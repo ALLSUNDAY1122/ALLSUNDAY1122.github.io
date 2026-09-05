@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "stage_order": [
+    "relay_yard",
+    "liftworks",
+    "phase_foundry",
+    "blackout_array",
+    "core_spire"
+  ],
+  "stages": [
+    {
+      "id": "relay_yard",
+      "display_name": "Relay Yard",
+      "order": 0,
+      "unlock": {"type": "always"},
+      "start_trigger_id": "relay_start",
+      "start_spawn_anchor": "relay_spawn_start",
+      "goal_trigger_id": "relay_goal",
+      "checkpoints": [
+        {"id": "relay_cp_1", "order": 1, "spawn_anchor": "relay_spawn_1"},
+        {"id": "relay_cp_2", "order": 2, "spawn_anchor": "relay_spawn_2"}
+      ],
+      "challenge_segments": 7,
+      "target_first_clear_seconds": 24.0,
+      "target_mastery_seconds": 8.0,
+      "checkpoint_mode_default": true,
+      "design_intent": ["movement_basics", "route_reading", "early_shortcut_tease"]
+    },
+    {
+      "id": "liftworks",
+      "display_name": "Liftworks",
+      "order": 1,
+      "unlock": {"type": "previous_clear", "stage_id": "relay_yard"},
+      "start_trigger_id": "lift_start",
+      "start_spawn_anchor": "lift_spawn_start",
+      "goal_trigger_id": "lift_goal",
+      "checkpoints": [
+        {"id": "lift_cp_1", "order": 1, "spawn_anchor": "lift_spawn_1"},
+        {"id": "lift_cp_2", "order": 2, "spawn_anchor": "lift_spawn_2"},
+        {"id": "lift_cp_3", "order": 3, "spawn_anchor": "lift_spawn_3"}
+      ],
+      "challenge_segments": 10,
+      "target_first_clear_seconds": 34.0,
+      "target_mastery_seconds": 12.0,
+      "checkpoint_mode_default": true,
+      "design_intent": ["vertical_timing", "moving_platforms", "upgrade_return_route"]
+    },
+    {
+      "id": "phase_foundry",
+      "display_name": "Phase Foundry",
+      "order": 2,
+      "unlock": {"type": "previous_clear", "stage_id": "liftworks"},
+      "start_trigger_id": "phase_start",
+      "start_spawn_anchor": "phase_spawn_start",
+      "goal_trigger_id": "phase_goal",
+      "checkpoints": [
+        {"id": "phase_cp_1", "order": 1, "spawn_anchor": "phase_spawn_1"},
+        {"id": "phase_cp_2", "order": 2, "spawn_anchor": "phase_spawn_2"},
+        {"id": "phase_cp_3", "order": 3, "spawn_anchor": "phase_spawn_3"}
+      ],
+      "challenge_segments": 12,
+      "target_first_clear_seconds": 46.0,
+      "target_mastery_seconds": 16.0,
+      "checkpoint_mode_default": true,
+      "design_intent": ["state_switching", "ability_gate", "branching_route"]
+    },
+    {
+      "id": "blackout_array",
+      "display_name": "Blackout Array",
+      "order": 3,
+      "unlock": {"type": "previous_clear", "stage_id": "phase_foundry"},
+      "start_trigger_id": "blackout_start",
+      "start_spawn_anchor": "blackout_spawn_start",
+      "goal_trigger_id": "blackout_goal",
+      "checkpoints": [
+        {"id": "blackout_cp_1", "order": 1, "spawn_anchor": "blackout_spawn_1"},
+        {"id": "blackout_cp_2", "order": 2, "spawn_anchor": "blackout_spawn_2"},
+        {"id": "blackout_cp_3", "order": 3, "spawn_anchor": "blackout_spawn_3"},
+        {"id": "blackout_cp_4", "order": 4, "spawn_anchor": "blackout_spawn_4"}
+      ],
+      "challenge_segments": 15,
+      "target_first_clear_seconds": 62.0,
+      "target_mastery_seconds": 22.0,
+      "checkpoint_mode_default": true,
+      "design_intent": ["limited_visibility", "hazard_memory", "secret_route"]
+    },
+    {
+      "id": "core_spire",
+      "display_name": "Core Spire",
+      "order": 4,
+      "unlock": {"type": "previous_clear", "stage_id": "blackout_array"},
+      "start_trigger_id": "spire_start",
+      "start_spawn_anchor": "spire_spawn_start",
+      "goal_trigger_id": "spire_goal",
+      "checkpoints": [
+        {"id": "spire_cp_1", "order": 1, "spawn_anchor": "spire_spawn_1"},
+        {"id": "spire_cp_2", "order": 2, "spawn_anchor": "spire_spawn_2"},
+        {"id": "spire_cp_3", "order": 3, "spawn_anchor": "spire_spawn_3"},
+        {"id": "spire_cp_4", "order": 4, "spawn_anchor": "spire_spawn_4"}
+      ],
+      "challenge_segments": 18,
+      "target_first_clear_seconds": 82.0,
+      "target_mastery_seconds": 29.0,
+      "checkpoint_mode_default": true,
+      "design_intent": ["ability_chain", "shortcut_mastery", "endgame_route_optimization"]
+    }
+  ]
+}

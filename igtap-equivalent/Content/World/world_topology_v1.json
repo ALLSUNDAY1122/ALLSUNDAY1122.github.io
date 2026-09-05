@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "known_abilities": ["speed_tune", "dash", "double_jump", "wall_jump", "phase_shift"],
+  "gimmick_types": ["moving_platform", "spring", "hazard", "ability_gate", "state_switch", "state_gate", "darkness", "shortcut", "secret"],
+  "stages": [
+    {
+      "id": "relay_yard", "entry_required_ability": null, "guaranteed_abilities": [], "default_phase": "neutral", "phases": ["neutral"], "default_visibility": 1.0,
+      "gimmick_types": ["moving_platform", "spring", "hazard", "ability_gate", "shortcut", "secret"],
+      "nodes": [{"id":"start"},{"id":"belts"},{"id":"lift"},{"id":"cp1"},{"id":"cp2"},{"id":"goal"},{"id":"secret_cache","secret_id":"relay_cache"}],
+      "edges": [
+        {"from":"start","to":"belts","kind":"main","gimmick":"hazard"},{"from":"belts","to":"lift","kind":"main","gimmick":"moving_platform"},{"from":"lift","to":"cp1","kind":"main","gimmick":"spring"},{"from":"cp1","to":"cp2","kind":"main","gimmick":"hazard"},{"from":"cp2","to":"goal","kind":"main","gimmick":"moving_platform"},
+        {"from":"start","to":"cp1","kind":"shortcut","shortcut_id":"relay_tuned_belt","requires_ability":"speed_tune","gimmick":"ability_gate"},{"from":"start","to":"cp2","kind":"shortcut","shortcut_id":"relay_dash_cut","requires_ability":"dash","gimmick":"ability_gate"},{"from":"lift","to":"secret_cache","kind":"secret","requires_ability":"double_jump","gimmick":"ability_gate"},{"from":"secret_cache","to":"cp1","kind":"secret","gimmick":"spring"}
+      ]
+    },
+    {
+      "id": "liftworks", "entry_required_ability": "speed_tune", "guaranteed_abilities": ["speed_tune"], "default_phase": "neutral", "phases": ["neutral"], "default_visibility": 1.0,
+      "gimmick_types": ["moving_platform", "spring", "hazard", "ability_gate", "shortcut", "secret"],
+      "nodes": [{"id":"start"},{"id":"lower_lift"},{"id":"spring_shaft"},{"id":"cp1"},{"id":"upper_lift"},{"id":"cp2"},{"id":"cp3"},{"id":"goal"},{"id":"secret_duct","secret_id":"lift_duct"}],
+      "edges": [
+        {"from":"start","to":"lower_lift","kind":"main","gimmick":"moving_platform"},{"from":"lower_lift","to":"spring_shaft","kind":"main","gimmick":"hazard"},{"from":"spring_shaft","to":"cp1","kind":"main","gimmick":"spring"},{"from":"cp1","to":"upper_lift","kind":"main","gimmick":"moving_platform"},{"from":"upper_lift","to":"cp2","kind":"main","gimmick":"hazard"},{"from":"cp2","to":"cp3","kind":"main","gimmick":"moving_platform"},{"from":"cp3","to":"goal","kind":"main","gimmick":"hazard"},
+        {"from":"start","to":"cp1","kind":"shortcut","shortcut_id":"lift_dash_riser","requires_ability":"dash","gimmick":"ability_gate"},{"from":"upper_lift","to":"secret_duct","kind":"secret","requires_ability":"double_jump","gimmick":"ability_gate"},{"from":"secret_duct","to":"cp2","kind":"secret","gimmick":"spring"}
+      ]
+    },
+    {
+      "id": "phase_foundry", "entry_required_ability": "dash", "guaranteed_abilities": ["speed_tune", "dash"], "default_phase": "neutral", "phases": ["neutral", "amber", "cyan"], "default_visibility": 1.0,
+      "gimmick_types": ["moving_platform", "spring", "hazard", "ability_gate", "state_switch", "state_gate", "shortcut", "secret"],
+      "nodes": [{"id":"start"},{"id":"switch_amber","sets_phase":"amber"},{"id":"amber_lane"},{"id":"switch_cyan","sets_phase":"cyan"},{"id":"cyan_lane"},{"id":"cp1"},{"id":"cp2"},{"id":"cp3"},{"id":"goal"},{"id":"secret_vat","secret_id":"phase_vat"}],
+      "edges": [
+        {"from":"start","to":"switch_amber","kind":"main","gimmick":"state_switch"},{"from":"switch_amber","to":"amber_lane","kind":"main","requires_phase":"amber","gimmick":"state_gate"},{"from":"amber_lane","to":"switch_cyan","kind":"main","gimmick":"moving_platform"},{"from":"switch_cyan","to":"cyan_lane","kind":"main","requires_phase":"cyan","gimmick":"state_gate"},{"from":"cyan_lane","to":"cp1","kind":"main","gimmick":"hazard"},{"from":"cp1","to":"cp2","kind":"main","requires_ability":"dash","gimmick":"ability_gate"},{"from":"cp2","to":"cp3","kind":"main","gimmick":"spring"},{"from":"cp3","to":"goal","kind":"main","gimmick":"moving_platform"},
+        {"from":"start","to":"cp2","kind":"shortcut","shortcut_id":"phase_wall_bypass","requires_ability":"wall_jump","gimmick":"ability_gate"},{"from":"amber_lane","to":"secret_vat","kind":"secret","requires_ability":"double_jump","gimmick":"ability_gate"},{"from":"secret_vat","to":"switch_cyan","kind":"secret","gimmick":"moving_platform"}
+      ]
+    },
+    {
+      "id": "blackout_array", "entry_required_ability": "double_jump", "guaranteed_abilities": ["speed_tune", "dash", "double_jump"], "default_phase": "neutral", "phases": ["neutral"], "default_visibility": 0.42,
+      "gimmick_types": ["moving_platform", "spring", "hazard", "ability_gate", "darkness", "shortcut", "secret"],
+      "nodes": [{"id":"start"},{"id":"beacon_1"},{"id":"shaft"},{"id":"cp1"},{"id":"blind_span"},{"id":"cp2"},{"id":"cp3"},{"id":"cp4"},{"id":"goal"},{"id":"secret_control","secret_id":"blackout_control"}],
+      "edges": [
+        {"from":"start","to":"beacon_1","kind":"main","gimmick":"darkness"},{"from":"beacon_1","to":"shaft","kind":"main","requires_ability":"double_jump","gimmick":"ability_gate"},{"from":"shaft","to":"cp1","kind":"main","gimmick":"moving_platform"},{"from":"cp1","to":"blind_span","kind":"main","gimmick":"hazard"},{"from":"blind_span","to":"cp2","kind":"main","gimmick":"spring"},{"from":"cp2","to":"cp3","kind":"main","gimmick":"hazard"},{"from":"cp3","to":"cp4","kind":"main","gimmick":"moving_platform"},{"from":"cp4","to":"goal","kind":"main","gimmick":"hazard"},
+        {"from":"start","to":"blind_span","kind":"shortcut","shortcut_id":"blackout_wall_cut","requires_ability":"wall_jump","gimmick":"ability_gate"},{"from":"cp1","to":"secret_control","kind":"secret","requires_ability":"phase_shift","gimmick":"ability_gate"},{"from":"secret_control","to":"cp3","kind":"secret","gimmick":"darkness"}
+      ]
+    },
+    {
+      "id": "core_spire", "entry_required_ability": "wall_jump", "guaranteed_abilities": ["speed_tune", "dash", "double_jump", "wall_jump"], "default_phase": "neutral", "phases": ["neutral", "amber", "cyan"], "default_visibility": 0.68,
+      "gimmick_types": ["moving_platform", "spring", "hazard", "ability_gate", "state_switch", "state_gate", "darkness", "shortcut", "secret"],
+      "nodes": [{"id":"start"},{"id":"switch_amber","sets_phase":"amber"},{"id":"amber_rise"},{"id":"cp1"},{"id":"switch_cyan","sets_phase":"cyan"},{"id":"cyan_drop"},{"id":"cp2"},{"id":"cp3"},{"id":"cp4"},{"id":"goal"},{"id":"secret_crown","secret_id":"spire_crown"}],
+      "edges": [
+        {"from":"start","to":"switch_amber","kind":"main","gimmick":"state_switch"},{"from":"switch_amber","to":"amber_rise","kind":"main","requires_phase":"amber","requires_ability":"wall_jump","gimmick":"state_gate"},{"from":"amber_rise","to":"cp1","kind":"main","gimmick":"moving_platform"},{"from":"cp1","to":"switch_cyan","kind":"main","gimmick":"hazard"},{"from":"switch_cyan","to":"cyan_drop","kind":"main","requires_phase":"cyan","gimmick":"state_gate"},{"from":"cyan_drop","to":"cp2","kind":"main","requires_ability":"double_jump","gimmick":"ability_gate"},{"from":"cp2","to":"cp3","kind":"main","gimmick":"spring"},{"from":"cp3","to":"cp4","kind":"main","requires_ability":"dash","gimmick":"ability_gate"},{"from":"cp4","to":"goal","kind":"main","gimmick":"moving_platform"},
+        {"from":"start","to":"cp3","kind":"shortcut","shortcut_id":"spire_phase_cut","requires_ability":"phase_shift","gimmick":"ability_gate"},{"from":"amber_rise","to":"secret_crown","kind":"secret","requires_ability":"phase_shift","gimmick":"ability_gate"},{"from":"secret_crown","to":"switch_cyan","kind":"secret","gimmick":"darkness"}
+      ]
+    }
+  ]
+}
