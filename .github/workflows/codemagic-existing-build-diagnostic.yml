@@ -1,0 +1,74 @@
+name: Codemagic Existing Build Diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/codemagic-existing-build-diagnostic-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Read existing Codemagic build only
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          cmd=json.loads(Path('automation/codemagic-existing-build-diagnostic-command.json').read_text(encoding='utf-8'))
+          build_id=str(cmd['build_id'])
+          request_id=str(cmd['request_id'])
+          token=os.environ['CM_API_TOKEN'].strip()
+          req=urllib.request.Request(
+              f'https://codemagic.io/api/v3/builds/{build_id}',
+              headers={'Accept':'application/json','x-auth-token':token})
+          with urllib.request.urlopen(req,timeout=30) as r:
+              raw=json.loads(r.read().decode('utf-8'))
+          data=raw.get('data') or raw
+          allowed={'name','status','startedAt','finishedAt','exitCode','error','message','details','actionType','type','versionCode','versionName','filename','artifactType','instanceType','instance_type','started_at','finished_at'}
+          def clean(v, depth=0):
+              if depth>8: return None
+              if isinstance(v,dict):
+                  out={}
+                  for k,val in v.items():
+                      if k in allowed or k in {'actions','artifacts','publishing','build','subactions','steps'}:
+                          out[k]=clean(val,depth+1)
+                  return out
+              if isinstance(v,list): return [clean(x,depth+1) for x in v[:200]]
+              if isinstance(v,str): return v[:1200]
+              if isinstance(v,(int,float,bool)) or v is None: return v
+              return str(v)[:1200]
+          out={
+              'request_id':request_id,
+              'build_id':build_id,
+              'read_only':True,
+              'root_keys':sorted(data.keys()) if isinstance(data,dict) else [],
+              'diagnostic':clean(data)
+          }
+          p=Path('automation/codemagic-results')/f'{request_id}.json'
+          p.parent.mkdir(parents=True,exist_ok=True)
+          p.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          Path('/tmp/cm-diag-path.txt').write_text(str(p),encoding='utf-8')
+          print(json.dumps({'request_id':request_id,'build_id':build_id,'root_keys':out['root_keys']},ensure_ascii=False))
+          PY
+      - name: Persist sanitized diagnostic
+        if: always()
+        run: |
+          test -f /tmp/cm-diag-path.txt || exit 1
+          P="$(cat /tmp/cm-diag-path.txt)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$P"; git commit -m "Persist Codemagic build diagnostic" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          cp "$P" /tmp/cm-diag-copy.json
+          git fetch origin main; git reset --hard origin/main; mkdir -p "$(dirname "$P")"; cp /tmp/cm-diag-copy.json "$P"
+          git add "$P"; git commit -m "Persist Codemagic build diagnostic" || exit 0; git push origin HEAD:main
