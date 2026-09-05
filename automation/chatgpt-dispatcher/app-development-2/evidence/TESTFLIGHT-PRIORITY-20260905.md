@@ -1,5 +1,28 @@
 # アプリ開発②｜TestFlight優先順位・先行3本の到達確認
 
+## 最新訂正｜20:05のユーザー録画でインストール未成立
+
+**先行3本の「インストール可能・完結」判定を撤回する。サーバー配信設定は成立しているが、端末での更新成功は未成立。**
+
+録画で確認した事実:
+- 登録販売者 Build 12・薬剤師 Build 7・第一種 Build 2026090501 が一覧に表示される。
+- 更新操作後にインストールが完了せず「アップデート」へ戻る。先行3本について詳細なエラー全文は録画内では確認できない。
+- 夜の書架 Build 5、呑み処 Build 4には「このビルドは現在利用できません」というエラーが表示される。これら旧ビルドは失効済み。
+
+追加API診断:
+- [最新5件の配信状態](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/blob/main/automation/asc-results/testflight-install-failure-20260905-2010.json)
+- [内部グループに実際に含まれるBuildと最低OS](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/blob/main/automation/asc-results/testflight-group-install-diagnosis-20260905-2011.json)
+- 先行3本はVALID、expired=false、IN_BETA_TESTING。各内部グループのbuilds relationshipに対象Buildを確認。minimum iOSは16.0。
+- 単純な「新ビルド未登録」「ビルド失効」「グループへの未割当」を先行3本の原因とする証拠はない。端末・通信・Apple配信側のどこで失敗したかは未確定。
+
+次の切り分け: アプリ/テスターを削除せず、TestFlightを完全終了して開き直し、薬剤師の詳細画面でBuild 7を単独更新する。失敗時の表示全文または詳細画面を取得し、同時更新・失効した別アプリのエラーと区別する。
+
+今回再ビルド、Build失効、テスター削除、アプリ削除、本審査提出は行っていない。
+
+以下は19時台の配信側監査記録であり、端末でのインストール成功を意味しない。
+
+---
+
 確認日: 2026-09-05
 
 ## 今回の完了範囲
