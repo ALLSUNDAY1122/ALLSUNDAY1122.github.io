@@ -1,0 +1,41 @@
+name: Otsu4 Fix Pinned Fetch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/otsu4-fix-pinned-fetch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Patch pinned Otsu4 source fetch only
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          text=p.read_text(encoding='utf-8')
+          old='''          git fetch --depth=1 origin "$RELEASE_SOURCE_BRANCH"\n          git checkout --detach "$RELEASE_SOURCE_SHA"'''
+          new='''          git fetch --depth=1 origin "$RELEASE_SOURCE_SHA"\n          git checkout --detach FETCH_HEAD'''
+          count=text.count(old)
+          if count < 1:
+              raise SystemExit('expected pinned Otsu4 fetch block not found')
+          text=text.replace(old,new)
+          p.write_text(text,encoding='utf-8')
+          print(f'patched {count} pinned fetch block(s)')
+          PY
+          git diff --check
+          grep -A6 -B2 'Check out pinned Release Gate source' codemagic.yaml
+      - name: Commit patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add codemagic.yaml
+          git diff --cached --quiet && exit 0
+          git commit -m "Fix Otsu4 pinned release source fetch"
+          git push origin HEAD:main
