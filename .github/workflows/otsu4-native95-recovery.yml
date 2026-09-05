@@ -1,0 +1,77 @@
+name: Otsu4 Native Build95 Recovery
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: otsu4-native95-recovery
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-NATIVE95]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - name: Start Codemagic native recovery build
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, time, urllib.request, urllib.error
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('CM_API_TOKEN missing')
+          app_id='6a769d81a1add9d06020b524'
+          workflow='otsu4-native-ios'
+          branch='main'
+          recovery_sha='67ec6a9bfd61c745b016eabdc63f5f2f7d6f9e53'
+          recovery_branch='recovery/otsu4-testflight-build95'
+          payload={
+            'appId':app_id,
+            'workflowId':workflow,
+            'branch':branch,
+            'labels':['otsu4-testflight-recovery-build95'],
+            'environment':{'variables':{
+              'RELEASE_SOURCE_SHA':recovery_sha,
+              'RELEASE_SOURCE_BRANCH':recovery_branch
+            }}
+          }
+          req=urllib.request.Request('https://api.codemagic.io/builds',data=json.dumps(payload).encode(),method='POST',headers={'Content-Type':'application/json','x-auth-token':token})
+          try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  data=json.loads(r.read().decode())
+          except urllib.error.HTTPError as e:
+              raise SystemExit('Codemagic start failed HTTP '+str(e.code)+': '+e.read().decode(errors='replace')[:1000])
+          build_id=data.get('buildId') or data.get('id')
+          if not build_id:
+              raise SystemExit('Codemagic build id missing')
+          print('build_id='+build_id)
+          terminal={'finished','failed','canceled','timeout','skipped'}
+          deadline=time.time()+4200
+          while time.time()<deadline:
+              req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{build_id}',headers={'x-auth-token':token})
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  d=json.loads(r.read().decode())
+              details=d.get('data') or d
+              status=details.get('status')
+              print('status='+str(status))
+              if status in terminal:
+                  print('app_store_connect_status='+str(details.get('app_store_connect_status')))
+                  if status!='finished':
+                      raise SystemExit('Codemagic ended with '+str(status))
+                  break
+              time.sleep(30)
+          else:
+              raise SystemExit('Timed out waiting for Codemagic')
+      - name: Report locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: `Otsu4 Build95 recovery gateway finished. status=${{ job.status }}; run_id=${context.runId}`});
