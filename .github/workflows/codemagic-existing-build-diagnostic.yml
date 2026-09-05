@@ -34,7 +34,7 @@ jobs:
           with urllib.request.urlopen(req,timeout=30) as r:
               raw=json.loads(r.read().decode('utf-8'))
           data=raw.get('data') or raw
-          allowed={'name','status','startedAt','finishedAt','exitCode','error','message','details','actionType','type','versionCode','versionName','filename','artifactType','instanceType','instance_type','started_at','finished_at'}
+          allowed={'name','status','startedAt','finishedAt','exitCode','error','message','details','actionType','type','versionCode','versionName','version_code','version_name','filename','artifactType','instanceType','instance_type','started_at','finished_at','app_store_connect_status','successful','reason'}
           def clean(v, depth=0):
               if depth>8: return None
               if isinstance(v,dict):
