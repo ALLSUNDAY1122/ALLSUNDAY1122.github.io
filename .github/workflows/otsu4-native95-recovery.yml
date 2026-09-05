@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
-      - name: Start Codemagic native recovery build
+      - name: Start isolated Codemagic Build95 recovery
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
@@ -33,18 +33,12 @@ jobs:
               raise SystemExit('CM_API_TOKEN missing')
           app_id='6a769d81a1add9d06020b524'
           workflow='otsu4-native-ios'
-          branch='main'
-          recovery_sha='67ec6a9bfd61c745b016eabdc63f5f2f7d6f9e53'
-          recovery_branch='recovery/otsu4-testflight-build95'
+          branch='recovery/otsu4-codemagic-build95-20260905'
           payload={
             'appId':app_id,
             'workflowId':workflow,
             'branch':branch,
-            'labels':['otsu4-testflight-recovery-build95'],
-            'environment':{'variables':{
-              'RELEASE_SOURCE_SHA':recovery_sha,
-              'RELEASE_SOURCE_BRANCH':recovery_branch
-            }}
+            'labels':['otsu4-testflight-recovery-build95-isolated']
           }
           req=urllib.request.Request('https://api.codemagic.io/builds',data=json.dumps(payload).encode(),method='POST',headers={'Content-Type':'application/json','x-auth-token':token})
           try:
@@ -67,6 +61,12 @@ jobs:
               print('status='+str(status))
               if status in terminal:
                   print('app_store_connect_status='+str(details.get('app_store_connect_status')))
+                  artifacts=details.get('artifacts') or []
+                  for artifact in artifacts:
+                      if artifact.get('type')=='ipa' or str(artifact.get('name','')).endswith('.ipa'):
+                          print('ipa_name='+str(artifact.get('name')))
+                          print('ipa_version_code='+str(artifact.get('version_code')))
+                          print('ipa_version_name='+str(artifact.get('version_name')))
                   if status!='finished':
                       raise SystemExit('Codemagic ended with '+str(status))
                   break
