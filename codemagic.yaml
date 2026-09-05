@@ -1,5 +1,106 @@
 # Codemagic configuration refreshed for the health-manager-2-ios release workflow.
 workflows:
+  english-listening-sprint-testflight:
+    name: English Listening Sprint - Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.englishlistening
+      vars:
+        BUNDLE_ID: jp.allsunday1122.englishlistening
+        XCODE_PROJECT: english-listening-sprint/ios/EnglishListeningSprint.xcodeproj
+        XCODE_SCHEME: EnglishListeningSprint
+      xcode: latest
+    scripts:
+      - name: Install XcodeGen
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Audit release content
+        script: |
+          python3 - "$CM_BUILD_DIR/english-listening-sprint" <<'PY'
+          from pathlib import Path
+          import json, plistlib, re, sys
+
+          root = Path(sys.argv[1])
+          html = (root / "index.html").read_text(encoding="utf-8")
+          match = re.search(r"window\.LESSONS\s*=\s*(\[.*?\]);</script>", html, re.S)
+          assert match, "embedded lesson data not found"
+          lessons = json.loads(match.group(1))
+          assert len(lessons) == 30, len(lessons)
+          assert len({lesson["id"] for lesson in lessons}) == 30
+          assert sum(len(lesson["questions"]) for lesson in lessons) == 90
+
+          audio_paths = []
+          for lesson in lessons:
+              audio_paths.extend(item["path"] for item in lesson["audio"].values())
+              audio_paths.extend(item["path"] for item in lesson["short"]["audio"].values())
+          assert len(audio_paths) == 312, len(audio_paths)
+          assert len(set(audio_paths)) == 312
+          assert all((root / path).is_file() for path in audio_paths)
+
+          icon = root / "ios/EnglishListeningSprint/Assets.xcassets/AppIcon.appiconset/EnglishListeningSprint-1024.png"
+          assert icon.is_file() and icon.stat().st_size > 0
+          with (root / "ios/EnglishListeningSprint/PrivacyInfo.xcprivacy").open("rb") as handle:
+              privacy = plistlib.load(handle)
+          assert privacy.get("NSPrivacyTracking") is False
+          assert privacy.get("NSPrivacyCollectedDataTypes") == []
+          reasons = privacy.get("NSPrivacyAccessedAPITypes", [])
+          assert any(
+              item.get("NSPrivacyAccessedAPIType") == "NSPrivacyAccessedAPICategoryUserDefaults"
+              and "CA92.1" in item.get("NSPrivacyAccessedAPITypeReasons", [])
+              for item in reasons
+          )
+          print("PASS: 30 lessons / 90 questions / 312 bundled audio files")
+          PY
+      - name: Generate Xcode project
+        script: |
+          cd "$CM_BUILD_DIR/english-listening-sprint/ios"
+          xcodegen generate
+      - name: Apply App Store signing profiles
+        script: |
+          cd "$CM_BUILD_DIR/english-listening-sprint/ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+      - name: Verify signed IPA
+        script: |
+          IPA_PATH="$(find build/ios/ipa -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          python3 - "$APP_DIR" <<'PY'
+          from pathlib import Path
+          import plistlib, sys
+
+          app = Path(sys.argv[1])
+          info = plistlib.loads((app / "Info.plist").read_bytes())
+          assert info.get("CFBundleIdentifier") == "jp.allsunday1122.englishlistening"
+          assert info.get("CFBundleShortVersionString") == "1.0.0"
+          assert str(info.get("CFBundleVersion", "")).isdigit()
+          assert (app / "PrivacyInfo.xcprivacy").is_file()
+          assert (app / "Assets.car").is_file()
+          assert (app / "embedded.mobileprovision").is_file()
+          assert (app / "_CodeSignature").is_dir()
+          assert len(list(app.rglob("*.mp3"))) == 312
+          assert len(list(app.glob("lessons-part*.json"))) == 3
+          print("PASS: signed IPA contains the release content and signing assets")
+          PY
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
+
   sprint-study-ios:
     name: Sprint Study - iOS TestFlight
     max_build_duration: 60
