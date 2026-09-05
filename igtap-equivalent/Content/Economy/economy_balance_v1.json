@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "resource_name": "Flux",
+  "display_suffixes": ["Flux", "kFlux", "MFlux", "GFlux", "TFlux", "PFlux", "EFlux", "ZFlux", "YFlux"],
+  "passive_tick_seconds": 0.25,
+  "active_reward": {"min_speed_factor": 0.75, "max_speed_factor": 2.20, "speed_power": 0.45},
+  "clone_reward": {"base_fraction": 0.72, "min_speed_factor": 0.75, "max_speed_factor": 1.80, "speed_power": 0.35, "route_quality_min": 0.50, "route_quality_max": 1.50},
+  "stage_rewards": [
+    {"stage_id": "relay_yard", "base_reward": 14.0},
+    {"stage_id": "liftworks", "base_reward": 40.0},
+    {"stage_id": "phase_foundry", "base_reward": 120.0},
+    {"stage_id": "blackout_array", "base_reward": 330.0},
+    {"stage_id": "core_spire", "base_reward": 850.0}
+  ],
+  "upgrades": [
+    {"id": "flux_coils", "display_name": "Flux Coils", "unlocks_after_stage": "relay_yard", "base_cost": 18.0, "cost_growth": 1.72, "max_level": 40, "effect": "income_multiplier", "per_level_multiplier": 1.18},
+    {"id": "loop_compression", "display_name": "Loop Compression", "unlocks_after_stage": "liftworks", "base_cost": 115.0, "cost_growth": 1.88, "max_level": 32, "effect": "clone_reward_multiplier", "per_level_multiplier": 1.16},
+    {"id": "route_dividend", "display_name": "Route Dividend", "unlocks_after_stage": "phase_foundry", "base_cost": 400.0, "cost_growth": 2.00, "max_level": 24, "effect": "active_reward_multiplier", "per_level_multiplier": 1.14}
+  ],
+  "balance_guardrails": {"meaningful_purchase_target_seconds": 90.0, "meaningful_purchase_failure_seconds": 180.0, "previous_stage_pair_share_minimum": 0.30, "mastery_clone_rps_gain_minimum": 2.5}
+}

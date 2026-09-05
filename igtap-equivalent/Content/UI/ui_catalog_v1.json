@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "upgrade_order": ["speed_tune", "jump_tune", "clone_capacity", "dash", "double_jump", "wall_jump", "phase_shift", "flux_coils", "loop_compression", "route_dividend"],
+  "upgrades": {
+    "speed_tune": {"label": "Drive Tuning", "description": "Run faster. Level 1 opens Liftworks.", "key_progression": true},
+    "jump_tune": {"label": "Lift Tuning", "description": "Increase jump intent for route refinement.", "key_progression": false},
+    "clone_capacity": {"label": "Echo Capacity", "description": "Add one global clone slot. Each stage holds at most three.", "key_progression": false},
+    "dash": {"label": "Vector Burst", "description": "Unlock dash and faster routes through earlier stages.", "key_progression": true},
+    "double_jump": {"label": "Air Relay", "description": "Unlock a second airborne jump and hidden upper routes.", "key_progression": true},
+    "wall_jump": {"label": "Surface Rebound", "description": "Unlock wall jumping and vertical bypass routes.", "key_progression": true},
+    "phase_shift": {"label": "Phase Override", "description": "Unlock endgame world-state shortcuts and secrets.", "key_progression": true},
+    "flux_coils": {"label": "Flux Coils", "description": "Multiply passive clone income.", "key_progression": false},
+    "loop_compression": {"label": "Loop Compression", "description": "Multiply reward produced by each clone loop.", "key_progression": false},
+    "route_dividend": {"label": "Route Dividend", "description": "Multiply rewards from active course clears.", "key_progression": false}
+  },
+  "lock_reason_labels": {
+    "unknown_stage": "Unavailable",
+    "requires_previous_clear": "Clear the previous stage",
+    "requires_ability": "Required ability not unlocked",
+    "requires_stage_clear": "Clear the required stage",
+    "requires_upgrade": "Purchase the prerequisite upgrade",
+    "max_level": "MAX",
+    "insufficient_resource": "Not enough Flux"
+  },
+  "accessibility": {
+    "minimum_touch_height": 48,
+    "body_font_size": 18,
+    "header_font_size": 24,
+    "never_color_only": true,
+    "show_numeric_effect_delta": true
+  }
+}
