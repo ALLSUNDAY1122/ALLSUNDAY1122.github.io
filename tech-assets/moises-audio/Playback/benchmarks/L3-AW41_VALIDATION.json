@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW41",
+  "title": "Staged Physical Capture Coordinator",
+  "result": "COMPLETE_NON_PARITY",
+  "canonical_audit": {
+    "integration_epoch_observed": 29,
+    "assignment_epoch": 2,
+    "planning_revision": 4,
+    "epoch_contract_sha": "c9e8ec5d191108db6eb20fbd40db0dab3c46b725",
+    "ownership_changed": false,
+    "rebase_required": false,
+    "worker_branch_base_head": "c1b60ded0ebc47f3ee26da904b7296e3152f30de",
+    "hq_integrated_lane3_through": "L3-AW38",
+    "parity_promotions_observed": 0
+  },
+  "implementation": {
+    "sample_id_staged_capture_authority": true,
+    "marker_first_supported": true,
+    "stamped_outcome_first_supported": true,
+    "actor_reentrancy_finalizing_fence": true,
+    "exact_duplicate_callback_idempotent": true,
+    "conflicting_duplicate_fails_closed": true,
+    "nonexecuted_excluded_from_executed_latency": true,
+    "audible_marker_for_nonexecuted_fails_closed": true,
+    "explicit_host_driven_expiry": true,
+    "internal_timer_added": false,
+    "pending_capacity_bounded": true,
+    "issue_detail_capacity_bounded": true,
+    "retired_callback_identity_bounded": true,
+    "retired_identity_window_truncation_fails_completion": true,
+    "backend_or_scheduling_time_fabricated_as_audible": false,
+    "aw39_generation_stamp_reused": true,
+    "aw38_exact_correlation_reused": true,
+    "aw40_v2_session_reused": true,
+    "shared_app_modified": false,
+    "parity_matrix_modified": false,
+    "parity_promotion_allowed": false
+  },
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "swift_language_mode": 6,
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true
+  },
+  "portable_structural_state_machine": {
+    "result": "PASS",
+    "marker_first": true,
+    "stamped_first": true,
+    "pending_and_retired_exact_duplicates_idempotent": true,
+    "nonexecuted_separate": true,
+    "audible_nonexecuted_contradiction_rejected": true,
+    "expired_before_stamp": true,
+    "expired_before_audible": true,
+    "pending_capacity_checked": true,
+    "issue_detail_bound_checked": true,
+    "retired_identity_wrap_checked": true,
+    "first_compile_issue_was_structural_stub_visibility_only": true
+  },
+  "portable_reentrancy": {
+    "result": "PASS",
+    "slow_correlator_forced_actor_reentrancy": true,
+    "finalizing_count_during_await": 1,
+    "exact_duplicate_callbacks_during_await": 2,
+    "double_finalization_observed": false,
+    "unexpected_issue_count_before_injected_conflict": 0
+  },
+  "portable_stress": {
+    "attempted_one_million": true,
+    "one_million_result": "EXECUTION_LIMIT_TIMEOUT_NOT_PASS",
+    "bounded_pass_operation_count": 100000,
+    "bounded_pass_result": "PASS",
+    "retained_retired_identities": 4096,
+    "retired_identity_drops": 95904,
+    "finalized_nonexecuted": 100000,
+    "final_pending": 0,
+    "final_finalizing": 0,
+    "issue_count": 1,
+    "expected_issue": "retiredIdentityWindowTruncated",
+    "issue_detail_drops": 0,
+    "elapsed_nanoseconds": 5083326055
+  },
+  "portable_benchmark": {
+    "result": "PASS",
+    "runs": 20,
+    "operations_per_run": 10000,
+    "median_nanoseconds": 487962683,
+    "p95_nanoseconds": 700156342,
+    "max_nanoseconds": 735207759,
+    "checksum": 318100,
+    "scope": "actor-hop plus staged capture bookkeeping only"
+  },
+  "selected_repository_tests": {
+    "staged_capture_self_test_authored": true,
+    "actor_reentrancy_self_test_authored": true,
+    "stress_authored": true,
+    "benchmark_authored": true,
+    "complete_selected_swiftpm_execution": false,
+    "xcode_execution": false,
+    "avfaudio_runtime_execution": false
+  },
+  "external_gates": {
+    "physical_iphone_executed": false,
+    "validated_external_audible_marker": false,
+    "rights_cleared_real_audio_executed": false,
+    "current_moises_differential_executed": false,
+    "human_listening_executed": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015"
+  ]
+}

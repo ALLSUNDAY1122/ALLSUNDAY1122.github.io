@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "generic-evaluation-source-index.private.schema.json",
+  "title": "Lane 1 E10 Private Evaluation Source Index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","private","evidence_state","parity_claim","route_id","route_kind","runtime_artifact_sha256","sources"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "private": {"const": true},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "parity_claim": {"const": "NONE"},
+    "route_id": {"type": "string", "minLength": 1},
+    "route_kind": {"enum": ["LICENSED_LOCAL_INFERENCE_SDK","ALTERNATE_WRITTEN_COMMERCIAL_PROVIDER","PROJECT_OWNED_MODEL_IF_RIGHTS_CLEARED_TRAINING_DATA_AVAILABLE"]},
+    "runtime_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sources": {"type":"object","additionalProperties":false,"required":["operational","benchmark","differential"],"properties":{"operational":{"$ref":"#/$defs/ref"},"benchmark":{"$ref":"#/$defs/ref"},"differential":{"$ref":"#/$defs/ref"}}}
+  },
+  "$defs": {"ref":{"type":"object","additionalProperties":false,"required":["path","sha256"],"properties":{"path":{"type":"string","minLength":1},"sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}}}
+}

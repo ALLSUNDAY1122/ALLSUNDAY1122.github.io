@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A08",
+  "parity_state": "NON_PARITY_EVIDENCE_ONLY",
+  "purpose": "Truthful logical-vs-upstream cancellation semantics for P020 readiness",
+  "invariants": [
+    "logical cancel intent is durable before any upstream cancel call",
+    "logical cancel never implies upstream compute stopped unless provider evidence confirms it",
+    "repeated cancel does not repeat a provider cancel call without proven idempotency",
+    "cancelled output disposition is discard and ready-vs-cancel cannot resurrect results",
+    "existing client snapshot remains canonical phase=cancelled while extra cancellation truth is evidence-only metadata"
+  ],
+  "scenarios": [
+    {"id":"A08-001","case":"provider cancel accepted but not confirmed","expect":"logical cancelled; upstream=requested"},
+    {"id":"A08-002","case":"provider cancel confirmed","expect":"logical cancelled; upstream=confirmed"},
+    {"id":"A08-003","case":"provider has no cancel capability","expect":"logical cancelled; upstream=unsupported"},
+    {"id":"A08-004","case":"provider cancel request errors","expect":"logical cancelled; upstream=unknown_after_error"},
+    {"id":"A08-005","case":"provider returns invalid cancel receipt","expect":"logical cancelled; upstream=unknown_invalid_receipt"},
+    {"id":"A08-006","case":"repeated logical cancel","expect":"provider cancel invoked once only"},
+    {"id":"A08-007","case":"cancel while provider task unbound","expect":"logical cancelled_unbound; no fake upstream cancellation"},
+    {"id":"A08-008","case":"provider becomes ready after logical cancel","expect":"phase remains cancelled; output discarded"},
+    {"id":"A08-009","case":"provider fails after logical cancel","expect":"phase remains cancelled; provider failure retained as evidence"},
+    {"id":"A08-010","case":"provider later reports cancelled","expect":"upstream cancellation becomes confirmed"},
+    {"id":"A08-011","case":"provider claimed confirmed then still separates","expect":"confirmation_contradicted fail-closed evidence"},
+    {"id":"A08-012","case":"collect after logical cancel","expect":"SEP_CANCELLED_OUTPUT_DISCARDED; backend collect not called"},
+    {"id":"A08-013","case":"relaunch after logical cancel","expect":"durable cancel registry blocks output delivery"},
+    {"id":"A08-014","case":"uncancelled job","expect":"normal observe/collect delegation unchanged"},
+    {"id":"A08-015","case":"corrupt cancellation registry","expect":"fail closed"},
+    {"id":"A08-016","case":"invalid logical job id","expect":"fail closed"}
+  ]
+}

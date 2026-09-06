@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "runtime-authority-results-index.private.schema.json",
+  "title": "Lane 1 E08 Private Runtime-Authority Results Index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "private", "results"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "private": {"const": true},
+    "results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["INPUT_INTERRUPTION", "CANCEL_PRE_START", "CANCEL_EXECUTING", "CANCEL_FINALIZING", "AMBIGUOUS_START_RETRY", "RELAUNCH", "OUTPUT_AVAILABILITY_LOSS", "CAPACITY_LIMIT", "LONG_TRACK", "STORAGE_PRESSURE"],
+      "properties": {
+        "INPUT_INTERRUPTION": {"type": "string", "minLength": 1},
+        "CANCEL_PRE_START": {"type": "string", "minLength": 1},
+        "CANCEL_EXECUTING": {"type": "string", "minLength": 1},
+        "CANCEL_FINALIZING": {"type": "string", "minLength": 1},
+        "AMBIGUOUS_START_RETRY": {"type": "string", "minLength": 1},
+        "RELAUNCH": {"type": "string", "minLength": 1},
+        "OUTPUT_AVAILABILITY_LOSS": {"type": "string", "minLength": 1},
+        "CAPACITY_LIMIT": {"type": "string", "minLength": 1},
+        "LONG_TRACK": {"type": "string", "minLength": 1},
+        "STORAGE_PRESSURE": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

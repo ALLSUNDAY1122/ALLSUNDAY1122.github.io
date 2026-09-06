@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW37",
+  "title": "Actual-Authority Cancellation Race Probe",
+  "result": "COMPLETE_NON_PARITY",
+  "canonical_audit": {
+    "integration_epoch_observed": 25,
+    "assignment_epoch": 2,
+    "planning_revision": 4,
+    "epoch_contract_sha": "c9e8ec5d191108db6eb20fbd40db0dab3c46b725",
+    "ownership_changed": false,
+    "rebase_required": false
+  },
+  "implementation": {
+    "reusable_probe_core": true,
+    "real_authority_adapter": true,
+    "seek_probe_route": true,
+    "loop_probe_route": true,
+    "immediate_cancellation_phase": true,
+    "one_yield_cancellation_phase": true,
+    "two_yield_cancellation_phase": true,
+    "post_operation_settlement_yields": true,
+    "complete_outcome_accounting": true,
+    "caller_cancellation_after_dispatch_accounting": true,
+    "late_retired_counter_delta": true,
+    "terminal_quiescence_required": true,
+    "counter_regression_fail_closed": true,
+    "parity_promotion_allowed": false
+  },
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "swift_language_mode": 6,
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "optimized_stress_and_benchmark": true
+  },
+  "probe_self_test": {
+    "executed": true,
+    "result": "PASS",
+    "iterations": 4096,
+    "cancellation_requests": 3072,
+    "cancelled_before_dispatch_observed": 2351,
+    "executed_observed": 1745,
+    "accounting_loss": 0,
+    "delayed_quiescence_polls": 1,
+    "counter_regression_case_rejected": true,
+    "final_retained_state_zero": true
+  },
+  "probe_stress": {
+    "executed": true,
+    "result": "PASS",
+    "iterations": 1000000,
+    "cancellation_requests": 750000,
+    "cancelled_before_dispatch_observed": 396304,
+    "executed_observed": 603696,
+    "accounting_loss": 0,
+    "boundedness_pass": true,
+    "elapsed_ms": 2627.853
+  },
+  "probe_benchmark": {
+    "executed": true,
+    "result": "PASS",
+    "rounds": 20,
+    "operations_per_round": 20000,
+    "median_ms": 52.257,
+    "p95_ms": 81.760,
+    "max_ms": 104.529,
+    "checksum": 412500,
+    "scope": "Task cancellation race probe bookkeeping and driver dispatch only"
+  },
+  "adapter_compile_surface": {
+    "executed": true,
+    "result": "PASS",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "scope": "AW37 adapter against structural stubs for existing authority/outcome/snapshot interfaces; not selected repository compile"
+  },
+  "actual_authority_regression": {
+    "authored": true,
+    "iterations": 5000,
+    "cancellation_requests": 3750,
+    "uses_real_lane3_unified_authority": true,
+    "uses_reschedule_fenced_playback_backend": true,
+    "uses_generation_coordinator": true,
+    "complete_selected_repository_execution": false,
+    "xcode_execution": false,
+    "result": "PENDING_SELECTED_EXECUTION"
+  },
+  "semantic_preservation": {
+    "aw34_fixed_window_changed": false,
+    "discrete_barrier_ordering_changed": false,
+    "recovery_semantics_changed": false,
+    "selected_aw31_tempo_route_changed": false,
+    "automatic_repeated_loop_seam_envelope_implemented": false
+  },
+  "external_gates": {
+    "avfaudio_runtime_executed": false,
+    "physical_iphone_executed": false,
+    "aw35_exact_device_latency_populated": false,
+    "rights_cleared_real_audio_executed": false,
+    "current_moises_differential_executed": false,
+    "human_listening_executed": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015"
+  ]
+}

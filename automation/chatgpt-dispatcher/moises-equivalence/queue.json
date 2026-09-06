@@ -1,0 +1,30 @@
+{
+  "schema_version": 5,
+  "project": "moises-equivalence",
+  "integration_branch": "tech/moises-separation",
+  "integration_pr": 4431,
+  "integration_epoch": 44,
+  "baseline_state": "EPOCH44_L1_A23_L2_AW49_L3_AW49_L4_W52_CANONICAL_PORTABLE_462_PLUS_L2_L3_FULL_SOURCE_TYPECHECK_PASS_EXTERNAL_DEVICE_GATES_PENDING",
+  "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
+  "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
+  "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
+  "worker_claiming": "DISABLED",
+  "history_archive": {"through_epoch": 35, "queue_blob_sha": "dc553e41bfa108e8b059ca2194533eadf8d2cba8", "source_commit": "b9f679611022c4c0c7132846892648ce9f3b6149", "path": "automation/chatgpt-dispatcher/moises-equivalence/queue.json"},
+  "recent_history": {
+    "epoch36": {"commit": "2560f9e23fe508b87c301888e000e2136a1b1292", "run": 33024055664, "run_number": 285, "result": "SUCCESS", "note": "Lane2 AW47 initial checkpoint; superseded by Epoch40 completion."},
+    "epoch37": {"commit": "25f3c00563a25a2f3dbdaa12084aea9cb34e59a1", "run": 33025265757, "run_number": 288, "result": "SUCCESS", "note": "Lane3 AW46 PCM identity metadata stability."},
+    "epoch38": {"commit": "bcb77038d7066afa57d7d8afe656be252fe187f6", "run": 33025464901, "run_number": 290, "result": "SUCCESS", "tests": 435, "unhandled": 342, "note": "Lane4 W49 durable bridge consumption ledger; custody hardening only."},
+    "epoch39": {"commit": "271a813c114a05e29bfade0fb0c977d6e9fa5247", "source_head": "30171464bbe9195c583a35d7c9a8ab2c070d860d", "run": 33025839683, "run_number": 292, "result": "SUCCESS", "note": "Lane3 AW47 streaming PCM identity; allocation/copy reduction only, no CPU speedup claim."},
+    "epoch40": {"commit": "121c3f8b1f495c691ad12116c07cce41d257e485", "source_head": "2110e9180daf00c7e03e3476c3dc12e32979e1c1", "run": 33025990535, "run_number": 294, "result": "SUCCESS", "note": "Lane2 AW47 final managed-path boundary completion."},
+    "epoch41": {"commit": "b90defce6f3f84a188037cfa8df0c6f3b0f1186e", "source_head": "50ae0896edd02413517defaec236df75b574f92f", "run": 33026135591, "run_number": 297, "result": "SUCCESS", "tests": 446, "unhandled": 347, "lane2_typecheck": "PASS", "lane3_typecheck": "PASS", "checked_merge_ref": "3ba7a1661f02a23b0bdd2842aee9414aa7d72619", "swift": "6.0.3", "target": "x86_64-unknown-linux-gnu", "note": "Lane4 W50 secure filesystem/crash recovery; physical-iPhone/APFS durability unobserved."},
+    "epoch42": {"commit": "0db4190b7768b47b368b34508eb916e6559197af", "source_head": "0f2d155db64d2a4e414143905eb73ae115b8158c", "run": 33028207865, "run_number": 311, "result": "SUCCESS", "lane2_typecheck": "PASS", "lane3_typecheck": "PASS", "note": "Lane3 AW48 rolling 16-word SHA-256 message schedule; NON_PARITY memory-layout hardening."},
+    "epoch43": {"commit": "0a6cbfb85b21c0d1e7afe176f3d831bf64a2b831", "lane2_source_head": "8ee3fbcf5b049dada154bd703518fc627c480456", "lane4_source_head": "583c129c16ec40e6f6db28de92e4123d00273d3b", "run": 33030267823, "run_number": 314, "result": "SUCCESS", "lane2_typecheck": "PASS", "lane3_typecheck": "PASS", "note": "Lane2 AW48 auxiliary managed-path authority plus Lane4 W51 concurrent writer serialization. Preserved intervening integration-only Worker3 status commit 5866cf17cefe95a16b3da5e5c184e3b37ddee9d2; direct Worker write to integration is a contract divergence, not source evidence."},
+    "epoch44": {"commit": "a93ef6b058db89fa57d8ee0a8064e5df019af331", "lane2_source_head": "69cacddd59c6432ddfe771cc2007e095b1566d7a", "lane3_source_head": "3df91be785116917814773a777f0a15da5b81568", "lane4_source_head": "7ac6b28ec8184689c41c1880e2daa6cf17abe2ae", "run": 33030546532, "run_number": 316, "result": "SUCCESS", "tests": 462, "unhandled": 359, "lane2_typecheck": "PASS", "lane3_typecheck": "PASS", "swift": "6.0.3", "target": "x86_64-unknown-linux-gnu", "note": "Lane2 AW49 Library lifecycle path authority, Lane3 AW49 Apple file-source identity fence, Lane4 W52 quiescent custody barrier. All portable gates PASS; no physical/current-Moises claim."}
+  },
+  "canonical_through": {"L1": "L1-A23", "L2": "L2-AW49", "L3": "L3-AW49", "L4": "L4-W52"},
+  "lane1_exact_audit": {"latest_worker_tip": "bdc6946907d47888140483e4964b2d905a4d1fc7", "latest_worker_bundle": "L1-A41", "exact_audit_tip": "6514ab8eea1570c18e75f012254db48c3a0418e6", "exact_audit_bundle": "L1-A40", "audit_run": 33028113833, "tool_version": "L1-A26-v5", "unittest_discovery": {"tests": 767, "failures": 0, "errors": 1, "skipped": 0, "result": "FAIL"}, "resolved_error": "test_rights_gate Python 3.12 dynamic import/dataclass sys.modules ordering", "remaining_error": "test_differential_gate imports a process-global fake differential_common left by test_differential_execute_resume.py; fake exposes validate_run but not validate_plan", "a41_blocker_fix_observed": false, "decision": "DEFER_A24_A41_KEEP_L1_A23_CANONICAL"},
+  "validation": {"epoch44": {"run": 33030546532, "run_number": 316, "result": "SUCCESS", "test_count": 462, "unhandled_file_count": 359, "lane2_io_library_typecheck": "PASS", "lane3_playback_dsp_typecheck": "PASS", "swift": "6.0.3", "target": "x86_64-unknown-linux-gnu"}, "scope_note": "Portable Linux evidence does not prove Apple runtime, selected Xcode/AVFAudio, physical iPhone, APFS crash durability, rights-cleared real audio, or current-Moises differential behavior."},
+  "parity": {"promotion_count": 0, "state": "ALL_CURRENT_IPHONE_IN_SCOPE_ROWS_REMAIN_MISSING"},
+  "external_blockers": ["production credentials and live runtime", "commercial/privacy/output-use approvals", "rights-cleared real/generated audio corpus", "current-iPhone Moises differential/reference capture", "blind listening", "Apple Core Data/APFS/Files/File Provider/codec runtime", "selected Xcode/AVFAudio build", "physical-iPhone performance/audio evidence"],
+  "late_integration_gate": {"owner": "HQ", "required": ["Shared/App adapters", "integrated iOS compile", "cross-feature regression", "real-device/real-audio evidence", "current-Moises differential", "PARITY finalization"]}
+}

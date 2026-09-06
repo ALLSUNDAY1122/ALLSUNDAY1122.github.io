@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/moises/commercial-route-approval-private.schema.json",
+  "title": "L1-E01 private commercial route approval manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","evidence_state","approval_state","provider","credentials","terms","operational_terms"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "approval_state": {"const": "APPROVED"},
+    "provider": {
+      "type": "object", "additionalProperties": false,
+      "required": ["provider_id","provider_kind","account_tier","service_region","capability_snapshot"],
+      "properties": {
+        "provider_id": {"type":"string","minLength":1},
+        "provider_kind": {"type":"string","minLength":1},
+        "account_tier": {"type":"string","minLength":1},
+        "service_region": {"type":"string","minLength":1},
+        "capability_snapshot": {
+          "type":"object", "additionalProperties":false,
+          "required":["captured_at","document_path","sha256","models"],
+          "properties": {
+            "captured_at":{"type":"string","minLength":1},
+            "document_path":{"type":"string","minLength":1},
+            "sha256":{"type":"string","pattern":"^(?:sha256:)?[0-9a-fA-F]{64}$"},
+            "models":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["model_name","model_version","quality_profile","canonical_roles"],"properties":{"model_name":{"type":"string","minLength":1},"model_version":{"type":"string","minLength":1},"quality_profile":{"type":"string","minLength":1},"canonical_roles":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}}}}}
+          }
+        }
+      }
+    },
+    "credentials": {
+      "type":"object","additionalProperties":false,
+      "required":["environment_names","server_side_only","client_distribution_prohibited"],
+      "properties": {
+        "environment_names":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","pattern":"^[A-Z_][A-Z0-9_]*$"}},
+        "server_side_only":{"const":true},
+        "client_distribution_prohibited":{"const":true}
+      }
+    },
+    "terms": {
+      "type":"object","additionalProperties":false,
+      "required":["commercial_use","privacy_retention","confidentiality","output_use","pricing"],
+      "properties": {
+        "commercial_use":{"$ref":"#/$defs/termReference"},
+        "privacy_retention":{"$ref":"#/$defs/termReference"},
+        "confidentiality":{"$ref":"#/$defs/termReference"},
+        "output_use":{"$ref":"#/$defs/termReference"},
+        "pricing":{"$ref":"#/$defs/termReference"}
+      }
+    },
+    "operational_terms": {
+      "type":"object","additionalProperties":false,
+      "required":["consumer_app_commercial_use_allowed","input_confidential","output_commercial_use_allowed","output_export_to_end_user_allowed","provider_training_on_user_content_allowed","data_region","uploaded_asset_retention_seconds","output_url_ttl_seconds","delete_api_available","delete_confirmation_semantics","pricing"],
+      "properties": {
+        "consumer_app_commercial_use_allowed":{"const":true},
+        "input_confidential":{"const":true},
+        "output_commercial_use_allowed":{"const":true},
+        "output_export_to_end_user_allowed":{"const":true},
+        "provider_training_on_user_content_allowed":{"const":false},
+        "data_region":{"type":"string","minLength":1},
+        "uploaded_asset_retention_seconds":{"type":["integer","null"],"minimum":1},
+        "output_url_ttl_seconds":{"type":["integer","null"],"minimum":1},
+        "delete_api_available":{"type":"boolean"},
+        "delete_confirmation_semantics":{"enum":["NOT_AVAILABLE","SYNC_CONFIRMED","ASYNC_CONFIRMED"]},
+        "pricing":{"type":"object","additionalProperties":false,"required":["currency","billing_unit","unit_price","minimum_charge"],"properties":{"currency":{"type":"string","pattern":"^[A-Za-z]{3}$"},"billing_unit":{"enum":["AUDIO_SECOND","AUDIO_MINUTE","AUDIO_HOUR","JOB","CREDIT"]},"unit_price":{"type":"string","pattern":"^(?:0|[1-9][0-9]*)(?:\\.[0-9]{1,12})?$"},"minimum_charge":{"type":"string","pattern":"^(?:0|[1-9][0-9]*)(?:\\.[0-9]{1,12})?$"}}}
+      }
+    }
+  },
+  "$defs": {
+    "termReference": {
+      "type":"object","additionalProperties":false,
+      "required":["record_id","document_path","sha256","effective_date","expires_date"],
+      "properties": {
+        "record_id":{"type":"string","minLength":1},
+        "document_path":{"type":"string","minLength":1},
+        "sha256":{"type":"string","pattern":"^(?:sha256:)?[0-9a-fA-F]{64}$"},
+        "effective_date":{"type":"string","format":"date"},
+        "expires_date":{"type":["string","null"],"format":"date"}
+      }
+    }
+  }
+}

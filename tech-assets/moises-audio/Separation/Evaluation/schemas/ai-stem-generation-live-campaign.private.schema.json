@@ -1,0 +1,7 @@
+{
+  "$id":"ai-stem-generation-live-campaign.private.schema.json","$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+  "$defs":{"file":{"type":"object","additionalProperties":false,"required":["path","sha256"],"properties":{"path":{"type":"string","minLength":1},"sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}}},
+  "required":["schema_version","private","plan","capability","current_iphone_surface","runtime_descriptor","entitlement_observations","runs","differentials","recovery_scenarios"],
+  "properties":{"schema_version":{"const":1},"private":{"const":true},"plan":{"$ref":"#/$defs/file"},"capability":{"$ref":"#/$defs/file"},"current_iphone_surface":{"$ref":"#/$defs/file"},"runtime_descriptor":{"$ref":"#/$defs/file"},"entitlement_observations":{"type":"array","items":{"$ref":"#/$defs/file"}},"runs":{"type":"array","items":{"$ref":"#/$defs/file"}},"differentials":{"type":"array","items":{"$ref":"#/$defs/file"}},"recovery_scenarios":{"type":"array","items":{"$ref":"#/$defs/file"}}},
+  "title":"Lane 1 A22 Private Live Campaign Index"
+}

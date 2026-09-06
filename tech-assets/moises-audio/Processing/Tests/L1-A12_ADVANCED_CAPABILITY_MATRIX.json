@@ -1,0 +1,44 @@
+{
+  "wave": "L1-A12",
+  "result": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "scenarios": [
+    {"id":"catalog-required-families","expected":"PASS","covers":["guitar","piano_keys","strings","winds"]},
+    {"id":"reference-floor-guitar-only","expected":"PASS","rule":"guitar is directly confirmed; piano_keys/strings/winds remain unverified current-iPhone"},
+    {"id":"professional-modules-ontology-only","expected":"PASS","covers":["lead_vocals","backing_vocals","electric_guitar","acoustic_guitar","acoustic_piano","other_excluding_guitar"]},
+    {"id":"provider-model-live-discovery","expected":"PASS","rule":"GET /models access=enabled plus wav output required"},
+    {"id":"request-access-gated","expected":"FAIL_CLOSED"},
+    {"id":"non-wav-provider-model","expected":"FAIL_CLOSED"},
+    {"id":"duplicate-provider-model","expected":"FAIL_CLOSED"},
+    {"id":"invalid-provider-model-id","expected":"FAIL_CLOSED"},
+    {"id":"advanced-role-normalization","expected":"PASS","mapping":{"keys":"piano_keys","wind":"winds"}},
+    {"id":"aggregate-substem-overlap","expected":"FAIL_CLOSED","examples":["guitar+electric_guitar","vocals+lead_vocals","piano_keys+acoustic_piano"]},
+    {"id":"target-limit","expected":"FAIL_CLOSED"},
+    {"id":"output-model-missing-extra","expected":"FAIL_CLOSED"},
+    {"id":"output-model-duplicate","expected":"FAIL_CLOSED"},
+    {"id":"preflight-discovery-before-upload","expected":"PASS"},
+    {"id":"disabled-model-never-posted","expected":"PASS"},
+    {"id":"enabled-advanced-model-post","expected":"PASS"},
+    {"id":"canonical-role-ingress","expected":"PASS","rule":"A06-facing adapter accepts canonical roles; vendor model IDs exist only at provider POST boundary"},
+    {"id":"canonical-role-egress","expected":"PASS","rule":"provider task output model IDs normalize back to canonical roles before A06 observes them"},
+    {"id":"unknown-provider-output-model","expected":"FAIL_CLOSED"},
+    {"id":"canonical-metadata-preserved","expected":"PASS"},
+    {"id":"hifi-not-inferred","expected":"PASS","provider_quality_modes":["standard"]},
+    {"id":"discovery-error","expected":"FAIL_CLOSED"},
+    {"id":"corrupt-capability-catalog","expected":"FAIL_CLOSED"}
+  ],
+  "machine_tests": {
+    "test_files": [
+      "tech-assets/moises-audio/Separation/Tests/test_advanced_capabilities.py",
+      "tech-assets/moises-audio/Separation/Tests/test_canonical_advanced_provider.py"
+    ],
+    "tests": 37,
+    "failures": 0
+  },
+  "external_gaps": [
+    "production AudioShake credential/account GET /models evidence",
+    "authoritative current-iPhone full custom instrument and lock map",
+    "Moises-equivalent Hi-Fi provider mapping and live quality evidence",
+    "real-audio differential evidence for P004/P005"
+  ]
+}

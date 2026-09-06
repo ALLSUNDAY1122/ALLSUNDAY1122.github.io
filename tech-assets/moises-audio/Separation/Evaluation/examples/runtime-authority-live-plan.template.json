@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "gate_id": "REPLACE_WITH_GATE_ID",
+  "route_id": "REPLACE_WITH_E07_ROUTE_ID",
+  "route_kind": "LICENSED_LOCAL_INFERENCE_SDK",
+  "scenarios": [
+    "INPUT_INTERRUPTION",
+    "CANCEL_PRE_START",
+    "CANCEL_EXECUTING",
+    "CANCEL_FINALIZING",
+    "AMBIGUOUS_START_RETRY",
+    "RELAUNCH",
+    "OUTPUT_AVAILABILITY_LOSS",
+    "CAPACITY_LIMIT",
+    "LONG_TRACK",
+    "STORAGE_PRESSURE"
+  ],
+  "policy": {
+    "maximum_non_cancel_degraded_fraction": 0.10,
+    "require_capacity_attestation": true,
+    "engineering_policy_not_reference_fact": true
+  }
+}

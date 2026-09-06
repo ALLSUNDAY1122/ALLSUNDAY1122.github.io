@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "policy_id": "REPLACE-HQ-GOLDEN-POLICY",
+  "minimum_fixture_count_by_group": {"G1": 2, "G2": 2},
+  "minimum_distinct_genres": 3,
+  "minimum_distinct_genres_by_group": {"G1": 2, "G2": 2},
+  "duration_buckets": [
+    {"id": "short", "min_seconds": 0.001, "max_seconds_exclusive": 90.0},
+    {"id": "medium", "min_seconds": 90.0, "max_seconds_exclusive": 300.0},
+    {"id": "long", "min_seconds": 300.0, "max_seconds_exclusive": null}
+  ],
+  "required_duration_buckets": ["short", "medium", "long"],
+  "minimum_duration_buckets_by_group": {"G1": 2, "G2": 2},
+  "required_role_sets": [
+    {
+      "id": "free-core-4stem",
+      "roles": ["vocals", "drums", "bass", "other"],
+      "groups": ["G1", "G2"]
+    }
+  ],
+  "minimum_distinct_production_buckets": 3,
+  "minimum_distinct_production_buckets_by_group": {"G1": 2, "G2": 2},
+  "required_production_buckets": [],
+  "required_hard_cases": [],
+  "minimum_distinct_hard_cases": 2,
+  "reference_submission_required_groups": ["G2"],
+  "metadata_duration_tolerance_ms": 20.0,
+  "g1_reference_alignment_tolerance_ms": 20.0,
+  "reject_duplicate_mixture_audio": true
+}

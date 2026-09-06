@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "live-processing-recovery-evidence.schema.json",
+  "title": "Lane 1 E05 Live Processing Recovery Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "tool_version", "evidence_kind", "evidence_state", "recovery_state",
+    "parity_claim", "recovery_campaign_id", "source_evidence", "checks", "scenarios",
+    "privacy", "e05_live_recovery_lock_sha256", "parity_reason"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"const": "L1-E05-v1"},
+    "evidence_kind": {"const": "LIVE_PROCESSING_RECOVERY"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "recovery_state": {"enum": ["READY_FOR_HQ_E05_LIVE_REVIEW", "LIVE_RECOVERY_FAILED"]},
+    "parity_claim": {"const": "NONE"},
+    "recovery_campaign_id": {"type": "string", "minLength": 1},
+    "source_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_sha256", "e01_evidence_sha256", "e03_evidence_sha256", "e01_approval_identity_sha256", "e03_live_benchmark_lock_sha256"],
+      "properties": {
+        "plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "e01_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "e03_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "e01_approval_identity_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "e03_live_benchmark_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "checks": {"type": "object"},
+    "scenarios": {"type": "array", "minItems": 10, "maxItems": 10, "items": {"type": "object"}},
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["credential_values_emitted", "provider_task_ids_emitted", "provider_asset_ids_emitted", "private_paths_emitted", "raw_account_evidence_emitted", "raw_audio_emitted"],
+      "properties": {
+        "credential_values_emitted": {"const": false},
+        "provider_task_ids_emitted": {"const": false},
+        "provider_asset_ids_emitted": {"const": false},
+        "private_paths_emitted": {"const": false},
+        "raw_account_evidence_emitted": {"const": false},
+        "raw_audio_emitted": {"const": false}
+      }
+    },
+    "e05_live_recovery_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "parity_reason": {"type": "string", "minLength": 1}
+  }
+}

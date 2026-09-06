@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "generic-route-decision-evidence.schema.json",
+  "title": "Lane 1 E09 Generic Route Decision Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","tool_version","evidence_kind","evidence_state","decision_state","parity_claim","decision_id","policy","routes","decision_identity_sha256","fallback_order","supported_evidence_paths","privacy","parity_reason","e09_route_decision_lock_sha256"],
+  "properties": {
+    "schema_version": {"const":1},
+    "tool_version": {"const":"L1-E09-v1"},
+    "evidence_kind": {"const":"GENERIC_ROUTE_DECISION"},
+    "evidence_state": {"const":"NON_PARITY_EVIDENCE_ONLY"},
+    "decision_state": {"enum":["NO_ACCEPTABLE_ROUTE","PENDING_EXTERNAL_EVIDENCE","PRIMARY_SELECTED","MULTIPLE_ACCEPTABLE_ROUTES"]},
+    "parity_claim": {"const":"NONE"},
+    "decision_id": {"type":"string"},
+    "policy": {"type":"object"},
+    "routes": {"type":"array","minItems":1},
+    "decision_identity_sha256": {"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "fallback_order": {"type":"array"},
+    "supported_evidence_paths": {"const":["LEGACY_E06_HOSTED","GENERIC_E07_E08"]},
+    "privacy": {"type":"object"},
+    "parity_reason": {"type":"string"},
+    "e09_route_decision_lock_sha256": {"type":"string","pattern":"^[0-9a-f]{64}$"}
+  }
+}

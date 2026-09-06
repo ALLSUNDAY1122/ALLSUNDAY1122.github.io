@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "provider-fallback-substitution-plan.schema.json",
+  "title": "Lane 1 E07 Provider Fallback Substitution Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_state",
+    "parity_claim",
+    "substitution_id",
+    "replaced_route_id",
+    "selected_fallback_kind",
+    "fallback_order"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "parity_claim": {"const": "NONE"},
+    "substitution_id": {"type": "string", "minLength": 1},
+    "replaced_route_id": {"type": "string", "minLength": 1},
+    "selected_fallback_kind": {
+      "enum": [
+        "LICENSED_LOCAL_INFERENCE_SDK",
+        "ALTERNATE_WRITTEN_COMMERCIAL_PROVIDER",
+        "PROJECT_OWNED_MODEL_IF_RIGHTS_CLEARED_TRAINING_DATA_AVAILABLE"
+      ]
+    },
+    "fallback_order": {
+      "const": [
+        "LICENSED_LOCAL_INFERENCE_SDK",
+        "ALTERNATE_WRITTEN_COMMERCIAL_PROVIDER",
+        "PROJECT_OWNED_MODEL_IF_RIGHTS_CLEARED_TRAINING_DATA_AVAILABLE"
+      ]
+    }
+  }
+}

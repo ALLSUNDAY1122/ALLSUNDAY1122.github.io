@@ -1,0 +1,6 @@
+{
+  "$id":"ai-stem-generation-differential.private.schema.json","$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+  "required":["schema_version","evidence_kind","project_run_id","source_sha256","settings_sha256","target_role","generation_mode","reference_platform","blind_review","usability_delta_project_minus_reference","material_inferiority_detected","reference_capture_sha256","review_evidence_sha256"],
+  "properties":{"schema_version":{"const":1},"evidence_kind":{"const":"AI_STEM_GENERATION_DIFFERENTIAL"},"project_run_id":{"type":"string","minLength":1},"source_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"settings_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"target_role":{"type":"string","minLength":1},"generation_mode":{"type":"string","minLength":1},"reference_platform":{"const":"CURRENT_IPHONE_MOISES"},"blind_review":{"const":true},"usability_delta_project_minus_reference":{"type":"number","minimum":-4,"maximum":4},"material_inferiority_detected":{"type":"boolean"},"reference_capture_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"review_evidence_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}},
+  "title":"Lane 1 A22 Private Current-iPhone Differential Review"
+}

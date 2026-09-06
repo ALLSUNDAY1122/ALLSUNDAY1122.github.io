@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW39",
+  "title": "Selected Lease Generation Stamping",
+  "result": "COMPLETE_NON_PARITY",
+  "canonical_audit": {
+    "integration_epoch_observed": 27,
+    "assignment_epoch": 2,
+    "planning_revision": 4,
+    "epoch_contract_sha": "c9e8ec5d191108db6eb20fbd40db0dab3c46b725",
+    "ownership_changed": false,
+    "rebase_required": false,
+    "worker_branch_base_head": "f08b318bf7cb6852d82114c34baa4197f5635d81",
+    "parity_promotions_observed": 0
+  },
+  "implementation": {
+    "shared_lease_captures_slot_generation": true,
+    "replacement_waits_for_inflight_lease_drain": true,
+    "stamped_seek_api": true,
+    "stamped_loop_api": true,
+    "legacy_seek_delegates_to_stamped_path": true,
+    "legacy_loop_delegates_to_stamped_path": true,
+    "aw38_lease_stamped_bridge": true,
+    "nonexecuted_outcome_fabricated_as_executed": false,
+    "shared_app_modified": false,
+    "parity_matrix_modified": false,
+    "parity_promotion_allowed": false
+  },
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "swift_language_mode": 6,
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true
+  },
+  "portable_structural_race": {
+    "result": "PASS",
+    "scenario": "shared operation holds generation 1 while replacement requests exclusivity, replacement advances to generation 2 only after lease drain",
+    "stamped_generation": 1,
+    "current_generation_after_replacement": 2,
+    "first_compile_test_only_issues_detected": true,
+    "first_compile_test_only_issues": [
+      "@main required parse-as-library compiler mode",
+      "await cannot appear inside precondition autoclosure"
+    ],
+    "issues_fixed": true
+  },
+  "swift_member_await_compile": {
+    "result": "PASS",
+    "expression_shape": "try await asyncCall().member"
+  },
+  "selected_repository_tests": {
+    "aw39_selected_lease_generation_self_test_authored": true,
+    "generation1_seek_then_generation2_reconstruction_case": true,
+    "aw38_post_reconstruction_old_seek_correlation_case": true,
+    "generation2_loop_disable_case": true,
+    "nonexecuted_negative_case": true,
+    "complete_selected_swiftpm_execution": false,
+    "xcode_execution": false,
+    "avfaudio_runtime_execution": false
+  },
+  "external_gates": {
+    "physical_iphone_executed": false,
+    "validated_physical_audible_marker": false,
+    "rights_cleared_real_audio_executed": false,
+    "current_moises_differential_executed": false,
+    "human_listening_executed": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015"
+  ]
+}

@@ -1,0 +1,108 @@
+name: Moises HQ Lane2 Inventory Authority
+
+on:
+  push:
+    branches:
+      - tech/moises-separation
+    paths:
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactInventory*.swift'
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactCompatibilityCensus.swift'
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedStreamingTraversal.swift'
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedBoundedMutation.swift'
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedRuntime.swift'
+      - 'tech-assets/moises-audio/Library/Sources/LibraryDescriptorRelativeIO.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryDescriptorAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryFreshActivationNodeKindTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactCompatibilityCensusPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactSegmentedStreamingTraversalTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
+      - '.github/workflows/moises-hq-l2-inventory-authority.yml'
+  pull_request:
+    paths:
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactInventory*.swift'
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactCompatibilityCensus.swift'
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedStreamingTraversal.swift'
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedBoundedMutation.swift'
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedRuntime.swift'
+      - 'tech-assets/moises-audio/Library/Sources/LibraryDescriptorRelativeIO.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryDescriptorAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryFreshActivationNodeKindTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactCompatibilityCensusPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactSegmentedStreamingTraversalTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
+      - '.github/workflows/moises-hq-l2-inventory-authority.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: moises-hq-l2-inventory-authority-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  portable-inventory-path-authority-xctest:
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.0
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: Execute Lane 2 inventory path and descriptor authority regressions
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp=/tmp/l2-inventory-authority-xctest
+          rm -rf "$tmp"
+          mkdir -p "$tmp/Sources/Lane2Inventory/Shared" "$tmp/Sources/Lane2Inventory/IO" "$tmp/Sources/Lane2Inventory/Library" "$tmp/Tests/Lane2InventoryTests"
+          cp Shared/DomainContracts.swift Shared/LibraryContracts.swift "$tmp/Sources/Lane2Inventory/Shared/"
+          cp IO/Sources/*.swift "$tmp/Sources/Lane2Inventory/IO/"
+          cp Library/Sources/*.swift "$tmp/Sources/Lane2Inventory/Library/"
+
+          inventory="$tmp/Tests/Lane2InventoryTests/ManagedArtifactInventoryPathAuthorityTests.swift"
+          printf '@testable import Lane2Inventory\n' > "$inventory"
+          cat Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift >> "$inventory"
+
+          descriptor_authority="$tmp/Tests/Lane2InventoryTests/ManagedArtifactInventoryDescriptorAuthorityTests.swift"
+          printf '@testable import Lane2Inventory\n' > "$descriptor_authority"
+          cat Library/Tests/ManagedArtifactInventoryDescriptorAuthorityTests.swift >> "$descriptor_authority"
+
+          fresh_activation="$tmp/Tests/Lane2InventoryTests/ManagedArtifactInventoryFreshActivationNodeKindTests.swift"
+          printf '@testable import Lane2Inventory\n' > "$fresh_activation"
+          cat Library/Tests/ManagedArtifactInventoryFreshActivationNodeKindTests.swift >> "$fresh_activation"
+
+          census="$tmp/Tests/Lane2InventoryTests/ManagedArtifactCompatibilityCensusPathAuthorityTests.swift"
+          printf '@testable import Lane2Inventory\n' > "$census"
+          cat Library/Tests/ManagedArtifactCompatibilityCensusPathAuthorityTests.swift >> "$census"
+
+          descriptor="$tmp/Tests/Lane2InventoryTests/LibraryDescriptorRelativeIOTests.swift"
+          printf '@testable import Lane2Inventory\n' > "$descriptor"
+          cat Library/Tests/LibraryDescriptorRelativeIOTests.swift >> "$descriptor"
+
+          traversal="$tmp/Tests/Lane2InventoryTests/ManagedArtifactSegmentedStreamingTraversalTests.swift"
+          printf '@testable import Lane2Inventory\n' > "$traversal"
+          cat Library/Tests/ManagedArtifactSegmentedStreamingTraversalTests.swift >> "$traversal"
+
+          cat > "$tmp/Package.swift" <<'SWIFT'
+          // swift-tools-version: 6.0
+          import PackageDescription
+
+          let package = Package(
+              name: "Lane2InventoryAuthorityCI",
+              targets: [
+                  .target(name: "Lane2Inventory", path: "Sources/Lane2Inventory"),
+                  .testTarget(
+                      name: "Lane2InventoryTests",
+                      dependencies: ["Lane2Inventory"],
+                      path: "Tests/Lane2InventoryTests"
+                  )
+              ]
+          )
+          SWIFT
+          swift test --package-path "$tmp" --parallel

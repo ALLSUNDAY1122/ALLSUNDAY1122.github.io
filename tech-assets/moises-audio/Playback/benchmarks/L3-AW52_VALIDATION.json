@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW52",
+  "title": "Candidate Physical Resource Trace",
+  "result": "COMPLETE_NON_PARITY",
+  "canonical_audit": {
+    "notion_canonical_epoch_observed": 44,
+    "notion_lane3_integrated_through": "L3-AW49",
+    "integration_head_initial": "6579cf4280c926387dfd00dd63345d4f4147be4d",
+    "integration_head_final": "0fea2b5f2db390cb1dc45ea9a9899d47ac549719",
+    "integration_final_commit_message": "moises hq epoch45 integrate L1 A42 L2 AW50 L3 AW50 L4 W54",
+    "integration_lane3_final_integrated_through": "L3-AW50",
+    "notion_git_integration_epoch_skew_observed": true,
+    "worker_branch_start_head": "fdfc82c251ce4486f38a1fb7e266fe5a4614b0da",
+    "aw51_aw52_pending_hq_late_integration": true,
+    "parity_rows_remain_missing": [
+      "MOI-P006", "MOI-P007", "MOI-P008", "MOI-P010",
+      "MOI-P012", "MOI-P014", "MOI-P015", "MOI-P021"
+    ]
+  },
+  "implementation": {
+    "portable_core": "Playback/Sources/Lane3CandidatePhysicalResourceTrace.swift",
+    "selected_apple_sampler": "Playback/Sources/AppleCandidatePhysicalResourceSampler.swift",
+    "recommended_sampling_interval_seconds": 15,
+    "minimum_duration_seconds": 1800,
+    "minimum_samples": 60,
+    "maximum_sampling_gap_seconds": 30,
+    "session_identifier_policy": "non-empty, <=128 UTF-8 bytes, already trimmed; noncanonical IDs fail before iOS battery monitoring begins",
+    "candidate_rss_surface": "task_info(mach_task_self_, MACH_TASK_BASIC_INFO).resident_size",
+    "thermal_surface": "ProcessInfo.thermalState",
+    "battery_surface": "UIDevice batteryLevel/batteryState with monitoring enabled",
+    "artifact_digest_surface": "CryptoKit SHA256 on selected iOS",
+    "current_moises_process_rss_collected": false
+  },
+  "focused_verification": {
+    "swift": "6.2.1",
+    "platform": "Linux x86_64",
+    "flags": ["-swift-version 6", "-strict-concurrency=complete", "-warnings-as-errors", "-O"],
+    "stable_trace_pass": true,
+    "stable_sample_count": 121,
+    "stable_duration_seconds": 1800,
+    "stable_maximum_gap_seconds": 15,
+    "stable_peak_rss_bytes": 200491520,
+    "thermal_counts": {
+      "nominal": 31,
+      "fair": 30,
+      "serious": 30,
+      "critical": 30
+    },
+    "canonical_artifact_bytes": 3214,
+    "canonical_artifact_fnv1a64": "14041105997891895343",
+    "canonical_artifact_sha256_independent": "1fab95e460f8f53a2130d2be6a082d36d172b6cd8b5e1eef68b084419ba75cca",
+    "sha_crosscheck": "Python hashlib and Swift-produced artifact sha256sum matched",
+    "stress_valid_cells": 300,
+    "stress_rejected_cells": 482,
+    "stress_rejection_breakdown": {
+      "external_power_positions": 121,
+      "non_monotonic_uptime_positions": 120,
+      "sampling_gap_over_30s_positions": 120,
+      "invalid_battery_positions": 121
+    },
+    "session_binding_rejections": [
+      "empty",
+      "leading whitespace",
+      "trailing whitespace",
+      "leading newline",
+      "129-byte identifier"
+    ],
+    "portable_benchmark_iterations": 5000,
+    "portable_benchmark_elapsed_seconds_one_run": 0.40984624900011113,
+    "portable_benchmark_microseconds_per_trace_one_run": 81.96924980002223,
+    "physical_performance_claim": false
+  },
+  "repository_native_artifacts": [
+    "Playback/Tests/L3_AW52_CandidatePhysicalResourceTraceSelfTest.swift",
+    "Playback/Tests/L3_AW52_CandidatePhysicalResourceTraceStress.swift",
+    "Playback/Tests/L3_AW52_CandidatePhysicalResourceTraceBenchmark.swift",
+    "Playback/Tests/L3_AW52_SessionBindingSelfTest.swift",
+    "Playback/benchmarks/L3-AW52_CANDIDATE_PHYSICAL_RESOURCE_TRACE.md"
+  ],
+  "source_and_evidence_commits_before_this_validation_update": [
+    "8925d7f892fa40084ae8c06d4b0c80de2677173d",
+    "8bc0d9db06ec30d875cc274a6e06c92aa9e0e273",
+    "76c777a096c0bb700254b04b58b6b314ea4a2692",
+    "06531bdaf3718f9fa29ddb06164864ad9745684e",
+    "b2cbb58a9e03ea97eac6e3fefd9656255488cb78",
+    "992bfcd15b2fa912136cda966ce3352763d874a6",
+    "553c11c5c0593b89e666453f57f24bc1da242c29",
+    "1cdf6500c7597d55b9240f5387a63bd63a999f52",
+    "47f51d5b2fdf8a0607c1b27c874b1d9409c35c4c",
+    "fac716be1e6652306d7baacb6760267314dd8167",
+    "23e287bdf61eaa478a3fba7fd7630a71cfd4a40c",
+    "e79bbfce0024d5559a9db86305e89e17be3ea10c",
+    "79d912c4f291690edb72ca5115063ec00e61e91d"
+  ],
+  "limitations": [
+    "Selected-iOS source was authored but not compiled against Xcode/iOS SDK in the Worker environment.",
+    "No physical iPhone RSS, thermal, battery, audio, current-Moises or listening evidence was collected.",
+    "UIDevice battery level is the public device estimate; AW52 does not claim high-resolution battery-energy instrumentation.",
+    "AW52 measures only the candidate process RSS and does not inspect or fabricate the third-party Moises process RSS.",
+    "Battery monitoring state is restored on successful finish or explicit cancel; host lifecycle must call cancel on abort.",
+    "Post-AW52 full Lane3 strict typecheck and repository-native test execution remain for HQ Apple/CI integration.",
+    "Notion still reported Epoch44 while GitHub integration had advanced to Epoch45 during final audit; GitHub actual state therefore superseded the stale integration observation for this validation record.",
+    "P021 and all other parity rows remain unpromoted."
+  ],
+  "parity_promotion_allowed": false
+}

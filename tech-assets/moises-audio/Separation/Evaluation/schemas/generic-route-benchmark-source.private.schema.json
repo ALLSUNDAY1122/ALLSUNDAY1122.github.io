@@ -1,0 +1,12 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"generic-route-benchmark-source.private.schema.json",
+  "title":"Lane 1 E10 Private Benchmark Source",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","evidence_kind","evidence_state","parity_claim","route_id","route_kind","runtime_artifact_sha256","runs"],
+  "properties":{
+    "schema_version":{"const":1},"evidence_kind":{"const":"GENERIC_ROUTE_BENCHMARK_SOURCE"},"evidence_state":{"const":"NON_PARITY_EVIDENCE_ONLY"},"parity_claim":{"const":"NONE"},
+    "route_id":{"type":"string"},"route_kind":{"enum":["LICENSED_LOCAL_INFERENCE_SDK","ALTERNATE_WRITTEN_COMMERCIAL_PROVIDER","PROJECT_OWNED_MODEL_IF_RIGHTS_CLEARED_TRAINING_DATA_AVAILABLE"]},"runtime_artifact_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "runs":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["run_id","mode_class","success","retry_count","execution_total_ms","cost_total","cost_currency","g1_objective_evaluable","g1_objective_pass","source_evidence_path","source_evidence_sha256"],"properties":{"run_id":{"type":"string"},"mode_class":{"type":"string"},"success":{"type":"boolean"},"retry_count":{"type":"integer","minimum":0},"execution_total_ms":{"type":"number","minimum":0},"cost_total":{"type":"number","minimum":0},"cost_currency":{"type":"string","minLength":3,"maxLength":3},"g1_objective_evaluable":{"type":"boolean"},"g1_objective_pass":{"type":"boolean"},"source_evidence_path":{"type":"string"},"source_evidence_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}}}
+  }
+}

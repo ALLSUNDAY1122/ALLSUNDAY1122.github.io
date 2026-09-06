@@ -1,0 +1,6 @@
+{
+  "$id":"ai-stem-generation-runtime-receipt.schema.json","$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+  "required":["schema_version","tool_version","evidence_kind","evidence_state","parity_claim","runtime_id","authority_kind","runtime_identity_sha256","runtime_descriptor_sha256","capability_snapshot_sha256","operation","operation_state","generation","privacy","receipt_sha256"],
+  "properties":{"schema_version":{"const":1},"tool_version":{"const":"L1-A22-v1"},"evidence_kind":{"const":"AI_STEM_GENERATION_RUNTIME_RECEIPT"},"evidence_state":{"const":"NON_PARITY_EVIDENCE_ONLY"},"parity_claim":{"const":"NONE"},"runtime_id":{"type":"string","minLength":1},"authority_kind":{"enum":["HOSTED_PROVIDER_ACCOUNT","LOCAL_RUNTIME","PROJECT_OWNED_RUNTIME"]},"runtime_identity_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"runtime_descriptor_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"capability_snapshot_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"operation":{"type":"string","minLength":1},"operation_state":{"type":"string","minLength":1},"generation":{"type":"object"},"privacy":{"type":"object"},"receipt_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}},
+  "title":"Lane 1 A22 AI Stem Generation Runtime Receipt"
+}

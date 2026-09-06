@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "project_id": "11111111-1111-4111-8111-111111111111",
+  "job_id": "22222222-2222-4222-8222-222222222222",
+  "provider": {
+    "id": "provider-run-id",
+    "kind": "SERVER_API",
+    "model_name": "four-stem",
+    "model_version": "provider-version"
+  },
+  "quality_profile": "standard",
+  "requested_roles": ["vocals", "drums", "bass", "other"],
+  "timing_ms": {
+    "upload": 0,
+    "queue": 0,
+    "inference": 0,
+    "download": 0
+  },
+  "cost": {
+    "currency": "USD",
+    "total": 0,
+    "units": 0,
+    "unit_name": "credits",
+    "basis": "replace with actual provider telemetry/invoice basis",
+    "is_actual": false
+  },
+  "retention": {
+    "vendor_asset_expires_at": "2026-08-25T09:00:00Z",
+    "vendor_output_expires_at": "2026-08-22T10:00:00Z",
+    "vendor_delete_requested_at": null,
+    "vendor_delete_confirmed_at": null,
+    "local_policy": "untilProjectDelete",
+    "local_expires_at": null
+  },
+  "outputs": [
+    {
+      "stem_id": "33333333-3333-4333-8333-333333333333",
+      "role": "vocals",
+      "download_url": "https://vendor.example/replace-with-live-vocals.wav",
+      "expires_at": "2026-08-22T10:00:00Z",
+      "container": "wav",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frame_count": 441000,
+      "duration_seconds": 10,
+      "expected_byte_count": null,
+      "expected_sha256": null
+    },
+    {
+      "stem_id": "44444444-4444-4444-8444-444444444444",
+      "role": "drums",
+      "download_url": "https://vendor.example/replace-with-live-drums.wav",
+      "expires_at": "2026-08-22T10:00:00Z",
+      "container": "wav",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frame_count": 441000,
+      "duration_seconds": 10,
+      "expected_byte_count": null,
+      "expected_sha256": null
+    },
+    {
+      "stem_id": "55555555-5555-4555-8555-555555555555",
+      "role": "bass",
+      "download_url": "https://vendor.example/replace-with-live-bass.wav",
+      "expires_at": "2026-08-22T10:00:00Z",
+      "container": "wav",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frame_count": 441000,
+      "duration_seconds": 10,
+      "expected_byte_count": null,
+      "expected_sha256": null
+    },
+    {
+      "stem_id": "66666666-6666-4666-8666-666666666666",
+      "role": "other",
+      "download_url": "https://vendor.example/replace-with-live-other.wav",
+      "expires_at": "2026-08-22T10:00:00Z",
+      "container": "wav",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frame_count": 441000,
+      "duration_seconds": 10,
+      "expected_byte_count": null,
+      "expected_sha256": null
+    }
+  ],
+  "generated_at": "2026-08-22T09:00:00Z"
+}

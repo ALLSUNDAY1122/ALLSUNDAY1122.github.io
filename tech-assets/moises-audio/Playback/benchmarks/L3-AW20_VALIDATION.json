@@ -1,0 +1,84 @@
+{
+  "wave_id": "L3-AW20",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_METRONOME_COUNTIN_INTERRUPTION_RESTORE_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "av_audio_session_runtime": false,
+    "apple_click_executor_runtime": false,
+    "moises_differential": false
+  },
+  "implementation": [
+    "project-side click lifecycle gate layered on AW19 instrumented interruption facade and production generation coordinator",
+    "count-in authorization tied to current AW18 lifecycle revision and coordinator click generation",
+    "count-in authorization revoked before awaiting interruption-begin transport boundary",
+    "pre-interruption count-in never auto-restored",
+    "raw pendingCountInClicks quarantined from selected product planning unless an AW20 authorization exists",
+    "post-interruption count-in requires explicit re-arm",
+    "count-in authorization consumed only after selected Apple click replacement schedule commit",
+    "metronome logical enable/disable may change while interruption is active",
+    "metronome restore requires safe non-stale interruption end, actual transport resume, idle matching episode/revision, non-poisoned coordinator and enabled metronome",
+    "metronome restore plan revalidates exact click generation immediately before planning",
+    "newer interruption or click-generation mutation invalidates old metronome restore authorization",
+    "restore authorization requires fresh render origin and fresh common-host anchor"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "exact_gate_source_typechecked_against_interface_compatible_contracts": true,
+    "deterministic_behavior_probe": "PASS",
+    "pre_interruption_countin_plan_valid": true,
+    "interruption_begin_revokes_countin_authorization": true,
+    "old_countin_plan_rejected_after_interruption": true,
+    "countin_auto_restore_allowed": false,
+    "metronome_restore_requires_transport_resume": true,
+    "metronome_restore_requires_matching_lifecycle_revision": true,
+    "metronome_restore_requires_matching_click_generation": true,
+    "newer_interruption_stales_old_metronome_restore": true,
+    "click_generation_change_stales_old_metronome_restore": true,
+    "countin_schedule_racing_interruption_leaves_no_authorization": true,
+    "metronome_disable_during_active_interruption_suppresses_restore": true,
+    "metronome_enable_during_active_interruption_allows_restore_when_transport_resumes": true,
+    "countin_duplicate_plan_after_commit_rejected": true
+  },
+  "stress": {
+    "cycles": 50000,
+    "countin_authorizations_revoked": 50000,
+    "old_countin_plan_attempts_rejected": 50000,
+    "automatic_countin_restores": 0,
+    "metronome_restores": 33333,
+    "final_countin_authorization_present": false,
+    "final_phase": "idle",
+    "checksum": 833383333,
+    "status": "PASS"
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "cycles_per_round": 2000,
+    "median_ms": 128.041,
+    "p95_ms": 154.978,
+    "max_ms": 170.651,
+    "checksum": 40440000,
+    "scope": "exact AW20 lifecycle/authorization logic over lightweight interface-compatible transport/coordinator/planner types; excludes AVAudioEngine, AVAudioSession delivery, Apple click-node scheduling, real Playback/DSP cost, file/device IO, real audio and current-Moises execution"
+  },
+  "repository_validation": {
+    "production_gate_authored": true,
+    "full_source_self_test_authored": true,
+    "full_source_benchmark_authored": true,
+    "selected_integrated_execution_pending": true
+  },
+  "known_limitation": {
+    "raw_pending_countin_can_remain_non_nil_after_interruption": true,
+    "selected_route_quarantines_raw_pending_without_authorization": true,
+    "direct_raw_countin_planner_bypass_forbidden": true,
+    "future_serialized_raw_pending_clear_hardening_possible": true
+  },
+  "device_timing_claimed": false,
+  "audible_artifact_claimed": false,
+  "real_audio_claimed": false,
+  "standardized_perceptual_metric_claimed": false,
+  "parity_claimed": false
+}

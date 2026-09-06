@@ -1,0 +1,65 @@
+{
+  "wave_id": "L1-E08",
+  "title": "Generic Runtime-Authority Live Gate local control matrix",
+  "engineering_readiness": "READY_PENDING_EXTERNAL_INPUT",
+  "live_gate": "PENDING_EXTERNAL_INPUT",
+  "parity_claim": "NONE",
+  "evidence_class": "SYNTHETIC_CONTROL_NON_PARITY",
+  "local_regression": {
+    "unittest_methods": 9,
+    "unittest_passed": 9,
+    "targeted_behavior_checks": 33,
+    "targeted_behavior_passed": 33,
+    "py_compile": "PASS"
+  },
+  "authority_classes": [
+    "HOSTED_PROVIDER_ACCOUNT",
+    "LOCAL_RUNTIME",
+    "PROJECT_OWNED_RUNTIME"
+  ],
+  "mandatory_scenarios": [
+    "INPUT_INTERRUPTION",
+    "CANCEL_PRE_START",
+    "CANCEL_EXECUTING",
+    "CANCEL_FINALIZING",
+    "AMBIGUOUS_START_RETRY",
+    "RELAUNCH",
+    "OUTPUT_AVAILABILITY_LOSS",
+    "CAPACITY_LIMIT",
+    "LONG_TRACK",
+    "STORAGE_PRESSURE"
+  ],
+  "coverage": [
+    {"id": "E08-01", "case": "licensed local SDK authority", "expected": "generic authority READY control without provider-account fabrication"},
+    {"id": "E08-02", "case": "alternate hosted provider authority", "expected": "same generic contract supports hosted account"},
+    {"id": "E08-03", "case": "project-owned runtime authority", "expected": "generic authority READY control without provider-account fabrication"},
+    {"id": "E08-04", "case": "UNKNOWN capacity", "expected": "PENDING_EXTERNAL_EVIDENCE"},
+    {"id": "E08-05", "case": "INSUFFICIENT capacity", "expected": "LIVE_AUTHORITY_REJECTED"},
+    {"id": "E08-06", "case": "authority kind/provenance mismatch", "expected": "fail closed"},
+    {"id": "E08-07", "case": "fake provider account on local/project-owned runtime", "expected": "fail closed"},
+    {"id": "E08-08", "case": "runtime artifact differs from E07", "expected": "fail closed"},
+    {"id": "E08-09", "case": "duplicate execution or billable execution", "expected": "fail closed"},
+    {"id": "E08-10", "case": "automatic repost after ambiguous start", "expected": "fail closed"},
+    {"id": "E08-11", "case": "ambiguous start without reconciliation", "expected": "fail closed"},
+    {"id": "E08-12", "case": "cancel before start still starts work", "expected": "fail closed"},
+    {"id": "E08-13", "case": "cancel publishes output or duplicates cancel request", "expected": "fail closed"},
+    {"id": "E08-14", "case": "upstream cancellation claimed without confirmation", "expected": "fail closed"},
+    {"id": "E08-15", "case": "relaunch not observed", "expected": "fail closed"},
+    {"id": "E08-16", "case": "capacity-limit fault not observed", "expected": "fail closed"},
+    {"id": "E08-17", "case": "long track not bounded-streamed", "expected": "fail closed"},
+    {"id": "E08-18", "case": "storage pressure without preflight", "expected": "fail closed"},
+    {"id": "E08-19", "case": "unsafe output-availability recovery", "expected": "fail closed"},
+    {"id": "E08-20", "case": "input interruption missing stable error code", "expected": "fail closed"},
+    {"id": "E08-21", "case": "project corruption or partial publication", "expected": "fail closed"},
+    {"id": "E08-22", "case": "logical identity not preserved", "expected": "fail closed"},
+    {"id": "E08-23", "case": "capacity privacy flag leaks authority/raw values", "expected": "fail closed"},
+    {"id": "E08-24", "case": "scenario plan/result set incomplete", "expected": "fail closed"},
+    {"id": "E08-25", "case": "non-cancel degraded fraction exceeds policy", "expected": "LIVE_AUTHORITY_REJECTED"},
+    {"id": "E08-26", "case": "public evidence privacy", "expected": "no private paths/IDs/raw capacity/audio; parity NONE"}
+  ],
+  "non_claims": [
+    "No live fallback runtime has been accepted by this matrix.",
+    "Synthetic temporary files do not establish provider/model/runtime quality or commercial approval.",
+    "No Lane 1 PARITY row may be promoted from E08 readiness evidence."
+  ]
+}

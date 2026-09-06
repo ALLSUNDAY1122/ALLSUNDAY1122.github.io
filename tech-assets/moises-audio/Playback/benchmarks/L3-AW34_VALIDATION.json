@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW34",
+  "title": "Fixed-Window Continuous Coalescing / Seek-Loop Starvation Hardening",
+  "result": "COMPLETE_NON_PARITY",
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "optimization": "-O"
+  },
+  "starvation_differential": {
+    "executed": true,
+    "quiet_period_ms": 16,
+    "input_rate_hz": 1000,
+    "stream_duration_seconds": 1,
+    "fixed_window_executed_winners": 63,
+    "historical_resettable_debounce_executions": 1,
+    "historical_execution_occurs_only_after_stream_end": true
+  },
+  "portable_fixed_window_stress": {
+    "executed": true,
+    "events": 1000000,
+    "virtual_input_spacing_nanoseconds": 125000,
+    "executed_window_winners": 7813,
+    "pre_token_supersessions": 992187,
+    "accounting_loss": 0,
+    "maximum_first_intent_to_eligibility_nanoseconds": 16000000,
+    "final_ticket_preserved_as_final_winner": true,
+    "flush_barrier_semantics_pass": true,
+    "supersede_barrier_semantics_pass": true
+  },
+  "portable_bookkeeping_benchmark": {
+    "executed": true,
+    "rounds": 20,
+    "operations_per_round": 1000000,
+    "runtime_varying_spacing": true,
+    "no_inline_state_mutation": true,
+    "median_ms": 2.718,
+    "p95_ms": 3.093,
+    "max_ms": 3.187,
+    "checksum": 7633173834630080814,
+    "scope": "fixed-window virtual coalescing state bookkeeping only"
+  },
+  "selected_contract": {
+    "first_pending_intent_opens_window": true,
+    "replacement_extends_window_deadline": false,
+    "replacement_is_latest_wins": true,
+    "predecessor_resumes_superseded_before_token": true,
+    "deadline_marks_current_latest_pending_ready": true,
+    "new_post_dispatch_intent_opens_new_window": true,
+    "play_pause_flush_barrier_preserved": true,
+    "media_interruption_recovery_supersede_barrier_preserved": true,
+    "pending_cancellation_closes_window": true,
+    "recovery_block_preserved": true,
+    "selected_seek_quiet_period_changed": false,
+    "selected_loop_quiet_period_changed": false,
+    "selected_inner_tempo_quiet_period_remains_zero": true
+  },
+  "repository_regression": {
+    "actual_aw34_authority_paced_stream_test_authored": true,
+    "aw17_historical_self_test_updated": true,
+    "aw17_historical_benchmark_updated": true,
+    "virtual_stress_authored": true,
+    "virtual_benchmark_authored": true,
+    "complete_repository_execution_in_worker_environment": false,
+    "cases": [
+      "paced seek stream dispatches while producer remains active",
+      "every paced seek becomes a window winner or pre-token supersession",
+      "backend seek count equals executed seek winners",
+      "play flush preserves seek-before-play generation order",
+      "cancelled pending loop consumes no token",
+      "fresh loop opens a new window after cancellation",
+      "one-million-event virtual accounting has zero loss",
+      "resettable debounce starvation differential remains reproducible"
+    ]
+  },
+  "deferred_loop_seam_reason": {
+    "automatic_repeated_loop_envelope_implemented": false,
+    "reason": "future AudioUnit gain events cannot yet be safely revoked by the Swift generation fence after seek/tempo/lifecycle invalidation; timer-only arming would weaken exact-host scheduling",
+    "safe_requirement": "cancelable or generation-isolated exact-host gain automation, or graph/gain-stage generation replacement"
+  },
+  "apple_and_parity_gates": {
+    "selected_xcode_compile_executed": false,
+    "physical_iphone_executed": false,
+    "actual_actor_wall_clock_latency_measured_on_iphone": false,
+    "avaudioplayernode_seek_restart_latency_measured": false,
+    "audible_seek_loop_click_pop_measured": false,
+    "automatic_repeated_loop_seam_envelope_validated": false,
+    "real_audio_executed": false,
+    "current_moises_differential_executed": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015"
+  ]
+}

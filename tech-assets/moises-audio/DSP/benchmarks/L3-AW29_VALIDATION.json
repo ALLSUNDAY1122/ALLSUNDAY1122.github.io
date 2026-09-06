@@ -1,0 +1,86 @@
+{
+  "wave_id": "L3-AW29",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_APPLE_COMPILE_SURFACE_ADAPTER_AUDIT_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "apple_documentation_surface_checked": true,
+    "selected_xcode_compile": false,
+    "real_apple_sdk_compile": false,
+    "physical_iphone": false,
+    "real_avfaudio_runtime": false,
+    "real_audio": false,
+    "current_moises_differential": false,
+    "human_listening": false
+  },
+  "implementation": [
+    "selected Lane3AppleDSPProductionStack exposes only shared AVAudioUnitTimePitch graph node plus project-scoped controller",
+    "raw Apple/telemetry backend not exposed by selected stack",
+    "generic compile guards require transactional, tempo-transition and pitch-transition conformances on AppleTimePitchBackend and telemetry wrapper",
+    "AppleSampleAccurateClickExecutor referenced by selected DSP compile surface",
+    "Playback compile guard requires AW27 bounded file source conformance, long-track input factory and selected ramped playback backend",
+    "fail-closed composition receipt rejects telemetry/conformance/node-identity/raw-backend/PARITY violations"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "behavior_probe": "AW29 portable composition PASS negatives=7",
+    "negative_cases": 7,
+    "telemetry_missing_rejected": true,
+    "transactional_missing_rejected": true,
+    "tempo_transition_missing_rejected": true,
+    "pitch_transition_missing_rejected": true,
+    "node_identity_mismatch_rejected": true,
+    "direct_backend_exposure_rejected": true,
+    "parity_promotion_rejected": true
+  },
+  "conditional_apple_branch_probe": {
+    "status": "PASS_WITH_INTERFACE_COMPATIBLE_SHIM_ONLY",
+    "method": "local AVFAudio shim used solely to make canImport(AVFAudio) true; exact new source compiled against interface-compatible project stubs",
+    "dsp_output": "AW29 synthetic Apple-branch compile-surface PASS",
+    "playback_output": "AW29 synthetic Playback Apple-branch compile-surface PASS",
+    "actual_apple_sdk_claimed": false,
+    "runtime_claimed": false
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "operations_per_round": 100000,
+    "median_ms": 1.015,
+    "p95_ms": 1.198,
+    "max_ms": 1.537,
+    "checksum": 2000000,
+    "scope": "composition receipt validation only; excludes Apple/audio/controller/Playback/click/file/device cost"
+  },
+  "source_identity": {
+    "DSP/Sources/Lane3AppleDSPProductionStack.swift": "9b92029dd1e106f1ac3f11f94efefb0f309e78b7",
+    "Playback/Sources/Lane3ApplePlaybackCompileSurface.swift": "99e2f10a9eef41255765d2b6b99abcbaef008924"
+  },
+  "apple_api_documentation_audit": {
+    "AUParameterTree_parameter_withID_scope_element": "documented_current",
+    "AUAudioUnit_scheduleParameterBlock": "documented_current",
+    "AUAudioUnit_renderResourcesAllocated": "documented_current",
+    "AVAudioFile_forReading_commonFormat_interleaved": "documented_current",
+    "AVAudioFile_framePosition_random_access": "documented_current",
+    "AVAudioFile_read_into_frameCount": "documented_current",
+    "documentation_check_is_not_compile_or_runtime_evidence": true
+  },
+  "repository_validation": {
+    "portable_composition_self_test_authored": true,
+    "portable_composition_benchmark_authored": true,
+    "apple_dsp_compile_probe_authored": true,
+    "apple_playback_compile_probe_authored": true,
+    "selected_complete_lane3_xcode_execution_pending": true
+  },
+  "claims": {
+    "selected_xcode_compile_claimed": false,
+    "apple_sdk_compile_claimed": false,
+    "apple_runtime_claimed": false,
+    "device_artifact_improvement_claimed": false,
+    "real_audio_claimed": false,
+    "current_moises_differential_claimed": false,
+    "human_listening_claimed": false,
+    "parity_claimed": false
+  }
+}

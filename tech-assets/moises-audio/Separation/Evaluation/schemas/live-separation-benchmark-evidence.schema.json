@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "live-separation-benchmark-evidence.schema.json",
+  "title": "Lane 1 E03 Live Separation Benchmark Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "tool_version", "evidence_kind", "evidence_state", "benchmark_state",
+    "parity_claim", "benchmark_id", "source_evidence", "requirements", "summary",
+    "acceptance_checks", "runs", "privacy", "e03_live_benchmark_lock_sha256", "parity_reason"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"const": "L1-E03-v1"},
+    "evidence_kind": {"const": "LIVE_SEPARATION_BENCHMARK"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "benchmark_state": {"enum": ["READY_FOR_HQ_E03_LIVE_REVIEW", "LIVE_BENCHMARK_FAILED"]},
+    "parity_claim": {"const": "NONE"},
+    "benchmark_id": {"type": "string", "minLength": 1},
+    "source_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_sha256", "e01_evidence_sha256", "e02_evidence_sha256", "e01_approval_identity_sha256", "a19_corpus_lock_sha256", "e02_rights_intake_lock_sha256"],
+      "properties": {
+        "plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "e01_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "e02_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "e01_approval_identity_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "a19_corpus_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "e02_rights_intake_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "requirements": {"type": "object"},
+    "summary": {"type": "object"},
+    "acceptance_checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_mode_repetition", "g1_objective_floor", "final_failure_fraction", "retry_fraction", "all_success_artifacts_local_and_hashed"],
+      "properties": {
+        "required_mode_repetition": {"type": "boolean"},
+        "g1_objective_floor": {"type": "boolean"},
+        "final_failure_fraction": {"type": "boolean"},
+        "retry_fraction": {"type": "boolean"},
+        "all_success_artifacts_local_and_hashed": {"type": "boolean"}
+      }
+    },
+    "runs": {"type": "array", "items": {"type": "object"}},
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raw_audio_emitted", "media_paths_emitted", "media_titles_emitted", "raw_rights_ids_emitted", "credential_values_emitted", "signed_urls_emitted", "cost_basis_text_emitted"],
+      "properties": {
+        "raw_audio_emitted": {"const": false},
+        "media_paths_emitted": {"const": false},
+        "media_titles_emitted": {"const": false},
+        "raw_rights_ids_emitted": {"const": false},
+        "credential_values_emitted": {"const": false},
+        "signed_urls_emitted": {"const": false},
+        "cost_basis_text_emitted": {"const": false}
+      }
+    },
+    "e03_live_benchmark_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "parity_reason": {"type": "string", "minLength": 1}
+  }
+}

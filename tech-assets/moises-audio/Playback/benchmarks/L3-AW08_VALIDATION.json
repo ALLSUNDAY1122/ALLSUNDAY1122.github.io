@@ -1,0 +1,60 @@
+{
+  "wave_id": "L3-AW08",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "apple_sdk_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "portable_validation": {
+    "status": "PASS",
+    "stress_frequency_ratio_analyses": 120,
+    "coverage": [
+      "identical-signal near-zero spectral baseline",
+      "known +12-semitone frequency-scale tracking",
+      "sub-bin spectral-peak cents matching",
+      "injected high-frequency artifact discrimination",
+      "isolated pop raises spectral-flux proxy",
+      "AW07-style global lag application",
+      "non-finite sample counting without FFT propagation",
+      "non-power-of-two FFT rejection",
+      "sample-rate mismatch rejection",
+      "channel mismatch rejection",
+      "Codable report JSON round-trip",
+      "final four-file source split recompilation/self-test"
+    ]
+  },
+  "metrics": [
+    "normalized log-spectral distance mean/p95",
+    "expected and best frequency-scale correlation",
+    "spectral-peak median/p95 cents error",
+    "spectral centroid ratio error cents",
+    "spectral flatness delta dB",
+    "high-band energy fraction delta dB",
+    "8-band energy cosine distance",
+    "RMS-envelope correlation",
+    "spectral-flux delta",
+    "non-finite sample counts"
+  ],
+  "benchmark": {
+    "rounds": 20,
+    "operations_per_round": 10,
+    "frames_per_analysis": 16384,
+    "channels": 2,
+    "sample_rate_hz": 48000,
+    "fft_window_frames": 1024,
+    "hop_frames": 512,
+    "maximum_windows": 30,
+    "median_ms_per_round": 21.288,
+    "p95_ms_per_round": 22.124,
+    "p99_max_ms_per_round": 22.124,
+    "checksum": 711.809156
+  },
+  "evidence_scope": "LANE3_SPECTRAL_PERCEPTUAL_PROXY_NON_PARITY",
+  "standardized_perceptual_metric_claimed": false,
+  "human_audibility_claimed": false,
+  "parity_claimed": false
+}

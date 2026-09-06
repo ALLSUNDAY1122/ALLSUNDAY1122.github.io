@@ -1,0 +1,98 @@
+{
+  "wave_id": "L3-AW27",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_APPLE_DECODER_BOUNDED_PCM_SOURCE_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "selected_xcode_compile": false,
+    "apple_avfaudio_branch_typechecked": false,
+    "physical_iphone": false,
+    "actual_apple_file_decode_executed": false,
+    "actual_process_rss_measured": false,
+    "framework_decoder_buffering_measured": false,
+    "thermal_measured": false,
+    "battery_measured": false,
+    "real_audio": false,
+    "current_moises_differential": false,
+    "human_listening": false
+  },
+  "implementation": [
+    "bounded read range/overflow policy with 65536-frame default maximum",
+    "path-free aggregate read audit",
+    "AVAudioFile Float32 deinterleaved random-access Lane3PCMChunkReadable adapter",
+    "serialized framePosition/read mutation",
+    "per-read open/length/format/channel/sample-rate stability validation",
+    "exact short-read and end-position validation",
+    "path-free categorized Apple read errors",
+    "AW26 read-budget preflight factory for reference/observed file pairs"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "policy_blob_sha": "d6c7f5a6ff46db9cc8148ec373cc1de63dd56151",
+    "policy_blob_exact_local_match": true,
+    "apple_source_blob_sha": "a2b3c987cb97c9211f327aad328066a7db83d7a2",
+    "apple_source_blob_exact_local_match": true,
+    "apple_branch_excluded_on_linux": true,
+    "aw26_sized_40962_frame_stereo_read_policy": "PASS",
+    "oversized_read_rejection": "PASS",
+    "eof_overrun_rejection": "PASS",
+    "int64_range_overflow_rejection": "PASS",
+    "read_audit_classification": "PASS",
+    "path_free_audit": "PASS"
+  },
+  "portable_policy_benchmark": {
+    "rounds": 20,
+    "operations_per_round": 100000,
+    "median_ms": 0.721,
+    "p95_ms": 0.760,
+    "max_ms": 0.760,
+    "checksum": 82197314834,
+    "scope": "range policy plus aggregate audit only; excludes AVAudioFile decode/file IO/full evidence analyzers/Apple/device cost"
+  },
+  "default_read_budget": {
+    "apple_adapter_maximum_frames_per_read": 65536,
+    "current_aw26_default_required_maximum_single_read_frames": 40962,
+    "preflight_fails_if_budget_insufficient": true
+  },
+  "apple_repository_self_test": {
+    "authored": true,
+    "selected_apple_execution_pending": true,
+    "fixture": "temporary Float32 stereo CAF",
+    "covers": [
+      "random forward/backward sample reads",
+      "exact sample count",
+      "read budget rejection",
+      "EOF range rejection",
+      "zero-length read",
+      "path-free metadata and diagnostics",
+      "AW26 read-budget preflight failure and success"
+    ]
+  },
+  "privacy": {
+    "public_source_metadata_contains_path": false,
+    "read_audit_contains_path": false,
+    "underlying_nserror_text_exported": false,
+    "raw_pcm_persisted_by_aw27": false
+  },
+  "memory_claim_boundary": {
+    "full_track_pcm_array_retained_by_adapter": false,
+    "avfaudio_internal_decoder_buffering_measured": false,
+    "physical_process_rss_measured": false,
+    "device_memory_improvement_claimed": false
+  },
+  "claims": {
+    "selected_xcode_compile_claimed": false,
+    "apple_runtime_claimed": false,
+    "device_memory_improvement_claimed": false,
+    "physical_rss_claimed": false,
+    "thermal_claimed": false,
+    "battery_claimed": false,
+    "real_audio_claimed": false,
+    "current_moises_differential_claimed": false,
+    "human_listening_claimed": false,
+    "parity_claimed": false
+  }
+}

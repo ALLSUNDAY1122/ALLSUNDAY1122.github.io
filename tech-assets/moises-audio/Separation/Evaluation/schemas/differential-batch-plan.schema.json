@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/moises/differential-batch-plan.schema.json",
+  "title": "L1-A20 resumable differential separation batch plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","batch_id","evidence_state","purpose","reference_system","legal_gate","coverage_requirements","execution","acceptance_policy","cases"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "batch_id": {"type":"string","minLength":1},
+    "evidence_state": {"const":"NON_PARITY_EVIDENCE_ONLY"},
+    "purpose": {"enum":["REGRESSION","PARITY_CANDIDATE"]},
+    "reference_system": {"const":"MOISES_CURRENT_IPHONE"},
+    "golden_corpus_lock_sha256": {"type":"string","pattern":"^(sha256:)?[0-9a-fA-F]{64}$"},
+    "legal_gate": {
+      "type":"object","additionalProperties":false,
+      "required":["commercial_approval_basis_id","privacy_retention_approval_id","reference_comparison_rights_id","provider_idempotency_contract_id","production_credentials_env"],
+      "properties": {
+        "commercial_approval_basis_id":{"type":"string","minLength":1},
+        "privacy_retention_approval_id":{"type":"string","minLength":1},
+        "reference_comparison_rights_id":{"type":"string","minLength":1},
+        "provider_idempotency_contract_id":{"type":"string","minLength":1},
+        "production_credentials_env":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","pattern":"^[A-Z_][A-Z0-9_]*$"}}
+      }
+    },
+    "coverage_requirements": {
+      "type":"object","additionalProperties":false,
+      "required":["min_cases","min_genres","required_duration_buckets","required_target_role_sets"],
+      "properties": {
+        "min_cases":{"type":"integer","minimum":1},
+        "min_genres":{"type":"integer","minimum":1},
+        "required_duration_buckets":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}},
+        "required_target_role_sets":{"type":"array","minItems":1,"items":{"type":"array","minItems":2,"uniqueItems":true,"items":{"type":"string","minLength":1}}}
+      }
+    },
+    "execution": {
+      "type":"object","additionalProperties":false,
+      "required":["max_attempts_per_case","timeout_seconds","driver_guarantees_stable_idempotency","provider_command"],
+      "properties": {
+        "max_attempts_per_case":{"type":"integer","minimum":1},
+        "timeout_seconds":{"type":"number","exclusiveMinimum":0},
+        "driver_guarantees_stable_idempotency":{"type":"boolean"},
+        "provider_command":{"type":"array","minItems":1,"items":{"type":"string","minLength":1}}
+      }
+    },
+    "acceptance_policy": {
+      "type":"object","additionalProperties":false,
+      "required":["policy_id","max_case_failure_rate","max_retry_fraction","max_mean_wall_time_ratio_vs_reference","min_mean_objective_si_sdr_delta_db","min_mean_listening_delta","min_worst_role_overall_usability_delta","min_reviewers_per_system_per_role","minimum_objective_cases","max_project_cost_per_audio_minute","cost_currency"],
+      "properties": {
+        "policy_id":{"type":"string","minLength":1},
+        "max_case_failure_rate":{"type":"number","minimum":0,"maximum":1},
+        "max_retry_fraction":{"type":"number","minimum":0,"maximum":1},
+        "max_mean_wall_time_ratio_vs_reference":{"type":"number","exclusiveMinimum":0},
+        "min_mean_objective_si_sdr_delta_db":{"type":"number"},
+        "min_mean_listening_delta":{"type":"number","minimum":-4,"maximum":4},
+        "min_worst_role_overall_usability_delta":{"type":"number","minimum":-4,"maximum":4},
+        "min_reviewers_per_system_per_role":{"type":"integer","minimum":1},
+        "minimum_objective_cases":{"type":"integer","minimum":0},
+        "max_project_cost_per_audio_minute":{"type":["number","null"],"minimum":0},
+        "cost_currency":{"type":["string","null"]}
+      }
+    },
+    "cases": {
+      "type":"array","minItems":1,
+      "items": {
+        "type":"object","additionalProperties":false,
+        "required":["case_id","genre","duration_bucket","target_roles","fixture_manifest","project_run_manifest","reference_run_manifest"],
+        "properties": {
+          "case_id":{"type":"string","minLength":1},
+          "genre":{"type":"string","minLength":1},
+          "duration_bucket":{"type":"string","minLength":1},
+          "target_roles":{"type":"array","minItems":2,"uniqueItems":true,"items":{"type":"string","minLength":1}},
+          "fixture_manifest":{"type":"string","minLength":1},
+          "project_run_manifest":{"type":"string","minLength":1},
+          "reference_run_manifest":{"type":"string","minLength":1}
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"purpose": {"const": "PARITY_CANDIDATE"}}, "required": ["purpose"]},
+      "then": {"required": ["golden_corpus_lock_sha256"]}
+    }
+  ]
+}
