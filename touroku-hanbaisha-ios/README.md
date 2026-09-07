@@ -19,10 +19,10 @@ npx expo start
 
 ## EAS / TestFlight
 ```bash
-npx eas-cli@latest login
-npx eas-cli@latest build:configure
-npx eas-cli@latest build --platform ios --profile production
-npx eas-cli@latest submit --platform ios --profile production
+npx eas-cli@23.2.0 login
+npx eas-cli@23.2.0 build:configure
+npx eas-cli@23.2.0 build --platform ios --profile production
+npx eas-cli@23.2.0 submit --platform ios --profile production
 ```
 
 Apple Developer / App Store Connectの認証、証明書、EAS projectIdは実行環境で設定してください。
