@@ -93,11 +93,11 @@ jobs:
           echo typecheck >/tmp/stage; pnpm typecheck || { echo typecheck_failed >/tmp/error; exit 1; }
           echo test >/tmp/stage; pnpm test || { echo test_failed >/tmp/error; exit 1; }
           echo doctor >/tmp/stage; pnpm doctor || { echo doctor_failed >/tmp/error; exit 1; }
-          echo eas_cli >/tmp/stage; npx --yes eas-cli@latest --version >/tmp/eas-version 2>/tmp/eas-version.err || { echo eas_cli_failed >/tmp/error; exit 1; }
-          echo eas_auth >/tmp/stage; npx --yes eas-cli@latest whoami >/tmp/eas-whoami 2>/tmp/eas-whoami.err || { echo eas_auth_failed >/tmp/error; exit 1; }
-          echo eas_build >/tmp/stage; npx --yes eas-cli@latest build --platform ios --profile production --auto-submit --non-interactive --no-wait >/tmp/eas-start 2>/tmp/eas-error || { echo eas_build_failed >/tmp/error; exit 1; }
+          echo eas_cli >/tmp/stage; npx --yes eas-cli@23.2.0 --version >/tmp/eas-version 2>/tmp/eas-version.err || { echo eas_cli_failed >/tmp/error; exit 1; }
+          echo eas_auth >/tmp/stage; npx --yes eas-cli@23.2.0 whoami >/tmp/eas-whoami 2>/tmp/eas-whoami.err || { echo eas_auth_failed >/tmp/error; exit 1; }
+          echo eas_build >/tmp/stage; npx --yes eas-cli@23.2.0 build --platform ios --profile production --auto-submit --non-interactive --no-wait >/tmp/eas-start 2>/tmp/eas-error || { echo eas_build_failed >/tmp/error; exit 1; }
           sleep 3
-          echo eas_list >/tmp/stage; npx --yes eas-cli@latest build:list --platform ios --limit 3 --json --non-interactive >/tmp/builds.json 2>/dev/null || { echo eas_list_failed >/tmp/error; exit 1; }
+          echo eas_list >/tmp/stage; npx --yes eas-cli@23.2.0 build:list --platform ios --limit 3 --json --non-interactive >/tmp/builds.json 2>/dev/null || { echo eas_list_failed >/tmp/error; exit 1; }
           python - <<'PY'
           import json
           from pathlib import Path
