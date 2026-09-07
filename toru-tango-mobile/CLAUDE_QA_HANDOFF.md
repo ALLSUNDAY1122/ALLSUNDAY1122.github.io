@@ -1,6 +1,6 @@
 # Claude QA引き継ぎ書: 撮る単語帳 iOS
 
-更新日: 2026-07-26
+更新日: 2026-09-07
 
 ## 役割
 
@@ -32,7 +32,7 @@ npm run check
 npx expo start
 ```
 
-iPhoneでExpo Goまたは開発ビルドを使用して確認する。SDK 57がExpo Goで利用できない場合はEASのpreview buildを使用する。
+iPhoneでExpo Goまたは開発ビルドを使用して確認する。2026-09-03以降の最新iOS版Expo Goでは、開発モードでプロジェクトを開く際にExpo CLIとExpo Goアプリの両方を同じExpoアカウントでログインしておく必要がある。QR読取後にログイン要求が出た場合は、ターミナルで `npx expo login` を実行し、iPhone側のExpo Goでも同じアカウントへログインして再試行する。development buildにはこのログイン要件は適用されない。
 
 ## 重点確認
 
