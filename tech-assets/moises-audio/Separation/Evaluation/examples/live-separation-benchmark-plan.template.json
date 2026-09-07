@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "benchmark_id": "REPLACE-E03-LIVE-BENCHMARK-ID",
+  "execution": {
+    "provider_command": [
+      "python",
+      "REPLACE_WITH_APPROVED_LIVE_PROVIDER_DRIVER.py",
+      "--root", "{root}",
+      "--fixture", "{fixture}",
+      "--run", "{project_run}",
+      "--mode", "{mode_id}",
+      "--model", "{model_name}",
+      "--model-version", "{model_version}",
+      "--quality", "{quality_profile}",
+      "--roles", "{roles_csv}",
+      "--idempotency-key", "{idempotency_key}"
+    ],
+    "timeout_seconds": 7200,
+    "max_attempts_per_run": 2,
+    "driver_guarantees_stable_idempotency": true
+  },
+  "requirements": {
+    "minimum_successful_runs_per_mode": 2,
+    "minimum_g1_objective_runs": 2,
+    "max_final_failure_fraction": 0.0,
+    "max_retry_fraction": 0.25,
+    "require_two_stem": true,
+    "require_core_four_stem": true,
+    "require_custom_instrument": true,
+    "hifi_required_by_reference": true
+  },
+  "modes": [
+    {
+      "mode_id": "two-stem-standard",
+      "mode_class": "TWO_STEM",
+      "model_name": "REPLACE_WITH_E01_APPROVED_TWO_STEM_MODEL",
+      "model_version": "REPLACE_WITH_EXACT_VERSION",
+      "quality_profile": "REPLACE_WITH_E01_APPROVED_QUALITY",
+      "target_roles": ["vocals", "instrumental"],
+      "required": true
+    },
+    {
+      "mode_id": "core-four-stem-standard",
+      "mode_class": "CORE_FOUR_STEM",
+      "model_name": "REPLACE_WITH_E01_APPROVED_FOUR_STEM_MODEL",
+      "model_version": "REPLACE_WITH_EXACT_VERSION",
+      "quality_profile": "REPLACE_WITH_E01_APPROVED_QUALITY",
+      "target_roles": ["vocals", "drums", "bass", "other"],
+      "required": true
+    },
+    {
+      "mode_id": "custom-instrument-representative",
+      "mode_class": "CUSTOM_INSTRUMENT",
+      "model_name": "REPLACE_WITH_E01_APPROVED_CUSTOM_MODEL",
+      "model_version": "REPLACE_WITH_EXACT_VERSION",
+      "quality_profile": "REPLACE_WITH_E01_APPROVED_QUALITY",
+      "target_roles": ["vocals", "guitar"],
+      "required": true
+    },
+    {
+      "mode_id": "hifi-advanced",
+      "mode_class": "HIFI_ADVANCED",
+      "model_name": "REPLACE_WITH_E01_APPROVED_HIFI_MODEL",
+      "model_version": "REPLACE_WITH_EXACT_VERSION",
+      "quality_profile": "REPLACE_WITH_E01_APPROVED_HIFI_QUALITY",
+      "target_roles": ["vocals", "drums", "bass", "other"],
+      "required": true
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "REPLACE-G1-TWO-STEM",
+      "fixture_manifest": "REPLACE_WITH_E02_CLEARED_G1_FIXTURE.json",
+      "mode_id": "two-stem-standard",
+      "repeat_count": 2,
+      "run_manifest_template": "private-live-runs/g1-two-stem-{repeat}.json"
+    },
+    {
+      "case_id": "REPLACE-G1-FOUR-STEM",
+      "fixture_manifest": "REPLACE_WITH_E02_CLEARED_G1_FIXTURE.json",
+      "mode_id": "core-four-stem-standard",
+      "repeat_count": 2,
+      "run_manifest_template": "private-live-runs/g1-four-stem-{repeat}.json"
+    },
+    {
+      "case_id": "REPLACE-G2-CUSTOM",
+      "fixture_manifest": "REPLACE_WITH_E02_CLEARED_G2_FIXTURE.json",
+      "mode_id": "custom-instrument-representative",
+      "repeat_count": 2,
+      "run_manifest_template": "private-live-runs/g2-custom-{repeat}.json"
+    },
+    {
+      "case_id": "REPLACE-G2-HIFI",
+      "fixture_manifest": "REPLACE_WITH_E02_CLEARED_G2_FIXTURE.json",
+      "mode_id": "hifi-advanced",
+      "repeat_count": 2,
+      "run_manifest_template": "private-live-runs/g2-hifi-{repeat}.json"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "wave_id": "L1-E06",
+  "title": "Provider Route Decision Loop local control matrix",
+  "engineering_readiness": "READY_PENDING_EXTERNAL_INPUT",
+  "live_gate": "PENDING_EXTERNAL_INPUT",
+  "parity_claim": "NONE",
+  "evidence_class": "SYNTHETIC_CONTROL_NON_PARITY",
+  "local_regression": {"tests_run": 21, "passed": 21, "failed": 0, "py_compile": "PASS"},
+  "coverage": [
+    {"id": "E06-01", "case": "single fully evaluated route", "expected": "ACCEPT_PRIMARY; parity remains NONE"},
+    {"id": "E06-02", "case": "missing E04", "expected": "PENDING_EXTERNAL_EVIDENCE"},
+    {"id": "E06-03", "case": "E04 WAITING_REVIEW", "expected": "PENDING_EXTERNAL_EVIDENCE"},
+    {"id": "E06-04", "case": "missing capacity attestation", "expected": "PENDING_EXTERNAL_EVIDENCE"},
+    {"id": "E06-05", "case": "quota/credit insufficient", "expected": "REJECT_CAPABILITY"},
+    {"id": "E06-06", "case": "capacity provenance differs from physically verified E05 rate-limit account provenance", "expected": "fail closed with L1E06_CAPACITY_E05_PROVENANCE_MISMATCH"},
+    {"id": "E06-07", "case": "current-iPhone differential practical inferiority", "expected": "REJECT_QUALITY"},
+    {"id": "E06-08", "case": "actual mean cost above policy", "expected": "REJECT_COST"},
+    {"id": "E06-09", "case": "actual mean provider latency above policy", "expected": "REJECT_LATENCY"},
+    {"id": "E06-10", "case": "retention exceeds policy", "expected": "REJECT_PRIVACY"},
+    {"id": "E06-11", "case": "data region outside policy", "expected": "REJECT_PRIVACY"},
+    {"id": "E06-12", "case": "required mode class missing", "expected": "REJECT_CAPABILITY"},
+    {"id": "E06-13", "case": "safe fail-closed/recoverable fraction too high", "expected": "REJECT_RELIABILITY; safe failure is not successful recovery"},
+    {"id": "E06-14", "case": "cancellation publishes output after logical cancel", "expected": "REJECT_CANCELLATION"},
+    {"id": "E06-15", "case": "E05 scenario set incomplete", "expected": "fail closed"},
+    {"id": "E06-16", "case": "E04->E03 lock mismatch", "expected": "fail closed"},
+    {"id": "E06-17", "case": "source evidence replacement", "expected": "decision identity and lock both change"},
+    {"id": "E06-18", "case": "two fully evaluated routes with material score margin", "expected": "stronger route ACCEPT_PRIMARY"},
+    {"id": "E06-19", "case": "one candidate pending while another passes", "expected": "overall PENDING; no premature primary"},
+    {"id": "E06-20", "case": "multiple close eligible routes", "expected": "ACCEPT_WITH_LIMITS; HQ/live selection remains unresolved"},
+    {"id": "E06-21", "case": "public report privacy contract", "expected": "all sensitive-emission flags false"}
+  ],
+  "non_claims": [
+    "No live provider route has been selected by this matrix.",
+    "No synthetic fixture establishes provider superiority.",
+    "No PARITY row may be promoted from this evidence."
+  ]
+}

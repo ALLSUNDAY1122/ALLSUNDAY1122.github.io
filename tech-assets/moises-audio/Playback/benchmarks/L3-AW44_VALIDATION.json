@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW44",
+  "title": "AW43 Codec Evidence / AW30 Long-Track Content Binding",
+  "result": "COMPLETE_NON_PARITY",
+  "canonical_audit": {
+    "integration_epoch_observed": 30,
+    "assignment_epoch": 2,
+    "planning_revision": 4,
+    "epoch_contract_sha": "c9e8ec5d191108db6eb20fbd40db0dab3c46b725",
+    "ownership_changed": false,
+    "rebase_required": false,
+    "worker_branch_base_head": "5c2e110bf0885700a7da0df97571b05d10a8c6df",
+    "hq_integrated_lane3_through": "L3-AW41",
+    "hq_permanent_full_lane3_portable_typecheck_gate_observed": true,
+    "parity_promotions_observed": 0
+  },
+  "implementation": {
+    "explicit_reference_or_observed_pcm_role": true,
+    "clean_aw43_report_reexecuted_against_supplied_source": true,
+    "clean_pcm_sha256_recomputed_with_aw30_identity_algorithm": true,
+    "selected_aw30_pcm_role_digest_must_match": true,
+    "aw30_run_binding_recomputed_from_pipeline_fields": true,
+    "aw30_completion_validator_reused": true,
+    "aw30_completion_run_binding_must_match": true,
+    "all_aw43_report_fields_content_bound": true,
+    "ordered_clean_truncated_corrupted_family_bound": true,
+    "combined_sha256_content_binding": true,
+    "duplicate_fixture_id_rejected": true,
+    "codec_and_baseline_metadata_mismatch_rejected": true,
+    "silent_corruption_or_truncation_without_expected_fault_rejected": true,
+    "raw_pcm_included": false,
+    "raw_compressed_bytes_included": false,
+    "source_path_included": false,
+    "authenticity_signature_included": false,
+    "derivative_lineage_cryptographically_proven": false,
+    "authoritative_physical_evidence_allowed": false,
+    "parity_promotion_allowed": false
+  },
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "swift_language_mode": 6,
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "worker_branch_clone_available": false,
+    "clone_failure_reason": "container DNS could not resolve github.com",
+    "exact_shape_repository_interface_stubs_used": true
+  },
+  "portable_structural_self_test": {
+    "result": "PASS",
+    "reference_role_binding": true,
+    "receipt_rebuild_validation": true,
+    "different_clean_pcm_rejected": true,
+    "non_recomputed_aw30_run_binding_rejected": true,
+    "observed_role_binding_with_reference_rate_difference": true,
+    "combined_binding_prefix": "c732f98926184e0c",
+    "selected_repository_execution_claimed": false
+  },
+  "portable_structural_stress": {
+    "result": "PASS",
+    "report_binding_iterations": 1000000,
+    "checksum": 3411186190977283808,
+    "approximate_elapsed_seconds": 4.857,
+    "cryptographic_primitive": "interface-compatible structural stub",
+    "production_sha256_performance_claimed": false
+  },
+  "repository_native_tests": {
+    "self_test_authored": true,
+    "production_sha256_stress_authored": true,
+    "production_sha256_stress_iterations": 100000,
+    "production_sha256_benchmark_authored": true,
+    "production_sha256_benchmark_runs": 20,
+    "production_sha256_benchmark_operations_per_run": 10000,
+    "complete_worker_branch_typecheck_executed_this_wave": false,
+    "xcode_execution": false,
+    "avfaudio_runtime_execution": false,
+    "physical_iphone_execution": false
+  },
+  "security_and_provenance_boundary": {
+    "binding_is_content_addressed_not_signed": true,
+    "clean_pcm_identity_is_sha256_bound_to_aw30_role": true,
+    "aw43_derivative_compressed_file_parentage_proven": false,
+    "reason_parentage_not_proven": "AW43 descriptors do not carry baseline compressed digest plus deterministic derivative recipe/digest",
+    "higher_level_fixture_generation_manifest_needed_if_parentage_becomes_required": true
+  },
+  "external_gates": {
+    "required_codec_set_from_lane2_current_reference": false,
+    "rights_cleared_real_30_minute_codec_family_executed": false,
+    "aw30_real_long_track_run_bound_to_aw43_clean_pcm": false,
+    "physical_rss_measured": false,
+    "thermal_measured": false,
+    "battery_measured": false,
+    "current_moises_differential_executed": false,
+    "human_listening_executed": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015",
+    "MOI-P021"
+  ]
+}

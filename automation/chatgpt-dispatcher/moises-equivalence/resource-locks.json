@@ -1,0 +1,42 @@
+{
+  "schema_version": 3,
+  "project": "moises-equivalence",
+  "integration_branch": "tech/moises-separation",
+  "integration_epoch": 31,
+  "assignment_epoch": 2,
+  "planning_revision": 4,
+  "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
+  "checkpoint_note": "Epoch31 canonical is L1 A23 / L2 AW44 / L3 AW43 / L4 W46. HQ semantic integration commit ff01d2a39d307f7947204ad31c923b21ac7ca4f1 admitted only the frozen owned-scope results for Lane2 AW43-AW44, Lane3 AW42-AW43 and Lane4 W45-W46; Lane1 remains deferred because A26 exact full current-tip dependency/provenance audit is still not PASS. Initial Run244 / 32894857304 failed only in portable SwiftPM because Swift 6.0.3 could not type-check the six-String W46 issue-order tuple comparison in reasonable time; Lane2 IO+Library and Lane3 Playback+DSP full-source typecheck gates both passed. HQ explored a temporary exact tuple compatibility shim and solver threshold, then replaced both with the semantics-preserving source fix 3cbd15d19c8d60925a2c6777e4c4a9416ea23357 that performs the identical lexicographic order as sequential comparisons; temporary workaround material was removed by 87143ed95ff9a48492678fe878c706172ea121c7 and 57b0101d584b3fe6d563ebb175174de4883a55a3. HQ also repaired two Swift throwing-expression test-helper boundaries without changing production semantics: W46 capture-root pre-evaluation at 7ba306743411ef3f9f0753469255a13dc87415ab and W45 anchor-root pre-evaluation at tested head 4cbcc4bcd6cff33a37c713bb11dbe8cbc285d743. Final Run260 / 32932534215 passed all three gates: SwiftPM 404/404, Lane2 IO+Library full portable typecheck PASS, Lane3 Playback+DSP full portable typecheck PASS; unhandled files 324; PR merge ref 35bcc35000fa4d1221c1336650ff80607fc0d5aa; Swift 6.0.3 Linux x86_64. Post-Epoch31 work remains deferred as single-wave progress: Lane2 AW45, Lane3 AW44, Lane4 W47 with W48 in progress. Apple persistence/filesystem, selected Xcode/AVFAudio, physical-iPhone, rights-cleared real-audio and current-Moises differential gates remain pending. PARITY promotion remains 0.",
+  "locks": [
+    {"id":"shared-contract","owner":"HQ","scope":["tech-assets/moises-audio/Shared/**"],"notes":"shared data model / cross-module protocol; epoch-frozen for Workers"},
+    {"id":"app-shell","owner":"HQ","scope":["tech-assets/moises-audio/App/**"],"notes":"navigation, global app state, root composition; epoch-frozen for Workers"},
+    {"id":"parity-ledger","owner":"HQ","scope":["tech-assets/moises-audio/PARITY_MATRIX.json"],"notes":"Workers propose evidence only; HQ finalizes parity"},
+    {"id":"queue-control","owner":"HQ","scope":["automation/chatgpt-dispatcher/moises-equivalence/queue.json"],"notes":"HQ integration ledger only; not a Worker dispatch queue"},
+    {"id":"work-package-control","owner":"HQ","scope":["automation/chatgpt-dispatcher/moises-equivalence/work-packages.json"],"notes":"Lane ownership boundaries are HQ-only; normal lane backlog is Worker-authored"},
+    {"id":"lane-plan-control","owner":"HQ","scope":["automation/chatgpt-dispatcher/moises-equivalence/lane-plan-v3.json"],"notes":"Defines autonomous lane missions/boundaries, not a finite task list"},
+    {"id":"resource-lock-control","owner":"HQ","scope":["automation/chatgpt-dispatcher/moises-equivalence/resource-locks.json"],"notes":"Logical ownership changes are HQ-only"},
+    {"id":"source-separation-model","owner":"LANE-1-SEPARATION-PROCESSING","worker":"Moises-Worker-1","scope":["tech-assets/moises-audio/Separation/**"],"notes":"lawful model/runtime/provider/evaluation surface; Worker self-plans within scope"},
+    {"id":"processing-lifecycle","owner":"LANE-1-SEPARATION-PROCESSING","worker":"Moises-Worker-1","scope":["tech-assets/moises-audio/Processing/**"],"notes":"processing job lifecycle, cancel/retry/recovery; Worker self-plans within scope"},
+    {"id":"import-export","owner":"LANE-2-IO-LIBRARY","worker":"Moises-Worker-2","scope":["tech-assets/moises-audio/IO/**"],"notes":"audio/video import, export, share; Worker self-plans within scope"},
+    {"id":"library-persistence","owner":"LANE-2-IO-LIBRARY","worker":"Moises-Worker-2","scope":["tech-assets/moises-audio/Library/**"],"notes":"projects, setlists, resume, persistence; Worker self-plans within scope"},
+    {"id":"audio-playback-engine","owner":"LANE-3-PLAYBACK-DSP","worker":"Moises-Worker-3","scope":["tech-assets/moises-audio/Playback/**"],"notes":"multi-track playback, solo/mute/volume, seek, loop; Worker self-plans within scope"},
+    {"id":"time-pitch-dsp","owner":"LANE-3-PLAYBACK-DSP","worker":"Moises-Worker-3","scope":["tech-assets/moises-audio/DSP/**"],"notes":"speed, pitch/key shifting, metronome/count-in synchronization; Worker self-plans within scope"},
+    {"id":"music-analysis-engine","owner":"LANE-4-IOS-ANALYSIS","worker":"Moises-Worker-4","scope":["tech-assets/moises-audio/Analysis/**"],"notes":"BPM, beat grid, key, chords, song parts; Worker self-plans within scope"},
+    {"id":"build-harness","owner":"LANE-4-IOS-ANALYSIS","worker":"Moises-Worker-4","scope":["tech-assets/moises-audio/Package.swift","tech-assets/moises-audio/Tests/**"],"notes":"standalone lane build/test harness; cross-lane semantic integration remains HQ"},
+    {"id":"ios-platform","owner":"LANE-4-IOS-ANALYSIS","worker":"Moises-Worker-4","scope":["tech-assets/moises-audio/iOS/**"],"notes":"standalone iOS host/target/project/scheme; cross-lane integrated build remains HQ"},
+    {"id":"reference-ledger","owner":"HQ","scope":["tech-assets/moises-audio/reference/**"],"notes":"current-iPhone reference scope and final differential authority remain HQ-owned"},
+    {"id":"worker-1-status","owner":"Moises-Worker-1","scope":["automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-1.json"]},
+    {"id":"worker-2-status","owner":"Moises-Worker-2","scope":["automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-2.json"]},
+    {"id":"worker-3-status","owner":"Moises-Worker-3","scope":["automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-3.json"]},
+    {"id":"worker-4-status","owner":"Moises-Worker-4","scope":["automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-4.json"]}
+  ],
+  "rules": [
+    "Each non-HQ logical resource has exactly one exclusive Lane owner per assignment_epoch.",
+    "Workers self-plan normal work only inside their owned scope; HQ does not author or replenish the normal lane-local backlog.",
+    "Workers never update Global Queue, Work Package manifest, Lane Plan, Resource Lock manifest, Shared, App, or PARITY.",
+    "Worker N may update only its own status file for canonical progress signaling.",
+    "No preloaded task, exhausted historical bundle list, no Queue READY entry, or another Worker being unfinished is not a valid stop condition.",
+    "Cross-lane semantic integration, Shared/App adapter resolution, actual integrated iOS build and PARITY judgment remain HQ responsibilities.",
+    "A resource may move to another lane only after HQ verifies no unintegrated changes remain on the previous owner branch and increments assignment_epoch."
+  ]
+}

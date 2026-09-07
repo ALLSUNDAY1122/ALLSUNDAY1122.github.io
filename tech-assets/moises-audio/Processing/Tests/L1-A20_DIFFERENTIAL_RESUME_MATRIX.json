@@ -1,0 +1,67 @@
+{
+  "wave":"L1-A20",
+  "result":"COMPLETE_NON_PARITY",
+  "parity_claim":"NONE",
+  "tool_version":"L1-A20-v1",
+  "goal":"A 12+12-scale differential batch may stop and resume without changing case identity, attempt history, reviewer assignment semantics, acceptance thresholds, or evidence hashes.",
+  "identity_bindings":[
+    "batch_id_and_purpose",
+    "normalized_case_fixture_sha_and_targets",
+    "provider_command_template_and_attempt_policy",
+    "legal_approval_ids",
+    "acceptance_policy_canonical_sha256",
+    "A19_golden_corpus_lock_for_PARITY_CANDIDATE",
+    "differential_toolchain_file_sha256"
+  ],
+  "resume_states":["ACTIVE","WAITING_REFERENCE","WAITING_REVIEWER_ROSTER","WAITING_REVIEW","ACCEPTANCE_READY","COMPLETE"],
+  "attempt_states":["STARTED","PASS","FAIL","TIMEOUT","INTERRUPTED","RECOVERED_OUTPUT"],
+  "review_replacement_reason_codes":["UNAVAILABLE","CONFLICT_OF_INTEREST","INVALID_REVIEW","COORDINATOR_CORRECTION"],
+  "critical_scenarios":[
+    {"id":"process-terminates-after-attempt-intent-before-result","expected":"STARTED becomes INTERRUPTED; attempt budget remains consumed; retry uses same idempotency identity"},
+    {"id":"process-terminates-after-provider-produced-valid-result","expected":"STARTED becomes RECOVERED_OUTPUT; no duplicate provider execution"},
+    {"id":"trusted-project-result-present-on-relaunch","expected":"hash verify and reuse; no subprocess rerun"},
+    {"id":"trusted-project-result-mutated-or-deleted","expected":"FAIL_CLOSED L1A20_EVIDENCE_MUTATED or L1A20_ARTIFACT_MISSING"},
+    {"id":"execution-history-evolves-during-retry","expected":"not immutable-bound until all project cases succeed"},
+    {"id":"missing-reference-after-project-complete","expected":"WAITING_REFERENCE; project attempt/result evidence preserved"},
+    {"id":"evaluation-present-and-hash-trusted","expected":"reuse exact evaluation without rerunning evaluator"},
+    {"id":"acceptance-policy-changed","expected":"same resume batch rejected by batch identity mismatch"},
+    {"id":"toolchain-file-changed","expected":"same resume batch rejected by batch identity mismatch"},
+    {"id":"golden-lock-changed","expected":"same resume batch rejected by batch identity mismatch"},
+    {"id":"PARITY-candidate-without-golden-lock","expected":"external input required before live gate starts"},
+    {"id":"case-order-changed-only","expected":"same semantic batch identity"},
+    {"id":"24-case-scale","expected":"24 unique case identities and deterministic assignment set independent of case/roster ordering"},
+    {"id":"zero-completed-reviews","expected":"WAITING_REVIEW with every active missing assignment ID explicitly persisted"},
+    {"id":"partial-review-set","expected":"only missing active assignments reported"},
+    {"id":"unassigned-reviewer-submission","expected":"FAIL_CLOSED L1A20_UNASSIGNED_REVIEW"},
+    {"id":"reviewer-unavailable","expected":"explicit replacement chain; superseded assignment retained and excluded from acceptance"},
+    {"id":"replacement-reviewer-already-in-same-slot","expected":"FAIL_CLOSED L1A20_REPLACEMENT_REVIEWER_CONFLICT"},
+    {"id":"roster-or-base-assignment-changed-after-binding","expected":"FAIL_CLOSED L1A20_REVIEW_ASSIGNMENT_MUTATED"},
+    {"id":"completed-evidence-changed","expected":"FAIL_CLOSED; COMPLETE cannot reopen"}
+  ],
+  "machine_tests":{
+    "python_environment":"lane-local Python 3.13-compatible runtime",
+    "resume_core":{"assertions":52,"failures":0},
+    "execution_resume":{"assertions":17,"failures":0},
+    "scale_and_faults":{"assertions":23,"failures":0},
+    "gate_and_zero_review":{"assertions":8,"failures":0},
+    "total":{"assertions":100,"failures":0},
+    "py_compile":"PASS"
+  },
+  "checked_in_tests":[
+    "tech-assets/moises-audio/Separation/Tests/test_differential_resume.py",
+    "tech-assets/moises-audio/Separation/Tests/test_differential_execute_resume.py",
+    "tech-assets/moises-audio/Separation/Tests/test_differential_resume_faults.py",
+    "tech-assets/moises-audio/Separation/Tests/test_differential_gate_a20_import.py"
+  ],
+  "schemas":[
+    "tech-assets/moises-audio/Separation/Evaluation/schemas/differential-batch-plan.schema.json",
+    "tech-assets/moises-audio/Separation/Evaluation/schemas/differential-resume-ledger.schema.json",
+    "tech-assets/moises-audio/Separation/Evaluation/schemas/differential-reproducibility-audit.schema.json"
+  ],
+  "external_gaps":[
+    "no approved real A19 Golden corpus lock exists yet",
+    "no production separator credentials/live provider differential executed",
+    "no current-iPhone Moises reference artifacts or blind human review collected",
+    "real-device interruption/performance evidence remains HQ/integrated gate work"
+  ]
+}

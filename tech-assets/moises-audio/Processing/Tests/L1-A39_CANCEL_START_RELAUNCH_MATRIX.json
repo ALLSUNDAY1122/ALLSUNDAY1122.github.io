@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A39",
+  "title": "Cancel-During-Start Relaunch Recovery Matrix",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "parity_target": "MOI-P020",
+  "problem": "A durable cancellationRequested record can have jobID=null when the app terminates while provider start is in flight. The remote start may have succeeded, so generic missing-binding handling or blind retry is unsafe.",
+  "implementation": {
+    "source": "Processing/Sources/ProcessingCrashSafeRelaunchRecovery.swift",
+    "formal_self_test": "Processing/Tests/L1_A39_SelfTest.swift",
+    "existing_idempotent_resolver": "Processing/Sources/ProcessingProviderCapabilities.swift",
+    "existing_resolver_regression": "Processing/Tests/L1_M02_SelfTest.swift"
+  },
+  "focused_validation": {
+    "environment": "Swift 6.2.1 isolated interface-compatible harness",
+    "tests_run": 7,
+    "failures": 0,
+    "errors": 0,
+    "state": "PASS",
+    "exact_worker_checkout": false
+  },
+  "cases": [
+    {
+      "id": "A39-01",
+      "condition": "cancellationRequested + jobID=null after relaunch and no stable resolver is available",
+      "expected": "ambiguousStart; do not delegate to generic missing-binding recovery; do not start a duplicate job",
+      "state": "PASS"
+    },
+    {
+      "id": "A39-02",
+      "condition": "starting/startAmbiguous remains unresolved after stable-idempotent recovery attempt",
+      "expected": "ambiguousStart; canonical lifecycle is not entered without a durable provider binding",
+      "state": "PASS"
+    },
+    {
+      "id": "A39-03",
+      "condition": "stable-idempotent resolver rebinds the original generation to a provider job",
+      "expected": "delegate to canonical lifecycle only after resolver has persisted the rebound binding",
+      "state": "PASS"
+    },
+    {
+      "id": "A39-04",
+      "condition": "resolver rebinds a cancellationRequested generation and completes cancellation",
+      "expected": "preserve cancellation intent; delegate the durable cancelled terminal state to canonical lifecycle",
+      "state": "PASS"
+    },
+    {
+      "id": "A39-05",
+      "condition": "cancellationRequested already has a durable jobID",
+      "expected": "bypass ambiguous resolver and use normal lifecycle reconnect/cancel observation",
+      "state": "PASS"
+    },
+    {
+      "id": "A39-06",
+      "condition": "UI/startup requests a non-mutating recovery preview for unbound cancellationRequested",
+      "expected": "ambiguousStart without invoking remote resolver or generic missing-binding path",
+      "state": "PASS"
+    },
+    {
+      "id": "A39-07",
+      "condition": "no durable processing state exists",
+      "expected": "no-op recovery",
+      "state": "PASS"
+    },
+    {
+      "id": "A39-08",
+      "condition": "existing ProcessingAmbiguousStartResolver receives cancellationRequested + jobID=null",
+      "expected": "reuse StableProcessingIdempotencyKey from the same generation; if rebound succeeds, persist binding before remote cancel and cleanup",
+      "state": "PREEXISTING_REGRESSION_INSPECTED_NOT_RERUN_IN_A39"
+    }
+  ],
+  "safety_non_claims": [
+    "A39 does not prove a live production provider honors idempotency; that remains provider/runtime evidence.",
+    "A39 does not prove current-iPhone background termination/relaunch behavior; integrated device evidence remains HQ-owned.",
+    "A39 does not promote MOI-P020 from MISSING because the PARITY gate requires integrated long-processing cancellation/retry/interruption evidence.",
+    "The formal repository Swift self-test is committed but exact Worker-checkout execution is not observed in this environment."
+  ]
+}

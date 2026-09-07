@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "current-iphone-differential-evidence.schema.json",
+  "title": "Lane 1 E04 Current-iPhone Differential Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "tool_version", "evidence_kind", "evidence_state", "comparison_state", "parity_claim", "comparison_id", "source_evidence", "policy", "summary", "reviews", "privacy", "e04_differential_lock_sha256", "parity_reason"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"const": "L1-E04-v1"},
+    "evidence_kind": {"const": "CURRENT_IPHONE_DIFFERENTIAL_LISTENING"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "comparison_state": {"enum": ["WAITING_REVIEW", "READY_FOR_HQ_E04_LIVE_REVIEW", "DIFFERENTIAL_FAIL"]},
+    "parity_claim": {"const": "NONE"},
+    "comparison_id": {"type": "string", "minLength": 1},
+    "source_evidence": {"type": "object"},
+    "policy": {
+      "type": "object",
+      "required": ["minimum_reviewers_per_case_role", "material_inferiority_vote_fraction", "min_mean_overall_usability_delta", "engineering_policy_not_reference_fact", "exact_input_bytes_required"],
+      "properties": {
+        "engineering_policy_not_reference_fact": {"const": true},
+        "exact_input_bytes_required": {"const": true}
+      }
+    },
+    "summary": {"type": "object"},
+    "reviews": {"type": "array"},
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference_assets_copied_to_repository", "reference_locator_paths_emitted", "project_locator_paths_emitted", "raw_reviewer_ids_emitted", "blinding_seed_emitted", "raw_audio_emitted"],
+      "properties": {
+        "reference_assets_copied_to_repository": {"const": false},
+        "reference_locator_paths_emitted": {"const": false},
+        "project_locator_paths_emitted": {"const": false},
+        "raw_reviewer_ids_emitted": {"const": false},
+        "blinding_seed_emitted": {"const": false},
+        "raw_audio_emitted": {"const": false}
+      }
+    },
+    "e04_differential_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "parity_reason": {"type": "string", "minLength": 1}
+  }
+}

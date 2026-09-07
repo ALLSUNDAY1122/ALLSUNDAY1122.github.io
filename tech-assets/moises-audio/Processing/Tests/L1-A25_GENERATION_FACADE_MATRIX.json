@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A25",
+  "title": "AI Stem Generation End-to-End Processing Facade / Crash-Recovery Composition",
+  "state": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "target": "MOI-P025",
+  "tests": {
+    "base_facade_focused_regression": {"passed": 23, "failed": 0},
+    "delete_resume_focused_regression": {"passed": 4, "failed": 0},
+    "facade_evidence_schema_samples": {"passed": 2, "failed": 0},
+    "python_compile": "PASS"
+  },
+  "contracts": [
+    "A25 persists generation identity and source mix format before A22 runtime execution",
+    "repeated begin never reissues runtime start once an A21 record exists",
+    "START_CALL_IN_FLIGHT may restart only when the intact A21 ledger proves GEN_RECORD_NOT_FOUND before any A22 external start could occur",
+    "ambiguous or possibly-issued start resumes by A22 reconciliation rather than blind start replay",
+    "runtime READY is not mixer publication; A23 mix compatibility remains mandatory",
+    "A22 project-controlled output SHA is rechecked before A23",
+    "normalization-required state cannot skip A23 normalization provenance",
+    "A23 active variant must exist before A24 retention registration",
+    "crash after variant activation resumes retention only and does not re-run generation",
+    "logical cancellation is durable before external cancel and an in-flight cancel is never blindly resent after crash",
+    "cancelled generation cannot be promoted to mixer-ready output",
+    "delete before a registered generated variant is forbidden",
+    "delete reason is durably bound by the A25 delete-resume adapter and a changed reason is rejected",
+    "delete crash resumes the same A24 destructive operation without generation reexecution",
+    "public facade evidence contains hashes/state/format metadata and no raw logical generation id, prompt, execution id, paths, credentials or audio"
+  ],
+  "external_remaining": [
+    "commercially approved real generation runtime",
+    "rights-cleared real generation sources",
+    "current-iPhone role/mode/preset/credit/entitlement/delete UX capture",
+    "real generated audio quality/latency/recovery campaign",
+    "current-iPhone blind differential listening",
+    "integrated iPhone Playback/DSP mixer validation",
+    "HQ final PARITY judgment"
+  ],
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY"
+}

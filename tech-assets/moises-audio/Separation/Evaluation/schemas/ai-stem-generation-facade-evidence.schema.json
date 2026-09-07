@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-stem-generation-facade-evidence.schema.json",
+  "title": "L1-A25 AI Stem Generation Processing Facade Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "tool_version", "evidence_state", "parity_claim",
+    "generation_ref_hash", "request_fingerprint", "project_ref_hash", "source_sha256",
+    "source_format", "target_role", "variant_index", "runtime_descriptor_sha256",
+    "mix_policy_sha256", "retention_policy_sha256", "phase", "directive",
+    "start_receipt_sha256", "last_runtime_receipt_sha256", "mix_plan_sha256",
+    "mix_ready_receipt_sha256", "active_artifact_sha256", "cancellation_requested",
+    "delete_requested", "stable_error_code", "privacy", "facade_evidence_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"const": "L1-A25-v1"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "parity_claim": {"const": "NONE"},
+    "generation_ref_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "request_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "project_ref_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_format": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sample_rate", "channels", "audio_format", "bits_per_sample", "frame_count"],
+      "properties": {
+        "sample_rate": {"type": "integer", "minimum": 1},
+        "channels": {"type": "integer", "minimum": 1},
+        "audio_format": {"type": "integer", "minimum": 1},
+        "bits_per_sample": {"type": "integer", "minimum": 1},
+        "frame_count": {"type": "integer", "minimum": 1}
+      }
+    },
+    "target_role": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "variant_index": {"type": "integer", "minimum": 0},
+    "runtime_descriptor_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "mix_policy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "retention_policy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "phase": {"enum": ["INTENT_DURABLE", "START_CALL_IN_FLIGHT", "START_UNKNOWN", "RUNTIME_BOUND", "RUNTIME_RUNNING", "RUNTIME_READY", "NORMALIZATION_REQUIRED", "MIX_COMMIT_IN_FLIGHT", "VARIANT_ACTIVE", "RETENTION_REGISTERED", "READY", "CANCEL_CALL_IN_FLIGHT", "CANCEL_PENDING", "CANCELLED", "FAILED", "DELETE_CALL_IN_FLIGHT", "DELETED_ASSOCIATION"]},
+    "directive": {"enum": ["RECONCILE_DELETE", "SETTLE_CANCELLED", "OBSERVE_RUNTIME_NO_CANCEL_RETRY", "PROVIDE_NORMALIZED_ARTIFACT", "REGISTER_RETENTION", "READY", "RECONCILE_RUNTIME", "FINALIZE_MIX", "OBSERVE_RUNTIME", "FAILED", "FAIL_CLOSED_UNKNOWN"]},
+    "start_receipt_sha256": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[0-9a-f]{64}$"}]},
+    "last_runtime_receipt_sha256": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[0-9a-f]{64}$"}]},
+    "mix_plan_sha256": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[0-9a-f]{64}$"}]},
+    "mix_ready_receipt_sha256": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[0-9a-f]{64}$"}]},
+    "active_artifact_sha256": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[0-9a-f]{64}$"}]},
+    "cancellation_requested": {"type": "boolean"},
+    "delete_requested": {"type": "boolean"},
+    "stable_error_code": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"}]},
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raw_logical_generation_id_emitted", "source_path_emitted", "runtime_output_path_emitted", "raw_prompt_emitted", "raw_execution_id_emitted", "credential_values_emitted", "raw_audio_emitted"],
+      "properties": {
+        "raw_logical_generation_id_emitted": {"const": false},
+        "source_path_emitted": {"const": false},
+        "runtime_output_path_emitted": {"const": false},
+        "raw_prompt_emitted": {"const": false},
+        "raw_execution_id_emitted": {"const": false},
+        "credential_values_emitted": {"const": false},
+        "raw_audio_emitted": {"const": false}
+      }
+    },
+    "facade_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

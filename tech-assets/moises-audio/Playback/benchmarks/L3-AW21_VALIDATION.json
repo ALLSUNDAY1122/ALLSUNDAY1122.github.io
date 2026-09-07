@@ -1,0 +1,80 @@
+{
+  "wave_id": "L3-AW21",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_SERIALIZED_COUNTIN_CONSUME_DISCARD_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "av_audio_session_runtime": false,
+    "apple_click_executor_runtime": false,
+    "moises_differential": false
+  },
+  "implementation": [
+    "PracticeDSPGenerationCoordinator gains actor-serialized count-in consume/discard authority without changing prior public entry points",
+    "consumeScheduledCountIn requires exact click generation and click count, clears raw pendingCountInClicks, and deliberately preserves the executor generation so an already accepted count-in is not flushed",
+    "discardCurrentCountIn and exact discardCountIn clear raw pending state, advance schedule generation, revoke combined replacement authority, and invalidate the click queue",
+    "discard failure after mutation start poisons the coordinator and attempts equal-or-newer-generation queue invalidation fail closed",
+    "generation overflow can still use equal-generation queue invalidation as a stale-queue flush",
+    "Lane3SerializedPracticeClickGate supersedes AW20 as selected count-in product route and performs coordinator discard before interruption transport boundary",
+    "selected route count-in planning requires exact arm generation, closing AW20 newer-generation authorization tolerance",
+    "schedule commit revokes AW20 one-shot authorization before serialized raw-state consume; consume failure attempts exact-authority discard",
+    "interruption boundary flag is set before first await so re-entrant product count-in arm cannot appear between discard and transport transition"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "swift_declaration_parse": "PASS",
+    "semantic_harness": "PASS",
+    "accepted_schedule_preserved_on_consume": true,
+    "raw_pending_nil_after_consume": true,
+    "duplicate_consume_rejected": true,
+    "stale_authorization_rejected_without_erasing_newer_arm": true,
+    "raw_pending_nil_after_discard": true,
+    "discard_advances_generation": true,
+    "discard_invalidates_queue": true,
+    "invalidation_failure_poison": true,
+    "failure_recovery_model": "PASS",
+    "generation_overflow_fail_closed_model": "PASS"
+  },
+  "stress": {
+    "cycles": 50000,
+    "final_pending_countin": null,
+    "final_generation": 83336,
+    "invalidations": 83336,
+    "failure_recovery": "PASS",
+    "overflow_fail_closed": "PASS",
+    "checksum": 2083508333,
+    "status": "PASS"
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "cycles_per_round": 2000,
+    "median_ms": 36.274,
+    "p95_ms": 50.049,
+    "max_ms": 55.714,
+    "checksum": 66686660,
+    "scope": "actor-based semantic microbenchmark for arm plus consume/discard ordering and queue-invalidation bookkeeping; excludes repository production backend cost, AVAudioEngine, AVAudioSession, Apple click-node execution, file/device IO, real audio and current-Moises execution"
+  },
+  "repository_validation": {
+    "coordinator_change_is_additive_only": true,
+    "coordinator_added_lines": 269,
+    "coordinator_deleted_lines": 0,
+    "selected_route_authored": true,
+    "full_source_self_test_authored": true,
+    "full_source_benchmark_authored": true,
+    "selected_integrated_execution_pending": true
+  },
+  "aw20_gap_resolution": {
+    "raw_pending_quarantine_is_selected_route_primary_safety_mechanism": false,
+    "schedule_commit_consumes_raw_pending": true,
+    "interruption_begin_discards_raw_pending": true,
+    "direct_raw_countin_planner_from_app_still_forbidden": true
+  },
+  "device_timing_claimed": false,
+  "audible_artifact_claimed": false,
+  "real_audio_claimed": false,
+  "standardized_perceptual_metric_claimed": false,
+  "parity_claimed": false
+}

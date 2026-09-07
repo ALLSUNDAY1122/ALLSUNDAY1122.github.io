@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "provider-route-capacity-evidence.schema.json",
+  "title": "Lane 1 E06 Provider Capacity Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence_kind", "evidence_state", "parity_claim", "provider_id", "e01_approval_identity_sha256", "captured_at", "capacity", "privacy"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_kind": {"const": "PROVIDER_CAPACITY_SNAPSHOT"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "parity_claim": {"const": "NONE"},
+    "provider_id": {"type": "string", "minLength": 1},
+    "e01_approval_identity_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "captured_at": {"type": "string", "minLength": 1},
+    "capacity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quota_status", "credit_status", "rate_limit_capacity_status", "provider_account_provenance_sha256"],
+      "properties": {
+        "quota_status": {"enum": ["ADEQUATE", "INSUFFICIENT", "UNKNOWN"]},
+        "credit_status": {"enum": ["ADEQUATE", "INSUFFICIENT", "UNKNOWN"]},
+        "rate_limit_capacity_status": {"enum": ["ADEQUATE", "INSUFFICIENT", "UNKNOWN"]},
+        "provider_account_provenance_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_account_id_emitted", "raw_quota_values_emitted", "raw_credit_values_emitted", "raw_billing_records_emitted"],
+      "properties": {
+        "provider_account_id_emitted": {"const": false},
+        "raw_quota_values_emitted": {"const": false},
+        "raw_credit_values_emitted": {"const": false},
+        "raw_billing_records_emitted": {"const": false}
+      }
+    }
+  }
+}

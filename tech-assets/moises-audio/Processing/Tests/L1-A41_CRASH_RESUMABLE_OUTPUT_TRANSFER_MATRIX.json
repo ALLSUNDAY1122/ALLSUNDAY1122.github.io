@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A41",
+  "title": "Crash-Resumable Long-Track Output Transfer",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "tool_version": "L1-A41-v1",
+  "observed_at": "2026-08-27T10:44:00+09:00",
+  "target_parity_row": "MOI-P021",
+  "implementation": {
+    "runtime": "Separation/Server/resumable_long_track_production_orchestrator.py",
+    "production_entrypoint": "Separation/Server/budgeted_production_orchestrator.py",
+    "regression": "Separation/Tests/test_resumable_long_track_production_orchestrator.py",
+    "http_semantics_regression": "Separation/Tests/test_a41_resume_http_semantics.py",
+    "dependency_binding_regression": "Separation/Tests/test_a41_dependency_binding.py"
+  },
+  "safety_contract": {
+    "resume_requires": [
+      "HTTPS output URL",
+      "strong ETag",
+      "known positive total length",
+      "matching URL SHA-256 reference",
+      "HTTP 206 with exact Content-Range start and total",
+      "matching strong ETag on resumed response"
+    ],
+    "fail_closed": [
+      "validator mismatch",
+      "range start mismatch",
+      "total length mismatch",
+      "declared or observed output larger than configured cap",
+      "unsafe/corrupt resume metadata",
+      "signed URL rotation discards incomplete prefix",
+      "no strong validator never retains an interrupted prefix"
+    ],
+    "safe_restart": [
+      "server ignores Range and returns HTTP 200: restart from byte zero instead of splicing"
+    ],
+    "privacy": [
+      "raw signed output URL is never persisted in resume sidecar; only SHA-256 URL reference is durable"
+    ],
+    "storage": [
+      "complete cache is hard-linked into ephemeral staging to avoid a second full stem copy",
+      "cache directory is removed after inherited atomic final-directory commit succeeds"
+    ]
+  },
+  "isolated_validation": {
+    "python_compile": "PASS",
+    "combined_unittest": {
+      "tests_run": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "state": "PASS"
+    },
+    "covered_cases": [
+      "interruption retains validator-bound prefix",
+      "Range + If-Range resumes at exact byte",
+      "complete cache avoids repeated network transfer",
+      "signed URL rotation restarts full download",
+      "ETag mismatch deletes partial/state",
+      "missing strong ETag deletes unsafe partial",
+      "declared oversize rejected before body",
+      "truncated known-length response remains resumable",
+      "raw signed URL absent from durable sidecar",
+      "hardlink materialization survives cache-link removal",
+      "Range ignored with HTTP 200 restarts from zero",
+      "wrong Content-Range start fails closed",
+      "A41 runtime/regression presence binding",
+      "budgeted production entrypoint wiring binding"
+    ]
+  },
+  "not_observed": [
+    "exact repository-native full Worker-branch unittest discovery on the final A41 tip",
+    "exact A26 one-command audit on the final A41 tip",
+    "real provider Range/If-Range behavior",
+    "rights-cleared real long-track audio",
+    "physical iPhone memory/thermal/battery/storage-pressure behavior",
+    "current-iPhone Moises differential"
+  ],
+  "parity_claim": "NONE"
+}

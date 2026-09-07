@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "wave": "L3-AW04",
+  "area": "DSP sample-time metronome/count-in execution",
+  "status": "PASS_PORTABLE_NON_PARITY",
+  "validation_environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "apple_sdk_compile": false,
+    "physical_device": false,
+    "actual_audio_capture": false
+  },
+  "implementation": {
+    "portable_execution_model": "DSP/Sources/ClickExecution.swift",
+    "practice_state_adapter": "DSP/Sources/PracticeDSPClickExecutionPlanning.swift",
+    "apple_executor": "DSP/Sources/AppleSampleAccurateClickExecutor.swift",
+    "generation_invalidation": "dedicated click player stop + replacement schedule",
+    "append_contract": "same generation, render origin, sample rate and schedule kind; no overlap"
+  },
+  "tests": {
+    "portable_self_test": "PASS",
+    "coverage": [
+      "metronome absolute-to-relative sample mapping",
+      "rolling append",
+      "overlap rejection",
+      "stale-generation rejection before enqueue",
+      "generation regression rejection",
+      "generation invalidation clears anchor/queue state",
+      "four-click count-in boundary",
+      "event-before-render-origin rejection",
+      "non-increasing sample rejection",
+      "append render-origin mismatch rejection",
+      "append sample-rate mismatch rejection",
+      "append schedule-kind mismatch rejection",
+      "PracticeDSP metronome disabled rejection",
+      "PracticeDSP missing count-in rejection",
+      "tempo-ratio-aware click spacing",
+      "100000 rolling append regression"
+    ]
+  },
+  "benchmark": {
+    "rounds": 20,
+    "batches_per_round": 50000,
+    "events_per_batch": 8,
+    "events_per_round": 400000,
+    "median_ms": 4.712,
+    "p95_ms": 7.540,
+    "p99_ms": 11.517,
+    "max_ms": 11.517,
+    "checksum": 51297024000000,
+    "scope": "portable CPU planning/state only; not AVAudioPlayerNode render performance"
+  },
+  "parity_rows": ["MOI-P014", "MOI-P015"],
+  "parity_promotion_allowed": false,
+  "remaining_gates": [
+    "selected Xcode/iOS SDK compile",
+    "integrated authoritative render-origin and common-host anchor",
+    "seek/loop/tempo/interruption generation invalidation wiring",
+    "target-device verification that dedicated player stop purges queued stale buffers",
+    "physical-iPhone onset/drift capture",
+    "rights-cleared studio and live/variable-tempo tracks",
+    "count-in final-click to music-start measurement",
+    "human audible review",
+    "current-Moises differential comparison"
+  ]
+}

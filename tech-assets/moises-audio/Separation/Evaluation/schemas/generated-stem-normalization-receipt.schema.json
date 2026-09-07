@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "generated-stem-normalization-receipt.schema.json",
+  "title": "L1-A23 Generated Stem Normalization Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "tool_version", "evidence_state", "input_artifact_sha256", "output_artifact_sha256", "normalization_plan_sha256", "normalizer_artifact_sha256", "execution_evidence_sha256", "parity_claim"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"const": "L1-A23-v1"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "input_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "output_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "normalization_plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "normalizer_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "execution_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "parity_claim": {"const": "NONE"}
+  }
+}

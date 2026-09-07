@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "wave": "L1-E05",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "live_gate_state": "PENDING_EXTERNAL_INPUT",
+  "required_scenarios": [
+    {"scenario_kind": "NETWORK_INTERRUPTION", "must_prove": ["stable error classification", "same logical identity", "no duplicate task/billing", "no project corruption"]},
+    {"scenario_kind": "CANCEL_UPLOAD", "must_prove": ["logical cancellation", "zero provider create", "no output publication", "truthful upstream state"]},
+    {"scenario_kind": "CANCEL_SEPARATING", "must_prove": ["logical cancellation", "provider cancel request <= 1", "no output publication", "upstream claim only when confirmed"]},
+    {"scenario_kind": "CANCEL_FINALIZING", "must_prove": ["logical cancellation wins ready race", "provider cancel request <= 1", "no partial publication"]},
+    {"scenario_kind": "AMBIGUOUS_CREATE_RETRY", "must_prove": ["reconciliation performed", "automatic create repost = 0", "distinct provider task <= 1", "billable task <= 1"]},
+    {"scenario_kind": "RELAUNCH", "must_prove": ["relaunch observed", "logical/idempotency identity preserved", "no duplicate provider task", "safe project state"]},
+    {"scenario_kind": "OUTPUT_EXPIRY", "must_prove": ["verified local copy or refreshed URL or fail closed", "no blind new provider job", "committed result not corrupted"]},
+    {"scenario_kind": "RATE_LIMIT", "must_prove": ["actual rate limit observed", "no unsafe create repost", "provider/account provenance"]},
+    {"scenario_kind": "LONG_TRACK", "must_prove": ["bounded streaming observed", "no partial publication", "provider/account provenance"]},
+    {"scenario_kind": "STORAGE_PRESSURE", "must_prove": ["storage preflight observed", "no project corruption", "previous committed result preserved on fail-closed path"]}
+  ],
+  "local_regression": {
+    "test_methods": 26,
+    "passed": 26,
+    "failed": 0,
+    "py_compile": "PASS",
+    "evidence_class": "synthetic control only; not live provider or PARITY evidence"
+  },
+  "negative_coverage": [
+    "missing required scenario",
+    "E01 not ready",
+    "E03 not ready",
+    "duplicate billable task",
+    "multiple distinct provider tasks",
+    "automatic provider create repost",
+    "logical identity changed",
+    "ambiguous create without reconciliation",
+    "ambiguous create second POST",
+    "unconfirmed upstream cancel claimed as confirmed",
+    "output publication after cancel",
+    "cancel during upload after provider create",
+    "duplicate provider cancel request",
+    "project corruption",
+    "partial result publication",
+    "relaunch not observed",
+    "429/rate limit not observed",
+    "long track not streamed",
+    "storage preflight absent",
+    "unsafe output expiry resolution",
+    "fault provenance SHA mismatch",
+    "private evidence root inside repository",
+    "fail-closed path mutates prior committed result",
+    "public evidence leaks private paths"
+  ],
+  "parity_claim": "NONE"
+}

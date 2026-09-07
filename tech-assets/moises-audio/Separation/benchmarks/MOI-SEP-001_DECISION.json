@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-SEP-001",
+  "attempt": "task/MOI-SEP-001/attempt-2",
+  "captured_at": "2026-08-22",
+  "integration_epoch": 1,
+  "licensing_dependency": {
+    "task": "MOI-SEP-LIC-001",
+    "status_required": "VERIFIED",
+    "production_weight_policy": "PROJECT_OWNED_FROM_SCRATCH_OR_EXPLICIT_WRITTEN_COMMERCIAL_GRANT",
+    "excluded_pretrained": [
+      "official Demucs/HTDemucs weights",
+      "Spleeter weights while current commercial use/conversion/redistribution grant remains unresolved",
+      "Open-Unmix noncommercial or otherwise uncleared weights"
+    ]
+  },
+  "selected": {
+    "model_family": "Demucs/HTDemucs-class permissively licensed code",
+    "weights": "project-owned weights trained from scratch on rights-cleared real multitracks",
+    "inference_baseline": "PyTorch CUDA server",
+    "product_topology": "asynchronous server inference plus iPhone durable project/job/stem cache",
+    "reason": "same-framework serving minimizes conversion risk during the first lawful quality loop while keeping large inference off the iPhone; hybrid lifecycle matches the verified nonblocking processing/player requirement without claiming Reference backend identity"
+  },
+  "candidate_scores": [
+    {
+      "id": "pytorch_cuda_server",
+      "quality_preservation": 5,
+      "first_result_latency": 3,
+      "iphone_memory_thermal": 5,
+      "infra_cost": 2,
+      "conversion_operator_risk": 5,
+      "offline_privacy": 2,
+      "engineering_confidence": 5,
+      "status": "SELECTED_INFERENCE_BASELINE"
+    },
+    {
+      "id": "onnxruntime_cuda_server",
+      "quality_preservation": 4,
+      "first_result_latency": 4,
+      "iphone_memory_thermal": 5,
+      "infra_cost": 3,
+      "conversion_operator_risk": 3,
+      "offline_privacy": 2,
+      "engineering_confidence": 3,
+      "status": "CHALLENGER_AFTER_EXPORT_EQUIVALENCE"
+    },
+    {
+      "id": "coreml_direct_on_device",
+      "quality_preservation": 3,
+      "first_result_latency": 3,
+      "iphone_memory_thermal": 2,
+      "infra_cost": 5,
+      "conversion_operator_risk": 2,
+      "offline_privacy": 5,
+      "engineering_confidence": 2,
+      "status": "R_AND_D_ONLY"
+    },
+    {
+      "id": "onnxruntime_coreml_on_device",
+      "quality_preservation": 3,
+      "first_result_latency": 3,
+      "iphone_memory_thermal": 2,
+      "infra_cost": 5,
+      "conversion_operator_risk": 2,
+      "offline_privacy": 5,
+      "engineering_confidence": 2,
+      "status": "SECONDARY_R_AND_D_ONLY"
+    },
+    {
+      "id": "server_inference_plus_client_cache",
+      "quality_preservation": 5,
+      "first_result_latency": 4,
+      "iphone_memory_thermal": 5,
+      "infra_cost": 2,
+      "conversion_operator_risk": 4,
+      "offline_privacy": 3,
+      "engineering_confidence": 5,
+      "status": "SELECTED_PRODUCT_TOPOLOGY"
+    }
+  ],
+  "score_semantics": "1=weak, 5=strong; pre-benchmark engineering score only, not measured performance or PARITY evidence",
+  "promotion_requirements": [
+    "same cleared project-owned weight lineage",
+    "successful executable export/runtime build",
+    "Golden objective metrics no worse than baseline",
+    "blind listening no material regression",
+    "no output duration/alignment/stem-order regression",
+    "latency/memory/thermal/cost measured on target environment",
+    "runtime distribution obligations cleared",
+    "failure/cancel/retry behavior remains deterministic"
+  ],
+  "benchmark_required": {
+    "durations_minutes": [5, 15, 30, 60],
+    "server_metrics": [
+      "cold_start_ms",
+      "queue_wait_ms",
+      "inference_wall_ms",
+      "real_time_factor",
+      "peak_gpu_vram_mb",
+      "cost_per_processed_audio_minute",
+      "throughput_at_concurrency",
+      "upload_bytes",
+      "download_bytes"
+    ],
+    "device_metrics": [
+      "peak_rss_mb",
+      "thermal_state",
+      "battery_delta",
+      "inference_wall_ms",
+      "real_time_factor"
+    ],
+    "quality_metrics": [
+      "per_stem_si_sdr",
+      "reconstruction_error",
+      "duration_alignment",
+      "stem_order_and_manifest_hashes",
+      "blind_listening_rubric"
+    ],
+    "recovery": [
+      "cancel_10_percent",
+      "cancel_50_percent",
+      "cancel_near_complete",
+      "retry_idempotency",
+      "reconnect",
+      "duplicate_job_guard",
+      "partial_output_cleanup"
+    ]
+  },
+  "known_unknowns": [
+    "project-owned trained separator weights do not exist yet",
+    "real separator quality is unmeasured",
+    "target server GPU/region/concurrency/cost",
+    "exact Core ML operator coverage for eventual trained graph",
+    "target iPhone memory thermal battery performance",
+    "Reference separation quality and processing latency"
+  ],
+  "parity_rows_informed": ["MOI-P003", "MOI-P004", "MOI-P005"],
+  "parity_state_change": false
+}

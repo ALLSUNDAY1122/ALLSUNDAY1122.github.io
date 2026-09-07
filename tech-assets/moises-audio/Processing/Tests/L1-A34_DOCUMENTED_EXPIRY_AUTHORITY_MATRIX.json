@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A34",
+  "title": "Provider Delete Reconciliation Documented Expiry Authority",
+  "state": "COMPLETE_NON_PARITY",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "implementation": {
+    "source": "tech-assets/moises-audio/Separation/Server/provider_delete_reconciliation.py",
+    "tool_version": "L1-A34-v1",
+    "remote_blob_sha": "139d0fcbe993baecbc2bcb1662ed3cad849205f5",
+    "repository_regression": "tech-assets/moises-audio/Separation/Tests/test_provider_delete_reconciliation_documented_expiry.py"
+  },
+  "verification": {
+    "local_candidate_py_compile": "PASS",
+    "focused_candidate_harness": {
+      "state": "PASS",
+      "tests_run": 9,
+      "failures": 0,
+      "errors": 0,
+      "note": "Focused harness executed the A34 implementation candidate against an interface-compatible AtomicPrivacyRegistry stub. Remote readback confirms the intended A34 validation branches; exact full Worker checkout execution remains unavailable."
+    },
+    "remote_source_readback": "PASS_INTENDED_A34_BRANCHES_PRESENT",
+    "exact_worker_branch_unittest_discovery": "NOT_OBSERVED_A26_GATE_PENDING"
+  },
+  "scenarios": [
+    {
+      "id": "A34-01",
+      "scenario": "documented asset expiry observation precedes registered vendor asset expiry epoch",
+      "expected": "SEP_PRIVACY_RECONCILE_DOCUMENTED_EXPIRY_NOT_REACHED; no applying/applied watermark",
+      "state": "PASS_FOCUSED"
+    },
+    {
+      "id": "A34-02",
+      "scenario": "documented asset expiry observed exactly at registered vendor asset expiry epoch with local clock at expiry",
+      "expected": "expired may be applied as asset-only expiry evidence",
+      "state": "PASS_FOCUSED"
+    },
+    {
+      "id": "A34-03",
+      "scenario": "observation timestamp reaches expiry but local runtime clock has not",
+      "expected": "SEP_PRIVACY_RECONCILE_LOCAL_CLOCK_BEFORE_EXPIRY",
+      "state": "PASS_FOCUSED"
+    },
+    {
+      "id": "A34-04",
+      "scenario": "registered vendor asset expiry epoch is absent or boolean/invalid",
+      "expected": "SEP_PRIVACY_RECONCILE_DOCUMENTED_EXPIRY_EPOCH_INVALID",
+      "state": "PASS_FOCUSED"
+    },
+    {
+      "id": "A34-05",
+      "scenario": "documented_expiry source attempts present or unknown state",
+      "expected": "SEP_PRIVACY_RECONCILE_DOCUMENTED_EXPIRY_STATE_INVALID",
+      "state": "PASS_FOCUSED"
+    },
+    {
+      "id": "A34-06",
+      "scenario": "documented_expiry source attempts confirmed/not_found",
+      "expected": "existing SEP_PRIVACY_RECONCILE_SOURCE_INSUFFICIENT compatibility preserved",
+      "state": "PASS_FOCUSED"
+    },
+    {
+      "id": "A34-07",
+      "scenario": "documented asset TTL attempts to prove task expiry",
+      "expected": "SEP_PRIVACY_RECONCILE_EXPIRY_SCOPE_INVALID",
+      "state": "PASS_FOCUSED"
+    },
+    {
+      "id": "A34-08",
+      "scenario": "premature documented expiry is rejected, followed by valid provider_api confirmation",
+      "expected": "invalid event remains observed_not_applied and cannot poison ordering; later valid provider evidence applies",
+      "state": "PASS_FOCUSED"
+    },
+    {
+      "id": "A34-09",
+      "scenario": "privacy completion semantics",
+      "expected": "documented expiry can establish asset expiry only after TTL; task deletion still requires confirmed/not_found and no PARITY is inferred",
+      "state": "PASS_STATIC"
+    }
+  ],
+  "remaining_gates": [
+    "L1-A26 exact full Worker-branch dependency audit remains unobserved",
+    "Provider-specific authoritative delete-status/clock contracts remain external/private input",
+    "A29-A34 file-backed reconciliation remains single-host only",
+    "P003/P004/P005/P020/P021/P024/P025 remain MISSING pending live/runtime/current-iPhone/HQ evidence"
+  ]
+}

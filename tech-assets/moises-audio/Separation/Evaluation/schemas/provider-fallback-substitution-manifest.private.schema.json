@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "provider-fallback-substitution-manifest.private.schema.json",
+  "title": "Lane 1 E07 Private Fallback Substitution Manifest",
+  "type": "object",
+  "required": ["schema_version","evidence_state","parity_claim","route_id","route_kind","replaced_route_id","adapter","shared_app_contract_changed","provider_neutral_publication_contract_preserved","prior_fallback_dispositions","invariants","capacity_authority","commercial_basis","runtime","training_rights"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "parity_claim": {"const": "NONE"},
+    "route_id": {"type": "string", "minLength": 1},
+    "route_kind": {"enum": ["LICENSED_LOCAL_INFERENCE_SDK","ALTERNATE_WRITTEN_COMMERCIAL_PROVIDER","PROJECT_OWNED_MODEL_IF_RIGHTS_CLEARED_TRAINING_DATA_AVAILABLE"]},
+    "replaced_route_id": {"type": "string", "minLength": 1},
+    "adapter": {"type":"object","required":["source_path","source_sha256","class_name"],"properties":{"source_path":{"type":"string"},"source_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"class_name":{"type":"string"}}},
+    "shared_app_contract_changed": {"const": false},
+    "provider_neutral_publication_contract_preserved": {"const": true},
+    "prior_fallback_dispositions": {"type":"array","items":{"type":"object","required":["fallback_kind","disposition","evidence_path","evidence_sha256"],"properties":{"fallback_kind":{"type":"string"},"disposition":{"enum":["UNAVAILABLE","REJECTED"]},"evidence_path":{"type":"string"},"evidence_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}}},
+    "invariants": {"type":"array","minItems":15,"maxItems":15,"items":{"type":"object","required":["invariant_id","status","waived","evidence_path","evidence_sha256"],"properties":{"invariant_id":{"type":"string"},"status":{"const":"PASS"},"waived":{"const":false},"evidence_path":{"type":"string"},"evidence_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}}},
+    "capacity_authority": {"type":"object","required":["kind","provenance_path","provenance_sha256"],"properties":{"kind":{"enum":["HOSTED_PROVIDER_ACCOUNT","LOCAL_RUNTIME","PROJECT_OWNED_RUNTIME"]},"provenance_path":{"type":"string"},"provenance_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}},
+    "commercial_basis": {"type":"object","required":["document_path","document_sha256","consumer_app_commercial_use_allowed","output_export_allowed","provider_training_on_user_content_allowed"],"properties":{"document_path":{"type":"string"},"document_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"consumer_app_commercial_use_allowed":{"const":true},"output_export_allowed":{"const":true},"provider_training_on_user_content_allowed":{"const":false}}},
+    "runtime": {"type":"object","required":["runtime_id","model_name","model_version","quality_profile","artifact_path","artifact_sha256"],"properties":{"runtime_id":{"type":"string"},"model_name":{"type":"string"},"model_version":{"type":"string"},"quality_profile":{"type":"string"},"artifact_path":{"type":"string"},"artifact_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}},
+    "training_rights": {"type":["object","null"]}
+  }
+}

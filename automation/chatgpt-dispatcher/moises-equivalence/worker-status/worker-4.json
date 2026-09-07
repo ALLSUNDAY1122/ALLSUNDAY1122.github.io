@@ -1,0 +1,82 @@
+{
+  "schema_version": 3,
+  "worker_id": "Moises-Worker-4",
+  "lane_id": "LANE-4-IOS-ANALYSIS",
+  "assignment_epoch": 2,
+  "planning_revision": 4,
+  "work_branch": "moises/wp4-analysis-platform",
+  "state": "IN_PROGRESS",
+  "current_bundle": null,
+  "completed_bundles": ["L4-M01", "L4-M02", "L4-M03", "L4-M04"],
+  "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
+  "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
+  "prior_checkpoint_head": "a1c90c681837ba018410c0247b78952641f09ddc",
+  "head_sha": "16960a4b58f2122e5bbc31803ec46712d83d3e97",
+  "unintegrated_range": "be1c84314db182d6eee5097de34e017af1a4a7de..16960a4b58f2122e5bbc31803ec46712d83d3e97",
+  "unintegrated_commit_count": 63,
+  "history_checkpoints": {
+    "L4-M04": "ed71af63fbbfe2c4116dd684b32b71057d45e612",
+    "L4-W05": "26585adb718cb007c20e6db2c16c317f5eaa9182",
+    "L4-W06": "0da56b8a31608dda55158708d6e886dd6fe23c7f",
+    "L4-W07": "a1c90c681837ba018410c0247b78952641f09ddc",
+    "L4-W08": "16960a4b58f2122e5bbc31803ec46712d83d3e97"
+  },
+  "commits": [
+    "ef23c4016efa685b88af7ae2f6f0f71314b2a3b8",
+    "ca1886f540e41908eea117335f2b04edd8f98e57",
+    "c9939d87005793004cea403e10f35ef6852f73b3",
+    "963989c973e614db611d07e713da8145f62fa17f",
+    "6b4fbd5ec79bd3fe862fa14b24f4d7556010e4e0",
+    "16960a4b58f2122e5bbc31803ec46712d83d3e97"
+  ],
+  "commit_scope": "commits lists the latest autonomous wave delta; earlier unintegrated work is preserved by prior_checkpoint_head/history_checkpoints and the base..head range on the long-lived branch",
+  "autonomous_wave": {
+    "wave_id": "L4-W08",
+    "goal": "Harden chord vocabulary and inversion handling so complex harmony is not flattened into incorrect major/minor labels, while preparing reference-gated extended diagnostics without changing frozen Shared contracts.",
+    "rationale": "MOI-P013 remains MISSING. Tempo/key synthetic hardening was already completed, while complex chord vocabulary/inversion behavior was the highest-value Lane 4 correctness gap that could be reduced without rights-cleared external audio or current-iPhone reference access.",
+    "done_when": "Clear major/minor timeline behavior remains compatible; strong 7th/maj7/min7/sus/dim/aug evidence fails closed in product mode; an internal extended diagnostic vocabulary and slash-inversion representation exist; bass-aware root handling, normalization, negative tests, machine-readable evidence and validation are committed.",
+    "result": "COMPLETE_NON_PARITY: added ChordVocabularyClassifier with conservative product and extended diagnostic modes; product mode now withholds unsupported complex labels as X instead of misclassifying simple triads; diagnostic mode distinguishes dominant7/major7/minor7/sus2/sus4/diminished/augmented and inversion forms; low-register evidence protects harmonic root under inversion; augmented symmetry requires a root anchor; label aliases normalize to canonical sharps. Portable classifier harness 10/10 and timeline regression PASS. Real Golden MIR/current-Moises/device evidence remains external/HQ-gated.",
+    "completed_at": "2026-08-23T18:02:00+09:00"
+  },
+  "tests": [
+    "L4-M01 through L4-M04 bootstrap implementation/evidence remain preserved on the long-lived branch",
+    "L4-W05 rights-safe Golden MIR admission/batch infrastructure portable checks PASS",
+    "L4-W06 tempo/beat adversarial harness PASS 7/7",
+    "L4-W07 key adversarial harness PASS 8/8",
+    "L4-W08 ChordVocabularyClassifier + ChordTimelineAnalyzer compile against frozen-contract-shaped stubs on Swift 6.2.1 Linux",
+    "L4-W08 executable classifier harness PASS 10/10: C, A:min, product C7->X, diagnostic C:7/C:maj7/A:min7/C:sus4/B:dim/C:aug/C/E",
+    "L4-W08 timeline regression PASS: exact labels C -> A:min -> N -> G, gap-free 0..7 s; standalone product C7 -> X",
+    "L4-W08 label normalization PASS: Bb:maj7/D -> A#:maj7/D; A:m7/C -> A:min7/C; Db:sus -> C#:sus4",
+    "L4-W08 ten-case portable harness wall times 0.33/0.33/0.34/0.37/0.32 s, median 0.33 s; this is not device evidence",
+    "L4-W08 committed XCTest source adds 8 deterministic methods and swiftc parse PASS; full canonical swift test remains HQ/integrated-checkout gate"
+  ],
+  "evidence": [
+    "Analysis/ChordVocabularyClassifier.swift contains extended quality scoring, conservative vocabulary gating, bass-aware inversion logic and canonical label normalization",
+    "ChordTimelineAnalyzer product path explicitly uses conservativeMajorMinor mode so unverified complex/slash labels cannot leak into product output",
+    "Strong seventh-family evidence returns X in product mode rather than a confidently wrong major/minor triad",
+    "Extended diagnostic mode is deliberately internal preparation for HQ reference verification, not a current product parity claim",
+    "Machine-readable NON_PARITY evidence saved at Analysis/benchmarks/L4-W08_CHORD_VOCABULARY_ADVERSARIAL.json",
+    "Durable validation saved at Tests/L4-W08_VALIDATION.md",
+    "Epoch-base compare after L4-W08: branch ahead 63, behind 0; all changed paths remain inside Analysis/**, Package.swift, Tests/** or iOS/**",
+    "MOI-P009/P011/P013/P016 remain MISSING because no rights-cleared real-audio/current-Moises differential has been accepted by HQ"
+  ],
+  "known_gaps": [
+    "Rights-safe Golden MIR infrastructure exists, but no rights-cleared multi-genre real-audio corpus with trustworthy ground truth has been supplied/run; P009/P011/P013/P016 cannot be promoted",
+    "Tempo synthetic hardening covers half/double, gradual drift, weak percussion, syncopated rate and common meter ambiguity, but live drummer/rubato/swing/varied-meter behavior and authoritative beat phase remain unverified on real audio",
+    "Key synthetic hardening covers clear major/minor, relative-key ambiguity, rooted modal signatures, obvious modulation and short-intro dominance; real modal vocabulary and subtler modulation remain unverified",
+    "Chord synthetic hardening now protects against strong seventh/sus/dim/aug misclassification and inversion root loss, but current-iPhone complex/slash vocabulary, real voicings, noisy mixes and short-transition accuracy remain unverified",
+    "Song-section functional labels and varied-structure robustness are now the next highest-value Lane 4 algorithm-hardening target",
+    "A fresh full canonical checkout regression, XcodeGen/Xcode Simulator build, four-Lane compile and physical-iPhone latency/RSS/thermal/battery/long-track behavior remain HQ Late Integration gates",
+    "Current Moises differential comparison for BPM/key/chords/sections has not been performed"
+  ],
+  "hq_requests": [
+    "Consume Lane 4 as a semantic checkpoint when useful; preserve the full base..head range and resolve cross-Lane adapters centrally.",
+    "Bind the final app-owned decode path to AnalysisBenchmarkSignalLoading and provide SHA-256 for the exact source file so the Golden MIR gate can execute real evidence without weakening checksum verification.",
+    "Run a fresh canonical SwiftPM regression, XcodeGen/Xcode Simulator gate and physical-iPhone tests before treating Lane 4 evidence as product evidence.",
+    "Supply/approve a rights-cleared multi-genre Golden MIR corpus with trustworthy BPM/beat/key/chord/section ground truth, then run P009/P011/P013/P016 and current-Moises differential.",
+    "Verify current-iPhone Moises key/modal vocabulary, complex/slash chord vocabulary and section functional-label/unknown behavior before enabling the prepared extended product labels."
+  ],
+  "next_priority": "Autonomous Wave L4-W09: song-section varied-structure and functional-label hardening for intro/verse/pre-chorus/chorus/bridge/outro repetition patterns, boundary false-positive suppression and conservative unknown semantics, while keeping exact current-iPhone vocabulary reference-gated.",
+  "last_updated": "2026-08-23T18:02:00+09:00",
+  "writer_policy": "Only Moises-Worker-4 may update this status file. Global Queue is not used for Worker dispatch in v4."
+}

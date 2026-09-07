@@ -1,0 +1,59 @@
+{
+  "wave_id": "L3-AW13",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "implementation": [
+    "snapshot-validated AW12 production-generation evidence receipt",
+    "AW11/AW12 exact playback-generation, click-generation and reason lineage binding",
+    "single-call AW07 time + AW08 spectral + AW10 envelope recomputation from one raw PCM pair",
+    "portable SHA-256 canonical Float32 PCM identity",
+    "unified SHA-256 run binding over fixture/control/generations/PCM/alignment/event identity",
+    "AW09 core evidence compatibility projection rebuilt inside v2 rather than accepting an arbitrary legacy report"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "exact_aw13_source_interface_compatible_compile_run": true,
+    "sha256_python_hashlib_cross_check": true,
+    "current_aw12_binding_capture": "PASS",
+    "stale_aw12_receipt_rejection": "PASS",
+    "click_only_receipt_authority_rejection": "PASS",
+    "aw11_aw12_generation_lineage_rejection": "PASS",
+    "aw11_aw12_reason_lineage_rejection": "PASS",
+    "same_raw_pcm_aw07_aw08_aw10_pipeline": "PASS",
+    "envelope_alignment_mismatch_rejection": "PASS",
+    "nonfinite_envelope_rejection": "PASS",
+    "single_sample_pcm_mutation_changes_identity": "PASS",
+    "codable_round_trip": "PASS",
+    "repository_full_source_self_test_authored": true,
+    "repository_full_analysis_benchmark_authored": true
+  },
+  "deterministic_probe": {
+    "run_binding_sha256": "47caf79fec1d422118a33e6e0ee973640f118fdec09f79397680f77c370c1c44",
+    "reference_pcm_sha256": "1ae0e19a911d747fffa5c39cc8be7e7d51e583e235c32406faf8c2612eec8c67",
+    "one_sample_mutated_observed_pcm_sha256": "b0c189f9b8731d9950f742995979e5eeb8efa0efbe4131b51dfe83e16592f49c"
+  },
+  "receipt_hash_benchmark": {
+    "rounds": 20,
+    "assemblies_per_round": 20,
+    "frames_per_buffer": 16384,
+    "channels": 2,
+    "median_ms_per_round": 27.258,
+    "p95_ms_per_round": 31.126,
+    "max_ms_per_round": 31.126,
+    "checksum": 1331579990000,
+    "scope": "exact AW13 receipt and SHA-256 PCM identity code with interface-compatible AW07/AW08/AW10 analyzer stubs; excludes actual analysis cost, AVAudioEngine, AudioUnit, file IO and device capture"
+  },
+  "evidence_scope": "LANE3_UNIFIED_PLAYBACK_DSP_EVIDENCE_V2_NON_PARITY",
+  "human_audibility_claimed": false,
+  "standardized_perceptual_metric_claimed": false,
+  "formant_preservation_claimed": false,
+  "device_timing_claimed": false,
+  "parity_claimed": false
+}

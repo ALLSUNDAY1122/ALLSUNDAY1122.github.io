@@ -1,0 +1,73 @@
+name: Moises HQ Lane2 Deletion Recovery Authority
+
+on:
+  push:
+    branches:
+      - tech/moises-separation
+    paths:
+      - 'tech-assets/moises-audio/Library/Sources/DeletionOwnership*.swift'
+      - 'tech-assets/moises-audio/Library/Sources/LibraryDescriptorRelativeIO.swift'
+      - 'tech-assets/moises-audio/Library/Tests/DeletionOwnershipPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
+      - '.github/workflows/moises-hq-l2-deletion-recovery-authority.yml'
+  pull_request:
+    paths:
+      - 'tech-assets/moises-audio/Library/Sources/DeletionOwnership*.swift'
+      - 'tech-assets/moises-audio/Library/Sources/LibraryDescriptorRelativeIO.swift'
+      - 'tech-assets/moises-audio/Library/Tests/DeletionOwnershipPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
+      - '.github/workflows/moises-hq-l2-deletion-recovery-authority.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: moises-hq-l2-deletion-recovery-authority-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  portable-deletion-recovery-path-authority-xctest:
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.0
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: Execute Lane 2 deletion recovery path and descriptor authority regressions
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp=/tmp/l2-deletion-recovery-authority-xctest
+          rm -rf "$tmp"
+          mkdir -p "$tmp/Sources/Lane2Deletion/Shared" "$tmp/Sources/Lane2Deletion/IO" "$tmp/Sources/Lane2Deletion/Library" "$tmp/Tests/Lane2DeletionTests"
+          cp Shared/DomainContracts.swift Shared/LibraryContracts.swift "$tmp/Sources/Lane2Deletion/Shared/"
+          cp IO/Sources/*.swift "$tmp/Sources/Lane2Deletion/IO/"
+          cp Library/Sources/*.swift "$tmp/Sources/Lane2Deletion/Library/"
+          out="$tmp/Tests/Lane2DeletionTests/DeletionOwnershipPathAuthorityTests.swift"
+          printf '@testable import Lane2Deletion\n' > "$out"
+          cat Library/Tests/DeletionOwnershipPathAuthorityTests.swift >> "$out"
+          descriptor="$tmp/Tests/Lane2DeletionTests/LibraryDescriptorRelativeIOTests.swift"
+          printf '@testable import Lane2Deletion\n' > "$descriptor"
+          cat Library/Tests/LibraryDescriptorRelativeIOTests.swift >> "$descriptor"
+          cat > "$tmp/Package.swift" <<'SWIFT'
+          // swift-tools-version: 6.0
+          import PackageDescription
+
+          let package = Package(
+              name: "Lane2DeletionRecoveryAuthorityCI",
+              targets: [
+                  .target(name: "Lane2Deletion", path: "Sources/Lane2Deletion"),
+                  .testTarget(
+                      name: "Lane2DeletionTests",
+                      dependencies: ["Lane2Deletion"],
+                      path: "Tests/Lane2DeletionTests"
+                  )
+              ]
+          )
+          SWIFT
+          swift test --package-path "$tmp" --parallel

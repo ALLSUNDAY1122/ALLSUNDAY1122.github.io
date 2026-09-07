@@ -1,0 +1,93 @@
+{
+  "wave_id": "L3-AW30",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_LONG_TRACK_EXECUTION_CANCELLATION_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "selected_xcode_compile": false,
+    "physical_iphone": false,
+    "real_avfaudio_decoder_cancellation_latency": false,
+    "real_long_track": false,
+    "actual_process_rss": false,
+    "thermal_battery": false,
+    "current_moises_differential": false,
+    "human_listening": false
+  },
+  "implementation": [
+    "lock-backed long-track evidence execution controller with explicit cancellation and pollable checkpoints",
+    "reference/observed PCM decorator checks cancellation before and after every underlying read",
+    "Swift Task cancellation and explicit cancellation share the same fail-closed execution state",
+    "monotonic stage transitions and conservative completed-stage progress lower bound",
+    "checkpoint has restartRequired semantics and contains no partial analyzer metrics/raw PCM/source path",
+    "checkpoints are never authoritative evidence and never permit PARITY promotion",
+    "completion receipt requires a lowercase 64-hex final report run binding and is unavailable after cancellation/failure",
+    "AW26 long-track unified pipeline accepts an optional execution controller without changing legacy behavior when omitted"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "behavior_probe": "L3-AW30 long-track execution self-test PASS cancellation=pre+midread+task progress=monotonic partialEvidence=forbidden completionBinding=validated",
+    "explicit_pre_read_cancellation": "PASS",
+    "mid_underlying_read_cancellation_discards_returned_pcm": "PASS",
+    "swift_task_cancellation": "PASS",
+    "illegal_stage_skip_rejected": "PASS",
+    "failed_execution_completion_rejected": "PASS",
+    "cancelled_execution_completion_rejected": "PASS",
+    "lowercase_sha256_completion_binding_required": "PASS",
+    "checkpoint_privacy_sentinels": "PASS",
+    "checkpoint_authoritative_evidence": false,
+    "checkpoint_resume_mode": "restartRequired"
+  },
+  "stress": {
+    "cycles": 50000,
+    "cancelled": 37500,
+    "completed": 12500,
+    "cancelled_completion_rejected": 37500,
+    "checksum": 543750,
+    "status": "PASS"
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "operations_per_round": 100000,
+    "checkpoint_poll_every_operations": 1000,
+    "median_ms": 1.462,
+    "p95_ms": 1.537,
+    "max_ms": 1.590,
+    "checksum": 101002000,
+    "scope": "execution lock/counter/checkpoint bookkeeping only; excludes decoder/file IO/analyzers/SHA scan/device/audio/cancellation latency"
+  },
+  "source_identity": {
+    "Playback/Sources/Lane3LongTrackEvidenceExecution.swift": "ceba6420af94b17550015a21a87e1ee7a6a012b8",
+    "Playback/Sources/Lane3LongTrackUnifiedEvidence.swift": "a05a88b163fa3a02176017193094c55cc1a747db",
+    "Playback/Tests/L3_AW30_LongTrackExecutionSelfTest.swift": "e1e1efcf815877b2da1b2fae013e1eafbdb60802",
+    "Playback/Tests/L3_AW30_LongTrackExecutionBenchmark.swift": "cc1e27f45e8ea67564e8ac94afeeac0ff836fe5d",
+    "Playback/Tests/L3_AW30_LongTrackExecutionStress.swift": "03e541a161eeb884eca1177dd335a985d05309f8",
+    "Playback/Tests/L3_AW30_LongTrackPipelineExecutionSelfTest.swift": "563eae8bc66696a95ad0c6fc6eafda487acca406"
+  },
+  "repository_validation": {
+    "execution_self_test_authored": true,
+    "execution_stress_authored": true,
+    "execution_benchmark_authored": true,
+    "full_pipeline_execution_self_test_authored": true,
+    "full_pipeline_selected_source_execution_pending": true,
+    "repository_integrated_pass_claimed": false
+  },
+  "cancellation_semantics": {
+    "hard_interrupt_of_synchronous_av_audio_file_read_claimed": false,
+    "post_read_cancellation_check": true,
+    "pcm_returned_to_analyzer_after_detected_mid_read_cancel": false,
+    "physical_device_request_to_abort_latency_measured": false,
+    "mid_analysis_resume_claimed": false,
+    "retry_semantics": "restart_from_validated_source_pair"
+  },
+  "claims": {
+    "physical_iphone_claimed": false,
+    "real_long_track_claimed": false,
+    "rss_thermal_battery_improvement_claimed": false,
+    "current_moises_differential_claimed": false,
+    "human_listening_claimed": false,
+    "parity_claimed": false
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "wave_id": "L3-AW06",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "apple_sdk_compile": false,
+    "apple_manual_render_runtime": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "portable_validation": {
+    "status": "PASS",
+    "harness_scope": "new AW06 portable source against interface-compatible M04 reference-render types; Apple AVFAudio branch parsed but not typechecked/executed on Linux",
+    "stress_manifest_validations": 100000,
+    "coverage": [
+      "deterministic request-plan preflight",
+      "missing stem metadata rejection",
+      "unexpected stem metadata rejection",
+      "source sample-rate and file-window bounds",
+      "click PCM required for count-in/metronome",
+      "click sample-rate mismatch rejection",
+      "streaming PCM RMS/peak/DC/non-finite summary",
+      "first/last non-silent frame digest",
+      "clip count and FNV-1a sample fingerprint",
+      "malformed interleaved PCM rejection"
+    ]
+  },
+  "preflight_benchmark": {
+    "rounds": 20,
+    "operations_per_round": 100000,
+    "median_ms": 125.805,
+    "p95_ms": 130.295,
+    "p99_max_ms": 135.079,
+    "checksum": 8000000,
+    "scope": "source-equivalent portable preflight; excludes AVAudioEngine"
+  },
+  "pcm_accumulator_benchmark": {
+    "rounds": 20,
+    "frames_per_round": 4096000,
+    "channels": 2,
+    "float_samples_per_round": 8192000,
+    "median_ms": 93.634,
+    "p95_ms": 99.561,
+    "p99_max_ms": 102.774,
+    "checksum_frames": 81920000,
+    "scope": "exact AW06 streaming accumulator; excludes AVAudioEngine"
+  },
+  "apple_adapter": {
+    "manual_rendering_mode": true,
+    "tempo_pitch_primitive": "AVAudioUnitTimePitch",
+    "optional_pcm_file_output": true,
+    "schedule_trace_is_audio_onset_detection": false,
+    "xcode_runtime_verification_pending": true
+  },
+  "parity_claimed": false
+}

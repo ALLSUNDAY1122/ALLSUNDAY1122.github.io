@@ -1,0 +1,100 @@
+{
+  "wave_id": "L3-AW19",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_PRIVACY_PRESERVING_PRODUCTION_TELEMETRY_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "av_audio_session_runtime": false,
+    "moises_differential": false
+  },
+  "implementation": [
+    "aggregate fixed-bucket latency histograms and saturating counters",
+    "per-kind product submission, internal-operation, executed, superseded, cancelled, rejected and failed counters",
+    "control and recovery Playback-token generation counts",
+    "coalesced predecessor and token-generations-per-1000-submissions metrics",
+    "submission-to-real-Playback-backend-entry latency for backend-backed transport routes",
+    "configured-quiet-period residual latency for continuous Playback-backed routes",
+    "real Playback backend execution latency",
+    "interruption begin/end/resume latency and lifecycle counters",
+    "bounded ephemeral backend-entry correlation bridge",
+    "stateless instrumented product facade preserving AW16-AW18 concurrency/coalescing semantics"
+  ],
+  "privacy": {
+    "aggregation_only": true,
+    "raw_event_log_retained": false,
+    "absolute_wall_clock_exported": false,
+    "project_identifier_exported": false,
+    "media_name_or_path_exported": false,
+    "pcm_or_audio_content_exported": false,
+    "ticket_or_generation_value_exported": false,
+    "ephemeral_monotonic_correlation_timestamp": true,
+    "ephemeral_correlation_persisted": false,
+    "default_correlation_cap_per_kind": 256
+  },
+  "portable_validation": {
+    "status": "PASS",
+    "production_sources_typechecked_against_interface_compatible_contracts": true,
+    "aggregate_self_test": {
+      "product_submissions": 505,
+      "pre_token_seek_superseded": 499,
+      "total_playback_tokens": 5,
+      "control_tokens": 4,
+      "recovery_tokens": 1,
+      "backend_entry_latency_matched": true,
+      "post_quiet_residual_histogram_matched": true,
+      "backend_execution_histogram_matched": true,
+      "interruption_counters_matched": true,
+      "privacy_sentinel_scan": "PASS"
+    },
+    "bounded_correlation_regression": {
+      "cap_per_kind": 2,
+      "injected_entries": 5,
+      "retained_entries_after_overflow": 2,
+      "overflow_drops": 3,
+      "valid_correlations_consumed": 2,
+      "pending_after_valid_correlations": 0,
+      "valid_unmatched": 0,
+      "deliberate_missing_backend_outcome_unmatched": 1,
+      "status": "PASS"
+    }
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "events_per_round": 20000,
+    "executed_token_shaped_events_per_round": 2000,
+    "pre_token_superseded_events_per_round": 18000,
+    "median_ms": 910.493,
+    "p95_ms": 959.372,
+    "max_ms": 1145.208,
+    "checksum": 800190,
+    "bridge_pending_after_each_round": 0,
+    "bridge_overflow_drops": 0,
+    "bridge_unmatched_outcomes": 0,
+    "scope": "exact AW19 aggregate collector plus bounded correlation bridge against interface-compatible transport/lifecycle contracts; excludes AVAudioEngine, AudioUnit, real Playback/DSP cost, file/device IO, AVAudioSession delivery, real audio and current-Moises execution"
+  },
+  "repository_validation": {
+    "production_collector_authored": true,
+    "bounded_correlation_bridge_authored": true,
+    "playback_backend_instrumentation_authored": true,
+    "instrumented_interruption_facade_authored": true,
+    "full_source_self_test_authored": true,
+    "bounded_correlation_self_test_authored": true,
+    "full_source_benchmark_authored": true,
+    "selected_integrated_execution_pending": true
+  },
+  "measurement_limitations": [
+    "submission-to-backend-entry latency includes configured quiet/coalescing delay for seek/loop",
+    "post-configured-quiet residual is a tuning metric and not a claim of pure scheduler queue time",
+    "tempo has no Playback backend entry and is currently measured by end-to-end/coalescing/token metrics rather than a distinct DSP-entry queue probe",
+    "physical-device telemetry cost and production quiet-window recommendation remain unmeasured"
+  ],
+  "device_timing_claimed": false,
+  "audible_artifact_claimed": false,
+  "real_audio_claimed": false,
+  "standardized_perceptual_metric_claimed": false,
+  "parity_claimed": false
+}

@@ -1,0 +1,52 @@
+{
+  "wave_id": "L3-AW15",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "production_hardening": [
+    "cooperative cancellation checks before transport/tempo/recovery replacement-binding commit points",
+    "cancelled externally-advanced Playback generations are retained as recovery floors",
+    "cancelled controller-advanced click generations are retained as recovery floors",
+    "newer Playback token arriving during operationInFlight supersedes and poisons the older in-flight authority",
+    "stale/replayed overlapping Playback token does not poison a newer pending/current authority",
+    "suspended transport/tempo detects cleared pending intent and exits operationSuperseded",
+    "suspended click-only mutation detects Playback supersession and records advanced click generation",
+    "suspended recovery detects a newer Playback floor and cannot publish an older recovery binding",
+    "gate-only authoritySnapshot exposes pending/current generation state while controller awaits are in flight"
+  ],
+  "repository_validation": {
+    "concurrency_cancellation_self_test_authored": true,
+    "full_source_concurrency_benchmark_authored": true,
+    "selected_integrated_execution_pending": true
+  },
+  "portable_validation": {
+    "status": "PASS",
+    "overlap_recovery_cycles": 10000,
+    "overlap_flow": "transport generation 1 suspended; generation 2 rejected but becomes floor; generation 1 superseded; recovery generation 2 rejected; generation 3 succeeds",
+    "cancellation_probe": "PASS",
+    "cancelled_transport_playback_floor": 1,
+    "cancelled_transport_click_floor": 1,
+    "cancelled_transport_active_binding": false,
+    "checksum": 1333080
+  },
+  "portable_contention_benchmark": {
+    "rounds": 20,
+    "cycles_per_round": 2000,
+    "median_ms": 247.364,
+    "p95_ms": 326.057,
+    "max_ms": 350.856,
+    "per_round_checksum": 262008,
+    "scope": "interface-compatible actor/generation contention harness; excludes AVAudioEngine, AudioUnit, PCM analysis, file IO, device IO, Apple click-node execution and current-Moises execution"
+  },
+  "evidence_scope": "LANE3_COORDINATOR_CONCURRENCY_CANCELLATION_NON_PARITY",
+  "device_timing_claimed": false,
+  "audible_artifact_claimed": false,
+  "standardized_perceptual_metric_claimed": false,
+  "parity_claimed": false
+}

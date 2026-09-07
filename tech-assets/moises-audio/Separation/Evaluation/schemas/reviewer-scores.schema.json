@@ -1,0 +1,10 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","batch_id","reviews"],
+  "properties": {
+    "schema_version":{"const":1},
+    "batch_id":{"type":"string","minLength":1},
+    "reviews":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["case_id","stem","system_blind_id","listener_id","timestamp","scores"],"properties":{"case_id":{"type":"string","minLength":1},"stem":{"type":"string","minLength":1},"system_blind_id":{"enum":["A","B"]},"listener_id":{"type":"string","minLength":1},"timestamp":{"type":"string","format":"date-time"},"scores":{"type":"object","additionalProperties":false,"required":["target_preservation","bleed","musical_noise","transient_integrity","timbre_formant_integrity","stereo_phase_integrity","low_frequency_integrity","reverb_ambience","overall_practice_usability"],"properties":{"target_preservation":{"type":"integer","minimum":0,"maximum":4},"bleed":{"type":"integer","minimum":0,"maximum":4},"musical_noise":{"type":"integer","minimum":0,"maximum":4},"transient_integrity":{"type":"integer","minimum":0,"maximum":4},"timbre_formant_integrity":{"type":"integer","minimum":0,"maximum":4},"stereo_phase_integrity":{"type":"integer","minimum":0,"maximum":4},"low_frequency_integrity":{"type":"integer","minimum":0,"maximum":4},"reverb_ambience":{"type":"integer","minimum":0,"maximum":4},"overall_practice_usability":{"type":"integer","minimum":0,"maximum":4}}}}}}
+  }
+}

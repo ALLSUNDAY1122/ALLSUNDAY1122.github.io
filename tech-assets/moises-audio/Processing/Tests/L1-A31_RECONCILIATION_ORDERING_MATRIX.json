@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A31",
+  "title": "Provider Delete Reconciliation Observation Ordering",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "scope": [
+    "tech-assets/moises-audio/Separation/Server/provider_delete_reconciliation.py",
+    "tech-assets/moises-audio/Separation/Tests/test_provider_delete_reconciliation_ordering.py"
+  ],
+  "problem": "A29/A30 durably record and resume provider-delete observations, but an older observation arriving after a newer applied non-terminal observation could previously overwrite the newer registry state.",
+  "contract": {
+    "serialization": "single-host POSIX flock around ordering decision plus registry mutation",
+    "ordering_key": "observed_at_epoch per logical_job_id and object_kind",
+    "older_than_latest_applied": "superseded_stale; registry is not mutated",
+    "equal_epoch_same_object_and_state": "equivalent evidence; may be marked applied without state mutation",
+    "equal_epoch_conflict": "fail closed with SEP_PRIVACY_RECONCILE_EQUAL_EPOCH_CONFLICT and remain pending",
+    "newer_observation": "may mutate registry only after existing hash/reservation/terminal checks",
+    "terminal_erasure": "never downgraded to non-terminal state",
+    "provider_delete_replay": "forbidden; ordering recovery is local evidence application only"
+  },
+  "cases": [
+    {"id": "A31-01", "case": "newer present then older unknown", "expected": "STALE_IGNORED; reconciled_present preserved"},
+    {"id": "A31-02", "case": "equal epoch equivalent present observations", "expected": "EQUIVALENT_EPOCH_APPLIED without state mutation"},
+    {"id": "A31-03", "case": "equal epoch conflicting present/unknown", "expected": "fail closed and remain pending"},
+    {"id": "A31-04", "case": "same receipt repeated", "expected": "ALREADY_APPLIED idempotently"},
+    {"id": "A31-05", "case": "terminal confirmed then newer present", "expected": "terminal downgrade rejected; observation remains pending"},
+    {"id": "A31-06", "case": "newer wrong object hash", "expected": "hash mismatch rejected and remains pending"},
+    {"id": "A31-07", "case": "older pending survives crash, newer observation applied, then resume", "expected": "old pending becomes superseded_stale; resume PASS"},
+    {"id": "A31-08", "case": "concurrent out-of-order observations", "expected": "single-host serialization yields state of maximum applied observation epoch"}
+  ],
+  "observed_focused_harness": {
+    "kind": "interface-compatible ordering model",
+    "tests_run": 8,
+    "failures": 0,
+    "errors": 0,
+    "state": "PASS"
+  },
+  "repository_test_execution": "NOT_OBSERVED_ON_EXACT_WORKER_CHECKOUT",
+  "limits": [
+    "No exact current Worker checkout full unittest discovery was available because container git cannot resolve github.com.",
+    "POSIX flock and the application lock are single-host only and do not establish distributed/multi-host ordering.",
+    "No provider API/console/support observation was fabricated or executed.",
+    "No P024, P025 or other PARITY promotion follows from this safety regression."
+  ]
+}

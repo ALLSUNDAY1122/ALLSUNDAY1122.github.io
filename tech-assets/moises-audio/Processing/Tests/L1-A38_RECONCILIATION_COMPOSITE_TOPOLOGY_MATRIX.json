@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A38",
+  "title": "Reconciliation Composite Topology Preflight Matrix",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "scope": [
+    "a09_privacy_registry",
+    "a29_provider_delete_reconciliation_ledger",
+    "a37_conflict_decision_store"
+  ],
+  "required_shared_capabilities": [
+    "atomic_compare_and_swap",
+    "durable_commit",
+    "monotonic_fencing_tokens",
+    "read_after_write_consistency"
+  ],
+  "focused_validation": {
+    "environment": "clean isolated interface-compatible Python harness",
+    "topology_tests_run": 21,
+    "dependency_tests_run": 15,
+    "tests_run": 36,
+    "failures": 0,
+    "errors": 0,
+    "state": "PASS",
+    "exact_worker_checkout": false
+  },
+  "cases": [
+    {
+      "id": "A38-01",
+      "condition": "A37 conflict-decision sidecar is present in builtin topology inventory",
+      "expected": "single-host PASS with POSIX flock; no shared-authority adapter claim",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-02",
+      "condition": "A37 conflict-decision sidecar is used in multi-host topology without shared authority",
+      "expected": "FAIL_CLOSED / L1A27_SHARED_AUTHORITY_REQUIRED",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-03",
+      "condition": "A37 sidecar receives capability labels but has no concrete shared adapter",
+      "expected": "FAIL_CLOSED / L1A27_SHARED_AUTHORITY_ADAPTER_NOT_IMPLEMENTED",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-04",
+      "condition": "Composite reconciliation preflight is evaluated on one host",
+      "expected": "privacy registry + reconciliation ledger + decision store all PASS",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-05",
+      "condition": "Composite reconciliation preflight is evaluated on multiple hosts without authorities",
+      "expected": "all three stores FAIL_CLOSED",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-06",
+      "condition": "Composite multi-host preflight receives full capability declarations but no store adapters",
+      "expected": "all three stores remain FAIL_CLOSED",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-07",
+      "condition": "Authority map contains a store outside the reconciliation composite",
+      "expected": "L1A38_RECONCILIATION_AUTHORITY_STORE_UNKNOWN",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-08",
+      "condition": "A37 decision store is removed from builtin inventory",
+      "expected": "L1A35_BUILTIN_STORE_INVENTORY_MISMATCH",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-09",
+      "condition": "Runtime reconciliation store tuple is shrunk while independent expected inventory remains intact",
+      "expected": "L1A38_RECONCILIATION_STORE_INVENTORY_INVALID",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-10",
+      "condition": "Independent expected reconciliation inventory is exactly the three-store contract",
+      "expected": "runtime membership equals independent fixed expected membership",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-11",
+      "condition": "A38 topology contract tokens are removed while mutation_topology.py remains",
+      "expected": "dependency audit FAIL / L1A38_RECONCILIATION_TOPOLOGY_CONTRACT_MISSING",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-12",
+      "condition": "A38 topology regression semantics are removed while test_mutation_topology.py remains",
+      "expected": "dependency audit FAIL / L1A38_RECONCILIATION_TOPOLOGY_REGRESSION_MISSING",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-13",
+      "condition": "A38 topology contract and regression semantics are removed together",
+      "expected": "paired semantic deletion cannot false-green dependency audit",
+      "state": "PASS"
+    },
+    {
+      "id": "A38-14",
+      "condition": "A37 token remains elsewhere in mutation_topology.py but is removed from RECONCILIATION_STORE_IDS",
+      "expected": "AST membership audit FAIL / L1A38_RECONCILIATION_TOPOLOGY_MEMBERSHIP_MISMATCH",
+      "state": "PASS"
+    }
+  ],
+  "limitations": [
+    "This is engineering safety evidence, not current-iPhone or Moises differential evidence.",
+    "All current built-in Lane 1 stores still lack concrete shared transactional adapters.",
+    "POSIX flock, atomic replace, capability declarations and composite preflight are not distributed synchronization.",
+    "HQ/App still owns invocation of the preflight at deployment/composition boundaries.",
+    "The exact final Worker-branch A26 one-command audit remains pending on an executable full checkout."
+  ]
+}

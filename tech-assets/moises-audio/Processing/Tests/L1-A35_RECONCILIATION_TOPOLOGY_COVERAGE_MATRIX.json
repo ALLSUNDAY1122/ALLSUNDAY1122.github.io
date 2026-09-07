@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A35",
+  "title": "Provider Delete Reconciliation Store Topology Coverage",
+  "state": "COMPLETE_NON_PARITY",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "problem": "A27 mutation-topology preflight covered A09/A16/A23/A24 but did not include the durable provider-delete reconciliation ledger introduced in A29-A34, so deployment inventory could omit a single-host-only mutation store.",
+  "implementation": {
+    "module": "tech-assets/moises-audio/Separation/Server/mutation_topology.py",
+    "module_blob_sha": "1b9d5bfce2d0d63448cbab164bd354184082ca18",
+    "test": "tech-assets/moises-audio/Separation/Tests/test_mutation_topology.py",
+    "test_blob_sha": "10bf3aeb3607626533d5de0e6d3fb00643a5247f",
+    "tool_version": "L1-A35-v1",
+    "added_store_id": "a29_provider_delete_reconciliation_ledger",
+    "local_serialization": "posix_flock",
+    "single_host_safe": true,
+    "shared_authority_adapter": false,
+    "risk": "reconciliation_watermark_race"
+  },
+  "required_store_inventory": [
+    "a09_privacy_registry",
+    "a16_reconnect_registry",
+    "a23_variant_store",
+    "a24_retention_store",
+    "a29_provider_delete_reconciliation_ledger"
+  ],
+  "required_shared_capabilities": [
+    "atomic_compare_and_swap",
+    "durable_commit",
+    "monotonic_fencing_tokens",
+    "read_after_write_consistency"
+  ],
+  "focused_validation": {
+    "py_compile": "PASS",
+    "unittest": {
+      "tests_run": 12,
+      "failures": 0,
+      "errors": 0,
+      "state": "PASS"
+    },
+    "exact_remote_blob_binding": "PASS",
+    "exact_worker_branch_full_suite": "NOT_OBSERVED_A26_GATE_PENDING"
+  },
+  "scenarios": [
+    {
+      "id": "A35-01",
+      "case": "all five built-in file-backed mutation stores are present in explicit deployment inventory",
+      "expected": "PASS"
+    },
+    {
+      "id": "A35-02",
+      "case": "reconciliation ledger under single-host topology",
+      "expected": "PASS"
+    },
+    {
+      "id": "A35-03",
+      "case": "reconciliation ledger under multi-host topology without shared authority",
+      "expected": "FAIL_CLOSED/L1A27_SHARED_AUTHORITY_REQUIRED"
+    },
+    {
+      "id": "A35-04",
+      "case": "reconciliation ledger under multi-host topology with declared capabilities but no concrete store adapter",
+      "expected": "FAIL_CLOSED/L1A27_SHARED_AUTHORITY_ADAPTER_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "A35-05",
+      "case": "future shared adapter may pass only with complete shared-authority capability contract",
+      "expected": "PASS"
+    },
+    {
+      "id": "A35-06",
+      "case": "incomplete shared authority capability set",
+      "expected": "FAIL_CLOSED/L1A27_SHARED_AUTHORITY_CAPABILITY_MISSING"
+    },
+    {
+      "id": "A35-07",
+      "case": "topology snapshot includes reconciliation store and rejects multi-host for all current built-ins",
+      "expected": "PASS"
+    },
+    {
+      "id": "A35-08",
+      "case": "required built-in store is removed from inventory",
+      "expected": "FAIL_CLOSED/L1A35_BUILTIN_STORE_INVENTORY_MISMATCH"
+    },
+    {
+      "id": "A35-09",
+      "case": "unknown store or invalid topology",
+      "expected": "FAIL_CLOSED"
+    }
+  ],
+  "limitations": [
+    "This is deployment-safety/preflight evidence only and does not establish product PARITY.",
+    "POSIX flock, atomic rename, A29-A34 application locks and ordering watermarks remain same-host mechanisms and are not distributed synchronization.",
+    "No real shared transactional backend or reconciliation-store adapter is implemented in A35.",
+    "HQ/App still owns the actual deployment entrypoint that must invoke or equivalently enforce this preflight.",
+    "The exact current Worker-branch full regression remains unobserved because A26 cannot run without an executable exact checkout or CI runner."
+  ]
+}

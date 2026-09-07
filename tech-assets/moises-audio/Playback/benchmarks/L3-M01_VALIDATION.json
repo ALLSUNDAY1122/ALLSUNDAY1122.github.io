@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "bundle_id": "L3-M01",
+  "lane_id": "LANE-3-PLAYBACK-DSP",
+  "captured_at": "2026-08-22T17:30:00+09:00",
+  "environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "avfaudio_available": false
+  },
+  "portable_self_test": {
+    "status": "PASS",
+    "coverage": [
+      "harness-only automated pass cannot claim parity",
+      "physical-device evidence eligibility requires all explicit gates",
+      "synthetic-only fixture fails closed",
+      "timing count mismatch fails closed",
+      "non-monotonic timing series fails closed",
+      "excessive onset skew and seek gap fail automated gate",
+      "JSON encoding exercised"
+    ]
+  },
+  "portable_benchmark": {
+    "status": "PASS",
+    "workload": "1000 loop boundaries + 7200 metronome clicks per run; 200 runs",
+    "median_ms": 0.0395,
+    "p95_ms": 0.0405,
+    "p99_ms": 0.0680,
+    "max_ms": 0.1162,
+    "scope_note": "Harness evaluation CPU time only. This is not AVAudioEngine seek latency, render latency, device output latency, or audible quality evidence."
+  },
+  "threshold_profile": "LANE3_PROVISIONAL_ENGINEERING_NOT_REFERENCE",
+  "machine_readable_contracts": [
+    "L3-M01_RESULT.schema.json",
+    "L3-M01_FIXTURE_MANIFEST.example.json",
+    "L3-M01_RESULT.example.json"
+  ],
+  "apple_runtime_gate": {
+    "status": "PENDING_LATE_INTEGRATION",
+    "required": [
+      "physical iPhone actual-audio capture",
+      "rights-cleared real fixtures",
+      "AVAudioEngine onset/seek/loop/gain measurements",
+      "metronome/count-in actual click capture",
+      "tempo/pitch artifact and render/control latency measurements",
+      "human listening review",
+      "Moises differential evidence"
+    ]
+  },
+  "parity_promotion": false,
+  "parity_rows_unchanged": ["MOI-P006", "MOI-P007", "MOI-P008", "MOI-P010", "MOI-P012", "MOI-P014", "MOI-P015"]
+}

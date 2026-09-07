@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "plan_id": "p025-live-campaign-v1",
+  "policy": {
+    "minimum_successful_runs_per_role_mode": 2,
+    "maximum_failure_fraction": 0.1,
+    "maximum_retry_fraction": 0.25,
+    "maximum_mean_latency_ms": 120000,
+    "minimum_mean_usability_delta_project_minus_reference": -0.5,
+    "maximum_material_inferiority_fraction": 0.1,
+    "required_tiers": ["FREE", "PREMIUM", "PRO"],
+    "engineering_policy_not_reference_fact": true
+  }
+}

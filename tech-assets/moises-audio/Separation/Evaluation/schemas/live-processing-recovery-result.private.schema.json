@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "live-processing-recovery-result.private.schema.json",
+  "title": "Lane 1 E05 Private Scenario Result",
+  "type": "object",
+  "required": [
+    "schema_version", "evidence_state", "scenario_kind", "stable_error_codes",
+    "project_state_after", "project_corrupted", "partial_result_published",
+    "provider_create_request_count", "provider_distinct_task_count", "provider_cancel_request_count",
+    "provider_billable_task_count", "automatic_create_repost_count", "duplicate_provider_task_detected",
+    "reconciliation_performed", "logical_cancelled", "logical_job_identity_sha256",
+    "idempotency_key_sha256", "logical_identity_preserved", "upstream_cancel_state",
+    "claimed_upstream_cancelled", "outputs_published_after_cancel", "relaunch_observed",
+    "rate_limit_observed", "bounded_streaming_observed", "storage_preflight_observed",
+    "output_expiry_resolution", "committed_result_sha256_before", "committed_result_sha256_after",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "scenario_kind": {
+      "enum": ["NETWORK_INTERRUPTION", "CANCEL_UPLOAD", "CANCEL_SEPARATING", "CANCEL_FINALIZING", "AMBIGUOUS_CREATE_RETRY", "RELAUNCH", "OUTPUT_EXPIRY", "RATE_LIMIT", "LONG_TRACK", "STORAGE_PRESSURE"]
+    },
+    "stable_error_codes": {"type": "array", "items": {"type": "string", "minLength": 1, "maxLength": 128}},
+    "project_state_after": {"enum": ["ready", "recoverable", "cancelled", "failed_closed"]},
+    "project_corrupted": {"type": "boolean"},
+    "partial_result_published": {"type": "boolean"},
+    "provider_create_request_count": {"type": "integer", "minimum": 0},
+    "provider_distinct_task_count": {"type": "integer", "minimum": 0},
+    "provider_cancel_request_count": {"type": "integer", "minimum": 0},
+    "provider_billable_task_count": {"type": "integer", "minimum": 0},
+    "automatic_create_repost_count": {"type": "integer", "minimum": 0},
+    "duplicate_provider_task_detected": {"type": "boolean"},
+    "reconciliation_performed": {"type": "boolean"},
+    "logical_cancelled": {"type": "boolean"},
+    "logical_job_identity_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "idempotency_key_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "logical_identity_preserved": {"type": "boolean"},
+    "upstream_cancel_state": {"type": "string", "minLength": 1},
+    "claimed_upstream_cancelled": {"type": "boolean"},
+    "outputs_published_after_cancel": {"type": "boolean"},
+    "relaunch_observed": {"type": "boolean"},
+    "rate_limit_observed": {"type": "boolean"},
+    "bounded_streaming_observed": {"type": "boolean"},
+    "storage_preflight_observed": {"type": "boolean"},
+    "output_expiry_resolution": {"type": "string", "minLength": 1},
+    "committed_result_sha256_before": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "committed_result_sha256_after": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fault_injection_path", "fault_injection_sha256", "provider_account_path", "provider_account_sha256"],
+      "properties": {
+        "fault_injection_path": {"type": "string", "minLength": 1},
+        "fault_injection_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "provider_account_path": {"type": "string", "minLength": 1},
+        "provider_account_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

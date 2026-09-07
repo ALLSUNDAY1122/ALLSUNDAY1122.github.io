@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project.local/moises/separation/golden-corpus-index.schema.json",
+  "title": "Golden G1/G2 corpus intake index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "corpus_id", "corpus_revision", "fixtures"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "corpus_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "corpus_revision": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "fixtures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["manifest_path", "manifest_sha256", "expected_group", "production_bucket"],
+        "properties": {
+          "manifest_path": {"type": "string", "minLength": 1},
+          "manifest_sha256": {"type": "string", "pattern": "^(sha256:)?[0-9a-fA-F]{64}$"},
+          "expected_group": {"enum": ["G1", "G2"]},
+          "production_bucket": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_.-]{0,63}$"}
+        }
+      }
+    }
+  }
+}

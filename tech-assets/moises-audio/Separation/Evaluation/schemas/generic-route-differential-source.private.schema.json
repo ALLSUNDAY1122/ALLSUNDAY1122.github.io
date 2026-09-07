@@ -1,0 +1,13 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"generic-route-differential-source.private.schema.json",
+  "title":"Lane 1 E10 Private Differential Source",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","evidence_kind","evidence_state","parity_claim","route_id","route_kind","runtime_artifact_sha256","project_input_sha256","reference_input_sha256","reviews"],
+  "properties":{
+    "schema_version":{"const":1},"evidence_kind":{"const":"GENERIC_ROUTE_DIFFERENTIAL_SOURCE"},"evidence_state":{"const":"NON_PARITY_EVIDENCE_ONLY"},"parity_claim":{"const":"NONE"},
+    "route_id":{"type":"string"},"route_kind":{"enum":["LICENSED_LOCAL_INFERENCE_SDK","ALTERNATE_WRITTEN_COMMERCIAL_PROVIDER","PROJECT_OWNED_MODEL_IF_RIGHTS_CLEARED_TRAINING_DATA_AVAILABLE"]},"runtime_artifact_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "project_input_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"reference_input_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "reviews":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["review_id","case_id","project_usability_score","reference_usability_score","materially_worse","source_evidence_path","source_evidence_sha256"],"properties":{"review_id":{"type":"string"},"case_id":{"type":"string"},"project_usability_score":{"type":"number","minimum":1,"maximum":5},"reference_usability_score":{"type":"number","minimum":1,"maximum":5},"materially_worse":{"type":"boolean"},"source_evidence_path":{"type":"string"},"source_evidence_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}}}
+  }
+}

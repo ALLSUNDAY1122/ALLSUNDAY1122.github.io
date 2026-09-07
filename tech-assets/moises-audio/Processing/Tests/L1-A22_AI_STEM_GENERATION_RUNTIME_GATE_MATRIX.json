@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A22",
+  "title": "AI Stem Generation Runtime Adapter / Live Evaluation Gate",
+  "state": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "target_parity_row": "MOI-P025",
+  "verification": {
+    "broad_pre_persistence_fault_suite": {"passed": 59, "failed": 0},
+    "checked_in_regression_suite": {"passed": 23, "failed": 0},
+    "json_schema_sample_validation": {"passed": 9, "failed": 0},
+    "python_syntax_compile": "PASS"
+  },
+  "runtime_contract": {
+    "protocol": "L1-A22-GENERATION-RUNTIME-v1",
+    "authority_kinds": ["HOSTED_PROVIDER_ACCOUNT", "LOCAL_RUNTIME", "PROJECT_OWNED_RUNTIME"],
+    "driver_artifact_sha_required": true,
+    "credential_values_in_descriptor": false,
+    "private_execution_binding": true,
+    "ambiguous_start_blind_retry_allowed": false,
+    "credit_release_without_absence_proof_allowed": false,
+    "ready_after_logical_cancel_publishable": false,
+    "project_controlled_output_required": true,
+    "output_sha_and_size_verified": true
+  },
+  "live_gate": {
+    "current_iphone_surface_is_explicit_role_mode_pairs": true,
+    "cartesian_product_assumption_forbidden": true,
+    "rights_cleared_real_source_only": true,
+    "blind_current_iphone_differential_required_for_successful_runs": true,
+    "required_recovery_scenarios": [
+      "AMBIGUOUS_START_RECONCILIATION",
+      "RELAUNCH_BOUND_EXECUTION",
+      "CANCEL_DURING_GENERATION",
+      "CREDIT_EXHAUSTION"
+    ],
+    "private_source_files_physically_sha_bound": true,
+    "engineering_thresholds_are_reference_facts": false
+  },
+  "privacy": {
+    "raw_prompt_emitted": false,
+    "raw_account_id_emitted": false,
+    "raw_execution_id_emitted": false,
+    "credential_values_emitted": false,
+    "private_paths_emitted": false,
+    "raw_audio_emitted": false,
+    "reference_audio_copied": false,
+    "raw_reviewer_id_emitted": false
+  },
+  "external_live_evidence_present": false,
+  "canonical_p025_state_expected_unchanged": "MISSING",
+  "notes": [
+    "All automated validation used synthetic/control fixtures only.",
+    "READY_FOR_HQ_P025_LIVE_REVIEW is an evidence-gate state, not product PARITY.",
+    "Current-iPhone role/mode/credit/entitlement UX, real generation quality/latency and integrated device evidence remain external/HQ gates."
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A37",
+  "title": "A37 Dependency Audit Binding / Paired-Deletion Safety",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "audit_upgrade": {
+    "path": "tech-assets/moises-audio/Separation/Evaluation/lane1_dependency_audit.py",
+    "tool_version": "L1-A26-v3",
+    "blob_sha": "44be0e3e55268a3244ec174d2ed3ff0e59114bd5",
+    "required_safety_file": "provider_delete_conflict_resolution.py",
+    "required_regression": "test_provider_delete_reconciliation_conflict_resolution.py"
+  },
+  "focused_regression": {
+    "path": "tech-assets/moises-audio/Separation/Tests/test_lane1_dependency_audit_safety_surfaces.py",
+    "blob_sha": "25b8bf6aac713bf3a3136bc0a1cfab998a124d2e",
+    "state": "PASS_ISOLATED_CANDIDATE",
+    "tests": 11,
+    "failures": 0,
+    "errors": 0
+  },
+  "critical_cases": [
+    {
+      "case": "complete_inventory",
+      "expected": "PASS checked=25",
+      "observed": "PASS"
+    },
+    {
+      "case": "missing_A37_module_only",
+      "expected": "FAIL L1A36_REQUIRED_SAFETY_FILE_MISSING",
+      "observed": "PASS_EXPECTED_FAILURE_DETECTED"
+    },
+    {
+      "case": "missing_A37_regression_only",
+      "expected": "FAIL L1A36_REQUIRED_REGRESSION_MISSING",
+      "observed": "PASS_EXPECTED_FAILURE_DETECTED"
+    },
+    {
+      "case": "paired_A37_module_and_regression_removal",
+      "expected": "FAIL with both missing-surface findings",
+      "observed": "PASS_EXPECTED_FAILURE_DETECTED"
+    },
+    {
+      "case": "legacy_A24_contract_checks",
+      "expected": "preserved",
+      "observed": "PASS"
+    },
+    {
+      "case": "A27-A36_safety_surface_checks",
+      "expected": "preserved",
+      "observed": "PASS"
+    }
+  ],
+  "limits": [
+    "Focused execution used an isolated contract-compatible source-snapshot stub because an exact Worker checkout is unavailable in the current execution container.",
+    "The exact one-command final-tip A26 audit remains unobserved and must still run on an executable full checkout or CI runner.",
+    "This binding prevents A37 module/test paired deletion from producing a false green dependency_contract result; it does not establish provider truth, real-device behavior, multi-host safety or PARITY."
+  ]
+}

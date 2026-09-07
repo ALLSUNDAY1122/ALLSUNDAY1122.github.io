@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW38",
+  "title": "Selected Device Continuity Instrumentation",
+  "result": "COMPLETE_NON_PARITY",
+  "canonical_audit": {
+    "integration_epoch_observed": 26,
+    "assignment_epoch": 2,
+    "planning_revision": 4,
+    "epoch_contract_sha": "c9e8ec5d191108db6eb20fbd40db0dab3c46b725",
+    "ownership_changed": false,
+    "rebase_required": false,
+    "lane3_canonical_through": "AW36",
+    "aw37_post_checkpoint": true
+  },
+  "implementation": {
+    "exact_generation_token_timestamp": true,
+    "bounded_generation_timing_ledger": true,
+    "backend_completion_timestamp": true,
+    "seek_applied_target_after_success": true,
+    "loop_applied_target_after_success": true,
+    "loop_disable_v2_target": true,
+    "failed_backend_marked_applied": false,
+    "external_audible_marker_required": true,
+    "backend_completion_substituted_for_audible": false,
+    "fade_in_schedule_substituted_for_audible": false,
+    "slot_generation_validation": true,
+    "legacy_aw35_seek_enabled_loop_bridge": true,
+    "legacy_aw35_loop_disable_fabricated": false,
+    "parity_promotion_allowed": false
+  },
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "swift_language_mode": 6,
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "optimized_stress_and_benchmark": true
+  },
+  "strict_compile_iteration": {
+    "initial_exclusive_access_error_detected": true,
+    "cause": "mutating self method passed a stored UInt64 property inout to another mutating self helper",
+    "fixed": true,
+    "post_fix_self_test": "PASS"
+  },
+  "timing_ledger_self_test": {
+    "result": "PASS",
+    "capacity": 64,
+    "issued_generations": 100,
+    "retained": 64,
+    "capacity_drops": 36,
+    "completion_misses_after_explicit_evicted_completion": 1,
+    "loop_disable_retained": true
+  },
+  "timing_ledger_stress": {
+    "result": "PASS",
+    "iterations": 1000000,
+    "capacity": 4096,
+    "retained": 4096,
+    "capacity_drops": 995904,
+    "normal_path_completion_misses": 0,
+    "explicit_evicted_completion_misses": 1,
+    "counter_overflowed": false,
+    "portable_wall_seconds_approx": 0.14
+  },
+  "timing_ledger_benchmark": {
+    "result": "PASS",
+    "rounds": 20,
+    "operations_per_round": 1000000,
+    "median_ms": 126.750,
+    "p95_ms": 132.563,
+    "max_ms": 144.293,
+    "checksum": 20000190,
+    "scope": "bounded token timing ledger issue plus completion bookkeeping only"
+  },
+  "bridge_structural_execution": {
+    "result": "PASS",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "seek_exact_token_correlation": true,
+    "seek_backend_applied_target_correlation": true,
+    "external_audible_marker_path": true,
+    "loop_disable_v2_retention": true,
+    "loop_disable_legacy_aw35_conversion_rejected": true,
+    "scope": "structural portable bridge with stubs; not complete selected repository/Xcode execution"
+  },
+  "selected_repository_tests": {
+    "timing_self_test_authored": true,
+    "timing_stress_authored": true,
+    "timing_benchmark_authored": true,
+    "instrumentation_self_test_authored": true,
+    "instrumentation_validation_self_test_authored": true,
+    "complete_selected_swiftpm_execution": false,
+    "xcode_execution": false
+  },
+  "external_gates": {
+    "avfaudio_runtime_executed": false,
+    "physical_iphone_executed": false,
+    "validated_physical_audible_marker": false,
+    "aw35_device_latency_populated": false,
+    "rights_cleared_real_audio_executed": false,
+    "current_moises_differential_executed": false,
+    "human_listening_executed": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015"
+  ]
+}

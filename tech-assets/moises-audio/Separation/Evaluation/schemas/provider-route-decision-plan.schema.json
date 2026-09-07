@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "provider-route-decision-plan.schema.json",
+  "title": "Lane 1 E06 Provider Route Decision Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence_state", "decision_id", "policy"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "decision_id": {"type": "string", "minLength": 1},
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_mode_classes", "allowed_service_regions", "allowed_data_regions", "maximum_mean_provider_total_ms", "maximum_final_failure_fraction", "maximum_retry_fraction", "cost_currency", "maximum_mean_cost_per_successful_run", "maximum_non_cancel_degraded_fraction", "maximum_uploaded_asset_retention_seconds", "require_delete_api", "require_capacity_attestation", "minimum_overall_usability_delta", "minimum_primary_score_margin", "ranking_weights", "engineering_policy_not_reference_fact"],
+      "properties": {
+        "required_mode_classes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "allowed_service_regions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "allowed_data_regions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "maximum_mean_provider_total_ms": {"type": "number", "exclusiveMinimum": 0},
+        "maximum_final_failure_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "maximum_retry_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "cost_currency": {"type": "string", "minLength": 3, "maxLength": 3},
+        "maximum_mean_cost_per_successful_run": {"type": "number", "minimum": 0},
+        "maximum_non_cancel_degraded_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "maximum_uploaded_asset_retention_seconds": {"type": "number", "minimum": 0},
+        "require_delete_api": {"type": "boolean"},
+        "require_capacity_attestation": {"const": true},
+        "minimum_overall_usability_delta": {"type": "number", "minimum": -4, "maximum": 4},
+        "minimum_primary_score_margin": {"type": "number", "minimum": 0},
+        "ranking_weights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["quality", "latency", "reliability", "cost"],
+          "properties": {
+            "quality": {"type": "number", "minimum": 0},
+            "latency": {"type": "number", "minimum": 0},
+            "reliability": {"type": "number", "minimum": 0},
+            "cost": {"type": "number", "minimum": 0}
+          }
+        },
+        "engineering_policy_not_reference_fact": {"const": true}
+      }
+    }
+  }
+}

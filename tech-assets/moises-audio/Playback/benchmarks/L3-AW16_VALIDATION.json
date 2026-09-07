@@ -1,0 +1,91 @@
+{
+  "wave_id": "L3-AW16",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "implementation": [
+    "upstream seek/loop/tempo coalescing before Playback reschedule token generation",
+    "same-family latest-wins pending intent replacement with zero generation consumption for superseded intents",
+    "global serialization of actual token generation and coordinator mutation across continuous-control families",
+    "explicit Playback-reason to coordinator-route audit for tempo, recovery and generic transport paths",
+    "pre-token input validation and pending cancellation",
+    "backend-failure reconstruction of an already-issued Playback token from before/after fence snapshots",
+    "automatic newer Playback recovery token plus PracticeDSPGenerationCoordinator recovery after post-token failure",
+    "recovery-blocked state that prevents further continuous token generation until explicit retry succeeds",
+    "caller cancellation after actual dispatch is recorded but does not abort a half-issued generation"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "basic_seek_burst": {
+      "submitted": 500,
+      "executed": 1,
+      "superseded_before_token": 499,
+      "actual_playback_tokens": 1,
+      "actual_backend_seeks": 1
+    },
+    "mixed_family_burst": {
+      "submitted": 300,
+      "seek": 100,
+      "loop": 100,
+      "tempo": 100,
+      "executed": 3,
+      "superseded_before_token": 297,
+      "actual_playback_tokens": 3
+    },
+    "stress": {
+      "bursts": 500,
+      "intents_per_burst": 30,
+      "submitted": 15000,
+      "executed": 1500,
+      "superseded_before_token": 13500,
+      "actual_playback_tokens": 1500,
+      "controlled_burst_token_reduction_fraction": 0.9,
+      "product_traffic_reduction_claimed": false
+    },
+    "invalid_seek_loop_tempo_consume_no_token": true,
+    "pending_cancellation_consumes_no_token": true,
+    "backend_failure_token_reconstructed_from_fence_snapshot": true,
+    "basic_failure_playback_generation": 2,
+    "basic_automatic_recovery_generation": 3,
+    "basic_automatic_recovery_succeeded": true,
+    "extended_failure_generation": 4,
+    "extended_automatic_recovery_generation": 5,
+    "forced_recovery_failure_control_generation": 6,
+    "forced_recovery_failure_recovery_generation": 7,
+    "recovery_blocked_rejects_without_new_control_token": true,
+    "explicit_retry_recovery_generation": 8,
+    "explicit_retry_recovery_succeeded": true
+  },
+  "repository_validation": {
+    "production_dispatcher_authored": true,
+    "full_source_self_test_authored": true,
+    "full_source_benchmark_authored": true,
+    "selected_integrated_execution_pending": true
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "intents_per_round": 2000,
+    "benchmark_quiet_period_ms": 2,
+    "executed_per_round": 1,
+    "superseded_per_round": 1999,
+    "actual_playback_tokens_per_round": 1,
+    "median_ms": 19.838,
+    "p95_ms": 24.113,
+    "max_ms": 25.193,
+    "checksum": 40810,
+    "scope": "exact AW16 dispatcher source with interface-compatible Playback/coordinator stubs; excludes AVAudioEngine, AudioUnit, real Playback backend cost, actual ProductionController cost, file/device IO, real audio and current-Moises execution"
+  },
+  "default_quiet_period_ms": 16,
+  "default_quiet_period_final_device_tuning_claimed": false,
+  "evidence_scope": "LANE3_PRODUCTION_INTENT_DISPATCH_COALESCING_NON_PARITY",
+  "device_timing_claimed": false,
+  "audible_artifact_claimed": false,
+  "standardized_perceptual_metric_claimed": false,
+  "parity_claimed": false
+}

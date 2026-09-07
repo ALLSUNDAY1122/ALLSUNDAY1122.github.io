@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-QA-001",
+  "gate_version": "1.0",
+  "parity_decision_owner": "HQ",
+  "worker_may_finalize_parity": false,
+  "fixture_requirements": {
+    "required_classes": [
+      "PROJECT_OWNED_REAL_MULTITRACK",
+      "RIGHTS_CLEARED_REAL_REFERENCE"
+    ],
+    "supplementary_classes": [
+      "PUBLIC_RESEARCH_NONCOMMERCIAL",
+      "LICENSED_SYNTHETIC",
+      "GENERATED_SIGNAL"
+    ],
+    "minimum_project_owned_real_full_songs": 12,
+    "minimum_rights_cleared_reference_tracks": 12,
+    "minimum_style_buckets": 8,
+    "minimum_project_owned_vocal_tracks": 6,
+    "synthetic_only_pass_forbidden": true,
+    "noncommercial_public_dataset_only_pass_forbidden": true,
+    "reference_submission_right_must_be_explicit": true,
+    "commercial_engineering_use_right_must_be_explicit": true
+  },
+  "separation_metrics": {
+    "per_stem_required": true,
+    "required": [
+      "si_sdr_db",
+      "bss_metric_with_pinned_tool_version",
+      "mixture_reconstruction_error",
+      "duration_alignment_error",
+      "clipping_check",
+      "nan_inf_check"
+    ],
+    "distribution_summaries_required": ["median", "p10", "worst_fixture"],
+    "forbid_global_average_only": true
+  },
+  "analysis_metrics": {
+    "bpm": ["exact_within_4_percent", "octave_aware", "half_double_error_rate"],
+    "beat": ["f_measure", "continuity_metrics"],
+    "key": ["exact", "tonic", "mode", "weighted_relation_score"],
+    "chord": ["root_weighted_accuracy", "maj_min_weighted_accuracy", "triad_weighted_accuracy", "no_chord_precision_recall", "coverage"],
+    "song_parts": ["boundary_f_0_5s", "boundary_f_3s", "structural_grouping", "functional_macro_f1_if_applicable"]
+  },
+  "listening": {
+    "blind_ab_required": true,
+    "score_min": 0,
+    "score_max": 4,
+    "dimensions": [
+      "target_preservation",
+      "bleed",
+      "musical_noise",
+      "transient_integrity",
+      "timbre_formant_integrity",
+      "stereo_phase_integrity",
+      "low_frequency_integrity",
+      "reverb_ambience",
+      "overall_practice_usability"
+    ],
+    "reject_conditions": {
+      "critical_worse_rule": "project_score<=1 AND reference_score>=3 on any mandatory stem/dimension where defect makes output unusable",
+      "overall_median_gap_max": 0.5,
+      "max_fraction_overall_worse_without_resolution": 0.2,
+      "reject_missing_stem": true,
+      "reject_gross_desync": true,
+      "reject_clipping_or_nan_inf": true,
+      "reject_consistent_genre_or_hard_case_failure": true
+    },
+    "reject_conditions_are_sufficient_for_failure_not_sufficient_for_parity": true
+  },
+  "ux": {
+    "core_scenarios": [
+      "import_local_and_start_4stem",
+      "reach_first_playable_state",
+      "mute_and_adjust_volume",
+      "seek",
+      "enable_metronome",
+      "change_pitch_key",
+      "export_custom_mix",
+      "recover_failed_processing"
+    ],
+    "max_extra_deliberate_actions_vs_reference_without_reason": 2,
+    "state_clarity_dimensions": [
+      "processing_status",
+      "available_vs_not_ready_controls",
+      "failure_explanation",
+      "retry_discoverability",
+      "cancellation_discoverability",
+      "interruption_work_preservation",
+      "export_completion_clarity"
+    ],
+    "reject_if_processing_and_failure_indistinguishable": true,
+    "reject_if_cancel_can_silently_corrupt_project": true,
+    "reject_if_core_function_requires_undocumented_gesture": true
+  },
+  "performance": {
+    "durations_minutes": [5, 15, 30, 60],
+    "required_metrics": [
+      "wall_time",
+      "real_time_factor",
+      "peak_rss",
+      "storage_peak",
+      "seek_latency_10pct",
+      "seek_latency_50pct",
+      "seek_latency_90pct",
+      "cancel_cleanup_latency",
+      "interruption_recovery_result"
+    ],
+    "conditional_on_device_metrics": ["thermal_state", "battery_delta"],
+    "conditional_server_metrics": ["upload_time", "queue_time", "inference_time", "download_time"]
+  },
+  "failure_recovery": {
+    "required_scenarios": [
+      "cancel_early",
+      "cancel_mid",
+      "cancel_near_complete",
+      "immediate_retry",
+      "network_timeout_if_server",
+      "reconnect_if_server",
+      "duplicate_submit_if_server",
+      "background_or_interruption",
+      "relaunch_after_termination",
+      "insufficient_temp_storage",
+      "malformed_or_unsupported_input",
+      "backend_or_model_failure",
+      "partial_output_cleanup"
+    ],
+    "reject_conditions": [
+      "data_loss",
+      "corrupted_project",
+      "orphaned_large_artifact",
+      "duplicate_charge_or_job",
+      "unrecoverable_processing_state"
+    ]
+  },
+  "parity_rows_informed": [
+    "MOI-P003",
+    "MOI-P009",
+    "MOI-P011",
+    "MOI-P013",
+    "MOI-P014",
+    "MOI-P021",
+    "MOI-P022"
+  ],
+  "parity_state_change_from_this_task": false
+}

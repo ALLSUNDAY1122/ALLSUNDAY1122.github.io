@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-IO-R001",
+  "captured_at": "2026-08-22",
+  "reference_observed_import_labels": [
+    "MP3",
+    "WAV",
+    "FLAC",
+    "M4A",
+    "MP4",
+    "MOV",
+    "WMA"
+  ],
+  "selected_native_path": {
+    "acquisition": [
+      "UIDocumentPickerViewController/File Provider",
+      "PhotosPicker file representation",
+      "URLSessionDownloadTask"
+    ],
+    "normalization": "copy to app-owned local file before downstream use",
+    "probe": "AVURLAsset async properties/tracks + protected-content check",
+    "decode": "AVAssetReaderTrackOutput -> Linear PCM",
+    "export": "M4A/AAC via Apple media/audio frameworks",
+    "handoff": [
+      "document exporter",
+      "UIActivityViewController"
+    ]
+  },
+  "input_matrix": [
+    {
+      "label": "MP3",
+      "container_or_codec": "MPEG-1/2 Layer III",
+      "reference_import": true,
+      "apple_native_decode": "YES",
+      "apple_native_encode": "NO_ESTABLISHED_PATH",
+      "implementation": "accept UTType.mp3/file; probe then decode to PCM",
+      "risk": "do not infer MP3 export support from MP3 decode support"
+    },
+    {
+      "label": "WAV",
+      "container_or_codec": "RIFF/WAVE, commonly PCM",
+      "reference_import": true,
+      "apple_native_decode": "YES",
+      "apple_native_encode": "YES_PCM",
+      "implementation": "probe then decode to PCM; preserve source metadata before normalization",
+      "risk": "non-PCM/rare WAV codecs require runtime decoder proof"
+    },
+    {
+      "label": "FLAC",
+      "container_or_codec": "FLAC",
+      "reference_import": true,
+      "apple_native_decode": "RUNTIME_PROBE_REQUIRED",
+      "apple_native_encode": "NOT_SELECTED",
+      "implementation": "attempt Apple runtime probe/reader; fail UNSUPPORTED_MEDIA if unavailable",
+      "risk": "kAudioFormatFLAC exists but a symbol alone is not sufficient proof for every target OS/container path"
+    },
+    {
+      "label": "M4A",
+      "container_or_codec": "MPEG-4 audio; AAC/ALAC common",
+      "reference_import": true,
+      "apple_native_decode": "YES",
+      "apple_native_encode": "YES_AAC_ALAC",
+      "implementation": "native probe/decode; selected AAC export container",
+      "risk": "validate actual track codec, not extension alone"
+    },
+    {
+      "label": "MP4",
+      "container_or_codec": "MPEG-4 movie/audio container",
+      "reference_import": true,
+      "apple_native_decode": "YES_IF_AUDIO_TRACK_SUPPORTED",
+      "apple_native_encode": "YES_CONTAINER",
+      "implementation": "AVURLAsset -> first/selected audio track -> PCM",
+      "risk": "video can contain no audio, protected media, or unsupported track codec"
+    },
+    {
+      "label": "MOV",
+      "container_or_codec": "QuickTime movie container",
+      "reference_import": true,
+      "apple_native_decode": "YES_IF_AUDIO_TRACK_SUPPORTED",
+      "apple_native_encode": "YES_CONTAINER",
+      "implementation": "AVURLAsset -> audio track -> PCM",
+      "risk": "same as MP4; reject no-audio or protected media deterministically"
+    },
+    {
+      "label": "WMA",
+      "container_or_codec": "Windows Media Audio",
+      "reference_import": true,
+      "apple_native_decode": "NOT_ESTABLISHED",
+      "apple_native_encode": "NO",
+      "implementation": "do not claim native support; require additional decoder/server transcode proof",
+      "risk": "Reference import label creates a known parity gap until a lawful compatible path is validated"
+    }
+  ],
+  "export_matrix": [
+    {
+      "format": "M4A/AAC",
+      "reference_mobile": true,
+      "apple_native": "YES",
+      "selected": "YES",
+      "quality_role": "compressed delivery baseline",
+      "validation": [
+        "runtime-supported output type",
+        "duration within tolerance",
+        "no truncation",
+        "decode-after-export succeeds",
+        "sync origin preserved"
+      ]
+    },
+    {
+      "format": "MP3",
+      "reference_mobile": true,
+      "apple_native": "NO_ESTABLISHED_ENCODER",
+      "selected": "NO",
+      "quality_role": "parity dependency",
+      "validation": [
+        "separate encoder licensing/distribution review",
+        "real-device speed/memory",
+        "decode-after-export",
+        "audible artifact rubric"
+      ]
+    },
+    {
+      "format": "WAV/PCM",
+      "reference_mobile": false,
+      "apple_native": "YES",
+      "selected": "INTERNAL_OR_FUTURE",
+      "quality_role": "lossless diagnostic/interchange candidate",
+      "validation": [
+        "do not surface as Reference parity requirement without evidence"
+      ]
+    },
+    {
+      "format": "M4A/ALAC",
+      "reference_mobile": false,
+      "apple_native": "YES",
+      "selected": "OPTIONAL_INTERNAL_OR_FUTURE",
+      "quality_role": "lossless Apple-container candidate",
+      "validation": [
+        "do not assume Reference exposes it"
+      ]
+    }
+  ],
+  "product_export_contract": {
+    "separated_tracks": "individual stem artifacts; do not apply key/speed edits",
+    "audio_mix": "single rendered mix including current audible mix/key/speed changes supplied by upstream render contract",
+    "mobile_reference_formats": [
+      "MP3",
+      "M4A"
+    ],
+    "system_destinations": [
+      "save/export through system document UI",
+      "share through system activity UI"
+    ]
+  },
+  "parity_effect": {
+    "MOI-P001": "research evidence only; remains MISSING",
+    "MOI-P002": "research evidence only; remains MISSING",
+    "MOI-P019": "research evidence only; remains MISSING; MP3 encoder remains explicit dependency"
+  },
+  "sources": [
+    "https://developer.apple.com/documentation/uikit/uidocumentpickerviewcontroller",
+    "https://developer.apple.com/documentation/photosui/photospicker",
+    "https://developer.apple.com/documentation/avfoundation/avassetreadertrackoutput",
+    "https://developer.apple.com/documentation/avfoundation/avassetwriter",
+    "https://developer.apple.com/documentation/avfoundation/avassetexportsession/supportedfiletypes",
+    "https://developer.apple.com/documentation/coreaudiotypes/kaudioformatmpeglayer3",
+    "https://developer.apple.com/documentation/audiotoolbox/encoding-and-decoding-audio",
+    "https://developer.apple.com/library/archive/documentation/MusicAudio/Conceptual/CoreAudioOverview/CoreAudioEssentials/CoreAudioEssentials.html",
+    "https://help.moises.ai/hc/en-us/articles/360013691720-How-do-I-export-my-file"
+  ]
+}

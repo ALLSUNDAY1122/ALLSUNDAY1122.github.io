@@ -1,0 +1,61 @@
+{
+  "wave_id": "L3-AW12",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "apple_sdk_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "implementation": [
+    "project-scoped PracticeDSPGenerationCoordinator over the production DSP controller",
+    "transport two-phase generation binding with click-queue invalidation before replacement authority",
+    "dedicated transactional tempo-change path",
+    "dedicated recovery path",
+    "metronome/count-in click-only invalidation that revokes older combined replacement authority",
+    "failed Playback/click generations retained as recovery floors",
+    "AppleSampleAccurateClickExecutor protocol conformance under AVFAudio"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "exact_transport_gate_self_test": true,
+    "exact_coordinator_interface_compatible_self_test": true,
+    "repository_production_test_source_parse": true,
+    "coverage": [
+      "seek replacement binding",
+      "metronome click-only binding revocation",
+      "count-in click-only invalidation",
+      "transactional tempo token path",
+      "stale Playback generation rejection without destroying current binding",
+      "click invalidation half-failure poison",
+      "failed Playback token recovery rejection",
+      "newer Playback plus click dual-generation recovery",
+      "click-only queue failure after old binding revocation",
+      "invalid count-in atomicity",
+      "tempoChange generic-bind bypass rejection",
+      "recovery generic-bind bypass rejection",
+      "operation serial overflow poison",
+      "observed-generation floors never regress"
+    ],
+    "successful_click_invalidations": [1, 2, 3, 4, 6, 7, 9],
+    "forced_failed_click_invalidations": [5, 8]
+  },
+  "benchmark": {
+    "rounds": 20,
+    "operations_per_round": 10000,
+    "mixed_operations": ["seek", "metronome", "count-in", "tempo", "loop"],
+    "median_ms_per_round": 200.151,
+    "p95_ms_per_round": 239.842,
+    "max_ms_per_round": 327.629,
+    "checksum": 520190,
+    "scope": "exact AW12 coordinator/gate with interface-compatible Linux production-controller/click backends; excludes AVAudioEngine, AudioUnit, PCM, device IO and Apple click scheduling"
+  },
+  "evidence_scope": "LANE3_PRODUCTION_COMBINED_GENERATION_NON_PARITY",
+  "selected_xcode_typecheck_pending": true,
+  "integrated_host_wiring_pending": true,
+  "device_timing_claimed": false,
+  "audible_artifact_claimed": false,
+  "parity_claimed": false
+}

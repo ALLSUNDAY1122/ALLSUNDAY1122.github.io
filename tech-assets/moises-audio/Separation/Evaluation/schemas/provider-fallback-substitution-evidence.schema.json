@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "provider-fallback-substitution-evidence.schema.json",
+  "title": "Lane 1 E07 Fallback Substitution Conformance Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","tool_version","evidence_kind","evidence_state","conformance_state","parity_claim","substitution_id","route_id","route_kind","replaced_route_id","fallback_order","prior_fallback_dispositions","adapter","runtime","capacity_authority","commercial_basis_sha256","training_rights_evidence_sha256","invariants","compatibility","substitution_identity_sha256","privacy","parity_reason","e07_substitution_lock_sha256"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"const": "L1-E07-v1"},
+    "evidence_kind": {"const": "PROVIDER_FALLBACK_SUBSTITUTION_CONFORMANCE"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "conformance_state": {"enum": ["READY_FOR_HQ_E07_SUBSTITUTION_REVIEW","CONFORMANT_REQUIRES_GENERIC_LIVE_AUTHORITY_GATE"]},
+    "parity_claim": {"const": "NONE"},
+    "substitution_id": {"type": "string"},
+    "route_id": {"type": "string"},
+    "route_kind": {"type": "string"},
+    "replaced_route_id": {"type": "string"},
+    "fallback_order": {"type": "array"},
+    "prior_fallback_dispositions": {"type": "array"},
+    "adapter": {"type": "object"},
+    "runtime": {"type": "object"},
+    "capacity_authority": {"type":"object","required":["kind","provenance_sha256"],"properties":{"kind":{"enum":["HOSTED_PROVIDER_ACCOUNT","LOCAL_RUNTIME","PROJECT_OWNED_RUNTIME"]},"provenance_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}},
+    "commercial_basis_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "training_rights_evidence_sha256": {"type": ["string","null"]},
+    "invariants": {"type": "array", "minItems": 15, "maxItems": 15},
+    "compatibility": {"type": "object"},
+    "substitution_identity_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "privacy": {"type": "object"},
+    "parity_reason": {"type": "string"},
+    "e07_substitution_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

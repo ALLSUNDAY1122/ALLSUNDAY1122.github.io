@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A09",
+  "parity_state": "NON_PARITY_EVIDENCE_ONLY",
+  "cases": [
+    {"id":"P01","case":"AudioShake documented asset TTL","expected":"72h tracked, expiry is not synchronous delete proof"},
+    {"id":"P02","case":"AudioShake documented output-link TTL","expected":"1h tracked, link expiry is not task erasure proof"},
+    {"id":"P03","case":"local project-controlled artifact delete","expected":"intent persisted first; directory absence verified before confirmed"},
+    {"id":"P04","case":"explicit local retention expiry","expected":"only exact logical-job directory removed"},
+    {"id":"P05","case":"until-project-delete policy","expected":"automatic sweep must retain"},
+    {"id":"P06","case":"provider asset/task delete confirmed","expected":"overall completion only after local + both provider confirmations"},
+    {"id":"P07","case":"provider delete accepted but not confirmed","expected":"must remain incomplete"},
+    {"id":"P08","case":"provider delete capability absent","expected":"asset expiry-only and task retention unknown; no false completion"},
+    {"id":"P09","case":"provider deletion error","expected":"unknown_after_error; no false confirmation"},
+    {"id":"P10","case":"repeated delete request","expected":"provider delete called once locally; idempotent state reused"},
+    {"id":"P11","case":"provider identifier mismatch","expected":"no destructive provider call"},
+    {"id":"P12","case":"privacy registry persistence/relaunch","expected":"deletion and retention state survives restart"},
+    {"id":"P13","case":"corrupt privacy registry","expected":"fail closed"},
+    {"id":"P14","case":"diagnostic URL/path/free text","expected":"forbidden"},
+    {"id":"P15","case":"diagnostic operational allowlist","expected":"only bounded non-content fields persisted"},
+    {"id":"P16","case":"privacy snapshot","expected":"no raw provider IDs, paths, URLs, filenames, or content"}
+  ]
+}

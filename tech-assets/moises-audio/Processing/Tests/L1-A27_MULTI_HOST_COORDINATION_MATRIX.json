@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A27",
+  "title": "File-Backed Mutation Store Deployment Topology Safety",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "observed_result": "8/8 PASS",
+  "cases": [
+    {
+      "id": "A27-01",
+      "scenario": "flock-backed A16/A23/A24 stores on single host",
+      "expected": "PASS",
+      "observed": "PASS"
+    },
+    {
+      "id": "A27-02",
+      "scenario": "A09 privacy registry on single host without serialized read-modify-write",
+      "expected": "FAIL_CLOSED:L1A27_SINGLE_HOST_SERIALIZATION_INSUFFICIENT",
+      "observed": "PASS"
+    },
+    {
+      "id": "A27-03",
+      "scenario": "multi-host built-in stores without shared mutation authority",
+      "expected": "FAIL_CLOSED:L1A27_SHARED_AUTHORITY_REQUIRED",
+      "observed": "PASS"
+    },
+    {
+      "id": "A27-04",
+      "scenario": "multi-host authority missing required transactional capabilities",
+      "expected": "REJECT:L1A27_SHARED_AUTHORITY_CAPABILITY_MISSING",
+      "observed": "PASS"
+    },
+    {
+      "id": "A27-05",
+      "scenario": "complete shared authority descriptor but no store adapter",
+      "expected": "FAIL_CLOSED:L1A27_SHARED_AUTHORITY_ADAPTER_NOT_IMPLEMENTED",
+      "observed": "PASS"
+    },
+    {
+      "id": "A27-06",
+      "scenario": "future store adapter with full authority contract",
+      "expected": "PASS",
+      "observed": "PASS"
+    },
+    {
+      "id": "A27-07",
+      "scenario": "topology snapshot is NON_PARITY and reports unsafe built-ins truthfully",
+      "expected": "PASS",
+      "observed": "PASS"
+    },
+    {
+      "id": "A27-08",
+      "scenario": "unknown store or invalid topology",
+      "expected": "REJECT",
+      "observed": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "wave_id": "L3-AW26",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_LONG_TRACK_EVIDENCE_MEMORY_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "selected_xcode_compile": false,
+    "physical_iphone": false,
+    "actual_process_rss_measured": false,
+    "thermal_measured": false,
+    "battery_measured": false,
+    "real_audio": false,
+    "current_moises_differential": false,
+    "human_listening": false
+  },
+  "implementation": [
+    "bounded random-access Lane3PCMChunkReadable contract for long-track evidence",
+    "array compatibility adapter and closure-backed integration adapter",
+    "incremental SHA-256 preserving AW13 SHA256_FLOAT32_LE_V1 identity byte contract",
+    "bounded AW07 global alignment, residual, derivative, drift, onset, discontinuity and sample-health analysis",
+    "bounded AW08 selected-window spectral/perceptual-proxy analysis preserving legacy peak interpolation and metric math",
+    "bounded AW10 selected-window cepstral-envelope/formant-proxy analysis",
+    "AW13-compatible long-track unified pipeline returning the existing Lane3UnifiedEvidenceReportV2 type",
+    "deterministic resource profile separating algorithmic buffer bounds from physical-device RSS"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "final_split_source_strict_typecheck": true,
+    "known_sha256_vector": {
+      "status": "PASS",
+      "digest": "df8a40df70a07aba6c124401e71319e690b2c1a188f47082183ad7d171072bdd",
+      "chunk_sizes_verified": [1, 3, 257, 4096]
+    },
+    "small_fixture_time_domain": "PASS",
+    "small_fixture_spectral": "PASS",
+    "small_fixture_cepstral_envelope": "PASS",
+    "portable_aw13_compatible_unified_report": "PASS",
+    "short_read_fail_closed": "PASS",
+    "virtual_30_minute_identity": {
+      "status": "PASS",
+      "sample_rate": 48000,
+      "channels": 2,
+      "frames_per_source": 86400000,
+      "maximum_requested_frames": 16384,
+      "reference_plus_observed_read_calls": 10548,
+      "full_track_allocation_by_virtual_source": false,
+      "device_rss_claimed": false
+    }
+  },
+  "default_resource_profile": {
+    "channels": 2,
+    "chunk_frames": 16384,
+    "maximum_single_read_frames": 40962,
+    "maximum_single_read_interleaved_float_count": 81924,
+    "approximate_maximum_single_read_bytes": 327696,
+    "estimated_major_analysis_buffer_bytes_upper_bound": 9740384,
+    "full_track_pcm_retained_by_pipeline": false,
+    "actual_process_rss_measured": false,
+    "interpretation": "deterministic major-buffer planning bound only; excludes caller-owned source storage, decoder/framework buffers, allocator overhead, runtime metadata and device RSS"
+  },
+  "portable_identity_benchmark": {
+    "rounds": 10,
+    "frames_per_source": 250000,
+    "sources_per_round": 2,
+    "median_ms": 24.946,
+    "p95_ms": 27.151,
+    "max_ms": 27.151,
+    "checksum": 44240,
+    "scope": "generated chunk source plus streaming AW13-compatible PCM identity only; excludes file IO, AVFAudio, full AW07/AW08/AW10 analysis, physical device and listening"
+  },
+  "repository_validation": {
+    "legacy_equivalence_self_test_authored": true,
+    "benchmark_authored": true,
+    "exact_aw13_identity_equality_assertion_authored": true,
+    "entire_aw07_report_equality_assertion_authored": true,
+    "entire_aw08_report_equality_assertion_authored": true,
+    "entire_aw10_report_equality_assertion_authored": true,
+    "selected_complete_lane3_execution_pending": true,
+    "repository_equivalence_pass_claimed": false
+  },
+  "integration_limitations": {
+    "array_source_retains_full_input_descriptor": true,
+    "file_or_decoder_backed_source_required_for_real_long_track_input_rss_reduction": true,
+    "selected_file_decoder_adapter_not_yet_integrated": true,
+    "aw24_device_bundle_not_yet_populated": true
+  },
+  "claims": {
+    "device_memory_improvement_claimed": false,
+    "physical_rss_claimed": false,
+    "thermal_claimed": false,
+    "battery_claimed": false,
+    "audible_quality_claimed": false,
+    "real_audio_claimed": false,
+    "current_moises_differential_claimed": false,
+    "human_listening_claimed": false,
+    "parity_claimed": false
+  }
+}

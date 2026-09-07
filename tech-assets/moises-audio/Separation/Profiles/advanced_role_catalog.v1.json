@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-08-23",
+  "parity_state": "NON_PARITY_EVIDENCE_ONLY",
+  "roles": [
+    {"canonical_role":"vocals","reference_state":"BASIC_REFERENCE_CONFIRMED","audioshake_model":"vocals","family":"vocals","notes":"Basic current-iPhone Reference role."},
+    {"canonical_role":"instrumental","reference_state":"BASIC_REFERENCE_CONFIRMED","audioshake_model":"instrumental","family":"mix","notes":"Basic 2-stem instrumental role."},
+    {"canonical_role":"drums","reference_state":"BASIC_REFERENCE_CONFIRMED","audioshake_model":"drums","family":"rhythm","notes":"Basic 4-stem role."},
+    {"canonical_role":"bass","reference_state":"BASIC_REFERENCE_CONFIRMED","audioshake_model":"bass","family":"bass","notes":"Basic/custom observed role."},
+    {"canonical_role":"other","reference_state":"BASIC_REFERENCE_CONFIRMED","audioshake_model":"other","family":"residual","notes":"Basic 4-stem residual role."},
+    {"canonical_role":"guitar","reference_state":"DIRECT_CURRENT_IPHONE_CONFIRMED","audioshake_model":"guitar","family":"guitar","notes":"Directly observed on current-iPhone custom separation."},
+    {"canonical_role":"piano_keys","reference_state":"UNVERIFIED_CURRENT_IPHONE","audioshake_model":"keys","family":"keys","notes":"Provider ontology ready; current-iPhone custom availability is not claimed."},
+    {"canonical_role":"strings","reference_state":"UNVERIFIED_CURRENT_IPHONE","audioshake_model":"strings","family":"strings","notes":"Provider ontology ready; current-iPhone custom availability is not claimed."},
+    {"canonical_role":"winds","reference_state":"UNVERIFIED_CURRENT_IPHONE","audioshake_model":"wind","family":"winds","notes":"Provider ontology ready; current-iPhone custom availability is not claimed."},
+    {"canonical_role":"lead_vocals","reference_state":"UNVERIFIED_CURRENT_IPHONE","audioshake_model":"vocals_lead","family":"vocals","notes":"Professional provider module; current-iPhone Reference activation pending."},
+    {"canonical_role":"backing_vocals","reference_state":"UNVERIFIED_CURRENT_IPHONE","audioshake_model":"vocals_backing","family":"vocals","notes":"Professional provider module; current-iPhone Reference activation pending."},
+    {"canonical_role":"electric_guitar","reference_state":"UNVERIFIED_CURRENT_IPHONE","audioshake_model":"guitar_electric","family":"guitar","notes":"Professional provider module; current-iPhone Reference activation pending."},
+    {"canonical_role":"acoustic_guitar","reference_state":"UNVERIFIED_CURRENT_IPHONE","audioshake_model":"guitar_acoustic","family":"guitar","notes":"Professional provider module; current-iPhone Reference activation pending."},
+    {"canonical_role":"acoustic_piano","reference_state":"UNVERIFIED_CURRENT_IPHONE","audioshake_model":"piano","family":"keys","notes":"Professional provider module; current-iPhone Reference activation pending."},
+    {"canonical_role":"other_excluding_guitar","reference_state":"UNVERIFIED_CURRENT_IPHONE","audioshake_model":"other-x-guitar","family":"residual","notes":"Provider model available as a future capability; Reference activation pending."}
+  ],
+  "incompatible_role_sets": [
+    ["vocals","lead_vocals"],
+    ["vocals","backing_vocals"],
+    ["guitar","electric_guitar"],
+    ["guitar","acoustic_guitar"],
+    ["piano_keys","acoustic_piano"],
+    ["other","other_excluding_guitar"]
+  ],
+  "unknowns": [
+    "Complete current-iPhone Premium/Pro custom instrument and lock map remains unverified.",
+    "Moises-equivalent Hi-Fi provider request mapping is not documented by the current AudioShake public API and remains fail-closed.",
+    "Provider account model access must be read from GET /models; documentation presence alone is not sufficient."
+  ]
+}

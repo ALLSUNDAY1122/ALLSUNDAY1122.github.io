@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "wave": "L1-E10",
+  "title": "Generic Evaluation Provenance Producer",
+  "result": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "tool_version": "L1-E10-v1",
+  "local_verification": {
+    "unittest_methods": 18,
+    "passed": 18,
+    "failed": 0,
+    "json_schema_validations": 9,
+    "json_schema_failures": 0,
+    "implementation_syntax_compile": "PASS",
+    "test_syntax_compile": "PASS"
+  },
+  "derived_outputs": [
+    "GENERIC_ROUTE_OPERATIONAL_MEASUREMENT",
+    "GENERIC_ROUTE_BENCHMARK_MEASUREMENT",
+    "GENERIC_ROUTE_DIFFERENTIAL_MEASUREMENT",
+    "GENERIC_ROUTE_LIVE_EVALUATION",
+    "GENERIC_EVALUATION_PROVENANCE_RECEIPT"
+  ],
+  "hard_guards": [
+    "private root must remain outside repository",
+    "all source files and supporting evidence are SHA-256 verified",
+    "route kind and runtime artifact must match E07/E08",
+    "operational fields require explicit evidence-id coverage",
+    "benchmark aggregates are computed from logical run records rather than hand-entered summary values",
+    "duplicate benchmark run ids are rejected",
+    "mixed successful-run currencies are rejected",
+    "G1 pass without an evaluable G1 run is rejected",
+    "differential exact-input is computed from input SHA equality",
+    "differential usability delta and material inferiority are derived from raw review records",
+    "review ids are hashed in internal derivation locks",
+    "generated output bytes are deterministic for identical inputs",
+    "mutated generated outputs fail replay verification",
+    "public provenance receipt emits hashes/locks but no private paths, raw reviewer ids, raw audio, contract text or billing records",
+    "E09 differential schema now permits and requires comparison_state used by E09 runtime decision code"
+  ],
+  "negative_cases": [
+    "supporting evidence mutation",
+    "operational field without evidence",
+    "duplicate run id",
+    "mixed currency",
+    "invalid G1 pass semantics",
+    "zero successful benchmark runs",
+    "input SHA mismatch",
+    "zero-review pending state",
+    "material inferiority",
+    "duplicate review id",
+    "route/runtime mismatch",
+    "E08-to-E07 binding mismatch",
+    "source-index SHA mismatch",
+    "private root inside repository",
+    "output outside private root",
+    "generated output mutation",
+    "path traversal"
+  ],
+  "external_gaps": [
+    "no actual commercial/runtime source artifacts were supplied",
+    "no rights-cleared G1/G2 real audio was supplied",
+    "no actual separation benchmark runs were supplied",
+    "no current-iPhone Moises exact-input review corpus was supplied",
+    "no live route is selected",
+    "no product PARITY is claimed"
+  ],
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY"
+}

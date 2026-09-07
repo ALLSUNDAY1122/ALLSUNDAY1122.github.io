@@ -1,0 +1,92 @@
+{
+  "wave_id": "L3-AW25",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_AW25_PITCH_TRANSITION_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "avfaudio_runtime": false,
+    "audio_unit_ramp_runtime": false,
+    "real_audio": false,
+    "current_moises_differential": false,
+    "human_listening": false
+  },
+  "implementation": [
+    "portable bounded pitch-transition policy/planner and NON_PARITY receipt",
+    "transaction-in-flight gate across scheduled pitch ramp plus settle barrier",
+    "rollback on begin/finalize/post-readback failure and desync on rollback failure",
+    "pitch-only logical commit only after target backend readback and no click-generation advancement",
+    "Apple NewTimePitch adapter prepared for AUAudioUnit scheduleParameterBlock ramp when render resources and a rampable pitch parameter are available",
+    "explicit Apple immediate fallback reasons for unavailable sample rate/render resources/pitch parameter/ramp flag",
+    "AW22 telemetry transactional backend preserves PracticeDSPPitchTransitionBackendApplying instead of erasing ramp capability",
+    "legacy backend under telemetry reports backendTransitionUnsupported immediate fallback"
+  ],
+  "provisional_policy": {
+    "immediate_delta_threshold_semitones": 0.2,
+    "minimum_ramp_seconds": 0.008,
+    "seconds_per_semitone": 0.002,
+    "maximum_ramp_seconds": 0.032,
+    "settle_seconds": 0.004,
+    "maximum_ramp_frames": 4096,
+    "final_tuning_requires_physical_iphone": true
+  },
+  "portable_validation": {
+    "status": "PASS",
+    "core_and_transaction_strict_compile": true,
+    "telemetry_transition_protocol_compile": true,
+    "planner_immediate_threshold": "PASS",
+    "planner_1_6_12_semitone_frames": "PASS",
+    "planner_high_sample_rate_4096_frame_cap": "PASS",
+    "invalid_sample_rate_rejection": "PASS",
+    "scheduled_transition_commit_after_finalize": "PASS",
+    "reentrant_control_during_ramp_rejected_transaction_in_flight": "PASS",
+    "begin_failure_rollback": "PASS",
+    "finalize_failure_rollback": "PASS",
+    "post_readback_mismatch_rollback": "PASS",
+    "rollback_failure_marks_desynchronized": "PASS",
+    "telemetry_wrapper_preserves_transition_backend": "PASS",
+    "legacy_telemetry_backend_explicit_fallback": "PASS",
+    "pitch_only_schedule_generation_preserved": "PASS",
+    "self_test_output": "L3-AW25 pitch transition self-test PASS ramps=5 reentrancy=blocked failures=rolledBack telemetryTransitionPreserved=true generationPreserved=true"
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "transitions_per_round": 5000,
+    "total_transitions": 100000,
+    "median_ms_per_round": 212.518,
+    "p95_ms_per_round": 233.649,
+    "max_ms_per_round": 269.458,
+    "checksum": 134315520,
+    "scope": "fake transition backend plus no-op sleeper; planner/transaction/receipt overhead only; excludes ramp waiting, AVFAudio, Audio Unit rendering, audio IO, device latency and listening"
+  },
+  "apple_api_preparation": {
+    "schedule_parameter_block_authored": true,
+    "nonzero_ramp_duration_authored": true,
+    "event_sample_time_immediate_authored": true,
+    "new_time_pitch_parameter_lookup_authored": true,
+    "can_ramp_flag_check_authored": true,
+    "selected_xcode_compile_pending": true,
+    "target_ios_can_ramp_confirmation_pending": true,
+    "scheduled_ramp_execution_pending": true
+  },
+  "repository_validation": {
+    "self_test_authored": true,
+    "benchmark_authored": true,
+    "apple_compile_probe_authored": true,
+    "selected_complete_lane3_execution_pending": true
+  },
+  "claims": {
+    "device_timing_claimed": false,
+    "click_pop_absence_claimed": false,
+    "warble_absence_claimed": false,
+    "formant_preservation_claimed": false,
+    "real_audio_claimed": false,
+    "current_moises_differential_claimed": false,
+    "human_listening_claimed": false,
+    "parity_claimed": false
+  }
+}

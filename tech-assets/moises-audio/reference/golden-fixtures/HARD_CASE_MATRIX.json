@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-QA-001",
+  "purpose": "minimum multi-genre and hard-case coverage for source separation, analysis, performance and recovery QA",
+  "rules": {
+    "real_audio_required_for_parity": true,
+    "synthetic_only_pass_forbidden": true,
+    "minimum_g1_full_songs": 12,
+    "minimum_g2_tracks": 12,
+    "minimum_style_buckets": 8,
+    "minimum_vocal_g1_tracks": 6,
+    "max_single_performer_or_producer_fraction": 0.3334,
+    "report_worst_case_separately": true
+  },
+  "style_buckets": [
+    {
+      "id": "STYLE-POP",
+      "required": true,
+      "description": "modern pop; lead and backing vocals; layered production",
+      "must_cover": ["lead_backing_vocal_overlap", "dense_chorus", "vocal_reverb"]
+    },
+    {
+      "id": "STYLE-ROCK",
+      "required": true,
+      "description": "distorted guitars, acoustic drums, bass guitar",
+      "must_cover": ["distorted_guitar_vocal_masking", "cymbal_wash", "kick_bass_overlap"]
+    },
+    {
+      "id": "STYLE-ACOUSTIC",
+      "required": true,
+      "description": "singer-songwriter or sparse acoustic arrangement",
+      "must_cover": ["quiet_detail", "breathy_vocal", "natural_room_reverb"]
+    },
+    {
+      "id": "STYLE-EDM",
+      "required": true,
+      "description": "electronic/dance, synthetic bass, side-chain dynamics",
+      "must_cover": ["synth_bass_kick_overlap", "stereo_fx", "limiting"]
+    },
+    {
+      "id": "STYLE-HIPHOP",
+      "required": true,
+      "description": "rap/hip-hop with dense low end and sampled production",
+      "must_cover": ["spoken_rap_vocal", "dense_low_end", "sampled_layers"]
+    },
+    {
+      "id": "STYLE-KEYBOARD",
+      "required": true,
+      "description": "piano or keyboard-led arrangement",
+      "must_cover": ["piano_transients", "long_sustain", "harmonic_overlap"]
+    },
+    {
+      "id": "STYLE-FUNK",
+      "required": true,
+      "description": "syncopated groove, bass/drum interaction",
+      "must_cover": ["syncopation", "ghost_notes", "bass_drum_interlock"]
+    },
+    {
+      "id": "STYLE-LIVE",
+      "required": true,
+      "description": "live or rehearsal recording with timing drift and bleed",
+      "must_cover": ["tempo_drift", "room_bleed", "audience_or_room_noise"]
+    },
+    {
+      "id": "STYLE-BALLAD",
+      "required": false,
+      "description": "slow sparse material exposing low-level artifacts",
+      "must_cover": ["long_decay", "quiet_vocal", "near_silence"]
+    },
+    {
+      "id": "STYLE-DENSE",
+      "required": false,
+      "description": "heavily limited wall-of-sound production",
+      "must_cover": ["high_masking", "clipping_or_limiting", "transient_density"]
+    }
+  ],
+  "hard_cases": [
+    {"id":"HC-001","name":"lead_backing_vocal_overlap","domains":["separation"],"required":true},
+    {"id":"HC-002","name":"breathy_or_falsetto_vocal","domains":["separation"],"required":true},
+    {"id":"HC-003","name":"heavy_vocal_reverb_delay","domains":["separation"],"required":true},
+    {"id":"HC-004","name":"kick_bass_fundamental_overlap","domains":["separation","metronome"],"required":true},
+    {"id":"HC-005","name":"bass_vs_low_guitar_or_synth","domains":["separation"],"required":true},
+    {"id":"HC-006","name":"cymbal_wash_over_vocal_consonants","domains":["separation"],"required":true},
+    {"id":"HC-007","name":"distorted_guitar_masks_vocal_midrange","domains":["separation"],"required":true},
+    {"id":"HC-008","name":"piano_attack_and_long_sustain","domains":["separation","chord","key"],"required":true},
+    {"id":"HC-009","name":"stereo_widening_phase_fx","domains":["separation","playback"],"required":true},
+    {"id":"HC-010","name":"live_tempo_drift","domains":["bpm","beat","metronome"],"required":true},
+    {"id":"HC-011","name":"tempo_change_or_rubato","domains":["bpm","beat","metronome"],"required":true},
+    {"id":"HC-012","name":"key_modulation","domains":["key","chord"],"required":true},
+    {"id":"HC-013","name":"sparse_intro_dense_chorus","domains":["separation","song_parts"],"required":true},
+    {"id":"HC-014","name":"silence_or_near_silence","domains":["separation","analysis"],"required":true},
+    {"id":"HC-015","name":"clipping_or_heavy_limiting","domains":["separation","analysis"],"required":true},
+    {"id":"HC-016","name":"low_bitrate_lossy_input","domains":["import","separation","analysis"],"required":true},
+    {"id":"HC-017","name":"abrupt_edit_or_hard_transient","domains":["separation","playback"],"required":true},
+    {"id":"HC-018","name":"large_dynamic_range_change","domains":["separation","analysis"],"required":true},
+    {"id":"HC-019","name":"mono_or_near_mono_mix","domains":["import","separation","playback"],"required":true},
+    {"id":"HC-020","name":"48khz_source","domains":["import","separation","analysis","export"],"required":true},
+    {"id":"HC-021","name":"complex_or_inverted_chords","domains":["chord"],"required":true},
+    {"id":"HC-022","name":"no_clear_percussion","domains":["bpm","beat","metronome"],"required":true},
+    {"id":"HC-023","name":"unusual_section_order","domains":["song_parts","ux"],"required":true},
+    {"id":"HC-024","name":"long_intro_outro","domains":["song_parts","ux"],"required":true}
+  ],
+  "long_track_cases": [
+    {"duration_minutes":5,"class":"normal_baseline","required":true},
+    {"duration_minutes":15,"class":"long_mix_or_rehearsal","required":true},
+    {"duration_minutes":30,"class":"stress","required":true},
+    {"duration_minutes":60,"class":"endurance","required":true}
+  ],
+  "long_track_measurements": [
+    "wall_time",
+    "real_time_factor",
+    "peak_rss",
+    "thermal_state_if_on_device",
+    "battery_delta_if_on_device",
+    "upload_and_download_time_if_server",
+    "storage_growth_and_cleanup",
+    "seek_latency_early_middle_late",
+    "cancel_at_10_50_95_percent",
+    "retry_after_failure",
+    "relaunch_or_interruption_recovery"
+  ],
+  "parity_rows_informed": ["MOI-P003","MOI-P009","MOI-P011","MOI-P013","MOI-P014","MOI-P021","MOI-P022"],
+  "parity_state_change": false
+}

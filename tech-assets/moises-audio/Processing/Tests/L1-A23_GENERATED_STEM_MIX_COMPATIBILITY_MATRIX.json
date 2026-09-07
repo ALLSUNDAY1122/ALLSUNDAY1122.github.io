@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A23",
+  "title": "Generated Stem Timing / Mix Compatibility Hardening",
+  "state": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "target": "MOI-P025",
+  "tests": {
+    "focused_regression": {"passed": 22, "failed": 0},
+    "json_schema_samples": {"passed": 4, "failed": 0},
+    "python_compile": "PASS"
+  },
+  "contracts": [
+    "raw runtime output is not mixer-ready by default",
+    "sample rate, channel count, audio format, bit depth and frame count must match the source mix format exactly before activation",
+    "timeline origin is zero for the current A23 contract",
+    "resample/channel-remix/sample-format conversion/edge trim-pad are fail-closed unless explicitly allowed by policy",
+    "normalization binds raw artifact SHA -> plan SHA -> normalizer artifact SHA -> execution evidence SHA -> normalized output SHA",
+    "unrelated pre-existing WAV cannot satisfy a normalization plan",
+    "same generation variant commit is idempotent but same variant with different generation/artifact identity conflicts",
+    "variant index regression is rejected",
+    "new variant object and manifest are durable before the active pointer changes",
+    "crash after object or manifest creation preserves the previously active variant",
+    "active artifact corruption/corrupt pointer fail closed",
+    "public evidence contains hashes/format metadata only and no raw path/audio"
+  ],
+  "external_remaining": [
+    "current-iPhone generated-stem timeline behavior",
+    "real generated audio alignment against rights-cleared sources",
+    "actual normalizer artifact/runtime if conversion is required",
+    "integrated Playback/DSP mixer compatibility on iPhone",
+    "current-iPhone Moises differential and human listening"
+  ],
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY"
+}

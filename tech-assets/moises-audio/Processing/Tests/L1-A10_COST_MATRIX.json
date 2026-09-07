@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A10",
+  "result": "COMPLETE_NON_PARITY",
+  "parity_state": "NON_PARITY_EVIDENCE_ONLY",
+  "captured": "2026-08-23 JST",
+  "test_suites": {
+    "cost_quota_guard": {"tests": 28, "failures": 0, "result": "PASS"},
+    "budgeted_provider_adapter": {"tests": 5, "failures": 0, "result": "PASS"},
+    "py_compile": {"modules": 2, "result": "PASS"}
+  },
+  "covered_semantics": [
+    "duration_times_target_estimation_with_billing_increment",
+    "per_job_ceiling_fail_close",
+    "daily_budget_fail_close",
+    "monthly_budget_fail_close",
+    "idempotent_same_logical_job_reservation",
+    "idempotency_payload_conflict_fail_close",
+    "durable_provider_create_authorization_exactly_once",
+    "ambiguous_create_budget_hold",
+    "no_release_after_provider_create_attempt",
+    "safe_precreate_release_and_reactivation",
+    "provider_task_id_hash_only",
+    "provider_task_conflict_billing_incident",
+    "actual_cost_reconciliation",
+    "actual_cost_relaunch_persistence",
+    "actual_cost_ceiling_overrun_incident",
+    "actual_daily_monthly_budget_overrun_incident",
+    "429_rate_limit_semantics",
+    "quota_exhausted_semantics",
+    "credit_exhausted_semantics",
+    "402_billing_rejected_semantics",
+    "privacy_safe_cost_evidence",
+    "timezone_scoped_daily_budget",
+    "corrupt_ledger_fail_close",
+    "server_resolved_duration_required_before_provider_calls"
+  ],
+  "not_proven": [
+    "live_provider_pricing",
+    "live_provider_credit_or_quota_error_payloads",
+    "live_provider_actual_invoice_reconciliation",
+    "commercial_terms_or_budget_approval",
+    "real_provider_duplicate_billing_behavior",
+    "PARITY"
+  ]
+}

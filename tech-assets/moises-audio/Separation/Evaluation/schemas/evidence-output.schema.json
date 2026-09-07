@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project.local/moises/separation/evidence-output.schema.json",
+  "title": "Separation evaluation evidence output",
+  "type": "object",
+  "required": ["schema_version", "evidence_kind", "run_id", "fixture_id", "fixture_class", "purpose", "provider", "timing_ms", "cost", "results", "objective_metrics", "rights_record_id", "real_audio", "parity_state", "parity_reason"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_kind": {"const": "SEPARATION_EVALUATION_RUN"},
+    "parity_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "parity_reason": {"type": "string", "minLength": 1}
+  }
+}

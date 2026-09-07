@@ -1,0 +1,6 @@
+{
+  "$id":"ai-stem-generation-live-evidence.schema.json","$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+  "required":["schema_version","tool_version","evidence_kind","evidence_state","parity_claim","gate_state","plan_id","runtime","capability","current_iphone_surface","metrics","checks","reasons","evidence_binding","privacy","parity_reason","a22_live_gate_lock_sha256"],
+  "properties":{"schema_version":{"const":1},"tool_version":{"const":"L1-A22-LIVE-v1"},"evidence_kind":{"const":"AI_STEM_GENERATION_LIVE_GATE"},"evidence_state":{"const":"NON_PARITY_EVIDENCE_ONLY"},"parity_claim":{"const":"NONE"},"gate_state":{"enum":["READY_FOR_HQ_P025_LIVE_REVIEW","WAITING_CURRENT_IPHONE_REFERENCE","WAITING_EXTERNAL_EVIDENCE","LIVE_EVALUATION_REJECTED"]},"plan_id":{"type":"string"},"runtime":{"type":"object"},"capability":{"type":"object"},"current_iphone_surface":{"type":"object"},"metrics":{"type":"object"},"checks":{"type":"object"},"reasons":{"type":"array","items":{"type":"string"}},"evidence_binding":{"type":"object"},"privacy":{"type":"object"},"parity_reason":{"type":"string"},"a22_live_gate_lock_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"campaign_source_file_sha256":{"type":"object"}},
+  "title":"Lane 1 A22 AI Stem Generation Live Gate Evidence"
+}

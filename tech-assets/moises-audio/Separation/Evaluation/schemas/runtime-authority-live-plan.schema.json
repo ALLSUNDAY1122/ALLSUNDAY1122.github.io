@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "runtime-authority-live-plan.schema.json",
+  "title": "Lane 1 E08 Generic Runtime-Authority Live Gate Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence_state", "parity_claim", "gate_id", "route_id", "route_kind", "scenarios", "policy"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "parity_claim": {"const": "NONE"},
+    "gate_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "route_id": {"type": "string", "minLength": 1},
+    "route_kind": {"enum": ["LICENSED_LOCAL_INFERENCE_SDK", "ALTERNATE_WRITTEN_COMMERCIAL_PROVIDER", "PROJECT_OWNED_MODEL_IF_RIGHTS_CLEARED_TRAINING_DATA_AVAILABLE"]},
+    "scenarios": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {"enum": ["INPUT_INTERRUPTION", "CANCEL_PRE_START", "CANCEL_EXECUTING", "CANCEL_FINALIZING", "AMBIGUOUS_START_RETRY", "RELAUNCH", "OUTPUT_AVAILABILITY_LOSS", "CAPACITY_LIMIT", "LONG_TRACK", "STORAGE_PRESSURE"]}
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maximum_non_cancel_degraded_fraction", "require_capacity_attestation", "engineering_policy_not_reference_fact"],
+      "properties": {
+        "maximum_non_cancel_degraded_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "require_capacity_attestation": {"const": true},
+        "engineering_policy_not_reference_fact": {"const": true}
+      }
+    }
+  }
+}

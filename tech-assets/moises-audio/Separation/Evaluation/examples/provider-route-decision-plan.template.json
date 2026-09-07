@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "decision_id": "REPLACE_WITH_DECISION_ID",
+  "policy": {
+    "required_mode_classes": ["FREE_CORE", "MAJOR", "ADVANCED"],
+    "allowed_service_regions": ["REPLACE_WITH_APPROVED_SERVICE_REGION"],
+    "allowed_data_regions": ["REPLACE_WITH_APPROVED_DATA_REGION"],
+    "maximum_mean_provider_total_ms": 120000,
+    "maximum_final_failure_fraction": 0.05,
+    "maximum_retry_fraction": 0.20,
+    "cost_currency": "USD",
+    "maximum_mean_cost_per_successful_run": 1.00,
+    "maximum_non_cancel_degraded_fraction": 0.10,
+    "maximum_uploaded_asset_retention_seconds": 86400,
+    "require_delete_api": true,
+    "require_capacity_attestation": true,
+    "minimum_overall_usability_delta": -0.25,
+    "minimum_primary_score_margin": 0.05,
+    "ranking_weights": {"quality": 0.45, "latency": 0.20, "reliability": 0.20, "cost": 0.15},
+    "engineering_policy_not_reference_fact": true
+  }
+}

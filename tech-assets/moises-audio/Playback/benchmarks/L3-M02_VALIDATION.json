@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "bundle_id": "L3-M02",
+  "lane_id": "LANE-3-PLAYBACK-DSP",
+  "execution_environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "compile_scope": "portable Playback transport semantics with contract-compatible frozen Shared type stubs",
+    "apple_runtime_executed": false,
+    "physical_iphone_executed": false
+  },
+  "results": [
+    {"id": "72h_project_frame_mapping", "status": "PASS", "detail": "72 hours at 48kHz mapped to 12441600000 frames and round-tripped"},
+    {"id": "million_loop_absolute_modulo", "status": "PASS", "detail": "1,000,000 loop repetitions normalized directly from absolute frames with zero accumulated planner drift"},
+    {"id": "mixed_sample_rate_stems", "status": "PASS", "detail": "44.1kHz/48kHz/96kHz stem project windows use one canonical project frame clock"},
+    {"id": "source_to_stems_preserve", "status": "PASS", "detail": "31.25s position and playing intent preserved when replacement stems cover the current clock"},
+    {"id": "delayed_stem_transition", "status": "PASS", "detail": "transition remains at the source clock and records waitingForDelayedStem instead of shifting project time"},
+    {"id": "short_stem_transition", "status": "PASS", "detail": "when all stems ended before current source position, transport clamps to latest real stem end and does not report playing"},
+    {"id": "stem_duration_mismatch_accounting", "status": "PASS", "detail": "source tail gap and stem extension beyond source are explicit plan outputs"},
+    {"id": "interruption_resume_intent", "status": "PASS", "detail": "playing -> interruption -> stem replacement -> permitted interruption end resumes; explicit pause cancels resume intent"},
+    {"id": "loop_seek_normalization", "status": "PASS", "detail": "87.5s seek under a 55...65s loop normalizes to 57.5s in frame space"},
+    {"id": "property_loop_stress", "status": "PASS", "detail": "50,000 deterministic pseudo-random long-position loop invariants passed"},
+    {"id": "overflow_fail_closed", "status": "PASS", "detail": "non-representable seconds fail with timelineOverflow rather than trapping"},
+    {"id": "invalid_loop_fail_closed", "status": "PASS", "detail": "zero/negative frame loop lengths are rejected"}
+  ],
+  "benchmark": {
+    "rounds": 25,
+    "operations_per_round": {
+      "absolute_loop_normalizations": 250000,
+      "source_to_stems_transition_plans": 20000,
+      "interruption_pairs": 10
+    },
+    "fixture": "four stems spanning six hours at 44.1kHz/48kHz/96kHz with non-zero offsets",
+    "median_ms": 53.476,
+    "p95_ms": 59.058,
+    "p99_ms": 61.044,
+    "max_ms": 61.044,
+    "note": "CPU planner benchmark only; not audio render, UI response, AVAudioEngine or device latency"
+  },
+  "parity_claim": false,
+  "remaining_runtime_gates": [
+    "HQ late-integration wiring of portable state machine into the integrated Apple transport path",
+    "Apple SDK compile and runtime checks",
+    "physical-iPhone onset/seek/loop/audio-interruption measurements",
+    "rights-cleared real-audio and Reference differential evidence"
+  ]
+}

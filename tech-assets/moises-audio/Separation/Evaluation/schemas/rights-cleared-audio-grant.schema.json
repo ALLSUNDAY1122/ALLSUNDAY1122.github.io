@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/moises/rights-cleared-audio-grant.schema.json",
+  "title": "Lane 1 E02 private rights/provenance grant record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "rights_record_id", "fixture_id", "grant_state", "authority_reviewed", "revoked", "effective_date", "expires_date", "source_document", "provenance", "permissions"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "rights_record_id": {"type": "string", "minLength": 1},
+    "fixture_id": {"type": "string", "minLength": 1},
+    "grant_state": {"const": "VERIFIED"},
+    "authority_reviewed": {"const": true},
+    "revoked": {"const": false},
+    "effective_date": {"type": "string", "format": "date"},
+    "expires_date": {"type": ["string", "null"], "format": "date"},
+    "source_document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^(?:sha256:)?[0-9a-fA-F]{64}$"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["real_recorded_music_attested", "synthetic_or_generated", "origin_record_id"],
+      "properties": {
+        "real_recorded_music_attested": {"const": true},
+        "synthetic_or_generated": {"const": false},
+        "origin_record_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commercial_engineering_use", "project_processing_submission", "reference_service_submission", "isolated_source_evaluation", "internal_stem_evaluation", "redistribution_allowed"],
+      "properties": {
+        "commercial_engineering_use": {"const": true},
+        "project_processing_submission": {"const": true},
+        "reference_service_submission": {"type": "boolean"},
+        "isolated_source_evaluation": {"type": "boolean"},
+        "internal_stem_evaluation": {"type": "boolean"},
+        "redistribution_allowed": {"type": "boolean"}
+      }
+    }
+  }
+}

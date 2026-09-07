@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "runtime-authority-live-result.private.schema.json",
+  "title": "Lane 1 E08 Private Runtime-Authority Scenario Result",
+  "type": "object",
+  "required": ["schema_version", "evidence_state", "scenario_kind", "stable_error_codes", "project_state_after", "project_corrupted", "partial_result_published", "work_start_request_count", "distinct_execution_count", "upstream_cancel_request_count", "billable_execution_count", "automatic_start_repost_count", "duplicate_execution_detected", "reconciliation_performed", "logical_cancelled", "outputs_published_after_cancel", "logical_job_identity_sha256", "idempotency_key_sha256", "logical_identity_preserved", "upstream_cancel_state", "claimed_upstream_cancelled", "relaunch_observed", "capacity_limit_observed", "bounded_streaming_observed", "storage_preflight_observed", "output_availability_resolution", "runtime_artifact_sha256", "authority", "fault_injection"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "scenario_kind": {"enum": ["INPUT_INTERRUPTION", "CANCEL_PRE_START", "CANCEL_EXECUTING", "CANCEL_FINALIZING", "AMBIGUOUS_START_RETRY", "RELAUNCH", "OUTPUT_AVAILABILITY_LOSS", "CAPACITY_LIMIT", "LONG_TRACK", "STORAGE_PRESSURE"]},
+    "stable_error_codes": {"type": "array", "items": {"type": "string", "minLength": 1, "maxLength": 128}},
+    "project_state_after": {"enum": ["ready", "recoverable", "cancelled", "failed_closed"]},
+    "project_corrupted": {"type": "boolean"},
+    "partial_result_published": {"type": "boolean"},
+    "work_start_request_count": {"type": "integer", "minimum": 0},
+    "distinct_execution_count": {"type": "integer", "minimum": 0},
+    "upstream_cancel_request_count": {"type": "integer", "minimum": 0},
+    "billable_execution_count": {"type": "integer", "minimum": 0},
+    "automatic_start_repost_count": {"type": "integer", "minimum": 0},
+    "duplicate_execution_detected": {"type": "boolean"},
+    "reconciliation_performed": {"type": "boolean"},
+    "logical_cancelled": {"type": "boolean"},
+    "outputs_published_after_cancel": {"type": "boolean"},
+    "logical_job_identity_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "idempotency_key_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "logical_identity_preserved": {"type": "boolean"},
+    "upstream_cancel_state": {"type": "string", "minLength": 1},
+    "claimed_upstream_cancelled": {"type": "boolean"},
+    "relaunch_observed": {"type": "boolean"},
+    "capacity_limit_observed": {"type": "boolean"},
+    "bounded_streaming_observed": {"type": "boolean"},
+    "storage_preflight_observed": {"type": "boolean"},
+    "output_availability_resolution": {"type": "string", "minLength": 1},
+    "runtime_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "authority": {
+      "type": "object",
+      "required": ["kind", "provenance_path", "provenance_sha256"],
+      "properties": {
+        "kind": {"enum": ["HOSTED_PROVIDER_ACCOUNT", "LOCAL_RUNTIME", "PROJECT_OWNED_RUNTIME"]},
+        "provenance_path": {"type": "string", "minLength": 1},
+        "provenance_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "fault_injection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

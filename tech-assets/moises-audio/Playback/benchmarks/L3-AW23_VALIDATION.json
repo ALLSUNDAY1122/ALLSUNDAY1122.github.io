@@ -1,0 +1,97 @@
+{
+  "wave_id": "L3-AW23",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_SERIALIZED_PITCH_KEY_AUTHORITY_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "strict_concurrency": "complete",
+    "warnings_as_errors": true,
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "av_audio_session_runtime": false,
+    "apple_time_pitch_runtime": false,
+    "moises_differential": false,
+    "human_listening": false
+  },
+  "implementation": [
+    "one project-scoped product-facing Lane-3 practice authority",
+    "shared admission for transport/tempo/click practice operations",
+    "exclusive pitch/key DSP mutation barrier",
+    "rapid pitch latest-wins with one bounded pending command",
+    "interruption closes pitch admission before awaiting lower layers",
+    "pitch preserves Playback generation, click generation, lifecycle revision and coordinator binding/operation serial",
+    "post-dispatch structural mismatch or backend desynchronization triggers fail-closed recovery attempt",
+    "AW22 TaskLocal pitch telemetry can be injected without persisting identifiers or content"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "strict_concurrency_exact_source_compile": "PASS",
+    "exact_source_behavior": {
+      "status": "PASS",
+      "rapid_pitch_submissions": 1000,
+      "pitch_executed": 2,
+      "pitch_superseded_before_dispatch": 998,
+      "interruption_pitch_rejection": true,
+      "post_interruption_pitch_reopen": true,
+      "final_barrier_clean": true
+    },
+    "mixed_concurrency_stress": {
+      "status": "PASS",
+      "operations": 20000,
+      "tempo_operations": 10000,
+      "pitch_operations": 10000,
+      "pitch_executed": 2,
+      "pitch_superseded_before_dispatch": 9998,
+      "other_pitch_outcomes": 0,
+      "shared_pitch_overlap_violations": 0
+    }
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "operations_per_round": 2000,
+    "median_ms": 12.573,
+    "p95_ms": 16.522,
+    "max_ms": 16.838,
+    "checksum": 40270,
+    "scope": "exact AW23 shared-exclusive authority and rapid-pitch latest-wins scheduling over lightweight protocol-compatible types; excludes AVAudioEngine, AVAudioUnitTimePitch, physical device, audio IO, real audio and current-Moises execution"
+  },
+  "repository_validation": {
+    "production_authority_authored": true,
+    "actual_lane3_self_test_authored": true,
+    "actual_lane3_benchmark_authored": true,
+    "selected_integrated_execution_pending": true
+  },
+  "successful_pitch_invariants": {
+    "playback_generation_advanced_by_pitch": false,
+    "click_generation_advanced_by_pitch": false,
+    "lifecycle_revision_changed_by_pitch": false,
+    "coordinator_operation_serial_changed_by_pitch": false,
+    "coordinator_active_binding_changed_by_pitch": false,
+    "backend_readback_required": true
+  },
+  "integration_acceptance": {
+    "one_project_scoped_aw23_authority_required": true,
+    "all_lane3_product_controls_route_through_aw23": true,
+    "direct_controller_pitch_calls_forbidden": true,
+    "aw21_countin_interruption_route_preserved": true,
+    "aw22_pitch_telemetry_probe_supported": true,
+    "representative_iphone_pitch_sweep_required": true,
+    "tempo_pitch_ordering_required": true,
+    "interruption_during_pitch_required": true,
+    "real_track_moises_ab_required": true,
+    "chord_display_transpose_cross_lane_gate_required": true
+  },
+  "limitations": [
+    "selected App/HQ has not yet adopted AW23, so direct pitch bypass remains possible until Late Integration",
+    "portable authority results do not prove AVAudioUnitTimePitch latency or audible quality",
+    "P012 chord-display transpose consistency is cross-lane and not proven here",
+    "real device, real audio, Moises differential and human listening remain open"
+  ],
+  "device_timing_claimed": false,
+  "audible_artifact_claimed": false,
+  "real_audio_claimed": false,
+  "chord_transpose_claimed": false,
+  "parity_claimed": false
+}
