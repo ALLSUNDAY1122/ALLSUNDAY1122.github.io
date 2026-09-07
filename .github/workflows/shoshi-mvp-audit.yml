@@ -24,11 +24,11 @@ jobs:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 1
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - name: Install Japanese fonts for visual audit
@@ -40,7 +40,7 @@ jobs:
       - name: Run mobile browser audit
         run: python learning-sprint/shoshi/mvp/mvp_audit.py
       - name: Upload visual audit screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: shoshi-mvp-mobile-audit
           path: learning-sprint/shoshi/mvp/audit/*.png
