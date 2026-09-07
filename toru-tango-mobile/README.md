@@ -56,8 +56,8 @@ OpenAI APIキーをアプリ、GitHub、`.env`へ保存してはいけません�
 SDK 57移行期間中は、iPhoneのExpo Goが対応SDKと一致しない場合があります。その場合はEAS development buildまたはpreview buildを使います。
 
 ```bash
-npx eas-cli@latest login
-npx eas-cli@latest build --platform ios --profile preview
+npx eas-cli@23.2.0 login
+npx eas-cli@23.2.0 build --platform ios --profile preview
 ```
 
 ## 標準の担当順
@@ -72,8 +72,8 @@ Codexへ渡した後は、原則として機能追加や大幅なUI変更を行�
 ## TestFlight
 
 ```bash
-npx eas-cli@latest build --platform ios --profile production
-npx eas-cli@latest submit --platform ios --profile production --latest
+npx eas-cli@23.2.0 build --platform ios --profile production
+npx eas-cli@23.2.0 submit --platform ios --profile production --latest
 ```
 
 実行前に以下を確定します。
