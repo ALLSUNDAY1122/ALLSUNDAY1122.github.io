@@ -53,7 +53,7 @@ jobs:
         run: node cpa-short-answer-sprint/scripts/capture_30_states.mjs
       - name: Upload 30-state screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: cpa-v21-ui-30-state-audit
           path: |
