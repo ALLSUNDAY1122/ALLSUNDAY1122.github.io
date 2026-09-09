@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""S14 RGB multi-view dense-seed source contract."""
+"""S14 RGB multi-view dense-seed source + camera-geometry contract."""
 from __future__ import annotations
 
 import math
@@ -8,6 +8,7 @@ import pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SOFTWARE = (ROOT / "SplatNative" / "SplatSoftwareDepthSeedBuilder.swift").read_text()
 SEED = (ROOT / "SplatNative" / "SplatDepthSeedBuilder.swift").read_text()
+MESH = (ROOT / "SplatNative" / "MeshDenseMVS.swift").read_text()
 POLICY = (ROOT / "SplatNative" / "SplatReconstructionPolicy.swift").read_text()
 RESOURCE = (ROOT / "SplatNative" / "SplatResourceGuard.swift").read_text()
 
@@ -48,6 +49,20 @@ for token in (
 ):
     assert token in SEED, f"missing S14 seed-routing contract: {token}"
 
+# The S14 software seed intentionally inherits the already-shipped MeshPlaneSweepMVS camera/image
+# convention. Guard this explicitly: an isolated vertical flip or optical-axis rewrite in only one
+# implementation would make the same ARKit intrinsics/poses describe different pixels.
+for token in (
+    "kCGImageSourceCreateThumbnailWithTransform: false",
+    "context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))",
+    "let y = -(v - frame.cy) / frame.fy * depth",
+    "let cameraPoint = SIMD4<Float>(x, y, -depth, 1)",
+    "let depth = -camera.z",
+    "let y = frame.cy - frame.fy * camera.y / depth",
+):
+    assert token in SOFTWARE, f"S14 camera/image convention drift: {token}"
+    assert token in MESH, f"Mesh MVS camera/image convention drift: {token}"
+
 # S14 changes initialization only. Training and safety policy must remain frozen.
 for token in (
     "standardIterations = 7_000",
@@ -64,20 +79,97 @@ for token in (
 ):
     assert token in RESOURCE, f"S14 must preserve resource safety contract: {token}"
 
-# Mirror the optical-axis convention used by current MeshPlaneSweepMVS and S13 hardware depth.
-def backproject(u, v, depth, fx, fy, cx, cy):
+
+def matmul4(a, b):
+    return tuple(sum(a[r][k] * b[k] for k in range(4)) for r in range(4))
+
+
+def rigid_inverse(m):
+    # ARKit camera transforms are rigid. Invert [R t; 0 1] deterministically without numpy.
+    r = tuple(tuple(m[row][col] for col in range(3)) for row in range(3))
+    rt = tuple(tuple(r[col][row] for col in range(3)) for row in range(3))
+    t = (m[0][3], m[1][3], m[2][3])
+    inv_t = tuple(-sum(rt[row][k] * t[k] for k in range(3)) for row in range(3))
+    return (
+        (rt[0][0], rt[0][1], rt[0][2], inv_t[0]),
+        (rt[1][0], rt[1][1], rt[1][2], inv_t[1]),
+        (rt[2][0], rt[2][1], rt[2][2], inv_t[2]),
+        (0.0, 0.0, 0.0, 1.0),
+    )
+
+
+def backproject_world(u, v, depth, fx, fy, cx, cy, camera_to_world):
     x = (u - cx) / fx * depth
     y = -(v - cy) / fy * depth
-    return x, y, -depth
+    return matmul4(camera_to_world, (x, y, -depth, 1.0))
 
-x, y, z = backproject(10.0, 10.0, 1.0, 10.0, 10.0, 10.0, 10.0)
-assert math.isclose(x, 0.0) and math.isclose(y, 0.0) and math.isclose(z, -1.0)
 
-# 1 cm voxelization must collapse sub-centimetre duplicates.
+def project_world(point, fx, fy, cx, cy, camera_to_world):
+    camera = matmul4(rigid_inverse(camera_to_world), point)
+    depth = -camera[2]
+    assert depth > 0.05
+    return (
+        cx + fx * camera[0] / depth,
+        cy - fy * camera[1] / depth,
+        depth,
+    )
+
+
+# 1) Optical-axis convention used by current MeshPlaneSweepMVS and S13 hardware depth.
+identity = (
+    (1.0, 0.0, 0.0, 0.0),
+    (0.0, 1.0, 0.0, 0.0),
+    (0.0, 0.0, 1.0, 0.0),
+    (0.0, 0.0, 0.0, 1.0),
+)
+center = backproject_world(10.0, 10.0, 1.0, 10.0, 10.0, 10.0, 10.0, identity)
+assert all(math.isclose(a, b, abs_tol=1e-8) for a, b in zip(center, (0.0, 0.0, -1.0, 1.0)))
+
+# 2) Projection/backprojection must round-trip off-axis pixels under a non-trivial rigid pose.
+# Rotation is +20 degrees around Y with a translated camera, representative of orbit capture.
+theta = math.radians(20.0)
+c, s = math.cos(theta), math.sin(theta)
+pose = (
+    (c, 0.0, s, 0.18),
+    (0.0, 1.0, 0.0, -0.04),
+    (-s, 0.0, c, 0.11),
+    (0.0, 0.0, 0.0, 1.0),
+)
+fx, fy, cx, cy = 182.0, 179.0, 96.0, 72.0
+for u, v, depth in (
+    (96.0, 72.0, 0.35),
+    (51.5, 38.0, 0.8),
+    (142.0, 103.0, 1.65),
+    (80.25, 91.75, 2.4),
+):
+    world = backproject_world(u, v, depth, fx, fy, cx, cy, pose)
+    ru, rv, rd = project_world(world, fx, fy, cx, cy, pose)
+    assert math.isclose(ru, u, abs_tol=1e-5), (u, ru)
+    assert math.isclose(rv, v, abs_tol=1e-5), (v, rv)
+    assert math.isclose(rd, depth, abs_tol=1e-5), (depth, rd)
+
+# 3) A world point backprojected from a reference camera must move predictably in a translated
+# neighbor. This catches row/column transposition and cameraToWorld/worldToCamera sign mistakes that
+# can otherwise turn one surface into spatially separated islands.
+reference = identity
+neighbor = (
+    (1.0, 0.0, 0.0, 0.12),
+    (0.0, 1.0, 0.0, 0.0),
+    (0.0, 0.0, 1.0, 0.0),
+    (0.0, 0.0, 0.0, 1.0),
+)
+world = backproject_world(cx, cy, 1.0, fx, fy, cx, cy, reference)
+nu, nv, nd = project_world(world, fx, fy, cx, cy, neighbor)
+expected_u = cx - fx * 0.12 / 1.0
+assert math.isclose(nu, expected_u, abs_tol=1e-5), (expected_u, nu)
+assert math.isclose(nv, cy, abs_tol=1e-5)
+assert math.isclose(nd, 1.0, abs_tol=1e-5)
+
+# 4) 1 cm voxelization must collapse sub-centimetre duplicates but retain distinct geometry.
 def voxel(p):
     return tuple(math.floor(v * 100.0) for v in p)
 
 assert voxel((0.001, 0.001, -1.001)) == voxel((0.009, 0.009, -1.009))
 assert voxel((0.001, 0.001, -1.001)) != voxel((0.021, 0.001, -1.001))
 
-print("PASS: S14 RGB multi-view software-depth dense-seed contract")
+print("PASS: S14 RGB dense-seed source + camera-geometry contract")
