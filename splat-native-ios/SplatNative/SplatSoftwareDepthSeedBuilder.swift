@@ -14,6 +14,8 @@ enum SplatSoftwareDepthSeedBuilder {
     static let maximumReferenceFrames = 8
     static let maximumNeighborFrames = 4
     static let hypothesisCount = 30
+    static let refinementHypothesisCount = 7
+    static let refinementRadiusInCoarseSteps: Float = 0.55
     static let pixelStride = 2
     static let border = 5
     static let bestCostThreshold: Float = 34
@@ -62,6 +64,29 @@ enum SplatSoftwareDepthSeedBuilder {
             let iy = Int(y.rounded())
             guard ix >= 0, iy >= 0, ix < width, iy < height else { return nil }
             return Float(pixels[iy * width + ix])
+        }
+
+        /// Sub-pixel sampling is intentionally reserved for the small post-confidence refinement
+        /// pass. Keeping the 30-hypothesis coarse search on nearest-neighbour samples preserves its
+        /// bounded cost, while bilinear sampling lets nearby depth hypotheses produce distinct
+        /// photometric costs instead of collapsing onto the same rounded pixel.
+        func sampleBilinear(_ x: Float, _ y: Float) -> Float? {
+            guard x.isFinite, y.isFinite else { return nil }
+            let x0 = Int(floor(x))
+            let y0 = Int(floor(y))
+            let x1 = x0 + 1
+            let y1 = y0 + 1
+            guard x0 >= 0, y0 >= 0, x1 < width, y1 < height else { return nil }
+
+            let tx = x - Float(x0)
+            let ty = y - Float(y0)
+            let p00 = Float(pixels[y0 * width + x0])
+            let p10 = Float(pixels[y0 * width + x1])
+            let p01 = Float(pixels[y1 * width + x0])
+            let p11 = Float(pixels[y1 * width + x1])
+            let top = p00 + (p10 - p00) * tx
+            let bottom = p01 + (p11 - p01) * tx
+            return top + (bottom - top) * ty
         }
     }
 
@@ -159,18 +184,30 @@ enum SplatSoftwareDepthSeedBuilder {
                         }
                     }
 
+                    // Preserve the shipped coarse confidence gate. The fine search runs only after a
+                    // correspondence is already accepted, so nearby refinement hypotheses do not
+                    // incorrectly defeat the coarse uniqueness margin.
                     guard bestDepth > 0,
                           bestCost < bestCostThreshold,
                           secondCost.isFinite,
                           secondCost - bestCost > uniquenessMargin,
                           let color = reference.rgb.sample(u, v) else { continue }
 
-                    let world = backproject(u: u, v: v, depth: bestDepth, frame: reference)
+                    let refined = refinedDepth(
+                        u: u,
+                        v: v,
+                        coarseDepth: bestDepth,
+                        coarseCost: bestCost,
+                        reference: reference,
+                        neighborIndices: neighbors,
+                        frames: frames
+                    )
+                    let world = backproject(u: u, v: v, depth: refined.depth, frame: reference)
                     guard world.x.isFinite, world.y.isFinite, world.z.isFinite else { continue }
                     rawPointCount += 1
                     acceptedInReference += 1
                     let key = Voxel(world)
-                    let candidate = Candidate(point: world, color: color, cost: bestCost)
+                    let candidate = Candidate(point: world, color: color, cost: refined.cost)
                     if let existing = voxels[key] {
                         if candidate.cost < existing.cost { voxels[key] = candidate }
                     } else {
@@ -209,13 +246,61 @@ enum SplatSoftwareDepthSeedBuilder {
         return max(spread, localContrast) >= 8
     }
 
+    private static func refinedDepth(
+        u: Float,
+        v: Float,
+        coarseDepth: Float,
+        coarseCost: Float,
+        reference: Frame,
+        neighborIndices: [Int],
+        frames: [Frame]
+    ) -> (depth: Float, cost: Float) {
+        guard refinementHypothesisCount >= 3,
+              hypothesisCount > 1,
+              coarseDepth.isFinite,
+              coarseDepth > 0 else {
+            return (coarseDepth, coarseCost)
+        }
+
+        let maximumInverseDepth = 1 / nearDepth
+        let minimumInverseDepth = 1 / farDepth
+        let coarseStep = (maximumInverseDepth - minimumInverseDepth) / Float(hypothesisCount - 1)
+        let centerInverseDepth = 1 / coarseDepth
+        let radius = coarseStep * refinementRadiusInCoarseSteps
+        let denominator = Float(refinementHypothesisCount - 1)
+
+        var bestDepth = coarseDepth
+        var bestCost = coarseCost
+        for hypothesis in 0..<refinementHypothesisCount {
+            let t = Float(hypothesis) / denominator
+            let proposedInverseDepth = centerInverseDepth - radius + (2 * radius * t)
+            let inverseDepth = min(maximumInverseDepth, max(minimumInverseDepth, proposedInverseDepth))
+            let depth = 1 / inverseDepth
+            guard let cost = patchCost(
+                u: u,
+                v: v,
+                depth: depth,
+                reference: reference,
+                neighborIndices: neighborIndices,
+                frames: frames,
+                useBilinearNeighborSampling: true
+            ) else { continue }
+            if cost < bestCost {
+                bestCost = cost
+                bestDepth = depth
+            }
+        }
+        return (bestDepth, bestCost)
+    }
+
     private static func patchCost(
         u: Float,
         v: Float,
         depth: Float,
         reference: Frame,
         neighborIndices: [Int],
-        frames: [Frame]
+        frames: [Frame],
+        useBilinearNeighborSampling: Bool = false
     ) -> Float? {
         let offsets: [Float] = [-2, 0, 2]
         var total: Float = 0
@@ -226,8 +311,11 @@ enum SplatSoftwareDepthSeedBuilder {
                 let world = backproject(u: u + dx, v: v + dy, depth: depth, frame: reference)
                 for neighborIndex in neighborIndices {
                     let neighbor = frames[neighborIndex]
-                    guard let pixel = project(world, frame: neighbor),
-                          let neighborValue = neighbor.gray.sample(pixel.x, pixel.y) else { continue }
+                    guard let pixel = project(world, frame: neighbor) else { continue }
+                    let neighborValue = useBilinearNeighborSampling
+                        ? neighbor.gray.sampleBilinear(pixel.x, pixel.y)
+                        : neighbor.gray.sample(pixel.x, pixel.y)
+                    guard let neighborValue else { continue }
                     total += abs(neighborValue - referenceValue)
                     samples += 1
                 }
