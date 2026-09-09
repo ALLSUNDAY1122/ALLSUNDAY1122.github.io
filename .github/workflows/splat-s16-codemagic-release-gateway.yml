@@ -78,34 +78,28 @@ jobs:
                   'repositoryUrl': a.get('repositoryUrl') or a.get('repository_url') or a.get('repoUrl'),
               }
 
-          repo='allsunday1122/allsunday1122.github.io'
-          candidates=[]
-          for a in apps:
-              s=summary(a)
-              blob=json.dumps(s,ensure_ascii=False).lower().replace('.git','')
-              if repo in blob or 'allsunday1122.github.io' in blob:
-                  candidates.append(s)
-
+          all_apps=[summary(a) for a in apps]
+          all_apps=[a for a in all_apps if a.get('id')]
           out={
               'request_id':cmd.get('request_id'),
               'action':cmd['action'],
               'repository':cmd['repository'],
               'branch':cmd['branch'],
               'workflow_id':cmd['workflow_id'],
-              'application_candidates':candidates,
+              'applications':all_apps,
               'secret_values_persisted':False,
           }
 
           if cmd['action']=='inspect':
               out['ok']=True
               Path('automation/scanlab-release-result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-              print(f'PASS inspect candidates={len(candidates)}')
+              print(f'PASS inspect apps={len(all_apps)}')
               raise SystemExit(0)
 
           app_id=cmd.get('app_id')
-          matching=[c for c in candidates if c.get('id')==app_id]
+          matching=[a for a in all_apps if a.get('id')==app_id]
           if len(matching)!=1:
-              raise SystemExit('requested app_id is not an inspected repository candidate')
+              raise SystemExit('requested app_id is not present in the inspected Codemagic account')
           app_name=(matching[0].get('name') or '').lower()
           if not any(word in app_name for word in ('splat','scan')):
               raise SystemExit(f'candidate does not look like Scan Lab: {matching[0].get("name")}')
