@@ -34,11 +34,20 @@ jobs:
           assert all(x['answerType'] in ('singleChoice','multiChoice') for x in q)
           print('OT_NATIVE_PAYLOAD_AUDIT_PASS total=600 free=200 premium=400')
           PY
+      - name: Validate privacy manifest
+        run: |
+          plutil -lint sagyo-ryohoshi-sprint/ios/PrivacyInfo.xcprivacy
+          grep -q 'NSPrivacyTracking' sagyo-ryohoshi-sprint/ios/PrivacyInfo.xcprivacy
+          grep -q 'NSPrivacyAccessedAPICategoryUserDefaults' sagyo-ryohoshi-sprint/ios/PrivacyInfo.xcprivacy
+          grep -q 'CA92.1' sagyo-ryohoshi-sprint/ios/PrivacyInfo.xcprivacy
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate project
         working-directory: sagyo-ryohoshi-sprint/ios
         run: xcodegen generate
+      - name: Verify privacy manifest is bundled
+        working-directory: sagyo-ryohoshi-sprint/ios
+        run: grep -q 'PrivacyInfo.xcprivacy' SagyoRyohoshiSprint.xcodeproj/project.pbxproj
       - name: Compile iOS 16+ release candidate scaffold
         working-directory: sagyo-ryohoshi-sprint/ios
         run: |
