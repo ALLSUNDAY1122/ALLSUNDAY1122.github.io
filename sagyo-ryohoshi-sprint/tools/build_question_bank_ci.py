@@ -6,6 +6,8 @@ parser where it works, pin independently verified official URLs where needed,
 use a PDF extractor that handles newer Japanese font encodings, normalize both
 legacy A001/B001 and newer AM1/PM1 answer-table labels, and resolve sources
 lazily so historical layout differences cannot block licensed-official items.
+
+Reaudit trigger: 2026-09-09. No question content is synthesized by this change.
 """
 import re
 import sys
@@ -198,7 +200,6 @@ def find_q_starts(lines):
 def build_sources():
     """Yield newest official rounds as they are resolved."""
     pages = bank.discover_exam_pages()
-    # Pin current official archive pages where the index/markup is obsolete.
     pages.update({61: R61_PAGE, 60: R60_PAGE, 59: R59_PAGE, 58: R58_PAGE, 57: R57_PAGE, 56: R56_PAGE})
     fix = None
     for exam in range(61, 44, -1):
