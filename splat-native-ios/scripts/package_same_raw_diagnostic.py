@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Build a deterministic S15/S18 same-RAW reconstruction diagnostic bundle.
+"""Build a deterministic S15/S18/S19 same-RAW reconstruction diagnostic bundle.
 
-Given one persisted Splat project directory, locate the camera-transform JSON, run the
-existing S15 pose diagnostic, and inventory reconstruction evidence without mutating
-the project. The emitted JSON is intentionally small enough to attach to an issue/chat
-while retaining hashes needed to prove two runs used the same durable inputs.
+Given one persisted Splat project directory, locate camera transforms, run the existing pose and
+seed-geometry diagnostics, and inventory reconstruction evidence without mutating the project.
+The emitted JSON is intentionally small enough to attach to an issue/chat while retaining hashes
+needed to prove two runs used the same durable inputs.
 """
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ from typing import Any
 
 HERE = pathlib.Path(__file__).resolve().parent
 POSE_SCRIPT = HERE / "diagnose_s15_pose_trajectory.py"
+SEED_GEOMETRY_SCRIPT = HERE / "diagnose_s19_seed_geometry.py"
 CANDIDATE_TRANSFORM_FILES = (
     "transforms.json",
     "dataset/transforms.json",
@@ -33,10 +34,10 @@ EVIDENCE_FILES = (
 )
 
 
-def _load_pose_module():
-    spec = importlib.util.spec_from_file_location("s15_pose", POSE_SCRIPT)
+def _load_module(name: str, path: pathlib.Path):
+    spec = importlib.util.spec_from_file_location(name, path)
     if spec is None or spec.loader is None:
-        raise RuntimeError("unable to load S15 pose diagnostic")
+        raise RuntimeError(f"unable to load diagnostic: {path.name}")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -75,6 +76,14 @@ def _discover_transform_file(root: pathlib.Path) -> pathlib.Path | None:
     return matches[0] if matches else None
 
 
+def _discover_first(root: pathlib.Path, filename: str) -> pathlib.Path | None:
+    direct = root / filename
+    if direct.is_file():
+        return direct
+    matches = sorted(root.rglob(filename))
+    return matches[0] if matches else None
+
+
 def build_bundle(project_dir: pathlib.Path) -> dict[str, Any]:
     root = project_dir.resolve()
     if not root.is_dir():
@@ -85,7 +94,7 @@ def build_bundle(project_dir: pathlib.Path) -> dict[str, Any]:
     transform_record: dict[str, Any] | None = None
     if transform_path is not None:
         payload = json.loads(transform_path.read_text())
-        pose_report = _load_pose_module().diagnose(payload)
+        pose_report = _load_module("s15_pose", POSE_SCRIPT).diagnose(payload)
         transform_record = _file_record(root, transform_path)
 
     evidence: list[dict[str, Any]] = []
@@ -101,26 +110,40 @@ def build_bundle(project_dir: pathlib.Path) -> dict[str, Any]:
     evidence.sort(key=lambda item: item["path"])
 
     seed_recipe = None
-    recipe_path = _first_existing(root, ("s14-seed-recipe.json",))
-    if recipe_path is None:
-        recipes = sorted(root.rglob("s14-seed-recipe.json"))
-        recipe_path = recipes[0] if recipes else None
+    recipe_path = _discover_first(root, "s14-seed-recipe.json")
+    raw_recipe: dict[str, Any] | None = None
     if recipe_path:
         try:
-            raw = json.loads(recipe_path.read_text())
+            raw_recipe = json.loads(recipe_path.read_text())
             seed_recipe = {
-                key: raw.get(key)
+                key: raw_recipe.get(key)
                 for key in (
                     "recipeVersion",
                     "source",
+                    "pointCount",
                     "depthFrameCount",
                     "geometryPointCount",
+                    "skySeedCount",
                     "colorFrameCount",
                 )
-                if key in raw
+                if key in raw_recipe
             }
         except (OSError, json.JSONDecodeError):
             seed_recipe = {"parseError": True}
+
+    points_path = _discover_first(root, "points3D.ply")
+    seed_geometry: dict[str, Any] | None = None
+    if points_path is not None:
+        geometry_count = raw_recipe.get("geometryPointCount") if isinstance(raw_recipe, dict) else None
+        if not isinstance(geometry_count, int):
+            geometry_count = None
+        try:
+            seed_geometry = _load_module("s19_seed_geometry", SEED_GEOMETRY_SCRIPT).diagnose_ply(
+                points_path,
+                geometry_count,
+            )
+        except (OSError, UnicodeError, ValueError) as exc:
+            seed_geometry = {"parse_error": type(exc).__name__}
 
     input_identity = {
         "transform_sha256": transform_record["sha256"] if transform_record else None,
@@ -142,17 +165,32 @@ def build_bundle(project_dir: pathlib.Path) -> dict[str, Any]:
         "same_raw_identity": input_identity,
         "pose": pose_report,
         "seed_recipe": seed_recipe,
+        "seed_geometry": seed_geometry,
         "evidence_files": evidence,
         "interpretation": {
             "pose_anomaly": bool(
                 pose_report
                 and (pose_report.get("invalid_pose_count", 0) or pose_report.get("pose_jump_count", 0))
             ),
+            "seed_fragmentation_suspected": bool(
+                seed_geometry and seed_geometry.get("fragmentation_suspected", False)
+            ),
             "has_seed_recipe": seed_recipe is not None,
             "has_points3d": any(item["path"].endswith("points3D.ply") for item in evidence),
             "has_finished_spz": any(item["path"].endswith(".spz") for item in evidence),
         },
     }
+
+
+def _write_fixture_ply(path: pathlib.Path, geometry: list[tuple[float, float, float]], sky: list[tuple[float, float, float]]) -> None:
+    points = geometry + sky
+    lines = [
+        "ply", "format ascii 1.0", f"element vertex {len(points)}",
+        "property float x", "property float y", "property float z",
+        "property uchar red", "property uchar green", "property uchar blue", "end_header",
+    ]
+    lines.extend(f"{x} {y} {z} 128 128 128" for x, y, z in points)
+    path.write_text("\n".join(lines) + "\n")
 
 
 def self_test() -> None:
@@ -170,14 +208,18 @@ def self_test() -> None:
                 for i in range(8)
             ]
         }
+        geometry = [(x * 0.02, y * 0.02, -1.0) for x in range(12) for y in range(12)]
+        sky = [(100.0, 100.0, 100.0)]
         (root / "transforms.json").write_text(json.dumps(poses))
         (root / "s14-seed-recipe.json").write_text(json.dumps({
             "recipeVersion": 2,
             "source": "planeSweep",
+            "pointCount": len(geometry) + len(sky),
             "depthFrameCount": 0,
-            "geometryPointCount": 1234,
+            "geometryPointCount": len(geometry),
+            "skySeedCount": len(sky),
         }))
-        (root / "points3D.ply").write_bytes(b"ply\nsame-raw-fixture\n")
+        _write_fixture_ply(root / "points3D.ply", geometry, sky)
         (root / "result.spz").write_bytes(b"SPZfixture")
 
         first = build_bundle(root)
@@ -187,8 +229,12 @@ def self_test() -> None:
         assert first["pose"]["pose_jump_count"] == 0
         assert first["seed_recipe"]["recipeVersion"] == 2
         assert first["seed_recipe"]["source"] == "planeSweep"
+        assert first["seed_geometry"]["geometry_point_count"] == len(geometry)
+        assert first["seed_geometry"]["component_count"] == 1
+        assert first["seed_geometry"]["largest_component_point_ratio"] == 1.0
         assert first["interpretation"] == {
             "pose_anomaly": False,
+            "seed_fragmentation_suspected": False,
             "has_seed_recipe": True,
             "has_points3d": True,
             "has_finished_spz": True,
@@ -202,6 +248,22 @@ def self_test() -> None:
         assert jumped["interpretation"]["pose_anomaly"] is True
         assert jumped["pose"]["pose_jump_count"] == 1
         assert jumped["same_raw_identity"]["transform_sha256"] != first["same_raw_identity"]["transform_sha256"]
+
+        islands: list[tuple[float, float, float]] = []
+        for island in range(5):
+            base = island * 1.0
+            islands.extend((base + x * 0.01, y * 0.01, -1.0) for x in range(5) for y in range(5))
+        _write_fixture_ply(root / "points3D.ply", islands, [])
+        (root / "s14-seed-recipe.json").write_text(json.dumps({
+            "recipeVersion": 2,
+            "source": "planeSweep",
+            "pointCount": len(islands),
+            "geometryPointCount": len(islands),
+            "skySeedCount": 0,
+        }))
+        fragmented = build_bundle(root)
+        assert fragmented["interpretation"]["seed_fragmentation_suspected"] is True
+        assert fragmented["seed_geometry"]["large_component_count"] == 5
 
     print("PASS: same-RAW diagnostic bundle self-test")
 
