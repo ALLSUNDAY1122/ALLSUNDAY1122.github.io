@@ -1,0 +1,51 @@
+name: OT Native iOS
+
+on:
+  pull_request:
+    paths:
+      - 'sagyo-ryohoshi-sprint/**'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/ot-native-ios.yml'
+  workflow_dispatch:
+
+jobs:
+  native-gate:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Build 600-question native payload
+        run: python3 sagyo-ryohoshi-sprint/ios/tools/build_native_payload.py
+      - name: Audit generated payload
+        run: |
+          python3 - <<'PY'
+          import json
+          from collections import Counter
+          p='sagyo-ryohoshi-sprint/ios/GeneratedResources/questions.generated.json'
+          q=json.load(open(p, encoding='utf-8'))
+          assert len(q)==600
+          assert len({x['id'] for x in q})==600
+          assert Counter(x['premium'] for x in q)=={False:200, True:400}
+          assert all(x['prompt'].strip() and x['explanation'].strip() for x in q)
+          assert all(x['choices'] for x in q)
+          assert all(x['answerType'] in ('singleChoice','multiChoice') for x in q)
+          print('OT_NATIVE_PAYLOAD_AUDIT_PASS total=600 free=200 premium=400')
+          PY
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        working-directory: sagyo-ryohoshi-sprint/ios
+        run: xcodegen generate
+      - name: Compile iOS 16+ release candidate scaffold
+        working-directory: sagyo-ryohoshi-sprint/ios
+        run: |
+          xcodebuild \
+            -project SagyoRyohoshiSprint.xcodeproj \
+            -scheme SagyoRyohoshiSprint \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
