@@ -22,9 +22,9 @@ struct SplatDepthSeedFrame: Sendable {
 /// multi-view software depth before falling back to ARKit raw feature points. This isolates dense
 /// initialization from camera-pose refinement while preserving all trainer/resource contracts.
 enum SplatDepthSeedBuilder {
-    // Keep the S13 contract literals stable for regression coverage; S14 uses a new metadata file so
-    // an existing S13 rawFeaturePoints recipe cannot mask the software-depth experiment.
-    static let recipeVersion = 1
+    // Recipe version is a cache-compatibility epoch, not the file-format version. Bump it whenever
+    // seed-generation semantics change so a same-RAW comparison cannot silently reuse stale points3D.ply.
+    static let recipeVersion = 2
     static let targetSamplesPerFrame = 900
     static let voxelDensity: Float = 100
     static let minimumDepth: Float = 0.18
