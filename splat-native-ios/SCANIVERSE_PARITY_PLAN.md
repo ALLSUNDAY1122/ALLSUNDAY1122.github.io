@@ -1,6 +1,6 @@
 # Scaniverse Functional Parity Program
 
-Updated: 2026-09-10 07:12 JST
+Updated: 2026-09-10 07:25 JST
 
 ## Goal
 
@@ -27,7 +27,7 @@ Fresh audit on 2026-09-10:
 - PR #4145 remains `open / draft / unmerged`; do not merge without explicit human instruction.
 - Build 15 is the current physical comparison candidate and is TestFlight `VALID / IN_BETA_TESTING / INTERNAL_ONLY`.
 - The Build 15 lineage includes the S14 dense-seed path, cache compatibility epoch `recipeVersion=2`, fresh-trainer invalidation and the standard 7000-iteration reconstruction contract.
-- No new Build 15 same-RAW physical result was found in Dropbox, Project files or Supabase during the 07:02 JST audit.
+- No new Build 15 same-RAW physical result was found in Dropbox or Supabase during the 07:17 JST audit; Project-file search surfaced no new Build 15 physical result in the current result set.
 - Supabase production is healthy with `auth.users=1`, `scanlab_profiles=1`, `scanlab_scans=0`, `scanlab_reports=0`, `scanlab_blocks=0`.
 - Dropbox `/Scaniverse` still contains five comparison files; newest evidence predates Build 15 physical validation.
 
@@ -59,29 +59,30 @@ Acceptance requires all of the following:
 - save/reopen preserves the same trusted completed asset;
 - the completed output is compared with the Scaniverse Golden reference for missing regions, duplication, geometry coherence, color/detail and stable 3D impression.
 
-If Build 15 still fragments after exercising `planeSweep`/hardware depth, do not blindly tune resource/UI settings. Run the persisted project through the S18 diagnostic bundle, then branch by evidence:
+If Build 15 still fragments after exercising `planeSweep`/hardware depth, do not blindly tune resource/UI settings. Run the persisted project through the S18/S19 diagnostic bundle, then branch by evidence:
 
 - pose anomaly present → tracking/relocalization / camera trajectory becomes P0;
-- pose smooth → plane-sweep multi-view geometric consistency becomes P0.
+- pose smooth + seed geometry severely fragmented → dense-seed / plane-sweep multi-view geometric consistency becomes P0;
+- pose smooth + seed coherent but final output fragmented → trainer/render/persistence stage becomes the next isolation target.
 
-## S18 deterministic same-RAW diagnostic bundle
+## S18/S19 deterministic same-RAW diagnostic bundle
 
-Implemented on 2026-09-10 to minimize the next external/device dependency.
+S18 was implemented on 2026-09-10 to minimize the next external/device dependency. S19 extends the same bundle with a read-only spatial-coherence measurement of the persisted seed.
 
-- script: `splat-native-ios/scripts/package_same_raw_diagnostic.py`
-- implementation commit: `202cae8222c71a44d4446282baf9c5d4722103ea`
-- workflow gate commit: `5bab3dfa36a56249855e7431415dde88831374cf`
-- output schema: `scanlab.same-raw-diagnostic.v1`
-- read-only/diagnostic-only; it does not modify reconstruction behavior or poses
-- accepts one persisted project directory and locates camera transforms
-- reuses the existing S15 pose trajectory diagnostic
-- records SHA-256 + byte size for transform data, seed recipe, `points3D.ply`, checkpoint candidates and completed SPZ candidates
-- records selected seed-recipe metadata including cache recipe version and source
-- emits deterministic same-RAW identity hashes so future A/B runs cannot accidentally compare different durable inputs
+- package: `splat-native-ios/scripts/package_same_raw_diagnostic.py`
+- S19 diagnostic: `splat-native-ios/scripts/diagnose_s19_seed_geometry.py`
+- output package schema remains backward-compatible `scanlab.same-raw-diagnostic.v1` with an additive `seed_geometry` object
+- S19 output schema: `scanlab.seed-geometry-diagnostic.v1`
+- read-only/diagnostic-only; neither script modifies reconstruction data, poses, seeds or trainer state
+- S18 records camera-pose diagnostics, SHA-256 + byte sizes, seed source/cache epoch and same-RAW identity
+- S19 parses the ASCII `points3D.ply`, uses `geometryPointCount` so trailing sky seeds do not contaminate the measurement, and reports 5 cm voxel connectivity, component counts, largest-component point ratio and metric bounds
+- S19 only marks **severe** fragmentation when the largest connected component is <35% and at least four components each contain >=2% of geometry points; this is a diagnostic suspicion flag, not an automatic reconstruction rejection
 
-GitHub Actions run `34410824680` at exact head `5bab3dfa36a56249855e7431415dde88831374cf` completed SUCCESS. The new S18 self-test, S14 dense-seed contract, S15 pose diagnostic, S13 same-RAW materialization contract, S13→S14 materializer composition and protected reconstruction invariants all passed.
+Implementation commits: `2207b66e0504033e70f32ffc12dd4bd44e958adc` (S19 diagnostic), `723330af2e15f41487cb6427eafe9541629dae2e` (CI gate), `6c94d99b1896b80b976c4eda6859bed27b9b6a48` (S18 package integration).
 
-This is a diagnosability/reproducibility improvement, not proof that visible geometry improved. Geometry parity remains blocked on the Build 15 physical run.
+GitHub Actions run `34411839999` at exact head `6c94d99b1896b80b976c4eda6859bed27b9b6a48` completed SUCCESS. S14 camera/seed geometry contract, S15 pose diagnostic, S18 package self-test, S19 coherent-vs-five-island self-test, S13 same-RAW materialization/composition and protected reconstruction invariants all passed.
+
+This is a root-cause isolation/reproducibility improvement, not proof that visible geometry improved. Geometry parity remains blocked on the Build 15 physical run.
 
 ## Current parity ledger
 
@@ -105,7 +106,7 @@ No row may become `PARITY` solely from compile, simulator, fixture, CI, signed b
 At each cycle, score remaining gaps by device impact × user visibility × recurrence × dependency-unblocking effect. Current ordering is:
 
 1. Build 15 same-RAW physical reconstruction quality.
-2. If fragmented with real `planeSweep`/depth, use S18 evidence to choose camera-pose/tracking vs plane-sweep multi-view consistency.
+2. If fragmented with real `planeSweep`/depth, use S15/S18/S19 evidence to isolate pose trajectory vs seed geometry vs post-seed trainer/output failure.
 3. Only after coherent trusted output, close viewer/edit/save/reopen/export/share and performance/thermal gaps.
 4. Only after a trusted real scan exists, close production publish/discover/map lifecycle.
 
