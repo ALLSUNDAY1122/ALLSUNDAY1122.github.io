@@ -6,6 +6,9 @@ workflows:
     integrations:
       app_store_connect: networkspecialist_appstore
     environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.networkspecialist
       xcode: latest
       vars:
         XCODE_PROJECT: "network-specialist-sprint/ios/NetworkSpecialist.xcodeproj"
@@ -60,13 +63,10 @@ workflows:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO
 
-      - name: Resolve App Store signing
+      - name: Apply App Store signing profiles
         script: |
-          keychain initialize
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
-          keychain add-certificates
+          cd network-specialist-sprint/ios
           xcode-project use-profiles \
-            --project "$XCODE_PROJECT" \
             --custom-export-options='{"testFlightInternalTestingOnly": true}'
 
       - name: Build signed IPA
