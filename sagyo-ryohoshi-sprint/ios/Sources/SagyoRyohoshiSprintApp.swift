@@ -20,7 +20,7 @@ final class OTAppModel: ObservableObject {
     @Published private(set) var feedback: AnswerEvaluation?
     @Published var selectedIndices: Set<Int> = []
     @Published var loadError: String?
-    @Published var finished = false
+    @Published private(set) var finished = false
 
     var current: LearningQuestion? {
         guard session.indices.contains(index) else { return nil }
@@ -49,6 +49,15 @@ final class OTAppModel: ObservableObject {
 
     func start(target: Int = 8) {
         session = LearningEngine.selectSprint(from: questions, target: target, isPremium: false)
+        index = 0
+        correctCount = 0
+        feedback = nil
+        selectedIndices = []
+        finished = false
+    }
+
+    func goHome() {
+        session = []
         index = 0
         correctCount = 0
         feedback = nil
@@ -251,10 +260,7 @@ struct ResultView: View {
                 .foregroundStyle(.secondary)
             Button("もう8問") { model.start(target: 8) }
                 .buttonStyle(.borderedProminent)
-            Button("ホームへ") {
-                model.session = []
-                model.finished = false
-            }
+            Button("ホームへ") { model.goHome() }
                 .buttonStyle(.bordered)
         }
         .padding()
@@ -280,6 +286,15 @@ struct ErrorView: View {
     let message: String
 
     var body: some View {
-        ContentUnavailableView("起動できません", systemImage: "exclamationmark.triangle", description: Text(message))
+        VStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.largeTitle)
+            Text("起動できません")
+                .font(.title2.bold())
+            Text(message)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
+        }
+        .padding()
     }
 }
