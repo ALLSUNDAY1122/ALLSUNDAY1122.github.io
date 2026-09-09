@@ -10,6 +10,9 @@ on:
 permissions:
   contents: write
 
+env:
+  GIT_LFS_SKIP_SMUDGE: '1'
+
 jobs:
   patch-test-commit:
     runs-on: macos-15
@@ -83,13 +86,20 @@ jobs:
           grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' splat-native-ios/SplatNative/ScanModel.swift
           grep -q 'FileManager.default.removeItem(at: checkpoint)' splat-native-ios/SplatNative/ScanModel.swift
 
-      - name: Compile tests and device Release
+      - name: Prepare proven iOS build environment
         run: |
           set -euo pipefail
           git lfs install --skip-smudge --skip-repo
           HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
           cd splat-native-ios
+          python3 scripts/make_test_icon.py
           xcodegen generate
+          xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
+
+      - name: Compile tests and device Release
+        working-directory: splat-native-ios
+        run: |
+          set -euo pipefail
           xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO build-for-testing
