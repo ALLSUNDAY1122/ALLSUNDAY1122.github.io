@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import math
 import pathlib
+import re
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 BUILDER = (ROOT / "SplatNative" / "SplatDepthSeedBuilder.swift").read_text()
@@ -18,8 +19,14 @@ PROJECT = (ROOT / "project.yml").read_text()
 POLICY = (ROOT / "SplatNative" / "SplatReconstructionPolicy.swift").read_text()
 RESOURCE = (ROOT / "SplatNative" / "SplatResourceGuard.swift").read_text()
 
+# recipeVersion is a cache-compatibility epoch. S14 started at 1; later seed-algorithm changes may
+# bump it again. The gate must require the epoch check without freezing a historical literal forever.
+recipe_version = re.search(r"static let recipeVersion = (\d+)", BUILDER)
+assert recipe_version, "missing seed recipe compatibility epoch"
+assert int(recipe_version.group(1)) >= 2, "seed recipe epoch regressed below the S14 cache-invalidation floor"
+assert "metadata.recipeVersion == recipeVersion" in BUILDER, "seed cache is not guarded by recipe epoch"
+
 for token in (
-    "recipeVersion = 1",
     "targetSamplesPerFrame = 900",
     "voxelDensity: Float = 100",
     "minimumDepth: Float = 0.18",
