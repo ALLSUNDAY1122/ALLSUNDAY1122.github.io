@@ -40,6 +40,13 @@ jobs:
           grep -q 'NSPrivacyTracking' sagyo-ryohoshi-sprint/ios/PrivacyInfo.xcprivacy
           grep -q 'NSPrivacyAccessedAPICategoryUserDefaults' sagyo-ryohoshi-sprint/ios/PrivacyInfo.xcprivacy
           grep -q 'CA92.1' sagyo-ryohoshi-sprint/ios/PrivacyInfo.xcprivacy
+      - name: Materialize canonical AppIcon
+        run: python3 sagyo-ryohoshi-sprint/ios/tools/materialize_appicon.py
+      - name: Verify canonical AppIcon
+        run: |
+          test -f sagyo-ryohoshi-sprint/ios/Sources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          test "$(shasum -a 256 sagyo-ryohoshi-sprint/ios/Sources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | awk '{print $1}')" = "0da95e08cbc366cc17ced44aaf28d46a08cd4219d328be389e31666d32d7c45c"
+          grep -q 'AppIcon-1024.png' sagyo-ryohoshi-sprint/ios/Sources/Assets.xcassets/AppIcon.appiconset/Contents.json
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate project
@@ -48,6 +55,11 @@ jobs:
       - name: Verify privacy manifest is bundled
         working-directory: sagyo-ryohoshi-sprint/ios
         run: grep -q 'PrivacyInfo.xcprivacy' SagyoRyohoshiSprint.xcodeproj/project.pbxproj
+      - name: Verify AppIcon asset catalog is bundled
+        working-directory: sagyo-ryohoshi-sprint/ios
+        run: |
+          grep -q 'Assets.xcassets' SagyoRyohoshiSprint.xcodeproj/project.pbxproj
+          grep -q 'ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon' SagyoRyohoshiSprint.xcodeproj/project.pbxproj
       - name: Compile iOS 16+ release candidate scaffold
         working-directory: sagyo-ryohoshi-sprint/ios
         run: |
