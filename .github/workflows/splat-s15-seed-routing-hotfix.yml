@@ -1,4 +1,4 @@
-name: Splat S15 Same-RAW Seed Routing Hotfix
+name: Splat S15 Materialized Seed Path Audit
 
 on:
   push:
@@ -8,83 +8,42 @@ on:
       - '.github/workflows/splat-s15-seed-routing-hotfix.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   GIT_LFS_SKIP_SMUDGE: '1'
 
 jobs:
-  patch-test-commit:
+  audit:
     runs-on: macos-15
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
           ref: feature/splat-native-ios-poc
-          fetch-depth: 0
 
-      - name: Wire S14 seed routing into same-RAW regeneration
+      - name: Verify S14 source contracts before materialization
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-
-          scan = Path('splat-native-ios/SplatNative/ScanModel.swift')
-          s = scan.read_text()
-
-          old_frames = "        let geometryPoints = Array(featurePoints.values)\n        let seedFrames = captured.map(Self.seedFrame(from:))\n        let firstSourceFrame = captured.first\n"
-          new_frames = "        let geometryPoints = Array(featurePoints.values)\n        let seedFrames = captured.map(Self.seedFrame(from:))\n        let depthSeedFrames = captured.map { frame in\n            SplatDepthSeedFrame(\n                depthFilePath: frame.depthFilePath,\n                depthWidth: frame.depthWidth,\n                depthHeight: frame.depthHeight,\n                depthBytesPerRow: frame.depthBytesPerRow,\n                transformMatrix: frame.transformMatrix,\n                flX: frame.flX,\n                flY: frame.flY,\n                cx: frame.cx,\n                cy: frame.cy,\n                w: frame.w,\n                h: frame.h\n            )\n        }\n        let firstSourceFrame = captured.first\n"
-
-          old_preflight = "                do {\n                    let plyURL = projectURL.appendingPathComponent(\"points3D.ply\")\n                    if !FileManager.default.fileExists(atPath: plyURL.path) {\n                        try Self.preparePointCloudPLY(\n                            projectURL: projectURL,\n                            points: geometryPoints,\n                            frames: seedFrames\n                        )\n                    }\n                } catch {\n"
-          new_preflight = "                do {\n                    let seedOutcome = try SplatDepthSeedBuilder.preparePointCloudPLY(\n                        projectURL: projectURL,\n                        depthFrames: depthSeedFrames,\n                        fallbackPoints: geometryPoints,\n                        colorFrames: seedFrames\n                    )\n                    if seedOutcome.requiresFreshTrainer,\n                       FileManager.default.fileExists(atPath: checkpoint.path) {\n                        try FileManager.default.removeItem(at: checkpoint)\n                    }\n                } catch {\n"
-
-          for old, new, label in (
-              (old_frames, new_frames, 'depth seed frame mapping'),
-              (old_preflight, new_preflight, 'S14 seed preflight routing'),
-          ):
-              count = s.count(old)
-              if count != 1:
-                  raise SystemExit(f'{label}: expected exactly 1 patch anchor, found {count}')
-              s = s.replace(old, new, 1)
-          scan.write_text(s)
-
-          test = Path('splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py')
-          t = test.read_text()
-          old_root = 'RESOURCE = (ROOT / "SplatNative" / "SplatResourceGuard.swift").read_text()\n'
-          new_root = old_root + 'SCAN_MODEL = (ROOT / "SplatNative" / "ScanModel.swift").read_text()\n'
-          if t.count(old_root) != 1:
-              raise SystemExit('S14 test root anchor changed')
-          t = t.replace(old_root, new_root, 1)
-
-          marker = '# S14 changes initialization only. Training and safety policy must remain frozen.\n'
-          tokens = [
-              'let depthSeedFrames = captured.map { frame in',
-              'SplatDepthSeedFrame(',
-              'SplatDepthSeedBuilder.preparePointCloudPLY(',
-              'depthFrames: depthSeedFrames',
-              'fallbackPoints: geometryPoints',
-              'colorFrames: seedFrames',
-              'seedOutcome.requiresFreshTrainer',
-              'FileManager.default.removeItem(at: checkpoint)',
-          ]
-          wiring = '# Dense-seed code must be on the actual same-RAW regeneration path.\n'
-          wiring += '# Legacy points3D/checkpoint artifacts must not silently mask a fresh S14 recipe.\n'
-          wiring += 'for token in (\n'
-          for token in tokens:
-              wiring += f'    {token!r},\n'
-          wiring += '):\n'
-          wiring += '    assert token in SCAN_MODEL, f"S14 seed builder is not wired into regeneration: {token}"\n\n'
-          legacy = '                    if !FileManager.default.fileExists(atPath: plyURL.path) {'
-          wiring += f'assert {legacy!r} not in SCAN_MODEL, "legacy points3D existence gate still masks S14 regeneration"\n\n'
-          if t.count(marker) != 1:
-              raise SystemExit('S14 test insertion marker changed')
-          t = t.replace(marker, wiring + marker, 1)
-          test.write_text(t)
-          PY
-
           python3 splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
-          grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' splat-native-ios/SplatNative/ScanModel.swift
-          grep -q 'FileManager.default.removeItem(at: checkpoint)' splat-native-ios/SplatNative/ScanModel.swift
+          python3 splat-native-ios/scripts/test_s13_depth_seed_contract.py
+
+      - name: Materialize the actual release path in the runner only
+        working-directory: splat-native-ios
+        run: |
+          set -euo pipefail
+          python3 scripts/apply_s13_depth_seed.py
+          python3 scripts/apply_s13_ios26_reprocess_tap_fix.py
+          grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' SplatNative/ScanModel.swift
+          grep -q 'depthFrames: depthSeedFrames' SplatNative/ScanModel.swift
+          grep -q 'seedOutcome.requiresFreshTrainer' SplatNative/ScanModel.swift
+          grep -q 'FileManager.default.removeItem(at: checkpoint)' SplatNative/ScanModel.swift
+          grep -q 'reconstructionSeedEvidenceText' SplatNative/ScanModel.swift
+          grep -q 'restoreFinishedProjectForS13Reprocess' SplatNative/ScanModel.swift
+          grep -q 'SplatSoftwareDepthSeedBuilder.makeSeedPoints' SplatNative/SplatDepthSeedBuilder.swift
+          grep -q 'metadataFileName = "s14-seed-recipe.json"' SplatNative/SplatDepthSeedBuilder.swift
+          grep -q 'case planeSweep' SplatNative/SplatDepthSeedBuilder.swift
+          test "$(git diff --name-only | grep -E '^splat-native-ios/' | wc -l | tr -d ' ')" -ge 1
 
       - name: Prepare proven iOS build environment
         run: |
@@ -96,7 +55,7 @@ jobs:
           xcodegen generate
           xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
 
-      - name: Compile tests and device Release
+      - name: Compile materialized tests and unsigned device Release
         working-directory: splat-native-ios
         run: |
           set -euo pipefail
@@ -106,14 +65,3 @@ jobs:
           xcodebuild -project SplatNative.xcodeproj -scheme SplatNative \
             -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
             CODE_SIGNING_ALLOWED=NO build
-
-      - name: Commit verified P0 fix
-        run: |
-          set -euo pipefail
-          git config user.name 'Scaniverse HQ'
-          git config user.email 'actions@users.noreply.github.com'
-          git add splat-native-ios/SplatNative/ScanModel.swift \
-                  splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
-          git diff --cached --check
-          git commit -m 'fix(scaniverse): activate dense seed for same-raw rebuild'
-          git push origin HEAD:feature/splat-native-ios-poc
