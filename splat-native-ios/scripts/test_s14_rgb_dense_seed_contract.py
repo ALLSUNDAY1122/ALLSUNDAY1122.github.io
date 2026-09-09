@@ -36,6 +36,7 @@ for token in (
     "reference.rgb.sample(u, v)",
     "sampleBilinear",
     "refinedDepth(",
+    "depth: coarseDepth",
     "useBilinearNeighborSampling: true",
 ):
     assert token in SOFTWARE, f"missing S14 software-depth contract: {token}"
@@ -166,7 +167,7 @@ assert math.isclose(nu, expected_u, abs_tol=1e-5), (expected_u, nu)
 assert math.isclose(nv, cy, abs_tol=1e-5)
 assert math.isclose(nd, 1.0, abs_tol=1e-5)
 
-# 4) The local inverse-depth search must materially reduce the quantization floor introduced by
+# The local inverse-depth search must materially reduce the quantization floor introduced by
 # the 30-value coarse sweep. Evaluate the worst-case midpoint between adjacent coarse hypotheses;
 # it is exactly where the old seed was forced furthest onto the wrong front/back layer.
 near_depth, far_depth = 0.12, 2.8
@@ -191,7 +192,7 @@ for index in (5, 12, 20, 27):
     refined_error = min(abs((1.0 / inv) - true_depth) for inv in refined_inverse)
     assert refined_error < coarse_error * 0.25, (index, coarse_error, refined_error)
 
-# 5) 1 cm voxelization must collapse sub-centimetre duplicates but retain distinct geometry.
+# 1 cm voxelization must collapse sub-centimetre duplicates but retain distinct geometry.
 def voxel(p):
     return tuple(math.floor(v * 100.0) for v in p)
 
