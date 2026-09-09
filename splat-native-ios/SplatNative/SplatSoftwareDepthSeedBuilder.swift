@@ -270,7 +270,18 @@ enum SplatSoftwareDepthSeedBuilder {
         let denominator = Float(refinementHypothesisCount - 1)
 
         var bestDepth = coarseDepth
-        var bestCost = coarseCost
+        // All refinement candidates, including the coarse winner, must be compared with the same
+        // sub-pixel photometric metric. Comparing a bilinear candidate against the coarse nearest-
+        // neighbour cost can select or reject a depth because of interpolation alone.
+        var bestCost = patchCost(
+            u: u,
+            v: v,
+            depth: coarseDepth,
+            reference: reference,
+            neighborIndices: neighborIndices,
+            frames: frames,
+            useBilinearNeighborSampling: true
+        ) ?? coarseCost
         for hypothesis in 0..<refinementHypothesisCount {
             let t = Float(hypothesis) / denominator
             let proposedInverseDepth = centerInverseDepth - radius + (2 * radius * t)
