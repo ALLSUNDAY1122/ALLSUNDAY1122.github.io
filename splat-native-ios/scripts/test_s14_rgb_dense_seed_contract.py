@@ -54,7 +54,6 @@ for token in (
 # implementation would make the same ARKit intrinsics/poses describe different pixels.
 for token in (
     "kCGImageSourceCreateThumbnailWithTransform: false",
-    "context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))",
     "let y = -(v - frame.cy) / frame.fy * depth",
     "let cameraPoint = SIMD4<Float>(x, y, -depth, 1)",
     "let depth = -camera.z",
@@ -62,6 +61,9 @@ for token in (
 ):
     assert token in SOFTWARE, f"S14 camera/image convention drift: {token}"
     assert token in MESH, f"Mesh MVS camera/image convention drift: {token}"
+assert "grayContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))" in SOFTWARE
+assert "context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))" in MESH
+assert "translateBy(x: 0, y:" not in SOFTWARE, "S14 image orientation changed independently"
 
 # S14 changes initialization only. Training and safety policy must remain frozen.
 for token in (
