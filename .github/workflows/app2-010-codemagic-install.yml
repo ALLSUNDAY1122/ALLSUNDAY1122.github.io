@@ -1,6 +1,7 @@
 name: APP2-010 Install Codemagic Workflow
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
@@ -16,7 +17,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Skip when workflow is already installed
+        id: installed
+        run: |
+          if grep -q '^  touhan-ios:$' codemagic.yaml; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            echo "touhan-ios already present; no write required"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Append Touhan workflow onto latest main without clobbering peers
+        if: steps.installed.outputs.present != 'true'
         run: |
           set -euo pipefail
           python3 -m pip install --disable-pip-version-check PyYAML
