@@ -6,49 +6,44 @@ workflows:
     integrations:
       app_store_connect: networkspecialist_appstore
     environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.networkspecialist
       xcode: latest
       vars:
         XCODE_PROJECT: "network-specialist-sprint/ios/NetworkSpecialist.xcodeproj"
         XCODE_SCHEME: "NetworkSpecialist"
         BUNDLE_ID: "jp.allsunday1122.networkspecialist"
+        APP_STORE_CONNECT_APP_ID: "6799754573"
+        IAP_PRODUCT_ID: "jp.allsunday1122.networkspecialist.premium"
         APPLE_TEAM_ID: "MN3D2ZM44N"
     scripts:
       - name: Build native question payload
         script: |
           cd network-specialist-sprint
           python3 scripts/build_native_questions.py
-
       - name: Materialize canonical AppIcon
         script: |
           cd network-specialist-sprint
           python3 scripts/materialize_appicon.py
-
       - name: Legacy content and rights validation
         script: |
           cd network-specialist-sprint
           python3 scripts/validate_release.py
-
       - name: Native Release Gate
         script: |
           cd network-specialist-sprint
-          # Signed/TestFlight release must fail closed until the canonical IAP
-          # Product ID and unlock scope are recorded in the #7 canonical source.
           python3 scripts/validate_native_release.py --require-icon --require-iap
-
       - name: Install XcodeGen
-        script: |
-          brew install xcodegen
-
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
       - name: Generate Xcode project
         script: |
           cd network-specialist-sprint/ios
           xcodegen generate
-
       - name: Simulator tests
         script: |
           cd network-specialist-sprint
           bash scripts/run_native_ui_tests.sh
-
       - name: Unsigned Release build gate
         script: |
           cd network-specialist-sprint
@@ -59,30 +54,22 @@ workflows:
             -destination 'generic/platform=iOS' \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO
-
-      - name: Resolve App Store signing
+      - name: Apply App Store signing profiles for Internal TestFlight only
         script: |
-          keychain initialize
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
-          keychain add-certificates
+          cd network-specialist-sprint/ios
           xcode-project use-profiles \
             --project "$XCODE_PROJECT" \
             --custom-export-options='{"testFlightInternalTestingOnly": true}'
-
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
             --project "$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
-
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-
     publishing:
       app_store_connect:
         auth: integration
-        # Upload the signed IPA to App Store Connect, but do not submit the
-        # Internal-Only build to external TestFlight beta review or App Store review.
-        submit_to_testflight: false
+        submit_to_testflight: true
         submit_to_app_store: false
