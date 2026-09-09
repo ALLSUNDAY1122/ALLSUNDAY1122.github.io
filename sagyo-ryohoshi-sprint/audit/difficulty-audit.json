@@ -1,0 +1,90 @@
+{
+  "task": "LS16-004",
+  "audit": "difficulty-profile-v1",
+  "status": "PASS",
+  "method": {
+    "principle": "match verifiable national-exam structure; do not invent psychometric difficulty labels",
+    "official_origin_required": true,
+    "round_mix": {
+      "general": 160,
+      "practical": 40
+    },
+    "profile_spread_limit": 0.12,
+    "proxy_fields": [
+      "clinical_vignette_proxy",
+      "practical_clinical_vignette_proxy",
+      "multi_select",
+      "short_recall_proxy"
+    ]
+  },
+  "overall": {
+    "total": 600,
+    "general": 480,
+    "practical": 120,
+    "clinical_vignette_proxy": 186,
+    "clinical_vignette_ratio": 0.31,
+    "practical_clinical_vignette_proxy": 118,
+    "practical_clinical_vignette_ratio": 0.9833,
+    "multi_select": 75,
+    "multi_select_ratio": 0.125,
+    "short_recall_proxy": 333,
+    "short_recall_proxy_ratio": 0.6937
+  },
+  "rounds": {
+    "R1": {
+      "total": 200,
+      "general": 160,
+      "practical": 40,
+      "clinical_vignette_proxy": 62,
+      "clinical_vignette_ratio": 0.31,
+      "practical_clinical_vignette_proxy": 40,
+      "practical_clinical_vignette_ratio": 1.0,
+      "multi_select": 26,
+      "multi_select_ratio": 0.13,
+      "short_recall_proxy": 110,
+      "short_recall_proxy_ratio": 0.6875
+    },
+    "R2": {
+      "total": 200,
+      "general": 160,
+      "practical": 40,
+      "clinical_vignette_proxy": 66,
+      "clinical_vignette_ratio": 0.33,
+      "practical_clinical_vignette_proxy": 40,
+      "practical_clinical_vignette_ratio": 1.0,
+      "multi_select": 20,
+      "multi_select_ratio": 0.1,
+      "short_recall_proxy": 110,
+      "short_recall_proxy_ratio": 0.6875
+    },
+    "R3": {
+      "total": 200,
+      "general": 160,
+      "practical": 40,
+      "clinical_vignette_proxy": 58,
+      "clinical_vignette_ratio": 0.29,
+      "practical_clinical_vignette_proxy": 38,
+      "practical_clinical_vignette_ratio": 0.95,
+      "multi_select": 29,
+      "multi_select_ratio": 0.145,
+      "short_recall_proxy": 113,
+      "short_recall_proxy_ratio": 0.7063
+    }
+  },
+  "round_profile_spreads": {
+    "clinical_vignette_ratio": 0.04,
+    "practical_clinical_vignette_ratio": 0.05,
+    "multi_select_ratio": 0.045,
+    "short_recall_proxy_ratio": 0.0188
+  },
+  "practice_16_contract": {
+    "sample_size": 16,
+    "general": 13,
+    "practical": 3,
+    "note": "closest integer stratification to the official 160/40 frame; sampling contract for LS16-005"
+  },
+  "errors": [],
+  "warnings": [
+    "more_than_half_of_general_items_match_short_recall_proxy"
+  ]
+}
