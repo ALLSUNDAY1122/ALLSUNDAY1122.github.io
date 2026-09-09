@@ -17,6 +17,8 @@ for token in (
     "maximumReferenceFrames = 8",
     "maximumNeighborFrames = 4",
     "hypothesisCount = 30",
+    "refinementHypothesisCount = 7",
+    "refinementRadiusInCoarseSteps: Float = 0.55",
     "pixelStride = 2",
     "bestCostThreshold: Float = 34",
     "uniquenessMargin: Float = 3.5",
@@ -32,12 +34,16 @@ for token in (
     "simd_dot(reference.forward, frames[index].forward)",
     "SIMD4<Float>(x, y, -depth, 1)",
     "reference.rgb.sample(u, v)",
+    "sampleBilinear",
+    "refinedDepth(",
+    "useBilinearNeighborSampling: true",
 ):
     assert token in SOFTWARE, f"missing S14 software-depth contract: {token}"
 
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
     'metadataFileName = "s14-seed-recipe.json"',
+    "static let recipeVersion = 3",
     "case planeSweep",
     "SplatSoftwareDepthSeedBuilder.makeSeedPoints",
     "softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount",
@@ -87,7 +93,6 @@ def matmul4(a, b):
 
 
 def rigid_inverse(m):
-    # ARKit camera transforms are rigid. Invert [R t; 0 1] deterministically without numpy.
     r = tuple(tuple(m[row][col] for col in range(3)) for row in range(3))
     rt = tuple(tuple(r[col][row] for col in range(3)) for row in range(3))
     t = (m[0][3], m[1][3], m[2][3])
@@ -117,7 +122,6 @@ def project_world(point, fx, fy, cx, cy, camera_to_world):
     )
 
 
-# 1) Optical-axis convention used by current MeshPlaneSweepMVS and S13 hardware depth.
 identity = (
     (1.0, 0.0, 0.0, 0.0),
     (0.0, 1.0, 0.0, 0.0),
@@ -127,8 +131,6 @@ identity = (
 center = backproject_world(10.0, 10.0, 1.0, 10.0, 10.0, 10.0, 10.0, identity)
 assert all(math.isclose(a, b, abs_tol=1e-8) for a, b in zip(center, (0.0, 0.0, -1.0, 1.0)))
 
-# 2) Projection/backprojection must round-trip off-axis pixels under a non-trivial rigid pose.
-# Rotation is +20 degrees around Y with a translated camera, representative of orbit capture.
 theta = math.radians(20.0)
 c, s = math.cos(theta), math.sin(theta)
 pose = (
@@ -150,9 +152,6 @@ for u, v, depth in (
     assert math.isclose(rv, v, abs_tol=1e-5), (v, rv)
     assert math.isclose(rd, depth, abs_tol=1e-5), (depth, rd)
 
-# 3) A world point backprojected from a reference camera must move predictably in a translated
-# neighbor. This catches row/column transposition and cameraToWorld/worldToCamera sign mistakes that
-# can otherwise turn one surface into spatially separated islands.
 reference = identity
 neighbor = (
     (1.0, 0.0, 0.0, 0.12),
@@ -167,11 +166,36 @@ assert math.isclose(nu, expected_u, abs_tol=1e-5), (expected_u, nu)
 assert math.isclose(nv, cy, abs_tol=1e-5)
 assert math.isclose(nd, 1.0, abs_tol=1e-5)
 
-# 4) 1 cm voxelization must collapse sub-centimetre duplicates but retain distinct geometry.
+# 4) The local inverse-depth search must materially reduce the quantization floor introduced by
+# the 30-value coarse sweep. Evaluate the worst-case midpoint between adjacent coarse hypotheses;
+# it is exactly where the old seed was forced furthest onto the wrong front/back layer.
+near_depth, far_depth = 0.12, 2.8
+coarse_count = 30
+fine_count = 7
+radius_steps = 0.55
+inv_near, inv_far = 1.0 / near_depth, 1.0 / far_depth
+coarse_step = (inv_near - inv_far) / (coarse_count - 1)
+coarse_inverse = [inv_near - i * coarse_step for i in range(coarse_count)]
+
+for index in (5, 12, 20, 27):
+    true_inverse = (coarse_inverse[index] + coarse_inverse[index + 1]) / 2.0
+    true_depth = 1.0 / true_inverse
+    coarse_center = coarse_inverse[index]
+    coarse_depth = 1.0 / coarse_center
+    coarse_error = abs(coarse_depth - true_depth)
+    radius = coarse_step * radius_steps
+    refined_inverse = [
+        min(inv_near, max(inv_far, coarse_center - radius + (2.0 * radius * j / (fine_count - 1))))
+        for j in range(fine_count)
+    ]
+    refined_error = min(abs((1.0 / inv) - true_depth) for inv in refined_inverse)
+    assert refined_error < coarse_error * 0.25, (index, coarse_error, refined_error)
+
+# 5) 1 cm voxelization must collapse sub-centimetre duplicates but retain distinct geometry.
 def voxel(p):
     return tuple(math.floor(v * 100.0) for v in p)
 
 assert voxel((0.001, 0.001, -1.001)) == voxel((0.009, 0.009, -1.009))
 assert voxel((0.001, 0.001, -1.001)) != voxel((0.021, 0.001, -1.001))
 
-print("PASS: S14 RGB dense-seed source + camera-geometry contract")
+print("PASS: S14 RGB dense-seed + subpixel local-depth refinement contract")
