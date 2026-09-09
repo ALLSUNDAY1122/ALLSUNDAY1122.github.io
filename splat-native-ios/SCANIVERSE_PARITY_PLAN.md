@@ -1,230 +1,177 @@
 # Scaniverse Functional Parity Program
 
-Updated: 2026-08-24 14:48 JST
+Updated: 2026-09-09 21:00 JST
 
 ## Goal
 
-Independently implement an iOS app that reaches functional and practical-quality parity with the current consumer Scaniverse experience. Do not copy Scaniverse proprietary source code, trademark, logo, artwork, models, training data, or other protected assets.
+Independently implement an iOS app that reaches functional and practical-quality parity with the current consumer Scaniverse experience. Do not copy Scaniverse proprietary source code, trademark, logo, artwork, models, training data, text, stages, or other protected assets.
 
-Parity means comparable user outcomes, real data/output, usability, speed, stability, recovery, and practical result quality. Requirements, compile success, simulator/fixture success, CI success, signed archive, or TestFlight distribution alone are not parity.
+Parity means comparable user outcomes, real reconstruction quality, usability, speed, stability, recovery, editing, export/share behavior, and practical result quality. Requirements, compile success, simulator/fixture success, CI success, signed archive, or TestFlight distribution alone are not parity.
 
-## Source of truth
+## Live source of truth
 
 - Notion: `Scaniverse同等化｜4開発班＋統合本部 v2.0`
 - Repository: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
 - Working root: `splat-native-ios/`
-- Integration branch: `feature/splat-native-ios-poc`
+- HQ branch: `feature/splat-native-ios-poc`
 - Integration PR: `#4145`
-- A2: `scaniverse/a2-capture-reconstruction`
-- B2: `scaniverse/b2-view-edit-mesh`
-- C2: `scaniverse/c2-library-export`
-- D2: `scaniverse/d2-share-discover`
 - Supabase production: `gybchnyqlqwmajwkhsly`
+- Golden / physical evidence: Dropbox `/Scaniverse`
 
-Fixed SHAs are evidence, not permanent source of truth. Every work session must re-read live state first.
+Fixed SHAs are evidence only. Every work cycle must re-read live GitHub, Notion, Supabase and physical evidence before deciding the next blocker.
 
-## Current validated app-source
+## Current integrated HQ state
 
-`595c1d1d3468dd85594a958d8750264d9db91f50`
+Fresh audit on 2026-09-09:
 
-Build 3以降に反映された重要な実source差分:
+- PR #4145: `open / draft / unmerged`
+- PR #4145 head: `a5d5b3a77c5cd1ff912b382a9a93ae0fdb774fe0`
+- PR #4145 base: `main`
+- #4145 must remain unmerged until the physical parity gate and final integration review pass.
+- S13→S14→S14D→HQ machine integration was already completed.
+- The integrated HQ machine gate had passed at the current Build 14 app-source lineage; machine success is evidence, not parity.
 
-- persisted viewer editをexport / video / publishの実outputへmaterialize
-- 外部actionが古いviewer stateを読むraceを避けるためedit persistenceを即時化
-- crop片側handleだけを動かした場合、未操作側tailを暗黙に切らないopen-ended endpoint semantics
+## Current Internal TestFlight candidate — Build 14
 
-Validated app-source automated gates:
+Build 14 is the current physical comparison candidate.
 
-- Splat Native Privacy Preflight: PASS
-- Splat Smoke Diagnostic: PASS
-- Splat Native iOS Build: PASS
-
-最新HQに対するA2/B2/C2/D2 fresh compareは4 branchすべて `ahead_by=0`。未統合Worker成果なし。
-
-## Current Internal TestFlight candidate — Build 4
-
-Build 3は現行app-sourceより古いためhistorical candidateへ降格。現在の物理比較対象は **Build 4**。
-
-- release branch: `testflight/splat-native-ios-20260824-build4`
-- release commit: `bdb1488b101c3855edc52687b5dd230748297a62`
-- release差分: TestFlight用 `codemagic.yaml` のみ
-- Codemagic build: `6a8bd803c391bffc3d7617ce`
-- Codemagic status: `finished`
-- App Store Connect app: `6803778932`
-- bundle: `jp.allsunday1122.splatlab`
-- build resource: `219264e6-587a-49f2-96b1-0850d5a8ad4c`
-- build number: `4`
+- release branch: `testflight/splat-native-ios-20260903-build14`
+- signed Gate Action: `33761097673` — SUCCESS
+- signed commit: `fe9e1c24e73fe5542c2b0fa6869983456092109f`
+- signed Codemagic: `6a99756109c439ed22acd91c`
+- artifact: `Splat_Lab_Native.ipa`
+- App Store Connect readback Codemagic: `6a9977da70cbb2e04fed4a20` — finished
+- Version: `1.0.0`
+- Build: `14`
 - `processingState=VALID`
-- `buildAudienceType=INTERNAL_ONLY`
-- `expired=false`
-- `usesNonExemptEncryption=false`
-- `internalBuildState=IN_BETA_TESTING`
-- internal beta group `sun`: assigned
-- tester count: `1`
-- App Store Review submission: false
+- TestFlight: internal testing only
+- App Store submission: false
 - external beta review submission: false
+- release evidence: `splat-native-ios/evidence/scaniverse-build14-release.json`
 
-Evidence:
+The release cleanup head is `c2754715`; its source difference from the signed commit is workflow/evidence cleanup only. Do not treat TestFlight VALID as parity.
 
-- `splat-native-ios/evidence/scaniverse-build4-release.json`
-- `splat-native-ios/evidence/scaniverse-build4-actions-probe.json`
-- release gate Actions run `32694020324`: SUCCESS
+## Reconstruction history that determines the current P0
+
+The latest physical failure was not a generic UI or resource-budget issue.
+
+- S13 same-raw regeneration reached the trainer with `rawFeaturePoints · depth 0 frames · geometry 7581`.
+- Training completed to a viewer result of `386,763 / 386,763 splats`.
+- The completed result was still spatially fragmented/disconnected and did not form a coherent representation of the captured object.
+- Therefore physical reconstruction quality remained FAIL even though regeneration and completion flow worked.
+
+S14 then added non-LiDAR RGB multi-view dense initialization:
+
+- `SplatSoftwareDepthSeedBuilder.swift`
+- software plane-sweep depth from saved RGB + ARKit pose
+- hardware depth remains first priority
+- software `planeSweep` is used when hardware depth is insufficient
+- `rawFeaturePoints` is only the fail-closed fallback
+- the S14 active seed recipe is separated so an old S13 raw-feature-point checkpoint cannot silently mask the S14 experiment
+
+This change passed machine gates and reached Build 14. Its physical effect has not yet been proven.
+
+## Current only P0 — Build 14 same-RAW physical reconstruction gate
+
+Do not add unrelated UI/features while this gate is unresolved.
+
+The next human/device action is intentionally one experiment:
+
+1. Do not delete the app.
+2. Update the existing installation to TestFlight Build 14.
+3. If the existing capture appears under `最近削除`, restore it.
+4. Use `同じ撮影から再生成` on that same RAW capture.
+5. Keep evidence from the run through completed 3D result.
+
+Acceptance requires all of the following:
+
+- seed source is `planeSweep`, or genuine hardware `depth`; `rawFeaturePoints` means the S14 hypothesis was not exercised and is a gate failure/inconclusive result.
+- the standard reconstruction reaches all 7000 iterations without terminal resource/thermal/memory pause.
+- the completed model is a coherent reconstruction rather than separated spatial fragments, duplicated shells, or disconnected placeholder-like geometry.
+- the same completed output is judged against the Scaniverse Golden reference for missing regions, duplication, geometric coherence, color, detail and stable 3D impression.
+- save/reopen must preserve the same completed asset; machine completion alone is insufficient.
+
+If Build 14 uses `planeSweep`/hardware depth and still produces the same class of fragmentation, stop tuning resource/UI/seed-source routing. The next P0 becomes S15 camera-pose and multi-view geometric consistency refinement.
+
+## Golden / physical evidence state
+
+Fresh Dropbox `/Scaniverse` audit on 2026-09-09 found five files and no newer Build 14 physical recording/output:
+
+- `こうへい - RPReplay_Final1787926603.mp4`
+- `こうへい - result.ply`
+- `こうへい - result.spz`
+- `こうへい - RPReplay_Final1787958095.mp4`
+- `こうへい - RPReplay_Final1787989688.mp4`
+
+The newest file in that folder is from 2026-08-29 UTC. Therefore Build 14 physical parity cannot be promoted from current Dropbox evidence.
 
 ## Supabase production
 
-2026-08-24 14:43 JST fresh read-only state:
+Fresh read-only audit on 2026-09-09:
 
-- project: `ACTIVE_HEALTHY`
+- project: healthy/available
 - `auth.users=1`
-- `scanlab_profiles=1`
-- `scanlab_scans=0`
-- `scanlab_reports=0`
-- `scanlab_blocks=0`
+- `public.scanlab_profiles=1`
+- `public.scanlab_scans=0`
+- `public.scanlab_reports=0`
+- `public.scanlab_blocks=0`
 
-Active Edge Functions:
+Important schema note: current production tables are prefixed `scanlab_*`; the old shorthand `public.profiles/scans/reports/blocks` is stale and must not be used in future audits.
 
-- `scanlab-public` v12
-- `scanlab-publish` v12
-- `scanlab-delete-account` v4
-- `scanlab-visibility` v5
-- `scanlab-delete-scan` v7
-- `scanlab-unpublish` v2
-- `scanlab-upload` v1
-
-A real generated trusted scan does not yet exist in production, so publish/share lifecycle parity remains unproven.
+Because `scanlab_scans=0`, production publish/share lifecycle parity is still unproven. Do not use synthetic or hardcoded scans to close that gate.
 
 ## Current parity ledger
 
-| Area | State | Remaining proof | Owner |
-|---|---|---|---|
-| ARKit capture / tracking / live coverage guidance | PARTIAL | Build 4 real-device continuity, responsiveness, image-quality rejection, recovery and Golden comparison | A/HQ |
-| On-device Gaussian Splat reconstruction | PARTIAL | representative-object physical output quality, processing time, thermal/memory behavior and recovery | A |
-| Splat viewer / edit / measure | PARTIAL | Build 4 device usability, edit persistence/output materialization, crop behavior and practical measurement | B/HQ |
-| Mesh reconstruction / texture / edit / measure / AR | PARTIAL | physical result quality and complete device workflow proof | B |
-| Local library / raw retention / process later / reopen / reprocess | NEAR_PARITY | Build 4 cold-reopen/process-later/reprocess physical proof | C/HQ |
-| Export / video interoperability | NEAR_PARITY | Build 4 generated edited assets/video, external-read usability and memory proof | C/B |
-| Auth / session / profile | NEAR_PARITY | production live E2E passes; Build 4 device UX proof remains | D/HQ |
-| Publish / durable browser URL / visibility / Map / Discover | PARTIAL | real Build 4 generated trusted scan production lifecycle E2E | D/HQ |
-| Integrated release candidate | NEAR_PARITY | Build 4 VALID/internal distribution established; physical end-to-end parity gate remains | HQ |
-| Integrated full app flow | PARTIAL | Build 4 `capture → coverage → finish → processing → 3D result → save → library reopen` | HQ/A-D |
+| Area | State | Remaining proof |
+|---|---|---|
+| ARKit capture / tracking / live coverage guidance | PARTIAL | Build 14 device continuity/responsiveness and Golden comparison |
+| On-device Gaussian Splat reconstruction | **P0 / PARTIAL** | Build 14 same-RAW `planeSweep`/depth run, 7000 completion, coherent final geometry |
+| Splat viewer / edit / measure | PARTIAL | trusted coherent Build 14 result on device; persistence/materialization/usability |
+| Mesh reconstruction / texture / edit / measure / AR | PARTIAL | physical result quality and complete device workflow proof |
+| Local library / raw retention / process later / reopen / reprocess | NEAR_PARITY | Build 14 same-RAW restore/reprocess and cold reopen proof |
+| Export / video interoperability | NEAR_PARITY | trusted Build 14 edited asset/video external-read proof |
+| Auth / session / profile | NEAR_PARITY | production live path exists; final device UX proof remains |
+| Publish / durable browser URL / visibility / Map / Discover | PARTIAL | real trusted Build 14 scan lifecycle E2E; production scan count is currently zero |
+| Integrated release candidate | NEAR_PARITY | Build 14 VALID/internal distribution established; physical quality gate remains |
+| Integrated full app flow | PARTIAL | coherent capture/reconstruct result then save/reopen/export/share on device |
 
-No row may become `PARITY` solely from compile, simulator, fixture, CI, signed build, TestFlight upload/distribution, screen transition, placeholder output, fake 3D, or synthetic backend data.
+No row may become `PARITY` solely from compile, simulator, fixture, CI, signed build, TestFlight upload/distribution, screen transitions, placeholder output, fake 3D, or synthetic backend data.
 
-## Current blocking gate — Build 4 physical device
+## Gate after reconstruction quality passes
 
-Use the actual TestFlight Build 4 on a representative iPhone and compare with the Scaniverse Golden Reference.
+Only after the Build 14 reconstruction result is physically trusted, run the same real scan through:
 
-Required flow:
+`viewer/edit → save → cold reopen → export/video → explicit publish → durable browser URL → separate browser viewer → public/unlisted/private → Discover → Map only with explicit geotag opt-in → unpublish → republish → owner delete`
 
-`capture → coverage → finish → processing → 3D result → save → library reopen`
+Acceptance includes:
 
-Minimum physical acceptance:
-
-1. Active capture hides bottom tabs.
-2. Real ARKit feature-point-derived red/green coverage heatmap updates continuously with camera movement.
-3. Camera remains responsive; tracking loss, pause/resume and interruption recovery are usable.
-4. Clearly dark-clipped, blown-highlight or strongly blurred/low-detail frames are rejected rather than silently degrading the dataset.
-5. Finish does not falsely succeed from redundant views alone.
-6. Processing progress corresponds to real reconstruction work; no fake progress, crash, permanent hang or unusable thermal/memory failure.
-7. Result is a real Gaussian Splat, not rough/fake 3D or disconnected placeholder geometry.
-8. Golden comparison shows no obvious unacceptable deficit in missing regions, duplication, color, detail, volume/3D impression, stability, time, or required user effort.
-9. Orbit / pan / zoom / reset are practically usable.
-10. Viewer edits persist and the same meaning is reflected in saved/exported/video/publish output.
-11. Moving only one crop endpoint does not silently cut the untouched opposite tail.
-12. Save succeeds and Library cold reopen shows the same completed asset.
-13. Process-later/reprocess paths remain recoverable where applicable.
-
-Capture/reconstruction/viewer/library must not be promoted to `PARITY` before this physical gate passes.
-
-## Production trusted-scan gate after physical quality passes
-
-Use the real trusted scan generated by Build 4. Do not substitute synthetic or hardcoded data.
-
-Required lifecycle:
-
-`explicit publish → durable asset URL → separate browser viewer → public/unlisted/private → Discover → Map only with explicit geotag opt-in → unpublish → republish → owner delete`
-
-Acceptance also includes:
-
+- viewer edits persist and are materialized into saved/exported/video/published output
+- crop endpoints do not silently remove the untouched opposite tail
+- external formats are readable and practically useful
 - local scan/process remains offline-capable until explicit network action
-- private/unlisted/public semantics are enforced
-- unlisted access token is not leaked into ordinary server-visible URL components
-- public scans can appear in Discover without forced geotag
-- Map requires explicit location opt-in
-- owner lifecycle and deletion clean up metadata/assets safely
-- block/report/moderation/rate-limit contracts do not regress
-- account deletion remains recoverable/safe until intentionally executed
+- public/unlisted/private semantics are enforced
+- Map location remains opt-in
+- owner deletion cleans metadata/assets safely
+- report/block/moderation/rate-limit/account-deletion contracts do not regress
 
-## Functional parity scope
+## Priority rule for future cycles
 
-### A — Capture / Splat generation
+At each cycle, score only real remaining gaps by device impact × user visibility × recurrence × dependency-unblocking effect. Prefer one deep quality blocker over many shallow TODOs.
 
-- guided Splat capture on supported iPhones
-- ARKit tracking, coverage and recovery
-- object/room/outdoor capture behavior
-- pause/resume and interruption recovery
-- quality rejection and finish-quality gates
-- on-device Gaussian Splat reconstruction
-- retained raw capture, checkpoint/retry, Enhance/reprocess
-- sky/background handling where applicable
-- bounded thermal/memory behavior
+Current ordering:
 
-### B — View / edit / measure / Mesh
-
-- useful initial Splat framing
-- orbit, true pan, zoom, reset
-- crop, exposure, contrast
-- measurement with meaningful scale contract where supported
-- edit persistence and output materialization
-- Mesh capture/reconstruction including applicable LiDAR/non-LiDAR paths
-- Mesh cleanup/texture/edit/measurement/AR viewing
-- Mesh reprocess from retained raw data
-
-### C — Library / lifecycle / export / video
-
-- persistent local library and thumbnails
-- save before processing / process later
-- reopen after relaunch
-- resume/reprocess/recovery
-- safe project delete/storage lifecycle
-- PLY/SPZ and relevant model/point-cloud exports
-- OBJ/FBX/GLB/USDZ interoperability within parity scope
-- video export and share sheet
-- trusted browser-share package
-
-### D — Account / publish / browser / discover
-
-- auth/session/profile
-- explicit trusted upload/publish
-- public/unlisted/private
-- durable browser-view URL
-- opt-in geotag
-- Map/Discover/public profile browsing
-- opening other users' public scans
-- unpublish/republish/delete/account deletion
-- report/block/moderation/rate limit/privacy safeguards
-
-## Frozen legacy branches
-
-The old S1-S8 branches are evidence/migration sources only. Do not resume development there.
-
-- `scaniverse/s1-capture`
-- `scaniverse/s2-splat-reconstruction`
-- `scaniverse/s3-splat-viewer-edit`
-- `scaniverse/s4-mesh-photogrammetry`
-- `scaniverse/s5-library-lifecycle`
-- `scaniverse/s6-export-video-share`
-- `scaniverse/s7-map-discover-backend`
-- `scaniverse/s8-adversarial-qa`
+1. Build 14 same-RAW physical reconstruction quality.
+2. If fragmented with real `planeSweep`/depth: camera-pose / multi-view consistency.
+3. Only after coherent trusted output: viewer/edit/save/reopen/export/share lifecycle.
+4. Only after a trusted real scan exists: production publish/discover/map lifecycle.
 
 ## Completion rule
 
 The program is complete only when:
 
-1. Build 4 (or a later source-identical/fix successor) passes real-device capture/reconstruction/viewer/library quality against Golden Reference.
-2. A real trusted scan passes production publish/share/visibility/Discover/Map/owner lifecycle E2E.
-3. Any defects found in those gates are fixed and re-run without creating new unverified source drift.
-4. Current parity ledger rows required for the public Scaniverse-equivalent experience are promoted based on runtime evidence, not assumptions.
-5. PR #4145 remains draft/unmerged until those gates are satisfied and final integration review is complete.
-
-Older detailed Build 2/Build 3 and legacy-lane evidence remains available in Git history and Notion history; it is not repeated here to avoid stale state being mistaken for the current gate.
+1. capture → reconstruction → viewer → edit → save/reload → export/share passes on a representative real iPhone flow;
+2. the resulting geometry is physically coherent and acceptably close to the Scaniverse Golden reference across representative captures;
+3. no fatal crash/data loss or unresolved P0/P1 remains;
+4. performance, memory and thermal behavior are repeatable enough for practical use;
+5. a real trusted scan passes production visibility/publish/owner lifecycle E2E;
+6. #4145 remains draft/unmerged until all final physical/integration checks pass and a human explicitly decides to merge.
