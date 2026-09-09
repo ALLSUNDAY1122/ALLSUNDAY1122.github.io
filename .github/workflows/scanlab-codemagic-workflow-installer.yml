@@ -1,0 +1,134 @@
+name: Install Scan Lab Codemagic Workflow
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/scanlab-codemagic-install-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-native-ios-poc
+          fetch-depth: 0
+
+      - name: Patch Scan Lab workflow into codemagic.yaml
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('codemagic.yaml')
+          text = path.read_text()
+          marker = 'workflows:\n'
+          begin = '  # BEGIN SCANLAB IOS WORKFLOW\n'
+          end = '  # END SCANLAB IOS WORKFLOW\n'
+          block = r'''  # BEGIN SCANLAB IOS WORKFLOW
+  scanlab-ios:
+    name: Scan Lab - iOS Internal TestFlight
+    max_build_duration: 80
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.splatlab
+      vars:
+        BUNDLE_ID: jp.allsunday1122.splatlab
+        XCODE_PROJECT: splat-native-ios/SplatNative.xcodeproj
+        XCODE_SCHEME: SplatNative
+      xcode: latest
+    scripts:
+      - name: Install XcodeGen
+        script: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Materialize current HQ reconstruction source
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/splat-native-ios"
+          python3 - <<'PYBUILD'
+          import os
+          from pathlib import Path
+          p = Path('project.yml')
+          s = p.read_text()
+          old = 'CURRENT_PROJECT_VERSION: 1'
+          if old not in s:
+              raise SystemExit('CURRENT_PROJECT_VERSION baseline not found')
+          s = s.replace(old, f"CURRENT_PROJECT_VERSION: {os.environ['CM_BUILD_NUMBER']}", 1)
+          p.write_text(s)
+          PYBUILD
+          xcodegen generate
+      - name: Verify S14 dense seed and S15 pose contracts
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          python3 splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
+          python3 splat-native-ios/scripts/diagnose_s15_pose_trajectory.py --self-test
+          grep -q 'recipeVersion = 2' splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift
+      - name: Apply App Store signing profile
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/splat-native-ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
+  # END SCANLAB IOS WORKFLOW
+'''
+          if begin in text:
+              start = text.index(begin)
+              stop = text.index(end, start) + len(end)
+              text = text[:start] + block + text[stop:]
+          else:
+              if marker not in text:
+                  raise SystemExit('top-level workflows: marker not found')
+              text = text.replace(marker, marker + block, 1)
+          path.write_text(text)
+          PY
+
+      - name: Validate patched Codemagic configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          ruby -e "require 'yaml'; YAML.load_file('codemagic.yaml')"
+          grep -q '^  scanlab-ios:$' codemagic.yaml
+          grep -q 'bundle_identifier: jp.allsunday1122.splatlab' codemagic.yaml
+          grep -q 'submit_to_testflight: true' codemagic.yaml
+          grep -q 'submit_to_app_store: false' codemagic.yaml
+          grep -q 'test_s14_rgb_dense_seed_contract.py' codemagic.yaml
+          grep -q 'diagnose_s15_pose_trajectory.py --self-test' codemagic.yaml
+          git diff --check
+
+      - name: Commit Codemagic workflow if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- codemagic.yaml; then
+            echo 'Scan Lab Codemagic workflow is already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          git commit -m 'ci: add Scan Lab signed TestFlight workflow'
+          git push origin HEAD:feature/splat-native-ios-poc
