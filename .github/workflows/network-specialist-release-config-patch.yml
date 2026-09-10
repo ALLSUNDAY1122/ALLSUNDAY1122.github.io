@@ -30,7 +30,7 @@ jobs:
           m=re.search(r'(?ms)^  network-specialist-native-ios:\n.*?(?=^  [A-Za-z0-9_-]+:\n|\Z)',root)
           assert m, 'network workflow missing'
           block=m.group(0)
-          for token in ['distribution_type: app_store','bundle_identifier: jp.allsunday1122.networkspecialist','xcode-project use-profiles','submit_to_testflight: true','submit_to_app_store: false']:
+          for token in ['distribution_type: app_store','bundle_identifier: jp.allsunday1122.networkspecialist','xcode-project use-profiles','submit_to_testflight: false','submit_to_app_store: false']:
               assert token in block, token
           for token in ['app-store-connect fetch-signing-files','keychain initialize','keychain add-certificates','drive.google.com/uc?export=download']:
               assert token not in block, token
