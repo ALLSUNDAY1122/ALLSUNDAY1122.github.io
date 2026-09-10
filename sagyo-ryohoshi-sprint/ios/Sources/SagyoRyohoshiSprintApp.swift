@@ -3,12 +3,16 @@ import LearningSprintCore
 
 private let otBundleID = "jp.allsunday1122.sagyoryouhoushi"
 private let otContentVersion = "ot-600-v1"
+private let otMonthlyProductID = "jp.allsunday1122.sagyoryouhoushi.monthly"
 
 @main
 struct SagyoRyohoshiSprintApp: App {
+    @StateObject private var purchase = PurchaseController(productIDs: [otMonthlyProductID])
+
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environmentObject(purchase)
                 .preferredColorScheme(.light)
         }
     }
@@ -67,13 +71,13 @@ final class OTAppModel: ObservableObject {
         }
     }
 
-    func start(target: Int = 8) {
-        let selected = LearningEngine.selectSprint(from: questions, target: target, isPremium: false)
+    func start(target: Int = 8, isPremium: Bool) {
+        let selected = LearningEngine.selectSprint(from: questions, target: target, isPremium: isPremium)
         begin(selected, kind: .sprint)
     }
 
-    func startWeak(target: Int = 8) {
-        let selected = LearningEngine.selectWeak(from: questions, state: state, target: target, isPremium: false)
+    func startWeak(target: Int = 8, isPremium: Bool) {
+        let selected = LearningEngine.selectWeak(from: questions, state: state, target: target, isPremium: isPremium)
         guard !selected.isEmpty else { return }
         begin(selected, kind: .weak)
     }
@@ -229,6 +233,8 @@ struct RootView: View {
 
 struct HomeView: View {
     @ObservedObject var model: OTAppModel
+    @EnvironmentObject private var purchase: PurchaseController
+    @State private var showPaywall = false
 
     var body: some View {
         ScrollView {
@@ -257,7 +263,7 @@ struct HomeView: View {
                 }
 
                 Button {
-                    model.start(target: 8)
+                    model.start(target: 8, isPremium: purchase.isPremium)
                 } label: {
                     Text("8問スプリントを始める")
                         .frame(maxWidth: .infinity)
@@ -265,10 +271,10 @@ struct HomeView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(model.questions.isEmpty)
-                .accessibilityHint("無料問題から8問を選んで学習を開始します")
+                .accessibilityHint(purchase.isPremium ? "全600問から8問を選んで学習を開始します" : "無料200問から8問を選んで学習を開始します")
 
                 Button {
-                    model.startWeak(target: 8)
+                    model.startWeak(target: 8, isPremium: purchase.isPremium)
                 } label: {
                     Label("苦手を8問復習", systemImage: "repeat")
                         .frame(maxWidth: .infinity)
@@ -278,7 +284,33 @@ struct HomeView: View {
                 .disabled(!model.canStartWeak)
                 .accessibilityHint("これまで間違えた問題を優先して復習します")
 
-                Text("収録600問・無料200問")
+                if purchase.isPremium {
+                    Label("プレミアム利用中・全600問", systemImage: "checkmark.seal.fill")
+                        .font(.subheadline.bold())
+                        .accessibilityLabel("プレミアム利用中。全600問を利用できます")
+                } else {
+                    Button {
+                        showPaywall = true
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("プレミアムで全600問")
+                                    .font(.headline)
+                                Text("無料200問＋プレミアム400問")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "lock.open")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityHint("App Storeの月額プランと購入の復元を確認します")
+                }
+
+                Text(purchase.isPremium ? "収録600問・全問利用可能" : "収録600問・無料200問")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
 
@@ -288,6 +320,10 @@ struct HomeView: View {
                     .font(.subheadline)
             }
             .padding()
+        }
+        .sheet(isPresented: $showPaywall) {
+            OTPaywallView()
+                .environmentObject(purchase)
         }
     }
 }
@@ -351,6 +387,7 @@ struct QuizView: View {
                         }
                         .padding()
                         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+                        .accessibilityElement(children: .combine)
 
                         Button(model.index + 1 == model.session.count ? "結果を見る" : "次の問題へ") {
                             model.next()
@@ -376,6 +413,7 @@ struct QuizView: View {
 
 struct ResultView: View {
     @ObservedObject var model: OTAppModel
+    @EnvironmentObject private var purchase: PurchaseController
 
     var body: some View {
         ScrollView {
@@ -383,21 +421,103 @@ struct ResultView: View {
                 Text("スプリント完了")
                     .font(.largeTitle.bold())
                 Text("\(model.correctCount) / \(model.session.count)")
-                    .font(.system(size: 48, weight: .bold, design: .rounded))
+                    .font(.system(.largeTitle, design: .rounded).weight(.bold))
                     .accessibilityLabel("正解数 \(model.correctCount)問、全\(model.session.count)問")
                 Text("間違えた問題は苦手として保存しました。3回連続で正解すると苦手から外れます。")
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
-                Button("もう8問") { model.start(target: 8) }
+                Button("もう8問") { model.start(target: 8, isPremium: purchase.isPremium) }
                     .buttonStyle(.borderedProminent)
                 if model.canStartWeak {
-                    Button("苦手を復習") { model.startWeak(target: 8) }
+                    Button("苦手を復習") { model.startWeak(target: 8, isPremium: purchase.isPremium) }
                         .buttonStyle(.bordered)
                 }
                 Button("ホームへ") { model.goHome() }
                     .buttonStyle(.bordered)
             }
             .padding()
+        }
+    }
+}
+
+struct OTPaywallView: View {
+    @EnvironmentObject private var purchase: PurchaseController
+    @Environment(\.dismiss) private var dismiss
+
+    private var stateMessage: String? {
+        switch purchase.state {
+        case .pending:
+            return "購入承認を待っています。"
+        case .cancelled:
+            return "購入はキャンセルされました。"
+        case .unavailable(let text), .failed(let text):
+            return text
+        default:
+            return nil
+        }
+    }
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 18) {
+                    Text("学びスプリント プレミアム")
+                        .font(.title2.bold())
+                        .accessibilityAddTraits(.isHeader)
+                    Text("無料200問に加えてプレミアム400問を解放し、全600問からスプリントと苦手復習を行えます。")
+                        .foregroundStyle(.secondary)
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        Label("全600問から8問スプリント", systemImage: "books.vertical.fill")
+                        Label("プレミアム問題も苦手復習の対象", systemImage: "repeat.circle.fill")
+                        Label("購入状態はApple IDで復元", systemImage: "arrow.clockwise.icloud")
+                    }
+                    .font(.subheadline)
+
+                    if purchase.isPremium {
+                        Label("プレミアム利用中", systemImage: "checkmark.seal.fill")
+                            .font(.headline)
+                    } else {
+                        Button {
+                            Task { await purchase.purchase(productID: otMonthlyProductID) }
+                        } label: {
+                            VStack(spacing: 3) {
+                                Text(purchase.state == .purchasing ? "購入処理中…" : "月額プラン")
+                                    .font(.headline)
+                                Text(purchase.displayPrice(for: otMonthlyProductID).map { "月額 \($0)" } ?? "価格を取得中")
+                                    .font(.caption)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(purchase.product(for: otMonthlyProductID) == nil || purchase.state == .purchasing)
+                    }
+
+                    Button("購入を復元") {
+                        Task { await purchase.restore() }
+                    }
+                    .font(.subheadline.bold())
+
+                    if let stateMessage {
+                        Text(stateMessage)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Text("表示価格はApp Storeから取得します。月額プランは自動更新です。購入・更新・解約・復元はApple IDの設定に従います。")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                .padding()
+            }
+            .navigationTitle("プレミアム")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("閉じる") { dismiss() }
+                }
+            }
         }
     }
 }
