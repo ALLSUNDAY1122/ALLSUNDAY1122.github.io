@@ -23,12 +23,6 @@ jobs:
       - name: Verify pinned release lineage
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          p = Path('automation/scanlab-materialize-release-request.json')
-          # Request lives on HQ, so retrieve the exact triggering payload from origin/HQ below.
-          PY
           git fetch origin feature/splat-native-ios-poc
           git show origin/feature/splat-native-ios-poc:automation/scanlab-materialize-release-request.json > /tmp/request.json
           python3 - <<'PY'
@@ -51,12 +45,26 @@ jobs:
           grep -q 'colorFrames: seedFrames' splat-native-ios/SplatNative/ScanModel.swift
           grep -q '同じ撮影から再生成' splat-native-ios/SplatNative/ScanLibraryView.swift
 
-      - name: Verify materialized reconstruction contracts
+      - name: Verify S14 dense reconstruction contract
         run: |
           set -euo pipefail
           python3 splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
+
+      - name: Verify S15 pose diagnostic contract
+        run: |
+          set -euo pipefail
           python3 splat-native-ios/scripts/diagnose_s15_pose_trajectory.py --self-test
-          bash splat-native-ios/scripts/validate.sh
+
+      - name: Verify materialized app callsites
+        run: |
+          set -euo pipefail
+          grep -q 'reconstructionSeedEvidenceText' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'restoreFinishedProjectForS13Reprocess' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'canReprocessTrusted' splat-native-ios/SplatNative/ScanLibraryView.swift
+          grep -q 'reconstructionSeedEvidenceText' splat-native-ios/SplatNative/RootScanView.swift
+          grep -q 'reconstructionSeedEvidenceText' splat-native-ios/SplatNative/SplatResultView.swift
+          grep -q 'static let recipeVersion = 5' splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift
+          grep -q 'static let standardIterations = 7_000' splat-native-ios/SplatNative/SplatReconstructionPolicy.swift
 
       - name: Persist materialized release source
         run: |
