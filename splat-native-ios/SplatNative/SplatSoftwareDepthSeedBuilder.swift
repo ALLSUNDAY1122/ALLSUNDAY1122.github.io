@@ -314,44 +314,52 @@ enum SplatSoftwareDepthSeedBuilder {
         useBilinearNeighborSampling: Bool = false
     ) -> Float? {
         let offsets: [Float] = [-2, 0, 2]
-        var neighborCosts = SIMD4<Float>(repeating: 0)
-        var neighborCostCount = 0
+        let neighborCount = min(neighborIndices.count, maximumNeighborFrames)
+        var differences = SIMD64<Float>(repeating: 0)
+        var differenceTotals = SIMD4<Float>(repeating: 0)
+        var sampleCounts = SIMD4<Int32>(repeating: 0)
 
-        // Score each view independently. Fixed-size SIMD storage keeps the inner plane-sweep loop
-        // allocation-free while local exposure centering removes additive auto-exposure drift.
-        for neighborIndex in neighborIndices {
-            let neighbor = frames[neighborIndex]
-            var differences = SIMD16<Float>(repeating: 0)
-            var differenceTotal: Float = 0
-            var samples = 0
-            for dy in offsets {
-                for dx in offsets {
-                    guard let referenceValue = reference.gray.sample(u + dx, v + dy) else { continue }
-                    let world = backproject(u: u + dx, v: v + dy, depth: depth, frame: reference)
+        // Backproject each reference patch sample exactly once per depth hypothesis, then reuse that
+        // world point across all neighbor views. Fixed-size SIMD storage keeps the hot loop allocation-free.
+        for dy in offsets {
+            for dx in offsets {
+                guard let referenceValue = reference.gray.sample(u + dx, v + dy) else { continue }
+                let world = backproject(u: u + dx, v: v + dy, depth: depth, frame: reference)
+                for neighborSlot in 0..<neighborCount {
+                    let neighbor = frames[neighborIndices[neighborSlot]]
                     guard let pixel = project(world, frame: neighbor) else { continue }
                     let neighborValue = useBilinearNeighborSampling
                         ? neighbor.gray.sampleBilinear(pixel.x, pixel.y)
                         : neighbor.gray.sample(pixel.x, pixel.y)
                     guard let neighborValue else { continue }
+                    let sampleIndex = Int(sampleCounts[neighborSlot])
+                    guard sampleIndex < 16 else { continue }
                     let difference = neighborValue - referenceValue
-                    differences[samples] = difference
-                    differenceTotal += difference
-                    samples += 1
+                    differences[neighborSlot * 16 + sampleIndex] = difference
+                    differenceTotals[neighborSlot] += difference
+                    sampleCounts[neighborSlot] += 1
                 }
             }
-            guard samples >= 5, neighborCostCount < maximumNeighborFrames else { continue }
-            let meanDifference = differenceTotal / Float(samples)
+        }
+
+        // Exposure centering removes local additive brightness drift while retaining edge/texture shape.
+        var neighborCosts = SIMD4<Float>(repeating: 0)
+        var neighborCostCount = 0
+        for neighborSlot in 0..<neighborCount {
+            let samples = Int(sampleCounts[neighborSlot])
+            guard samples >= 5 else { continue }
+            let meanDifference = differenceTotals[neighborSlot] / Float(samples)
             var centeredTotal: Float = 0
-            for index in 0..<samples {
-                centeredTotal += abs(differences[index] - meanDifference)
+            let base = neighborSlot * 16
+            for sampleIndex in 0..<samples {
+                centeredTotal += abs(differences[base + sampleIndex] - meanDifference)
             }
             neighborCosts[neighborCostCount] = centeredTotal / Float(samples)
             neighborCostCount += 1
         }
 
         // Keep genuine multi-view support mandatory. For 3 views the median rejects one outlier;
-        // for 4 views remove both extremes. The resulting value remains a per-pixel intensity cost,
-        // so the shipped best-cost and uniqueness thresholds retain their scale.
+        // for 4 views remove both extremes. The result remains on the shipped per-pixel intensity scale.
         guard neighborCostCount >= 2 else { return nil }
         if neighborCostCount == 2 {
             return (neighborCosts[0] + neighborCosts[1]) * 0.5
