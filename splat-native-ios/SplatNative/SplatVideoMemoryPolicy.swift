@@ -8,11 +8,20 @@ enum SplatVideoMemoryPolicy {
         let budgetBytes: UInt64
 
         var estimatedPeakMegabytes: Int {
-            Int((estimatedPeakBytes + mib - 1) / mib)
+            ceilMegabytes(estimatedPeakBytes)
         }
 
         var budgetMegabytes: Int {
-            Int((budgetBytes + mib - 1) / mib)
+            ceilMegabytes(budgetBytes)
+        }
+
+        private func ceilMegabytes(_ bytes: UInt64) -> Int {
+            // Avoid `(bytes + MiB - 1) / MiB`: makeEstimate deliberately saturates an
+            // overflowing working-set estimate to UInt64.max, and adding the rounding term to
+            // that sentinel would itself overflow while preparing the user-facing rejection.
+            let whole = bytes / mib
+            let rounded = whole + (bytes % mib == 0 ? 0 : 1)
+            return Int(clamping: rounded)
         }
     }
 
