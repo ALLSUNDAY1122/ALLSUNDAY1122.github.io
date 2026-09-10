@@ -132,6 +132,30 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
         XCTAssertEqual(admission.renderAssetURL.standardizedFileURL, canonicalURL.standardizedFileURL)
     }
 
+    func testVideoPreflightRejectsMalformedExistingCanonicalInsteadOfSilentLegacyDowngrade() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("splat-video-sh3-malformed-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        let pointCount = 10
+        try Data(repeating: 0x61, count: pointCount * 32).write(to: source, options: .atomic)
+
+        let canonicalURL = try SplatCanonicalSHAsset.canonicalURL(forLegacySplat: source)
+        try Data("ply\nformat binary_little_endian 1.0\nelement vertex 10\nend_header\n".utf8)
+            .write(to: canonicalURL, options: .atomic)
+
+        XCTAssertThrowsError(
+            try SplatVideoMemoryPolicy.preflightAdmission(
+                sourceURL: source,
+                configuration: SplatVideoConfiguration(),
+                physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024
+            )
+        ) { error in
+            XCTAssertEqual(error as? SplatVideoMemoryPolicy.PolicyError, .untrustedCanonicalAsset)
+        }
+    }
+
     private func canonicalSH3Header(pointCount: Int) -> String {
         var header = "ply\nformat binary_little_endian 1.0\nelement vertex \(pointCount)\n"
         header += "property float f_dc_0\nproperty float f_dc_1\nproperty float f_dc_2\n"
