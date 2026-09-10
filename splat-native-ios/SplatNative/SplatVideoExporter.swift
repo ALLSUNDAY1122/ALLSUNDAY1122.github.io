@@ -52,7 +52,7 @@ enum SplatVideoExporter {
     ) async throws -> URL {
         try Task.checkCancellation()
 
-        try SplatVideoMemoryPolicy.preflight(
+        let admission = try SplatVideoMemoryPolicy.preflightAdmission(
             sourceURL: sourceURL,
             configuration: configuration
         )
@@ -65,17 +65,10 @@ enum SplatVideoExporter {
             throw ExportError.commandQueueUnavailable
         }
 
-        // Keep video appearance aligned with the live viewer and lossless export path. New
-        // reconstructions retain a content-addressed SH3 PLY beside the legacy `.splat`; rendering
-        // the legacy source here would collapse higher-order view-dependent color to SH0 only.
-        // Require the binary vertex payload to be complete as well as schema-valid so renderer
-        // selection cannot regress to the weaker header-only test after hardened preflight.
-        let sourcePointCount = try SplatExportService.sourcePointCount(sourceURL)
-        let renderAssetURL = SplatCanonicalSHAsset.existingCompleteAsset(
-            forLegacySplat: sourceURL,
-            expectedPointCount: sourcePointCount
-        )?.url ?? sourceURL
-        let reader = try AutodetectSceneReader(renderAssetURL)
+        // Render the exact complete SH3 generation selected by preflight. Re-resolving here would
+        // hash the full legacy result a second time and reopen a selection window between validation
+        // and rendering on large scenes.
+        let reader = try AutodetectSceneReader(admission.renderAssetURL)
         let sourcePoints = try await reader.readAll()
         guard !sourcePoints.isEmpty else { throw ExportError.emptyScene }
         try Task.checkCancellation()
@@ -185,9 +178,6 @@ enum SplatVideoExporter {
         }
         writer.startSession(atSourceTime: .zero)
 
-        // Any throw after startWriting — including Task cancellation — must synchronously move the
-        // writer out of `.writing` before export() removes the partial file. Otherwise AVAssetWriter
-        // may still own the file descriptor while cleanup races it, leaving a stale or locked export.
         var encodingCompleted = false
         defer {
             if !encodingCompleted && writer.status == .writing {
@@ -265,9 +255,6 @@ enum SplatVideoExporter {
                 center: framing.center,
                 up: SIMD3<Float>(0, 1, 0)
             )
-            // Match the live viewer exactly: the 180-degree display correction belongs in
-            // camera space. Right-multiplying it rotates translated scenes around world space,
-            // which can shift the subject off-center only in exported video.
             let viewMatrix = SplatCameraGeometry.rotationZ(.pi) * baseView
 
             let viewport = SplatRenderer.ViewportDescriptor(
