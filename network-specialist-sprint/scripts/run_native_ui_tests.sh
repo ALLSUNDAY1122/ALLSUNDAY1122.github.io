@@ -103,9 +103,8 @@ PY
 rm -rf "$DERIVED_DATA"
 mkdir -p "$DERIVED_DATA"
 
-# Compile the app and both test bundles exactly once. Rebuilding for each simulator
-# previously mixed compilation time into the per-device 540s hard timeout and made
-# a slow build indistinguishable from a hanging UI journey.
+# Build the app and both test bundles exactly once. Keep compilation outside all
+# per-device test timeouts so a slow build cannot masquerade as a hung journey.
 run_xcodebuild_logged "build-for-testing" 600 \
   xcodebuild build-for-testing \
     -project "$PROJECT" \
@@ -116,22 +115,51 @@ run_xcodebuild_logged "build-for-testing" 600 \
     CODE_SIGNING_ALLOWED=NO \
     ASSETCATALOG_COMPILER_APPICON_NAME=
 
+# Unit tests are device-size independent. Run them once, then run each UI journey
+# independently on both phone sizes. A single stalled journey now fails with its
+# own phase name instead of consuming the whole 420s suite timeout.
+boot_device "${IDS[0]}"
+run_xcodebuild_logged "unit-${IDS[0]}" 180 \
+  xcodebuild test-without-building \
+    -project "$PROJECT" \
+    -scheme "$SCHEME" \
+    -destination "platform=iOS Simulator,id=${IDS[0]}" \
+    -destination-timeout 60 \
+    -derivedDataPath "$DERIVED_DATA" \
+    -parallel-testing-enabled NO \
+    -test-timeouts-enabled YES \
+    -default-test-execution-time-allowance 60 \
+    -maximum-test-execution-time-allowance 120 \
+    -only-testing:NetworkSpecialistTests \
+    CODE_SIGNING_ALLOWED=NO \
+    ASSETCATALOG_COMPILER_APPICON_NAME=
+xcrun simctl shutdown "${IDS[0]}" >/dev/null 2>&1 || true
+
+UI_TESTS=(
+  "NetworkSpecialistUITests/NetworkSpecialistUITests/testCoreLearningFlowAndFourTabs"
+  "NetworkSpecialistUITests/NetworkSpecialistUITests/testFreeUserCannotEnterPremiumTabs"
+  "NetworkSpecialistUITests/NetworkSpecialistUITests/testPremiumMockHidesImmediateCorrectness"
+  "NetworkSpecialistUITests/NetworkSpecialistUITests/testPremiumHistorySettingsAndLargeTextStayInsidePhoneWidth"
+)
+
 for UDID in "${IDS[@]}"; do
   boot_device "$UDID"
-  run_xcodebuild_logged "test-$UDID" 420 \
-    xcodebuild test-without-building \
-      -project "$PROJECT" \
-      -scheme "$SCHEME" \
-      -destination "platform=iOS Simulator,id=$UDID" \
-      -destination-timeout 60 \
-      -derivedDataPath "$DERIVED_DATA" \
-      -parallel-testing-enabled NO \
-      -test-timeouts-enabled YES \
-      -default-test-execution-time-allowance 60 \
-      -maximum-test-execution-time-allowance 120 \
-      -only-testing:NetworkSpecialistTests \
-      -only-testing:NetworkSpecialistUITests \
-      CODE_SIGNING_ALLOWED=NO \
-      ASSETCATALOG_COMPILER_APPICON_NAME=
+  for TEST_ID in "${UI_TESTS[@]}"; do
+    TEST_NAME="${TEST_ID##*/}"
+    run_xcodebuild_logged "ui-${UDID}-${TEST_NAME}" 150 \
+      xcodebuild test-without-building \
+        -project "$PROJECT" \
+        -scheme "$SCHEME" \
+        -destination "platform=iOS Simulator,id=$UDID" \
+        -destination-timeout 60 \
+        -derivedDataPath "$DERIVED_DATA" \
+        -parallel-testing-enabled NO \
+        -test-timeouts-enabled YES \
+        -default-test-execution-time-allowance 60 \
+        -maximum-test-execution-time-allowance 120 \
+        -only-testing:"$TEST_ID" \
+        CODE_SIGNING_ALLOWED=NO \
+        ASSETCATALOG_COMPILER_APPICON_NAME=
+  done
   xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true
 done
