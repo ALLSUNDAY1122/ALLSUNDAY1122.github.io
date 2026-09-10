@@ -46,22 +46,23 @@ jobs:
           git config user.email noreply@example.invalid
           git add . && git commit -qm init
 
-          npx --yes eas-cli@23.0.0 whoami >/tmp/whoami.out 2>/tmp/whoami.err
-          npx --yes eas-cli@23.0.0 build:list --platform ios --limit 20 --json --non-interactive >/tmp/builds.out 2>/tmp/builds.err
+          npx --yes eas-cli@23.2.0 whoami >/tmp/whoami.out 2>/tmp/whoami.err
+          npx --yes eas-cli@23.2.0 status --json --limit 20 >/tmp/status.out 2>/tmp/status.err
+          npx --yes eas-cli@23.2.0 build:list --platform ios --limit 20 --json --non-interactive >/tmp/builds.out 2>/tmp/builds.err
 
-          npx --yes eas-cli@23.0.0 submit:list --help >/tmp/submit-list-help.out 2>/tmp/submit-list-help.err
+          npx --yes eas-cli@23.2.0 submit:list --help >/tmp/submit-list-help.out 2>/tmp/submit-list-help.err
           SUBMIT_LIST_HELP_RC=$?
-          npx --yes eas-cli@23.0.0 submission:list --help >/tmp/submission-list-help.out 2>/tmp/submission-list-help.err
+          npx --yes eas-cli@23.2.0 submission:list --help >/tmp/submission-list-help.out 2>/tmp/submission-list-help.err
           SUBMISSION_LIST_HELP_RC=$?
-          npx --yes eas-cli@23.0.0 submit --help >/tmp/submit-help.out 2>/tmp/submit-help.err
+          npx --yes eas-cli@23.2.0 submit --help >/tmp/submit-help.out 2>/tmp/submit-help.err
 
           if [ "$SUBMIT_LIST_HELP_RC" -eq 0 ]; then
-            npx --yes eas-cli@23.0.0 submit:list --platform ios --limit 20 --json --non-interactive >/tmp/submissions.out 2>/tmp/submissions.err
+            npx --yes eas-cli@23.2.0 submit:list --platform ios --limit 20 --json --non-interactive >/tmp/submissions.out 2>/tmp/submissions.err
           else
             : >/tmp/submissions.out; : >/tmp/submissions.err
           fi
           if [ "$SUBMISSION_LIST_HELP_RC" -eq 0 ]; then
-            npx --yes eas-cli@23.0.0 submission:list --platform ios --limit 20 --json --non-interactive >/tmp/submission-list.out 2>/tmp/submission-list.err
+            npx --yes eas-cli@23.2.0 submission:list --platform ios --limit 20 --json --non-interactive >/tmp/submission-list.out 2>/tmp/submission-list.err
           else
             : >/tmp/submission-list.out; : >/tmp/submission-list.err
           fi
@@ -80,6 +81,12 @@ jobs:
               builds=json.loads(text('/tmp/builds.out',100000))
           except Exception as e:
               parse_error=repr(e)
+          project_status=None
+          status_parse_error=''
+          try:
+              project_status=json.loads(text('/tmp/status.out',200000))
+          except Exception as e:
+              status_parse_error=repr(e)
           target=None
           if isinstance(builds,list):
               target=next((b for b in builds if b.get('id')==build_id),None)
@@ -87,11 +94,14 @@ jobs:
             'request_id':rid,
             'build_id':build_id,
             'eas_identity':text('/tmp/whoami.out',2000).strip(),
+            'project_status':project_status,
+            'project_status_parse_error':status_parse_error,
             'target_build':target,
             'recent_builds':builds[:5] if isinstance(builds,list) else [],
             'build_list_parse_error':parse_error,
             'raw':{
               'whoami_error':text('/tmp/whoami.err',4000),
+              'status_error':text('/tmp/status.err',8000),
               'builds_error':text('/tmp/builds.err',8000),
               'submit_list_help':text('/tmp/submit-list-help.out',8000),
               'submit_list_help_error':text('/tmp/submit-list-help.err',4000),
