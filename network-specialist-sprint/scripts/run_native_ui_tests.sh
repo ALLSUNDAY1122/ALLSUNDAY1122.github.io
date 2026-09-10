@@ -5,6 +5,8 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PROJECT="$ROOT/ios/NetworkSpecialist.xcodeproj"
 SCHEME="NetworkSpecialist"
 DERIVED_DATA="${TMPDIR:-/tmp}/network-specialist-derived-data"
+LOG_DIR="${RUNNER_TEMP:-${TMPDIR:-/tmp}}"
+mkdir -p "$LOG_DIR"
 
 IDS=()
 while IFS= read -r id; do
@@ -72,7 +74,7 @@ run_xcodebuild_logged() {
   local phase="$1"
   local timeout_seconds="$2"
   shift 2
-  local log="${TMPDIR:-/tmp}/network-specialist-${phase}.log"
+  local log="$LOG_DIR/network-specialist-${phase}.log"
   echo "=== XCTest ${phase} start ==="
   set +e
   /usr/bin/python3 - "$log" "$timeout_seconds" "$@" <<'PY'
