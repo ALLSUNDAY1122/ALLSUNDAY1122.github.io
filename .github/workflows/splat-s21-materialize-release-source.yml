@@ -1,0 +1,72 @@
+name: Splat S21 Materialize Release Source
+
+on:
+  push:
+    branches:
+      - feature/splat-native-ios-poc
+    paths:
+      - automation/scanlab-materialize-release-request.json
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v6
+        with:
+          ref: release/scanlab-testflight
+          fetch-depth: 0
+
+      - name: Verify pinned release lineage
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('automation/scanlab-materialize-release-request.json')
+          # Request lives on HQ, so retrieve the exact triggering payload from origin/HQ below.
+          PY
+          git fetch origin feature/splat-native-ios-poc
+          git show origin/feature/splat-native-ios-poc:automation/scanlab-materialize-release-request.json > /tmp/request.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/request.json'))
+          if d.get('repository') != 'ALLSUNDAY1122/ALLSUNDAY1122.github.io': raise SystemExit('repository mismatch')
+          if d.get('branch') != 'release/scanlab-testflight': raise SystemExit('branch mismatch')
+          if d.get('recipe_version') != 5: raise SystemExit('recipe epoch mismatch')
+          if d.get('submit_to_app_store') is not False: raise SystemExit('App Store submit must remain false')
+          PY
+          grep -q 'static let recipeVersion = 5' splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift
+          grep -q 'static let standardIterations = 7_000' splat-native-ios/SplatNative/SplatReconstructionPolicy.swift
+
+      - name: Materialize dense reconstruction source
+        run: |
+          set -euo pipefail
+          python3 splat-native-ios/scripts/apply_s13_depth_seed.py
+          grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'seedDepthFrames' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'seedColorFrames' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q '同じ撮影から再生成' splat-native-ios/SplatNative/ScanLibraryView.swift
+
+      - name: Verify materialized reconstruction contracts
+        run: |
+          set -euo pipefail
+          python3 splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
+          python3 splat-native-ios/scripts/diagnose_s15_pose_trajectory.py --self-test
+          bash splat-native-ios/scripts/validate.sh
+
+      - name: Persist materialized release source
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            splat-native-ios/SplatNative/ScanModel.swift \
+            splat-native-ios/SplatNative/ScanLibraryView.swift \
+            splat-native-ios/SplatNative/RootScanView.swift \
+            splat-native-ios/SplatNative/SplatResultView.swift
+          git commit -m 'scanlab: materialize epoch-5 dense release source' || true
+          git push origin HEAD:release/scanlab-testflight
