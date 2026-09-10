@@ -105,8 +105,18 @@ struct MeshAppearanceEditorSheet: View {
                 Section { Button(working ? "適用中…" : "実テクスチャへ適用") { apply() }.disabled(working) }
             }
             .navigationTitle("見た目を編集")
-            .toolbar { ToolbarItem(placement:.topBarTrailing){Button("閉じる"){dismiss()}} }
+            .toolbar {
+                ToolbarItem(placement:.topBarTrailing) {
+                    Button("閉じる") { dismiss() }
+                        .disabled(working)
+                }
+            }
         }
+        // Core Image/JPEG materialization is synchronous inside its worker. Allowing the sheet to
+        // disappear while that immutable generation is still being validated can make a completed
+        // edit appear to happen "after cancellation". Keep the transaction visible until it either
+        // commits its exporter metadata or rolls back, instead of permitting hidden state mutation.
+        .interactiveDismissDisabled(working)
     }
 
     private func control(_ title:String, value:Binding<Double>, range:ClosedRange<Double>, format:String)->some View {
