@@ -83,10 +83,15 @@ struct SplatVideoConfiguration: Equatable, Sendable {
         let progress = Float(max(0, min(1, rawProgress)))
         switch cameraMotion {
         case .orbit360:
-            // Keep a constant angular velocity for a seamless looping turntable.
+            // The encoder samples progress inclusively from 0...1. Mapping 1.0 to 2π would
+            // duplicate the first frame at the end of every turntable movie, creating a tiny
+            // visible dwell at the loop seam. Keep N unique angular samples with a constant
+            // 2π/N step so the last->first transition is the same size as every other step.
+            let frameCount = max(1, totalFrames)
+            let loopProgress = progress * Float(max(0, frameCount - 1)) / Float(frameCount)
             return CameraSample(
-                yaw: progress * 2 * .pi,
-                pitch: sin(progress * 2 * .pi) * 0.06,
+                yaw: loopProgress * 2 * .pi,
+                pitch: sin(loopProgress * 2 * .pi) * 0.06,
                 distanceMultiplier: 1
             )
         case .orbit180:
