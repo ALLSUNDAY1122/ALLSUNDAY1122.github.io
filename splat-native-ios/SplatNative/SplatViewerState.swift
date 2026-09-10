@@ -220,7 +220,14 @@ final class SplatViewerState: ObservableObject {
 
     func attach(url: URL) {
         guard sourceURL != url else { return }
-        persistenceTask?.cancel()
+        // If the user switches directly from one saved scan to another while a debounced edit is
+        // pending, persistNow() must still target the old source URL. Flushing before replacing
+        // sourceURL preserves the final edit without risking a delayed write into the new scan.
+        if sourceURL != nil {
+            persistNow()
+        } else {
+            persistenceTask?.cancel()
+        }
         sourceURL = url
         metersPerSceneUnit = Self.measurementScale(for: url)
         measurementEnabled = false
