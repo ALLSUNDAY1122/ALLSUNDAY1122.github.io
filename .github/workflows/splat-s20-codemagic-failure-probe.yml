@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Compare known-good and failed Scan Lab builds and optionally retry
+      - name: Compare known-good and failed Scan Lab builds, retry or poll
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
@@ -46,7 +46,6 @@ jobs:
               with urllib.request.urlopen(r, timeout=30) as resp:
                   raw = resp.read().decode('utf-8')
                   return resp.status, json.loads(raw) if raw else {}
-
           def get(build_id):
               _, raw = api(f'https://codemagic.io/api/v3/builds/{build_id}')
               return raw.get('data') or raw
@@ -82,7 +81,7 @@ jobs:
           good = get(req['good_build_id'])
           failed = get(req['failed_build_id'])
           result = {
-              'schema': 'scanlab.codemagic-safe-probe.v2',
+              'schema': 'scanlab.codemagic-safe-probe.v3',
               'request_id': req.get('request_id'),
               'good_build_id': req['good_build_id'],
               'failed_build_id': req['failed_build_id'],
@@ -90,25 +89,26 @@ jobs:
               'failed': summarize(failed),
               'secret_values_persisted': False,
           }
-          if req.get('action') == 'build':
+          action = req.get('action') or 'probe'
+          if action == 'build':
               payload = {'appId': req['app_id'], 'workflowId': 'scanlab-ios', 'branch': 'release/scanlab-testflight'}
               status, started = api('https://api.codemagic.io/builds', method='POST', payload=payload)
               if not 200 <= status < 300: raise SystemExit(f'build start failed: {status}')
               build_id = started.get('buildId') or started.get('id')
               if not build_id: raise SystemExit('Codemagic did not return build id')
-              result['retry'] = {
-                  'build_id': build_id,
-                  'status': 'started',
-                  'branch': 'release/scanlab-testflight',
-                  'workflow_id': 'scanlab-ios',
-                  'app_id': req['app_id'],
-              }
-          elif req.get('action') not in {None, 'probe'}:
+              result['retry'] = {'build_id': build_id, 'status': 'started', 'branch': 'release/scanlab-testflight', 'workflow_id': 'scanlab-ios', 'app_id': req['app_id']}
+          elif action == 'poll':
+              build_id = req.get('target_build_id')
+              if not isinstance(build_id, str) or len(build_id) < 12: raise SystemExit('poll target missing')
+              target = get(build_id)
+              if target.get('app_id') != req['app_id'] or target.get('branch') != 'release/scanlab-testflight':
+                  raise SystemExit('poll target identity mismatch')
+              result['retry'] = {'build_id': build_id, 'summary': summarize(target)}
+          elif action != 'probe':
               raise SystemExit('invalid action')
 
-          Path('automation/scanlab-codemagic-probe-result.json').write_text(
-              json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-          print('PASS guarded Codemagic probe/retry')
+          Path('automation/scanlab-codemagic-probe-result.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print('PASS guarded Codemagic probe/retry/poll')
           PY
 
       - name: Persist sanitized probe
