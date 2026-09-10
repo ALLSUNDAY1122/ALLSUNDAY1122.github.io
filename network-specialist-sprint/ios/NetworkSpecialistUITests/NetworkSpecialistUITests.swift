@@ -34,7 +34,8 @@ final class NetworkSpecialistUITests: XCTestCase {
         let app = launch()
         app.buttons["tab.mock"].tap()
         XCTAssertTrue(app.staticTexts["プレミアム機能"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["premium.openSettings"].waitForExistence(timeout: 2))
+        let premiumCTA = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "プレミアムを見る")).firstMatch
+        XCTAssertTrue(premiumCTA.waitForExistence(timeout: 2))
         XCTAssertFalse(app.buttons["mock.year.2025"].exists)
 
         app.buttons["tab.history"].tap()
