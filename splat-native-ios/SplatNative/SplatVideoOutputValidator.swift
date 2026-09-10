@@ -8,11 +8,13 @@ enum SplatVideoOutputValidator {
         case missingOrEmpty
         case missingVideoTrack
         case invalidVideoDimensions
+        case unexpectedVideoDimensions
         case invalidDuration
     }
 
     static func validate(
         _ url: URL,
+        expectedDimensions: (width: Int, height: Int)? = nil,
         fileManager: FileManager = .default
     ) async throws {
         try Task.checkCancellation()
@@ -43,6 +45,15 @@ enum SplatVideoOutputValidator {
               naturalSize.width > 0,
               naturalSize.height > 0 else {
             throw ValidationError.invalidVideoDimensions
+        }
+
+        if let expectedDimensions {
+            let encodedWidth = Int(abs(naturalSize.width).rounded())
+            let encodedHeight = Int(abs(naturalSize.height).rounded())
+            guard encodedWidth == expectedDimensions.width,
+                  encodedHeight == expectedDimensions.height else {
+                throw ValidationError.unexpectedVideoDimensions
+            }
         }
 
         let duration = try await asset.load(.duration)
