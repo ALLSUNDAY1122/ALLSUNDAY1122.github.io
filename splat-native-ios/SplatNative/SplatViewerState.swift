@@ -14,6 +14,43 @@ struct SplatEditSettings: Codable, Equatable, Sendable {
 
     static let `default` = SplatEditSettings()
 
+    private enum CodingKeys: String, CodingKey {
+        case exposureEV, contrast
+        case cropXMin, cropXMax, cropYMin, cropYMax, cropZMin, cropZMax
+    }
+
+    init(
+        exposureEV: Double = 0,
+        contrast: Double = 1,
+        cropXMin: Double = 0,
+        cropXMax: Double = 1,
+        cropYMin: Double = 0,
+        cropYMax: Double = 1,
+        cropZMin: Double = 0,
+        cropZMax: Double = 1
+    ) {
+        self.exposureEV = exposureEV
+        self.contrast = contrast
+        self.cropXMin = cropXMin
+        self.cropXMax = cropXMax
+        self.cropYMin = cropYMin
+        self.cropYMax = cropYMax
+        self.cropZMin = cropZMin
+        self.cropZMax = cropZMax
+    }
+
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        exposureEV = try values.decodeIfPresent(Double.self, forKey: .exposureEV) ?? 0
+        contrast = try values.decodeIfPresent(Double.self, forKey: .contrast) ?? 1
+        cropXMin = try values.decodeIfPresent(Double.self, forKey: .cropXMin) ?? 0
+        cropXMax = try values.decodeIfPresent(Double.self, forKey: .cropXMax) ?? 1
+        cropYMin = try values.decodeIfPresent(Double.self, forKey: .cropYMin) ?? 0
+        cropYMax = try values.decodeIfPresent(Double.self, forKey: .cropYMax) ?? 1
+        cropZMin = try values.decodeIfPresent(Double.self, forKey: .cropZMin) ?? 0
+        cropZMax = try values.decodeIfPresent(Double.self, forKey: .cropZMax) ?? 1
+    }
+
     var hasCrop: Bool {
         cropXMin > 0.0001 || cropXMax < 0.9999 ||
         cropYMin > 0.0001 || cropYMax < 0.9999 ||
