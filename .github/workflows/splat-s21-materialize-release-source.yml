@@ -47,8 +47,8 @@ jobs:
           set -euo pipefail
           python3 splat-native-ios/scripts/apply_s13_depth_seed.py
           grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' splat-native-ios/SplatNative/ScanModel.swift
-          grep -q 'seedDepthFrames' splat-native-ios/SplatNative/ScanModel.swift
-          grep -q 'seedColorFrames' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'let depthSeedFrames = captured.map' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'colorFrames: seedFrames' splat-native-ios/SplatNative/ScanModel.swift
           grep -q '同じ撮影から再生成' splat-native-ios/SplatNative/ScanLibraryView.swift
 
       - name: Verify materialized reconstruction contracts
