@@ -5,6 +5,7 @@ import Foundation
 /// silently accumulate beside `result.splat` after the share activity has completed.
 enum SplatTransientExportWorkspace {
     private static let prefix = "scanlab-export-"
+    private static let ownershipMarker = ".scanlab-transient-export"
     private static let staleAge: TimeInterval = 24 * 60 * 60
 
     static func create(
@@ -24,6 +25,12 @@ enum SplatTransientExportWorkspace {
         let url = rootDirectory
             .appendingPathComponent("\(prefix)\(UUID().uuidString)", isDirectory: true)
         try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+        do {
+            try Data().write(to: markerURL(for: url), options: .atomic)
+        } catch {
+            try? fileManager.removeItem(at: url)
+            throw error
+        }
         return url
     }
 
@@ -32,14 +39,10 @@ enum SplatTransientExportWorkspace {
         fileManager: FileManager = .default
     ) {
         guard let url,
-              url.isFileURL,
-              url.lastPathComponent.hasPrefix(prefix) else { return }
-        // Cleanup is intentionally fail-closed. This helper is called from cancellation/dismissal
-        // paths, so an accidentally propagated scan-project URL must never become a recursive
-        // delete target. Export workspaces are always namespaced directories created above.
-        var isDirectory: ObjCBool = false
-        guard fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory),
-              isDirectory.boolValue else { return }
+              isOwnedWorkspace(url, fileManager: fileManager) else { return }
+        // Cleanup is intentionally fail-closed. Cancellation/dismissal must never turn a mistakenly
+        // propagated project URL into a recursive delete target; only a directory created by this
+        // helper and carrying its ownership marker can be removed.
         try? fileManager.removeItem(at: url)
     }
 
@@ -58,11 +61,31 @@ enum SplatTransientExportWorkspace {
 
         let cutoff = now.addingTimeInterval(-age)
         for entry in entries where entry.lastPathComponent.hasPrefix(prefix) {
-            guard let values = try? entry.resourceValues(forKeys: [.contentModificationDateKey, .isDirectoryKey]),
-                  values.isDirectory == true,
+            guard isOwnedWorkspace(entry, fileManager: fileManager),
+                  let values = try? entry.resourceValues(forKeys: [.contentModificationDateKey]),
                   let modified = values.contentModificationDate,
                   modified <= cutoff else { continue }
             try? fileManager.removeItem(at: entry)
         }
+    }
+
+    private static func markerURL(for workspaceURL: URL) -> URL {
+        workspaceURL.appendingPathComponent(ownershipMarker, isDirectory: false)
+    }
+
+    private static func isOwnedWorkspace(
+        _ url: URL,
+        fileManager: FileManager
+    ) -> Bool {
+        guard url.isFileURL,
+              url.lastPathComponent.hasPrefix(prefix) else { return false }
+        var isDirectory: ObjCBool = false
+        guard fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory),
+              isDirectory.boolValue else { return false }
+        var markerIsDirectory: ObjCBool = false
+        return fileManager.fileExists(
+            atPath: markerURL(for: url).path,
+            isDirectory: &markerIsDirectory
+        ) && !markerIsDirectory.boolValue
     }
 }
