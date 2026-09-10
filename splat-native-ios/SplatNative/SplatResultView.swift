@@ -48,6 +48,12 @@ struct SplatResultView: View {
             // navigation paths still call persistNow() immediately before consuming the state.
             viewerState.schedulePersistence()
         }
+        .onChange(of: viewerState.measurementEnabled) { _, _ in
+            // A half-finished two-point measurement must never survive leaving/re-entering measure
+            // mode. Otherwise the next tap can silently pair with a stale point from an earlier
+            // measurement session and report a plausible but wrong distance.
+            viewerState.requestMeasurementClear()
+        }
         .onDisappear {
             // A swipe/back navigation can dismiss the viewer inside the debounce window. Flush
             // once at the lifecycle boundary so responsiveness does not trade away durability.
