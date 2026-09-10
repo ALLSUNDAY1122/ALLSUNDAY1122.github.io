@@ -83,25 +83,36 @@ struct SplatVideoConfiguration: Equatable, Sendable {
         let progress = Float(max(0, min(1, rawProgress)))
         switch cameraMotion {
         case .orbit360:
+            // Keep a constant angular velocity for a seamless looping turntable.
             return CameraSample(
                 yaw: progress * 2 * .pi,
                 pitch: sin(progress * 2 * .pi) * 0.06,
                 distanceMultiplier: 1
             )
         case .orbit180:
+            // Finite camera moves should settle gently at both ends instead of
+            // starting and stopping with an instantaneous angular velocity change.
+            let eased = smoothstep(progress)
             return CameraSample(
-                yaw: -.pi / 2 + progress * .pi,
-                pitch: sin(progress * .pi) * 0.05,
+                yaw: -.pi / 2 + eased * .pi,
+                pitch: sin(eased * .pi) * 0.05,
                 distanceMultiplier: 1
             )
         case .pushIn:
+            // Ease the dolly move so exported videos do not visibly snap into or
+            // out of motion on their first and final frames.
+            let eased = smoothstep(progress)
             return CameraSample(
                 yaw: 0,
                 pitch: 0,
-                distanceMultiplier: 1.25 - progress * 0.45
+                distanceMultiplier: 1.25 - eased * 0.45
             )
         case .fixed:
             return CameraSample(yaw: 0, pitch: 0, distanceMultiplier: 1)
         }
+    }
+
+    private func smoothstep(_ value: Float) -> Float {
+        value * value * (3 - 2 * value)
     }
 }
