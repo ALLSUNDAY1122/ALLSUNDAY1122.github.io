@@ -35,6 +35,11 @@ enum SplatVideoMemoryPolicy {
         }
     }
 
+    private struct CanonicalInspection {
+        let candidateExists: Bool
+        let completeAsset: SplatCanonicalSHAsset.Asset?
+    }
+
     private static let mib: UInt64 = 1_048_576
 
     static let estimatedWorkingBytesPerPoint: UInt64 = 160
@@ -64,14 +69,16 @@ enum SplatVideoMemoryPolicy {
     ) throws -> Admission {
         // Admission owns canonical selection and returns the exact validated URL to the renderer.
         // Compute the content-addressed URL once here: the canonical helper derives it by hashing
-        // the whole legacy result, so calling both existingAsset and existingCompleteAsset would
-        // otherwise repeat that O(file-size) read before rendering starts.
+        // the whole legacy result, so repeated resolver calls would repeat that O(file-size) read.
         let pointCount = try SplatExportService.sourcePointCount(sourceURL)
         let canonical = inspectCanonicalOnce(
             sourceURL: sourceURL,
             expectedPointCount: pointCount
         )
-        if canonical.schemaValid && canonical.completeAsset == nil {
+        // A missing canonical is legitimate for older SH0 scans. Once a content-addressed canonical
+        // candidate exists, however, malformed schema, mismatched point count/SH degree, or a
+        // truncated binary payload must not silently downgrade a new scan's video to legacy SH0.
+        if canonical.candidateExists && canonical.completeAsset == nil {
             throw PolicyError.untrustedCanonicalAsset
         }
 
@@ -120,13 +127,17 @@ enum SplatVideoMemoryPolicy {
     private static func inspectCanonicalOnce(
         sourceURL: URL,
         expectedPointCount: Int
-    ) -> (schemaValid: Bool, completeAsset: SplatCanonicalSHAsset.Asset?) {
-        guard let canonicalURL = try? SplatCanonicalSHAsset.canonicalURL(forLegacySplat: sourceURL),
-              FileManager.default.fileExists(atPath: canonicalURL.path),
-              let descriptor = try? SplatCanonicalSHAsset.inspectPLY(canonicalURL),
+    ) -> CanonicalInspection {
+        guard let canonicalURL = try? SplatCanonicalSHAsset.canonicalURL(forLegacySplat: sourceURL) else {
+            return CanonicalInspection(candidateExists: false, completeAsset: nil)
+        }
+        guard FileManager.default.fileExists(atPath: canonicalURL.path) else {
+            return CanonicalInspection(candidateExists: false, completeAsset: nil)
+        }
+        guard let descriptor = try? SplatCanonicalSHAsset.inspectPLY(canonicalURL),
               descriptor.shDegree == SplatCanonicalSHAsset.requiredSHDegree,
               descriptor.pointCount == expectedPointCount else {
-            return (false, nil)
+            return CanonicalInspection(candidateExists: true, completeAsset: nil)
         }
 
         let asset = SplatCanonicalSHAsset.Asset(url: canonicalURL, descriptor: descriptor)
@@ -134,9 +145,9 @@ enum SplatVideoMemoryPolicy {
             at: canonicalURL,
             expectedPointCount: expectedPointCount
         ) else {
-            return (true, nil)
+            return CanonicalInspection(candidateExists: true, completeAsset: nil)
         }
-        return (true, asset)
+        return CanonicalInspection(candidateExists: true, completeAsset: asset)
     }
 
     private static func makeEstimate(
