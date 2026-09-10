@@ -50,6 +50,12 @@ enum SplatVideoMemoryPolicy {
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
     ) throws -> Estimate {
+        // Video export materializes the persisted viewer edit sidecar immediately after this
+        // memory admission. Repair a corrupt primary from the known-good generation first so a
+        // video cannot silently fall back to default edits while the live viewer shows recovered
+        // exposure/crop settings.
+        _ = SplatViewerEditStore.load(sourceURL: sourceURL)
+
         let estimate = try estimate(
             sourceURL: sourceURL,
             configuration: configuration,
