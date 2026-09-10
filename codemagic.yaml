@@ -50,6 +50,15 @@ workflows:
           python3 "$CM_BUILD_DIR/splat-native-ios/scripts/make_test_icon.py"
           test -f "$CM_BUILD_DIR/splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
 
+      - name: Materialize dense reconstruction source
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          python3 splat-native-ios/scripts/apply_s13_depth_seed.py
+          grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'seedDepthFrames' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'seedColorFrames' splat-native-ios/SplatNative/ScanModel.swift
+
       - name: Resolve next TestFlight build number and generate project
         script: |
           set -euo pipefail
@@ -82,6 +91,7 @@ workflows:
           python3 splat-native-ios/scripts/diagnose_s15_pose_trajectory.py --self-test
           grep -q 'recipeVersion = 5' splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift
           grep -q 'standardIterations = 7_000' splat-native-ios/SplatNative/SplatReconstructionPolicy.swift
+          grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' splat-native-ios/SplatNative/ScanModel.swift
           bash splat-native-ios/scripts/validate.sh
           test -f splat-native-ios/SplatNative/PrivacyInfo.xcprivacy
           test -f splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
