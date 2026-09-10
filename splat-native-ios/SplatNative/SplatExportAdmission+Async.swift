@@ -6,21 +6,36 @@ extension SplatExportAdmission {
     /// from their Task can freeze buttons/progress/cancellation until SHA-256 finishes.
     ///
     /// Keep the exact same fail-closed verification semantics, but execute filesystem/hash work on
-    /// an unstructured worker and return only the trusted URL to the caller's actor.
+    /// an unstructured worker and return only the trusted URL to legacy callers.
     static func preflightAsync(
         sourceURL: URL,
         kind: Kind,
         availableCapacityOverride: Int64? = nil
     ) async throws -> URL {
+        try await preflightResultAsync(
+            sourceURL: sourceURL,
+            kind: kind,
+            availableCapacityOverride: availableCapacityOverride
+        ).trustedURL
+    }
+
+    /// Returns the freshly verified completion digest together with the trusted URL so downstream
+    /// video/export admission can derive content-addressed assets without hashing the same large
+    /// completed result again.
+    static func preflightResultAsync(
+        sourceURL: URL,
+        kind: Kind,
+        availableCapacityOverride: Int64? = nil
+    ) async throws -> Result {
         let worker = Task.detached(priority: .userInitiated) {
             try Task.checkCancellation()
-            let trusted = try preflight(
+            let result = try preflightResult(
                 sourceURL: sourceURL,
                 kind: kind,
                 availableCapacityOverride: availableCapacityOverride
             )
             try Task.checkCancellation()
-            return trusted
+            return result
         }
 
         return try await withTaskCancellationHandler {
