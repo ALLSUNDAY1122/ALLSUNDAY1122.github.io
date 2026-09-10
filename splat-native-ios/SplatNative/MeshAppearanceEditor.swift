@@ -27,18 +27,31 @@ private enum MeshAppearanceProcessor {
         guard let output = sharpen.outputImage, let cs = CGColorSpace(name: CGColorSpace.sRGB) else { throw error("画像フィルタを適用できません") }
 
         let visual = objURL.lastPathComponent.lowercased().contains("visual")
-        let prefix = visual ? "visual-mesh-textured-edited" : "mesh-textured-edited"
+        let basePrefix = visual ? "visual-mesh-textured-edited" : "mesh-textured-edited"
+        // Never overwrite the generation that may currently be open in the viewer. The previous
+        // fixed filenames meant a failed second edit could truncate/replace the texture before the
+        // matching MTL/OBJ had been committed, corrupting an otherwise valid prior result.
+        let prefix = "\(basePrefix)-\(UUID().uuidString.lowercased())"
         let editedTexture = directory.appendingPathComponent(prefix + ".jpg")
+        let editedMTL = directory.appendingPathComponent(prefix + ".mtl")
+        let editedOBJ = directory.appendingPathComponent(prefix + ".obj")
+        var committed = false
+        defer {
+            guard !committed else { return }
+            try? FileManager.default.removeItem(at: editedTexture)
+            try? FileManager.default.removeItem(at: editedMTL)
+            try? FileManager.default.removeItem(at: editedOBJ)
+        }
+
         let context = CIContext(options: [.cacheIntermediates:false])
         try context.writeJPEGRepresentation(of: output, to: editedTexture, colorSpace: cs, options: [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 0.94])
 
-        let editedMTL = directory.appendingPathComponent(prefix + ".mtl")
         mtl = mtl.split(whereSeparator: \.isNewline).map { line in line.hasPrefix("map_Kd ") ? "map_Kd \(editedTexture.lastPathComponent)" : String(line) }.joined(separator:"\n") + "\n"
         try mtl.write(to: editedMTL, atomically: true, encoding: .utf8)
 
-        let editedOBJ = directory.appendingPathComponent(prefix + ".obj")
         let newOBJ = obj.split(whereSeparator: \.isNewline).map { line in line.hasPrefix("mtllib ") ? "mtllib \(editedMTL.lastPathComponent)" : String(line) }.joined(separator:"\n") + "\n"
         try newOBJ.write(to: editedOBJ, atomically: true, encoding: .utf8)
+        committed = true
         return MeshAppearanceEditResult(objURL: editedOBJ, textureURL: editedTexture)
     }
     private static func error(_ text:String)->NSError{NSError(domain:"ScanLab.MeshAppearance",code:1,userInfo:[NSLocalizedDescriptionKey:text])}
