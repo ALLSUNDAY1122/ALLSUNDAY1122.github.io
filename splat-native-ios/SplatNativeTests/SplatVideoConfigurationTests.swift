@@ -38,8 +38,10 @@ final class SplatVideoConfigurationTests: XCTestCase {
         config.cameraMotion = .orbit360
         let orbitStart = config.cameraSample(progress: 0)
         let orbitEnd = config.cameraSample(progress: 1)
+        let expectedLastYaw = 2 * Float.pi * Float(config.totalFrames - 1) / Float(config.totalFrames)
         XCTAssertEqual(orbitStart.yaw, 0, accuracy: 0.0001)
-        XCTAssertEqual(orbitEnd.yaw, 2 * .pi, accuracy: 0.0001)
+        XCTAssertEqual(orbitEnd.yaw, expectedLastYaw, accuracy: 0.0001)
+        XCTAssertLessThan(orbitEnd.yaw, 2 * .pi)
         XCTAssertEqual(orbitStart.distanceMultiplier, 1, accuracy: 0.0001)
 
         config.cameraMotion = .orbit180
@@ -60,6 +62,23 @@ final class SplatVideoConfigurationTests: XCTestCase {
         XCTAssertEqual(fixed.yaw, 0, accuracy: 0.0001)
         XCTAssertEqual(fixed.pitch, 0, accuracy: 0.0001)
         XCTAssertEqual(fixed.distanceMultiplier, 1, accuracy: 0.0001)
+    }
+
+    func testOrbit360UsesUniformUniqueSamplesAcrossTheLoopSeam() {
+        var config = SplatVideoConfiguration()
+        config.cameraMotion = .orbit360
+        config.speed = .fast
+        config.framesPerSecond = 30
+
+        let frameCount = config.totalFrames
+        let first = config.cameraSample(progress: 0)
+        let second = config.cameraSample(progress: 1.0 / Double(frameCount - 1))
+        let last = config.cameraSample(progress: 1)
+        let angularStep = 2 * Float.pi / Float(frameCount)
+
+        XCTAssertEqual(second.yaw - first.yaw, angularStep, accuracy: 0.0001)
+        XCTAssertEqual((2 * Float.pi) - last.yaw, angularStep, accuracy: 0.0001)
+        XCTAssertNotEqual(first.yaw, last.yaw)
     }
 
     func testFiniteCameraMovesEaseAtTheirEndpoints() {
