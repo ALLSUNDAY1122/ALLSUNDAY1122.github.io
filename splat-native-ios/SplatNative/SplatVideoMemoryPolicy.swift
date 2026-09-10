@@ -62,11 +62,13 @@ enum SplatVideoMemoryPolicy {
         ).estimate
     }
 
-    /// Canonical selection hashes the completed legacy result and can therefore scan hundreds of
+    /// Canonical selection may hash the completed legacy result and can therefore scan hundreds of
     /// megabytes. Run that synchronous filesystem work on an explicit worker so callers from the
-    /// SwiftUI export flow never depend on executor inheritance for UI responsiveness.
+    /// SwiftUI export flow never depend on executor inheritance for UI responsiveness. When the
+    /// completion gate already produced a trusted digest, reuse it and avoid the extra full-file read.
     static func preflightAdmissionAsync(
         sourceURL: URL,
+        verifiedDigest: String? = nil,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
     ) async throws -> Admission {
@@ -74,6 +76,7 @@ enum SplatVideoMemoryPolicy {
             try Task.checkCancellation()
             let admission = try preflightAdmission(
                 sourceURL: sourceURL,
+                verifiedDigest: verifiedDigest,
                 configuration: configuration,
                 physicalMemoryBytes: physicalMemoryBytes
             )
@@ -89,15 +92,17 @@ enum SplatVideoMemoryPolicy {
 
     static func preflightAdmission(
         sourceURL: URL,
+        verifiedDigest: String? = nil,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
     ) throws -> Admission {
         // Admission owns canonical selection and returns the exact validated URL to the renderer.
-        // Compute the content-addressed URL once here: the canonical helper derives it by hashing
-        // the whole legacy result, so repeated resolver calls would repeat that O(file-size) read.
+        // Reuse a fresh completion digest when available. Legacy/internal callers without one retain
+        // the original fail-safe path that hashes the source to derive the content address.
         let pointCount = try SplatExportService.sourcePointCount(sourceURL)
         let canonical = inspectCanonicalOnce(
             sourceURL: sourceURL,
+            verifiedDigest: verifiedDigest,
             expectedPointCount: pointCount
         )
         // A missing canonical is legitimate for older SH0 scans. Once a content-addressed canonical
@@ -151,9 +156,19 @@ enum SplatVideoMemoryPolicy {
 
     private static func inspectCanonicalOnce(
         sourceURL: URL,
+        verifiedDigest: String?,
         expectedPointCount: Int
     ) -> CanonicalInspection {
-        guard let canonicalURL = try? SplatCanonicalSHAsset.canonicalURL(forLegacySplat: sourceURL) else {
+        let resolvedURL: URL?
+        if let verifiedDigest {
+            resolvedURL = try? SplatCanonicalSHAsset.canonicalURL(
+                forLegacySplat: sourceURL,
+                verifiedDigest: verifiedDigest
+            )
+        } else {
+            resolvedURL = try? SplatCanonicalSHAsset.canonicalURL(forLegacySplat: sourceURL)
+        }
+        guard let canonicalURL = resolvedURL else {
             return CanonicalInspection(candidateExists: false, completeAsset: nil)
         }
         guard FileManager.default.fileExists(atPath: canonicalURL.path) else {
