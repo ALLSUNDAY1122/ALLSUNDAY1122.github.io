@@ -243,8 +243,6 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         let pixels = max(1, Float(view.bounds.height))
         let worldPerPixel = max(0.00001, 2 * tan(fovY * 0.5) * distance / pixels)
 
-        // Rendering applies a 180-degree camera-space roll. Compensate here so the
-        // scene follows the user's two-finger drag on screen.
         targetOffset += right * Float(delta.x) * worldPerPixel
         targetOffset -= up * Float(delta.y) * worldPerPixel
         gesture.setTranslation(.zero, in: view)
@@ -277,8 +275,6 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         if measurementPoints.count == 1 {
             state?.rendererSelectedMeasurementPoint(count: 1)
         } else if measurementPoints.count == 2 {
-            // SplatViewerState converts exported scene units back into meters using
-            // the exact camera normalization applied by the pinned msplat trainer.
             state?.rendererMeasured(meters: simd_distance(measurementPoints[0], measurementPoints[1]))
         }
     }
@@ -291,16 +287,18 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
     func draw(in view: MTKView) {
         guard let renderer, renderer.isReadyToRender,
-              drawableSize.width > 0, drawableSize.height > 0,
-              let drawable = view.currentDrawable,
-              let commandBuffer = commandQueue.makeCommandBuffer() else { return }
+              drawableSize.width > 0, drawableSize.height > 0 else { return }
 
-        // MTKView invokes this delegate on the main actor. Waiting indefinitely for an
-        // in-flight GPU slot can therefore freeze gestures and the rest of the UI whenever
-        // Metal falls behind. Interactive viewing values latency over rendering every frame:
-        // if two frames are already in flight, drop this frame and let the next display tick
-        // try again instead of blocking the main thread.
+        // Reserve an in-flight GPU slot before asking CAMetalLayer for a drawable. currentDrawable
+        // may wait when the drawable pool is exhausted; acquiring the non-blocking GPU budget first
+        // keeps a saturated viewer on the frame-drop path instead of letting the MainActor enter
+        // drawable acquisition while two frames are already outstanding.
         guard semaphore.wait(timeout: .now()) == .success else { return }
+        guard let drawable = view.currentDrawable,
+              let commandBuffer = commandQueue.makeCommandBuffer() else {
+            semaphore.signal()
+            return
+        }
         commandBuffer.addCompletedHandler { [semaphore] _ in semaphore.signal() }
 
         let matrices = cameraMatrices(size: drawableSize)
@@ -426,10 +424,6 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         let target = sceneCenter + targetOffset
         let eye = target + orbitVector
         let baseView = lookAt(eye: eye, center: target, up: SIMD3<Float>(0, 1, 0))
-
-        // The old implementation multiplied this correction on the world side,
-        // which rotates translated scans around the global origin and can push an
-        // otherwise correctly framed subject off-center. Apply it in camera space.
         let correctedView = rotationZ(.pi) * baseView
         return (projection, correctedView)
     }
@@ -462,8 +456,6 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         return best
     }
 
-    /// Reproduces the pinned msplat camera center/scale normalization before
-    /// comparing the capture camera positions with the exported Splat scene.
     private static func initialViewGeometry(for url: URL, center: SIMD3<Float>) -> (yaw: Float, pitch: Float) {
         let transformsURL = url.deletingLastPathComponent().appendingPathComponent("transforms.json")
         guard let data = try? Data(contentsOf: transformsURL),
