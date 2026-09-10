@@ -31,9 +31,10 @@ enum SplatExportAdmission {
     private static let safetyReserveBytes: Int64 = 128 * 1_024 * 1_024
 
     static func preflight(sourceURL: URL, kind: Kind, availableCapacityOverride: Int64? = nil) throws -> URL {
-        let trustedURL: URL
-        do { trustedURL = try SplatCompletionVerifier.verify(sourceURL: sourceURL) }
+        let verification: SplatCompletionVerifier.Verification
+        do { verification = try SplatCompletionVerifier.verifyWithDigest(sourceURL: sourceURL) }
         catch { throw AdmissionError.untrustedSource }
+        let trustedURL = verification.url
 
         _ = SplatViewerEditStore.load(sourceURL: trustedURL)
 
@@ -41,11 +42,12 @@ enum SplatExportAdmission {
         let sourceBytes = try fileSize(at: trustedURL)
         let pointCount = Int(sourceBytes / 32)
 
-        // Resolve the content-addressed canonical path only once. canonicalURL hashes the entire
-        // completed legacy `.splat`, so chaining existingAsset -> existingCompleteAsset here would
-        // repeat a potentially hundreds-of-megabytes read before every export.
+        // Completion verification has just hashed the full result. Reuse that trusted SHA-256 to
+        // derive the content-addressed canonical path instead of immediately scanning the same large
+        // `.splat` a second time. Schema and binary-payload checks below remain fail-closed.
         let canonicalInspection = inspectCanonicalOnce(
             sourceURL: trustedURL,
+            verifiedDigest: verification.sha256,
             expectedPointCount: pointCount
         )
         // Older SH0 projects legitimately have no canonical file. If the canonical path does exist,
@@ -85,9 +87,13 @@ enum SplatExportAdmission {
 
     private static func inspectCanonicalOnce(
         sourceURL: URL,
+        verifiedDigest: String,
         expectedPointCount: Int
     ) -> CanonicalInspection {
-        guard let canonicalURL = try? SplatCanonicalSHAsset.canonicalURL(forLegacySplat: sourceURL) else {
+        guard let canonicalURL = try? SplatCanonicalSHAsset.canonicalURL(
+            forLegacySplat: sourceURL,
+            verifiedDigest: verifiedDigest
+        ) else {
             return CanonicalInspection(candidateExists: false, completeAsset: nil)
         }
         guard FileManager.default.fileExists(atPath: canonicalURL.path) else {
