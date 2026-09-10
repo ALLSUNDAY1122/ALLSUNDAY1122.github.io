@@ -68,8 +68,10 @@ enum SplatVideoExporter {
         // Keep video appearance aligned with the live viewer and lossless export path. New
         // reconstructions retain a content-addressed SH3 PLY beside the legacy `.splat`; rendering
         // the legacy source here would collapse higher-order view-dependent color to SH0 only.
+        // Require the binary vertex payload to be complete as well as schema-valid so renderer
+        // selection cannot regress to the weaker header-only test after hardened preflight.
         let sourcePointCount = try SplatExportService.sourcePointCount(sourceURL)
-        let renderAssetURL = SplatCanonicalSHAsset.existingAsset(
+        let renderAssetURL = SplatCanonicalSHAsset.existingCompleteAsset(
             forLegacySplat: sourceURL,
             expectedPointCount: sourcePointCount
         )?.url ?? sourceURL
