@@ -52,7 +52,7 @@ enum SplatVideoExporter {
     ) async throws -> URL {
         try Task.checkCancellation()
 
-        let admission = try SplatVideoMemoryPolicy.preflightAdmission(
+        let admission = try await SplatVideoMemoryPolicy.preflightAdmissionAsync(
             sourceURL: sourceURL,
             configuration: configuration
         )
@@ -65,9 +65,6 @@ enum SplatVideoExporter {
             throw ExportError.commandQueueUnavailable
         }
 
-        // Render the exact complete SH3 generation selected by preflight. Re-resolving here would
-        // hash the full legacy result a second time and reopen a selection window between validation
-        // and rendering on large scenes.
         let reader = try AutodetectSceneReader(admission.renderAssetURL)
         let sourcePoints = try await reader.readAll()
         guard !sourcePoints.isEmpty else { throw ExportError.emptyScene }
