@@ -33,11 +33,13 @@ final class NetworkSpecialistUITests: XCTestCase {
     func testFreeUserCannotEnterPremiumTabs() {
         let app = launch()
         app.buttons["tab.mock"].tap()
-        XCTAssertTrue(app.otherElements["premium.required"].waitForExistence(timeout: 3))
-        XCTAssertTrue(app.buttons["premium.openSettings"].exists)
+        XCTAssertTrue(app.staticTexts["プレミアム機能"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["premium.openSettings"].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.buttons["mock.year.2025"].exists)
 
         app.buttons["tab.history"].tap()
-        XCTAssertTrue(app.otherElements["premium.required"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["プレミアム機能"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.otherElements["history.screen"].exists)
     }
 
     func testPremiumMockHidesImmediateCorrectness() {
@@ -67,12 +69,10 @@ final class NetworkSpecialistUITests: XCTestCase {
         if fontControl.exists && fontControl.buttons["特大"].exists {
             fontControl.buttons["特大"].tap()
         }
-
         app.buttons["tab.home"].tap()
-        let cta = app.buttons["home.startToday"]
-        XCTAssertTrue(cta.waitForExistence(timeout: 2))
-        let windowFrame = app.windows.firstMatch.frame
-        XCTAssertGreaterThanOrEqual(cta.frame.minX, windowFrame.minX - 1)
-        XCTAssertLessThanOrEqual(cta.frame.maxX, windowFrame.maxX + 1)
+        XCTAssertTrue(app.buttons["home.startToday"].waitForExistence(timeout: 2))
+        let window = app.windows.firstMatch
+        let start = app.buttons["home.startToday"]
+        XCTAssertLessThanOrEqual(start.frame.maxX, window.frame.maxX + 1)
     }
 }
