@@ -1,4 +1,5 @@
 import Foundation
+import SplatIO
 
 enum SplatVideoMemoryPolicy {
     struct Estimate: Equatable, Sendable {
@@ -48,6 +49,17 @@ enum SplatVideoMemoryPolicy {
     static let minimumBudgetBytes: UInt64 = 256 * mib
     static let maximumBudgetBytes: UInt64 = 512 * mib
     static let physicalMemoryDivisor: UInt64 = 8
+
+    /// Any non-default persisted edit makes the video path allocate an edited point array while the
+    /// original reader result is still alive. Reserve at least the concrete SplatPoint stride for
+    /// that second array instead of pretending edited and unedited exports have identical peaks.
+    static let editedPointCopyBytesPerPoint: UInt64 = UInt64(MemoryLayout<SplatPoint>.stride)
+
+    /// Exposure/contrast edits of SH3 points mutate coefficient[0]. Swift Array copy-on-write then
+    /// materializes the 16-coefficient SH payload for edited points. Account for that payload plus a
+    /// small per-allocation header reserve; crop-only edits do not need this coefficient clone.
+    static let editedSH3ColorCopyBytesPerPoint: UInt64 =
+        UInt64(16 * MemoryLayout<SIMD3<Float>>.stride + 32)
 
     @discardableResult
     static func preflight(
@@ -112,11 +124,14 @@ enum SplatVideoMemoryPolicy {
             throw PolicyError.untrustedCanonicalAsset
         }
 
-        _ = SplatViewerEditStore.load(sourceURL: sourceURL)
+        // Loading here also performs the established backup-recovery/self-heal. Keep the recovered
+        // settings and feed them into memory admission because the renderer will materialize them.
+        let editSettings = SplatViewerEditStore.load(sourceURL: sourceURL)?.settings ?? .default
 
         let estimate = makeEstimate(
             pointCount: pointCount,
             hasCanonicalSH3: canonical.completeAsset != nil,
+            editSettings: editSettings,
             configuration: configuration,
             physicalMemoryBytes: physicalMemoryBytes
         )
@@ -145,10 +160,12 @@ enum SplatVideoMemoryPolicy {
             forLegacySplat: sourceURL,
             expectedPointCount: pointCount
         ) != nil
+        let editSettings = SplatViewerEditStore.load(sourceURL: sourceURL)?.settings ?? .default
 
         return makeEstimate(
             pointCount: pointCount,
             hasCanonicalSH3: hasCanonicalSH3,
+            editSettings: editSettings,
             configuration: configuration,
             physicalMemoryBytes: physicalMemoryBytes
         )
@@ -193,6 +210,7 @@ enum SplatVideoMemoryPolicy {
     private static func makeEstimate(
         pointCount: Int,
         hasCanonicalSH3: Bool,
+        editSettings: SplatEditSettings,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64
     ) -> Estimate {
@@ -204,10 +222,25 @@ enum SplatVideoMemoryPolicy {
         let workingBytesPerPoint = hasCanonicalSH3
             ? estimatedSH3WorkingBytesPerPoint
             : estimatedWorkingBytesPerPoint
-        let pointWorkingSetBytes = UInt64(pointCount) * workingBytesPerPoint
-        let estimatedPeakBytes = pointWorkingSetBytes
-            + fixedRendererAndEncoderReserveBytes
-            + videoSurfaceReserveBytes
+
+        let normalizedEdits = editSettings.normalized()
+        let hasEdits = normalizedEdits != .default
+        let needsColorAdjustment =
+            abs(normalizedEdits.exposureEV) > 0.0001 ||
+            abs(normalizedEdits.contrast - 1) > 0.0001
+        var additionalEditedBytesPerPoint: UInt64 = hasEdits ? editedPointCopyBytesPerPoint : 0
+        if hasCanonicalSH3 && needsColorAdjustment {
+            additionalEditedBytesPerPoint = additionalEditedBytesPerPoint
+                &+ editedSH3ColorCopyBytesPerPoint
+        }
+
+        let bytesPerPoint = workingBytesPerPoint &+ additionalEditedBytesPerPoint
+        let pointWorkingSetBytes = UInt64(pointCount).multipliedReportingOverflow(by: bytesPerPoint)
+        let boundedPointWorkingSet = pointWorkingSetBytes.overflow ? UInt64.max : pointWorkingSetBytes.partialValue
+        let basePeak = boundedPointWorkingSet.addingReportingOverflow(fixedRendererAndEncoderReserveBytes)
+        let withRendererReserve = basePeak.overflow ? UInt64.max : basePeak.partialValue
+        let finalPeak = withRendererReserve.addingReportingOverflow(videoSurfaceReserveBytes)
+        let estimatedPeakBytes = finalPeak.overflow ? UInt64.max : finalPeak.partialValue
 
         let proportionalBudget = physicalMemoryBytes / physicalMemoryDivisor
         let budgetBytes = min(
