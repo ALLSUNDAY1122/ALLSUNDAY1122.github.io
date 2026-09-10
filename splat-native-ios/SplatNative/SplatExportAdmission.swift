@@ -7,6 +7,13 @@ enum SplatExportAdmission {
         case video(width: Int, height: Int, framesPerSecond: Int, duration: TimeInterval)
     }
 
+    struct Result: Equatable, Sendable {
+        let verification: SplatCompletionVerifier.Verification
+
+        var trustedURL: URL { verification.url }
+        var verifiedDigest: String { verification.sha256 }
+    }
+
     enum AdmissionError: LocalizedError {
         case untrustedSource
         case sourceSizeUnavailable
@@ -31,6 +38,18 @@ enum SplatExportAdmission {
     private static let safetyReserveBytes: Int64 = 128 * 1_024 * 1_024
 
     static func preflight(sourceURL: URL, kind: Kind, availableCapacityOverride: Int64? = nil) throws -> URL {
+        try preflightResult(
+            sourceURL: sourceURL,
+            kind: kind,
+            availableCapacityOverride: availableCapacityOverride
+        ).trustedURL
+    }
+
+    static func preflightResult(
+        sourceURL: URL,
+        kind: Kind,
+        availableCapacityOverride: Int64? = nil
+    ) throws -> Result {
         let verification: SplatCompletionVerifier.Verification
         do { verification = try SplatCompletionVerifier.verifyWithDigest(sourceURL: sourceURL) }
         catch { throw AdmissionError.untrustedSource }
@@ -63,7 +82,7 @@ enum SplatExportAdmission {
         let required = estimatedRequiredFreeBytes(sourceBytes: sourceBytes, canonicalAssetBytes: canonicalBytes, kind: kind)
         let available = availableCapacityOverride.map { max(0, $0) } ?? availableCapacity(at: projectURL)
         if let available, available < required { throw AdmissionError.insufficientStorage(required: required, available: available) }
-        return trustedURL
+        return Result(verification: verification)
     }
 
     static func estimatedRequiredFreeBytes(sourceBytes: Int64, canonicalAssetBytes: Int64? = nil, kind: Kind) -> Int64 {
