@@ -263,12 +263,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     var trainingStageText: String {
-        switch trainingProgress {
-        case ..<0.18: return "写真の位置関係を確認しています"
-        case ..<0.58: return "立体の形を組み立てています"
-        case ..<0.88: return "色と細部を整えています"
-        default: return "見返せる形に仕上げています"
+        guard trainingIteration > 0 else {
+            return "初期3Dデータと学習データを準備しています"
         }
+        return "Splatを最適化しています（\(trainingIteration) / \(max(1, pendingTrainingTarget))）"
     }
 
     private var coverageMode: CaptureCoverageMode {
