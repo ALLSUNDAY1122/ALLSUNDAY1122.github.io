@@ -1,26 +1,45 @@
 import XCTest
 
 final class SplatVideoConfigurationTests: XCTestCase {
-    func testAspectRatioDimensionsAreStableAndEncoderFriendly() {
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.portrait9x16.dimensions.width, 1080)
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.portrait9x16.dimensions.height, 1920)
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.square1x1.dimensions.width, 1080)
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.square1x1.dimensions.height, 1080)
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.landscape16x9.dimensions.width, 1920)
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.landscape16x9.dimensions.height, 1080)
+    func testVideoQualityDimensionsAreStableAndEncoderFriendly() {
+        let high = SplatVideoConfiguration.Quality.high1080p
+        XCTAssertEqual(high.dimensions(for: .portrait9x16).width, 1080)
+        XCTAssertEqual(high.dimensions(for: .portrait9x16).height, 1920)
+        XCTAssertEqual(high.dimensions(for: .square1x1).width, 1080)
+        XCTAssertEqual(high.dimensions(for: .square1x1).height, 1080)
+        XCTAssertEqual(high.dimensions(for: .landscape16x9).width, 1920)
+        XCTAssertEqual(high.dimensions(for: .landscape16x9).height, 1080)
 
-        for ratio in SplatVideoConfiguration.AspectRatio.allCases {
-            XCTAssertEqual(ratio.dimensions.width % 2, 0)
-            XCTAssertEqual(ratio.dimensions.height % 2, 0)
+        let lightweight = SplatVideoConfiguration.Quality.compatible720p
+        XCTAssertEqual(lightweight.dimensions(for: .portrait9x16).width, 720)
+        XCTAssertEqual(lightweight.dimensions(for: .portrait9x16).height, 1280)
+        XCTAssertEqual(lightweight.dimensions(for: .square1x1).width, 720)
+        XCTAssertEqual(lightweight.dimensions(for: .square1x1).height, 720)
+        XCTAssertEqual(lightweight.dimensions(for: .landscape16x9).width, 1280)
+        XCTAssertEqual(lightweight.dimensions(for: .landscape16x9).height, 720)
+
+        for quality in SplatVideoConfiguration.Quality.allCases {
+            for ratio in SplatVideoConfiguration.AspectRatio.allCases {
+                let dimensions = quality.dimensions(for: ratio)
+                XCTAssertEqual(dimensions.width % 2, 0)
+                XCTAssertEqual(dimensions.height % 2, 0)
+            }
+            let portrait = quality.dimensions(for: .portrait9x16)
+            let landscape = quality.dimensions(for: .landscape16x9)
+            XCTAssertEqual(portrait.width * 16, portrait.height * 9)
+            XCTAssertEqual(landscape.width * 9, landscape.height * 16)
         }
-        XCTAssertEqual(
-            SplatVideoConfiguration.AspectRatio.portrait9x16.dimensions.width * 16,
-            SplatVideoConfiguration.AspectRatio.portrait9x16.dimensions.height * 9
-        )
-        XCTAssertEqual(
-            SplatVideoConfiguration.AspectRatio.landscape16x9.dimensions.width * 9,
-            SplatVideoConfiguration.AspectRatio.landscape16x9.dimensions.height * 16
-        )
+    }
+
+    func test1080pIsTheDefaultAnd720pIsAnExplicitFallback() {
+        var config = SplatVideoConfiguration()
+        XCTAssertEqual(config.quality, .high1080p)
+        XCTAssertEqual(config.dimensions.width, 1080)
+        XCTAssertEqual(config.dimensions.height, 1920)
+
+        config.quality = .compatible720p
+        XCTAssertEqual(config.dimensions.width, 720)
+        XCTAssertEqual(config.dimensions.height, 1280)
     }
 
     func testSpeedChangesDurationWithoutChangingFrameRate() {
@@ -96,7 +115,6 @@ final class SplatVideoConfigurationTests: XCTestCase {
         let pushQuarter = config.cameraSample(progress: 0.25)
         let pushHalf = config.cameraSample(progress: 0.5)
         let pushThreeQuarter = config.cameraSample(progress: 0.75)
-        // Smoothstep(0.25) = 0.15625: the move starts slower than a linear dolly.
         XCTAssertEqual(pushQuarter.distanceMultiplier, 1.1796875, accuracy: 0.0001)
         XCTAssertEqual(pushHalf.distanceMultiplier, 1.025, accuracy: 0.0001)
         XCTAssertEqual(pushThreeQuarter.distanceMultiplier, 0.8703125, accuracy: 0.0001)
