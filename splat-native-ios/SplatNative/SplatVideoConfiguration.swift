@@ -14,16 +14,28 @@ struct SplatVideoConfiguration: Equatable, Sendable {
             case .landscape16x9: return "横 16:9"
             }
         }
+    }
 
-        var dimensions: (width: Int, height: Int) {
-            // 1080-line output preserves substantially more splat detail than the previous
-            // 720-line export while staying inside the hardware H.264 envelope of supported
-            // iOS 18 devices. Video memory and free-space admission both consume these dimensions,
-            // so large scenes fail safely before the higher-resolution buffers are allocated.
+    enum Quality: String, CaseIterable, Identifiable, Sendable {
+        case high1080p
+        case compatible720p
+
+        var id: String { rawValue }
+        var displayName: String {
             switch self {
-            case .portrait9x16: return (1080, 1920)
-            case .square1x1: return (1080, 1080)
-            case .landscape16x9: return (1920, 1080)
+            case .high1080p: return "高画質 1080p"
+            case .compatible720p: return "軽量 720p"
+            }
+        }
+
+        func dimensions(for aspectRatio: AspectRatio) -> (width: Int, height: Int) {
+            switch (self, aspectRatio) {
+            case (.high1080p, .portrait9x16): return (1080, 1920)
+            case (.high1080p, .square1x1): return (1080, 1080)
+            case (.high1080p, .landscape16x9): return (1920, 1080)
+            case (.compatible720p, .portrait9x16): return (720, 1280)
+            case (.compatible720p, .square1x1): return (720, 720)
+            case (.compatible720p, .landscape16x9): return (1280, 720)
             }
         }
     }
@@ -75,11 +87,12 @@ struct SplatVideoConfiguration: Equatable, Sendable {
     }
 
     var aspectRatio: AspectRatio = .portrait9x16
+    var quality: Quality = .high1080p
     var cameraMotion: CameraMotion = .orbit360
     var speed: Speed = .normal
     var framesPerSecond: Int = 30
 
-    var dimensions: (width: Int, height: Int) { aspectRatio.dimensions }
+    var dimensions: (width: Int, height: Int) { quality.dimensions(for: aspectRatio) }
     var duration: TimeInterval { speed.duration }
     var totalFrames: Int { max(1, Int((duration * Double(framesPerSecond)).rounded())) }
 
@@ -99,8 +112,6 @@ struct SplatVideoConfiguration: Equatable, Sendable {
                 distanceMultiplier: 1
             )
         case .orbit180:
-            // Finite camera moves should settle gently at both ends instead of
-            // starting and stopping with an instantaneous angular velocity change.
             let eased = smoothstep(progress)
             return CameraSample(
                 yaw: -.pi / 2 + eased * .pi,
@@ -108,8 +119,6 @@ struct SplatVideoConfiguration: Equatable, Sendable {
                 distanceMultiplier: 1
             )
         case .pushIn:
-            // Ease the dolly move so exported videos do not visibly snap into or
-            // out of motion on their first and final frames.
             let eased = smoothstep(progress)
             return CameraSample(
                 yaw: 0,
