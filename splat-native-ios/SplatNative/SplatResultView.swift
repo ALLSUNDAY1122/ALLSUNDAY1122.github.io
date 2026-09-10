@@ -24,9 +24,6 @@ struct SplatResultView: View {
         VStack(spacing: 0) {
             ZStack {
                 if let preferredViewerURL {
-                    // New reconstructions retain a lossless SH3 PLY beside the compact legacy
-                    // .splat. Render that canonical asset when it is valid and fits the bounded
-                    // viewer working set; otherwise preserve stability with the legacy fallback.
                     SplatViewer(url: preferredViewerURL, state: viewerState)
                         .ignoresSafeArea(edges: .top)
                 } else {
@@ -58,28 +55,17 @@ struct SplatResultView: View {
             resolvePreferredViewerAsset(for: newURL)
         }
         .onChange(of: viewerState.editSettings) { _, _ in
-            // Slider/crop gestures can emit dozens of changes per second. Debounce these tiny
-            // sidecar writes so interactive editing stays responsive; explicit export/reprocess/
-            // navigation paths still call persistNow() immediately before consuming the state.
             viewerState.schedulePersistence()
         }
         .onChange(of: viewerState.measurementEnabled) { _, _ in
-            // A half-finished two-point measurement must never survive leaving/re-entering measure
-            // mode. Otherwise the next tap can silently pair with a stale point from an earlier
-            // measurement session and report a plausible but wrong distance.
             viewerState.requestMeasurementClear()
         }
         .onChange(of: selectedTool) { _, newTool in
-            // Measurement mode owns single-finger taps and intentionally disables orbit/pan/pinch.
-            // Turning that mode off when its panel is no longer visible prevents the viewer from
-            // appearing frozen after the user switches back to View/Crop/Adjust.
             if newTool != .measure {
                 viewerState.measurementEnabled = false
             }
         }
         .onDisappear {
-            // A swipe/back navigation can dismiss the viewer inside the debounce window. Flush
-            // once at the lifecycle boundary so responsiveness does not trade away durability.
             preferredViewerResolutionTask?.cancel()
             preferredViewerResolutionTask = nil
             viewerState.persistNow()
@@ -298,7 +284,10 @@ struct SplatResultView: View {
                     return sourceURL
                 }
                 try Task.checkCancellation()
-                let resolved = SplatCanonicalSHAsset.existingAsset(
+                // A canonical PLY can retain a valid header after its binary body is truncated.
+                // Only prefer SH3 when the declared vertex payload is complete; otherwise keep the
+                // legacy result viewable instead of feeding a corrupt asset to the renderer.
+                let resolved = SplatCanonicalSHAsset.existingCompleteAsset(
                     forLegacySplat: sourceURL,
                     expectedPointCount: pointCount
                 )?.url ?? sourceURL
