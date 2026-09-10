@@ -3,6 +3,7 @@ import Msplat
 
 extension SplatCanonicalSHAsset {
     static let manifestOutputKeyPrefix = "splatSH3Canonical."
+    private static let abandonedCandidateAge: TimeInterval = 24 * 60 * 60
 
     enum DurabilityError: LocalizedError {
         case lossyFingerprintCollision
@@ -25,7 +26,15 @@ extension SplatCanonicalSHAsset {
         expectedPointCount: Int
     ) throws -> Asset {
         let targetURL = try canonicalURL(forLegacySplat: legacySplatURL)
-        let temporaryURL = targetURL.deletingLastPathComponent()
+        let directoryURL = targetURL.deletingLastPathComponent()
+
+        // A process kill during trainer.exportPly can strand a very large hidden candidate. Those
+        // files are never valid project outputs and can accumulate across retries until export or
+        // reconstruction fails from low storage. Prune only our own >24h candidate namespace so a
+        // concurrently running reconstruction is never touched.
+        pruneAbandonedCandidates(in: directoryURL)
+
+        let temporaryURL = directoryURL
             .appendingPathComponent(".\(targetURL.lastPathComponent).\(UUID().uuidString).candidate.ply")
         try? FileManager.default.removeItem(at: temporaryURL)
 
@@ -93,6 +102,28 @@ extension SplatCanonicalSHAsset {
         let key = manifestOutputKeyPrefix + asset.url.deletingPathExtension().lastPathComponent
         return try store.updateManifest(projectURL: projectURL) { manifest in
             manifest.outputs[key] = asset.url.lastPathComponent
+        }
+    }
+
+    private static func pruneAbandonedCandidates(
+        in directoryURL: URL,
+        now: Date = Date(),
+        fileManager: FileManager = .default
+    ) {
+        guard let urls = try? fileManager.contentsOfDirectory(
+            at: directoryURL,
+            includingPropertiesForKeys: [.contentModificationDateKey, .isRegularFileKey],
+            options: [.skipsSubdirectoryDescendants]
+        ) else { return }
+
+        for url in urls {
+            let name = url.lastPathComponent
+            guard name.hasPrefix(".result.sh3-"), name.hasSuffix(".candidate.ply") else { continue }
+            guard let values = try? url.resourceValues(forKeys: [.contentModificationDateKey, .isRegularFileKey]),
+                  values.isRegularFile == true,
+                  let modified = values.contentModificationDate,
+                  now.timeIntervalSince(modified) >= abandonedCandidateAge else { continue }
+            try? fileManager.removeItem(at: url)
         }
     }
 }
