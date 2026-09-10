@@ -15,6 +15,10 @@ struct SplatVideoOptionsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    let dimensions = configuration.dimensions
+                    Text("出力: \(dimensions.width) × \(dimensions.height) / 1080p品質")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
 
                 Section("カメラの動き") {
