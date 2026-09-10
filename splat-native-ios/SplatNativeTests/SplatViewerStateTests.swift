@@ -41,6 +41,23 @@ final class SplatViewerStateTests: XCTestCase {
         XCTAssertFalse(decoded.hasCrop)
     }
 
+    func testFirstViewerEditSaveSeedsRecoverableBackup() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let first = SplatEditSettings(exposureEV: 0.45, contrast: 1.15, cropXMin: 0.1, cropXMax: 0.9)
+
+        try SplatViewerEditStore.save(first, sourceURL: source)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: SplatViewerEditStore.backupURL(for: source).path))
+        try Data("corrupt".utf8).write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
+
+        let recovered = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
+        XCTAssertTrue(recovered.recoveredFromBackup)
+        XCTAssertEqual(recovered.settings, first.normalized())
+    }
+
     func testViewerEditStoreRecoversLastKnownGoodSettingsFromBackup() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
