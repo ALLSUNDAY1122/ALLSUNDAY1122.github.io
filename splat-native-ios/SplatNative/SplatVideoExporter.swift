@@ -47,6 +47,7 @@ enum SplatVideoExporter {
 
     static func export(
         sourceURL: URL,
+        verifiedDigest: String? = nil,
         configuration: SplatVideoConfiguration,
         destinationDirectory: URL? = nil
     ) async throws -> URL {
@@ -54,6 +55,7 @@ enum SplatVideoExporter {
 
         let admission = try await SplatVideoMemoryPolicy.preflightAdmissionAsync(
             sourceURL: sourceURL,
+            verifiedDigest: verifiedDigest,
             configuration: configuration
         )
         try Task.checkCancellation()
