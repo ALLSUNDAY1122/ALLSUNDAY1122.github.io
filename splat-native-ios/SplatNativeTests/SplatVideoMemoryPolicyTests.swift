@@ -33,4 +33,43 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
         let healed = try JSONDecoder().decode(SplatEditSettings.self, from: healedData).normalized()
         XCTAssertEqual(healed, expected)
     }
+
+    func testCanonicalSH3SceneUsesLargerPerPointVideoBudget() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("splat-video-sh3-budget-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        let pointCount = 10
+        try Data(repeating: 0x31, count: pointCount * 32).write(to: source, options: .atomic)
+        let configuration = SplatVideoConfiguration()
+        let physicalMemory: UInt64 = 8 * 1_024 * 1_024 * 1_024
+
+        let legacy = try SplatVideoMemoryPolicy.estimate(
+            sourceURL: source,
+            configuration: configuration,
+            physicalMemoryBytes: physicalMemory
+        )
+
+        let canonicalURL = try SplatCanonicalSHAsset.canonicalURL(forLegacySplat: source)
+        var header = "ply\nformat binary_little_endian 1.0\nelement vertex \(pointCount)\n"
+        header += "property float f_dc_0\nproperty float f_dc_1\nproperty float f_dc_2\n"
+        for index in 0..<45 { header += "property float f_rest_\(index)\n" }
+        header += "end_header\n"
+        try Data(header.utf8).write(to: canonicalURL, options: .atomic)
+
+        let sh3 = try SplatVideoMemoryPolicy.estimate(
+            sourceURL: source,
+            configuration: configuration,
+            physicalMemoryBytes: physicalMemory
+        )
+
+        let expectedDelta = UInt64(pointCount) * (
+            SplatVideoMemoryPolicy.estimatedSH3WorkingBytesPerPoint -
+            SplatVideoMemoryPolicy.estimatedWorkingBytesPerPoint
+        )
+        XCTAssertEqual(sh3.pointCount, legacy.pointCount)
+        XCTAssertEqual(sh3.estimatedPeakBytes - legacy.estimatedPeakBytes, expectedDelta)
+        XCTAssertEqual(sh3.budgetBytes, legacy.budgetBytes)
+    }
 }
