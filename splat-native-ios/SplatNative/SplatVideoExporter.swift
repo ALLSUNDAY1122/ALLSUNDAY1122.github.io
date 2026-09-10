@@ -119,9 +119,15 @@ enum SplatVideoExporter {
                     finalURL,
                     expectedDimensions: configuration.dimensions
                 )
+            } catch is CancellationError {
+                // Cancellation is a distinct user action, not a corrupt-output failure. Preserve it
+                // so the caller can silently dismiss progress rather than showing an erroneous
+                // "video could not be completed" alert. The outer catch still removes finalURL.
+                throw CancellationError()
             } catch {
                 throw ExportError.outputMissing
             }
+            try Task.checkCancellation()
             return finalURL
         } catch {
             try? FileManager.default.removeItem(at: partialURL)
@@ -168,7 +174,7 @@ enum SplatVideoExporter {
         writer.add(input)
 
         let attributes: [String: Any] = [
-            kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA),
+            kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelBufferPixelFormatType_32BGRA),
             kCVPixelBufferWidthKey as String: dimensions.width,
             kCVPixelBufferHeightKey as String: dimensions.height,
             kCVPixelBufferMetalCompatibilityKey as String: true,
@@ -178,58 +184,45 @@ enum SplatVideoExporter {
             assetWriterInput: input,
             sourcePixelBufferAttributes: attributes
         )
-
-        guard writer.startWriting() else {
-            throw ExportError.writerFailed(writer.error?.localizedDescription ?? "startWriting failed")
-        }
+        guard writer.startWriting() else { throw ExportError.cannotStartWriter }
         writer.startSession(atSourceTime: .zero)
 
         var encodingCompleted = false
         defer {
-            if !encodingCompleted && writer.status == .writing {
+            if !encodingCompleted, writer.status == .writing {
                 writer.cancelWriting()
             }
         }
 
-        guard let pool = adaptor.pixelBufferPool else {
+        guard let pixelBufferPool = adaptor.pixelBufferPool else {
             throw ExportError.pixelBufferPoolUnavailable
         }
-
         var textureCache: CVMetalTextureCache?
-        guard CVMetalTextureCacheCreate(nil, nil, device, nil, &textureCache) == kCVReturnSuccess,
+        guard CVMetalTextureCacheCreate(kCFAllocatorDefault, nil, device, nil, &textureCache) == kCVReturnSuccess,
               let textureCache else {
             throw ExportError.textureCacheFailed
         }
 
         let frameDuration = CMTime(value: 1, timescale: CMTimeScale(configuration.framesPerSecond))
-        let totalFrames = configuration.totalFrames
-        let aspect = Float(dimensions.width) / Float(max(1, dimensions.height))
-        let fovY: Float = 55 * .pi / 180
-        let fittedBaseDistance = SplatCameraGeometry.aspectFittedDistance(
+        let baseDistance = SplatCameraGeometry.aspectFittedDistance(
             framing: framing,
-            fovY: fovY,
-            aspect: aspect
-        )
-        let projection = SplatCameraGeometry.perspective(
-            fovY: fovY,
-            aspect: max(0.1, aspect),
-            near: 0.01,
-            far: 100
+            fovY: .pi / 3,
+            aspect: Float(dimensions.width) / Float(dimensions.height)
         )
 
-        for frameIndex in 0..<totalFrames {
+        for frameIndex in 0..<configuration.frameCount {
             try Task.checkCancellation()
             try await waitUntilReady(input, writer: writer)
 
             var pixelBuffer: CVPixelBuffer?
-            guard CVPixelBufferPoolCreatePixelBuffer(nil, pool, &pixelBuffer) == kCVReturnSuccess,
+            guard CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pixelBufferPool, &pixelBuffer) == kCVReturnSuccess,
                   let pixelBuffer else {
                 throw ExportError.pixelBufferAllocationFailed
             }
 
             var cvTexture: CVMetalTexture?
-            let status = CVMetalTextureCacheCreateTextureFromImage(
-                nil,
+            guard CVMetalTextureCacheCreateTextureFromImage(
+                kCFAllocatorDefault,
                 textureCache,
                 pixelBuffer,
                 nil,
@@ -238,73 +231,68 @@ enum SplatVideoExporter {
                 dimensions.height,
                 0,
                 &cvTexture
-            )
-            guard status == kCVReturnSuccess,
+            ) == kCVReturnSuccess,
                   let cvTexture,
-                  let colorTexture = CVMetalTextureGetTexture(cvTexture) else {
+                  let texture = CVMetalTextureGetTexture(cvTexture) else {
                 throw ExportError.textureCreationFailed
             }
 
-            let progress = totalFrames <= 1
-                ? 0.0
-                : Double(frameIndex) / Double(totalFrames - 1)
-            let sample = configuration.cameraSample(progress: progress)
-            let distance = fittedBaseDistance * sample.distanceMultiplier
-            let eye = SplatCameraGeometry.eye(
+            let depthTexture: MTLTexture? = nil
+            let normalizedTime = configuration.frameCount > 1
+                ? Float(frameIndex) / Float(configuration.frameCount - (configuration.cameraMotion == .orbit360 ? 0 : 1))
+                : 0
+            let pose = configuration.cameraPose(
                 center: framing.center,
-                distance: distance,
-                yaw: sample.yaw,
-                pitch: sample.pitch
+                distance: baseDistance,
+                normalizedTime: normalizedTime
             )
-            let baseView = SplatCameraGeometry.lookAt(
-                eye: eye,
-                center: framing.center,
-                up: SIMD3<Float>(0, 1, 0)
+            let projection = SplatCameraGeometry.projectionMatrix(
+                fovY: .pi / 3,
+                aspect: Float(dimensions.width) / Float(dimensions.height),
+                near: 0.01,
+                far: 100
             )
-            let viewMatrix = SplatCameraGeometry.rotationZ(.pi) * baseView
-
-            let viewport = SplatRenderer.ViewportDescriptor(
-                viewport: MTLViewport(
-                    originX: 0,
-                    originY: 0,
-                    width: Double(dimensions.width),
-                    height: Double(dimensions.height),
-                    znear: 0,
-                    zfar: 1
-                ),
-                projectionMatrix: projection,
-                viewMatrix: viewMatrix,
-                screenSize: SIMD2(dimensions.width, dimensions.height)
+            let view = SplatCameraGeometry.viewMatrix(
+                eye: pose.eye,
+                target: pose.target,
+                up: pose.up
             )
 
+            guard let commandBuffer = commandQueue.makeCommandBuffer() else {
+                throw ExportError.commandBufferFailed
+            }
             var didRender = false
-            for attempt in 0..<20 where !didRender {
+            while !didRender {
                 try Task.checkCancellation()
-                guard let commandBuffer = commandQueue.makeCommandBuffer() else {
-                    throw ExportError.commandBufferFailed
+                guard let descriptor = MTLRenderPassDescriptor() as MTLRenderPassDescriptor? else {
+                    throw ExportError.renderSkipped
                 }
-                didRender = try renderer.render(
-                    viewports: [viewport],
-                    colorTexture: colorTexture,
-                    colorStoreAction: .store,
-                    depthTexture: nil,
-                    rasterizationRateMap: nil,
-                    renderTargetArrayLength: 0,
-                    accessTimeout: 0.25,
-                    sortTimeout: attempt == 0 ? 0.5 : 0.1,
-                    to: commandBuffer
+                descriptor.colorAttachments[0].texture = texture
+                descriptor.colorAttachments[0].loadAction = .clear
+                descriptor.colorAttachments[0].storeAction = .store
+                descriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.025, green: 0.03, blue: 0.04, alpha: 1)
+                if let depthTexture {
+                    descriptor.depthAttachment.texture = depthTexture
+                    descriptor.depthAttachment.loadAction = .clear
+                    descriptor.depthAttachment.storeAction = .dontCare
+                    descriptor.depthAttachment.clearDepth = 1
+                }
+
+                didRender = await renderer.render(
+                    viewMatrix: view,
+                    projectionMatrix: projection,
+                    viewportSize: SIMD2<Int>(dimensions.width, dimensions.height),
+                    renderTarget: descriptor,
+                    commandBuffer: commandBuffer
                 )
-                await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-                    commandBuffer.addCompletedHandler { _ in
-                        continuation.resume()
-                    }
+                if didRender {
                     commandBuffer.commit()
-                }
-                try Task.checkCancellation()
-                guard commandBuffer.status != .error else {
-                    throw ExportError.writerFailed(commandBuffer.error?.localizedDescription ?? "Metal command failed")
-                }
-                if !didRender {
+                    await commandBuffer.completed()
+                    try Task.checkCancellation()
+                    guard commandBuffer.status != .error else {
+                        throw ExportError.writerFailed(commandBuffer.error?.localizedDescription ?? "Metal command failed")
+                    }
+                } else {
                     try await Task.sleep(for: .milliseconds(10))
                 }
             }
