@@ -30,20 +30,29 @@ enum SplatExportAdmission {
         do { trustedURL = try SplatCompletionVerifier.verify(sourceURL: sourceURL) }
         catch { throw AdmissionError.untrustedSource }
 
-        // Export/materialization reads the persisted viewer sidecar independently from the live
-        // viewer. Recover a corrupt primary from the known-good generation before that read so the
-        // file the user sees and the file they export cannot silently diverge after a partial write.
         _ = SplatViewerEditStore.load(sourceURL: trustedURL)
 
         let projectURL = trustedURL.deletingLastPathComponent()
         let sourceBytes = try fileSize(at: trustedURL)
-        // New SH3 scans export from the canonical PLY rather than the compact legacy .splat.
-        // Size the workspace from whichever representation will actually be read/written so a
-        // 32-byte-record source cannot under-estimate a much larger SH3 export transaction.
-        let canonicalBytes = SplatCanonicalSHAsset.existingAsset(
+        let pointCount = Int(sourceBytes / 32)
+
+        // `existingAsset` historically validates the PLY schema but not whether every declared
+        // binary vertex is present. If a canonical SH3 file has a valid header but is truncated,
+        // do not let export silently consume it. A complete canonical asset remains preferred;
+        // scans with no canonical asset at all retain legacy `.splat` compatibility.
+        let schemaValidCanonical = SplatCanonicalSHAsset.existingAsset(
             forLegacySplat: trustedURL,
-            expectedPointCount: Int(sourceBytes / 32)
-        ).flatMap { try? fileSize(at: $0.url) }
+            expectedPointCount: pointCount
+        )
+        let canonical = SplatCanonicalSHAsset.existingCompleteAsset(
+            forLegacySplat: trustedURL,
+            expectedPointCount: pointCount
+        )
+        if schemaValidCanonical != nil, canonical == nil {
+            throw AdmissionError.untrustedSource
+        }
+
+        let canonicalBytes = canonical.flatMap { try? fileSize(at: $0.url) }
         let required = estimatedRequiredFreeBytes(sourceBytes: sourceBytes, canonicalAssetBytes: canonicalBytes, kind: kind)
         let available = availableCapacityOverride.map { max(0, $0) } ?? availableCapacity(at: projectURL)
         if let available, available < required { throw AdmissionError.insufficientStorage(required: required, available: available) }
@@ -57,19 +66,13 @@ enum SplatExportAdmission {
         let outputEstimate: Int64
         switch kind {
         case .ply:
-            // PLY may be copied/materialized from the canonical SH3 asset. Reserve at least its
-            // full size; legacy scans without a canonical asset keep the conservative 3x estimate.
             outputEstimate = canonical > 0 ? canonical : saturatingMultiply(legacySource, by: 3)
         case .spz:
-            // Compression is not a license to under-budget the reader/input workspace.
             outputEstimate = max(effectiveSource, 32 * 1_024 * 1_024)
         case .video(let width, let height, let framesPerSecond, let duration):
             let pixelsPerSecond = Double(max(1, width)) * Double(max(1, height)) * Double(max(1, framesPerSecond))
             let estimatedBitrate = max(2_000_000, pixelsPerSecond * 0.12)
             let videoBytes = Int64(min(Double(Int64.max), (estimatedBitrate * max(1, duration) / 8).rounded(.up)))
-            // Video export keeps the scene/materialization workspace alive while the encoded movie
-            // grows. Reserving max(scene, movie) flattened duration/resolution changes whenever the
-            // scene was larger than the movie, under-budgeting the actual simultaneous footprint.
             outputEstimate = saturatingAdd(effectiveSource, videoBytes)
         }
         return saturatingAdd(outputEstimate, safetyReserveBytes)
