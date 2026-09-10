@@ -102,8 +102,11 @@ final class SplatExportAdmissionTests: XCTestCase {
                 availableCapacityOverride: Int64.max
             )
         ) { error in
-            guard case SplatExportAdmission.AdmissionError.untrustedSource = error else {
-                return XCTFail("Expected untrustedSource, got \(error)")
+            guard let admissionError = error as? SplatExportAdmission.AdmissionError else {
+                return XCTFail("Expected AdmissionError, got \(error)")
+            }
+            guard case .untrustedSource = admissionError else {
+                return XCTFail("Expected untrustedSource, got \(admissionError)")
             }
         }
     }
