@@ -38,13 +38,18 @@ for token in (
     "refinedDepth(",
     "depth: coarseDepth",
     "useBilinearNeighborSampling: true",
+    "var neighborCosts: [Float] = []",
+    "if samples >= 5",
+    "guard neighborCosts.count >= 2 else { return nil }",
+    "neighborCosts.sort()",
+    "neighborCosts.dropFirst().dropLast()",
 ):
     assert token in SOFTWARE, f"missing S14 software-depth contract: {token}"
 
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
     'metadataFileName = "s14-seed-recipe.json"',
-    "static let recipeVersion = 3",
+    "static let recipeVersion = 4",
     "case planeSweep",
     "SplatSoftwareDepthSeedBuilder.makeSeedPoints",
     "softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount",
@@ -192,6 +197,25 @@ for index in (5, 12, 20, 27):
     refined_error = min(abs((1.0 / inv) - true_depth) for inv in refined_inverse)
     assert refined_error < coarse_error * 0.25, (index, coarse_error, refined_error)
 
+# Multi-view cost must remain on the same per-pixel intensity scale while resisting one bad view.
+def robust_multiview_cost(costs):
+    costs = sorted(costs)
+    if len(costs) < 2:
+        return None
+    if len(costs) == 2:
+        return (costs[0] + costs[1]) * 0.5
+    if len(costs) == 3:
+        return costs[1]
+    trimmed = costs[1:-1]
+    return sum(trimmed) / len(trimmed)
+
+assert math.isclose(robust_multiview_cost([8.0, 10.0]), 9.0)
+assert math.isclose(robust_multiview_cost([8.0, 10.0, 9.0]), 9.0)
+assert math.isclose(robust_multiview_cost([8.0, 9.0, 10.0, 120.0]), 9.5)
+assert sum([8.0, 9.0, 10.0, 120.0]) / 4.0 > 34.0
+assert robust_multiview_cost([8.0, 9.0, 10.0, 120.0]) < 34.0
+assert robust_multiview_cost([8.0]) is None
+
 # 1 cm voxelization must collapse sub-centimetre duplicates but retain distinct geometry.
 def voxel(p):
     return tuple(math.floor(v * 100.0) for v in p)
@@ -199,4 +223,4 @@ def voxel(p):
 assert voxel((0.001, 0.001, -1.001)) == voxel((0.009, 0.009, -1.009))
 assert voxel((0.001, 0.001, -1.001)) != voxel((0.021, 0.001, -1.001))
 
-print("PASS: S14 RGB dense-seed + subpixel local-depth refinement contract")
+print("PASS: S14 RGB dense-seed + refined robust multi-view depth contract")
