@@ -54,7 +54,6 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
         let canonicalURL = try SplatCanonicalSHAsset.canonicalURL(forLegacySplat: source)
         let header = canonicalSH3Header(pointCount: pointCount)
         var completePLY = Data(header.utf8)
-        // 48 float properties per vertex: f_dc_0...2 + f_rest_0...44.
         completePLY.append(Data(repeating: 0, count: pointCount * 48 * MemoryLayout<Float>.size))
         try completePLY.write(to: canonicalURL, options: .atomic)
 
@@ -83,7 +82,6 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
         try Data(repeating: 0x42, count: pointCount * 32).write(to: source, options: .atomic)
 
         let canonicalURL = try SplatCanonicalSHAsset.canonicalURL(forLegacySplat: source)
-        // Header advertises all SH3 vertices but intentionally contains no binary vertex payload.
         try Data(canonicalSH3Header(pointCount: pointCount).utf8).write(to: canonicalURL, options: .atomic)
 
         XCTAssertThrowsError(
@@ -96,8 +94,6 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
             XCTAssertEqual(error as? SplatVideoMemoryPolicy.PolicyError, .untrustedCanonicalAsset)
         }
 
-        // A truncated generation is not charged as SH3 working memory because it can never be
-        // safely selected by the hardened rendering path.
         let estimate = try SplatVideoMemoryPolicy.estimate(
             sourceURL: source,
             configuration: SplatVideoConfiguration(),
@@ -110,6 +106,30 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
             estimate.estimatedPeakBytes,
             legacyPointBytes + SplatVideoMemoryPolicy.fixedRendererAndEncoderReserveBytes + videoBytes
         )
+    }
+
+    func testVideoAdmissionCarriesTheValidatedCanonicalRenderAsset() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("splat-video-admitted-asset-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        let pointCount = 10
+        try Data(repeating: 0x51, count: pointCount * 32).write(to: source, options: .atomic)
+
+        let canonicalURL = try SplatCanonicalSHAsset.canonicalURL(forLegacySplat: source)
+        var completePLY = Data(canonicalSH3Header(pointCount: pointCount).utf8)
+        completePLY.append(Data(repeating: 0, count: pointCount * 48 * MemoryLayout<Float>.size))
+        try completePLY.write(to: canonicalURL, options: .atomic)
+
+        let admission = try SplatVideoMemoryPolicy.preflightAdmission(
+            sourceURL: source,
+            configuration: SplatVideoConfiguration(),
+            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024
+        )
+
+        XCTAssertEqual(admission.estimate.pointCount, pointCount)
+        XCTAssertEqual(admission.renderAssetURL.standardizedFileURL, canonicalURL.standardizedFileURL)
     }
 
     private func canonicalSH3Header(pointCount: Int) -> String {
