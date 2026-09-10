@@ -237,11 +237,15 @@ enum SplatVideoExporter {
                 yaw: sample.yaw,
                 pitch: sample.pitch
             )
-            let viewMatrix = SplatCameraGeometry.lookAt(
+            let baseView = SplatCameraGeometry.lookAt(
                 eye: eye,
                 center: framing.center,
                 up: SIMD3<Float>(0, 1, 0)
-            ) * SplatCameraGeometry.rotationZ(.pi)
+            )
+            // Match the live viewer exactly: the 180-degree display correction belongs in
+            // camera space. Right-multiplying it rotates translated scenes around world space,
+            // which can shift the subject off-center only in exported video.
+            let viewMatrix = SplatCameraGeometry.rotationZ(.pi) * baseView
 
             let viewport = SplatRenderer.ViewportDescriptor(
                 viewport: MTLViewport(
