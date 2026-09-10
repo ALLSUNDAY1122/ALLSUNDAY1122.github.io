@@ -58,6 +58,19 @@ enum SplatResourcePauseReason: String, Codable, Sendable {
             return "端末温度が高くなったため生成を安全に一時停止しました。端末が冷えてから「生成だけもう一度試す」で続きから再開できます"
         }
     }
+
+    func diagnosticText(
+        evaluation: SplatResourceEvaluation,
+        limits: SplatResourceLimits,
+        iteration: Int,
+        splatCount: Int
+    ) -> String {
+        func mib(_ bytes: UInt64) -> String {
+            String(format: "%.0f", Double(bytes) / 1_048_576.0)
+        }
+        return "reason=\(rawValue) · iteration=\(iteration) · splats=\(splatCount) · resident=\(mib(evaluation.residentMemoryBytes)) MiB / budget=\(mib(limits.residentMemoryBudgetBytes)) MiB · available=\(mib(evaluation.availableMemoryBytes)) MiB / reserve=\(mib(limits.minimumAvailableMemoryReserveBytes)) MiB"
+    }
+
 }
 
 enum SplatReconstructionStopReason: String, Codable, Equatable, Sendable {
