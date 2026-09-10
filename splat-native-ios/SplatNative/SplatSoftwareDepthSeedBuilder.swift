@@ -317,12 +317,14 @@ enum SplatSoftwareDepthSeedBuilder {
         var neighborCosts: [Float] = []
         neighborCosts.reserveCapacity(neighborIndices.count)
 
-        // Score each view independently. A single occluded, reflective or exposure-shifted view
-        // must not drag every otherwise-consistent correspondence onto a wrong depth layer.
+        // Score each view independently. Exposure centering removes local additive brightness drift
+        // from auto exposure while preserving the patch's edge/texture structure and the SAD scale.
         for neighborIndex in neighborIndices {
             let neighbor = frames[neighborIndex]
-            var total: Float = 0
-            var samples = 0
+            var referenceValues: [Float] = []
+            var neighborValues: [Float] = []
+            referenceValues.reserveCapacity(9)
+            neighborValues.reserveCapacity(9)
             for dy in offsets {
                 for dx in offsets {
                     guard let referenceValue = reference.gray.sample(u + dx, v + dy) else { continue }
@@ -332,13 +334,23 @@ enum SplatSoftwareDepthSeedBuilder {
                         ? neighbor.gray.sampleBilinear(pixel.x, pixel.y)
                         : neighbor.gray.sample(pixel.x, pixel.y)
                     guard let neighborValue else { continue }
-                    total += abs(neighborValue - referenceValue)
-                    samples += 1
+                    referenceValues.append(referenceValue)
+                    neighborValues.append(neighborValue)
                 }
             }
-            if samples >= 5 {
-                neighborCosts.append(total / Float(samples))
+            guard referenceValues.count >= 5,
+                  referenceValues.count == neighborValues.count else { continue }
+            let count = Float(referenceValues.count)
+            let referenceMean = referenceValues.reduce(0, +) / count
+            let neighborMean = neighborValues.reduce(0, +) / count
+            var centeredTotal: Float = 0
+            for index in referenceValues.indices {
+                centeredTotal += abs(
+                    (referenceValues[index] - referenceMean) -
+                    (neighborValues[index] - neighborMean)
+                )
             }
+            neighborCosts.append(centeredTotal / count)
         }
 
         // Keep genuine multi-view support mandatory. Robustly trim only when at least four views
