@@ -43,6 +43,21 @@ final class SplatTransientExportWorkspaceTests: XCTestCase {
         XCTAssertTrue(fileManager.fileExists(atPath: sentinel.path))
     }
 
+    func testRemoveRefusesUnownedPrefixedDirectory() throws {
+        let fileManager = FileManager.default
+        let directory = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-export-unowned-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        let sentinel = directory.appendingPathComponent("result.splat")
+        try Data(repeating: 0x52, count: 64).write(to: sentinel)
+        defer { try? fileManager.removeItem(at: directory) }
+
+        SplatTransientExportWorkspace.remove(directory, fileManager: fileManager)
+
+        XCTAssertTrue(fileManager.fileExists(atPath: directory.path))
+        XCTAssertTrue(fileManager.fileExists(atPath: sentinel.path))
+    }
+
     func testRemoveRefusesNamespacedRegularFile() throws {
         let fileManager = FileManager.default
         let file = fileManager.temporaryDirectory
@@ -55,23 +70,24 @@ final class SplatTransientExportWorkspaceTests: XCTestCase {
         XCTAssertTrue(fileManager.fileExists(atPath: file.path))
     }
 
-    func testCleanupRemovesOnlyStaleScanLabExportDirectories() throws {
+    func testCleanupRemovesOnlyStaleOwnedExportDirectories() throws {
         let fileManager = FileManager.default
         let root = fileManager.temporaryDirectory.appendingPathComponent("scanlab-export-cleanup-test-\(UUID().uuidString)", isDirectory: true)
         try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? fileManager.removeItem(at: root) }
 
-        let stale = root.appendingPathComponent("scanlab-export-stale", isDirectory: true)
-        let recent = root.appendingPathComponent("scanlab-export-recent", isDirectory: true)
+        let stale = try SplatTransientExportWorkspace.create(rootDirectory: root, fileManager: fileManager)
+        let recent = try SplatTransientExportWorkspace.create(rootDirectory: root, fileManager: fileManager)
         let unrelated = root.appendingPathComponent("other-export-stale", isDirectory: true)
-        for directory in [stale, recent, unrelated] {
-            try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
-        }
+        let unownedPrefixed = root.appendingPathComponent("scanlab-export-unowned", isDirectory: true)
+        try fileManager.createDirectory(at: unrelated, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: unownedPrefixed, withIntermediateDirectories: true)
 
         let now = Date(timeIntervalSince1970: 2_000_000)
         try fileManager.setAttributes([.modificationDate: now.addingTimeInterval(-48 * 60 * 60)], ofItemAtPath: stale.path)
         try fileManager.setAttributes([.modificationDate: now.addingTimeInterval(-2 * 60 * 60)], ofItemAtPath: recent.path)
         try fileManager.setAttributes([.modificationDate: now.addingTimeInterval(-48 * 60 * 60)], ofItemAtPath: unrelated.path)
+        try fileManager.setAttributes([.modificationDate: now.addingTimeInterval(-48 * 60 * 60)], ofItemAtPath: unownedPrefixed.path)
 
         SplatTransientExportWorkspace.cleanupStaleExports(
             in: root,
@@ -83,16 +99,16 @@ final class SplatTransientExportWorkspaceTests: XCTestCase {
         XCTAssertFalse(fileManager.fileExists(atPath: stale.path))
         XCTAssertTrue(fileManager.fileExists(atPath: recent.path))
         XCTAssertTrue(fileManager.fileExists(atPath: unrelated.path))
+        XCTAssertTrue(fileManager.fileExists(atPath: unownedPrefixed.path))
     }
 
-    func testCreatePrunesStaleWorkspaceAndCreatesFreshDirectory() throws {
+    func testCreatePrunesStaleOwnedWorkspaceAndCreatesFreshDirectory() throws {
         let fileManager = FileManager.default
         let root = fileManager.temporaryDirectory.appendingPathComponent("scanlab-export-create-test-\(UUID().uuidString)", isDirectory: true)
         try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? fileManager.removeItem(at: root) }
 
-        let stale = root.appendingPathComponent("scanlab-export-abandoned", isDirectory: true)
-        try fileManager.createDirectory(at: stale, withIntermediateDirectories: true)
+        let stale = try SplatTransientExportWorkspace.create(rootDirectory: root, fileManager: fileManager)
         try fileManager.setAttributes([.modificationDate: Date().addingTimeInterval(-48 * 60 * 60)], ofItemAtPath: stale.path)
 
         let created = try SplatTransientExportWorkspace.create(rootDirectory: root, fileManager: fileManager)
@@ -102,5 +118,6 @@ final class SplatTransientExportWorkspaceTests: XCTestCase {
         XCTAssertTrue(fileManager.fileExists(atPath: created.path, isDirectory: &isDirectory))
         XCTAssertTrue(isDirectory.boolValue)
         XCTAssertTrue(created.lastPathComponent.hasPrefix("scanlab-export-"))
+        XCTAssertTrue(fileManager.fileExists(atPath: created.appendingPathComponent(".scanlab-transient-export").path))
     }
 }
