@@ -25,4 +25,26 @@ extension SplatCanonicalSHAsset {
         return sourceURL.deletingLastPathComponent()
             .appendingPathComponent("result.sh3-\(normalized).ply")
     }
+
+    /// Resolves a canonical SH3 asset from a digest already verified against the legacy result.
+    /// Unlike `existingCompleteAsset(forLegacySplat:expectedPointCount:)`, this does not hash the
+    /// legacy `.splat` again. Schema, SH degree, point count and complete binary payload remain
+    /// fail-closed before the higher-fidelity asset can be selected for export.
+    static func existingCompleteAsset(
+        forLegacySplat sourceURL: URL,
+        verifiedDigest: String,
+        expectedPointCount: Int
+    ) -> Asset? {
+        guard let url = try? canonicalURL(
+            forLegacySplat: sourceURL,
+            verifiedDigest: verifiedDigest
+        ), FileManager.default.fileExists(atPath: url.path),
+           let descriptor = try? inspectPLY(url),
+           descriptor.shDegree == requiredSHDegree,
+           descriptor.pointCount == expectedPointCount,
+           hasCompleteVertexPayload(at: url, expectedPointCount: expectedPointCount) else {
+            return nil
+        }
+        return Asset(url: url, descriptor: descriptor)
+    }
 }
