@@ -141,7 +141,7 @@ struct SplatExportOptionsView: View {
             var workspace: URL?
             do {
                 let kind: SplatExportAdmission.Kind = format == .ply ? .ply : .spz
-                let trustedURL = try await SplatExportAdmission.preflightAsync(
+                let admission = try await SplatExportAdmission.preflightResultAsync(
                     sourceURL: sourceURL,
                     kind: kind
                 )
@@ -149,7 +149,8 @@ struct SplatExportOptionsView: View {
                 let createdWorkspace = try SplatTransientExportWorkspace.create()
                 workspace = createdWorkspace
                 let url = try await SplatExportService.export(
-                    sourceURL: trustedURL,
+                    sourceURL: admission.trustedURL,
+                    verifiedDigest: admission.verifiedDigest,
                     format: format,
                     destinationDirectory: createdWorkspace
                 )
