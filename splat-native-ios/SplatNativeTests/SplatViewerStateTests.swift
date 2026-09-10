@@ -110,6 +110,33 @@ final class SplatViewerStateTests: XCTestCase {
         XCTAssertEqual(recovered.settings, expected)
     }
 
+    @MainActor
+    func testSwitchingScansFlushesPendingEditsToPreviousScan() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let firstSource = root.appendingPathComponent("first.splat")
+        let secondSource = root.appendingPathComponent("second.splat")
+        try Data([0]).write(to: firstSource)
+        try Data([0]).write(to: secondSource)
+
+        let state = SplatViewerState()
+        state.attach(url: firstSource)
+        state.exposureEV = 0.8
+        state.contrast = 1.25
+        state.schedulePersistence()
+
+        // Switch immediately, before the 220 ms debounce can fire. The old settings must be
+        // flushed to first.splat rather than cancelled or written into second.splat.
+        state.attach(url: secondSource)
+
+        let firstSaved = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: firstSource))
+        XCTAssertEqual(firstSaved.settings.exposureEV, 0.8, accuracy: 0.0001)
+        XCTAssertEqual(firstSaved.settings.contrast, 1.25, accuracy: 0.0001)
+        XCTAssertNil(SplatViewerEditStore.load(sourceURL: secondSource))
+        XCTAssertEqual(state.editSettings, .default)
+    }
+
     func testMeasurementFormattingUsesPracticalUnits() {
         XCTAssertEqual(SplatMeasurementFormatter.string(meters: 0.004), "4.0 mm")
         XCTAssertEqual(SplatMeasurementFormatter.string(meters: 0.245), "24.5 cm")
