@@ -126,6 +126,7 @@ struct SplatViewerEditStore {
         let backup = backupURL(for: sourceURL)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let decoder = JSONDecoder()
         let data = try encoder.encode(settings.normalized())
 
         // Keep one known-good generation. Copy rather than move so an interrupted backup update
@@ -133,16 +134,27 @@ struct SplatViewerEditStore {
         var preservedPreviousGeneration = false
         if fileManager.fileExists(atPath: primary.path),
            let oldData = try? Data(contentsOf: primary),
-           (try? JSONDecoder().decode(SplatEditSettings.self, from: oldData)) != nil {
+           (try? decoder.decode(SplatEditSettings.self, from: oldData)) != nil {
             try oldData.write(to: backup, options: .atomic)
             preservedPreviousGeneration = true
         }
+
+        // A backup file can exist but itself be truncated/corrupt. Treat only a decodable backup as
+        // a recovery generation; otherwise the new successful primary must reseed it.
+        let existingBackupIsValid: Bool
+        if let backupData = try? Data(contentsOf: backup),
+           (try? decoder.decode(SplatEditSettings.self, from: backupData)) != nil {
+            existingBackupIsValid = true
+        } else {
+            existingBackupIsValid = false
+        }
+
         try data.write(to: primary, options: .atomic)
 
-        // The very first successful edit previously had no backup until a second save occurred.
-        // Seed the backup only when no previous known-good generation exists and no valid backup is
-        // already present. A corrupt primary must never overwrite an existing recovery generation.
-        if !preservedPreviousGeneration && !fileManager.fileExists(atPath: backup.path) {
+        // The very first successful edit, or a successful save after backup corruption, must leave
+        // a usable recovery generation. A valid older backup is intentionally preserved when the
+        // previous primary was corrupt so one bad generation cannot erase the last known-good edit.
+        if !preservedPreviousGeneration && !existingBackupIsValid {
             try data.write(to: backup, options: .atomic)
         }
     }
