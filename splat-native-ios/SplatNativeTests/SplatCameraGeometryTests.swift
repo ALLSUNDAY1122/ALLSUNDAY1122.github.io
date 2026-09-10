@@ -18,6 +18,49 @@ final class SplatCameraGeometryTests: XCTestCase {
 
         XCTAssertEqual(framing.center.x, 0, accuracy: 0.0001)
         XCTAssertEqual(framing.distance, 18, accuracy: 0.0001)
+        XCTAssertEqual(framing.radius, 10, accuracy: 0.0001)
+    }
+
+    func testPortraitVideoMovesBackWhenHorizontalFOVIsLimiting() {
+        let framing = SplatCameraGeometry.Framing(
+            center: .zero,
+            distance: 2.8,
+            radius: 1
+        )
+        let fovY: Float = 55 * .pi / 180
+
+        let portraitDistance = SplatCameraGeometry.aspectFittedDistance(
+            framing: framing,
+            fovY: fovY,
+            aspect: 9.0 / 16.0
+        )
+        let landscapeDistance = SplatCameraGeometry.aspectFittedDistance(
+            framing: framing,
+            fovY: fovY,
+            aspect: 16.0 / 9.0
+        )
+
+        XCTAssertGreaterThan(portraitDistance, framing.distance)
+        XCTAssertEqual(landscapeDistance, framing.distance, accuracy: 0.0001)
+    }
+
+    func testAspectFittedDistanceContainsRobustSphereInPortraitFrame() {
+        let framing = SplatCameraGeometry.Framing(
+            center: .zero,
+            distance: 5.6,
+            radius: 2
+        )
+        let fovY: Float = 55 * .pi / 180
+        let aspect: Float = 9.0 / 16.0
+        let distance = SplatCameraGeometry.aspectFittedDistance(
+            framing: framing,
+            fovY: fovY,
+            aspect: aspect
+        )
+        let halfHorizontalFOV = atan(tan(fovY * 0.5) * aspect)
+        let visibleHalfWidthAtSphereTangent = distance * sin(halfHorizontalFOV)
+
+        XCTAssertGreaterThanOrEqual(visibleHalfWidthAtSphereTangent, framing.radius * 1.09)
     }
 
     func testCameraSpaceDisplayCorrectionKeepsTranslatedTargetCentered() {
