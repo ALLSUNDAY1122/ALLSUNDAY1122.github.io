@@ -37,6 +37,7 @@ final class PremiumPurchaseStore: ObservableObject {
     private var transactionUpdatesTask: Task<Void, Never>?
     private var hasPrepared = false
     private let uiTestForcesPremium: Bool
+    private let uiTestBypassesStoreKit: Bool
 
     init(bundle: Bundle = .main, productID: String? = nil, processInfo: ProcessInfo = .processInfo) {
         let explicitID = Self.normalized(productID)
@@ -44,13 +45,16 @@ final class PremiumPurchaseStore: ObservableObject {
         let resolved = explicitID ?? plistID
         #if DEBUG
         let forcedPremium = processInfo.arguments.contains("-UITestPremium")
+        let forcedFree = processInfo.arguments.contains("-UITestFree")
         #else
         let forcedPremium = false
+        let forcedFree = false
         #endif
         self.productID = resolved
         self.uiTestForcesPremium = forcedPremium
+        self.uiTestBypassesStoreKit = forcedPremium || forcedFree
         self.isPremium = forcedPremium
-        self.status = forcedPremium ? .ready : (resolved == nil ? .unconfigured : .loading)
+        self.status = (forcedPremium || forcedFree) ? .ready : (resolved == nil ? .unconfigured : .loading)
     }
 
     deinit {
@@ -61,7 +65,7 @@ final class PremiumPurchaseStore: ObservableObject {
     var displayPrice: String? { product?.displayPrice }
 
     func prepare() async {
-        guard !uiTestForcesPremium else { return }
+        guard !uiTestBypassesStoreKit else { return }
         guard !hasPrepared else { return }
         hasPrepared = true
         guard let productID else {
@@ -165,6 +169,10 @@ final class PremiumPurchaseStore: ObservableObject {
     func refreshEntitlements() async {
         guard !uiTestForcesPremium else {
             isPremium = true
+            return
+        }
+        guard !uiTestBypassesStoreKit else {
+            isPremium = false
             return
         }
         guard let productID else {
