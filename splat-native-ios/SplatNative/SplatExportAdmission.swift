@@ -14,91 +14,68 @@ enum SplatExportAdmission {
 
         var errorDescription: String? {
             switch self {
-            case .untrustedSource:
-                return "完成確認できていない3Dデータは書き出せません。再生成または保存済みスキャンから開き直してください。"
-            case .sourceSizeUnavailable:
-                return "3Dデータのサイズを確認できないため、書き出しを開始できません。"
+            case .untrustedSource: return "完成確認できていない3Dデータは書き出せません。再生成または保存済みスキャンから開き直してください。"
+            case .sourceSizeUnavailable: return "3Dデータのサイズを確認できないため、書き出しを開始できません。"
             case .insufficientStorage(let required, let available):
-                let formatter = ByteCountFormatter()
-                formatter.countStyle = .file
-                let requiredText = formatter.string(fromByteCount: required)
-                let availableText = formatter.string(fromByteCount: available)
-                return "空き容量が不足しています。安全な書き出しには約\(requiredText)必要ですが、現在は約\(availableText)です。"
+                let formatter = ByteCountFormatter(); formatter.countStyle = .file
+                return "空き容量が不足しています。安全な書き出しには約\(formatter.string(fromByteCount: required))必要ですが、現在は約\(formatter.string(fromByteCount: available))です。"
             }
         }
     }
 
     private static let safetyReserveBytes: Int64 = 128 * 1_024 * 1_024
 
-    /// Export is admitted only when the source matches the project store's atomic completion
-    /// evidence. Record alignment or a `.finished` manifest by itself is not enough because an
-    /// interrupted writer can still leave a whole number of 32-byte records behind.
-    static func preflight(
-        sourceURL: URL,
-        kind: Kind,
-        availableCapacityOverride: Int64? = nil
-    ) throws -> URL {
+    static func preflight(sourceURL: URL, kind: Kind, availableCapacityOverride: Int64? = nil) throws -> URL {
         let trustedURL: URL
-        do {
-            trustedURL = try SplatCompletionVerifier.verify(sourceURL: sourceURL)
-        } catch {
-            throw AdmissionError.untrustedSource
-        }
+        do { trustedURL = try SplatCompletionVerifier.verify(sourceURL: sourceURL) }
+        catch { throw AdmissionError.untrustedSource }
 
         let projectURL = trustedURL.deletingLastPathComponent()
         let sourceBytes = try fileSize(at: trustedURL)
-        let required = estimatedRequiredFreeBytes(sourceBytes: sourceBytes, kind: kind)
-        let available = availableCapacityOverride.map { max(0, $0) }
-            ?? availableCapacity(at: projectURL)
-        if let available, available < required {
-            throw AdmissionError.insufficientStorage(required: required, available: available)
-        }
+        // New SH3 scans export from the canonical PLY rather than the compact legacy .splat.
+        // Size the workspace from whichever representation will actually be read/written so a
+        // 32-byte-record source cannot under-estimate a much larger SH3 export transaction.
+        let canonicalBytes = SplatCanonicalSHAsset.existingAsset(
+            forLegacySplat: trustedURL,
+            expectedPointCount: Int(sourceBytes / 32)
+        ).flatMap { try? fileSize(at: $0.url) }
+        let required = estimatedRequiredFreeBytes(sourceBytes: sourceBytes, canonicalAssetBytes: canonicalBytes, kind: kind)
+        let available = availableCapacityOverride.map { max(0, $0) } ?? availableCapacity(at: projectURL)
+        if let available, available < required { throw AdmissionError.insufficientStorage(required: required, available: available) }
         return trustedURL
     }
 
-    /// Includes temporary-output headroom because export services write `.partial` files
-    /// and only replace the final file after validation succeeds.
-    static func estimatedRequiredFreeBytes(sourceBytes: Int64, kind: Kind) -> Int64 {
-        let source = max(0, sourceBytes)
+    static func estimatedRequiredFreeBytes(sourceBytes: Int64, canonicalAssetBytes: Int64? = nil, kind: Kind) -> Int64 {
+        let legacySource = max(0, sourceBytes)
+        let canonical = max(0, canonicalAssetBytes ?? 0)
+        let effectiveSource = max(legacySource, canonical)
         let outputEstimate: Int64
-
         switch kind {
         case .ply:
-            // Binary PLY carries more attributes per Gaussian than the compact 32-byte .splat record.
-            outputEstimate = saturatingMultiply(source, by: 3)
+            // PLY may be copied/materialized from the canonical SH3 asset. Reserve at least its
+            // full size; legacy scans without a canonical asset keep the conservative 3x estimate.
+            outputEstimate = canonical > 0 ? canonical : saturatingMultiply(legacySource, by: 3)
         case .spz:
-            // SPZ is compressed, but reserve at least one source-sized working file.
-            outputEstimate = max(source, 32 * 1_024 * 1_024)
+            // Compression is not a license to under-budget the reader/input workspace.
+            outputEstimate = max(effectiveSource, 32 * 1_024 * 1_024)
         case .video(let width, let height, let framesPerSecond, let duration):
-            let pixelsPerSecond = Double(max(1, width))
-                * Double(max(1, height))
-                * Double(max(1, framesPerSecond))
+            let pixelsPerSecond = Double(max(1, width)) * Double(max(1, height)) * Double(max(1, framesPerSecond))
             let estimatedBitrate = max(2_000_000, pixelsPerSecond * 0.12)
-            let estimatedBytes = estimatedBitrate * max(1, duration) / 8
-            outputEstimate = Int64(min(Double(Int64.max), estimatedBytes.rounded(.up)))
+            let videoBytes = Int64(min(Double(Int64.max), (estimatedBitrate * max(1, duration) / 8).rounded(.up)))
+            outputEstimate = max(videoBytes, effectiveSource)
         }
-
         return saturatingAdd(outputEstimate, safetyReserveBytes)
     }
 
     private static func fileSize(at url: URL) throws -> Int64 {
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber else {
-            throw AdmissionError.sourceSizeUnavailable
-        }
+        guard let size = attributes[.size] as? NSNumber else { throw AdmissionError.sourceSizeUnavailable }
         return size.int64Value
     }
 
     private static func availableCapacity(at url: URL) -> Int64? {
-        if let values = try? url.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]),
-           let capacity = values.volumeAvailableCapacityForImportantUsage {
-            return capacity
-        }
-
-        if let attributes = try? FileManager.default.attributesOfFileSystem(forPath: url.path),
-           let freeSize = attributes[.systemFreeSize] as? NSNumber {
-            return freeSize.int64Value
-        }
+        if let values = try? url.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]), let capacity = values.volumeAvailableCapacityForImportantUsage { return capacity }
+        if let attributes = try? FileManager.default.attributesOfFileSystem(forPath: url.path), let freeSize = attributes[.systemFreeSize] as? NSNumber { return freeSize.int64Value }
         return nil
     }
 
