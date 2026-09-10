@@ -37,10 +37,11 @@ private enum MeshAppearanceProcessor {
         let editedOBJ = directory.appendingPathComponent(prefix + ".obj")
         var committed = false
         defer {
-            guard !committed else { return }
-            try? FileManager.default.removeItem(at: editedTexture)
-            try? FileManager.default.removeItem(at: editedMTL)
-            try? FileManager.default.removeItem(at: editedOBJ)
+            if !committed {
+                try? FileManager.default.removeItem(at: editedTexture)
+                try? FileManager.default.removeItem(at: editedMTL)
+                try? FileManager.default.removeItem(at: editedOBJ)
+            }
         }
 
         let context = CIContext(options: [.cacheIntermediates:false])
