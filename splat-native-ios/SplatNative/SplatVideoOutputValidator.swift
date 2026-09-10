@@ -7,6 +7,7 @@ enum SplatVideoOutputValidator {
     enum ValidationError: Error, Equatable {
         case missingOrEmpty
         case missingVideoTrack
+        case invalidVideoDimensions
         case invalidDuration
     }
 
@@ -28,8 +29,20 @@ enum SplatVideoOutputValidator {
         // A user can cancel while AVFoundation is parsing a large MP4. Do not let a validation
         // result obtained after cancellation escape back to the export/share flow as success.
         try Task.checkCancellation()
-        guard !tracks.isEmpty else {
+        guard let videoTrack = tracks.first else {
             throw ValidationError.missingVideoTrack
+        }
+
+        // A parsable container can still carry a degenerate video track. Reject zero, NaN and
+        // infinite geometry before the file becomes shareable so downstream viewers do not receive
+        // an MP4 that has duration but no meaningful render surface.
+        let naturalSize = try await videoTrack.load(.naturalSize)
+        try Task.checkCancellation()
+        guard naturalSize.width.isFinite,
+              naturalSize.height.isFinite,
+              naturalSize.width > 0,
+              naturalSize.height > 0 else {
+            throw ValidationError.invalidVideoDimensions
         }
 
         let duration = try await asset.load(.duration)
