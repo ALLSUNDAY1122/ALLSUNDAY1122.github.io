@@ -957,6 +957,9 @@ workflows:
     integrations:
       app_store_connect: "Codemagic Shiwake Swipe"
     environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.networkspecialist
       vars:
         BUNDLE_ID: jp.allsunday1122.networkspecialist
         APP_STORE_CONNECT_APP_ID: "6799754573"
@@ -972,18 +975,11 @@ workflows:
       - name: Materialize and verify canonical AppIcon
         script: |
           set -euo pipefail
-          cd "$CM_BUILD_DIR"
-          DEST='network-specialist-sprint/ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
-          mkdir -p "$(dirname "$DEST")"
-          curl --fail --location --retry 2 --connect-timeout 20 --max-time 120 \
-            'https://drive.google.com/uc?export=download&id=1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8' \
-            -o "$DEST"
-          test "$(stat -f%z "$DEST")" = '678310'
-          test "$(shasum -a 256 "$DEST" | awk '{print $1}')" = "$APPICON_SHA256"
-          python3 network-specialist-sprint/scripts/build_native_questions.py
-          python3 network-specialist-sprint/scripts/materialize_appicon.py
-          python3 network-specialist-sprint/scripts/validate_release.py
-          python3 network-specialist-sprint/scripts/validate_native_release.py --require-icon --require-iap
+          cd "$CM_BUILD_DIR/network-specialist-sprint"
+          python3 scripts/build_native_questions.py
+          python3 scripts/materialize_appicon.py
+          python3 scripts/validate_release.py
+          python3 scripts/validate_native_release.py --require-icon --require-iap
           test "$BUNDLE_ID" = 'jp.allsunday1122.networkspecialist'
           test "$APP_STORE_CONNECT_APP_ID" = '6799754573'
           test "$CODEMAGIC_PROFILE_REF" = 'networkspecialist_appstore'
@@ -1011,18 +1007,14 @@ workflows:
           set -euo pipefail
           cd "$CM_BUILD_DIR/network-specialist-sprint"
           xcodebuild build -project ios/NetworkSpecialist.xcodeproj -scheme NetworkSpecialist -configuration Release -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
-      - name: Initialize signing keychain
-        script: keychain initialize
-      - name: Fetch or create App Store signing files
-        script: app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
-      - name: Add signing certificate to keychain
-        script: keychain add-certificates
       - name: Apply App Store signing profiles for Internal TestFlight only
         script: |
+          set -euo pipefail
           cd "$CM_BUILD_DIR/network-specialist-sprint/ios"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
       - name: Build signed IPA
         script: |
+          set -euo pipefail
           xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
@@ -1030,9 +1022,8 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: true
+        submit_to_testflight: false
         submit_to_app_store: false
-
   network-specialist-signing-preflight:
     name: ネットワークスペシャリスト - Apple Signing Preflight
     max_build_duration: 20
