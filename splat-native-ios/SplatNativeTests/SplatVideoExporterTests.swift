@@ -44,8 +44,8 @@ final class SplatVideoExporterTests: XCTestCase {
         let videoTracks = try await asset.loadTracks(withMediaType: .video)
         let track = try XCTUnwrap(videoTracks.first)
         let naturalSize = try await track.load(.naturalSize)
-        XCTAssertEqual(Int(abs(naturalSize.width)), 720)
-        XCTAssertEqual(Int(abs(naturalSize.height)), 720)
+        XCTAssertEqual(Int(abs(naturalSize.width)), configuration.dimensions.width)
+        XCTAssertEqual(Int(abs(naturalSize.height)), configuration.dimensions.height)
     }
 
     func testMemoryPreflightProducesBoundedEstimateForNormalScene() throws {
