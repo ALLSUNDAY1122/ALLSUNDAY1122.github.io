@@ -176,14 +176,16 @@ def patch_root() -> None:
     ROOT_CODEMAGIC.write_text(updated, encoding="utf-8")
 
 
+def require_scalar(text: str, key: str, expected: str, path: Path) -> None:
+    pattern = rf"(?m)^\s*{re.escape(key)}:\s*[\"']?{re.escape(expected)}[\"']?\s*$"
+    if not re.search(pattern, text):
+        raise SystemExit(f"{path}: missing or mismatched {key}={expected}")
+
+
 def validate(path: Path) -> None:
     text = path.read_text(encoding="utf-8")
     required = [
         "distribution_type: app_store",
-        f"bundle_identifier: {BUNDLE_ID}",
-        f"BUNDLE_ID: {BUNDLE_ID}",
-        APP_STORE_CONNECT_APP_ID,
-        IAP_PRODUCT_ID,
         "xcode-project use-profiles",
         "submit_to_testflight: false",
         "submit_to_app_store: false",
@@ -191,6 +193,12 @@ def validate(path: Path) -> None:
     for token in required:
         if token not in text:
             raise SystemExit(f"{path}: missing required token {token}")
+
+    require_scalar(text, "bundle_identifier", BUNDLE_ID, path)
+    require_scalar(text, "BUNDLE_ID", BUNDLE_ID, path)
+    require_scalar(text, "APP_STORE_CONNECT_APP_ID", APP_STORE_CONNECT_APP_ID, path)
+    require_scalar(text, "IAP_PRODUCT_ID", IAP_PRODUCT_ID, path)
+
     forbidden = [
         'app-store-connect fetch-signing-files "$BUNDLE_ID"',
         "keychain initialize",
