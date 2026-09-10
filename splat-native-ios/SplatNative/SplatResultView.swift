@@ -24,8 +24,8 @@ struct SplatResultView: View {
             ZStack {
                 if let preferredViewerURL {
                     // New reconstructions retain a lossless SH3 PLY beside the compact legacy
-                    // .splat. Render that canonical asset when it is valid so the live viewer keeps
-                    // the trainer's view-dependent appearance instead of collapsing to SH0 color.
+                    // .splat. Render that canonical asset when it is valid and fits the bounded
+                    // viewer working set; otherwise preserve stability with the legacy fallback.
                     SplatViewer(url: preferredViewerURL, state: viewerState)
                         .ignoresSafeArea(edges: .top)
                 } else {
@@ -284,7 +284,8 @@ struct SplatResultView: View {
     private func resolvePreferredViewerAsset(for sourceURL: URL) {
         Task {
             let resolved = await Task.detached(priority: .userInitiated) {
-                guard let pointCount = try? SplatExportService.sourcePointCount(sourceURL) else {
+                guard let pointCount = try? SplatExportService.sourcePointCount(sourceURL),
+                      SplatViewerMemoryPolicy.canUseCanonicalSH3(pointCount: pointCount) else {
                     return sourceURL
                 }
                 return SplatCanonicalSHAsset.existingAsset(
