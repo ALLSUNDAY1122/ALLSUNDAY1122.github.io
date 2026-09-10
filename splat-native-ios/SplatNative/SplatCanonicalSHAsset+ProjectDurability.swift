@@ -57,9 +57,6 @@ extension SplatCanonicalSHAsset {
         guard candidate.shDegree == requiredSHDegree else {
             throw CanonicalError.shDegreeMismatch(expected: requiredSHDegree, actual: candidate.shDegree)
         }
-        // `inspectPLY` validates the schema header. A process/storage interruption can still leave
-        // that header intact while truncating the binary vertex body, so validate the minimum
-        // payload before a candidate is ever promoted to a durable canonical asset.
         guard hasCompleteVertexPayload(at: temporaryURL, expectedPointCount: expectedPointCount) else {
             throw DurabilityError.incompleteCanonicalPayload
         }
@@ -69,8 +66,6 @@ extension SplatCanonicalSHAsset {
                existing.pointCount == expectedPointCount,
                existing.shDegree == requiredSHDegree,
                hasCompleteVertexPayload(at: targetURL, expectedPointCount: expectedPointCount) {
-                // A structurally and physically complete asset with the same legacy content-addressed
-                // key but different SH3 bytes is not safe to overwrite: preserve the collision guard.
                 guard try SplatExportService.sha256Hex(fileURL: targetURL) ==
                         SplatExportService.sha256Hex(fileURL: temporaryURL) else {
                     throw DurabilityError.lossyFingerprintCollision
@@ -79,17 +74,28 @@ extension SplatCanonicalSHAsset {
                 return Asset(url: targetURL, descriptor: existing)
             }
 
-            // A truncated/corrupt canonical file can be left behind by storage corruption or an
-            // interrupted older write. The fresh candidate above has passed schema, point-count,
-            // SH3 and payload-length validation. Replace the invalid target atomically so repair
-            // cannot create a new crash window. A valid-but-different complete target still takes
-            // the collision path above and is never silently overwritten.
             _ = try FileManager.default.replaceItemAt(targetURL, withItemAt: temporaryURL)
             return Asset(url: targetURL, descriptor: candidate)
         }
 
         try FileManager.default.moveItem(at: temporaryURL, to: targetURL)
         return Asset(url: targetURL, descriptor: candidate)
+    }
+
+    /// Returns a canonical SH asset only when both its schema and declared binary vertex payload
+    /// are complete. Viewer/export admission use this stricter resolver so a header-valid but
+    /// truncated PLY cannot replace the known-good legacy `.splat` fallback.
+    static func existingCompleteAsset(
+        forLegacySplat legacySplatURL: URL,
+        expectedPointCount: Int
+    ) -> Asset? {
+        guard let asset = existingAsset(
+            forLegacySplat: legacySplatURL,
+            expectedPointCount: expectedPointCount
+        ), hasCompleteVertexPayload(at: asset.url, expectedPointCount: expectedPointCount) else {
+            return nil
+        }
+        return asset
     }
 
     /// Validates that a binary PLY contains at least the full declared vertex payload.
