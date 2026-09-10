@@ -19,9 +19,34 @@ extension SplatPersistedEditMaterializer {
             ? try cancellableRobustCropBounds(for: points)
             : nil
         let plan = Plan(settings: settings, bounds: bounds, outputPointCount: points.count)
-        let edited = try cancellableApply(points, plan: plan)
+        let edited = try applyCancellable(points, plan: plan)
         guard !edited.isEmpty else { throw MaterializeError.emptyEditedScene }
         return edited
+    }
+
+    /// Streaming PLY/SPZ export uses the same cooperative-cancellation semantics as video export.
+    /// SceneReader chunks can be large enough that checking only between chunks leaves a cancelled
+    /// export burning CPU and holding a second point buffer for a noticeable period.
+    static func applyCancellable(_ points: [SplatPoint], plan: Plan) throws -> [SplatPoint] {
+        try cancellableApply(points, plan: plan)
+    }
+
+    /// Count pass used while planning a cropped export. Check cancellation inside the reader chunk,
+    /// not only when the next async chunk arrives.
+    static func eligiblePointCountCancellable(
+        _ points: [SplatPoint],
+        settings: SplatEditSettings,
+        bounds: CropBounds?
+    ) throws -> Int {
+        var count = 0
+        for (index, point) in points.enumerated() {
+            if index & 0x3FF == 0 { try Task.checkCancellation() }
+            if cancellableIsEligible(point, settings: settings, bounds: bounds) {
+                count += 1
+            }
+        }
+        try Task.checkCancellation()
+        return count
     }
 
     private static func cancellableRobustCropBounds(for points: [SplatPoint]) throws -> CropBounds {
