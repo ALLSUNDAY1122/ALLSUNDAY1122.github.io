@@ -1,6 +1,6 @@
 {
-  "schema": "scanlab.codemagic-safe-probe.v1",
-  "request_id": "scanlab-s20-good-failed-20260910-1006",
+  "schema": "scanlab.codemagic-safe-probe.v2",
+  "request_id": "scanlab-s20-proven-topology-retry-20260910-1015",
   "good_build_id": "6aa1bb55b7af1ef0d6ac5484",
   "failed_build_id": "6aa1f88a7784a14a74795f9b",
   "good": {
@@ -115,5 +115,12 @@
       }
     ]
   },
-  "secret_values_persisted": false
+  "secret_values_persisted": false,
+  "retry": {
+    "build_id": "6aa202ccd4904620a9d6df00",
+    "status": "started",
+    "branch": "release/scanlab-testflight",
+    "workflow_id": "scanlab-ios",
+    "app_id": "6a769d81a1add9d06020b524"
+  }
 }
