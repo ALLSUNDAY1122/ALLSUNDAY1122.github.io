@@ -43,6 +43,18 @@ final class SplatTransientExportWorkspaceTests: XCTestCase {
         XCTAssertTrue(fileManager.fileExists(atPath: sentinel.path))
     }
 
+    func testRemoveRefusesNamespacedRegularFile() throws {
+        let fileManager = FileManager.default
+        let file = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-export-sentinel-\(UUID().uuidString).dat")
+        try Data(repeating: 0x24, count: 64).write(to: file)
+        defer { try? fileManager.removeItem(at: file) }
+
+        SplatTransientExportWorkspace.remove(file, fileManager: fileManager)
+
+        XCTAssertTrue(fileManager.fileExists(atPath: file.path))
+    }
+
     func testCleanupRemovesOnlyStaleScanLabExportDirectories() throws {
         let fileManager = FileManager.default
         let root = fileManager.temporaryDirectory.appendingPathComponent("scanlab-export-cleanup-test-\(UUID().uuidString)", isDirectory: true)
