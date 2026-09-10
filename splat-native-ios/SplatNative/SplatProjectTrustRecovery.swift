@@ -44,13 +44,28 @@ enum SplatProjectTrustRecovery {
         // Strong verification can hash a completed Splat hundreds of megabytes in size. Do it once:
         // calling canRecoverForReprocess here used to repeat the exact same SHA-256 scan immediately
         // before checking raw availability, doubling recovery latency and storage I/O.
-        if trustedResultURL(for: project) != nil {
+        //
+        // Do not use trustedResultURL's `try?` here: the strong verifier is cooperatively cancellable,
+        // and swallowing CancellationError would reinterpret an abandoned verification as corruption
+        // and could then downgrade a healthy finished manifest after the user left the flow.
+        let candidate = project.projectURL.appendingPathComponent(ScanProjectStore.splatResultFileName)
+        do {
+            _ = try SplatCompletionVerifier.verify(sourceURL: candidate)
             throw RecoveryError.trustedResultAlreadyExists
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch let error as RecoveryError {
+            throw error
+        } catch {
+            // A real verification failure is the expected prerequisite for trust recovery.
         }
+
+        try Task.checkCancellation()
         guard project.manifest.stage == .finished,
               hasReprocessableRaw(project, store: store) else {
             throw RecoveryError.rawDataUnavailable
         }
+        try Task.checkCancellation()
 
         _ = try store.updateManifest(projectURL: project.projectURL) { manifest in
             manifest.stage = .captured
