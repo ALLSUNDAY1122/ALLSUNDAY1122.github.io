@@ -130,13 +130,21 @@ struct SplatViewerEditStore {
 
         // Keep one known-good generation. Copy rather than move so an interrupted backup update
         // never removes the only valid primary before the new atomic write lands.
-        if fileManager.fileExists(atPath: primary.path) {
-            if let oldData = try? Data(contentsOf: primary),
-               (try? JSONDecoder().decode(SplatEditSettings.self, from: oldData)) != nil {
-                try oldData.write(to: backup, options: .atomic)
-            }
+        var preservedPreviousGeneration = false
+        if fileManager.fileExists(atPath: primary.path),
+           let oldData = try? Data(contentsOf: primary),
+           (try? JSONDecoder().decode(SplatEditSettings.self, from: oldData)) != nil {
+            try oldData.write(to: backup, options: .atomic)
+            preservedPreviousGeneration = true
         }
         try data.write(to: primary, options: .atomic)
+
+        // The very first successful edit previously had no backup until a second save occurred.
+        // Seed the backup only when no previous known-good generation exists and no valid backup is
+        // already present. A corrupt primary must never overwrite an existing recovery generation.
+        if !preservedPreviousGeneration && !fileManager.fileExists(atPath: backup.path) {
+            try data.write(to: backup, options: .atomic)
+        }
     }
 }
 
