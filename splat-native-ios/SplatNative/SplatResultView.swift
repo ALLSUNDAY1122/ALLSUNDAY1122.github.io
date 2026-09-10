@@ -76,6 +76,11 @@ struct SplatResultView: View {
                         .font(.caption.monospacedDigit())
                         .foregroundStyle(.secondary)
                 }
+                if let seedEvidence = model.reconstructionSeedEvidenceText {
+                    Text(seedEvidence)
+                        .font(.caption2.monospacedDigit().weight(.semibold))
+                        .foregroundStyle(.mint)
+                }
             }
             .padding(.horizontal, 13)
             .padding(.vertical, 9)

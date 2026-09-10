@@ -142,6 +142,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     @Published var activeCaptureSeconds: Double = 0
     @Published var ignoreLiDAR = false
     @Published var depthCaptureActive = false
+    @Published private(set) var reconstructionSeedEvidenceText: String?
     @Published private(set) var isWorldMapPersistencePending = false
 
     let coverageSectorTotal = 12
@@ -573,6 +574,21 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let checkpoint = projectURL.appendingPathComponent("training.msplat-checkpoint")
         let geometryPoints = Array(featurePoints.values)
         let seedFrames = captured.map(Self.seedFrame(from:))
+        let depthSeedFrames = captured.map { frame in
+            SplatDepthSeedFrame(
+                depthFilePath: frame.depthFilePath,
+                depthWidth: frame.depthWidth,
+                depthHeight: frame.depthHeight,
+                depthBytesPerRow: frame.depthBytesPerRow,
+                transformMatrix: frame.transformMatrix,
+                flX: frame.flX,
+                flY: frame.flY,
+                cx: frame.cx,
+                cy: frame.cy,
+                w: frame.w,
+                h: frame.h
+            )
+        }
         let firstSourceFrame = captured.first
         let runContext = SplatReconstructionRunContext(
             runID: runToken.runID,
@@ -628,14 +644,26 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 writeEarlyReport("running-preflight", .preflight, nil, nil)
 
                 do {
-                    let plyURL = projectURL.appendingPathComponent("points3D.ply")
-                    if !FileManager.default.fileExists(atPath: plyURL.path) {
-                        try Self.preparePointCloudPLY(
-                            projectURL: projectURL,
-                            points: geometryPoints,
-                            frames: seedFrames
-                        )
+                    let seedOutcome = try SplatDepthSeedBuilder.preparePointCloudPLY(
+                        projectURL: projectURL,
+                        depthFrames: depthSeedFrames,
+                        fallbackPoints: geometryPoints,
+                        colorFrames: seedFrames
+                    )
+                    let seedEvidenceText = "S13 seed: \(seedOutcome.source.rawValue) · depth \(seedOutcome.depthFrameCount) frames · geometry \(seedOutcome.geometryPointCount)"
+                    Task { @MainActor [weak self] in
+                        self?.reconstructionSeedEvidenceText = seedEvidenceText
                     }
+                    if seedOutcome.requiresFreshTrainer,
+                       FileManager.default.fileExists(atPath: checkpoint.path) {
+                        try? FileManager.default.removeItem(at: checkpoint)
+                    }
+                    writeEarlyReport(
+                        "running-preflight-seed-\(seedOutcome.source.rawValue)",
+                        .preflight,
+                        nil,
+                        nil
+                    )
                 } catch {
                     let message = "初期3Dデータを準備できませんでした: \(error.localizedDescription)"
                     writeEarlyReport("failed-preflight", .preflight, .other, message)
@@ -1117,7 +1145,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         }
 
         absorbFeaturePoints(frame.rawFeaturePoints, cameraTransform: frame.camera.transform)
-        let depthPayload = ignoreLiDAR ? nil : Self.copyDepthPayload(frame.sceneDepth?.depthMap)
+        let depthPayload = ignoreLiDAR ? nil : Self.copyDepthPayload((frame.smoothedSceneDepth ?? frame.sceneDepth)?.depthMap)
 
         isWritingFrame = true
         let index = acceptedFrames
@@ -1510,6 +1538,62 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         }
     }
 
+    /// S13 physical A/B entry: re-run reconstruction from the exact same durable raw capture.
+    /// The current trusted result is protected before entering `.captured`, while the on-disk
+    /// manifest intentionally remains `.finished`. When `train()` transitions it to `.processing`,
+    /// the normal Store swap therefore preserves the current result as the previous result.
+    func restoreFinishedProjectForS13Reprocess(id: String) {
+        do {
+            let summary = try projectStore.loadProject(id: id)
+            guard summary.manifest.stage == .finished,
+                  summary.manifest.rawDataRetained,
+                  let trustedURL = SplatProjectTrustRecovery.trustedResultURL(for: summary),
+                  (try? projectStore.reprocessRequest(
+                    projectURL: summary.projectURL,
+                    representation: .splat
+                  )) != nil else {
+                throw dataError("同じ撮影から再生成するためのrawデータを確認できません")
+            }
+            let checkpoint = try projectStore.loadCheckpoint(projectURL: summary.projectURL)
+            try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: trustedURL)
+
+            invalidateWorldMapPersistence()
+            session?.pause()
+            closeActiveCaptureTiming()
+            projectURL = summary.projectURL
+            imagesURL = summary.projectURL.appendingPathComponent("images", isDirectory: true)
+            depthURL = summary.projectURL.appendingPathComponent("depth", isDirectory: true)
+            restoreCaptureCheckpoint(checkpoint)
+            targetFrames = summary.manifest.targetFrames
+            pendingTrainingTarget = SplatReconstructionPolicy.standardIterations
+            pendingResumeWorldMap = loadPersistedWorldMap(projectURL: summary.projectURL)
+            requiresWorldMapForResume = true
+            userPauseRequested = false
+            systemPausedCapture = false
+            activeCaptureStartedAt = nil
+            resultURL = trustedURL
+            reconstructionSeedEvidenceText = nil
+            if let thumbnail = summary.thumbnailURL {
+                previewImage = UIImage(contentsOfFile: thumbnail.path)
+            }
+            datasetReady = true
+            phase = .captured
+            isCapturePaused = false
+            trackingNeedsRecovery = false
+            stableTrackingFrames = 0
+            trainingProgress = 0
+            trainingIteration = 0
+            splatCount = 0
+            trackingMessage = "同じ撮影rawを読み込みました。撮影を追加せず「3Dを生成」でS13比較を開始できます"
+            UIApplication.shared.isIdleTimerDisabled = false
+        } catch {
+            let message = "同じ撮影から再生成する準備に失敗しました: \(error.localizedDescription)"
+            phase = .failed(message)
+            trackingMessage = message
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
+    }
+
     func restoreSavedProject(id: String) {
         do {
             let summary = try projectStore.loadProject(id: id)
@@ -1839,6 +1923,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         accumulatedCaptureSeconds = 0
         activeCaptureSeconds = 0
         depthCaptureActive = false
+        reconstructionSeedEvidenceText = nil
         systemPausedCapture = false
         pendingResumeWorldMap = nil
         requiresWorldMapForResume = false
