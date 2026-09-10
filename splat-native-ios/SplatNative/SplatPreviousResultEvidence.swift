@@ -54,13 +54,22 @@ enum SplatPreviousResultEvidence {
         sourceURL: URL,
         fileManager: FileManager = .default
     ) throws {
-        let trustedURL: URL
+        let verification: SplatCompletionVerifier.Verification
         do {
-            trustedURL = try SplatCompletionVerifier.verify(sourceURL: sourceURL, fileManager: fileManager)
+            // Strong verification already reads and SHA-256 hashes the complete result. Reuse that
+            // freshly computed digest instead of immediately scanning the same potentially hundreds-
+            // of-megabytes Splat a second time before backup materialization.
+            verification = try SplatCompletionVerifier.verifyWithDigest(
+                sourceURL: sourceURL,
+                fileManager: fileManager
+            )
+        } catch is CancellationError {
+            throw CancellationError()
         } catch {
             throw PreservationError.currentResultNotTrusted
         }
 
+        let trustedURL = verification.url
         let projectURL = trustedURL.deletingLastPathComponent()
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
         guard let evidenceData = try? Data(contentsOf: evidenceURL),
@@ -71,7 +80,7 @@ enum SplatPreviousResultEvidence {
         }
 
         let beforeSize = try fileByteCount(trustedURL, fileManager: fileManager)
-        let hash = try sha256Hex(fileURL: trustedURL)
+        let hash = verification.sha256
         let afterSize = try fileByteCount(trustedURL, fileManager: fileManager)
         guard beforeSize == afterSize, afterSize == evidence.byteCount else {
             throw PreservationError.resultChangedDuringPreservation
@@ -87,6 +96,9 @@ enum SplatPreviousResultEvidence {
                 expectedSHA256: hash,
                 fileManager: fileManager
             )
+        } catch is CancellationError {
+            discardBackup(projectURL: projectURL, fileManager: fileManager)
+            throw CancellationError()
         } catch {
             discardBackup(projectURL: projectURL, fileManager: fileManager)
             throw PreservationError.previousResultBackupFailed
