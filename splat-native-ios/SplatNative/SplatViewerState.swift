@@ -213,6 +213,10 @@ final class SplatViewerState: ObservableObject {
     private var sourceURL: URL?
     private var persistenceTask: Task<Void, Never>?
     private var metersPerSceneUnit: Float = 1
+    private var persistenceWarningMessage: String?
+
+    private static let saveFailureWarning = "編集内容を保存できませんでした"
+    private static let backupRecoveryWarning = "前回の編集設定をバックアップから復元しました"
 
     var editSettings: SplatEditSettings {
         SplatEditSettings(exposureEV: exposureEV, contrast: contrast, cropXMin: cropXMin, cropXMax: cropXMax, cropYMin: cropYMin, cropYMax: cropYMax, cropZMin: cropZMin, cropZMax: cropZMax).normalized()
@@ -232,7 +236,9 @@ final class SplatViewerState: ObservableObject {
         metersPerSceneUnit = Self.measurementScale(for: url)
         measurementEnabled = false
         measurementText = "画面上の2点を順番にタップしてください"
-        errorMessage = nil; warningMessage = nil
+        errorMessage = nil
+        persistenceWarningMessage = nil
+        warningMessage = nil
         totalPointCount = 0; visiblePointCount = 0
         isLoading = true; isApplyingEdits = false
         loadPersistedEdits()
@@ -242,7 +248,7 @@ final class SplatViewerState: ObservableObject {
     func resetEdits() { apply(.default); persistNow() }
     func requestCameraReset() { resetCameraToken &+= 1 }
     func requestMeasurementClear() { measurementText = "画面上の2点を順番にタップしてください"; clearMeasurementToken &+= 1 }
-    func requestReload() { errorMessage = nil; warningMessage = nil; isLoading = true; reloadToken &+= 1 }
+    func requestReload() { errorMessage = nil; warningMessage = persistenceWarningMessage; isLoading = true; reloadToken &+= 1 }
 
     func schedulePersistence() {
         guard sourceURL != nil else { return }
@@ -257,14 +263,23 @@ final class SplatViewerState: ObservableObject {
     func persistNow() {
         persistenceTask?.cancel()
         guard let sourceURL else { return }
-        do { try SplatViewerEditStore.save(editSettings, sourceURL: sourceURL) }
-        catch { warningMessage = "編集内容を保存できませんでした" }
+        do {
+            try SplatViewerEditStore.save(editSettings, sourceURL: sourceURL)
+            let previousPersistenceWarning = persistenceWarningMessage
+            persistenceWarningMessage = nil
+            if warningMessage == previousPersistenceWarning {
+                warningMessage = nil
+            }
+        } catch {
+            persistenceWarningMessage = Self.saveFailureWarning
+            warningMessage = Self.saveFailureWarning
+        }
     }
 
-    func rendererBeganLoading() { isLoading = true; errorMessage = nil; warningMessage = nil }
+    func rendererBeganLoading() { isLoading = true; errorMessage = nil; warningMessage = persistenceWarningMessage }
     func rendererLoaded(total: Int) { totalPointCount = total; visiblePointCount = total; isLoading = false; errorMessage = nil }
-    func rendererBeganApplyingEdits() { isApplyingEdits = true; warningMessage = nil }
-    func rendererAppliedEdits(visible: Int) { visiblePointCount = visible; isApplyingEdits = false; warningMessage = nil }
+    func rendererBeganApplyingEdits() { isApplyingEdits = true; warningMessage = persistenceWarningMessage }
+    func rendererAppliedEdits(visible: Int) { visiblePointCount = visible; isApplyingEdits = false; warningMessage = persistenceWarningMessage }
     func rendererRejectedEdit(_ message: String) { isApplyingEdits = false; warningMessage = message }
     func rendererFailed(_ message: String) { isLoading = false; isApplyingEdits = false; errorMessage = message }
     func rendererSelectedMeasurementPoint(count: Int) { if count == 1 { measurementText = "始点を選択しました。終点をタップしてください" } }
@@ -276,7 +291,10 @@ final class SplatViewerState: ObservableObject {
             apply(.default); return
         }
         apply(loaded.settings)
-        if loaded.recoveredFromBackup { warningMessage = "前回の編集設定をバックアップから復元しました" }
+        if loaded.recoveredFromBackup {
+            persistenceWarningMessage = Self.backupRecoveryWarning
+            warningMessage = Self.backupRecoveryWarning
+        }
     }
 
     private func apply(_ settings: SplatEditSettings) {
