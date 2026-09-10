@@ -56,15 +56,25 @@ extension SplatCanonicalSHAsset {
         }
 
         if FileManager.default.fileExists(atPath: targetURL.path) {
-            let existing = try inspectPLY(targetURL)
-            guard existing.pointCount == expectedPointCount,
-                  existing.shDegree == requiredSHDegree,
-                  try SplatExportService.sha256Hex(fileURL: targetURL) ==
-                    SplatExportService.sha256Hex(fileURL: temporaryURL) else {
-                throw DurabilityError.lossyFingerprintCollision
+            if let existing = try? inspectPLY(targetURL),
+               existing.pointCount == expectedPointCount,
+               existing.shDegree == requiredSHDegree {
+                // A structurally valid asset with the same legacy content-addressed key but
+                // different SH3 bytes is not safe to overwrite: preserve the collision guard.
+                guard try SplatExportService.sha256Hex(fileURL: targetURL) ==
+                        SplatExportService.sha256Hex(fileURL: temporaryURL) else {
+                    throw DurabilityError.lossyFingerprintCollision
+                }
+                try? FileManager.default.removeItem(at: temporaryURL)
+                return Asset(url: targetURL, descriptor: existing)
             }
-            try? FileManager.default.removeItem(at: temporaryURL)
-            return Asset(url: targetURL, descriptor: existing)
+
+            // A truncated/corrupt canonical file can be left behind by storage corruption or an
+            // interrupted older write. The fresh candidate above has already passed point-count
+            // and SH3 validation, so allowing the invalid target to permanently block all future
+            // regenerations would be worse than replacing it. A valid-but-different target still
+            // takes the collision path above and is never silently overwritten.
+            try FileManager.default.removeItem(at: targetURL)
         }
 
         try FileManager.default.moveItem(at: temporaryURL, to: targetURL)
