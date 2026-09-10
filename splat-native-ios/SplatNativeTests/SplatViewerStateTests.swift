@@ -27,6 +27,20 @@ final class SplatViewerStateTests: XCTestCase {
         XCTAssertEqual(try JSONDecoder().decode(SplatEditSettings.self, from: data), expected)
     }
 
+    func testOlderSparseViewerJSONKeepsMissingFieldsAtSafeDefaults() throws {
+        let legacyJSON = Data(#"{"exposureEV":0.6,"contrast":1.2}"#.utf8)
+        let decoded = try JSONDecoder().decode(SplatEditSettings.self, from: legacyJSON).normalized()
+        XCTAssertEqual(decoded.exposureEV, 0.6)
+        XCTAssertEqual(decoded.contrast, 1.2)
+        XCTAssertEqual(decoded.cropXMin, 0)
+        XCTAssertEqual(decoded.cropXMax, 1)
+        XCTAssertEqual(decoded.cropYMin, 0)
+        XCTAssertEqual(decoded.cropYMax, 1)
+        XCTAssertEqual(decoded.cropZMin, 0)
+        XCTAssertEqual(decoded.cropZMax, 1)
+        XCTAssertFalse(decoded.hasCrop)
+    }
+
     func testViewerEditStoreRecoversLastKnownGoodSettingsFromBackup() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
