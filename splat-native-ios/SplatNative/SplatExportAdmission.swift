@@ -30,6 +30,11 @@ enum SplatExportAdmission {
         do { trustedURL = try SplatCompletionVerifier.verify(sourceURL: sourceURL) }
         catch { throw AdmissionError.untrustedSource }
 
+        // Export/materialization reads the persisted viewer sidecar independently from the live
+        // viewer. Recover a corrupt primary from the known-good generation before that read so the
+        // file the user sees and the file they export cannot silently diverge after a partial write.
+        _ = SplatViewerEditStore.load(sourceURL: trustedURL)
+
         let projectURL = trustedURL.deletingLastPathComponent()
         let sourceBytes = try fileSize(at: trustedURL)
         // New SH3 scans export from the canonical PLY rather than the compact legacy .splat.
