@@ -16,10 +16,14 @@ struct SplatVideoConfiguration: Equatable, Sendable {
         }
 
         var dimensions: (width: Int, height: Int) {
+            // 1080-line output preserves substantially more splat detail than the previous
+            // 720-line export while staying inside the hardware H.264 envelope of supported
+            // iOS 18 devices. Video memory and free-space admission both consume these dimensions,
+            // so large scenes fail safely before the higher-resolution buffers are allocated.
             switch self {
-            case .portrait9x16: return (720, 1280)
-            case .square1x1: return (720, 720)
-            case .landscape16x9: return (1280, 720)
+            case .portrait9x16: return (1080, 1920)
+            case .square1x1: return (1080, 1080)
+            case .landscape16x9: return (1920, 1080)
             }
         }
     }
