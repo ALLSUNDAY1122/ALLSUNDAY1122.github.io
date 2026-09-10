@@ -29,10 +29,16 @@ enum SplatVideoMemoryPolicy {
 
     private static let mib: UInt64 = 1_048_576
 
-    // Conservative working-set estimate for one dot-splat point while video export is active.
-    // It covers the decoded Swift SplatPoint array, Metal encoded/covariance data,
+    // Conservative working-set estimate for a legacy SH0 dot-splat point while video export is
+    // active. It covers the decoded Swift point array, Metal encoded/covariance data,
     // sorting/index buffers, and temporary conversion/staging overhead.
     static let estimatedWorkingBytesPerPoint: UInt64 = 160
+
+    // SH3 retains 16 RGB coefficient vectors per Gaussian. Once video rendering prefers the
+    // canonical SH3 PLY, those coefficients remain resident in the decoded point representation
+    // in addition to renderer staging, so using the legacy estimate can materially under-budget
+    // large scenes and increase jetsam/thermal risk during export.
+    static let estimatedSH3WorkingBytesPerPoint: UInt64 = 384
 
     // Keep headroom for the renderer, AVAssetWriter/VideoToolbox, framework state,
     // and allocations elsewhere in the app that are not proportional to point count.
@@ -77,10 +83,14 @@ enum SplatVideoMemoryPolicy {
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
     ) throws -> Estimate {
-        // The reconstruction output is the fixed-width 32-byte .splat format.
-        // sourcePointCount validates divisibility and returns the exact point count
-        // without decoding the scene into memory.
+        // The user-facing source remains the fixed-width 32-byte legacy `.splat`; resolve whether
+        // this committed generation also has a validated canonical SH3 representation. The video
+        // renderer can then reserve memory for the representation it will actually decode.
         let pointCount = try SplatExportService.sourcePointCount(sourceURL)
+        let hasCanonicalSH3 = SplatCanonicalSHAsset.existingAsset(
+            forLegacySplat: sourceURL,
+            expectedPointCount: pointCount
+        ) != nil
 
         let dimensions = configuration.dimensions
         let width = UInt64(max(1, dimensions.width))
@@ -90,7 +100,10 @@ enum SplatVideoMemoryPolicy {
         // AVAssetWriterPixelBufferAdaptor may keep multiple frame surfaces alive while
         // Metal renders and VideoToolbox encodes. Reserve four full BGRA surfaces.
         let videoSurfaceReserveBytes = bytesPerBGRAFrame * 4
-        let pointWorkingSetBytes = UInt64(pointCount) * estimatedWorkingBytesPerPoint
+        let workingBytesPerPoint = hasCanonicalSH3
+            ? estimatedSH3WorkingBytesPerPoint
+            : estimatedWorkingBytesPerPoint
+        let pointWorkingSetBytes = UInt64(pointCount) * workingBytesPerPoint
         let estimatedPeakBytes = pointWorkingSetBytes
             + fixedRendererAndEncoderReserveBytes
             + videoSurfaceReserveBytes
