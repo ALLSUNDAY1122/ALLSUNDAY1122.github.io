@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PROJECT="$ROOT/ios/NetworkSpecialist.xcodeproj"
 SCHEME="NetworkSpecialist"
+DERIVED_DATA="${TMPDIR:-/tmp}/network-specialist-derived-data"
 
 IDS=()
 while IFS= read -r id; do
@@ -67,51 +68,70 @@ raise SystemExit(124)
 PY
 }
 
-run_test_suite() {
-  local udid="$1"
-  local log="${TMPDIR:-/tmp}/network-specialist-ui-$udid.log"
-  echo "=== XCTest start: $udid ==="
+run_xcodebuild_logged() {
+  local phase="$1"
+  local timeout_seconds="$2"
+  shift 2
+  local log="${TMPDIR:-/tmp}/network-specialist-${phase}.log"
+  echo "=== XCTest ${phase} start ==="
   set +e
-  /usr/bin/python3 - "$log" "$PROJECT" "$SCHEME" "$udid" <<'PY'
+  /usr/bin/python3 - "$log" "$timeout_seconds" "$@" <<'PY'
 import subprocess, sys
-log, project, scheme, udid = sys.argv[1:]
-cmd = [
-    'xcodebuild', 'test',
-    '-project', project,
-    '-scheme', scheme,
-    '-destination', f'platform=iOS Simulator,id={udid}',
-    '-destination-timeout', '60',
-    '-parallel-testing-enabled', 'NO',
-    '-test-timeouts-enabled', 'YES',
-    '-default-test-execution-time-allowance', '60',
-    '-maximum-test-execution-time-allowance', '120',
-    '-only-testing:NetworkSpecialistTests',
-    '-only-testing:NetworkSpecialistUITests',
-    'CODE_SIGNING_ALLOWED=NO',
-    'ASSETCATALOG_COMPILER_APPICON_NAME=',
-]
+log = sys.argv[1]
+timeout_seconds = int(sys.argv[2])
+cmd = sys.argv[3:]
 with open(log, 'wb') as output:
     try:
-        result = subprocess.run(cmd, stdout=output, stderr=subprocess.STDOUT, timeout=540)
+        result = subprocess.run(cmd, stdout=output, stderr=subprocess.STDOUT, timeout=timeout_seconds)
         raise SystemExit(result.returncode)
     except subprocess.TimeoutExpired:
-        output.write(b'\nNETWORK_XCODEBUILD_HARD_TIMEOUT_540S\n')
+        output.write(f'\nNETWORK_XCODEBUILD_HARD_TIMEOUT_{timeout_seconds}S\n'.encode())
         raise SystemExit(124)
 PY
   local status=$?
   set -e
   if [[ "$status" -ne 0 ]]; then
-    echo "=== XCTest FAILURE status=$status ===" >&2
-    grep -E 'NETWORK_XCODEBUILD_HARD_TIMEOUT|Test Case .* (failed|passed)|Assertion Failure|XCTAssert|error:|timed out|Timeout|Failure|TEST FAILED|Executed [0-9]+ tests' "$log" | tail -180 >&2 || true
-    tail -100 "$log" >&2 || true
+    echo "=== XCTest ${phase} FAILURE status=$status ===" >&2
+    grep -E 'NETWORK_XCODEBUILD_HARD_TIMEOUT|Test Case .* (failed|passed)|Assertion Failure|XCTAssert|error:|timed out|Timeout|Failure|TEST FAILED|Executed [0-9]+ tests' "$log" | tail -220 >&2 || true
+    tail -120 "$log" >&2 || true
     return "$status"
   fi
-  grep -E 'Test Case .* passed|Executed [0-9]+ tests|TEST SUCCEEDED' "$log" | tail -60 || true
-  echo "=== XCTest PASS: $udid ==="
+  grep -E 'Test Case .* passed|Executed [0-9]+ tests|TEST SUCCEEDED|BUILD SUCCEEDED' "$log" | tail -80 || true
+  echo "=== XCTest ${phase} PASS ==="
 }
+
+rm -rf "$DERIVED_DATA"
+mkdir -p "$DERIVED_DATA"
+
+# Compile the app and both test bundles exactly once. Rebuilding for each simulator
+# previously mixed compilation time into the per-device 540s hard timeout and made
+# a slow build indistinguishable from a hanging UI journey.
+run_xcodebuild_logged "build-for-testing" 600 \
+  xcodebuild build-for-testing \
+    -project "$PROJECT" \
+    -scheme "$SCHEME" \
+    -destination "platform=iOS Simulator,id=${IDS[0]}" \
+    -derivedDataPath "$DERIVED_DATA" \
+    -parallel-testing-enabled NO \
+    CODE_SIGNING_ALLOWED=NO \
+    ASSETCATALOG_COMPILER_APPICON_NAME=
 
 for UDID in "${IDS[@]}"; do
   boot_device "$UDID"
-  run_test_suite "$UDID"
+  run_xcodebuild_logged "test-$UDID" 420 \
+    xcodebuild test-without-building \
+      -project "$PROJECT" \
+      -scheme "$SCHEME" \
+      -destination "platform=iOS Simulator,id=$UDID" \
+      -destination-timeout 60 \
+      -derivedDataPath "$DERIVED_DATA" \
+      -parallel-testing-enabled NO \
+      -test-timeouts-enabled YES \
+      -default-test-execution-time-allowance 60 \
+      -maximum-test-execution-time-allowance 120 \
+      -only-testing:NetworkSpecialistTests \
+      -only-testing:NetworkSpecialistUITests \
+      CODE_SIGNING_ALLOWED=NO \
+      ASSETCATALOG_COMPILER_APPICON_NAME=
   xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true
 done
