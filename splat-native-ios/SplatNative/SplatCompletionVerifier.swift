@@ -97,8 +97,30 @@ enum SplatCompletionVerifier {
                 evidence: evidence,
                 fileManager: fileManager
             )
+        } catch is CancellationError {
+            throw CancellationError()
         } catch {
-            throw VerificationError.completionEvidenceMismatch
+            // Structural recovery intentionally avoids a second hash on every healthy library open.
+            // If the strong verifier finds same-size corruption and the exact commit still has a
+            // protected SHA-bound backup, recover it now and immediately re-run the strong gate.
+            do {
+                guard try SplatPreviousResultEvidence.recoverTrustedPreviousAfterIntegrityFailure(
+                    projectURL: projectURL,
+                    evidence: evidence,
+                    fileManager: fileManager
+                ) else {
+                    throw VerificationError.completionEvidenceMismatch
+                }
+                verifiedDigest = try SplatStrongCompletionEvidence.verifyOrSeal(
+                    sourceURL: expectedURL,
+                    evidence: evidence,
+                    fileManager: fileManager
+                )
+            } catch is CancellationError {
+                throw CancellationError()
+            } catch {
+                throw VerificationError.completionEvidenceMismatch
+            }
         }
 
         SplatPreviousResultEvidence.discardBackup(projectURL: projectURL, fileManager: fileManager)
