@@ -36,13 +36,25 @@ final class PremiumPurchaseStore: ObservableObject {
     let productID: String?
     private var transactionUpdatesTask: Task<Void, Never>?
     private var hasPrepared = false
+    private let uiTestForcesPremium: Bool
+    private let uiTestBypassesStoreKit: Bool
 
-    init(bundle: Bundle = .main, productID: String? = nil) {
+    init(bundle: Bundle = .main, productID: String? = nil, processInfo: ProcessInfo = .processInfo) {
         let explicitID = Self.normalized(productID)
         let plistID = Self.normalized(bundle.object(forInfoDictionaryKey: "PremiumProductID") as? String)
         let resolved = explicitID ?? plistID
+        #if DEBUG
+        let forcedPremium = processInfo.arguments.contains("-UITestPremium")
+        let forcedFree = processInfo.arguments.contains("-UITestFree")
+        #else
+        let forcedPremium = false
+        let forcedFree = false
+        #endif
         self.productID = resolved
-        self.status = resolved == nil ? .unconfigured : .loading
+        self.uiTestForcesPremium = forcedPremium
+        self.uiTestBypassesStoreKit = forcedPremium || forcedFree
+        self.isPremium = forcedPremium
+        self.status = (forcedPremium || forcedFree) ? .ready : (resolved == nil ? .unconfigured : .loading)
     }
 
     deinit {
@@ -53,6 +65,7 @@ final class PremiumPurchaseStore: ObservableObject {
     var displayPrice: String? { product?.displayPrice }
 
     func prepare() async {
+        guard !uiTestBypassesStoreKit else { return }
         guard !hasPrepared else { return }
         hasPrepared = true
         guard let productID else {
@@ -114,13 +127,11 @@ final class PremiumPurchaseStore: ObservableObject {
                     await refreshEntitlements()
                     status = .ready
                 case .unverified:
-                    // Verification failure never grants access.
                     _ = PremiumAccessPolicy.grantsAccess(for: .unverified)
                     status = .ready
                     message = "購入情報を検証できなかったため、機能は解放していません。"
                 }
             case .pending:
-                // Pending transactions never grant access until a later verified update arrives.
                 _ = PremiumAccessPolicy.grantsAccess(for: .pending)
                 status = .ready
                 message = "購入は保留中です。承認後に自動で再確認します。"
@@ -145,7 +156,6 @@ final class PremiumPurchaseStore: ObservableObject {
         status = .restoring
         message = nil
         do {
-            // Apple recommends calling AppStore.sync() only after an explicit user action.
             try await AppStore.sync()
             await refreshEntitlements()
             status = .ready
@@ -157,6 +167,14 @@ final class PremiumPurchaseStore: ObservableObject {
     }
 
     func refreshEntitlements() async {
+        guard !uiTestForcesPremium else {
+            isPremium = true
+            return
+        }
+        guard !uiTestBypassesStoreKit else {
+            isPremium = false
+            return
+        }
         guard let productID else {
             isPremium = false
             return
@@ -189,7 +207,6 @@ final class PremiumPurchaseStore: ObservableObject {
             await refreshEntitlements()
             await transaction.finish()
         case .unverified:
-            // Unverified updates never grant access.
             return
         }
     }

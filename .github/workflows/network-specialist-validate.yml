@@ -112,6 +112,15 @@ jobs:
           cd network-specialist-sprint
           bash scripts/run_native_ui_tests.sh
 
+      - name: Preserve XCTest diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: network-specialist-xctest-diagnostics
+          path: /Users/runner/work/_temp/network-specialist-*.log
+          if-no-files-found: warn
+          retention-days: 2
+
       - name: Unsigned device Release build
         timeout-minutes: 10
         run: |

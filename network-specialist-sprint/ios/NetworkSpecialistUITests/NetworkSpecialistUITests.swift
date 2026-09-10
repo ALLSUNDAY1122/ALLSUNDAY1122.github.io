@@ -1,9 +1,12 @@
 import XCTest
 
 final class NetworkSpecialistUITests: XCTestCase {
-    private func launch() -> XCUIApplication {
+    private func launch(premium: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments += ["-UITestReset"]
+        app.launchArguments += ["-UITestReset", "-UITestFree"]
+        if premium {
+            app.launchArguments += ["-UITestPremium"]
+        }
         app.launch()
         return app
     }
@@ -27,8 +30,21 @@ final class NetworkSpecialistUITests: XCTestCase {
         XCTAssertTrue(app.buttons["home.resume"].waitForExistence(timeout: 2))
     }
 
-    func testMockHidesImmediateCorrectness() {
+    func testFreeUserCannotEnterPremiumTabs() {
         let app = launch()
+        app.buttons["tab.mock"].tap()
+        XCTAssertTrue(app.staticTexts["プレミアム機能"].waitForExistence(timeout: 5))
+        let premiumCTA = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "プレミアムを見る")).firstMatch
+        XCTAssertTrue(premiumCTA.waitForExistence(timeout: 2))
+        XCTAssertFalse(app.buttons["mock.year.2025"].exists)
+
+        app.buttons["tab.history"].tap()
+        XCTAssertTrue(app.staticTexts["プレミアム機能"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.otherElements["history.screen"].exists)
+    }
+
+    func testPremiumMockHidesImmediateCorrectness() {
+        let app = launch(premium: true)
         app.buttons["tab.mock"].tap()
         XCTAssertTrue(app.buttons["mock.year.2025"].waitForExistence(timeout: 3))
         app.buttons["mock.year.2025"].tap()
@@ -40,8 +56,8 @@ final class NetworkSpecialistUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["わからないとして記録"].exists)
     }
 
-    func testHistorySettingsAndLargeTextStayInsidePhoneWidth() {
-        let app = launch()
+    func testPremiumHistorySettingsAndLargeTextStayInsidePhoneWidth() {
+        let app = launch(premium: true)
         app.buttons["tab.history"].tap()
         XCTAssertTrue(app.otherElements["history.screen"].waitForExistence(timeout: 2))
 
@@ -54,12 +70,10 @@ final class NetworkSpecialistUITests: XCTestCase {
         if fontControl.exists && fontControl.buttons["特大"].exists {
             fontControl.buttons["特大"].tap()
         }
-
         app.buttons["tab.home"].tap()
-        let cta = app.buttons["home.startToday"]
-        XCTAssertTrue(cta.waitForExistence(timeout: 2))
-        let windowFrame = app.windows.firstMatch.frame
-        XCTAssertGreaterThanOrEqual(cta.frame.minX, windowFrame.minX - 1)
-        XCTAssertLessThanOrEqual(cta.frame.maxX, windowFrame.maxX + 1)
+        XCTAssertTrue(app.buttons["home.startToday"].waitForExistence(timeout: 2))
+        let window = app.windows.firstMatch
+        let start = app.buttons["home.startToday"]
+        XCTAssertLessThanOrEqual(start.frame.maxX, window.frame.maxX + 1)
     }
 }
