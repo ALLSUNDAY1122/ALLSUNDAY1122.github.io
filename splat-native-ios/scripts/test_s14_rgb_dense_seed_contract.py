@@ -38,17 +38,22 @@ for token in (
     "refinedDepth(",
     "depth: coarseDepth",
     "useBilinearNeighborSampling: true",
+    "var neighborCosts = SIMD4<Float>(repeating: 0)",
+    "var differences = SIMD16<Float>(repeating: 0)",
+    "let difference = neighborValue - referenceValue",
+    "guard samples >= 5, neighborCostCount < maximumNeighborFrames else { continue }",
+    "let meanDifference = differenceTotal / Float(samples)",
+    "guard neighborCostCount >= 2 else { return nil }",
+    "return (total - minimum - maximum) / Float(neighborCostCount - 2)",
+):
+    assert token in SOFTWARE, f"missing S14 software-depth contract: {token}"
+
+for forbidden in (
     "var neighborCosts: [Float] = []",
     "var referenceValues: [Float] = []",
     "var neighborValues: [Float] = []",
-    "referenceValues.count >= 5",
-    "let referenceMean = referenceValues.reduce(0, +) / count",
-    "let neighborMean = neighborValues.reduce(0, +) / count",
-    "guard neighborCosts.count >= 2 else { return nil }",
-    "neighborCosts.sort()",
-    "neighborCosts.dropFirst().dropLast()",
 ):
-    assert token in SOFTWARE, f"missing S14 software-depth contract: {token}"
+    assert forbidden not in SOFTWARE, f"inner plane-sweep allocation regressed: {forbidden}"
 
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
@@ -134,10 +139,9 @@ def project_world(point, fx, fy, cx, cy, camera_to_world):
 
 def centered_patch_cost(reference_values, neighbor_values):
     assert len(reference_values) == len(neighbor_values)
-    reference_mean = sum(reference_values) / len(reference_values)
-    neighbor_mean = sum(neighbor_values) / len(neighbor_values)
+    mean_difference = sum(n - r for r, n in zip(reference_values, neighbor_values)) / len(reference_values)
     return sum(
-        abs((r - reference_mean) - (n - neighbor_mean))
+        abs((n - r) - mean_difference)
         for r, n in zip(reference_values, neighbor_values)
     ) / len(reference_values)
 
@@ -227,10 +231,10 @@ def robust_multiview_cost(costs):
         return None
     if len(costs) == 2:
         return (costs[0] + costs[1]) * 0.5
+    total = sum(costs)
     if len(costs) == 3:
-        return costs[1]
-    trimmed = costs[1:-1]
-    return sum(trimmed) / len(trimmed)
+        return total - min(costs) - max(costs)
+    return (total - min(costs) - max(costs)) / (len(costs) - 2)
 
 assert math.isclose(robust_multiview_cost([8.0, 10.0]), 9.0)
 assert math.isclose(robust_multiview_cost([8.0, 10.0, 9.0]), 9.0)
@@ -246,4 +250,4 @@ def voxel(p):
 assert voxel((0.001, 0.001, -1.001)) == voxel((0.009, 0.009, -1.009))
 assert voxel((0.001, 0.001, -1.001)) != voxel((0.021, 0.001, -1.001))
 
-print("PASS: S14 RGB dense-seed + exposure-normalized robust refined depth contract")
+print("PASS: S14 RGB dense-seed + allocation-free exposure-normalized robust refined depth contract")
