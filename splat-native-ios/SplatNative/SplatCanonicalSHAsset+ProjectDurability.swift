@@ -71,10 +71,12 @@ extension SplatCanonicalSHAsset {
 
             // A truncated/corrupt canonical file can be left behind by storage corruption or an
             // interrupted older write. The fresh candidate above has already passed point-count
-            // and SH3 validation, so allowing the invalid target to permanently block all future
-            // regenerations would be worse than replacing it. A valid-but-different target still
-            // takes the collision path above and is never silently overwritten.
-            try FileManager.default.removeItem(at: targetURL)
+            // and SH3 validation. Replace the invalid target atomically so a repair cannot create
+            // a new crash window where neither the old target nor the validated candidate exists.
+            // A valid-but-different target still takes the collision path above and is never
+            // silently overwritten.
+            _ = try FileManager.default.replaceItemAt(targetURL, withItemAt: temporaryURL)
+            return Asset(url: targetURL, descriptor: candidate)
         }
 
         try FileManager.default.moveItem(at: temporaryURL, to: targetURL)
