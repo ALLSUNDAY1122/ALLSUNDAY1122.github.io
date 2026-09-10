@@ -132,6 +132,34 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
         XCTAssertEqual(admission.renderAssetURL.standardizedFileURL, canonicalURL.standardizedFileURL)
     }
 
+    func testVerifiedDigestVideoAdmissionSelectsSameCanonicalWithoutResolverHashPath() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("splat-video-digest-admission-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        let pointCount = 10
+        try Data(repeating: 0x5A, count: pointCount * 32).write(to: source, options: .atomic)
+        let digest = try SplatExportService.sha256Hex(fileURL: source)
+        let canonicalURL = try SplatCanonicalSHAsset.canonicalURL(
+            forLegacySplat: source,
+            verifiedDigest: digest
+        )
+        var completePLY = Data(canonicalSH3Header(pointCount: pointCount).utf8)
+        completePLY.append(Data(repeating: 0, count: pointCount * 48 * MemoryLayout<Float>.size))
+        try completePLY.write(to: canonicalURL, options: .atomic)
+
+        let admission = try SplatVideoMemoryPolicy.preflightAdmission(
+            sourceURL: source,
+            verifiedDigest: digest,
+            configuration: SplatVideoConfiguration(),
+            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024
+        )
+
+        XCTAssertEqual(admission.estimate.pointCount, pointCount)
+        XCTAssertEqual(admission.renderAssetURL.standardizedFileURL, canonicalURL.standardizedFileURL)
+    }
+
     func testVideoPreflightRejectsMalformedExistingCanonicalInsteadOfSilentLegacyDowngrade() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("splat-video-sh3-malformed-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
