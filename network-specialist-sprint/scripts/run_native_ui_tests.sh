@@ -12,17 +12,41 @@ IDS=()
 while IFS= read -r id; do
   IDS+=("$id")
 done < <(python3 - <<'PY'
-import json, subprocess
+import json, re, subprocess
+
+sdk = subprocess.check_output(
+    ['xcrun', '--sdk', 'iphonesimulator', '--show-sdk-version'], text=True
+).strip()
+sdk_match = re.match(r'^(\d+)(?:\.(\d+))?', sdk)
+if not sdk_match:
+    raise SystemExit(f'Unable to parse iPhone Simulator SDK version: {sdk}')
+sdk_major = int(sdk_match.group(1))
+sdk_minor = int(sdk_match.group(2) or 0)
+
 raw = subprocess.check_output(['xcrun','simctl','list','-j','devices','available'])
 data = json.loads(raw)
 items=[]
 for runtime, devices in data['devices'].items():
-    if 'iOS' not in runtime:
+    m = re.search(r'SimRuntime\.iOS-(\d+)-(\d+)', runtime)
+    if not m:
+        continue
+    runtime_version = (int(m.group(1)), int(m.group(2)))
+    # Xcode 16.4 can coexist with newer runtimes on GitHub-hosted runners.
+    # Never choose a simulator runtime newer than the active Xcode SDK.
+    if runtime_version > (sdk_major, sdk_minor):
         continue
     for d in devices:
         if d.get('isAvailable') and d.get('name','').startswith('iPhone'):
-            items.append((d['name'], d['udid']))
-preferred_large=['iPhone 17 Pro Max','iPhone 16 Pro Max','iPhone 16 Pro','iPhone 15 Pro Max','iPhone 15 Pro']
+            items.append((runtime_version, d['name'], d['udid']))
+
+if not items:
+    raise SystemExit(f'No iPhone simulator compatible with active SDK {sdk}')
+
+# Prefer the newest runtime that is not newer than the active SDK, then choose
+# one large and one small phone within that same runtime for deterministic tests.
+best_runtime = max(x[0] for x in items)
+items = [(name, udid) for runtime, name, udid in items if runtime == best_runtime]
+preferred_large=['iPhone 16 Pro Max','iPhone 16 Pro','iPhone 15 Pro Max','iPhone 15 Pro','iPhone 17 Pro Max']
 preferred_small=['iPhone SE (3rd generation)','iPhone 13 mini','iPhone 16e','iPhone 15']
 chosen=[]
 for prefs in (preferred_large, preferred_small):
@@ -33,40 +57,41 @@ for prefs in (preferred_large, preferred_small):
     if not found:
         found=next((x for x in items if x[1] not in [c[1] for c in chosen]), None)
     if found: chosen.append(found)
+
+print(f'NETWORK_SIMULATOR_RUNTIME_SELECTED iOS {best_runtime[0]}.{best_runtime[1]} for SDK {sdk}', file=__import__('sys').stderr)
 for name, udid in chosen[:2]:
     print(udid)
 PY
 )
 
-if [[ ${#IDS[@]} -eq 0 ]]; then
-  echo "No available iPhone simulators" >&2
+if [[ ${#IDS[@]} -lt 2 ]]; then
+  echo "Need two compatible iPhone simulators for large/small Visual Gate" >&2
   exit 1
 fi
 
 boot_device() {
   local udid="$1"
   /usr/bin/python3 - "$udid" <<'PY'
-import subprocess, sys, time
+import subprocess, sys
 udid = sys.argv[1]
 try:
     subprocess.run(['xcrun', 'simctl', 'boot', udid], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
 except subprocess.TimeoutExpired:
     print('NETWORK_SIMCTL_BOOT_HARD_TIMEOUT_30S', file=sys.stderr)
     raise SystemExit(124)
-for attempt in range(36):
-    try:
-        result = subprocess.run(
-            ['xcrun', 'simctl', 'list', 'devices', 'available'],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=10
-        )
-        if result.returncode == 0 and udid in result.stdout and '(Booted)' in result.stdout:
-            print(f'NETWORK_SIMULATOR_BOOTED attempt={attempt + 1}')
-            raise SystemExit(0)
-    except subprocess.TimeoutExpired:
-        print('NETWORK_SIMCTL_LIST_TIMEOUT_RETRYING', file=sys.stderr)
-    time.sleep(5)
-print('NETWORK_SIMULATOR_DID_NOT_BOOT_WITHIN_180S', file=sys.stderr)
-raise SystemExit(124)
+# "Booted" in simctl list is not sufficient: wait until SpringBoard/services are ready.
+try:
+    result = subprocess.run(
+        ['xcrun', 'simctl', 'bootstatus', udid, '-b'],
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=120
+    )
+except subprocess.TimeoutExpired:
+    print('NETWORK_SIMULATOR_BOOTSTATUS_HARD_TIMEOUT_120S', file=sys.stderr)
+    raise SystemExit(124)
+if result.returncode != 0:
+    print(result.stdout, file=sys.stderr)
+    raise SystemExit(result.returncode)
+print('NETWORK_SIMULATOR_BOOT_READY')
 PY
 }
 
@@ -105,8 +130,6 @@ PY
 rm -rf "$DERIVED_DATA"
 mkdir -p "$DERIVED_DATA"
 
-# The macOS runner starts cold. Compilation is not a human-journey budget, so give
-# build-for-testing its own bounded allowance and keep all journey limits strict.
 run_xcodebuild_logged "build-for-testing" 900 \
   xcodebuild build-for-testing \
     -project "$PROJECT" \
@@ -117,8 +140,6 @@ run_xcodebuild_logged "build-for-testing" 900 \
     CODE_SIGNING_ALLOWED=NO \
     ASSETCATALOG_COMPILER_APPICON_NAME=
 
-# Unit tests are device-size independent. Run them once, then run each UI journey
-# independently on both phone sizes so a stalled journey is identified by name.
 boot_device "${IDS[0]}"
 run_xcodebuild_logged "unit-${IDS[0]}" 180 \
   xcodebuild test-without-building \
