@@ -87,13 +87,30 @@ final class OTAppModel: ObservableObject {
             persistState()
             return
         }
+
+        var restoredCorrectCount = 0
+        for question in restored {
+            guard let savedAnswer = snapshot.answers[question.id] else { continue }
+            if let evaluation = try? LearningEngine.evaluate(question, answer: savedAnswer), evaluation.isCorrect {
+                restoredCorrectCount += 1
+            }
+        }
+
         session = restored
         sessionKind = snapshot.kind
         index = snapshot.currentIndex
-        correctCount = 0
-        feedback = nil
-        selectedIndices = []
+        correctCount = restoredCorrectCount
         finished = false
+
+        let currentQuestion = restored[snapshot.currentIndex]
+        if let savedAnswer = snapshot.answers[currentQuestion.id],
+           let savedEvaluation = try? LearningEngine.evaluate(currentQuestion, answer: savedAnswer) {
+            selectedIndices = Set(savedAnswer.selectedIndices)
+            feedback = savedEvaluation
+        } else {
+            selectedIndices = []
+            feedback = nil
+        }
     }
 
     private func begin(_ selected: [LearningQuestion], kind: SessionKind) {
