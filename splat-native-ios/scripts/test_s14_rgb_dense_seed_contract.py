@@ -38,11 +38,14 @@ for token in (
     "refinedDepth(",
     "depth: coarseDepth",
     "useBilinearNeighborSampling: true",
-    "var neighborCosts = SIMD4<Float>(repeating: 0)",
-    "var differences = SIMD16<Float>(repeating: 0)",
-    "let difference = neighborValue - referenceValue",
-    "guard samples >= 5, neighborCostCount < maximumNeighborFrames else { continue }",
-    "let meanDifference = differenceTotal / Float(samples)",
+    "let neighborCount = min(neighborIndices.count, maximumNeighborFrames)",
+    "var differences = SIMD64<Float>(repeating: 0)",
+    "var differenceTotals = SIMD4<Float>(repeating: 0)",
+    "var sampleCounts = SIMD4<Int32>(repeating: 0)",
+    "let world = backproject(u: u + dx, v: v + dy, depth: depth, frame: reference)",
+    "for neighborSlot in 0..<neighborCount",
+    "differences[neighborSlot * 16 + sampleIndex] = difference",
+    "let meanDifference = differenceTotals[neighborSlot] / Float(samples)",
     "guard neighborCostCount >= 2 else { return nil }",
     "return (total - minimum - maximum) / Float(neighborCostCount - 2)",
 ):
@@ -52,8 +55,16 @@ for forbidden in (
     "var neighborCosts: [Float] = []",
     "var referenceValues: [Float] = []",
     "var neighborValues: [Float] = []",
+    "var differences = SIMD16<Float>(repeating: 0)",
 ):
-    assert forbidden not in SOFTWARE, f"inner plane-sweep allocation regressed: {forbidden}"
+    assert forbidden not in SOFTWARE, f"inner plane-sweep allocation/reprojection regressed: {forbidden}"
+
+# The patch point must be backprojected before entering the neighbor loop, not once per neighbor.
+backproject_token = "let world = backproject(u: u + dx, v: v + dy, depth: depth, frame: reference)"
+neighbor_loop_token = "for neighborSlot in 0..<neighborCount"
+assert SOFTWARE.index(backproject_token, SOFTWARE.index("private static func patchCost")) < SOFTWARE.index(
+    neighbor_loop_token, SOFTWARE.index("private static func patchCost")
+)
 
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
@@ -250,4 +261,4 @@ def voxel(p):
 assert voxel((0.001, 0.001, -1.001)) == voxel((0.009, 0.009, -1.009))
 assert voxel((0.001, 0.001, -1.001)) != voxel((0.021, 0.001, -1.001))
 
-print("PASS: S14 RGB dense-seed + allocation-free exposure-normalized robust refined depth contract")
+print("PASS: S14 RGB dense-seed + shared-backprojection exposure-normalized robust refined depth contract")
