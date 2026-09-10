@@ -103,9 +103,9 @@ PY
 rm -rf "$DERIVED_DATA"
 mkdir -p "$DERIVED_DATA"
 
-# Build the app and both test bundles exactly once. Keep compilation outside all
-# per-device test timeouts so a slow build cannot masquerade as a hung journey.
-run_xcodebuild_logged "build-for-testing" 600 \
+# The macOS runner starts cold. Compilation is not a human-journey budget, so give
+# build-for-testing its own bounded allowance and keep all journey limits strict.
+run_xcodebuild_logged "build-for-testing" 900 \
   xcodebuild build-for-testing \
     -project "$PROJECT" \
     -scheme "$SCHEME" \
@@ -116,8 +116,7 @@ run_xcodebuild_logged "build-for-testing" 600 \
     ASSETCATALOG_COMPILER_APPICON_NAME=
 
 # Unit tests are device-size independent. Run them once, then run each UI journey
-# independently on both phone sizes. A single stalled journey now fails with its
-# own phase name instead of consuming the whole 420s suite timeout.
+# independently on both phone sizes so a stalled journey is identified by name.
 boot_device "${IDS[0]}"
 run_xcodebuild_logged "unit-${IDS[0]}" 180 \
   xcodebuild test-without-building \
