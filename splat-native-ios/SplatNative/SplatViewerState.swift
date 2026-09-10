@@ -48,30 +48,68 @@ struct SplatEditSettings: Codable, Equatable, Sendable {
 enum SplatMeasurementFormatter {
     static func string(meters: Float) -> String {
         let value = max(0, meters)
-        if value < 0.01 {
-            return String(format: "%.1f mm", value * 1_000)
-        }
-        if value < 1 {
-            return String(format: "%.1f cm", value * 100)
-        }
+        if value < 0.01 { return String(format: "%.1f mm", value * 1_000) }
+        if value < 1 { return String(format: "%.1f cm", value * 100) }
         return String(format: "%.2f m", value)
     }
 }
 
+/// Durable viewer-edit sidecar. The backup is intentionally separate from the scan manifest:
+/// viewer edits can be recovered without making the reconstructed asset itself untrusted.
+struct SplatViewerEditStore {
+    static func primaryURL(for sourceURL: URL) -> URL {
+        sourceURL.deletingPathExtension().appendingPathExtension("viewer.json")
+    }
+
+    static func backupURL(for sourceURL: URL) -> URL {
+        sourceURL.deletingPathExtension().appendingPathExtension("viewer.json.bak")
+    }
+
+    static func load(sourceURL: URL, fileManager: FileManager = .default) -> (settings: SplatEditSettings, recoveredFromBackup: Bool)? {
+        let decoder = JSONDecoder()
+        let primary = primaryURL(for: sourceURL)
+        if let data = try? Data(contentsOf: primary),
+           let decoded = try? decoder.decode(SplatEditSettings.self, from: data) {
+            return (decoded.normalized(), false)
+        }
+
+        let backup = backupURL(for: sourceURL)
+        guard let data = try? Data(contentsOf: backup),
+              let decoded = try? decoder.decode(SplatEditSettings.self, from: data) else {
+            return nil
+        }
+        // Best-effort self-heal: a valid backup becomes the new primary. Failure here does not
+        // discard the recovered settings; the caller can still render them and warn the user.
+        try? data.write(to: primary, options: .atomic)
+        return (decoded.normalized(), true)
+    }
+
+    static func save(_ settings: SplatEditSettings, sourceURL: URL, fileManager: FileManager = .default) throws {
+        let primary = primaryURL(for: sourceURL)
+        let backup = backupURL(for: sourceURL)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(settings.normalized())
+
+        // Keep one known-good generation. Copy rather than move so an interrupted backup update
+        // never removes the only valid primary before the new atomic write lands.
+        if fileManager.fileExists(atPath: primary.path) {
+            if let oldData = try? Data(contentsOf: primary),
+               (try? JSONDecoder().decode(SplatEditSettings.self, from: oldData)) != nil {
+                try oldData.write(to: backup, options: .atomic)
+            }
+        }
+        try data.write(to: primary, options: .atomic)
+    }
+}
+
 /// Mirrors msplat's `autoScaleAndCenter` transform for Nerfstudio input.
-/// The trainer exports gaussians in this normalized coordinate system, so
-/// distances in the exported Splat must be multiplied by `1 / scale` to recover meters.
 struct SplatSceneNormalization: Equatable, Sendable {
     let translation: SIMD3<Float>
     let scale: Float
 
     init(cameraPositions: [SIMD3<Float>]) {
-        guard !cameraPositions.isEmpty else {
-            translation = .zero
-            scale = 1
-            return
-        }
-
+        guard !cameraPositions.isEmpty else { translation = .zero; scale = 1; return }
         let total = cameraPositions.reduce(SIMD3<Float>.zero, +)
         let mean = total / Float(cameraPositions.count)
         var maxAbs: Float = 0
@@ -83,25 +121,14 @@ struct SplatSceneNormalization: Equatable, Sendable {
         scale = maxAbs > 0 ? 1 / maxAbs : 1
     }
 
-    var metersPerSceneUnit: Float {
-        scale > 0.000001 ? 1 / scale : 1
-    }
-
-    func normalized(_ worldPosition: SIMD3<Float>) -> SIMD3<Float> {
-        (worldPosition - translation) * scale
-    }
+    var metersPerSceneUnit: Float { scale > 0.000001 ? 1 / scale : 1 }
+    func normalized(_ worldPosition: SIMD3<Float>) -> SIMD3<Float> { (worldPosition - translation) * scale }
 }
 
-private struct MeasurementTransforms: Decodable {
-    let frames: [MeasurementFrame]
-}
-
+private struct MeasurementTransforms: Decodable { let frames: [MeasurementFrame] }
 private struct MeasurementFrame: Decodable {
     let transformMatrix: [[Float]]
-
-    enum CodingKeys: String, CodingKey {
-        case transformMatrix = "transform_matrix"
-    }
+    enum CodingKeys: String, CodingKey { case transformMatrix = "transform_matrix" }
 }
 
 @MainActor
@@ -115,7 +142,6 @@ final class SplatViewerState: ObservableObject {
     @Published var cropZMin: Double = 0
     @Published var cropZMax: Double = 1
     @Published var measurementEnabled = false
-
     @Published private(set) var isLoading = true
     @Published private(set) var isApplyingEdits = false
     @Published private(set) var totalPointCount = 0
@@ -132,54 +158,27 @@ final class SplatViewerState: ObservableObject {
     private var metersPerSceneUnit: Float = 1
 
     var editSettings: SplatEditSettings {
-        SplatEditSettings(
-            exposureEV: exposureEV,
-            contrast: contrast,
-            cropXMin: cropXMin,
-            cropXMax: cropXMax,
-            cropYMin: cropYMin,
-            cropYMax: cropYMax,
-            cropZMin: cropZMin,
-            cropZMax: cropZMax
-        ).normalized()
+        SplatEditSettings(exposureEV: exposureEV, contrast: contrast, cropXMin: cropXMin, cropXMax: cropXMax, cropYMin: cropYMin, cropYMax: cropYMax, cropZMin: cropZMin, cropZMax: cropZMax).normalized()
     }
 
     func attach(url: URL) {
         guard sourceURL != url else { return }
+        persistenceTask?.cancel()
         sourceURL = url
         metersPerSceneUnit = Self.measurementScale(for: url)
         measurementEnabled = false
         measurementText = "画面上の2点を順番にタップしてください"
-        errorMessage = nil
-        warningMessage = nil
-        totalPointCount = 0
-        visiblePointCount = 0
-        isLoading = true
-        isApplyingEdits = false
+        errorMessage = nil; warningMessage = nil
+        totalPointCount = 0; visiblePointCount = 0
+        isLoading = true; isApplyingEdits = false
         loadPersistedEdits()
         clearMeasurementToken &+= 1
     }
 
-    func resetEdits() {
-        apply(.default)
-        persistNow()
-    }
-
-    func requestCameraReset() {
-        resetCameraToken &+= 1
-    }
-
-    func requestMeasurementClear() {
-        measurementText = "画面上の2点を順番にタップしてください"
-        clearMeasurementToken &+= 1
-    }
-
-    func requestReload() {
-        errorMessage = nil
-        warningMessage = nil
-        isLoading = true
-        reloadToken &+= 1
-    }
+    func resetEdits() { apply(.default); persistNow() }
+    func requestCameraReset() { resetCameraToken &+= 1 }
+    func requestMeasurementClear() { measurementText = "画面上の2点を順番にタップしてください"; clearMeasurementToken &+= 1 }
+    func requestReload() { errorMessage = nil; warningMessage = nil; isLoading = true; reloadToken &+= 1 }
 
     func schedulePersistence() {
         guard sourceURL != nil else { return }
@@ -192,104 +191,44 @@ final class SplatViewerState: ObservableObject {
     }
 
     func persistNow() {
-        guard let url = sidecarURL else { return }
-        do {
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-            try encoder.encode(editSettings).write(to: url, options: .atomic)
-        } catch {
-            warningMessage = "編集内容を保存できませんでした"
-        }
+        persistenceTask?.cancel()
+        guard let sourceURL else { return }
+        do { try SplatViewerEditStore.save(editSettings, sourceURL: sourceURL) }
+        catch { warningMessage = "編集内容を保存できませんでした" }
     }
 
-    func rendererBeganLoading() {
-        isLoading = true
-        errorMessage = nil
-        warningMessage = nil
-    }
-
-    func rendererLoaded(total: Int) {
-        totalPointCount = total
-        visiblePointCount = total
-        isLoading = false
-        errorMessage = nil
-    }
-
-    func rendererBeganApplyingEdits() {
-        isApplyingEdits = true
-        warningMessage = nil
-    }
-
-    func rendererAppliedEdits(visible: Int) {
-        visiblePointCount = visible
-        isApplyingEdits = false
-        warningMessage = nil
-    }
-
-    func rendererRejectedEdit(_ message: String) {
-        isApplyingEdits = false
-        warningMessage = message
-    }
-
-    func rendererFailed(_ message: String) {
-        isLoading = false
-        isApplyingEdits = false
-        errorMessage = message
-    }
-
-    func rendererSelectedMeasurementPoint(count: Int) {
-        if count == 1 {
-            measurementText = "始点を選択しました。終点をタップしてください"
-        }
-    }
-
-    /// The renderer reports distance in exported Splat scene units. The parameter
-    /// label is retained for the renderer-facing API, then converted back to meters here.
-    func rendererMeasured(meters sceneUnits: Float) {
-        measurementText = SplatMeasurementFormatter.string(
-            meters: sceneUnits * metersPerSceneUnit
-        )
-    }
-
-    private var sidecarURL: URL? {
-        sourceURL?.deletingPathExtension().appendingPathExtension("viewer.json")
-    }
+    func rendererBeganLoading() { isLoading = true; errorMessage = nil; warningMessage = nil }
+    func rendererLoaded(total: Int) { totalPointCount = total; visiblePointCount = total; isLoading = false; errorMessage = nil }
+    func rendererBeganApplyingEdits() { isApplyingEdits = true; warningMessage = nil }
+    func rendererAppliedEdits(visible: Int) { visiblePointCount = visible; isApplyingEdits = false; warningMessage = nil }
+    func rendererRejectedEdit(_ message: String) { isApplyingEdits = false; warningMessage = message }
+    func rendererFailed(_ message: String) { isLoading = false; isApplyingEdits = false; errorMessage = message }
+    func rendererSelectedMeasurementPoint(count: Int) { if count == 1 { measurementText = "始点を選択しました。終点をタップしてください" } }
+    func rendererMeasured(meters sceneUnits: Float) { measurementText = SplatMeasurementFormatter.string(meters: sceneUnits * metersPerSceneUnit) }
 
     private func loadPersistedEdits() {
-        guard let url = sidecarURL,
-              let data = try? Data(contentsOf: url),
-              let decoded = try? JSONDecoder().decode(SplatEditSettings.self, from: data) else {
-            apply(.default)
-            return
+        guard let sourceURL,
+              let loaded = SplatViewerEditStore.load(sourceURL: sourceURL) else {
+            apply(.default); return
         }
-        apply(decoded.normalized())
+        apply(loaded.settings)
+        if loaded.recoveredFromBackup { warningMessage = "前回の編集設定をバックアップから復元しました" }
     }
 
     private func apply(_ settings: SplatEditSettings) {
         let value = settings.normalized()
-        exposureEV = value.exposureEV
-        contrast = value.contrast
-        cropXMin = value.cropXMin
-        cropXMax = value.cropXMax
-        cropYMin = value.cropYMin
-        cropYMax = value.cropYMax
-        cropZMin = value.cropZMin
-        cropZMax = value.cropZMax
+        exposureEV = value.exposureEV; contrast = value.contrast
+        cropXMin = value.cropXMin; cropXMax = value.cropXMax
+        cropYMin = value.cropYMin; cropYMax = value.cropYMax
+        cropZMin = value.cropZMin; cropZMax = value.cropZMax
     }
 
     private static func measurementScale(for splatURL: URL) -> Float {
         let transformsURL = splatURL.deletingLastPathComponent().appendingPathComponent("transforms.json")
-        guard let data = try? Data(contentsOf: transformsURL),
-              let dataset = try? JSONDecoder().decode(MeasurementTransforms.self, from: data) else {
-            return 1
-        }
-
+        guard let data = try? Data(contentsOf: transformsURL), let dataset = try? JSONDecoder().decode(MeasurementTransforms.self, from: data) else { return 1 }
         let positions = dataset.frames.compactMap { frame -> SIMD3<Float>? in
             let matrix = frame.transformMatrix
-            guard matrix.count >= 3,
-                  matrix[0].count >= 4,
-                  matrix[1].count >= 4,
-                  matrix[2].count >= 4 else { return nil }
+            guard matrix.count >= 3, matrix[0].count >= 4, matrix[1].count >= 4, matrix[2].count >= 4 else { return nil }
             return SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])
         }
         return SplatSceneNormalization(cameraPositions: positions).metersPerSceneUnit
