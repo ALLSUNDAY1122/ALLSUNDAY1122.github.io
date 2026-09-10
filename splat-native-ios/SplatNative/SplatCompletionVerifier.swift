@@ -6,6 +6,11 @@ import Foundation
 /// after writing any whole number of 32-byte records. Export/share/view entry points must pass
 /// through this verifier before treating a local result as user-owned completed data.
 enum SplatCompletionVerifier {
+    struct Verification: Equatable, Sendable {
+        let url: URL
+        let sha256: String
+    }
+
     enum VerificationError: LocalizedError {
         case unexpectedSource
         case projectNotFinished
@@ -30,6 +35,13 @@ enum SplatCompletionVerifier {
         sourceURL: URL,
         fileManager: FileManager = .default
     ) throws -> URL {
+        try verifyWithDigest(sourceURL: sourceURL, fileManager: fileManager).url
+    }
+
+    static func verifyWithDigest(
+        sourceURL: URL,
+        fileManager: FileManager = .default
+    ) throws -> Verification {
         guard sourceURL.isFileURL else {
             throw VerificationError.unexpectedSource
         }
@@ -78,8 +90,9 @@ enum SplatCompletionVerifier {
             throw VerificationError.completionEvidenceMismatch
         }
 
+        let verifiedDigest: String
         do {
-            try SplatStrongCompletionEvidence.verifyOrSeal(
+            verifiedDigest = try SplatStrongCompletionEvidence.verifyOrSeal(
                 sourceURL: expectedURL,
                 evidence: evidence,
                 fileManager: fileManager
@@ -89,7 +102,7 @@ enum SplatCompletionVerifier {
         }
 
         SplatPreviousResultEvidence.discardBackup(projectURL: projectURL, fileManager: fileManager)
-        return expectedURL
+        return Verification(url: expectedURL, sha256: verifiedDigest)
     }
 
     private static func normalized(_ url: URL) -> URL {
