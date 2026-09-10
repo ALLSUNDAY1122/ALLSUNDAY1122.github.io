@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var store: LearningStore
+    @EnvironmentObject private var purchases: PremiumPurchaseStore
 
     var body: some View {
         Group {
@@ -18,9 +19,9 @@ struct ContentView: View {
                         case .home:
                             HomeView()
                         case .mock:
-                            MockView()
+                            if purchases.isPremium { MockView() } else { PremiumRequiredView(feature: "年度別25問模試") }
                         case .history:
-                            HistoryView()
+                            if purchases.isPremium { HistoryView() } else { PremiumRequiredView(feature: "記録・5週間ヒートマップ") }
                         case .settings:
                             SettingsView()
                         }
@@ -33,6 +34,44 @@ struct ContentView: View {
         .environment(\.appFontScale, store.fontScale)
         .tint(AppTheme.ai)
         .preferredColorScheme(.light)
+    }
+}
+
+private struct PremiumRequiredView: View {
+    @EnvironmentObject private var store: LearningStore
+    @EnvironmentObject private var purchases: PremiumPurchaseStore
+    let feature: String
+
+    var body: some View {
+        ZStack {
+            AppTheme.paper.ignoresSafeArea()
+            VStack(spacing: 16) {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundStyle(AppTheme.ai)
+                Text("プレミアム機能")
+                    .appSerif(22, weight: .bold)
+                    .foregroundStyle(AppTheme.ink)
+                Text("\(feature)はプレミアムで利用できます。")
+                    .appSans(13)
+                    .foregroundStyle(AppTheme.ink2)
+                    .multilineTextAlignment(.center)
+                Button {
+                    store.currentTab = .settings
+                } label: {
+                    Text(purchases.displayPrice.map { "プレミアムを見る（\($0)）" } ?? "プレミアムを見る")
+                        .appSans(14, weight: .bold)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: 300, minHeight: 48)
+                        .background(AppTheme.ai)
+                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("premium.openSettings")
+            }
+            .padding(24)
+        }
+        .accessibilityIdentifier("premium.required")
     }
 }
 
