@@ -3,7 +3,7 @@ import XCTest
 final class NetworkSpecialistUITests: XCTestCase {
     private func launch(premium: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments += ["-UITestReset"]
+        app.launchArguments += ["-UITestReset", "-UITestFree"]
         if premium {
             app.launchArguments += ["-UITestPremium"]
         }
