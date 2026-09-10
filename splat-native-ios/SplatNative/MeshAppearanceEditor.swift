@@ -55,6 +55,14 @@ private enum MeshAppearanceProcessor {
         committed = true
         return MeshAppearanceEditResult(objURL: editedOBJ, textureURL: editedTexture)
     }
+
+    static func discard(_ result: MeshAppearanceEditResult) {
+        let mtlURL = result.objURL.deletingPathExtension().appendingPathExtension("mtl")
+        try? FileManager.default.removeItem(at: result.textureURL)
+        try? FileManager.default.removeItem(at: mtlURL)
+        try? FileManager.default.removeItem(at: result.objURL)
+    }
+
     private static func error(_ text:String)->NSError{NSError(domain:"ScanLab.MeshAppearance",code:1,userInfo:[NSLocalizedDescriptionKey:text])}
 }
 
@@ -94,11 +102,15 @@ struct MeshAppearanceEditorSheet: View {
         Task {
             do {
                 let result = try await Task.detached(priority:.userInitiated){ try MeshAppearanceProcessor.apply(objURL:url, exposure:e, contrast:c, saturation:s, sharpness:sh) }.value
+                guard let candidateScene = try? SCNScene(url: result.objURL, options: nil) else {
+                    MeshAppearanceProcessor.discard(result)
+                    throw NSError(domain: "ScanLab.MeshAppearance", code: 2, userInfo: [NSLocalizedDescriptionKey: "編集後のMeshを検証できませんでした。直前の結果を保持します。"])
+                }
                 let previousURL = model.resultURL
                 let previousScene = model.previewScene
                 let previousStatus = model.statusMessage
                 model.resultURL = result.objURL
-                model.previewScene = try? SCNScene(url: result.objURL, options: nil)
+                model.previewScene = candidateScene
                 do {
                     try model.persistExporterMeshAssetContract()
                 } catch {
@@ -108,6 +120,7 @@ struct MeshAppearanceEditorSheet: View {
                     model.resultURL = previousURL
                     model.previewScene = previousScene
                     model.statusMessage = previousStatus
+                    MeshAppearanceProcessor.discard(result)
                     throw error
                 }
                 model.statusMessage="露出・コントラスト・彩度・シャープを実テクスチャへ反映しました"
