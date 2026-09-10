@@ -15,10 +15,24 @@ struct SplatVideoOptionsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                }
+
+                Section("画質") {
+                    Picker("画質", selection: $configuration.quality) {
+                        ForEach(SplatVideoConfiguration.Quality.allCases) { quality in
+                            Text(quality.displayName).tag(quality)
+                        }
+                    }
+                    .pickerStyle(.segmented)
                     let dimensions = configuration.dimensions
-                    Text("出力: \(dimensions.width) × \(dimensions.height) / 1080p品質")
+                    Text("出力: \(dimensions.width) × \(dimensions.height)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    if configuration.quality == .compatible720p {
+                        Text("大きな3Dデータで1080pの安全上限を超える場合に使います。")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
 
                 Section("カメラの動き") {
