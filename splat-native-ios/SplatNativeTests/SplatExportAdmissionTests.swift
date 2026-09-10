@@ -76,4 +76,35 @@ final class SplatExportAdmissionTests: XCTestCase {
         let children = try FileManager.default.contentsOfDirectory(at: projectURL, includingPropertiesForKeys: nil)
         XCTAssertFalse(children.contains { ["ply", "spz", "mp4"].contains($0.pathExtension.lowercased()) })
     }
+
+    func testPreflightRejectsMalformedExistingCanonicalInsteadOfExportingLegacyFallback() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("c2-splat-export-malformed-sh3-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Malformed SH3")
+        let pending = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        try Data(repeating: 0x71, count: 64).write(to: pending, options: .atomic)
+        let result = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+
+        let canonicalURL = try SplatCanonicalSHAsset.canonicalURL(forLegacySplat: result)
+        try Data("ply\nformat binary_little_endian 1.0\nelement vertex 2\nend_header\n".utf8)
+            .write(to: canonicalURL, options: .atomic)
+
+        XCTAssertThrowsError(
+            try SplatExportAdmission.preflight(
+                sourceURL: result,
+                kind: .spz,
+                availableCapacityOverride: Int64.max
+            )
+        ) { error in
+            guard case SplatExportAdmission.AdmissionError.untrustedSource = error else {
+                return XCTFail("Expected untrustedSource, got \(error)")
+            }
+        }
+    }
 }
