@@ -1,13 +1,15 @@
 import CryptoKit
+import Darwin
 import Foundation
 
 /// Durable protection for the last trusted completed Splat while a new reconstruction is running.
 ///
 /// The legacy Store swap keeps one `result.previous.splat`, but a second retry from `.failed`
 /// can delete that file before the old result has been restored. C2 therefore keeps a separate
-/// trusted backup. APFS hard-linking is attempted first so the backup normally costs no duplicate
-/// data blocks; a verified copy is used only when linking is unavailable. SHA-256 binds the backup
-/// to its original completion evidence and prevents same-size partial data from regaining trust.
+/// trusted backup. APFS cloning is attempted first so the backup normally costs no immediate
+/// duplicate data blocks while remaining logically independent; a verified copy is used when
+/// cloning is unavailable. SHA-256 binds the backup to its original completion evidence and
+/// prevents same-size partial data from regaining trust.
 enum SplatPreviousResultEvidence {
     static let fileName = "result.previous.splat.complete.json"
     static let assetFileName = "result.previous.trusted.splat"
@@ -228,9 +230,16 @@ enum SplatPreviousResultEvidence {
         try? fileManager.removeItem(at: destinationURL)
 
         do {
-            do {
-                try fileManager.linkItem(at: sourceURL, to: partialURL)
-            } catch {
+            // Preserve logical independence from the active result. APFS clonefile provides
+            // copy-on-write storage efficiency without the inode aliasing of a hard link.
+            let cloned = sourceURL.withUnsafeFileSystemRepresentation { sourcePath in
+                partialURL.withUnsafeFileSystemRepresentation { destinationPath in
+                    guard let sourcePath, let destinationPath else { return false }
+                    return clonefile(sourcePath, destinationPath, 0) == 0
+                }
+            }
+            if !cloned {
+                try? fileManager.removeItem(at: partialURL)
                 try fileManager.copyItem(at: sourceURL, to: partialURL)
             }
 
