@@ -63,6 +63,22 @@ private enum MeshAppearanceProcessor {
         try? FileManager.default.removeItem(at: result.objURL)
     }
 
+    /// Successful edits are immutable generations. Once the new generation and its persisted
+    /// exporter metadata are committed, the immediately superseded edited generation is no longer
+    /// a recovery point and retaining its OBJ/MTL/JPG trio makes repeated appearance adjustments
+    /// consume storage indefinitely. Never touch the original mesh generation: only filenames
+    /// created by this editor are eligible for retirement.
+    static func discardSupersededGeneration(at objURL: URL?) {
+        guard let objURL else { return }
+        let stem = objURL.deletingPathExtension().lastPathComponent
+        guard stem.hasPrefix("mesh-textured-edited-") ||
+              stem.hasPrefix("visual-mesh-textured-edited-") else { return }
+        let base = objURL.deletingPathExtension()
+        try? FileManager.default.removeItem(at: base.appendingPathExtension("jpg"))
+        try? FileManager.default.removeItem(at: base.appendingPathExtension("mtl"))
+        try? FileManager.default.removeItem(at: objURL)
+    }
+
     private static func error(_ text:String)->NSError{NSError(domain:"ScanLab.MeshAppearance",code:1,userInfo:[NSLocalizedDescriptionKey:text])}
 }
 
@@ -122,6 +138,12 @@ struct MeshAppearanceEditorSheet: View {
                     model.statusMessage = previousStatus
                     MeshAppearanceProcessor.discard(result)
                     throw error
+                }
+                // The new metadata is durable now, so retaining an older editor-owned generation
+                // only wastes project storage. Original reconstruction assets are never matched by
+                // discardSupersededGeneration and therefore remain untouched.
+                if previousURL != result.objURL {
+                    MeshAppearanceProcessor.discardSupersededGeneration(at: previousURL)
                 }
                 model.statusMessage="露出・コントラスト・彩度・シャープを実テクスチャへ反映しました"
                 working=false
