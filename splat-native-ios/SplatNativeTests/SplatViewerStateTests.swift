@@ -93,6 +93,23 @@ final class SplatViewerStateTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: SplatViewerEditStore.backupURL(for: source)), backupBefore)
     }
 
+    func testViewerEditStoreReseedsCorruptBackupAfterSuccessfulSave() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let expected = SplatEditSettings(exposureEV: -0.25, contrast: 1.3, cropYMin: 0.1, cropYMax: 0.9).normalized()
+
+        try Data("truncated-backup".utf8).write(to: SplatViewerEditStore.backupURL(for: source), options: .atomic)
+        try SplatViewerEditStore.save(expected, sourceURL: source)
+        try Data("corrupt-primary".utf8).write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
+
+        let recovered = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
+        XCTAssertTrue(recovered.recoveredFromBackup)
+        XCTAssertEqual(recovered.settings, expected)
+    }
+
     func testMeasurementFormattingUsesPracticalUnits() {
         XCTAssertEqual(SplatMeasurementFormatter.string(meters: 0.004), "4.0 mm")
         XCTAssertEqual(SplatMeasurementFormatter.string(meters: 0.245), "24.5 cm")
