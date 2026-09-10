@@ -81,8 +81,13 @@ enum SplatVideoMemoryPolicy {
         // exposure/crop settings.
         _ = SplatViewerEditStore.load(sourceURL: sourceURL)
 
-        let estimate = try estimate(
-            sourceURL: sourceURL,
+        // Reuse the canonical resolution performed above. The canonical filename is derived from
+        // the legacy result SHA-256, so resolving it again inside estimate() would reread/hash the
+        // entire result during every video start. On large scenes that is measurable CPU, storage
+        // bandwidth, latency and heat with no change in the answer.
+        let estimate = makeEstimate(
+            pointCount: pointCount,
+            hasCanonicalSH3: completeCanonical != nil,
             configuration: configuration,
             physicalMemoryBytes: physicalMemoryBytes
         )
@@ -110,6 +115,20 @@ enum SplatVideoMemoryPolicy {
             expectedPointCount: pointCount
         ) != nil
 
+        return makeEstimate(
+            pointCount: pointCount,
+            hasCanonicalSH3: hasCanonicalSH3,
+            configuration: configuration,
+            physicalMemoryBytes: physicalMemoryBytes
+        )
+    }
+
+    private static func makeEstimate(
+        pointCount: Int,
+        hasCanonicalSH3: Bool,
+        configuration: SplatVideoConfiguration,
+        physicalMemoryBytes: UInt64
+    ) -> Estimate {
         let dimensions = configuration.dimensions
         let width = UInt64(max(1, dimensions.width))
         let height = UInt64(max(1, dimensions.height))
