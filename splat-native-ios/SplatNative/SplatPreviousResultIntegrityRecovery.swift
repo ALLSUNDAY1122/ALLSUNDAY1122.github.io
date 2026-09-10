@@ -1,4 +1,5 @@
 import CryptoKit
+import Darwin
 import Foundation
 
 extension SplatPreviousResultEvidence {
@@ -36,14 +37,15 @@ extension SplatPreviousResultEvidence {
 
         do {
             // Materialize and verify the replacement before removing the untrusted current result.
-            // Prefer an APFS hard link so recovery does not require another scene-sized allocation
-            // exactly when the device may already be storage constrained. Fall back to a copy when
-            // linking is unavailable (for example, across filesystems).
-            do {
-                try fileManager.linkItem(at: backupURL, to: partialURL)
-            } catch {
-                try fileManager.copyItem(at: backupURL, to: partialURL)
-            }
+            // Prefer an APFS clone so a scene-sized recovery normally uses copy-on-write storage
+            // without aliasing the protected backup. A hard link is deliberately not used here:
+            // an in-place mutation of a recovered result must never mutate its recovery source.
+            // Fall back to a normal copy when cloning is unavailable.
+            try cloneOrCopyForIntegrityRecovery(
+                from: backupURL,
+                to: partialURL,
+                fileManager: fileManager
+            )
             guard try fileByteCountForIntegrityRecovery(partialURL, fileManager: fileManager) == evidence.byteCount,
                   try sha256ForIntegrityRecovery(partialURL) == snapshot.sha256 else {
                 try? fileManager.removeItem(at: partialURL)
@@ -60,6 +62,25 @@ extension SplatPreviousResultEvidence {
             try? fileManager.removeItem(at: partialURL)
             throw error
         }
+    }
+
+    private static func cloneOrCopyForIntegrityRecovery(
+        from sourceURL: URL,
+        to destinationURL: URL,
+        fileManager: FileManager
+    ) throws {
+        let cloned = sourceURL.withUnsafeFileSystemRepresentation { sourcePath in
+            destinationURL.withUnsafeFileSystemRepresentation { destinationPath in
+                guard let sourcePath, let destinationPath else { return false }
+                return clonefile(sourcePath, destinationPath, 0) == 0
+            }
+        }
+        if cloned { return }
+
+        // clonefile can fail on non-APFS/cross-volume destinations. Ensure no destination artifact
+        // survives a failed clone before falling back to FileManager's independent copy.
+        try? fileManager.removeItem(at: destinationURL)
+        try fileManager.copyItem(at: sourceURL, to: destinationURL)
     }
 
     private static func fileByteCountForIntegrityRecovery(
