@@ -94,7 +94,25 @@ struct MeshAppearanceEditorSheet: View {
         Task {
             do {
                 let result = try await Task.detached(priority:.userInitiated){ try MeshAppearanceProcessor.apply(objURL:url, exposure:e, contrast:c, saturation:s, sharpness:sh) }.value
-                model.resultURL=result.objURL; model.previewScene=try? SCNScene(url:result.objURL,options:nil); model.statusMessage="露出・コントラスト・彩度・シャープを実テクスチャへ反映しました"; try? model.persistExporterMeshAssetContract(); working=false; dismiss()
+                let previousURL = model.resultURL
+                let previousScene = model.previewScene
+                let previousStatus = model.statusMessage
+                model.resultURL = result.objURL
+                model.previewScene = try? SCNScene(url: result.objURL, options: nil)
+                do {
+                    try model.persistExporterMeshAssetContract()
+                } catch {
+                    // Persisted asset metadata is part of the saved/exportable result. If that
+                    // commit fails, do not leave the in-memory viewer pointing at a generation
+                    // that cannot be recovered after relaunch.
+                    model.resultURL = previousURL
+                    model.previewScene = previousScene
+                    model.statusMessage = previousStatus
+                    throw error
+                }
+                model.statusMessage="露出・コントラスト・彩度・シャープを実テクスチャへ反映しました"
+                working=false
+                dismiss()
             } catch { working=false; errorText=error.localizedDescription }
         }
     }
