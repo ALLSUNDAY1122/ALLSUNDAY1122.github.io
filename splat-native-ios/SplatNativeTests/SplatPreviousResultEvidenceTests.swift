@@ -115,6 +115,31 @@ final class SplatPreviousResultEvidenceTests: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: protectedAsset.path))
     }
 
+    func testProtectedBackupDoesNotAliasActiveResultBytes() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Independent protected backup")
+        try makeProcessableRaw(in: projectURL, store: store)
+
+        let trustedBytes = Data(repeating: 0x61, count: 64)
+        let result = try commitResult(bytes: trustedBytes, projectURL: projectURL, store: store)
+        try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: result)
+
+        let backup = projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName)
+        XCTAssertEqual(try Data(contentsOf: backup), trustedBytes)
+
+        // Deliberately mutate the active result in-place. A hard-linked "backup" would change too,
+        // defeating the promise that it can survive corruption or an interrupted reprocess.
+        let handle = try FileHandle(forWritingTo: result)
+        try handle.seek(toOffset: 0)
+        try handle.write(contentsOf: Data(repeating: 0x7F, count: trustedBytes.count))
+        try handle.close()
+
+        XCTAssertEqual(try Data(contentsOf: backup), trustedBytes)
+        XCTAssertNotEqual(try Data(contentsOf: result), trustedBytes)
+    }
+
     func testSuccessfulReprocessUsesNewEvidenceAndDiscardsOldBackupOnVerification() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
