@@ -314,17 +314,16 @@ enum SplatSoftwareDepthSeedBuilder {
         useBilinearNeighborSampling: Bool = false
     ) -> Float? {
         let offsets: [Float] = [-2, 0, 2]
-        var neighborCosts: [Float] = []
-        neighborCosts.reserveCapacity(neighborIndices.count)
+        var neighborCosts = SIMD4<Float>(repeating: 0)
+        var neighborCostCount = 0
 
-        // Score each view independently. Exposure centering removes local additive brightness drift
-        // from auto exposure while preserving the patch's edge/texture structure and the SAD scale.
+        // Score each view independently. Fixed-size SIMD storage keeps the inner plane-sweep loop
+        // allocation-free while local exposure centering removes additive auto-exposure drift.
         for neighborIndex in neighborIndices {
             let neighbor = frames[neighborIndex]
-            var referenceValues: [Float] = []
-            var neighborValues: [Float] = []
-            referenceValues.reserveCapacity(9)
-            neighborValues.reserveCapacity(9)
+            var differences = SIMD16<Float>(repeating: 0)
+            var differenceTotal: Float = 0
+            var samples = 0
             for dy in offsets {
                 for dx in offsets {
                     guard let referenceValue = reference.gray.sample(u + dx, v + dy) else { continue }
@@ -334,38 +333,42 @@ enum SplatSoftwareDepthSeedBuilder {
                         ? neighbor.gray.sampleBilinear(pixel.x, pixel.y)
                         : neighbor.gray.sample(pixel.x, pixel.y)
                     guard let neighborValue else { continue }
-                    referenceValues.append(referenceValue)
-                    neighborValues.append(neighborValue)
+                    let difference = neighborValue - referenceValue
+                    differences[samples] = difference
+                    differenceTotal += difference
+                    samples += 1
                 }
             }
-            guard referenceValues.count >= 5,
-                  referenceValues.count == neighborValues.count else { continue }
-            let count = Float(referenceValues.count)
-            let referenceMean = referenceValues.reduce(0, +) / count
-            let neighborMean = neighborValues.reduce(0, +) / count
+            guard samples >= 5, neighborCostCount < maximumNeighborFrames else { continue }
+            let meanDifference = differenceTotal / Float(samples)
             var centeredTotal: Float = 0
-            for index in referenceValues.indices {
-                centeredTotal += abs(
-                    (referenceValues[index] - referenceMean) -
-                    (neighborValues[index] - neighborMean)
-                )
+            for index in 0..<samples {
+                centeredTotal += abs(differences[index] - meanDifference)
             }
-            neighborCosts.append(centeredTotal / count)
+            neighborCosts[neighborCostCount] = centeredTotal / Float(samples)
+            neighborCostCount += 1
         }
 
-        // Keep genuine multi-view support mandatory. Robustly trim only when at least four views
-        // survive projection: discard one suspiciously-low accidental match and one high occlusion
-        // outlier. For two views both must agree; for three, the median rejects one outlier.
-        guard neighborCosts.count >= 2 else { return nil }
-        neighborCosts.sort()
-        if neighborCosts.count == 2 {
+        // Keep genuine multi-view support mandatory. For 3 views the median rejects one outlier;
+        // for 4 views remove both extremes. The resulting value remains a per-pixel intensity cost,
+        // so the shipped best-cost and uniqueness thresholds retain their scale.
+        guard neighborCostCount >= 2 else { return nil }
+        if neighborCostCount == 2 {
             return (neighborCosts[0] + neighborCosts[1]) * 0.5
         }
-        if neighborCosts.count == 3 {
-            return neighborCosts[1]
+        var total: Float = 0
+        var minimum = Float.greatestFiniteMagnitude
+        var maximum = -Float.greatestFiniteMagnitude
+        for index in 0..<neighborCostCount {
+            let value = neighborCosts[index]
+            total += value
+            minimum = min(minimum, value)
+            maximum = max(maximum, value)
         }
-        let trimmed = neighborCosts.dropFirst().dropLast()
-        return trimmed.reduce(0, +) / Float(trimmed.count)
+        if neighborCostCount == 3 {
+            return total - minimum - maximum
+        }
+        return (total - minimum - maximum) / Float(neighborCostCount - 2)
     }
 
     private static func load(
