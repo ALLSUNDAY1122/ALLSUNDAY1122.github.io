@@ -29,6 +29,33 @@ final class SplatExportAdmissionTests: XCTestCase {
         XCTAssertEqual(SplatExportAdmission.estimatedRequiredFreeBytes(sourceBytes: Int64.max, kind: .ply), Int64.max)
     }
 
+    func testPreflightRecoversViewerEditsBeforeExportMaterialization() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("c2-splat-export-edit-recovery-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Edit recovery")
+        let pending = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        try Data(repeating: 0x31, count: 64).write(to: pending, options: .atomic)
+        let result = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+
+        let knownGood = SplatEditSettings(exposureEV: 0.35, contrast: 1.1, cropXMin: 0.1, cropXMax: 0.9)
+        let newer = SplatEditSettings(exposureEV: -0.4, contrast: 0.9, cropYMin: 0.2, cropYMax: 0.8)
+        try SplatViewerEditStore.save(knownGood, sourceURL: result)
+        try SplatViewerEditStore.save(newer, sourceURL: result)
+        try Data("corrupt".utf8).write(to: SplatViewerEditStore.primaryURL(for: result), options: .atomic)
+
+        _ = try SplatExportAdmission.preflight(sourceURL: result, kind: .spz, availableCapacityOverride: Int64.max)
+
+        let healedData = try Data(contentsOf: SplatViewerEditStore.primaryURL(for: result))
+        let healed = try JSONDecoder().decode(SplatEditSettings.self, from: healedData)
+        XCTAssertEqual(healed.normalized(), knownGood.normalized())
+    }
+
     func testPreflightRejectsBeforeExportWhenFreeSpaceIsInsufficient() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("c2-splat-low-storage-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
