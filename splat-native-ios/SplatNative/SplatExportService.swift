@@ -223,7 +223,11 @@ enum SplatPersistedEditMaterializer {
         var outputPointCount = 0
         for try await points in stream {
             try Task.checkCancellation()
-            outputPointCount += eligiblePointCount(points, settings: settings, bounds: bounds)
+            outputPointCount += try eligiblePointCountCancellable(
+                points,
+                settings: settings,
+                bounds: bounds
+            )
         }
         guard outputPointCount > 0 else { throw MaterializeError.emptyEditedScene }
         return Plan(settings: settings, bounds: bounds, outputPointCount: outputPointCount)
@@ -520,7 +524,10 @@ enum SplatExportService {
                 )
                 for try await points in stream {
                     try Task.checkCancellation()
-                    let outputPoints = SplatPersistedEditMaterializer.apply(points, plan: editPlan)
+                    let outputPoints = try SplatPersistedEditMaterializer.applyCancellable(
+                        points,
+                        plan: editPlan
+                    )
                     if !outputPoints.isEmpty {
                         try await writer.write(outputPoints)
                         pointsWritten += outputPoints.count
@@ -533,7 +540,10 @@ enum SplatExportService {
                 try await writer.start(numPoints: pointCount)
                 for try await points in stream {
                     try Task.checkCancellation()
-                    let outputPoints = SplatPersistedEditMaterializer.apply(points, plan: editPlan)
+                    let outputPoints = try SplatPersistedEditMaterializer.applyCancellable(
+                        points,
+                        plan: editPlan
+                    )
                     if !outputPoints.isEmpty {
                         try await writer.write(outputPoints)
                         pointsWritten += outputPoints.count
