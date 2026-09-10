@@ -48,7 +48,9 @@ final class SplatPersistedEditCancellationTests: XCTestCase {
         XCTAssertEqual(actual.count, expected.count)
         XCTAssertEqual(actual.first?.position.x, expected.first?.position.x)
         XCTAssertEqual(actual.last?.position.x, expected.last?.position.x)
-        XCTAssertEqual(actual.first?.color.asSRGBFloat.x, expected.first?.color.asSRGBFloat.x, accuracy: 0.0001)
+        let actualFirst = try XCTUnwrap(actual.first)
+        let expectedFirst = try XCTUnwrap(expected.first)
+        XCTAssertEqual(actualFirst.color.asSRGBFloat.x, expectedFirst.color.asSRGBFloat.x, accuracy: 0.0001)
     }
 
     func testCancellableMaterializerHonorsCancelledTask() async throws {
