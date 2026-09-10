@@ -10,6 +10,7 @@ struct SplatResultView: View {
     @State private var selectedTool: ViewerTool = .view
     @State private var confirmNewScan = false
     @State private var reprocessError: String?
+    @State private var preferredViewerURL: URL?
 
     private enum ViewerTool: String, CaseIterable, Hashable {
         case view = "見る"
@@ -21,8 +22,16 @@ struct SplatResultView: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack {
-                SplatViewer(url: url, state: viewerState)
-                    .ignoresSafeArea(edges: .top)
+                if let preferredViewerURL {
+                    // New reconstructions retain a lossless SH3 PLY beside the compact legacy
+                    // .splat. Render that canonical asset when it is valid so the live viewer keeps
+                    // the trainer's view-dependent appearance instead of collapsing to SH0 color.
+                    SplatViewer(url: preferredViewerURL, state: viewerState)
+                        .ignoresSafeArea(edges: .top)
+                } else {
+                    ProgressView("3Dデータを確認中")
+                        .tint(.white)
+                }
 
                 VStack {
                     topOverlay
@@ -38,9 +47,14 @@ struct SplatResultView: View {
             controls
         }
         .background(Color.black)
-        .onAppear { viewerState.attach(url: url) }
+        .onAppear {
+            viewerState.attach(url: url)
+            resolvePreferredViewerAsset(for: url)
+        }
         .onChange(of: url) { _, newURL in
+            preferredViewerURL = nil
             viewerState.attach(url: newURL)
+            resolvePreferredViewerAsset(for: newURL)
         }
         .onChange(of: viewerState.editSettings) { _, _ in
             // Slider/crop gestures can emit dozens of changes per second. Debounce these tiny
@@ -264,6 +278,22 @@ struct SplatResultView: View {
             action()
         } catch {
             reprocessError = error.localizedDescription
+        }
+    }
+
+    private func resolvePreferredViewerAsset(for sourceURL: URL) {
+        Task {
+            let resolved = await Task.detached(priority: .userInitiated) {
+                guard let pointCount = try? SplatExportService.sourcePointCount(sourceURL) else {
+                    return sourceURL
+                }
+                return SplatCanonicalSHAsset.existingAsset(
+                    forLegacySplat: sourceURL,
+                    expectedPointCount: pointCount
+                )?.url ?? sourceURL
+            }.value
+            guard url == sourceURL else { return }
+            preferredViewerURL = resolved
         }
     }
 
