@@ -85,7 +85,7 @@ ROOT_BLOCK = r'''  network-specialist-native-ios:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: true
+        submit_to_testflight: false
         submit_to_app_store: false
 '''
 
@@ -162,7 +162,7 @@ NESTED = r'''workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: true
+        submit_to_testflight: false
         submit_to_app_store: false
 '''
 
@@ -185,7 +185,7 @@ def validate(path: Path) -> None:
         APP_STORE_CONNECT_APP_ID,
         IAP_PRODUCT_ID,
         "xcode-project use-profiles",
-        "submit_to_testflight: true",
+        "submit_to_testflight: false",
         "submit_to_app_store: false",
     ]
     for token in required:
