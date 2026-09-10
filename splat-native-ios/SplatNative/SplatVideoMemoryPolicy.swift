@@ -62,6 +62,31 @@ enum SplatVideoMemoryPolicy {
         ).estimate
     }
 
+    /// Canonical selection hashes the completed legacy result and can therefore scan hundreds of
+    /// megabytes. Run that synchronous filesystem work on an explicit worker so callers from the
+    /// SwiftUI export flow never depend on executor inheritance for UI responsiveness.
+    static func preflightAdmissionAsync(
+        sourceURL: URL,
+        configuration: SplatVideoConfiguration,
+        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
+    ) async throws -> Admission {
+        let worker = Task.detached(priority: .userInitiated) {
+            try Task.checkCancellation()
+            let admission = try preflightAdmission(
+                sourceURL: sourceURL,
+                configuration: configuration,
+                physicalMemoryBytes: physicalMemoryBytes
+            )
+            try Task.checkCancellation()
+            return admission
+        }
+        return try await withTaskCancellationHandler {
+            try await worker.value
+        } onCancel: {
+            worker.cancel()
+        }
+    }
+
     static func preflightAdmission(
         sourceURL: URL,
         configuration: SplatVideoConfiguration,
