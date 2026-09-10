@@ -62,19 +62,16 @@ enum SplatVideoMemoryPolicy {
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
     ) throws -> Admission {
-        // Resolve and validate the preferred render asset exactly once. Returning the selected URL
-        // binds the renderer to the same complete SH3 generation that admission inspected, avoiding
-        // a second full result hash/canonical lookup and a separate asset-selection window.
+        // Admission owns canonical selection and returns the exact validated URL to the renderer.
+        // Compute the content-addressed URL once here: the canonical helper derives it by hashing
+        // the whole legacy result, so calling both existingAsset and existingCompleteAsset would
+        // otherwise repeat that O(file-size) read before rendering starts.
         let pointCount = try SplatExportService.sourcePointCount(sourceURL)
-        let schemaValidCanonical = SplatCanonicalSHAsset.existingAsset(
-            forLegacySplat: sourceURL,
+        let canonical = inspectCanonicalOnce(
+            sourceURL: sourceURL,
             expectedPointCount: pointCount
         )
-        let completeCanonical = SplatCanonicalSHAsset.existingCompleteAsset(
-            forLegacySplat: sourceURL,
-            expectedPointCount: pointCount
-        )
-        if schemaValidCanonical != nil && completeCanonical == nil {
+        if canonical.schemaValid && canonical.completeAsset == nil {
             throw PolicyError.untrustedCanonicalAsset
         }
 
@@ -82,7 +79,7 @@ enum SplatVideoMemoryPolicy {
 
         let estimate = makeEstimate(
             pointCount: pointCount,
-            hasCanonicalSH3: completeCanonical != nil,
+            hasCanonicalSH3: canonical.completeAsset != nil,
             configuration: configuration,
             physicalMemoryBytes: physicalMemoryBytes
         )
@@ -97,7 +94,7 @@ enum SplatVideoMemoryPolicy {
 
         return Admission(
             estimate: estimate,
-            renderAssetURL: completeCanonical?.url ?? sourceURL
+            renderAssetURL: canonical.completeAsset?.url ?? sourceURL
         )
     }
 
@@ -118,6 +115,28 @@ enum SplatVideoMemoryPolicy {
             configuration: configuration,
             physicalMemoryBytes: physicalMemoryBytes
         )
+    }
+
+    private static func inspectCanonicalOnce(
+        sourceURL: URL,
+        expectedPointCount: Int
+    ) -> (schemaValid: Bool, completeAsset: SplatCanonicalSHAsset.Asset?) {
+        guard let canonicalURL = try? SplatCanonicalSHAsset.canonicalURL(forLegacySplat: sourceURL),
+              FileManager.default.fileExists(atPath: canonicalURL.path),
+              let descriptor = try? SplatCanonicalSHAsset.inspectPLY(canonicalURL),
+              descriptor.shDegree == SplatCanonicalSHAsset.requiredSHDegree,
+              descriptor.pointCount == expectedPointCount else {
+            return (false, nil)
+        }
+
+        let asset = SplatCanonicalSHAsset.Asset(url: canonicalURL, descriptor: descriptor)
+        guard SplatCanonicalSHAsset.hasCompleteVertexPayload(
+            at: canonicalURL,
+            expectedPointCount: expectedPointCount
+        ) else {
+            return (true, nil)
+        }
+        return (true, asset)
     }
 
     private static func makeEstimate(
