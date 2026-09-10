@@ -9,7 +9,6 @@ enum SplatExportAdmission {
 
     struct Result: Equatable, Sendable {
         let verification: SplatCompletionVerifier.Verification
-        let requiresCanonicalSH3: Bool
 
         var trustedURL: URL { verification.url }
         var verifiedDigest: String { verification.sha256 }
@@ -83,10 +82,7 @@ enum SplatExportAdmission {
         let required = estimatedRequiredFreeBytes(sourceBytes: sourceBytes, canonicalAssetBytes: canonicalBytes, kind: kind)
         let available = availableCapacityOverride.map { max(0, $0) } ?? availableCapacity(at: projectURL)
         if let available, available < required { throw AdmissionError.insufficientStorage(required: required, available: available) }
-        return Result(
-            verification: verification,
-            requiresCanonicalSH3: canonical != nil
-        )
+        return Result(verification: verification)
     }
 
     static func estimatedRequiredFreeBytes(sourceBytes: Int64, canonicalAssetBytes: Int64? = nil, kind: Kind) -> Int64 {
