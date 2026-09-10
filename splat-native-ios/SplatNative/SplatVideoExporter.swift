@@ -65,7 +65,15 @@ enum SplatVideoExporter {
             throw ExportError.commandQueueUnavailable
         }
 
-        let reader = try AutodetectSceneReader(sourceURL)
+        // Keep video appearance aligned with the live viewer and lossless export path. New
+        // reconstructions retain a content-addressed SH3 PLY beside the legacy `.splat`; rendering
+        // the legacy source here would collapse higher-order view-dependent color to SH0 only.
+        let sourcePointCount = try SplatExportService.sourcePointCount(sourceURL)
+        let renderAssetURL = SplatCanonicalSHAsset.existingAsset(
+            forLegacySplat: sourceURL,
+            expectedPointCount: sourcePointCount
+        )?.url ?? sourceURL
+        let reader = try AutodetectSceneReader(renderAssetURL)
         let sourcePoints = try await reader.readAll()
         guard !sourcePoints.isEmpty else { throw ExportError.emptyScene }
         try Task.checkCancellation()
