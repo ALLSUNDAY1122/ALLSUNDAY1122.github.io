@@ -294,7 +294,13 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
               drawableSize.width > 0, drawableSize.height > 0,
               let drawable = view.currentDrawable,
               let commandBuffer = commandQueue.makeCommandBuffer() else { return }
-        _ = semaphore.wait(timeout: .distantFuture)
+
+        // MTKView invokes this delegate on the main actor. Waiting indefinitely for an
+        // in-flight GPU slot can therefore freeze gestures and the rest of the UI whenever
+        // Metal falls behind. Interactive viewing values latency over rendering every frame:
+        // if two frames are already in flight, drop this frame and let the next display tick
+        // try again instead of blocking the main thread.
+        guard semaphore.wait(timeout: .now()) == .success else { return }
         commandBuffer.addCompletedHandler { [semaphore] _ in semaphore.signal() }
 
         let matrices = cameraMatrices(size: drawableSize)
