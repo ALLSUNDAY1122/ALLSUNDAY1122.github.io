@@ -12,6 +12,8 @@ struct SplatResultView: View {
     @State private var reprocessError: String?
     @State private var preferredViewerURL: URL?
     @State private var preferredViewerResolutionTask: Task<Void, Never>?
+    @State private var reprocessPreparationTask: Task<Void, Never>?
+    @State private var isPreparingReprocess = false
 
     private enum ViewerTool: String, CaseIterable, Hashable {
         case view = "見る"
@@ -50,6 +52,9 @@ struct SplatResultView: View {
             resolvePreferredViewerAsset(for: url)
         }
         .onChange(of: url) { _, newURL in
+            reprocessPreparationTask?.cancel()
+            reprocessPreparationTask = nil
+            isPreparingReprocess = false
             preferredViewerURL = nil
             viewerState.attach(url: newURL)
             resolvePreferredViewerAsset(for: newURL)
@@ -66,6 +71,9 @@ struct SplatResultView: View {
             }
         }
         .onDisappear {
+            reprocessPreparationTask?.cancel()
+            reprocessPreparationTask = nil
+            isPreparingReprocess = false
             preferredViewerResolutionTask?.cancel()
             preferredViewerResolutionTask = nil
             viewerState.persistNow()
@@ -106,10 +114,10 @@ struct SplatResultView: View {
 
             Spacer()
 
-            if viewerState.isLoading || viewerState.isApplyingEdits {
+            if viewerState.isLoading || viewerState.isApplyingEdits || isPreparingReprocess {
                 HStack(spacing: 8) {
                     ProgressView().tint(.white)
-                    Text(viewerState.isLoading ? "読込中" : "反映中")
+                    Text(isPreparingReprocess ? "保護中" : (viewerState.isLoading ? "読込中" : "反映中"))
                         .font(.caption.bold())
                 }
                 .padding(.horizontal, 12)
@@ -149,6 +157,7 @@ struct SplatResultView: View {
                     Label("品質向上", systemImage: "sparkles")
                 }
                 .buttonStyle(ViewerActionButtonStyle())
+                .disabled(isPreparingReprocess)
 
                 Button {
                     viewerState.persistNow()
@@ -157,6 +166,7 @@ struct SplatResultView: View {
                     Label("書き出す", systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(ViewerActionButtonStyle())
+                .disabled(isPreparingReprocess)
             }
 
             HStack(spacing: 9) {
@@ -168,7 +178,7 @@ struct SplatResultView: View {
                     Label("再処理", systemImage: "arrow.clockwise")
                 }
                 .buttonStyle(ViewerActionButtonStyle())
-                .disabled(!model.canRetryGeneration)
+                .disabled(!model.canRetryGeneration || isPreparingReprocess)
 
                 Button {
                     confirmNewScan = true
@@ -176,6 +186,7 @@ struct SplatResultView: View {
                     Label("新規", systemImage: "camera")
                 }
                 .buttonStyle(ViewerActionButtonStyle())
+                .disabled(isPreparingReprocess)
             }
         }
         .padding(.horizontal, 14)
@@ -260,13 +271,31 @@ struct SplatResultView: View {
         }
     }
 
-    private func beginProtectedReprocess(_ action: () -> Void) {
+    private func beginProtectedReprocess(_ action: @escaping @MainActor () -> Void) {
+        guard !isPreparingReprocess else { return }
         viewerState.persistNow()
-        do {
-            try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: url)
-            action()
-        } catch {
-            reprocessError = error.localizedDescription
+        reprocessError = nil
+        isPreparingReprocess = true
+        let sourceURL = url
+
+        reprocessPreparationTask = Task {
+            defer {
+                if url == sourceURL {
+                    isPreparingReprocess = false
+                    reprocessPreparationTask = nil
+                }
+            }
+            do {
+                try await SplatPreviousResultEvidence.preserveBeforeReprocessAsync(sourceURL: sourceURL)
+                try Task.checkCancellation()
+                guard url == sourceURL else { return }
+                action()
+            } catch is CancellationError {
+                return
+            } catch {
+                guard url == sourceURL else { return }
+                reprocessError = error.localizedDescription
+            }
         }
     }
 
