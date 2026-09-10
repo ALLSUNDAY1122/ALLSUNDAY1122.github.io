@@ -137,6 +137,31 @@ final class SplatViewerStateTests: XCTestCase {
         XCTAssertEqual(state.editSettings, .default)
     }
 
+    @MainActor
+    func testBackupRecoveryWarningSurvivesRendererLifecycleUntilNextSuccessfulSave() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let expected = SplatEditSettings(exposureEV: 0.35, contrast: 1.1)
+        try SplatViewerEditStore.save(expected, sourceURL: source)
+        try Data("corrupt-primary".utf8).write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
+
+        let state = SplatViewerState()
+        state.attach(url: source)
+        XCTAssertEqual(state.warningMessage, "前回の編集設定をバックアップから復元しました")
+
+        state.rendererBeganLoading()
+        XCTAssertEqual(state.warningMessage, "前回の編集設定をバックアップから復元しました")
+        state.rendererBeganApplyingEdits()
+        state.rendererAppliedEdits(visible: 1)
+        XCTAssertEqual(state.warningMessage, "前回の編集設定をバックアップから復元しました")
+
+        state.persistNow()
+        XCTAssertNil(state.warningMessage)
+    }
+
     func testMeasurementFormattingUsesPracticalUnits() {
         XCTAssertEqual(SplatMeasurementFormatter.string(meters: 0.004), "4.0 mm")
         XCTAssertEqual(SplatMeasurementFormatter.string(meters: 0.245), "24.5 cm")
