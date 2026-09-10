@@ -1,9 +1,12 @@
 import XCTest
 
 final class NetworkSpecialistUITests: XCTestCase {
-    private func launch() -> XCUIApplication {
+    private func launch(premium: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments += ["-UITestReset"]
+        if premium {
+            app.launchArguments += ["-UITestPremium"]
+        }
         app.launch()
         return app
     }
@@ -27,8 +30,18 @@ final class NetworkSpecialistUITests: XCTestCase {
         XCTAssertTrue(app.buttons["home.resume"].waitForExistence(timeout: 2))
     }
 
-    func testMockHidesImmediateCorrectness() {
+    func testFreeUserCannotEnterPremiumTabs() {
         let app = launch()
+        app.buttons["tab.mock"].tap()
+        XCTAssertTrue(app.otherElements["premium.required"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["premium.openSettings"].exists)
+
+        app.buttons["tab.history"].tap()
+        XCTAssertTrue(app.otherElements["premium.required"].waitForExistence(timeout: 3))
+    }
+
+    func testPremiumMockHidesImmediateCorrectness() {
+        let app = launch(premium: true)
         app.buttons["tab.mock"].tap()
         XCTAssertTrue(app.buttons["mock.year.2025"].waitForExistence(timeout: 3))
         app.buttons["mock.year.2025"].tap()
@@ -40,8 +53,8 @@ final class NetworkSpecialistUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["わからないとして記録"].exists)
     }
 
-    func testHistorySettingsAndLargeTextStayInsidePhoneWidth() {
-        let app = launch()
+    func testPremiumHistorySettingsAndLargeTextStayInsidePhoneWidth() {
+        let app = launch(premium: true)
         app.buttons["tab.history"].tap()
         XCTAssertTrue(app.otherElements["history.screen"].waitForExistence(timeout: 2))
 
