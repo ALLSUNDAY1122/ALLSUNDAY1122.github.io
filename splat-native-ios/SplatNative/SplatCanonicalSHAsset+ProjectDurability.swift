@@ -7,11 +7,14 @@ extension SplatCanonicalSHAsset {
 
     enum DurabilityError: LocalizedError {
         case lossyFingerprintCollision
+        case incompleteCanonicalPayload
 
         var errorDescription: String? {
             switch self {
             case .lossyFingerprintCollision:
                 return "同じlegacy .splat識別子に異なるSH3内容が検出されたため、安全のため再生成結果を確定しませんでした。"
+            case .incompleteCanonicalPayload:
+                return "SH3 canonical asset の点データが途中で欠損しているため、安全のため確定しませんでした。"
             }
         }
     }
@@ -54,13 +57,20 @@ extension SplatCanonicalSHAsset {
         guard candidate.shDegree == requiredSHDegree else {
             throw CanonicalError.shDegreeMismatch(expected: requiredSHDegree, actual: candidate.shDegree)
         }
+        // `inspectPLY` validates the schema header. A process/storage interruption can still leave
+        // that header intact while truncating the binary vertex body, so validate the minimum
+        // payload before a candidate is ever promoted to a durable canonical asset.
+        guard hasCompleteVertexPayload(at: temporaryURL, expectedPointCount: expectedPointCount) else {
+            throw DurabilityError.incompleteCanonicalPayload
+        }
 
         if FileManager.default.fileExists(atPath: targetURL.path) {
             if let existing = try? inspectPLY(targetURL),
                existing.pointCount == expectedPointCount,
-               existing.shDegree == requiredSHDegree {
-                // A structurally valid asset with the same legacy content-addressed key but
-                // different SH3 bytes is not safe to overwrite: preserve the collision guard.
+               existing.shDegree == requiredSHDegree,
+               hasCompleteVertexPayload(at: targetURL, expectedPointCount: expectedPointCount) {
+                // A structurally and physically complete asset with the same legacy content-addressed
+                // key but different SH3 bytes is not safe to overwrite: preserve the collision guard.
                 guard try SplatExportService.sha256Hex(fileURL: targetURL) ==
                         SplatExportService.sha256Hex(fileURL: temporaryURL) else {
                     throw DurabilityError.lossyFingerprintCollision
@@ -70,17 +80,83 @@ extension SplatCanonicalSHAsset {
             }
 
             // A truncated/corrupt canonical file can be left behind by storage corruption or an
-            // interrupted older write. The fresh candidate above has already passed point-count
-            // and SH3 validation. Replace the invalid target atomically so a repair cannot create
-            // a new crash window where neither the old target nor the validated candidate exists.
-            // A valid-but-different target still takes the collision path above and is never
-            // silently overwritten.
+            // interrupted older write. The fresh candidate above has passed schema, point-count,
+            // SH3 and payload-length validation. Replace the invalid target atomically so repair
+            // cannot create a new crash window. A valid-but-different complete target still takes
+            // the collision path above and is never silently overwritten.
             _ = try FileManager.default.replaceItemAt(targetURL, withItemAt: temporaryURL)
             return Asset(url: targetURL, descriptor: candidate)
         }
 
         try FileManager.default.moveItem(at: temporaryURL, to: targetURL)
         return Asset(url: targetURL, descriptor: candidate)
+    }
+
+    /// Validates that a binary PLY contains at least the full declared vertex payload.
+    /// This deliberately does not require EOF immediately after the vertex element because future
+    /// exporters may append other legal PLY elements after the Gaussian vertices.
+    static func hasCompleteVertexPayload(
+        at url: URL,
+        expectedPointCount: Int,
+        fileManager: FileManager = .default
+    ) -> Bool {
+        guard expectedPointCount > 0,
+              let attributes = try? fileManager.attributesOfItem(atPath: url.path),
+              let sizeNumber = attributes[.size] as? NSNumber,
+              sizeNumber.int64Value > 0,
+              let handle = try? FileHandle(forReadingFrom: url) else { return false }
+        defer { try? handle.close() }
+
+        guard let prefix = try? handle.read(upToCount: 128 * 1024),
+              let prefix, !prefix.isEmpty,
+              let markerRange = prefix.range(of: Data("end_header".utf8)) else { return false }
+
+        var payloadOffset = markerRange.upperBound
+        if payloadOffset < prefix.endIndex, prefix[payloadOffset] == 13 { payloadOffset += 1 }
+        if payloadOffset < prefix.endIndex, prefix[payloadOffset] == 10 { payloadOffset += 1 }
+
+        let headerData = prefix.prefix(upTo: markerRange.upperBound)
+        guard let header = String(data: headerData, encoding: .utf8) else { return false }
+
+        var binaryFormat = false
+        var inVertexElement = false
+        var declaredVertexCount: Int?
+        var vertexStride: UInt64 = 0
+        for rawLine in header.split(whereSeparator: { $0.isNewline }) {
+            let fields = rawLine.split(whereSeparator: { $0 == " " || $0 == "\t" })
+            guard !fields.isEmpty else { continue }
+            if fields[0] == "format", fields.count >= 2 {
+                binaryFormat = fields[1] == "binary_little_endian" || fields[1] == "binary_big_endian"
+            } else if fields[0] == "element", fields.count >= 3 {
+                inVertexElement = fields[1] == "vertex"
+                if inVertexElement { declaredVertexCount = Int(fields[2]) }
+            } else if fields[0] == "property", inVertexElement {
+                guard fields.count >= 3, fields[1] != "list",
+                      let byteWidth = plyScalarByteWidth(String(fields[1])) else { return false }
+                guard vertexStride <= UInt64.max - byteWidth else { return false }
+                vertexStride += byteWidth
+            }
+        }
+
+        guard binaryFormat,
+              declaredVertexCount == expectedPointCount,
+              vertexStride > 0 else { return false }
+        let count = UInt64(expectedPointCount)
+        guard count <= UInt64.max / vertexStride else { return false }
+        let bodyBytes = count * vertexStride
+        let headerBytes = UInt64(payloadOffset)
+        guard headerBytes <= UInt64.max - bodyBytes else { return false }
+        return UInt64(sizeNumber.int64Value) >= headerBytes + bodyBytes
+    }
+
+    private static func plyScalarByteWidth(_ type: String) -> UInt64? {
+        switch type.lowercased() {
+        case "char", "int8", "uchar", "uint8": return 1
+        case "short", "int16", "ushort", "uint16": return 2
+        case "int", "int32", "uint", "uint32", "float", "float32": return 4
+        case "double", "float64", "int64", "uint64": return 8
+        default: return nil
+        }
     }
 
     @discardableResult
