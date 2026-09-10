@@ -17,12 +17,15 @@ enum SplatVideoMemoryPolicy {
 
     enum PolicyError: LocalizedError, Equatable {
         case sceneTooLarge(pointCount: Int, estimatedPeakMegabytes: Int, budgetMegabytes: Int)
+        case untrustedCanonicalAsset
 
         var errorDescription: String? {
             switch self {
             case .sceneTooLarge(let pointCount, let estimatedPeakMegabytes, let budgetMegabytes):
                 let formattedPoints = pointCount.formatted(.number.grouping(.automatic))
                 return "3Dデータが大きすぎるため、この端末では安全に動画化できません（\(formattedPoints)点 / 推定\(estimatedPeakMegabytes)MB、上限\(budgetMegabytes)MB）。PLYまたはSPZで書き出すか、点数を減らしてから再試行してください。"
+            case .untrustedCanonicalAsset:
+                return "高品質3Dデータが不完全なため、安全に動画化できません。元のスキャン結果を再生成してから再試行してください。"
             }
         }
     }
@@ -56,6 +59,22 @@ enum SplatVideoMemoryPolicy {
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
     ) throws -> Estimate {
+        // Video rendering prefers a committed SH3 generation when present. A schema-valid PLY can
+        // still have a truncated binary body after an interrupted copy/write. Reject that state at
+        // admission instead of allowing SplatVideoExporter to hand the corrupt file to SplatIO.
+        let pointCount = try SplatExportService.sourcePointCount(sourceURL)
+        let schemaValidCanonical = SplatCanonicalSHAsset.existingAsset(
+            forLegacySplat: sourceURL,
+            expectedPointCount: pointCount
+        )
+        let completeCanonical = SplatCanonicalSHAsset.existingCompleteAsset(
+            forLegacySplat: sourceURL,
+            expectedPointCount: pointCount
+        )
+        if schemaValidCanonical != nil && completeCanonical == nil {
+            throw PolicyError.untrustedCanonicalAsset
+        }
+
         // Video export materializes the persisted viewer edit sidecar immediately after this
         // memory admission. Repair a corrupt primary from the known-good generation first so a
         // video cannot silently fall back to default edits while the live viewer shows recovered
@@ -83,11 +102,10 @@ enum SplatVideoMemoryPolicy {
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
     ) throws -> Estimate {
-        // The user-facing source remains the fixed-width 32-byte legacy `.splat`; resolve whether
-        // this committed generation also has a validated canonical SH3 representation. The video
-        // renderer can then reserve memory for the representation it will actually decode.
+        // Reserve SH3 memory only when the generation is complete enough to be selected by the
+        // hardened viewer/export path. A header-only/truncated PLY must not influence the estimate.
         let pointCount = try SplatExportService.sourcePointCount(sourceURL)
-        let hasCanonicalSH3 = SplatCanonicalSHAsset.existingAsset(
+        let hasCanonicalSH3 = SplatCanonicalSHAsset.existingCompleteAsset(
             forLegacySplat: sourceURL,
             expectedPointCount: pointCount
         ) != nil
