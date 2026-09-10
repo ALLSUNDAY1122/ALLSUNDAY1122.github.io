@@ -28,6 +28,21 @@ final class SplatTransientExportWorkspaceTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: missing.path))
     }
 
+    func testRemoveRefusesUnrelatedDirectory() throws {
+        let fileManager = FileManager.default
+        let unrelated = fileManager.temporaryDirectory
+            .appendingPathComponent("scan-project-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: unrelated, withIntermediateDirectories: true)
+        let sentinel = unrelated.appendingPathComponent("result.splat")
+        try Data(repeating: 0x42, count: 64).write(to: sentinel)
+        defer { try? fileManager.removeItem(at: unrelated) }
+
+        SplatTransientExportWorkspace.remove(unrelated, fileManager: fileManager)
+
+        XCTAssertTrue(fileManager.fileExists(atPath: unrelated.path))
+        XCTAssertTrue(fileManager.fileExists(atPath: sentinel.path))
+    }
+
     func testCleanupRemovesOnlyStaleScanLabExportDirectories() throws {
         let fileManager = FileManager.default
         let root = fileManager.temporaryDirectory.appendingPathComponent("scanlab-export-cleanup-test-\(UUID().uuidString)", isDirectory: true)
