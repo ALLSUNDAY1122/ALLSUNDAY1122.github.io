@@ -11,6 +11,7 @@ struct SplatResultView: View {
     @State private var confirmNewScan = false
     @State private var reprocessError: String?
     @State private var preferredViewerURL: URL?
+    @State private var preferredViewerResolutionTask: Task<Void, Never>?
 
     private enum ViewerTool: String, CaseIterable, Hashable {
         case view = "見る"
@@ -79,6 +80,8 @@ struct SplatResultView: View {
         .onDisappear {
             // A swipe/back navigation can dismiss the viewer inside the debounce window. Flush
             // once at the lifecycle boundary so responsiveness does not trade away durability.
+            preferredViewerResolutionTask?.cancel()
+            preferredViewerResolutionTask = nil
             viewerState.persistNow()
         }
         .confirmationDialog("新しい撮影を開始しますか？", isPresented: $confirmNewScan, titleVisibility: .visible) {
@@ -282,18 +285,40 @@ struct SplatResultView: View {
     }
 
     private func resolvePreferredViewerAsset(for sourceURL: URL) {
-        Task {
-            let resolved = await Task.detached(priority: .userInitiated) {
-                guard let pointCount = try? SplatExportService.sourcePointCount(sourceURL),
-                      SplatViewerMemoryPolicy.canUseCanonicalSH3(pointCount: pointCount) else {
+        preferredViewerResolutionTask?.cancel()
+        preferredViewerResolutionTask = Task {
+            let worker = Task.detached(priority: .userInitiated) { () throws -> URL in
+                try Task.checkCancellation()
+                guard let pointCount = try? SplatExportService.sourcePointCount(sourceURL) else {
+                    try Task.checkCancellation()
                     return sourceURL
                 }
-                return SplatCanonicalSHAsset.existingAsset(
+                try Task.checkCancellation()
+                guard SplatViewerMemoryPolicy.canUseCanonicalSH3(pointCount: pointCount) else {
+                    return sourceURL
+                }
+                try Task.checkCancellation()
+                let resolved = SplatCanonicalSHAsset.existingAsset(
                     forLegacySplat: sourceURL,
                     expectedPointCount: pointCount
                 )?.url ?? sourceURL
-            }.value
-            guard url == sourceURL else { return }
+                try Task.checkCancellation()
+                return resolved
+            }
+
+            let resolved: URL
+            do {
+                resolved = try await withTaskCancellationHandler {
+                    try await worker.value
+                } onCancel: {
+                    worker.cancel()
+                }
+            } catch is CancellationError {
+                return
+            } catch {
+                return
+            }
+            guard !Task.isCancelled, url == sourceURL else { return }
             preferredViewerURL = resolved
         }
     }
