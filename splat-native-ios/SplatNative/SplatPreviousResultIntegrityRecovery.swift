@@ -36,8 +36,14 @@ extension SplatPreviousResultEvidence {
 
         do {
             // Materialize and verify the replacement before removing the untrusted current result.
-            // This preserves the best available bytes even if storage or I/O fails mid-recovery.
-            try fileManager.copyItem(at: backupURL, to: partialURL)
+            // Prefer an APFS hard link so recovery does not require another scene-sized allocation
+            // exactly when the device may already be storage constrained. Fall back to a copy when
+            // linking is unavailable (for example, across filesystems).
+            do {
+                try fileManager.linkItem(at: backupURL, to: partialURL)
+            } catch {
+                try fileManager.copyItem(at: backupURL, to: partialURL)
+            }
             guard try fileByteCountForIntegrityRecovery(partialURL, fileManager: fileManager) == evidence.byteCount,
                   try sha256ForIntegrityRecovery(partialURL) == snapshot.sha256 else {
                 try? fileManager.removeItem(at: partialURL)
