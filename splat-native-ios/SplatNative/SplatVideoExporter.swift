@@ -77,7 +77,7 @@ enum SplatVideoExporter {
         let sourcePoints = try await reader.readAll()
         guard !sourcePoints.isEmpty else { throw ExportError.emptyScene }
         try Task.checkCancellation()
-        let points = try SplatPersistedEditMaterializer.materializeInMemory(
+        let points = try await SplatPersistedEditMaterializer.materializeInMemoryCancellable(
             sourceURL: sourceURL,
             points: sourcePoints
         )
