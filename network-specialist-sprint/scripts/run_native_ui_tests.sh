@@ -168,7 +168,10 @@ for UDID in "${IDS[@]}"; do
   boot_device "$UDID"
   for TEST_ID in "${UI_TESTS[@]}"; do
     TEST_NAME="${TEST_ID##*/}"
-    run_xcodebuild_logged "ui-${UDID}-${TEST_NAME}" 150 \
+    # xcodebuild can spend >2 minutes attaching the UI test runner on hosted macOS.
+    # Keep XCTest's per-test execution ceiling at 120s, but give the outer process
+    # enough startup budget so infrastructure latency cannot terminate a healthy test.
+    run_xcodebuild_logged "ui-${UDID}-${TEST_NAME}" 300 \
       xcodebuild test-without-building \
         -project "$PROJECT" \
         -scheme "$SCHEME" \
