@@ -103,12 +103,24 @@ extension SplatCanonicalSHAsset {
         guard expectedPointCount > 0,
               let attributes = try? fileManager.attributesOfItem(atPath: url.path),
               let sizeNumber = attributes[.size] as? NSNumber,
-              sizeNumber.int64Value > 0,
-              let handle = try? FileHandle(forReadingFrom: url) else { return false }
+              sizeNumber.int64Value > 0 else { return false }
+
+        let handle: FileHandle
+        do {
+            handle = try FileHandle(forReadingFrom: url)
+        } catch {
+            return false
+        }
         defer { try? handle.close() }
 
-        guard let prefix = try? handle.read(upToCount: 128 * 1024),
-              let prefix, !prefix.isEmpty,
+        let prefix: Data
+        do {
+            guard let data = try handle.read(upToCount: 128 * 1024) else { return false }
+            prefix = data
+        } catch {
+            return false
+        }
+        guard !prefix.isEmpty,
               let markerRange = prefix.range(of: Data("end_header".utf8)) else { return false }
 
         var payloadOffset = markerRange.upperBound
