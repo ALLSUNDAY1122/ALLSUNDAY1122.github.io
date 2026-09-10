@@ -61,4 +61,25 @@ final class SplatVideoConfigurationTests: XCTestCase {
         XCTAssertEqual(fixed.pitch, 0, accuracy: 0.0001)
         XCTAssertEqual(fixed.distanceMultiplier, 1, accuracy: 0.0001)
     }
+
+    func testFiniteCameraMovesEaseAtTheirEndpoints() {
+        var config = SplatVideoConfiguration()
+
+        config.cameraMotion = .pushIn
+        let pushQuarter = config.cameraSample(progress: 0.25)
+        let pushHalf = config.cameraSample(progress: 0.5)
+        let pushThreeQuarter = config.cameraSample(progress: 0.75)
+        // Smoothstep(0.25) = 0.15625: the move starts slower than a linear dolly.
+        XCTAssertEqual(pushQuarter.distanceMultiplier, 1.1796875, accuracy: 0.0001)
+        XCTAssertEqual(pushHalf.distanceMultiplier, 1.025, accuracy: 0.0001)
+        XCTAssertEqual(pushThreeQuarter.distanceMultiplier, 0.8703125, accuracy: 0.0001)
+
+        config.cameraMotion = .orbit180
+        let orbitQuarter = config.cameraSample(progress: 0.25)
+        let orbitHalf = config.cameraSample(progress: 0.5)
+        let orbitThreeQuarter = config.cameraSample(progress: 0.75)
+        XCTAssertLessThan(orbitQuarter.yaw, -.pi / 4)
+        XCTAssertEqual(orbitHalf.yaw, 0, accuracy: 0.0001)
+        XCTAssertGreaterThan(orbitThreeQuarter.yaw, .pi / 4)
+    }
 }
