@@ -29,6 +29,24 @@ final class SplatExportAdmissionTests: XCTestCase {
         XCTAssertEqual(SplatExportAdmission.estimatedRequiredFreeBytes(sourceBytes: Int64.max, kind: .ply), Int64.max)
     }
 
+    func testTrustedDigestCanonicalURLMatchesHashedCanonicalURL() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("c2-trusted-digest-canonical-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data((0..<128).map { UInt8($0 & 0xff) }).write(to: source, options: .atomic)
+
+        let digest = try SplatExportService.sha256Hex(fileURL: source)
+        let hashedURL = try SplatCanonicalSHAsset.canonicalURL(forLegacySplat: source)
+        let trustedURL = try SplatCanonicalSHAsset.canonicalURL(
+            forLegacySplat: source,
+            verifiedDigest: digest.uppercased()
+        )
+
+        XCTAssertEqual(trustedURL, hashedURL)
+        XCTAssertTrue(trustedURL.lastPathComponent.hasPrefix("result.sh3-"))
+    }
+
     func testPreflightRecoversViewerEditsBeforeExportMaterialization() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("c2-splat-export-edit-recovery-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
