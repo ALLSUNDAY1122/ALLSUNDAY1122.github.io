@@ -167,7 +167,7 @@ enum SplatVideoExporter {
         writer.add(input)
 
         let attributes: [String: Any] = [
-            kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA),
+            kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelBufferPixelFormatType_32BGRA),
             kCVPixelBufferWidthKey as String: dimensions.width,
             kCVPixelBufferHeightKey as String: dimensions.height,
             kCVPixelBufferMetalCompatibilityKey as String: true,
@@ -182,15 +182,24 @@ enum SplatVideoExporter {
             throw ExportError.writerFailed(writer.error?.localizedDescription ?? "startWriting failed")
         }
         writer.startSession(atSourceTime: .zero)
+
+        // Any throw after startWriting — including Task cancellation — must synchronously move the
+        // writer out of `.writing` before export() removes the partial file. Otherwise AVAssetWriter
+        // may still own the file descriptor while cleanup races it, leaving a stale or locked export.
+        var encodingCompleted = false
+        defer {
+            if !encodingCompleted && writer.status == .writing {
+                writer.cancelWriting()
+            }
+        }
+
         guard let pool = adaptor.pixelBufferPool else {
-            writer.cancelWriting()
             throw ExportError.pixelBufferPoolUnavailable
         }
 
         var textureCache: CVMetalTextureCache?
         guard CVMetalTextureCacheCreate(nil, nil, device, nil, &textureCache) == kCVReturnSuccess,
               let textureCache else {
-            writer.cancelWriting()
             throw ExportError.textureCacheFailed
         }
 
@@ -217,7 +226,6 @@ enum SplatVideoExporter {
             var pixelBuffer: CVPixelBuffer?
             guard CVPixelBufferPoolCreatePixelBuffer(nil, pool, &pixelBuffer) == kCVReturnSuccess,
                   let pixelBuffer else {
-                writer.cancelWriting()
                 throw ExportError.pixelBufferAllocationFailed
             }
 
@@ -236,7 +244,6 @@ enum SplatVideoExporter {
             guard status == kCVReturnSuccess,
                   let cvTexture,
                   let colorTexture = CVMetalTextureGetTexture(cvTexture) else {
-                writer.cancelWriting()
                 throw ExportError.textureCreationFailed
             }
 
@@ -279,33 +286,27 @@ enum SplatVideoExporter {
             for attempt in 0..<20 where !didRender {
                 try Task.checkCancellation()
                 guard let commandBuffer = commandQueue.makeCommandBuffer() else {
-                    writer.cancelWriting()
                     throw ExportError.commandBufferFailed
                 }
-                do {
-                    didRender = try renderer.render(
-                        viewports: [viewport],
-                        colorTexture: colorTexture,
-                        colorStoreAction: .store,
-                        depthTexture: nil,
-                        rasterizationRateMap: nil,
-                        renderTargetArrayLength: 0,
-                        accessTimeout: 0.25,
-                        sortTimeout: attempt == 0 ? 0.5 : 0.1,
-                        to: commandBuffer
-                    )
-                } catch {
-                    writer.cancelWriting()
-                    throw error
-                }
+                didRender = try renderer.render(
+                    viewports: [viewport],
+                    colorTexture: colorTexture,
+                    colorStoreAction: .store,
+                    depthTexture: nil,
+                    rasterizationRateMap: nil,
+                    renderTargetArrayLength: 0,
+                    accessTimeout: 0.25,
+                    sortTimeout: attempt == 0 ? 0.5 : 0.1,
+                    to: commandBuffer
+                )
                 await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
                     commandBuffer.addCompletedHandler { _ in
                         continuation.resume()
                     }
                     commandBuffer.commit()
                 }
+                try Task.checkCancellation()
                 guard commandBuffer.status != .error else {
-                    writer.cancelWriting()
                     throw ExportError.writerFailed(commandBuffer.error?.localizedDescription ?? "Metal command failed")
                 }
                 if !didRender {
@@ -314,13 +315,11 @@ enum SplatVideoExporter {
             }
 
             guard didRender else {
-                writer.cancelWriting()
                 throw ExportError.renderSkipped
             }
 
             let presentationTime = CMTimeMultiply(frameDuration, multiplier: Int32(frameIndex))
             guard adaptor.append(pixelBuffer, withPresentationTime: presentationTime) else {
-                writer.cancelWriting()
                 throw ExportError.writerFailed(writer.error?.localizedDescription ?? "append failed")
             }
 
@@ -329,6 +328,7 @@ enum SplatVideoExporter {
             }
         }
 
+        try Task.checkCancellation()
         input.markAsFinished()
         try await finish(writer)
         CVMetalTextureCacheFlush(textureCache, 0)
@@ -336,7 +336,8 @@ enum SplatVideoExporter {
         if writer.status == .failed {
             throw ExportError.writerFailed(writer.error?.localizedDescription ?? "finishWriting failed")
         }
-        return writer.status == .completed
+        encodingCompleted = writer.status == .completed
+        return encodingCompleted
     }
 
     private static func waitUntilReady(_ input: AVAssetWriterInput, writer: AVAssetWriter) async throws {
