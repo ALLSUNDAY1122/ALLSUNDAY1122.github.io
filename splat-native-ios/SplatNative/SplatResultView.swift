@@ -48,6 +48,11 @@ struct SplatResultView: View {
             // navigation paths still call persistNow() immediately before consuming the state.
             viewerState.schedulePersistence()
         }
+        .onDisappear {
+            // A swipe/back navigation can dismiss the viewer inside the debounce window. Flush
+            // once at the lifecycle boundary so responsiveness does not trade away durability.
+            viewerState.persistNow()
+        }
         .confirmationDialog("新しい撮影を開始しますか？", isPresented: $confirmNewScan, titleVisibility: .visible) {
             Button("保存したまま新しい撮影へ") {
                 viewerState.persistNow()
