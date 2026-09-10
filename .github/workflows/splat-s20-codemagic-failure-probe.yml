@@ -77,7 +77,7 @@ jobs:
               return out
 
           good = get(req['good_build_id']); failed = get(req['failed_build_id'])
-          result = {'schema':'scanlab.codemagic-safe-probe.v4','request_id':req.get('request_id'),'good_build_id':req['good_build_id'],'failed_build_id':req['failed_build_id'],'good':summarize(good),'failed':summarize(failed),'secret_values_persisted':False}
+          result = {'schema':'scanlab.codemagic-safe-probe.v5','request_id':req.get('request_id'),'good_build_id':req['good_build_id'],'failed_build_id':req['failed_build_id'],'good':summarize(good),'failed':summarize(failed),'secret_values_persisted':False}
           action = req.get('action') or 'probe'
           if action == 'build':
               status, started = api('https://api.codemagic.io/builds', method='POST', payload={'appId':req['app_id'],'workflowId':'scanlab-ios','branch':'release/scanlab-testflight'})
@@ -94,11 +94,49 @@ jobs:
               if target.get('app_id') != req['app_id'] or target.get('branch') != 'release/scanlab-testflight': raise SystemExit('cancel target identity mismatch')
               status, _ = api(f'https://api.codemagic.io/builds/{build_id}/cancel', method='POST', accept_208=True)
               result['retry'] = {'build_id':build_id,'cancel_http_status':status,'before':summarize(target)}
+          elif action == 'materialize':
+              if req.get('recipe_version') != 5: raise SystemExit('materialize recipe epoch mismatch')
+              result['materialize'] = {'branch':'release/scanlab-testflight','recipe_version':5,'status':'requested'}
           elif action != 'probe': raise SystemExit('invalid action')
 
           Path('automation/scanlab-codemagic-probe-result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-          print('PASS guarded Codemagic distribution action')
+          print('PASS guarded Scan Lab distribution action')
           PY
+
+      - name: Materialize dense release source when requested
+        run: |
+          set -euo pipefail
+          ACTION="$(python3 -c 'import json; print(json.load(open("automation/scanlab-codemagic-probe-request.json")).get("action", "probe"))')"
+          if [ "$ACTION" != "materialize" ]; then
+            exit 0
+          fi
+          rm -rf /tmp/scanlab-release
+          git fetch origin release/scanlab-testflight
+          git worktree add -B scanlab-release-materialize /tmp/scanlab-release origin/release/scanlab-testflight
+          cd /tmp/scanlab-release
+          grep -q 'static let recipeVersion = 5' splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift
+          grep -q 'static let standardIterations = 7_000' splat-native-ios/SplatNative/SplatReconstructionPolicy.swift
+          python3 splat-native-ios/scripts/apply_s13_depth_seed.py
+          grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'seedDepthFrames' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'seedColorFrames' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q '同じ撮影から再生成' splat-native-ios/SplatNative/ScanLibraryView.swift
+          python3 splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
+          python3 splat-native-ios/scripts/diagnose_s15_pose_trajectory.py --self-test
+          bash splat-native-ios/scripts/validate.sh
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            splat-native-ios/SplatNative/ScanModel.swift \
+            splat-native-ios/SplatNative/ScanLibraryView.swift \
+            splat-native-ios/SplatNative/RootScanView.swift \
+            splat-native-ios/SplatNative/SplatResultView.swift
+          if git diff --cached --quiet; then
+            echo 'Dense release source already materialized.'
+          else
+            git commit -m 'scanlab: materialize epoch-5 dense release source'
+            git push origin HEAD:release/scanlab-testflight
+          fi
 
       - name: Persist sanitized probe
         run: |
