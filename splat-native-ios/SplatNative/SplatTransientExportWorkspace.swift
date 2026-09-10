@@ -31,7 +31,12 @@ enum SplatTransientExportWorkspace {
         _ url: URL?,
         fileManager: FileManager = .default
     ) {
-        guard let url else { return }
+        guard let url,
+              url.isFileURL,
+              url.lastPathComponent.hasPrefix(prefix) else { return }
+        // Cleanup is intentionally fail-closed. This helper is called from cancellation/dismissal
+        // paths, so an accidentally propagated scan-project URL must never become a recursive
+        // delete target. Export workspaces are always namespaced with `scanlab-export-` at create().
         try? fileManager.removeItem(at: url)
     }
 
