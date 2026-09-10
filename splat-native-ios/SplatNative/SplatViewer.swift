@@ -384,9 +384,23 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
         rebuildTask = Task { [weak self] in
             guard let self else { return }
-            let edited = await Task.detached(priority: .userInitiated) {
-                Self.editedPoints(points, settings: settings, bounds: bounds)
-            }.value
+            let worker = Task.detached(priority: .userInitiated) {
+                try Self.editedPoints(points, settings: settings, bounds: bounds)
+            }
+            let edited: [SplatPoint]
+            do {
+                edited = try await withTaskCancellationHandler {
+                    try await worker.value
+                } onCancel: {
+                    worker.cancel()
+                }
+            } catch is CancellationError {
+                return
+            } catch {
+                guard generation == self.editGeneration else { return }
+                self.state?.rendererRejectedEdit("編集結果を生成できませんでした: \(error.localizedDescription)")
+                return
+            }
             guard !Task.isCancelled, generation == self.editGeneration else { return }
             guard !edited.isEmpty else {
                 self.state?.rendererRejectedEdit("切り抜き範囲に3Dデータが残っていません")
@@ -563,7 +577,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
     nonisolated private static func editedPoints(_ points: [SplatPoint],
                                                   settings: SplatEditSettings,
-                                                  bounds: CropBounds) -> [SplatPoint] {
+                                                  bounds: CropBounds) throws -> [SplatPoint] {
         let settings = settings.normalized()
         let exposureGain = Float(pow(2.0, settings.exposureEV))
         let contrast = Float(settings.contrast)
@@ -584,7 +598,13 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
         var result: [SplatPoint] = []
         result.reserveCapacity(points.count)
-        for point in points {
+        for (index, point) in points.enumerated() {
+            // Rapid slider/crop gestures supersede older full-scene rebuilds. Check cancellation
+            // in bounded batches so obsolete CPU work releases its large temporary array quickly
+            // instead of competing with the newest edit for memory, thermals and responsiveness.
+            if index & 0x3FF == 0 {
+                try Task.checkCancellation()
+            }
             let p = point.position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
             if cropXLow && p.x < xLow { continue }
@@ -618,6 +638,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
             }
             result.append(edited)
         }
+        try Task.checkCancellation()
         return result
     }
 
