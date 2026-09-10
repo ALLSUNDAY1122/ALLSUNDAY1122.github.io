@@ -1,0 +1,102 @@
+name: Splat S20 Codemagic Failure Probe
+
+on:
+  push:
+    branches:
+      - feature/splat-native-ios-poc
+    paths:
+      - automation/scanlab-codemagic-probe-request.json
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Compare known-good and failed Scan Lab builds
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$CM_API_TOKEN"
+          python3 - <<'PY'
+          import json, os, re, urllib.request, urllib.error
+          from pathlib import Path
+
+          req = json.loads(Path('automation/scanlab-codemagic-probe-request.json').read_text(encoding='utf-8'))
+          if req.get('repository') != 'ALLSUNDAY1122/ALLSUNDAY1122.github.io': raise SystemExit('repository mismatch')
+          if req.get('app_id') != '6a769d81a1add9d06020b524': raise SystemExit('app mismatch')
+          if req.get('good_build_id') != '6aa1bb55b7af1ef0d6ac5484': raise SystemExit('known-good build mismatch')
+          if req.get('failed_build_id') != '6aa1f88a7784a14a74795f9b': raise SystemExit('target failure mismatch')
+
+          token = os.environ['CM_API_TOKEN'].strip()
+          def get(build_id):
+              r = urllib.request.Request(f'https://codemagic.io/api/v3/builds/{build_id}')
+              r.add_header('x-auth-token', token)
+              with urllib.request.urlopen(r, timeout=30) as resp:
+                  raw = json.loads(resp.read().decode('utf-8'))
+              return raw.get('data') or raw
+
+          allowed = {
+              'status','state','name','title','phase','step','stage','result','conclusion',
+              'error','message','reason','exitcode','exit_code','startedat','started_at',
+              'finishedat','finished_at','duration','buildnumber','build_number','branch',
+              'workflowid','workflow_id'
+          }
+          secretish = re.compile(r'(?i)(token|secret|password|private[_ -]?key|authorization|certificate)')
+          def clean(v):
+              if not isinstance(v, str): return v
+              v = re.sub(r'(?i)(token|secret|password|key)=\S+', r'\1=<redacted>', v)
+              return v[:500]
+
+          def summarize(x):
+              out = {'top_level_keys': sorted(x.keys()) if isinstance(x, dict) else []}
+              scalars = []
+              def walk(v, path=''):
+                  if isinstance(v, dict):
+                      for k, child in v.items():
+                          if secretish.search(str(k)): continue
+                          p = f'{path}.{k}' if path else str(k)
+                          if isinstance(child, (str,int,float,bool)) or child is None:
+                              if str(k).lower() in allowed:
+                                  scalars.append({'path': p, 'value': clean(child)})
+                          elif isinstance(child, (dict,list)):
+                              walk(child, p)
+                  elif isinstance(v, list):
+                      for i, child in enumerate(v[:100]): walk(child, f'{path}[{i}]')
+              walk(x)
+              out['safe_status_fields'] = scalars[:300]
+              return out
+
+          good = get(req['good_build_id'])
+          failed = get(req['failed_build_id'])
+          result = {
+              'schema': 'scanlab.codemagic-safe-probe.v1',
+              'request_id': req.get('request_id'),
+              'good_build_id': req['good_build_id'],
+              'failed_build_id': req['failed_build_id'],
+              'good': summarize(good),
+              'failed': summarize(failed),
+              'secret_values_persisted': False,
+          }
+          Path('automation/scanlab-codemagic-probe-result.json').write_text(
+              json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print('PASS guarded Codemagic good/failed metadata probe')
+          PY
+
+      - name: Persist sanitized probe
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/scanlab-codemagic-probe-result.json
+          git commit -m 'ci: record Scan Lab Codemagic failure probe' || exit 0
+          if git push origin HEAD:feature/splat-native-ios-poc; then exit 0; fi
+          git fetch origin feature/splat-native-ios-poc
+          git rebase origin/feature/splat-native-ios-poc
+          git push origin HEAD:feature/splat-native-ios-poc
