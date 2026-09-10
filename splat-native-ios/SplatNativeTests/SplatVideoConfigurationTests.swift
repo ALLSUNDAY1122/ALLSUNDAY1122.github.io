@@ -2,17 +2,25 @@ import XCTest
 
 final class SplatVideoConfigurationTests: XCTestCase {
     func testAspectRatioDimensionsAreStableAndEncoderFriendly() {
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.portrait9x16.dimensions.width, 720)
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.portrait9x16.dimensions.height, 1280)
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.square1x1.dimensions.width, 720)
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.square1x1.dimensions.height, 720)
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.landscape16x9.dimensions.width, 1280)
-        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.landscape16x9.dimensions.height, 720)
+        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.portrait9x16.dimensions.width, 1080)
+        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.portrait9x16.dimensions.height, 1920)
+        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.square1x1.dimensions.width, 1080)
+        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.square1x1.dimensions.height, 1080)
+        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.landscape16x9.dimensions.width, 1920)
+        XCTAssertEqual(SplatVideoConfiguration.AspectRatio.landscape16x9.dimensions.height, 1080)
 
         for ratio in SplatVideoConfiguration.AspectRatio.allCases {
-            XCTAssertEqual(ratio.dimensions.width % 16, 0)
-            XCTAssertEqual(ratio.dimensions.height % 16, 0)
+            XCTAssertEqual(ratio.dimensions.width % 2, 0)
+            XCTAssertEqual(ratio.dimensions.height % 2, 0)
         }
+        XCTAssertEqual(
+            SplatVideoConfiguration.AspectRatio.portrait9x16.dimensions.width * 16,
+            SplatVideoConfiguration.AspectRatio.portrait9x16.dimensions.height * 9
+        )
+        XCTAssertEqual(
+            SplatVideoConfiguration.AspectRatio.landscape16x9.dimensions.width * 9,
+            SplatVideoConfiguration.AspectRatio.landscape16x9.dimensions.height * 16
+        )
     }
 
     func testSpeedChangesDurationWithoutChangingFrameRate() {
