@@ -189,8 +189,14 @@ enum SplatVideoExporter {
         let frameDuration = CMTime(value: 1, timescale: CMTimeScale(configuration.framesPerSecond))
         let totalFrames = configuration.totalFrames
         let aspect = Float(dimensions.width) / Float(max(1, dimensions.height))
+        let fovY: Float = 55 * .pi / 180
+        let fittedBaseDistance = SplatCameraGeometry.aspectFittedDistance(
+            framing: framing,
+            fovY: fovY,
+            aspect: aspect
+        )
         let projection = SplatCameraGeometry.perspective(
-            fovY: 55 * .pi / 180,
+            fovY: fovY,
             aspect: max(0.1, aspect),
             near: 0.01,
             far: 100
@@ -230,7 +236,7 @@ enum SplatVideoExporter {
                 ? 0.0
                 : Double(frameIndex) / Double(totalFrames - 1)
             let sample = configuration.cameraSample(progress: progress)
-            let distance = framing.distance * sample.distanceMultiplier
+            let distance = fittedBaseDistance * sample.distanceMultiplier
             let eye = SplatCameraGeometry.eye(
                 center: framing.center,
                 distance: distance,
