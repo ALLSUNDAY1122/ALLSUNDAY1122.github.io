@@ -54,11 +54,15 @@ enum SplatStrongCompletionEvidence {
         }
     }
 
+    /// Returns the digest that was freshly computed during this verification. Callers that need the
+    /// content address immediately afterwards can reuse it without weakening the invariant that every
+    /// verification re-reads and hashes the completed result.
+    @discardableResult
     static func verifyOrSeal(
         sourceURL: URL,
         evidence: SplatCommitEvidence,
         fileManager: FileManager = .default
-    ) throws {
+    ) throws -> String {
         let projectURL = sourceURL.deletingLastPathComponent()
         let sealURL = projectURL.appendingPathComponent(fileName)
         let before = try snapshot(sourceURL, fileManager: fileManager)
@@ -71,7 +75,7 @@ enum SplatStrongCompletionEvidence {
             let after = try snapshot(sourceURL, fileManager: fileManager)
             guard after == before else { throw IntegrityError.sourceChangedDuringVerification }
             guard hash == seal.sha256 else { throw IntegrityError.hashMismatch }
-            return
+            return hash
         }
 
         // A stale seal is expected after a newly committed reconstruction. It may be replaced only
@@ -88,6 +92,7 @@ enum SplatStrongCompletionEvidence {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         try encoder.encode(Seal(evidence: evidence, sha256: hash)).write(to: sealURL, options: .atomic)
+        return hash
     }
 
     private struct FileSnapshot: Equatable {
