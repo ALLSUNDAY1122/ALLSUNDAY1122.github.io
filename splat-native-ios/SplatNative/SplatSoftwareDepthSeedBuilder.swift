@@ -314,14 +314,19 @@ enum SplatSoftwareDepthSeedBuilder {
         useBilinearNeighborSampling: Bool = false
     ) -> Float? {
         let offsets: [Float] = [-2, 0, 2]
-        var total: Float = 0
-        var samples = 0
-        for dy in offsets {
-            for dx in offsets {
-                guard let referenceValue = reference.gray.sample(u + dx, v + dy) else { continue }
-                let world = backproject(u: u + dx, v: v + dy, depth: depth, frame: reference)
-                for neighborIndex in neighborIndices {
-                    let neighbor = frames[neighborIndex]
+        var neighborCosts: [Float] = []
+        neighborCosts.reserveCapacity(neighborIndices.count)
+
+        // Score each view independently. A single occluded, reflective or exposure-shifted view
+        // must not drag every otherwise-consistent correspondence onto a wrong depth layer.
+        for neighborIndex in neighborIndices {
+            let neighbor = frames[neighborIndex]
+            var total: Float = 0
+            var samples = 0
+            for dy in offsets {
+                for dx in offsets {
+                    guard let referenceValue = reference.gray.sample(u + dx, v + dy) else { continue }
+                    let world = backproject(u: u + dx, v: v + dy, depth: depth, frame: reference)
                     guard let pixel = project(world, frame: neighbor) else { continue }
                     let neighborValue = useBilinearNeighborSampling
                         ? neighbor.gray.sampleBilinear(pixel.x, pixel.y)
@@ -331,9 +336,24 @@ enum SplatSoftwareDepthSeedBuilder {
                     samples += 1
                 }
             }
+            if samples >= 5 {
+                neighborCosts.append(total / Float(samples))
+            }
         }
-        guard samples >= max(12, neighborIndices.count * 5) else { return nil }
-        return total / Float(samples)
+
+        // Keep genuine multi-view support mandatory. Robustly trim only when at least four views
+        // survive projection: discard one suspiciously-low accidental match and one high occlusion
+        // outlier. For two views both must agree; for three, the median rejects one outlier.
+        guard neighborCosts.count >= 2 else { return nil }
+        neighborCosts.sort()
+        if neighborCosts.count == 2 {
+            return (neighborCosts[0] + neighborCosts[1]) * 0.5
+        }
+        if neighborCosts.count == 3 {
+            return neighborCosts[1]
+        }
+        let trimmed = neighborCosts.dropFirst().dropLast()
+        return trimmed.reduce(0, +) / Float(trimmed.count)
     }
 
     private static func load(
