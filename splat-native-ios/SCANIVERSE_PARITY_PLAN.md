@@ -1,6 +1,6 @@
 # Scaniverse Functional Parity Program
 
-Updated: 2026-09-10 09:43 JST
+Updated: 2026-09-10 11:18 JST
 
 ## Goal
 
@@ -20,39 +20,37 @@ Parity means comparable real-device outcomes in reconstruction quality, renderin
 
 Every cycle must re-read live GitHub, Notion, Supabase and physical evidence. Historical SHAs and old TestFlight builds are evidence only.
 
-## 2026-09-10 09:43 JST Macro Loop checkpoint
+## 2026-09-10 11:18 JST Macro Loop checkpoint
 
-Fresh HQ reconstruction source is now cache compatibility epoch `recipeVersion=5`; the older Build 15 / epoch-2 state below is historical evidence rather than the current physical candidate.
+The current reconstruction compatibility epoch remains `recipeVersion=5`. The direct plane-sweep quality changes already present in this lineage are robust multi-view cost aggregation, local additive exposure normalization and bounded/allocation-free inner-loop geometry reuse.
 
-This macro loop changed plane-sweep reconstruction directly rather than adding another diagnostic gate:
+This macro loop removed the epoch-5 distribution blocker without changing those reconstruction algorithms:
 
-1. Robust multi-view depth aggregation: require genuine support from at least two projected neighbors; for three/four surviving views reject extreme outliers before accepting the photometric cost.
-2. Local additive exposure normalization: center neighbor-reference patch intensity differences so auto-exposure drift does not dominate geometric matching while preserving local edge/texture structure.
-3. Mobile hot-loop optimization: replace dynamic temporary arrays with bounded SIMD storage and backproject each reference patch sample once per depth hypothesis, reusing that world point across neighbors. This reduces allocation and repeated camera-geometry work in the inner sweep.
-
-The last direct source head before release orchestration was `c34fc8771e261279494f459f9b2a4c59cb49c0fc`. At that exact source head S14 RGB Dense Seed, S13 Depth Seed Geometry, S12 Quality-aware Bounded Densification, S10 Bounded Memory, S9 Memory Drain, Privacy Preflight and Smoke Diagnostic all passed. Native iOS Build was cancelled rather than failed.
-
-The new materialized Codemagic build `6aa1f88a7784a14a74795f9b` was started from `release/scanlab-testflight` but readback reports `failed` after roughly one minute. The release branch itself contains `recipeVersion=5` and the current dense reconstruction source, so this failure is a distribution/release gate and is not evidence that the plane-sweep algorithm failed physically. A fresh human-authored poll/checkpoint commit `4c6cbb0496ff6dac91c37c00df4689d4aaf4c88a` retriggered PR CI for exact-head regression checking.
+1. The failed release path was reproduced and traced to stale release-contract symbols after materialization. The release workflow still grepped for `seedDepthFrames` / `seedColorFrames`, while the current materializer emits `depthSeedFrames` and `colorFrames: seedFrames`.
+2. S21 was repaired and split into Linux-safe contract checks. Materialization, S14 dense reconstruction contract, S15 pose diagnostic contract and materialized app callsites all passed.
+3. The release architecture was then made immutable: GitHub materializes and verifies the epoch-5 source once; Codemagic no longer executes `apply_s13_depth_seed.py`. Codemagic verifies the already-materialized callsites, runs the macOS release contracts, signs that same source and submits only to Internal TestFlight.
+4. S21 now rejects any future release configuration that reintroduces build-time reconstruction-source materialization. The immutable-release verification run completed SUCCESS.
+5. Codemagic build `6aa21077fc7a270bc6de5bd6` completed successfully. App Store Connect readback identifies the resulting latest candidate as **Build 17**, `processingState=VALID`, `internalBuildState=IN_BETA_TESTING`, `buildAudienceType=INTERNAL_ONLY`, `expired=false`.
+6. As an independent UX sidecar, the training screen no longer invents processing stages from training percentage. Before Gaussian optimization starts it reports preparation of the initial 3D/training data; once training starts it reports actual Splat optimization with the current/target iteration count.
 
 Fresh external state in this cycle:
 
 - Supabase production: `ACTIVE_HEALTHY`; `auth.users=1`, `scanlab_profiles=1`, `scanlab_scans=0`, `scanlab_reports=0`, `scanlab_blocks=0`.
-- Dropbox `/Scaniverse`: five comparison files, newest evidence still predates this epoch-5 lineage.
-- No new same-RAW physical reconstruction result was found in the available Project-file search.
+- Dropbox `/Scaniverse`: five comparison files; no new epoch-5 same-RAW physical result was found.
+- Available Project-file search likewise found no new Build-17 physical reconstruction evidence.
+- Golden reference remains approximately 259,243 splats (SH3) for the supplied Scaniverse SPZ and 28,792 vertices plus texture for the supplied mesh export.
 - PR #4145 remains human-merge-only and must not be merged automatically.
 
-## Current P0 — distribute and physically validate epoch-5 same-RAW reconstruction
+## Current P0 — physically validate Build 17 on retained same RAW
 
-Do not claim a Scaniverse gap reduction from CI alone. The next trustworthy geometry comparison must exercise the current epoch-5 plane-sweep source on the retained same RAW capture.
+The distribution blocker is resolved. Do not claim a Scaniverse geometry gap reduction from Build 17 availability alone.
 
 Gate sequence:
 
-1. Resolve the current Codemagic/TestFlight distribution failure without reverting the epoch-5 reconstruction changes.
-2. Produce a signed internal TestFlight build from the current reconstruction lineage.
-3. Update the existing iPhone installation without deleting the app.
-4. Use `同じ撮影から再生成` on the retained capture.
-5. Require seed source `planeSweep` or genuine hardware `depth`, standard 7000 iterations, coherent completed geometry, and save/reopen persistence.
-6. Compare the completed output with the Scaniverse Golden reference for missing regions, duplicated shells/fragments, holes/floating geometry, color/detail and stable 3D impression.
+1. Update the existing iPhone installation to **TestFlight Build 17 without deleting the app**.
+2. Use `同じ撮影から再生成` on the retained capture.
+3. Require seed source `planeSweep` or genuine hardware `depth`, current epoch 5, standard 7000 iterations, coherent completed geometry, and save/reopen persistence.
+4. Compare the completed output with the Scaniverse Golden reference for missing regions, duplicated shells/fragments, holes/floating geometry, color/detail and stable 3D impression.
 
 If final geometry still fragments, use the already-existing S15/S18/S19 evidence once, then branch by evidence:
 
@@ -76,12 +74,12 @@ These diagnostics support root-cause isolation; they do not prove visible qualit
 
 | Area | State | Remaining proof |
 |---|---|---|
-| Reconstruction / geometry | **P0 / PARTIAL** | epoch-5 signed build + same-RAW `planeSweep`/depth + 7000 completion + coherent final geometry |
-| Color / texture / appearance | PARTIAL | coherent current-lineage output vs Golden |
+| Reconstruction / geometry | **P0 / PARTIAL** | Build 17 same-RAW `planeSweep`/depth + 7000 completion + coherent final geometry |
+| Color / texture / appearance | PARTIAL | coherent Build-17 output vs Golden |
 | Splat / mesh rendering | PARTIAL | trusted coherent output; view-dependent stability and physical appearance |
 | Camera / scan UX | PARTIAL | real-device continuity, coverage guidance, tracking/relocalization proof |
-| Edit UX | PARTIAL | edit operations on a trusted coherent result and persistence |
-| Save / reopen | PARTIAL | current-lineage physical persistence proof |
+| Edit UX | PARTIAL | crop/exposure/contrast/measurement on a trusted coherent result and persistence |
+| Save / reopen | PARTIAL | Build-17 physical persistence proof |
 | Export / share | NEAR_PARITY | external-read/share proof from trusted edited asset |
 | Performance / memory / thermal | PARTIAL | repeatable physical run without terminal degradation |
 | Crash / data consistency | PARTIAL | same-RAW reprocess, save/reopen and cold-recovery physical proof |
@@ -94,7 +92,7 @@ No row may become `PARITY` solely from compile, simulator, fixture, CI, signed b
 
 The latest trusted physical failure completed reconstruction but remained spatially fragmented/disconnected. Earlier same-RAW regeneration reached the trainer from a sparse `rawFeaturePoints` seed and produced a high splat count without coherent geometry, demonstrating that completion/count alone is insufficient. S14 introduced RGB multi-view dense initialization, hardware depth remains first priority, and raw feature points remain fail-closed fallback. The current epoch-5 lineage further refines the non-LiDAR plane-sweep matcher described above.
 
-Build 15 / epoch 2 remains useful historical evidence, but it is no longer the preferred physical comparison candidate after the epoch-5 source changes.
+Build 15 / epoch 2 remains historical evidence. Build 17 / epoch 5 is now the preferred physical comparison candidate.
 
 ## Completion rule
 
