@@ -39,7 +39,11 @@ for token in (
     "depth: coarseDepth",
     "useBilinearNeighborSampling: true",
     "var neighborCosts: [Float] = []",
-    "if samples >= 5",
+    "var referenceValues: [Float] = []",
+    "var neighborValues: [Float] = []",
+    "referenceValues.count >= 5",
+    "let referenceMean = referenceValues.reduce(0, +) / count",
+    "let neighborMean = neighborValues.reduce(0, +) / count",
     "guard neighborCosts.count >= 2 else { return nil }",
     "neighborCosts.sort()",
     "neighborCosts.dropFirst().dropLast()",
@@ -49,7 +53,7 @@ for token in (
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
     'metadataFileName = "s14-seed-recipe.json"',
-    "static let recipeVersion = 4",
+    "static let recipeVersion = 5",
     "case planeSweep",
     "SplatSoftwareDepthSeedBuilder.makeSeedPoints",
     "softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount",
@@ -128,6 +132,16 @@ def project_world(point, fx, fy, cx, cy, camera_to_world):
     )
 
 
+def centered_patch_cost(reference_values, neighbor_values):
+    assert len(reference_values) == len(neighbor_values)
+    reference_mean = sum(reference_values) / len(reference_values)
+    neighbor_mean = sum(neighbor_values) / len(neighbor_values)
+    return sum(
+        abs((r - reference_mean) - (n - neighbor_mean))
+        for r, n in zip(reference_values, neighbor_values)
+    ) / len(reference_values)
+
+
 identity = (
     (1.0, 0.0, 0.0, 0.0),
     (0.0, 1.0, 0.0, 0.0),
@@ -197,6 +211,15 @@ for index in (5, 12, 20, 27):
     refined_error = min(abs((1.0 / inv) - true_depth) for inv in refined_inverse)
     assert refined_error < coarse_error * 0.25, (index, coarse_error, refined_error)
 
+# Additive auto-exposure changes must not turn the same local structure into a high-cost mismatch.
+reference_patch = [20.0, 35.0, 55.0, 30.0, 60.0, 90.0, 25.0, 50.0, 80.0]
+bright_patch = [value + 45.0 for value in reference_patch]
+raw_exposure_cost = sum(abs(a - b) for a, b in zip(reference_patch, bright_patch)) / len(reference_patch)
+assert raw_exposure_cost > 34.0
+assert math.isclose(centered_patch_cost(reference_patch, bright_patch), 0.0, abs_tol=1e-6)
+wrong_structure = [80.0, 50.0, 25.0, 90.0, 60.0, 30.0, 55.0, 35.0, 20.0]
+assert centered_patch_cost(reference_patch, wrong_structure) > 20.0
+
 # Multi-view cost must remain on the same per-pixel intensity scale while resisting one bad view.
 def robust_multiview_cost(costs):
     costs = sorted(costs)
@@ -223,4 +246,4 @@ def voxel(p):
 assert voxel((0.001, 0.001, -1.001)) == voxel((0.009, 0.009, -1.009))
 assert voxel((0.001, 0.001, -1.001)) != voxel((0.021, 0.001, -1.001))
 
-print("PASS: S14 RGB dense-seed + refined robust multi-view depth contract")
+print("PASS: S14 RGB dense-seed + exposure-normalized robust refined depth contract")
