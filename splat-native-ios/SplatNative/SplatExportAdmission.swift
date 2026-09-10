@@ -67,7 +67,10 @@ enum SplatExportAdmission {
             let pixelsPerSecond = Double(max(1, width)) * Double(max(1, height)) * Double(max(1, framesPerSecond))
             let estimatedBitrate = max(2_000_000, pixelsPerSecond * 0.12)
             let videoBytes = Int64(min(Double(Int64.max), (estimatedBitrate * max(1, duration) / 8).rounded(.up)))
-            outputEstimate = max(videoBytes, effectiveSource)
+            // Video export keeps the scene/materialization workspace alive while the encoded movie
+            // grows. Reserving max(scene, movie) flattened duration/resolution changes whenever the
+            // scene was larger than the movie, under-budgeting the actual simultaneous footprint.
+            outputEstimate = saturatingAdd(effectiveSource, videoBytes)
         }
         return saturatingAdd(outputEstimate, safetyReserveBytes)
     }
