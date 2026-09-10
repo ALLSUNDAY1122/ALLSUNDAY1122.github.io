@@ -41,7 +41,10 @@ enum SplatCameraGeometry {
         guard !radii.isEmpty else { return Framing(center: center, distance: 2.5) }
         let percentileIndex = min(radii.count - 1, Int(Float(radii.count - 1) * 0.90))
         let radius = max(0.10, radii[percentileIndex])
-        let framingDistance = max(0.35, min(12.0, radius * 2.8))
+        // Keep video framing aligned with the live viewer. The previous 12-unit cap could
+        // move the export camera materially closer than the viewer for large scenes, clipping
+        // geometry that was fully visible before the user tapped Export.
+        let framingDistance = max(0.35, min(18.0, radius * 2.8))
         return Framing(center: center, distance: framingDistance)
     }
 
