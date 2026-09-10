@@ -114,7 +114,11 @@ enum SplatVideoExporter {
                 try FileManager.default.removeItem(at: finalURL)
             }
             try FileManager.default.moveItem(at: partialURL, to: finalURL)
-            try validateOutput(finalURL)
+            do {
+                try await SplatVideoOutputValidator.validate(finalURL)
+            } catch {
+                throw ExportError.outputMissing
+            }
             return finalURL
         } catch {
             try? FileManager.default.removeItem(at: partialURL)
@@ -352,13 +356,6 @@ enum SplatVideoExporter {
                     ))
                 }
             }
-        }
-    }
-
-    private static func validateOutput(_ url: URL) throws {
-        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber, size.intValue > 0 else {
-            throw ExportError.outputMissing
         }
     }
 }
