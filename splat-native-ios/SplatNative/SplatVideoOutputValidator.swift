@@ -14,6 +14,7 @@ enum SplatVideoOutputValidator {
         _ url: URL,
         fileManager: FileManager = .default
     ) async throws {
+        try Task.checkCancellation()
         guard url.isFileURL,
               fileManager.fileExists(atPath: url.path),
               let attributes = try? fileManager.attributesOfItem(atPath: url.path),
@@ -24,11 +25,15 @@ enum SplatVideoOutputValidator {
 
         let asset = AVURLAsset(url: url)
         let tracks = try await asset.loadTracks(withMediaType: .video)
+        // A user can cancel while AVFoundation is parsing a large MP4. Do not let a validation
+        // result obtained after cancellation escape back to the export/share flow as success.
+        try Task.checkCancellation()
         guard !tracks.isEmpty else {
             throw ValidationError.missingVideoTrack
         }
 
         let duration = try await asset.load(.duration)
+        try Task.checkCancellation()
         guard duration.isNumeric,
               duration.seconds.isFinite,
               duration.seconds > 0 else {
