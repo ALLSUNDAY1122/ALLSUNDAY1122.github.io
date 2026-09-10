@@ -54,6 +54,14 @@ struct SplatResultView: View {
             // measurement session and report a plausible but wrong distance.
             viewerState.requestMeasurementClear()
         }
+        .onChange(of: selectedTool) { _, newTool in
+            // Measurement mode owns single-finger taps and intentionally disables orbit/pan/pinch.
+            // Turning that mode off when its panel is no longer visible prevents the viewer from
+            // appearing frozen after the user switches back to View/Crop/Adjust.
+            if newTool != .measure {
+                viewerState.measurementEnabled = false
+            }
+        }
         .onDisappear {
             // A swipe/back navigation can dismiss the viewer inside the debounce window. Flush
             // once at the lifecycle boundary so responsiveness does not trade away durability.
