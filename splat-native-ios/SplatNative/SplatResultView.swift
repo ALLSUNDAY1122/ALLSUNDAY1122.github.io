@@ -43,9 +43,10 @@ struct SplatResultView: View {
             viewerState.attach(url: newURL)
         }
         .onChange(of: viewerState.editSettings) { _, _ in
-            // Output/publish controls live outside this view as well, so persist each tiny JSON
-            // edit atomically before an external action can consume stale viewer state.
-            viewerState.persistNow()
+            // Slider/crop gestures can emit dozens of changes per second. Debounce these tiny
+            // sidecar writes so interactive editing stays responsive; explicit export/reprocess/
+            // navigation paths still call persistNow() immediately before consuming the state.
+            viewerState.schedulePersistence()
         }
         .confirmationDialog("新しい撮影を開始しますか？", isPresented: $confirmNewScan, titleVisibility: .visible) {
             Button("保存したまま新しい撮影へ") {
