@@ -23,6 +23,11 @@ enum SplatExportAdmission {
         }
     }
 
+    private struct CanonicalInspection {
+        let candidateExists: Bool
+        let completeAsset: SplatCanonicalSHAsset.Asset?
+    }
+
     private static let safetyReserveBytes: Int64 = 128 * 1_024 * 1_024
 
     static func preflight(sourceURL: URL, kind: Kind, availableCapacityOverride: Int64? = nil) throws -> URL {
@@ -36,21 +41,21 @@ enum SplatExportAdmission {
         let sourceBytes = try fileSize(at: trustedURL)
         let pointCount = Int(sourceBytes / 32)
 
-        // `existingAsset` historically validates the PLY schema but not whether every declared
-        // binary vertex is present. If a canonical SH3 file has a valid header but is truncated,
-        // do not let export silently consume it. A complete canonical asset remains preferred;
-        // scans with no canonical asset at all retain legacy `.splat` compatibility.
-        let schemaValidCanonical = SplatCanonicalSHAsset.existingAsset(
-            forLegacySplat: trustedURL,
+        // Resolve the content-addressed canonical path only once. canonicalURL hashes the entire
+        // completed legacy `.splat`, so chaining existingAsset -> existingCompleteAsset here would
+        // repeat a potentially hundreds-of-megabytes read before every export.
+        let canonicalInspection = inspectCanonicalOnce(
+            sourceURL: trustedURL,
             expectedPointCount: pointCount
         )
-        let canonical = SplatCanonicalSHAsset.existingCompleteAsset(
-            forLegacySplat: trustedURL,
-            expectedPointCount: pointCount
-        )
-        if schemaValidCanonical != nil, canonical == nil {
+        // Older SH0 projects legitimately have no canonical file. If the canonical path does exist,
+        // any malformed schema, mismatched point count/SH degree, or truncated vertex payload means
+        // the high-quality generation is damaged and export must fail closed rather than silently
+        // producing a lower-fidelity result from the legacy `.splat`.
+        if canonicalInspection.candidateExists && canonicalInspection.completeAsset == nil {
             throw AdmissionError.untrustedSource
         }
+        let canonical = canonicalInspection.completeAsset
 
         let canonicalBytes = canonical.flatMap { try? fileSize(at: $0.url) }
         let required = estimatedRequiredFreeBytes(sourceBytes: sourceBytes, canonicalAssetBytes: canonicalBytes, kind: kind)
@@ -76,6 +81,33 @@ enum SplatExportAdmission {
             outputEstimate = saturatingAdd(effectiveSource, videoBytes)
         }
         return saturatingAdd(outputEstimate, safetyReserveBytes)
+    }
+
+    private static func inspectCanonicalOnce(
+        sourceURL: URL,
+        expectedPointCount: Int
+    ) -> CanonicalInspection {
+        guard let canonicalURL = try? SplatCanonicalSHAsset.canonicalURL(forLegacySplat: sourceURL) else {
+            return CanonicalInspection(candidateExists: false, completeAsset: nil)
+        }
+        guard FileManager.default.fileExists(atPath: canonicalURL.path) else {
+            return CanonicalInspection(candidateExists: false, completeAsset: nil)
+        }
+        guard let descriptor = try? SplatCanonicalSHAsset.inspectPLY(canonicalURL),
+              descriptor.shDegree == SplatCanonicalSHAsset.requiredSHDegree,
+              descriptor.pointCount == expectedPointCount else {
+            return CanonicalInspection(candidateExists: true, completeAsset: nil)
+        }
+        guard SplatCanonicalSHAsset.hasCompleteVertexPayload(
+            at: canonicalURL,
+            expectedPointCount: expectedPointCount
+        ) else {
+            return CanonicalInspection(candidateExists: true, completeAsset: nil)
+        }
+        return CanonicalInspection(
+            candidateExists: true,
+            completeAsset: SplatCanonicalSHAsset.Asset(url: canonicalURL, descriptor: descriptor)
+        )
     }
 
     private static func fileSize(at url: URL) throws -> Int64 {
