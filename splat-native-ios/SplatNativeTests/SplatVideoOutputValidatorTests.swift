@@ -35,6 +35,11 @@ final class SplatVideoOutputValidatorTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: url) }
 
         let task = Task {
+            // Wait until cancellation is observably set before entering validation so this test
+            // exercises the validator's cancellation gate rather than racing malformed-file parsing.
+            while !Task.isCancelled {
+                await Task.yield()
+            }
             try await SplatVideoOutputValidator.validate(url)
         }
         task.cancel()
