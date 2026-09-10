@@ -115,7 +115,10 @@ enum SplatVideoExporter {
             }
             try FileManager.default.moveItem(at: partialURL, to: finalURL)
             do {
-                try await SplatVideoOutputValidator.validate(finalURL)
+                try await SplatVideoOutputValidator.validate(
+                    finalURL,
+                    expectedDimensions: configuration.dimensions
+                )
             } catch {
                 throw ExportError.outputMissing
             }
@@ -165,7 +168,7 @@ enum SplatVideoExporter {
         writer.add(input)
 
         let attributes: [String: Any] = [
-            kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA),
+            kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelBufferPixelFormatType_32BGRA),
             kCVPixelBufferWidthKey as String: dimensions.width,
             kCVPixelBufferHeightKey as String: dimensions.height,
             kCVPixelBufferMetalCompatibilityKey as String: true,
