@@ -55,7 +55,7 @@ jobs:
           set -euo pipefail
           python3 splat-native-ios/scripts/diagnose_s15_pose_trajectory.py --self-test
 
-      - name: Verify materialized app callsites
+      - name: Verify materialized app and immutable release contracts
         run: |
           set -euo pipefail
           grep -q 'reconstructionSeedEvidenceText' splat-native-ios/SplatNative/ScanModel.swift
@@ -65,6 +65,11 @@ jobs:
           grep -q 'reconstructionSeedEvidenceText' splat-native-ios/SplatNative/SplatResultView.swift
           grep -q 'static let recipeVersion = 5' splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift
           grep -q 'static let standardIterations = 7_000' splat-native-ios/SplatNative/SplatReconstructionPolicy.swift
+          grep -q 'Verify immutable materialized reconstruction source' codemagic.yaml
+          if grep -q 'python3 splat-native-ios/scripts/apply_s13_depth_seed.py' codemagic.yaml; then
+            echo 'release build must not mutate reconstruction source during Codemagic execution' >&2
+            exit 1
+          fi
 
       - name: Persist materialized release source
         run: |
