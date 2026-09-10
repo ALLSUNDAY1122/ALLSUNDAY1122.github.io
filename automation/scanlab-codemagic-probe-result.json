@@ -1,6 +1,6 @@
 {
   "schema": "scanlab.codemagic-safe-probe.v4",
-  "request_id": "scanlab-s20-materialized-epoch5-retry-20260910-1023",
+  "request_id": "scanlab-s20-materialized-epoch5-poll-20260910-1019",
   "good_build_id": "6aa1bb55b7af1ef0d6ac5484",
   "failed_build_id": "6aa1f88a7784a14a74795f9b",
   "good": {
@@ -118,9 +118,55 @@
   "secret_values_persisted": false,
   "retry": {
     "build_id": "6aa2040e78ca287e0158c8fc",
-    "status": "started",
-    "branch": "release/scanlab-testflight",
-    "workflow_id": "scanlab-ios",
-    "app_id": "6a769d81a1add9d06020b524"
+    "summary": {
+      "top_level_keys": [
+        "app_id",
+        "app_store_connect_status",
+        "artifacts",
+        "branch",
+        "build_inputs",
+        "commit",
+        "config",
+        "created_at",
+        "finished_at",
+        "id",
+        "index",
+        "instance_type",
+        "labels",
+        "pull_request",
+        "release_notes",
+        "remote_access_enabled",
+        "started_at",
+        "status",
+        "tag",
+        "workflow"
+      ],
+      "safe_status_fields": [
+        {
+          "path": "workflow.name",
+          "value": "Scan Lab - iOS Internal TestFlight"
+        },
+        {
+          "path": "status",
+          "value": "failed"
+        },
+        {
+          "path": "commit.message",
+          "value": "scanlab: restore mandatory dense materialization gate"
+        },
+        {
+          "path": "branch",
+          "value": "release/scanlab-testflight"
+        },
+        {
+          "path": "started_at",
+          "value": "2026-09-10T01:13:15.484000Z"
+        },
+        {
+          "path": "finished_at",
+          "value": "2026-09-10T01:14:15.028000Z"
+        }
+      ]
+    }
   }
 }
