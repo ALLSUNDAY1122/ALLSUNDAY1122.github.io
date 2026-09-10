@@ -3,7 +3,7 @@ import Msplat
 
 extension SplatCanonicalSHAsset {
     static let manifestOutputKeyPrefix = "splatSH3Canonical."
-    private static let abandonedCandidateAge: TimeInterval = 24 * 60 * 60
+    static let abandonedCandidateAge: TimeInterval = 24 * 60 * 60
 
     enum DurabilityError: LocalizedError {
         case lossyFingerprintCollision
@@ -16,10 +16,6 @@ extension SplatCanonicalSHAsset {
         }
     }
 
-    /// Persists SH3 without ever overwriting a different canonical payload that happens to share
-    /// the same legacy `.splat` fingerprint. Because legacy `.splat` excludes SH1-3, two trainer
-    /// generations can theoretically have identical `.splat` bytes but different higher-order SH.
-    /// In that ambiguous case we reject the new pending result instead of corrupting recovery pairing.
     static func persistCollisionSafe(
         from trainer: Msplat.GaussianTrainer,
         legacySplatURL: URL,
@@ -27,11 +23,6 @@ extension SplatCanonicalSHAsset {
     ) throws -> Asset {
         let targetURL = try canonicalURL(forLegacySplat: legacySplatURL)
         let directoryURL = targetURL.deletingLastPathComponent()
-
-        // A process kill during trainer.exportPly can strand a very large hidden candidate. Those
-        // files are never valid project outputs and can accumulate across retries until export or
-        // reconstruction fails from low storage. Prune only our own >24h candidate namespace so a
-        // concurrently running reconstruction is never touched.
         pruneAbandonedCandidates(in: directoryURL)
 
         let temporaryURL = directoryURL
@@ -51,7 +42,6 @@ extension SplatCanonicalSHAsset {
         }
     }
 
-    /// Internal seam used by synthetic tests to exercise collision behavior without allocating a trainer.
     static func installCollisionSafeTemporaryPLY(
         _ temporaryURL: URL,
         targetURL: URL,
@@ -59,16 +49,10 @@ extension SplatCanonicalSHAsset {
     ) throws -> Asset {
         let candidate = try inspectPLY(temporaryURL)
         guard candidate.pointCount == expectedPointCount else {
-            throw CanonicalError.pointCountMismatch(
-                expected: expectedPointCount,
-                actual: candidate.pointCount
-            )
+            throw CanonicalError.pointCountMismatch(expected: expectedPointCount, actual: candidate.pointCount)
         }
         guard candidate.shDegree == requiredSHDegree else {
-            throw CanonicalError.shDegreeMismatch(
-                expected: requiredSHDegree,
-                actual: candidate.shDegree
-            )
+            throw CanonicalError.shDegreeMismatch(expected: requiredSHDegree, actual: candidate.shDegree)
         }
 
         if FileManager.default.fileExists(atPath: targetURL.path) {
@@ -87,11 +71,6 @@ extension SplatCanonicalSHAsset {
         return Asset(url: targetURL, descriptor: candidate)
     }
 
-    /// Registers a canonical SH asset as a durable project output before reconstruction completion.
-    ///
-    /// Keys are content-addressed rather than singular so a failed reprocess cannot evict the canonical
-    /// asset belonging to the previously committed `.splat`. `ScanProjectStore.clearRawData()` already
-    /// preserves every `manifest.outputs` value, so both the current and recovery candidate remain safe.
     @discardableResult
     static func registerDurableProjectOutput(
         _ asset: Asset,
@@ -105,7 +84,7 @@ extension SplatCanonicalSHAsset {
         }
     }
 
-    private static func pruneAbandonedCandidates(
+    static func pruneAbandonedCandidates(
         in directoryURL: URL,
         now: Date = Date(),
         fileManager: FileManager = .default
