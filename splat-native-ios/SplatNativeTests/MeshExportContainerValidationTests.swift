@@ -2,6 +2,50 @@ import Foundation
 import XCTest
 
 final class MeshExportContainerValidationTests: XCTestCase {
+    func testGLBPassthroughRejectsMagicOnlyPayloadWithWrongDeclaredLength() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-glb-length-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        var bytes = Data([0x67, 0x6c, 0x54, 0x46]) // glTF
+        bytes.append(contentsOf: [0x02, 0x00, 0x00, 0x00]) // version 2
+        bytes.append(contentsOf: [0x20, 0x00, 0x00, 0x00]) // claims 32 bytes, only 12 exist
+        let source = root.appendingPathComponent("truncated.glb")
+        try bytes.write(to: source, options: .atomic)
+
+        do {
+            _ = try await MeshExportService.export(sourceURL: source, format: .glb, destinationDirectory: root)
+            XCTFail("Expected mismatched GLB byte length to be rejected")
+        } catch let error as MeshExportService.ExportError {
+            guard case .invalidContainer("glb") = error else {
+                return XCTFail("Expected invalidContainer(glb), got \(error)")
+            }
+        }
+    }
+
+    func testGLBPassthroughRejectsUnsupportedVersion() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-glb-version-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        var bytes = Data([0x67, 0x6c, 0x54, 0x46]) // glTF
+        bytes.append(contentsOf: [0x01, 0x00, 0x00, 0x00]) // unsupported GLB v1
+        bytes.append(contentsOf: [0x0c, 0x00, 0x00, 0x00]) // exact 12-byte length
+        let source = root.appendingPathComponent("legacy.glb")
+        try bytes.write(to: source, options: .atomic)
+
+        do {
+            _ = try await MeshExportService.export(sourceURL: source, format: .glb, destinationDirectory: root)
+            XCTFail("Expected unsupported GLB version to be rejected")
+        } catch let error as MeshExportService.ExportError {
+            guard case .invalidContainer("glb") = error else {
+                return XCTFail("Expected invalidContainer(glb), got \(error)")
+            }
+        }
+    }
+
     func testSTLPassthroughRejectsArbitraryEightyFourBytePayload() async throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mesh-stl-validation-\(UUID().uuidString)", isDirectory: true)
