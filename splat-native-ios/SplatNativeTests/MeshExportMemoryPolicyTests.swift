@@ -51,6 +51,19 @@ final class MeshExportMemoryPolicyTests: XCTestCase {
         XCTAssertGreaterThan(usdzSource.estimatedPeakBytes, obj.estimatedPeakBytes)
     }
 
+    func testSaturatedEstimateCanBeReportedWithoutOverflow() {
+        let estimate = MeshExportMemoryPolicy.estimate(
+            sourceBytes: UInt64.max,
+            sourceExtension: "obj",
+            format: .ply,
+            physicalMemoryBytes: 3 * 1_024 * mib
+        )
+
+        XCTAssertEqual(estimate.estimatedPeakBytes, UInt64.max)
+        XCTAssertGreaterThan(estimate.estimatedPeakMegabytes, 0)
+        XCTAssertLessThanOrEqual(estimate.budgetMegabytes, 768)
+    }
+
     func testPreflightRejectsOversizedConversionForConstrainedDevice() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("c2-mesh-memory-\(UUID().uuidString)", isDirectory: true)
