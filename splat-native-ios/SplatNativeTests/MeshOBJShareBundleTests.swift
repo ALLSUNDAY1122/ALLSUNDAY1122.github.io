@@ -26,6 +26,35 @@ final class MeshOBJShareBundleTests: XCTestCase {
         )
     }
 
+    func testCopiesQuotedMaterialAndOptionedTextureWithSpaces() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let workspace = root.appendingPathComponent("workspace", isDirectory: true)
+        try FileManager.default.createDirectory(at: workspace, withIntermediateDirectories: true)
+        let textures = root.appendingPathComponent("textures", isDirectory: true)
+        try FileManager.default.createDirectory(at: textures, withIntermediateDirectories: true)
+
+        let obj = root.appendingPathComponent("mesh.obj")
+        let mtl = root.appendingPathComponent("scan material.mtl")
+        let texture = textures.appendingPathComponent("base color.png")
+        try "mtllib \"scan material.mtl\" # exported material\nv 0 0 0\n"
+            .write(to: obj, atomically: true, encoding: .utf8)
+        try "newmtl scan\nmap_Kd -s 1 1 1 \"textures/base color.png\" # albedo\n"
+            .write(to: mtl, atomically: true, encoding: .utf8)
+        let textureData = Data([0x89, 0x50, 0x4e, 0x47, 0x02])
+        try textureData.write(to: texture)
+
+        let companions = try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace)
+        XCTAssertEqual(
+            Set(companions.map { $0.path.replacingOccurrences(of: workspace.path + "/", with: "") }),
+            Set(["scan material.mtl", "textures/base color.png"])
+        )
+        XCTAssertEqual(
+            try Data(contentsOf: workspace.appendingPathComponent("textures/base color.png")),
+            textureData
+        )
+    }
+
     func testConvertedOBJCompanionsAlreadyInWorkspaceAreNotDestroyed() throws {
         let workspace = try makeRoot()
         defer { try? FileManager.default.removeItem(at: workspace) }
