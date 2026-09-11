@@ -72,7 +72,7 @@ final class MeshProjectStoreTests: XCTestCase {
             resultURL: live.appendingPathComponent("mesh-textured.usdz")
         )
 
-        XCTAssertFalse(summary.rawDataRetained)
+        XCTAssertTrue(summary.rawDataRetained)
         XCTAssertFalse(summary.reprocessSupported)
         XCTAssertTrue(MeshRawProjectBridge.discover(appRootURL: rootURL).filter {
             $0.sourceProjectURL.standardizedFileURL == summary.projectURL.standardizedFileURL
