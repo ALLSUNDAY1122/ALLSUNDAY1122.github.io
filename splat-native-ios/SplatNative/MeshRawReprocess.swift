@@ -69,7 +69,7 @@ enum MeshRawReprocessor {
                 case .stitchingIncomplete:
                     model.statusMessage = "raw再処理中: 一部画像を接続できませんでした"
                 case .processingCancelled:
-                    MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
+                    cleanupFailedOutput(outputURL, prepared: prepared)
                     model.phase = .captured
                     model.statusMessage = "raw再処理を中断しました。保存rawは保持されています"
                     return
@@ -86,17 +86,17 @@ enum MeshRawReprocessor {
             }
 
             if !completed {
-                MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
+                cleanupFailedOutput(outputURL, prepared: prepared)
                 model.resultURL = nil
                 model.previewScene = nil
                 model.phase = .failed("raw再処理は完了しましたが、完成Meshを正常に読み込めませんでした。保存rawは保持されています。")
             }
         } catch is CancellationError {
-            MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
+            cleanupFailedOutput(outputURL, prepared: prepared)
             model.phase = .captured
             model.statusMessage = "raw再処理を中断しました。保存rawは保持されています"
         } catch {
-            MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
+            cleanupFailedOutput(outputURL, prepared: prepared)
             model.phase = .failed("raw再処理に失敗しました: \(error.localizedDescription)。保存rawは保持されています。")
         }
     }
@@ -127,6 +127,18 @@ enum MeshRawReprocessor {
             ? "保存済みSplat rawからMeshを生成しました。ライブラリへ安全に保存しています"
             : "保存済みMesh rawから再処理したMeshを生成しました"
         return true
+    }
+
+    /// Derived one-shot USDZ output must never survive a failed/cancelled request. For transient
+    /// bridge workspaces the whole directory is disposable; for a live Mesh project only the
+    /// UUID-named candidate is disposable, so remove that candidate explicitly before asking the
+    /// bridge to clean up derived containers.
+    private static func cleanupFailedOutput(_ outputURL: URL, prepared: PreparedMeshRawProject) {
+        let fileManager = FileManager.default
+        if fileManager.fileExists(atPath: outputURL.path) {
+            try? fileManager.removeItem(at: outputURL)
+        }
+        MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
     }
 }
 
