@@ -35,18 +35,23 @@ enum MeshExportAdmission {
             throw AdmissionError.sourceMissing
         }
         let sourceBytes = try fileSize(at: sourceURL)
+        let sourceExtension = sourceURL.pathExtension.lowercased()
         var required = estimatedRequiredFreeBytes(
             sourceBytes: sourceBytes,
-            sourceExtension: sourceURL.pathExtension.lowercased(),
+            sourceExtension: sourceExtension,
             format: format
         )
 
-        // Exact OBJ sharing copies the OBJ plus each referenced MTL/texture into the transient
-        // delivery workspace. Account for those real companion bytes before creating the workspace;
-        // otherwise a tiny OBJ with a large texture atlas can pass admission and fail mid-share.
-        if format == .obj, sourceURL.pathExtension.lowercased() == "obj" {
+        // Any conversion that imports an OBJ may follow mtllib/texture references through Assimp
+        // or Model I/O, not only exact OBJ sharing. Resolve every companion through the same
+        // containment/symlink policy before conversion starts so a crafted or stale project cannot
+        // make export read data outside the project root. Only exact OBJ delivery duplicates the
+        // companions into the transient share workspace, so only that path adds their bytes here.
+        if sourceExtension == "obj" {
             let companionBytes = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL)
-            required = saturatingAdd(required, companionBytes)
+            if format == .obj {
+                required = saturatingAdd(required, companionBytes)
+            }
         }
 
         let available = availableCapacityOverride.map { max(0, $0) }
