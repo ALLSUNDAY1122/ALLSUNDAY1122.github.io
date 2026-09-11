@@ -42,6 +42,10 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
 
     func record(frame: ARFrame, mode: MeshCaptureMode, size: MeshScanSize, frameCount: Int, faceCount: Int) {
         guard frame.timestamp - lastTimestamp >= 0.16 else { return }
+        // Throttle every tracking state, not only normal samples. During `.limited`, leaving the
+        // timestamp untouched turns this method into a per-AR-frame Published update loop exactly
+        // when tracking already needs CPU headroom.
+        lastTimestamp = frame.timestamp
         guard case .normal = frame.camera.trackingState else {
             // A coordinate frame can move while ARKit is initializing/relocalizing. Even a
             // sub-35 cm shift is large enough to manufacture path, height and viewpoint coverage,
@@ -50,7 +54,6 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
             guidance = "追跡が安定するまで速度を落としてください"
             return
         }
-        lastTimestamp = frame.timestamp
 
         let transform = frame.camera.transform
         let position = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
