@@ -9,8 +9,15 @@ enum SplatCameraGeometry {
         let radius: Float
     }
 
+    static func framingSampleStride(pointCount: Int, targetSampleCount: Int = 6_000) -> Int {
+        guard pointCount > 0, targetSampleCount > 0 else { return 1 }
+        let quotient = pointCount / targetSampleCount
+        let remainder = pointCount % targetSampleCount
+        return max(1, quotient + (remainder == 0 ? 0 : 1))
+    }
+
     static func robustFraming(for points: [SplatPoint]) -> Framing {
-        let strideSize = max(1, points.count / 6_000)
+        let strideSize = framingSampleStride(pointCount: points.count)
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
