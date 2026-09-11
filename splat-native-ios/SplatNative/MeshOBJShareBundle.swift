@@ -24,12 +24,10 @@ enum MeshOBJShareBundle {
         let text = try String(contentsOf: sourceOBJ, encoding: .utf8)
         let mtlReferences = text
             .split(whereSeparator: { $0.isNewline })
-            .compactMap { line -> String? in
+            .flatMap { line -> [String] in
                 let trimmed = String(line).trimmingCharacters(in: .whitespaces)
-                guard trimmed.hasPrefix("mtllib ") else { return nil }
-                let value = String(trimmed.dropFirst("mtllib ".count))
-                    .trimmingCharacters(in: .whitespaces)
-                return value.isEmpty ? nil : value
+                guard trimmed.hasPrefix("mtllib ") else { return [] }
+                return parseArguments(String(trimmed.dropFirst("mtllib ".count)))
             }
 
         var shared: [URL] = []
@@ -66,14 +64,90 @@ enum MeshOBJShareBundle {
             "map_bump", "bump", "disp", "decal", "norm", "map_Pr", "map_Pm"
         ]
         return mtl.split(whereSeparator: { $0.isNewline }).compactMap { rawLine in
-            let line = String(rawLine).trimmingCharacters(in: .whitespaces)
-            guard !line.isEmpty, !line.hasPrefix("#") else { return nil }
-            let parts = line.split(whereSeparator: { $0.isWhitespace })
-            guard parts.count >= 2, commands.contains(String(parts[0])), let last = parts.last else {
-                return nil
-            }
-            return String(last)
+            let parts = parseArguments(String(rawLine))
+            guard parts.count >= 2, commands.contains(parts[0]) else { return nil }
+            return texturePath(in: Array(parts.dropFirst()))
         }
+    }
+
+    /// OBJ/MTL paths are frequently quoted when exported by DCC tools because material and
+    /// texture names contain spaces. Preserve quoted/escaped paths instead of splitting them
+    /// into lossy whitespace tokens. A comment begins only outside a quoted argument.
+    private static func parseArguments(_ text: String) -> [String] {
+        var result: [String] = []
+        var current = ""
+        var quote: Character?
+        var escaping = false
+
+        func flush() {
+            guard !current.isEmpty else { return }
+            result.append(current)
+            current.removeAll(keepingCapacity: true)
+        }
+
+        for character in text {
+            if escaping {
+                current.append(character)
+                escaping = false
+                continue
+            }
+            if character == "\\" {
+                escaping = true
+                continue
+            }
+            if let activeQuote = quote {
+                if character == activeQuote {
+                    quote = nil
+                } else {
+                    current.append(character)
+                }
+                continue
+            }
+            if character == "\"" || character == "'" {
+                quote = character
+                continue
+            }
+            if character == "#" {
+                break
+            }
+            if character.isWhitespace {
+                flush()
+            } else {
+                current.append(character)
+            }
+        }
+        if escaping { current.append("\\") }
+        flush()
+        return result
+    }
+
+    /// MTL texture statements can prefix the filename with mapping options. Consume the known
+    /// option payload, then preserve all remaining tokens as the filename. This handles both
+    /// quoted filenames and exporters that emit an unquoted path containing spaces.
+    private static func texturePath(in arguments: [String]) -> String? {
+        var index = 0
+        while index < arguments.count, arguments[index].hasPrefix("-") {
+            let option = arguments[index].lowercased()
+            index += 1
+            switch option {
+            case "-mm":
+                index = min(arguments.count, index + 2)
+            case "-o", "-s", "-t":
+                var consumed = 0
+                while index < arguments.count, consumed < 3, Float(arguments[index]) != nil {
+                    index += 1
+                    consumed += 1
+                }
+            default:
+                // All remaining standard map options take one value. For unknown options, one
+                // value is the least-lossy interpretation and leaves the eventual path intact.
+                if index < arguments.count { index += 1 }
+            }
+        }
+        guard index < arguments.count else { return nil }
+        let path = arguments[index...].joined(separator: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return path.isEmpty ? nil : path
     }
 
     private static func resolved(_ reference: String, relativeTo base: URL, allowedRoot: URL) throws -> URL {
