@@ -79,6 +79,13 @@ final class CaptureMotionQualityTests: XCTestCase {
         XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.nan))
     }
 
+    func testMeshCoverageRejectsMotionFasterThanCapturePipelineCanAccept() {
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: 0.20))
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.30, elapsedSeconds: 0.30))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.30, elapsedSeconds: 0.16))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: 0))
+    }
+
     func testMeshVerticalCoverageRequiresRealCameraHeightChange() {
         XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 0.55), 0.10, accuracy: 0.0001)
         XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 1.0), 0.12, accuracy: 0.0001)
