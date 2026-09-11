@@ -51,9 +51,9 @@ enum SplatVideoOutputValidator {
             throw ValidationError.invalidVideoDimensions
         }
 
+        let encodedWidth = Int(abs(naturalSize.width).rounded())
+        let encodedHeight = Int(abs(naturalSize.height).rounded())
         if let expectedDimensions {
-            let encodedWidth = Int(abs(naturalSize.width).rounded())
-            let encodedHeight = Int(abs(naturalSize.height).rounded())
             guard encodedWidth == expectedDimensions.width,
                   encodedHeight == expectedDimensions.height else {
                 throw ValidationError.unexpectedVideoDimensions
@@ -98,9 +98,20 @@ enum SplatVideoOutputValidator {
         }
         defer { reader.cancelReading() }
 
-        let firstFrame = output.copyNextSampleBuffer()
+        guard let firstFrame = output.copyNextSampleBuffer(),
+              let imageBuffer = CMSampleBufferGetImageBuffer(firstFrame) else {
+            throw ValidationError.undecodableVideoFrame
+        }
         try Task.checkCancellation()
-        guard firstFrame != nil else {
+
+        // Verify decoded pixels agree with the encoded track geometry. This catches containers whose
+        // metadata advertises one surface while the decoder yields a degenerate/inconsistent buffer.
+        let decodedWidth = CVPixelBufferGetWidth(imageBuffer)
+        let decodedHeight = CVPixelBufferGetHeight(imageBuffer)
+        guard decodedWidth > 0,
+              decodedHeight > 0,
+              decodedWidth == encodedWidth,
+              decodedHeight == encodedHeight else {
             throw ValidationError.undecodableVideoFrame
         }
     }
