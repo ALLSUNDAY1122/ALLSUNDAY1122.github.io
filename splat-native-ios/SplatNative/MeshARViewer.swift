@@ -95,6 +95,22 @@ struct MeshARPlacementView: UIViewRepresentable {
         configuration.planeDetection = [.horizontal]
         configuration.environmentTexturing = .automatic
         view.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+
+        // A raw raycast failure is invisible to the user. Let ARKit coach motion only while a
+        // usable horizontal support surface is unavailable, then dismiss automatically so it
+        // never competes with normal placement gestures after tracking is ready.
+        let coaching = ARCoachingOverlayView()
+        coaching.session = view.session
+        coaching.goal = .horizontalPlane
+        coaching.activatesAutomatically = true
+        coaching.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(coaching)
+        NSLayoutConstraint.activate([
+            coaching.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            coaching.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            coaching.topAnchor.constraint(equalTo: view.topAnchor),
+            coaching.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
         return view
     }
 
