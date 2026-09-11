@@ -75,7 +75,7 @@ struct ContentView: View {
                     if model.canFinishCapture {
                         Button("この撮影で生成へ") { model.finishCapture() }.buttonStyle(PrimaryButtonStyle())
                     } else {
-                        Text("最低24枚、目標\(model.targetFrames)枚").font(.caption).foregroundStyle(.secondary)
+                        Text("最低24枚、推奨48枚").font(.caption).foregroundStyle(.secondary)
                     }
                 }
                 .padding(16).background(.black.opacity(0.72), in: RoundedRectangle(cornerRadius: 20))
@@ -88,7 +88,7 @@ struct ContentView: View {
             Spacer()
             Image(systemName: "checkmark.circle.fill").font(.system(size: 64)).foregroundStyle(.mint)
             Text("\(model.acceptedFrames)枚を保存しました").font(.title2.bold())
-            Text("次に、撮影画像とARKitのカメラ姿勢からGaussian SplatをiPhone内で学習します。標準生成は\(SplatReconstructionPolicy.standardIterations.formatted()) iterationです。")
+            Text("次に、撮影画像とARKitのカメラ姿勢からGaussian SplatをiPhone内で学習します。初回PoCは2,000 iterationです。")
                 .multilineTextAlignment(.center).foregroundStyle(.secondary)
             Button("端末内で3Dを生成") { model.train() }.buttonStyle(PrimaryButtonStyle())
             Button("撮り直す") { model.discardAndReset() }.foregroundStyle(.secondary)
@@ -101,7 +101,7 @@ struct ContentView: View {
             Spacer()
             ProgressView(value: model.trainingProgress).progressViewStyle(.circular).scaleEffect(1.7).tint(.mint)
             Text("Gaussian Splatを生成中").font(.title2.bold())
-            Text("iteration \(model.trainingIteration) / \(SplatReconstructionPolicy.standardIterations)")
+            Text("iteration \(model.trainingIteration) / 2000")
                 .font(.body.monospacedDigit()).foregroundStyle(.secondary)
             Text("splats \(model.splatCount.formatted())")
                 .font(.caption.monospacedDigit()).foregroundStyle(.secondary)
