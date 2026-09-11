@@ -129,8 +129,6 @@ final class MeshProjectStore {
         summaries(in: trashURL, includeHidden: true)
     }
 
-    /// Imports completed working projects left by builds that predate C's durable Mesh library.
-    /// Incomplete `.meshproject` directories are deliberately ignored and never promoted.
     func adoptLegacyCompletedProjects() {
         try? ensureDirectories()
         let children = (try? fileManager.contentsOfDirectory(
@@ -157,7 +155,6 @@ final class MeshProjectStore {
             throw MeshProjectStoreError.invalidProject
         }
 
-        // Saved-library results are already durable. Avoid snapshotting an archive into itself.
         if sourceProjectURL.deletingLastPathComponent().standardizedFileURL == libraryURL.standardizedFileURL {
             return try summary(at: sourceProjectURL)
         }
@@ -344,11 +341,16 @@ final class MeshProjectStore {
         let images = projectURL.appendingPathComponent("images", isDirectory: true)
         guard let children = try? fileManager.contentsOfDirectory(
             at: images,
-            includingPropertiesForKeys: [.isRegularFileKey],
+            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
             options: [.skipsHiddenFiles]
         ) else { return false }
+        let supportedExtensions = Set(["jpg", "jpeg", "heic", "png"])
         return children.contains { url in
-            (try? url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile) == true
+            guard supportedExtensions.contains(url.pathExtension.lowercased()),
+                  let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]) else {
+                return false
+            }
+            return values.isRegularFile == true && (values.fileSize ?? 0) > 0
         }
     }
 
