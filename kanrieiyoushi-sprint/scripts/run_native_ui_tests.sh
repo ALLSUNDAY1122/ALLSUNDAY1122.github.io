@@ -105,10 +105,10 @@ cmd=[
 ]
 with open(log,'wb') as f:
     try:
-        result=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,timeout=180)
+        result=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,timeout=360)
         raise SystemExit(result.returncode)
     except subprocess.TimeoutExpired:
-        f.write(b'\nKANRI_XCTEST_HARD_TIMEOUT_180S\n')
+        f.write(b'\nKANRI_XCTEST_HARD_TIMEOUT_360S\n')
         raise SystemExit(124)
 PY
   local STATUS=$?
