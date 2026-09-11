@@ -174,7 +174,10 @@ enum MeshProjectIntegrity {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
             let decoded = try decoder.decode(Evidence.self, from: readBack)
-            guard decoded == evidence, decoded.matches(manifest), decoded.sha256 == expectedHash else {
+            // ISO8601 encoding intentionally rounds Dates to whole seconds, so validate the
+            // persisted semantic contract rather than comparing decoded Date instances against
+            // their pre-encoding sub-second values.
+            guard decoded.matches(manifest), decoded.sha256 == expectedHash else {
                 throw IntegrityError.evidencePersistenceFailed
             }
 
