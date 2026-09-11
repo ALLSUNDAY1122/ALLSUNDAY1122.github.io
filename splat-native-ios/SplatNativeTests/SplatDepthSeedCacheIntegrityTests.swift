@@ -1,6 +1,5 @@
 import Foundation
 import XCTest
-@testable import SplatNative
 
 final class SplatDepthSeedCacheIntegrityTests: XCTestCase {
     func testCompletePLYIsAccepted() throws {
