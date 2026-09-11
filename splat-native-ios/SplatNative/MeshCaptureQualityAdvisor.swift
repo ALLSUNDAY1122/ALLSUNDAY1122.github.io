@@ -51,24 +51,35 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
         let forwardRaw = SIMD3<Float>(-transform.columns.2.x, -transform.columns.2.y, -transform.columns.2.z)
         let forward = simd_length_squared(forwardRaw) > 1e-8 ? simd_normalize(forwardRaw) : SIMD3<Float>(0, 0, -1)
 
-        if let previous = lastPosition {
-            let delta = simd_distance(position, previous)
-            if delta >= 0.006 && delta <= 0.35 {
-                pathLengthMeters += delta
-            }
+        let displacement = lastPosition.map { simd_distance(position, $0) }
+        let plausibleMotion = displacement.map(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement) ?? true
+        if let displacement, plausibleMotion, displacement >= 0.006 {
+            pathLengthMeters += displacement
         }
         lastPosition = position
-        minimumHeight = min(minimumHeight ?? position.y, position.y)
-        maximumHeight = max(maximumHeight ?? position.y, position.y)
-        verticalSpanMeters = max(0, (maximumHeight ?? position.y) - (minimumHeight ?? position.y))
+
+        // Only continuous camera motion contributes to physical height coverage. A relocalization
+        // jump can otherwise manufacture 10-20 cm of apparent vertical span in one sample.
+        if plausibleMotion {
+            minimumHeight = min(minimumHeight ?? position.y, position.y)
+            maximumHeight = max(maximumHeight ?? position.y, position.y)
+            verticalSpanMeters = max(0, (maximumHeight ?? position.y) - (minimumHeight ?? position.y))
+        } else {
+            // Start a fresh continuous height range after the tracking discontinuity. Keep the
+            // already-earned span so a relocalization cannot erase legitimate earlier coverage.
+            minimumHeight = position.y
+            maximumHeight = position.y
+        }
         stableSamples += 1
 
         // Camera heading alone is not evidence of viewpoint coverage: a user can rotate the
         // phone in place and sweep every yaw bin without creating any reconstruction parallax.
-        // Credit new azimuth/elevation bins only after enough physical translation since the
-        // previous credited viewpoint. Slow movement still accumulates until this threshold.
+        // Credit new azimuth/elevation bins only after enough continuous physical translation since
+        // the previous credited viewpoint. Relocalization jumps reset this anchor instead.
         let coverageDisplacement = lastCoveragePosition.map { simd_distance(position, $0) }
-        if coverageDisplacement == nil || coverageDisplacement! >= Self.coverageTranslationThreshold(size: size) {
+        if !plausibleMotion {
+            lastCoveragePosition = position
+        } else if coverageDisplacement == nil || coverageDisplacement! >= Self.coverageTranslationThreshold(size: size) {
             let yaw = atan2(forward.x, -forward.z)
             let normalizedYaw = (yaw + .pi) / (2 * .pi)
             let azimuth = min(11, max(0, Int(floor(normalizedYaw * 12))))
