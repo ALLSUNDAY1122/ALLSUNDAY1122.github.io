@@ -57,6 +57,7 @@ enum MeshRawProjectBridge {
     ) -> [MeshRawProject] {
         let root = appRootURL ?? defaultAppRoot(fileManager: fileManager)
         var projects: [MeshRawProject] = []
+        var meshIDs = Set<String>()
 
         let meshChildren = (try? fileManager.contentsOfDirectory(
             at: root,
@@ -71,14 +72,39 @@ enum MeshRawProjectBridge {
             let modifiedAt = (try? projectURL.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate)
                 ?? .distantPast
             let projectID = projectURL.deletingPathExtension().lastPathComponent
+            let id = "mesh:\(projectID)"
+            meshIDs.insert(id)
             projects.append(MeshRawProject(
-                id: "mesh:\(projectID)",
+                id: id,
                 sourceKind: .meshProject,
                 sourceProjectURL: projectURL,
                 imagesURL: imagesURL,
                 imageCount: imageCount,
                 modifiedAt: modifiedAt,
                 title: projectID
+            ))
+        }
+
+        // A finished Mesh is copied into MeshLibrary so the working project can later be reset.
+        // The old discovery path only scanned the working root, which made retained RAW disappear
+        // from "reprocess" as soon as that working directory was deleted. Re-expose archived RAW,
+        // while preferring an extant working project with the same logical ID to avoid duplicate IDs.
+        let meshStore = MeshProjectStore(appRootURL: root, fileManager: fileManager)
+        for summary in meshStore.listProjects() where summary.rawDataRetained {
+            let id = "mesh:\(summary.id)"
+            guard !meshIDs.contains(id) else { continue }
+            let imagesURL = summary.projectURL.appendingPathComponent("images", isDirectory: true)
+            let imageCount = countImages(in: imagesURL, fileManager: fileManager)
+            guard imageCount > 0 else { continue }
+            meshIDs.insert(id)
+            projects.append(MeshRawProject(
+                id: id,
+                sourceKind: .meshProject,
+                sourceProjectURL: summary.projectURL,
+                imagesURL: imagesURL,
+                imageCount: imageCount,
+                modifiedAt: summary.updatedAt,
+                title: summary.id
             ))
         }
 
