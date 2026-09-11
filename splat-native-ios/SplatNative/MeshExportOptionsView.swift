@@ -141,10 +141,13 @@ struct MeshExportOptionsView: View {
                 var shareItems = [output]
                 if format == .obj {
                     let companionSource = sourceURL.pathExtension.lowercased() == "obj" ? sourceURL : output
-                    shareItems.append(contentsOf: try MeshOBJShareBundle.copyCompanions(
-                        sourceOBJ: companionSource,
-                        workspace: createdWorkspace
-                    ))
+                    let companions = try await Task.detached(priority: .userInitiated) {
+                        try MeshOBJShareBundle.copyCompanions(
+                            sourceOBJ: companionSource,
+                            workspace: createdWorkspace
+                        )
+                    }.value
+                    shareItems.append(contentsOf: companions)
                 }
                 try Task.checkCancellation()
 
