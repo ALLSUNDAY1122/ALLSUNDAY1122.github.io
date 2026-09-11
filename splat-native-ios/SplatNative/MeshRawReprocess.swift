@@ -25,7 +25,17 @@ enum MeshRawReprocessor {
             return
         }
 
-        guard MeshRawInputValidator.hasMinimumUsableImages(in: prepared.imagesURL) else {
+        let rawValidation = Task.detached(priority: .userInitiated) {
+            MeshRawInputValidator.hasMinimumUsableImages(in: prepared.imagesURL)
+        }
+        let hasUsableRaw = await rawValidation.value
+        if Task.isCancelled {
+            MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
+            model.phase = .captured
+            model.statusMessage = "raw再処理を中断しました。保存rawは保持されています"
+            return
+        }
+        guard hasUsableRaw else {
             MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
             let message = "raw再処理には読み取り可能な画像が20枚以上必要です。保存rawが欠損または破損していないか確認してください。"
             model.phase = .failed(message)
