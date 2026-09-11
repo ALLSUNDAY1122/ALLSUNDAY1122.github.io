@@ -37,17 +37,16 @@ enum MeshRawProjectBridgeError: LocalizedError {
         case .rawUnavailable:
             return "Mesh再処理に必要な保存済みraw画像が見つかりません。"
         case .workspacePreparationFailed:
-            return "Splat rawからMesh再処理用の一時プロジェクトを準備できません。"
+            return "保存済みrawからMesh再処理用の一時プロジェクトを準備できません。"
         }
     }
 }
 
 /// Cross-representation bridge owned by HQ/C integration.
 ///
-/// Saved Splat projects remain the source of truth for their raw capture package. When the user asks
-/// to generate a Mesh from that raw, we create only a short-lived `.meshproject` container for the
-/// derived result. The source images are read in-place through `ScanProjectStore.reprocessRequest` and
-/// are never copied into the transient Mesh workspace.
+/// Saved projects remain the source of truth for their raw capture package. When the user asks
+/// to generate a Mesh from archived raw, we create only a short-lived `.meshproject` container for
+/// the derived result. Source images are read in place and never copied into that transient workspace.
 enum MeshRawProjectBridge {
     static let derivedMarkerFileName = ".derived-from-splat.json"
 
@@ -142,7 +141,14 @@ enum MeshRawProjectBridge {
             throw MeshRawProjectBridgeError.rawUnavailable
         }
 
-        if project.sourceKind == .meshProject {
+        let sourceParent = project.sourceProjectURL.deletingLastPathComponent()
+        let isArchivedMesh = project.sourceKind == .meshProject
+            && sourceParent.lastPathComponent == MeshProjectStore.libraryDirectoryName
+
+        // A live working Mesh project is already an appropriate write target. Archived MeshLibrary
+        // snapshots are different: writing a regenerated result into them would mutate the user's
+        // saved original and could invalidate its library manifest. Treat archived RAW as read-only.
+        if project.sourceKind == .meshProject, !isArchivedMesh {
             return PreparedMeshRawProject(
                 source: project,
                 projectURL: project.sourceProjectURL,
@@ -150,7 +156,9 @@ enum MeshRawProjectBridge {
             )
         }
 
-        let root = project.sourceProjectURL.deletingLastPathComponent()
+        let root = isArchivedMesh
+            ? sourceParent.deletingLastPathComponent()
+            : sourceParent
         try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
         let sourceID = project.sourceProjectURL.deletingPathExtension().lastPathComponent
         let safeID = sanitizedFileComponent(sourceID)
@@ -163,7 +171,7 @@ enum MeshRawProjectBridge {
 
             let sourceManifest = DerivedMeshSourceManifest(
                 captureMode: "photogrammetry",
-                scanSize: "source-splat",
+                scanSize: project.sourceKind == .splatProject ? "source-splat" : "source-mesh",
                 createdAt: project.modifiedAt
             )
             let encoder = JSONEncoder()
