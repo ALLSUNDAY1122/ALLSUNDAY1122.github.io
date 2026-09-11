@@ -63,7 +63,8 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
         if plausibleMotion {
             minimumHeight = min(minimumHeight ?? position.y, position.y)
             maximumHeight = max(maximumHeight ?? position.y, position.y)
-            verticalSpanMeters = max(0, (maximumHeight ?? position.y) - (minimumHeight ?? position.y))
+            let continuousSpan = max(0, (maximumHeight ?? position.y) - (minimumHeight ?? position.y))
+            verticalSpanMeters = max(verticalSpanMeters, continuousSpan)
         } else {
             // Start a fresh continuous height range after the tracking discontinuity. Keep the
             // already-earned span so a relocalization cannot erase legitimate earlier coverage.
