@@ -8,6 +8,7 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     @Published private(set) var azimuthCoverage = 0
     @Published private(set) var elevationCoverage = 0
     @Published private(set) var pathLengthMeters: Float = 0
+    @Published private(set) var verticalSpanMeters: Float = 0
     @Published private(set) var stableSamples = 0
     @Published private(set) var qualityScore: Double = 0
     @Published private(set) var guidance = "対象の周囲をゆっくり移動してください"
@@ -16,6 +17,8 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     private var elevationBins = Set<Int>()
     private var lastPosition: SIMD3<Float>?
     private var lastCoveragePosition: SIMD3<Float>?
+    private var minimumHeight: Float?
+    private var maximumHeight: Float?
     private var lastTimestamp: TimeInterval = -.greatestFiniteMagnitude
 
     func reset() {
@@ -23,10 +26,13 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
         elevationBins.removeAll()
         lastPosition = nil
         lastCoveragePosition = nil
+        minimumHeight = nil
+        maximumHeight = nil
         lastTimestamp = -.greatestFiniteMagnitude
         azimuthCoverage = 0
         elevationCoverage = 0
         pathLengthMeters = 0
+        verticalSpanMeters = 0
         stableSamples = 0
         qualityScore = 0
         guidance = "対象の周囲をゆっくり移動してください"
@@ -52,6 +58,9 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
             }
         }
         lastPosition = position
+        minimumHeight = min(minimumHeight ?? position.y, position.y)
+        maximumHeight = max(maximumHeight ?? position.y, position.y)
+        verticalSpanMeters = max(0, (maximumHeight ?? position.y) - (minimumHeight ?? position.y))
         stableSamples += 1
 
         // Camera heading alone is not evidence of viewpoint coverage: a user can rotate the
@@ -80,10 +89,13 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
         let requiredAzimuth = mode == .lidar ? 7.0 : 9.0
         let requiredSamples = mode == .lidar ? 18.0 : 28.0
         let requiredPath = Double(pathThreshold(size: size))
+        let requiredVerticalSpan = Double(Self.verticalSpanThreshold(size: size))
         let faceFactor = mode == .lidar ? min(1, Double(faceCount) / 6_000.0) : 1
         let photoFactor = min(1, Double(frameCount) / (mode == .lidar ? 20.0 : 32.0))
         let azimuthFactor = min(1, Double(azimuthCoverage) / requiredAzimuth)
-        let elevationFactor = min(1, Double(elevationCoverage) / 2.0)
+        let pitchFactor = min(1, Double(elevationCoverage) / 2.0)
+        let physicalHeightFactor = min(1, Double(verticalSpanMeters) / max(0.01, requiredVerticalSpan))
+        let elevationFactor = min(pitchFactor, physicalHeightFactor)
         let pathFactor = min(1, Double(pathLengthMeters) / max(0.1, requiredPath))
         let sampleFactor = min(1, Double(stableSamples) / requiredSamples)
         qualityScore = 0.26 * azimuthFactor + 0.16 * elevationFactor + 0.18 * pathFactor + 0.12 * sampleFactor + 0.14 * photoFactor + 0.14 * faceFactor
@@ -92,6 +104,8 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
             guidance = "同じ側に偏っています。対象の反対側まで回り込んでください"
         } else if elevationCoverage < 2 {
             guidance = "高さが単調です。少し上・下からも撮影してください"
+        } else if verticalSpanMeters < Self.verticalSpanThreshold(size: size) {
+            guidance = "端末の高さがほぼ一定です。向きを変えるだけでなく、少し高い位置・低い位置へ移動して撮影してください"
         } else if pathLengthMeters < pathThreshold(size: size) {
             guidance = "移動量が不足しています。対象との距離を保ってもう少し回ってください"
         } else if mode == .lidar && faceCount < 6_000 {
@@ -106,19 +120,24 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     func isSufficient(mode: MeshCaptureMode, size: MeshScanSize, frameCount: Int, faceCount: Int) -> Bool {
         let azimuthOK = azimuthCoverage >= (mode == .lidar ? 7 : 9)
         let elevationOK = elevationCoverage >= 2
+        let physicalHeightOK = verticalSpanMeters >= Self.verticalSpanThreshold(size: size)
         let pathOK = pathLengthMeters >= pathThreshold(size: size)
         let samplesOK = stableSamples >= (mode == .lidar ? 18 : 28)
         let framesOK = frameCount >= (mode == .lidar ? 20 : 32)
         let geometryOK = mode != .lidar || faceCount >= 6_000
-        return azimuthOK && elevationOK && pathOK && samplesOK && framesOK && geometryOK
+        return azimuthOK && elevationOK && physicalHeightOK && pathOK && samplesOK && framesOK && geometryOK
     }
 
     var compactStatus: String {
-        "周回 \(azimuthCoverage)/12・高さ \(elevationCoverage)/3・移動 \(String(format: "%.1f", pathLengthMeters))m・品質 \(Int((qualityScore * 100).rounded()))%"
+        "周回 \(azimuthCoverage)/12・高さ \(elevationCoverage)/3 / \(String(format: "%.2f", verticalSpanMeters))m・移動 \(String(format: "%.1f", pathLengthMeters))m・品質 \(Int((qualityScore * 100).rounded()))%"
     }
 
     static func coverageTranslationThreshold(size: MeshScanSize) -> Float {
         MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: pathThresholdValue(size: size))
+    }
+
+    static func verticalSpanThreshold(size: MeshScanSize) -> Float {
+        MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: pathThresholdValue(size: size))
     }
 
     private func pathThreshold(size: MeshScanSize) -> Float {
