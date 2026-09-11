@@ -172,8 +172,10 @@ final class MeshDepthRecorder: ObservableObject {
             }
 
             let attributes = try fileManager.attributesOfItem(atPath: payloadPath)
-            guard let fileSize = attributes[.size] as? NSNumber,
-                  fileSize.intValue == expectedBytes else {
+            guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+                  let fileSize = attributes[.size] as? NSNumber,
+                  fileSize.intValue == expectedBytes,
+                  try containsUsableDepthSample(payloadURL) else {
                 throw CocoaError(.fileReadCorruptFile)
             }
         }
@@ -218,6 +220,28 @@ final class MeshDepthRecorder: ObservableObject {
         directoryURL = nil
         samples.removeAll()
         lastTimestamp = -1
+    }
+
+    private static func containsUsableDepthSample(_ url: URL) throws -> Bool {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+
+        while let data = try handle.read(upToCount: 64 * 1024), !data.isEmpty {
+            guard data.count % MemoryLayout<Float>.size == 0 else {
+                throw CocoaError(.fileReadCorruptFile)
+            }
+            for offset in stride(from: 0, to: data.count, by: MemoryLayout<Float>.size) {
+                let bits = UInt32(data[offset]) |
+                    (UInt32(data[offset + 1]) << 8) |
+                    (UInt32(data[offset + 2]) << 16) |
+                    (UInt32(data[offset + 3]) << 24)
+                let depth = Float(bitPattern: bits)
+                if depth.isFinite, depth > 0 {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     private static func rows(_ matrix: simd_float4x4) -> [[Float]] {
