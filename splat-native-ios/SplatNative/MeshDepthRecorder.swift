@@ -110,15 +110,45 @@ final class MeshDepthRecorder: ObservableObject {
             )
 
             let destination = projectURL.appendingPathComponent("lidar-depth", isDirectory: true)
-            if FileManager.default.fileExists(atPath: destination.path) {
-                try FileManager.default.removeItem(at: destination)
-            }
-            try FileManager.default.moveItem(at: directoryURL, to: destination)
+            try Self.installCaptureDirectory(directoryURL, at: destination)
             self.directoryURL = nil
             samples.removeAll()
             lastTimestamp = -1
         } catch {
-            // Temporary capture is intentionally retained for recovery.
+            // Temporary capture is intentionally retained for recovery. If a previous
+            // lidar-depth generation existed, installCaptureDirectory restores it.
+        }
+    }
+
+    static func installCaptureDirectory(
+        _ source: URL,
+        at destination: URL,
+        fileManager: FileManager = .default
+    ) throws {
+        guard fileManager.fileExists(atPath: source.path) else {
+            throw CocoaError(.fileNoSuchFile)
+        }
+
+        guard fileManager.fileExists(atPath: destination.path) else {
+            try fileManager.moveItem(at: source, to: destination)
+            return
+        }
+
+        let backup = destination.deletingLastPathComponent().appendingPathComponent(
+            ".\(destination.lastPathComponent).previous-\(UUID().uuidString)",
+            isDirectory: true
+        )
+        try fileManager.moveItem(at: destination, to: backup)
+
+        do {
+            try fileManager.moveItem(at: source, to: destination)
+            try? fileManager.removeItem(at: backup)
+        } catch {
+            if !fileManager.fileExists(atPath: destination.path),
+               fileManager.fileExists(atPath: backup.path) {
+                try? fileManager.moveItem(at: backup, to: destination)
+            }
+            throw error
         }
     }
 
