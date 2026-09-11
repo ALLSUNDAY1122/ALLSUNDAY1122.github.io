@@ -62,9 +62,7 @@ private enum MeshDetailSimplifierEngine {
             }
         }
 
-        guard vertices.count > 8, !faces.isEmpty else {
-            throw error("十分なMeshがありません")
-        }
+        guard vertices.count > 8, !faces.isEmpty else { throw error("十分なMeshがありません") }
 
         var edgeCount: [DetailEdge: Int] = [:]
         for face in faces {
@@ -89,34 +87,21 @@ private enum MeshDetailSimplifierEngine {
             return index
         }
         func union(_ a: Int, _ b: Int) {
-            let rootA = find(a)
-            let rootB = find(b)
+            let rootA = find(a), rootB = find(b)
             if rootA != rootB { parent[rootB] = rootA }
         }
-
         for face in faces {
-            union(face.a, face.b)
-            union(face.b, face.c)
-            union(face.c, face.a)
+            union(face.a, face.b); union(face.b, face.c); union(face.c, face.a)
         }
 
         var componentFaceCounts: [Int: Int] = [:]
-        for face in faces {
-            componentFaceCounts[find(face.a), default: 0] += 1
-        }
-        let protectedRoots = Set(
-            componentFaceCounts
-                .filter { $0.value < 600 }
-                .map(\.key)
-        )
+        for face in faces { componentFaceCounts[find(face.a), default: 0] += 1 }
+        let protectedRoots = Set(componentFaceCounts.filter { $0.value < 600 }.map(\.key))
         let protectedVertices = Set(vertices.indices.filter { protectedRoots.contains(find($0)) })
 
         var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
         var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
-        for vertex in vertices {
-            minimum = simd_min(minimum, vertex)
-            maximum = simd_max(maximum, vertex)
-        }
+        for vertex in vertices { minimum = simd_min(minimum, vertex); maximum = simd_max(maximum, vertex) }
         let extent = simd_max(maximum - minimum, SIMD3<Float>(repeating: 0.0001))
         let target = max(16, Int(Double(vertices.count) * min(0.95, max(0.15, retainedFraction))))
         let resolution = max(2, Int(ceil(pow(Double(target), 1.0 / 3.0))))
@@ -126,7 +111,6 @@ private enum MeshDetailSimplifierEngine {
         var counts: [DetailCluster: Int] = [:]
         var vertexKeys: [DetailCluster] = []
         vertexKeys.reserveCapacity(vertices.count)
-
         for (index, vertex) in vertices.enumerated() {
             let key: DetailCluster
             if boundaryVertices.contains(index) || protectedVertices.contains(index) {
@@ -136,13 +120,10 @@ private enum MeshDetailSimplifierEngine {
                 key = DetailCluster(
                     x: min(resolution - 1, max(0, Int(floor(relative.x)))),
                     y: min(resolution - 1, max(0, Int(floor(relative.y)))),
-                    z: min(resolution - 1, max(0, Int(floor(relative.z)))),
-                    unique: 0
+                    z: min(resolution - 1, max(0, Int(floor(relative.z)))), unique: 0
                 )
             }
-            vertexKeys.append(key)
-            sums[key, default: .zero] += vertex
-            counts[key, default: 0] += 1
+            vertexKeys.append(key); sums[key, default: .zero] += vertex; counts[key, default: 0] += 1
         }
 
         let orderedKeys = sums.keys.sorted { lhs, rhs in
@@ -151,10 +132,8 @@ private enum MeshDetailSimplifierEngine {
             if lhs.y != rhs.y { return lhs.y < rhs.y }
             return lhs.z < rhs.z
         }
-
         var clusterToIndex: [DetailCluster: Int] = [:]
         var outputVertices: [SIMD3<Float>] = []
-        outputVertices.reserveCapacity(orderedKeys.count)
         for key in orderedKeys {
             clusterToIndex[key] = outputVertices.count
             outputVertices.append((sums[key] ?? .zero) / Float(max(1, counts[key] ?? 1)))
@@ -165,59 +144,40 @@ private enum MeshDetailSimplifierEngine {
         for face in faces {
             guard face.a >= 0, face.b >= 0, face.c >= 0,
                   face.a < vertexKeys.count, face.b < vertexKeys.count, face.c < vertexKeys.count,
-                  let a = clusterToIndex[vertexKeys[face.a]],
-                  let b = clusterToIndex[vertexKeys[face.b]],
-                  let c = clusterToIndex[vertexKeys[face.c]],
-                  a != b, b != c, a != c else { continue }
+                  let a = clusterToIndex[vertexKeys[face.a]], let b = clusterToIndex[vertexKeys[face.b]],
+                  let c = clusterToIndex[vertexKeys[face.c]], a != b, b != c, a != c else { continue }
             let area = simd_length_squared(simd_cross(outputVertices[b] - outputVertices[a], outputVertices[c] - outputVertices[a]))
             guard area > 1e-10 else { continue }
             let canonical = [a, b, c].sorted().map(String.init).joined(separator: ":")
-            if seenFaces.insert(canonical).inserted {
-                outputFaces.append(SIMD3<Int>(a, b, c))
-            }
+            if seenFaces.insert(canonical).inserted { outputFaces.append(SIMD3<Int>(a, b, c)) }
         }
-
-        guard !outputFaces.isEmpty else {
-            throw error("簡略化後に面が残りません")
-        }
+        guard !outputFaces.isEmpty else { throw error("簡略化後に面が残りません") }
 
         var normals = Array(repeating: SIMD3<Float>.zero, count: outputVertices.count)
         for face in outputFaces {
-            let normal = simd_cross(
-                outputVertices[face.y] - outputVertices[face.x],
-                outputVertices[face.z] - outputVertices[face.x]
-            )
-            normals[face.x] += normal
-            normals[face.y] += normal
-            normals[face.z] += normal
+            let normal = simd_cross(outputVertices[face.y] - outputVertices[face.x], outputVertices[face.z] - outputVertices[face.x])
+            normals[face.x] += normal; normals[face.y] += normal; normals[face.z] += normal
         }
-        normals = normals.map {
-            simd_length_squared($0) > 1e-12 ? simd_normalize($0) : SIMD3<Float>(0, 1, 0)
-        }
+        normals = normals.map { simd_length_squared($0) > 1e-12 ? simd_normalize($0) : SIMD3<Float>(0, 1, 0) }
 
         let percent = Int((retainedFraction * 100).rounded())
         let outputURL = url.deletingLastPathComponent()
-            .appendingPathComponent("mesh-detail-simplified-\(percent).obj")
+            .appendingPathComponent("mesh-detail-simplified-\(percent)-\(UUID().uuidString.lowercased()).obj")
         var output = "# Scan Lab detail-preserving simplification\n"
         output += "# boundaries \(boundaryVertices.count) protected_components \(protectedRoots.count)\n"
-        for vertex in outputVertices {
-            output += "v \(vertex.x) \(vertex.y) \(vertex.z)\n"
-        }
-        for normal in normals {
-            output += "vn \(normal.x) \(normal.y) \(normal.z)\n"
-        }
+        for vertex in outputVertices { output += "v \(vertex.x) \(vertex.y) \(vertex.z)\n" }
+        for normal in normals { output += "vn \(normal.x) \(normal.y) \(normal.z)\n" }
         for face in outputFaces {
             output += "f \(face.x + 1)//\(face.x + 1) \(face.y + 1)//\(face.y + 1) \(face.z + 1)//\(face.z + 1)\n"
         }
         try output.write(to: outputURL, atomically: true, encoding: .utf8)
+        return DetailSimplifyResult(url: outputURL, vertices: outputVertices.count, faces: outputFaces.count,
+                                    boundaryVertices: boundaryVertices.count, protectedComponents: protectedRoots.count)
+    }
 
-        return DetailSimplifyResult(
-            url: outputURL,
-            vertices: outputVertices.count,
-            faces: outputFaces.count,
-            boundaryVertices: boundaryVertices.count,
-            protectedComponents: protectedRoots.count
-        )
+    static func discard(_ result: DetailSimplifyResult) {
+        try? FileManager.default.removeItem(at: result.url)
+        try? FileManager.default.removeItem(at: result.url.deletingPathExtension().appendingPathExtension("mesh-asset.json"))
     }
 
     private static func error(_ message: String) -> NSError {
@@ -238,48 +198,46 @@ struct MeshDetailSimplifySheet: View {
         NavigationStack {
             Form {
                 Section("形状を守る軽量化") {
-                    HStack {
-                        Text("目標密度")
-                        Spacer()
-                        Text("\(Int(retained * 100))%").monospacedDigit()
-                    }
+                    HStack { Text("目標密度"); Spacer(); Text("\(Int(retained * 100))%").monospacedDigit() }
                     Slider(value: $retained, in: 0.25...0.9, step: 0.05)
                     Text("境界線と小さな連結部品を固定し、内部だけをクラスタリングします。花びら・葉・細い包装を単純な頂点削減で消しにくくします。")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(.caption).foregroundStyle(.secondary)
                 }
-                if let errorText {
-                    Section { Text(errorText).foregroundStyle(.red) }
-                }
-                Section {
-                    Button(working ? "処理中…" : "ディテール保持OBJを生成") { run() }
-                        .disabled(working)
-                }
+                if let errorText { Section { Text(errorText).foregroundStyle(.red) } }
+                Section { Button(working ? "処理中…" : "ディテール保持OBJを生成") { run() }.disabled(working) }
             }
             .navigationTitle("Mesh軽量化")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("閉じる") { dismiss() }
-                }
-            }
+            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("閉じる") { dismiss() }.disabled(working) } }
         }
+        .interactiveDismissDisabled(working)
     }
 
     private func run() {
         working = true
         errorText = nil
-        let url = sourceURL
-        let fraction = retained
+        let url = sourceURL, fraction = retained
         Task {
             do {
                 let result = try await Task.detached(priority: .userInitiated) {
                     try MeshDetailSimplifierEngine.simplify(url: url, retainedFraction: fraction)
                 }.value
-                model.rawOBJURL = result.url
-                model.resultURL = result.url
-                model.previewScene = try? SCNScene(url: result.url, options: nil)
-                model.vertexCount = result.vertices
-                model.faceCount = result.faces
+                guard let candidateScene = try? SCNScene(url: result.url, options: nil) else {
+                    MeshDetailSimplifierEngine.discard(result)
+                    throw NSError(domain:"ScanLab.MeshDetailSimplifier", code:2, userInfo:[NSLocalizedDescriptionKey:"軽量化後のMeshを検証できませんでした。元Meshを保持します。"])
+                }
+
+                let previousRawURL = model.rawOBJURL, previousResultURL = model.resultURL
+                let previousScene = model.previewScene, previousVertices = model.vertexCount, previousFaces = model.faceCount
+                model.rawOBJURL = result.url; model.resultURL = result.url; model.previewScene = candidateScene
+                model.vertexCount = result.vertices; model.faceCount = result.faces
+                do {
+                    try model.persistExporterMeshAssetContract()
+                } catch {
+                    model.rawOBJURL = previousRawURL; model.resultURL = previousResultURL; model.previewScene = previousScene
+                    model.vertexCount = previousVertices; model.faceCount = previousFaces
+                    MeshDetailSimplifierEngine.discard(result)
+                    throw error
+                }
                 model.statusMessage = "境界\(result.boundaryVertices)頂点・小部品\(result.protectedComponents)成分を保護して軽量化しました"
                 working = false
                 dismiss()
