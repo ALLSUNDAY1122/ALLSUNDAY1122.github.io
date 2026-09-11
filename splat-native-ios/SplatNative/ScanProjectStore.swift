@@ -324,6 +324,7 @@ final class ScanProjectStore {
         }
         let primary = projectURL.appendingPathComponent(Self.manifestFileName)
         let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
+        try rejectFutureManifestSchemaIfPresent(primary: primary, backup: backup)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let data = try encoder.encode(manifest)
@@ -337,6 +338,7 @@ final class ScanProjectStore {
         }
         let primary = projectURL.appendingPathComponent(Self.checkpointFileName)
         let backup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
+        try rejectFutureCheckpointSchemaIfPresent(primary: primary, backup: backup)
         let encoder = PropertyListEncoder()
         encoder.outputFormat = .binary
         let data = try encoder.encode(checkpoint)
@@ -347,12 +349,11 @@ final class ScanProjectStore {
     func loadCheckpoint(projectURL: URL) throws -> ScanCaptureCheckpoint {
         let primary = projectURL.appendingPathComponent(Self.checkpointFileName)
         let backup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
+        try rejectFutureCheckpointSchemaIfPresent(primary: primary, backup: backup)
         let decoder = PropertyListDecoder()
         if let data = try? Data(contentsOf: primary) {
             do {
                 return try decodeSupportedCheckpoint(data, decoder: decoder)
-            } catch ScanProjectStoreError.unsupportedCheckpointSchemaVersion(let version) {
-                throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(version)
             } catch {
                 // Corrupt/legacy primary may still be recovered from its known-good backup below.
             }
@@ -362,9 +363,6 @@ final class ScanProjectStore {
                 let value = try decodeSupportedCheckpoint(data, decoder: decoder)
                 try? data.write(to: primary, options: .atomic)
                 return value
-            } catch ScanProjectStoreError.unsupportedCheckpointSchemaVersion(let version) {
-                // Never overwrite a future-version backup with an older interpretation.
-                throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(version)
             } catch {
                 // Fall through to the established raw-data-unavailable failure.
             }
@@ -547,6 +545,28 @@ final class ScanProjectStore {
         return values.sorted { $0.manifest.updatedAt > $1.manifest.updatedAt }
     }
 
+    private func rejectFutureManifestSchemaIfPresent(primary: URL, backup: URL) throws {
+        let decoder = JSONDecoder()
+        for url in [primary, backup] {
+            guard let data = try? Data(contentsOf: url),
+                  let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }
+            guard envelope.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+                throw ScanProjectStoreError.unsupportedManifestSchemaVersion(envelope.schemaVersion)
+            }
+        }
+    }
+
+    private func rejectFutureCheckpointSchemaIfPresent(primary: URL, backup: URL) throws {
+        let decoder = PropertyListDecoder()
+        for url in [primary, backup] {
+            guard let data = try? Data(contentsOf: url),
+                  let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }
+            guard envelope.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {
+                throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(envelope.schemaVersion)
+            }
+        }
+    }
+
     private func decodeSupportedManifest(_ data: Data, decoder: JSONDecoder) throws -> ScanProjectManifest {
         let envelope = try decoder.decode(ScanSchemaVersionEnvelope.self, from: data)
         guard envelope.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
@@ -566,14 +586,11 @@ final class ScanProjectStore {
     private func loadOrMigrateManifest(projectURL: URL) throws -> ScanProjectManifest {
         let primary = projectURL.appendingPathComponent(Self.manifestFileName)
         let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
+        try rejectFutureManifestSchemaIfPresent(primary: primary, backup: backup)
         let decoder = JSONDecoder()
         if let data = try? Data(contentsOf: primary) {
             do {
                 return try decodeSupportedManifest(data, decoder: decoder)
-            } catch ScanProjectStoreError.unsupportedManifestSchemaVersion(let version) {
-                // A valid future schema is not corruption. Never replace it with an older backup or
-                // synthesize a legacy manifest, because either action destroys unknown fields.
-                throw ScanProjectStoreError.unsupportedManifestSchemaVersion(version)
             } catch {
                 // Corrupt/current-schema-incompatible primary may still recover from backup.
             }
@@ -583,9 +600,6 @@ final class ScanProjectStore {
                 let manifest = try decodeSupportedManifest(data, decoder: decoder)
                 try? data.write(to: primary, options: .atomic)
                 return manifest
-            } catch ScanProjectStoreError.unsupportedManifestSchemaVersion(let version) {
-                // Preserve the future backup and the primary exactly as found.
-                throw ScanProjectStoreError.unsupportedManifestSchemaVersion(version)
             } catch {
                 // Only genuinely undecodable current/legacy data may fall through to migration.
             }
