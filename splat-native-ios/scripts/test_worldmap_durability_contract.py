@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import re
 
 model = Path("splat-native-ios/SplatNative/ScanModel.swift").read_text()
 helper = Path("splat-native-ios/SplatNative/ScanWorldMapArchiveStore.swift").read_text()
 tests = Path("splat-native-ios/SplatNativeTests/ScanColdResumePersistenceTests.swift").read_text()
+store_tests = Path("splat-native-ios/SplatNativeTests/ScanWorldMapArchiveStoreTests.swift").read_text()
 
 if "persistWorldMapIfPossible()" in model:
     raise SystemExit("WorldMap durability regression: fire-and-forget persistence returned")
@@ -29,8 +29,22 @@ if pause.index("persistWorldMapForTransition") > pause.index("session?.pause()")
     raise SystemExit("pauseCapture must settle WorldMap before pausing ARSession")
 if finish.index("persistWorldMapForTransition") > finish.index("self.phase = .captured"):
     raise SystemExit("finishCapture must settle WorldMap before exposing captured UI")
-if "try data.write(to: targetURL, options: .atomic)" not in helper or "values.fileSize == data.count" not in helper:
-    raise SystemExit("WorldMap archive store must atomically write and verify byte count")
+
+for needle in (
+    "candidateURL",
+    "data.write(to: candidateURL, options: .atomic)",
+    "values.fileSize == data.count",
+    "persisted == data",
+    "replaceItemAt(targetURL, withItemAt: candidateURL)",
+    "moveItem(at: candidateURL, to: targetURL)",
+):
+    if needle not in helper:
+        raise SystemExit(f"WorldMap archive store missing verified replacement contract: {needle}")
+
+if "try data.write(to: targetURL, options: .atomic)" in helper:
+    raise SystemExit("WorldMap archive store must not overwrite the last resumable map before candidate verification")
 if "testWorldMapArchiveStoreRejectsEmptyArchiveWithoutReplacingExistingData" not in tests:
-    raise SystemExit("missing WorldMap archive replacement regression")
-print("PASS: WorldMap pause/finish persistence is ordered, serialized, atomic, and failure-aware")
+    raise SystemExit("missing WorldMap archive empty replacement regression")
+if "testWriteReplacesExistingArchiveOnlyAfterCandidateValidation" not in store_tests:
+    raise SystemExit("missing WorldMap verified replacement regression")
+print("PASS: WorldMap pause/finish persistence is ordered, serialized, candidate-verified, and failure-aware")
