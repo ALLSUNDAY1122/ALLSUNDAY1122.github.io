@@ -109,6 +109,7 @@ final class MeshDepthRecorder: ObservableObject {
                 options: .atomic
             )
 
+            try Self.validateCaptureDirectory(directoryURL)
             let destination = projectURL.appendingPathComponent("lidar-depth", isDirectory: true)
             try Self.installCaptureDirectory(directoryURL, at: destination)
             self.directoryURL = nil
@@ -116,7 +117,60 @@ final class MeshDepthRecorder: ObservableObject {
             lastTimestamp = -1
         } catch {
             // Temporary capture is intentionally retained for recovery. If a previous
-            // lidar-depth generation existed, installCaptureDirectory restores it.
+            // lidar-depth generation existed, it remains untouched until validation succeeds.
+        }
+    }
+
+    static func validateCaptureDirectory(
+        _ source: URL,
+        fileManager: FileManager = .default
+    ) throws {
+        let indexURL = source.appendingPathComponent("depth-index.json")
+        guard fileManager.fileExists(atPath: indexURL.path) else {
+            throw CocoaError(.fileReadNoSuchFile)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let index = try decoder.decode(MeshDepthIndex.self, from: Data(contentsOf: indexURL))
+        guard index.schemaVersion == 2, !index.samples.isEmpty else {
+            throw CocoaError(.fileReadCorruptFile)
+        }
+
+        let sourcePath = source.standardizedFileURL.path
+        for sample in index.samples {
+            guard sample.width > 0,
+                  sample.height > 0,
+                  sample.cameraWidth > 0,
+                  sample.cameraHeight > 0,
+                  sample.timestamp.isFinite,
+                  sample.transform.count == 4,
+                  sample.transform.allSatisfy({ $0.count == 4 && $0.allSatisfy(\.isFinite) }),
+                  sample.intrinsics.count == 3,
+                  sample.intrinsics.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }),
+                  sample.file == URL(fileURLWithPath: sample.file).lastPathComponent,
+                  sample.file.hasSuffix(".f32") else {
+                throw CocoaError(.fileReadCorruptFile)
+            }
+
+            let (pixelCount, pixelOverflow) = sample.width.multipliedReportingOverflow(by: sample.height)
+            let (expectedBytes, byteOverflow) = pixelCount.multipliedReportingOverflow(by: MemoryLayout<Float>.size)
+            guard !pixelOverflow, !byteOverflow, expectedBytes > 0 else {
+                throw CocoaError(.fileReadCorruptFile)
+            }
+
+            let payloadURL = source.appendingPathComponent(sample.file).standardizedFileURL
+            let payloadPath = payloadURL.path
+            guard payloadPath.hasPrefix(sourcePath + "/"),
+                  fileManager.fileExists(atPath: payloadPath) else {
+                throw CocoaError(.fileReadCorruptFile)
+            }
+
+            let attributes = try fileManager.attributesOfItem(atPath: payloadPath)
+            guard let fileSize = attributes[.size] as? NSNumber,
+                  fileSize.intValue == expectedBytes else {
+                throw CocoaError(.fileReadCorruptFile)
+            }
         }
     }
 
