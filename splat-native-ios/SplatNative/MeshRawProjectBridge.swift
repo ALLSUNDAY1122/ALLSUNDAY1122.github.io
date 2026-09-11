@@ -241,11 +241,12 @@ enum MeshRawProjectBridge {
     }
 
     private static func countImages(in directory: URL, fileManager: FileManager) -> Int {
-        guard MeshRawInputValidator.hasMinimumUsableImages(
+        let usableCount = MeshRawInputValidator.usableImageCount(
             in: directory,
             fileManager: fileManager
-        ) else { return 0 }
-        return MeshRawInputValidator.rawImageFileCount(in: directory, fileManager: fileManager)
+        )
+        guard usableCount >= MeshRawInputValidator.minimumPhotogrammetryImageCount else { return 0 }
+        return usableCount
     }
 
     private static func sanitizedFileComponent(_ value: String) -> String {
