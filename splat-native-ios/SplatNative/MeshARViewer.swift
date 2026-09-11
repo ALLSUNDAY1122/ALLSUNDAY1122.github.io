@@ -146,7 +146,7 @@ struct MeshARPlacementView: UIViewRepresentable {
             )
 
             guard let result else { return }
-            place(at: result.worldTransform)
+            place(at: Self.translationOnlyPlacement(from: result.worldTransform))
         }
 
         private func raycast(
@@ -209,6 +209,21 @@ struct MeshARPlacementView: UIViewRepresentable {
             guard found else { return }
             let center = (minimum + maximum) / 2
             root.position = SCNVector3(-center.x, -minimum.y, -center.z)
+        }
+
+        nonisolated static func translationOnlyPlacement(from raycastTransform: simd_float4x4) -> simd_float4x4 {
+            // Mesh reconstruction already uses gravity world alignment. ARRaycastResult orientation
+            // is an estimate of the support plane and can change yaw as ARKit refines that plane;
+            // applying it verbatim makes the same saved scan visibly spin between placement taps.
+            // Preserve the scan's own orientation and use only the hit position.
+            var transform = matrix_identity_float4x4
+            transform.columns.3 = SIMD4<Float>(
+                raycastTransform.columns.3.x,
+                raycastTransform.columns.3.y,
+                raycastTransform.columns.3.z,
+                1
+            )
+            return transform
         }
 
         private static func corners(minimum: SCNVector3, maximum: SCNVector3) -> [SCNVector3] {
