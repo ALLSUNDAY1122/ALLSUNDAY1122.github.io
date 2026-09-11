@@ -3,6 +3,41 @@ import XCTest
 
 @MainActor
 final class MeshDepthRecorderDurabilityTests: XCTestCase {
+    func testValidateCaptureDirectoryAcceptsExactPayloadAndMetadata() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-depth-validate-good-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        try makeCapture(at: root, payloadBytes: 16, file: "depth_00000.f32")
+
+        XCTAssertNoThrow(try MeshDepthRecorder.validateCaptureDirectory(root))
+    }
+
+    func testValidateCaptureDirectoryRejectsTruncatedDepthPayload() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-depth-validate-truncated-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        try makeCapture(at: root, payloadBytes: 12, file: "depth_00000.f32")
+
+        XCTAssertThrowsError(try MeshDepthRecorder.validateCaptureDirectory(root))
+    }
+
+    func testValidateCaptureDirectoryRejectsPathTraversal() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-depth-validate-path-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root.deletingLastPathComponent()) }
+
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try Data(repeating: 0, count: 16).write(
+            to: root.deletingLastPathComponent().appendingPathComponent("outside.f32"),
+            options: .atomic
+        )
+        try writeIndex(at: root, file: "../outside.f32")
+
+        XCTAssertThrowsError(try MeshDepthRecorder.validateCaptureDirectory(root))
+    }
+
     func testInstallCaptureDirectoryReplacesGenerationWithoutLeavingBackup() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mesh-depth-install-\(UUID().uuidString)", isDirectory: true)
@@ -64,6 +99,41 @@ final class MeshDepthRecorderDurabilityTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: destination.appendingPathComponent("old.bin")), previous)
         XCTAssertEqual(try Data(contentsOf: source.appendingPathComponent("new.bin")), replacement)
         try assertNoBackup(in: root)
+    }
+
+    private func makeCapture(at root: URL, payloadBytes: Int, file: String) throws {
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try Data(repeating: 0, count: payloadBytes).write(
+            to: root.appendingPathComponent(file),
+            options: .atomic
+        )
+        try writeIndex(at: root, file: file)
+    }
+
+    private func writeIndex(at root: URL, file: String) throws {
+        let json = """
+        {
+          "schemaVersion": 2,
+          "format": "test",
+          "createdAt": "2026-09-11T00:00:00Z",
+          "samples": [
+            {
+              "file": "\(file)",
+              "timestamp": 1.0,
+              "width": 2,
+              "height": 2,
+              "cameraWidth": 1920,
+              "cameraHeight": 1440,
+              "transform": [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],
+              "intrinsics": [[1,0,0],[0,1,0],[0,0,1]]
+            }
+          ]
+        }
+        """
+        try Data(json.utf8).write(
+            to: root.appendingPathComponent("depth-index.json"),
+            options: .atomic
+        )
     }
 
     private func assertNoBackup(in root: URL) throws {
