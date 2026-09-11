@@ -75,7 +75,7 @@ struct ContentView: View {
                     if model.canFinishCapture {
                         Button("この撮影で生成へ") { model.finishCapture() }.buttonStyle(PrimaryButtonStyle())
                     } else {
-                        Text("最低24枚、推奨48枚").font(.caption).foregroundStyle(.secondary)
+                        Text("最低24枚、目標\(model.targetFrames)枚").font(.caption).foregroundStyle(.secondary)
                     }
                 }
                 .padding(16).background(.black.opacity(0.72), in: RoundedRectangle(cornerRadius: 20))
