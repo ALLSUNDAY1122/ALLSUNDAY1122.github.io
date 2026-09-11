@@ -167,7 +167,7 @@ final class MeshProjectStore {
         let projectID = sourceProjectURL.deletingPathExtension().lastPathComponent
         guard !projectID.isEmpty else { throw MeshProjectStoreError.invalidProject }
         let imagesURL = sourceProjectURL.appendingPathComponent("images", isDirectory: true)
-        let rawRetained = MeshRawInputValidator.hasMinimumUsableImages(
+        let rawRetained = MeshRawInputValidator.hasAnyRawImageBytes(
             in: imagesURL,
             fileManager: fileManager
         )
@@ -176,7 +176,8 @@ final class MeshProjectStore {
         let createdAt = sourceManifest?.createdAt
             ?? directoryDate(sourceProjectURL, key: .creationDate)
             ?? resultSnapshot.modificationDate
-        let reprocessSupported = captureMode == "photogrammetry" && rawRetained
+        let reprocessSupported = captureMode == "photogrammetry" &&
+            MeshRawInputValidator.hasMinimumUsableImages(in: imagesURL, fileManager: fileManager)
 
         let finalURL = libraryURL
             .appendingPathComponent(projectID)
@@ -290,15 +291,16 @@ final class MeshProjectStore {
         }
 
         // Manifest flags are a historical snapshot. RAW may have been cleared, partially deleted,
-        // or the archive may predate the stricter ImageIO eligibility contract. Recompute these
-        // user-visible capabilities from the bytes that exist now so the library never advertises
-        // a reprocess action that the actual Photogrammetry gate will immediately reject.
+        // or the archive may predate the stricter ImageIO eligibility contract. Recompute both
+        // concepts from current bytes: retention is a privacy/storage fact, while reprocessing has
+        // the stronger minimum-count + structural-readability requirement.
         let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
-        let rawRetained = MeshRawInputValidator.hasMinimumUsableImages(
+        let rawRetained = MeshRawInputValidator.hasAnyRawImageBytes(
             in: imagesURL,
             fileManager: fileManager
         )
-        let reprocessSupported = manifest.captureMode == "photogrammetry" && rawRetained
+        let reprocessSupported = manifest.captureMode == "photogrammetry" &&
+            MeshRawInputValidator.hasMinimumUsableImages(in: imagesURL, fileManager: fileManager)
 
         return MeshProjectSummary(
             id: manifest.id,
