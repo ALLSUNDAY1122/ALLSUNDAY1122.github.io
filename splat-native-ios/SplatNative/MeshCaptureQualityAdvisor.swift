@@ -58,8 +58,17 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
 
         let transform = frame.camera.transform
         let position = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+        guard MeshCaptureCoveragePolicy.isFiniteCameraPosition(position) else {
+            // Do not retain a malformed transform as the next displacement baseline. Treat it like
+            // a relocalization boundary so the next valid sample establishes a fresh origin.
+            trackingInterrupted = true
+            guidance = "カメラ位置を安定して取得できません。ゆっくり動かしてください"
+            return
+        }
         let forwardRaw = SIMD3<Float>(-transform.columns.2.x, -transform.columns.2.y, -transform.columns.2.z)
-        let forward = simd_length_squared(forwardRaw) > 1e-8 ? simd_normalize(forwardRaw) : SIMD3<Float>(0, 0, -1)
+        let forward = forwardRaw.x.isFinite && forwardRaw.y.isFinite && forwardRaw.z.isFinite && simd_length_squared(forwardRaw) > 1e-8
+            ? simd_normalize(forwardRaw)
+            : SIMD3<Float>(0, 0, -1)
 
         if trackingInterrupted {
             trackingInterrupted = false
