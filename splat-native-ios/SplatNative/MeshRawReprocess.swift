@@ -102,8 +102,9 @@ enum MeshRawReprocessor {
     }
 
     /// A PhotogrammetrySession request is not considered complete merely because a path exists.
-    /// Require a non-empty regular file and a SceneKit decode before exposing it as a finished
-    /// result. This prevents a truncated/stale USDZ from entering preview, save, or export flows.
+    /// Require a non-empty regular file, a SceneKit decode, and at least one actual geometry node
+    /// before exposing it as a finished result. This prevents a truncated, stale, or structurally
+    /// empty USDZ from entering preview, save, or export flows.
     private static func validateAndFinish(
         outputURL: URL,
         sourceKind: MeshRawSourceKind,
@@ -115,7 +116,8 @@ enum MeshRawReprocessor {
               (attributes[.type] as? FileAttributeType) == .typeRegular,
               let size = (attributes[.size] as? NSNumber)?.uint64Value,
               size > 0,
-              let scene = try? SCNScene(url: outputURL, options: nil) else {
+              let scene = try? SCNScene(url: outputURL, options: nil),
+              sceneContainsGeometry(scene) else {
             return false
         }
 
@@ -127,6 +129,21 @@ enum MeshRawReprocessor {
             ? "保存済みSplat rawからMeshを生成しました。ライブラリへ安全に保存しています"
             : "保存済みMesh rawから再処理したMeshを生成しました"
         return true
+    }
+
+    /// SceneKit can successfully decode a syntactically valid USDZ whose scene contains no mesh
+    /// geometry. Treat that as reconstruction failure rather than a finished user-visible asset.
+    private static func sceneContainsGeometry(_ scene: SCNScene) -> Bool {
+        if scene.rootNode.geometry != nil {
+            return true
+        }
+        var containsGeometry = false
+        scene.rootNode.enumerateChildNodes { node, stop in
+            guard node.geometry != nil else { return }
+            containsGeometry = true
+            stop.pointee = true
+        }
+        return containsGeometry
     }
 
     /// Derived one-shot USDZ output must never survive a failed/cancelled request. For transient
