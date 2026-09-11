@@ -167,7 +167,15 @@ struct MeshARPlacementView: UIViewRepresentable {
 
         private func place(at transform: simd_float4x4) {
             guard let view else { return }
-            placedNode?.removeFromParentNode()
+
+            // Repositioning an already loaded scan must not parse and clone the entire model again.
+            // The anchor owns the recentered model subtree, so changing only its transform produces
+            // the same placement result while keeping repeated taps responsive on large meshes.
+            if let placedNode {
+                placedNode.simdTransform = transform
+                return
+            }
+
             guard let source = try? SCNScene(url: modelURL, options: nil) else { return }
 
             let anchor = SCNNode()
