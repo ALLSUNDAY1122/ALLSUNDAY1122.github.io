@@ -59,14 +59,26 @@ enum SplatCameraGeometry {
         aspect: Float,
         margin: Float = 1.10
     ) -> Float {
-        let safeAspect = max(0.1, aspect)
-        let halfVerticalFOV = max(0.05, fovY * 0.5)
+        // Export dimensions, persisted framing state, or caller-provided FOV can be malformed.
+        // Never let NaN/Inf escape into camera distance: a non-finite distance poisons every
+        // subsequent view/projection matrix and can make the entire export render disappear.
+        let safeAspect = aspect.isFinite && aspect > 0.1 ? aspect : 1
+        let safeFOVY = fovY.isFinite
+            ? min(max(fovY, 0.10), Float.pi - 0.10)
+            : Float.pi / 3
+        let safeRadius = framing.radius.isFinite ? max(0.10, framing.radius) : 0.10
+        let safeMargin = margin.isFinite ? max(1, margin) : 1.10
+        let safeFloor = framing.distance.isFinite
+            ? min(60, max(0.35, framing.distance))
+            : 2.5
+
+        let halfVerticalFOV = max(0.05, safeFOVY * 0.5)
         let halfHorizontalFOV = atan(tan(halfVerticalFOV) * safeAspect)
         let limitingHalfFOV = max(0.05, min(halfVerticalFOV, halfHorizontalFOV))
-        let requiredForSphere = framing.radius / sin(limitingHalfFOV) * max(1, margin)
+        let requiredForSphere = safeRadius / sin(limitingHalfFOV) * safeMargin
         // Preserve the existing live-view framing as a floor; only move farther away when the
         // output aspect ratio actually needs more room. Keep comfortably inside the far plane.
-        return min(60, max(framing.distance, requiredForSphere))
+        return min(60, max(safeFloor, requiredForSphere))
     }
 
     static func eye(center: SIMD3<Float>, distance: Float, yaw: Float, pitch: Float) -> SIMD3<Float> {
