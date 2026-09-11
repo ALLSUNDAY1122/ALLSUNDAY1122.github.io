@@ -24,16 +24,19 @@ final class MeshDepthRecorderDurabilityTests: XCTestCase {
     }
 
     func testValidateCaptureDirectoryRejectsPathTraversal() throws {
+        let token = UUID().uuidString
         let root = FileManager.default.temporaryDirectory
-            .appendingPathComponent("mesh-depth-validate-path-\(UUID().uuidString)", isDirectory: true)
-        defer { try? FileManager.default.removeItem(at: root.deletingLastPathComponent()) }
+            .appendingPathComponent("mesh-depth-validate-path-\(token)", isDirectory: true)
+        let outside = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-depth-outside-\(token).f32")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: outside)
+        }
 
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
-        try Data(repeating: 0, count: 16).write(
-            to: root.deletingLastPathComponent().appendingPathComponent("outside.f32"),
-            options: .atomic
-        )
-        try writeIndex(at: root, file: "../outside.f32")
+        try Data(repeating: 0, count: 16).write(to: outside, options: .atomic)
+        try writeIndex(at: root, file: "../\(outside.lastPathComponent)")
 
         XCTAssertThrowsError(try MeshDepthRecorder.validateCaptureDirectory(root))
     }
