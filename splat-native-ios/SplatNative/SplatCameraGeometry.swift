@@ -78,26 +78,52 @@ enum SplatCameraGeometry {
     }
 
     static func perspective(fovY: Float, aspect: Float, near: Float, far: Float) -> simd_float4x4 {
-        let y = 1 / tan(fovY * 0.5)
-        let x = y / aspect
-        let z = far / (near - far)
+        // SwiftUI/Metal surfaces can transiently report zero-sized dimensions during layout and
+        // scene transitions. A single zero/NaN aspect must not poison the projection matrix and
+        // destabilize the viewer until the next valid frame.
+        let safeFOV = fovY.isFinite ? min(max(fovY, 0.01), Float.pi - 0.01) : Float.pi / 3
+        let safeAspect = aspect.isFinite && aspect > 0.001 ? aspect : 1
+        let safeNear = near.isFinite && near > 0.0001 ? near : 0.01
+        let safeFar = far.isFinite && far > safeNear + 0.001 ? far : max(100, safeNear + 1)
+
+        let y = 1 / tan(safeFOV * 0.5)
+        let x = y / safeAspect
+        let z = safeFar / (safeNear - safeFar)
         return simd_float4x4(columns: (
             SIMD4<Float>(x, 0, 0, 0),
             SIMD4<Float>(0, y, 0, 0),
             SIMD4<Float>(0, 0, z, -1),
-            SIMD4<Float>(0, 0, z * near, 0)
+            SIMD4<Float>(0, 0, z * safeNear, 0)
         ))
     }
 
     static func lookAt(eye: SIMD3<Float>, center: SIMD3<Float>, up: SIMD3<Float>) -> simd_float4x4 {
-        let z = simd_normalize(eye - center)
-        var x = simd_cross(up, z)
-        if simd_length_squared(x) < 1e-8 {
-            x = SIMD3<Float>(1, 0, 0)
+        let delta = eye - center
+        let z: SIMD3<Float>
+        if isFinite(delta), simd_length_squared(delta) >= 1e-8 {
+            z = simd_normalize(delta)
         } else {
-            x = simd_normalize(x)
+            z = SIMD3<Float>(0, 0, 1)
         }
-        let y = simd_cross(z, x)
+
+        let normalizedUp: SIMD3<Float>
+        if isFinite(up), simd_length_squared(up) >= 1e-8 {
+            normalizedUp = simd_normalize(up)
+        } else {
+            normalizedUp = SIMD3<Float>(0, 1, 0)
+        }
+
+        var x = simd_cross(normalizedUp, z)
+        if simd_length_squared(x) < 1e-8 {
+            // Pick an axis that is not parallel to the viewing direction. Using a fixed X axis
+            // fails when the camera itself looks along X and produces a zero Y basis vector.
+            let fallbackUp = abs(z.y) < 0.9
+                ? SIMD3<Float>(0, 1, 0)
+                : SIMD3<Float>(1, 0, 0)
+            x = simd_cross(fallbackUp, z)
+        }
+        x = simd_normalize(x)
+        let y = simd_normalize(simd_cross(z, x))
         return simd_float4x4(columns: (
             SIMD4<Float>(x.x, y.x, z.x, 0),
             SIMD4<Float>(x.y, y.y, z.y, 0),
@@ -114,5 +140,9 @@ enum SplatCameraGeometry {
             SIMD4<Float>(0, 0, 1, 0),
             SIMD4<Float>(0, 0, 0, 1)
         ))
+    }
+
+    private static func isFinite(_ value: SIMD3<Float>) -> Bool {
+        value.x.isFinite && value.y.isFinite && value.z.isFinite
     }
 }
