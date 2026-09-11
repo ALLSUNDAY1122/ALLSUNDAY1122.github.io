@@ -1,16 +1,15 @@
 import XCTest
-@testable import SplatNative
 
 final class MeshCaptureQualityAdvisorTests: XCTestCase {
     func testCoverageTranslationThresholdScalesWithSceneSize() {
-        XCTAssertEqual(MeshCaptureQualityAdvisor.coverageTranslationThreshold(size: .small), 0.015, accuracy: 0.0001)
-        XCTAssertEqual(MeshCaptureQualityAdvisor.coverageTranslationThreshold(size: .medium), 0.020, accuracy: 0.0001)
-        XCTAssertEqual(MeshCaptureQualityAdvisor.coverageTranslationThreshold(size: .large), 0.036, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 0.55), 0.015, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 1.0), 0.020, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 1.8), 0.036, accuracy: 0.0001)
     }
 
     func testCoverageThresholdAlwaysRequiresPhysicalTranslation() {
-        for size in MeshScanSize.allCases {
-            XCTAssertGreaterThan(MeshCaptureQualityAdvisor.coverageTranslationThreshold(size: size), 0)
+        for threshold: Float in [0, 0.55, 1.0, 1.8] {
+            XCTAssertGreaterThan(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: threshold), 0)
         }
     }
 }
