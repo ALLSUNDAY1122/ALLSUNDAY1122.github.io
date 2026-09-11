@@ -115,10 +115,6 @@ enum SplatVideoExporter {
             }
             try FileManager.default.moveItem(at: partialURL, to: finalURL)
             do {
-                // AVAssetWriter can leave a structurally valid, playable MP4 even if writing ended
-                // prematurely. Require almost the full requested timeline before exposing the file to
-                // share/export. The tolerance covers normal container timestamp rounding and up to two
-                // frame intervals on deliberately low-FPS regression fixtures.
                 let durationTolerance = max(
                     0.5,
                     2.0 / Double(max(1, configuration.framesPerSecond))
@@ -130,9 +126,6 @@ enum SplatVideoExporter {
                     minimumDuration: minimumDuration
                 )
             } catch is CancellationError {
-                // Cancellation is a distinct user action, not a corrupt-output failure. Preserve it
-                // so the caller can silently dismiss progress rather than showing an erroneous
-                // "video could not be completed" alert. The outer catch still removes finalURL.
                 throw CancellationError()
             } catch {
                 throw ExportError.outputMissing
@@ -248,7 +241,6 @@ enum SplatVideoExporter {
                 throw ExportError.textureCreationFailed
             }
 
-            let depthTexture: MTLTexture? = nil
             let normalizedTime = totalFrames > 1
                 ? Double(frameIndex) / Double(totalFrames - 1)
                 : 0
@@ -270,37 +262,42 @@ enum SplatVideoExporter {
                 center: framing.center,
                 up: SIMD3<Float>(0, 1, 0)
             )
+            let viewport = SplatRenderer.ViewportDescriptor(
+                viewport: MTLViewport(
+                    originX: 0,
+                    originY: 0,
+                    width: Double(dimensions.width),
+                    height: Double(dimensions.height),
+                    znear: 0,
+                    zfar: 1
+                ),
+                projectionMatrix: projection,
+                viewMatrix: view,
+                screenSize: SIMD2<Int>(dimensions.width, dimensions.height)
+            )
 
-            guard let commandBuffer = commandQueue.makeCommandBuffer() else {
-                throw ExportError.commandBufferFailed
-            }
             var didRender = false
             while !didRender {
                 try Task.checkCancellation()
-                guard let descriptor = MTLRenderPassDescriptor() as MTLRenderPassDescriptor? else {
-                    throw ExportError.renderSkipped
+                guard let commandBuffer = commandQueue.makeCommandBuffer() else {
+                    throw ExportError.commandBufferFailed
                 }
-                descriptor.colorAttachments[0].texture = texture
-                descriptor.colorAttachments[0].loadAction = .clear
-                descriptor.colorAttachments[0].storeAction = .store
-                descriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.025, green: 0.03, blue: 0.04, alpha: 1)
-                if let depthTexture {
-                    descriptor.depthAttachment.texture = depthTexture
-                    descriptor.depthAttachment.loadAction = .clear
-                    descriptor.depthAttachment.storeAction = .dontCare
-                    descriptor.depthAttachment.clearDepth = 1
+                do {
+                    didRender = try renderer.render(
+                        viewports: [viewport],
+                        colorTexture: texture,
+                        colorStoreAction: .store,
+                        depthTexture: nil,
+                        rasterizationRateMap: nil,
+                        renderTargetArrayLength: 1,
+                        to: commandBuffer
+                    )
+                } catch {
+                    throw ExportError.writerFailed(error.localizedDescription)
                 }
-
-                didRender = await renderer.render(
-                    viewMatrix: view,
-                    projectionMatrix: projection,
-                    viewportSize: SIMD2<Int>(dimensions.width, dimensions.height),
-                    renderTarget: descriptor,
-                    commandBuffer: commandBuffer
-                )
                 if didRender {
                     commandBuffer.commit()
-                    await commandBuffer.completed()
+                    commandBuffer.waitUntilCompleted()
                     try Task.checkCancellation()
                     guard commandBuffer.status != .error else {
                         throw ExportError.writerFailed(commandBuffer.error?.localizedDescription ?? "Metal command failed")
@@ -308,10 +305,6 @@ enum SplatVideoExporter {
                 } else {
                     try await Task.sleep(for: .milliseconds(10))
                 }
-            }
-
-            guard didRender else {
-                throw ExportError.renderSkipped
             }
 
             let presentationTime = CMTimeMultiply(frameDuration, multiplier: Int32(frameIndex))
