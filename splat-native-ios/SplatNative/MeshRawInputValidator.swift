@@ -16,18 +16,35 @@ enum MeshRawInputValidator {
         in directory: URL,
         fileManager: FileManager = .default
     ) -> Bool {
+        rawImageFileCount(in: directory, fileManager: fileManager, stopAfter: 1) > 0
+    }
+
+    /// Lightweight count for labels/storage state. This intentionally checks file metadata only;
+    /// callers must use `hasMinimumUsableImages` before treating these files as reprocessable.
+    static func rawImageFileCount(
+        in directory: URL,
+        fileManager: FileManager = .default,
+        stopAfter: Int? = nil
+    ) -> Int {
+        if let stopAfter, stopAfter <= 0 { return 0 }
         guard let files = try? fileManager.contentsOfDirectory(
             at: directory,
             includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
             options: [.skipsHiddenFiles]
-        ) else { return false }
-        return files.contains { url in
+        ) else { return 0 }
+
+        var count = 0
+        for url in files {
             guard supportedExtensions.contains(url.pathExtension.lowercased()),
-                  let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]) else {
-                return false
+                  let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
+                  values.isRegularFile == true,
+                  (values.fileSize ?? 0) > 0 else {
+                continue
             }
-            return values.isRegularFile == true && (values.fileSize ?? 0) > 0
+            count += 1
+            if let stopAfter, count >= stopAfter { return count }
         }
+        return count
     }
 
     static func hasMinimumUsableImages(
