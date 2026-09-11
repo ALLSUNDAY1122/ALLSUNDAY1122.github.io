@@ -18,6 +18,32 @@ final class MeshProjectIntegrityTests: XCTestCase {
         XCTAssertEqual(try MeshProjectIntegrity.verifyOrSeal(summary: relaunched), relaunched.resultURL)
     }
 
+    func testFirstSealPublishesVerifiedEvidenceWithoutCandidateResidue() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = MeshProjectStore(appRootURL: root)
+        let live = try makeLiveProject(in: root, marker: 0x32)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+
+        XCTAssertEqual(try MeshProjectIntegrity.verifyOrSeal(summary: archived), archived.resultURL)
+
+        let evidenceURL = archived.projectURL.appendingPathComponent(MeshProjectIntegrity.evidenceFileName)
+        let data = try Data(contentsOf: evidenceURL)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let evidence = try decoder.decode(MeshProjectIntegrity.Evidence.self, from: data)
+        XCTAssertEqual(evidence.schemaVersion, MeshProjectIntegrity.Evidence.currentSchemaVersion)
+        XCTAssertEqual(evidence.resultFileName, archived.resultURL.lastPathComponent)
+        XCTAssertFalse(evidence.sha256.isEmpty)
+
+        let entries = try FileManager.default.contentsOfDirectory(
+            at: archived.projectURL,
+            includingPropertiesForKeys: nil,
+            options: []
+        )
+        XCTAssertFalse(entries.contains { $0.lastPathComponent.contains(".mesh-result.sha256.json.candidate-") })
+    }
+
     func testRejectsSameSizeReplacementAfterSealEvenWhenMtimeRestored() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
