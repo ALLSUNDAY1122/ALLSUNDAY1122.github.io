@@ -13,6 +13,10 @@ enum ScanRepresentationKind: String, Codable, CaseIterable {
     case mesh
 }
 
+private struct ScanSchemaVersionEnvelope: Decodable {
+    var schemaVersion: Int
+}
+
 struct ScanProjectManifest: Codable, Identifiable, Equatable {
     static let currentSchemaVersion = 1
 
@@ -208,6 +212,8 @@ enum ScanProjectStoreError: LocalizedError {
     case rawDataUnavailable
     case invalidManifest
     case invalidPendingResult
+    case unsupportedManifestSchemaVersion(Int)
+    case unsupportedCheckpointSchemaVersion(Int)
 
     var errorDescription: String? {
         switch self {
@@ -215,6 +221,10 @@ enum ScanProjectStoreError: LocalizedError {
         case .rawDataUnavailable: return "再処理に必要なrawデータがありません"
         case .invalidManifest: return "スキャン情報を読み込めません"
         case .invalidPendingResult: return "生成結果の安全な保存を完了できません"
+        case .unsupportedManifestSchemaVersion:
+            return "このスキャンは新しいバージョンで保存されています。アプリを更新して開いてください。"
+        case .unsupportedCheckpointSchemaVersion:
+            return "この撮影データは新しいバージョンで保存されています。アプリを更新して再開してください。"
         }
     }
 }
@@ -309,6 +319,9 @@ final class ScanProjectStore {
     }
 
     func writeManifest(_ manifest: ScanProjectManifest, to projectURL: URL) throws {
+        guard manifest.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedManifestSchemaVersion(manifest.schemaVersion)
+        }
         let primary = projectURL.appendingPathComponent(Self.manifestFileName)
         let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
         let encoder = JSONEncoder()
@@ -319,6 +332,9 @@ final class ScanProjectStore {
     }
 
     func saveCheckpoint(_ checkpoint: ScanCaptureCheckpoint, projectURL: URL) throws {
+        guard checkpoint.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(checkpoint.schemaVersion)
+        }
         let primary = projectURL.appendingPathComponent(Self.checkpointFileName)
         let backup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
         let encoder = PropertyListEncoder()
@@ -332,19 +348,34 @@ final class ScanProjectStore {
         let primary = projectURL.appendingPathComponent(Self.checkpointFileName)
         let backup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
         let decoder = PropertyListDecoder()
-        if let data = try? Data(contentsOf: primary),
-           let value = try? decoder.decode(ScanCaptureCheckpoint.self, from: data) {
-            return value
+        if let data = try? Data(contentsOf: primary) {
+            do {
+                return try decodeSupportedCheckpoint(data, decoder: decoder)
+            } catch ScanProjectStoreError.unsupportedCheckpointSchemaVersion(let version) {
+                throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(version)
+            } catch {
+                // Corrupt/legacy primary may still be recovered from its known-good backup below.
+            }
         }
-        if let data = try? Data(contentsOf: backup),
-           let value = try? decoder.decode(ScanCaptureCheckpoint.self, from: data) {
-            try? data.write(to: primary, options: .atomic)
-            return value
+        if let data = try? Data(contentsOf: backup) {
+            do {
+                let value = try decodeSupportedCheckpoint(data, decoder: decoder)
+                try? data.write(to: primary, options: .atomic)
+                return value
+            } catch ScanProjectStoreError.unsupportedCheckpointSchemaVersion(let version) {
+                // Never overwrite a future-version backup with an older interpretation.
+                throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(version)
+            } catch {
+                // Fall through to the established raw-data-unavailable failure.
+            }
         }
         throw ScanProjectStoreError.rawDataUnavailable
     }
 
     func setThumbnail(from sourceURL: URL, projectURL: URL) throws {
+        // Validate schema compatibility before touching project-owned files. A newer app may own
+        // thumbnail semantics this version does not understand.
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
         guard fileManager.fileExists(atPath: sourceURL.path) else { return }
         let target = projectURL.appendingPathComponent(Self.thumbnailFileName)
         if sourceURL.standardizedFileURL != target.standardizedFileURL {
@@ -354,6 +385,7 @@ final class ScanProjectStore {
     }
 
     func setThumbnail(data: Data, projectURL: URL) throws {
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
         let target = projectURL.appendingPathComponent(Self.thumbnailFileName)
         try data.write(to: target, options: .atomic)
         _ = try updateManifest(projectURL: projectURL) { $0.thumbnailFileName = Self.thumbnailFileName }
@@ -382,6 +414,9 @@ final class ScanProjectStore {
     /// The evidence file is written atomically before the rename so relaunch can distinguish a completed export
     /// from an aligned partial write even if termination happens before the manifest reaches `.finished`.
     func commitPendingSplat(projectURL: URL) throws -> URL {
+        // A project created by a newer schema must remain byte-for-byte owned by that newer app.
+        // Validate before writing evidence or moving any reconstruction files.
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
         let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
         let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
@@ -455,6 +490,9 @@ final class ScanProjectStore {
         var restoredID = id
         var destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
         if fileManager.fileExists(atPath: destination.path) {
+            // A collision requires rewriting the manifest ID. Refuse that rewrite for a future
+            // schema before moving anything out of Trash.
+            _ = try loadOrMigrateManifest(projectURL: source)
             restoredID = UUID().uuidString
             destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
         }
@@ -509,18 +547,48 @@ final class ScanProjectStore {
         return values.sorted { $0.manifest.updatedAt > $1.manifest.updatedAt }
     }
 
+    private func decodeSupportedManifest(_ data: Data, decoder: JSONDecoder) throws -> ScanProjectManifest {
+        let envelope = try decoder.decode(ScanSchemaVersionEnvelope.self, from: data)
+        guard envelope.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedManifestSchemaVersion(envelope.schemaVersion)
+        }
+        return try decoder.decode(ScanProjectManifest.self, from: data)
+    }
+
+    private func decodeSupportedCheckpoint(_ data: Data, decoder: PropertyListDecoder) throws -> ScanCaptureCheckpoint {
+        let envelope = try decoder.decode(ScanSchemaVersionEnvelope.self, from: data)
+        guard envelope.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(envelope.schemaVersion)
+        }
+        return try decoder.decode(ScanCaptureCheckpoint.self, from: data)
+    }
+
     private func loadOrMigrateManifest(projectURL: URL) throws -> ScanProjectManifest {
         let primary = projectURL.appendingPathComponent(Self.manifestFileName)
         let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
         let decoder = JSONDecoder()
-        if let data = try? Data(contentsOf: primary),
-           let manifest = try? decoder.decode(ScanProjectManifest.self, from: data) {
-            return manifest
+        if let data = try? Data(contentsOf: primary) {
+            do {
+                return try decodeSupportedManifest(data, decoder: decoder)
+            } catch ScanProjectStoreError.unsupportedManifestSchemaVersion(let version) {
+                // A valid future schema is not corruption. Never replace it with an older backup or
+                // synthesize a legacy manifest, because either action destroys unknown fields.
+                throw ScanProjectStoreError.unsupportedManifestSchemaVersion(version)
+            } catch {
+                // Corrupt/current-schema-incompatible primary may still recover from backup.
+            }
         }
-        if let data = try? Data(contentsOf: backup),
-           let manifest = try? decoder.decode(ScanProjectManifest.self, from: data) {
-            try? data.write(to: primary, options: .atomic)
-            return manifest
+        if let data = try? Data(contentsOf: backup) {
+            do {
+                let manifest = try decodeSupportedManifest(data, decoder: decoder)
+                try? data.write(to: primary, options: .atomic)
+                return manifest
+            } catch ScanProjectStoreError.unsupportedManifestSchemaVersion(let version) {
+                // Preserve the future backup and the primary exactly as found.
+                throw ScanProjectStoreError.unsupportedManifestSchemaVersion(version)
+            } catch {
+                // Only genuinely undecodable current/legacy data may fall through to migration.
+            }
         }
 
         guard fileManager.fileExists(atPath: projectURL.path) else { throw ScanProjectStoreError.projectNotFound }
@@ -583,6 +651,9 @@ final class ScanProjectStore {
     }
 
     private func repairIfNeeded(manifest input: ScanProjectManifest, projectURL: URL) throws -> ScanProjectManifest {
+        guard input.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedManifestSchemaVersion(input.schemaVersion)
+        }
         var manifest = input
         var changed = false
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
@@ -645,7 +716,7 @@ final class ScanProjectStore {
             manifest.rawDataRetained = rawExists
             changed = true
         }
-        if manifest.schemaVersion != ScanProjectManifest.currentSchemaVersion {
+        if manifest.schemaVersion < ScanProjectManifest.currentSchemaVersion {
             manifest.schemaVersion = ScanProjectManifest.currentSchemaVersion
             changed = true
         }
