@@ -24,16 +24,28 @@ enum ScanWorldMapArchiveStore {
             throw ScanWorldMapArchiveStoreError.missingParentDirectory
         }
 
-        try data.write(to: targetURL, options: .atomic)
-        let values = try targetURL.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey])
+        // Keep the last resumable WorldMap untouched until the replacement has survived an exact
+        // read-back. The capture transition deliberately falls back to an existing map when a
+        // refresh fails, so validating a sibling candidate first keeps that fallback truthful.
+        let candidateURL = parent.appendingPathComponent(
+            ".\(targetURL.lastPathComponent).\(UUID().uuidString).candidate",
+            isDirectory: false
+        )
+        defer { try? FileManager.default.removeItem(at: candidateURL) }
+
+        try data.write(to: candidateURL, options: .atomic)
+        let values = try candidateURL.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey])
         guard values.isRegularFile == true,
               values.fileSize == data.count,
-              let persisted = try? Data(contentsOf: targetURL, options: .mappedIfSafe),
+              let persisted = try? Data(contentsOf: candidateURL, options: .mappedIfSafe),
               persisted == data else {
-            // A failed read-back must not leave an archive that `hasWorldMap` can later mistake for
-            // a resumable capture. Keep failure atomic from the caller's perspective as well.
-            try? FileManager.default.removeItem(at: targetURL)
             throw ScanWorldMapArchiveStoreError.verificationFailed
+        }
+
+        if FileManager.default.fileExists(atPath: targetURL.path) {
+            _ = try FileManager.default.replaceItemAt(targetURL, withItemAt: candidateURL)
+        } else {
+            try FileManager.default.moveItem(at: candidateURL, to: targetURL)
         }
     }
 }
