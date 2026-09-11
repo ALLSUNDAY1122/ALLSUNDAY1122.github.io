@@ -81,40 +81,43 @@ enum SplatVideoOutputValidator {
         // Probe both the beginning and the tail. A first-frame-only probe misses files that were
         // truncated after a valid prefix, while a full second decode would be unnecessarily costly.
         try Task.checkCancellation()
-        try validateDecodedFrame(
+        try validateDecodedFrames(
             asset: asset,
             track: videoTrack,
             encodedWidth: encodedWidth,
             encodedHeight: encodedHeight,
-            timeRange: nil
+            timeRange: nil,
+            drainRange: false
         )
         try Task.checkCancellation()
 
-        // Restrict the second reader to the final bounded window. AVAssetReader performs the codec
-        // seek needed for inter-frame media, so this verifies the encoded tail without walking the
-        // entire movie again. Very short clips simply probe their whole duration a second time.
+        // Restrict the second reader to the final bounded window. Drain that entire window so a
+        // corrupt final GOP/frame cannot hide behind one decodable sample near the window start.
+        // At 30 fps this is normally <=15 decoded frames, keeping completion validation bounded.
         let tailWindowSeconds = min(0.5, duration.seconds)
         let tailStartSeconds = max(0, duration.seconds - tailWindowSeconds)
         let tailRange = CMTimeRange(
             start: CMTime(seconds: tailStartSeconds, preferredTimescale: 600),
             duration: CMTime(seconds: max(0.001, duration.seconds - tailStartSeconds), preferredTimescale: 600)
         )
-        try validateDecodedFrame(
+        try validateDecodedFrames(
             asset: asset,
             track: videoTrack,
             encodedWidth: encodedWidth,
             encodedHeight: encodedHeight,
-            timeRange: tailRange
+            timeRange: tailRange,
+            drainRange: true
         )
         try Task.checkCancellation()
     }
 
-    private static func validateDecodedFrame(
+    private static func validateDecodedFrames(
         asset: AVAsset,
         track: AVAssetTrack,
         encodedWidth: Int,
         encodedHeight: Int,
-        timeRange: CMTimeRange?
+        timeRange: CMTimeRange?,
+        drainRange: Bool
     ) throws {
         let reader = try AVAssetReader(asset: asset)
         if let timeRange {
@@ -136,20 +139,36 @@ enum SplatVideoOutputValidator {
         }
         defer { reader.cancelReading() }
 
-        guard let frame = output.copyNextSampleBuffer(),
-              let imageBuffer = CMSampleBufferGetImageBuffer(frame) else {
-            throw ValidationError.undecodableVideoFrame
+        var decodedFrameCount = 0
+        while let frame = output.copyNextSampleBuffer() {
+            try Task.checkCancellation()
+            guard let imageBuffer = CMSampleBufferGetImageBuffer(frame) else {
+                throw ValidationError.undecodableVideoFrame
+            }
+
+            // Verify decoded pixels agree with the encoded track geometry. This catches containers whose
+            // metadata advertises one surface while the decoder yields a degenerate/inconsistent buffer.
+            let decodedWidth = CVPixelBufferGetWidth(imageBuffer)
+            let decodedHeight = CVPixelBufferGetHeight(imageBuffer)
+            guard decodedWidth > 0,
+                  decodedHeight > 0,
+                  decodedWidth == encodedWidth,
+                  decodedHeight == encodedHeight else {
+                throw ValidationError.undecodableVideoFrame
+            }
+            decodedFrameCount += 1
+            if !drainRange { break }
         }
 
-        // Verify decoded pixels agree with the encoded track geometry. This catches containers whose
-        // metadata advertises one surface while the decoder yields a degenerate/inconsistent buffer.
-        let decodedWidth = CVPixelBufferGetWidth(imageBuffer)
-        let decodedHeight = CVPixelBufferGetHeight(imageBuffer)
-        guard decodedWidth > 0,
-              decodedHeight > 0,
-              decodedWidth == encodedWidth,
-              decodedHeight == encodedHeight else {
+        guard decodedFrameCount > 0 else {
             throw ValidationError.undecodableVideoFrame
+        }
+        if drainRange {
+            // Reaching nil must mean the bounded range decoded normally, not that AVFoundation
+            // stopped because the media tail was corrupt.
+            guard reader.status == .completed else {
+                throw ValidationError.undecodableVideoFrame
+            }
         }
     }
 }
