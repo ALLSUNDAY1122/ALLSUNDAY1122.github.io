@@ -65,13 +65,14 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
             maximumHeight = max(maximumHeight ?? position.y, position.y)
             let continuousSpan = max(0, (maximumHeight ?? position.y) - (minimumHeight ?? position.y))
             verticalSpanMeters = max(verticalSpanMeters, continuousSpan)
+            stableSamples += 1
         } else {
             // Start a fresh continuous height range after the tracking discontinuity. Keep the
             // already-earned span so a relocalization cannot erase legitimate earlier coverage.
             minimumHeight = position.y
             maximumHeight = position.y
+            guidance = "位置追跡が飛びました。対象を画面に入れたまま、ゆっくり撮影を続けてください"
         }
-        stableSamples += 1
 
         // Camera heading alone is not evidence of viewpoint coverage: a user can rotate the
         // phone in place and sweep every yaw bin without creating any reconstruction parallax.
@@ -112,6 +113,7 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
         let sampleFactor = min(1, Double(stableSamples) / requiredSamples)
         qualityScore = 0.26 * azimuthFactor + 0.16 * elevationFactor + 0.18 * pathFactor + 0.12 * sampleFactor + 0.14 * photoFactor + 0.14 * faceFactor
 
+        guard plausibleMotion else { return }
         if azimuthCoverage < Int(requiredAzimuth) {
             guidance = "同じ側に偏っています。対象の反対側まで回り込んでください"
         } else if elevationCoverage < 2 {
