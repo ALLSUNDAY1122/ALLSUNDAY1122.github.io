@@ -1,14 +1,16 @@
 import Foundation
 import ImageIO
 
-/// Cheap preflight for saved RAW before launching PhotogrammetrySession.
+/// Saved-RAW preflight before launching PhotogrammetrySession.
 ///
-/// Discovery intentionally stays lightweight, but the actual reprocess path must not spend
-/// reconstruction time on zero-byte, renamed, or structurally unreadable image placeholders.
-/// ImageIO is asked for container metadata only; pixel data is not decoded or cached.
+/// Discovery and library refresh run away from the MainActor, so eligibility can probe a tiny
+/// decoded thumbnail instead of trusting filename/byte count or container metadata alone. This
+/// rejects truncated payloads that still expose width/height but would fail once reconstruction
+/// attempts to decode the frame.
 enum MeshRawInputValidator {
     static let minimumPhotogrammetryImageCount = 20
     private static let supportedExtensions = Set(["jpg", "jpeg", "heic", "png"])
+    private static let decodeProbeMaxPixelSize = 32
 
     /// Privacy/storage truth: report retained RAW whenever at least one supported regular image
     /// still occupies bytes, even when there is no longer enough trustworthy input to reprocess.
@@ -80,7 +82,7 @@ enum MeshRawInputValidator {
                   let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
                   values.isRegularFile == true,
                   (values.fileSize ?? 0) > 0,
-                  isStructurallyReadableImage(url) else {
+                  isDecodableImage(url) else {
                 continue
             }
             usableCount += 1
@@ -89,15 +91,26 @@ enum MeshRawInputValidator {
         return usableCount
     }
 
-    private static func isStructurallyReadableImage(_ url: URL) -> Bool {
-        let options = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let source = CGImageSourceCreateWithURL(url as CFURL, options),
+    private static func isDecodableImage(_ url: URL) -> Bool {
+        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, sourceOptions),
               CGImageSourceGetCount(source) > 0,
-              let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, options) as? [CFString: Any],
+              let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, sourceOptions) as? [CFString: Any],
               let width = properties[kCGImagePropertyPixelWidth] as? NSNumber,
-              let height = properties[kCGImagePropertyPixelHeight] as? NSNumber else {
+              let height = properties[kCGImagePropertyPixelHeight] as? NSNumber,
+              width.intValue > 0,
+              height.intValue > 0 else {
             return false
         }
-        return width.intValue > 0 && height.intValue > 0
+
+        // Some truncated JPEG/HEIC/PNG files still retain enough header bytes for ImageIO to
+        // report dimensions. Force a tiny decode so those containers cannot be advertised as
+        // reconstructable RAW. The 32px cap bounds temporary decode memory during library scans.
+        let thumbnailOptions = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceThumbnailMaxPixelSize: decodeProbeMaxPixelSize,
+            kCGImageSourceShouldCache: false
+        ] as CFDictionary
+        return CGImageSourceCreateThumbnailAtIndex(source, 0, thumbnailOptions) != nil
     }
 }
