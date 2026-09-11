@@ -25,10 +25,10 @@ enum MeshRawReprocessor {
             return
         }
 
-        let formatter = ISO8601DateFormatter()
-        let safeStamp = formatter.string(from: Date()).replacingOccurrences(of: ":", with: "-")
-        let outputURL = prepared.projectURL.appendingPathComponent("mesh-reprocessed-\(safeStamp).usdz")
-        try? FileManager.default.removeItem(at: outputURL)
+        // A UUID keeps retries independent even when two reprocess attempts begin in the same second.
+        // Never reuse a stale derived filename: a failed remove/write must not make an older USDZ
+        // look like the output of the current request.
+        let outputURL = prepared.projectURL.appendingPathComponent("mesh-reprocessed-\(UUID().uuidString).usdz")
 
         model.mode = .photogrammetry
         model.resultURL = nil
@@ -57,8 +57,7 @@ enum MeshRawReprocessor {
                 case .inputComplete:
                     model.statusMessage = "raw画像の取り込み完了。Meshを再構築しています"
                 case .requestComplete(_, _):
-                    if FileManager.default.fileExists(atPath: outputURL.path) {
-                        finish(outputURL: outputURL, sourceKind: project.sourceKind, model: model)
+                    if validateAndFinish(outputURL: outputURL, sourceKind: project.sourceKind, model: model) {
                         completed = true
                     }
                 case .requestError(_, let error):
@@ -75,8 +74,8 @@ enum MeshRawReprocessor {
                     model.statusMessage = "raw再処理を中断しました。保存rawは保持されています"
                     return
                 case .processingComplete:
-                    if !completed, FileManager.default.fileExists(atPath: outputURL.path) {
-                        finish(outputURL: outputURL, sourceKind: project.sourceKind, model: model)
+                    if !completed,
+                       validateAndFinish(outputURL: outputURL, sourceKind: project.sourceKind, model: model) {
                         completed = true
                     }
                 case .requestProgressInfo(_, _):
@@ -88,7 +87,9 @@ enum MeshRawReprocessor {
 
             if !completed {
                 MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
-                model.phase = .failed("raw再処理は完了しましたが、完成Meshを確認できませんでした。保存rawは保持されています。")
+                model.resultURL = nil
+                model.previewScene = nil
+                model.phase = .failed("raw再処理は完了しましたが、完成Meshを正常に読み込めませんでした。保存rawは保持されています。")
             }
         } catch is CancellationError {
             MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
@@ -100,18 +101,32 @@ enum MeshRawReprocessor {
         }
     }
 
-    private static func finish(
+    /// A PhotogrammetrySession request is not considered complete merely because a path exists.
+    /// Require a non-empty regular file and a SceneKit decode before exposing it as a finished
+    /// result. This prevents a truncated/stale USDZ from entering preview, save, or export flows.
+    private static func validateAndFinish(
         outputURL: URL,
         sourceKind: MeshRawSourceKind,
         model: MeshScanModel
-    ) {
+    ) -> Bool {
+        let fileManager = FileManager.default
+        guard fileManager.fileExists(atPath: outputURL.path),
+              let attributes = try? fileManager.attributesOfItem(atPath: outputURL.path),
+              (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = (attributes[.size] as? NSNumber)?.uint64Value,
+              size > 0,
+              let scene = try? SCNScene(url: outputURL, options: nil) else {
+            return false
+        }
+
         model.resultURL = outputURL
-        model.previewScene = try? SCNScene(url: outputURL, options: nil)
+        model.previewScene = scene
         model.reconstructionProgress = 1
         model.phase = .finished
         model.statusMessage = sourceKind == .splatProject
             ? "保存済みSplat rawからMeshを生成しました。ライブラリへ安全に保存しています"
             : "保存済みMesh rawから再処理したMeshを生成しました"
+        return true
     }
 }
 
