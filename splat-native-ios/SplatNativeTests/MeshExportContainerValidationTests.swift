@@ -24,6 +24,76 @@ final class MeshExportContainerValidationTests: XCTestCase {
         }
     }
 
+    func testGLBPassthroughRejectsHeaderOnlyVersionTwoPayload() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-glb-v2-header-only-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        var bytes = Data([0x67, 0x6c, 0x54, 0x46]) // glTF
+        bytes.append(contentsOf: [0x02, 0x00, 0x00, 0x00]) // GLB v2
+        bytes.append(contentsOf: [0x0c, 0x00, 0x00, 0x00]) // exact 12-byte file, but no required JSON chunk
+        let source = root.appendingPathComponent("header-only.glb")
+        try bytes.write(to: source, options: .atomic)
+
+        do {
+            _ = try await MeshExportService.export(sourceURL: source, format: .glb, destinationDirectory: root)
+            XCTFail("Expected GLB v2 without a JSON chunk to be rejected")
+        } catch let error as MeshExportService.ExportError {
+            guard case .invalidContainer("glb") = error else {
+                return XCTFail("Expected invalidContainer(glb), got \(error)")
+            }
+        }
+    }
+
+    func testGLBPassthroughRejectsNonJSONFirstChunk() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-glb-v2-bin-first-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        var bytes = Data([0x67, 0x6c, 0x54, 0x46]) // glTF
+        bytes.append(contentsOf: [0x02, 0x00, 0x00, 0x00]) // GLB v2
+        bytes.append(contentsOf: [0x18, 0x00, 0x00, 0x00]) // 24 bytes total
+        bytes.append(contentsOf: [0x04, 0x00, 0x00, 0x00]) // 4-byte first chunk
+        bytes.append(contentsOf: [0x42, 0x49, 0x4e, 0x00]) // BIN, invalid as first GLB v2 chunk
+        bytes.append(contentsOf: [0x00, 0x00, 0x00, 0x00])
+        let source = root.appendingPathComponent("bin-first.glb")
+        try bytes.write(to: source, options: .atomic)
+
+        do {
+            _ = try await MeshExportService.export(sourceURL: source, format: .glb, destinationDirectory: root)
+            XCTFail("Expected GLB v2 with a non-JSON first chunk to be rejected")
+        } catch let error as MeshExportService.ExportError {
+            guard case .invalidContainer("glb") = error else {
+                return XCTFail("Expected invalidContainer(glb), got \(error)")
+            }
+        }
+    }
+
+    func testGLBPassthroughAcceptsMinimalValidVersionTwoJSONChunk() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-glb-v2-minimal-valid-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        var bytes = Data([0x67, 0x6c, 0x54, 0x46]) // glTF
+        bytes.append(contentsOf: [0x02, 0x00, 0x00, 0x00]) // GLB v2
+        bytes.append(contentsOf: [0x18, 0x00, 0x00, 0x00]) // 24 bytes total
+        bytes.append(contentsOf: [0x04, 0x00, 0x00, 0x00]) // 4-byte JSON chunk
+        bytes.append(contentsOf: [0x4a, 0x53, 0x4f, 0x4e]) // JSON
+        bytes.append(contentsOf: [0x7b, 0x7d, 0x20, 0x20]) // "{}  "
+        let source = root.appendingPathComponent("minimal-valid.glb")
+        try bytes.write(to: source, options: .atomic)
+
+        let output = try await MeshExportService.export(
+            sourceURL: source,
+            format: .glb,
+            destinationDirectory: root
+        )
+        XCTAssertEqual(try Data(contentsOf: output), bytes)
+    }
+
     func testGLBPassthroughRejectsTruncatedVersionOneHeader() async throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mesh-glb-v1-truncated-\(UUID().uuidString)", isDirectory: true)
