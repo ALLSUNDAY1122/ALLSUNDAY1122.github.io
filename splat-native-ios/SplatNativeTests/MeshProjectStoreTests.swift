@@ -27,7 +27,7 @@ final class MeshProjectStoreTests: XCTestCase {
         XCTAssertFalse(archived.reprocessSupported)
         XCTAssertEqual(try Data(contentsOf: archived.resultURL), Data(repeating: 0x11, count: 256))
         XCTAssertTrue(FileManager.default.fileExists(
-            atPath: archived.projectURL.appendingPathComponent("images/mesh_00000.jpg").path
+            atPath: archived.projectURL.appendingPathComponent("images/frame-00000.png").path
         ))
 
         try FileManager.default.removeItem(at: live)
@@ -54,16 +54,19 @@ final class MeshProjectStoreTests: XCTestCase {
         XCTAssertTrue(summary.reprocessSupported)
     }
 
-    func testPhotogrammetryArchiveDoesNotAdvertiseZeroByteOrNonImageRaw() throws {
+    func testPhotogrammetryArchiveDoesNotAdvertiseInsufficientOrUnreadableRaw() throws {
         let live = try makeLiveProject(
             mode: "photogrammetry",
             resultName: "mesh-textured.usdz",
             marker: 0x23
         )
         let images = live.appendingPathComponent("images", isDirectory: true)
-        try FileManager.default.removeItem(at: images.appendingPathComponent("mesh_00000.jpg"))
-        try Data().write(to: images.appendingPathComponent("empty.jpg"))
-        try Data(repeating: 0x41, count: 16).write(to: images.appendingPathComponent("notes.txt"))
+        try FileManager.default.removeItem(at: images)
+        try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
+        for index in 0..<19 {
+            try usablePNGData().write(to: images.appendingPathComponent("frame-\(index).png"))
+        }
+        try Data(repeating: 0x41, count: 128).write(to: images.appendingPathComponent("corrupt.jpg"))
 
         let summary = try store.archiveFinishedProject(
             resultURL: live.appendingPathComponent("mesh-textured.usdz")
@@ -195,7 +198,7 @@ final class MeshProjectStoreTests: XCTestCase {
         let project = rootURL.appendingPathComponent(id).appendingPathExtension("meshproject")
         let images = project.appendingPathComponent("images", isDirectory: true)
         try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
-        try Data(repeating: 0xA5, count: 128).write(to: images.appendingPathComponent("mesh_00000.jpg"))
+        try writeUsableRawImages(to: images)
 
         let manifest: [String: Any] = [
             "schemaVersion": 1,
@@ -211,5 +214,19 @@ final class MeshProjectStoreTests: XCTestCase {
         try Data(repeating: marker, count: mode == "photogrammetry" ? 512 : 256)
             .write(to: project.appendingPathComponent(resultName), options: .atomic)
         return project
+    }
+
+    private func writeUsableRawImages(to directory: URL) throws {
+        let image = usablePNGData()
+        for index in 0..<MeshRawInputValidator.minimumPhotogrammetryImageCount {
+            try image.write(
+                to: directory.appendingPathComponent(String(format: "frame-%05d.png", index)),
+                options: .atomic
+            )
+        }
+    }
+
+    private func usablePNGData() -> Data {
+        Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=")!
     }
 }
