@@ -53,4 +53,21 @@ final class SplatVideoOutputValidatorTests: XCTestCase {
             XCTFail("Expected CancellationError, got \(error)")
         }
     }
+
+    func testMidpointProbeIsBoundedAndCenteredForLongVideos() {
+        XCTAssertEqual(
+            SplatVideoOutputValidator.boundedProbeWindows(duration: 10),
+            [.init(start: 4.75, duration: 0.5)]
+        )
+        XCTAssertEqual(
+            SplatVideoOutputValidator.boundedProbeWindows(duration: 2),
+            [.init(start: 0.75, duration: 0.5)]
+        )
+    }
+
+    func testMidpointProbeSkipsShortVideosToAvoidEdgeOverlap() {
+        XCTAssertTrue(SplatVideoOutputValidator.boundedProbeWindows(duration: 1.5).isEmpty)
+        XCTAssertTrue(SplatVideoOutputValidator.boundedProbeWindows(duration: 0.5).isEmpty)
+        XCTAssertTrue(SplatVideoOutputValidator.boundedProbeWindows(duration: .nan).isEmpty)
+    }
 }
