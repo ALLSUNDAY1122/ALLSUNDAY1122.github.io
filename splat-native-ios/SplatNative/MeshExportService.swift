@@ -315,7 +315,7 @@ enum MeshExportService {
             let suffix = try readSuffix(url, maxBytes: zipEndOfCentralDirectorySearchBytes)
             valid = totalBytes >= 22 &&
                 Array(prefix) == [0x50, 0x4b, 0x03, 0x04] &&
-                hasValidZipEndOfCentralDirectory(suffix)
+                hasValidZipEndOfCentralDirectory(suffix, url: url, totalBytes: totalBytes)
 
         case .stl:
             let data = try readPrefix(url, maxBytes: 1_000_000)
@@ -377,17 +377,43 @@ enum MeshExportService {
         guard valid else { throw ExportError.invalidContainer(format.rawValue) }
     }
 
-    private static func hasValidZipEndOfCentralDirectory(_ data: Data) -> Bool {
+    private static func hasValidZipEndOfCentralDirectory(
+        _ data: Data,
+        url: URL,
+        totalBytes: UInt64
+    ) -> Bool {
         guard data.count >= 22 else { return false }
+        let suffixStart = totalBytes - UInt64(data.count)
+
         for offset in stride(from: data.count - 22, through: 0, by: -1) {
             guard data[offset] == 0x50,
                   data[offset + 1] == 0x4b,
                   data[offset + 2] == 0x05,
                   data[offset + 3] == 0x06 else { continue }
+
             let commentLength = Int(readUInt16LE(data, offset: offset + 20))
-            if offset + 22 + commentLength == data.count {
-                return true
+            guard offset + 22 + commentLength == data.count else { continue }
+
+            let diskNumber = readUInt16LE(data, offset: offset + 4)
+            let centralDirectoryDisk = readUInt16LE(data, offset: offset + 6)
+            let entriesOnDisk = UInt64(readUInt16LE(data, offset: offset + 8))
+            let totalEntries = UInt64(readUInt16LE(data, offset: offset + 10))
+            let centralDirectorySize = UInt64(readUInt32LE(data, offset: offset + 12))
+            let centralDirectoryOffset = UInt64(readUInt32LE(data, offset: offset + 16))
+            let endOfCentralDirectoryOffset = suffixStart + UInt64(offset)
+
+            guard diskNumber == 0,
+                  centralDirectoryDisk == 0,
+                  entriesOnDisk > 0,
+                  entriesOnDisk == totalEntries,
+                  centralDirectorySize >= totalEntries * 46,
+                  centralDirectoryOffset < endOfCentralDirectoryOffset,
+                  centralDirectoryOffset + centralDirectorySize <= endOfCentralDirectoryOffset,
+                  let centralSignature = try? readRange(url, offset: centralDirectoryOffset, maxBytes: 4),
+                  Array(centralSignature) == [0x50, 0x4b, 0x01, 0x02] else {
+                continue
             }
+            return true
         }
         return false
     }
@@ -414,6 +440,13 @@ enum MeshExportService {
         let count = min(UInt64(max(1, maxBytes)), size)
         try handle.seek(toOffset: size - count)
         return try handle.readToEnd() ?? Data()
+    }
+
+    private static func readRange(_ url: URL, offset: UInt64, maxBytes: Int) throws -> Data {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        try handle.seek(toOffset: offset)
+        return try handle.read(upToCount: max(1, maxBytes)) ?? Data()
     }
 
     private static func readUInt16LE(_ data: Data, offset: Int) -> UInt16 {
