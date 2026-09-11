@@ -15,6 +15,18 @@ enum SplatVideoOutputValidator {
         case undecodableVideoFrame
     }
 
+    struct ProbeWindow: Equatable {
+        var start: TimeInterval
+        var duration: TimeInterval
+    }
+
+    static func boundedProbeWindows(duration: TimeInterval) -> [ProbeWindow] {
+        guard duration.isFinite, duration > 1.5 else { return [] }
+        let window = min(0.5, duration)
+        let start = max(0, (duration * 0.5) - (window * 0.5))
+        return [ProbeWindow(start: start, duration: window)]
+    }
+
     static func validate(
         _ url: URL,
         expectedDimensions: (width: Int, height: Int)? = nil,
@@ -78,8 +90,8 @@ enum SplatVideoOutputValidator {
 
         // Metadata alone is insufficient: a damaged MP4 can expose a video track and plausible
         // duration while containing no frame that the system decoder can actually materialize.
-        // Probe both the beginning and the tail. A first-frame-only probe misses files that were
-        // truncated after a valid prefix, while a full second decode would be unnecessarily costly.
+        // Probe the beginning first, then bounded interior/tail windows. This catches a valid prefix
+        // followed by localized corruption without imposing a full second decode on export.
         try Task.checkCancellation()
         try validateDecodedFrames(
             asset: asset,
@@ -91,7 +103,26 @@ enum SplatVideoOutputValidator {
         )
         try Task.checkCancellation()
 
-        // Restrict the second reader to the final bounded window. Drain that entire window so a
+        // A file can have valid beginning/end GOPs yet contain a damaged middle segment. Drain a
+        // single centered bounded window for videos long enough that it does not simply overlap the
+        // edge probes. At 30 fps this adds at most about 15 decoded frames.
+        for window in boundedProbeWindows(duration: duration.seconds) {
+            let middleRange = CMTimeRange(
+                start: CMTime(seconds: window.start, preferredTimescale: 600),
+                duration: CMTime(seconds: max(0.001, window.duration), preferredTimescale: 600)
+            )
+            try validateDecodedFrames(
+                asset: asset,
+                track: videoTrack,
+                encodedWidth: encodedWidth,
+                encodedHeight: encodedHeight,
+                timeRange: middleRange,
+                drainRange: true
+            )
+            try Task.checkCancellation()
+        }
+
+        // Restrict the final reader to the tail bounded window. Drain that entire window so a
         // corrupt final GOP/frame cannot hide behind one decodable sample near the window start.
         // At 30 fps this is normally <=15 decoded frames, keeping completion validation bounded.
         let tailWindowSeconds = min(0.5, duration.seconds)
@@ -165,7 +196,7 @@ enum SplatVideoOutputValidator {
         }
         if drainRange {
             // Reaching nil must mean the bounded range decoded normally, not that AVFoundation
-            // stopped because the media tail was corrupt.
+            // stopped because the media range was corrupt.
             guard reader.status == .completed else {
                 throw ValidationError.undecodableVideoFrame
             }
