@@ -1,6 +1,6 @@
 import type { ExpoConfig, ConfigContext } from 'expo/config';
 
-// Build 9: real-device QA fixes from 2026-08-21 video review.
+// Build 10: byte-equivalent release source to accepted Build 9, with build number advanced because Build 9 expired in App Store Connect.
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: '撮る単語帳',
@@ -14,7 +14,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: 'com.allsunday1122.torutango',
-    buildNumber: '9',
+    buildNumber: '10',
     icon: './assets/icon-appstore.png',
     infoPlist: {
       NSCameraUsageDescription: '教材を撮影して単語カード作成に利用します。',
