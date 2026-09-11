@@ -159,6 +159,11 @@ final class MeshProjectStore {
             return try summary(at: sourceProjectURL)
         }
 
+        // A durable library entry must never depend on aliases outside its own project tree.
+        // Reject symlinked roots, symlinked descendants, and special filesystem nodes before any
+        // metadata is derived or a snapshot begins. Recheck before physical-copy fallback too.
+        try validateSnapshotTree(at: sourceProjectURL)
+
         let relativeResultPath = try relativePath(of: resultURL, inside: sourceProjectURL)
         let resultSnapshot = try regularFileSnapshot(at: resultURL)
         guard resultSnapshot.byteCount > 0 else { throw MeshProjectStoreError.resultMissing }
@@ -201,6 +206,7 @@ final class MeshProjectStore {
                 try cloneSnapshotTree(from: sourceProjectURL, to: temporaryURL)
             } catch {
                 try? fileManager.removeItem(at: temporaryURL)
+                try validateSnapshotTree(at: sourceProjectURL)
                 try preflightPhysicalCopy(of: sourceProjectURL)
                 try fileManager.copyItem(at: sourceProjectURL, to: temporaryURL)
             }
@@ -355,6 +361,30 @@ final class MeshProjectStore {
         return nil
     }
 
+    private func validateSnapshotTree(at source: URL) throws {
+        guard source.isFileURL,
+              let rootValues = try? source.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              rootValues.isDirectory == true,
+              rootValues.isSymbolicLink != true,
+              let enumerator = fileManager.enumerator(
+                at: source,
+                includingPropertiesForKeys: [.isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey],
+                options: []
+              ) else {
+            throw MeshProjectStoreError.invalidProject
+        }
+
+        for case let itemURL as URL in enumerator {
+            let values = try itemURL.resourceValues(
+                forKeys: [.isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey]
+            )
+            guard values.isSymbolicLink != true,
+                  values.isDirectory == true || values.isRegularFile == true else {
+                throw MeshProjectStoreError.invalidProject
+            }
+        }
+    }
+
     private func cloneSnapshotTree(from source: URL, to destination: URL) throws {
         try fileManager.createDirectory(at: destination, withIntermediateDirectories: true)
         guard let enumerator = fileManager.enumerator(
@@ -374,6 +404,7 @@ final class MeshProjectStore {
             guard !relative.isEmpty else { continue }
             let target = destination.appendingPathComponent(relative)
             let values = try standardized.resourceValues(forKeys: [.isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey])
+            guard values.isSymbolicLink != true else { throw MeshProjectStoreError.invalidProject }
             if values.isDirectory == true {
                 try fileManager.createDirectory(at: target, withIntermediateDirectories: true)
             } else if values.isRegularFile == true {
@@ -388,8 +419,7 @@ final class MeshProjectStore {
                     throw CocoaError(.fileWriteUnknown)
                 }
             } else {
-                try fileManager.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
-                try fileManager.copyItem(at: standardized, to: target)
+                throw MeshProjectStoreError.invalidProject
             }
         }
     }
