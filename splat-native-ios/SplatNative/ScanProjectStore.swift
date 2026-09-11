@@ -371,8 +371,6 @@ final class ScanProjectStore {
     }
 
     func setThumbnail(from sourceURL: URL, projectURL: URL) throws {
-        // Validate schema compatibility before touching project-owned files. A newer app may own
-        // thumbnail semantics this version does not understand.
         _ = try loadOrMigrateManifest(projectURL: projectURL)
         guard fileManager.fileExists(atPath: sourceURL.path) else { return }
         let target = projectURL.appendingPathComponent(Self.thumbnailFileName)
@@ -408,12 +406,7 @@ final class ScanProjectStore {
         )
     }
 
-    /// Commits a reconstruction only after the pending file has been completely exported.
-    /// The evidence file is written atomically before the rename so relaunch can distinguish a completed export
-    /// from an aligned partial write even if termination happens before the manifest reaches `.finished`.
     func commitPendingSplat(projectURL: URL) throws -> URL {
-        // A project created by a newer schema must remain byte-for-byte owned by that newer app.
-        // Validate before writing evidence or moving any reconstruction files.
         _ = try loadOrMigrateManifest(projectURL: projectURL)
         let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
@@ -448,8 +441,6 @@ final class ScanProjectStore {
         }
     }
 
-    /// Returns only a Splat whose project state carries durable completion evidence.
-    /// Consumers such as export/share should use a repaired project summary instead of byte alignment alone.
     func trustedSplatURL(projectURL: URL) -> URL? {
         guard let manifest = try? loadManifest(projectURL: projectURL),
               manifest.stage == .finished,
@@ -469,7 +460,7 @@ final class ScanProjectStore {
         ])
         let children = try fileManager.contentsOfDirectory(at: projectURL, includingPropertiesForKeys: nil)
         for child in children where !keep.contains(child.lastPathComponent) {
-            try? fileManager.removeItem(at: child)
+            try fileManager.removeItem(at: child)
         }
         _ = try updateManifest(projectURL: projectURL) { $0.rawDataRetained = false }
     }
@@ -488,8 +479,6 @@ final class ScanProjectStore {
         var restoredID = id
         var destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
         if fileManager.fileExists(atPath: destination.path) {
-            // A collision requires rewriting the manifest ID. Refuse that rewrite for a future
-            // schema before moving anything out of Trash.
             _ = try loadOrMigrateManifest(projectURL: source)
             restoredID = UUID().uuidString
             destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
@@ -592,7 +581,6 @@ final class ScanProjectStore {
             do {
                 return try decodeSupportedManifest(data, decoder: decoder)
             } catch {
-                // Corrupt/current-schema-incompatible primary may still recover from backup.
             }
         }
         if let data = try? Data(contentsOf: backup) {
@@ -601,7 +589,6 @@ final class ScanProjectStore {
                 try? data.write(to: primary, options: .atomic)
                 return manifest
             } catch {
-                // Only genuinely undecodable current/legacy data may fall through to migration.
             }
         }
 
@@ -768,8 +755,6 @@ final class ScanProjectStore {
         if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
     }
 
-    /// A `.processing` manifest is repaired only from durable completion evidence.
-    /// Record alignment by itself is structural validation, never proof that export reached completion.
     private func recoverInterruptedProcessing(projectURL: URL) throws -> (url: URL?, message: String?) {
         let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
