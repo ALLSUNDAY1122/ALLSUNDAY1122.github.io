@@ -62,6 +62,21 @@ final class SplatVideoExporterTests: XCTestCase {
         } catch let error as SplatVideoOutputValidator.ValidationError {
             XCTAssertEqual(error, .unexpectedVideoDimensions)
         }
+
+        // A truncated writer can leave a perfectly parsable MP4 with the correct dimensions.
+        // Duration therefore has to be part of the shareability contract as well. Use the same
+        // real encoded fixture and demand a timeline longer than it contains to exercise that gate
+        // without relying on malformed container bytes.
+        do {
+            try await SplatVideoOutputValidator.validate(
+                output,
+                expectedDimensions: configuration.dimensions,
+                minimumDuration: configuration.duration + 1
+            )
+            XCTFail("Expected a playable but too-short MP4 to be rejected")
+        } catch let error as SplatVideoOutputValidator.ValidationError {
+            XCTAssertEqual(error, .unexpectedlyShortDuration)
+        }
     }
 
     func testMemoryPreflightProducesBoundedEstimateForNormalScene() throws {
