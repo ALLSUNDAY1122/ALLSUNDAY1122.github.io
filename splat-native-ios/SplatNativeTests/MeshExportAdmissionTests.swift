@@ -58,4 +58,24 @@ final class MeshExportAdmissionTests: XCTestCase {
         let children = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)
         XCTAssertEqual(children.map(\.lastPathComponent), ["mesh.obj"])
     }
+
+    func testPreflightRejectsDirectoryMasqueradingAsMeshFile() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("c2-mesh-nonregular-\(UUID().uuidString)", isDirectory: true)
+        let source = root.appendingPathComponent("fake.obj", isDirectory: true)
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        XCTAssertThrowsError(
+            try MeshExportAdmission.preflight(
+                sourceURL: source,
+                format: .obj,
+                availableCapacityOverride: Int64.max
+            )
+        ) { error in
+            guard case MeshExportAdmission.AdmissionError.sourceSizeUnavailable = error else {
+                return XCTFail("Expected sourceSizeUnavailable, got \(error)")
+            }
+        }
+    }
 }
