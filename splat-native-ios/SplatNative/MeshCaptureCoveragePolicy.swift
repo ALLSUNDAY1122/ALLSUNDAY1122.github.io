@@ -14,4 +14,11 @@ enum MeshCaptureCoveragePolicy {
     static func verticalSpanThreshold(pathThresholdMeters: Float) -> Float {
         max(0.10, pathThresholdMeters * 0.12)
     }
+
+    /// Reject discontinuous camera-coordinate jumps from coverage accounting. ARKit can return to
+    /// normal tracking after relocalization with a shifted world origin; treating that discontinuity
+    /// as user motion would falsely satisfy path/height coverage gates.
+    static func isPlausibleSampleDisplacement(_ meters: Float) -> Bool {
+        meters.isFinite && meters >= 0 && meters <= 0.35
+    }
 }
