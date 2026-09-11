@@ -63,6 +63,26 @@ final class SplatDepthSeedCacheIntegrityTests: XCTestCase {
         XCTAssertTrue(changed.requiresFreshTrainer)
     }
 
+    func testAppendingCapturedFrameForcesFreshSeedAndTrainer() throws {
+        let projectURL = try makeProjectDirectory()
+        defer { try? FileManager.default.removeItem(at: projectURL) }
+        let points = fallbackPoints()
+
+        _ = try SplatDepthSeedBuilder.preparePointCloudPLY(
+            projectURL: projectURL,
+            depthFrames: [],
+            fallbackPoints: points,
+            colorFrames: []
+        )
+        let changed = try SplatDepthSeedBuilder.preparePointCloudPLY(
+            projectURL: projectURL,
+            depthFrames: [depthFrameWithoutDepth()],
+            fallbackPoints: points,
+            colorFrames: []
+        )
+        XCTAssertTrue(changed.requiresFreshTrainer)
+    }
+
     func testFallbackPointOrderingDoesNotInvalidateSameCaptureCache() throws {
         let projectURL = try makeProjectDirectory()
         defer { try? FileManager.default.removeItem(at: projectURL) }
@@ -107,5 +127,26 @@ final class SplatDepthSeedCacheIntegrityTests: XCTestCase {
         (0..<64).map { index in
             SIMD3<Float>(Float(index), Float(index % 7), Float(index % 11))
         }
+    }
+
+    private func depthFrameWithoutDepth() -> SplatDepthSeedFrame {
+        SplatDepthSeedFrame(
+            depthFilePath: nil,
+            depthWidth: nil,
+            depthHeight: nil,
+            depthBytesPerRow: nil,
+            transformMatrix: [
+                [1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1]
+            ],
+            flX: 500,
+            flY: 500,
+            cx: 320,
+            cy: 240,
+            w: 640,
+            h: 480
+        )
     }
 }
