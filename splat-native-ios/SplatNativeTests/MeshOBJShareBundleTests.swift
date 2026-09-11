@@ -26,6 +26,43 @@ final class MeshOBJShareBundleTests: XCTestCase {
         )
     }
 
+    func testCopiesLowercaseMaterialAndTextureCommands() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let workspace = root.appendingPathComponent("workspace", isDirectory: true)
+        try FileManager.default.createDirectory(at: workspace, withIntermediateDirectories: true)
+
+        let obj = root.appendingPathComponent("mesh.obj")
+        let mtl = root.appendingPathComponent("mesh.mtl")
+        let texture = root.appendingPathComponent("atlas.png")
+        try "MTLLIB mesh.mtl\nv 0 0 0\n".write(to: obj, atomically: true, encoding: .utf8)
+        try "newmtl scan\nmap_kd atlas.png\n".write(to: mtl, atomically: true, encoding: .utf8)
+        let textureData = Data([0x89, 0x50, 0x4e, 0x47, 0x08])
+        try textureData.write(to: texture)
+
+        let companions = try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace)
+        XCTAssertEqual(Set(companions.map(\.lastPathComponent)), Set(["mesh.mtl", "atlas.png"]))
+        XCTAssertEqual(try Data(contentsOf: workspace.appendingPathComponent("atlas.png")), textureData)
+    }
+
+    func testDeduplicatesRepeatedMaterialAndTextureReferences() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let workspace = root.appendingPathComponent("workspace", isDirectory: true)
+        try FileManager.default.createDirectory(at: workspace, withIntermediateDirectories: true)
+
+        let obj = root.appendingPathComponent("mesh.obj")
+        let mtl = root.appendingPathComponent("mesh.mtl")
+        let texture = root.appendingPathComponent("atlas.png")
+        try "mtllib mesh.mtl mesh.mtl\nv 0 0 0\n".write(to: obj, atomically: true, encoding: .utf8)
+        try "newmtl one\nmap_Kd atlas.png\nnewmtl two\nmap_Kd atlas.png\n"
+            .write(to: mtl, atomically: true, encoding: .utf8)
+        try Data([0x89, 0x50, 0x4e, 0x47, 0x09]).write(to: texture)
+
+        let companions = try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace)
+        XCTAssertEqual(companions.map(\.lastPathComponent), ["mesh.mtl", "atlas.png"])
+    }
+
     func testCopiesQuotedMaterialAndOptionedTextureWithSpaces() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
