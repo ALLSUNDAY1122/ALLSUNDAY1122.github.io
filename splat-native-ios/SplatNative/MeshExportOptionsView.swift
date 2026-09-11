@@ -121,8 +121,13 @@ struct MeshExportOptionsView: View {
                 exportTask = nil
             }
             do {
-                try MeshExportMemoryPolicy.preflight(sourceURL: sourceURL, format: format)
-                try MeshExportAdmission.preflight(sourceURL: sourceURL, format: format)
+                // Exact OBJ admission can scan a large OBJ/MTL set to account for companion
+                // textures. Keep that filesystem/text work off MainActor so tapping Share cannot
+                // stall the saved-model viewer before conversion even begins.
+                try await Task.detached(priority: .userInitiated) {
+                    try MeshExportMemoryPolicy.preflight(sourceURL: sourceURL, format: format)
+                    try MeshExportAdmission.preflight(sourceURL: sourceURL, format: format)
+                }.value
                 try Task.checkCancellation()
                 let createdWorkspace = try SplatTransientExportWorkspace.create()
                 workspace = createdWorkspace
