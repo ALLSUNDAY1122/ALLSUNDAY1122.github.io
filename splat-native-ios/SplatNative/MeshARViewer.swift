@@ -124,9 +124,10 @@ struct MeshARPlacementView: UIViewRepresentable {
             guard let view else { return }
             let point = recognizer.location(in: view)
 
-            // Prefer ARKit's measured plane geometry before progressively falling back to
-            // inferred planes. This avoids snapping a scan to a transient estimated surface
-            // when a stable detected horizontal plane is already available.
+            // Keep placement consistent with the UI contract: a saved scan is always placed
+            // upright on a horizontal support surface. Falling back to `.estimatedPlane(.any)`
+            // can accept a wall and rotate the whole mesh sideways, which is especially unstable
+            // while ARKit is still refining plane estimates.
             let result = raycast(
                 view: view,
                 point: point,
@@ -142,11 +143,6 @@ struct MeshARPlacementView: UIViewRepresentable {
                 point: point,
                 allowing: .estimatedPlane,
                 alignment: .horizontal
-            ) ?? raycast(
-                view: view,
-                point: point,
-                allowing: .estimatedPlane,
-                alignment: .any
             )
 
             guard let result else { return }
