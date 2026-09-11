@@ -12,4 +12,20 @@ final class MeshCaptureQualityAdvisorTests: XCTestCase {
             XCTAssertGreaterThan(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: threshold), 0)
         }
     }
+
+    func testVerticalSpanThresholdRequiresRealHeightChange() {
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 0), 0.10, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 0.55), 0.10, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 1.0), 0.12, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 1.8), 0.216, accuracy: 0.0001)
+    }
+
+    func testVerticalSpanThresholdScalesWithoutBecomingZero() {
+        let small = MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 0.55)
+        let medium = MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 1.0)
+        let large = MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 1.8)
+        XCTAssertGreaterThan(small, 0)
+        XCTAssertGreaterThanOrEqual(medium, small)
+        XCTAssertGreaterThan(large, medium)
+    }
 }
