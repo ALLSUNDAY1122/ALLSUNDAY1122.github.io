@@ -166,7 +166,11 @@ final class MeshProjectStore {
         let sourceManifest = readSourceManifest(projectURL: sourceProjectURL)
         let projectID = sourceProjectURL.deletingPathExtension().lastPathComponent
         guard !projectID.isEmpty else { throw MeshProjectStoreError.invalidProject }
-        let rawRetained = hasRawImages(projectURL: sourceProjectURL)
+        let imagesURL = sourceProjectURL.appendingPathComponent("images", isDirectory: true)
+        let rawRetained = MeshRawInputValidator.hasMinimumUsableImages(
+            in: imagesURL,
+            fileManager: fileManager
+        )
         let captureMode = sourceManifest?.captureMode ?? "unknown"
         let scanSize = sourceManifest?.scanSize ?? "unknown"
         let createdAt = sourceManifest?.createdAt
@@ -335,23 +339,6 @@ final class MeshProjectStore {
             if (try? regularFileSnapshot(at: url).byteCount) ?? 0 > 0 { return url }
         }
         return nil
-    }
-
-    private func hasRawImages(projectURL: URL) -> Bool {
-        let images = projectURL.appendingPathComponent("images", isDirectory: true)
-        guard let children = try? fileManager.contentsOfDirectory(
-            at: images,
-            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
-            options: [.skipsHiddenFiles]
-        ) else { return false }
-        let supportedExtensions = Set(["jpg", "jpeg", "heic", "png"])
-        return children.contains { url in
-            guard supportedExtensions.contains(url.pathExtension.lowercased()),
-                  let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]) else {
-                return false
-            }
-            return values.isRegularFile == true && (values.fileSize ?? 0) > 0
-        }
     }
 
     private func cloneSnapshotTree(from source: URL, to destination: URL) throws {
