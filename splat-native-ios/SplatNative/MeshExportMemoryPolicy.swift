@@ -6,8 +6,13 @@ enum MeshExportMemoryPolicy {
         let estimatedPeakBytes: UInt64
         let budgetBytes: UInt64
 
-        var estimatedPeakMegabytes: Int { Int((estimatedPeakBytes + mib - 1) / mib) }
-        var budgetMegabytes: Int { Int((budgetBytes + mib - 1) / mib) }
+        var estimatedPeakMegabytes: Int {
+            MeshExportMemoryPolicy.roundedUpMegabytesClampedToInt(estimatedPeakBytes)
+        }
+
+        var budgetMegabytes: Int {
+            MeshExportMemoryPolicy.roundedUpMegabytesClampedToInt(budgetBytes)
+        }
     }
 
     enum PolicyError: LocalizedError, Equatable {
@@ -101,6 +106,17 @@ enum MeshExportMemoryPolicy {
             estimatedPeakBytes: estimatedPeakBytes,
             budgetBytes: budgetBytes
         )
+    }
+
+    /// Round bytes up to MiB without overflowing `UInt64`, then clamp before converting to Int.
+    /// Saturating estimates deliberately use UInt64.max; diagnostics must remain safe even for
+    /// hostile/corrupt file sizes that drive the estimate to that sentinel.
+    private static func roundedUpMegabytesClampedToInt(_ bytes: UInt64) -> Int {
+        let quotient = bytes / mib
+        let remainder = bytes % mib
+        let rounded = remainder == 0 ? quotient : saturatingAdd(quotient, 1)
+        guard rounded <= UInt64(Int.max) else { return Int.max }
+        return Int(rounded)
     }
 
     private static func saturatingMultiply(_ value: UInt64, by multiplier: UInt64) -> UInt64 {
