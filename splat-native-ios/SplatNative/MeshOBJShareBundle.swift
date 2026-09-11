@@ -26,12 +26,13 @@ enum MeshOBJShareBundle {
             .split(whereSeparator: { $0.isNewline })
             .flatMap { line -> [String] in
                 let trimmed = String(line).trimmingCharacters(in: .whitespaces)
-                guard trimmed.hasPrefix("mtllib ") else { return [] }
+                guard trimmed.lowercased().hasPrefix("mtllib ") else { return [] }
                 return parseArguments(String(trimmed.dropFirst("mtllib ".count)))
             }
 
         var shared: [URL] = []
         var copied = Set<String>()
+        var sharedPaths = Set<String>()
         for reference in mtlReferences {
             let mtlSource = try resolved(reference, relativeTo: root, allowedRoot: root)
             let mtlDestination = try copyPreservingRelativePath(
@@ -40,7 +41,9 @@ enum MeshOBJShareBundle {
                 workspace: workspace,
                 copied: &copied
             )
-            shared.append(mtlDestination)
+            if sharedPaths.insert(mtlDestination.path).inserted {
+                shared.append(mtlDestination)
+            }
 
             let mtlText = try String(contentsOf: mtlSource, encoding: .utf8)
             let mtlRoot = mtlSource.deletingLastPathComponent()
@@ -52,7 +55,9 @@ enum MeshOBJShareBundle {
                     workspace: workspace,
                     copied: &copied
                 )
-                shared.append(destination)
+                if sharedPaths.insert(destination.path).inserted {
+                    shared.append(destination)
+                }
             }
         }
         return shared
@@ -60,12 +65,12 @@ enum MeshOBJShareBundle {
 
     private static func textureReferences(in mtl: String) -> [String] {
         let commands: Set<String> = [
-            "map_Ka", "map_Kd", "map_Ks", "map_Ke", "map_d",
-            "map_bump", "bump", "disp", "decal", "norm", "map_Pr", "map_Pm"
+            "map_ka", "map_kd", "map_ks", "map_ke", "map_d",
+            "map_bump", "bump", "disp", "decal", "norm", "map_pr", "map_pm"
         ]
         return mtl.split(whereSeparator: { $0.isNewline }).compactMap { rawLine in
             let parts = parseArguments(String(rawLine))
-            guard parts.count >= 2, commands.contains(parts[0]) else { return nil }
+            guard parts.count >= 2, commands.contains(parts[0].lowercased()) else { return nil }
             return texturePath(in: Array(parts.dropFirst()))
         }
     }
