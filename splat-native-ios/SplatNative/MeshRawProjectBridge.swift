@@ -88,8 +88,10 @@ enum MeshRawProjectBridge {
         // The old discovery path only scanned the working root, which made retained RAW disappear
         // from "reprocess" as soon as that working directory was deleted. Re-expose archived RAW,
         // while preferring an extant working project with the same logical ID to avoid duplicate IDs.
+        // `rawDataRetained` is intentionally broader than the original capture mode: LiDAR captures
+        // can still carry camera images that are valid inputs for a later photogrammetry reprocess.
         let meshStore = MeshProjectStore(appRootURL: root, fileManager: fileManager)
-        for summary in meshStore.listProjects() where summary.reprocessSupported {
+        for summary in meshStore.listProjects() where summary.rawDataRetained {
             let id = "mesh:\(summary.id)"
             guard !meshIDs.contains(id) else { continue }
             let imagesURL = summary.projectURL.appendingPathComponent("images", isDirectory: true)
