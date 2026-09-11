@@ -71,6 +71,7 @@ enum MeshExportService {
 
     private static let las12HeaderSize = 227
     private static let zipEndOfCentralDirectorySearchBytes = 65_557
+    private static let plyHeaderSearchBytes = 64 * 1024
 
     /// Reports actual runtime capability. A format is never advertised merely because its
     /// extension exists in the UI. Exact-format passthrough is always permitted after validation.
@@ -345,13 +346,8 @@ enum MeshExportService {
             valid = text.hasPrefix("v ") || text.contains("\nv ")
 
         case .ply:
-            let data = try readPrefix(url, maxBytes: 2_048)
-            let prefix = String(decoding: data, as: UTF8.self)
-            valid = prefix.hasPrefix("ply\n") &&
-                prefix.contains("format binary_little_endian 1.0") &&
-                prefix.contains("element vertex ") &&
-                !prefix.contains("element face ") &&
-                prefix.contains("end_header\n")
+            let data = try readPrefix(url, maxBytes: plyHeaderSearchBytes)
+            valid = validBinaryPointCloudPLY(data, totalBytes: totalBytes)
 
         case .las:
             let data = try readPrefix(url, maxBytes: las12HeaderSize)
@@ -375,6 +371,74 @@ enum MeshExportService {
         }
 
         guard valid else { throw ExportError.invalidContainer(format.rawValue) }
+    }
+
+    private static func validBinaryPointCloudPLY(_ data: Data, totalBytes: UInt64) -> Bool {
+        let marker = Data("end_header\n".utf8)
+        guard let markerRange = data.range(of: marker) else { return false }
+        let headerEnd = markerRange.upperBound
+        guard let header = String(data: data.prefix(upTo: headerEnd), encoding: .utf8),
+              header.hasPrefix("ply\n"),
+              header.contains("format binary_little_endian 1.0\n") else {
+            return false
+        }
+
+        var vertexCount: UInt64?
+        var vertexStride: UInt64 = 0
+        var parsingVertexProperties = false
+        var sawX = false
+        var sawY = false
+        var sawZ = false
+
+        for line in header.split(separator: "\n", omittingEmptySubsequences: false) {
+            let parts = line.split(separator: " ")
+            guard !parts.isEmpty else { continue }
+
+            if parts[0] == "element" {
+                guard parts.count == 3 else { return false }
+                let name = String(parts[1])
+                guard name == "vertex", vertexCount == nil,
+                      let count = UInt64(parts[2]), count > 0 else {
+                    return false
+                }
+                vertexCount = count
+                parsingVertexProperties = true
+                continue
+            }
+
+            guard parts[0] == "property", parsingVertexProperties else { continue }
+            guard parts.count == 3,
+                  let width = plyScalarByteWidth(String(parts[1])) else {
+                return false
+            }
+            let propertyName = String(parts[2])
+            sawX = sawX || propertyName == "x"
+            sawY = sawY || propertyName == "y"
+            sawZ = sawZ || propertyName == "z"
+            let (nextStride, overflow) = vertexStride.addingReportingOverflow(width)
+            guard !overflow else { return false }
+            vertexStride = nextStride
+        }
+
+        guard let vertexCount,
+              vertexStride > 0,
+              sawX, sawY, sawZ else {
+            return false
+        }
+        let (payloadBytes, overflow) = vertexCount.multipliedReportingOverflow(by: vertexStride)
+        guard !overflow else { return false }
+        let (requiredBytes, totalOverflow) = UInt64(headerEnd).addingReportingOverflow(payloadBytes)
+        return !totalOverflow && requiredBytes == totalBytes
+    }
+
+    private static func plyScalarByteWidth(_ type: String) -> UInt64? {
+        switch type.lowercased() {
+        case "char", "uchar", "int8", "uint8": return 1
+        case "short", "ushort", "int16", "uint16": return 2
+        case "int", "uint", "int32", "uint32", "float", "float32": return 4
+        case "double", "float64": return 8
+        default: return nil
+        }
     }
 
     private static func hasValidZipEndOfCentralDirectory(
