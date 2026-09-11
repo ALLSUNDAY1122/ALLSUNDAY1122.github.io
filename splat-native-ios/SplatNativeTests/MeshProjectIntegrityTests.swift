@@ -151,7 +151,16 @@ final class MeshProjectIntegrityTests: XCTestCase {
         ]
         let manifestData = try JSONSerialization.data(withJSONObject: manifest, options: [.prettyPrinted, .sortedKeys])
         try manifestData.write(to: project.appendingPathComponent("mesh-project.json"), options: .atomic)
-        try Data(repeating: marker, count: 256).write(to: project.appendingPathComponent("mesh.obj"), options: .atomic)
+
+        // Integrity sealing now requires semantically usable geometry, not merely a non-empty file.
+        // Keep the fixture exactly 256 bytes so the same-size tamper regressions continue exercising
+        // hash/mtime behavior while the baseline itself is a real triangle SceneKit can load.
+        var obj = Data("o Mesh\nv 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n#".utf8)
+        XCTAssertLessThan(obj.count, 256)
+        while obj.count < 255 { obj.append(marker) }
+        obj.append(0x0A)
+        XCTAssertEqual(obj.count, 256)
+        try obj.write(to: project.appendingPathComponent("mesh.obj"), options: .atomic)
         return project
     }
 }
