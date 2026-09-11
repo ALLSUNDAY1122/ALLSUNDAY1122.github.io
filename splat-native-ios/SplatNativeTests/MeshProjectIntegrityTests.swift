@@ -58,6 +58,49 @@ final class MeshProjectIntegrityTests: XCTestCase {
         }
     }
 
+    func testRejectsCorruptExistingEvidenceInsteadOfResealing() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = MeshProjectStore(appRootURL: root)
+        let live = try makeLiveProject(in: root, marker: 0x61)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        XCTAssertEqual(try MeshProjectIntegrity.verifyOrSeal(summary: archived), archived.resultURL)
+
+        let evidenceURL = archived.projectURL.appendingPathComponent(MeshProjectIntegrity.evidenceFileName)
+        try Data("not-valid-integrity-evidence".utf8).write(to: evidenceURL, options: .atomic)
+
+        XCTAssertThrowsError(try MeshProjectIntegrity.verifyOrSeal(summary: archived)) { error in
+            guard case MeshProjectIntegrity.IntegrityError.evidenceInvalid = error else {
+                return XCTFail("Expected evidenceInvalid, got \(error)")
+            }
+        }
+        XCTAssertEqual(try Data(contentsOf: evidenceURL), Data("not-valid-integrity-evidence".utf8))
+    }
+
+    func testRejectsEvidenceFromUnsupportedFutureSchemaWithoutOverwritingIt() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = MeshProjectStore(appRootURL: root)
+        let live = try makeLiveProject(in: root, marker: 0x71)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        XCTAssertEqual(try MeshProjectIntegrity.verifyOrSeal(summary: archived), archived.resultURL)
+
+        let evidenceURL = archived.projectURL.appendingPathComponent(MeshProjectIntegrity.evidenceFileName)
+        let original = try Data(contentsOf: evidenceURL)
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: original) as? [String: Any])
+        object["schemaVersion"] = 999
+        object["futureField"] = "must-survive"
+        let futureEvidence = try JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted, .sortedKeys])
+        try futureEvidence.write(to: evidenceURL, options: .atomic)
+
+        XCTAssertThrowsError(try MeshProjectIntegrity.verifyOrSeal(summary: archived)) { error in
+            guard case MeshProjectIntegrity.IntegrityError.evidenceInvalid = error else {
+                return XCTFail("Expected evidenceInvalid, got \(error)")
+            }
+        }
+        XCTAssertEqual(try Data(contentsOf: evidenceURL), futureEvidence)
+    }
+
     private func makeRoot() throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshProjectIntegrityTests-\(UUID().uuidString)", isDirectory: true)
