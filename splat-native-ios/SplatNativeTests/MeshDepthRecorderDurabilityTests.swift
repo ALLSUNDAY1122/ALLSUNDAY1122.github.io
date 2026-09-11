@@ -13,6 +13,36 @@ final class MeshDepthRecorderDurabilityTests: XCTestCase {
         XCTAssertNoThrow(try MeshDepthRecorder.validateCaptureDirectory(root))
     }
 
+    func testValidateCaptureDirectoryAcceptsMixedInvalidAndPositiveDepthValues() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-depth-validate-mixed-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try depthPayload([.nan, 0, -1, 2.0]).write(
+            to: root.appendingPathComponent("depth_00000.f32"),
+            options: .atomic
+        )
+        try writeIndex(at: root, file: "depth_00000.f32")
+
+        XCTAssertNoThrow(try MeshDepthRecorder.validateCaptureDirectory(root))
+    }
+
+    func testValidateCaptureDirectoryRejectsDepthPayloadWithoutFinitePositiveSamples() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-depth-validate-unusable-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try depthPayload([.nan, .infinity, 0, -1]).write(
+            to: root.appendingPathComponent("depth_00000.f32"),
+            options: .atomic
+        )
+        try writeIndex(at: root, file: "depth_00000.f32")
+
+        XCTAssertThrowsError(try MeshDepthRecorder.validateCaptureDirectory(root))
+    }
+
     func testValidateCaptureDirectoryRejectsTruncatedDepthPayload() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mesh-depth-validate-truncated-\(UUID().uuidString)", isDirectory: true)
@@ -35,7 +65,7 @@ final class MeshDepthRecorderDurabilityTests: XCTestCase {
         }
 
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
-        try Data(repeating: 0, count: 16).write(to: outside, options: .atomic)
+        try depthPayload([1, 2, 3, 4]).write(to: outside, options: .atomic)
         try writeIndex(at: root, file: "../\(outside.lastPathComponent)")
 
         XCTAssertThrowsError(try MeshDepthRecorder.validateCaptureDirectory(root))
@@ -47,7 +77,7 @@ final class MeshDepthRecorderDurabilityTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
 
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
-        try Data(repeating: 0, count: 16).write(
+        try depthPayload([1, 2, 3, 4]).write(
             to: root.appendingPathComponent("depth_00000.f32"),
             options: .atomic
         )
@@ -66,11 +96,11 @@ final class MeshDepthRecorderDurabilityTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
 
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
-        try Data(repeating: 0, count: 16).write(
+        try depthPayload([1, 2, 3, 4]).write(
             to: root.appendingPathComponent("depth_00000.f32"),
             options: .atomic
         )
-        try Data(repeating: 0, count: 16).write(
+        try depthPayload([1, 2, 3, 4]).write(
             to: root.appendingPathComponent("depth_00001.f32"),
             options: .atomic
         )
@@ -148,11 +178,23 @@ final class MeshDepthRecorderDurabilityTests: XCTestCase {
 
     private func makeCapture(at root: URL, payloadBytes: Int, file: String) throws {
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
-        try Data(repeating: 0, count: payloadBytes).write(
+        let payload = payloadBytes == 16
+            ? depthPayload([1, 2, 3, 4])
+            : Data(repeating: 0, count: payloadBytes)
+        try payload.write(
             to: root.appendingPathComponent(file),
             options: .atomic
         )
         try writeIndex(at: root, file: file)
+    }
+
+    private func depthPayload(_ values: [Float]) -> Data {
+        var data = Data(capacity: values.count * MemoryLayout<Float>.size)
+        for value in values {
+            var bits = value.bitPattern.littleEndian
+            withUnsafeBytes(of: &bits) { data.append(contentsOf: $0) }
+        }
+        return data
     }
 
     private func writeIndex(at root: URL, file: String) throws {
