@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -9,8 +10,9 @@ if marker not in text:
     raise SystemExit('network-specialist-native-ios workflow missing')
 
 start = text.index(marker)
-next_workflow = text.find('\n  ', start + len(marker))
-end = len(text) if next_workflow < 0 else next_workflow
+search_from = start + len(marker)
+next_match = re.search(r'(?m)^  [A-Za-z0-9][A-Za-z0-9_.-]*:\s*$', text[search_from:])
+end = search_from + next_match.start() if next_match else len(text)
 block = text[start:end]
 
 src_line = "          SRC='network-specialist-sprint/07_ネットワークスペシャリスト試験.png'\n"
