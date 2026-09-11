@@ -21,6 +21,32 @@ final class SplatCameraGeometryTests: XCTestCase {
         XCTAssertEqual(framing.radius, 10, accuracy: 0.0001)
     }
 
+    func testRobustFramingIgnoresDistanceOverflowFromHugeFiniteCoordinates() {
+        let huge = Float.greatestFiniteMagnitude / 2
+        let positions: [SIMD3<Float>] = [
+            SIMD3<Float>(-huge, 0, 0),
+            .zero,
+            SIMD3<Float>(huge, 0, 0)
+        ]
+        let points = positions.map { position in
+            SplatPoint(
+                position: position,
+                color: .sRGBUInt8(SIMD3<UInt8>(128, 128, 128)),
+                opacity: .linearFloat(1),
+                scale: .linearFloat(SIMD3<Float>(repeating: 0.1)),
+                rotation: simd_quatf(angle: 0, axis: SIMD3<Float>(0, 1, 0))
+            )
+        }
+
+        let framing = SplatCameraGeometry.robustFraming(for: points)
+
+        XCTAssertTrue(framing.center.x.isFinite)
+        XCTAssertTrue(framing.radius.isFinite)
+        XCTAssertTrue(framing.distance.isFinite)
+        XCTAssertEqual(framing.radius, 0.10, accuracy: 0.0001)
+        XCTAssertEqual(framing.distance, 0.35, accuracy: 0.0001)
+    }
+
     func testPortraitVideoMovesBackWhenHorizontalFOVIsLimiting() {
         let framing = SplatCameraGeometry.Framing(
             center: .zero,
