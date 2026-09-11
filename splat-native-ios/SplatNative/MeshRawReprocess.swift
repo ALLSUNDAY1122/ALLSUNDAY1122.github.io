@@ -41,10 +41,12 @@ enum MeshRawReprocessor {
             ? "保存済みSplat rawからMeshを再処理しています"
             : "保存済みMesh rawからMeshを再処理しています"
 
+        var activeSession: PhotogrammetrySession?
         do {
             var configuration = PhotogrammetrySession.Configuration()
             configuration.isObjectMaskingEnabled = true
             let session = try PhotogrammetrySession(input: prepared.imagesURL, configuration: configuration)
+            activeSession = session
             let request = PhotogrammetrySession.Request.modelFile(url: outputURL, detail: .reduced, geometry: nil)
             try session.process(requests: [request])
 
@@ -69,6 +71,7 @@ enum MeshRawReprocessor {
                 case .stitchingIncomplete:
                     model.statusMessage = "raw再処理中: 一部画像を接続できませんでした"
                 case .processingCancelled:
+                    activeSession?.cancel()
                     cleanupFailedOutput(outputURL, prepared: prepared)
                     model.phase = .captured
                     model.statusMessage = "raw再処理を中断しました。保存rawは保持されています"
@@ -86,16 +89,22 @@ enum MeshRawReprocessor {
             }
 
             if !completed {
+                activeSession?.cancel()
                 cleanupFailedOutput(outputURL, prepared: prepared)
                 model.resultURL = nil
                 model.previewScene = nil
                 model.phase = .failed("raw再処理は完了しましたが、完成Meshを正常に読み込めませんでした。保存rawは保持されています。")
             }
         } catch is CancellationError {
+            // Cancelling the Swift task does not implicitly cancel RealityKit's reconstruction.
+            // Stop the underlying session before deleting its candidate output/workspace so it
+            // cannot continue consuming CPU/GPU or recreate files after the UI reports cancellation.
+            activeSession?.cancel()
             cleanupFailedOutput(outputURL, prepared: prepared)
             model.phase = .captured
             model.statusMessage = "raw再処理を中断しました。保存rawは保持されています"
         } catch {
+            activeSession?.cancel()
             cleanupFailedOutput(outputURL, prepared: prepared)
             model.phase = .failed("raw再処理に失敗しました: \(error.localizedDescription)。保存rawは保持されています。")
         }
