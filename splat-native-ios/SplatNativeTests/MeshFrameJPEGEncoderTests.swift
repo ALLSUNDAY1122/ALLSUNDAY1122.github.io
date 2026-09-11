@@ -41,9 +41,23 @@ final class MeshFrameJPEGEncoderTests: XCTestCase {
             }
         }
 
-        let data = try XCTUnwrap(
-            MeshFrameJPEGEncoder().encode(MeshFrameImage(pixelBuffer: buffer))
+        let encoder = MeshFrameJPEGEncoder()
+        let data = try XCTUnwrap(encoder.encode(MeshFrameImage(pixelBuffer: buffer)))
+        try assertDecodable(data, width: width, height: height)
+
+        // Quality is a caller-controlled boundary; values outside ImageIO's 0...1 range
+        // must be clamped instead of turning a capture frame into an encoding failure.
+        let highQuality = try XCTUnwrap(
+            encoder.encode(MeshFrameImage(pixelBuffer: buffer), compressionQuality: 2)
         )
+        let lowQuality = try XCTUnwrap(
+            encoder.encode(MeshFrameImage(pixelBuffer: buffer), compressionQuality: -1)
+        )
+        try assertDecodable(highQuality, width: width, height: height)
+        try assertDecodable(lowQuality, width: width, height: height)
+    }
+
+    private func assertDecodable(_ data: Data, width: Int, height: Int) throws {
         XCTAssertGreaterThan(data.count, 64)
         XCTAssertEqual(Array(data.prefix(2)), [0xFF, 0xD8])
         XCTAssertEqual(Array(data.suffix(2)), [0xFF, 0xD9])
