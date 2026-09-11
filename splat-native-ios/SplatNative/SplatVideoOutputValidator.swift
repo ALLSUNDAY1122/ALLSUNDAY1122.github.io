@@ -1,4 +1,5 @@
 import AVFoundation
+import CoreVideo
 import Foundation
 
 /// Rejects partial/non-video files even when AVAssetWriter happened to leave non-zero bytes.
@@ -11,6 +12,7 @@ enum SplatVideoOutputValidator {
         case unexpectedVideoDimensions
         case invalidDuration
         case unexpectedlyShortDuration
+        case undecodableVideoFrame
     }
 
     static func validate(
@@ -72,6 +74,34 @@ enum SplatVideoOutputValidator {
                   duration.seconds >= minimumDuration else {
                 throw ValidationError.unexpectedlyShortDuration
             }
+        }
+
+        // Metadata alone is insufficient: a damaged MP4 can expose a video track and plausible
+        // duration while containing no frame that the system decoder can actually materialize.
+        // Decode exactly one frame before the file becomes shareable. This is bounded work and
+        // catches corrupt/truncated media without walking the full export a second time.
+        try Task.checkCancellation()
+        let reader = try AVAssetReader(asset: asset)
+        let output = AVAssetReaderTrackOutput(
+            track: videoTrack,
+            outputSettings: [
+                kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)
+            ]
+        )
+        output.alwaysCopiesSampleData = false
+        guard reader.canAdd(output) else {
+            throw ValidationError.undecodableVideoFrame
+        }
+        reader.add(output)
+        guard reader.startReading() else {
+            throw ValidationError.undecodableVideoFrame
+        }
+        defer { reader.cancelReading() }
+
+        let firstFrame = output.copyNextSampleBuffer()
+        try Task.checkCancellation()
+        guard firstFrame != nil else {
+            throw ValidationError.undecodableVideoFrame
         }
     }
 }
