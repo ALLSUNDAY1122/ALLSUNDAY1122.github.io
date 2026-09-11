@@ -81,6 +81,62 @@ final class SplatSeedColorizerMultiViewTests: XCTestCase {
         XCTAssertLessThan(color.red, 40)
     }
 
+    func testSeedCacheRejectsTruncatedPLY() throws {
+        let root = try makeProjectDirectory(prefix: "splat-seed-truncated")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let ply = root.appendingPathComponent("points3D.ply")
+        var text = "ply\nformat ascii 1.0\nelement vertex 64\n"
+        text += "property float x\nproperty float y\nproperty float z\n"
+        text += "property uchar red\nproperty uchar green\nproperty uchar blue\nend_header\n"
+        for index in 0..<63 { text += "\(index) 0 0 255 255 255\n" }
+        try text.write(to: ply, atomically: true, encoding: .utf8)
+
+        XCTAssertFalse(SplatDepthSeedBuilder.cachedPLYIsComplete(at: ply, expectedPointCount: 64))
+    }
+
+    func testAppendedCaptureInputForcesFreshSeedAndTrainer() throws {
+        let root = try makeProjectDirectory(prefix: "splat-seed-fingerprint")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let points = (0..<64).map { index in
+            SIMD3<Float>(Float(index), Float(index % 7), Float(index % 11))
+        }
+
+        _ = try SplatDepthSeedBuilder.preparePointCloudPLY(
+            projectURL: root,
+            depthFrames: [],
+            fallbackPoints: points,
+            colorFrames: []
+        )
+        let unchanged = try SplatDepthSeedBuilder.preparePointCloudPLY(
+            projectURL: root,
+            depthFrames: [],
+            fallbackPoints: Array(points.reversed()),
+            colorFrames: []
+        )
+        XCTAssertFalse(unchanged.requiresFreshTrainer)
+
+        let appended = SplatDepthSeedFrame(
+            depthFilePath: nil,
+            depthWidth: nil,
+            depthHeight: nil,
+            depthBytesPerRow: nil,
+            transformMatrix: identityRows,
+            flX: 500,
+            flY: 500,
+            cx: 320,
+            cy: 240,
+            w: 640,
+            h: 480
+        )
+        let changed = try SplatDepthSeedBuilder.preparePointCloudPLY(
+            projectURL: root,
+            depthFrames: [appended],
+            fallbackPoints: points,
+            colorFrames: []
+        )
+        XCTAssertTrue(changed.requiresFreshTrainer)
+    }
+
     private func writeSolidImage(color: UIColor, name: String, root: URL) throws {
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: 20, height: 20))
         let image = renderer.image { context in
@@ -88,6 +144,13 @@ final class SplatSeedColorizerMultiViewTests: XCTestCase {
             context.fill(CGRect(x: 0, y: 0, width: 20, height: 20))
         }
         try XCTUnwrap(image.pngData()).write(to: root.appendingPathComponent(name))
+    }
+
+    private func makeProjectDirectory(prefix: String) throws -> URL {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("\(prefix)-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        return root
     }
 
     private var identityRows: [[Float]] {
