@@ -15,12 +15,14 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     private var azimuthBins = Set<Int>()
     private var elevationBins = Set<Int>()
     private var lastPosition: SIMD3<Float>?
+    private var lastCoveragePosition: SIMD3<Float>?
     private var lastTimestamp: TimeInterval = -.greatestFiniteMagnitude
 
     func reset() {
         azimuthBins.removeAll()
         elevationBins.removeAll()
         lastPosition = nil
+        lastCoveragePosition = nil
         lastTimestamp = -.greatestFiniteMagnitude
         azimuthCoverage = 0
         elevationCoverage = 0
@@ -43,18 +45,6 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
         let forwardRaw = SIMD3<Float>(-transform.columns.2.x, -transform.columns.2.y, -transform.columns.2.z)
         let forward = simd_length_squared(forwardRaw) > 1e-8 ? simd_normalize(forwardRaw) : SIMD3<Float>(0, 0, -1)
 
-        let yaw = atan2(forward.x, -forward.z)
-        let normalizedYaw = (yaw + .pi) / (2 * .pi)
-        let azimuth = min(11, max(0, Int(floor(normalizedYaw * 12))))
-        azimuthBins.insert(azimuth)
-
-        let pitch = asin(min(1, max(-1, forward.y)))
-        let elevation: Int
-        if pitch < -0.16 { elevation = 0 }
-        else if pitch > 0.16 { elevation = 2 }
-        else { elevation = 1 }
-        elevationBins.insert(elevation)
-
         if let previous = lastPosition {
             let delta = simd_distance(position, previous)
             if delta >= 0.006 && delta <= 0.35 {
@@ -63,6 +53,27 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
         }
         lastPosition = position
         stableSamples += 1
+
+        // Camera heading alone is not evidence of viewpoint coverage: a user can rotate the
+        // phone in place and sweep every yaw bin without creating any reconstruction parallax.
+        // Credit new azimuth/elevation bins only after enough physical translation since the
+        // previous credited viewpoint. Slow movement still accumulates until this threshold.
+        let coverageDisplacement = lastCoveragePosition.map { simd_distance(position, $0) }
+        if coverageDisplacement == nil || coverageDisplacement! >= Self.coverageTranslationThreshold(size: size) {
+            let yaw = atan2(forward.x, -forward.z)
+            let normalizedYaw = (yaw + .pi) / (2 * .pi)
+            let azimuth = min(11, max(0, Int(floor(normalizedYaw * 12))))
+            azimuthBins.insert(azimuth)
+
+            let pitch = asin(min(1, max(-1, forward.y)))
+            let elevation: Int
+            if pitch < -0.16 { elevation = 0 }
+            else if pitch > 0.16 { elevation = 2 }
+            else { elevation = 1 }
+            elevationBins.insert(elevation)
+            lastCoveragePosition = position
+        }
+
         azimuthCoverage = azimuthBins.count
         elevationCoverage = elevationBins.count
 
@@ -106,7 +117,15 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
         "周回 \(azimuthCoverage)/12・高さ \(elevationCoverage)/3・移動 \(String(format: "%.1f", pathLengthMeters))m・品質 \(Int((qualityScore * 100).rounded()))%"
     }
 
+    static func coverageTranslationThreshold(size: MeshScanSize) -> Float {
+        max(0.015, pathThresholdValue(size: size) * 0.02)
+    }
+
     private func pathThreshold(size: MeshScanSize) -> Float {
+        Self.pathThresholdValue(size: size)
+    }
+
+    private static func pathThresholdValue(size: MeshScanSize) -> Float {
         switch size {
         case .small: return 0.55
         case .medium: return 1.0
