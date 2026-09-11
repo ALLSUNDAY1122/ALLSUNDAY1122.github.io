@@ -229,8 +229,6 @@ enum ScanProjectStoreError: LocalizedError {
     }
 }
 
-/// File-system source of truth for local scans.
-/// Every project is self-contained so the library can be rebuilt after termination without an in-memory index.
 final class ScanProjectStore {
     static let projectExtension = "splatproject"
     static let manifestFileName = "manifest.json"
@@ -355,7 +353,6 @@ final class ScanProjectStore {
             do {
                 return try decodeSupportedCheckpoint(data, decoder: decoder)
             } catch {
-                // Corrupt/legacy primary may still be recovered from its known-good backup below.
             }
         }
         if let data = try? Data(contentsOf: backup) {
@@ -364,7 +361,6 @@ final class ScanProjectStore {
                 try? data.write(to: primary, options: .atomic)
                 return value
             } catch {
-                // Fall through to the established raw-data-unavailable failure.
             }
         }
         throw ScanProjectStoreError.rawDataUnavailable
@@ -388,6 +384,7 @@ final class ScanProjectStore {
     }
 
     func reprocessRequest(projectURL: URL, representation: ScanRepresentationKind) throws -> ScanReprocessRequest {
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
         let images = projectURL.appendingPathComponent("images", isDirectory: true)
         let transforms = projectURL.appendingPathComponent("transforms.json")
         let points = projectURL.appendingPathComponent("points3D.ply")
@@ -450,18 +447,30 @@ final class ScanProjectStore {
     }
 
     func clearRawData(projectURL: URL) throws {
-        let manifest = try loadOrMigrateManifest(projectURL: projectURL)
-        let resultNames = Set(manifest.outputs.values)
-        let keep = resultNames.union([
-            Self.manifestFileName,
-            Self.manifestBackupFileName,
-            Self.thumbnailFileName,
-            Self.splatCommitEvidenceFileName
-        ])
-        let children = try fileManager.contentsOfDirectory(at: projectURL, includingPropertiesForKeys: nil)
-        for child in children where !keep.contains(child.lastPathComponent) {
-            try fileManager.removeItem(at: child)
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
+
+        // Delete only capture/reconstruction inputs. Derived result sidecars are deliberately not
+        // selected here: viewer.json(.bak), canonical SH3 PLY, mesh MTL/JPG, export metadata and
+        // run diagnostics remain valid after raw capture data is discarded.
+        let rawNames: Set<String> = [
+            "images",
+            "depth",
+            "transforms.json",
+            "points3D.ply",
+            "training.msplat-checkpoint",
+            Self.checkpointFileName,
+            Self.checkpointBackupFileName,
+            Self.worldMapFileName,
+            "s13-seed-recipe.json",
+            "s14-seed-recipe.json"
+        ]
+        for name in rawNames {
+            let url = projectURL.appendingPathComponent(name)
+            if fileManager.fileExists(atPath: url.path) {
+                try fileManager.removeItem(at: url)
+            }
         }
+
         _ = try updateManifest(projectURL: projectURL) { $0.rawDataRetained = false }
     }
 
