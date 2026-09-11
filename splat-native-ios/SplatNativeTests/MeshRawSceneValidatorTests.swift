@@ -13,6 +13,21 @@ final class MeshRawSceneValidatorTests: XCTestCase {
         XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
     }
 
+    func testRejectsPrimitiveElementsWithoutVertexPositions() {
+        let scene = SCNScene()
+        let normals = SCNGeometrySource(normals: [
+            SCNVector3(0, 1, 0),
+            SCNVector3(0, 1, 0),
+            SCNVector3(0, 1, 0),
+        ])
+        let element = SCNGeometryElement(indices: [UInt16(0), 1, 2], primitiveType: .triangles)
+        let malformed = SCNGeometry(sources: [normals], elements: [element])
+        scene.rootNode.addChildNode(SCNNode(geometry: malformed))
+
+        XCTAssertEqual(element.primitiveCount, 1)
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
     func testAcceptsNestedGeometryWithPrimitives() {
         let scene = SCNScene()
         let container = SCNNode()
