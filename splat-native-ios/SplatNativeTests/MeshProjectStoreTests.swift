@@ -144,7 +144,7 @@ final class MeshProjectStoreTests: XCTestCase {
         let splatStore = ScanProjectStore(rootURL: rootURL)
         let (projectURL, _) = try splatStore.createProject(title: "Splat source")
         let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
-        try Data(repeating: 0xAB, count: 32).write(to: imagesURL.appendingPathComponent("frame-0001.jpg"))
+        try writeUsableRawImages(to: imagesURL)
         try Data("{}".utf8).write(to: projectURL.appendingPathComponent("transforms.json"))
         try Data("ply\n".utf8).write(to: projectURL.appendingPathComponent("points3D.ply"))
 
@@ -153,7 +153,7 @@ final class MeshProjectStoreTests: XCTestCase {
 
         XCTAssertEqual(source.sourceProjectURL.standardizedFileURL, projectURL.standardizedFileURL)
         XCTAssertEqual(source.imagesURL.standardizedFileURL, imagesURL.standardizedFileURL)
-        XCTAssertEqual(source.imageCount, 1)
+        XCTAssertEqual(source.imageCount, MeshRawInputValidator.minimumPhotogrammetryImageCount)
         XCTAssertEqual(source.title, "Splat source")
     }
 
@@ -161,7 +161,7 @@ final class MeshProjectStoreTests: XCTestCase {
         let splatStore = ScanProjectStore(rootURL: rootURL)
         let (projectURL, _) = try splatStore.createProject(title: "Splat source")
         let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
-        try Data(repeating: 0xCD, count: 32).write(to: imagesURL.appendingPathComponent("frame-0001.jpg"))
+        try writeUsableRawImages(to: imagesURL)
         try Data("{}".utf8).write(to: projectURL.appendingPathComponent("transforms.json"))
         try Data("ply\n".utf8).write(to: projectURL.appendingPathComponent("points3D.ply"))
 
@@ -186,7 +186,38 @@ final class MeshProjectStoreTests: XCTestCase {
 
         XCTAssertFalse(FileManager.default.fileExists(atPath: prepared.projectURL.path))
         XCTAssertTrue(FileManager.default.fileExists(atPath: projectURL.path))
-        XCTAssertTrue(FileManager.default.fileExists(atPath: imagesURL.appendingPathComponent("frame-0001.jpg").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: imagesURL.appendingPathComponent("frame-00000.png").path))
+    }
+
+    func testCrossRepresentationBridgeRejectsInsufficientUsableRawBeforeWorkspaceCreation() throws {
+        let splatStore = ScanProjectStore(rootURL: rootURL)
+        let (projectURL, _) = try splatStore.createProject(title: "Insufficient Splat source")
+        let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
+        for index in 0..<19 {
+            try usablePNGData().write(to: imagesURL.appendingPathComponent("frame-\(index).png"))
+        }
+        try Data(repeating: 0xAA, count: 128).write(to: imagesURL.appendingPathComponent("renamed.jpg"))
+        try Data("{}".utf8).write(to: projectURL.appendingPathComponent("transforms.json"))
+        try Data("ply\n".utf8).write(to: projectURL.appendingPathComponent("points3D.ply"))
+
+        XCTAssertTrue(MeshRawProjectBridge.discover(appRootURL: rootURL).allSatisfy {
+            $0.sourceProjectURL.standardizedFileURL != projectURL.standardizedFileURL
+        })
+
+        let directCandidate = MeshRawProject(
+            id: "splat:stale",
+            sourceKind: .splatProject,
+            sourceProjectURL: projectURL,
+            imagesURL: imagesURL,
+            imageCount: 20,
+            modifiedAt: Date(),
+            title: "Stale candidate"
+        )
+        XCTAssertThrowsError(try MeshRawProjectBridge.prepareWorkingProject(for: directCandidate)) { error in
+            guard case MeshRawProjectBridgeError.rawUnavailable = error else {
+                return XCTFail("Expected rawUnavailable, got \(error)")
+            }
+        }
     }
 
     private func makeLiveProject(
