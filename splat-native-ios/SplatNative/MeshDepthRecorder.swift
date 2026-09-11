@@ -138,12 +138,16 @@ final class MeshDepthRecorder: ObservableObject {
         }
 
         let sourcePath = source.standardizedFileURL.path
+        var seenFiles = Set<String>()
+        var previousTimestamp: TimeInterval?
         for sample in index.samples {
             guard sample.width > 0,
                   sample.height > 0,
                   sample.cameraWidth > 0,
                   sample.cameraHeight > 0,
                   sample.timestamp.isFinite,
+                  previousTimestamp.map({ sample.timestamp > $0 }) ?? true,
+                  seenFiles.insert(sample.file).inserted,
                   sample.transform.count == 4,
                   sample.transform.allSatisfy({ $0.count == 4 && $0.allSatisfy(\.isFinite) }),
                   sample.intrinsics.count == 3,
@@ -152,6 +156,7 @@ final class MeshDepthRecorder: ObservableObject {
                   sample.file.hasSuffix(".f32") else {
                 throw CocoaError(.fileReadCorruptFile)
             }
+            previousTimestamp = sample.timestamp
 
             let (pixelCount, pixelOverflow) = sample.width.multipliedReportingOverflow(by: sample.height)
             let (expectedBytes, byteOverflow) = pixelCount.multipliedReportingOverflow(by: MemoryLayout<Float>.size)
