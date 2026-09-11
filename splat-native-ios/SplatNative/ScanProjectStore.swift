@@ -326,7 +326,7 @@ final class ScanProjectStore {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let data = try encoder.encode(manifest)
-        try rotateBackup(primary: primary, backup: backup)
+        try rotateManifestBackupIfPrimaryIsValid(primary: primary, backup: backup)
         try data.write(to: primary, options: .atomic)
     }
 
@@ -340,7 +340,7 @@ final class ScanProjectStore {
         let encoder = PropertyListEncoder()
         encoder.outputFormat = .binary
         let data = try encoder.encode(checkpoint)
-        try rotateBackup(primary: primary, backup: backup)
+        try rotateCheckpointBackupIfPrimaryIsValid(primary: primary, backup: backup)
         try data.write(to: primary, options: .atomic)
     }
 
@@ -449,9 +449,6 @@ final class ScanProjectStore {
     func clearRawData(projectURL: URL) throws {
         _ = try loadOrMigrateManifest(projectURL: projectURL)
 
-        // Delete only capture/reconstruction inputs. Derived result sidecars are deliberately not
-        // selected here: viewer.json(.bak), canonical SH3 PLY, mesh MTL/JPG, export metadata and
-        // run diagnostics remain valid after raw capture data is discarded.
         let rawNames: Set<String> = [
             "images",
             "depth",
@@ -826,10 +823,18 @@ final class ScanProjectStore {
         return size.int64Value == evidence.byteCount
     }
 
-    private func rotateBackup(primary: URL, backup: URL) throws {
-        guard fileManager.fileExists(atPath: primary.path) else { return }
-        if fileManager.fileExists(atPath: backup.path) { try? fileManager.removeItem(at: backup) }
-        try fileManager.copyItem(at: primary, to: backup)
+    private func rotateManifestBackupIfPrimaryIsValid(primary: URL, backup: URL) throws {
+        guard let data = try? Data(contentsOf: primary) else { return }
+        let decoder = JSONDecoder()
+        guard (try? decodeSupportedManifest(data, decoder: decoder)) != nil else { return }
+        try data.write(to: backup, options: .atomic)
+    }
+
+    private func rotateCheckpointBackupIfPrimaryIsValid(primary: URL, backup: URL) throws {
+        guard let data = try? Data(contentsOf: primary) else { return }
+        let decoder = PropertyListDecoder()
+        guard (try? decodeSupportedCheckpoint(data, decoder: decoder)) != nil else { return }
+        try data.write(to: backup, options: .atomic)
     }
 
     private func validSplatByteCount(at url: URL) -> Int64? {
