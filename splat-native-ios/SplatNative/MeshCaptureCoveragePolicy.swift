@@ -1,4 +1,5 @@
 import Foundation
+import simd
 
 enum MeshCaptureCoveragePolicy {
     /// Require physical translation before crediting another coverage viewpoint. The floor keeps
@@ -29,5 +30,11 @@ enum MeshCaptureCoveragePolicy {
               elapsedSeconds.isFinite,
               elapsedSeconds > 0 else { return false }
         return meters / Float(elapsedSeconds) <= 1.60
+    }
+
+    /// A tracking state of `.normal` is necessary but not sufficient when the camera transform is
+    /// malformed. Never let NaN/Inf camera coordinates enter path, height, or coverage accumulators.
+    static func isFiniteCameraPosition(_ position: SIMD3<Float>) -> Bool {
+        position.x.isFinite && position.y.isFinite && position.z.isFinite
     }
 }
