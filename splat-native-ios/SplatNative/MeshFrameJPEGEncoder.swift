@@ -20,31 +20,37 @@ final class MeshFrameImage: @unchecked Sendable {
 /// encode/write in flight and camera frames cannot build an unbounded backlog.
 final class MeshFrameJPEGEncoder: @unchecked Sendable {
     private let context: CIContext
+    private let outputColorSpace: CGColorSpace
+    private let compressionQualityKey = CIImageRepresentationOption(
+        rawValue: kCGImageDestinationLossyCompressionQuality as String
+    )
 
     init() {
-        context = CIContext(options: [.cacheIntermediates: false])
+        outputColorSpace = CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB()
+        context = CIContext(options: [
+            .cacheIntermediates: false,
+            .outputColorSpace: outputColorSpace,
+        ])
     }
 
     func encode(_ frameImage: MeshFrameImage, compressionQuality: CGFloat = 0.91) -> Data? {
         autoreleasepool {
             let image = CIImage(cvPixelBuffer: frameImage.pixelBuffer)
             guard !image.extent.isEmpty,
-                  let cgImage = context.createCGImage(image, from: image.extent),
-                  let data = CFDataCreateMutable(nil, 0),
-                  let destination = CGImageDestinationCreateWithData(
-                    data,
-                    "public.jpeg" as CFString,
-                    1,
-                    nil
-                  ) else {
+                  image.extent.width.isFinite,
+                  image.extent.height.isFinite else {
                 return nil
             }
 
+            // Ask Core Image to render directly into its JPEG representation. This avoids the
+            // full-size CGImage materialization that the previous ImageIO bridge required and
+            // lowers the transient capture working set for multi-megapixel AR camera frames.
             let quality = min(max(compressionQuality, 0), 1)
-            let properties = [kCGImageDestinationLossyCompressionQuality: quality] as CFDictionary
-            CGImageDestinationAddImage(destination, cgImage, properties)
-            guard CGImageDestinationFinalize(destination) else { return nil }
-            return data as Data
+            return context.jpegRepresentation(
+                of: image,
+                colorSpace: outputColorSpace,
+                options: [compressionQualityKey: quality]
+            )
         }
     }
 }
