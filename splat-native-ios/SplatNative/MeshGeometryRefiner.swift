@@ -90,7 +90,10 @@ private enum MeshGeometryRefinerEngine {
         let compacted = compact(vertices: vertices, faces: faces)
         let normals = recomputeNormals(vertices: compacted.vertices, faces: compacted.faces)
 
-        let outputURL = url.deletingLastPathComponent().appendingPathComponent("mesh-refined.obj")
+        // Refinement is an immutable generation. A fixed mesh-refined.obj made a later refine able
+        // to replace the previous good result before SceneKit/asset-metadata validation completed.
+        let outputURL = url.deletingLastPathComponent()
+            .appendingPathComponent("mesh-refined-\(UUID().uuidString.lowercased()).obj")
         var output = "# Scan Lab refined metric mesh\n"
         output += "# conservative weld_m \(weldMeters)\n"
         output += "# source_faces \(parsed.faces.count) refined_faces \(compacted.faces.count)\n"
@@ -107,6 +110,12 @@ private enum MeshGeometryRefinerEngine {
             removedFaces: max(0, parsed.faces.count - compacted.faces.count),
             removedComponents: componentResult.removedComponents
         )
+    }
+
+    static func discard(_ result: MeshGeometryRefineResult) {
+        try? FileManager.default.removeItem(at: result.url)
+        let sidecar = result.url.deletingPathExtension().appendingPathExtension("mesh-asset.json")
+        try? FileManager.default.removeItem(at: sidecar)
     }
 
     private static func parse(_ text: String) -> MeshRefineMesh {
@@ -211,12 +220,38 @@ extension MeshScanModel {
                 let result = try await Task.detached(priority: .userInitiated) {
                     try MeshGeometryRefinerEngine.refine(url: source)
                 }.value
-                guard let self else { return }
+                guard let self else {
+                    MeshGeometryRefinerEngine.discard(result)
+                    return
+                }
+                guard let candidateScene = try? SCNScene(url: result.url, options: nil) else {
+                    MeshGeometryRefinerEngine.discard(result)
+                    throw NSError(domain:"ScanLab.MeshGeometryRefiner", code:2, userInfo:[NSLocalizedDescriptionKey:"精製後のMeshを検証できませんでした。元Meshを保持します。"])
+                }
+
+                let previousRawURL = self.rawOBJURL
+                let previousResultURL = self.resultURL
+                let previousScene = self.previewScene
+                let previousVertexCount = self.vertexCount
+                let previousFaceCount = self.faceCount
+
                 self.rawOBJURL = result.url
                 self.resultURL = result.url
-                self.previewScene = try? SCNScene(url: result.url, options: nil)
+                self.previewScene = candidateScene
                 self.vertexCount = result.vertexCount
                 self.faceCount = result.faceCount
+                do {
+                    try self.persistExporterMeshAssetContract()
+                } catch {
+                    self.rawOBJURL = previousRawURL
+                    self.resultURL = previousResultURL
+                    self.previewScene = previousScene
+                    self.vertexCount = previousVertexCount
+                    self.faceCount = previousFaceCount
+                    MeshGeometryRefinerEngine.discard(result)
+                    throw error
+                }
+
                 self.reconstructionProgress = 1
                 self.phase = .finished
                 self.statusMessage = "Mesh精製完了：微小ノイズ\(result.removedComponents)成分を除去、薄い可視部品は保持"
