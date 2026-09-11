@@ -281,12 +281,21 @@ enum MeshExportService {
             valid = prefix.contains("Kaydara FBX Binary") || prefix.contains("; FBX")
 
         case .glb:
-            let data = try readPrefix(url, maxBytes: 12)
+            let data = try readPrefix(url, maxBytes: 20)
             if data.count >= 12,
                Array(data.prefix(4)) == [0x67, 0x6c, 0x54, 0x46] {
                 let version = readUInt32LE(data, offset: 4)
                 let declaredLength = UInt64(readUInt32LE(data, offset: 8))
-                valid = version == 2 && declaredLength == totalBytes && declaredLength >= 12
+                switch version {
+                case 1:
+                    // GLB 1.0 has a 20-byte header. Accept valid legacy passthrough without
+                    // weakening truncation protection; v1-specific content metadata starts at 12.
+                    valid = data.count >= 20 && declaredLength == totalBytes && declaredLength >= 20
+                case 2:
+                    valid = declaredLength == totalBytes && declaredLength >= 12
+                default:
+                    valid = false
+                }
             } else {
                 valid = false
             }
