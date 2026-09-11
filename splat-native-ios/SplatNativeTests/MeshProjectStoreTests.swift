@@ -92,6 +92,29 @@ final class MeshProjectStoreTests: XCTestCase {
         XCTAssertEqual(store.listProjects().count, 1)
     }
 
+    func testLibraryManifestCannotEscapeArchivedProjectResultRoot() throws {
+        let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x34)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        let outside = rootURL.appendingPathComponent("outside.obj")
+        try Data(repeating: 0x71, count: 256).write(to: outside)
+
+        let manifestURL = archived.projectURL.appendingPathComponent(MeshProjectStore.libraryManifestFileName)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        var manifest = try decoder.decode(
+            MeshProjectStore.LibraryManifest.self,
+            from: Data(contentsOf: manifestURL)
+        )
+        manifest.resultFileName = "../../outside.obj"
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        try encoder.encode(manifest).write(to: manifestURL, options: .atomic)
+
+        let relaunched = MeshProjectStore(appRootURL: rootURL)
+        XCTAssertTrue(relaunched.listProjects().isEmpty)
+        XCTAssertEqual(try Data(contentsOf: outside), Data(repeating: 0x71, count: 256))
+    }
+
     func testTrashRestoreAndPermanentDeleteSurviveStoreRecreation() throws {
         let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x55)
         let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
