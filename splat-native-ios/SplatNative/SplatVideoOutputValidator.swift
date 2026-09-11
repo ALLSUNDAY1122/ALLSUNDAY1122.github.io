@@ -78,12 +78,50 @@ enum SplatVideoOutputValidator {
 
         // Metadata alone is insufficient: a damaged MP4 can expose a video track and plausible
         // duration while containing no frame that the system decoder can actually materialize.
-        // Decode exactly one frame before the file becomes shareable. This is bounded work and
-        // catches corrupt/truncated media without walking the full export a second time.
+        // Probe both the beginning and the tail. A first-frame-only probe misses files that were
+        // truncated after a valid prefix, while a full second decode would be unnecessarily costly.
         try Task.checkCancellation()
-        let reader = try AVAssetReader(asset: asset)
-        let output = AVAssetReaderTrackOutput(
+        try validateDecodedFrame(
+            asset: asset,
             track: videoTrack,
+            encodedWidth: encodedWidth,
+            encodedHeight: encodedHeight,
+            timeRange: nil
+        )
+        try Task.checkCancellation()
+
+        // Restrict the second reader to the final bounded window. AVAssetReader performs the codec
+        // seek needed for inter-frame media, so this verifies the encoded tail without walking the
+        // entire movie again. Very short clips simply probe their whole duration a second time.
+        let tailWindowSeconds = min(0.5, duration.seconds)
+        let tailStartSeconds = max(0, duration.seconds - tailWindowSeconds)
+        let tailRange = CMTimeRange(
+            start: CMTime(seconds: tailStartSeconds, preferredTimescale: 600),
+            duration: CMTime(seconds: max(0.001, duration.seconds - tailStartSeconds), preferredTimescale: 600)
+        )
+        try validateDecodedFrame(
+            asset: asset,
+            track: videoTrack,
+            encodedWidth: encodedWidth,
+            encodedHeight: encodedHeight,
+            timeRange: tailRange
+        )
+        try Task.checkCancellation()
+    }
+
+    private static func validateDecodedFrame(
+        asset: AVAsset,
+        track: AVAssetTrack,
+        encodedWidth: Int,
+        encodedHeight: Int,
+        timeRange: CMTimeRange?
+    ) throws {
+        let reader = try AVAssetReader(asset: asset)
+        if let timeRange {
+            reader.timeRange = timeRange
+        }
+        let output = AVAssetReaderTrackOutput(
+            track: track,
             outputSettings: [
                 kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)
             ]
@@ -98,11 +136,10 @@ enum SplatVideoOutputValidator {
         }
         defer { reader.cancelReading() }
 
-        guard let firstFrame = output.copyNextSampleBuffer(),
-              let imageBuffer = CMSampleBufferGetImageBuffer(firstFrame) else {
+        guard let frame = output.copyNextSampleBuffer(),
+              let imageBuffer = CMSampleBufferGetImageBuffer(frame) else {
             throw ValidationError.undecodableVideoFrame
         }
-        try Task.checkCancellation()
 
         // Verify decoded pixels agree with the encoded track geometry. This catches containers whose
         // metadata advertises one surface while the decoder yields a degenerate/inconsistent buffer.
