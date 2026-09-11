@@ -187,9 +187,9 @@ enum SplatDepthSeedBuilder {
 
     /// Cache admission is intentionally structural and bounded: `points3D.ply` is ASCII and is
     /// capped by `maximumDepthSeedPointCount` plus a small bounded sky seed set. Mapping the file
-    /// avoids a second large heap copy while still proving the body has the exact number of rows
-    /// promised by metadata. A torn/truncated or appended cache is regenerated instead of being
-    /// handed to the trainer.
+    /// avoids a second large heap copy while proving every persisted row has exactly the numeric
+    /// shape written by this app. A torn, appended, non-finite, or malformed cache is regenerated
+    /// instead of being handed to the trainer.
     static func cachedPLYIsComplete(at url: URL, expectedPointCount: Int) -> Bool {
         guard expectedPointCount >= minimumGeometryPointCount,
               let data = try? Data(contentsOf: url, options: .mappedIfSafe),
@@ -209,17 +209,42 @@ enum SplatDepthSeedBuilder {
 
         let body = data[headerRange.upperBound...]
         var rowCount = 0
+        var rowStart = body.startIndex
         var rowHasContent = false
-        for byte in body {
+
+        func rowIsValid(_ row: Data.SubSequence) -> Bool {
+            let line = String(decoding: row, as: UTF8.self)
+            let fields = line.split(whereSeparator: { $0 == " " || $0 == "\t" || $0 == "\r" })
+            guard fields.count == 6,
+                  let x = Float(fields[0]), x.isFinite,
+                  let y = Float(fields[1]), y.isFinite,
+                  let z = Float(fields[2]), z.isFinite,
+                  let red = Int(fields[3]), (0...255).contains(red),
+                  let green = Int(fields[4]), (0...255).contains(green),
+                  let blue = Int(fields[5]), (0...255).contains(blue) else {
+                return false
+            }
+            return true
+        }
+
+        for index in body.indices {
+            let byte = body[index]
             if byte == 0x0A {
-                if rowHasContent { rowCount += 1 }
+                if rowHasContent {
+                    guard rowIsValid(body[rowStart..<index]) else { return false }
+                    rowCount += 1
+                    if rowCount > expectedPointCount { return false }
+                }
+                rowStart = body.index(after: index)
                 rowHasContent = false
-                if rowCount > expectedPointCount { return false }
             } else if byte != 0x0D && byte != 0x20 && byte != 0x09 {
                 rowHasContent = true
             }
         }
-        if rowHasContent { rowCount += 1 }
+        if rowHasContent {
+            guard rowIsValid(body[rowStart..<body.endIndex]) else { return false }
+            rowCount += 1
+        }
         return rowCount == expectedPointCount
     }
 
