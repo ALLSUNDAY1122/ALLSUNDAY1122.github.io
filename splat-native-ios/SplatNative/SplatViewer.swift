@@ -316,6 +316,8 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                                                depthTexture: view.depthStencilTexture,
                                                rasterizationRateMap: nil,
                                                renderTargetArrayLength: 0,
+                                               accessTimeout: 0,
+                                               sortTimeout: 0,
                                                to: commandBuffer)
             consecutiveRenderFailures = 0
             if rendered { commandBuffer.present(drawable) }
