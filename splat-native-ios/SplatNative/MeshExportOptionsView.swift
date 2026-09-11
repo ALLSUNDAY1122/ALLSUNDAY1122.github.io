@@ -2,7 +2,7 @@ import SwiftUI
 
 private struct MeshSharePayload: Identifiable {
     let id = UUID()
-    let url: URL
+    let urls: [URL]
 }
 
 /// Export surface for B's real Mesh result. Share outputs are transient user-delivery artifacts:
@@ -91,7 +91,7 @@ struct MeshExportOptionsView: View {
         .sheet(item: $sharePayload, onDismiss: {
             cleanupTransientExport()
         }) { payload in
-            ShareSheet(items: [payload.url])
+            ShareSheet(items: payload.urls)
         }
         .alert("3Dデータを書き出せませんでした", isPresented: Binding(
             get: { exportError != nil },
@@ -132,9 +132,19 @@ struct MeshExportOptionsView: View {
                     destinationDirectory: createdWorkspace
                 )
                 try Task.checkCancellation()
+
+                var shareItems = [output]
+                if format == .obj, sourceURL.pathExtension.lowercased() == "obj" {
+                    shareItems.append(contentsOf: try MeshOBJShareBundle.copyCompanions(
+                        sourceOBJ: sourceURL,
+                        workspace: createdWorkspace
+                    ))
+                }
+                try Task.checkCancellation()
+
                 cleanupTransientExport()
                 exportWorkspaceURL = createdWorkspace
-                sharePayload = MeshSharePayload(url: output)
+                sharePayload = MeshSharePayload(urls: shareItems)
                 workspace = nil
             } catch is CancellationError {
                 SplatTransientExportWorkspace.remove(workspace)
