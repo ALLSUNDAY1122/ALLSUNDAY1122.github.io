@@ -263,7 +263,11 @@ private struct SavedMeshView: View {
                 let verified = try MeshProjectIntegrity.verifyOrSeal(summary: summary)
                 let scene = try SCNScene(url: verified, options: nil)
                 guard MeshRawSceneValidator.containsGeometry(scene) else {
-                    throw MeshProjectIntegrityError.invalidScene
+                    throw NSError(
+                        domain: "ScanLab.SavedMeshLoad",
+                        code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "保存済みMeshに表示可能な3D形状がありません。"]
+                    )
                 }
                 return LoadedSavedMesh(url: verified, scene: scene)
             }.value
