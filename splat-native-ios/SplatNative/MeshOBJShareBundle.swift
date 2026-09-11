@@ -92,13 +92,17 @@ enum MeshOBJShareBundle {
             throw BundleError.missingReference(reference)
         }
 
-        // A symlink can either escape the project or change the filename that OBJ/MTL still
-        // references after sharing. In both cases copying the resolved target would create a
-        // bundle whose references no longer match its files, so reject it instead of guessing.
+        // Compare the candidate after resolving against the same relative path under the resolved
+        // project root. This tolerates iOS sandbox ancestors such as /var -> /private/var while
+        // rejecting any symlink introduced inside the project itself (which would either escape
+        // the project or change a referenced filename when the files are shared).
+        let rootPath = lexicalRoot.path.hasSuffix("/") ? lexicalRoot.path : lexicalRoot.path + "/"
+        let relative = String(lexicalCandidate.path.dropFirst(rootPath.count))
+        guard !relative.isEmpty else { throw BundleError.unsafeReference(reference) }
         let resolvedRoot = lexicalRoot.resolvingSymlinksInPath().standardizedFileURL
         let resolvedCandidate = lexicalCandidate.resolvingSymlinksInPath().standardizedFileURL
-        guard resolvedRoot == lexicalRoot,
-              resolvedCandidate == lexicalCandidate,
+        let expectedResolved = resolvedRoot.appendingPathComponent(relative).standardizedFileURL
+        guard resolvedCandidate == expectedResolved,
               isContained(resolvedCandidate, in: resolvedRoot) else {
             throw BundleError.unsafeReference(reference)
         }
