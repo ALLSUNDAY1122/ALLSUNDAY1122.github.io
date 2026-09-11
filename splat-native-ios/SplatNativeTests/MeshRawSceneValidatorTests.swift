@@ -6,7 +6,14 @@ final class MeshRawSceneValidatorTests: XCTestCase {
         XCTAssertFalse(MeshRawSceneValidator.containsGeometry(SCNScene()))
     }
 
-    func testAcceptsNestedGeometry() {
+    func testRejectsGeometryContainerWithoutPrimitives() {
+        let scene = SCNScene()
+        scene.rootNode.addChildNode(SCNNode(geometry: SCNGeometry(sources: [], elements: [])))
+
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
+    func testAcceptsNestedGeometryWithPrimitives() {
         let scene = SCNScene()
         let container = SCNNode()
         let meshNode = SCNNode(geometry: SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0))
