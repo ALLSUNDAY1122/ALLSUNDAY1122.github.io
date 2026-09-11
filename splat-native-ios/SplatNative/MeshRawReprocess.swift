@@ -163,14 +163,17 @@ enum MeshRawReprocessor {
 struct MeshRawReprocessSheet: View {
     @EnvironmentObject var model: MeshScanModel
     @Environment(\.dismiss) private var dismiss
-    @State private var projects = MeshRawProjectStore.discover()
+    @State private var projects: [MeshRawProject] = []
+    @State private var isDiscoveringRaw = false
     @State private var activeProjectID: String?
     @State private var reprocessTask: Task<Void, Never>?
 
     var body: some View {
         NavigationStack {
             Group {
-                if projects.isEmpty {
+                if projects.isEmpty, isDiscoveringRaw {
+                    ProgressView("保存rawを確認しています")
+                } else if projects.isEmpty {
                     ContentUnavailableView(
                         "再処理できるrawがありません",
                         systemImage: "externaldrive.badge.xmark",
@@ -226,13 +229,28 @@ struct MeshRawReprocessSheet: View {
             }
             .refreshable {
                 guard reprocessTask == nil else { return }
-                projects = MeshRawProjectStore.discover()
+                await refreshProjects()
             }
         }
         .interactiveDismissDisabled(reprocessTask != nil)
+        .task {
+            await refreshProjects()
+        }
         .onDisappear {
             reprocessTask?.cancel()
         }
+    }
+
+    private func refreshProjects() async {
+        guard !isDiscoveringRaw else { return }
+        isDiscoveringRaw = true
+        defer { isDiscoveringRaw = false }
+
+        let discovered = await Task.detached(priority: .userInitiated) {
+            MeshRawProjectStore.discover()
+        }.value
+        guard !Task.isCancelled else { return }
+        projects = discovered
     }
 
     private func beginReprocess(_ project: MeshRawProject) {
