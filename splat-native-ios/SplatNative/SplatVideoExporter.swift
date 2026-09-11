@@ -115,9 +115,19 @@ enum SplatVideoExporter {
             }
             try FileManager.default.moveItem(at: partialURL, to: finalURL)
             do {
+                // AVAssetWriter can leave a structurally valid, playable MP4 even if writing ended
+                // prematurely. Require almost the full requested timeline before exposing the file to
+                // share/export. The tolerance covers normal container timestamp rounding and up to two
+                // frame intervals on deliberately low-FPS regression fixtures.
+                let durationTolerance = max(
+                    0.5,
+                    2.0 / Double(max(1, configuration.framesPerSecond))
+                )
+                let minimumDuration = max(0, configuration.duration - durationTolerance)
                 try await SplatVideoOutputValidator.validate(
                     finalURL,
-                    expectedDimensions: configuration.dimensions
+                    expectedDimensions: configuration.dimensions,
+                    minimumDuration: minimumDuration
                 )
             } catch is CancellationError {
                 // Cancellation is a distinct user action, not a corrupt-output failure. Preserve it
