@@ -76,4 +76,24 @@ final class MeshExportMemoryPolicyTests: XCTestCase {
             }
         }
     }
+
+    func testPreflightRejectsDirectoryMasqueradingAsMeshFile() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("c2-mesh-memory-nonregular-\(UUID().uuidString)", isDirectory: true)
+        let source = root.appendingPathComponent("fake.obj", isDirectory: true)
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        XCTAssertThrowsError(
+            try MeshExportMemoryPolicy.preflight(
+                sourceURL: source,
+                format: .obj,
+                physicalMemoryBytes: 4 * 1_024 * mib
+            )
+        ) { error in
+            guard case MeshExportMemoryPolicy.PolicyError.sourceSizeUnavailable = error else {
+                return XCTFail("Expected sourceSizeUnavailable, got \(error)")
+            }
+        }
+    }
 }
