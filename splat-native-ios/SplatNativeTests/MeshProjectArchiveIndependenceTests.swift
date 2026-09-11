@@ -49,6 +49,34 @@ final class MeshProjectArchiveIndependenceTests: XCTestCase {
         )
     }
 
+    func testArchiveRejectsProjectContainingSymlinkedSidecar() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-archive-symlink-\(UUID().uuidString)", isDirectory: true)
+        let workingProject = root
+            .appendingPathComponent("working")
+            .appendingPathComponent("mesh-archive-symlink")
+            .appendingPathExtension(MeshProjectStore.projectExtension)
+        try FileManager.default.createDirectory(at: workingProject, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let resultURL = workingProject.appendingPathComponent("mesh.obj")
+        try Data(repeating: 0x31, count: 4096).write(to: resultURL)
+
+        let externalTexture = root.appendingPathComponent("external-texture.bin")
+        try Data(repeating: 0x52, count: 2048).write(to: externalTexture)
+        let linkedTexture = workingProject.appendingPathComponent("linked-texture.bin")
+        try FileManager.default.createSymbolicLink(at: linkedTexture, withDestinationURL: externalTexture)
+
+        let store = MeshProjectStore(appRootURL: root)
+        XCTAssertThrowsError(try store.archiveFinishedProject(resultURL: resultURL)) { error in
+            guard case MeshProjectStoreError.invalidProject = error else {
+                return XCTFail("Expected invalidProject, got \(error)")
+            }
+        }
+        XCTAssertTrue(store.listProjects().isEmpty)
+        XCTAssertEqual(try Data(contentsOf: externalTexture), Data(repeating: 0x52, count: 2048))
+    }
+
     private func overwriteInPlace(_ data: Data, at url: URL) throws {
         let handle = try FileHandle(forWritingTo: url)
         defer { try? handle.close() }
