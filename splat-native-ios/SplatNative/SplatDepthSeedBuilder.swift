@@ -56,6 +56,7 @@ enum SplatDepthSeedBuilder {
         let depthFrameCount: Int
         let geometryPointCount: Int
         let skySeedCount: Int
+        let captureFingerprint: String?
         let createdAt: Date
     }
 
@@ -80,11 +81,20 @@ enum SplatDepthSeedBuilder {
     ) throws -> Outcome {
         let plyURL = projectURL.appendingPathComponent("points3D.ply")
         let metadataURL = projectURL.appendingPathComponent(metadataFileName)
+        let canonicalFallbackPoints = fallbackPoints
+            .filter { $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }
+            .sorted(by: pointLessThan)
+        let currentCaptureFingerprint = captureFingerprint(
+            depthFrames: depthFrames,
+            fallbackPoints: canonicalFallbackPoints,
+            colorFrames: colorFrames
+        )
 
         if fileManager.fileExists(atPath: plyURL.path),
            let metadataData = try? Data(contentsOf: metadataURL),
            let metadata = try? JSONDecoder().decode(RecipeMetadata.self, from: metadataData),
            metadata.recipeVersion == recipeVersion,
+           metadata.captureFingerprint == currentCaptureFingerprint,
            metadata.geometryPointCount >= minimumGeometryPointCount,
            metadata.pointCount >= metadata.geometryPointCount,
            cachedPLYIsComplete(at: plyURL, expectedPointCount: metadata.pointCount) {
@@ -122,10 +132,7 @@ enum SplatDepthSeedBuilder {
                 geometryPoints = softwareResult.points
                 geometryColors = softwareResult.colors
             } else {
-                let finiteFallback = fallbackPoints.filter {
-                    $0.x.isFinite && $0.y.isFinite && $0.z.isFinite
-                }
-                guard finiteFallback.count >= minimumGeometryPointCount else {
+                guard canonicalFallbackPoints.count >= minimumGeometryPointCount else {
                     throw NSError(
                         domain: "SplatLab.S14",
                         code: 1,
@@ -133,7 +140,7 @@ enum SplatDepthSeedBuilder {
                     )
                 }
                 source = .rawFeaturePoints
-                geometryPoints = finiteFallback
+                geometryPoints = canonicalFallbackPoints
                 geometryColors = SplatSeedColorizer.colorize(
                     points: geometryPoints,
                     frames: colorFrames,
@@ -161,6 +168,7 @@ enum SplatDepthSeedBuilder {
             depthFrameCount: depthResult.framesUsed,
             geometryPointCount: geometryPoints.count,
             skySeedCount: skySeeds.count,
+            captureFingerprint: currentCaptureFingerprint,
             createdAt: Date()
         )
         let encoder = JSONEncoder()
@@ -213,6 +221,84 @@ enum SplatDepthSeedBuilder {
         }
         if rowHasContent { rowCount += 1 }
         return rowCount == expectedPointCount
+    }
+
+    private static func captureFingerprint(
+        depthFrames: [SplatDepthSeedFrame],
+        fallbackPoints: [SIMD3<Float>],
+        colorFrames: [SplatSeedFrame]
+    ) -> String {
+        // Stable FNV-1a over persisted reconstruction inputs. Swift's Hasher is deliberately
+        // randomized between launches and therefore must not be used for an on-disk cache key.
+        var hash: UInt64 = 14_695_981_039_346_656_037
+        let prime: UInt64 = 1_099_511_628_211
+
+        func mixByte(_ byte: UInt8) {
+            hash ^= UInt64(byte)
+            hash &*= prime
+        }
+        func mixUInt64(_ value: UInt64) {
+            var value = value
+            for _ in 0..<8 {
+                mixByte(UInt8(truncatingIfNeeded: value))
+                value >>= 8
+            }
+        }
+        func mixInt(_ value: Int) {
+            mixUInt64(UInt64(bitPattern: Int64(value)))
+        }
+        func mixFloat(_ value: Float) {
+            mixUInt64(UInt64(value.bitPattern))
+        }
+        func mixString(_ value: String?) {
+            guard let value else {
+                mixByte(0xFF)
+                return
+            }
+            mixByte(0x01)
+            for byte in value.utf8 { mixByte(byte) }
+            mixByte(0)
+        }
+        func mixMatrix(_ matrix: [[Float]]) {
+            mixInt(matrix.count)
+            for row in matrix {
+                mixInt(row.count)
+                for value in row { mixFloat(value) }
+            }
+        }
+
+        mixInt(colorFrames.count)
+        for frame in colorFrames {
+            mixString(frame.filePath)
+            mixMatrix(frame.transformMatrix)
+            mixFloat(frame.flX); mixFloat(frame.flY)
+            mixFloat(frame.cx); mixFloat(frame.cy)
+            mixInt(frame.w); mixInt(frame.h)
+        }
+
+        mixInt(depthFrames.count)
+        for frame in depthFrames {
+            mixString(frame.depthFilePath)
+            mixInt(frame.depthWidth ?? -1)
+            mixInt(frame.depthHeight ?? -1)
+            mixInt(frame.depthBytesPerRow ?? -1)
+            mixMatrix(frame.transformMatrix)
+            mixFloat(frame.flX); mixFloat(frame.flY)
+            mixFloat(frame.cx); mixFloat(frame.cy)
+            mixInt(frame.w); mixInt(frame.h)
+        }
+
+        mixInt(fallbackPoints.count)
+        for point in fallbackPoints {
+            mixFloat(point.x); mixFloat(point.y); mixFloat(point.z)
+        }
+        return String(format: "%016llx", hash)
+    }
+
+    private static func pointLessThan(_ lhs: SIMD3<Float>, _ rhs: SIMD3<Float>) -> Bool {
+        if lhs.x != rhs.x { return lhs.x < rhs.x }
+        if lhs.y != rhs.y { return lhs.y < rhs.y }
+        return lhs.z < rhs.z
     }
 
     private static func depthSeedPoints(
