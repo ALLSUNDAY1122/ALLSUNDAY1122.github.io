@@ -3,7 +3,7 @@ import CoreVideo
 import Foundation
 import simd
 
-private struct MeshDepthSampleRecord: Codable {
+private struct MeshDepthSampleRecord: Codable, Sendable {
     let file: String
     let timestamp: TimeInterval
     let width: Int
@@ -14,7 +14,7 @@ private struct MeshDepthSampleRecord: Codable {
     let intrinsics: [[Float]]
 }
 
-private struct MeshDepthIndex: Codable {
+private struct MeshDepthIndex: Codable, Sendable {
     let schemaVersion: Int
     let format: String
     let createdAt: Date
@@ -60,18 +60,16 @@ final class MeshDepthRecorder: ObservableObject {
 
         let width = CVPixelBufferGetWidth(depthMap)
         let height = CVPixelBufferGetHeight(depthMap)
-        let bytesPerPixel = MemoryLayout<Float>.size
-        let rowBytes = width * bytesPerPixel
 
         CVPixelBufferLockBaseAddress(depthMap, .readOnly)
         defer { CVPixelBufferUnlockBaseAddress(depthMap, .readOnly) }
-        guard let baseAddress = CVPixelBufferGetBaseAddress(depthMap) else { return }
-
-        let sourceRowBytes = CVPixelBufferGetBytesPerRow(depthMap)
-        var data = Data(capacity: rowBytes * height)
-        for row in 0..<height {
-            data.append(Data(bytes: baseAddress.advanced(by: row * sourceRowBytes), count: rowBytes))
-        }
+        guard let baseAddress = CVPixelBufferGetBaseAddress(depthMap),
+              let data = MeshDepthPayload.tightlyPackedFloat32(
+                baseAddress: baseAddress,
+                width: width,
+                height: height,
+                sourceRowBytes: CVPixelBufferGetBytesPerRow(depthMap)
+              ) else { return }
 
         let fileName = String(format: "depth_%05d.f32", samples.count)
         let fileURL = directoryURL.appendingPathComponent(fileName)
@@ -264,9 +262,6 @@ final class MeshDepthRecorder: ObservableObject {
         lastTimestamp = -1
         // If a background write is still finishing, keep the in-flight flag set so a new
         // capture cannot start until that completion returns and releases its retained Data.
-        if !isWritingSample {
-            isWritingSample = false
-        }
     }
 
     private static func containsUsableDepthSample(_ url: URL) throws -> Bool {
