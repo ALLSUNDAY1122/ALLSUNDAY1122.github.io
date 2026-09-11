@@ -26,7 +26,7 @@ final class MeshDepthRecorderDurabilityTests: XCTestCase {
         let siblings = try FileManager.default.contentsOfDirectory(
             at: root,
             includingPropertiesForKeys: nil,
-            options: [.skipsHiddenFiles]
+            options: []
         )
         XCTAssertFalse(siblings.contains { $0.lastPathComponent.contains("lidar-depth.previous-") })
     }
