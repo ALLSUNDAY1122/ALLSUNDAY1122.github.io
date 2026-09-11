@@ -24,6 +24,28 @@ final class MeshExportContainerValidationTests: XCTestCase {
         }
     }
 
+    func testGLBPassthroughRejectsTruncatedVersionOneHeader() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-glb-v1-truncated-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        var bytes = Data([0x67, 0x6c, 0x54, 0x46]) // glTF
+        bytes.append(contentsOf: [0x01, 0x00, 0x00, 0x00]) // GLB v1
+        bytes.append(contentsOf: [0x0c, 0x00, 0x00, 0x00]) // claims 12-byte file; v1 header requires 20
+        let source = root.appendingPathComponent("truncated-v1.glb")
+        try bytes.write(to: source, options: .atomic)
+
+        do {
+            _ = try await MeshExportService.export(sourceURL: source, format: .glb, destinationDirectory: root)
+            XCTFail("Expected truncated GLB v1 header to be rejected")
+        } catch let error as MeshExportService.ExportError {
+            guard case .invalidContainer("glb") = error else {
+                return XCTFail("Expected invalidContainer(glb), got \(error)")
+            }
+        }
+    }
+
     func testGLBPassthroughRejectsUnsupportedVersion() async throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mesh-glb-version-\(UUID().uuidString)", isDirectory: true)
@@ -31,9 +53,9 @@ final class MeshExportContainerValidationTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
 
         var bytes = Data([0x67, 0x6c, 0x54, 0x46]) // glTF
-        bytes.append(contentsOf: [0x01, 0x00, 0x00, 0x00]) // unsupported GLB v1
-        bytes.append(contentsOf: [0x0c, 0x00, 0x00, 0x00]) // exact 12-byte length
-        let source = root.appendingPathComponent("legacy.glb")
+        bytes.append(contentsOf: [0x03, 0x00, 0x00, 0x00]) // unsupported GLB v3
+        bytes.append(contentsOf: [0x0c, 0x00, 0x00, 0x00])
+        let source = root.appendingPathComponent("future.glb")
         try bytes.write(to: source, options: .atomic)
 
         do {
