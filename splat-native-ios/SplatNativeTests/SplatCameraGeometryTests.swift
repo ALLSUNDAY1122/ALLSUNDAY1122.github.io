@@ -3,6 +3,15 @@ import simd
 import XCTest
 
 final class SplatCameraGeometryTests: XCTestCase {
+    func testFramingSampleStrideCapsWorkNearTargetBoundary() {
+        XCTAssertEqual(SplatCameraGeometry.framingSampleStride(pointCount: 0), 1)
+        XCTAssertEqual(SplatCameraGeometry.framingSampleStride(pointCount: 6_000), 1)
+        XCTAssertEqual(SplatCameraGeometry.framingSampleStride(pointCount: 6_001), 2)
+        XCTAssertEqual(SplatCameraGeometry.framingSampleStride(pointCount: 11_999), 2)
+        XCTAssertEqual(SplatCameraGeometry.framingSampleStride(pointCount: 12_000), 2)
+        XCTAssertEqual(SplatCameraGeometry.framingSampleStride(pointCount: 12_001), 3)
+    }
+
     func testRobustFramingKeepsLargeSceneAtLiveViewerDistanceCap() {
         let points = stride(from: -10, through: 10, by: 2).map { x in
             SplatPoint(
