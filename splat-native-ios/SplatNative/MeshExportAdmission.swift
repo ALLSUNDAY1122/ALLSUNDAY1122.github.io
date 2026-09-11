@@ -72,7 +72,9 @@ enum MeshExportAdmission {
 
     private static func fileSize(at url: URL) throws -> Int64 {
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber, size.int64Value > 0 else {
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.int64Value > 0 else {
             throw AdmissionError.sourceSizeUnavailable
         }
         return size.int64Value
