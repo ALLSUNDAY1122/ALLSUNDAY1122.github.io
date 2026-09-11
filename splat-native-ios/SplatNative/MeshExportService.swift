@@ -291,7 +291,18 @@ enum MeshExportService {
                 case 1:
                     valid = data.count >= 20 && declaredLength == totalBytes && declaredLength >= 20
                 case 2:
-                    valid = declaredLength == totalBytes && declaredLength >= 12
+                    if data.count >= 20 {
+                        let jsonChunkLength = UInt64(readUInt32LE(data, offset: 12))
+                        let firstChunkType = readUInt32LE(data, offset: 16)
+                        valid = declaredLength == totalBytes &&
+                            declaredLength >= 20 &&
+                            jsonChunkLength > 0 &&
+                            jsonChunkLength % 4 == 0 &&
+                            jsonChunkLength <= declaredLength - 20 &&
+                            firstChunkType == 0x4E4F534A
+                    } else {
+                        valid = false
+                    }
                 default:
                     valid = false
                 }
