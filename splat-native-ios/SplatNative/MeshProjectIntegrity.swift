@@ -53,6 +53,7 @@ enum MeshProjectIntegrity {
     enum IntegrityError: LocalizedError, Equatable {
         case manifestMissing
         case resultMissing
+        case evidenceInvalid
         case resultChangedAfterArchive
         case resultChangedDuringVerification
         case hashMismatch
@@ -63,6 +64,8 @@ enum MeshProjectIntegrity {
                 return "保存済みMeshの完成記録を確認できません。"
             case .resultMissing:
                 return "保存済みMeshの3Dデータが見つかりません。"
+            case .evidenceInvalid:
+                return "保存済みMeshの整合性記録が破損または互換性のない状態です。元のスキャンから保存し直してください。"
             case .resultChangedAfterArchive:
                 return "保存後にMeshデータが変更されています。元のスキャンから保存し直してください。"
             case .resultChangedDuringVerification:
@@ -105,9 +108,16 @@ enum MeshProjectIntegrity {
         }
 
         let evidenceURL = summary.projectURL.appendingPathComponent(evidenceFileName)
-        if let data = try? Data(contentsOf: evidenceURL),
-           let evidence = try? decoder.decode(Evidence.self, from: data),
-           evidence.matches(manifest) {
+        if fileManager.fileExists(atPath: evidenceURL.path) {
+            guard let data = try? Data(contentsOf: evidenceURL),
+                  let evidence = try? decoder.decode(Evidence.self, from: data),
+                  evidence.matches(manifest) else {
+                // Existing trust evidence must never be silently replaced by a new seal. If it is
+                // corrupt, from an unsupported future schema, or no longer bound to this manifest,
+                // fail closed so modified bytes cannot become trusted merely by deleting/damaging
+                // the previous hash record while preserving size and mtime.
+                throw IntegrityError.evidenceInvalid
+            }
             let hash = try sha256Hex(fileURL: resultURL)
             let after = try snapshot(resultURL, fileManager: fileManager)
             guard after == before else { throw IntegrityError.resultChangedDuringVerification }
