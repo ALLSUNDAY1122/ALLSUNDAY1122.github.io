@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 
 struct MeshProjectSummary: Identifiable, Equatable, Sendable {
@@ -43,9 +44,9 @@ enum MeshProjectStoreError: LocalizedError {
 ///
 /// B currently deletes its working directory from `MeshScanModel.reset()`. C therefore snapshots
 /// a finished project outside B's working root before reset can destroy it. Because both locations
-/// are on the app's Documents volume, regular files are hard-linked first: deleting B's directory
-/// removes only its names while the library links keep the exact bytes alive without duplicating
-/// storage. Filesystems that reject hard links fall back to a capacity-checked physical copy.
+/// are normally on the same APFS volume, regular files are cloned copy-on-write first: deleting or
+/// mutating B's working files cannot mutate the archived library while unchanged extents remain
+/// storage-efficient. Filesystems that reject clones fall back to a capacity-checked physical copy.
 final class MeshProjectStore {
     static let projectExtension = "meshproject"
     static let sourceManifestFileName = "mesh-project.json"
@@ -195,7 +196,7 @@ final class MeshProjectStore {
 
         do {
             do {
-                try hardLinkSnapshotTree(from: sourceProjectURL, to: temporaryURL)
+                try cloneSnapshotTree(from: sourceProjectURL, to: temporaryURL)
             } catch {
                 try? fileManager.removeItem(at: temporaryURL)
                 try preflightPhysicalCopy(of: sourceProjectURL)
@@ -351,7 +352,7 @@ final class MeshProjectStore {
         }
     }
 
-    private func hardLinkSnapshotTree(from source: URL, to destination: URL) throws {
+    private func cloneSnapshotTree(from source: URL, to destination: URL) throws {
         try fileManager.createDirectory(at: destination, withIntermediateDirectories: true)
         guard let enumerator = fileManager.enumerator(
             at: source,
@@ -374,7 +375,15 @@ final class MeshProjectStore {
                 try fileManager.createDirectory(at: target, withIntermediateDirectories: true)
             } else if values.isRegularFile == true {
                 try fileManager.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
-                try fileManager.linkItem(at: standardized, to: target)
+                let cloned = standardized.withUnsafeFileSystemRepresentation { sourcePath in
+                    target.withUnsafeFileSystemRepresentation { destinationPath in
+                        guard let sourcePath, let destinationPath else { return false }
+                        return clonefile(sourcePath, destinationPath, 0) == 0
+                    }
+                }
+                if !cloned {
+                    throw CocoaError(.fileWriteUnknown)
+                }
             } else {
                 try fileManager.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
                 try fileManager.copyItem(at: standardized, to: target)
