@@ -15,7 +15,7 @@ final class MeshOBJShareBundleTests: XCTestCase {
         try Data([0x89, 0x50, 0x4e, 0x47]).write(to: texture)
 
         let companions = try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace)
-        XCTAssertEqual(Set(companions.map(\.lastPathComponent)), ["mesh.mtl", "atlas.png"])
+        XCTAssertEqual(Set(companions.map(\.lastPathComponent)), Set(["mesh.mtl", "atlas.png"]))
         XCTAssertEqual(
             try Data(contentsOf: workspace.appendingPathComponent("mesh.mtl")),
             try Data(contentsOf: mtl)
