@@ -127,4 +127,19 @@ final class SplatVideoConfigurationTests: XCTestCase {
         XCTAssertEqual(orbitHalf.yaw, 0, accuracy: 0.0001)
         XCTAssertGreaterThan(orbitThreeQuarter.yaw, .pi / 4)
     }
+
+    func testCameraMotionSanitizesNonfiniteProgress() {
+        for motion in SplatVideoConfiguration.CameraMotion.allCases {
+            var config = SplatVideoConfiguration()
+            config.cameraMotion = motion
+
+            for progress in [Double.nan, Double.infinity, -Double.infinity] {
+                let sample = config.cameraSample(progress: progress)
+                XCTAssertTrue(sample.yaw.isFinite)
+                XCTAssertTrue(sample.pitch.isFinite)
+                XCTAssertTrue(sample.distanceMultiplier.isFinite)
+                XCTAssertEqual(sample, config.cameraSample(progress: 0))
+            }
+        }
+    }
 }
