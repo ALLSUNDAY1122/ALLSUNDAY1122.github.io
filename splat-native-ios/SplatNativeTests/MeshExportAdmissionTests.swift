@@ -76,6 +76,33 @@ final class MeshExportAdmissionTests: XCTestCase {
         )
     }
 
+    func testPreflightRejectsUnsafeOBJCompanionBeforeConvertedExport() throws {
+        let parent = FileManager.default.temporaryDirectory
+            .appendingPathComponent("c2-mesh-obj-conversion-containment-\(UUID().uuidString)", isDirectory: true)
+        let root = parent.appendingPathComponent("source", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: parent) }
+
+        let source = root.appendingPathComponent("mesh.obj")
+        let externalMaterial = parent.appendingPathComponent("outside.mtl")
+        try "mtllib ../outside.mtl\nv 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n"
+            .write(to: source, atomically: true, encoding: .utf8)
+        try "newmtl external\n".write(to: externalMaterial, atomically: true, encoding: .utf8)
+
+        XCTAssertThrowsError(
+            try MeshExportAdmission.preflight(
+                sourceURL: source,
+                format: .glb,
+                availableCapacityOverride: Int64.max
+            )
+        ) { error in
+            guard case MeshOBJShareBundle.BundleError.unsafeReference(let reference) = error else {
+                return XCTFail("Expected unsafeReference, got \(error)")
+            }
+            XCTAssertEqual(reference, "../outside.mtl")
+        }
+    }
+
     func testPreflightRejectsBeforeWorkspaceWhenFreeSpaceIsInsufficient() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("c2-mesh-low-storage-\(UUID().uuidString)", isDirectory: true)
