@@ -134,6 +134,16 @@ final class SplatCameraGeometryTests: XCTestCase {
         XCTAssertEqual(simd_length(z), 1, accuracy: 0.0001)
     }
 
+    func testLookAtRemainsFiniteForNonFiniteEyeAndCenter() {
+        let matrix = SplatCameraGeometry.lookAt(
+            eye: SIMD3<Float>(.nan, .infinity, -.infinity),
+            center: SIMD3<Float>(.nan, 0, 0),
+            up: SIMD3<Float>(0, 1, 0)
+        )
+
+        XCTAssertTrue(isFinite(matrix))
+    }
+
     private func isFinite(_ matrix: simd_float4x4) -> Bool {
         for column in 0..<4 {
             for row in 0..<4 where !matrix[column][row].isFinite {
