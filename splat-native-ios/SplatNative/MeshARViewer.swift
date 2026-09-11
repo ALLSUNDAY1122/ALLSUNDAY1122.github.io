@@ -22,7 +22,7 @@ struct MeshARViewerSheet: View {
             if let url = model.resultURL {
                 switch displayMode {
                 case .ar:
-                    MeshARPlacementView(modelURL: url)
+                    MeshARPlacementView(modelURL: url, preparedScene: model.previewScene)
                         .ignoresSafeArea()
                 case .object:
                     if let scene = model.previewScene {
@@ -78,9 +78,10 @@ struct MeshARViewerSheet: View {
 @MainActor
 struct MeshARPlacementView: UIViewRepresentable {
     let modelURL: URL
+    let preparedScene: SCNScene?
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(modelURL: modelURL)
+        Coordinator(modelURL: modelURL, preparedScene: preparedScene)
     }
 
     func makeUIView(context: Context) -> ARSCNView {
@@ -123,11 +124,13 @@ struct MeshARPlacementView: UIViewRepresentable {
     @MainActor
     final class Coordinator: NSObject {
         private let modelURL: URL
+        private let preparedScene: SCNScene?
         private weak var view: ARSCNView?
         private var placedNode: SCNNode?
 
-        init(modelURL: URL) {
+        init(modelURL: URL, preparedScene: SCNScene?) {
             self.modelURL = modelURL
+            self.preparedScene = preparedScene
         }
 
         func attach(to view: ARSCNView) {
@@ -188,8 +191,19 @@ struct MeshARPlacementView: UIViewRepresentable {
                 return
             }
 
-            guard let source = try? SCNScene(url: modelURL, options: nil),
-                  MeshRawSceneValidator.containsGeometry(source) else { return }
+            // MeshScanModel has already parsed and validated previewScene before this sheet opens.
+            // Reuse that in-memory scene on the first AR placement instead of synchronously parsing
+            // the same potentially large OBJ/USDZ from disk on the user's tap. Keep the URL fallback
+            // for restored/legacy flows where a preview scene is not available.
+            let source: SCNScene
+            if let preparedScene, MeshRawSceneValidator.containsGeometry(preparedScene) {
+                source = preparedScene
+            } else if let loaded = try? SCNScene(url: modelURL, options: nil),
+                      MeshRawSceneValidator.containsGeometry(loaded) {
+                source = loaded
+            } else {
+                return
+            }
 
             let anchor = SCNNode()
             anchor.simdTransform = transform
