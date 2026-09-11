@@ -273,7 +273,6 @@ struct SplatResultView: View {
 
     private func beginProtectedReprocess(_ action: @escaping @MainActor () -> Void) {
         guard !isPreparingReprocess else { return }
-        viewerState.persistNow()
         reprocessError = nil
         isPreparingReprocess = true
         let sourceURL = url
@@ -287,11 +286,12 @@ struct SplatResultView: View {
                 }
             }
             do {
-                // Compatibility must be established before preservation or training can touch any
-                // project-owned checkpoint/result files. A future manifest belongs to the newer app
-                // and must remain byte-for-byte untouched by this version.
+                // This must be the first project-file operation in the reprocess path. A future
+                // manifest belongs to the newer app, so even viewer sidecars must remain untouched
+                // until compatibility has been established.
                 _ = try ScanProjectStore().loadManifest(projectURL: projectURL)
                 try Task.checkCancellation()
+                viewerState.persistNow()
                 try await SplatPreviousResultEvidence.preserveBeforeReprocessAsync(sourceURL: sourceURL)
                 try Task.checkCancellation()
                 guard url == sourceURL else { return }
