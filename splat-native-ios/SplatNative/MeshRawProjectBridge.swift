@@ -138,11 +138,16 @@ enum MeshRawProjectBridge {
         for project: MeshRawProject,
         fileManager: FileManager = .default
     ) throws -> PreparedMeshRawProject {
-        // Discovery is only a snapshot. The user may clear RAW or storage may change while the
-        // reprocess sheet is open, so revalidate the actual directory immediately before work.
-        // The same eligibility contract used by the actual PhotogrammetrySession is required here;
-        // one surviving or renamed file must never create an apparently runnable workspace.
-        guard countImages(in: project.imagesURL, fileManager: fileManager) > 0 else {
+        // This function is reached from the MainActor reprocess action. Do not repeat the expensive
+        // ImageIO decode probe here: MeshRawReprocessor immediately performs the authoritative deep
+        // validation on a detached worker before PhotogrammetrySession starts. A cheap metadata gate
+        // still catches RAW deletion while the sheet was open; failed deep validation cleans up any
+        // transient workspace without touching the archived source.
+        guard MeshRawInputValidator.rawImageFileCount(
+            in: project.imagesURL,
+            fileManager: fileManager,
+            stopAfter: MeshRawInputValidator.minimumPhotogrammetryImageCount
+        ) >= MeshRawInputValidator.minimumPhotogrammetryImageCount else {
             throw MeshRawProjectBridgeError.rawUnavailable
         }
 
