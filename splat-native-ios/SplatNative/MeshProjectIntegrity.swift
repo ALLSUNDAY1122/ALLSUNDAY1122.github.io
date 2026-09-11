@@ -1,5 +1,6 @@
 import CryptoKit
 import Foundation
+import SceneKit
 
 /// Integrity gate for C-owned archived Mesh results.
 ///
@@ -53,6 +54,7 @@ enum MeshProjectIntegrity {
     enum IntegrityError: LocalizedError, Equatable {
         case manifestMissing
         case resultMissing
+        case invalidGeometry
         case evidenceInvalid
         case evidencePersistenceFailed
         case resultChangedAfterArchive
@@ -65,6 +67,8 @@ enum MeshProjectIntegrity {
                 return "保存済みMeshの完成記録を確認できません。"
             case .resultMissing:
                 return "保存済みMeshの3Dデータが見つかりません。"
+            case .invalidGeometry:
+                return "保存済みMeshに利用可能な3D形状がありません。元のスキャンから再生成してください。"
             case .evidenceInvalid:
                 return "保存済みMeshの整合性記録が破損または互換性のない状態です。元のスキャンから保存し直してください。"
             case .evidencePersistenceFailed:
@@ -134,6 +138,14 @@ enum MeshProjectIntegrity {
         guard abs(before.modificationDate.timeIntervalSince(manifest.sourceResultModificationDate)) < manifestTimestampTolerance,
               before.modificationDate < manifest.archivedAt.addingTimeInterval(manifestTimestampTolerance) else {
             throw IntegrityError.resultChangedAfterArchive
+        }
+
+        // A non-empty, byte-stable file is still not necessarily a usable Mesh. SceneKit can open
+        // syntactically valid but empty/truncated containers, so first trust requires real vertex
+        // payload plus primitives. Once sealed, the exact hash preserves this semantic decision.
+        guard let scene = try? SCNScene(url: resultURL, options: nil),
+              MeshRawSceneValidator.containsGeometry(scene) else {
+            throw IntegrityError.invalidGeometry
         }
 
         let hash = try sha256Hex(fileURL: resultURL)
