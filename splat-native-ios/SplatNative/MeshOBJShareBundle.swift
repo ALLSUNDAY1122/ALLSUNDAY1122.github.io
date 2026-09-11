@@ -87,7 +87,14 @@ enum MeshOBJShareBundle {
 
         for character in text {
             if escaping {
-                current.append(character)
+                if character.isWhitespace || character == "\"" || character == "'" || character == "\\" || character == "#" {
+                    current.append(character)
+                } else {
+                    // A backslash before an ordinary filename character is a Windows path
+                    // separator, not an OBJ escape sequence. Preserve it for normalization.
+                    current.append("\\")
+                    current.append(character)
+                }
                 escaping = false
                 continue
             }
@@ -151,10 +158,17 @@ enum MeshOBJShareBundle {
     }
 
     private static func resolved(_ reference: String, relativeTo base: URL, allowedRoot: URL) throws -> URL {
-        guard !reference.hasPrefix("/"), !reference.hasPrefix("~") else {
+        let characters = Array(reference)
+        let isWindowsAbsolute = characters.count >= 3 && characters[1] == ":" && (characters[2] == "\\" || characters[2] == "/")
+        guard !reference.hasPrefix("/"), !reference.hasPrefix("~"), !isWindowsAbsolute else {
             throw BundleError.unsafeReference(reference)
         }
-        let lexicalCandidate = base.appendingPathComponent(reference).standardizedFileURL
+
+        // OBJ/MTL files created on Windows commonly persist '\\' separators. Normalize only
+        // after rejecting an absolute drive path; parent traversal is still caught below after
+        // standardizedFileURL resolves `..` components.
+        let normalizedReference = reference.replacingOccurrences(of: "\\", with: "/")
+        let lexicalCandidate = base.appendingPathComponent(normalizedReference).standardizedFileURL
         let lexicalRoot = allowedRoot.standardizedFileURL
         guard isContained(lexicalCandidate, in: lexicalRoot) else {
             throw BundleError.unsafeReference(reference)
