@@ -84,6 +84,18 @@ enum MeshAssetContract {
             }
         }
 
+        // Never downgrade a sidecar written by a newer app. Codable can successfully ignore
+        // unknown fields, so decoding it as today's descriptor is not enough to prove that a
+        // rewrite is lossless. Read only the version discriminator and leave future bytes intact.
+        if fileManager.fileExists(atPath: sidecarURL.path) {
+            let existing = try Data(contentsOf: sidecarURL, options: [.mappedIfSafe])
+            if let object = try? JSONSerialization.jsonObject(with: existing) as? [String: Any],
+               let version = object["schemaVersion"] as? NSNumber,
+               version.intValue > descriptor.schemaVersion {
+                throw sidecarError("このMesh資産メタデータは新しいバージョンで作成されています。原本を保護するため更新しません")
+            }
+        }
+
         // Validate the exact candidate before replacing the last known-good sidecar. Atomic write
         // alone protects against a torn rename, but it does not prove that the bytes now on disk
         // still decode to the asset generation the viewer/exporter is about to expose.
