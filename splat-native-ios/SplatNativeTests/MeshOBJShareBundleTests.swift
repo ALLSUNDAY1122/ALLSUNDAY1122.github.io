@@ -63,6 +63,24 @@ final class MeshOBJShareBundleTests: XCTestCase {
         XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: workspace.path), [])
     }
 
+    func testRejectsSymlinkEscapeWithoutCopyingExternalMaterial() throws {
+        let parent = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: parent) }
+        let sourceRoot = parent.appendingPathComponent("source", isDirectory: true)
+        let workspace = parent.appendingPathComponent("workspace", isDirectory: true)
+        try FileManager.default.createDirectory(at: sourceRoot, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: workspace, withIntermediateDirectories: true)
+        let external = parent.appendingPathComponent("external.mtl")
+        try "newmtl secret\n".write(to: external, atomically: true, encoding: .utf8)
+        let link = sourceRoot.appendingPathComponent("linked.mtl")
+        try FileManager.default.createSymbolicLink(at: link, withDestinationURL: external)
+        let obj = sourceRoot.appendingPathComponent("mesh.obj")
+        try "mtllib linked.mtl\nv 0 0 0\n".write(to: obj, atomically: true, encoding: .utf8)
+
+        XCTAssertThrowsError(try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace))
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: workspace.path), [])
+    }
+
     private func makeRoot() throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("obj-share-\(UUID().uuidString)", isDirectory: true)
