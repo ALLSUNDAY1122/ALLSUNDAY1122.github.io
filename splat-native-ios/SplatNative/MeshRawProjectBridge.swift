@@ -89,7 +89,7 @@ enum MeshRawProjectBridge {
         // from "reprocess" as soon as that working directory was deleted. Re-expose archived RAW,
         // while preferring an extant working project with the same logical ID to avoid duplicate IDs.
         let meshStore = MeshProjectStore(appRootURL: root, fileManager: fileManager)
-        for summary in meshStore.listProjects() where summary.rawDataRetained {
+        for summary in meshStore.listProjects() where summary.reprocessSupported {
             let id = "mesh:\(summary.id)"
             guard !meshIDs.contains(id) else { continue }
             let imagesURL = summary.projectURL.appendingPathComponent("images", isDirectory: true)
@@ -239,13 +239,11 @@ enum MeshRawProjectBridge {
     }
 
     private static func countImages(in directory: URL, fileManager: FileManager) -> Int {
-        let usableCount = MeshRawInputValidator.usableImageCount(
+        guard MeshRawInputValidator.hasMinimumUsableImages(
             in: directory,
             fileManager: fileManager
-        )
-        return usableCount >= MeshRawInputValidator.minimumPhotogrammetryImageCount
-            ? usableCount
-            : 0
+        ) else { return 0 }
+        return MeshRawInputValidator.rawImageFileCount(in: directory, fileManager: fileManager)
     }
 
     private static func sanitizedFileComponent(_ value: String) -> String {
