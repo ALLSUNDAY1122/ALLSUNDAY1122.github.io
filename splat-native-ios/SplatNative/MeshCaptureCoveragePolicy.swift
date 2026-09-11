@@ -23,12 +23,17 @@ enum MeshCaptureCoveragePolicy {
         meters.isFinite && meters >= 0 && meters <= 0.35
     }
 
-    /// The capture pipeline never accepts translation above 1.6 m/s, even for distant scenes.
-    /// Do not let the quality advisor credit motion that the actual RGB capture policy would reject.
+    /// The quality advisor samples roughly every 160 ms. A long gap means the trajectory between
+    /// the two camera poses was unobserved (for example after a stall, interruption, or resume), so
+    /// displacement across that gap must not be credited as continuous capture motion. Otherwise a
+    /// user can gain path/height/viewpoint coverage from a jump that the capture pipeline never saw.
     static func isPlausibleSampleDisplacement(_ meters: Float, elapsedSeconds: TimeInterval) -> Bool {
         guard isPlausibleSampleDisplacement(meters),
               elapsedSeconds.isFinite,
-              elapsedSeconds > 0 else { return false }
+              elapsedSeconds > 0,
+              elapsedSeconds <= 1.0 else { return false }
+        // The capture pipeline never accepts translation above 1.6 m/s, even for distant scenes.
+        // Do not let the quality advisor credit motion that the actual RGB capture policy would reject.
         return meters / Float(elapsedSeconds) <= 1.60
     }
 
