@@ -23,7 +23,7 @@ enum MeshOBJShareBundle {
         let root = sourceOBJ.deletingLastPathComponent().standardizedFileURL
         let text = try String(contentsOf: sourceOBJ, encoding: .utf8)
         let mtlReferences = text
-            .split(whereSeparator: \ .isNewline)
+            .split(whereSeparator: \.isNewline)
             .compactMap { line -> String? in
                 let trimmed = line.trimmingCharacters(in: .whitespaces)
                 guard trimmed.hasPrefix("mtllib ") else { return nil }
@@ -64,10 +64,10 @@ enum MeshOBJShareBundle {
             "map_Ka", "map_Kd", "map_Ks", "map_Ke", "map_d",
             "map_bump", "bump", "disp", "decal", "norm", "map_Pr", "map_Pm"
         ]
-        return mtl.split(whereSeparator: \ .isNewline).compactMap { rawLine in
+        return mtl.split(whereSeparator: \.isNewline).compactMap { rawLine in
             let line = rawLine.trimmingCharacters(in: .whitespaces)
             guard !line.isEmpty, !line.hasPrefix("#") else { return nil }
-            let parts = line.split(whereSeparator: \ .isWhitespace)
+            let parts = line.split(whereSeparator: \.isWhitespace)
             guard parts.count >= 2, commands.contains(String(parts[0])) else { return nil }
             // App-generated MTL uses a plain relative filename. For third-party MTL with options,
             // the final token is the texture path per common exporter convention.
