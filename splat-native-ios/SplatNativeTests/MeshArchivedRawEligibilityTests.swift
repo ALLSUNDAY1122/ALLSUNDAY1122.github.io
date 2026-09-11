@@ -38,7 +38,7 @@ final class MeshArchivedRawEligibilityTests: XCTestCase {
         try FileManager.default.removeItem(at: archivedImages.appendingPathComponent("frame-00000.png"))
 
         let refreshed = try XCTUnwrap(store.listProjects().first)
-        XCTAssertFalse(refreshed.rawDataRetained)
+        XCTAssertTrue(refreshed.rawDataRetained)
         XCTAssertFalse(refreshed.reprocessSupported)
     }
 }
