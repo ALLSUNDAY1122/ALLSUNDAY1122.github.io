@@ -1,3 +1,4 @@
+import simd
 import XCTest
 
 final class MeshCaptureQualityAdvisorTests: XCTestCase {
@@ -37,5 +38,12 @@ final class MeshCaptureQualityAdvisorTests: XCTestCase {
         XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.infinity))
         XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.nan))
         XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(-0.01))
+    }
+
+    func testCameraPositionRejectsNonfiniteCoordinates() {
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isFiniteCameraPosition(SIMD3<Float>(0, 1, -2)))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isFiniteCameraPosition(SIMD3<Float>(.nan, 0, 0)))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isFiniteCameraPosition(SIMD3<Float>(0, .infinity, 0)))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isFiniteCameraPosition(SIMD3<Float>(0, 0, -.infinity)))
     }
 }
