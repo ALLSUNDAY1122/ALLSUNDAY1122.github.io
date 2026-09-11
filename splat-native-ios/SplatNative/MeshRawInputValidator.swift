@@ -32,14 +32,15 @@ enum MeshRawInputValidator {
         if let stopAfter, stopAfter <= 0 { return 0 }
         guard let files = try? fileManager.contentsOfDirectory(
             at: directory,
-            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
+            includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
             options: [.skipsHiddenFiles]
         ) else { return 0 }
 
         var count = 0
         for url in files {
             guard supportedExtensions.contains(url.pathExtension.lowercased()),
-                  let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
+                  let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]),
+                  values.isSymbolicLink != true,
                   values.isRegularFile == true,
                   (values.fileSize ?? 0) > 0 else {
                 continue
@@ -71,7 +72,7 @@ enum MeshRawInputValidator {
         if let stopAfter, stopAfter <= 0 { return 0 }
         guard let files = try? fileManager.contentsOfDirectory(
             at: directory,
-            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
+            includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
             options: [.skipsHiddenFiles]
         ) else {
             return 0
@@ -80,7 +81,8 @@ enum MeshRawInputValidator {
         var usableCount = 0
         for url in files {
             guard supportedExtensions.contains(url.pathExtension.lowercased()),
-                  let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
+                  let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]),
+                  values.isSymbolicLink != true,
                   values.isRegularFile == true,
                   (values.fileSize ?? 0) > 0,
                   isDecodableImage(url) else {
