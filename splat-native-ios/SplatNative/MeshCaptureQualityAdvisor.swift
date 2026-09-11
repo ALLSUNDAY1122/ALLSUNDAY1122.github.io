@@ -20,6 +20,7 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     private var minimumHeight: Float?
     private var maximumHeight: Float?
     private var lastTimestamp: TimeInterval = -.greatestFiniteMagnitude
+    private var trackingInterrupted = false
 
     func reset() {
         azimuthBins.removeAll()
@@ -29,6 +30,7 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
         minimumHeight = nil
         maximumHeight = nil
         lastTimestamp = -.greatestFiniteMagnitude
+        trackingInterrupted = false
         azimuthCoverage = 0
         elevationCoverage = 0
         pathLengthMeters = 0
@@ -41,6 +43,10 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     func record(frame: ARFrame, mode: MeshCaptureMode, size: MeshScanSize, frameCount: Int, faceCount: Int) {
         guard frame.timestamp - lastTimestamp >= 0.16 else { return }
         guard case .normal = frame.camera.trackingState else {
+            // A coordinate frame can move while ARKit is initializing/relocalizing. Even a
+            // sub-35 cm shift is large enough to manufacture path, height and viewpoint coverage,
+            // so the first normal sample after any tracking interruption is always a new baseline.
+            trackingInterrupted = true
             guidance = "追跡が安定するまで速度を落としてください"
             return
         }
@@ -50,6 +56,16 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
         let position = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
         let forwardRaw = SIMD3<Float>(-transform.columns.2.x, -transform.columns.2.y, -transform.columns.2.z)
         let forward = simd_length_squared(forwardRaw) > 1e-8 ? simd_normalize(forwardRaw) : SIMD3<Float>(0, 0, -1)
+
+        if trackingInterrupted {
+            trackingInterrupted = false
+            lastPosition = position
+            lastCoveragePosition = position
+            minimumHeight = position.y
+            maximumHeight = position.y
+            guidance = "位置追跡が復旧しました。対象を画面に入れたまま、ゆっくり撮影を続けてください"
+            return
+        }
 
         let displacement = lastPosition.map { simd_distance(position, $0) }
         let plausibleMotion = displacement.map(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement) ?? true
