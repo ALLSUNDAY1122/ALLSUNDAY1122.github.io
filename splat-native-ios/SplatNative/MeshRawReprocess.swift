@@ -9,6 +9,23 @@ enum MeshRawProjectStore {
     }
 }
 
+enum MeshRawSceneValidator {
+    /// SceneKit can successfully decode a syntactically valid USDZ whose scene contains no mesh
+    /// geometry. Treat that as reconstruction failure rather than a finished user-visible asset.
+    static func containsGeometry(_ scene: SCNScene) -> Bool {
+        if scene.rootNode.geometry != nil {
+            return true
+        }
+        var containsGeometry = false
+        scene.rootNode.enumerateChildNodes { node, stop in
+            guard node.geometry != nil else { return }
+            containsGeometry = true
+            stop.pointee = true
+        }
+        return containsGeometry
+    }
+}
+
 @MainActor
 enum MeshRawReprocessor {
     static func run(project: MeshRawProject, model: MeshScanModel) async {
@@ -117,7 +134,7 @@ enum MeshRawReprocessor {
               let size = (attributes[.size] as? NSNumber)?.uint64Value,
               size > 0,
               let scene = try? SCNScene(url: outputURL, options: nil),
-              sceneContainsGeometry(scene) else {
+              MeshRawSceneValidator.containsGeometry(scene) else {
             return false
         }
 
@@ -129,21 +146,6 @@ enum MeshRawReprocessor {
             ? "保存済みSplat rawからMeshを生成しました。ライブラリへ安全に保存しています"
             : "保存済みMesh rawから再処理したMeshを生成しました"
         return true
-    }
-
-    /// SceneKit can successfully decode a syntactically valid USDZ whose scene contains no mesh
-    /// geometry. Treat that as reconstruction failure rather than a finished user-visible asset.
-    private static func sceneContainsGeometry(_ scene: SCNScene) -> Bool {
-        if scene.rootNode.geometry != nil {
-            return true
-        }
-        var containsGeometry = false
-        scene.rootNode.enumerateChildNodes { node, stop in
-            guard node.geometry != nil else { return }
-            containsGeometry = true
-            stop.pointee = true
-        }
-        return containsGeometry
     }
 
     /// Derived one-shot USDZ output must never survive a failed/cancelled request. For transient
