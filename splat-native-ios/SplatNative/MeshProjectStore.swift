@@ -288,6 +288,18 @@ final class MeshProjectStore {
               resultSnapshot.byteCount > 0 else {
             throw MeshProjectStoreError.resultMissing
         }
+
+        // Manifest flags are a historical snapshot. RAW may have been cleared, partially deleted,
+        // or the archive may predate the stricter ImageIO eligibility contract. Recompute these
+        // user-visible capabilities from the bytes that exist now so the library never advertises
+        // a reprocess action that the actual Photogrammetry gate will immediately reject.
+        let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
+        let rawRetained = MeshRawInputValidator.hasMinimumUsableImages(
+            in: imagesURL,
+            fileManager: fileManager
+        )
+        let reprocessSupported = manifest.captureMode == "photogrammetry" && rawRetained
+
         return MeshProjectSummary(
             id: manifest.id,
             projectURL: projectURL,
@@ -296,8 +308,8 @@ final class MeshProjectStore {
             scanSize: manifest.scanSize,
             createdAt: manifest.createdAt,
             updatedAt: manifest.archivedAt,
-            rawDataRetained: manifest.rawDataRetained,
-            reprocessSupported: manifest.reprocessSupported,
+            rawDataRetained: rawRetained,
+            reprocessSupported: reprocessSupported,
             storageBytes: logicalDirectorySize(projectURL)
         )
     }
