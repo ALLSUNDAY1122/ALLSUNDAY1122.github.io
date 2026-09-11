@@ -30,6 +30,9 @@ enum ScanWorldMapArchiveStore {
               values.fileSize == data.count,
               let persisted = try? Data(contentsOf: targetURL, options: .mappedIfSafe),
               persisted == data else {
+            // A failed read-back must not leave an archive that `hasWorldMap` can later mistake for
+            // a resumable capture. Keep failure atomic from the caller's perspective as well.
+            try? FileManager.default.removeItem(at: targetURL)
             throw ScanWorldMapArchiveStoreError.verificationFailed
         }
     }
