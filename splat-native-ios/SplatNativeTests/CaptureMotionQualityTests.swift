@@ -65,6 +65,26 @@ final class CaptureMotionQualityTests: XCTestCase {
         XCTAssertEqual(decision, .relocalizationJump)
     }
 
+    func testMeshCoverageViewpointRequiresPhysicalTranslation() {
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 0.55), 0.015, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 1.0), 0.020, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 1.8), 0.036, accuracy: 0.0001)
+    }
+
+    func testMeshCoverageRejectsCoordinateDiscontinuityAsPhysicalMotion() {
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20))
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.35))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.351))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.infinity))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.nan))
+    }
+
+    func testMeshVerticalCoverageRequiresRealCameraHeightChange() {
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 0.55), 0.10, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 1.0), 0.12, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 1.8), 0.216, accuracy: 0.0001)
+    }
+
     func testRejectsSeverelyDarkFrame() {
         let stats = CaptureImageQualityStats(
             meanLuma: 24,
