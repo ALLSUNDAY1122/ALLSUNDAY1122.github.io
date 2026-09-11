@@ -27,11 +27,13 @@ final class MeshFrameJPEGEncoder: @unchecked Sendable {
     }
 
     func encode(_ frameImage: MeshFrameImage, compressionQuality: CGFloat = 0.91) -> Data? {
-        let image = CIImage(cvPixelBuffer: frameImage.pixelBuffer)
-        return context.jpegRepresentation(
-            of: image,
-            colorSpace: colorSpace,
-            options: [.lossyCompressionQuality: compressionQuality]
-        )
+        autoreleasepool {
+            let image = CIImage(cvPixelBuffer: frameImage.pixelBuffer)
+            return context.jpegRepresentation(
+                of: image,
+                colorSpace: colorSpace,
+                options: [.lossyCompressionQuality: compressionQuality]
+            )
+        }
     }
 }
