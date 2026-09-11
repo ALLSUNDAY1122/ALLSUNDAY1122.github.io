@@ -22,7 +22,9 @@ final class SplatVideoOutputDecoderTests: XCTestCase {
             .appendingPathComponent("decodable-video-tail-\(UUID().uuidString).mp4")
         defer { try? FileManager.default.removeItem(at: url) }
 
-        try await writeVideo(to: url, width: 16, height: 16, frameCount: 45, framesPerSecond: 30)
+        // Six frames are sufficient to force a non-zero tail seek while avoiding unnecessary
+        // hardware/software H.264 encoder load on shared CI runners.
+        try await writeVideo(to: url, width: 16, height: 16, frameCount: 6, framesPerSecond: 4)
 
         try await SplatVideoOutputValidator.validate(
             url,
@@ -86,7 +88,16 @@ final class SplatVideoOutputDecoderTests: XCTestCase {
             }
             CVPixelBufferUnlockBaseAddress(buffer, [])
 
+            let readinessDeadline = Date().addingTimeInterval(5)
             while !input.isReadyForMoreMediaData {
+                guard writer.status == .writing, Date() < readinessDeadline else {
+                    throw writer.error ?? NSError(
+                        domain: "SplatVideoOutputDecoderTests",
+                        code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "Timed out waiting for AVAssetWriterInput readiness"]
+                    )
+                }
+                try Task.checkCancellation()
                 await Task.yield()
             }
             let presentationTime = CMTime(value: CMTimeValue(frameIndex), timescale: CMTimeScale(framesPerSecond))
