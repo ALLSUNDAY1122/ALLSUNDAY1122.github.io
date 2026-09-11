@@ -77,7 +77,7 @@ final class SplatDepthSeedCacheIntegrityTests: XCTestCase {
         let reordered = try SplatDepthSeedBuilder.preparePointCloudPLY(
             projectURL: projectURL,
             depthFrames: [],
-            fallbackPoints: points.reversed(),
+            fallbackPoints: Array(points.reversed()),
             colorFrames: []
         )
         XCTAssertFalse(reordered.requiresFreshTrainer)
