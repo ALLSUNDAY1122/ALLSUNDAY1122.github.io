@@ -1,5 +1,4 @@
 @preconcurrency import ARKit
-import CoreImage
 import Foundation
 import RealityKit
 import SceneKit
@@ -118,7 +117,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private var scanOrigin: SIMD3<Float>?
     private var lastSavedFrameTimestamp: TimeInterval = 0
     private var isWritingFrame = false
-    private let ciContext = CIContext(options: [.cacheIntermediates: false])
+    private let frameEncoder = MeshFrameJPEGEncoder()
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.mesh.capture", qos: .userInitiated)
     private var reconstructionTask: Task<Void, Never>?
     private var photogrammetrySession: PhotogrammetrySession?
@@ -388,10 +387,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
               !isWritingFrame,
               let imagesURL else { return }
 
-        let image = CIImage(cvPixelBuffer: frame.capturedImage)
-        guard let cgImage = ciContext.createCGImage(image, from: image.extent),
-              let jpeg = UIImage(cgImage: cgImage).jpegData(compressionQuality: 0.91) else { return }
-
+        let frameImage = MeshFrameImage(pixelBuffer: frame.capturedImage)
         let index = frames.count
         let fileName = String(format: "mesh_%05d.jpg", index)
         let fileURL = imagesURL.appendingPathComponent(fileName)
@@ -399,14 +395,19 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let transform = Self.rows(frame.camera.transform)
         let intrinsics = Self.rows3(frame.camera.intrinsics)
         let resolution = frame.camera.imageResolution
+        let frameEncoder = self.frameEncoder
         isWritingFrame = true
 
-        captureQueue.async { [weak self] in
+        captureQueue.async { [weak self, frameEncoder, frameImage] in
             let success: Bool
-            do {
-                try jpeg.write(to: fileURL, options: .atomic)
-                success = true
-            } catch {
+            if let jpeg = frameEncoder.encode(frameImage) {
+                do {
+                    try jpeg.write(to: fileURL, options: .atomic)
+                    success = true
+                } catch {
+                    success = false
+                }
+            } else {
                 success = false
             }
 
