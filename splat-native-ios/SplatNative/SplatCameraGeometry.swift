@@ -98,9 +98,13 @@ enum SplatCameraGeometry {
     }
 
     static func lookAt(eye: SIMD3<Float>, center: SIMD3<Float>, up: SIMD3<Float>) -> simd_float4x4 {
-        let delta = eye - center
+        // A malformed persisted camera state must not inject NaN/Inf into either the orientation
+        // basis or the translation column. Sanitize both positions before any matrix arithmetic.
+        let safeCenter = isFinite(center) ? center : .zero
+        let safeEye = isFinite(eye) ? eye : safeCenter + SIMD3<Float>(0, 0, 1)
+        let delta = safeEye - safeCenter
         let z: SIMD3<Float>
-        if isFinite(delta), simd_length_squared(delta) >= 1e-8 {
+        if simd_length_squared(delta) >= 1e-8 {
             z = simd_normalize(delta)
         } else {
             z = SIMD3<Float>(0, 0, 1)
@@ -128,7 +132,7 @@ enum SplatCameraGeometry {
             SIMD4<Float>(x.x, y.x, z.x, 0),
             SIMD4<Float>(x.y, y.y, z.y, 0),
             SIMD4<Float>(x.z, y.z, z.z, 0),
-            SIMD4<Float>(-simd_dot(x, eye), -simd_dot(y, eye), -simd_dot(z, eye), 1)
+            SIMD4<Float>(-simd_dot(x, safeEye), -simd_dot(y, safeEye), -simd_dot(z, safeEye), 1)
         ))
     }
 
