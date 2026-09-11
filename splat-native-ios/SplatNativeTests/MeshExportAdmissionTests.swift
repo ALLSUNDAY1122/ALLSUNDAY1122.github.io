@@ -27,6 +27,55 @@ final class MeshExportAdmissionTests: XCTestCase {
         XCTAssertEqual(required, Int64.max)
     }
 
+    func testPreflightCountsReferencedOBJMaterialAndTextureBytes() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("c2-mesh-obj-companions-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("mesh.obj")
+        let material = root.appendingPathComponent("mesh.mtl")
+        let texture = root.appendingPathComponent("atlas.png")
+        try "mtllib mesh.mtl\nv 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n"
+            .write(to: source, atomically: true, encoding: .utf8)
+        try "newmtl scan\nmap_Kd atlas.png\n"
+            .write(to: material, atomically: true, encoding: .utf8)
+        try Data(repeating: 0x7a, count: 4_096).write(to: texture)
+
+        let sourceBytes = Int64((try FileManager.default.attributesOfItem(atPath: source.path)[.size] as? NSNumber)?.int64Value ?? 0)
+        let companionBytes = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: source)
+        XCTAssertGreaterThan(companionBytes, 4_096)
+
+        let baseRequired = MeshExportAdmission.estimatedRequiredFreeBytes(
+            sourceBytes: sourceBytes,
+            sourceExtension: "obj",
+            format: .obj
+        )
+        let insufficientByOne = baseRequired + companionBytes - 1
+
+        XCTAssertThrowsError(
+            try MeshExportAdmission.preflight(
+                sourceURL: source,
+                format: .obj,
+                availableCapacityOverride: insufficientByOne
+            )
+        ) { error in
+            guard case MeshExportAdmission.AdmissionError.insufficientStorage(let required, let available) = error else {
+                return XCTFail("Expected insufficientStorage, got \(error)")
+            }
+            XCTAssertEqual(required, baseRequired + companionBytes)
+            XCTAssertEqual(available, insufficientByOne)
+        }
+
+        XCTAssertNoThrow(
+            try MeshExportAdmission.preflight(
+                sourceURL: source,
+                format: .obj,
+                availableCapacityOverride: baseRequired + companionBytes
+            )
+        )
+    }
+
     func testPreflightRejectsBeforeWorkspaceWhenFreeSpaceIsInsufficient() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("c2-mesh-low-storage-\(UUID().uuidString)", isDirectory: true)
@@ -56,7 +105,7 @@ final class MeshExportAdmissionTests: XCTestCase {
         }
 
         let children = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)
-        XCTAssertEqual(children.map(\.lastPathComponent), ["mesh.obj"])
+        XCTAssertEqual(children.map(\.lastPathComponent).sorted(), ["mesh.obj"])
     }
 
     func testPreflightRejectsDirectoryMasqueradingAsMeshFile() throws {
