@@ -41,7 +41,8 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     }
 
     func record(frame: ARFrame, mode: MeshCaptureMode, size: MeshScanSize, frameCount: Int, faceCount: Int) {
-        guard frame.timestamp - lastTimestamp >= 0.16 else { return }
+        let sampleElapsed = frame.timestamp - lastTimestamp
+        guard sampleElapsed >= 0.16 else { return }
         // Throttle every tracking state, not only normal samples. During `.limited`, leaving the
         // timestamp untouched turns this method into a per-AR-frame Published update loop exactly
         // when tracking already needs CPU headroom.
@@ -71,7 +72,9 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
         }
 
         let displacement = lastPosition.map { simd_distance(position, $0) }
-        let plausibleMotion = displacement.map(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement) ?? true
+        let plausibleMotion = displacement.map {
+            MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement($0, elapsedSeconds: sampleElapsed)
+        } ?? true
         if let displacement, plausibleMotion, displacement >= 0.006 {
             pathLengthMeters += displacement
         }
