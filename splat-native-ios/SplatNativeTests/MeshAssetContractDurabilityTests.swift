@@ -55,6 +55,32 @@ final class MeshAssetContractDurabilityTests: XCTestCase {
         )
     }
 
+    func testFutureSchemaSidecarIsNeverDowngraded() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("MeshAssetContractFuture-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+        let assetURL = root.appendingPathComponent("mesh.obj")
+        try Data("v 0 0 0\n".utf8).write(to: assetURL, options: .atomic)
+        let descriptor = try XCTUnwrap(
+            MeshAssetContract.descriptor(for: assetURL, source: .lidarSceneReconstruction)
+        )
+        let sidecarURL = assetURL.deletingPathExtension().appendingPathExtension("mesh-asset.json")
+        let futureBytes = Data("{\"schemaVersion\":999,\"futureField\":\"must-survive\"}".utf8)
+        try futureBytes.write(to: sidecarURL, options: .atomic)
+
+        XCTAssertThrowsError(try MeshAssetContract.writeSidecar(for: descriptor))
+        XCTAssertEqual(try Data(contentsOf: sidecarURL), futureBytes)
+
+        let siblings = try FileManager.default.contentsOfDirectory(
+            at: root,
+            includingPropertiesForKeys: nil,
+            options: []
+        )
+        XCTAssertFalse(siblings.contains { $0.lastPathComponent.contains(".candidate-") })
+    }
+
     func testTexturedTrimGenerationRemainsTexturedAndMetric() throws {
         let trimmedURL = URL(fileURLWithPath: "/tmp/mesh-textured-trimmed-1234.obj")
         let descriptor = try XCTUnwrap(MeshAssetContract.descriptor(for: trimmedURL))
