@@ -40,11 +40,21 @@ private enum MeshTrimEngine {
             if inside { output.append(line); used.formUnion(ids); faceCount += max(1,ids.count-2) }
         }
         guard faceCount>0 else { throw error("トリミング範囲内に面が残りません") }
-        let visual=url.lastPathComponent.lowercased().contains("visual")
+        let sourceName = url.lastPathComponent.lowercased()
+        let visual = sourceName.contains("visual")
+        let textured = sourceName.contains("textured") || lines.contains(where: { $0.hasPrefix("mtllib ") })
         // Every successful edit is a new immutable generation. Reusing a fixed filename made a
         // second trim overwrite the last known-good edited mesh before SceneKit/metadata validation
-        // had completed, so a failed edit could destroy the user's previous result.
-        let stem = visual ? "visual-mesh-trimmed" : "mesh-trimmed"
+        // had completed, so a failed edit could destroy the user's previous result. Preserve the
+        // textured marker as well: the OBJ still carries its UV/MTL references after trimming and
+        // MeshAssetContract derives isTextured from the immutable generation's filename.
+        let stem: String
+        switch (visual, textured) {
+        case (true, true): stem = "visual-mesh-textured-trimmed"
+        case (true, false): stem = "visual-mesh-trimmed"
+        case (false, true): stem = "mesh-textured-trimmed"
+        case (false, false): stem = "mesh-trimmed"
+        }
         let out=url.deletingLastPathComponent().appendingPathComponent("\(stem)-\(UUID().uuidString.lowercased()).obj")
         try (output.joined(separator:"\n")+"\n").write(to:out,atomically:true,encoding:.utf8)
         return MeshTrimResult(url:out,usedVertexCount:used.count,faceCount:faceCount)
