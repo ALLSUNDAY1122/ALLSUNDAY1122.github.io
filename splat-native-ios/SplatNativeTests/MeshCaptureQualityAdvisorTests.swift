@@ -40,6 +40,15 @@ final class MeshCaptureQualityAdvisorTests: XCTestCase {
         XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(-0.01))
     }
 
+    func testTimedMotionRejectsUnobservedLongGapsAndExcessiveSpeed() {
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: 0.20))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: 0.10))
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: 1.0))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: 1.01))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: .infinity))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: .nan))
+    }
+
     func testCameraPositionRejectsNonfiniteCoordinates() {
         XCTAssertTrue(MeshCaptureCoveragePolicy.isFiniteCameraPosition(SIMD3<Float>(0, 1, -2)))
         XCTAssertFalse(MeshCaptureCoveragePolicy.isFiniteCameraPosition(SIMD3<Float>(.nan, 0, 0)))
