@@ -97,7 +97,11 @@ struct SplatVideoConfiguration: Equatable, Sendable {
     var totalFrames: Int { max(1, Int((duration * Double(framesPerSecond)).rounded())) }
 
     func cameraSample(progress rawProgress: Double) -> CameraSample {
-        let progress = Float(max(0, min(1, rawProgress)))
+        // Export progress normally comes from an integer frame index, but treating a malformed
+        // NaN/Inf value as camera state would poison yaw/pitch and every render matrix downstream.
+        // Fail soft to the first frame so a single bad progress value cannot make the movie blank.
+        let finiteProgress = rawProgress.isFinite ? rawProgress : 0
+        let progress = Float(max(0, min(1, finiteProgress)))
         switch cameraMotion {
         case .orbit360:
             // The encoder samples progress inclusively from 0...1. Mapping 1.0 to 2π would
