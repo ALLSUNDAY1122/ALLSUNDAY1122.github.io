@@ -5,7 +5,9 @@ import SwiftUI
 
 enum MeshRawProjectStore {
     static func discover() -> [MeshRawProject] {
-        MeshRawProjectBridge.discover()
+        MeshRawProjectBridge.discover().filter {
+            $0.imageCount >= MeshRawInputValidator.minimumPhotogrammetryImageCount
+        }
     }
 }
 
