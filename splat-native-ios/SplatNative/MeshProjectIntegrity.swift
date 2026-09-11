@@ -54,6 +54,7 @@ enum MeshProjectIntegrity {
         case manifestMissing
         case resultMissing
         case evidenceInvalid
+        case evidencePersistenceFailed
         case resultChangedAfterArchive
         case resultChangedDuringVerification
         case hashMismatch
@@ -66,6 +67,8 @@ enum MeshProjectIntegrity {
                 return "保存済みMeshの3Dデータが見つかりません。"
             case .evidenceInvalid:
                 return "保存済みMeshの整合性記録が破損または互換性のない状態です。元のスキャンから保存し直してください。"
+            case .evidencePersistenceFailed:
+                return "保存済みMeshの整合性記録を安全に確定できませんでした。もう一度開いてください。"
             case .resultChangedAfterArchive:
                 return "保存後にMeshデータが変更されています。元のスキャンから保存し直してください。"
             case .resultChangedDuringVerification:
@@ -137,11 +140,62 @@ enum MeshProjectIntegrity {
         let after = try snapshot(resultURL, fileManager: fileManager)
         guard after == before else { throw IntegrityError.resultChangedDuringVerification }
 
+        try persistVerifiedEvidence(
+            Evidence(manifest: manifest, sha256: hash),
+            to: evidenceURL,
+            manifest: manifest,
+            expectedHash: hash,
+            fileManager: fileManager
+        )
+        return resultURL
+    }
+
+    private static func persistVerifiedEvidence(
+        _ evidence: Evidence,
+        to evidenceURL: URL,
+        manifest: MeshProjectStore.LibraryManifest,
+        expectedHash: String,
+        fileManager: FileManager
+    ) throws {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        try encoder.encode(Evidence(manifest: manifest, sha256: hash)).write(to: evidenceURL, options: .atomic)
-        return resultURL
+        let encoded = try encoder.encode(evidence)
+        let candidateURL = evidenceURL.deletingLastPathComponent().appendingPathComponent(
+            ".\(evidenceFileName).candidate-\(UUID().uuidString)"
+        )
+        defer { try? fileManager.removeItem(at: candidateURL) }
+
+        do {
+            try encoded.write(to: candidateURL, options: .atomic)
+            let readBack = try Data(contentsOf: candidateURL)
+            guard readBack == encoded else { throw IntegrityError.evidencePersistenceFailed }
+
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let decoded = try decoder.decode(Evidence.self, from: readBack)
+            guard decoded == evidence, decoded.matches(manifest), decoded.sha256 == expectedHash else {
+                throw IntegrityError.evidencePersistenceFailed
+            }
+
+            // Another verifier may have sealed the same archive while this candidate was being
+            // checked. Never overwrite trust evidence in that race; accept it only if it binds to
+            // this exact manifest and hash.
+            if fileManager.fileExists(atPath: evidenceURL.path) {
+                let existingData = try Data(contentsOf: evidenceURL)
+                let existing = try decoder.decode(Evidence.self, from: existingData)
+                guard existing.matches(manifest), existing.sha256 == expectedHash else {
+                    throw IntegrityError.evidenceInvalid
+                }
+                return
+            }
+
+            try fileManager.moveItem(at: candidateURL, to: evidenceURL)
+        } catch let error as IntegrityError {
+            throw error
+        } catch {
+            throw IntegrityError.evidencePersistenceFailed
+        }
     }
 
     private struct FileSnapshot: Equatable {
