@@ -25,6 +25,14 @@ enum MeshRawReprocessor {
             return
         }
 
+        guard MeshRawInputValidator.hasMinimumUsableImages(in: prepared.imagesURL) else {
+            MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
+            let message = "raw再処理には読み取り可能な画像が20枚以上必要です。保存rawが欠損または破損していないか確認してください。"
+            model.phase = .failed(message)
+            model.statusMessage = message
+            return
+        }
+
         let outputURL = prepared.projectURL.appendingPathComponent("mesh-reprocessed-\(UUID().uuidString).usdz")
 
         model.mode = .photogrammetry
