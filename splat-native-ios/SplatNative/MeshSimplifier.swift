@@ -114,7 +114,8 @@ private enum MeshOBJSimplifier {
         }
 
         let percent = Int((retainedFraction * 100).rounded())
-        let outputURL = url.deletingLastPathComponent().appendingPathComponent("mesh-simplified-\(percent).obj")
+        let outputURL = url.deletingLastPathComponent()
+            .appendingPathComponent("mesh-simplified-\(percent)-\(UUID().uuidString.lowercased()).obj")
         var output = "# Scan Lab vertex-cluster simplified mesh\n"
         output += "# source vertices \(vertices.count) faces \(faces.count)\n"
         output += "# simplified vertices \(simplifiedVertices.count) faces \(simplifiedFaces.count)\n"
@@ -130,6 +131,12 @@ private enum MeshOBJSimplifier {
             vertexCount: simplifiedVertices.count,
             faceCount: simplifiedFaces.count
         )
+    }
+
+    static func discard(_ result: MeshSimplifyResult) {
+        try? FileManager.default.removeItem(at: result.url)
+        let sidecar = result.url.deletingPathExtension().appendingPathExtension("mesh-asset.json")
+        try? FileManager.default.removeItem(at: sidecar)
     }
 }
 
@@ -164,28 +171,7 @@ struct MeshSimplifySheet: View {
                 }
                 Section {
                     Button(isWorking ? "簡略化中…" : "簡略化OBJを生成") {
-                        isWorking = true
-                        errorText = nil
-                        let url = sourceURL
-                        let fraction = retainedFraction
-                        Task {
-                            do {
-                                let result = try await Task.detached(priority: .userInitiated) {
-                                    try MeshOBJSimplifier.simplify(url: url, retainedFraction: fraction)
-                                }.value
-                                model.rawOBJURL = result.url
-                                model.resultURL = result.url
-                                model.previewScene = try? SCNScene(url: result.url, options: nil)
-                                model.vertexCount = result.vertexCount
-                                model.faceCount = result.faceCount
-                                model.statusMessage = "簡略化した実Meshを生成しました"
-                                isWorking = false
-                                dismiss()
-                            } catch {
-                                isWorking = false
-                                errorText = error.localizedDescription
-                            }
-                        }
+                        applySimplification()
                     }
                     .disabled(isWorking)
                 }
@@ -193,8 +179,57 @@ struct MeshSimplifySheet: View {
             .navigationTitle("Meshを軽量化")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("閉じる") { dismiss() }
+                    Button("閉じる") { dismiss() }.disabled(isWorking)
                 }
+            }
+        }
+        .interactiveDismissDisabled(isWorking)
+    }
+
+    private func applySimplification() {
+        isWorking = true
+        errorText = nil
+        let url = sourceURL
+        let fraction = retainedFraction
+        Task {
+            do {
+                let result = try await Task.detached(priority: .userInitiated) {
+                    try MeshOBJSimplifier.simplify(url: url, retainedFraction: fraction)
+                }.value
+                guard let candidateScene = try? SCNScene(url: result.url, options: nil) else {
+                    MeshOBJSimplifier.discard(result)
+                    throw NSError(domain:"ScanLab.MeshSimplifier", code:3, userInfo:[NSLocalizedDescriptionKey:"簡略化後のMeshを検証できませんでした。元Meshを保持します。"])
+                }
+
+                let previousRawURL = model.rawOBJURL
+                let previousResultURL = model.resultURL
+                let previousScene = model.previewScene
+                let previousVertexCount = model.vertexCount
+                let previousFaceCount = model.faceCount
+
+                model.rawOBJURL = result.url
+                model.resultURL = result.url
+                model.previewScene = candidateScene
+                model.vertexCount = result.vertexCount
+                model.faceCount = result.faceCount
+                do {
+                    try model.persistExporterMeshAssetContract()
+                } catch {
+                    model.rawOBJURL = previousRawURL
+                    model.resultURL = previousResultURL
+                    model.previewScene = previousScene
+                    model.vertexCount = previousVertexCount
+                    model.faceCount = previousFaceCount
+                    MeshOBJSimplifier.discard(result)
+                    throw error
+                }
+
+                model.statusMessage = "簡略化した実Meshを生成しました"
+                isWorking = false
+                dismiss()
+            } catch {
+                isWorking = false
+                errorText = error.localizedDescription
             }
         }
     }
