@@ -44,6 +44,26 @@ final class MeshOBJShareBundleTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: texture), textureData)
     }
 
+    func testAllowsSymlinkOnlyAboveProjectRoot() throws {
+        let parent = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: parent) }
+        let realRoot = parent.appendingPathComponent("real", isDirectory: true)
+        try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+        let alias = parent.appendingPathComponent("alias", isDirectory: true)
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: realRoot)
+        let workspace = parent.appendingPathComponent("workspace", isDirectory: true)
+        try FileManager.default.createDirectory(at: workspace, withIntermediateDirectories: true)
+
+        let obj = alias.appendingPathComponent("mesh.obj")
+        let mtl = alias.appendingPathComponent("mesh.mtl")
+        try "mtllib mesh.mtl\nv 0 0 0\n".write(to: obj, atomically: true, encoding: .utf8)
+        try "newmtl scan\n".write(to: mtl, atomically: true, encoding: .utf8)
+
+        let companions = try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace)
+        XCTAssertEqual(companions.map(\.lastPathComponent), ["mesh.mtl"])
+        XCTAssertTrue(FileManager.default.fileExists(atPath: workspace.appendingPathComponent("mesh.mtl").path))
+    }
+
     func testRejectsParentTraversalWithoutCopyingSecret() throws {
         let parent = try makeRoot()
         defer { try? FileManager.default.removeItem(at: parent) }
