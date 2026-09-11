@@ -15,13 +15,26 @@ enum MeshRawInputValidator {
         fileManager: FileManager = .default,
         minimumCount: Int = minimumPhotogrammetryImageCount
     ) -> Bool {
-        guard minimumCount > 0,
-              let files = try? fileManager.contentsOfDirectory(
-                  at: directory,
-                  includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
-                  options: [.skipsHiddenFiles]
-              ) else {
-            return false
+        guard minimumCount > 0 else { return false }
+        return usableImageCount(
+            in: directory,
+            fileManager: fileManager,
+            stopAfter: minimumCount
+        ) >= minimumCount
+    }
+
+    static func usableImageCount(
+        in directory: URL,
+        fileManager: FileManager = .default,
+        stopAfter: Int? = nil
+    ) -> Int {
+        if let stopAfter, stopAfter <= 0 { return 0 }
+        guard let files = try? fileManager.contentsOfDirectory(
+            at: directory,
+            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
+            options: [.skipsHiddenFiles]
+        ) else {
+            return 0
         }
 
         var usableCount = 0
@@ -34,9 +47,9 @@ enum MeshRawInputValidator {
                 continue
             }
             usableCount += 1
-            if usableCount >= minimumCount { return true }
+            if let stopAfter, usableCount >= stopAfter { return usableCount }
         }
-        return false
+        return usableCount
     }
 
     private static func isStructurallyReadableImage(_ url: URL) -> Bool {
