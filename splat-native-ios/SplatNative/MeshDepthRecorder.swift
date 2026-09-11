@@ -26,11 +26,14 @@ final class MeshDepthRecorder: ObservableObject {
     private var directoryURL: URL?
     private var samples: [MeshDepthSampleRecord] = []
     private var lastTimestamp: TimeInterval = -1
+    private var isWritingSample = false
+    private var pendingFinalizeProjectURL: URL?
+    private let writeQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.mesh.depth-write", qos: .utility)
 
     var isRecording: Bool { directoryURL != nil }
 
     func start() {
-        guard directoryURL == nil else { return }
+        guard directoryURL == nil, !isWritingSample else { return }
         do {
             let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let root = documents.appendingPathComponent("SplatLab", isDirectory: true)
@@ -40,6 +43,7 @@ final class MeshDepthRecorder: ObservableObject {
             directoryURL = directory
             samples.removeAll(keepingCapacity: true)
             lastTimestamp = -1
+            pendingFinalizeProjectURL = nil
         } catch {
             directoryURL = nil
         }
@@ -47,6 +51,7 @@ final class MeshDepthRecorder: ObservableObject {
 
     func record(frame: ARFrame) {
         guard let directoryURL,
+              !isWritingSample,
               frame.timestamp - lastTimestamp >= 0.75,
               let sceneDepth = frame.smoothedSceneDepth ?? frame.sceneDepth else { return }
 
@@ -70,26 +75,61 @@ final class MeshDepthRecorder: ObservableObject {
 
         let fileName = String(format: "depth_%05d.f32", samples.count)
         let fileURL = directoryURL.appendingPathComponent(fileName)
-        do {
-            try data.write(to: fileURL, options: .atomic)
-            let cameraResolution = frame.camera.imageResolution
-            samples.append(MeshDepthSampleRecord(
-                file: fileName,
-                timestamp: frame.timestamp,
-                width: width,
-                height: height,
-                cameraWidth: Int(cameraResolution.width),
-                cameraHeight: Int(cameraResolution.height),
-                transform: Self.rows(frame.camera.transform),
-                intrinsics: Self.rows3(frame.camera.intrinsics)
-            ))
-            lastTimestamp = frame.timestamp
-        } catch {
-            try? FileManager.default.removeItem(at: fileURL)
+        let cameraResolution = frame.camera.imageResolution
+        let record = MeshDepthSampleRecord(
+            file: fileName,
+            timestamp: frame.timestamp,
+            width: width,
+            height: height,
+            cameraWidth: Int(cameraResolution.width),
+            cameraHeight: Int(cameraResolution.height),
+            transform: Self.rows(frame.camera.transform),
+            intrinsics: Self.rows3(frame.camera.intrinsics)
+        )
+        isWritingSample = true
+
+        // Pixel-buffer access above remains synchronous so ARKit-owned memory never crosses
+        // executors. The copied Data is value-semantic/Sendable, so the comparatively slow
+        // atomic filesystem write can safely leave MainActor and avoid stalling capture UI.
+        writeQueue.async { [weak self] in
+            let success: Bool
+            do {
+                try data.write(to: fileURL, options: .atomic)
+                success = true
+            } catch {
+                try? FileManager.default.removeItem(at: fileURL)
+                success = false
+            }
+
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                guard self.directoryURL == directoryURL else {
+                    self.isWritingSample = false
+                    return
+                }
+
+                self.isWritingSample = false
+                if success {
+                    self.samples.append(record)
+                    self.lastTimestamp = record.timestamp
+                }
+
+                if let projectURL = self.pendingFinalizeProjectURL {
+                    self.pendingFinalizeProjectURL = nil
+                    self.finalize(into: projectURL)
+                }
+            }
         }
     }
 
     func finalize(into projectURL: URL) {
+        if isWritingSample {
+            // Finish is allowed immediately after the user taps stop. Preserve that intent and
+            // finalize only after the last in-flight atomic sample write has committed.
+            pendingFinalizeProjectURL = projectURL
+            return
+        }
+
         guard let directoryURL, !samples.isEmpty else {
             discard()
             return
@@ -115,6 +155,7 @@ final class MeshDepthRecorder: ObservableObject {
             self.directoryURL = nil
             samples.removeAll()
             lastTimestamp = -1
+            pendingFinalizeProjectURL = nil
         } catch {
             // Temporary capture is intentionally retained for recovery. If a previous
             // lidar-depth generation existed, it remains untouched until validation succeeds.
@@ -214,12 +255,18 @@ final class MeshDepthRecorder: ObservableObject {
     }
 
     func discard() {
+        pendingFinalizeProjectURL = nil
         if let directoryURL {
             try? FileManager.default.removeItem(at: directoryURL)
         }
         directoryURL = nil
         samples.removeAll()
         lastTimestamp = -1
+        // If a background write is still finishing, keep the in-flight flag set so a new
+        // capture cannot start until that completion returns and releases its retained Data.
+        if !isWritingSample {
+            isWritingSample = false
+        }
     }
 
     private static func containsUsableDepthSample(_ url: URL) throws -> Bool {
