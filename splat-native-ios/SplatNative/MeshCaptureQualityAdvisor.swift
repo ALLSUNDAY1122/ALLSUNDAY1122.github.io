@@ -118,7 +118,7 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     }
 
     static func coverageTranslationThreshold(size: MeshScanSize) -> Float {
-        max(0.015, pathThresholdValue(size: size) * 0.02)
+        MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: pathThresholdValue(size: size))
     }
 
     private func pathThreshold(size: MeshScanSize) -> Float {
