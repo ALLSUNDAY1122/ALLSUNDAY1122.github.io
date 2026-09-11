@@ -41,6 +41,48 @@ final class MeshDepthRecorderDurabilityTests: XCTestCase {
         XCTAssertThrowsError(try MeshDepthRecorder.validateCaptureDirectory(root))
     }
 
+    func testValidateCaptureDirectoryRejectsDuplicatePayloadReferences() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-depth-validate-duplicate-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try Data(repeating: 0, count: 16).write(
+            to: root.appendingPathComponent("depth_00000.f32"),
+            options: .atomic
+        )
+        try writeIndex(
+            at: root,
+            samplesJSON: sampleJSON(file: "depth_00000.f32", timestamp: 1.0) + "," +
+                sampleJSON(file: "depth_00000.f32", timestamp: 2.0)
+        )
+
+        XCTAssertThrowsError(try MeshDepthRecorder.validateCaptureDirectory(root))
+    }
+
+    func testValidateCaptureDirectoryRejectsNonIncreasingTimestamps() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-depth-validate-time-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try Data(repeating: 0, count: 16).write(
+            to: root.appendingPathComponent("depth_00000.f32"),
+            options: .atomic
+        )
+        try Data(repeating: 0, count: 16).write(
+            to: root.appendingPathComponent("depth_00001.f32"),
+            options: .atomic
+        )
+        try writeIndex(
+            at: root,
+            samplesJSON: sampleJSON(file: "depth_00000.f32", timestamp: 2.0) + "," +
+                sampleJSON(file: "depth_00001.f32", timestamp: 1.0)
+        )
+
+        XCTAssertThrowsError(try MeshDepthRecorder.validateCaptureDirectory(root))
+    }
+
     func testInstallCaptureDirectoryReplacesGenerationWithoutLeavingBackup() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mesh-depth-install-\(UUID().uuidString)", isDirectory: true)
@@ -114,29 +156,37 @@ final class MeshDepthRecorderDurabilityTests: XCTestCase {
     }
 
     private func writeIndex(at root: URL, file: String) throws {
+        try writeIndex(at: root, samplesJSON: sampleJSON(file: file, timestamp: 1.0))
+    }
+
+    private func writeIndex(at root: URL, samplesJSON: String) throws {
         let json = """
         {
           "schemaVersion": 2,
           "format": "test",
           "createdAt": "2026-09-11T00:00:00Z",
-          "samples": [
-            {
-              "file": "\(file)",
-              "timestamp": 1.0,
-              "width": 2,
-              "height": 2,
-              "cameraWidth": 1920,
-              "cameraHeight": 1440,
-              "transform": [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],
-              "intrinsics": [[1,0,0],[0,1,0],[0,0,1]]
-            }
-          ]
+          "samples": [\(samplesJSON)]
         }
         """
         try Data(json.utf8).write(
             to: root.appendingPathComponent("depth-index.json"),
             options: .atomic
         )
+    }
+
+    private func sampleJSON(file: String, timestamp: Double) -> String {
+        """
+        {
+          "file": "\(file)",
+          "timestamp": \(timestamp),
+          "width": 2,
+          "height": 2,
+          "cameraWidth": 1920,
+          "cameraHeight": 1440,
+          "transform": [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],
+          "intrinsics": [[1,0,0],[0,1,0],[0,0,1]]
+        }
+        """
     }
 
     private func assertNoBackup(in root: URL) throws {
