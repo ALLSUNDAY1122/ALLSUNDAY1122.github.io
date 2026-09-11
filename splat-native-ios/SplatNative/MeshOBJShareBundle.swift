@@ -80,19 +80,34 @@ enum MeshOBJShareBundle {
         guard !reference.hasPrefix("/"), !reference.hasPrefix("~") else {
             throw BundleError.unsafeReference(reference)
         }
-        let candidate = base.appendingPathComponent(reference).standardizedFileURL
-        let rootPath = allowedRoot.standardizedFileURL.path.hasSuffix("/")
-            ? allowedRoot.standardizedFileURL.path
-            : allowedRoot.standardizedFileURL.path + "/"
-        guard candidate.path.hasPrefix(rootPath) else {
+        let lexicalCandidate = base.appendingPathComponent(reference).standardizedFileURL
+        let lexicalRoot = allowedRoot.standardizedFileURL
+        guard isContained(lexicalCandidate, in: lexicalRoot) else {
             throw BundleError.unsafeReference(reference)
         }
+
         var isDirectory: ObjCBool = false
-        guard FileManager.default.fileExists(atPath: candidate.path, isDirectory: &isDirectory),
+        guard FileManager.default.fileExists(atPath: lexicalCandidate.path, isDirectory: &isDirectory),
               !isDirectory.boolValue else {
             throw BundleError.missingReference(reference)
         }
-        return candidate
+
+        // Standardized paths only collapse `..`; resolve symlinks as well so an imported OBJ
+        // cannot smuggle a companion outside its project directory through an in-tree symlink.
+        let resolvedRoot = lexicalRoot.resolvingSymlinksInPath().standardizedFileURL
+        let resolvedCandidate = lexicalCandidate.resolvingSymlinksInPath().standardizedFileURL
+        guard isContained(resolvedCandidate, in: resolvedRoot) else {
+            throw BundleError.unsafeReference(reference)
+        }
+        return resolvedCandidate
+    }
+
+    private static func isContained(_ candidate: URL, in root: URL) -> Bool {
+        if candidate.standardizedFileURL == root.standardizedFileURL { return true }
+        let rootPath = root.standardizedFileURL.path.hasSuffix("/")
+            ? root.standardizedFileURL.path
+            : root.standardizedFileURL.path + "/"
+        return candidate.standardizedFileURL.path.hasPrefix(rootPath)
     }
 
     private static func copyPreservingRelativePath(
@@ -101,17 +116,17 @@ enum MeshOBJShareBundle {
         workspace: URL,
         copied: inout Set<String>
     ) throws -> URL {
-        let rootPath = root.standardizedFileURL.path.hasSuffix("/")
-            ? root.standardizedFileURL.path
-            : root.standardizedFileURL.path + "/"
-        guard source.standardizedFileURL.path.hasPrefix(rootPath) else {
+        let resolvedRoot = root.resolvingSymlinksInPath().standardizedFileURL
+        let resolvedSource = source.resolvingSymlinksInPath().standardizedFileURL
+        guard isContained(resolvedSource, in: resolvedRoot) else {
             throw BundleError.unsafeReference(source.path)
         }
-        let relative = String(source.standardizedFileURL.path.dropFirst(rootPath.count))
+        let rootPath = resolvedRoot.path.hasSuffix("/") ? resolvedRoot.path : resolvedRoot.path + "/"
+        let relative = String(resolvedSource.path.dropFirst(rootPath.count))
         guard !relative.isEmpty else { throw BundleError.unsafeReference(source.path) }
         let destination = workspace.appendingPathComponent(relative).standardizedFileURL
 
-        if source.standardizedFileURL == destination {
+        if resolvedSource == destination.resolvingSymlinksInPath().standardizedFileURL {
             copied.insert(destination.path)
             return destination
         }
@@ -124,7 +139,7 @@ enum MeshOBJShareBundle {
             if FileManager.default.fileExists(atPath: destination.path) {
                 try FileManager.default.removeItem(at: destination)
             }
-            try FileManager.default.copyItem(at: source, to: destination)
+            try FileManager.default.copyItem(at: resolvedSource, to: destination)
         }
         return destination
     }
