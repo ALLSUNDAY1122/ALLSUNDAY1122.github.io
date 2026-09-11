@@ -41,10 +41,21 @@ private enum MeshTrimEngine {
         }
         guard faceCount>0 else { throw error("トリミング範囲内に面が残りません") }
         let visual=url.lastPathComponent.lowercased().contains("visual")
-        let out=url.deletingLastPathComponent().appendingPathComponent(visual ? "visual-mesh-trimmed.obj" : "mesh-trimmed.obj")
+        // Every successful edit is a new immutable generation. Reusing a fixed filename made a
+        // second trim overwrite the last known-good edited mesh before SceneKit/metadata validation
+        // had completed, so a failed edit could destroy the user's previous result.
+        let stem = visual ? "visual-mesh-trimmed" : "mesh-trimmed"
+        let out=url.deletingLastPathComponent().appendingPathComponent("\(stem)-\(UUID().uuidString.lowercased()).obj")
         try (output.joined(separator:"\n")+"\n").write(to:out,atomically:true,encoding:.utf8)
         return MeshTrimResult(url:out,usedVertexCount:used.count,faceCount:faceCount)
     }
+
+    static func discard(_ result: MeshTrimResult) {
+        try? FileManager.default.removeItem(at: result.url)
+        let sidecar = result.url.deletingPathExtension().appendingPathExtension("mesh-asset.json")
+        try? FileManager.default.removeItem(at: sidecar)
+    }
+
     private static func error(_ s:String)->NSError{NSError(domain:"ScanLab.MeshTrim",code:1,userInfo:[NSLocalizedDescriptionKey:s])}
 }
 
@@ -69,8 +80,9 @@ struct MeshTrimEditorSheet: View {
                 Section { Button(working ? "適用中…" : "トリミングを実Meshへ適用") { apply() }.disabled(working || x1-x0<0.05 || y1-y0<0.05 || z1-z0<0.05) }
             }
             .navigationTitle("トリミング")
-            .toolbar { ToolbarItem(placement:.topBarTrailing){Button("閉じる"){dismiss()}} }
+            .toolbar { ToolbarItem(placement:.topBarTrailing){Button("閉じる"){dismiss()}.disabled(working)} }
         }
+        .interactiveDismissDisabled(working)
     }
 
     private func axis(_ title:String, low:Binding<Double>, high:Binding<Double>)->some View {
@@ -80,5 +92,50 @@ struct MeshTrimEditorSheet: View {
         }
     }
 
-    private func apply(){working=true;errorText=nil;let u=sourceURL,a=x0,b=x1,c=y0,d=y1,e=z0,f=z1;Task{do{let r=try await Task.detached(priority:.userInitiated){try MeshTrimEngine.trim(url:u,x:a...b,y:c...d,z:e...f)}.value;model.resultURL=r.url;model.previewScene=try? SCNScene(url:r.url,options:nil);model.vertexCount=r.usedVertexCount;model.faceCount=r.faceCount;model.statusMessage="6方向トリミングを実Meshへ反映しました";try? model.persistExporterMeshAssetContract();working=false;dismiss()}catch{working=false;errorText=error.localizedDescription}}}
+    private func apply() {
+        working = true
+        errorText = nil
+        let source = sourceURL, xLow = x0, xHigh = x1, yLow = y0, yHigh = y1, zLow = z0, zHigh = z1
+        Task {
+            do {
+                let result = try await Task.detached(priority:.userInitiated) {
+                    try MeshTrimEngine.trim(url:source, x:xLow...xHigh, y:yLow...yHigh, z:zLow...zHigh)
+                }.value
+
+                guard let candidateScene = try? SCNScene(url: result.url, options: nil) else {
+                    MeshTrimEngine.discard(result)
+                    throw NSError(domain:"ScanLab.MeshTrim", code:2, userInfo:[NSLocalizedDescriptionKey:"トリミング後のMeshを検証できませんでした。直前の結果を保持します。"])
+                }
+
+                let previousURL = model.resultURL
+                let previousScene = model.previewScene
+                let previousVertexCount = model.vertexCount
+                let previousFaceCount = model.faceCount
+                let previousStatus = model.statusMessage
+
+                model.resultURL = result.url
+                model.previewScene = candidateScene
+                model.vertexCount = result.usedVertexCount
+                model.faceCount = result.faceCount
+                do {
+                    try model.persistExporterMeshAssetContract()
+                } catch {
+                    model.resultURL = previousURL
+                    model.previewScene = previousScene
+                    model.vertexCount = previousVertexCount
+                    model.faceCount = previousFaceCount
+                    model.statusMessage = previousStatus
+                    MeshTrimEngine.discard(result)
+                    throw error
+                }
+
+                model.statusMessage="6方向トリミングを実Meshへ反映しました"
+                working=false
+                dismiss()
+            } catch {
+                working=false
+                errorText=error.localizedDescription
+            }
+        }
+    }
 }
