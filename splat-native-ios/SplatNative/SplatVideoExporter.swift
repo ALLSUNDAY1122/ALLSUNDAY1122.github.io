@@ -277,8 +277,11 @@ enum SplatVideoExporter {
             )
 
             var didRender = false
+            var renderAttempts = 0
+            let maxRenderAttempts = 6
             while !didRender {
                 try Task.checkCancellation()
+                renderAttempts += 1
                 guard let commandBuffer = commandQueue.makeCommandBuffer() else {
                     throw ExportError.commandBufferFailed
                 }
@@ -303,6 +306,9 @@ enum SplatVideoExporter {
                         throw ExportError.writerFailed(commandBuffer.error?.localizedDescription ?? "Metal command failed")
                     }
                 } else {
+                    guard renderAttempts < maxRenderAttempts else {
+                        throw ExportError.renderSkipped
+                    }
                     try await Task.sleep(for: .milliseconds(10))
                 }
             }
