@@ -254,7 +254,9 @@ enum MeshExportService {
             throw ExportError.sourceMissing
         }
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber, size.intValue > 0 else {
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.intValue > 0 else {
             throw ExportError.emptySource
         }
     }
@@ -287,11 +289,23 @@ enum MeshExportService {
             valid = data.count >= 4 && data[0] == 0x50 && data[1] == 0x4b
 
         case .stl:
-            let data = try readPrefix(url, maxBytes: 84)
-            let asciiPrefix = String(decoding: data.prefix(80), as: UTF8.self)
+            let data = try readPrefix(url, maxBytes: 1_000_000)
+            let asciiPrefix = String(decoding: data, as: UTF8.self)
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .lowercased()
-            valid = totalBytes >= 84 || asciiPrefix.hasPrefix("solid")
+            if asciiPrefix.hasPrefix("solid"), asciiPrefix.contains("facet"), asciiPrefix.contains("endsolid") {
+                valid = true
+            } else if data.count >= 84, totalBytes >= 84 {
+                let triangleCount = UInt64(readUInt32LE(data, offset: 80))
+                if triangleCount == 0 || triangleCount > (UInt64.max - 84) / 50 {
+                    valid = false
+                } else {
+                    let requiredBytes = 84 + triangleCount * 50
+                    valid = requiredBytes == totalBytes
+                }
+            } else {
+                valid = false
+            }
 
         case .obj:
             let data = try readPrefix(url, maxBytes: 1_000_000)
@@ -336,7 +350,8 @@ enum MeshExportService {
 
     private static func fileByteCount(_ url: URL) throws -> UInt64 {
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber else {
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber else {
             throw ExportError.outputMissing
         }
         return size.uint64Value
