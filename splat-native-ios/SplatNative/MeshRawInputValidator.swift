@@ -10,6 +10,26 @@ enum MeshRawInputValidator {
     static let minimumPhotogrammetryImageCount = 20
     private static let supportedExtensions = Set(["jpg", "jpeg", "heic", "png"])
 
+    /// Privacy/storage truth: report retained RAW whenever at least one supported regular image
+    /// still occupies bytes, even when there is no longer enough trustworthy input to reprocess.
+    static func hasAnyRawImageBytes(
+        in directory: URL,
+        fileManager: FileManager = .default
+    ) -> Bool {
+        guard let files = try? fileManager.contentsOfDirectory(
+            at: directory,
+            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
+            options: [.skipsHiddenFiles]
+        ) else { return false }
+        return files.contains { url in
+            guard supportedExtensions.contains(url.pathExtension.lowercased()),
+                  let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]) else {
+                return false
+            }
+            return values.isRegularFile == true && (values.fileSize ?? 0) > 0
+        }
+    }
+
     static func hasMinimumUsableImages(
         in directory: URL,
         fileManager: FileManager = .default,
