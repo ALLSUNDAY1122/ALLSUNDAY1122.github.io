@@ -25,9 +25,6 @@ enum MeshRawReprocessor {
             return
         }
 
-        // A UUID keeps retries independent even when two reprocess attempts begin in the same second.
-        // Never reuse a stale derived filename: a failed remove/write must not make an older USDZ
-        // look like the output of the current request.
         let outputURL = prepared.projectURL.appendingPathComponent("mesh-reprocessed-\(UUID().uuidString).usdz")
 
         model.mode = .photogrammetry
@@ -96,9 +93,6 @@ enum MeshRawReprocessor {
                 model.phase = .failed("raw再処理は完了しましたが、完成Meshを正常に読み込めませんでした。保存rawは保持されています。")
             }
         } catch is CancellationError {
-            // Cancelling the Swift task does not implicitly cancel RealityKit's reconstruction.
-            // Stop the underlying session before deleting its candidate output/workspace so it
-            // cannot continue consuming CPU/GPU or recreate files after the UI reports cancellation.
             activeSession?.cancel()
             cleanupFailedOutput(outputURL, prepared: prepared)
             model.phase = .captured
@@ -110,10 +104,6 @@ enum MeshRawReprocessor {
         }
     }
 
-    /// A PhotogrammetrySession request is not considered complete merely because a path exists.
-    /// Require a non-empty regular file, a SceneKit decode, and at least one actual geometry node
-    /// before exposing it as a finished result. This prevents a truncated, stale, or structurally
-    /// empty USDZ from entering preview, save, or export flows.
     private static func validateAndFinish(
         outputURL: URL,
         sourceKind: MeshRawSourceKind,
@@ -140,10 +130,6 @@ enum MeshRawReprocessor {
         return true
     }
 
-    /// Derived one-shot USDZ output must never survive a failed/cancelled request. For transient
-    /// bridge workspaces the whole directory is disposable; for a live Mesh project only the
-    /// UUID-named candidate is disposable, so remove that candidate explicitly before asking the
-    /// bridge to clean up derived containers.
     private static func cleanupFailedOutput(_ outputURL: URL, prepared: PreparedMeshRawProject) {
         let fileManager = FileManager.default
         if fileManager.fileExists(atPath: outputURL.path) {
@@ -158,6 +144,8 @@ struct MeshRawReprocessSheet: View {
     @EnvironmentObject var model: MeshScanModel
     @Environment(\.dismiss) private var dismiss
     @State private var projects = MeshRawProjectStore.discover()
+    @State private var activeProjectID: String?
+    @State private var reprocessTask: Task<Void, Never>?
 
     var body: some View {
         NavigationStack {
@@ -171,8 +159,7 @@ struct MeshRawReprocessSheet: View {
                 } else {
                     List(projects) { project in
                         Button {
-                            dismiss()
-                            Task { await MeshRawReprocessor.run(project: project, model: model) }
+                            beginReprocess(project)
                         } label: {
                             HStack(spacing: 12) {
                                 Image(systemName: project.sourceKind == .splatProject ? "sparkles" : "cube")
@@ -190,24 +177,52 @@ struct MeshRawReprocessSheet: View {
                                         .foregroundStyle(.secondary)
                                 }
                                 Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(.caption.bold())
-                                    .foregroundStyle(.secondary)
+                                if activeProjectID == project.id {
+                                    ProgressView()
+                                } else {
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption.bold())
+                                        .foregroundStyle(.secondary)
+                                }
                             }
                         }
-                        .disabled(!PhotogrammetrySession.isSupported)
+                        .disabled(!PhotogrammetrySession.isSupported || reprocessTask != nil)
                     }
                 }
             }
             .navigationTitle("rawからMesh再処理")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    if let task = reprocessTask {
+                        Button("中止", role: .destructive) {
+                            task.cancel()
+                        }
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("閉じる") { dismiss() }
+                        .disabled(reprocessTask != nil)
                 }
             }
             .refreshable {
+                guard reprocessTask == nil else { return }
                 projects = MeshRawProjectStore.discover()
             }
+        }
+        .interactiveDismissDisabled(reprocessTask != nil)
+        .onDisappear {
+            reprocessTask?.cancel()
+        }
+    }
+
+    private func beginReprocess(_ project: MeshRawProject) {
+        guard reprocessTask == nil else { return }
+        activeProjectID = project.id
+        reprocessTask = Task { @MainActor in
+            await MeshRawReprocessor.run(project: project, model: model)
+            activeProjectID = nil
+            reprocessTask = nil
+            dismiss()
         }
     }
 }
