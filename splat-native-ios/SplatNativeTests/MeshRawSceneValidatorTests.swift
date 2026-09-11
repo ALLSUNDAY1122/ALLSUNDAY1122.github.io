@@ -28,6 +28,26 @@ final class MeshRawSceneValidatorTests: XCTestCase {
         XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
     }
 
+    func testRejectsTruncatedVertexPayloadEvenWhenPrimitiveCountIsPositive() {
+        let scene = SCNScene()
+        let truncatedVertices = SCNGeometrySource(
+            data: Data(repeating: 0, count: 12),
+            semantic: .vertex,
+            vectorCount: 3,
+            usesFloatComponents: true,
+            componentsPerVector: 3,
+            bytesPerComponent: 4,
+            dataOffset: 0,
+            dataStride: 12
+        )
+        let element = SCNGeometryElement(indices: [UInt16(0), 1, 2], primitiveType: .triangles)
+        let malformed = SCNGeometry(sources: [truncatedVertices], elements: [element])
+        scene.rootNode.addChildNode(SCNNode(geometry: malformed))
+
+        XCTAssertEqual(element.primitiveCount, 1)
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
     func testAcceptsNestedGeometryWithPrimitives() {
         let scene = SCNScene()
         let container = SCNNode()
