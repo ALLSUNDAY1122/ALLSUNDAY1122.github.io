@@ -27,7 +27,9 @@ enum ScanWorldMapArchiveStore {
         try data.write(to: targetURL, options: .atomic)
         let values = try targetURL.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey])
         guard values.isRegularFile == true,
-              values.fileSize == data.count else {
+              values.fileSize == data.count,
+              let persisted = try? Data(contentsOf: targetURL, options: .mappedIfSafe),
+              persisted == data else {
             throw ScanWorldMapArchiveStoreError.verificationFailed
         }
     }
