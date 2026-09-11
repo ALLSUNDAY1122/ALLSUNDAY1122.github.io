@@ -70,64 +70,39 @@ enum MeshExportService {
     }
 
     private static let las12HeaderSize = 227
+    private static let zipEndOfCentralDirectorySearchBytes = 65_557
 
-    /// Reports actual runtime capability. A format is never advertised merely because its
-    /// extension exists in the UI. Exact-format passthrough is always permitted after validation.
     static func capabilities(for sourceURL: URL) -> [Capability] {
         let sourceExtension = sourceURL.pathExtension.lowercased()
         let exporterIDs = assimpExporterIDs()
         let canBridgeToOBJ = sourceExtension == "obj" || (
-            MDLAsset.canImportFileExtension(sourceExtension) &&
-                MDLAsset.canExportFileExtension("obj")
+            MDLAsset.canImportFileExtension(sourceExtension) && MDLAsset.canExportFileExtension("obj")
         )
 
         return Format.allCases.map { format in
             if sourceExtension == format.rawValue {
                 return Capability(format: format, isAvailable: true, reason: nil)
             }
-
             if format == .usdz {
-                let available = MDLAsset.canImportFileExtension(sourceExtension) &&
-                    MDLAsset.canExportFileExtension("usdz")
-                return Capability(
-                    format: format,
-                    isAvailable: available,
-                    reason: available ? nil : "Model I/OでUSDZへ実変換できません"
-                )
+                let available = MDLAsset.canImportFileExtension(sourceExtension) && MDLAsset.canExportFileExtension("usdz")
+                return Capability(format: format, isAvailable: available, reason: available ? nil : "Model I/OでUSDZへ実変換できません")
             }
-
             guard canBridgeToOBJ else {
-                return Capability(
-                    format: format,
-                    isAvailable: false,
-                    reason: "元の.\(sourceExtension)をOBJ中間データへ変換できません"
-                )
+                return Capability(format: format, isAvailable: false, reason: "元の.\(sourceExtension)をOBJ中間データへ変換できません")
             }
-
             if format == .ply || format == .las {
                 return Capability(format: format, isAvailable: true, reason: nil)
             }
-
-            guard let exporterID = format.assimpExporterID,
-                  exporterIDs.contains(exporterID) else {
-                return Capability(
-                    format: format,
-                    isAvailable: false,
-                    reason: "実\(format.displayName) Exporterがこのビルドにありません"
-                )
+            guard let exporterID = format.assimpExporterID, exporterIDs.contains(exporterID) else {
+                return Capability(format: format, isAvailable: false, reason: "実\(format.displayName) Exporterがこのビルドにありません")
             }
             return Capability(format: format, isAvailable: true, reason: nil)
         }
     }
 
-    static func export(
-        sourceURL: URL,
-        format: Format,
-        destinationDirectory: URL? = nil
-    ) async throws -> URL {
+    static func export(sourceURL: URL, format: Format, destinationDirectory: URL? = nil) async throws -> URL {
         try Task.checkCancellation()
         try validateSource(sourceURL)
-
         let directory = destinationDirectory ?? sourceURL.deletingLastPathComponent()
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let finalURL = directory.appendingPathComponent("scan-mesh-\(UUID().uuidString).\(format.rawValue)")
@@ -141,8 +116,7 @@ enum MeshExportService {
             if sourceExtension == format.rawValue {
                 try FileManager.default.copyItem(at: sourceURL, to: partialURL)
             } else if format == .usdz {
-                guard MDLAsset.canImportFileExtension(sourceExtension),
-                      MDLAsset.canExportFileExtension("usdz") else {
+                guard MDLAsset.canImportFileExtension(sourceExtension), MDLAsset.canExportFileExtension("usdz") else {
                     throw ExportError.unsupportedConversion(source: sourceExtension, destination: "usdz")
                 }
                 let asset = MDLAsset(url: sourceURL)
@@ -150,12 +124,8 @@ enum MeshExportService {
                 try asset.export(to: partialURL)
             } else {
                 try FileManager.default.createDirectory(at: bridgeDirectory, withIntermediateDirectories: true)
-                let bridgeURL = try bridgeToOBJ(
-                    sourceURL: sourceURL,
-                    bridgeDirectory: bridgeDirectory
-                )
+                let bridgeURL = try bridgeToOBJ(sourceURL: sourceURL, bridgeDirectory: bridgeDirectory)
                 try Task.checkCancellation()
-
                 switch format {
                 case .ply:
                     try MeshPointCloudExportService.exportPLY(sourceOBJ: bridgeURL, outputURL: partialURL)
@@ -195,27 +165,20 @@ enum MeshExportService {
         let count = aiGetExportFormatCount()
         var ids = Set<String>()
         guard count > 0 else { return ids }
-
         for index in 0..<count {
             guard let description = aiGetExportFormatDescription(index) else { continue }
             defer { aiReleaseExportFormatDescription(description) }
-            if let pointer = description.pointee.id {
-                ids.insert(String(cString: pointer))
-            }
+            if let pointer = description.pointee.id { ids.insert(String(cString: pointer)) }
         }
         return ids
     }
 
     private static func bridgeToOBJ(sourceURL: URL, bridgeDirectory: URL) throws -> URL {
         let sourceExtension = sourceURL.pathExtension.lowercased()
-        if sourceExtension == "obj" {
-            return sourceURL
-        }
-        guard MDLAsset.canImportFileExtension(sourceExtension),
-              MDLAsset.canExportFileExtension("obj") else {
+        if sourceExtension == "obj" { return sourceURL }
+        guard MDLAsset.canImportFileExtension(sourceExtension), MDLAsset.canExportFileExtension("obj") else {
             throw ExportError.unsupportedSource(sourceExtension)
         }
-
         let bridgeURL = bridgeDirectory.appendingPathComponent("scene.obj")
         let asset = MDLAsset(url: sourceURL)
         try Task.checkCancellation()
@@ -225,22 +188,13 @@ enum MeshExportService {
     }
 
     private static func exportWithAssimp(sourceOBJ: URL, exporterID: String, outputURL: URL) throws {
-        let scene: UnsafePointer<aiScene>? = sourceOBJ.path.withCString { path in
-            aiImportFile(path, 0)
-        }
-        guard let scene else {
-            throw ExportError.assimpImporterFailed(assimpErrorString())
-        }
+        let scene: UnsafePointer<aiScene>? = sourceOBJ.path.withCString { aiImportFile($0, 0) }
+        guard let scene else { throw ExportError.assimpImporterFailed(assimpErrorString()) }
         defer { aiReleaseImport(scene) }
-
         let result: aiReturn = exporterID.withCString { formatPointer in
-            outputURL.path.withCString { outputPointer in
-                aiExportScene(scene, formatPointer, outputPointer, 0)
-            }
+            outputURL.path.withCString { outputPointer in aiExportScene(scene, formatPointer, outputPointer, 0) }
         }
-        guard result == aiReturn_SUCCESS else {
-            throw ExportError.assimpExportFailed(assimpErrorString())
-        }
+        guard result == aiReturn_SUCCESS else { throw ExportError.assimpExportFailed(assimpErrorString()) }
     }
 
     private static func assimpErrorString() -> String {
@@ -250,126 +204,82 @@ enum MeshExportService {
     }
 
     private static func validateSource(_ url: URL) throws {
-        guard url.isFileURL, FileManager.default.fileExists(atPath: url.path) else {
-            throw ExportError.sourceMissing
-        }
+        guard url.isFileURL, FileManager.default.fileExists(atPath: url.path) else { throw ExportError.sourceMissing }
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
         guard (attributes[.type] as? FileAttributeType) == .typeRegular,
               let size = attributes[.size] as? NSNumber,
-              size.intValue > 0 else {
-            throw ExportError.emptySource
-        }
+              size.intValue > 0 else { throw ExportError.emptySource }
     }
 
     private static func validateOutput(_ url: URL) throws {
-        guard try fileByteCount(url) > 0 else {
-            throw ExportError.outputMissing
-        }
+        guard try fileByteCount(url) > 0 else { throw ExportError.outputMissing }
     }
 
-    /// Prevents extension-only success without loading a potentially huge export into memory.
-    /// Container recognition needs only bounded header/prefix bytes plus the on-disk byte count.
     private static func validateContainer(_ url: URL, as format: Format) throws {
         let totalBytes = try fileByteCount(url)
         guard totalBytes > 0 else { throw ExportError.outputMissing }
-
         let valid: Bool
         switch format {
         case .fbx:
-            let data = try readPrefix(url, maxBytes: 32)
-            let prefix = String(decoding: data, as: UTF8.self)
+            let prefix = String(decoding: try readPrefix(url, maxBytes: 32), as: UTF8.self)
             valid = prefix.contains("Kaydara FBX Binary") || prefix.contains("; FBX")
-
         case .glb:
             let data = try readPrefix(url, maxBytes: 20)
-            if data.count >= 12,
-               Array(data.prefix(4)) == [0x67, 0x6c, 0x54, 0x46] {
+            if data.count >= 12, Array(data.prefix(4)) == [0x67, 0x6c, 0x54, 0x46] {
                 let version = readUInt32LE(data, offset: 4)
                 let declaredLength = UInt64(readUInt32LE(data, offset: 8))
                 switch version {
                 case 1:
-                    // GLB 1.0 has a 20-byte header. Accept valid legacy passthrough without
-                    // weakening truncation protection; v1-specific content metadata starts at 12.
                     valid = data.count >= 20 && declaredLength == totalBytes && declaredLength >= 20
                 case 2:
                     valid = declaredLength == totalBytes && declaredLength >= 12
                 default:
                     valid = false
                 }
-            } else {
-                valid = false
-            }
-
+            } else { valid = false }
         case .usdz:
-            let data = try readPrefix(url, maxBytes: 4)
-            valid = data.count >= 4 && data[0] == 0x50 && data[1] == 0x4b
-
+            let prefix = try readPrefix(url, maxBytes: 4)
+            let suffix = try readSuffix(url, maxBytes: zipEndOfCentralDirectorySearchBytes)
+            valid = totalBytes >= 22 &&
+                Array(prefix) == [0x50, 0x4b, 0x03, 0x04] &&
+                containsSignature(suffix, [0x50, 0x4b, 0x05, 0x06])
         case .stl:
             let data = try readPrefix(url, maxBytes: 1_000_000)
-            let asciiPrefix = String(decoding: data, as: UTF8.self)
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .lowercased()
+            let asciiPrefix = String(decoding: data, as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
             if asciiPrefix.hasPrefix("solid"), asciiPrefix.contains("facet"), asciiPrefix.contains("endsolid") {
                 valid = true
             } else if data.count >= 84, totalBytes >= 84 {
                 let triangleCount = UInt64(readUInt32LE(data, offset: 80))
-                if triangleCount == 0 || triangleCount > (UInt64.max - 84) / 50 {
-                    valid = false
-                } else {
-                    let requiredBytes = 84 + triangleCount * 50
-                    valid = requiredBytes == totalBytes
-                }
-            } else {
-                valid = false
-            }
-
+                if triangleCount == 0 || triangleCount > (UInt64.max - 84) / 50 { valid = false }
+                else { valid = 84 + triangleCount * 50 == totalBytes }
+            } else { valid = false }
         case .obj:
             let data = try readPrefix(url, maxBytes: 1_000_000)
-            guard let text = String(data: data, encoding: .utf8) else {
-                valid = false
-                break
-            }
-            valid = text.hasPrefix("v ") || text.contains("\nv ")
-
+            if let text = String(data: data, encoding: .utf8) {
+                valid = text.hasPrefix("v ") || text.contains("\nv ")
+            } else { valid = false }
         case .ply:
-            let data = try readPrefix(url, maxBytes: 2_048)
-            let prefix = String(decoding: data, as: UTF8.self)
-            valid = prefix.hasPrefix("ply\n") &&
-                prefix.contains("format binary_little_endian 1.0") &&
-                prefix.contains("element vertex ") &&
-                !prefix.contains("element face ") &&
-                prefix.contains("end_header\n")
-
+            let prefix = String(decoding: try readPrefix(url, maxBytes: 2_048), as: UTF8.self)
+            valid = prefix.hasPrefix("ply\n") && prefix.contains("format binary_little_endian 1.0") && prefix.contains("element vertex ") && !prefix.contains("element face ") && prefix.contains("end_header\n")
         case .las:
             let data = try readPrefix(url, maxBytes: las12HeaderSize)
-            guard data.count >= las12HeaderSize,
-                  Array(data.prefix(4)) == [0x4c, 0x41, 0x53, 0x46] else {
-                valid = false
-                break
-            }
-            let headerSize = Int(readUInt16LE(data, offset: 94))
-            let pointOffset = Int(readUInt32LE(data, offset: 96))
-            let pointFormat = data[104] & 0x3f
-            let recordLength = Int(readUInt16LE(data, offset: 105))
-            let legacyPointCount = UInt64(readUInt32LE(data, offset: 107))
-            let requiredBytes = UInt64(pointOffset) + legacyPointCount * UInt64(recordLength)
-            valid = headerSize >= las12HeaderSize &&
-                pointOffset >= headerSize &&
-                UInt64(pointOffset) <= totalBytes &&
-                pointFormat <= 10 &&
-                recordLength > 0 &&
-                requiredBytes <= totalBytes
+            if data.count >= las12HeaderSize, Array(data.prefix(4)) == [0x4c, 0x41, 0x53, 0x46] {
+                let headerSize = Int(readUInt16LE(data, offset: 94))
+                let pointOffset = Int(readUInt32LE(data, offset: 96))
+                let pointFormat = data[104] & 0x3f
+                let recordLength = Int(readUInt16LE(data, offset: 105))
+                let legacyPointCount = UInt64(readUInt32LE(data, offset: 107))
+                let requiredBytes = UInt64(pointOffset) + legacyPointCount * UInt64(recordLength)
+                valid = headerSize >= las12HeaderSize && pointOffset >= headerSize && UInt64(pointOffset) <= totalBytes && pointFormat <= 10 && recordLength > 0 && requiredBytes <= totalBytes
+            } else { valid = false }
         }
-
         guard valid else { throw ExportError.invalidContainer(format.rawValue) }
     }
 
     private static func fileByteCount(_ url: URL) throws -> UInt64 {
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
         guard (attributes[.type] as? FileAttributeType) == .typeRegular,
-              let size = attributes[.size] as? NSNumber else {
-            throw ExportError.outputMissing
-        }
+              let size = attributes[.size] as? NSNumber else { throw ExportError.outputMissing }
         return size.uint64Value
     }
 
@@ -379,14 +289,36 @@ enum MeshExportService {
         return try handle.read(upToCount: max(1, maxBytes)) ?? Data()
     }
 
+    private static func readSuffix(_ url: URL, maxBytes: Int) throws -> Data {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        let size = try handle.seekToEnd()
+        let count = min(UInt64(max(1, maxBytes)), size)
+        try handle.seek(toOffset: size - count)
+        return try handle.readToEnd() ?? Data()
+    }
+
+    private static func containsSignature(_ data: Data, _ signature: [UInt8]) -> Bool {
+        guard !signature.isEmpty, data.count >= signature.count else { return false }
+        return data.withUnsafeBytes { rawBuffer in
+            let bytes = rawBuffer.bindMemory(to: UInt8.self)
+            for offset in 0...(bytes.count - signature.count) {
+                var matches = true
+                for index in signature.indices where bytes[offset + index] != signature[index] {
+                    matches = false
+                    break
+                }
+                if matches { return true }
+            }
+            return false
+        }
+    }
+
     private static func readUInt16LE(_ data: Data, offset: Int) -> UInt16 {
         UInt16(data[offset]) | (UInt16(data[offset + 1]) << 8)
     }
 
     private static func readUInt32LE(_ data: Data, offset: Int) -> UInt32 {
-        UInt32(data[offset]) |
-            (UInt32(data[offset + 1]) << 8) |
-            (UInt32(data[offset + 2]) << 16) |
-            (UInt32(data[offset + 3]) << 24)
+        UInt32(data[offset]) | (UInt32(data[offset + 1]) << 8) | (UInt32(data[offset + 2]) << 16) | (UInt32(data[offset + 3]) << 24)
     }
 }
