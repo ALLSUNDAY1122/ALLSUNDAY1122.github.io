@@ -21,4 +21,13 @@ enum MeshCaptureCoveragePolicy {
     static func isPlausibleSampleDisplacement(_ meters: Float) -> Bool {
         meters.isFinite && meters >= 0 && meters <= 0.35
     }
+
+    /// The capture pipeline never accepts translation above 1.6 m/s, even for distant scenes.
+    /// Do not let the quality advisor credit motion that the actual RGB capture policy would reject.
+    static func isPlausibleSampleDisplacement(_ meters: Float, elapsedSeconds: TimeInterval) -> Bool {
+        guard isPlausibleSampleDisplacement(meters),
+              elapsedSeconds.isFinite,
+              elapsedSeconds > 0 else { return false }
+        return meters / Float(elapsedSeconds) <= 1.60
+    }
 }
