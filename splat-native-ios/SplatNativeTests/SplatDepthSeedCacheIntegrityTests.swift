@@ -31,6 +31,22 @@ final class SplatDepthSeedCacheIntegrityTests: XCTestCase {
         XCTAssertFalse(SplatDepthSeedBuilder.cachedPLYIsComplete(at: url, expectedPointCount: 64))
     }
 
+    func testNonFiniteVertexIsRejectedEvenWhenRowCountMatches() throws {
+        let url = try makePLY(declared: 64, actual: 64)
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+        try replaceFirstVertex(in: url, with: "nan 0 0 255 255 255")
+
+        XCTAssertFalse(SplatDepthSeedBuilder.cachedPLYIsComplete(at: url, expectedPointCount: 64))
+    }
+
+    func testOutOfRangeColorIsRejectedEvenWhenRowCountMatches() throws {
+        let url = try makePLY(declared: 64, actual: 64)
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+        try replaceFirstVertex(in: url, with: "0 0 0 256 255 255")
+
+        XCTAssertFalse(SplatDepthSeedBuilder.cachedPLYIsComplete(at: url, expectedPointCount: 64))
+    }
+
     func testChangedReconstructionInputsForceFreshSeedAndTrainer() throws {
         let projectURL = try makeProjectDirectory()
         defer { try? FileManager.default.removeItem(at: projectURL) }
@@ -114,6 +130,17 @@ final class SplatDepthSeedCacheIntegrityTests: XCTestCase {
         }
         try text.write(to: url, atomically: true, encoding: .utf8)
         return url
+    }
+
+    private func replaceFirstVertex(in url: URL, with replacement: String) throws {
+        var text = try String(contentsOf: url, encoding: .utf8)
+        guard let headerEnd = text.range(of: "end_header\n"),
+              let firstNewline = text[headerEnd.upperBound...].firstIndex(of: "\n") else {
+            XCTFail("Expected first PLY vertex row")
+            return
+        }
+        text.replaceSubrange(headerEnd.upperBound..<firstNewline, with: replacement)
+        try text.write(to: url, atomically: true, encoding: .utf8)
     }
 
     private func makeProjectDirectory() throws -> URL {
