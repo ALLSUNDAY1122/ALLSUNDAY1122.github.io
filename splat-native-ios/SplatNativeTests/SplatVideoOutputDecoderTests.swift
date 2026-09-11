@@ -8,7 +8,7 @@ final class SplatVideoOutputDecoderTests: XCTestCase {
             .appendingPathComponent("decodable-video-\(UUID().uuidString).mp4")
         defer { try? FileManager.default.removeItem(at: url) }
 
-        try await writeSingleFrameVideo(to: url, width: 16, height: 16)
+        try await writeVideo(to: url, width: 16, height: 16, frameCount: 1, framesPerSecond: 30)
 
         try await SplatVideoOutputValidator.validate(
             url,
@@ -17,14 +17,38 @@ final class SplatVideoOutputDecoderTests: XCTestCase {
         )
     }
 
-    private func writeSingleFrameVideo(to url: URL, width: Int, height: Int) async throws {
+    func testValidatorAcceptsDecodableTailOfMultiFrameVideo() async throws {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("decodable-video-tail-\(UUID().uuidString).mp4")
+        defer { try? FileManager.default.removeItem(at: url) }
+
+        try await writeVideo(to: url, width: 16, height: 16, frameCount: 45, framesPerSecond: 30)
+
+        try await SplatVideoOutputValidator.validate(
+            url,
+            expectedDimensions: (16, 16),
+            minimumDuration: 1.0
+        )
+    }
+
+    private func writeVideo(
+        to url: URL,
+        width: Int,
+        height: Int,
+        frameCount: Int,
+        framesPerSecond: Int
+    ) async throws {
         let writer = try AVAssetWriter(outputURL: url, fileType: .mp4)
         let input = AVAssetWriterInput(
             mediaType: .video,
             outputSettings: [
                 AVVideoCodecKey: AVVideoCodecType.h264,
                 AVVideoWidthKey: width,
-                AVVideoHeightKey: height
+                AVVideoHeightKey: height,
+                AVVideoCompressionPropertiesKey: [
+                    AVVideoExpectedSourceFrameRateKey: framesPerSecond,
+                    AVVideoMaxKeyFrameIntervalKey: framesPerSecond
+                ]
             ]
         )
         input.expectsMediaDataInRealTime = false
@@ -43,28 +67,32 @@ final class SplatVideoOutputDecoderTests: XCTestCase {
         XCTAssertTrue(writer.startWriting())
         writer.startSession(atSourceTime: .zero)
 
-        var pixelBuffer: CVPixelBuffer?
-        let status = CVPixelBufferCreate(
-            kCFAllocatorDefault,
-            width,
-            height,
-            kCVPixelFormatType_32BGRA,
-            nil,
-            &pixelBuffer
-        )
-        XCTAssertEqual(status, kCVReturnSuccess)
-        let buffer = try XCTUnwrap(pixelBuffer)
+        for frameIndex in 0..<frameCount {
+            var pixelBuffer: CVPixelBuffer?
+            let status = CVPixelBufferCreate(
+                kCFAllocatorDefault,
+                width,
+                height,
+                kCVPixelFormatType_32BGRA,
+                nil,
+                &pixelBuffer
+            )
+            XCTAssertEqual(status, kCVReturnSuccess)
+            let buffer = try XCTUnwrap(pixelBuffer)
 
-        CVPixelBufferLockBaseAddress(buffer, [])
-        if let base = CVPixelBufferGetBaseAddress(buffer) {
-            memset(base, 0x40, CVPixelBufferGetDataSize(buffer))
-        }
-        CVPixelBufferUnlockBaseAddress(buffer, [])
+            CVPixelBufferLockBaseAddress(buffer, [])
+            if let base = CVPixelBufferGetBaseAddress(buffer) {
+                memset(base, Int32(0x20 + (frameIndex % 0x40)), CVPixelBufferGetDataSize(buffer))
+            }
+            CVPixelBufferUnlockBaseAddress(buffer, [])
 
-        while !input.isReadyForMoreMediaData {
-            await Task.yield()
+            while !input.isReadyForMoreMediaData {
+                await Task.yield()
+            }
+            let presentationTime = CMTime(value: CMTimeValue(frameIndex), timescale: CMTimeScale(framesPerSecond))
+            XCTAssertTrue(adaptor.append(buffer, withPresentationTime: presentationTime))
         }
-        XCTAssertTrue(adaptor.append(buffer, withPresentationTime: .zero))
+
         input.markAsFinished()
         await writer.finishWriting()
         XCTAssertEqual(writer.status, .completed, writer.error?.localizedDescription ?? "writer did not complete")
