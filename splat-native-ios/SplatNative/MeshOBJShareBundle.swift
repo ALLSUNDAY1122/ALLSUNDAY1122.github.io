@@ -63,6 +63,46 @@ enum MeshOBJShareBundle {
         return shared
     }
 
+    /// Returns the on-disk bytes that an exact OBJ share will additionally copy into the transient
+    /// workspace. De-duplicate repeated material/texture references so storage admission matches
+    /// the actual copy path rather than pessimistically counting the same companion many times.
+    static func referencedCompanionByteCount(sourceOBJ: URL) throws -> Int64 {
+        guard sourceOBJ.pathExtension.lowercased() == "obj" else { return 0 }
+        let root = sourceOBJ.deletingLastPathComponent().standardizedFileURL
+        let text = try String(contentsOf: sourceOBJ, encoding: .utf8)
+        let mtlReferences = text
+            .split(whereSeparator: { $0.isNewline })
+            .flatMap { line -> [String] in
+                let trimmed = String(line).trimmingCharacters(in: .whitespaces)
+                guard trimmed.lowercased().hasPrefix("mtllib ") else { return [] }
+                return parseArguments(String(trimmed.dropFirst("mtllib ".count)))
+            }
+
+        var sources = Set<String>()
+        var total: Int64 = 0
+        func addSize(_ url: URL) throws {
+            guard sources.insert(url.standardizedFileURL.path).inserted else { return }
+            let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+            guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+                  let number = attributes[.size] as? NSNumber else {
+                throw BundleError.missingReference(url.path)
+            }
+            let bytes = max(0, number.int64Value)
+            total = total > Int64.max - bytes ? Int64.max : total + bytes
+        }
+
+        for reference in mtlReferences {
+            let mtlSource = try resolved(reference, relativeTo: root, allowedRoot: root)
+            try addSize(mtlSource)
+            let mtlText = try String(contentsOf: mtlSource, encoding: .utf8)
+            let mtlRoot = mtlSource.deletingLastPathComponent()
+            for textureReference in textureReferences(in: mtlText) {
+                try addSize(try resolved(textureReference, relativeTo: mtlRoot, allowedRoot: root))
+            }
+        }
+        return total
+    }
+
     private static func textureReferences(in mtl: String) -> [String] {
         let commands: Set<String> = [
             "map_ka", "map_kd", "map_ks", "map_ke", "map_d",
@@ -95,8 +135,6 @@ enum MeshOBJShareBundle {
                 if character.isWhitespace || character == "\"" || character == "'" || character == "\\" || character == "#" {
                     current.append(character)
                 } else {
-                    // A backslash before an ordinary filename character is a Windows path
-                    // separator, not an OBJ escape sequence. Preserve it for normalization.
                     current.append("\\")
                     current.append(character)
                 }
@@ -133,9 +171,6 @@ enum MeshOBJShareBundle {
         return result
     }
 
-    /// MTL texture statements can prefix the filename with mapping options. Consume the known
-    /// option payload, then preserve all remaining tokens as the filename. This handles both
-    /// quoted filenames and exporters that emit an unquoted path containing spaces.
     private static func texturePath(in arguments: [String]) -> String? {
         var index = 0
         while index < arguments.count, arguments[index].hasPrefix("-") {
@@ -151,8 +186,6 @@ enum MeshOBJShareBundle {
                     consumed += 1
                 }
             default:
-                // All remaining standard map options take one value. For unknown options, one
-                // value is the least-lossy interpretation and leaves the eventual path intact.
                 if index < arguments.count { index += 1 }
             }
         }
@@ -168,10 +201,6 @@ enum MeshOBJShareBundle {
         guard !reference.hasPrefix("/"), !reference.hasPrefix("~"), !isWindowsAbsolute else {
             throw BundleError.unsafeReference(reference)
         }
-
-        // OBJ/MTL files created on Windows commonly persist '\\' separators. Normalize only
-        // after rejecting an absolute drive path; parent traversal is still caught below after
-        // standardizedFileURL resolves `..` components.
         let normalizedReference = reference.replacingOccurrences(of: "\\", with: "/")
         let lexicalCandidate = base.appendingPathComponent(normalizedReference).standardizedFileURL
         let lexicalRoot = allowedRoot.standardizedFileURL
@@ -185,10 +214,6 @@ enum MeshOBJShareBundle {
             throw BundleError.missingReference(reference)
         }
 
-        // Compare the candidate after resolving against the same relative path under the resolved
-        // project root. This tolerates iOS sandbox ancestors such as /var -> /private/var while
-        // rejecting any symlink introduced inside the project itself (which would either escape
-        // the project or change a referenced filename when the files are shared).
         let rootPath = lexicalRoot.path.hasSuffix("/") ? lexicalRoot.path : lexicalRoot.path + "/"
         let relative = String(lexicalCandidate.path.dropFirst(rootPath.count))
         guard !relative.isEmpty else { throw BundleError.unsafeReference(reference) }
