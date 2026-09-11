@@ -48,7 +48,34 @@ final class MeshRawSceneValidatorTests: XCTestCase {
         XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
     }
 
-    func testAcceptsNestedGeometryWithPrimitives() {
+    func testRejectsPointCloudAsFinishedSurfaceMesh() {
+        let scene = SCNScene()
+        let vertices = SCNGeometrySource(vertices: [
+            SCNVector3(0, 0, 0),
+            SCNVector3(1, 0, 0),
+            SCNVector3(0, 1, 0),
+        ])
+        let points = SCNGeometryElement(indices: [UInt16(0), 1, 2], primitiveType: .point)
+        scene.rootNode.addChildNode(SCNNode(geometry: SCNGeometry(sources: [vertices], elements: [points])))
+
+        XCTAssertGreaterThan(points.primitiveCount, 0)
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
+    func testRejectsLineGeometryAsFinishedSurfaceMesh() {
+        let scene = SCNScene()
+        let vertices = SCNGeometrySource(vertices: [
+            SCNVector3(0, 0, 0),
+            SCNVector3(1, 0, 0),
+        ])
+        let lines = SCNGeometryElement(indices: [UInt16(0), 1], primitiveType: .line)
+        scene.rootNode.addChildNode(SCNNode(geometry: SCNGeometry(sources: [vertices], elements: [lines])))
+
+        XCTAssertGreaterThan(lines.primitiveCount, 0)
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
+    func testAcceptsNestedSurfaceGeometryWithPrimitives() {
         let scene = SCNScene()
         let container = SCNNode()
         let meshNode = SCNNode(geometry: SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0))
