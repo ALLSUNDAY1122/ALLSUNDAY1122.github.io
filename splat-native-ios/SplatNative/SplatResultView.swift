@@ -277,6 +277,7 @@ struct SplatResultView: View {
         reprocessError = nil
         isPreparingReprocess = true
         let sourceURL = url
+        let projectURL = sourceURL.deletingLastPathComponent()
 
         reprocessPreparationTask = Task {
             defer {
@@ -286,6 +287,11 @@ struct SplatResultView: View {
                 }
             }
             do {
+                // Compatibility must be established before preservation or training can touch any
+                // project-owned checkpoint/result files. A future manifest belongs to the newer app
+                // and must remain byte-for-byte untouched by this version.
+                _ = try ScanProjectStore().loadManifest(projectURL: projectURL)
+                try Task.checkCancellation()
                 try await SplatPreviousResultEvidence.preserveBeforeReprocessAsync(sourceURL: sourceURL)
                 try Task.checkCancellation()
                 guard url == sourceURL else { return }
