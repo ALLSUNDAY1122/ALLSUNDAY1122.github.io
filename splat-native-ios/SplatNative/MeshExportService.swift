@@ -282,7 +282,14 @@ enum MeshExportService {
 
         case .glb:
             let data = try readPrefix(url, maxBytes: 12)
-            valid = data.count >= 12 && Array(data.prefix(4)) == [0x67, 0x6c, 0x54, 0x46]
+            if data.count >= 12,
+               Array(data.prefix(4)) == [0x67, 0x6c, 0x54, 0x46] {
+                let version = readUInt32LE(data, offset: 4)
+                let declaredLength = UInt64(readUInt32LE(data, offset: 8))
+                valid = version == 2 && declaredLength == totalBytes && declaredLength >= 12
+            } else {
+                valid = false
+            }
 
         case .usdz:
             let data = try readPrefix(url, maxBytes: 4)
