@@ -124,20 +124,45 @@ struct MeshARPlacementView: UIViewRepresentable {
             guard let view else { return }
             let point = recognizer.location(in: view)
 
-            let horizontal = view.raycastQuery(
-                from: point,
+            // Prefer ARKit's measured plane geometry before progressively falling back to
+            // inferred planes. This avoids snapping a scan to a transient estimated surface
+            // when a stable detected horizontal plane is already available.
+            let result = raycast(
+                view: view,
+                point: point,
+                allowing: .existingPlaneGeometry,
+                alignment: .horizontal
+            ) ?? raycast(
+                view: view,
+                point: point,
+                allowing: .existingPlaneInfinite,
+                alignment: .horizontal
+            ) ?? raycast(
+                view: view,
+                point: point,
                 allowing: .estimatedPlane,
                 alignment: .horizontal
-            ).flatMap { view.session.raycast($0).first }
-
-            let result = horizontal ?? view.raycastQuery(
-                from: point,
+            ) ?? raycast(
+                view: view,
+                point: point,
                 allowing: .estimatedPlane,
                 alignment: .any
-            ).flatMap { view.session.raycast($0).first }
+            )
 
             guard let result else { return }
             place(at: result.worldTransform)
+        }
+
+        private func raycast(
+            view: ARSCNView,
+            point: CGPoint,
+            allowing target: ARRaycastQuery.Target,
+            alignment: ARRaycastQuery.TargetAlignment
+        ) -> ARRaycastResult? {
+            guard let query = view.raycastQuery(from: point, allowing: target, alignment: alignment) else {
+                return nil
+            }
+            return view.session.raycast(query).first
         }
 
         private func place(at transform: simd_float4x4) {
