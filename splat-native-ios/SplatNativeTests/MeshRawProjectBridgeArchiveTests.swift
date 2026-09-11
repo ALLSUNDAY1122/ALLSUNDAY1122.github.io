@@ -12,7 +12,7 @@ final class MeshRawProjectBridgeArchiveTests: XCTestCase {
         let working = root.appendingPathComponent("scan-archive").appendingPathExtension("meshproject")
         let images = working.appendingPathComponent("images", isDirectory: true)
         try fileManager.createDirectory(at: images, withIntermediateDirectories: true)
-        try Data([0xFF, 0xD8, 0xFF, 0xD9]).write(to: images.appendingPathComponent("mesh_00000.jpg"))
+        try writeUsableRawImages(to: images)
         let result = working.appendingPathComponent("mesh.obj")
         try Data("v 0 0 0\n".utf8).write(to: result)
 
@@ -24,8 +24,8 @@ final class MeshRawProjectBridgeArchiveTests: XCTestCase {
         let raw = try XCTUnwrap(discovered.first { $0.id == "mesh:scan-archive" })
         XCTAssertEqual(raw.sourceKind, .meshProject)
         XCTAssertEqual(raw.sourceProjectURL.standardizedFileURL, archived.projectURL.standardizedFileURL)
-        XCTAssertEqual(raw.imageCount, 1)
-        XCTAssertTrue(fileManager.fileExists(atPath: raw.imagesURL.appendingPathComponent("mesh_00000.jpg").path))
+        XCTAssertEqual(raw.imageCount, MeshRawInputValidator.minimumPhotogrammetryImageCount)
+        XCTAssertTrue(fileManager.fileExists(atPath: raw.imagesURL.appendingPathComponent("mesh_00000.png").path))
     }
 
     func testWorkingMeshTakesPrecedenceOverArchivedDuplicate() throws {
@@ -38,7 +38,7 @@ final class MeshRawProjectBridgeArchiveTests: XCTestCase {
         let working = root.appendingPathComponent("scan-duplicate").appendingPathExtension("meshproject")
         let images = working.appendingPathComponent("images", isDirectory: true)
         try fileManager.createDirectory(at: images, withIntermediateDirectories: true)
-        try Data([0xFF, 0xD8, 0xFF, 0xD9]).write(to: images.appendingPathComponent("mesh_00000.jpg"))
+        try writeUsableRawImages(to: images)
         let result = working.appendingPathComponent("mesh.obj")
         try Data("v 0 0 0\n".utf8).write(to: result)
 
@@ -61,7 +61,7 @@ final class MeshRawProjectBridgeArchiveTests: XCTestCase {
         let working = root.appendingPathComponent("scan-readonly").appendingPathExtension("meshproject")
         let images = working.appendingPathComponent("images", isDirectory: true)
         try fileManager.createDirectory(at: images, withIntermediateDirectories: true)
-        try Data([0xFF, 0xD8, 0xFF, 0xD9]).write(to: images.appendingPathComponent("mesh_00000.jpg"))
+        try writeUsableRawImages(to: images)
         let result = working.appendingPathComponent("mesh.obj")
         try Data("v 0 0 0\n".utf8).write(to: result)
 
@@ -87,5 +87,15 @@ final class MeshRawProjectBridgeArchiveTests: XCTestCase {
         MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL, fileManager: fileManager)
         XCTAssertFalse(fileManager.fileExists(atPath: prepared.projectURL.path))
         XCTAssertTrue(fileManager.fileExists(atPath: archived.projectURL.path))
+    }
+
+    private func writeUsableRawImages(to directory: URL) throws {
+        let png = try XCTUnwrap(Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="))
+        for index in 0..<MeshRawInputValidator.minimumPhotogrammetryImageCount {
+            try png.write(
+                to: directory.appendingPathComponent(String(format: "mesh_%05d.png", index)),
+                options: .atomic
+            )
+        }
     }
 }
