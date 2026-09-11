@@ -86,7 +86,8 @@ enum SplatDepthSeedBuilder {
            let metadata = try? JSONDecoder().decode(RecipeMetadata.self, from: metadataData),
            metadata.recipeVersion == recipeVersion,
            metadata.geometryPointCount >= minimumGeometryPointCount,
-           metadata.pointCount >= metadata.geometryPointCount {
+           metadata.pointCount >= metadata.geometryPointCount,
+           cachedPLYIsComplete(at: plyURL, expectedPointCount: metadata.pointCount) {
             return Outcome(
                 source: metadata.source,
                 pointCount: metadata.pointCount,
@@ -174,6 +175,44 @@ enum SplatDepthSeedBuilder {
             skySeedCount: metadata.skySeedCount,
             requiresFreshTrainer: true
         )
+    }
+
+    /// Cache admission is intentionally structural and bounded: `points3D.ply` is ASCII and is
+    /// capped by `maximumDepthSeedPointCount` plus a small bounded sky seed set. Mapping the file
+    /// avoids a second large heap copy while still proving the body has the exact number of rows
+    /// promised by metadata. A torn/truncated or appended cache is regenerated instead of being
+    /// handed to the trainer.
+    static func cachedPLYIsComplete(at url: URL, expectedPointCount: Int) -> Bool {
+        guard expectedPointCount >= minimumGeometryPointCount,
+              let data = try? Data(contentsOf: url, options: .mappedIfSafe),
+              !data.isEmpty,
+              let headerMarker = "end_header\n".data(using: .utf8),
+              let headerRange = data.range(of: headerMarker) else {
+            return false
+        }
+
+        let headerData = data[..<headerRange.upperBound]
+        guard let header = String(data: headerData, encoding: .utf8),
+              let declaredLine = header.split(separator: "\n").first(where: { $0.hasPrefix("element vertex ") }),
+              let declaredCount = Int(declaredLine.dropFirst("element vertex ".count)),
+              declaredCount == expectedPointCount else {
+            return false
+        }
+
+        let body = data[headerRange.upperBound...]
+        var rowCount = 0
+        var rowHasContent = false
+        for byte in body {
+            if byte == 0x0A {
+                if rowHasContent { rowCount += 1 }
+                rowHasContent = false
+                if rowCount > expectedPointCount { return false }
+            } else if byte != 0x0D && byte != 0x20 && byte != 0x09 {
+                rowHasContent = true
+            }
+        }
+        if rowHasContent { rowCount += 1 }
+        return rowCount == expectedPointCount
     }
 
     private static func depthSeedPoints(
