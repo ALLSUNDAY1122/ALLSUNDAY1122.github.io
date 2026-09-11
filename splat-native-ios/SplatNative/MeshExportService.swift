@@ -147,7 +147,7 @@ enum MeshExportService {
         }
         return false
     }
-    private static func fileByteCount(_ url: URL) throws -> UInt64 { let a=try FileManager.default.attributesOfItem(atPath:url.path); guard (a[.type] as? FileAttributeType)==.typeRegular, let n=a[.size] as? NSNumber else { throw ExportError.outputMissing }; return n.uint64Value }
+    private static func fileByteCount(_ url: URL) throws -> UInt64 { let a=try FileManager.default.attributesOfItem(atPath:url.path); guard (a[.type] as? FileAttributeType) == .typeRegular, let n=a[.size] as? NSNumber else { throw ExportError.outputMissing }; return n.uint64Value }
     private static func readPrefix(_ url: URL, maxBytes: Int) throws -> Data { let h=try FileHandle(forReadingFrom:url); defer{try? h.close()}; return try h.read(upToCount:max(1,maxBytes)) ?? Data() }
     private static func readSuffix(_ url: URL, maxBytes: Int) throws -> Data { let h=try FileHandle(forReadingFrom:url); defer{try? h.close()}; let size=try h.seekToEnd(), count=min(UInt64(max(1,maxBytes)),size); try h.seek(toOffset:size-count); return try h.readToEnd() ?? Data() }
     private static func readUInt16LE(_ d: Data, offset: Int) -> UInt16 { UInt16(d[offset]) | (UInt16(d[offset+1]) << 8) }
