@@ -26,6 +26,24 @@ final class MeshOBJShareBundleTests: XCTestCase {
         )
     }
 
+    func testConvertedOBJCompanionsAlreadyInWorkspaceAreNotDestroyed() throws {
+        let workspace = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: workspace) }
+        let obj = workspace.appendingPathComponent("converted.obj")
+        let mtl = workspace.appendingPathComponent("converted.mtl")
+        let texture = workspace.appendingPathComponent("converted.png")
+        let mtlData = Data("newmtl scan\nmap_Kd converted.png\n".utf8)
+        let textureData = Data([0x89, 0x50, 0x4e, 0x47, 0x01])
+        try Data("mtllib converted.mtl\nv 0 0 0\n".utf8).write(to: obj)
+        try mtlData.write(to: mtl)
+        try textureData.write(to: texture)
+
+        let companions = try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace)
+        XCTAssertEqual(Set(companions.map(\.lastPathComponent)), Set(["converted.mtl", "converted.png"]))
+        XCTAssertEqual(try Data(contentsOf: mtl), mtlData)
+        XCTAssertEqual(try Data(contentsOf: texture), textureData)
+    }
+
     func testRejectsParentTraversalWithoutCopyingSecret() throws {
         let parent = try makeRoot()
         defer { try? FileManager.default.removeItem(at: parent) }
