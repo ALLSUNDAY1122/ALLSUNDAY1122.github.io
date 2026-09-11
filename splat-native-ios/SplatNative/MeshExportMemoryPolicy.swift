@@ -36,7 +36,9 @@ enum MeshExportMemoryPolicy {
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
     ) throws -> Estimate {
         let attributes = try FileManager.default.attributesOfItem(atPath: sourceURL.path)
-        guard let size = attributes[.size] as? NSNumber, size.uint64Value > 0 else {
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.uint64Value > 0 else {
             throw PolicyError.sourceSizeUnavailable
         }
         let estimate = estimate(
