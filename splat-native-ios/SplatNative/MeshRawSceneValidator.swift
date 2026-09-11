@@ -2,9 +2,10 @@ import SceneKit
 
 enum MeshRawSceneValidator {
     /// SceneKit can successfully decode a syntactically valid USDZ whose scene contains either no
-    /// geometry nodes, geometry containers with zero primitives, or malformed geometry that has
-    /// elements but no complete vertex-position payload. None is a usable finished Mesh, so require
-    /// at least one geometry element with primitives backed by a complete vertex source.
+    /// geometry nodes, geometry containers with zero primitives, malformed geometry that has
+    /// elements but no complete vertex-position payload, or only point/line primitives. None is a
+    /// usable finished surface Mesh, so require at least one surface primitive backed by a complete
+    /// vertex source.
     static func containsGeometry(_ scene: SCNScene) -> Bool {
         if hasRenderableGeometry(scene.rootNode.geometry) {
             return true
@@ -23,7 +24,17 @@ enum MeshRawSceneValidator {
               !geometry.elements.isEmpty,
               let vertices = geometry.sources(for: .vertex).first,
               hasCompleteVertexPayload(vertices) else { return false }
-        return geometry.elements.contains { $0.primitiveCount > 0 }
+        return geometry.elements.contains { element in
+            guard element.primitiveCount > 0 else { return false }
+            switch element.primitiveType {
+            case .triangles, .triangleStrip, .polygon:
+                return true
+            case .line, .point:
+                return false
+            @unknown default:
+                return false
+            }
+        }
     }
 
     private static func hasCompleteVertexPayload(_ source: SCNGeometrySource) -> Bool {
