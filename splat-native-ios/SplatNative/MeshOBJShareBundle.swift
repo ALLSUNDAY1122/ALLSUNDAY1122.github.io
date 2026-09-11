@@ -72,8 +72,6 @@ enum MeshOBJShareBundle {
             guard parts.count >= 2, commands.contains(String(parts[0])), let last = parts.last else {
                 return nil
             }
-            // App-generated MTL uses a plain relative filename. For third-party MTL with options,
-            // the final token is the texture path per common exporter convention.
             return String(last)
         }
     }
@@ -112,6 +110,12 @@ enum MeshOBJShareBundle {
         let relative = String(source.standardizedFileURL.path.dropFirst(rootPath.count))
         guard !relative.isEmpty else { throw BundleError.unsafeReference(source.path) }
         let destination = workspace.appendingPathComponent(relative).standardizedFileURL
+
+        if source.standardizedFileURL == destination {
+            copied.insert(destination.path)
+            return destination
+        }
+
         if copied.insert(destination.path).inserted {
             try FileManager.default.createDirectory(
                 at: destination.deletingLastPathComponent(),
