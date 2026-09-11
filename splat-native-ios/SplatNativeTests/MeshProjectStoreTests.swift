@@ -54,6 +54,28 @@ final class MeshProjectStoreTests: XCTestCase {
         XCTAssertTrue(summary.reprocessSupported)
     }
 
+    func testPhotogrammetryArchiveDoesNotAdvertiseZeroByteOrNonImageRaw() throws {
+        let live = try makeLiveProject(
+            mode: "photogrammetry",
+            resultName: "mesh-textured.usdz",
+            marker: 0x23
+        )
+        let images = live.appendingPathComponent("images", isDirectory: true)
+        try FileManager.default.removeItem(at: images.appendingPathComponent("mesh_00000.jpg"))
+        try Data().write(to: images.appendingPathComponent("empty.jpg"))
+        try Data(repeating: 0x41, count: 16).write(to: images.appendingPathComponent("notes.txt"))
+
+        let summary = try store.archiveFinishedProject(
+            resultURL: live.appendingPathComponent("mesh-textured.usdz")
+        )
+
+        XCTAssertFalse(summary.rawDataRetained)
+        XCTAssertFalse(summary.reprocessSupported)
+        XCTAssertTrue(MeshRawProjectBridge.discover(appRootURL: rootURL).filter {
+            $0.sourceProjectURL.standardizedFileURL == summary.projectURL.standardizedFileURL
+        }.isEmpty)
+    }
+
     func testArchiveRefreshesWhenFinishedResultChanges() throws {
         let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x33)
         _ = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
