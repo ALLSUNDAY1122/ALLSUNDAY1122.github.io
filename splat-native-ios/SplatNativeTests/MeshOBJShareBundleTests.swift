@@ -55,6 +55,37 @@ final class MeshOBJShareBundleTests: XCTestCase {
         )
     }
 
+    func testCopiesWindowsStyleRelativeMaterialAndTexturePaths() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let workspace = root.appendingPathComponent("workspace", isDirectory: true)
+        try FileManager.default.createDirectory(at: workspace, withIntermediateDirectories: true)
+        let materials = root.appendingPathComponent("materials", isDirectory: true)
+        let textures = root.appendingPathComponent("textures", isDirectory: true)
+        try FileManager.default.createDirectory(at: materials, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: textures, withIntermediateDirectories: true)
+
+        let obj = root.appendingPathComponent("mesh.obj")
+        let mtl = materials.appendingPathComponent("scan.mtl")
+        let texture = textures.appendingPathComponent("base.png")
+        try "mtllib materials\\scan.mtl\nv 0 0 0\n"
+            .write(to: obj, atomically: true, encoding: .utf8)
+        try "newmtl scan\nmap_Kd ..\\textures\\base.png\n"
+            .write(to: mtl, atomically: true, encoding: .utf8)
+        let textureData = Data([0x89, 0x50, 0x4e, 0x47, 0x03])
+        try textureData.write(to: texture)
+
+        let companions = try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace)
+        XCTAssertEqual(
+            Set(companions.map { $0.path.replacingOccurrences(of: workspace.path + "/", with: "") }),
+            Set(["materials/scan.mtl", "textures/base.png"])
+        )
+        XCTAssertEqual(
+            try Data(contentsOf: workspace.appendingPathComponent("textures/base.png")),
+            textureData
+        )
+    }
+
     func testConvertedOBJCompanionsAlreadyInWorkspaceAreNotDestroyed() throws {
         let workspace = try makeRoot()
         defer { try? FileManager.default.removeItem(at: workspace) }
@@ -107,6 +138,19 @@ final class MeshOBJShareBundleTests: XCTestCase {
         )
         let obj = sourceRoot.appendingPathComponent("mesh.obj")
         try "mtllib ../secret.mtl\nv 0 0 0\n".write(to: obj, atomically: true, encoding: .utf8)
+
+        XCTAssertThrowsError(try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace))
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: workspace.path), [])
+    }
+
+    func testRejectsWindowsAbsoluteMaterialPathWithoutCopying() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let workspace = root.appendingPathComponent("workspace", isDirectory: true)
+        try FileManager.default.createDirectory(at: workspace, withIntermediateDirectories: true)
+        let obj = root.appendingPathComponent("mesh.obj")
+        try "mtllib C:\\outside\\secret.mtl\nv 0 0 0\n"
+            .write(to: obj, atomically: true, encoding: .utf8)
 
         XCTAssertThrowsError(try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace))
         XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: workspace.path), [])
