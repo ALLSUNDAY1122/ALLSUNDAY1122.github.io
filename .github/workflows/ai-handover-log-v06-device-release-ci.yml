@@ -1,0 +1,334 @@
+name: AI Handover Log v0.6 Device Release CI
+
+on:
+  push:
+    branches:
+      - agent/ai-handover-log-v04-binary
+    paths:
+      - source_parts/**
+      - patches/**
+      - scripts/**
+      - .github/workflows/ai-handover-log-v06-device-release-ci.yml
+  pull_request:
+    paths:
+      - source_parts/**
+      - patches/**
+      - scripts/**
+      - .github/workflows/ai-handover-log-v06-device-release-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unsigned-device-release:
+    runs-on: macos-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Record Apple toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/logs"
+          {
+            sw_vers
+            echo
+            xcodebuild -version
+            echo
+            xcrun --sdk iphoneos --show-sdk-version
+            echo
+            xcrun --sdk iphonesimulator --show-sdk-version
+          } | tee "$RUNNER_TEMP/logs/apple-toolchain.log"
+
+      - name: Set up Flutter 3.44.7
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.7'
+          channel: stable
+          cache: true
+
+      - name: Reconstruct and patch v0.6 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/source" "$RUNNER_TEMP/logs"
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+          import os
+
+          parts = sorted(Path('source_parts').glob('part_*.b64'))
+          if not parts:
+              raise SystemExit('No source parts found')
+          target = Path(os.environ['RUNNER_TEMP']) / 'source.tar.xz'
+          with target.open('wb') as output:
+              for part in parts:
+                  encoded = ''.join(part.read_text(encoding='utf-8').split())
+                  output.write(base64.b64decode(encoded, validate=True))
+          digest = hashlib.sha256(target.read_bytes()).hexdigest()
+          expected = 'cdb7067a29385d346edadb7506f39f7e5cfd567a07e930e5b43344ae4f50e234'
+          print(f'parts={len(parts)} bytes={target.stat().st_size} sha256={digest}')
+          if digest != expected:
+              raise SystemExit(f'SHA-256 mismatch: expected {expected}, got {digest}')
+          PY
+          tar -tJf "$RUNNER_TEMP/source.tar.xz" | tee "$RUNNER_TEMP/logs/source-files.txt"
+          tar -xJf "$RUNNER_TEMP/source.tar.xz" -C "$RUNNER_TEMP/source"
+          python3 patches/fix_v04_migration.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v05_mobile_ui.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v05_mobile_tests.py "$RUNNER_TEMP/source"
+          python3 patches/fix_v05_dialog_disposal.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v06_release_prep.py "$RUNNER_TEMP/source"
+          grep -q 'version: 0.6.0+6' "$RUNNER_TEMP/source/pubspec.yaml"
+
+      - name: Generate clean iOS Flutter project
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter create \
+            --platforms=ios \
+            --project-name=aihandoverlog \
+            --org=jp.allsunday \
+            "$RUNNER_TEMP/build"
+          SOURCE="$RUNNER_TEMP/source"
+          rm -rf "$RUNNER_TEMP/build/lib" "$RUNNER_TEMP/build/test"
+          cp -R "$SOURCE/lib" "$RUNNER_TEMP/build/lib"
+          cp -R "$SOURCE/test" "$RUNNER_TEMP/build/test"
+          cp "$SOURCE/pubspec.yaml" "$RUNNER_TEMP/build/pubspec.yaml"
+          cp "$SOURCE/analysis_options.yaml" "$RUNNER_TEMP/build/analysis_options.yaml"
+          for item in docs README.md CHANGELOG.md; do
+            if [ -e "$SOURCE/$item" ]; then
+              cp -R "$SOURCE/$item" "$RUNNER_TEMP/build/$item"
+            fi
+          done
+          flutter --version | tee "$RUNNER_TEMP/logs/flutter-version.log"
+
+      - name: Apply product and App Store settings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/generate_v05_brand_assets.py "$RUNNER_TEMP/build"
+          python3 - <<'PY'
+          from pathlib import Path
+          import plistlib
+          import re
+
+          root = Path(r'${{ runner.temp }}/build')
+          plist_path = root / 'ios/Runner/Info.plist'
+          with plist_path.open('rb') as f:
+              plist = plistlib.load(f)
+          plist['CFBundleDisplayName'] = 'AI引継ぎ帳'
+          plist['CFBundleName'] = 'AI引継ぎ帳'
+          plist['ITSAppUsesNonExemptEncryption'] = False
+          with plist_path.open('wb') as f:
+              plistlib.dump(plist, f, sort_keys=False)
+
+          project = root / 'ios/Runner.xcodeproj/project.pbxproj'
+          text = project.read_text(encoding='utf-8')
+          text = re.sub(r'PRODUCT_BUNDLE_IDENTIFIER = [^;]+;', 'PRODUCT_BUNDLE_IDENTIFIER = jp.allsunday.aihandoverlog;', text)
+          project.write_text(text, encoding='utf-8')
+          PY
+          plutil -lint "$RUNNER_TEMP/build/ios/Runner/Info.plist"
+          grep -q 'jp.allsunday.aihandoverlog' "$RUNNER_TEMP/build/ios/Runner.xcodeproj/project.pbxproj"
+
+      - name: Resolve dependencies
+        id: pubget
+        continue-on-error: true
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          flutter pub get 2>&1 | tee "$RUNNER_TEMP/logs/pub-get.log"
+
+      - name: Run 16 Flutter tests on macOS
+        id: test
+        if: steps.pubget.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          flutter test 2>&1 | tee "$RUNNER_TEMP/logs/flutter-test-macos.log"
+
+      - name: Build unsigned iPhone Release app
+        id: releasebuild
+        if: steps.pubget.outcome == 'success' && steps.test.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          flutter build ios --release --no-codesign 2>&1 | tee "$RUNNER_TEMP/logs/flutter-ios-device-release.log"
+
+      - name: Create unsigned generic iOS archive
+        id: archive
+        if: steps.releasebuild.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          mkdir -p "$RUNNER_TEMP/archive"
+          xcodebuild \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/archive/AI_Handover_Log_v0.6.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            archive 2>&1 | tee "$RUNNER_TEMP/logs/xcode-unsigned-archive.log"
+
+      - name: Inspect device Release result
+        if: always()
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set +e
+          APP="build/ios/iphoneos/Runner.app"
+          {
+            echo '=== Device Release app ==='
+            find build/ios/iphoneos -maxdepth 2 -type d -name '*.app' -print 2>/dev/null
+            echo
+            echo '=== Bundle values ==='
+            if [ -f "$APP/Info.plist" ]; then
+              /usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$APP/Info.plist"
+              /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist"
+              /usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Info.plist"
+              /usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP/Info.plist"
+              /usr/libexec/PlistBuddy -c 'Print :MinimumOSVersion' "$APP/Info.plist"
+              /usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$APP/Info.plist"
+            fi
+            echo
+            echo '=== Binary architecture ==='
+            file "$APP/Runner" 2>/dev/null
+            lipo -info "$APP/Runner" 2>/dev/null
+            echo
+            echo '=== Code signature ==='
+            codesign -dv --verbose=4 "$APP" 2>&1 || echo 'Unsigned as expected'
+            echo
+            echo '=== Archive ==='
+            find "$RUNNER_TEMP/archive" -maxdepth 2 -type d -name '*.xcarchive' -print 2>/dev/null
+          } | tee "$RUNNER_TEMP/logs/device-release-inspection.log"
+          exit 0
+
+      - name: Prepare TestFlight handoff package
+        if: steps.releasebuild.outcome == 'success' && steps.archive.outcome == 'success'
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/release"
+          APP="build/ios/iphoneos/Runner.app"
+          test -d "$APP"
+          ditto -c -k --sequesterRsrc --keepParent "$APP" \
+            "$RUNNER_TEMP/release/AI_Handover_Log_v0.6_iPhone_Unsigned_Release_Runner.app.zip"
+          ditto -c -k --sequesterRsrc --keepParent \
+            "$RUNNER_TEMP/archive/AI_Handover_Log_v0.6.xcarchive" \
+            "$RUNNER_TEMP/release/AI_Handover_Log_v0.6_Unsigned.xcarchive.zip"
+
+          cat > "$RUNNER_TEMP/release/ExportOptions_AppStoreConnect.example.plist" <<'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store-connect</string>
+            <key>signingStyle</key>
+            <string>automatic</string>
+            <key>teamID</key>
+            <string>REPLACE_WITH_APPLE_TEAM_ID</string>
+            <key>uploadSymbols</key>
+            <true/>
+          </dict>
+          </plist>
+          EOF
+          plutil -lint "$RUNNER_TEMP/release/ExportOptions_AppStoreConnect.example.plist"
+
+          cat > "$RUNNER_TEMP/release/prepare_testflight_macos.sh" <<'EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          : "${APPLE_TEAM_ID:?APPLE_TEAM_IDを設定してください}"
+          EXPORT_OPTIONS_PLIST="${EXPORT_OPTIONS_PLIST:-ExportOptions_AppStoreConnect.plist}"
+          test -f "$EXPORT_OPTIONS_PLIST"
+
+          flutter clean
+          flutter pub get
+          flutter test
+          flutter build ipa --release \
+            --build-name=0.6.0 \
+            --build-number=6 \
+            --export-options-plist="$EXPORT_OPTIONS_PLIST"
+
+          echo "IPA: $(find build/ios/ipa -name '*.ipa' -maxdepth 2 -print)"
+          echo 'Xcode OrganizerまたはTransporterで検証・アップロードしてください。'
+          EOF
+          chmod +x "$RUNNER_TEMP/release/prepare_testflight_macos.sh"
+
+          cat > "$RUNNER_TEMP/release/AI引継ぎ帳_v0.6_MacinCloud_TestFlight手順.md" <<'EOF'
+          # AI引継ぎ帳 v0.6 MacinCloud・TestFlight手順
+
+          ## 固定値
+
+          - 表示名：AI引継ぎ帳
+          - Bundle ID：jp.allsunday.aihandoverlog
+          - Version：0.6.0
+          - Build：6
+          - 最低対応iOS：13.0
+
+          ## Apple側で必要な操作
+
+          1. Apple DeveloperのIdentifiersで明示的App ID `jp.allsunday.aihandoverlog`を登録する。
+          2. App Store Connectで新規iOSアプリを作成し、同じBundle IDを選択する。
+          3. MacinCloudのXcodeへApple Accountを追加する。
+          4. RunnerターゲットのSigning & CapabilitiesでTeamを選択し、Automatically manage signingを有効にする。
+          5. `ios/Runner.xcworkspace`を開き、Any iOS Deviceを選択する。
+          6. Product > Archiveを実行する。
+          7. OrganizerでValidate Appを実行する。
+          8. Distribute App > App Store Connect > Uploadを選択する。
+          9. App Store ConnectのTestFlightで処理完了を確認する。
+
+          ## 代替CLI手順
+
+          Xcodeで一度正常なExportOptions.plistを生成した後、同梱の
+          `prepare_testflight_macos.sh`を使用する。
+
+          Apple Account、証明書、秘密鍵、App Store Connect APIキーは
+          GitHubやChatGPTへ貼り付けないこと。
+          EOF
+
+          cat > "$RUNNER_TEMP/release/AI引継ぎ帳_v0.6_実機Release検証報告.md" <<'EOF'
+          # AI引継ぎ帳 v0.6 実機Release検証報告
+
+          - Flutter 3.44.7
+          - Version 0.6.0 / Build 6
+          - macOS上のFlutterテスト：16件成功
+          - iPhone実機向けReleaseコンパイル：成功
+          - 署名なしRunner.app生成：成功
+          - 署名なしgeneric iOS archive生成：成功
+          - Bundle ID：jp.allsunday.aihandoverlog
+          - 輸出コンプライアンス：現行コードは非免除暗号を使用しない設定
+          - Apple署名、実機インストール、IPA書き出し、TestFlightアップロードは未実施
+          EOF
+
+          shasum -a 256 "$RUNNER_TEMP/release"/*.zip > "$RUNNER_TEMP/release/AI_Handover_Log_v0.6_SHA256SUMS.txt"
+
+      - name: Upload v0.6 Release diagnostics and handoff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-v06-device-release
+          path: |
+            ${{ runner.temp }}/logs
+            ${{ runner.temp }}/release
+            ${{ runner.temp }}/build/ios/Runner.xcworkspace
+            ${{ runner.temp }}/build/ios/Runner.xcodeproj
+          if-no-files-found: warn
+
+      - name: Stop when unsigned Release validation failed
+        if: steps.pubget.outcome == 'failure' || steps.test.outcome == 'failure' || steps.releasebuild.outcome == 'failure' || steps.archive.outcome == 'failure'
+        run: exit 1

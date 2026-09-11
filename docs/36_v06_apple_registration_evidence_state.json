@@ -1,0 +1,28 @@
+{
+  "app": "AI引継ぎ帳",
+  "bundle_id": "jp.allsunday.aihandoverlog",
+  "version": "0.6.0",
+  "build": "6",
+  "evidence_tool": {
+    "script": "scripts/capture_apple_release_evidence_macos.sh",
+    "macos_required": true,
+    "writes_private_key": false,
+    "writes_password": false,
+    "writes_api_key_body": false,
+    "output_files": [
+      "AI_Handover_Log_v0.6_Apple_Registration_Evidence.json",
+      "AI引継ぎ帳_v0.6_Apple登録完了証跡.md"
+    ]
+  },
+  "current_state": {
+    "app_id_registered": false,
+    "app_store_record_created": false,
+    "distribution_certificate_created": false,
+    "app_store_profile_created": false,
+    "api_key_created": false,
+    "evidence_captured": false,
+    "signed_archive_created": false,
+    "testflight_uploaded": false
+  },
+  "merge_policy": "Do not merge or publish without explicit user instruction"
+}

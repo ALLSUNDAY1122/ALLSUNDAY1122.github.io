@@ -1,0 +1,231 @@
+name: AI Handover Log v0.5 CI
+
+on:
+  push:
+    branches:
+      - agent/ai-handover-log-v04-binary
+  pull_request:
+    paths:
+      - source_parts/**
+      - patches/**
+      - scripts/**
+      - .github/workflows/ai-handover-log-v04-binary-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter 3.44.7
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.7'
+          channel: stable
+          cache: true
+
+      - name: Reconstruct and patch v0.5 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/source"
+          : > "$RUNNER_TEMP/source.tar.xz"
+          for part in source_parts/part_*.b64; do
+            base64 --decode "$part" >> "$RUNNER_TEMP/source.tar.xz"
+          done
+          echo 'cdb7067a29385d346edadb7506f39f7e5cfd567a07e930e5b43344ae4f50e234  '"$RUNNER_TEMP/source.tar.xz" | sha256sum -c -
+          tar -tJf "$RUNNER_TEMP/source.tar.xz" > "$RUNNER_TEMP/source-files.txt"
+          tar -xJf "$RUNNER_TEMP/source.tar.xz" -C "$RUNNER_TEMP/source"
+          python3 patches/fix_v04_migration.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v05_mobile_ui.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v05_mobile_tests.py "$RUNNER_TEMP/source"
+          test -f "$RUNNER_TEMP/source/pubspec.yaml"
+          grep -q 'version: 0.5.0+5' "$RUNNER_TEMP/source/pubspec.yaml"
+
+      - name: Generate clean Flutter project
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter create \
+            --platforms=android,ios,web \
+            --project-name=aihandoverlog \
+            --org=jp.allsunday \
+            "$RUNNER_TEMP/build"
+          SOURCE="$RUNNER_TEMP/source"
+          rm -rf "$RUNNER_TEMP/build/lib" "$RUNNER_TEMP/build/test"
+          cp -R "$SOURCE/lib" "$RUNNER_TEMP/build/lib"
+          cp -R "$SOURCE/test" "$RUNNER_TEMP/build/test"
+          cp "$SOURCE/pubspec.yaml" "$RUNNER_TEMP/build/pubspec.yaml"
+          cp "$SOURCE/analysis_options.yaml" "$RUNNER_TEMP/build/analysis_options.yaml"
+          for item in docs README.md CHANGELOG.md; do
+            if [ -e "$SOURCE/$item" ]; then
+              cp -R "$SOURCE/$item" "$RUNNER_TEMP/build/$item"
+            fi
+          done
+          flutter --version > "$RUNNER_TEMP/flutter-version.txt"
+          cp "$RUNNER_TEMP/build/pubspec.yaml" "$RUNNER_TEMP/pubspec-used.yaml"
+
+      - name: Apply product branding and generate icons
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          import plistlib
+
+          root = Path(r'${{ runner.temp }}/build')
+          plist_path = root / 'ios/Runner/Info.plist'
+          with plist_path.open('rb') as f:
+              plist = plistlib.load(f)
+          plist['CFBundleDisplayName'] = 'AI引継ぎ帳'
+          plist['CFBundleName'] = 'AI引継ぎ帳'
+          with plist_path.open('wb') as f:
+              plistlib.dump(plist, f, sort_keys=False)
+
+          android_manifest = root / 'android/app/src/main/AndroidManifest.xml'
+          text = android_manifest.read_text(encoding='utf-8')
+          text = text.replace('android:label="aihandoverlog"', 'android:label="AI引継ぎ帳"')
+          android_manifest.write_text(text, encoding='utf-8')
+
+          web_index = root / 'web/index.html'
+          text = web_index.read_text(encoding='utf-8')
+          text = text.replace('A new Flutter project.', '複数AIの長期作業を整理し、次のセッションへ引き継ぐオフラインアプリ。')
+          text = text.replace('content="aihandoverlog"', 'content="AI引継ぎ帳"')
+          text = text.replace('<title>aihandoverlog</title>', '<title>AI引継ぎ帳</title>')
+          web_index.write_text(text, encoding='utf-8')
+
+          manifest_path = root / 'web/manifest.json'
+          manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+          manifest['name'] = 'AI引継ぎ帳'
+          manifest['short_name'] = 'AI引継ぎ帳'
+          manifest['description'] = '複数AIの長期作業を整理し、次のセッションへ引き継ぐオフラインアプリ。'
+          manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+          python3 scripts/generate_v05_brand_assets.py "$RUNNER_TEMP/build"
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+          root = Path(r'${{ runner.temp }}/build')
+          checks = {
+              root / 'ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png': (1024, 1024, 2),
+              root / 'ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png': (504, 504, 6),
+              root / 'web/icons/Icon-512.png': (512, 512, 2),
+          }
+          for path, expected in checks.items():
+              data = path.read_bytes()
+              if data[:8] != b'\x89PNG\r\n\x1a\n':
+                  raise SystemExit(f'not PNG: {path}')
+              width, height, depth, color_type = struct.unpack('>IIBB', data[16:26])
+              actual = (width, height, color_type)
+              print(path, actual)
+              if actual != expected:
+                  raise SystemExit(f'asset mismatch: {path}: {actual} != {expected}')
+          PY
+
+      - name: Resolve dependencies
+        id: pubget
+        continue-on-error: true
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          flutter pub get 2>&1 | tee "$RUNNER_TEMP/pub-get.log"
+
+      - name: Format
+        id: format
+        if: steps.pubget.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          dart format lib test 2>&1 | tee "$RUNNER_TEMP/format.log"
+
+      - name: Analyze
+        id: analyze
+        if: steps.pubget.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          flutter analyze 2>&1 | tee "$RUNNER_TEMP/analyze.log"
+
+      - name: Test 16 cases
+        id: test
+        if: steps.pubget.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          flutter test --coverage 2>&1 | tee "$RUNNER_TEMP/test.log"
+
+      - name: Build web release
+        id: webbuild
+        if: steps.pubget.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          flutter build web --release 2>&1 | tee "$RUNNER_TEMP/web-build.log"
+
+      - name: Create v0.5 report and package
+        if: steps.pubget.outcome == 'success' && steps.format.outcome == 'success' && steps.analyze.outcome == 'success' && steps.test.outcome == 'success' && steps.webbuild.outcome == 'success'
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/release"
+          cat > docs/15_ci_validation_v05.md <<'EOF'
+          # Flutter CI検証報告 v0.5
+
+          検証日：2026-07-23
+
+          - Flutter：3.44.7 stable
+          - バージョン：0.5.0+5
+          - iPhone小画面・iPhone 16相当・キーボード表示テストを追加
+          - 自動テスト：16件成功
+          - 静的解析：No issues found
+          - Webリリースビルド：成功
+          - iOS・Android・Web用ブランド画像生成：成功
+          - iOS 1024px App Storeアイコン：RGB、アルファなし
+          EOF
+          zip -qr "$RUNNER_TEMP/release/AI_Handover_Log_Flutter_v0.5_2026-07-23.zip" . \
+            -x '.dart_tool/*' 'build/*' '.git/*' '.idea/*' '*.iml' \
+               '.flutter-plugins-dependencies' 'android/local.properties' \
+               'ios/Flutter/ephemeral/*' 'ios/Flutter/Generated.xcconfig' \
+               'ios/Flutter/flutter_export_environment.sh'
+          sha256sum "$RUNNER_TEMP/release/AI_Handover_Log_Flutter_v0.5_2026-07-23.zip" \
+            > "$RUNNER_TEMP/release/AI_Handover_Log_Flutter_v0.5_2026-07-23.sha256"
+          cp docs/15_ci_validation_v05.md "$RUNNER_TEMP/release/AI引継ぎ帳_v0.5_CI検証報告_2026-07-23.md"
+
+      - name: Upload validated project and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-ci-output-v05
+          path: |
+            ${{ runner.temp }}/release
+            ${{ runner.temp }}/pub-get.log
+            ${{ runner.temp }}/format.log
+            ${{ runner.temp }}/analyze.log
+            ${{ runner.temp }}/test.log
+            ${{ runner.temp }}/web-build.log
+            ${{ runner.temp }}/flutter-version.txt
+            ${{ runner.temp }}/pubspec-used.yaml
+            ${{ runner.temp }}/build/docs/brand
+            ${{ runner.temp }}/build/build/web
+            ${{ runner.temp }}/build/coverage/lcov.info
+          if-no-files-found: warn
+
+      - name: Stop when validation failed
+        if: steps.pubget.outcome == 'failure' || steps.format.outcome == 'failure' || steps.analyze.outcome == 'failure' || steps.test.outcome == 'failure' || steps.webbuild.outcome == 'failure'
+        run: exit 1

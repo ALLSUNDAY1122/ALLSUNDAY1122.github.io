@@ -1,0 +1,24 @@
+{
+  "app": "AI引継ぎ帳",
+  "bundle_id": "jp.allsunday.aihandoverlog",
+  "purpose": "Validate signing assets for optional GitHub Actions TestFlight upload",
+  "required_assets": [
+    "Apple Distribution certificate and private key in PKCS#12",
+    "App Store Connect provisioning profile for jp.allsunday.aihandoverlog",
+    "App Store Connect API private key in .p8 format",
+    "Apple Team ID",
+    "App Store Connect API Key ID",
+    "App Store Connect Issuer ID"
+  ],
+  "validation": {
+    "certificate_type": "Apple Distribution",
+    "team_id_match": true,
+    "private_key_match": true,
+    "profile_application_identifier": "<TEAM_ID>.jp.allsunday.aihandoverlog",
+    "profile_distribution_type": "App Store Connect",
+    "api_key_algorithm": "EC P-256"
+  },
+  "stores_secret_material": false,
+  "api_key_required_for_xcode_organizer_route": false,
+  "api_key_required_for_github_actions_alternative": true
+}

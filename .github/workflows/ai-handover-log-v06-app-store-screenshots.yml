@@ -1,0 +1,208 @@
+name: AI Handover Log v0.6 App Store Screenshots
+
+on:
+  push:
+    branches:
+      - agent/ai-handover-log-v04-binary
+    paths:
+      - screenshots/**
+      - scripts/compose_app_store_screenshots.py
+      - .github/workflows/ai-handover-log-v06-app-store-screenshots.yml
+      - source_parts/**
+      - patches/**
+      - scripts/generate_v05_brand_assets.py
+  pull_request:
+    paths:
+      - screenshots/**
+      - scripts/compose_app_store_screenshots.py
+      - .github/workflows/ai-handover-log-v06-app-store-screenshots.yml
+      - source_parts/**
+      - patches/**
+      - scripts/generate_v05_brand_assets.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Japanese font and image tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check pillow
+          curl --fail --location --retry 3 \
+            --output "$RUNNER_TEMP/NotoSansJP.ttf" \
+            'https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf'
+          test "$(stat -c%s "$RUNNER_TEMP/NotoSansJP.ttf")" -gt 1000000
+
+      - name: Set up Flutter 3.44.7
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.7'
+          channel: stable
+          cache: true
+
+      - name: Reconstruct v0.6 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/source" "$RUNNER_TEMP/logs"
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, hashlib, os
+          parts = sorted(Path('source_parts').glob('part_*.b64'))
+          if not parts:
+              raise SystemExit('No source parts found')
+          target = Path(os.environ['RUNNER_TEMP']) / 'source.tar.xz'
+          with target.open('wb') as output:
+              for part in parts:
+                  output.write(base64.b64decode(''.join(part.read_text().split()), validate=True))
+          digest = hashlib.sha256(target.read_bytes()).hexdigest()
+          expected = 'cdb7067a29385d346edadb7506f39f7e5cfd567a07e930e5b43344ae4f50e234'
+          print(f'parts={len(parts)} sha256={digest}')
+          if digest != expected:
+              raise SystemExit('source archive SHA-256 mismatch')
+          PY
+          tar -xJf "$RUNNER_TEMP/source.tar.xz" -C "$RUNNER_TEMP/source"
+          python3 patches/fix_v04_migration.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v05_mobile_ui.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v05_mobile_tests.py "$RUNNER_TEMP/source"
+          python3 patches/fix_v05_dialog_disposal.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v06_release_prep.py "$RUNNER_TEMP/source"
+          grep -q 'version: 0.6.0+6' "$RUNNER_TEMP/source/pubspec.yaml"
+
+      - name: Generate screenshot test project
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter create --platforms=web --project-name=aihandoverlog --org=jp.allsunday "$RUNNER_TEMP/build"
+          SOURCE="$RUNNER_TEMP/source"
+          rm -rf "$RUNNER_TEMP/build/lib" "$RUNNER_TEMP/build/test"
+          cp -R "$SOURCE/lib" "$RUNNER_TEMP/build/lib"
+          cp -R "$SOURCE/test" "$RUNNER_TEMP/build/test"
+          cp "$SOURCE/pubspec.yaml" "$RUNNER_TEMP/build/pubspec.yaml"
+          cp "$SOURCE/analysis_options.yaml" "$RUNNER_TEMP/build/analysis_options.yaml"
+          cp -R "$SOURCE/docs" "$RUNNER_TEMP/build/docs"
+          cp screenshots/app_store_screenshots_test.dart "$RUNNER_TEMP/build/test/app_store_screenshots_test.dart"
+          mkdir -p "$RUNNER_TEMP/build/assets"
+          cp "$RUNNER_TEMP/NotoSansJP.ttf" "$RUNNER_TEMP/build/assets/NotoSansJP.ttf"
+          python3 - <<'PY'
+          from pathlib import Path
+          root = Path(r'${{ runner.temp }}/build')
+          pubspec = root / 'pubspec.yaml'
+          text = pubspec.read_text(encoding='utf-8')
+          old = 'flutter:\n  uses-material-design: true'
+          new = "flutter:\n  uses-material-design: true\n  fonts:\n    - family: AppStoreNoto\n      fonts:\n        - asset: assets/NotoSansJP.ttf"
+          if old not in text:
+              raise SystemExit('pubspec flutter anchor not found')
+          pubspec.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          app = root / 'lib/app.dart'
+          text = app.read_text(encoding='utf-8')
+          old = '      useMaterial3: true,\n      colorScheme: scheme,'
+          new = "      useMaterial3: true,\n      fontFamily: 'AppStoreNoto',\n      colorScheme: scheme,"
+          if old not in text:
+              raise SystemExit('ThemeData anchor not found')
+          app.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+          python3 scripts/generate_v05_brand_assets.py "$RUNNER_TEMP/build"
+          flutter --version | tee "$RUNNER_TEMP/logs/flutter-version.log"
+
+      - name: Resolve dependencies
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -euo pipefail
+          set -o pipefail
+          flutter pub get 2>&1 | tee "$RUNNER_TEMP/logs/pub-get.log"
+
+      - name: Render five raw Flutter screenshots
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -euo pipefail
+          set -o pipefail
+          flutter test --update-goldens test/app_store_screenshots_test.dart 2>&1 | tee "$RUNNER_TEMP/logs/screenshot-test.log"
+          test "$(find test/goldens -name '*_raw.png' | wc -l | tr -d ' ')" = '5'
+
+      - name: Compose App Store images
+        id: compose
+        continue-on-error: true
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/release/final" "$RUNNER_TEMP/release/raw"
+          cp test/goldens/*_raw.png "$RUNNER_TEMP/release/raw/"
+          python3 "$GITHUB_WORKSPACE/scripts/compose_app_store_screenshots.py" \
+            "$RUNNER_TEMP/release/raw" \
+            "$RUNNER_TEMP/release/final" \
+            "$RUNNER_TEMP/build/docs/brand/AI_Handover_Log_AppIcon_1024.png" \
+            "$RUNNER_TEMP/NotoSansJP.ttf" \
+            2>&1 | tee "$RUNNER_TEMP/logs/compose.log"
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import os
+          root = Path(os.environ['RUNNER_TEMP']) / 'release/final'
+          files = sorted(root.glob('*.png'))
+          if len(files) != 5:
+              raise SystemExit(f'expected 5 final screenshots, got {len(files)}')
+          for path in files:
+              image = Image.open(path)
+              print(path.name, image.size, image.mode)
+              if image.size != (1290, 2796) or image.mode != 'RGB':
+                  raise SystemExit(f'invalid screenshot: {path}')
+          PY
+
+      - name: Package screenshots and report
+        if: steps.compose.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/release/AI引継ぎ帳_v0.6_AppStoreスクリーンショット検証報告.md" <<'EOF'
+          # AI引継ぎ帳 v0.6 App Storeスクリーンショット検証報告
+
+          - 作成日：2026-07-24
+          - 枚数：5枚
+          - サイズ：1290 × 2796 px
+          - 形式：PNG
+          - カラーモード：RGB
+          - 透過：なし
+          - 元画面：Flutterウィジェットテストによる実UI描画
+          - 対象：App Store Connect 6.9インチiPhone枠
+          - 内容：現在地、AI担当・リスク、タスク、指示・実行ログ、引継ぎ文
+          EOF
+          cd "$RUNNER_TEMP/release"
+          zip -qr AI_Handover_Log_v0.6_AppStore_Screenshots_1290x2796.zip final raw AI引継ぎ帳_v0.6_AppStoreスクリーンショット検証報告.md
+          sha256sum AI_Handover_Log_v0.6_AppStore_Screenshots_1290x2796.zip > AI_Handover_Log_v0.6_AppStore_Screenshots_1290x2796.sha256
+
+      - name: Upload App Store screenshot package
+        if: steps.compose.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-v06-app-store-screenshots-${{ github.run_id }}
+          path: ${{ runner.temp }}/release
+          compression-level: 0
+          if-no-files-found: error
+
+      - name: Upload screenshot diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-v06-screenshot-diagnostics-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/logs
+            ${{ runner.temp }}/build/test/goldens
+            ${{ runner.temp }}/release
+          if-no-files-found: warn
+
+      - name: Stop when composition failed
+        if: steps.compose.outcome == 'failure'
+        run: exit 1

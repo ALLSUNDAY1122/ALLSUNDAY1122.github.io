@@ -1,0 +1,64 @@
+name: AI Handover Log v0.6 Final Tracker
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/ai-handover-log-v06-final-tracker.yml
+      - .github/workflows/ai-handover-log-v06-device-release-final.yml
+
+permissions:
+  actions: read
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  track-final-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Wait for final push workflow and comment result
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow='ai-handover-log-v06-device-release-final.yml'
+          branch='agent/ai-handover-log-v04-binary'
+          run_id=''
+          status=''
+          conclusion=''
+          html_url=''
+
+          for attempt in $(seq 1 100); do
+            json=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$workflow/runs?event=push&branch=$branch&per_page=1")
+            run_id=$(jq -r '.workflow_runs[0].id // empty' <<<"$json")
+            status=$(jq -r '.workflow_runs[0].status // empty' <<<"$json")
+            conclusion=$(jq -r '.workflow_runs[0].conclusion // empty' <<<"$json")
+            html_url=$(jq -r '.workflow_runs[0].html_url // empty' <<<"$json")
+            echo "attempt=$attempt run_id=$run_id status=$status conclusion=$conclusion"
+            if [[ -n "$run_id" && "$status" == 'completed' ]]; then
+              break
+            fi
+            sleep 15
+          done
+
+          if [[ -z "$run_id" || "$status" != 'completed' ]]; then
+            conclusion='timeout'
+          fi
+
+          body=$(cat <<EOF
+          ## AI引継ぎ帳 v0.6 最終Releaseパッケージ
+
+          - push run ID: \`$run_id\`
+          - status: \`$status\`
+          - conclusion: \`$conclusion\`
+          - run: $html_url
+          EOF
+          )
+          gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -f body="$body"
+
+          if [[ "$conclusion" != 'success' ]]; then
+            exit 1
+          fi
