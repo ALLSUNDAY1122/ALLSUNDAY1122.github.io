@@ -30,7 +30,8 @@ SENSITIVE_KEY_PARTS = (
 )
 SCANLAB_BUILD3_BRANCH = "testflight/splat-native-ios-20260824-build3"
 KANRIEIYOUSHI_RELEASE_BRANCH = "release/kanrieiyoushi-testflight-20260911"
-PINNED_RELEASE_BRANCHES = {SCANLAB_BUILD3_BRANCH, KANRIEIYOUSHI_RELEASE_BRANCH}
+TORU_TANGO_RELEASE_BRANCH = "release/toru-tango-build10-20260912"
+PINNED_RELEASE_BRANCHES = {SCANLAB_BUILD3_BRANCH, KANRIEIYOUSHI_RELEASE_BRANCH, TORU_TANGO_RELEASE_BRANCH}
 
 
 def api_json(url: str, token: str, method: str = "GET", payload: dict | None = None) -> tuple[int, dict]:
