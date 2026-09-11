@@ -36,7 +36,11 @@ enum SplatCameraGeometry {
         for index in stride(from: 0, to: points.count, by: strideSize) {
             let p = points[index].position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
-            radii.append(simd_distance(p, center))
+            let radius = simd_distance(p, center)
+            // Extremely large but individually finite coordinates can still overflow the squared
+            // distance operation to Infinity. Do not let that one sample poison framing radius.
+            guard radius.isFinite else { continue }
+            radii.append(radius)
         }
         radii.sort()
         guard !radii.isEmpty else { return Framing(center: center, distance: 2.5, radius: 0.10) }
