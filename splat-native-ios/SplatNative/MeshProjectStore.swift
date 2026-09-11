@@ -289,7 +289,10 @@ final class MeshProjectStore {
 
     private func summary(at projectURL: URL) throws -> MeshProjectSummary {
         let manifest = try readLibraryManifest(projectURL: projectURL)
-        let resultURL = projectURL.appendingPathComponent(manifest.resultFileName)
+        let resultURL = try archivedResultURL(
+            projectURL: projectURL,
+            resultFileName: manifest.resultFileName
+        )
         let resultSnapshot = try regularFileSnapshot(at: resultURL)
         guard resultSnapshot.byteCount == manifest.resultByteCount,
               resultSnapshot.byteCount > 0 else {
@@ -359,6 +362,37 @@ final class MeshProjectStore {
             if (try? regularFileSnapshot(at: url).byteCount) ?? 0 > 0 { return url }
         }
         return nil
+    }
+
+    private func archivedResultURL(projectURL: URL, resultFileName: String) throws -> URL {
+        let trimmed = resultFileName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let characters = Array(trimmed)
+        let isWindowsAbsolute = characters.count >= 3 &&
+            characters[1] == ":" &&
+            (characters[2] == "\\" || characters[2] == "/")
+        guard !trimmed.isEmpty,
+              !trimmed.hasPrefix("/"),
+              !trimmed.hasPrefix("~"),
+              !isWindowsAbsolute else {
+            throw MeshProjectStoreError.invalidProject
+        }
+
+        let root = projectURL.standardizedFileURL
+        let candidate = root.appendingPathComponent(trimmed).standardizedFileURL
+        let rootPrefix = root.path.hasSuffix("/") ? root.path : root.path + "/"
+        guard candidate.path.hasPrefix(rootPrefix) else {
+            throw MeshProjectStoreError.invalidProject
+        }
+
+        let resolvedRoot = root.resolvingSymlinksInPath().standardizedFileURL
+        let resolvedCandidate = candidate.resolvingSymlinksInPath().standardizedFileURL
+        let resolvedPrefix = resolvedRoot.path.hasSuffix("/")
+            ? resolvedRoot.path
+            : resolvedRoot.path + "/"
+        guard resolvedCandidate.path.hasPrefix(resolvedPrefix) else {
+            throw MeshProjectStoreError.invalidProject
+        }
+        return candidate
     }
 
     private func validateSnapshotTree(at source: URL) throws {
