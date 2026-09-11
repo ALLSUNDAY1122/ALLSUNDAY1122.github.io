@@ -11,6 +11,7 @@ enum MeshRawInputValidator {
     static let minimumPhotogrammetryImageCount = 20
     private static let supportedExtensions = Set(["jpg", "jpeg", "heic", "png"])
     private static let decodeProbeMaxPixelSize = 32
+    private static let minimumUsableImageDimension = 64
 
     /// Privacy/storage truth: report retained RAW whenever at least one supported regular image
     /// still occupies bytes, even when there is no longer enough trustworthy input to reprocess.
@@ -98,8 +99,8 @@ enum MeshRawInputValidator {
               let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, sourceOptions) as? [CFString: Any],
               let width = properties[kCGImagePropertyPixelWidth] as? NSNumber,
               let height = properties[kCGImagePropertyPixelHeight] as? NSNumber,
-              width.intValue > 0,
-              height.intValue > 0 else {
+              width.intValue >= minimumUsableImageDimension,
+              height.intValue >= minimumUsableImageDimension else {
             return false
         }
 
