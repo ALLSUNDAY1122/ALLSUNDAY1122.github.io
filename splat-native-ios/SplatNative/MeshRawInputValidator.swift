@@ -30,11 +30,12 @@ enum MeshRawInputValidator {
         stopAfter: Int? = nil
     ) -> Int {
         if let stopAfter, stopAfter <= 0 { return 0 }
-        guard let files = try? fileManager.contentsOfDirectory(
-            at: directory,
-            includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
-            options: [.skipsHiddenFiles]
-        ) else { return 0 }
+        guard isLocalDirectory(directory),
+              let files = try? fileManager.contentsOfDirectory(
+                at: directory,
+                includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
+                options: [.skipsHiddenFiles]
+              ) else { return 0 }
 
         var count = 0
         for url in files {
@@ -70,11 +71,12 @@ enum MeshRawInputValidator {
         stopAfter: Int? = nil
     ) -> Int {
         if let stopAfter, stopAfter <= 0 { return 0 }
-        guard let files = try? fileManager.contentsOfDirectory(
-            at: directory,
-            includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
-            options: [.skipsHiddenFiles]
-        ) else {
+        guard isLocalDirectory(directory),
+              let files = try? fileManager.contentsOfDirectory(
+                at: directory,
+                includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
+                options: [.skipsHiddenFiles]
+              ) else {
             return 0
         }
 
@@ -92,6 +94,17 @@ enum MeshRawInputValidator {
             if let stopAfter, usableCount >= stopAfter { return usableCount }
         }
         return usableCount
+    }
+
+    /// A saved RAW package must be self-contained. Rejecting a symlinked `images` directory is
+    /// separate from rejecting symlinked image files: otherwise every child appears to be a normal
+    /// regular file while the whole capture silently depends on storage outside the project.
+    private static func isLocalDirectory(_ url: URL) -> Bool {
+        guard url.isFileURL,
+              let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]) else {
+            return false
+        }
+        return values.isDirectory == true && values.isSymbolicLink != true
     }
 
     private static func isDecodableImage(_ url: URL) -> Bool {
