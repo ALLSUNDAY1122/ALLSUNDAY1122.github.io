@@ -209,8 +209,9 @@ enum SplatVideoExporter {
             fovY: .pi / 3,
             aspect: Float(dimensions.width) / Float(dimensions.height)
         )
+        let totalFrames = configuration.totalFrames
 
-        for frameIndex in 0..<configuration.frameCount {
+        for frameIndex in 0..<totalFrames {
             try Task.checkCancellation()
             try await waitUntilReady(input, writer: writer)
 
@@ -238,24 +239,26 @@ enum SplatVideoExporter {
             }
 
             let depthTexture: MTLTexture? = nil
-            let normalizedTime = configuration.frameCount > 1
-                ? Float(frameIndex) / Float(configuration.frameCount - (configuration.cameraMotion == .orbit360 ? 0 : 1))
+            let normalizedTime = totalFrames > 1
+                ? Double(frameIndex) / Double(totalFrames - 1)
                 : 0
-            let pose = configuration.cameraPose(
+            let camera = configuration.cameraSample(progress: normalizedTime)
+            let eye = SplatCameraGeometry.eye(
                 center: framing.center,
-                distance: baseDistance,
-                normalizedTime: normalizedTime
+                distance: baseDistance * camera.distanceMultiplier,
+                yaw: camera.yaw,
+                pitch: camera.pitch
             )
-            let projection = SplatCameraGeometry.projectionMatrix(
+            let projection = SplatCameraGeometry.perspective(
                 fovY: .pi / 3,
                 aspect: Float(dimensions.width) / Float(dimensions.height),
                 near: 0.01,
                 far: 100
             )
-            let view = SplatCameraGeometry.viewMatrix(
-                eye: pose.eye,
-                target: pose.target,
-                up: pose.up
+            let view = SplatCameraGeometry.lookAt(
+                eye: eye,
+                center: framing.center,
+                up: SIMD3<Float>(0, 1, 0)
             )
 
             guard let commandBuffer = commandQueue.makeCommandBuffer() else {
