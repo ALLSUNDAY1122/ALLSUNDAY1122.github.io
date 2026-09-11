@@ -65,6 +65,21 @@ final class MeshRawInputValidatorTests: XCTestCase {
         XCTAssertFalse(MeshRawInputValidator.hasMinimumUsableImages(in: images, minimumCount: 1))
     }
 
+    func testSymlinkedImagesDirectoryIsNotRetainedRawOrReprocessInput() throws {
+        let root = try makeDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let external = root.appendingPathComponent("external-images", isDirectory: true)
+        try FileManager.default.createDirectory(at: external, withIntermediateDirectories: true)
+        try usablePNG.write(to: external.appendingPathComponent("valid.png"))
+        let linkedDirectory = root.appendingPathComponent("images", isDirectory: true)
+        try FileManager.default.createSymbolicLink(at: linkedDirectory, withDestinationURL: external)
+
+        XCTAssertEqual(MeshRawInputValidator.rawImageFileCount(in: linkedDirectory), 0)
+        XCTAssertEqual(MeshRawInputValidator.usableImageCount(in: linkedDirectory), 0)
+        XCTAssertFalse(MeshRawInputValidator.hasAnyRawImageBytes(in: linkedDirectory))
+        XCTAssertFalse(MeshRawInputValidator.hasMinimumUsableImages(in: linkedDirectory, minimumCount: 1))
+    }
+
     private func makeDirectory() throws -> URL {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("mesh-raw-validator-\(UUID().uuidString)", isDirectory: true)
