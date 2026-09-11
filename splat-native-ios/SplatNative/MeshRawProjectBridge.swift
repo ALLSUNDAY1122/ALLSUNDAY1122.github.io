@@ -136,8 +136,10 @@ enum MeshRawProjectBridge {
         for project: MeshRawProject,
         fileManager: FileManager = .default
     ) throws -> PreparedMeshRawProject {
-        guard project.imageCount > 0,
-              fileManager.fileExists(atPath: project.imagesURL.path) else {
+        // Discovery is only a snapshot. The user may clear RAW or storage may change while the
+        // reprocess sheet is open, so revalidate the actual directory immediately before work.
+        // Do not accept zero-byte placeholders as usable photogrammetry input.
+        guard countImages(in: project.imagesURL, fileManager: fileManager) > 0 else {
             throw MeshRawProjectBridgeError.rawUnavailable
         }
 
@@ -238,13 +240,15 @@ enum MeshRawProjectBridge {
     private static func countImages(in directory: URL, fileManager: FileManager) -> Int {
         guard let files = try? fileManager.contentsOfDirectory(
             at: directory,
-            includingPropertiesForKeys: [.isRegularFileKey],
+            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
             options: [.skipsHiddenFiles]
         ) else { return 0 }
         let extensions = Set(["jpg", "jpeg", "heic", "png"])
         return files.reduce(into: 0) { count, url in
             guard extensions.contains(url.pathExtension.lowercased()),
-                  (try? url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile) == true else {
+                  let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
+                  values.isRegularFile == true,
+                  (values.fileSize ?? 0) > 0 else {
                 return
             }
             count += 1
