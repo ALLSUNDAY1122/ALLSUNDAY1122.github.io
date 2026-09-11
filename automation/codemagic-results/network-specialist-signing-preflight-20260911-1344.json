@@ -1,0 +1,146 @@
+{
+  "request_id": "network-specialist-signing-preflight-20260911-1344",
+  "ok": false,
+  "action": "build",
+  "workflow_id": "network-specialist-signing-preflight",
+  "branch": "main",
+  "resolved_app_id": null,
+  "application_candidates": [
+    {
+      "id": "6a769d81a1add9d06020b524",
+      "name": "ALLSUNDAY1122.github.io",
+      "repositoryUrl": null
+    }
+  ],
+  "note": null,
+  "build_id": "6aa385f264bcaa9f918ea6c8",
+  "status": "failed",
+  "app_id": "6a769d81a1add9d06020b524",
+  "error": "Codemagic build ended with status: failed",
+  "build_details": {
+    "id": "6aa385f264bcaa9f918ea6c8",
+    "app_id": "6a769d81a1add9d06020b524",
+    "workflow": {
+      "id": "network-specialist-signing-preflight",
+      "source": "file",
+      "name": "ネットワークスペシャリスト - Apple Signing Preflight"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 2,
+    "artifacts": [],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-09-11T04:39:14.309000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "2bc79b7be8fa7e8358580508f73a3795ebdee694",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "Run Network Specialist signing preflight without TestFlight",
+      "url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/2bc79b7be8fa7e8358580508f73a3795ebdee694"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-09-11T04:39:20.407000Z",
+    "finished_at": "2026-09-11T04:39:52.149000Z"
+  },
+  "actions": {
+    "data": [
+      {
+        "id": "6aa385f37f5edc3f3ebf57e2",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-11T04:39:20.665000Z",
+        "finished_at": "2026-09-11T04:39:43.176000Z"
+      },
+      {
+        "id": "6aa385f37f5edc3f3ebf57e3",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-11T04:39:43.176000Z",
+        "finished_at": "2026-09-11T04:39:50.073000Z"
+      },
+      {
+        "id": "6aa385f37f5edc3f3ebf57e4",
+        "name": "Verify canonical identifiers",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ntest \"$BUNDLE_ID\" = 'jp.allsunday1122.networkspecialist'\ntest \"$APP_STORE_CONNECT_APP_ID\" = '6799754573'\ntest \"$CODEMAGIC_PROFILE_REF\" = 'networkspecialist_appstore'\ntest \"$IAP_PRODUCT_ID\" = 'jp.allsunday1122.networkspecialist.premium'",
+        "status": "success",
+        "started_at": "2026-09-11T04:39:50.073000Z",
+        "finished_at": "2026-09-11T04:39:50.421000Z"
+      },
+      {
+        "id": "6aa385f37f5edc3f3ebf57e5",
+        "name": "Initialize signing keychain",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nkeychain initialize",
+        "status": "success",
+        "started_at": "2026-09-11T04:39:50.421000Z",
+        "finished_at": "2026-09-11T04:39:51.177000Z"
+      },
+      {
+        "id": "6aa385f37f5edc3f3ebf57e6",
+        "name": "Fetch or create App Store signing files",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\napp-store-connect fetch-signing-files \"$BUNDLE_ID\" --type IOS_APP_STORE --create",
+        "status": "failed",
+        "started_at": "2026-09-11T04:39:51.177000Z",
+        "finished_at": "2026-09-11T04:39:51.918000Z"
+      },
+      {
+        "id": "6aa385f37f5edc3f3ebf57e7",
+        "name": "Add signing certificate to keychain",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nkeychain add-certificates",
+        "status": "skipped",
+        "started_at": "2026-09-11T04:39:51.918000Z",
+        "finished_at": "2026-09-11T04:39:51.919000Z"
+      },
+      {
+        "id": "6aa385f37f5edc3f3ebf57e8",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-11T04:39:51.919000Z",
+        "finished_at": "2026-09-11T04:39:52.069000Z"
+      },
+      {
+        "id": "6aa385f37f5edc3f3ebf57e9",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-11T04:39:52.069000Z",
+        "finished_at": "2026-09-11T04:39:52.149000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
