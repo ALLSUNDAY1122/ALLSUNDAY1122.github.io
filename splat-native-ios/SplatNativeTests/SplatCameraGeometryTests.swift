@@ -84,4 +84,62 @@ final class SplatCameraGeometryTests: XCTestCase {
         XCTAssertEqual(targetInCamera.x, 0, accuracy: 0.0001)
         XCTAssertEqual(targetInCamera.y, 0, accuracy: 0.0001)
     }
+
+    func testPerspectiveRemainsFiniteForTransientZeroAspect() {
+        let matrix = SplatCameraGeometry.perspective(
+            fovY: .pi / 3,
+            aspect: 0,
+            near: 0.01,
+            far: 100
+        )
+
+        XCTAssertTrue(isFinite(matrix))
+    }
+
+    func testPerspectiveRemainsFiniteForNonFiniteInputs() {
+        let matrix = SplatCameraGeometry.perspective(
+            fovY: .nan,
+            aspect: .nan,
+            near: .nan,
+            far: .nan
+        )
+
+        XCTAssertTrue(isFinite(matrix))
+    }
+
+    func testLookAtRemainsFiniteWhenEyeEqualsCenter() {
+        let center = SIMD3<Float>(1, 2, 3)
+        let matrix = SplatCameraGeometry.lookAt(
+            eye: center,
+            center: center,
+            up: SIMD3<Float>(0, 1, 0)
+        )
+
+        XCTAssertTrue(isFinite(matrix))
+    }
+
+    func testLookAtRemainsFiniteWhenUpIsParallelToXAxisView() {
+        let matrix = SplatCameraGeometry.lookAt(
+            eye: SIMD3<Float>(1, 0, 0),
+            center: .zero,
+            up: SIMD3<Float>(1, 0, 0)
+        )
+
+        XCTAssertTrue(isFinite(matrix))
+        let x = SIMD3<Float>(matrix.columns.0.x, matrix.columns.1.x, matrix.columns.2.x)
+        let y = SIMD3<Float>(matrix.columns.0.y, matrix.columns.1.y, matrix.columns.2.y)
+        let z = SIMD3<Float>(matrix.columns.0.z, matrix.columns.1.z, matrix.columns.2.z)
+        XCTAssertEqual(simd_length(x), 1, accuracy: 0.0001)
+        XCTAssertEqual(simd_length(y), 1, accuracy: 0.0001)
+        XCTAssertEqual(simd_length(z), 1, accuracy: 0.0001)
+    }
+
+    private func isFinite(_ matrix: simd_float4x4) -> Bool {
+        for column in 0..<4 {
+            for row in 0..<4 where !matrix[column][row].isFinite {
+                return false
+            }
+        }
+        return true
+    }
 }
