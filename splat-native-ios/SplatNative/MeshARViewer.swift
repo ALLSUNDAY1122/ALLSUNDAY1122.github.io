@@ -172,15 +172,18 @@ struct MeshARPlacementView: UIViewRepresentable {
                 return
             }
 
-            guard let source = try? SCNScene(url: modelURL, options: nil) else { return }
+            guard let source = try? SCNScene(url: modelURL, options: nil),
+                  MeshRawSceneValidator.containsGeometry(source) else { return }
 
             let anchor = SCNNode()
             anchor.simdTransform = transform
 
+            // Preserve the imported scene root itself rather than reparenting only its children.
+            // Some OBJ/USDZ readers attach scale/orientation or geometry directly to rootNode;
+            // dropping that root changes the saved model's transform and can misplace or resize it.
+            // A neutral wrapper still gives recenterForPlacement a stable coordinate space.
             let modelRoot = SCNNode()
-            for child in source.rootNode.childNodes {
-                modelRoot.addChildNode(child.clone())
-            }
+            modelRoot.addChildNode(source.rootNode.clone())
             recenterForPlacement(modelRoot)
             anchor.addChildNode(modelRoot)
 
@@ -200,6 +203,7 @@ struct MeshARPlacementView: UIViewRepresentable {
                 for corner in corners {
                     let local = node.convertPosition(corner, to: root)
                     let p = SIMD3<Float>(local.x, local.y, local.z)
+                    guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
                     minimum = simd_min(minimum, p)
                     maximum = simd_max(maximum, p)
                     found = true
@@ -217,12 +221,10 @@ struct MeshARPlacementView: UIViewRepresentable {
             // applying it verbatim makes the same saved scan visibly spin between placement taps.
             // Preserve the scan's own orientation and use only the hit position.
             var transform = matrix_identity_float4x4
-            transform.columns.3 = SIMD4<Float>(
-                raycastTransform.columns.3.x,
-                raycastTransform.columns.3.y,
-                raycastTransform.columns.3.z,
-                1
-            )
+            let translation = raycastTransform.columns.3
+            if translation.x.isFinite, translation.y.isFinite, translation.z.isFinite {
+                transform.columns.3 = SIMD4<Float>(translation.x, translation.y, translation.z, 1)
+            }
             return transform
         }
 
