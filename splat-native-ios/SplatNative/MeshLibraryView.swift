@@ -222,21 +222,14 @@ private struct SavedMeshView: View {
                 }
             }
 
-            if let trustedURL {
-                HStack(spacing: 12) {
-                    Button {
-                        showingExport = true
-                    } label: {
-                        Label("書き出す", systemImage: "square.and.arrow.up")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-
-                    ShareLink(item: trustedURL) {
-                        Label("元データ", systemImage: "doc")
-                    }
-                    .buttonStyle(.bordered)
+            if trustedURL != nil {
+                Button {
+                    showingExport = true
+                } label: {
+                    Label("書き出す・共有", systemImage: "square.and.arrow.up")
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.borderedProminent)
                 .padding(14)
                 .background(.black)
             }
