@@ -10,11 +10,13 @@ enum SplatVideoOutputValidator {
         case invalidVideoDimensions
         case unexpectedVideoDimensions
         case invalidDuration
+        case unexpectedlyShortDuration
     }
 
     static func validate(
         _ url: URL,
         expectedDimensions: (width: Int, height: Int)? = nil,
+        minimumDuration: TimeInterval? = nil,
         fileManager: FileManager = .default
     ) async throws {
         try Task.checkCancellation()
@@ -62,6 +64,14 @@ enum SplatVideoOutputValidator {
               duration.seconds.isFinite,
               duration.seconds > 0 else {
             throw ValidationError.invalidDuration
+        }
+
+        if let minimumDuration {
+            guard minimumDuration.isFinite,
+                  minimumDuration >= 0,
+                  duration.seconds >= minimumDuration else {
+                throw ValidationError.unexpectedlyShortDuration
+            }
         }
     }
 }
