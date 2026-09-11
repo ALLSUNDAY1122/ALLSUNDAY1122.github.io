@@ -55,4 +55,15 @@ final class MeshAssetContractDurabilityTests: XCTestCase {
             second
         )
     }
+
+    func testTexturedTrimGenerationRemainsTexturedAndMetric() throws {
+        let trimmedURL = URL(fileURLWithPath: "/tmp/mesh-textured-trimmed-1234.obj")
+        let descriptor = try XCTUnwrap(MeshAssetContract.descriptor(for: trimmedURL))
+
+        XCTAssertEqual(descriptor.source, .trimmed)
+        XCTAssertEqual(descriptor.format, .obj)
+        XCTAssertTrue(descriptor.isTextured)
+        XCTAssertTrue(descriptor.hasMetricScale)
+        XCTAssertEqual(descriptor.linearUnit, "meter")
+    }
 }
