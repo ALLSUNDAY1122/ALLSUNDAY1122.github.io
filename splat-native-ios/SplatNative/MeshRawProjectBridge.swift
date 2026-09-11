@@ -138,7 +138,8 @@ enum MeshRawProjectBridge {
     ) throws -> PreparedMeshRawProject {
         // Discovery is only a snapshot. The user may clear RAW or storage may change while the
         // reprocess sheet is open, so revalidate the actual directory immediately before work.
-        // Do not accept zero-byte placeholders as usable photogrammetry input.
+        // The same eligibility contract used by the actual PhotogrammetrySession is required here;
+        // one surviving or renamed file must never create an apparently runnable workspace.
         guard countImages(in: project.imagesURL, fileManager: fileManager) > 0 else {
             throw MeshRawProjectBridgeError.rawUnavailable
         }
@@ -238,21 +239,13 @@ enum MeshRawProjectBridge {
     }
 
     private static func countImages(in directory: URL, fileManager: FileManager) -> Int {
-        guard let files = try? fileManager.contentsOfDirectory(
-            at: directory,
-            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
-            options: [.skipsHiddenFiles]
-        ) else { return 0 }
-        let extensions = Set(["jpg", "jpeg", "heic", "png"])
-        return files.reduce(into: 0) { count, url in
-            guard extensions.contains(url.pathExtension.lowercased()),
-                  let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
-                  values.isRegularFile == true,
-                  (values.fileSize ?? 0) > 0 else {
-                return
-            }
-            count += 1
-        }
+        let usableCount = MeshRawInputValidator.usableImageCount(
+            in: directory,
+            fileManager: fileManager
+        )
+        return usableCount >= MeshRawInputValidator.minimumPhotogrammetryImageCount
+            ? usableCount
+            : 0
     }
 
     private static func sanitizedFileComponent(_ value: String) -> String {
