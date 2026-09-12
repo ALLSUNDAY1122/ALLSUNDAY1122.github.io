@@ -180,7 +180,7 @@ enum SplatCameraGeometry {
             SIMD4<Float>(x.x, y.x, z.x, 0),
             SIMD4<Float>(x.y, y.y, z.y, 0),
             SIMD4<Float>(x.z, y.z, z.z, 0),
-            SIMD4<Float>(-simd_dot(x, safeEye), -simd_dot(y, safeEye), -simd_dot(z, safeEye), 1)
+            SIMD4<Float>(-finiteDot(x, safeEye), -finiteDot(y, safeEye), -finiteDot(z, safeEye), 1)
         ))
     }
 
@@ -212,6 +212,18 @@ enum SplatCameraGeometry {
         let lengthSquared = simd_length_squared(scaled)
         guard lengthSquared.isFinite, lengthSquared > 1e-12 else { return nil }
         return scaled / sqrt(lengthSquared)
+    }
+
+    /// Computes a translation dot product in Double and clamps it back into the finite Float range.
+    /// Unit camera axes multiplied by three individually finite near-Float.max coordinates can sum
+    /// beyond Float.max even though every input component is valid.
+    private static func finiteDot(_ lhs: SIMD3<Float>, _ rhs: SIMD3<Float>) -> Float {
+        let value = Double(lhs.x) * Double(rhs.x)
+            + Double(lhs.y) * Double(rhs.y)
+            + Double(lhs.z) * Double(rhs.z)
+        guard value.isFinite else { return 0 }
+        let limit = Double(Float.greatestFiniteMagnitude)
+        return Float(min(limit, max(-limit, value)))
     }
 
     private static func isFinite(_ value: SIMD3<Float>) -> Bool {
