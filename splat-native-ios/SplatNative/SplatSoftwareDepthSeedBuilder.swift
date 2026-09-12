@@ -271,6 +271,7 @@ enum SplatSoftwareDepthSeedBuilder {
         let centerInverseDepth = 1 / coarseDepth
         let radius = coarseStep * refinementRadiusInCoarseSteps
         let denominator = Float(refinementHypothesisCount - 1)
+        let centerHypothesis = refinementHypothesisCount / 2
 
         var bestDepth = coarseDepth
         var bestCost = patchCost(
@@ -282,11 +283,14 @@ enum SplatSoftwareDepthSeedBuilder {
             frames: frames,
             useBilinearNeighborSampling: true
         ) ?? coarseCost
-        var bestHypothesis = refinementHypothesisCount / 2
+        var bestHypothesis = centerHypothesis
         var sampledCosts = SIMD8<Float>(repeating: .infinity)
         var sampledInverseDepths = SIMD8<Float>(repeating: 0)
+        sampledCosts[centerHypothesis] = bestCost
+        sampledInverseDepths[centerHypothesis] = centerInverseDepth
 
         for hypothesis in 0..<refinementHypothesisCount {
+            if hypothesis == centerHypothesis { continue }
             let t = Float(hypothesis) / denominator
             let proposedInverseDepth = centerInverseDepth - radius + (2 * radius * t)
             let inverseDepth = min(maximumInverseDepth, max(minimumInverseDepth, proposedInverseDepth))
@@ -619,7 +623,7 @@ enum SplatSoftwareDepthSeedBuilder {
               y >= 2,
               x < Float(frame.gray.width - 2),
               y < Float(frame.gray.height - 2) else { return nil }
-        return SIMD2<Float>(x, y)
+        return SIMD2<Float>>(x, y)
     }
 
     private static func matrixIsFinite(_ matrix: simd_float4x4) -> Bool {
