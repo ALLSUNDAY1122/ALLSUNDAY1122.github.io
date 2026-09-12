@@ -138,16 +138,14 @@ enum MeshRawProjectBridge {
         for project: MeshRawProject,
         fileManager: FileManager = .default
     ) throws -> PreparedMeshRawProject {
-        // This function is reached from the MainActor reprocess action. Do not repeat the expensive
-        // ImageIO decode probe here: MeshRawReprocessor immediately performs the authoritative deep
-        // validation on a detached worker before PhotogrammetrySession starts. A cheap metadata gate
-        // still catches RAW deletion while the sheet was open; failed deep validation cleans up any
-        // transient workspace without touching the archived source.
-        guard MeshRawInputValidator.rawImageFileCount(
+        // A candidate can become stale after discovery, and direct callers can provide their own
+        // metadata. Re-run the same authoritative decodability gate used by discovery before any
+        // transient workspace is created. Stopping at the minimum count bounds the ImageIO work
+        // while preventing a corrupt/renamed twentieth file from bypassing RAW admission.
+        guard MeshRawInputValidator.hasMinimumUsableImages(
             in: project.imagesURL,
-            fileManager: fileManager,
-            stopAfter: MeshRawInputValidator.minimumPhotogrammetryImageCount
-        ) >= MeshRawInputValidator.minimumPhotogrammetryImageCount else {
+            fileManager: fileManager
+        ) else {
             throw MeshRawProjectBridgeError.rawUnavailable
         }
 
