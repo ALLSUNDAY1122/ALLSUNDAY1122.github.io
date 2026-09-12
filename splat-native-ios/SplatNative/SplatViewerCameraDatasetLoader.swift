@@ -104,6 +104,10 @@ enum SplatViewerCameraDatasetLoader {
                         translationComponent = value
                     }
                 }
+                guard row.isAtEnd else {
+                    position = nil
+                    return
+                }
 
                 // The downstream normalization and initial-camera average intentionally use Float.
                 // Bound each accepted component so even maximumReturnedPositions same-sign samples
@@ -118,6 +122,28 @@ enum SplatViewerCameraDatasetLoader {
                     return
                 }
                 translation[rowIndex] = component
+            }
+
+            // A transform is serialized as an exact 4x4 matrix. Viewer framing only needs the
+            // translation, but accepting a truncated 3x4 (or extra-column/extra-row) payload makes
+            // corrupted capture metadata look like a valid camera pose and can bias the initial
+            // viewpoint. Validate the structural tail without imposing additional pose heuristics.
+            guard !matrix.isAtEnd,
+                  var finalRow = try? matrix.nestedUnkeyedContainer() else {
+                position = nil
+                return
+            }
+            for _ in 0..<4 {
+                guard !finalRow.isAtEnd,
+                      let value = try? finalRow.decode(Float.self),
+                      value.isFinite else {
+                    position = nil
+                    return
+                }
+            }
+            guard finalRow.isAtEnd, matrix.isAtEnd else {
+                position = nil
+                return
             }
 
             position = translation
