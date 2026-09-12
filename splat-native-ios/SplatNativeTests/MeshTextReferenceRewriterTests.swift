@@ -53,6 +53,32 @@ final class MeshTextReferenceRewriterTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: output.path))
     }
 
+    func testRewriteCannotOverwriteSourceOrExistingDestination() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("source.obj")
+        let existing = root.appendingPathComponent("existing.obj")
+        let payload = Data("mtllib original.mtl\nv 0 0 0\n".utf8)
+        try payload.write(to: source)
+        try Data("sentinel".utf8).write(to: existing)
+
+        XCTAssertThrowsError(try MeshTextReferenceRewriter.rewrite(
+            sourceURL: source,
+            destinationURL: source,
+            directive: "mtllib",
+            replacement: "edited.mtl"
+        ))
+        XCTAssertEqual(try Data(contentsOf: source), payload)
+
+        XCTAssertThrowsError(try MeshTextReferenceRewriter.rewrite(
+            sourceURL: source,
+            destinationURL: existing,
+            directive: "mtllib",
+            replacement: "edited.mtl"
+        ))
+        XCTAssertEqual(try String(contentsOf: existing, encoding: .utf8), "sentinel")
+    }
+
     private func makeRoot() throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshTextReferenceRewriterTests-\(UUID().uuidString)", isDirectory: true)
