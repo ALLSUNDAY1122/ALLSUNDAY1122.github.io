@@ -124,15 +124,18 @@ enum SplatViewerCameraDatasetLoader {
                 translation[rowIndex] = component
             }
 
-            // A transform is serialized as an exact 4x4 matrix. Viewer framing only needs the
-            // translation, but accepting a truncated 3x4 (or extra-column/extra-row) payload makes
-            // corrupted capture metadata look like a valid camera pose and can bias the initial
-            // viewpoint. Validate the structural tail without imposing additional pose heuristics.
+            // Camera transforms are homogeneous 4x4 matrices. Viewer framing only needs the
+            // translation, but accepting a truncated matrix, extra values, or a corrupt homogeneous
+            // tail makes damaged capture metadata look like a valid pose and can bias the initial
+            // viewpoint. Validate the structure and the invariant [0, 0, 0, 1] tail while allowing
+            // small serialization noise.
             guard !matrix.isAtEnd,
                   var finalRow = try? matrix.nestedUnkeyedContainer() else {
                 position = nil
                 return
             }
+            var tail: [Float] = []
+            tail.reserveCapacity(4)
             for _ in 0..<4 {
                 guard !finalRow.isAtEnd,
                       let value = try? finalRow.decode(Float.self),
@@ -140,8 +143,14 @@ enum SplatViewerCameraDatasetLoader {
                     position = nil
                     return
                 }
+                tail.append(value)
             }
-            guard finalRow.isAtEnd, matrix.isAtEnd else {
+            guard finalRow.isAtEnd,
+                  matrix.isAtEnd,
+                  abs(tail[0]) <= 0.0001,
+                  abs(tail[1]) <= 0.0001,
+                  abs(tail[2]) <= 0.0001,
+                  abs(tail[3] - 1) <= 0.0001 else {
                 position = nil
                 return
             }
