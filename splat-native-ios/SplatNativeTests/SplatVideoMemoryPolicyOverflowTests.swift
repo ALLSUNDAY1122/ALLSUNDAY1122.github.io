@@ -13,4 +13,18 @@ final class SplatVideoMemoryPolicyOverflowTests: XCTestCase {
         XCTAssertEqual(estimate.estimatedPeakMegabytes, expectedPeakMegabytes)
         XCTAssertEqual(estimate.budgetMegabytes, 512)
     }
+
+    func testVideoSurfaceReserveSaturatesInsteadOfTrapping() {
+        XCTAssertEqual(
+            SplatVideoMemoryPolicy.videoSurfaceReserveBytes(width: Int.max, height: Int.max),
+            UInt64.max
+        )
+    }
+
+    func testVideoSurfaceReserveKeepsOrdinaryPresetExact() {
+        XCTAssertEqual(
+            SplatVideoMemoryPolicy.videoSurfaceReserveBytes(width: 1_920, height: 1_080),
+            UInt64(1_920 * 1_080 * 4 * 4)
+        )
+    }
 }
