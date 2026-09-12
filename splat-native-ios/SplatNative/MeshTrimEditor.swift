@@ -17,10 +17,16 @@ enum MeshTrimEngine {
         // keep parsing semantics identical while avoiding an input-sized duplicate allocation.
         let lines = text.split(whereSeparator: \.isNewline)
         var vertices: [SIMD3<Float>] = []
+        var hasMaterialLibrary = false
 
         for line in lines {
             let fields = line.split(whereSeparator: \.isWhitespace)
-            guard let directive = fields.first, directive == "v" else { continue }
+            guard let directive = fields.first else { continue }
+            if directive.lowercased() == "mtllib" {
+                hasMaterialLibrary = true
+                continue
+            }
+            guard directive == "v" else { continue }
             guard fields.count >= 4,
                   let a = Float(fields[1]),
                   let b = Float(fields[2]),
@@ -54,10 +60,7 @@ enum MeshTrimEngine {
 
         let sourceName = url.lastPathComponent.lowercased()
         let visual = sourceName.contains("visual")
-        let textured = sourceName.contains("textured") || lines.contains { line in
-            let fields = line.split(whereSeparator: \.isWhitespace)
-            return fields.first?.lowercased() == "mtllib"
-        }
+        let textured = sourceName.contains("textured") || hasMaterialLibrary
         let stem: String
         switch (visual, textured) {
         case (true, true): stem = "visual-mesh-textured-trimmed"
@@ -98,11 +101,11 @@ enum MeshTrimEngine {
                 try writeLine(line)
                 continue
             }
-            let tokens = Array(fields.dropFirst().prefix { !$0.hasPrefix("#") })
-            guard tokens.count >= 3 else { throw error("OBJ面定義が不正です") }
+            let faceFields = fields.dropFirst().prefix { !$0.hasPrefix("#") }
+            guard faceFields.count >= 3 else { throw error("OBJ面定義が不正です") }
             var ids: [Int] = []
-            ids.reserveCapacity(tokens.count)
-            for token in tokens {
+            ids.reserveCapacity(faceFields.count)
+            for token in faceFields {
                 guard let first = token.split(separator: "/", omittingEmptySubsequences: false).first,
                       !first.isEmpty,
                       let raw = Int(first),
