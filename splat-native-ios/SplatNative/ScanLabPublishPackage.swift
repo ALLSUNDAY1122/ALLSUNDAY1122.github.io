@@ -58,10 +58,14 @@ enum ScanLabPublishPackageBuilder {
               let number = attributes[.size] as? NSNumber,
               number.int64Value > 0 else { throw ScanLabPublishPackageError.invalidSource }
         guard number.int64Value <= Int64(maximumBytes) else { throw ScanLabPublishPackageError.sourceTooLarge }
-        let source: Data
-        do { source = try Data(contentsOf: sourceURL, options: [.mappedIfSafe]) } catch { throw ScanLabPublishPackageError.invalidSource }
-        guard source.count == number.intValue, isDecodableSPZ(source) else { throw ScanLabPublishPackageError.invalidSPZ }
-        let trustedSourceHash = sha256(source)
+        let sourceByteCount = Int(number.int64Value)
+        let trustedSourceHash: String
+        do {
+            let source: Data
+            do { source = try Data(contentsOf: sourceURL, options: [.mappedIfSafe]) } catch { throw ScanLabPublishPackageError.invalidSource }
+            guard source.count == sourceByteCount, isDecodableSPZ(source) else { throw ScanLabPublishPackageError.invalidSPZ }
+            trustedSourceHash = sha256(source)
+        }
         let directory = fileManager.temporaryDirectory.appendingPathComponent("\(directoryPrefix)\(UUID().uuidString.lowercased())", isDirectory: true)
         let sceneURL = directory.appendingPathComponent(ScanLabPublishPackage.sceneFilename)
         let manifestURL = directory.appendingPathComponent(ScanLabPublishPackage.manifestFilename)
@@ -69,19 +73,18 @@ enum ScanLabPublishPackageBuilder {
             try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
             try Data().write(to: markerURL(for: directory), options: .atomic)
             // The source is already a validated regular, non-empty SPZ file. Copy it as a file
-            // rather than asking Data.write(.atomic) to stage another 128 MB-class Data-backed write
-            // while the mapped source remains alive. The hash + size verification below still proves
-            // that the package contains the exact validated bytes.
+            // rather than asking Data.write(.atomic) to stage another 128 MB-class Data-backed write.
+            // The validation mapping above has left scope before this copy starts, and the streamed
+            // hash + size verification below still proves that the package contains those exact bytes.
             try fileManager.copyItem(at: sourceURL, to: sceneURL)
-            let manifest = ScanLabPublishManifest(schemaVersion: ScanLabPublishManifest.currentSchemaVersion, sceneFile: ScanLabPublishPackage.sceneFilename, sceneByteCount: Int64(source.count), sceneSHA256: trustedSourceHash, mediaType: ScanLabPublishPackage.manifestSceneMediaType, createdAt: ISO8601DateFormatter().string(from: Date()))
+            let manifest = ScanLabPublishManifest(schemaVersion: ScanLabPublishManifest.currentSchemaVersion, sceneFile: ScanLabPublishPackage.sceneFilename, sceneByteCount: Int64(sourceByteCount), sceneSHA256: trustedSourceHash, mediaType: ScanLabPublishPackage.manifestSceneMediaType, createdAt: ISO8601DateFormatter().string(from: Date()))
             let encoder = JSONEncoder(); encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
             try encoder.encode(manifest).write(to: manifestURL, options: [.atomic])
             let package = ScanLabPublishPackage(directoryURL: directory, sceneURL: sceneURL, manifestURL: manifestURL, manifest: manifest)
             // The source bytes were fully decoded as SPZ immediately above. During this same build,
             // proving the copied bytes have the exact same SHA-256 is sufficient to preserve that
-            // semantic guarantee. Avoid decoding the 128 MB-class scene a second time while the
-            // source mapping is still alive; public verify() retains the full standalone decode for
-            // packages that do not carry this in-process trusted-source proof.
+            // semantic guarantee. Avoid decoding the 128 MB-class scene a second time; public verify()
+            // retains the full standalone decode for packages without this in-process source proof.
             guard try verifyWrittenCopy(package, trustedSourceHash: trustedSourceHash, fileManager: fileManager) else {
                 throw ScanLabPublishPackageError.packageVerificationFailed
             }
