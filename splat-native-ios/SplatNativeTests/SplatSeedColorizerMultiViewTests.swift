@@ -81,6 +81,36 @@ final class SplatSeedColorizerMultiViewTests: XCTestCase {
         XCTAssertLessThan(color.red, 40)
     }
 
+    func testSeedColorizerRejectsImagePathEscapingProject() throws {
+        let parent = FileManager.default.temporaryDirectory
+            .appendingPathComponent("splat-seed-containment-\(UUID().uuidString)", isDirectory: true)
+        let root = parent.appendingPathComponent("project", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: parent) }
+
+        try writeSolidImage(color: .red, name: "outside.png", root: parent)
+        let frame = SplatSeedFrame(
+            filePath: "../outside.png",
+            transformMatrix: identityRows,
+            flX: 10,
+            flY: 10,
+            cx: 10,
+            cy: 10,
+            w: 20,
+            h: 20
+        )
+
+        let color = try XCTUnwrap(SplatSeedColorizer.colorize(
+            points: [SIMD3<Float>(0, 0, -1)],
+            frames: [frame],
+            projectURL: root
+        ).first)
+
+        XCTAssertEqual(color.red, SplatSeedColorizer.fallback.red)
+        XCTAssertEqual(color.green, SplatSeedColorizer.fallback.green)
+        XCTAssertEqual(color.blue, SplatSeedColorizer.fallback.blue)
+    }
+
     func testEqualScoreFramesKeepStableFirstThreeConsensusAfterTopKOptimization() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("splat-seed-topk-\(UUID().uuidString)", isDirectory: true)
