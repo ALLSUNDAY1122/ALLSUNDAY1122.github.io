@@ -46,12 +46,33 @@ enum MeshExportMemoryPolicy {
               size.uint64Value > 0 else {
             throw PolicyError.sourceSizeUnavailable
         }
-        let estimate = estimate(
+        var estimate = estimate(
             sourceBytes: size.uint64Value,
             sourceExtension: sourceURL.pathExtension.lowercased(),
             format: format,
             physicalMemoryBytes: physicalMemoryBytes
         )
+
+        // Scene conversions import OBJ companion MTL/texture assets into the same in-memory scene.
+        // Accounting only for the tiny OBJ text lets a project with a very large captured texture
+        // bypass the memory gate and then jetsam during Assimp/ModelIO decode. Reuse the hardened
+        // companion resolver so unsafe/symlink-escaped references are rejected consistently, and
+        // reserve a conservative decoded/staging multiple for the companion payload.
+        if sourceURL.pathExtension.lowercased() == "obj" {
+            switch format {
+            case .fbx, .glb, .usdz, .stl:
+                let companionBytes = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL)
+                let companionWorkingBytes = saturatingMultiply(UInt64(clamping: companionBytes), by: 8)
+                estimate = Estimate(
+                    sourceBytes: estimate.sourceBytes,
+                    estimatedPeakBytes: saturatingAdd(estimate.estimatedPeakBytes, companionWorkingBytes),
+                    budgetBytes: estimate.budgetBytes
+                )
+            case .obj, .ply, .las:
+                break
+            }
+        }
+
         guard estimate.estimatedPeakBytes <= estimate.budgetBytes else {
             throw PolicyError.conversionTooLarge(
                 estimatedPeakMegabytes: estimate.estimatedPeakMegabytes,
