@@ -134,7 +134,26 @@ enum MeshTrimEngine {
             let centroidInside = centroidX >= lowX && centroidX <= highX &&
                 centroidY >= lowY && centroidY <= highY &&
                 centroidZ >= lowZ && centroidZ <= highZ
-            if hasVertexInside || centroidInside {
+
+            var edgeIntersects = false
+            if !hasVertexInside && !centroidInside {
+                var previous = vertices[faceIndices[faceIndices.count - 1]]
+                for id in faceIndices {
+                    let current = vertices[id]
+                    if segmentIntersectsBounds(
+                        previous, current,
+                        lowX: lowX, highX: highX,
+                        lowY: lowY, highY: highY,
+                        lowZ: lowZ, highZ: highZ
+                    ) {
+                        edgeIntersects = true
+                        break
+                    }
+                    previous = current
+                }
+            }
+
+            if hasVertexInside || centroidInside || edgeIntersects {
                 markBit(faceRecordIndex, in: &selectedFaceBits)
                 for id in faceIndices {
                     let word = id >> 6
@@ -264,6 +283,37 @@ enum MeshTrimEngine {
         try? FileManager.default.removeItem(at: result.url)
         let sidecar = result.url.deletingPathExtension().appendingPathExtension("mesh-asset.json")
         try? FileManager.default.removeItem(at: sidecar)
+    }
+
+    private static func segmentIntersectsBounds(
+        _ start: Vertex,
+        _ end: Vertex,
+        lowX: Float,
+        highX: Float,
+        lowY: Float,
+        highY: Float,
+        lowZ: Float,
+        highZ: Float
+    ) -> Bool {
+        var minimumT: Float = 0
+        var maximumT: Float = 1
+
+        func clipsAxis(origin: Float, destination: Float, low: Float, high: Float) -> Bool {
+            let delta = destination - origin
+            if abs(delta) <= Float.ulpOfOne {
+                return origin >= low && origin <= high
+            }
+            var first = (low - origin) / delta
+            var second = (high - origin) / delta
+            if first > second { swap(&first, &second) }
+            minimumT = max(minimumT, first)
+            maximumT = min(maximumT, second)
+            return minimumT <= maximumT
+        }
+
+        return clipsAxis(origin: start.x, destination: end.x, low: lowX, high: highX) &&
+            clipsAxis(origin: start.y, destination: end.y, low: lowY, high: highY) &&
+            clipsAxis(origin: start.z, destination: end.z, low: lowZ, high: highZ)
     }
 
     private static func resolveVertexIndex(token: Substring, verticesDefined: Int, totalVertices: Int) throws -> Int {
