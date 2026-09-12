@@ -23,8 +23,19 @@ enum SplatVideoOutputValidator {
     static func boundedProbeWindows(duration: TimeInterval) -> [ProbeWindow] {
         guard duration.isFinite, duration > 1.5 else { return [] }
         let window = min(0.5, duration)
-        let start = max(0, (duration * 0.5) - (window * 0.5))
-        return [ProbeWindow(start: start, duration: window)]
+
+        // Export presets are 4/8/12 seconds. One midpoint-only probe could miss a localized
+        // damaged GOP around the first or third quarter and still expose the movie to Share.
+        // Three half-second windows remain tightly bounded (<=1.5 s total decode) while sampling
+        // the whole timeline. Very short custom inputs retain the single centered probe to avoid
+        // overlapping the beginning/tail checks almost completely.
+        let centers: [TimeInterval] = duration >= 4 ? [0.25, 0.50, 0.75] : [0.50]
+        return centers.map { fraction in
+            ProbeWindow(
+                start: max(0, min(duration - window, duration * fraction - window * 0.5)),
+                duration: window
+            )
+        }
     }
 
     static func validate(
@@ -91,7 +102,7 @@ enum SplatVideoOutputValidator {
         // Metadata alone is insufficient: a damaged MP4 can expose a video track and plausible
         // duration while containing no frame that the system decoder can actually materialize.
         // Probe the beginning first, then bounded interior/tail windows. This catches a valid prefix
-        // followed by localized corruption without imposing a full second decode on export.
+        // followed by localized corruption without imposing a full-file decode on export.
         try Task.checkCancellation()
         try validateDecodedFrames(
             asset: asset,
@@ -103,9 +114,8 @@ enum SplatVideoOutputValidator {
         )
         try Task.checkCancellation()
 
-        // A file can have valid beginning/end GOPs yet contain a damaged middle segment. Drain a
-        // single centered bounded window for videos long enough that it does not simply overlap the
-        // edge probes. At 30 fps this adds at most about 15 decoded frames.
+        // Drain bounded interior windows. Standard 4/8/12-second exports probe the first quarter,
+        // midpoint and third quarter, adding at most 1.5 seconds of decoded video at validation.
         for window in boundedProbeWindows(duration: duration.seconds) {
             let middleRange = CMTimeRange(
                 start: CMTime(seconds: window.start, preferredTimescale: 600),
