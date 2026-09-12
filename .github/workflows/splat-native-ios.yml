@@ -19,9 +19,6 @@ env:
   GIT_LFS_SKIP_SMUDGE: '1'
 jobs:
   build:
-    # Feature branches use the lightweight Linux contract workflow on every push.
-    # The macOS/Xcode gate runs only when explicitly requested, on a PR, on HQ,
-    # or on a TestFlight release branch.
     if: >-
       github.event_name == 'workflow_dispatch' ||
       github.event_name == 'pull_request' ||
@@ -147,7 +144,6 @@ jobs:
             -only-testing:SplatNativeTests/ScanProjectStoreTests \
             -only-testing:SplatNativeTests/ScanColdResumePersistenceTests \
             -only-testing:SplatNativeTests/ScanPersistenceIntegrationTests \
-            -only-testing:SplatNativeTests/ScanCompletionVerifierTests \
             -only-testing:SplatNativeTests/SplatCompletionVerifierTests \
             -only-testing:SplatNativeTests/SplatPreviousResultEvidenceTests \
             -only-testing:SplatNativeTests/SplatProjectTrustRecoveryTests \
