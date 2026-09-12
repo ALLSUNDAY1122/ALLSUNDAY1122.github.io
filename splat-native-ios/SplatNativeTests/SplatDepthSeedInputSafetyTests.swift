@@ -68,6 +68,59 @@ final class SplatDepthSeedInputSafetyTests: XCTestCase {
         )
     }
 
+    func testDepthPixelCentersMapWithoutHalfPixelBias() throws {
+        XCTAssertEqual(
+            try XCTUnwrap(SplatDepthSeedBuilder.imagePixelCenterCoordinate(
+                sampleIndex: 0,
+                sourceExtent: 256,
+                destinationExtent: 1920
+            )),
+            3.25,
+            accuracy: 0.0001
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(SplatDepthSeedBuilder.imagePixelCenterCoordinate(
+                sampleIndex: 255,
+                sourceExtent: 256,
+                destinationExtent: 1920
+            )),
+            1915.75,
+            accuracy: 0.0001
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(SplatDepthSeedBuilder.imagePixelCenterCoordinate(
+                sampleIndex: 37,
+                sourceExtent: 256,
+                destinationExtent: 256
+            )),
+            37,
+            accuracy: 0.0001
+        )
+    }
+
+    func testDepthPixelCenterMappingRejectsInvalidExtentsAndIndices() {
+        XCTAssertNil(SplatDepthSeedBuilder.imagePixelCenterCoordinate(
+            sampleIndex: -1,
+            sourceExtent: 256,
+            destinationExtent: 1920
+        ))
+        XCTAssertNil(SplatDepthSeedBuilder.imagePixelCenterCoordinate(
+            sampleIndex: 256,
+            sourceExtent: 256,
+            destinationExtent: 1920
+        ))
+        XCTAssertNil(SplatDepthSeedBuilder.imagePixelCenterCoordinate(
+            sampleIndex: 0,
+            sourceExtent: 0,
+            destinationExtent: 1920
+        ))
+        XCTAssertNil(SplatDepthSeedBuilder.imagePixelCenterCoordinate(
+            sampleIndex: 0,
+            sourceExtent: 256,
+            destinationExtent: 0
+        ))
+    }
+
     func testMalformedHugeDepthDimensionsFallBackWithoutIntegerTrap() throws {
         let project = try makeDirectory()
         defer { try? FileManager.default.removeItem(at: project) }
