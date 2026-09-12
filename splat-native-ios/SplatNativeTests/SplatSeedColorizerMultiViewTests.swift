@@ -81,6 +81,44 @@ final class SplatSeedColorizerMultiViewTests: XCTestCase {
         XCTAssertLessThan(color.red, 40)
     }
 
+    func testProjectionPreparationInvertsEachUsableFrameOncePerColorizationPass() {
+        let frames = (0..<100).map { index in
+            SplatSeedFrame(
+                filePath: "\(index).png",
+                transformMatrix: identityRows,
+                flX: 10,
+                flY: 10,
+                cx: 10,
+                cy: 10,
+                w: 20,
+                h: 20
+            )
+        }
+
+        let prepared = SplatSeedColorizer.prepareProjections(frames: frames)
+
+        XCTAssertEqual(prepared.count, 100)
+        XCTAssertEqual(Set(prepared.map(\.frameIndex)), Set(0..<100))
+    }
+
+    func testProjectionPreparationRejectsSingularTransformBeforePointLoop() {
+        var singular = identityRows
+        singular[2] = [0, 0, 0, 0]
+        let frame = SplatSeedFrame(
+            filePath: "bad.png",
+            transformMatrix: singular,
+            flX: 10,
+            flY: 10,
+            cx: 10,
+            cy: 10,
+            w: 20,
+            h: 20
+        )
+
+        XCTAssertTrue(SplatSeedColorizer.prepareProjections(frames: [frame]).isEmpty)
+        XCTAssertNil(SplatSeedColorizer.project(point: SIMD3<Float>(0, 0, -1), frame: frame))
+    }
+
     func testSeedCacheRejectsTruncatedPLY() throws {
         let root = try makeProjectDirectory(prefix: "splat-seed-truncated")
         defer { try? FileManager.default.removeItem(at: root) }
