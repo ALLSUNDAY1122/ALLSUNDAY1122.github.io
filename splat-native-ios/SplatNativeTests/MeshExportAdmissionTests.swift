@@ -30,6 +30,24 @@ final class MeshExportAdmissionTests: XCTestCase {
         XCTAssertEqual(required, 12 * sourceBytes + 128 * mib)
     }
 
+    func testBridgedPointCloudEstimateReservesForIntermediateOBJExpansion() {
+        let mib: Int64 = 1_024 * 1_024
+        let sourceBytes: Int64 = 10 * mib
+        let bridged = MeshExportAdmission.estimatedRequiredFreeBytes(
+            sourceBytes: sourceBytes,
+            sourceExtension: "glb",
+            format: .ply
+        )
+        let directOBJ = MeshExportAdmission.estimatedRequiredFreeBytes(
+            sourceBytes: sourceBytes,
+            sourceExtension: "obj",
+            format: .ply
+        )
+
+        XCTAssertEqual(bridged, 24 * sourceBytes + 128 * mib)
+        XCTAssertGreaterThan(bridged, directOBJ)
+    }
+
     func testEstimateSaturatesInsteadOfOverflowing() {
         let required = MeshExportAdmission.estimatedRequiredFreeBytes(
             sourceBytes: Int64.max,
