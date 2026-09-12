@@ -1,13 +1,13 @@
 # 情報処理安全確保支援士試験｜学びスプリント RELEASE STATUS
 
-更新基準日: 2026-08-10 18:43 JST
+更新基準日: 2026-09-12 11:32 JST
 
 ## 対象アプリ
 
 - 資格名: 情報処理安全確保支援士試験
 - 開発連番: #8
-- Bundle ID: `jp.allsunday1122.scmanabisprint` **（暫定。App Store Connect作成前のため最終確定扱いにしない）**
-- App Store Connect App ID: **未発行 / 未確認**
+- Bundle ID: `jp.allsunday1122.scmanabisprint` **（最終確定）**
+- App Store Connect App ID: **未発行**（2026-09-12 fresh API read: Bundle ID一致App=0）
 - Version: `1.0.0`
 - Build番号: `1`（GitHub preflight）。Codemagic signed buildは `CM_BUILD_NUMBER` を使用するため配布Buildは未確定
 - iOS方式: Capacitor `8.4.2` / app内Web資産同梱 / iPhone-only
@@ -16,7 +16,7 @@
 - Codemagic App Store Connect integration候補: `codemagic`
 - 署名方式候補: Codemagic automatic App Store signing (`distribution_type: app_store`)
 - 署名プロファイル: **未確認 / 未実行**
-- root `codemagic.yaml`へのSC workflow統合: **未実施**
+- root `codemagic.yaml`へのSC workflow統合: **PASS**（2026-09-12 / Issue #4928 / run 34667781515 / YAML parse PASS）
 - App Store本審査提出: **禁止 / 未実施**
 
 ## 実績ステータス
@@ -52,7 +52,7 @@
 - IAP offline entitlement fix commit: `4de3a6f50a1692e1d826d555df36ca7d100340ee`
 - IAP spec commit: `774113e6cb4176307caeac32f4970530b507b070`
 - AppIcon正本: Google Drive `08_情報処理安全確保支援士試験.png`, file ID `1HuyIsiuQFmCbW266NbZIz5YM7tC08fON`, SHA-256 `6bf2945788da0be45b9e448ea79d5c40ac197e97d6bed387d4215c50d486bb3d`
-- GitHub `sc-manabi-sprint/native/AppIcon-1024.png`: **未配置（2026-08-10 18:43確認時 404）**
+- GitHub `sc-manabi-sprint/native/AppIcon-1024.png`: **未配置**。ただし2026-09-12にGoogle Drive正本を認証済み取得し、1024×1024 RGB・SHA-256一致を再確認済み。
 - SC専用PR: なし。主要変更はmain直接コミットで記録。
 
 ## 未完了項目
@@ -65,11 +65,9 @@
 - 次: canonical icon配置→SHA検証。
 
 ### 2. Codemagic workflow統合
-- 未完了内容: `sc-manabi-sprint/app-store/codemagic-sc-workflow.yaml` の `sc-manabi-sprint-ios` をroot `codemagic.yaml`へ統合。
-- FAIL理由: 候補定義のみでCodemagic実行条件が本番設定へ反映されていない。
-- ChatGPTで実行可能: root YAMLへの安全な統合、構文確認。
-- 本人操作が必要: Codemagic App Store Connect integration/署名プロファイルの実アカウント確認。
-- 次: AppIcon配置後にroot workflow統合。
+- **完了（2026-09-12）**：`sc-manabi-sprint-ios` をroot `codemagic.yaml`へ統合し、PyYAML parse、Bundle ID、Internal TestFlight有効、App Store提出無効を検証PASS。
+- Codemagic app resolveもfresh inspect #4926でPASS。
+- 残件はcanonical AppIconのGitHub配置後に署名Release Buildを実行すること。
 
 ### 3. Bundle ID / App Store Connect App ID
 - 未完了内容: Bundle ID最終確定、App Store Connect Appレコード作成、App ID取得。
@@ -106,11 +104,9 @@
 `[CODEX TESTFLIGHT READY]` は記録しない。
 
 未達条件:
-- Bundle IDが最終確定扱いではない
 - App Store Connect App ID未確定
 - StoreKit 2のSandbox購入・キャンセル・復元・オフライン実機監査未完了
 - canonical AppIconがiOS資産へ未配置
-- Codemagic SC workflowがroot設定へ未統合
 - 署名プロファイル未確認
 - signed IPA未生成
 - App Store Connect upload未実施
