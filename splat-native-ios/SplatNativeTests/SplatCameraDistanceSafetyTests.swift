@@ -2,6 +2,20 @@ import simd
 import XCTest
 
 final class SplatCameraDistanceSafetyTests: XCTestCase {
+    func testEyePreservesNormalViewerDistance() {
+        let center = SIMD3<Float>(1, -1, 2)
+        let eye = SplatCameraGeometry.eye(
+            center: center,
+            distance: 4,
+            yaw: 0,
+            pitch: 0
+        )
+
+        XCTAssertEqual(eye.x, center.x, accuracy: 0.0001)
+        XCTAssertEqual(eye.y, center.y, accuracy: 0.0001)
+        XCTAssertEqual(eye.z, center.z + 4, accuracy: 0.0001)
+    }
+
     func testEyeClampsNegativePersistedDistanceInsteadOfFlippingOrbit() {
         let center = SIMD3<Float>(1, 2, 3)
         let eye = SplatCameraGeometry.eye(
