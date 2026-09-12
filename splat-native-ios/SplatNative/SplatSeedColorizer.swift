@@ -27,6 +27,12 @@ private struct SplatSeedAssignment {
     let score: Float
 }
 
+private struct SplatSeedSampleLocation {
+    let pointIndex: Int
+    let x: Float
+    let y: Float
+}
+
 private struct SplatSeedAssignmentSet {
     private var first: SplatSeedAssignment?
     private var second: SplatSeedAssignment?
@@ -171,18 +177,16 @@ enum SplatSeedColorizer {
         // can land on a temporary occluder, highlight or exposure outlier; a small robust consensus
         // gives the 3DGS initializer a more stable color while keeping raster memory bounded because
         // only one source image is decoded at a time below.
-        // Stream each point's at-most-three assignments directly into frame buckets. The previous
-        // two-stage `[[SplatSeedAssignment]]` staging array retained every candidate a second time
-        // until all points were classified; large dense seeds therefore paid O(points) extra array
-        // headers plus up to three duplicated assignment values per point for no quality benefit.
-        var grouped: [Int: [(pointIndex: Int, assignment: SplatSeedAssignment)]] = [:]
-        // Every point uses at most three color observations. A fixed inline accumulator avoids one
-        // tiny heap-backed Array allocation for every colored point, which is significant for dense
-        // 100k+ seed clouds while preserving the same one/two/three-view consensus semantics.
+        // Retain only the information needed after view selection. frameIndex is already the bucket
+        // key and score is only needed while selecting the best views, so carrying both through the
+        // raster pass inflated the up-to-three-per-point grouped payload without changing output.
+        var grouped: [Int: [SplatSeedSampleLocation]] = [:]
         var samples = Array(repeating: SplatSeedColorAccumulator(), count: points.count)
         for (pointIndex, point) in points.enumerated() {
             bestAssignments(for: point, projections: projections).forEachAccepted { assignment in
-                grouped[assignment.frameIndex, default: []].append((pointIndex, assignment))
+                grouped[assignment.frameIndex, default: []].append(
+                    SplatSeedSampleLocation(pointIndex: pointIndex, x: assignment.x, y: assignment.y)
+                )
             }
         }
 
@@ -195,8 +199,8 @@ enum SplatSeedColorizer {
             guard let raster = loadRaster(url: imageURL) else { continue }
             for item in items {
                 if let color = raster.sample(
-                    x: item.assignment.x,
-                    y: item.assignment.y,
+                    x: item.x,
+                    y: item.y,
                     sourceWidth: frame.w,
                     sourceHeight: frame.h
                 ) {
