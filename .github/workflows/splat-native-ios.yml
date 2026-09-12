@@ -95,12 +95,15 @@ jobs:
           grep -q 'SplatVideoConfigurationTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatVideoExporterTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatTransientExportWorkspaceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatViewerSidecarWriteSafetyTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshThirdPartyReaderCompatibilityTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportAdmissionTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportMemoryPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MeshExportSourceSafetyTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshProjectStoreTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshProjectIntegrityTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MeshDurabilityRecoverySymlinkTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'CaptureMotionQualityTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatResourceGuardAdaptiveTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatSeedColorizerMultiViewTests.swift' SplatNative.xcodeproj/project.pbxproj
@@ -144,12 +147,14 @@ jobs:
             -only-testing:SplatNativeTests/ScanProjectStoreTests \
             -only-testing:SplatNativeTests/ScanColdResumePersistenceTests \
             -only-testing:SplatNativeTests/ScanPersistenceIntegrationTests \
+            -only-testing:SplatNativeTests/ScanCompletionVerifierTests \
             -only-testing:SplatNativeTests/SplatCompletionVerifierTests \
             -only-testing:SplatNativeTests/SplatPreviousResultEvidenceTests \
             -only-testing:SplatNativeTests/SplatProjectTrustRecoveryTests \
             -only-testing:SplatNativeTests/SplatExportAdmissionTests \
             -only-testing:SplatNativeTests/SplatExportServiceTests \
             -only-testing:SplatNativeTests/SplatTransientExportWorkspaceTests \
+            -only-testing:SplatNativeTests/SplatViewerSidecarWriteSafetyTests \
             -only-testing:SplatNativeTests/ScanTrashLifecycleTests \
             -only-testing:SplatNativeTests/SplatVideoConfigurationTests \
             -only-testing:SplatNativeTests/SplatVideoExporterTests \
@@ -157,8 +162,10 @@ jobs:
             -only-testing:SplatNativeTests/MeshExportAdmissionTests \
             -only-testing:SplatNativeTests/MeshExportMemoryPolicyTests \
             -only-testing:SplatNativeTests/MeshExportResourcePressureTests \
+            -only-testing:SplatNativeTests/MeshExportSourceSafetyTests \
             -only-testing:SplatNativeTests/MeshProjectStoreTests \
             -only-testing:SplatNativeTests/MeshProjectIntegrityTests \
+            -only-testing:SplatNativeTests/MeshDurabilityRecoverySymlinkTests \
             2>&1 | tee /tmp/splat-integrated-tests.log
           status=${PIPESTATUS[0]}
           grep -E 'Test Case.*(failed|passed)|XCTAssert|error:|Testing failed|Failures:|failed on|threw error' /tmp/splat-integrated-tests.log | tail -240 > /tmp/splat-integrated-diagnostics.txt || true
