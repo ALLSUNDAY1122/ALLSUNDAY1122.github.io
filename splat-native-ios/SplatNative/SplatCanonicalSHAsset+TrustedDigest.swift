@@ -39,12 +39,19 @@ extension SplatCanonicalSHAsset {
             forLegacySplat: sourceURL,
             verifiedDigest: verifiedDigest
         ), FileManager.default.fileExists(atPath: url.path),
+           let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+           values.isRegularFile == true,
+           values.isSymbolicLink != true,
            let descriptor = try? inspectPLY(url),
            descriptor.shDegree == requiredSHDegree,
            descriptor.pointCount == expectedPointCount,
            hasCompleteVertexPayload(at: url, expectedPointCount: expectedPointCount) else {
             return nil
         }
+        // A canonical higher-fidelity asset is an optimization of a freshly verified project
+        // result, not an escape hatch to arbitrary filesystem content. Requiring an actual
+        // non-symlink regular file keeps export/share self-contained even if a damaged project
+        // contains a correctly named alias pointing outside its archive.
         return Asset(url: url, descriptor: descriptor)
     }
 }
