@@ -94,7 +94,16 @@ struct SplatVideoConfiguration: Equatable, Sendable {
 
     var dimensions: (width: Int, height: Int) { quality.dimensions(for: aspectRatio) }
     var duration: TimeInterval { speed.duration }
-    var totalFrames: Int { max(1, Int((duration * Double(framesPerSecond)).rounded())) }
+    var totalFrames: Int {
+        let safeFPS = max(1, framesPerSecond)
+        let rawFrames = duration * Double(safeFPS)
+        guard rawFrames.isFinite else { return Int.max }
+        let rounded = rawFrames.rounded()
+        // Double(Int.max) rounds to 2^63 on 64-bit platforms, which itself is outside Int's
+        // representable range. Compare before conversion and saturate rather than trapping.
+        guard rounded < Double(Int.max) else { return Int.max }
+        return max(1, Int(rounded))
+    }
 
     func cameraSample(progress rawProgress: Double) -> CameraSample {
         // Export progress normally comes from an integer frame index, but treating a malformed
