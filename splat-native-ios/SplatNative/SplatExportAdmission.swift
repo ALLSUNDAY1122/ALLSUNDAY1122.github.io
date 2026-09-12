@@ -17,12 +17,14 @@ enum SplatExportAdmission {
     enum AdmissionError: LocalizedError {
         case untrustedSource
         case sourceSizeUnavailable
+        case availableCapacityUnavailable
         case insufficientStorage(required: Int64, available: Int64)
 
         var errorDescription: String? {
             switch self {
             case .untrustedSource: return "完成確認できていない3Dデータは書き出せません。再生成または保存済みスキャンから開き直してください。"
             case .sourceSizeUnavailable: return "3Dデータのサイズを確認できないため、書き出しを開始できません。"
+            case .availableCapacityUnavailable: return "端末の空き容量を確認できないため、安全な書き出しを開始できません。"
             case .insufficientStorage(let required, let available):
                 let formatter = ByteCountFormatter(); formatter.countStyle = .file
                 return "空き容量が不足しています。安全な書き出しには約\(formatter.string(fromByteCount: required))必要ですが、現在は約\(formatter.string(fromByteCount: available))です。"
@@ -80,9 +82,19 @@ enum SplatExportAdmission {
 
         let canonicalBytes = canonical.flatMap { try? fileSize(at: $0.url) }
         let required = estimatedRequiredFreeBytes(sourceBytes: sourceBytes, canonicalAssetBytes: canonicalBytes, kind: kind)
-        let available = availableCapacityOverride.map { max(0, $0) } ?? availableCapacity(at: projectURL)
-        if let available, available < required { throw AdmissionError.insufficientStorage(required: required, available: available) }
+        let detectedCapacity = availableCapacityOverride == nil ? availableCapacity(at: projectURL) : nil
+        let available = try resolvedAvailableCapacity(
+            override: availableCapacityOverride,
+            detected: detectedCapacity
+        )
+        if available < required { throw AdmissionError.insufficientStorage(required: required, available: available) }
         return Result(verification: verification)
+    }
+
+    static func resolvedAvailableCapacity(override: Int64?, detected: Int64?) throws -> Int64 {
+        if let override { return max(0, override) }
+        guard let detected else { throw AdmissionError.availableCapacityUnavailable }
+        return max(0, detected)
     }
 
     static func estimatedRequiredFreeBytes(sourceBytes: Int64, canonicalAssetBytes: Int64? = nil, kind: Kind) -> Int64 {
