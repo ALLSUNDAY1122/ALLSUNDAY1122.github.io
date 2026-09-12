@@ -41,9 +41,12 @@ enum MeshExportAdmission {
         guard sourceURL.isFileURL, FileManager.default.fileExists(atPath: sourceURL.path) else {
             throw AdmissionError.sourceMissing
         }
-        guard let sourceValues = try? sourceURL.resourceValues(
-            forKeys: [.isRegularFileKey, .isSymbolicLinkKey]
-        ), sourceValues.isRegularFile == true, sourceValues.isSymbolicLink != true else {
+        // Preserve the pre-existing `sourceSizeUnavailable` contract for directories/special nodes,
+        // while explicitly rejecting aliases before `attributesOfItem` follows them to an external
+        // regular file. That closes the self-contained export hole without broadening behavior for
+        // malformed non-file inputs.
+        if let sourceValues = try? sourceURL.resourceValues(forKeys: [.isSymbolicLinkKey]),
+           sourceValues.isSymbolicLink == true {
             throw AdmissionError.unsafeSource
         }
 
