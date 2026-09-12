@@ -19,17 +19,19 @@ final class MeshDepthPayloadPackingTests: XCTestCase {
     func testPaddedRowsDiscardStridePaddingWithoutChangingPixels() {
         let pixelBytes = 2 * MemoryLayout<Float>.size
         let sourceRowBytes = pixelBytes + 8
-        var source = Data(count: sourceRowBytes * 2)
+        var source = Data(repeating: 0x7f, count: sourceRowBytes * 2)
         let first: [Float] = [1.25, 2.5]
         let second: [Float] = [3.75, 5.0]
         source.withUnsafeMutableBytes { raw in
             guard let base = raw.baseAddress else { return }
-            first.withUnsafeBytes { base.copyMemory(from: $0.baseAddress!, byteCount: pixelBytes) }
-            second.withUnsafeBytes {
-                base.advanced(by: sourceRowBytes).copyMemory(from: $0.baseAddress!, byteCount: pixelBytes)
+            first.withUnsafeBytes { firstBytes in
+                guard let firstBase = firstBytes.baseAddress else { return }
+                base.copyMemory(from: firstBase, byteCount: pixelBytes)
             }
-            memset(base.advanced(by: pixelBytes), 0x7f, 8)
-            memset(base.advanced(by: sourceRowBytes + pixelBytes), 0x7f, 8)
+            second.withUnsafeBytes { secondBytes in
+                guard let secondBase = secondBytes.baseAddress else { return }
+                base.advanced(by: sourceRowBytes).copyMemory(from: secondBase, byteCount: pixelBytes)
+            }
         }
 
         let result = source.withUnsafeBytes { raw -> Data? in
@@ -41,7 +43,8 @@ final class MeshDepthPayloadPackingTests: XCTestCase {
                 sourceRowBytes: sourceRowBytes
             )
         }
-        let expected = first.withUnsafeBytes { Data($0) } + second.withUnsafeBytes { Data($0) }
+        var expected = first.withUnsafeBytes { Data($0) }
+        expected.append(second.withUnsafeBytes { Data($0) })
         XCTAssertEqual(result, expected)
     }
 }
