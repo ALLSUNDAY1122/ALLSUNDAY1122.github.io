@@ -19,6 +19,7 @@ enum MeshOBJShareBundle {
     }
 
     static func copyCompanions(sourceOBJ: URL, workspace: URL) throws -> [URL] {
+        try Task.checkCancellation()
         guard sourceOBJ.pathExtension.lowercased() == "obj" else { return [] }
         let root = sourceOBJ.deletingLastPathComponent().standardizedFileURL
         let text = try String(contentsOf: sourceOBJ, encoding: .utf8)
@@ -28,6 +29,7 @@ enum MeshOBJShareBundle {
         var copied = Set<String>()
         var sharedPaths = Set<String>()
         for reference in mtlReferences {
+            try Task.checkCancellation()
             let mtlSource = try resolved(reference, relativeTo: root, allowedRoot: root)
             let mtlDestination = try copyPreservingRelativePath(
                 mtlSource,
@@ -39,9 +41,11 @@ enum MeshOBJShareBundle {
                 shared.append(mtlDestination)
             }
 
+            try Task.checkCancellation()
             let mtlText = try String(contentsOf: mtlSource, encoding: .utf8)
             let mtlRoot = mtlSource.deletingLastPathComponent()
             for textureReference in textureReferences(in: mtlText) {
+                try Task.checkCancellation()
                 let textureSource = try resolved(textureReference, relativeTo: mtlRoot, allowedRoot: root)
                 let destination = try copyPreservingRelativePath(
                     textureSource,
@@ -54,6 +58,7 @@ enum MeshOBJShareBundle {
                 }
             }
         }
+        try Task.checkCancellation()
         return shared
     }
 
@@ -61,6 +66,7 @@ enum MeshOBJShareBundle {
     /// workspace. De-duplicate repeated material/texture references so storage admission matches
     /// the actual copy path rather than pessimistically counting the same companion many times.
     static func referencedCompanionByteCount(sourceOBJ: URL) throws -> Int64 {
+        try Task.checkCancellation()
         guard sourceOBJ.pathExtension.lowercased() == "obj" else { return 0 }
         let root = sourceOBJ.deletingLastPathComponent().standardizedFileURL
         let text = try String(contentsOf: sourceOBJ, encoding: .utf8)
@@ -69,6 +75,7 @@ enum MeshOBJShareBundle {
         var sources = Set<String>()
         var total: Int64 = 0
         func addSize(_ url: URL) throws {
+            try Task.checkCancellation()
             guard sources.insert(url.standardizedFileURL.path).inserted else { return }
             let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
             guard (attributes[.type] as? FileAttributeType) == .typeRegular,
@@ -80,14 +87,17 @@ enum MeshOBJShareBundle {
         }
 
         for reference in mtlReferences {
+            try Task.checkCancellation()
             let mtlSource = try resolved(reference, relativeTo: root, allowedRoot: root)
             try addSize(mtlSource)
             let mtlText = try String(contentsOf: mtlSource, encoding: .utf8)
             let mtlRoot = mtlSource.deletingLastPathComponent()
             for textureReference in textureReferences(in: mtlText) {
+                try Task.checkCancellation()
                 try addSize(try resolved(textureReference, relativeTo: mtlRoot, allowedRoot: root))
             }
         }
+        try Task.checkCancellation()
         return total
     }
 
@@ -237,6 +247,7 @@ enum MeshOBJShareBundle {
         workspace: URL,
         copied: inout Set<String>
     ) throws -> URL {
+        try Task.checkCancellation()
         let source = source.standardizedFileURL
         let root = root.standardizedFileURL
         guard isContained(source, in: root) else {
@@ -257,10 +268,12 @@ enum MeshOBJShareBundle {
                 at: destination.deletingLastPathComponent(),
                 withIntermediateDirectories: true
             )
+            try Task.checkCancellation()
             if FileManager.default.fileExists(atPath: destination.path) {
                 try FileManager.default.removeItem(at: destination)
             }
             try FileManager.default.copyItem(at: source, to: destination)
+            try Task.checkCancellation()
         }
         return destination
     }
