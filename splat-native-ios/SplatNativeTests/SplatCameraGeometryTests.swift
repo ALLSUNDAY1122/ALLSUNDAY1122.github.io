@@ -166,6 +166,18 @@ final class SplatCameraGeometryTests: XCTestCase {
         XCTAssertTrue(isFinite(matrix))
     }
 
+    func testPerspectiveRemainsFiniteForHugeFinitePlanes() {
+        let huge = Float.greatestFiniteMagnitude / 2
+        let matrix = SplatCameraGeometry.perspective(
+            fovY: .pi / 3,
+            aspect: 1,
+            near: huge,
+            far: huge
+        )
+
+        XCTAssertTrue(isFinite(matrix))
+    }
+
     func testLookAtRemainsFiniteWhenEyeEqualsCenter() {
         let center = SIMD3<Float>(1, 2, 3)
         let matrix = SplatCameraGeometry.lookAt(
