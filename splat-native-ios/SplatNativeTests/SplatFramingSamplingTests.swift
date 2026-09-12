@@ -19,7 +19,7 @@ final class SplatFramingSamplingTests: XCTestCase {
             XCTAssertLessThanOrEqual(indices.count, 6_000)
             XCTAssertEqual(indices.first, 0)
             XCTAssertEqual(indices.last, pointCount - 1)
-            XCTAssertTrue(zip(indices, indices.dropFirst()).allSatisfy { $0 < $1 })
+            XCTAssertTrue(zip(indices, indices.dropFirst()).allSatisfy { pair in pair.0 < pair.1 })
         }
     }
 
