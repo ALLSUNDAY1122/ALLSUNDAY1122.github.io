@@ -17,11 +17,13 @@ private enum MeshAppearanceProcessor {
         // texture. This rejects parent traversal, absolute paths, missing companions and symlink
         // escapes so appearance editing cannot silently depend on files outside the scan project.
         _ = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: objURL)
-        let obj = try String(contentsOf: objURL, encoding: .utf8)
-        guard let mtlName = obj.split(whereSeparator: \.isNewline).first(where: { $0.hasPrefix("mtllib ") }).map({ String($0.dropFirst(7)) }) else { throw error("MTL参照がありません") }
-        let mtlURL = directory.appendingPathComponent(mtlName.trimmingCharacters(in: .whitespaces))
-        var mtl = try String(contentsOf: mtlURL, encoding: .utf8)
-        guard let textureName = mtl.split(whereSeparator: \.isNewline).first(where: { $0.hasPrefix("map_Kd ") }).map({ String($0.dropFirst(7)).trimmingCharacters(in: .whitespaces) }) else { throw error("テクスチャ参照がありません") }
+        guard let mtlName = try MeshTextReferenceRewriter.firstReference(in: objURL, directive: "mtllib") else {
+            throw error("MTL参照がありません")
+        }
+        let mtlURL = directory.appendingPathComponent(mtlName)
+        guard let textureName = try MeshTextReferenceRewriter.firstReference(in: mtlURL, directive: "map_Kd") else {
+            throw error("テクスチャ参照がありません")
+        }
         let textureURL = directory.appendingPathComponent(textureName)
         guard let input = CIImage(contentsOf: textureURL) else { throw error("テクスチャ画像を開けません") }
 
@@ -51,11 +53,22 @@ private enum MeshAppearanceProcessor {
         let context = CIContext(options: [.cacheIntermediates:false])
         try context.writeJPEGRepresentation(of: output, to: editedTexture, colorSpace: cs, options: [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 0.94])
 
-        mtl = mtl.split(whereSeparator: \.isNewline).map { line in line.hasPrefix("map_Kd ") ? "map_Kd \(editedTexture.lastPathComponent)" : String(line) }.joined(separator:"\n") + "\n"
-        try mtl.write(to: editedMTL, atomically: true, encoding: .utf8)
-
-        let newOBJ = obj.split(whereSeparator: \.isNewline).map { line in line.hasPrefix("mtllib ") ? "mtllib \(editedMTL.lastPathComponent)" : String(line) }.joined(separator:"\n") + "\n"
-        try newOBJ.write(to: editedOBJ, atomically: true, encoding: .utf8)
+        // OBJ geometry can be hundreds of MiB for a large scan. Do not materialize the complete
+        // OBJ as String and then create a second split/map/join copy merely to update mtllib.
+        // Stream both text companions with bounded buffers so appearance editing peak memory is
+        // driven by the texture filter, not by mesh text size.
+        try MeshTextReferenceRewriter.rewrite(
+            sourceURL: mtlURL,
+            destinationURL: editedMTL,
+            directive: "map_Kd",
+            replacement: editedTexture.lastPathComponent
+        )
+        try MeshTextReferenceRewriter.rewrite(
+            sourceURL: objURL,
+            destinationURL: editedOBJ,
+            directive: "mtllib",
+            replacement: editedMTL.lastPathComponent
+        )
         committed = true
         return MeshAppearanceEditResult(objURL: editedOBJ, textureURL: editedTexture)
     }
