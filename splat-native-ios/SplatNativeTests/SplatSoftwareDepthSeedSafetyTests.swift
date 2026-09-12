@@ -83,10 +83,10 @@ final class SplatSoftwareDepthSeedSafetyTests: XCTestCase {
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: 32, height: 32))
         let image = renderer.image { context in
             UIColor.black.setFill()
-            context.fill(CGRect(x: 0, y: 0, width: 32, height: 32))
+            context.cgContext.fill(CGRect(x: 0, y: 0, width: 32, height: 32))
             UIColor.white.setFill()
-            context.fill(CGRect(x: 0, y: 0, width: 16, height: 16))
-            context.fill(CGRect(x: 16, y: 16, width: 16, height: 16))
+            context.cgContext.fill(CGRect(x: 0, y: 0, width: 16, height: 16))
+            context.cgContext.fill(CGRect(x: 16, y: 16, width: 16, height: 16))
         }
         guard let data = image.pngData() else {
             XCTFail("Expected PNG data")
