@@ -173,7 +173,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                     return
                 }
 
-                let framing = Self.robustFraming(for: points)
+                let framing = SplatCameraGeometry.robustFraming(for: points)
                 self.sceneCenter = framing.center
                 self.baseDistance = framing.distance
                 self.distance = framing.distance
@@ -247,7 +247,6 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         targetOffset -= up * Float(delta.y) * worldPerPixel
         gesture.setTranslation(.zero, in: view)
     }
-
     @objc func pinch(_ gesture: UIPinchGestureRecognizer) {
         guard !stateMeasurementEnabled else { return }
         distance = max(baseDistance * 0.12, min(baseDistance * 7.0, distance / Float(gesture.scale)))
