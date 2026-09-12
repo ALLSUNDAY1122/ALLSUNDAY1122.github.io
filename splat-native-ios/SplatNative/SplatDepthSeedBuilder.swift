@@ -24,7 +24,7 @@ struct SplatDepthSeedFrame: Sendable {
 enum SplatDepthSeedBuilder {
     // Recipe version is a cache-compatibility epoch, not the file-format version. Bump it whenever
     // seed-generation semantics change so a same-RAW comparison cannot silently reuse stale points3D.ply.
-    static let recipeVersion = 6
+    static let recipeVersion = 5
     static let targetSamplesPerFrame = 900
     static let voxelDensity: Float = 100
     static let minimumDepth: Float = 0.18
@@ -258,8 +258,6 @@ enum SplatDepthSeedBuilder {
         fallbackPoints: [SIMD3<Float>],
         colorFrames: [SplatSeedFrame]
     ) -> String {
-        // Stable FNV-1a over persisted reconstruction inputs. Swift's Hasher is deliberately
-        // randomized between launches and therefore must not be used for an on-disk cache key.
         var hash: UInt64 = 14_695_981_039_346_656_037
         let prime: UInt64 = 1_099_511_628_211
 
@@ -336,13 +334,26 @@ enum SplatDepthSeedBuilder {
         relativePath: String,
         fileManager: FileManager = .default
     ) -> URL? {
-        guard !relativePath.isEmpty, !relativePath.hasPrefix("/") else { return nil }
-
         let lexicalRoot = projectURL.standardizedFileURL
+        let resolvedRoot = lexicalRoot.resolvingSymlinksInPath()
+        return validatedDepthInputURL(
+            lexicalRoot: lexicalRoot,
+            resolvedRoot: resolvedRoot,
+            relativePath: relativePath,
+            fileManager: fileManager
+        )
+    }
+
+    private static func validatedDepthInputURL(
+        lexicalRoot: URL,
+        resolvedRoot: URL,
+        relativePath: String,
+        fileManager: FileManager
+    ) -> URL? {
+        guard !relativePath.isEmpty, !relativePath.hasPrefix("/") else { return nil }
         let lexicalCandidate = lexicalRoot.appendingPathComponent(relativePath).standardizedFileURL
         guard isContained(lexicalCandidate, in: lexicalRoot) else { return nil }
 
-        let resolvedRoot = lexicalRoot.resolvingSymlinksInPath()
         let resolvedCandidate = lexicalCandidate.resolvingSymlinksInPath()
         guard isContained(resolvedCandidate, in: resolvedRoot),
               let values = try? resolvedCandidate.resourceValues(forKeys: [.isRegularFileKey]),
@@ -365,8 +376,11 @@ enum SplatDepthSeedBuilder {
         fileManager: FileManager
     ) -> (points: [SIMD3<Float>], framesUsed: Int) {
         var voxels: [Voxel: SIMD3<Float>] = [:]
-        voxels.reserveCapacity(min(maximumDepthSeedPointCount, frames.count * targetSamplesPerFrame))
+        let (reserveEstimate, reserveOverflow) = frames.count.multipliedReportingOverflow(by: targetSamplesPerFrame)
+        voxels.reserveCapacity(min(maximumDepthSeedPointCount, reserveOverflow ? maximumDepthSeedPointCount : reserveEstimate))
         var framesUsed = 0
+        let lexicalRoot = projectURL.standardizedFileURL
+        let resolvedRoot = lexicalRoot.resolvingSymlinksInPath()
 
         for frame in frames {
             guard voxels.count < maximumDepthSeedPointCount,
@@ -387,7 +401,8 @@ enum SplatDepthSeedBuilder {
                   frame.flY > 0,
                   let cameraToWorld = matrix(fromRows: frame.transformMatrix),
                   let depthURL = validatedDepthInputURL(
-                    projectURL: projectURL,
+                    lexicalRoot: lexicalRoot,
+                    resolvedRoot: resolvedRoot,
                     relativePath: relativePath,
                     fileManager: fileManager
                   ) else {
@@ -408,10 +423,7 @@ enum SplatDepthSeedBuilder {
                 continue
             }
 
-            let step = max(
-                2,
-                Int(sqrt(Double(pixelCount) / Double(targetSamplesPerFrame)))
-            )
+            let step = max(2, Int(sqrt(Double(pixelCount) / Double(targetSamplesPerFrame))))
             var acceptedInFrame = 0
 
             for y in stride(from: step / 2, to: depthHeight, by: step) {
@@ -463,7 +475,9 @@ enum SplatDepthSeedBuilder {
 
     private static func matrix(fromRows rows: [[Float]]) -> simd_float4x4? {
         guard rows.count == 4,
-              rows.allSatisfy({ $0.count == 4 && $0.allSatisfy(\.isFinite) }) else { return nil }
+              rows.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }) else {
+            return nil
+        }
         return simd_float4x4(
             SIMD4<Float>(rows[0][0], rows[1][0], rows[2][0], rows[3][0]),
             SIMD4<Float>(rows[0][1], rows[1][1], rows[2][1], rows[3][1]),
