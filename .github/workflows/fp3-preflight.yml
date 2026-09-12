@@ -52,6 +52,16 @@ jobs:
           if found: raise SystemExit('prohibited markers: '+repr(found))
           print('PASS: FP3 core static contract')
           PY
+      - name: Release identity gate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('fp3-manabi-sprint/ios/project.yml').read_text(encoding='utf-8')
+          expected='PRODUCT_BUNDLE_IDENTIFIER: com.allsunday1122.fp3kakomoncoach'
+          if expected not in p:
+              raise SystemExit('release bundle ID drift: expected existing ASC app com.allsunday1122.fp3kakomoncoach')
+          print('PASS: FP3 release identity matches App Store Connect app 6796733578')
+          PY
       - name: Native premium-boundary regression gates
         run: |
           python - <<'PY'
