@@ -6,7 +6,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/fp3-materialize-bank.yml'
-      - 'fp3-manabi-sprint/tools/materialize_fp3_bank.py'
+      - 'fp3-manabi-sprint/staging/payload.gz.b64.part*'
 
 permissions:
   contents: write
@@ -16,32 +16,56 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download canonical audited source
+
+      - name: Reassemble authenticated canonical payload
         run: |
           set -euo pipefail
-          curl -fL --retry 3 --retry-delay 2 \
-            'https://drive.usercontent.google.com/download?id=1iqk3OO4uVDNPe_orfpyksoYwNSAXwnkk&export=download&confirm=t' \
-            -o /tmp/FP3_KAKOMON_COACH_v1.1.0.html
-      - name: Materialize with fail-closed gates
-        run: |
-          set -euo pipefail
-          python3 fp3-manabi-sprint/tools/materialize_fp3_bank.py \
-            /tmp/FP3_KAKOMON_COACH_v1.1.0.html \
-            fp3-manabi-sprint/question_bank_180.payload.json
-      - name: Verify output
+          test "$(find fp3-manabi-sprint/staging -maxdepth 1 -name 'payload.gz.b64.part*' | wc -l)" -eq 5
+          cat fp3-manabi-sprint/staging/payload.gz.b64.part* > /tmp/fp3.payload.gz.b64
+          test "$(wc -c < /tmp/fp3.payload.gz.b64)" -eq 49532
+          base64 -d /tmp/fp3.payload.gz.b64 > /tmp/fp3.payload.gz
+          echo '834f5908fe8d1077c270004d7ddb3b39ce521884344db8a7191c5dcff9d4ea6f  /tmp/fp3.payload.gz' | sha256sum -c -
+          gzip -dc /tmp/fp3.payload.gz > fp3-manabi-sprint/question_bank_180.payload.json
+
+      - name: Verify fail-closed product bank
         run: |
           set -euo pipefail
           test "$(wc -c < fp3-manabi-sprint/question_bank_180.payload.json)" -eq 234369
           echo 'bf2a24b354cc5b1714e1c0ef10fb529220b474c8d0b48b2f135ae42b061bda33  fp3-manabi-sprint/question_bank_180.payload.json' | sha256sum -c -
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('fp3-manabi-sprint/question_bank_180.payload.json')
+          bank = json.loads(p.read_text(encoding='utf-8'))
+          questions = bank.get('questions')
+          assert isinstance(questions, list) and len(questions) == 180
+          assert bank.get('metadata', {}).get('question_count') == 180
+          print('FP3_CANONICAL_GATE=PASS question_count=180')
+          PY
+
+      - name: Mark manifest committed and remove transport staging
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('fp3-manabi-sprint/question_bank_180.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          data['payload_status'] = 'PAYLOAD_COMMITTED_VERIFIED'
+          data['metadata']['note'] = 'Authenticated Drive canonical payload committed after byte-count, gzip SHA, payload SHA and 180-question fail-closed verification.'
+          p.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          PY
+          rm -f fp3-manabi-sprint/staging/payload.gz.b64.part*
+
       - name: Commit canonical payload
         run: |
           set -euo pipefail
-          if git diff --quiet -- fp3-manabi-sprint/question_bank_180.payload.json; then
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add fp3-manabi-sprint/question_bank_180.payload.json fp3-manabi-sprint/question_bank_180.json fp3-manabi-sprint/staging
+          if git diff --cached --quiet; then
             echo 'Payload already current.'
             exit 0
           fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add fp3-manabi-sprint/question_bank_180.payload.json
-          git commit -m 'fp3: materialize audited 180-question bank'
+          git commit -m 'fp3: commit verified authenticated 180-question bank'
           git push
