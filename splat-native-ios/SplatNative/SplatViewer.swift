@@ -562,6 +562,16 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         let cropYHigh = settings.cropYMax < 0.9999
         let cropZLow = settings.cropZMin > 0.0001
         let cropZHigh = settings.cropZMax < 0.9999
+        let needsCrop = cropXLow || cropXHigh || cropYLow || cropYHigh || cropZLow || cropZHigh
+
+        // Initial viewer load and a reset to default edits used to allocate a second scene-sized
+        // array and append every point even though no point or color could change. Returning the
+        // immutable input Array value is copy-on-write and therefore keeps the exact point storage
+        // without an O(N) materialization pass. Real crop/color edits still use the cancellable path.
+        if !needsCrop && !needsColorAdjustment {
+            try Task.checkCancellation()
+            return points
+        }
 
         var result: [SplatPoint] = []
         result.reserveCapacity(points.count)
