@@ -200,6 +200,35 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
         }
     }
 
+    func testTinyReportedPhysicalMemoryNeverInflatesVideoBudget() throws {
+        let physicalMemory = UInt64(64 * 1_024 * 1_024)
+        XCTAssertEqual(SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        ), physicalMemory / 2)
+
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("splat-video-tiny-memory-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data(repeating: 0x6A, count: 32).write(to: source, options: .atomic)
+
+        XCTAssertThrowsError(
+            try SplatVideoMemoryPolicy.preflight(
+                sourceURL: source,
+                configuration: SplatVideoConfiguration(),
+                physicalMemoryBytes: physicalMemory,
+                thermalState: .nominal,
+                isLowPowerModeEnabled: false
+            )
+        ) { error in
+            guard case .sceneTooLarge = error as? SplatVideoMemoryPolicy.PolicyError else {
+                return XCTFail("Expected tiny-memory admission to fail as sceneTooLarge, got \(error)")
+            }
+        }
+    }
+
     func testSeriousThermalStateReducesVideoAdmissionBudget() {
         let physicalMemory = UInt64(8 * 1_024 * 1_024 * 1_024)
         let nominal = SplatVideoMemoryPolicy.budgetBytes(
