@@ -10,23 +10,24 @@ struct MeshTrimResult: Sendable {
 }
 
 enum MeshTrimEngine {
+    private static let inputChunkSize = 256 * 1024
+    private static let maximumOBJLineBytes = 8 * 1024 * 1024
+
     static func trim(url: URL, x: ClosedRange<Double>, y: ClosedRange<Double>, z: ClosedRange<Double>) throws -> MeshTrimResult {
-        let text = try String(contentsOf: url, encoding: .utf8)
-        // Keep line views into the original OBJ text instead of materializing a second full set of
-        // per-line Strings. Large textured OBJ scans can be hundreds of megabytes; Substring slices
-        // keep parsing semantics identical while avoiding an input-sized duplicate allocation.
-        let lines = text.split(whereSeparator: \.isNewline)
         var vertices: [SIMD3<Float>] = []
         var hasMaterialLibrary = false
 
-        for line in lines {
+        // Parse the OBJ in bounded chunks rather than holding the entire source String and a second
+        // input-sized line-index array. The vertex array is still required for face lookup, but text
+        // memory now stays bounded by the read buffer plus the largest accepted OBJ line.
+        try forEachOBJLine(at: url) { line in
             let fields = line.split(whereSeparator: \.isWhitespace)
-            guard let directive = fields.first else { continue }
+            guard let directive = fields.first else { return }
             if directive.lowercased() == "mtllib" {
                 hasMaterialLibrary = true
-                continue
+                return
             }
-            guard directive == "v" else { continue }
+            guard directive == "v" else { return }
             guard fields.count >= 4,
                   let a = Float(fields[1]),
                   let b = Float(fields[2]),
@@ -110,11 +111,11 @@ enum MeshTrimEngine {
         var faceIndices: [Int] = []
         faceIndices.reserveCapacity(4)
 
-        for line in lines {
+        try forEachOBJLine(at: url) { line in
             let fields = line.split(whereSeparator: \.isWhitespace)
             guard let directive = fields.first, directive == "f" else {
                 try writeLine(line)
-                continue
+                return
             }
             let faceFields = fields.dropFirst().prefix { !$0.hasPrefix("#") }
             guard faceFields.count >= 3 else { throw error("OBJ面定義が不正です") }
@@ -163,6 +164,50 @@ enum MeshTrimEngine {
         try? FileManager.default.removeItem(at: result.url)
         let sidecar = result.url.deletingPathExtension().appendingPathExtension("mesh-asset.json")
         try? FileManager.default.removeItem(at: sidecar)
+    }
+
+    private static func forEachOBJLine(at url: URL, _ body: (Substring) throws -> Void) throws {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+
+        var buffer = Data()
+        buffer.reserveCapacity(inputChunkSize * 2)
+
+        while let chunk = try handle.read(upToCount: inputChunkSize), !chunk.isEmpty {
+            buffer.append(chunk)
+            var start = buffer.startIndex
+            while start < buffer.endIndex,
+                  let newline = buffer[start...].firstIndex(of: 0x0A) {
+                var end = newline
+                if end > start {
+                    let previous = buffer.index(before: end)
+                    if buffer[previous] == 0x0D { end = previous }
+                }
+                guard let lineString = String(bytes: buffer[start..<end], encoding: .utf8) else {
+                    throw error("OBJがUTF-8として読み込めません")
+                }
+                try body(lineString[...])
+                start = buffer.index(after: newline)
+            }
+            if start > buffer.startIndex {
+                buffer.removeSubrange(buffer.startIndex..<start)
+            }
+            guard buffer.count <= maximumOBJLineBytes else {
+                throw error("OBJの1行が大きすぎます")
+            }
+        }
+
+        if !buffer.isEmpty {
+            var end = buffer.endIndex
+            if end > buffer.startIndex {
+                let previous = buffer.index(before: end)
+                if buffer[previous] == 0x0D { end = previous }
+            }
+            guard let lineString = String(bytes: buffer[buffer.startIndex..<end], encoding: .utf8) else {
+                throw error("OBJがUTF-8として読み込めません")
+            }
+            try body(lineString[...])
+        }
     }
 
     private static func error(_ message: String) -> NSError {
