@@ -281,12 +281,7 @@ enum SplatPersistedEditMaterializer {
     }
 
     static func loadSettings(sourceURL: URL) -> SplatEditSettings {
-        let sidecar = sourceURL.deletingPathExtension().appendingPathExtension("viewer.json")
-        guard let data = try? Data(contentsOf: sidecar),
-              let decoded = try? JSONDecoder().decode(SplatEditSettings.self, from: data) else {
-            return .default
-        }
-        return decoded.normalized()
+        SplatViewerEditStore.load(sourceURL: sourceURL)?.settings ?? .default
     }
 
     private static func sampledCropBounds(sourceURL: URL, sourcePointCount: Int) async throws -> CropBounds {
