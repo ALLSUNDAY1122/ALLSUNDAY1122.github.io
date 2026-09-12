@@ -1,0 +1,42 @@
+name: FP3 Materialize Canonical Bank
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download canonical audited source
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 --retry-delay 2 \
+            'https://drive.usercontent.google.com/download?id=1iqk3OO4uVDNPe_orfpyksoYwNSAXwnkk&export=download&confirm=t' \
+            -o /tmp/FP3_KAKOMON_COACH_v1.1.0.html
+      - name: Materialize with fail-closed gates
+        run: |
+          set -euo pipefail
+          python3 fp3-manabi-sprint/tools/materialize_fp3_bank.py \
+            /tmp/FP3_KAKOMON_COACH_v1.1.0.html \
+            fp3-manabi-sprint/question_bank_180.payload.json
+      - name: Verify output
+        run: |
+          set -euo pipefail
+          test "$(wc -c < fp3-manabi-sprint/question_bank_180.payload.json)" -eq 234369
+          echo 'bf2a24b354cc5b1714e1c0ef10fb529220b474c8d0b48b2f135ae42b061bda33  fp3-manabi-sprint/question_bank_180.payload.json' | sha256sum -c -
+      - name: Commit canonical payload
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- fp3-manabi-sprint/question_bank_180.payload.json; then
+            echo 'Payload already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add fp3-manabi-sprint/question_bank_180.payload.json
+          git commit -m 'fp3: materialize audited 180-question bank'
+          git push
