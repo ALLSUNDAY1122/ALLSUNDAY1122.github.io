@@ -72,14 +72,18 @@ enum SplatSeedColorizer {
         // can land on a temporary occluder, highlight or exposure outlier; a small robust consensus
         // gives the 3DGS initializer a more stable color while keeping raster memory bounded because
         // only one source image is decoded at a time below.
-        let assignments = points.map {
-            bestAssignments(for: $0, projections: projections, maxCount: maxColorViewsPerPoint)
-        }
+        // Stream each point's at-most-three assignments directly into frame buckets. The previous
+        // two-stage `[[SplatSeedAssignment]]` staging array retained every candidate a second time
+        // until all points were classified; large dense seeds therefore paid O(points) extra array
+        // headers plus up to three duplicated assignment values per point for no quality benefit.
         var grouped: [Int: [(pointIndex: Int, assignment: SplatSeedAssignment)]] = [:]
         var samples = Array(repeating: [SplatSeedSample](), count: points.count)
-
-        for (pointIndex, pointAssignments) in assignments.enumerated() {
-            for assignment in pointAssignments {
+        for (pointIndex, point) in points.enumerated() {
+            for assignment in bestAssignments(
+                for: point,
+                projections: projections,
+                maxCount: maxColorViewsPerPoint
+            ) {
                 grouped[assignment.frameIndex, default: []].append((pointIndex, assignment))
             }
         }
