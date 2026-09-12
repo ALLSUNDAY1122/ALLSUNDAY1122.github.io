@@ -96,6 +96,20 @@ struct SplatVideoConfiguration: Equatable, Sendable {
         }
     }
 
+    init(
+        aspectRatio: AspectRatio = .portrait9x16,
+        quality: Quality = .high1080p,
+        cameraMotion: CameraMotion = .orbit360,
+        speed: Speed = .normal,
+        framesPerSecond: Int = 30
+    ) {
+        self.aspectRatio = aspectRatio
+        self.quality = quality
+        self.cameraMotion = cameraMotion
+        self.speed = speed
+        self.framesPerSecond = Self.safeFramesPerSecond(framesPerSecond)
+    }
+
     var dimensions: (width: Int, height: Int) { quality.dimensions(for: aspectRatio) }
     var duration: TimeInterval { speed.duration }
     var totalFrames: Int {
