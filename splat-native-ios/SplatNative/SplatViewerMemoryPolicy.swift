@@ -19,30 +19,36 @@ enum SplatViewerMemoryPolicy {
     /// Thermal pressure is a useful proxy for sustained device contention during long scans. Keeping
     /// the nominal memory budget while the SoC is already serious/critical can select a large SH3
     /// scene that technically fits RAM but causes sustained frame drops or raises jetsam risk once
-    /// Metal sorting and edit buffers overlap. Prefer the legacy representation earlier instead.
+    /// Metal sorting and edit buffers overlap. Low Power Mode is handled similarly: the user has
+    /// explicitly asked iOS to constrain sustained work, so large SH3 scenes should fall back earlier
+    /// while normal-mode quality remains unchanged.
     static func budgetBytes(
         physicalMemoryBytes: UInt64,
-        thermalState: ProcessInfo.ThermalState
+        thermalState: ProcessInfo.ThermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) -> UInt64 {
         let proportional = physicalMemoryBytes / physicalMemoryDivisor
         let baseBudget = min(maximumBudgetBytes, max(minimumBudgetBytes, proportional))
+        let thermallyAdjusted: UInt64
         switch thermalState {
         case .nominal, .fair:
-            return baseBudget
+            thermallyAdjusted = baseBudget
         case .serious:
-            return baseBudget / 4 * 3
+            thermallyAdjusted = baseBudget / 4 * 3
         case .critical:
-            return baseBudget / 2
+            thermallyAdjusted = baseBudget / 2
         @unknown default:
             // Unknown future states should be conservative rather than silently assuming nominal.
-            return baseBudget / 2
+            thermallyAdjusted = baseBudget / 2
         }
+        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
     }
 
     static func canUseCanonicalSH3(
         pointCount: Int,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
-        thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState
+        thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) -> Bool {
         guard pointCount > 0 else { return false }
         let safePointCount = UInt64(pointCount)
@@ -54,7 +60,8 @@ enum SplatViewerMemoryPolicy {
         }
         return pointBytes <= budgetBytes(
             physicalMemoryBytes: physicalMemoryBytes,
-            thermalState: thermalState
+            thermalState: thermalState,
+            isLowPowerModeEnabled: isLowPowerModeEnabled
         )
     }
 }
