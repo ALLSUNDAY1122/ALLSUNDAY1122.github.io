@@ -15,8 +15,11 @@ final class MeshDurabilityRecoverySymlinkTests: XCTestCase {
 
         let store = MeshDurabilityRecoveryStore(appRootURL: root)
         XCTAssertThrowsError(try store.protect(resultURL: alias)) { error in
-            guard case MeshDurabilityRecoveryError.invalidResult = error else {
-                return XCTFail("Expected invalidResult, got \(error)")
+            guard let recoveryError = error as? MeshDurabilityRecoveryError else {
+                return XCTFail("Expected MeshDurabilityRecoveryError, got \(error)")
+            }
+            guard case .invalidResult = recoveryError else {
+                return XCTFail("Expected invalidResult, got \(recoveryError)")
             }
         }
         XCTAssertTrue(FileManager.default.fileExists(atPath: project.path))
@@ -39,8 +42,11 @@ final class MeshDurabilityRecoverySymlinkTests: XCTestCase {
 
         let store = MeshDurabilityRecoveryStore(appRootURL: root)
         XCTAssertThrowsError(try store.protect(resultURL: aliasedResult)) { error in
-            guard case MeshDurabilityRecoveryError.invalidProject = error else {
-                return XCTFail("Expected invalidProject, got \(error)")
+            guard let recoveryError = error as? MeshDurabilityRecoveryError else {
+                return XCTFail("Expected MeshDurabilityRecoveryError, got \(error)")
+            }
+            guard case .invalidProject = recoveryError else {
+                return XCTFail("Expected invalidProject, got \(recoveryError)")
             }
         }
         XCTAssertTrue(FileManager.default.fileExists(atPath: outsideResult.path))
