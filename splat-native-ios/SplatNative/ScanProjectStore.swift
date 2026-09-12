@@ -331,6 +331,7 @@ final class ScanProjectStore {
     }
 
     func writeManifest(_ manifest: ScanProjectManifest, to projectURL: URL) throws {
+        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }
         guard manifest.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
             throw ScanProjectStoreError.unsupportedManifestSchemaVersion(manifest.schemaVersion)
         }
@@ -345,6 +346,7 @@ final class ScanProjectStore {
     }
 
     func saveCheckpoint(_ checkpoint: ScanCaptureCheckpoint, projectURL: URL) throws {
+        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }
         guard checkpoint.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {
             throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(checkpoint.schemaVersion)
         }
@@ -554,6 +556,14 @@ final class ScanProjectStore {
         try fileManager.createDirectory(at: trashURL, withIntermediateDirectories: true)
     }
 
+    private func isSafeProjectDirectory(_ url: URL) -> Bool {
+        guard url.isFileURL,
+              let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              values.isDirectory == true,
+              values.isSymbolicLink != true else { return false }
+        return true
+    }
+
     private func summaries(in directory: URL, includeHidden: Bool) throws -> [ScanProjectSummary] {
         try ensureDirectories()
         let urls = try fileManager.contentsOfDirectory(
@@ -609,6 +619,7 @@ final class ScanProjectStore {
     }
 
     private func loadOrMigrateManifest(projectURL: URL) throws -> ScanProjectManifest {
+        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }
         let primary = projectURL.appendingPathComponent(Self.manifestFileName)
         let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
         try rejectFutureManifestSchemaIfPresent(primary: primary, backup: backup)
