@@ -34,24 +34,34 @@ struct MeshGeometryRefineResult: Sendable {
 
 private enum MeshGeometryRefinerEngine {
     static func refine(url: URL, weldMeters: Float = 0.0015) throws -> MeshGeometryRefineResult {
+        guard weldMeters.isFinite, weldMeters >= 0.000001, weldMeters <= 0.1 else {
+            throw error("Mesh精製の統合距離が不正です")
+        }
         let source = try String(contentsOf: url, encoding: .utf8)
-        let parsed = parse(source)
+        let parsed = try parse(source)
         guard parsed.vertices.count >= 3, !parsed.faces.isEmpty else {
             throw error("有効なOBJ三角形がありません")
         }
 
-        var sums: [MeshRefineKey: SIMD3<Float>] = [:]
+        var sums: [MeshRefineKey: SIMD3<Double>] = [:]
         var counts: [MeshRefineKey: Int] = [:]
         var keys: [MeshRefineKey] = []
         keys.reserveCapacity(parsed.vertices.count)
-        for p in parsed.vertices {
+        for point in parsed.vertices {
+            let scaled = point / weldMeters
+            guard scaled.x.isFinite, scaled.y.isFinite, scaled.z.isFinite,
+                  abs(Double(scaled.x)) <= Double(Int.max) - 1,
+                  abs(Double(scaled.y)) <= Double(Int.max) - 1,
+                  abs(Double(scaled.z)) <= Double(Int.max) - 1 else {
+                throw error("Mesh座標が精製可能な範囲を超えています")
+            }
             let key = MeshRefineKey(
-                x: Int((p.x / weldMeters).rounded()),
-                y: Int((p.y / weldMeters).rounded()),
-                z: Int((p.z / weldMeters).rounded())
+                x: Int(scaled.x.rounded()),
+                y: Int(scaled.y.rounded()),
+                z: Int(scaled.z.rounded())
             )
             keys.append(key)
-            sums[key, default: .zero] += p
+            sums[key, default: .zero] += SIMD3<Double>(Double(point.x), Double(point.y), Double(point.z))
             counts[key, default: 0] += 1
         }
 
@@ -65,21 +75,30 @@ private enum MeshGeometryRefinerEngine {
         vertices.reserveCapacity(ordered.count)
         for key in ordered {
             keyToIndex[key] = vertices.count
-            vertices.append((sums[key] ?? .zero) / Float(max(1, counts[key] ?? 1)))
+            let divisor = Double(max(1, counts[key] ?? 1))
+            let mean = (sums[key] ?? .zero) / divisor
+            guard mean.x.isFinite, mean.y.isFinite, mean.z.isFinite,
+                  abs(mean.x) <= Double(Float.greatestFiniteMagnitude),
+                  abs(mean.y) <= Double(Float.greatestFiniteMagnitude),
+                  abs(mean.z) <= Double(Float.greatestFiniteMagnitude) else {
+                throw error("Meshの統合座標を確定できません")
+            }
+            vertices.append(SIMD3<Float>(Float(mean.x), Float(mean.y), Float(mean.z)))
         }
 
         var faces: [SIMD3<Int>] = []
         var faceSet = Set<MeshRefineFaceKey>()
         faces.reserveCapacity(parsed.faces.count)
-        for f in parsed.faces {
-            guard f.x >= 0, f.y >= 0, f.z >= 0,
-                  f.x < keys.count, f.y < keys.count, f.z < keys.count,
-                  let a = keyToIndex[keys[f.x]],
-                  let b = keyToIndex[keys[f.y]],
-                  let c = keyToIndex[keys[f.z]],
+        for face in parsed.faces {
+            guard face.x >= 0, face.y >= 0, face.z >= 0,
+                  face.x < keys.count, face.y < keys.count, face.z < keys.count,
+                  let a = keyToIndex[keys[face.x]],
+                  let b = keyToIndex[keys[face.y]],
+                  let c = keyToIndex[keys[face.z]],
                   a != b, b != c, a != c else { continue }
             let cross = simd_cross(vertices[b] - vertices[a], vertices[c] - vertices[a])
-            guard simd_length_squared(cross) > 1e-10 else { continue }
+            let area = simd_length_squared(cross)
+            guard area.isFinite, area > 1e-10 else { continue }
             guard faceSet.insert(MeshRefineFaceKey(a, b, c)).inserted else { continue }
             faces.append(SIMD3<Int>(a, b, c))
         }
@@ -87,20 +106,19 @@ private enum MeshGeometryRefinerEngine {
         guard !faces.isEmpty else { throw error("統合後に有効な面が残りませんでした") }
         let componentResult = filterMicroscopicComponents(vertices: vertices, faces: faces)
         faces = componentResult.faces
+        guard !faces.isEmpty else { throw error("ノイズ除去後に有効な面が残りませんでした") }
         let compacted = compact(vertices: vertices, faces: faces)
         let normals = recomputeNormals(vertices: compacted.vertices, faces: compacted.faces)
 
-        // Refinement is an immutable generation. A fixed mesh-refined.obj made a later refine able
-        // to replace the previous good result before SceneKit/asset-metadata validation completed.
         let outputURL = url.deletingLastPathComponent()
             .appendingPathComponent("mesh-refined-\(UUID().uuidString.lowercased()).obj")
         var output = "# Scan Lab refined metric mesh\n"
         output += "# conservative weld_m \(weldMeters)\n"
         output += "# source_faces \(parsed.faces.count) refined_faces \(compacted.faces.count)\n"
-        for p in compacted.vertices { output += "v \(p.x) \(p.y) \(p.z)\n" }
-        for n in normals { output += "vn \(n.x) \(n.y) \(n.z)\n" }
-        for f in compacted.faces {
-            output += "f \(f.x + 1)//\(f.x + 1) \(f.y + 1)//\(f.y + 1) \(f.z + 1)//\(f.z + 1)\n"
+        for point in compacted.vertices { output += "v \(point.x) \(point.y) \(point.z)\n" }
+        for normal in normals { output += "vn \(normal.x) \(normal.y) \(normal.z)\n" }
+        for face in compacted.faces {
+            output += "f \(face.x + 1)//\(face.x + 1) \(face.y + 1)//\(face.y + 1) \(face.z + 1)//\(face.z + 1)\n"
         }
         try output.write(to: outputURL, atomically: true, encoding: .utf8)
         return MeshGeometryRefineResult(
@@ -118,24 +136,44 @@ private enum MeshGeometryRefinerEngine {
         try? FileManager.default.removeItem(at: sidecar)
     }
 
-    private static func parse(_ text: String) -> MeshRefineMesh {
+    private static func parse(_ text: String) throws -> MeshRefineMesh {
         var vertices: [SIMD3<Float>] = []
         var faces: [SIMD3<Int>] = []
         for line in text.split(whereSeparator: \.isNewline) {
-            if line.hasPrefix("v ") {
-                let p = line.split(separator: " ", omittingEmptySubsequences: true)
-                if p.count >= 4, let x = Float(p[1]), let y = Float(p[2]), let z = Float(p[3]) {
-                    vertices.append(SIMD3<Float>(x, y, z))
+            let fields = line.split(whereSeparator: \.isWhitespace)
+            guard let directive = fields.first else { continue }
+            if directive == "mtllib" || directive == "usemtl" || directive == "vt" {
+                throw error("テクスチャ付きMeshは色を失うため精製しません")
+            }
+            if directive == "v" {
+                guard fields.count >= 4,
+                      let x = Float(fields[1]), let y = Float(fields[2]), let z = Float(fields[3]),
+                      x.isFinite, y.isFinite, z.isFinite else {
+                    throw error("OBJ頂点定義が不正です")
                 }
-            } else if line.hasPrefix("f ") {
-                let p = line.split(separator: " ", omittingEmptySubsequences: true)
-                let ids = p.dropFirst().compactMap { token -> Int? in
-                    guard let s = token.split(separator: "/", omittingEmptySubsequences: false).first,
-                          let raw = Int(s) else { return nil }
-                    return raw > 0 ? raw - 1 : vertices.count + raw
+                if fields.count >= 7 {
+                    throw error("頂点色付きMeshは色を失うため精製しません")
                 }
-                if ids.count >= 3 {
-                    for i in 1..<(ids.count - 1) { faces.append(SIMD3<Int>(ids[0], ids[i], ids[i + 1])) }
+                vertices.append(SIMD3<Float>(x, y, z))
+            } else if directive == "f" {
+                let tokens = Array(fields.dropFirst().prefix { !$0.hasPrefix("#") })
+                guard tokens.count >= 3 else { throw error("OBJ面定義が不正です") }
+                var ids: [Int] = []
+                ids.reserveCapacity(tokens.count)
+                for token in tokens {
+                    guard let first = token.split(separator: "/", omittingEmptySubsequences: false).first,
+                          !first.isEmpty,
+                          let raw = Int(first), raw != 0 else {
+                        throw error("OBJ面定義が不正です")
+                    }
+                    let index = raw > 0 ? raw - 1 : vertices.count + raw
+                    guard index >= 0, index < vertices.count else {
+                        throw error("OBJ面インデックスが範囲外です")
+                    }
+                    ids.append(index)
+                }
+                for i in 1..<(ids.count - 1) {
+                    faces.append(SIMD3<Int>(ids[0], ids[i], ids[i + 1]))
                 }
             }
         }
@@ -153,21 +191,24 @@ private enum MeshGeometryRefinerEngine {
             let ra = find(a), rb = find(b)
             if ra != rb { parent[rb] = ra }
         }
-        for f in faces { union(f.x, f.y); union(f.y, f.z); union(f.z, f.x) }
+        for face in faces { union(face.x, face.y); union(face.y, face.z); union(face.z, face.x) }
 
         var groups: [Int: [Int]] = [:]
-        for (index, f) in faces.enumerated() { groups[find(f.x), default: []].append(index) }
+        for (index, face) in faces.enumerated() { groups[find(face.x), default: []].append(index) }
         var keep = Set<Int>()
         var removed = 0
         for indices in groups.values {
-            var minP = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
-            var maxP = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
+            var minPoint = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
+            var maxPoint = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
             for faceIndex in indices {
-                let f = faces[faceIndex]
-                for id in [f.x, f.y, f.z] { minP = simd_min(minP, vertices[id]); maxP = simd_max(maxP, vertices[id]) }
+                let face = faces[faceIndex]
+                for id in [face.x, face.y, face.z] {
+                    minPoint = simd_min(minPoint, vertices[id])
+                    maxPoint = simd_max(maxPoint, vertices[id])
+                }
             }
-            let diagonal = simd_length(maxP - minP)
-            if indices.count >= 4 || diagonal >= 0.006 {
+            let diagonal = simd_length(maxPoint - minPoint)
+            if diagonal.isFinite, indices.count >= 4 || diagonal >= 0.006 {
                 keep.formUnion(indices)
             } else {
                 removed += 1
@@ -178,25 +219,29 @@ private enum MeshGeometryRefinerEngine {
 
     private static func compact(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> MeshRefineMesh {
         var used = Set<Int>()
-        for f in faces { used.insert(f.x); used.insert(f.y); used.insert(f.z) }
+        for face in faces { used.insert(face.x); used.insert(face.y); used.insert(face.z) }
         let ordered = used.sorted()
         var map: [Int: Int] = [:]
-        var outV: [SIMD3<Float>] = []
-        for old in ordered { map[old] = outV.count; outV.append(vertices[old]) }
-        let outF = faces.compactMap { f -> SIMD3<Int>? in
-            guard let a = map[f.x], let b = map[f.y], let c = map[f.z] else { return nil }
+        var outputVertices: [SIMD3<Float>] = []
+        for old in ordered { map[old] = outputVertices.count; outputVertices.append(vertices[old]) }
+        let outputFaces = faces.compactMap { face -> SIMD3<Int>? in
+            guard let a = map[face.x], let b = map[face.y], let c = map[face.z] else { return nil }
             return SIMD3<Int>(a, b, c)
         }
-        return MeshRefineMesh(vertices: outV, faces: outF)
+        return MeshRefineMesh(vertices: outputVertices, faces: outputFaces)
     }
 
     private static func recomputeNormals(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> [SIMD3<Float>] {
         var normals = Array(repeating: SIMD3<Float>.zero, count: vertices.count)
-        for f in faces {
-            let n = simd_cross(vertices[f.y] - vertices[f.x], vertices[f.z] - vertices[f.x])
-            normals[f.x] += n; normals[f.y] += n; normals[f.z] += n
+        for face in faces {
+            let normal = simd_cross(vertices[face.y] - vertices[face.x], vertices[face.z] - vertices[face.x])
+            guard normal.x.isFinite, normal.y.isFinite, normal.z.isFinite else { continue }
+            normals[face.x] += normal; normals[face.y] += normal; normals[face.z] += normal
         }
-        return normals.map { simd_length_squared($0) > 1e-12 ? simd_normalize($0) : SIMD3<Float>(0, 1, 0) }
+        return normals.map {
+            let lengthSquared = simd_length_squared($0)
+            return lengthSquared.isFinite && lengthSquared > 1e-12 ? simd_normalize($0) : SIMD3<Float>(0, 1, 0)
+        }
     }
 
     private static func error(_ message: String) -> NSError {
