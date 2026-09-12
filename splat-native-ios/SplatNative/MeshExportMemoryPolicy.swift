@@ -40,7 +40,12 @@ enum MeshExportMemoryPolicy {
         isLowPowerModeEnabled: Bool
     ) -> UInt64 {
         let proportionalBudget = physicalMemoryBytes / physicalMemoryDivisor
-        let baseBudget = min(maximumBudgetBytes, max(minimumBudgetBytes, proportionalBudget))
+        let nominalFloorApplied = min(maximumBudgetBytes, max(minimumBudgetBytes, proportionalBudget))
+        // Do not let the minimum quality budget claim more RAM than the platform actually reports.
+        // Normal supported iPhones still keep the same 256...768 MiB envelope; only malformed/tiny
+        // memory reports are forced to fail closed before scene conversion can exceed the device.
+        let physicalSafetyCap = physicalMemoryBytes / 2
+        let baseBudget = min(nominalFloorApplied, physicalSafetyCap)
         let thermallyAdjusted: UInt64
         switch thermalState {
         case .nominal, .fair:
