@@ -15,6 +15,19 @@ final class MeshExportMemoryPolicyTests: XCTestCase {
         XCTAssertLessThan(estimate.estimatedPeakBytes, estimate.budgetBytes)
     }
 
+    func testTinyReportedPhysicalMemoryNeverInflatesMeshExportBudget() {
+        let physicalMemory = UInt64(64 * 1_024 * 1_024)
+        let estimate = MeshExportMemoryPolicy.estimate(
+            sourceBytes: 1 * mib,
+            sourceExtension: "obj",
+            format: .glb,
+            physicalMemoryBytes: physicalMemory
+        )
+
+        XCTAssertEqual(estimate.budgetBytes, physicalMemory / 2)
+        XCTAssertGreaterThan(estimate.estimatedPeakBytes, estimate.budgetBytes)
+    }
+
     func testOBJPointCloudExpansionIsBudgetedMoreConservatively() {
         let small = MeshExportMemoryPolicy.estimate(
             sourceBytes: 24 * mib,
