@@ -13,6 +13,21 @@ final class MeshTrimEditorSafetyTests: XCTestCase {
         XCTAssertEqual(result.usedVertexCount, 4)
     }
 
+    func testNegativeFaceIndicesResolveAgainstVerticesDefinedAtFace() throws {
+        let url = try writeOBJ([
+            "v 0 0 0", "v 1 0 0", "v 0 1 0",
+            "f -3 -2 -1",
+            "v 100 100 100"
+        ])
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+
+        let result = try MeshTrimEngine.trim(url: url, x: 0...0.1, y: 0...0.1, z: 0...1)
+        XCTAssertEqual(result.faceCount, 1)
+        XCTAssertEqual(result.usedVertexCount, 3)
+        let output = try String(contentsOf: result.url, encoding: .utf8)
+        XCTAssertTrue(output.contains("f -3 -2 -1\n"))
+    }
+
     func testRejectsSymlinkMeshSource() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshTrimEditorSafety-\(UUID().uuidString)", isDirectory: true)
