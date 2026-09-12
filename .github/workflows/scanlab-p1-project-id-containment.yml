@@ -1,0 +1,61 @@
+name: Scan Lab P1 project ID containment one-shot
+
+on:
+  push:
+    branches:
+      - feature/splat-post-build17-p1
+    paths:
+      - '.github/workflows/scanlab-p1-project-id-containment.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-post-build17-p1
+          fetch-depth: 1
+          lfs: false
+      - name: Contain project IDs inside Library and Trash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('splat-native-ios/SplatNative/ScanProjectStore.swift')
+          s = p.read_text()
+
+          old_load = '''    func loadProject(id: String) throws -> ScanProjectSummary {\n        let url = projectURL(for: id)\n        guard fileManager.fileExists(atPath: url.path) else { throw ScanProjectStoreError.projectNotFound }\n'''
+          new_load = '''    func loadProject(id: String) throws -> ScanProjectSummary {\n        let url = try validatedProjectURL(id: id, in: rootURL)\n        guard fileManager.fileExists(atPath: url.path) else { throw ScanProjectStoreError.projectNotFound }\n'''
+          if s.count(old_load) != 1: raise SystemExit('loadProject anchor mismatch')
+          s = s.replace(old_load, new_load, 1)
+
+          old_restore = '''        let source = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)\n        guard fileManager.fileExists(atPath: source.path) else { throw ScanProjectStoreError.projectNotFound }\n'''
+          new_restore = '''        let source = try validatedProjectURL(id: id, in: trashURL)\n        guard fileManager.fileExists(atPath: source.path) else { throw ScanProjectStoreError.projectNotFound }\n'''
+          if s.count(old_restore) != 1: raise SystemExit('restore source anchor mismatch')
+          s = s.replace(old_restore, new_restore, 1)
+
+          old_delete = '''    func permanentlyDeleteFromTrash(id: String) throws {\n        let url = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)\n        guard fileManager.fileExists(atPath: url.path) else { throw ScanProjectStoreError.projectNotFound }\n        try fileManager.removeItem(at: url)\n    }\n'''
+          new_delete = '''    func permanentlyDeleteFromTrash(id: String) throws {\n        let url = try validatedProjectURL(id: id, in: trashURL)\n        guard fileManager.fileExists(atPath: url.path) else { throw ScanProjectStoreError.projectNotFound }\n        try fileManager.removeItem(at: url)\n    }\n'''
+          if s.count(old_delete) != 1: raise SystemExit('permanent delete anchor mismatch')
+          s = s.replace(old_delete, new_delete, 1)
+
+          anchor = '''    func projectURL(for id: String) -> URL {\n        rootURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)\n    }\n'''
+          replacement = '''    func projectURL(for id: String) -> URL {\n        rootURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)\n    }\n\n    private func validatedProjectURL(id: String, in directory: URL) throws -> URL {\n        guard !id.isEmpty, id != ".", id != "..",\n              !id.contains("/"), !id.contains("\\\\"), !id.contains("\\0") else {\n            throw ScanProjectStoreError.invalidManifest\n        }\n        let root = directory.standardizedFileURL\n        let candidate = root.appendingPathComponent(id).appendingPathExtension(Self.projectExtension).standardizedFileURL\n        guard candidate.deletingLastPathComponent() == root,\n              candidate.lastPathComponent == "\\(id).\\(Self.projectExtension)" else {\n            throw ScanProjectStoreError.invalidManifest\n        }\n        return candidate\n    }\n'''
+          if s.count(anchor) != 1: raise SystemExit('projectURL anchor mismatch')
+          s = s.replace(anchor, replacement, 1)
+          p.write_text(s)
+          PY
+          grep -q 'validatedProjectURL' splat-native-ios/SplatNative/ScanProjectStore.swift
+      - name: Commit repair and retire helper
+        run: |
+          set -euo pipefail
+          git config user.name 'Scan Lab Macro Loop HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm -f .github/workflows/scanlab-p1-project-id-containment.yml
+          git add splat-native-ios/SplatNative/ScanProjectStore.swift
+          git commit -m 'fix(splat): contain project IDs inside storage roots'
+          git push origin HEAD:feature/splat-post-build17-p1
