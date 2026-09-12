@@ -48,6 +48,20 @@ final class MeshDetailSimplifierSafetyTests: XCTestCase {
         XCTAssertNoThrow(try MeshDetailSimplifierEngine.simplify(url: url, retainedFraction: 0.6))
     }
 
+    func testRejectsTexturedOBJInsteadOfSilentlyDroppingUVAndMaterial() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let url = root.appendingPathComponent("textured.obj")
+        let vertices = (0..<10).map { "v \($0) \($0 % 2) 0" }
+        let text = (["mtllib mesh.mtl"] + vertices + ["vt 0 0", "vt 1 0", "vt 0 1", "usemtl scan", "f 1/1 2/2 3/3"])
+            .joined(separator: "\n") + "\n"
+        try text.write(to: url, atomically: true, encoding: .utf8)
+
+        XCTAssertThrowsError(try MeshDetailSimplifierEngine.simplify(url: url, retainedFraction: 0.6)) { error in
+            XCTAssertTrue(error.localizedDescription.contains("テクスチャ"))
+        }
+    }
+
     func testRejectsMalformedVertexInsteadOfShiftingSubsequentIndices() throws {
         var vertices = (0..<9).map { "v \($0) 0 0" }
         vertices.insert("v broken 1 2", at: 3)
@@ -83,12 +97,17 @@ final class MeshDetailSimplifierSafetyTests: XCTestCase {
     }
 
     private func writeOBJ(vertices: [String], faces: [String]) throws -> URL {
-        let directory = FileManager.default.temporaryDirectory
-            .appendingPathComponent("MeshDetailSimplifierSafety-\(UUID().uuidString)", isDirectory: true)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let directory = try makeRoot()
         let url = directory.appendingPathComponent("input.obj")
         let text = (vertices + faces).joined(separator: "\n") + "\n"
         try text.write(to: url, atomically: true, encoding: .utf8)
         return url
+    }
+
+    private func makeRoot() throws -> URL {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("MeshDetailSimplifierSafety-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        return directory
     }
 }
