@@ -64,6 +64,31 @@ final class ScanWorldMapArchiveStoreTests: XCTestCase {
         XCTAssertEqual(values.isSymbolicLink, true)
     }
 
+    func testWriteRejectsSymlinkedParentWithoutWritingOutsideProject() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let externalDirectory = fileManager.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: externalDirectory, withIntermediateDirectories: true)
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: externalDirectory)
+        }
+
+        let aliasedProject = root.appendingPathComponent("project.splatproject", isDirectory: true)
+        try fileManager.createSymbolicLink(at: aliasedProject, withDestinationURL: externalDirectory)
+        let target = aliasedProject.appendingPathComponent("worldmap.bin")
+
+        XCTAssertThrowsError(try ScanWorldMapArchiveStore.write(Data([1, 2, 3]), to: target)) { error in
+            guard case ScanWorldMapArchiveStoreError.unsafeParentDirectory = error else {
+                return XCTFail("Expected unsafeParentDirectory, got \(error)")
+            }
+        }
+        XCTAssertFalse(fileManager.fileExists(atPath: externalDirectory.appendingPathComponent("worldmap.bin").path))
+    }
+
     func testWriteRejectsEmptyArchiveWithoutCreatingFile() throws {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
