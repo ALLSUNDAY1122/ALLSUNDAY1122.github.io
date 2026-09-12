@@ -14,8 +14,8 @@ enum SplatViewerCameraDatasetLoader {
         }
 
         init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            guard let matrix = try? container.decode([[Float]].self, forKey: .transformMatrix),
+            guard let container = try? decoder.container(keyedBy: CodingKeys.self),
+                  let matrix = try? container.decode([[Float]].self, forKey: .transformMatrix),
                   matrix.count >= 3,
                   matrix[0].count >= 4,
                   matrix[1].count >= 4,
