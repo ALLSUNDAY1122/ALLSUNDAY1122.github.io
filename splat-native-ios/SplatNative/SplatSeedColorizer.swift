@@ -139,14 +139,59 @@ private struct SplatSeedRaster {
     let bytes: [UInt8]
 
     func sample(x: Float, y: Float, sourceWidth: Int, sourceHeight: Int) -> SplatSeedSample? {
-        guard width > 0, height > 0, sourceWidth > 0, sourceHeight > 0 else { return nil }
-        let scaledX = x * Float(width) / Float(sourceWidth)
-        let scaledY = y * Float(height) / Float(sourceHeight)
-        let ix = min(width - 1, max(0, Int(scaledX.rounded())))
-        let iy = min(height - 1, max(0, Int(scaledY.rounded())))
-        let offset = (iy * width + ix) * 4
-        guard offset + 2 < bytes.count else { return nil }
+        guard width > 0, height > 0, sourceWidth > 0, sourceHeight > 0,
+              x.isFinite, y.isFinite else { return nil }
+
+        // Map source pixel centres into the bounded decode, then interpolate instead of snapping
+        // to one thumbnail texel. This avoids adding raster memory while reducing colour aliasing
+        // when a large capture frame has been downsampled to maximumRasterDimension.
+        let scaleX = Float(width) / Float(sourceWidth)
+        let scaleY = Float(height) / Float(sourceHeight)
+        let rasterX = min(Float(width - 1), max(0, (x + 0.5) * scaleX - 0.5))
+        let rasterY = min(Float(height - 1), max(0, (y + 0.5) * scaleY - 0.5))
+        guard rasterX.isFinite, rasterY.isFinite else { return nil }
+
+        let x0 = Int(floor(rasterX))
+        let y0 = Int(floor(rasterY))
+        let x1 = min(width - 1, x0 + 1)
+        let y1 = min(height - 1, y0 + 1)
+        let tx = rasterX - Float(x0)
+        let ty = rasterY - Float(y0)
+
+        guard let c00 = pixel(x: x0, y: y0),
+              let c10 = pixel(x: x1, y: y0),
+              let c01 = pixel(x: x0, y: y1),
+              let c11 = pixel(x: x1, y: y1) else { return nil }
+
+        return SplatSeedSample(
+            red: interpolate(c00.red, c10.red, c01.red, c11.red, tx: tx, ty: ty),
+            green: interpolate(c00.green, c10.green, c01.green, c11.green, tx: tx, ty: ty),
+            blue: interpolate(c00.blue, c10.blue, c01.blue, c11.blue, tx: tx, ty: ty)
+        )
+    }
+
+    private func pixel(x: Int, y: Int) -> SplatSeedSample? {
+        guard x >= 0, x < width, y >= 0, y < height else { return nil }
+        let (rowOffset, rowOverflow) = y.multipliedReportingOverflow(by: width)
+        let (pixelOffset, pixelOverflow) = rowOffset.addingReportingOverflow(x)
+        let (offset, byteOverflow) = pixelOffset.multipliedReportingOverflow(by: 4)
+        guard !rowOverflow, !pixelOverflow, !byteOverflow,
+              offset >= 0, offset + 2 < bytes.count else { return nil }
         return SplatSeedSample(red: bytes[offset], green: bytes[offset + 1], blue: bytes[offset + 2])
+    }
+
+    private func interpolate(
+        _ c00: UInt8,
+        _ c10: UInt8,
+        _ c01: UInt8,
+        _ c11: UInt8,
+        tx: Float,
+        ty: Float
+    ) -> UInt8 {
+        let top = Float(c00) + (Float(c10) - Float(c00)) * tx
+        let bottom = Float(c01) + (Float(c11) - Float(c01)) * tx
+        let value = top + (bottom - top) * ty
+        return UInt8(min(255, max(0, Int(value.rounded()))))
     }
 }
 
