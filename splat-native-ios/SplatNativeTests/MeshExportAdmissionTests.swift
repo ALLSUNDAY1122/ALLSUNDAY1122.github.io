@@ -18,6 +18,18 @@ final class MeshExportAdmissionTests: XCTestCase {
         XCTAssertGreaterThan(pointCloud, passthrough)
     }
 
+    func testPointCloudEstimateReservesTwelveTimesSourceBeforeSafetyMargin() {
+        let mib: Int64 = 1_024 * 1_024
+        let sourceBytes: Int64 = 10 * mib
+        let required = MeshExportAdmission.estimatedRequiredFreeBytes(
+            sourceBytes: sourceBytes,
+            sourceExtension: "obj",
+            format: .las
+        )
+
+        XCTAssertEqual(required, 12 * sourceBytes + 128 * mib)
+    }
+
     func testEstimateSaturatesInsteadOfOverflowing() {
         let required = MeshExportAdmission.estimatedRequiredFreeBytes(
             sourceBytes: Int64.max,
