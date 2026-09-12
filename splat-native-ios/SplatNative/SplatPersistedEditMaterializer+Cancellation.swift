@@ -50,27 +50,22 @@ extension SplatPersistedEditMaterializer {
     }
 
     private static func cancellableRobustCropBounds(for points: [SplatPoint]) throws -> CropBounds {
-        // Reuse the viewer/video bounded sampler instead of floor-division stride sampling. The old
-        // stride became 1 for every scene below 16k points, so a nominal 8k cap could actually sort
-        // almost 16k X/Y/Z values. Exactly-bounded, evenly distributed indices keep crop quality
-        // stable across the 8k boundary while halving worst-case sort work in that range.
-        let sampleIndices = SplatCameraGeometry.framingSampleIndices(
-            pointCount: points.count,
-            targetSampleCount: 8_000
-        )
+        let strideSize = max(1, points.count / 8_000)
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
-        xs.reserveCapacity(sampleIndices.count)
-        ys.reserveCapacity(sampleIndices.count)
-        zs.reserveCapacity(sampleIndices.count)
+        xs.reserveCapacity(min(points.count, 8_001))
+        ys.reserveCapacity(min(points.count, 8_001))
+        zs.reserveCapacity(min(points.count, 8_001))
 
-        for (sampleIndex, index) in sampleIndices.enumerated() {
+        var sampleIndex = 0
+        for index in stride(from: 0, to: points.count, by: strideSize) {
             if sampleIndex & 0x3FF == 0 { try Task.checkCancellation() }
             let p = points[index].position
             if p.x.isFinite, p.y.isFinite, p.z.isFinite {
                 xs.append(p.x); ys.append(p.y); zs.append(p.z)
             }
+            sampleIndex += 1
         }
         try Task.checkCancellation()
         return CropBounds(
