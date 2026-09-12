@@ -17,9 +17,6 @@ enum MeshTrimEngine {
         var vertices: [SIMD3<Float>] = []
         var hasMaterialLibrary = false
 
-        // Parse the OBJ in bounded chunks rather than holding the entire source String and a second
-        // input-sized line-index array. The vertex array is still required for face lookup, but text
-        // memory now stays bounded by the read buffer plus the largest accepted OBJ line.
         try forEachOBJLine(at: url) { line in
             let fields = line.split(whereSeparator: \.isWhitespace)
             guard let directive = fields.first else { return }
@@ -104,14 +101,9 @@ enum MeshTrimEngine {
             }
         }
 
-        // A Set<Int> costs many words per retained vertex on large scans. A dense byte-backed bitmap
-        // is bounded directly by source vertex count and makes repeated face membership updates O(1)
-        // without hash-table growth or rehash peaks.
         var usedVertices = [Bool](repeating: false, count: vertices.count)
         var usedVertexCount = 0
         var faceCount = 0
-        // Reuse one small index buffer across faces. Triangulated meshes otherwise create one
-        // short-lived heap-backed [Int] for every face, which becomes significant on million-face scans.
         var faceIndices: [Int] = []
         faceIndices.reserveCapacity(4)
 
@@ -190,6 +182,9 @@ enum MeshTrimEngine {
                     let previous = buffer.index(before: end)
                     if buffer[previous] == 0x0D { end = previous }
                 }
+                guard buffer.distance(from: start, to: end) <= maximumOBJLineBytes else {
+                    throw error("OBJの1行が大きすぎます")
+                }
                 guard let lineString = String(bytes: buffer[start..<end], encoding: .utf8) else {
                     throw error("OBJがUTF-8として読み込めません")
                 }
@@ -209,6 +204,9 @@ enum MeshTrimEngine {
             if end > buffer.startIndex {
                 let previous = buffer.index(before: end)
                 if buffer[previous] == 0x0D { end = previous }
+            }
+            guard buffer.distance(from: buffer.startIndex, to: end) <= maximumOBJLineBytes else {
+                throw error("OBJの1行が大きすぎます")
             }
             guard let lineString = String(bytes: buffer[buffer.startIndex..<end], encoding: .utf8) else {
                 throw error("OBJがUTF-8として読み込めません")
