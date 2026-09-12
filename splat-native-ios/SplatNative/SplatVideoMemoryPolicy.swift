@@ -70,16 +70,44 @@ enum SplatVideoMemoryPolicy {
     static let editedSH3ColorCopyBytesPerPoint: UInt64 =
         UInt64(16 * MemoryLayout<SIMD3<Float>>.stride + 32)
 
+    static func budgetBytes(
+        physicalMemoryBytes: UInt64,
+        thermalState: ProcessInfo.ThermalState,
+        isLowPowerModeEnabled: Bool
+    ) -> UInt64 {
+        let proportionalBudget = physicalMemoryBytes / physicalMemoryDivisor
+        let baseBudget = min(
+            maximumBudgetBytes,
+            max(minimumBudgetBytes, proportionalBudget)
+        )
+        let thermallyAdjusted: UInt64
+        switch thermalState {
+        case .nominal, .fair:
+            thermallyAdjusted = baseBudget
+        case .serious:
+            thermallyAdjusted = baseBudget / 4 * 3
+        case .critical:
+            thermallyAdjusted = baseBudget / 2
+        @unknown default:
+            thermallyAdjusted = baseBudget / 2
+        }
+        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
+    }
+
     @discardableResult
     static func preflight(
         sourceURL: URL,
         configuration: SplatVideoConfiguration,
-        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
+        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Estimate {
         try preflightAdmission(
             sourceURL: sourceURL,
             configuration: configuration,
-            physicalMemoryBytes: physicalMemoryBytes
+            physicalMemoryBytes: physicalMemoryBytes,
+            thermalState: thermalState,
+            isLowPowerModeEnabled: isLowPowerModeEnabled
         ).estimate
     }
 
@@ -91,7 +119,9 @@ enum SplatVideoMemoryPolicy {
         sourceURL: URL,
         verifiedDigest: String? = nil,
         configuration: SplatVideoConfiguration,
-        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
+        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) async throws -> Admission {
         let worker = Task.detached(priority: .userInitiated) {
             try Task.checkCancellation()
@@ -99,7 +129,9 @@ enum SplatVideoMemoryPolicy {
                 sourceURL: sourceURL,
                 verifiedDigest: verifiedDigest,
                 configuration: configuration,
-                physicalMemoryBytes: physicalMemoryBytes
+                physicalMemoryBytes: physicalMemoryBytes,
+                thermalState: thermalState,
+                isLowPowerModeEnabled: isLowPowerModeEnabled
             )
             try Task.checkCancellation()
             return admission
@@ -115,7 +147,9 @@ enum SplatVideoMemoryPolicy {
         sourceURL: URL,
         verifiedDigest: String? = nil,
         configuration: SplatVideoConfiguration,
-        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
+        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Admission {
         // Admission owns canonical selection and returns the exact validated URL to the renderer.
         // Reuse a fresh completion digest when available. Legacy/internal callers without one retain
@@ -142,7 +176,9 @@ enum SplatVideoMemoryPolicy {
             hasCanonicalSH3: canonical.completeAsset != nil,
             editSettings: editSettings,
             configuration: configuration,
-            physicalMemoryBytes: physicalMemoryBytes
+            physicalMemoryBytes: physicalMemoryBytes,
+            thermalState: thermalState,
+            isLowPowerModeEnabled: isLowPowerModeEnabled
         )
 
         guard estimate.estimatedPeakBytes <= estimate.budgetBytes else {
@@ -162,7 +198,9 @@ enum SplatVideoMemoryPolicy {
     static func estimate(
         sourceURL: URL,
         configuration: SplatVideoConfiguration,
-        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
+        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Estimate {
         let pointCount = try SplatExportService.sourcePointCount(sourceURL)
         let hasCanonicalSH3 = SplatCanonicalSHAsset.existingCompleteAsset(
@@ -176,7 +214,9 @@ enum SplatVideoMemoryPolicy {
             hasCanonicalSH3: hasCanonicalSH3,
             editSettings: editSettings,
             configuration: configuration,
-            physicalMemoryBytes: physicalMemoryBytes
+            physicalMemoryBytes: physicalMemoryBytes,
+            thermalState: thermalState,
+            isLowPowerModeEnabled: isLowPowerModeEnabled
         )
     }
 
@@ -221,7 +261,9 @@ enum SplatVideoMemoryPolicy {
         hasCanonicalSH3: Bool,
         editSettings: SplatEditSettings,
         configuration: SplatVideoConfiguration,
-        physicalMemoryBytes: UInt64
+        physicalMemoryBytes: UInt64,
+        thermalState: ProcessInfo.ThermalState,
+        isLowPowerModeEnabled: Bool
     ) -> Estimate {
         let dimensions = configuration.dimensions
         let width = UInt64(max(1, dimensions.width))
@@ -244,17 +286,18 @@ enum SplatVideoMemoryPolicy {
         }
 
         let bytesPerPoint = workingBytesPerPoint &+ additionalEditedBytesPerPoint
-        let pointWorkingSetBytes = UInt64(pointCount).multipliedReportingOverflow(by: bytesPerPoint)
+        let safePointCount = pointCount > 0 ? UInt64(pointCount) : 0
+        let pointWorkingSetBytes = safePointCount.multipliedReportingOverflow(by: bytesPerPoint)
         let boundedPointWorkingSet = pointWorkingSetBytes.overflow ? UInt64.max : pointWorkingSetBytes.partialValue
         let basePeak = boundedPointWorkingSet.addingReportingOverflow(fixedRendererAndEncoderReserveBytes)
         let withRendererReserve = basePeak.overflow ? UInt64.max : basePeak.partialValue
         let finalPeak = withRendererReserve.addingReportingOverflow(videoSurfaceReserveBytes)
         let estimatedPeakBytes = finalPeak.overflow ? UInt64.max : finalPeak.partialValue
 
-        let proportionalBudget = physicalMemoryBytes / physicalMemoryDivisor
-        let budgetBytes = min(
-            maximumBudgetBytes,
-            max(minimumBudgetBytes, proportionalBudget)
+        let budgetBytes = budgetBytes(
+            physicalMemoryBytes: physicalMemoryBytes,
+            thermalState: thermalState,
+            isLowPowerModeEnabled: isLowPowerModeEnabled
         )
 
         return Estimate(
