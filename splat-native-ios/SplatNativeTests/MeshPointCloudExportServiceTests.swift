@@ -16,7 +16,7 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
         """.write(to: root.appendingPathComponent("capture.mtl"), atomically: true, encoding: .utf8)
         let obj = root.appendingPathComponent("capture.obj")
         try """
-        mtllib capture.mtl
+        mtllib	capture.mtl
         v 0 0 0
         v 1 0 0
         v 0 1 0
