@@ -74,7 +74,8 @@ enum SplatCompletionVerifier {
         }
 
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
-        guard let evidenceData = try? Data(contentsOf: evidenceURL),
+        guard isIndependentRegularFile(evidenceURL),
+              let evidenceData = try? Data(contentsOf: evidenceURL),
               let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: evidenceData),
               evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               evidence.fileName == ScanProjectStore.splatResultFileName,
@@ -83,7 +84,7 @@ enum SplatCompletionVerifier {
             throw VerificationError.completionEvidenceMissing
         }
 
-        guard fileManager.fileExists(atPath: expectedURL.path),
+        guard isIndependentRegularFile(expectedURL),
               let attributes = try? fileManager.attributesOfItem(atPath: expectedURL.path),
               let size = attributes[.size] as? NSNumber,
               size.int64Value == evidence.byteCount else {
@@ -125,6 +126,13 @@ enum SplatCompletionVerifier {
 
         SplatPreviousResultEvidence.discardBackup(projectURL: projectURL, fileManager: fileManager)
         return Verification(url: expectedURL, sha256: verifiedDigest)
+    }
+
+    private static func isIndependentRegularFile(_ url: URL) -> Bool {
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]) else {
+            return false
+        }
+        return values.isRegularFile == true && values.isSymbolicLink != true
     }
 
     private static func normalized(_ url: URL) -> URL {
