@@ -32,6 +32,36 @@ final class SplatViewerCameraDatasetLoaderTests: XCTestCase {
         XCTAssertEqual(positions[0].z, 6, accuracy: 0.0001)
     }
 
+    func testTruncatedThreeRowTransformDoesNotAffectFollowingValidCamera() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let render = root.appendingPathComponent("result.ply")
+        try Data([0x50]).write(to: render)
+        let json = #"{"frames":[{"transform_matrix":[[1,0,0,1000],[0,1,0,1000],[0,0,1,1000]]},{"transform_matrix":[[1,0,0,4],[0,1,0,5],[0,0,1,6],[0,0,0,1]]}]}"#
+        try Data(json.utf8).write(to: root.appendingPathComponent("transforms.json"))
+
+        let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: render)
+        XCTAssertEqual(positions.count, 1)
+        XCTAssertEqual(positions[0].x, 4, accuracy: 0.0001)
+        XCTAssertEqual(positions[0].y, 5, accuracy: 0.0001)
+        XCTAssertEqual(positions[0].z, 6, accuracy: 0.0001)
+    }
+
+    func testExtraColumnTransformDoesNotAffectFollowingValidCamera() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let render = root.appendingPathComponent("result.ply")
+        try Data([0x50]).write(to: render)
+        let json = #"{"frames":[{"transform_matrix":[[1,0,0,1000,7],[0,1,0,1000],[0,0,1,1000],[0,0,0,1]]},{"transform_matrix":[[1,0,0,7],[0,1,0,8],[0,0,1,9],[0,0,0,1]]}]}"#
+        try Data(json.utf8).write(to: root.appendingPathComponent("transforms.json"))
+
+        let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: render)
+        XCTAssertEqual(positions.count, 1)
+        XCTAssertEqual(positions[0].x, 7, accuracy: 0.0001)
+        XCTAssertEqual(positions[0].y, 8, accuracy: 0.0001)
+        XCTAssertEqual(positions[0].z, 9, accuracy: 0.0001)
+    }
+
     func testWrongTransformTypeDoesNotDiscardFollowingValidCamera() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
