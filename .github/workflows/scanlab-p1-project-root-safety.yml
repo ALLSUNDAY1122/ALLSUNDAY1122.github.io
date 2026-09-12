@@ -1,0 +1,61 @@
+name: Scan Lab P1 project root safety one-shot
+
+on:
+  push:
+    branches:
+      - feature/splat-post-build17-p1
+    paths:
+      - '.github/workflows/scanlab-p1-project-root-safety.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-post-build17-p1
+          fetch-depth: 1
+          lfs: false
+      - name: Reject symlink or non-directory project roots
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('splat-native-ios/SplatNative/ScanProjectStore.swift')
+          s = p.read_text()
+
+          old_write = '''    func writeManifest(_ manifest: ScanProjectManifest, to projectURL: URL) throws {\n        guard manifest.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {\n'''
+          new_write = '''    func writeManifest(_ manifest: ScanProjectManifest, to projectURL: URL) throws {\n        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }\n        guard manifest.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {\n'''
+          if s.count(old_write) != 1: raise SystemExit('writeManifest anchor mismatch')
+          s = s.replace(old_write, new_write, 1)
+
+          old_checkpoint = '''    func saveCheckpoint(_ checkpoint: ScanCaptureCheckpoint, projectURL: URL) throws {\n        guard checkpoint.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {\n'''
+          new_checkpoint = '''    func saveCheckpoint(_ checkpoint: ScanCaptureCheckpoint, projectURL: URL) throws {\n        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }\n        guard checkpoint.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {\n'''
+          if s.count(old_checkpoint) != 1: raise SystemExit('saveCheckpoint anchor mismatch')
+          s = s.replace(old_checkpoint, new_checkpoint, 1)
+
+          old_load = '''    private func loadOrMigrateManifest(projectURL: URL) throws -> ScanProjectManifest {\n        let primary = projectURL.appendingPathComponent(Self.manifestFileName)\n'''
+          new_load = '''    private func loadOrMigrateManifest(projectURL: URL) throws -> ScanProjectManifest {\n        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }\n        let primary = projectURL.appendingPathComponent(Self.manifestFileName)\n'''
+          if s.count(old_load) != 1: raise SystemExit('loadOrMigrateManifest anchor mismatch')
+          s = s.replace(old_load, new_load, 1)
+
+          anchor = '''    private func ensureDirectories() throws {\n        try fileManager.createDirectory(at: rootURL, withIntermediateDirectories: true)\n        try fileManager.createDirectory(at: trashURL, withIntermediateDirectories: true)\n    }\n'''
+          replacement = '''    private func ensureDirectories() throws {\n        try fileManager.createDirectory(at: rootURL, withIntermediateDirectories: true)\n        try fileManager.createDirectory(at: trashURL, withIntermediateDirectories: true)\n    }\n\n    private func isSafeProjectDirectory(_ url: URL) -> Bool {\n        guard url.isFileURL,\n              let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),\n              values.isDirectory == true,\n              values.isSymbolicLink != true else { return false }\n        return true\n    }\n'''
+          if s.count(anchor) != 1: raise SystemExit('ensureDirectories anchor mismatch')
+          s = s.replace(anchor, replacement, 1)
+          p.write_text(s)
+          PY
+          grep -q 'isSafeProjectDirectory' splat-native-ios/SplatNative/ScanProjectStore.swift
+      - name: Commit repair and retire helper
+        run: |
+          set -euo pipefail
+          git config user.name 'Scan Lab Macro Loop HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm -f .github/workflows/scanlab-p1-project-root-safety.yml
+          git add splat-native-ios/SplatNative/ScanProjectStore.swift
+          git commit -m 'fix(splat): reject unsafe project roots'
+          git push origin HEAD:feature/splat-post-build17-p1
