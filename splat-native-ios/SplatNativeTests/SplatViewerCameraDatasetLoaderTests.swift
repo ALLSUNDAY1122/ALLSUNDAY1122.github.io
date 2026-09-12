@@ -74,7 +74,7 @@ final class SplatViewerCameraDatasetLoaderTests: XCTestCase {
         var frames: [String] = []
         frames.reserveCapacity(frameCount)
         for index in 0..<frameCount {
-            frames.append("{\"transform_matrix\":[[1,0,0,\(index)],[0,1,0,0],[0,0,1,0],[0,0,0,1]]}")
+            frames.append(validFrame(x: index))
         }
         let json = "{\"frames\":[" + frames.joined(separator: ",") + "]}"
         try Data(json.utf8).write(to: root.appendingPathComponent("transforms.json"))
@@ -86,6 +86,37 @@ final class SplatViewerCameraDatasetLoaderTests: XCTestCase {
         XCTAssertTrue(zip(positions, positions.dropFirst()).allSatisfy { pair in
             pair.0.x <= pair.1.x
         })
+    }
+
+    func testLongTrajectorySamplesValidFramesDespiteMalformedInterleaving() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let render = root.appendingPathComponent("result.ply")
+        try Data([0x50]).write(to: render)
+
+        let validFrameCount = SplatViewerCameraDatasetLoader.maximumReturnedPositions + 904
+        var frames: [String] = []
+        frames.reserveCapacity(validFrameCount + 500)
+        for index in 0..<validFrameCount {
+            if index % 10 == 5 {
+                frames.append(#"{"transform_matrix":[[1,0],[0,1]]}"#)
+            }
+            frames.append(validFrame(x: index))
+        }
+        let json = "{\"frames\":[" + frames.joined(separator: ",") + "]}"
+        try Data(json.utf8).write(to: root.appendingPathComponent("transforms.json"))
+
+        let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: render)
+        XCTAssertEqual(positions.count, SplatViewerCameraDatasetLoader.maximumReturnedPositions)
+        XCTAssertEqual(positions.first?.x, 0)
+        XCTAssertEqual(positions.last?.x, Float(validFrameCount - 1))
+        XCTAssertTrue(zip(positions, positions.dropFirst()).allSatisfy { pair in
+            pair.0.x <= pair.1.x
+        })
+    }
+
+    private func validFrame(x: Int) -> String {
+        "{\"transform_matrix\":[[1,0,0,\(x)],[0,1,0,0],[0,0,1,0],[0,0,0,1]]}"
     }
 
     private func makeRoot() throws -> URL {
