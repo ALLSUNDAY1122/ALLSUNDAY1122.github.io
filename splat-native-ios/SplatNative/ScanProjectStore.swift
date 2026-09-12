@@ -404,9 +404,9 @@ final class ScanProjectStore {
         let images = projectURL.appendingPathComponent("images", isDirectory: true)
         let transforms = projectURL.appendingPathComponent("transforms.json")
         let points = projectURL.appendingPathComponent("points3D.ply")
-        guard fileManager.fileExists(atPath: images.path),
-              fileManager.fileExists(atPath: transforms.path),
-              fileManager.fileExists(atPath: points.path) else {
+        guard isSafeDirectory(images),
+              isSafeRegularFile(transforms),
+              isSafeRegularFile(points) else {
             throw ScanProjectStoreError.rawDataUnavailable
         }
         return ScanReprocessRequest(
@@ -571,9 +571,21 @@ final class ScanProjectStore {
     }
 
     private func isSafeProjectDirectory(_ url: URL) -> Bool {
+        isSafeDirectory(url)
+    }
+
+    private func isSafeDirectory(_ url: URL) -> Bool {
         guard url.isFileURL,
               let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
               values.isDirectory == true,
+              values.isSymbolicLink != true else { return false }
+        return true
+    }
+
+    private func isSafeRegularFile(_ url: URL) -> Bool {
+        guard url.isFileURL,
+              let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
               values.isSymbolicLink != true else { return false }
         return true
     }
