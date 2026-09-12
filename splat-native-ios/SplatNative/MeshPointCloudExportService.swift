@@ -84,6 +84,57 @@ enum MeshPointCloudExportService {
         }
     }
 
+    struct AlternatingTextureCache<Value> {
+        let cacheByteLimit: Int
+        private var activeURL: URL?
+        private var activeValue: Value?
+        private var cachedURL: URL?
+        private var cachedValue: Value?
+
+        init(cacheByteLimit: Int) {
+            self.cacheByteLimit = max(0, cacheByteLimit)
+        }
+
+        mutating func value(
+            for url: URL,
+            byteCount: (Value) -> Int,
+            load: (URL) throws -> Value
+        ) rethrows -> Value {
+            let key = url.standardizedFileURL
+            if activeURL == key, let activeValue { return activeValue }
+
+            if cachedURL == key, let cachedValue {
+                let previousURL = activeURL
+                let previousValue = activeValue
+                activeURL = key
+                activeValue = cachedValue
+                if let previousURL, let previousValue, byteCount(previousValue) <= cacheByteLimit {
+                    self.cachedURL = previousURL
+                    self.cachedValue = previousValue
+                } else {
+                    self.cachedURL = nil
+                    self.cachedValue = nil
+                }
+                return cachedValue
+            }
+
+            // Discard the secondary sampler before a decode miss so a material switch never
+            // retains three decoded atlases. This keeps peak memory close to the prior behavior.
+            cachedURL = nil
+            cachedValue = nil
+            let previousURL = activeURL
+            let previousValue = activeValue
+            let loaded = try load(key)
+            activeURL = key
+            activeValue = loaded
+            if let previousURL, let previousValue, byteCount(previousValue) <= cacheByteLimit {
+                cachedURL = previousURL
+                cachedValue = previousValue
+            }
+            return loaded
+        }
+    }
+
     private enum PointPlan {
         case texturedCorners(MaterialTextureSet)
         case coloredVertices
@@ -137,6 +188,9 @@ enum MeshPointCloudExportService {
     private static let las12HeaderSize = 227
     private static let streamFlushThreshold = 64 * 1024
     private static let maxTextureSampleDimension = 4_096
+    // Retain only one small previous atlas. A/B/A/B no longer re-decodes small textures while
+    // large atlases keep the established one-active memory behavior.
+    private static let alternatingTextureCacheByteLimit = 8 * 1_024 * 1_024
 
     static func exportPLY(sourceOBJ: URL, outputURL: URL) throws {
         try Task.checkCancellation()
@@ -312,21 +366,23 @@ enum MeshPointCloudExportService {
         case .coloredVertices:
             for vertex in geometry.vertices { try body(vertex, vertex.color) }
         case .texturedCorners(let textures):
-            var activeTextureURL: URL?
-            var activeSampler: TextureSampler?
+            var samplerCache = AlternatingTextureCache<TextureSampler>(
+                cacheByteLimit: alternatingTextureCacheByteLimit
+            )
             for triangle in geometry.triangles {
                 guard let textureURL = textures.textureURL(for: triangle.material) else {
                     throw ExportError.invalidTexture
                 }
-                if activeTextureURL != textureURL {
+                let sampler = try samplerCache.value(
+                    for: textureURL,
+                    byteCount: { $0.rgba.count }
+                ) { url in
                     try Task.checkCancellation()
-                    guard let sampler = try loadTextureSampler(textureURL) else {
+                    guard let loaded = try loadTextureSampler(url) else {
                         throw ExportError.invalidTexture
                     }
-                    activeSampler = sampler
-                    activeTextureURL = textureURL
+                    return loaded
                 }
-                guard let sampler = activeSampler else { throw ExportError.invalidTexture }
                 for corner in triangle.corners {
                     guard corner.vertex >= 0, corner.vertex < geometry.vertices.count,
                           let textureIndex = corner.texCoord,

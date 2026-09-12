@@ -157,6 +157,38 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
         }
     }
 
+    func testAlternatingTextureCacheReusesSmallPreviousSampler() {
+        var cache = MeshPointCloudExportService.AlternatingTextureCache<Int>(cacheByteLimit: 8)
+        let root = URL(fileURLWithPath: "/tmp")
+        let a = root.appendingPathComponent("a.png")
+        let b = root.appendingPathComponent("b.png")
+        var loads = 0
+        func load(_ url: URL) -> Int {
+            loads += 1
+            return url == a ? 4 : 4
+        }
+
+        _ = cache.value(for: a, byteCount: { $0 }, load: load)
+        _ = cache.value(for: b, byteCount: { $0 }, load: load)
+        _ = cache.value(for: a, byteCount: { $0 }, load: load)
+        _ = cache.value(for: b, byteCount: { $0 }, load: load)
+        XCTAssertEqual(loads, 2, "A/B/A/B should decode each small atlas only once")
+    }
+
+    func testAlternatingTextureCacheDoesNotRetainOversizedPreviousSampler() {
+        var cache = MeshPointCloudExportService.AlternatingTextureCache<Int>(cacheByteLimit: 8)
+        let root = URL(fileURLWithPath: "/tmp")
+        let a = root.appendingPathComponent("large-a.png")
+        let b = root.appendingPathComponent("large-b.png")
+        var loads = 0
+        func load(_ url: URL) -> Int { loads += 1; return 9 }
+
+        _ = cache.value(for: a, byteCount: { $0 }, load: load)
+        _ = cache.value(for: b, byteCount: { $0 }, load: load)
+        _ = cache.value(for: a, byteCount: { $0 }, load: load)
+        XCTAssertEqual(loads, 3, "Oversized atlases must keep the one-active decode behavior")
+    }
+
     func testPLYReloadsTextureWhenMaterialReturnsAfterSwitch() throws {
         let root = try temporaryRoot("mesh-pointcloud-material-reload")
         defer { try? FileManager.default.removeItem(at: root) }
