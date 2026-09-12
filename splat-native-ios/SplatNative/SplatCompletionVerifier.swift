@@ -6,6 +6,8 @@ import Foundation
 /// after writing any whole number of 32-byte records. Export/share/view entry points must pass
 /// through this verifier before treating a local result as user-owned completed data.
 enum SplatCompletionVerifier {
+    private static let maximumCompletionEvidenceByteCount: Int64 = 64 * 1024
+
     struct Verification: Equatable, Sendable {
         let url: URL
         let sha256: String
@@ -60,9 +62,6 @@ enum SplatCompletionVerifier {
             throw VerificationError.projectNotFinished
         }
 
-        // A failed/repeated reprocess may have exhausted Store's legacy `result.previous.splat`.
-        // C2 can restore only the separately protected exact previous bytes whose SHA-256 matches
-        // the snapshot captured while that result was still strictly trusted.
         let manifest = SplatPreviousResultEvidence.recoverTrustedPreviousIfNeeded(
             projectURL: projectURL,
             manifest: loadedManifest,
@@ -75,6 +74,9 @@ enum SplatCompletionVerifier {
 
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
         guard isIndependentRegularFile(evidenceURL),
+              let evidenceByteCount = try? fileByteCount(evidenceURL, fileManager: fileManager),
+              evidenceByteCount >= 0,
+              evidenceByteCount <= maximumCompletionEvidenceByteCount,
               let evidenceData = try? Data(contentsOf: evidenceURL),
               let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: evidenceData),
               evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
@@ -84,9 +86,6 @@ enum SplatCompletionVerifier {
             throw VerificationError.completionEvidenceMissing
         }
 
-        // Do not reject a non-regular result before the strong verifier. It deliberately owns that
-        // classification so a trusted protected backup can repair a replaced/symlinked result in
-        // the integrity-failure recovery path below.
         guard fileManager.fileExists(atPath: expectedURL.path),
               let attributes = try? fileManager.attributesOfItem(atPath: expectedURL.path),
               let size = attributes[.size] as? NSNumber,
@@ -104,9 +103,6 @@ enum SplatCompletionVerifier {
         } catch is CancellationError {
             throw CancellationError()
         } catch {
-            // Structural recovery intentionally avoids a second hash on every healthy library open.
-            // If the strong verifier finds same-size corruption and the exact commit still has a
-            // protected SHA-bound backup, recover it now and immediately re-run the strong gate.
             do {
                 guard try SplatPreviousResultEvidence.recoverTrustedPreviousAfterIntegrityFailure(
                     projectURL: projectURL,
@@ -136,6 +132,14 @@ enum SplatCompletionVerifier {
             return false
         }
         return values.isRegularFile == true && values.isSymbolicLink != true
+    }
+
+    private static func fileByteCount(_ url: URL, fileManager: FileManager) throws -> Int64 {
+        let attributes = try fileManager.attributesOfItem(atPath: url.path)
+        guard let size = attributes[.size] as? NSNumber else {
+            throw CocoaError(.fileReadUnknown)
+        }
+        return size.int64Value
     }
 
     private static func normalized(_ url: URL) -> URL {
