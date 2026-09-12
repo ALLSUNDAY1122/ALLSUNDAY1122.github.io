@@ -22,9 +22,14 @@ extension SplatSeedColorizerMultiViewTests {
             rgba[offset + 2] = blue
             rgba[offset + 3] = 255
         }
-        setPixel(x: 4, y: 4, red: 255, green: 0, blue: 0)
-        setPixel(x: 5, y: 4, red: 0, green: 255, blue: 0)
-        setPixel(x: 4, y: 5, red: 0, green: 0, blue: 255)
+
+        // Keep the regression independent of CoreGraphics' vertical row convention: paint both
+        // neighbouring columns for the full image height, then sample halfway between them. The
+        // expected value therefore depends only on horizontal bilinear interpolation.
+        for y in 0..<height {
+            setPixel(x: 4, y: y, red: 255, green: 0, blue: 0)
+            setPixel(x: 5, y: y, red: 0, green: 255, blue: 0)
+        }
 
         let provider = try XCTUnwrap(CGDataProvider(data: Data(rgba) as CFData))
         let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB()
@@ -66,13 +71,12 @@ extension SplatSeedColorizerMultiViewTests {
             projectURL: root
         ).first)
 
-        // At (4.5, 4.5), bilinear sampling blends red/green/blue/black equally.
-        // Nearest-neighbour sampling would select one texel instead and fail this range.
-        XCTAssertGreaterThanOrEqual(color.red, 50)
-        XCTAssertLessThanOrEqual(color.red, 80)
-        XCTAssertGreaterThanOrEqual(color.green, 50)
-        XCTAssertLessThanOrEqual(color.green, 80)
-        XCTAssertGreaterThanOrEqual(color.blue, 50)
-        XCTAssertLessThanOrEqual(color.blue, 80)
+        // At x=4.5, bilinear sampling blends the red and green columns equally. A nearest-neighbour
+        // sampler would select only one column and fail these two ranges.
+        XCTAssertGreaterThanOrEqual(color.red, 110)
+        XCTAssertLessThanOrEqual(color.red, 145)
+        XCTAssertGreaterThanOrEqual(color.green, 110)
+        XCTAssertLessThanOrEqual(color.green, 145)
+        XCTAssertLessThanOrEqual(color.blue, 5)
     }
 }
