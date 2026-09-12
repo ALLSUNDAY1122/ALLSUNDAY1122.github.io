@@ -2,7 +2,7 @@ import XCTest
 import UIKit
 import simd
 
-final class SplatSeedColorizerBilinearTests: XCTestCase {
+extension SplatSeedColorizerMultiViewTests {
     func testSubpixelProjectionBlendsNeighbouringRasterTexels() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("splat-seed-bilinear-\(UUID().uuidString)", isDirectory: true)
@@ -25,6 +25,12 @@ final class SplatSeedColorizerBilinearTests: XCTestCase {
         let imageURL = root.appendingPathComponent("subpixel.png")
         try XCTUnwrap(image.pngData()).write(to: imageURL)
 
+        let identityRows: [[Float]] = [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+        ]
         let frame = SplatSeedFrame(
             filePath: "subpixel.png",
             transformMatrix: identityRows,
@@ -49,14 +55,5 @@ final class SplatSeedColorizerBilinearTests: XCTestCase {
         XCTAssertLessThanOrEqual(color.green, 80)
         XCTAssertGreaterThanOrEqual(color.blue, 50)
         XCTAssertLessThanOrEqual(color.blue, 80)
-    }
-
-    private var identityRows: [[Float]] {
-        [
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1],
-        ]
     }
 }
