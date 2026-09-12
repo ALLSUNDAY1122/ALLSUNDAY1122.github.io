@@ -36,7 +36,7 @@ extension SplatPreviousResultEvidence {
         try? fileManager.removeItem(at: partialURL)
 
         do {
-            // Materialize and verify the replacement before removing the untrusted current result.
+            // Materialize and verify the replacement before touching the untrusted current result.
             // Prefer an APFS clone so a scene-sized recovery normally uses copy-on-write storage
             // without aliasing the protected backup. A hard link is deliberately not used here:
             // an in-place mutation of a recovered result must never mutate its recovery source.
@@ -54,9 +54,14 @@ extension SplatPreviousResultEvidence {
             try Task.checkCancellation()
 
             if fileManager.fileExists(atPath: outputURL.path) {
-                try fileManager.removeItem(at: outputURL)
+                // Replace in one filesystem transaction. The previous remove+move sequence created
+                // a data-loss window: if the move failed after removing the corrupt-but-recoverable
+                // current result, the project was left with no result at all. The verified partial
+                // lives in the same project directory, so replaceItemAt can promote it atomically.
+                _ = try fileManager.replaceItemAt(outputURL, withItemAt: partialURL)
+            } else {
+                try fileManager.moveItem(at: partialURL, to: outputURL)
             }
-            try fileManager.moveItem(at: partialURL, to: outputURL)
             return true
         } catch {
             try? fileManager.removeItem(at: partialURL)
