@@ -30,6 +30,30 @@ final class SplatCameraGeometryTests: XCTestCase {
         XCTAssertEqual(framing.radius, 10, accuracy: 0.0001)
     }
 
+    func testRobustFramingUsesTrueMedianForEvenSampleCount() {
+        let positions: [SIMD3<Float>] = [
+            SIMD3<Float>(-3, -4, -2),
+            SIMD3<Float>(-1, -2, 0),
+            SIMD3<Float>(1, 2, 0),
+            SIMD3<Float>(3, 4, 2),
+        ]
+        let points = positions.map { position in
+            SplatPoint(
+                position: position,
+                color: .sRGBUInt8(SIMD3<UInt8>(128, 128, 128)),
+                opacity: .linearFloat(1),
+                scale: .linearFloat(SIMD3<Float>(repeating: 0.1)),
+                rotation: simd_quatf(angle: 0, axis: SIMD3<Float>(0, 1, 0))
+            )
+        }
+
+        let framing = SplatCameraGeometry.robustFraming(for: points)
+
+        XCTAssertEqual(framing.center.x, 0, accuracy: 0.0001)
+        XCTAssertEqual(framing.center.y, 0, accuracy: 0.0001)
+        XCTAssertEqual(framing.center.z, 0, accuracy: 0.0001)
+    }
+
     func testRobustFramingIgnoresDistanceOverflowFromHugeFiniteCoordinates() {
         let huge = Float.greatestFiniteMagnitude / 2
         let positions: [SIMD3<Float>] = [
