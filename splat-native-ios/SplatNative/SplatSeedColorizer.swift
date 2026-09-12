@@ -190,13 +190,18 @@ enum SplatSeedColorizer {
             }
         }
 
-        // Seed colors always come from untouched captures. Decode one raster at a time so adding
-        // multi-view consensus does not multiply peak memory by the number of captured frames.
+        // Resolve the project root once per pass. Candidate paths still resolve symlinks individually
+        // so an escaped capture cannot be sampled, but large captures do not repeat the same root
+        // filesystem resolution for every frame.
+        let resolvedProjectRoot = projectURL.standardizedFileURL.resolvingSymlinksInPath()
         for (frameIndex, items) in grouped {
             guard frames.indices.contains(frameIndex) else { continue }
             let frame = frames[frameIndex]
-            guard let imageURL = containedImageURL(filePath: frame.filePath, projectURL: projectURL),
-                  let raster = loadRaster(url: imageURL) else { continue }
+            guard let imageURL = containedImageURL(
+                filePath: frame.filePath,
+                projectURL: projectURL,
+                resolvedProjectRoot: resolvedProjectRoot
+            ), let raster = loadRaster(url: imageURL) else { continue }
             for item in items {
                 if let color = raster.sample(
                     x: item.x,
@@ -311,11 +316,14 @@ enum SplatSeedColorizer {
         )
     }
 
-    private static func containedImageURL(filePath: String, projectURL: URL) -> URL? {
+    private static func containedImageURL(
+        filePath: String,
+        projectURL: URL,
+        resolvedProjectRoot: URL
+    ) -> URL? {
         guard !filePath.isEmpty else { return nil }
-        let root = projectURL.standardizedFileURL.resolvingSymlinksInPath()
         let candidate = projectURL.appendingPathComponent(filePath).standardizedFileURL.resolvingSymlinksInPath()
-        let rootPath = root.path.hasSuffix("/") ? root.path : root.path + "/"
+        let rootPath = resolvedProjectRoot.path.hasSuffix("/") ? resolvedProjectRoot.path : resolvedProjectRoot.path + "/"
         guard candidate.path.hasPrefix(rootPath) else { return nil }
         return candidate
     }
