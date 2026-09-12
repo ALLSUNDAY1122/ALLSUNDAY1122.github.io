@@ -105,6 +105,10 @@ enum MeshTrimEngine {
 
         var used = Set<Int>()
         var faceCount = 0
+        // Reuse one small index buffer across faces. Triangulated meshes otherwise create one
+        // short-lived heap-backed [Int] for every face, which becomes significant on million-face scans.
+        var faceIndices: [Int] = []
+        faceIndices.reserveCapacity(4)
 
         for line in lines {
             let fields = line.split(whereSeparator: \.isWhitespace)
@@ -114,8 +118,10 @@ enum MeshTrimEngine {
             }
             let faceFields = fields.dropFirst().prefix { !$0.hasPrefix("#") }
             guard faceFields.count >= 3 else { throw error("OBJ面定義が不正です") }
-            var ids: [Int] = []
-            ids.reserveCapacity(faceFields.count)
+            faceIndices.removeAll(keepingCapacity: true)
+            if faceIndices.capacity < faceFields.count {
+                faceIndices.reserveCapacity(faceFields.count)
+            }
             for token in faceFields {
                 guard let first = token.split(separator: "/", omittingEmptySubsequences: false).first,
                       !first.isEmpty,
@@ -127,12 +133,12 @@ enum MeshTrimEngine {
                 guard index >= 0, index < vertices.count else {
                     throw error("OBJ面インデックスが範囲外です")
                 }
-                ids.append(index)
+                faceIndices.append(index)
             }
 
             var centroid = SIMD3<Float>.zero
-            for id in ids { centroid += vertices[id] }
-            centroid /= Float(ids.count)
+            for id in faceIndices { centroid += vertices[id] }
+            centroid /= Float(faceIndices.count)
             guard centroid.x.isFinite, centroid.y.isFinite, centroid.z.isFinite else {
                 throw error("面の位置を計算できません")
             }
@@ -141,8 +147,8 @@ enum MeshTrimEngine {
                 centroid.z >= low.z && centroid.z <= high.z
             if inside {
                 try writeLine(line)
-                used.formUnion(ids)
-                faceCount += ids.count - 2
+                used.formUnion(faceIndices)
+                faceCount += faceIndices.count - 2
             }
         }
         guard faceCount > 0 else { throw error("トリミング範囲内に面が残りません") }
