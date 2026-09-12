@@ -28,7 +28,14 @@ enum SplatViewerMemoryPolicy {
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) -> UInt64 {
         let proportional = physicalMemoryBytes / physicalMemoryDivisor
-        let baseBudget = min(maximumBudgetBytes, max(minimumBudgetBytes, proportional))
+        let nominalFloorApplied = min(maximumBudgetBytes, max(minimumBudgetBytes, proportional))
+        // `ProcessInfo.physicalMemory` is normally several GiB on supported iPhones, but tests,
+        // future runtimes, or transient platform-reporting failures can provide a much smaller value.
+        // Never let the 256 MiB quality floor claim more than half of the RAM we were actually told
+        // exists. Normal 4/6/8 GiB device budgets are unchanged; malformed/tiny reports fail safe to
+        // the legacy representation instead of selecting an SH3 working set larger than the device.
+        let physicalSafetyCap = physicalMemoryBytes / 2
+        let baseBudget = min(nominalFloorApplied, physicalSafetyCap)
         let thermallyAdjusted: UInt64
         switch thermalState {
         case .nominal, .fair:
