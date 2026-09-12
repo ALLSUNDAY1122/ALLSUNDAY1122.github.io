@@ -157,22 +157,12 @@ enum SplatCameraGeometry {
         let safeCenter = isFinite(center) ? center : .zero
         let safeEye = isFinite(eye) ? eye : safeCenter + SIMD3<Float>(0, 0, 1)
         let delta = safeEye - safeCenter
-        let z: SIMD3<Float>
-        if simd_length_squared(delta) >= 1e-8 {
-            z = simd_normalize(delta)
-        } else {
-            z = SIMD3<Float>(0, 0, 1)
-        }
+        let z = stableNormalize(delta) ?? SIMD3<Float>(0, 0, 1)
 
-        let normalizedUp: SIMD3<Float>
-        if isFinite(up), simd_length_squared(up) >= 1e-8 {
-            normalizedUp = simd_normalize(up)
-        } else {
-            normalizedUp = SIMD3<Float>(0, 1, 0)
-        }
+        let normalizedUp = stableNormalize(up) ?? SIMD3<Float>(0, 1, 0)
 
         var x = simd_cross(normalizedUp, z)
-        if simd_length_squared(x) < 1e-8 {
+        if stableNormalize(x) == nil {
             // Pick an axis that is not parallel to the viewing direction. Using a fixed X axis
             // fails when the camera itself looks along X and produces a zero Y basis vector.
             let fallbackUp = abs(z.y) < 0.9
@@ -180,8 +170,8 @@ enum SplatCameraGeometry {
                 : SIMD3<Float>(1, 0, 0)
             x = simd_cross(fallbackUp, z)
         }
-        x = simd_normalize(x)
-        let y = simd_normalize(simd_cross(z, x))
+        x = stableNormalize(x) ?? SIMD3<Float>(1, 0, 0)
+        let y = stableNormalize(simd_cross(z, x)) ?? SIMD3<Float>(0, 1, 0)
         return simd_float4x4(columns: (
             SIMD4<Float>(x.x, y.x, z.x, 0),
             SIMD4<Float>(x.y, y.y, z.y, 0),
@@ -205,6 +195,19 @@ enum SplatCameraGeometry {
         guard values.count.isMultiple(of: 2) else { return values[upperIndex] }
         // Halving before addition avoids overflow when two large finite coordinates share a sign.
         return values[upperIndex - 1] * 0.5 + values[upperIndex] * 0.5
+    }
+
+    /// Normalizes without squaring the original magnitude first. `simd_normalize` can overflow its
+    /// length calculation for very large but finite vectors, producing an invalid camera basis.
+    /// Scaling by the largest component keeps the intermediate norm near one and preserves direction.
+    private static func stableNormalize(_ value: SIMD3<Float>) -> SIMD3<Float>? {
+        guard isFinite(value) else { return nil }
+        let scale = max(abs(value.x), max(abs(value.y), abs(value.z)))
+        guard scale.isFinite, scale > Float.leastNonzeroMagnitude else { return nil }
+        let scaled = value / scale
+        let lengthSquared = simd_length_squared(scaled)
+        guard lengthSquared.isFinite, lengthSquared > 1e-12 else { return nil }
+        return scaled / sqrt(lengthSquared)
     }
 
     private static func isFinite(_ value: SIMD3<Float>) -> Bool {
