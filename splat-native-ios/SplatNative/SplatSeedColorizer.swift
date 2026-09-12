@@ -27,6 +27,58 @@ private struct SplatSeedAssignment {
     let score: Float
 }
 
+private struct SplatSeedAssignmentSet {
+    private var first: SplatSeedAssignment?
+    private var second: SplatSeedAssignment?
+    private var third: SplatSeedAssignment?
+
+    mutating func insert(_ candidate: SplatSeedAssignment) {
+        guard let first else {
+            self.first = candidate
+            return
+        }
+        if precedes(candidate, first) {
+            third = second
+            second = first
+            self.first = candidate
+            return
+        }
+
+        guard let second else {
+            self.second = candidate
+            return
+        }
+        if precedes(candidate, second) {
+            third = second
+            self.second = candidate
+            return
+        }
+
+        guard let third else {
+            self.third = candidate
+            return
+        }
+        if precedes(candidate, third) {
+            self.third = candidate
+        }
+    }
+
+    func forEachAccepted(_ body: (SplatSeedAssignment) -> Void) {
+        guard let first else { return }
+        let scoreCeiling = max(first.score * 1.8, first.score + 0.05)
+        body(first)
+        if let second, second.score <= scoreCeiling { body(second) }
+        if let third, third.score <= scoreCeiling { body(third) }
+    }
+
+    private func precedes(_ lhs: SplatSeedAssignment, _ rhs: SplatSeedAssignment) -> Bool {
+        if abs(lhs.score - rhs.score) < 0.000_001 {
+            return lhs.frameIndex < rhs.frameIndex
+        }
+        return lhs.score < rhs.score
+    }
+}
+
 private struct SplatSeedColorAccumulator {
     private(set) var count = 0
     private var first = SplatSeedSample(red: 0, green: 0, blue: 0)
@@ -129,11 +181,7 @@ enum SplatSeedColorizer {
         // 100k+ seed clouds while preserving the same one/two/three-view consensus semantics.
         var samples = Array(repeating: SplatSeedColorAccumulator(), count: points.count)
         for (pointIndex, point) in points.enumerated() {
-            for assignment in bestAssignments(
-                for: point,
-                projections: projections,
-                maxCount: maxColorViewsPerPoint
-            ) {
+            bestAssignments(for: point, projections: projections).forEachAccepted { assignment in
                 grouped[assignment.frameIndex, default: []].append((pointIndex, assignment))
             }
         }
@@ -201,17 +249,9 @@ enum SplatSeedColorizer {
 
     private static func bestAssignments(
         for point: SIMD3<Float>,
-        projections: [PreparedProjection],
-        maxCount: Int
-    ) -> [SplatSeedAssignment] {
-        guard maxCount > 0 else { return [] }
-
-        // We only ever consume the best three observations, so retaining and sorting every visible
-        // frame is wasted work. Keep a tiny sorted top-K list while scanning projections. This keeps
-        // temporary storage O(K) instead of O(frameCount) and avoids an O(F log F) sort per point.
-        var best: [SplatSeedAssignment] = []
-        best.reserveCapacity(maxCount)
-
+        projections: [PreparedProjection]
+    ) -> SplatSeedAssignmentSet {
+        var best = SplatSeedAssignmentSet()
         for projection in projections {
             let frame = projection.frame
             guard let projected = project(
@@ -224,38 +264,14 @@ enum SplatSeedColorizer {
             let offAxis = sqrt(nx * nx + ny * ny)
             let score = projected.z * (1 + 0.35 * offAxis)
             guard score.isFinite else { continue }
-            let candidate = SplatSeedAssignment(
+            best.insert(SplatSeedAssignment(
                 frameIndex: projection.frameIndex,
                 x: projected.x,
                 y: projected.y,
                 score: score
-            )
-
-            let insertionIndex = best.firstIndex { existing in
-                assignmentPrecedes(candidate, existing)
-            } ?? best.count
-            if insertionIndex < maxCount {
-                best.insert(candidate, at: insertionIndex)
-                if best.count > maxCount { best.removeLast() }
-            } else if best.count < maxCount {
-                best.append(candidate)
-            }
+            ))
         }
-
-        guard let bestScore = best.first?.score else { return [] }
-        // Avoid blending a very distant/grazing observation merely to reach three samples.
-        let scoreCeiling = max(bestScore * 1.8, bestScore + 0.05)
-        return best.filter { $0.score <= scoreCeiling }
-    }
-
-    private static func assignmentPrecedes(
-        _ lhs: SplatSeedAssignment,
-        _ rhs: SplatSeedAssignment
-    ) -> Bool {
-        if abs(lhs.score - rhs.score) < 0.000_001 {
-            return lhs.frameIndex < rhs.frameIndex
-        }
-        return lhs.score < rhs.score
+        return best
     }
 
     private static func worldToCameraMatrix(frame: SplatSeedFrame) -> simd_float4x4? {
