@@ -290,6 +290,18 @@ final class ScanProjectStoreTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: created.0.appendingPathComponent("images").path))
     }
 
+    func testMoveToTrashPreservesBothProjectsWhenDestinationAlreadyExists() throws {
+        let created = try store.createProject(title: "live")
+        let destination = store.trashURL.appendingPathComponent(created.0.lastPathComponent)
+        try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: true)
+        let sentinel = destination.appendingPathComponent("sentinel")
+        try Data([0xAC]).write(to: sentinel)
+
+        XCTAssertThrowsError(try store.moveToTrash(projectURL: created.0))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: created.0.path))
+        XCTAssertEqual(try Data(contentsOf: sentinel), Data([0xAC]))
+    }
+
     func testTrashIsRecoverableAcrossRelaunchBeforePermanentDelete() throws {
         let created = try store.createProject(title: "削除テスト")
         try store.moveToTrash(projectURL: created.0)
