@@ -98,6 +98,74 @@ final class SplatExportAdmissionTests: XCTestCase {
         XCTAssertEqual(healed.normalized(), knownGood.normalized())
     }
 
+    func testPreflightRejectsExternalViewerEditAliasWithoutBackup() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory.appendingPathComponent("c2-splat-export-edit-alias-\(UUID().uuidString)", isDirectory: true)
+        let externalRoot = fileManager.temporaryDirectory.appendingPathComponent("c2-splat-export-edit-external-\(UUID().uuidString)", isDirectory: true)
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: externalRoot)
+        }
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: externalRoot, withIntermediateDirectories: true)
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Reject external edits")
+        let pending = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        try Data(repeating: 0x32, count: 64).write(to: pending, options: .atomic)
+        let result = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+
+        let externalSidecar = externalRoot.appendingPathComponent("viewer.json")
+        try JSONEncoder().encode(SplatEditSettings(exposureEV: 1.5, contrast: 1.2)).write(to: externalSidecar, options: .atomic)
+        try fileManager.createSymbolicLink(
+            at: SplatViewerEditStore.primaryURL(for: result),
+            withDestinationURL: externalSidecar
+        )
+
+        XCTAssertThrowsError(
+            try SplatExportAdmission.preflight(sourceURL: result, kind: .spz, availableCapacityOverride: Int64.max)
+        ) { error in
+            guard let admissionError = error as? SplatExportAdmission.AdmissionError,
+                  case .untrustedSource = admissionError else {
+                return XCTFail("Expected untrustedSource for external viewer edit alias, got \(error)")
+            }
+        }
+        XCTAssertTrue(fileManager.fileExists(atPath: externalSidecar.path))
+    }
+
+    func testPreflightRejectsOversizedViewerEditSidecarWithoutBackup() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory.appendingPathComponent("c2-splat-export-edit-oversized-\(UUID().uuidString)", isDirectory: true)
+        defer { try? fileManager.removeItem(at: root) }
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Reject oversized edits")
+        let pending = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        try Data(repeating: 0x33, count: 64).write(to: pending, options: .atomic)
+        let result = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+
+        try Data(repeating: 0x41, count: 64 * 1024 + 1).write(
+            to: SplatViewerEditStore.primaryURL(for: result),
+            options: .atomic
+        )
+
+        XCTAssertThrowsError(
+            try SplatExportAdmission.preflight(sourceURL: result, kind: .ply, availableCapacityOverride: Int64.max)
+        ) { error in
+            guard let admissionError = error as? SplatExportAdmission.AdmissionError,
+                  case .untrustedSource = admissionError else {
+                return XCTFail("Expected untrustedSource for oversized viewer edit sidecar, got \(error)")
+            }
+        }
+    }
+
     func testPreflightRejectsBeforeExportWhenFreeSpaceIsInsufficient() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("c2-splat-low-storage-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
