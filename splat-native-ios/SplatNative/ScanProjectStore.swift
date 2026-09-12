@@ -187,14 +187,28 @@ struct ScanProjectSummary: Identifiable, Equatable {
 
     var thumbnailURL: URL? {
         guard let name = manifest.thumbnailFileName else { return nil }
-        let url = projectURL.appendingPathComponent(name)
-        return FileManager.default.fileExists(atPath: url.path) ? url : nil
+        return containedRegularFileURL(named: name)
     }
 
     var resultURL: URL? {
         guard let name = manifest.splatFileName else { return nil }
-        let url = projectURL.appendingPathComponent(name)
-        return FileManager.default.fileExists(atPath: url.path) ? url : nil
+        return containedRegularFileURL(named: name)
+    }
+
+    private func containedRegularFileURL(named name: String) -> URL? {
+        // Manifest filenames are durable metadata and may be stale/corrupt. Never let `../`, an
+        // absolute path, or an in-project symlink turn a library summary into an external file read.
+        guard !name.isEmpty,
+              !name.contains("/"),
+              !name.contains("\\"),
+              name != ".", name != ".." else { return nil }
+        let root = projectURL.standardizedFileURL
+        let candidate = root.appendingPathComponent(name).standardizedFileURL
+        guard candidate.deletingLastPathComponent() == root,
+              let values = try? candidate.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true else { return nil }
+        return candidate
     }
 }
 
