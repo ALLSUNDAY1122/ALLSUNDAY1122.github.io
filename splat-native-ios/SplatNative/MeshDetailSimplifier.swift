@@ -44,24 +44,21 @@ enum MeshDetailSimplifierEngine {
         var faces: [DetailFace] = []
 
         for line in text.split(whereSeparator: \.isNewline) {
-            if line.hasPrefix("v ") {
-                let parts = line.split(separator: " ")
-                guard parts.count >= 4,
-                      let x = Float(parts[1]),
-                      let y = Float(parts[2]),
-                      let z = Float(parts[3]) else {
+            let fields = line.split(whereSeparator: \.isWhitespace)
+            guard let directive = fields.first else { continue }
+            if directive == "v" {
+                guard fields.count >= 4,
+                      let x = Float(fields[1]),
+                      let y = Float(fields[2]),
+                      let z = Float(fields[3]) else {
                     throw error("Meshの頂点定義が不正です")
                 }
                 guard x.isFinite, y.isFinite, z.isFinite else {
                     throw error("Meshに無効な頂点座標があります")
                 }
                 vertices.append(SIMD3<Float>(x, y, z))
-            } else if line.hasPrefix("f ") {
-                let tokens = Array(
-                    line.split(separator: " ")
-                        .dropFirst()
-                        .prefix { !$0.hasPrefix("#") }
-                )
+            } else if directive == "f" {
+                let tokens = Array(fields.dropFirst().prefix { !$0.hasPrefix("#") })
                 guard tokens.count >= 3 else { continue }
                 var indices: [Int] = []
                 indices.reserveCapacity(tokens.count)
