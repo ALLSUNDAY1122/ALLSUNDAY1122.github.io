@@ -51,6 +51,7 @@ enum MeshPointCloudExportService {
         let a: Corner
         let b: Corner
         let c: Corner
+        let material: String?
         var corners: [Corner] { [a, b, c] }
     }
 
@@ -58,7 +59,7 @@ enum MeshPointCloudExportService {
         let vertices: [Vertex]
         let texCoords: [TexCoord]
         let triangles: [Triangle]
-        let materialLibrary: String?
+        let materialLibraries: [String]
     }
 
     private struct Bounds {
@@ -70,8 +71,18 @@ enum MeshPointCloudExportService {
         var maxZ: Double
     }
 
+    private struct MaterialTextureSet {
+        let byMaterial: [String: TextureSampler]
+        let fallback: TextureSampler?
+
+        func sampler(for material: String?) -> TextureSampler? {
+            if let material, let sampler = byMaterial[material] { return sampler }
+            return fallback
+        }
+    }
+
     private enum PointPlan {
-        case texturedCorners(TextureSampler)
+        case texturedCorners(MaterialTextureSet)
         case coloredVertices
         case vertices
 
@@ -280,9 +291,8 @@ enum MeshPointCloudExportService {
             }
         }
         if allCornersHaveUV,
-           let textureURL = textureURL(for: geometry, sourceOBJ: sourceOBJ),
-           let sampler = try loadTextureSampler(textureURL) {
-            return .texturedCorners(sampler)
+           let textures = try materialTextureSet(for: geometry, sourceOBJ: sourceOBJ) {
+            return .texturedCorners(textures)
         }
         if hasCompleteInlineColor { return .coloredVertices }
         return .vertices
@@ -298,8 +308,11 @@ enum MeshPointCloudExportService {
             for vertex in geometry.vertices { try body(vertex, nil) }
         case .coloredVertices:
             for vertex in geometry.vertices { try body(vertex, vertex.color) }
-        case .texturedCorners(let sampler):
+        case .texturedCorners(let textures):
             for triangle in geometry.triangles {
+                guard let sampler = textures.sampler(for: triangle.material) else {
+                    throw ExportError.invalidTexture
+                }
                 for corner in triangle.corners {
                     guard corner.vertex >= 0, corner.vertex < geometry.vertices.count,
                           let textureIndex = corner.texCoord,
@@ -320,7 +333,8 @@ enum MeshPointCloudExportService {
         var vertices: [Vertex] = []
         var texCoords: [TexCoord] = []
         var triangles: [Triangle] = []
-        var materialLibrary: String?
+        var materialLibraries: [String] = []
+        var currentMaterial: String?
         vertices.reserveCapacity(max(128, data.count / 80))
 
         text.enumerateLines { line, _ in
@@ -328,9 +342,19 @@ enum MeshPointCloudExportService {
             guard !trimmed.isEmpty, !trimmed.hasPrefix("#") else { return }
             let fields = trimmed.split(whereSeparator: { $0.isWhitespace })
             guard let kind = fields.first else { return }
-            if kind.lowercased() == "mtllib", materialLibrary == nil {
+            let lowerKind = kind.lowercased()
+            if lowerKind == "mtllib" {
                 let arguments = parseArguments(trimmed)
-                if arguments.count >= 2 { materialLibrary = arguments[1] }
+                for library in arguments.dropFirst() where !materialLibraries.contains(library) {
+                    materialLibraries.append(library)
+                }
+                return
+            }
+            if lowerKind == "usemtl" {
+                let arguments = parseArguments(trimmed)
+                let name = arguments.dropFirst().joined(separator: " ")
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                currentMaterial = name.isEmpty ? nil : name
                 return
             }
             if kind == "v", fields.count >= 4,
@@ -369,11 +393,21 @@ enum MeshPointCloudExportService {
             }
             guard corners.count >= 3 else { return }
             for index in 1..<(corners.count - 1) {
-                triangles.append(Triangle(a: corners[0], b: corners[index], c: corners[index + 1]))
+                triangles.append(Triangle(
+                    a: corners[0],
+                    b: corners[index],
+                    c: corners[index + 1],
+                    material: currentMaterial
+                ))
             }
         }
         guard !vertices.isEmpty else { throw ExportError.emptyGeometry }
-        return Geometry(vertices: vertices, texCoords: texCoords, triangles: triangles, materialLibrary: materialLibrary)
+        return Geometry(
+            vertices: vertices,
+            texCoords: texCoords,
+            triangles: triangles,
+            materialLibraries: materialLibraries
+        )
     }
 
     private static func resolveOBJIndex(_ raw: Int, count: Int) -> Int? {
@@ -382,32 +416,82 @@ enum MeshPointCloudExportService {
         return resolved >= 0 && resolved < count ? resolved : nil
     }
 
-    private static func textureURL(for geometry: Geometry, sourceOBJ: URL) -> URL? {
-        guard let materialLibrary = geometry.materialLibrary else { return nil }
+    /// Builds face-material-aware texture samplers. A single texture remains a safe fallback for
+    /// legacy OBJ files without `usemtl`; multiple textures are never guessed across materials.
+    private static func materialTextureSet(for geometry: Geometry, sourceOBJ: URL) throws -> MaterialTextureSet? {
+        guard !geometry.materialLibraries.isEmpty else { return nil }
         let root = sourceOBJ.deletingLastPathComponent().standardizedFileURL
         let resolvedRoot = root.resolvingSymlinksInPath().standardizedFileURL
-        let mtlURL = root.appendingPathComponent(materialLibrary).standardizedFileURL
-        let resolvedMTL = mtlURL.resolvingSymlinksInPath().standardizedFileURL
-        guard isContained(mtlURL, in: root),
-              isContained(resolvedMTL, in: resolvedRoot),
-              let data = try? Data(contentsOf: mtlURL), !data.isEmpty else { return nil }
-        let text = String(decoding: data, as: UTF8.self)
-        var textureName: String?
-        text.enumerateLines { line, stop in
-            let arguments = parseArguments(line)
-            guard arguments.count >= 2, arguments[0].lowercased() == "map_kd" else { return }
-            if let path = texturePath(in: Array(arguments.dropFirst())) {
-                textureName = path
-                stop = true
+        var textureURLsByMaterial: [String: URL] = [:]
+        var allTextureURLs: [URL] = []
+
+        for materialLibrary in geometry.materialLibraries {
+            try Task.checkCancellation()
+            let normalizedLibrary = materialLibrary.replacingOccurrences(of: "\\", with: "/")
+            let mtlURL = root.appendingPathComponent(normalizedLibrary).standardizedFileURL
+            let resolvedMTL = mtlURL.resolvingSymlinksInPath().standardizedFileURL
+            guard isContained(mtlURL, in: root),
+                  isContained(resolvedMTL, in: resolvedRoot),
+                  let data = try? Data(contentsOf: mtlURL), !data.isEmpty else { continue }
+
+            let mtlRoot = mtlURL.deletingLastPathComponent().standardizedFileURL
+            var currentMaterial: String?
+            String(decoding: data, as: UTF8.self).enumerateLines { line, _ in
+                let arguments = parseArguments(line)
+                guard let command = arguments.first?.lowercased() else { return }
+                if command == "newmtl" {
+                    let name = arguments.dropFirst().joined(separator: " ")
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                    currentMaterial = name.isEmpty ? nil : name
+                    return
+                }
+                guard command == "map_kd", arguments.count >= 2,
+                      let path = texturePath(in: Array(arguments.dropFirst())) else { return }
+                let candidate = mtlRoot
+                    .appendingPathComponent(path.replacingOccurrences(of: "\\", with: "/"))
+                    .standardizedFileURL
+                guard isContained(candidate, in: root),
+                      FileManager.default.fileExists(atPath: candidate.path) else { return }
+                let resolvedTexture = candidate.resolvingSymlinksInPath().standardizedFileURL
+                guard isContained(resolvedTexture, in: resolvedRoot) else { return }
+                if let currentMaterial, textureURLsByMaterial[currentMaterial] == nil {
+                    textureURLsByMaterial[currentMaterial] = candidate
+                }
+                if !allTextureURLs.contains(candidate) { allTextureURLs.append(candidate) }
             }
         }
-        guard let textureName else { return nil }
-        let mtlRoot = mtlURL.deletingLastPathComponent().standardizedFileURL
-        let textureURL = mtlRoot.appendingPathComponent(textureName.replacingOccurrences(of: "\\", with: "/")).standardizedFileURL
-        guard isContained(textureURL, in: root), FileManager.default.fileExists(atPath: textureURL.path) else { return nil }
-        let resolvedTexture = textureURL.resolvingSymlinksInPath().standardizedFileURL
-        guard isContained(resolvedTexture, in: resolvedRoot) else { return nil }
-        return textureURL
+
+        guard !allTextureURLs.isEmpty else { return nil }
+        let fallbackURL = allTextureURLs.count == 1 ? allTextureURLs[0] : nil
+
+        // Do not silently apply an unrelated material's texture. Every face with an explicit
+        // material must resolve its own map_Kd; faces without usemtl are allowed only when there
+        // is exactly one unambiguous texture in the whole OBJ material set.
+        for triangle in geometry.triangles {
+            if let material = triangle.material {
+                guard textureURLsByMaterial[material] != nil else { return nil }
+            } else if fallbackURL == nil {
+                return nil
+            }
+        }
+
+        var samplerCache: [String: TextureSampler] = [:]
+        func sampler(for url: URL) throws -> TextureSampler {
+            let key = url.standardizedFileURL.path
+            if let cached = samplerCache[key] { return cached }
+            guard let loaded = try loadTextureSampler(url) else { throw ExportError.invalidTexture }
+            samplerCache[key] = loaded
+            return loaded
+        }
+
+        var byMaterial: [String: TextureSampler] = [:]
+        for (material, url) in textureURLsByMaterial {
+            if geometry.triangles.contains(where: { $0.material == material }) {
+                byMaterial[material] = try sampler(for: url)
+            }
+        }
+        let fallback = try fallbackURL.map { try sampler(for: $0) }
+        return MaterialTextureSet(byMaterial: byMaterial, fallback: fallback)
     }
 
     /// Tokenizes OBJ/MTL arguments while preserving quoted paths, escaped whitespace and comments.
