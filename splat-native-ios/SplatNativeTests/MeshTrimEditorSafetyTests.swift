@@ -13,6 +13,21 @@ final class MeshTrimEditorSafetyTests: XCTestCase {
         XCTAssertEqual(result.usedVertexCount, 4)
     }
 
+    func testRejectsSymlinkMeshSource() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("MeshTrimEditorSafety-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let actual = root.appendingPathComponent("actual.obj")
+        let link = root.appendingPathComponent("mesh.obj")
+        try "v 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n".write(to: actual, atomically: true, encoding: .utf8)
+        try FileManager.default.createSymbolicLink(at: link, withDestinationURL: actual)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        XCTAssertThrowsError(try MeshTrimEngine.trim(url: link, x: 0...1, y: 0...1, z: 0...1)) { error in
+            XCTAssertTrue(error.localizedDescription.contains("安全な通常ファイル"))
+        }
+    }
+
     func testVertexBitsetCountsAcrossWordBoundary() throws {
         var lines = (0..<65).map { index in
             "v \(index) \(index % 2) 0"
