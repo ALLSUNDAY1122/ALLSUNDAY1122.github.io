@@ -81,9 +81,10 @@ enum MeshExportAdmission {
     /// because each triangle corner becomes a full point record (up to 26 bytes in LAS 1.2 with
     /// RGB), so reserve 12x source bytes. Non-OBJ point-cloud conversion first materializes a text
     /// OBJ bridge and then expands that bridge again into PLY/LAS; compressed/binary inputs such as
-    /// GLB/USDZ can therefore consume substantially more disk than their source size suggests.
-    /// Reserve 24x source bytes for that two-stage path so low-storage failures happen before the
-    /// bridge/export pipeline starts rather than after a large temporary OBJ has already been made.
+    /// GLB can therefore consume substantially more disk than their source size suggests, so that
+    /// two-stage path reserves 24x source bytes. Non-OBJ FBX/OBJ/GLB/STL conversion also creates a
+    /// temporary text OBJ bridge before writing the final container; reserve 8x source bytes there
+    /// instead of the direct-OBJ 3x path. USDZ is exported directly by Model I/O and keeps 3x.
     static func estimatedRequiredFreeBytes(
         sourceBytes: Int64,
         sourceExtension: String,
@@ -98,8 +99,10 @@ enum MeshExportAdmission {
             switch format {
             case .ply, .las:
                 multiplier = normalizedExtension == "obj" ? 12 : 24
-            case .fbx, .obj, .glb, .usdz, .stl:
+            case .usdz:
                 multiplier = 3
+            case .fbx, .obj, .glb, .stl:
+                multiplier = normalizedExtension == "obj" ? 3 : 8
             }
         }
         return saturatingAdd(saturatingMultiply(source, by: multiplier), safetyReserveBytes)
