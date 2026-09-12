@@ -90,6 +90,73 @@ final class MeshExportMemoryPolicyTests: XCTestCase {
         }
     }
 
+    func testPreflightIncludesOBJCompanionTextureWorkingSetForSceneConversion() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("c2-mesh-memory-companion-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("capture.obj")
+        try """
+        mtllib capture.mtl
+        v 0 0 0
+        v 1 0 0
+        v 0 1 0
+        f 1 2 3
+        """.write(to: source, atomically: true, encoding: .utf8)
+        try "map_Kd atlas.jpg\n"
+            .write(to: root.appendingPathComponent("capture.mtl"), atomically: true, encoding: .utf8)
+
+        let texture = root.appendingPathComponent("atlas.jpg")
+        XCTAssertTrue(FileManager.default.createFile(atPath: texture.path, contents: Data([0xff])))
+        let textureHandle = try FileHandle(forWritingTo: texture)
+        try textureHandle.truncate(atOffset: 100 * mib)
+        try textureHandle.close()
+
+        XCTAssertThrowsError(
+            try MeshExportMemoryPolicy.preflight(
+                sourceURL: source,
+                format: .glb,
+                physicalMemoryBytes: 3 * 1_024 * mib
+            )
+        ) { error in
+            guard case MeshExportMemoryPolicy.PolicyError.conversionTooLarge = error else {
+                return XCTFail("Expected companion-aware conversionTooLarge, got \(error)")
+            }
+        }
+    }
+
+    func testExactOBJPassthroughDoesNotDecodeCompanionWorkingSet() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("c2-mesh-memory-companion-passthrough-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("capture.obj")
+        try """
+        mtllib capture.mtl
+        v 0 0 0
+        v 1 0 0
+        v 0 1 0
+        f 1 2 3
+        """.write(to: source, atomically: true, encoding: .utf8)
+        try "map_Kd atlas.jpg\n"
+            .write(to: root.appendingPathComponent("capture.mtl"), atomically: true, encoding: .utf8)
+
+        let texture = root.appendingPathComponent("atlas.jpg")
+        XCTAssertTrue(FileManager.default.createFile(atPath: texture.path, contents: Data([0xff])))
+        let textureHandle = try FileHandle(forWritingTo: texture)
+        try textureHandle.truncate(atOffset: 100 * mib)
+        try textureHandle.close()
+
+        let estimate = try MeshExportMemoryPolicy.preflight(
+            sourceURL: source,
+            format: .obj,
+            physicalMemoryBytes: 3 * 1_024 * mib
+        )
+        XCTAssertEqual(estimate.estimatedPeakBytes, 32 * mib)
+    }
+
     func testPreflightRejectsDirectoryMasqueradingAsMeshFile() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("c2-mesh-memory-nonregular-\(UUID().uuidString)", isDirectory: true)
