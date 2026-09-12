@@ -1,0 +1,70 @@
+name: Scan Lab P1 integrity binding one-shot
+
+on:
+  push:
+    branches:
+      - feature/splat-post-build17-p1
+    paths:
+      - '.github/workflows/scanlab-p1-integrity-binding.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-test-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-post-build17-p1
+          fetch-depth: 0
+      - name: Bind integrity verification to listed archive identity
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('splat-native-ios/SplatNative/MeshProjectIntegrity.swift')
+          s = p.read_text()
+          old = '''        case manifestMissing\n        case resultMissing\n'''
+          new = '''        case manifestMissing\n        case manifestChangedSinceListing\n        case resultMissing\n'''
+          if s.count(old) != 1: raise SystemExit('enum anchor mismatch')
+          s = s.replace(old, new, 1)
+          old = '''            case .manifestMissing:\n                return "保存済みMeshの完成記録を確認できません。"\n            case .resultMissing:\n'''
+          new = '''            case .manifestMissing:\n                return "保存済みMeshの完成記録を確認できません。"\n            case .manifestChangedSinceListing:\n                return "保存済みMeshの完成記録が一覧取得後に変更されています。ライブラリを更新してから開き直してください。"\n            case .resultMissing:\n'''
+          if s.count(old) != 1: raise SystemExit('description anchor mismatch')
+          s = s.replace(old, new, 1)
+          old = '''        guard let manifest = try? decoder.decode(MeshProjectStore.LibraryManifest.self, from: manifestData),\n              manifest.schemaVersion == MeshProjectStore.LibraryManifest.currentSchemaVersion else {\n            throw IntegrityError.manifestMissing\n        }\n\n        let resultURL = summary.projectURL.appendingPathComponent(manifest.resultFileName)\n        let standardizedProject = summary.projectURL.standardizedFileURL.resolvingSymlinksInPath()\n'''
+          new = '''        guard let manifest = try? decoder.decode(MeshProjectStore.LibraryManifest.self, from: manifestData),\n              manifest.schemaVersion == MeshProjectStore.LibraryManifest.currentSchemaVersion else {\n            throw IntegrityError.manifestMissing\n        }\n\n        let resultURL = summary.projectURL.appendingPathComponent(manifest.resultFileName)\n        let expectedProjectID = summary.projectURL.deletingPathExtension().lastPathComponent\n        let expectedResultURL = summary.resultURL.standardizedFileURL\n        let listedRootValues = try? summary.projectURL.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])\n        guard manifest.id == summary.id,\n              expectedProjectID == summary.id,\n              resultURL.standardizedFileURL == expectedResultURL,\n              listedRootValues?.isDirectory == true,\n              listedRootValues?.isSymbolicLink != true else {\n            throw IntegrityError.manifestChangedSinceListing\n        }\n\n        let standardizedProject = summary.projectURL.standardizedFileURL.resolvingSymlinksInPath()\n'''
+          if s.count(old) != 1: raise SystemExit('binding anchor mismatch')
+          p.write_text(s.replace(old, new, 1))
+
+          t = Path('splat-native-ios/SplatNativeTests/MeshProjectIntegrityTests.swift')
+          tests = t.read_text()
+          anchor = '''    func testRejectsCorruptExistingEvidenceInsteadOfResealing() throws {\n'''
+          insertion = '''    func testRejectsManifestRetargetBetweenListingAndFirstSeal() throws {\n        let root = try makeRoot()\n        defer { try? FileManager.default.removeItem(at: root) }\n        let store = MeshProjectStore(appRootURL: root)\n        let live = try makeLiveProject(in: root, marker: 0x5A)\n        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))\n\n        let alternate = archived.projectURL.appendingPathComponent("alternate.obj")\n        try Data(contentsOf: archived.resultURL).write(to: alternate, options: .atomic)\n        let attrs = try FileManager.default.attributesOfItem(atPath: archived.resultURL.path)\n        let originalDate = try XCTUnwrap(attrs[.modificationDate] as? Date)\n        try FileManager.default.setAttributes([.modificationDate: originalDate], ofItemAtPath: alternate.path)\n\n        let manifestURL = archived.projectURL.appendingPathComponent(MeshProjectStore.libraryManifestFileName)\n        let decoder = JSONDecoder()\n        decoder.dateDecodingStrategy = .iso8601\n        var manifest = try decoder.decode(MeshProjectStore.LibraryManifest.self, from: Data(contentsOf: manifestURL))\n        manifest.resultFileName = alternate.lastPathComponent\n        manifest.resultByteCount = Int64(try Data(contentsOf: alternate).count)\n        manifest.sourceResultModificationDate = originalDate\n        let encoder = JSONEncoder()\n        encoder.dateEncodingStrategy = .iso8601\n        try encoder.encode(manifest).write(to: manifestURL, options: .atomic)\n\n        XCTAssertThrowsError(try MeshProjectIntegrity.verifyOrSeal(summary: archived)) { error in\n            guard case MeshProjectIntegrity.IntegrityError.manifestChangedSinceListing = error else {\n                return XCTFail("Expected manifestChangedSinceListing, got \\(error)")\n            }\n        }\n        XCTAssertFalse(FileManager.default.fileExists(\n            atPath: archived.projectURL.appendingPathComponent(MeshProjectIntegrity.evidenceFileName).path\n        ))\n    }\n\n'''
+          if tests.count(anchor) != 1: raise SystemExit('test anchor mismatch')
+          t.write_text(tests.replace(anchor, insertion + anchor, 1))
+          PY
+          grep -q 'manifestChangedSinceListing' splat-native-ios/SplatNative/MeshProjectIntegrity.swift
+          grep -q 'testRejectsManifestRetargetBetweenListingAndFirstSeal' splat-native-ios/SplatNativeTests/MeshProjectIntegrityTests.swift
+      - name: Run focused integrity regressions
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
+            -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+            -parallel-testing-enabled NO \
+            -only-testing:SplatNativeTests/MeshProjectIntegrityTests test
+      - name: Commit verified binding and remove one-shot workflow
+        run: |
+          set -euo pipefail
+          git config user.name 'Scan Lab Macro Loop HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm .github/workflows/scanlab-p1-integrity-binding.yml
+          git add splat-native-ios/SplatNative/MeshProjectIntegrity.swift splat-native-ios/SplatNativeTests/MeshProjectIntegrityTests.swift
+          git commit -m 'fix(mesh): bind integrity checks to listed archive identity'
+          git push origin HEAD:feature/splat-post-build17-p1
