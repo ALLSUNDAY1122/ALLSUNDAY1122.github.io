@@ -34,11 +34,34 @@ enum MeshExportMemoryPolicy {
     static let maximumBudgetBytes: UInt64 = 768 * mib
     static let physicalMemoryDivisor: UInt64 = 6
 
+    static func budgetBytes(
+        physicalMemoryBytes: UInt64,
+        thermalState: ProcessInfo.ThermalState,
+        isLowPowerModeEnabled: Bool
+    ) -> UInt64 {
+        let proportionalBudget = physicalMemoryBytes / physicalMemoryDivisor
+        let baseBudget = min(maximumBudgetBytes, max(minimumBudgetBytes, proportionalBudget))
+        let thermallyAdjusted: UInt64
+        switch thermalState {
+        case .nominal, .fair:
+            thermallyAdjusted = baseBudget
+        case .serious:
+            thermallyAdjusted = baseBudget / 4 * 3
+        case .critical:
+            thermallyAdjusted = baseBudget / 2
+        @unknown default:
+            thermallyAdjusted = baseBudget / 2
+        }
+        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
+    }
+
     @discardableResult
     static func preflight(
         sourceURL: URL,
         format: MeshExportService.Format,
-        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
+        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Estimate {
         let attributes = try FileManager.default.attributesOfItem(atPath: sourceURL.path)
         guard (attributes[.type] as? FileAttributeType) == .typeRegular,
@@ -50,7 +73,9 @@ enum MeshExportMemoryPolicy {
             sourceBytes: size.uint64Value,
             sourceExtension: sourceURL.pathExtension.lowercased(),
             format: format,
-            physicalMemoryBytes: physicalMemoryBytes
+            physicalMemoryBytes: physicalMemoryBytes,
+            thermalState: thermalState,
+            isLowPowerModeEnabled: isLowPowerModeEnabled
         )
 
         // Scene conversion may hand the complete OBJ material graph to Assimp/ModelIO, so account
@@ -82,7 +107,9 @@ enum MeshExportMemoryPolicy {
         sourceBytes: UInt64,
         sourceExtension: String,
         format: MeshExportService.Format,
-        physicalMemoryBytes: UInt64
+        physicalMemoryBytes: UInt64,
+        thermalState: ProcessInfo.ThermalState = .nominal,
+        isLowPowerModeEnabled: Bool = false
     ) -> Estimate {
         let sourceExtension = sourceExtension.lowercased()
         let exactPassthrough = sourceExtension == format.rawValue
@@ -132,12 +159,14 @@ enum MeshExportMemoryPolicy {
             }
         }
 
-        let proportionalBudget = physicalMemoryBytes / physicalMemoryDivisor
-        let budgetBytes = min(maximumBudgetBytes, max(minimumBudgetBytes, proportionalBudget))
         return Estimate(
             sourceBytes: sourceBytes,
             estimatedPeakBytes: estimatedPeakBytes,
-            budgetBytes: budgetBytes
+            budgetBytes: budgetBytes(
+                physicalMemoryBytes: physicalMemoryBytes,
+                thermalState: thermalState,
+                isLowPowerModeEnabled: isLowPowerModeEnabled
+            )
         )
     }
 
