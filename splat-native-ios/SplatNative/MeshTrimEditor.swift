@@ -1,7 +1,6 @@
 import Foundation
 import SceneKit
 import SwiftUI
-import simd
 
 struct MeshTrimResult: Sendable {
     let url: URL
@@ -10,6 +9,12 @@ struct MeshTrimResult: Sendable {
 }
 
 enum MeshTrimEngine {
+    private struct Vertex {
+        let x: Float
+        let y: Float
+        let z: Float
+    }
+
     private static let inputChunkSize = 256 * 1024
     private static let maximumOBJLineBytes = 8 * 1024 * 1024
 
@@ -19,7 +24,7 @@ enum MeshTrimEngine {
             throw error("トリミング元Meshが安全な通常ファイルではありません")
         }
 
-        var vertices: [SIMD3<Float>] = []
+        var vertices: [Vertex] = []
         var hasMaterialLibrary = false
 
         try forEachOBJLine(at: url) { line in
@@ -37,27 +42,40 @@ enum MeshTrimEngine {
                   a.isFinite, b.isFinite, c.isFinite else {
                 throw error("OBJ頂点定義が不正です")
             }
-            vertices.append(SIMD3<Float>(a, b, c))
+            vertices.append(Vertex(x: a, y: b, z: c))
         }
         guard !vertices.isEmpty else { throw error("OBJ頂点がありません") }
 
-        var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
-        var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
+        var minimumX = Float.greatestFiniteMagnitude
+        var minimumY = Float.greatestFiniteMagnitude
+        var minimumZ = Float.greatestFiniteMagnitude
+        var maximumX = -Float.greatestFiniteMagnitude
+        var maximumY = -Float.greatestFiniteMagnitude
+        var maximumZ = -Float.greatestFiniteMagnitude
         for point in vertices {
-            minimum = simd_min(minimum, point)
-            maximum = simd_max(maximum, point)
+            minimumX = min(minimumX, point.x)
+            minimumY = min(minimumY, point.y)
+            minimumZ = min(minimumZ, point.z)
+            maximumX = max(maximumX, point.x)
+            maximumY = max(maximumY, point.y)
+            maximumZ = max(maximumZ, point.z)
         }
-        let rawExtent = maximum - minimum
-        guard rawExtent.x.isFinite, rawExtent.y.isFinite, rawExtent.z.isFinite else {
+        let extentX = max(maximumX - minimumX, 0.000001)
+        let extentY = max(maximumY - minimumY, 0.000001)
+        let extentZ = max(maximumZ - minimumZ, 0.000001)
+        guard extentX.isFinite, extentY.isFinite, extentZ.isFinite else {
             throw error("Meshの座標範囲が大きすぎます")
         }
-        let extent = simd_max(rawExtent, SIMD3<Float>(repeating: 0.000001))
         let bounds = [x.lowerBound, x.upperBound, y.lowerBound, y.upperBound, z.lowerBound, z.upperBound]
         guard bounds.allSatisfy(\.isFinite) else { throw error("トリミング範囲が不正です") }
-        let low = minimum + extent * SIMD3<Float>(Float(x.lowerBound), Float(y.lowerBound), Float(z.lowerBound))
-        let high = minimum + extent * SIMD3<Float>(Float(x.upperBound), Float(y.upperBound), Float(z.upperBound))
-        guard low.x.isFinite, low.y.isFinite, low.z.isFinite,
-              high.x.isFinite, high.y.isFinite, high.z.isFinite else {
+        let lowX = minimumX + extentX * Float(x.lowerBound)
+        let lowY = minimumY + extentY * Float(y.lowerBound)
+        let lowZ = minimumZ + extentZ * Float(z.lowerBound)
+        let highX = minimumX + extentX * Float(x.upperBound)
+        let highY = minimumY + extentY * Float(y.upperBound)
+        let highZ = minimumZ + extentZ * Float(z.upperBound)
+        guard lowX.isFinite, lowY.isFinite, lowZ.isFinite,
+              highX.isFinite, highY.isFinite, highZ.isFinite else {
             throw error("トリミング境界を計算できません")
         }
 
@@ -144,15 +162,25 @@ enum MeshTrimEngine {
                 faceIndices.append(index)
             }
 
-            var centroid = SIMD3<Float>.zero
-            for id in faceIndices { centroid += vertices[id] }
-            centroid /= Float(faceIndices.count)
-            guard centroid.x.isFinite, centroid.y.isFinite, centroid.z.isFinite else {
+            var centroidX: Float = 0
+            var centroidY: Float = 0
+            var centroidZ: Float = 0
+            for id in faceIndices {
+                let point = vertices[id]
+                centroidX += point.x
+                centroidY += point.y
+                centroidZ += point.z
+            }
+            let inverseCount = 1 / Float(faceIndices.count)
+            centroidX *= inverseCount
+            centroidY *= inverseCount
+            centroidZ *= inverseCount
+            guard centroidX.isFinite, centroidY.isFinite, centroidZ.isFinite else {
                 throw error("面の位置を計算できません")
             }
-            let inside = centroid.x >= low.x && centroid.x <= high.x &&
-                centroid.y >= low.y && centroid.y <= high.y &&
-                centroid.z >= low.z && centroid.z <= high.z
+            let inside = centroidX >= lowX && centroidX <= highX &&
+                centroidY >= lowY && centroidY <= highY &&
+                centroidZ >= lowZ && centroidZ <= highZ
             if inside {
                 try writeLine(line)
                 for id in faceIndices {
