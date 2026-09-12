@@ -41,10 +41,15 @@ enum SplatSoftwareDepthSeedBuilder {
         let y: Int
         let z: Int
 
-        init(_ point: SIMD3<Float>) {
-            x = Int(floor(point.x * voxelDensity))
-            y = Int(floor(point.y * voxelDensity))
-            z = Int(floor(point.z * voxelDensity))
+        init?(_ point: SIMD3<Float>) {
+            guard let x = Int(exactly: floor(Double(point.x) * Double(voxelDensity))),
+                  let y = Int(exactly: floor(Double(point.y) * Double(voxelDensity))),
+                  let z = Int(exactly: floor(Double(point.z) * Double(voxelDensity))) else {
+                return nil
+            }
+            self.x = x
+            self.y = y
+            self.z = z
         }
     }
 
@@ -60,16 +65,13 @@ enum SplatSoftwareDepthSeedBuilder {
         let height: Int
 
         func sample(_ x: Float, _ y: Float) -> Float? {
+            guard x.isFinite, y.isFinite else { return nil }
             let ix = Int(x.rounded())
             let iy = Int(y.rounded())
             guard ix >= 0, iy >= 0, ix < width, iy < height else { return nil }
             return Float(pixels[iy * width + ix])
         }
 
-        /// Sub-pixel sampling is intentionally reserved for the small post-confidence refinement
-        /// pass. Keeping the 30-hypothesis coarse search on nearest-neighbour samples preserves its
-        /// bounded cost, while bilinear sampling lets nearby depth hypotheses produce distinct
-        /// photometric costs instead of collapsing onto the same rounded pixel.
         func sampleBilinear(_ x: Float, _ y: Float) -> Float? {
             guard x.isFinite, y.isFinite else { return nil }
             let x0 = Int(floor(x))
@@ -96,6 +98,7 @@ enum SplatSoftwareDepthSeedBuilder {
         let height: Int
 
         func sample(_ x: Float, _ y: Float) -> SplatSeedSample? {
+            guard x.isFinite, y.isFinite else { return nil }
             let ix = Int(x.rounded())
             let iy = Int(y.rounded())
             guard ix >= 0, iy >= 0, ix < width, iy < height else { return nil }
@@ -184,9 +187,6 @@ enum SplatSoftwareDepthSeedBuilder {
                         }
                     }
 
-                    // Preserve the shipped coarse confidence gate. The fine search runs only after a
-                    // correspondence is already accepted, so nearby refinement hypotheses do not
-                    // incorrectly defeat the coarse uniqueness margin.
                     guard bestDepth > 0,
                           bestCost < bestCostThreshold,
                           secondCost.isFinite,
@@ -203,10 +203,12 @@ enum SplatSoftwareDepthSeedBuilder {
                         frames: frames
                     )
                     let world = backproject(u: u, v: v, depth: refined.depth, frame: reference)
-                    guard world.x.isFinite, world.y.isFinite, world.z.isFinite else { continue }
+                    guard world.x.isFinite,
+                          world.y.isFinite,
+                          world.z.isFinite,
+                          let key = Voxel(world) else { continue }
                     rawPointCount += 1
                     acceptedInReference += 1
-                    let key = Voxel(world)
                     let candidate = Candidate(point: world, color: color, cost: refined.cost)
                     if let existing = voxels[key] {
                         if candidate.cost < existing.cost { voxels[key] = candidate }
@@ -270,9 +272,6 @@ enum SplatSoftwareDepthSeedBuilder {
         let denominator = Float(refinementHypothesisCount - 1)
 
         var bestDepth = coarseDepth
-        // All refinement candidates, including the coarse winner, must be compared with the same
-        // sub-pixel photometric metric. Comparing a bilinear candidate against the coarse nearest-
-        // neighbour cost can select or reject a depth because of interpolation alone.
         var bestCost = patchCost(
             u: u,
             v: v,
@@ -319,8 +318,6 @@ enum SplatSoftwareDepthSeedBuilder {
         var differenceTotals = SIMD4<Float>(repeating: 0)
         var sampleCounts = SIMD4<Int32>(repeating: 0)
 
-        // Backproject each reference patch sample exactly once per depth hypothesis, then reuse that
-        // world point across all neighbor views. Fixed-size SIMD storage keeps the hot loop allocation-free.
         for dy in offsets {
             for dx in offsets {
                 guard let referenceValue = reference.gray.sample(u + dx, v + dy) else { continue }
@@ -342,7 +339,6 @@ enum SplatSoftwareDepthSeedBuilder {
             }
         }
 
-        // Exposure centering removes local additive brightness drift while retaining edge/texture shape.
         var neighborCosts = SIMD4<Float>(repeating: 0)
         var neighborCostCount = 0
         for neighborSlot in 0..<neighborCount {
@@ -358,8 +354,6 @@ enum SplatSoftwareDepthSeedBuilder {
             neighborCostCount += 1
         }
 
-        // Keep genuine multi-view support mandatory. For 3 views the median rejects one outlier;
-        // for 4 views remove both extremes. The result remains on the shipped per-pixel intensity scale.
         guard neighborCostCount >= 2 else { return nil }
         if neighborCostCount == 2 {
             return (neighborCosts[0] + neighborCosts[1]) * 0.5
@@ -385,11 +379,20 @@ enum SplatSoftwareDepthSeedBuilder {
         maximumPixel: Int
     ) -> Frame? {
         guard source.transformMatrix.count == 4,
-              source.transformMatrix.allSatisfy({ $0.count == 4 }),
-              source.w > 0, source.h > 0,
-              source.flX > 0, source.flY > 0 else { return nil }
-        let fileURL = projectURL.appendingPathComponent(source.filePath)
-        guard let imageSource = CGImageSourceCreateWithURL(fileURL as CFURL, nil),
+              source.transformMatrix.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }),
+              source.w > 0,
+              source.h > 0,
+              source.flX.isFinite,
+              source.flY.isFinite,
+              source.cx.isFinite,
+              source.cy.isFinite,
+              source.flX > 0,
+              source.flY > 0,
+              let fileURL = SplatDepthSeedBuilder.validatedDepthInputURL(
+                projectURL: projectURL,
+                relativePath: source.filePath
+              ),
+              let imageSource = CGImageSourceCreateWithURL(fileURL as CFURL, nil),
               let image = CGImageSourceCreateThumbnailAtIndex(
                 imageSource,
                 0,
@@ -402,9 +405,16 @@ enum SplatSoftwareDepthSeedBuilder {
 
         let width = image.width
         let height = image.height
-        guard width > 0, height > 0 else { return nil }
+        guard width > 0,
+              height > 0,
+              width <= maximumPixel,
+              height <= maximumPixel else { return nil }
+        let (grayCount, grayOverflow) = width.multipliedReportingOverflow(by: height)
+        let (rgbaCount, rgbaOverflow) = grayCount.multipliedReportingOverflow(by: 4)
+        let (rgbaBytesPerRow, rowOverflow) = width.multipliedReportingOverflow(by: 4)
+        guard !grayOverflow, !rgbaOverflow, !rowOverflow, grayCount > 0 else { return nil }
 
-        var grayBytes = [UInt8](repeating: 0, count: width * height)
+        var grayBytes = [UInt8](repeating: 0, count: grayCount)
         guard let grayContext = CGContext(
             data: &grayBytes,
             width: width,
@@ -416,20 +426,23 @@ enum SplatSoftwareDepthSeedBuilder {
         ) else { return nil }
         grayContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
 
-        var rgbaBytes = [UInt8](repeating: 0, count: width * height * 4)
+        var rgbaBytes = [UInt8](repeating: 0, count: rgbaCount)
         let bitmapInfo = CGBitmapInfo.byteOrder32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue
         guard let rgbContext = CGContext(
             data: &rgbaBytes,
             width: width,
             height: height,
             bitsPerComponent: 8,
-            bytesPerRow: width * 4,
+            bytesPerRow: rgbaBytesPerRow,
             space: CGColorSpaceCreateDeviceRGB(),
             bitmapInfo: bitmapInfo
         ) else { return nil }
         rgbContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
 
         let cameraToWorld = matrix(source.transformMatrix)
+        guard matrixIsFinite(cameraToWorld) else { return nil }
+        let worldToCamera = simd_inverse(cameraToWorld)
+        guard matrixIsFinite(worldToCamera) else { return nil }
         let position = SIMD3<Float>(
             cameraToWorld.columns.3.x,
             cameraToWorld.columns.3.y,
@@ -440,21 +453,27 @@ enum SplatSoftwareDepthSeedBuilder {
             -cameraToWorld.columns.2.y,
             -cameraToWorld.columns.2.z
         )
-        let forward = simd_length_squared(forwardRaw) > 1e-8
+        let forwardLengthSquared = simd_length_squared(forwardRaw)
+        let forward = forwardLengthSquared.isFinite && forwardLengthSquared > 1e-8
             ? simd_normalize(forwardRaw)
             : SIMD3<Float>(0, 0, -1)
         let scaleX = Float(width) / Float(source.w)
         let scaleY = Float(height) / Float(source.h)
+        let fx = source.flX * scaleX
+        let fy = source.flY * scaleY
+        let cx = source.cx * scaleX
+        let cy = source.cy * scaleY
+        guard fx.isFinite, fy.isFinite, cx.isFinite, cy.isFinite, fx > 0, fy > 0 else { return nil }
 
         return Frame(
             gray: GrayRaster(pixels: grayBytes, width: width, height: height),
             rgb: RGBRaster(pixels: rgbaBytes, width: width, height: height),
             cameraToWorld: cameraToWorld,
-            worldToCamera: simd_inverse(cameraToWorld),
-            fx: source.flX * scaleX,
-            fy: source.flY * scaleY,
-            cx: source.cx * scaleX,
-            cy: source.cy * scaleY,
+            worldToCamera: worldToCamera,
+            fx: fx,
+            fy: fy,
+            cx: cx,
+            cy: cy,
             position: position,
             forward: forward
         )
@@ -484,10 +503,13 @@ enum SplatSoftwareDepthSeedBuilder {
             guard index != referenceIndex else { return nil }
             let baseline = simd_distance(reference.position, frames[index].position)
             let directionDot = simd_dot(reference.forward, frames[index].forward)
-            guard baseline >= minimumBaseline,
+            guard baseline.isFinite,
+                  directionDot.isFinite,
+                  baseline >= minimumBaseline,
                   baseline <= maximumBaseline,
                   directionDot > minimumDirectionDot else { return nil }
             let score = abs(baseline - 0.16) + (1 - directionDot) * 0.12
+            guard score.isFinite else { return nil }
             return (index, score)
         }
         return candidates.sorted { $0.score < $1.score }.prefix(maximumNeighborFrames).map(\.index)
@@ -502,16 +524,29 @@ enum SplatSoftwareDepthSeedBuilder {
     }
 
     private static func project(_ point: SIMD3<Float>, frame: Frame) -> SIMD2<Float>? {
+        guard point.x.isFinite, point.y.isFinite, point.z.isFinite else { return nil }
         let camera = frame.worldToCamera * SIMD4<Float>(point.x, point.y, point.z, 1)
+        guard camera.x.isFinite, camera.y.isFinite, camera.z.isFinite else { return nil }
         let depth = -camera.z
-        guard depth > 0.05 else { return nil }
+        guard depth.isFinite, depth > 0.05 else { return nil }
         let x = frame.cx + frame.fx * camera.x / depth
         let y = frame.cy - frame.fy * camera.y / depth
-        guard x >= 2,
+        guard x.isFinite,
+              y.isFinite,
+              x >= 2,
               y >= 2,
               x < Float(frame.gray.width - 2),
               y < Float(frame.gray.height - 2) else { return nil }
         return SIMD2<Float>(x, y)
+    }
+
+    private static func matrixIsFinite(_ matrix: simd_float4x4) -> Bool {
+        for column in 0..<4 {
+            for row in 0..<4 where !matrix[column][row].isFinite {
+                return false
+            }
+        }
+        return true
     }
 
     private static func matrix(_ rows: [[Float]]) -> simd_float4x4 {
