@@ -12,7 +12,10 @@ struct MeshTrimResult: Sendable {
 enum MeshTrimEngine {
     static func trim(url: URL, x: ClosedRange<Double>, y: ClosedRange<Double>, z: ClosedRange<Double>) throws -> MeshTrimResult {
         let text = try String(contentsOf: url, encoding: .utf8)
-        let lines = text.split(whereSeparator: \.isNewline).map(String.init)
+        // Keep line views into the original OBJ text instead of materializing a second full set of
+        // per-line Strings. Large textured OBJ scans can be hundreds of megabytes; Substring slices
+        // keep parsing semantics identical while avoiding an input-sized duplicate allocation.
+        let lines = text.split(whereSeparator: \.isNewline)
         var vertices: [SIMD3<Float>] = []
 
         for line in lines {
@@ -49,7 +52,7 @@ enum MeshTrimEngine {
             throw error("トリミング境界を計算できません")
         }
 
-        var output: [String] = []
+        var output: [Substring] = []
         output.reserveCapacity(lines.count)
         var used = Set<Int>()
         var faceCount = 0
