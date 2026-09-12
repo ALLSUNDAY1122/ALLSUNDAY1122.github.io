@@ -112,26 +112,36 @@ extension SplatPersistedEditMaterializer {
         sourceURL: URL,
         sourcePointCount: Int
     ) async throws -> CropBounds {
-        let sampleStride = max(1, sourcePointCount / 8_000)
+        // Use exactly the same evenly distributed sample convention as the live viewer. The former
+        // floor-stride path sampled almost every point for 8,001...15,999-point scenes, while the
+        // viewer used at most 8,000 points; percentile crop boundaries could therefore move when the
+        // same persisted slider values were materialized for export/video.
+        let sampleIndices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: sourcePointCount,
+            targetSampleCount: 8_000
+        )
         let reader = try AutodetectSceneReader(sourceURL)
         let stream = try await reader.read()
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
-        xs.reserveCapacity(min(sourcePointCount, 8_001))
-        ys.reserveCapacity(min(sourcePointCount, 8_001))
-        zs.reserveCapacity(min(sourcePointCount, 8_001))
+        xs.reserveCapacity(sampleIndices.count)
+        ys.reserveCapacity(sampleIndices.count)
+        zs.reserveCapacity(sampleIndices.count)
         var globalIndex = 0
+        var sampleOffset = 0
 
         for try await points in stream {
             try Task.checkCancellation()
             for point in points {
                 if globalIndex & 0x3FF == 0 { try Task.checkCancellation() }
-                if globalIndex % sampleStride == 0 {
+                if sampleOffset < sampleIndices.count,
+                   globalIndex == sampleIndices[sampleOffset] {
                     let p = point.position
                     if p.x.isFinite, p.y.isFinite, p.z.isFinite {
                         xs.append(p.x); ys.append(p.y); zs.append(p.z)
                     }
+                    sampleOffset += 1
                 }
                 globalIndex += 1
             }
@@ -145,22 +155,23 @@ extension SplatPersistedEditMaterializer {
     }
 
     private static func cancellableRobustCropBounds(for points: [SplatPoint]) throws -> CropBounds {
-        let strideSize = max(1, points.count / 8_000)
+        let sampleIndices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: points.count,
+            targetSampleCount: 8_000
+        )
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
-        xs.reserveCapacity(min(points.count, 8_001))
-        ys.reserveCapacity(min(points.count, 8_001))
-        zs.reserveCapacity(min(points.count, 8_001))
+        xs.reserveCapacity(sampleIndices.count)
+        ys.reserveCapacity(sampleIndices.count)
+        zs.reserveCapacity(sampleIndices.count)
 
-        var sampleIndex = 0
-        for index in stride(from: 0, to: points.count, by: strideSize) {
-            if sampleIndex & 0x3FF == 0 { try Task.checkCancellation() }
+        for (sampleOffset, index) in sampleIndices.enumerated() {
+            if sampleOffset & 0x3FF == 0 { try Task.checkCancellation() }
             let p = points[index].position
             if p.x.isFinite, p.y.isFinite, p.z.isFinite {
                 xs.append(p.x); ys.append(p.y); zs.append(p.z)
             }
-            sampleIndex += 1
         }
         try Task.checkCancellation()
         return CropBounds(
