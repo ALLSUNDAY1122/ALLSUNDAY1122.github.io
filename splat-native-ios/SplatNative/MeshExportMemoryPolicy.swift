@@ -53,14 +53,15 @@ enum MeshExportMemoryPolicy {
             physicalMemoryBytes: physicalMemoryBytes
         )
 
-        // Scene conversions import OBJ companion MTL/texture assets into the same in-memory scene.
-        // Accounting only for the tiny OBJ text lets a project with a very large captured texture
-        // bypass the memory gate and then jetsam during Assimp/ModelIO decode. Reuse the hardened
-        // companion resolver so unsafe/symlink-escaped references are rejected consistently, and
-        // reserve a conservative decoded/staging multiple for the companion payload.
+        // OBJ conversions may load referenced MTL/texture assets in addition to the OBJ itself.
+        // The point-cloud path now supports multiple face materials, so companion textures can no
+        // longer be treated as a fixed one-texture allowance. Account for their on-disk payload
+        // with the same conservative expansion multiplier used by scene conversion. This remains
+        // intentionally conservative for compressed images while the sampler itself independently
+        // caps each decoded texture to 4096² RGBA.
         if sourceURL.pathExtension.lowercased() == "obj" {
             switch format {
-            case .fbx, .glb, .usdz, .stl:
+            case .fbx, .glb, .usdz, .stl, .ply, .las:
                 let companionBytes = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL)
                 let companionWorkingBytes = saturatingMultiply(UInt64(clamping: companionBytes), by: 8)
                 estimate = Estimate(
@@ -68,7 +69,7 @@ enum MeshExportMemoryPolicy {
                     estimatedPeakBytes: saturatingAdd(estimate.estimatedPeakBytes, companionWorkingBytes),
                     budgetBytes: estimate.budgetBytes
                 )
-            case .obj, .ply, .las:
+            case .obj:
                 break
             }
         }
@@ -99,7 +100,8 @@ enum MeshExportMemoryPolicy {
             switch format {
             case .ply, .las:
                 // OBJ input is mapped, decoded to text and expanded into vertex/UV/triangle arrays.
-                // Texture sampling is capped at 4096² RGBA (~64 MiB).
+                // The base reserve covers one capped texture sampler; preflight adds companion
+                // working bytes so multi-material projects cannot bypass admission via a tiny OBJ.
                 estimatedPeakBytes = saturatingAdd(
                     saturatingMultiply(sourceBytes, by: 8),
                     96 * mib
