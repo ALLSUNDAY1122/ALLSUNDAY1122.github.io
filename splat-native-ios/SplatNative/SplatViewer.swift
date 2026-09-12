@@ -6,18 +6,6 @@ import SplatIO
 import SwiftUI
 import simd
 
-private struct ViewerCameraDataset: Decodable {
-    let frames: [ViewerCameraFrame]
-}
-
-private struct ViewerCameraFrame: Decodable {
-    let transformMatrix: [[Float]]
-
-    enum CodingKeys: String, CodingKey {
-        case transformMatrix = "transform_matrix"
-    }
-}
-
 struct SplatViewer: UIViewRepresentable {
     let url: URL
     @ObservedObject var state: SplatViewerState
@@ -469,19 +457,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
     }
 
     private static func initialViewGeometry(for url: URL, center: SIMD3<Float>) -> (yaw: Float, pitch: Float) {
-        let transformsURL = url.deletingLastPathComponent().appendingPathComponent("transforms.json")
-        guard let data = try? Data(contentsOf: transformsURL),
-              let dataset = try? JSONDecoder().decode(ViewerCameraDataset.self, from: data),
-              !dataset.frames.isEmpty else { return (0, 0) }
-
-        let positions = dataset.frames.compactMap { frame -> SIMD3<Float>? in
-            let matrix = frame.transformMatrix
-            guard matrix.count >= 3,
-                  matrix[0].count >= 4,
-                  matrix[1].count >= 4,
-                  matrix[2].count >= 4 else { return nil }
-            return SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])
-        }
+        let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: url)
         guard !positions.isEmpty else { return (0, 0) }
 
         let normalization = SplatSceneNormalization(cameraPositions: positions)
