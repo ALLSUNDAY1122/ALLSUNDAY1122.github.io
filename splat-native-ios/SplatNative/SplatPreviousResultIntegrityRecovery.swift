@@ -18,7 +18,8 @@ extension SplatPreviousResultEvidence {
     ) throws -> Bool {
         let snapshotURL = projectURL.appendingPathComponent(fileName)
         let backupURL = projectURL.appendingPathComponent(assetFileName)
-        guard let snapshotData = try? Data(contentsOf: snapshotURL),
+        guard isIndependentRegularFileForIntegrityRecovery(snapshotURL),
+              let snapshotData = try? Data(contentsOf: snapshotURL),
               let snapshot = try? JSONDecoder().decode(Snapshot.self, from: snapshotData),
               snapshot.schemaVersion == Snapshot.currentSchemaVersion,
               snapshot.originalEvidence == evidence,
