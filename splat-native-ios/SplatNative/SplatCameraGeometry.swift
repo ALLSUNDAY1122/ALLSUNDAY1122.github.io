@@ -132,13 +132,17 @@ enum SplatCameraGeometry {
     }
 
     static func perspective(fovY: Float, aspect: Float, near: Float, far: Float) -> simd_float4x4 {
-        // SwiftUI/Metal surfaces can transiently report zero-sized dimensions during layout and
-        // scene transitions. A single zero/NaN aspect must not poison the projection matrix and
-        // destabilize the viewer until the next valid frame.
+        // SwiftUI/Metal surfaces can transiently report malformed dimensions or persisted camera
+        // planes. Very large but finite near values are as dangerous as NaN: `near + 1` can round
+        // back to `near`, collapsing the projection denominator to zero. Keep planes in the range
+        // the viewer can meaningfully use before constructing the matrix.
         let safeFOV = fovY.isFinite ? min(max(fovY, 0.01), Float.pi - 0.01) : Float.pi / 3
         let safeAspect = aspect.isFinite && aspect > 0.001 ? aspect : 1
-        let safeNear = near.isFinite && near > 0.0001 ? near : 0.01
-        let safeFar = far.isFinite && far > safeNear + 0.001 ? far : max(100, safeNear + 1)
+        let safeNear = near.isFinite && near > 0.0001 && near <= 1_000 ? near : 0.01
+        let fallbackFar = max(100, safeNear * 100)
+        let safeFar = far.isFinite && far > safeNear + 0.001 && far <= 1_000_000
+            ? far
+            : fallbackFar
 
         let y = 1 / tan(safeFOV * 0.5)
         let x = y / safeAspect
