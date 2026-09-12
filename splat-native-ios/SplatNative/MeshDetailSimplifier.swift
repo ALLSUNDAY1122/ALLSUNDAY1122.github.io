@@ -26,7 +26,7 @@ private struct DetailCluster: Hashable, Sendable {
     let unique: Int
 }
 
-private struct DetailSimplifyResult: Sendable {
+struct DetailSimplifyResult: Sendable {
     let url: URL
     let vertices: Int
     let faces: Int
@@ -34,7 +34,7 @@ private struct DetailSimplifyResult: Sendable {
     let protectedComponents: Int
 }
 
-private enum MeshDetailSimplifierEngine {
+enum MeshDetailSimplifierEngine {
     static func simplify(url: URL, retainedFraction: Double) throws -> DetailSimplifyResult {
         let text = try String(contentsOf: url, encoding: .utf8)
         var vertices: [SIMD3<Float>] = []
@@ -47,6 +47,12 @@ private enum MeshDetailSimplifierEngine {
                       let x = Float(parts[1]),
                       let y = Float(parts[2]),
                       let z = Float(parts[3]) else { continue }
+                // `Float("nan")` / `Float("inf")` are valid parses. Letting either value enter the
+                // bounds/grid calculation eventually reaches Int(floor(NaN/Inf)), which traps the
+                // process instead of preserving the original Mesh. Reject the edit before mutation.
+                guard x.isFinite, y.isFinite, z.isFinite else {
+                    throw error("Meshに無効な頂点座標があります")
+                }
                 vertices.append(SIMD3<Float>(x, y, z))
             } else if line.hasPrefix("f ") {
                 let tokens = line.split(separator: " ").dropFirst()
@@ -63,6 +69,15 @@ private enum MeshDetailSimplifierEngine {
         }
 
         guard vertices.count > 8, !faces.isEmpty else { throw error("十分なMeshがありません") }
+        // Validate before edge counting/Union-Find. The previous implementation first indexed the
+        // `parent` array and only checked face bounds much later while emitting output faces, so a
+        // malformed OBJ face such as `f 1 2 999999` could crash the editor instead of failing safely.
+        guard faces.allSatisfy({ face in
+            face.a >= 0 && face.b >= 0 && face.c >= 0 &&
+                face.a < vertices.count && face.b < vertices.count && face.c < vertices.count
+        }) else {
+            throw error("Meshの面インデックスが不正です")
+        }
 
         var edgeCount: [DetailEdge: Int] = [:]
         for face in faces {
