@@ -28,6 +28,21 @@ final class SplatViewerMemoryPolicyTests: XCTestCase {
         ))
     }
 
+    func testTinyReportedPhysicalMemoryNeverInflatesToQualityFloor() {
+        let physicalMemory = UInt64(64 * 1_024 * 1_024)
+        XCTAssertEqual(SplatViewerMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        ), physicalMemory / 2)
+        XCTAssertFalse(SplatViewerMemoryPolicy.canUseCanonicalSH3(
+            pointCount: 250_000,
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        ))
+    }
+
     func testSeriousThermalPressureReducesViewerBudgetByQuarter() {
         let nominal = SplatViewerMemoryPolicy.budgetBytes(
             physicalMemoryBytes: 4 * 1_024 * 1_024 * 1_024,
