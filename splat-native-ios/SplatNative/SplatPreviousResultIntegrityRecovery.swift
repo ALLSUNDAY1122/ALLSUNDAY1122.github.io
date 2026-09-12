@@ -3,6 +3,8 @@ import Darwin
 import Foundation
 
 extension SplatPreviousResultEvidence {
+    private static let maximumIntegritySnapshotByteCount: Int64 = 64 * 1024
+
     /// Last-resort recovery for a completed project whose current result still has the expected
     /// byte count but fails the strong SHA-256 completion check. The normal recovery path uses
     /// cheap structural checks so every library open does not hash the same large Splat twice;
@@ -19,6 +21,9 @@ extension SplatPreviousResultEvidence {
         let snapshotURL = projectURL.appendingPathComponent(fileName)
         let backupURL = projectURL.appendingPathComponent(assetFileName)
         guard isIndependentRegularFileForIntegrityRecovery(snapshotURL),
+              let snapshotByteCount = try? fileByteCountForIntegrityRecovery(snapshotURL, fileManager: fileManager),
+              snapshotByteCount >= 0,
+              snapshotByteCount <= maximumIntegritySnapshotByteCount,
               let snapshotData = try? Data(contentsOf: snapshotURL),
               let snapshot = try? JSONDecoder().decode(Snapshot.self, from: snapshotData),
               snapshot.schemaVersion == Snapshot.currentSchemaVersion,
