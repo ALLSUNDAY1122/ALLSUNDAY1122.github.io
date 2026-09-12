@@ -3,12 +3,14 @@ import Foundation
 enum ScanWorldMapArchiveStoreError: LocalizedError {
     case emptyArchive
     case missingParentDirectory
+    case unsafeExistingArchive
     case verificationFailed
 
     var errorDescription: String? {
         switch self {
         case .emptyArchive: return "WorldMap archiveが空です"
         case .missingParentDirectory: return "WorldMap保存先projectがありません"
+        case .unsafeExistingArchive: return "既存WorldMap archiveが安全な通常ファイルではありません"
         case .verificationFailed: return "保存したWorldMap archiveを検証できません"
         }
     }
@@ -43,6 +45,14 @@ enum ScanWorldMapArchiveStore {
         }
 
         if FileManager.default.fileExists(atPath: targetURL.path) {
+            // A saved project must stay self-contained. Replacing a symlink/special node risks
+            // making the resumable WorldMap depend on bytes outside the project archive and gives
+            // platform-specific replace semantics a chance to affect the alias target. Fail closed.
+            guard let targetValues = try? targetURL.resourceValues(
+                forKeys: [.isRegularFileKey, .isSymbolicLinkKey]
+            ), targetValues.isRegularFile == true, targetValues.isSymbolicLink != true else {
+                throw ScanWorldMapArchiveStoreError.unsafeExistingArchive
+            }
             _ = try FileManager.default.replaceItemAt(targetURL, withItemAt: candidateURL)
         } else {
             try FileManager.default.moveItem(at: candidateURL, to: targetURL)
