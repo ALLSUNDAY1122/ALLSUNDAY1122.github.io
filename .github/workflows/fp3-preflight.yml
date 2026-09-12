@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  preflight:
+  web-preflight:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -52,3 +52,26 @@ jobs:
           if found: raise SystemExit('prohibited markers: '+repr(found))
           print('PASS: FP3 core static contract')
           PY
+
+  ios-simulator:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Prepare audited offline bundle
+        run: bash fp3-manabi-sprint/ios/prepare-ios.sh
+      - name: Generate Xcode project
+        working-directory: fp3-manabi-sprint/ios
+        run: xcodegen generate
+      - name: Build iOS simulator target
+        working-directory: fp3-manabi-sprint/ios
+        run: |
+          xcodebuild \
+            -project FP3ManabiSprint.xcodeproj \
+            -scheme FP3ManabiSprint \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            build
