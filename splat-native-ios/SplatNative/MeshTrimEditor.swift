@@ -52,15 +52,50 @@ enum MeshTrimEngine {
             throw error("トリミング境界を計算できません")
         }
 
-        var output: [Substring] = []
-        output.reserveCapacity(lines.count)
+        let sourceName = url.lastPathComponent.lowercased()
+        let visual = sourceName.contains("visual")
+        let textured = sourceName.contains("textured") || lines.contains { line in
+            let fields = line.split(whereSeparator: \.isWhitespace)
+            return fields.first?.lowercased() == "mtllib"
+        }
+        let stem: String
+        switch (visual, textured) {
+        case (true, true): stem = "visual-mesh-textured-trimmed"
+        case (true, false): stem = "visual-mesh-trimmed"
+        case (false, true): stem = "mesh-textured-trimmed"
+        case (false, false): stem = "mesh-trimmed"
+        }
+        let out = url.deletingLastPathComponent()
+            .appendingPathComponent("\(stem)-\(UUID().uuidString.lowercased()).obj")
+        guard FileManager.default.createFile(atPath: out.path, contents: nil) else {
+            throw error("トリミング結果を作成できません")
+        }
+        let handle: FileHandle
+        do {
+            handle = try FileHandle(forWritingTo: out)
+        } catch {
+            try? FileManager.default.removeItem(at: out)
+            throw error
+        }
+        let newline = Data([0x0A])
+        var completed = false
+        defer {
+            try? handle.close()
+            if !completed { try? FileManager.default.removeItem(at: out) }
+        }
+
+        func writeLine(_ line: Substring) throws {
+            try handle.write(contentsOf: Data(line.utf8))
+            try handle.write(contentsOf: newline)
+        }
+
         var used = Set<Int>()
         var faceCount = 0
 
         for line in lines {
             let fields = line.split(whereSeparator: \.isWhitespace)
             guard let directive = fields.first, directive == "f" else {
-                output.append(line)
+                try writeLine(line)
                 continue
             }
             let tokens = Array(fields.dropFirst().prefix { !$0.hasPrefix("#") })
@@ -91,29 +126,15 @@ enum MeshTrimEngine {
                 centroid.y >= low.y && centroid.y <= high.y &&
                 centroid.z >= low.z && centroid.z <= high.z
             if inside {
-                output.append(line)
+                try writeLine(line)
                 used.formUnion(ids)
                 faceCount += ids.count - 2
             }
         }
         guard faceCount > 0 else { throw error("トリミング範囲内に面が残りません") }
 
-        let sourceName = url.lastPathComponent.lowercased()
-        let visual = sourceName.contains("visual")
-        let textured = sourceName.contains("textured") || lines.contains { line in
-            let fields = line.split(whereSeparator: \.isWhitespace)
-            return fields.first?.lowercased() == "mtllib"
-        }
-        let stem: String
-        switch (visual, textured) {
-        case (true, true): stem = "visual-mesh-textured-trimmed"
-        case (true, false): stem = "visual-mesh-trimmed"
-        case (false, true): stem = "mesh-textured-trimmed"
-        case (false, false): stem = "mesh-trimmed"
-        }
-        let out = url.deletingLastPathComponent()
-            .appendingPathComponent("\(stem)-\(UUID().uuidString.lowercased()).obj")
-        try (output.joined(separator: "\n") + "\n").write(to: out, atomically: true, encoding: .utf8)
+        try handle.synchronize()
+        completed = true
         return MeshTrimResult(url: out, usedVertexCount: used.count, faceCount: faceCount)
     }
 
