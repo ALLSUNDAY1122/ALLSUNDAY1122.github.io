@@ -115,10 +115,14 @@ enum SplatExportAdmission {
             // duration as the same conservative one-second floor used for zero/negative values.
             let safeDuration = duration.isFinite ? max(1, duration) : 1
             let estimatedVideoBytes = estimatedBitrate * safeDuration / 8
-            let boundedVideoBytes = estimatedVideoBytes.isFinite
-                ? min(Double(Int64.max), max(0, estimatedVideoBytes))
-                : Double(Int64.max)
-            let videoBytes = Int64(boundedVideoBytes.rounded(.up))
+            let videoBytes: Int64
+            // Double(Int64.max) rounds to 2^63 on 64-bit platforms, which is already outside
+            // Int64's representable range. Decide saturation before the integer conversion.
+            if !estimatedVideoBytes.isFinite || estimatedVideoBytes >= Double(Int64.max) {
+                videoBytes = Int64.max
+            } else {
+                videoBytes = Int64(max(0, estimatedVideoBytes).rounded(.up))
+            }
             outputEstimate = saturatingAdd(effectiveSource, videoBytes)
         }
         return saturatingAdd(outputEstimate, safetyReserveBytes)
