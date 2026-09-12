@@ -1,32 +1,37 @@
 workflows:
   kanrieiyoushi-ios:
-    name: 管理栄養士 - iOS Internal TestFlight
+    name: 管理栄養士 - Native iOS Internal TestFlight
     max_build_duration: 60
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: codemagic
+      app_store_connect: kanrieiyoushi_appstore
     environment:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: jp.allsunday1122.kanrieiyoushi
       vars:
         BUNDLE_ID: jp.allsunday1122.kanrieiyoushi
+        APP_STORE_CONNECT_APP_ID: "6799753841"
+        APPLE_TEAM_ID: MN3D2ZM44N
         XCODE_PROJECT: kanrieiyoushi-sprint/ios/KanriEiyoushiSprint.xcodeproj
         XCODE_SCHEME: KanriEiyoushiSprint
       xcode: latest
     scripts:
-      - name: Audit release inputs
+      - name: Audit canonical 600-question bank
         script: |
           cd "$CM_BUILD_DIR"
           python3 kanrieiyoushi-sprint/audit/build_round1_2_3_canonical.py
           python3 automation/learning-sprint-question-pipeline/validate_questions.py kanrieiyoushi-sprint/audit/learning-sprint-audit-round1-2-3.json
           python3 kanrieiyoushi-sprint/audit/audit_content_rights.py
-          node --check kanrieiyoushi-sprint/ios/native-storekit.js
-          node kanrieiyoushi-sprint/validate-apple-preflight.mjs
-          python3 kanrieiyoushi-sprint/ios/ios_productization_audit.py
+          python3 kanrieiyoushi-sprint/scripts/build_native_questions.py
+          python3 kanrieiyoushi-sprint/scripts/validate_native_release.py
+      - name: Run shared Native Core tests
+        script: |
+          cd "$CM_BUILD_DIR/native-ios/LearningSprintCore"
+          swift test
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-      - name: Prepare audited local bundle and canonical icon
+      - name: Prepare native resources and canonical AppIcon
         script: bash "$CM_BUILD_DIR/kanrieiyoushi-sprint/ios/prepare-ios.sh"
       - name: Set CI build number and generate Xcode project
         script: |
@@ -34,27 +39,39 @@ workflows:
           python3 - <<'PY'
           from pathlib import Path
           import os
-          p=Path('project.yml');t=p.read_text(encoding='utf-8')
-          t=t.replace('CURRENT_PROJECT_VERSION: 1','CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'],1)
-          p.write_text(t,encoding='utf-8')
+          p=Path('project.yml')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('CURRENT_PROJECT_VERSION: 1','CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'],1)
+          p.write_text(text,encoding='utf-8')
           PY
           xcodegen generate
           python3 apply-xcode-capabilities.py KanriEiyoushiSprint.xcodeproj/project.pbxproj
-      - name: Verify release bundle
+          grep -q 'com.apple.InAppPurchase' KanriEiyoushiSprint.xcodeproj/project.pbxproj
+      - name: Verify native Release inputs
         script: |
-          test -f "$CM_BUILD_DIR/kanrieiyoushi-sprint/ios/Web/index.html"
-          test -f "$CM_BUILD_DIR/kanrieiyoushi-sprint/ios/Web/native-storekit.js"
-          test -f "$CM_BUILD_DIR/kanrieiyoushi-sprint/ios/Web/data-bootstrap-v061.js"
-          test -f "$CM_BUILD_DIR/kanrieiyoushi-sprint/ios/PrivacyInfo.xcprivacy"
-          test -f "$CM_BUILD_DIR/kanrieiyoushi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
-          grep -q 'com.apple.InAppPurchase' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
-      - name: Apply App Store signing profiles for internal TestFlight only
+          cd "$CM_BUILD_DIR"
+          python3 kanrieiyoushi-sprint/scripts/validate_native_release.py --require-icon
+          test -f kanrieiyoushi-sprint/ios/Resources/questions.native.json
+          test -f kanrieiyoushi-sprint/ios/PrivacyInfo.xcprivacy
+          test -f kanrieiyoushi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png
+          ! grep -R --line-number -E 'WKWebView|import WebKit' kanrieiyoushi-sprint/ios/KanriEiyoushiSprint/*.swift
+      - name: Simulator build and native tests
+        script: |
+          cd "$CM_BUILD_DIR/kanrieiyoushi-sprint"
+          KANRI_ICON_MODE=simulator-placeholder bash ios/prepare-ios.sh
+          cd ios && xcodegen generate && python3 apply-xcode-capabilities.py KanriEiyoushiSprint.xcodeproj/project.pbxproj && cd ..
+          bash scripts/run_native_ui_tests.sh
+          KANRI_ICON_MODE=canonical bash ios/prepare-ios.sh
+          cd ios && xcodegen generate && python3 apply-xcode-capabilities.py KanriEiyoushiSprint.xcodeproj/project.pbxproj
+      - name: Apply App Store signing for Internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/kanrieiyoushi-sprint/ios"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
-      - name: Build signed IPA
+      - name: Build signed Release IPA
         script: |
-          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -63,5 +80,5 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: false
+        submit_to_testflight: true
         submit_to_app_store: false
