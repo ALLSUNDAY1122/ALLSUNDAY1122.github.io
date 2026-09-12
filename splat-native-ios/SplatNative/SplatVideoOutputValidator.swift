@@ -20,6 +20,11 @@ enum SplatVideoOutputValidator {
         var duration: TimeInterval
     }
 
+    static func leadingProbeWindow(duration: TimeInterval) -> ProbeWindow? {
+        guard duration.isFinite, duration > 0 else { return nil }
+        return ProbeWindow(start: 0, duration: min(0.5, duration))
+    }
+
     static func boundedProbeWindows(duration: TimeInterval) -> [ProbeWindow] {
         guard duration.isFinite, duration > 1.5 else { return [] }
         let window = min(0.5, duration)
@@ -110,16 +115,23 @@ enum SplatVideoOutputValidator {
 
         // Metadata alone is insufficient: a damaged MP4 can expose a video track and plausible
         // duration while containing no frame that the system decoder can actually materialize.
-        // Probe the beginning first, then bounded interior/tail windows. This catches a valid prefix
-        // followed by localized corruption without imposing a full-file decode on export.
+        // Drain the first bounded half-second rather than accepting the first decodable frame only;
+        // this catches an export with a valid first frame followed by a damaged opening GOP.
         try Task.checkCancellation()
+        guard let leadingWindow = leadingProbeWindow(duration: duration.seconds) else {
+            throw ValidationError.invalidDuration
+        }
+        let leadingRange = CMTimeRange(
+            start: .zero,
+            duration: CMTime(seconds: max(0.001, leadingWindow.duration), preferredTimescale: 600)
+        )
         try validateDecodedFrames(
             asset: asset,
             track: videoTrack,
             encodedWidth: encodedWidth,
             encodedHeight: encodedHeight,
-            timeRange: nil,
-            drainRange: false
+            timeRange: leadingRange,
+            drainRange: true
         )
         try Task.checkCancellation()
 
