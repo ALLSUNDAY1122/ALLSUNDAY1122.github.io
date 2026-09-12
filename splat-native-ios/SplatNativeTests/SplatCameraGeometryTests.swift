@@ -12,6 +12,18 @@ final class SplatCameraGeometryTests: XCTestCase {
         XCTAssertEqual(SplatCameraGeometry.framingSampleStride(pointCount: 12_001), 3)
     }
 
+    func testFramingSampleIndicesRemainExactNearIntMax() {
+        let indices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: Int.max,
+            targetSampleCount: 6_000
+        )
+
+        XCTAssertEqual(indices.count, 6_000)
+        XCTAssertEqual(indices.first, 0)
+        XCTAssertEqual(indices.last, Int.max - 1)
+        XCTAssertTrue(zip(indices, indices.dropFirst()).allSatisfy(<))
+    }
+
     func testRobustFramingKeepsLargeSceneAtLiveViewerDistanceCap() {
         let points = stride(from: -10, through: 10, by: 2).map { x in
             SplatPoint(
