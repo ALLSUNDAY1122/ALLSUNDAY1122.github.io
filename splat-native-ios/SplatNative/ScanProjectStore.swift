@@ -297,7 +297,7 @@ final class ScanProjectStore {
     }
 
     func loadProject(id: String) throws -> ScanProjectSummary {
-        let url = projectURL(for: id)
+        let url = try validatedProjectURL(id: id, in: rootURL)
         guard fileManager.fileExists(atPath: url.path) else { throw ScanProjectStoreError.projectNotFound }
         let manifest = try loadOrMigrateManifest(projectURL: url)
         let repaired = try repairIfNeeded(manifest: manifest, projectURL: url)
@@ -500,7 +500,7 @@ final class ScanProjectStore {
 
     func restoreFromTrash(id: String) throws {
         try ensureDirectories()
-        let source = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+        let source = try validatedProjectURL(id: id, in: trashURL)
         guard fileManager.fileExists(atPath: source.path) else { throw ScanProjectStoreError.projectNotFound }
         var restoredID = id
         var destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
@@ -528,7 +528,7 @@ final class ScanProjectStore {
     }
 
     func permanentlyDeleteFromTrash(id: String) throws {
-        let url = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+        let url = try validatedProjectURL(id: id, in: trashURL)
         guard fileManager.fileExists(atPath: url.path) else { throw ScanProjectStoreError.projectNotFound }
         try fileManager.removeItem(at: url)
     }
@@ -541,6 +541,20 @@ final class ScanProjectStore {
 
     func projectURL(for id: String) -> URL {
         rootURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+    }
+
+    private func validatedProjectURL(id: String, in directory: URL) throws -> URL {
+        guard !id.isEmpty, id != ".", id != "..",
+              !id.contains("/"), !id.contains("\\"), !id.contains("\0") else {
+            throw ScanProjectStoreError.invalidManifest
+        }
+        let root = directory.standardizedFileURL
+        let candidate = root.appendingPathComponent(id).appendingPathExtension(Self.projectExtension).standardizedFileURL
+        guard candidate.deletingLastPathComponent() == root,
+              candidate.lastPathComponent == "\(id).\(Self.projectExtension)" else {
+            throw ScanProjectStoreError.invalidManifest
+        }
+        return candidate
     }
 
     func worldMapURL(projectURL: URL) -> URL {
