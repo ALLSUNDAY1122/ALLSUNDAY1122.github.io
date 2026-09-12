@@ -81,6 +81,19 @@ final class SplatVideoOutputValidatorTests: XCTestCase {
         }
     }
 
+    func testLeadingProbeDrainsBoundedOpeningWindow() {
+        XCTAssertEqual(
+            SplatVideoOutputValidator.leadingProbeWindow(duration: 4),
+            .init(start: 0, duration: 0.5)
+        )
+        XCTAssertEqual(
+            SplatVideoOutputValidator.leadingProbeWindow(duration: 0.25),
+            .init(start: 0, duration: 0.25)
+        )
+        XCTAssertNil(SplatVideoOutputValidator.leadingProbeWindow(duration: 0))
+        XCTAssertNil(SplatVideoOutputValidator.leadingProbeWindow(duration: .nan))
+    }
+
     func testStandardExportDurationsProbeQuarterMidAndThreeQuarterWindows() {
         XCTAssertEqual(
             SplatVideoOutputValidator.boundedProbeWindows(duration: 4),
