@@ -70,6 +70,50 @@ final class SplatTransientExportWorkspaceTests: XCTestCase {
         XCTAssertTrue(fileManager.fileExists(atPath: file.path))
     }
 
+    func testRemoveRefusesSymlinkedWorkspaceEvenWithMarkerAtDestination() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-export-alias-root-\(UUID().uuidString)", isDirectory: true)
+        let external = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-export-alias-target-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: external, withIntermediateDirectories: true)
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: external)
+        }
+        try Data().write(to: external.appendingPathComponent(".scanlab-transient-export"))
+        let sentinel = external.appendingPathComponent("keep.dat")
+        try Data([0x7A]).write(to: sentinel)
+
+        let alias = root.appendingPathComponent("scanlab-export-aliased", isDirectory: true)
+        try fileManager.createSymbolicLink(at: alias, withDestinationURL: external)
+        SplatTransientExportWorkspace.remove(alias, fileManager: fileManager)
+
+        XCTAssertTrue(fileManager.fileExists(atPath: alias.path))
+        XCTAssertTrue(fileManager.fileExists(atPath: sentinel.path))
+    }
+
+    func testRemoveRefusesSymlinkedOwnershipMarker() throws {
+        let fileManager = FileManager.default
+        let directory = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-export-marker-alias-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? fileManager.removeItem(at: directory) }
+        let externalMarker = fileManager.temporaryDirectory
+            .appendingPathComponent("marker-\(UUID().uuidString)")
+        try Data().write(to: externalMarker)
+        defer { try? fileManager.removeItem(at: externalMarker) }
+        try fileManager.createSymbolicLink(
+            at: directory.appendingPathComponent(".scanlab-transient-export"),
+            withDestinationURL: externalMarker
+        )
+
+        SplatTransientExportWorkspace.remove(directory, fileManager: fileManager)
+
+        XCTAssertTrue(fileManager.fileExists(atPath: directory.path))
+    }
+
     func testCleanupRemovesOnlyStaleOwnedExportDirectories() throws {
         let fileManager = FileManager.default
         let root = fileManager.temporaryDirectory.appendingPathComponent("scanlab-export-cleanup-test-\(UUID().uuidString)", isDirectory: true)
