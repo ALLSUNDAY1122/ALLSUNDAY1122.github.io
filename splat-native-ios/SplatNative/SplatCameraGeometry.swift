@@ -124,11 +124,19 @@ enum SplatCameraGeometry {
     }
 
     static func eye(center: SIMD3<Float>, distance: Float, yaw: Float, pitch: Float) -> SIMD3<Float> {
-        center + SIMD3<Float>(
-            sin(yaw) * cos(pitch) * distance,
-            sin(pitch) * distance,
-            cos(yaw) * cos(pitch) * distance
+        // Gesture state and persisted camera values can be interrupted mid-write or restored from
+        // older schemas. Keep a malformed scalar from poisoning the view matrix before lookAt gets
+        // a chance to sanitize it. Finite values preserve the exact existing orbit semantics.
+        let safeCenter = isFinite(center) ? center : .zero
+        let safeDistance = distance.isFinite ? distance : 2.5
+        let safeYaw = yaw.isFinite ? yaw : 0
+        let safePitch = pitch.isFinite ? pitch : 0
+        let eye = safeCenter + SIMD3<Float>(
+            sin(safeYaw) * cos(safePitch) * safeDistance,
+            sin(safePitch) * safeDistance,
+            cos(safeYaw) * cos(safePitch) * safeDistance
         )
+        return isFinite(eye) ? eye : safeCenter + SIMD3<Float>(0, 0, 2.5)
     }
 
     static func perspective(fovY: Float, aspect: Float, near: Float, far: Float) -> simd_float4x4 {
