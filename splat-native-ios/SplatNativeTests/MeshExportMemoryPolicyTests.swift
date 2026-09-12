@@ -126,6 +126,48 @@ final class MeshExportMemoryPolicyTests: XCTestCase {
         }
     }
 
+    func testPreflightIncludesOBJCompanionTextureWorkingSetForPointCloudConversion() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("c2-mesh-memory-pointcloud-companion-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("capture.obj")
+        try """
+        mtllib capture.mtl
+        v 0 0 0
+        v 1 0 0
+        v 0 1 0
+        vt 0 0
+        vt 1 0
+        vt 0 1
+        usemtl capture
+        f 1/1 2/2 3/3
+        """.write(to: source, atomically: true, encoding: .utf8)
+        try """
+        newmtl capture
+        map_Kd atlas.jpg
+        """.write(to: root.appendingPathComponent("capture.mtl"), atomically: true, encoding: .utf8)
+
+        let texture = root.appendingPathComponent("atlas.jpg")
+        XCTAssertTrue(FileManager.default.createFile(atPath: texture.path, contents: Data([0xff])))
+        let textureHandle = try FileHandle(forWritingTo: texture)
+        try textureHandle.truncate(atOffset: 64 * mib)
+        try textureHandle.close()
+
+        XCTAssertThrowsError(
+            try MeshExportMemoryPolicy.preflight(
+                sourceURL: source,
+                format: .ply,
+                physicalMemoryBytes: 3 * 1_024 * mib
+            )
+        ) { error in
+            guard case MeshExportMemoryPolicy.PolicyError.conversionTooLarge = error else {
+                return XCTFail("Expected point-cloud companion-aware conversionTooLarge, got \(error)")
+            }
+        }
+    }
+
     func testExactOBJPassthroughDoesNotDecodeCompanionWorkingSet() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("c2-mesh-memory-companion-passthrough-\(UUID().uuidString)", isDirectory: true)
