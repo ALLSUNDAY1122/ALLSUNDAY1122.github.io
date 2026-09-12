@@ -24,7 +24,7 @@ extension SplatPreviousResultEvidence {
               snapshot.originalEvidence == evidence,
               snapshot.originalEvidence.byteCount > 0,
               snapshot.originalEvidence.byteCount % 32 == 0,
-              fileManager.fileExists(atPath: backupURL.path),
+              isIndependentRegularFileForIntegrityRecovery(backupURL),
               try fileByteCountForIntegrityRecovery(backupURL, fileManager: fileManager) == evidence.byteCount,
               try sha256ForIntegrityRecovery(backupURL) == snapshot.sha256 else {
             return false
@@ -46,7 +46,8 @@ extension SplatPreviousResultEvidence {
                 to: partialURL,
                 fileManager: fileManager
             )
-            guard try fileByteCountForIntegrityRecovery(partialURL, fileManager: fileManager) == evidence.byteCount,
+            guard isIndependentRegularFileForIntegrityRecovery(partialURL),
+                  try fileByteCountForIntegrityRecovery(partialURL, fileManager: fileManager) == evidence.byteCount,
                   try sha256ForIntegrityRecovery(partialURL) == snapshot.sha256 else {
                 try? fileManager.removeItem(at: partialURL)
                 return false
@@ -67,6 +68,13 @@ extension SplatPreviousResultEvidence {
             try? fileManager.removeItem(at: partialURL)
             throw error
         }
+    }
+
+    private static func isIndependentRegularFileForIntegrityRecovery(_ url: URL) -> Bool {
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]) else {
+            return false
+        }
+        return values.isRegularFile == true && values.isSymbolicLink != true
     }
 
     private static func cloneOrCopyForIntegrityRecovery(
