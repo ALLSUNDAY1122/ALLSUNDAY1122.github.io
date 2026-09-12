@@ -55,6 +55,43 @@ final class SplatVerifiedDigestExportTests: XCTestCase {
         )
     }
 
+    func testVerifiedDigestResolverRejectsCanonicalSymlinkOutsideProject() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory
+            .appendingPathComponent("splat-verified-digest-alias-\(UUID().uuidString)", isDirectory: true)
+        let externalRoot = fileManager.temporaryDirectory
+            .appendingPathComponent("splat-verified-digest-external-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: externalRoot, withIntermediateDirectories: true)
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: externalRoot)
+        }
+
+        let source = root.appendingPathComponent("result.splat")
+        let pointCount = 10
+        try Data(repeating: 0x33, count: pointCount * 32).write(to: source, options: .atomic)
+        let digest = try SplatExportService.sha256Hex(fileURL: source)
+        let canonicalURL = try SplatCanonicalSHAsset.canonicalURL(
+            forLegacySplat: source,
+            verifiedDigest: digest
+        )
+        let external = externalRoot.appendingPathComponent("external-sh3.ply")
+        var completePLY = Data(canonicalSH3Header(pointCount: pointCount).utf8)
+        completePLY.append(Data(repeating: 0, count: pointCount * 48 * MemoryLayout<Float>.size))
+        try completePLY.write(to: external, options: .atomic)
+        try fileManager.createSymbolicLink(at: canonicalURL, withDestinationURL: external)
+
+        XCTAssertNil(
+            SplatCanonicalSHAsset.existingCompleteAsset(
+                forLegacySplat: source,
+                verifiedDigest: digest,
+                expectedPointCount: pointCount
+            )
+        )
+        XCTAssertEqual(try Data(contentsOf: external), completePLY)
+    }
+
     private func canonicalSH3Header(pointCount: Int) -> String {
         var header = "ply\nformat binary_little_endian 1.0\nelement vertex \(pointCount)\n"
         header += "property float f_dc_0\nproperty float f_dc_1\nproperty float f_dc_2\n"
