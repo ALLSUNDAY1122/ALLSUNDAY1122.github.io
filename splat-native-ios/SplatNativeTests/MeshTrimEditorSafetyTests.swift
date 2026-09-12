@@ -13,6 +13,19 @@ final class MeshTrimEditorSafetyTests: XCTestCase {
         XCTAssertEqual(result.usedVertexCount, 4)
     }
 
+    func testVertexBitsetCountsAcrossWordBoundary() throws {
+        var lines = (0..<65).map { index in
+            "v \(index) \(index % 2) 0"
+        }
+        lines.append("f 1 64 65")
+        let url = try writeOBJ(lines)
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+
+        let result = try MeshTrimEngine.trim(url: url, x: 0...1, y: 0...1, z: 0...1)
+        XCTAssertEqual(result.faceCount, 1)
+        XCTAssertEqual(result.usedVertexCount, 3)
+    }
+
     func testRejectsMalformedVertexInsteadOfShiftingFaceIndices() throws {
         let url = try writeOBJ(["v 0 0 0", "v broken 0 0", "v 0 1 0", "v 1 0 0", "f 1 3 4"])
         defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
