@@ -1,0 +1,50 @@
+name: SC Release Status Finalize
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: write
+  issues: write
+jobs:
+  finalize:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[SC-RELEASE] Finalize status consistency'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Remove stale SC blocker statements
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('sc-manabi-sprint/RELEASE_STATUS.md')
+          s=p.read_text(encoding='utf-8')
+          reps={
+          'signed IPA artifactなし。候補workflow `sc-manabi-sprint/app-store/codemagic-sc-workflow.yaml` は commit `0ddb87c4953f950c6837d911378a99d32e8ed9b6` で準備済みだがroot `codemagic.yaml`未統合、正本AppIcon未配置、Apple署名プロファイル未確認。':'signed IPA artifactなし。SC workflowはroot `codemagic.yaml`へ統合・構文検証済み。残る前提は正本AppIcon配置、Apple署名プロファイル確認、App Store Connect Appレコード作成。',
+          'App Store Connect App ID未発行/未確認。signed IPA未生成のため未アップロード。':'App Store Connect App ID未発行（fresh API readでBundle ID一致App=0）。signed IPA未生成のため未アップロード。',
+          '- 未完了内容: Bundle ID最終確定、App Store Connect Appレコード作成、App ID取得。\n- FAIL理由: 現在のBundle IDは暫定。App Store Connect App IDは未発行/未確認。\n- ChatGPTで実行可能: 入力値・SKU・メタデータの準備。\n- 本人操作が必要: Appleログイン、2FA、Appレコード作成。\n- 次: `jp.allsunday1122.scmanabisprint` を採用するか本人確定→Appレコード作成→App IDを正本へ記録。':'- Bundle ID `jp.allsunday1122.scmanabisprint` は最終確定済み。\n- 未完了内容: App Store Connect Appレコード作成、App ID取得。\n- fresh API read #4925ではBundle ID一致App=0。現行ASC gatewayはApp新規作成operationを持たないためHuman Gate。\n- 次: Appレコード作成→App IDを正本へ記録。',
+          '- FAIL理由: AppIcon未配置、Codemagic本番workflow未統合、Apple signing未確認、App Store Connect App IDなし。':'- FAIL理由: AppIcon未配置、Apple signing未確認、App Store Connect App IDなし。Codemagic本番workflow統合はPASS済み。',
+          '- ChatGPTで実行可能: workflow統合、release gate整備、ログ監査。':'- ChatGPTで実行可能: release gate整備、ログ監査。',
+          }
+          for old,new in reps.items():
+              if old not in s: raise SystemExit('missing stale text: '+old[:100])
+              s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit consistency fix
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add sc-manabi-sprint/RELEASE_STATUS.md
+          git diff --cached --check
+          git commit -m 'Finalize SC release status consistency'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: `SC status consistency finished. status=${{ job.status }}; run_id=${context.runId}`});
