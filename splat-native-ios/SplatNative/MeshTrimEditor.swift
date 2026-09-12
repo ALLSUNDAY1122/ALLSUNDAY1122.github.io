@@ -130,9 +130,16 @@ enum MeshTrimEngine {
         var faceCount = 0
         var faceIndices: [Int] = []
         faceIndices.reserveCapacity(4)
+        var verticesSeen = 0
 
         try forEachOBJLine(at: url) { line in
-            guard firstDirective(in: line) == "f" else {
+            let directive = firstDirective(in: line)
+            if directive == "v" {
+                verticesSeen += 1
+                try writeLine(line)
+                return
+            }
+            guard directive == "f" else {
                 try writeLine(line)
                 return
             }
@@ -155,7 +162,7 @@ enum MeshTrimEngine {
                       raw != 0 else {
                     throw error("OBJ面定義が不正です")
                 }
-                let index = raw > 0 ? raw - 1 : vertices.count + raw
+                let index = raw > 0 ? raw - 1 : verticesSeen + raw
                 guard index >= 0, index < vertices.count else {
                     throw error("OBJ面インデックスが範囲外です")
                 }
