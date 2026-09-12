@@ -60,10 +60,11 @@ enum MeshTrimEngine {
             maximumY = max(maximumY, point.y)
             maximumZ = max(maximumZ, point.z)
         }
-        let extentX = max(maximumX - minimumX, 0.000001)
-        let extentY = max(maximumY - minimumY, 0.000001)
-        let extentZ = max(maximumZ - minimumZ, 0.000001)
-        guard extentX.isFinite, extentY.isFinite, extentZ.isFinite else {
+        let extentX = maximumX - minimumX
+        let extentY = maximumY - minimumY
+        let extentZ = maximumZ - minimumZ
+        guard extentX.isFinite, extentY.isFinite, extentZ.isFinite,
+              extentX >= 0, extentY >= 0, extentZ >= 0 else {
             throw error("Meshの座標範囲が大きすぎます")
         }
         let bounds = [x.lowerBound, x.upperBound, y.lowerBound, y.upperBound, z.lowerBound, z.upperBound]
