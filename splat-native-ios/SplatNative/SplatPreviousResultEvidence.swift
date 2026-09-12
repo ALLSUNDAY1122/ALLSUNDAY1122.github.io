@@ -74,7 +74,8 @@ enum SplatPreviousResultEvidence {
         let trustedURL = verification.url
         let projectURL = trustedURL.deletingLastPathComponent()
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
-        guard let evidenceData = try? Data(contentsOf: evidenceURL),
+        guard isIndependentRegularFile(evidenceURL),
+              let evidenceData = try? Data(contentsOf: evidenceURL),
               let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: evidenceData),
               evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               evidence.fileName == ScanProjectStore.splatResultFileName else {
@@ -140,7 +141,8 @@ enum SplatPreviousResultEvidence {
 
         let backupEvidenceURL = projectURL.appendingPathComponent(fileName)
         let backupAssetURL = projectURL.appendingPathComponent(assetFileName)
-        guard let data = try? Data(contentsOf: backupEvidenceURL),
+        guard isIndependentRegularFile(backupEvidenceURL),
+              let data = try? Data(contentsOf: backupEvidenceURL),
               let snapshot = try? JSONDecoder().decode(Snapshot.self, from: data),
               snapshot.schemaVersion == Snapshot.currentSchemaVersion,
               snapshot.originalEvidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
@@ -198,7 +200,9 @@ enum SplatPreviousResultEvidence {
         evidenceURL: URL,
         fileManager: FileManager
     ) -> Bool {
-        guard let data = try? Data(contentsOf: evidenceURL),
+        guard isIndependentRegularFile(outputURL),
+              isIndependentRegularFile(evidenceURL),
+              let data = try? Data(contentsOf: evidenceURL),
               let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: data),
               evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               evidence.fileName == ScanProjectStore.splatResultFileName,
