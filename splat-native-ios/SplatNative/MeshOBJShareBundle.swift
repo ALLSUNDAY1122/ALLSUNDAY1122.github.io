@@ -18,12 +18,14 @@ enum MeshOBJShareBundle {
         }
     }
 
+    private static let scanChunkBytes = 64 * 1024
+    private static let maxDirectiveLineBytes = 64 * 1024
+
     static func copyCompanions(sourceOBJ: URL, workspace: URL) throws -> [URL] {
         try Task.checkCancellation()
         guard sourceOBJ.pathExtension.lowercased() == "obj" else { return [] }
         let root = sourceOBJ.deletingLastPathComponent().standardizedFileURL
-        let text = try String(contentsOf: sourceOBJ, encoding: .utf8)
-        let mtlReferences = materialLibraryReferences(in: text)
+        let mtlReferences = try materialLibraryReferences(sourceOBJ: sourceOBJ)
 
         var shared: [URL] = []
         var copied = Set<String>()
@@ -69,8 +71,7 @@ enum MeshOBJShareBundle {
         try Task.checkCancellation()
         guard sourceOBJ.pathExtension.lowercased() == "obj" else { return 0 }
         let root = sourceOBJ.deletingLastPathComponent().standardizedFileURL
-        let text = try String(contentsOf: sourceOBJ, encoding: .utf8)
-        let mtlReferences = materialLibraryReferences(in: text)
+        let mtlReferences = try materialLibraryReferences(sourceOBJ: sourceOBJ)
 
         var sources = Set<String>()
         var total: Int64 = 0
@@ -101,12 +102,48 @@ enum MeshOBJShareBundle {
         return total
     }
 
-    private static func materialLibraryReferences(in obj: String) -> [String] {
-        obj.split(whereSeparator: { $0.isNewline }).flatMap { rawLine -> [String] in
-            let parts = parseArguments(String(rawLine))
-            guard parts.count >= 2, parts[0].lowercased() == "mtllib" else { return [] }
-            return Array(parts.dropFirst())
+    /// Scans the OBJ incrementally instead of materializing the entire geometry text just to find
+    /// `mtllib` directives. This keeps exact-OBJ share/preflight memory bounded even for large scans.
+    private static func materialLibraryReferences(sourceOBJ: URL) throws -> [String] {
+        let handle = try FileHandle(forReadingFrom: sourceOBJ)
+        defer { try? handle.close() }
+
+        var references: [String] = []
+        var line = Data()
+        line.reserveCapacity(256)
+        var discardingOversizedLine = false
+
+        func consumeLine() {
+            defer {
+                line.removeAll(keepingCapacity: true)
+                discardingOversizedLine = false
+            }
+            guard !discardingOversizedLine, !line.isEmpty else { return }
+            let text = String(decoding: line, as: UTF8.self)
+            let parts = parseArguments(text)
+            guard parts.count >= 2, parts[0].lowercased() == "mtllib" else { return }
+            references.append(contentsOf: parts.dropFirst())
         }
+
+        while true {
+            try Task.checkCancellation()
+            guard let chunk = try handle.read(upToCount: scanChunkBytes), !chunk.isEmpty else { break }
+            for byte in chunk {
+                if byte == 0x0A {
+                    consumeLine()
+                } else if !discardingOversizedLine {
+                    if line.count < maxDirectiveLineBytes {
+                        line.append(byte)
+                    } else {
+                        line.removeAll(keepingCapacity: true)
+                        discardingOversizedLine = true
+                    }
+                }
+            }
+        }
+        if !line.isEmpty || discardingOversizedLine { consumeLine() }
+        try Task.checkCancellation()
+        return references
     }
 
     private static func textureReferences(in mtl: String) -> [String] {
