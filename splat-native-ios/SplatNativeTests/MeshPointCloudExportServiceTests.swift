@@ -46,6 +46,43 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
         }
     }
 
+    func testPLYUsesWavefrontBottomLeftVOriginExactlyOnce() throws {
+        let root = try temporaryRoot("mesh-pointcloud-uv-origin")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let texture = root.appendingPathComponent("atlas.png")
+        // File rows are top-to-bottom: red/green on top, blue/yellow on bottom.
+        // Wavefront vt uses a bottom-left origin, so vt(0,0) must sample blue and vt(0,1) red.
+        try writePNG(
+            to: texture,
+            width: 2,
+            height: 2,
+            rgba: [
+                255, 0, 0, 255,   0, 255, 0, 255,
+                0, 0, 255, 255,   255, 255, 0, 255,
+            ]
+        )
+        try "map_Kd atlas.png\n"
+            .write(to: root.appendingPathComponent("capture.mtl"), atomically: true, encoding: .utf8)
+        let obj = root.appendingPathComponent("capture.obj")
+        try """
+        mtllib capture.mtl
+        v 0 0 0
+        v 1 0 0
+        v 0 1 0
+        vt 0 0
+        vt 1 0
+        vt 0 1
+        f 1/1 2/2 3/3
+        """.write(to: obj, atomically: true, encoding: .utf8)
+
+        let output = root.appendingPathComponent("capture.ply")
+        try MeshPointCloudExportService.exportPLY(sourceOBJ: obj, outputURL: output)
+        let body = try plyBody(at: output)
+        XCTAssertEqual(Array(body[body.startIndex + 12..<body.startIndex + 15]), [0, 0, 255])
+        XCTAssertEqual(Array(body[body.startIndex + 27..<body.startIndex + 30]), [255, 255, 0])
+        XCTAssertEqual(Array(body[body.startIndex + 42..<body.startIndex + 45]), [255, 0, 0])
+    }
+
     func testLASBoundsRemainExactAfterSinglePassComputation() throws {
         let root = try temporaryRoot("mesh-pointcloud-las-bounds")
         defer { try? FileManager.default.removeItem(at: root) }
@@ -108,15 +145,19 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
     }
 
     private func writeSolidPNG(to url: URL, rgba: [UInt8]) throws {
-        precondition(rgba.count == 4)
+        try writePNG(to: url, width: 1, height: 1, rgba: rgba)
+    }
+
+    private func writePNG(to url: URL, width: Int, height: Int, rgba: [UInt8]) throws {
+        precondition(width > 0 && height > 0 && rgba.count == width * height * 4)
         let pixel = Data(rgba)
         guard let provider = CGDataProvider(data: pixel as CFData),
               let image = CGImage(
-                width: 1,
-                height: 1,
+                width: width,
+                height: height,
                 bitsPerComponent: 8,
                 bitsPerPixel: 32,
-                bytesPerRow: 4,
+                bytesPerRow: width * 4,
                 space: CGColorSpaceCreateDeviceRGB(),
                 bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue),
                 provider: provider,
@@ -131,6 +172,16 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
         guard CGImageDestinationFinalize(destination) else {
             throw NSError(domain: "MeshPointCloudExportServiceTests", code: 2)
         }
+    }
+
+    private func plyBody(at url: URL) throws -> Data.SubSequence {
+        let data = try Data(contentsOf: url)
+        let marker = Data("end_header\n".utf8)
+        guard let range = data.range(of: marker) else {
+            XCTFail("Missing PLY header terminator")
+            return data[data.endIndex..<data.endIndex]
+        }
+        return data[range.upperBound...]
     }
 
     private func readDoubleLE(_ data: Data, at offset: Int) -> Double {
