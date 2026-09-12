@@ -1,0 +1,77 @@
+name: SC Codemagic Root Integration
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  integrate:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[SC-RELEASE] Integrate Codemagic workflow'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install YAML parser
+        run: python -m pip install --disable-pip-version-check PyYAML
+      - name: Integrate SC workflow into root codemagic.yaml
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+
+          root = Path('codemagic.yaml')
+          snippet = Path('sc-manabi-sprint/app-store/codemagic-sc-workflow.yaml')
+          text = root.read_text(encoding='utf-8')
+          if '\n  sc-manabi-sprint-ios:\n' not in text:
+              block = snippet.read_text(encoding='utf-8')
+              lines = [line for line in block.splitlines() if not line.startswith('#')]
+              while lines and not lines[0].strip():
+                  lines.pop(0)
+              indented = '\n'.join(('  ' + line) if line else '' for line in lines).rstrip() + '\n'
+              if not text.endswith('\n'):
+                  text += '\n'
+              text += '\n' + indented
+              root.write_text(text, encoding='utf-8')
+
+          data = yaml.safe_load(root.read_text(encoding='utf-8'))
+          workflows = data.get('workflows') or {}
+          sc = workflows.get('sc-manabi-sprint-ios')
+          assert isinstance(sc, dict), 'SC workflow missing after integration'
+          assert sc['environment']['ios_signing']['bundle_identifier'] == 'jp.allsunday1122.scmanabisprint'
+          assert sc['publishing']['app_store_connect']['submit_to_testflight'] is True
+          assert sc['publishing']['app_store_connect']['submit_to_app_store'] is False
+          print('PASS: SC Codemagic workflow integrated and YAML parsed')
+          PY
+      - name: Commit root integration
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- codemagic.yaml; then
+            echo 'No change required'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add codemagic.yaml
+            git commit -m 'Integrate SC Codemagic release workflow'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `SC Codemagic root integration finished. status=${{ job.status }}; run_id=${context.runId}`
+            });
