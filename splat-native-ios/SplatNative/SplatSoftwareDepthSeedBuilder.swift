@@ -623,7 +623,7 @@ enum SplatSoftwareDepthSeedBuilder {
               y >= 2,
               x < Float(frame.gray.width - 2),
               y < Float(frame.gray.height - 2) else { return nil }
-        return SIMD2<Float>>(x, y)
+        return SIMD2<Float>(x, y)
     }
 
     private static func matrixIsFinite(_ matrix: simd_float4x4) -> Bool {
