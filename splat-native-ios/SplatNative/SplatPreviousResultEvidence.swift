@@ -147,20 +147,15 @@ enum SplatPreviousResultEvidence {
               snapshot.originalEvidence.fileName == ScanProjectStore.splatResultFileName,
               snapshot.originalEvidence.byteCount > 0,
               snapshot.originalEvidence.byteCount % 32 == 0,
-              fileManager.fileExists(atPath: backupAssetURL.path),
+              isIndependentRegularFile(backupAssetURL),
               (try? fileByteCount(backupAssetURL, fileManager: fileManager)) == snapshot.originalEvidence.byteCount,
               (try? sha256Hex(fileURL: backupAssetURL)) == snapshot.sha256 else {
             return manifest
         }
 
         do {
-            if fileManager.fileExists(atPath: outputURL.path) {
-                try fileManager.removeItem(at: outputURL)
-            }
-            if fileManager.fileExists(atPath: currentEvidenceURL.path) {
-                try fileManager.removeItem(at: currentEvidenceURL)
-            }
-
+            // Verify a complete replacement in a sibling partial file before touching whatever
+            // remains at result.splat. This avoids a data-loss window if clone/copy/hash fails.
             try materializeExactFile(
                 sourceURL: backupAssetURL,
                 destinationURL: outputURL,
@@ -223,11 +218,14 @@ enum SplatPreviousResultEvidence {
         expectedSHA256: String,
         fileManager: FileManager
     ) throws {
+        guard isIndependentRegularFile(sourceURL) else {
+            throw PreservationError.resultChangedDuringPreservation
+        }
+
         let partialURL = destinationURL
             .deletingLastPathComponent()
             .appendingPathComponent(".\(destinationURL.lastPathComponent).partial")
         try? fileManager.removeItem(at: partialURL)
-        try? fileManager.removeItem(at: destinationURL)
 
         do {
             // Preserve logical independence from the active result. APFS clonefile provides
@@ -243,16 +241,28 @@ enum SplatPreviousResultEvidence {
                 try fileManager.copyItem(at: sourceURL, to: partialURL)
             }
 
-            guard try fileByteCount(partialURL, fileManager: fileManager) == expectedByteCount,
+            guard isIndependentRegularFile(partialURL),
+                  try fileByteCount(partialURL, fileManager: fileManager) == expectedByteCount,
                   try sha256Hex(fileURL: partialURL) == expectedSHA256 else {
                 throw PreservationError.resultChangedDuringPreservation
             }
-            try fileManager.moveItem(at: partialURL, to: destinationURL)
+
+            if fileManager.fileExists(atPath: destinationURL.path) {
+                _ = try fileManager.replaceItemAt(destinationURL, withItemAt: partialURL)
+            } else {
+                try fileManager.moveItem(at: partialURL, to: destinationURL)
+            }
         } catch {
             try? fileManager.removeItem(at: partialURL)
-            try? fileManager.removeItem(at: destinationURL)
             throw error
         }
+    }
+
+    private static func isIndependentRegularFile(_ url: URL) -> Bool {
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]) else {
+            return false
+        }
+        return values.isRegularFile == true && values.isSymbolicLink != true
     }
 
     private static func fileByteCount(_ url: URL, fileManager: FileManager) throws -> Int64 {
