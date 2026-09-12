@@ -12,7 +12,10 @@ extension SplatPersistedEditMaterializer {
         points: [SplatPoint]
     ) async throws -> [SplatPoint] {
         try Task.checkCancellation()
-        let settings = loadSettings(sourceURL: sourceURL)
+        // Reuse the durable viewer sidecar gate instead of bypassing it with an unrestricted
+        // Data(contentsOf:). Video export must see exactly the same bounded/project-local edit
+        // settings as the live viewer, including backup recovery when the primary sidecar is corrupt.
+        let settings = SplatViewerEditStore.load(sourceURL: sourceURL)?.settings ?? .default
         guard settings != .default else { return points }
 
         let bounds = settings.hasCrop
