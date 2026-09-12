@@ -46,6 +46,13 @@ enum MeshDetailSimplifierEngine {
         for line in text.split(whereSeparator: \.isNewline) {
             let fields = line.split(whereSeparator: \.isWhitespace)
             guard let directive = fields.first else { continue }
+            if directive == "mtllib" || directive == "usemtl" || directive == "vt" {
+                // This simplifier currently rebuilds geometry and normals only. Continuing with a
+                // textured OBJ would silently produce a visually degraded untextured result, which
+                // is worse than leaving the known-good source intact. Fail closed until UV/material
+                // remapping is implemented explicitly.
+                throw error("テクスチャ付きMeshの軽量化は色を失うため実行できません。元Meshを保持します")
+            }
             if directive == "v" {
                 guard fields.count >= 4,
                       let x = Float(fields[1]),
