@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install dependencies
-        run: python -m pip install --disable-pip-version-check PyYAML
+        run: python -m pip install --disable-pip-version-check PyYAML gdown
       - name: Materialize non-secret command
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
@@ -69,9 +69,9 @@ jobs:
         if: startsWith(github.event.issue.title, '[FP3-CMD] MATERIALIZE')
         run: |
           set -euo pipefail
-          curl -fL --retry 3 --retry-delay 2 \
-            'https://drive.usercontent.google.com/download?id=1iqk3OO4uVDNPe_orfpyksoYwNSAXwnkk&export=download&confirm=t' \
-            -o /tmp/FP3_KAKOMON_COACH_v1.1.0.html
+          python -m gdown 'https://drive.google.com/uc?id=1iqk3OO4uVDNPe_orfpyksoYwNSAXwnkk' \
+            -O /tmp/FP3_KAKOMON_COACH_v1.1.0.html
+          test "$(wc -c < /tmp/FP3_KAKOMON_COACH_v1.1.0.html)" -eq 263111
           python3 fp3-manabi-sprint/tools/materialize_fp3_bank.py \
             /tmp/FP3_KAKOMON_COACH_v1.1.0.html \
             fp3-manabi-sprint/question_bank_180.payload.json > /tmp/fp3-materialize.json
