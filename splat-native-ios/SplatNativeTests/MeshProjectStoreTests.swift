@@ -163,6 +163,39 @@ final class MeshProjectStoreTests: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: outside.path))
     }
 
+    func testLibraryListingRejectsManifestIDThatDoesNotMatchArchiveDirectory() throws {
+        let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x5A)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        let manifestURL = archived.projectURL.appendingPathComponent(MeshProjectStore.libraryManifestFileName)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        var manifest = try decoder.decode(MeshProjectStore.LibraryManifest.self, from: Data(contentsOf: manifestURL))
+        manifest.id = "different-id"
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        try encoder.encode(manifest).write(to: manifestURL, options: .atomic)
+
+        XCTAssertTrue(store.listProjects().isEmpty)
+    }
+
+    func testTrashListingAndRestoreRejectSymlinkedArchiveRoot() throws {
+        let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x5B)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        try store.moveToTrash(projectURL: archived.projectURL)
+        let trashEntry = store.trashURL.appendingPathComponent(archived.id).appendingPathExtension(MeshProjectStore.projectExtension)
+        let external = rootURL.appendingPathComponent("external-archive").appendingPathExtension(MeshProjectStore.projectExtension)
+        try FileManager.default.moveItem(at: trashEntry, to: external)
+        try FileManager.default.createSymbolicLink(at: trashEntry, withDestinationURL: external)
+
+        XCTAssertTrue(store.listTrash().isEmpty)
+        XCTAssertThrowsError(try store.restoreFromTrash(id: archived.id)) { error in
+            guard case MeshProjectStoreError.invalidProject = error else {
+                return XCTFail("Expected invalidProject, got \(error)")
+            }
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: external.path))
+    }
+
     func testAdoptsLegacyCompletedWorkingProjectButIgnoresIncompleteOne() throws {
         let completed = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x66)
         let incomplete = rootURL.appendingPathComponent("incomplete.meshproject", isDirectory: true)

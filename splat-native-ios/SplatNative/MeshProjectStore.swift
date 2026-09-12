@@ -239,8 +239,8 @@ final class MeshProjectStore {
 
     func moveToTrash(projectURL: URL) throws {
         try ensureDirectories()
+        try validateArchivedProjectRoot(projectURL)
         guard projectURL.deletingLastPathComponent().standardizedFileURL == libraryURL.standardizedFileURL,
-              projectURL.pathExtension.lowercased() == Self.projectExtension,
               fileManager.fileExists(atPath: projectURL.path) else {
             throw MeshProjectStoreError.archiveMissing
         }
@@ -253,6 +253,7 @@ final class MeshProjectStore {
         try ensureDirectories()
         let source = try validatedTrashProjectURL(id: id)
         guard fileManager.fileExists(atPath: source.path) else { throw MeshProjectStoreError.archiveMissing }
+        try validateArchivedProjectRoot(source)
 
         var restoredID = id
         var destination = libraryURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
@@ -271,6 +272,7 @@ final class MeshProjectStore {
     func permanentlyDeleteFromTrash(id: String) throws {
         let target = try validatedTrashProjectURL(id: id)
         guard fileManager.fileExists(atPath: target.path) else { throw MeshProjectStoreError.archiveMissing }
+        try validateArchivedProjectRoot(target)
         try fileManager.removeItem(at: target)
     }
 
@@ -301,7 +303,12 @@ final class MeshProjectStore {
     }
 
     private func summary(at projectURL: URL) throws -> MeshProjectSummary {
+        try validateArchivedProjectRoot(projectURL)
         let manifest = try readLibraryManifest(projectURL: projectURL)
+        let expectedID = projectURL.deletingPathExtension().lastPathComponent
+        guard !expectedID.isEmpty, manifest.id == expectedID else {
+            throw MeshProjectStoreError.invalidProject
+        }
         let resultURL = try archivedResultURL(
             projectURL: projectURL,
             resultFileName: manifest.resultFileName
@@ -336,6 +343,20 @@ final class MeshProjectStore {
             reprocessSupported: reprocessSupported,
             storageBytes: logicalDirectorySize(projectURL)
         )
+    }
+
+    private func validateArchivedProjectRoot(_ projectURL: URL) throws {
+        guard projectURL.isFileURL,
+              projectURL.pathExtension.lowercased() == Self.projectExtension,
+              let values = try? projectURL.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              values.isDirectory == true,
+              values.isSymbolicLink != true else {
+            throw MeshProjectStoreError.invalidProject
+        }
+        let parent = projectURL.deletingLastPathComponent().standardizedFileURL
+        guard parent == libraryURL.standardizedFileURL || parent == trashURL.standardizedFileURL else {
+            throw MeshProjectStoreError.invalidProject
+        }
     }
 
     private func readSourceManifest(projectURL: URL) -> SourceManifest? {
