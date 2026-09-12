@@ -258,7 +258,7 @@ enum CapturePolicy {
         guard count > 0 else { return nil }
         let dx = cameraPosition.x - center.x
         let dz = cameraPosition.z - center.z
-        guard hypot(dx, dz) >= 0.08 else { return nil }
+        guard dx.isFinite, dz.isFinite, hypot(dx, dz) >= 0.08 else { return nil }
         let angle = atan2(dx, dz)
         let normalized = (angle + .pi) / (2 * .pi)
         return min(count - 1, max(0, Int(floor(normalized * Float(count)))))
@@ -267,27 +267,36 @@ enum CapturePolicy {
     static func viewDirectionSector(transform: simd_float4x4, count: Int) -> Int {
         guard count > 1 else { return 0 }
         let forward = SIMD3<Float>(-transform.columns.2.x, -transform.columns.2.y, -transform.columns.2.z)
+        guard forward.x.isFinite, forward.z.isFinite else { return 0 }
         let angle = atan2(forward.x, forward.z)
+        guard angle.isFinite else { return 0 }
         let normalized = (angle + .pi) / (2 * .pi)
+        guard normalized.isFinite else { return 0 }
         return min(count - 1, max(0, Int(floor(normalized * Float(count)))))
     }
 
     static func elevationBand(cameraPosition: SIMD3<Float>, center: SIMD3<Float>) -> Int? {
         let delta = cameraPosition - center
         let horizontal = hypot(delta.x, delta.z)
-        guard horizontal >= 0.08 else { return nil }
+        guard horizontal.isFinite, delta.y.isFinite, horizontal >= 0.08 else { return nil }
         let angle = atan2(delta.y, horizontal)
+        guard angle.isFinite else { return nil }
         if angle < -0.18 { return 0 }
         if angle > 0.18 { return 2 }
         return 1
     }
 
     static func spatialCell(cameraPosition: SIMD3<Float>, cellSize: Float = 0.25) -> CaptureGridCell {
-        let safeSize = max(0.10, cellSize)
-        return CaptureGridCell(
-            x: Int(floor(cameraPosition.x / safeSize)),
-            z: Int(floor(cameraPosition.z / safeSize))
-        )
+        let safeSize = cellSize.isFinite && cellSize >= 0.10 ? cellSize : 0.25
+        guard cameraPosition.x.isFinite, cameraPosition.z.isFinite else {
+            return CaptureGridCell(x: 0, z: 0)
+        }
+        // Scene coordinates are expected to stay close to the capture origin. Clamp before Int
+        // conversion so corrupt/extreme AR transforms can never trap while computing coverage.
+        let maxIndex: Float = 1_000_000
+        let x = max(-maxIndex, min(maxIndex, floor(cameraPosition.x / safeSize)))
+        let z = max(-maxIndex, min(maxIndex, floor(cameraPosition.z / safeSize)))
+        return CaptureGridCell(x: Int(x), z: Int(z))
     }
 
     static func objectCoverageSatisfied(orbitSectors: Int, elevationBands: Int) -> Bool {
