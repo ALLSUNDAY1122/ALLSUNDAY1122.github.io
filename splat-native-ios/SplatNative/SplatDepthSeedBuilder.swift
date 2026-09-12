@@ -24,7 +24,7 @@ struct SplatDepthSeedFrame: Sendable {
 enum SplatDepthSeedBuilder {
     // Recipe version is a cache-compatibility epoch, not the file-format version. Bump it whenever
     // seed-generation semantics change so a same-RAW comparison cannot silently reuse stale points3D.ply.
-    static let recipeVersion = 7
+    static let recipeVersion = 6
     static let targetSamplesPerFrame = 900
     static let voxelDensity: Float = 100
     static let minimumDepth: Float = 0.18
