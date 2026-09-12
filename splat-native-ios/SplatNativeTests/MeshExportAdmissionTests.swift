@@ -130,6 +130,40 @@ final class MeshExportAdmissionTests: XCTestCase {
         )
     }
 
+    func testPointCloudPreflightAllowsMissingTextureGeometryFallback() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("c2-mesh-pointcloud-missing-texture-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("mesh.obj")
+        let material = root.appendingPathComponent("mesh.mtl")
+        try "mtllib mesh.mtl\nv 0 0 0\nv 1 0 0\nv 0 1 0\nvt 0 0\nvt 1 0\nvt 0 1\nusemtl scan\nf 1/1 2/2 3/3\n"
+            .write(to: source, atomically: true, encoding: .utf8)
+        try "newmtl scan\nmap_Kd missing.png\n"
+            .write(to: material, atomically: true, encoding: .utf8)
+
+        XCTAssertNoThrow(
+            try MeshExportAdmission.preflight(
+                sourceURL: source,
+                format: .ply,
+                availableCapacityOverride: Int64.max
+            )
+        )
+        XCTAssertThrowsError(
+            try MeshExportAdmission.preflight(
+                sourceURL: source,
+                format: .glb,
+                availableCapacityOverride: Int64.max
+            )
+        ) { error in
+            guard case MeshOBJShareBundle.BundleError.missingReference(let reference) = error else {
+                return XCTFail("Expected missingReference for strict scene export, got \(error)")
+            }
+            XCTAssertEqual(reference, "missing.png")
+        }
+    }
+
     func testPreflightRejectsUnsafeOBJCompanionBeforeConvertedExport() throws {
         let parent = FileManager.default.temporaryDirectory
             .appendingPathComponent("c2-mesh-obj-conversion-containment-\(UUID().uuidString)", isDirectory: true)
