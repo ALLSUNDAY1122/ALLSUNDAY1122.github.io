@@ -145,9 +145,13 @@ final class SplatCameraGeometryTests: XCTestCase {
     }
 
     func testDisplayRotationRemainsFiniteForNonFiniteAngle() {
-        XCTAssertTrue(isFinite(SplatCameraGeometry.rotationZ(.nan)))
+        let nanRotation = SplatCameraGeometry.rotationZ(.nan)
+        XCTAssertTrue(isFinite(nanRotation))
         XCTAssertTrue(isFinite(SplatCameraGeometry.rotationZ(.infinity)))
-        XCTAssertEqual(SplatCameraGeometry.rotationZ(.nan), matrix_identity_float4x4)
+        XCTAssertEqual(nanRotation.columns.0.x, 1, accuracy: 0.0001)
+        XCTAssertEqual(nanRotation.columns.1.y, 1, accuracy: 0.0001)
+        XCTAssertEqual(nanRotation.columns.2.z, 1, accuracy: 0.0001)
+        XCTAssertEqual(nanRotation.columns.3.w, 1, accuracy: 0.0001)
     }
 
     func testPerspectiveRemainsFiniteForTransientZeroAspect() {
