@@ -95,7 +95,7 @@ final class SplatPreviousResultAliasRecoveryTests: XCTestCase {
         let result = try store.commitPendingSplat(projectURL: projectURL)
         _ = try store.updateManifest(projectURL: projectURL) { value in
             value.stage = .finished
-            value.outputs[ScanRepresentationKind.splat.rawValue]] = ScanProjectStore.splatResultFileName
+            value.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
         }
         return result
     }
