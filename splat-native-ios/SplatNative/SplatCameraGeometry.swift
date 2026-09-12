@@ -60,8 +60,14 @@ enum SplatCameraGeometry {
 
         guard !xs.isEmpty else { return Framing(center: .zero, distance: 2.5, radius: 0.10) }
         xs.sort(); ys.sort(); zs.sort()
-        let middle = xs.count / 2
-        let center = SIMD3<Float>(xs[middle], ys[middle], zs[middle])
+        // Most bounded large-scene samples contain exactly 6,000 points. Choosing the upper of the
+        // two middle coordinates biases the camera center toward +X/+Y/+Z and can visibly shift the
+        // scene as sample parity changes. Use the statistical median for even samples as well.
+        let center = SIMD3<Float>(
+            median(ofSorted: xs),
+            median(ofSorted: ys),
+            median(ofSorted: zs)
+        )
 
         var radii: [Float] = []
         radii.reserveCapacity(xs.count)
@@ -192,6 +198,13 @@ enum SplatCameraGeometry {
             SIMD4<Float>(0, 0, 1, 0),
             SIMD4<Float>(0, 0, 0, 1)
         ))
+    }
+
+    private static func median(ofSorted values: [Float]) -> Float {
+        let upperIndex = values.count / 2
+        guard values.count.isMultiple(of: 2) else { return values[upperIndex] }
+        // Halving before addition avoids overflow when two large finite coordinates share a sign.
+        return values[upperIndex - 1] * 0.5 + values[upperIndex] * 0.5
     }
 
     private static func isFinite(_ value: SIMD3<Float>) -> Bool {
