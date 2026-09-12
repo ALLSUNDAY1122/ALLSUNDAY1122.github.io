@@ -76,10 +76,16 @@ enum SplatVideoMemoryPolicy {
         isLowPowerModeEnabled: Bool
     ) -> UInt64 {
         let proportionalBudget = physicalMemoryBytes / physicalMemoryDivisor
-        let baseBudget = min(
+        let nominalFloorApplied = min(
             maximumBudgetBytes,
             max(minimumBudgetBytes, proportionalBudget)
         )
+        // The quality floor must never manufacture more usable RAM than the platform reports.
+        // Supported iPhones normally report several GiB, so their existing 256...512 MiB budgets
+        // are unchanged. Tiny/zero reports instead fail closed before renderer + encoder buffers can
+        // exceed the environment that actually exists.
+        let physicalSafetyCap = physicalMemoryBytes / 2
+        let baseBudget = min(nominalFloorApplied, physicalSafetyCap)
         let thermallyAdjusted: UInt64
         switch thermalState {
         case .nominal, .fair:
