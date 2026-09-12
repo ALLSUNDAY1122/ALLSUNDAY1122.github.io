@@ -157,6 +157,45 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
         }
     }
 
+    func testPLYReloadsTextureWhenMaterialReturnsAfterSwitch() throws {
+        let root = try temporaryRoot("mesh-pointcloud-material-reload")
+        defer { try? FileManager.default.removeItem(at: root) }
+        try writeSolidPNG(to: root.appendingPathComponent("red.png"), rgba: [255, 0, 0, 255])
+        try writeSolidPNG(to: root.appendingPathComponent("green.png"), rgba: [0, 255, 0, 255])
+        try """
+        newmtl redMaterial
+        map_Kd red.png
+        newmtl greenMaterial
+        map_Kd green.png
+        """.write(to: root.appendingPathComponent("capture.mtl"), atomically: true, encoding: .utf8)
+        let obj = root.appendingPathComponent("capture.obj")
+        try """
+        mtllib capture.mtl
+        v 0 0 0
+        v 1 0 0
+        v 0 1 0
+        vt 0.5 0.5
+        vt 0.5 0.5
+        vt 0.5 0.5
+        usemtl redMaterial
+        f 1/1 2/2 3/3
+        usemtl greenMaterial
+        f 1/1 2/2 3/3
+        usemtl redMaterial
+        f 1/1 2/2 3/3
+        """.write(to: obj, atomically: true, encoding: .utf8)
+
+        let output = root.appendingPathComponent("capture.ply")
+        try MeshPointCloudExportService.exportPLY(sourceOBJ: obj, outputURL: output)
+        let body = try plyBody(at: output)
+        XCTAssertEqual(body.count, 9 * 15)
+        for record in 0..<9 {
+            let colorOffset = body.startIndex + record * 15 + 12
+            let expected: [UInt8] = (3..<6).contains(record) ? [0, 255, 0] : [255, 0, 0]
+            XCTAssertEqual(Array(body[colorOffset..<colorOffset + 3]), expected)
+        }
+    }
+
     func testLASBoundsRemainExactAfterSinglePassComputation() throws {
         let root = try temporaryRoot("mesh-pointcloud-las-bounds")
         defer { try? FileManager.default.removeItem(at: root) }
