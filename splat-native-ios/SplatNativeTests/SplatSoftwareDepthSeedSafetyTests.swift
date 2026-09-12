@@ -70,6 +70,52 @@ final class SplatSoftwareDepthSeedSafetyTests: XCTestCase {
         XCTAssertNil(SplatSoftwareDepthSeedBuilder.scaledPrincipalPointCoordinate(100, scale: -1))
     }
 
+    func testParabolicMinimumOffsetFindsSubHypothesisMinimum() throws {
+        let offset = try XCTUnwrap(
+            SplatSoftwareDepthSeedBuilder.parabolicMinimumOffset(
+                leftCost: 1.5625,
+                centerCost: 0.0625,
+                rightCost: 0.5625
+            )
+        )
+        XCTAssertEqual(offset, 0.25, accuracy: 0.0001)
+    }
+
+    func testParabolicMinimumOffsetKeepsSymmetricMinimumCentered() throws {
+        let offset = try XCTUnwrap(
+            SplatSoftwareDepthSeedBuilder.parabolicMinimumOffset(
+                leftCost: 1,
+                centerCost: 0,
+                rightCost: 1
+            )
+        )
+        XCTAssertEqual(offset, 0, accuracy: 0.0001)
+    }
+
+    func testParabolicMinimumOffsetRejectsUnsafeFits() {
+        XCTAssertNil(
+            SplatSoftwareDepthSeedBuilder.parabolicMinimumOffset(
+                leftCost: 1,
+                centerCost: 1,
+                rightCost: 1
+            )
+        )
+        XCTAssertNil(
+            SplatSoftwareDepthSeedBuilder.parabolicMinimumOffset(
+                leftCost: .nan,
+                centerCost: 0,
+                rightCost: 1
+            )
+        )
+        XCTAssertNil(
+            SplatSoftwareDepthSeedBuilder.parabolicMinimumOffset(
+                leftCost: 9,
+                centerCost: 4,
+                rightCost: 1
+            )
+        )
+    }
+
     private var identityMatrix: [[Float]] {
         [
             [1, 0, 0, 0],
