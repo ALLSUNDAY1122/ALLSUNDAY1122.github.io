@@ -26,6 +26,28 @@ final class MeshDetailSimplifierSafetyTests: XCTestCase {
         }
     }
 
+    func testAllowsInlineCommentAfterValidFace() throws {
+        let vertices = [
+            "v 0 0 0", "v 1 0 0", "v 0 1 0", "v 1 1 0", "v 0 0 1",
+            "v 1 0 1", "v 0 1 1", "v 1 1 1", "v 2 0 0", "v 2 1 0"
+        ]
+        let url = try writeOBJ(vertices: vertices, faces: ["f 1 2 3 # front triangle"])
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+
+        XCTAssertNoThrow(try MeshDetailSimplifierEngine.simplify(url: url, retainedFraction: 0.6))
+    }
+
+    func testRejectsMalformedVertexInsteadOfShiftingSubsequentIndices() throws {
+        var vertices = (0..<9).map { "v \($0) 0 0" }
+        vertices.insert("v broken 1 2", at: 3)
+        let url = try writeOBJ(vertices: vertices, faces: ["f 1 2 3"])
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+
+        XCTAssertThrowsError(try MeshDetailSimplifierEngine.simplify(url: url, retainedFraction: 0.6)) { error in
+            XCTAssertEqual((error as NSError).domain, "ScanLab.MeshDetailSimplifier")
+        }
+    }
+
     func testRejectsNonFiniteVertexBeforeGridIntegerConversion() throws {
         var vertices = (0..<9).map { "v \($0) 0 0" }
         vertices.append("v nan 1 2")
