@@ -509,7 +509,19 @@ final class ScanProjectStore {
         }
         try fileManager.moveItem(at: source, to: destination)
         if restoredID != id {
-            _ = try updateManifest(projectURL: destination) { $0.id = restoredID }
+            do {
+                _ = try updateManifest(projectURL: destination) { $0.id = restoredID }
+            } catch {
+                // The move and manifest-ID rewrite form one logical restore transaction. If the
+                // atomic manifest write fails, put the project back in Trash instead of leaving a
+                // Library folder whose directory ID and manifest ID disagree. Never overwrite a
+                // newly appeared source path while rolling back.
+                if !fileManager.fileExists(atPath: source.path),
+                   fileManager.fileExists(atPath: destination.path) {
+                    try? fileManager.moveItem(at: destination, to: source)
+                }
+                throw error
+            }
         }
     }
 
