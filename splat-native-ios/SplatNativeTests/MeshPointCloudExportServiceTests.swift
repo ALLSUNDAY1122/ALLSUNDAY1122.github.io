@@ -87,8 +87,6 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
         let root = try temporaryRoot("mesh-pointcloud-uv-origin")
         defer { try? FileManager.default.removeItem(at: root) }
         let texture = root.appendingPathComponent("atlas.png")
-        // File rows are top-to-bottom: red/green on top, blue/yellow on bottom.
-        // Wavefront vt uses a bottom-left origin, so vt(0,0) must sample blue and vt(0,1) red.
         try writePNG(
             to: texture,
             width: 2,
@@ -120,6 +118,45 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
         XCTAssertEqual(Array(body[body.startIndex + 42..<body.startIndex + 45]), [255, 0, 0])
     }
 
+    func testPLYUsesEachFacesOwnMaterialTexture() throws {
+        let root = try temporaryRoot("mesh-pointcloud-multi-material")
+        defer { try? FileManager.default.removeItem(at: root) }
+        try writeSolidPNG(to: root.appendingPathComponent("red.png"), rgba: [255, 0, 0, 255])
+        try writeSolidPNG(to: root.appendingPathComponent("green.png"), rgba: [0, 255, 0, 255])
+        try """
+        newmtl redMaterial
+        map_Kd red.png
+        newmtl greenMaterial
+        map_Kd green.png
+        """.write(to: root.appendingPathComponent("capture.mtl"), atomically: true, encoding: .utf8)
+        let obj = root.appendingPathComponent("capture.obj")
+        try """
+        mtllib capture.mtl
+        v 0 0 0
+        v 1 0 0
+        v 0 1 0
+        v 1 1 0
+        vt 0.5 0.5
+        vt 0.5 0.5
+        vt 0.5 0.5
+        vt 0.5 0.5
+        usemtl redMaterial
+        f 1/1 2/2 3/3
+        usemtl greenMaterial
+        f 2/2 4/4 3/3
+        """.write(to: obj, atomically: true, encoding: .utf8)
+
+        let output = root.appendingPathComponent("capture.ply")
+        try MeshPointCloudExportService.exportPLY(sourceOBJ: obj, outputURL: output)
+        let body = try plyBody(at: output)
+        XCTAssertEqual(body.count, 6 * 15)
+        for record in 0..<6 {
+            let colorOffset = body.startIndex + record * 15 + 12
+            let expected: [UInt8] = record < 3 ? [255, 0, 0] : [0, 255, 0]
+            XCTAssertEqual(Array(body[colorOffset..<colorOffset + 3]), expected)
+        }
+    }
+
     func testLASBoundsRemainExactAfterSinglePassComputation() throws {
         let root = try temporaryRoot("mesh-pointcloud-las-bounds")
         defer { try? FileManager.default.removeItem(at: root) }
@@ -134,12 +171,12 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
         try MeshPointCloudExportService.exportLAS12(sourceOBJ: obj, outputURL: output)
         let data = try Data(contentsOf: output)
         XCTAssertEqual(data.count, 227 + 3 * 20)
-        XCTAssertEqual(readDoubleLE(data, at: 179), 7.25, accuracy: 0.000_000_1) // max X
-        XCTAssertEqual(readDoubleLE(data, at: 187), -2.5, accuracy: 0.000_000_1) // min X
-        XCTAssertEqual(readDoubleLE(data, at: 195), 6.5, accuracy: 0.000_000_1) // max Y
-        XCTAssertEqual(readDoubleLE(data, at: 203), -3, accuracy: 0.000_000_1) // min Y
-        XCTAssertEqual(readDoubleLE(data, at: 211), 10.75, accuracy: 0.000_000_1) // max Z
-        XCTAssertEqual(readDoubleLE(data, at: 219), -8, accuracy: 0.000_000_1) // min Z
+        XCTAssertEqual(readDoubleLE(data, at: 179), 7.25, accuracy: 0.000_000_1)
+        XCTAssertEqual(readDoubleLE(data, at: 187), -2.5, accuracy: 0.000_000_1)
+        XCTAssertEqual(readDoubleLE(data, at: 195), 6.5, accuracy: 0.000_000_1)
+        XCTAssertEqual(readDoubleLE(data, at: 203), -3, accuracy: 0.000_000_1)
+        XCTAssertEqual(readDoubleLE(data, at: 211), 10.75, accuracy: 0.000_000_1)
+        XCTAssertEqual(readDoubleLE(data, at: 219), -8, accuracy: 0.000_000_1)
     }
 
     func testPLYDoesNotTreatMapOptionTokensAsTextureFilename() throws {
