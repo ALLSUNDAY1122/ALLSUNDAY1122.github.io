@@ -32,8 +32,8 @@
 | 専門監査 | **PASS** | `sc-manabi-sprint/app-store/release-preflight.md`。IPA利用条件・著作権・2026年度非公開問題不使用・制度監査・Privacy Manifest・輸出コンプライアンスを記録。Notion正本 `https://app.notion.com/p/3b609c10697d8191b58fdcffd8ec7f44` に一次根拠と運用ルールを保持。 |
 | 再監査 | **PASS** | build-number対応変更後に実装検証を再発火。最新 run `31375145017` conclusion `success`。`sc-manabi-sprint/build-results/ios-preflight.txt`: source `9b1bf60f2ad19ef9603f8d86753fc36dc64eebc0`, result記録 commit `c24d78f1f569f2aa4352da072bfc38b3adaf3ede`。 |
 | Releaseビルド | **PASS** | **署名なし** physical-device Release build。workflow `.github/workflows/sc-manabi-ios-preflight.yml` は `xcodebuild -configuration Release -destination generic/platform=iOS CODE_SIGNING_ALLOWED=NO`。run `31375145017` step 13 `Unsigned physical-device build` success、step 14 bundle inspection success。 |
-| 署名IPA | **本人操作待ち** | signed IPA artifactなし。候補workflow `sc-manabi-sprint/app-store/codemagic-sc-workflow.yaml` は commit `0ddb87c4953f950c6837d911378a99d32e8ed9b6` で準備済みだがroot `codemagic.yaml`未統合、正本AppIcon未配置、Apple署名プロファイル未確認。 |
-| App Store Connectアップロード | **本人操作待ち** | App Store Connect App ID未発行/未確認。signed IPA未生成のため未アップロード。 |
+| 署名IPA | **本人操作待ち** | signed IPA artifactなし。SC workflowはroot `codemagic.yaml`へ統合・構文検証済み。残る前提は正本AppIcon配置、Apple署名プロファイル確認、App Store Connect Appレコード作成。 |
+| App Store Connectアップロード | **本人操作待ち** | App Store Connect App ID未発行（fresh API readでBundle ID一致App=0）。signed IPA未生成のため未アップロード。 |
 | Internal TestFlight | **本人操作待ち** | App Store Connectアップロード未実施。Internal TestFlight buildなし、実機確認未実施。 |
 
 ## 主要証跡
@@ -70,11 +70,10 @@
 - 残件はcanonical AppIconのGitHub配置後に署名Release Buildを実行すること。
 
 ### 3. Bundle ID / App Store Connect App ID
-- 未完了内容: Bundle ID最終確定、App Store Connect Appレコード作成、App ID取得。
-- FAIL理由: 現在のBundle IDは暫定。App Store Connect App IDは未発行/未確認。
-- ChatGPTで実行可能: 入力値・SKU・メタデータの準備。
-- 本人操作が必要: Appleログイン、2FA、Appレコード作成。
-- 次: `jp.allsunday1122.scmanabisprint` を採用するか本人確定→Appレコード作成→App IDを正本へ記録。
+- Bundle ID `jp.allsunday1122.scmanabisprint` は最終確定済み。
+- 未完了内容: App Store Connect Appレコード作成、App ID取得。
+- fresh API read #4925ではBundle ID一致App=0。現行ASC gatewayはApp新規作成operationを持たないためHuman Gate。
+- 次: Appレコード作成→App IDを正本へ記録。
 
 ### 4. Paid Apps Agreement / IAP商品
 - 未完了内容: Paid Apps Agreement、税務・銀行状態確認、Non-Consumable `jp.allsunday1122.scmanabisprint.premium` 作成、価格確定。
@@ -85,8 +84,8 @@
 
 ### 5. 署名・IPA・アップロード・Internal TestFlight
 - 未完了内容: Apple署名、signed IPA生成、App Store Connect upload、Internal TestFlight配信。
-- FAIL理由: AppIcon未配置、Codemagic本番workflow未統合、Apple signing未確認、App Store Connect App IDなし。
-- ChatGPTで実行可能: workflow統合、release gate整備、ログ監査。
+- FAIL理由: AppIcon未配置、Apple signing未確認、App Store Connect App IDなし。Codemagic本番workflow統合はPASS済み。
+- ChatGPTで実行可能: release gate整備、ログ監査。
 - 本人操作が必要: Apple Developer/Codemagic認証、証明書/provisioning、2FA、必要な契約確認、TestFlight実機確認。
 - 次: 前項完了後にCodemagic signed build→App Store Connect upload→Internal TestFlight。
 
