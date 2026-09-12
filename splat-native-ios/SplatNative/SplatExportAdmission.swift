@@ -58,9 +58,13 @@ enum SplatExportAdmission {
         catch { throw AdmissionError.untrustedSource }
         let trustedURL = verification.url
 
-        // Let the viewer store recover a corrupt primary from a trusted backup first. If an unsafe
-        // primary still remains (for example an external symlink or oversized file), fail closed
-        // before any legacy export materializer can bypass the bounded viewer-store reader.
+        // Never enter backup self-heal while the primary path itself is an external symlink or an
+        // oversized file. That keeps preflight read-only for unsafe paths rather than depending on
+        // atomic-write symlink replacement semantics. Ordinary bounded/corrupt JSON may still be
+        // recovered from its project-local backup exactly as before.
+        guard viewerPrimarySidecarIsSafeOrMissing(sourceURL: trustedURL) else {
+            throw AdmissionError.untrustedSource
+        }
         _ = SplatViewerEditStore.load(sourceURL: trustedURL)
         guard viewerPrimarySidecarIsSafeOrMissing(sourceURL: trustedURL) else {
             throw AdmissionError.untrustedSource
