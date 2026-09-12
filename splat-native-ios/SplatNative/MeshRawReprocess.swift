@@ -19,29 +19,25 @@ enum MeshRawReprocessor {
             return
         }
 
+        // `prepareWorkingProject` performs the authoritative ImageIO decodability gate before it
+        // creates any transient workspace. That gate may probe up to 20 saved frames, so execute
+        // the whole preparation off MainActor instead of decoding those images while the sheet UI
+        // is expected to remain responsive. The bridge remains authoritative for direct callers;
+        // we no longer repeat the exact same decode pass immediately afterwards.
         let prepared: PreparedMeshRawProject
         do {
-            prepared = try MeshRawProjectBridge.prepareWorkingProject(for: project)
+            prepared = try await Task.detached(priority: .userInitiated) {
+                try MeshRawProjectBridge.prepareWorkingProject(for: project)
+            }.value
         } catch {
             model.phase = .failed(error.localizedDescription)
             return
         }
 
-        let rawValidation = Task.detached(priority: .userInitiated) {
-            MeshRawInputValidator.hasMinimumUsableImages(in: prepared.imagesURL)
-        }
-        let hasUsableRaw = await rawValidation.value
         if Task.isCancelled {
             MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
             model.phase = .captured
             model.statusMessage = "raw再処理を中断しました。保存rawは保持されています"
-            return
-        }
-        guard hasUsableRaw else {
-            MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
-            let message = "raw再処理には読み取り可能な画像が20枚以上必要です。保存rawが欠損または破損していないか確認してください。"
-            model.phase = .failed(message)
-            model.statusMessage = message
             return
         }
 
