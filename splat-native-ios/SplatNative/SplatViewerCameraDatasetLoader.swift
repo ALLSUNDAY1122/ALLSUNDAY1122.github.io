@@ -105,7 +105,15 @@ enum SplatViewerCameraDatasetLoader {
                     }
                 }
 
-                guard let component = translationComponent, component.isFinite else {
+                // The downstream normalization and initial-camera average intentionally use Float.
+                // Bound each accepted component so even maximumReturnedPositions same-sign samples
+                // cannot overflow their accumulation. This threshold is still astronomically larger
+                // than any physically meaningful ARKit trajectory and only rejects corrupt metadata.
+                let safeAccumulationComponent = Float.greatestFiniteMagnitude
+                    / Float(maximumReturnedPositions * 2)
+                guard let component = translationComponent,
+                      component.isFinite,
+                      abs(component) <= safeAccumulationComponent else {
                     position = nil
                     return
                 }
