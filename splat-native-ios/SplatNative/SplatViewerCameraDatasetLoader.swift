@@ -16,10 +16,12 @@ enum SplatViewerCameraDatasetLoader {
             decodedPositions.reserveCapacity(min(frames.count ?? 0, maximumReturnedPositions * 2))
             var validPositionIndex = 0
             var retentionStride = 1
+            var lastValidPosition: SIMD3<Float>?
 
             while !frames.isAtEnd {
                 let frame = try frames.decode(Frame.self)
                 guard let position = frame.position else { continue }
+                lastValidPosition = position
 
                 if validPositionIndex % retentionStride == 0 {
                     decodedPositions.append(position)
@@ -44,7 +46,14 @@ enum SplatViewerCameraDatasetLoader {
                 }
             }
 
-            positions = Self.evenlySampled(decodedPositions, limit: maximumReturnedPositions)
+            var sampled = Self.evenlySampled(decodedPositions, limit: maximumReturnedPositions)
+            // The final camera pose is useful to trajectory-envelope normalization and was retained
+            // by the previous post-decode sampler. Online compaction can end between stride slots,
+            // so explicitly keep the true endpoint without allowing the working array to grow.
+            if let lastValidPosition, !sampled.isEmpty {
+                sampled[sampled.count - 1] = lastValidPosition
+            }
+            positions = sampled
         }
 
         private static func evenlySampled(_ positions: [SIMD3<Float>], limit: Int) -> [SIMD3<Float>] {
