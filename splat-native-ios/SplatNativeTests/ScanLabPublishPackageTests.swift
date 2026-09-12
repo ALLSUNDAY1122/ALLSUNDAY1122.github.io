@@ -41,6 +41,49 @@ final class ScanLabPublishPackageTests: XCTestCase {
         let source = try await temporaryValidSPZ(); defer { removeTemporaryTree(containing: source) }
         XCTAssertThrowsError(try ScanLabPublishPackageBuilder.build(from: source, maximumBytes: 8)) { XCTAssertEqual($0 as? ScanLabPublishPackageError, .sourceTooLarge) }
     }
+    func testRejectsSymlinkedSourceOutsideProject() async throws {
+        let fileManager = FileManager.default
+        let source = try await temporaryValidSPZ()
+        let sourceDirectory = source.deletingLastPathComponent()
+        let aliasDirectory = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try fileManager.createDirectory(at: aliasDirectory, withIntermediateDirectories: true)
+        defer {
+            try? fileManager.removeItem(at: sourceDirectory)
+            try? fileManager.removeItem(at: aliasDirectory)
+        }
+        let alias = aliasDirectory.appendingPathComponent("input.spz")
+        try fileManager.createSymbolicLink(at: alias, withDestinationURL: source)
+        XCTAssertThrowsError(try ScanLabPublishPackageBuilder.build(from: alias)) {
+            XCTAssertEqual($0 as? ScanLabPublishPackageError, .invalidSource)
+        }
+    }
+    func testVerificationRejectsAliasedScene() async throws {
+        let fileManager = FileManager.default
+        let source = try await temporaryValidSPZ(); defer { removeTemporaryTree(containing: source) }
+        let package = try ScanLabPublishPackageBuilder.build(from: source); defer { ScanLabPublishPackageBuilder.cleanup(package) }
+        let external = fileManager.temporaryDirectory.appendingPathComponent("publish-scene-\(UUID().uuidString).spz")
+        try fileManager.copyItem(at: package.sceneURL, to: external)
+        defer { try? fileManager.removeItem(at: external) }
+        try fileManager.removeItem(at: package.sceneURL)
+        try fileManager.createSymbolicLink(at: package.sceneURL, withDestinationURL: external)
+        XCTAssertFalse(try ScanLabPublishPackageBuilder.verify(package))
+    }
+    func testCleanupRefusesUnownedNamespacedDirectory() throws {
+        let fileManager = FileManager.default
+        let directory = fileManager.temporaryDirectory.appendingPathComponent("scanlab-publish-unowned-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        let sentinel = directory.appendingPathComponent("keep.dat")
+        try Data([0x41]).write(to: sentinel)
+        defer { try? fileManager.removeItem(at: directory) }
+        let package = ScanLabPublishPackage(
+            directoryURL: directory,
+            sceneURL: directory.appendingPathComponent("scene.spz"),
+            manifestURL: directory.appendingPathComponent("manifest.json"),
+            manifest: ScanLabPublishManifest(schemaVersion: 1, sceneFile: "scene.spz", sceneByteCount: 1, sceneSHA256: String(repeating: "0", count: 64), mediaType: "application/vnd.scanlab.spz", createdAt: "2026-09-12T00:00:00Z")
+        )
+        ScanLabPublishPackageBuilder.cleanup(package, fileManager: fileManager)
+        XCTAssertTrue(fileManager.fileExists(atPath: sentinel.path))
+    }
     private func temporaryValidSPZ() async throws -> URL {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
