@@ -122,10 +122,11 @@ enum SplatCameraGeometry {
 
     static func eye(center: SIMD3<Float>, distance: Float, yaw: Float, pitch: Float) -> SIMD3<Float> {
         // Gesture state and persisted camera values can be interrupted mid-write or restored from
-        // older schemas. Keep a malformed scalar from poisoning the view matrix before lookAt gets
-        // a chance to sanitize it. Finite values preserve the exact existing orbit semantics.
+        // older schemas. Keep malformed scalars from poisoning or inverting the view matrix before
+        // lookAt gets a chance to sanitize it. Match the framing/export camera's usable distance
+        // envelope so a finite negative or extreme persisted distance cannot flip or lose the scene.
         let safeCenter = isFinite(center) ? center : .zero
-        let safeDistance = distance.isFinite ? distance : 2.5
+        let safeDistance = distance.isFinite ? min(60, max(0.35, distance)) : 2.5
         let safeYaw = yaw.isFinite ? yaw : 0
         let safePitch = pitch.isFinite ? pitch : 0
         let eye = safeCenter + SIMD3<Float>(
