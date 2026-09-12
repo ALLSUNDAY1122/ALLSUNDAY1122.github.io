@@ -52,6 +52,31 @@ jobs:
           if found: raise SystemExit('prohibited markers: '+repr(found))
           print('PASS: FP3 core static contract')
           PY
+      - name: Native premium-boundary regression gates
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('fp3-manabi-sprint/ios/App.swift').read_text(encoding='utf-8')
+          required=[
+            'jp.allsunday1122.fp3manabisprint.premium',
+            'window.__nativeStoreKitUpdate',
+            "post('purchase')", "post('restore')",
+            "String(q.year)==='2026'",
+            "el.id === 'startWeak'",
+            "el.closest('#domains')",
+            "t.includes('2024') || t.includes('2025')",
+            'FP3級 学科', '2026-04-01基準',
+            '出典：日本FP協会・金融財政事情研究会',
+            '学習用に表現・解説・法令基準を加工しています。'
+          ]
+          missing=[x for x in required if x not in s]
+          if missing: raise SystemExit('missing premium-boundary markers: '+repr(missing))
+          if 'if(state.premium && typeof originalBalanced12' not in s:
+              raise SystemExit('premium 12-question path missing')
+          if 'if(!state.premium && premiumTarget(el))' not in s:
+              raise SystemExit('free lock interception missing')
+          print('PASS: FP3 native premium boundary contract')
+          PY
 
   ios-simulator:
     runs-on: macos-latest
