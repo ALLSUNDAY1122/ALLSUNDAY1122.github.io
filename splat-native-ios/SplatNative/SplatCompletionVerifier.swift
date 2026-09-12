@@ -84,7 +84,10 @@ enum SplatCompletionVerifier {
             throw VerificationError.completionEvidenceMissing
         }
 
-        guard isIndependentRegularFile(expectedURL),
+        // Do not reject a non-regular result before the strong verifier. It deliberately owns that
+        // classification so a trusted protected backup can repair a replaced/symlinked result in
+        // the integrity-failure recovery path below.
+        guard fileManager.fileExists(atPath: expectedURL.path),
               let attributes = try? fileManager.attributesOfItem(atPath: expectedURL.path),
               let size = attributes[.size] as? NSNumber,
               size.int64Value == evidence.byteCount else {
