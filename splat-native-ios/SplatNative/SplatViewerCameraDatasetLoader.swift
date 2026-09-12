@@ -76,7 +76,10 @@ enum SplatViewerCameraDatasetLoader {
     static func cameraPositions(for renderURL: URL, fileManager: FileManager = .default) -> [SIMD3<Float>] {
         let root = renderURL.deletingLastPathComponent().standardizedFileURL
         let url = root.appendingPathComponent("transforms.json").standardizedFileURL
-        guard url.deletingLastPathComponent() == root,
+        guard let rootValues = try? root.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              rootValues.isDirectory == true,
+              rootValues.isSymbolicLink != true,
+              url.deletingLastPathComponent() == root,
               let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]),
               values.isRegularFile == true,
               values.isSymbolicLink != true,
