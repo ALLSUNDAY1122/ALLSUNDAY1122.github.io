@@ -103,4 +103,28 @@ final class SplatViewerSidecarWriteSafetyTests: XCTestCase {
         XCTAssertNil(try? Data(contentsOf: missingTarget))
         XCTAssertEqual(try fileManager.destinationOfSymbolicLink(atPath: primary.path), missingTarget.path)
     }
+
+    func testCroppedMaterializationDoesNotPreallocateFullInputCapacity() {
+        XCTAssertEqual(
+            SplatPersistedEditMaterializer.initialOutputReserveCapacity(
+                inputPointCount: 1_000_000,
+                hasCrop: true
+            ),
+            0
+        )
+        XCTAssertEqual(
+            SplatPersistedEditMaterializer.initialOutputReserveCapacity(
+                inputPointCount: 1_000_000,
+                hasCrop: false
+            ),
+            1_000_000
+        )
+        XCTAssertEqual(
+            SplatPersistedEditMaterializer.initialOutputReserveCapacity(
+                inputPointCount: 0,
+                hasCrop: true
+            ),
+            0
+        )
+    }
 }
