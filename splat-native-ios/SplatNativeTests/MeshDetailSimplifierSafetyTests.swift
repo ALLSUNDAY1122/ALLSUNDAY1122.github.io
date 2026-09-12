@@ -37,6 +37,17 @@ final class MeshDetailSimplifierSafetyTests: XCTestCase {
         XCTAssertNoThrow(try MeshDetailSimplifierEngine.simplify(url: url, retainedFraction: 0.6))
     }
 
+    func testAcceptsTabAndLeadingWhitespaceInOBJRecords() throws {
+        let vertices = [
+            "\tv\t0\t0\t0", "v\t1\t0\t0", " v 0 1 0", "v\t1\t1\t0", "v 0 0 1",
+            "v 1 0 1", "v 0 1 1", "v 1 1 1", "v 2 0 0", "v 2 1 0"
+        ]
+        let url = try writeOBJ(vertices: vertices, faces: ["\tf\t1\t2\t3"])
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+
+        XCTAssertNoThrow(try MeshDetailSimplifierEngine.simplify(url: url, retainedFraction: 0.6))
+    }
+
     func testRejectsMalformedVertexInsteadOfShiftingSubsequentIndices() throws {
         var vertices = (0..<9).map { "v \($0) 0 0" }
         vertices.insert("v broken 1 2", at: 3)
