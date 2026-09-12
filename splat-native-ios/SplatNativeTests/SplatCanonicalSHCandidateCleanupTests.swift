@@ -139,6 +139,30 @@ final class SplatCanonicalSHCandidateCleanupTests: XCTestCase {
         XCTAssertTrue(fileManager.fileExists(atPath: candidate.path))
     }
 
+    func testEndHeaderTokenInsideCommentCannotHideTruncatedVertexPayload() throws {
+        let fileManager = FileManager.default
+        let directory = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-canonical-fake-end-header-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? fileManager.removeItem(at: directory) }
+
+        let url = directory.appendingPathComponent("result.sh3-test.ply")
+        let pointCount = 2
+        var header = validSH3Header(pointCount: pointCount, comment: "ordinary")
+        let terminator = Data("end_header\n".utf8)
+        XCTAssertTrue(header.count >= terminator.count)
+        header.removeLast(terminator.count)
+        header.append(Data("comment fake end_header marker\nend_header\n".utf8))
+
+        let scalarCountPerVertex = 3 + 3 + 45
+        let fullPayloadBytes = pointCount * scalarCountPerVertex * MemoryLayout<Float>.size
+        var truncated = header
+        truncated.append(Data(count: fullPayloadBytes - 8))
+        try truncated.write(to: url, options: .atomic)
+
+        XCTAssertFalse(SplatCanonicalSHAsset.hasCompleteVertexPayload(at: url, expectedPointCount: pointCount))
+    }
+
     private func validSH3PLY(pointCount: Int, comment: String) -> Data {
         var data = validSH3Header(pointCount: pointCount, comment: comment)
         let scalarCountPerVertex = 3 + 3 + 45
