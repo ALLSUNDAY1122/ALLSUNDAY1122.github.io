@@ -38,6 +38,7 @@ enum SplatExportAdmission {
     }
 
     private static let safetyReserveBytes: Int64 = 128 * 1_024 * 1_024
+    private static let maximumViewerSidecarByteCount: Int64 = 64 * 1_024
 
     static func preflight(sourceURL: URL, kind: Kind, availableCapacityOverride: Int64? = nil) throws -> URL {
         try preflightResult(
@@ -57,24 +58,23 @@ enum SplatExportAdmission {
         catch { throw AdmissionError.untrustedSource }
         let trustedURL = verification.url
 
+        // Let the viewer store recover a corrupt primary from a trusted backup first. If an unsafe
+        // primary still remains (for example an external symlink or oversized file), fail closed
+        // before any legacy export materializer can bypass the bounded viewer-store reader.
         _ = SplatViewerEditStore.load(sourceURL: trustedURL)
+        guard viewerPrimarySidecarIsSafeOrMissing(sourceURL: trustedURL) else {
+            throw AdmissionError.untrustedSource
+        }
 
         let projectURL = trustedURL.deletingLastPathComponent()
         let sourceBytes = try fileSize(at: trustedURL)
         let pointCount = Int(sourceBytes / 32)
 
-        // Completion verification has just hashed the full result. Reuse that trusted SHA-256 to
-        // derive the content-addressed canonical path instead of immediately scanning the same large
-        // `.splat` a second time. Schema and binary-payload checks below remain fail-closed.
         let canonicalInspection = inspectCanonicalOnce(
             sourceURL: trustedURL,
             verifiedDigest: verification.sha256,
             expectedPointCount: pointCount
         )
-        // Older SH0 projects legitimately have no canonical file. If the canonical path does exist,
-        // any malformed schema, mismatched point count/SH degree, or truncated vertex payload means
-        // the high-quality generation is damaged and export must fail closed rather than silently
-        // producing a lower-fidelity result from the legacy `.splat`.
         if canonicalInspection.candidateExists && canonicalInspection.completeAsset == nil {
             throw AdmissionError.untrustedSource
         }
@@ -110,14 +110,9 @@ enum SplatExportAdmission {
         case .video(let width, let height, let framesPerSecond, let duration):
             let pixelsPerSecond = Double(max(1, width)) * Double(max(1, height)) * Double(max(1, framesPerSecond))
             let estimatedBitrate = max(2_000_000, pixelsPerSecond * 0.12)
-            // A corrupted/persisted configuration can surface NaN here. Converting NaN directly
-            // to Int64 traps, turning a preflight safety check into an app crash. Treat malformed
-            // duration as the same conservative one-second floor used for zero/negative values.
             let safeDuration = duration.isFinite ? max(1, duration) : 1
             let estimatedVideoBytes = estimatedBitrate * safeDuration / 8
             let videoBytes: Int64
-            // Double(Int64.max) rounds to 2^63 on 64-bit platforms, which is already outside
-            // Int64's representable range. Decide saturation before the integer conversion.
             if !estimatedVideoBytes.isFinite || estimatedVideoBytes >= Double(Int64.max) {
                 videoBytes = Int64.max
             } else {
@@ -157,6 +152,22 @@ enum SplatExportAdmission {
             candidateExists: true,
             completeAsset: SplatCanonicalSHAsset.Asset(url: canonicalURL, descriptor: descriptor)
         )
+    }
+
+    private static func viewerPrimarySidecarIsSafeOrMissing(
+        sourceURL: URL,
+        fileManager: FileManager = .default
+    ) -> Bool {
+        let primary = SplatViewerEditStore.primaryURL(for: sourceURL)
+        guard fileManager.fileExists(atPath: primary.path) else { return true }
+        guard let values = try? primary.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true,
+              let attributes = try? fileManager.attributesOfItem(atPath: primary.path),
+              let size = attributes[.size] as? NSNumber else {
+            return false
+        }
+        return size.int64Value >= 0 && size.int64Value <= maximumViewerSidecarByteCount
     }
 
     private static func fileSize(at url: URL) throws -> Int64 {
