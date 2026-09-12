@@ -110,7 +110,15 @@ enum SplatExportAdmission {
         case .video(let width, let height, let framesPerSecond, let duration):
             let pixelsPerSecond = Double(max(1, width)) * Double(max(1, height)) * Double(max(1, framesPerSecond))
             let estimatedBitrate = max(2_000_000, pixelsPerSecond * 0.12)
-            let videoBytes = Int64(min(Double(Int64.max), (estimatedBitrate * max(1, duration) / 8).rounded(.up)))
+            // A corrupted/persisted configuration can surface NaN here. Converting NaN directly
+            // to Int64 traps, turning a preflight safety check into an app crash. Treat malformed
+            // duration as the same conservative one-second floor used for zero/negative values.
+            let safeDuration = duration.isFinite ? max(1, duration) : 1
+            let estimatedVideoBytes = estimatedBitrate * safeDuration / 8
+            let boundedVideoBytes = estimatedVideoBytes.isFinite
+                ? min(Double(Int64.max), max(0, estimatedVideoBytes))
+                : Double(Int64.max)
+            let videoBytes = Int64(boundedVideoBytes.rounded(.up))
             outputEstimate = saturatingAdd(effectiveSource, videoBytes)
         }
         return saturatingAdd(outputEstimate, safetyReserveBytes)
