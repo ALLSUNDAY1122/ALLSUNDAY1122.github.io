@@ -100,6 +100,8 @@ enum SplatMeasurementFormatter {
 /// Durable viewer-edit sidecar. The backup is intentionally separate from the scan manifest:
 /// viewer edits can be recovered without making the reconstructed asset itself untrusted.
 struct SplatViewerEditStore {
+    private static let maximumSidecarByteCount: Int64 = 64 * 1024
+
     static func primaryURL(for sourceURL: URL) -> URL {
         sourceURL.deletingPathExtension().appendingPathExtension("viewer.json")
     }
@@ -111,13 +113,13 @@ struct SplatViewerEditStore {
     static func load(sourceURL: URL, fileManager: FileManager = .default) -> (settings: SplatEditSettings, recoveredFromBackup: Bool)? {
         let decoder = JSONDecoder()
         let primary = primaryURL(for: sourceURL)
-        if let data = try? Data(contentsOf: primary),
+        if let data = readSettingsDataIfSafe(at: primary, fileManager: fileManager),
            let decoded = try? decoder.decode(SplatEditSettings.self, from: data) {
             return (decoded.normalized(), false)
         }
 
         let backup = backupURL(for: sourceURL)
-        guard let data = try? Data(contentsOf: backup),
+        guard let data = readSettingsDataIfSafe(at: backup, fileManager: fileManager),
               let decoded = try? decoder.decode(SplatEditSettings.self, from: data) else {
             return nil
         }
@@ -135,20 +137,15 @@ struct SplatViewerEditStore {
         let decoder = JSONDecoder()
         let data = try encoder.encode(settings.normalized())
 
-        // Keep one known-good generation. Copy rather than move so an interrupted backup update
-        // never removes the only valid primary before the new atomic write lands.
         var preservedPreviousGeneration = false
-        if fileManager.fileExists(atPath: primary.path),
-           let oldData = try? Data(contentsOf: primary),
+        if let oldData = readSettingsDataIfSafe(at: primary, fileManager: fileManager),
            (try? decoder.decode(SplatEditSettings.self, from: oldData)) != nil {
             try oldData.write(to: backup, options: .atomic)
             preservedPreviousGeneration = true
         }
 
-        // A backup file can exist but itself be truncated/corrupt. Treat only a decodable backup as
-        // a recovery generation; otherwise the new successful primary must reseed it.
         let existingBackupIsValid: Bool
-        if let backupData = try? Data(contentsOf: backup),
+        if let backupData = readSettingsDataIfSafe(at: backup, fileManager: fileManager),
            (try? decoder.decode(SplatEditSettings.self, from: backupData)) != nil {
             existingBackupIsValid = true
         } else {
@@ -157,12 +154,22 @@ struct SplatViewerEditStore {
 
         try data.write(to: primary, options: .atomic)
 
-        // The very first successful edit, or a successful save after backup corruption, must leave
-        // a usable recovery generation. A valid older backup is intentionally preserved when the
-        // previous primary was corrupt so one bad generation cannot erase the last known-good edit.
         if !preservedPreviousGeneration && !existingBackupIsValid {
             try data.write(to: backup, options: .atomic)
         }
+    }
+
+    private static func readSettingsDataIfSafe(at url: URL, fileManager: FileManager) -> Data? {
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true,
+              let attributes = try? fileManager.attributesOfItem(atPath: url.path),
+              let size = attributes[.size] as? NSNumber,
+              size.int64Value >= 0,
+              size.int64Value <= maximumSidecarByteCount else {
+            return nil
+        }
+        return try? Data(contentsOf: url)
     }
 }
 
@@ -236,9 +243,6 @@ final class SplatViewerState: ObservableObject {
 
     func attach(url: URL) {
         guard sourceURL != url else { return }
-        // If the user switches directly from one saved scan to another while a debounced edit is
-        // pending, persistNow() must still target the old source URL. Flushing before replacing
-        // sourceURL preserves the final edit without risking a delayed write into the new scan.
         if sourceURL != nil {
             persistNow()
         } else {
