@@ -71,12 +71,15 @@ enum MeshPointCloudExportService {
         var maxZ: Double
     }
 
+    /// Keep only URLs in the material table. Decoded RGBA samplers can each reach ~64 MiB at the
+    /// 4096² cap, so retaining one sampler per material makes peak memory grow with material count.
+    /// The writer resolves/decode-switches lazily as face material changes and retains one sampler.
     private struct MaterialTextureSet {
-        let byMaterial: [String: TextureSampler]
-        let fallback: TextureSampler?
+        let byMaterial: [String: URL]
+        let fallback: URL?
 
-        func sampler(for material: String?) -> TextureSampler? {
-            if let material, let sampler = byMaterial[material] { return sampler }
+        func textureURL(for material: String?) -> URL? {
+            if let material, let url = byMaterial[material] { return url }
             return fallback
         }
     }
@@ -309,10 +312,23 @@ enum MeshPointCloudExportService {
         case .coloredVertices:
             for vertex in geometry.vertices { try body(vertex, vertex.color) }
         case .texturedCorners(let textures):
+            var activeTextureURL: URL?
+            var activeSampler: TextureSampler?
             for triangle in geometry.triangles {
-                guard let sampler = textures.sampler(for: triangle.material) else {
+                guard let textureURL = textures.textureURL(for: triangle.material) else {
                     throw ExportError.invalidTexture
                 }
+                if activeTextureURL != textureURL {
+                    try Task.checkCancellation()
+                    guard let sampler = try loadTextureSampler(textureURL) else {
+                        throw ExportError.invalidTexture
+                    }
+                    // Assign the new sampler only after decode succeeds so the previous large RGBA
+                    // buffer can be released immediately when the material changes.
+                    activeSampler = sampler
+                    activeTextureURL = textureURL
+                }
+                guard let sampler = activeSampler else { throw ExportError.invalidTexture }
                 for corner in triangle.corners {
                     guard corner.vertex >= 0, corner.vertex < geometry.vertices.count,
                           let textureIndex = corner.texCoord,
@@ -416,7 +432,7 @@ enum MeshPointCloudExportService {
         return resolved >= 0 && resolved < count ? resolved : nil
     }
 
-    /// Builds face-material-aware texture samplers. A single texture remains a safe fallback for
+    /// Builds face-material-aware texture URL mappings. A single texture remains a safe fallback for
     /// legacy OBJ files without `usemtl`; multiple textures are never guessed across materials.
     private static func materialTextureSet(for geometry: Geometry, sourceOBJ: URL) throws -> MaterialTextureSet? {
         guard !geometry.materialLibraries.isEmpty else { return nil }
@@ -475,23 +491,7 @@ enum MeshPointCloudExportService {
             }
         }
 
-        var samplerCache: [String: TextureSampler] = [:]
-        func sampler(for url: URL) throws -> TextureSampler {
-            let key = url.standardizedFileURL.path
-            if let cached = samplerCache[key] { return cached }
-            guard let loaded = try loadTextureSampler(url) else { throw ExportError.invalidTexture }
-            samplerCache[key] = loaded
-            return loaded
-        }
-
-        var byMaterial: [String: TextureSampler] = [:]
-        for (material, url) in textureURLsByMaterial {
-            if geometry.triangles.contains(where: { $0.material == material }) {
-                byMaterial[material] = try sampler(for: url)
-            }
-        }
-        let fallback = try fallbackURL.map { try sampler(for: $0) }
-        return MaterialTextureSet(byMaterial: byMaterial, fallback: fallback)
+        return MaterialTextureSet(byMaterial: textureURLsByMaterial, fallback: fallbackURL)
     }
 
     /// Tokenizes OBJ/MTL arguments while preserving quoted paths, escaped whitespace and comments.
