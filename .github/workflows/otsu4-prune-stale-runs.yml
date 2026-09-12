@@ -1,0 +1,42 @@
+name: Otsu4 Prune Stale CI Runs
+
+on:
+  push:
+    branches: [ feat/otsu4-360-productization ]
+    paths:
+      - '.github/workflows/otsu4-prune-stale-runs.yml'
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Cancel older unfinished Otsu4 macOS runs and keep newest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: feat/otsu4-360-productization
+        run: |
+          set -euo pipefail
+          for workflow in otsu4-native-typecheck.yml otsu4-xcode-build.yml; do
+            echo "Pruning $workflow"
+            runs=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$workflow/runs?per_page=100")
+            newest=$(printf '%s' "$runs" | jq -r --arg branch "$TARGET_BRANCH" '
+              [.workflow_runs[] | select(.head_branch == $branch and .status != "completed")]
+              | sort_by(.id)
+              | last
+              | .id // empty')
+            echo "Keeping newest unfinished run: ${newest:-none}"
+            printf '%s' "$runs" | jq -r --arg branch "$TARGET_BRANCH" --arg newest "$newest" '
+              .workflow_runs[]
+              | select(.head_branch == $branch and .status != "completed")
+              | select((.id|tostring) != $newest)
+              | .id' | while read -r id; do
+                [ -n "$id" ] || continue
+                echo "Canceling stale run $id"
+                gh api --method POST "repos/$GITHUB_REPOSITORY/actions/runs/$id/cancel" >/dev/null || true
+              done
+          done

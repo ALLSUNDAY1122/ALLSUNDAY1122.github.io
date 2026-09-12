@@ -245,17 +245,27 @@ workflows:
       app_store_connect: codemagic
     environment:
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: jp.allsunday1122.otsu4
+        provisioning_profiles:
+          - otsu4_appstore
       vars:
+        APP_STORE_ID: '6799755566'
+        APPLE_TEAM_ID: MN3D2ZM44N
         BUNDLE_ID: jp.allsunday1122.otsu4
+        CODEMAGIC_PROFILE: otsu4_appstore
         XCODE_PROJECT: native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj
         XCODE_SCHEME: Otsu4Sprint
       xcode: latest
     scripts:
+      - name: Verify canonical identifiers
+        script: |
+          set -euo pipefail
+          test "$BUNDLE_ID" = "jp.allsunday1122.otsu4"
+          test "$APP_STORE_ID" = "6799755566"
+          test "$APPLE_TEAM_ID" = "MN3D2ZM44N"
+          test "$CODEMAGIC_PROFILE" = "otsu4_appstore"
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-      - name: Prepare audited 360-question resources and icon
+      - name: Prepare audited final 720-question resources and icon
         script: bash "$CM_BUILD_DIR/native-ios/Otsu4Sprint/prepare-ios.sh"
       - name: Generate Xcode project
         script: |
@@ -274,10 +284,13 @@ workflows:
           import json,sys
           data=json.load(open(sys.argv[1],encoding='utf-8'))
           assert data['contentVersion']=='otsu4-2026-08-product-v2'
-          assert len(data['questions'])==360
-          print('PASS: audited Otsu4 bundle inputs')
+          assert len(data['questions'])==720
+          counts={s:sum(1 for q in data['questions'] if q['subject']==s) for s in ['法令','物理・化学','性質・消火']}
+          assert counts=={'法令':288,'物理・化学':192,'性質・消火':240}, counts
+          assert data.get('difficultyAudit',{}).get('policy')=='2026-08 exam-level v1'
+          print('PASS: audited final Otsu4 720 bundle inputs',counts)
           PY
-      - name: Apply App Store signing profiles for internal TestFlight only
+      - name: Apply canonical App Store profile for internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
@@ -286,6 +299,31 @@ workflows:
           xcode-project build-ipa \
             --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
+      - name: Verify signed final IPA before TestFlight
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find build/ios/ipa -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          python3 - "$APP_DIR" <<'PY'
+          import json,plistlib,sys
+          from pathlib import Path
+          app=Path(sys.argv[1])
+          data=json.loads((app/'questions.generated.json').read_text(encoding='utf-8'))
+          assert len(data['questions'])==720
+          counts={s:sum(1 for q in data['questions'] if q['subject']==s) for s in ['法令','物理・化学','性質・消火']}
+          assert counts=={'法令':288,'物理・化学':192,'性質・消火':240}, counts
+          info=plistlib.loads((app/'Info.plist').read_bytes())
+          assert info.get('CFBundleIdentifier')=='jp.allsunday1122.otsu4'
+          assert str(info.get('CFBundleVersion','')).isdigit()
+          assert (app/'PrivacyInfo.xcprivacy').is_file()
+          assert (app/'Assets.car').is_file()
+          assert (app/'embedded.mobileprovision').is_file()
+          assert (app/'_CodeSignature').is_dir()
+          print('PASS: signed Otsu4 IPA contains audited 720-question bundle',counts,'build',info.get('CFBundleVersion'))
+          PY
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -294,7 +332,7 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: false
+        submit_to_testflight: true
         submit_to_app_store: false
 
   tsukanshi-ios:

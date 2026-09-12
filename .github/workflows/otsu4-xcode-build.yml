@@ -5,15 +5,29 @@ on:
     paths:
       - 'native-ios/Otsu4Sprint/**'
       - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
+      - 'kikenbutsu-otsu4-sprint/question-bank-v3-wave*.js'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-build-content-v3.mjs'
+      - 'tools/otsu4-apply-difficulty-hardening.mjs'
+      - 'tools/otsu4-difficulty-audit.mjs'
+      - 'tools/otsu4-difficulty-audit-v3.mjs'
       - '.github/workflows/otsu4-xcode-build.yml'
   push:
-    branches: [ feat/otsu4-360-productization ]
+    branches: [ main ]
     paths:
       - 'native-ios/Otsu4Sprint/**'
       - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
+      - 'kikenbutsu-otsu4-sprint/question-bank-v3-wave*.js'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-build-content-v3.mjs'
+      - 'tools/otsu4-apply-difficulty-hardening.mjs'
+      - 'tools/otsu4-difficulty-audit.mjs'
+      - 'tools/otsu4-difficulty-audit-v3.mjs'
       - '.github/workflows/otsu4-xcode-build.yml'
+
+concurrency:
+  group: otsu4-xcode-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -21,6 +35,7 @@ permissions:
 jobs:
   simulator-build:
     runs-on: macos-latest
+    timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -35,7 +50,7 @@ jobs:
       - name: Validate privacy manifest plist
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: plutil -lint native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy
-      - name: Prepare audited native resources
+      - name: Prepare final audited 720 native resources
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: bash native-ios/Otsu4Sprint/prepare-ios.sh
       - name: Generate Xcode project
@@ -55,22 +70,167 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             build | xcpretty
-      - name: Verify release bundle resources
+      - name: Verify release bundle resources and final identifiers
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: |
+          set -euo pipefail
           APP=$(find "$HOME/Library/Developer/Xcode/DerivedData" -path '*Build/Products/Release-iphonesimulator/Otsu4Sprint.app' -type d | head -1)
           echo "APP=$APP"
           test -n "$APP"
-          find "$APP" -maxdepth 2 -type f -print | sort
           test -f "$APP/questions.generated.json"
           test -f "$APP/PrivacyInfo.xcprivacy"
           test -f "$APP/Assets.car"
           plutil -p "$APP/Info.plist"
+          test "$(plutil -extract CFBundleIdentifier raw "$APP/Info.plist")" = "jp.allsunday1122.otsu4"
+          test "$(plutil -extract CFBundleShortVersionString raw "$APP/Info.plist")" = "1.0.0"
           /usr/bin/python3 - "$APP/questions.generated.json" <<'PY'
           import json,sys
-          p=sys.argv[1]
-          data=json.load(open(p,encoding='utf-8'))
+          data=json.load(open(sys.argv[1],encoding='utf-8'))
           assert data['contentVersion']=='otsu4-2026-08-product-v2'
-          assert len(data['questions'])==360
-          print('bundle questions=',len(data['questions']))
+          assert len(data['questions'])==720
+          assert data.get('difficultyAudit',{}).get('policy')=='2026-08 exam-level v1'
+          counts={s:sum(1 for q in data['questions'] if q['subject']==s) for s in ['法令','物理・化学','性質・消火']}
+          assert counts=={'法令':288,'物理・化学':192,'性質・消火':240},counts
+          print('bundle questions=',len(data['questions']),counts)
           PY
+      - name: Select small and large iPhone simulators
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        run: |
+          python3 - <<'PY' > /tmp/otsu4-simulators.txt
+          import json, subprocess
+          data=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          devices=[]
+          for runtime, rows in sorted(data.get('devices',{}).items(), reverse=True):
+              if 'iOS' not in runtime: continue
+              for row in rows:
+                  name=row.get('name','')
+                  if row.get('isAvailable', True) and name.startswith('iPhone'): devices.append((name,row['udid']))
+          by_name={}
+          for name,udid in devices: by_name.setdefault(name,udid)
+          if len(by_name) < 2: raise SystemExit('Need at least two available iPhone simulator sizes')
+          def choose(tokens, excluded=set()):
+              for token in tokens:
+                  for name,udid in by_name.items():
+                      if token in name and udid not in excluded: return name,udid
+              for name,udid in by_name.items():
+                  if udid not in excluded: return name,udid
+              raise SystemExit('No simulator available')
+          small=choose(['16e','SE (3rd generation)','15','16'])
+          large=choose(['17 Pro Max','Pro Max','Plus'], {small[1]})
+          print(f'{small[0]}|{small[1]}')
+          print(f'{large[0]}|{large[1]}')
+          PY
+          cat /tmp/otsu4-simulators.txt
+      - name: Reset simulator state before boot
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        timeout-minutes: 2
+        run: |
+          set -euo pipefail
+          xcrun simctl shutdown all || true
+          xcrun simctl erase all || true
+      - name: Boot selected iPhone simulators
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          while IFS='|' read -r NAME UDID; do
+            echo "Booting $NAME ($UDID)"
+            xcrun simctl boot "$UDID" 2>/dev/null || true
+            /usr/bin/python3 - "$UDID" <<'PY'
+          import subprocess, sys, time
+          udid = sys.argv[1]
+          for attempt in range(120):
+              try:
+                  result = subprocess.run(['xcrun','simctl','list','devices','available'],check=False,capture_output=True,text=True,timeout=10)
+                  if udid in result.stdout and '(Booted)' in result.stdout:
+                      print(f'{udid} is Booted'); break
+              except subprocess.TimeoutExpired: print('simctl list timed out; retrying')
+              time.sleep(5)
+          else: raise SystemExit(f'{udid} did not reach Booted state')
+          PY
+          done < /tmp/otsu4-simulators.txt
+      - name: Run native unit tests
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        timeout-minutes: 10
+        working-directory: native-ios/Otsu4Sprint
+        run: |
+          set -euo pipefail
+          FIRST=$(head -1 /tmp/otsu4-simulators.txt)
+          UDID=${FIRST##*|}
+          set -o pipefail
+          xcodebuild test \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -destination-timeout 60 \
+            -only-testing:Otsu4SprintTests \
+            -parallel-testing-enabled NO \
+            -test-timeouts-enabled YES \
+            -default-test-execution-time-allowance 60 \
+            -maximum-test-execution-time-allowance 120 | xcpretty
+      - name: Run UI tests on small and large iPhone sizes
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        timeout-minutes: 40
+        working-directory: native-ios/Otsu4Sprint
+        run: |
+          set -euo pipefail
+          wait_for_boot() {
+            /usr/bin/python3 - "$1" <<'PY'
+          import subprocess, sys, time
+          udid = sys.argv[1]
+          for attempt in range(24):
+              try:
+                  result = subprocess.run(['xcrun','simctl','list','devices','available'],check=False,capture_output=True,text=True,timeout=20)
+                  if udid in result.stdout and '(Booted)' in result.stdout:
+                      print(f'{udid} is Booted'); break
+              except subprocess.TimeoutExpired: print('simctl list timed out during retry; waiting for CoreSimulator')
+              time.sleep(5)
+          else: raise SystemExit(f'{udid} did not return to Booted state')
+          PY
+          }
+          run_ui_suite() {
+            local log_path="$1"
+            set +e
+            /usr/bin/python3 - "$log_path" "$UDID" <<'PY'
+          import subprocess, sys
+          log_path, udid = sys.argv[1:]
+          cmd=['xcodebuild','test','-project','Otsu4Sprint.xcodeproj','-scheme','Otsu4Sprint','-configuration','Debug','-destination',f'platform=iOS Simulator,id={udid}','-destination-timeout','60','-only-testing:Otsu4SprintUITests','-parallel-testing-enabled','NO','-test-timeouts-enabled','YES','-default-test-execution-time-allowance','90','-maximum-test-execution-time-allowance','180','CODE_SIGNING_ALLOWED=NO','ASSETCATALOG_COMPILER_APPICON_NAME=']
+          with open(log_path,'wb') as log:
+              try:
+                  result=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,timeout=900); raise SystemExit(result.returncode)
+              except subprocess.TimeoutExpired:
+                  log.write(b'\nOTSU4_UI_XCODEBUILD_HARD_TIMEOUT_900S\n'); raise SystemExit(124)
+          PY
+            local xcodebuild_status=$?
+            cat "$log_path" | xcpretty || true
+            set -e
+            return "$xcodebuild_status"
+          }
+          while IFS='|' read -r NAME UDID; do
+            echo "UI testing final 720 selector flow on $NAME ($UDID)"
+            LOG_PATH="/tmp/otsu4-ui-$UDID.log"
+            if ! run_ui_suite "$LOG_PATH"; then
+              if grep -qE 'Timed out while launching application via Xcode|DebuggerLLDB\.DebuggerVersionStore\.StoreError' "$LOG_PATH"; then
+                echo "Retrying once after a hosted-Xcode launch timeout on $NAME ($UDID)"
+                xcrun simctl shutdown "$UDID" || true
+                xcrun simctl boot "$UDID" 2>/dev/null || true
+                wait_for_boot "$UDID"
+                run_ui_suite "${LOG_PATH}.retry"
+              else
+                grep -E 'OTSU4_UI_XCODEBUILD_HARD_TIMEOUT|Timed out|timeout|error:|Assertion Failure|XCTAssert|TEST FAILED|Executed [0-9]+ tests' "$LOG_PATH" | tail -180 || true
+                tail -100 "$LOG_PATH" || true
+                exit 1
+              fi
+            fi
+          done < /tmp/otsu4-simulators.txt
+      - name: Enforce canonical App Store icon SHA
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        run: |
+          set -euo pipefail
+          ICON=native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png
+          EXPECTED=d0cb19b237ca3306413c481e4fbc0fb871705b390a1bc37619d9683fff19ff2d
+          ACTUAL=$(shasum -a 256 "$ICON" | awk '{print $1}')
+          echo "canonical=$EXPECTED"
+          echo "built=$ACTUAL"
+          test "$ACTUAL" = "$EXPECTED"
