@@ -138,6 +138,8 @@ final class SplatCameraGeometryTests: XCTestCase {
         let correctedView = SplatCameraGeometry.rotationZ(.pi) * baseView
         let targetInCamera = correctedView * SIMD4<Float>(center, 1)
 
+        // The display correction rotates camera axes, not the translated world. The scene target
+        // therefore remains exactly on the optical axis even when its world-space center is not 0.
         XCTAssertEqual(targetInCamera.x, 0, accuracy: 0.0001)
         XCTAssertEqual(targetInCamera.y, 0, accuracy: 0.0001)
     }
