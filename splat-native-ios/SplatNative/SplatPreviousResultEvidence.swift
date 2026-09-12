@@ -13,6 +13,7 @@ import Foundation
 enum SplatPreviousResultEvidence {
     static let fileName = "result.previous.splat.complete.json"
     static let assetFileName = "result.previous.trusted.splat"
+    private static let maximumTrustMetadataByteCount: Int64 = 64 * 1024
 
     struct Snapshot: Codable, Equatable, Sendable {
         static let currentSchemaVersion = 2
@@ -50,17 +51,12 @@ enum SplatPreviousResultEvidence {
         }
     }
 
-    /// Call immediately before a completed result enters `.processing`.
-    /// Existing backup is replaced only after the current result has passed the strict verifier.
     static func preserveBeforeReprocess(
         sourceURL: URL,
         fileManager: FileManager = .default
     ) throws {
         let verification: SplatCompletionVerifier.Verification
         do {
-            // Strong verification already reads and SHA-256 hashes the complete result. Reuse that
-            // freshly computed digest instead of immediately scanning the same potentially hundreds-
-            // of-megabytes Splat a second time before backup materialization.
             verification = try SplatCompletionVerifier.verifyWithDigest(
                 sourceURL: sourceURL,
                 fileManager: fileManager
@@ -74,8 +70,7 @@ enum SplatPreviousResultEvidence {
         let trustedURL = verification.url
         let projectURL = trustedURL.deletingLastPathComponent()
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
-        guard isIndependentRegularFile(evidenceURL),
-              let evidenceData = try? Data(contentsOf: evidenceURL),
+        guard let evidenceData = readTrustMetadataDataIfSafe(at: evidenceURL, fileManager: fileManager),
               let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: evidenceData),
               evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               evidence.fileName == ScanProjectStore.splatResultFileName else {
@@ -119,9 +114,6 @@ enum SplatPreviousResultEvidence {
         }
     }
 
-    /// Restores the separately protected previous result after Store recovery has exhausted its
-    /// legacy swap files. This is intentionally callable for `.failed`/`.captured` repaired state:
-    /// the exact SHA-256-bound backup is stronger evidence than structural 32-byte alignment.
     @discardableResult
     static func recoverTrustedPreviousIfNeeded(
         projectURL: URL,
@@ -141,8 +133,7 @@ enum SplatPreviousResultEvidence {
 
         let backupEvidenceURL = projectURL.appendingPathComponent(fileName)
         let backupAssetURL = projectURL.appendingPathComponent(assetFileName)
-        guard isIndependentRegularFile(backupEvidenceURL),
-              let data = try? Data(contentsOf: backupEvidenceURL),
+        guard let data = readTrustMetadataDataIfSafe(at: backupEvidenceURL, fileManager: fileManager),
               let snapshot = try? JSONDecoder().decode(Snapshot.self, from: data),
               snapshot.schemaVersion == Snapshot.currentSchemaVersion,
               snapshot.originalEvidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
@@ -156,8 +147,6 @@ enum SplatPreviousResultEvidence {
         }
 
         do {
-            // Verify a complete replacement in a sibling partial file before touching whatever
-            // remains at result.splat. This avoids a data-loss window if clone/copy/hash fails.
             try materializeExactFile(
                 sourceURL: backupAssetURL,
                 destinationURL: outputURL,
@@ -201,8 +190,7 @@ enum SplatPreviousResultEvidence {
         fileManager: FileManager
     ) -> Bool {
         guard isIndependentRegularFile(outputURL),
-              isIndependentRegularFile(evidenceURL),
-              let data = try? Data(contentsOf: evidenceURL),
+              let data = readTrustMetadataDataIfSafe(at: evidenceURL, fileManager: fileManager),
               let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: data),
               evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               evidence.fileName == ScanProjectStore.splatResultFileName,
@@ -232,8 +220,6 @@ enum SplatPreviousResultEvidence {
         try? fileManager.removeItem(at: partialURL)
 
         do {
-            // Preserve logical independence from the active result. APFS clonefile provides
-            // copy-on-write storage efficiency without the inode aliasing of a hard link.
             let cloned = sourceURL.withUnsafeFileSystemRepresentation { sourcePath in
                 partialURL.withUnsafeFileSystemRepresentation { destinationPath in
                     guard let sourcePath, let destinationPath else { return false }
@@ -260,6 +246,16 @@ enum SplatPreviousResultEvidence {
             try? fileManager.removeItem(at: partialURL)
             throw error
         }
+    }
+
+    private static func readTrustMetadataDataIfSafe(at url: URL, fileManager: FileManager) -> Data? {
+        guard isIndependentRegularFile(url),
+              let size = try? fileByteCount(url, fileManager: fileManager),
+              size >= 0,
+              size <= maximumTrustMetadataByteCount else {
+            return nil
+        }
+        return try? Data(contentsOf: url)
     }
 
     private static func isIndependentRegularFile(_ url: URL) -> Bool {
