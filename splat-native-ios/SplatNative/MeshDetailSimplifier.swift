@@ -50,21 +50,24 @@ enum MeshDetailSimplifierEngine {
                       let x = Float(parts[1]),
                       let y = Float(parts[2]),
                       let z = Float(parts[3]) else { continue }
-                // `Float("nan")` / `Float("inf")` are valid parses. Letting either value enter the
-                // bounds/grid calculation eventually reaches Int(floor(NaN/Inf)), which traps the
-                // process instead of preserving the original Mesh. Reject the edit before mutation.
                 guard x.isFinite, y.isFinite, z.isFinite else {
                     throw error("Meshに無効な頂点座標があります")
                 }
                 vertices.append(SIMD3<Float>(x, y, z))
             } else if line.hasPrefix("f ") {
-                let tokens = line.split(separator: " ").dropFirst()
-                let indices = tokens.compactMap { token -> Int? in
+                let tokens = Array(line.split(separator: " ").dropFirst())
+                guard tokens.count >= 3 else { continue }
+                var indices: [Int] = []
+                indices.reserveCapacity(tokens.count)
+                for token in tokens {
                     guard let first = token.split(separator: "/", omittingEmptySubsequences: false).first,
-                          let raw = Int(first) else { return nil }
-                    return raw > 0 ? raw - 1 : vertices.count + raw
+                          !first.isEmpty,
+                          let raw = Int(first),
+                          raw != 0 else {
+                        throw error("Meshの面定義が不正です")
+                    }
+                    indices.append(raw > 0 ? raw - 1 : vertices.count + raw)
                 }
-                guard indices.count >= 3 else { continue }
                 for i in 1..<(indices.count - 1) {
                     faces.append(DetailFace(a: indices[0], b: indices[i], c: indices[i + 1]))
                 }
@@ -72,9 +75,6 @@ enum MeshDetailSimplifierEngine {
         }
 
         guard vertices.count > 8, !faces.isEmpty else { throw error("十分なMeshがありません") }
-        // Validate before edge counting/Union-Find. The previous implementation first indexed the
-        // `parent` array and only checked face bounds much later while emitting output faces, so a
-        // malformed OBJ face such as `f 1 2 999999` could crash the editor instead of failing safely.
         guard faces.allSatisfy({ face in
             face.a >= 0 && face.b >= 0 && face.c >= 0 &&
                 face.a < vertices.count && face.b < vertices.count && face.c < vertices.count
@@ -90,7 +90,7 @@ enum MeshDetailSimplifierEngine {
         }
 
         var boundaryVertices = Set<Int>()
-        for (edge, count) in edgeCount where count == 1 {
+        for (edge, count) in edgeCount where count != 2 {
             boundaryVertices.insert(edge.a)
             boundaryVertices.insert(edge.b)
         }
@@ -129,8 +129,6 @@ enum MeshDetailSimplifierEngine {
         let resolution = max(2, Int(ceil(pow(Double(target), 1.0 / 3.0))))
         let cell = extent / Float(resolution)
 
-        // Accumulate cluster centroids in Double. A cluster containing many large but finite Float
-        // positions can overflow a Float sum even though its mean remains representable and valid.
         var sums: [DetailCluster: SIMD3<Double>] = [:]
         var counts: [DetailCluster: Int] = [:]
         var vertexKeys: [DetailCluster] = []
