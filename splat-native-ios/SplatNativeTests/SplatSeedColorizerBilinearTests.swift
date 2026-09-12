@@ -10,7 +10,9 @@ extension SplatSeedColorizerMultiViewTests {
         defer { try? FileManager.default.removeItem(at: root) }
 
         let size = CGSize(width: 8, height: 8)
-        let renderer = UIGraphicsImageRenderer(size: size)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let renderer = UIGraphicsImageRenderer(size: size, format: format)
         let image = renderer.image { context in
             UIColor.black.setFill()
             context.fill(CGRect(origin: .zero, size: size))
