@@ -77,7 +77,11 @@ enum MeshExportAdmission {
     }
 
     /// Conservative disk estimate for the atomic pipeline. Exact-format passthrough only needs
-    /// one share copy. Other formats may need an OBJ bridge plus partial/final conversion output.
+    /// one share copy. Point-cloud output can expand a compact indexed OBJ substantially because
+    /// each triangle corner becomes a full point record (up to 26 bytes in LAS 1.2 with RGB).
+    /// A short repeated `f 1 2 3` line can therefore approach a 10x output/source ratio, before
+    /// temporary output and metadata overhead. Reserve 12x source bytes for PLY/LAS rather than
+    /// the former 4x estimate so valid high-reuse meshes fail before disk exhaustion, not midway.
     static func estimatedRequiredFreeBytes(
         sourceBytes: Int64,
         sourceExtension: String,
@@ -90,7 +94,7 @@ enum MeshExportAdmission {
         } else {
             switch format {
             case .ply, .las:
-                multiplier = 4
+                multiplier = 12
             case .fbx, .obj, .glb, .usdz, .stl:
                 multiplier = 3
             }
