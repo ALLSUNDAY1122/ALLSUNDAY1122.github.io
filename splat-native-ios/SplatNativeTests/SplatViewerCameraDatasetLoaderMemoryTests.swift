@@ -44,4 +44,20 @@ final class SplatViewerCameraDatasetLoaderMemoryTests: XCTestCase {
         XCTAssertEqual(positions[0], SIMD3<Float>(1, 2, 3))
         XCTAssertEqual(positions[1], SIMD3<Float>(4, 5, 6))
     }
+
+    func testAstronomicalFiniteTranslationCannotPoisonFramingAccumulation() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("viewer-camera-overflow-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let json = "{\"frames\":[{\"transform_matrix\":[[1,0,0,1e38],[0,1,0,0],[0,0,1,0],[0,0,0,1]]},{\"transform_matrix\":[[1,0,0,7],[0,1,0,8],[0,0,1,9],[0,0,0,1]]}]}"
+        try Data(json.utf8).write(to: root.appendingPathComponent("transforms.json"))
+
+        let positions = SplatViewerCameraDatasetLoader.cameraPositions(
+            for: root.appendingPathComponent("result.splat")
+        )
+
+        XCTAssertEqual(positions, [SIMD3<Float>(7, 8, 9)])
+    }
 }
