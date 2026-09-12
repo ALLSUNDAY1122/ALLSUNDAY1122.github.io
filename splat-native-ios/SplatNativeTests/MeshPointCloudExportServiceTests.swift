@@ -54,8 +54,8 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
             try? FileManager.default.removeItem(at: external)
         }
 
-        try writeSolidPNG(to: external.appendingPathComponent("outside.png"), rgba: [255, 0, 0, 255])
-        try "map_Kd outside.png\n"
+        try writeSolidPNG(to: root.appendingPathComponent("inside.png"), rgba: [255, 0, 0, 255])
+        try "map_Kd inside.png\n"
             .write(to: external.appendingPathComponent("outside.mtl"), atomically: true, encoding: .utf8)
         try FileManager.default.createSymbolicLink(
             at: root.appendingPathComponent("capture.mtl"),
