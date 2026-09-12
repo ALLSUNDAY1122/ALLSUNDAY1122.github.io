@@ -489,7 +489,13 @@ final class ScanProjectStore {
 
     func moveToTrash(projectURL: URL) throws {
         try ensureDirectories()
-        let destination = trashURL.appendingPathComponent(projectURL.lastPathComponent)
+        let normalizedProject = projectURL.standardizedFileURL
+        guard isSafeProjectDirectory(normalizedProject),
+              normalizedProject.deletingLastPathComponent() == rootURL.standardizedFileURL,
+              normalizedProject.pathExtension == Self.projectExtension else {
+            throw ScanProjectStoreError.invalidManifest
+        }
+        let destination = trashURL.appendingPathComponent(normalizedProject.lastPathComponent)
         // A duplicate project ID in Trash is an integrity collision. Never destroy the existing
         // recoverable copy implicitly; preserve both sides and let the caller surface the failure.
         guard !fileManager.fileExists(atPath: destination.path) else {
@@ -502,6 +508,7 @@ final class ScanProjectStore {
         try ensureDirectories()
         let source = try validatedProjectURL(id: id, in: trashURL)
         guard fileManager.fileExists(atPath: source.path) else { throw ScanProjectStoreError.projectNotFound }
+        guard isSafeProjectDirectory(source) else { throw ScanProjectStoreError.invalidManifest }
         var restoredID = id
         var destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
         if fileManager.fileExists(atPath: destination.path) {
@@ -530,6 +537,7 @@ final class ScanProjectStore {
     func permanentlyDeleteFromTrash(id: String) throws {
         let url = try validatedProjectURL(id: id, in: trashURL)
         guard fileManager.fileExists(atPath: url.path) else { throw ScanProjectStoreError.projectNotFound }
+        guard isSafeProjectDirectory(url) else { throw ScanProjectStoreError.invalidManifest }
         try fileManager.removeItem(at: url)
     }
 
