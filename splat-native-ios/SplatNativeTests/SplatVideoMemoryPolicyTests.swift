@@ -26,7 +26,9 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
         _ = try SplatVideoMemoryPolicy.preflight(
             sourceURL: source,
             configuration: SplatVideoConfiguration(),
-            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024
+            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
         )
 
         let healedData = try Data(contentsOf: SplatViewerEditStore.primaryURL(for: source))
@@ -48,7 +50,9 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
         let legacy = try SplatVideoMemoryPolicy.estimate(
             sourceURL: source,
             configuration: configuration,
-            physicalMemoryBytes: physicalMemory
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
         )
 
         let canonicalURL = try SplatCanonicalSHAsset.canonicalURL(forLegacySplat: source)
@@ -60,7 +64,9 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
         let sh3 = try SplatVideoMemoryPolicy.estimate(
             sourceURL: source,
             configuration: configuration,
-            physicalMemoryBytes: physicalMemory
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
         )
 
         let expectedDelta = UInt64(pointCount) * (
@@ -88,7 +94,9 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
             try SplatVideoMemoryPolicy.preflight(
                 sourceURL: source,
                 configuration: SplatVideoConfiguration(),
-                physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024
+                physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024,
+                thermalState: .nominal,
+                isLowPowerModeEnabled: false
             )
         ) { error in
             XCTAssertEqual(error as? SplatVideoMemoryPolicy.PolicyError, .untrustedCanonicalAsset)
@@ -97,7 +105,9 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
         let estimate = try SplatVideoMemoryPolicy.estimate(
             sourceURL: source,
             configuration: SplatVideoConfiguration(),
-            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024
+            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
         )
         let legacyPointBytes = UInt64(pointCount) * SplatVideoMemoryPolicy.estimatedWorkingBytesPerPoint
         let dimensions = SplatVideoConfiguration().dimensions
@@ -125,7 +135,9 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
         let admission = try SplatVideoMemoryPolicy.preflightAdmission(
             sourceURL: source,
             configuration: SplatVideoConfiguration(),
-            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024
+            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
         )
 
         XCTAssertEqual(admission.estimate.pointCount, pointCount)
@@ -153,7 +165,9 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
             sourceURL: source,
             verifiedDigest: digest,
             configuration: SplatVideoConfiguration(),
-            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024
+            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
         )
 
         XCTAssertEqual(admission.estimate.pointCount, pointCount)
@@ -177,11 +191,51 @@ final class SplatVideoMemoryPolicyTests: XCTestCase {
             try SplatVideoMemoryPolicy.preflightAdmission(
                 sourceURL: source,
                 configuration: SplatVideoConfiguration(),
-                physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024
+                physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024,
+                thermalState: .nominal,
+                isLowPowerModeEnabled: false
             )
         ) { error in
             XCTAssertEqual(error as? SplatVideoMemoryPolicy.PolicyError, .untrustedCanonicalAsset)
         }
+    }
+
+    func testSeriousThermalStateReducesVideoAdmissionBudget() {
+        let physicalMemory = UInt64(8 * 1_024 * 1_024 * 1_024)
+        let nominal = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let serious = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .serious,
+            isLowPowerModeEnabled: false
+        )
+        let critical = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .critical,
+            isLowPowerModeEnabled: false
+        )
+
+        XCTAssertEqual(serious, nominal / 4 * 3)
+        XCTAssertEqual(critical, nominal / 2)
+    }
+
+    func testLowPowerModeReducesVideoAdmissionBudgetWithoutChangingNormalMode() {
+        let physicalMemory = UInt64(8 * 1_024 * 1_024 * 1_024)
+        let normal = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let lowPower = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: true
+        )
+
+        XCTAssertEqual(lowPower, normal / 4 * 3)
     }
 
     private func canonicalSH3Header(pointCount: Int) -> String {
