@@ -15,18 +15,39 @@ enum SplatViewerCameraDatasetLoader {
 
         init(from decoder: Decoder) throws {
             guard let container = try? decoder.container(keyedBy: CodingKeys.self),
-                  let matrix = try? container.decode([[Float]].self, forKey: .transformMatrix),
-                  matrix.count >= 3,
-                  matrix[0].count >= 4,
-                  matrix[1].count >= 4,
-                  matrix[2].count >= 4 else {
+                  var matrix = try? container.nestedUnkeyedContainer(forKey: .transformMatrix) else {
                 position = nil
                 return
             }
-            let candidate = SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])
-            position = candidate.x.isFinite && candidate.y.isFinite && candidate.z.isFinite
-                ? candidate
-                : nil
+
+            var translation = SIMD3<Float>.zero
+            for rowIndex in 0..<3 {
+                guard !matrix.isAtEnd,
+                      var row = try? matrix.nestedUnkeyedContainer() else {
+                    position = nil
+                    return
+                }
+
+                var translationComponent: Float?
+                for columnIndex in 0..<4 {
+                    guard !row.isAtEnd,
+                          let value = try? row.decode(Float.self) else {
+                        position = nil
+                        return
+                    }
+                    if columnIndex == 3 {
+                        translationComponent = value
+                    }
+                }
+
+                guard let component = translationComponent, component.isFinite else {
+                    position = nil
+                    return
+                }
+                translation[rowIndex] = component
+            }
+
+            position = translation
         }
     }
 
