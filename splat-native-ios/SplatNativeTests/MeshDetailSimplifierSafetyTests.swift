@@ -25,6 +25,18 @@ final class MeshDetailSimplifierSafetyTests: XCTestCase {
         }
     }
 
+    func testRejectsFiniteCoordinatesWhoseExtentOverflowsFloat() throws {
+        let huge = Float.greatestFiniteMagnitude
+        var vertices = ["v \(-huge) 0 0", "v \(huge) 0 0"]
+        vertices.append(contentsOf: (0..<8).map { "v \($0) 1 0" })
+        let url = try writeOBJ(vertices: vertices, faces: ["f 1 2 3"])
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+
+        XCTAssertThrowsError(try MeshDetailSimplifierEngine.simplify(url: url, retainedFraction: 0.6)) { error in
+            XCTAssertEqual((error as NSError).domain, "ScanLab.MeshDetailSimplifier")
+        }
+    }
+
     private func writeOBJ(vertices: [String], faces: [String]) throws -> URL {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshDetailSimplifierSafety-\(UUID().uuidString)", isDirectory: true)
