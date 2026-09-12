@@ -33,6 +33,11 @@ final class MeshFrameJPEGEncoder: @unchecked Sendable {
         ])
     }
 
+    static func normalizedCompressionQuality(_ value: CGFloat) -> CGFloat {
+        guard value.isFinite else { return 0.91 }
+        return min(max(value, 0), 1)
+    }
+
     func encode(_ frameImage: MeshFrameImage, compressionQuality: CGFloat = 0.91) -> Data? {
         autoreleasepool {
             let image = CIImage(cvPixelBuffer: frameImage.pixelBuffer)
@@ -45,7 +50,7 @@ final class MeshFrameJPEGEncoder: @unchecked Sendable {
             // Ask Core Image to render directly into its JPEG representation. This avoids the
             // full-size CGImage materialization that the previous ImageIO bridge required and
             // lowers the transient capture working set for multi-megapixel AR camera frames.
-            let quality = min(max(compressionQuality, 0), 1)
+            let quality = Self.normalizedCompressionQuality(compressionQuality)
             return context.jpegRepresentation(
                 of: image,
                 colorSpace: outputColorSpace,
