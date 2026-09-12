@@ -110,6 +110,47 @@ final class SplatViewerStateTests: XCTestCase {
         XCTAssertEqual(recovered.settings, expected)
     }
 
+    func testViewerEditStoreIgnoresOversizedPrimaryAndRecoversBoundedBackup() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let expected = SplatEditSettings(exposureEV: 0.55, contrast: 1.2)
+        try SplatViewerEditStore.save(expected, sourceURL: source)
+
+        let oversized = Data(repeating: 0x41, count: 64 * 1024 + 1)
+        try oversized.write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
+
+        let recovered = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
+        XCTAssertTrue(recovered.recoveredFromBackup)
+        XCTAssertEqual(recovered.settings, expected.normalized())
+    }
+
+    func testViewerEditStoreDoesNotReadExternalBackupAlias() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let externalRoot = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: externalRoot)
+        }
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: externalRoot, withIntermediateDirectories: true)
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let expected = SplatEditSettings(exposureEV: 0.25, contrast: 1.1)
+        let externalBackup = externalRoot.appendingPathComponent("viewer.json")
+        try JSONEncoder().encode(expected).write(to: externalBackup, options: .atomic)
+        try fileManager.createSymbolicLink(
+            at: SplatViewerEditStore.backupURL(for: source),
+            withDestinationURL: externalBackup
+        )
+
+        XCTAssertNil(SplatViewerEditStore.load(sourceURL: source))
+        XCTAssertTrue(fileManager.fileExists(atPath: externalBackup.path))
+    }
+
     @MainActor
     func testSwitchingScansFlushesPendingEditsToPreviousScan() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -125,9 +166,6 @@ final class SplatViewerStateTests: XCTestCase {
         state.exposureEV = 0.8
         state.contrast = 1.25
         state.schedulePersistence()
-
-        // Switch immediately, before the 220 ms debounce can fire. The old settings must be
-        // flushed to first.splat rather than cancelled or written into second.splat.
         state.attach(url: secondSource)
 
         let firstSaved = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: firstSource))
