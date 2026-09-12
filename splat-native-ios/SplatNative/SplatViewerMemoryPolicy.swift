@@ -16,9 +16,33 @@ enum SplatViewerMemoryPolicy {
     static let maximumBudgetBytes: UInt64 = 768 * mib
     static let physicalMemoryDivisor: UInt64 = 6
 
+    /// Thermal pressure is a useful proxy for sustained device contention during long scans. Keeping
+    /// the nominal memory budget while the SoC is already serious/critical can select a large SH3
+    /// scene that technically fits RAM but causes sustained frame drops or raises jetsam risk once
+    /// Metal sorting and edit buffers overlap. Prefer the legacy representation earlier instead.
+    static func budgetBytes(
+        physicalMemoryBytes: UInt64,
+        thermalState: ProcessInfo.ThermalState
+    ) -> UInt64 {
+        let proportional = physicalMemoryBytes / physicalMemoryDivisor
+        let baseBudget = min(maximumBudgetBytes, max(minimumBudgetBytes, proportional))
+        switch thermalState {
+        case .nominal, .fair:
+            return baseBudget
+        case .serious:
+            return baseBudget / 4 * 3
+        case .critical:
+            return baseBudget / 2
+        @unknown default:
+            // Unknown future states should be conservative rather than silently assuming nominal.
+            return baseBudget / 2
+        }
+    }
+
     static func canUseCanonicalSH3(
         pointCount: Int,
-        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
+        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState
     ) -> Bool {
         guard pointCount > 0 else { return false }
         let safePointCount = UInt64(pointCount)
@@ -28,8 +52,9 @@ enum SplatViewerMemoryPolicy {
         } else {
             pointBytes = safePointCount * estimatedWorkingBytesPerSH3Point + fixedRendererReserveBytes
         }
-        let proportional = physicalMemoryBytes / physicalMemoryDivisor
-        let budget = min(maximumBudgetBytes, max(minimumBudgetBytes, proportional))
-        return pointBytes <= budget
+        return pointBytes <= budgetBytes(
+            physicalMemoryBytes: physicalMemoryBytes,
+            thermalState: thermalState
+        )
     }
 }
