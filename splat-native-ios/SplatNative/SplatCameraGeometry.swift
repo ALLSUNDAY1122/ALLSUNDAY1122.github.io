@@ -16,16 +16,41 @@ enum SplatCameraGeometry {
         return max(1, quotient + (remainder == 0 ? 0 : 1))
     }
 
+    /// Produces a bounded, evenly distributed sample over the complete point ordering. A fixed
+    /// ceil-stride keeps memory bounded, but its sample count drops abruptly at stride boundaries
+    /// (for example 12,001 points -> only 4,001 samples) and can omit the tail of ordered scans.
+    /// Keeping up to 6,000 evenly spaced indices preserves the same O(6k log 6k) framing bound
+    /// while avoiding viewer/video framing quality discontinuities as scene size crosses a boundary.
+    static func framingSampleIndices(pointCount: Int, targetSampleCount: Int = 6_000) -> [Int] {
+        guard pointCount > 0, targetSampleCount > 0 else { return [] }
+        let sampleCount = min(pointCount, targetSampleCount)
+        guard sampleCount > 1 else { return [0] }
+        if sampleCount == pointCount { return Array(0..<pointCount) }
+
+        let lastIndex = pointCount - 1
+        let denominator = sampleCount - 1
+        return (0..<sampleCount).map { sampleIndex in
+            let product = sampleIndex.multipliedReportingOverflow(by: lastIndex)
+            if !product.overflow {
+                return product.partialValue / denominator
+            }
+            // Defensive fallback for synthetic/hostile counts near Int.max. Real arrays cannot
+            // practically reach this path on iOS, but the helper should remain arithmetic-safe.
+            let fraction = Double(sampleIndex) / Double(denominator)
+            return min(lastIndex, max(0, Int((fraction * Double(lastIndex)).rounded(.down))))
+        }
+    }
+
     static func robustFraming(for points: [SplatPoint]) -> Framing {
-        let strideSize = framingSampleStride(pointCount: points.count)
+        let sampleIndices = framingSampleIndices(pointCount: points.count)
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
-        xs.reserveCapacity(min(points.count, 6_000))
-        ys.reserveCapacity(min(points.count, 6_000))
-        zs.reserveCapacity(min(points.count, 6_000))
+        xs.reserveCapacity(sampleIndices.count)
+        ys.reserveCapacity(sampleIndices.count)
+        zs.reserveCapacity(sampleIndices.count)
 
-        for index in stride(from: 0, to: points.count, by: strideSize) {
+        for index in sampleIndices {
             let p = points[index].position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
             xs.append(p.x)
@@ -40,7 +65,7 @@ enum SplatCameraGeometry {
 
         var radii: [Float] = []
         radii.reserveCapacity(xs.count)
-        for index in stride(from: 0, to: points.count, by: strideSize) {
+        for index in sampleIndices {
             let p = points[index].position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
             let radius = simd_distance(p, center)
