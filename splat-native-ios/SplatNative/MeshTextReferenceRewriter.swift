@@ -28,14 +28,20 @@ enum MeshTextReferenceRewriter {
               !replacement.contains("\r") else {
             throw error("参照名が不正です")
         }
-        guard FileManager.default.createFile(atPath: destinationURL.path, contents: nil) else {
+        let source = sourceURL.standardizedFileURL
+        let destination = destinationURL.standardizedFileURL
+        guard source != destination,
+              !FileManager.default.fileExists(atPath: destination.path) else {
+            throw error("編集先が既存ファイルと競合しています")
+        }
+        guard FileManager.default.createFile(atPath: destination.path, contents: nil) else {
             throw error("編集結果を作成できません")
         }
         let handle: FileHandle
         do {
-            handle = try FileHandle(forWritingTo: destinationURL)
+            handle = try FileHandle(forWritingTo: destination)
         } catch {
-            try? FileManager.default.removeItem(at: destinationURL)
+            try? FileManager.default.removeItem(at: destination)
             throw error
         }
 
@@ -45,7 +51,7 @@ enum MeshTextReferenceRewriter {
         output.reserveCapacity(outputBufferLimit)
         defer {
             try? handle.close()
-            if !committed { try? FileManager.default.removeItem(at: destinationURL) }
+            if !committed { try? FileManager.default.removeItem(at: destination) }
         }
 
         func flush() throws {
@@ -60,7 +66,7 @@ enum MeshTextReferenceRewriter {
             if output.count >= outputBufferLimit { try flush() }
         }
 
-        try forEachLine(at: sourceURL) { line in
+        try forEachLine(at: source) { line in
             if directiveValue(in: line, directive: directive) != nil {
                 try append("\(directive) \(replacement)")
                 replaced = true
