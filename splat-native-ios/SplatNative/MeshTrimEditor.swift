@@ -174,7 +174,8 @@ struct MeshTrimEditorSheet: View {
                     try MeshTrimEngine.trim(url: source, x: xLow...xHigh, y: yLow...yHigh, z: zLow...zHigh)
                 }.value
 
-                guard let candidateScene = try? SCNScene(url: result.url, options: nil) else {
+                guard let candidateScene = try? SCNScene(url: result.url, options: nil),
+                      MeshRawSceneValidator.containsGeometry(candidateScene) else {
                     MeshTrimEngine.discard(result)
                     throw NSError(domain:"ScanLab.MeshTrim", code:2, userInfo:[NSLocalizedDescriptionKey:"トリミング後のMeshを検証できませんでした。直前の結果を保持します。"])
                 }
