@@ -37,6 +37,40 @@ final class SplatCompletionVerifierProjectIndependenceTests: XCTestCase {
         ))
     }
 
+    func testCompletionVerifierRejectsOversizedCommitEvidenceBeforeDecode() throws {
+        let fileManager = FileManager.default
+        let root = try makeRoot("commit-evidence-oversized")
+        defer { try? fileManager.removeItem(at: root) }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Oversized evidence must not verify")
+        try makeProcessableRaw(in: projectURL, store: store)
+
+        let pending = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        let trustedBytes = Data(repeating: 0x53, count: 64)
+        try trustedBytes.write(to: pending, options: .atomic)
+        let result = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { value in
+            value.stage = .finished
+            value.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+
+        let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
+        let oversized = Data(repeating: 0x41, count: 64 * 1024 + 1)
+        try oversized.write(to: evidenceURL, options: .atomic)
+
+        XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: result)) { error in
+            guard case SplatCompletionVerifier.VerificationError.completionEvidenceMissing = error else {
+                return XCTFail("Expected completionEvidenceMissing for oversized evidence, got \(error)")
+            }
+        }
+        XCTAssertEqual((try fileManager.attributesOfItem(atPath: evidenceURL.path)[.size] as? NSNumber)?.intValue, oversized.count)
+        XCTAssertEqual(try Data(contentsOf: result), trustedBytes)
+        XCTAssertFalse(fileManager.fileExists(
+            atPath: projectURL.appendingPathComponent(SplatStrongCompletionEvidence.fileName).path
+        ))
+    }
+
     private func makeProcessableRaw(in projectURL: URL, store: ScanProjectStore) throws {
         let images = projectURL.appendingPathComponent("images", isDirectory: true)
         try Data([0xff, 0xd8, 0xff, 0xd9]).write(to: images.appendingPathComponent("frame_00000.jpg"))
