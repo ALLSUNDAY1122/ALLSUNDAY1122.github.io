@@ -24,7 +24,7 @@ struct SplatDepthSeedFrame: Sendable {
 enum SplatDepthSeedBuilder {
     // Recipe version is a cache-compatibility epoch, not the file-format version. Bump it whenever
     // seed-generation semantics change so a same-RAW comparison cannot silently reuse stale points3D.ply.
-    static let recipeVersion = 6
+    static let recipeVersion = 7
     static let targetSamplesPerFrame = 900
     static let voxelDensity: Float = 100
     static let minimumDepth: Float = 0.18
@@ -370,6 +370,26 @@ enum SplatDepthSeedBuilder {
         return candidateComponents.prefix(rootComponents.count).elementsEqual(rootComponents)
     }
 
+    /// Maps a depth pixel index to the matching camera-image pixel center. When the two rasters
+    /// have different resolutions, scaling pixel edges directly introduces a half-pixel bias that
+    /// becomes several RGB pixels on LiDAR-to-camera upscales. Matching centers preserves the same
+    /// coordinate convention used by camera intrinsics while remaining identity at equal sizes.
+    static func imagePixelCenterCoordinate(
+        sampleIndex: Int,
+        sourceExtent: Int,
+        destinationExtent: Int
+    ) -> Float? {
+        guard sampleIndex >= 0,
+              sampleIndex < sourceExtent,
+              sourceExtent > 0,
+              destinationExtent > 0 else {
+            return nil
+        }
+        let coordinate = (Double(sampleIndex) + 0.5) * Double(destinationExtent) / Double(sourceExtent) - 0.5
+        guard coordinate.isFinite else { return nil }
+        return Float(coordinate)
+    }
+
     private static func depthSeedPoints(
         projectURL: URL,
         frames: [SplatDepthSeedFrame],
@@ -446,8 +466,18 @@ enum SplatDepthSeedBuilder {
                     let z = Float(bitPattern: bits)
                     guard z.isFinite, z >= minimumDepth, z <= maximumDepth else { continue }
 
-                    let imageX = Float(x) * Float(frame.w) / Float(depthWidth)
-                    let imageY = Float(y) * Float(frame.h) / Float(depthHeight)
+                    guard let imageX = imagePixelCenterCoordinate(
+                        sampleIndex: x,
+                        sourceExtent: depthWidth,
+                        destinationExtent: frame.w
+                    ),
+                    let imageY = imagePixelCenterCoordinate(
+                        sampleIndex: y,
+                        sourceExtent: depthHeight,
+                        destinationExtent: frame.h
+                    ) else {
+                        continue
+                    }
                     let cameraX = (imageX - frame.cx) * z / frame.flX
                     let cameraY = (frame.cy - imageY) * z / frame.flY
                     let world4 = cameraToWorld * SIMD4<Float>(cameraX, cameraY, -z, 1)
