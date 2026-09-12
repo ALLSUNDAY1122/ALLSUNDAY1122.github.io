@@ -57,6 +57,15 @@ private struct DenseMVSResult: Sendable {
     let keyframes: Int
 }
 
+enum MeshDenseMVSGeometry {
+    static func scaledPrincipalPointCoordinate(_ coordinate: Float, scale: Float) -> Float? {
+        guard coordinate.isFinite, scale.isFinite, scale > 0 else { return nil }
+        let scaled = (Double(coordinate) + 0.5) * Double(scale) - 0.5
+        guard scaled.isFinite else { return nil }
+        return Float(scaled)
+    }
+}
+
 private enum MeshPlaneSweepMVS {
     static func reconstruct(project: URL, manifest: DenseMVSManifest) throws -> DenseMVSResult {
         let records = selectFrames(manifest.frames, maximumCount: 14)
@@ -208,9 +217,11 @@ private enum MeshPlaneSweepMVS {
 
     private static func load(_ record: DenseMVSRecord, project: URL, maximumPixel: Int) -> DenseMVSFrame? {
         guard record.transform.count == 4,
-              record.transform.allSatisfy({ $0.count == 4 }),
+              record.transform.allSatisfy({ $0.count == 4 && $0.allSatisfy({ $0.isFinite }) }),
               record.intrinsics.count == 3,
-              record.intrinsics.allSatisfy({ $0.count == 3 }) else { return nil }
+              record.intrinsics.allSatisfy({ $0.count == 3 && $0.allSatisfy({ $0.isFinite }) }),
+              record.width > 0,
+              record.height > 0 else { return nil }
         let fileURL = project.appendingPathComponent(record.filePath)
         guard let source = CGImageSourceCreateWithURL(fileURL as CFURL, nil),
               let image = CGImageSourceCreateThumbnailAtIndex(
@@ -225,7 +236,10 @@ private enum MeshPlaneSweepMVS {
 
         let width = image.width
         let height = image.height
-        var pixels = [UInt8](repeating: 0, count: width * height)
+        guard width > 0, height > 0 else { return nil }
+        let (pixelCount, pixelOverflow) = width.multipliedReportingOverflow(by: height)
+        guard !pixelOverflow, pixelCount > 0 else { return nil }
+        var pixels = [UInt8](repeating: 0, count: pixelCount)
         guard let context = CGContext(
             data: &pixels,
             width: width,
@@ -238,6 +252,9 @@ private enum MeshPlaneSweepMVS {
         context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
 
         let cameraToWorld = matrix(record.transform)
+        guard matrixIsFinite(cameraToWorld) else { return nil }
+        let worldToCamera = simd_inverse(cameraToWorld)
+        guard matrixIsFinite(worldToCamera) else { return nil }
         let position = SIMD3<Float>(
             cameraToWorld.columns.3.x,
             cameraToWorld.columns.3.y,
@@ -248,20 +265,29 @@ private enum MeshPlaneSweepMVS {
             -cameraToWorld.columns.2.y,
             -cameraToWorld.columns.2.z
         )
-        let forward = simd_length_squared(forwardRaw) > 1e-8
+        let forwardLengthSquared = simd_length_squared(forwardRaw)
+        let forward = forwardLengthSquared.isFinite && forwardLengthSquared > 1e-8
             ? simd_normalize(forwardRaw)
             : SIMD3<Float>(0, 0, -1)
-        let scaleX = Float(width) / Float(max(1, record.width))
-        let scaleY = Float(height) / Float(max(1, record.height))
+        let scaleX = Float(width) / Float(record.width)
+        let scaleY = Float(height) / Float(record.height)
+        let fx = record.intrinsics[0][0] * scaleX
+        let fy = record.intrinsics[1][1] * scaleY
+        guard let cx = MeshDenseMVSGeometry.scaledPrincipalPointCoordinate(record.intrinsics[0][2], scale: scaleX),
+              let cy = MeshDenseMVSGeometry.scaledPrincipalPointCoordinate(record.intrinsics[1][2], scale: scaleY),
+              fx.isFinite,
+              fy.isFinite,
+              fx > 0,
+              fy > 0 else { return nil }
 
         return DenseMVSFrame(
             gray: DenseGray(pixels: pixels, width: width, height: height),
             cameraToWorld: cameraToWorld,
-            worldToCamera: simd_inverse(cameraToWorld),
-            fx: record.intrinsics[0][0] * scaleX,
-            fy: record.intrinsics[1][1] * scaleY,
-            cx: record.intrinsics[0][2] * scaleX,
-            cy: record.intrinsics[1][2] * scaleY,
+            worldToCamera: worldToCamera,
+            fx: fx,
+            fy: fy,
+            cx: cx,
+            cy: cy,
             position: position,
             forward: forward
         )
@@ -291,8 +317,13 @@ private enum MeshPlaneSweepMVS {
             guard index != referenceIndex else { return nil }
             let baseline = simd_distance(reference.position, frames[index].position)
             let directionDot = simd_dot(reference.forward, frames[index].forward)
-            guard baseline >= 0.025, baseline <= 0.75, directionDot > 0.50 else { return nil }
+            guard baseline.isFinite,
+                  directionDot.isFinite,
+                  baseline >= 0.025,
+                  baseline <= 0.75,
+                  directionDot > 0.50 else { return nil }
             let score = abs(baseline - 0.16) + (1 - directionDot) * 0.12
+            guard score.isFinite else { return nil }
             return (index, score)
         }
         return candidates.sorted { $0.score < $1.score }.prefix(4).map(\.index)
@@ -307,16 +338,29 @@ private enum MeshPlaneSweepMVS {
     }
 
     private static func project(_ point: SIMD3<Float>, frame: DenseMVSFrame) -> SIMD2<Float>? {
+        guard point.x.isFinite, point.y.isFinite, point.z.isFinite else { return nil }
         let camera = frame.worldToCamera * SIMD4<Float>(point.x, point.y, point.z, 1)
+        guard camera.x.isFinite, camera.y.isFinite, camera.z.isFinite else { return nil }
         let depth = -camera.z
-        guard depth > 0.05 else { return nil }
+        guard depth.isFinite, depth > 0.05 else { return nil }
         let x = frame.cx + frame.fx * camera.x / depth
         let y = frame.cy - frame.fy * camera.y / depth
-        guard x >= 2,
+        guard x.isFinite,
+              y.isFinite,
+              x >= 2,
               y >= 2,
               x < Float(frame.gray.width - 2),
               y < Float(frame.gray.height - 2) else { return nil }
         return SIMD2<Float>(x, y)
+    }
+
+    private static func matrixIsFinite(_ matrix: simd_float4x4) -> Bool {
+        for column in 0..<4 {
+            for row in 0..<4 where !matrix[column][row].isFinite {
+                return false
+            }
+        }
+        return true
     }
 
     private static func matrix(_ rows: [[Float]]) -> simd_float4x4 {
@@ -519,39 +563,18 @@ struct MeshDenseVisualFallbackOverlay: View {
                     model.frameCount = recorder.frameCount
                     model.statusMessage = recorder.canFinish ? "Dense MVS生成可能" : "Dense MVS用RGB＋pose収集中"
                 }
-                try? await Task.sleep(for: .milliseconds(220))
+                try? await Task.sleep(nanoseconds: 120_000_000)
             }
-        }
-        .onChange(of: model.phase) { _, phase in
-            if phase == .ready && recorder.isRecording { recorder.discard() }
         }
     }
 
     private func start() {
-        guard ARWorldTrackingConfiguration.isSupported, let session = model.session else {
-            model.phase = .failed("ARKit World Tracking非対応です")
-            return
-        }
         do {
             try recorder.start(size: model.scanSize)
+            model.phase = .scanning
+            model.statusMessage = "ARKit pose付きRGBを収集中"
         } catch {
-            model.phase = .failed("Dense MVS保存準備失敗: \(error.localizedDescription)")
-            return
+            model.phase = .failed("Dense MVSを開始できませんでした: \(error.localizedDescription)")
         }
-        model.mode = .photogrammetry
-        model.frameCount = 0
-        model.vertexCount = 0
-        model.faceCount = 0
-        model.resultURL = nil
-        model.rawOBJURL = nil
-        model.previewScene = nil
-        model.phase = .scanning
-
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.worldAlignment = .gravity
-        configuration.isLightEstimationEnabled = true
-        configuration.environmentTexturing = .automatic
-        configuration.planeDetection = [.horizontal, .vertical]
-        session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
     }
 }
