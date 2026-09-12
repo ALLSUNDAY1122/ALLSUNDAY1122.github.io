@@ -56,6 +56,11 @@ enum SplatVideoOutputValidator {
         try Task.checkCancellation()
         guard url.isFileURL,
               fileManager.fileExists(atPath: url.path),
+              let resourceValues = try? url.resourceValues(
+                forKeys: [.isRegularFileKey, .isSymbolicLinkKey]
+              ),
+              resourceValues.isRegularFile == true,
+              resourceValues.isSymbolicLink != true,
               let attributes = try? fileManager.attributesOfItem(atPath: url.path),
               let size = attributes[.size] as? NSNumber,
               size.int64Value > 0 else {
