@@ -14,6 +14,18 @@ final class MeshDetailSimplifierSafetyTests: XCTestCase {
         }
     }
 
+    func testRejectsMalformedFaceTokenInsteadOfInventingTriangle() throws {
+        let url = try writeOBJ(
+            vertices: (0..<10).map { "v \($0) \($0 % 2) 0" },
+            faces: ["f 1 broken 3 4"]
+        )
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+
+        XCTAssertThrowsError(try MeshDetailSimplifierEngine.simplify(url: url, retainedFraction: 0.6)) { error in
+            XCTAssertEqual((error as NSError).domain, "ScanLab.MeshDetailSimplifier")
+        }
+    }
+
     func testRejectsNonFiniteVertexBeforeGridIntegerConversion() throws {
         var vertices = (0..<9).map { "v \($0) 0 0" }
         vertices.append("v nan 1 2")
