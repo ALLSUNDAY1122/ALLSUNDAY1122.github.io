@@ -95,6 +95,13 @@ struct MeshDurabilityRecoveryStore: Sendable {
         try fileManager.moveItem(at: sourceProjectURL, to: destinationURL)
         let movedResultURL = destinationURL.appendingPathComponent(relativeResultPath)
         guard isNonEmptyRegularFile(movedResultURL) else {
+            // The move and validation are one logical protection transaction. If a filesystem race
+            // or unexpected post-rename state makes the selected result disappear, restore the
+            // working project whenever doing so cannot overwrite a newly appeared source path.
+            if !fileManager.fileExists(atPath: sourceProjectURL.path),
+               fileManager.fileExists(atPath: destinationURL.path) {
+                try? fileManager.moveItem(at: destinationURL, to: sourceProjectURL)
+            }
             throw MeshDurabilityRecoveryError.movedResultMissing
         }
 
@@ -135,7 +142,7 @@ struct MeshDurabilityRecoveryStore: Sendable {
 
         let protectedProjects = projectDirectories(in: recoveryURL)
         let orphanedWorkingProjects = projectDirectories(in: appRootURL)
-            .filter { bestFinishedResult(in: $0) != nil }
+            .filter { !finishedResults(in: $0).isEmpty }
         let projects = protectedProjects + orphanedWorkingProjects
 
         var recoveredCount = 0
@@ -143,25 +150,36 @@ struct MeshDurabilityRecoveryStore: Sendable {
         let libraryStore = MeshProjectStore(appRootURL: appRootURL)
 
         for projectURL in projects {
-            guard let resultURL = bestFinishedResult(in: projectURL) else {
+            let candidates = finishedResults(in: projectURL)
+            guard !candidates.isEmpty else {
                 if projectURL.deletingLastPathComponent().standardizedFileURL == recoveryURL.standardizedFileURL {
                     lastErrorDescription = "Recovery内に完成Meshを確認できないprojectがあります。"
                 }
                 continue
             }
-            do {
-                let summary = try libraryStore.archiveFinishedProject(resultURL: resultURL)
-                _ = try MeshProjectIntegrity.verifyOrSeal(summary: summary)
-                try fileManager.removeItem(at: projectURL)
-                recoveredCount += 1
-            } catch {
-                lastErrorDescription = error.localizedDescription
+
+            var recovered = false
+            var candidateErrorDescription: String?
+            for resultURL in candidates {
+                do {
+                    let summary = try libraryStore.archiveFinishedProject(resultURL: resultURL)
+                    _ = try MeshProjectIntegrity.verifyOrSeal(summary: summary)
+                    try fileManager.removeItem(at: projectURL)
+                    recoveredCount += 1
+                    recovered = true
+                    break
+                } catch {
+                    candidateErrorDescription = error.localizedDescription
+                }
+            }
+            if !recovered, let candidateErrorDescription {
+                lastErrorDescription = candidateErrorDescription
             }
         }
 
         let protectedRemaining = projectDirectories(in: recoveryURL).count
         let orphanedRemaining = projectDirectories(in: appRootURL)
-            .filter { bestFinishedResult(in: $0) != nil }
+            .filter { !finishedResults(in: $0).isEmpty }
             .count
 
         return MeshDurabilityRecoveryReport(
@@ -184,12 +202,13 @@ struct MeshDurabilityRecoveryStore: Sendable {
         }
     }
 
-    private func bestFinishedResult(in projectURL: URL) -> URL? {
-        guard isRegularDirectory(projectURL) else { return nil }
+    private func finishedResults(in projectURL: URL) -> [URL] {
+        guard isRegularDirectory(projectURL) else { return [] }
         let fileManager = FileManager.default
+        var candidates: [URL] = []
         for name in ["mesh-cropped.obj", "mesh-textured.usdz", "mesh.obj"] {
             let candidate = projectURL.appendingPathComponent(name)
-            if isNonEmptyRegularFile(candidate) { return candidate }
+            if isNonEmptyRegularFile(candidate) { candidates.append(candidate) }
         }
 
         let reprocessed = ((try? fileManager.contentsOfDirectory(
@@ -207,7 +226,8 @@ struct MeshDurabilityRecoveryStore: Sendable {
                 let rhs = (try? $1.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
                 return lhs > rhs
             }
-        return reprocessed.first
+        candidates.append(contentsOf: reprocessed)
+        return candidates
     }
 
     private func isRegularDirectory(_ url: URL) -> Bool {
