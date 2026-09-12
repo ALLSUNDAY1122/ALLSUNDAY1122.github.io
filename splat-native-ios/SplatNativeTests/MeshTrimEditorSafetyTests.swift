@@ -219,6 +219,18 @@ final class MeshTrimEditorSafetyTests: XCTestCase {
         XCTAssertEqual(result.usedVertexCount, 3)
     }
 
+    func testZeroThicknessAxisDoesNotInventDepthThatDropsPlanarFace() throws {
+        let url = try writeOBJ([
+            "v 0 0 5", "v 1 0 5", "v 0 1 5",
+            "f 1 2 3"
+        ])
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+
+        let result = try MeshTrimEngine.trim(url: url, x: 0...1, y: 0...1, z: 0.8...1)
+        XCTAssertEqual(result.faceCount, 1)
+        XCTAssertEqual(result.usedVertexCount, 3)
+    }
+
     private func writeOBJ(_ lines: [String]) throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshTrimEditorSafety-\(UUID().uuidString)", isDirectory: true)
