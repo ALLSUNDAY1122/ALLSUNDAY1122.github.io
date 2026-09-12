@@ -1,0 +1,55 @@
+name: Scan Lab P1 texture switch cache repair
+
+on:
+  push:
+    branches:
+      - feature/splat-post-build17-p1
+    paths:
+      - '.github/workflows/scanlab-p1-texture-switch-cache-repair.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair-test-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-post-build17-p1
+          fetch-depth: 0
+      - name: Repair focused cache regression syntax
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('splat-native-ios/SplatNativeTests/MeshPointCloudExportServiceTests.swift')
+          s = p.read_text()
+          old = '''        XCTAssertEqual(try cache.value(for: a, byteCount: { $0 }, load: load), 4)\n        XCTAssertEqual(try cache.value(for: b, byteCount: { $0 }, load: load), 4)\n        XCTAssertEqual(try cache.value(for: a, byteCount: { $0 }, load: load), 4)\n        XCTAssertEqual(try cache.value(for: b, byteCount: { $0 }, load: load), 4)\n        XCTAssertEqual(loads, 2, "A/B/A/B should decode each small atlas only once")\n'''
+          new = '''        let firstA = cache.value(for: a, byteCount: { $0 }, load: load)\n        let firstB = cache.value(for: b, byteCount: { $0 }, load: load)\n        let secondA = cache.value(for: a, byteCount: { $0 }, load: load)\n        let secondB = cache.value(for: b, byteCount: { $0 }, load: load)\n        XCTAssertEqual(firstA, 4)\n        XCTAssertEqual(firstB, 4)\n        XCTAssertEqual(secondA, 4)\n        XCTAssertEqual(secondB, 4)\n        XCTAssertEqual(loads, 2, "A/B/A/B should decode each small atlas only once")\n'''
+          if s.count(old) != 1: raise SystemExit('small cache test anchor mismatch')
+          s = s.replace(old, new, 1)
+          s = s.replace('''        _ = try cache.value(for: a, byteCount: { $0 }, load: load)\n        _ = try cache.value(for: b, byteCount: { $0 }, load: load)\n        _ = try cache.value(for: a, byteCount: { $0 }, load: load)\n''','''        _ = cache.value(for: a, byteCount: { $0 }, load: load)\n        _ = cache.value(for: b, byteCount: { $0 }, load: load)\n        _ = cache.value(for: a, byteCount: { $0 }, load: load)\n''',1)
+          p.write_text(s)
+          PY
+      - name: Run focused point-cloud export regressions
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
+            -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+            -parallel-testing-enabled NO \
+            -only-testing:SplatNativeTests/MeshPointCloudExportServiceTests test
+      - name: Commit verified performance patch and remove one-shot workflows
+        run: |
+          set -euo pipefail
+          git config user.name 'Scan Lab Macro Loop HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm -f .github/workflows/scanlab-p1-texture-switch-cache.yml .github/workflows/scanlab-p1-texture-switch-cache-repair.yml
+          git add splat-native-ios/SplatNative/MeshPointCloudExportService.swift splat-native-ios/SplatNativeTests/MeshPointCloudExportServiceTests.swift
+          git commit -m 'perf(mesh): reuse bounded alternating texture sampler'
+          git push origin HEAD:feature/splat-post-build17-p1
