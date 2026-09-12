@@ -52,6 +52,15 @@ extension SplatPersistedEditMaterializer {
         return count
     }
 
+    /// Cropped materialization can discard most of a large scene. Reserving the full input count in
+    /// that case defeats the purpose of the crop and can transiently duplicate hundreds of MB of SH3
+    /// storage during video export. Identity/no-crop edits keep the exact reserve for throughput;
+    /// cropped paths grow only with points that actually survive the crop.
+    static func initialOutputReserveCapacity(inputPointCount: Int, hasCrop: Bool) -> Int {
+        guard inputPointCount > 0 else { return 0 }
+        return hasCrop ? 0 : inputPointCount
+    }
+
     private static func cancellableRobustCropBounds(for points: [SplatPoint]) throws -> CropBounds {
         let strideSize = max(1, points.count / 8_000)
         var xs: [Float] = []
@@ -105,7 +114,13 @@ extension SplatPersistedEditMaterializer {
         let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
 
         var result: [SplatPoint] = []
-        result.reserveCapacity(points.count)
+        let reserveCapacity = initialOutputReserveCapacity(
+            inputPointCount: points.count,
+            hasCrop: settings.hasCrop
+        )
+        if reserveCapacity > 0 {
+            result.reserveCapacity(reserveCapacity)
+        }
         for (index, point) in points.enumerated() {
             if index & 0x3FF == 0 { try Task.checkCancellation() }
             guard cancellableIsEligible(point, settings: settings, bounds: plan.bounds) else { continue }
