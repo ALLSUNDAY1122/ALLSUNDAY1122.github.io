@@ -232,6 +232,18 @@ final class SplatCameraGeometryTests: XCTestCase {
         XCTAssertEqual(simd_length(z), 1, accuracy: 0.0001)
     }
 
+    func testLookAtClampsTranslationWhenFiniteDotWouldOverflowFloat() {
+        let huge = Float.greatestFiniteMagnitude
+        let matrix = SplatCameraGeometry.lookAt(
+            eye: SIMD3<Float>(huge, huge, huge),
+            center: .zero,
+            up: SIMD3<Float>(0, 1, 0)
+        )
+
+        XCTAssertTrue(isFinite(matrix))
+        XCTAssertLessThanOrEqual(abs(matrix.columns.3.z), Float.greatestFiniteMagnitude)
+    }
+
     private func isFinite(_ matrix: simd_float4x4) -> Bool {
         for column in 0..<4 {
             for row in 0..<4 where !matrix[column][row].isFinite {
