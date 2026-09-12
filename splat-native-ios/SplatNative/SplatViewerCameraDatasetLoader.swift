@@ -14,14 +14,51 @@ enum SplatViewerCameraDatasetLoader {
             var frames = try container.nestedUnkeyedContainer(forKey: .frames)
             var decodedPositions: [SIMD3<Float>] = []
             decodedPositions.reserveCapacity(min(frames.count ?? 0, maximumReturnedPositions * 2))
+            var validPositionIndex = 0
+            var retentionStride = 1
 
             while !frames.isAtEnd {
                 let frame = try frames.decode(Frame.self)
-                if let position = frame.position {
+                guard let position = frame.position else { continue }
+
+                if validPositionIndex % retentionStride == 0 {
                     decodedPositions.append(position)
                 }
+                validPositionIndex += 1
+
+                // A 32 MiB JSON file can still contain tens or hundreds of thousands of compact
+                // frames. Keep decode memory bounded while preserving samples across the complete
+                // trajectory. Whenever the temporary sample exceeds 2x the final budget, retain
+                // every other entry and double the future stride; the first sample remains fixed
+                // and later samples continue on the same global cadence.
+                if decodedPositions.count > maximumReturnedPositions * 2 {
+                    var compacted: [SIMD3<Float>] = []
+                    compacted.reserveCapacity(maximumReturnedPositions + 1)
+                    for index in stride(from: 0, to: decodedPositions.count, by: 2) {
+                        compacted.append(decodedPositions[index])
+                    }
+                    decodedPositions = compacted
+                    if retentionStride <= Int.max / 2 {
+                        retentionStride *= 2
+                    }
+                }
             }
-            positions = decodedPositions
+
+            positions = Self.evenlySampled(decodedPositions, limit: maximumReturnedPositions)
+        }
+
+        private static func evenlySampled(_ positions: [SIMD3<Float>], limit: Int) -> [SIMD3<Float>] {
+            guard positions.count > limit, limit > 1 else { return positions }
+            var sampled: [SIMD3<Float>] = []
+            sampled.reserveCapacity(limit)
+            let denominator = limit - 1
+            let lastIndex = positions.count - 1
+            for slot in 0..<limit {
+                let product = slot.multipliedFullWidth(by: lastIndex)
+                let index = denominator.dividingFullWidth(product).quotient
+                sampled.append(positions[index])
+            }
+            return sampled
         }
     }
 
@@ -91,26 +128,6 @@ enum SplatViewerCameraDatasetLoader {
               !dataset.positions.isEmpty else {
             return []
         }
-
-        let positions = dataset.positions
-        guard positions.count > maximumReturnedPositions else { return positions }
-
-        // Viewer orientation only needs the capture trajectory envelope. Both capture endpoints are
-        // retained while downstream normalization/sort work stays capped at maximumReturnedPositions
-        // regardless of a very long capture.
-        var sampled: [SIMD3<Float>] = []
-        sampled.reserveCapacity(maximumReturnedPositions)
-        let denominator = maximumReturnedPositions - 1
-        let lastIndex = positions.count - 1
-        for slot in 0..<maximumReturnedPositions {
-            sampled.append(positions[evenlySpacedIndex(slot: slot, lastIndex: lastIndex, denominator: denominator)])
-        }
-        return sampled
-    }
-
-    private static func evenlySpacedIndex(slot: Int, lastIndex: Int, denominator: Int) -> Int {
-        guard denominator > 0 else { return 0 }
-        let product = slot.multipliedFullWidth(by: lastIndex)
-        return denominator.dividingFullWidth(product).quotient
+        return dataset.positions
     }
 }
