@@ -1,0 +1,53 @@
+name: Scan Lab P1 trash restore rollback one-shot
+
+on:
+  push:
+    branches:
+      - feature/splat-post-build17-p1
+    paths:
+      - '.github/workflows/scanlab-p1-trash-restore-rollback.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-post-build17-p1
+          fetch-depth: 1
+          lfs: false
+      - name: Make collision restore transactional
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('splat-native-ios/SplatNative/MeshProjectStore.swift')
+          s = p.read_text()
+          old = '''        try fileManager.moveItem(at: source, to: destination)\n        if restoredID != id {\n            var manifest = try readLibraryManifest(projectURL: destination)\n            manifest.id = restoredID\n            try writeLibraryManifest(manifest, projectURL: destination)\n        }\n'''
+          new = '''        try fileManager.moveItem(at: source, to: destination)\n        if restoredID != id {\n            do {\n                var manifest = try readLibraryManifest(projectURL: destination)\n                guard manifest.id == id else { throw MeshProjectStoreError.invalidProject }\n                manifest.id = restoredID\n                try writeLibraryManifest(manifest, projectURL: destination)\n            } catch {\n                // Collision restore must be all-or-nothing. If the manifest cannot be rebound to\n                // the generated ID, return the archive to Trash instead of leaving an invisible\n                // library directory whose directory ID and manifest ID disagree.\n                if !fileManager.fileExists(atPath: source.path),\n                   fileManager.fileExists(atPath: destination.path) {\n                    try? fileManager.moveItem(at: destination, to: source)\n                }\n                throw error\n            }\n        }\n'''
+          if s.count(old) != 1: raise SystemExit('restore anchor mismatch')
+          p.write_text(s.replace(old, new, 1))
+
+          t = Path('splat-native-ios/SplatNativeTests/MeshProjectStoreTests.swift')
+          tests = t.read_text()
+          anchor = '''    func testTrashRestoreRejectsTraversalIDWithoutMovingOutsideArchive() throws {\n'''
+          insertion = '''    func testCollisionRestoreRollsBackToTrashWhenManifestCannotBeRebound() throws {\n        let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x54)\n        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))\n        try store.moveToTrash(projectURL: archived.projectURL)\n\n        // Force the collision path while keeping the existing library entry out of the semantic list.\n        let collision = store.libraryURL\n            .appendingPathComponent(archived.id)\n            .appendingPathExtension(MeshProjectStore.projectExtension)\n        try FileManager.default.createDirectory(at: collision, withIntermediateDirectories: true)\n\n        let trashEntry = store.trashURL\n            .appendingPathComponent(archived.id)\n            .appendingPathExtension(MeshProjectStore.projectExtension)\n        try Data("not-json".utf8).write(\n            to: trashEntry.appendingPathComponent(MeshProjectStore.libraryManifestFileName),\n            options: .atomic\n        )\n\n        XCTAssertThrowsError(try store.restoreFromTrash(id: archived.id))\n        XCTAssertTrue(FileManager.default.fileExists(atPath: trashEntry.path))\n        let meshDirectories = try FileManager.default.contentsOfDirectory(\n            at: store.libraryURL,\n            includingPropertiesForKeys: nil\n        ).filter { $0.pathExtension == MeshProjectStore.projectExtension }\n        XCTAssertEqual(meshDirectories.map(\\.lastPathComponent), [collision.lastPathComponent])\n    }\n\n'''
+          if tests.count(anchor) != 1: raise SystemExit('test anchor mismatch')
+          t.write_text(tests.replace(anchor, insertion + anchor, 1))
+          PY
+          grep -q 'Collision restore must be all-or-nothing' splat-native-ios/SplatNative/MeshProjectStore.swift
+          grep -q 'testCollisionRestoreRollsBackToTrashWhenManifestCannotBeRebound' splat-native-ios/SplatNativeTests/MeshProjectStoreTests.swift
+      - name: Commit patch and retire helper
+        run: |
+          set -euo pipefail
+          git config user.name 'Scan Lab Macro Loop HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm -f .github/workflows/scanlab-p1-trash-restore-rollback.yml
+          git add splat-native-ios/SplatNative/MeshProjectStore.swift \
+            splat-native-ios/SplatNativeTests/MeshProjectStoreTests.swift
+          git commit -m 'fix(mesh): rollback failed trash collision restore'
+          git push origin HEAD:feature/splat-post-build17-p1
