@@ -81,10 +81,12 @@ enum SplatCameraGeometry {
         guard !radii.isEmpty else { return Framing(center: center, distance: 2.5, radius: 0.10) }
         let percentileIndex = min(radii.count - 1, Int(Float(radii.count - 1) * 0.90))
         let radius = max(0.10, radii[percentileIndex])
-        // Keep video framing aligned with the live viewer. The previous 12-unit cap could
-        // move the export camera materially closer than the viewer for large scenes, clipping
-        // geometry that was fully visible before the user tapped Export.
-        let framingDistance = max(0.35, min(18.0, radius * 2.8))
+        // The camera helpers and gesture envelope already support a 60-unit distance, while the
+        // former 18-unit framing cap forced ordinary room/building-scale captures too close. A
+        // 10-unit radius scene needs 28 units at the established 2.8x framing ratio; clamping it to
+        // 18 visibly crops the outer geometry before the user makes any gesture. Keep the robust
+        // ratio intact until the same 60-unit safety envelope used by eye()/video framing.
+        let framingDistance = max(0.35, min(60.0, radius * 2.8))
         return Framing(center: center, distance: framingDistance, radius: radius)
     }
 
