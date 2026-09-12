@@ -195,8 +195,8 @@ enum SplatSeedColorizer {
         for (frameIndex, items) in grouped {
             guard frames.indices.contains(frameIndex) else { continue }
             let frame = frames[frameIndex]
-            let imageURL = projectURL.appendingPathComponent(frame.filePath)
-            guard let raster = loadRaster(url: imageURL) else { continue }
+            guard let imageURL = containedImageURL(filePath: frame.filePath, projectURL: projectURL),
+                  let raster = loadRaster(url: imageURL) else { continue }
             for item in items {
                 if let color = raster.sample(
                     x: item.x,
@@ -309,6 +309,15 @@ enum SplatSeedColorizer {
             SIMD4<Float>(rows[0][2], rows[1][2], rows[2][2], rows[3][2]),
             SIMD4<Float>(rows[0][3], rows[1][3], rows[2][3], rows[3][3])
         )
+    }
+
+    private static func containedImageURL(filePath: String, projectURL: URL) -> URL? {
+        guard !filePath.isEmpty else { return nil }
+        let root = projectURL.standardizedFileURL.resolvingSymlinksInPath()
+        let candidate = projectURL.appendingPathComponent(filePath).standardizedFileURL.resolvingSymlinksInPath()
+        let rootPath = root.path.hasSuffix("/") ? root.path : root.path + "/"
+        guard candidate.path.hasPrefix(rootPath) else { return nil }
+        return candidate
     }
 
     private static func loadRaster(url: URL) -> SplatSeedRaster? {
