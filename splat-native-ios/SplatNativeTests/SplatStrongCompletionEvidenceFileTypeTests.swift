@@ -76,4 +76,39 @@ final class SplatStrongCompletionEvidenceFileTypeTests: XCTestCase {
         }
         XCTAssertEqual(try Data(contentsOf: externalSeal), externalBefore)
     }
+
+    func testRejectsOversizedStrongSealBeforeAttemptingJSONDecode() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory
+            .appendingPathComponent("strong-evidence-oversized-seal-\(UUID().uuidString)", isDirectory: true)
+        defer { try? fileManager.removeItem(at: root) }
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+
+        let project = root.appendingPathComponent("project.scanproject", isDirectory: true)
+        try fileManager.createDirectory(at: project, withIntermediateDirectories: true)
+        let result = project.appendingPathComponent(ScanProjectStore.splatResultFileName)
+        let bytes = Data(repeating: 0x29, count: 64)
+        try bytes.write(to: result, options: .atomic)
+
+        let evidence = SplatCommitEvidence(
+            fileName: ScanProjectStore.splatResultFileName,
+            byteCount: Int64(bytes.count),
+            completedAt: Date().addingTimeInterval(60)
+        )
+        _ = try SplatStrongCompletionEvidence.verifyOrSeal(sourceURL: result, evidence: evidence)
+
+        let seal = project.appendingPathComponent(SplatStrongCompletionEvidence.fileName)
+        let oversized = Data(repeating: 0x41, count: 64 * 1024 + 1)
+        try oversized.write(to: seal, options: .atomic)
+
+        XCTAssertThrowsError(
+            try SplatStrongCompletionEvidence.verifyOrSeal(sourceURL: result, evidence: evidence)
+        ) { error in
+            guard case SplatStrongCompletionEvidence.IntegrityError.hashMismatch = error else {
+                return XCTFail("Expected hashMismatch for oversized seal, got \(error)")
+            }
+        }
+        XCTAssertEqual((try fileManager.attributesOfItem(atPath: seal.path)[.size] as? NSNumber)?.intValue, oversized.count)
+        XCTAssertEqual(try Data(contentsOf: result), bytes)
+    }
 }
