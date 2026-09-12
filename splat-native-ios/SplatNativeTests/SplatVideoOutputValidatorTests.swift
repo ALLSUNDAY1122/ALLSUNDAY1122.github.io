@@ -28,6 +28,33 @@ final class SplatVideoOutputValidatorTests: XCTestCase {
         }
     }
 
+    func testRejectsVideoOutputSymlinkBeforeFollowingExternalTarget() async throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory
+            .appendingPathComponent("video-output-alias-\(UUID().uuidString)", isDirectory: true)
+        let externalRoot = fileManager.temporaryDirectory
+            .appendingPathComponent("video-output-external-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: externalRoot, withIntermediateDirectories: true)
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: externalRoot)
+        }
+
+        let external = externalRoot.appendingPathComponent("outside.mp4")
+        try Data(repeating: 0x41, count: 4_096).write(to: external)
+        let alias = root.appendingPathComponent("export.mp4")
+        try fileManager.createSymbolicLink(at: alias, withDestinationURL: external)
+
+        do {
+            try await SplatVideoOutputValidator.validate(alias)
+            XCTFail("A symlinked output must never become shareable")
+        } catch let error as SplatVideoOutputValidator.ValidationError {
+            XCTAssertEqual(error, .missingOrEmpty)
+        }
+        XCTAssertEqual(try Data(contentsOf: external), Data(repeating: 0x41, count: 4_096))
+    }
+
     func testCancelledValidationCannotBecomeShareableSuccess() async throws {
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("cancelled-video-validation-\(UUID().uuidString).mp4")
