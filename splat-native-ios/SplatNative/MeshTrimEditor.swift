@@ -120,8 +120,13 @@ enum MeshTrimEngine {
                 faceIndices.reserveCapacity(faceFields.count)
             }
             for token in faceFields {
-                guard let first = token.split(separator: "/", omittingEmptySubsequences: false).first,
-                      !first.isEmpty,
+                let first: Substring
+                if let slash = token.firstIndex(of: "/") {
+                    first = token[..<slash]
+                } else {
+                    first = token
+                }
+                guard !first.isEmpty,
                       let raw = Int(first),
                       raw != 0 else {
                     throw error("OBJ面定義が不正です")
