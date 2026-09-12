@@ -1,7 +1,6 @@
 import Foundation
 import SceneKit
 import SwiftUI
-import simd
 
 private struct MeshSimplifyResult: Sendable {
     let url: URL
@@ -9,127 +8,21 @@ private struct MeshSimplifyResult: Sendable {
     let faceCount: Int
 }
 
-private struct MeshClusterKey: Hashable, Sendable {
-    let x: Int
-    let y: Int
-    let z: Int
-}
-
+/// The original general simplifier duplicated an older vertex-cluster parser that silently skipped
+/// malformed OBJ records, dropped textures/vertex color and did not protect boundaries or small
+/// components. Keep one quality path: the general sheet delegates to the detail-preserving engine
+/// so both entry points share the same geometry validation, topology protection and visual-data
+/// safeguards.
 private enum MeshOBJSimplifier {
     static func simplify(url: URL, retainedFraction: Double) throws -> MeshSimplifyResult {
-        let source = try String(contentsOf: url, encoding: .utf8)
-        var vertices: [SIMD3<Float>] = []
-        var faces: [SIMD3<Int>] = []
-
-        for line in source.split(whereSeparator: \.isNewline) {
-            if line.hasPrefix("v ") {
-                let parts = line.split(separator: " ")
-                guard parts.count >= 4,
-                      let x = Float(parts[1]),
-                      let y = Float(parts[2]),
-                      let z = Float(parts[3]) else { continue }
-                vertices.append(SIMD3<Float>(x, y, z))
-            } else if line.hasPrefix("f ") {
-                let parts = line.split(separator: " ")
-                guard parts.count >= 4 else { continue }
-                let parsed = parts[1...3].compactMap { token -> Int? in
-                    guard let first = token.split(separator: "/").first,
-                          let oneBased = Int(first), oneBased > 0 else { return nil }
-                    return oneBased - 1
-                }
-                guard parsed.count == 3 else { continue }
-                faces.append(SIMD3<Int>(parsed[0], parsed[1], parsed[2]))
-            }
-        }
-
-        guard vertices.count >= 8, !faces.isEmpty else {
-            throw NSError(
-                domain: "ScanLab.MeshSimplifier",
-                code: 1,
-                userInfo: [NSLocalizedDescriptionKey: "OBJに十分な三角形Meshがありません"]
-            )
-        }
-
-        var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
-        var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
-        for vertex in vertices {
-            minimum = simd_min(minimum, vertex)
-            maximum = simd_max(maximum, vertex)
-        }
-        let extent = simd_max(maximum - minimum, SIMD3<Float>(repeating: 0.0001))
-        let targetVertexCount = max(8, Int(Double(vertices.count) * min(0.95, max(0.1, retainedFraction))))
-        let resolution = max(2, Int(ceil(pow(Double(targetVertexCount), 1.0 / 3.0))))
-        let cell = extent / Float(resolution)
-
-        var sums: [MeshClusterKey: SIMD3<Float>] = [:]
-        var counts: [MeshClusterKey: Int] = [:]
-        var vertexKeys: [MeshClusterKey] = []
-        vertexKeys.reserveCapacity(vertices.count)
-
-        for vertex in vertices {
-            let relative = (vertex - minimum) / cell
-            let key = MeshClusterKey(
-                x: min(resolution - 1, max(0, Int(floor(relative.x)))),
-                y: min(resolution - 1, max(0, Int(floor(relative.y)))),
-                z: min(resolution - 1, max(0, Int(floor(relative.z))))
-            )
-            vertexKeys.append(key)
-            sums[key, default: .zero] += vertex
-            counts[key, default: 0] += 1
-        }
-
-        let orderedKeys = sums.keys.sorted {
-            if $0.x != $1.x { return $0.x < $1.x }
-            if $0.y != $1.y { return $0.y < $1.y }
-            return $0.z < $1.z
-        }
-        var remap: [MeshClusterKey: Int] = [:]
-        var simplifiedVertices: [SIMD3<Float>] = []
-        simplifiedVertices.reserveCapacity(orderedKeys.count)
-        for key in orderedKeys {
-            remap[key] = simplifiedVertices.count
-            simplifiedVertices.append((sums[key] ?? .zero) / Float(max(1, counts[key] ?? 1)))
-        }
-
-        var simplifiedFaces: [SIMD3<Int>] = []
-        var faceSet = Set<String>()
-        for face in faces {
-            guard face.x >= 0, face.y >= 0, face.z >= 0,
-                  face.x < vertexKeys.count, face.y < vertexKeys.count, face.z < vertexKeys.count,
-                  let a = remap[vertexKeys[face.x]],
-                  let b = remap[vertexKeys[face.y]],
-                  let c = remap[vertexKeys[face.z]],
-                  a != b, b != c, a != c else { continue }
-            let key = "\(a):\(b):\(c)"
-            guard faceSet.insert(key).inserted else { continue }
-            simplifiedFaces.append(SIMD3<Int>(a, b, c))
-        }
-
-        guard !simplifiedFaces.isEmpty else {
-            throw NSError(
-                domain: "ScanLab.MeshSimplifier",
-                code: 2,
-                userInfo: [NSLocalizedDescriptionKey: "簡略化後に有効な三角形が残りませんでした"]
-            )
-        }
-
-        let percent = Int((retainedFraction * 100).rounded())
-        let outputURL = url.deletingLastPathComponent()
-            .appendingPathComponent("mesh-simplified-\(percent)-\(UUID().uuidString.lowercased()).obj")
-        var output = "# Scan Lab vertex-cluster simplified mesh\n"
-        output += "# source vertices \(vertices.count) faces \(faces.count)\n"
-        output += "# simplified vertices \(simplifiedVertices.count) faces \(simplifiedFaces.count)\n"
-        for vertex in simplifiedVertices {
-            output += "v \(vertex.x) \(vertex.y) \(vertex.z)\n"
-        }
-        for face in simplifiedFaces {
-            output += "f \(face.x + 1) \(face.y + 1) \(face.z + 1)\n"
-        }
-        try output.write(to: outputURL, atomically: true, encoding: .utf8)
+        let result = try MeshDetailSimplifierEngine.simplify(
+            url: url,
+            retainedFraction: retainedFraction
+        )
         return MeshSimplifyResult(
-            url: outputURL,
-            vertexCount: simplifiedVertices.count,
-            faceCount: simplifiedFaces.count
+            url: result.url,
+            vertexCount: result.vertices,
+            faceCount: result.faces
         )
     }
 
@@ -160,7 +53,7 @@ struct MeshSimplifySheet: View {
                             .monospacedDigit()
                     }
                     Slider(value: $retainedFraction, in: 0.2...0.9, step: 0.05)
-                    Text("頂点クラスタリングで実ジオメトリを削減します。元OBJは保持されます。")
+                    Text("境界と小さな部品を保護するクラスタリングで実ジオメトリを削減します。元OBJは保持されます。")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -224,7 +117,7 @@ struct MeshSimplifySheet: View {
                     throw error
                 }
 
-                model.statusMessage = "簡略化した実Meshを生成しました"
+                model.statusMessage = "境界・小部品を保護して実Meshを軽量化しました"
                 isWorking = false
                 dismiss()
             } catch {
