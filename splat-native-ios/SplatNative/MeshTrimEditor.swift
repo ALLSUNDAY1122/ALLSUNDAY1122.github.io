@@ -89,8 +89,6 @@ enum MeshTrimEngine {
         var faceRecordIndex = 0
         var selectedFaceBits: [UInt64] = []
 
-        // Pass 2 determines which faces survive and which source vertices they actually reference.
-        // Keeping one bit per face/vertex avoids retaining rewritten face strings for large scans.
         try forEachOBJLine(at: url) { line in
             let directive = firstDirective(in: line)
             if directive == "v" {
@@ -202,8 +200,6 @@ enum MeshTrimEngine {
             if writeBuffer.count >= writeBufferLimit { try flushOutput() }
         }
 
-        // Pass 3 emits only referenced vertex records and rewrites only the vertex component of each
-        // surviving face token. vt/vn indices and other OBJ records remain intact.
         verticesSeen = 0
         faceRecordIndex = 0
         try forEachOBJLine(at: url) { line in
@@ -237,14 +233,14 @@ enum MeshTrimEngine {
                 }
                 let compactIndex = compactVertexIndex(sourceIndex, bits: usedVertexBits, prefix: usedVertexPrefix)
                 rewritten.append(" ")
-                rewritten.append(String(compactIndex))
+                rewritten.append(contentsOf: String(compactIndex))
                 if let slash = token.firstIndex(of: "/") {
                     rewritten.append(contentsOf: token[slash...])
                 }
             }
             if let commentField = fields.firstIndex(where: { $0.hasPrefix("#") }) {
                 rewritten.append(" ")
-                rewritten.append(fields[commentField...].joined(separator: " "))
+                rewritten.append(contentsOf: fields[commentField...].joined(separator: " "))
             }
             try writeString(rewritten)
         }
