@@ -3,6 +3,53 @@ import SplatIO
 import simd
 
 extension SplatPersistedEditMaterializer {
+    /// Streaming materialization for video export. Non-default edits no longer require readAll() to
+    /// keep the entire unedited scene resident while a second edited array is built. Crop paths make
+    /// one bounded sampling pass for robust bounds, then stream the source again into the final array;
+    /// color-only paths need just the single materialization pass.
+    static func materializeStreamingCancellable(
+        sourceURL: URL,
+        assetURL: URL,
+        sourcePointCount: Int
+    ) async throws -> [SplatPoint] {
+        try Task.checkCancellation()
+        let settings = SplatViewerEditStore.load(sourceURL: sourceURL)?.settings ?? .default
+
+        guard settings != .default else {
+            let reader = try AutodetectSceneReader(assetURL)
+            let points = try await reader.readAll()
+            try Task.checkCancellation()
+            return points
+        }
+
+        let bounds = settings.hasCrop
+            ? try await cancellableSampledCropBounds(
+                sourceURL: assetURL,
+                sourcePointCount: sourcePointCount
+            )
+            : nil
+        let plan = Plan(settings: settings, bounds: bounds, outputPointCount: sourcePointCount)
+        let reader = try AutodetectSceneReader(assetURL)
+        let stream = try await reader.read()
+        var result: [SplatPoint] = []
+        let reserveCapacity = initialOutputReserveCapacity(
+            inputPointCount: sourcePointCount,
+            hasCrop: settings.hasCrop
+        )
+        if reserveCapacity > 0 {
+            result.reserveCapacity(reserveCapacity)
+        }
+
+        for try await points in stream {
+            try Task.checkCancellation()
+            let edited = try cancellableApply(points, plan: plan)
+            result.append(contentsOf: edited)
+        }
+        try Task.checkCancellation()
+        guard !result.isEmpty else { throw MaterializeError.emptyEditedScene }
+        return result
+    }
+
     /// Cancellation-aware in-memory materialization for long-running consumers such as video export.
     /// The original synchronous helper remains available for small/synchronous call sites; this path
     /// checks cooperative cancellation in bounded batches so cancelling an export releases its large
@@ -59,6 +106,42 @@ extension SplatPersistedEditMaterializer {
     static func initialOutputReserveCapacity(inputPointCount: Int, hasCrop: Bool) -> Int {
         guard inputPointCount > 0 else { return 0 }
         return hasCrop ? 0 : inputPointCount
+    }
+
+    private static func cancellableSampledCropBounds(
+        sourceURL: URL,
+        sourcePointCount: Int
+    ) async throws -> CropBounds {
+        let sampleStride = max(1, sourcePointCount / 8_000)
+        let reader = try AutodetectSceneReader(sourceURL)
+        let stream = try await reader.read()
+        var xs: [Float] = []
+        var ys: [Float] = []
+        var zs: [Float] = []
+        xs.reserveCapacity(min(sourcePointCount, 8_001))
+        ys.reserveCapacity(min(sourcePointCount, 8_001))
+        zs.reserveCapacity(min(sourcePointCount, 8_001))
+        var globalIndex = 0
+
+        for try await points in stream {
+            try Task.checkCancellation()
+            for point in points {
+                if globalIndex & 0x3FF == 0 { try Task.checkCancellation() }
+                if globalIndex % sampleStride == 0 {
+                    let p = point.position
+                    if p.x.isFinite, p.y.isFinite, p.z.isFinite {
+                        xs.append(p.x); ys.append(p.y); zs.append(p.z)
+                    }
+                }
+                globalIndex += 1
+            }
+        }
+        try Task.checkCancellation()
+        return CropBounds(
+            x: cancellablePercentileRange(xs),
+            y: cancellablePercentileRange(ys),
+            z: cancellablePercentileRange(zs)
+        )
     }
 
     private static func cancellableRobustCropBounds(for points: [SplatPoint]) throws -> CropBounds {
