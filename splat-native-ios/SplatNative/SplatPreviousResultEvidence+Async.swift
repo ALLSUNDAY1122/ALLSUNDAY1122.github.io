@@ -7,9 +7,13 @@ extension SplatPreviousResultEvidence {
     static func preserveBeforeReprocessAsync(
         sourceURL: URL
     ) async throws {
-        let worker = Task.detached(priority: .userInitiated) {
+        // Do not transfer Foundation URL state across the detached-task boundary under Swift 6
+        // strict concurrency. A String path is Sendable; rebuild the file URL inside the worker.
+        let sourcePath = sourceURL.path
+        let worker = Task.detached(priority: .userInitiated) { @Sendable in
+            let detachedSourceURL = URL(fileURLWithPath: sourcePath)
             try Task.checkCancellation()
-            try preserveBeforeReprocess(sourceURL: sourceURL, fileManager: .default)
+            try preserveBeforeReprocess(sourceURL: detachedSourceURL, fileManager: .default)
             try Task.checkCancellation()
         }
 
