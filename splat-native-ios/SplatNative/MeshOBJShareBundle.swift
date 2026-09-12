@@ -43,10 +43,8 @@ enum MeshOBJShareBundle {
                 shared.append(mtlDestination)
             }
 
-            try Task.checkCancellation()
-            let mtlText = try String(contentsOf: mtlSource, encoding: .utf8)
             let mtlRoot = mtlSource.deletingLastPathComponent()
-            for textureReference in textureReferences(in: mtlText) {
+            for textureReference in try textureReferences(sourceMTL: mtlSource) {
                 try Task.checkCancellation()
                 let textureSource = try resolved(textureReference, relativeTo: mtlRoot, allowedRoot: root)
                 let destination = try copyPreservingRelativePath(
@@ -91,9 +89,8 @@ enum MeshOBJShareBundle {
             try Task.checkCancellation()
             let mtlSource = try resolved(reference, relativeTo: root, allowedRoot: root)
             try addSize(mtlSource)
-            let mtlText = try String(contentsOf: mtlSource, encoding: .utf8)
             let mtlRoot = mtlSource.deletingLastPathComponent()
-            for textureReference in textureReferences(in: mtlText) {
+            for textureReference in try textureReferences(sourceMTL: mtlSource) {
                 try Task.checkCancellation()
                 try addSize(try resolved(textureReference, relativeTo: mtlRoot, allowedRoot: root))
             }
@@ -102,13 +99,13 @@ enum MeshOBJShareBundle {
         return total
     }
 
-    /// Scans the OBJ incrementally instead of materializing the entire geometry text just to find
-    /// `mtllib` directives. This keeps exact-OBJ share/preflight memory bounded even for large scans.
-    private static func materialLibraryReferences(sourceOBJ: URL) throws -> [String] {
-        let handle = try FileHandle(forReadingFrom: sourceOBJ)
+    /// Scans only bounded line buffers instead of materializing a potentially very large OBJ/MTL
+    /// text file. Oversized nonstandard directive lines are ignored rather than growing memory
+    /// without bound; normal Wavefront exporter directives are orders of magnitude smaller.
+    private static func forEachBoundedLine(in url: URL, body: (String) -> Void) throws {
+        let handle = try FileHandle(forReadingFrom: url)
         defer { try? handle.close() }
 
-        var references: [String] = []
         var line = Data()
         line.reserveCapacity(256)
         var discardingOversizedLine = false
@@ -119,10 +116,7 @@ enum MeshOBJShareBundle {
                 discardingOversizedLine = false
             }
             guard !discardingOversizedLine, !line.isEmpty else { return }
-            let text = String(decoding: line, as: UTF8.self)
-            let parts = parseArguments(text)
-            guard parts.count >= 2, parts[0].lowercased() == "mtllib" else { return }
-            references.append(contentsOf: parts.dropFirst())
+            body(String(decoding: line, as: UTF8.self))
         }
 
         while true {
@@ -143,19 +137,31 @@ enum MeshOBJShareBundle {
         }
         if !line.isEmpty || discardingOversizedLine { consumeLine() }
         try Task.checkCancellation()
+    }
+
+    private static func materialLibraryReferences(sourceOBJ: URL) throws -> [String] {
+        var references: [String] = []
+        try forEachBoundedLine(in: sourceOBJ) { line in
+            let parts = parseArguments(line)
+            guard parts.count >= 2, parts[0].lowercased() == "mtllib" else { return }
+            references.append(contentsOf: parts.dropFirst())
+        }
         return references
     }
 
-    private static func textureReferences(in mtl: String) -> [String] {
+    private static func textureReferences(sourceMTL: URL) throws -> [String] {
         let commands: Set<String> = [
             "map_ka", "map_kd", "map_ks", "map_ke", "map_d",
             "map_bump", "bump", "disp", "decal", "norm", "map_pr", "map_pm"
         ]
-        return mtl.split(whereSeparator: { $0.isNewline }).compactMap { rawLine in
-            let parts = parseArguments(String(rawLine))
-            guard parts.count >= 2, commands.contains(parts[0].lowercased()) else { return nil }
-            return texturePath(in: Array(parts.dropFirst()))
+        var references: [String] = []
+        try forEachBoundedLine(in: sourceMTL) { line in
+            let parts = parseArguments(line)
+            guard parts.count >= 2, commands.contains(parts[0].lowercased()),
+                  let path = texturePath(in: Array(parts.dropFirst())) else { return }
+            references.append(path)
         }
+        return references
     }
 
     /// OBJ/MTL paths are frequently quoted when exported by DCC tools because material and
