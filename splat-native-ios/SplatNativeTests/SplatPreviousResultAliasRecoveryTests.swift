@@ -42,6 +42,49 @@ final class SplatPreviousResultAliasRecoveryTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: externalBackup), trustedBytes)
     }
 
+    func testProjectRecoveryRefusesExternalSnapshotAliasAndPreservesCurrentBytes() throws {
+        let fileManager = FileManager.default
+        let root = try makeRoot("snapshot-alias-recovery")
+        let externalRoot = try makeRoot("snapshot-alias-external")
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: externalRoot)
+        }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, manifest) = try store.createProject(title: "Snapshot alias safety")
+        try makeProcessableRaw(in: projectURL, store: store)
+
+        let trustedBytes = Data(repeating: 0x49, count: 64)
+        let result = try commitResult(trustedBytes, in: projectURL, store: store)
+        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: result), result)
+        try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: result)
+
+        let snapshot = projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName)
+        let externalSnapshot = externalRoot.appendingPathComponent("snapshot.json")
+        try fileManager.moveItem(at: snapshot, to: externalSnapshot)
+        try fileManager.createSymbolicLink(at: snapshot, withDestinationURL: externalSnapshot)
+
+        let corruptedBytes = Data(repeating: 0x72, count: 96)
+        try corruptedBytes.write(to: result, options: .atomic)
+        try? fileManager.removeItem(
+            at: projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
+        )
+
+        let recovered = SplatPreviousResultEvidence.recoverTrustedPreviousIfNeeded(
+            projectURL: projectURL,
+            manifest: manifest,
+            fileManager: fileManager
+        )
+
+        XCTAssertEqual(recovered.stage, manifest.stage)
+        XCTAssertEqual(try Data(contentsOf: result), corruptedBytes)
+        XCTAssertTrue(fileManager.fileExists(
+            atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName).path
+        ))
+        XCTAssertTrue(fileManager.fileExists(atPath: externalSnapshot.path))
+    }
+
     private func commitResult(
         _ bytes: Data,
         in projectURL: URL,
@@ -52,7 +95,7 @@ final class SplatPreviousResultAliasRecoveryTests: XCTestCase {
         let result = try store.commitPendingSplat(projectURL: projectURL)
         _ = try store.updateManifest(projectURL: projectURL) { value in
             value.stage = .finished
-            value.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+            value.outputs[ScanRepresentationKind.splat.rawValue]] = ScanProjectStore.splatResultFileName
         }
         return result
     }
