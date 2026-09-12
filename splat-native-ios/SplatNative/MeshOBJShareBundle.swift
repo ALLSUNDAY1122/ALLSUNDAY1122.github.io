@@ -22,13 +22,7 @@ enum MeshOBJShareBundle {
         guard sourceOBJ.pathExtension.lowercased() == "obj" else { return [] }
         let root = sourceOBJ.deletingLastPathComponent().standardizedFileURL
         let text = try String(contentsOf: sourceOBJ, encoding: .utf8)
-        let mtlReferences = text
-            .split(whereSeparator: { $0.isNewline })
-            .flatMap { line -> [String] in
-                let trimmed = String(line).trimmingCharacters(in: .whitespaces)
-                guard trimmed.lowercased().hasPrefix("mtllib ") else { return [] }
-                return parseArguments(String(trimmed.dropFirst("mtllib ".count)))
-            }
+        let mtlReferences = materialLibraryReferences(in: text)
 
         var shared: [URL] = []
         var copied = Set<String>()
@@ -70,13 +64,7 @@ enum MeshOBJShareBundle {
         guard sourceOBJ.pathExtension.lowercased() == "obj" else { return 0 }
         let root = sourceOBJ.deletingLastPathComponent().standardizedFileURL
         let text = try String(contentsOf: sourceOBJ, encoding: .utf8)
-        let mtlReferences = text
-            .split(whereSeparator: { $0.isNewline })
-            .flatMap { line -> [String] in
-                let trimmed = String(line).trimmingCharacters(in: .whitespaces)
-                guard trimmed.lowercased().hasPrefix("mtllib ") else { return [] }
-                return parseArguments(String(trimmed.dropFirst("mtllib ".count)))
-            }
+        let mtlReferences = materialLibraryReferences(in: text)
 
         var sources = Set<String>()
         var total: Int64 = 0
@@ -101,6 +89,14 @@ enum MeshOBJShareBundle {
             }
         }
         return total
+    }
+
+    private static func materialLibraryReferences(in obj: String) -> [String] {
+        obj.split(whereSeparator: { $0.isNewline }).flatMap { rawLine -> [String] in
+            let parts = parseArguments(String(rawLine))
+            guard parts.count >= 2, parts[0].lowercased() == "mtllib" else { return [] }
+            return Array(parts.dropFirst())
+        }
     }
 
     private static func textureReferences(in mtl: String) -> [String] {
