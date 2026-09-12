@@ -139,6 +139,29 @@ final class SplatCanonicalSHCandidateCleanupTests: XCTestCase {
         XCTAssertTrue(fileManager.fileExists(atPath: candidate.path))
     }
 
+    func testCanonicalPayloadRejectsSymlinkEvenWhenExternalPLYIsComplete() throws {
+        let fileManager = FileManager.default
+        let directory = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-canonical-symlink-\(UUID().uuidString)", isDirectory: true)
+        let externalDirectory = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-canonical-external-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: externalDirectory, withIntermediateDirectories: true)
+        defer {
+            try? fileManager.removeItem(at: directory)
+            try? fileManager.removeItem(at: externalDirectory)
+        }
+
+        let external = externalDirectory.appendingPathComponent("complete.ply")
+        try validSH3PLY(pointCount: 2, comment: "external-complete").write(to: external, options: .atomic)
+        XCTAssertTrue(SplatCanonicalSHAsset.hasCompleteVertexPayload(at: external, expectedPointCount: 2))
+
+        let alias = directory.appendingPathComponent("result.sh3-test.ply")
+        try fileManager.createSymbolicLink(at: alias, withDestinationURL: external)
+
+        XCTAssertFalse(SplatCanonicalSHAsset.hasCompleteVertexPayload(at: alias, expectedPointCount: 2))
+    }
+
     func testEndHeaderTokenInsideCommentCannotHideTruncatedVertexPayload() throws {
         let fileManager = FileManager.default
         let directory = fileManager.temporaryDirectory
