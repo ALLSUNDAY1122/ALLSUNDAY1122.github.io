@@ -23,6 +23,24 @@ final class SplatFramingSamplingTests: XCTestCase {
         }
     }
 
+    func testCustomViewerBudgetsRemainBoundedAcrossOldFloorStrideWindows() {
+        let cropIndices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: 15_999,
+            targetSampleCount: 8_000
+        )
+        XCTAssertEqual(cropIndices.count, 8_000)
+        XCTAssertEqual(cropIndices.first, 0)
+        XCTAssertEqual(cropIndices.last, 15_998)
+
+        let pickIndices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: 29_999,
+            targetSampleCount: 15_000
+        )
+        XCTAssertEqual(pickIndices.count, 15_000)
+        XCTAssertEqual(pickIndices.first, 0)
+        XCTAssertEqual(pickIndices.last, 29_998)
+    }
+
     func testSmallScenesStillUseEveryPoint() {
         XCTAssertEqual(
             SplatCameraGeometry.framingSampleIndices(pointCount: 5),
