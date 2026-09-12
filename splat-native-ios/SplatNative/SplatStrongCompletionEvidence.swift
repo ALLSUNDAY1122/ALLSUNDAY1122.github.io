@@ -68,6 +68,13 @@ enum SplatStrongCompletionEvidence {
         let before = try snapshot(sourceURL, fileManager: fileManager)
         guard before.byteCount == evidence.byteCount else { throw IntegrityError.hashMismatch }
 
+        // Completion trust metadata must be physically owned by the project. Following a symlinked
+        // seal would let bytes outside the archived scan decide which local result hash is trusted.
+        // Fail closed rather than reading or overwriting an external target.
+        if let sealType = fileTypeIfPresent(sealURL, fileManager: fileManager), sealType != .typeRegular {
+            throw IntegrityError.hashMismatch
+        }
+
         if let data = try? Data(contentsOf: sealURL),
            let seal = try? JSONDecoder().decode(Seal.self, from: data),
            seal.matches(evidence) {
@@ -110,6 +117,11 @@ enum SplatStrongCompletionEvidence {
             throw IntegrityError.sourceMissing
         }
         return FileSnapshot(byteCount: size.int64Value, modificationDate: modificationDate)
+    }
+
+    private static func fileTypeIfPresent(_ url: URL, fileManager: FileManager) -> FileAttributeType? {
+        guard let attributes = try? fileManager.attributesOfItem(atPath: url.path) else { return nil }
+        return attributes[.type] as? FileAttributeType
     }
 
     private static func sha256Hex(fileURL: URL) throws -> String {
