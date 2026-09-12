@@ -46,15 +46,20 @@ enum MeshExportAdmission {
             format: format
         )
 
-        // Any conversion that imports an OBJ may follow mtllib/texture references through Assimp
-        // or Model I/O, not only exact OBJ sharing. Resolve every companion through the same
-        // containment/symlink policy before conversion starts so a crafted or stale project cannot
-        // make export read data outside the project root. Only exact OBJ delivery duplicates the
-        // companions into the transient share workspace, so only that path adds their bytes here.
+        // Assimp/Model I/O scene conversion and exact OBJ delivery may follow every referenced
+        // material/texture, so those paths fail closed on missing/unsafe companions. PLY/LAS uses
+        // our bounded parser instead: it validates contained, decodable textures and deliberately
+        // falls back to geometry-only points when texture metadata is stale or damaged. Do not let
+        // the stricter share-bundle scanner block that safe point-cloud fallback before it starts.
         if sourceExtension == "obj" {
-            let companionBytes = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL)
-            if format == .obj {
-                required = saturatingAdd(required, companionBytes)
+            switch format {
+            case .fbx, .obj, .glb, .usdz, .stl:
+                let companionBytes = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL)
+                if format == .obj {
+                    required = saturatingAdd(required, companionBytes)
+                }
+            case .ply, .las:
+                break
             }
         }
 
