@@ -53,6 +53,58 @@ final class SplatPersistedEditCancellationTests: XCTestCase {
         XCTAssertEqual(actualFirst.color.asSRGBFloat.x, expectedFirst.color.asSRGBFloat.x, accuracy: 0.0001)
     }
 
+    func testStreamingMaterializerMatchesInMemoryCropAndColorEdits() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("splat-streaming-edit-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        let points = (0..<2_000).map { index in
+            SplatPoint(
+                position: SIMD3<Float>(Float(index) / 1_999, 0, 0),
+                color: .sRGBUInt8(SIMD3<UInt8>(45, 80, 120)),
+                opacity: .linearFloat(0.8),
+                scale: .linearFloat(SIMD3<Float>(repeating: 0.02)),
+                rotation: simd_quatf(angle: 0, axis: SIMD3<Float>(0, 1, 0))
+            )
+        }
+        let writer = try DotSplatSceneWriter(toFileAtPath: source.path)
+        try await writer.write(points)
+        try await writer.close()
+
+        let edits = SplatEditSettings(
+            exposureEV: 0.75,
+            contrast: 1.15,
+            cropXMin: 0.2,
+            cropXMax: 0.85,
+            cropYMin: 0,
+            cropYMax: 1,
+            cropZMin: 0,
+            cropZMax: 1
+        )
+        try SplatViewerEditStore.save(edits, sourceURL: source)
+
+        let expected = try await SplatPersistedEditMaterializer.materializeInMemoryCancellable(
+            sourceURL: source,
+            points: points
+        )
+        let actual = try await SplatPersistedEditMaterializer.materializeStreamingCancellable(
+            sourceURL: source,
+            assetURL: source,
+            sourcePointCount: points.count
+        )
+
+        XCTAssertEqual(actual.count, expected.count)
+        XCTAssertEqual(actual.first?.position.x, expected.first?.position.x)
+        XCTAssertEqual(actual.last?.position.x, expected.last?.position.x)
+        let actualFirst = try XCTUnwrap(actual.first)
+        let expectedFirst = try XCTUnwrap(expected.first)
+        XCTAssertEqual(actualFirst.color.asSRGBFloat.x, expectedFirst.color.asSRGBFloat.x, accuracy: 0.0001)
+        XCTAssertEqual(actualFirst.color.asSRGBFloat.y, expectedFirst.color.asSRGBFloat.y, accuracy: 0.0001)
+        XCTAssertEqual(actualFirst.color.asSRGBFloat.z, expectedFirst.color.asSRGBFloat.z, accuracy: 0.0001)
+    }
+
     func testCancellableMaterializerIgnoresExternalViewerSidecarAlias() async throws {
         let fileManager = FileManager.default
         let root = fileManager.temporaryDirectory
