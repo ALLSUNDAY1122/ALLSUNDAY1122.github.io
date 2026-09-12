@@ -200,6 +200,34 @@ final class SplatViewerStateTests: XCTestCase {
         XCTAssertNil(state.warningMessage)
     }
 
+    @MainActor
+    func testMeasurementIgnoresExternalTransformsAlias() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let externalRoot = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: externalRoot)
+        }
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: externalRoot, withIntermediateDirectories: true)
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+
+        let externalTransforms = externalRoot.appendingPathComponent("transforms.json")
+        let json = #"{"frames":[{"transform_matrix":[[1,0,0,-10],[0,1,0,0],[0,0,1,0],[0,0,0,1]]},{"transform_matrix":[[1,0,0,10],[0,1,0,0],[0,0,1,0],[0,0,0,1]]}]}"#
+        try Data(json.utf8).write(to: externalTransforms, options: .atomic)
+        try fileManager.createSymbolicLink(
+            at: root.appendingPathComponent("transforms.json"),
+            withDestinationURL: externalTransforms
+        )
+
+        let state = SplatViewerState()
+        state.attach(url: source)
+        state.rendererMeasured(meters: 1)
+        XCTAssertEqual(state.measurementText, "1.00 m")
+    }
+
     func testMeasurementFormattingUsesPracticalUnits() {
         XCTAssertEqual(SplatMeasurementFormatter.string(meters: 0.004), "4.0 mm")
         XCTAssertEqual(SplatMeasurementFormatter.string(meters: 0.245), "24.5 cm")
