@@ -47,17 +47,15 @@ enum MeshExportAdmission {
         )
 
         // Assimp/Model I/O scene conversion and exact OBJ delivery may follow every referenced
-        // material/texture, so those paths fail closed on missing/unsafe companions. PLY/LAS uses
-        // our bounded parser instead: it validates contained, decodable textures and deliberately
-        // falls back to geometry-only points when texture metadata is stale or damaged. Do not let
-        // the stricter share-bundle scanner block that safe point-cloud fallback before it starts.
+        // material/texture. Validate those companions and reserve their on-disk bytes because the
+        // converted container can embed/copy them while the originals and partial output coexist.
+        // PLY/LAS uses our bounded parser instead: it validates contained, decodable textures and
+        // deliberately falls back to geometry-only points when texture metadata is stale/damaged.
         if sourceExtension == "obj" {
             switch format {
             case .fbx, .obj, .glb, .usdz, .stl:
                 let companionBytes = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL)
-                if format == .obj {
-                    required = saturatingAdd(required, companionBytes)
-                }
+                required = saturatingAdd(required, companionBytes)
             case .ply, .las:
                 break
             }
