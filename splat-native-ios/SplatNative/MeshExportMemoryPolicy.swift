@@ -53,22 +53,18 @@ enum MeshExportMemoryPolicy {
             physicalMemoryBytes: physicalMemoryBytes
         )
 
-        // OBJ conversions may load referenced MTL/texture assets in addition to the OBJ itself.
-        // Scene conversion requires its companions, so malformed/missing references remain a hard
-        // preflight failure there. PLY/LAS intentionally retain the existing geometry-only fallback
-        // when texture companions are absent or unsafe; when companions are valid, account for their
-        // on-disk payload with a conservative expansion multiplier so multi-material projects cannot
-        // bypass admission via a tiny OBJ.
+        // Scene conversion may hand the complete OBJ material graph to Assimp/ModelIO, so account
+        // for referenced companions there. Point-cloud conversion is different: its exporter keeps
+        // only one decoded texture sampler active at a time and the estimate below includes enough
+        // reserve for the old/new sampler overlap during a material switch. Summing every compressed
+        // texture here would therefore reject otherwise safe multi-material PLY/LAS exports solely
+        // because the project contains many atlases.
         if sourceURL.pathExtension.lowercased() == "obj" {
             switch format {
             case .fbx, .glb, .usdz, .stl:
                 let companionBytes = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL)
                 estimate = addingCompanionWorkingSet(companionBytes, to: estimate)
-            case .ply, .las:
-                if let companionBytes = try? MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL) {
-                    estimate = addingCompanionWorkingSet(companionBytes, to: estimate)
-                }
-            case .obj:
+            case .ply, .las, .obj:
                 break
             }
         }
@@ -99,11 +95,13 @@ enum MeshExportMemoryPolicy {
             switch format {
             case .ply, .las:
                 // OBJ input is mapped, decoded to text and expanded into vertex/UV/triangle arrays.
-                // The base reserve covers one capped texture sampler; preflight adds companion
-                // working bytes so multi-material projects cannot bypass admission via a tiny OBJ.
+                // Texture decoding is capped at 4096² RGBA and retains one active sampler. During a
+                // material switch Swift can transiently hold the old and new samplers together, so
+                // reserve two capped samplers plus parser/streaming overhead instead of scaling with
+                // the total number or compressed byte size of texture companions.
                 estimatedPeakBytes = saturatingAdd(
                     saturatingMultiply(sourceBytes, by: 8),
-                    96 * mib
+                    160 * mib
                 )
             case .fbx, .obj, .glb, .usdz, .stl:
                 // Assimp/ModelIO build an in-memory scene before serialization.
