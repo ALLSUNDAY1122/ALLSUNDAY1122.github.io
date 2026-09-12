@@ -54,21 +54,20 @@ enum MeshExportMemoryPolicy {
         )
 
         // OBJ conversions may load referenced MTL/texture assets in addition to the OBJ itself.
-        // The point-cloud path now supports multiple face materials, so companion textures can no
-        // longer be treated as a fixed one-texture allowance. Account for their on-disk payload
-        // with the same conservative expansion multiplier used by scene conversion. This remains
-        // intentionally conservative for compressed images while the sampler itself independently
-        // caps each decoded texture to 4096² RGBA.
+        // Scene conversion requires its companions, so malformed/missing references remain a hard
+        // preflight failure there. PLY/LAS intentionally retain the existing geometry-only fallback
+        // when texture companions are absent or unsafe; when companions are valid, account for their
+        // on-disk payload with a conservative expansion multiplier so multi-material projects cannot
+        // bypass admission via a tiny OBJ.
         if sourceURL.pathExtension.lowercased() == "obj" {
             switch format {
-            case .fbx, .glb, .usdz, .stl, .ply, .las:
+            case .fbx, .glb, .usdz, .stl:
                 let companionBytes = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL)
-                let companionWorkingBytes = saturatingMultiply(UInt64(clamping: companionBytes), by: 8)
-                estimate = Estimate(
-                    sourceBytes: estimate.sourceBytes,
-                    estimatedPeakBytes: saturatingAdd(estimate.estimatedPeakBytes, companionWorkingBytes),
-                    budgetBytes: estimate.budgetBytes
-                )
+                estimate = addingCompanionWorkingSet(companionBytes, to: estimate)
+            case .ply, .las:
+                if let companionBytes = try? MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL) {
+                    estimate = addingCompanionWorkingSet(companionBytes, to: estimate)
+                }
             case .obj:
                 break
             }
@@ -128,6 +127,15 @@ enum MeshExportMemoryPolicy {
             sourceBytes: sourceBytes,
             estimatedPeakBytes: estimatedPeakBytes,
             budgetBytes: budgetBytes
+        )
+    }
+
+    private static func addingCompanionWorkingSet(_ companionBytes: Int64, to estimate: Estimate) -> Estimate {
+        let companionWorkingBytes = saturatingMultiply(UInt64(clamping: companionBytes), by: 8)
+        return Estimate(
+            sourceBytes: estimate.sourceBytes,
+            estimatedPeakBytes: saturatingAdd(estimate.estimatedPeakBytes, companionWorkingBytes),
+            budgetBytes: estimate.budgetBytes
         )
     }
 
