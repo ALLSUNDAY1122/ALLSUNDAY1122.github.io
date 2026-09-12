@@ -101,7 +101,8 @@ enum MeshTrimEngine {
             }
         }
 
-        var usedVertices = [Bool](repeating: false, count: vertices.count)
+        let bitWordCount = (vertices.count >> 6) + ((vertices.count & 63) == 0 ? 0 : 1)
+        var usedVertexBits = [UInt64](repeating: 0, count: bitWordCount)
         var usedVertexCount = 0
         var faceCount = 0
         var faceIndices: [Int] = []
@@ -149,9 +150,13 @@ enum MeshTrimEngine {
                 centroid.z >= low.z && centroid.z <= high.z
             if inside {
                 try writeLine(line)
-                for id in faceIndices where !usedVertices[id] {
-                    usedVertices[id] = true
-                    usedVertexCount += 1
+                for id in faceIndices {
+                    let word = id >> 6
+                    let mask = UInt64(1) << UInt64(id & 63)
+                    if usedVertexBits[word] & mask == 0 {
+                        usedVertexBits[word] |= mask
+                        usedVertexCount += 1
+                    }
                 }
                 faceCount += faceIndices.count - 2
             }
