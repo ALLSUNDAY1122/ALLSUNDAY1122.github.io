@@ -84,6 +84,40 @@ final class MeshProjectIntegrityTests: XCTestCase {
         }
     }
 
+    func testRejectsManifestRetargetBetweenListingAndFirstSeal() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = MeshProjectStore(appRootURL: root)
+        let live = try makeLiveProject(in: root, marker: 0x5A)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+
+        let alternate = archived.projectURL.appendingPathComponent("alternate.obj")
+        try Data(contentsOf: archived.resultURL).write(to: alternate, options: .atomic)
+        let attrs = try FileManager.default.attributesOfItem(atPath: archived.resultURL.path)
+        let originalDate = try XCTUnwrap(attrs[.modificationDate] as? Date)
+        try FileManager.default.setAttributes([.modificationDate: originalDate], ofItemAtPath: alternate.path)
+
+        let manifestURL = archived.projectURL.appendingPathComponent(MeshProjectStore.libraryManifestFileName)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        var manifest = try decoder.decode(MeshProjectStore.LibraryManifest.self, from: Data(contentsOf: manifestURL))
+        manifest.resultFileName = alternate.lastPathComponent
+        manifest.resultByteCount = Int64(try Data(contentsOf: alternate).count)
+        manifest.sourceResultModificationDate = originalDate
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        try encoder.encode(manifest).write(to: manifestURL, options: .atomic)
+
+        XCTAssertThrowsError(try MeshProjectIntegrity.verifyOrSeal(summary: archived)) { error in
+            guard case MeshProjectIntegrity.IntegrityError.manifestChangedSinceListing = error else {
+                return XCTFail("Expected manifestChangedSinceListing, got \(error)")
+            }
+        }
+        XCTAssertFalse(FileManager.default.fileExists(
+            atPath: archived.projectURL.appendingPathComponent(MeshProjectIntegrity.evidenceFileName).path
+        ))
+    }
+
     func testRejectsCorruptExistingEvidenceInsteadOfResealing() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }

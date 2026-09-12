@@ -53,6 +53,7 @@ enum MeshProjectIntegrity {
 
     enum IntegrityError: LocalizedError, Equatable {
         case manifestMissing
+        case manifestChangedSinceListing
         case resultMissing
         case invalidGeometry
         case evidenceInvalid
@@ -65,6 +66,8 @@ enum MeshProjectIntegrity {
             switch self {
             case .manifestMissing:
                 return "保存済みMeshの完成記録を確認できません。"
+            case .manifestChangedSinceListing:
+                return "保存済みMeshの完成記録が一覧取得後に変更されています。ライブラリを更新してから開き直してください。"
             case .resultMissing:
                 return "保存済みMeshの3Dデータが見つかりません。"
             case .invalidGeometry:
@@ -100,6 +103,17 @@ enum MeshProjectIntegrity {
         }
 
         let resultURL = summary.projectURL.appendingPathComponent(manifest.resultFileName)
+        let expectedProjectID = summary.projectURL.deletingPathExtension().lastPathComponent
+        let expectedResultURL = summary.resultURL.standardizedFileURL
+        let listedRootValues = try? summary.projectURL.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+        guard manifest.id == summary.id,
+              expectedProjectID == summary.id,
+              resultURL.standardizedFileURL == expectedResultURL,
+              listedRootValues?.isDirectory == true,
+              listedRootValues?.isSymbolicLink != true else {
+            throw IntegrityError.manifestChangedSinceListing
+        }
+
         let standardizedProject = summary.projectURL.standardizedFileURL.resolvingSymlinksInPath()
         let standardizedResult = resultURL.standardizedFileURL.resolvingSymlinksInPath()
         let projectPrefix = standardizedProject.path.hasSuffix("/")
