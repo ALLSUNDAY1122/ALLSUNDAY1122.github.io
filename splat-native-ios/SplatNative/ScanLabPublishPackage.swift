@@ -67,7 +67,11 @@ enum ScanLabPublishPackageBuilder {
         do {
             try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
             try Data().write(to: markerURL(for: directory), options: .atomic)
-            try source.write(to: sceneURL, options: [.atomic])
+            // The source is already a validated regular, non-empty SPZ file. Copy it as a file
+            // rather than asking Data.write(.atomic) to stage another 128 MB-class Data-backed write
+            // while the mapped source remains alive. The hash + size verification below still proves
+            // that the package contains the exact validated bytes.
+            try fileManager.copyItem(at: sourceURL, to: sceneURL)
             let manifest = ScanLabPublishManifest(schemaVersion: ScanLabPublishManifest.currentSchemaVersion, sceneFile: ScanLabPublishPackage.sceneFilename, sceneByteCount: Int64(source.count), sceneSHA256: trustedSourceHash, mediaType: ScanLabPublishPackage.manifestSceneMediaType, createdAt: ISO8601DateFormatter().string(from: Date()))
             let encoder = JSONEncoder(); encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
             try encoder.encode(manifest).write(to: manifestURL, options: [.atomic])
