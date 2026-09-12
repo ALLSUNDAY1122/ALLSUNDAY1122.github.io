@@ -77,24 +77,27 @@ enum MeshExportAdmission {
     }
 
     /// Conservative disk estimate for the atomic pipeline. Exact-format passthrough only needs
-    /// one share copy. Point-cloud output can expand a compact indexed OBJ substantially because
-    /// each triangle corner becomes a full point record (up to 26 bytes in LAS 1.2 with RGB).
-    /// A short repeated `f 1 2 3` line can therefore approach a 10x output/source ratio, before
-    /// temporary output and metadata overhead. Reserve 12x source bytes for PLY/LAS rather than
-    /// the former 4x estimate so valid high-reuse meshes fail before disk exhaustion, not midway.
+    /// one share copy. Direct OBJ point-cloud output can expand a compact indexed OBJ substantially
+    /// because each triangle corner becomes a full point record (up to 26 bytes in LAS 1.2 with
+    /// RGB), so reserve 12x source bytes. Non-OBJ point-cloud conversion first materializes a text
+    /// OBJ bridge and then expands that bridge again into PLY/LAS; compressed/binary inputs such as
+    /// GLB/USDZ can therefore consume substantially more disk than their source size suggests.
+    /// Reserve 24x source bytes for that two-stage path so low-storage failures happen before the
+    /// bridge/export pipeline starts rather than after a large temporary OBJ has already been made.
     static func estimatedRequiredFreeBytes(
         sourceBytes: Int64,
         sourceExtension: String,
         format: MeshExportService.Format
     ) -> Int64 {
         let source = max(0, sourceBytes)
+        let normalizedExtension = sourceExtension.lowercased()
         let multiplier: Int64
-        if sourceExtension.lowercased() == format.rawValue {
+        if normalizedExtension == format.rawValue {
             multiplier = 1
         } else {
             switch format {
             case .ply, .las:
-                multiplier = 12
+                multiplier = normalizedExtension == "obj" ? 12 : 24
             case .fbx, .obj, .glb, .usdz, .stl:
                 multiplier = 3
             }
