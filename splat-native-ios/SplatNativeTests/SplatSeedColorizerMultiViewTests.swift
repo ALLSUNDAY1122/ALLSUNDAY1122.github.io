@@ -111,6 +111,42 @@ final class SplatSeedColorizerMultiViewTests: XCTestCase {
         XCTAssertEqual(color.blue, SplatSeedColorizer.fallback.blue)
     }
 
+    func testLargeSourceFrameStillSamplesCorrectColorThroughBoundedRasterDecode() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("splat-seed-large-raster-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let size = CGSize(width: 4096, height: 64)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let image = renderer.image { context in
+            UIColor(red: 0.20, green: 0.70, blue: 0.30, alpha: 1).setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+        }
+        try XCTUnwrap(image.pngData()).write(to: root.appendingPathComponent("wide.png"))
+
+        let frame = SplatSeedFrame(
+            filePath: "wide.png",
+            transformMatrix: identityRows,
+            flX: 1000,
+            flY: 1000,
+            cx: 2048,
+            cy: 32,
+            w: 4096,
+            h: 64
+        )
+        let color = try XCTUnwrap(SplatSeedColorizer.colorize(
+            points: [SIMD3<Float>(0, 0, -1)],
+            frames: [frame],
+            projectURL: root
+        ).first)
+
+        XCTAssertGreaterThan(color.green, 150)
+        XCTAssertLessThan(color.red, 80)
+        XCTAssertLessThan(color.blue, 110)
+        XCTAssertEqual(SplatSeedColorizer.maximumRasterDimension, 2_048)
+    }
+
     func testEqualScoreFramesKeepStableFirstThreeConsensusAfterTopKOptimization() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("splat-seed-topk-\(UUID().uuidString)", isDirectory: true)
