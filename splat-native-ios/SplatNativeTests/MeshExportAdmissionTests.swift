@@ -135,6 +135,29 @@ final class MeshExportAdmissionTests: XCTestCase {
         XCTAssertEqual(children.map(\.lastPathComponent).sorted(), ["mesh.obj"])
     }
 
+    func testPreflightFailsClosedWhenCapacityCannotBeRead() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("c2-mesh-unknown-storage-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("mesh.obj")
+        try "v 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n"
+            .write(to: source, atomically: true, encoding: .utf8)
+
+        XCTAssertThrowsError(
+            try MeshExportAdmission.preflight(
+                sourceURL: source,
+                format: .glb,
+                capacityProvider: { _ in nil }
+            )
+        ) { error in
+            guard case MeshExportAdmission.AdmissionError.storageCapacityUnavailable = error else {
+                return XCTFail("Expected storageCapacityUnavailable, got \(error)")
+            }
+        }
+    }
+
     func testPreflightRejectsDirectoryMasqueradingAsMeshFile() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("c2-mesh-nonregular-\(UUID().uuidString)", isDirectory: true)
