@@ -83,7 +83,9 @@ final class SplatViewerCameraDatasetLoaderTests: XCTestCase {
         XCTAssertEqual(positions.count, SplatViewerCameraDatasetLoader.maximumReturnedPositions)
         XCTAssertEqual(positions.first?.x, 0)
         XCTAssertEqual(positions.last?.x, Float(frameCount - 1))
-        XCTAssertTrue(zip(positions, positions.dropFirst()).allSatisfy { $0.x <= $1.x })
+        XCTAssertTrue(zip(positions, positions.dropFirst()).allSatisfy { pair in
+            pair.0.x <= pair.1.x
+        })
     }
 
     private func makeRoot() throws -> URL {
