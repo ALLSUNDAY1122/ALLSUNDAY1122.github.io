@@ -13,7 +13,7 @@ final class MeshTrimEditorSafetyTests: XCTestCase {
         XCTAssertEqual(result.usedVertexCount, 4)
     }
 
-    func testNegativeFaceIndicesResolveAgainstVerticesDefinedAtFace() throws {
+    func testNegativeFaceIndicesResolveAtFaceAndUnusedVerticesAreCompacted() throws {
         let url = try writeOBJ([
             "v 0 0 0", "v 1 0 0", "v 0 1 0",
             "f -3 -2 -1",
@@ -25,7 +25,9 @@ final class MeshTrimEditorSafetyTests: XCTestCase {
         XCTAssertEqual(result.faceCount, 1)
         XCTAssertEqual(result.usedVertexCount, 3)
         let output = try String(contentsOf: result.url, encoding: .utf8)
-        XCTAssertTrue(output.contains("f -3 -2 -1\n"))
+        XCTAssertTrue(output.contains("f 1 2 3\n"))
+        XCTAssertFalse(output.contains("v 100 100 100\n"))
+        XCTAssertEqual(output.split(whereSeparator: \.isNewline).filter { $0.hasPrefix("v ") }.count, 3)
     }
 
     func testRejectsSymlinkMeshSource() throws {
