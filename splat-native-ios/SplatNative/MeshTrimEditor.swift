@@ -273,7 +273,15 @@ enum MeshTrimEngine {
         guard !first.isEmpty, let raw = Int(first), raw != 0 else {
             throw error("OBJ面定義が不正です")
         }
-        let index = raw > 0 ? raw - 1 : verticesDefined + raw
+        let index: Int
+        if raw > 0 {
+            index = raw - 1
+            guard index < verticesDefined else {
+                throw error("OBJ面が未定義の頂点を参照しています")
+            }
+        } else {
+            index = verticesDefined + raw
+        }
         guard index >= 0, index < totalVertices else {
             throw error("OBJ面インデックスが範囲外です")
         }
