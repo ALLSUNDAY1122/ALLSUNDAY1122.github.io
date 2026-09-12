@@ -127,7 +127,7 @@ extension SplatCanonicalSHAsset {
             return false
         }
         guard !prefix.isEmpty,
-              let markerRange = prefix.range(of: Data("end_header".utf8)) else { return false }
+              let markerRange = endHeaderLineRange(in: prefix) else { return false }
 
         var payloadOffset = markerRange.upperBound
         if payloadOffset < prefix.endIndex, prefix[payloadOffset] == 13 { payloadOffset += 1 }
@@ -165,6 +165,33 @@ extension SplatCanonicalSHAsset {
         let headerBytes = UInt64(payloadOffset)
         guard headerBytes <= UInt64.max - bodyBytes else { return false }
         return UInt64(sizeNumber.int64Value) >= headerBytes + bodyBytes
+    }
+
+    /// `end_header` is valid only as a complete PLY header line. Searching for the raw byte token
+    /// alone lets a comment such as `comment end_header marker` shorten the calculated header size;
+    /// a correspondingly truncated binary body could then pass the size-only completeness check.
+    private static func endHeaderLineRange(in data: Data) -> Range<Data.Index>? {
+        let marker = Data("end_header".utf8)
+        var searchStart = data.startIndex
+
+        while searchStart < data.endIndex,
+              let range = data.range(of: marker, in: searchStart..<data.endIndex) {
+            let startsAtLineBoundary: Bool
+            if range.lowerBound == data.startIndex {
+                startsAtLineBoundary = true
+            } else {
+                let previous = data[data.index(before: range.lowerBound)]
+                startsAtLineBoundary = previous == 0x0A || previous == 0x0D
+            }
+
+            let endsAtLineBoundary = range.upperBound == data.endIndex ||
+                data[range.upperBound] == 0x0A || data[range.upperBound] == 0x0D
+            if startsAtLineBoundary && endsAtLineBoundary {
+                return range
+            }
+            searchStart = range.upperBound
+        }
+        return nil
     }
 
     private static func plyScalarByteWidth(_ type: String) -> UInt64? {
