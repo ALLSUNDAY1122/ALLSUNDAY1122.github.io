@@ -79,6 +79,80 @@ enum MeshTrimEngine {
             throw error("トリミング境界を計算できません")
         }
 
+        let bitWordCount = (vertices.count >> 6) + ((vertices.count & 63) == 0 ? 0 : 1)
+        var usedVertexBits = [UInt64](repeating: 0, count: bitWordCount)
+        var usedVertexCount = 0
+        var faceCount = 0
+        var faceIndices: [Int] = []
+        faceIndices.reserveCapacity(4)
+        var verticesSeen = 0
+        var faceRecordIndex = 0
+        var selectedFaceBits: [UInt64] = []
+
+        // Pass 2 determines which faces survive and which source vertices they actually reference.
+        // Keeping one bit per face/vertex avoids retaining rewritten face strings for large scans.
+        try forEachOBJLine(at: url) { line in
+            let directive = firstDirective(in: line)
+            if directive == "v" {
+                verticesSeen += 1
+                return
+            }
+            guard directive == "f" else { return }
+
+            let fields = line.split(whereSeparator: \.isWhitespace)
+            let faceFields = fields.dropFirst().prefix { !$0.hasPrefix("#") }
+            guard faceFields.count >= 3 else { throw error("OBJ面定義が不正です") }
+            faceIndices.removeAll(keepingCapacity: true)
+            if faceIndices.capacity < faceFields.count {
+                faceIndices.reserveCapacity(faceFields.count)
+            }
+            for token in faceFields {
+                let index = try resolveVertexIndex(token: token, verticesDefined: verticesSeen, totalVertices: vertices.count)
+                faceIndices.append(index)
+            }
+
+            var centroidX: Float = 0
+            var centroidY: Float = 0
+            var centroidZ: Float = 0
+            for id in faceIndices {
+                let point = vertices[id]
+                centroidX += point.x
+                centroidY += point.y
+                centroidZ += point.z
+            }
+            let inverseCount = 1 / Float(faceIndices.count)
+            centroidX *= inverseCount
+            centroidY *= inverseCount
+            centroidZ *= inverseCount
+            guard centroidX.isFinite, centroidY.isFinite, centroidZ.isFinite else {
+                throw error("面の位置を計算できません")
+            }
+            let inside = centroidX >= lowX && centroidX <= highX &&
+                centroidY >= lowY && centroidY <= highY &&
+                centroidZ >= lowZ && centroidZ <= highZ
+            if inside {
+                markBit(faceRecordIndex, in: &selectedFaceBits)
+                for id in faceIndices {
+                    let word = id >> 6
+                    let mask = UInt64(1) << UInt64(id & 63)
+                    if usedVertexBits[word] & mask == 0 {
+                        usedVertexBits[word] |= mask
+                        usedVertexCount += 1
+                    }
+                }
+                faceCount += faceIndices.count - 2
+            }
+            faceRecordIndex += 1
+        }
+        guard faceCount > 0 else { throw error("トリミング範囲内に面が残りません") }
+
+        var usedVertexPrefix = [Int](repeating: 0, count: usedVertexBits.count + 1)
+        if !usedVertexBits.isEmpty {
+            for word in 0..<usedVertexBits.count {
+                usedVertexPrefix[word + 1] = usedVertexPrefix[word] + usedVertexBits[word].nonzeroBitCount
+            }
+        }
+
         let sourceName = url.lastPathComponent.lowercased()
         let visual = sourceName.contains("visual")
         let textured = sourceName.contains("textured") || hasMaterialLibrary
@@ -119,89 +193,61 @@ enum MeshTrimEngine {
         func writeLine(_ line: Substring) throws {
             writeBuffer.append(contentsOf: line.utf8)
             writeBuffer.append(0x0A)
-            if writeBuffer.count >= writeBufferLimit {
-                try flushOutput()
-            }
+            if writeBuffer.count >= writeBufferLimit { try flushOutput() }
         }
 
-        let bitWordCount = (vertices.count >> 6) + ((vertices.count & 63) == 0 ? 0 : 1)
-        var usedVertexBits = [UInt64](repeating: 0, count: bitWordCount)
-        var usedVertexCount = 0
-        var faceCount = 0
-        var faceIndices: [Int] = []
-        faceIndices.reserveCapacity(4)
-        var verticesSeen = 0
+        func writeString(_ line: String) throws {
+            writeBuffer.append(contentsOf: line.utf8)
+            writeBuffer.append(0x0A)
+            if writeBuffer.count >= writeBufferLimit { try flushOutput() }
+        }
 
+        // Pass 3 emits only referenced vertex records and rewrites only the vertex component of each
+        // surviving face token. vt/vn indices and other OBJ records remain intact.
+        verticesSeen = 0
+        faceRecordIndex = 0
         try forEachOBJLine(at: url) { line in
             let directive = firstDirective(in: line)
             if directive == "v" {
+                let sourceIndex = verticesSeen
                 verticesSeen += 1
-                try writeLine(line)
+                if isBitSet(sourceIndex, in: usedVertexBits) {
+                    try writeLine(line)
+                }
                 return
             }
             guard directive == "f" else {
                 try writeLine(line)
                 return
             }
+
+            let selected = isBitSet(faceRecordIndex, in: selectedFaceBits)
+            faceRecordIndex += 1
+            guard selected else { return }
+
             let fields = line.split(whereSeparator: \.isWhitespace)
             let faceFields = fields.dropFirst().prefix { !$0.hasPrefix("#") }
             guard faceFields.count >= 3 else { throw error("OBJ面定義が不正です") }
-            faceIndices.removeAll(keepingCapacity: true)
-            if faceIndices.capacity < faceFields.count {
-                faceIndices.reserveCapacity(faceFields.count)
-            }
+            var rewritten = "f"
+            rewritten.reserveCapacity(line.utf8.count)
             for token in faceFields {
-                let first: Substring
+                let sourceIndex = try resolveVertexIndex(token: token, verticesDefined: verticesSeen, totalVertices: vertices.count)
+                guard isBitSet(sourceIndex, in: usedVertexBits) else {
+                    throw error("OBJ面の頂点対応が壊れています")
+                }
+                let compactIndex = compactVertexIndex(sourceIndex, bits: usedVertexBits, prefix: usedVertexPrefix)
+                rewritten.append(" ")
+                rewritten.append(String(compactIndex))
                 if let slash = token.firstIndex(of: "/") {
-                    first = token[..<slash]
-                } else {
-                    first = token
+                    rewritten.append(contentsOf: token[slash...])
                 }
-                guard !first.isEmpty,
-                      let raw = Int(first),
-                      raw != 0 else {
-                    throw error("OBJ面定義が不正です")
-                }
-                let index = raw > 0 ? raw - 1 : verticesSeen + raw
-                guard index >= 0, index < vertices.count else {
-                    throw error("OBJ面インデックスが範囲外です")
-                }
-                faceIndices.append(index)
             }
-
-            var centroidX: Float = 0
-            var centroidY: Float = 0
-            var centroidZ: Float = 0
-            for id in faceIndices {
-                let point = vertices[id]
-                centroidX += point.x
-                centroidY += point.y
-                centroidZ += point.z
+            if let commentField = fields.firstIndex(where: { $0.hasPrefix("#") }) {
+                rewritten.append(" ")
+                rewritten.append(fields[commentField...].joined(separator: " "))
             }
-            let inverseCount = 1 / Float(faceIndices.count)
-            centroidX *= inverseCount
-            centroidY *= inverseCount
-            centroidZ *= inverseCount
-            guard centroidX.isFinite, centroidY.isFinite, centroidZ.isFinite else {
-                throw error("面の位置を計算できません")
-            }
-            let inside = centroidX >= lowX && centroidX <= highX &&
-                centroidY >= lowY && centroidY <= highY &&
-                centroidZ >= lowZ && centroidZ <= highZ
-            if inside {
-                try writeLine(line)
-                for id in faceIndices {
-                    let word = id >> 6
-                    let mask = UInt64(1) << UInt64(id & 63)
-                    if usedVertexBits[word] & mask == 0 {
-                        usedVertexBits[word] |= mask
-                        usedVertexCount += 1
-                    }
-                }
-                faceCount += faceIndices.count - 2
-            }
+            try writeString(rewritten)
         }
-        guard faceCount > 0 else { throw error("トリミング範囲内に面が残りません") }
 
         try flushOutput()
         try handle.synchronize()
@@ -213,6 +259,45 @@ enum MeshTrimEngine {
         try? FileManager.default.removeItem(at: result.url)
         let sidecar = result.url.deletingPathExtension().appendingPathExtension("mesh-asset.json")
         try? FileManager.default.removeItem(at: sidecar)
+    }
+
+    private static func resolveVertexIndex(token: Substring, verticesDefined: Int, totalVertices: Int) throws -> Int {
+        let first: Substring
+        if let slash = token.firstIndex(of: "/") {
+            first = token[..<slash]
+        } else {
+            first = token
+        }
+        guard !first.isEmpty, let raw = Int(first), raw != 0 else {
+            throw error("OBJ面定義が不正です")
+        }
+        let index = raw > 0 ? raw - 1 : verticesDefined + raw
+        guard index >= 0, index < totalVertices else {
+            throw error("OBJ面インデックスが範囲外です")
+        }
+        return index
+    }
+
+    private static func compactVertexIndex(_ sourceIndex: Int, bits: [UInt64], prefix: [Int]) -> Int {
+        let word = sourceIndex >> 6
+        let bit = sourceIndex & 63
+        let lowerMask: UInt64 = bit == 0 ? 0 : (UInt64(1) << UInt64(bit)) - 1
+        return prefix[word] + (bits[word] & lowerMask).nonzeroBitCount + 1
+    }
+
+    private static func markBit(_ index: Int, in bits: inout [UInt64]) {
+        let word = index >> 6
+        if word >= bits.count {
+            bits.append(contentsOf: repeatElement(0, count: word - bits.count + 1))
+        }
+        bits[word] |= UInt64(1) << UInt64(index & 63)
+    }
+
+    private static func isBitSet(_ index: Int, in bits: [UInt64]) -> Bool {
+        guard index >= 0 else { return false }
+        let word = index >> 6
+        guard word < bits.count else { return false }
+        return bits[word] & (UInt64(1) << UInt64(index & 63)) != 0
     }
 
     private static func firstDirective(in line: Substring) -> Substring? {
@@ -231,7 +316,6 @@ enum MeshTrimEngine {
     private static func forEachOBJLine(at url: URL, _ body: (Substring) throws -> Void) throws {
         let handle = try FileHandle(forReadingFrom: url)
         defer { try? handle.close() }
-
         var buffer = Data()
         buffer.reserveCapacity(inputChunkSize * 2)
 
