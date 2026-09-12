@@ -135,6 +135,34 @@ final class MeshProjectStoreTests: XCTestCase {
         XCTAssertTrue(relaunched.listTrash().isEmpty)
     }
 
+    func testCollisionRestoreRollsBackToTrashWhenManifestCannotBeRebound() throws {
+        let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x54)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        try store.moveToTrash(projectURL: archived.projectURL)
+
+        // Force the collision path while keeping the existing library entry out of the semantic list.
+        let collision = store.libraryURL
+            .appendingPathComponent(archived.id)
+            .appendingPathExtension(MeshProjectStore.projectExtension)
+        try FileManager.default.createDirectory(at: collision, withIntermediateDirectories: true)
+
+        let trashEntry = store.trashURL
+            .appendingPathComponent(archived.id)
+            .appendingPathExtension(MeshProjectStore.projectExtension)
+        try Data("not-json".utf8).write(
+            to: trashEntry.appendingPathComponent(MeshProjectStore.libraryManifestFileName),
+            options: .atomic
+        )
+
+        XCTAssertThrowsError(try store.restoreFromTrash(id: archived.id))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: trashEntry.path))
+        let meshDirectories = try FileManager.default.contentsOfDirectory(
+            at: store.libraryURL,
+            includingPropertiesForKeys: nil
+        ).filter { $0.pathExtension == MeshProjectStore.projectExtension }
+        XCTAssertEqual(meshDirectories.map(\.lastPathComponent), [collision.lastPathComponent])
+    }
+
     func testTrashRestoreRejectsTraversalIDWithoutMovingOutsideArchive() throws {
         let outside = rootURL.appendingPathComponent("escape").appendingPathExtension(MeshProjectStore.projectExtension)
         try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)

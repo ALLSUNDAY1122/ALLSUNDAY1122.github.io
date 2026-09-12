@@ -263,9 +263,21 @@ final class MeshProjectStore {
         }
         try fileManager.moveItem(at: source, to: destination)
         if restoredID != id {
-            var manifest = try readLibraryManifest(projectURL: destination)
-            manifest.id = restoredID
-            try writeLibraryManifest(manifest, projectURL: destination)
+            do {
+                var manifest = try readLibraryManifest(projectURL: destination)
+                guard manifest.id == id else { throw MeshProjectStoreError.invalidProject }
+                manifest.id = restoredID
+                try writeLibraryManifest(manifest, projectURL: destination)
+            } catch {
+                // Collision restore must be all-or-nothing. If the manifest cannot be rebound to
+                // the generated ID, return the archive to Trash instead of leaving an invisible
+                // library directory whose directory ID and manifest ID disagree.
+                if !fileManager.fileExists(atPath: source.path),
+                   fileManager.fileExists(atPath: destination.path) {
+                    try? fileManager.moveItem(at: destination, to: source)
+                }
+                throw error
+            }
         }
     }
 
