@@ -385,8 +385,11 @@ enum MeshPointCloudExportService {
     private static func textureURL(for geometry: Geometry, sourceOBJ: URL) -> URL? {
         guard let materialLibrary = geometry.materialLibrary else { return nil }
         let root = sourceOBJ.deletingLastPathComponent().standardizedFileURL
+        let resolvedRoot = root.resolvingSymlinksInPath().standardizedFileURL
         let mtlURL = root.appendingPathComponent(materialLibrary).standardizedFileURL
+        let resolvedMTL = mtlURL.resolvingSymlinksInPath().standardizedFileURL
         guard isContained(mtlURL, in: root),
+              isContained(resolvedMTL, in: resolvedRoot),
               let data = try? Data(contentsOf: mtlURL), !data.isEmpty else { return nil }
         let text = String(decoding: data, as: UTF8.self)
         var textureName: String?
@@ -402,7 +405,6 @@ enum MeshPointCloudExportService {
         let mtlRoot = mtlURL.deletingLastPathComponent().standardizedFileURL
         let textureURL = mtlRoot.appendingPathComponent(textureName.replacingOccurrences(of: "\\", with: "/")).standardizedFileURL
         guard isContained(textureURL, in: root), FileManager.default.fileExists(atPath: textureURL.path) else { return nil }
-        let resolvedRoot = root.resolvingSymlinksInPath().standardizedFileURL
         let resolvedTexture = textureURL.resolvingSymlinksInPath().standardizedFileURL
         guard isContained(resolvedTexture, in: resolvedRoot) else { return nil }
         return textureURL
