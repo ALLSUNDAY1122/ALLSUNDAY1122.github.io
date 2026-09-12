@@ -49,6 +49,36 @@ final class MeshTrimEditorSafetyTests: XCTestCase {
         XCTAssertTrue(output.contains("f 1/1 2/2 3/3\n"))
     }
 
+    func testChunkedReaderHandlesLineCrossingReadBoundary() throws {
+        let longComment = "#" + String(repeating: "x", count: 300_000)
+        let url = try writeOBJ([
+            "v 0 0 0", "v 1 0 0", longComment, "v 0 1 0", "f 1 2 3"
+        ])
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+
+        let result = try MeshTrimEngine.trim(url: url, x: 0...1, y: 0...1, z: 0...1)
+        let output = try String(contentsOf: result.url, encoding: .utf8)
+        XCTAssertEqual(result.faceCount, 1)
+        XCTAssertEqual(result.usedVertexCount, 3)
+        XCTAssertTrue(output.contains(longComment))
+        XCTAssertTrue(output.contains("f 1 2 3\n"))
+    }
+
+    func testChunkedReaderAcceptsCRLFWithoutCarriageReturnLeakage() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("MeshTrimEditorSafety-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let url = root.appendingPathComponent("mesh.obj")
+        try "v 0 0 0\r\nv 1 0 0\r\nv 0 1 0\r\nf 1 2 3\r\n".write(to: url, atomically: true, encoding: .utf8)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let result = try MeshTrimEngine.trim(url: url, x: 0...1, y: 0...1, z: 0...1)
+        let output = try String(contentsOf: result.url, encoding: .utf8)
+        XCTAssertEqual(result.faceCount, 1)
+        XCTAssertFalse(output.contains("\r"))
+        XCTAssertTrue(output.contains("f 1 2 3\n"))
+    }
+
     func testFailedStreamedTrimRemovesPartialOutput() throws {
         let url = try writeOBJ([
             "v 0 0 0", "v 1 0 0", "v 0 1 0",
