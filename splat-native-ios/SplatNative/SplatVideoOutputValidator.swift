@@ -38,6 +38,15 @@ enum SplatVideoOutputValidator {
         }
     }
 
+    static func encodedPixelDimension(_ value: CGFloat) -> Int? {
+        guard value.isFinite else { return nil }
+        let rounded = abs(value).rounded()
+        // CGFloat(Int.max) rounds to 2^63 on 64-bit platforms. Reject that boundary before the
+        // conversion so hostile/corrupt track metadata cannot turn validation into a process trap.
+        guard rounded > 0, rounded < CGFloat(Int.max) else { return nil }
+        return Int(rounded)
+    }
+
     static func validate(
         _ url: URL,
         expectedDimensions: (width: Int, height: Int)? = nil,
@@ -67,15 +76,10 @@ enum SplatVideoOutputValidator {
         // an MP4 that has duration but no meaningful render surface.
         let naturalSize = try await videoTrack.load(.naturalSize)
         try Task.checkCancellation()
-        guard naturalSize.width.isFinite,
-              naturalSize.height.isFinite,
-              naturalSize.width > 0,
-              naturalSize.height > 0 else {
+        guard let encodedWidth = encodedPixelDimension(naturalSize.width),
+              let encodedHeight = encodedPixelDimension(naturalSize.height) else {
             throw ValidationError.invalidVideoDimensions
         }
-
-        let encodedWidth = Int(abs(naturalSize.width).rounded())
-        let encodedHeight = Int(abs(naturalSize.height).rounded())
         if let expectedDimensions {
             guard encodedWidth == expectedDimensions.width,
                   encodedHeight == expectedDimensions.height else {
