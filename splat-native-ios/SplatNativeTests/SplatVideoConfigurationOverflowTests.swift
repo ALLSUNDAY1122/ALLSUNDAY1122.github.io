@@ -28,4 +28,11 @@ final class SplatVideoConfigurationOverflowTests: XCTestCase {
         XCTAssertEqual(configuration.totalFrames, 1_440)
         XCTAssertEqual(SplatVideoConfiguration.safeFramesPerSecond(Int.max), 120)
     }
+
+    func testInitializerAlsoClampsFrameRate() {
+        let configuration = SplatVideoConfiguration(framesPerSecond: Int.max)
+
+        XCTAssertEqual(configuration.framesPerSecond, 120)
+        XCTAssertEqual(configuration.totalFrames, 960)
+    }
 }
