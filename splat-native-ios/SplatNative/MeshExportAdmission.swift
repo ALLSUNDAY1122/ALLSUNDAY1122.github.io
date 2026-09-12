@@ -6,6 +6,7 @@ import Foundation
 enum MeshExportAdmission {
     enum AdmissionError: LocalizedError, Equatable {
         case sourceMissing
+        case unsafeSource
         case sourceSizeUnavailable
         case storageCapacityUnavailable
         case insufficientStorage(required: Int64, available: Int64)
@@ -14,6 +15,8 @@ enum MeshExportAdmission {
             switch self {
             case .sourceMissing:
                 return "Meshの書き出し元が見つかりません。"
+            case .unsafeSource:
+                return "Meshの書き出し元が安全な通常ファイルではありません。保存済みスキャンから開き直してください。"
             case .sourceSizeUnavailable:
                 return "Meshデータのサイズを確認できないため、書き出しを開始できません。"
             case .storageCapacityUnavailable:
@@ -38,6 +41,12 @@ enum MeshExportAdmission {
         guard sourceURL.isFileURL, FileManager.default.fileExists(atPath: sourceURL.path) else {
             throw AdmissionError.sourceMissing
         }
+        guard let sourceValues = try? sourceURL.resourceValues(
+            forKeys: [.isRegularFileKey, .isSymbolicLinkKey]
+        ), sourceValues.isRegularFile == true, sourceValues.isSymbolicLink != true else {
+            throw AdmissionError.unsafeSource
+        }
+
         let sourceBytes = try fileSize(at: sourceURL)
         let sourceExtension = sourceURL.pathExtension.lowercased()
         var required = estimatedRequiredFreeBytes(
