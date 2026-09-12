@@ -50,6 +50,26 @@ final class SplatSoftwareDepthSeedSafetyTests: XCTestCase {
         XCTAssertTrue(result.points.isEmpty)
     }
 
+    func testThumbnailPrincipalPointPreservesPixelCenterConvention() throws {
+        XCTAssertEqual(
+            try XCTUnwrap(SplatSoftwareDepthSeedBuilder.scaledPrincipalPointCoordinate(959.5, scale: 0.1)),
+            95.5,
+            accuracy: 0.0001
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(SplatSoftwareDepthSeedBuilder.scaledPrincipalPointCoordinate(37, scale: 1)),
+            37,
+            accuracy: 0.0001
+        )
+    }
+
+    func testThumbnailPrincipalPointRejectsInvalidScaleOrCoordinate() {
+        XCTAssertNil(SplatSoftwareDepthSeedBuilder.scaledPrincipalPointCoordinate(.nan, scale: 0.1))
+        XCTAssertNil(SplatSoftwareDepthSeedBuilder.scaledPrincipalPointCoordinate(100, scale: .infinity))
+        XCTAssertNil(SplatSoftwareDepthSeedBuilder.scaledPrincipalPointCoordinate(100, scale: 0))
+        XCTAssertNil(SplatSoftwareDepthSeedBuilder.scaledPrincipalPointCoordinate(100, scale: -1))
+    }
+
     private var identityMatrix: [[Float]] {
         [
             [1, 0, 0, 0],
