@@ -203,6 +203,23 @@ final class SplatCameraGeometryTests: XCTestCase {
         XCTAssertTrue(isFinite(matrix))
     }
 
+    func testLookAtRemainsFiniteForHugeFiniteDirectionAndUpVectors() {
+        let huge = Float.greatestFiniteMagnitude / 4
+        let matrix = SplatCameraGeometry.lookAt(
+            eye: SIMD3<Float>(huge, huge * 0.5, huge * 0.25),
+            center: .zero,
+            up: SIMD3<Float>(huge * 0.25, huge, huge * 0.5)
+        )
+
+        XCTAssertTrue(isFinite(matrix))
+        let x = SIMD3<Float>(matrix.columns.0.x, matrix.columns.1.x, matrix.columns.2.x)
+        let y = SIMD3<Float>(matrix.columns.0.y, matrix.columns.1.y, matrix.columns.2.y)
+        let z = SIMD3<Float>(matrix.columns.0.z, matrix.columns.1.z, matrix.columns.2.z)
+        XCTAssertEqual(simd_length(x), 1, accuracy: 0.0001)
+        XCTAssertEqual(simd_length(y), 1, accuracy: 0.0001)
+        XCTAssertEqual(simd_length(z), 1, accuracy: 0.0001)
+    }
+
     private func isFinite(_ matrix: simd_float4x4) -> Bool {
         for column in 0..<4 {
             for row in 0..<4 where !matrix[column][row].isFinite {
