@@ -30,14 +30,11 @@ enum SplatCameraGeometry {
         let lastIndex = pointCount - 1
         let denominator = sampleCount - 1
         return (0..<sampleCount).map { sampleIndex in
-            let product = sampleIndex.multipliedReportingOverflow(by: lastIndex)
-            if !product.overflow {
-                return product.partialValue / denominator
-            }
-            // Defensive fallback for synthetic/hostile counts near Int.max. Real arrays cannot
-            // practically reach this path on iOS, but the helper should remain arithmetic-safe.
-            let fraction = Double(sampleIndex) / Double(denominator)
-            return min(lastIndex, max(0, Int((fraction * Double(lastIndex)).rounded(.down))))
+            // Compute floor(sampleIndex * lastIndex / denominator) exactly without overflowing the
+            // machine word. The previous Double fallback could round Int.max-scale values to 2^63
+            // and trap during Double -> Int conversion even though the mathematical quotient fits.
+            let product = sampleIndex.multipliedFullWidth(by: lastIndex)
+            return denominator.dividingFullWidth(product).quotient
         }
     }
 
