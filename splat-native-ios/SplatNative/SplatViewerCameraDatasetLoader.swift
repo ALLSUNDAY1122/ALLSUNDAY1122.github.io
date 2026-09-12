@@ -15,6 +15,7 @@ enum SplatViewerCameraDatasetLoader {
     }
 
     static let maximumTransformsBytes: Int64 = 32 * 1024 * 1024
+    static let maximumReturnedPositions = 4_096
 
     static func cameraPositions(for renderURL: URL, fileManager: FileManager = .default) -> [SIMD3<Float>] {
         let root = renderURL.deletingLastPathComponent().standardizedFileURL
@@ -27,12 +28,13 @@ enum SplatViewerCameraDatasetLoader {
               size > 0,
               Int64(size) <= maximumTransformsBytes,
               let data = try? Data(contentsOf: url, options: .mappedIfSafe),
-              let dataset = try? JSONDecoder().decode(Dataset.self, from: data) else {
+              let dataset = try? JSONDecoder().decode(Dataset.self, from: data),
+              !dataset.frames.isEmpty else {
             return []
         }
 
-        return dataset.frames.compactMap { frame in
-            let matrix = frame.transformMatrix
+        func position(at index: Int) -> SIMD3<Float>? {
+            let matrix = dataset.frames[index].transformMatrix
             guard matrix.count >= 3,
                   matrix[0].count >= 4,
                   matrix[1].count >= 4,
@@ -41,5 +43,26 @@ enum SplatViewerCameraDatasetLoader {
             guard position.x.isFinite, position.y.isFinite, position.z.isFinite else { return nil }
             return position
         }
+
+        let frameCount = dataset.frames.count
+        guard frameCount > maximumReturnedPositions else {
+            return dataset.frames.indices.compactMap(position(at:))
+        }
+
+        // Viewer orientation only needs the capture trajectory envelope. Keep a deterministic,
+        // evenly spaced sample including both endpoints instead of materializing every camera
+        // position for very long captures. This bounds downstream normalization/sort work while
+        // preserving the beginning and end of the scan path.
+        var positions: [SIMD3<Float>] = []
+        positions.reserveCapacity(maximumReturnedPositions)
+        let denominator = maximumReturnedPositions - 1
+        let lastFrameIndex = frameCount - 1
+        for slot in 0..<maximumReturnedPositions {
+            let index = slot * lastFrameIndex / denominator
+            if let value = position(at: index) {
+                positions.append(value)
+            }
+        }
+        return positions
     }
 }
