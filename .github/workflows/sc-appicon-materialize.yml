@@ -1,0 +1,49 @@
+name: SC AppIcon materialize
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/sc-icon-transfer/**.b64part'
+      - '.github/workflows/sc-appicon-materialize.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Materialize canonical AppIcon
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          parts=(automation/sc-icon-transfer/*.b64part)
+          if [ ${#parts[@]} -eq 0 ]; then
+            echo 'No staged AppIcon parts; nothing to materialize.'
+            exit 0
+          fi
+          mkdir -p sc-manabi-sprint/native
+          cat "${parts[@]}" | tr -d '\r\n' | base64 --decode > sc-manabi-sprint/native/AppIcon-1024.png
+          actual="$(sha256sum sc-manabi-sprint/native/AppIcon-1024.png | awk '{print $1}')"
+          expected='6bf2945788da0be45b9e448ea79d5c40ac197e97d6bed387d4215c50d486bb3d'
+          test "$actual" = "$expected"
+          file sc-manabi-sprint/native/AppIcon-1024.png | grep -q 'PNG image data, 1024 x 1024'
+          rm -f automation/sc-icon-transfer/*.b64part
+      - name: Commit canonical AppIcon
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- sc-manabi-sprint/native/AppIcon-1024.png automation/sc-icon-transfer; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add sc-manabi-sprint/native/AppIcon-1024.png automation/sc-icon-transfer
+          git commit -m 'release(sc): materialize canonical AppIcon'
+          git push
