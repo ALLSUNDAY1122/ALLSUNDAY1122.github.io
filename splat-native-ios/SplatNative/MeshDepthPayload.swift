@@ -28,6 +28,13 @@ enum MeshDepthPayload {
         var data = Data(count: totalBytes)
         data.withUnsafeMutableBytes { destination in
             guard let destinationBase = destination.baseAddress else { return }
+            if sourceRowBytes == rowBytes {
+                // ARKit commonly supplies an already tightly packed Float32 plane. Copy it as one
+                // contiguous span instead of performing one memcpy per image row. The padded-row
+                // path below remains unchanged for buffers whose stride exceeds their pixel width.
+                destinationBase.copyMemory(from: baseAddress, byteCount: totalBytes)
+                return
+            }
             for row in 0..<height {
                 destinationBase
                     .advanced(by: row * rowBytes)
