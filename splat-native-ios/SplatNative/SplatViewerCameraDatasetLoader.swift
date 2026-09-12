@@ -3,7 +3,26 @@ import simd
 
 enum SplatViewerCameraDatasetLoader {
     private struct Dataset: Decodable {
-        let frames: [Frame]
+        let positions: [SIMD3<Float>]
+
+        enum CodingKeys: String, CodingKey {
+            case frames
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            var frames = try container.nestedUnkeyedContainer(forKey: .frames)
+            var decodedPositions: [SIMD3<Float>] = []
+            decodedPositions.reserveCapacity(min(frames.count ?? 0, maximumReturnedPositions * 2))
+
+            while !frames.isAtEnd {
+                let frame = try frames.decode(Frame.self)
+                if let position = frame.position {
+                    decodedPositions.append(position)
+                }
+            }
+            positions = decodedPositions
+        }
     }
 
     private struct Frame: Decodable {
@@ -66,41 +85,24 @@ enum SplatViewerCameraDatasetLoader {
               Int64(size) <= maximumTransformsBytes,
               let data = try? Data(contentsOf: url, options: .mappedIfSafe),
               let dataset = try? JSONDecoder().decode(Dataset.self, from: data),
-              !dataset.frames.isEmpty else {
+              !dataset.positions.isEmpty else {
             return []
         }
 
-        var validCount = 0
-        for frame in dataset.frames where frame.position != nil {
-            validCount += 1
-        }
-        guard validCount > 0 else { return [] }
-        guard validCount > maximumReturnedPositions else {
-            return dataset.frames.compactMap(\.position)
-        }
+        let positions = dataset.positions
+        guard positions.count > maximumReturnedPositions else { return positions }
 
-        // Viewer orientation only needs the capture trajectory envelope. Sample by valid-camera
-        // ordinal, not raw frame index, so malformed frames cannot punch holes in the bounded sample.
-        // Both capture endpoints are retained when valid. Downstream normalization/sort work stays
-        // capped at maximumReturnedPositions regardless of a very long capture.
-        var positions: [SIMD3<Float>] = []
-        positions.reserveCapacity(maximumReturnedPositions)
+        // Viewer orientation only needs the capture trajectory envelope. Both capture endpoints are
+        // retained while downstream normalization/sort work stays capped at maximumReturnedPositions
+        // regardless of a very long capture.
+        var sampled: [SIMD3<Float>] = []
+        sampled.reserveCapacity(maximumReturnedPositions)
         let denominator = maximumReturnedPositions - 1
-        let lastValidOrdinal = validCount - 1
-        var nextSlot = 0
-        var validOrdinal = 0
-
-        for frame in dataset.frames {
-            guard let value = frame.position else { continue }
-            while nextSlot < maximumReturnedPositions,
-                  evenlySpacedIndex(slot: nextSlot, lastIndex: lastValidOrdinal, denominator: denominator) == validOrdinal {
-                positions.append(value)
-                nextSlot += 1
-            }
-            validOrdinal += 1
-            if nextSlot == maximumReturnedPositions { break }
+        let lastIndex = positions.count - 1
+        for slot in 0..<maximumReturnedPositions {
+            sampled.append(positions[evenlySpacedIndex(slot: slot, lastIndex: lastIndex, denominator: denominator)])
         }
-        return positions
+        return sampled
     }
 
     private static func evenlySpacedIndex(slot: Int, lastIndex: Int, denominator: Int) -> Int {
