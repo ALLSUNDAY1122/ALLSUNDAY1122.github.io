@@ -1,26 +1,27 @@
 import Foundation
 
+private actor SplatPreviousResultPreservationWorker {
+    func preserve(sourcePath: String) throws {
+        try Task.checkCancellation()
+        let sourceURL = URL(fileURLWithPath: sourcePath)
+        try SplatPreviousResultEvidence.preserveBeforeReprocess(
+            sourceURL: sourceURL,
+            fileManager: FileManager()
+        )
+        try Task.checkCancellation()
+    }
+}
+
 extension SplatPreviousResultEvidence {
     /// Performs the potentially large completion hash and backup verification away from MainActor.
-    /// Cancellation is forwarded to the worker; synchronous hash loops already check cancellation
-    /// between 1 MiB chunks so dismissing the result screen can release I/O promptly.
+    /// A dedicated actor keeps synchronous file/hash work off the UI actor without creating an
+    /// unstructured `Task.detached` sending boundary. Cancellation remains part of the caller's
+    /// structured task and the synchronous hash loops check it between 1 MiB chunks.
     static func preserveBeforeReprocessAsync(
         sourceURL: URL
     ) async throws {
-        // Do not transfer Foundation URL state across the detached-task boundary under Swift 6
-        // strict concurrency. A String path is Sendable; rebuild the file URL inside the worker.
         let sourcePath = sourceURL.path
-        let worker = Task.detached(priority: .userInitiated) { @Sendable in
-            let detachedSourceURL = URL(fileURLWithPath: sourcePath)
-            try Task.checkCancellation()
-            try preserveBeforeReprocess(sourceURL: detachedSourceURL, fileManager: .default)
-            try Task.checkCancellation()
-        }
-
-        try await withTaskCancellationHandler {
-            try await worker.value
-        } onCancel: {
-            worker.cancel()
-        }
+        let worker = SplatPreviousResultPreservationWorker()
+        try await worker.preserve(sourcePath: sourcePath)
     }
 }
