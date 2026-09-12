@@ -17,6 +17,14 @@ enum MeshDepthPayload {
         let (totalBytes, totalOverflow) = rowBytes.multipliedReportingOverflow(by: height)
         guard !totalOverflow, totalBytes > 0 else { return nil }
 
+        // Pointer arithmetic below walks to `(height - 1) * sourceRowBytes` and then copies one
+        // complete row. Validate that span in Int before touching the caller's buffer so corrupt
+        // stride metadata cannot wrap an address and turn a rejected frame into a process crash.
+        let (lastRowOffset, sourceOffsetOverflow) = (height - 1).multipliedReportingOverflow(by: sourceRowBytes)
+        guard !sourceOffsetOverflow else { return nil }
+        let (_, sourceSpanOverflow) = lastRowOffset.addingReportingOverflow(rowBytes)
+        guard !sourceSpanOverflow else { return nil }
+
         var data = Data(count: totalBytes)
         data.withUnsafeMutableBytes { destination in
             guard let destinationBase = destination.baseAddress else { return }
