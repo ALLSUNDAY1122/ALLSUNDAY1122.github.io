@@ -13,6 +13,10 @@ private struct MeshAppearanceEditResult: Sendable {
 private enum MeshAppearanceProcessor {
     static func apply(objURL: URL, exposure: Double, contrast: Double, saturation: Double, sharpness: Double) throws -> MeshAppearanceEditResult {
         let directory = objURL.deletingLastPathComponent()
+        // Reuse the export companion validator before opening any OBJ-referenced material or
+        // texture. This rejects parent traversal, absolute paths, missing companions and symlink
+        // escapes so appearance editing cannot silently depend on files outside the scan project.
+        _ = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: objURL)
         let obj = try String(contentsOf: objURL, encoding: .utf8)
         guard let mtlName = obj.split(whereSeparator: \.isNewline).first(where: { $0.hasPrefix("mtllib ") }).map({ String($0.dropFirst(7)) }) else { throw error("MTL参照がありません") }
         let mtlURL = directory.appendingPathComponent(mtlName.trimmingCharacters(in: .whitespaces))
