@@ -1,5 +1,6 @@
 import CoreGraphics
 import Foundation
+import ImageIO
 import UIKit
 import simd
 
@@ -27,29 +28,195 @@ private struct SplatSeedAssignment {
     let score: Float
 }
 
+private struct SplatSeedSampleLocation {
+    let pointIndex: Int
+    let x: Float
+    let y: Float
+}
+
+private struct SplatSeedAssignmentSet {
+    private var first: SplatSeedAssignment?
+    private var second: SplatSeedAssignment?
+    private var third: SplatSeedAssignment?
+
+    mutating func insert(_ candidate: SplatSeedAssignment) {
+        guard let first else {
+            self.first = candidate
+            return
+        }
+        if precedes(candidate, first) {
+            third = second
+            second = first
+            self.first = candidate
+            return
+        }
+
+        guard let second else {
+            self.second = candidate
+            return
+        }
+        if precedes(candidate, second) {
+            third = second
+            self.second = candidate
+            return
+        }
+
+        guard let third else {
+            self.third = candidate
+            return
+        }
+        if precedes(candidate, third) {
+            self.third = candidate
+        }
+    }
+
+    func forEachAccepted(_ body: (SplatSeedAssignment) -> Void) {
+        guard let first else { return }
+        let scoreCeiling = max(first.score * 1.8, first.score + 0.05)
+        body(first)
+        if let second, second.score <= scoreCeiling { body(second) }
+        if let third, third.score <= scoreCeiling { body(third) }
+    }
+
+    private func precedes(_ lhs: SplatSeedAssignment, _ rhs: SplatSeedAssignment) -> Bool {
+        if abs(lhs.score - rhs.score) < 0.000_001 {
+            return lhs.frameIndex < rhs.frameIndex
+        }
+        return lhs.score < rhs.score
+    }
+}
+
+private struct SplatSeedColorAccumulator {
+    private(set) var count = 0
+    private var first = SplatSeedSample(red: 0, green: 0, blue: 0)
+    private var second = SplatSeedSample(red: 0, green: 0, blue: 0)
+    private var third = SplatSeedSample(red: 0, green: 0, blue: 0)
+
+    mutating func append(_ sample: SplatSeedSample) {
+        switch count {
+        case 0: first = sample
+        case 1: second = sample
+        case 2: third = sample
+        default: return
+        }
+        count += 1
+    }
+
+    func robustColor(fallback: SplatSeedSample) -> SplatSeedSample {
+        switch count {
+        case 0:
+            return fallback
+        case 1:
+            return first
+        case 2:
+            return SplatSeedSample(
+                red: average(first.red, second.red),
+                green: average(first.green, second.green),
+                blue: average(first.blue, second.blue)
+            )
+        default:
+            return SplatSeedSample(
+                red: median3(first.red, second.red, third.red),
+                green: median3(first.green, second.green, third.green),
+                blue: median3(first.blue, second.blue, third.blue)
+            )
+        }
+    }
+
+    private func average(_ a: UInt8, _ b: UInt8) -> UInt8 {
+        UInt8((Int(a) + Int(b)) / 2)
+    }
+
+    private func median3(_ a: UInt8, _ b: UInt8, _ c: UInt8) -> UInt8 {
+        let total = Int(a) + Int(b) + Int(c)
+        return UInt8(total - Int(min(a, min(b, c))) - Int(max(a, max(b, c))))
+    }
+}
+
 private struct SplatSeedRaster {
     let width: Int
     let height: Int
     let bytes: [UInt8]
 
     func sample(x: Float, y: Float, sourceWidth: Int, sourceHeight: Int) -> SplatSeedSample? {
-        guard width > 0, height > 0, sourceWidth > 0, sourceHeight > 0 else { return nil }
-        let scaledX = x * Float(width) / Float(sourceWidth)
-        let scaledY = y * Float(height) / Float(sourceHeight)
-        let ix = min(width - 1, max(0, Int(scaledX.rounded())))
-        let iy = min(height - 1, max(0, Int(scaledY.rounded())))
-        let offset = (iy * width + ix) * 4
-        guard offset + 2 < bytes.count else { return nil }
+        guard width > 0, height > 0, sourceWidth > 0, sourceHeight > 0,
+              x.isFinite, y.isFinite else { return nil }
+
+        // Map source pixel centres into the bounded decode, then interpolate instead of snapping
+        // to one thumbnail texel. This avoids adding raster memory while reducing colour aliasing
+        // when a large capture frame has been downsampled to maximumRasterDimension.
+        let scaleX = Float(width) / Float(sourceWidth)
+        let scaleY = Float(height) / Float(sourceHeight)
+        let rasterX = min(Float(width - 1), max(0, (x + 0.5) * scaleX - 0.5))
+        let rasterY = min(Float(height - 1), max(0, (y + 0.5) * scaleY - 0.5))
+        guard rasterX.isFinite, rasterY.isFinite else { return nil }
+
+        let x0 = Int(floor(rasterX))
+        let y0 = Int(floor(rasterY))
+        let x1 = min(width - 1, x0 + 1)
+        let y1 = min(height - 1, y0 + 1)
+        let tx = rasterX - Float(x0)
+        let ty = rasterY - Float(y0)
+
+        guard let c00 = pixel(x: x0, y: y0),
+              let c10 = pixel(x: x1, y: y0),
+              let c01 = pixel(x: x0, y: y1),
+              let c11 = pixel(x: x1, y: y1) else { return nil }
+
+        return SplatSeedSample(
+            red: interpolate(c00.red, c10.red, c01.red, c11.red, tx: tx, ty: ty),
+            green: interpolate(c00.green, c10.green, c01.green, c11.green, tx: tx, ty: ty),
+            blue: interpolate(c00.blue, c10.blue, c01.blue, c11.blue, tx: tx, ty: ty)
+        )
+    }
+
+    private func pixel(x: Int, y: Int) -> SplatSeedSample? {
+        guard x >= 0, x < width, y >= 0, y < height else { return nil }
+        let (rowOffset, rowOverflow) = y.multipliedReportingOverflow(by: width)
+        let (pixelOffset, pixelOverflow) = rowOffset.addingReportingOverflow(x)
+        let (offset, byteOverflow) = pixelOffset.multipliedReportingOverflow(by: 4)
+        guard !rowOverflow, !pixelOverflow, !byteOverflow,
+              offset >= 0, offset + 2 < bytes.count else { return nil }
         return SplatSeedSample(red: bytes[offset], green: bytes[offset + 1], blue: bytes[offset + 2])
+    }
+
+    private func interpolate(
+        _ c00: UInt8,
+        _ c10: UInt8,
+        _ c01: UInt8,
+        _ c11: UInt8,
+        tx: Float,
+        ty: Float
+    ) -> UInt8 {
+        let top = Float(c00) + (Float(c10) - Float(c00)) * tx
+        let bottom = Float(c01) + (Float(c11) - Float(c01)) * tx
+        let value = top + (bottom - top) * ty
+        return UInt8(min(255, max(0, Int(value.rounded()))))
     }
 }
 
 enum SplatSeedColorizer {
+    struct PreparedProjection {
+        let frameIndex: Int
+        let frame: SplatSeedFrame
+        let worldToCamera: simd_float4x4
+    }
+
     static let fallback = SplatSeedSample(red: 128, green: 128, blue: 128)
     static let maxColorViewsPerPoint = 3
+    static let maximumRasterDimension = 2_048
 
     static func colorize(points: [SIMD3<Float>], frames: [SplatSeedFrame], projectURL: URL) -> [SplatSeedSample] {
         guard !points.isEmpty, !frames.isEmpty else {
+            return Array(repeating: fallback, count: points.count)
+        }
+
+        // Camera transforms are immutable for the entire colorization pass. The old path inverted
+        // the same 4x4 matrix for every point x frame candidate; a 100k-point / 100-frame capture
+        // could therefore perform up to ten million identical inversions before sampling a pixel.
+        // Prepare each usable frame once and reuse its world-to-camera transform for all points.
+        let projections = prepareProjections(frames: frames)
+        guard !projections.isEmpty else {
             return Array(repeating: fallback, count: points.count)
         }
 
@@ -57,29 +224,35 @@ enum SplatSeedColorizer {
         // can land on a temporary occluder, highlight or exposure outlier; a small robust consensus
         // gives the 3DGS initializer a more stable color while keeping raster memory bounded because
         // only one source image is decoded at a time below.
-        let assignments = points.map {
-            bestAssignments(for: $0, frames: frames, maxCount: maxColorViewsPerPoint)
-        }
-        var grouped: [Int: [(pointIndex: Int, assignment: SplatSeedAssignment)]] = [:]
-        var samples = Array(repeating: [SplatSeedSample](), count: points.count)
-
-        for (pointIndex, pointAssignments) in assignments.enumerated() {
-            for assignment in pointAssignments {
-                grouped[assignment.frameIndex, default: []].append((pointIndex, assignment))
+        // Retain only the information needed after view selection. frameIndex is already the bucket
+        // key and score is only needed while selecting the best views, so carrying both through the
+        // raster pass inflated the up-to-three-per-point grouped payload without changing output.
+        var grouped: [Int: [SplatSeedSampleLocation]] = [:]
+        var samples = Array(repeating: SplatSeedColorAccumulator(), count: points.count)
+        for (pointIndex, point) in points.enumerated() {
+            bestAssignments(for: point, projections: projections).forEachAccepted { assignment in
+                grouped[assignment.frameIndex, default: []].append(
+                    SplatSeedSampleLocation(pointIndex: pointIndex, x: assignment.x, y: assignment.y)
+                )
             }
         }
 
-        // Seed colors always come from untouched captures. Decode one raster at a time so adding
-        // multi-view consensus does not multiply peak memory by the number of captured frames.
+        // Resolve the project root once per pass. Candidate paths still resolve symlinks individually
+        // so an escaped capture cannot be sampled, but large captures do not repeat the same root
+        // filesystem resolution for every frame.
+        let resolvedProjectRoot = projectURL.standardizedFileURL.resolvingSymlinksInPath()
         for (frameIndex, items) in grouped {
             guard frames.indices.contains(frameIndex) else { continue }
             let frame = frames[frameIndex]
-            let imageURL = projectURL.appendingPathComponent(frame.filePath)
-            guard let raster = loadRaster(url: imageURL) else { continue }
+            guard let imageURL = containedImageURL(
+                filePath: frame.filePath,
+                projectURL: projectURL,
+                resolvedProjectRoot: resolvedProjectRoot
+            ), let raster = loadRaster(url: imageURL) else { continue }
             for item in items {
                 if let color = raster.sample(
-                    x: item.assignment.x,
-                    y: item.assignment.y,
+                    x: item.x,
+                    y: item.y,
                     sourceWidth: frame.w,
                     sourceHeight: frame.h
                 ) {
@@ -88,23 +261,39 @@ enum SplatSeedColorizer {
             }
         }
 
-        return samples.map(robustColor)
+        return samples.map { $0.robustColor(fallback: fallback) }
+    }
+
+    static func prepareProjections(frames: [SplatSeedFrame]) -> [PreparedProjection] {
+        frames.enumerated().compactMap { frameIndex, frame in
+            guard let worldToCamera = worldToCameraMatrix(frame: frame) else { return nil }
+            return PreparedProjection(
+                frameIndex: frameIndex,
+                frame: frame,
+                worldToCamera: worldToCamera
+            )
+        }
     }
 
     static func project(point: SIMD3<Float>, frame: SplatSeedFrame) -> SIMD3<Float>? {
-        guard frame.transformMatrix.count == 4,
-              frame.transformMatrix.allSatisfy({ $0.count == 4 }),
-              frame.w > 0, frame.h > 0,
-              frame.flX > 0, frame.flY > 0 else { return nil }
+        guard let worldToCamera = worldToCameraMatrix(frame: frame) else { return nil }
+        return project(point: point, frame: frame, worldToCamera: worldToCamera)
+    }
 
-        let cameraToWorld = matrix(fromRows: frame.transformMatrix)
-        let worldToCamera = simd_inverse(cameraToWorld)
+    private static func project(
+        point: SIMD3<Float>,
+        frame: SplatSeedFrame,
+        worldToCamera: simd_float4x4
+    ) -> SIMD3<Float>? {
+        guard point.x.isFinite, point.y.isFinite, point.z.isFinite else { return nil }
         let cameraPoint = worldToCamera * SIMD4<Float>(point.x, point.y, point.z, 1)
+        guard cameraPoint.x.isFinite, cameraPoint.y.isFinite, cameraPoint.z.isFinite else { return nil }
         let depth = -cameraPoint.z
-        guard depth > 0.05 else { return nil }
+        guard depth.isFinite, depth > 0.05 else { return nil }
 
         let x = frame.flX * cameraPoint.x / depth + frame.cx
         let y = frame.cy - frame.flY * cameraPoint.y / depth
+        guard x.isFinite, y.isFinite else { return nil }
         let margin: Float = 3
         guard x >= margin,
               y >= margin,
@@ -116,57 +305,53 @@ enum SplatSeedColorizer {
 
     private static func bestAssignments(
         for point: SIMD3<Float>,
-        frames: [SplatSeedFrame],
-        maxCount: Int
-    ) -> [SplatSeedAssignment] {
-        guard maxCount > 0 else { return [] }
-        var candidates: [SplatSeedAssignment] = []
-        candidates.reserveCapacity(frames.count)
-
-        for (frameIndex, frame) in frames.enumerated() {
-            guard let projected = project(point: point, frame: frame) else { continue }
+        projections: [PreparedProjection]
+    ) -> SplatSeedAssignmentSet {
+        var best = SplatSeedAssignmentSet()
+        for projection in projections {
+            let frame = projection.frame
+            guard let projected = project(
+                point: point,
+                frame: frame,
+                worldToCamera: projection.worldToCamera
+            ) else { continue }
             let nx = (projected.x - frame.cx) / max(frame.flX, 1)
             let ny = (projected.y - frame.cy) / max(frame.flY, 1)
             let offAxis = sqrt(nx * nx + ny * ny)
             let score = projected.z * (1 + 0.35 * offAxis)
-            candidates.append(SplatSeedAssignment(
-                frameIndex: frameIndex,
+            guard score.isFinite else { continue }
+            best.insert(SplatSeedAssignment(
+                frameIndex: projection.frameIndex,
                 x: projected.x,
                 y: projected.y,
                 score: score
             ))
         }
+        return best
+    }
 
-        candidates.sort {
-            if abs($0.score - $1.score) < 0.000_001 {
-                return $0.frameIndex < $1.frameIndex
+    private static func worldToCameraMatrix(frame: SplatSeedFrame) -> simd_float4x4? {
+        guard frame.transformMatrix.count == 4,
+              frame.transformMatrix.allSatisfy({ $0.count == 4 }),
+              frame.w > 0, frame.h > 0,
+              frame.flX.isFinite, frame.flY.isFinite,
+              frame.cx.isFinite, frame.cy.isFinite,
+              frame.flX > 0, frame.flY > 0 else { return nil }
+
+        let cameraToWorld = matrix(fromRows: frame.transformMatrix)
+        guard matrixIsFinite(cameraToWorld) else { return nil }
+        let worldToCamera = simd_inverse(cameraToWorld)
+        guard matrixIsFinite(worldToCamera) else { return nil }
+        return worldToCamera
+    }
+
+    private static func matrixIsFinite(_ matrix: simd_float4x4) -> Bool {
+        for column in 0..<4 {
+            for row in 0..<4 where !matrix[column][row].isFinite {
+                return false
             }
-            return $0.score < $1.score
         }
-        guard let bestScore = candidates.first?.score else { return [] }
-
-        // Avoid blending a very distant/grazing observation merely to reach three samples.
-        let scoreCeiling = max(bestScore * 1.8, bestScore + 0.05)
-        return Array(candidates.lazy.filter { $0.score <= scoreCeiling }.prefix(maxCount))
-    }
-
-    private static func robustColor(_ samples: [SplatSeedSample]) -> SplatSeedSample {
-        guard !samples.isEmpty else { return fallback }
-        return SplatSeedSample(
-            red: robustChannel(samples.map(\.red)),
-            green: robustChannel(samples.map(\.green)),
-            blue: robustChannel(samples.map(\.blue))
-        )
-    }
-
-    private static func robustChannel(_ values: [UInt8]) -> UInt8 {
-        guard !values.isEmpty else { return 128 }
-        let sorted = values.sorted()
-        let middle = sorted.count / 2
-        if sorted.count.isMultiple(of: 2) {
-            return UInt8((Int(sorted[middle - 1]) + Int(sorted[middle])) / 2)
-        }
-        return sorted[middle]
+        return true
     }
 
     private static func matrix(fromRows rows: [[Float]]) -> simd_float4x4 {
@@ -178,21 +363,49 @@ enum SplatSeedColorizer {
         )
     }
 
+    private static func containedImageURL(
+        filePath: String,
+        projectURL: URL,
+        resolvedProjectRoot: URL
+    ) -> URL? {
+        guard !filePath.isEmpty else { return nil }
+        let candidate = projectURL.appendingPathComponent(filePath).standardizedFileURL.resolvingSymlinksInPath()
+        let rootPath = resolvedProjectRoot.path.hasSuffix("/") ? resolvedProjectRoot.path : resolvedProjectRoot.path + "/"
+        guard candidate.path.hasPrefix(rootPath) else { return nil }
+        return candidate
+    }
+
     private static func loadRaster(url: URL) -> SplatSeedRaster? {
-        guard let image = UIImage(contentsOfFile: url.path)?.cgImage else { return nil }
+        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, sourceOptions),
+              CGImageSourceGetCount(source) > 0,
+              let image = CGImageSourceCreateThumbnailAtIndex(
+                source,
+                0,
+                [
+                    kCGImageSourceCreateThumbnailFromImageAlways: true,
+                    kCGImageSourceCreateThumbnailWithTransform: false,
+                    kCGImageSourceThumbnailMaxPixelSize: maximumRasterDimension,
+                    kCGImageSourceShouldCacheImmediately: true
+                ] as CFDictionary
+              ) else { return nil }
         let width = image.width
         let height = image.height
-        guard width > 0, height > 0 else { return nil }
+        guard width > 0, height > 0, width <= maximumRasterDimension, height <= maximumRasterDimension else { return nil }
+        let (pixelCount, pixelOverflow) = width.multipliedReportingOverflow(by: height)
+        let (byteCount, byteOverflow) = pixelCount.multipliedReportingOverflow(by: 4)
+        let (bytesPerRow, rowOverflow) = width.multipliedReportingOverflow(by: 4)
+        guard !pixelOverflow, !byteOverflow, !rowOverflow, byteCount > 0 else { return nil }
 
-        var bytes = [UInt8](repeating: 0, count: width * height * 4)
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        var bytes = [UInt8](repeating: 0, count: byteCount)
+        let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo.byteOrder32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue
         guard let context = CGContext(
             data: &bytes,
             width: width,
             height: height,
             bitsPerComponent: 8,
-            bytesPerRow: width * 4,
+            bytesPerRow: bytesPerRow,
             space: colorSpace,
             bitmapInfo: bitmapInfo
         ) else { return nil }

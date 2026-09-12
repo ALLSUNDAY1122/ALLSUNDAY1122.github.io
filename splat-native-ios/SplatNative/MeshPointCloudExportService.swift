@@ -3,12 +3,8 @@ import Foundation
 import ImageIO
 
 /// Point-cloud export surface matching Scaniverse's PLY/LAS semantics.
-///
-/// S4's textured OBJ stores one UV per face corner and a `map_Kd` texture atlas.
-/// When that real texture data is present, this exporter emits one colored point per
-/// face corner so seams/thin structures keep their captured RGB instead of collapsing
-/// to an arbitrary color per shared geometry vertex. If no real texture/vertex color
-/// exists, coordinates are still exported but color fields are omitted rather than invented.
+/// Textured OBJ input is sampled at face corners so UV seams and thin structures preserve
+/// captured RGB instead of collapsing to an arbitrary shared-vertex color.
 enum MeshPointCloudExportService {
     enum ExportError: LocalizedError {
         case emptyGeometry
@@ -19,16 +15,11 @@ enum MeshPointCloudExportService {
 
         var errorDescription: String? {
             switch self {
-            case .emptyGeometry:
-                return "点群へ変換できるMesh頂点がありません。"
-            case .invalidOBJ:
-                return "MeshのOBJ構造を点群として読み込めません。"
-            case .pointCountOverflow(let count):
-                return "LAS 1.2で扱える点数を超えています（\(count)点）。"
-            case .cannotCreateOutput:
-                return "点群ファイルを作成できません。"
-            case .invalidTexture:
-                return "Meshの実テクスチャを読み込めません。"
+            case .emptyGeometry: return "点群へ変換できるMesh頂点がありません。"
+            case .invalidOBJ: return "MeshのOBJ構造を点群として読み込めません。"
+            case .pointCountOverflow(let count): return "LAS 1.2で扱える点数を超えています（\(count)点）。"
+            case .cannotCreateOutput: return "点群ファイルを作成できません。"
+            case .invalidTexture: return "Meshの実テクスチャを読み込めません。"
             }
         }
     }
@@ -60,7 +51,7 @@ enum MeshPointCloudExportService {
         let a: Corner
         let b: Corner
         let c: Corner
-
+        let material: String?
         var corners: [Corner] { [a, b, c] }
     }
 
@@ -68,19 +59,92 @@ enum MeshPointCloudExportService {
         let vertices: [Vertex]
         let texCoords: [TexCoord]
         let triangles: [Triangle]
-        let materialLibrary: String?
+        let materialLibraries: [String]
+    }
+
+    private struct Bounds {
+        var minX: Double
+        var maxX: Double
+        var minY: Double
+        var maxY: Double
+        var minZ: Double
+        var maxZ: Double
+    }
+
+    /// Keep only URLs in the material table. Decoded RGBA samplers can each reach ~64 MiB at the
+    /// 4096² cap, so retaining one sampler per material makes peak memory grow with material count.
+    /// The writer resolves/decode-switches lazily as face material changes and retains one sampler.
+    private struct MaterialTextureSet {
+        let byMaterial: [String: URL]
+        let fallback: URL?
+
+        func textureURL(for material: String?) -> URL? {
+            if let material, let url = byMaterial[material] { return url }
+            return fallback
+        }
+    }
+
+    struct AlternatingTextureCache<Value> {
+        let cacheByteLimit: Int
+        private var activeURL: URL?
+        private var activeValue: Value?
+        private var cachedURL: URL?
+        private var cachedValue: Value?
+
+        init(cacheByteLimit: Int) {
+            self.cacheByteLimit = max(0, cacheByteLimit)
+        }
+
+        mutating func value(
+            for url: URL,
+            byteCount: (Value) -> Int,
+            load: (URL) throws -> Value
+        ) rethrows -> Value {
+            let key = url.standardizedFileURL
+            if activeURL == key, let activeValue { return activeValue }
+
+            if cachedURL == key, let cachedValue {
+                let previousURL = activeURL
+                let previousValue = activeValue
+                activeURL = key
+                activeValue = cachedValue
+                if let previousURL, let previousValue, byteCount(previousValue) <= cacheByteLimit {
+                    self.cachedURL = previousURL
+                    self.cachedValue = previousValue
+                } else {
+                    self.cachedURL = nil
+                    self.cachedValue = nil
+                }
+                return cachedValue
+            }
+
+            // Discard the secondary sampler before a decode miss so a material switch never
+            // retains three decoded atlases. This keeps peak memory close to the prior behavior.
+            cachedURL = nil
+            cachedValue = nil
+            let previousURL = activeURL
+            let previousValue = activeValue
+            let loaded = try load(key)
+            activeURL = key
+            activeValue = loaded
+            if let previousURL, let previousValue, byteCount(previousValue) <= cacheByteLimit {
+                cachedURL = previousURL
+                cachedValue = previousValue
+            }
+            return loaded
+        }
     }
 
     private enum PointPlan {
-        case texturedCorners(TextureSampler)
+        case texturedCorners(MaterialTextureSet)
         case coloredVertices
         case vertices
 
         func pointCount(for geometry: Geometry) -> Int {
             switch self {
             case .texturedCorners:
-                let multiplied = geometry.triangles.count.multipliedReportingOverflow(by: 3)
-                return multiplied.overflow ? Int.max : multiplied.partialValue
+                let value = geometry.triangles.count.multipliedReportingOverflow(by: 3)
+                return value.overflow ? Int.max : value.partialValue
             case .coloredVertices, .vertices:
                 return geometry.vertices.count
             }
@@ -108,8 +172,6 @@ enum MeshPointCloudExportService {
             let u = min(1, max(0, texCoord.u))
             let v = min(1, max(0, texCoord.v))
             let x = min(width - 1, max(0, Int((u * Double(width - 1)).rounded())))
-            // OBJ UV uses a bottom-left V origin. The sampler buffer is rendered into
-            // top-left row order, so invert V here exactly once.
             let y = min(height - 1, max(0, Int(((1 - v) * Double(height - 1)).rounded())))
             let offset = (y * width + x) * 4
             return rgba.withUnsafeBytes { raw in
@@ -126,6 +188,9 @@ enum MeshPointCloudExportService {
     private static let las12HeaderSize = 227
     private static let streamFlushThreshold = 64 * 1024
     private static let maxTextureSampleDimension = 4_096
+    // Retain only one small previous atlas. A/B/A/B no longer re-decodes small textures while
+    // large atlases keep the established one-active memory behavior.
+    private static let alternatingTextureCacheByteLimit = 8 * 1_024 * 1_024
 
     static func exportPLY(sourceOBJ: URL, outputURL: URL) throws {
         try Task.checkCancellation()
@@ -160,7 +225,6 @@ enum MeshPointCloudExportService {
             var buffer = Data()
             buffer.reserveCapacity(streamFlushThreshold + 64)
             var emitted = 0
-
             try forEachPoint(geometry: geometry, plan: plan) { vertex, color in
                 if emitted % 4_096 == 0 { try Task.checkCancellation() }
                 appendFloat32(Float(vertex.x), to: &buffer)
@@ -174,7 +238,6 @@ enum MeshPointCloudExportService {
                 emitted += 1
                 try flushIfNeeded(&buffer, to: handle)
             }
-
             guard emitted == pointCount else { throw ExportError.invalidOBJ }
             if !buffer.isEmpty { try handle.write(contentsOf: buffer) }
             try handle.close()
@@ -184,8 +247,7 @@ enum MeshPointCloudExportService {
         }
     }
 
-    /// Writes local-coordinate LAS 1.2 point records. No georeferencing is fabricated:
-    /// S0 may add CRS/GPS metadata later only when a trusted capture-location contract exists.
+    /// Writes local-coordinate LAS 1.2 records. No georeferencing is fabricated.
     static func exportLAS12(sourceOBJ: URL, outputURL: URL) throws {
         try Task.checkCancellation()
         let geometry = try parseOBJ(sourceOBJ)
@@ -196,32 +258,25 @@ enum MeshPointCloudExportService {
             throw ExportError.pointCountOverflow(pointCount)
         }
 
-        let minX = geometry.vertices.map(\.x).min() ?? 0
-        let maxX = geometry.vertices.map(\.x).max() ?? 0
-        let minY = geometry.vertices.map(\.y).min() ?? 0
-        let maxY = geometry.vertices.map(\.y).max() ?? 0
-        let minZ = geometry.vertices.map(\.z).min() ?? 0
-        let maxZ = geometry.vertices.map(\.z).max() ?? 0
-        let xAxis = lasAxis(minimum: minX, maximum: maxX)
-        let yAxis = lasAxis(minimum: minY, maximum: maxY)
-        let zAxis = lasAxis(minimum: minZ, maximum: maxZ)
-
+        let bounds = bounds(for: geometry.vertices)
+        let xAxis = lasAxis(minimum: bounds.minX, maximum: bounds.maxX)
+        let yAxis = lasAxis(minimum: bounds.minY, maximum: bounds.maxY)
+        let zAxis = lasAxis(minimum: bounds.minZ, maximum: bounds.maxZ)
         let recordFormat: UInt8 = plan.includesColor ? 2 : 0
         let recordLength: UInt16 = plan.includesColor ? 26 : 20
-        let legacyPointCount = UInt32(pointCount)
         let header = makeLAS12Header(
-            pointCount: legacyPointCount,
+            pointCount: UInt32(pointCount),
             pointFormat: recordFormat,
             recordLength: recordLength,
             xAxis: xAxis,
             yAxis: yAxis,
             zAxis: zAxis,
-            minX: minX,
-            maxX: maxX,
-            minY: minY,
-            maxY: maxY,
-            minZ: minZ,
-            maxZ: maxZ
+            minX: bounds.minX,
+            maxX: bounds.maxX,
+            minY: bounds.minY,
+            maxY: bounds.maxY,
+            minZ: bounds.minZ,
+            maxZ: bounds.maxZ
         )
         guard header.count == las12HeaderSize else { throw ExportError.invalidOBJ }
 
@@ -236,18 +291,17 @@ enum MeshPointCloudExportService {
             var buffer = Data()
             buffer.reserveCapacity(streamFlushThreshold + 64)
             var emitted = 0
-
             try forEachPoint(geometry: geometry, plan: plan) { vertex, color in
                 if emitted % 4_096 == 0 { try Task.checkCancellation() }
                 appendLittleEndian(quantize(vertex.x, axis: xAxis), to: &buffer)
                 appendLittleEndian(quantize(vertex.y, axis: yAxis), to: &buffer)
                 appendLittleEndian(quantize(vertex.z, axis: zAxis), to: &buffer)
-                appendLittleEndian(UInt16(0), to: &buffer) // intensity
-                buffer.append(0x09) // return 1 of 1
-                buffer.append(0) // classification
-                buffer.append(0) // scan angle rank
-                buffer.append(0) // user data
-                appendLittleEndian(UInt16(0), to: &buffer) // point source ID
+                appendLittleEndian(UInt16(0), to: &buffer)
+                buffer.append(0x09)
+                buffer.append(0)
+                buffer.append(0)
+                buffer.append(0)
+                appendLittleEndian(UInt16(0), to: &buffer)
                 if plan.includesColor, let color {
                     appendLittleEndian(color.red, to: &buffer)
                     appendLittleEndian(color.green, to: &buffer)
@@ -256,7 +310,6 @@ enum MeshPointCloudExportService {
                 emitted += 1
                 try flushIfNeeded(&buffer, to: handle)
             }
-
             guard emitted == pointCount else { throw ExportError.invalidOBJ }
             if !buffer.isEmpty { try handle.write(contentsOf: buffer) }
             try handle.close()
@@ -264,6 +317,26 @@ enum MeshPointCloudExportService {
             try? handle.close()
             throw error
         }
+    }
+
+    private static func bounds(for vertices: [Vertex]) -> Bounds {
+        guard let first = vertices.first else {
+            return Bounds(minX: 0, maxX: 0, minY: 0, maxY: 0, minZ: 0, maxZ: 0)
+        }
+        var result = Bounds(
+            minX: first.x, maxX: first.x,
+            minY: first.y, maxY: first.y,
+            minZ: first.z, maxZ: first.z
+        )
+        for vertex in vertices.dropFirst() {
+            result.minX = min(result.minX, vertex.x)
+            result.maxX = max(result.maxX, vertex.x)
+            result.minY = min(result.minY, vertex.y)
+            result.maxY = max(result.maxY, vertex.y)
+            result.minZ = min(result.minZ, vertex.z)
+            result.maxZ = max(result.maxZ, vertex.z)
+        }
+        return result
     }
 
     private static func pointPlan(for geometry: Geometry, sourceOBJ: URL) throws -> PointPlan {
@@ -274,11 +347,9 @@ enum MeshPointCloudExportService {
                 return index >= 0 && index < geometry.texCoords.count
             }
         }
-
         if allCornersHaveUV,
-           let textureURL = textureURL(for: geometry, sourceOBJ: sourceOBJ),
-           let sampler = try loadTextureSampler(textureURL) {
-            return .texturedCorners(sampler)
+           let textures = try materialTextureSet(for: geometry, sourceOBJ: sourceOBJ) {
+            return .texturedCorners(textures)
         }
         if hasCompleteInlineColor { return .coloredVertices }
         return .vertices
@@ -294,8 +365,24 @@ enum MeshPointCloudExportService {
             for vertex in geometry.vertices { try body(vertex, nil) }
         case .coloredVertices:
             for vertex in geometry.vertices { try body(vertex, vertex.color) }
-        case .texturedCorners(let sampler):
+        case .texturedCorners(let textures):
+            var samplerCache = AlternatingTextureCache<TextureSampler>(
+                cacheByteLimit: alternatingTextureCacheByteLimit
+            )
             for triangle in geometry.triangles {
+                guard let textureURL = textures.textureURL(for: triangle.material) else {
+                    throw ExportError.invalidTexture
+                }
+                let sampler = try samplerCache.value(
+                    for: textureURL,
+                    byteCount: { $0.rgba.count }
+                ) { url in
+                    try Task.checkCancellation()
+                    guard let loaded = try loadTextureSampler(url) else {
+                        throw ExportError.invalidTexture
+                    }
+                    return loaded
+                }
                 for corner in triangle.corners {
                     guard corner.vertex >= 0, corner.vertex < geometry.vertices.count,
                           let textureIndex = corner.texCoord,
@@ -303,8 +390,7 @@ enum MeshPointCloudExportService {
                         throw ExportError.invalidOBJ
                     }
                     let vertex = geometry.vertices[corner.vertex]
-                    let color = sampler.color(at: geometry.texCoords[textureIndex])
-                    try body(vertex, color)
+                    try body(vertex, sampler.color(at: geometry.texCoords[textureIndex]))
                 }
             }
         }
@@ -317,22 +403,30 @@ enum MeshPointCloudExportService {
         var vertices: [Vertex] = []
         var texCoords: [TexCoord] = []
         var triangles: [Triangle] = []
-        var materialLibrary: String?
+        var materialLibraries: [String] = []
+        var currentMaterial: String?
         vertices.reserveCapacity(max(128, data.count / 80))
 
         text.enumerateLines { line, _ in
             let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !trimmed.isEmpty, !trimmed.hasPrefix("#") else { return }
-
-            if trimmed.hasPrefix("mtllib "), materialLibrary == nil {
-                let value = trimmed.dropFirst("mtllib ".count).trimmingCharacters(in: .whitespacesAndNewlines)
-                if !value.isEmpty { materialLibrary = unquote(value) }
-                return
-            }
-
             let fields = trimmed.split(whereSeparator: { $0.isWhitespace })
             guard let kind = fields.first else { return }
-
+            let lowerKind = kind.lowercased()
+            if lowerKind == "mtllib" {
+                let arguments = parseArguments(trimmed)
+                for library in arguments.dropFirst() where !materialLibraries.contains(library) {
+                    materialLibraries.append(library)
+                }
+                return
+            }
+            if lowerKind == "usemtl" {
+                let arguments = parseArguments(trimmed)
+                let name = arguments.dropFirst().joined(separator: " ")
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                currentMaterial = name.isEmpty ? nil : name
+                return
+            }
             if kind == "v", fields.count >= 4,
                let x = Double(fields[1]), let y = Double(fields[2]), let z = Double(fields[3]),
                x.isFinite, y.isFinite, z.isFinite {
@@ -345,13 +439,11 @@ enum MeshPointCloudExportService {
                 vertices.append(Vertex(x: x, y: y, z: z, color: color))
                 return
             }
-
             if kind == "vt", fields.count >= 3,
                let u = Double(fields[1]), let v = Double(fields[2]), u.isFinite, v.isFinite {
                 texCoords.append(TexCoord(u: u, v: v))
                 return
             }
-
             guard kind == "f", fields.count >= 4 else { return }
             var corners: [Corner] = []
             corners.reserveCapacity(fields.count - 1)
@@ -371,17 +463,11 @@ enum MeshPointCloudExportService {
             }
             guard corners.count >= 3 else { return }
             for index in 1..<(corners.count - 1) {
-                triangles.append(Triangle(a: corners[0], b: corners[index], c: corners[index + 1]))
+                triangles.append(Triangle(a: corners[0], b: corners[index], c: corners[index + 1], material: currentMaterial))
             }
         }
-
         guard !vertices.isEmpty else { throw ExportError.emptyGeometry }
-        return Geometry(
-            vertices: vertices,
-            texCoords: texCoords,
-            triangles: triangles,
-            materialLibrary: materialLibrary
-        )
+        return Geometry(vertices: vertices, texCoords: texCoords, triangles: triangles, materialLibraries: materialLibraries)
     }
 
     private static func resolveOBJIndex(_ raw: Int, count: Int) -> Int? {
@@ -390,65 +476,135 @@ enum MeshPointCloudExportService {
         return resolved >= 0 && resolved < count ? resolved : nil
     }
 
-    private static func textureURL(for geometry: Geometry, sourceOBJ: URL) -> URL? {
-        guard let materialLibrary = geometry.materialLibrary else { return nil }
-        let mtlURL = sourceOBJ.deletingLastPathComponent().appendingPathComponent(materialLibrary)
-        guard let data = try? Data(contentsOf: mtlURL), !data.isEmpty else { return nil }
-        let text = String(decoding: data, as: UTF8.self)
-        var textureName: String?
-        text.enumerateLines { line, stop in
-            let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
-            if trimmed.hasPrefix("map_Kd ") {
-                let value = trimmed.dropFirst("map_Kd ".count).trimmingCharacters(in: .whitespacesAndNewlines)
-                if !value.isEmpty {
-                    textureName = unquote(value)
-                    stop = true
+    private static func materialTextureSet(for geometry: Geometry, sourceOBJ: URL) throws -> MaterialTextureSet? {
+        guard !geometry.materialLibraries.isEmpty else { return nil }
+        let root = sourceOBJ.deletingLastPathComponent().standardizedFileURL
+        let resolvedRoot = root.resolvingSymlinksInPath().standardizedFileURL
+        var textureURLsByMaterial: [String: URL] = [:]
+        var allTextureURLs: [URL] = []
+
+        for materialLibrary in geometry.materialLibraries {
+            try Task.checkCancellation()
+            let normalizedLibrary = materialLibrary.replacingOccurrences(of: "\\", with: "/")
+            let mtlURL = root.appendingPathComponent(normalizedLibrary).standardizedFileURL
+            let resolvedMTL = mtlURL.resolvingSymlinksInPath().standardizedFileURL
+            guard isContained(mtlURL, in: root), isContained(resolvedMTL, in: resolvedRoot),
+                  let data = try? Data(contentsOf: mtlURL), !data.isEmpty else { continue }
+            let mtlRoot = mtlURL.deletingLastPathComponent().standardizedFileURL
+            var currentMaterial: String?
+            String(decoding: data, as: UTF8.self).enumerateLines { line, _ in
+                let arguments = parseArguments(line)
+                guard let command = arguments.first?.lowercased() else { return }
+                if command == "newmtl" {
+                    let name = arguments.dropFirst().joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+                    currentMaterial = name.isEmpty ? nil : name
+                    return
                 }
+                guard command == "map_kd", arguments.count >= 2,
+                      let path = texturePath(in: Array(arguments.dropFirst())) else { return }
+                let candidate = mtlRoot.appendingPathComponent(path.replacingOccurrences(of: "\\", with: "/")).standardizedFileURL
+                guard isContained(candidate, in: root), FileManager.default.fileExists(atPath: candidate.path) else { return }
+                let resolvedTexture = candidate.resolvingSymlinksInPath().standardizedFileURL
+                guard isContained(resolvedTexture, in: resolvedRoot), isTextureDecodable(candidate) else { return }
+                if let currentMaterial, textureURLsByMaterial[currentMaterial] == nil { textureURLsByMaterial[currentMaterial] = candidate }
+                if !allTextureURLs.contains(candidate) { allTextureURLs.append(candidate) }
             }
         }
-        guard let textureName else { return nil }
-        let textureURL = mtlURL.deletingLastPathComponent().appendingPathComponent(textureName)
-        return FileManager.default.fileExists(atPath: textureURL.path) ? textureURL : nil
+        guard !allTextureURLs.isEmpty else { return nil }
+        let fallbackURL = allTextureURLs.count == 1 ? allTextureURLs[0] : nil
+        for triangle in geometry.triangles {
+            if let material = triangle.material {
+                guard textureURLsByMaterial[material] != nil else { return nil }
+            } else if fallbackURL == nil { return nil }
+        }
+        return MaterialTextureSet(byMaterial: textureURLsByMaterial, fallback: fallbackURL)
+    }
+
+    private static func isTextureDecodable(_ url: URL) -> Bool {
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, nil), CGImageSourceGetCount(source) > 0 else { return false }
+        let options: [CFString: Any] = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: 1,
+            kCGImageSourceShouldCacheImmediately: false,
+        ]
+        guard let image = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else { return false }
+        return image.width > 0 && image.height > 0
+    }
+
+    private static func parseArguments(_ text: String) -> [String] {
+        var result: [String] = []
+        var current = ""
+        var quote: Character?
+        var escaping = false
+        func flush() { guard !current.isEmpty else { return }; result.append(current); current.removeAll(keepingCapacity: true) }
+        for character in text {
+            if escaping {
+                if character.isWhitespace || character == "\"" || character == "'" || character == "\\" || character == "#" { current.append(character) }
+                else { current.append("\\"); current.append(character) }
+                escaping = false
+                continue
+            }
+            if character == "\\" { escaping = true; continue }
+            if let activeQuote = quote {
+                if character == activeQuote { quote = nil } else { current.append(character) }
+                continue
+            }
+            if character == "\"" || character == "'" { quote = character; continue }
+            if character == "#" { break }
+            if character.isWhitespace { flush() } else { current.append(character) }
+        }
+        if escaping { current.append("\\") }
+        flush()
+        return result
+    }
+
+    private static func texturePath(in arguments: [String]) -> String? {
+        var index = 0
+        while index < arguments.count, arguments[index].hasPrefix("-") {
+            let option = arguments[index].lowercased()
+            index += 1
+            switch option {
+            case "-mm": index = min(arguments.count, index + 2)
+            case "-o", "-s", "-t":
+                var consumed = 0
+                while index < arguments.count, consumed < 3, Float(arguments[index]) != nil { index += 1; consumed += 1 }
+            default: if index < arguments.count { index += 1 }
+            }
+        }
+        guard index < arguments.count else { return nil }
+        let path = arguments[index...].joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+        return path.isEmpty ? nil : path
+    }
+
+    private static func isContained(_ candidate: URL, in root: URL) -> Bool {
+        if candidate.standardizedFileURL == root.standardizedFileURL { return true }
+        let rootPath = root.standardizedFileURL.path.hasSuffix("/") ? root.standardizedFileURL.path : root.standardizedFileURL.path + "/"
+        return candidate.standardizedFileURL.path.hasPrefix(rootPath)
     }
 
     private static func loadTextureSampler(_ url: URL) throws -> TextureSampler? {
-        guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
-            throw ExportError.invalidTexture
-        }
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { throw ExportError.invalidTexture }
         let options: [CFString: Any] = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceCreateThumbnailWithTransform: true,
             kCGImageSourceThumbnailMaxPixelSize: maxTextureSampleDimension,
             kCGImageSourceShouldCacheImmediately: true,
         ]
-        guard let image = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else {
-            throw ExportError.invalidTexture
-        }
-        let width = image.width
-        let height = image.height
+        guard let image = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else { throw ExportError.invalidTexture }
+        let width = image.width, height = image.height
         guard width > 0, height > 0 else { throw ExportError.invalidTexture }
-
-        let byteCount = width * height * 4
-        var rgba = Data(count: byteCount)
+        var rgba = Data(count: width * height * 4)
         let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB()
-        let drewImage = rgba.withUnsafeMutableBytes { raw -> Bool in
-            guard let baseAddress = raw.baseAddress,
-                  let context = CGContext(
-                    data: baseAddress,
-                    width: width,
-                    height: height,
-                    bitsPerComponent: 8,
-                    bytesPerRow: width * 4,
-                    space: colorSpace,
-                    bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue
-                  ) else { return false }
-            // Store rows top-to-bottom so sampling can use y = (1 - v).
-            context.translateBy(x: 0, y: CGFloat(height))
-            context.scaleBy(x: 1, y: -1)
-            context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
-            return true
+        let drew = rgba.withUnsafeMutableBytes { raw -> Bool in
+            guard let base = raw.baseAddress,
+                  let context = CGContext(data: base, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
+                                          space: colorSpace,
+                                          bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue) else { return false }
+            context.translateBy(x: 0, y: CGFloat(height)); context.scaleBy(x: 1, y: -1)
+            context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height)); return true
         }
-        guard drewImage else { throw ExportError.invalidTexture }
+        guard drew else { throw ExportError.invalidTexture }
         return TextureSampler(width: width, height: height, rgba: rgba)
     }
 
@@ -457,62 +613,26 @@ enum MeshPointCloudExportService {
         let unitRange = values.allSatisfy { $0 >= 0 && $0 <= 1 }
         let byteRange = values.allSatisfy { $0 >= 0 && $0 <= 255 }
         let multiplier: Double = unitRange ? 65_535 : (byteRange ? 257 : 1)
-        func convert(_ value: Double) -> UInt16 {
-            UInt16(clamping: Int((value * multiplier).rounded()))
-        }
+        func convert(_ value: Double) -> UInt16 { UInt16(clamping: Int((value * multiplier).rounded())) }
         return VertexColor(red: convert(red), green: convert(green), blue: convert(blue))
     }
 
-    private static func makeLAS12Header(
-        pointCount: UInt32,
-        pointFormat: UInt8,
-        recordLength: UInt16,
-        xAxis: LASAxis,
-        yAxis: LASAxis,
-        zAxis: LASAxis,
-        minX: Double,
-        maxX: Double,
-        minY: Double,
-        maxY: Double,
-        minZ: Double,
-        maxZ: Double
-    ) -> Data {
-        var header = Data()
-        header.reserveCapacity(las12HeaderSize)
-        header.append(contentsOf: [0x4c, 0x41, 0x53, 0x46]) // LASF
-        appendLittleEndian(UInt16(0), to: &header) // File Source ID
-        appendLittleEndian(UInt16(0), to: &header) // Global Encoding: no fake CRS/GPS time
-        header.append(Data(repeating: 0, count: 16)) // Project ID GUID
-        header.append(1)
-        header.append(2)
-        appendFixedASCII("Scan Lab Point Cloud", width: 32, to: &header)
-        appendFixedASCII("Scan Lab Native", width: 32, to: &header)
-
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .current
-        let now = Date()
+    private static func makeLAS12Header(pointCount: UInt32, pointFormat: UInt8, recordLength: UInt16,
+                                        xAxis: LASAxis, yAxis: LASAxis, zAxis: LASAxis,
+                                        minX: Double, maxX: Double, minY: Double, maxY: Double, minZ: Double, maxZ: Double) -> Data {
+        var header = Data(); header.reserveCapacity(las12HeaderSize)
+        header.append(contentsOf: [0x4c, 0x41, 0x53, 0x46]); appendLittleEndian(UInt16(0), to: &header); appendLittleEndian(UInt16(0), to: &header)
+        header.append(Data(repeating: 0, count: 16)); header.append(1); header.append(2)
+        appendFixedASCII("Scan Lab Point Cloud", width: 32, to: &header); appendFixedASCII("Scan Lab Native", width: 32, to: &header)
+        var calendar = Calendar(identifier: .gregorian); calendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .current; let now = Date()
         appendLittleEndian(UInt16(calendar.ordinality(of: .day, in: .year, for: now) ?? 0), to: &header)
         appendLittleEndian(UInt16(calendar.component(.year, from: now)), to: &header)
-        appendLittleEndian(UInt16(las12HeaderSize), to: &header)
-        appendLittleEndian(UInt32(las12HeaderSize), to: &header)
-        appendLittleEndian(UInt32(0), to: &header) // VLR count
-        header.append(pointFormat)
-        appendLittleEndian(recordLength, to: &header)
-        appendLittleEndian(pointCount, to: &header)
-        appendLittleEndian(pointCount, to: &header) // points by return 1
+        appendLittleEndian(UInt16(las12HeaderSize), to: &header); appendLittleEndian(UInt32(las12HeaderSize), to: &header); appendLittleEndian(UInt32(0), to: &header)
+        header.append(pointFormat); appendLittleEndian(recordLength, to: &header); appendLittleEndian(pointCount, to: &header); appendLittleEndian(pointCount, to: &header)
         for _ in 0..<4 { appendLittleEndian(UInt32(0), to: &header) }
-        appendFloat64(xAxis.scale, to: &header)
-        appendFloat64(yAxis.scale, to: &header)
-        appendFloat64(zAxis.scale, to: &header)
-        appendFloat64(xAxis.offset, to: &header)
-        appendFloat64(yAxis.offset, to: &header)
-        appendFloat64(zAxis.offset, to: &header)
-        appendFloat64(maxX, to: &header)
-        appendFloat64(minX, to: &header)
-        appendFloat64(maxY, to: &header)
-        appendFloat64(minY, to: &header)
-        appendFloat64(maxZ, to: &header)
-        appendFloat64(minZ, to: &header)
+        appendFloat64(xAxis.scale, to: &header); appendFloat64(yAxis.scale, to: &header); appendFloat64(zAxis.scale, to: &header)
+        appendFloat64(xAxis.offset, to: &header); appendFloat64(yAxis.offset, to: &header); appendFloat64(zAxis.offset, to: &header)
+        appendFloat64(maxX, to: &header); appendFloat64(minX, to: &header); appendFloat64(maxY, to: &header); appendFloat64(minY, to: &header); appendFloat64(maxZ, to: &header); appendFloat64(minZ, to: &header)
         return header
     }
 
@@ -520,51 +640,24 @@ enum MeshPointCloudExportService {
         let offset = (minimum + maximum) / 2
         let halfSpan = max(abs(maximum - offset), abs(minimum - offset))
         let safeIntegerRange = Double(Int32.max) - 4_096
-        let scale = max(0.000_001, halfSpan / max(1, safeIntegerRange))
-        return LASAxis(scale: scale, offset: offset)
+        return LASAxis(scale: max(0.000_001, halfSpan / max(1, safeIntegerRange)), offset: offset)
     }
 
     private static func quantize(_ value: Double, axis: LASAxis) -> Int32 {
         let raw = ((value - axis.offset) / axis.scale).rounded()
-        if raw <= Double(Int32.min) { return Int32.min }
-        if raw >= Double(Int32.max) { return Int32.max }
-        return Int32(raw)
+        if raw <= Double(Int32.min) { return Int32.min }; if raw >= Double(Int32.max) { return Int32.max }; return Int32(raw)
     }
 
     private static func flushIfNeeded(_ buffer: inout Data, to handle: FileHandle) throws {
-        guard buffer.count >= streamFlushThreshold else { return }
-        try handle.write(contentsOf: buffer)
-        buffer.removeAll(keepingCapacity: true)
+        guard buffer.count >= streamFlushThreshold else { return }; try handle.write(contentsOf: buffer); buffer.removeAll(keepingCapacity: true)
     }
 
     private static func appendLittleEndian<T: FixedWidthInteger>(_ value: T, to data: inout Data) {
-        var littleEndian = value.littleEndian
-        withUnsafeBytes(of: &littleEndian) { data.append(contentsOf: $0) }
+        var littleEndian = value.littleEndian; withUnsafeBytes(of: &littleEndian) { data.append(contentsOf: $0) }
     }
-
-    private static func appendFloat32(_ value: Float, to data: inout Data) {
-        appendLittleEndian(value.bitPattern, to: &data)
-    }
-
-    private static func appendFloat64(_ value: Double, to data: inout Data) {
-        appendLittleEndian(value.bitPattern, to: &data)
-    }
-
+    private static func appendFloat32(_ value: Float, to data: inout Data) { appendLittleEndian(value.bitPattern, to: &data) }
+    private static func appendFloat64(_ value: Double, to data: inout Data) { appendLittleEndian(value.bitPattern, to: &data) }
     private static func appendFixedASCII(_ value: String, width: Int, to data: inout Data) {
-        let bytes = Array(value.utf8.prefix(width))
-        data.append(contentsOf: bytes)
-        if bytes.count < width {
-            data.append(Data(repeating: 0, count: width - bytes.count))
-        }
-    }
-
-    private static func unquote(_ value: String) -> String {
-        guard value.count >= 2,
-              let first = value.first,
-              let last = value.last,
-              (first == "\"" && last == "\"") || (first == "'" && last == "'") else {
-            return value
-        }
-        return String(value.dropFirst().dropLast())
+        let bytes = Array(value.utf8.prefix(width)); data.append(contentsOf: bytes); if bytes.count < width { data.append(Data(repeating: 0, count: width - bytes.count)) }
     }
 }

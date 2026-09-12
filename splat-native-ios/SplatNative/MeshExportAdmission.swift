@@ -7,6 +7,7 @@ enum MeshExportAdmission {
     enum AdmissionError: LocalizedError, Equatable {
         case sourceMissing
         case sourceSizeUnavailable
+        case storageCapacityUnavailable
         case insufficientStorage(required: Int64, available: Int64)
 
         var errorDescription: String? {
@@ -15,6 +16,8 @@ enum MeshExportAdmission {
                 return "Meshの書き出し元が見つかりません。"
             case .sourceSizeUnavailable:
                 return "Meshデータのサイズを確認できないため、書き出しを開始できません。"
+            case .storageCapacityUnavailable:
+                return "端末の空き容量を確認できないため、安全なMesh書き出しを開始できません。"
             case .insufficientStorage(let required, let available):
                 let formatter = ByteCountFormatter()
                 formatter.countStyle = .file
@@ -29,42 +32,80 @@ enum MeshExportAdmission {
     static func preflight(
         sourceURL: URL,
         format: MeshExportService.Format,
-        availableCapacityOverride: Int64? = nil
+        availableCapacityOverride: Int64? = nil,
+        capacityProvider: ((URL) -> Int64?)? = nil
     ) throws -> URL {
         guard sourceURL.isFileURL, FileManager.default.fileExists(atPath: sourceURL.path) else {
             throw AdmissionError.sourceMissing
         }
         let sourceBytes = try fileSize(at: sourceURL)
-        let required = estimatedRequiredFreeBytes(
+        let sourceExtension = sourceURL.pathExtension.lowercased()
+        var required = estimatedRequiredFreeBytes(
             sourceBytes: sourceBytes,
-            sourceExtension: sourceURL.pathExtension.lowercased(),
+            sourceExtension: sourceExtension,
             format: format
         )
-        let available = availableCapacityOverride.map { max(0, $0) }
-            ?? availableCapacity(at: sourceURL.deletingLastPathComponent())
-        if let available, available < required {
+
+        // Assimp/Model I/O scene conversion and exact OBJ delivery may follow every referenced
+        // material/texture. Validate those companions and reserve their on-disk bytes because the
+        // converted container can embed/copy them while the originals and partial output coexist.
+        // PLY/LAS uses our bounded parser instead: it validates contained, decodable textures and
+        // deliberately falls back to geometry-only points when texture metadata is stale/damaged.
+        if sourceExtension == "obj" {
+            switch format {
+            case .fbx, .obj, .glb, .usdz, .stl:
+                let companionBytes = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL)
+                required = saturatingAdd(required, companionBytes)
+            case .ply, .las:
+                break
+            }
+        }
+
+        let capacityURL = sourceURL.deletingLastPathComponent()
+        let available: Int64?
+        if let availableCapacityOverride {
+            available = max(0, availableCapacityOverride)
+        } else if let capacityProvider {
+            available = capacityProvider(capacityURL).map { max(0, $0) }
+        } else {
+            available = availableCapacity(at: capacityURL).map { max(0, $0) }
+        }
+        guard let available else {
+            throw AdmissionError.storageCapacityUnavailable
+        }
+        if available < required {
             throw AdmissionError.insufficientStorage(required: required, available: available)
         }
         return sourceURL
     }
 
     /// Conservative disk estimate for the atomic pipeline. Exact-format passthrough only needs
-    /// one share copy. Other formats may need an OBJ bridge plus partial/final conversion output.
+    /// one share copy. Direct OBJ point-cloud output can expand a compact indexed OBJ substantially
+    /// because each triangle corner becomes a full point record (up to 26 bytes in LAS 1.2 with
+    /// RGB), so reserve 12x source bytes. Non-OBJ point-cloud conversion first materializes a text
+    /// OBJ bridge and then expands that bridge again into PLY/LAS; compressed/binary inputs such as
+    /// GLB can therefore consume substantially more disk than their source size suggests, so that
+    /// two-stage path reserves 24x source bytes. Non-OBJ FBX/OBJ/GLB/STL conversion also creates a
+    /// temporary text OBJ bridge before writing the final container; reserve 8x source bytes there
+    /// instead of the direct-OBJ 3x path. USDZ is exported directly by Model I/O and keeps 3x.
     static func estimatedRequiredFreeBytes(
         sourceBytes: Int64,
         sourceExtension: String,
         format: MeshExportService.Format
     ) -> Int64 {
         let source = max(0, sourceBytes)
+        let normalizedExtension = sourceExtension.lowercased()
         let multiplier: Int64
-        if sourceExtension.lowercased() == format.rawValue {
+        if normalizedExtension == format.rawValue {
             multiplier = 1
         } else {
             switch format {
             case .ply, .las:
-                multiplier = 4
-            case .fbx, .obj, .glb, .usdz, .stl:
+                multiplier = normalizedExtension == "obj" ? 12 : 24
+            case .usdz:
                 multiplier = 3
+            case .fbx, .obj, .glb, .stl:
+                multiplier = normalizedExtension == "obj" ? 3 : 8
             }
         }
         return saturatingAdd(saturatingMultiply(source, by: multiplier), safetyReserveBytes)
@@ -72,7 +113,9 @@ enum MeshExportAdmission {
 
     private static func fileSize(at url: URL) throws -> Int64 {
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber, size.int64Value > 0 else {
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.int64Value > 0 else {
             throw AdmissionError.sourceSizeUnavailable
         }
         return size.int64Value

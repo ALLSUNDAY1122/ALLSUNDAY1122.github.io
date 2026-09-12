@@ -141,4 +141,60 @@ final class SplatResourceGuardAdaptiveTests: XCTestCase {
             guardrail.limits.minimumAvailableMemoryReserveBytes
         )
     }
+
+    func testViewerMemoryAdmissionShrinksOnlyUnderResourcePressure() {
+        let physicalMemory = UInt64(4 * 1_073_741_824)
+        let normal = SplatViewerMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let lowPower = SplatViewerMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: true
+        )
+        let critical = SplatViewerMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .critical,
+            isLowPowerModeEnabled: false
+        )
+
+        XCTAssertEqual(lowPower, normal / 4 * 3)
+        XCTAssertEqual(critical, normal / 2)
+        XCTAssertTrue(SplatViewerMemoryPolicy.canUseCanonicalSH3(
+            pointCount: 1_000_000,
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        ))
+        XCTAssertFalse(SplatViewerMemoryPolicy.canUseCanonicalSH3(
+            pointCount: 1_000_000,
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: true
+        ))
+    }
+
+    func testVideoMemoryAdmissionShrinksUnderThermalAndLowPowerPressure() {
+        let physicalMemory = UInt64(8 * 1_073_741_824)
+        let normal = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let serious = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .serious,
+            isLowPowerModeEnabled: false
+        )
+        let lowPower = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: true
+        )
+
+        XCTAssertEqual(serious, normal / 4 * 3)
+        XCTAssertEqual(lowPower, normal / 4 * 3)
+    }
 }

@@ -14,6 +14,7 @@ struct MeshDurabilityRecoveryReport: Equatable, Sendable {
 enum MeshDurabilityRecoveryError: LocalizedError {
     case invalidResult
     case invalidProject
+    case unsafeRecoveryDirectory
     case movedResultMissing
 
     var errorDescription: String? {
@@ -22,6 +23,8 @@ enum MeshDurabilityRecoveryError: LocalizedError {
             return "保護するMesh結果を確認できません。"
         case .invalidProject:
             return "Mesh working projectをRecovery領域へ退避できません。"
+        case .unsafeRecoveryDirectory:
+            return "Mesh Recovery領域が安全な通常directoryではありません。"
         case .movedResultMissing:
             return "Recovery領域へ移動したMesh結果を確認できません。"
         }
@@ -51,16 +54,20 @@ struct MeshDurabilityRecoveryStore: Sendable {
     func protect(resultURL: URL) throws -> MeshDurabilityProtectedResult {
         let fileManager = FileManager.default
         guard resultURL.isFileURL,
-              fileManager.fileExists(atPath: resultURL.path) else {
+              isNonEmptyRegularFile(resultURL) else {
             throw MeshDurabilityRecoveryError.invalidResult
         }
 
         let sourceProjectURL = resultURL.deletingLastPathComponent().standardizedFileURL
-        guard sourceProjectURL.pathExtension.lowercased() == MeshProjectStore.projectExtension else {
+        guard sourceProjectURL.pathExtension.lowercased() == MeshProjectStore.projectExtension,
+              isRegularDirectory(sourceProjectURL) else {
             throw MeshDurabilityRecoveryError.invalidProject
         }
 
         try fileManager.createDirectory(at: recoveryURL, withIntermediateDirectories: true)
+        guard isRegularDirectory(recoveryURL) else {
+            throw MeshDurabilityRecoveryError.unsafeRecoveryDirectory
+        }
 
         if sourceProjectURL.deletingLastPathComponent().standardizedFileURL == recoveryURL.standardizedFileURL {
             return MeshDurabilityProtectedResult(projectURL: sourceProjectURL, resultURL: resultURL)
@@ -87,7 +94,7 @@ struct MeshDurabilityRecoveryStore: Sendable {
         // Same-volume rename deliberately avoids allocating another copy when storage is exhausted.
         try fileManager.moveItem(at: sourceProjectURL, to: destinationURL)
         let movedResultURL = destinationURL.appendingPathComponent(relativeResultPath)
-        guard fileManager.fileExists(atPath: movedResultURL.path) else {
+        guard isNonEmptyRegularFile(movedResultURL) else {
             throw MeshDurabilityRecoveryError.movedResultMissing
         }
 
@@ -95,8 +102,12 @@ struct MeshDurabilityRecoveryStore: Sendable {
     }
 
     func cleanupProtectedResult(containing resultURL: URL) {
-        guard isProtected(resultURL: resultURL) else { return }
-        try? FileManager.default.removeItem(at: resultURL.deletingLastPathComponent())
+        let projectURL = resultURL.deletingLastPathComponent()
+        guard isRegularDirectory(recoveryURL),
+              isProtected(resultURL: resultURL),
+              isRegularDirectory(projectURL),
+              isNonEmptyRegularFile(resultURL) else { return }
+        try? FileManager.default.removeItem(at: projectURL)
     }
 
     func isProtected(resultURL: URL) -> Bool {
@@ -105,7 +116,22 @@ struct MeshDurabilityRecoveryStore: Sendable {
 
     func recoverPendingArchives() -> MeshDurabilityRecoveryReport {
         let fileManager = FileManager.default
-        try? fileManager.createDirectory(at: recoveryURL, withIntermediateDirectories: true)
+        do {
+            try fileManager.createDirectory(at: recoveryURL, withIntermediateDirectories: true)
+        } catch {
+            return MeshDurabilityRecoveryReport(
+                recoveredCount: 0,
+                remainingCount: 0,
+                lastErrorDescription: error.localizedDescription
+            )
+        }
+        guard isRegularDirectory(recoveryURL) else {
+            return MeshDurabilityRecoveryReport(
+                recoveredCount: 0,
+                remainingCount: 0,
+                lastErrorDescription: MeshDurabilityRecoveryError.unsafeRecoveryDirectory.localizedDescription
+            )
+        }
 
         let protectedProjects = projectDirectories(in: recoveryURL)
         let orphanedWorkingProjects = projectDirectories(in: appRootURL)
@@ -147,17 +173,19 @@ struct MeshDurabilityRecoveryStore: Sendable {
 
     private func projectDirectories(in directoryURL: URL) -> [URL] {
         let fileManager = FileManager.default
+        guard isRegularDirectory(directoryURL) else { return [] }
         return ((try? fileManager.contentsOfDirectory(
             at: directoryURL,
-            includingPropertiesForKeys: [.isDirectoryKey],
+            includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey],
             options: [.skipsHiddenFiles]
         )) ?? []).filter { url in
             guard url.pathExtension.lowercased() == MeshProjectStore.projectExtension else { return false }
-            return (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true
+            return isRegularDirectory(url)
         }
     }
 
     private func bestFinishedResult(in projectURL: URL) -> URL? {
+        guard isRegularDirectory(projectURL) else { return nil }
         let fileManager = FileManager.default
         for name in ["mesh-cropped.obj", "mesh-textured.usdz", "mesh.obj"] {
             let candidate = projectURL.appendingPathComponent(name)
@@ -166,7 +194,7 @@ struct MeshDurabilityRecoveryStore: Sendable {
 
         let reprocessed = ((try? fileManager.contentsOfDirectory(
             at: projectURL,
-            includingPropertiesForKeys: [.isRegularFileKey, .contentModificationDateKey, .fileSizeKey],
+            includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .contentModificationDateKey, .fileSizeKey],
             options: [.skipsHiddenFiles]
         )) ?? [])
             .filter {
@@ -182,9 +210,17 @@ struct MeshDurabilityRecoveryStore: Sendable {
         return reprocessed.first
     }
 
+    private func isRegularDirectory(_ url: URL) -> Bool {
+        guard let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              values.isDirectory == true,
+              values.isSymbolicLink != true else { return false }
+        return true
+    }
+
     private func isNonEmptyRegularFile(_ url: URL) -> Bool {
-        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
-              values.isRegularFile == true else { return false }
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true else { return false }
         return (values.fileSize ?? 0) > 0
     }
 }

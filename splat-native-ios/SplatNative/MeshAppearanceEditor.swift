@@ -13,6 +13,10 @@ private struct MeshAppearanceEditResult: Sendable {
 private enum MeshAppearanceProcessor {
     static func apply(objURL: URL, exposure: Double, contrast: Double, saturation: Double, sharpness: Double) throws -> MeshAppearanceEditResult {
         let directory = objURL.deletingLastPathComponent()
+        // Reuse the export companion validator before opening any OBJ-referenced material or
+        // texture. This rejects parent traversal, absolute paths, missing companions and symlink
+        // escapes so appearance editing cannot silently depend on files outside the scan project.
+        _ = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: objURL)
         let obj = try String(contentsOf: objURL, encoding: .utf8)
         guard let mtlName = obj.split(whereSeparator: \.isNewline).first(where: { $0.hasPrefix("mtllib ") }).map({ String($0.dropFirst(7)) }) else { throw error("MTL参照がありません") }
         let mtlURL = directory.appendingPathComponent(mtlName.trimmingCharacters(in: .whitespaces))
@@ -27,20 +31,58 @@ private enum MeshAppearanceProcessor {
         guard let output = sharpen.outputImage, let cs = CGColorSpace(name: CGColorSpace.sRGB) else { throw error("画像フィルタを適用できません") }
 
         let visual = objURL.lastPathComponent.lowercased().contains("visual")
-        let prefix = visual ? "visual-mesh-textured-edited" : "mesh-textured-edited"
+        let basePrefix = visual ? "visual-mesh-textured-edited" : "mesh-textured-edited"
+        // Never overwrite the generation that may currently be open in the viewer. The previous
+        // fixed filenames meant a failed second edit could truncate/replace the texture before the
+        // matching MTL/OBJ had been committed, corrupting an otherwise valid prior result.
+        let prefix = "\(basePrefix)-\(UUID().uuidString.lowercased())"
         let editedTexture = directory.appendingPathComponent(prefix + ".jpg")
+        let editedMTL = directory.appendingPathComponent(prefix + ".mtl")
+        let editedOBJ = directory.appendingPathComponent(prefix + ".obj")
+        var committed = false
+        defer {
+            if !committed {
+                try? FileManager.default.removeItem(at: editedTexture)
+                try? FileManager.default.removeItem(at: editedMTL)
+                try? FileManager.default.removeItem(at: editedOBJ)
+            }
+        }
+
         let context = CIContext(options: [.cacheIntermediates:false])
         try context.writeJPEGRepresentation(of: output, to: editedTexture, colorSpace: cs, options: [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 0.94])
 
-        let editedMTL = directory.appendingPathComponent(prefix + ".mtl")
         mtl = mtl.split(whereSeparator: \.isNewline).map { line in line.hasPrefix("map_Kd ") ? "map_Kd \(editedTexture.lastPathComponent)" : String(line) }.joined(separator:"\n") + "\n"
         try mtl.write(to: editedMTL, atomically: true, encoding: .utf8)
 
-        let editedOBJ = directory.appendingPathComponent(prefix + ".obj")
         let newOBJ = obj.split(whereSeparator: \.isNewline).map { line in line.hasPrefix("mtllib ") ? "mtllib \(editedMTL.lastPathComponent)" : String(line) }.joined(separator:"\n") + "\n"
         try newOBJ.write(to: editedOBJ, atomically: true, encoding: .utf8)
+        committed = true
         return MeshAppearanceEditResult(objURL: editedOBJ, textureURL: editedTexture)
     }
+
+    static func discard(_ result: MeshAppearanceEditResult) {
+        let mtlURL = result.objURL.deletingPathExtension().appendingPathExtension("mtl")
+        try? FileManager.default.removeItem(at: result.textureURL)
+        try? FileManager.default.removeItem(at: mtlURL)
+        try? FileManager.default.removeItem(at: result.objURL)
+    }
+
+    /// Successful edits are immutable generations. Once the new generation and its persisted
+    /// exporter metadata are committed, the immediately superseded edited generation is no longer
+    /// a recovery point and retaining its OBJ/MTL/JPG trio makes repeated appearance adjustments
+    /// consume storage indefinitely. Never touch the original mesh generation: only filenames
+    /// created by this editor are eligible for retirement.
+    static func discardSupersededGeneration(at objURL: URL?) {
+        guard let objURL else { return }
+        let stem = objURL.deletingPathExtension().lastPathComponent
+        guard stem.hasPrefix("mesh-textured-edited-") ||
+              stem.hasPrefix("visual-mesh-textured-edited-") else { return }
+        let base = objURL.deletingPathExtension()
+        try? FileManager.default.removeItem(at: base.appendingPathExtension("jpg"))
+        try? FileManager.default.removeItem(at: base.appendingPathExtension("mtl"))
+        try? FileManager.default.removeItem(at: objURL)
+    }
+
     private static func error(_ text:String)->NSError{NSError(domain:"ScanLab.MeshAppearance",code:1,userInfo:[NSLocalizedDescriptionKey:text])}
 }
 
@@ -67,8 +109,18 @@ struct MeshAppearanceEditorSheet: View {
                 Section { Button(working ? "適用中…" : "実テクスチャへ適用") { apply() }.disabled(working) }
             }
             .navigationTitle("見た目を編集")
-            .toolbar { ToolbarItem(placement:.topBarTrailing){Button("閉じる"){dismiss()}} }
+            .toolbar {
+                ToolbarItem(placement:.topBarTrailing) {
+                    Button("閉じる") { dismiss() }
+                        .disabled(working)
+                }
+            }
         }
+        // Core Image/JPEG materialization is synchronous inside its worker. Allowing the sheet to
+        // disappear while that immutable generation is still being validated can make a completed
+        // edit appear to happen "after cancellation". Keep the transaction visible until it either
+        // commits its exporter metadata or rolls back, instead of permitting hidden state mutation.
+        .interactiveDismissDisabled(working)
     }
 
     private func control(_ title:String, value:Binding<Double>, range:ClosedRange<Double>, format:String)->some View {
@@ -80,7 +132,36 @@ struct MeshAppearanceEditorSheet: View {
         Task {
             do {
                 let result = try await Task.detached(priority:.userInitiated){ try MeshAppearanceProcessor.apply(objURL:url, exposure:e, contrast:c, saturation:s, sharpness:sh) }.value
-                model.resultURL=result.objURL; model.previewScene=try? SCNScene(url:result.objURL,options:nil); model.statusMessage="露出・コントラスト・彩度・シャープを実テクスチャへ反映しました"; try? model.persistExporterMeshAssetContract(); working=false; dismiss()
+                guard let candidateScene = try? SCNScene(url: result.objURL, options: nil) else {
+                    MeshAppearanceProcessor.discard(result)
+                    throw NSError(domain: "ScanLab.MeshAppearance", code: 2, userInfo: [NSLocalizedDescriptionKey: "編集後のMeshを検証できませんでした。直前の結果を保持します。"])
+                }
+                let previousURL = model.resultURL
+                let previousScene = model.previewScene
+                let previousStatus = model.statusMessage
+                model.resultURL = result.objURL
+                model.previewScene = candidateScene
+                do {
+                    try model.persistExporterMeshAssetContract()
+                } catch {
+                    // Persisted asset metadata is part of the saved/exportable result. If that
+                    // commit fails, do not leave the in-memory viewer pointing at a generation
+                    // that cannot be recovered after relaunch.
+                    model.resultURL = previousURL
+                    model.previewScene = previousScene
+                    model.statusMessage = previousStatus
+                    MeshAppearanceProcessor.discard(result)
+                    throw error
+                }
+                // The new metadata is durable now, so retaining an older editor-owned generation
+                // only wastes project storage. Original reconstruction assets are never matched by
+                // discardSupersededGeneration and therefore remain untouched.
+                if previousURL != result.objURL {
+                    MeshAppearanceProcessor.discardSupersededGeneration(at: previousURL)
+                }
+                model.statusMessage="露出・コントラスト・彩度・シャープを実テクスチャへ反映しました"
+                working=false
+                dismiss()
             } catch { working=false; errorText=error.localizedDescription }
         }
     }

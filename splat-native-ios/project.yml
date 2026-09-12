@@ -81,29 +81,49 @@ targets:
       - path: SplatNative/SplatReconstructionPolicy.swift
       - path: SplatNative/SplatSeedColorizer.swift
       - path: SplatNative/SplatSkySeeder.swift
+      - path: SplatNative/SplatSoftwareDepthSeedBuilder.swift
+      - path: SplatNative/SplatDepthSeedBuilder.swift
       - path: SplatNative/SplatResourceGuard.swift
       - path: SplatNative/SplatViewerState.swift
+      - path: SplatNative/SplatViewerMemoryPolicy.swift
       - path: SplatNative/ScanProjectStore.swift
       - path: SplatNative/ScanWorldMapArchiveStore.swift
       - path: SplatNative/SplatCompletionVerifier.swift
       - path: SplatNative/SplatStrongCompletionEvidence.swift
       - path: SplatNative/SplatPreviousResultEvidence.swift
+      - path: SplatNative/SplatPreviousResultIntegrityRecovery.swift
       - path: SplatNative/SplatProjectTrustRecovery.swift
       - path: SplatNative/SplatExportService.swift
+      - path: SplatNative/SplatPersistedEditMaterializer+Cancellation.swift
       - path: SplatNative/SplatCanonicalSHAsset+ProjectDurability.swift
+      - path: SplatNative/SplatCanonicalSHAsset+TrustedDigest.swift
       - path: SplatNative/SplatExportAdmission.swift
+      - path: SplatNative/SplatExportAdmission+Async.swift
       - path: SplatNative/SplatTransientExportWorkspace.swift
       - path: SplatNative/SplatVideoConfiguration.swift
       - path: SplatNative/SplatCameraGeometry.swift
+      - path: SplatNative/SplatViewerCameraDatasetLoader.swift
       - path: SplatNative/SplatVideoMemoryPolicy.swift
       - path: SplatNative/SplatVideoExporter.swift
+      - path: SplatNative/SplatVideoOutputValidator.swift
+      - path: SplatNative/MeshAssetContract.swift
+      - path: SplatNative/MeshCaptureCoveragePolicy.swift
+      - path: SplatNative/MeshDepthPayload.swift
+      - path: SplatNative/MeshDepthRecorder.swift
+      - path: SplatNative/MeshDetailSimplifier.swift
+      - path: SplatNative/MeshTrimEditor.swift
       - path: SplatNative/MeshExportService.swift
+      - path: SplatNative/MeshOBJShareBundle.swift
       - path: SplatNative/MeshExportAdmission.swift
       - path: SplatNative/MeshExportMemoryPolicy.swift
       - path: SplatNative/MeshPointCloudExportService.swift
       - path: SplatNative/MeshRawProjectBridge.swift
+      - path: SplatNative/MeshRawInputValidator.swift
+      - path: SplatNative/MeshRawSceneValidator.swift
       - path: SplatNative/MeshProjectStore.swift
       - path: SplatNative/MeshProjectIntegrity.swift
+      - path: SplatNative/MeshDurabilityRecoveryStore.swift
+      - path: SplatNative/MeshFrameJPEGEncoder.swift
       - path: SplatNative/ScanLabMapQuery.swift
     dependencies:
       - package: Msplat

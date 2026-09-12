@@ -1,4 +1,4 @@
-import SceneKit
+@preconcurrency import SceneKit
 import SwiftUI
 
 /// Unified local-library entry point. Existing Splat library remains C-owned and is presented as-is;
@@ -196,6 +196,14 @@ private struct MeshLibraryRow: View {
     }
 }
 
+/// SceneKit scenes are fully constructed before leaving the detached loader and are then owned by
+/// MainActor UI state. The wrapper documents that one-way ownership transfer without marking every
+/// SceneKit API as Sendable.
+private struct LoadedSavedMesh: @unchecked Sendable {
+    let url: URL
+    let scene: SCNScene
+}
+
 private struct SavedMeshView: View {
     let summary: MeshProjectSummary
 
@@ -222,21 +230,14 @@ private struct SavedMeshView: View {
                 }
             }
 
-            if let trustedURL {
-                HStack(spacing: 12) {
-                    Button {
-                        showingExport = true
-                    } label: {
-                        Label("書き出す", systemImage: "square.and.arrow.up")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-
-                    ShareLink(item: trustedURL) {
-                        Label("元データ", systemImage: "doc")
-                    }
-                    .buttonStyle(.bordered)
+            if trustedURL != nil {
+                Button {
+                    showingExport = true
+                } label: {
+                    Label("書き出す・共有", systemImage: "square.and.arrow.up")
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.borderedProminent)
                 .padding(14)
                 .background(.black)
             }
@@ -255,12 +256,23 @@ private struct SavedMeshView: View {
         isLoading = true
         defer { isLoading = false }
         do {
-            let verified = try await Task.detached(priority: .utility) {
-                try MeshProjectIntegrity.verifyOrSeal(summary: summary)
+            // Integrity verification can hash a large asset and SCNScene parsing can synchronously
+            // read/decode OBJ/USDZ. Keep both off MainActor so opening a large saved scan leaves the
+            // navigation stack and progress indicator responsive until ownership transfers here.
+            let loaded = try await Task.detached(priority: .userInitiated) {
+                let verified = try MeshProjectIntegrity.verifyOrSeal(summary: summary)
+                let scene = try SCNScene(url: verified, options: nil)
+                guard MeshRawSceneValidator.containsGeometry(scene) else {
+                    throw NSError(
+                        domain: "ScanLab.SavedMeshLoad",
+                        code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "保存済みMeshに表示可能な3D形状がありません。"]
+                    )
+                }
+                return LoadedSavedMesh(url: verified, scene: scene)
             }.value
-            let loaded = try SCNScene(url: verified, options: nil)
-            trustedURL = verified
-            scene = loaded
+            trustedURL = loaded.url
+            scene = loaded.scene
         } catch {
             trustedURL = nil
             scene = nil

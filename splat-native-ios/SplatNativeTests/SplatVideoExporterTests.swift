@@ -44,8 +44,39 @@ final class SplatVideoExporterTests: XCTestCase {
         let videoTracks = try await asset.loadTracks(withMediaType: .video)
         let track = try XCTUnwrap(videoTracks.first)
         let naturalSize = try await track.load(.naturalSize)
-        XCTAssertEqual(Int(abs(naturalSize.width)), 720)
-        XCTAssertEqual(Int(abs(naturalSize.height)), 720)
+        XCTAssertEqual(Int(abs(naturalSize.width)), configuration.dimensions.width)
+        XCTAssertEqual(Int(abs(naturalSize.height)), configuration.dimensions.height)
+
+        // Reuse the already-encoded positive fixture to prove the validator fails closed when
+        // the file is real and playable but does not match the quality/aspect requested by UI.
+        let mismatchedDimensions = (
+            width: max(1, configuration.dimensions.width / 2),
+            height: max(1, configuration.dimensions.height / 2)
+        )
+        do {
+            try await SplatVideoOutputValidator.validate(
+                output,
+                expectedDimensions: mismatchedDimensions
+            )
+            XCTFail("Expected a playable MP4 with the wrong dimensions to be rejected")
+        } catch let error as SplatVideoOutputValidator.ValidationError {
+            XCTAssertEqual(error, .unexpectedVideoDimensions)
+        }
+
+        // A truncated writer can leave a perfectly parsable MP4 with the correct dimensions.
+        // Duration therefore has to be part of the shareability contract as well. Use the same
+        // real encoded fixture and demand a timeline longer than it contains to exercise that gate
+        // without relying on malformed container bytes.
+        do {
+            try await SplatVideoOutputValidator.validate(
+                output,
+                expectedDimensions: configuration.dimensions,
+                minimumDuration: configuration.duration + 1
+            )
+            XCTFail("Expected a playable but too-short MP4 to be rejected")
+        } catch let error as SplatVideoOutputValidator.ValidationError {
+            XCTAssertEqual(error, .unexpectedlyShortDuration)
+        }
     }
 
     func testMemoryPreflightProducesBoundedEstimateForNormalScene() throws {

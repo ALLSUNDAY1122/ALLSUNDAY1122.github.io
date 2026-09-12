@@ -223,7 +223,11 @@ enum SplatPersistedEditMaterializer {
         var outputPointCount = 0
         for try await points in stream {
             try Task.checkCancellation()
-            outputPointCount += eligiblePointCount(points, settings: settings, bounds: bounds)
+            outputPointCount += try eligiblePointCountCancellable(
+                points,
+                settings: settings,
+                bounds: bounds
+            )
         }
         guard outputPointCount > 0 else { throw MaterializeError.emptyEditedScene }
         return Plan(settings: settings, bounds: bounds, outputPointCount: outputPointCount)
@@ -465,15 +469,25 @@ enum SplatExportService {
 
     static func export(
         sourceURL: URL,
+        verifiedDigest: String? = nil,
         format: Format,
         destinationDirectory: URL? = nil,
         outputBaseName: String? = nil
     ) async throws -> URL {
         let sourcePointCount = try sourcePointCount(sourceURL)
-        let canonical = SplatCanonicalSHAsset.existingAsset(
-            forLegacySplat: sourceURL,
-            expectedPointCount: sourcePointCount
-        )
+        let canonical: SplatCanonicalSHAsset.Asset?
+        if let verifiedDigest {
+            canonical = SplatCanonicalSHAsset.existingCompleteAsset(
+                forLegacySplat: sourceURL,
+                verifiedDigest: verifiedDigest,
+                expectedPointCount: sourcePointCount
+            )
+        } else {
+            canonical = SplatCanonicalSHAsset.existingCompleteAsset(
+                forLegacySplat: sourceURL,
+                expectedPointCount: sourcePointCount
+            )
+        }
         let retainedAssetURL = canonical?.url ?? sourceURL
         let retainedSHDegree = canonical?.descriptor.shDegree ?? 0
         let editPlan = try await SplatPersistedEditMaterializer.makePlan(
@@ -510,7 +524,10 @@ enum SplatExportService {
                 )
                 for try await points in stream {
                     try Task.checkCancellation()
-                    let outputPoints = SplatPersistedEditMaterializer.apply(points, plan: editPlan)
+                    let outputPoints = try SplatPersistedEditMaterializer.applyCancellable(
+                        points,
+                        plan: editPlan
+                    )
                     if !outputPoints.isEmpty {
                         try await writer.write(outputPoints)
                         pointsWritten += outputPoints.count
@@ -523,7 +540,10 @@ enum SplatExportService {
                 try await writer.start(numPoints: pointCount)
                 for try await points in stream {
                     try Task.checkCancellation()
-                    let outputPoints = SplatPersistedEditMaterializer.apply(points, plan: editPlan)
+                    let outputPoints = try SplatPersistedEditMaterializer.applyCancellable(
+                        points,
+                        plan: editPlan
+                    )
                     if !outputPoints.isEmpty {
                         try await writer.write(outputPoints)
                         pointsWritten += outputPoints.count
@@ -561,7 +581,7 @@ enum SplatExportService {
         previewJPEG: Data? = nil,
         rootDirectory: URL = FileManager.default.temporaryDirectory
     ) async throws -> BrowserSharePackage {
-        let trustedURL = try SplatExportAdmission.preflight(sourceURL: sourceURL, kind: .spz)
+        let admission = try await SplatExportAdmission.preflightResultAsync(sourceURL: sourceURL, kind: .spz)
         try Task.checkCancellation()
 
         let packageURL = rootDirectory
@@ -570,7 +590,8 @@ enum SplatExportService {
 
         do {
             let assetURL = try await export(
-                sourceURL: trustedURL,
+                sourceURL: admission.trustedURL,
+                verifiedDigest: admission.verifiedDigest,
                 format: .spz,
                 destinationDirectory: packageURL,
                 outputBaseName: "scene"

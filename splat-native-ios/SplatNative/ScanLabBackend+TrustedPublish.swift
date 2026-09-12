@@ -107,6 +107,10 @@ extension ScanLabBackend {
         }
         defer { ScanLabPublishPackageBuilder.cleanup(package) }
 
+        // Encode before creating server-side metadata. If JPEG encoding fails, publish without a
+        // preview instead of persisting a preview_path for an object that was never uploaded.
+        let previewData = previewImage?.jpegData(compressionQuality: 0.82)
+
         // D2-004 + D2-015 convergence: create the owner-bound draft first.
         // The final Storage policy intentionally rejects uploads that are not attached
         // to a live draft, which also prevents assets from being resurrected while a
@@ -134,7 +138,7 @@ extension ScanLabBackend {
             throw ScanLabBackendError.invalidServerResponse
         }
 
-        let previewPath = previewImage == nil ? nil : initialized.paths.previewJpeg
+        let previewPath = previewData == nil ? nil : initialized.paths.previewJpeg
 
         do {
             try await client.storage.from("scanlab-assets").upload(
@@ -147,7 +151,7 @@ extension ScanLabBackend {
                 fileURL: package.manifestURL,
                 options: FileOptions(contentType: "application/json")
             )
-            if let previewPath, let previewData = previewImage?.jpegData(compressionQuality: 0.82) {
+            if let previewPath, let previewData {
                 try await client.storage.from("scanlab-assets").upload(
                     previewPath,
                     data: previewData,

@@ -8,6 +8,7 @@ import Foundation
 /// same-size replacement cannot be accepted as the previously completed asset.
 enum SplatStrongCompletionEvidence {
     static let fileName = "result.splat.sha256.json"
+    private static let maximumSealByteCount: Int64 = 64 * 1024
 
     struct Seal: Codable, Equatable, Sendable {
         static let currentSchemaVersion = 1
@@ -54,15 +55,25 @@ enum SplatStrongCompletionEvidence {
         }
     }
 
+    /// Returns the digest that was freshly computed during this verification. Callers that need the
+    /// content address immediately afterwards can reuse it without weakening the invariant that every
+    /// verification re-reads and hashes the completed result.
+    @discardableResult
     static func verifyOrSeal(
         sourceURL: URL,
         evidence: SplatCommitEvidence,
         fileManager: FileManager = .default
-    ) throws {
+    ) throws -> String {
         let projectURL = sourceURL.deletingLastPathComponent()
         let sealURL = projectURL.appendingPathComponent(fileName)
         let before = try snapshot(sourceURL, fileManager: fileManager)
         guard before.byteCount == evidence.byteCount else { throw IntegrityError.hashMismatch }
+
+        // Completion trust metadata must be physically owned by the project and tiny. Following a
+        // symlinked seal would let bytes outside the archived scan decide which local result hash is
+        // trusted, while reading an arbitrarily large corrupt JSON file would create avoidable peak
+        // memory pressure on library open/export. Fail closed before Data(contentsOf:) in both cases.
+        try validateExistingSealForBoundedRead(sealURL, fileManager: fileManager)
 
         if let data = try? Data(contentsOf: sealURL),
            let seal = try? JSONDecoder().decode(Seal.self, from: data),
@@ -71,7 +82,7 @@ enum SplatStrongCompletionEvidence {
             let after = try snapshot(sourceURL, fileManager: fileManager)
             guard after == before else { throw IntegrityError.sourceChangedDuringVerification }
             guard hash == seal.sha256 else { throw IntegrityError.hashMismatch }
-            return
+            return hash
         }
 
         // A stale seal is expected after a newly committed reconstruction. It may be replaced only
@@ -88,6 +99,7 @@ enum SplatStrongCompletionEvidence {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         try encoder.encode(Seal(evidence: evidence, sha256: hash)).write(to: sealURL, options: .atomic)
+        return hash
     }
 
     private struct FileSnapshot: Equatable {
@@ -98,11 +110,23 @@ enum SplatStrongCompletionEvidence {
     private static func snapshot(_ url: URL, fileManager: FileManager) throws -> FileSnapshot {
         guard fileManager.fileExists(atPath: url.path) else { throw IntegrityError.sourceMissing }
         let attributes = try fileManager.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber,
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.int64Value > 0,
               let modificationDate = attributes[.modificationDate] as? Date else {
             throw IntegrityError.sourceMissing
         }
         return FileSnapshot(byteCount: size.int64Value, modificationDate: modificationDate)
+    }
+
+    private static func validateExistingSealForBoundedRead(_ url: URL, fileManager: FileManager) throws {
+        guard let attributes = try? fileManager.attributesOfItem(atPath: url.path) else { return }
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.int64Value >= 0,
+              size.int64Value <= maximumSealByteCount else {
+            throw IntegrityError.hashMismatch
+        }
     }
 
     private static func sha256Hex(fileURL: URL) throws -> String {

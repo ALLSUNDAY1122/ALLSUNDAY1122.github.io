@@ -24,7 +24,7 @@ struct SplatDepthSeedFrame: Sendable {
 enum SplatDepthSeedBuilder {
     // Recipe version is a cache-compatibility epoch, not the file-format version. Bump it whenever
     // seed-generation semantics change so a same-RAW comparison cannot silently reuse stale points3D.ply.
-    static let recipeVersion = 5
+    static let recipeVersion = 7
     static let targetSamplesPerFrame = 900
     static let voxelDensity: Float = 100
     static let minimumDepth: Float = 0.18
@@ -56,6 +56,7 @@ enum SplatDepthSeedBuilder {
         let depthFrameCount: Int
         let geometryPointCount: Int
         let skySeedCount: Int
+        let captureFingerprint: String?
         let createdAt: Date
     }
 
@@ -64,10 +65,15 @@ enum SplatDepthSeedBuilder {
         let y: Int
         let z: Int
 
-        init(_ point: SIMD3<Float>) {
-            x = Int(floor(point.x * voxelDensity))
-            y = Int(floor(point.y * voxelDensity))
-            z = Int(floor(point.z * voxelDensity))
+        init?(_ point: SIMD3<Float>) {
+            guard let x = Int(exactly: floor(Double(point.x) * Double(voxelDensity))),
+                  let y = Int(exactly: floor(Double(point.y) * Double(voxelDensity))),
+                  let z = Int(exactly: floor(Double(point.z) * Double(voxelDensity))) else {
+                return nil
+            }
+            self.x = x
+            self.y = y
+            self.z = z
         }
     }
 
@@ -80,13 +86,23 @@ enum SplatDepthSeedBuilder {
     ) throws -> Outcome {
         let plyURL = projectURL.appendingPathComponent("points3D.ply")
         let metadataURL = projectURL.appendingPathComponent(metadataFileName)
+        let canonicalFallbackPoints = fallbackPoints
+            .filter { $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }
+            .sorted(by: pointLessThan)
+        let currentCaptureFingerprint = captureFingerprint(
+            depthFrames: depthFrames,
+            fallbackPoints: canonicalFallbackPoints,
+            colorFrames: colorFrames
+        )
 
         if fileManager.fileExists(atPath: plyURL.path),
            let metadataData = try? Data(contentsOf: metadataURL),
            let metadata = try? JSONDecoder().decode(RecipeMetadata.self, from: metadataData),
            metadata.recipeVersion == recipeVersion,
+           metadata.captureFingerprint == currentCaptureFingerprint,
            metadata.geometryPointCount >= minimumGeometryPointCount,
-           metadata.pointCount >= metadata.geometryPointCount {
+           metadata.pointCount >= metadata.geometryPointCount,
+           cachedPLYIsComplete(at: plyURL, expectedPointCount: metadata.pointCount) {
             return Outcome(
                 source: metadata.source,
                 pointCount: metadata.pointCount,
@@ -97,7 +113,7 @@ enum SplatDepthSeedBuilder {
             )
         }
 
-        let depthResult = depthSeedPoints(projectURL: projectURL, frames: depthFrames)
+        let depthResult = depthSeedPoints(projectURL: projectURL, frames: depthFrames, fileManager: fileManager)
         let source: Source
         let geometryPoints: [SIMD3<Float>]
         let geometryColors: [SplatSeedSample]
@@ -121,10 +137,7 @@ enum SplatDepthSeedBuilder {
                 geometryPoints = softwareResult.points
                 geometryColors = softwareResult.colors
             } else {
-                let finiteFallback = fallbackPoints.filter {
-                    $0.x.isFinite && $0.y.isFinite && $0.z.isFinite
-                }
-                guard finiteFallback.count >= minimumGeometryPointCount else {
+                guard canonicalFallbackPoints.count >= minimumGeometryPointCount else {
                     throw NSError(
                         domain: "SplatLab.S14",
                         code: 1,
@@ -132,7 +145,7 @@ enum SplatDepthSeedBuilder {
                     )
                 }
                 source = .rawFeaturePoints
-                geometryPoints = finiteFallback
+                geometryPoints = canonicalFallbackPoints
                 geometryColors = SplatSeedColorizer.colorize(
                     points: geometryPoints,
                     frames: colorFrames,
@@ -160,6 +173,7 @@ enum SplatDepthSeedBuilder {
             depthFrameCount: depthResult.framesUsed,
             geometryPointCount: geometryPoints.count,
             skySeedCount: skySeeds.count,
+            captureFingerprint: currentCaptureFingerprint,
             createdAt: Date()
         )
         let encoder = JSONEncoder()
@@ -176,13 +190,217 @@ enum SplatDepthSeedBuilder {
         )
     }
 
+    /// Cache admission is intentionally structural and bounded: `points3D.ply` is ASCII and is
+    /// capped by `maximumDepthSeedPointCount` plus a small bounded sky seed set. Mapping the file
+    /// avoids a second large heap copy while proving every persisted row has exactly the numeric
+    /// shape written by this app. A torn, appended, non-finite, or malformed cache is regenerated
+    /// instead of being handed to the trainer.
+    static func cachedPLYIsComplete(at url: URL, expectedPointCount: Int) -> Bool {
+        guard expectedPointCount >= minimumGeometryPointCount,
+              let data = try? Data(contentsOf: url, options: .mappedIfSafe),
+              !data.isEmpty,
+              let headerMarker = "end_header\n".data(using: .utf8),
+              let headerRange = data.range(of: headerMarker) else {
+            return false
+        }
+
+        let headerData = data[..<headerRange.upperBound]
+        guard let header = String(data: headerData, encoding: .utf8),
+              let declaredLine = header.split(separator: "\n").first(where: { $0.hasPrefix("element vertex ") }),
+              let declaredCount = Int(declaredLine.dropFirst("element vertex ".count)),
+              declaredCount == expectedPointCount else {
+            return false
+        }
+
+        let body = data[headerRange.upperBound...]
+        var rowCount = 0
+        var rowStart = body.startIndex
+        var rowHasContent = false
+
+        func rowIsValid(_ row: Data.SubSequence) -> Bool {
+            let line = String(decoding: row, as: UTF8.self)
+            let fields = line.split(whereSeparator: { $0 == " " || $0 == "\t" || $0 == "\r" })
+            guard fields.count == 6,
+                  let x = Float(fields[0]), x.isFinite,
+                  let y = Float(fields[1]), y.isFinite,
+                  let z = Float(fields[2]), z.isFinite,
+                  let red = Int(fields[3]), (0...255).contains(red),
+                  let green = Int(fields[4]), (0...255).contains(green),
+                  let blue = Int(fields[5]), (0...255).contains(blue) else {
+                return false
+            }
+            return true
+        }
+
+        for index in body.indices {
+            let byte = body[index]
+            if byte == 0x0A {
+                if rowHasContent {
+                    guard rowIsValid(body[rowStart..<index]) else { return false }
+                    rowCount += 1
+                    if rowCount > expectedPointCount { return false }
+                }
+                rowStart = body.index(after: index)
+                rowHasContent = false
+            } else if byte != 0x0D && byte != 0x20 && byte != 0x09 {
+                rowHasContent = true
+            }
+        }
+        if rowHasContent {
+            guard rowIsValid(body[rowStart..<body.endIndex]) else { return false }
+            rowCount += 1
+        }
+        return rowCount == expectedPointCount
+    }
+
+    private static func captureFingerprint(
+        depthFrames: [SplatDepthSeedFrame],
+        fallbackPoints: [SIMD3<Float>],
+        colorFrames: [SplatSeedFrame]
+    ) -> String {
+        var hash: UInt64 = 14_695_981_039_346_656_037
+        let prime: UInt64 = 1_099_511_628_211
+
+        func mixByte(_ byte: UInt8) {
+            hash ^= UInt64(byte)
+            hash &*= prime
+        }
+        func mixUInt64(_ value: UInt64) {
+            var value = value
+            for _ in 0..<8 {
+                mixByte(UInt8(truncatingIfNeeded: value))
+                value >>= 8
+            }
+        }
+        func mixInt(_ value: Int) {
+            mixUInt64(UInt64(bitPattern: Int64(value)))
+        }
+        func mixFloat(_ value: Float) {
+            mixUInt64(UInt64(value.bitPattern))
+        }
+        func mixString(_ value: String?) {
+            guard let value else {
+                mixByte(0xFF)
+                return
+            }
+            mixByte(0x01)
+            for byte in value.utf8 { mixByte(byte) }
+            mixByte(0)
+        }
+        func mixMatrix(_ matrix: [[Float]]) {
+            mixInt(matrix.count)
+            for row in matrix {
+                mixInt(row.count)
+                for value in row { mixFloat(value) }
+            }
+        }
+
+        mixInt(colorFrames.count)
+        for frame in colorFrames {
+            mixString(frame.filePath)
+            mixMatrix(frame.transformMatrix)
+            mixFloat(frame.flX); mixFloat(frame.flY)
+            mixFloat(frame.cx); mixFloat(frame.cy)
+            mixInt(frame.w); mixInt(frame.h)
+        }
+
+        mixInt(depthFrames.count)
+        for frame in depthFrames {
+            mixString(frame.depthFilePath)
+            mixInt(frame.depthWidth ?? -1)
+            mixInt(frame.depthHeight ?? -1)
+            mixInt(frame.depthBytesPerRow ?? -1)
+            mixMatrix(frame.transformMatrix)
+            mixFloat(frame.flX); mixFloat(frame.flY)
+            mixFloat(frame.cx); mixFloat(frame.cy)
+            mixInt(frame.w); mixInt(frame.h)
+        }
+
+        mixInt(fallbackPoints.count)
+        for point in fallbackPoints {
+            mixFloat(point.x); mixFloat(point.y); mixFloat(point.z)
+        }
+        return String(format: "%016llx", hash)
+    }
+
+    private static func pointLessThan(_ lhs: SIMD3<Float>, _ rhs: SIMD3<Float>) -> Bool {
+        if lhs.x != rhs.x { return lhs.x < rhs.x }
+        if lhs.y != rhs.y { return lhs.y < rhs.y }
+        return lhs.z < rhs.z
+    }
+
+    static func validatedDepthInputURL(
+        projectURL: URL,
+        relativePath: String,
+        fileManager: FileManager = .default
+    ) -> URL? {
+        let lexicalRoot = projectURL.standardizedFileURL
+        let resolvedRoot = lexicalRoot.resolvingSymlinksInPath()
+        return validatedDepthInputURL(
+            lexicalRoot: lexicalRoot,
+            resolvedRoot: resolvedRoot,
+            relativePath: relativePath,
+            fileManager: fileManager
+        )
+    }
+
+    private static func validatedDepthInputURL(
+        lexicalRoot: URL,
+        resolvedRoot: URL,
+        relativePath: String,
+        fileManager: FileManager
+    ) -> URL? {
+        guard !relativePath.isEmpty, !relativePath.hasPrefix("/") else { return nil }
+        let lexicalCandidate = lexicalRoot.appendingPathComponent(relativePath).standardizedFileURL
+        guard isContained(lexicalCandidate, in: lexicalRoot) else { return nil }
+
+        let resolvedCandidate = lexicalCandidate.resolvingSymlinksInPath()
+        guard isContained(resolvedCandidate, in: resolvedRoot),
+              let values = try? resolvedCandidate.resourceValues(forKeys: [.isRegularFileKey]),
+              values.isRegularFile == true else {
+            return nil
+        }
+        return resolvedCandidate
+    }
+
+    private static func isContained(_ candidate: URL, in root: URL) -> Bool {
+        let rootComponents = root.standardizedFileURL.pathComponents
+        let candidateComponents = candidate.standardizedFileURL.pathComponents
+        guard candidateComponents.count > rootComponents.count else { return false }
+        return candidateComponents.prefix(rootComponents.count).elementsEqual(rootComponents)
+    }
+
+    /// Maps a depth pixel index to the matching camera-image pixel center. When the two rasters
+    /// have different resolutions, scaling pixel edges directly introduces a half-pixel bias that
+    /// becomes several RGB pixels on LiDAR-to-camera upscales. Matching centers preserves the same
+    /// coordinate convention used by camera intrinsics while remaining identity at equal sizes.
+    static func imagePixelCenterCoordinate(
+        sampleIndex: Int,
+        sourceExtent: Int,
+        destinationExtent: Int
+    ) -> Float? {
+        guard sampleIndex >= 0,
+              sampleIndex < sourceExtent,
+              sourceExtent > 0,
+              destinationExtent > 0 else {
+            return nil
+        }
+        let coordinate = (Double(sampleIndex) + 0.5) * Double(destinationExtent) / Double(sourceExtent) - 0.5
+        guard coordinate.isFinite else { return nil }
+        return Float(coordinate)
+    }
+
     private static func depthSeedPoints(
         projectURL: URL,
-        frames: [SplatDepthSeedFrame]
+        frames: [SplatDepthSeedFrame],
+        fileManager: FileManager
     ) -> (points: [SIMD3<Float>], framesUsed: Int) {
         var voxels: [Voxel: SIMD3<Float>] = [:]
-        voxels.reserveCapacity(min(maximumDepthSeedPointCount, frames.count * targetSamplesPerFrame))
+        let (reserveEstimate, reserveOverflow) = frames.count.multipliedReportingOverflow(by: targetSamplesPerFrame)
+        voxels.reserveCapacity(min(maximumDepthSeedPointCount, reserveOverflow ? maximumDepthSeedPointCount : reserveEstimate))
         var framesUsed = 0
+        let lexicalRoot = projectURL.standardizedFileURL
+        let resolvedRoot = lexicalRoot.resolvingSymlinksInPath()
 
         for frame in frames {
             guard voxels.count < maximumDepthSeedPointCount,
@@ -192,28 +410,55 @@ enum SplatDepthSeedBuilder {
                   let bytesPerRow = frame.depthBytesPerRow,
                   depthWidth > 0,
                   depthHeight > 0,
-                  bytesPerRow >= depthWidth * MemoryLayout<Float32>.stride,
+                  bytesPerRow > 0,
                   frame.w > 0,
                   frame.h > 0,
+                  frame.flX.isFinite,
+                  frame.flY.isFinite,
+                  frame.cx.isFinite,
+                  frame.cy.isFinite,
                   frame.flX > 0,
                   frame.flY > 0,
                   let cameraToWorld = matrix(fromRows: frame.transformMatrix),
-                  let data = try? Data(contentsOf: projectURL.appendingPathComponent(relativePath)),
-                  data.count >= bytesPerRow * depthHeight else {
+                  let depthURL = validatedDepthInputURL(
+                    lexicalRoot: lexicalRoot,
+                    resolvedRoot: resolvedRoot,
+                    relativePath: relativePath,
+                    fileManager: fileManager
+                  ) else {
                 continue
             }
 
-            let step = max(
-                2,
-                Int(sqrt(Double(depthWidth * depthHeight) / Double(targetSamplesPerFrame)))
-            )
+            let (minimumBytesPerRow, widthOverflow) = depthWidth.multipliedReportingOverflow(by: MemoryLayout<Float32>.stride)
+            let (requiredByteCount, payloadOverflow) = bytesPerRow.multipliedReportingOverflow(by: depthHeight)
+            let (pixelCount, pixelOverflow) = depthWidth.multipliedReportingOverflow(by: depthHeight)
+            guard !widthOverflow,
+                  !payloadOverflow,
+                  !pixelOverflow,
+                  bytesPerRow >= minimumBytesPerRow,
+                  requiredByteCount > 0,
+                  pixelCount > 0,
+                  let data = try? Data(contentsOf: depthURL, options: .mappedIfSafe),
+                  data.count >= requiredByteCount else {
+                continue
+            }
+
+            let step = max(2, Int(sqrt(Double(pixelCount) / Double(targetSamplesPerFrame))))
             var acceptedInFrame = 0
 
             for y in stride(from: step / 2, to: depthHeight, by: step) {
                 for x in stride(from: step / 2, to: depthWidth, by: step) {
                     if voxels.count >= maximumDepthSeedPointCount { break }
-                    let offset = y * bytesPerRow + x * MemoryLayout<Float32>.stride
-                    guard offset >= 0, offset + 3 < data.count else { continue }
+                    let (rowOffset, rowOverflow) = y.multipliedReportingOverflow(by: bytesPerRow)
+                    let (pixelOffset, pixelOverflow) = x.multipliedReportingOverflow(by: MemoryLayout<Float32>.stride)
+                    let (offset, offsetOverflow) = rowOffset.addingReportingOverflow(pixelOffset)
+                    guard !rowOverflow,
+                          !pixelOverflow,
+                          !offsetOverflow,
+                          offset >= 0,
+                          offset <= data.count - MemoryLayout<Float32>.stride else {
+                        continue
+                    }
                     let bits = UInt32(data[offset])
                         | (UInt32(data[offset + 1]) << 8)
                         | (UInt32(data[offset + 2]) << 16)
@@ -221,14 +466,27 @@ enum SplatDepthSeedBuilder {
                     let z = Float(bitPattern: bits)
                     guard z.isFinite, z >= minimumDepth, z <= maximumDepth else { continue }
 
-                    let imageX = Float(x) * Float(frame.w) / Float(depthWidth)
-                    let imageY = Float(y) * Float(frame.h) / Float(depthHeight)
+                    guard let imageX = imagePixelCenterCoordinate(
+                        sampleIndex: x,
+                        sourceExtent: depthWidth,
+                        destinationExtent: frame.w
+                    ),
+                    let imageY = imagePixelCenterCoordinate(
+                        sampleIndex: y,
+                        sourceExtent: depthHeight,
+                        destinationExtent: frame.h
+                    ) else {
+                        continue
+                    }
                     let cameraX = (imageX - frame.cx) * z / frame.flX
                     let cameraY = (frame.cy - imageY) * z / frame.flY
                     let world4 = cameraToWorld * SIMD4<Float>(cameraX, cameraY, -z, 1)
                     let world = SIMD3<Float>(world4.x, world4.y, world4.z)
-                    guard world.x.isFinite, world.y.isFinite, world.z.isFinite else { continue }
-                    voxels[Voxel(world)] = world
+                    guard world.x.isFinite,
+                          world.y.isFinite,
+                          world.z.isFinite,
+                          let voxel = Voxel(world) else { continue }
+                    voxels[voxel] = world
                     acceptedInFrame += 1
                 }
                 if voxels.count >= maximumDepthSeedPointCount { break }
@@ -246,20 +504,16 @@ enum SplatDepthSeedBuilder {
     }
 
     private static func matrix(fromRows rows: [[Float]]) -> simd_float4x4? {
-        guard rows.count == 4, rows.allSatisfy({ $0.count == 4 }) else { return nil }
-        let matrix = simd_float4x4(
+        guard rows.count == 4,
+              rows.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }) else {
+            return nil
+        }
+        return simd_float4x4(
             SIMD4<Float>(rows[0][0], rows[1][0], rows[2][0], rows[3][0]),
             SIMD4<Float>(rows[0][1], rows[1][1], rows[2][1], rows[3][1]),
             SIMD4<Float>(rows[0][2], rows[1][2], rows[2][2], rows[3][2]),
             SIMD4<Float>(rows[0][3], rows[1][3], rows[2][3], rows[3][3])
         )
-        guard matrix.columns.0.x.isFinite,
-              matrix.columns.1.y.isFinite,
-              matrix.columns.2.z.isFinite,
-              matrix.columns.3.x.isFinite,
-              matrix.columns.3.y.isFinite,
-              matrix.columns.3.z.isFinite else { return nil }
-        return matrix
     }
 
     private static func writePLY(

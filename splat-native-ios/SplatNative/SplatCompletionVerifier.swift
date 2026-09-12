@@ -6,6 +6,13 @@ import Foundation
 /// after writing any whole number of 32-byte records. Export/share/view entry points must pass
 /// through this verifier before treating a local result as user-owned completed data.
 enum SplatCompletionVerifier {
+    private static let maximumCompletionEvidenceByteCount: Int64 = 64 * 1024
+
+    struct Verification: Equatable, Sendable {
+        let url: URL
+        let sha256: String
+    }
+
     enum VerificationError: LocalizedError {
         case unexpectedSource
         case projectNotFinished
@@ -30,6 +37,13 @@ enum SplatCompletionVerifier {
         sourceURL: URL,
         fileManager: FileManager = .default
     ) throws -> URL {
+        try verifyWithDigest(sourceURL: sourceURL, fileManager: fileManager).url
+    }
+
+    static func verifyWithDigest(
+        sourceURL: URL,
+        fileManager: FileManager = .default
+    ) throws -> Verification {
         guard sourceURL.isFileURL else {
             throw VerificationError.unexpectedSource
         }
@@ -48,9 +62,6 @@ enum SplatCompletionVerifier {
             throw VerificationError.projectNotFinished
         }
 
-        // A failed/repeated reprocess may have exhausted Store's legacy `result.previous.splat`.
-        // C2 can restore only the separately protected exact previous bytes whose SHA-256 matches
-        // the snapshot captured while that result was still strictly trusted.
         let manifest = SplatPreviousResultEvidence.recoverTrustedPreviousIfNeeded(
             projectURL: projectURL,
             manifest: loadedManifest,
@@ -62,7 +73,11 @@ enum SplatCompletionVerifier {
         }
 
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
-        guard let evidenceData = try? Data(contentsOf: evidenceURL),
+        guard isIndependentRegularFile(evidenceURL),
+              let evidenceByteCount = try? fileByteCount(evidenceURL, fileManager: fileManager),
+              evidenceByteCount >= 0,
+              evidenceByteCount <= maximumCompletionEvidenceByteCount,
+              let evidenceData = try? Data(contentsOf: evidenceURL),
               let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: evidenceData),
               evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               evidence.fileName == ScanProjectStore.splatResultFileName,
@@ -78,18 +93,53 @@ enum SplatCompletionVerifier {
             throw VerificationError.completionEvidenceMismatch
         }
 
+        let verifiedDigest: String
         do {
-            try SplatStrongCompletionEvidence.verifyOrSeal(
+            verifiedDigest = try SplatStrongCompletionEvidence.verifyOrSeal(
                 sourceURL: expectedURL,
                 evidence: evidence,
                 fileManager: fileManager
             )
+        } catch is CancellationError {
+            throw CancellationError()
         } catch {
-            throw VerificationError.completionEvidenceMismatch
+            do {
+                guard try SplatPreviousResultEvidence.recoverTrustedPreviousAfterIntegrityFailure(
+                    projectURL: projectURL,
+                    evidence: evidence,
+                    fileManager: fileManager
+                ) else {
+                    throw VerificationError.completionEvidenceMismatch
+                }
+                verifiedDigest = try SplatStrongCompletionEvidence.verifyOrSeal(
+                    sourceURL: expectedURL,
+                    evidence: evidence,
+                    fileManager: fileManager
+                )
+            } catch is CancellationError {
+                throw CancellationError()
+            } catch {
+                throw VerificationError.completionEvidenceMismatch
+            }
         }
 
         SplatPreviousResultEvidence.discardBackup(projectURL: projectURL, fileManager: fileManager)
-        return expectedURL
+        return Verification(url: expectedURL, sha256: verifiedDigest)
+    }
+
+    private static func isIndependentRegularFile(_ url: URL) -> Bool {
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]) else {
+            return false
+        }
+        return values.isRegularFile == true && values.isSymbolicLink != true
+    }
+
+    private static func fileByteCount(_ url: URL, fileManager: FileManager) throws -> Int64 {
+        let attributes = try fileManager.attributesOfItem(atPath: url.path)
+        guard let size = attributes[.size] as? NSNumber else {
+            throw CocoaError(.fileReadUnknown)
+        }
+        return size.int64Value
     }
 
     private static func normalized(_ url: URL) -> URL {

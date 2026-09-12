@@ -65,6 +65,33 @@ final class CaptureMotionQualityTests: XCTestCase {
         XCTAssertEqual(decision, .relocalizationJump)
     }
 
+    func testMeshCoverageViewpointRequiresPhysicalTranslation() {
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 0.55), 0.015, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 1.0), 0.020, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 1.8), 0.036, accuracy: 0.0001)
+    }
+
+    func testMeshCoverageRejectsCoordinateDiscontinuityAsPhysicalMotion() {
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20))
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.35))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.351))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.infinity))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.nan))
+    }
+
+    func testMeshCoverageRejectsMotionFasterThanCapturePipelineCanAccept() {
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: 0.20))
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.30, elapsedSeconds: 0.30))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.30, elapsedSeconds: 0.16))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: 0))
+    }
+
+    func testMeshVerticalCoverageRequiresRealCameraHeightChange() {
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 0.55), 0.10, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 1.0), 0.12, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 1.8), 0.216, accuracy: 0.0001)
+    }
+
     func testRejectsSeverelyDarkFrame() {
         let stats = CaptureImageQualityStats(
             meanLuma: 24,
@@ -123,5 +150,37 @@ final class CaptureMotionQualityTests: XCTestCase {
             sampleCount: 12
         )
         XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
+    }
+
+    func testInvalidPoseCoverageIndexingDoesNotTrap() {
+        var transform = matrix_identity_float4x4
+        transform.columns.2.x = .nan
+        XCTAssertEqual(CapturePolicy.viewDirectionSector(transform: transform, count: 8), 0)
+
+        transform = matrix_identity_float4x4
+        transform.columns.2.z = .infinity
+        XCTAssertEqual(CapturePolicy.viewDirectionSector(transform: transform, count: 8), 0)
+
+        XCTAssertNil(CapturePolicy.orbitSector(
+            cameraPosition: SIMD3<Float>(.nan, 0, 1),
+            center: .zero,
+            count: 8
+        ))
+        XCTAssertNil(CapturePolicy.elevationBand(
+            cameraPosition: SIMD3<Float>(1, .infinity, 0),
+            center: .zero
+        ))
+        XCTAssertEqual(
+            CapturePolicy.spatialCell(cameraPosition: SIMD3<Float>(.nan, 0, .infinity)),
+            CaptureGridCell(x: 0, z: 0)
+        )
+        XCTAssertEqual(
+            CapturePolicy.spatialCell(cameraPosition: SIMD3<Float>(.greatestFiniteMagnitude, 0, -.greatestFiniteMagnitude)),
+            CaptureGridCell(x: 1_000_000, z: -1_000_000)
+        )
+        XCTAssertEqual(
+            CapturePolicy.spatialCell(cameraPosition: SIMD3<Float>(1, 0, -1), cellSize: .nan),
+            CaptureGridCell(x: 4, z: -4)
+        )
     }
 }

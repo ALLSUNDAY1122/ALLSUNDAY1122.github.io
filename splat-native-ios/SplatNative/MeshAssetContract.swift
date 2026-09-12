@@ -48,6 +48,8 @@ struct MeshAssetDescriptor: Codable, Sendable, Equatable {
 }
 
 enum MeshAssetContract {
+    private static let maximumSidecarByteCount: Int64 = 64 * 1024
+
     static func descriptor(for url: URL, source requestedSource: MeshAssetSource = .unknown) -> MeshAssetDescriptor? {
         let ext = url.pathExtension.lowercased()
         let format: MeshAssetFormat
@@ -71,10 +73,65 @@ enum MeshAssetContract {
 
     static func writeSidecar(for descriptor: MeshAssetDescriptor) throws -> URL {
         let sidecarURL = descriptor.fileURL.deletingPathExtension().appendingPathExtension("mesh-asset.json")
+        let candidateURL = sidecarURL.deletingLastPathComponent()
+            .appendingPathComponent(".\(sidecarURL.lastPathComponent).candidate-\(UUID().uuidString)")
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        try encoder.encode(descriptor).write(to: sidecarURL, options: .atomic)
+        let expected = try encoder.encode(descriptor)
+        let fileManager = FileManager.default
+        var candidateCommitted = false
+        defer {
+            if !candidateCommitted {
+                try? fileManager.removeItem(at: candidateURL)
+            }
+        }
+
+        // Never downgrade a sidecar written by a newer app. Before reading an existing sidecar,
+        // require an independent regular file and a small bounded payload. A symlink could alias an
+        // unrelated file outside the project, and an oversized/corrupt JSON blob should not be
+        // materialized merely to decide whether this generation may update its metadata.
+        if fileManager.fileExists(atPath: sidecarURL.path) {
+            guard let values = try? sidecarURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+                  values.isRegularFile == true,
+                  values.isSymbolicLink != true,
+                  let attributes = try? fileManager.attributesOfItem(atPath: sidecarURL.path),
+                  let size = attributes[.size] as? NSNumber,
+                  size.int64Value >= 0,
+                  size.int64Value <= maximumSidecarByteCount else {
+                throw sidecarError("既存のMesh資産メタデータを安全に確認できません。原本を保護するため更新しません")
+            }
+            let existing = try Data(contentsOf: sidecarURL, options: [.mappedIfSafe])
+            if let object = try? JSONSerialization.jsonObject(with: existing) as? [String: Any],
+               let version = object["schemaVersion"] as? NSNumber,
+               version.intValue > descriptor.schemaVersion {
+                throw sidecarError("このMesh資産メタデータは新しいバージョンで作成されています。原本を保護するため更新しません")
+            }
+        }
+
+        // Validate the exact candidate before replacing the last known-good sidecar. Atomic write
+        // alone protects against a torn rename, but it does not prove that the bytes now on disk
+        // still decode to the asset generation the viewer/exporter is about to expose.
+        try expected.write(to: candidateURL, options: .atomic)
+        let persisted = try Data(contentsOf: candidateURL, options: [.mappedIfSafe])
+        guard persisted == expected else {
+            throw sidecarError("Mesh資産メタデータの書込み検証に失敗しました")
+        }
+        let decoded = try JSONDecoder().decode(MeshAssetDescriptor.self, from: persisted)
+        guard decoded == descriptor else {
+            throw sidecarError("Mesh資産メタデータの復号検証に失敗しました")
+        }
+
+        if fileManager.fileExists(atPath: sidecarURL.path) {
+            _ = try fileManager.replaceItemAt(sidecarURL, withItemAt: candidateURL)
+        } else {
+            try fileManager.moveItem(at: candidateURL, to: sidecarURL)
+        }
+        candidateCommitted = true
         return sidecarURL
+    }
+
+    private static func sidecarError(_ message: String) -> NSError {
+        NSError(domain: "ScanLab.MeshAssetContract", code: 1, userInfo: [NSLocalizedDescriptionKey: message])
     }
 
     private static func isTextured(url: URL, format: MeshAssetFormat, source: MeshAssetSource) -> Bool {
@@ -116,22 +173,5 @@ enum MeshAssetContract {
         if name.contains("trimmed") || name.contains("cropped") { return .trimmed }
         if name == "mesh.obj" { return .lidarSceneReconstruction }
         return .unknown
-    }
-}
-
-extension MeshScanModel {
-    var exporterMeshAsset: MeshAssetDescriptor? {
-        guard let resultURL else { return nil }
-        return MeshAssetContract.descriptor(for: resultURL)
-    }
-
-    var currentMeshHasMetricScale: Bool {
-        exporterMeshAsset?.hasMetricScale ?? false
-    }
-
-    @discardableResult
-    func persistExporterMeshAssetContract() throws -> URL? {
-        guard let descriptor = exporterMeshAsset else { return nil }
-        return try MeshAssetContract.writeSidecar(for: descriptor)
     }
 }

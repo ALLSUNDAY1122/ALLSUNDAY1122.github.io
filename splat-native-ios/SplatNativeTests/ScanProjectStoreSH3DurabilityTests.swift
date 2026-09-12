@@ -33,7 +33,7 @@ extension ScanProjectStoreTests {
             store: store
         )
 
-        let disposableRaw = projectURL.appendingPathComponent("temporary-raw.bin")
+        let disposableRaw = projectURL.appendingPathComponent("points3D.ply")
         try Data(repeating: 9, count: 128).write(to: disposableRaw, options: .atomic)
 
         try store.clearRawData(projectURL: projectURL)

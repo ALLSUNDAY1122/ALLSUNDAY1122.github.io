@@ -6,18 +6,6 @@ import SplatIO
 import SwiftUI
 import simd
 
-private struct ViewerCameraDataset: Decodable {
-    let frames: [ViewerCameraFrame]
-}
-
-private struct ViewerCameraFrame: Decodable {
-    let transformMatrix: [[Float]]
-
-    enum CodingKeys: String, CodingKey {
-        case transformMatrix = "transform_matrix"
-    }
-}
-
 struct SplatViewer: UIViewRepresentable {
     let url: URL
     @ObservedObject var state: SplatViewerState
@@ -173,7 +161,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                     return
                 }
 
-                let framing = Self.robustFraming(for: points)
+                let framing = SplatCameraGeometry.robustFraming(for: points)
                 self.sceneCenter = framing.center
                 self.baseDistance = framing.distance
                 self.distance = framing.distance
@@ -243,8 +231,6 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         let pixels = max(1, Float(view.bounds.height))
         let worldPerPixel = max(0.00001, 2 * tan(fovY * 0.5) * distance / pixels)
 
-        // Rendering applies a 180-degree camera-space roll. Compensate here so the
-        // scene follows the user's two-finger drag on screen.
         targetOffset += right * Float(delta.x) * worldPerPixel
         targetOffset -= up * Float(delta.y) * worldPerPixel
         gesture.setTranslation(.zero, in: view)
@@ -277,8 +263,6 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         if measurementPoints.count == 1 {
             state?.rendererSelectedMeasurementPoint(count: 1)
         } else if measurementPoints.count == 2 {
-            // SplatViewerState converts exported scene units back into meters using
-            // the exact camera normalization applied by the pinned msplat trainer.
             state?.rendererMeasured(meters: simd_distance(measurementPoints[0], measurementPoints[1]))
         }
     }
@@ -291,10 +275,14 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
     func draw(in view: MTKView) {
         guard let renderer, renderer.isReadyToRender,
-              drawableSize.width > 0, drawableSize.height > 0,
-              let drawable = view.currentDrawable,
-              let commandBuffer = commandQueue.makeCommandBuffer() else { return }
-        _ = semaphore.wait(timeout: .distantFuture)
+              drawableSize.width > 0, drawableSize.height > 0 else { return }
+
+        guard semaphore.wait(timeout: .now()) == .success else { return }
+        guard let drawable = view.currentDrawable,
+              let commandBuffer = commandQueue.makeCommandBuffer() else {
+            semaphore.signal()
+            return
+        }
         commandBuffer.addCompletedHandler { [semaphore] _ in semaphore.signal() }
 
         let matrices = cameraMatrices(size: drawableSize)
@@ -312,6 +300,8 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                                                depthTexture: view.depthStencilTexture,
                                                rasterizationRateMap: nil,
                                                renderTargetArrayLength: 0,
+                                               accessTimeout: 0,
+                                               sortTimeout: 0,
                                                to: commandBuffer)
             consecutiveRenderFailures = 0
             if rendered { commandBuffer.present(drawable) }
@@ -380,9 +370,23 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
         rebuildTask = Task { [weak self] in
             guard let self else { return }
-            let edited = await Task.detached(priority: .userInitiated) {
-                Self.editedPoints(points, settings: settings, bounds: bounds)
-            }.value
+            let worker = Task.detached(priority: .userInitiated) {
+                try Self.editedPoints(points, settings: settings, bounds: bounds)
+            }
+            let edited: [SplatPoint]
+            do {
+                edited = try await withTaskCancellationHandler {
+                    try await worker.value
+                } onCancel: {
+                    worker.cancel()
+                }
+            } catch is CancellationError {
+                return
+            } catch {
+                guard generation == self.editGeneration else { return }
+                self.state?.rendererRejectedEdit("編集結果を生成できませんでした: \(error.localizedDescription)")
+                return
+            }
             guard !Task.isCancelled, generation == self.editGeneration else { return }
             guard !edited.isEmpty else {
                 self.state?.rendererRejectedEdit("切り抜き範囲に3Dデータが残っていません")
@@ -420,10 +424,6 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         let target = sceneCenter + targetOffset
         let eye = target + orbitVector
         let baseView = lookAt(eye: eye, center: target, up: SIMD3<Float>(0, 1, 0))
-
-        // The old implementation multiplied this correction on the world side,
-        // which rotates translated scans around the global origin and can push an
-        // otherwise correctly framed subject off-center. Apply it in camera space.
         let correctedView = rotationZ(.pi) * baseView
         return (projection, correctedView)
     }
@@ -456,22 +456,8 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         return best
     }
 
-    /// Reproduces the pinned msplat camera center/scale normalization before
-    /// comparing the capture camera positions with the exported Splat scene.
     private static func initialViewGeometry(for url: URL, center: SIMD3<Float>) -> (yaw: Float, pitch: Float) {
-        let transformsURL = url.deletingLastPathComponent().appendingPathComponent("transforms.json")
-        guard let data = try? Data(contentsOf: transformsURL),
-              let dataset = try? JSONDecoder().decode(ViewerCameraDataset.self, from: data),
-              !dataset.frames.isEmpty else { return (0, 0) }
-
-        let positions = dataset.frames.compactMap { frame -> SIMD3<Float>? in
-            let matrix = frame.transformMatrix
-            guard matrix.count >= 3,
-                  matrix[0].count >= 4,
-                  matrix[1].count >= 4,
-                  matrix[2].count >= 4 else { return nil }
-            return SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])
-        }
+        let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: url)
         guard !positions.isEmpty else { return (0, 0) }
 
         let normalization = SplatSceneNormalization(cameraPositions: positions)
@@ -492,49 +478,18 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         return (yaw, pitch)
     }
 
-    private static func robustFraming(for points: [SplatPoint]) -> (center: SIMD3<Float>, distance: Float) {
-        let strideSize = max(1, points.count / 6_000)
-        var xs: [Float] = []
-        var ys: [Float] = []
-        var zs: [Float] = []
-        xs.reserveCapacity(min(points.count, 6_000))
-        ys.reserveCapacity(min(points.count, 6_000))
-        zs.reserveCapacity(min(points.count, 6_000))
-
-        for index in stride(from: 0, to: points.count, by: strideSize) {
-            let p = points[index].position
-            guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
-            xs.append(p.x)
-            ys.append(p.y)
-            zs.append(p.z)
-        }
-
-        guard !xs.isEmpty else { return (.zero, 2.5) }
-        xs.sort(); ys.sort(); zs.sort()
-        let middle = xs.count / 2
-        let center = SIMD3<Float>(xs[middle], ys[middle], zs[middle])
-
-        var radii: [Float] = []
-        radii.reserveCapacity(xs.count)
-        for index in stride(from: 0, to: points.count, by: strideSize) {
-            let p = points[index].position
-            guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
-            radii.append(simd_distance(p, center))
-        }
-        radii.sort()
-        guard !radii.isEmpty else { return (center, 2.5) }
-        let percentileIndex = min(radii.count - 1, Int(Float(radii.count - 1) * 0.90))
-        let radius = max(0.10, radii[percentileIndex])
-        let framingDistance = max(0.35, min(18.0, radius * 2.8))
-        return (center, framingDistance)
-    }
-
     private static func robustCropBounds(for points: [SplatPoint]) -> CropBounds {
-        let strideSize = max(1, points.count / 8_000)
+        let sampleIndices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: points.count,
+            targetSampleCount: 8_000
+        )
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
-        for index in stride(from: 0, to: points.count, by: strideSize) {
+        xs.reserveCapacity(sampleIndices.count)
+        ys.reserveCapacity(sampleIndices.count)
+        zs.reserveCapacity(sampleIndices.count)
+        for index in sampleIndices {
             let p = points[index].position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
             xs.append(p.x); ys.append(p.y); zs.append(p.z)
@@ -565,7 +520,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
     nonisolated private static func editedPoints(_ points: [SplatPoint],
                                                   settings: SplatEditSettings,
-                                                  bounds: CropBounds) -> [SplatPoint] {
+                                                  bounds: CropBounds) throws -> [SplatPoint] {
         let settings = settings.normalized()
         let exposureGain = Float(pow(2.0, settings.exposureEV))
         let contrast = Float(settings.contrast)
@@ -583,10 +538,23 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         let cropYHigh = settings.cropYMax < 0.9999
         let cropZLow = settings.cropZMin > 0.0001
         let cropZHigh = settings.cropZMax < 0.9999
+        let needsCrop = cropXLow || cropXHigh || cropYLow || cropYHigh || cropZLow || cropZHigh
+
+        // Initial viewer load and a reset to default edits used to allocate a second scene-sized
+        // array and append every point even though no point or color could change. Returning the
+        // immutable input Array value is copy-on-write and therefore keeps the exact point storage
+        // without an O(N) materialization pass. Real crop/color edits still use the cancellable path.
+        if !needsCrop && !needsColorAdjustment {
+            try Task.checkCancellation()
+            return points
+        }
 
         var result: [SplatPoint] = []
         result.reserveCapacity(points.count)
-        for point in points {
+        for (index, point) in points.enumerated() {
+            if index & 0x3FF == 0 {
+                try Task.checkCancellation()
+            }
             let p = point.position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
             if cropXLow && p.x < xLow { continue }
@@ -620,6 +588,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
             }
             result.append(edited)
         }
+        try Task.checkCancellation()
         return result
     }
 
@@ -628,11 +597,14 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
     }
 
     nonisolated private static func sampledPositions(from points: [SplatPoint], limit: Int) -> [SIMD3<Float>] {
-        guard !points.isEmpty else { return [] }
-        let step = max(1, points.count / max(1, limit))
+        guard !points.isEmpty, limit > 0 else { return [] }
+        let indices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: points.count,
+            targetSampleCount: limit
+        )
         var result: [SIMD3<Float>] = []
-        result.reserveCapacity(min(points.count, limit + 1))
-        for index in stride(from: 0, to: points.count, by: step) {
+        result.reserveCapacity(indices.count)
+        for index in indices {
             let p = points[index].position
             if p.x.isFinite, p.y.isFinite, p.z.isFinite { result.append(p) }
         }

@@ -1,5 +1,6 @@
 import CryptoKit
 import Foundation
+import SceneKit
 
 /// Integrity gate for C-owned archived Mesh results.
 ///
@@ -9,6 +10,7 @@ import Foundation
 /// same-size replacement can still be a different 3D asset.
 enum MeshProjectIntegrity {
     static let evidenceFileName = "mesh-result.sha256.json"
+    private static let maximumTrustMetadataByteCount: Int64 = 64 * 1024
 
     // `JSONEncoder.DateEncodingStrategy.iso8601` stores whole seconds. The archived file's
     // filesystem mtime can retain sub-second precision, so first-seal comparisons must use the
@@ -52,7 +54,11 @@ enum MeshProjectIntegrity {
 
     enum IntegrityError: LocalizedError, Equatable {
         case manifestMissing
+        case manifestChangedSinceListing
         case resultMissing
+        case invalidGeometry
+        case evidenceInvalid
+        case evidencePersistenceFailed
         case resultChangedAfterArchive
         case resultChangedDuringVerification
         case hashMismatch
@@ -61,8 +67,16 @@ enum MeshProjectIntegrity {
             switch self {
             case .manifestMissing:
                 return "保存済みMeshの完成記録を確認できません。"
+            case .manifestChangedSinceListing:
+                return "保存済みMeshの完成記録が一覧取得後に変更されています。ライブラリを更新してから開き直してください。"
             case .resultMissing:
                 return "保存済みMeshの3Dデータが見つかりません。"
+            case .invalidGeometry:
+                return "保存済みMeshに利用可能な3D形状がありません。元のスキャンから再生成してください。"
+            case .evidenceInvalid:
+                return "保存済みMeshの整合性記録が破損または互換性のない状態です。元のスキャンから保存し直してください。"
+            case .evidencePersistenceFailed:
+                return "保存済みMeshの整合性記録を安全に確定できませんでした。もう一度開いてください。"
             case .resultChangedAfterArchive:
                 return "保存後にMeshデータが変更されています。元のスキャンから保存し直してください。"
             case .resultChangedDuringVerification:
@@ -79,7 +93,7 @@ enum MeshProjectIntegrity {
         fileManager: FileManager = .default
     ) throws -> URL {
         let manifestURL = summary.projectURL.appendingPathComponent(MeshProjectStore.libraryManifestFileName)
-        guard let manifestData = try? Data(contentsOf: manifestURL) else {
+        guard let manifestData = readTrustMetadataIfSafe(at: manifestURL, fileManager: fileManager) else {
             throw IntegrityError.manifestMissing
         }
         let decoder = JSONDecoder()
@@ -90,6 +104,17 @@ enum MeshProjectIntegrity {
         }
 
         let resultURL = summary.projectURL.appendingPathComponent(manifest.resultFileName)
+        let expectedProjectID = summary.projectURL.deletingPathExtension().lastPathComponent
+        let expectedResultURL = summary.resultURL.standardizedFileURL
+        let listedRootValues = try? summary.projectURL.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+        guard manifest.id == summary.id,
+              expectedProjectID == summary.id,
+              resultURL.standardizedFileURL == expectedResultURL,
+              listedRootValues?.isDirectory == true,
+              listedRootValues?.isSymbolicLink != true else {
+            throw IntegrityError.manifestChangedSinceListing
+        }
+
         let standardizedProject = summary.projectURL.standardizedFileURL.resolvingSymlinksInPath()
         let standardizedResult = resultURL.standardizedFileURL.resolvingSymlinksInPath()
         let projectPrefix = standardizedProject.path.hasSuffix("/")
@@ -105,9 +130,16 @@ enum MeshProjectIntegrity {
         }
 
         let evidenceURL = summary.projectURL.appendingPathComponent(evidenceFileName)
-        if let data = try? Data(contentsOf: evidenceURL),
-           let evidence = try? decoder.decode(Evidence.self, from: data),
-           evidence.matches(manifest) {
+        if fileManager.fileExists(atPath: evidenceURL.path) {
+            guard let data = readTrustMetadataIfSafe(at: evidenceURL, fileManager: fileManager),
+                  let evidence = try? decoder.decode(Evidence.self, from: data),
+                  evidence.matches(manifest) else {
+                // Existing trust evidence must never be silently replaced by a new seal. If it is
+                // corrupt, from an unsupported future schema, or no longer bound to this manifest,
+                // fail closed so modified bytes cannot become trusted merely by deleting/damaging
+                // the previous hash record while preserving size and mtime.
+                throw IntegrityError.evidenceInvalid
+            }
             let hash = try sha256Hex(fileURL: resultURL)
             let after = try snapshot(resultURL, fileManager: fileManager)
             guard after == before else { throw IntegrityError.resultChangedDuringVerification }
@@ -123,15 +155,79 @@ enum MeshProjectIntegrity {
             throw IntegrityError.resultChangedAfterArchive
         }
 
+        // A non-empty, byte-stable file is still not necessarily a usable Mesh. SceneKit can open
+        // syntactically valid but empty/truncated containers, so first trust requires real vertex
+        // payload plus primitives. Once sealed, the exact hash preserves this semantic decision.
+        guard let scene = try? SCNScene(url: resultURL, options: nil),
+              MeshRawSceneValidator.containsGeometry(scene) else {
+            throw IntegrityError.invalidGeometry
+        }
+
         let hash = try sha256Hex(fileURL: resultURL)
         let after = try snapshot(resultURL, fileManager: fileManager)
         guard after == before else { throw IntegrityError.resultChangedDuringVerification }
 
+        try persistVerifiedEvidence(
+            Evidence(manifest: manifest, sha256: hash),
+            to: evidenceURL,
+            manifest: manifest,
+            expectedHash: hash,
+            fileManager: fileManager
+        )
+        return resultURL
+    }
+
+    private static func persistVerifiedEvidence(
+        _ evidence: Evidence,
+        to evidenceURL: URL,
+        manifest: MeshProjectStore.LibraryManifest,
+        expectedHash: String,
+        fileManager: FileManager
+    ) throws {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        try encoder.encode(Evidence(manifest: manifest, sha256: hash)).write(to: evidenceURL, options: .atomic)
-        return resultURL
+        let encoded = try encoder.encode(evidence)
+        let candidateURL = evidenceURL.deletingLastPathComponent().appendingPathComponent(
+            ".\(evidenceFileName).candidate-\(UUID().uuidString)"
+        )
+        defer { try? fileManager.removeItem(at: candidateURL) }
+
+        do {
+            try encoded.write(to: candidateURL, options: .atomic)
+            let readBack = try Data(contentsOf: candidateURL)
+            guard readBack == encoded else { throw IntegrityError.evidencePersistenceFailed }
+
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let decoded = try decoder.decode(Evidence.self, from: readBack)
+            // ISO8601 encoding intentionally rounds Dates to whole seconds, so validate the
+            // persisted semantic contract rather than comparing decoded Date instances against
+            // their pre-encoding sub-second values.
+            guard decoded.matches(manifest), decoded.sha256 == expectedHash else {
+                throw IntegrityError.evidencePersistenceFailed
+            }
+
+            // Another verifier may have sealed the same archive while this candidate was being
+            // checked. Never overwrite trust evidence in that race; accept it only if it binds to
+            // this exact manifest and hash.
+            if fileManager.fileExists(atPath: evidenceURL.path) {
+                guard let existingData = readTrustMetadataIfSafe(at: evidenceURL, fileManager: fileManager) else {
+                    throw IntegrityError.evidenceInvalid
+                }
+                let existing = try decoder.decode(Evidence.self, from: existingData)
+                guard existing.matches(manifest), existing.sha256 == expectedHash else {
+                    throw IntegrityError.evidenceInvalid
+                }
+                return
+            }
+
+            try fileManager.moveItem(at: candidateURL, to: evidenceURL)
+        } catch let error as IntegrityError {
+            throw error
+        } catch {
+            throw IntegrityError.evidencePersistenceFailed
+        }
     }
 
     private struct FileSnapshot: Equatable {
@@ -149,6 +245,22 @@ enum MeshProjectIntegrity {
             throw IntegrityError.resultMissing
         }
         return FileSnapshot(byteCount: size.int64Value, modificationDate: modificationDate)
+    }
+
+    private static func readTrustMetadataIfSafe(
+        at url: URL,
+        fileManager: FileManager
+    ) -> Data? {
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true,
+              let attributes = try? fileManager.attributesOfItem(atPath: url.path),
+              let size = attributes[.size] as? NSNumber,
+              size.int64Value >= 0,
+              size.int64Value <= maximumTrustMetadataByteCount else {
+            return nil
+        }
+        return try? Data(contentsOf: url)
     }
 
     private static func sha256Hex(fileURL: URL) throws -> String {

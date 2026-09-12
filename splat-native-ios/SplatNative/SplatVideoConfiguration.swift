@@ -14,12 +14,28 @@ struct SplatVideoConfiguration: Equatable, Sendable {
             case .landscape16x9: return "横 16:9"
             }
         }
+    }
 
-        var dimensions: (width: Int, height: Int) {
+    enum Quality: String, CaseIterable, Identifiable, Sendable {
+        case high1080p
+        case compatible720p
+
+        var id: String { rawValue }
+        var displayName: String {
             switch self {
-            case .portrait9x16: return (720, 1280)
-            case .square1x1: return (720, 720)
-            case .landscape16x9: return (1280, 720)
+            case .high1080p: return "高画質 1080p"
+            case .compatible720p: return "軽量 720p"
+            }
+        }
+
+        func dimensions(for aspectRatio: AspectRatio) -> (width: Int, height: Int) {
+            switch (self, aspectRatio) {
+            case (.high1080p, .portrait9x16): return (1080, 1920)
+            case (.high1080p, .square1x1): return (1080, 1080)
+            case (.high1080p, .landscape16x9): return (1920, 1080)
+            case (.compatible720p, .portrait9x16): return (720, 1280)
+            case (.compatible720p, .square1x1): return (720, 720)
+            case (.compatible720p, .landscape16x9): return (1280, 720)
             }
         }
     }
@@ -71,37 +87,87 @@ struct SplatVideoConfiguration: Equatable, Sendable {
     }
 
     var aspectRatio: AspectRatio = .portrait9x16
+    var quality: Quality = .high1080p
     var cameraMotion: CameraMotion = .orbit360
     var speed: Speed = .normal
-    var framesPerSecond: Int = 30
+    var framesPerSecond: Int = 30 {
+        didSet {
+            framesPerSecond = Self.safeFramesPerSecond(framesPerSecond)
+        }
+    }
 
-    var dimensions: (width: Int, height: Int) { aspectRatio.dimensions }
+    init(
+        aspectRatio: AspectRatio = .portrait9x16,
+        quality: Quality = .high1080p,
+        cameraMotion: CameraMotion = .orbit360,
+        speed: Speed = .normal,
+        framesPerSecond: Int = 30
+    ) {
+        self.aspectRatio = aspectRatio
+        self.quality = quality
+        self.cameraMotion = cameraMotion
+        self.speed = speed
+        self.framesPerSecond = Self.safeFramesPerSecond(framesPerSecond)
+    }
+
+    var dimensions: (width: Int, height: Int) { quality.dimensions(for: aspectRatio) }
     var duration: TimeInterval { speed.duration }
-    var totalFrames: Int { max(1, Int((duration * Double(framesPerSecond)).rounded())) }
+    var totalFrames: Int {
+        let rawFrames = duration * Double(Self.safeFramesPerSecond(framesPerSecond))
+        guard rawFrames.isFinite else { return Int.max }
+        let rounded = rawFrames.rounded()
+        // Double(Int.max) rounds to 2^63 on 64-bit platforms, which itself is outside Int's
+        // representable range. Compare before conversion and saturate rather than trapping.
+        guard rounded < Double(Int.max) else { return Int.max }
+        return max(1, Int(rounded))
+    }
+
+    static func safeFramesPerSecond(_ value: Int) -> Int {
+        // H.264 export presets in this app are designed around 30 fps. A bounded ceiling keeps
+        // AVVideoExpectedSourceFrameRate, keyframe interval arithmetic, CMTimeScale conversion and
+        // bitrate estimation in a valid range even if transient UI/persisted state is corrupted.
+        min(120, max(1, value))
+    }
 
     func cameraSample(progress rawProgress: Double) -> CameraSample {
-        let progress = Float(max(0, min(1, rawProgress)))
+        // Export progress normally comes from an integer frame index, but treating a malformed
+        // NaN/Inf value as camera state would poison yaw/pitch and every render matrix downstream.
+        // Fail soft to the first frame so a single bad progress value cannot make the movie blank.
+        let finiteProgress = rawProgress.isFinite ? rawProgress : 0
+        let progress = Float(max(0, min(1, finiteProgress)))
         switch cameraMotion {
         case .orbit360:
+            // The encoder samples progress inclusively from 0...1. Mapping 1.0 to 2π would
+            // duplicate the first frame at the end of every turntable movie, creating a tiny
+            // visible dwell at the loop seam. Keep N unique angular samples with a constant
+            // 2π/N step so the last->first transition is the same size as every other step.
+            let frameCount = max(1, totalFrames)
+            let loopProgress = progress * Float(max(0, frameCount - 1)) / Float(frameCount)
             return CameraSample(
-                yaw: progress * 2 * .pi,
-                pitch: sin(progress * 2 * .pi) * 0.06,
+                yaw: loopProgress * 2 * .pi,
+                pitch: sin(loopProgress * 2 * .pi) * 0.06,
                 distanceMultiplier: 1
             )
         case .orbit180:
+            let eased = smoothstep(progress)
             return CameraSample(
-                yaw: -.pi / 2 + progress * .pi,
-                pitch: sin(progress * .pi) * 0.05,
+                yaw: -.pi / 2 + eased * .pi,
+                pitch: sin(eased * .pi) * 0.05,
                 distanceMultiplier: 1
             )
         case .pushIn:
+            let eased = smoothstep(progress)
             return CameraSample(
                 yaw: 0,
                 pitch: 0,
-                distanceMultiplier: 1.25 - progress * 0.45
+                distanceMultiplier: 1.25 - eased * 0.45
             )
         case .fixed:
             return CameraSample(yaw: 0, pitch: 0, distanceMultiplier: 1)
         }
+    }
+
+    private func smoothstep(_ value: Float) -> Float {
+        value * value * (3 - 2 * value)
     }
 }

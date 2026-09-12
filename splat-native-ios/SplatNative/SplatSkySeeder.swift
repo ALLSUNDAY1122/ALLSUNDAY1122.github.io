@@ -1,6 +1,6 @@
 import CoreGraphics
 import Foundation
-import UIKit
+import ImageIO
 import simd
 
 struct SplatSkySeed: Sendable {
@@ -32,6 +32,7 @@ enum SplatSkySeeder {
     static let azimuthBinCount = 48
     static let elevationBinCount = 12
     static let maxColorSamplesPerDirection = 5
+    static let maximumRasterPixel = 512
 
     static func makeSeeds(
         frames: [SplatSeedFrame],
@@ -40,20 +41,20 @@ enum SplatSkySeeder {
     ) -> [SplatSkySeed] {
         guard !frames.isEmpty else { return [] }
 
-        // The same far-field direction is visible in many overlapping capture frames. Emitting a
-        // fresh Gaussian seed every time can create thousands of nearly duplicate sky points and
-        // waste the splat/memory budget before training has learned useful foreground geometry.
-        // Keep a bounded world-direction grid instead and use repeated observations to stabilize
-        // the seed color rather than increasing seed count.
         var order: [DirectionKey] = []
-        order.reserveCapacity(min(maxTotalSeeds, frames.count * maxSeedsPerFrame))
+        let (reserveEstimate, reserveOverflow) = frames.count.multipliedReportingOverflow(by: maxSeedsPerFrame)
+        let boundedReserve = reserveOverflow ? maxTotalSeeds : min(maxTotalSeeds, reserveEstimate)
+        order.reserveCapacity(boundedReserve)
         var accumulators: [DirectionKey: SkyAccumulator] = [:]
-        accumulators.reserveCapacity(min(maxTotalSeeds, frames.count * maxSeedsPerFrame))
+        accumulators.reserveCapacity(boundedReserve)
 
         for frame in frames {
             autoreleasepool {
-                let url = projectURL.appendingPathComponent(frame.filePath)
-                guard let raster = SkyRaster(url: url) else { return }
+                guard let url = SplatDepthSeedBuilder.validatedDepthInputURL(
+                    projectURL: projectURL,
+                    relativePath: frame.filePath
+                ),
+                      let raster = SkyRaster(url: url, maximumPixel: maximumRasterPixel) else { return }
                 let baseline = lowerSceneLuma(raster: raster)
                 let xs: [Float] = [0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92]
                 let topY: Float = 0.035
@@ -127,24 +128,39 @@ enum SplatSkySeeder {
         frame: SplatSeedFrame,
         distance: Float
     ) -> SIMD3<Float>? {
-        guard frame.transformMatrix.count == 4,
-              frame.transformMatrix.allSatisfy({ $0.count == 4 }),
+        guard normalizedX.isFinite,
+              normalizedY.isFinite,
+              distance.isFinite,
+              frame.transformMatrix.count == 4,
+              frame.transformMatrix.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }),
+              frame.flX.isFinite,
+              frame.flY.isFinite,
+              frame.cx.isFinite,
+              frame.cy.isFinite,
               frame.flX > 0, frame.flY > 0,
               frame.w > 0, frame.h > 0,
               distance > 0 else { return nil }
 
         let px = normalizedX * Float(frame.w)
         let py = normalizedY * Float(frame.h)
-        let cameraDirection = simd_normalize(SIMD3<Float>(
+        let rawDirection = SIMD3<Float>(
             (px - frame.cx) / frame.flX,
             -(py - frame.cy) / frame.flY,
             -1
-        ))
+        )
+        let rawLength = simd_length(rawDirection)
+        guard rawLength.isFinite, rawLength > 1e-6 else { return nil }
+        let cameraDirection = rawDirection / rawLength
         let m = matrix(fromRows: frame.transformMatrix)
         let worldDirection4 = m * SIMD4<Float>(cameraDirection.x, cameraDirection.y, cameraDirection.z, 0)
-        let worldDirection = simd_normalize(SIMD3<Float>(worldDirection4.x, worldDirection4.y, worldDirection4.z))
+        let worldDirectionRaw = SIMD3<Float>(worldDirection4.x, worldDirection4.y, worldDirection4.z)
+        let worldLength = simd_length(worldDirectionRaw)
+        guard worldLength.isFinite, worldLength > 1e-6 else { return nil }
+        let worldDirection = worldDirectionRaw / worldLength
         let origin = SIMD3<Float>(m.columns.3.x, m.columns.3.y, m.columns.3.z)
-        return origin + worldDirection * distance
+        let result = origin + worldDirection * distance
+        guard result.x.isFinite, result.y.isFinite, result.z.isFinite else { return nil }
+        return result
     }
 
     static func directionKey(position: SIMD3<Float>, frame: SplatSeedFrame) -> DirectionKey? {
@@ -198,9 +214,13 @@ enum SplatSkySeeder {
 
     private static func cameraOrigin(frame: SplatSeedFrame) -> SIMD3<Float>? {
         guard frame.transformMatrix.count == 4,
-              frame.transformMatrix.allSatisfy({ $0.count == 4 }) else { return nil }
+              frame.transformMatrix.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }) else {
+            return nil
+        }
         let m = matrix(fromRows: frame.transformMatrix)
-        return SIMD3<Float>(m.columns.3.x, m.columns.3.y, m.columns.3.z)
+        let origin = SIMD3<Float>(m.columns.3.x, m.columns.3.y, m.columns.3.z)
+        guard origin.x.isFinite, origin.y.isFinite, origin.z.isFinite else { return nil }
+        return origin
     }
 
     private static func lowerSceneLuma(raster: SkyRaster) -> Float {
@@ -253,20 +273,39 @@ private struct SkyRaster {
     let height: Int
     let bytes: [UInt8]
 
-    init?(url: URL) {
-        guard let image = UIImage(contentsOfFile: url.path)?.cgImage else { return nil }
+    init?(url: URL, maximumPixel: Int) {
+        guard maximumPixel > 0,
+              let source = CGImageSourceCreateWithURL(url as CFURL, nil),
+              let image = CGImageSourceCreateThumbnailAtIndex(
+                source,
+                0,
+                [
+                    kCGImageSourceCreateThumbnailFromImageAlways: true,
+                    kCGImageSourceThumbnailMaxPixelSize: maximumPixel,
+                    kCGImageSourceCreateThumbnailWithTransform: false
+                ] as CFDictionary
+              ) else { return nil }
         width = image.width
         height = image.height
-        guard width > 0, height > 0 else { return nil }
-        var storage = [UInt8](repeating: 0, count: width * height * 4)
+        guard width > 0,
+              height > 0,
+              width <= maximumPixel,
+              height <= maximumPixel else { return nil }
+        let (pixelCount, pixelOverflow) = width.multipliedReportingOverflow(by: height)
+        let (byteCount, byteOverflow) = pixelCount.multipliedReportingOverflow(by: 4)
+        let (bytesPerRow, rowOverflow) = width.multipliedReportingOverflow(by: 4)
+        guard !pixelOverflow, !byteOverflow, !rowOverflow, byteCount > 0 else { return nil }
+
+        var storage = [UInt8](repeating: 0, count: byteCount)
+        let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB()
         let info = CGBitmapInfo.byteOrder32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue
         guard let context = CGContext(
             data: &storage,
             width: width,
             height: height,
             bitsPerComponent: 8,
-            bytesPerRow: width * 4,
-            space: CGColorSpaceCreateDeviceRGB(),
+            bytesPerRow: bytesPerRow,
+            space: colorSpace,
             bitmapInfo: info
         ) else { return nil }
         context.translateBy(x: 0, y: CGFloat(height))
@@ -276,6 +315,7 @@ private struct SkyRaster {
     }
 
     func sample(normalizedX: Float, normalizedY: Float) -> SplatSeedSample {
+        guard normalizedX.isFinite, normalizedY.isFinite else { return SplatSeedColorizer.fallback }
         let x = min(width - 1, max(0, Int((normalizedX * Float(width - 1)).rounded())))
         let y = min(height - 1, max(0, Int((normalizedY * Float(height - 1)).rounded())))
         let offset = (y * width + x) * 4

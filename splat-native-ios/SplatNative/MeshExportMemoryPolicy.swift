@@ -6,8 +6,13 @@ enum MeshExportMemoryPolicy {
         let estimatedPeakBytes: UInt64
         let budgetBytes: UInt64
 
-        var estimatedPeakMegabytes: Int { Int((estimatedPeakBytes + mib - 1) / mib) }
-        var budgetMegabytes: Int { Int((budgetBytes + mib - 1) / mib) }
+        var estimatedPeakMegabytes: Int {
+            MeshExportMemoryPolicy.roundedUpMegabytesClampedToInt(estimatedPeakBytes)
+        }
+
+        var budgetMegabytes: Int {
+            MeshExportMemoryPolicy.roundedUpMegabytesClampedToInt(budgetBytes)
+        }
     }
 
     enum PolicyError: LocalizedError, Equatable {
@@ -29,22 +34,71 @@ enum MeshExportMemoryPolicy {
     static let maximumBudgetBytes: UInt64 = 768 * mib
     static let physicalMemoryDivisor: UInt64 = 6
 
+    static func budgetBytes(
+        physicalMemoryBytes: UInt64,
+        thermalState: ProcessInfo.ThermalState,
+        isLowPowerModeEnabled: Bool
+    ) -> UInt64 {
+        let proportionalBudget = physicalMemoryBytes / physicalMemoryDivisor
+        let nominalFloorApplied = min(maximumBudgetBytes, max(minimumBudgetBytes, proportionalBudget))
+        // Do not let the minimum quality budget claim more RAM than the platform actually reports.
+        // Normal supported iPhones still keep the same 256...768 MiB envelope; only malformed/tiny
+        // memory reports are forced to fail closed before scene conversion can exceed the device.
+        let physicalSafetyCap = physicalMemoryBytes / 2
+        let baseBudget = min(nominalFloorApplied, physicalSafetyCap)
+        let thermallyAdjusted: UInt64
+        switch thermalState {
+        case .nominal, .fair:
+            thermallyAdjusted = baseBudget
+        case .serious:
+            thermallyAdjusted = baseBudget / 4 * 3
+        case .critical:
+            thermallyAdjusted = baseBudget / 2
+        @unknown default:
+            thermallyAdjusted = baseBudget / 2
+        }
+        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
+    }
+
     @discardableResult
     static func preflight(
         sourceURL: URL,
         format: MeshExportService.Format,
-        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
+        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Estimate {
         let attributes = try FileManager.default.attributesOfItem(atPath: sourceURL.path)
-        guard let size = attributes[.size] as? NSNumber, size.uint64Value > 0 else {
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.uint64Value > 0 else {
             throw PolicyError.sourceSizeUnavailable
         }
-        let estimate = estimate(
+        var estimate = estimate(
             sourceBytes: size.uint64Value,
             sourceExtension: sourceURL.pathExtension.lowercased(),
             format: format,
-            physicalMemoryBytes: physicalMemoryBytes
+            physicalMemoryBytes: physicalMemoryBytes,
+            thermalState: thermalState,
+            isLowPowerModeEnabled: isLowPowerModeEnabled
         )
+
+        // Scene conversion may hand the complete OBJ material graph to Assimp/ModelIO, so account
+        // for referenced companions there. Point-cloud conversion is different: its exporter keeps
+        // only one decoded texture sampler active at a time and the estimate below includes enough
+        // reserve for the old/new sampler overlap during a material switch. Summing every compressed
+        // texture here would therefore reject otherwise safe multi-material PLY/LAS exports solely
+        // because the project contains many atlases.
+        if sourceURL.pathExtension.lowercased() == "obj" {
+            switch format {
+            case .fbx, .glb, .usdz, .stl:
+                let companionBytes = try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: sourceURL)
+                estimate = addingCompanionWorkingSet(companionBytes, to: estimate)
+            case .ply, .las, .obj:
+                break
+            }
+        }
+
         guard estimate.estimatedPeakBytes <= estimate.budgetBytes else {
             throw PolicyError.conversionTooLarge(
                 estimatedPeakMegabytes: estimate.estimatedPeakMegabytes,
@@ -58,7 +112,9 @@ enum MeshExportMemoryPolicy {
         sourceBytes: UInt64,
         sourceExtension: String,
         format: MeshExportService.Format,
-        physicalMemoryBytes: UInt64
+        physicalMemoryBytes: UInt64,
+        thermalState: ProcessInfo.ThermalState = .nominal,
+        isLowPowerModeEnabled: Bool = false
     ) -> Estimate {
         let sourceExtension = sourceExtension.lowercased()
         let exactPassthrough = sourceExtension == format.rawValue
@@ -71,10 +127,13 @@ enum MeshExportMemoryPolicy {
             switch format {
             case .ply, .las:
                 // OBJ input is mapped, decoded to text and expanded into vertex/UV/triangle arrays.
-                // Texture sampling is capped at 4096² RGBA (~64 MiB).
+                // Texture decoding is capped at 4096² RGBA and retains one active sampler. During a
+                // material switch Swift can transiently hold the old and new samplers together, so
+                // reserve two capped samplers plus parser/streaming overhead instead of scaling with
+                // the total number or compressed byte size of texture companions.
                 estimatedPeakBytes = saturatingAdd(
                     saturatingMultiply(sourceBytes, by: 8),
-                    96 * mib
+                    160 * mib
                 )
             case .fbx, .obj, .glb, .usdz, .stl:
                 // Assimp/ModelIO build an in-memory scene before serialization.
@@ -84,21 +143,56 @@ enum MeshExportMemoryPolicy {
                 )
             }
         } else {
-            // Non-OBJ inputs may first be decoded by ModelIO and bridged through OBJ before
-            // the final exporter parses them again, so reserve more than the direct OBJ path.
-            estimatedPeakBytes = saturatingAdd(
-                saturatingMultiply(sourceBytes, by: 10),
-                160 * mib
-            )
+            switch format {
+            case .ply, .las:
+                // Binary/compressed inputs first expand through a text OBJ bridge, then that bridge
+                // is mapped and expanded again into vertex/UV/triangle arrays. A multiplier based on
+                // the compact source alone must therefore cover both the bridge expansion ratio and
+                // point-cloud parser structures; align this path with the conservative 24x disk
+                // admission rather than the lighter scene-conversion estimate.
+                estimatedPeakBytes = saturatingAdd(
+                    saturatingMultiply(sourceBytes, by: 24),
+                    160 * mib
+                )
+            case .fbx, .obj, .glb, .usdz, .stl:
+                // Other non-OBJ conversions may bridge through OBJ, but do not subsequently expand
+                // every triangle corner into the point-cloud writer's Swift geometry structures.
+                estimatedPeakBytes = saturatingAdd(
+                    saturatingMultiply(sourceBytes, by: 10),
+                    160 * mib
+                )
+            }
         }
 
-        let proportionalBudget = physicalMemoryBytes / physicalMemoryDivisor
-        let budgetBytes = min(maximumBudgetBytes, max(minimumBudgetBytes, proportionalBudget))
         return Estimate(
             sourceBytes: sourceBytes,
             estimatedPeakBytes: estimatedPeakBytes,
-            budgetBytes: budgetBytes
+            budgetBytes: budgetBytes(
+                physicalMemoryBytes: physicalMemoryBytes,
+                thermalState: thermalState,
+                isLowPowerModeEnabled: isLowPowerModeEnabled
+            )
         )
+    }
+
+    private static func addingCompanionWorkingSet(_ companionBytes: Int64, to estimate: Estimate) -> Estimate {
+        let companionWorkingBytes = saturatingMultiply(UInt64(clamping: companionBytes), by: 8)
+        return Estimate(
+            sourceBytes: estimate.sourceBytes,
+            estimatedPeakBytes: saturatingAdd(estimate.estimatedPeakBytes, companionWorkingBytes),
+            budgetBytes: estimate.budgetBytes
+        )
+    }
+
+    /// Round bytes up to MiB without overflowing `UInt64`, then clamp before converting to Int.
+    /// Saturating estimates deliberately use UInt64.max; diagnostics must remain safe even for
+    /// hostile/corrupt file sizes that drive the estimate to that sentinel.
+    private static func roundedUpMegabytesClampedToInt(_ bytes: UInt64) -> Int {
+        let quotient = bytes / mib
+        let remainder = bytes % mib
+        let rounded = remainder == 0 ? quotient : saturatingAdd(quotient, 1)
+        guard rounded <= UInt64(Int.max) else { return Int.max }
+        return Int(rounded)
     }
 
     private static func saturatingMultiply(_ value: UInt64, by multiplier: UInt64) -> UInt64 {

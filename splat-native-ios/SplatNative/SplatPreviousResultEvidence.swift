@@ -1,16 +1,19 @@
 import CryptoKit
+import Darwin
 import Foundation
 
 /// Durable protection for the last trusted completed Splat while a new reconstruction is running.
 ///
 /// The legacy Store swap keeps one `result.previous.splat`, but a second retry from `.failed`
 /// can delete that file before the old result has been restored. C2 therefore keeps a separate
-/// trusted backup. APFS hard-linking is attempted first so the backup normally costs no duplicate
-/// data blocks; a verified copy is used only when linking is unavailable. SHA-256 binds the backup
-/// to its original completion evidence and prevents same-size partial data from regaining trust.
+/// trusted backup. APFS cloning is attempted first so the backup normally costs no immediate
+/// duplicate data blocks while remaining logically independent; a verified copy is used when
+/// cloning is unavailable. SHA-256 binds the backup to its original completion evidence and
+/// prevents same-size partial data from regaining trust.
 enum SplatPreviousResultEvidence {
     static let fileName = "result.previous.splat.complete.json"
     static let assetFileName = "result.previous.trusted.splat"
+    private static let maximumTrustMetadataByteCount: Int64 = 64 * 1024
 
     struct Snapshot: Codable, Equatable, Sendable {
         static let currentSchemaVersion = 2
@@ -48,22 +51,26 @@ enum SplatPreviousResultEvidence {
         }
     }
 
-    /// Call immediately before a completed result enters `.processing`.
-    /// Existing backup is replaced only after the current result has passed the strict verifier.
     static func preserveBeforeReprocess(
         sourceURL: URL,
         fileManager: FileManager = .default
     ) throws {
-        let trustedURL: URL
+        let verification: SplatCompletionVerifier.Verification
         do {
-            trustedURL = try SplatCompletionVerifier.verify(sourceURL: sourceURL, fileManager: fileManager)
+            verification = try SplatCompletionVerifier.verifyWithDigest(
+                sourceURL: sourceURL,
+                fileManager: fileManager
+            )
+        } catch is CancellationError {
+            throw CancellationError()
         } catch {
             throw PreservationError.currentResultNotTrusted
         }
 
+        let trustedURL = verification.url
         let projectURL = trustedURL.deletingLastPathComponent()
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
-        guard let evidenceData = try? Data(contentsOf: evidenceURL),
+        guard let evidenceData = readTrustMetadataDataIfSafe(at: evidenceURL, fileManager: fileManager),
               let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: evidenceData),
               evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               evidence.fileName == ScanProjectStore.splatResultFileName else {
@@ -71,7 +78,7 @@ enum SplatPreviousResultEvidence {
         }
 
         let beforeSize = try fileByteCount(trustedURL, fileManager: fileManager)
-        let hash = try sha256Hex(fileURL: trustedURL)
+        let hash = verification.sha256
         let afterSize = try fileByteCount(trustedURL, fileManager: fileManager)
         guard beforeSize == afterSize, afterSize == evidence.byteCount else {
             throw PreservationError.resultChangedDuringPreservation
@@ -87,6 +94,9 @@ enum SplatPreviousResultEvidence {
                 expectedSHA256: hash,
                 fileManager: fileManager
             )
+        } catch is CancellationError {
+            discardBackup(projectURL: projectURL, fileManager: fileManager)
+            throw CancellationError()
         } catch {
             discardBackup(projectURL: projectURL, fileManager: fileManager)
             throw PreservationError.previousResultBackupFailed
@@ -104,9 +114,6 @@ enum SplatPreviousResultEvidence {
         }
     }
 
-    /// Restores the separately protected previous result after Store recovery has exhausted its
-    /// legacy swap files. This is intentionally callable for `.failed`/`.captured` repaired state:
-    /// the exact SHA-256-bound backup is stronger evidence than structural 32-byte alignment.
     @discardableResult
     static func recoverTrustedPreviousIfNeeded(
         projectURL: URL,
@@ -126,27 +133,20 @@ enum SplatPreviousResultEvidence {
 
         let backupEvidenceURL = projectURL.appendingPathComponent(fileName)
         let backupAssetURL = projectURL.appendingPathComponent(assetFileName)
-        guard let data = try? Data(contentsOf: backupEvidenceURL),
+        guard let data = readTrustMetadataDataIfSafe(at: backupEvidenceURL, fileManager: fileManager),
               let snapshot = try? JSONDecoder().decode(Snapshot.self, from: data),
               snapshot.schemaVersion == Snapshot.currentSchemaVersion,
               snapshot.originalEvidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               snapshot.originalEvidence.fileName == ScanProjectStore.splatResultFileName,
               snapshot.originalEvidence.byteCount > 0,
               snapshot.originalEvidence.byteCount % 32 == 0,
-              fileManager.fileExists(atPath: backupAssetURL.path),
+              isIndependentRegularFile(backupAssetURL),
               (try? fileByteCount(backupAssetURL, fileManager: fileManager)) == snapshot.originalEvidence.byteCount,
               (try? sha256Hex(fileURL: backupAssetURL)) == snapshot.sha256 else {
             return manifest
         }
 
         do {
-            if fileManager.fileExists(atPath: outputURL.path) {
-                try fileManager.removeItem(at: outputURL)
-            }
-            if fileManager.fileExists(atPath: currentEvidenceURL.path) {
-                try fileManager.removeItem(at: currentEvidenceURL)
-            }
-
             try materializeExactFile(
                 sourceURL: backupAssetURL,
                 destinationURL: outputURL,
@@ -189,7 +189,8 @@ enum SplatPreviousResultEvidence {
         evidenceURL: URL,
         fileManager: FileManager
     ) -> Bool {
-        guard let data = try? Data(contentsOf: evidenceURL),
+        guard isIndependentRegularFile(outputURL),
+              let data = readTrustMetadataDataIfSafe(at: evidenceURL, fileManager: fileManager),
               let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: data),
               evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               evidence.fileName == ScanProjectStore.splatResultFileName,
@@ -209,29 +210,59 @@ enum SplatPreviousResultEvidence {
         expectedSHA256: String,
         fileManager: FileManager
     ) throws {
+        guard isIndependentRegularFile(sourceURL) else {
+            throw PreservationError.resultChangedDuringPreservation
+        }
+
         let partialURL = destinationURL
             .deletingLastPathComponent()
             .appendingPathComponent(".\(destinationURL.lastPathComponent).partial")
         try? fileManager.removeItem(at: partialURL)
-        try? fileManager.removeItem(at: destinationURL)
 
         do {
-            do {
-                try fileManager.linkItem(at: sourceURL, to: partialURL)
-            } catch {
+            let cloned = sourceURL.withUnsafeFileSystemRepresentation { sourcePath in
+                partialURL.withUnsafeFileSystemRepresentation { destinationPath in
+                    guard let sourcePath, let destinationPath else { return false }
+                    return clonefile(sourcePath, destinationPath, 0) == 0
+                }
+            }
+            if !cloned {
+                try? fileManager.removeItem(at: partialURL)
                 try fileManager.copyItem(at: sourceURL, to: partialURL)
             }
 
-            guard try fileByteCount(partialURL, fileManager: fileManager) == expectedByteCount,
+            guard isIndependentRegularFile(partialURL),
+                  try fileByteCount(partialURL, fileManager: fileManager) == expectedByteCount,
                   try sha256Hex(fileURL: partialURL) == expectedSHA256 else {
                 throw PreservationError.resultChangedDuringPreservation
             }
-            try fileManager.moveItem(at: partialURL, to: destinationURL)
+
+            if fileManager.fileExists(atPath: destinationURL.path) {
+                _ = try fileManager.replaceItemAt(destinationURL, withItemAt: partialURL)
+            } else {
+                try fileManager.moveItem(at: partialURL, to: destinationURL)
+            }
         } catch {
             try? fileManager.removeItem(at: partialURL)
-            try? fileManager.removeItem(at: destinationURL)
             throw error
         }
+    }
+
+    private static func readTrustMetadataDataIfSafe(at url: URL, fileManager: FileManager) -> Data? {
+        guard isIndependentRegularFile(url),
+              let size = try? fileByteCount(url, fileManager: fileManager),
+              size >= 0,
+              size <= maximumTrustMetadataByteCount else {
+            return nil
+        }
+        return try? Data(contentsOf: url)
+    }
+
+    private static func isIndependentRegularFile(_ url: URL) -> Bool {
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]) else {
+            return false
+        }
+        return values.isRegularFile == true && values.isSymbolicLink != true
     }
 
     private static func fileByteCount(_ url: URL, fileManager: FileManager) throws -> Int64 {
