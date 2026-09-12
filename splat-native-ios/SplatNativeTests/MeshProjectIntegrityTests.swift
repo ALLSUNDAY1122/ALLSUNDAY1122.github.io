@@ -161,6 +161,56 @@ final class MeshProjectIntegrityTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: evidenceURL), futureEvidence)
     }
 
+    func testRejectsOversizedExistingEvidenceWithoutReadingOrReplacingIt() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = MeshProjectStore(appRootURL: root)
+        let live = try makeLiveProject(in: root, marker: 0x72)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        XCTAssertEqual(try MeshProjectIntegrity.verifyOrSeal(summary: archived), archived.resultURL)
+
+        let evidenceURL = archived.projectURL.appendingPathComponent(MeshProjectIntegrity.evidenceFileName)
+        let oversized = Data(repeating: 0x41, count: 64 * 1024 + 1)
+        try oversized.write(to: evidenceURL, options: .atomic)
+
+        XCTAssertThrowsError(try MeshProjectIntegrity.verifyOrSeal(summary: archived)) { error in
+            guard case MeshProjectIntegrity.IntegrityError.evidenceInvalid = error else {
+                return XCTFail("Expected evidenceInvalid, got \(error)")
+            }
+        }
+        XCTAssertEqual(try Data(contentsOf: evidenceURL), oversized)
+    }
+
+    func testRejectsSymlinkedEvidenceWithoutFollowingExternalBytes() throws {
+        let fileManager = FileManager.default
+        let root = try makeRoot()
+        let externalRoot = fileManager.temporaryDirectory
+            .appendingPathComponent("MeshProjectIntegrityExternal-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: externalRoot, withIntermediateDirectories: true)
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: externalRoot)
+        }
+        let store = MeshProjectStore(appRootURL: root)
+        let live = try makeLiveProject(in: root, marker: 0x73)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        XCTAssertEqual(try MeshProjectIntegrity.verifyOrSeal(summary: archived), archived.resultURL)
+
+        let evidenceURL = archived.projectURL.appendingPathComponent(MeshProjectIntegrity.evidenceFileName)
+        let validEvidence = try Data(contentsOf: evidenceURL)
+        try fileManager.removeItem(at: evidenceURL)
+        let external = externalRoot.appendingPathComponent("outside-evidence.json")
+        try validEvidence.write(to: external, options: .atomic)
+        try fileManager.createSymbolicLink(at: evidenceURL, withDestinationURL: external)
+
+        XCTAssertThrowsError(try MeshProjectIntegrity.verifyOrSeal(summary: archived)) { error in
+            guard case MeshProjectIntegrity.IntegrityError.evidenceInvalid = error else {
+                return XCTFail("Expected evidenceInvalid, got \(error)")
+            }
+        }
+        XCTAssertEqual(try Data(contentsOf: external), validEvidence)
+    }
+
     private func makeRoot() throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshProjectIntegrityTests-\(UUID().uuidString)", isDirectory: true)
