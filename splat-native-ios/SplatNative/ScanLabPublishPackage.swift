@@ -42,6 +42,7 @@ enum ScanLabPublishPackageBuilder {
     private static let ownershipMarker = ".scanlab-publish-package"
     private static let maximumManifestBytes: Int64 = 64 * 1024
     private static let stalePackageAge: TimeInterval = 24 * 60 * 60
+    private static let hashReadChunkBytes = 1024 * 1024
 
     static func build(from sourceURL: URL, maximumBytes: Int = 128 * 1024 * 1024, fileManager: FileManager = .default) throws -> ScanLabPublishPackage {
         guard maximumBytes > 0, sourceURL.isFileURL else { throw ScanLabPublishPackageError.invalidSource }
@@ -106,9 +107,6 @@ enum ScanLabPublishPackageBuilder {
         try? fileManager.removeItem(at: package.directoryURL)
     }
 
-    /// Removes only package directories created by this helper and carrying its ownership marker.
-    /// A killed app cannot run the normal upload/share completion cleanup, so a later publish prunes
-    /// abandoned packages after a day without risking unrelated temporary folders or active work.
     static func cleanupStalePackages(
         in rootDirectory: URL,
         olderThan age: TimeInterval,
@@ -138,10 +136,27 @@ enum ScanLabPublishPackageBuilder {
     ) throws -> Bool {
         guard package.manifest.sceneSHA256 == trustedSourceHash,
               basicPackageStructureIsValid(package, fileManager: fileManager) else { return false }
-        let scene = try Data(contentsOf: package.sceneURL, options: [.mappedIfSafe])
-        guard Int64(scene.count) == package.manifest.sceneByteCount,
-              sha256(scene) == trustedSourceHash else { return false }
+        let digest = try streamingSHA256(package.sceneURL)
+        guard digest.byteCount == package.manifest.sceneByteCount,
+              digest.hash == trustedSourceHash else { return false }
         return try manifestOnDiskMatches(package)
+    }
+
+    private static func streamingSHA256(_ url: URL) throws -> (byteCount: Int64, hash: String) {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        var hasher = SHA256()
+        var byteCount: Int64 = 0
+        while true {
+            let chunk = try handle.read(upToCount: hashReadChunkBytes) ?? Data()
+            if chunk.isEmpty { break }
+            let (nextCount, overflow) = byteCount.addingReportingOverflow(Int64(chunk.count))
+            guard !overflow else { throw ScanLabPublishPackageError.packageVerificationFailed }
+            byteCount = nextCount
+            hasher.update(data: chunk)
+        }
+        let hash = hasher.finalize().map { String(format: "%02x", $0) }.joined()
+        return (byteCount, hash)
     }
 
     private static func basicPackageStructureIsValid(
