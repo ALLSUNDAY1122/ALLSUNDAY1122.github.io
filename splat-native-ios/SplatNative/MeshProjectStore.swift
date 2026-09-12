@@ -245,7 +245,12 @@ final class MeshProjectStore {
             throw MeshProjectStoreError.archiveMissing
         }
         let destination = trashURL.appendingPathComponent(projectURL.lastPathComponent, isDirectory: true)
-        if fileManager.fileExists(atPath: destination.path) { try fileManager.removeItem(at: destination) }
+        // A stale/corrupt duplicate in Trash must never be destroyed implicitly. Normal lifecycle
+        // cannot produce the same project ID in Library and Trash at once, so treat this as an
+        // integrity collision and preserve both sides for explicit recovery.
+        guard !fileManager.fileExists(atPath: destination.path) else {
+            throw MeshProjectStoreError.invalidProject
+        }
         try fileManager.moveItem(at: projectURL, to: destination)
     }
 

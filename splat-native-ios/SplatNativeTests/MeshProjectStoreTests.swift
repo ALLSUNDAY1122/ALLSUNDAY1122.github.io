@@ -115,6 +115,23 @@ final class MeshProjectStoreTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: outside), Data(repeating: 0x71, count: 256))
     }
 
+    func testMoveToTrashPreservesBothSidesWhenDestinationIsAlreadyOccupied() throws {
+        let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x53)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        let destination = store.trashURL.appendingPathComponent(archived.projectURL.lastPathComponent)
+        try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: true)
+        let sentinel = destination.appendingPathComponent("sentinel")
+        try Data([0xAC]).write(to: sentinel)
+
+        XCTAssertThrowsError(try store.moveToTrash(projectURL: archived.projectURL)) { error in
+            guard case MeshProjectStoreError.invalidProject = error else {
+                return XCTFail("Expected invalidProject, got \(error)")
+            }
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: archived.projectURL.path))
+        XCTAssertEqual(try Data(contentsOf: sentinel), Data([0xAC]))
+    }
+
     func testTrashRestoreAndPermanentDeleteSurviveStoreRecreation() throws {
         let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x55)
         let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
