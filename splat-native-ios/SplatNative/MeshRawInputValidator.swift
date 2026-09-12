@@ -71,7 +71,8 @@ enum MeshRawInputValidator {
         stopAfter: Int? = nil
     ) -> Int {
         if let stopAfter, stopAfter <= 0 { return 0 }
-        guard isLocalDirectory(directory),
+        guard !Task.isCancelled,
+              isLocalDirectory(directory),
               let files = try? fileManager.contentsOfDirectory(
                 at: directory,
                 includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
@@ -82,6 +83,11 @@ enum MeshRawInputValidator {
 
         var usableCount = 0
         for url in files {
+            // Library refresh/reprocess eligibility can become obsolete when the user switches
+            // projects or dismisses the flow. Thumbnail probes are intentionally bounded, but a
+            // large retained RAW set can still perform many decodes; stop stale CPU/I/O work as
+            // soon as the surrounding detached task is cancelled.
+            guard !Task.isCancelled else { return usableCount }
             guard supportedExtensions.contains(url.pathExtension.lowercased()),
                   let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]),
                   values.isSymbolicLink != true,
