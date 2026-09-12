@@ -46,6 +46,43 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
         }
     }
 
+    func testPLYRejectsMaterialLibrarySymlinkEscapingProjectRoot() throws {
+        let root = try temporaryRoot("mesh-pointcloud-mtl-symlink-root")
+        let external = try temporaryRoot("mesh-pointcloud-mtl-symlink-external")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+
+        try writeSolidPNG(to: external.appendingPathComponent("outside.png"), rgba: [255, 0, 0, 255])
+        try "map_Kd outside.png\n"
+            .write(to: external.appendingPathComponent("outside.mtl"), atomically: true, encoding: .utf8)
+        try FileManager.default.createSymbolicLink(
+            at: root.appendingPathComponent("capture.mtl"),
+            withDestinationURL: external.appendingPathComponent("outside.mtl")
+        )
+        let obj = root.appendingPathComponent("capture.obj")
+        try """
+        mtllib capture.mtl
+        v 0 0 0
+        v 1 0 0
+        v 0 1 0
+        vt 0 0
+        vt 1 0
+        vt 0 1
+        f 1/1 2/2 3/3
+        """.write(to: obj, atomically: true, encoding: .utf8)
+
+        let output = root.appendingPathComponent("capture.ply")
+        try MeshPointCloudExportService.exportPLY(sourceOBJ: obj, outputURL: output)
+        let data = try Data(contentsOf: output)
+        let marker = Data("end_header\n".utf8)
+        guard let range = data.range(of: marker) else { return XCTFail("Missing PLY header terminator") }
+        let header = String(decoding: data[..<range.upperBound], as: UTF8.self)
+        XCTAssertFalse(header.contains("property uchar red"), "Escaped MTL must not provide texture color")
+        XCTAssertEqual(data[range.upperBound...].count, 36, "Fallback must emit three position-only vertices")
+    }
+
     func testPLYUsesWavefrontBottomLeftVOriginExactlyOnce() throws {
         let root = try temporaryRoot("mesh-pointcloud-uv-origin")
         defer { try? FileManager.default.removeItem(at: root) }
