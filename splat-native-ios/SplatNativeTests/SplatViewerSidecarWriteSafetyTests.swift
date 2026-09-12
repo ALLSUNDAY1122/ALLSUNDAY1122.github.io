@@ -127,4 +127,28 @@ final class SplatViewerSidecarWriteSafetyTests: XCTestCase {
             0
         )
     }
+
+    func testExportMaterializerRecoversSettingsFromBackup() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory
+            .appendingPathComponent("SplatViewerSidecarExportRecovery-\(UUID().uuidString)", isDirectory: true)
+        defer { try? fileManager.removeItem(at: root) }
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let expected = SplatEditSettings(exposureEV: 0.7, contrast: 1.25).normalized()
+        try SplatViewerEditStore.save(expected, sourceURL: source)
+
+        let primary = SplatViewerEditStore.primaryURL(for: source)
+        try Data("corrupt-primary".utf8).write(to: primary, options: .atomic)
+
+        XCTAssertEqual(SplatPersistedEditMaterializer.loadSettings(sourceURL: source), expected)
+
+        let healed = try JSONDecoder().decode(
+            SplatEditSettings.self,
+            from: Data(contentsOf: primary)
+        ).normalized()
+        XCTAssertEqual(healed, expected)
+    }
 }
