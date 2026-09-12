@@ -25,10 +25,12 @@ final class MeshDurabilityRecoverySymlinkTests: XCTestCase {
 
     func testProtectRejectsSymlinkedWorkingProject() throws {
         let root = try makeRoot()
-        defer { try? FileManager.default.removeItem(at: root) }
+        let outsideProject = try makeExternalProject()
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: outsideProject)
+        }
 
-        let outsideProject = root.appendingPathComponent("outside-real.meshproject", isDirectory: true)
-        try FileManager.default.createDirectory(at: outsideProject, withIntermediateDirectories: true)
         let outsideResult = outsideProject.appendingPathComponent("mesh.obj")
         try Data("v 0 0 0\n".utf8).write(to: outsideResult)
         let projectAlias = root.appendingPathComponent("work.meshproject", isDirectory: true)
@@ -46,12 +48,14 @@ final class MeshDurabilityRecoverySymlinkTests: XCTestCase {
 
     func testRecoverIgnoresSymlinkedProjectDirectory() throws {
         let root = try makeRoot()
-        defer { try? FileManager.default.removeItem(at: root) }
+        let outsideProject = try makeExternalProject()
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: outsideProject)
+        }
 
         let recovery = root.appendingPathComponent(MeshDurabilityRecoveryStore.recoveryDirectoryName, isDirectory: true)
         try FileManager.default.createDirectory(at: recovery, withIntermediateDirectories: true)
-        let outsideProject = root.appendingPathComponent("outside.meshproject", isDirectory: true)
-        try FileManager.default.createDirectory(at: outsideProject, withIntermediateDirectories: true)
         let outsideResult = outsideProject.appendingPathComponent("mesh.obj")
         try Data("v 0 0 0\n".utf8).write(to: outsideResult)
         let alias = recovery.appendingPathComponent("alias.meshproject", isDirectory: true)
@@ -67,5 +71,13 @@ final class MeshDurabilityRecoverySymlinkTests: XCTestCase {
             .appendingPathComponent("MeshDurabilityRecoverySymlinkTests-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         return root
+    }
+
+    private func makeExternalProject() throws -> URL {
+        let project = FileManager.default.temporaryDirectory
+            .appendingPathComponent("MeshDurabilityRecoveryExternal-\(UUID().uuidString)", isDirectory: true)
+            .appendingPathExtension(MeshProjectStore.projectExtension)
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        return project
     }
 }
