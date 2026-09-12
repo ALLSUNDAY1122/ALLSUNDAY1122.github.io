@@ -1,0 +1,54 @@
+name: FP3 Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'fp3-manabi-sprint/**'
+      - '.github/workflows/fp3-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Audit canonical learning bank
+        run: python fp3-manabi-sprint/tools/audit_learning_bank.py
+      - name: Extract and syntax-check product JavaScript
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('fp3-manabi-sprint/index.html').read_text(encoding='utf-8')
+          blocks=re.findall(r'<script>(.*?)</script>',html,flags=re.S)
+          if len(blocks) != 1:
+              raise SystemExit(f'expected one inline product script, got {len(blocks)}')
+          Path('/tmp/fp3-product.js').write_text(blocks[0],encoding='utf-8')
+          PY
+          node --check /tmp/fp3-product.js
+      - name: Product contract static gates
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('fp3-manabi-sprint/index.html').read_text(encoding='utf-8')
+          required=[
+            "12問スプリント","60問チャレンジ","苦手復習","続きから",
+            "迷ったので復習に入れる","詳しい解説を見る","学習記録",
+            "v===q.answer-1","st.weak[q.id].streak>=3",
+            "q.status==='archived_law_changed'","active!==178","tf!==90","mc!==90"
+          ]
+          missing=[x for x in required if x not in s]
+          if missing: raise SystemExit('missing contract markers: '+repr(missing))
+          prohibited=["v===q.answer||v===q.answer-1","legacy `fp3-12mon-knock`"]
+          found=[x for x in prohibited if x in s]
+          if found: raise SystemExit('prohibited markers: '+repr(found))
+          print('PASS: FP3 core static contract')
+          PY
