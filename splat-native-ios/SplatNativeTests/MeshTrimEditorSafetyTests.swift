@@ -70,6 +70,23 @@ final class MeshTrimEditorSafetyTests: XCTestCase {
         XCTAssertThrowsError(try MeshTrimEngine.trim(url: url, x: 0...1, y: 0...1, z: 0...1))
     }
 
+    func testRejectsForwardPositiveFaceReferenceInsteadOfEmittingInvalidOrder() throws {
+        let url = try writeOBJ([
+            "v 0 0 0", "v 1 0 0",
+            "f 1 2 3",
+            "v 0 1 0"
+        ])
+        let root = url.deletingLastPathComponent()
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        XCTAssertThrowsError(try MeshTrimEngine.trim(url: url, x: 0...1, y: 0...1, z: 0...1)) { error in
+            XCTAssertTrue(error.localizedDescription.contains("未定義の頂点"))
+        }
+        let leftovers = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)
+            .filter { $0.lastPathComponent.contains("trimmed-") }
+        XCTAssertTrue(leftovers.isEmpty)
+    }
+
     func testRejectsNonFiniteVertexBeforeBoundsMath() throws {
         let url = try writeOBJ(["v 0 0 0", "v 1 0 0", "v nan 1 0", "v 1 1 0", "f 1 2 4"])
         defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
