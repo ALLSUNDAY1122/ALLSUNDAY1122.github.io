@@ -102,9 +102,12 @@ struct MeshDurabilityRecoveryStore: Sendable {
     }
 
     func cleanupProtectedResult(containing resultURL: URL) {
-        guard isProtected(resultURL: resultURL),
-              isRegularDirectory(resultURL.deletingLastPathComponent()) else { return }
-        try? FileManager.default.removeItem(at: resultURL.deletingLastPathComponent())
+        let projectURL = resultURL.deletingLastPathComponent()
+        guard isRegularDirectory(recoveryURL),
+              isProtected(resultURL: resultURL),
+              isRegularDirectory(projectURL),
+              isNonEmptyRegularFile(resultURL) else { return }
+        try? FileManager.default.removeItem(at: projectURL)
     }
 
     func isProtected(resultURL: URL) -> Bool {
