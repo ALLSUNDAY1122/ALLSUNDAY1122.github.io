@@ -35,6 +35,25 @@ final class SplatViewerCameraStreamingDecodeTests: XCTestCase {
         XCTAssertEqual(positions[0].z, 6, accuracy: 0.0001)
     }
 
+    func testRejectsTransformsWhenSceneRootIsSymlinked() throws {
+        let targetRoot = try makeRoot()
+        let aliasParent = try makeRoot()
+        defer {
+            try? FileManager.default.removeItem(at: aliasParent)
+            try? FileManager.default.removeItem(at: targetRoot)
+        }
+
+        try Data([0x50]).write(to: targetRoot.appendingPathComponent("result.ply"))
+        let json = #"{"frames":[{"transform_matrix":[[1,0,0,7],[0,1,0,8],[0,0,1,9],[0,0,0,1]]}]}"#
+        try Data(json.utf8).write(to: targetRoot.appendingPathComponent("transforms.json"))
+
+        let aliasRoot = aliasParent.appendingPathComponent("aliased-scene", isDirectory: true)
+        try FileManager.default.createSymbolicLink(at: aliasRoot, withDestinationURL: targetRoot)
+        let renderViaAlias = aliasRoot.appendingPathComponent("result.ply")
+
+        XCTAssertTrue(SplatViewerCameraDatasetLoader.cameraPositions(for: renderViaAlias).isEmpty)
+    }
+
     private func makeRoot() throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("SplatViewerCameraStreamingDecodeTests-\(UUID().uuidString)", isDirectory: true)
