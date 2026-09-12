@@ -28,6 +28,37 @@ final class SplatPreviousResultIntegrityRecoveryTests: XCTestCase {
         assertBackupMissing(projectURL)
     }
 
+    func testExternalSymlinkCannotActAsTrustedRecoveryBackup() throws {
+        let root = try makeRoot("symlink-backup-rejected")
+        let externalRoot = try makeRoot("symlink-backup-external")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: externalRoot)
+        }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Reject aliased recovery backup")
+        try makeProcessableRaw(in: projectURL, store: store)
+
+        let trustedBytes = Data(repeating: 0x42, count: 64)
+        let result = try commitResult(trustedBytes, in: projectURL, store: store)
+        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: result), result)
+        try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: result)
+
+        let backupURL = projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName)
+        let externalBackup = externalRoot.appendingPathComponent("external-backup.splat")
+        try trustedBytes.write(to: externalBackup, options: .atomic)
+        try FileManager.default.removeItem(at: backupURL)
+        try FileManager.default.createSymbolicLink(at: backupURL, withDestinationURL: externalBackup)
+
+        let corrupted = Data(repeating: 0x6D, count: trustedBytes.count)
+        try corrupted.write(to: result, options: .atomic)
+
+        XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: result))
+        XCTAssertEqual(try Data(contentsOf: result), corrupted)
+        XCTAssertEqual(try Data(contentsOf: externalBackup), trustedBytes)
+    }
+
     func testCorruptedNewerCommitNeverRollsBackToOlderTrustedBackup() throws {
         let root = try makeRoot("newer-commit-no-rollback")
         defer { try? FileManager.default.removeItem(at: root) }
