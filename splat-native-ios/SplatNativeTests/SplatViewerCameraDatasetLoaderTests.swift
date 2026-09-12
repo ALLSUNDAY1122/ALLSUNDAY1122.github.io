@@ -17,6 +17,21 @@ final class SplatViewerCameraDatasetLoaderTests: XCTestCase {
         XCTAssertEqual(positions[0].z, 3.75, accuracy: 0.0001)
     }
 
+    func testMalformedFrameDoesNotDiscardFollowingValidCamera() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let render = root.appendingPathComponent("result.ply")
+        try Data([0x50]).write(to: render)
+        let json = #"{"frames":[{"transform_matrix":[[1,0],[0,1]]},{"transform_matrix":[[1,0,0,4],[0,1,0,5],[0,0,1,6],[0,0,0,1]]}]}"#
+        try Data(json.utf8).write(to: root.appendingPathComponent("transforms.json"))
+
+        let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: render)
+        XCTAssertEqual(positions.count, 1)
+        XCTAssertEqual(positions[0].x, 4, accuracy: 0.0001)
+        XCTAssertEqual(positions[0].y, 5, accuracy: 0.0001)
+        XCTAssertEqual(positions[0].z, 6, accuracy: 0.0001)
+    }
+
     func testRejectsSymlinkedTransformsMetadata() throws {
         let root = try makeRoot()
         let outside = root.deletingLastPathComponent().appendingPathComponent("outside-\(UUID().uuidString).json")
