@@ -123,8 +123,6 @@ struct SplatViewerEditStore {
               let decoded = try? decoder.decode(SplatEditSettings.self, from: data) else {
             return nil
         }
-        // Best-effort self-heal: a valid backup becomes the new primary. Failure here does not
-        // discard the recovered settings; the caller can still render them and warn the user.
         try? data.write(to: primary, options: .atomic)
         return (decoded.normalized(), true)
     }
@@ -173,7 +171,6 @@ struct SplatViewerEditStore {
     }
 }
 
-/// Mirrors msplat's `autoScaleAndCenter` transform for Nerfstudio input.
 struct SplatSceneNormalization: Equatable, Sendable {
     let translation: SIMD3<Float>
     let scale: Float
@@ -323,7 +320,13 @@ final class SplatViewerState: ObservableObject {
 
     private static func measurementScale(for splatURL: URL) -> Float {
         let transformsURL = splatURL.deletingLastPathComponent().appendingPathComponent("transforms.json")
-        guard let data = try? Data(contentsOf: transformsURL), let dataset = try? JSONDecoder().decode(MeasurementTransforms.self, from: data) else { return 1 }
+        guard let values = try? transformsURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true,
+              let data = try? Data(contentsOf: transformsURL, options: .mappedIfSafe),
+              let dataset = try? JSONDecoder().decode(MeasurementTransforms.self, from: data) else {
+            return 1
+        }
         let positions = dataset.frames.compactMap { frame -> SIMD3<Float>? in
             let matrix = frame.transformMatrix
             guard matrix.count >= 3, matrix[0].count >= 4, matrix[1].count >= 4, matrix[2].count >= 4 else { return nil }
