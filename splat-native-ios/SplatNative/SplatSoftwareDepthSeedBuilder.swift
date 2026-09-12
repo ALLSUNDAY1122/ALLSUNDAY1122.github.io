@@ -282,7 +282,7 @@ enum SplatSoftwareDepthSeedBuilder {
             frames: frames,
             useBilinearNeighborSampling: true
         ) ?? coarseCost
-        var bestHypothesis = -1
+        var bestHypothesis = refinementHypothesisCount / 2
         var sampledCosts = SIMD8<Float>(repeating: .infinity)
         var sampledInverseDepths = SIMD8<Float>(repeating: 0)
 
