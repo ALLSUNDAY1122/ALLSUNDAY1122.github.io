@@ -212,6 +212,12 @@ enum MeshTrimEngine {
                 }
                 return
             }
+            if directive == "p" || directive == "l" {
+                // Position indices are compacted below. Keeping point/line primitives unchanged
+                // would make them reference stale or unrelated vertices in the trimmed artifact.
+                // The editor produces a surface mesh, so drop unsupported non-surface geometry.
+                return
+            }
             guard directive == "f" else {
                 try writeLine(line)
                 return
