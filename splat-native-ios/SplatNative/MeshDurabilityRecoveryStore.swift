@@ -1,4 +1,5 @@
 import Foundation
+import SceneKit
 
 struct MeshDurabilityProtectedResult: Equatable, Sendable {
     let projectURL: URL
@@ -161,6 +162,13 @@ struct MeshDurabilityRecoveryStore: Sendable {
             var recovered = false
             var candidateErrorDescription: String?
             for resultURL in candidates {
+                // `archiveFinishedProject` commits a library directory before the integrity seal is
+                // created. Validate actual geometry first so a stale/truncated preferred result can
+                // neither block a valid lower-priority result nor replace an already-good archive.
+                guard containsUsableGeometry(resultURL) else {
+                    candidateErrorDescription = MeshProjectIntegrity.IntegrityError.invalidGeometry.localizedDescription
+                    continue
+                }
                 do {
                     let summary = try libraryStore.archiveFinishedProject(resultURL: resultURL)
                     _ = try MeshProjectIntegrity.verifyOrSeal(summary: summary)
@@ -228,6 +236,12 @@ struct MeshDurabilityRecoveryStore: Sendable {
             }
         candidates.append(contentsOf: reprocessed)
         return candidates
+    }
+
+    private func containsUsableGeometry(_ url: URL) -> Bool {
+        guard isNonEmptyRegularFile(url),
+              let scene = try? SCNScene(url: url, options: nil) else { return false }
+        return MeshRawSceneValidator.containsGeometry(scene)
     }
 
     private func isRegularDirectory(_ url: URL) -> Bool {
