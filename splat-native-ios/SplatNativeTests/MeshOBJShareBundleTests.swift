@@ -73,6 +73,51 @@ final class MeshOBJShareBundleTests: XCTestCase {
         )
     }
 
+    func testStreamingScanKeepsMtllibAcrossReadChunkBoundary() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let workspace = root.appendingPathComponent("workspace", isDirectory: true)
+        try FileManager.default.createDirectory(at: workspace, withIntermediateDirectories: true)
+
+        let obj = root.appendingPathComponent("mesh.obj")
+        let mtl = root.appendingPathComponent("mesh.mtl")
+        let texture = root.appendingPathComponent("atlas.png")
+        let prefix = String(repeating: "# filler\n", count: 7_280)
+        try (prefix + "mtllib mesh.mtl\nv 0 0 0\n")
+            .write(to: obj, atomically: true, encoding: .utf8)
+        try "newmtl scan\nmap_Kd atlas.png\n".write(to: mtl, atomically: true, encoding: .utf8)
+        let textureData = Data([0x89, 0x50, 0x4e, 0x47, 0x55])
+        try textureData.write(to: texture)
+
+        let companions = try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace)
+        XCTAssertEqual(Set(companions.map(\.lastPathComponent)), Set(["mesh.mtl", "atlas.png"]))
+        XCTAssertEqual(try Data(contentsOf: workspace.appendingPathComponent("atlas.png")), textureData)
+    }
+
+    func testCancelledTaskDoesNotStartCompanionCopy() async throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let workspace = root.appendingPathComponent("workspace", isDirectory: true)
+        try FileManager.default.createDirectory(at: workspace, withIntermediateDirectories: true)
+        let obj = root.appendingPathComponent("mesh.obj")
+        let mtl = root.appendingPathComponent("mesh.mtl")
+        try "mtllib mesh.mtl\nv 0 0 0\n".write(to: obj, atomically: true, encoding: .utf8)
+        try "newmtl scan\n".write(to: mtl, atomically: true, encoding: .utf8)
+
+        let error: Error? = await Task {
+            withUnsafeCurrentTask { $0?.cancel() }
+            do {
+                _ = try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace)
+                return nil
+            } catch {
+                return error
+            }
+        }.value
+
+        XCTAssertTrue(error is CancellationError)
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: workspace.path), [])
+    }
+
     func testDeduplicatesRepeatedMaterialAndTextureReferences() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
