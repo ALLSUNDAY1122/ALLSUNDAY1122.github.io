@@ -20,6 +20,7 @@ enum MeshOBJShareBundle {
 
     private static let scanChunkBytes = 64 * 1024
     private static let maxDirectiveLineBytes = 64 * 1024
+    private static let mtllibDirectiveASCII = Array("mtllib".utf8)
 
     static func copyCompanions(sourceOBJ: URL, workspace: URL) throws -> [URL] {
         try Task.checkCancellation()
@@ -102,7 +103,7 @@ enum MeshOBJShareBundle {
     /// Scans only bounded line buffers instead of materializing a potentially very large OBJ/MTL
     /// text file. Oversized nonstandard directive lines are ignored rather than growing memory
     /// without bound; normal Wavefront exporter directives are orders of magnitude smaller.
-    private static func forEachBoundedLine(in url: URL, body: (String) -> Void) throws {
+    private static func forEachBoundedLine(in url: URL, body: (Data) -> Void) throws {
         let handle = try FileHandle(forReadingFrom: url)
         defer { try? handle.close() }
 
@@ -116,7 +117,7 @@ enum MeshOBJShareBundle {
                 discardingOversizedLine = false
             }
             guard !discardingOversizedLine, !line.isEmpty else { return }
-            body(String(decoding: line, as: UTF8.self))
+            body(line)
         }
 
         while true {
@@ -142,11 +143,38 @@ enum MeshOBJShareBundle {
     private static func materialLibraryReferences(sourceOBJ: URL) throws -> [String] {
         var references: [String] = []
         try forEachBoundedLine(in: sourceOBJ) { line in
-            let parts = parseArguments(line)
-            guard parts.count >= 2, parts[0].lowercased() == "mtllib" else { return }
+            guard hasASCIIDirective(line, directive: mtllibDirectiveASCII) else { return }
+            let parts = parseArguments(String(decoding: line, as: UTF8.self))
+            guard parts.count >= 2 else { return }
             references.append(contentsOf: parts.dropFirst())
         }
         return references
+    }
+
+    /// Fast byte-level filter used on every OBJ geometry line. Only the tiny number of `mtllib`
+    /// lines proceed to String decoding/tokenization, avoiding per-vertex/per-face String churn.
+    private static func hasASCIIDirective(_ line: Data, directive: [UInt8]) -> Bool {
+        var index = line.startIndex
+        while index < line.endIndex {
+            let byte = line[index]
+            if byte == 0x20 || byte == 0x09 || byte == 0x0D {
+                index = line.index(after: index)
+            } else {
+                break
+            }
+        }
+        guard line.distance(from: index, to: line.endIndex) >= directive.count else { return false }
+        for expected in directive {
+            let byte = line[index]
+            let lowercased: UInt8 = (0x41...0x5A).contains(byte) ? byte + 0x20 : byte
+            guard lowercased == expected else { return false }
+            index = line.index(after: index)
+        }
+        guard index == line.endIndex else {
+            let separator = line[index]
+            return separator == 0x20 || separator == 0x09 || separator == 0x0D
+        }
+        return false
     }
 
     private static func textureReferences(sourceMTL: URL) throws -> [String] {
@@ -156,7 +184,7 @@ enum MeshOBJShareBundle {
         ]
         var references: [String] = []
         try forEachBoundedLine(in: sourceMTL) { line in
-            let parts = parseArguments(line)
+            let parts = parseArguments(String(decoding: line, as: UTF8.self))
             guard parts.count >= 2, commands.contains(parts[0].lowercased()),
                   let path = texturePath(in: Array(parts.dropFirst())) else { return }
             references.append(path)
