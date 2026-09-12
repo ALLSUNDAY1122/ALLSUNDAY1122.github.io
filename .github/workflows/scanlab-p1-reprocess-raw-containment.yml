@@ -1,0 +1,49 @@
+name: Scan Lab P1 reprocess RAW containment one-shot
+
+on:
+  push:
+    branches:
+      - feature/splat-post-build17-p1
+    paths:
+      - '.github/workflows/scanlab-p1-reprocess-raw-containment.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-post-build17-p1
+          fetch-depth: 1
+          lfs: false
+      - name: Reject symlinked retained RAW components
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('splat-native-ios/SplatNative/ScanProjectStore.swift')
+          s = p.read_text()
+          old = '''        guard fileManager.fileExists(atPath: images.path),\n              fileManager.fileExists(atPath: transforms.path),\n              fileManager.fileExists(atPath: points.path) else {\n            throw ScanProjectStoreError.rawDataUnavailable\n        }\n'''
+          new = '''        guard isSafeDirectory(images),\n              isSafeRegularFile(transforms),\n              isSafeRegularFile(points) else {\n            throw ScanProjectStoreError.rawDataUnavailable\n        }\n'''
+          if s.count(old) != 1: raise SystemExit('reprocess RAW anchor mismatch')
+          s = s.replace(old, new, 1)
+
+          anchor = '''    private func isSafeProjectDirectory(_ url: URL) -> Bool {\n        guard url.isFileURL,\n              let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),\n              values.isDirectory == true,\n              values.isSymbolicLink != true else { return false }\n        return true\n    }\n'''
+          replacement = '''    private func isSafeProjectDirectory(_ url: URL) -> Bool {\n        isSafeDirectory(url)\n    }\n\n    private func isSafeDirectory(_ url: URL) -> Bool {\n        guard url.isFileURL,\n              let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),\n              values.isDirectory == true,\n              values.isSymbolicLink != true else { return false }\n        return true\n    }\n\n    private func isSafeRegularFile(_ url: URL) -> Bool {\n        guard url.isFileURL,\n              let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),\n              values.isRegularFile == true,\n              values.isSymbolicLink != true else { return false }\n        return true\n    }\n'''
+          if s.count(anchor) != 1: raise SystemExit('safe project helper anchor mismatch')
+          p.write_text(s.replace(anchor, replacement, 1))
+          PY
+          grep -q 'isSafeRegularFile(transforms)' splat-native-ios/SplatNative/ScanProjectStore.swift
+      - name: Commit repair and retire helper
+        run: |
+          set -euo pipefail
+          git config user.name 'Scan Lab Macro Loop HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm -f .github/workflows/scanlab-p1-reprocess-raw-containment.yml
+          git add splat-native-ios/SplatNative/ScanProjectStore.swift
+          git commit -m 'fix(splat): require self-contained retained RAW'
+          git push origin HEAD:feature/splat-post-build17-p1
