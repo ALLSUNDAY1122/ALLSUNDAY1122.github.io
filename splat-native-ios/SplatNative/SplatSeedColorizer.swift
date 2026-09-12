@@ -45,6 +45,12 @@ private struct SplatSeedRaster {
 }
 
 enum SplatSeedColorizer {
+    struct PreparedProjection {
+        let frameIndex: Int
+        let frame: SplatSeedFrame
+        let worldToCamera: simd_float4x4
+    }
+
     static let fallback = SplatSeedSample(red: 128, green: 128, blue: 128)
     static let maxColorViewsPerPoint = 3
 
@@ -53,12 +59,21 @@ enum SplatSeedColorizer {
             return Array(repeating: fallback, count: points.count)
         }
 
+        // Camera transforms are immutable for the entire colorization pass. The old path inverted
+        // the same 4x4 matrix for every point x frame candidate; a 100k-point / 100-frame capture
+        // could therefore perform up to ten million identical inversions before sampling a pixel.
+        // Prepare each usable frame once and reuse its world-to-camera transform for all points.
+        let projections = prepareProjections(frames: frames)
+        guard !projections.isEmpty else {
+            return Array(repeating: fallback, count: points.count)
+        }
+
         // Use several nearby, low-off-axis views instead of trusting one frame. A single projection
         // can land on a temporary occluder, highlight or exposure outlier; a small robust consensus
         // gives the 3DGS initializer a more stable color while keeping raster memory bounded because
         // only one source image is decoded at a time below.
         let assignments = points.map {
-            bestAssignments(for: $0, frames: frames, maxCount: maxColorViewsPerPoint)
+            bestAssignments(for: $0, projections: projections, maxCount: maxColorViewsPerPoint)
         }
         var grouped: [Int: [(pointIndex: Int, assignment: SplatSeedAssignment)]] = [:]
         var samples = Array(repeating: [SplatSeedSample](), count: points.count)
@@ -91,20 +106,36 @@ enum SplatSeedColorizer {
         return samples.map(robustColor)
     }
 
-    static func project(point: SIMD3<Float>, frame: SplatSeedFrame) -> SIMD3<Float>? {
-        guard frame.transformMatrix.count == 4,
-              frame.transformMatrix.allSatisfy({ $0.count == 4 }),
-              frame.w > 0, frame.h > 0,
-              frame.flX > 0, frame.flY > 0 else { return nil }
+    static func prepareProjections(frames: [SplatSeedFrame]) -> [PreparedProjection] {
+        frames.enumerated().compactMap { frameIndex, frame in
+            guard let worldToCamera = worldToCameraMatrix(frame: frame) else { return nil }
+            return PreparedProjection(
+                frameIndex: frameIndex,
+                frame: frame,
+                worldToCamera: worldToCamera
+            )
+        }
+    }
 
-        let cameraToWorld = matrix(fromRows: frame.transformMatrix)
-        let worldToCamera = simd_inverse(cameraToWorld)
+    static func project(point: SIMD3<Float>, frame: SplatSeedFrame) -> SIMD3<Float>? {
+        guard let worldToCamera = worldToCameraMatrix(frame: frame) else { return nil }
+        return project(point: point, frame: frame, worldToCamera: worldToCamera)
+    }
+
+    private static func project(
+        point: SIMD3<Float>,
+        frame: SplatSeedFrame,
+        worldToCamera: simd_float4x4
+    ) -> SIMD3<Float>? {
+        guard point.x.isFinite, point.y.isFinite, point.z.isFinite else { return nil }
         let cameraPoint = worldToCamera * SIMD4<Float>(point.x, point.y, point.z, 1)
+        guard cameraPoint.x.isFinite, cameraPoint.y.isFinite, cameraPoint.z.isFinite else { return nil }
         let depth = -cameraPoint.z
-        guard depth > 0.05 else { return nil }
+        guard depth.isFinite, depth > 0.05 else { return nil }
 
         let x = frame.flX * cameraPoint.x / depth + frame.cx
         let y = frame.cy - frame.flY * cameraPoint.y / depth
+        guard x.isFinite, y.isFinite else { return nil }
         let margin: Float = 3
         guard x >= margin,
               y >= margin,
@@ -116,21 +147,27 @@ enum SplatSeedColorizer {
 
     private static func bestAssignments(
         for point: SIMD3<Float>,
-        frames: [SplatSeedFrame],
+        projections: [PreparedProjection],
         maxCount: Int
     ) -> [SplatSeedAssignment] {
         guard maxCount > 0 else { return [] }
         var candidates: [SplatSeedAssignment] = []
-        candidates.reserveCapacity(frames.count)
+        candidates.reserveCapacity(projections.count)
 
-        for (frameIndex, frame) in frames.enumerated() {
-            guard let projected = project(point: point, frame: frame) else { continue }
+        for projection in projections {
+            let frame = projection.frame
+            guard let projected = project(
+                point: point,
+                frame: frame,
+                worldToCamera: projection.worldToCamera
+            ) else { continue }
             let nx = (projected.x - frame.cx) / max(frame.flX, 1)
             let ny = (projected.y - frame.cy) / max(frame.flY, 1)
             let offAxis = sqrt(nx * nx + ny * ny)
             let score = projected.z * (1 + 0.35 * offAxis)
+            guard score.isFinite else { continue }
             candidates.append(SplatSeedAssignment(
-                frameIndex: frameIndex,
+                frameIndex: projection.frameIndex,
                 x: projected.x,
                 y: projected.y,
                 score: score
@@ -167,6 +204,30 @@ enum SplatSeedColorizer {
             return UInt8((Int(sorted[middle - 1]) + Int(sorted[middle])) / 2)
         }
         return sorted[middle]
+    }
+
+    private static func worldToCameraMatrix(frame: SplatSeedFrame) -> simd_float4x4? {
+        guard frame.transformMatrix.count == 4,
+              frame.transformMatrix.allSatisfy({ $0.count == 4 }),
+              frame.w > 0, frame.h > 0,
+              frame.flX.isFinite, frame.flY.isFinite,
+              frame.cx.isFinite, frame.cy.isFinite,
+              frame.flX > 0, frame.flY > 0 else { return nil }
+
+        let cameraToWorld = matrix(fromRows: frame.transformMatrix)
+        guard matrixIsFinite(cameraToWorld) else { return nil }
+        let worldToCamera = simd_inverse(cameraToWorld)
+        guard matrixIsFinite(worldToCamera) else { return nil }
+        return worldToCamera
+    }
+
+    private static func matrixIsFinite(_ matrix: simd_float4x4) -> Bool {
+        for column in 0..<4 {
+            for row in 0..<4 where !matrix[column][row].isFinite {
+                return false
+            }
+        }
+        return true
     }
 
     private static func matrix(fromRows rows: [[Float]]) -> simd_float4x4 {
