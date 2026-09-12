@@ -258,6 +258,7 @@ enum SplatSoftwareDepthSeedBuilder {
         frames: [Frame]
     ) -> (depth: Float, cost: Float) {
         guard refinementHypothesisCount >= 3,
+              refinementHypothesisCount <= 8,
               hypothesisCount > 1,
               coarseDepth.isFinite,
               coarseDepth > 0 else {
@@ -281,6 +282,10 @@ enum SplatSoftwareDepthSeedBuilder {
             frames: frames,
             useBilinearNeighborSampling: true
         ) ?? coarseCost
+        var bestHypothesis = -1
+        var sampledCosts = SIMD8<Float>(repeating: .infinity)
+        var sampledInverseDepths = SIMD8<Float>(repeating: 0)
+
         for hypothesis in 0..<refinementHypothesisCount {
             let t = Float(hypothesis) / denominator
             let proposedInverseDepth = centerInverseDepth - radius + (2 * radius * t)
@@ -295,12 +300,78 @@ enum SplatSoftwareDepthSeedBuilder {
                 frames: frames,
                 useBilinearNeighborSampling: true
             ) else { continue }
+            sampledCosts[hypothesis] = cost
+            sampledInverseDepths[hypothesis] = inverseDepth
             if cost < bestCost {
                 bestCost = cost
                 bestDepth = depth
+                bestHypothesis = hypothesis
             }
         }
+
+        if bestHypothesis > 0,
+           bestHypothesis + 1 < refinementHypothesisCount {
+            let leftIndex = bestHypothesis - 1
+            let rightIndex = bestHypothesis + 1
+            let leftCost = sampledCosts[leftIndex]
+            let centerCost = sampledCosts[bestHypothesis]
+            let rightCost = sampledCosts[rightIndex]
+            let leftInverseDepth = sampledInverseDepths[leftIndex]
+            let centerSampleInverseDepth = sampledInverseDepths[bestHypothesis]
+            let rightInverseDepth = sampledInverseDepths[rightIndex]
+            let leftStep = centerSampleInverseDepth - leftInverseDepth
+            let rightStep = rightInverseDepth - centerSampleInverseDepth
+
+            if leftStep.isFinite,
+               rightStep.isFinite,
+               leftStep > 0,
+               rightStep > 0,
+               abs(leftStep - rightStep) <= max(leftStep, rightStep) * 0.001,
+               let offset = parabolicMinimumOffset(
+                leftCost: leftCost,
+                centerCost: centerCost,
+                rightCost: rightCost
+               ) {
+                let interpolatedInverseDepth = centerSampleInverseDepth + offset * ((leftStep + rightStep) * 0.5)
+                if interpolatedInverseDepth.isFinite,
+                   interpolatedInverseDepth >= minimumInverseDepth,
+                   interpolatedInverseDepth <= maximumInverseDepth {
+                    let interpolatedDepth = 1 / interpolatedInverseDepth
+                    if interpolatedDepth.isFinite,
+                       interpolatedDepth > 0,
+                       let interpolatedCost = patchCost(
+                        u: u,
+                        v: v,
+                        depth: interpolatedDepth,
+                        reference: reference,
+                        neighborIndices: neighborIndices,
+                        frames: frames,
+                        useBilinearNeighborSampling: true
+                       ),
+                       interpolatedCost < bestCost {
+                        bestDepth = interpolatedDepth
+                        bestCost = interpolatedCost
+                    }
+                }
+            }
+        }
+
         return (bestDepth, bestCost)
+    }
+
+    static func parabolicMinimumOffset(
+        leftCost: Float,
+        centerCost: Float,
+        rightCost: Float
+    ) -> Float? {
+        guard leftCost.isFinite,
+              centerCost.isFinite,
+              rightCost.isFinite else { return nil }
+        let curvature = leftCost - (2 * centerCost) + rightCost
+        guard curvature.isFinite, curvature > 1e-5 else { return nil }
+        let offset = 0.5 * (leftCost - rightCost) / curvature
+        guard offset.isFinite, abs(offset) <= 1 else { return nil }
+        return offset
     }
 
     private static func patchCost(
