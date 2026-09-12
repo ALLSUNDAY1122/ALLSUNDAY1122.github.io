@@ -119,6 +119,43 @@ final class MeshDurabilityRecoverySymlinkTests: XCTestCase {
         XCTAssertEqual(archived.first?.resultURL.lastPathComponent, "mesh.obj")
     }
 
+    func testCorruptRecoveryCandidateCannotReplaceExistingGoodArchive() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let project = root.appendingPathComponent("preserve.meshproject", isDirectory: true)
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        let sourceResult = project.appendingPathComponent("mesh.obj")
+        let validOBJ = """
+        v 0 0 0
+        v 1 0 0
+        v 0 1 0
+        f 1 2 3
+        """
+        try Data(validOBJ.utf8).write(to: sourceResult)
+
+        let libraryStore = MeshProjectStore(appRootURL: root)
+        let goodSummary = try libraryStore.archiveFinishedProject(resultURL: sourceResult)
+        _ = try MeshProjectIntegrity.verifyOrSeal(summary: goodSummary)
+        let goodBytes = try Data(contentsOf: goodSummary.resultURL)
+
+        try Data("broken-later-result".utf8).write(to: sourceResult, options: .atomic)
+        try Data("also-broken".utf8).write(
+            to: project.appendingPathComponent("mesh-cropped.obj"),
+            options: .atomic
+        )
+
+        let report = MeshDurabilityRecoveryStore(appRootURL: root).recoverPendingArchives()
+
+        XCTAssertEqual(report.recoveredCount, 0)
+        XCTAssertEqual(report.remainingCount, 1)
+        let archived = libraryStore.listProjects()
+        XCTAssertEqual(archived.count, 1)
+        XCTAssertEqual(try Data(contentsOf: archived[0].resultURL), goodBytes)
+        XCTAssertNoThrow(try MeshProjectIntegrity.verifyOrSeal(summary: archived[0]))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: project.path))
+    }
+
     private func makeRoot() throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshDurabilityRecoverySymlinkTests-\(UUID().uuidString)", isDirectory: true)
