@@ -1,5 +1,6 @@
 import CoreGraphics
 import Foundation
+import ImageIO
 import UIKit
 import simd
 
@@ -158,6 +159,7 @@ enum SplatSeedColorizer {
 
     static let fallback = SplatSeedSample(red: 128, green: 128, blue: 128)
     static let maxColorViewsPerPoint = 3
+    static let maximumRasterDimension = 2_048
 
     static func colorize(points: [SIMD3<Float>], frames: [SplatSeedFrame], projectURL: URL) -> [SplatSeedSample] {
         guard !points.isEmpty, !frames.isEmpty else {
@@ -329,12 +331,28 @@ enum SplatSeedColorizer {
     }
 
     private static func loadRaster(url: URL) -> SplatSeedRaster? {
-        guard let image = UIImage(contentsOfFile: url.path)?.cgImage else { return nil }
+        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, sourceOptions),
+              CGImageSourceGetCount(source) > 0,
+              let image = CGImageSourceCreateThumbnailAtIndex(
+                source,
+                0,
+                [
+                    kCGImageSourceCreateThumbnailFromImageAlways: true,
+                    kCGImageSourceCreateThumbnailWithTransform: false,
+                    kCGImageSourceThumbnailMaxPixelSize: maximumRasterDimension,
+                    kCGImageSourceShouldCacheImmediately: true
+                ] as CFDictionary
+              ) else { return nil }
         let width = image.width
         let height = image.height
-        guard width > 0, height > 0 else { return nil }
+        guard width > 0, height > 0, width <= maximumRasterDimension, height <= maximumRasterDimension else { return nil }
+        let (pixelCount, pixelOverflow) = width.multipliedReportingOverflow(by: height)
+        let (byteCount, byteOverflow) = pixelCount.multipliedReportingOverflow(by: 4)
+        let (bytesPerRow, rowOverflow) = width.multipliedReportingOverflow(by: 4)
+        guard !pixelOverflow, !byteOverflow, !rowOverflow, byteCount > 0 else { return nil }
 
-        var bytes = [UInt8](repeating: 0, count: width * height * 4)
+        var bytes = [UInt8](repeating: 0, count: byteCount)
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo.byteOrder32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue
         guard let context = CGContext(
@@ -342,7 +360,7 @@ enum SplatSeedColorizer {
             width: width,
             height: height,
             bitsPerComponent: 8,
-            bytesPerRow: width * 4,
+            bytesPerRow: bytesPerRow,
             space: colorSpace,
             bitmapInfo: bitmapInfo
         ) else { return nil }
