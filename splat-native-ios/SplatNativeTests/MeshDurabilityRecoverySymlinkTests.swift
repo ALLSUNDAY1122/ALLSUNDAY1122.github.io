@@ -72,6 +72,28 @@ final class MeshDurabilityRecoverySymlinkTests: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: outsideResult.path))
     }
 
+    func testCleanupDoesNotDeleteProjectForSymlinkedResult() throws {
+        let root = try makeRoot()
+        let outsideProject = try makeExternalProject()
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: outsideProject)
+        }
+
+        let recovery = root.appendingPathComponent(MeshDurabilityRecoveryStore.recoveryDirectoryName, isDirectory: true)
+        let project = recovery.appendingPathComponent("protected.meshproject", isDirectory: true)
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        let outsideResult = outsideProject.appendingPathComponent("mesh.obj")
+        try Data("v 0 0 0\n".utf8).write(to: outsideResult)
+        let alias = project.appendingPathComponent("mesh.obj")
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: outsideResult)
+
+        MeshDurabilityRecoveryStore(appRootURL: root).cleanupProtectedResult(containing: alias)
+
+        XCTAssertTrue(FileManager.default.fileExists(atPath: project.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outsideResult.path))
+    }
+
     private func makeRoot() throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshDurabilityRecoverySymlinkTests-\(UUID().uuidString)", isDirectory: true)
