@@ -41,8 +41,19 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     }
 
     func record(frame: ARFrame, mode: MeshCaptureMode, size: MeshScanSize, frameCount: Int, faceCount: Int) {
-        let sampleElapsed = frame.timestamp - lastTimestamp
-        guard sampleElapsed >= 0.16 else { return }
+        guard frame.timestamp.isFinite else {
+            trackingInterrupted = true
+            guidance = "撮影時刻を安定して取得できません。ゆっくり動かしてください"
+            return
+        }
+        let sampleElapsed: TimeInterval
+        if lastTimestamp == -.greatestFiniteMagnitude {
+            sampleElapsed = .greatestFiniteMagnitude
+        } else {
+            let elapsed = frame.timestamp - lastTimestamp
+            guard elapsed.isFinite, elapsed >= 0.16 else { return }
+            sampleElapsed = elapsed
+        }
         // Throttle every tracking state, not only normal samples. During `.limited`, leaving the
         // timestamp untouched turns this method into a per-AR-frame Published update loop exactly
         // when tracking already needs CPU headroom.
@@ -66,9 +77,11 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
             return
         }
         let forwardRaw = SIMD3<Float>(-transform.columns.2.x, -transform.columns.2.y, -transform.columns.2.z)
-        let forward = forwardRaw.x.isFinite && forwardRaw.y.isFinite && forwardRaw.z.isFinite && simd_length_squared(forwardRaw) > 1e-8
-            ? simd_normalize(forwardRaw)
-            : SIMD3<Float>(0, 0, -1)
+        guard let forward = MeshCaptureCoveragePolicy.normalizedForwardDirection(forwardRaw) else {
+            trackingInterrupted = true
+            guidance = "カメラの向きを安定して取得できません。ゆっくり動かしてください"
+            return
+        }
 
         if trackingInterrupted {
             trackingInterrupted = false
