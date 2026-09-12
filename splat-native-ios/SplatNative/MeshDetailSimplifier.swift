@@ -41,16 +41,13 @@ enum MeshDetailSimplifierEngine {
             ? min(0.95, max(0.15, retainedFraction))
             : 0.60
         var vertices: [SIMD3<Float>] = []
+        var vertexColors: [SIMD3<Float>?] = []
         var faces: [DetailFace] = []
 
         for line in text.split(whereSeparator: \.isNewline) {
             let fields = line.split(whereSeparator: \.isWhitespace)
             guard let directive = fields.first else { continue }
             if directive == "mtllib" || directive == "usemtl" || directive == "vt" {
-                // This simplifier currently rebuilds geometry and normals only. Continuing with a
-                // textured OBJ would silently produce a visually degraded untextured result, which
-                // is worse than leaving the known-good source intact. Fail closed until UV/material
-                // remapping is implemented explicitly.
                 throw error("テクスチャ付きMeshの軽量化は色を失うため実行できません。元Meshを保持します")
             }
             if directive == "v" {
@@ -64,6 +61,15 @@ enum MeshDetailSimplifierEngine {
                     throw error("Meshに無効な頂点座標があります")
                 }
                 vertices.append(SIMD3<Float>(x, y, z))
+                if fields.count >= 7 {
+                    guard let r = Float(fields[4]), let g = Float(fields[5]), let b = Float(fields[6]),
+                          r.isFinite, g.isFinite, b.isFinite else {
+                        throw error("Meshの頂点色が不正です")
+                    }
+                    vertexColors.append(SIMD3<Float>(r, g, b))
+                } else {
+                    vertexColors.append(nil)
+                }
             } else if directive == "f" {
                 let tokens = Array(fields.dropFirst().prefix { !$0.hasPrefix("#") })
                 guard tokens.count >= 3 else { continue }
@@ -85,6 +91,13 @@ enum MeshDetailSimplifierEngine {
         }
 
         guard vertices.count > 8, !faces.isEmpty else { throw error("十分なMeshがありません") }
+        let coloredVertexCount = vertexColors.reduce(into: 0) { count, color in
+            if color != nil { count += 1 }
+        }
+        guard coloredVertexCount == 0 || coloredVertexCount == vertices.count else {
+            throw error("頂点色が一部の頂点にしかないため、安全に軽量化できません")
+        }
+        let hasVertexColors = coloredVertexCount == vertices.count
         guard faces.allSatisfy({ face in
             face.a >= 0 && face.b >= 0 && face.c >= 0 &&
                 face.a < vertices.count && face.b < vertices.count && face.c < vertices.count
@@ -140,6 +153,7 @@ enum MeshDetailSimplifierEngine {
         let cell = extent / Float(resolution)
 
         var sums: [DetailCluster: SIMD3<Double>] = [:]
+        var colorSums: [DetailCluster: SIMD3<Double>] = [:]
         var counts: [DetailCluster: Int] = [:]
         var vertexKeys: [DetailCluster] = []
         vertexKeys.reserveCapacity(vertices.count)
@@ -160,6 +174,9 @@ enum MeshDetailSimplifierEngine {
             }
             vertexKeys.append(key)
             sums[key, default: .zero] += SIMD3<Double>(Double(vertex.x), Double(vertex.y), Double(vertex.z))
+            if hasVertexColors, let color = vertexColors[index] {
+                colorSums[key, default: .zero] += SIMD3<Double>(Double(color.x), Double(color.y), Double(color.z))
+            }
             counts[key, default: 0] += 1
         }
 
@@ -171,6 +188,7 @@ enum MeshDetailSimplifierEngine {
         }
         var clusterToIndex: [DetailCluster: Int] = [:]
         var outputVertices: [SIMD3<Float>] = []
+        var outputColors: [SIMD3<Float>] = []
         for key in orderedKeys {
             clusterToIndex[key] = outputVertices.count
             let divisor = Double(max(1, counts[key] ?? 1))
@@ -182,6 +200,13 @@ enum MeshDetailSimplifierEngine {
                 throw error("Meshの簡略化座標を確定できません")
             }
             outputVertices.append(SIMD3<Float>(Float(mean.x), Float(mean.y), Float(mean.z)))
+            if hasVertexColors {
+                let colorMean = (colorSums[key] ?? .zero) / divisor
+                guard colorMean.x.isFinite, colorMean.y.isFinite, colorMean.z.isFinite else {
+                    throw error("Meshの頂点色を確定できません")
+                }
+                outputColors.append(SIMD3<Float>(Float(colorMean.x), Float(colorMean.y), Float(colorMean.z)))
+            }
         }
 
         var outputFaces: [SIMD3<Int>] = []
@@ -216,7 +241,14 @@ enum MeshDetailSimplifierEngine {
             .appendingPathComponent("mesh-detail-simplified-\(percent)-\(UUID().uuidString.lowercased()).obj")
         var output = "# Scan Lab detail-preserving simplification\n"
         output += "# boundaries \(boundaryVertices.count) protected_components \(protectedRoots.count)\n"
-        for vertex in outputVertices { output += "v \(vertex.x) \(vertex.y) \(vertex.z)\n" }
+        for (index, vertex) in outputVertices.enumerated() {
+            if hasVertexColors {
+                let color = outputColors[index]
+                output += "v \(vertex.x) \(vertex.y) \(vertex.z) \(color.x) \(color.y) \(color.z)\n"
+            } else {
+                output += "v \(vertex.x) \(vertex.y) \(vertex.z)\n"
+            }
+        }
         for normal in normals { output += "vn \(normal.x) \(normal.y) \(normal.z)\n" }
         for face in outputFaces {
             output += "f \(face.x + 1)//\(face.x + 1) \(face.y + 1)//\(face.y + 1) \(face.z + 1)//\(face.z + 1)\n"
