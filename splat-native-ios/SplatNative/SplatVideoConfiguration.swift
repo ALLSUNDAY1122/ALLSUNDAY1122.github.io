@@ -90,19 +90,29 @@ struct SplatVideoConfiguration: Equatable, Sendable {
     var quality: Quality = .high1080p
     var cameraMotion: CameraMotion = .orbit360
     var speed: Speed = .normal
-    var framesPerSecond: Int = 30
+    var framesPerSecond: Int = 30 {
+        didSet {
+            framesPerSecond = Self.safeFramesPerSecond(framesPerSecond)
+        }
+    }
 
     var dimensions: (width: Int, height: Int) { quality.dimensions(for: aspectRatio) }
     var duration: TimeInterval { speed.duration }
     var totalFrames: Int {
-        let safeFPS = max(1, framesPerSecond)
-        let rawFrames = duration * Double(safeFPS)
+        let rawFrames = duration * Double(Self.safeFramesPerSecond(framesPerSecond))
         guard rawFrames.isFinite else { return Int.max }
         let rounded = rawFrames.rounded()
         // Double(Int.max) rounds to 2^63 on 64-bit platforms, which itself is outside Int's
         // representable range. Compare before conversion and saturate rather than trapping.
         guard rounded < Double(Int.max) else { return Int.max }
         return max(1, Int(rounded))
+    }
+
+    static func safeFramesPerSecond(_ value: Int) -> Int {
+        // H.264 export presets in this app are designed around 30 fps. A bounded ceiling keeps
+        // AVVideoExpectedSourceFrameRate, keyframe interval arithmetic, CMTimeScale conversion and
+        // bitrate estimation in a valid range even if transient UI/persisted state is corrupted.
+        min(120, max(1, value))
     }
 
     func cameraSample(progress rawProgress: Double) -> CameraSample {
