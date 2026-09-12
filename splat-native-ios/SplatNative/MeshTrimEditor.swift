@@ -80,16 +80,27 @@ enum MeshTrimEngine {
             try? FileManager.default.removeItem(at: out)
             throw error
         }
-        let newline = Data([0x0A])
+        let writeBufferLimit = 256 * 1024
+        var writeBuffer = Data()
+        writeBuffer.reserveCapacity(writeBufferLimit)
         var completed = false
         defer {
             try? handle.close()
             if !completed { try? FileManager.default.removeItem(at: out) }
         }
 
+        func flushOutput() throws {
+            guard !writeBuffer.isEmpty else { return }
+            try handle.write(contentsOf: writeBuffer)
+            writeBuffer.removeAll(keepingCapacity: true)
+        }
+
         func writeLine(_ line: Substring) throws {
-            try handle.write(contentsOf: Data(line.utf8))
-            try handle.write(contentsOf: newline)
+            writeBuffer.append(contentsOf: line.utf8)
+            writeBuffer.append(0x0A)
+            if writeBuffer.count >= writeBufferLimit {
+                try flushOutput()
+            }
         }
 
         var used = Set<Int>()
@@ -136,6 +147,7 @@ enum MeshTrimEngine {
         }
         guard faceCount > 0 else { throw error("トリミング範囲内に面が残りません") }
 
+        try flushOutput()
         try handle.synchronize()
         completed = true
         return MeshTrimResult(url: out, usedVertexCount: used.count, faceCount: faceCount)
