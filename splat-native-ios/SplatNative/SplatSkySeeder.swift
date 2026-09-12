@@ -297,6 +297,7 @@ private struct SkyRaster {
         guard !pixelOverflow, !byteOverflow, !rowOverflow, byteCount > 0 else { return nil }
 
         var storage = [UInt8](repeating: 0, count: byteCount)
+        let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB()
         let info = CGBitmapInfo.byteOrder32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue
         guard let context = CGContext(
             data: &storage,
@@ -304,7 +305,7 @@ private struct SkyRaster {
             height: height,
             bitsPerComponent: 8,
             bytesPerRow: bytesPerRow,
-            space: CGColorSpaceCreateDeviceRGB(),
+            space: colorSpace,
             bitmapInfo: info
         ) else { return nil }
         context.translateBy(x: 0, y: CGFloat(height))
