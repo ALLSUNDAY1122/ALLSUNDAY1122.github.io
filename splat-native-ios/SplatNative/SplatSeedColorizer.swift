@@ -27,6 +27,53 @@ private struct SplatSeedAssignment {
     let score: Float
 }
 
+private struct SplatSeedColorAccumulator {
+    private(set) var count = 0
+    private var first = SplatSeedSample(red: 0, green: 0, blue: 0)
+    private var second = SplatSeedSample(red: 0, green: 0, blue: 0)
+    private var third = SplatSeedSample(red: 0, green: 0, blue: 0)
+
+    mutating func append(_ sample: SplatSeedSample) {
+        switch count {
+        case 0: first = sample
+        case 1: second = sample
+        case 2: third = sample
+        default: return
+        }
+        count += 1
+    }
+
+    func robustColor(fallback: SplatSeedSample) -> SplatSeedSample {
+        switch count {
+        case 0:
+            return fallback
+        case 1:
+            return first
+        case 2:
+            return SplatSeedSample(
+                red: average(first.red, second.red),
+                green: average(first.green, second.green),
+                blue: average(first.blue, second.blue)
+            )
+        default:
+            return SplatSeedSample(
+                red: median3(first.red, second.red, third.red),
+                green: median3(first.green, second.green, third.green),
+                blue: median3(first.blue, second.blue, third.blue)
+            )
+        }
+    }
+
+    private func average(_ a: UInt8, _ b: UInt8) -> UInt8 {
+        UInt8((Int(a) + Int(b)) / 2)
+    }
+
+    private func median3(_ a: UInt8, _ b: UInt8, _ c: UInt8) -> UInt8 {
+        let total = Int(a) + Int(b) + Int(c)
+        return UInt8(total - Int(min(a, min(b, c))) - Int(max(a, max(b, c))))
+    }
+}
+
 private struct SplatSeedRaster {
     let width: Int
     let height: Int
@@ -77,7 +124,10 @@ enum SplatSeedColorizer {
         // until all points were classified; large dense seeds therefore paid O(points) extra array
         // headers plus up to three duplicated assignment values per point for no quality benefit.
         var grouped: [Int: [(pointIndex: Int, assignment: SplatSeedAssignment)]] = [:]
-        var samples = Array(repeating: [SplatSeedSample](), count: points.count)
+        // Every point uses at most three color observations. A fixed inline accumulator avoids one
+        // tiny heap-backed Array allocation for every colored point, which is significant for dense
+        // 100k+ seed clouds while preserving the same one/two/three-view consensus semantics.
+        var samples = Array(repeating: SplatSeedColorAccumulator(), count: points.count)
         for (pointIndex, point) in points.enumerated() {
             for assignment in bestAssignments(
                 for: point,
@@ -107,7 +157,7 @@ enum SplatSeedColorizer {
             }
         }
 
-        return samples.map(robustColor)
+        return samples.map { $0.robustColor(fallback: fallback) }
     }
 
     static func prepareProjections(frames: [SplatSeedFrame]) -> [PreparedProjection] {
@@ -206,25 +256,6 @@ enum SplatSeedColorizer {
             return lhs.frameIndex < rhs.frameIndex
         }
         return lhs.score < rhs.score
-    }
-
-    private static func robustColor(_ samples: [SplatSeedSample]) -> SplatSeedSample {
-        guard !samples.isEmpty else { return fallback }
-        return SplatSeedSample(
-            red: robustChannel(samples.map(\.red)),
-            green: robustChannel(samples.map(\.green)),
-            blue: robustChannel(samples.map(\.blue))
-        )
-    }
-
-    private static func robustChannel(_ values: [UInt8]) -> UInt8 {
-        guard !values.isEmpty else { return 128 }
-        let sorted = values.sorted()
-        let middle = sorted.count / 2
-        if sorted.count.isMultiple(of: 2) {
-            return UInt8((Int(sorted[middle - 1]) + Int(sorted[middle])) / 2)
-        }
-        return sorted[middle]
     }
 
     private static func worldToCameraMatrix(frame: SplatSeedFrame) -> simd_float4x4? {
