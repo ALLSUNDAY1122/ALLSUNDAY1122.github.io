@@ -45,6 +45,34 @@ final class MeshOBJShareBundleTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: workspace.appendingPathComponent("atlas.png")), textureData)
     }
 
+    func testCopiesMaterialAndTextureWhenMtllibUsesTabs() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let workspace = root.appendingPathComponent("workspace", isDirectory: true)
+        try FileManager.default.createDirectory(at: workspace, withIntermediateDirectories: true)
+
+        let obj = root.appendingPathComponent("mesh.obj")
+        let mtl = root.appendingPathComponent("mesh.mtl")
+        let texture = root.appendingPathComponent("atlas.png")
+        let materialText = "newmtl scan\nmap_Kd atlas.png\n"
+        let textureData = Data([0x89, 0x50, 0x4e, 0x47, 0x0a])
+        try "mtllib\tmesh.mtl\t# exported material\nv 0 0 0\n"
+            .write(to: obj, atomically: true, encoding: .utf8)
+        try materialText.write(to: mtl, atomically: true, encoding: .utf8)
+        try textureData.write(to: texture)
+
+        let companions = try MeshOBJShareBundle.copyCompanions(sourceOBJ: obj, workspace: workspace)
+        XCTAssertEqual(Set(companions.map(\.lastPathComponent)), Set(["mesh.mtl", "atlas.png"]))
+        XCTAssertEqual(try Data(contentsOf: workspace.appendingPathComponent("atlas.png")), textureData)
+
+        let expectedCompanionBytes = Int64(Data(materialText.utf8).count + textureData.count)
+        XCTAssertEqual(
+            try MeshOBJShareBundle.referencedCompanionByteCount(sourceOBJ: obj),
+            expectedCompanionBytes,
+            "Storage admission must count the same tab-separated companions that exact sharing copies"
+        )
+    }
+
     func testDeduplicatesRepeatedMaterialAndTextureReferences() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
