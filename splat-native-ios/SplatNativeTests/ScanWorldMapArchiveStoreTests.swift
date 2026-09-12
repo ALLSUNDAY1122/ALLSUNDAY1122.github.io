@@ -34,6 +34,36 @@ final class ScanWorldMapArchiveStoreTests: XCTestCase {
         XCTAssertEqual(names, ["worldmap.bin"])
     }
 
+    func testWriteRejectsExternalAliasWithoutTouchingAliasTarget() throws {
+        let fileManager = FileManager.default
+        let directory = fileManager.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let externalDirectory = fileManager.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: externalDirectory, withIntermediateDirectories: true)
+        defer {
+            try? fileManager.removeItem(at: directory)
+            try? fileManager.removeItem(at: externalDirectory)
+        }
+
+        let target = directory.appendingPathComponent("worldmap.bin")
+        let external = externalDirectory.appendingPathComponent("outside-worldmap.bin")
+        let previous = Data(repeating: 0x2A, count: 1024)
+        let replacement = Data(repeating: 0x7C, count: 2048)
+        try previous.write(to: external, options: .atomic)
+        try fileManager.createSymbolicLink(at: target, withDestinationURL: external)
+
+        XCTAssertThrowsError(try ScanWorldMapArchiveStore.write(replacement, to: target)) { error in
+            guard case ScanWorldMapArchiveStoreError.unsafeExistingArchive = error else {
+                return XCTFail("Expected unsafeExistingArchive, got \(error)")
+            }
+        }
+        XCTAssertEqual(try Data(contentsOf: external), previous)
+        let values = try target.resourceValues(forKeys: [.isSymbolicLinkKey])
+        XCTAssertEqual(values.isSymbolicLink, true)
+    }
+
     func testWriteRejectsEmptyArchiveWithoutCreatingFile() throws {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
