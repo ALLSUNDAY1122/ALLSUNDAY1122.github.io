@@ -29,6 +29,30 @@ final class SplatExportAdmissionTests: XCTestCase {
         XCTAssertEqual(SplatExportAdmission.estimatedRequiredFreeBytes(sourceBytes: Int64.max, kind: .ply), Int64.max)
     }
 
+    func testCapacityResolutionRejectsWhenNeitherOverrideNorFilesystemValueExists() {
+        XCTAssertThrowsError(
+            try SplatExportAdmission.resolvedAvailableCapacity(override: nil, detected: nil)
+        ) { error in
+            guard let admissionError = error as? SplatExportAdmission.AdmissionError else {
+                return XCTFail("Expected AdmissionError, got \(error)")
+            }
+            guard case .availableCapacityUnavailable = admissionError else {
+                return XCTFail("Expected availableCapacityUnavailable, got \(admissionError)")
+            }
+        }
+    }
+
+    func testCapacityResolutionPrefersExplicitOverrideAndClampsNegativeValues() throws {
+        XCTAssertEqual(
+            try SplatExportAdmission.resolvedAvailableCapacity(override: 123, detected: 999),
+            123
+        )
+        XCTAssertEqual(
+            try SplatExportAdmission.resolvedAvailableCapacity(override: -1, detected: 999),
+            0
+        )
+    }
+
     func testTrustedDigestCanonicalURLMatchesHashedCanonicalURL() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("c2-trusted-digest-canonical-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
