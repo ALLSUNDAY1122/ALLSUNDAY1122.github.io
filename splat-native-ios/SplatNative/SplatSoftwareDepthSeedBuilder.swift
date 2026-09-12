@@ -373,6 +373,13 @@ enum SplatSoftwareDepthSeedBuilder {
         return (total - minimum - maximum) / Float(neighborCostCount - 2)
     }
 
+    static func scaledPrincipalPointCoordinate(_ coordinate: Float, scale: Float) -> Float? {
+        guard coordinate.isFinite, scale.isFinite, scale > 0 else { return nil }
+        let scaled = (Double(coordinate) + 0.5) * Double(scale) - 0.5
+        guard scaled.isFinite else { return nil }
+        return Float(scaled)
+    }
+
     private static func load(
         _ source: SplatSeedFrame,
         projectURL: URL,
@@ -428,13 +435,14 @@ enum SplatSoftwareDepthSeedBuilder {
 
         var rgbaBytes = [UInt8](repeating: 0, count: rgbaCount)
         let bitmapInfo = CGBitmapInfo.byteOrder32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue
+        let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB()
         guard let rgbContext = CGContext(
             data: &rgbaBytes,
             width: width,
             height: height,
             bitsPerComponent: 8,
             bytesPerRow: rgbaBytesPerRow,
-            space: CGColorSpaceCreateDeviceRGB(),
+            space: colorSpace,
             bitmapInfo: bitmapInfo
         ) else { return nil }
         rgbContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
@@ -461,9 +469,12 @@ enum SplatSoftwareDepthSeedBuilder {
         let scaleY = Float(height) / Float(source.h)
         let fx = source.flX * scaleX
         let fy = source.flY * scaleY
-        let cx = source.cx * scaleX
-        let cy = source.cy * scaleY
-        guard fx.isFinite, fy.isFinite, cx.isFinite, cy.isFinite, fx > 0, fy > 0 else { return nil }
+        guard let cx = scaledPrincipalPointCoordinate(source.cx, scale: scaleX),
+              let cy = scaledPrincipalPointCoordinate(source.cy, scale: scaleY),
+              fx.isFinite,
+              fy.isFinite,
+              fx > 0,
+              fy > 0 else { return nil }
 
         return Frame(
             gray: GrayRaster(pixels: grayBytes, width: width, height: height),
