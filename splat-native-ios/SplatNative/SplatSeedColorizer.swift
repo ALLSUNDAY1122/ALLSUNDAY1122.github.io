@@ -398,7 +398,7 @@ enum SplatSeedColorizer {
         guard !pixelOverflow, !byteOverflow, !rowOverflow, byteCount > 0 else { return nil }
 
         var bytes = [UInt8](repeating: 0, count: byteCount)
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo.byteOrder32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue
         guard let context = CGContext(
             data: &bytes,
