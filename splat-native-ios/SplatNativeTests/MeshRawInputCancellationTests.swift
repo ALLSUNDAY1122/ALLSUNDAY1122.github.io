@@ -24,7 +24,8 @@ final class MeshRawInputCancellationTests: XCTestCase {
         }
         task.cancel()
 
-        XCTAssertEqual(await task.value, 0)
+        let cancelledCount = await task.value
+        XCTAssertEqual(cancelledCount, 0)
     }
 
     private func writePNG(to url: URL) throws {
