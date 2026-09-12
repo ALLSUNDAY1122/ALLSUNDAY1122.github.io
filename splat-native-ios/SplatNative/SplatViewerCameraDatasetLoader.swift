@@ -46,7 +46,7 @@ enum SplatViewerCameraDatasetLoader {
 
         let frameCount = dataset.frames.count
         guard frameCount > maximumReturnedPositions else {
-            return dataset.frames.indices.compactMap(position(at:))
+            return dataset.frames.indices.compactMap { position(at: $0) }
         }
 
         // Viewer orientation only needs the capture trajectory envelope. Keep a deterministic,
