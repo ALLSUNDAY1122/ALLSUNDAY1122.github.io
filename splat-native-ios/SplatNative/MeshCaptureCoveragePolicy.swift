@@ -6,14 +6,20 @@ enum MeshCaptureCoveragePolicy {
     /// small scans from accepting orientation-only sweeps, while larger targets scale the required
     /// parallax with the path-length expectation used by the capture quality advisor.
     static func translationThreshold(pathThresholdMeters: Float) -> Float {
-        max(0.015, pathThresholdMeters * 0.02)
+        let safePathThreshold = pathThresholdMeters.isFinite && pathThresholdMeters > 0
+            ? pathThresholdMeters
+            : 0
+        return max(0.015, safePathThreshold * 0.02)
     }
 
     /// Require real vertical camera displacement before treating pitch changes as useful
     /// top/bottom coverage. This prevents a user from satisfying the elevation gate by simply
     /// tilting the phone from one position, which adds little reconstruction parallax.
     static func verticalSpanThreshold(pathThresholdMeters: Float) -> Float {
-        max(0.10, pathThresholdMeters * 0.12)
+        let safePathThreshold = pathThresholdMeters.isFinite && pathThresholdMeters > 0
+            ? pathThresholdMeters
+            : 0
+        return max(0.10, safePathThreshold * 0.12)
     }
 
     /// Reject discontinuous camera-coordinate jumps from coverage accounting. ARKit can return to
