@@ -159,6 +159,24 @@ final class MeshTrimEditorSafetyTests: XCTestCase {
         XCTAssertTrue(leftovers.isEmpty)
     }
 
+    func testCompactionDropsPointAndLinePrimitivesWithStalePositionIndices() throws {
+        let url = try writeOBJ([
+            "v 0 0 0", "v 1 0 0", "v 0 1 0", "v 100 100 100",
+            "p 4",
+            "l 1 4",
+            "f 1 2 3"
+        ])
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+
+        let result = try MeshTrimEngine.trim(url: url, x: 0...0.1, y: 0...0.1, z: 0...1)
+        let output = try String(contentsOf: result.url, encoding: .utf8)
+        XCTAssertEqual(result.usedVertexCount, 3)
+        XCTAssertTrue(output.contains("f 1 2 3\n"))
+        XCTAssertFalse(output.split(whereSeparator: \.isNewline).contains { $0.hasPrefix("p ") })
+        XCTAssertFalse(output.split(whereSeparator: \.isNewline).contains { $0.hasPrefix("l ") })
+        XCTAssertFalse(output.contains("v 100 100 100\n"))
+    }
+
     private func writeOBJ(_ lines: [String]) throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshTrimEditorSafety-\(UUID().uuidString)", isDirectory: true)
