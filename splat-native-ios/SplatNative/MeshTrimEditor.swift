@@ -14,6 +14,11 @@ enum MeshTrimEngine {
     private static let maximumOBJLineBytes = 8 * 1024 * 1024
 
     static func trim(url: URL, x: ClosedRange<Double>, y: ClosedRange<Double>, z: ClosedRange<Double>) throws -> MeshTrimResult {
+        let sourceValues = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
+        guard sourceValues.isRegularFile == true, sourceValues.isSymbolicLink != true else {
+            throw error("トリミング元Meshが安全な通常ファイルではありません")
+        }
+
         var vertices: [SIMD3<Float>] = []
         var hasMaterialLibrary = false
 
