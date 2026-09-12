@@ -97,6 +97,10 @@ enum SplatMeasurementFormatter {
     }
 }
 
+enum SplatViewerEditStoreError: Error, Equatable {
+    case unsafeWriteTarget
+}
+
 /// Durable viewer-edit sidecar. The backup is intentionally separate from the scan manifest:
 /// viewer edits can be recovered without making the reconstructed asset itself untrusted.
 struct SplatViewerEditStore {
@@ -123,13 +127,23 @@ struct SplatViewerEditStore {
               let decoded = try? decoder.decode(SplatEditSettings.self, from: data) else {
             return nil
         }
-        try? data.write(to: primary, options: .atomic)
+        // A valid backup remains useful even when the primary node is unsafe. Do not attempt the
+        // self-heal through an existing symlink/special node: normal viewer loading must never write
+        // outside the scan project merely because the primary sidecar was replaced by an alias.
+        if writeDestinationIsSafeOrMissing(at: primary, fileManager: fileManager) {
+            try? data.write(to: primary, options: .atomic)
+        }
         return (decoded.normalized(), true)
     }
 
     static func save(_ settings: SplatEditSettings, sourceURL: URL, fileManager: FileManager = .default) throws {
         let primary = primaryURL(for: sourceURL)
         let backup = backupURL(for: sourceURL)
+        guard writeDestinationIsSafeOrMissing(at: primary, fileManager: fileManager),
+              writeDestinationIsSafeOrMissing(at: backup, fileManager: fileManager) else {
+            throw SplatViewerEditStoreError.unsafeWriteTarget
+        }
+
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let decoder = JSONDecoder()
@@ -155,6 +169,14 @@ struct SplatViewerEditStore {
         if !preservedPreviousGeneration && !existingBackupIsValid {
             try data.write(to: backup, options: .atomic)
         }
+    }
+
+    private static func writeDestinationIsSafeOrMissing(at url: URL, fileManager: FileManager) -> Bool {
+        guard fileManager.fileExists(atPath: url.path) else { return true }
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]) else {
+            return false
+        }
+        return values.isRegularFile == true && values.isSymbolicLink != true
     }
 
     private static func readSettingsDataIfSafe(at url: URL, fileManager: FileManager) -> Data? {
