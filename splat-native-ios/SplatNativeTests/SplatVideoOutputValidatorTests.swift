@@ -54,18 +54,33 @@ final class SplatVideoOutputValidatorTests: XCTestCase {
         }
     }
 
-    func testMidpointProbeIsBoundedAndCenteredForLongVideos() {
+    func testStandardExportDurationsProbeQuarterMidAndThreeQuarterWindows() {
+        XCTAssertEqual(
+            SplatVideoOutputValidator.boundedProbeWindows(duration: 4),
+            [
+                .init(start: 0.75, duration: 0.5),
+                .init(start: 1.75, duration: 0.5),
+                .init(start: 2.75, duration: 0.5),
+            ]
+        )
         XCTAssertEqual(
             SplatVideoOutputValidator.boundedProbeWindows(duration: 10),
-            [.init(start: 4.75, duration: 0.5)]
+            [
+                .init(start: 2.25, duration: 0.5),
+                .init(start: 4.75, duration: 0.5),
+                .init(start: 7.25, duration: 0.5),
+            ]
         )
+    }
+
+    func testShortNonstandardVideoKeepsSingleCenteredInteriorProbe() {
         XCTAssertEqual(
             SplatVideoOutputValidator.boundedProbeWindows(duration: 2),
             [.init(start: 0.75, duration: 0.5)]
         )
     }
 
-    func testMidpointProbeSkipsShortVideosToAvoidEdgeOverlap() {
+    func testInteriorProbeSkipsShortVideosToAvoidEdgeOverlap() {
         XCTAssertTrue(SplatVideoOutputValidator.boundedProbeWindows(duration: 1.5).isEmpty)
         XCTAssertTrue(SplatVideoOutputValidator.boundedProbeWindows(duration: 0.5).isEmpty)
         XCTAssertTrue(SplatVideoOutputValidator.boundedProbeWindows(duration: .nan).isEmpty)
