@@ -41,9 +41,16 @@ enum ScanLabPublishPackageBuilder {
     private static let directoryPrefix = "scanlab-publish-"
     private static let ownershipMarker = ".scanlab-publish-package"
     private static let maximumManifestBytes: Int64 = 64 * 1024
+    private static let stalePackageAge: TimeInterval = 24 * 60 * 60
 
     static func build(from sourceURL: URL, maximumBytes: Int = 128 * 1024 * 1024, fileManager: FileManager = .default) throws -> ScanLabPublishPackage {
         guard maximumBytes > 0, sourceURL.isFileURL else { throw ScanLabPublishPackageError.invalidSource }
+        cleanupStalePackages(
+            in: fileManager.temporaryDirectory,
+            olderThan: stalePackageAge,
+            now: Date(),
+            fileManager: fileManager
+        )
         let attributes: [FileAttributeKey: Any]
         do { attributes = try fileManager.attributesOfItem(atPath: sourceURL.path) } catch { throw ScanLabPublishPackageError.invalidSource }
         guard (attributes[.type] as? FileAttributeType) == .typeRegular,
@@ -93,6 +100,31 @@ enum ScanLabPublishPackageBuilder {
     static func cleanup(_ package: ScanLabPublishPackage, fileManager: FileManager = .default) {
         guard isOwnedPackageDirectory(package.directoryURL, fileManager: fileManager) else { return }
         try? fileManager.removeItem(at: package.directoryURL)
+    }
+
+    /// Removes only package directories created by this helper and carrying its ownership marker.
+    /// A killed app cannot run the normal upload/share completion cleanup, so a later publish prunes
+    /// abandoned packages after a day without risking unrelated temporary folders or active work.
+    static func cleanupStalePackages(
+        in rootDirectory: URL,
+        olderThan age: TimeInterval,
+        now: Date = Date(),
+        fileManager: FileManager = .default
+    ) {
+        guard age.isFinite, age >= 0,
+              let entries = try? fileManager.contentsOfDirectory(
+                at: rootDirectory,
+                includingPropertiesForKeys: [.contentModificationDateKey, .isDirectoryKey, .isSymbolicLinkKey],
+                options: [.skipsHiddenFiles]
+              ) else { return }
+        let cutoff = now.addingTimeInterval(-age)
+        for entry in entries where entry.lastPathComponent.hasPrefix(directoryPrefix) {
+            guard isOwnedPackageDirectory(entry, fileManager: fileManager),
+                  let values = try? entry.resourceValues(forKeys: [.contentModificationDateKey]),
+                  let modified = values.contentModificationDate,
+                  modified <= cutoff else { continue }
+            try? fileManager.removeItem(at: entry)
+        }
     }
 
     private static func verifyWrittenCopy(
