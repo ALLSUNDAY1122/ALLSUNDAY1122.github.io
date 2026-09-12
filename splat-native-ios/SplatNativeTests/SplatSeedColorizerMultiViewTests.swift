@@ -81,6 +81,47 @@ final class SplatSeedColorizerMultiViewTests: XCTestCase {
         XCTAssertLessThan(color.red, 40)
     }
 
+    func testEqualScoreFramesKeepStableFirstThreeConsensusAfterTopKOptimization() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("splat-seed-topk-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let colors: [UIColor] = [
+            UIColor(red: 0.08, green: 0.65, blue: 0.12, alpha: 1),
+            UIColor(red: 0.10, green: 0.68, blue: 0.14, alpha: 1),
+            UIColor(red: 0.12, green: 0.70, blue: 0.16, alpha: 1),
+            .red,
+            .red,
+        ]
+        let names = (0..<colors.count).map { "view-\($0).png" }
+        for (name, color) in zip(names, colors) {
+            try writeSolidImage(color: color, name: name, root: root)
+        }
+        let frames = names.map { name in
+            SplatSeedFrame(
+                filePath: name,
+                transformMatrix: identityRows,
+                flX: 10,
+                flY: 10,
+                cx: 10,
+                cy: 10,
+                w: 20,
+                h: 20
+            )
+        }
+
+        let result = try XCTUnwrap(SplatSeedColorizer.colorize(
+            points: [SIMD3<Float>(0, 0, -1)],
+            frames: frames,
+            projectURL: root
+        ).first)
+
+        XCTAssertLessThan(result.red, 50)
+        XCTAssertGreaterThan(result.green, 150)
+        XCTAssertLessThan(result.blue, 60)
+    }
+
     func testProjectionPreparationInvertsEachUsableFrameOncePerColorizationPass() {
         let frames = (0..<100).map { index in
             SplatSeedFrame(
