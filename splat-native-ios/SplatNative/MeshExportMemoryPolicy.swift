@@ -111,12 +111,25 @@ enum MeshExportMemoryPolicy {
                 )
             }
         } else {
-            // Non-OBJ inputs may first be decoded by ModelIO and bridged through OBJ before
-            // the final exporter parses them again, so reserve more than the direct OBJ path.
-            estimatedPeakBytes = saturatingAdd(
-                saturatingMultiply(sourceBytes, by: 10),
-                160 * mib
-            )
+            switch format {
+            case .ply, .las:
+                // Binary/compressed inputs first expand through a text OBJ bridge, then that bridge
+                // is mapped and expanded again into vertex/UV/triangle arrays. A multiplier based on
+                // the compact source alone must therefore cover both the bridge expansion ratio and
+                // point-cloud parser structures; align this path with the conservative 24x disk
+                // admission rather than the lighter scene-conversion estimate.
+                estimatedPeakBytes = saturatingAdd(
+                    saturatingMultiply(sourceBytes, by: 24),
+                    160 * mib
+                )
+            case .fbx, .obj, .glb, .usdz, .stl:
+                // Other non-OBJ conversions may bridge through OBJ, but do not subsequently expand
+                // every triangle corner into the point-cloud writer's Swift geometry structures.
+                estimatedPeakBytes = saturatingAdd(
+                    saturatingMultiply(sourceBytes, by: 10),
+                    160 * mib
+                )
+            }
         }
 
         let proportionalBudget = physicalMemoryBytes / physicalMemoryDivisor
