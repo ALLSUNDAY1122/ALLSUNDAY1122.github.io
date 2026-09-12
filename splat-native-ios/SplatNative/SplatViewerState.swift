@@ -59,8 +59,14 @@ struct SplatEditSettings: Codable, Equatable, Sendable {
 
     func normalized() -> SplatEditSettings {
         var value = self
-        value.exposureEV = Self.clamp(value.exposureEV, -2...2)
-        value.contrast = Self.clamp(value.contrast, 0.5...1.5)
+        value.exposureEV = value.exposureEV.isFinite ? Self.clamp(value.exposureEV, -2...2) : 0
+        value.contrast = value.contrast.isFinite ? Self.clamp(value.contrast, 0.5...1.5) : 1
+        if !value.cropXMin.isFinite { value.cropXMin = 0 }
+        if !value.cropXMax.isFinite { value.cropXMax = 1 }
+        if !value.cropYMin.isFinite { value.cropYMin = 0 }
+        if !value.cropYMax.isFinite { value.cropYMax = 1 }
+        if !value.cropZMin.isFinite { value.cropZMin = 0 }
+        if !value.cropZMax.isFinite { value.cropZMax = 1 }
         Self.normalizeRange(low: &value.cropXMin, high: &value.cropXMax)
         Self.normalizeRange(low: &value.cropYMin, high: &value.cropYMax)
         Self.normalizeRange(low: &value.cropZMin, high: &value.cropZMax)
@@ -84,7 +90,7 @@ struct SplatEditSettings: Codable, Equatable, Sendable {
 
 enum SplatMeasurementFormatter {
     static func string(meters: Float) -> String {
-        let value = max(0, meters)
+        let value = meters.isFinite ? max(0, meters) : 0
         if value < 0.01 { return String(format: "%.1f mm", value * 1_000) }
         if value < 1 { return String(format: "%.1f cm", value * 100) }
         return String(format: "%.2f m", value)
@@ -166,19 +172,25 @@ struct SplatSceneNormalization: Equatable, Sendable {
     let scale: Float
 
     init(cameraPositions: [SIMD3<Float>]) {
-        guard !cameraPositions.isEmpty else { translation = .zero; scale = 1; return }
-        let total = cameraPositions.reduce(SIMD3<Float>.zero, +)
-        let mean = total / Float(cameraPositions.count)
+        let finitePositions = cameraPositions.filter { position in
+            position.x.isFinite && position.y.isFinite && position.z.isFinite
+        }
+        guard !finitePositions.isEmpty else { translation = .zero; scale = 1; return }
+        let total = finitePositions.reduce(SIMD3<Float>.zero, +)
+        guard total.x.isFinite, total.y.isFinite, total.z.isFinite else {
+            translation = .zero; scale = 1; return
+        }
+        let mean = total / Float(finitePositions.count)
         var maxAbs: Float = 0
-        for position in cameraPositions {
+        for position in finitePositions {
             let centered = position - mean
             maxAbs = max(maxAbs, abs(centered.x), abs(centered.y), abs(centered.z))
         }
         translation = mean
-        scale = maxAbs > 0 ? 1 / maxAbs : 1
+        scale = maxAbs.isFinite && maxAbs > 0 ? 1 / maxAbs : 1
     }
 
-    var metersPerSceneUnit: Float { scale > 0.000001 ? 1 / scale : 1 }
+    var metersPerSceneUnit: Float { scale.isFinite && scale > 0.000001 ? 1 / scale : 1 }
     func normalized(_ worldPosition: SIMD3<Float>) -> SIMD3<Float> { (worldPosition - translation) * scale }
 }
 
@@ -311,7 +323,9 @@ final class SplatViewerState: ObservableObject {
         let positions = dataset.frames.compactMap { frame -> SIMD3<Float>? in
             let matrix = frame.transformMatrix
             guard matrix.count >= 3, matrix[0].count >= 4, matrix[1].count >= 4, matrix[2].count >= 4 else { return nil }
-            return SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])
+            let position = SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])
+            guard position.x.isFinite, position.y.isFinite, position.z.isFinite else { return nil }
+            return position
         }
         return SplatSceneNormalization(cameraPositions: positions).metersPerSceneUnit
     }
