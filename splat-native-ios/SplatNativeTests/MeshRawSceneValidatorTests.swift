@@ -48,6 +48,33 @@ final class MeshRawSceneValidatorTests: XCTestCase {
         XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
     }
 
+    func testRejectsTriangleWhoseIndexExceedsVertexPayload() {
+        let scene = SCNScene()
+        let vertices = SCNGeometrySource(vertices: [
+            SCNVector3(0, 0, 0),
+            SCNVector3(1, 0, 0),
+            SCNVector3(0, 1, 0),
+        ])
+        let invalid = SCNGeometryElement(indices: [UInt16(0), 1, 7], primitiveType: .triangles)
+        scene.rootNode.addChildNode(SCNNode(geometry: SCNGeometry(sources: [vertices], elements: [invalid])))
+
+        XCTAssertEqual(invalid.primitiveCount, 1)
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
+    func testAcceptsValidIndexedTriangleSurface() {
+        let scene = SCNScene()
+        let vertices = SCNGeometrySource(vertices: [
+            SCNVector3(0, 0, 0),
+            SCNVector3(1, 0, 0),
+            SCNVector3(0, 1, 0),
+        ])
+        let triangle = SCNGeometryElement(indices: [UInt16(0), 1, 2], primitiveType: .triangles)
+        scene.rootNode.addChildNode(SCNNode(geometry: SCNGeometry(sources: [vertices], elements: [triangle])))
+
+        XCTAssertTrue(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
     func testRejectsPointCloudAsFinishedSurfaceMesh() {
         let scene = SCNScene()
         let vertices = SCNGeometrySource(vertices: [
