@@ -12,13 +12,9 @@ final class SplatPreviousResultIntegrityRecoveryTests: XCTestCase {
         let trustedBytes = Data(repeating: 0x31, count: 64)
         let result = try commitResult(trustedBytes, in: projectURL, store: store)
 
-        // Seal the trusted commit, then preserve the exact previous bytes as reprocess protection.
         XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: result), result)
         try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: result)
 
-        // Atomic replacement keeps the byte count identical while changing the content hash. This
-        // used to bypass structural recovery and then fail the strong verifier without using the
-        // valid protected backup.
         try Data(repeating: 0x7C, count: trustedBytes.count).write(to: result, options: .atomic)
         XCTAssertNotEqual(try Data(contentsOf: result), trustedBytes)
 
@@ -89,6 +85,31 @@ final class SplatPreviousResultIntegrityRecoveryTests: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: externalSnapshot.path))
     }
 
+    func testOversizedSnapshotCannotAuthorizeIntegrityRecovery() throws {
+        let root = try makeRoot("oversized-snapshot-rejected")
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Reject oversized recovery snapshot")
+        try makeProcessableRaw(in: projectURL, store: store)
+
+        let trustedBytes = Data(repeating: 0x44, count: 64)
+        let result = try commitResult(trustedBytes, in: projectURL, store: store)
+        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: result), result)
+        try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: result)
+
+        let snapshotURL = projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName)
+        let oversized = Data(repeating: 0x41, count: 64 * 1024 + 1)
+        try oversized.write(to: snapshotURL, options: .atomic)
+
+        let corrupted = Data(repeating: 0x6F, count: trustedBytes.count)
+        try corrupted.write(to: result, options: .atomic)
+
+        XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: result))
+        XCTAssertEqual(try Data(contentsOf: result), corrupted)
+        XCTAssertEqual((try FileManager.default.attributesOfItem(atPath: snapshotURL.path)[.size] as? NSNumber)?.intValue, oversized.count)
+    }
+
     func testCorruptedNewerCommitNeverRollsBackToOlderTrustedBackup() throws {
         let root = try makeRoot("newer-commit-no-rollback")
         defer { try? FileManager.default.removeItem(at: root) }
@@ -106,7 +127,6 @@ final class SplatPreviousResultIntegrityRecoveryTests: XCTestCase {
         let newBytes = Data(repeating: 0x55, count: 96)
         let newResult = try commitResult(newBytes, in: projectURL, store: store)
 
-        // Keep the old protected backup alive and corrupt the newer commit without changing size.
         try Data(repeating: 0x6A, count: newBytes.count).write(to: newResult, options: .atomic)
         XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: newResult))
         XCTAssertEqual(try Data(contentsOf: newResult), Data(repeating: 0x6A, count: newBytes.count))
