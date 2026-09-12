@@ -7,10 +7,26 @@ enum SplatViewerCameraDatasetLoader {
     }
 
     private struct Frame: Decodable {
-        let transformMatrix: [[Float]]
+        let position: SIMD3<Float>?
 
         enum CodingKeys: String, CodingKey {
             case transformMatrix = "transform_matrix"
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let matrix = try container.decode([[Float]].self, forKey: .transformMatrix)
+            guard matrix.count >= 3,
+                  matrix[0].count >= 4,
+                  matrix[1].count >= 4,
+                  matrix[2].count >= 4 else {
+                position = nil
+                return
+            }
+            let candidate = SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])
+            position = candidate.x.isFinite && candidate.y.isFinite && candidate.z.isFinite
+                ? candidate
+                : nil
         }
     }
 
@@ -33,24 +49,13 @@ enum SplatViewerCameraDatasetLoader {
             return []
         }
 
-        func position(at index: Int) -> SIMD3<Float>? {
-            let matrix = dataset.frames[index].transformMatrix
-            guard matrix.count >= 3,
-                  matrix[0].count >= 4,
-                  matrix[1].count >= 4,
-                  matrix[2].count >= 4 else { return nil }
-            let position = SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])
-            guard position.x.isFinite, position.y.isFinite, position.z.isFinite else { return nil }
-            return position
-        }
-
         var validCount = 0
-        for index in dataset.frames.indices where position(at: index) != nil {
+        for frame in dataset.frames where frame.position != nil {
             validCount += 1
         }
         guard validCount > 0 else { return [] }
         guard validCount > maximumReturnedPositions else {
-            return dataset.frames.indices.compactMap { position(at: $0) }
+            return dataset.frames.compactMap(\.position)
         }
 
         // Viewer orientation only needs the capture trajectory envelope. Sample by valid-camera
@@ -64,8 +69,8 @@ enum SplatViewerCameraDatasetLoader {
         var nextSlot = 0
         var validOrdinal = 0
 
-        for index in dataset.frames.indices {
-            guard let value = position(at: index) else { continue }
+        for frame in dataset.frames {
+            guard let value = frame.position else { continue }
             while nextSlot < maximumReturnedPositions,
                   evenlySpacedIndex(slot: nextSlot, lastIndex: lastValidOrdinal, denominator: denominator) == validOrdinal {
                 positions.append(value)
