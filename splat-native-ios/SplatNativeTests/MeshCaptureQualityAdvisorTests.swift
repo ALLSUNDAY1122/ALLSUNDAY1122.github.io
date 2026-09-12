@@ -55,4 +55,21 @@ final class MeshCaptureQualityAdvisorTests: XCTestCase {
         XCTAssertFalse(MeshCaptureCoveragePolicy.isFiniteCameraPosition(SIMD3<Float>(0, .infinity, 0)))
         XCTAssertFalse(MeshCaptureCoveragePolicy.isFiniteCameraPosition(SIMD3<Float>(0, 0, -.infinity)))
     }
+
+    func testForwardNormalizationSurvivesHugeFiniteVector() throws {
+        let direction = try XCTUnwrap(MeshCaptureCoveragePolicy.normalizedForwardDirection(
+            SIMD3<Float>(Float.greatestFiniteMagnitude, Float.greatestFiniteMagnitude, 0)
+        ))
+        XCTAssertTrue(direction.x.isFinite)
+        XCTAssertTrue(direction.y.isFinite)
+        XCTAssertTrue(direction.z.isFinite)
+        XCTAssertEqual(simd_length(direction), 1, accuracy: 0.0001)
+        XCTAssertEqual(direction.x, direction.y, accuracy: 0.0001)
+    }
+
+    func testForwardNormalizationRejectsDegenerateAndNonfiniteVectors() {
+        XCTAssertNil(MeshCaptureCoveragePolicy.normalizedForwardDirection(.zero))
+        XCTAssertNil(MeshCaptureCoveragePolicy.normalizedForwardDirection(SIMD3<Float>(.nan, 0, -1)))
+        XCTAssertNil(MeshCaptureCoveragePolicy.normalizedForwardDirection(SIMD3<Float>(0, .infinity, -1)))
+    }
 }
