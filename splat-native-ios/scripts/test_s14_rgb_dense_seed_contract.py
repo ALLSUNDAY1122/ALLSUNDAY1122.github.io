@@ -69,7 +69,7 @@ assert SOFTWARE.index(backproject_token, SOFTWARE.index("private static func pat
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
     'metadataFileName = "s14-seed-recipe.json"',
-    "static let recipeVersion = 6",
+    "static let recipeVersion = 7",
     "case planeSweep",
     "SplatSoftwareDepthSeedBuilder.makeSeedPoints",
     "softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount",
@@ -80,6 +80,17 @@ for token in (
     "requiresFreshTrainer: true",
 ):
     assert token in SEED, f"missing S14 seed-routing contract: {token}"
+
+# Hardware depth is sampled on its own raster but camera intrinsics describe the capture image.
+# Preserve center-to-center resampling: edge scaling produces a half-pixel bias that can expand to
+# several camera pixels when LiDAR depth is much smaller than RGB.
+for token in (
+    "imagePixelCenterCoordinate(",
+    "(Double(sampleIndex) + 0.5) * Double(destinationExtent) / Double(sourceExtent) - 0.5",
+    "sampleIndex: x",
+    "sampleIndex: y",
+):
+    assert token in SEED, f"missing hardware-depth pixel-center mapping: {token}"
 
 # The S14 software seed intentionally inherits the already-shipped MeshPlaneSweepMVS camera/image
 # convention. Guard this explicitly: an isolated vertical flip or optical-axis rewrite in only one
