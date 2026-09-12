@@ -155,8 +155,12 @@ enum SplatSeedColorizer {
         maxCount: Int
     ) -> [SplatSeedAssignment] {
         guard maxCount > 0 else { return [] }
-        var candidates: [SplatSeedAssignment] = []
-        candidates.reserveCapacity(projections.count)
+
+        // We only ever consume the best three observations, so retaining and sorting every visible
+        // frame is wasted work. Keep a tiny sorted top-K list while scanning projections. This keeps
+        // temporary storage O(K) instead of O(frameCount) and avoids an O(F log F) sort per point.
+        var best: [SplatSeedAssignment] = []
+        best.reserveCapacity(maxCount)
 
         for projection in projections {
             let frame = projection.frame
@@ -170,25 +174,38 @@ enum SplatSeedColorizer {
             let offAxis = sqrt(nx * nx + ny * ny)
             let score = projected.z * (1 + 0.35 * offAxis)
             guard score.isFinite else { continue }
-            candidates.append(SplatSeedAssignment(
+            let candidate = SplatSeedAssignment(
                 frameIndex: projection.frameIndex,
                 x: projected.x,
                 y: projected.y,
                 score: score
-            ))
-        }
+            )
 
-        candidates.sort {
-            if abs($0.score - $1.score) < 0.000_001 {
-                return $0.frameIndex < $1.frameIndex
+            let insertionIndex = best.firstIndex { existing in
+                assignmentPrecedes(candidate, existing)
+            } ?? best.count
+            if insertionIndex < maxCount {
+                best.insert(candidate, at: insertionIndex)
+                if best.count > maxCount { best.removeLast() }
+            } else if best.count < maxCount {
+                best.append(candidate)
             }
-            return $0.score < $1.score
         }
-        guard let bestScore = candidates.first?.score else { return [] }
 
+        guard let bestScore = best.first?.score else { return [] }
         // Avoid blending a very distant/grazing observation merely to reach three samples.
         let scoreCeiling = max(bestScore * 1.8, bestScore + 0.05)
-        return Array(candidates.lazy.filter { $0.score <= scoreCeiling }.prefix(maxCount))
+        return best.filter { $0.score <= scoreCeiling }
+    }
+
+    private static func assignmentPrecedes(
+        _ lhs: SplatSeedAssignment,
+        _ rhs: SplatSeedAssignment
+    ) -> Bool {
+        if abs(lhs.score - rhs.score) < 0.000_001 {
+            return lhs.frameIndex < rhs.frameIndex
+        }
+        return lhs.score < rhs.score
     }
 
     private static func robustColor(_ samples: [SplatSeedSample]) -> SplatSeedSample {
