@@ -247,6 +247,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         targetOffset -= up * Float(delta.y) * worldPerPixel
         gesture.setTranslation(.zero, in: view)
     }
+
     @objc func pinch(_ gesture: UIPinchGestureRecognizer) {
         guard !stateMeasurementEnabled else { return }
         distance = max(baseDistance * 0.12, min(baseDistance * 7.0, distance / Float(gesture.scale)))
@@ -288,10 +289,6 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         guard let renderer, renderer.isReadyToRender,
               drawableSize.width > 0, drawableSize.height > 0 else { return }
 
-        // Reserve an in-flight GPU slot before asking CAMetalLayer for a drawable. currentDrawable
-        // may wait when the drawable pool is exhausted; acquiring the non-blocking GPU budget first
-        // keeps a saturated viewer on the frame-drop path instead of letting the MainActor enter
-        // drawable acquisition while two frames are already outstanding.
         guard semaphore.wait(timeout: .now()) == .success else { return }
         guard let drawable = view.currentDrawable,
               let commandBuffer = commandQueue.makeCommandBuffer() else {
@@ -505,49 +502,18 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         return (yaw, pitch)
     }
 
-    private static func robustFraming(for points: [SplatPoint]) -> (center: SIMD3<Float>, distance: Float) {
-        let strideSize = max(1, points.count / 6_000)
-        var xs: [Float] = []
-        var ys: [Float] = []
-        var zs: [Float] = []
-        xs.reserveCapacity(min(points.count, 6_000))
-        ys.reserveCapacity(min(points.count, 6_000))
-        zs.reserveCapacity(min(points.count, 6_000))
-
-        for index in stride(from: 0, to: points.count, by: strideSize) {
-            let p = points[index].position
-            guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
-            xs.append(p.x)
-            ys.append(p.y)
-            zs.append(p.z)
-        }
-
-        guard !xs.isEmpty else { return (.zero, 2.5) }
-        xs.sort(); ys.sort(); zs.sort()
-        let middle = xs.count / 2
-        let center = SIMD3<Float>(xs[middle], ys[middle], zs[middle])
-
-        var radii: [Float] = []
-        radii.reserveCapacity(xs.count)
-        for index in stride(from: 0, to: points.count, by: strideSize) {
-            let p = points[index].position
-            guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
-            radii.append(simd_distance(p, center))
-        }
-        radii.sort()
-        guard !radii.isEmpty else { return (center, 2.5) }
-        let percentileIndex = min(radii.count - 1, Int(Float(radii.count - 1) * 0.90))
-        let radius = max(0.10, radii[percentileIndex])
-        let framingDistance = max(0.35, min(18.0, radius * 2.8))
-        return (center, framingDistance)
-    }
-
     private static func robustCropBounds(for points: [SplatPoint]) -> CropBounds {
-        let strideSize = max(1, points.count / 8_000)
+        let sampleIndices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: points.count,
+            targetSampleCount: 8_000
+        )
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
-        for index in stride(from: 0, to: points.count, by: strideSize) {
+        xs.reserveCapacity(sampleIndices.count)
+        ys.reserveCapacity(sampleIndices.count)
+        zs.reserveCapacity(sampleIndices.count)
+        for index in sampleIndices {
             let p = points[index].position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
             xs.append(p.x); ys.append(p.y); zs.append(p.z)
@@ -600,9 +566,6 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         var result: [SplatPoint] = []
         result.reserveCapacity(points.count)
         for (index, point) in points.enumerated() {
-            // Rapid slider/crop gestures supersede older full-scene rebuilds. Check cancellation
-            // in bounded batches so obsolete CPU work releases its large temporary array quickly
-            // instead of competing with the newest edit for memory, thermals and responsiveness.
             if index & 0x3FF == 0 {
                 try Task.checkCancellation()
             }
@@ -648,11 +611,14 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
     }
 
     nonisolated private static func sampledPositions(from points: [SplatPoint], limit: Int) -> [SIMD3<Float>] {
-        guard !points.isEmpty else { return [] }
-        let step = max(1, points.count / max(1, limit))
+        guard !points.isEmpty, limit > 0 else { return [] }
+        let indices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: points.count,
+            targetSampleCount: limit
+        )
         var result: [SIMD3<Float>] = []
-        result.reserveCapacity(min(points.count, limit + 1))
-        for index in stride(from: 0, to: points.count, by: step) {
+        result.reserveCapacity(indices.count)
+        for index in indices {
             let p = points[index].position
             if p.x.isFinite, p.y.isFinite, p.z.isFinite { result.append(p) }
         }
