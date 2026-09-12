@@ -48,4 +48,20 @@ enum MeshCaptureCoveragePolicy {
     static func isFiniteCameraPosition(_ position: SIMD3<Float>) -> Bool {
         position.x.isFinite && position.y.isFinite && position.z.isFinite
     }
+
+    /// Normalize a camera forward vector without first squaring its original magnitude. ARKit
+    /// normally supplies a unit vector, but a corrupt/interrupted transform with individually finite
+    /// near-Float.max components makes `simd_length_squared` overflow to Infinity and can turn a
+    /// direct `simd_normalize` into NaN. Scale first so malformed input fails soft instead of
+    /// poisoning yaw/elevation coverage and quality guidance.
+    static func normalizedForwardDirection(_ vector: SIMD3<Float>) -> SIMD3<Float>? {
+        guard isFiniteCameraPosition(vector) else { return nil }
+        let scale = max(abs(vector.x), max(abs(vector.y), abs(vector.z)))
+        guard scale.isFinite, scale > Float.leastNonzeroMagnitude else { return nil }
+        let scaled = vector / scale
+        let lengthSquared = simd_length_squared(scaled)
+        guard lengthSquared.isFinite, lengthSquared > 1e-12 else { return nil }
+        let normalized = scaled / sqrt(lengthSquared)
+        return isFiniteCameraPosition(normalized) ? normalized : nil
+    }
 }
