@@ -172,6 +172,11 @@ struct SplatViewerEditStore {
     }
 
     private static func writeDestinationIsSafeOrMissing(at url: URL, fileManager: FileManager) -> Bool {
+        // `fileExists` follows symlinks and returns false for a dangling alias. Probe the node type
+        // first so a broken external link cannot masquerade as a safe missing destination.
+        if (try? fileManager.destinationOfSymbolicLink(atPath: url.path)) != nil {
+            return false
+        }
         guard fileManager.fileExists(atPath: url.path) else { return true }
         guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]) else {
             return false
