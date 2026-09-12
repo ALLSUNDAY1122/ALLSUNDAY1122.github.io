@@ -64,6 +64,27 @@ final class MeshTrimEditorSafetyTests: XCTestCase {
         XCTAssertTrue(output.contains("f 1 2 3\n"))
     }
 
+    func testChunkedReaderRejectsOverLimitLineBeforeDecoding() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("MeshTrimEditorSafety-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let url = root.appendingPathComponent("mesh.obj")
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        var data = Data("v 0 0 0\nv 1 0 0\n".utf8)
+        data.append(contentsOf: "#".utf8)
+        data.append(Data(repeating: 0x78, count: 8 * 1024 * 1024 + 1))
+        data.append(contentsOf: "\nv 0 1 0\nf 1 2 3\n".utf8)
+        try data.write(to: url)
+
+        XCTAssertThrowsError(try MeshTrimEngine.trim(url: url, x: 0...1, y: 0...1, z: 0...1)) { error in
+            XCTAssertTrue(error.localizedDescription.contains("1行が大きすぎます"))
+        }
+        let leftovers = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)
+            .filter { $0.lastPathComponent.contains("trimmed-") }
+        XCTAssertTrue(leftovers.isEmpty)
+    }
+
     func testChunkedReaderAcceptsCRLFWithoutCarriageReturnLeakage() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshTrimEditorSafety-\(UUID().uuidString)", isDirectory: true)
