@@ -251,7 +251,7 @@ final class MeshProjectStore {
 
     func restoreFromTrash(id: String) throws {
         try ensureDirectories()
-        let source = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+        let source = try validatedTrashProjectURL(id: id)
         guard fileManager.fileExists(atPath: source.path) else { throw MeshProjectStoreError.archiveMissing }
 
         var restoredID = id
@@ -269,9 +269,22 @@ final class MeshProjectStore {
     }
 
     func permanentlyDeleteFromTrash(id: String) throws {
-        let target = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+        let target = try validatedTrashProjectURL(id: id)
         guard fileManager.fileExists(atPath: target.path) else { throw MeshProjectStoreError.archiveMissing }
         try fileManager.removeItem(at: target)
+    }
+
+    private func validatedTrashProjectURL(id: String) throws -> URL {
+        guard !id.isEmpty, id != ".", id != "..",
+              !id.contains("/"), !id.contains("\\"), !id.contains("\0") else {
+            throw MeshProjectStoreError.invalidProject
+        }
+        let candidate = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension).standardizedFileURL
+        guard candidate.deletingLastPathComponent().standardizedFileURL == trashURL.standardizedFileURL,
+              candidate.lastPathComponent == "\(id).\(Self.projectExtension)" else {
+            throw MeshProjectStoreError.invalidProject
+        }
+        return candidate
     }
 
     private func summaries(in directory: URL, includeHidden: Bool) -> [MeshProjectSummary] {

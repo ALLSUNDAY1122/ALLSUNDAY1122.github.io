@@ -135,6 +135,34 @@ final class MeshProjectStoreTests: XCTestCase {
         XCTAssertTrue(relaunched.listTrash().isEmpty)
     }
 
+    func testTrashRestoreRejectsTraversalIDWithoutMovingOutsideArchive() throws {
+        let outside = rootURL.appendingPathComponent("escape").appendingPathExtension(MeshProjectStore.projectExtension)
+        try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+        try Data([0xAA]).write(to: outside.appendingPathComponent("sentinel"))
+
+        XCTAssertThrowsError(try store.restoreFromTrash(id: "../../escape")) { error in
+            guard case MeshProjectStoreError.invalidProject = error else {
+                return XCTFail("Expected invalidProject, got \(error)")
+            }
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outside.appendingPathComponent("sentinel").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outside.path))
+    }
+
+    func testTrashPermanentDeleteRejectsTraversalIDWithoutDeletingOutsideArchive() throws {
+        let outside = rootURL.appendingPathComponent("escape-delete").appendingPathExtension(MeshProjectStore.projectExtension)
+        try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+        try Data([0xBB]).write(to: outside.appendingPathComponent("sentinel"))
+
+        XCTAssertThrowsError(try store.permanentlyDeleteFromTrash(id: "../../escape-delete")) { error in
+            guard case MeshProjectStoreError.invalidProject = error else {
+                return XCTFail("Expected invalidProject, got \(error)")
+            }
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outside.appendingPathComponent("sentinel").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outside.path))
+    }
+
     func testAdoptsLegacyCompletedWorkingProjectButIgnoresIncompleteOne() throws {
         let completed = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x66)
         let incomplete = rootURL.appendingPathComponent("incomplete.meshproject", isDirectory: true)
