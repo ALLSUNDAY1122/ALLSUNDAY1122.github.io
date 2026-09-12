@@ -3,6 +3,7 @@ import Foundation
 enum ScanWorldMapArchiveStoreError: LocalizedError {
     case emptyArchive
     case missingParentDirectory
+    case unsafeParentDirectory
     case unsafeExistingArchive
     case verificationFailed
 
@@ -10,6 +11,7 @@ enum ScanWorldMapArchiveStoreError: LocalizedError {
         switch self {
         case .emptyArchive: return "WorldMap archiveが空です"
         case .missingParentDirectory: return "WorldMap保存先projectがありません"
+        case .unsafeParentDirectory: return "WorldMap保存先projectが安全な通常directoryではありません"
         case .unsafeExistingArchive: return "既存WorldMap archiveが安全な通常ファイルではありません"
         case .verificationFailed: return "保存したWorldMap archiveを検証できません"
         }
@@ -24,6 +26,14 @@ enum ScanWorldMapArchiveStore {
         guard FileManager.default.fileExists(atPath: parent.path, isDirectory: &isDirectory),
               isDirectory.boolValue else {
             throw ScanWorldMapArchiveStoreError.missingParentDirectory
+        }
+        // `fileExists(...isDirectory:)` follows a directory symlink. Without an explicit lstat-style
+        // resource check, a damaged/restored project path can redirect the candidate and final
+        // WorldMap write outside the scan project while still looking like a valid directory.
+        guard let parentValues = try? parent.resourceValues(
+            forKeys: [.isDirectoryKey, .isSymbolicLinkKey]
+        ), parentValues.isDirectory == true, parentValues.isSymbolicLink != true else {
+            throw ScanWorldMapArchiveStoreError.unsafeParentDirectory
         }
 
         // Keep the last resumable WorldMap untouched until the replacement has survived an exact
