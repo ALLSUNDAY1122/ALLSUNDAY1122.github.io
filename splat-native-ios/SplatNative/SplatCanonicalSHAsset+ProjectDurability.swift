@@ -100,13 +100,18 @@ extension SplatCanonicalSHAsset {
 
     /// Validates that a binary PLY contains at least the full declared vertex payload.
     /// This deliberately does not require EOF immediately after the vertex element because future
-    /// exporters may append other legal PLY elements after the Gaussian vertices.
+    /// exporters may append other legal PLY elements after the Gaussian vertices. Canonical assets
+    /// must also be independent regular files: a symlink may make a project appear healthy while
+    /// silently depending on bytes outside its archive.
     static func hasCompleteVertexPayload(
         at url: URL,
         expectedPointCount: Int,
         fileManager: FileManager = .default
     ) -> Bool {
         guard expectedPointCount > 0,
+              let resourceValues = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              resourceValues.isRegularFile == true,
+              resourceValues.isSymbolicLink != true,
               let attributes = try? fileManager.attributesOfItem(atPath: url.path),
               let sizeNumber = attributes[.size] as? NSNumber,
               sizeNumber.int64Value > 0 else { return false }
