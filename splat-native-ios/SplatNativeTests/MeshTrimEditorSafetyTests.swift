@@ -31,6 +31,38 @@ final class MeshTrimEditorSafetyTests: XCTestCase {
         XCTAssertThrowsError(try MeshTrimEngine.trim(url: url, x: 0...1, y: 0...1, z: 0...1))
     }
 
+    func testStreamedTrimPreservesMaterialLibraryAndFaces() throws {
+        let url = try writeOBJ([
+            "mtllib material.mtl",
+            "v 0 0 0", "v 1 0 0", "v 0 1 0",
+            "vt 0 0", "vt 1 0", "vt 0 1",
+            "usemtl material0",
+            "f 1/1 2/2 3/3"
+        ])
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+
+        let result = try MeshTrimEngine.trim(url: url, x: 0...1, y: 0...1, z: 0...1)
+        let output = try String(contentsOf: result.url, encoding: .utf8)
+        XCTAssertTrue(result.url.lastPathComponent.hasPrefix("mesh-textured-trimmed-"))
+        XCTAssertTrue(output.contains("mtllib material.mtl\n"))
+        XCTAssertTrue(output.contains("usemtl material0\n"))
+        XCTAssertTrue(output.contains("f 1/1 2/2 3/3\n"))
+    }
+
+    func testFailedStreamedTrimRemovesPartialOutput() throws {
+        let url = try writeOBJ([
+            "v 0 0 0", "v 1 0 0", "v 0 1 0",
+            "f 1 2 broken"
+        ])
+        let root = url.deletingLastPathComponent()
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        XCTAssertThrowsError(try MeshTrimEngine.trim(url: url, x: 0...1, y: 0...1, z: 0...1))
+        let leftovers = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)
+            .filter { $0.lastPathComponent.contains("trimmed-") }
+        XCTAssertTrue(leftovers.isEmpty)
+    }
+
     private func writeOBJ(_ lines: [String]) throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshTrimEditorSafety-\(UUID().uuidString)", isDirectory: true)
