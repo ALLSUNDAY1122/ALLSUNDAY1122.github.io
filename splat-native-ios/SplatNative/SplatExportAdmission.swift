@@ -58,10 +58,6 @@ enum SplatExportAdmission {
         catch { throw AdmissionError.untrustedSource }
         let trustedURL = verification.url
 
-        // Never enter backup self-heal while the primary path itself is an external symlink or an
-        // oversized file. That keeps preflight read-only for unsafe paths rather than depending on
-        // atomic-write symlink replacement semantics. Ordinary bounded/corrupt JSON may still be
-        // recovered from its project-local backup exactly as before.
         guard viewerPrimarySidecarIsSafeOrMissing(sourceURL: trustedURL) else {
             throw AdmissionError.untrustedSource
         }
@@ -163,6 +159,9 @@ enum SplatExportAdmission {
         fileManager: FileManager = .default
     ) -> Bool {
         let primary = SplatViewerEditStore.primaryURL(for: sourceURL)
+        if (try? fileManager.destinationOfSymbolicLink(atPath: primary.path)) != nil {
+            return false
+        }
         guard fileManager.fileExists(atPath: primary.path) else { return true }
         guard let values = try? primary.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
               values.isRegularFile == true,
