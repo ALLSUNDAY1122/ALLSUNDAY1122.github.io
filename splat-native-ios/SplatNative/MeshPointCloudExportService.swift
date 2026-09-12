@@ -326,14 +326,13 @@ enum MeshPointCloudExportService {
         text.enumerateLines { line, _ in
             let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !trimmed.isEmpty, !trimmed.hasPrefix("#") else { return }
-            if trimmed.hasPrefix("mtllib "), materialLibrary == nil {
-                let arguments = parseArguments(String(trimmed.dropFirst("mtllib ".count)))
-                if let first = arguments.first { materialLibrary = first }
-                return
-            }
-
             let fields = trimmed.split(whereSeparator: { $0.isWhitespace })
             guard let kind = fields.first else { return }
+            if kind.lowercased() == "mtllib", materialLibrary == nil {
+                let arguments = parseArguments(trimmed)
+                if arguments.count >= 2 { materialLibrary = arguments[1] }
+                return
+            }
             if kind == "v", fields.count >= 4,
                let x = Double(fields[1]), let y = Double(fields[2]), let z = Double(fields[3]),
                x.isFinite, y.isFinite, z.isFinite {
