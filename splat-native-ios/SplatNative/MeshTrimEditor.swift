@@ -18,13 +18,13 @@ enum MeshTrimEngine {
         var hasMaterialLibrary = false
 
         try forEachOBJLine(at: url) { line in
-            let fields = line.split(whereSeparator: \.isWhitespace)
-            guard let directive = fields.first else { return }
+            guard let directive = firstDirective(in: line) else { return }
             if directive.lowercased() == "mtllib" {
                 hasMaterialLibrary = true
                 return
             }
             guard directive == "v" else { return }
+            let fields = line.split(whereSeparator: \.isWhitespace)
             guard fields.count >= 4,
                   let a = Float(fields[1]),
                   let b = Float(fields[2]),
@@ -109,11 +109,11 @@ enum MeshTrimEngine {
         faceIndices.reserveCapacity(4)
 
         try forEachOBJLine(at: url) { line in
-            let fields = line.split(whereSeparator: \.isWhitespace)
-            guard let directive = fields.first, directive == "f" else {
+            guard firstDirective(in: line) == "f" else {
                 try writeLine(line)
                 return
             }
+            let fields = line.split(whereSeparator: \.isWhitespace)
             let faceFields = fields.dropFirst().prefix { !$0.hasPrefix("#") }
             guard faceFields.count >= 3 else { throw error("OBJ面定義が不正です") }
             faceIndices.removeAll(keepingCapacity: true)
@@ -173,6 +173,19 @@ enum MeshTrimEngine {
         try? FileManager.default.removeItem(at: result.url)
         let sidecar = result.url.deletingPathExtension().appendingPathExtension("mesh-asset.json")
         try? FileManager.default.removeItem(at: sidecar)
+    }
+
+    private static func firstDirective(in line: Substring) -> Substring? {
+        var start = line.startIndex
+        while start < line.endIndex, line[start].isWhitespace {
+            line.formIndex(after: &start)
+        }
+        guard start < line.endIndex else { return nil }
+        var end = start
+        while end < line.endIndex, !line[end].isWhitespace {
+            line.formIndex(after: &end)
+        }
+        return line[start..<end]
     }
 
     private static func forEachOBJLine(at url: URL, _ body: (Substring) throws -> Void) throws {
