@@ -104,7 +104,11 @@ enum MeshTrimEngine {
             }
         }
 
-        var used = Set<Int>()
+        // A Set<Int> costs many words per retained vertex on large scans. A dense byte-backed bitmap
+        // is bounded directly by source vertex count and makes repeated face membership updates O(1)
+        // without hash-table growth or rehash peaks.
+        var usedVertices = [Bool](repeating: false, count: vertices.count)
+        var usedVertexCount = 0
         var faceCount = 0
         // Reuse one small index buffer across faces. Triangulated meshes otherwise create one
         // short-lived heap-backed [Int] for every face, which becomes significant on million-face scans.
@@ -148,7 +152,10 @@ enum MeshTrimEngine {
                 centroid.z >= low.z && centroid.z <= high.z
             if inside {
                 try writeLine(line)
-                used.formUnion(faceIndices)
+                for id in faceIndices where !usedVertices[id] {
+                    usedVertices[id] = true
+                    usedVertexCount += 1
+                }
                 faceCount += faceIndices.count - 2
             }
         }
@@ -157,7 +164,7 @@ enum MeshTrimEngine {
         try flushOutput()
         try handle.synchronize()
         completed = true
-        return MeshTrimResult(url: out, usedVertexCount: used.count, faceCount: faceCount)
+        return MeshTrimResult(url: out, usedVertexCount: usedVertexCount, faceCount: faceCount)
     }
 
     static func discard(_ result: MeshTrimResult) {
