@@ -94,6 +94,31 @@ final class MeshDurabilityRecoverySymlinkTests: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: outsideResult.path))
     }
 
+    func testRecoverFallsBackWhenPreferredMeshResultIsCorrupt() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let project = root.appendingPathComponent("fallback.meshproject", isDirectory: true)
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        try Data("not-a-mesh".utf8).write(to: project.appendingPathComponent("mesh-cropped.obj"))
+        let validOBJ = """
+        v 0 0 0
+        v 1 0 0
+        v 0 1 0
+        f 1 2 3
+        """
+        try Data(validOBJ.utf8).write(to: project.appendingPathComponent("mesh.obj"))
+
+        let report = MeshDurabilityRecoveryStore(appRootURL: root).recoverPendingArchives()
+
+        XCTAssertEqual(report.recoveredCount, 1)
+        XCTAssertEqual(report.remainingCount, 0)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: project.path))
+        let archived = MeshProjectStore(appRootURL: root).listProjects()
+        XCTAssertEqual(archived.count, 1)
+        XCTAssertEqual(archived.first?.resultURL.lastPathComponent, "mesh.obj")
+    }
+
     private func makeRoot() throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshDurabilityRecoverySymlinkTests-\(UUID().uuidString)", isDirectory: true)
