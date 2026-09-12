@@ -1,0 +1,56 @@
+name: Scan Lab P1 viewer camera loader wiring one-shot
+
+on:
+  push:
+    branches:
+      - feature/splat-post-build17-p1
+    paths:
+      - '.github/workflows/scanlab-p1-viewer-camera-loader-wire.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-post-build17-p1
+          fetch-depth: 1
+          lfs: false
+      - name: Wire bounded metadata loader into viewer and tests
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('splat-native-ios/SplatNative/SplatViewer.swift')
+          s = p.read_text()
+          structs = '''private struct ViewerCameraDataset: Decodable {\n    let frames: [ViewerCameraFrame]\n}\n\nprivate struct ViewerCameraFrame: Decodable {\n    let transformMatrix: [[Float]]\n\n    enum CodingKeys: String, CodingKey {\n        case transformMatrix = "transform_matrix"\n    }\n}\n\n'''
+          if s.count(structs) != 1: raise SystemExit('viewer camera structs anchor mismatch')
+          s = s.replace(structs, '', 1)
+          old = '''        let transformsURL = url.deletingLastPathComponent().appendingPathComponent("transforms.json")\n        guard let data = try? Data(contentsOf: transformsURL),\n              let dataset = try? JSONDecoder().decode(ViewerCameraDataset.self, from: data),\n              !dataset.frames.isEmpty else { return (0, 0) }\n\n        let positions = dataset.frames.compactMap { frame -> SIMD3<Float>? in\n            let matrix = frame.transformMatrix\n            guard matrix.count >= 3,\n                  matrix[0].count >= 4,\n                  matrix[1].count >= 4,\n                  matrix[2].count >= 4 else { return nil }\n            return SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])\n        }\n        guard !positions.isEmpty else { return (0, 0) }\n'''
+          new = '''        let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: url)\n        guard !positions.isEmpty else { return (0, 0) }\n'''
+          if s.count(old) != 1: raise SystemExit('initial view metadata anchor mismatch')
+          p.write_text(s.replace(old, new, 1))
+
+          y = Path('splat-native-ios/project.yml')
+          ys = y.read_text()
+          anchor = '''      - path: SplatNative/SplatCameraGeometry.swift\n'''
+          replacement = '''      - path: SplatNative/SplatCameraGeometry.swift\n      - path: SplatNative/SplatViewerCameraDatasetLoader.swift\n'''
+          if ys.count(anchor) != 1: raise SystemExit('project.yml camera geometry anchor mismatch')
+          y.write_text(ys.replace(anchor, replacement, 1))
+          PY
+          grep -q 'SplatViewerCameraDatasetLoader.cameraPositions' splat-native-ios/SplatNative/SplatViewer.swift
+          grep -q 'SplatViewerCameraDatasetLoader.swift' splat-native-ios/project.yml
+      - name: Commit wiring and retire helper
+        run: |
+          set -euo pipefail
+          git config user.name 'Scan Lab Macro Loop HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm -f .github/workflows/scanlab-p1-viewer-camera-loader-wire.yml
+          git add splat-native-ios/SplatNative/SplatViewer.swift splat-native-ios/project.yml
+          git commit -m 'fix(splat): bound viewer initial camera metadata'
+          git push origin HEAD:feature/splat-post-build17-p1
