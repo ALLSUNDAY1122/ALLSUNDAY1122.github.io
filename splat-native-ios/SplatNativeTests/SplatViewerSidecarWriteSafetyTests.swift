@@ -82,4 +82,25 @@ final class SplatViewerSidecarWriteSafetyTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: primary), primaryBefore)
         XCTAssertEqual(try Data(contentsOf: externalBackup), externalBytes)
     }
+
+    func testSaveRejectsDanglingPrimaryAlias() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory
+            .appendingPathComponent("SplatViewerSidecarWriteSafetyTests-\(UUID().uuidString)", isDirectory: true)
+        defer { try? fileManager.removeItem(at: root) }
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let primary = SplatViewerEditStore.primaryURL(for: source)
+        let missingTarget = root.appendingPathComponent("missing-external-viewer.json")
+        try fileManager.createSymbolicLink(at: primary, withDestinationURL: missingTarget)
+
+        XCTAssertFalse(fileManager.fileExists(atPath: primary.path))
+        XCTAssertThrowsError(try SplatViewerEditStore.save(.default, sourceURL: source)) { error in
+            XCTAssertEqual(error as? SplatViewerEditStoreError, .unsafeWriteTarget)
+        }
+        XCTAssertNil(try? Data(contentsOf: missingTarget))
+        XCTAssertEqual(try fileManager.destinationOfSymbolicLink(atPath: primary.path), missingTarget.path)
+    }
 }
