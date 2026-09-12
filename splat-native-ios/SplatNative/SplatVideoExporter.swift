@@ -67,13 +67,13 @@ enum SplatVideoExporter {
             throw ExportError.commandQueueUnavailable
         }
 
-        let reader = try AutodetectSceneReader(admission.renderAssetURL)
-        let sourcePoints = try await reader.readAll()
-        guard !sourcePoints.isEmpty else { throw ExportError.emptyScene }
-        try Task.checkCancellation()
-        let points = try await SplatPersistedEditMaterializer.materializeInMemoryCancellable(
+        // Apply persisted edits while streaming the source asset. When crop/exposure/contrast is
+        // active this avoids keeping a complete unedited scene alive beside the edited render array.
+        // Identity exports retain the direct readAll path inside the materializer for throughput.
+        let points = try await SplatPersistedEditMaterializer.materializeStreamingCancellable(
             sourceURL: sourceURL,
-            points: sourcePoints
+            assetURL: admission.renderAssetURL,
+            sourcePointCount: admission.estimate.pointCount
         )
         guard !points.isEmpty else { throw ExportError.emptyScene }
         try Task.checkCancellation()
