@@ -78,14 +78,22 @@ enum SplatTransientExportWorkspace {
         fileManager: FileManager
     ) -> Bool {
         guard url.isFileURL,
-              url.lastPathComponent.hasPrefix(prefix) else { return false }
-        var isDirectory: ObjCBool = false
-        guard fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory),
-              isDirectory.boolValue else { return false }
-        var markerIsDirectory: ObjCBool = false
-        return fileManager.fileExists(
-            atPath: markerURL(for: url).path,
-            isDirectory: &markerIsDirectory
-        ) && !markerIsDirectory.boolValue
+              url.lastPathComponent.hasPrefix(prefix),
+              let workspaceValues = try? url.resourceValues(
+                forKeys: [.isDirectoryKey, .isSymbolicLinkKey]
+              ),
+              workspaceValues.isDirectory == true,
+              workspaceValues.isSymbolicLink != true else { return false }
+
+        // The marker is our deletion capability. Requiring an actual regular non-symlink file
+        // prevents an unrelated prefixed directory from borrowing a marker through an external
+        // alias and being mistaken for a workspace that this helper created.
+        let marker = markerURL(for: url)
+        guard let markerValues = try? marker.resourceValues(
+            forKeys: [.isRegularFileKey, .isSymbolicLinkKey]
+        ), markerValues.isRegularFile == true, markerValues.isSymbolicLink != true else {
+            return false
+        }
+        return fileManager.fileExists(atPath: marker.path)
     }
 }
