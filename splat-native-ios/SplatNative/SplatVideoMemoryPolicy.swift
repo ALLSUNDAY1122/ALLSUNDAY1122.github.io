@@ -262,6 +262,17 @@ enum SplatVideoMemoryPolicy {
         return CanonicalInspection(candidateExists: true, completeAsset: asset)
     }
 
+    static func videoSurfaceReserveBytes(width: Int, height: Int) -> UInt64 {
+        let safeWidth = UInt64(max(1, width))
+        let safeHeight = UInt64(max(1, height))
+        let pixels = safeWidth.multipliedReportingOverflow(by: safeHeight)
+        guard !pixels.overflow else { return UInt64.max }
+        let bgra = pixels.partialValue.multipliedReportingOverflow(by: 4)
+        guard !bgra.overflow else { return UInt64.max }
+        let surfaces = bgra.partialValue.multipliedReportingOverflow(by: 4)
+        return surfaces.overflow ? UInt64.max : surfaces.partialValue
+    }
+
     private static func makeEstimate(
         pointCount: Int,
         hasCanonicalSH3: Bool,
@@ -272,10 +283,10 @@ enum SplatVideoMemoryPolicy {
         isLowPowerModeEnabled: Bool
     ) -> Estimate {
         let dimensions = configuration.dimensions
-        let width = UInt64(max(1, dimensions.width))
-        let height = UInt64(max(1, dimensions.height))
-        let bytesPerBGRAFrame: UInt64 = width * height * 4
-        let videoSurfaceReserveBytes = bytesPerBGRAFrame * 4
+        let videoSurfaceReserveBytes = videoSurfaceReserveBytes(
+            width: dimensions.width,
+            height: dimensions.height
+        )
         let workingBytesPerPoint = hasCanonicalSH3
             ? estimatedSH3WorkingBytesPerPoint
             : estimatedWorkingBytesPerPoint
