@@ -112,11 +112,17 @@ enum MeshTrimEngine {
             var centroidX: Float = 0
             var centroidY: Float = 0
             var centroidZ: Float = 0
+            var hasVertexInside = false
             for id in faceIndices {
                 let point = vertices[id]
                 centroidX += point.x
                 centroidY += point.y
                 centroidZ += point.z
+                if point.x >= lowX && point.x <= highX &&
+                    point.y >= lowY && point.y <= highY &&
+                    point.z >= lowZ && point.z <= highZ {
+                    hasVertexInside = true
+                }
             }
             let inverseCount = 1 / Float(faceIndices.count)
             centroidX *= inverseCount
@@ -125,10 +131,10 @@ enum MeshTrimEngine {
             guard centroidX.isFinite, centroidY.isFinite, centroidZ.isFinite else {
                 throw error("面の位置を計算できません")
             }
-            let inside = centroidX >= lowX && centroidX <= highX &&
+            let centroidInside = centroidX >= lowX && centroidX <= highX &&
                 centroidY >= lowY && centroidY <= highY &&
                 centroidZ >= lowZ && centroidZ <= highZ
-            if inside {
+            if hasVertexInside || centroidInside {
                 markBit(faceRecordIndex, in: &selectedFaceBits)
                 for id in faceIndices {
                     let word = id >> 6
@@ -213,9 +219,6 @@ enum MeshTrimEngine {
                 return
             }
             if directive == "p" || directive == "l" {
-                // Position indices are compacted below. Keeping point/line primitives unchanged
-                // would make them reference stale or unrelated vertices in the trimmed artifact.
-                // The editor produces a surface mesh, so drop unsupported non-surface geometry.
                 return
             }
             guard directive == "f" else {
@@ -397,7 +400,7 @@ struct MeshTrimEditorSheet: View {
                 axis("左右 X", low: $x0, high: $x1)
                 axis("上下 Y", low: $y0, high: $y1)
                 axis("前後 Z", low: $z0, high: $z1)
-                Section { Text("6方向の実ジオメトリ平面で切り取ります。テクスチャOBJではUV/MTLを保持します。").font(.caption).foregroundStyle(.secondary) }
+                Section { Text("境界に触れる面を保持しながら6方向で切り詰めます。テクスチャOBJではUV/MTLを保持します。").font(.caption).foregroundStyle(.secondary) }
                 if let errorText { Section { Text(errorText).foregroundStyle(.red) } }
                 Section { Button(working ? "適用中…" : "トリミングを実Meshへ適用") { apply() }.disabled(working || x1 - x0 < 0.05 || y1 - y0 < 0.05 || z1 - z0 < 0.05) }
             }
