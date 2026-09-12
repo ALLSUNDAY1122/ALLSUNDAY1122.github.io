@@ -7,6 +7,7 @@ enum MeshExportAdmission {
     enum AdmissionError: LocalizedError, Equatable {
         case sourceMissing
         case sourceSizeUnavailable
+        case storageCapacityUnavailable
         case insufficientStorage(required: Int64, available: Int64)
 
         var errorDescription: String? {
@@ -15,6 +16,8 @@ enum MeshExportAdmission {
                 return "Meshの書き出し元が見つかりません。"
             case .sourceSizeUnavailable:
                 return "Meshデータのサイズを確認できないため、書き出しを開始できません。"
+            case .storageCapacityUnavailable:
+                return "端末の空き容量を確認できないため、安全なMesh書き出しを開始できません。"
             case .insufficientStorage(let required, let available):
                 let formatter = ByteCountFormatter()
                 formatter.countStyle = .file
@@ -29,7 +32,8 @@ enum MeshExportAdmission {
     static func preflight(
         sourceURL: URL,
         format: MeshExportService.Format,
-        availableCapacityOverride: Int64? = nil
+        availableCapacityOverride: Int64? = nil,
+        capacityProvider: ((URL) -> Int64?)? = nil
     ) throws -> URL {
         guard sourceURL.isFileURL, FileManager.default.fileExists(atPath: sourceURL.path) else {
             throw AdmissionError.sourceMissing
@@ -54,9 +58,19 @@ enum MeshExportAdmission {
             }
         }
 
-        let available = availableCapacityOverride.map { max(0, $0) }
-            ?? availableCapacity(at: sourceURL.deletingLastPathComponent())
-        if let available, available < required {
+        let capacityURL = sourceURL.deletingLastPathComponent()
+        let available: Int64?
+        if let availableCapacityOverride {
+            available = max(0, availableCapacityOverride)
+        } else if let capacityProvider {
+            available = capacityProvider(capacityURL).map { max(0, $0) }
+        } else {
+            available = availableCapacity(at: capacityURL).map { max(0, $0) }
+        }
+        guard let available else {
+            throw AdmissionError.storageCapacityUnavailable
+        }
+        if available < required {
             throw AdmissionError.insufficientStorage(required: required, available: available)
         }
         return sourceURL
