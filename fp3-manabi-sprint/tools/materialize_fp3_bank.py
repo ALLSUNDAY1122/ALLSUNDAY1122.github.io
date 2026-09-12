@@ -7,6 +7,7 @@ UTF-8 JSON payload matches the canonical SHA-256 locked by SOURCE_LOCK.md.
 from __future__ import annotations
 import argparse, hashlib, json, pathlib, tempfile, os
 
+# This file is a monitored trigger path for the canonical materialization workflow.
 EXPECTED_QUESTIONS = 180
 EXPECTED_PAYLOAD_SHA256 = "bf2a24b354cc5b1714e1c0ef10fb529220b474c8d0b48b2f135ae42b061bda33"
 PREFIX = "const BANK = "
