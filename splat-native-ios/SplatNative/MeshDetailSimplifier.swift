@@ -37,6 +37,9 @@ struct DetailSimplifyResult: Sendable {
 enum MeshDetailSimplifierEngine {
     static func simplify(url: URL, retainedFraction: Double) throws -> DetailSimplifyResult {
         let text = try String(contentsOf: url, encoding: .utf8)
+        let safeRetainedFraction = retainedFraction.isFinite
+            ? min(0.95, max(0.15, retainedFraction))
+            : 0.60
         var vertices: [SIMD3<Float>] = []
         var faces: [DetailFace] = []
 
@@ -117,12 +120,18 @@ enum MeshDetailSimplifierEngine {
         var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
         var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
         for vertex in vertices { minimum = simd_min(minimum, vertex); maximum = simd_max(maximum, vertex) }
-        let extent = simd_max(maximum - minimum, SIMD3<Float>(repeating: 0.0001))
-        let target = max(16, Int(Double(vertices.count) * min(0.95, max(0.15, retainedFraction))))
+        let rawExtent = maximum - minimum
+        guard rawExtent.x.isFinite, rawExtent.y.isFinite, rawExtent.z.isFinite else {
+            throw error("Meshの座標範囲が大きすぎます")
+        }
+        let extent = simd_max(rawExtent, SIMD3<Float>(repeating: 0.0001))
+        let target = max(16, Int(Double(vertices.count) * safeRetainedFraction))
         let resolution = max(2, Int(ceil(pow(Double(target), 1.0 / 3.0))))
         let cell = extent / Float(resolution)
 
-        var sums: [DetailCluster: SIMD3<Float>] = [:]
+        // Accumulate cluster centroids in Double. A cluster containing many large but finite Float
+        // positions can overflow a Float sum even though its mean remains representable and valid.
+        var sums: [DetailCluster: SIMD3<Double>] = [:]
         var counts: [DetailCluster: Int] = [:]
         var vertexKeys: [DetailCluster] = []
         vertexKeys.reserveCapacity(vertices.count)
@@ -132,13 +141,18 @@ enum MeshDetailSimplifierEngine {
                 key = DetailCluster(x: 0, y: 0, z: 0, unique: index + 1)
             } else {
                 let relative = (vertex - minimum) / cell
+                guard relative.x.isFinite, relative.y.isFinite, relative.z.isFinite else {
+                    throw error("Meshのクラスタ座標を計算できません")
+                }
                 key = DetailCluster(
                     x: min(resolution - 1, max(0, Int(floor(relative.x)))),
                     y: min(resolution - 1, max(0, Int(floor(relative.y)))),
                     z: min(resolution - 1, max(0, Int(floor(relative.z)))), unique: 0
                 )
             }
-            vertexKeys.append(key); sums[key, default: .zero] += vertex; counts[key, default: 0] += 1
+            vertexKeys.append(key)
+            sums[key, default: .zero] += SIMD3<Double>(Double(vertex.x), Double(vertex.y), Double(vertex.z))
+            counts[key, default: 0] += 1
         }
 
         let orderedKeys = sums.keys.sorted { lhs, rhs in
@@ -151,7 +165,15 @@ enum MeshDetailSimplifierEngine {
         var outputVertices: [SIMD3<Float>] = []
         for key in orderedKeys {
             clusterToIndex[key] = outputVertices.count
-            outputVertices.append((sums[key] ?? .zero) / Float(max(1, counts[key] ?? 1)))
+            let divisor = Double(max(1, counts[key] ?? 1))
+            let mean = (sums[key] ?? .zero) / divisor
+            guard mean.x.isFinite, mean.y.isFinite, mean.z.isFinite,
+                  abs(mean.x) <= Double(Float.greatestFiniteMagnitude),
+                  abs(mean.y) <= Double(Float.greatestFiniteMagnitude),
+                  abs(mean.z) <= Double(Float.greatestFiniteMagnitude) else {
+                throw error("Meshの簡略化座標を確定できません")
+            }
+            outputVertices.append(SIMD3<Float>(Float(mean.x), Float(mean.y), Float(mean.z)))
         }
 
         var outputFaces: [SIMD3<Int>] = []
@@ -162,7 +184,7 @@ enum MeshDetailSimplifierEngine {
                   let a = clusterToIndex[vertexKeys[face.a]], let b = clusterToIndex[vertexKeys[face.b]],
                   let c = clusterToIndex[vertexKeys[face.c]], a != b, b != c, a != c else { continue }
             let area = simd_length_squared(simd_cross(outputVertices[b] - outputVertices[a], outputVertices[c] - outputVertices[a]))
-            guard area > 1e-10 else { continue }
+            guard area.isFinite, area > 1e-10 else { continue }
             let canonical = [a, b, c].sorted().map(String.init).joined(separator: ":")
             if seenFaces.insert(canonical).inserted { outputFaces.append(SIMD3<Int>(a, b, c)) }
         }
@@ -171,11 +193,17 @@ enum MeshDetailSimplifierEngine {
         var normals = Array(repeating: SIMD3<Float>.zero, count: outputVertices.count)
         for face in outputFaces {
             let normal = simd_cross(outputVertices[face.y] - outputVertices[face.x], outputVertices[face.z] - outputVertices[face.x])
+            guard normal.x.isFinite, normal.y.isFinite, normal.z.isFinite else { continue }
             normals[face.x] += normal; normals[face.y] += normal; normals[face.z] += normal
         }
-        normals = normals.map { simd_length_squared($0) > 1e-12 ? simd_normalize($0) : SIMD3<Float>(0, 1, 0) }
+        normals = normals.map {
+            let lengthSquared = simd_length_squared($0)
+            return lengthSquared.isFinite && lengthSquared > 1e-12
+                ? simd_normalize($0)
+                : SIMD3<Float>(0, 1, 0)
+        }
 
-        let percent = Int((retainedFraction * 100).rounded())
+        let percent = Int((safeRetainedFraction * 100).rounded())
         let outputURL = url.deletingLastPathComponent()
             .appendingPathComponent("mesh-detail-simplified-\(percent)-\(UUID().uuidString.lowercased()).obj")
         var output = "# Scan Lab detail-preserving simplification\n"
