@@ -42,13 +42,44 @@ function grade(di,unknownFlag){
   storeResume(idx+1);save();
 }
 function nextQ(){idx++;storeResume(idx);renderQuiz()}
+function fullMockAssessment(){
+  const subjects={};
+  for(const subject of SUBJECTS){
+    const subjectResults=results.filter(r=>QMAP[r.id]?.subject===subject);
+    const correct=subjectResults.filter(r=>r.ok).length;
+    const total=subjectResults.length;
+    const rate=total?Math.round(correct/total*100):0;
+    subjects[subject]={correct,total,rate,passed:total>0&&rate>=40};
+  }
+  const total=results.length;
+  const totalRate=total?Math.round(score/total*100):0;
+  const passed=total===30&&totalRate>=60&&SUBJECTS.every(s=>subjects[s].passed);
+  return {score,total,totalRate,subjects,passed};
+}
+function fullMockAssessmentHTML(assessment){
+  const rows=SUBJECTS.map(subject=>{
+    const x=assessment.subjects[subject];
+    return `<div class="recentrow"><span>${esc(subject)}</span><b>${x.correct}/${x.total}</b><em>${x.rate}% ${x.passed?'✓':'要40%'}</em></div>`;
+  }).join('');
+  return `<div class="card recent" style="margin-top:14px"><div class="recentrow"><span>総合</span><b>${assessment.score}/${assessment.total}</b><em>${assessment.totalRate}% ${assessment.totalRate>=60?'✓':'要60%'}</em></div>${rows}</div>`;
+}
 function finish(){
   const total=session.questions.length,pct=Math.round(score/total*100),wrong=results.filter(r=>!r.ok).map(r=>r.id);
+  let assessment=null;
   if(session.mode==='mock')S.mockResults[pairKey(session.examSet,session.subject)]={score,total,date:new Date().toISOString()};
+  if(session.mode==='fullmock'){
+    assessment=fullMockAssessment();
+    S.mockResults[fullMockKey(session.examSet)]={...assessment,date:new Date().toISOString()};
+  }
   S.history.unshift({date:new Date().toISOString(),title:session.title,score,total,mode:session.mode,ids:session.ids,wrong});S.history=S.history.slice(0,50);
   S.resume=null;save();
-  const msg=pct>=80?'よく定着しています。':pct>=60?'合格ラインを意識できる出来です。':'要点を拾い直すと伸びます。';
+  const msg=assessment?(assessment.passed?'合格基準をクリアしました。':'総合60%以上・各科目40%以上の両方を確認して再挑戦しましょう。'):(pct>=80?'よく定着しています。':pct>=60?'合格ラインを意識できる出来です。':'要点を拾い直すと伸びます。');
   const weakBtn=wrong.length?`<button class="reviewbtn" onclick='repeatIds(${JSON.stringify(wrong)})'>間違えた問題をすぐ復習</button>`:'';
-  setApp(`<div class="resultwrap"><div class="card resultcard"><div class="brand">今回の結果</div><div class="score">${score}<span> / ${total}</span></div><div class="rmsg">${msg}</div><div class="rmeta">正答率 ${pct}%</div><div class="resultactions">${weakBtn}<button class="retrybtn" onclick='repeatIds(${JSON.stringify(session.ids)})'>もう一度${total}問</button><button class="homebtn" onclick="home()">ホームへ戻る</button></div></div></div>`);
+  const assessmentHTML=assessment?fullMockAssessmentHTML(assessment):'';
+  setApp(`<div class="resultwrap"><div class="card resultcard"><div class="brand">今回の結果</div><div class="score">${score}<span> / ${total}</span></div><div class="rmsg">${msg}</div><div class="rmeta">正答率 ${pct}%</div>${assessmentHTML}<div class="resultactions">${weakBtn}<button class="retrybtn" onclick='repeatIds(${JSON.stringify(session.ids)})'>もう一度${total}問</button><button class="homebtn" onclick="home()">ホームへ戻る</button></div></div></div>`);
 }
-function repeatIds(ids){begin('復習',ids.map(id=>QMAP[id]).filter(Boolean),{mode:'review'})}
+function repeatIds(ids){
+  const qs=ids.map(id=>QMAP[id]).filter(Boolean);
+  if(!isPremiumAccess()&&qs.some(q=>q.examSet!==FREE_SET)){showPaywall('review');return}
+  begin('復習',qs,{mode:'review'})
+}
