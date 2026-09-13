@@ -1,5 +1,6 @@
 import AVFoundation
 import CoreMedia
+import CoreVideo
 import Metal
 import SplatIO
 import simd
@@ -25,7 +26,7 @@ final class SplatVideoColorPipelineTests: XCTestCase {
         )
     }
 
-    func testEncodedTrackCarriesBT709ColorMetadata() async throws {
+    func testEncodedTrackCarriesBT709ColorMetadataAndPreservesMidGray() async throws {
         guard MTLCreateSystemDefaultDevice() != nil else {
             throw XCTSkip("Metal device is unavailable on this simulator runner")
         }
@@ -76,5 +77,54 @@ final class SplatVideoColorPipelineTests: XCTestCase {
             extensions[kCMFormatDescriptionExtension_YCbCrMatrix] as? String,
             kCMFormatDescriptionYCbCrMatrix_ITU_R_709_2 as String
         )
+
+        let center = try decodeFirstFrameCenterBGRA(asset: asset, track: track)
+        XCTAssertLessThanOrEqual(abs(Int(center.r) - Int(center.g)), 12)
+        XCTAssertLessThanOrEqual(abs(Int(center.g) - Int(center.b)), 12)
+        // sRGB 0.5 should remain a visible mid-tone after encode/decode. A linear UNORM target
+        // incorrectly tagged as BT.709 falls near the mid-50s for this fixture, which this gate rejects.
+        XCTAssertGreaterThanOrEqual(center.r, 90)
+        XCTAssertLessThanOrEqual(center.r, 175)
+    }
+
+    private func decodeFirstFrameCenterBGRA(
+        asset: AVAsset,
+        track: AVAssetTrack
+    ) throws -> (b: UInt8, g: UInt8, r: UInt8, a: UInt8) {
+        let reader = try AVAssetReader(asset: asset)
+        let output = AVAssetReaderTrackOutput(
+            track: track,
+            outputSettings: [
+                kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)
+            ]
+        )
+        output.alwaysCopiesSampleData = false
+        guard reader.canAdd(output) else { throw CocoaError(.coderReadCorrupt) }
+        reader.add(output)
+        guard reader.startReading(),
+              let sample = output.copyNextSampleBuffer(),
+              let pixelBuffer = CMSampleBufferGetImageBuffer(sample) else {
+            throw CocoaError(.coderReadCorrupt)
+        }
+
+        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
+        defer {
+            CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly)
+            reader.cancelReading()
+        }
+        guard let base = CVPixelBufferGetBaseAddress(pixelBuffer) else {
+            throw CocoaError(.coderReadCorrupt)
+        }
+        let width = CVPixelBufferGetWidth(pixelBuffer)
+        let height = CVPixelBufferGetHeight(pixelBuffer)
+        let rowBytes = CVPixelBufferGetBytesPerRow(pixelBuffer)
+        guard width > 0, height > 0, rowBytes >= width * 4 else {
+            throw CocoaError(.coderReadCorrupt)
+        }
+        let x = width / 2
+        let y = height / 2
+        let offset = y * rowBytes + x * 4
+        let bytes = base.assumingMemoryBound(to: UInt8.self)
+        return (bytes[offset], bytes[offset + 1], bytes[offset + 2], bytes[offset + 3])
     }
 }
