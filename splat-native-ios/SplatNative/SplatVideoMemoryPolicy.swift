@@ -1,3 +1,4 @@
+import Darwin.Mach
 import Foundation
 import SplatIO
 
@@ -100,11 +101,34 @@ enum SplatVideoMemoryPolicy {
         return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
     }
 
+    /// Limit video admission by current process headroom as well as the long-lived device budget.
+    /// Video export overlaps decoded splats, edited copies, Metal surfaces and encoder buffers, so a
+    /// scene that normally fits can still jetsam when another operation has temporarily consumed RAM.
+    /// Keep one quarter of the reported headroom outside the estimate. Some simulator/host contexts
+    /// report zero when this telemetry is unavailable; treat only that sentinel as unknown rather than
+    /// literal zero so missing telemetry cannot disable every video export.
+    static func effectiveBudgetBytes(
+        physicalMemoryBytes: UInt64,
+        availableMemoryBytes: UInt64,
+        thermalState: ProcessInfo.ThermalState,
+        isLowPowerModeEnabled: Bool
+    ) -> UInt64 {
+        let staticBudget = budgetBytes(
+            physicalMemoryBytes: physicalMemoryBytes,
+            thermalState: thermalState,
+            isLowPowerModeEnabled: isLowPowerModeEnabled
+        )
+        guard availableMemoryBytes > 0 else { return staticBudget }
+        let availableSafetyBudget = availableMemoryBytes / 4 * 3
+        return min(staticBudget, availableSafetyBudget)
+    }
+
     @discardableResult
     static func preflight(
         sourceURL: URL,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Estimate {
@@ -112,6 +136,7 @@ enum SplatVideoMemoryPolicy {
             sourceURL: sourceURL,
             configuration: configuration,
             physicalMemoryBytes: physicalMemoryBytes,
+            availableMemoryBytes: availableMemoryBytes,
             thermalState: thermalState,
             isLowPowerModeEnabled: isLowPowerModeEnabled
         ).estimate
@@ -126,6 +151,7 @@ enum SplatVideoMemoryPolicy {
         verifiedDigest: String? = nil,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) async throws -> Admission {
@@ -136,6 +162,7 @@ enum SplatVideoMemoryPolicy {
                 verifiedDigest: verifiedDigest,
                 configuration: configuration,
                 physicalMemoryBytes: physicalMemoryBytes,
+                availableMemoryBytes: availableMemoryBytes,
                 thermalState: thermalState,
                 isLowPowerModeEnabled: isLowPowerModeEnabled
             )
@@ -159,6 +186,7 @@ enum SplatVideoMemoryPolicy {
         verifiedDigest: String? = nil,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Admission {
@@ -188,6 +216,7 @@ enum SplatVideoMemoryPolicy {
             editSettings: editSettings,
             configuration: configuration,
             physicalMemoryBytes: physicalMemoryBytes,
+            availableMemoryBytes: availableMemoryBytes,
             thermalState: thermalState,
             isLowPowerModeEnabled: isLowPowerModeEnabled
         )
@@ -210,6 +239,7 @@ enum SplatVideoMemoryPolicy {
         sourceURL: URL,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Estimate {
@@ -226,6 +256,7 @@ enum SplatVideoMemoryPolicy {
             editSettings: editSettings,
             configuration: configuration,
             physicalMemoryBytes: physicalMemoryBytes,
+            availableMemoryBytes: availableMemoryBytes,
             thermalState: thermalState,
             isLowPowerModeEnabled: isLowPowerModeEnabled
         )
@@ -284,6 +315,7 @@ enum SplatVideoMemoryPolicy {
         editSettings: SplatEditSettings,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64,
+        availableMemoryBytes: UInt64,
         thermalState: ProcessInfo.ThermalState,
         isLowPowerModeEnabled: Bool
     ) -> Estimate {
@@ -316,8 +348,9 @@ enum SplatVideoMemoryPolicy {
         let finalPeak = withRendererReserve.addingReportingOverflow(videoSurfaceReserveBytes)
         let estimatedPeakBytes = finalPeak.overflow ? UInt64.max : finalPeak.partialValue
 
-        let budgetBytes = budgetBytes(
+        let budgetBytes = effectiveBudgetBytes(
             physicalMemoryBytes: physicalMemoryBytes,
+            availableMemoryBytes: availableMemoryBytes,
             thermalState: thermalState,
             isLowPowerModeEnabled: isLowPowerModeEnabled
         )
