@@ -4,7 +4,7 @@ function nativeStoreAvailable(){return !!window.webkit?.messageHandlers?.storeki
 function isPremiumAccess(){return !nativeStoreAvailable()||!!window.SM2_STORE.isPremium}
 function requestStoreStatus(){try{window.webkit.messageHandlers.storekit.postMessage({action:'status'})}catch(_){}}
 function freePool(){return QUESTIONS.filter(q=>q.examSet===FREE_SET)}
-function premiumCTA(){return isPremiumAccess()?'':`<div class="sec"><button class="action" onclick="showPaywall('home')"><span class="aicon mock">${ICON.mock}</span><span><strong>全300問を解放</strong><small>月額または買い切りで、全30セット・苦手復習まで</small></span><span class="pill hot">PLUS</span></button></div>`}
+function premiumCTA(){return `<div id="home-premium-cta">${isPremiumAccess()?'':`<div class="sec"><button class="action" onclick="showPaywall('home')"><span class="aicon mock">${ICON.mock}</span><span><strong>全300問を解放</strong><small>月額または買い切りで、全30セット・苦手復習まで</small></span><span class="pill hot">PLUS</span></button></div>`}</div>`}
 
 function home(){
   const d=dailyNow(),goal=S.dailyGoal,w=Object.keys(S.weak).length,rate=S.total?Math.round(S.correct/S.total*100):0,days=Object.values(S.daily).filter(x=>x.a>0).length;
