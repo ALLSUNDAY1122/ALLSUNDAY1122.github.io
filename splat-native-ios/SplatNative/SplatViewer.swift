@@ -361,6 +361,10 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
     }
 
     private func rejectCurrentEditAndRestoreLastRendered(_ message: String) {
+        guard renderer != nil else {
+            state?.rendererFailed(message)
+            return
+        }
         requestedSettings = renderedSettings
         state?.applyHistorySettings(renderedSettings)
         state?.rendererRejectedEdit(message)
