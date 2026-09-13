@@ -80,10 +80,11 @@ def main() -> None:
             },
         )
         result.update(ensure_info_metadata(token))
-        result["review_detail_id"] = ensure_review_detail(token, version_id)
 
-        # Store screenshots and IAP/subscription review screenshots are metadata.
-        # No build selection and no reviewSubmission mutation are allowed in this script.
+        # Finish every automatable, reversible metadata task before evaluating the
+        # human-only App Review contact gate. A missing real contact must not block
+        # screenshot/IAP metadata that the AI can safely complete by itself.
+        # No build selection and no reviewSubmission mutation are allowed here.
         result["app_screenshots"] = upload_app_screenshots(token, localization_id, [home, premium])
         result["lifetime_review_screenshot"] = ensure_review_screenshot(
             token, kind="iap", product_id=LIFETIME_ID, image=premium
@@ -104,6 +105,10 @@ def main() -> None:
         monthly = one(sub_payload, "monthly")
         result["lifetime_state_after_metadata"] = state(lifetime)
         result["monthly_state_after_metadata"] = state(monthly)
+
+        # Human-only gate is deliberately last. This may fail closed while the
+        # safe metadata above remains prepared and its states remain observable.
+        result["review_detail_id"] = ensure_review_detail(token, version_id)
         result["ok"] = True
 
         Path(args.output).write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
