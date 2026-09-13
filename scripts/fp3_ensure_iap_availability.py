@@ -23,6 +23,10 @@ def persist(result: dict) -> None:
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def territories(payload: dict) -> list[str]:
+    return sorted({str(x.get("id")) for x in (payload.get("included") or []) if isinstance(x, dict) and x.get("type") == "territories" and x.get("id")})
+
+
 def main() -> None:
     issuer = os.environ.get("ASC_ISSUER_ID")
     key_id = os.environ.get("ASC_KEY_ID")
@@ -43,10 +47,12 @@ def main() -> None:
         if iap_data.get("id") != IAP_ID or attrs.get("productId") != PRODUCT_ID:
             raise RuntimeError("FP3 IAP identity mismatch")
 
-        availability_path = f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseAvailability?include=availableTerritories&limit[availableTerritories]=50"
+        existence_path = f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseAvailability"
+        expanded_path = existence_path + "?include=availableTerritories&limit[availableTerritories]=50"
         try:
-            _, av = api_get(token, availability_path)
-            existing = sorted({str(x.get("id")) for x in (av.get("included") or []) if isinstance(x, dict) and x.get("type") == "territories" and x.get("id")})
+            api_get(token, existence_path)
+            _, av = api_get(token, expanded_path)
+            existing = territories(av)
             if existing != [TERRITORY]:
                 raise RuntimeError(f"Existing IAP availability is not the expected JPN-only set: {existing}")
             result.update({"ok": True, "changed": False, "available_territories": existing})
@@ -66,8 +72,8 @@ def main() -> None:
             status, _ = api_request(token, "/v1/inAppPurchaseAvailabilities", method="POST", payload=payload)
             if status not in (200, 201):
                 raise RuntimeError(f"IAP availability create returned HTTP {status}")
-            _, check = api_get(token, availability_path)
-            actual = sorted({str(x.get("id")) for x in (check.get("included") or []) if isinstance(x, dict) and x.get("type") == "territories" and x.get("id")})
+            _, check = api_get(token, expanded_path)
+            actual = territories(check)
             if actual != [TERRITORY]:
                 raise RuntimeError(f"IAP availability read-back mismatch: {actual}")
             result.update({"ok": True, "changed": True, "http_status": status, "available_territories": actual})
