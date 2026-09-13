@@ -63,6 +63,24 @@ final class SplatEditHistoryTests: XCTestCase {
         XCTAssertEqual(history.redo(), SplatEditSettings.default)
     }
 
+    func testEditImmediatelyAfterResetRetainsResetAsUndoBoundary() {
+        let baseline = SplatEditSettings()
+        let liveBeforeReset = SplatEditSettings(exposureEV: 0.8, cropXMin: 0.15, cropXMax: 0.85)
+        let editAfterReset = SplatEditSettings(contrast: 1.25)
+        var history = SplatEditHistory(current: baseline)
+
+        // resetAllEdits() now commits both sides of the reset synchronously. If the user begins a
+        // new slider/crop edit before the 300 ms debounce expires, committing that new edit must
+        // still leave the reset/default state as the first undo destination.
+        history.commit(liveBeforeReset)
+        history.commit(.default)
+        history.commit(editAfterReset)
+
+        XCTAssertEqual(history.current, editAfterReset.normalized())
+        XCTAssertEqual(history.undo(), SplatEditSettings.default)
+        XCTAssertEqual(history.undo(), liveBeforeReset.normalized())
+    }
+
     func testHistoryDepthIsBounded() {
         var history = SplatEditHistory(maximumDepth: 3)
         for step in 1...8 {
