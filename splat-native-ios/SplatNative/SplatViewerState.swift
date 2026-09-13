@@ -387,6 +387,8 @@ final class SplatViewerState: ObservableObject {
     private var persistenceTask: Task<Void, Never>?
     private var measurementScaleTask: Task<Void, Never>?
     private var metersPerSceneUnit: Float = 1
+    private var measurementScaleReady = false
+    private var pendingMeasurementSceneUnits: Float?
     private var persistenceWarningMessage: String?
 
     private static let saveFailureWarning = "編集内容を保存できませんでした"
@@ -406,15 +408,22 @@ final class SplatViewerState: ObservableObject {
         measurementScaleTask?.cancel()
         sourceURL = url
         // `transforms.json` is allowed to be tens of MiB. Keep attach/UI responsiveness independent
-        // of trajectory size: use a conservative scale until the bounded background decoder returns,
-        // then apply it only if this scan is still current.
+        // of trajectory size without ever exposing the temporary 1:1 fallback as a completed
+        // measurement. A measurement finished during decode is held and reformatted once scale is ready.
         metersPerSceneUnit = 1
+        measurementScaleReady = false
+        pendingMeasurementSceneUnits = nil
         measurementScaleTask = Task { [weak self] in
             let positions = await SplatViewerCameraDatasetLoader.cameraPositionsAsync(for: url)
             guard !Task.isCancelled, let self, self.sourceURL == url else { return }
             self.metersPerSceneUnit = SplatSceneNormalization(
                 cameraPositions: positions
             ).metersPerSceneUnit
+            self.measurementScaleReady = true
+            if let pending = self.pendingMeasurementSceneUnits {
+                self.pendingMeasurementSceneUnits = nil
+                self.rendererMeasured(meters: pending)
+            }
         }
         measurementEnabled = false
         measurementText = "画面上の2点を順番にタップしてください"
@@ -429,7 +438,11 @@ final class SplatViewerState: ObservableObject {
 
     func resetEdits() { apply(.default); persistNow() }
     func requestCameraReset() { resetCameraToken &+= 1 }
-    func requestMeasurementClear() { measurementText = "画面上の2点を順番にタップしてください"; clearMeasurementToken &+= 1 }
+    func requestMeasurementClear() {
+        pendingMeasurementSceneUnits = nil
+        measurementText = "画面上の2点を順番にタップしてください"
+        clearMeasurementToken &+= 1
+    }
     func requestReload() { errorMessage = nil; warningMessage = persistenceWarningMessage; isLoading = true; reloadToken &+= 1 }
 
     func schedulePersistence() {
@@ -465,7 +478,15 @@ final class SplatViewerState: ObservableObject {
     func rendererRejectedEdit(_ message: String) { isApplyingEdits = false; warningMessage = message }
     func rendererFailed(_ message: String) { isLoading = false; isApplyingEdits = false; errorMessage = message }
     func rendererSelectedMeasurementPoint(count: Int) { if count == 1 { measurementText = "始点を選択しました。終点をタップしてください" } }
-    func rendererMeasured(meters sceneUnits: Float) { measurementText = SplatMeasurementFormatter.string(meters: sceneUnits * metersPerSceneUnit) }
+    func rendererMeasured(meters sceneUnits: Float) {
+        guard measurementScaleReady else {
+            pendingMeasurementSceneUnits = sceneUnits
+            measurementText = "計測情報を準備中です"
+            return
+        }
+        pendingMeasurementSceneUnits = nil
+        measurementText = SplatMeasurementFormatter.string(meters: sceneUnits * metersPerSceneUnit)
+    }
 
     private func loadPersistedEdits() {
         guard let sourceURL,
