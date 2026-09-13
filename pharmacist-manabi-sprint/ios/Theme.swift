@@ -126,6 +126,7 @@ struct BottomNav: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(tab.rawValue)
+                .accessibilityIdentifier("tab.\(tab.rawValue)")
             }
         }
         .padding(.horizontal, 8)
