@@ -24,7 +24,7 @@ struct SplatDepthSeedFrame: Sendable {
 enum SplatDepthSeedBuilder {
     // Recipe version is a cache-compatibility epoch, not the file-format version. Bump it whenever
     // seed-generation semantics change so a same-RAW comparison cannot silently reuse stale points3D.ply.
-    static let recipeVersion = 10
+    static let recipeVersion = 11
     static let targetSamplesPerFrame = 900
     static let voxelDensity: Float = 100
     static let minimumDepth: Float = 0.18
@@ -423,6 +423,13 @@ enum SplatDepthSeedBuilder {
         return Float(coordinate)
     }
 
+    static func newVoxelBudget(remainingCapacity: Int, remainingFrameCount: Int) -> Int {
+        guard remainingCapacity > 0, remainingFrameCount > 0 else { return 0 }
+        let quotient = remainingCapacity / remainingFrameCount
+        let remainder = remainingCapacity % remainingFrameCount
+        return max(1, quotient + (remainder == 0 ? 0 : 1))
+    }
+
     private static func depthSeedPoints(
         projectURL: URL,
         frames: [SplatDepthSeedFrame],
@@ -435,7 +442,7 @@ enum SplatDepthSeedBuilder {
         let lexicalRoot = projectURL.standardizedFileURL
         let resolvedRoot = lexicalRoot.resolvingSymlinksInPath()
 
-        for frame in frames {
+        for (frameIndex, frame) in frames.enumerated() {
             guard let relativePath = frame.depthFilePath,
                   let depthWidth = frame.depthWidth,
                   let depthHeight = frame.depthHeight,
@@ -475,8 +482,23 @@ enum SplatDepthSeedBuilder {
                 continue
             }
 
+            // A fixed 900 new voxels per frame can exhaust the 120k global seed cap after roughly
+            // the first 133 mostly-unique frames. Long captures would then keep refining existing
+            // early voxels but admit no new geometry from the rest of the trajectory. Reserve an
+            // equal share of the remaining capacity for every remaining capture frame. Invalid
+            // frames consume nothing, so their unused share is automatically redistributed later.
+            let remainingCapacity = max(0, maximumDepthSeedPointCount - voxels.count)
+            let remainingFrameCount = max(1, frames.count - frameIndex)
+            let perFrameNewVoxelBudget = min(
+                targetSamplesPerFrame,
+                newVoxelBudget(
+                    remainingCapacity: remainingCapacity,
+                    remainingFrameCount: remainingFrameCount
+                )
+            )
             let step = max(2, Int(sqrt(Double(pixelCount) / Double(targetSamplesPerFrame))))
             var acceptedInFrame = 0
+            var newVoxelsInFrame = 0
 
             for y in stride(from: step / 2, to: depthHeight, by: step) {
                 for x in stride(from: step / 2, to: depthWidth, by: step) {
@@ -521,8 +543,10 @@ enum SplatDepthSeedBuilder {
                         accumulator.append(world)
                         voxels[voxel] = accumulator
                         acceptedInFrame += 1
-                    } else if voxels.count < maximumDepthSeedPointCount {
+                    } else if voxels.count < maximumDepthSeedPointCount,
+                              newVoxelsInFrame < perFrameNewVoxelBudget {
                         voxels[voxel] = VoxelAccumulator(world)
+                        newVoxelsInFrame += 1
                         acceptedInFrame += 1
                     }
                 }
