@@ -171,10 +171,12 @@ jobs:
             'activeQuestions':1031,
             'note':'No IAP. All 1,031 scored questions are available without purchase.'
           }
-          open('pharmacist-manabi-sprint/content/product/ios-preflight-report.json','w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          open('/tmp/pharmacist-ios-preflight-report.json','w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
           print(json.dumps(out,ensure_ascii=False))
           PY
           if [[ "${{ github.event_name }}" == "push" ]]; then
+            git reset --hard HEAD
+            cp /tmp/pharmacist-ios-preflight-report.json pharmacist-manabi-sprint/content/product/ios-preflight-report.json
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add pharmacist-manabi-sprint/content/product/ios-preflight-report.json
