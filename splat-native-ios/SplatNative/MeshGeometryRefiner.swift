@@ -13,6 +13,12 @@ private struct MeshRefineAccumulator: Sendable {
     var count = 0
 }
 
+private struct MeshRefineComponentSummary: Sendable {
+    var faceCount = 0
+    var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
+    var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
+}
+
 private struct MeshRefineFaceKey: Hashable, Sendable {
     let a: Int
     let b: Int
@@ -326,28 +332,32 @@ private enum MeshGeometryRefinerEngine {
         }
         for face in faces { union(face.x, face.y); union(face.y, face.z); union(face.z, face.x) }
 
-        var groups: [Int: [Int]] = [:]
-        for (index, face) in faces.enumerated() { groups[find(face.x), default: []].append(index) }
-        var keep = Set<Int>()
-        var removed = 0
-        for indices in groups.values {
-            var minPoint = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
-            var maxPoint = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
-            for faceIndex in indices {
-                let face = faces[faceIndex]
-                for id in [face.x, face.y, face.z] {
-                    minPoint = simd_min(minPoint, vertices[id])
-                    maxPoint = simd_max(maxPoint, vertices[id])
-                }
+        // Keep one compact summary per component instead of retaining an array of every face index
+        // and then a second Set of every kept face index. On large connected meshes the old shape
+        // duplicated O(faceCount) Int storage exactly when refinement is already memory intensive.
+        var summaries: [Int: MeshRefineComponentSummary] = [:]
+        for face in faces {
+            let root = find(face.x)
+            var summary = summaries[root] ?? MeshRefineComponentSummary()
+            summary.faceCount += 1
+            for id in [face.x, face.y, face.z] {
+                summary.minimum = simd_min(summary.minimum, vertices[id])
+                summary.maximum = simd_max(summary.maximum, vertices[id])
             }
-            let diagonal = simd_length(maxPoint - minPoint)
-            if diagonal.isFinite, indices.count >= 4 || diagonal >= 0.006 {
-                keep.formUnion(indices)
+            summaries[root] = summary
+        }
+
+        var keptRoots = Set<Int>()
+        var removed = 0
+        for (root, summary) in summaries {
+            let diagonal = simd_length(summary.maximum - summary.minimum)
+            if diagonal.isFinite, summary.faceCount >= 4 || diagonal >= 0.006 {
+                keptRoots.insert(root)
             } else {
                 removed += 1
             }
         }
-        return (faces.enumerated().compactMap { keep.contains($0.offset) ? $0.element : nil }, removed)
+        return (faces.filter { keptRoots.contains(find($0.x)) }, removed)
     }
 
     private static func compact(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> MeshRefineMesh {
