@@ -5,7 +5,9 @@ on:
     branches: [main]
     paths:
       - 'scripts/app2_005_hm1_prepare_metadata.py'
+      - 'scripts/audit_hm1_release_contract.py'
       - 'ios/health-manager-1/prepare-ios.sh'
+      - 'ios/health-manager-1/prepare-approved-icon.sh'
       - '.github/workflows/app2-005-hm1-prepare-metadata.yml'
   workflow_dispatch:
 
@@ -24,6 +26,14 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      - name: Install deterministic product materialization dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends webp
+          python -m pip install --disable-pip-version-check Pillow
 
       - name: Materialize audited 264-question product
         env:
