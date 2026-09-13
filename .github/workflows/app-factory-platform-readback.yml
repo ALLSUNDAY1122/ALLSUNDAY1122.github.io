@@ -31,6 +31,39 @@ jobs:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
           FACTORY_PLATFORM_RESULT: factory-platform-readback.json
         run: python3 scripts/app_factory_platform_readback.py
+      - name: Build concise canonical summary
+        id: summary
+        if: always() && hashFiles('factory-platform-readback.json') != ''
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path('factory-platform-readback.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          lines=[f"completed_at={d.get('completed_at')} read_only={d.get('read_only')}"]
+          builds=((d.get('codemagic') or {}).get('builds') or {}).get('builds') or []
+          by_id={str(x.get('_id') or x.get('id')):x for x in builds if isinstance(x,dict)}
+          workflows=(d.get('codemagic') or {}).get('workflow_latest') or {}
+          for label in ('touhan','hm2','hm1','pharmacist'):
+              tf=(d.get('testflight') or {}).get(label) or {}
+              s=tf.get('summary') or {}
+              latest=((workflows.get(label) or {}).get('latest') or {})
+              cm=by_id.get(str(latest.get('_id') or latest.get('id'))) or {}
+              commit=cm.get('commit') or {}
+              commit_hash=str(commit.get('hash') or '')[:12] or '-'
+              lines.append(
+                  f"{label}: TF build={s.get('latest_build')} state={s.get('latest_processing_state')} "
+                  f"expired={s.get('latest_expired')} groups={s.get('beta_group_count')} | "
+                  f"CM workflow={(workflows.get(label) or {}).get('workflow_id')} status={latest.get('status')} "
+                  f"index={latest.get('index')} commit={commit_hash} branch={latest.get('branch')}"
+              )
+          summary='\n'.join(lines)
+          print(summary)
+          out=os.environ['GITHUB_OUTPUT']
+          with open(out,'a',encoding='utf-8') as f:
+              f.write('text<<APP_FACTORY_EOF\n'+summary+'\nAPP_FACTORY_EOF\n')
+          PY
       - name: Upload sanitized result
         if: always() && hashFiles('factory-platform-readback.json') != ''
         uses: actions/upload-artifact@v6
@@ -42,6 +75,14 @@ jobs:
       - name: Report run
         if: github.event_name == 'issues' && always()
         uses: actions/github-script@v8
+        env:
+          READBACK_SUMMARY: ${{ steps.summary.outputs.text }}
         with:
           script: |
-            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Read-only platform readback finished. status=${{ job.status }}; run_id=${context.runId}`});
+            const summary = process.env.READBACK_SUMMARY || 'summary unavailable';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Read-only platform readback finished. status=${{ job.status }}; run_id=${context.runId}\n\n\`\`\`text\n${summary}\n\`\`\``
+            });
