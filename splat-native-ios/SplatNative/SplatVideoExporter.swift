@@ -7,6 +7,13 @@ import SplatIO
 import simd
 
 enum SplatVideoExporter {
+    static let renderPixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
+    static let videoColorProperties: [String: String] = [
+        AVVideoColorPrimariesKey: AVVideoColorPrimaries_ITU_R_709_2,
+        AVVideoTransferFunctionKey: AVVideoTransferFunction_ITU_R_709_2,
+        AVVideoYCbCrMatrixKey: AVVideoYCbCrMatrix_ITU_R_709_2,
+    ]
+
     enum ExportError: LocalizedError {
         case metalUnavailable
         case commandQueueUnavailable
@@ -67,9 +74,6 @@ enum SplatVideoExporter {
             throw ExportError.commandQueueUnavailable
         }
 
-        // Apply persisted edits while streaming the source asset. When crop/exposure/contrast is
-        // active this avoids keeping a complete unedited scene alive beside the edited render array.
-        // Identity exports retain the direct readAll path inside the materializer for throughput.
         let points = try await SplatPersistedEditMaterializer.materializeStreamingCancellable(
             sourceURL: sourceURL,
             assetURL: admission.renderAssetURL,
@@ -82,7 +86,7 @@ enum SplatVideoExporter {
         let chunk = try SplatChunk(device: device, from: points)
         let renderer = try SplatRenderer(
             device: device,
-            colorFormat: .bgra8Unorm,
+            colorFormat: renderPixelFormat,
             depthFormat: .invalid,
             sampleCount: 1,
             maxViewCount: 1,
@@ -164,6 +168,7 @@ enum SplatVideoExporter {
             AVVideoCodecKey: AVVideoCodecType.h264,
             AVVideoWidthKey: dimensions.width,
             AVVideoHeightKey: dimensions.height,
+            AVVideoColorPropertiesKey: videoColorProperties,
             AVVideoCompressionPropertiesKey: [
                 AVVideoAverageBitRateKey: bitrate,
                 AVVideoExpectedSourceFrameRateKey: configuration.framesPerSecond,
@@ -230,7 +235,7 @@ enum SplatVideoExporter {
                 textureCache,
                 pixelBuffer,
                 nil,
-                .bgra8Unorm,
+                renderPixelFormat,
                 dimensions.width,
                 dimensions.height,
                 0,
