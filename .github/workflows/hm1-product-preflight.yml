@@ -1,0 +1,26 @@
+name: HM1 Product Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ios/health-manager-1/Resources/questions.json'
+      - 'ios/health-manager-1/Resources/index.html'
+      - 'ios/health-manager-1/HealthManager1/StoreKitManager.swift'
+      - 'ios/health-manager-1/HealthManager1/WebView.swift'
+      - 'ios/health-manager-1/RELEASE_CHECKLIST.md'
+      - 'scripts/audit_hm1_product_preflight.py'
+      - '.github/workflows/hm1-product-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  product-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Product quality preflight
+        run: python3 scripts/audit_hm1_product_preflight.py
