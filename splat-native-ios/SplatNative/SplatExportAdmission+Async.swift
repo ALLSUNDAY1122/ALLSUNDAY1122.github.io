@@ -38,10 +38,16 @@ extension SplatExportAdmission {
             return result
         }
 
-        return try await withTaskCancellationHandler {
+        let result = try await withTaskCancellationHandler {
             try await worker.value
         } onCancel: {
             worker.cancel()
         }
+
+        // Cancellation can race the worker's successful completion. Re-check on the parent before
+        // handing the trusted result back so a dismissed/obsolete export does not continue into
+        // materialization or share work merely because the detached hash finished first.
+        try Task.checkCancellation()
+        return result
     }
 }
