@@ -2,9 +2,27 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 INDEX="$SCRIPT_DIR/Resources/index.html"
 QUESTIONS="$SCRIPT_DIR/Resources/questions.json"
 ICON_DIR="$SCRIPT_DIR/Resources/Assets.xcassets/AppIcon.appiconset"
+
+# Release-contract drift must be clean before any signed artifact can be built.
+python3 "$REPO_ROOT/scripts/audit_hm1_release_contract.py"
+
+# This Codemagic workflow auto-publishes to Internal TestFlight. Therefore the
+# release preparation is deliberately fail-closed until AI Preflight, Visual
+# Gate, Release Gate and fresh ASC read-back have all been completed for the
+# current product HEAD. The readiness file may only be flipped after those gates.
+python3 - "$REPO_ROOT/automation/hm1-testflight-readiness.json" <<'PY'
+from pathlib import Path
+import json, sys
+p=Path(sys.argv[1])
+data=json.loads(p.read_text(encoding='utf-8'))
+if data.get('ready') is not True:
+    raise SystemExit('HM1 TestFlight blocked: readiness gate is not PASS')
+print('PASS: HM1 TestFlight readiness gate')
+PY
 
 # Release invariant: never ship the historical/generated SVG icon. Rebuild all
 # AppIcon slots from the checksum-verified user-approved artwork before Xcode
