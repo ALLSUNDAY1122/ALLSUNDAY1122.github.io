@@ -71,7 +71,7 @@ jobs:
           cat /tmp/touhan-http.log
           exit 1
 
-      - name: Verify human learning journey and capture Visual Gate
+      - name: Verify complete human learning loop and capture Visual Gate
         if: steps.contract.outcome == 'success'
         shell: bash
         run: |
@@ -101,31 +101,46 @@ jobs:
                   assert text in home, f'home missing: {text}'
               page.screenshot(path=str(out/'01-home.png'))
 
+              # Start -> understand: deliberately use "わからない" so a weak item is guaranteed.
               page.locator('[data-action="today"]').click()
               page.locator('[data-choice]').first.wait_for(state='visible')
               quiz = page.locator('body').inner_text()
               assert 'わからない' in quiz, quiz[:2000]
               page.screenshot(path=str(out/'02-question.png'))
-              page.locator('[data-choice]').first.click()
+              page.get_by_text('わからない', exact=True).click()
               page.get_by_text('ここだけ覚える', exact=True).wait_for(state='visible')
               feedback = page.locator('body').inner_text()
               assert ('正解' in feedback or 'ここを確認' in feedback)
               assert ('次の問題' in feedback or '結果を見る' in feedback)
               page.screenshot(path=str(out/'03-feedback.png'))
 
+              # Interruption recovery / progress awareness.
               page.locator('[data-quit]').click()
               page.get_by_text('前回の続きから始める', exact=True).wait_for(state='visible')
               page.screenshot(path=str(out/'04-resume.png'))
 
+              # Review -> retry must be a real journey, not merely a home label.
+              page.get_by_text('苦手復習', exact=True).click()
+              page.locator('[data-choice]').first.wait_for(state='visible')
+              review = page.locator('body').inner_text()
+              assert 'わからない' in review, review[:2000]
+              page.screenshot(path=str(out/'05-review-retry.png'))
+              page.locator('[data-choice]').first.click()
+              page.get_by_text('ここだけ覚える', exact=True).wait_for(state='visible')
+              page.screenshot(path=str(out/'06-review-feedback.png'))
+
+              page.locator('[data-quit]').click()
               page.locator('[data-tab="record"]').click()
               page.get_by_text('学習記録', exact=True).wait_for(state='visible')
               record = page.locator('body').inner_text()
               for text in ('総回答', '正答率', '苦手'):
                   assert text in record, f'record missing: {text}'
-              page.screenshot(path=str(out/'05-record.png'))
+              page.screenshot(path=str(out/'07-record.png'))
               browser.close()
 
-          for path in sorted(out.glob('*.png')):
+          pngs = sorted(out.glob('*.png'))
+          assert len(pngs) == 7, f'expected 7 learning-loop screenshots, got {len(pngs)}'
+          for path in pngs:
               raw = path.read_bytes()
               assert raw[:8] == b'\x89PNG\r\n\x1a\n', path
               w,h = struct.unpack('>II', raw[16:24])
