@@ -63,6 +63,7 @@ targets:
     scheme:
       testTargets:
         - PharmacistSprintTests
+        - PharmacistSprintUITests
       gatherCoverageData: true
       coverageTargets:
         - PharmacistSprint
@@ -79,3 +80,17 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         CODE_SIGN_STYLE: Automatic
+
+  PharmacistSprintUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: UITests/VisualGateUITests.swift
+    dependencies:
+      - target: PharmacistSprint
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_STYLE: Automatic
+        TEST_TARGET_NAME: PharmacistSprint
