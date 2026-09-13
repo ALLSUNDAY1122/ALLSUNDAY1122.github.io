@@ -24,12 +24,24 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Release and learning Acceptance Contract
+        id: contract
+        continue-on-error: true
         shell: bash
         run: |
-          set -euo pipefail
-          python3 touroku-hanbaisha-ios/scripts/validate_release.py
+          set -o pipefail
+          python3 touroku-hanbaisha-ios/scripts/validate_release.py 2>&1 | tee /tmp/touhan-acceptance.log
+
+      - name: Upload Acceptance Contract diagnostics
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: touhan-acceptance-diagnostics
+          path: /tmp/touhan-acceptance.log
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Install deterministic browser
+        if: steps.contract.outcome == 'success'
         shell: bash
         run: |
           set -euo pipefail
@@ -37,6 +49,7 @@ jobs:
           python -m playwright install --with-deps chromium
 
       - name: Serve release web bundle
+        if: steps.contract.outcome == 'success'
         shell: bash
         run: |
           set -euo pipefail
@@ -51,6 +64,7 @@ jobs:
           exit 1
 
       - name: Verify human learning journey and capture Visual Gate
+        if: steps.contract.outcome == 'success'
         shell: bash
         run: |
           set -euo pipefail
@@ -113,10 +127,19 @@ jobs:
           PY
 
       - name: Upload Visual Gate evidence
-        if: always()
+        if: always() && steps.contract.outcome == 'success'
         uses: actions/upload-artifact@v6
         with:
           name: touhan-visual-preflight
           path: /tmp/touhan-visual/*.png
           if-no-files-found: error
           retention-days: 14
+
+      - name: Enforce Acceptance Contract
+        if: always()
+        shell: bash
+        run: |
+          if [ "${{ steps.contract.outcome }}" != "success" ]; then
+            echo "Touhan Release/Learning Acceptance Contract failed; see touhan-acceptance-diagnostics artifact"
+            exit 1
+          fi
