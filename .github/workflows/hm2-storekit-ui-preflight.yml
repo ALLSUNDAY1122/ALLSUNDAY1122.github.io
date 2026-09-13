@@ -8,8 +8,10 @@ on:
       - 'apps/sanitary-manager-2/gm2.js'
       - 'apps/sanitary-manager-2/gm3.js'
       - 'apps/sanitary-manager-2/gm4.js'
+      - 'ios/health-manager-2/RELEASE_CHECKLIST.md'
       - 'scripts/audit_sm2_storekit_ui.py'
       - 'scripts/audit_sm2_learning_contract.py'
+      - 'scripts/audit_sm2_release_drift.py'
       - '.github/workflows/hm2-storekit-ui-preflight.yml'
 
 permissions:
@@ -21,6 +23,8 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
@@ -34,3 +38,5 @@ jobs:
         run: python3 scripts/audit_sm2_storekit_ui.py
       - name: Learning Acceptance Contract gate
         run: python3 scripts/audit_sm2_learning_contract.py
+      - name: Release drift regression gate
+        run: python3 scripts/audit_sm2_release_drift.py
