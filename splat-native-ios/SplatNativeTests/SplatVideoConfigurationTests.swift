@@ -103,12 +103,12 @@ final class SplatVideoConfigurationTests: XCTestCase {
         let pushEnd = config.cameraSample(progress: 1)
         XCTAssertGreaterThan(pushStart.distanceMultiplier, pushEnd.distanceMultiplier)
         XCTAssertEqual(pushStart.distanceMultiplier, 1.25, accuracy: 0.0001)
-        XCTAssertEqual(pushEnd.distanceMultiplier, 0.80, accuracy: 0.0001)
+        XCTAssertEqual(pushEnd.distanceMultiplier, 1.00, accuracy: 0.0001)
 
         config.cameraMotion = .depthOrbit
         let depthStart = config.cameraSample(progress: 0)
         let depthQuarter = config.cameraSample(progress: 0.25)
-        XCTAssertEqual(depthStart.distanceMultiplier, 1.18, accuracy: 0.0001)
+        XCTAssertEqual(depthStart.distanceMultiplier, 1.36, accuracy: 0.0001)
         XCTAssertLessThan(depthQuarter.distanceMultiplier, depthStart.distanceMultiplier)
         XCTAssertNotEqual(depthQuarter.pitch, depthStart.pitch)
 
@@ -118,6 +118,7 @@ final class SplatVideoConfigurationTests: XCTestCase {
         XCTAssertEqual(spiralStart.pitch, -0.28, accuracy: 0.0001)
         XCTAssertEqual(spiralEnd.pitch, 0.28, accuracy: 0.0001)
         XCTAssertGreaterThan(spiralStart.distanceMultiplier, spiralEnd.distanceMultiplier)
+        XCTAssertEqual(spiralEnd.distanceMultiplier, 1.00, accuracy: 0.0001)
         XCTAssertGreaterThan(spiralEnd.yaw - spiralStart.yaw, 6.2)
 
         config.cameraMotion = .topApproach
@@ -126,6 +127,7 @@ final class SplatVideoConfigurationTests: XCTestCase {
         XCTAssertEqual(topStart.pitch, 0.62, accuracy: 0.0001)
         XCTAssertEqual(topEnd.pitch, 0.10, accuracy: 0.0001)
         XCTAssertGreaterThan(topStart.distanceMultiplier, topEnd.distanceMultiplier)
+        XCTAssertEqual(topEnd.distanceMultiplier, 1.00, accuracy: 0.0001)
 
         config.cameraMotion = .lowReveal
         let lowStart = config.cameraSample(progress: 0)
@@ -133,6 +135,7 @@ final class SplatVideoConfigurationTests: XCTestCase {
         XCTAssertEqual(lowStart.pitch, -0.24, accuracy: 0.0001)
         XCTAssertEqual(lowEnd.pitch, 0.38, accuracy: 0.0001)
         XCTAssertGreaterThan(lowStart.distanceMultiplier, lowEnd.distanceMultiplier)
+        XCTAssertEqual(lowEnd.distanceMultiplier, 1.00, accuracy: 0.0001)
 
         config.cameraMotion = .fixed
         let fixed = config.cameraSample(progress: 0.75)
@@ -141,16 +144,20 @@ final class SplatVideoConfigurationTests: XCTestCase {
         XCTAssertEqual(fixed.distanceMultiplier, 1, accuracy: 0.0001)
     }
 
-    func testAllCameraMotionsStayFiniteAndInSafeFramingRange() {
+    func testAllCameraMotionsStayFiniteAndNeverInvadeAspectFitDistance() {
         for motion in SplatVideoConfiguration.CameraMotion.allCases {
             var config = SplatVideoConfiguration()
             config.cameraMotion = motion
-            for step in 0...100 {
-                let sample = config.cameraSample(progress: Double(step) / 100)
+            for step in 0...120 {
+                let sample = config.cameraSample(progress: Double(step) / 120)
                 XCTAssertTrue(sample.yaw.isFinite, "nonfinite yaw for \(motion)")
                 XCTAssertTrue(sample.pitch.isFinite, "nonfinite pitch for \(motion)")
                 XCTAssertTrue(sample.distanceMultiplier.isFinite, "nonfinite distance for \(motion)")
-                XCTAssertGreaterThan(sample.distanceMultiplier, 0.5, "unsafe near distance for \(motion)")
+                XCTAssertGreaterThanOrEqual(
+                    sample.distanceMultiplier,
+                    1.0 - 0.0001,
+                    "camera moved inside aspect-fit framing floor for \(motion) at step \(step)"
+                )
                 XCTAssertLessThan(sample.distanceMultiplier, 1.6, "unsafe far distance for \(motion)")
                 XCTAssertLessThanOrEqual(abs(sample.pitch), 0.75, "excessive pitch for \(motion)")
             }
@@ -181,9 +188,9 @@ final class SplatVideoConfigurationTests: XCTestCase {
         let pushQuarter = config.cameraSample(progress: 0.25)
         let pushHalf = config.cameraSample(progress: 0.5)
         let pushThreeQuarter = config.cameraSample(progress: 0.75)
-        XCTAssertEqual(pushQuarter.distanceMultiplier, 1.1796875, accuracy: 0.0001)
-        XCTAssertEqual(pushHalf.distanceMultiplier, 1.025, accuracy: 0.0001)
-        XCTAssertEqual(pushThreeQuarter.distanceMultiplier, 0.8703125, accuracy: 0.0001)
+        XCTAssertEqual(pushQuarter.distanceMultiplier, 1.2109375, accuracy: 0.0001)
+        XCTAssertEqual(pushHalf.distanceMultiplier, 1.125, accuracy: 0.0001)
+        XCTAssertEqual(pushThreeQuarter.distanceMultiplier, 1.0390625, accuracy: 0.0001)
 
         config.cameraMotion = .orbit180
         let orbitQuarter = config.cameraSample(progress: 0.25)
