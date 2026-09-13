@@ -42,6 +42,6 @@ final class SplatCameraDistanceSafetyTests: XCTestCase {
         XCTAssertTrue(eye.x.isFinite)
         XCTAssertTrue(eye.y.isFinite)
         XCTAssertTrue(eye.z.isFinite)
-        XCTAssertEqual(eye.z, center.z + 60, accuracy: 0.0001)
+        XCTAssertEqual(eye.z, center.z + SplatCameraGeometry.maximumCameraDistance, accuracy: 0.0001)
     }
 }
