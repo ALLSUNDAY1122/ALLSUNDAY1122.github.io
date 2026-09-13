@@ -1,18 +1,29 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import re
+import json, re
 
 ROOT = Path(__file__).resolve().parents[1]
-CHECKLIST = ROOT / "ios/health-manager-1/RELEASE_CHECKLIST.md"
-STATUS = ROOT / "ios/health-manager-1/RELEASE_STATUS.md"
+BASE = ROOT / "ios/health-manager-1"
+CHECKLIST = BASE / "RELEASE_CHECKLIST.md"
+STATUS = BASE / "RELEASE_STATUS.md"
+METADATA = BASE / "APP_STORE_METADATA_JA.md"
+ASC_INPUT = BASE / "APP_STORE_CONNECT_INPUT_JA.md"
+PREPARE = BASE / "prepare-ios.sh"
+READINESS = ROOT / "automation/hm1-testflight-readiness.json"
 SUBMIT = ROOT / "scripts/app2_005_hm1_prepare_submit.py"
 
-checklist = CHECKLIST.read_text(encoding="utf-8")
-status = STATUS.read_text(encoding="utf-8")
+texts = {
+    "checklist": CHECKLIST.read_text(encoding="utf-8"),
+    "status": STATUS.read_text(encoding="utf-8"),
+    "metadata": METADATA.read_text(encoding="utf-8"),
+    "asc_input": ASC_INPUT.read_text(encoding="utf-8"),
+}
 submit = SUBMIT.read_text(encoding="utf-8")
+prepare = PREPARE.read_text(encoding="utf-8")
+readiness = json.loads(READINESS.read_text(encoding="utf-8"))
 errors = []
 
-required_contract = {
+required_submit = {
     "app id": 'APP_ID = "6799581662"',
     "bundle id": 'BUNDLE_ID = "jp.allsunday1122.healthmanager1"',
     "monthly id": 'MONTHLY_ID = "6804373671"',
@@ -21,25 +32,63 @@ required_contract = {
     "monthly 200": "月額200円",
     "lifetime 800": "買い切り800円",
 }
-for label, marker in required_contract.items():
+for label, marker in required_submit.items():
     if marker not in submit:
         errors.append(f"submit contract missing {label}: {marker}")
 
-for doc_name, text in (("checklist", checklist), ("status", status)):
-    for marker in ("6799581662", "jp.allsunday1122.healthmanager1", "264問", "月額", "200円", "買い切り", "800円"):
+for doc_name, text in texts.items():
+    for marker in ("264問", "月額", "200円", "買い切り", "800円"):
         if marker not in text:
             errors.append(f"{doc_name} missing current marker: {marker}")
+
+for doc_name in ("checklist", "status"):
+    text = texts[doc_name]
+    for marker in ("6799581662", "jp.allsunday1122.healthmanager1"):
+        if marker not in text:
+            errors.append(f"{doc_name} missing release identity: {marker}")
 
 stale_active_patterns = [
     r"Status:\s*\*\*教材132問",
     r"残作業:\s*Apple Developer / App Store Connect / 署名付きIPA",
     r"買い切り980円相当",
-    r"App Store ConnectにApp作成\s*$",
+    r"Non-Consumable\s*/\s*980円相当",
+    r"購入後は全132問",
+    r"説明候補:\s*全132問",
 ]
-combined = checklist + "\n" + status
+combined_docs = "\n".join(texts.values())
 for pattern in stale_active_patterns:
-    if re.search(pattern, combined, flags=re.MULTILINE):
+    if re.search(pattern, combined_docs, flags=re.MULTILINE):
         errors.append(f"stale active release assertion remains: {pattern}")
+
+# Raw web source may still carry the historic display fallback, but release
+# preparation must deterministically replace it and assert that no 980-yen text
+# or 132-question claim can survive into the bundled app.
+prepare_markers = (
+    "audit_hm1_release_contract.py",
+    "hm1-testflight-readiness.json",
+    "HM1 TestFlight blocked: readiness gate is not PASS",
+    "monthlyPrice:'¥200',lifetimePrice:'¥800'",
+    "assert '980円' not in updated",
+    "assert '全132問' not in updated",
+    "assert len(questions)==264",
+)
+for marker in prepare_markers:
+    if marker not in prepare:
+        errors.append(f"release preparation safety marker missing: {marker}")
+
+required_readiness = {
+    "release_contract",
+    "learning_acceptance",
+    "storekit_regression",
+    "visual_gate",
+    "release_drift",
+    "fresh_asc_release_readback",
+}
+actual_required = set(readiness.get("required") or [])
+if actual_required != required_readiness:
+    errors.append(f"TestFlight readiness requirements drifted: {sorted(actual_required)}")
+if readiness.get("ready") not in (True, False):
+    errors.append("TestFlight readiness must be an explicit boolean")
 
 human_gate_markers = (
     "AI Preflight",
@@ -48,7 +97,7 @@ human_gate_markers = (
     "TestFlightは開発QAに使用せず",
 )
 for marker in human_gate_markers:
-    if marker not in combined:
+    if marker not in combined_docs:
         errors.append(f"release safety marker missing: {marker}")
 
 if errors:
@@ -57,4 +106,7 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: HM1 release docs and submit automation agree on current 264-question / 200+800-yen contract")
+print(
+    "PASS: HM1 release docs, submit automation, build preparation and "
+    "TestFlight readiness agree on the current 264-question / 200+800-yen contract"
+)
