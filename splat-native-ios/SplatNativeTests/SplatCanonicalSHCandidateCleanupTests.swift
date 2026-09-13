@@ -84,6 +84,36 @@ final class SplatCanonicalSHCandidateCleanupTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: target), candidateData)
     }
 
+    func testTrustedDigestResolverAcceptsEndHeaderTokenInsideComment() throws {
+        let fileManager = FileManager.default
+        let directory = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-canonical-trusted-digest-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? fileManager.removeItem(at: directory) }
+
+        let legacy = directory.appendingPathComponent("result.splat")
+        try Data("legacy-placeholder".utf8).write(to: legacy, options: .atomic)
+        let digest = String(repeating: "a", count: 64)
+        let canonical = try SplatCanonicalSHAsset.canonicalURL(
+            forLegacySplat: legacy,
+            verifiedDigest: digest
+        )
+        try validSH3PLY(
+            pointCount: 2,
+            comment: "end_header marker must not terminate trusted export parsing"
+        ).write(to: canonical, options: .atomic)
+
+        let asset = SplatCanonicalSHAsset.existingCompleteAsset(
+            forLegacySplat: legacy,
+            verifiedDigest: digest,
+            expectedPointCount: 2
+        )
+
+        XCTAssertEqual(asset?.url, canonical)
+        XCTAssertEqual(asset?.descriptor.pointCount, 2)
+        XCTAssertEqual(asset?.descriptor.shDegree, 3)
+    }
+
     func testValidDifferentCanonicalTargetStillRejectsCollision() throws {
         let fileManager = FileManager.default
         let directory = fileManager.temporaryDirectory
