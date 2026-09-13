@@ -356,7 +356,7 @@ private enum MeshGeometryRefinerEngine {
     private static func recomputeNormals(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> [SIMD3<Float>] {
         var normals = Array(repeating: SIMD3<Float>.zero, count: vertices.count)
         for face in faces {
-            let normal = simd_cross(vertices[face.y] - vertices[face.x], vertices[face.z] - vertices[face.z])
+            let normal = simd_cross(vertices[face.y] - vertices[face.x], vertices[face.z] - vertices[face.x])
             guard normal.x.isFinite, normal.y.isFinite, normal.z.isFinite else { continue }
             normals[face.x] += normal; normals[face.y] += normal; normals[face.z] += normal
         }
