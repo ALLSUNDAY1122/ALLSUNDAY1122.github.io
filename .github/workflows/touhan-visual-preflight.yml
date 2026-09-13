@@ -6,6 +6,7 @@ on:
     paths:
       - 'touroku-hanbaisha-sprint/**'
       - 'touroku-hanbaisha-ios/scripts/validate_release.py'
+      - 'touroku-hanbaisha-ios/native-ios/prepare-ios.sh'
       - '.github/workflows/touhan-visual-preflight.yml'
   workflow_dispatch:
 
@@ -22,6 +23,13 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
+
+      - name: Materialize native release inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check cairosvg==2.8.2
+          bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
 
       - name: Release and learning Acceptance Contract
         id: contract
