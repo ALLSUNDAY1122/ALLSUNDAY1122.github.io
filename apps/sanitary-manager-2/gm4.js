@@ -68,12 +68,14 @@ function premiumPlansHTML(){
   <p style="margin-top:12px">無料版では最新1回相当の30問と今日のスプリントを利用できます。購入後は全300問、全30セット、全分野、苦手復習を解放します。</p>${st.message?`<p>${esc(st.message)}</p>`:''}</div>`;
 }
 function showPaywall(){
-  setApp(topBlock('プレミアム','学びを続ける','自分に合う支払い方で、全300問を使えます。')+`<div class="sec settings">${premiumPlansHTML()}</div>`+nav('settings'));
+  setApp(topBlock('プレミアム','学びを続ける','自分に合う支払い方で、全300問を使えます。')+`<div class="sec settings paywall">${premiumPlansHTML()}</div>`+nav('settings'));
   requestStoreStatus();
 }
 window.__storekitUpdate=function(payload){
   window.SM2_STORE=Object.assign(window.SM2_STORE||{},payload||{});
-  if(document.querySelector('.settings'))settingsScreen();
+  const paywall=document.querySelector('.paywall');
+  if(paywall)paywall.innerHTML=premiumPlansHTML();
+  else if(document.querySelector('.settings'))settingsScreen();
   else if(document.querySelector('.home-grid'))home();
 };
 
