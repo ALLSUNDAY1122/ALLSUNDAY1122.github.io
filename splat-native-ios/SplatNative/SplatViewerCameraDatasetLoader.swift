@@ -14,6 +14,12 @@ enum SplatViewerCameraDatasetLoader {
             var frames = try container.nestedUnkeyedContainer(forKey: .frames)
             var decodedPositions: [SIMD3<Float>] = []
             decodedPositions.reserveCapacity(min(frames.count ?? 0, maximumReturnedPositions * 2))
+            // Initial viewer orientation averages the first six returned camera poses. Preserve those
+            // exact capture poses separately: long-trajectory compaction deliberately spreads the
+            // general sample over the entire capture and otherwise turns "first six" into six widely
+            // separated cameras, making the initial view depend on total frame count.
+            var initialPositions: [SIMD3<Float>] = []
+            initialPositions.reserveCapacity(6)
             var validPositionIndex = 0
             var retentionStride = 1
             var lastValidPosition: SIMD3<Float>?
@@ -22,6 +28,9 @@ enum SplatViewerCameraDatasetLoader {
                 let frame = try frames.decode(Frame.self)
                 guard let position = frame.position else { continue }
                 lastValidPosition = position
+                if initialPositions.count < 6 {
+                    initialPositions.append(position)
+                }
 
                 if validPositionIndex % retentionStride == 0 {
                     decodedPositions.append(position)
@@ -47,6 +56,16 @@ enum SplatViewerCameraDatasetLoader {
             }
 
             var sampled = Self.evenlySampled(decodedPositions, limit: maximumReturnedPositions)
+            // Reinsert the exact first capture poses after trajectory sampling. They are the inputs
+            // used by the viewer's initial yaw/pitch estimate; keeping them stable avoids a visible
+            // startup viewpoint jump once a long scan crosses the sampling threshold. Only six of
+            // 4,096 trajectory slots are replaced, so normalization still spans the complete path.
+            if !sampled.isEmpty {
+                let prefixCount = min(initialPositions.count, sampled.count)
+                for index in 0..<prefixCount {
+                    sampled[index] = initialPositions[index]
+                }
+            }
             // The final camera pose is useful to trajectory-envelope normalization and was retained
             // by the previous post-decode sampler. Online compaction can end between stride slots,
             // so explicitly keep the true endpoint without allowing the working array to grow.
