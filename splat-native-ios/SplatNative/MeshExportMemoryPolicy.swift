@@ -61,12 +61,24 @@ enum MeshExportMemoryPolicy {
         return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
     }
 
+    /// `os_proc_available_memory()` reflects the host process rather than a simulated iPhone when
+    /// running under the iOS Simulator. Treat that value as unavailable there so CI/Simulator does
+    /// not collapse a valid device-model budget to a few host megabytes. Real devices retain the
+    /// dynamic headroom gate.
+    static func currentAvailableMemoryBytes() -> UInt64 {
+#if targetEnvironment(simulator)
+        return 0
+#else
+        return UInt64(os_proc_available_memory())
+#endif
+    }
+
     @discardableResult
     static func preflight(
         sourceURL: URL,
         format: MeshExportService.Format,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
-        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
+        availableMemoryBytes: UInt64 = currentAvailableMemoryBytes(),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Estimate {
