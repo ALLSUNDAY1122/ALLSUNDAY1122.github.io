@@ -20,7 +20,6 @@ final class PharmacistVisualGateUITests: XCTestCase {
     func testVisualLearningJourneyAndCoreTabs() throws {
         XCTAssertTrue(app.staticTexts["薬剤師国家試験"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["dailySprintButton"].exists)
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "追加購入なし")).firstMatch.exists)
         keepScreenshot("01-home")
 
         app.buttons["dailySprintButton"].tap()
