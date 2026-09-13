@@ -25,6 +25,12 @@ enum SplatViewerCameraDatasetLoader {
             var lastValidPosition: SIMD3<Float>?
 
             while !frames.isAtEnd {
+                // JSONDecoder can spend noticeable time walking a near-32 MiB trajectory. The async
+                // viewer path runs this decoder off MainActor; make that work cooperatively cancellable
+                // so switching scans does not leave obsolete metadata decode consuming CPU.
+                if validPositionIndex % 1_024 == 0, Task.isCancelled {
+                    throw CancellationError()
+                }
                 let frame = try frames.decode(Frame.self)
                 guard let position = frame.position else { continue }
                 lastValidPosition = position
@@ -200,5 +206,18 @@ enum SplatViewerCameraDatasetLoader {
             return []
         }
         return dataset.positions
+    }
+
+    static func cameraPositionsAsync(for renderURL: URL) async -> [SIMD3<Float>] {
+        // SplatViewerRenderer is @MainActor. Keep mapped file IO + JSON decoding out of the render/UI
+        // executor; only the small normalized position set crosses back to MainActor.
+        let worker = Task.detached(priority: .userInitiated) {
+            cameraPositions(for: renderURL)
+        }
+        return await withTaskCancellationHandler {
+            await worker.value
+        } onCancel: {
+            worker.cancel()
+        }
     }
 }

@@ -17,6 +17,24 @@ final class SplatViewerCameraDatasetLoaderTests: XCTestCase {
         XCTAssertEqual(positions[0].z, 3.75, accuracy: 0.0001)
     }
 
+    func testAsyncLoaderMatchesSyncCameraPositions() async throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let render = root.appendingPathComponent("result.ply")
+        try Data([0x50]).write(to: render)
+        let json = #"{\"frames\":[{\"transform_matrix\":[[1,0,0,1.25],[0,1,0,-2.5],[0,0,1,3.75],[0,0,0,1]]},{\"transform_matrix\":[[1,0,0,4],[0,1,0,5],[0,0,1,6],[0,0,0,1]]}]}"#
+        try Data(json.utf8).write(to: root.appendingPathComponent("transforms.json"))
+
+        let synchronous = SplatViewerCameraDatasetLoader.cameraPositions(for: render)
+        let asynchronous = await SplatViewerCameraDatasetLoader.cameraPositionsAsync(for: render)
+        XCTAssertEqual(asynchronous.count, synchronous.count)
+        for (lhs, rhs) in zip(asynchronous, synchronous) {
+            XCTAssertEqual(lhs.x, rhs.x, accuracy: 0.0001)
+            XCTAssertEqual(lhs.y, rhs.y, accuracy: 0.0001)
+            XCTAssertEqual(lhs.z, rhs.z, accuracy: 0.0001)
+        }
+    }
+
     func testMalformedFrameDoesNotDiscardFollowingValidCamera() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }

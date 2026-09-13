@@ -184,7 +184,8 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                 self.sourcePoints = points
                 self.targetOffset = .zero
 
-                let initial = Self.initialViewGeometry(for: url, center: framing.center)
+                let initial = await Self.initialViewGeometry(for: url, center: framing.center)
+                guard !Task.isCancelled, generation == self.loadGeneration else { return }
                 self.initialYaw = initial.yaw
                 self.initialPitch = initial.pitch
                 self.yaw = self.initialYaw
@@ -564,8 +565,8 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         return best
     }
 
-    private static func initialViewGeometry(for url: URL, center: SIMD3<Float>) -> (yaw: Float, pitch: Float) {
-        let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: url)
+    private static func initialViewGeometry(for url: URL, center: SIMD3<Float>) async -> (yaw: Float, pitch: Float) {
+        let positions = await SplatViewerCameraDatasetLoader.cameraPositionsAsync(for: url)
         guard !positions.isEmpty else { return (0, 0) }
 
         let normalization = SplatSceneNormalization(cameraPositions: positions)
