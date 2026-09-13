@@ -15,6 +15,17 @@ enum SplatVideoExporter {
         AVVideoYCbCrMatrixKey: AVVideoYCbCrMatrix_ITU_R_709_2,
     ]
 
+    static func renderViewMatrix(eye: SIMD3<Float>, center: SIMD3<Float>) -> simd_float4x4 {
+        let baseView = SplatCameraGeometry.lookAt(
+            eye: eye,
+            center: center,
+            up: SIMD3<Float>(0, 1, 0)
+        )
+        // Match the live viewer exactly. The display correction belongs in camera space; applying
+        // it on the right rotates translated scenes around world space and can move them off-center.
+        return SplatCameraGeometry.rotationZ(.pi) * baseView
+    }
+
     enum ExportError: LocalizedError {
         case metalUnavailable
         case commandQueueUnavailable
@@ -266,11 +277,7 @@ enum SplatVideoExporter {
                 near: 0.01,
                 far: 100
             )
-            let view = SplatCameraGeometry.lookAt(
-                eye: eye,
-                center: framing.center,
-                up: SIMD3<Float>(0, 1, 0)
-            )
+            let view = renderViewMatrix(eye: eye, center: framing.center)
             let viewport = SplatRenderer.ViewportDescriptor(
                 viewport: MTLViewport(
                     originX: 0,
