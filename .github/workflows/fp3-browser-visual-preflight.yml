@@ -1,0 +1,39 @@
+name: FP3 Browser Visual Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'fp3-manabi-sprint/**'
+      - 'scripts/fp3_browser_visual_preflight.py'
+      - '.github/workflows/fp3-browser-visual-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fp3-browser-visual-preflight
+  cancel-in-progress: true
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Prepare exact audited native bundle
+        run: bash fp3-manabi-sprint/ios/prepare-ios.sh
+      - name: Install Playwright Chromium
+        run: |
+          python3 -m pip install --disable-pip-version-check playwright
+          python3 -m playwright install --with-deps chromium
+      - name: Run mobile visual and premium interaction gate
+        run: python3 scripts/fp3_browser_visual_preflight.py
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: fp3-browser-visual-preflight
+          path: artifacts/fp3-browser-visual
+          if-no-files-found: warn
+          retention-days: 7
