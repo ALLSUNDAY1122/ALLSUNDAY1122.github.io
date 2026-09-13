@@ -15,8 +15,8 @@ extension ScanLabPublishPackageBuilder {
     /// Preserve the exact synchronous fail-closed package contract while moving the expensive
     /// filesystem/decode/hash work to a user-initiated worker. Parent cancellation is propagated
     /// to the worker before and after the synchronous package build. If cancellation lands while
-    /// the synchronous builder is running, remove the completed temporary package before surfacing
-    /// CancellationError so abandoned publish workspaces do not accumulate.
+    /// the builder is running or in the completion handoff race, remove the completed temporary
+    /// package before surfacing CancellationError so abandoned publish workspaces do not accumulate.
     static func buildAsync(
         from sourceURL: URL,
         maximumBytes: Int = 128 * 1024 * 1024
@@ -33,10 +33,18 @@ extension ScanLabPublishPackageBuilder {
             return ScanLabPublishPackageWorkerResult(package: package)
         }
 
-        return try await withTaskCancellationHandler {
-            try await worker.value.package
+        let result = try await withTaskCancellationHandler {
+            try await worker.value
         } onCancel: {
             worker.cancel()
+        }
+
+        do {
+            try Task.checkCancellation()
+            return result.package
+        } catch {
+            cleanup(result.package)
+            throw error
         }
     }
 }
