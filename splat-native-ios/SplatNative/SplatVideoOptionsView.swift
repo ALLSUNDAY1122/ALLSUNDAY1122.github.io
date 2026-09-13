@@ -44,6 +44,15 @@ struct SplatVideoOptionsView: View {
                     .pickerStyle(.menu)
                 }
 
+                Section("背景") {
+                    Picker("背景", selection: $configuration.backgroundStyle) {
+                        ForEach(SplatVideoConfiguration.BackgroundStyle.allCases) { background in
+                            Text(background.displayName).tag(background)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+
                 Section("速度") {
                     Picker("速度", selection: $configuration.speed) {
                         ForEach(SplatVideoConfiguration.Speed.allCases) { speed in
