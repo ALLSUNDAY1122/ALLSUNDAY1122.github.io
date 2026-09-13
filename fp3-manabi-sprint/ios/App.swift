@@ -16,7 +16,7 @@ struct FP3ManabiSprintApp: App {
 
 @MainActor
 final class StoreKitManager: ObservableObject {
-    static let productID = "jp.allsunday1122.fp3manabisprint.premium"
+    static let productID = "com.allsunday1122.fp3kakomoncoach.premium.lifetime"
 
     @Published private(set) var isPremium = false
     @Published private(set) var displayPrice = ""
