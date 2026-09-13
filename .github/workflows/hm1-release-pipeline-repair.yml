@@ -1,0 +1,68 @@
+name: HM1 Release Pipeline Repair
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: hm1-release-pipeline-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: github.event_name == 'workflow_dispatch' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP-FACTORY] HM1 Release Pipeline Repair')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Repair HM1 export audience only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          text=p.read_text(encoding='utf-8')
+          start=text.find('\n  health-manager-1-testflight:')
+          if start < 0: raise SystemExit('HM1 workflow missing')
+          end=text.find('\n  ', start+4)
+          if end < 0: end=len(text)
+          section=text[start:end]
+          old="xcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'"
+          if old not in section:
+              if 'testFlightInternalTestingOnly' not in section and 'xcode-project use-profiles' in section:
+                  print('HM1 pipeline already repaired; no mutation required')
+                  raise SystemExit(0)
+              raise SystemExit('Unexpected HM1 signing stanza; fail closed')
+          new=section.replace(old, 'xcode-project use-profiles', 1)
+          if 'testFlightInternalTestingOnly' in new:
+              raise SystemExit('Internal-only flag still present in HM1 workflow')
+          p.write_text(text[:start]+new+text[end:], encoding='utf-8')
+          PY
+          python3 scripts/audit-hm1-release-pipeline.py
+      - name: Commit repair if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- codemagic.yaml; then
+            echo 'No config diff.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          git commit -m 'fix(hm1): export App Store eligible release candidates'
+          git push origin HEAD:main
+      - name: Report
+        if: github.event_name == 'issues' && always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: `HM1 release pipeline repair finished. status=${{ job.status }} run_id=${context.runId}`});
