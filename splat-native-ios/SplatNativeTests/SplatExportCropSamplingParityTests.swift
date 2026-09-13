@@ -50,8 +50,6 @@ final class SplatExportCropSamplingParityTests: XCTestCase {
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
 
         let source = root.appendingPathComponent("result.splat")
-        try Data(repeating: 0, count: 32).write(to: source)
-
         let pointCount = 12_001
         let viewerSamples = Set(SplatCameraGeometry.framingSampleIndices(
             pointCount: pointCount,
