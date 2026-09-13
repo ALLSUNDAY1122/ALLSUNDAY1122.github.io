@@ -72,7 +72,6 @@ enum MeshExportService {
     private static let las12HeaderSize = 227
     private static let zipEndOfCentralDirectorySearchBytes = 65_557
     private static let plyHeaderSearchBytes = 64 * 1024
-    private static let passthroughCopyChunkBytes = 1 * 1024 * 1024
 
     /// Reports actual runtime capability. A format is never advertised merely because its
     /// extension exists in the UI. Exact-format passthrough is always permitted after validation.
@@ -142,7 +141,7 @@ enum MeshExportService {
         do {
             let sourceExtension = sourceURL.pathExtension.lowercased()
             if sourceExtension == format.rawValue {
-                try copyExactFormatCooperatively(sourceURL, to: partialURL)
+                try FileManager.default.copyItem(at: sourceURL, to: partialURL)
             } else if format == .usdz {
                 guard MDLAsset.canImportFileExtension(sourceExtension),
                       MDLAsset.canExportFileExtension("usdz") else {
@@ -490,24 +489,6 @@ enum MeshExportService {
             throw ExportError.outputMissing
         }
         return size.uint64Value
-    }
-
-    private static func copyExactFormatCooperatively(_ sourceURL: URL, to destinationURL: URL) throws {
-        guard FileManager.default.createFile(atPath: destinationURL.path, contents: nil) else {
-            throw ExportError.outputMissing
-        }
-        let source = try FileHandle(forReadingFrom: sourceURL)
-        let destination = try FileHandle(forWritingTo: destinationURL)
-        defer {
-            try? source.close()
-            try? destination.close()
-        }
-
-        while let chunk = try source.read(upToCount: passthroughCopyChunkBytes), !chunk.isEmpty {
-            try Task.checkCancellation()
-            try destination.write(contentsOf: chunk)
-        }
-        try Task.checkCancellation()
     }
 
     private static func readPrefix(_ url: URL, maxBytes: Int) throws -> Data {
