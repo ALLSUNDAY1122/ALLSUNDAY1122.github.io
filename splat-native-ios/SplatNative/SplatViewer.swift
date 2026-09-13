@@ -102,9 +102,11 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
     private var initialPitch: Float = 0
     private var distance: Float = 2.5
     private var baseDistance: Float = 2.5
+    private var robustBaseDistance: Float = 2.5
     private var sceneRadius: Float = 0.10
     private var sceneCenter = SIMD3<Float>.zero
     private var targetOffset = SIMD3<Float>.zero
+    private var cameraWasManuallyAdjusted = false
     private var measurementPoints: [SIMD3<Float>] = []
     private var requestedSettings = SplatEditSettings.default
     private var renderedSettings = SplatEditSettings.default
@@ -165,8 +167,15 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                 let framing = SplatCameraGeometry.robustFraming(for: points)
                 self.sceneCenter = framing.center
                 self.sceneRadius = framing.radius
-                self.baseDistance = framing.distance
-                self.distance = framing.distance
+                self.robustBaseDistance = framing.distance
+                let fittedDistance = self.aspectFittedBaseDistance(
+                    robustDistance: framing.distance,
+                    radius: framing.radius,
+                    size: self.drawableSize
+                )
+                self.baseDistance = fittedDistance
+                self.distance = fittedDistance
+                self.cameraWasManuallyAdjusted = false
                 self.cropBounds = Self.robustCropBounds(for: points)
                 self.sourcePoints = points
                 self.targetOffset = .zero
@@ -218,6 +227,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         let delta = gesture.translation(in: view)
         yaw += Float(delta.x) * 0.006
         pitch = max(-1.15, min(1.15, pitch + Float(delta.y) * 0.0045))
+        cameraWasManuallyAdjusted = true
         gesture.setTranslation(.zero, in: view)
     }
 
@@ -235,12 +245,14 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
         targetOffset += right * Float(delta.x) * worldPerPixel
         targetOffset -= up * Float(delta.y) * worldPerPixel
+        cameraWasManuallyAdjusted = true
         gesture.setTranslation(.zero, in: view)
     }
 
     @objc func pinch(_ gesture: UIPinchGestureRecognizer) {
         guard !stateMeasurementEnabled else { return }
         distance = max(baseDistance * 0.12, min(baseDistance * 7.0, distance / Float(gesture.scale)))
+        cameraWasManuallyAdjusted = true
         gesture.scale = 1
     }
 
@@ -318,6 +330,14 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         drawableSize = size
+        guard loadedURL != nil, !cameraWasManuallyAdjusted else { return }
+        let fittedDistance = aspectFittedBaseDistance(
+            robustDistance: robustBaseDistance,
+            radius: sceneRadius,
+            size: size
+        )
+        baseDistance = fittedDistance
+        distance = fittedDistance
     }
 
     private var stateMeasurementEnabled: Bool {
@@ -335,8 +355,34 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
     private func resetCamera() {
         yaw = initialYaw
         pitch = initialPitch
-        distance = baseDistance
+        let fittedDistance = aspectFittedBaseDistance(
+            robustDistance: robustBaseDistance,
+            radius: sceneRadius,
+            size: drawableSize
+        )
+        baseDistance = fittedDistance
+        distance = fittedDistance
         targetOffset = .zero
+        cameraWasManuallyAdjusted = false
+    }
+
+    private func aspectFittedBaseDistance(
+        robustDistance: Float,
+        radius: Float,
+        size: CGSize
+    ) -> Float {
+        guard size.width.isFinite,
+              size.height.isFinite,
+              size.width > 0,
+              size.height > 0 else {
+            return robustDistance
+        }
+        let aspect = Float(size.width / size.height)
+        return SplatCameraGeometry.aspectFittedDistance(
+            framing: .init(center: sceneCenter, distance: robustDistance, radius: radius),
+            fovY: fovY,
+            aspect: aspect
+        )
     }
 
     private func clearMeasurement() {
