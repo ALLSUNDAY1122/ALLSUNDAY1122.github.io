@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Configure fixed Japanese metadata for HM2 premium products."""
+"""Configure fixed Japanese metadata for HM2 premium products and read back release-critical IAP state."""
 import json, os
 from pathlib import Path
 from app_store_connect_api import api_get, api_request, load_private_key, make_token
@@ -83,6 +83,13 @@ def patch_notes(t,r):
         r['lifetime_review_note']={'changed':True,'http_status':status}
     else:r['lifetime_review_note']={'changed':False}
 
+def safe_readback(t, path):
+    try:
+        status, body = api_get(t, path)
+        return {'http_status': status, 'body': body}
+    except Exception as exc:
+        return {'error': type(exc).__name__, 'message': str(exc)[:500]}
+
 def main():
     issuer=os.environ.get('ASC_ISSUER_ID'); keyid=os.environ.get('ASC_KEY_ID')
     if not issuer or not keyid: raise SystemExit('missing ASC credentials')
@@ -96,8 +103,16 @@ def main():
         _,r['group_readback']=api_get(t,f'/v1/subscriptionGroups/{GROUP}?include=subscriptionGroupLocalizations')
         _,r['lifetime_product_readback']=api_get(t,f'/v2/inAppPurchases/{IAP}')
         _,r['lifetime_version_readback']=api_get(t,f'/v1/inAppPurchaseVersions/{vid}?include=localizations')
+        # Release-critical readiness dimensions. Keep each independent so one unsupported
+        # endpoint cannot hide the state of the others.
+        r['monthly_availability_readback']=safe_readback(t,f'/v1/subscriptions/{SUB}/subscriptionAvailability')
+        r['monthly_prices_readback']=safe_readback(t,f'/v1/subscriptions/{SUB}/prices?limit=50')
+        r['monthly_review_screenshot_readback']=safe_readback(t,f'/v1/subscriptions/{SUB}/appStoreReviewScreenshot')
+        r['lifetime_availability_readback']=safe_readback(t,f'/v2/inAppPurchases/{IAP}/inAppPurchaseAvailability')
+        r['lifetime_price_schedule_readback']=safe_readback(t,f'/v1/inAppPurchases/{IAP}/iapPriceSchedule')
+        r['lifetime_review_screenshot_readback']=safe_readback(t,f'/v2/inAppPurchases/{IAP}/appStoreReviewScreenshot')
     finally:
         if cleanup: cleanup.unlink(missing_ok=True)
     Path('hm2-iap-metadata-result.json').write_text(json.dumps(r,ensure_ascii=False,indent=2),encoding='utf-8')
-    print('PASS: HM2 Japanese IAP metadata configured')
+    print('PASS: HM2 Japanese IAP metadata configured and readiness read back')
 if __name__=='__main__': main()
