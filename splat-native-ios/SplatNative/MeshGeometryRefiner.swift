@@ -8,6 +8,11 @@ private struct MeshRefineKey: Hashable, Sendable {
     let z: Int
 }
 
+private struct MeshRefineAccumulator: Sendable {
+    var sum = SIMD3<Double>.zero
+    var count = 0
+}
+
 private struct MeshRefineFaceKey: Hashable, Sendable {
     let a: Int
     let b: Int
@@ -41,13 +46,12 @@ private enum MeshGeometryRefinerEngine {
         guard weldMeters.isFinite, weldMeters >= 0.000001, weldMeters <= 0.1 else {
             throw error("Mesh精製の統合距離が不正です")
         }
-        let parsed = try parse(url)
+        var parsed = try parse(url)
         guard parsed.vertices.count >= 3, !parsed.faces.isEmpty else {
             throw error("有効なOBJ三角形がありません")
         }
 
-        var sums: [MeshRefineKey: SIMD3<Double>] = [:]
-        var counts: [MeshRefineKey: Int] = [:]
+        var accumulators: [MeshRefineKey: MeshRefineAccumulator] = [:]
         var keys: [MeshRefineKey] = []
         keys.reserveCapacity(parsed.vertices.count)
         for point in parsed.vertices {
@@ -64,11 +68,17 @@ private enum MeshGeometryRefinerEngine {
                 z: Int(scaled.z.rounded())
             )
             keys.append(key)
-            sums[key, default: .zero] += SIMD3<Double>(Double(point.x), Double(point.y), Double(point.z))
-            counts[key, default: 0] += 1
+            var accumulator = accumulators[key] ?? MeshRefineAccumulator()
+            accumulator.sum += SIMD3<Double>(Double(point.x), Double(point.y), Double(point.z))
+            accumulator.count += 1
+            accumulators[key] = accumulator
         }
+        // Keys retain the complete source-to-weld mapping needed by faces. The original float
+        // vertices are no longer needed after accumulation, so release that large allocation before
+        // building the welded vertex table and face set.
+        parsed.vertices.removeAll(keepingCapacity: false)
 
-        let ordered = sums.keys.sorted {
+        let ordered = accumulators.keys.sorted {
             if $0.x != $1.x { return $0.x < $1.x }
             if $0.y != $1.y { return $0.y < $1.y }
             return $0.z < $1.z
@@ -78,8 +88,9 @@ private enum MeshGeometryRefinerEngine {
         vertices.reserveCapacity(ordered.count)
         for key in ordered {
             keyToIndex[key] = vertices.count
-            let divisor = Double(max(1, counts[key] ?? 1))
-            let mean = (sums[key] ?? .zero) / divisor
+            let accumulator = accumulators[key] ?? MeshRefineAccumulator()
+            let divisor = Double(max(1, accumulator.count))
+            let mean = accumulator.sum / divisor
             guard mean.x.isFinite, mean.y.isFinite, mean.z.isFinite,
                   abs(mean.x) <= Double(Float.greatestFiniteMagnitude),
                   abs(mean.y) <= Double(Float.greatestFiniteMagnitude),
