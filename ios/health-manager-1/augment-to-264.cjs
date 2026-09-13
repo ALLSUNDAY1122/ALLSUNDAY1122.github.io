@@ -8,8 +8,20 @@ const REPO_ROOT = path.resolve(IOS_DIR, '..', '..');
 const HM1 = path.join(IOS_DIR, 'Resources', 'questions.json');
 const HM2_WEB = path.join(REPO_ROOT, 'apps', 'sanitary-manager-2');
 
-const base = JSON.parse(fs.readFileSync(HM1, 'utf8'));
-if (base.length !== 132) throw new Error(`Expected HM1 base=132, got ${base.length}`);
+const rawBase = JSON.parse(fs.readFileSync(HM1, 'utf8'));
+if (rawBase.length !== 132) throw new Error(`Expected HM1 base=132, got ${rawBase.length}`);
+
+// Release bundles must carry an explicit legal/content as-of date on every item.
+// Older HM1 base rows used lawVersion/auditDate for the same audit dimension.
+// Normalize that legacy shape during deterministic release materialization rather
+// than silently shipping rows whose legal baseline is ambiguous.
+const base = rawBase.map(q => ({
+  ...q,
+  lawAsOf: q.lawAsOf || q.lawVersion || q.auditDate || null,
+}));
+for (const q of base) {
+  if (!q.lawAsOf) throw new Error(`${q.id}: no legal/content as-of date available`);
+}
 
 const scripts = [
   'q1.js','q2.js','q3.js','q4.js','q5.js','q6.js','q7.js','q8.js','q9.js','q10.js','q11.js','q12.js',
