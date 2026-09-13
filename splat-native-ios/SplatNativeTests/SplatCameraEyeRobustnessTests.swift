@@ -66,4 +66,29 @@ final class SplatCameraEyeRobustnessTests: XCTestCase {
         XCTAssertEqual(undersized.y, lowerClamp.y, accuracy: 0.0001)
         XCTAssertEqual(undersized.z, lowerClamp.z, accuracy: 0.0001)
     }
+
+    func testEyeKeepsLargeFiniteYawInsidePeriodicOrbit() {
+        let center = SIMD3<Float>(0.5, -1, 2)
+        let yaw: Float = 0.37 + 4_096 * (2 * .pi)
+        let reducedYaw = yaw.truncatingRemainder(dividingBy: 2 * .pi)
+        let large = SplatCameraGeometry.eye(center: center, distance: 3, yaw: yaw, pitch: 0.2)
+        let reduced = SplatCameraGeometry.eye(center: center, distance: 3, yaw: reducedYaw, pitch: 0.2)
+
+        XCTAssertEqual(large.x, reduced.x, accuracy: 0.0001)
+        XCTAssertEqual(large.y, reduced.y, accuracy: 0.0001)
+        XCTAssertEqual(large.z, reduced.z, accuracy: 0.0001)
+    }
+
+    func testRotationZKeepsLargeFiniteAnglePeriodic() {
+        let angle: Float = -0.42 + 8_192 * (2 * .pi)
+        let reduced = angle.truncatingRemainder(dividingBy: 2 * .pi)
+        let largeMatrix = SplatCameraGeometry.rotationZ(angle)
+        let reducedMatrix = SplatCameraGeometry.rotationZ(reduced)
+
+        for column in 0..<4 {
+            for row in 0..<4 {
+                XCTAssertEqual(largeMatrix[column][row], reducedMatrix[column][row], accuracy: 0.0001)
+            }
+        }
+    }
 }
