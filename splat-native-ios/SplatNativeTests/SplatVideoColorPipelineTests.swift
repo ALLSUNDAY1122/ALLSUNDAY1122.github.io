@@ -158,7 +158,8 @@ extension SplatVideoExporterTests {
             destinationDirectory: root
         )
         let asset = AVURLAsset(url: output)
-        let track = try XCTUnwrap(try await asset.loadTracks(withMediaType: .video).first)
+        let tracks = try await asset.loadTracks(withMediaType: .video)
+        let track = try XCTUnwrap(tracks.first)
         let center = try decodeFirstFrameBGRA(asset: asset, track: track, normalizedX: 0.5, normalizedY: 0.5)
 
         // This is deliberately an ordering/contrast gate rather than an exact codec byte match.
@@ -180,7 +181,7 @@ extension SplatVideoExporterTests {
         let output = AVAssetReaderTrackOutput(
             track: track,
             outputSettings: [
-                kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)
+                kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelBufferPixelFormatType_32BGRA)
             ]
         )
         output.alwaysCopiesSampleData = false
