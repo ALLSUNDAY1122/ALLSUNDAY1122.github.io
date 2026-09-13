@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -27,6 +28,38 @@ from app2_005_hm1_prepare_submit import (
     state,
     upload_app_screenshots,
 )
+
+
+def included_checklist(payload: dict) -> dict:
+    included = payload.get("included") or []
+    counts = Counter(str(item.get("type")) for item in included if isinstance(item, dict))
+    locales = sorted(
+        {
+            str((item.get("attributes") or {}).get("locale"))
+            for item in included
+            if isinstance(item, dict)
+            and str(item.get("type")) in {"subscriptionLocalizations", "inAppPurchaseLocalizations"}
+            and (item.get("attributes") or {}).get("locale")
+        }
+    )
+    screenshots = []
+    for item in included:
+        if not isinstance(item, dict) or item.get("type") != "appStoreReviewScreenshots":
+            continue
+        attrs = item.get("attributes") or {}
+        delivery = attrs.get("assetDeliveryState") or {}
+        screenshots.append(
+            {
+                "id": item.get("id"),
+                "file_name": attrs.get("fileName"),
+                "delivery_state": delivery.get("state") if isinstance(delivery, dict) else None,
+            }
+        )
+    return {
+        "included_type_counts": dict(sorted(counts.items())),
+        "locales": locales,
+        "review_screenshots": screenshots,
+    }
 
 
 def main() -> None:
@@ -82,9 +115,7 @@ def main() -> None:
         result.update(ensure_info_metadata(token))
 
         # Finish every automatable, reversible metadata task before evaluating the
-        # human-only App Review contact gate. A missing real contact must not block
-        # screenshot/IAP metadata that the AI can safely complete by itself.
-        # No build selection and no reviewSubmission mutation are allowed here.
+        # human-only App Review contact gate. No build selection or review submit.
         result["app_screenshots"] = upload_app_screenshots(token, localization_id, [home, premium])
         result["lifetime_review_screenshot"] = ensure_review_screenshot(
             token, kind="iap", product_id=LIFETIME_ID, image=premium
@@ -105,9 +136,16 @@ def main() -> None:
         monthly = one(sub_payload, "monthly")
         result["lifetime_state_after_metadata"] = state(lifetime)
         result["monthly_state_after_metadata"] = state(monthly)
+        result["lifetime_metadata_checklist"] = included_checklist(iap_payload)
+        result["monthly_metadata_checklist"] = included_checklist(sub_payload)
+        # Keep only non-secret public metadata needed to diagnose ASC state.
+        result["monthly_attributes"] = {
+            key: (monthly.get("attributes") or {}).get(key)
+            for key in ("name", "productId", "subscriptionPeriod", "familySharable", "groupLevel", "state")
+        }
 
-        # Human-only gate is deliberately last. This may fail closed while the
-        # safe metadata above remains prepared and its states remain observable.
+        # Human-only gate is deliberately last. It may fail closed while all safe
+        # metadata and the diagnostic checklist above remain persisted.
         result["review_detail_id"] = ensure_review_detail(token, version_id)
         result["ok"] = True
 
