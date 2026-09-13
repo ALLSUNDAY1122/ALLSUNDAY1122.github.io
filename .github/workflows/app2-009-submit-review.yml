@@ -14,9 +14,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - name: Require explicit approval bound to exact release commit
+        env:
+          APPROVAL_BODY: ${{ github.event.issue.body }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, re, subprocess
+          body=os.environ.get('APPROVAL_BODY','')
+          head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          if 'APPROVE_APP_REVIEW=YES' not in body:
+              raise SystemExit('HUMAN_GATE: explicit approval token missing')
+          m=re.search(r'APPROVED_COMMIT=([0-9a-f]{40})',body)
+          if not m or m.group(1)!=head:
+              raise SystemExit(f'HUMAN_GATE: approval must pin current release commit {head}')
+          print('PASS: explicit App Review approval pinned to exact release commit')
+          PY
       - name: Submit app and first purchases together
         id: submit
         continue-on-error: true
