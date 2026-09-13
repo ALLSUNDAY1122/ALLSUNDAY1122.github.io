@@ -181,7 +181,7 @@ extension SplatVideoExporterTests {
         let output = AVAssetReaderTrackOutput(
             track: track,
             outputSettings: [
-                kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelBufferPixelFormatType_32BGRA)
+                kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)
             ]
         )
         output.alwaysCopiesSampleData = false
