@@ -1,0 +1,58 @@
+name: ASC IAP Metadata Probe
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  probe:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[ASC-IAP-CMD]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Parse bounded command
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          python - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          data=json.loads(os.environ.get('ISSUE_BODY','').strip())
+          if set(data) - {'request_id','iap_id'}:
+              raise SystemExit('Unsupported command fields')
+          rid=data.get('request_id','')
+          iid=data.get('iap_id','')
+          if not re.fullmatch(r'[A-Za-z0-9._-]{1,100}', rid):
+              raise SystemExit('Invalid request_id')
+          if not re.fullmatch(r'[0-9]{8,20}', iid):
+              raise SystemExit('Invalid iap_id')
+          Path('/tmp/iap_id').write_text(iid, encoding='utf-8')
+          PY
+      - name: Probe fixed IAP metadata relationships
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python scripts/app_store_connect_iap_probe.py --iap-id "$(cat /tmp/iap_id)" --output iap-result.json
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asc-iap-result-${{ github.event.issue.number }}-${{ github.run_id }}
+          path: iap-result.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report result locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const conclusion = '${{ job.status }}';
+            const artifact = `asc-iap-result-${context.issue.number}-${context.runId}`;
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: `ASC IAP probe finished. status=${conclusion}; run_id=${context.runId}; artifact=${artifact}`});
