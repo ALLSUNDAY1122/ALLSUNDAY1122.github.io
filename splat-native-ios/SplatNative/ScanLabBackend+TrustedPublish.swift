@@ -96,7 +96,7 @@ extension ScanLabBackend {
 
         let package: ScanLabPublishPackage
         do {
-            package = try ScanLabPublishPackageBuilder.build(
+            package = try await ScanLabPublishPackageBuilder.buildAsync(
                 from: resultURL,
                 maximumBytes: ScanLabConfig.maximumAssetBytes
             )
