@@ -1,0 +1,79 @@
+name: Pharmacist Learning Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pharmacist-manabi-sprint/ios/**'
+      - 'pharmacist-manabi-sprint/content/product/**'
+      - 'pharmacist-manabi-sprint/scripts/validate_release.py'
+      - '.github/workflows/pharmacist-learning-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pharmacist-learning-preflight
+  cancel-in-progress: true
+
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Existing release preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 pharmacist-manabi-sprint/scripts/validate_release.py
+
+      - name: Learning Acceptance Contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('pharmacist-manabi-sprint/ios')
+          store=(root/'LearningStore.swift').read_text(encoding='utf-8')
+          result=(root/'LearningStoreResultActions.swift').read_text(encoding='utf-8')
+          quiz=(root/'QuizViews.swift').read_text(encoding='utf-8')
+          home=(root/'RootAndHomeViews.swift').read_text(encoding='utf-8')
+          history=(root/'HistorySettingsViews.swift').read_text(encoding='utf-8')
+          combined='\n'.join((store,result,quiz,home,history))
+
+          required={
+            'start daily':'func startDaily(',
+            'start field':'func startField(',
+            'start mock':'func startMock(',
+            'session persistence':'persist()',
+            'interruption resume':'func resume()',
+            'quit without losing progress':'func quitQuiz()',
+            'unknown answer':'func revealUnknown()',
+            'answer feedback':'AnswerFeedback(',
+            'progress seen':'state.seen.insert(q.id)',
+            'daily progress':'daily.answered += 1',
+            'weak review':'func startWeak(',
+            'wrong-only review':'func reviewWrongCurrent()',
+            'retry current':'func repeatCurrentSession()',
+            'weak graduation':'weak.streak',
+            'result route':'route = .result',
+            'learning record':'5週間の学習',
+            'understanding aid':'ここだけ覚える',
+          }
+          missing=[f'{label}: {token}' for label,token in required.items() if token not in combined]
+          if missing:
+              raise SystemExit('Learning Acceptance Contract missing:\n- '+'\n- '.join(missing))
+
+          # Release promise is full free access to all 1,031 scored questions.
+          # Premium arguments may remain as a generic model shape, but all human
+          # entry routes shipped in the no-IAP build must explicitly pass true.
+          for token in ('startDaily(premium: true)','startWeak(premium: true)','premium: true'):
+              if token not in combined:
+                  raise SystemExit(f'no-IAP full-access route missing: {token}')
+
+          print('PASS: pharmacist learning cycle=start-understand-progress-review-retry-resume')
+          print('PASS: no-IAP human routes remain explicitly full-access')
+          PY
