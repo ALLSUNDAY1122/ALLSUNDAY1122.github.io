@@ -91,6 +91,18 @@ final class MeshTextReferenceRewriterTests: XCTestCase {
         XCTAssertFalse(rewritten.contains("primary material.mtl"))
     }
 
+    func testQuotedCommentDoesNotReinterpretLegacyUnquotedFilename() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("source.obj")
+        try Data("mtllib original material.mtl # exporter says \"legacy\"\n".utf8).write(to: source)
+
+        XCTAssertEqual(
+            try MeshTextReferenceRewriter.firstReference(in: source, directive: "mtllib"),
+            "original material.mtl # exporter says \"legacy\""
+        )
+    }
+
     func testRejectsSymlinkedSource() throws {
         let root = try makeRoot()
         let outside = root.deletingLastPathComponent().appendingPathComponent("outside-\(UUID().uuidString).obj")
