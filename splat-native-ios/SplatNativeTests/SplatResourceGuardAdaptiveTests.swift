@@ -216,4 +216,30 @@ final class SplatResourceGuardAdaptiveTests: XCTestCase {
         XCTAssertEqual(serious, normal / 4 * 3)
         XCTAssertEqual(lowPower, normal / 4 * 3)
     }
+
+    func testVideoAdmissionUsesLiveHeadroomButTreatsZeroTelemetryAsUnknown() {
+        let physicalMemory = UInt64(8 * 1_073_741_824)
+        let staticBudget = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let zeroTelemetryBudget = SplatVideoMemoryPolicy.effectiveBudgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            availableMemoryBytes: 0,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let constrainedAvailableMemory = UInt64(256 * 1_048_576)
+        let constrainedBudget = SplatVideoMemoryPolicy.effectiveBudgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            availableMemoryBytes: constrainedAvailableMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+
+        XCTAssertEqual(zeroTelemetryBudget, staticBudget)
+        XCTAssertEqual(constrainedBudget, constrainedAvailableMemory / 4 * 3)
+        XCTAssertLessThan(constrainedBudget, staticBudget)
+    }
 }
