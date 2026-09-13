@@ -43,8 +43,9 @@ def main() -> None:
         if iap_data.get("id") != IAP_ID or attrs.get("productId") != PRODUCT_ID:
             raise RuntimeError("FP3 IAP identity mismatch")
 
+        availability_path = f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseAvailability?include=availableTerritories&limit[availableTerritories]=50"
         try:
-            _, av = api_get(token, f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseAvailability?include=availableTerritories&limit[availableTerritories]=200")
+            _, av = api_get(token, availability_path)
             existing = sorted({str(x.get("id")) for x in (av.get("included") or []) if isinstance(x, dict) and x.get("type") == "territories" and x.get("id")})
             if existing != [TERRITORY]:
                 raise RuntimeError(f"Existing IAP availability is not the expected JPN-only set: {existing}")
@@ -65,7 +66,7 @@ def main() -> None:
             status, _ = api_request(token, "/v1/inAppPurchaseAvailabilities", method="POST", payload=payload)
             if status not in (200, 201):
                 raise RuntimeError(f"IAP availability create returned HTTP {status}")
-            _, check = api_get(token, f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseAvailability?include=availableTerritories&limit[availableTerritories]=200")
+            _, check = api_get(token, availability_path)
             actual = sorted({str(x.get("id")) for x in (check.get("included") or []) if isinstance(x, dict) and x.get("type") == "territories" and x.get("id")})
             if actual != [TERRITORY]:
                 raise RuntimeError(f"IAP availability read-back mismatch: {actual}")
