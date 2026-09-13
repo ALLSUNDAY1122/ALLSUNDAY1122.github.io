@@ -14,7 +14,7 @@ WORKFLOW_ID = "touhan-ios"
 BLOCK = r'''
 
   touhan-ios:
-    name: 登録販売者 - iOS Internal TestFlight
+    name: 登録販売者 - iOS App Store Release Candidate
     max_build_duration: 60
     instance_type: mac_mini_m2
     environment:
@@ -85,18 +85,18 @@ BLOCK = r'''
         script: |
           set -euo pipefail
           keychain add-certificates
-      - name: Apply App Store signing profiles for internal TestFlight only
+      - name: Apply App Store signing profiles for release candidate
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          xcode-project use-profiles
       - name: Build signed IPA
         script: |
           set -euo pipefail
           xcode-project build-ipa \
             --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
-      - name: Upload signed IPA to App Store Connect for Internal TestFlight
+      - name: Upload signed IPA to App Store Connect as release candidate
         script: |
           set -euo pipefail
           IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
@@ -172,6 +172,7 @@ def main() -> int:
 
     required = [
         "  touhan-ios:\n",
+        "name: 登録販売者 - iOS App Store Release Candidate",
         "- app2_010_touhan_signing",
         "BUNDLE_ID: com.allsunday1122.tourokuhanbaisha",
         'APP_STORE_CONNECT_APP_ID: "6802119268"',
@@ -191,7 +192,16 @@ def main() -> int:
         "--altool-retries 3",
         "/tmp/app2-010-asc-publish-sanitized.log",
     ]
-    forbidden = ["--create", "ios_signing:", "auth: integration", "submit_to_testflight:", "submit_to_app_store:", "publishing:"]
+    forbidden = [
+        "--create",
+        "ios_signing:",
+        "auth: integration",
+        "submit_to_testflight:",
+        "submit_to_app_store:",
+        "publishing:",
+        "testFlightInternalTestingOnly",
+        "Internal TestFlight",
+    ]
     for token in required:
         if token not in workflow:
             raise SystemExit(f"missing required Touhan token: {token}")
@@ -208,7 +218,7 @@ def main() -> int:
         "changed": changed,
         "build_number_mode": "CM_BUILD_NUMBER_or_BUILD_NUMBER",
         "signing_mode": "managed_private_key_and_explicit_asc_credentials",
-        "publishing_mode": "codemagic_cli_direct_upload_internal_only_no_magic_actions",
+        "publishing_mode": "codemagic_cli_direct_upload_release_candidate_no_review_submission",
         "codemagic_group_name": "app2_010_touhan_signing",
         "bundle_id": "com.allsunday1122.tourokuhanbaisha",
         "app_store_connect_app_id": "6802119268",
@@ -217,7 +227,7 @@ def main() -> int:
         "apple_certificate_id": "K2A3VCP583",
         "submit_to_testflight_beta_review": False,
         "submit_to_app_store": False,
-        "internal_testflight_only_export": True,
+        "internal_testflight_only_export": False,
         "sanitized_publish_log_artifact": "/tmp/app2-010-asc-publish-sanitized.log",
     }
     (RESULT_DIR / f"{request_id}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
