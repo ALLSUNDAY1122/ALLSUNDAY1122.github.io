@@ -80,6 +80,9 @@ private enum MeshGeometryRefinerEngine {
             accumulator.count += 1
             accumulators[key] = accumulator
         }
+        // Keys retain the complete source-to-weld mapping needed by faces. The original float
+        // vertices are no longer needed after accumulation, so release that large allocation before
+        // building the welded vertex table and face set.
         parsed.vertices.removeAll(keepingCapacity: false)
 
         var ordered = accumulators.keys.sorted {
@@ -351,6 +354,9 @@ private enum MeshGeometryRefinerEngine {
         }
         for face in faces { union(face.x, face.y); union(face.y, face.z); union(face.z, face.x) }
 
+        // Keep one compact summary per component instead of retaining an array of every face index
+        // and then a second Set of every kept face index. On large connected meshes the old shape
+        // duplicated O(faceCount) Int storage exactly when refinement is already memory intensive.
         var summaries: [Int: MeshRefineComponentSummary] = [:]
         for face in faces {
             let root = find(face.x)
@@ -377,15 +383,28 @@ private enum MeshGeometryRefinerEngine {
     }
 
     private static func compact(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> MeshRefineMesh {
-        var used = Set<Int>()
-        for face in faces { used.insert(face.x); used.insert(face.y); used.insert(face.z) }
-        let ordered = used.sorted()
-        var map: [Int: Int] = [:]
+        // A dense remap replaces the Set -> sorted Array -> Dictionary chain. Because compacted
+        // vertices were already emitted in ascending original index order, this preserves output
+        // ordering while keeping one O(vertexCount) Int table and direct O(1) face remaps.
+        var remap = Array(repeating: -1, count: vertices.count)
+        for face in faces {
+            remap[face.x] = 0
+            remap[face.y] = 0
+            remap[face.z] = 0
+        }
         var outputVertices: [SIMD3<Float>] = []
-        for old in ordered { map[old] = outputVertices.count; outputVertices.append(vertices[old]) }
-        let outputFaces = faces.compactMap { face -> SIMD3<Int>? in
-            guard let a = map[face.x], let b = map[face.y], let c = map[face.z] else { return nil }
-            return SIMD3<Int>(a, b, c)
+        for oldIndex in remap.indices where remap[oldIndex] == 0 {
+            remap[oldIndex] = outputVertices.count
+            outputVertices.append(vertices[oldIndex])
+        }
+        var outputFaces: [SIMD3<Int>] = []
+        outputFaces.reserveCapacity(faces.count)
+        for face in faces {
+            let a = remap[face.x]
+            let b = remap[face.y]
+            let c = remap[face.z]
+            guard a >= 0, b >= 0, c >= 0 else { continue }
+            outputFaces.append(SIMD3<Int>(a, b, c))
         }
         return MeshRefineMesh(vertices: outputVertices, faces: outputFaces)
     }
