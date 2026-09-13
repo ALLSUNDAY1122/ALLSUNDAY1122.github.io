@@ -401,7 +401,17 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
             }
             guard !Task.isCancelled, generation == self.editGeneration else { return }
             guard !edited.isEmpty else {
-                self.rejectCurrentEditAndRestoreLastRendered("切り抜き範囲に3Dデータが残っていません")
+                // Older builds could persist a crop before the renderer had proved it left any
+                // visible splats. On the first load there is no last-good renderer to roll back to,
+                // so self-heal that legacy state once by restoring the non-destructive defaults.
+                if self.renderer == nil, settings != .default {
+                    self.requestedSettings = .default
+                    self.state?.applyHistorySettings(.default)
+                    self.state?.persistNow()
+                    self.rebuildImmediately(settings: .default)
+                } else {
+                    self.rejectCurrentEditAndRestoreLastRendered("切り抜き範囲に3Dデータが残っていません")
+                }
                 return
             }
 
