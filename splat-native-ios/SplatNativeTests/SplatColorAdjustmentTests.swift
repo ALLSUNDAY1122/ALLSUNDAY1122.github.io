@@ -51,24 +51,32 @@ final class SplatColorAdjustmentTests: XCTestCase {
     }
 
     func testNonfiniteAppearanceParametersPreserveLastValidColor() {
-        let sh = SplatPoint.Color.sphericalHarmonicFloat([
+        let originalSH = [
             SIMD3<Float>(0.10, 0.20, 0.30),
             SIMD3<Float>(0.01, -0.02, 0.03)
-        ])
-        let bytes = SplatPoint.Color.sRGBUInt8(SIMD3<UInt8>(32, 128, 240))
+        ]
+        let sh = SplatPoint.Color.sphericalHarmonicFloat(originalSH)
+        let originalBytes = SIMD3<UInt8>(32, 128, 240)
+        let bytes = SplatPoint.Color.sRGBUInt8(originalBytes)
 
-        XCTAssertEqual(
+        for result in [
             SplatColorAdjustment.apply(sh, exposureEV: .nan, contrast: 1.2),
-            sh
-        )
-        XCTAssertEqual(
-            SplatColorAdjustment.apply(sh, exposureEV: 0.5, contrast: .infinity),
-            sh
-        )
-        XCTAssertEqual(
-            SplatColorAdjustment.apply(bytes, exposureEV: -.infinity, contrast: 1.0),
-            bytes
-        )
+            SplatColorAdjustment.apply(sh, exposureEV: 0.5, contrast: .infinity)
+        ] {
+            guard case .sphericalHarmonicFloat(let coefficients) = result else {
+                return XCTFail("Expected unchanged SH color")
+            }
+            XCTAssertEqual(coefficients.count, originalSH.count)
+            for index in originalSH.indices {
+                assertApproximatelyEqual(coefficients[index], originalSH[index])
+            }
+        }
+
+        let byteResult = SplatColorAdjustment.apply(bytes, exposureEV: -.infinity, contrast: 1.0)
+        guard case .sRGBUInt8(let preservedBytes) = byteResult else {
+            return XCTFail("Expected unchanged sRGB color")
+        }
+        XCTAssertEqual(preservedBytes, originalBytes)
     }
 
     func testSRGBEditStillClampsToDisplayRange() {
