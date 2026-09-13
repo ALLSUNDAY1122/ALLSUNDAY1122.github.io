@@ -194,46 +194,48 @@ struct SplatVideoConfiguration: Equatable, Sendable {
             )
         case .pushIn:
             let eased = smoothstep(progress)
+            // aspectFittedDistance() is the minimum distance that keeps the complete scene inside
+            // the selected output aspect ratio. Keep the closest frame at that floor and create the
+            // push-in from farther away instead of cropping the geometry near the end of the shot.
             return CameraSample(
                 yaw: 0,
                 pitch: 0,
-                distanceMultiplier: 1.25 - eased * 0.45
+                distanceMultiplier: 1.25 - eased * 0.25
             )
         case .depthOrbit:
-            // A full turn with a gentle radial ellipse. The changing distance reveals foreground /
-            // background separation that a constant-radius turntable can hide while staying centered.
+            // Keep the radial ellipse entirely outside the fitted distance. The old 0.82x minimum
+            // could clip the scene for part of each orbit even though the initial framing was valid.
             let frameCount = max(1, totalFrames)
             let loopProgress = progress * Float(max(0, frameCount - 1)) / Float(frameCount)
             let angle = loopProgress * 2 * Float.pi
             return CameraSample(
                 yaw: angle,
                 pitch: sin(angle) * 0.10,
-                distanceMultiplier: 1 + cos(angle * 2) * 0.18
+                distanceMultiplier: 1.18 + cos(angle * 2) * 0.18
             )
         case .spiralRise:
-            // One cinematic revolution while climbing and easing slightly toward the subject.
+            // One cinematic revolution while climbing toward the fitted framing floor.
             let eased = smoothstep(progress)
             return CameraSample(
                 yaw: -.pi / 2 + eased * 2 * .pi,
                 pitch: -0.28 + eased * 0.56,
-                distanceMultiplier: 1.12 - eased * 0.18
+                distanceMultiplier: 1.12 - eased * 0.12
             )
         case .topApproach:
-            // Start above and farther away, then settle toward a near-horizontal hero angle.
+            // Start above and farther away, then settle at the fitted framing floor.
             let eased = smoothstep(progress)
             return CameraSample(
                 yaw: -0.38 + eased * 0.76,
                 pitch: 0.62 - eased * 0.52,
-                distanceMultiplier: 1.24 - eased * 0.28
+                distanceMultiplier: 1.24 - eased * 0.24
             )
         case .lowReveal:
-            // Rise from a low angle while making a small lateral arc; useful for objects whose top
-            // surface should be revealed gradually rather than shown immediately.
+            // Rise from a low angle while approaching no closer than the fitted framing floor.
             let eased = smoothstep(progress)
             return CameraSample(
                 yaw: 0.42 - eased * 0.84,
                 pitch: -0.24 + eased * 0.62,
-                distanceMultiplier: 1.12 - eased * 0.16
+                distanceMultiplier: 1.12 - eased * 0.12
             )
         case .fixed:
             return CameraSample(yaw: 0, pitch: 0, distanceMultiplier: 1)
