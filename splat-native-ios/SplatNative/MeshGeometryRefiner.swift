@@ -416,10 +416,13 @@ private enum MeshGeometryRefinerEngine {
             guard normal.x.isFinite, normal.y.isFinite, normal.z.isFinite else { continue }
             normals[face.x] += normal; normals[face.y] += normal; normals[face.z] += normal
         }
-        return normals.map {
-            let lengthSquared = simd_length_squared($0)
-            return lengthSquared.isFinite && lengthSquared > 1e-12 ? simd_normalize($0) : SIMD3<Float>(0, 1, 0)
+        for index in normals.indices {
+            let lengthSquared = simd_length_squared(normals[index])
+            normals[index] = lengthSquared.isFinite && lengthSquared > 1e-12
+                ? simd_normalize(normals[index])
+                : SIMD3<Float>(0, 1, 0)
         }
+        return normals
     }
 
     private static func error(_ message: String) -> NSError {
