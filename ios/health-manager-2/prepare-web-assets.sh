@@ -10,6 +10,12 @@ APP_ICON_SOURCE="$WEB_SRC/approved-app-icon.png"
 ICON_PARTS_DIR="$WEB_SRC/approved-icon-v4"
 ICON_TRANSPORT_SHA256="4cefe840198dde91fddb6c5fe0fdece7d41a8bebfed415eb034752491cd7977c"
 
+# Release preparation is fail-closed: the exact product gates used by AI
+# Preflight must pass again inside Codemagic before any archive can be created.
+python3 "$REPO_ROOT/scripts/audit_sm2_storekit_ui.py"
+python3 "$REPO_ROOT/scripts/audit_sm2_learning_contract.py"
+python3 "$REPO_ROOT/scripts/audit_sm2_release_drift.py"
+
 # Every Apple upload needs a unique CFBundleVersion. Codemagic officially
 # exports BUILD_NUMBER per workflow; apply it before XcodeGen runs.
 if [ -z "${BUILD_NUMBER:-}" ]; then
