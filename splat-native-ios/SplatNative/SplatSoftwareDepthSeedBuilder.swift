@@ -28,6 +28,7 @@ enum SplatSoftwareDepthSeedBuilder {
     static let voxelDensity: Float = 100
     static let maximumPointCount = 120_000
     static let minimumUsablePointCount = 2_000
+    static let maximumTopConnectedSkyY: Float = 0.60
 
     struct Result: Sendable {
         let points: [SIMD3<Float>]
@@ -110,6 +111,16 @@ enum SplatSoftwareDepthSeedBuilder {
                 blue: pixels[offset + 2]
             )
         }
+
+        func sample(normalizedX: Float, normalizedY: Float) -> SplatSeedSample? {
+            guard width > 0,
+                  height > 0,
+                  normalizedX.isFinite,
+                  normalizedY.isFinite else { return nil }
+            let x = min(1, max(0, normalizedX)) * Float(width - 1)
+            let y = min(1, max(0, normalizedY)) * Float(height - 1)
+            return sample(x, y)
+        }
     }
 
     private struct Frame {
@@ -123,6 +134,8 @@ enum SplatSoftwareDepthSeedBuilder {
         let cy: Float
         let position: SIMD3<Float>
         let forward: SIMD3<Float>
+        let skySceneLuma: Float
+        let hasConfidentTopSky: Bool
     }
 
     static func makeSeedPoints(
@@ -159,7 +172,8 @@ enum SplatSoftwareDepthSeedBuilder {
                     if voxels.count >= maximumPointCount { break }
                     let u = Float(border + gridX * pixelStride)
                     let v = Float(border + gridY * pixelStride)
-                    guard hasTexture(u: u, v: v, raster: reference.gray) else { continue }
+                    guard hasTexture(u: u, v: v, raster: reference.gray),
+                          !isTopConnectedSky(u: u, v: v, frame: reference) else { continue }
 
                     var bestCost = Float.greatestFiniteMagnitude
                     var secondCost = Float.greatestFiniteMagnitude
@@ -246,6 +260,65 @@ enum SplatSoftwareDepthSeedBuilder {
             max(abs(center - up), abs(center - down))
         )
         return max(spread, localContrast) >= 8
+    }
+
+    /// Plane sweep can assign finite parallax to textured clouds even though sky belongs at
+    /// effectively infinite depth. Reject only sky-colored pixels that are connected to a strongly
+    /// sky-like top border, leaving isolated blue objects and interior blue surfaces eligible for
+    /// reconstruction. This also prevents false near geometry from suppressing SplatSkySeeder's
+    /// far-field sky seeds.
+    private static func isTopConnectedSky(u: Float, v: Float, frame: Frame) -> Bool {
+        guard frame.hasConfidentTopSky,
+              frame.rgb.height > 1,
+              frame.rgb.width > 1 else { return false }
+        let normalizedY = v / Float(frame.rgb.height - 1)
+        guard normalizedY.isFinite,
+              normalizedY <= maximumTopConnectedSkyY,
+              let candidate = frame.rgb.sample(u, v),
+              SplatSkySeeder.isHighConfidenceSky(candidate, sceneLuma: frame.skySceneLuma) else {
+            return false
+        }
+
+        let topY = 0.035 * Float(frame.rgb.height - 1)
+        guard v > topY else { return true }
+        let sampleCount = 5
+        var skySamples = 0
+        for index in 0..<sampleCount {
+            let t = Float(index) / Float(sampleCount - 1)
+            let y = topY + (v - topY) * t
+            if let pixel = frame.rgb.sample(u, y),
+               SplatSkySeeder.isHighConfidenceSky(pixel, sceneLuma: frame.skySceneLuma) {
+                skySamples += 1
+            }
+        }
+        return skySamples >= 4
+    }
+
+    private static func lowerSceneLuma(raster: RGBRaster) -> Float {
+        let xs: [Float] = [0.20, 0.40, 0.60, 0.80]
+        let ys: [Float] = [0.55, 0.72]
+        var total: Float = 0
+        var count: Float = 0
+        for y in ys {
+            for x in xs {
+                guard let pixel = raster.sample(normalizedX: x, normalizedY: y) else { continue }
+                total += (0.2126 * Float(pixel.red) + 0.7152 * Float(pixel.green) + 0.0722 * Float(pixel.blue)) / 255
+                count += 1
+            }
+        }
+        return count > 0 ? total / count : 0.5
+    }
+
+    private static func hasConfidentTopSky(raster: RGBRaster, sceneLuma: Float) -> Bool {
+        let xs: [Float] = [0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92]
+        var matches = 0
+        for x in xs {
+            if let pixel = raster.sample(normalizedX: x, normalizedY: 0.035),
+               SplatSkySeeder.isHighConfidenceSky(pixel, sceneLuma: sceneLuma) {
+                matches += 1
+            }
+        }
+        return matches >= 5
     }
 
     private static func refinedDepth(
@@ -555,9 +628,11 @@ enum SplatSoftwareDepthSeedBuilder {
               fx > 0,
               fy > 0 else { return nil }
 
+        let rgbRaster = RGBRaster(pixels: rgbaBytes, width: width, height: height)
+        let skySceneLuma = lowerSceneLuma(raster: rgbRaster)
         return Frame(
             gray: GrayRaster(pixels: grayBytes, width: width, height: height),
-            rgb: RGBRaster(pixels: rgbaBytes, width: width, height: height),
+            rgb: rgbRaster,
             cameraToWorld: cameraToWorld,
             worldToCamera: worldToCamera,
             fx: fx,
@@ -565,7 +640,9 @@ enum SplatSoftwareDepthSeedBuilder {
             cx: cx,
             cy: cy,
             position: position,
-            forward: forward
+            forward: forward,
+            skySceneLuma: skySceneLuma,
+            hasConfidentTopSky: hasConfidentTopSky(raster: rgbRaster, sceneLuma: skySceneLuma)
         )
     }
 
