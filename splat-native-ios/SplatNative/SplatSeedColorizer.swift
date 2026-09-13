@@ -115,11 +115,12 @@ private struct SplatSeedColorAccumulator {
                 blue: average(first.blue, second.blue)
             )
         default:
-            return SplatSeedSample(
-                red: median3(first.red, second.red, third.red),
-                green: median3(first.green, second.green, third.green),
-                blue: median3(first.blue, second.blue, third.blue)
-            )
+            // A per-channel median can synthesize a color that no camera observed. For example,
+            // saturated red/green/blue samples collapse toward black because each channel's median
+            // is low. Use the RGB medoid instead: the accepted observation with the smallest total
+            // squared distance to the other observations. It keeps the robust outlier rejection
+            // benefit while guaranteeing that the 3-view seed color came from a real source frame.
+            return medoid3(first, second, third)
         }
     }
 
@@ -127,9 +128,33 @@ private struct SplatSeedColorAccumulator {
         UInt8((Int(a) + Int(b)) / 2)
     }
 
-    private func median3(_ a: UInt8, _ b: UInt8, _ c: UInt8) -> UInt8 {
-        let total = Int(a) + Int(b) + Int(c)
-        return UInt8(total - Int(min(a, min(b, c))) - Int(max(a, max(b, c))))
+    private func medoid3(
+        _ a: SplatSeedSample,
+        _ b: SplatSeedSample,
+        _ c: SplatSeedSample
+    ) -> SplatSeedSample {
+        let samples = [a, b, c]
+        var best = samples[0]
+        var bestCost = Int.max
+        for candidate in samples {
+            let cost = samples.reduce(into: 0) { partial, other in
+                partial += colorDistanceSquared(candidate, other)
+            }
+            // Keep the earliest/best-geometry observation on an exact tie. Assignment insertion
+            // order is deterministic and already ranks equal projection scores by frame index.
+            if cost < bestCost {
+                bestCost = cost
+                best = candidate
+            }
+        }
+        return best
+    }
+
+    private func colorDistanceSquared(_ lhs: SplatSeedSample, _ rhs: SplatSeedSample) -> Int {
+        let dr = Int(lhs.red) - Int(rhs.red)
+        let dg = Int(lhs.green) - Int(rhs.green)
+        let db = Int(lhs.blue) - Int(rhs.blue)
+        return dr * dr + dg * dg + db * db
     }
 }
 
