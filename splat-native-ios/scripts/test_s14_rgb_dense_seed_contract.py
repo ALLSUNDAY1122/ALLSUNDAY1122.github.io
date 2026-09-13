@@ -69,7 +69,7 @@ assert SOFTWARE.index(backproject_token, SOFTWARE.index("private static func pat
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
     'metadataFileName = "s14-seed-recipe.json"',
-    "static let recipeVersion = 7",
+    "static let recipeVersion = 8",
     "case planeSweep",
     "SplatSoftwareDepthSeedBuilder.makeSeedPoints",
     "softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount",
@@ -78,8 +78,14 @@ for token in (
     "source = .rawFeaturePoints",
     "SplatSeedColorizer.colorize",
     "requiresFreshTrainer: true",
+    "private struct VoxelAccumulator",
+    "accumulator.append(world)",
+    "VoxelAccumulator(world)",
+    ".map { $0.value.centroid }",
 ):
     assert token in SEED, f"missing S14 seed-routing contract: {token}"
+
+assert "voxels[voxel] = world" not in SEED, "depth voxel fusion regressed to last-observation-wins"
 
 # Hardware depth is sampled on its own raster but camera intrinsics describe the capture image.
 # Preserve center-to-center resampling: edge scaling produces a half-pixel bias that can expand to
