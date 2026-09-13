@@ -6,7 +6,7 @@ import SplatIO
 import simd
 import XCTest
 
-final class SplatVideoColorPipelineTests: XCTestCase {
+extension SplatVideoExporterTests {
     func testVideoRenderTargetUsesSRGBEncodingLikeLiveViewer() {
         XCTAssertEqual(SplatVideoExporter.renderPixelFormat, .bgra8Unorm_srgb)
     }
