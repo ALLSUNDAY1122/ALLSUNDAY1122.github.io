@@ -17,26 +17,30 @@ jobs:
         with:
           ref: feature/splat-post-build17-p1
           fetch-depth: 0
-      - name: Repair async loader regression JSON
+      - name: Count every decoded frame for cooperative cancellation
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p = Path('splat-native-ios/SplatNativeTests/SplatViewerCameraDatasetLoaderTests.swift')
+          p = Path('splat-native-ios/SplatNative/SplatViewerCameraDatasetLoader.swift')
           text = p.read_text(encoding='utf-8')
-          old = r'''        let json = #"{\"frames\":[{\"transform_matrix\":[[1,0,0,1.25],[0,1,0,-2.5],[0,0,1,3.75],[0,0,0,1]]},{\"transform_matrix\":[[1,0,0,4],[0,1,0,5],[0,0,1,6],[0,0,0,1]]}]}"#'''
-          new = r'''        let json = #"{"frames":[{"transform_matrix":[[1,0,0,1.25],[0,1,0,-2.5],[0,0,1,3.75],[0,0,0,1]]},{"transform_matrix":[[1,0,0,4],[0,1,0,5],[0,0,1,6],[0,0,0,1]]}]}"#'''
-          if text.count(old) != 1:
-              raise SystemExit(f'bad fixture anchor count={text.count(old)}')
-          text = text.replace(old, new, 1)
+          old_decl = '''            var validPositionIndex = 0\n            var retentionStride = 1'''
+          new_decl = '''            var validPositionIndex = 0\n            var decodedFrameIndex = 0\n            var retentionStride = 1'''
+          old_check = '''                if validPositionIndex % 1_024 == 0, Task.isCancelled {\n                    throw CancellationError()\n                }\n                let frame = try frames.decode(Frame.self)'''
+          new_check = '''                if decodedFrameIndex % 1_024 == 0, Task.isCancelled {\n                    throw CancellationError()\n                }\n                decodedFrameIndex += 1\n                let frame = try frames.decode(Frame.self)'''
+          if text.count(old_decl) != 1:
+              raise SystemExit(f'declaration anchor count={text.count(old_decl)}')
+          if text.count(old_check) != 1:
+              raise SystemExit(f'cancellation anchor count={text.count(old_check)}')
+          text = text.replace(old_decl, new_decl, 1).replace(old_check, new_check, 1)
           p.write_text(text, encoding='utf-8')
           PY
           git diff --check
-      - name: Commit repair
+      - name: Commit cancellation repair
         shell: bash
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add splat-native-ios/SplatNativeTests/SplatViewerCameraDatasetLoaderTests.swift
-          git commit -m "Fix async camera loader regression fixture"
+          git add splat-native-ios/SplatNative/SplatViewerCameraDatasetLoader.swift
+          git commit -m "Cancel camera metadata decode across malformed frames"
           git push origin HEAD:feature/splat-post-build17-p1
