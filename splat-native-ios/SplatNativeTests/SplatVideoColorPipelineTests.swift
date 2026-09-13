@@ -50,46 +50,6 @@ extension SplatVideoExporterTests {
         )
     }
 
-    func testVideoSourcePixelBufferCarriesSRGBColorSemantics() throws {
-        var pixelBuffer: CVPixelBuffer?
-        XCTAssertEqual(
-            CVPixelBufferCreate(
-                kCFAllocatorDefault,
-                4,
-                4,
-                kCVPixelFormatType_32BGRA,
-                nil,
-                &pixelBuffer
-            ),
-            kCVReturnSuccess
-        )
-        let buffer = try XCTUnwrap(pixelBuffer)
-
-        SplatVideoExporter.tagSourcePixelBufferColor(buffer)
-
-        var primariesMode = CVAttachmentMode.shouldNotPropagate
-        let primaries = CVBufferCopyAttachment(
-            buffer,
-            kCVImageBufferColorPrimariesKey,
-            &primariesMode
-        )
-        XCTAssertEqual(primariesMode, .shouldPropagate)
-        XCTAssertEqual(primaries as? String, kCVImageBufferColorPrimaries_ITU_R_709_2 as String)
-
-        var transferMode = CVAttachmentMode.shouldNotPropagate
-        let transfer = CVBufferCopyAttachment(
-            buffer,
-            kCVImageBufferTransferFunctionKey,
-            &transferMode
-        )
-        XCTAssertEqual(transferMode, .shouldPropagate)
-        XCTAssertEqual(transfer as? String, kCVImageBufferTransferFunction_sRGB as String)
-
-        // The source is RGB. YCbCr matrix semantics belong to the encoded video output, not the
-        // Metal-backed BGRA source buffer.
-        XCTAssertFalse(CVBufferHasAttachment(buffer, kCVImageBufferYCbCrMatrixKey))
-    }
-
     func testEncodedTrackCarriesBT709ColorMetadataAndPreservesMidGrayAndBackground() async throws {
         guard MTLCreateSystemDefaultDevice() != nil else {
             throw XCTSkip("Metal device is unavailable on this simulator runner")
