@@ -330,6 +330,10 @@ struct SplatResultView: View {
         // reset destroys it so an immediate “reset all” remains a reversible single user action.
         editHistory.commit(viewerState.editSettings)
         viewerState.resetEdits()
+        // Reset is a deliberate edit boundary, not another debounced slider sample. Commit the
+        // default state immediately so an edit started within the next 300 ms cannot skip the reset
+        // state in the undo chain. The onChange debounce observes the same value and becomes a no-op.
+        editHistory.commit(viewerState.editSettings)
     }
 
     private func undoEdit() {
