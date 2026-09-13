@@ -279,25 +279,36 @@ private enum MeshGeometryRefinerEngine {
                 }
                 vertices.append(SIMD3<Float>(x, y, z))
             } else if directive == "f" {
-                let tokens = Array(fields.dropFirst().prefix { !$0.hasPrefix("#") })
-                guard tokens.count >= 3 else { throw error("OBJ面定義が不正です") }
-                var ids: [Int] = []
-                ids.reserveCapacity(tokens.count)
-                for token in tokens {
-                    guard let first = token.split(separator: "/", omittingEmptySubsequences: false).first,
-                          !first.isEmpty,
-                          let raw = Int(first), raw != 0 else {
+                var firstIndex: Int?
+                var previousIndex: Int?
+                var faceVertexCount = 0
+                for token in fields.dropFirst() {
+                    if token.hasPrefix("#") { break }
+                    let vertexToken: Substring
+                    if let slash = token.firstIndex(of: "/") {
+                        vertexToken = token[..<slash]
+                    } else {
+                        vertexToken = token
+                    }
+                    guard !vertexToken.isEmpty,
+                          let raw = Int(vertexToken), raw != 0 else {
                         throw error("OBJ面定義が不正です")
                     }
                     let index = raw > 0 ? raw - 1 : vertices.count + raw
                     guard index >= 0, index < vertices.count else {
                         throw error("OBJ面インデックスが範囲外です")
                     }
-                    ids.append(index)
+                    if faceVertexCount == 0 {
+                        firstIndex = index
+                    } else if faceVertexCount >= 2,
+                              let firstIndex,
+                              let previousIndex {
+                        faces.append(SIMD3<Int>(firstIndex, previousIndex, index))
+                    }
+                    previousIndex = index
+                    faceVertexCount += 1
                 }
-                for i in 1..<(ids.count - 1) {
-                    faces.append(SIMD3<Int>(ids[0], ids[i], ids[i + 1]))
-                }
+                guard faceVertexCount >= 3 else { throw error("OBJ面定義が不正です") }
             }
         }
         return MeshRefineMesh(vertices: vertices, faces: faces)
