@@ -118,7 +118,11 @@ enum SplatExportAdmission {
             } else {
                 videoBytes = Int64(max(0, estimatedVideoBytes).rounded(.up))
             }
-            outputEstimate = saturatingAdd(effectiveSource, videoBytes)
+            // The trusted legacy/canonical scene already occupies storage before export starts.
+            // Video materialization is in memory and the writer creates only one partial MP4 that
+            // is renamed in place on success, so charging existing scene bytes again can reject a
+            // perfectly safe video solely because the scan itself is large.
+            outputEstimate = videoBytes
         }
         return saturatingAdd(outputEstimate, safetyReserveBytes)
     }
