@@ -69,7 +69,7 @@ assert SOFTWARE.index(backproject_token, SOFTWARE.index("private static func pat
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
     'metadataFileName = "s14-seed-recipe.json"',
-    "static let recipeVersion = 10",
+    "static let recipeVersion = 11",
     "case planeSweep",
     "SplatSoftwareDepthSeedBuilder.makeSeedPoints",
     "softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount",
@@ -82,10 +82,27 @@ for token in (
     "accumulator.append(world)",
     "VoxelAccumulator(world)",
     ".map { $0.value.centroid }",
+    "static func newVoxelBudget(remainingCapacity: Int, remainingFrameCount: Int) -> Int",
+    "for (frameIndex, frame) in frames.enumerated()",
+    "let remainingCapacity = max(0, maximumDepthSeedPointCount - voxels.count)",
+    "let remainingFrameCount = max(1, frames.count - frameIndex)",
+    "newVoxelsInFrame < perFrameNewVoxelBudget",
 ):
     assert token in SEED, f"missing S14 seed-routing contract: {token}"
 
 assert "voxels[voxel] = world" not in SEED, "depth voxel fusion regressed to last-observation-wins"
+
+# Long captures must not let the first ~133 mostly-unique depth frames monopolize all 120k voxels.
+def new_voxel_budget(remaining_capacity, remaining_frames):
+    if remaining_capacity <= 0 or remaining_frames <= 0:
+        return 0
+    quotient, remainder = divmod(remaining_capacity, remaining_frames)
+    return max(1, quotient + (1 if remainder else 0))
+
+assert new_voxel_budget(120_000, 200) == 600
+assert new_voxel_budget(60_000, 150) == 400
+assert new_voxel_budget(900, 1) == 900
+assert new_voxel_budget(0, 20) == 0
 
 # Hardware depth is sampled on its own raster but camera intrinsics describe the capture image.
 # Preserve center-to-center resampling: edge scaling produces a half-pixel bias that can expand to
