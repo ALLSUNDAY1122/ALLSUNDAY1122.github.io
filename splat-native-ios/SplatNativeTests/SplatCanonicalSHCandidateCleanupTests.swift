@@ -60,6 +60,30 @@ final class SplatCanonicalSHCandidateCleanupTests: XCTestCase {
         XCTAssertFalse(fileManager.fileExists(atPath: candidate.path))
     }
 
+    func testEndHeaderTokenInsideCommentDoesNotRejectValidCanonicalCandidate() throws {
+        let fileManager = FileManager.default
+        let directory = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-canonical-comment-end-header-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? fileManager.removeItem(at: directory) }
+
+        let target = directory.appendingPathComponent("result.sh3-test.ply")
+        let candidate = directory.appendingPathComponent(".result.sh3-test.ply.candidate.ply")
+        let candidateData = validSH3PLY(pointCount: 2, comment: "end_header marker is metadata only")
+        try candidateData.write(to: candidate, options: .atomic)
+
+        let installed = try SplatCanonicalSHAsset.installCollisionSafeTemporaryPLY(
+            candidate,
+            targetURL: target,
+            expectedPointCount: 2
+        )
+
+        XCTAssertEqual(installed.descriptor.pointCount, 2)
+        XCTAssertEqual(installed.descriptor.shDegree, 3)
+        XCTAssertTrue(SplatCanonicalSHAsset.hasCompleteVertexPayload(at: target, expectedPointCount: 2))
+        XCTAssertEqual(try Data(contentsOf: target), candidateData)
+    }
+
     func testValidDifferentCanonicalTargetStillRejectsCollision() throws {
         let fileManager = FileManager.default
         let directory = fileManager.temporaryDirectory
