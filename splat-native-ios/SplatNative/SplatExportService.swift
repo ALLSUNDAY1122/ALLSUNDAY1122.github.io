@@ -251,7 +251,12 @@ enum SplatPersistedEditMaterializer {
         let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
 
         var result: [SplatPoint] = []
-        result.reserveCapacity(points.count)
+        // A crop can discard most of a large scene. Reserving the full input count up front
+        // creates avoidable peak heap pressure; let the array grow with surviving points instead.
+        // Keep the full reservation for color-only edits where every point is retained.
+        if !settings.hasCrop {
+            result.reserveCapacity(points.count)
+        }
         for point in points {
             guard isEligible(point, settings: settings, bounds: plan.bounds) else { continue }
             guard needsColorAdjustment else {
