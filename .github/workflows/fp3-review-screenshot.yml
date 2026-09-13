@@ -1,0 +1,64 @@
+name: FP3 Review Screenshot
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'fp3-manabi-sprint/ios/**'
+      - '.github/workflows/fp3-review-screenshot.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: macos-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Prepare audited offline bundle
+        run: bash fp3-manabi-sprint/ios/prepare-ios.sh
+      - name: Generate Xcode project
+        working-directory: fp3-manabi-sprint/ios
+        run: xcodegen generate
+      - name: Choose simulator
+        id: sim
+        run: |
+          DEVICE=$(xcrun simctl list devices available | grep -m1 'iPhone' | sed -E 's/^[[:space:]]*([^\(]+) \(.*/\1/' | sed 's/[[:space:]]*$//')
+          test -n "$DEVICE"
+          echo "device=$DEVICE" >> "$GITHUB_OUTPUT"
+      - name: Run paywall UI capture
+        working-directory: fp3-manabi-sprint/ios
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project FP3ManabiSprint.xcodeproj \
+            -scheme FP3ManabiSprint \
+            -destination "platform=iOS Simulator,name=${{ steps.sim.outputs.device }}" \
+            -resultBundlePath "$RUNNER_TEMP/FP3Review.xcresult" \
+            CODE_SIGNING_ALLOWED=NO \
+            test | tee "$RUNNER_TEMP/fp3-review-test.log"
+      - name: Export screenshot attachments
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/fp3-review-attachments"
+          xcrun xcresulttool export attachments \
+            --path "$RUNNER_TEMP/FP3Review.xcresult" \
+            --output-path "$RUNNER_TEMP/fp3-review-attachments"
+          find "$RUNNER_TEMP/fp3-review-attachments" -type f -maxdepth 3 -print
+      - name: Require captured PNG
+        run: |
+          COUNT=$(find "$RUNNER_TEMP/fp3-review-attachments" -type f \( -name '*.png' -o -name '*.PNG' \) | wc -l | tr -d ' ')
+          test "$COUNT" -ge 1
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: fp3-iap-review-paywall
+          path: |
+            ${{ runner.temp }}/fp3-review-attachments
+            ${{ runner.temp }}/fp3-review-test.log
+          if-no-files-found: error
+          retention-days: 7
