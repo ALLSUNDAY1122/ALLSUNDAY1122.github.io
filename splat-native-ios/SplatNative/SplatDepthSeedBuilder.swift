@@ -24,7 +24,7 @@ struct SplatDepthSeedFrame: Sendable {
 enum SplatDepthSeedBuilder {
     // Recipe version is a cache-compatibility epoch, not the file-format version. Bump it whenever
     // seed-generation semantics change so a same-RAW comparison cannot silently reuse stale points3D.ply.
-    static let recipeVersion = 7
+    static let recipeVersion = 8
     static let targetSamplesPerFrame = 900
     static let voxelDensity: Float = 100
     static let minimumDepth: Float = 0.18
@@ -74,6 +74,39 @@ enum SplatDepthSeedBuilder {
             self.x = x
             self.y = y
             self.z = z
+        }
+    }
+
+    /// Fuse repeated depth observations inside the same 1 cm voxel instead of letting the last
+    /// capture sample win. Double-precision sums keep accumulation error far below the voxel scale;
+    /// the final centroid is converted back to Float only once when the bounded seed is emitted.
+    private struct VoxelAccumulator {
+        var sumX: Double
+        var sumY: Double
+        var sumZ: Double
+        var count: Int
+
+        init(_ point: SIMD3<Float>) {
+            sumX = Double(point.x)
+            sumY = Double(point.y)
+            sumZ = Double(point.z)
+            count = 1
+        }
+
+        mutating func append(_ point: SIMD3<Float>) {
+            sumX += Double(point.x)
+            sumY += Double(point.y)
+            sumZ += Double(point.z)
+            count += 1
+        }
+
+        var centroid: SIMD3<Float> {
+            let denominator = Double(max(1, count))
+            return SIMD3<Float>(
+                Float(sumX / denominator),
+                Float(sumY / denominator),
+                Float(sumZ / denominator)
+            )
         }
     }
 
@@ -395,7 +428,7 @@ enum SplatDepthSeedBuilder {
         frames: [SplatDepthSeedFrame],
         fileManager: FileManager
     ) -> (points: [SIMD3<Float>], framesUsed: Int) {
-        var voxels: [Voxel: SIMD3<Float>] = [:]
+        var voxels: [Voxel: VoxelAccumulator] = [:]
         let (reserveEstimate, reserveOverflow) = frames.count.multipliedReportingOverflow(by: targetSamplesPerFrame)
         voxels.reserveCapacity(min(maximumDepthSeedPointCount, reserveOverflow ? maximumDepthSeedPointCount : reserveEstimate))
         var framesUsed = 0
@@ -403,8 +436,7 @@ enum SplatDepthSeedBuilder {
         let resolvedRoot = lexicalRoot.resolvingSymlinksInPath()
 
         for frame in frames {
-            guard voxels.count < maximumDepthSeedPointCount,
-                  let relativePath = frame.depthFilePath,
+            guard let relativePath = frame.depthFilePath,
                   let depthWidth = frame.depthWidth,
                   let depthHeight = frame.depthHeight,
                   let bytesPerRow = frame.depthBytesPerRow,
@@ -448,7 +480,6 @@ enum SplatDepthSeedBuilder {
 
             for y in stride(from: step / 2, to: depthHeight, by: step) {
                 for x in stride(from: step / 2, to: depthWidth, by: step) {
-                    if voxels.count >= maximumDepthSeedPointCount { break }
                     let (rowOffset, rowOverflow) = y.multipliedReportingOverflow(by: bytesPerRow)
                     let (pixelOffset, pixelOverflow) = x.multipliedReportingOverflow(by: MemoryLayout<Float32>.stride)
                     let (offset, offsetOverflow) = rowOffset.addingReportingOverflow(pixelOffset)
@@ -486,10 +517,16 @@ enum SplatDepthSeedBuilder {
                           world.y.isFinite,
                           world.z.isFinite,
                           let voxel = Voxel(world) else { continue }
-                    voxels[voxel] = world
-                    acceptedInFrame += 1
+
+                    if var accumulator = voxels[voxel] {
+                        accumulator.append(world)
+                        voxels[voxel] = accumulator
+                        acceptedInFrame += 1
+                    } else if voxels.count < maximumDepthSeedPointCount {
+                        voxels[voxel] = VoxelAccumulator(world)
+                        acceptedInFrame += 1
+                    }
                 }
-                if voxels.count >= maximumDepthSeedPointCount { break }
             }
 
             if acceptedInFrame > 0 { framesUsed += 1 }
@@ -499,7 +536,7 @@ enum SplatDepthSeedBuilder {
             if lhs.key.x != rhs.key.x { return lhs.key.x < rhs.key.x }
             if lhs.key.y != rhs.key.y { return lhs.key.y < rhs.key.y }
             return lhs.key.z < rhs.key.z
-        }.map(\.value)
+        }.map { $0.value.centroid }
         return (ordered, framesUsed)
     }
 
