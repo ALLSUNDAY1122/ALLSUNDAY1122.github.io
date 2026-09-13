@@ -1,0 +1,32 @@
+name: FP3 IAP Availability
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/fp3_ensure_iap_availability.py'
+      - '.github/workflows/fp3-iap-availability.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ensure:
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Ensure FP3 lifetime IAP is available in Japan
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/fp3_ensure_iap_availability.py
+      - name: Upload sanitized result
+        if: always() && hashFiles('fp3-iap-availability-result.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: fp3-iap-availability-${{ github.run_id }}
+          path: fp3-iap-availability-result.json
+          retention-days: 7
