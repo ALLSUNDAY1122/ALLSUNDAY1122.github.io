@@ -52,6 +52,16 @@ enum SplatViewerMemoryPolicy {
         return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
     }
 
+    /// Simulator headroom describes the macOS runner rather than a simulated iPhone and can be only
+    /// a few MiB during CI. Mark it unavailable there; real iPhones still use live headroom telemetry.
+    static func currentAvailableMemoryBytes() -> UInt64 {
+#if targetEnvironment(simulator)
+        return 0
+#else
+        return UInt64(os_proc_available_memory())
+#endif
+    }
+
     /// Physical RAM alone is not enough to decide whether a high-quality SH3 scene is safe to open:
     /// another app, the just-finished reconstruction, or an export can temporarily consume most of
     /// the process headroom. Keep one quarter of the currently available memory outside the SH3
@@ -79,7 +89,7 @@ enum SplatViewerMemoryPolicy {
     static func canUseCanonicalSH3(
         pointCount: Int,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
-        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
+        availableMemoryBytes: UInt64 = currentAvailableMemoryBytes(),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) -> Bool {
