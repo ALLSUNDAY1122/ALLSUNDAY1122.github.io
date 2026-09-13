@@ -5,6 +5,33 @@ final class HM2PaywallReviewUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    private func attachDiagnostics(_ app: XCUIApplication, stage: String) {
+        let screenshot = XCUIScreen.main.screenshot()
+        let image = XCTAttachment(screenshot: screenshot)
+        image.name = "HM2-Diagnostic-\(stage)"
+        image.lifetime = .keepAlways
+        add(image)
+
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.name = "HM2-Accessibility-\(stage)"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+    }
+
+    private func require(
+        _ element: XCUIElement,
+        timeout: TimeInterval,
+        message: String,
+        stage: String,
+        app: XCUIApplication
+    ) {
+        guard element.waitForExistence(timeout: timeout) else {
+            attachDiagnostics(app, stage: stage)
+            XCTFail(message)
+            return
+        }
+    }
+
     func testCapturePremiumPaywall() throws {
         let app = XCUIApplication()
         // App Store Connect canonical Japan prices. StoreKit Simulator storefront
@@ -17,7 +44,14 @@ final class HM2PaywallReviewUITests: XCTestCase {
         let unlock = app.buttons.matching(
             NSPredicate(format: "label CONTAINS %@", "全300問を解放")
         ).firstMatch
-        XCTAssertTrue(unlock.waitForExistence(timeout: 12), "Premium entry was not visible")
+        require(
+            unlock,
+            timeout: 12,
+            message: "Premium entry was not visible",
+            stage: "home-premium-entry",
+            app: app
+        )
+        guard unlock.exists else { return }
         unlock.tap()
 
         let monthly = app.buttons.matching(
@@ -36,12 +70,13 @@ final class HM2PaywallReviewUITests: XCTestCase {
             NSPredicate(format: "label CONTAINS %@", "¥800")
         ).firstMatch
 
-        XCTAssertTrue(monthly.waitForExistence(timeout: 8), "Monthly plan was not visible")
-        XCTAssertTrue(lifetime.waitForExistence(timeout: 3), "Lifetime plan was not visible")
-        XCTAssertTrue(restore.waitForExistence(timeout: 3), "Restore purchase was not visible")
-        XCTAssertTrue(monthlyPrice.waitForExistence(timeout: 3), "Canonical monthly price was not visible")
-        XCTAssertTrue(lifetimePrice.waitForExistence(timeout: 3), "Canonical lifetime price was not visible")
+        require(monthly, timeout: 8, message: "Monthly plan was not visible", stage: "paywall-monthly", app: app)
+        require(lifetime, timeout: 3, message: "Lifetime plan was not visible", stage: "paywall-lifetime", app: app)
+        require(restore, timeout: 3, message: "Restore purchase was not visible", stage: "paywall-restore", app: app)
+        require(monthlyPrice, timeout: 3, message: "Canonical monthly price was not visible", stage: "paywall-monthly-price", app: app)
+        require(lifetimePrice, timeout: 3, message: "Canonical lifetime price was not visible", stage: "paywall-lifetime-price", app: app)
 
+        guard monthly.exists, lifetime.exists, restore.exists, monthlyPrice.exists, lifetimePrice.exists else { return }
         let screenshot = XCUIScreen.main.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot)
         attachment.name = "HM2-IAP-Review-Paywall"
