@@ -1,0 +1,42 @@
+name: APP Factory Platform Readback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/app_factory_platform_readback.py'
+      - '.github/workflows/app-factory-platform-readback.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-factory-platform-readback
+  cancel-in-progress: true
+
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Fresh read-only TestFlight and Codemagic state
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          FACTORY_PLATFORM_RESULT: factory-platform-readback.json
+        run: python3 scripts/app_factory_platform_readback.py
+      - name: Upload sanitized result
+        if: always() && hashFiles('factory-platform-readback.json') != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: app-factory-platform-readback
+          path: factory-platform-readback.json
+          if-no-files-found: error
+          retention-days: 7
