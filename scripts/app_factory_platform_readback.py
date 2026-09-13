@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+"""Read-only canonical platform probe for APP COMPLETION FACTORY.
+
+Reads current TestFlight/App Store Connect beta state and Codemagic state without
+starting builds, changing beta groups, uploading binaries, or submitting review.
+"""
 from __future__ import annotations
 
 import json, os, urllib.error, urllib.parse, urllib.request
