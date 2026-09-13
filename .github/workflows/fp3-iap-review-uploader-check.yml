@@ -1,0 +1,43 @@
+name: FP3 IAP Review Uploader Check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/fp3_upload_iap_review_screenshot.py'
+      - '.github/workflows/fp3-iap-review-uploader-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Python syntax
+        run: python -m py_compile scripts/fp3_upload_iap_review_screenshot.py
+      - name: Fail-closed identity and asset gates
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s = Path('scripts/fp3_upload_iap_review_screenshot.py').read_text(encoding='utf-8')
+          required = [
+              'APP_ID = "6796733578"',
+              'BUNDLE_ID = "com.allsunday1122.fp3kakomoncoach"',
+              'IAP_ID = "6798730387"',
+              'PRODUCT_ID = "com.allsunday1122.fp3kakomoncoach.premium.lifetime"',
+              'Existing IAP review screenshot is not COMPLETE',
+              'sourceFileChecksum',
+              'IAP review screenshot read-back mismatch',
+          ]
+          missing = [x for x in required if x not in s]
+          if missing:
+              raise SystemExit('missing FP3 review uploader safety markers: ' + repr(missing))
+          print('PASS: FP3 IAP review screenshot uploader contract')
+          PY
