@@ -69,9 +69,12 @@ final class SplatVideoColorPipelineTests: XCTestCase {
             destinationDirectory: root
         )
         let asset = AVURLAsset(url: output)
-        let track = try XCTUnwrap(try await asset.loadTracks(withMediaType: .video).first)
-        let format = try XCTUnwrap(try await track.load(.formatDescriptions).first)
-        let extensions = CMFormatDescriptionGetExtensions(format) as NSDictionary
+        let tracks = try await asset.loadTracks(withMediaType: .video)
+        let track = try XCTUnwrap(tracks.first)
+        let formats = try await track.load(.formatDescriptions)
+        let format = try XCTUnwrap(formats.first)
+        let extensionDictionary = try XCTUnwrap(CMFormatDescriptionGetExtensions(format))
+        let extensions = extensionDictionary as NSDictionary
 
         XCTAssertEqual(
             extensions[kCMFormatDescriptionExtension_ColorPrimaries] as? String,
