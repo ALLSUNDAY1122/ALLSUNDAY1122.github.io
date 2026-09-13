@@ -506,6 +506,8 @@ enum SplatSoftwareDepthSeedBuilder {
             space: CGColorSpaceCreateDeviceGray(),
             bitmapInfo: CGImageAlphaInfo.none.rawValue
         ) else { return nil }
+        grayContext.translateBy(x: 0, y: CGFloat(height))
+        grayContext.scaleBy(x: 1, y: -1)
         grayContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
 
         var rgbaBytes = [UInt8](repeating: 0, count: rgbaCount)
@@ -520,6 +522,8 @@ enum SplatSoftwareDepthSeedBuilder {
             space: colorSpace,
             bitmapInfo: bitmapInfo
         ) else { return nil }
+        rgbContext.translateBy(x: 0, y: CGFloat(height))
+        rgbContext.scaleBy(x: 1, y: -1)
         rgbContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
 
         let cameraToWorld = matrix(source.transformMatrix)

@@ -69,7 +69,7 @@ assert SOFTWARE.index(backproject_token, SOFTWARE.index("private static func pat
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
     'metadataFileName = "s14-seed-recipe.json"',
-    "static let recipeVersion = 8",
+    "static let recipeVersion = 9",
     "case planeSweep",
     "SplatSoftwareDepthSeedBuilder.makeSeedPoints",
     "softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount",
@@ -112,7 +112,12 @@ for token in (
     assert token in MESH, f"Mesh MVS camera/image convention drift: {token}"
 assert "grayContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))" in SOFTWARE
 assert "context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))" in MESH
-assert "translateBy(x: 0, y:" not in SOFTWARE, "S14 image orientation changed independently"
+for token in (
+    "translateBy(x: 0, y: CGFloat(height))",
+    "scaleBy(x: 1, y: -1)",
+):
+    assert token in SOFTWARE, f"S14 top-left raster convention missing: {token}"
+    assert token in MESH, f"Mesh MVS top-left raster convention missing: {token}"
 
 # S14 changes initialization only. Training and safety policy must remain frozen.
 for token in (
