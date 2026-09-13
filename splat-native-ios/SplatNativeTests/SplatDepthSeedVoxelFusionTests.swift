@@ -43,6 +43,30 @@ final class SplatDepthSeedVoxelFusionTests: XCTestCase {
         XCTAssertEqual(forwardPLY, reversePLY)
     }
 
+    func testLongCaptureBudgetReservesCapacityForTailFrames() {
+        var remainingCapacity = SplatDepthSeedBuilder.maximumDepthSeedPointCount
+        let frameCount = 200
+        var budgets: [Int] = []
+
+        for frameIndex in 0..<frameCount {
+            let remainingFrames = frameCount - frameIndex
+            let budget = min(
+                SplatDepthSeedBuilder.targetSamplesPerFrame,
+                SplatDepthSeedBuilder.newVoxelBudget(
+                    remainingCapacity: remainingCapacity,
+                    remainingFrameCount: remainingFrames
+                )
+            )
+            budgets.append(budget)
+            remainingCapacity -= budget
+        }
+
+        XCTAssertEqual(budgets.first, 600)
+        XCTAssertEqual(budgets.last, 600)
+        XCTAssertEqual(budgets.reduce(0, +), SplatDepthSeedBuilder.maximumDepthSeedPointCount)
+        XCTAssertEqual(remainingCapacity, 0)
+    }
+
     private func makeFrame(path: String) -> SplatDepthSeedFrame {
         SplatDepthSeedFrame(
             depthFilePath: path,
