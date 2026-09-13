@@ -12,11 +12,15 @@ enum SplatColorAdjustment {
         let linearGain = Float(pow(2.0, exposureEV)) * contrastValue
         let bias = Float(0.5) * (1 - contrastValue)
         let midpoint = SIMD3<Float>(repeating: 0.5)
-        let base = color.asSRGBFloat
 
         switch color {
         case .sphericalHarmonicFloat(var coefficients):
+            // A malformed/truncated scene can surface an SH payload with no DC coefficient.
+            // Do not ask `asSRGBFloat` to derive a base color until the DC term is known to exist;
+            // returning the original payload lets the caller's normal validation/recovery path
+            // handle the damaged point instead of turning an appearance edit into a crash.
             guard !coefficients.isEmpty else { return color }
+            let base = color.asSRGBFloat
             // The edit is affine before display clipping. Scale every directional
             // SH coefficient by the linear term; apply the constant bias to DC only.
             // Clamping DC here would destroy view-dependent variation, so final
@@ -31,6 +35,7 @@ enum SplatColorAdjustment {
             return .sphericalHarmonicFloat(coefficients)
 
         case .sRGBUInt8:
+            let base = color.asSRGBFloat
             let adjusted = simd_clamp(
                 base * linearGain + SIMD3<Float>(repeating: bias),
                 .zero,
