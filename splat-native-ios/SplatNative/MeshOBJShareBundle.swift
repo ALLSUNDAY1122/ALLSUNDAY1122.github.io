@@ -254,6 +254,11 @@ enum MeshOBJShareBundle {
             let option = arguments[index].lowercased()
             index += 1
             switch option {
+            case "-halo":
+                // Wavefront's map_d -halo flag has no following option argument. Treating every
+                // unknown switch as one-argument used to consume the texture filename itself and
+                // silently omit dissolve/alpha maps from exact OBJ sharing.
+                break
             case "-mm":
                 index = min(arguments.count, index + 2)
             case "-o", "-s", "-t":
