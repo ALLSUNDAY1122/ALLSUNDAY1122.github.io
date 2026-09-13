@@ -81,9 +81,13 @@ struct SplatEditSettings: Codable, Equatable, Sendable {
         }
     }
 
-    static func salvagingPartiallyCorruptJSON(_ data: Data) -> SplatEditSettings? {
+    static func salvagingPartiallyCorruptJSON(
+        _ data: Data,
+        minimumValidKnownFieldCount: Int = 1
+    ) -> SplatEditSettings? {
+        let minimum = min(8, max(1, minimumValidKnownFieldCount))
         guard let decoded = try? JSONDecoder().decode(LossyDecode.self, from: data),
-              decoded.validKnownFieldCount > 0 else {
+              decoded.validKnownFieldCount >= minimum else {
             return nil
         }
         return decoded.settings.normalized()
@@ -143,6 +147,7 @@ enum SplatViewerEditStoreError: Error, Equatable {
 /// viewer edits can be recovered without making the reconstructed asset itself untrusted.
 struct SplatViewerEditStore {
     private static let maximumSidecarByteCount: Int64 = 64 * 1024
+    private static let strongPartialSalvageFieldCount = 6
 
     static func primaryURL(for sourceURL: URL) -> URL {
         sourceURL.deletingPathExtension().appendingPathExtension("viewer.json")
@@ -155,31 +160,41 @@ struct SplatViewerEditStore {
     static func load(sourceURL: URL, fileManager: FileManager = .default) -> (settings: SplatEditSettings, recoveredFromBackup: Bool)? {
         let decoder = JSONDecoder()
         let primary = primaryURL(for: sourceURL)
+        var weakPrimarySalvage: SplatEditSettings?
         if let data = readSettingsDataIfSafe(at: primary, fileManager: fileManager) {
             if let decoded = try? decoder.decode(SplatEditSettings.self, from: data) {
                 return (decoded.normalized(), false)
             }
-            // A single type-damaged field should not roll every newer viewer edit back to an older
-            // generation. Salvage independently decodable numeric siblings, but only when at least
-            // one known field remains usable; fully unrecognizable data still falls through to the
-            // last-known-good backup below.
-            if let salvaged = SplatEditSettings.salvagingPartiallyCorruptJSON(data) {
+            // Preserve a nearly-intact newer generation when only one or two known fields are type
+            // damaged. If corruption is broader, remember any usable primary values but prefer a
+            // complete last-known-good backup instead of silently resetting most edits to defaults.
+            if let salvaged = SplatEditSettings.salvagingPartiallyCorruptJSON(
+                data,
+                minimumValidKnownFieldCount: strongPartialSalvageFieldCount
+            ) {
                 return (salvaged, false)
             }
+            weakPrimarySalvage = SplatEditSettings.salvagingPartiallyCorruptJSON(data)
         }
 
         let backup = backupURL(for: sourceURL)
-        guard let data = readSettingsDataIfSafe(at: backup, fileManager: fileManager),
-              let decoded = try? decoder.decode(SplatEditSettings.self, from: data) else {
-            return nil
+        if let data = readSettingsDataIfSafe(at: backup, fileManager: fileManager),
+           let decoded = try? decoder.decode(SplatEditSettings.self, from: data) {
+            // A valid backup remains useful even when the primary node is unsafe. Do not attempt the
+            // self-heal through an existing symlink/special node: normal viewer loading must never write
+            // outside the scan project merely because the primary sidecar was replaced by an alias.
+            if writeDestinationIsSafeOrMissing(at: primary, fileManager: fileManager) {
+                try? data.write(to: primary, options: .atomic)
+            }
+            return (decoded.normalized(), true)
         }
-        // A valid backup remains useful even when the primary node is unsafe. Do not attempt the
-        // self-heal through an existing symlink/special node: normal viewer loading must never write
-        // outside the scan project merely because the primary sidecar was replaced by an alias.
-        if writeDestinationIsSafeOrMissing(at: primary, fileManager: fileManager) {
-            try? data.write(to: primary, options: .atomic)
+
+        // No healthy backup exists. Retaining the independently decodable primary values is safer
+        // than discarding every user edit, even when the primary was too damaged to outrank a backup.
+        if let weakPrimarySalvage {
+            return (weakPrimarySalvage, false)
         }
-        return (decoded.normalized(), true)
+        return nil
     }
 
     static func save(_ settings: SplatEditSettings, sourceURL: URL, fileManager: FileManager = .default) throws {
