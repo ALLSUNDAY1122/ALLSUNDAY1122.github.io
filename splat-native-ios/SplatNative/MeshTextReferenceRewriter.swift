@@ -68,7 +68,22 @@ enum MeshTextReferenceRewriter {
 
         try forEachLine(at: source) { line in
             if directiveValue(in: line, directive: directive) != nil {
-                try append("\(directive) \(replacement)")
+                if directive.lowercased() == "map_kd" {
+                    let arguments = parseArguments(String(line))
+                    let payload = Array(arguments.dropFirst())
+                    if let pathStart = texturePathStartIndex(in: payload) {
+                        // Preserve material-space texture transforms/options. Dropping -s/-o/-t while
+                        // swapping the edited bitmap changes how the same UVs sample the texture and
+                        // can make a successful appearance edit visibly move or rescale the material.
+                        let options = payload[..<pathStart]
+                        let optionSuffix = options.isEmpty ? "" : " " + options.joined(separator: " ")
+                        try append("\(directive)\(optionSuffix) \(replacement)")
+                    } else {
+                        try append("\(directive) \(replacement)")
+                    }
+                } else {
+                    try append("\(directive) \(replacement)")
+                }
                 replaced = true
             } else {
                 try append(String(line))
@@ -186,7 +201,7 @@ enum MeshTextReferenceRewriter {
         return result
     }
 
-    private static func texturePath(in arguments: [String]) -> String? {
+    private static func texturePathStartIndex(in arguments: [String]) -> Int? {
         var index = 0
         while index < arguments.count, arguments[index].hasPrefix("-") {
             let option = arguments[index].lowercased()
@@ -207,7 +222,11 @@ enum MeshTextReferenceRewriter {
                 if index < arguments.count { index += 1 }
             }
         }
-        guard index < arguments.count else { return nil }
+        return index < arguments.count ? index : nil
+    }
+
+    private static func texturePath(in arguments: [String]) -> String? {
+        guard let index = texturePathStartIndex(in: arguments) else { return nil }
         let path = arguments[index...].joined(separator: " ")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         return path.isEmpty ? nil : path
