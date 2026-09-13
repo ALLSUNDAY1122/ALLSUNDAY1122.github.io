@@ -55,8 +55,8 @@ final class SplatDepthSeedVoxelFusionTests: XCTestCase {
                 [0, 0, 1, 0],
                 [0, 0, 0, 1]
             ],
-            flX: 1_000,
-            flY: 1_000,
+            flX: 100,
+            flY: 100,
             cx: 8,
             cy: 8,
             w: 16,
