@@ -8,14 +8,14 @@ function premiumCTA(){return `<div id="home-premium-cta">${isPremiumAccess()?'':
 
 function home(){
   const d=dailyNow(),goal=S.dailyGoal,w=Object.keys(S.weak).length,rate=S.total?Math.round(S.correct/S.total*100):0,days=Object.values(S.daily).filter(x=>x.a>0).length;
-  const mockSetCount=EXAMSETS.length*SUBJECTS.length;
+  const mockSetCount=EXAMSETS.length;
   let resume='';
   if(S.resume&&S.resume.ids?.length&&S.resume.idx<S.resume.ids.length) resume=`<button class="resume" onclick="resumeSession()"><strong>続きから再開</strong><small>${esc(S.resume.title)}　${S.resume.idx+1}問目から</small></button>`;
   const html=topBlock('学びスプリント','第二種衛生管理者','今日も1問、力に変える。')+countdownHTML()+
   `<div class="today">${ringHTML(d.a,goal)}<div class="todaycopy"><b>今日の学習</b><p>${todayMessage(d.a,d.c,goal)}</p><span class="streakchip">連続 ${streakDays()}日</span></div></div>${resume}
   <div class="sec"><button class="primarycta" onclick="startDaily()"><span><strong>今日のスプリント</strong><small>${goal}問・${minutes(goal)}分ほど</small></span><span class="arr">→</span></button></div>
   <div class="sec"><button class="action" onclick="startWeak()"><span class="aicon weak">${ICON.weak}</span><span><strong>苦手をつぶす</strong><small>間違えた問題を3連続正解で卒業</small></span><span class="pill ${w?'hot':''}">${w}</span></button></div>
-  <div class="sec"><button class="action" onclick="mockScreen()"><span class="aicon mock">${ICON.mock}</span><span><strong>模擬試験</strong><small>5年分相当・${mockSetCount}セット</small></span><span class="pill">${mockSetCount}</span></button></div>
+  <div class="sec"><button class="action" onclick="mockScreen()"><span class="aicon mock">${ICON.mock}</span><span><strong>30問模擬試験</strong><small>総合60%＋各科目40%の合格基準で判定</small></span><span class="pill">${mockSetCount}回</span></button></div>
   ${premiumCTA()}
   <div class="sec"><div class="sectitle"><h2>分野から解く</h2><span>全${QUESTIONS.length}問</span></div><div class="subjectlist">${SUBJECTS.map(subjectCard).join('')}</div></div>
   <div class="sec"><div class="sectitle"><h2>これまで</h2></div><div class="homestats"><div class="hstat"><b>${S.total}</b><small>のべ回答</small></div><div class="hstat"><b>${rate}%</b><small>正答率</small></div><div class="hstat"><b>${days}</b><small>学習日数</small></div></div></div>`+nav('home');
@@ -40,19 +40,24 @@ function startWeak(){
 }
 function pairKey(set,sub){return set+'｜'+sub}
 function pairAnswers(set,sub){return S.pairAnswers[pairKey(set,sub)]||0}
-function mockCard(set,sub){
-  const k=pairKey(set,sub),r=S.mockResults[k],score=r?.score??null,pct=score===null?0:Math.round(score/10*100);
+function fullMockKey(set){return '30問模試｜'+set}
+function mockSetCard(set){
+  const r=S.mockResults[fullMockKey(set)]||null;
   const locked=!isPremiumAccess()&&set!==FREE_SET;
-  return `<button class="mockcard" onclick="${locked?`showPaywall('mock')`:`startMock('${set}','${sub}')`}"><span class="pill ${locked?'hot':score===null?'':score>=6?'good':'bad'}">${locked?'PLUS':score===null?'未受験':`前回 ${score}/10`}</span><div class="mockring" style="--pct:${pct}%"></div><b>${sub}</b><small>${locked?'プレミアムで解放':`10問・解答${pairAnswers(set,sub)}回`}</small></button>`;
+  const status=locked?'PLUS':r?(r.passed?'合格':'再挑戦'):'未受験';
+  const detail=locked?'プレミアムで解放':r?`前回 ${r.score}/30・${r.passed?'合格基準クリア':'合格基準未達'}`:'30問・総合60%＋各科目40%';
+  return `<button class="mockcard" onclick="${locked?`showPaywall('mock')`:`startFullMock('${set}')`}"><span class="pill ${locked?'hot':r?.passed?'good':r?'bad':''}">${status}</span><div class="mockring" style="--pct:${r?Math.round(r.score/30*100):0}%"></div><b>${esc(set)}</b><small>${detail}</small></button>`;
 }
 function mockScreen(){
-  const mockSetCount=EXAMSETS.length*SUBJECTS.length;
-  let groups=EXAMSETS.map(set=>{
-    const done=SUBJECTS.filter(s=>S.mockResults[pairKey(set,s)]).length;
-    return `<div class="mockgroup"><div class="mocktitle"><b>${set}</b><span>完答 ${done}/${SUBJECTS.length} 科目</span></div><div class="mockgrid">${SUBJECTS.map(s=>mockCard(set,s)).join('')}</div></div>`;
-  }).join('');
-  setApp(topBlock('模擬試験','本番形式',`5年分相当。全${mockSetCount}セットを10問ずつ解けます。`)+`<div class="sec">${groups}</div>`+nav('mock'));
+  const cards=EXAMSETS.map(mockSetCard).join('');
+  setApp(topBlock('模擬試験','30問で本番判定','各回30問を通して解き、総合60%以上・各科目40%以上で判定します。')+`<div class="sec"><div class="mockgrid">${cards}</div></div>`+nav('mock'));
   requestStoreStatus();
+}
+function startFullMock(set){
+  if(!isPremiumAccess()&&set!==FREE_SET){showPaywall('mock');return}
+  const qs=QUESTIONS.filter(q=>q.examSet===set);
+  if(qs.length!==30){toast('この回の30問を準備できません');return}
+  begin(set+'｜30問模試',qs,{mode:'fullmock',examSet:set})
 }
 function startMock(set,sub){
   if(!isPremiumAccess()&&set!==FREE_SET){showPaywall('mock');return}
