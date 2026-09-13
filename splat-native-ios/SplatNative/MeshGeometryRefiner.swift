@@ -34,16 +34,14 @@ struct MeshGeometryRefineResult: Sendable {
 
 private enum MeshGeometryRefinerEngine {
     private static let outputFlushThresholdBytes = 256 * 1024
+    private static let objInputChunkSize = 256 * 1024
+    private static let maximumOBJLineBytes = 8 * 1024 * 1024
 
     static func refine(url: URL, weldMeters: Float = 0.0015) throws -> MeshGeometryRefineResult {
         guard weldMeters.isFinite, weldMeters >= 0.000001, weldMeters <= 0.1 else {
             throw error("Mesh精製の統合距離が不正です")
         }
-        let parsed: MeshRefineMesh
-        do {
-            let source = try String(contentsOf: url, encoding: .utf8)
-            parsed = try parse(source)
-        }
+        let parsed = try parse(url)
         guard parsed.vertices.count >= 3, !parsed.faces.isEmpty else {
             throw error("有効なOBJ三角形がありません")
         }
@@ -201,12 +199,21 @@ private enum MeshGeometryRefinerEngine {
         }
     }
 
-    private static func parse(_ text: String) throws -> MeshRefineMesh {
+    private static func parse(_ url: URL) throws -> MeshRefineMesh {
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.uint64Value > 0 else {
+            throw error("OBJファイルを読み込めません")
+        }
+        let sourceByteCount = Int(clamping: size.uint64Value)
         var vertices: [SIMD3<Float>] = []
         var faces: [SIMD3<Int>] = []
-        for line in text.split(whereSeparator: \.isNewline) {
+        vertices.reserveCapacity(max(128, sourceByteCount / 80))
+
+        try forEachOBJLine(at: url) { line in
             let fields = line.split(whereSeparator: \.isWhitespace)
-            guard let directive = fields.first else { continue }
+            guard let directive = fields.first else { return }
             if directive == "mtllib" || directive == "usemtl" || directive == "vt" {
                 throw error("テクスチャ付きMeshは色を失うため精製しません")
             }
@@ -243,6 +250,56 @@ private enum MeshGeometryRefinerEngine {
             }
         }
         return MeshRefineMesh(vertices: vertices, faces: faces)
+    }
+
+    private static func forEachOBJLine(
+        at url: URL,
+        body: (Substring) throws -> Void
+    ) throws {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        var buffer = Data()
+        buffer.reserveCapacity(objInputChunkSize * 2)
+
+        while let chunk = try handle.read(upToCount: objInputChunkSize), !chunk.isEmpty {
+            try Task.checkCancellation()
+            buffer.append(chunk)
+            var start = buffer.startIndex
+            while start < buffer.endIndex,
+                  let newline = buffer[start...].firstIndex(of: 0x0A) {
+                var end = newline
+                if end > start {
+                    let previous = buffer.index(before: end)
+                    if buffer[previous] == 0x0D { end = previous }
+                }
+                guard buffer.distance(from: start, to: end) <= maximumOBJLineBytes else {
+                    throw error("OBJの1行が安全な上限を超えています")
+                }
+                let lineString = String(decoding: buffer[start..<end], as: UTF8.self)
+                try body(lineString[...])
+                start = buffer.index(after: newline)
+            }
+            if start > buffer.startIndex {
+                buffer.removeSubrange(buffer.startIndex..<start)
+            }
+            guard buffer.count <= maximumOBJLineBytes else {
+                throw error("OBJの1行が安全な上限を超えています")
+            }
+        }
+
+        if !buffer.isEmpty {
+            try Task.checkCancellation()
+            var end = buffer.endIndex
+            if end > buffer.startIndex {
+                let previous = buffer.index(before: end)
+                if buffer[previous] == 0x0D { end = previous }
+            }
+            guard buffer.distance(from: buffer.startIndex, to: end) <= maximumOBJLineBytes else {
+                throw error("OBJの1行が安全な上限を超えています")
+            }
+            let lineString = String(decoding: buffer[buffer.startIndex..<end], as: UTF8.self)
+            try body(lineString[...])
+        }
     }
 
     private static func filterMicroscopicComponents(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> (faces: [SIMD3<Int>], removedComponents: Int) {
@@ -299,7 +356,7 @@ private enum MeshGeometryRefinerEngine {
     private static func recomputeNormals(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> [SIMD3<Float>] {
         var normals = Array(repeating: SIMD3<Float>.zero, count: vertices.count)
         for face in faces {
-            let normal = simd_cross(vertices[face.y] - vertices[face.x], vertices[face.z] - vertices[face.x])
+            let normal = simd_cross(vertices[face.y] - vertices[face.x], vertices[face.z] - vertices[face.z])
             guard normal.x.isFinite, normal.y.isFinite, normal.z.isFinite else { continue }
             normals[face.x] += normal; normals[face.y] += normal; normals[face.z] += normal
         }
