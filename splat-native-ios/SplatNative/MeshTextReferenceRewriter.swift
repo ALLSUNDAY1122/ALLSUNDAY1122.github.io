@@ -108,8 +108,9 @@ enum MeshTextReferenceRewriter {
         // valid textured OBJ shareable but impossible to reopen in the appearance editor.
         if normalizedDirective == "map_kd" {
             let arguments = parseArguments(String(line[start...]))
-            guard arguments.count >= 2 else { return nil }
-            return texturePath(in: Array(arguments.dropFirst()))
+            guard arguments.count >= 2,
+                  let path = texturePath(in: Array(arguments.dropFirst())) else { return nil }
+            return normalizedRelativeReference(path)
         }
 
         // A quoted/single mtllib reference (optionally followed by a comment) should resolve to the
@@ -120,12 +121,16 @@ enum MeshTextReferenceRewriter {
         if normalizedDirective == "mtllib" {
             let arguments = parseArguments(String(line[start...]))
             if arguments.count == 2 {
-                return arguments[1]
+                return normalizedRelativeReference(arguments[1])
             }
         }
 
         let value = line[valueStart...].trimmingCharacters(in: .whitespaces)
         return value.isEmpty ? nil : value
+    }
+
+    private static func normalizedRelativeReference(_ value: String) -> String {
+        value.replacingOccurrences(of: "\\", with: "/")
     }
 
     private static func parseArguments(_ text: String) -> [String] {
