@@ -122,6 +122,54 @@ extension SplatVideoExporterTests {
         XCTAssertGreaterThanOrEqual(corner.b, 180)
     }
 
+    func testEncodedVideoPreservesStrongChromaticOrdering() async throws {
+        guard MTLCreateSystemDefaultDevice() != nil else {
+            throw XCTSkip("Metal device is unavailable on this simulator runner")
+        }
+
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("video-chroma-contract-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        let writer = try DotSplatSceneWriter(toFileAtPath: source.path)
+        try await writer.write([
+            SplatPoint(
+                position: SIMD3<Float>(0, 0, 0),
+                color: .sRGBUInt8(SIMD3<UInt8>(220, 50, 20)),
+                opacity: .linearFloat(1),
+                scale: .linearFloat(SIMD3<Float>(0.32, 0.32, 0.32)),
+                rotation: simd_quatf(angle: 0, axis: SIMD3<Float>(0, 1, 0))
+            )
+        ])
+        try await writer.close()
+
+        var configuration = SplatVideoConfiguration()
+        configuration.aspectRatio = .square1x1
+        configuration.cameraMotion = .fixed
+        configuration.backgroundStyle = .dark
+        configuration.speed = .fast
+        configuration.framesPerSecond = 1
+
+        let output = try await SplatVideoExporter.export(
+            sourceURL: source,
+            configuration: configuration,
+            destinationDirectory: root
+        )
+        let asset = AVURLAsset(url: output)
+        let track = try XCTUnwrap(try await asset.loadTracks(withMediaType: .video).first)
+        let center = try decodeFirstFrameBGRA(asset: asset, track: track, normalizedX: 0.5, normalizedY: 0.5)
+
+        // This is deliberately an ordering/contrast gate rather than an exact codec byte match.
+        // H.264 may move channel values slightly, but a transfer/matrix regression must not turn a
+        // strongly red Gaussian into a neutral/desaturated result while metadata still looks valid.
+        XCTAssertGreaterThanOrEqual(center.r, 120)
+        XCTAssertGreaterThan(Int(center.r) - Int(center.g), 45)
+        XCTAssertGreaterThan(Int(center.r) - Int(center.b), 70)
+        XCTAssertGreaterThanOrEqual(Int(center.g) - Int(center.b), 5)
+    }
+
     private func decodeFirstFrameBGRA(
         asset: AVAsset,
         track: AVAssetTrack,
