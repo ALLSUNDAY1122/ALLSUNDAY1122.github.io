@@ -23,6 +23,29 @@ final class MeshTextReferenceRewriterTests: XCTestCase {
         XCTAssertFalse(rewritten.contains("original material.mtl"))
     }
 
+    func testDiffuseRewriteChangesOnlyFirstMaterialTexture() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("source.mtl")
+        let output = root.appendingPathComponent("output.mtl")
+        let secondMap = "map_Kd -s 2 2 1 \"second diffuse.jpg\""
+        let payload = "newmtl primary\nmap_Kd first.jpg\nnewmtl secondary\n\(secondMap)\n"
+        try Data(payload.utf8).write(to: source)
+
+        XCTAssertTrue(try MeshTextReferenceRewriter.rewrite(
+            sourceURL: source,
+            destinationURL: output,
+            directive: "map_Kd",
+            replacement: "edited.jpg"
+        ))
+
+        let rewritten = try String(contentsOf: output, encoding: .utf8)
+        XCTAssertTrue(rewritten.contains("map_Kd edited.jpg\n"))
+        XCTAssertTrue(rewritten.contains("\(secondMap)\n"))
+        XCTAssertFalse(rewritten.contains("map_Kd first.jpg"))
+        XCTAssertEqual(rewritten.components(separatedBy: "map_Kd ").count - 1, 2)
+    }
+
     func testRejectsSymlinkedSource() throws {
         let root = try makeRoot()
         let outside = root.deletingLastPathComponent().appendingPathComponent("outside-\(UUID().uuidString).obj")
