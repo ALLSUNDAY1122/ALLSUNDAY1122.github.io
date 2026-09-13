@@ -42,6 +42,27 @@ final class SplatVideoConfigurationTests: XCTestCase {
         XCTAssertEqual(config.dimensions.height, 1280)
     }
 
+    func testVideoBackgroundDefaultsDarkAndAllChoicesAreValidSRGBComponents() {
+        let config = SplatVideoConfiguration()
+        XCTAssertEqual(config.backgroundStyle, .dark)
+        XCTAssertEqual(config.backgroundStyle.rgb.red, 0.025, accuracy: 0.0001)
+        XCTAssertEqual(config.backgroundStyle.rgb.green, 0.030, accuracy: 0.0001)
+        XCTAssertEqual(config.backgroundStyle.rgb.blue, 0.040, accuracy: 0.0001)
+
+        for background in SplatVideoConfiguration.BackgroundStyle.allCases {
+            let rgb = background.rgb
+            for component in [rgb.red, rgb.green, rgb.blue] {
+                XCTAssertTrue(component.isFinite)
+                XCTAssertGreaterThanOrEqual(component, 0)
+                XCTAssertLessThanOrEqual(component, 1)
+            }
+        }
+        XCTAssertGreaterThan(
+            SplatVideoConfiguration.BackgroundStyle.light.rgb.red,
+            SplatVideoConfiguration.BackgroundStyle.neutral.rgb.red
+        )
+    }
+
     func testSpeedChangesDurationWithoutChangingFrameRate() {
         var config = SplatVideoConfiguration()
         XCTAssertEqual(config.framesPerSecond, 30)
