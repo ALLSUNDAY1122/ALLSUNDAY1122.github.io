@@ -33,12 +33,17 @@ struct MeshGeometryRefineResult: Sendable {
 }
 
 private enum MeshGeometryRefinerEngine {
+    private static let outputFlushThresholdBytes = 256 * 1024
+
     static func refine(url: URL, weldMeters: Float = 0.0015) throws -> MeshGeometryRefineResult {
         guard weldMeters.isFinite, weldMeters >= 0.000001, weldMeters <= 0.1 else {
             throw error("Mesh精製の統合距離が不正です")
         }
-        let source = try String(contentsOf: url, encoding: .utf8)
-        let parsed = try parse(source)
+        let parsed: MeshRefineMesh
+        do {
+            let source = try String(contentsOf: url, encoding: .utf8)
+            parsed = try parse(source)
+        }
         guard parsed.vertices.count >= 3, !parsed.faces.isEmpty else {
             throw error("有効なOBJ三角形がありません")
         }
@@ -112,15 +117,14 @@ private enum MeshGeometryRefinerEngine {
 
         let outputURL = url.deletingLastPathComponent()
             .appendingPathComponent("mesh-refined-\(UUID().uuidString.lowercased()).obj")
-        var output = "# Scan Lab refined metric mesh\n"
-        output += "# conservative weld_m \(weldMeters)\n"
-        output += "# source_faces \(parsed.faces.count) refined_faces \(compacted.faces.count)\n"
-        for point in compacted.vertices { output += "v \(point.x) \(point.y) \(point.z)\n" }
-        for normal in normals { output += "vn \(normal.x) \(normal.y) \(normal.z)\n" }
-        for face in compacted.faces {
-            output += "f \(face.x + 1)//\(face.x + 1) \(face.y + 1)//\(face.y + 1) \(face.z + 1)//\(face.z + 1)\n"
-        }
-        try output.write(to: outputURL, atomically: true, encoding: .utf8)
+        try writeOBJ(
+            to: outputURL,
+            weldMeters: weldMeters,
+            sourceFaceCount: parsed.faces.count,
+            vertices: compacted.vertices,
+            normals: normals,
+            faces: compacted.faces
+        )
         return MeshGeometryRefineResult(
             url: outputURL,
             vertexCount: compacted.vertices.count,
@@ -134,6 +138,67 @@ private enum MeshGeometryRefinerEngine {
         try? FileManager.default.removeItem(at: result.url)
         let sidecar = result.url.deletingPathExtension().appendingPathExtension("mesh-asset.json")
         try? FileManager.default.removeItem(at: sidecar)
+    }
+
+    private static func writeOBJ(
+        to outputURL: URL,
+        weldMeters: Float,
+        sourceFaceCount: Int,
+        vertices: [SIMD3<Float>],
+        normals: [SIMD3<Float>],
+        faces: [SIMD3<Int>]
+    ) throws {
+        guard FileManager.default.createFile(atPath: outputURL.path, contents: nil) else {
+            throw error("精製後OBJの出力ファイルを作成できません")
+        }
+        let handle: FileHandle
+        do {
+            handle = try FileHandle(forWritingTo: outputURL)
+        } catch {
+            try? FileManager.default.removeItem(at: outputURL)
+            throw error
+        }
+
+        do {
+            var buffer = ""
+            buffer.reserveCapacity(outputFlushThresholdBytes)
+            var bufferedBytes = 0
+
+            func append(_ line: String) throws {
+                buffer.append(line)
+                bufferedBytes += line.utf8.count
+                if bufferedBytes >= outputFlushThresholdBytes {
+                    try handle.write(contentsOf: Data(buffer.utf8))
+                    buffer.removeAll(keepingCapacity: true)
+                    bufferedBytes = 0
+                }
+            }
+
+            try append("# Scan Lab refined metric mesh\n")
+            try append("# conservative weld_m \(weldMeters)\n")
+            try append("# source_faces \(sourceFaceCount) refined_faces \(faces.count)\n")
+            for (index, point) in vertices.enumerated() {
+                if index & 0xFFF == 0 { try Task.checkCancellation() }
+                try append("v \(point.x) \(point.y) \(point.z)\n")
+            }
+            for (index, normal) in normals.enumerated() {
+                if index & 0xFFF == 0 { try Task.checkCancellation() }
+                try append("vn \(normal.x) \(normal.y) \(normal.z)\n")
+            }
+            for (index, face) in faces.enumerated() {
+                if index & 0xFFF == 0 { try Task.checkCancellation() }
+                try append("f \(face.x + 1)//\(face.x + 1) \(face.y + 1)//\(face.y + 1) \(face.z + 1)//\(face.z + 1)\n")
+            }
+            if !buffer.isEmpty {
+                try handle.write(contentsOf: Data(buffer.utf8))
+            }
+            try handle.synchronize()
+            try handle.close()
+        } catch {
+            try? handle.close()
+            try? FileManager.default.removeItem(at: outputURL)
+            throw error
+        }
     }
 
     private static func parse(_ text: String) throws -> MeshRefineMesh {
