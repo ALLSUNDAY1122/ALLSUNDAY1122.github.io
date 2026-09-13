@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Require fresh explicit human approval for this exact release commit
+      - name: Require fresh explicit human approval and exact-build device acceptance
         shell: bash
         run: |
           set -euo pipefail
@@ -33,9 +33,14 @@ jobs:
           cmd=json.loads(Path('automation/app2-004-yakuzaishi-final-submit-command.json').read_text(encoding='utf-8'))
           if cmd.get('action') != 'submit_app_review': raise SystemExit('HUMAN_GATE: unexpected submit action')
           if str(cmd.get('app_id')) != '6799753724' or str(cmd.get('bundle_id')) != 'jp.allsunday1122.yakuzaishi': raise SystemExit('HUMAN_GATE: target mismatch')
+          build=str(cmd.get('build') or '').strip()
+          if not build.isdigit(): raise SystemExit('HUMAN_GATE: approved build missing or invalid')
           auth=cmd.get('authorization') or {}
           if auth.get('status') != 'APPROVED' or auth.get('source') != 'user': raise SystemExit('HUMAN_GATE: explicit user approval missing')
-          if (cmd.get('human_device_acceptance') or {}).get('status') != 'PASS': raise SystemExit('HUMAN_GATE: device acceptance missing')
+          acceptance=cmd.get('human_device_acceptance') or {}
+          if acceptance.get('status') != 'PASS' or acceptance.get('source') != 'user': raise SystemExit('HUMAN_GATE: device acceptance missing')
+          accepted_build=str(acceptance.get('build') or '').strip()
+          if accepted_build != build: raise SystemExit(f'HUMAN_GATE: device acceptance build mismatch; accepted={accepted_build or "[missing]"} approved={build}')
           parent=subprocess.check_output(['git','rev-parse','HEAD^'],text=True).strip()
           if str(cmd.get('approved_commit') or '') != parent: raise SystemExit('HUMAN_GATE: approval is not pinned to exact release commit')
           raw=str(cmd.get('approved_at') or '').replace('Z','+00:00')
@@ -44,10 +49,10 @@ jobs:
           if approved_at.tzinfo is None: raise SystemExit('HUMAN_GATE: approved_at timezone missing')
           age=datetime.now(timezone.utc)-approved_at.astimezone(timezone.utc)
           if age < timedelta(minutes=-5) or age > timedelta(hours=24): raise SystemExit(f'HUMAN_GATE: approval stale/future; age={age}')
-          print('PASS: fresh approval pinned to exact release commit')
+          print(f'PASS: fresh approval and device acceptance both pinned to Build {build}')
           PY
 
-      - name: Submit prepared Build 5 to App Review
+      - name: Submit exact approved build to App Review
         id: submit
         continue-on-error: true
         env:
