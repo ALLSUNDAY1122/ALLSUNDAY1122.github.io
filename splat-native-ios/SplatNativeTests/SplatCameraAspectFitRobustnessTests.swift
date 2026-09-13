@@ -17,7 +17,7 @@ final class SplatCameraAspectFitRobustnessTests: XCTestCase {
 
         XCTAssertTrue(distance.isFinite)
         XCTAssertGreaterThanOrEqual(distance, 0.35)
-        XCTAssertLessThanOrEqual(distance, 60)
+        XCTAssertLessThanOrEqual(distance, SplatCameraGeometry.maximumCameraDistance)
     }
 
     func testAspectFitSanitizesNegativeRadiusAndDistance() {
@@ -36,6 +36,23 @@ final class SplatCameraAspectFitRobustnessTests: XCTestCase {
 
         XCTAssertTrue(distance.isFinite)
         XCTAssertGreaterThanOrEqual(distance, 0.35)
-        XCTAssertLessThanOrEqual(distance, 60)
+        XCTAssertLessThanOrEqual(distance, SplatCameraGeometry.maximumCameraDistance)
+    }
+
+    func testPortraitAspectFitCanMoveBeyondInitialSixtyUnitFramingFloor() {
+        let framing = SplatCameraGeometry.Framing(
+            center: .zero,
+            distance: 60,
+            radius: 40
+        )
+
+        let distance = SplatCameraGeometry.aspectFittedDistance(
+            framing: framing,
+            fovY: 55 * .pi / 180,
+            aspect: 9.0 / 16.0
+        )
+
+        XCTAssertGreaterThan(distance, 60)
+        XCTAssertLessThanOrEqual(distance, SplatCameraGeometry.maximumCameraDistance)
     }
 }
