@@ -1,0 +1,90 @@
+name: HM2 IAP Review Screenshot Upload
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/hm2-iap-review-upload-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Read fail-closed command
+        id: command
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          command=json.loads(Path('automation/hm2-iap-review-upload-command.json').read_text())
+          run_id=command.get('source_run_id')
+          issue=command.get('issue_number')
+          expected_artifact=command.get('artifact_name')
+          if not isinstance(run_id,int) or run_id <= 0:
+              raise SystemExit('invalid source_run_id')
+          if not isinstance(issue,int) or issue <= 0:
+              raise SystemExit('invalid issue_number')
+          if expected_artifact != 'hm2-iap-review-paywall':
+              raise SystemExit('unexpected artifact_name')
+          print(f'run_id={run_id}')
+          print(f'issue_number={issue}')
+          PY
+      - name: Download audited screenshot artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: hm2-iap-review-paywall
+          path: /tmp/hm2-review
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.command.outputs.run_id }}
+      - name: Select exactly one audited PNG
+        id: screenshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t pngs < <(find /tmp/hm2-review -type f \( -iname '*.png' \) | sort)
+          if [ "${#pngs[@]}" -ne 1 ]; then
+            printf 'Expected exactly one PNG, found %s\n' "${#pngs[@]}" >&2
+            printf '%s\n' "${pngs[@]}" >&2
+            exit 1
+          fi
+          test -s "${pngs[0]}"
+          echo "path=${pngs[0]}" >> "$GITHUB_OUTPUT"
+      - name: Upload to exact HM2 Lifetime IAP and verify COMPLETE
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          HM2_IAP_REVIEW_SCREENSHOT: ${{ steps.screenshot.outputs.path }}
+        run: python3 scripts/hm2_upload_iap_review_screenshot.py
+      - name: Persist result artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: hm2-iap-review-upload-result-${{ github.run_id }}
+          path: hm2-iap-review-screenshot-result.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Report locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: Number('${{ steps.command.outputs.issue_number }}'),
+              body: `HM2 IAP review screenshot upload finished. status=${{ job.status }}; run_id=${context.runId}`
+            });
