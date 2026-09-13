@@ -48,6 +48,21 @@ final class SplatEditHistoryTests: XCTestCase {
         XCTAssertNil(history.undo())
     }
 
+    func testImmediateResetCanUndoBackToUnDebouncedLiveEdit() {
+        let baseline = SplatEditSettings()
+        let liveEdit = SplatEditSettings(exposureEV: 0.8, contrast: 1.25, cropXMin: 0.15, cropXMax: 0.85)
+        var history = SplatEditHistory(current: baseline)
+
+        // SplatResultView captures the live slider/crop state synchronously before reset-all applies
+        // defaults. This models a reset pressed inside the 300 ms edit-history debounce window.
+        history.commit(liveEdit)
+        history.commit(.default)
+
+        XCTAssertEqual(history.current, SplatEditSettings.default)
+        XCTAssertEqual(history.undo(), liveEdit.normalized())
+        XCTAssertEqual(history.redo(), SplatEditSettings.default)
+    }
+
     func testHistoryDepthIsBounded() {
         var history = SplatEditHistory(maximumDepth: 3)
         for step in 1...8 {
