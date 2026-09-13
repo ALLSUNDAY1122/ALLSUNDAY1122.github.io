@@ -3,6 +3,7 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
+index = (ROOT / "apps/sanitary-manager-2/index.html").read_text(encoding="utf-8")
 gm2 = (ROOT / "apps/sanitary-manager-2/gm2.js").read_text(encoding="utf-8")
 gm4 = (ROOT / "apps/sanitary-manager-2/gm4.js").read_text(encoding="utf-8")
 
@@ -15,6 +16,14 @@ def require(condition: bool, message: str) -> None:
 require('id="home-premium-cta"' in gm2, "home premium CTA must have a stable partial-render target")
 require('class="sec settings storekit-panel paywall"' in gm4, "paywall must expose storekit-panel")
 require('<div class="storekit-panel">${premiumPlansHTML()}</div>' in gm4, "settings must expose storekit-panel")
+require(
+    '.storekit-panel .setting>.action{grid-template-columns:minmax(0,1fr) auto}' in index,
+    "secondary lifetime purchase card must use content+arrow columns instead of the generic icon grid",
+)
+require(
+    '.storekit-panel .setting>.action strong,.storekit-panel .setting>.action small{word-break:keep-all;overflow-wrap:normal}' in index,
+    "purchase labels/prices must not collapse into vertical Japanese wrapping",
+)
 
 match = re.search(r"window\.__storekitUpdate=function\(payload\)\{(?P<body>.*?)\n\};", gm4, re.S)
 require(match is not None, "StoreKit update handler must exist")
@@ -49,4 +58,5 @@ if errors:
 print("PASS: HM2 StoreKit UI uses non-recursive partial rendering")
 print("PASS: home premium CTA stays stable while entitlement is unchanged")
 print("PASS: paywall entry does not start a control-replacing StoreKit refresh")
+print("PASS: lifetime purchase card preserves readable two-column label/price layout")
 print("PASS: paywall/settings/home preserve product price and restore-purchase surfaces")
