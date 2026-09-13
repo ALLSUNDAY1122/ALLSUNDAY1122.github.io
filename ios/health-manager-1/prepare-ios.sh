@@ -7,14 +7,15 @@ INDEX="$SCRIPT_DIR/Resources/index.html"
 QUESTIONS="$SCRIPT_DIR/Resources/questions.json"
 ICON_DIR="$SCRIPT_DIR/Resources/Assets.xcassets/AppIcon.appiconset"
 
-# Release-contract drift must be clean before any signed artifact can be built.
+# Release-contract drift must be clean before any artifact or metadata asset is prepared.
 python3 "$REPO_ROOT/scripts/audit_hm1_release_contract.py"
 
-# This Codemagic workflow auto-publishes to Internal TestFlight. Therefore the
-# release preparation is deliberately fail-closed until AI Preflight, Visual
-# Gate, Release Gate and fresh ASC read-back have all been completed for the
-# current product HEAD. The readiness file may only be flipped after those gates.
-python3 - "$REPO_ROOT/automation/hm1-testflight-readiness.json" <<'PY'
+# Default/release mode remains fail-closed because Codemagic auto-publishes to
+# Internal TestFlight. Metadata/visual workflows may explicitly request a
+# product-only materialization; that mode never signs, uploads, selects a build,
+# or submits App Review and therefore must be able to run before Release Gate.
+if [[ "${HM1_PRODUCT_ONLY:-0}" != "1" ]]; then
+  python3 - "$REPO_ROOT/automation/hm1-testflight-readiness.json" <<'PY'
 from pathlib import Path
 import json, sys
 p=Path(sys.argv[1])
@@ -23,6 +24,9 @@ if data.get('ready') is not True:
     raise SystemExit('HM1 TestFlight blocked: readiness gate is not PASS')
 print('PASS: HM1 TestFlight readiness gate')
 PY
+else
+  echo "PASS: HM1 product-only materialization; TestFlight readiness intentionally not consumed"
+fi
 
 # Release invariant: never ship the historical/generated SVG icon. Rebuild all
 # AppIcon slots from the checksum-verified user-approved artwork before Xcode
