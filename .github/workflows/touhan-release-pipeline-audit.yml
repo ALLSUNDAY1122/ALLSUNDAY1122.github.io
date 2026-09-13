@@ -35,12 +35,21 @@ jobs:
               'app-store-connect publish',
               'internal_testflight_only_export": False',
           ]
-          forbidden = ['testFlightInternalTestingOnly', 'Internal TestFlight']
           for token in required:
               if token not in text:
                   raise SystemExit(f'installer release contract missing: {token}')
-          for token in forbidden:
-              if token in text:
-                  raise SystemExit(f'installer can restore obsolete internal-only mode: {token}')
+          # The installer intentionally contains each obsolete token once in its own
+          # local forbidden-token regression list. More than one occurrence means
+          # the executable workflow template has reintroduced the obsolete mode.
+          expected_self_reference_counts = {
+              'testFlightInternalTestingOnly': 1,
+              'Internal TestFlight': 1,
+          }
+          for token, expected in expected_self_reference_counts.items():
+              actual = text.count(token)
+              if actual != expected:
+                  raise SystemExit(
+                      f'installer obsolete-token occurrence mismatch: {token}: {actual} != {expected}'
+                  )
           print('PASS: Touhan installer cannot restore internal-only release mode')
           PY
