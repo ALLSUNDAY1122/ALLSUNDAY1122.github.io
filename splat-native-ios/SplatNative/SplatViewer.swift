@@ -360,6 +360,12 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         }
     }
 
+    private func rejectCurrentEditAndRestoreLastRendered(_ message: String) {
+        requestedSettings = renderedSettings
+        state?.applyHistorySettings(renderedSettings)
+        state?.rendererRejectedEdit(message)
+    }
+
     private func rebuildImmediately(settings: SplatEditSettings) {
         guard !sourcePoints.isEmpty else { return }
         editGeneration &+= 1
@@ -386,12 +392,12 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                 return
             } catch {
                 guard generation == self.editGeneration else { return }
-                self.state?.rendererRejectedEdit("編集結果を生成できませんでした: \(error.localizedDescription)")
+                self.rejectCurrentEditAndRestoreLastRendered("編集結果を生成できませんでした: \(error.localizedDescription)")
                 return
             }
             guard !Task.isCancelled, generation == self.editGeneration else { return }
             guard !edited.isEmpty else {
-                self.state?.rendererRejectedEdit("切り抜き範囲に3Dデータが残っていません")
+                self.rejectCurrentEditAndRestoreLastRendered("切り抜き範囲に3Dデータが残っていません")
                 return
             }
 
@@ -415,7 +421,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                 self.state?.rendererAppliedEdits(visible: edited.count)
             } catch {
                 guard generation == self.editGeneration else { return }
-                self.state?.rendererRejectedEdit("編集結果を表示できませんでした: \(error.localizedDescription)")
+                self.rejectCurrentEditAndRestoreLastRendered("編集結果を表示できませんでした: \(error.localizedDescription)")
             }
         }
     }
