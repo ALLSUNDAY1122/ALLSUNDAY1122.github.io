@@ -1,34 +1,35 @@
 # App Store Connect 入力用｜第一種衛生管理者｜学びスプリント
 
-更新: 2026-08-09
+更新: 2026-09-13
 
 ## App
 - App名: 第一種衛生管理者｜学びスプリント
-- Bundle ID: jp.allsunday1122.healthmanager1
+- App Store Connect App ID: `6799581662`
+- Bundle ID: `jp.allsunday1122.healthmanager1`
 - Version: 1.0.0
-- Build: 1
 - Category: 教育
 - サインイン: 不要
+- Release Build番号は固定値を正本にせず、fresh ASC read-backで確定する
 
 ## 課金プランA｜月額
 - 種別: Auto-Renewable Subscription
 - Subscription Group: 第一種衛生管理者 プレミアム
-- Product ID: jp.allsunday1122.healthmanager1.monthly
+- Product ID: `jp.allsunday1122.healthmanager1.monthly`
 - Reference Name: 第一種衛生管理者 月額プレミアム
 - 期間: 1 Month
-- 日本価格方針: 200円相当
-- Introductory Offer: Free Trial / 1 Week
-- 表示名候補: 月額プレミアム
-- 説明候補: 全132問・苦手復習・模試を利用
+- 日本価格: 200円
+- Introductory Offer: Free Trial / 1 Week（対象者のみ）
+- 表示名: 月額プレミアム
+- 説明: 全264問・追加演習・苦手復習を利用
 - 自動更新: あり
 
 ## 課金プランB｜買い切り
 - 種別: Non-Consumable
-- Product ID: jp.allsunday1122.healthmanager1.lifetime
+- Product ID: `jp.allsunday1122.healthmanager1.lifetime`
 - Reference Name: 第一種衛生管理者 買い切りプレミアム
-- 日本価格方針: 980円相当
-- 表示名候補: 買い切りプレミアム
-- 説明候補: 全132問・苦手復習・模試を期限なく利用
+- 日本価格: 800円
+- 表示名: 買い切りプレミアム
+- 説明: 全264問・追加演習・苦手復習を期限なく利用
 - 自動更新: なし
 - 利用期限: なし
 
@@ -50,22 +51,17 @@
 
 ## App Reviewメモ
 本アプリはサインイン不要です。
-無料状態では2026年4月公表回対応の独自演習を利用できます。
-プレミアム画面には、月額自動更新サブスクリプションと非消耗型買い切りを並べて表示します。
-月額の初回7日無料表示はStoreKitがIntroductory Offer利用資格ありと返したユーザーにのみ表示します。
-購入後は全132問・苦手復習・模試などを解放します。
-購入復元は設定画面から実行できます。
-月額利用者は設定画面からAppleのサブスクリプション管理画面を開けます。
-外部決済導線はありません。
+公表問題の論点と現行法令を確認して独自作成した264問を収録し、公表回対応3セット＋追加演習3セット、44問通し、4/8/16問スプリント、苦手復習を提供します。
+プレミアム画面には月額200円と買い切り800円を並べ、実取引価格はStoreKit取得値を正本として表示します。
+月額の7日無料表示はStoreKitがIntroductory Offer利用資格ありと返したユーザーにのみ表示します。
+購入復元は設定画面から実行できます。外部決済導線はありません。
 
-## TestFlight実機確認
+## Human Test
+TestFlightはAI Preflight / Visual Gate / Release Gate通過後にのみ使用する。
 - [ ] 月額の正式価格を取得
 - [ ] 買い切りの正式価格を取得
 - [ ] 対象者だけ7日無料を表示
-- [ ] 月額購入成功
-- [ ] 月額キャンセル
-- [ ] pending
-- [ ] 月額期限切れ
+- [ ] 月額購入成功 / キャンセル / pending / 期限切れ
 - [ ] 買い切り購入
 - [ ] 購入復元
 - [ ] 再起動後の権利確認
