@@ -44,6 +44,10 @@ struct SplatVideoConfiguration: Equatable, Sendable {
         case orbit360
         case orbit180
         case pushIn
+        case depthOrbit
+        case spiralRise
+        case topApproach
+        case lowReveal
         case fixed
 
         var id: String { rawValue }
@@ -52,6 +56,10 @@ struct SplatVideoConfiguration: Equatable, Sendable {
             case .orbit360: return "1周する"
             case .orbit180: return "半周する"
             case .pushIn: return "近づく"
+            case .depthOrbit: return "奥行き周回"
+            case .spiralRise: return "らせん上昇"
+            case .topApproach: return "上から寄る"
+            case .lowReveal: return "低い位置から見せる"
             case .fixed: return "固定"
             }
         }
@@ -161,6 +169,42 @@ struct SplatVideoConfiguration: Equatable, Sendable {
                 yaw: 0,
                 pitch: 0,
                 distanceMultiplier: 1.25 - eased * 0.45
+            )
+        case .depthOrbit:
+            // A full turn with a gentle radial ellipse. The changing distance reveals foreground /
+            // background separation that a constant-radius turntable can hide while staying centered.
+            let frameCount = max(1, totalFrames)
+            let loopProgress = progress * Float(max(0, frameCount - 1)) / Float(frameCount)
+            let angle = loopProgress * 2 * Float.pi
+            return CameraSample(
+                yaw: angle,
+                pitch: sin(angle) * 0.10,
+                distanceMultiplier: 1 + cos(angle * 2) * 0.18
+            )
+        case .spiralRise:
+            // One cinematic revolution while climbing and easing slightly toward the subject.
+            let eased = smoothstep(progress)
+            return CameraSample(
+                yaw: -.pi / 2 + eased * 2 * .pi,
+                pitch: -0.28 + eased * 0.56,
+                distanceMultiplier: 1.12 - eased * 0.18
+            )
+        case .topApproach:
+            // Start above and farther away, then settle toward a near-horizontal hero angle.
+            let eased = smoothstep(progress)
+            return CameraSample(
+                yaw: -0.38 + eased * 0.76,
+                pitch: 0.62 - eased * 0.52,
+                distanceMultiplier: 1.24 - eased * 0.28
+            )
+        case .lowReveal:
+            // Rise from a low angle while making a small lateral arc; useful for objects whose top
+            // surface should be revealed gradually rather than shown immediately.
+            let eased = smoothstep(progress)
+            return CameraSample(
+                yaw: 0.42 - eased * 0.84,
+                pitch: -0.24 + eased * 0.62,
+                distanceMultiplier: 1.12 - eased * 0.16
             )
         case .fixed:
             return CameraSample(yaw: 0, pitch: 0, distanceMultiplier: 1)
