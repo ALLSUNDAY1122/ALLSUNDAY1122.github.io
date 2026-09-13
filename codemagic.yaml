@@ -831,7 +831,7 @@ workflows:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
   touhan-ios:
-    name: 登録販売者 - iOS Internal TestFlight
+    name: 登録販売者 - iOS App Store Release Candidate
     max_build_duration: 60
     instance_type: mac_mini_m2
     environment:
@@ -902,18 +902,18 @@ workflows:
         script: |
           set -euo pipefail
           keychain add-certificates
-      - name: Apply App Store signing profiles for internal TestFlight only
+      - name: Apply App Store signing profiles for release candidate
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          xcode-project use-profiles
       - name: Build signed IPA
         script: |
           set -euo pipefail
           xcode-project build-ipa \
             --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
-      - name: Upload signed IPA to App Store Connect for Internal TestFlight
+      - name: Upload signed release candidate IPA to App Store Connect
         script: |
           set -euo pipefail
           IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
