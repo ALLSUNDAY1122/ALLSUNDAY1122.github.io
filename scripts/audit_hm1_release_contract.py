@@ -11,6 +11,7 @@ ASC_INPUT = BASE / "APP_STORE_CONNECT_INPUT_JA.md"
 PREPARE = BASE / "prepare-ios.sh"
 READINESS = ROOT / "automation/hm1-testflight-readiness.json"
 SUBMIT = ROOT / "scripts/app2_005_hm1_prepare_submit.py"
+METADATA_WORKFLOW = ROOT / ".github/workflows/app2-005-hm1-prepare-metadata.yml"
 
 texts = {
     "checklist": CHECKLIST.read_text(encoding="utf-8"),
@@ -20,6 +21,7 @@ texts = {
 }
 submit = SUBMIT.read_text(encoding="utf-8")
 prepare = PREPARE.read_text(encoding="utf-8")
+metadata_workflow = METADATA_WORKFLOW.read_text(encoding="utf-8")
 readiness = json.loads(READINESS.read_text(encoding="utf-8"))
 errors = []
 
@@ -67,6 +69,8 @@ prepare_markers = (
     "audit_hm1_release_contract.py",
     "hm1-testflight-readiness.json",
     "HM1 TestFlight blocked: readiness gate is not PASS",
+    '${HM1_PRODUCT_ONLY:-0}',
+    "HM1 product-only materialization; TestFlight readiness intentionally not consumed",
     "monthlyPrice:'¥200',lifetimePrice:'¥800'",
     "assert '980円' not in updated",
     "assert '全132問' not in updated",
@@ -75,6 +79,22 @@ prepare_markers = (
 for marker in prepare_markers:
     if marker not in prepare:
         errors.append(f"release preparation safety marker missing: {marker}")
+
+# Metadata and Visual Gate preparation must be executable before TestFlight
+# readiness is true. Conversely, the normal release path must still fail closed.
+# This prevents the circular dependency where screenshots/metadata cannot be
+# generated until a gate that itself depends on those screenshots is already PASS.
+metadata_markers = (
+    "HM1_PRODUCT_ONLY: '1'",
+    "bash ios/health-manager-1/prepare-ios.sh",
+    "Upload metadata and review screenshots without submission",
+    "Safety violation: metadata workflow must not select a build or submit for review",
+)
+for marker in metadata_markers:
+    if marker not in metadata_workflow:
+        errors.append(f"metadata-only workflow safety marker missing: {marker}")
+if "submit_to_testflight: true" in metadata_workflow or "submit_to_app_store: true" in metadata_workflow:
+    errors.append("metadata-only workflow must never publish a TestFlight/App Store build")
 
 required_readiness = {
     "release_contract",
@@ -107,6 +127,7 @@ if errors:
     raise SystemExit(1)
 
 print(
-    "PASS: HM1 release docs, submit automation, build preparation and "
-    "TestFlight readiness agree on the current 264-question / 200+800-yen contract"
+    "PASS: HM1 release docs, submit automation, metadata-only Visual path, "
+    "build preparation and TestFlight readiness agree on the current "
+    "264-question / 200+800-yen contract"
 )
