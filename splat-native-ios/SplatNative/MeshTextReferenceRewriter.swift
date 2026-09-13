@@ -154,6 +154,9 @@ enum MeshTextReferenceRewriter {
             if arguments.count == 2 || hasExplicitQuotedReferenceList(raw), arguments.count >= 2 {
                 return normalizedRelativeReference(arguments[1])
             }
+            let legacyValue = stripUnquotedInlineComment(String(line[valueStart...]))
+                .trimmingCharacters(in: .whitespaces)
+            return legacyValue.isEmpty ? nil : legacyValue
         }
 
         let value = line[valueStart...].trimmingCharacters(in: .whitespaces)
@@ -183,6 +186,23 @@ enum MeshTextReferenceRewriter {
             }
         }
         return false
+    }
+
+    private static func stripUnquotedInlineComment(_ text: String) -> String {
+        var escaping = false
+        var index = text.startIndex
+        while index < text.endIndex {
+            let character = text[index]
+            if escaping {
+                escaping = false
+            } else if character == "\\" {
+                escaping = true
+            } else if character == "#" {
+                return String(text[..<index])
+            }
+            text.formIndex(after: &index)
+        }
+        return text
     }
 
     private static func renderReferenceArgument(_ value: String) -> String {
