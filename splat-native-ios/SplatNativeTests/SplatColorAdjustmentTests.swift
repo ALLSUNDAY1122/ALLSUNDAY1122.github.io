@@ -41,6 +41,15 @@ final class SplatColorAdjustmentTests: XCTestCase {
         assertApproximatelyEqual(coefficients[1], original[1] * Float(pow(2.0, 2.0) * 1.4))
     }
 
+    func testEmptySHPayloadSurvivesAppearanceEditWithoutDereferencingMissingDC() {
+        let color = SplatPoint.Color.sphericalHarmonicFloat([])
+        let result = SplatColorAdjustment.apply(color, exposureEV: 1.0, contrast: 1.25)
+        guard case .sphericalHarmonicFloat(let coefficients) = result else {
+            return XCTFail("Expected SH color")
+        }
+        XCTAssertTrue(coefficients.isEmpty)
+    }
+
     func testSRGBEditStillClampsToDisplayRange() {
         let color = SplatPoint.Color.sRGBUInt8(SIMD3<UInt8>(240, 128, 8))
         let result = SplatColorAdjustment.apply(color, exposureEV: 2.0, contrast: 1.5)
