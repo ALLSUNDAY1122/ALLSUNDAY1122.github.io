@@ -72,6 +72,10 @@ jobs:
           console_errors = []
           page_errors = []
 
+          def assert_memory_label(page):
+              label = page.locator('.memory').evaluate("(el) => getComputedStyle(el, '::before').content")
+              assert 'ここだけ覚える' in label, f'memory pseudo-label missing: {label}'
+
           with sync_playwright() as p:
               browser = p.chromium.launch()
               context = browser.new_context(
@@ -100,7 +104,7 @@ jobs:
               page.locator('#unknown').click()
               page.locator('.memory').wait_for(state='visible')
               feedback = page.locator('body').inner_text()
-              assert 'ここだけ覚える' in feedback
+              assert_memory_label(page)
               assert '苦手に追加しました' in feedback
               page.screenshot(path=str(out/'03-understand.png'))
 
@@ -110,7 +114,7 @@ jobs:
               page.screenshot(path=str(out/'04-resume-home.png'))
               page.locator('#resume').click()
               page.locator('.memory').wait_for(state='visible')
-              assert 'ここだけ覚える' in page.locator('body').inner_text()
+              assert_memory_label(page)
 
               # Finish the short sprint deterministically with "unknown" so review inventory exists.
               safety = 0
