@@ -66,6 +66,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           s=Path('fp3-manabi-sprint/ios/App.swift').read_text(encoding='utf-8')
           required=[
             'com.allsunday1122.fp3kakomoncoach.premium.lifetime',
@@ -83,8 +84,13 @@ jobs:
           if missing: raise SystemExit('missing premium-boundary markers: '+repr(missing))
           if 'jp.allsunday1122.fp3manabisprint.premium' in s:
               raise SystemExit('stale StoreKit product ID drift detected')
-          if 'if(state.premium && typeof originalBalanced12' not in s:
-              raise SystemExit('premium 12-question path missing')
+          premium_path = re.search(
+              r'window\.balanced12\s*=\s*function\s*\(\)\s*\{(?:(?!\n\s*\};).){0,800}?if\s*\(\s*state\.premium\s*\)\s*return\s+originalBalanced12\s*\(\s*\)\s*;',
+              s,
+              flags=re.S,
+          )
+          if not premium_path:
+              raise SystemExit('premium 12-question path missing: balanced12 must route premium users to originalBalanced12()')
           if 'if(!state.premium && premiumTarget(el))' not in s:
               raise SystemExit('free lock interception missing')
           print('PASS: FP3 native premium boundary contract')
