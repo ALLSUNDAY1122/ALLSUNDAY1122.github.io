@@ -19,6 +19,22 @@ final class SplatVideoColorPipelineTests: XCTestCase {
         )
     }
 
+    func testVideoViewMatrixKeepsViewerCameraSpaceDisplayCorrection() {
+        let eye = SIMD3<Float>(1.25, 0.75, 3.5)
+        let center = SIMD3<Float>(0.25, -0.5, 0.75)
+        let expected = SplatCameraGeometry.rotationZ(.pi) * SplatCameraGeometry.lookAt(
+            eye: eye,
+            center: center,
+            up: SIMD3<Float>(0, 1, 0)
+        )
+        let actual = SplatVideoExporter.renderViewMatrix(eye: eye, center: center)
+        for column in 0..<4 {
+            for row in 0..<4 {
+                XCTAssertEqual(actual[column][row], expected[column][row], accuracy: 0.000_001)
+            }
+        }
+    }
+
     func testEncodedVideoDeclaresBT709ColorProperties() {
         XCTAssertEqual(
             SplatVideoExporter.videoColorProperties[AVVideoColorPrimariesKey],
