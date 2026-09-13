@@ -1,0 +1,33 @@
+name: APP Factory Human Gate Audit
+
+on:
+  issues:
+    types: [opened]
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/audit_active_app_review_human_gates.py'
+      - '.github/workflows/app2-005-hm1-submit-review.yml'
+      - '.github/workflows/app2-004-yakuzaishi-submit-review.yml'
+      - '.github/workflows/app2-009-submit-review.yml'
+      - '.github/workflows/app-factory-human-gate-audit.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    if: github.event_name == 'push' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP-FACTORY] Human Gate Audit')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Audit final App Review approval barriers
+        run: python3 scripts/audit_active_app_review_human_gates.py
+      - name: Report
+        if: github.event_name == 'issues' && always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Human Gate audit finished. status=${{ job.status }}; run_id=${context.runId}`});
