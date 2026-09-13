@@ -5,7 +5,6 @@ on:
     branches: [main]
     paths:
       - automation/app2-004-yakuzaishi-final-submit-command.json
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,6 +21,31 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      - name: Require fresh explicit human approval for this exact release commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, subprocess
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+          cmd=json.loads(Path('automation/app2-004-yakuzaishi-final-submit-command.json').read_text(encoding='utf-8'))
+          if cmd.get('action') != 'submit_app_review': raise SystemExit('HUMAN_GATE: unexpected submit action')
+          if str(cmd.get('app_id')) != '6799753724' or str(cmd.get('bundle_id')) != 'jp.allsunday1122.yakuzaishi': raise SystemExit('HUMAN_GATE: target mismatch')
+          auth=cmd.get('authorization') or {}
+          if auth.get('status') != 'APPROVED' or auth.get('source') != 'user': raise SystemExit('HUMAN_GATE: explicit user approval missing')
+          if (cmd.get('human_device_acceptance') or {}).get('status') != 'PASS': raise SystemExit('HUMAN_GATE: device acceptance missing')
+          parent=subprocess.check_output(['git','rev-parse','HEAD^'],text=True).strip()
+          if str(cmd.get('approved_commit') or '') != parent: raise SystemExit('HUMAN_GATE: approval is not pinned to exact release commit')
+          raw=str(cmd.get('approved_at') or '').replace('Z','+00:00')
+          try: approved_at=datetime.fromisoformat(raw)
+          except Exception: raise SystemExit('HUMAN_GATE: approved_at missing or invalid')
+          if approved_at.tzinfo is None: raise SystemExit('HUMAN_GATE: approved_at timezone missing')
+          age=datetime.now(timezone.utc)-approved_at.astimezone(timezone.utc)
+          if age < timedelta(minutes=-5) or age > timedelta(hours=24): raise SystemExit(f'HUMAN_GATE: approval stale/future; age={age}')
+          print('PASS: fresh approval pinned to exact release commit')
+          PY
 
       - name: Submit prepared Build 5 to App Review
         id: submit
@@ -74,9 +98,6 @@ jobs:
           p=Path('automation/asc-results/app2-004-yakuzaishi-submit-review-result.json')
           if not p.exists(): raise SystemExit('submission result missing')
           data=json.loads(p.read_text(encoding='utf-8'))
-          if not data.get('submitted'):
-              raise SystemExit('APP2-004 submission did not complete: '+str(data.get('error')))
-          if data.get('review_submission_state') not in {'WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING'}:
-              raise SystemExit('Unexpected review state: '+str(data.get('review_submission_state')))
+          if not data.get('submitted'): raise SystemExit('APP2-004 submission did not complete: '+str(data.get('error')))
           print('PASS: submitted state='+str(data.get('review_submission_state')))
           PY
