@@ -63,6 +63,10 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
         UIViewControllerBasedStatusBarAppearance: true
+    scheme:
+      testTargets:
+        - HealthManager2UITests
+
   HealthManager2UITests:
     type: bundle.ui-testing
     platform: iOS
@@ -74,10 +78,5 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.healthmanager2.uitests
-    info:
-      path: UITests/Info.plist
-      properties:
-        CFBundleDisplayName: HealthManager2UITests
-    scheme:
-      testTargets:
-        - HealthManager2UITests
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO
