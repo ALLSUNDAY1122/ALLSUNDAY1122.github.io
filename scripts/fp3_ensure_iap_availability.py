@@ -3,6 +3,7 @@
 
 The operation is intentionally narrow: exact app/IAP identity, JPN only,
 availableInNewTerritories=false. Existing availability is never mutated.
+A sanitized result is written on both success and failure.
 """
 import json
 import os
@@ -15,6 +16,11 @@ BUNDLE_ID = "com.allsunday1122.fp3kakomoncoach"
 IAP_ID = "6798730387"
 PRODUCT_ID = "com.allsunday1122.fp3kakomoncoach.premium.lifetime"
 TERRITORY = "JPN"
+OUT = Path("fp3-iap-availability-result.json")
+
+
+def persist(result: dict) -> None:
+    OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def main() -> None:
@@ -23,7 +29,7 @@ def main() -> None:
     if not issuer or not key_id:
         raise SystemExit("Missing ASC credentials")
     key_path, cleanup = load_private_key()
-    result = {"app_id": APP_ID, "iap_id": IAP_ID, "territory": TERRITORY}
+    result = {"app_id": APP_ID, "iap_id": IAP_ID, "territory": TERRITORY, "ok": False}
     try:
         token = make_token(issuer, key_id, key_path)
         _, app = api_get(token, f"/v1/apps/{APP_ID}")
@@ -38,11 +44,11 @@ def main() -> None:
             raise RuntimeError("FP3 IAP identity mismatch")
 
         try:
-            _, av = api_get(token, f"/v1/inAppPurchaseAvailabilities/{IAP_ID}?include=availableTerritories&limit[availableTerritories]=200")
+            _, av = api_get(token, f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseAvailability?include=availableTerritories&limit[availableTerritories]=200")
             existing = sorted({str(x.get("id")) for x in (av.get("included") or []) if isinstance(x, dict) and x.get("type") == "territories" and x.get("id")})
             if existing != [TERRITORY]:
                 raise RuntimeError(f"Existing IAP availability is not the expected JPN-only set: {existing}")
-            result.update({"changed": False, "available_territories": existing})
+            result.update({"ok": True, "changed": False, "available_territories": existing})
         except RuntimeError as exc:
             if "HTTP 404" not in str(exc):
                 raise
@@ -59,17 +65,20 @@ def main() -> None:
             status, _ = api_request(token, "/v1/inAppPurchaseAvailabilities", method="POST", payload=payload)
             if status not in (200, 201):
                 raise RuntimeError(f"IAP availability create returned HTTP {status}")
-            _, check = api_get(token, f"/v1/inAppPurchaseAvailabilities/{IAP_ID}?include=availableTerritories&limit[availableTerritories]=200")
+            _, check = api_get(token, f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseAvailability?include=availableTerritories&limit[availableTerritories]=200")
             actual = sorted({str(x.get("id")) for x in (check.get("included") or []) if isinstance(x, dict) and x.get("type") == "territories" and x.get("id")})
             if actual != [TERRITORY]:
                 raise RuntimeError(f"IAP availability read-back mismatch: {actual}")
-            result.update({"changed": True, "http_status": status, "available_territories": actual})
+            result.update({"ok": True, "changed": True, "http_status": status, "available_territories": actual})
+        persist(result)
+        print(json.dumps(result, ensure_ascii=False))
+    except Exception as exc:
+        result["error"] = str(exc)[:4000]
+        persist(result)
+        raise
     finally:
         if cleanup:
             cleanup.unlink(missing_ok=True)
-
-    Path("fp3-iap-availability-result.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(result, ensure_ascii=False))
 
 
 if __name__ == "__main__":
