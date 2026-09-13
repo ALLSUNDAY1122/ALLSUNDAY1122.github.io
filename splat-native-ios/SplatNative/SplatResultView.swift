@@ -246,7 +246,7 @@ struct SplatResultView: View {
                     .buttonStyle(.bordered)
 
                     Button {
-                        viewerState.resetEdits()
+                        resetAllEdits()
                     } label: {
                         Label("編集を全解除", systemImage: "arrow.uturn.backward")
                     }
@@ -321,6 +321,15 @@ struct SplatResultView: View {
             editHistory.commit(snapshot)
             editHistoryTask = nil
         }
+    }
+
+    private func resetAllEdits() {
+        editHistoryTask?.cancel()
+        editHistoryTask = nil
+        // A slider/crop change is intentionally debounced for 300 ms. Capture the live state before
+        // reset destroys it so an immediate “reset all” remains a reversible single user action.
+        editHistory.commit(viewerState.editSettings)
+        viewerState.resetEdits()
     }
 
     private func undoEdit() {
