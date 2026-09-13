@@ -45,6 +45,29 @@ def summarize(resources: list[dict]) -> list[dict]:
     return out
 
 
+def all_reads_ok(result: dict) -> bool:
+    direct_reads = (
+        result.get("legacy_subscription_localizations"),
+        result.get("legacy_group_localizations"),
+        result.get("subscription_availability"),
+    )
+    if not all(isinstance(item, dict) and item.get("ok") is True for item in direct_reads):
+        return False
+
+    for detail in result.get("subscription_version_details", []):
+        for key in ("localizations", "images", "image"):
+            item = detail.get(key)
+            if not isinstance(item, dict) or item.get("ok") is not True:
+                return False
+
+    for detail in result.get("group_version_details", []):
+        item = detail.get("localizations")
+        if not isinstance(item, dict) or item.get("ok") is not True:
+            return False
+
+    return True
+
+
 def main() -> None:
     key_path, cleanup = load_private_key()
     result = {
@@ -87,9 +110,12 @@ def main() -> None:
             token, f"/v1/subscriptionGroups/{GROUP_ID}/subscriptionGroupLocalizations?limit=200"
         )
         result["subscription_availability"] = safe_get(
-            token, f"/v1/subscriptions/{SUB_ID}/subscriptionAvailability?include=availableTerritories&limit[availableTerritories]=200"
+            token,
+            f"/v1/subscriptions/{SUB_ID}/subscriptionAvailability?include=availableTerritories&limit[availableTerritories]=50",
         )
-        result["ok"] = True
+        result["ok"] = all_reads_ok(result)
+        if not result["ok"]:
+            raise RuntimeError("one or more required subscription metadata reads failed")
     except Exception as exc:
         result.update({"ok": False, "error": str(exc)})
         raise
