@@ -53,19 +53,29 @@ def approval_command():
 def main():
     command = approval_command()
     approved_build = str((command or {}).get("build") or "").strip() or None
+    acceptance = (command or {}).get("human_device_acceptance") or {}
+    accepted_build = str(acceptance.get("build") or "").strip() or None
     result = {
         "task_id": "APP2-004",
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "app_id": APP_ID,
         "bundle_id": BUNDLE_ID,
         "approved_build": approved_build,
+        "human_device_accepted_build": accepted_build,
         "errors": [],
         "warnings": [],
     }
     if command is None:
-        result["warnings"].append("Human approval command missing or target mismatch")
+        result["errors"].append("Human approval command missing or target mismatch")
     elif not approved_build:
-        result["warnings"].append("Human approval command does not name a build")
+        result["errors"].append("Human approval command does not name a build")
+    if command is not None:
+        if acceptance.get("status") != "PASS" or acceptance.get("source") != "user":
+            result["errors"].append("Human device acceptance missing")
+        elif accepted_build != approved_build:
+            result["errors"].append(
+                f"Human device acceptance is not pinned to approved build: accepted={accepted_build or '[missing]'} approved={approved_build or '[missing]'}"
+            )
 
     key_path, cleanup = load_private_key()
     try:
@@ -142,7 +152,7 @@ def main():
             if selected_attrs.get("expired") is True:
                 result["errors"].append("Selected App Store build is expired")
             if approved_build and selected_build and str(selected_attrs.get("version")) != approved_build:
-                result["warnings"].append(
+                result["errors"].append(
                     f"Human approval targets Build {approved_build}, but App Store version selects Build {selected_attrs.get('version')}"
                 )
 
@@ -172,7 +182,7 @@ def main():
             if approved_resource else None
         )
         if approved_build and not approved_resource:
-            result["warnings"].append(f"Approved VALID nonexpired Build {approved_build} is not present")
+            result["errors"].append(f"Approved VALID nonexpired Build {approved_build} is not present")
 
         submissions_read = safe_get(token, f"/v1/apps/{APP_ID}/reviewSubmissions?limit=50")
         submissions = many((submissions_read.get("payload") or {})) if submissions_read.get("ok") else []
@@ -182,6 +192,8 @@ def main():
         OUT.parent.mkdir(parents=True, exist_ok=True)
         OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(json.dumps({"pass": result["pass"], "errors": result["errors"], "warnings": result["warnings"]}, ensure_ascii=False))
+        if result["errors"]:
+            raise SystemExit(1)
     finally:
         if cleanup:
             cleanup.unlink(missing_ok=True)
