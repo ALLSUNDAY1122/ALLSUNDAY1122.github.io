@@ -181,9 +181,12 @@ enum MeshExportMemoryPolicy {
     /// Conversion estimates describe how much memory the operation may need; physical RAM alone
     /// does not describe how much headroom exists at the moment the user starts an export. Keep one
     /// quarter of currently available memory outside the estimate for the app, Metal and transient
-    /// framework allocations. This avoids starting a conversion that is statically safe for the
-    /// device but unsafe while reconstruction/viewer state is still resident.
+    /// framework allocations. `os_proc_available_memory()` can return zero when the measurement is
+    /// unavailable (notably some simulator/host contexts); zero is not a trustworthy observation of
+    /// literal zero headroom, so preserve the static physical/thermal budget in that case instead of
+    /// rejecting every export with a synthetic 0 MiB ceiling.
     static func applyingAvailableMemoryLimit(_ availableMemoryBytes: UInt64, to estimate: Estimate) -> Estimate {
+        guard availableMemoryBytes > 0 else { return estimate }
         let currentHeadroomBudget = availableMemoryBytes / 4 * 3
         return Estimate(
             sourceBytes: estimate.sourceBytes,
