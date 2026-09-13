@@ -39,6 +39,8 @@ jobs:
           test -n "$DEVICE"
           echo "device=$DEVICE" >> "$GITHUB_OUTPUT"
       - name: Run real paywall UI capture
+        id: ui_capture
+        continue-on-error: true
         working-directory: ios/health-manager-2
         run: |
           set -o pipefail
@@ -59,9 +61,28 @@ jobs:
               --output-path "$RUNNER_TEMP/hm2-review-attachments"
           fi
           find "$RUNNER_TEMP/hm2-review-attachments" -type f -maxdepth 3 -print || true
-      - name: Require captured PNG
+      - name: Summarize UI capture diagnostics
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### HM2 review screenshot diagnostics'
+            echo "UI capture outcome: ${{ steps.ui_capture.outcome }}"
+            if [ -f "$RUNNER_TEMP/hm2-review-test.log" ]; then
+              echo '```text'
+              grep -E '(^|[[:space:]])(error:|failed|FAIL|XCTFail|Test Case|Testing failed)' "$RUNNER_TEMP/hm2-review-test.log" | tail -n 80 || true
+              echo '```'
+            fi
+            echo 'Attachments:'
+            find "$RUNNER_TEMP/hm2-review-attachments" -type f -maxdepth 3 -printf '%f\n' 2>/dev/null || true
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Require captured diagnostic or review PNG
+        if: always()
+        id: png_gate
+        continue-on-error: true
         run: |
           COUNT=$(find "$RUNNER_TEMP/hm2-review-attachments" -type f \( -name '*.png' -o -name '*.PNG' \) | wc -l | tr -d ' ')
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
           test "$COUNT" -ge 1
       - uses: actions/upload-artifact@v6
         if: always()
@@ -72,3 +93,8 @@ jobs:
             ${{ runner.temp }}/hm2-review-test.log
           if-no-files-found: error
           retention-days: 7
+      - name: Enforce review screenshot gate
+        if: always()
+        run: |
+          test "${{ steps.ui_capture.outcome }}" = "success"
+          test "${{ steps.png_gate.outcome }}" = "success"
