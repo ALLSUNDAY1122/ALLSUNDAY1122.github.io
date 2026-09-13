@@ -202,6 +202,46 @@ enum SplatSkySeeder {
         )
     }
 
+    static func bilinearSample(
+        bytes: [UInt8],
+        width: Int,
+        height: Int,
+        normalizedX: Float,
+        normalizedY: Float
+    ) -> SplatSeedSample {
+        guard width > 0,
+              height > 0,
+              normalizedX.isFinite,
+              normalizedY.isFinite else { return SplatSeedColorizer.fallback }
+        let (pixelCount, pixelOverflow) = width.multipliedReportingOverflow(by: height)
+        let (requiredBytes, byteOverflow) = pixelCount.multipliedReportingOverflow(by: 4)
+        guard !pixelOverflow,
+              !byteOverflow,
+              requiredBytes > 0,
+              bytes.count >= requiredBytes else { return SplatSeedColorizer.fallback }
+
+        let fx = min(Float(width - 1), max(0, normalizedX * Float(width - 1)))
+        let fy = min(Float(height - 1), max(0, normalizedY * Float(height - 1)))
+        let x0 = Int(floor(fx))
+        let y0 = Int(floor(fy))
+        let x1 = min(width - 1, x0 + 1)
+        let y1 = min(height - 1, y0 + 1)
+        let tx = fx - Float(x0)
+        let ty = fy - Float(y0)
+
+        func channel(_ x: Int, _ y: Int, _ offset: Int) -> Float {
+            Float(bytes[(y * width + x) * 4 + offset])
+        }
+        func interpolate(_ offset: Int) -> UInt8 {
+            let top = channel(x0, y0, offset) * (1 - tx) + channel(x1, y0, offset) * tx
+            let bottom = channel(x0, y1, offset) * (1 - tx) + channel(x1, y1, offset) * tx
+            let value = top * (1 - ty) + bottom * ty
+            return UInt8(min(255, max(0, value.rounded())))
+        }
+
+        return SplatSeedSample(red: interpolate(0), green: interpolate(1), blue: interpolate(2))
+    }
+
     private static func median(_ values: [UInt8]) -> UInt8 {
         guard !values.isEmpty else { return 128 }
         let sorted = values.sorted()
@@ -315,10 +355,12 @@ private struct SkyRaster {
     }
 
     func sample(normalizedX: Float, normalizedY: Float) -> SplatSeedSample {
-        guard normalizedX.isFinite, normalizedY.isFinite else { return SplatSeedColorizer.fallback }
-        let x = min(width - 1, max(0, Int((normalizedX * Float(width - 1)).rounded())))
-        let y = min(height - 1, max(0, Int((normalizedY * Float(height - 1)).rounded())))
-        let offset = (y * width + x) * 4
-        return SplatSeedSample(red: bytes[offset], green: bytes[offset + 1], blue: bytes[offset + 2])
+        SplatSkySeeder.bilinearSample(
+            bytes: bytes,
+            width: width,
+            height: height,
+            normalizedX: normalizedX,
+            normalizedY: normalizedY
+        )
     }
 }
