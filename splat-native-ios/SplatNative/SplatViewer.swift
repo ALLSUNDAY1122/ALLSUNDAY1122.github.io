@@ -105,6 +105,8 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
     private var robustBaseDistance: Float = 2.5
     private var sceneRadius: Float = 0.10
     private var sceneCenter = SIMD3<Float>.zero
+    private var sourceFraming = SplatCameraGeometry.Framing(center: .zero, distance: 2.5, radius: 0.10)
+    private var renderedFraming = SplatCameraGeometry.Framing(center: .zero, distance: 2.5, radius: 0.10)
     private var targetOffset = SIMD3<Float>.zero
     private var cameraWasManuallyAdjusted = false
     private var measurementPoints: [SIMD3<Float>] = []
@@ -165,6 +167,8 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                 }
 
                 let framing = SplatCameraGeometry.robustFraming(for: points)
+                self.sourceFraming = framing
+                self.renderedFraming = framing
                 self.sceneCenter = framing.center
                 self.sceneRadius = framing.radius
                 self.robustBaseDistance = framing.distance
@@ -356,15 +360,22 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
     private func resetCamera() {
         yaw = initialYaw
         pitch = initialPitch
+        applyCameraFraming(renderedFraming)
+        targetOffset = .zero
+        cameraWasManuallyAdjusted = false
+    }
+
+    private func applyCameraFraming(_ framing: SplatCameraGeometry.Framing) {
+        sceneCenter = framing.center
+        sceneRadius = framing.radius
+        robustBaseDistance = framing.distance
         let fittedDistance = aspectFittedBaseDistance(
-            robustDistance: robustBaseDistance,
-            radius: sceneRadius,
+            robustDistance: framing.distance,
+            radius: framing.radius,
             size: drawableSize
         )
         baseDistance = fittedDistance
         distance = fittedDistance
-        targetOffset = .zero
-        cameraWasManuallyAdjusted = false
     }
 
     private func aspectFittedBaseDistance(
@@ -470,6 +481,11 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                 return
             }
 
+            let visibleFraming = settings.hasCrop
+                ? SplatCameraGeometry.robustFraming(for: edited)
+                : self.sourceFraming
+            let shouldFrameVisibleContent = self.renderer == nil
+
             do {
                 let candidate = try SplatRenderer(
                     device: self.device,
@@ -483,6 +499,10 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                 await candidate.addChunk(chunk)
                 guard generation == self.editGeneration else { return }
                 self.renderer = candidate
+                self.renderedFraming = visibleFraming
+                if shouldFrameVisibleContent {
+                    self.applyCameraFraming(visibleFraming)
+                }
                 self.renderedSettings = settings
                 self.pickPositions = Self.sampledPositions(from: edited, limit: 15_000)
                 self.clearMeasurement()
