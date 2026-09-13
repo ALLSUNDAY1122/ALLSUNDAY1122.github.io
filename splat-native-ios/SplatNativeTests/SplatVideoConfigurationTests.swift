@@ -84,11 +84,56 @@ final class SplatVideoConfigurationTests: XCTestCase {
         XCTAssertEqual(pushStart.distanceMultiplier, 1.25, accuracy: 0.0001)
         XCTAssertEqual(pushEnd.distanceMultiplier, 0.80, accuracy: 0.0001)
 
+        config.cameraMotion = .depthOrbit
+        let depthStart = config.cameraSample(progress: 0)
+        let depthQuarter = config.cameraSample(progress: 0.25)
+        XCTAssertEqual(depthStart.distanceMultiplier, 1.18, accuracy: 0.0001)
+        XCTAssertLessThan(depthQuarter.distanceMultiplier, depthStart.distanceMultiplier)
+        XCTAssertNotEqual(depthQuarter.pitch, depthStart.pitch)
+
+        config.cameraMotion = .spiralRise
+        let spiralStart = config.cameraSample(progress: 0)
+        let spiralEnd = config.cameraSample(progress: 1)
+        XCTAssertEqual(spiralStart.pitch, -0.28, accuracy: 0.0001)
+        XCTAssertEqual(spiralEnd.pitch, 0.28, accuracy: 0.0001)
+        XCTAssertGreaterThan(spiralStart.distanceMultiplier, spiralEnd.distanceMultiplier)
+        XCTAssertGreaterThan(spiralEnd.yaw - spiralStart.yaw, 6.2)
+
+        config.cameraMotion = .topApproach
+        let topStart = config.cameraSample(progress: 0)
+        let topEnd = config.cameraSample(progress: 1)
+        XCTAssertEqual(topStart.pitch, 0.62, accuracy: 0.0001)
+        XCTAssertEqual(topEnd.pitch, 0.10, accuracy: 0.0001)
+        XCTAssertGreaterThan(topStart.distanceMultiplier, topEnd.distanceMultiplier)
+
+        config.cameraMotion = .lowReveal
+        let lowStart = config.cameraSample(progress: 0)
+        let lowEnd = config.cameraSample(progress: 1)
+        XCTAssertEqual(lowStart.pitch, -0.24, accuracy: 0.0001)
+        XCTAssertEqual(lowEnd.pitch, 0.38, accuracy: 0.0001)
+        XCTAssertGreaterThan(lowStart.distanceMultiplier, lowEnd.distanceMultiplier)
+
         config.cameraMotion = .fixed
         let fixed = config.cameraSample(progress: 0.75)
         XCTAssertEqual(fixed.yaw, 0, accuracy: 0.0001)
         XCTAssertEqual(fixed.pitch, 0, accuracy: 0.0001)
         XCTAssertEqual(fixed.distanceMultiplier, 1, accuracy: 0.0001)
+    }
+
+    func testAllCameraMotionsStayFiniteAndInSafeFramingRange() {
+        for motion in SplatVideoConfiguration.CameraMotion.allCases {
+            var config = SplatVideoConfiguration()
+            config.cameraMotion = motion
+            for step in 0...100 {
+                let sample = config.cameraSample(progress: Double(step) / 100)
+                XCTAssertTrue(sample.yaw.isFinite, "nonfinite yaw for \(motion)")
+                XCTAssertTrue(sample.pitch.isFinite, "nonfinite pitch for \(motion)")
+                XCTAssertTrue(sample.distanceMultiplier.isFinite, "nonfinite distance for \(motion)")
+                XCTAssertGreaterThan(sample.distanceMultiplier, 0.5, "unsafe near distance for \(motion)")
+                XCTAssertLessThan(sample.distanceMultiplier, 1.6, "unsafe far distance for \(motion)")
+                XCTAssertLessThanOrEqual(abs(sample.pitch), 0.75, "excessive pitch for \(motion)")
+            }
+        }
     }
 
     func testOrbit360UsesUniformUniqueSamplesAcrossTheLoopSeam() {
