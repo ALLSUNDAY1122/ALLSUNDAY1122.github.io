@@ -277,11 +277,17 @@ enum SplatVideoExporter {
                 yaw: camera.yaw,
                 pitch: camera.pitch
             )
+            // Keep the complete robust scene inside the depth range as the camera moves farther
+            // away for narrow output or cinematic motion. A fixed far=100 clipped large scenes even
+            // after aspect fitting had correctly moved the eye beyond the original 60-unit floor.
+            let eyeDistance = simd_distance(eye, framing.center)
+            let safeEyeDistance = eyeDistance.isFinite ? eyeDistance : baseDistance
+            let farPlane = max(100, safeEyeDistance + framing.radius * 2 + 10)
             let projection = SplatCameraGeometry.perspective(
                 fovY: renderFovY,
                 aspect: Float(dimensions.width) / Float(dimensions.height),
                 near: 0.01,
-                far: 100
+                far: farPlane
             )
             let view = renderViewMatrix(eye: eye, center: framing.center)
             let viewport = SplatRenderer.ViewportDescriptor(
