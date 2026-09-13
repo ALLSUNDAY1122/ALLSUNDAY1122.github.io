@@ -45,6 +45,7 @@ enum ScanLabPublishPackageBuilder {
     private static let hashReadChunkBytes = 1024 * 1024
 
     static func build(from sourceURL: URL, maximumBytes: Int = 128 * 1024 * 1024, fileManager: FileManager = .default) throws -> ScanLabPublishPackage {
+        try Task.checkCancellation()
         guard maximumBytes > 0, sourceURL.isFileURL else { throw ScanLabPublishPackageError.invalidSource }
         cleanupStalePackages(
             in: fileManager.temporaryDirectory,
@@ -52,6 +53,7 @@ enum ScanLabPublishPackageBuilder {
             now: Date(),
             fileManager: fileManager
         )
+        try Task.checkCancellation()
         let attributes: [FileAttributeKey: Any]
         do { attributes = try fileManager.attributesOfItem(atPath: sourceURL.path) } catch { throw ScanLabPublishPackageError.invalidSource }
         guard (attributes[.type] as? FileAttributeType) == .typeRegular,
@@ -64,7 +66,9 @@ enum ScanLabPublishPackageBuilder {
             let source: Data
             do { source = try Data(contentsOf: sourceURL, options: [.mappedIfSafe]) } catch { throw ScanLabPublishPackageError.invalidSource }
             guard source.count == sourceByteCount, isDecodableSPZ(source) else { throw ScanLabPublishPackageError.invalidSPZ }
+            try Task.checkCancellation()
             trustedSourceHash = sha256(source)
+            try Task.checkCancellation()
         }
         let directory = fileManager.temporaryDirectory.appendingPathComponent("\(directoryPrefix)\(UUID().uuidString.lowercased())", isDirectory: true)
         let sceneURL = directory.appendingPathComponent(ScanLabPublishPackage.sceneFilename)
@@ -72,11 +76,13 @@ enum ScanLabPublishPackageBuilder {
         do {
             try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
             try Data().write(to: markerURL(for: directory), options: .atomic)
+            try Task.checkCancellation()
             // The source is already a validated regular, non-empty SPZ file. Copy it as a file
             // rather than asking Data.write(.atomic) to stage another 128 MB-class Data-backed write.
             // The validation mapping above has left scope before this copy starts, and the streamed
             // hash + size verification below still proves that the package contains those exact bytes.
             try fileManager.copyItem(at: sourceURL, to: sceneURL)
+            try Task.checkCancellation()
             let manifest = ScanLabPublishManifest(schemaVersion: ScanLabPublishManifest.currentSchemaVersion, sceneFile: ScanLabPublishPackage.sceneFilename, sceneByteCount: Int64(sourceByteCount), sceneSHA256: trustedSourceHash, mediaType: ScanLabPublishPackage.manifestSceneMediaType, createdAt: ISO8601DateFormatter().string(from: Date()))
             let encoder = JSONEncoder(); encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
             try encoder.encode(manifest).write(to: manifestURL, options: [.atomic])
@@ -88,9 +94,11 @@ enum ScanLabPublishPackageBuilder {
             guard try verifyWrittenCopy(package, trustedSourceHash: trustedSourceHash, fileManager: fileManager) else {
                 throw ScanLabPublishPackageError.packageVerificationFailed
             }
+            try Task.checkCancellation()
             return package
         } catch {
             if isOwnedPackageDirectory(directory, fileManager: fileManager) { try? fileManager.removeItem(at: directory) }
+            if error is CancellationError { throw error }
             if error is ScanLabPublishPackageError { throw error }
             throw ScanLabPublishPackageError.packageWriteFailed
         }
@@ -137,6 +145,7 @@ enum ScanLabPublishPackageBuilder {
         trustedSourceHash: String,
         fileManager: FileManager
     ) throws -> Bool {
+        try Task.checkCancellation()
         guard package.manifest.sceneSHA256 == trustedSourceHash,
               basicPackageStructureIsValid(package, fileManager: fileManager) else { return false }
         let digest = try streamingSHA256(package.sceneURL)
@@ -151,6 +160,7 @@ enum ScanLabPublishPackageBuilder {
         var hasher = SHA256()
         var byteCount: Int64 = 0
         while true {
+            try Task.checkCancellation()
             let chunk = try handle.read(upToCount: hashReadChunkBytes) ?? Data()
             if chunk.isEmpty { break }
             let (nextCount, overflow) = byteCount.addingReportingOverflow(Int64(chunk.count))
