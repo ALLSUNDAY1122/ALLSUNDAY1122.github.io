@@ -109,7 +109,7 @@ workflows:
       - name: Apply App Store signing profiles
         script: |
           cd "$CM_BUILD_DIR/ios/health-manager-1"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          xcode-project use-profiles
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
