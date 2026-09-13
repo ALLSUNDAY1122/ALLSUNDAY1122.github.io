@@ -1,3 +1,4 @@
+import Darwin.Mach
 import Foundation
 
 /// Chooses whether the live viewer can safely retain the canonical SH3 representation in memory.
@@ -51,9 +52,30 @@ enum SplatViewerMemoryPolicy {
         return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
     }
 
+    /// Physical RAM alone is not enough to decide whether a high-quality SH3 scene is safe to open:
+    /// another app, the just-finished reconstruction, or an export can temporarily consume most of
+    /// the process headroom. Keep one quarter of the currently available memory outside the SH3
+    /// estimate so Metal staging/sorting and Swift copy-on-write edits do not immediately push the
+    /// viewer into memory pressure. The static physical/thermal budget remains the upper ceiling.
+    static func effectiveBudgetBytes(
+        physicalMemoryBytes: UInt64,
+        availableMemoryBytes: UInt64,
+        thermalState: ProcessInfo.ThermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
+    ) -> UInt64 {
+        let staticBudget = budgetBytes(
+            physicalMemoryBytes: physicalMemoryBytes,
+            thermalState: thermalState,
+            isLowPowerModeEnabled: isLowPowerModeEnabled
+        )
+        let availableSafetyBudget = availableMemoryBytes / 4 * 3
+        return min(staticBudget, availableSafetyBudget)
+    }
+
     static func canUseCanonicalSH3(
         pointCount: Int,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) -> Bool {
@@ -65,8 +87,9 @@ enum SplatViewerMemoryPolicy {
         } else {
             pointBytes = safePointCount * estimatedWorkingBytesPerSH3Point + fixedRendererReserveBytes
         }
-        return pointBytes <= budgetBytes(
+        return pointBytes <= effectiveBudgetBytes(
             physicalMemoryBytes: physicalMemoryBytes,
+            availableMemoryBytes: availableMemoryBytes,
             thermalState: thermalState,
             isLowPowerModeEnabled: isLowPowerModeEnabled
         )
