@@ -66,9 +66,20 @@ enum MeshTextReferenceRewriter {
             if output.count >= outputBufferLimit { try flush() }
         }
 
+        let normalizedDirective = directive.lowercased()
         try forEachLine(at: source) { line in
             if directiveValue(in: line, directive: directive) != nil {
-                if directive.lowercased() == "map_kd" {
+                // Appearance editing currently materializes the first diffuse bitmap only. Repointing
+                // every map_Kd in a multi-material MTL to that one bitmap collapses unrelated materials
+                // and can visibly destroy a valid imported mesh. Replace only the first diffuse map;
+                // leave later material textures byte-for-byte intact until multi-texture processing is
+                // implemented. Other reference directives keep their historical replace-all behavior.
+                if normalizedDirective == "map_kd", replaced {
+                    try append(String(line))
+                    return true
+                }
+
+                if normalizedDirective == "map_kd" {
                     let arguments = parseArguments(String(line))
                     let payload = Array(arguments.dropFirst())
                     if let pathStart = texturePathStartIndex(in: payload) {
