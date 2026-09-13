@@ -99,6 +99,7 @@ enum SplatVideoExporter {
 
         let framing = SplatCameraGeometry.robustFraming(for: points)
         let chunk = try SplatChunk(device: device, from: points)
+        let background = configuration.backgroundStyle.rgb
         let renderer = try SplatRenderer(
             device: device,
             colorFormat: renderPixelFormat,
@@ -107,7 +108,12 @@ enum SplatVideoExporter {
             maxViewCount: 1,
             maxSimultaneousRenders: 1,
             highQualityDepth: false,
-            clearColor: MTLClearColor(red: 0.025, green: 0.03, blue: 0.04, alpha: 1)
+            clearColor: MTLClearColor(
+                red: background.red,
+                green: background.green,
+                blue: background.blue,
+                alpha: 1
+            )
         )
         await renderer.addChunk(chunk)
 
