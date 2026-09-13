@@ -246,8 +246,6 @@ enum SplatPersistedEditMaterializer {
     static func apply(_ points: [SplatPoint], plan: Plan) -> [SplatPoint] {
         guard !plan.isIdentity else { return points }
         let settings = plan.settings
-        let exposureGain = Float(pow(2.0, settings.exposureEV))
-        let contrast = Float(settings.contrast)
         let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
 
         var result: [SplatPoint] = []
@@ -265,22 +263,12 @@ enum SplatPersistedEditMaterializer {
             }
 
             var edited = point
-            let base = point.color.asSRGBFloat
-            let exposed = base * exposureGain
-            let midpoint = SIMD3<Float>(repeating: 0.5)
-            let adjusted = simd_clamp((exposed - midpoint) * contrast + midpoint, .zero, .one)
-            switch point.color {
-            case .sphericalHarmonicFloat(var coefficients):
-                if !coefficients.isEmpty {
-                    coefficients[0] = (adjusted - midpoint) * SplatPoint.Color.INV_SH_C0
-                    edited.color = .sphericalHarmonicFloat(coefficients)
-                }
-            case .sRGBUInt8:
-                edited.color = .sRGBUInt8(SIMD3<UInt8>(
-                    byte(adjusted.x), byte(adjusted.y), byte(adjusted.z)
-                ))
-            }
-            result.append(edited)
+    edited.color = SplatColorAdjustment.apply(
+        point.color,
+        exposureEV: settings.exposureEV,
+        contrast: settings.contrast
+    )
+    result.append(edited)
         }
         return result
     }
