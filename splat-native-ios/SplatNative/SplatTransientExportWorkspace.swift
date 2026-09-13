@@ -7,6 +7,7 @@ enum SplatTransientExportWorkspace {
     private static let prefix = "scanlab-export-"
     private static let ownershipMarker = ".scanlab-transient-export"
     private static let staleAge: TimeInterval = 24 * 60 * 60
+    private static let maximumMarkerByteCount = 4 * 1024
 
     static func create(
         rootDirectory: URL = FileManager.default.temporaryDirectory,
@@ -26,7 +27,14 @@ enum SplatTransientExportWorkspace {
             .appendingPathComponent("\(prefix)\(UUID().uuidString)", isDirectory: true)
         try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
         do {
-            try Data().write(to: markerURL(for: url), options: .atomic)
+            // Bind the deletion capability to the exact directory it was created for. A copied or
+            // accidentally recreated marker in another prefixed directory must not authorize a
+            // recursive delete there.
+            let marker = Data(canonicalPath(of: url).utf8)
+            guard !marker.isEmpty, marker.count <= maximumMarkerByteCount else {
+                throw CocoaError(.fileWriteInvalidFileName)
+            }
+            try marker.write(to: markerURL(for: url), options: .atomic)
         } catch {
             try? fileManager.removeItem(at: url)
             throw error
@@ -90,10 +98,30 @@ enum SplatTransientExportWorkspace {
         // alias and being mistaken for a workspace that this helper created.
         let marker = markerURL(for: url)
         guard let markerValues = try? marker.resourceValues(
-            forKeys: [.isRegularFileKey, .isSymbolicLinkKey]
-        ), markerValues.isRegularFile == true, markerValues.isSymbolicLink != true else {
+            forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
+        ), markerValues.isRegularFile == true,
+           markerValues.isSymbolicLink != true,
+           let markerSize = markerValues.fileSize,
+           markerSize >= 0,
+           markerSize <= maximumMarkerByteCount,
+           fileManager.fileExists(atPath: marker.path) else {
             return false
         }
-        return fileManager.fileExists(atPath: marker.path)
+
+        // New workspaces carry their exact canonical path. Keep compatibility with the previous
+        // empty-marker schema only for production's direct children of the process temp directory;
+        // this lets already-created share workspaces clean up after an app update without allowing
+        // an empty marker elsewhere in the filesystem to authorize deletion.
+        guard let data = try? Data(contentsOf: marker) else { return false }
+        if data.isEmpty {
+            return canonicalPath(of: url.deletingLastPathComponent())
+                == canonicalPath(of: fileManager.temporaryDirectory)
+        }
+        guard let recordedPath = String(data: data, encoding: .utf8) else { return false }
+        return recordedPath == canonicalPath(of: url)
+    }
+
+    private static func canonicalPath(of url: URL) -> String {
+        url.standardizedFileURL.resolvingSymlinksInPath().path
     }
 }
