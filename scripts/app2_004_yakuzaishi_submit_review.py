@@ -16,12 +16,7 @@ SUBMITTED_STATES = {"WAITING_FOR_REVIEW", "IN_REVIEW", "COMPLETING"}
 
 
 def approved_target_build() -> str:
-    """Return the exact build explicitly named by the human approval command.
-
-    The selected App Store build can change while release work continues. The
-    submitter therefore must never carry a second, hard-coded build number that
-    can drift away from the approval command.
-    """
+    """Return the exact build explicitly named by approval and accepted on-device."""
     try:
         command = json.loads(COMMAND_PATH.read_text(encoding="utf-8"))
     except Exception as exc:
@@ -33,6 +28,14 @@ def approved_target_build() -> str:
     build = str(command.get("build") or "").strip()
     if not build:
         raise RuntimeError("Approval command build missing")
+    acceptance = command.get("human_device_acceptance") or {}
+    if acceptance.get("status") != "PASS" or acceptance.get("source") != "user":
+        raise RuntimeError("Human device acceptance missing")
+    accepted_build = str(acceptance.get("build") or "").strip()
+    if accepted_build != build:
+        raise RuntimeError(
+            f"Human device acceptance is not for approved build: accepted={accepted_build or '[missing]'} approved={build}"
+        )
     return build
 
 
