@@ -124,7 +124,7 @@ final class SplatViewerCameraDatasetLoaderTests: XCTestCase {
         XCTAssertTrue(SplatViewerCameraDatasetLoader.cameraPositions(for: render).isEmpty)
     }
 
-    func testLongTrajectoryIsEvenlySampledAndKeepsEndpoints() throws {
+    func testLongTrajectoryIsEvenlySampledKeepsInitialPoseWindowAndEndpoints() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let render = root.appendingPathComponent("result.ply")
@@ -141,7 +141,9 @@ final class SplatViewerCameraDatasetLoaderTests: XCTestCase {
 
         let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: render)
         XCTAssertEqual(positions.count, SplatViewerCameraDatasetLoader.maximumReturnedPositions)
-        XCTAssertEqual(positions.first?.x, 0)
+        for index in 0..<6 {
+            XCTAssertEqual(positions[index].x, Float(index), accuracy: 0.0001)
+        }
         XCTAssertEqual(positions.last?.x, Float(frameCount - 1))
         XCTAssertTrue(zip(positions, positions.dropFirst()).allSatisfy { pair in
             pair.0.x <= pair.1.x
@@ -168,7 +170,9 @@ final class SplatViewerCameraDatasetLoaderTests: XCTestCase {
 
         let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: render)
         XCTAssertEqual(positions.count, SplatViewerCameraDatasetLoader.maximumReturnedPositions)
-        XCTAssertEqual(positions.first?.x, 0)
+        for index in 0..<6 {
+            XCTAssertEqual(positions[index].x, Float(index), accuracy: 0.0001)
+        }
         XCTAssertEqual(positions.last?.x, Float(validFrameCount - 1))
         XCTAssertTrue(zip(positions, positions.dropFirst()).allSatisfy { pair in
             pair.0.x <= pair.1.x
