@@ -42,7 +42,7 @@ extension SplatCanonicalSHAsset {
            let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
            values.isRegularFile == true,
            values.isSymbolicLink != true,
-           let descriptor = try? inspectPLY(url),
+           let descriptor = try? inspectPLYStrictHeader(url),
            descriptor.shDegree == requiredSHDegree,
            descriptor.pointCount == expectedPointCount,
            hasCompleteVertexPayload(at: url, expectedPointCount: expectedPointCount) else {
