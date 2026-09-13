@@ -1,0 +1,46 @@
+name: Touhan ASC Metadata Prepare
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/app2_010_touhan_prepare_metadata.py'
+      - '.github/workflows/touhan-asc-metadata-prepare.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: touhan-asc-metadata-prepare
+  cancel-in-progress: true
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Prepare App Store Connect metadata without submission
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          TOUHAN_ASC_RESULT: touhan-asc-metadata-result.json
+        run: |
+          set -euo pipefail
+          python3 scripts/app2_010_touhan_prepare_metadata.py
+
+      - name: Upload sanitized readback
+        if: always() && hashFiles('touhan-asc-metadata-result.json') != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: touhan-asc-metadata-result
+          path: touhan-asc-metadata-result.json
+          if-no-files-found: error
+          retention-days: 14
