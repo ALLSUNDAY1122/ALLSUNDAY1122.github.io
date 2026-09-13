@@ -1,59 +1,70 @@
-# Release Checklist - TestFlight
+# Release Checklist - 第一種衛生管理者
 
-## コード・教材側
-- [x] FP2級 v1.3実装（PR #4065）を直接比較し共通UIを同期
-- [x] 3公表回×3課目＝9カード
-- [x] 132問の意味的独立性（旧44コア＋88反復を破棄し再構築）
-- [x] 3公表回×44問を意味的に独立した132問へ再構築
-- [x] 各回17/17/10、計44レコード
-- [x] 各回・課目の完答回数保存
-- [x] 中断・続きから再開
-- [x] 選択肢タップ即時採点 / わからない / 3連続正解で弱点解除
-- [x] 関係法令51レコードの現行法監査（基準日2026-08-08）
-- [x] 現行132レコードの正答文字列監査（132/132 PASS）
-- [x] 再構築後132問の正答・解説・意味的重複・出典を全件再監査
-- [x] StoreKit 2 月額サブスク＋買い切りIAPコード
-- [x] currentEntitlements / Transaction.updates / 購入 / 復元 / revocation対応
-- [x] Privacy Manifest
-- [x] App Icon
-- [x] App Store metadata / IAP設定書
-- [x] Codemagic TestFlight設定（App Store本審査自動提出OFF）
+更新: 2026-09-13
 
-## Apple側・実ビルドで必要
-- [ ] Explicit App ID `jp.allsunday1122.healthmanager1` 登録
-- [ ] App Store ConnectにApp作成
-- [ ] Non-Consumable `jp.allsunday1122.healthmanager1.premium` 作成・価格設定
-- [ ] Paid Apps Agreement / 税務 / 銀行情報確認
-- [ ] Codemagic App Store Connect integration接続
-- [ ] 署名付きArchive / IPA build成功
-- [ ] TestFlight upload成功
-- [ ] iPhoneで起動、9カード、12問、44問、中断再開、完答回数を確認
-- [ ] Sandbox購入成功・キャンセル・pending・復元・失効を確認
+> このファイルに残っていた「132問」「App Store Connect App未作成」「買い切り980円」は旧工程の履歴であり、現行Release判定には使用しない。現行の申請自動化 `scripts/app2_005_hm1_prepare_submit.py` は App ID `6799581662` / Bundle ID `jp.allsunday1122.healthmanager1`、独自作問264問、月額200円、買い切り800円を正本契約としている。以下は現行HEADを再検証してからのみPASS化する。
 
-**上の未完了項目を実行するまでは「TestFlight申請済み／アップロード成功」と表現しない。**
+## 1. 教材・学習契約
+- [ ] 全264問を現行HEADから機械監査
+- [ ] 公表回対応3セット + 追加演習3セットを確認
+- [ ] 1セット44問、関係法令・労働衛生・労働生理の構成を確認
+- [ ] 今日のスプリント4/8/16問を確認
+- [ ] 回答→解説→進捗→苦手復習→再挑戦の学習循環をPreflightで確認
+- [ ] 中断・続きから再開を確認
+- [ ] 苦手登録・解除条件を確認
+- [ ] 問題本文・正答・解説・意味的重複・出典・法令基準日を再監査
 
-## 法律・規約 最終ゲート（2026-08-09）
-- [x] 公式公表問題の全文転載なし
-- [x] 「公表回対応」表記へ変更し、公式過去問そのものと誤認させない
-- [x] 非公式アプリであることを明記
-- [x] プライバシーポリシーをGitHub Pages用リポジトリに配置
-- [x] 利用規約をGitHub Pages用リポジトリに配置
-- [x] サポートページをGitHub Pages用リポジトリに配置
-- [x] デジタル機能の解放はStoreKit 2の非消耗型IAP
-- [x] 購入復元導線あり
-- [ ] App Store Connect登録時に各URLへ実ブラウザからアクセスできることを再確認
-
-## 月額＋買い切り課金ゲート（2026-08-09）
+## 2. StoreKit / Premium
 - [x] 月額Product ID `jp.allsunday1122.healthmanager1.monthly`
 - [x] 買い切りProduct ID `jp.allsunday1122.healthmanager1.lifetime`
-- [x] 2商品をStoreKitから同時取得
-- [x] どちらかのentitlementでプレミアム解放
-- [x] 月額のIntro Offer資格をStoreKitで判定
-- [x] 7日無料はStoreKit設定・資格の両方を満たす場合のみ表示
-- [x] 月額・買い切り比較UI
-- [x] 購入復元
-- [x] サブスクリプション管理導線
-- [ ] App Store Connectで月額200円相当を設定
-- [ ] Introductory Offer: Free Trial / 1 Weekを設定
-- [ ] App Store Connectで買い切り980円相当を設定
-- [ ] Sandboxで月額購入・無料トライアル・期限切れ・買い切り・復元・返金を実機確認
+- [ ] currentEntitlements / Transaction.updates / 購入 / 復元 / revocationを現HEADで再監査
+- [ ] 月額200円のfresh ASC read-back
+- [ ] 対象者7日無料トライアルのfresh ASC read-back
+- [ ] 買い切り800円のfresh ASC read-back
+- [ ] 月額・買い切りReview Screenshotのfresh ASC read-back
+- [ ] Sandbox購入・復元・失効は新Release BuildのHuman Testで確認
+
+## 3. App Store Connect / Release identity
+- [x] App ID `6799581662`
+- [x] Bundle ID `jp.allsunday1122.healthmanager1`
+- [ ] Version stateをfresh ASC read-back
+- [ ] 現行Release Buildをfresh ASC read-back
+- [ ] 現HEADとの差分0を確認
+- [ ] 新Buildが必要な場合はAI Preflight / Visual Gate後に生成
+- [ ] Build `VALID / APP_STORE_ELIGIBLE / expired=false`をread-back
+- [ ] App Store VersionへのBuild紐付けをread-back
+- [ ] Internal TestFlight対象をread-back
+- [ ] App Store本審査自動提出OFFを確認
+
+## 4. Metadata / 法令・権利
+- [x] 現行Store原稿は独自作問264問として記述
+- [x] 「公表回対応」とし、公式過去問そのものと誤認させない
+- [x] 非公式アプリであることを明記
+- [x] Support / Privacy URLを申請自動化で固定
+- [ ] Support / Privacy URLの公開到達性をfresh確認
+- [ ] Primary Category / 年齢評価をfresh ASC read-back
+- [ ] App Store screenshotをVisual Gateで確認
+- [ ] Review Detailと実製品UIの価格・機能説明を一致確認
+
+## 5. AI Preflight / Visual Gate
+- [ ] P0=0
+- [ ] P1=0
+- [ ] 主要Journey未確認=0
+- [ ] 既知表示欠落=0
+- [ ] Learning Acceptance Contract PASS
+- [ ] StoreKit Regression Gate PASS
+- [ ] Visual Gate PASS
+- [ ] Release drift Gate PASS
+
+## 6. Human Gate
+AI Preflight / Visual Gate / Release Gateを通過した新Release Buildのみ人間確認へ渡す。
+
+- [ ] 起動クラッシュなし
+- [ ] 主要学習Journey完走
+- [ ] 中断復帰
+- [ ] 学習履歴保持
+- [ ] 月額購入 / Trial表示 / 買い切り / 復元 / 失効
+- [ ] 実機レイアウト崩れなし
+- [ ] Submit for Review直前のユーザー最終承認
+
+Human Testで不具合が出た場合は対象箇所だけを直さず、Root Cause分類→同種全探索→横断修正→Human Defect LibraryへRegression Rule追加→Preflight再実行を行う。
