@@ -57,6 +57,9 @@ enum SplatViewerMemoryPolicy {
     /// the process headroom. Keep one quarter of the currently available memory outside the SH3
     /// estimate so Metal staging/sorting and Swift copy-on-write edits do not immediately push the
     /// viewer into memory pressure. The static physical/thermal budget remains the upper ceiling.
+    /// A zero reading means the platform did not provide usable headroom telemetry; it must not be
+    /// interpreted as literal zero bytes because that would force every SH3 scene onto the legacy
+    /// representation even when the physical/thermal budget is otherwise safe.
     static func effectiveBudgetBytes(
         physicalMemoryBytes: UInt64,
         availableMemoryBytes: UInt64,
@@ -68,6 +71,7 @@ enum SplatViewerMemoryPolicy {
             thermalState: thermalState,
             isLowPowerModeEnabled: isLowPowerModeEnabled
         )
+        guard availableMemoryBytes > 0 else { return staticBudget }
         let availableSafetyBudget = availableMemoryBytes / 4 * 3
         return min(staticBudget, availableSafetyBudget)
     }
