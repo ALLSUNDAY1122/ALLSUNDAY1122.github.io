@@ -56,6 +56,7 @@ private enum MeshGeometryRefinerEngine {
         guard parsed.vertices.count >= 3, !parsed.faces.isEmpty else {
             throw error("有効なOBJ三角形がありません")
         }
+        let sourceFaceCount = parsed.faces.count
 
         var accumulators: [MeshRefineKey: MeshRefineAccumulator] = [:]
         var keys: [MeshRefineKey] = []
@@ -79,12 +80,9 @@ private enum MeshGeometryRefinerEngine {
             accumulator.count += 1
             accumulators[key] = accumulator
         }
-        // Keys retain the complete source-to-weld mapping needed by faces. The original float
-        // vertices are no longer needed after accumulation, so release that large allocation before
-        // building the welded vertex table and face set.
         parsed.vertices.removeAll(keepingCapacity: false)
 
-        let ordered = accumulators.keys.sorted {
+        var ordered = accumulators.keys.sorted {
             if $0.x != $1.x { return $0.x < $1.x }
             if $0.y != $1.y { return $0.y < $1.y }
             return $0.z < $1.z
@@ -106,22 +104,43 @@ private enum MeshGeometryRefinerEngine {
             vertices.append(SIMD3<Float>(Float(mean.x), Float(mean.y), Float(mean.z)))
         }
 
+        // Faces only need a compact source-vertex -> welded-vertex index after the deterministic
+        // welded table is built. Collapse the 24-byte source keys into Int indices, then release the
+        // key arrays/dictionaries before allocating the deduplicated face set.
+        var sourceToWelded: [Int] = []
+        sourceToWelded.reserveCapacity(keys.count)
+        for key in keys {
+            guard let index = keyToIndex[key] else {
+                throw error("Mesh頂点の統合対応を確定できません")
+            }
+            sourceToWelded.append(index)
+        }
+        keys.removeAll(keepingCapacity: false)
+        ordered.removeAll(keepingCapacity: false)
+        accumulators.removeAll(keepingCapacity: false)
+        keyToIndex.removeAll(keepingCapacity: false)
+
         var faces: [SIMD3<Int>] = []
         var faceSet = Set<MeshRefineFaceKey>()
         faces.reserveCapacity(parsed.faces.count)
         for face in parsed.faces {
             guard face.x >= 0, face.y >= 0, face.z >= 0,
-                  face.x < keys.count, face.y < keys.count, face.z < keys.count,
-                  let a = keyToIndex[keys[face.x]],
-                  let b = keyToIndex[keys[face.y]],
-                  let c = keyToIndex[keys[face.z]],
-                  a != b, b != c, a != c else { continue }
+                  face.x < sourceToWelded.count,
+                  face.y < sourceToWelded.count,
+                  face.z < sourceToWelded.count else { continue }
+            let a = sourceToWelded[face.x]
+            let b = sourceToWelded[face.y]
+            let c = sourceToWelded[face.z]
+            guard a != b, b != c, a != c else { continue }
             let cross = simd_cross(vertices[b] - vertices[a], vertices[c] - vertices[a])
             let area = simd_length_squared(cross)
             guard area.isFinite, area > 1e-10 else { continue }
             guard faceSet.insert(MeshRefineFaceKey(a, b, c)).inserted else { continue }
             faces.append(SIMD3<Int>(a, b, c))
         }
+        sourceToWelded.removeAll(keepingCapacity: false)
+        faceSet.removeAll(keepingCapacity: false)
+        parsed.faces.removeAll(keepingCapacity: false)
 
         guard !faces.isEmpty else { throw error("統合後に有効な面が残りませんでした") }
         let componentResult = filterMicroscopicComponents(vertices: vertices, faces: faces)
@@ -135,7 +154,7 @@ private enum MeshGeometryRefinerEngine {
         try writeOBJ(
             to: outputURL,
             weldMeters: weldMeters,
-            sourceFaceCount: parsed.faces.count,
+            sourceFaceCount: sourceFaceCount,
             vertices: compacted.vertices,
             normals: normals,
             faces: compacted.faces
@@ -144,7 +163,7 @@ private enum MeshGeometryRefinerEngine {
             url: outputURL,
             vertexCount: compacted.vertices.count,
             faceCount: compacted.faces.count,
-            removedFaces: max(0, parsed.faces.count - compacted.faces.count),
+            removedFaces: max(0, sourceFaceCount - compacted.faces.count),
             removedComponents: componentResult.removedComponents
         )
     }
@@ -332,9 +351,6 @@ private enum MeshGeometryRefinerEngine {
         }
         for face in faces { union(face.x, face.y); union(face.y, face.z); union(face.z, face.x) }
 
-        // Keep one compact summary per component instead of retaining an array of every face index
-        // and then a second Set of every kept face index. On large connected meshes the old shape
-        // duplicated O(faceCount) Int storage exactly when refinement is already memory intensive.
         var summaries: [Int: MeshRefineComponentSummary] = [:]
         for face in faces {
             let root = find(face.x)
