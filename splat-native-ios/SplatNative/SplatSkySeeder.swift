@@ -60,7 +60,7 @@ enum SplatSkySeeder {
                 let topY: Float = 0.035
                 let borderCandidates = xs.filter { x in
                     let pixel = raster.sample(normalizedX: x, normalizedY: topY)
-                    return isHighConfidenceSky(pixel, sceneLuma: baseline) &&
+                    return isHighConfidenceSkyForSeeding(pixel, sceneLuma: baseline) &&
                         !hasGeometryNear(normalizedX: x, normalizedY: topY, frame: frame, points: geometryPoints)
                 }
                 guard borderCandidates.count >= 5 else { return }
@@ -71,7 +71,7 @@ enum SplatSkySeeder {
                     for x in xs {
                         guard frameContributions < maxSeedsPerFrame else { break }
                         let pixel = raster.sample(normalizedX: x, normalizedY: y)
-                        guard isHighConfidenceSky(pixel, sceneLuma: baseline),
+                        guard isHighConfidenceSkyForSeeding(pixel, sceneLuma: baseline),
                               !hasGeometryNear(normalizedX: x, normalizedY: y, frame: frame, points: geometryPoints),
                               let position = worldPoint(
                                 normalizedX: x,
@@ -108,7 +108,20 @@ enum SplatSkySeeder {
         }
     }
 
-    static func isHighConfidenceSky(_ pixel: SplatSeedSample, sceneLuma: Float) -> Bool {
+    /// Conservative predicate for suppressing near plane-sweep geometry. Keep this blue-sky-only:
+    /// bright low-saturation indoor ceilings can look like overcast sky when scene luma is dark.
+    static func isHighConfidenceSky(_ pixel: SplatSeedSample, sceneLuma _: Float) -> Bool {
+        let r = Float(pixel.red) / 255
+        let g = Float(pixel.green) / 255
+        let b = Float(pixel.blue) / 255
+        return b >= 0.46 && b - r >= 0.08 && g - r >= 0.02
+    }
+
+    /// Far-field background seeding can safely be broader than geometry suppression because it also
+    /// requires top-border consensus and absence of nearby reconstructed geometry. Preserve bright
+    /// overcast support here without allowing that heuristic to erase real indoor surfaces.
+    private static func isHighConfidenceSkyForSeeding(_ pixel: SplatSeedSample, sceneLuma: Float) -> Bool {
+        if isHighConfidenceSky(pixel, sceneLuma: sceneLuma) { return true }
         let r = Float(pixel.red) / 255
         let g = Float(pixel.green) / 255
         let b = Float(pixel.blue) / 255
@@ -116,10 +129,7 @@ enum SplatSkySeeder {
         let minValue = min(r, min(g, b))
         let saturation = maxValue > 0 ? (maxValue - minValue) / maxValue : 0
         let luma = 0.2126 * r + 0.7152 * g + 0.0722 * b
-
-        let blueSky = b >= 0.46 && b - r >= 0.08 && g - r >= 0.02
-        let brightOvercast = luma >= max(0.72, sceneLuma + 0.12) && saturation <= 0.18
-        return blueSky || brightOvercast
+        return luma >= max(0.72, sceneLuma + 0.12) && saturation <= 0.18
     }
 
     static func worldPoint(
