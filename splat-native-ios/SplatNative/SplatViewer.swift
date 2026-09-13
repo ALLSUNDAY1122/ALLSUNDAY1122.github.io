@@ -102,6 +102,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
     private var initialPitch: Float = 0
     private var distance: Float = 2.5
     private var baseDistance: Float = 2.5
+    private var sceneRadius: Float = 0.10
     private var sceneCenter = SIMD3<Float>.zero
     private var targetOffset = SIMD3<Float>.zero
     private var measurementPoints: [SIMD3<Float>] = []
@@ -163,6 +164,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
                 let framing = SplatCameraGeometry.robustFraming(for: points)
                 self.sceneCenter = framing.center
+                self.sceneRadius = framing.radius
                 self.baseDistance = framing.distance
                 self.distance = framing.distance
                 self.cropBounds = Self.robustCropBounds(for: points)
@@ -420,11 +422,17 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
     private func cameraMatrices(size: CGSize) -> (projection: simd_float4x4, view: simd_float4x4) {
         let aspect = max(0.1, Float(size.width / max(1, size.height)))
-        let projection = perspective(fovY: fovY, aspect: aspect, near: 0.01, far: 100)
+        let offsetLength = simd_length(targetOffset)
+        let safeOffsetLength = offsetLength.isFinite ? offsetLength : 0
+        // The interaction envelope allows distance to reach baseDistance * 7 (up to 420 scene
+        // units), while the former fixed far plane was 100. Large captures could therefore vanish
+        // under a perfectly valid zoom-out or pan. Cover the camera-to-scene sphere dynamically.
+        let farPlane = max(100, distance + safeOffsetLength + sceneRadius * 2 + 10)
+        let projection = SplatCameraGeometry.perspective(fovY: fovY, aspect: aspect, near: 0.01, far: farPlane)
         let target = sceneCenter + targetOffset
         let eye = target + orbitVector
-        let baseView = lookAt(eye: eye, center: target, up: SIMD3<Float>(0, 1, 0))
-        let correctedView = rotationZ(.pi) * baseView
+        let baseView = SplatCameraGeometry.lookAt(eye: eye, center: target, up: SIMD3<Float>(0, 1, 0))
+        let correctedView = SplatCameraGeometry.rotationZ(.pi) * baseView
         return (projection, correctedView)
     }
 
@@ -614,39 +622,5 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
             if p.x.isFinite, p.y.isFinite, p.z.isFinite { result.append(p) }
         }
         return result
-    }
-
-    private func perspective(fovY: Float, aspect: Float, near: Float, far: Float) -> simd_float4x4 {
-        let y = 1 / tan(fovY * 0.5)
-        let x = y / aspect
-        let z = far / (near - far)
-        return simd_float4x4(columns: (
-            SIMD4<Float>(x, 0, 0, 0),
-            SIMD4<Float>(0, y, 0, 0),
-            SIMD4<Float>(0, 0, z, -1),
-            SIMD4<Float>(0, 0, z * near, 0)
-        ))
-    }
-
-    private func lookAt(eye: SIMD3<Float>, center: SIMD3<Float>, up: SIMD3<Float>) -> simd_float4x4 {
-        let z = simd_normalize(eye - center)
-        let x = simd_normalize(simd_cross(up, z))
-        let y = simd_cross(z, x)
-        return simd_float4x4(columns: (
-            SIMD4<Float>(x.x, y.x, z.x, 0),
-            SIMD4<Float>(x.y, y.y, z.y, 0),
-            SIMD4<Float>(x.z, y.z, z.z, 0),
-            SIMD4<Float>(-simd_dot(x, eye), -simd_dot(y, eye), -simd_dot(z, eye), 1)
-        ))
-    }
-
-    private func rotationZ(_ angle: Float) -> simd_float4x4 {
-        let c = cos(angle), s = sin(angle)
-        return simd_float4x4(columns: (
-            SIMD4<Float>(c, s, 0, 0),
-            SIMD4<Float>(-s, c, 0, 0),
-            SIMD4<Float>(0, 0, 1, 0),
-            SIMD4<Float>(0, 0, 0, 1)
-        ))
     }
 }
