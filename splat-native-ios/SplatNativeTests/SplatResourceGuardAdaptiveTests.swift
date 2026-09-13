@@ -165,15 +165,34 @@ final class SplatResourceGuardAdaptiveTests: XCTestCase {
         XCTAssertTrue(SplatViewerMemoryPolicy.canUseCanonicalSH3(
             pointCount: 1_000_000,
             physicalMemoryBytes: physicalMemory,
+            availableMemoryBytes: physicalMemory,
             thermalState: .nominal,
             isLowPowerModeEnabled: false
         ))
         XCTAssertFalse(SplatViewerMemoryPolicy.canUseCanonicalSH3(
             pointCount: 1_000_000,
             physicalMemoryBytes: physicalMemory,
+            availableMemoryBytes: physicalMemory,
             thermalState: .nominal,
             isLowPowerModeEnabled: true
         ))
+    }
+
+    func testViewerZeroAvailableMemoryTelemetryFallsBackToStaticBudget() {
+        let physicalMemory = UInt64(4 * 1_073_741_824)
+        let expected = SplatViewerMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let effective = SplatViewerMemoryPolicy.effectiveBudgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            availableMemoryBytes: 0,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+
+        XCTAssertEqual(effective, expected)
     }
 
     func testVideoMemoryAdmissionShrinksUnderThermalAndLowPowerPressure() {
