@@ -117,22 +117,34 @@ enum MeshDetailSimplifierEngine {
                     vertexColorMode = .uncolored
                 }
             } else if directive == "f" {
-                let tokens = Array(fields.dropFirst().prefix { !$0.hasPrefix("#") })
-                guard tokens.count >= 3 else { return }
-                var indices: [Int] = []
-                indices.reserveCapacity(tokens.count)
-                for token in tokens {
-                    guard let first = token.split(separator: "/", omittingEmptySubsequences: false).first,
-                          !first.isEmpty,
-                          let raw = Int(first),
+                var firstIndex: Int?
+                var previousIndex: Int?
+                var faceVertexCount = 0
+                for token in fields.dropFirst() {
+                    if token.hasPrefix("#") { break }
+                    let vertexToken: Substring
+                    if let slash = token.firstIndex(of: "/") {
+                        vertexToken = token[..<slash]
+                    } else {
+                        vertexToken = token
+                    }
+                    guard !vertexToken.isEmpty,
+                          let raw = Int(vertexToken),
                           raw != 0 else {
                         throw error("Meshの面定義が不正です")
                     }
-                    indices.append(raw > 0 ? raw - 1 : vertices.count + raw)
+                    let resolvedIndex = raw > 0 ? raw - 1 : vertices.count + raw
+                    if faceVertexCount == 0 {
+                        firstIndex = resolvedIndex
+                    } else if faceVertexCount >= 2,
+                              let firstIndex,
+                              let previousIndex {
+                        faces.append(DetailFace(a: firstIndex, b: previousIndex, c: resolvedIndex))
+                    }
+                    previousIndex = resolvedIndex
+                    faceVertexCount += 1
                 }
-                for i in 1..<(indices.count - 1) {
-                    faces.append(DetailFace(a: indices[0], b: indices[i], c: indices[i + 1]))
-                }
+                guard faceVertexCount >= 3 else { return }
             }
         }
 
@@ -181,7 +193,11 @@ enum MeshDetailSimplifierEngine {
 
         var componentFaceCounts: [Int: Int] = [:]
         for face in faces { componentFaceCounts[find(face.a), default: 0] += 1 }
-        var protectedRoots = Set(componentFaceCounts.filter { $0.value < 600 }.map(\.key))
+        var protectedRoots = Set<Int>()
+        protectedRoots.reserveCapacity(componentFaceCounts.count)
+        for (root, count) in componentFaceCounts where count < 600 {
+            protectedRoots.insert(root)
+        }
 
         var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
         var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
@@ -264,9 +280,6 @@ enum MeshDetailSimplifierEngine {
             }
         }
 
-        // Faces only need an Int output-cluster index once cluster means are fixed. Replace the
-        // 32-byte source DetailCluster key per vertex with one Int, then release the heavy key arrays
-        // and dictionaries before allocating outputFaces / seenFaces.
         var vertexToClusterIndex: [Int] = []
         vertexToClusterIndex.reserveCapacity(vertexKeys.count)
         for key in vertexKeys {
