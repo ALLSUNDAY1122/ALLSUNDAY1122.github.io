@@ -93,7 +93,7 @@ enum MeshTextReferenceRewriter {
         while end < line.endIndex, !line[end].isWhitespace {
             line.formIndex(after: &end)
         }
-        guard line[start..<end] == directive[...] else { return nil }
+        guard line[start..<end].lowercased() == directive.lowercased() else { return nil }
 
         var valueStart = end
         while valueStart < line.endIndex, line[valueStart].isWhitespace {
