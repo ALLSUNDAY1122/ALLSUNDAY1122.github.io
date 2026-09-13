@@ -51,6 +51,44 @@ struct SplatEditSettings: Codable, Equatable, Sendable {
         cropZMax = try values.decodeIfPresent(Double.self, forKey: .cropZMax) ?? 1
     }
 
+    private struct LossyDecode: Decodable {
+        let settings: SplatEditSettings
+        let validKnownFieldCount: Int
+
+        init(from decoder: Decoder) throws {
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            var validKnownFieldCount = 0
+
+            func value(_ key: CodingKeys, default defaultValue: Double) -> Double {
+                if let decoded = try? values.decode(Double.self, forKey: key) {
+                    validKnownFieldCount += 1
+                    return decoded
+                }
+                return defaultValue
+            }
+
+            settings = SplatEditSettings(
+                exposureEV: value(.exposureEV, default: 0),
+                contrast: value(.contrast, default: 1),
+                cropXMin: value(.cropXMin, default: 0),
+                cropXMax: value(.cropXMax, default: 1),
+                cropYMin: value(.cropYMin, default: 0),
+                cropYMax: value(.cropYMax, default: 1),
+                cropZMin: value(.cropZMin, default: 0),
+                cropZMax: value(.cropZMax, default: 1)
+            )
+            self.validKnownFieldCount = validKnownFieldCount
+        }
+    }
+
+    static func salvagingPartiallyCorruptJSON(_ data: Data) -> SplatEditSettings? {
+        guard let decoded = try? JSONDecoder().decode(LossyDecode.self, from: data),
+              decoded.validKnownFieldCount > 0 else {
+            return nil
+        }
+        return decoded.settings.normalized()
+    }
+
     var hasCrop: Bool {
         cropXMin > 0.0001 || cropXMax < 0.9999 ||
         cropYMin > 0.0001 || cropYMax < 0.9999 ||
@@ -117,9 +155,17 @@ struct SplatViewerEditStore {
     static func load(sourceURL: URL, fileManager: FileManager = .default) -> (settings: SplatEditSettings, recoveredFromBackup: Bool)? {
         let decoder = JSONDecoder()
         let primary = primaryURL(for: sourceURL)
-        if let data = readSettingsDataIfSafe(at: primary, fileManager: fileManager),
-           let decoded = try? decoder.decode(SplatEditSettings.self, from: data) {
-            return (decoded.normalized(), false)
+        if let data = readSettingsDataIfSafe(at: primary, fileManager: fileManager) {
+            if let decoded = try? decoder.decode(SplatEditSettings.self, from: data) {
+                return (decoded.normalized(), false)
+            }
+            // A single type-damaged field should not roll every newer viewer edit back to an older
+            // generation. Salvage independently decodable numeric siblings, but only when at least
+            // one known field remains usable; fully unrecognizable data still falls through to the
+            // last-known-good backup below.
+            if let salvaged = SplatEditSettings.salvagingPartiallyCorruptJSON(data) {
+                return (salvaged, false)
+            }
         }
 
         let backup = backupURL(for: sourceURL)
