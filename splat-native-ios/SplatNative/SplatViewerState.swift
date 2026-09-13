@@ -52,45 +52,62 @@ struct SplatEditSettings: Codable, Equatable, Sendable {
     }
 
     private struct LossyDecode: Decodable {
-        let settings: SplatEditSettings
+        let exposureEV: Double?
+        let contrast: Double?
+        let cropXMin: Double?
+        let cropXMax: Double?
+        let cropYMin: Double?
+        let cropYMax: Double?
+        let cropZMin: Double?
+        let cropZMax: Double?
         let validKnownFieldCount: Int
 
         init(from decoder: Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
-            var validKnownFieldCount = 0
 
-            func value(_ key: CodingKeys, default defaultValue: Double) -> Double {
-                if let decoded = try? values.decode(Double.self, forKey: key) {
-                    validKnownFieldCount += 1
-                    return decoded
-                }
-                return defaultValue
+            func value(_ key: CodingKeys) -> Double? {
+                try? values.decode(Double.self, forKey: key)
             }
 
-            settings = SplatEditSettings(
-                exposureEV: value(.exposureEV, default: 0),
-                contrast: value(.contrast, default: 1),
-                cropXMin: value(.cropXMin, default: 0),
-                cropXMax: value(.cropXMax, default: 1),
-                cropYMin: value(.cropYMin, default: 0),
-                cropYMax: value(.cropYMax, default: 1),
-                cropZMin: value(.cropZMin, default: 0),
-                cropZMax: value(.cropZMax, default: 1)
+            exposureEV = value(.exposureEV)
+            contrast = value(.contrast)
+            cropXMin = value(.cropXMin)
+            cropXMax = value(.cropXMax)
+            cropYMin = value(.cropYMin)
+            cropYMax = value(.cropYMax)
+            cropZMin = value(.cropZMin)
+            cropZMax = value(.cropZMax)
+            validKnownFieldCount = [
+                exposureEV, contrast,
+                cropXMin, cropXMax,
+                cropYMin, cropYMax,
+                cropZMin, cropZMax
+            ].compactMap { $0 }.count
+        }
+
+        func settings(fallingBackTo fallback: SplatEditSettings) -> SplatEditSettings {
+            SplatEditSettings(
+                exposureEV: exposureEV ?? fallback.exposureEV,
+                contrast: contrast ?? fallback.contrast,
+                cropXMin: cropXMin ?? fallback.cropXMin,
+                cropXMax: cropXMax ?? fallback.cropXMax,
+                cropYMin: cropYMin ?? fallback.cropYMin,
+                cropYMax: cropYMax ?? fallback.cropYMax,
+                cropZMin: cropZMin ?? fallback.cropZMin,
+                cropZMax: cropZMax ?? fallback.cropZMax
             )
-            self.validKnownFieldCount = validKnownFieldCount
         }
     }
 
     static func salvagingPartiallyCorruptJSON(
         _ data: Data,
-        minimumValidKnownFieldCount: Int = 1
+        fallback: SplatEditSettings = .default
     ) -> SplatEditSettings? {
-        let minimum = min(8, max(1, minimumValidKnownFieldCount))
         guard let decoded = try? JSONDecoder().decode(LossyDecode.self, from: data),
-              decoded.validKnownFieldCount >= minimum else {
+              decoded.validKnownFieldCount > 0 else {
             return nil
         }
-        return decoded.settings.normalized()
+        return decoded.settings(fallingBackTo: fallback).normalized()
     }
 
     var hasCrop: Bool {
@@ -147,7 +164,6 @@ enum SplatViewerEditStoreError: Error, Equatable {
 /// viewer edits can be recovered without making the reconstructed asset itself untrusted.
 struct SplatViewerEditStore {
     private static let maximumSidecarByteCount: Int64 = 64 * 1024
-    private static let strongPartialSalvageFieldCount = 6
 
     static func primaryURL(for sourceURL: URL) -> URL {
         sourceURL.deletingPathExtension().appendingPathExtension("viewer.json")
@@ -160,39 +176,45 @@ struct SplatViewerEditStore {
     static func load(sourceURL: URL, fileManager: FileManager = .default) -> (settings: SplatEditSettings, recoveredFromBackup: Bool)? {
         let decoder = JSONDecoder()
         let primary = primaryURL(for: sourceURL)
-        var weakPrimarySalvage: SplatEditSettings?
+        var partiallyCorruptPrimaryData: Data?
         if let data = readSettingsDataIfSafe(at: primary, fileManager: fileManager) {
             if let decoded = try? decoder.decode(SplatEditSettings.self, from: data) {
                 return (decoded.normalized(), false)
             }
-            // Preserve a nearly-intact newer generation when only one or two known fields are type
-            // damaged. If corruption is broader, remember any usable primary values but prefer a
-            // complete last-known-good backup instead of silently resetting most edits to defaults.
-            if let salvaged = SplatEditSettings.salvagingPartiallyCorruptJSON(
-                data,
-                minimumValidKnownFieldCount: strongPartialSalvageFieldCount
-            ) {
-                return (salvaged, false)
-            }
-            weakPrimarySalvage = SplatEditSettings.salvagingPartiallyCorruptJSON(data)
+            partiallyCorruptPrimaryData = data
         }
 
         let backup = backupURL(for: sourceURL)
         if let data = readSettingsDataIfSafe(at: backup, fileManager: fileManager),
            let decoded = try? decoder.decode(SplatEditSettings.self, from: data) {
+            let backupSettings = decoded.normalized()
+            if let primaryData = partiallyCorruptPrimaryData,
+               let merged = SplatEditSettings.salvagingPartiallyCorruptJSON(
+                    primaryData,
+                    fallback: backupSettings
+               ) {
+                // Keep every independently readable value from the newer primary, but source only
+                // the damaged fields from the complete previous generation. Persist the repaired
+                // generation so future opens do not repeat corruption recovery.
+                try? save(merged, sourceURL: sourceURL, fileManager: fileManager)
+                return (merged, true)
+            }
+
             // A valid backup remains useful even when the primary node is unsafe. Do not attempt the
             // self-heal through an existing symlink/special node: normal viewer loading must never write
             // outside the scan project merely because the primary sidecar was replaced by an alias.
             if writeDestinationIsSafeOrMissing(at: primary, fileManager: fileManager) {
                 try? data.write(to: primary, options: .atomic)
             }
-            return (decoded.normalized(), true)
+            return (backupSettings, true)
         }
 
-        // No healthy backup exists. Retaining the independently decodable primary values is safer
-        // than discarding every user edit, even when the primary was too damaged to outrank a backup.
-        if let weakPrimarySalvage {
-            return (weakPrimarySalvage, false)
+        // With no healthy backup, independently decodable primary fields are still better than
+        // discarding every user edit. Damaged/missing siblings fall back to schema defaults only in
+        // this last-resort path.
+        if let primaryData = partiallyCorruptPrimaryData,
+           let salvaged = SplatEditSettings.salvagingPartiallyCorruptJSON(primaryData) {
+            return (salvaged, false)
         }
         return nil
     }
