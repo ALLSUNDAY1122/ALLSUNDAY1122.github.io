@@ -55,4 +55,37 @@ final class SplatCameraAspectFitRobustnessTests: XCTestCase {
         XCTAssertGreaterThan(distance, 60)
         XCTAssertLessThanOrEqual(distance, SplatCameraGeometry.maximumCameraDistance)
     }
+
+    func testPortraitPhoneAspectRequiresMoreDistanceThanLegacyTwoPointEightRadiusFloor() {
+        let framing = SplatCameraGeometry.Framing(
+            center: .zero,
+            distance: 2.8,
+            radius: 1
+        )
+
+        let portrait = SplatCameraGeometry.aspectFittedDistance(
+            framing: framing,
+            fovY: 55 * .pi / 180,
+            aspect: 9.0 / 16.0
+        )
+
+        XCTAssertGreaterThan(portrait, 3.8)
+        XCTAssertLessThan(portrait, 4.1)
+    }
+
+    func testLandscapePhoneAspectPreservesLegacyFramingFloor() {
+        let framing = SplatCameraGeometry.Framing(
+            center: .zero,
+            distance: 2.8,
+            radius: 1
+        )
+
+        let landscape = SplatCameraGeometry.aspectFittedDistance(
+            framing: framing,
+            fovY: 55 * .pi / 180,
+            aspect: 16.0 / 9.0
+        )
+
+        XCTAssertEqual(landscape, 2.8, accuracy: 0.0001)
+    }
 }
