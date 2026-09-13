@@ -229,13 +229,17 @@ struct MeshDurabilityRecoveryStore: Sendable {
                 $0.pathExtension.lowercased() == "usdz" &&
                 isNonEmptyRegularFile($0)
             }
-            .sorted {
-                let lhs = (try? $0.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
-                let rhs = (try? $1.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
-                return lhs > rhs
-            }
         candidates.append(contentsOf: reprocessed)
-        return candidates
+
+        // Recovery no longer has the live model's `resultURL`, so mtime is the closest durable
+        // representation of the user's last completed Mesh. Prefer the newest valid result and
+        // retain the existing geometry-validation fallback for a newer truncated/corrupt file.
+        return candidates.sorted {
+            let lhs = (try? $0.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
+            let rhs = (try? $1.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
+            if lhs != rhs { return lhs > rhs }
+            return $0.lastPathComponent < $1.lastPathComponent
+        }
     }
 
     private func containsUsableGeometry(_ url: URL) -> Bool {
