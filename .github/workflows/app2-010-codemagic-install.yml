@@ -1,4 +1,4 @@
-name: APP2-010 Install Codemagic Workflow
+name: APP2-010 Reconcile Codemagic Release Workflow
 
 on:
   workflow_dispatch:
@@ -10,27 +10,21 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: app2-010-codemagic-install
+  cancel-in-progress: false
+
 jobs:
-  install:
+  reconcile:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Skip when workflow is already installed
-        id: installed
-        run: |
-          if grep -q '^  touhan-ios:$' codemagic.yaml; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-            echo "touhan-ios already present; no write required"
-          else
-            echo "present=false" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Append Touhan workflow onto latest main without clobbering peers
-        if: steps.installed.outputs.present != 'true'
+      - name: Reconcile Touhan workflow on latest main
+        shell: bash
         run: |
           set -euo pipefail
-          python3 -m pip install --disable-pip-version-check PyYAML
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for attempt in 1 2 3 4 5 6; do
@@ -38,112 +32,64 @@ jobs:
             git checkout -B app2-010-install origin/main
             python3 - <<'PY'
           from pathlib import Path
+          import re
           path=Path('codemagic.yaml')
           text=path.read_text(encoding='utf-8')
-          if '\n  touhan-ios:\n' in text:
-              print('touhan-ios already present')
-              raise SystemExit(0)
-          block=r'''
-
-  touhan-ios:
-    name: 登録販売者 - iOS Internal TestFlight
-    max_build_duration: 60
-    instance_type: mac_mini_m2
-    integrations:
-      app_store_connect: "Codemagic Shiwake Swipe"
-    environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.allsunday1122.tourokuhanbaisha
-      vars:
-        BUNDLE_ID: com.allsunday1122.tourokuhanbaisha
-        APP_STORE_CONNECT_APP_ID: "6802119268"
-        CODEMAGIC_PROFILE_REF: tourokuhanbaisha_appstore
-        APPICON_SHA256: c0cefbae22cdcd7b614d213ddca7942c7d693f02ead758b11b66d447a66bff03
-        XCODE_PROJECT: touroku-hanbaisha-ios/native-ios/TouhanSprint.xcodeproj
-        XCODE_SCHEME: TouhanSprint
-      xcode: latest
-    scripts:
-      - name: Install native build tools
-        script: |
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-          python3 -m pip install --disable-pip-version-check 'cairosvg==2.8.2'
-      - name: Audit registration seller release inputs
-        script: |
-          set -euo pipefail
-          cd "$CM_BUILD_DIR"
-          node touroku-hanbaisha-sprint/validate-history-calendar.mjs
-          bash -n touroku-hanbaisha-ios/native-ios/prepare-ios.sh
-          test "$BUNDLE_ID" = "com.allsunday1122.tourokuhanbaisha"
-          test "$APP_STORE_CONNECT_APP_ID" = "6802119268"
-          test "$CODEMAGIC_PROFILE_REF" = "tourokuhanbaisha_appstore"
-          bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
-          python3 touroku-hanbaisha-ios/scripts/validate_release.py
-      - name: Set CI build number and generate native project
-        script: |
-          set -euo pipefail
-          cd "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios"
-          python3 - <<'PYBUILD'
-          from pathlib import Path
-          import os
-          p=Path('project.yml')
-          text=p.read_text(encoding='utf-8')
-          text=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)
-          p.write_text(text, encoding='utf-8')
-          PYBUILD
-          xcodegen generate
-      - name: Verify signed native inputs
-        script: |
-          set -euo pipefail
-          test -f "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/PrivacyInfo.xcprivacy"
-          test -f "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
-          echo "$APPICON_SHA256  $CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" | shasum -a 256 -c -
-          grep -q 'com.allsunday1122.tourokuhanbaisha' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
-          grep -q 'MN3D2ZM44N' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
-      - name: Apply App Store signing profiles for internal TestFlight only
-        script: |
-          set -euo pipefail
-          cd "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
-      - name: Build signed IPA
-        script: |
-          set -euo pipefail
-          xcode-project build-ipa \
-            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
-    artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true
-        submit_to_app_store: false
-'''
-          path.write_text(text.rstrip()+block+'\n', encoding='utf-8')
+          marker='\n  touhan-ios:\n'
+          start=text.find(marker)
+          if start < 0:
+              raise SystemExit('touhan-ios workflow missing; do not invent release config')
+          body_start=start+1
+          search_from=body_start+len('  touhan-ios:\n')
+          match=re.search(r'(?m)^  [A-Za-z0-9_-]+:\s*$', text[search_from:])
+          end=search_from+match.start() if match else len(text)
+          workflow=text[body_start:end]
+          required=(
+              'BUNDLE_ID: com.allsunday1122.tourokuhanbaisha',
+              'APP_STORE_CONNECT_APP_ID: "6802119268"',
+              'app-store-connect publish',
+              '--type IOS_APP_STORE',
+          )
+          for token in required:
+              if token not in workflow:
+                  raise SystemExit(f'Touhan workflow contract changed; missing {token}')
+          workflow=workflow.replace('name: 登録販売者 - iOS Internal TestFlight','name: 登録販売者 - iOS App Store Release Candidate')
+          workflow=workflow.replace('Apply App Store signing profiles for internal TestFlight only','Apply App Store signing profiles for release candidate')
+          workflow=workflow.replace("xcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",'xcode-project use-profiles')
+          workflow=workflow.replace('Upload signed IPA to App Store Connect for Internal TestFlight','Upload signed release candidate IPA to App Store Connect')
+          if 'testFlightInternalTestingOnly' in workflow:
+              raise SystemExit('internal-only export flag remains in Touhan release workflow')
+          if 'submit_to_app_store: true' in workflow:
+              raise SystemExit('automatic App Store submission must remain disabled')
+          path.write_text(text[:body_start]+workflow+text[end:],encoding='utf-8')
+          print('PASS: touhan-ios now builds an App Store eligible release candidate without auto-submission')
           PY
-            if grep -q '^  touhan-ios:$' codemagic.yaml && git diff --quiet -- codemagic.yaml; then
-              echo "touhan-ios already present on latest main"
+            python3 - <<'PY'
+          import re
+          from pathlib import Path
+          text=Path('codemagic.yaml').read_text(encoding='utf-8')
+          start=text.index('  touhan-ios:\n')
+          tail=text[start+len('  touhan-ios:\n'):]
+          m=re.search(r'(?m)^  [A-Za-z0-9_-]+:\s*$',tail)
+          wf=text[start:start+len('  touhan-ios:\n')+(m.start() if m else len(tail))]
+          assert 'testFlightInternalTestingOnly' not in wf
+          assert 'name: 登録販売者 - iOS App Store Release Candidate' in wf
+          assert 'xcode-project use-profiles' in wf
+          assert 'app-store-connect publish' in wf
+          assert 'submit_to_app_store: true' not in wf
+          print('PASS: release-candidate workflow static contract')
+          PY
+            if git diff --quiet -- codemagic.yaml; then
+              echo "Touhan release workflow already reconciled"
               exit 0
             fi
-            python3 - <<'PY'
-          import yaml
-          data=yaml.safe_load(open('codemagic.yaml',encoding='utf-8'))
-          wf=data['workflows']['touhan-ios']
-          assert wf['environment']['ios_signing']['bundle_identifier']=='com.allsunday1122.tourokuhanbaisha'
-          assert wf['publishing']['app_store_connect']['submit_to_testflight'] is True
-          assert wf['publishing']['app_store_connect']['submit_to_app_store'] is False
-          print('PASS: touhan-ios workflow parsed and review submission disabled')
-          PY
             git add codemagic.yaml
-            git commit -m "Add 登録販売者 Internal TestFlight workflow"
+            git commit -m "Make 登録販売者 build App Store release eligible"
             if git push origin HEAD:main; then
               exit 0
             fi
             echo "main advanced during attempt $attempt; retrying"
             sleep 2
           done
-          echo "Failed to append touhan-ios after concurrency retries" >&2
+          echo "Failed to reconcile touhan-ios after concurrency retries" >&2
           exit 1
