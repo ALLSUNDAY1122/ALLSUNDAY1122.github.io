@@ -69,14 +69,14 @@ function premiumPlansHTML(){
 }
 function showPaywall(){
   setApp(topBlock('プレミアム','学びを続ける','自分に合う支払い方で、全300問を使えます。')+`<div class="sec settings storekit-panel paywall">${premiumPlansHTML()}</div>`+nav('settings'));
-  requestStoreStatus();
 }
 window.__storekitUpdate=function(payload){
+  const previousPremium=!!window.SM2_STORE?.isPremium;
   window.SM2_STORE=Object.assign(window.SM2_STORE||{},payload||{});
   const panel=document.querySelector('.storekit-panel');
   if(panel)panel.innerHTML=premiumPlansHTML();
   const homePremium=document.querySelector('#home-premium-cta');
-  if(homePremium)homePremium.outerHTML=premiumCTA();
+  if(homePremium&&previousPremium!==!!window.SM2_STORE.isPremium)homePremium.outerHTML=premiumCTA();
 };
 
 function settingsScreen(){
