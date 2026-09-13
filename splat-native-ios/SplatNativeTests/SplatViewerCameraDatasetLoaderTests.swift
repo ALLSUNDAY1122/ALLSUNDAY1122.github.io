@@ -22,7 +22,7 @@ final class SplatViewerCameraDatasetLoaderTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
         let render = root.appendingPathComponent("result.ply")
         try Data([0x50]).write(to: render)
-        let json = #"{\"frames\":[{\"transform_matrix\":[[1,0,0,1.25],[0,1,0,-2.5],[0,0,1,3.75],[0,0,0,1]]},{\"transform_matrix\":[[1,0,0,4],[0,1,0,5],[0,0,1,6],[0,0,0,1]]}]}"#
+        let json = #"{"frames":[{"transform_matrix":[[1,0,0,1.25],[0,1,0,-2.5],[0,0,1,3.75],[0,0,0,1]]},{"transform_matrix":[[1,0,0,4],[0,1,0,5],[0,0,1,6],[0,0,0,1]]}]}"#
         try Data(json.utf8).write(to: root.appendingPathComponent("transforms.json"))
 
         let synchronous = SplatViewerCameraDatasetLoader.cameraPositions(for: render)
