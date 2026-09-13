@@ -69,7 +69,7 @@ final class MeshTextReferenceOptionTests: XCTestCase {
         )
     }
 
-    func testMapKdRewriteStillReplacesWholeDirectiveWithEditedTexture() throws {
+    func testMapKdRewritePreservesTextureTransformOptionsWhileReplacingEditedTexture() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mesh-text-reference-rewrite-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
@@ -77,7 +77,7 @@ final class MeshTextReferenceOptionTests: XCTestCase {
 
         let source = root.appendingPathComponent("source.mtl")
         let output = root.appendingPathComponent("edited.mtl")
-        try "newmtl scan\nmap_Kd -s 1 1 1 \"old texture.jpg\"\n"
+        try "newmtl scan\nmap_Kd -s 0.5 0.75 1 -o 0.25 0.5 0 \"old texture.jpg\" # authored transform\n"
             .write(to: source, atomically: true, encoding: .utf8)
 
         XCTAssertTrue(try MeshTextReferenceRewriter.rewrite(
@@ -87,7 +87,7 @@ final class MeshTextReferenceOptionTests: XCTestCase {
             replacement: "edited.jpg"
         ))
         let text = try String(contentsOf: output, encoding: .utf8)
-        XCTAssertTrue(text.contains("map_Kd edited.jpg\n"))
+        XCTAssertTrue(text.contains("map_Kd -s 0.5 0.75 1 -o 0.25 0.5 0 edited.jpg\n"))
         XCTAssertFalse(text.contains("old texture.jpg"))
     }
 }
