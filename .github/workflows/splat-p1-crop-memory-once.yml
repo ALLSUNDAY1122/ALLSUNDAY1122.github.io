@@ -1,0 +1,52 @@
+name: Splat P1 crop memory one-shot
+
+on:
+  push:
+    branches:
+      - feature/splat-post-build17-p1
+    paths:
+      - .github/workflows/splat-p1-crop-memory-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: feature/splat-post-build17-p1
+      - name: Reduce cropped export preallocation
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('splat-native-ios/SplatNative/SplatExportService.swift')
+          text = path.read_text()
+          old = '''        var result: [SplatPoint] = []
+        result.reserveCapacity(points.count)
+'''
+          new = '''        var result: [SplatPoint] = []
+        // A crop can discard most of a large scene. Reserving the full input count up front
+        // creates avoidable peak heap pressure; let the array grow with surviving points instead.
+        // Keep the full reservation for color-only edits where every point is retained.
+        if !settings.hasCrop {
+            result.reserveCapacity(points.count)
+        }
+'''
+          if text.count(old) != 1:
+              raise SystemExit(f'expected exactly one allocation site, found {text.count(old)}')
+          path.write_text(text.replace(old, new))
+          PY
+          git diff --check
+          grep -q 'if !settings.hasCrop' splat-native-ios/SplatNative/SplatExportService.swift
+      - name: Commit production change
+        shell: bash
+        run: |
+          git config user.name 'scaniverse-macro-loop'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/SplatExportService.swift
+          git commit -m 'Reduce cropped export peak allocation'
+          git push origin HEAD:feature/splat-post-build17-p1
