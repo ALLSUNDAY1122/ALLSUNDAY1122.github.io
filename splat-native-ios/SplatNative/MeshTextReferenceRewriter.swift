@@ -91,6 +91,11 @@ enum MeshTextReferenceRewriter {
                     } else {
                         try append("\(directive) \(replacement)")
                     }
+                } else if normalizedDirective == "mtllib", hasExplicitQuotedReferenceList(String(line)) {
+                    let arguments = parseArguments(String(line))
+                    let retained = arguments.dropFirst(2).map(renderReferenceArgument)
+                    let suffix = retained.isEmpty ? "" : " " + retained.joined(separator: " ")
+                    try append("\(directive) \(replacement)\(suffix)")
                 } else {
                     try append("\(directive) \(replacement)")
                 }
@@ -141,11 +146,12 @@ enum MeshTextReferenceRewriter {
         // A quoted/single mtllib reference (optionally followed by a comment) should resolve to the
         // actual filename for the appearance editor. Preserve the legacy raw remainder when an OBJ
         // supplies multiple unquoted tokens because older Scan Lab fixtures treated that text as a
-        // single filename; this avoids changing established behavior while fixing standards-compliant
-        // quoted paths and inline comments.
+        // single filename. When the exporter explicitly quotes a multi-library list, however, the
+        // first quoted token is unambiguous and can be edited without discarding the later libraries.
         if normalizedDirective == "mtllib" {
-            let arguments = parseArguments(String(line[start...]))
-            if arguments.count == 2 {
+            let raw = String(line[start...])
+            let arguments = parseArguments(raw)
+            if arguments.count == 2 || hasExplicitQuotedReferenceList(raw), arguments.count >= 2 {
                 return normalizedRelativeReference(arguments[1])
             }
         }
@@ -156,6 +162,18 @@ enum MeshTextReferenceRewriter {
 
     private static func normalizedRelativeReference(_ value: String) -> String {
         value.replacingOccurrences(of: "\\", with: "/")
+    }
+
+    private static func hasExplicitQuotedReferenceList(_ text: String) -> Bool {
+        text.contains("\"") || text.contains("'")
+    }
+
+    private static func renderReferenceArgument(_ value: String) -> String {
+        let normalized = normalizedRelativeReference(value)
+        let needsQuotes = normalized.contains(where: { $0.isWhitespace || $0 == "#" || $0 == "\"" })
+        guard needsQuotes else { return normalized }
+        let escaped = normalized.replacingOccurrences(of: "\"", with: "\\\"")
+        return "\"\(escaped)\""
     }
 
     private static func parseArguments(_ text: String) -> [String] {
