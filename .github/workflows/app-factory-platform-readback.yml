@@ -1,15 +1,13 @@
 name: APP Factory Platform Readback
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/app_factory_platform_readback.py'
-      - '.github/workflows/app-factory-platform-readback.yml'
+  issues:
+    types: [opened]
   workflow_dispatch:
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: app-factory-platform-readback
@@ -17,6 +15,7 @@ concurrency:
 
 jobs:
   readback:
+    if: github.event_name == 'workflow_dispatch' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP-FACTORY] Platform Readback')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -40,3 +39,9 @@ jobs:
           path: factory-platform-readback.json
           if-no-files-found: error
           retention-days: 7
+      - name: Report run
+        if: github.event_name == 'issues' && always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Read-only platform readback finished. status=${{ job.status }}; run_id=${context.runId}`});
