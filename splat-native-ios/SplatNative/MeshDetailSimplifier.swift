@@ -221,7 +221,7 @@ enum MeshDetailSimplifierEngine {
         componentFaceCounts.removeAll(keepingCapacity: false)
         parent.removeAll(keepingCapacity: false)
 
-        let orderedKeys = accumulators.keys.sorted { lhs, rhs in
+        var orderedKeys = accumulators.keys.sorted { lhs, rhs in
             if lhs.unique != rhs.unique { return lhs.unique < rhs.unique }
             if lhs.x != rhs.x { return lhs.x < rhs.x }
             if lhs.y != rhs.y { return lhs.y < rhs.y }
@@ -250,6 +250,21 @@ enum MeshDetailSimplifierEngine {
                 outputColors.append(SIMD3<Float>(Float(colorMean.x), Float(colorMean.y), Float(colorMean.z)))
             }
         }
+
+        // Faces only need an Int output-cluster index once cluster means are fixed. Replace the
+        // 32-byte source DetailCluster key per vertex with one Int, then release the heavy key arrays
+        // and dictionaries before allocating outputFaces / seenFaces.
+        var vertexToClusterIndex: [Int] = []
+        vertexToClusterIndex.reserveCapacity(vertexKeys.count)
+        for key in vertexKeys {
+            guard let index = clusterToIndex[key] else {
+                throw error("Mesh頂点の軽量化対応を確定できません")
+            }
+            vertexToClusterIndex.append(index)
+        }
+        vertexKeys.removeAll(keepingCapacity: false)
+        orderedKeys.removeAll(keepingCapacity: false)
+        clusterToIndex.removeAll(keepingCapacity: false)
         accumulators.removeAll(keepingCapacity: false)
         colorSums.removeAll(keepingCapacity: false)
 
@@ -257,9 +272,13 @@ enum MeshDetailSimplifierEngine {
         var seenFaces = Set<DetailFaceKey>()
         for face in faces {
             guard face.a >= 0, face.b >= 0, face.c >= 0,
-                  face.a < vertexKeys.count, face.b < vertexKeys.count, face.c < vertexKeys.count,
-                  let a = clusterToIndex[vertexKeys[face.a]], let b = clusterToIndex[vertexKeys[face.b]],
-                  let c = clusterToIndex[vertexKeys[face.c]], a != b, b != c, a != c else { continue }
+                  face.a < vertexToClusterIndex.count,
+                  face.b < vertexToClusterIndex.count,
+                  face.c < vertexToClusterIndex.count else { continue }
+            let a = vertexToClusterIndex[face.a]
+            let b = vertexToClusterIndex[face.b]
+            let c = vertexToClusterIndex[face.c]
+            guard a != b, b != c, a != c else { continue }
             let area = simd_length_squared(simd_cross(outputVertices[b] - outputVertices[a], outputVertices[c] - outputVertices[a]))
             guard area.isFinite, area > 1e-10 else { continue }
             if seenFaces.insert(DetailFaceKey(a, b, c)).inserted {
@@ -268,8 +287,7 @@ enum MeshDetailSimplifierEngine {
         }
         guard !outputFaces.isEmpty else { throw error("簡略化後に面が残りません") }
         faces.removeAll(keepingCapacity: false)
-        vertexKeys.removeAll(keepingCapacity: false)
-        clusterToIndex.removeAll(keepingCapacity: false)
+        vertexToClusterIndex.removeAll(keepingCapacity: false)
         seenFaces.removeAll(keepingCapacity: false)
 
         var normals = Array(repeating: SIMD3<Float>.zero, count: outputVertices.count)
@@ -278,10 +296,10 @@ enum MeshDetailSimplifierEngine {
             guard normal.x.isFinite, normal.y.isFinite, normal.z.isFinite else { continue }
             normals[face.x] += normal; normals[face.y] += normal; normals[face.z] += normal
         }
-        normals = normals.map {
-            let lengthSquared = simd_length_squared($0)
-            return lengthSquared.isFinite && lengthSquared > 1e-12
-                ? simd_normalize($0)
+        for index in normals.indices {
+            let lengthSquared = simd_length_squared(normals[index])
+            normals[index] = lengthSquared.isFinite && lengthSquared > 1e-12
+                ? simd_normalize(normals[index])
                 : SIMD3<Float>(0, 1, 0)
         }
 
