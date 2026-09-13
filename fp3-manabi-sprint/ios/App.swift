@@ -70,18 +70,25 @@ final class StoreKitManager: ObservableObject {
                     await transaction.finish()
                     await refresh()
                 }
-            case .pending: status = "pending"
-            case .userCancelled: status = "cancelled"
-            @unknown default: status = "unknown"
+            case .pending:
+                status = "pending"
+            case .userCancelled:
+                status = "cancelled"
+            @unknown default:
+                status = "unknown"
             }
-        } catch { status = "error" }
+        } catch {
+            status = "error"
+        }
     }
 
     func restore() async {
         do {
             try await AppStore.sync()
             await refresh()
-        } catch { status = "error" }
+        } catch {
+            status = "error"
+        }
     }
 
     func payload() -> [String: Any] {
@@ -118,7 +125,7 @@ struct WebAppView: UIViewRepresentable {
 
         guard let webRoot = Bundle.main.resourceURL?.appendingPathComponent("Web", isDirectory: true),
               let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "Web") else {
-            webView.loadHTMLString(Self.missingBundleHTML, baseURL: nil)
+            webView.loadHTMLString(Self.errorHTML("教材データを読み込めませんでした"), baseURL: nil)
             return webView
         }
         webView.loadFileURL(url, allowingReadAccessTo: webRoot)
@@ -145,6 +152,22 @@ struct WebAppView: UIViewRepresentable {
                 await store.refresh()
                 pushStoreKitState()
             }
+        }
+
+        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            showNavigationError(error, in: webView)
+        }
+
+        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+            showNavigationError(error, in: webView)
+        }
+
+        private func showNavigationError(_ error: Error, in webView: WKWebView) {
+            let message = error.localizedDescription
+                .replacingOccurrences(of: "&", with: "&amp;")
+                .replacingOccurrences(of: "<", with: "&lt;")
+                .replacingOccurrences(of: ">", with: "&gt;")
+            webView.loadHTMLString(WebAppView.errorHTML("教材画面の読込に失敗しました：\(message)"), baseURL: nil)
         }
 
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -176,6 +199,7 @@ struct WebAppView: UIViewRepresentable {
       if (window.__fp3NativeBridgeInstalled) return;
       window.__fp3NativeBridgeInstalled = true;
       const state = { native:true, premium:false, displayPrice:'', status:'unknown' };
+      const setText = (el, text) => { if (el && el.textContent !== text) el.textContent = text; };
       const post = action => {
         const h = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.storeKit;
         if (h) h.postMessage({action});
@@ -207,15 +231,30 @@ struct WebAppView: UIViewRepresentable {
         b.querySelector('.fp3-close').addEventListener('click',()=>{b.hidden=true});
         return b;
       };
+      const installFreeSprintBoundary = () => {
+        if (window.__fp3Balanced12Wrapped || typeof balanced12 !== 'function') return;
+        const originalBalanced12 = balanced12;
+        window.__fp3Balanced12Wrapped = true;
+        window.balanced12 = function(){
+          if(state.premium) return originalBalanced12();
+          const a=(typeof activeBank==='function'?activeBank():[]).filter(q=>String(q.year)==='2026');
+          let out=[];
+          (typeof DOMAINS!=='undefined'?DOMAINS:[]).forEach(d=>out.push(...sample(a.filter(q=>q.domain===d),2)));
+          return sample(out,12);
+        };
+      };
       const showPaywall = () => { const b=ensurePaywall(); if(!state.premium) b.hidden=false; };
       const decorate = () => {
         ensurePaywall();
+        installFreeSprintBoundary();
         document.querySelectorAll('#domains button,#years button,#startWeak').forEach(el=>{
           const locked = !state.premium && premiumTarget(el);
           el.classList.toggle('fp3-premium-lock',locked);
-          el.setAttribute('aria-label', locked ? `${el.textContent.trim()} Premium` : el.textContent.trim());
+          const label = locked ? `${el.textContent.trim()} Premium` : el.textContent.trim();
+          if (el.getAttribute('aria-label') !== label) el.setAttribute('aria-label', label);
         });
-        const title=document.querySelector('#home .title'); if(title && title.textContent.trim()==='FP3級') title.textContent='FP3級 学科';
+        const title=document.querySelector('#home .title');
+        if(title && title.textContent.trim()==='FP3級') title.textContent='FP3級 学科';
         const top=document.querySelector('#home .top');
         if(top && !document.getElementById('fp3-scope-note')){
           const n=document.createElement('div'); n.id='fp3-scope-note'; n.className='fp3-scope-note';
@@ -226,34 +265,45 @@ struct WebAppView: UIViewRepresentable {
           const n=document.createElement('div'); n.id='fp3-source-note'; n.className='fp3-scope-note';
           n.textContent='出典：日本FP協会・金融財政事情研究会の公開試験問題を参照。学習用に表現・解説・法令基準を加工しています。'; settings.appendChild(n);
         }
-        const buy=document.querySelector('[data-native-purchase]'), price=document.querySelector('[data-native-price]');
-        if(buy){ const ready=state.status==='known' && !!state.displayPrice; buy.disabled=!ready; buy.textContent=ready?`${state.displayPrice}でPremiumを購入`:(state.status==='pending'?'購入承認待ち':'価格を取得中…'); }
-        if(price) price.textContent=state.premium?'Premium購入済み':(state.status==='error'?'App Storeへ接続できません':state.displayPrice?`買い切り ${state.displayPrice}`:'');
-        const backdrop=document.getElementById('fp3-native-paywall'); if(state.premium && backdrop) backdrop.hidden=true;
+        const buy=document.querySelector('[data-native-purchase]');
+        const price=document.querySelector('[data-native-price]');
+        if(buy){
+          const ready=state.status==='known' && !!state.displayPrice;
+          buy.disabled=!ready;
+          setText(buy, ready?`${state.displayPrice}でPremiumを購入`:(state.status==='pending'?'購入承認待ち':'価格を取得中…'));
+        }
+        if(price) setText(price, state.premium?'Premium購入済み':(state.status==='error'?'App Storeへ接続できません':state.displayPrice?`買い切り ${state.displayPrice}`:''));
+        const backdrop=document.getElementById('fp3-native-paywall');
+        if(state.premium && backdrop) backdrop.hidden=true;
       };
       document.addEventListener('click',e=>{
         const el=e.target && e.target.closest ? e.target.closest('button') : null;
-        if(!state.premium && premiumTarget(el)){ e.preventDefault(); e.stopImmediatePropagation(); showPaywall(); }
+        if(!state.premium && premiumTarget(el)){
+          e.preventDefault(); e.stopImmediatePropagation(); showPaywall();
+        }
       },true);
-      const originalBalanced12 = window.balanced12;
-      window.balanced12 = function(){
-        if(state.premium && typeof originalBalanced12==='function') return originalBalanced12();
-        const a=(typeof activeBank==='function'?activeBank():[]).filter(q=>String(q.year)==='2026');
-        let out=[]; (window.DOMAINS || (typeof DOMAINS!=='undefined'?DOMAINS:[])).forEach(d=>out.push(...sample(a.filter(q=>q.domain===d),2)));
-        return sample(out,12);
-      };
       window.__nativeStoreKitUpdate = payload => {
         if(payload && typeof payload==='object') Object.assign(state,payload);
         decorate();
       };
-      new MutationObserver(decorate).observe(document.documentElement,{childList:true,subtree:true});
-      decorate(); post('refresh');
+      let attempts=0;
+      const waitForDynamicControls=()=>{
+        decorate();
+        attempts += 1;
+        if(attempts < 80 && (!document.querySelector('#years button') || !document.querySelector('#domains button'))) {
+          setTimeout(waitForDynamicControls, 100);
+        }
+      };
+      waitForDynamicControls();
+      post('refresh');
     })();
     """#
 
-    private static let missingBundleHTML = """
-    <!doctype html><meta name=viewport content='width=device-width,initial-scale=1'>
-    <body style='font-family:-apple-system;padding:32px;background:#fdf6ef;color:#231f1a'>
-    <h2>教材データを読み込めませんでした</h2><p>アプリを再インストールしてください。</p></body>
-    """
+    fileprivate static func errorHTML(_ message: String) -> String {
+        """
+        <!doctype html><meta name=viewport content='width=device-width,initial-scale=1'>
+        <body style='font-family:-apple-system;padding:32px;background:#fdf6ef;color:#231f1a'>
+        <h2>読み込みエラー</h2><p>\(message)</p><p>アプリを再起動してください。</p></body>
+        """
+    }
 }
