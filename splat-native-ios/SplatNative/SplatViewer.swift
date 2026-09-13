@@ -448,7 +448,12 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
             let clip = simd_mul(matrices.projection, viewPoint)
             guard clip.w > 0.0001 else { continue }
             let ndc = SIMD3<Float>(clip.x, clip.y, clip.z) / clip.w
-            guard ndc.x >= -1.1, ndc.x <= 1.1, ndc.y >= -1.1, ndc.y <= 1.1 else { continue }
+            // Metal's visible depth range is 0...1. X/Y alone can project a point beyond the far
+            // plane onto the tap location even though rasterization clips that point completely.
+            // Never let an invisible depth-clipped splat become a measurement endpoint.
+            guard ndc.x >= -1.1, ndc.x <= 1.1,
+                  ndc.y >= -1.1, ndc.y <= 1.1,
+                  ndc.z >= 0, ndc.z <= 1 else { continue }
             let normalizedX = CGFloat(ndc.x) * 0.5 + 0.5
             let normalizedY = CGFloat(ndc.y) * 0.5 + 0.5
             let x = normalizedX * size.width
