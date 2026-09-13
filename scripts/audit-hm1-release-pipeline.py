@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import re
 
 text = Path('codemagic.yaml').read_text(encoding='utf-8')
-start = text.find('\n  health-manager-1-testflight:')
-if start < 0:
+match = re.search(r'(?ms)^  health-manager-1-testflight:\n(.*?)(?=^  [A-Za-z0-9_-]+:\n|\Z)', text)
+if not match:
     raise SystemExit('FAIL: health-manager-1-testflight workflow missing')
-end = text.find('\n  ', start + 4)
-section = text[start:end if end >= 0 else len(text)]
+section = match.group(0)
 required = [
     'bundle_identifier: jp.allsunday1122.healthmanager1',
     'distribution_type: app_store',
