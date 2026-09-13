@@ -21,6 +21,7 @@ enum SplatViewerCameraDatasetLoader {
             var initialPositions: [SIMD3<Float>] = []
             initialPositions.reserveCapacity(6)
             var validPositionIndex = 0
+            var decodedFrameIndex = 0
             var retentionStride = 1
             var lastValidPosition: SIMD3<Float>?
 
@@ -28,9 +29,10 @@ enum SplatViewerCameraDatasetLoader {
                 // JSONDecoder can spend noticeable time walking a near-32 MiB trajectory. The async
                 // viewer path runs this decoder off MainActor; make that work cooperatively cancellable
                 // so switching scans does not leave obsolete metadata decode consuming CPU.
-                if validPositionIndex % 1_024 == 0, Task.isCancelled {
+                if decodedFrameIndex % 1_024 == 0, Task.isCancelled {
                     throw CancellationError()
                 }
+                decodedFrameIndex += 1
                 let frame = try frames.decode(Frame.self)
                 guard let position = frame.position else { continue }
                 lastValidPosition = position
