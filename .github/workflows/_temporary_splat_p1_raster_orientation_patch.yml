@@ -1,0 +1,97 @@
+name: Temporary Splat P1 Raster Orientation Patch
+
+on:
+  push:
+    branches:
+      - feature/splat-post-build17-p1
+    paths:
+      - .github/workflows/_temporary_splat_p1_raster_orientation_patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-post-build17-p1
+          fetch-depth: 0
+      - name: Apply bounded raster-orientation fix
+        shell: python
+        run: |
+          from pathlib import Path
+
+          software = Path('splat-native-ios/SplatNative/SplatSoftwareDepthSeedBuilder.swift')
+          text = software.read_text()
+          old_gray = '''        ) else { return nil }
+          grayContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))'''
+          new_gray = '''        ) else { return nil }
+          grayContext.translateBy(x: 0, y: CGFloat(height))
+          grayContext.scaleBy(x: 1, y: -1)
+          grayContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))'''
+          old_rgb = '''        ) else { return nil }
+          rgbContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))'''
+          new_rgb = '''        ) else { return nil }
+          rgbContext.translateBy(x: 0, y: CGFloat(height))
+          rgbContext.scaleBy(x: 1, y: -1)
+          rgbContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))'''
+          if text.count(old_gray) != 1 or text.count(old_rgb) != 1:
+              raise SystemExit('software raster patch point drifted')
+          text = text.replace(old_gray, new_gray).replace(old_rgb, new_rgb)
+          software.write_text(text)
+
+          mesh = Path('splat-native-ios/SplatNative/MeshDenseMVS.swift')
+          text = mesh.read_text()
+          old_mesh = '''        ) else { return nil }
+          context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))'''
+          new_mesh = '''        ) else { return nil }
+          context.translateBy(x: 0, y: CGFloat(height))
+          context.scaleBy(x: 1, y: -1)
+          context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))'''
+          if text.count(old_mesh) != 1:
+              raise SystemExit('mesh raster patch point drifted')
+          mesh.write_text(text.replace(old_mesh, new_mesh))
+
+          seed = Path('splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift')
+          text = seed.read_text()
+          if text.count('static let recipeVersion = 8') != 1:
+              raise SystemExit('recipe version patch point drifted')
+          seed.write_text(text.replace('static let recipeVersion = 8', 'static let recipeVersion = 9'))
+
+          contract = Path('splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py')
+          text = contract.read_text()
+          if text.count('"static let recipeVersion = 8"') != 1:
+              raise SystemExit('contract recipe patch point drifted')
+          text = text.replace('"static let recipeVersion = 8"', '"static let recipeVersion = 9"')
+          old_orientation = '''assert "grayContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))" in SOFTWARE
+          assert "context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))" in MESH
+          assert "translateBy(x: 0, y:" not in SOFTWARE, "S14 image orientation changed independently"'''
+          new_orientation = '''for token in (
+              "translateBy(x: 0, y: CGFloat(height))",
+              "scaleBy(x: 1, y: -1)",
+          ):
+              assert token in SOFTWARE, f"S14 top-left raster convention missing: {token}"
+              assert token in MESH, f"Mesh MVS top-left raster convention missing: {token}"
+          assert "grayContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))" in SOFTWARE
+          assert "context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))" in MESH'''
+          if text.count(old_orientation) != 1:
+              raise SystemExit('orientation contract patch point drifted')
+          contract.write_text(text.replace(old_orientation, new_orientation))
+      - name: Verify bounded diff
+        run: |
+          git diff --check
+          git diff --stat
+          grep -R "static let recipeVersion = 8" splat-native-ios/SplatNative splat-native-ios/scripts && exit 1 || true
+          python3 splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
+      - name: Commit fix
+        run: |
+          git config user.name "scanlab-macro-loop"
+          git config user.email "actions@users.noreply.github.com"
+          git add splat-native-ios/SplatNative/SplatSoftwareDepthSeedBuilder.swift \
+                  splat-native-ios/SplatNative/MeshDenseMVS.swift \
+                  splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift \
+                  splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
+          git commit -m "Fix plane-sweep raster orientation"
+          git push origin HEAD:feature/splat-post-build17-p1
