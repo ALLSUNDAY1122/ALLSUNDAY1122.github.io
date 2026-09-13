@@ -5,7 +5,6 @@ on:
     branches: [main]
     paths:
       - automation/app2-005-hm1-submit-command.json
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,6 +21,38 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      - name: Require fresh explicit human approval for this exact release commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+          cmd=json.loads(Path('automation/app2-005-hm1-submit-command.json').read_text(encoding='utf-8'))
+          if cmd.get('approved_by_user') is not True:
+              raise SystemExit('HUMAN_GATE: approved_by_user must be true')
+          if cmd.get('action') != 'prepare_metadata_screenshots_and_submit_for_review':
+              raise SystemExit('HUMAN_GATE: unexpected submit action')
+          if str(cmd.get('app_id')) != '6799581662' or str(cmd.get('build')) != '2026082501':
+              raise SystemExit('HUMAN_GATE: target app/build mismatch')
+          approved_commit=str(cmd.get('approved_commit') or '')
+          # The command-changing commit is the trigger commit; approval must pin its parent product state.
+          import subprocess
+          parent=subprocess.check_output(['git','rev-parse','HEAD^'],text=True).strip()
+          if approved_commit != parent:
+              raise SystemExit(f'HUMAN_GATE: approval commit mismatch; expected {parent}, got {approved_commit or "[missing]"}')
+          raw=str(cmd.get('approved_at') or '').replace('Z','+00:00')
+          try: approved_at=datetime.fromisoformat(raw)
+          except Exception: raise SystemExit('HUMAN_GATE: approved_at missing or invalid')
+          if approved_at.tzinfo is None: raise SystemExit('HUMAN_GATE: approved_at must include timezone')
+          now=datetime.now(timezone.utc)
+          age=now-approved_at.astimezone(timezone.utc)
+          if age < timedelta(minutes=-5) or age > timedelta(hours=24):
+              raise SystemExit(f'HUMAN_GATE: approval is stale or future-dated; age={age}')
+          print('PASS: fresh explicit approval is pinned to exact product commit')
+          PY
 
       - name: Prepare final 264-question HTML
         shell: bash
