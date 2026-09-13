@@ -38,6 +38,41 @@ final class SplatSeedColorizerMultiViewTests: XCTestCase {
         XCTAssertLessThan(color.blue, 80)
     }
 
+    func testThreeViewConsensusNeverSynthesizesBlackFromPrimaryColorViews() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("splat-seed-observed-medoid-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        try writeSolidImage(color: .red, name: "red.png", root: root)
+        try writeSolidImage(color: .green, name: "green.png", root: root)
+        try writeSolidImage(color: .blue, name: "blue.png", root: root)
+        let frames = ["red.png", "green.png", "blue.png"].map { name in
+            SplatSeedFrame(
+                filePath: name,
+                transformMatrix: identityRows,
+                flX: 10,
+                flY: 10,
+                cx: 10,
+                cy: 10,
+                w: 20,
+                h: 20
+            )
+        }
+
+        let color = try XCTUnwrap(SplatSeedColorizer.colorize(
+            points: [SIMD3<Float>(0, 0, -1)],
+            frames: frames,
+            projectURL: root
+        ).first)
+
+        // Channel-wise median of red/green/blue produces an artificial near-black sample. The
+        // medoid must remain an actually observed primary view; equal geometry ties prefer frame 0.
+        XCTAssertGreaterThan(color.red, 220)
+        XCTAssertLessThan(color.green, 40)
+        XCTAssertLessThan(color.blue, 40)
+    }
+
     func testConsensusFallsBackToSingleVisibleView() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("splat-seed-single-\(UUID().uuidString)", isDirectory: true)
