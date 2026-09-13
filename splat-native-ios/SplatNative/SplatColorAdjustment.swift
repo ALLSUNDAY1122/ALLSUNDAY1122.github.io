@@ -22,17 +22,23 @@ enum SplatColorAdjustment {
         switch color {
         case .sphericalHarmonicFloat(var coefficients):
             // A malformed/truncated scene can surface an SH payload with no DC coefficient.
-            // Do not ask `asSRGBFloat` to derive a base color until the DC term is known to exist;
-            // returning the original payload lets the caller's normal validation/recovery path
+            // Returning the original payload lets the caller's normal validation/recovery path
             // handle the damaged point instead of turning an appearance edit into a crash.
             guard !coefficients.isEmpty else { return color }
-            let base = color.asSRGBFloat
-            // The edit is affine before display clipping. Scale every directional
-            // SH coefficient by the linear term; apply the constant bias to DC only.
-            // Clamping DC here would destroy view-dependent variation, so final
-            // display clipping remains the renderer's responsibility.
-            let affineBase = base * linearGain + SIMD3<Float>(repeating: bias)
-            coefficients[0] = (affineBase - midpoint) * SplatPoint.Color.INV_SH_C0
+
+            // The edit is affine before display clipping. SplatIO's `asSRGBFloat` intentionally
+            // clamps SH0 into 0...1, so round-tripping through it would discard valid over/under-range
+            // DC energy before applying the edit. Transform the coefficients directly instead:
+            //   rgb = 0.5 + C0*dc + directional
+            //   rgb' = rgb*linearGain + bias
+            // therefore every directional band scales by linearGain and only DC receives the
+            // constant offset. Final display clipping remains the renderer's responsibility.
+            let dcOffset = (
+                midpoint * linearGain
+                    + SIMD3<Float>(repeating: bias)
+                    - midpoint
+            ) * SplatPoint.Color.INV_SH_C0
+            coefficients[0] = coefficients[0] * linearGain + dcOffset
             if coefficients.count > 1 {
                 for index in 1..<coefficients.count {
                     coefficients[index] = coefficients[index] * linearGain
