@@ -13,6 +13,10 @@ enum SplatCameraGeometry {
     // Keep camera helpers and aspect-fitted exports inside the same finite 420-unit envelope so
     // large/narrow scenes can actually move far enough away without accepting unbounded state.
     static let maximumCameraDistance: Float = 420
+    // Keep finite camera pitch inside the same envelope used by the live viewer. Corrupt persisted
+    // state or future callers can otherwise pass a finite but pole-crossing value that flips the
+    // camera basis even though the ordinary gesture path never permits it.
+    static let maximumOrbitPitch: Float = 1.15
 
     static func framingSampleStride(pointCount: Int, targetSampleCount: Int = 6_000) -> Int {
         guard pointCount > 0, targetSampleCount > 0 else { return 1 }
@@ -134,7 +138,9 @@ enum SplatCameraGeometry {
         let safeCenter = isFinite(center) ? center : .zero
         let safeDistance = distance.isFinite ? min(maximumCameraDistance, max(0.35, distance)) : 2.5
         let safeYaw = yaw.isFinite ? yaw : 0
-        let safePitch = pitch.isFinite ? pitch : 0
+        let safePitch = pitch.isFinite
+            ? min(maximumOrbitPitch, max(-maximumOrbitPitch, pitch))
+            : 0
         let eye = safeCenter + SIMD3<Float>(
             sin(safeYaw) * cos(safePitch) * safeDistance,
             sin(safePitch) * safeDistance,
