@@ -101,14 +101,27 @@ enum MeshTextReferenceRewriter {
         }
         guard valueStart < line.endIndex else { return nil }
 
+        let normalizedDirective = directive.lowercased()
         // Appearance editing needs the actual diffuse texture path, not the literal remainder of a
         // Wavefront map_Kd line. Standard exporters commonly add options such as -s/-o and quote
         // filenames containing spaces. Treating that complete suffix as one filesystem path made a
         // valid textured OBJ shareable but impossible to reopen in the appearance editor.
-        if directive.lowercased() == "map_kd" {
+        if normalizedDirective == "map_kd" {
             let arguments = parseArguments(String(line[start...]))
             guard arguments.count >= 2 else { return nil }
             return texturePath(in: Array(arguments.dropFirst()))
+        }
+
+        // A quoted/single mtllib reference (optionally followed by a comment) should resolve to the
+        // actual filename for the appearance editor. Preserve the legacy raw remainder when an OBJ
+        // supplies multiple unquoted tokens because older Scan Lab fixtures treated that text as a
+        // single filename; this avoids changing established behavior while fixing standards-compliant
+        // quoted paths and inline comments.
+        if normalizedDirective == "mtllib" {
+            let arguments = parseArguments(String(line[start...]))
+            if arguments.count == 2 {
+                return arguments[1]
+            }
         }
 
         let value = line[valueStart...].trimmingCharacters(in: .whitespaces)
