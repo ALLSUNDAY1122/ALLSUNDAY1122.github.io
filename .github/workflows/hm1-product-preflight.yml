@@ -12,6 +12,9 @@ on:
       - 'apps/sanitary-manager-2/**'
       - 'ios/health-manager-1/RELEASE_CHECKLIST.md'
       - 'scripts/audit_hm1_product_preflight.py'
+      - 'scripts/audit_hm1_human_gate.py'
+      - '.github/workflows/app2-005-hm1-submit-review.yml'
+      - 'automation/app2-005-hm1-submit-command.json'
       - '.github/workflows/hm1-product-preflight.yml'
   workflow_dispatch:
 
@@ -28,3 +31,5 @@ jobs:
         run: node ios/health-manager-1/augment-to-264.cjs
       - name: Product quality preflight
         run: python3 scripts/audit_hm1_product_preflight.py
+      - name: App Review Human Gate regression
+        run: python3 scripts/audit_hm1_human_gate.py
