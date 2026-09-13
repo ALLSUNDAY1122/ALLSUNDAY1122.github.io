@@ -1,12 +1,15 @@
-name: HM2 StoreKit UI Preflight
+name: HM2 Product Preflight
 
 on:
   workflow_dispatch:
   push:
     paths:
+      - 'apps/sanitary-manager-2/gm1.js'
       - 'apps/sanitary-manager-2/gm2.js'
+      - 'apps/sanitary-manager-2/gm3.js'
       - 'apps/sanitary-manager-2/gm4.js'
       - 'scripts/audit_sm2_storekit_ui.py'
+      - 'scripts/audit_sm2_learning_contract.py'
       - '.github/workflows/hm2-storekit-ui-preflight.yml'
 
 permissions:
@@ -23,7 +26,11 @@ jobs:
           node-version: '22'
       - name: JavaScript syntax
         run: |
+          node --check apps/sanitary-manager-2/gm1.js
           node --check apps/sanitary-manager-2/gm2.js
+          node --check apps/sanitary-manager-2/gm3.js
           node --check apps/sanitary-manager-2/gm4.js
       - name: StoreKit UI regression gate
         run: python3 scripts/audit_sm2_storekit_ui.py
+      - name: Learning Acceptance Contract gate
+        run: python3 scripts/audit_sm2_learning_contract.py
