@@ -100,8 +100,99 @@ enum MeshTextReferenceRewriter {
             line.formIndex(after: &valueStart)
         }
         guard valueStart < line.endIndex else { return nil }
+
+        // Appearance editing needs the actual diffuse texture path, not the literal remainder of a
+        // Wavefront map_Kd line. Standard exporters commonly add options such as -s/-o and quote
+        // filenames containing spaces. Treating that complete suffix as one filesystem path made a
+        // valid textured OBJ shareable but impossible to reopen in the appearance editor.
+        if directive.lowercased() == "map_kd" {
+            let arguments = parseArguments(String(line[start...]))
+            guard arguments.count >= 2 else { return nil }
+            return texturePath(in: Array(arguments.dropFirst()))
+        }
+
         let value = line[valueStart...].trimmingCharacters(in: .whitespaces)
         return value.isEmpty ? nil : value
+    }
+
+    private static func parseArguments(_ text: String) -> [String] {
+        var result: [String] = []
+        var current = ""
+        var quote: Character?
+        var escaping = false
+
+        func flush() {
+            guard !current.isEmpty else { return }
+            result.append(current)
+            current.removeAll(keepingCapacity: true)
+        }
+
+        for character in text {
+            if escaping {
+                if character.isWhitespace || character == "\"" || character == "'" || character == "\\" || character == "#" {
+                    current.append(character)
+                } else {
+                    current.append("\\")
+                    current.append(character)
+                }
+                escaping = false
+                continue
+            }
+            if character == "\\" {
+                escaping = true
+                continue
+            }
+            if let activeQuote = quote {
+                if character == activeQuote {
+                    quote = nil
+                } else {
+                    current.append(character)
+                }
+                continue
+            }
+            if character == "\"" || character == "'" {
+                quote = character
+                continue
+            }
+            if character == "#" {
+                break
+            }
+            if character.isWhitespace {
+                flush()
+            } else {
+                current.append(character)
+            }
+        }
+        if escaping { current.append("\\") }
+        flush()
+        return result
+    }
+
+    private static func texturePath(in arguments: [String]) -> String? {
+        var index = 0
+        while index < arguments.count, arguments[index].hasPrefix("-") {
+            let option = arguments[index].lowercased()
+            index += 1
+            switch option {
+            case "-mm":
+                index = min(arguments.count, index + 2)
+            case "-o", "-s", "-t":
+                var consumed = 0
+                while index < arguments.count, consumed < 3, Float(arguments[index]) != nil {
+                    index += 1
+                    consumed += 1
+                }
+            default:
+                // Remaining standard map options (-clamp, -blendu, -blendv, -boost, -texres,
+                // -bm, -imfchan, -type) each consume one value. Unknown vendor options retain the
+                // same conservative one-value behavior as the exact-share parser.
+                if index < arguments.count { index += 1 }
+            }
+        }
+        guard index < arguments.count else { return nil }
+        let path = arguments[index...].joined(separator: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return path.isEmpty ? nil : path
     }
 
     private static func forEachLine(at url: URL, _ body: (Substring) throws -> Bool) throws {
