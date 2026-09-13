@@ -97,7 +97,7 @@ def main():
     try:
         t=make_token(issuer,keyid,kp)
         ensure_v1_localization(t,f'/v1/subscriptions/{SUB}/subscriptionLocalizations?limit=50','/v1/subscriptionLocalizations','subscriptionLocalizations','subscription','subscriptions',SUB,{'locale':LOCALE,'name':MONTHLY_NAME,'description':MONTHLY_DESC},'monthly_localization',r)
-        ensure_v1_localization(t,f'/v1/subscriptionGroups/{GROUP}/subscriptionGroupLocalizations?limit=50','/v1/subscriptionGroupLocalizations','subscriptionGroup','subscriptionGroup','subscriptionGroups',GROUP,{'locale':LOCALE,'name':GROUP_NAME},'group_localization',r)
+        ensure_v1_localization(t,f'/v1/subscriptionGroups/{GROUP}/subscriptionGroupLocalizations?limit=50','/v1/subscriptionGroupLocalizations','subscriptionGroupLocalizations','subscriptionGroup','subscriptionGroups',GROUP,{'locale':LOCALE,'name':GROUP_NAME},'group_localization',r)
         vid=ensure_iap_loc(t,r); patch_notes(t,r)
         _,r['monthly_readback']=api_get(t,f'/v1/subscriptions/{SUB}?include=subscriptionLocalizations')
         _,r['group_readback']=api_get(t,f'/v1/subscriptionGroups/{GROUP}?include=subscriptionGroupLocalizations')
