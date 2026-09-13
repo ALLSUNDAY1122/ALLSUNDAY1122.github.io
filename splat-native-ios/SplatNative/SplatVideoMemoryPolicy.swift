@@ -101,6 +101,17 @@ enum SplatVideoMemoryPolicy {
         return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
     }
 
+    /// Simulator headroom is the macOS runner's process headroom, not a simulated iPhone's. Keep
+    /// live headroom admission on physical devices, but mark the measurement unavailable on the
+    /// Simulator so CI/Simulator behavior is governed by the modeled physical-memory budget.
+    static func currentAvailableMemoryBytes() -> UInt64 {
+#if targetEnvironment(simulator)
+        return 0
+#else
+        return UInt64(os_proc_available_memory())
+#endif
+    }
+
     /// Limit video admission by current process headroom as well as the long-lived device budget.
     /// Video export overlaps decoded splats, edited copies, Metal surfaces and encoder buffers, so a
     /// scene that normally fits can still jetsam when another operation has temporarily consumed RAM.
@@ -128,7 +139,7 @@ enum SplatVideoMemoryPolicy {
         sourceURL: URL,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
-        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
+        availableMemoryBytes: UInt64 = currentAvailableMemoryBytes(),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Estimate {
@@ -151,7 +162,7 @@ enum SplatVideoMemoryPolicy {
         verifiedDigest: String? = nil,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
-        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
+        availableMemoryBytes: UInt64 = currentAvailableMemoryBytes(),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) async throws -> Admission {
@@ -186,7 +197,7 @@ enum SplatVideoMemoryPolicy {
         verifiedDigest: String? = nil,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
-        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
+        availableMemoryBytes: UInt64 = currentAvailableMemoryBytes(),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Admission {
@@ -239,7 +250,7 @@ enum SplatVideoMemoryPolicy {
         sourceURL: URL,
         configuration: SplatVideoConfiguration,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
-        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
+        availableMemoryBytes: UInt64 = currentAvailableMemoryBytes(),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Estimate {
