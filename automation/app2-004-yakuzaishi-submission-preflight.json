@@ -1,22 +1,21 @@
 {
   "task_id": "APP2-004",
-  "checked_at": "2026-08-25T11:08:05.900885+00:00",
+  "checked_at": "2026-09-13T21:26:11.702524+00:00",
   "app_id": "6799753724",
   "bundle_id": "jp.allsunday1122.yakuzaishi",
+  "approved_build": "5",
+  "human_device_accepted_build": "5",
   "errors": [
-    "Japanese localization missing description",
-    "Japanese localization missing keywords",
-    "Japanese localization missing supportUrl",
     "No COMPLETE App Store screenshot",
     "review detail missing contactFirstName",
     "review detail missing contactLastName",
     "review detail missing contactPhone",
     "review detail missing contactEmail",
-    "review detail missing notes"
+    "review detail missing notes",
+    "Approved VALID nonexpired Build 5 is not present"
   ],
   "warnings": [
-    "age rating read unavailable; verify before submit",
-    "VALID Build 5 not present yet"
+    "age rating read unavailable; verify before submit"
   ],
   "app": {
     "id": "6799753724",
@@ -47,7 +46,7 @@
         "reviewType": "APP_STORE",
         "releaseType": "AFTER_APPROVAL",
         "earliestReleaseDate": null,
-        "usesIdfa": null,
+        "usesIdfa": false,
         "downloadable": true,
         "createdDate": "2026-08-09T13:00:40-07:00"
       }
@@ -64,7 +63,7 @@
       "reviewType": "APP_STORE",
       "releaseType": "AFTER_APPROVAL",
       "earliestReleaseDate": null,
-      "usesIdfa": null,
+      "usesIdfa": false,
       "downloadable": true,
       "createdDate": "2026-08-09T13:00:40-07:00"
     }
@@ -73,12 +72,12 @@
     {
       "id": "932e6afa-1c42-471c-98d2-81964b581842",
       "attributes": {
-        "description": null,
+        "description": "薬剤師国家試験の直近3回分を収録した学習アプリです。第111回・第110回・第109回の採点対象1,031問を追加購入なしで利用できます。今日のスプリントは4・8・16問から選択でき、分野別は約20問ずつのセットで学習できます。間違えた問題は苦手として記録し、3回連続で正解すると苦手から卒業します。公式問題画像は全画面表示・ピンチズーム・ドラッグに対応。模擬試験、学習履歴、5週間ヒートマップ、試験日カウントダウン、JSONバックアップ、オフライン学習にも対応しています。厚生労働省が公開する薬剤師国家試験資料を出典として利用しています。本アプリは厚生労働省の公式アプリではなく、試験学習用です。診断・治療・調剤・服薬指導等の医療上の判断を提供するものではありません。",
         "locale": "ja",
-        "keywords": null,
+        "keywords": "薬剤師,薬剤師国家試験,国試,薬学,過去問,必須,理論,実践,資格,学習",
         "marketingUrl": null,
         "promotionalText": null,
-        "supportUrl": null,
+        "supportUrl": "https://allsunday1122.github.io/pharmacist-manabi-sprint/support.html",
         "whatsNew": null
       }
     }
@@ -93,11 +92,10 @@
     "attributes": {},
     "read_ok": true
   },
-  "selected_build_relationship": {
-    "data": null,
-    "links": {
-      "self": "https://api.appstoreconnect.apple.com/v1/appStoreVersions/430ba445-fae0-4d1d-9301-95d1ea342ac7/relationships/build"
-    }
+  "selected_build": {
+    "id": null,
+    "attributes": {},
+    "read_ok": true
   },
   "age_rating": {
     "read_ok": false,
@@ -109,8 +107,8 @@
       "attributes": {
         "version": "1",
         "uploadedDate": "2026-08-17T00:18:45-07:00",
-        "expirationDate": "2026-11-14T23:18:45-08:00",
-        "expired": false,
+        "expirationDate": "2026-09-02T06:24:52-07:00",
+        "expired": true,
         "minOsVersion": "16.0",
         "lsMinimumSystemVersion": null,
         "computedMinMacOsVersion": "13.0",
@@ -130,8 +128,8 @@
       "attributes": {
         "version": "2",
         "uploadedDate": "2026-08-18T20:58:01-07:00",
-        "expirationDate": "2026-11-16T19:58:01-08:00",
-        "expired": false,
+        "expirationDate": "2026-09-02T06:24:52-07:00",
+        "expired": true,
         "minOsVersion": "16.0",
         "lsMinimumSystemVersion": null,
         "computedMinMacOsVersion": "13.0",
@@ -147,12 +145,54 @@
       }
     },
     {
+      "id": "3bc62c58-f089-4e3d-aa12-7d97872be4cf",
+      "attributes": {
+        "version": "6",
+        "uploadedDate": "2026-08-26T03:48:21-07:00",
+        "expirationDate": "2026-09-02T06:24:52-07:00",
+        "expired": true,
+        "minOsVersion": "16.0",
+        "lsMinimumSystemVersion": null,
+        "computedMinMacOsVersion": "13.0",
+        "computedMinVisionOsVersion": "1.0",
+        "iconAssetToken": {
+          "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/f9/c8/9b/f9c89be3-04d7-8510-1613-a26f6b9c7020/AppIcon76x76@2x_U007eipad.png/{w}x{h}bb.{f}",
+          "width": 152,
+          "height": 152
+        },
+        "processingState": "VALID",
+        "buildAudienceType": "APP_STORE_ELIGIBLE",
+        "usesNonExemptEncryption": false
+      }
+    },
+    {
+      "id": "b8a108b1-0bb2-42ad-9b26-6562fb90b8df",
+      "attributes": {
+        "version": "7",
+        "uploadedDate": "2026-09-04T17:54:23-07:00",
+        "expirationDate": "2026-12-03T16:54:23-08:00",
+        "expired": false,
+        "minOsVersion": "16.0",
+        "lsMinimumSystemVersion": null,
+        "computedMinMacOsVersion": "13.0",
+        "computedMinVisionOsVersion": "1.0",
+        "iconAssetToken": {
+          "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/f4/47/b6/f447b6e6-0ac1-a41e-50d2-f5f5cc9890a0/AppIcon76x76@2x_U007eipad.png/{w}x{h}bb.{f}",
+          "width": 152,
+          "height": 152
+        },
+        "processingState": "VALID",
+        "buildAudienceType": "APP_STORE_ELIGIBLE",
+        "usesNonExemptEncryption": false
+      }
+    },
+    {
       "id": "d193a30c-53fc-4915-a7ba-daaca8b392d0",
       "attributes": {
         "version": "3",
         "uploadedDate": "2026-08-22T02:19:21-07:00",
-        "expirationDate": "2026-11-20T01:19:21-08:00",
-        "expired": false,
+        "expirationDate": "2026-09-02T06:24:52-07:00",
+        "expired": true,
         "minOsVersion": "16.0",
         "lsMinimumSystemVersion": null,
         "computedMinMacOsVersion": "13.0",
@@ -168,12 +208,33 @@
       }
     },
     {
+      "id": "f801f114-2bc2-4295-b250-0cde7e199ce7",
+      "attributes": {
+        "version": "5",
+        "uploadedDate": "2026-08-25T07:06:32-07:00",
+        "expirationDate": "2026-09-02T06:24:52-07:00",
+        "expired": true,
+        "minOsVersion": "16.0",
+        "lsMinimumSystemVersion": null,
+        "computedMinMacOsVersion": "13.0",
+        "computedMinVisionOsVersion": "1.0",
+        "iconAssetToken": {
+          "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/1b/7b/0f/1b7b0ff7-e18b-b9e8-3e05-93a01c9dab12/AppIcon76x76@2x_U007eipad.png/{w}x{h}bb.{f}",
+          "width": 152,
+          "height": 152
+        },
+        "processingState": "VALID",
+        "buildAudienceType": "INTERNAL_ONLY",
+        "usesNonExemptEncryption": false
+      }
+    },
+    {
       "id": "08361432-b815-4194-ab9d-b3860d71cbe2",
       "attributes": {
         "version": "4",
         "uploadedDate": "2026-08-23T06:08:41-07:00",
-        "expirationDate": "2026-11-21T05:08:41-08:00",
-        "expired": false,
+        "expirationDate": "2026-09-02T06:24:52-07:00",
+        "expired": true,
         "minOsVersion": "16.0",
         "lsMinimumSystemVersion": null,
         "computedMinMacOsVersion": "13.0",
@@ -189,7 +250,7 @@
       }
     }
   ],
-  "valid_build5": null,
+  "approved_build_resource": null,
   "review_submissions": [],
   "pass": false
 }
