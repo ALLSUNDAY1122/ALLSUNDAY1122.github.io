@@ -15,6 +15,24 @@ enum SplatVideoExporter {
         AVVideoYCbCrMatrixKey: AVVideoYCbCrMatrix_ITU_R_709_2,
     ]
 
+    static func tagSourcePixelBufferColor(_ pixelBuffer: CVPixelBuffer) {
+        // The Metal target is sRGB, so the bytes presented to AVAssetWriter are sRGB-encoded RGB.
+        // Explicitly tag the source buffer so VideoToolbox can convert that transfer function into
+        // the BT.709 output contract instead of inferring source color semantics from an untagged BGRA buffer.
+        CVBufferSetAttachment(
+            pixelBuffer,
+            kCVImageBufferColorPrimariesKey,
+            kCVImageBufferColorPrimaries_ITU_R_709_2,
+            .shouldPropagate
+        )
+        CVBufferSetAttachment(
+            pixelBuffer,
+            kCVImageBufferTransferFunctionKey,
+            kCVImageBufferTransferFunction_sRGB,
+            .shouldPropagate
+        )
+    }
+
     static func renderViewMatrix(eye: SIMD3<Float>, center: SIMD3<Float>) -> simd_float4x4 {
         let baseView = SplatCameraGeometry.lookAt(
             eye: eye,
@@ -249,6 +267,7 @@ enum SplatVideoExporter {
                   let pixelBuffer else {
                 throw ExportError.pixelBufferAllocationFailed
             }
+            tagSourcePixelBufferColor(pixelBuffer)
 
             var cvTexture: CVMetalTexture?
             guard CVMetalTextureCacheCreateTextureFromImage(
