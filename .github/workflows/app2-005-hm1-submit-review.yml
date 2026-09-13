@@ -35,8 +35,11 @@ jobs:
               raise SystemExit('HUMAN_GATE: approved_by_user must be true')
           if cmd.get('action') != 'prepare_metadata_screenshots_and_submit_for_review':
               raise SystemExit('HUMAN_GATE: unexpected submit action')
-          if str(cmd.get('app_id')) != '6799581662' or str(cmd.get('build')) != '2026082501':
-              raise SystemExit('HUMAN_GATE: target app/build mismatch')
+          if str(cmd.get('app_id')) != '6799581662':
+              raise SystemExit('HUMAN_GATE: target app mismatch')
+          approved_build=str(cmd.get('build') or '').strip()
+          if not approved_build.isdigit():
+              raise SystemExit('HUMAN_GATE: approved build must be a numeric App Store build version')
           approved_commit=str(cmd.get('approved_commit') or '')
           # The command-changing commit is the trigger commit; approval must pin its parent product state.
           import subprocess
@@ -51,7 +54,7 @@ jobs:
           age=now-approved_at.astimezone(timezone.utc)
           if age < timedelta(minutes=-5) or age > timedelta(hours=24):
               raise SystemExit(f'HUMAN_GATE: approval is stale or future-dated; age={age}')
-          print('PASS: fresh explicit approval is pinned to exact product commit')
+          print(f'PASS: fresh explicit approval is pinned to exact product commit and build={approved_build}')
           PY
 
       - name: Prepare final 264-question HTML
@@ -113,7 +116,8 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          python scripts/app2_005_hm1_prepare_submit.py \
+          python scripts/app2_005_hm1_submit_from_approval.py \
+            --command automation/app2-005-hm1-submit-command.json \
             --screens /tmp/hm1-review-screens \
             --output /tmp/app2-005-hm1-submit-result.json \
             2>&1 | tee /tmp/app2-005-hm1-submit.log
