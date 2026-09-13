@@ -85,7 +85,8 @@ jobs:
           raise SystemExit(2)
           PY
           )
-          rm -rf /tmp/PharmacistVisualGate.xcresult
+          echo "simulator_udid=$UDID" >> "$GITHUB_OUTPUT"
+          rm -rf /tmp/PharmacistVisualGate.xcresult /tmp/pharmacist-visual-png
           xcodebuild test \
             -project pharmacist-manabi-sprint/ios/PharmacistSprint.xcodeproj \
             -scheme PharmacistSprint \
@@ -98,6 +99,33 @@ jobs:
           tail -n 200 /tmp/pharmacist-tests.log
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
 
+      - name: Export native Visual Gate screenshots
+        id: visual_png
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          mkdir -p /tmp/pharmacist-visual-png
+          if [ -d /tmp/PharmacistVisualGate.xcresult ]; then
+            xcrun xcresulttool export attachments \
+              --path /tmp/PharmacistVisualGate.xcresult \
+              --output-path /tmp/pharmacist-visual-png \
+              > /tmp/pharmacist-visual-export.log 2>&1
+          fi
+          count=$(find /tmp/pharmacist-visual-png -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \) | wc -l | tr -d ' ')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "Exported visual images: $count"
+          find /tmp/pharmacist-visual-png -type f -maxdepth 4 -print || true
+          if command -v sips >/dev/null 2>&1; then
+            find /tmp/pharmacist-visual-png -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \) -print0 | while IFS= read -r -d '' f; do
+              echo "--- $f"
+              sips -g pixelWidth -g pixelHeight "$f" 2>/dev/null || true
+            done
+          fi
+          # The UI contract explicitly captures seven key states. Fewer than seven
+          # exported images means visual evidence is incomplete even if XCTest exits 0.
+          test "$count" -ge 7
+
       - name: Upload native Visual Gate evidence
         if: always()
         uses: actions/upload-artifact@v6
@@ -106,6 +134,8 @@ jobs:
           path: |
             /tmp/PharmacistVisualGate.xcresult
             /tmp/pharmacist-tests.log
+            /tmp/pharmacist-visual-png
+            /tmp/pharmacist-visual-export.log
           if-no-files-found: error
           retention-days: 14
 
@@ -148,14 +178,16 @@ jobs:
           TEST_EXIT: ${{ steps.tests.outputs.exit_code }}
           BUILD_EXIT: ${{ steps.build.outputs.exit_code }}
           RESOURCE_EXIT: ${{ steps.resources.outputs.exit_code }}
+          VISUAL_COUNT: ${{ steps.visual_png.outputs.count }}
         run: |
           python3 - <<'PY'
           import json,os
           t=int(os.environ.get('TEST_EXIT') or 999)
           b=int(os.environ.get('BUILD_EXIT') or 999)
           r=int(os.environ.get('RESOURCE_EXIT') or 999)
+          vc=int(os.environ.get('VISUAL_COUNT') or 0)
           out={
-            'pass': t==0 and b==0 and r==0,
+            'pass': t==0 and b==0 and r==0 and vc>=7,
             'architecture':'SwiftUI-native',
             'monetization':'none',
             'allScoredQuestionsUnlocked':True,
@@ -163,6 +195,7 @@ jobs:
             'unitAndVisualGateExit':t,
             'releaseBuildExit':b,
             'resourceAuditExit':r,
+            'visualScreenshotCount':vc,
             'visualEvidenceArtifact':'pharmacist-native-visual-gate',
             'bundleId':'jp.allsunday1122.yakuzaishi',
             'appStoreConnectAppId':'6799753724',
@@ -192,3 +225,4 @@ jobs:
           test "${{ steps.tests.outputs.exit_code }}" = '0'
           test "${{ steps.build.outputs.exit_code }}" = '0'
           test "${{ steps.resources.outputs.exit_code }}" = '0'
+          test "${{ steps.visual_png.outputs.count }}" -ge 7
