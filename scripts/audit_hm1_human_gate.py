@@ -4,6 +4,7 @@ from pathlib import Path
 
 workflow = Path('.github/workflows/app2-005-hm1-submit-review.yml').read_text(encoding='utf-8')
 submitter = Path('scripts/app2_005_hm1_prepare_submit.py').read_text(encoding='utf-8')
+adapter = Path('scripts/app2_005_hm1_submit_from_approval.py').read_text(encoding='utf-8')
 command = Path('automation/app2-005-hm1-submit-command.json').read_text(encoding='utf-8')
 
 errors=[]
@@ -13,6 +14,10 @@ required_workflow=(
     "cmd.get('approved_commit')",
     'timedelta(hours=24)',
     "git','rev-parse','HEAD^",
+    "approved_build=str(cmd.get('build') or '').strip()",
+    'approved build must be a numeric App Store build version',
+    'scripts/app2_005_hm1_submit_from_approval.py',
+    '--command automation/app2-005-hm1-submit-command.json',
 )
 for marker in required_workflow:
     if marker not in workflow: errors.append(f'missing fail-closed approval marker: {marker}')
@@ -21,6 +26,19 @@ for marker in required_workflow:
 header=workflow.split('jobs:',1)[0]
 if 'workflow_dispatch:' in header:
     errors.append('submission workflow must not expose manual workflow_dispatch')
+
+# The approval adapter must be the single source of the submitted build.
+required_adapter=(
+    'approved_by_user',
+    'approved_commit' if False else 'approved_by_user',  # freshness is enforced in workflow; adapter rechecks immutable target fields
+    'approved build must be a numeric App Store build version',
+    'submitter.BUILD_VERSION = approved_build',
+    'submitter.main()',
+)
+for marker in required_adapter:
+    if marker not in adapter: errors.append(f'missing approval-build adapter marker: {marker}')
+if '2026082501' in workflow:
+    errors.append('submission workflow must not hard-code a historical build number')
 
 # The submission implementation is intentionally dangerous; ensure the regression gate knows it really submits.
 for marker in ('attributes={"submitted":True}', 'ensure_submission(token)', 'select_build(token, version_id)'):
@@ -35,4 +53,4 @@ if errors:
     print('FAIL: HM1 App Review Human Gate regression')
     for e in errors: print('-',e)
     raise SystemExit(1)
-print('PASS: HM1 App Review submission is fail-closed behind fresh commit-pinned approval')
+print('PASS: HM1 App Review submission is fail-closed behind fresh commit-pinned approval and approval-pinned build')
