@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-13T21:42:55.277738+00:00",
+  "checked_at": "2026-09-13T21:57:26.342173+00:00",
   "app_id": "6799581662",
   "subscription_id": "6804373671",
   "subscription_group_id": "22329151",
@@ -119,8 +119,49 @@
     "included": []
   },
   "subscription_availability": {
-    "ok": false,
-    "error": "App Store Connect API GET /v1/subscriptions/6804373671/subscriptionAvailability?include=availableTerritories&limit[availableTerritories]=200 returned HTTP 400: {'errors': [{'id': '8069e428-eda7-4877-832d-b31a1758dbeb', 'status': '400', 'code': 'PARAMETER_ERROR.INVALID', 'title': 'A parameter has an invalid value', 'detail': \"The maximum allowable limit is '50'\", 'source': {'parameter': 'limit[availableTerritories]'}}]}"
+    "ok": true,
+    "data": {
+      "type": "subscriptionAvailabilities",
+      "id": "6804373671",
+      "attributes": {
+        "availableInNewTerritories": false
+      },
+      "relationships": {
+        "availableTerritories": {
+          "meta": {
+            "paging": {
+              "total": 1,
+              "limit": 50
+            }
+          },
+          "data": [
+            {
+              "type": "territories",
+              "id": "JPN"
+            }
+          ],
+          "links": {
+            "self": "https://api.appstoreconnect.apple.com/v1/subscriptionAvailabilities/6804373671/relationships/availableTerritories",
+            "related": "https://api.appstoreconnect.apple.com/v1/subscriptionAvailabilities/6804373671/availableTerritories"
+          }
+        }
+      },
+      "links": {
+        "self": "https://api.appstoreconnect.apple.com/v1/subscriptionAvailabilities/6804373671"
+      }
+    },
+    "included": [
+      {
+        "type": "territories",
+        "id": "JPN",
+        "attributes": {
+          "currency": "JPY"
+        },
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v1/territories/JPN"
+        }
+      }
+    ]
   },
   "ok": true
 }
