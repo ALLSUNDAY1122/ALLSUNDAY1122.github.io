@@ -42,7 +42,7 @@ private struct DetailClusterAccumulator: Sendable {
     var count = 0
 }
 
-private enum DetailVertexColorMode: Sendable {
+private enum DetailVertexColorMode: Sendable, Equatable {
     case unknown
     case uncolored
     case colored
