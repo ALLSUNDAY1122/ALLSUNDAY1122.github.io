@@ -9,6 +9,11 @@ enum SplatCameraGeometry {
         let radius: Float
     }
 
+    // The viewer gesture envelope already permits up to 7x the 60-unit robust framing floor.
+    // Keep camera helpers and aspect-fitted exports inside the same finite 420-unit envelope so
+    // large/narrow scenes can actually move far enough away without accepting unbounded state.
+    static let maximumCameraDistance: Float = 420
+
     static func framingSampleStride(pointCount: Int, targetSampleCount: Int = 6_000) -> Int {
         guard pointCount > 0, targetSampleCount > 0 else { return 1 }
         let quotient = pointCount / targetSampleCount
@@ -81,11 +86,9 @@ enum SplatCameraGeometry {
         guard !radii.isEmpty else { return Framing(center: center, distance: 2.5, radius: 0.10) }
         let percentileIndex = min(radii.count - 1, Int(Float(radii.count - 1) * 0.90))
         let radius = max(0.10, radii[percentileIndex])
-        // The camera helpers and gesture envelope already support a 60-unit distance, while the
-        // former 18-unit framing cap forced ordinary room/building-scale captures too close. A
-        // 10-unit radius scene needs 28 units at the established 2.8x framing ratio; clamping it to
-        // 18 visibly crops the outer geometry before the user makes any gesture. Keep the robust
-        // ratio intact until the same 60-unit safety envelope used by eye()/video framing.
+        // Initial live framing remains intentionally bounded to 60 units. Users can then zoom out
+        // through the larger camera envelope, while video aspect fitting may also move farther away
+        // when a narrow output requires it.
         let framingDistance = max(0.35, min(60.0, radius * 2.8))
         return Framing(center: center, distance: framingDistance, radius: radius)
     }
@@ -110,7 +113,7 @@ enum SplatCameraGeometry {
         let safeRadius = framing.radius.isFinite ? max(0.10, framing.radius) : 0.10
         let safeMargin = margin.isFinite ? max(1, margin) : 1.10
         let safeFloor = framing.distance.isFinite
-            ? min(60, max(0.35, framing.distance))
+            ? min(maximumCameraDistance, max(0.35, framing.distance))
             : 2.5
 
         let halfVerticalFOV = max(0.05, safeFOVY * 0.5)
@@ -118,17 +121,18 @@ enum SplatCameraGeometry {
         let limitingHalfFOV = max(0.05, min(halfVerticalFOV, halfHorizontalFOV))
         let requiredForSphere = safeRadius / sin(limitingHalfFOV) * safeMargin
         // Preserve the existing live-view framing as a floor; only move farther away when the
-        // output aspect ratio actually needs more room. Keep comfortably inside the far plane.
-        return min(60, max(safeFloor, requiredForSphere))
+        // output aspect ratio actually needs more room. Clamp to the finite camera envelope rather
+        // than the 60-unit initial framing floor so room/building scenes remain complete in 9:16.
+        return min(maximumCameraDistance, max(safeFloor, requiredForSphere))
     }
 
     static func eye(center: SIMD3<Float>, distance: Float, yaw: Float, pitch: Float) -> SIMD3<Float> {
         // Gesture state and persisted camera values can be interrupted mid-write or restored from
         // older schemas. Keep malformed scalars from poisoning or inverting the view matrix before
-        // lookAt gets a chance to sanitize it. Match the framing/export camera's usable distance
-        // envelope so a finite negative or extreme persisted distance cannot flip or lose the scene.
+        // lookAt gets a chance to sanitize it. The 420-unit cap matches the viewer gesture envelope
+        // and export aspect fitter while still preventing unbounded persisted values.
         let safeCenter = isFinite(center) ? center : .zero
-        let safeDistance = distance.isFinite ? min(60, max(0.35, distance)) : 2.5
+        let safeDistance = distance.isFinite ? min(maximumCameraDistance, max(0.35, distance)) : 2.5
         let safeYaw = yaw.isFinite ? yaw : 0
         let safePitch = pitch.isFinite ? pitch : 0
         let eye = safeCenter + SIMD3<Float>(
