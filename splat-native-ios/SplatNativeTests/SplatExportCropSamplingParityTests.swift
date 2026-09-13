@@ -4,10 +4,50 @@ import simd
 
 final class SplatExportCropSamplingParityTests: XCTestCase {
     func testSynchronousExportMaterializerMatchesViewerSamplingAcrossStrideBoundary() async throws {
+        let fixture = try makeFixture(prefix: "splat-export-crop-parity")
+        defer { try? FileManager.default.removeItem(at: fixture.root) }
+
+        let synchronous = try SplatPersistedEditMaterializer.materializeInMemory(
+            sourceURL: fixture.source,
+            points: fixture.points
+        )
+        let viewerParity = try await SplatPersistedEditMaterializer.materializeInMemoryCancellable(
+            sourceURL: fixture.source,
+            points: fixture.points
+        )
+
+        assertViewerParity(synchronous, viewerParity)
+    }
+
+    func testStreamingExportPlanMatchesViewerSamplingAcrossStrideBoundary() async throws {
+        let fixture = try makeFixture(prefix: "splat-export-streaming-crop-parity")
+        defer { try? FileManager.default.removeItem(at: fixture.root) }
+
+        let writer = try DotSplatSceneWriter(toFileAtPath: fixture.source.path)
+        try await writer.write(fixture.points)
+        try await writer.close()
+
+        let streaming = try await SplatPersistedEditMaterializer.materializeStreamingCancellable(
+            sourceURL: fixture.source,
+            assetURL: fixture.source,
+            sourcePointCount: fixture.points.count
+        )
+        let viewerParity = try await SplatPersistedEditMaterializer.materializeInMemoryCancellable(
+            sourceURL: fixture.source,
+            points: fixture.points
+        )
+
+        assertViewerParity(streaming, viewerParity)
+    }
+
+    private func makeFixture(prefix: String) throws -> (
+        root: URL,
+        source: URL,
+        points: [SplatPoint]
+    ) {
         let root = FileManager.default.temporaryDirectory
-            .appendingPathComponent("splat-export-crop-parity-\(UUID().uuidString)", isDirectory: true)
+            .appendingPathComponent("\(prefix)-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
-        defer { try? FileManager.default.removeItem(at: root) }
 
         let source = root.appendingPathComponent("result.splat")
         try Data(repeating: 0, count: 32).write(to: source)
@@ -33,21 +73,15 @@ final class SplatExportCropSamplingParityTests: XCTestCase {
             SplatEditSettings(cropXMax: 0.5),
             sourceURL: source
         )
+        return (root, source, points)
+    }
 
-        let synchronous = try SplatPersistedEditMaterializer.materializeInMemory(
-            sourceURL: source,
-            points: points
-        )
-        let viewerParity = try await SplatPersistedEditMaterializer.materializeInMemoryCancellable(
-            sourceURL: source,
-            points: points
-        )
-
-        XCTAssertEqual(synchronous.count, viewerParity.count)
-        XCTAssertEqual(synchronous.first?.position.x, viewerParity.first?.position.x)
-        XCTAssertEqual(synchronous.last?.position.x, viewerParity.last?.position.x)
-        XCTAssertGreaterThan(synchronous.count, 3_000)
-        XCTAssertLessThan(synchronous.count, 5_000)
-        XCTAssertTrue(synchronous.allSatisfy { $0.position.x < 1 })
+    private func assertViewerParity(_ actual: [SplatPoint], _ expected: [SplatPoint]) {
+        XCTAssertEqual(actual.count, expected.count)
+        XCTAssertEqual(actual.first?.position.x, expected.first?.position.x)
+        XCTAssertEqual(actual.last?.position.x, expected.last?.position.x)
+        XCTAssertGreaterThan(actual.count, 3_000)
+        XCTAssertLessThan(actual.count, 5_000)
+        XCTAssertTrue(actual.allSatisfy { $0.position.x < 1 })
     }
 }
