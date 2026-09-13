@@ -1,0 +1,26 @@
+name: Touhan Release Pipeline Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'codemagic.yaml'
+      - 'scripts/audit_touhan_release_pipeline.py'
+      - '.github/workflows/touhan-release-pipeline-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: touhan-release-pipeline-audit
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Enforce App Store eligible release candidate contract
+        run: python3 scripts/audit_touhan_release_pipeline.py
