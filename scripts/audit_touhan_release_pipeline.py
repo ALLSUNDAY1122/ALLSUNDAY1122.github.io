@@ -13,12 +13,17 @@ match = re.search(r'(?m)^  [A-Za-z0-9_-]+:\s*$', rest)
 end = start + len('  touhan-ios:\n') + (match.start() if match else len(rest))
 block = text[start:end]
 
+# Touhan provisions its App Store profile explicitly via Codemagic CLI instead of
+# declaring ios_signing/distribution_type in the workflow. Validate the real path,
+# not one particular Codemagic syntax.
 required = (
     'name: 登録販売者 - iOS App Store Release Candidate',
-    'distribution_type: app_store',
-    'bundle_identifier: com.allsunday1122.tourokuhanbaisha',
+    'BUNDLE_ID: com.allsunday1122.tourokuhanbaisha',
     'APP_STORE_CONNECT_APP_ID: "6802119268"',
+    'CODEMAGIC_PROFILE_REF: tourokuhanbaisha_appstore',
     'python3 touroku-hanbaisha-ios/scripts/validate_release.py',
+    '--type IOS_APP_STORE',
+    'keychain add-certificates',
     'xcode-project use-profiles',
     'app-store-connect publish',
 )
@@ -34,4 +39,4 @@ for forbidden in (
     if forbidden in block:
         raise SystemExit(f'FAIL: Touhan release pipeline contains forbidden marker {forbidden}')
 
-print('PASS: Touhan pipeline produces App Store eligible release candidate without auto submission/distribution')
+print('PASS: Touhan pipeline provisions IOS_APP_STORE signing and produces an App Store eligible candidate without auto submission/distribution')
