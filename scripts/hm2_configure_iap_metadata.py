@@ -107,7 +107,7 @@ def main():
         r['monthly_prices_readback']=safe_readback(t,f'/v1/subscriptions/{SUB}/prices?include=subscriptionPricePoint&limit=50')
         r['monthly_review_screenshot_readback']=safe_readback(t,f'/v1/subscriptions/{SUB}/appStoreReviewScreenshot')
         r['lifetime_availability_readback']=safe_readback(t,f'/v2/inAppPurchases/{IAP}/inAppPurchaseAvailability?include=availableTerritories')
-        r['lifetime_price_schedule_readback']=safe_readback(t,f'/v2/inAppPurchases/{IAP}/iapPriceSchedule?include=baseTerritory,manualPrices,inAppPurchasePricePoint')
+        r['lifetime_price_schedule_readback']=safe_readback(t,f'/v2/inAppPurchases/{IAP}/iapPriceSchedule?include=baseTerritory,manualPrices')
         r['lifetime_review_screenshot_readback']=safe_readback(t,f'/v2/inAppPurchases/{IAP}/appStoreReviewScreenshot')
     finally:
         if cleanup: cleanup.unlink(missing_ok=True)
