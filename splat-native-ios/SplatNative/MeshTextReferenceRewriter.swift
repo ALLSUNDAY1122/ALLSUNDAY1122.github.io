@@ -69,12 +69,11 @@ enum MeshTextReferenceRewriter {
         let normalizedDirective = directive.lowercased()
         try forEachLine(at: source) { line in
             if directiveValue(in: line, directive: directive) != nil {
-                // Appearance editing currently materializes the first diffuse bitmap only. Repointing
-                // every map_Kd in a multi-material MTL to that one bitmap collapses unrelated materials
-                // and can visibly destroy a valid imported mesh. Replace only the first diffuse map;
-                // leave later material textures byte-for-byte intact until multi-texture processing is
-                // implemented. Other reference directives keep their historical replace-all behavior.
-                if normalizedDirective == "map_kd", replaced {
+                // Appearance editing materializes exactly one diffuse bitmap and one material
+                // library generation. Repointing every map_Kd/mtllib reference to that generation
+                // collapses unrelated materials in multi-material assets. Replace the first target
+                // only and preserve all later references until full multi-texture editing exists.
+                if (normalizedDirective == "map_kd" || normalizedDirective == "mtllib"), replaced {
                     try append(String(line))
                     return true
                 }
@@ -92,6 +91,15 @@ enum MeshTextReferenceRewriter {
                     } else {
                         try append("\(directive) \(replacement)")
                     }
+                } else if normalizedDirective == "mtllib" {
+                    let arguments = parseArguments(String(line))
+                    let libraries = Array(arguments.dropFirst())
+                    // Wavefront permits more than one material library on the same mtllib line.
+                    // Replace only the library that the appearance editor opened; retain every
+                    // additional library so unrelated usemtl bindings remain resolvable.
+                    let retainedLibraries = libraries.dropFirst().map(renderReferenceArgument)
+                    let suffix = retainedLibraries.isEmpty ? "" : " " + retainedLibraries.joined(separator: " ")
+                    try append("\(directive) \(replacement)\(suffix)")
                 } else {
                     try append("\(directive) \(replacement)")
                 }
@@ -139,14 +147,12 @@ enum MeshTextReferenceRewriter {
             return normalizedRelativeReference(path)
         }
 
-        // A quoted/single mtllib reference (optionally followed by a comment) should resolve to the
-        // actual filename for the appearance editor. Preserve the legacy raw remainder when an OBJ
-        // supplies multiple unquoted tokens because older Scan Lab fixtures treated that text as a
-        // single filename; this avoids changing established behavior while fixing standards-compliant
-        // quoted paths and inline comments.
+        // Wavefront mtllib accepts one or more library filenames. The appearance editor can edit
+        // one library at a time, so resolve the first parsed reference rather than treating the
+        // complete multi-library suffix as a single nonexistent filename.
         if normalizedDirective == "mtllib" {
             let arguments = parseArguments(String(line[start...]))
-            if arguments.count == 2 {
+            if arguments.count >= 2 {
                 return normalizedRelativeReference(arguments[1])
             }
         }
@@ -157,6 +163,14 @@ enum MeshTextReferenceRewriter {
 
     private static func normalizedRelativeReference(_ value: String) -> String {
         value.replacingOccurrences(of: "\\", with: "/")
+    }
+
+    private static func renderReferenceArgument(_ value: String) -> String {
+        let normalized = normalizedRelativeReference(value)
+        let needsQuotes = normalized.contains(where: { $0.isWhitespace || $0 == "#" || $0 == "\"" })
+        guard needsQuotes else { return normalized }
+        let escaped = normalized.replacingOccurrences(of: "\"", with: "\\\"")
+        return "\"\(escaped)\""
     }
 
     private static func parseArguments(_ text: String) -> [String] {
