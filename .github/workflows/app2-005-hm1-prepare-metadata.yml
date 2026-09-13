@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/app2_005_hm1_prepare_metadata.py'
+      - 'ios/health-manager-1/prepare-ios.sh'
       - '.github/workflows/app2-005-hm1-prepare-metadata.yml'
   workflow_dispatch:
 
@@ -25,6 +26,8 @@ jobs:
           fetch-depth: 0
 
       - name: Materialize audited 264-question product
+        env:
+          HM1_PRODUCT_ONLY: '1'
         shell: bash
         run: |
           set -euo pipefail
