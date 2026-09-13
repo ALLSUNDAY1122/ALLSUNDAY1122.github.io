@@ -27,13 +27,16 @@ final class FP3PaywallReviewUITests: XCTestCase {
         let paywall = app.staticTexts["Premiumで学習範囲を広げる"]
         XCTAssertTrue(paywall.waitForExistence(timeout: 5), "Premium paywall did not appear")
 
+        let pricedPurchase = app.buttons.matching(NSPredicate(format: "label CONTAINS '800'" )).firstMatch
+        XCTAssertTrue(pricedPurchase.waitForExistence(timeout: 10), "Premium purchase price was not resolved to ¥800")
+        XCTAssertFalse(app.buttons["価格を取得中…"].exists, "Review screenshot must not be captured before StoreKit price is ready")
+        XCTAssertTrue(app.buttons["購入を復元"].exists)
+        XCTAssertTrue(app.buttons["今はしない"].exists)
+
         let screenshot = XCUIScreen.main.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot)
         attachment.name = "FP3-IAP-Review-Paywall"
         attachment.lifetime = .keepAlways
         add(attachment)
-
-        XCTAssertTrue(app.buttons["購入を復元"].exists)
-        XCTAssertTrue(app.buttons["今はしない"].exists)
     }
 }
