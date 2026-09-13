@@ -46,6 +46,29 @@ final class MeshTextReferenceRewriterTests: XCTestCase {
         XCTAssertEqual(rewritten.components(separatedBy: "map_Kd ").count - 1, 2)
     }
 
+    func testMaterialRewritePreservesSecondaryLibraryLines() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("source.obj")
+        let output = root.appendingPathComponent("output.obj")
+        let payload = "mtllib primary.mtl\nmtllib secondary.mtl\nusemtl secondary\nv 0 0 0\n"
+        try Data(payload.utf8).write(to: source)
+
+        XCTAssertEqual(try MeshTextReferenceRewriter.firstReference(in: source, directive: "mtllib"), "primary.mtl")
+        XCTAssertTrue(try MeshTextReferenceRewriter.rewrite(
+            sourceURL: source,
+            destinationURL: output,
+            directive: "mtllib",
+            replacement: "edited-primary.mtl"
+        ))
+
+        let rewritten = try String(contentsOf: output, encoding: .utf8)
+        XCTAssertTrue(rewritten.contains("mtllib edited-primary.mtl\n"))
+        XCTAssertTrue(rewritten.contains("mtllib secondary.mtl\n"))
+        XCTAssertTrue(rewritten.contains("usemtl secondary\n"))
+        XCTAssertEqual(rewritten.components(separatedBy: "mtllib ").count - 1, 2)
+    }
+
     func testRejectsSymlinkedSource() throws {
         let root = try makeRoot()
         let outside = root.deletingLastPathComponent().appendingPathComponent("outside-\(UUID().uuidString).obj")
