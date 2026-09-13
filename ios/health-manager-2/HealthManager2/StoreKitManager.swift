@@ -36,16 +36,34 @@ final class StoreKitManager: ObservableObject {
 
     deinit { updatesTask?.cancel() }
 
+    private var reviewMonthlyPriceOverride: String? {
+#if DEBUG
+        let value = ProcessInfo.processInfo.environment["HM2_REVIEW_MONTHLY_PRICE"]?.trimmingCharacters(in: .whitespacesAndNewlines)
+        return value?.isEmpty == false ? value : nil
+#else
+        return nil
+#endif
+    }
+
+    private var reviewLifetimePriceOverride: String? {
+#if DEBUG
+        let value = ProcessInfo.processInfo.environment["HM2_REVIEW_LIFETIME_PRICE"]?.trimmingCharacters(in: .whitespacesAndNewlines)
+        return value?.isEmpty == false ? value : nil
+#else
+        return nil
+#endif
+    }
+
     var monthlyDisplayPrice: String {
-        monthlyProduct?.displayPrice ?? "App Storeで価格を確認"
+        reviewMonthlyPriceOverride ?? monthlyProduct?.displayPrice ?? "App Storeで価格を確認"
     }
 
     var lifetimeDisplayPrice: String {
-        lifetimeProduct?.displayPrice ?? "App Storeで価格を確認"
+        reviewLifetimePriceOverride ?? lifetimeProduct?.displayPrice ?? "App Storeで価格を確認"
     }
 
-    var monthlyAvailable: Bool { monthlyProduct != nil }
-    var lifetimeAvailable: Bool { lifetimeProduct != nil }
+    var monthlyAvailable: Bool { reviewMonthlyPriceOverride != nil || monthlyProduct != nil }
+    var lifetimeAvailable: Bool { reviewLifetimePriceOverride != nil || lifetimeProduct != nil }
 
     func loadProducts() async {
         do {
@@ -53,12 +71,19 @@ final class StoreKitManager: ObservableObject {
             monthlyProduct = products.first { $0.id == Self.monthlyProductID }
             lifetimeProduct = products.first { $0.id == Self.lifetimeProductID }
             if monthlyProduct == nil || lifetimeProduct == nil {
-                statusMessage = "商品情報を取得できません。App Store Connect設定を確認してください。"
+                // CI review capture may intentionally inject the App Store Connect
+                // canonical JPY display prices because Simulator storefront data is
+                // not deterministic. This never applies to Release builds.
+                if reviewMonthlyPriceOverride == nil || reviewLifetimePriceOverride == nil {
+                    statusMessage = "商品情報を取得できません。App Store Connect設定を確認してください。"
+                }
             } else if !isPremium {
                 statusMessage = ""
             }
         } catch {
-            statusMessage = "商品情報を取得できませんでした。"
+            if reviewMonthlyPriceOverride == nil || reviewLifetimePriceOverride == nil {
+                statusMessage = "商品情報を取得できませんでした。"
+            }
         }
     }
 
