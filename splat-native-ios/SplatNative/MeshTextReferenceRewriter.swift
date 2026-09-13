@@ -193,14 +193,17 @@ enum MeshTextReferenceRewriter {
                     ))
                 }
                 guard !libraries.isEmpty else { return lineString }
-                return "\(directive) \(libraries.joined(separator: " "))"
+                let renderedLibraries = libraries.joined(separator: " ")
+                return "\(directive) \(renderedLibraries)"
             }
             guard let reference = directiveValue(in: line, directive: directive) else { return lineString }
-            return "\(directive) \(renderReferenceArgument(rebasedReference(
+            let rebased = rebasedReference(
                 reference,
                 sourceURL: sourceURL,
                 destinationURL: destinationURL
-            )))"
+            )
+            let renderedReference = renderReferenceArgument(rebased)
+            return "\(directive) \(renderedReference)"
         }
 
         return lineString
