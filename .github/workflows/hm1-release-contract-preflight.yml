@@ -1,0 +1,24 @@
+name: HM1 Release Contract Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ios/health-manager-1/RELEASE_CHECKLIST.md'
+      - 'ios/health-manager-1/RELEASE_STATUS.md'
+      - 'scripts/app2_005_hm1_prepare_submit.py'
+      - 'scripts/audit_hm1_release_contract.py'
+      - '.github/workflows/hm1-release-contract-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Release contract drift gate
+        run: python3 scripts/audit_hm1_release_contract.py
