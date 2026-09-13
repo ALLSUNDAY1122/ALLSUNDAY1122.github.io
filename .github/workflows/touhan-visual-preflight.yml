@@ -1,0 +1,122 @@
+name: Touhan Visual Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'touroku-hanbaisha-sprint/**'
+      - 'touroku-hanbaisha-ios/scripts/validate_release.py'
+      - '.github/workflows/touhan-visual-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: touhan-visual-preflight
+  cancel-in-progress: true
+
+jobs:
+  visual-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Release and learning Acceptance Contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 touroku-hanbaisha-ios/scripts/validate_release.py
+
+      - name: Install deterministic browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Serve release web bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd touroku-hanbaisha-sprint
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/touhan-http.log 2>&1 &
+          echo $! >/tmp/touhan-http.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/touhan-http.log
+          exit 1
+
+      - name: Verify human learning journey and capture Visual Gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/touhan-visual
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          import struct
+
+          out = Path('/tmp/touhan-visual')
+          with sync_playwright() as p:
+              browser = p.chromium.launch()
+              context = browser.new_context(
+                  viewport={'width':430,'height':932},
+                  device_scale_factor=3,
+                  locale='ja-JP',
+                  is_mobile=True,
+                  has_touch=True,
+              )
+              page = context.new_page()
+              page.goto('http://127.0.0.1:4173/', wait_until='networkidle')
+
+              page.get_by_text('今日の12問', exact=True).wait_for(state='visible')
+              home = page.locator('body').inner_text()
+              for text in ('全360問', '第1回 模擬試験', '第2回 模擬試験', '第3回 模擬試験', '苦手復習'):
+                  assert text in home, f'home missing: {text}'
+              page.screenshot(path=str(out/'01-home.png'))
+
+              page.locator('[data-action="today"]').click()
+              page.locator('[data-choice]').first.wait_for(state='visible')
+              quiz = page.locator('body').inner_text()
+              assert 'わからない' in quiz, quiz[:2000]
+              page.screenshot(path=str(out/'02-question.png'))
+              page.locator('[data-choice]').first.click()
+              page.get_by_text('ここだけ覚える', exact=True).wait_for(state='visible')
+              feedback = page.locator('body').inner_text()
+              assert ('正解' in feedback or 'ここを確認' in feedback)
+              assert ('次の問題' in feedback or '結果を見る' in feedback)
+              page.screenshot(path=str(out/'03-feedback.png'))
+
+              page.locator('[data-quit]').click()
+              page.get_by_text('前回の続きから始める', exact=True).wait_for(state='visible')
+              page.screenshot(path=str(out/'04-resume.png'))
+
+              page.locator('[data-tab="record"]').click()
+              page.get_by_text('学習記録', exact=True).wait_for(state='visible')
+              record = page.locator('body').inner_text()
+              for text in ('総回答', '正答率', '苦手'):
+                  assert text in record, f'record missing: {text}'
+              page.screenshot(path=str(out/'05-record.png'))
+              browser.close()
+
+          for path in sorted(out.glob('*.png')):
+              raw = path.read_bytes()
+              assert raw[:8] == b'\x89PNG\r\n\x1a\n', path
+              w,h = struct.unpack('>II', raw[16:24])
+              assert (w,h) == (1290,2796), (path,w,h)
+              assert len(raw) > 20_000, (path,len(raw))
+              print(f'PASS {path.name}: {w}x{h} bytes={len(raw)}')
+          PY
+
+      - name: Upload Visual Gate evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: touhan-visual-preflight
+          path: /tmp/touhan-visual/*.png
+          if-no-files-found: error
+          retention-days: 14
