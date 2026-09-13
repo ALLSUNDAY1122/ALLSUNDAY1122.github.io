@@ -107,16 +107,10 @@ enum SplatVideoOutputValidator {
         guard let formatDescription = formatDescriptions.first else {
             throw ValidationError.unexpectedColorProperties
         }
-        let formatExtensions = CMFormatDescriptionGetExtensions(formatDescription) as NSDictionary
-        let primaries = formatExtensions.object(forKey: kCMFormatDescriptionExtension_ColorPrimaries) as? String
-        let transfer = formatExtensions.object(forKey: kCMFormatDescriptionExtension_TransferFunction) as? String
-        let matrix = formatExtensions.object(forKey: kCMFormatDescriptionExtension_YCbCrMatrix) as? String
-        let expectedPrimaries = kCMFormatDescriptionColorPrimaries_ITU_R_709_2 as String
-        let expectedTransfer = kCMFormatDescriptionTransferFunction_ITU_R_709_2 as String
-        let expectedMatrix = kCMFormatDescriptionYCbCrMatrix_ITU_R_709_2 as String
-        guard primaries == expectedPrimaries,
-              transfer == expectedTransfer,
-              matrix == expectedMatrix else {
+        let formatExtensions = formatDescription.extensions
+        guard formatExtensions[.colorPrimaries] == .colorPrimaries(.itu_R_709_2),
+              formatExtensions[.transferFunction] == .transferFunction(.itu_R_709_2),
+              formatExtensions[.yCbCrMatrix] == .yCbCrMatrix(.itu_R_709_2) else {
             throw ValidationError.unexpectedColorProperties
         }
 
