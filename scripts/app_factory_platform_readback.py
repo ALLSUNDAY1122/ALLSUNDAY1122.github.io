@@ -13,6 +13,18 @@ APPS={
  "pharmacist":("6799753724","jp.allsunday1122.yakuzaishi"),
 }
 REPOSITORY="ALLSUNDAY1122/ALLSUNDAY1122.github.io"
+# Codemagic models this monorepo as one app containing several workflows. The
+# /apps response has not always exposed repositoryUrl, so repository-string
+# matching alone is not a reliable canonical readback. This ID is the same app
+# ID already used by the release commands for HM1/Touhan/etc.; it is read-only
+# here and is used only as a deterministic fallback when discovery is ambiguous.
+KNOWN_CM_APP_ID="6a769d81a1add9d06020b524"
+CM_WORKFLOWS={
+ "touhan":"touhan-ios",
+ "hm2":"health-manager-2-ios",
+ "hm1":"health-manager-1-testflight",
+ "pharmacist":"pharmacist-ios",
+}
 OUT=Path(os.environ.get("FACTORY_PLATFORM_RESULT","factory-platform-readback.json"))
 SENSITIVE=("secret","token","password","credential","private","environment","variable")
 
@@ -59,6 +71,25 @@ def app_summary(app):
         "repositoryUrl":app.get("repositoryUrl") or app.get("repository_url") or app.get("repoUrl"),
         "workflowIds":app.get("workflowIds"),
     }
+
+
+def cm_build_list(payload):
+    if not isinstance(payload,dict): return []
+    rows=payload.get("builds") or payload.get("data") or []
+    if isinstance(rows,dict): rows=rows.get("builds") or []
+    return rows if isinstance(rows,list) else []
+
+
+def cm_time_key(build):
+    return str(build.get("startedAt") or build.get("finishedAt") or build.get("createdAt") or "")
+
+
+def cm_build_summary(build):
+    if not build: return None
+    return {k:build.get(k) for k in (
+        "_id","id","status","workflowId","branch","startedAt","finishedAt",
+        "buildVersion","buildNumber","index","app_store_connect_status"
+    ) if k in build}
 
 
 def main():
@@ -112,21 +143,30 @@ def main():
                 serialized=json.dumps(app,ensure_ascii=False).lower().replace(".git","")
                 if needle in serialized or needle.split("/")[-1] in serialized:
                     candidates.append(app_summary(app))
+        discovered_ids={str(c.get("id")) for c in candidates if c.get("id")}
+        if len(discovered_ids)==1:
+            selected_app_id=next(iter(discovered_ids))
+            resolution="repository-discovery"
+        else:
+            selected_app_id=KNOWN_CM_APP_ID
+            resolution="known-monorepo-app-id-fallback"
         result["codemagic"].update({
             "apps_http_status":status,
             "application_count":len(raw) if isinstance(raw,list) else 0,
             "application_summaries":[app_summary(x) for x in raw] if isinstance(raw,list) else [],
             "repository_candidates":candidates,
+            "selected_app_id":selected_app_id,
+            "resolution":resolution,
         })
-        if candidates:
-            app_id=candidates[0].get("id")
-            bstatus,builds=cm_get(f"https://api.codemagic.io/builds?appId={urllib.parse.quote(str(app_id))}",cm_token)
-            result["codemagic"].update({"builds_http_status":bstatus,"builds":sanitize(builds)})
-            arr=(builds.get("builds") or builds.get("data") or []) if isinstance(builds,dict) else []
-            if isinstance(arr,dict): arr=arr.get("builds") or []
-            if arr:
-                b=arr[0]
-                result["codemagic"]["latest_summary"]={k:b.get(k) for k in ("_id","id","status","workflowId","branch","startedAt","finishedAt")}
+        bstatus,builds=cm_get(f"https://api.codemagic.io/builds?appId={urllib.parse.quote(str(selected_app_id))}",cm_token)
+        result["codemagic"].update({"builds_http_status":bstatus,"builds":sanitize(builds)})
+        arr=sorted(cm_build_list(builds),key=cm_time_key,reverse=True)
+        result["codemagic"]["latest_summary"]=cm_build_summary(arr[0]) if arr else None
+        per_workflow={}
+        for label,workflow_id in CM_WORKFLOWS.items():
+            row=next((b for b in arr if str(b.get("workflowId") or "")==workflow_id),None)
+            per_workflow[label]={"workflow_id":workflow_id,"latest":cm_build_summary(row)}
+        result["codemagic"]["workflow_latest"]=per_workflow
 
     OUT.write_text(json.dumps(sanitize(result),ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     summary={
@@ -137,13 +177,17 @@ def main():
         "codemagic_application_count":result["codemagic"].get("application_count"),
         "codemagic_builds_http":result["codemagic"].get("builds_http_status"),
         "codemagic_candidates":len(result["codemagic"].get("repository_candidates") or []),
+        "codemagic_resolution":result["codemagic"].get("resolution"),
         "codemagic_latest":result["codemagic"].get("latest_summary"),
+        "codemagic_workflows":result["codemagic"].get("workflow_latest"),
     }
     print(json.dumps(summary,ensure_ascii=False))
     if asc_errors:
         raise SystemExit(f"ASC fresh readback incomplete: {asc_errors}")
     if result["codemagic"].get("apps_http_status")!=200:
         raise SystemExit("Codemagic fresh readback failed")
+    if result["codemagic"].get("builds_http_status")!=200:
+        raise SystemExit("Codemagic build readback failed")
 
 
 if __name__=="__main__":
