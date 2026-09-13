@@ -65,6 +65,32 @@ struct SplatVideoConfiguration: Equatable, Sendable {
         }
     }
 
+    enum BackgroundStyle: String, CaseIterable, Identifiable, Sendable {
+        case dark
+        case light
+        case neutral
+
+        var id: String { rawValue }
+        var displayName: String {
+            switch self {
+            case .dark: return "ダーク"
+            case .light: return "ライト"
+            case .neutral: return "グレー"
+            }
+        }
+
+        var rgb: (red: Double, green: Double, blue: Double) {
+            switch self {
+            case .dark:
+                return (0.025, 0.030, 0.040)
+            case .light:
+                return (0.92, 0.92, 0.92)
+            case .neutral:
+                return (0.18, 0.18, 0.18)
+            }
+        }
+    }
+
     enum Speed: String, CaseIterable, Identifiable, Sendable {
         case slow
         case normal
@@ -97,6 +123,7 @@ struct SplatVideoConfiguration: Equatable, Sendable {
     var aspectRatio: AspectRatio = .portrait9x16
     var quality: Quality = .high1080p
     var cameraMotion: CameraMotion = .orbit360
+    var backgroundStyle: BackgroundStyle = .dark
     var speed: Speed = .normal
     var framesPerSecond: Int = 30 {
         didSet {
@@ -108,12 +135,14 @@ struct SplatVideoConfiguration: Equatable, Sendable {
         aspectRatio: AspectRatio = .portrait9x16,
         quality: Quality = .high1080p,
         cameraMotion: CameraMotion = .orbit360,
+        backgroundStyle: BackgroundStyle = .dark,
         speed: Speed = .normal,
         framesPerSecond: Int = 30
     ) {
         self.aspectRatio = aspectRatio
         self.quality = quality
         self.cameraMotion = cameraMotion
+        self.backgroundStyle = backgroundStyle
         self.speed = speed
         self.framesPerSecond = Self.safeFramesPerSecond(framesPerSecond)
     }
