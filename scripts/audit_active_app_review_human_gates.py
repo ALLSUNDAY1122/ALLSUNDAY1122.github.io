@@ -34,8 +34,25 @@ submit_markers={
 for path,marker in submit_markers.items():
     if marker not in Path(path).read_text(encoding='utf-8'): errors.append(f'{path}: submitter route changed; re-audit required')
 
+# Historical pharmacist Build 6 final-submit automation is retained only as a
+# visible tombstone. It must never regain a manual trigger, ASC credentials, or
+# a real submitter invocation; otherwise it would recreate the stale-approval
+# bypass that this regression rule was added to prevent.
+legacy='.github/workflows/app2-004-yakuzaishi-build6-finalize-submit.yml'
+legacy_text=Path(legacy).read_text(encoding='utf-8')
+legacy_header=legacy_text.split('jobs:',1)[0]
+if '[SUPERSEDED]' not in legacy_text:
+    errors.append(f'{legacy}: superseded marker missing')
+if 'workflow_dispatch:' in legacy_header:
+    errors.append(f'{legacy}: manual trigger must remain disabled')
+for marker in ('ASC_PRIVATE_KEY', 'ASC_ISSUER_ID', 'ASC_KEY_ID', 'scripts/app2_004_yakuzaishi_submit_review.py'):
+    if marker in legacy_text:
+        errors.append(f'{legacy}: forbidden legacy submission capability {marker}')
+if 'PROCESS_FAILURE_GUARD' not in legacy_text:
+    errors.append(f'{legacy}: fail-closed tombstone guard missing')
+
 if errors:
     print('FAIL: active App Review Human Gate regression')
     for e in errors: print('-',e)
     raise SystemExit(1)
-print('PASS: HM1 / Pharmacist / Nurse final App Review paths require current explicit human approval')
+print('PASS: HM1 / Pharmacist / Nurse final App Review paths require current explicit human approval; pharmacist legacy route remains disabled')
