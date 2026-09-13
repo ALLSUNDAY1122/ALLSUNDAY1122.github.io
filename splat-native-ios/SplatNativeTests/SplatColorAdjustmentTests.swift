@@ -50,6 +50,27 @@ final class SplatColorAdjustmentTests: XCTestCase {
         XCTAssertTrue(coefficients.isEmpty)
     }
 
+    func testNonfiniteAppearanceParametersPreserveLastValidColor() {
+        let sh = SplatPoint.Color.sphericalHarmonicFloat([
+            SIMD3<Float>(0.10, 0.20, 0.30),
+            SIMD3<Float>(0.01, -0.02, 0.03)
+        ])
+        let bytes = SplatPoint.Color.sRGBUInt8(SIMD3<UInt8>(32, 128, 240))
+
+        XCTAssertEqual(
+            SplatColorAdjustment.apply(sh, exposureEV: .nan, contrast: 1.2),
+            sh
+        )
+        XCTAssertEqual(
+            SplatColorAdjustment.apply(sh, exposureEV: 0.5, contrast: .infinity),
+            sh
+        )
+        XCTAssertEqual(
+            SplatColorAdjustment.apply(bytes, exposureEV: -.infinity, contrast: 1.0),
+            bytes
+        )
+    }
+
     func testSRGBEditStillClampsToDisplayRange() {
         let color = SplatPoint.Color.sRGBUInt8(SIMD3<UInt8>(240, 128, 8))
         let result = SplatColorAdjustment.apply(color, exposureEV: 2.0, contrast: 1.5)
