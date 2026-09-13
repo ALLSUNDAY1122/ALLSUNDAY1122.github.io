@@ -42,6 +42,12 @@ private struct DetailClusterAccumulator: Sendable {
     var count = 0
 }
 
+private enum DetailVertexColorMode: Sendable {
+    case unknown
+    case uncolored
+    case colored
+}
+
 struct DetailSimplifyResult: Sendable {
     let url: URL
     let vertices: Int
@@ -60,7 +66,8 @@ enum MeshDetailSimplifierEngine {
             ? min(0.95, max(0.15, retainedFraction))
             : 0.60
         var vertices: [SIMD3<Float>] = []
-        var vertexColors: [SIMD3<Float>?] = []
+        var vertexColors: [SIMD3<Float>] = []
+        var vertexColorMode = DetailVertexColorMode.unknown
         var faces: [DetailFace] = []
 
         try forEachOBJLine(at: url) { line in
@@ -81,13 +88,20 @@ enum MeshDetailSimplifierEngine {
                 }
                 vertices.append(SIMD3<Float>(x, y, z))
                 if fields.count >= 7 {
+                    guard vertexColorMode != .uncolored else {
+                        throw error("頂点色が一部の頂点にしかないため、安全に軽量化できません")
+                    }
                     guard let r = Float(fields[4]), let g = Float(fields[5]), let b = Float(fields[6]),
                           r.isFinite, g.isFinite, b.isFinite else {
                         throw error("Meshの頂点色が不正です")
                     }
+                    vertexColorMode = .colored
                     vertexColors.append(SIMD3<Float>(r, g, b))
                 } else {
-                    vertexColors.append(nil)
+                    guard vertexColorMode != .colored else {
+                        throw error("頂点色が一部の頂点にしかないため、安全に軽量化できません")
+                    }
+                    vertexColorMode = .uncolored
                 }
             } else if directive == "f" {
                 let tokens = Array(fields.dropFirst().prefix { !$0.hasPrefix("#") })
@@ -110,13 +124,10 @@ enum MeshDetailSimplifierEngine {
         }
 
         guard vertices.count > 8, !faces.isEmpty else { throw error("十分なMeshがありません") }
-        let coloredVertexCount = vertexColors.reduce(into: 0) { count, color in
-            if color != nil { count += 1 }
-        }
-        guard coloredVertexCount == 0 || coloredVertexCount == vertices.count else {
+        let hasVertexColors = vertexColorMode == .colored
+        guard !hasVertexColors || vertexColors.count == vertices.count else {
             throw error("頂点色が一部の頂点にしかないため、安全に軽量化できません")
         }
-        let hasVertexColors = coloredVertexCount == vertices.count
         guard faces.allSatisfy({ face in
             face.a >= 0 && face.b >= 0 && face.c >= 0 &&
                 face.a < vertices.count && face.b < vertices.count && face.c < vertices.count
@@ -195,15 +206,14 @@ enum MeshDetailSimplifierEngine {
             accumulator.positionSum += SIMD3<Double>(Double(vertex.x), Double(vertex.y), Double(vertex.z))
             accumulator.count += 1
             accumulators[key] = accumulator
-            if hasVertexColors, let color = vertexColors[index] {
+            if hasVertexColors {
+                let color = vertexColors[index]
                 colorSums[key, default: .zero] += SIMD3<Double>(Double(color.x), Double(color.y), Double(color.z))
             }
         }
 
         let boundaryVertexCount = boundaryVertices.count
         let protectedComponentCount = protectedRoots.count
-        // Original vertices/colors and connectivity scratch are no longer required after every
-        // source vertex has been mapped to a cluster. Release them before allocating output arrays.
         vertices.removeAll(keepingCapacity: false)
         vertexColors.removeAll(keepingCapacity: false)
         boundaryVertices.removeAll(keepingCapacity: false)
