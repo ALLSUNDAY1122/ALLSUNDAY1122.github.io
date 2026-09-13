@@ -33,6 +33,21 @@ final class MeshTextReferenceOptionTests: XCTestCase {
         )
     }
 
+    func testReferenceLookupMatchesDirectiveCasingUsedByThirdPartyExporters() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-reference-casing-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let obj = root.appendingPathComponent("mesh.obj")
+        let mtl = root.appendingPathComponent("mesh.mtl")
+        try "MTLLIB mesh.mtl\nv 0 0 0\n".write(to: obj, atomically: true, encoding: .utf8)
+        try "newmtl scan\nmap_kd texture.jpg\n".write(to: mtl, atomically: true, encoding: .utf8)
+
+        XCTAssertEqual(try MeshTextReferenceRewriter.firstReference(in: obj, directive: "mtllib"), "mesh.mtl")
+        XCTAssertEqual(try MeshTextReferenceRewriter.firstReference(in: mtl, directive: "map_Kd"), "texture.jpg")
+    }
+
     func testMapKdRewriteStillReplacesWholeDirectiveWithEditedTexture() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mesh-text-reference-rewrite-\(UUID().uuidString)", isDirectory: true)
