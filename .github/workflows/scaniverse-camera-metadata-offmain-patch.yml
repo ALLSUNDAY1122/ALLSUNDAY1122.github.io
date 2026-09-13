@@ -1,0 +1,75 @@
+name: Scaniverse camera metadata off-main patch
+
+on:
+  push:
+    branches: [feature/splat-post-build17-p1]
+    paths: [.github/scaniverse-camera-metadata-offmain-trigger]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: startsWith(github.event.head_commit.message, 'Trigger camera metadata off-main patch')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-post-build17-p1
+          fetch-depth: 0
+      - name: Apply guarded off-main patch
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          loader = Path('splat-native-ios/SplatNative/SplatViewerCameraDatasetLoader.swift')
+          text = loader.read_text(encoding='utf-8')
+          loop_old = '''            while !frames.isAtEnd {\n                let frame = try frames.decode(Frame.self)'''
+          loop_new = '''            while !frames.isAtEnd {\n                // JSONDecoder can spend noticeable time walking a near-32 MiB trajectory. The async\n                // viewer path runs this decoder off MainActor; make that work cooperatively cancellable\n                // so switching scans does not leave obsolete metadata decode consuming CPU.\n                if validPositionIndex % 1_024 == 0, Task.isCancelled {\n                    throw CancellationError()\n                }\n                let frame = try frames.decode(Frame.self)'''
+          if text.count(loop_old) != 1:
+              raise SystemExit(f'loader loop anchor count={text.count(loop_old)}')
+          text = text.replace(loop_old, loop_new, 1)
+
+          tail_old = '''        return dataset.positions\n    }\n}'''
+          tail_new = '''        return dataset.positions\n    }\n\n    static func cameraPositionsAsync(for renderURL: URL) async -> [SIMD3<Float>] {\n        // SplatViewerRenderer is @MainActor. Keep mapped file IO + JSON decoding out of the render/UI\n        // executor; only the small normalized position set crosses back to MainActor.\n        let worker = Task.detached(priority: .userInitiated) {\n            cameraPositions(for: renderURL)\n        }\n        return await withTaskCancellationHandler {\n            await worker.value\n        } onCancel: {\n            worker.cancel()\n        }\n    }\n}'''
+          if text.count(tail_old) != 1:
+              raise SystemExit(f'loader tail anchor count={text.count(tail_old)}')
+          text = text.replace(tail_old, tail_new, 1)
+          loader.write_text(text, encoding='utf-8')
+
+          viewer = Path('splat-native-ios/SplatNative/SplatViewer.swift')
+          text = viewer.read_text(encoding='utf-8')
+          call_old = '''                let initial = Self.initialViewGeometry(for: url, center: framing.center)'''
+          call_new = '''                let initial = await Self.initialViewGeometry(for: url, center: framing.center)\n                guard !Task.isCancelled, generation == self.loadGeneration else { return }'''
+          if text.count(call_old) != 1:
+              raise SystemExit(f'viewer call anchor count={text.count(call_old)}')
+          text = text.replace(call_old, call_new, 1)
+          func_old = '''    private static func initialViewGeometry(for url: URL, center: SIMD3<Float>) -> (yaw: Float, pitch: Float) {\n        let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: url)'''
+          func_new = '''    private static func initialViewGeometry(for url: URL, center: SIMD3<Float>) async -> (yaw: Float, pitch: Float) {\n        let positions = await SplatViewerCameraDatasetLoader.cameraPositionsAsync(for: url)'''
+          if text.count(func_old) != 1:
+              raise SystemExit(f'viewer function anchor count={text.count(func_old)}')
+          text = text.replace(func_old, func_new, 1)
+          viewer.write_text(text, encoding='utf-8')
+
+          tests = Path('splat-native-ios/SplatNativeTests/SplatViewerCameraDatasetLoaderTests.swift')
+          text = tests.read_text(encoding='utf-8')
+          anchor = '''    func testMalformedFrameDoesNotDiscardFollowingValidCamera() throws {'''
+          addition = '''    func testAsyncLoaderMatchesSyncCameraPositions() async throws {\n        let root = try makeRoot()\n        defer { try? FileManager.default.removeItem(at: root) }\n        let render = root.appendingPathComponent("result.ply")\n        try Data([0x50]).write(to: render)\n        let json = #"{\\"frames\\":[{\\"transform_matrix\\":[[1,0,0,1.25],[0,1,0,-2.5],[0,0,1,3.75],[0,0,0,1]]},{\\"transform_matrix\\":[[1,0,0,4],[0,1,0,5],[0,0,1,6],[0,0,0,1]]}]}"#\n        try Data(json.utf8).write(to: root.appendingPathComponent("transforms.json"))\n\n        let synchronous = SplatViewerCameraDatasetLoader.cameraPositions(for: render)\n        let asynchronous = await SplatViewerCameraDatasetLoader.cameraPositionsAsync(for: render)\n        XCTAssertEqual(asynchronous.count, synchronous.count)\n        for (lhs, rhs) in zip(asynchronous, synchronous) {\n            XCTAssertEqual(lhs.x, rhs.x, accuracy: 0.0001)\n            XCTAssertEqual(lhs.y, rhs.y, accuracy: 0.0001)\n            XCTAssertEqual(lhs.z, rhs.z, accuracy: 0.0001)\n        }\n    }\n\n''' + anchor
+          if text.count(anchor) != 1:
+              raise SystemExit(f'test anchor count={text.count(anchor)}')
+          text = text.replace(anchor, addition, 1)
+          tests.write_text(text, encoding='utf-8')
+          PY
+          git diff --check
+          git status --short
+      - name: Commit implementation
+        shell: bash
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add splat-native-ios/SplatNative/SplatViewerCameraDatasetLoader.swift \
+                  splat-native-ios/SplatNative/SplatViewer.swift \
+                  splat-native-ios/SplatNativeTests/SplatViewerCameraDatasetLoaderTests.swift
+          git commit -m "Move viewer camera metadata decode off MainActor"
+          git push origin HEAD:feature/splat-post-build17-p1
