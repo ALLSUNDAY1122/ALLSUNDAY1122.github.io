@@ -140,9 +140,10 @@ private struct SplatSeedColorAccumulator {
             let cost = samples.reduce(into: 0) { partial, other in
                 partial += colorDistanceSquared(candidate, other)
             }
-            // Keep the earliest/best-geometry observation on an exact tie. Assignment insertion
-            // order is deterministic and already ranks equal projection scores by frame index.
-            if cost < bestCost {
+            // `grouped` resolves source frames through a Dictionary, whose iteration order is not
+            // part of the contract. Never make an exact medoid tie depend on append order; use a
+            // stable RGB ordering so identical inputs produce identical seeds across launches.
+            if cost < bestCost || (cost == bestCost && colorPrecedes(candidate, best)) {
                 bestCost = cost
                 best = candidate
             }
@@ -155,6 +156,12 @@ private struct SplatSeedColorAccumulator {
         let dg = Int(lhs.green) - Int(rhs.green)
         let db = Int(lhs.blue) - Int(rhs.blue)
         return dr * dr + dg * dg + db * db
+    }
+
+    private func colorPrecedes(_ lhs: SplatSeedSample, _ rhs: SplatSeedSample) -> Bool {
+        if lhs.red != rhs.red { return lhs.red < rhs.red }
+        if lhs.green != rhs.green { return lhs.green < rhs.green }
+        return lhs.blue < rhs.blue
     }
 }
 
