@@ -68,7 +68,7 @@ jobs:
           from pathlib import Path
           s=Path('fp3-manabi-sprint/ios/App.swift').read_text(encoding='utf-8')
           required=[
-            'jp.allsunday1122.fp3manabisprint.premium',
+            'com.allsunday1122.fp3kakomoncoach.premium.lifetime',
             'window.__nativeStoreKitUpdate',
             "post('purchase')", "post('restore')",
             "String(q.year)==='2026'",
@@ -81,6 +81,8 @@ jobs:
           ]
           missing=[x for x in required if x not in s]
           if missing: raise SystemExit('missing premium-boundary markers: '+repr(missing))
+          if 'jp.allsunday1122.fp3manabisprint.premium' in s:
+              raise SystemExit('stale StoreKit product ID drift detected')
           if 'if(state.premium && typeof originalBalanced12' not in s:
               raise SystemExit('premium 12-question path missing')
           if 'if(!state.premium && premiumTarget(el))' not in s:
