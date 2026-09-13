@@ -100,6 +100,8 @@ extension ScanLabBackend {
                 from: resultURL,
                 maximumBytes: ScanLabConfig.maximumAssetBytes
             )
+        } catch is CancellationError {
+            throw CancellationError()
         } catch ScanLabPublishPackageError.sourceTooLarge {
             throw ScanLabBackendError.assetTooLarge
         } catch {
