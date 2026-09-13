@@ -48,6 +48,27 @@ final class MeshTextReferenceOptionTests: XCTestCase {
         XCTAssertEqual(try MeshTextReferenceRewriter.firstReference(in: mtl, directive: "map_Kd"), "texture.jpg")
     }
 
+    func testWindowsRelativeReferencesAreNormalizedForIOSFileLookup() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-reference-windows-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let obj = root.appendingPathComponent("mesh.obj")
+        let mtl = root.appendingPathComponent("mesh.mtl")
+        try "mtllib materials\\scan.mtl\nv 0 0 0\n".write(to: obj, atomically: true, encoding: .utf8)
+        try "newmtl scan\nmap_Kd textures\\base.jpg\n".write(to: mtl, atomically: true, encoding: .utf8)
+
+        XCTAssertEqual(
+            try MeshTextReferenceRewriter.firstReference(in: obj, directive: "mtllib"),
+            "materials/scan.mtl"
+        )
+        XCTAssertEqual(
+            try MeshTextReferenceRewriter.firstReference(in: mtl, directive: "map_Kd"),
+            "textures/base.jpg"
+        )
+    }
+
     func testMapKdRewriteStillReplacesWholeDirectiveWithEditedTexture() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mesh-text-reference-rewrite-\(UUID().uuidString)", isDirectory: true)
