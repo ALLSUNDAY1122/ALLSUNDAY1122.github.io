@@ -385,6 +385,7 @@ final class SplatViewerState: ObservableObject {
 
     private var sourceURL: URL?
     private var persistenceTask: Task<Void, Never>?
+    private var measurementScaleTask: Task<Void, Never>?
     private var metersPerSceneUnit: Float = 1
     private var persistenceWarningMessage: String?
 
@@ -402,8 +403,19 @@ final class SplatViewerState: ObservableObject {
         } else {
             persistenceTask?.cancel()
         }
+        measurementScaleTask?.cancel()
         sourceURL = url
-        metersPerSceneUnit = Self.measurementScale(for: url)
+        // `transforms.json` is allowed to be tens of MiB. Keep attach/UI responsiveness independent
+        // of trajectory size: use a conservative scale until the bounded background decoder returns,
+        // then apply it only if this scan is still current.
+        metersPerSceneUnit = 1
+        measurementScaleTask = Task { [weak self] in
+            let positions = await SplatViewerCameraDatasetLoader.cameraPositionsAsync(for: url)
+            guard !Task.isCancelled, let self, self.sourceURL == url else { return }
+            self.metersPerSceneUnit = SplatSceneNormalization(
+                cameraPositions: positions
+            ).metersPerSceneUnit
+        }
         measurementEnabled = false
         measurementText = "画面上の2点を順番にタップしてください"
         errorMessage = nil
@@ -473,10 +485,5 @@ final class SplatViewerState: ObservableObject {
         cropXMin = value.cropXMin; cropXMax = value.cropXMax
         cropYMin = value.cropYMin; cropYMax = value.cropYMax
         cropZMin = value.cropZMin; cropZMax = value.cropZMax
-    }
-
-    private static func measurementScale(for splatURL: URL) -> Float {
-        let positions = SplatViewerCameraDatasetLoader.cameraPositions(for: splatURL)
-        return SplatSceneNormalization(cameraPositions: positions).metersPerSceneUnit
     }
 }
