@@ -228,6 +228,41 @@ final class MeshPointCloudExportServiceTests: XCTestCase {
         }
     }
 
+    func testPLYKeepsTextureColorWhenFaceHasInlineComment() throws {
+        let root = try temporaryRoot("mesh-pointcloud-face-inline-comment")
+        defer { try? FileManager.default.removeItem(at: root) }
+        try writeSolidPNG(to: root.appendingPathComponent("atlas.png"), rgba: [40, 120, 220, 255])
+        try "map_Kd atlas.png\n"
+            .write(to: root.appendingPathComponent("capture.mtl"), atomically: true, encoding: .utf8)
+        let obj = root.appendingPathComponent("capture.obj")
+        try """
+        mtllib capture.mtl
+        v 0 0 0 # captured corner A
+        v 1 0 0 # captured corner B
+        v 0 1 0 # captured corner C
+        vt 0.5 0.5 # uv A
+        vt 0.5 0.5 # uv B
+        vt 0.5 0.5 # uv C
+        f 1/1 2/2 3/3 # valid textured triangle; comment is not a fourth corner
+        """.write(to: obj, atomically: true, encoding: .utf8)
+
+        let output = root.appendingPathComponent("capture.ply")
+        try MeshPointCloudExportService.exportPLY(sourceOBJ: obj, outputURL: output)
+        let data = try Data(contentsOf: output)
+        let marker = Data("end_header\n".utf8)
+        guard let range = data.range(of: marker) else { return XCTFail("Missing PLY header terminator") }
+        let header = String(decoding: data[..<range.upperBound], as: UTF8.self)
+        XCTAssertTrue(header.contains("element vertex 3"))
+        XCTAssertTrue(header.contains("property uchar red"), "Inline face comments must not discard texture RGB")
+
+        let body = data[range.upperBound...]
+        XCTAssertEqual(body.count, 3 * 15)
+        for record in 0..<3 {
+            let colorOffset = body.startIndex + record * 15 + 12
+            XCTAssertEqual(Array(body[colorOffset..<colorOffset + 3]), [40, 120, 220])
+        }
+    }
+
     func testLASBoundsRemainExactAfterSinglePassComputation() throws {
         let root = try temporaryRoot("mesh-pointcloud-las-bounds")
         defer { try? FileManager.default.removeItem(at: root) }
