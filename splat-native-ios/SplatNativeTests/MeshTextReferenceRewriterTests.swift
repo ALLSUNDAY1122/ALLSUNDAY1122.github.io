@@ -23,11 +23,12 @@ final class MeshTextReferenceRewriterTests: XCTestCase {
         XCTAssertFalse(rewritten.contains("original material.mtl"))
     }
 
-    func testDiffuseRewriteChangesOnlyFirstMaterialTexture() throws {
+    func testDiffuseRewriteRebasesSecondaryMaterialTexture() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let source = root.appendingPathComponent("source.mtl")
-        let output = root.appendingPathComponent("output.mtl")
+        let generation = try makeGenerationDirectory(in: root)
+        let output = generation.appendingPathComponent("output.mtl")
         let secondMap = "map_Kd -s 2 2 1 \"second diffuse.jpg\""
         let payload = "newmtl primary\nmap_Kd first.jpg\nnewmtl secondary\n\(secondMap)\n"
         try Data(payload.utf8).write(to: source)
@@ -41,16 +42,17 @@ final class MeshTextReferenceRewriterTests: XCTestCase {
 
         let rewritten = try String(contentsOf: output, encoding: .utf8)
         XCTAssertTrue(rewritten.contains("map_Kd edited.jpg\n"))
-        XCTAssertTrue(rewritten.contains("\(secondMap)\n"))
+        XCTAssertTrue(rewritten.contains("map_Kd -s 2 2 1 \"../../second diffuse.jpg\"\n"))
         XCTAssertFalse(rewritten.contains("map_Kd first.jpg"))
         XCTAssertEqual(rewritten.components(separatedBy: "map_Kd ").count - 1, 2)
     }
 
-    func testMaterialRewritePreservesSecondaryLibraryLines() throws {
+    func testMaterialRewriteRebasesSecondaryLibraryLines() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let source = root.appendingPathComponent("source.obj")
-        let output = root.appendingPathComponent("output.obj")
+        let generation = try makeGenerationDirectory(in: root)
+        let output = generation.appendingPathComponent("output.obj")
         let payload = "mtllib primary.mtl\nmtllib secondary.mtl\nusemtl secondary\nv 0 0 0\n"
         try Data(payload.utf8).write(to: source)
 
@@ -64,16 +66,17 @@ final class MeshTextReferenceRewriterTests: XCTestCase {
 
         let rewritten = try String(contentsOf: output, encoding: .utf8)
         XCTAssertTrue(rewritten.contains("mtllib edited-primary.mtl\n"))
-        XCTAssertTrue(rewritten.contains("mtllib secondary.mtl\n"))
+        XCTAssertTrue(rewritten.contains("mtllib ../../secondary.mtl\n"))
         XCTAssertTrue(rewritten.contains("usemtl secondary\n"))
         XCTAssertEqual(rewritten.components(separatedBy: "mtllib ").count - 1, 2)
     }
 
-    func testQuotedMultiLibraryLineRetainsUneditedLibraries() throws {
+    func testQuotedMultiLibraryLineRebasesUneditedLibraries() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let source = root.appendingPathComponent("source.obj")
-        let output = root.appendingPathComponent("output.obj")
+        let generation = try makeGenerationDirectory(in: root)
+        let output = generation.appendingPathComponent("output.obj")
         let payload = "mtllib \"primary material.mtl\" \"secondary material.mtl\"\nusemtl secondary\n"
         try Data(payload.utf8).write(to: source)
 
@@ -86,7 +89,7 @@ final class MeshTextReferenceRewriterTests: XCTestCase {
         ))
 
         let rewritten = try String(contentsOf: output, encoding: .utf8)
-        XCTAssertTrue(rewritten.contains("mtllib edited-primary.mtl \"secondary material.mtl\"\n"))
+        XCTAssertTrue(rewritten.contains("mtllib edited-primary.mtl \"../../secondary material.mtl\"\n"))
         XCTAssertTrue(rewritten.contains("usemtl secondary\n"))
         XCTAssertFalse(rewritten.contains("primary material.mtl"))
     }
@@ -164,5 +167,13 @@ final class MeshTextReferenceRewriterTests: XCTestCase {
             .appendingPathComponent("MeshTextReferenceRewriterTests-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         return root
+    }
+
+    private func makeGenerationDirectory(in root: URL) throws -> URL {
+        let generation = root
+            .appendingPathComponent("EditGenerations", isDirectory: true)
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: generation, withIntermediateDirectories: true)
+        return generation
     }
 }
