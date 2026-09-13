@@ -1,4 +1,5 @@
 import AVFoundation
+import CoreMedia
 import CoreVideo
 import Foundation
 
@@ -10,6 +11,7 @@ enum SplatVideoOutputValidator {
         case missingVideoTrack
         case invalidVideoDimensions
         case unexpectedVideoDimensions
+        case unexpectedColorProperties
         case invalidDuration
         case unexpectedlyShortDuration
         case undecodableVideoFrame
@@ -95,6 +97,24 @@ enum SplatVideoOutputValidator {
                   encodedHeight == expectedDimensions.height else {
                 throw ValidationError.unexpectedVideoDimensions
             }
+        }
+
+        // Scan Lab's SDR video contract is explicit BT.709. A valid H.264 container with missing or
+        // conflicting primaries/transfer/matrix metadata can decode but appear materially different
+        // between Photos, QuickTime and social upload pipelines. Reject that output before Share.
+        let formatDescriptions = try await videoTrack.load(.formatDescriptions)
+        try Task.checkCancellation()
+        guard let formatDescription = formatDescriptions.first else {
+            throw ValidationError.unexpectedColorProperties
+        }
+        let formatExtensions = CMFormatDescriptionGetExtensions(formatDescription) as NSDictionary
+        guard formatExtensions[kCMFormatDescriptionExtension_ColorPrimaries] as? String ==
+                kCMFormatDescriptionColorPrimaries_ITU_R_709_2 as String,
+              formatExtensions[kCMFormatDescriptionExtension_TransferFunction] as? String ==
+                kCMFormatDescriptionTransferFunction_ITU_R_709_2 as String,
+              formatExtensions[kCMFormatDescriptionExtension_YCbCrMatrix] as? String ==
+                kCMFormatDescriptionYCbCrMatrix_ITU_R_709_2 as String else {
+            throw ValidationError.unexpectedColorProperties
         }
 
         let duration = try await asset.load(.duration)
