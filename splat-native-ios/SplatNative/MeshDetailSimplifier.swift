@@ -84,7 +84,8 @@ enum MeshDetailSimplifierEngine {
         var faces: [DetailFace] = []
 
         try forEachOBJLine(at: url) { line in
-            let fields = line.split(whereSeparator: \.isWhitespace)
+            let content = line[..<(line.firstIndex(of: "#") ?? line.endIndex)]
+            let fields = content.split(whereSeparator: \.isWhitespace)
             guard let directive = fields.first else { return }
             if directive == "mtllib" || directive == "usemtl" || directive == "vt" {
                 throw error("テクスチャ付きMeshの軽量化は色を失うため実行できません。元Meshを保持します")
@@ -121,7 +122,6 @@ enum MeshDetailSimplifierEngine {
                 var previousIndex: Int?
                 var faceVertexCount = 0
                 for token in fields.dropFirst() {
-                    if token.hasPrefix("#") { break }
                     let vertexToken: Substring
                     if let slash = token.firstIndex(of: "/") {
                         vertexToken = token[..<slash]
