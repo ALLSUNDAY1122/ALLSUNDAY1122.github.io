@@ -105,6 +105,7 @@ jobs:
           grep -q 'SplatResourceGuardAdaptiveTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatSeedColorizerMultiViewTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatSkySeederDedupTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatSkyGeometryRejectionTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'ScanLabSessionPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'ScanLabPublishPackageTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'ScanLabGeotagPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
@@ -141,6 +142,7 @@ jobs:
             -only-testing:SplatNativeTests/SplatResourceGuardAdaptiveTests \
             -only-testing:SplatNativeTests/SplatSeedColorizerMultiViewTests \
             -only-testing:SplatNativeTests/SplatSkySeederDedupTests \
+            -only-testing:SplatNativeTests/SplatSkyGeometryRejectionTests \
             -only-testing:SplatNativeTests/ScanProjectStoreTests \
             -only-testing:SplatNativeTests/ScanColdResumePersistenceTests \
             -only-testing:SplatNativeTests/ScanPersistenceIntegrationTests \
