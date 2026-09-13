@@ -1,0 +1,83 @@
+name: APP Factory Release Readback
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: app-factory-release-readback
+  cancel-in-progress: true
+
+jobs:
+  readback:
+    if: github.event_name == 'workflow_dispatch' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP-FACTORY] Release Readback')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Fresh read-only App Store Connect release state
+        id: probe
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          FACTORY_RELEASE_RESULT: factory-release-readback.json
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/app_factory_release_readback.py 2>&1 | tee /tmp/factory-release-readback.log
+      - name: Build concise canonical summary
+        id: summary
+        if: always() && hashFiles('factory-release-readback.json') != ''
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          d=json.loads(Path('factory-release-readback.json').read_text(encoding='utf-8'))
+          lines=[f"completed_at={d.get('completed_at')} read_only={d.get('read_only')}"]
+          for label in ('touhan','hm2','hm1','pharmacist'):
+              s=((d.get('apps') or {}).get(label) or {}).get('summary') or {}
+              iaps=','.join(f"{x.get('product_id')}={x.get('state')}" for x in (s.get('iaps') or [])) or 'none'
+              lines.append(
+                  f"{label}: latest={s.get('latest_build')} state={s.get('latest_processing_state')} expired={s.get('latest_expired')} "
+                  f"audience={s.get('latest_audience')} | version={s.get('version_string')}:{s.get('version_state')} "
+                  f"selected={s.get('selected_build')} selected_audience={s.get('selected_build_audience')} | iap={iaps}"
+              )
+          summary='\n'.join(lines)
+          print(summary)
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write('text<<APP_FACTORY_EOF\n'+summary+'\nAPP_FACTORY_EOF\n')
+          PY
+      - name: Upload release-readback evidence
+        if: always() && hashFiles('factory-release-readback.json') != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: app-factory-release-readback
+          path: |
+            factory-release-readback.json
+            /tmp/factory-release-readback.log
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report run
+        if: github.event_name == 'issues' && always()
+        uses: actions/github-script@v8
+        env:
+          READBACK_SUMMARY: ${{ steps.summary.outputs.text }}
+        with:
+          script: |
+            const summary = process.env.READBACK_SUMMARY || 'summary unavailable';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Read-only release readback finished. status=${{ job.status }}; run_id=${context.runId}\n\n\`\`\`text\n${summary}\n\`\`\``
+            });
