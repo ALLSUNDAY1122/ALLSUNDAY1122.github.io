@@ -50,7 +50,7 @@ extension SplatCanonicalSHAsset {
         targetURL: URL,
         expectedPointCount: Int
     ) throws -> Asset {
-        let candidate = try inspectPLY(temporaryURL)
+        let candidate = try inspectPLYStrictHeader(temporaryURL)
         guard candidate.pointCount == expectedPointCount else {
             throw CanonicalError.pointCountMismatch(expected: expectedPointCount, actual: candidate.pointCount)
         }
@@ -62,7 +62,7 @@ extension SplatCanonicalSHAsset {
         }
 
         if FileManager.default.fileExists(atPath: targetURL.path) {
-            if let existing = try? inspectPLY(targetURL),
+            if let existing = try? inspectPLYStrictHeader(targetURL),
                existing.pointCount == expectedPointCount,
                existing.shDegree == requiredSHDegree,
                hasCompleteVertexPayload(at: targetURL, expectedPointCount: expectedPointCount) {
@@ -89,13 +89,78 @@ extension SplatCanonicalSHAsset {
         forLegacySplat legacySplatURL: URL,
         expectedPointCount: Int
     ) -> Asset? {
-        guard let asset = existingAsset(
-            forLegacySplat: legacySplatURL,
-            expectedPointCount: expectedPointCount
-        ), hasCompleteVertexPayload(at: asset.url, expectedPointCount: expectedPointCount) else {
+        guard let url = try? canonicalURL(forLegacySplat: legacySplatURL),
+              FileManager.default.fileExists(atPath: url.path),
+              let descriptor = try? inspectPLYStrictHeader(url),
+              descriptor.shDegree == requiredSHDegree,
+              descriptor.pointCount == expectedPointCount,
+              hasCompleteVertexPayload(at: url, expectedPointCount: expectedPointCount) else {
             return nil
         }
-        return asset
+        return Asset(url: url, descriptor: descriptor)
+    }
+
+    /// Parses the canonical PLY schema only after finding `end_header` as a complete header line.
+    /// The legacy schema parser searches for the raw byte token and can therefore stop inside a
+    /// comment such as `comment end_header marker`, rejecting an otherwise valid canonical asset.
+    static func inspectPLYStrictHeader(_ url: URL) throws -> Descriptor {
+        guard url.isFileURL,
+              FileManager.default.fileExists(atPath: url.path) else {
+            throw CanonicalError.sourceMissing
+        }
+
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        guard let data = try handle.read(upToCount: 128 * 1024),
+              !data.isEmpty,
+              let markerRange = endHeaderLineRange(in: data) else {
+            throw CanonicalError.invalidPLYHeader
+        }
+        let headerData = data.prefix(upTo: markerRange.upperBound)
+        guard let header = String(data: headerData, encoding: .utf8),
+              header.hasPrefix("ply") else {
+            throw CanonicalError.invalidPLYHeader
+        }
+
+        var pointCount: Int?
+        var dcIndices = Set<Int>()
+        var restIndices = Set<Int>()
+        for rawLine in header.split(whereSeparator: { $0.isNewline }) {
+            let line = String(rawLine)
+            if line.hasPrefix("element vertex ") {
+                pointCount = Int(line.dropFirst("element vertex ".count))
+            } else if line.hasPrefix("property float f_dc_") {
+                if let index = Int(line.dropFirst("property float f_dc_".count)) {
+                    dcIndices.insert(index)
+                }
+            } else if line.hasPrefix("property float f_rest_") {
+                if let index = Int(line.dropFirst("property float f_rest_".count)) {
+                    restIndices.insert(index)
+                }
+            }
+        }
+
+        guard let pointCount, pointCount > 0, dcIndices == Set([0, 1, 2]) else {
+            throw CanonicalError.invalidPLYHeader
+        }
+        let restCount = restIndices.count
+        if restCount > 0, restIndices != Set(0..<restCount) {
+            throw CanonicalError.invalidPLYHeader
+        }
+
+        let degree: UInt
+        switch restCount {
+        case 0: degree = 0
+        case 9: degree = 1
+        case 24: degree = 2
+        case 45: degree = 3
+        default: throw CanonicalError.unsupportedSHLayout(restCount)
+        }
+        return Descriptor(
+            pointCount: pointCount,
+            shDegree: degree,
+            higherOrderPropertyCount: restCount
+        )
     }
 
     /// Validates that a binary PLY contains at least the full declared vertex payload.
