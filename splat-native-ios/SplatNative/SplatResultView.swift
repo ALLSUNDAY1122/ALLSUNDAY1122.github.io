@@ -150,7 +150,7 @@ struct SplatResultView: View {
 
             toolPanel
 
-            if selectedTool == .crop || selectedTool == .adjust {
+            if selectedTool != .measure {
                 HStack(spacing: 10) {
                     Button {
                         undoEdit()
