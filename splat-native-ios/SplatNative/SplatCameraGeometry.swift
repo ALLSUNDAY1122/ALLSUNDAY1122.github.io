@@ -137,7 +137,7 @@ enum SplatCameraGeometry {
         // and export aspect fitter while still preventing unbounded persisted values.
         let safeCenter = isFinite(center) ? center : .zero
         let safeDistance = distance.isFinite ? min(maximumCameraDistance, max(0.35, distance)) : 2.5
-        let safeYaw = yaw.isFinite ? yaw : 0
+        let safeYaw = normalizedAngle(yaw)
         let safePitch = pitch.isFinite
             ? min(maximumOrbitPitch, max(-maximumOrbitPitch, pitch))
             : 0
@@ -204,7 +204,7 @@ enum SplatCameraGeometry {
 
     static func rotationZ(_ angle: Float) -> simd_float4x4 {
         // Display-correction state should never be able to poison an otherwise valid camera matrix.
-        let safeAngle = angle.isFinite ? angle : 0
+        let safeAngle = normalizedAngle(angle)
         let c = cos(safeAngle), s = sin(safeAngle)
         return simd_float4x4(columns: (
             SIMD4<Float>(c, s, 0, 0),
@@ -212,6 +212,16 @@ enum SplatCameraGeometry {
             SIMD4<Float>(0, 0, 1, 0),
             SIMD4<Float>(0, 0, 0, 1)
         ))
+    }
+
+    /// Persisted/gesture angles are periodic, but a corrupt finite value can still be enormous.
+    /// Reduce it before trigonometric evaluation so viewer/video camera matrices do not depend on
+    /// low-order precision lost while range-reducing a Float close to its maximum magnitude.
+    private static func normalizedAngle(_ value: Float) -> Float {
+        guard value.isFinite else { return 0 }
+        let fullTurn = Float.pi * 2
+        let normalized = value.truncatingRemainder(dividingBy: fullTurn)
+        return normalized.isFinite ? normalized : 0
     }
 
     private static func median(ofSorted values: [Float]) -> Float {
