@@ -17,6 +17,22 @@ final class MeshTextReferenceOptionTests: XCTestCase {
         )
     }
 
+    func testQuotedMaterialLibraryWithInlineCommentReturnsActualFilename() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mesh-material-reference-options-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let obj = root.appendingPathComponent("mesh.obj")
+        try "mtllib \"scan material.mtl\" # exported material\nv 0 0 0\n"
+            .write(to: obj, atomically: true, encoding: .utf8)
+
+        XCTAssertEqual(
+            try MeshTextReferenceRewriter.firstReference(in: obj, directive: "mtllib"),
+            "scan material.mtl"
+        )
+    }
+
     func testMapKdRewriteStillReplacesWholeDirectiveWithEditedTexture() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mesh-text-reference-rewrite-\(UUID().uuidString)", isDirectory: true)
