@@ -14,6 +14,8 @@ struct SplatResultView: View {
     @State private var preferredViewerResolutionTask: Task<Void, Never>?
     @State private var reprocessPreparationTask: Task<Void, Never>?
     @State private var isPreparingReprocess = false
+    @State private var editHistory = SplatEditHistory()
+    @State private var editHistoryTask: Task<Void, Never>?
 
     private enum ViewerTool: String, CaseIterable, Hashable {
         case view = "見る"
@@ -49,18 +51,23 @@ struct SplatResultView: View {
         .background(Color.black)
         .onAppear {
             viewerState.attach(url: url)
+            editHistory.reset(to: viewerState.editSettings)
             resolvePreferredViewerAsset(for: url)
         }
         .onChange(of: url) { _, newURL in
             reprocessPreparationTask?.cancel()
             reprocessPreparationTask = nil
             isPreparingReprocess = false
+            editHistoryTask?.cancel()
+            editHistoryTask = nil
             preferredViewerURL = nil
             viewerState.attach(url: newURL)
+            editHistory.reset(to: viewerState.editSettings)
             resolvePreferredViewerAsset(for: newURL)
         }
         .onChange(of: viewerState.editSettings) { _, _ in
             viewerState.schedulePersistence()
+            scheduleEditHistoryCommit()
         }
         .onChange(of: viewerState.measurementEnabled) { _, _ in
             viewerState.requestMeasurementClear()
@@ -76,10 +83,14 @@ struct SplatResultView: View {
             isPreparingReprocess = false
             preferredViewerResolutionTask?.cancel()
             preferredViewerResolutionTask = nil
+            editHistoryTask?.cancel()
+            editHistoryTask = nil
+            editHistory.commit(viewerState.editSettings)
             viewerState.persistNow()
         }
         .confirmationDialog("新しい撮影を開始しますか？", isPresented: $confirmNewScan, titleVisibility: .visible) {
             Button("保存したまま新しい撮影へ") {
+                editHistory.commit(viewerState.editSettings)
                 viewerState.persistNow()
                 model.returnHomePreservingProject()
             }
@@ -139,6 +150,27 @@ struct SplatResultView: View {
 
             toolPanel
 
+            if selectedTool == .crop || selectedTool == .adjust {
+                HStack(spacing: 10) {
+                    Button {
+                        undoEdit()
+                    } label: {
+                        Label("元に戻す", systemImage: "arrow.uturn.backward")
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!canUndoEdit)
+
+                    Button {
+                        redoEdit()
+                    } label: {
+                        Label("やり直す", systemImage: "arrow.uturn.forward")
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!canRedoEdit)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
             if let warning = viewerState.warningMessage {
                 Label(warning, systemImage: "exclamationmark.triangle.fill")
                     .font(.caption)
@@ -160,6 +192,7 @@ struct SplatResultView: View {
                 .disabled(isPreparingReprocess)
 
                 Button {
+                    editHistory.commit(viewerState.editSettings)
                     viewerState.persistNow()
                     showingShare = true
                 } label: {
@@ -271,6 +304,43 @@ struct SplatResultView: View {
         }
     }
 
+    private var canUndoEdit: Bool {
+        editHistory.canUndo || viewerState.editSettings != editHistory.current
+    }
+
+    private var canRedoEdit: Bool {
+        viewerState.editSettings == editHistory.current && editHistory.canRedo
+    }
+
+    private func scheduleEditHistoryCommit() {
+        editHistoryTask?.cancel()
+        let snapshot = viewerState.editSettings
+        editHistoryTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            guard !Task.isCancelled else { return }
+            editHistory.commit(snapshot)
+            editHistoryTask = nil
+        }
+    }
+
+    private func undoEdit() {
+        editHistoryTask?.cancel()
+        editHistoryTask = nil
+        editHistory.commit(viewerState.editSettings)
+        guard let settings = editHistory.undo() else { return }
+        viewerState.applyHistorySettings(settings)
+        viewerState.persistNow()
+    }
+
+    private func redoEdit() {
+        editHistoryTask?.cancel()
+        editHistoryTask = nil
+        guard viewerState.editSettings == editHistory.current,
+              let settings = editHistory.redo() else { return }
+        viewerState.applyHistorySettings(settings)
+        viewerState.persistNow()
+    }
+
     private func beginProtectedReprocess(_ action: @escaping @MainActor () -> Void) {
         guard !isPreparingReprocess else { return }
         reprocessError = nil
@@ -291,6 +361,7 @@ struct SplatResultView: View {
                 // until compatibility has been established.
                 _ = try ScanProjectStore().loadManifest(projectURL: projectURL)
                 try Task.checkCancellation()
+                editHistory.commit(viewerState.editSettings)
                 viewerState.persistNow()
                 try await SplatPreviousResultEvidence.preserveBeforeReprocessAsync(sourceURL: sourceURL)
                 try Task.checkCancellation()
