@@ -8,6 +8,7 @@ import simd
 
 enum SplatVideoExporter {
     static let renderPixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
+    static let renderFovY: Float = 55 * .pi / 180
     static let videoColorProperties: [String: String] = [
         AVVideoColorPrimariesKey: AVVideoColorPrimaries_ITU_R_709_2,
         AVVideoTransferFunctionKey: AVVideoTransferFunction_ITU_R_709_2,
@@ -74,6 +75,9 @@ enum SplatVideoExporter {
             throw ExportError.commandQueueUnavailable
         }
 
+        // Apply persisted edits while streaming the source asset. When crop/exposure/contrast is
+        // active this avoids keeping a complete unedited scene alive beside the edited render array.
+        // Identity exports retain the direct readAll path inside the materializer for throughput.
         let points = try await SplatPersistedEditMaterializer.materializeStreamingCancellable(
             sourceURL: sourceURL,
             assetURL: admission.renderAssetURL,
@@ -214,7 +218,7 @@ enum SplatVideoExporter {
         let frameDuration = CMTime(value: 1, timescale: CMTimeScale(configuration.framesPerSecond))
         let baseDistance = SplatCameraGeometry.aspectFittedDistance(
             framing: framing,
-            fovY: .pi / 3,
+            fovY: renderFovY,
             aspect: Float(dimensions.width) / Float(dimensions.height)
         )
         let totalFrames = configuration.totalFrames
@@ -257,7 +261,7 @@ enum SplatVideoExporter {
                 pitch: camera.pitch
             )
             let projection = SplatCameraGeometry.perspective(
-                fovY: .pi / 3,
+                fovY: renderFovY,
                 aspect: Float(dimensions.width) / Float(dimensions.height),
                 near: 0.01,
                 far: 100
