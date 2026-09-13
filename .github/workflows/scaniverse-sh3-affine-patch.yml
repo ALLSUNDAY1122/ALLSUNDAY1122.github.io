@@ -2,10 +2,8 @@ name: Scaniverse SH3 affine parity patch
 
 on:
   push:
-    branches:
-      - feature/splat-post-build17-p1
-    paths:
-      - .github/scaniverse-sh3-affine-trigger
+    branches: [feature/splat-post-build17-p1]
+    paths: [.github/scaniverse-sh3-affine-trigger]
 
 permissions:
   contents: write
@@ -19,13 +17,15 @@ jobs:
         with:
           ref: feature/splat-post-build17-p1
           fetch-depth: 0
-      - name: Apply exact SH3 affine parity patch
+      - name: Apply guarded SH3 affine parity patch
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
-          helper = '''import SplatIO
+          helper = '''import Foundation
+          import SplatIO
           import simd
 
           enum SplatColorAdjustment {
@@ -43,14 +43,10 @@ jobs:
                   switch color {
                   case .sphericalHarmonicFloat(var coefficients):
                       guard !coefficients.isEmpty else { return color }
-
-                      // Exposure + contrast is affine before display clamping:
-                      // y = (2^EV * x - 0.5) * contrast + 0.5
-                      //   = linearGain * x + bias.
-                      // Preserve the complete view-dependent SH field by scaling every higher-order
-                      // coefficient with the linear term and applying the constant offset only to DC.
-                      // Do not clamp DC here: clamping before SH evaluation would destroy directional
-                      // variation. The renderer remains responsible for final display-domain clipping.
+                      // The edit is affine before display clipping. Scale every directional
+                      // SH coefficient by the linear term; apply the constant bias to DC only.
+                      // Clamping DC here would destroy view-dependent variation, so final
+                      // display clipping remains the renderer's responsibility.
                       let affineBase = base * linearGain + SIMD3<Float>(repeating: bias)
                       coefficients[0] = (affineBase - midpoint) * SplatPoint.Color.INV_SH_C0
                       if coefficients.count > 1 {
@@ -79,13 +75,23 @@ jobs:
           '''
           Path('splat-native-ios/SplatNative/SplatColorAdjustment.swift').write_text(helper, encoding='utf-8')
 
-          old_setup = '''        let exposureGain = Float(pow(2.0, settings.exposureEV))\n        let contrast = Float(settings.contrast)\n        let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001'''
+          setup = '''        let exposureGain = Float(pow(2.0, settings.exposureEV))\n        let contrast = Float(settings.contrast)\n        let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001'''
           new_setup = '''        let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001'''
-
-          old_color = '''            var edited = point\n            let base = point.color.asSRGBFloat\n            let exposed = base * exposureGain\n            let midpoint = SIMD3<Float>(repeating: 0.5)\n            let adjusted = simd_clamp((exposed - midpoint) * contrast + midpoint, .zero, .one)\n\n            switch point.color {\n            case .sphericalHarmonicFloat(var coefficients):\n                if !coefficients.isEmpty {\n                    coefficients[0] = (adjusted - midpoint) * SplatPoint.Color.INV_SH_C0\n                    edited.color = .sphericalHarmonicFloat(coefficients)\n                }\n            case .sRGBUInt8:\n                edited.color = .sRGBUInt8(SIMD3<UInt8>(\n                    byte(adjusted.x), byte(adjusted.y), byte(adjusted.z)\n                ))\n            }'''
-          new_color = '''            var edited = point\n            edited.color = SplatColorAdjustment.apply(\n                point.color,\n                exposureEV: settings.exposureEV,\n                contrast: settings.contrast\n            )'''
-
-          old_cancel_color = '''            var edited = point\n            let base = point.color.asSRGBFloat\n            let exposed = base * exposureGain\n            let midpoint = SIMD3<Float>(repeating: 0.5)\n            let adjusted = simd_clamp((exposed - midpoint) * contrast + midpoint, .zero, .one)\n            switch point.color {\n            case .sphericalHarmonicFloat(var coefficients):\n                if !coefficients.isEmpty {\n                    coefficients[0] = (adjusted - midpoint) * SplatPoint.Color.INV_SH_C0\n                    edited.color = .sphericalHarmonicFloat(coefficients)\n                }\n            case .sRGBUInt8:\n                edited.color = .sRGBUInt8(SIMD3<UInt8>(\n                    cancellableByte(adjusted.x),\n                    cancellableByte(adjusted.y),\n                    cancellableByte(adjusted.z)\n                ))\n            }'''
+          block = re.compile(
+              r'            var edited = point\n'
+              r'            let base = point\.color\.asSRGBFloat\n'
+              r'            let exposed = base \* exposureGain\n'
+              r'.*?'
+              r'            result\.append\(edited\)',
+              re.DOTALL,
+          )
+          replacement = '''            var edited = point
+              edited.color = SplatColorAdjustment.apply(
+                  point.color,
+                  exposureEV: settings.exposureEV,
+                  contrast: settings.contrast
+              )
+              result.append(edited)'''
 
           paths = [
               Path('splat-native-ios/SplatNative/SplatViewer.swift'),
@@ -94,16 +100,16 @@ jobs:
           ]
           for p in paths:
               text = p.read_text(encoding='utf-8')
-              if text.count(old_setup) != 1:
-                  raise SystemExit(f'{p}: expected exactly one setup block, found {text.count(old_setup)}')
-              text = text.replace(old_setup, new_setup, 1)
-              old = old_cancel_color if 'Cancellation' in p.name else old_color
-              if text.count(old) != 1:
-                  raise SystemExit(f'{p}: expected exactly one color block, found {text.count(old)}')
-              text = text.replace(old, new_color, 1)
+              if text.count(setup) != 1:
+                  raise SystemExit(f'{p}: setup count={text.count(setup)}')
+              if len(block.findall(text)) != 1:
+                  raise SystemExit(f'{p}: color block count={len(block.findall(text))}')
+              text = text.replace(setup, new_setup, 1)
+              text = block.sub(replacement, text, count=1)
               p.write_text(text, encoding='utf-8')
 
-          tests = '''import SplatIO
+          tests = '''import Foundation
+          import SplatIO
           import XCTest
           import simd
 
@@ -121,16 +127,10 @@ jobs:
                   let gain = Float(pow(2.0, exposureEV) * contrast)
                   let bias = Float(0.5 * (1 - contrast))
                   let midpoint = SIMD3<Float>(repeating: 0.5)
-
-                  let result = SplatColorAdjustment.apply(
-                      color,
-                      exposureEV: exposureEV,
-                      contrast: contrast
-                  )
+                  let result = SplatColorAdjustment.apply(color, exposureEV: exposureEV, contrast: contrast)
                   guard case .sphericalHarmonicFloat(let coefficients) = result else {
                       return XCTFail("Expected SH color")
                   }
-
                   let expectedDC = (base * gain + SIMD3<Float>(repeating: bias) - midpoint)
                       * SplatPoint.Color.INV_SH_C0
                   assertApproximatelyEqual(coefficients[0], expectedDC)
@@ -161,11 +161,8 @@ jobs:
               }
 
               private func assertApproximatelyEqual(
-                  _ lhs: SIMD3<Float>,
-                  _ rhs: SIMD3<Float>,
-                  accuracy: Float = 0.00001,
-                  file: StaticString = #filePath,
-                  line: UInt = #line
+                  _ lhs: SIMD3<Float>, _ rhs: SIMD3<Float>, accuracy: Float = 0.00001,
+                  file: StaticString = #filePath, line: UInt = #line
               ) {
                   XCTAssertEqual(lhs.x, rhs.x, accuracy: accuracy, file: file, line: line)
                   XCTAssertEqual(lhs.y, rhs.y, accuracy: accuracy, file: file, line: line)
@@ -178,20 +175,18 @@ jobs:
           project = Path('splat-native-ios/project.yml')
           text = project.read_text(encoding='utf-8')
           anchor = '      - path: SplatNative/SplatEditHistory.swift\n'
-          addition = anchor + '      - path: SplatNative/SplatColorAdjustment.swift\n'
           if text.count(anchor) != 1:
-              raise SystemExit(f'project.yml: expected one helper anchor, found {text.count(anchor)}')
+              raise SystemExit(f'project helper anchor count={text.count(anchor)}')
           if 'SplatNative/SplatColorAdjustment.swift' not in text:
-              text = text.replace(anchor, addition, 1)
+              text = text.replace(anchor, anchor + '      - path: SplatNative/SplatColorAdjustment.swift\n', 1)
           project.write_text(text, encoding='utf-8')
 
-          # Ensure no old DC-only edit block survives in the three production paths.
           for p in paths:
               text = p.read_text(encoding='utf-8')
               if 'coefficients[0] = (adjusted - midpoint) * SplatPoint.Color.INV_SH_C0' in text:
                   raise SystemExit(f'{p}: stale DC-only adjustment remains')
-              if 'SplatColorAdjustment.apply(' not in text:
-                  raise SystemExit(f'{p}: shared affine helper not wired')
+              if text.count('SplatColorAdjustment.apply(') != 1:
+                  raise SystemExit(f'{p}: helper wiring count={text.count("SplatColorAdjustment.apply(")}')
           PY
           git diff --check
           git status --short
