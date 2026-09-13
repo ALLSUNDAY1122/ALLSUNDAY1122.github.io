@@ -206,23 +206,73 @@ struct SplatSceneNormalization: Equatable, Sendable {
         let finitePositions = cameraPositions.filter { position in
             position.x.isFinite && position.y.isFinite && position.z.isFinite
         }
-        guard !finitePositions.isEmpty else { translation = .zero; scale = 1; return }
-        let total = finitePositions.reduce(SIMD3<Float>.zero, +)
-        guard total.x.isFinite, total.y.isFinite, total.z.isFinite else {
-            translation = .zero; scale = 1; return
+        guard !finitePositions.isEmpty else {
+            translation = .zero
+            scale = 1
+            return
         }
-        let mean = total / Float(finitePositions.count)
-        var maxAbs: Float = 0
+
+        // Accumulate the centroid in Double with an online mean. A plain SIMD3<Float> sum can
+        // overflow even when every camera position and the mathematical mean are finite; that used
+        // to collapse measurement scaling to the 1:1 fallback for otherwise valid datasets.
+        var mean = SIMD3<Double>.zero
+        var sampleCount = 0.0
         for position in finitePositions {
-            let centered = position - mean
-            maxAbs = max(maxAbs, abs(centered.x), abs(centered.y), abs(centered.z))
+            sampleCount += 1
+            let sample = SIMD3<Double>(
+                Double(position.x),
+                Double(position.y),
+                Double(position.z)
+            )
+            mean += (sample - mean) / sampleCount
         }
-        translation = mean
-        scale = maxAbs.isFinite && maxAbs > 0 ? 1 / maxAbs : 1
+        guard mean.x.isFinite, mean.y.isFinite, mean.z.isFinite else {
+            translation = .zero
+            scale = 1
+            return
+        }
+
+        let stableTranslation = SIMD3<Float>(Float(mean.x), Float(mean.y), Float(mean.z))
+        guard stableTranslation.x.isFinite,
+              stableTranslation.y.isFinite,
+              stableTranslation.z.isFinite else {
+            translation = .zero
+            scale = 1
+            return
+        }
+
+        // Compute the spread before narrowing back to Float. Opposite large-but-finite Float
+        // coordinates can have a finite center while their subtraction overflows in Float.
+        var maxAbs = 0.0
+        for position in finitePositions {
+            maxAbs = max(
+                maxAbs,
+                abs(Double(position.x) - mean.x),
+                abs(Double(position.y) - mean.y),
+                abs(Double(position.z) - mean.z)
+            )
+        }
+        guard maxAbs.isFinite, maxAbs > 0 else {
+            translation = stableTranslation
+            scale = 1
+            return
+        }
+
+        let inverseSpread = 1.0 / maxAbs
+        let stableScale = Float(inverseSpread)
+        translation = stableTranslation
+        scale = stableScale.isFinite && stableScale > 0 ? stableScale : 1
     }
 
-    var metersPerSceneUnit: Float { scale.isFinite && scale > 0.000001 ? 1 / scale : 1 }
-    func normalized(_ worldPosition: SIMD3<Float>) -> SIMD3<Float> { (worldPosition - translation) * scale }
+    var metersPerSceneUnit: Float {
+        guard scale.isFinite, scale > 0 else { return 1 }
+        let value = 1 / scale
+        return value.isFinite && value > 0 ? value : 1
+    }
+
+    func normalized(_ worldPosition: SIMD3<Float>) -> SIMD3<Float> {
+        (worldPosition - translation) * scale
+    }
 }
 
 @MainActor
