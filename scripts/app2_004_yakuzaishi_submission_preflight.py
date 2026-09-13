@@ -11,16 +11,19 @@ from app_store_connect_api import api_get, load_private_key, make_token
 APP_ID = "6799753724"
 BUNDLE_ID = "jp.allsunday1122.yakuzaishi"
 OUT = Path("automation/app2-004-yakuzaishi-submission-preflight.json")
+APPROVAL_COMMAND = Path("automation/app2-004-yakuzaishi-final-submit-command.json")
 
 
 def many(payload):
-    if not isinstance(payload, dict): return []
+    if not isinstance(payload, dict):
+        return []
     data = payload.get("data", [])
     return data if isinstance(data, list) else ([data] if isinstance(data, dict) else [])
 
 
 def one(payload):
-    if not isinstance(payload, dict): return None
+    if not isinstance(payload, dict):
+        return None
     data = payload.get("data")
     return data if isinstance(data, dict) else None
 
@@ -37,15 +40,33 @@ def safe_get(token, path):
         return {"ok": False, "error": str(exc)[-2000:]}
 
 
+def approval_command():
+    try:
+        data = json.loads(APPROVAL_COMMAND.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if str(data.get("app_id")) != APP_ID or str(data.get("bundle_id")) != BUNDLE_ID:
+        return None
+    return data
+
+
 def main():
+    command = approval_command()
+    approved_build = str((command or {}).get("build") or "").strip() or None
     result = {
         "task_id": "APP2-004",
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "app_id": APP_ID,
         "bundle_id": BUNDLE_ID,
+        "approved_build": approved_build,
         "errors": [],
         "warnings": [],
     }
+    if command is None:
+        result["warnings"].append("Human approval command missing or target mismatch")
+    elif not approved_build:
+        result["warnings"].append("Human approval command does not name a build")
+
     key_path, cleanup = load_private_key()
     try:
         token = make_token(os.environ["ASC_ISSUER_ID"], os.environ["ASC_KEY_ID"], key_path)
@@ -76,36 +97,82 @@ def main():
             else:
                 la = attrs(ja)
                 for key in ("description", "keywords", "supportUrl"):
-                    if not la.get(key): result["errors"].append(f"Japanese localization missing {key}")
+                    if not la.get(key):
+                        result["errors"].append(f"Japanese localization missing {key}")
                 lid = ja["id"]
                 sets_read = safe_get(token, f"/v1/appStoreVersionLocalizations/{lid}/appScreenshotSets?limit=50&include=appScreenshots")
                 payload = sets_read.get("payload") or {}
                 sets = many(payload)
                 included = payload.get("included", []) if isinstance(payload, dict) else []
-                complete = [x for x in included if x.get("type") == "appScreenshots" and (((attrs(x).get("assetDeliveryState") or {}).get("state")) == "COMPLETE")]
-                result["screenshots"] = {"set_count": len(sets), "complete_count": len(complete), "sets": [{"id": x.get("id"), "attributes": attrs(x)} for x in sets]}
-                if not complete: result["errors"].append("No COMPLETE App Store screenshot")
+                complete = [
+                    x for x in included
+                    if x.get("type") == "appScreenshots"
+                    and (((attrs(x).get("assetDeliveryState") or {}).get("state")) == "COMPLETE")
+                ]
+                result["screenshots"] = {
+                    "set_count": len(sets),
+                    "complete_count": len(complete),
+                    "sets": [{"id": x.get("id"), "attributes": attrs(x)} for x in sets],
+                }
+                if not complete:
+                    result["errors"].append("No COMPLETE App Store screenshot")
 
             review_read = safe_get(token, f"/v1/appStoreVersions/{vid}/appStoreReviewDetail")
             review = one(review_read.get("payload") or {}) if review_read.get("ok") else None
-            result["review_detail"] = {"id": (review or {}).get("id"), "attributes": attrs(review), "read_ok": review_read.get("ok")}
+            result["review_detail"] = {
+                "id": (review or {}).get("id"),
+                "attributes": attrs(review),
+                "read_ok": review_read.get("ok"),
+            }
             ra = attrs(review)
             for key in ("contactFirstName", "contactLastName", "contactPhone", "contactEmail", "notes"):
-                if not ra.get(key): result["errors"].append(f"review detail missing {key}")
+                if not ra.get(key):
+                    result["errors"].append(f"review detail missing {key}")
 
-            build_read = safe_get(token, f"/v1/appStoreVersions/{vid}/relationships/build")
-            result["selected_build_relationship"] = build_read.get("payload") if build_read.get("ok") else None
+            build_read = safe_get(token, f"/v1/appStoreVersions/{vid}/build")
+            selected_build = one(build_read.get("payload") or {}) if build_read.get("ok") else None
+            result["selected_build"] = {
+                "id": (selected_build or {}).get("id"),
+                "attributes": attrs(selected_build),
+                "read_ok": build_read.get("ok"),
+            }
+            selected_attrs = attrs(selected_build)
+            if selected_build and selected_attrs.get("processingState") != "VALID":
+                result["errors"].append("Selected App Store build is not VALID")
+            if selected_attrs.get("expired") is True:
+                result["errors"].append("Selected App Store build is expired")
+            if approved_build and selected_build and str(selected_attrs.get("version")) != approved_build:
+                result["warnings"].append(
+                    f"Human approval targets Build {approved_build}, but App Store version selects Build {selected_attrs.get('version')}"
+                )
 
             age_read = safe_get(token, f"/v1/appStoreVersions/{vid}/ageRatingDeclaration")
-            result["age_rating"] = {"read_ok": age_read.get("ok"), "resource": one(age_read.get("payload") or {}) if age_read.get("ok") else None}
-            if not age_read.get("ok"): result["warnings"].append("age rating read unavailable; verify before submit")
+            result["age_rating"] = {
+                "read_ok": age_read.get("ok"),
+                "resource": one(age_read.get("payload") or {}) if age_read.get("ok") else None,
+            }
+            if not age_read.get("ok"):
+                result["warnings"].append("age rating read unavailable; verify before submit")
 
         builds_read = safe_get(token, f"/v1/apps/{APP_ID}/builds?limit=50")
         builds = many((builds_read.get("payload") or {})) if builds_read.get("ok") else []
         result["builds"] = [{"id": b.get("id"), "attributes": attrs(b)} for b in builds]
-        build5 = next((b for b in builds if str(attrs(b).get("version")) == "5" and attrs(b).get("processingState") == "VALID"), None)
-        result["valid_build5"] = {"id": build5.get("id"), "attributes": attrs(build5)} if build5 else None
-        if not build5: result["warnings"].append("VALID Build 5 not present yet")
+        approved_resource = next(
+            (
+                b for b in builds
+                if approved_build
+                and str(attrs(b).get("version")) == approved_build
+                and attrs(b).get("processingState") == "VALID"
+                and attrs(b).get("expired") is not True
+            ),
+            None,
+        )
+        result["approved_build_resource"] = (
+            {"id": approved_resource.get("id"), "attributes": attrs(approved_resource)}
+            if approved_resource else None
+        )
+        if approved_build and not approved_resource:
+            result["warnings"].append(f"Approved VALID nonexpired Build {approved_build} is not present")
 
         submissions_read = safe_get(token, f"/v1/apps/{APP_ID}/reviewSubmissions?limit=50")
         submissions = many((submissions_read.get("payload") or {})) if submissions_read.get("ok") else []
@@ -116,7 +183,8 @@ def main():
         OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(json.dumps({"pass": result["pass"], "errors": result["errors"], "warnings": result["warnings"]}, ensure_ascii=False))
     finally:
-        if cleanup: cleanup.unlink(missing_ok=True)
+        if cleanup:
+            cleanup.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
