@@ -81,21 +81,26 @@ def main():
             result["review_detail"] = get(token, f"/v1/appStoreVersions/{vid}/appStoreReviewDetail")
 
         result["builds"] = summarize_collection(get(token, f"/v1/apps/{APP_ID}/builds?limit=100"))
+        result["beta_groups"] = summarize_collection(get(token, f"/v1/apps/{APP_ID}/betaGroups?limit=50"))
+        result["beta_app_localizations"] = summarize_collection(get(token, f"/v1/apps/{APP_ID}/betaAppLocalizations?limit=50"))
         result["app_infos"] = summarize_collection(get(token, f"/v1/apps/{APP_ID}/appInfos?limit=20"))
 
         result["subscription"] = get(token, f"/v1/subscriptions/{SUB_ID}")
         result["subscription_localizations"] = summarize_collection(get(token, f"/v1/subscriptions/{SUB_ID}/subscriptionLocalizations?limit=50"))
         result["subscription_prices_jpn"] = get(token, f"/v1/subscriptions/{SUB_ID}/prices?filter[territory]=JPN&include=subscriptionPricePoint,territory&limit=200")
-        result["subscription_availability"] = get(token, f"/v1/subscriptions/{SUB_ID}/subscriptionAvailability?include=availableTerritories&limit[availableTerritories]=200")
+        result["subscription_availability"] = get(token, f"/v1/subscriptions/{SUB_ID}/subscriptionAvailability?include=availableTerritories&limit[availableTerritories]=50")
         result["subscription_review_screenshot"] = get(token, f"/v1/subscriptions/{SUB_ID}/appStoreReviewScreenshot")
 
+        # In-app purchases use v2 relationship endpoints. The old v1 relationship URLs returned 404 and
+        # were an audit bug, not evidence that metadata was missing.
         result["lifetime_iap"] = get(token, f"/v2/inAppPurchases/{IAP_ID}")
-        result["lifetime_localizations"] = summarize_collection(get(token, f"/v1/inAppPurchases/{IAP_ID}/inAppPurchaseLocalizations?limit=50"))
+        result["lifetime_localizations"] = summarize_collection(get(token, f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseLocalizations?limit=50"))
         result["lifetime_price_schedule"] = get(token, f"/v2/inAppPurchases/{IAP_ID}/iapPriceSchedule?include=baseTerritory,manualPrices&limit[manualPrices]=50")
-        result["lifetime_availability"] = get(token, f"/v1/inAppPurchaseAvailabilities/{IAP_ID}?include=availableTerritories&limit[availableTerritories]=200")
-        result["lifetime_review_screenshot"] = get(token, f"/v1/inAppPurchases/{IAP_ID}/appStoreReviewScreenshot")
+        result["lifetime_availability"] = get(token, f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseAvailability?include=availableTerritories&limit[availableTerritories]=50")
+        result["lifetime_review_screenshot"] = get(token, f"/v2/inAppPurchases/{IAP_ID}/appStoreReviewScreenshot")
 
-        # Fail only on the canonical target/version path. Optional endpoint failures are evidence, not gateway failure.
+        # Fail only on canonical target/version path. Optional endpoint failures remain evidence and make
+        # the readback explicit rather than turning an API-shape issue into a false product failure.
         if not app.get("ok") or not isinstance(result.get("versions"), list):
             raise RuntimeError("canonical app/version readback failed")
     finally:
