@@ -4,12 +4,11 @@ import XCTest
 import simd
 
 final class SplatColorAdjustmentTests: XCTestCase {
-    func testSH3AffineEditScalesDirectionalCoefficientsAndOffsetsOnlyDC() {
-        let original: [SIMD3<Float>] = [
-            SIMD3<Float>(0.10, -0.05, 0.20),
-            SIMD3<Float>(0.03, -0.04, 0.05),
-            SIMD3<Float>(-0.02, 0.06, 0.01),
-        ]
+    func testSH3AffineEditScalesAllDirectionalBandsAndOffsetsOnlyDC() {
+        let original: [SIMD3<Float>] = (0..<16).map { index in
+            let value = Float(index + 1) * 0.01
+            return SIMD3<Float>(value, -value * 0.5, value * 0.25)
+        }
         let color = SplatPoint.Color.sphericalHarmonicFloat(original)
         let base = color.asSRGBFloat
         let exposureEV = 1.0
@@ -21,11 +20,14 @@ final class SplatColorAdjustmentTests: XCTestCase {
         guard case .sphericalHarmonicFloat(let coefficients) = result else {
             return XCTFail("Expected SH color")
         }
+
+        XCTAssertEqual(coefficients.count, 16)
         let expectedDC = (base * gain + SIMD3<Float>(repeating: bias) - midpoint)
             * SplatPoint.Color.INV_SH_C0
         assertApproximatelyEqual(coefficients[0], expectedDC)
-        assertApproximatelyEqual(coefficients[1], original[1] * gain)
-        assertApproximatelyEqual(coefficients[2], original[2] * gain)
+        for index in 1..<16 {
+            assertApproximatelyEqual(coefficients[index], original[index] * gain)
+        }
     }
 
     func testSHAdjustmentDoesNotPrematurelyClampDC() {
