@@ -35,8 +35,11 @@ struct DetailSimplifyResult: Sendable {
 }
 
 enum MeshDetailSimplifierEngine {
+    private static let inputChunkBytes = 256 * 1024
+    private static let outputFlushThresholdBytes = 256 * 1024
+    private static let maximumOBJLineBytes = 8 * 1024 * 1024
+
     static func simplify(url: URL, retainedFraction: Double) throws -> DetailSimplifyResult {
-        let text = try String(contentsOf: url, encoding: .utf8)
         let safeRetainedFraction = retainedFraction.isFinite
             ? min(0.95, max(0.15, retainedFraction))
             : 0.60
@@ -44,9 +47,9 @@ enum MeshDetailSimplifierEngine {
         var vertexColors: [SIMD3<Float>?] = []
         var faces: [DetailFace] = []
 
-        for line in text.split(whereSeparator: \.isNewline) {
+        try forEachOBJLine(at: url) { line in
             let fields = line.split(whereSeparator: \.isWhitespace)
-            guard let directive = fields.first else { continue }
+            guard let directive = fields.first else { return }
             if directive == "mtllib" || directive == "usemtl" || directive == "vt" {
                 throw error("テクスチャ付きMeshの軽量化は色を失うため実行できません。元Meshを保持します")
             }
@@ -72,7 +75,7 @@ enum MeshDetailSimplifierEngine {
                 }
             } else if directive == "f" {
                 let tokens = Array(fields.dropFirst().prefix { !$0.hasPrefix("#") })
-                guard tokens.count >= 3 else { continue }
+                guard tokens.count >= 3 else { return }
                 var indices: [Int] = []
                 indices.reserveCapacity(tokens.count)
                 for token in tokens {
@@ -239,23 +242,133 @@ enum MeshDetailSimplifierEngine {
         let percent = Int((safeRetainedFraction * 100).rounded())
         let outputURL = url.deletingLastPathComponent()
             .appendingPathComponent("mesh-detail-simplified-\(percent)-\(UUID().uuidString.lowercased()).obj")
-        var output = "# Scan Lab detail-preserving simplification\n"
-        output += "# boundaries \(boundaryVertices.count) protected_components \(protectedRoots.count)\n"
-        for (index, vertex) in outputVertices.enumerated() {
-            if hasVertexColors {
-                let color = outputColors[index]
-                output += "v \(vertex.x) \(vertex.y) \(vertex.z) \(color.x) \(color.y) \(color.z)\n"
-            } else {
-                output += "v \(vertex.x) \(vertex.y) \(vertex.z)\n"
-            }
-        }
-        for normal in normals { output += "vn \(normal.x) \(normal.y) \(normal.z)\n" }
-        for face in outputFaces {
-            output += "f \(face.x + 1)//\(face.x + 1) \(face.y + 1)//\(face.y + 1) \(face.z + 1)//\(face.z + 1)\n"
-        }
-        try output.write(to: outputURL, atomically: true, encoding: .utf8)
+        try writeOBJ(
+            to: outputURL,
+            boundaryVertexCount: boundaryVertices.count,
+            protectedComponentCount: protectedRoots.count,
+            vertices: outputVertices,
+            colors: hasVertexColors ? outputColors : nil,
+            normals: normals,
+            faces: outputFaces
+        )
         return DetailSimplifyResult(url: outputURL, vertices: outputVertices.count, faces: outputFaces.count,
                                     boundaryVertices: boundaryVertices.count, protectedComponents: protectedRoots.count)
+    }
+
+    private static func forEachOBJLine(at url: URL, body: (Substring) throws -> Void) throws {
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular else {
+            throw error("Meshファイルを読み込めません")
+        }
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        var buffer = Data()
+        buffer.reserveCapacity(inputChunkBytes * 2)
+
+        while let chunk = try handle.read(upToCount: inputChunkBytes), !chunk.isEmpty {
+            try Task.checkCancellation()
+            buffer.append(chunk)
+            var start = buffer.startIndex
+            while start < buffer.endIndex,
+                  let newline = buffer[start...].firstIndex(of: 0x0A) {
+                var end = newline
+                if end > start {
+                    let previous = buffer.index(before: end)
+                    if buffer[previous] == 0x0D { end = previous }
+                }
+                guard buffer.distance(from: start, to: end) <= maximumOBJLineBytes else {
+                    throw error("OBJの1行が安全な上限を超えています")
+                }
+                let line = String(decoding: buffer[start..<end], as: UTF8.self)
+                try body(line[...])
+                start = buffer.index(after: newline)
+            }
+            if start > buffer.startIndex {
+                buffer.removeSubrange(buffer.startIndex..<start)
+            }
+            guard buffer.count <= maximumOBJLineBytes else {
+                throw error("OBJの1行が安全な上限を超えています")
+            }
+        }
+
+        if !buffer.isEmpty {
+            try Task.checkCancellation()
+            var end = buffer.endIndex
+            if end > buffer.startIndex {
+                let previous = buffer.index(before: end)
+                if buffer[previous] == 0x0D { end = previous }
+            }
+            guard buffer.distance(from: buffer.startIndex, to: end) <= maximumOBJLineBytes else {
+                throw error("OBJの1行が安全な上限を超えています")
+            }
+            let line = String(decoding: buffer[buffer.startIndex..<end], as: UTF8.self)
+            try body(line[...])
+        }
+    }
+
+    private static func writeOBJ(
+        to url: URL,
+        boundaryVertexCount: Int,
+        protectedComponentCount: Int,
+        vertices: [SIMD3<Float>],
+        colors: [SIMD3<Float>]?,
+        normals: [SIMD3<Float>],
+        faces: [SIMD3<Int>]
+    ) throws {
+        guard FileManager.default.createFile(atPath: url.path, contents: nil) else {
+            throw error("軽量化OBJを作成できません")
+        }
+        let handle: FileHandle
+        do {
+            handle = try FileHandle(forWritingTo: url)
+        } catch {
+            try? FileManager.default.removeItem(at: url)
+            throw error
+        }
+
+        do {
+            var buffer = ""
+            buffer.reserveCapacity(outputFlushThresholdBytes)
+            var bufferedBytes = 0
+            func append(_ line: String) throws {
+                buffer.append(line)
+                bufferedBytes += line.utf8.count
+                if bufferedBytes >= outputFlushThresholdBytes {
+                    try handle.write(contentsOf: Data(buffer.utf8))
+                    buffer.removeAll(keepingCapacity: true)
+                    bufferedBytes = 0
+                }
+            }
+
+            try append("# Scan Lab detail-preserving simplification\n")
+            try append("# boundaries \(boundaryVertexCount) protected_components \(protectedComponentCount)\n")
+            for (index, vertex) in vertices.enumerated() {
+                if index & 0xFFF == 0 { try Task.checkCancellation() }
+                if let colors {
+                    let color = colors[index]
+                    try append("v \(vertex.x) \(vertex.y) \(vertex.z) \(color.x) \(color.y) \(color.z)\n")
+                } else {
+                    try append("v \(vertex.x) \(vertex.y) \(vertex.z)\n")
+                }
+            }
+            for (index, normal) in normals.enumerated() {
+                if index & 0xFFF == 0 { try Task.checkCancellation() }
+                try append("vn \(normal.x) \(normal.y) \(normal.z)\n")
+            }
+            for (index, face) in faces.enumerated() {
+                if index & 0xFFF == 0 { try Task.checkCancellation() }
+                try append("f \(face.x + 1)//\(face.x + 1) \(face.y + 1)//\(face.y + 1) \(face.z + 1)//\(face.z + 1)\n")
+            }
+            if !buffer.isEmpty {
+                try handle.write(contentsOf: Data(buffer.utf8))
+            }
+            try handle.synchronize()
+            try handle.close()
+        } catch {
+            try? handle.close()
+            try? FileManager.default.removeItem(at: url)
+            throw error
+        }
     }
 
     static func discard(_ result: DetailSimplifyResult) {
