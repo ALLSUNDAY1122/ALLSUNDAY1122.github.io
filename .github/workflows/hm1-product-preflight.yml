@@ -8,6 +8,8 @@ on:
       - 'ios/health-manager-1/Resources/index.html'
       - 'ios/health-manager-1/HealthManager1/StoreKitManager.swift'
       - 'ios/health-manager-1/HealthManager1/WebView.swift'
+      - 'ios/health-manager-1/augment-to-264.cjs'
+      - 'apps/sanitary-manager-2/**'
       - 'ios/health-manager-1/RELEASE_CHECKLIST.md'
       - 'scripts/audit_hm1_product_preflight.py'
       - '.github/workflows/hm1-product-preflight.yml'
@@ -22,5 +24,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
+      - name: Materialize audited 264-question release bundle
+        run: node ios/health-manager-1/augment-to-264.cjs
       - name: Product quality preflight
         run: python3 scripts/audit_hm1_product_preflight.py
