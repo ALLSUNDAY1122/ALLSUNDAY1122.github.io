@@ -385,7 +385,6 @@ final class SplatViewerState: ObservableObject {
 
     private var sourceURL: URL?
     private var persistenceTask: Task<Void, Never>?
-    private var measurementScaleTask: Task<Void, Never>?
     private var metersPerSceneUnit: Float = 1
     private var measurementScaleReady = false
     private var pendingMeasurementSceneUnits: Float?
@@ -405,26 +404,13 @@ final class SplatViewerState: ObservableObject {
         } else {
             persistenceTask?.cancel()
         }
-        measurementScaleTask?.cancel()
         sourceURL = url
-        // `transforms.json` is allowed to be tens of MiB. Keep attach/UI responsiveness independent
-        // of trajectory size without ever exposing the temporary 1:1 fallback as a completed
-        // measurement. A measurement finished during decode is held and reformatted once scale is ready.
+        // The renderer already needs transforms.json for initial-view geometry. Reuse the scale from
+        // that single bounded decode instead of independently decoding the same up-to-32 MiB metadata
+        // here. Until the renderer supplies it, completed measurements are held rather than mislabeled.
         metersPerSceneUnit = 1
         measurementScaleReady = false
         pendingMeasurementSceneUnits = nil
-        measurementScaleTask = Task { [weak self] in
-            let positions = await SplatViewerCameraDatasetLoader.cameraPositionsAsync(for: url)
-            guard !Task.isCancelled, let self, self.sourceURL == url else { return }
-            self.metersPerSceneUnit = SplatSceneNormalization(
-                cameraPositions: positions
-            ).metersPerSceneUnit
-            self.measurementScaleReady = true
-            if let pending = self.pendingMeasurementSceneUnits {
-                self.pendingMeasurementSceneUnits = nil
-                self.rendererMeasured(meters: pending)
-            }
-        }
         measurementEnabled = false
         measurementText = "画面上の2点を順番にタップしてください"
         errorMessage = nil
@@ -478,6 +464,17 @@ final class SplatViewerState: ObservableObject {
     func rendererRejectedEdit(_ message: String) { isApplyingEdits = false; warningMessage = message }
     func rendererFailed(_ message: String) { isLoading = false; isApplyingEdits = false; errorMessage = message }
     func rendererSelectedMeasurementPoint(count: Int) { if count == 1 { measurementText = "始点を選択しました。終点をタップしてください" } }
+
+    func rendererMeasurementScaleReady(_ scale: Float, sourceURL: URL) {
+        guard self.sourceURL == sourceURL else { return }
+        metersPerSceneUnit = scale.isFinite && scale > 0 ? scale : 1
+        measurementScaleReady = true
+        if let pending = pendingMeasurementSceneUnits {
+            pendingMeasurementSceneUnits = nil
+            rendererMeasured(meters: pending)
+        }
+    }
+
     func rendererMeasured(meters sceneUnits: Float) {
         guard measurementScaleReady else {
             pendingMeasurementSceneUnits = sceneUnits
