@@ -68,22 +68,22 @@ function premiumPlansHTML(){
   <p style="margin-top:12px">無料版では最新1回相当の30問と今日のスプリントを利用できます。購入後は全300問、全30セット、全分野、苦手復習を解放します。</p>${st.message?`<p>${esc(st.message)}</p>`:''}</div>`;
 }
 function showPaywall(){
-  setApp(topBlock('プレミアム','学びを続ける','自分に合う支払い方で、全300問を使えます。')+`<div class="sec settings paywall">${premiumPlansHTML()}</div>`+nav('settings'));
+  setApp(topBlock('プレミアム','学びを続ける','自分に合う支払い方で、全300問を使えます。')+`<div class="sec settings storekit-panel paywall">${premiumPlansHTML()}</div>`+nav('settings'));
   requestStoreStatus();
 }
 window.__storekitUpdate=function(payload){
   window.SM2_STORE=Object.assign(window.SM2_STORE||{},payload||{});
-  const paywall=document.querySelector('.paywall');
-  if(paywall)paywall.innerHTML=premiumPlansHTML();
-  else if(document.querySelector('.settings'))settingsScreen();
-  else if(document.querySelector('.home-grid'))home();
+  const panel=document.querySelector('.storekit-panel');
+  if(panel)panel.innerHTML=premiumPlansHTML();
+  const homePremium=document.querySelector('#home-premium-cta');
+  if(homePremium)homePremium.outerHTML=premiumCTA();
 };
 
 function settingsScreen(){
   const fs=S.fontSize,goal=S.dailyGoal;
   setApp(topBlock('設定','学び方','自分のペースに合わせて調整できます。')+
   `<div class="sec settings">
-  ${premiumPlansHTML()}
+  <div class="storekit-panel">${premiumPlansHTML()}</div>
   <div class="card setting"><h3>文字サイズ</h3><div class="seg"><button class="${fs==='standard'?'on':''}" onclick="setFont('standard')">標準</button><button class="${fs==='large'?'on':''}" onclick="setFont('large')">大</button><button class="${fs==='xlarge'?'on':''}" onclick="setFont('xlarge')">特大</button></div></div>
   <div class="card setting"><h3>1日の目標</h3><div class="seg"><button class="${goal===4?'on':''}" onclick="setGoal(4)">4問</button><button class="${goal===8?'on':''}" onclick="setGoal(8)">8問</button><button class="${goal===16?'on':''}" onclick="setGoal(16)">16問</button></div></div>
   <div class="card setting"><div class="toggle"><div><h3 style="margin:0">出題順をシャッフル</h3><p>今日のスプリント・分野学習で使用します。</p></div><button class="switch ${S.shuffleQuestions?'on':''}" onclick="toggleSetting('shuffleQuestions')" aria-pressed="${S.shuffleQuestions}"><i></i></button></div></div>
