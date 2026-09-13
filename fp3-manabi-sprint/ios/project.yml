@@ -44,4 +44,19 @@ targets:
           - UIInterfaceOrientationPortrait
         UIViewControllerBasedStatusBarAppearance: true
     scheme:
-      testTargets: []
+      testTargets:
+        - FP3ManabiSprintUITests
+
+  FP3ManabiSprintUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: UITests
+    dependencies:
+      - target: FP3ManabiSprint
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.allsunday1122.fp3kakomoncoach.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO
