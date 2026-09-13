@@ -397,15 +397,17 @@ enum MeshPointCloudExportService {
     }
 
     private static func parseOBJ(_ url: URL) throws -> Geometry {
-        let data = try Data(contentsOf: url, options: [.mappedIfSafe])
-        guard !data.isEmpty else { throw ExportError.invalidOBJ }
-        let text = String(decoding: data, as: UTF8.self)
+        let (text, sourceByteCount): (String, Int) = try autoreleasepool {
+            let data = try Data(contentsOf: url, options: [.mappedIfSafe])
+            guard !data.isEmpty else { throw ExportError.invalidOBJ }
+            return (String(decoding: data, as: UTF8.self), data.count)
+        }
         var vertices: [Vertex] = []
         var texCoords: [TexCoord] = []
         var triangles: [Triangle] = []
         var materialLibraries: [String] = []
         var currentMaterial: String?
-        vertices.reserveCapacity(max(128, data.count / 80))
+        vertices.reserveCapacity(max(128, sourceByteCount / 80))
 
         text.enumerateLines { line, _ in
             let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
