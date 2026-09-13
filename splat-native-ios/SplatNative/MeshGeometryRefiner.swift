@@ -93,6 +93,9 @@ private enum MeshGeometryRefinerEngine {
             accumulator.count += 1
             accumulators[key] = accumulator
         }
+        // Keys retain the complete source-to-weld mapping needed by faces. The original float
+        // vertices are no longer needed after accumulation, so release that large allocation before
+        // building the welded vertex table and face set.
         parsed.vertices.removeAll(keepingCapacity: false)
 
         var ordered = accumulators.keys.sorted {
@@ -117,6 +120,9 @@ private enum MeshGeometryRefinerEngine {
             vertices.append(SIMD3<Float>(Float(mean.x), Float(mean.y), Float(mean.z)))
         }
 
+        // Faces only need a compact source-vertex -> welded-vertex index after the deterministic
+        // welded table is built. Collapse the 24-byte source keys into Int indices, then release the
+        // key arrays/dictionaries before allocating the deduplicated face set.
         var sourceToWelded: [Int] = []
         sourceToWelded.reserveCapacity(keys.count)
         for key in keys {
@@ -371,6 +377,9 @@ private enum MeshGeometryRefinerEngine {
         }
         for face in faces { union(face.x, face.y); union(face.y, face.z); union(face.z, face.x) }
 
+        // Keep one compact summary per component instead of retaining an array of every face index
+        // and then a second Set of every kept face index. On large connected meshes the old shape
+        // duplicated O(faceCount) Int storage exactly when refinement is already memory intensive.
         var summaries: [Int: MeshRefineComponentSummary] = [:]
         for face in faces {
             let root = find(face.x)
@@ -380,7 +389,7 @@ private enum MeshGeometryRefinerEngine {
             let b = vertices[face.y]
             let c = vertices[face.z]
             summary.minimum = simd_min(summary.minimum, simd_min(a, simd_min(b, c)))
-            summary.maximum = simd_max(summary.maximum, simd_max(a, simd_max(b, c)))
+            summary.maximum = simd_max(summary.maximum, simd_max(b, c))
             summaries[root] = summary
         }
 
@@ -399,6 +408,9 @@ private enum MeshGeometryRefinerEngine {
     }
 
     private static func compact(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> MeshRefineMesh {
+        // A dense remap replaces the Set -> sorted Array -> Dictionary chain. Because compacted
+        // vertices were already emitted in ascending original index order, this preserves output
+        // ordering while keeping one O(vertexCount) Int table and direct O(1) face remaps.
         var remap = Array(repeating: -1, count: vertices.count)
         for face in faces {
             remap[face.x] = 0
