@@ -408,8 +408,15 @@ enum MeshPointCloudExportService {
         var materialLibraries: [String] = []
         var currentMaterial: String?
         vertices.reserveCapacity(max(128, sourceByteCount / 80))
+        try Task.checkCancellation()
+        var cancelled = false
 
-        text.enumerateLines { line, _ in
+        text.enumerateLines { line, stop in
+            if withUnsafeCurrentTask(body: { $0?.isCancelled ?? false }) {
+                cancelled = true
+                stop = true
+                return
+            }
             let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !trimmed.isEmpty, !trimmed.hasPrefix("#") else { return }
             let fields = trimmed.split(whereSeparator: { $0.isWhitespace })
@@ -468,6 +475,7 @@ enum MeshPointCloudExportService {
                 triangles.append(Triangle(a: corners[0], b: corners[index], c: corners[index + 1], material: currentMaterial))
             }
         }
+        if cancelled { try Task.checkCancellation() }
         guard !vertices.isEmpty else { throw ExportError.emptyGeometry }
         return Geometry(vertices: vertices, texCoords: texCoords, triangles: triangles, materialLibraries: materialLibraries)
     }
