@@ -1,3 +1,4 @@
+import Darwin.Mach
 import Foundation
 
 enum MeshExportMemoryPolicy {
@@ -65,6 +66,7 @@ enum MeshExportMemoryPolicy {
         sourceURL: URL,
         format: MeshExportService.Format,
         physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        availableMemoryBytes: UInt64 = UInt64(os_proc_available_memory()),
         thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
     ) throws -> Estimate {
@@ -82,6 +84,7 @@ enum MeshExportMemoryPolicy {
             thermalState: thermalState,
             isLowPowerModeEnabled: isLowPowerModeEnabled
         )
+        estimate = applyingAvailableMemoryLimit(availableMemoryBytes, to: estimate)
 
         // Scene conversion may hand the complete OBJ material graph to Assimp/ModelIO, so account
         // for referenced companions there. Point-cloud conversion is different: its exporter keeps
@@ -172,6 +175,20 @@ enum MeshExportMemoryPolicy {
                 thermalState: thermalState,
                 isLowPowerModeEnabled: isLowPowerModeEnabled
             )
+        )
+    }
+
+    /// Conversion estimates describe how much memory the operation may need; physical RAM alone
+    /// does not describe how much headroom exists at the moment the user starts an export. Keep one
+    /// quarter of currently available memory outside the estimate for the app, Metal and transient
+    /// framework allocations. This avoids starting a conversion that is statically safe for the
+    /// device but unsafe while reconstruction/viewer state is still resident.
+    static func applyingAvailableMemoryLimit(_ availableMemoryBytes: UInt64, to estimate: Estimate) -> Estimate {
+        let currentHeadroomBudget = availableMemoryBytes / 4 * 3
+        return Estimate(
+            sourceBytes: estimate.sourceBytes,
+            estimatedPeakBytes: estimate.estimatedPeakBytes,
+            budgetBytes: min(estimate.budgetBytes, currentHeadroomBudget)
         )
     }
 
