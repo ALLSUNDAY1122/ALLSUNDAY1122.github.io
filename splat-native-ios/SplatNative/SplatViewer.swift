@@ -550,7 +550,12 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         }
 
         var result: [SplatPoint] = []
-        result.reserveCapacity(points.count)
+        // A crop can discard most of a large scene, so reserving the complete source scene here
+        // creates a needless scene-sized heap spike on every crop-slider rebuild. Color-only edits
+        // retain every point and still benefit from exact preallocation.
+        if !needsCrop {
+            result.reserveCapacity(points.count)
+        }
         for (index, point) in points.enumerated() {
             if index & 0x3FF == 0 {
                 try Task.checkCancellation()
@@ -629,7 +634,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         let y = simd_cross(z, x)
         return simd_float4x4(columns: (
             SIMD4<Float>(x.x, y.x, z.x, 0),
-            SIMD4<Float>(x.y, y.y, z.y, 0),
+            SIMD4<Float>(x.y, y.x, z.y, 0),
             SIMD4<Float>(x.z, y.z, z.z, 0),
             SIMD4<Float>(-simd_dot(x, eye), -simd_dot(y, eye), -simd_dot(z, eye), 1)
         ))
