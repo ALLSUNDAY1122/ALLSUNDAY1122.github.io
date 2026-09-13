@@ -68,8 +68,9 @@ jobs:
           xcodegen generate
           ! grep -q 'com.apple.InAppPurchase' PharmacistSprint.xcodeproj/project.pbxproj
           ! grep -R -q 'import StoreKit\|StoreKitManager\|PaywallView\|WKWebView\|import WebKit' --include='*.swift' .
+          grep -q 'PharmacistSprintUITests' PharmacistSprint.xcodeproj/project.pbxproj
 
-      - name: Native unit tests
+      - name: Native unit + UI Visual Gate
         id: tests
         shell: bash
         run: |
@@ -84,16 +85,29 @@ jobs:
           raise SystemExit(2)
           PY
           )
+          rm -rf /tmp/PharmacistVisualGate.xcresult
           xcodebuild test \
             -project pharmacist-manabi-sprint/ios/PharmacistSprint.xcodeproj \
             -scheme PharmacistSprint \
             -destination "platform=iOS Simulator,id=$UDID" \
+            -resultBundlePath /tmp/PharmacistVisualGate.xcresult \
             CODE_SIGNING_ALLOWED=NO \
             > /tmp/pharmacist-tests.log 2>&1
           code=$?
           set -e
-          tail -n 160 /tmp/pharmacist-tests.log
+          tail -n 200 /tmp/pharmacist-tests.log
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+
+      - name: Upload native Visual Gate evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: pharmacist-native-visual-gate
+          path: |
+            /tmp/PharmacistVisualGate.xcresult
+            /tmp/pharmacist-tests.log
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Release simulator build
         id: build
@@ -146,9 +160,10 @@ jobs:
             'monetization':'none',
             'allScoredQuestionsUnlocked':True,
             'webViewRuntime':False,
-            'unitTestExit':t,
+            'unitAndVisualGateExit':t,
             'releaseBuildExit':b,
             'resourceAuditExit':r,
+            'visualEvidenceArtifact':'pharmacist-native-visual-gate',
             'bundleId':'jp.allsunday1122.yakuzaishi',
             'appStoreConnectAppId':'6799753724',
             'version':'1.0.0',
@@ -164,13 +179,13 @@ jobs:
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add pharmacist-manabi-sprint/content/product/ios-preflight-report.json
             if ! git diff --cached --quiet; then
-              git commit -m 'pharmacist: no-IAP iOS preflight result [skip ci]'
+              git commit -m 'pharmacist: native visual preflight result [skip ci]'
               git pull --rebase origin main
               git push
             fi
           fi
 
-      - name: Enforce native preflight gate
+      - name: Enforce native Preflight + Visual Gate
         run: |
           test "${{ steps.tests.outputs.exit_code }}" = '0'
           test "${{ steps.build.outputs.exit_code }}" = '0'
