@@ -9,6 +9,17 @@ private struct DetailFace: Sendable {
     let c: Int
 }
 
+private struct DetailFaceKey: Hashable, Sendable {
+    let a: Int
+    let b: Int
+    let c: Int
+
+    init(_ x: Int, _ y: Int, _ z: Int) {
+        let sorted = [x, y, z].sorted()
+        a = sorted[0]; b = sorted[1]; c = sorted[2]
+    }
+}
+
 private struct DetailEdge: Hashable, Sendable {
     let a: Int
     let b: Int
@@ -24,6 +35,11 @@ private struct DetailCluster: Hashable, Sendable {
     let y: Int
     let z: Int
     let unique: Int
+}
+
+private struct DetailClusterAccumulator: Sendable {
+    var positionSum = SIMD3<Double>.zero
+    var count = 0
 }
 
 struct DetailSimplifyResult: Sendable {
@@ -120,6 +136,9 @@ enum MeshDetailSimplifierEngine {
             boundaryVertices.insert(edge.a)
             boundaryVertices.insert(edge.b)
         }
+        // Edge multiplicity is only needed to identify boundaries. Release the potentially large
+        // hash table before allocating union-find and clustering state.
+        edgeCount.removeAll(keepingCapacity: false)
 
         var parent = Array(0..<vertices.count)
         func find(_ x: Int) -> Int {
@@ -141,7 +160,6 @@ enum MeshDetailSimplifierEngine {
         var componentFaceCounts: [Int: Int] = [:]
         for face in faces { componentFaceCounts[find(face.a), default: 0] += 1 }
         let protectedRoots = Set(componentFaceCounts.filter { $0.value < 600 }.map(\.key))
-        let protectedVertices = Set(vertices.indices.filter { protectedRoots.contains(find($0)) })
 
         var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
         var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
@@ -155,14 +173,13 @@ enum MeshDetailSimplifierEngine {
         let resolution = max(2, Int(ceil(pow(Double(target), 1.0 / 3.0))))
         let cell = extent / Float(resolution)
 
-        var sums: [DetailCluster: SIMD3<Double>] = [:]
+        var accumulators: [DetailCluster: DetailClusterAccumulator] = [:]
         var colorSums: [DetailCluster: SIMD3<Double>] = [:]
-        var counts: [DetailCluster: Int] = [:]
         var vertexKeys: [DetailCluster] = []
         vertexKeys.reserveCapacity(vertices.count)
         for (index, vertex) in vertices.enumerated() {
             let key: DetailCluster
-            if boundaryVertices.contains(index) || protectedVertices.contains(index) {
+            if boundaryVertices.contains(index) || protectedRoots.contains(find(index)) {
                 key = DetailCluster(x: 0, y: 0, z: 0, unique: index + 1)
             } else {
                 let relative = (vertex - minimum) / cell
@@ -176,14 +193,16 @@ enum MeshDetailSimplifierEngine {
                 )
             }
             vertexKeys.append(key)
-            sums[key, default: .zero] += SIMD3<Double>(Double(vertex.x), Double(vertex.y), Double(vertex.z))
+            var accumulator = accumulators[key] ?? DetailClusterAccumulator()
+            accumulator.positionSum += SIMD3<Double>(Double(vertex.x), Double(vertex.y), Double(vertex.z))
+            accumulator.count += 1
+            accumulators[key] = accumulator
             if hasVertexColors, let color = vertexColors[index] {
                 colorSums[key, default: .zero] += SIMD3<Double>(Double(color.x), Double(color.y), Double(color.z))
             }
-            counts[key, default: 0] += 1
         }
 
-        let orderedKeys = sums.keys.sorted { lhs, rhs in
+        let orderedKeys = accumulators.keys.sorted { lhs, rhs in
             if lhs.unique != rhs.unique { return lhs.unique < rhs.unique }
             if lhs.x != rhs.x { return lhs.x < rhs.x }
             if lhs.y != rhs.y { return lhs.y < rhs.y }
@@ -194,8 +213,9 @@ enum MeshDetailSimplifierEngine {
         var outputColors: [SIMD3<Float>] = []
         for key in orderedKeys {
             clusterToIndex[key] = outputVertices.count
-            let divisor = Double(max(1, counts[key] ?? 1))
-            let mean = (sums[key] ?? .zero) / divisor
+            let accumulator = accumulators[key] ?? DetailClusterAccumulator()
+            let divisor = Double(max(1, accumulator.count))
+            let mean = accumulator.positionSum / divisor
             guard mean.x.isFinite, mean.y.isFinite, mean.z.isFinite,
                   abs(mean.x) <= Double(Float.greatestFiniteMagnitude),
                   abs(mean.y) <= Double(Float.greatestFiniteMagnitude),
@@ -213,7 +233,7 @@ enum MeshDetailSimplifierEngine {
         }
 
         var outputFaces: [SIMD3<Int>] = []
-        var seenFaces = Set<String>()
+        var seenFaces = Set<DetailFaceKey>()
         for face in faces {
             guard face.a >= 0, face.b >= 0, face.c >= 0,
                   face.a < vertexKeys.count, face.b < vertexKeys.count, face.c < vertexKeys.count,
@@ -221,8 +241,9 @@ enum MeshDetailSimplifierEngine {
                   let c = clusterToIndex[vertexKeys[face.c]], a != b, b != c, a != c else { continue }
             let area = simd_length_squared(simd_cross(outputVertices[b] - outputVertices[a], outputVertices[c] - outputVertices[a]))
             guard area.isFinite, area > 1e-10 else { continue }
-            let canonical = [a, b, c].sorted().map(String.init).joined(separator: ":")
-            if seenFaces.insert(canonical).inserted { outputFaces.append(SIMD3<Int>(a, b, c)) }
+            if seenFaces.insert(DetailFaceKey(a, b, c)).inserted {
+                outputFaces.append(SIMD3<Int>(a, b, c))
+            }
         }
         guard !outputFaces.isEmpty else { throw error("簡略化後に面が残りません") }
 
