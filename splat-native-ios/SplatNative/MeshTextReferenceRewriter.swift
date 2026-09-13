@@ -69,6 +69,10 @@ enum MeshTextReferenceRewriter {
         let normalizedDirective = directive.lowercased()
         try forEachLine(at: source) { line in
             if directiveValue(in: line, directive: directive) != nil {
+                // Appearance editing materializes exactly one diffuse bitmap and one material
+                // library generation. Repointing every map_Kd/mtllib reference to that generation
+                // collapses unrelated materials in multi-material assets. Replace the first target
+                // only and preserve all later reference lines until full multi-texture editing exists.
                 if (normalizedDirective == "map_kd" || normalizedDirective == "mtllib"), replaced {
                     try append(String(line))
                     return true
@@ -78,6 +82,9 @@ enum MeshTextReferenceRewriter {
                     let arguments = parseArguments(String(line))
                     let payload = Array(arguments.dropFirst())
                     if let pathStart = texturePathStartIndex(in: payload) {
+                        // Preserve material-space texture transforms/options. Dropping -s/-o/-t while
+                        // swapping the edited bitmap changes how the same UVs sample the texture and
+                        // can make a successful appearance edit visibly move or rescale the material.
                         let options = payload[..<pathStart]
                         let optionSuffix = options.isEmpty ? "" : " " + options.joined(separator: " ")
                         try append("\(directive)\(optionSuffix) \(replacement)")
@@ -125,6 +132,10 @@ enum MeshTextReferenceRewriter {
         guard valueStart < line.endIndex else { return nil }
 
         let normalizedDirective = directive.lowercased()
+        // Appearance editing needs the actual diffuse texture path, not the literal remainder of a
+        // Wavefront map_Kd line. Standard exporters commonly add options such as -s/-o and quote
+        // filenames containing spaces. Treating that complete suffix as one filesystem path made a
+        // valid textured OBJ shareable but impossible to reopen in the appearance editor.
         if normalizedDirective == "map_kd" {
             let arguments = parseArguments(String(line[start...]))
             guard arguments.count >= 2,
@@ -132,6 +143,11 @@ enum MeshTextReferenceRewriter {
             return normalizedRelativeReference(path)
         }
 
+        // A quoted/single mtllib reference (optionally followed by a comment) should resolve to the
+        // actual filename for the appearance editor. Preserve the legacy raw remainder when an OBJ
+        // supplies multiple unquoted tokens because older Scan Lab fixtures treated that text as a
+        // single filename. When the exporter explicitly quotes a multi-library list, however, the
+        // first quoted token is unambiguous and can be edited without discarding the later libraries.
         if normalizedDirective == "mtllib" {
             let raw = String(line[start...])
             let arguments = parseArguments(raw)
@@ -245,6 +261,9 @@ enum MeshTextReferenceRewriter {
                     consumed += 1
                 }
             default:
+                // Remaining standard map options (-clamp, -blendu, -blendv, -boost, -texres,
+                // -bm, -imfchan, -type) each consume one value. Unknown vendor options retain the
+                // same conservative one-value behavior as the exact-share parser.
                 if index < arguments.count { index += 1 }
             }
         }
