@@ -136,8 +136,6 @@ enum MeshDetailSimplifierEngine {
             boundaryVertices.insert(edge.a)
             boundaryVertices.insert(edge.b)
         }
-        // Edge multiplicity is only needed to identify boundaries. Release the potentially large
-        // hash table before allocating union-find and clustering state.
         edgeCount.removeAll(keepingCapacity: false)
 
         var parent = Array(0..<vertices.count)
@@ -159,7 +157,7 @@ enum MeshDetailSimplifierEngine {
 
         var componentFaceCounts: [Int: Int] = [:]
         for face in faces { componentFaceCounts[find(face.a), default: 0] += 1 }
-        let protectedRoots = Set(componentFaceCounts.filter { $0.value < 600 }.map(\.key))
+        var protectedRoots = Set(componentFaceCounts.filter { $0.value < 600 }.map(\.key))
 
         var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
         var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
@@ -202,6 +200,17 @@ enum MeshDetailSimplifierEngine {
             }
         }
 
+        let boundaryVertexCount = boundaryVertices.count
+        let protectedComponentCount = protectedRoots.count
+        // Original vertices/colors and connectivity scratch are no longer required after every
+        // source vertex has been mapped to a cluster. Release them before allocating output arrays.
+        vertices.removeAll(keepingCapacity: false)
+        vertexColors.removeAll(keepingCapacity: false)
+        boundaryVertices.removeAll(keepingCapacity: false)
+        protectedRoots.removeAll(keepingCapacity: false)
+        componentFaceCounts.removeAll(keepingCapacity: false)
+        parent.removeAll(keepingCapacity: false)
+
         let orderedKeys = accumulators.keys.sorted { lhs, rhs in
             if lhs.unique != rhs.unique { return lhs.unique < rhs.unique }
             if lhs.x != rhs.x { return lhs.x < rhs.x }
@@ -231,6 +240,8 @@ enum MeshDetailSimplifierEngine {
                 outputColors.append(SIMD3<Float>(Float(colorMean.x), Float(colorMean.y), Float(colorMean.z)))
             }
         }
+        accumulators.removeAll(keepingCapacity: false)
+        colorSums.removeAll(keepingCapacity: false)
 
         var outputFaces: [SIMD3<Int>] = []
         var seenFaces = Set<DetailFaceKey>()
@@ -246,6 +257,10 @@ enum MeshDetailSimplifierEngine {
             }
         }
         guard !outputFaces.isEmpty else { throw error("簡略化後に面が残りません") }
+        faces.removeAll(keepingCapacity: false)
+        vertexKeys.removeAll(keepingCapacity: false)
+        clusterToIndex.removeAll(keepingCapacity: false)
+        seenFaces.removeAll(keepingCapacity: false)
 
         var normals = Array(repeating: SIMD3<Float>.zero, count: outputVertices.count)
         for face in outputFaces {
@@ -265,15 +280,15 @@ enum MeshDetailSimplifierEngine {
             .appendingPathComponent("mesh-detail-simplified-\(percent)-\(UUID().uuidString.lowercased()).obj")
         try writeOBJ(
             to: outputURL,
-            boundaryVertexCount: boundaryVertices.count,
-            protectedComponentCount: protectedRoots.count,
+            boundaryVertexCount: boundaryVertexCount,
+            protectedComponentCount: protectedComponentCount,
             vertices: outputVertices,
             colors: hasVertexColors ? outputColors : nil,
             normals: normals,
             faces: outputFaces
         )
         return DetailSimplifyResult(url: outputURL, vertices: outputVertices.count, faces: outputFaces.count,
-                                    boundaryVertices: boundaryVertices.count, protectedComponents: protectedRoots.count)
+                                    boundaryVertices: boundaryVertexCount, protectedComponents: protectedComponentCount)
     }
 
     private static func forEachOBJLine(at url: URL, body: (Substring) throws -> Void) throws {
