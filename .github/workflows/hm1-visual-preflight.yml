@@ -1,0 +1,175 @@
+name: HM1 Visual Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/sanitary-manager-1/**'
+      - 'ios/health-manager-1/**'
+      - 'scripts/audit_hm1_product_preflight.py'
+      - 'scripts/audit_hm1_human_gate.py'
+      - '.github/workflows/hm1-visual-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hm1-visual-preflight
+  cancel-in-progress: true
+
+jobs:
+  visual-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Materialize audited 264-question release product
+        env:
+          HM1_PRODUCT_ONLY: '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends webp
+          python -m pip install --disable-pip-version-check Pillow
+          bash ios/health-manager-1/prepare-ios.sh
+          python3 scripts/audit_hm1_product_preflight.py
+
+      - name: Install deterministic browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Serve release bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd ios/health-manager-1/Resources
+          python3 -m http.server 4174 --bind 127.0.0.1 >/tmp/hm1-http.log 2>&1 &
+          echo $! >/tmp/hm1-http.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4174/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/hm1-http.log
+          exit 1
+
+      - name: Verify complete learning loop and visual state changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/hm1-visual
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          import struct
+
+          out = Path('/tmp/hm1-visual')
+          console_errors = []
+          page_errors = []
+
+          with sync_playwright() as p:
+              browser = p.chromium.launch()
+              context = browser.new_context(
+                  viewport={'width':430,'height':932},
+                  device_scale_factor=3,
+                  locale='ja-JP',
+                  is_mobile=True,
+                  has_touch=True,
+              )
+              page = context.new_page()
+              page.on('console', lambda msg: console_errors.append(msg.text) if msg.type == 'error' else None)
+              page.on('pageerror', lambda exc: page_errors.append(str(exc)))
+              page.goto('http://127.0.0.1:4174/', wait_until='networkidle')
+
+              # Home / information completeness.
+              page.locator('#todayStart').wait_for(state='visible')
+              home = page.locator('body').inner_text()
+              for text in ('第一種衛生管理者', '今日のスプリント', '苦手をつぶす', '模擬試験', '全264問'):
+                  assert text in home, f'home missing: {text}'
+              page.screenshot(path=str(out/'01-home.png'))
+
+              # Start -> understand. Unknown is deterministic and guarantees a wrong item for review.
+              page.locator('#todayStart').click()
+              page.locator('#unknown').wait_for(state='visible')
+              page.screenshot(path=str(out/'02-question.png'))
+              page.locator('#unknown').click()
+              page.locator('.memory').wait_for(state='visible')
+              feedback = page.locator('body').inner_text()
+              assert 'ここだけ覚える' in feedback
+              assert '苦手に追加しました' in feedback
+              page.screenshot(path=str(out/'03-understand.png'))
+
+              # Interruption -> recovery must preserve the answered state.
+              page.locator('#quit').click()
+              page.locator('#resume').wait_for(state='visible')
+              page.screenshot(path=str(out/'04-resume-home.png'))
+              page.locator('#resume').click()
+              page.locator('.memory').wait_for(state='visible')
+              assert 'ここだけ覚える' in page.locator('body').inner_text()
+
+              # Finish the short sprint deterministically with "unknown" so review inventory exists.
+              safety = 0
+              while page.locator('#rAgain').count() == 0:
+                  safety += 1
+                  assert safety <= 20, 'sprint did not reach result within 20 transitions'
+                  if page.locator('#next').count():
+                      page.locator('#next').click()
+                  if page.locator('#rAgain').count():
+                      break
+                  page.locator('#unknown').wait_for(state='visible')
+                  page.locator('#unknown').click()
+                  page.locator('.memory').wait_for(state='visible')
+
+              # Progress awareness/result state.
+              result = page.locator('body').inner_text()
+              for text in ('正答率', '所要時間', 'もう一度'):
+                  assert text in result, f'result missing: {text}'
+              assert page.locator('#rReview').count() == 1, 'wrong-answer review CTA missing'
+              page.screenshot(path=str(out/'05-result-progress.png'))
+
+              # Review -> retry is a real journey, not a static label.
+              page.locator('#rReview').click()
+              page.locator('#unknown').wait_for(state='visible')
+              review = page.locator('body').inner_text()
+              assert '間違えた問題を復習' in review
+              page.screenshot(path=str(out/'06-review-retry.png'))
+              page.locator('[data-choice]').first.click()
+              page.locator('.memory').wait_for(state='visible')
+              page.screenshot(path=str(out/'07-review-feedback.png'))
+
+              # Premium surface is also part of release information completeness.
+              page.locator('#quit').click()
+              page.locator('#premiumGo').click()
+              premium = page.locator('body').inner_text()
+              for text in ('¥200', '¥800', '264', '購入を復元'):
+                  assert text in premium, f'premium missing: {text}'
+              page.screenshot(path=str(out/'08-premium.png'))
+
+              browser.close()
+
+          assert not page_errors, f'page errors: {page_errors}'
+          assert not console_errors, f'console errors: {console_errors}'
+          pngs = sorted(out.glob('*.png'))
+          assert len(pngs) == 8, f'expected 8 screenshots, got {len(pngs)}'
+          for path in pngs:
+              raw = path.read_bytes()
+              assert raw[:8] == b'\x89PNG\r\n\x1a\n', path
+              w,h = struct.unpack('>II', raw[16:24])
+              assert (w,h) == (1290,2796), (path,w,h)
+              assert len(raw) > 20_000, (path,len(raw))
+              print(f'PASS {path.name}: {w}x{h} bytes={len(raw)}')
+          PY
+
+      - name: Upload Visual Gate evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: hm1-visual-preflight
+          path: /tmp/hm1-visual/*.png
+          if-no-files-found: error
+          retention-days: 14
