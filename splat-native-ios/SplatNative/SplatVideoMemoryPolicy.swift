@@ -142,11 +142,16 @@ enum SplatVideoMemoryPolicy {
             try Task.checkCancellation()
             return admission
         }
-        return try await withTaskCancellationHandler {
+        let admission = try await withTaskCancellationHandler {
             try await worker.value
         } onCancel: {
             worker.cancel()
         }
+        // The detached worker can finish successfully at the same instant the parent export task
+        // is cancelled. Re-check the parent after the handoff so a stale admission never proceeds
+        // into scene materialization/video encoding after the user has dismissed the export flow.
+        try Task.checkCancellation()
+        return admission
     }
 
     static func preflightAdmission(
