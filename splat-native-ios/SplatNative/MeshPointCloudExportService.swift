@@ -414,9 +414,15 @@ enum MeshPointCloudExportService {
         try forEachOBJLine(at: url) { line in
             let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !trimmed.isEmpty, !trimmed.hasPrefix("#") else { return }
-            let fields = trimmed.split(whereSeparator: { $0.isWhitespace })
-            guard let kind = fields.first else { return }
-            let lowerKind = kind.lowercased()
+
+            // Material/library records need the richer quoted/escaped argument parser because a
+            // literal '#' may be escaped inside a filename. Numeric geometry records do not: for
+            // v/vt/f, Wavefront '#' starts a comment and everything after it is syntax-external.
+            // Parse command records first, then strip inline comments before numeric tokenization so
+            // `f 1/1 2/2 3/3 # note` cannot turn a valid textured triangle into a silent fallback.
+            let commandFields = trimmed.split(whereSeparator: { $0.isWhitespace })
+            guard let commandKind = commandFields.first else { return }
+            let lowerKind = commandKind.lowercased()
             if lowerKind == "mtllib" {
                 let arguments = parseArguments(trimmed)
                 for library in arguments.dropFirst() where !materialLibraries.contains(library) {
@@ -431,6 +437,10 @@ enum MeshPointCloudExportService {
                 currentMaterial = name.isEmpty ? nil : name
                 return
             }
+
+            let numericSyntax = trimmed.prefix { $0 != "#" }
+            let fields = numericSyntax.split(whereSeparator: { $0.isWhitespace })
+            guard let kind = fields.first else { return }
             if kind == "v", fields.count >= 4,
                let x = Double(fields[1]), let y = Double(fields[2]), let z = Double(fields[3]),
                x.isFinite, y.isFinite, z.isFinite {
