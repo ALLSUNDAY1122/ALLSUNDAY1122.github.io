@@ -2,7 +2,7 @@ import XCTest
 
 @MainActor
 final class SplatViewerMeasurementScaleAsyncTests: XCTestCase {
-    func testAttachAppliesMeasurementScaleAfterBackgroundTrajectoryDecode() async throws {
+    func testAttachDefersMeasurementUntilBackgroundTrajectoryDecodeCompletes() async throws {
         let fileManager = FileManager.default
         let root = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
@@ -15,17 +15,18 @@ final class SplatViewerMeasurementScaleAsyncTests: XCTestCase {
 
         let state = SplatViewerState()
         state.attach(url: source)
+        state.rendererMeasured(meters: 1)
+        XCTAssertEqual(state.measurementText, "計測情報を準備中です")
 
         var observed = false
         for _ in 0..<100 {
-            state.rendererMeasured(meters: 1)
             if state.measurementText == "2.00 m" {
                 observed = true
                 break
             }
             try await Task.sleep(nanoseconds: 10_000_000)
         }
-        XCTAssertTrue(observed, "background trajectory decode should update measurement scale")
+        XCTAssertTrue(observed, "pending measurement should be reformatted after trajectory decode")
     }
 
     func testSwitchingScansPreventsObsoleteScaleFromWinning() async throws {
@@ -53,10 +54,10 @@ final class SplatViewerMeasurementScaleAsyncTests: XCTestCase {
         let state = SplatViewerState()
         state.attach(url: slowSource)
         state.attach(url: fastSource)
+        state.rendererMeasured(meters: 1)
 
         var observedFastScale = false
         for _ in 0..<150 {
-            state.rendererMeasured(meters: 1)
             if state.measurementText == "3.00 m" {
                 observedFastScale = true
                 break
