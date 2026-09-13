@@ -25,8 +25,21 @@ private struct MeshRefineFaceKey: Hashable, Sendable {
     let c: Int
 
     init(_ x: Int, _ y: Int, _ z: Int) {
-        let sorted = [x, y, z].sorted()
-        a = sorted[0]; b = sorted[1]; c = sorted[2]
+        if x <= y {
+            if y <= z {
+                a = x; b = y; c = z
+            } else if x <= z {
+                a = x; b = z; c = y
+            } else {
+                a = z; b = x; c = y
+            }
+        } else if x <= z {
+            a = y; b = x; c = z
+        } else if y <= z {
+            a = y; b = z; c = x
+        } else {
+            a = z; b = y; c = x
+        }
     }
 }
 
