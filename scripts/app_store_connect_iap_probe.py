@@ -42,10 +42,14 @@ def main() -> None:
     try:
         token = make_token(issuer_id, key_id, key_path)
         base = f"/v2/inAppPurchases/{args.iap_id}"
+        price = f"/v1/inAppPurchasePriceSchedules/{args.iap_id}"
         requests = [
             ("iap-detail", base),
             ("iap-localizations", base + "/inAppPurchaseLocalizations"),
             ("iap-price-schedule", base + "/iapPriceSchedule"),
+            ("iap-manual-prices", price + "/manualPrices?limit=50"),
+            ("iap-automatic-prices", price + "/automaticPrices?limit=50"),
+            ("iap-base-territory", price + "/baseTerritory"),
             ("iap-review-screenshot", base + "/appStoreReviewScreenshot"),
             ("iap-availability", base + "/inAppPurchaseAvailability"),
         ]
