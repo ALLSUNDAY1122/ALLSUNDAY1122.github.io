@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Read-only FP3 App Store Connect release-state probe.
 
-Fail-closed target identity; no ASC mutation is performed. The result is sanitized
-and intended for release/preflight decisions before any TestFlight human test.
+Fail-closed target identity; no ASC mutation is performed. Parent-app availability
+is intentionally excluded because that relationship is not readable through the
+current gateway/API combination. IAP release metadata remains fully observable.
 """
 import json
 import os
@@ -58,10 +59,6 @@ def main() -> None:
         if iap_data.get("id") != IAP_ID or iap_attrs.get("productId") != PRODUCT_ID:
             raise RuntimeError("FP3 IAP identity mismatch")
 
-        app_av = safe_get(
-            token,
-            f"/v1/apps/{APP_ID}/appAvailabilityV2?include=territoryAvailabilities&limit[territoryAvailabilities]=200",
-        )
         iap_av = safe_get(
             token,
             f"/v1/inAppPurchaseAvailabilities/{IAP_ID}?include=availableTerritories&limit[availableTerritories]=200",
@@ -71,23 +68,9 @@ def main() -> None:
             token,
             f"/v2/inAppPurchases/{IAP_ID}/iapPriceSchedule?include=baseTerritory,manualPrices&limit[manualPrices]=50",
         )
+        screenshot = safe_get(token, f"/v2/inAppPurchases/{IAP_ID}/appStoreReviewScreenshot")
 
-        app_available = []
-        if app_av["ok"]:
-            payload = app_av["payload"]
-            for item in payload.get("included") or []:
-                if not isinstance(item, dict) or item.get("type") != "territoryAvailabilities":
-                    continue
-                if (item.get("attributes") or {}).get("available") is not True:
-                    continue
-                rel = ((item.get("relationships") or {}).get("territory") or {}).get("data") or {}
-                if rel.get("id"):
-                    app_available.append(str(rel["id"]))
-
-        iap_available = []
-        if iap_av["ok"]:
-            iap_available = included_territories(iap_av["payload"])
-
+        iap_available = included_territories(iap_av["payload"]) if iap_av["ok"] else []
         localizations = []
         for item in loc.get("data") or []:
             attrs = item.get("attributes") or {}
@@ -108,11 +91,6 @@ def main() -> None:
             "checked_at": datetime.now(timezone.utc).isoformat(),
             "app": {"id": APP_ID, "bundle_id": BUNDLE_ID, "name": app_attrs.get("name")},
             "iap": {"id": IAP_ID, "product_id": PRODUCT_ID, "state": iap_attrs.get("state")},
-            "app_availability": {
-                "exists": app_av["ok"],
-                "status": app_av["status"],
-                "available_territories": sorted(set(app_available)),
-            },
             "iap_availability": {
                 "exists": iap_av["ok"],
                 "status": iap_av["status"],
@@ -120,6 +98,7 @@ def main() -> None:
             },
             "localizations": localizations,
             "price_schedule": price_summary,
+            "review_screenshot": {"exists": screenshot["ok"], "status": screenshot["status"]},
         }
         Path("fp3-release-state.json").write_text(
             json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
