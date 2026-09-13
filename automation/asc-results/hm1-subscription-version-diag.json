@@ -1,0 +1,126 @@
+{
+  "checked_at": "2026-09-13T21:42:55.277738+00:00",
+  "app_id": "6799581662",
+  "subscription_id": "6804373671",
+  "subscription_group_id": "22329151",
+  "read_only": true,
+  "subscription_versions": [
+    {
+      "id": "c3bba03b-b852-42ee-8570-a5fa872e7f6a",
+      "type": "subscriptionVersions",
+      "attributes": {
+        "state": "PREPARE_FOR_SUBMISSION",
+        "version": 1
+      }
+    }
+  ],
+  "subscription_version_details": [
+    {
+      "version_id": "c3bba03b-b852-42ee-8570-a5fa872e7f6a",
+      "localizations": {
+        "ok": true,
+        "data": [
+          {
+            "type": "subscriptionLocalizations",
+            "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488",
+            "attributes": {
+              "name": "第一種衛生管理者 プレミアム月額",
+              "locale": "ja",
+              "description": "追加問題・弱点学習などプレミアム機能を月額で利用できます。"
+            },
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/subscriptionLocalizations/8a7a9964-4b2c-4b1a-b8ad-77b24b76a488"
+            }
+          }
+        ],
+        "included": []
+      },
+      "images": {
+        "ok": true,
+        "data": [],
+        "included": []
+      },
+      "image": {
+        "ok": true,
+        "data": null,
+        "included": []
+      }
+    }
+  ],
+  "group_versions": [
+    {
+      "id": "00ca6b0c-5dcc-4a6f-99e9-19c5e0b0086d",
+      "type": "subscriptionGroupVersions",
+      "attributes": {
+        "state": "PREPARE_FOR_SUBMISSION",
+        "version": 1
+      }
+    }
+  ],
+  "group_version_details": [
+    {
+      "version_id": "00ca6b0c-5dcc-4a6f-99e9-19c5e0b0086d",
+      "localizations": {
+        "ok": true,
+        "data": [
+          {
+            "type": "subscriptionGroupLocalizations",
+            "id": "c531f2d8-df44-438a-921b-b59d814207e5",
+            "attributes": {
+              "name": "第一種衛生管理者プレミアム",
+              "customAppName": null,
+              "locale": "ja"
+            },
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/subscriptionGroupLocalizations/c531f2d8-df44-438a-921b-b59d814207e5"
+            }
+          }
+        ],
+        "included": []
+      }
+    }
+  ],
+  "legacy_subscription_localizations": {
+    "ok": true,
+    "data": [
+      {
+        "type": "subscriptionLocalizations",
+        "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488",
+        "attributes": {
+          "name": "第一種衛生管理者 プレミアム月額",
+          "locale": "ja",
+          "description": "追加問題・弱点学習などプレミアム機能を月額で利用できます。",
+          "state": "PREPARE_FOR_SUBMISSION"
+        },
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v1/subscriptionLocalizations/8a7a9964-4b2c-4b1a-b8ad-77b24b76a488"
+        }
+      }
+    ],
+    "included": []
+  },
+  "legacy_group_localizations": {
+    "ok": true,
+    "data": [
+      {
+        "type": "subscriptionGroupLocalizations",
+        "id": "c531f2d8-df44-438a-921b-b59d814207e5",
+        "attributes": {
+          "name": "第一種衛生管理者プレミアム",
+          "customAppName": null,
+          "locale": "ja",
+          "state": "PREPARE_FOR_SUBMISSION"
+        },
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroupLocalizations/c531f2d8-df44-438a-921b-b59d814207e5"
+        }
+      }
+    ],
+    "included": []
+  },
+  "subscription_availability": {
+    "ok": false,
+    "error": "App Store Connect API GET /v1/subscriptions/6804373671/subscriptionAvailability?include=availableTerritories&limit[availableTerritories]=200 returned HTTP 400: {'errors': [{'id': '8069e428-eda7-4877-832d-b31a1758dbeb', 'status': '400', 'code': 'PARAMETER_ERROR.INVALID', 'title': 'A parameter has an invalid value', 'detail': \"The maximum allowable limit is '50'\", 'source': {'parameter': 'limit[availableTerritories]'}}]}"
+  },
+  "ok": true
+}
