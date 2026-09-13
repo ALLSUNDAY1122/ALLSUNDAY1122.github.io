@@ -28,13 +28,13 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
+          import re
           p=Path('codemagic.yaml')
           text=p.read_text(encoding='utf-8')
-          start=text.find('\n  health-manager-1-testflight:')
-          if start < 0: raise SystemExit('HM1 workflow missing')
-          end=text.find('\n  ', start+4)
-          if end < 0: end=len(text)
-          section=text[start:end]
+          match=re.search(r'(?ms)^  health-manager-1-testflight:\n(.*?)(?=^  [A-Za-z0-9_-]+:\n|\Z)', text)
+          if not match:
+              raise SystemExit('HM1 workflow missing')
+          section=match.group(0)
           old="xcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'"
           if old not in section:
               if 'testFlightInternalTestingOnly' not in section and 'xcode-project use-profiles' in section:
@@ -44,7 +44,8 @@ jobs:
           new=section.replace(old, 'xcode-project use-profiles', 1)
           if 'testFlightInternalTestingOnly' in new:
               raise SystemExit('Internal-only flag still present in HM1 workflow')
-          p.write_text(text[:start]+new+text[end:], encoding='utf-8')
+          text=text[:match.start()]+new+text[match.end():]
+          p.write_text(text, encoding='utf-8')
           PY
           python3 scripts/audit-hm1-release-pipeline.py
       - name: Commit repair if changed
