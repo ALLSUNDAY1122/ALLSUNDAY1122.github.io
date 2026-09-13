@@ -108,6 +108,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Product materialization intentionally mutates tracked release inputs.
+          # Evidence must be committed from a clean checkout, not together with
+          # generated product files, otherwise git pull --rebase is fail-closed.
+          git reset --hard HEAD
           mkdir -p automation/app2-005-hm1-metadata-assets automation/asc-results
           cp /tmp/hm1-review-screens/01-home.png automation/app2-005-hm1-metadata-assets/01-home.png 2>/dev/null || true
           cp /tmp/hm1-review-screens/02-premium.png automation/app2-005-hm1-metadata-assets/02-premium.png 2>/dev/null || true
@@ -140,8 +144,9 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          p=Path('automation/asc-results/app2-005-hm1-metadata-result.json')
-          if not p.exists():
+          candidates=[Path('/tmp/app2-005-hm1-metadata-result.json'),Path('automation/asc-results/app2-005-hm1-metadata-result.json')]
+          p=next((x for x in candidates if x.exists()),None)
+          if p is None:
               raise SystemExit('metadata result missing')
           data=json.loads(p.read_text(encoding='utf-8'))
           if data.get('submitted') or data.get('build_selected'):
