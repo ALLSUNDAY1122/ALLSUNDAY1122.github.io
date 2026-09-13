@@ -146,8 +146,7 @@ private enum MeshGeometryRefinerEngine {
         parsed.faces.removeAll(keepingCapacity: false)
 
         guard !faces.isEmpty else { throw error("統合後に有効な面が残りませんでした") }
-        let componentResult = filterMicroscopicComponents(vertices: vertices, faces: faces)
-        faces = componentResult.faces
+        let removedComponents = filterMicroscopicComponents(vertices: vertices, faces: &faces)
         guard !faces.isEmpty else { throw error("ノイズ除去後に有効な面が残りませんでした") }
         let compacted = compact(vertices: vertices, faces: faces)
         let normals = recomputeNormals(vertices: compacted.vertices, faces: compacted.faces)
@@ -167,7 +166,7 @@ private enum MeshGeometryRefinerEngine {
             vertexCount: compacted.vertices.count,
             faceCount: compacted.faces.count,
             removedFaces: max(0, sourceFaceCount - compacted.faces.count),
-            removedComponents: componentResult.removedComponents
+            removedComponents: removedComponents
         )
     }
 
@@ -341,7 +340,7 @@ private enum MeshGeometryRefinerEngine {
         }
     }
 
-    private static func filterMicroscopicComponents(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> (faces: [SIMD3<Int>], removedComponents: Int) {
+    private static func filterMicroscopicComponents(vertices: [SIMD3<Float>], faces: inout [SIMD3<Int>]) -> Int {
         var parent = Array(0..<vertices.count)
         func find(_ x: Int) -> Int {
             var i = x
@@ -379,7 +378,8 @@ private enum MeshGeometryRefinerEngine {
                 removed += 1
             }
         }
-        return (faces.filter { keptRoots.contains(find($0.x)) }, removed)
+        faces.removeAll { !keptRoots.contains(find($0.x)) }
+        return removed
     }
 
     private static func compact(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> MeshRefineMesh {
