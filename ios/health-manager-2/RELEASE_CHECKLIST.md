@@ -1,6 +1,6 @@
 # RELEASE_CHECKLIST｜第二種衛生管理者｜学びスプリント
 
-更新: 2026-08-19
+更新: 2026-09-13
 
 ## 1. 教材・構造
 - [x] 全300問
@@ -31,13 +31,14 @@
 - [x] ホーム/模試/記録/設定の4タブ
 - [x] 10回相当・30セットをデータ駆動表示
 - [x] 30問模試
-- [x] 科目別40%判定
+- [x] 総合60%以上 + 全3科目40%以上の合格判定
 - [x] 回答タップで即時採点
 - [x] ○×、ここだけ覚える、詳細解説
 - [x] 中断→続きから再開
 - [x] 苦手登録→3連続正解で卒業
 - [x] 学習履歴・正答率・ヒートマップ
 - [x] JSONバックアップ
+- [x] StoreKit entitlement更新時に全画面再描画ループを起こさない部分更新方式
 
 ## 4. iOS製品化 / AppIcon
 - [x] SwiftUI + WKWebView
@@ -49,11 +50,11 @@
 - [x] iPhone portrait
 - [x] Bundle ID `jp.allsunday1122.healthmanager2`
 - [x] Version `1.0.0`
-- [x] Current release Build `16`
 - [x] ユーザー承認済みAppIconを唯一のrelease sourceとして固定
 - [x] approved icon transport SHA-256 `4cefe840198dde91fddb6c5fe0fdece7d41a8bebfed415eb034752491cd7977c`
 - [x] placeholder iconへのfallback禁止
 - [x] 1024/120/152/167/180pxを承認sourceから生成・寸法検査
+- [ ] **現HEADを含む新Release Buildを生成する**
 
 ## 5. Privacy・通信
 - [x] アカウントなし
@@ -63,9 +64,12 @@
 - [x] 位置情報/カメラ/マイク/写真/連絡先なし
 - [x] 学習データは端末内保存
 - [x] Support/Privacy公開ページあり
-- [x] App Store本審査前に実ビルドのPrivacy Manifest/SDKを再確認する
+- [ ] 新Release BuildのPrivacy Manifest/SDKを再確認する
 
 ## 6. Codemagic / App Store Connect / Internal TestFlight
+過去のBuild 16は2026-08-19時点のrelease evidenceとしてのみ保持する。現HEADの製品差分を含まないためRelease候補に戻さない。
+
+### Historical evidence: Build 16
 - [x] Codemagic App ID `6a769d81a1add9d06020b524` API解決
 - [x] Workflow `health-manager-2-ios`
 - [x] Codemagic Build ID `6a842f4fb381e0b3a3e7a246`
@@ -74,25 +78,41 @@
 - [x] IPA archive/export
 - [x] App Store Connect upload
 - [x] Apple Build ID `b53250d3-e005-4da4-bbc0-319c86a321ee`
-- [x] Build 16 `VALID`
-- [x] Build 16 `APP_STORE_ELIGIBLE`
+- [x] Build 16 `VALID`（当時）
+- [x] Build 16 `APP_STORE_ELIGIBLE`（当時）
 - [x] 非免除暗号化なし
-- [x] App Store Version 1.0へBuild 16紐付け read-back
-- [x] Internal Testingグループ `sun` のbuild一覧にBuild 16をread-back
+- [x] App Store Version 1.0へBuild 16紐付け read-back（当時）
+- [x] Internal Testingグループ `sun` のbuild一覧にBuild 16をread-back（当時）
 - [x] App Store本審査自動提出OFF
-- [x] 旧Build 1は履歴として維持し、現行release Buildへ戻さない
 
-## 7. Build 16後の失効監査
-- [x] Build 16生成commit `f29557c61f7898707f513dc1c1385baa6a6c87c2` 以降、第二種の問題バンク・UI・approved AppIcon sourceに変更なし
-- [x] したがって300問/アイコン/Build 16のPASSを失効させる製品差分なし
+### Current release candidate
+- [ ] AI Preflight PASS
+- [ ] Learning Acceptance Contract PASS
+- [ ] StoreKit UI Regression Gate PASS
+- [ ] Visual Gate PASS
+- [ ] current HEADを含む新Build生成
+- [ ] 新Build `VALID / APP_STORE_ELIGIBLE / expired=false` read-back
+- [ ] App Store Version 1.0への新Build紐付け read-back
+- [ ] Internal Testing対象の新Build read-back
+- [ ] App Store本審査自動提出OFF再確認
+
+## 7. Release Build失効監査
+旧記録「Build 16生成commit `f29557c61f7898707f513dc1c1385baa6a6c87c2` 以降、製品差分なし」は失効した。
+
+2026-09-13時点で少なくとも `apps/sanitary-manager-2/gm2.js` / `gm3.js` / `gm4.js` 等に製品差分が存在し、30問模試・合格判定・StoreKit UI更新・学習循環に関わる変更が入っている。このためBuild 16を現行Release GateのPASS根拠として使用しない。
+
+- [x] 旧Build 16のRelease適格性を失効扱いへ変更
+- [ ] 新Release Buildのcommit SHAを記録
+- [ ] 新Release Build以降の製品差分0を再監査
 
 ## 8. 次の人間品質ゲート
-Build 16をiPhone実機で確認する。
+人間品質ゲートへ渡すのは、AI Preflight / Visual Gate / Release Gateを通過した**新Release Buildのみ**とする。Build 16では実施しない。
+
 - [ ] 起動クラッシュなし
 - [ ] approved AppIcon表示
 - [ ] 4タブ表示
 - [ ] 10回相当・30セット・300問への導線
-- [ ] 30問模試と科目別40%判定
+- [ ] 30問模試と「総合60%以上 + 全科目40%以上」判定
 - [ ] 8問スプリント完走
 - [ ] 即時採点・ハプティクス
 - [ ] 中断再開
@@ -106,7 +126,8 @@ Build 16をiPhone実機で確認する。
 - [ ] Primary Category / 年齢評価
 - [ ] App Storeスクリーンショット
 - [ ] Review Detail（第二種固有価値とGuideline 4.3(a)対策）
-- [ ] Build 16実機最終確認
+- [ ] Lifetime IAP metadata / availability / price / review screenshotのfresh read-back
+- [ ] 新Release Build実機最終確認
 - [ ] Submit for Review直前のユーザー最終承認
 
-実機FAIL時は対象品質ループへ戻り、修正後にBuild番号を上げて再配布する。本審査Submitは人間の最終承認前に実行しない。
+実機FAIL時は対象品質ループへ戻り、Root Cause分類→同種全探索→横断修正→Regression Rule追加→Preflight再実行を行う。本審査Submitは人間の最終承認前に実行しない。
