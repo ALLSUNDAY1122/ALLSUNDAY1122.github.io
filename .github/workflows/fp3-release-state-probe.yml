@@ -1,0 +1,33 @@
+name: FP3 Release State Probe
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/fp3_release_state_probe.py'
+      - '.github/workflows/fp3-release-state-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Read FP3 App Store Connect release state
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/fp3_release_state_probe.py
+      - name: Upload sanitized release state
+        if: always() && hashFiles('fp3-release-state.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: fp3-release-state-${{ github.run_id }}
+          path: fp3-release-state.json
+          retention-days: 7
