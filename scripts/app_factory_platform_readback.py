@@ -13,11 +13,6 @@ APPS={
  "pharmacist":("6799753724","jp.allsunday1122.yakuzaishi"),
 }
 REPOSITORY="ALLSUNDAY1122/ALLSUNDAY1122.github.io"
-# Codemagic models this monorepo as one app containing several workflows. The
-# /apps response has not always exposed repositoryUrl, so repository-string
-# matching alone is not a reliable canonical readback. This ID is the same app
-# ID already used by the release commands for HM1/Touhan/etc.; it is read-only
-# here and is used only as a deterministic fallback when discovery is ambiguous.
 KNOWN_CM_APP_ID="6a769d81a1add9d06020b524"
 CM_WORKFLOWS={
  "touhan":"touhan-ios",
@@ -55,9 +50,7 @@ def list_data(payload):
 
 
 def latest_build(builds):
-    """ASC /v1/apps/{id}/builds does not accept sort; sort its result locally."""
-    if not builds:
-        return None
+    if not builds: return None
     def key(item):
         attrs=item.get("attributes") or {}
         return str(attrs.get("uploadedDate") or attrs.get("expirationDate") or "")
@@ -84,12 +77,21 @@ def cm_time_key(build):
     return str(build.get("startedAt") or build.get("finishedAt") or build.get("createdAt") or "")
 
 
+def cm_workflow_id(build):
+    # Codemagic v3 list responses currently expose fileWorkflowId while older
+    # responses/fixtures may expose workflowId. Accept both, preferring the
+    # explicit file workflow identifier used by codemagic.yaml.
+    return str(build.get("fileWorkflowId") or build.get("workflowId") or "")
+
+
 def cm_build_summary(build):
     if not build: return None
-    return {k:build.get(k) for k in (
-        "_id","id","status","workflowId","branch","startedAt","finishedAt",
+    out={k:build.get(k) for k in (
+        "_id","id","status","workflowId","fileWorkflowId","branch","startedAt","finishedAt",
         "buildVersion","buildNumber","index","app_store_connect_status"
     ) if k in build}
+    out["resolvedWorkflowId"]=cm_workflow_id(build) or None
+    return out
 
 
 def main():
@@ -133,8 +135,7 @@ def main():
         result["codemagic"]={"error":"CM_API_TOKEN unavailable"}
     else:
         status,apps=cm_get("https://api.codemagic.io/apps",cm_token)
-        candidates=[]
-        raw=[]
+        candidates=[]; raw=[]
         if 200<=status<300:
             raw=(apps.get("applications") or apps.get("data") or []) if isinstance(apps,dict) else []
             if isinstance(raw,dict): raw=raw.get("applications") or []
@@ -145,11 +146,9 @@ def main():
                     candidates.append(app_summary(app))
         discovered_ids={str(c.get("id")) for c in candidates if c.get("id")}
         if len(discovered_ids)==1:
-            selected_app_id=next(iter(discovered_ids))
-            resolution="repository-discovery"
+            selected_app_id=next(iter(discovered_ids)); resolution="repository-discovery"
         else:
-            selected_app_id=KNOWN_CM_APP_ID
-            resolution="known-monorepo-app-id-fallback"
+            selected_app_id=KNOWN_CM_APP_ID; resolution="known-monorepo-app-id-fallback"
         result["codemagic"].update({
             "apps_http_status":status,
             "application_count":len(raw) if isinstance(raw,list) else 0,
@@ -164,7 +163,7 @@ def main():
         result["codemagic"]["latest_summary"]=cm_build_summary(arr[0]) if arr else None
         per_workflow={}
         for label,workflow_id in CM_WORKFLOWS.items():
-            row=next((b for b in arr if str(b.get("workflowId") or "")==workflow_id),None)
+            row=next((b for b in arr if cm_workflow_id(b)==workflow_id),None)
             per_workflow[label]={"workflow_id":workflow_id,"latest":cm_build_summary(row)}
         result["codemagic"]["workflow_latest"]=per_workflow
 
