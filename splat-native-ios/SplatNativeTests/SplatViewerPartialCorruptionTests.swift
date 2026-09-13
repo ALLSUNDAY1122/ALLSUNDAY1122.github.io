@@ -86,6 +86,13 @@ final class SplatViewerPartialCorruptionTests: XCTestCase {
         XCTAssertEqual(loaded.settings.contrast, 1, accuracy: 0.0001)
         XCTAssertEqual(loaded.settings.cropXMin, 0, accuracy: 0.0001)
         XCTAssertEqual(loaded.settings.cropXMax, 1, accuracy: 0.0001)
+
+        // Last-resort salvage should happen once. The repaired primary must decode normally on the
+        // next open, and save() should have re-established a healthy backup generation too.
+        let reopened = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
+        XCTAssertFalse(reopened.recoveredFromBackup)
+        XCTAssertEqual(reopened.settings, loaded.settings)
+        XCTAssertTrue(fileManager.fileExists(atPath: SplatViewerEditStore.backupURL(for: source).path))
     }
 
     func testPrimaryWithNoUsableKnownFieldStillFallsBackToLastKnownGoodBackup() throws {
