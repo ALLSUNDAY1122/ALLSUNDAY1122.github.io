@@ -4,8 +4,12 @@ from __future__ import annotations
 import hashlib
 import json
 import plistlib
+import re
+import statistics
 import struct
+from collections import Counter, defaultdict
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
 IOS = ROOT / "touroku-hanbaisha-ios"
@@ -72,6 +76,7 @@ for token in ('state?.inProgress', 'chapterAnswered', 'inProgress=true'):
 # Learning Acceptance Contract: the release must contain three independent
 # 120-question rounds (360 total), not merely copy that claims 360 questions.
 all_ids: set[str] = set()
+all_questions: list[dict] = []
 question_total = 0
 for round_no in (1, 2, 3):
     round_count = 0
@@ -88,18 +93,69 @@ for round_no in (1, 2, 3):
             qid = str(q.get('id') or '')
             assert qid and qid not in all_ids, f'duplicate/missing question id: {qid!r}'
             all_ids.add(qid)
+            all_questions.append(q)
             choices = q.get('choices')
             assert isinstance(choices, list) and len(choices) == 5, f'{qid}: choices != 5'
             assert len(set(map(str, choices))) == 5, f'{qid}: duplicate choices'
             answer = q.get('correct_index')
             assert isinstance(answer, int) and 0 <= answer < 5, f'{qid}: invalid correct_index'
+            assert q.get('answer') == answer, f'{qid}: answer/correct_index mismatch'
             for field in ('question', 'topic', 'source_url', 'reference_date', 'rights_basis'):
                 assert str(q.get(field) or '').strip(), f'{qid}: missing {field}'
             explanation = q.get('explanation') or q.get('point')
             assert str(explanation or '').strip(), f'{qid}: missing explanation/point'
-            assert str(q['source_url']).startswith('https://'), f'{qid}: source must be HTTPS'
+            source = str(q['source_url'])
+            assert source.startswith('https://'), f'{qid}: source must be HTTPS'
+            host = urlparse(source).netloc.lower()
+            assert host.endswith('mhlw.go.jp') or host.endswith('pmda.go.jp'), f'{qid}: non-primary source {host}'
     assert round_count == 120, f'round {round_no}: {round_count}/120 questions'
 assert question_total == 360 and len(all_ids) == 360, (question_total, len(all_ids))
+
+# Question Quality Pack. The historical 2026-08-20 finding showed that count
+# and schema checks alone could pass weak distractors. Re-run the same difficulty
+# heuristic used by the final 360-question audit against the *current* release
+# payload so later edits cannot silently reintroduce C/D questions.
+normalized_stems: dict[str, list[str]] = defaultdict(list)
+for q in all_questions:
+    stem = re.sub(r'\s+', '', str(q.get('question', '')))
+    normalized_stems[stem].append(str(q['id']))
+exact_duplicates = [ids for stem, ids in normalized_stems.items() if stem and len(ids) > 1]
+assert not exact_duplicates, f'exact duplicate question stems: {exact_duplicates}'
+
+absolute_terms = ('必ず','すべて','一切','絶対','常に','例外なく','ことはない','必要はない','不要','のみで','だけで','全く','いかなる','どのような場合でも','自己判断で直ちに')
+hedge_terms = ('場合がある','ことがある','必要に応じ','基本的に','適切','おそれ','可能性','原則','確認する','相談','受診')
+grade_counts: Counter[str] = Counter()
+flagged: list[dict] = []
+for q in all_questions:
+    choices = q['choices']
+    ans = q['correct_index']
+    correct = choices[ans]
+    wrong = [c for i, c in enumerate(choices) if i != ans]
+    wrong_abs = sum(any(t in c for t in absolute_terms) for c in wrong)
+    correct_abs = any(t in correct for t in absolute_terms)
+    correct_hedge = sum(t in correct for t in hedge_terms)
+    med = statistics.median(map(len, choices))
+    ratio = len(correct) / med if med else 1
+    score = 0
+    if wrong_abs >= 3 and not correct_abs:
+        score += 3
+    elif wrong_abs >= 2 and not correct_abs:
+        score += 2
+    elif wrong_abs >= 1 and not correct_abs:
+        score += 1
+    if ratio >= 1.35:
+        score += 2
+    elif ratio >= 1.20:
+        score += 1
+    if correct_hedge >= 1 and wrong_abs >= 2:
+        score += 2
+    if all(len(c) < 28 for c in wrong) and len(correct) >= 45:
+        score += 2
+    grade = 'D' if score >= 6 else 'C' if score >= 4 else 'B-' if score >= 2 else 'B'
+    grade_counts[grade] += 1
+    if grade in ('C', 'D'):
+        flagged.append({'id': q['id'], 'grade': grade, 'score': score})
+assert not flagged, f'question quality regression C/D: {flagged}'
 
 # The app must support the complete human learning loop, not just question
 # rendering: start -> understand feedback -> progress -> weak review -> retry,
@@ -137,8 +193,9 @@ assert f'- サポート: {EXPECTED_WEB_URL}support.html' in metadata
 assert f'- プライバシーポリシー: {EXPECTED_WEB_URL}privacy.html' in metadata
 
 print(
-    'PASS: Touhan release + learning acceptance; '
+    'PASS: Touhan release + learning + question quality acceptance; '
     f'bundle={EXPECTED_BUNDLE}; app_id={EXPECTED_APP_ID}; questions={question_total}; '
-    f'icon_sha256={EXPECTED_ICON_SHA}; orientations=all-four; export_compliance=exempt; '
+    f'grades={dict(grade_counts)}; icon_sha256={EXPECTED_ICON_SHA}; '
+    'orientations=all-four; export_compliance=exempt; '
     'cycle=start-understand-progress-review-retry-resume'
 )
