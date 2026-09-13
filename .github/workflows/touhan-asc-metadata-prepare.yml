@@ -34,7 +34,20 @@ jobs:
           TOUHAN_ASC_RESULT: touhan-asc-metadata-result.json
         run: |
           set -euo pipefail
-          python3 scripts/app2_010_touhan_prepare_metadata.py
+          python3 - <<'PY'
+          import sys
+          sys.path.insert(0, 'scripts')
+          import app2_010_touhan_prepare_metadata as target
+          original = target.load_private_key
+          def compatible_load_private_key():
+              key_path, cleanup_path = original()
+              def cleanup():
+                  if cleanup_path:
+                      cleanup_path.unlink(missing_ok=True)
+              return key_path, cleanup
+          target.load_private_key = compatible_load_private_key
+          target.main()
+          PY
 
       - name: Upload sanitized readback
         if: always() && hashFiles('touhan-asc-metadata-result.json') != ''
