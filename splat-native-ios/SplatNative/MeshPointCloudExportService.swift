@@ -187,6 +187,8 @@ enum MeshPointCloudExportService {
 
     private static let las12HeaderSize = 227
     private static let streamFlushThreshold = 64 * 1024
+    private static let objInputChunkSize = 256 * 1024
+    private static let maximumOBJLineBytes = 8 * 1024 * 1024
     private static let maxTextureSampleDimension = 4_096
     // Retain only one small previous atlas. A/B/A/B no longer re-decodes small textures while
     // large atlases keep the established one-active memory behavior.
@@ -397,26 +399,19 @@ enum MeshPointCloudExportService {
     }
 
     private static func parseOBJ(_ url: URL) throws -> Geometry {
-        let (text, sourceByteCount): (String, Int) = try autoreleasepool {
-            let data = try Data(contentsOf: url, options: [.mappedIfSafe])
-            guard !data.isEmpty else { throw ExportError.invalidOBJ }
-            return (String(decoding: data, as: UTF8.self), data.count)
-        }
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.uint64Value > 0 else { throw ExportError.invalidOBJ }
+        let sourceByteCount = Int(clamping: size.uint64Value)
         var vertices: [Vertex] = []
         var texCoords: [TexCoord] = []
         var triangles: [Triangle] = []
         var materialLibraries: [String] = []
         var currentMaterial: String?
         vertices.reserveCapacity(max(128, sourceByteCount / 80))
-        try Task.checkCancellation()
-        var cancelled = false
 
-        text.enumerateLines { line, stop in
-            if withUnsafeCurrentTask(body: { $0?.isCancelled ?? false }) {
-                cancelled = true
-                stop = true
-                return
-            }
+        try forEachOBJLine(at: url) { line in
             let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !trimmed.isEmpty, !trimmed.hasPrefix("#") else { return }
             let fields = trimmed.split(whereSeparator: { $0.isWhitespace })
@@ -475,9 +470,56 @@ enum MeshPointCloudExportService {
                 triangles.append(Triangle(a: corners[0], b: corners[index], c: corners[index + 1], material: currentMaterial))
             }
         }
-        if cancelled { try Task.checkCancellation() }
         guard !vertices.isEmpty else { throw ExportError.emptyGeometry }
         return Geometry(vertices: vertices, texCoords: texCoords, triangles: triangles, materialLibraries: materialLibraries)
+    }
+
+    private static func forEachOBJLine(
+        at url: URL,
+        body: (Substring) throws -> Void
+    ) throws {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        var buffer = Data()
+        buffer.reserveCapacity(objInputChunkSize * 2)
+
+        while let chunk = try handle.read(upToCount: objInputChunkSize), !chunk.isEmpty {
+            try Task.checkCancellation()
+            buffer.append(chunk)
+            var start = buffer.startIndex
+            while start < buffer.endIndex,
+                  let newline = buffer[start...].firstIndex(of: 0x0A) {
+                var end = newline
+                if end > start {
+                    let previous = buffer.index(before: end)
+                    if buffer[previous] == 0x0D { end = previous }
+                }
+                guard buffer.distance(from: start, to: end) <= maximumOBJLineBytes else {
+                    throw ExportError.invalidOBJ
+                }
+                let lineString = String(decoding: buffer[start..<end], as: UTF8.self)
+                try body(lineString[...])
+                start = buffer.index(after: newline)
+            }
+            if start > buffer.startIndex {
+                buffer.removeSubrange(buffer.startIndex..<start)
+            }
+            guard buffer.count <= maximumOBJLineBytes else { throw ExportError.invalidOBJ }
+        }
+
+        if !buffer.isEmpty {
+            try Task.checkCancellation()
+            var end = buffer.endIndex
+            if end > buffer.startIndex {
+                let previous = buffer.index(before: end)
+                if buffer[previous] == 0x0D { end = previous }
+            }
+            guard buffer.distance(from: buffer.startIndex, to: end) <= maximumOBJLineBytes else {
+                throw ExportError.invalidOBJ
+            }
+            let lineString = String(decoding: buffer[buffer.startIndex..<end], as: UTF8.self)
+            try body(lineString[...])
+        }
     }
 
     private static func resolveOBJIndex(_ raw: Int, count: Int) -> Int? {
