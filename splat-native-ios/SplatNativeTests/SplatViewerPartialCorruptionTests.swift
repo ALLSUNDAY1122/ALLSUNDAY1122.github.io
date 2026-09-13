@@ -1,7 +1,7 @@
 import XCTest
 
 final class SplatViewerPartialCorruptionTests: XCTestCase {
-    func testPartialPrimaryCorruptionPreservesNewerValidSiblingFields() throws {
+    func testPartialPrimaryCorruptionMergesDamagedFieldFromBackup() throws {
         let fileManager = FileManager.default
         let root = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
@@ -14,23 +14,27 @@ final class SplatViewerPartialCorruptionTests: XCTestCase {
             contrast: 1.25,
             cropXMin: 0.05,
             cropXMax: 0.95
-        )
+        ).normalized()
         try SplatViewerEditStore.save(older, sourceURL: source)
 
         let partiallyDamaged = Data(#"{"exposureEV":0.8,"contrast":"damaged","cropXMin":0.2,"cropXMax":0.8,"cropYMin":0.1,"cropYMax":0.9,"cropZMin":0,"cropZMax":1}"#.utf8)
         try partiallyDamaged.write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
 
         let loaded = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
-        XCTAssertFalse(loaded.recoveredFromBackup)
+        XCTAssertTrue(loaded.recoveredFromBackup)
         XCTAssertEqual(loaded.settings.exposureEV, 0.8, accuracy: 0.0001)
-        XCTAssertEqual(loaded.settings.contrast, 1, accuracy: 0.0001)
+        XCTAssertEqual(loaded.settings.contrast, older.contrast, accuracy: 0.0001)
         XCTAssertEqual(loaded.settings.cropXMin, 0.2, accuracy: 0.0001)
         XCTAssertEqual(loaded.settings.cropXMax, 0.8, accuracy: 0.0001)
         XCTAssertEqual(loaded.settings.cropYMin, 0.1, accuracy: 0.0001)
         XCTAssertEqual(loaded.settings.cropYMax, 0.9, accuracy: 0.0001)
+
+        let reopened = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
+        XCTAssertFalse(reopened.recoveredFromBackup)
+        XCTAssertEqual(reopened.settings, loaded.settings)
     }
 
-    func testBroadPrimaryCorruptionPrefersLastKnownGoodBackup() throws {
+    func testBroadPrimaryCorruptionPreservesReadablePrimaryAndFillsRestFromBackup() throws {
         let fileManager = FileManager.default
         let root = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
@@ -38,7 +42,7 @@ final class SplatViewerPartialCorruptionTests: XCTestCase {
 
         let source = root.appendingPathComponent("result.splat")
         try Data([0]).write(to: source)
-        let expected = SplatEditSettings(
+        let older = SplatEditSettings(
             exposureEV: -0.4,
             contrast: 1.2,
             cropXMin: 0.08,
@@ -48,14 +52,21 @@ final class SplatViewerPartialCorruptionTests: XCTestCase {
             cropZMin: 0.18,
             cropZMax: 0.82
         ).normalized()
-        try SplatViewerEditStore.save(expected, sourceURL: source)
+        try SplatViewerEditStore.save(older, sourceURL: source)
 
         let broadlyDamaged = Data(#"{"exposureEV":0.9,"contrast":"bad","cropXMin":"bad","cropXMax":"bad","cropYMin":"bad","cropYMax":"bad","cropZMin":"bad","cropZMax":"bad"}"#.utf8)
         try broadlyDamaged.write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
 
         let loaded = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
         XCTAssertTrue(loaded.recoveredFromBackup)
-        XCTAssertEqual(loaded.settings, expected)
+        XCTAssertEqual(loaded.settings.exposureEV, 0.9, accuracy: 0.0001)
+        XCTAssertEqual(loaded.settings.contrast, older.contrast, accuracy: 0.0001)
+        XCTAssertEqual(loaded.settings.cropXMin, older.cropXMin, accuracy: 0.0001)
+        XCTAssertEqual(loaded.settings.cropXMax, older.cropXMax, accuracy: 0.0001)
+        XCTAssertEqual(loaded.settings.cropYMin, older.cropYMin, accuracy: 0.0001)
+        XCTAssertEqual(loaded.settings.cropYMax, older.cropYMax, accuracy: 0.0001)
+        XCTAssertEqual(loaded.settings.cropZMin, older.cropZMin, accuracy: 0.0001)
+        XCTAssertEqual(loaded.settings.cropZMax, older.cropZMax, accuracy: 0.0001)
     }
 
     func testWeakPrimarySalvageIsUsedWhenNoHealthyBackupExists() throws {
