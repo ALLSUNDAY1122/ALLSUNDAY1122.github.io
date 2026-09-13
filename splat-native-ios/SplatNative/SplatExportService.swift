@@ -285,25 +285,31 @@ enum SplatPersistedEditMaterializer {
     }
 
     private static func sampledCropBounds(sourceURL: URL, sourcePointCount: Int) async throws -> CropBounds {
-        let sampleStride = max(1, sourcePointCount / 8_000)
+        let sampleIndices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: sourcePointCount,
+            targetSampleCount: 8_000
+        )
         let reader = try AutodetectSceneReader(sourceURL)
         let stream = try await reader.read()
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
-        xs.reserveCapacity(min(sourcePointCount, 8_001))
-        ys.reserveCapacity(min(sourcePointCount, 8_001))
-        zs.reserveCapacity(min(sourcePointCount, 8_001))
+        xs.reserveCapacity(sampleIndices.count)
+        ys.reserveCapacity(sampleIndices.count)
+        zs.reserveCapacity(sampleIndices.count)
         var globalIndex = 0
+        var nextSampleOffset = 0
 
         for try await points in stream {
             try Task.checkCancellation()
             for point in points {
-                if globalIndex % sampleStride == 0 {
+                if nextSampleOffset < sampleIndices.count,
+                   globalIndex == sampleIndices[nextSampleOffset] {
                     let p = point.position
                     if p.x.isFinite, p.y.isFinite, p.z.isFinite {
                         xs.append(p.x); ys.append(p.y); zs.append(p.z)
                     }
+                    nextSampleOffset += 1
                 }
                 globalIndex += 1
             }
@@ -312,11 +318,17 @@ enum SplatPersistedEditMaterializer {
     }
 
     private static func robustCropBounds(for points: [SplatPoint]) -> CropBounds {
-        let strideSize = max(1, points.count / 8_000)
+        let sampleIndices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: points.count,
+            targetSampleCount: 8_000
+        )
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
-        for index in stride(from: 0, to: points.count, by: strideSize) {
+        xs.reserveCapacity(sampleIndices.count)
+        ys.reserveCapacity(sampleIndices.count)
+        zs.reserveCapacity(sampleIndices.count)
+        for index in sampleIndices {
             let p = points[index].position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
             xs.append(p.x); ys.append(p.y); zs.append(p.z)
