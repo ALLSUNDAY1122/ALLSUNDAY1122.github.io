@@ -97,19 +97,17 @@ def main():
     try:
         t=make_token(issuer,keyid,kp)
         ensure_v1_localization(t,f'/v1/subscriptions/{SUB}/subscriptionLocalizations?limit=50','/v1/subscriptionLocalizations','subscriptionLocalizations','subscription','subscriptions',SUB,{'locale':LOCALE,'name':MONTHLY_NAME,'description':MONTHLY_DESC},'monthly_localization',r)
-        ensure_v1_localization(t,f'/v1/subscriptionGroups/{GROUP}/subscriptionGroupLocalizations?limit=50','/v1/subscriptionGroupLocalizations','subscriptionGroupLocalizations','subscriptionGroup','subscriptionGroups',GROUP,{'locale':LOCALE,'name':GROUP_NAME},'group_localization',r)
+        ensure_v1_localization(t,f'/v1/subscriptionGroups/{GROUP}/subscriptionGroupLocalizations?limit=50','/v1/subscriptionGroupLocalizations','subscriptionGroup','subscriptionGroup','subscriptionGroups',GROUP,{'locale':LOCALE,'name':GROUP_NAME},'group_localization',r)
         vid=ensure_iap_loc(t,r); patch_notes(t,r)
         _,r['monthly_readback']=api_get(t,f'/v1/subscriptions/{SUB}?include=subscriptionLocalizations')
         _,r['group_readback']=api_get(t,f'/v1/subscriptionGroups/{GROUP}?include=subscriptionGroupLocalizations')
         _,r['lifetime_product_readback']=api_get(t,f'/v2/inAppPurchases/{IAP}')
         _,r['lifetime_version_readback']=api_get(t,f'/v1/inAppPurchaseVersions/{vid}?include=localizations')
-        # Release-critical readiness dimensions. Keep each independent so one unsupported
-        # endpoint cannot hide the state of the others.
-        r['monthly_availability_readback']=safe_readback(t,f'/v1/subscriptions/{SUB}/subscriptionAvailability')
-        r['monthly_prices_readback']=safe_readback(t,f'/v1/subscriptions/{SUB}/prices?limit=50')
+        r['monthly_availability_readback']=safe_readback(t,f'/v1/subscriptions/{SUB}/subscriptionAvailability?include=availableTerritories')
+        r['monthly_prices_readback']=safe_readback(t,f'/v1/subscriptions/{SUB}/prices?include=subscriptionPricePoint&limit=50')
         r['monthly_review_screenshot_readback']=safe_readback(t,f'/v1/subscriptions/{SUB}/appStoreReviewScreenshot')
-        r['lifetime_availability_readback']=safe_readback(t,f'/v2/inAppPurchases/{IAP}/inAppPurchaseAvailability')
-        r['lifetime_price_schedule_readback']=safe_readback(t,f'/v1/inAppPurchases/{IAP}/iapPriceSchedule')
+        r['lifetime_availability_readback']=safe_readback(t,f'/v2/inAppPurchases/{IAP}/inAppPurchaseAvailability?include=availableTerritories')
+        r['lifetime_price_schedule_readback']=safe_readback(t,f'/v2/inAppPurchases/{IAP}/iapPriceSchedule?include=baseTerritory,manualPrices,inAppPurchasePricePoint')
         r['lifetime_review_screenshot_readback']=safe_readback(t,f'/v2/inAppPurchases/{IAP}/appStoreReviewScreenshot')
     finally:
         if cleanup: cleanup.unlink(missing_ok=True)
