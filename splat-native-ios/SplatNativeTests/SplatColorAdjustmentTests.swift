@@ -30,6 +30,36 @@ final class SplatColorAdjustmentTests: XCTestCase {
         }
     }
 
+    func testSHAdjustmentPreservesUnclippedDCEnergy() {
+        // SplatIO's asSRGBFloat clamps SH0 into 0...1. Use coefficients whose decoded red is
+        // above 1 and blue is below 0 so a round-trip through display RGB would irreversibly flatten
+        // both channels before the edit. Coefficient-domain affine adjustment must preserve them.
+        let original = [
+            SIMD3<Float>(3.0, 0.2, -2.2),
+            SIMD3<Float>(0.05, -0.03, 0.01)
+        ]
+        let exposureEV = -0.5
+        let contrast = 1.2
+        let gain = Float(pow(2.0, exposureEV) * contrast)
+        let bias = Float(0.5 * (1 - contrast))
+        let midpoint = SIMD3<Float>(repeating: 0.5)
+        let dcOffset = (
+            midpoint * gain + SIMD3<Float>(repeating: bias) - midpoint
+        ) * SplatPoint.Color.INV_SH_C0
+
+        let result = SplatColorAdjustment.apply(
+            .sphericalHarmonicFloat(original),
+            exposureEV: exposureEV,
+            contrast: contrast
+        )
+        guard case .sphericalHarmonicFloat(let coefficients) = result else {
+            return XCTFail("Expected SH color")
+        }
+
+        assertApproximatelyEqual(coefficients[0], original[0] * gain + dcOffset)
+        assertApproximatelyEqual(coefficients[1], original[1] * gain)
+    }
+
     func testSHAdjustmentDoesNotPrematurelyClampDC() {
         let original = [SIMD3<Float>(0.35, 0.30, 0.25), SIMD3<Float>(0.08, 0.02, -0.04)]
         let color = SplatPoint.Color.sphericalHarmonicFloat(original)
