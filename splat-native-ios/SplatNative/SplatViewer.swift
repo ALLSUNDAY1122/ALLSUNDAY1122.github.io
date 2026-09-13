@@ -251,7 +251,8 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
 
     @objc func pinch(_ gesture: UIPinchGestureRecognizer) {
         guard !stateMeasurementEnabled else { return }
-        distance = max(baseDistance * 0.12, min(baseDistance * 7.0, distance / Float(gesture.scale)))
+        let maximumDistance = min(SplatCameraGeometry.maximumCameraDistance, baseDistance * 7.0)
+        distance = max(baseDistance * 0.12, min(maximumDistance, distance / Float(gesture.scale)))
         cameraWasManuallyAdjusted = true
         gesture.scale = 1
     }
