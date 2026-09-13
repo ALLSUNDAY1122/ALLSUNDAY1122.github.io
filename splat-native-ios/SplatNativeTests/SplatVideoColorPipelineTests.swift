@@ -11,6 +11,14 @@ final class SplatVideoColorPipelineTests: XCTestCase {
         XCTAssertEqual(SplatVideoExporter.renderPixelFormat, .bgra8Unorm_srgb)
     }
 
+    func testVideoFieldOfViewMatchesLiveViewer() {
+        XCTAssertEqual(
+            SplatVideoExporter.renderFovY,
+            55 * Float.pi / 180,
+            accuracy: 0.000_001
+        )
+    }
+
     func testEncodedVideoDeclaresBT709ColorProperties() {
         XCTAssertEqual(
             SplatVideoExporter.videoColorProperties[AVVideoColorPrimariesKey],
