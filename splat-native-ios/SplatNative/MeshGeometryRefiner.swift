@@ -385,10 +385,11 @@ private enum MeshGeometryRefinerEngine {
             let root = find(face.x)
             var summary = summaries[root] ?? MeshRefineComponentSummary()
             summary.faceCount += 1
-            for id in [face.x, face.y, face.z] {
-                summary.minimum = simd_min(summary.minimum, vertices[id])
-                summary.maximum = simd_max(summary.maximum, vertices[id])
-            }
+            let a = vertices[face.x]
+            let b = vertices[face.y]
+            let c = vertices[face.z]
+            summary.minimum = simd_min(summary.minimum, simd_min(a, simd_min(b, c)))
+            summary.maximum = simd_max(summary.maximum, simd_max(a, simd_max(b, c)))
             summaries[root] = summary
         }
 
