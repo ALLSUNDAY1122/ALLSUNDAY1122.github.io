@@ -211,9 +211,12 @@ struct SplatViewerEditStore {
 
         // With no healthy backup, independently decodable primary fields are still better than
         // discarding every user edit. Damaged/missing siblings fall back to schema defaults only in
-        // this last-resort path.
+        // this last-resort path. Persist that normalized salvage immediately so the next launch uses
+        // ordinary decoding and regains the two-generation durability contract instead of reparsing
+        // the same damaged JSON forever. `save` fails closed for unsafe primary/backup nodes.
         if let primaryData = partiallyCorruptPrimaryData,
            let salvaged = SplatEditSettings.salvagingPartiallyCorruptJSON(primaryData) {
+            try? save(salvaged, sourceURL: sourceURL, fileManager: fileManager)
             return (salvaged, false)
         }
         return nil
