@@ -8,8 +8,24 @@ final class MeshRawSceneValidatorPolygonTests: XCTestCase {
         XCTAssertTrue(MeshRawSceneValidator.containsGeometry(scene))
     }
 
+    func testAcceptsSceneKitTwoSequenceMultiPolygonLayout() {
+        let scene = sceneWithPolygon(
+            tokens: [3, 3, 0, 1, 2, 0, 2, 1],
+            primitiveCount: 2
+        )
+        XCTAssertTrue(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
     func testRejectsPolygonWithOutOfRangeIndex() {
         let scene = sceneWithPolygon(tokens: [3, 0, 1, 7])
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
+    func testRejectsOutOfRangeIndexInLaterPolygon() {
+        let scene = sceneWithPolygon(
+            tokens: [3, 3, 0, 1, 2, 0, 2, 7],
+            primitiveCount: 2
+        )
         XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
     }
 
@@ -23,7 +39,15 @@ final class MeshRawSceneValidatorPolygonTests: XCTestCase {
         XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
     }
 
-    private func sceneWithPolygon(tokens: [UInt16]) -> SCNScene {
+    func testRejectsInterleavedCountsAndIndicesForMultiplePolygons() {
+        let scene = sceneWithPolygon(
+            tokens: [3, 0, 1, 2, 3, 0, 1, 2],
+            primitiveCount: 2
+        )
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
+    private func sceneWithPolygon(tokens: [UInt16], primitiveCount: Int = 1) -> SCNScene {
         let scene = SCNScene()
         let vertices = SCNGeometrySource(vertices: [
             SCNVector3(0, 0, 0),
@@ -35,7 +59,7 @@ final class MeshRawSceneValidatorPolygonTests: XCTestCase {
         let polygon = SCNGeometryElement(
             data: data,
             primitiveType: .polygon,
-            primitiveCount: 1,
+            primitiveCount: primitiveCount,
             bytesPerIndex: MemoryLayout<UInt16>.size
         )
         scene.rootNode.addChildNode(
