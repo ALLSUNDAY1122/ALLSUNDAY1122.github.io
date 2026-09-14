@@ -1,0 +1,81 @@
+name: Network Specialist IAP Review Screenshot
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'network-specialist-sprint/ios/Review.storekit'
+      - 'network-specialist-sprint/ios/project.yml'
+      - 'network-specialist-sprint/ios/NetworkSpecialist/**'
+      - 'network-specialist-sprint/ios/NetworkSpecialistUITests/**'
+      - '.github/workflows/network-iap-review-screenshot.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: macos-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build native question payload
+        run: node network-specialist-sprint/scripts/build_native_questions.mjs
+      - name: Materialize exact canonical AppIcon
+        run: bash network-specialist-sprint/scripts/materialize_native_appicon.sh
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project with StoreKit review configuration
+        working-directory: network-specialist-sprint/ios
+        run: |
+          xcodegen generate
+          grep -q 'Review.storekit' NetworkSpecialist.xcodeproj/xcshareddata/xcschemes/NetworkSpecialist.xcscheme
+      - name: Choose simulator
+        id: sim
+        run: |
+          set -euo pipefail
+          LINE=$(xcrun simctl list devices available | grep -m1 'iPhone')
+          UDID=$(printf '%s\n' "$LINE" | sed -E 's/.*\(([0-9A-Fa-f-]{36})\).*/\1/')
+          test -n "$UDID"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: Reset simulator before review capture
+        run: |
+          set -euo pipefail
+          UDID='${{ steps.sim.outputs.udid }}'
+          xcrun simctl shutdown "$UDID" 2>/dev/null || true
+          xcrun simctl erase "$UDID"
+      - name: Run isolated StoreKit review capture
+        working-directory: network-specialist-sprint/ios
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project NetworkSpecialist.xcodeproj \
+            -scheme NetworkSpecialist \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -only-testing:NetworkSpecialistUITests/NetworkSpecialistUITests/testCapturePremiumReviewScreenshotWithResolvedPrice \
+            -resultBundlePath "$RUNNER_TEMP/NetworkReview.xcresult" \
+            -parallel-testing-enabled NO \
+            CODE_SIGNING_ALLOWED=NO \
+            test | tee "$RUNNER_TEMP/network-review-test.log"
+      - name: Export screenshot attachments
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/network-review-attachments"
+          xcrun xcresulttool export attachments \
+            --path "$RUNNER_TEMP/NetworkReview.xcresult" \
+            --output-path "$RUNNER_TEMP/network-review-attachments"
+          find "$RUNNER_TEMP/network-review-attachments" -type f -maxdepth 3 -print
+      - name: Require captured PNG
+        run: |
+          COUNT=$(find "$RUNNER_TEMP/network-review-attachments" -type f \( -name '*.png' -o -name '*.PNG' \) | wc -l | tr -d ' ')
+          test "$COUNT" -ge 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: network-specialist-iap-review-paywall
+          path: |
+            ${{ runner.temp }}/network-review-attachments
+            ${{ runner.temp }}/network-review-test.log
+          if-no-files-found: error
+          retention-days: 7
