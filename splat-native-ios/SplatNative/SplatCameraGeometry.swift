@@ -179,8 +179,10 @@ enum SplatCameraGeometry {
         // basis or the translation column. Sanitize both positions before any matrix arithmetic.
         let safeCenter = isFinite(center) ? center : .zero
         let safeEye = isFinite(eye) ? eye : safeCenter + SIMD3<Float>(0, 0, 1)
-        let delta = safeEye - safeCenter
-        let z = stableNormalize(delta) ?? SIMD3<Float>(0, 0, 1)
+        // Subtracting two opposite, individually finite near-Float.max coordinates in Float can
+        // overflow before normalization. Form the direction in Double and normalize its scaled
+        // representation so huge imported/corrupt scenes still point the camera at the true target.
+        let z = stableDirection(from: safeCenter, to: safeEye) ?? SIMD3<Float>(0, 0, 1)
 
         let normalizedUp = stableNormalize(up) ?? SIMD3<Float>(0, 1, 0)
 
@@ -243,6 +245,23 @@ enum SplatCameraGeometry {
         let distance = sqrt(dx * dx + dy * dy + dz * dz)
         guard distance.isFinite else { return nil }
         return Float(min(distance, Double(Float.greatestFiniteMagnitude)))
+    }
+
+    /// Returns the unit direction from `from` to `to` without first performing a potentially
+    /// overflowing Float subtraction. Scaling the Double delta before converting back to Float
+    /// preserves direction while keeping every component inside [-1, 1].
+    private static func stableDirection(from: SIMD3<Float>, to: SIMD3<Float>) -> SIMD3<Float>? {
+        guard isFinite(from), isFinite(to) else { return nil }
+        let dx = Double(to.x) - Double(from.x)
+        let dy = Double(to.y) - Double(from.y)
+        let dz = Double(to.z) - Double(from.z)
+        let scale = max(abs(dx), max(abs(dy), abs(dz)))
+        guard scale.isFinite, scale > Double.leastNonzeroMagnitude else { return nil }
+        return stableNormalize(SIMD3<Float>(
+            Float(dx / scale),
+            Float(dy / scale),
+            Float(dz / scale)
+        ))
     }
 
     /// Normalizes without squaring the original magnitude first. `simd_normalize` can overflow its
