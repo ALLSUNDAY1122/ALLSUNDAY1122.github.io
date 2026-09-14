@@ -68,6 +68,9 @@ for token in (
     "var failedFrameIndexes = Set<Int>()",
     "var retryPointIndexes = Set<Int>()",
     "if !failedFrameIndexes.isEmpty, !retryPointIndexes.isEmpty",
+    "var attemptedRetryFramesByPoint: [Int: Set<Int>] = [:]",
+    "let maximumRetryWaves = min(8, max(1, projections.count))",
+    "while !retryPointIndexes.isEmpty, wave < maximumRetryWaves",
     "let retryProjections = projections.filter { !failedFrameIndexes.contains($0.frameIndex) }",
     "var originalAcceptedCount = 0",
     "var originalScoreCeiling = Float.greatestFiniteMagnitude",
@@ -75,6 +78,9 @@ for token in (
     "let missingCount = max(0, originalAcceptedCount - samples[pointIndex].count)",
     "assignment.score <= originalScoreCeiling",
     "!originallySelected.contains(assignment.frameIndex)",
+    "!attemptedRetryFrames.contains(assignment.frameIndex)",
+    "attemptedRetryFramesByPoint[pointIndex, default: []].insert(assignment.frameIndex)",
+    "pointsNeedingAnotherWave.insert(item.pointIndex)",
 ):
     assert token in COLORIZER, f"missing seed-color frame admission/recovery contract: {token}"
 
@@ -88,7 +94,7 @@ assert SOFTWARE.index(backproject_token, SOFTWARE.index("private static func pat
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
     'metadataFileName = "s14-seed-recipe.json"',
-    "static let recipeVersion = 15",
+    "static let recipeVersion = 16",
     "case planeSweep",
     "SplatSoftwareDepthSeedBuilder.makeSeedPoints",
     "softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount",
