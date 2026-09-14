@@ -541,14 +541,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
                         case .requestProgress(_, let fractionComplete):
                             self.reconstructionProgress = fractionComplete
                         case .requestComplete(_, _):
-                            if FileManager.default.fileExists(atPath: outputURL.path) {
-                                self.resultURL = outputURL
-                                self.previewScene = try? SCNScene(url: outputURL, options: nil)
-                                self.reconstructionProgress = 1
-                                self.phase = .finished
-                                self.statusMessage = "テクスチャ付きMeshを端末内で生成しました"
-                                try? self.writeManifest(texturedModelAvailable: true)
-                            }
+                            _ = self.completePhotogrammetryOutput(at: outputURL)
                         case .requestError(_, let error):
                             self.phase = .failed("テクスチャ再構築に失敗しました: \(error.localizedDescription)")
                         case .invalidSample(_, _):
@@ -565,13 +558,8 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
                                 self.statusMessage = "再構築を中断しました"
                             }
                         case .processingComplete:
-                            if self.resultURL == nil && FileManager.default.fileExists(atPath: outputURL.path) {
-                                self.resultURL = outputURL
-                                self.previewScene = try? SCNScene(url: outputURL, options: nil)
-                                self.reconstructionProgress = 1
-                                self.phase = .finished
-                                self.statusMessage = "テクスチャ付きMeshを端末内で生成しました"
-                                try? self.writeManifest(texturedModelAvailable: true)
+                            if self.resultURL == nil && self.phase == .reconstructing {
+                                _ = self.completePhotogrammetryOutput(at: outputURL)
                             }
                         case .requestProgressInfo(_, _):
                             break
@@ -588,6 +576,29 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         } catch {
             phase = .failed("フォトグラメトリを開始できませんでした: \(error.localizedDescription)")
         }
+    }
+
+    @discardableResult
+    func completePhotogrammetryOutput(at outputURL: URL) -> Bool {
+        guard FileManager.default.fileExists(atPath: outputURL.path),
+              let scene = try? SCNScene(url: outputURL, options: nil),
+              MeshRawSceneValidator.containsGeometry(scene) else {
+            resultURL = nil
+            previewScene = nil
+            reconstructionProgress = min(reconstructionProgress, 0.99)
+            let message = "フォトグラメトリ結果に有効な面形状を確認できませんでした。撮影条件を変えて再生成してください。"
+            phase = .failed(message)
+            statusMessage = message
+            return false
+        }
+
+        resultURL = outputURL
+        previewScene = scene
+        reconstructionProgress = 1
+        phase = .finished
+        statusMessage = "テクスチャ付きMeshを端末内で生成しました"
+        try? writeManifest(texturedModelAvailable: true)
+        return true
     }
 
     private func writeManifest(texturedModelAvailable: Bool) throws {
