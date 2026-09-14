@@ -1,0 +1,69 @@
+name: Otsu4 Current Release Diagnostic
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  diagnose:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      startsWith(github.event.issue.title, '[OTSU4-RELEASE-DIAG]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Check out exact pinned release source
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RELEASE_SOURCE_SHA"
+          git checkout --detach "$RELEASE_SOURCE_SHA"
+          test "$(git rev-parse HEAD)" = "$RELEASE_SOURCE_SHA"
+      - name: Materialize and audit release resources
+        run: |
+          set -euo pipefail
+          bash native-ios/Otsu4Sprint/prepare-ios.sh
+          test -f native-ios/Otsu4Sprint/Generated/questions.generated.json
+          test -f native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy
+          test -f native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png
+          python3 - <<'PY'
+          import json, hashlib, pathlib
+          q=pathlib.Path('native-ios/Otsu4Sprint/Generated/questions.generated.json')
+          data=json.loads(q.read_text(encoding='utf-8'))
+          assert data['contentVersion']=='otsu4-2026-08-product-v2'
+          assert len(data['questions'])==360
+          icon=pathlib.Path('native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png')
+          assert hashlib.sha256(icon.read_bytes()).hexdigest()=='d0cb19b237ca3306413c481e4fbc0fb871705b390a1bc37619d9683fff19ff2d'
+          print('PASS: pinned Otsu4 release resources, 360 questions, canonical icon')
+          PY
+      - name: Audit release workflow contract from current main
+        run: |
+          set -euo pipefail
+          git show origin/main:codemagic.yaml > /tmp/codemagic-main.yaml
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('/tmp/codemagic-main.yaml').read_text(encoding='utf-8')
+          a=s.index('  otsu4-native-ios:')
+          b=s.index('\n  kangoshi-ios:',a)
+          block=s[a:b]
+          assert 'RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8' in block
+          assert 'submit_to_app_store: false' in block
+          assert 'submit_to_testflight: false' in block
+          assert 'testFlightInternalTestingOnly' in block
+          print('PASS: current Otsu4 workflow remains pinned and cannot submit App Review')
+          print('NOTICE: current workflow exports Internal-TestFlight-only artifacts; a later App Store eligible RC path is still required for PRODUCT_DONE.')
+          PY
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Otsu4 release diagnostic finished. status=${{ job.status }}; run_id=${context.runId}. This diagnostic does not build, upload, or submit.`});
