@@ -7,12 +7,18 @@ on:
       - 'fp3-manabi-sprint/ios/**'
       - '.github/workflows/fp3-review-screenshot.yml'
   workflow_dispatch:
+  issues:
+    types: [opened]
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   capture:
+    if: >-
+      github.event_name != 'issues' ||
+      (github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[FP3-REVIEW-CAPTURE]'))
     runs-on: macos-latest
     timeout-minutes: 25
     steps:
@@ -62,3 +68,14 @@ jobs:
             ${{ runner.temp }}/fp3-review-test.log
           if-no-files-found: error
           retention-days: 7
+      - name: Report issue-triggered result
+        if: always() && github.event_name == 'issues'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `FP3 Review Screenshot finished. status=${{ job.status }}; run_id=${context.runId}. No App Store upload or review submission was performed.`
+            });
