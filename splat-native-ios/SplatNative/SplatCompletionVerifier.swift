@@ -65,8 +65,8 @@ enum SplatCompletionVerifier {
 
         // The broad previous-result recovery path is for an interrupted reprocess. Once a manifest
         // says a generation finished, never let that path silently replace it with an older backup;
-        // finished generations are handled below by strong integrity verification and exact-evidence
-        // recovery only.
+        // finished generations are handled below by strong integrity verification and bounded
+        // same-size trusted recovery only.
         let manifest: ScanProjectManifest
         if loadedManifest.stage == .finished {
             manifest = loadedManifest
@@ -87,16 +87,29 @@ enum SplatCompletionVerifier {
             throw VerificationError.completionEvidenceMissing
         }
 
-        guard fileManager.fileExists(atPath: expectedURL.path),
-              let attributes = try? fileManager.attributesOfItem(atPath: expectedURL.path),
+        // A missing result is recoverable only through the same independently SHA-verified previous
+        // asset used for late integrity failures. If no same-size trusted backup exists this helper
+        // fails closed and the missing/corrupt generation is never fabricated from weaker evidence.
+        guard fileManager.fileExists(atPath: expectedURL.path) else {
+            let recoveredDigest = try recoverTrustedPreviousAndVerify(
+                projectURL: projectURL,
+                expectedURL: expectedURL,
+                evidenceURL: evidenceURL,
+                failedEvidence: evidence,
+                fileManager: fileManager
+            )
+            SplatPreviousResultEvidence.discardBackup(projectURL: projectURL, fileManager: fileManager)
+            return Verification(url: expectedURL, sha256: recoveredDigest)
+        }
+
+        guard let attributes = try? fileManager.attributesOfItem(atPath: expectedURL.path),
               let size = attributes[.size] as? NSNumber else {
             throw VerificationError.completionEvidenceMismatch
         }
 
         // A byte-count mismatch is normally a hard completion failure. The only exception is when
-        // this exact failed generation still has a separately SHA-verified previous result. Route
-        // that case through the same anti-rollback recovery contract used for same-size corruption;
-        // without a matching trusted backup this still fails closed immediately.
+        // this failed generation still has a separately SHA-verified same-size previous result.
+        // Without that bounded fallback this still fails closed immediately.
         if size.int64Value != evidence.byteCount {
             let recoveredDigest = try recoverTrustedPreviousAndVerify(
                 projectURL: projectURL,
