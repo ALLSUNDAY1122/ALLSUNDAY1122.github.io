@@ -11,10 +11,10 @@ extension SplatPreviousResultEvidence {
     /// this path runs only after the strong verifier has already proved the current bytes untrusted.
     ///
     /// A protected previous result may belong to the immediately preceding commit evidence. That is
-    /// precisely the useful fallback when a newer, strongly sealed result is later found corrupt.
-    /// Recovery therefore validates the backup against the snapshot's original evidence/hash rather
-    /// than requiring that older evidence to equal the already-failed current evidence. A snapshot
-    /// from the future is rejected so stale/cross-run metadata cannot supersede a newer commit.
+    /// precisely the useful fallback when a newer, strongly sealed same-size result is later found
+    /// corrupt. Recovery therefore validates the backup against the snapshot's original hash while
+    /// requiring the old and failed current generations to have the same byte-count contract. A
+    /// differently sized newer reconstruction is never silently rolled back to an older geometry.
     static func recoverTrustedPreviousAfterIntegrityFailure(
         projectURL: URL,
         evidence: SplatCommitEvidence,
@@ -32,6 +32,7 @@ extension SplatPreviousResultEvidence {
               snapshot.originalEvidence.fileName == ScanProjectStore.splatResultFileName,
               snapshot.originalEvidence.byteCount > 0,
               snapshot.originalEvidence.byteCount % 32 == 0,
+              snapshot.originalEvidence.byteCount == evidence.byteCount,
               snapshot.originalEvidence.completedAt <= evidence.completedAt,
               snapshot.preservedAt <= evidence.completedAt,
               isIndependentRegularFileForIntegrityRecovery(backupURL),
