@@ -15,6 +15,31 @@ final class SplatSkySeederSafetyTests: XCTestCase {
         XCTAssertTrue(point.z.isFinite)
     }
 
+    func testNormalizedImageCenterUsesPixelCenterConvention() throws {
+        let centeredFrame = SplatSeedFrame(
+            filePath: "frame.jpg",
+            transformMatrix: identityMatrix,
+            flX: 500,
+            flY: 500,
+            cx: 319.5,
+            cy: 239.5,
+            w: 640,
+            h: 480
+        )
+        let point = try XCTUnwrap(
+            SplatSkySeeder.worldPoint(
+                normalizedX: 0.5,
+                normalizedY: 0.5,
+                frame: centeredFrame,
+                distance: 20
+            )
+        )
+
+        XCTAssertEqual(point.x, 0, accuracy: 0.0001)
+        XCTAssertEqual(point.y, 0, accuracy: 0.0001)
+        XCTAssertEqual(point.z, -20, accuracy: 0.0001)
+    }
+
     func testNonFiniteIntrinsicsAreRejected() {
         XCTAssertNil(
             SplatSkySeeder.worldPoint(
