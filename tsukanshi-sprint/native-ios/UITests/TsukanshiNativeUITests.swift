@@ -1,8 +1,20 @@
+import Foundation
 import XCTest
 
 final class TsukanshiNativeUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
+    }
+
+    private func capture(_ name: String) throws {
+        let directory = URL(fileURLWithPath: "/tmp/tsukanshi-visual", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let screenshot = XCUIScreen.main.screenshot()
+        try screenshot.pngRepresentation.write(to: directory.appendingPathComponent("\(name).png"))
+        let attachment = XCTAttachment(screenshot: screenshot)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     func testHomeFourTabsAndSprintFlow() throws {
@@ -13,16 +25,21 @@ final class TsukanshiNativeUITests: XCTestCase {
         for tab in ["ホーム", "模試", "記録", "設定"] {
             XCTAssertTrue(app.tabBars.buttons[tab].exists, "missing tab \(tab)")
         }
+        try capture("01-home")
 
         let sprint = app.buttons["今日のスプリント"]
         XCTAssertTrue(sprint.waitForExistence(timeout: 5))
+        XCTAssertTrue(sprint.isHittable, "today sprint must be reachable")
         sprint.tap()
 
         let unknown = app.buttons["わからない"]
         XCTAssertTrue(unknown.waitForExistence(timeout: 5))
+        XCTAssertTrue(unknown.isHittable, "unknown action must be reachable")
+        try capture("02-question")
         unknown.tap()
         XCTAssertTrue(app.staticTexts["ここだけ覚える"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["次の問題"].exists || app.buttons["結果を見る"].exists)
+        try capture("03-feedback")
     }
 
     func testMockTabHasPracticalTrainingAndNineRoundSubjectCards() throws {
@@ -34,6 +51,7 @@ final class TsukanshiNativeUITests: XCTestCase {
         XCTAssertTrue(app.buttons["計算"].exists)
         XCTAssertTrue(app.buttons["申告書演習"].exists)
         XCTAssertTrue(app.buttons["第59回 通関業法 模擬試験"].exists)
+        try capture("04-mock")
     }
 
     func testSettingsBackupAndGoalControlsExist() throws {
@@ -45,5 +63,6 @@ final class TsukanshiNativeUITests: XCTestCase {
         XCTAssertTrue(app.buttons["JSONを書き出す"].exists)
         XCTAssertTrue(app.buttons["JSONから復元"].exists)
         XCTAssertTrue(app.buttons["購入を復元"].exists)
+        try capture("05-settings")
     }
 }
