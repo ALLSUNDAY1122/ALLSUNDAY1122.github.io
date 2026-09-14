@@ -54,10 +54,11 @@ enum MeshRawSceneValidator {
                     worldTransform: worldTransform
                 )
             case .polygon:
-                // Polygon elements use variable-length per-polygon index records. SceneKit's
-                // decoder has already validated their container representation; keep accepting
-                // them here rather than applying the fixed-width triangle/strip contract.
-                return element.bytesPerIndex > 0 && !element.data.isEmpty
+                return hasValidPolygonSurface(
+                    element,
+                    vertices: vertices,
+                    worldTransform: worldTransform
+                )
             case .line, .point:
                 return false
             @unknown default:
@@ -236,19 +237,90 @@ enum MeshRawSceneValidator {
                           let c = worldPosition(Int(rawC), source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer) else {
                         return false
                     }
-                    let ab = b - a
-                    let ac = c - a
-                    guard ab.x.isFinite, ab.y.isFinite, ab.z.isFinite,
-                          ac.x.isFinite, ac.y.isFinite, ac.z.isFinite else { return false }
-                    let cross = simd_cross(ab, ac)
-                    guard cross.x.isFinite, cross.y.isFinite, cross.z.isFinite else { return false }
-                    if cross.x != 0 || cross.y != 0 || cross.z != 0 {
+                    if formsNonDegenerateTriangle(a, b, c) {
                         return true
                     }
                 }
                 return false
             }
         }
+    }
+
+    /// SceneKit polygon elements encode each primitive as a vertex-count token followed by that
+    /// polygon's indices. Treating any non-empty polygon payload as a finished surface allowed a
+    /// malformed/out-of-range or fully degenerate polygon to bypass the triangle validator.
+    private static func hasValidPolygonSurface(
+        _ element: SCNGeometryElement,
+        vertices: SCNGeometrySource,
+        worldTransform: simd_float4x4
+    ) -> Bool {
+        guard element.primitiveType == .polygon,
+              element.primitiveCount > 0,
+              vertices.vectorCount > 0,
+              element.bytesPerIndex == 1 || element.bytesPerIndex == 2 || element.bytesPerIndex == 4,
+              !element.data.isEmpty else { return false }
+
+        return element.data.withUnsafeBytes { indexBuffer in
+            guard indexBuffer.baseAddress != nil else { return false }
+            let availableTokens = element.data.count / element.bytesPerIndex
+            var cursor = 0
+            var polygons: [(start: Int, count: Int)] = []
+            polygons.reserveCapacity(min(element.primitiveCount, 64))
+
+            for _ in 0..<element.primitiveCount {
+                guard cursor < availableTokens,
+                      let rawCount = indexValue(cursor, element: element, rawBuffer: indexBuffer),
+                      rawCount >= 3,
+                      rawCount <= UInt32(Int.max) else { return false }
+                cursor += 1
+                let count = Int(rawCount)
+                let (end, overflow) = cursor.addingReportingOverflow(count)
+                guard !overflow, end <= availableTokens else { return false }
+                for token in cursor..<end {
+                    guard let value = indexValue(token, element: element, rawBuffer: indexBuffer),
+                          value < UInt32(vertices.vectorCount) else { return false }
+                }
+                polygons.append((start: cursor, count: count))
+                cursor = end
+            }
+
+            guard vertices.usesFloatComponents else { return !polygons.isEmpty }
+            return vertices.data.withUnsafeBytes { vertexBuffer in
+                guard vertexBuffer.baseAddress != nil else { return false }
+                for polygon in polygons {
+                    guard let rawA = indexValue(polygon.start, element: element, rawBuffer: indexBuffer),
+                          let a = worldPosition(Int(rawA), source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer) else {
+                        return false
+                    }
+                    for offset in 1..<(polygon.count - 1) {
+                        guard let rawB = indexValue(polygon.start + offset, element: element, rawBuffer: indexBuffer),
+                              let rawC = indexValue(polygon.start + offset + 1, element: element, rawBuffer: indexBuffer),
+                              let b = worldPosition(Int(rawB), source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer),
+                              let c = worldPosition(Int(rawC), source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer) else {
+                            return false
+                        }
+                        if formsNonDegenerateTriangle(a, b, c) {
+                            return true
+                        }
+                    }
+                }
+                return false
+            }
+        }
+    }
+
+    private static func formsNonDegenerateTriangle(
+        _ a: SIMD3<Float>,
+        _ b: SIMD3<Float>,
+        _ c: SIMD3<Float>
+    ) -> Bool {
+        let ab = b - a
+        let ac = c - a
+        guard ab.x.isFinite, ab.y.isFinite, ab.z.isFinite,
+              ac.x.isFinite, ac.y.isFinite, ac.z.isFinite else { return false }
+        let cross = simd_cross(ab, ac)
+        guard cross.x.isFinite, cross.y.isFinite, cross.z.isFinite else { return false }
+        return cross.x != 0 || cross.y != 0 || cross.z != 0
     }
 
     private static func indexValue(
