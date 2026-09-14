@@ -17,6 +17,14 @@ APPS = {
     "otsu4": ("6799755566", "jp.allsunday1122.otsu4"),
     "fp3": ("6796733578", "com.allsunday1122.fp3kakomoncoach"),
     "ap": ("6799754343", "jp.allsunday1122.apmanabisprint"),
+    "tsukanshi": ("6799753744", "jp.allsunday1122.tsukanshi"),
+    "network": ("6799754573", "jp.allsunday1122.networkspecialist"),
+    "cpa": ("6799754783", "jp.allsunday1122.cpamanabisprint"),
+    "shoshi": ("6799755748", "jp.allsunday1122.shoshi"),
+    "kanteishi": ("6801787074", "jp.allsunday1122.kanteishishortanswer"),
+    "kangoshi": ("6801792293", "jp.allsunday1122.kangoshi"),
+    "kanrieiyoushi": ("6799753841", "jp.allsunday1122.kanrieiyoushi"),
+    "hokenshi": ("6801783499", "jp.allsunday1122.hokenshi"),
 }
 OUT = Path(os.environ.get("FACTORY_RELEASE_RESULT", "factory-release-readback.json"))
 
