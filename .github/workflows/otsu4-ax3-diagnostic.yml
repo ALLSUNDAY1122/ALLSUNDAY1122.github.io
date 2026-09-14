@@ -1,0 +1,93 @@
+name: Otsu4 Accessibility3 Diagnostic
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  diagnose:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTSU4-AX3-DIAG]'))
+    runs-on: macos-latest
+    timeout-minutes: 25
+    env:
+      RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8
+      DIAGNOSTIC_SHA256: 18374446188a0b55a589c5e0c1627d2c4a60fac50107f9a8412f2d563eacca53
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Materialize exact audited release source
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RELEASE_SOURCE_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$RELEASE_SOURCE_SHA"
+      - name: Overlay fail-closed Accessibility3 diagnostic test
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git show origin/main:.github/diagnostics/otsu4/Otsu4SprintUITests.swift > native-ios/Otsu4Sprint/UITests/Otsu4SprintUITests.swift
+          ACTUAL=$(shasum -a 256 native-ios/Otsu4Sprint/UITests/Otsu4SprintUITests.swift | awk '{print $1}')
+          test "$ACTUAL" = "$DIAGNOSTIC_SHA256"
+          echo "PASS diagnostic overlay sha=$ACTUAL"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Prepare audited native resources
+        run: bash native-ios/Otsu4Sprint/prepare-ios.sh
+      - name: Generate Xcode project
+        working-directory: native-ios/Otsu4Sprint
+        run: xcodegen generate
+      - name: Choose simulator
+        id: sim
+        run: |
+          set -euo pipefail
+          LINE=$(xcrun simctl list devices available | grep -m1 'iPhone')
+          DEVICE=$(printf '%s\n' "$LINE" | sed -E 's/^[[:space:]]*([^\(]+) \(.*/\1/' | sed 's/[[:space:]]*$//')
+          UDID=$(printf '%s\n' "$LINE" | sed -E 's/.*\(([0-9A-Fa-f-]{36})\).*/\1/')
+          test -n "$DEVICE"
+          test -n "$UDID"
+          echo "device=$DEVICE" >> "$GITHUB_OUTPUT"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: Run Accessibility3 start-transition diagnostic only
+        working-directory: native-ios/Otsu4Sprint
+        run: |
+          set -o pipefail
+          rm -rf "$RUNNER_TEMP/otsu4-ax3.xcresult"
+          xcodebuild \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -only-testing:Otsu4SprintUITests/Otsu4SprintUITests/testAccessibility3DynamicTypeHasNoHorizontalOverflow \
+            -resultBundlePath "$RUNNER_TEMP/otsu4-ax3.xcresult" \
+            CODE_SIGNING_ALLOWED=NO \
+            test | tee "$RUNNER_TEMP/otsu4-ax3.log"
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: otsu4-ax3-diagnostic
+          path: |
+            ${{ runner.temp }}/otsu4-ax3.log
+            ${{ runner.temp }}/otsu4-ax3.xcresult
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Report issue-triggered result
+        if: always() && github.event_name == 'issues'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Otsu4 Accessibility3 diagnostic finished. status=${{ job.status }}; run_id=${context.runId}; source=${process.env.RELEASE_SOURCE_SHA}; diagnostic_sha256=${process.env.DIAGNOSTIC_SHA256}. No TestFlight or App Store upload was performed.`
+            });
