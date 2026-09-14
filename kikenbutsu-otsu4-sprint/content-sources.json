@@ -1,0 +1,70 @@
+{
+  "contentVersion": "otsu4-2026-08-product-v1",
+  "lawBaselineDate": "2026-08-08",
+  "policy": {
+    "officialPastQuestions": "Do not reproduce or adapt official past-question text for commercial distribution. Use only for topic/frequency analysis.",
+    "drafting": "Draft independently from statutes, Fire and Disaster Management Agency materials, and official exam scope.",
+    "corrections": "When an official source changes, identify affected sourceKeys/tags, re-audit answers and explanations, then bump contentVersion."
+  },
+  "sources": [
+    {
+      "key": "fire-service-act",
+      "title": "消防法",
+      "url": "https://laws.e-gov.go.jp/law/323AC1000000186",
+      "authority": "e-Gov法令検索",
+      "covers": ["指定数量以上の貯蔵・取扱い", "複数危険物の倍数合算", "仮貯蔵・仮取扱い10日以内", "製造所等"]
+    },
+    {
+      "key": "hazardous-materials-order",
+      "title": "危険物の規制に関する政令",
+      "url": "https://laws.e-gov.go.jp/law/334CO0000000306",
+      "authority": "e-Gov法令検索",
+      "covers": ["別表第三", "第4類指定数量", "技術基準"]
+    },
+    {
+      "key": "fdma-definition",
+      "title": "「危険物」とは？",
+      "url": "https://www.fdma.go.jp/laws/laws/laws003.html",
+      "authority": "総務省消防庁",
+      "covers": ["第1類〜第6類の性質", "第4類は引火性液体"]
+    },
+    {
+      "key": "fdma-fire-service-act-table",
+      "title": "消防法｜危険物確認試験や危険物の運搬について",
+      "url": "https://www.fdma.go.jp/relocation/kasai_yobo/about_shiken_unpan/houbeppyou.html",
+      "authority": "総務省消防庁",
+      "covers": ["特殊引火物", "第一石油類", "アルコール類", "第二石油類", "引火点区分"]
+    },
+    {
+      "key": "exam-subjects",
+      "title": "試験科目及び問題数",
+      "url": "https://www.shoubo-shiken.or.jp/kikenbutsu/annai/subject.html",
+      "authority": "一般財団法人消防試験研究センター",
+      "covers": ["乙種15/10/10問", "科目免除", "試験範囲"]
+    },
+    {
+      "key": "official-past-question-policy",
+      "title": "過去に出題された問題",
+      "url": "https://www.shoubo-shiken.or.jp/kikenbutsu/exercise.html",
+      "authority": "一般財団法人消防試験研究センター",
+      "covers": ["著作権", "二次利用禁止方針", "頻出論点分析のみ"]
+    }
+  ],
+  "designatedQuantitiesLiters": {
+    "特殊引火物": 50,
+    "第一石油類（非水溶性）": 200,
+    "第一石油類（水溶性）": 400,
+    "アルコール類": 400,
+    "第二石油類（非水溶性）": 1000,
+    "第二石油類（水溶性）": 2000,
+    "第三石油類（非水溶性）": 2000,
+    "第三石油類（水溶性）": 4000,
+    "第四石油類": 6000,
+    "動植物油類": 10000
+  },
+  "audit": {
+    "layer1": "Generator fact tables: legal numbers, category thresholds, representative substances, combustion/extinguishing concepts.",
+    "layer2": "Generated bank: 360 IDs, 5 unique choices, answer index, source metadata, subject counts, duplicate signatures.",
+    "reviewStatus": "productization-candidate"
+  }
+}
