@@ -74,12 +74,7 @@ enum SplatCompletionVerifier {
         }
 
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
-        guard let evidenceData = readCompletionEvidenceIfSafe(at: evidenceURL, fileManager: fileManager),
-              let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: evidenceData),
-              evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
-              evidence.fileName == ScanProjectStore.splatResultFileName,
-              evidence.byteCount > 0,
-              evidence.byteCount % 32 == 0 else {
+        guard let evidence = loadValidEvidence(at: evidenceURL, fileManager: fileManager) else {
             throw VerificationError.completionEvidenceMissing
         }
 
@@ -105,12 +100,12 @@ enum SplatCompletionVerifier {
                     projectURL: projectURL,
                     evidence: evidence,
                     fileManager: fileManager
-                ) else {
+                ), let restoredEvidence = loadValidEvidence(at: evidenceURL, fileManager: fileManager) else {
                     throw VerificationError.completionEvidenceMismatch
                 }
                 verifiedDigest = try SplatStrongCompletionEvidence.verifyOrSeal(
                     sourceURL: expectedURL,
-                    evidence: evidence,
+                    evidence: restoredEvidence,
                     fileManager: fileManager
                 )
             } catch is CancellationError {
@@ -122,6 +117,21 @@ enum SplatCompletionVerifier {
 
         SplatPreviousResultEvidence.discardBackup(projectURL: projectURL, fileManager: fileManager)
         return Verification(url: expectedURL, sha256: verifiedDigest)
+    }
+
+    private static func loadValidEvidence(
+        at url: URL,
+        fileManager: FileManager
+    ) -> SplatCommitEvidence? {
+        guard let data = readCompletionEvidenceIfSafe(at: url, fileManager: fileManager),
+              let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: data),
+              evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
+              evidence.fileName == ScanProjectStore.splatResultFileName,
+              evidence.byteCount > 0,
+              evidence.byteCount % 32 == 0 else {
+            return nil
+        }
+        return evidence
     }
 
     private static func readCompletionEvidenceIfSafe(
