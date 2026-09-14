@@ -1,0 +1,53 @@
+name: HM2 Release Audit Diagnostic
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  diagnose:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      startsWith(github.event.issue.title, '[HM2-RELEASE-DIAG]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: StoreKit UI audit
+        id: storekit
+        continue-on-error: true
+        run: python3 scripts/audit_sm2_storekit_ui.py
+      - name: Learning contract audit
+        id: learning
+        continue-on-error: true
+        run: python3 scripts/audit_sm2_learning_contract.py
+      - name: Release drift audit
+        id: drift
+        continue-on-error: true
+        run: python3 scripts/audit_sm2_release_drift.py
+      - name: Fail closed after full diagnosis
+        run: |
+          echo "storekit=${{ steps.storekit.outcome }}"
+          echo "learning=${{ steps.learning.outcome }}"
+          echo "drift=${{ steps.drift.outcome }}"
+          test "${{ steps.storekit.outcome }}" = success
+          test "${{ steps.learning.outcome }}" = success
+          test "${{ steps.drift.outcome }}" = success
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const body = [
+              `HM2 release audit diagnostic status=${{ job.status }}; run_id=${context.runId}`,
+              `storekit=${{ steps.storekit.outcome }}`,
+              `learning=${{ steps.learning.outcome }}`,
+              `drift=${{ steps.drift.outcome }}`,
+            ].join('\n');
+            await github.rest.issues.createComment({owner:context.repo.owner, repo:context.repo.repo, issue_number:context.issue.number, body});
