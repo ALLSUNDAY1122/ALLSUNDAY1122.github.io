@@ -1,0 +1,63 @@
+name: Tsukanshi Codemagic integration bootstrap
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tsukanshi-codemagic-integration-bootstrap.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.actor == 'ALLSUNDAY1122'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Repair only the Tsukanshi ASC integration binding
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml'); s=p.read_text(encoding='utf-8')
+          marker='\n  tsukanshi-ios:'
+          if marker not in s: raise SystemExit('missing tsukanshi-ios workflow')
+          start=s.index(marker); tail=s[start+1:]; rel=tail.find('\n  ',len('  tsukanshi-ios:')); end=len(s) if rel<0 else start+1+rel
+          block=s[start:end]
+          old='      app_store_connect: codemagic'; new='      app_store_connect: "Codemagic Shiwake Swipe"'
+          if block.count(old)!=1: raise SystemExit(f'expected exactly one broken binding, found {block.count(old)}')
+          if 'bundle_identifier: jp.allsunday1122.tsukanshi' not in block: raise SystemExit('bundle id mismatch')
+          if 'submit_to_testflight: true' not in block or 'submit_to_app_store: false' not in block: raise SystemExit('release safety contract mismatch')
+          p.write_text(s[:start]+block.replace(old,new,1)+s[end:],encoding='utf-8')
+          v=Path('tsukanshi-sprint/validate-apple-preflight.mjs'); t=v.read_text(encoding='utf-8')
+          vold="includes(block, 'app_store_connect: codemagic', 'Codemagic ASC integration');"
+          vnew="includes(block, 'app_store_connect: \\\"Codemagic Shiwake Swipe\\\"', 'Codemagic ASC integration');"
+          if t.count(vold)!=1: raise SystemExit(f'expected one preflight assertion, found {t.count(vold)}')
+          v.write_text(t.replace(vold,vnew,1),encoding='utf-8')
+          PY
+      - name: Validate release safety contract
+        run: |
+          set -euo pipefail
+          node tsukanshi-sprint/validate-apple-preflight.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('codemagic.yaml').read_text(encoding='utf-8'); block=s.split('\n  tsukanshi-ios:',1)[1]
+          assert 'app_store_connect: "Codemagic Shiwake Swipe"' in block
+          assert 'submit_to_testflight: true' in block
+          assert 'submit_to_app_store: false' in block
+          assert 'bundle_identifier: jp.allsunday1122.tsukanshi' in block
+          print('PASS release safety contract')
+          PY
+      - name: Commit repair
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml tsukanshi-sprint/validate-apple-preflight.mjs
+          git diff --cached --quiet && { echo 'No change required'; exit 0; }
+          git commit -m 'fix(tsukanshi): use existing Codemagic ASC integration'
+          git push origin HEAD:main
