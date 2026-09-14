@@ -26,6 +26,7 @@ targets:
       - path: NetworkSpecialist/Resources/questions.native.json
       - path: NetworkSpecialist/Assets.xcassets
       - path: NetworkSpecialist/PrivacyInfo.xcprivacy
+      - path: Review.storekit
     info:
       path: NetworkSpecialist/Info.plist
     settings:
@@ -38,6 +39,7 @@ targets:
       testTargets:
         - NetworkSpecialistTests
         - NetworkSpecialistUITests
+      storeKitConfiguration: Review.storekit
 
   NetworkSpecialistTests:
     type: bundle.unit-test
