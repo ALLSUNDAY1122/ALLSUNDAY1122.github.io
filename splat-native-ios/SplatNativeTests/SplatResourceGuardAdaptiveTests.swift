@@ -74,6 +74,19 @@ final class SplatResourceGuardAdaptiveTests: XCTestCase {
         XCTAssertEqual(SplatReconstructionPolicy.makeConfig().shDegree, 3)
     }
 
+    func testEnhancementTargetSaturatesCorruptHugeIterationWithoutOverflow() {
+        XCTAssertEqual(
+            SplatReconstructionPolicy.enhancementTarget(from: Int.max),
+            SplatReconstructionPolicy.trainingHorizon
+        )
+        XCTAssertEqual(
+            SplatReconstructionPolicy.enhancementTarget(from: Int.max - 1),
+            SplatReconstructionPolicy.trainingHorizon
+        )
+        XCTAssertEqual(SplatReconstructionPolicy.enhancementTarget(from: 7_000), 12_000)
+        XCTAssertEqual(SplatReconstructionPolicy.enhancementTarget(from: 29_000), 30_000)
+    }
+
     func testFairThermalStateDoesNotPauseByItself() {
         let guardrail = SplatResourceGuard(physicalMemoryBytes: 8 * 1_073_741_824)
         guardrail.resetForPass()
