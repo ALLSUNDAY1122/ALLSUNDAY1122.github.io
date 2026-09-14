@@ -2,9 +2,10 @@
 """Read-only recovery of the FP3 App Store icon from processed ASC Build 9.
 
 This script never mutates App Store Connect. It validates the exact app identity,
-locates build number 9, selects exactly one APP_STORE BuildIcon, downloads the
-rendered PNG from Apple's ImageAsset template URL, validates PNG structure and
-records a sanitized recovery manifest.
+locates build number 9, downloads every APP_STORE BuildIcon exposed for the build,
+validates each rendered PNG, and accepts a canonical icon only when all APP_STORE
+variants are byte-identical. Distinct variants fail closed instead of choosing one
+arbitrarily.
 """
 from __future__ import annotations
 
@@ -45,10 +46,49 @@ def render_url(template: str, width: int, height: int) -> str:
     for key, value in replacements.items():
         url = url.replace(key, value)
     if "{" in url or "}" in url:
-        raise RuntimeError(f"Unsupported ImageAsset template placeholders remain: {url}")
+        raise RuntimeError("Unsupported ImageAsset template placeholders remain")
     if not url.startswith("https://"):
         raise RuntimeError("BuildIcon template URL is not HTTPS")
     return url
+
+
+def download_icon(item: dict) -> tuple[dict, bytes]:
+    attrs = item.get("attributes") or {}
+    asset = attrs.get("iconAsset") or {}
+    width = int(asset.get("width") or 0)
+    height = int(asset.get("height") or 0)
+    template = str(asset.get("templateUrl") or "")
+    if width < 512 or height < 512 or not template:
+        raise RuntimeError(
+            f"APP_STORE BuildIcon asset is unexpectedly small/incomplete: id={item.get('id')} {width}x{height}"
+        )
+
+    png_url = render_url(template, width, height)
+    with urllib.request.urlopen(png_url, timeout=30) as response:
+        png = response.read()
+    actual_width, actual_height = png_dimensions(png)
+    if (actual_width, actual_height) != (width, height):
+        raise RuntimeError(
+            f"Downloaded BuildIcon dimensions mismatch: id={item.get('id')} API={width}x{height}, "
+            f"PNG={actual_width}x{actual_height}"
+        )
+    if len(png) < 10_000:
+        raise RuntimeError(f"Recovered BuildIcon PNG unexpectedly small: id={item.get('id')} bytes={len(png)}")
+
+    sha256 = hashlib.sha256(png).hexdigest()
+    metadata = {
+        "build_icon_id": item.get("id"),
+        "icon_type": attrs.get("iconType"),
+        "icon_name": attrs.get("name"),
+        "icon_masked": attrs.get("isPrerendered"),
+        "asset_width": width,
+        "asset_height": height,
+        "png_width": actual_width,
+        "png_height": actual_height,
+        "png_bytes": len(png),
+        "png_sha256": sha256,
+    }
+    return metadata, png
 
 
 def main() -> None:
@@ -84,34 +124,33 @@ def main() -> None:
         icons = []
         for item in icons_payload.get("data") or []:
             icon_attrs = item.get("attributes") or {}
-            icon_type = str(icon_attrs.get("iconType") or "")
-            if icon_type == "APP_STORE":
+            if str(icon_attrs.get("iconType") or "") == "APP_STORE":
                 icons.append(item)
-        if len(icons) != 1:
+        if not icons:
             summary = [str((x.get("attributes") or {}).get("iconType")) for x in (icons_payload.get("data") or [])]
-            raise RuntimeError(f"Expected one APP_STORE BuildIcon; found {len(icons)}; types={summary}")
+            raise RuntimeError(f"No APP_STORE BuildIcon found; types={summary}")
 
-        icon = icons[0]
-        icon_attrs = icon.get("attributes") or {}
-        asset = icon_attrs.get("iconAsset") or {}
-        width = int(asset.get("width") or 0)
-        height = int(asset.get("height") or 0)
-        template = str(asset.get("templateUrl") or "")
-        if width < 512 or height < 512 or not template:
-            raise RuntimeError(f"APP_STORE BuildIcon asset is unexpectedly small/incomplete: {width}x{height}")
-
-        png_url = render_url(template, width, height)
-        with urllib.request.urlopen(png_url, timeout=30) as response:
-            png = response.read()
-        actual_width, actual_height = png_dimensions(png)
-        if (actual_width, actual_height) != (width, height):
+        recovered = [download_icon(item) for item in icons]
+        variants = [metadata for metadata, _ in recovered]
+        unique_hashes = {metadata["png_sha256"] for metadata in variants}
+        if len(unique_hashes) != 1:
+            sanitized = [
+                {
+                    "build_icon_id": x["build_icon_id"],
+                    "icon_name": x["icon_name"],
+                    "asset_width": x["asset_width"],
+                    "asset_height": x["asset_height"],
+                    "png_sha256": x["png_sha256"],
+                }
+                for x in variants
+            ]
             raise RuntimeError(
-                f"Downloaded BuildIcon dimensions mismatch: API={width}x{height}, PNG={actual_width}x{actual_height}"
+                "Distinct APP_STORE BuildIcon variants found; refusing arbitrary selection: "
+                + json.dumps(sanitized, ensure_ascii=False, sort_keys=True)
             )
-        if len(png) < 10_000:
-            raise RuntimeError(f"Recovered BuildIcon PNG unexpectedly small: {len(png)} bytes")
 
-        sha256 = hashlib.sha256(png).hexdigest()
+        canonical = variants[0]
+        png = recovered[0][1]
         OUT_PNG.write_bytes(png)
         result = {
             "checked_at": datetime.now(timezone.utc).isoformat(),
@@ -123,16 +162,16 @@ def main() -> None:
             "build_number": TARGET_BUILD_NUMBER,
             "build_processing_state": (build.get("attributes") or {}).get("processingState"),
             "build_expired": (build.get("attributes") or {}).get("expired"),
-            "build_icon_id": icon.get("id"),
-            "icon_type": icon_attrs.get("iconType"),
-            "icon_name": icon_attrs.get("name"),
-            "icon_masked": icon_attrs.get("isPrerendered"),
-            "asset_width": width,
-            "asset_height": height,
-            "png_width": actual_width,
-            "png_height": actual_height,
-            "png_bytes": len(png),
-            "png_sha256": sha256,
+            "app_store_icon_count": len(variants),
+            "all_app_store_icons_byte_identical": True,
+            "canonical_build_icon_id": canonical["build_icon_id"],
+            "asset_width": canonical["asset_width"],
+            "asset_height": canonical["asset_height"],
+            "png_width": canonical["png_width"],
+            "png_height": canonical["png_height"],
+            "png_bytes": canonical["png_bytes"],
+            "png_sha256": canonical["png_sha256"],
+            "variants": variants,
             "apple_template_url_present": True,
             "app_store_connect_mutated": False,
         }
