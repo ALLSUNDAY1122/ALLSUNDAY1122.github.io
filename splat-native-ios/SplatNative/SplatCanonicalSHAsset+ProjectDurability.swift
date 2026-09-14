@@ -74,10 +74,12 @@ extension SplatCanonicalSHAsset {
                 return Asset(url: targetURL, descriptor: existing)
             }
 
+            try synchronizeFileBeforePublish(at: temporaryURL)
             _ = try FileManager.default.replaceItemAt(targetURL, withItemAt: temporaryURL)
             return Asset(url: targetURL, descriptor: candidate)
         }
 
+        try synchronizeFileBeforePublish(at: temporaryURL)
         try FileManager.default.moveItem(at: temporaryURL, to: targetURL)
         return Asset(url: targetURL, descriptor: candidate)
     }
@@ -272,6 +274,12 @@ extension SplatCanonicalSHAsset {
         case "double", "float64", "int64", "uint64": return 8
         default: return nil
         }
+    }
+
+    private static func synchronizeFileBeforePublish(at url: URL) throws {
+        let handle = try FileHandle(forWritingTo: url)
+        defer { try? handle.close() }
+        try handle.synchronize()
     }
 
     @discardableResult
