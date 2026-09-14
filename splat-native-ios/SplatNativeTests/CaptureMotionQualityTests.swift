@@ -139,6 +139,30 @@ final class CaptureMotionQualityTests: XCTestCase {
         XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooSoft)
     }
 
+    func testFlatLowTextureSurfaceIsNotMisclassifiedAsBlur() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 126,
+            darkFraction: 0,
+            highlightFraction: 0,
+            lumaStandardDeviation: 3,
+            laplacianScore: 0.5,
+            sampleCount: 512
+        )
+        XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
+    }
+
+    func testTexturedLowLaplacianFrameIsRejectedAsBlur() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 118,
+            darkFraction: 0.04,
+            highlightFraction: 0.03,
+            lumaStandardDeviation: 22,
+            laplacianScore: 1.1,
+            sampleCount: 512
+        )
+        XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooSoft)
+    }
+
     func testAcceptsNormallyExposedDetailedFrame() {
         let stats = CaptureImageQualityStats(
             meanLuma: 116,
