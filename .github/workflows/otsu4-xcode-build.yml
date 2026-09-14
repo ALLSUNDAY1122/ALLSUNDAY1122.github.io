@@ -6,6 +6,7 @@ on:
       - 'native-ios/Otsu4Sprint/**'
       - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
       - 'tools/otsu4-build-content-v2.mjs'
+      - '.github/acceptance/otsu4/**'
       - '.github/workflows/otsu4-xcode-build.yml'
   push:
     branches: [ feat/otsu4-360-productization ]
@@ -13,6 +14,7 @@ on:
       - 'native-ios/Otsu4Sprint/**'
       - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
       - 'tools/otsu4-build-content-v2.mjs'
+      - '.github/acceptance/otsu4/**'
       - '.github/workflows/otsu4-xcode-build.yml'
   workflow_dispatch:
   issues:
@@ -31,6 +33,7 @@ jobs:
     timeout-minutes: 35
     env:
       RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8
+      ACCEPTANCE_OVERLAY_SHA256: ffb271cfb5bc741a047d859196b3fa5f7c4b4d7398995ccb639dc20c4b5bfa15
     steps:
       - uses: actions/checkout@v6
         with:
@@ -42,6 +45,14 @@ jobs:
           git fetch --depth=1 origin "$RELEASE_SOURCE_SHA"
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$RELEASE_SOURCE_SHA"
+      - name: Overlay current Acceptance Contract test
+        run: |
+          set -euo pipefail
+          mkdir -p native-ios/Otsu4Sprint/UITests
+          git show origin/main:.github/acceptance/otsu4/Otsu4AcceptanceUITests.swift > native-ios/Otsu4Sprint/UITests/Otsu4AcceptanceUITests.swift
+          ACTUAL=$(shasum -a 256 native-ios/Otsu4Sprint/UITests/Otsu4AcceptanceUITests.swift | awk '{print $1}')
+          test "$ACTUAL" = "$ACCEPTANCE_OVERLAY_SHA256"
+          echo "PASS acceptance overlay sha=$ACTUAL"
       - name: Require native source
         run: test -f native-ios/Otsu4Sprint/project.yml
       - uses: actions/setup-node@v4
@@ -129,5 +140,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `Otsu4 pinned Native Preflight finished. status=${{ job.status }}; run_id=${context.runId}; source=${process.env.RELEASE_SOURCE_SHA}. No TestFlight or App Store upload was performed.`
+              body: `Otsu4 pinned Native Preflight finished. status=${{ job.status }}; run_id=${context.runId}; source=${process.env.RELEASE_SOURCE_SHA}; acceptance_overlay_sha256=${process.env.ACCEPTANCE_OVERLAY_SHA256}. No TestFlight or App Store upload was performed.`
             });
