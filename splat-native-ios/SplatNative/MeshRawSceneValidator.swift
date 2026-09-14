@@ -328,13 +328,22 @@ enum MeshRawSceneValidator {
         _ b: SIMD3<Float>,
         _ c: SIMD3<Float>
     ) -> Bool {
-        let ab = b - a
-        let ac = c - a
-        guard ab.x.isFinite, ab.y.isFinite, ab.z.isFinite,
-              ac.x.isFinite, ac.y.isFinite, ac.z.isFinite else { return false }
-        let cross = simd_cross(ab, ac)
-        guard cross.x.isFinite, cross.y.isFinite, cross.z.isFinite else { return false }
-        return cross.x != 0 || cross.y != 0 || cross.z != 0
+        // All coordinates are already finite here, but subtracting opposite large Floats can still
+        // overflow before the area check and Float cross products overflow much earlier than their
+        // inputs. Evaluate the determinant in Double: every finite Float delta/product is exactly
+        // within Double's exponent range, so large-but-valid imported surfaces are not mistaken for
+        // degenerate geometry merely because the Float intermediate became ±Inf.
+        let abx = Double(b.x) - Double(a.x)
+        let aby = Double(b.y) - Double(a.y)
+        let abz = Double(b.z) - Double(a.z)
+        let acx = Double(c.x) - Double(a.x)
+        let acy = Double(c.y) - Double(a.y)
+        let acz = Double(c.z) - Double(a.z)
+        let crossX = aby * acz - abz * acy
+        let crossY = abz * acx - abx * acz
+        let crossZ = abx * acy - aby * acx
+        guard crossX.isFinite, crossY.isFinite, crossZ.isFinite else { return false }
+        return crossX != 0 || crossY != 0 || crossZ != 0
     }
 
     private static func indexValue(
