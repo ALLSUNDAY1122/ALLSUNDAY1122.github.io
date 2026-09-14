@@ -1,4 +1,5 @@
 import Foundation
+import SceneKit
 
 /// Storage admission for Mesh/model delivery. Conversion can temporarily hold the source,
 /// an OBJ bridge, a partial output, and the finalized share file at the same time, so the UI
@@ -8,6 +9,7 @@ enum MeshExportAdmission {
         case sourceMissing
         case unsafeSource
         case sourceSizeUnavailable
+        case invalidGeometry
         case storageCapacityUnavailable
         case insufficientStorage(required: Int64, available: Int64)
 
@@ -19,6 +21,8 @@ enum MeshExportAdmission {
                 return "Meshの書き出し元が安全な通常ファイルではありません。保存済みスキャンから開き直してください。"
             case .sourceSizeUnavailable:
                 return "Meshデータのサイズを確認できないため、書き出しを開始できません。"
+            case .invalidGeometry:
+                return "Meshの生成結果に有効な面形状を確認できないため、書き出しを開始できません。再生成してください。"
             case .storageCapacityUnavailable:
                 return "端末の空き容量を確認できないため、安全なMesh書き出しを開始できません。"
             case .insufficientStorage(let required, let available):
@@ -52,6 +56,19 @@ enum MeshExportAdmission {
 
         let sourceBytes = try fileSize(at: sourceURL)
         let sourceExtension = sourceURL.pathExtension.lowercased()
+
+        // RealityKit can report a modelFile request complete as soon as a USDZ exists. File
+        // existence alone does not prove SceneKit can decode a usable surface. Export/share is a
+        // last irreversible hand-off to other apps, so fail closed here for malformed, empty,
+        // non-finite, out-of-range, or fully degenerate USDZ geometry. This runs on the detached
+        // export preflight path, not the viewer's MainActor.
+        if sourceExtension == "usdz" {
+            guard let scene = try? SCNScene(url: sourceURL, options: nil),
+                  MeshRawSceneValidator.containsGeometry(scene) else {
+                throw AdmissionError.invalidGeometry
+            }
+        }
+
         var required = estimatedRequiredFreeBytes(
             sourceBytes: sourceBytes,
             sourceExtension: sourceExtension,
