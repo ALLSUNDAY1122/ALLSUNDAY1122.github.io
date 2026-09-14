@@ -74,6 +74,7 @@ jobs:
           PY
       - name: Mark TestFlight readiness PASS with evidence
         run: |
+          set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
           import json, datetime
@@ -99,6 +100,21 @@ jobs:
           git add automation/hm1-testflight-readiness.json
           git diff --cached --exit-code && { echo 'Readiness already current'; exit 0; } || true
           git commit -m 'release(hm1): mark TestFlight readiness after fresh gates'
+          # Other independent app repairs may update main while this gate runs.
+          # Rebase the evidence-only commit instead of failing on a non-HM1 race.
+          git pull --rebase origin main
+          changed="$(git diff --name-only "$KNOWN_VISUAL_PASS_SHA..HEAD" -- \
+            ios/health-manager-1 \
+            apps/sanitary-manager-1 \
+            apps/sanitary-manager-2 \
+            scripts/audit_hm1_product_preflight.py \
+            scripts/audit_hm1_human_gate.py \
+            scripts/audit_hm1_release_contract.py)"
+          if [ -n "$changed" ]; then
+            echo 'HM1 visual/product drift appeared during readiness synthesis; refusing push:' >&2
+            echo "$changed" >&2
+            exit 1
+          fi
           git push origin HEAD:main
       - name: Report
         if: always()
