@@ -65,8 +65,14 @@ for forbidden in (
 for token in (
     "CGImageSourceGetCount(source) > 0",
     "CGImageSourceCopyPropertiesAtIndex(source, 0, nil) != nil",
+    "var failedFrameIndexes = Set<Int>()",
+    "var retryPointIndexes = Set<Int>()",
+    "if !failedFrameIndexes.isEmpty, !retryPointIndexes.isEmpty",
+    "let retryProjections = projections.filter { !failedFrameIndexes.contains($0.frameIndex) }",
+    "let missingCount = maxColorViewsPerPoint - samples[pointIndex].count",
+    "!originallySelected.contains(assignment.frameIndex)",
 ):
-    assert token in COLORIZER, f"missing seed-color frame preflight: {token}"
+    assert token in COLORIZER, f"missing seed-color frame admission/recovery contract: {token}"
 
 # The patch point must be backprojected before entering the neighbor loop, not once per neighbor.
 backproject_token = "let world = backproject(u: u + dx, v: v + dy, depth: depth, frame: reference)"
@@ -78,7 +84,7 @@ assert SOFTWARE.index(backproject_token, SOFTWARE.index("private static func pat
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
     'metadataFileName = "s14-seed-recipe.json"',
-    "static let recipeVersion = 14",
+    "static let recipeVersion = 15",
     "case planeSweep",
     "SplatSoftwareDepthSeedBuilder.makeSeedPoints",
     "softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount",
