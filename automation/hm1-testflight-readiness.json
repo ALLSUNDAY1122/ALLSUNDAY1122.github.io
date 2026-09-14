@@ -1,13 +1,14 @@
 {
-  "ready": false,
-  "updated_at": "2026-09-13",
-  "reason": "AI Preflight / Visual Gate / Release Gate not yet all PASS on the current product HEAD",
-  "required": [
+  "ready": true,
+  "updated_at": "2026-09-14T00:40:58.613541+00:00",
+  "product_sha": "32cb3d2ed17e1161111c23084b7ea88129b32689",
+  "visual_pass_sha": "220a590eb55bd0b49be00f1e370fa6219b2cbbb0",
+  "evidence": [
+    "no_visual_or_product_drift_since_visual_pass",
     "release_contract",
-    "learning_acceptance",
-    "storekit_regression",
-    "visual_gate",
-    "release_drift",
-    "fresh_asc_release_readback"
+    "learning_acceptance_and_storekit_product_preflight",
+    "human_gate_regression",
+    "fresh_asc_version_1_0_prepare_for_submission",
+    "fresh_asc_lifetime_iap_ready_to_submit"
   ]
 }
