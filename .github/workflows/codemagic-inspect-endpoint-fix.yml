@@ -1,47 +1,54 @@
-name: Codemagic Inspect Endpoint Fix
+name: Codemagic Monitoring Contract Audit
 
 on:
   issues:
     types: [opened]
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/codemagic_build_gateway.py'
+      - '.github/workflows/codemagic-inspect-endpoint-fix.yml'
 
 permissions:
-  contents: write
+  contents: read
   issues: write
 
 jobs:
-  repair:
+  audit:
     if: >-
-      github.actor == 'ALLSUNDAY1122' &&
-      startsWith(github.event.issue.title, '[CM-INSPECT-ENDPOINT-FIX]')
+      github.event_name != 'issues' ||
+      (github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[CM-MONITORING-AUDIT]'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Patch documented Codemagic GET build endpoint
+      - name: Enforce documented Codemagic monitoring contract
         run: |
+          set -euo pipefail
+          python -m py_compile scripts/codemagic_build_gateway.py
           python3 - <<'PY'
           from pathlib import Path
-          p=Path('scripts/codemagic_build_gateway.py')
-          s=p.read_text(encoding='utf-8')
-          old='https://codemagic.io/api/v3/builds/{build_id}'
-          new='https://api.codemagic.io/builds/{build_id}'
-          if s.count(old) != 1:
-              raise SystemExit(f'Expected exactly one legacy inspect endpoint, found {s.count(old)}')
-          p.write_text(s.replace(old,new,1),encoding='utf-8')
-          print('PASS: Codemagic inspect endpoint updated to documented /builds/:id API')
+          s=Path('scripts/codemagic_build_gateway.py').read_text(encoding='utf-8')
+          forbidden=(
+              'https://api.codemagic.io/builds/{build_id}',
+              'https://codemagic.io/api/v3/builds/{build_id}',
+              'action must be inspect, inspect_build',
+          )
+          for token in forbidden:
+              assert token not in s, f'unsupported Codemagic polling regression: {token}'
+          assert 'inspect_workflow_status' in s
+          assert 'status_badge.svg' in s
+          assert 'wait=true is unsupported' in s
+          assert 'https://api.codemagic.io/builds' in s
+          print('PASS: start-build API is separated from workflow-health/ASC completion evidence')
           PY
-          grep -q 'https://api.codemagic.io/builds/{build_id}' scripts/codemagic_build_gateway.py
-      - name: Commit repair
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add scripts/codemagic_build_gateway.py
-          git diff --cached --exit-code && { echo 'No change required'; exit 0; } || true
-          git commit -m 'fix(release): use documented Codemagic build status endpoint'
-          git pull --rebase origin main
-          git push origin HEAD:main
-      - name: Report
-        if: always()
+      - name: Report issue-triggered result
+        if: always() && github.event_name == 'issues'
         uses: actions/github-script@v8
         with:
           script: |
-            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Codemagic inspect endpoint repair finished. status=${{ job.status }}; run_id=${context.runId}`});
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Codemagic monitoring contract audit finished. status=${{ job.status }}; run_id=${context.runId}. Unsupported build-id polling is treated as a regression.`
+            });
