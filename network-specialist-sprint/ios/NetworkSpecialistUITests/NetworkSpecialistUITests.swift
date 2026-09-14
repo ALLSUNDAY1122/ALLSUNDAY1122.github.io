@@ -11,6 +11,13 @@ final class NetworkSpecialistUITests: XCTestCase {
         return app
     }
 
+    private func launchStoreKitReview() -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchArguments += ["-UITestReset"]
+        app.launch()
+        return app
+    }
+
     func testCoreLearningFlowAndFourTabs() {
         let app = launch()
         XCTAssertTrue(app.otherElements["home.title"].waitForExistence(timeout: 5) || app.staticTexts["home.title"].exists)
@@ -109,5 +116,27 @@ final class NetworkSpecialistUITests: XCTestCase {
         let window = app.windows.firstMatch
         let start = app.buttons["home.startToday"]
         XCTAssertLessThanOrEqual(start.frame.maxX, window.frame.maxX + 1)
+    }
+
+    func testCapturePremiumReviewScreenshotWithResolvedPrice() {
+        let app = launchStoreKitReview()
+        XCTAssertTrue(app.buttons["tab.settings"].waitForExistence(timeout: 5))
+        app.buttons["tab.settings"].tap()
+        XCTAssertTrue(app.otherElements["settings.screen"].waitForExistence(timeout: 3))
+
+        let purchase = app.buttons["プレミアムを購入"]
+        for _ in 0..<8 where !purchase.exists {
+            app.swipeUp()
+        }
+        XCTAssertTrue(purchase.waitForExistence(timeout: 8), "StoreKit review purchase CTA must be visible")
+        XCTAssertTrue(app.staticTexts["買い切り"].exists)
+        let price = app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "800")).firstMatch
+        XCTAssertTrue(price.waitForExistence(timeout: 5), "StoreKit JPN price must resolve before review capture")
+        XCTAssertFalse(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "取得")).firstMatch.exists)
+
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "NetworkSpecialist-IAP-Review"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 }
