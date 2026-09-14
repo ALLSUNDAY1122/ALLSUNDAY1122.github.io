@@ -1,20 +1,13 @@
 import XCTest
-import StoreKitTest
 
 final class FP3PaywallReviewUITests: XCTestCase {
-    private var storeKitSession: SKTestSession!
-
     override func setUpWithError() throws {
         continueAfterFailure = false
-        storeKitSession = try SKTestSession(configurationFileNamed: "Review.storekit")
-        storeKitSession.disableDialogs = true
-        storeKitSession.clearTransactions()
-        storeKitSession.locale = Locale(identifier: "ja_JP")
-        storeKitSession.storefront = "JPN"
     }
 
     func testCapturePremiumPaywall() throws {
         let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
         app.launch()
 
         let lockedYear = app.buttons.matching(NSPredicate(format: "label CONTAINS '2024'" )).firstMatch
