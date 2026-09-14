@@ -66,22 +66,26 @@ enum SplatSkySeeder {
                 ),
                       let raster = SkyRaster(url: url, maximumPixel: maximumRasterPixel),
                       let geometryProjection = geometryProjection(frame: frame) else { return }
+                let baseline = lowerSceneLuma(raster: raster)
+                let xs: [Float] = [0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92]
+                let topY: Float = 0.035
+                let skyBorderCandidates = xs.filter { x in
+                    let pixel = raster.sample(normalizedX: x, normalizedY: topY)
+                    return isHighConfidenceSkyForSeeding(pixel, sceneLuma: baseline)
+                }
+                guard skyBorderCandidates.count >= 5 else { return }
+
                 let projectedGeometry = projectedGeometryPoints(
                     points: geometryPoints,
                     projection: geometryProjection
                 )
-                let baseline = lowerSceneLuma(raster: raster)
-                let xs: [Float] = [0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92]
-                let topY: Float = 0.035
-                let borderCandidates = xs.filter { x in
-                    let pixel = raster.sample(normalizedX: x, normalizedY: topY)
-                    return isHighConfidenceSkyForSeeding(pixel, sceneLuma: baseline) &&
-                        !hasGeometryNear(
-                            normalizedX: x,
-                            normalizedY: topY,
-                            projection: geometryProjection,
-                            projectedPoints: projectedGeometry
-                        )
+                let borderCandidates = skyBorderCandidates.filter { x in
+                    !hasGeometryNear(
+                        normalizedX: x,
+                        normalizedY: topY,
+                        projection: geometryProjection,
+                        projectedPoints: projectedGeometry
+                    )
                 }
                 guard borderCandidates.count >= 5 else { return }
 
