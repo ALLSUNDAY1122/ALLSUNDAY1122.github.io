@@ -2,6 +2,17 @@ import XCTest
 import simd
 
 final class CaptureMotionQualityTests: XCTestCase {
+    func testInitialFrameIsAcceptedWithoutArtificialCadenceDelay() {
+        let decision = CapturePolicy.frameDecision(
+            previous: nil,
+            current: matrix_identity_float4x4,
+            subjectDistance: 0.75,
+            previousTimestamp: 5.0,
+            currentTimestamp: 5.0
+        )
+        XCTAssertEqual(decision, .accept)
+    }
+
     func testCloseObjectRejectsFastTranslationThatWouldBlurOverlap() {
         var current = matrix_identity_float4x4
         current.columns.3.x = 0.30
