@@ -44,22 +44,24 @@ jobs:
           assert hashlib.sha256(icon.read_bytes()).hexdigest()=='d0cb19b237ca3306413c481e4fbc0fb871705b390a1bc37619d9683fff19ff2d'
           print('PASS: pinned Otsu4 release resources, 360 questions, canonical icon')
           PY
-      - name: Audit release workflow contract from current main
+      - name: Audit App Store eligible release workflow contract from current main
         run: |
           set -euo pipefail
           git show origin/main:codemagic.yaml > /tmp/codemagic-main.yaml
           python3 - <<'PY'
           from pathlib import Path
           s=Path('/tmp/codemagic-main.yaml').read_text(encoding='utf-8')
-          a=s.index('  otsu4-native-ios:')
-          b=s.index('\n  kangoshi-ios:',a)
+          a=s.index('  otsu4-ios:')
+          b=s.index('\n  tsukanshi-ios:',a)
           block=s[a:b]
           assert 'RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8' in block
+          assert 'distribution_type: app_store' in block
+          assert 'xcode-project use-profiles' in block
+          assert 'testFlightInternalTestingOnly' not in block
           assert 'submit_to_app_store: false' in block
           assert 'submit_to_testflight: false' in block
-          assert 'testFlightInternalTestingOnly' in block
-          print('PASS: current Otsu4 workflow remains pinned and cannot submit App Review')
-          print('NOTICE: current workflow exports Internal-TestFlight-only artifacts; a later App Store eligible RC path is still required for PRODUCT_DONE.')
+          assert 'git checkout --detach FETCH_HEAD' in block
+          print('PASS: current Otsu4 workflow is pinned, App Store eligible, and cannot auto-submit App Review/TestFlight')
           PY
       - name: Report
         if: always()
