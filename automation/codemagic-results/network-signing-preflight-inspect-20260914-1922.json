@@ -1,0 +1,98 @@
+{
+  "request_id": "network-signing-preflight-inspect-20260914-1922",
+  "ok": true,
+  "action": "inspect_build",
+  "workflow_id": null,
+  "branch": null,
+  "resolved_app_id": null,
+  "application_candidates": [
+    {
+      "id": "6a769d81a1add9d06020b524",
+      "name": "ALLSUNDAY1122.github.io",
+      "repositoryUrl": null
+    }
+  ],
+  "note": "Exact read-only build-list match. Apple-side availability still requires fresh ASC/TestFlight readback.",
+  "build_id": "6aa7c7c8f9310a8a6552fb4f",
+  "status": null,
+  "app_id": "6a769d81a1add9d06020b524",
+  "error": null,
+  "build_details": null,
+  "actions": {
+    "data": [
+      {
+        "id": "6aa7c7c90903b0362ebd0dac",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-14T10:09:19.672000Z",
+        "finished_at": "2026-09-14T10:10:23.718000Z"
+      },
+      {
+        "id": "6aa7c7c90903b0362ebd0dad",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-14T10:10:23.718000Z",
+        "finished_at": "2026-09-14T10:10:29.779000Z"
+      },
+      {
+        "id": "6aa7c7c90903b0362ebd0dab",
+        "name": "Set up code signing identities",
+        "type": "setup_code_signing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-14T10:10:29.779000Z",
+        "finished_at": "2026-09-14T10:10:32.221000Z"
+      },
+      {
+        "id": "6aa7c7c90903b0362ebd0dae",
+        "name": "Verify canonical identifiers",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ntest \"$BUNDLE_ID\" = 'jp.allsunday1122.networkspecialist'\ntest \"$APP_STORE_CONNECT_APP_ID\" = '6799754573'\ntest \"$CODEMAGIC_PROFILE_REF\" = 'networkspecialist_appstore'\ntest \"$IAP_PRODUCT_ID\" = 'jp.allsunday1122.networkspecialist.premium'",
+        "status": "success",
+        "started_at": "2026-09-14T10:10:32.221000Z",
+        "finished_at": "2026-09-14T10:10:32.565000Z"
+      },
+      {
+        "id": "6aa7c7c90903b0362ebd0daf",
+        "name": "Verify Codemagic automatic signing assets",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nsecurity find-identity -v -p codesigning\nPROFILE_DIR=\"$HOME/Library/MobileDevice/Provisioning Profiles\"\ntest -d \"$PROFILE_DIR\"\ntest -n \"$(find \"$PROFILE_DIR\" -maxdepth 1 -type f -name '*.mobileprovision' -print -quit)\"",
+        "status": "success",
+        "started_at": "2026-09-14T10:10:32.565000Z",
+        "finished_at": "2026-09-14T10:10:32.964000Z"
+      },
+      {
+        "id": "6aa7c7c90903b0362ebd0db0",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-14T10:10:32.964000Z",
+        "finished_at": "2026-09-14T10:10:33.115000Z"
+      },
+      {
+        "id": "6aa7c7c90903b0362ebd0db1",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-14T10:10:33.115000Z",
+        "finished_at": "2026-09-14T10:10:33.192000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
