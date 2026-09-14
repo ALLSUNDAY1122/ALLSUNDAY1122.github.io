@@ -118,6 +118,51 @@ final class SplatCompletionVerifierTests: XCTestCase {
         XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: resultURL))
     }
 
+    func testRestoresTrustedPreviousResultWhenCurrentSameSizeResultFailsStrongIntegrity() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Strong integrity recovery")
+        let pendingURL = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        let resultURL = projectURL.appendingPathComponent(ScanProjectStore.splatResultFileName)
+
+        let trustedBytes = Data(repeating: 0x51, count: 64)
+        try trustedBytes.write(to: pendingURL, options: .atomic)
+        _ = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: resultURL), resultURL)
+        try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: resultURL)
+
+        let newBytes = Data(repeating: 0x61, count: 64)
+        try newBytes.write(to: pendingURL, options: .atomic)
+        _ = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: resultURL), resultURL)
+
+        // Corrupt the new result without changing its byte count, then preserve its mtime so the
+        // strong hash seal rather than the legacy size/mtime guard is what detects the damage.
+        let attributes = try FileManager.default.attributesOfItem(atPath: resultURL.path)
+        let modificationDate = try XCTUnwrap(attributes[.modificationDate] as? Date)
+        try Data(repeating: 0x71, count: 64).write(to: resultURL, options: .atomic)
+        try FileManager.default.setAttributes([.modificationDate: modificationDate], ofItemAtPath: resultURL.path)
+
+        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: resultURL), resultURL)
+        XCTAssertEqual(try Data(contentsOf: resultURL), trustedBytes)
+        let recovered = try store.loadManifest(projectURL: projectURL)
+        XCTAssertTrue(recovered.recoveredAfterInterruption)
+        XCTAssertTrue(recovered.lastError?.contains("復元") == true)
+        XCTAssertFalse(FileManager.default.fileExists(
+            atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName).path
+        ))
+    }
+
     func testRejectsSiblingSplatEvenWhenProjectHasCommittedResult() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
