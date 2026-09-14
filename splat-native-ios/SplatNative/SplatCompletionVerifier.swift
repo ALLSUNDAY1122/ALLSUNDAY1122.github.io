@@ -74,11 +74,7 @@ enum SplatCompletionVerifier {
         }
 
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
-        guard isIndependentRegularFile(evidenceURL),
-              let evidenceByteCount = try? fileByteCount(evidenceURL, fileManager: fileManager),
-              evidenceByteCount >= 0,
-              evidenceByteCount <= maximumCompletionEvidenceByteCount,
-              let evidenceData = try? Data(contentsOf: evidenceURL),
+        guard let evidenceData = readCompletionEvidenceIfSafe(at: evidenceURL, fileManager: fileManager),
               let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: evidenceData),
               evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               evidence.fileName == ScanProjectStore.splatResultFileName,
@@ -126,6 +122,28 @@ enum SplatCompletionVerifier {
 
         SplatPreviousResultEvidence.discardBackup(projectURL: projectURL, fileManager: fileManager)
         return Verification(url: expectedURL, sha256: verifiedDigest)
+    }
+
+    private static func readCompletionEvidenceIfSafe(
+        at url: URL,
+        fileManager: FileManager
+    ) -> Data? {
+        guard isIndependentRegularFile(url),
+              let evidenceByteCount = try? fileByteCount(url, fileManager: fileManager),
+              evidenceByteCount >= 0,
+              evidenceByteCount <= maximumCompletionEvidenceByteCount,
+              let handle = try? FileHandle(forReadingFrom: url) else {
+            return nil
+        }
+        defer { try? handle.close() }
+
+        // The pre-read stat is only an early rejection. Keep the actual read bounded as well so a
+        // corrupt or concurrently replaced completion record cannot become an unbounded allocation.
+        guard let data = try? handle.read(upToCount: Int(maximumCompletionEvidenceByteCount) + 1),
+              data.count <= Int(maximumCompletionEvidenceByteCount) else {
+            return nil
+        }
+        return data
     }
 
     private static func isIndependentRegularFile(_ url: URL) -> Bool {
