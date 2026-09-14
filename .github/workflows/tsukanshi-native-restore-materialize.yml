@@ -1,0 +1,77 @@
+name: Tsukanshi Native Restore + Canonical Icon
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  restore:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[TSUKANSHI-NATIVE-RESTORE]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SOURCE_SHA: 03470845c1a8dc3199542bf2d8395611b3e981b8
+      ICON_URL: 'https://sdmntpraustraliaeast.oaiusercontent.com/files/00000000-9e9c-81fa-bb61-797b0e4b6a64/raw?se=2026-09-14T14%3A47%3A05Z&sp=r&sv=2026-02-06&sr=b&scid=20e8ba96-7f13-53f9-a22b-c968fb4b1ae6&skoid=732f244e-db13-47c3-bcc7-7ee02a9397bc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-14T09%3A46%3A02Z&ske=2026-09-15T09%3A46%3A02Z&sks=b&skv=2026-02-06&sig=pnnukNgIHmRi1FaO7FxsR7uBT1JITaEvO6Jo8bTQ0iY%3D'
+      EXPECTED_SHA256: ff9fd508930e8728ef54907ec64a7835dcffb69a1a773edc645b79715fbfccaa
+      EXPECTED_BYTES: '556001'
+      TARGET: tsukanshi-sprint/native-ios/CanonicalAssets/02_通関士.png
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Restore audited native source only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$SOURCE_SHA"
+          git checkout FETCH_HEAD -- tsukanshi-sprint/native-ios
+          test -f tsukanshi-sprint/native-ios/project.yml
+          test -d tsukanshi-sprint/native-ios/Tests
+      - name: Materialize exact connected-Drive canonical icon
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp --suffix=.png)"
+          trap 'rm -f "$tmp"' EXIT
+          curl --fail --location --retry 2 --retry-delay 1 "$ICON_URL" --output "$tmp"
+          test "$(wc -c < "$tmp" | tr -d ' ')" = "$EXPECTED_BYTES"
+          echo "$EXPECTED_SHA256  $tmp" | sha256sum --check --status
+          python3 - "$tmp" <<'PY'
+          import struct,sys
+          b=open(sys.argv[1],'rb').read(33)
+          assert b[:8] == b'\x89PNG\r\n\x1a\n' and b[12:16] == b'IHDR'
+          w,h,depth,color,comp,filt,interlace=struct.unpack('>IIBBBBB',b[16:29])
+          assert (w,h,depth,color)==(1024,1024,8,2)
+          assert comp==0 and filt==0 and interlace in (0,1)
+          PY
+          mkdir -p "$(dirname "$TARGET")"
+          cp "$tmp" "$TARGET"
+          echo "$EXPECTED_SHA256  $TARGET" | sha256sum --check --status
+      - name: Fail-closed source contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.tsukanshi' tsukanshi-sprint/native-ios/project.yml
+          test -f tsukanshi-sprint/native-ios/PrivacyInfo.xcprivacy
+          test -f tsukanshi-sprint/native-ios/Tests/TsukanshiNativeTests.swift
+          test -f tsukanshi-sprint/native-ios/prepare-native.sh
+      - name: Commit restored audited source plus exact icon
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- tsukanshi-sprint/native-ios
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(tsukanshi): restore audited native source and canonical icon'
+          git push origin HEAD:main
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Tsukanshi restore/materialize status=${{ job.status }} run_id=${context.runId}`});
