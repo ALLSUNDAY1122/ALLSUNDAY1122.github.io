@@ -210,6 +210,24 @@ final class CaptureMotionQualityTests: XCTestCase {
         XCTAssertLessThan(incompleteScore, 1)
     }
 
+    func testIncompleteSceneCoverageDoesNotRoundToCompleteProgress() {
+        XCTAssertFalse(CapturePolicy.sceneCoverageSatisfied(
+            viewDirectionSectors: 5,
+            spatialCells: 5,
+            pathLength: 0.75
+        ))
+        let score = CapturePolicy.coverageScore(
+            subjectDistance: nil,
+            orbitSectors: 0,
+            elevationBands: 0,
+            viewDirectionSectors: 5,
+            spatialCells: 5,
+            pathLength: 0.75
+        )
+        XCTAssertEqual(score, 0.95, accuracy: 0.0001)
+        XCTAssertEqual(Int((score * 12).rounded()), 11)
+    }
+
     func testCoverageScoreStaysFiniteAndBoundedForDamagedCheckpointValues() {
         let negative = CapturePolicy.coverageScore(
             subjectDistance: nil,
