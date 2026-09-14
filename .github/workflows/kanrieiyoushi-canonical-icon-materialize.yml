@@ -1,0 +1,63 @@
+name: Kanri Eiyoushi Canonical AppIcon Materialize
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: kanrieiyoushi-canonical-icon-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[KANRI-ICON] MATERIALIZE CANONICAL'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Fetch and verify canonical Drive icon
+        env:
+          KANRI_ICON_MODE: canonical
+        run: bash kanrieiyoushi-sprint/ios/prepare-ios.sh
+      - name: Independent exact binary audit
+        run: |
+          set -euo pipefail
+          ICON=kanrieiyoushi-sprint/ios/AppIcon.png
+          test -f "$ICON"
+          test "$(wc -c < "$ICON" | tr -d ' ')" = '726223'
+          echo '294481351106502f20958359d02bb2fb117ae18399654388425aad0e264fe31f  kanrieiyoushi-sprint/ios/AppIcon.png' | sha256sum -c -
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+          p=Path('kanrieiyoushi-sprint/ios/AppIcon.png')
+          b=p.read_bytes()
+          assert b[:8]==b'\x89PNG\r\n\x1a\n'
+          assert struct.unpack('>II',b[16:24])==(1024,1024)
+          print('PASS: canonical 管理栄養士 AppIcon exact binary')
+          PY
+      - name: Commit canonical source only
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f kanrieiyoushi-sprint/ios/AppIcon.png
+          test "$(git diff --cached --name-only)" = 'kanrieiyoushi-sprint/ios/AppIcon.png'
+          if git diff --cached --quiet; then
+            echo 'canonical icon already materialized identically'
+            exit 0
+          fi
+          git commit -m 'assets(kanri): materialize verified canonical AppIcon'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: `Canonical 管理栄養士 AppIcon materialization finished. status=${{ job.status }}; run_id=${context.runId}. Expected SHA-256: 294481351106502f20958359d02bb2fb117ae18399654388425aad0e264fe31f. No TestFlight/App Store action performed.`});
