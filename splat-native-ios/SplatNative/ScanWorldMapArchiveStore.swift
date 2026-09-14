@@ -19,6 +19,8 @@ enum ScanWorldMapArchiveStoreError: LocalizedError {
 }
 
 enum ScanWorldMapArchiveStore {
+    private static let verificationChunkByteCount = 1_024 * 1_024
+
     static func write(_ data: Data, to targetURL: URL) throws {
         guard !data.isEmpty else { throw ScanWorldMapArchiveStoreError.emptyArchive }
         let parent = targetURL.deletingLastPathComponent()
@@ -62,8 +64,7 @@ enum ScanWorldMapArchiveStore {
         let values = try candidateURL.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey])
         guard values.isRegularFile == true,
               values.fileSize == data.count,
-              let persisted = try? Data(contentsOf: candidateURL, options: .mappedIfSafe),
-              persisted == data else {
+              fileContentsEqual(data, at: candidateURL) else {
             throw ScanWorldMapArchiveStoreError.verificationFailed
         }
 
@@ -80,5 +81,24 @@ enum ScanWorldMapArchiveStore {
         } else {
             try FileManager.default.moveItem(at: candidateURL, to: targetURL)
         }
+    }
+
+    private static func fileContentsEqual(_ expected: Data, at url: URL) -> Bool {
+        guard let handle = try? FileHandle(forReadingFrom: url) else { return false }
+        defer { try? handle.close() }
+
+        var offset = 0
+        while offset < expected.count {
+            let count = min(verificationChunkByteCount, expected.count - offset)
+            guard let chunk = try? handle.read(upToCount: count),
+                  chunk.count == count,
+                  chunk.elementsEqual(expected[offset..<(offset + count)]) else {
+                return false
+            }
+            offset += count
+        }
+
+        guard let trailing = try? handle.read(upToCount: 1) else { return false }
+        return trailing.isEmpty
     }
 }
