@@ -37,6 +37,42 @@ final class SplatCompletionVerifierProjectIndependenceTests: XCTestCase {
         ))
     }
 
+    func testCompletionVerifierRejectsExternalResultAlias() throws {
+        let fileManager = FileManager.default
+        let root = try makeRoot("result-alias")
+        let externalRoot = try makeRoot("result-external")
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: externalRoot)
+        }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "External result must not verify")
+        try makeProcessableRaw(in: projectURL, store: store)
+
+        let pending = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        try Data(repeating: 0x54, count: 64).write(to: pending, options: .atomic)
+        let result = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { value in
+            value.stage = .finished
+            value.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+
+        let externalResult = externalRoot.appendingPathComponent("result.splat")
+        try fileManager.moveItem(at: result, to: externalResult)
+        try fileManager.createSymbolicLink(at: result, withDestinationURL: externalResult)
+
+        XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: result)) { error in
+            guard case SplatCompletionVerifier.VerificationError.unexpectedSource = error else {
+                return XCTFail("Expected unexpectedSource for aliased result, got \(error)")
+            }
+        }
+        XCTAssertFalse(fileManager.fileExists(
+            atPath: projectURL.appendingPathComponent(SplatStrongCompletionEvidence.fileName).path
+        ))
+        XCTAssertEqual(try Data(contentsOf: externalResult), Data(repeating: 0x54, count: 64))
+    }
+
     func testCompletionVerifierRejectsOversizedCommitEvidenceBeforeDecode() throws {
         let fileManager = FileManager.default
         let root = try makeRoot("commit-evidence-oversized")
