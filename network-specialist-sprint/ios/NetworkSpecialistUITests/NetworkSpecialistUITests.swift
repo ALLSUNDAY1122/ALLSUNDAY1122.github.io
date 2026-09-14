@@ -30,6 +30,40 @@ final class NetworkSpecialistUITests: XCTestCase {
         XCTAssertTrue(app.buttons["home.resume"].waitForExistence(timeout: 2))
     }
 
+    func testLearningCycleReachesResultReviewAndRetry() {
+        let app = launch()
+        XCTAssertTrue(app.buttons["home.startToday"].waitForExistence(timeout: 5))
+        app.buttons["home.startToday"].tap()
+        XCTAssertTrue(app.staticTexts["quiz.questionText"].waitForExistence(timeout: 3))
+
+        var answered = 0
+        while answered < 20 {
+            let unknown = app.buttons["quiz.unknown"]
+            guard unknown.waitForExistence(timeout: 2) else { break }
+            unknown.tap()
+            answered += 1
+
+            if answered == 1 {
+                XCTAssertTrue(app.staticTexts["ここだけ覚える"].waitForExistence(timeout: 2))
+            }
+
+            let next = app.buttons["quiz.next"]
+            XCTAssertTrue(next.waitForExistence(timeout: 2))
+            next.tap()
+            if app.otherElements["result.score"].waitForExistence(timeout: 1) || app.staticTexts["result.score"].exists {
+                break
+            }
+        }
+
+        XCTAssertGreaterThan(answered, 0)
+        XCTAssertTrue(app.otherElements["result.score"].waitForExistence(timeout: 3) || app.staticTexts["result.score"].exists)
+        let retry = app.buttons["result.retryMissed"]
+        XCTAssertTrue(retry.waitForExistence(timeout: 3))
+        retry.tap()
+        XCTAssertTrue(app.staticTexts["quiz.questionText"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["quiz.unknown"].exists)
+    }
+
     func testFreeUserCannotEnterPremiumTabs() {
         let app = launch()
         app.buttons["tab.mock"].tap()
