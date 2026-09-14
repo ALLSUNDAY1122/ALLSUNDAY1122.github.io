@@ -87,20 +87,11 @@ enum MeshAssetContract {
         }
 
         // Never downgrade a sidecar written by a newer app. Before reading an existing sidecar,
-        // require an independent regular file and a small bounded payload. A symlink could alias an
-        // unrelated file outside the project, and an oversized/corrupt JSON blob should not be
-        // materialized merely to decide whether this generation may update its metadata.
+        // require an independent regular file and a small bounded payload. The bounded FileHandle
+        // read also closes the stat/read race: replacing or extending the file after the size check
+        // cannot turn metadata validation into an unbounded allocation.
         if fileManager.fileExists(atPath: sidecarURL.path) {
-            guard let values = try? sidecarURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
-                  values.isRegularFile == true,
-                  values.isSymbolicLink != true,
-                  let attributes = try? fileManager.attributesOfItem(atPath: sidecarURL.path),
-                  let size = attributes[.size] as? NSNumber,
-                  size.int64Value >= 0,
-                  size.int64Value <= maximumSidecarByteCount else {
-                throw sidecarError("既存のMesh資産メタデータを安全に確認できません。原本を保護するため更新しません")
-            }
-            let existing = try Data(contentsOf: sidecarURL, options: [.mappedIfSafe])
+            let existing = try readExistingSidecarIfSafe(at: sidecarURL, fileManager: fileManager)
             if let object = try? JSONSerialization.jsonObject(with: existing) as? [String: Any],
                let version = object["schemaVersion"] as? NSNumber,
                version.intValue > descriptor.schemaVersion {
@@ -129,6 +120,26 @@ enum MeshAssetContract {
         }
         candidateCommitted = true
         return sidecarURL
+    }
+
+    private static func readExistingSidecarIfSafe(at url: URL, fileManager: FileManager) throws -> Data {
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true,
+              let attributes = try? fileManager.attributesOfItem(atPath: url.path),
+              let size = attributes[.size] as? NSNumber,
+              size.int64Value >= 0,
+              size.int64Value <= maximumSidecarByteCount else {
+            throw sidecarError("既存のMesh資産メタデータを安全に確認できません。原本を保護するため更新しません")
+        }
+
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        guard let data = try handle.read(upToCount: Int(maximumSidecarByteCount) + 1),
+              data.count <= Int(maximumSidecarByteCount) else {
+            throw sidecarError("既存のMesh資産メタデータを安全に確認できません。原本を保護するため更新しません")
+        }
+        return data
     }
 
     private static func synchronizeFileBeforePublish(at url: URL) throws {
