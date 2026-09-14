@@ -1,0 +1,55 @@
+name: FP3 Build Icon Recovery
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  recover:
+    if: >-
+      github.event_name != 'issues' ||
+      (github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[FP3-BUILD-ICON-READ]'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Recover FP3 APP_STORE BuildIcon read-only
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/fp3_build_icon_recovery.py
+      - name: Upload recovered icon evidence
+        if: always() && hashFiles('fp3-build9-appstore-icon-recovery.json') != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: fp3-build9-appstore-icon-${{ github.run_id }}
+          path: |
+            fp3-build9-appstore-icon.png
+            fp3-build9-appstore-icon-recovery.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report issue-triggered result
+        if: always() && github.event_name == 'issues'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            let detail = '';
+            if (fs.existsSync('fp3-build9-appstore-icon-recovery.json')) {
+              detail = '\n\n```json\n' + fs.readFileSync('fp3-build9-appstore-icon-recovery.json','utf8') + '\n```';
+            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `FP3 BuildIcon read-only recovery finished. status=${{ job.status }}; run_id=${context.runId}. No App Store Connect mutation, build, submission, or TestFlight distribution was performed.${detail}`
+            });
