@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect candidate FP3 Expo projects read-only
+      - name: Inspect Expo account project inventory read-only
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
@@ -30,62 +30,62 @@ jobs:
           token = os.environ['EXPO_TOKEN'].strip()
           endpoint = 'https://api.expo.dev/graphql'
           target_bundle = 'com.allsunday1122.fp3kakomoncoach'
-          candidates = [
-              '@allsunday1122/fp3-kakomon-coach',
-              '@allsunday1122/fp3-kakomoncoach',
-              '@allsunday1122/fp3kakomoncoach',
-              '@allsunday1122/fp3-speed',
-              '@allsunday1122/fp3-manabi-sprint',
-              '@allsunday1122/fp3',
-          ]
           query = r'''
-          query FP3Project($projectFullName: String!) {
-            app {
-              byFullName(fullName: $projectFullName) {
+          query FP3AccountInventory($accountName: String!) {
+            account {
+              byName(accountName: $accountName) {
                 id
-                iosAppCredentials {
-                  appleAppIdentifier {
-                    bundleIdentifier
+                name
+                appsPaginated(first: 100) {
+                  edges {
+                    node {
+                      id
+                      slug
+                      ownerAccount { name }
+                      iosAppCredentials {
+                        appleAppIdentifier { bundleIdentifier }
+                      }
+                    }
                   }
                 }
               }
             }
           }
           '''
-
-          matches=[]
-          checked=[]
-          for full_name in candidates:
-              body=json.dumps({'query':query,'variables':{'projectFullName':full_name}}, separators=(',',':')).encode()
-              req=urllib.request.Request(endpoint,data=body,method='POST',headers={
-                  'Authorization':f'Bearer {token}',
-                  'Content-Type':'application/json',
-                  'Accept':'application/json',
-              })
-              try:
-                  with urllib.request.urlopen(req, timeout=30) as r:
-                      payload=json.loads(r.read().decode())
-              except urllib.error.HTTPError as exc:
-                  checked.append({'full_name':full_name,'http':exc.code,'resolved':False})
-                  continue
-              app=(((payload.get('data') or {}).get('app') or {}).get('byFullName') or {})
-              bundles=sorted({
-                  str((cred.get('appleAppIdentifier') or {}).get('bundleIdentifier'))
-                  for cred in (app.get('iosAppCredentials') or [])
-                  if isinstance(cred,dict) and (cred.get('appleAppIdentifier') or {}).get('bundleIdentifier')
-              }) if isinstance(app,dict) else []
-              resolved=bool(isinstance(app,dict) and app.get('id'))
-              checked.append({'full_name':full_name,'resolved':resolved,'bundle_ids':bundles})
-              if resolved and target_bundle in bundles:
-                  matches.append({'full_name':full_name,'project_id':str(app['id']),'bundle_id':target_bundle})
-
-          result={
-              'read_only': True,
-              'target_bundle': target_bundle,
-              'checked': checked,
-              'matches': matches,
-              'match_count': len(matches),
-          }
+          body=json.dumps({'query':query,'variables':{'accountName':'allsunday1122'}}, separators=(',',':')).encode()
+          req=urllib.request.Request(endpoint,data=body,method='POST',headers={
+              'Authorization':f'Bearer {token}',
+              'Content-Type':'application/json',
+              'Accept':'application/json',
+          })
+          result={'read_only':True,'target_bundle':target_bundle,'inventory_ok':False,'matches':[]}
+          try:
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  payload=json.loads(r.read().decode())
+              errors=payload.get('errors') or []
+              if errors:
+                  result['graphql_errors']=[str(e.get('message',''))[:220] for e in errors if isinstance(e,dict)][:5]
+              account=(((payload.get('data') or {}).get('account') or {}).get('byName') or {})
+              edges=(((account.get('appsPaginated') or {}).get('edges')) or []) if isinstance(account,dict) else []
+              result['inventory_ok']=bool(account.get('id'))
+              result['app_count_scanned']=len(edges)
+              for edge in edges:
+                  app=(edge or {}).get('node') or {}
+                  bundles=sorted({
+                      str((cred.get('appleAppIdentifier') or {}).get('bundleIdentifier'))
+                      for cred in (app.get('iosAppCredentials') or [])
+                      if isinstance(cred,dict) and (cred.get('appleAppIdentifier') or {}).get('bundleIdentifier')
+                  }) if isinstance(app,dict) else []
+                  if target_bundle in bundles:
+                      result['matches'].append({
+                          'project_id':str(app.get('id') or ''),
+                          'slug':str(app.get('slug') or ''),
+                          'owner':str(((app.get('ownerAccount') or {}).get('name')) or ''),
+                          'bundle_id':target_bundle,
+                      })
+          except urllib.error.HTTPError as exc:
+              result['http']=exc.code
+          result['match_count']=len(result['matches'])
           Path('/tmp/fp3-eas-readback.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
           print(json.dumps(result,ensure_ascii=False))
           PY
