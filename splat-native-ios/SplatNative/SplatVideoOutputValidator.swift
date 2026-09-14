@@ -9,6 +9,7 @@ enum SplatVideoOutputValidator {
     enum ValidationError: Error, Equatable {
         case missingOrEmpty
         case missingVideoTrack
+        case unexpectedVideoTrackCount
         case invalidVideoDimensions
         case unexpectedVideoDimensions
         case unexpectedColorProperties
@@ -54,6 +55,10 @@ enum SplatVideoOutputValidator {
         return Int(rounded)
     }
 
+    static func acceptsVideoTrackCount(_ count: Int) -> Bool {
+        count == 1
+    }
+
     static func validate(
         _ url: URL,
         expectedDimensions: (width: Int, height: Int)? = nil,
@@ -79,8 +84,14 @@ enum SplatVideoOutputValidator {
         // A user can cancel while AVFoundation is parsing a large MP4. Do not let a validation
         // result obtained after cancellation escape back to the export/share flow as success.
         try Task.checkCancellation()
-        guard let videoTrack = tracks.first else {
+        guard !tracks.isEmpty else {
             throw ValidationError.missingVideoTrack
+        }
+        // Scan Lab writes exactly one video stream. Accepting a container with an additional video
+        // track means later players/social pipelines may select a stream that this validator never
+        // decoded or color-checked. Fail closed rather than validating only tracks.first.
+        guard acceptsVideoTrackCount(tracks.count), let videoTrack = tracks.first else {
+            throw ValidationError.unexpectedVideoTrackCount
         }
 
         // A parsable container can still carry a degenerate video track. Reject zero, NaN and
