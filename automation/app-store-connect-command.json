@@ -1,30 +1,8 @@
 {
-  "request_id": "network-specialist-preflight-20260911-0820",
+  "request_id": "toru-release-artifact-readback-20260915-0640",
   "requests": [
-    {
-      "label": "network-app",
-      "method": "GET",
-      "path": "/v1/apps/6799754573?fields[apps]=name,bundleId,sku,primaryLocale"
-    },
-    {
-      "label": "network-builds",
-      "method": "GET",
-      "path": "/v1/builds?filter[app]=6799754573&limit=20&fields[builds]=version,uploadedDate,processingState,expired,expirationDate,minOsVersion"
-    },
-    {
-      "label": "network-versions",
-      "method": "GET",
-      "path": "/v1/apps/6799754573/appStoreVersions?limit=20&fields[appStoreVersions]=versionString,platform,appStoreState,appVersionState"
-    },
-    {
-      "label": "network-iap",
-      "method": "GET",
-      "path": "/v1/apps/6799754573/inAppPurchasesV2?limit=50&fields[inAppPurchases]=name,productId,inAppPurchaseType,state"
-    },
-    {
-      "label": "network-beta-groups",
-      "method": "GET",
-      "path": "/v1/apps/6799754573/betaGroups?limit=50&fields[betaGroups]=name,isInternalGroup,publicLinkEnabled"
-    }
+    {"label":"toru-app","method":"GET","path":"/v1/apps/6795968222?fields[apps]=name,bundleId,sku,primaryLocale"},
+    {"label":"toru-versions","method":"GET","path":"/v1/apps/6795968222/appStoreVersions?filter[platform]=IOS&limit=20"},
+    {"label":"toru-builds","method":"GET","path":"/v1/builds?filter[app]=6795968222&sort=-uploadedDate&limit=20"}
   ]
 }
