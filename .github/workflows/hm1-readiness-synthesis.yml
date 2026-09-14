@@ -101,6 +101,14 @@ jobs:
             'updated_at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
             'product_sha': os.environ['BASELINE_SHA'],
             'visual_pass_sha': '220a590eb55bd0b49be00f1e370fa6219b2cbbb0',
+            'required': [
+              'release_contract',
+              'learning_acceptance',
+              'storekit_regression',
+              'visual_gate',
+              'release_drift',
+              'fresh_asc_release_readback'
+            ],
             'evidence': [
               'no_visual_or_product_drift_since_visual_pass',
               'release_contract',
