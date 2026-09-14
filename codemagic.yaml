@@ -344,6 +344,118 @@ workflows:
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
 
+  otsu4-testflight:
+    name: 危険物乙4 - Human Test #1 Candidate
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.otsu4
+      vars:
+        RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8
+        BUNDLE_ID: jp.allsunday1122.otsu4
+        XCODE_PROJECT: native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj
+        XCODE_SCHEME: Otsu4Sprint
+      xcode: latest
+    scripts:
+      - name: Materialize audited pinned release source
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          git fetch --depth=1 origin "$RELEASE_SOURCE_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$RELEASE_SOURCE_SHA"
+          test -f native-ios/Otsu4Sprint/project.yml
+      - name: Install XcodeGen
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Prepare audited 360-question resources and icon
+        script: bash "$CM_BUILD_DIR/native-ios/Otsu4Sprint/prepare-ios.sh"
+      - name: Generate Xcode project
+        script: |
+          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          xcodegen generate
+      - name: Set numeric build number
+        script: |
+          set -euo pipefail
+          case "$BUILD_NUMBER" in
+            ''|*[!0-9]*) echo "BUILD_NUMBER must be numeric: $BUILD_NUMBER" >&2; exit 1 ;;
+          esac
+          PBX="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj/project.pbxproj"
+          python3 - "$PBX" "$BUILD_NUMBER" <<'PY2'
+          from pathlib import Path
+          import re,sys
+          path=Path(sys.argv[1]); number=sys.argv[2]
+          if not number.isdigit(): raise SystemExit('non-numeric build number')
+          text=path.read_text(encoding='utf-8')
+          text,n=re.subn(r'CURRENT_PROJECT_VERSION = [^;]+;', f'CURRENT_PROJECT_VERSION = {number};', text)
+          if n < 1: raise SystemExit('CURRENT_PROJECT_VERSION not found')
+          if re.search(r'CURRENT_PROJECT_VERSION = (YES|NO);', text): raise SystemExit('boolean build number remains')
+          path.write_text(text,encoding='utf-8')
+          print(f'PASS: CURRENT_PROJECT_VERSION={number} replacements={n}')
+          PY2
+      - name: Verify release inputs
+        script: |
+          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json"
+          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy"
+          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png"
+          python3 - "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1],encoding='utf-8'))
+          assert data['contentVersion']=='otsu4-2026-08-product-v2'
+          assert len(data['questions'])==360
+          print('PASS: audited Otsu4 bundle inputs')
+          PY
+      - name: Apply App Store signing profiles for internal TestFlight only
+        script: |
+          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          xcode-project use-profiles
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+      - name: Verify packaged Otsu4 IPA
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          test -n "$APP_DIR"
+          python3 - "$APP_DIR" "$BUILD_NUMBER" <<'PY2'
+          from pathlib import Path
+          import json,plistlib,sys
+          app=Path(sys.argv[1]); expected=sys.argv[2]
+          info=plistlib.loads((app/'Info.plist').read_bytes())
+          actual=str(info.get('CFBundleVersion',''))
+          assert expected.isdigit(), expected
+          assert actual == expected, f'CFBundleVersion mismatch actual={actual} expected={expected}'
+          assert info.get('CFBundleIdentifier') == 'jp.allsunday1122.otsu4', info.get('CFBundleIdentifier')
+          qpath=app/'questions.generated.json'
+          assert qpath.is_file(), 'packaged questions.generated.json missing'
+          data=json.loads(qpath.read_text(encoding='utf-8'))
+          assert data.get('contentVersion') == 'otsu4-2026-08-product-v2'
+          assert len(data.get('questions') or []) == 360, len(data.get('questions') or [])
+          assert (app/'Assets.car').is_file(), 'Assets.car missing'
+          assert (app/'embedded.mobileprovision').is_file(), 'embedded.mobileprovision missing'
+          assert (app/'_CodeSignature').is_dir(), '_CodeSignature missing'
+          print(f'PASS: signed Otsu4 IPA bundle={info.get("CFBundleIdentifier")} version={info.get("CFBundleShortVersionString")} build={actual} questions=360')
+          PY2
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
+
   tsukanshi-ios:
     name: 通関士 - iOS Internal TestFlight
     max_build_duration: 60
