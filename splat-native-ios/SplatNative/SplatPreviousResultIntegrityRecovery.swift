@@ -93,7 +93,7 @@ extension SplatPreviousResultEvidence {
         // replaced or extended after the size stat; reading at most cap + 1 keeps corruption or a
         // concurrent writer from turning that TOCTOU window into an unbounded allocation.
         guard let data = try? handle.read(upToCount: Int(maximumIntegritySnapshotByteCount) + 1),
-              data.count <= maximumIntegritySnapshotByteCount else {
+              data.count <= Int(maximumIntegritySnapshotByteCount) else {
             return nil
         }
         return data
