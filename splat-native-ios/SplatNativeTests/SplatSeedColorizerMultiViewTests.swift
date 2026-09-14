@@ -117,6 +117,45 @@ final class SplatSeedColorizerMultiViewTests: XCTestCase {
         XCTAssertLessThan(color.red, 40)
     }
 
+    func testMissingBestRankedFramePromotesNextUsableViewIntoConsensus() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("splat-seed-missing-view-promotion-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        // All four frames have identical geometry, so frame index is the deterministic tie-break.
+        // Frame 0 is intentionally missing. The old path selected indices 0/1/2 first and only
+        // discovered the missing raster later, leaving a two-view red+blue average. A usable-image
+        // preflight must exclude frame 0 before ranking so frame 3 is promoted into the consensus.
+        try writeSolidImage(color: .red, name: "red.png", root: root)
+        try writeSolidImage(color: .blue, name: "blue.png", root: root)
+        try writeSolidImage(color: .green, name: "green.png", root: root)
+        let frames = ["missing.png", "red.png", "blue.png", "green.png"].map { name in
+            SplatSeedFrame(
+                filePath: name,
+                transformMatrix: identityRows,
+                flX: 10,
+                flY: 10,
+                cx: 10,
+                cy: 10,
+                w: 20,
+                h: 20
+            )
+        }
+
+        let color = try XCTUnwrap(SplatSeedColorizer.colorize(
+            points: [SIMD3<Float>(0, 0, -1)],
+            frames: frames,
+            projectURL: root
+        ).first)
+
+        // With red/blue/green available, the deterministic medoid tie chooses blue. If the missing
+        // frame still steals a top-three slot, only red+blue survive and this becomes purple.
+        XCTAssertLessThan(color.red, 40)
+        XCTAssertLessThan(color.green, 40)
+        XCTAssertGreaterThan(color.blue, 220)
+    }
+
     func testSeedColorizerRejectsImagePathEscapingProject() throws {
         let parent = FileManager.default.temporaryDirectory
             .appendingPathComponent("splat-seed-containment-\(UUID().uuidString)", isDirectory: true)
