@@ -1,0 +1,52 @@
+name: IT Passport Rebuild Quality
+
+on:
+  push:
+    paths:
+      - 'apps/it-passport-rebuild/questions/**'
+      - 'apps/it-passport-rebuild/quality/**'
+      - '.github/workflows/it-passport-rebuild-quality.yml'
+  pull_request:
+    paths:
+      - 'apps/it-passport-rebuild/questions/**'
+      - 'apps/it-passport-rebuild/quality/**'
+      - '.github/workflows/it-passport-rebuild-quality.yml'
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  validate:
+    if: github.event_name != 'issues' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[ITP-REBUILD] Quality Gate')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Validate current development dataset
+        run: python3 apps/it-passport-rebuild/quality/validate-question-dataset.py
+      - name: Prove incomplete release pool fails closed
+        shell: bash
+        run: |
+          set +e
+          python3 apps/it-passport-rebuild/quality/validate-question-dataset.py --release >/tmp/itp-release-gate.log 2>&1
+          rc=$?
+          set -e
+          cat /tmp/itp-release-gate.log
+          if [ "$rc" -eq 0 ]; then
+            echo 'Release gate unexpectedly passed while canonical pool is incomplete.' >&2
+            exit 1
+          fi
+          grep -q 'release requires 300 questions' /tmp/itp-release-gate.log
+          echo 'PASS: incomplete canonical pool is blocked from release'
+      - name: Report issue-triggered run
+        if: github.event_name == 'issues' && always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`IT Passport rebuild quality gate finished. status=${{ job.status }}; run_id=${context.runId}`});
