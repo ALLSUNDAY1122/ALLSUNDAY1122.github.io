@@ -9,9 +9,9 @@ enum SplatCameraGeometry {
         let radius: Float
     }
 
-    // The viewer gesture envelope already permits up to 7x the 60-unit robust framing floor.
-    // Keep camera helpers and aspect-fitted exports inside the same finite 420-unit envelope so
-    // large/narrow scenes can actually move far enough away without accepting unbounded state.
+    // The viewer gesture envelope already permits up to 7x the former 60-unit framing floor.
+    // Keep camera helpers, initial framing and aspect-fitted exports inside the same finite 420-unit
+    // envelope so room/building scans open fully framed instead of requiring a manual zoom-out.
     static let maximumCameraDistance: Float = 420
     // Keep finite camera pitch inside the same envelope used by the live viewer. Corrupt persisted
     // state or future callers can otherwise pass a finite but pole-crossing value that flips the
@@ -90,10 +90,10 @@ enum SplatCameraGeometry {
         guard !radii.isEmpty else { return Framing(center: center, distance: 2.5, radius: 0.10) }
         let percentileIndex = min(radii.count - 1, Int(Float(radii.count - 1) * 0.90))
         let radius = max(0.10, radii[percentileIndex])
-        // Initial live framing remains intentionally bounded to 60 units. Users can then zoom out
-        // through the larger camera envelope, while video aspect fitting may also move farther away
-        // when a narrow output requires it.
-        let framingDistance = max(0.35, min(60.0, radius * 2.8))
+        // Auto-fit the same robust 90th-percentile scene envelope used by viewer/video framing.
+        // The old 60-unit initial cap cropped large room/building scans even though gestures and
+        // export already allow 420 units. Preserve the finite 420-unit safety ceiling instead.
+        let framingDistance = max(0.35, min(maximumCameraDistance, radius * 2.8))
         return Framing(center: center, distance: framingDistance, radius: radius)
     }
 
@@ -126,7 +126,7 @@ enum SplatCameraGeometry {
         let requiredForSphere = safeRadius / sin(limitingHalfFOV) * safeMargin
         // Preserve the existing live-view framing as a floor; only move farther away when the
         // output aspect ratio actually needs more room. Clamp to the finite camera envelope rather
-        // than the 60-unit initial framing floor so room/building scenes remain complete in 9:16.
+        // than the former 60-unit initial framing cap so room/building scenes remain complete in 9:16.
         return min(maximumCameraDistance, max(safeFloor, requiredForSphere))
     }
 
