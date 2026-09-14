@@ -86,11 +86,21 @@ def cm_workflow_id(build):
 
 def cm_build_summary(build):
     if not build: return None
+    # Keep the public readback useful for failure triage without exposing
+    # secrets or full logs. startedAt/finishedAt plus action/artifact counts
+    # distinguish pre-runner failures from failures inside a workflow.
     out={k:build.get(k) for k in (
-        "_id","id","status","workflowId","fileWorkflowId","branch","startedAt","finishedAt",
-        "buildVersion","buildNumber","index","app_store_connect_status"
+        "_id","id","status","workflowId","fileWorkflowId","branch","startedAt","finishedAt","createdAt",
+        "buildVersion","buildNumber","index","app_store_connect_status","instanceType","message"
     ) if k in build}
+    actions=build.get("actions")
+    artifacts=build.get("artifacts")
+    out["actionCount"]=len(actions) if isinstance(actions,list) else (0 if actions is None else None)
+    out["artifactCount"]=len(artifacts) if isinstance(artifacts,list) else (0 if artifacts is None else None)
     out["resolvedWorkflowId"]=cm_workflow_id(build) or None
+    commit=build.get("commit") or {}
+    if isinstance(commit,dict):
+        out["commit"]={k:commit.get(k) for k in ("hash","message") if commit.get(k) is not None}
     return out
 
 
