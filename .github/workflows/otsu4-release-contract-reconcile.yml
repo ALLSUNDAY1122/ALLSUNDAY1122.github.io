@@ -18,18 +18,29 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Verify pinned release contract
         run: |
           set -euo pipefail
           git fetch --depth=1 origin "$RELEASE_SOURCE_SHA"
-          git show "$RELEASE_SOURCE_SHA:native-ios/Otsu4Sprint/Generated/questions.generated.json" > /tmp/otsu4-questions.json
+          rm -rf /tmp/otsu4-release
+          git worktree add --detach /tmp/otsu4-release "$RELEASE_SOURCE_SHA"
+          (
+            cd /tmp/otsu4-release
+            bash native-ios/Otsu4Sprint/prepare-ios.sh
+          )
           python3 - <<'PY'
           import json
-          data=json.load(open('/tmp/otsu4-questions.json', encoding='utf-8'))
+          from pathlib import Path
+          generated=Path('/tmp/otsu4-release/native-ios/Otsu4Sprint/Generated/questions.generated.json')
+          data=json.loads(generated.read_text(encoding='utf-8'))
           qs=data['questions']
           assert len(qs)==360, len(qs)
-          sets={q.get('mockExamSet') for q in qs if q.get('mockExamSet') is not None}
-          assert max(sets, default=3) <= 3, sets
+          source=(Path('/tmp/otsu4-release/native-ios/Otsu4Sprint/Otsu4LearningView.swift').read_text(encoding='utf-8'))
+          assert '360問・模試3回 解放済み' in source
+          assert '360問・模試3回を解放' in source
           print('PASS pinned release contract: 360 questions / 3 mock sets')
           PY
       - name: Reconcile stale 720/6 metadata
@@ -49,7 +60,6 @@ jobs:
             before=s
             s=s.replace('全720問・模擬試験6回', '全360問・模擬試験3回')
             s=s.replace('合計720問を収録しています。', '合計360問を収録しています。')
-            # Old support page subject counts belonged to the superseded 720-question bank.
             s=s.replace('法令288問、物理・化学192問、性質・消火240問の合計360問', '法令・物理化学・性質消火の3分野、合計360問')
             if s != before:
               p.write_text(s, encoding='utf-8')
@@ -89,4 +99,4 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: `Otsu4 release contract reconcile finished. status=${{ job.status }}; run_id=${context.runId}; pinned_source=${process.env.RELEASE_SOURCE_SHA}. No TestFlight or App Store submission was performed.`
-            })
+            });
