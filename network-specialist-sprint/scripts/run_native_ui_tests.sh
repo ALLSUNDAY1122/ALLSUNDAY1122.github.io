@@ -31,8 +31,6 @@ for runtime, devices in data['devices'].items():
     if not m:
         continue
     runtime_version = (int(m.group(1)), int(m.group(2)))
-    # Xcode 16.4 can coexist with newer runtimes on GitHub-hosted runners.
-    # Never choose a simulator runtime newer than the active Xcode SDK.
     if runtime_version > (sdk_major, sdk_minor):
         continue
     for d in devices:
@@ -42,8 +40,6 @@ for runtime, devices in data['devices'].items():
 if not items:
     raise SystemExit(f'No iPhone simulator compatible with active SDK {sdk}')
 
-# Prefer the newest runtime that is not newer than the active SDK, then choose
-# one large and one small phone within that same runtime for deterministic tests.
 best_runtime = max(x[0] for x in items)
 items = [(name, udid) for runtime, name, udid in items if runtime == best_runtime]
 preferred_large=['iPhone 16 Pro Max','iPhone 16 Pro','iPhone 15 Pro Max','iPhone 15 Pro','iPhone 17 Pro Max']
@@ -79,7 +75,6 @@ try:
 except subprocess.TimeoutExpired:
     print('NETWORK_SIMCTL_BOOT_HARD_TIMEOUT_30S', file=sys.stderr)
     raise SystemExit(124)
-# "Booted" in simctl list is not sufficient: wait until SpringBoard/services are ready.
 try:
     result = subprocess.run(
         ['xcrun', 'simctl', 'bootstatus', udid, '-b'],
@@ -159,6 +154,7 @@ xcrun simctl shutdown "${IDS[0]}" >/dev/null 2>&1 || true
 
 UI_TESTS=(
   "NetworkSpecialistUITests/NetworkSpecialistUITests/testCoreLearningFlowAndFourTabs"
+  "NetworkSpecialistUITests/NetworkSpecialistUITests/testLearningCycleReachesResultReviewAndRetry"
   "NetworkSpecialistUITests/NetworkSpecialistUITests/testFreeUserCannotEnterPremiumTabs"
   "NetworkSpecialistUITests/NetworkSpecialistUITests/testPremiumMockHidesImmediateCorrectness"
   "NetworkSpecialistUITests/NetworkSpecialistUITests/testPremiumHistorySettingsAndLargeTextStayInsidePhoneWidth"
@@ -168,9 +164,6 @@ for UDID in "${IDS[@]}"; do
   boot_device "$UDID"
   for TEST_ID in "${UI_TESTS[@]}"; do
     TEST_NAME="${TEST_ID##*/}"
-    # xcodebuild can spend >2 minutes attaching the UI test runner on hosted macOS.
-    # Keep XCTest's per-test execution ceiling at 120s, but give the outer process
-    # enough startup budget so infrastructure latency cannot terminate a healthy test.
     run_xcodebuild_logged "ui-${UDID}-${TEST_NAME}" 300 \
       xcodebuild test-without-building \
         -project "$PROJECT" \
