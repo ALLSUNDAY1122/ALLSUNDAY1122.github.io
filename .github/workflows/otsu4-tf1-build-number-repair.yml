@@ -1,0 +1,92 @@
+name: Otsu4 TF1 Build Number Repair
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  repair:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-TF1-BUILDNUM-FIX]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch only Otsu4 TF1 build-number derivation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          s=p.read_text(encoding='utf-8')
+          start=s.index('\n  otsu4-testflight:')
+          end=s.find('\n  ', start+3)
+          if end < 0: end=len(s)
+          block=s[start:end]
+          required=[
+              'name: 危険物乙4 - Human Test #1 Candidate',
+              'RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8',
+              'submit_to_testflight: true',
+              'submit_to_app_store: false',
+              'case "$BUILD_NUMBER" in',
+              'python3 - "$PBX" "$BUILD_NUMBER"',
+              '/usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER"',
+              'python3 - "$APP_DIR" "$BUILD_NUMBER"',
+          ]
+          missing=[x for x in required if x not in block]
+          if missing: raise SystemExit('TF1 contract drift: '+repr(missing))
+          if 'UPLOAD_BUILD_NUMBER=' in block:
+              raise SystemExit('repair already applied')
+          block=block.replace(
+              '          PBX="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj/project.pbxproj"\n          python3 - "$PBX" "$BUILD_NUMBER"',
+              '          UPLOAD_BUILD_NUMBER="$((100 + BUILD_NUMBER))"\n          PBX="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj/project.pbxproj"\n          python3 - "$PBX" "$UPLOAD_BUILD_NUMBER"',
+              1)
+          block=block.replace(
+              '          PLIST="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Info.plist"\n          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$PLIST"\n          ACTUAL="$(/usr/libexec/PlistBuddy -c \'Print :CFBundleVersion\' "$PLIST")"\n          test "$ACTUAL" = "$BUILD_NUMBER"',
+              '          UPLOAD_BUILD_NUMBER="$((100 + BUILD_NUMBER))"\n          PLIST="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Info.plist"\n          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $UPLOAD_BUILD_NUMBER" "$PLIST"\n          ACTUAL="$(/usr/libexec/PlistBuddy -c \'Print :CFBundleVersion\' "$PLIST")"\n          test "$ACTUAL" = "$UPLOAD_BUILD_NUMBER"',
+              1)
+          block=block.replace('          python3 - "$APP_DIR" "$BUILD_NUMBER" <<\'PY2\'', '          python3 - "$APP_DIR" "$((100 + BUILD_NUMBER))" <<\'PY2\'', 1)
+          if block.count('UPLOAD_BUILD_NUMBER="$((100 + BUILD_NUMBER))"') != 2:
+              raise SystemExit('unexpected upload build-number replacement count')
+          if 'python3 - "$APP_DIR" "$((100 + BUILD_NUMBER))"' not in block:
+              raise SystemExit('package gate expected build number was not patched')
+          out=s[:start]+block+s[end:]
+          p.write_text(out,encoding='utf-8')
+          print('PASS: Otsu4 TF1 now maps Codemagic workflow build n to ASC build 100+n; RC workflow untouched')
+          PY
+      - name: Validate YAML and contract
+        run: |
+          python - <<'PY'
+          import yaml
+          cfg=yaml.safe_load(open('codemagic.yaml',encoding='utf-8'))
+          w=(cfg.get('workflows') or {})
+          rc=w['otsu4-ios']; tf=w['otsu4-testflight']
+          assert 'publishing' not in rc, 'RC must remain generation-only'
+          pub=((tf.get('publishing') or {}).get('app_store_connect') or {})
+          assert pub.get('submit_to_testflight') is True
+          assert pub.get('submit_to_app_store') is False
+          text=open('codemagic.yaml',encoding='utf-8').read()
+          a=text.index('\n  otsu4-testflight:'); b=text.find('\n  ',a+3); block=text[a:] if b<0 else text[a:b]
+          assert block.count('UPLOAD_BUILD_NUMBER="$((100 + BUILD_NUMBER))"') == 2
+          assert 'python3 - "$APP_DIR" "$((100 + BUILD_NUMBER))"' in block
+          print('PASS: guarded TF1 build number +101 on first run; App Store submission remains disabled')
+          PY
+      - name: Commit repair
+        run: |
+          if git diff --quiet -- codemagic.yaml; then
+            echo 'No diff'; exit 1
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          git commit -m 'fix(otsu4): avoid TestFlight build-number collision'
+          git push origin HEAD:main
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Otsu4 TF1 build-number repair finished. status=${{ job.status }}; run_id=${context.runId}`});
