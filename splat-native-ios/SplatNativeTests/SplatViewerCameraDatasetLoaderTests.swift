@@ -35,6 +35,31 @@ final class SplatViewerCameraDatasetLoaderTests: XCTestCase {
         }
     }
 
+    func testCancelledAsyncLoaderDoesNotReturnStaleTrajectory() async throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let render = root.appendingPathComponent("result.ply")
+        try Data([0x50]).write(to: render)
+
+        let frameCount = SplatViewerCameraDatasetLoader.maximumReturnedPositions * 2
+        var frames: [String] = []
+        frames.reserveCapacity(frameCount)
+        for index in 0..<frameCount {
+            frames.append(validFrame(x: index))
+        }
+        let json = "{\"frames\":[" + frames.joined(separator: ",") + "]}"
+        try Data(json.utf8).write(to: root.appendingPathComponent("transforms.json"))
+
+        let task = Task {
+            await SplatViewerCameraDatasetLoader.cameraPositionsAsync(for: render)
+        }
+        task.cancel()
+        let positions = await task.value
+
+        XCTAssertTrue(positions.isEmpty)
+        XCTAssertLessThanOrEqual(SplatViewerCameraDatasetLoader.cancellationCheckFrameInterval, 256)
+    }
+
     func testMalformedFrameDoesNotDiscardFollowingValidCamera() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
