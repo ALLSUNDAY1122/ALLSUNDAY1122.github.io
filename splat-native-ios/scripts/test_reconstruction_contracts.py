@@ -56,8 +56,23 @@ for contract in (
 ):
     require(contract, POLICY, f"reconstruction policy contract missing: {contract}")
 
-assert "base + enhancementIncrement" in POLICY
-assert "min(trainingHorizon" in POLICY
+# Enhancement arithmetic must keep the normal +5k progression while saturating before Int addition.
+# A corrupt persisted iteration near Int.max must never trap before the 30k training horizon clamp.
+require(
+    r"let\s+base\s*=\s*min\(trainingHorizon,\s*max\(standardIterations,\s*currentIteration\)\)",
+    POLICY,
+    "enhancement target must clamp the resumed iteration before arithmetic",
+)
+require(
+    r"let\s+remaining\s*=\s*trainingHorizon\s*-\s*base",
+    POLICY,
+    "enhancement target must derive non-negative remaining horizon",
+)
+require(
+    r"return\s+base\s*\+\s*min\(enhancementIncrement,\s*remaining\)",
+    POLICY,
+    "enhancement target must preserve bounded +increment progression",
+)
 for ply_field in ("property uchar red", "property uchar green", "property uchar blue"):
     assert ply_field in MODEL, f"colored seed PLY contract missing: {ply_field}"
 
