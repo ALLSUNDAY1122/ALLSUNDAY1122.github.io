@@ -80,10 +80,11 @@ enum SplatCameraGeometry {
         for index in sampleIndices {
             let p = points[index].position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
-            let radius = simd_distance(p, center)
-            // Extremely large but individually finite coordinates can still overflow the squared
-            // distance operation to Infinity. Do not let that one sample poison framing radius.
-            guard radius.isFinite else { continue }
+            // `simd_distance` evaluates the squared Float magnitude first and can overflow to
+            // Infinity for individually finite large coordinates. Compute in Double and saturate
+            // back into Float so one large-but-valid scene cannot collapse framing to the 2.5-unit
+            // fallback simply because every radius overflowed during the intermediate square.
+            guard let radius = finiteDistance(p, center) else { continue }
             radii.append(radius)
         }
         radii.sort()
@@ -229,6 +230,19 @@ enum SplatCameraGeometry {
         guard values.count.isMultiple(of: 2) else { return values[upperIndex] }
         // Halving before addition avoids overflow when two large finite coordinates share a sign.
         return values[upperIndex - 1] * 0.5 + values[upperIndex] * 0.5
+    }
+
+    /// Measures finite Float points without squaring Float-scale deltas. The subtraction and norm
+    /// live in Double, whose exponent range comfortably covers all finite Float coordinates; values
+    /// beyond Float's representable range saturate so downstream framing remains finite and bounded.
+    private static func finiteDistance(_ lhs: SIMD3<Float>, _ rhs: SIMD3<Float>) -> Float? {
+        guard isFinite(lhs), isFinite(rhs) else { return nil }
+        let dx = Double(lhs.x) - Double(rhs.x)
+        let dy = Double(lhs.y) - Double(rhs.y)
+        let dz = Double(lhs.z) - Double(rhs.z)
+        let distance = sqrt(dx * dx + dy * dy + dz * dz)
+        guard distance.isFinite else { return nil }
+        return Float(min(distance, Double(Float.greatestFiniteMagnitude)))
     }
 
     /// Normalizes without squaring the original magnitude first. `simd_normalize` can overflow its
