@@ -151,7 +151,7 @@ final class CaptureMotionQualityTests: XCTestCase {
         XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
     }
 
-    func testTexturedLowLaplacianFrameIsRejectedAsBlur() {
+    func testHighContrastLowLaplacianFrameKeepsPreviousAcceptanceBehavior() {
         let stats = CaptureImageQualityStats(
             meanLuma: 118,
             darkFraction: 0.04,
@@ -160,7 +160,7 @@ final class CaptureMotionQualityTests: XCTestCase {
             laplacianScore: 1.1,
             sampleCount: 512
         )
-        XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooSoft)
+        XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
     }
 
     func testAcceptsNormallyExposedDetailedFrame() {
