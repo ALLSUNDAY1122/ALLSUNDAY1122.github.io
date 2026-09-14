@@ -144,14 +144,44 @@ enum SplatSoftwareDepthSeedBuilder {
     ) -> Result {
         // Do not let a missing/traversal/obviously unreadable capture consume one of the globally
         // bounded plane-sweep slots. Preflight is metadata-only; full thumbnail decode remains
-        // bounded to maximumSelectedFrames below.
+        // bounded to maximumSelectedFrames on the healthy path below.
         let selected = selectLoadableFrames(
             projectURL: projectURL,
             frames: sourceFrames,
             maximumCount: maximumSelectedFrames
         )
         let maximumPixel = ProcessInfo.processInfo.physicalMemory >= 6_000_000_000 ? 224 : 192
-        let frames = selected.compactMap { load($0, projectURL: projectURL, maximumPixel: maximumPixel) }
+
+        // Preserve the normal temporal sample exactly when all selected thumbnails decode. If an
+        // ImageIO source passes metadata preflight but later fails full thumbnail materialization,
+        // recover only the missing slots from a separately time-distributed candidate pool. This
+        // keeps healthy-path decode work fixed at <=18 frames and bounds failure recovery to <=18
+        // additional attempts rather than full-decoding every capture frame up front.
+        var sourceOrder: [String: Int] = [:]
+        sourceOrder.reserveCapacity(sourceFrames.count)
+        for (index, source) in sourceFrames.enumerated() where sourceOrder[source.filePath] == nil {
+            sourceOrder[source.filePath] = index
+        }
+        var loaded: [(order: Int, frame: Frame)] = selected.compactMap { source in
+            guard let frame = load(source, projectURL: projectURL, maximumPixel: maximumPixel) else { return nil }
+            return (sourceOrder[source.filePath] ?? Int.max, frame)
+        }
+
+        if loaded.count < selected.count {
+            let selectedPaths = Set(selected.map(\.filePath))
+            let recoverySources = selectLoadableFrames(
+                projectURL: projectURL,
+                frames: sourceFrames.filter { !selectedPaths.contains($0.filePath) },
+                maximumCount: maximumSelectedFrames
+            )
+            let targetCount = min(maximumSelectedFrames, selected.count)
+            for source in recoverySources where loaded.count < targetCount {
+                guard let frame = load(source, projectURL: projectURL, maximumPixel: maximumPixel) else { continue }
+                loaded.append((sourceOrder[source.filePath] ?? Int.max, frame))
+            }
+        }
+
+        let frames = loaded.sorted { lhs, rhs in lhs.order < rhs.order }.map(\.frame)
         guard frames.count >= 5 else {
             return Result(points: [], colors: [], framesUsed: frames.count, rawPointCount: 0)
         }
