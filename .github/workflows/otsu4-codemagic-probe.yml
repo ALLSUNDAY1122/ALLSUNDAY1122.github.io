@@ -29,7 +29,9 @@ jobs:
               workflow='otsu4-internal-group-assign'
           else:
               workflow='otsu4-ios'
-          branch='release/otsu4-720-internal-testflight'
+          # main owns the current fail-closed contract and pins RELEASE_SOURCE_SHA itself.
+          # Do not launch from the legacy 720-question branch.
+          branch='main'
           build={}
           def api(url,method='GET',payload=None):
               req=urllib.request.Request(url,data=None if payload is None else json.dumps(payload).encode(),method=method,headers={'Content-Type':'application/json','x-auth-token':token})
@@ -38,14 +40,14 @@ jobs:
               except urllib.error.HTTPError as e:return e.code,{'error':e.read().decode(errors='replace')[:1500]}
           s,d=api('https://api.codemagic.io/builds','POST',{'appId':app_id,'workflowId':workflow,'branch':branch})
           if not 200<=s<300: raise SystemExit(f'start failed {s}: {d}')
-          bid=d.get('buildId') or d.get('id'); print('workflow='+workflow,'build_id='+str(bid))
+          bid=d.get('buildId') or d.get('id'); print('workflow='+workflow,'branch='+branch,'build_id='+str(bid))
           for _ in range(60):
               time.sleep(15)
               s,d=api(f'https://codemagic.io/api/v3/builds/{bid}')
               x=d.get('data') or d; state=x.get('status'); print('status='+str(state),'instance='+str(x.get('instance_type')),'started='+str(x.get('started_at')))
               build=x
               if state in {'finished','failed','canceled','timeout','skipped'}: break
-          open('otsu4-codemagic-probe.json','w').write(json.dumps({'workflow':workflow,'build_id':bid,'status':build.get('status'),'instance_type':build.get('instance_type'),'started_at':build.get('started_at'),'finished_at':build.get('finished_at'),'artifacts':build.get('artifacts',[])},indent=2))
+          open('otsu4-codemagic-probe.json','w').write(json.dumps({'workflow':workflow,'branch':branch,'build_id':bid,'status':build.get('status'),'instance_type':build.get('instance_type'),'started_at':build.get('started_at'),'finished_at':build.get('finished_at'),'artifacts':build.get('artifacts',[])},indent=2))
           if build.get('status')!='finished': raise SystemExit('probe ended '+str(build.get('status')))
           PY
       - uses: actions/upload-artifact@v4
