@@ -316,55 +316,86 @@ enum SplatSeedColorizer {
         }
 
         // Metadata can be readable even when ImageIO later fails to materialize the thumbnail.
-        // Keep the normal path unchanged: only points that actually lost a selected frame pay for
-        // a second ranking pass, and only previously unselected healthy views are eligible. Preserve
-        // both the original accepted-view count and its geometric score ceiling so a failed close
-        // view cannot suddenly admit several distant cameras that were intentionally rejected.
+        // Preserve the healthy path exactly, but keep filling any lost consensus slot while there
+        // are geometrically eligible, not-yet-attempted views. A failed replacement view is added to
+        // the global failed-frame set and the next wave ranks again without it. Per-point attempted
+        // replacement indexes prevent an already-successful replacement from occupying the next wave.
+        // The original accepted-view count and original geometric score ceiling never expand.
         if !failedFrameIndexes.isEmpty, !retryPointIndexes.isEmpty {
-            let retryProjections = projections.filter { !failedFrameIndexes.contains($0.frameIndex) }
-            var retryGrouped: [Int: [SplatSeedSampleLocation]] = [:]
-            for pointIndex in retryPointIndexes where points.indices.contains(pointIndex) {
-                var originallySelected = Set<Int>()
-                var originalAcceptedCount = 0
-                var originalScoreCeiling = Float.greatestFiniteMagnitude
-                bestAssignments(for: points[pointIndex], projections: projections).forEachAccepted { assignment in
-                    if originalAcceptedCount == 0 {
-                        originalScoreCeiling = max(assignment.score * 1.8, assignment.score + 0.05)
+            var attemptedRetryFramesByPoint: [Int: Set<Int>] = [:]
+            let maximumRetryWaves = min(8, max(1, projections.count))
+            var wave = 0
+
+            while !retryPointIndexes.isEmpty, wave < maximumRetryWaves {
+                wave += 1
+                let retryProjections = projections.filter { !failedFrameIndexes.contains($0.frameIndex) }
+                guard !retryProjections.isEmpty else { break }
+
+                var retryGrouped: [Int: [SplatSeedSampleLocation]] = [:]
+                var pointsNeedingAnotherWave = Set<Int>()
+
+                for pointIndex in retryPointIndexes where points.indices.contains(pointIndex) {
+                    var originallySelected = Set<Int>()
+                    var originalAcceptedCount = 0
+                    var originalScoreCeiling = Float.greatestFiniteMagnitude
+                    bestAssignments(for: points[pointIndex], projections: projections).forEachAccepted { assignment in
+                        if originalAcceptedCount == 0 {
+                            originalScoreCeiling = max(assignment.score * 1.8, assignment.score + 0.05)
+                        }
+                        originallySelected.insert(assignment.frameIndex)
+                        originalAcceptedCount += 1
                     }
-                    originallySelected.insert(assignment.frameIndex)
-                    originalAcceptedCount += 1
+
+                    let missingCount = max(0, originalAcceptedCount - samples[pointIndex].count)
+                    guard missingCount > 0 else { continue }
+
+                    let attemptedRetryFrames = attemptedRetryFramesByPoint[pointIndex] ?? []
+                    var remaining = missingCount
+                    bestAssignments(for: points[pointIndex], projections: retryProjections).forEachAccepted { assignment in
+                        guard remaining > 0,
+                              assignment.score <= originalScoreCeiling,
+                              !originallySelected.contains(assignment.frameIndex),
+                              !attemptedRetryFrames.contains(assignment.frameIndex) else { return }
+                        retryGrouped[assignment.frameIndex, default: []].append(
+                            SplatSeedSampleLocation(pointIndex: pointIndex, x: assignment.x, y: assignment.y)
+                        )
+                        attemptedRetryFramesByPoint[pointIndex, default: []].insert(assignment.frameIndex)
+                        remaining -= 1
+                    }
+                    if remaining > 0 { pointsNeedingAnotherWave.insert(pointIndex) }
                 }
 
-                let missingCount = max(0, originalAcceptedCount - samples[pointIndex].count)
-                guard missingCount > 0 else { continue }
+                guard !retryGrouped.isEmpty else { break }
 
-                var remaining = missingCount
-                bestAssignments(for: points[pointIndex], projections: retryProjections).forEachAccepted { assignment in
-                    guard remaining > 0,
-                          assignment.score <= originalScoreCeiling,
-                          !originallySelected.contains(assignment.frameIndex) else { return }
-                    retryGrouped[assignment.frameIndex, default: []].append(
-                        SplatSeedSampleLocation(pointIndex: pointIndex, x: assignment.x, y: assignment.y)
-                    )
-                    remaining -= 1
-                }
-            }
-
-            for (frameIndex, items) in retryGrouped {
-                guard frames.indices.contains(frameIndex),
-                      let imageURL = usableImageURLs[frameIndex],
-                      let raster = loadRaster(url: imageURL) else { continue }
-                let frame = frames[frameIndex]
-                for item in items {
-                    if let color = raster.sample(
-                        x: item.x,
-                        y: item.y,
-                        sourceWidth: frame.w,
-                        sourceHeight: frame.h
-                    ) {
-                        samples[item.pointIndex].append(color)
+                for (frameIndex, items) in retryGrouped {
+                    guard frames.indices.contains(frameIndex),
+                          let imageURL = usableImageURLs[frameIndex] else {
+                        for item in items { pointsNeedingAnotherWave.insert(item.pointIndex) }
+                        continue
+                    }
+                    let frame = frames[frameIndex]
+                    guard let raster = loadRaster(url: imageURL) else {
+                        failedFrameIndexes.insert(frameIndex)
+                        for item in items { pointsNeedingAnotherWave.insert(item.pointIndex) }
+                        continue
+                    }
+                    for item in items {
+                        if let color = raster.sample(
+                            x: item.x,
+                            y: item.y,
+                            sourceWidth: frame.w,
+                            sourceHeight: frame.h
+                        ) {
+                            samples[item.pointIndex].append(color)
+                        } else {
+                            pointsNeedingAnotherWave.insert(item.pointIndex)
+                        }
                     }
                 }
+
+                retryPointIndexes = Set(pointsNeedingAnotherWave.filter { pointIndex in
+                    points.indices.contains(pointIndex) && samples[pointIndex].count < maxColorViewsPerPoint
+                })
             }
         }
 
