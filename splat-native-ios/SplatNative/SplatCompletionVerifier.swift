@@ -63,11 +63,20 @@ enum SplatCompletionVerifier {
             throw VerificationError.projectNotFinished
         }
 
-        let manifest = SplatPreviousResultEvidence.recoverTrustedPreviousIfNeeded(
-            projectURL: projectURL,
-            manifest: loadedManifest,
-            fileManager: fileManager
-        )
+        // The broad previous-result recovery path is for an interrupted reprocess. Once a manifest
+        // says a generation finished, never let that path silently replace it with an older backup;
+        // finished generations are handled below by strong integrity verification and exact-evidence
+        // recovery only.
+        let manifest: ScanProjectManifest
+        if loadedManifest.stage == .finished {
+            manifest = loadedManifest
+        } else {
+            manifest = SplatPreviousResultEvidence.recoverTrustedPreviousIfNeeded(
+                projectURL: projectURL,
+                manifest: loadedManifest,
+                fileManager: fileManager
+            )
+        }
         guard manifest.stage == .finished,
               manifest.splatFileName == ScanProjectStore.splatResultFileName else {
             throw VerificationError.projectNotFinished
