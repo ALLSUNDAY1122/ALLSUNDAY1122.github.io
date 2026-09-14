@@ -58,6 +58,7 @@ extension SplatPreviousResultEvidence {
                 try? fileManager.removeItem(at: partialURL)
                 return false
             }
+            try synchronizeIntegrityRecoveryFile(at: partialURL)
             try Task.checkCancellation()
 
             if fileManager.fileExists(atPath: outputURL.path) {
@@ -100,6 +101,12 @@ extension SplatPreviousResultEvidence {
         // survives a failed clone before falling back to FileManager's independent copy.
         try? fileManager.removeItem(at: destinationURL)
         try fileManager.copyItem(at: sourceURL, to: destinationURL)
+    }
+
+    private static func synchronizeIntegrityRecoveryFile(at url: URL) throws {
+        let handle = try FileHandle(forWritingTo: url)
+        defer { try? handle.close() }
+        try handle.synchronize()
     }
 
     private static func fileByteCountForIntegrityRecovery(
