@@ -27,9 +27,19 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends imagemagick webp
+          if ! command -v magick >/dev/null 2>&1 && command -v convert >/dev/null 2>&1; then
+            mkdir -p "$RUNNER_TEMP/bin"
+            cat > "$RUNNER_TEMP/bin/magick" <<'SH'
+          #!/bin/sh
+          exec convert "$@"
+          SH
+            chmod +x "$RUNNER_TEMP/bin/magick"
+            echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          fi
       - name: Run the same product audits used by Codemagic
         run: |
           set -euo pipefail
+          command -v magick
           python3 scripts/audit_sm2_storekit_ui.py
           python3 scripts/audit_sm2_learning_contract.py
           python3 scripts/audit_sm2_release_drift.py
