@@ -19,6 +19,19 @@ extension SplatPreviousResultEvidence {
         evidence: SplatCommitEvidence,
         fileManager: FileManager = .default
     ) throws -> Bool {
+        let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
+        // Verification and recovery are separate filesystem operations. Re-read the current commit
+        // evidence at the recovery boundary so a concurrently published newer completion cannot be
+        // replaced using the stale evidence that originally failed verification.
+        guard let currentEvidenceData = readIntegritySnapshotDataIfSafe(
+                  at: evidenceURL,
+                  fileManager: fileManager
+              ),
+              let currentEvidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: currentEvidenceData),
+              currentEvidence == evidence else {
+            return false
+        }
+
         let snapshotURL = projectURL.appendingPathComponent(fileName)
         let backupURL = projectURL.appendingPathComponent(assetFileName)
         guard let snapshotData = readIntegritySnapshotDataIfSafe(
@@ -40,7 +53,6 @@ extension SplatPreviousResultEvidence {
 
         try Task.checkCancellation()
         let outputURL = projectURL.appendingPathComponent(ScanProjectStore.splatResultFileName)
-        let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
         let partialURL = projectURL.appendingPathComponent(".result.splat.integrity-recovery.partial")
         try? fileManager.removeItem(at: partialURL)
 
@@ -63,6 +75,18 @@ extension SplatPreviousResultEvidence {
             }
             try synchronizeIntegrityRecoveryFile(at: partialURL)
             try Task.checkCancellation()
+
+            // Close the longer copy/hash race as well: if another completion was published while the
+            // trusted backup was materialized, leave that newer generation untouched.
+            guard let latestEvidenceData = readIntegritySnapshotDataIfSafe(
+                      at: evidenceURL,
+                      fileManager: fileManager
+                  ),
+                  let latestEvidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: latestEvidenceData),
+                  latestEvidence == evidence else {
+                try? fileManager.removeItem(at: partialURL)
+                return false
+            }
 
             if fileManager.fileExists(atPath: outputURL.path) {
                 // Replace in one filesystem transaction. The verified partial lives in the same
