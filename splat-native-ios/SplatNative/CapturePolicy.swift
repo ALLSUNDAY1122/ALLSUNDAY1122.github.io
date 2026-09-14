@@ -369,6 +369,10 @@ enum CapturePolicy {
         let sceneScore = min(1, Float(safeViewDirectionSectors) / 5) * 0.35
             + min(1, Float(safeSpatialCells) / 5) * 0.30
             + min(1, safePathLength / 0.80) * 0.35
+        // Reserve the final 5% of progress for the hard completion gate. The UI rounds this score
+        // into 12 coverage steps; without a reserve, a near-complete scene (for example 0.75m of the
+        // required 0.80m path) can round to 12/12 while capture is still legitimately incomplete.
+        let maximumIncompleteScore: Float = 0.95
 
         switch coverageMode(subjectDistance: subjectDistance) {
         case .object:
@@ -381,7 +385,7 @@ enum CapturePolicy {
             ) {
                 return 1
             }
-            return min(1, max(0, objectScore))
+            return min(maximumIncompleteScore, max(0, objectScore))
         case .scene:
             if sceneCoverageSatisfied(
                 viewDirectionSectors: safeViewDirectionSectors,
@@ -390,7 +394,7 @@ enum CapturePolicy {
             ) {
                 return 1
             }
-            return min(1, max(0, sceneScore))
+            return min(maximumIncompleteScore, max(0, sceneScore))
         }
     }
 
