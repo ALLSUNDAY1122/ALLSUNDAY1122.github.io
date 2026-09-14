@@ -317,23 +317,32 @@ enum SplatSeedColorizer {
 
         // Metadata can be readable even when ImageIO later fails to materialize the thumbnail.
         // Keep the normal path unchanged: only points that actually lost a selected frame pay for
-        // a second ranking pass, and only previously unselected healthy views are eligible. This
-        // avoids full-decoding every capture frame up front while allowing one bounded recovery pass.
+        // a second ranking pass, and only previously unselected healthy views are eligible. Preserve
+        // both the original accepted-view count and its geometric score ceiling so a failed close
+        // view cannot suddenly admit several distant cameras that were intentionally rejected.
         if !failedFrameIndexes.isEmpty, !retryPointIndexes.isEmpty {
             let retryProjections = projections.filter { !failedFrameIndexes.contains($0.frameIndex) }
             var retryGrouped: [Int: [SplatSeedSampleLocation]] = [:]
             for pointIndex in retryPointIndexes where points.indices.contains(pointIndex) {
-                let missingCount = maxColorViewsPerPoint - samples[pointIndex].count
-                guard missingCount > 0 else { continue }
-
                 var originallySelected = Set<Int>()
-                bestAssignments(for: points[pointIndex], projections: projections).forEachAccepted {
-                    originallySelected.insert($0.frameIndex)
+                var originalAcceptedCount = 0
+                var originalScoreCeiling = Float.greatestFiniteMagnitude
+                bestAssignments(for: points[pointIndex], projections: projections).forEachAccepted { assignment in
+                    if originalAcceptedCount == 0 {
+                        originalScoreCeiling = max(assignment.score * 1.8, assignment.score + 0.05)
+                    }
+                    originallySelected.insert(assignment.frameIndex)
+                    originalAcceptedCount += 1
                 }
+
+                let missingCount = max(0, originalAcceptedCount - samples[pointIndex].count)
+                guard missingCount > 0 else { continue }
 
                 var remaining = missingCount
                 bestAssignments(for: points[pointIndex], projections: retryProjections).forEachAccepted { assignment in
-                    guard remaining > 0, !originallySelected.contains(assignment.frameIndex) else { return }
+                    guard remaining > 0,
+                          assignment.score <= originalScoreCeiling,
+                          !originallySelected.contains(assignment.frameIndex) else { return }
                     retryGrouped[assignment.frameIndex, default: []].append(
                         SplatSeedSampleLocation(pointIndex: pointIndex, x: assignment.x, y: assignment.y)
                     )
