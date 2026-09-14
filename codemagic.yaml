@@ -273,11 +273,11 @@ workflows:
       - name: Set numeric build number
         script: |
           set -euo pipefail
-          case "$CM_BUILD_NUMBER" in
-            ''|*[!0-9]*) echo "CM_BUILD_NUMBER must be numeric: $CM_BUILD_NUMBER" >&2; exit 1 ;;
+          case "$BUILD_NUMBER" in
+            ''|*[!0-9]*) echo "BUILD_NUMBER must be numeric: $BUILD_NUMBER" >&2; exit 1 ;;
           esac
           PBX="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj/project.pbxproj"
-          python3 - "$PBX" "$CM_BUILD_NUMBER" <<'PY2'
+          python3 - "$PBX" "$BUILD_NUMBER" <<'PY2'
           from pathlib import Path
           import re,sys
           path=Path(sys.argv[1]); number=sys.argv[2]
