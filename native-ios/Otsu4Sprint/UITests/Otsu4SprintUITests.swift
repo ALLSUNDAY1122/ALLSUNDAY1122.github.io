@@ -85,7 +85,17 @@ final class Otsu4SprintUITests: XCTestCase {
         XCTAssertTrue(start.waitForExistence(timeout: 5))
         start.tap()
 
-        XCTAssertTrue(app.buttons["わからない"].waitForExistence(timeout: 10))
+        // Accessibility3では5択の下にある「わからない」が初期viewport外になる。
+        // 製品はScrollViewで構成されているため、人間と同じ縦スクロール操作で
+        // 主要回答操作へ到達できること、その時点で横クリップせずhittableであることをGateにする。
+        let firstChoice = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "選択肢 1。")).firstMatch
+        XCTAssertTrue(firstChoice.waitForExistence(timeout: 10), "Accessibility3でも回答選択肢がアクセシビリティツリーに存在する")
+        XCTAssertTrue(scrollUntilHittable(firstChoice, in: app), "Accessibility3でも選択肢1へ縦スクロールで到達できる")
+        assertVisibleContentFitsHorizontally(in: app)
+
+        let unknown = app.buttons["わからない"]
+        XCTAssertTrue(scrollUntilHittable(unknown, in: app), "Accessibility3でも『わからない』へ縦スクロールで到達できる")
+        XCTAssertTrue(unknown.isHittable, "Accessibility3で『わからない』が実際にタップ可能である")
         assertVisibleContentFitsHorizontally(in: app)
         assertButtonsHaveAccessibilityLabels(in: app)
     }
@@ -97,6 +107,18 @@ final class Otsu4SprintUITests: XCTestCase {
             app.launchArguments.append("OTS4_UI_TEST_ACCESSIBILITY3")
         }
         return app
+    }
+
+    @discardableResult
+    private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 8) -> Bool {
+        if element.exists && element.isHittable { return true }
+        for _ in 0..<maxSwipes {
+            app.swipeUp()
+            if element.waitForExistence(timeout: 1), element.isHittable {
+                return true
+            }
+        }
+        return element.exists && element.isHittable
     }
 
     private func assertButtonsHaveAccessibilityLabels(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
