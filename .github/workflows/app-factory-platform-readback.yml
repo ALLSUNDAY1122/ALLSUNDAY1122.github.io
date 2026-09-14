@@ -42,21 +42,22 @@ jobs:
           p=Path('factory-platform-readback.json')
           d=json.loads(p.read_text(encoding='utf-8'))
           lines=[f"completed_at={d.get('completed_at')} read_only={d.get('read_only')}"]
-          builds=((d.get('codemagic') or {}).get('builds') or {}).get('builds') or []
-          by_id={str(x.get('_id') or x.get('id')):x for x in builds if isinstance(x,dict)}
           workflows=(d.get('codemagic') or {}).get('workflow_latest') or {}
           for label in ('touhan','hm2','hm1','pharmacist'):
               tf=(d.get('testflight') or {}).get(label) or {}
               s=tf.get('summary') or {}
               latest=((workflows.get(label) or {}).get('latest') or {})
-              cm=by_id.get(str(latest.get('_id') or latest.get('id'))) or {}
-              commit=cm.get('commit') or {}
+              commit=latest.get('commit') or {}
               commit_hash=str(commit.get('hash') or '')[:12] or '-'
+              msg=str(latest.get('message') or commit.get('message') or '').replace('\n',' ')[:120]
               lines.append(
                   f"{label}: TF build={s.get('latest_build')} state={s.get('latest_processing_state')} "
                   f"expired={s.get('latest_expired')} groups={s.get('beta_group_count')} | "
                   f"CM workflow={(workflows.get(label) or {}).get('workflow_id')} status={latest.get('status')} "
-                  f"index={latest.get('index')} commit={commit_hash} branch={latest.get('branch')}"
+                  f"index={latest.get('index')} commit={commit_hash} branch={latest.get('branch')} "
+                  f"started={latest.get('startedAt')} finished={latest.get('finishedAt')} "
+                  f"actions={latest.get('actionCount')} artifacts={latest.get('artifactCount')} "
+                  f"instance={latest.get('instanceType')} message={msg!r}"
               )
           summary='\n'.join(lines)
           print(summary)
