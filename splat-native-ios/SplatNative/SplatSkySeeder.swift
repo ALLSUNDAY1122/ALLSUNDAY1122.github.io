@@ -26,6 +26,16 @@ enum SplatSkySeeder {
         var samples: [SplatSeedSample]
     }
 
+    private struct GeometryProjection {
+        let worldToCamera: simd_float4x4
+        let flX: Float
+        let flY: Float
+        let cx: Float
+        let cy: Float
+        let width: Int
+        let height: Int
+    }
+
     static let farDistance: Float = 20
     static let maxSeedsPerFrame = 24
     static let maxTotalSeeds = 512
@@ -54,14 +64,20 @@ enum SplatSkySeeder {
                     projectURL: projectURL,
                     relativePath: frame.filePath
                 ),
-                      let raster = SkyRaster(url: url, maximumPixel: maximumRasterPixel) else { return }
+                      let raster = SkyRaster(url: url, maximumPixel: maximumRasterPixel),
+                      let geometryProjection = geometryProjection(frame: frame) else { return }
                 let baseline = lowerSceneLuma(raster: raster)
                 let xs: [Float] = [0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92]
                 let topY: Float = 0.035
                 let borderCandidates = xs.filter { x in
                     let pixel = raster.sample(normalizedX: x, normalizedY: topY)
                     return isHighConfidenceSkyForSeeding(pixel, sceneLuma: baseline) &&
-                        !hasGeometryNear(normalizedX: x, normalizedY: topY, frame: frame, points: geometryPoints)
+                        !hasGeometryNear(
+                            normalizedX: x,
+                            normalizedY: topY,
+                            projection: geometryProjection,
+                            points: geometryPoints
+                        )
                 }
                 guard borderCandidates.count >= 5 else { return }
 
@@ -72,7 +88,12 @@ enum SplatSkySeeder {
                         guard frameContributions < maxSeedsPerFrame else { break }
                         let pixel = raster.sample(normalizedX: x, normalizedY: y)
                         guard isHighConfidenceSkyForSeeding(pixel, sceneLuma: baseline),
-                              !hasGeometryNear(normalizedX: x, normalizedY: y, frame: frame, points: geometryPoints),
+                              !hasGeometryNear(
+                                normalizedX: x,
+                                normalizedY: y,
+                                projection: geometryProjection,
+                                points: geometryPoints
+                              ),
                               let position = worldPoint(
                                 normalizedX: x,
                                 normalizedY: y,
@@ -294,21 +315,66 @@ enum SplatSkySeeder {
     private static func hasGeometryNear(
         normalizedX: Float,
         normalizedY: Float,
-        frame: SplatSeedFrame,
+        projection: GeometryProjection,
         points: [SIMD3<Float>]
     ) -> Bool {
-        let targetX = normalizedX * Float(max(0, frame.w - 1))
-        let targetY = normalizedY * Float(max(0, frame.h - 1))
-        let radiusX = Float(frame.w) * 0.055
-        let radiusY = Float(frame.h) * 0.055
+        let targetX = normalizedX * Float(max(0, projection.width - 1))
+        let targetY = normalizedY * Float(max(0, projection.height - 1))
+        let radiusX = Float(projection.width) * 0.055
+        let radiusY = Float(projection.height) * 0.055
         let step = max(1, points.count / 1_500)
         for index in stride(from: 0, to: points.count, by: step) {
-            guard let projected = SplatSeedColorizer.project(point: points[index], frame: frame) else { continue }
+            guard let projected = project(point: points[index], projection: projection) else { continue }
             if abs(projected.x - targetX) <= radiusX && abs(projected.y - targetY) <= radiusY {
                 return true
             }
         }
         return false
+    }
+
+    private static func geometryProjection(frame: SplatSeedFrame) -> GeometryProjection? {
+        guard frame.transformMatrix.count == 4,
+              frame.transformMatrix.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }),
+              frame.flX.isFinite,
+              frame.flY.isFinite,
+              frame.cx.isFinite,
+              frame.cy.isFinite,
+              frame.flX > 0,
+              frame.flY > 0,
+              frame.w > 0,
+              frame.h > 0 else { return nil }
+        let worldToCamera = simd_inverse(matrix(fromRows: frame.transformMatrix))
+        for column in 0..<4 {
+            for row in 0..<4 where !worldToCamera[column][row].isFinite {
+                return nil
+            }
+        }
+        return GeometryProjection(
+            worldToCamera: worldToCamera,
+            flX: frame.flX,
+            flY: frame.flY,
+            cx: frame.cx,
+            cy: frame.cy,
+            width: frame.w,
+            height: frame.h
+        )
+    }
+
+    private static func project(point: SIMD3<Float>, projection: GeometryProjection) -> SIMD3<Float>? {
+        guard point.x.isFinite, point.y.isFinite, point.z.isFinite else { return nil }
+        let cameraPoint = projection.worldToCamera * SIMD4<Float>(point.x, point.y, point.z, 1)
+        guard cameraPoint.x.isFinite, cameraPoint.y.isFinite, cameraPoint.z.isFinite else { return nil }
+        let depth = -cameraPoint.z
+        guard depth.isFinite, depth > 0.05 else { return nil }
+        let x = projection.flX * cameraPoint.x / depth + projection.cx
+        let y = projection.cy - projection.flY * cameraPoint.y / depth
+        guard x.isFinite, y.isFinite else { return nil }
+        let margin: Float = 3
+        guard x >= margin,
+              y >= margin,
+              x < Float(projection.width) - margin,
+              y < Float(projection.height) - margin else { return nil }
+        return SIMD3<Float>(x, y, depth)
     }
 
     private static func matrix(fromRows rows: [[Float]]) -> simd_float4x4 {
