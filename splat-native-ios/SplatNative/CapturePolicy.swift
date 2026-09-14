@@ -63,11 +63,12 @@ enum CaptureImageQualityPolicy {
             return .tooBright
         }
         // A low Laplacian score alone is ambiguous on genuinely flat surfaces: a sharp painted wall
-        // and a motion-blurred low-texture frame can both have almost no local edges. Only classify
-        // softness when the luma samples contain enough contrast for the edge metric to be meaningful.
-        // This keeps useful depth/pose coverage from flat scene surfaces instead of discarding it as
-        // an asserted focus failure, while still rejecting blurred frames that actually contain texture.
-        if stats.laplacianScore < 2.0, stats.lumaStandardDeviation >= 8 {
+        // and a motion-blurred low-texture frame can both have almost no local edges. Preserve the
+        // existing softness band only when there is enough contrast for the edge metric to be useful,
+        // without expanding rejection to high-contrast frames that were previously accepted.
+        if stats.laplacianScore < 2.0,
+           stats.lumaStandardDeviation >= 8,
+           stats.lumaStandardDeviation < 14 {
             return .tooSoft
         }
         return nil
@@ -162,60 +163,29 @@ enum CapturePolicy {
         guard let subjectDistance, subjectDistance.isFinite, subjectDistance > 0 else {
             return 1.20
         }
-        // Close-object scans need slower motion to retain overlap; rooms can tolerate a faster walk.
         return min(1.60, max(0.55, subjectDistance * 0.80))
     }
 
     static let maximumRotationSpeed: Float = 1.80
 
-    static func frameDecision(
-        previous: simd_float4x4?,
-        current: simd_float4x4,
-        subjectDistance: Float?,
-        previousTimestamp: TimeInterval,
-        currentTimestamp: TimeInterval
-    ) -> CaptureFrameDecision {
-        // The first accepted frame has no temporal or pose baseline to compare against. Applying the
-        // inter-frame cadence gate before this check can discard the opening view solely because the
-        // caller initialized both timestamps together, reducing coverage and delaying capture start.
+    static func frameDecision(previous: simd_float4x4?, current: simd_float4x4, subjectDistance: Float?, previousTimestamp: TimeInterval, currentTimestamp: TimeInterval) -> CaptureFrameDecision {
         guard let previous else { return .accept }
-
         let elapsed = currentTimestamp - previousTimestamp
         guard elapsed >= 0.16 else { return .tooSoon }
-
         let delta = movement(from: previous, to: current)
         let minimum = minimumTranslation(subjectDistance: subjectDistance)
-
-        // Large discontinuities are more likely to be relocalization jumps than useful overlap.
         guard delta.translation <= 1.25 else { return .relocalizationJump }
-
         let dt = Float(max(0.001, elapsed))
         let translationSpeed = delta.translation / dt
         let rotationSpeed = delta.rotation / dt
-        guard translationSpeed <= maximumTranslationSpeed(subjectDistance: subjectDistance),
-              rotationSpeed <= maximumRotationSpeed else {
-            return .tooFast
-        }
-
+        guard translationSpeed <= maximumTranslationSpeed(subjectDistance: subjectDistance), rotationSpeed <= maximumRotationSpeed else { return .tooFast }
         if delta.translation >= minimum { return .accept }
         if delta.translation >= minimum * 0.45 && delta.rotation >= 0.09 { return .accept }
         return .insufficientParallax
     }
 
-    static func shouldAcceptFrame(
-        previous: simd_float4x4?,
-        current: simd_float4x4,
-        subjectDistance: Float?,
-        previousTimestamp: TimeInterval,
-        currentTimestamp: TimeInterval
-    ) -> Bool {
-        frameDecision(
-            previous: previous,
-            current: current,
-            subjectDistance: subjectDistance,
-            previousTimestamp: previousTimestamp,
-            currentTimestamp: currentTimestamp
-        ) == .accept
+    static func shouldAcceptFrame(previous: simd_float4x4?, current: simd_float4x4, subjectDistance: Float?, previousTimestamp: TimeInterval, currentTimestamp: TimeInterval) -> Bool {
+        frameDecision(previous: previous, current: current, subjectDistance: subjectDistance, previousTimestamp: previousTimestamp, currentTimestamp: currentTimestamp) == .accept
     }
 
     static func longScanStage(seconds: Double) -> LongScanStage {
@@ -224,46 +194,23 @@ enum CapturePolicy {
         return .normal
     }
 
-    static func softLimitAllowsFrame(
-        mode: CaptureCoverageMode,
-        coverageSatisfied: Bool,
-        orbitSectorIsNew: Bool,
-        elevationBandIsNew: Bool,
-        viewDirectionIsNew: Bool,
-        spatialCellIsNew: Bool,
-        spatialCellCount: Int,
-        pathLength: Float,
-        translationSinceLast: Float
-    ) -> Bool {
+    static func softLimitAllowsFrame(mode: CaptureCoverageMode, coverageSatisfied: Bool, orbitSectorIsNew: Bool, elevationBandIsNew: Bool, viewDirectionIsNew: Bool, spatialCellIsNew: Bool, spatialCellCount: Int, pathLength: Float, translationSinceLast: Float) -> Bool {
         guard !coverageSatisfied else { return false }
-
         switch mode {
         case .object:
             return orbitSectorIsNew || elevationBandIsNew
         case .scene:
-            let extendsPath = pathLength < 0.80
-                && translationSinceLast >= 0.10
-                && translationSinceLast <= 1.25
-            return viewDirectionIsNew
-                || (spatialCellCount < 5 && spatialCellIsNew)
-                || extendsPath
+            let extendsPath = pathLength < 0.80 && translationSinceLast >= 0.10 && translationSinceLast <= 1.25
+            return viewDirectionIsNew || (spatialCellCount < 5 && spatialCellIsNew) || extendsPath
         }
     }
 
     static func coverageMode(subjectDistance: Float?) -> CaptureCoverageMode {
-        // A reliably detected nearby center is treated as an object capture. In that mode,
-        // walking/turning around on one side must never satisfy the scene coverage fallback.
-        guard let subjectDistance, subjectDistance.isFinite, subjectDistance > 0 else {
-            return .scene
-        }
+        guard let subjectDistance, subjectDistance.isFinite, subjectDistance > 0 else { return .scene }
         return subjectDistance <= 1.50 ? .object : .scene
     }
 
-    static func orbitSector(
-        cameraPosition: SIMD3<Float>,
-        center: SIMD3<Float>,
-        count: Int
-    ) -> Int? {
+    static func orbitSector(cameraPosition: SIMD3<Float>, center: SIMD3<Float>, count: Int) -> Int? {
         guard count > 0 else { return nil }
         let dx = cameraPosition.x - center.x
         let dz = cameraPosition.z - center.z
@@ -297,11 +244,7 @@ enum CapturePolicy {
 
     static func spatialCell(cameraPosition: SIMD3<Float>, cellSize: Float = 0.25) -> CaptureGridCell {
         let safeSize = cellSize.isFinite && cellSize >= 0.10 ? cellSize : 0.25
-        guard cameraPosition.x.isFinite, cameraPosition.z.isFinite else {
-            return CaptureGridCell(x: 0, z: 0)
-        }
-        // Scene coordinates are expected to stay close to the capture origin. Clamp before Int
-        // conversion so corrupt/extreme AR transforms can never trap while computing coverage.
+        guard cameraPosition.x.isFinite, cameraPosition.z.isFinite else { return CaptureGridCell(x: 0, z: 0) }
         let maxIndex: Float = 1_000_000
         let x = max(-maxIndex, min(maxIndex, floor(cameraPosition.x / safeSize)))
         let z = max(-maxIndex, min(maxIndex, floor(cameraPosition.z / safeSize)))
@@ -309,66 +252,30 @@ enum CapturePolicy {
     }
 
     static func objectCoverageSatisfied(orbitSectors: Int, elevationBands: Int) -> Bool {
-        // A broad orbit is the hard completion gate. A second high/low elevation pass remains
-        // a quality recommendation, but must not trap the user in capture indefinitely when
-        // ARKit keeps the target center in the same elevation band.
         orbitSectors >= 8 && elevationBands >= 1
     }
 
-    static func sceneCoverageSatisfied(
-        viewDirectionSectors: Int,
-        spatialCells: Int,
-        pathLength: Float
-    ) -> Bool {
+    static func sceneCoverageSatisfied(viewDirectionSectors: Int, spatialCells: Int, pathLength: Float) -> Bool {
         viewDirectionSectors >= 5 && spatialCells >= 5 && pathLength >= 0.80
     }
 
-    static func coverageSatisfied(
-        subjectDistance: Float?,
-        orbitSectors: Int,
-        elevationBands: Int,
-        viewDirectionSectors: Int,
-        spatialCells: Int,
-        pathLength: Float
-    ) -> Bool {
+    static func coverageSatisfied(subjectDistance: Float?, orbitSectors: Int, elevationBands: Int, viewDirectionSectors: Int, spatialCells: Int, pathLength: Float) -> Bool {
         switch coverageMode(subjectDistance: subjectDistance) {
         case .object:
-            return objectCoverageSatisfied(
-                orbitSectors: orbitSectors,
-                elevationBands: elevationBands
-            )
+            return objectCoverageSatisfied(orbitSectors: orbitSectors, elevationBands: elevationBands)
         case .scene:
-            return sceneCoverageSatisfied(
-                viewDirectionSectors: viewDirectionSectors,
-                spatialCells: spatialCells,
-                pathLength: pathLength
-            )
+            return sceneCoverageSatisfied(viewDirectionSectors: viewDirectionSectors, spatialCells: spatialCells, pathLength: pathLength)
         }
     }
 
-    static func coverageScore(
-        subjectDistance: Float?,
-        orbitSectors: Int,
-        elevationBands: Int,
-        viewDirectionSectors: Int,
-        spatialCells: Int,
-        pathLength: Float
-    ) -> Float {
-        // Checkpoint values are persisted metadata and can be damaged independently of the live sets
-        // that normally produce non-negative counts and path length. Keep progress finite and bounded
-        // instead of letting a NaN/negative value leak into SwiftUI progress/framing calculations.
+    static func coverageScore(subjectDistance: Float?, orbitSectors: Int, elevationBands: Int, viewDirectionSectors: Int, spatialCells: Int, pathLength: Float) -> Float {
         let safeOrbitSectors = max(0, orbitSectors)
         let safeElevationBands = max(0, elevationBands)
         let safeViewDirectionSectors = max(0, viewDirectionSectors)
         let safeSpatialCells = max(0, spatialCells)
         let safePathLength = pathLength.isFinite ? max(0, pathLength) : 0
-
-        let objectScore = min(1, Float(safeOrbitSectors) / 8) * 0.82
-            + min(1, Float(safeElevationBands) / 2) * 0.18
-        let sceneScore = min(1, Float(safeViewDirectionSectors) / 5) * 0.35
-            + min(1, Float(safeSpatialCells) / 5) * 0.30
-            + min(1, safePathLength / 0.80) * 0.35
-
+        let objectScore = min(1, Float(safeOrbitSectors) / 8) * 0.82 + min(1, Float(safeElevationBands) / 2) * 0.18
+        let sceneScore = min(1, Float(safeViewDirectionSectors) / 5) * 0.35 + min(1, Float(safeSpatialCells) / 5) * 0.30 + min(1, safePathLength / 0.80) * 0.35
         switch coverageMode(subjectDistance: subjectDistance) {
         case .object:
             return min(1, max(0, objectScore))
