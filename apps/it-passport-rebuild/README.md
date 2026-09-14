@@ -12,11 +12,13 @@
 大量の問題を並べるのではなく、IT初心者が「今日何をやるか」を迷わず、弱点を反復して本試験合格水準に近づける学習ナビゲーションを作る。
 
 ## Current exam baseline
-- Syllabus: IPA ITパスポート Ver.6.5
+- Current live syllabus: IPA ITパスポート Ver.6.5（2026-01-08掲載）
 - CBT / 120 minutes / 100 questions / 4 choices
 - Strategy ~35 / Management ~20 / Technology ~45
 - Pass: total >= 600/1000 and each domain >= 300/1000
-- 2027 new-system IT Passport syllabus: pending as of 2026-08-25
+- IPA published a **2027 new-system IT Passport draft syllabus Ver.0.1 on 2026-08-31**. It is a draft and must not silently replace the live Ver.6.5 content baseline.
+- Until the 2027 system is finalized, every canonical question must explicitly declare its syllabus version. Content derived from the 2027 draft must use a draft-tagged version and must not be mixed into the live-exam pool without a release decision.
+- Official reference pages: current syllabus `https://www.ipa.go.jp/shiken/syllabus/gaiyou.html`; 2027 draft `https://www.ipa.go.jp/shiken/syllabus/henkou/2026/20260630.html`.
 
 ## MVP
 1. 初回診断
