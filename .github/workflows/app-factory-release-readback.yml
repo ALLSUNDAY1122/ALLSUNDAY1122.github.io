@@ -44,9 +44,10 @@ jobs:
           from pathlib import Path
           d=json.loads(Path('factory-release-readback.json').read_text(encoding='utf-8'))
           lines=[f"completed_at={d.get('completed_at')} read_only={d.get('read_only')}"]
-          order=('touhan','hm2','hm1','pharmacist','otsu4','fp3','ap','tsukanshi','network','cpa','shoshi','kanteishi','kangoshi','kanrieiyoushi','hokenshi')
-          for label in order:
-              s=((d.get('apps') or {}).get(label) or {}).get('summary') or {}
+          # The probe's app map is canonical for this run. Do not maintain a second
+          # hard-coded report list that can silently omit an active app.
+          for label,app in (d.get('apps') or {}).items():
+              s=(app or {}).get('summary') or {}
               iaps=','.join(f"{x.get('product_id')}={x.get('state')}" for x in (s.get('iaps') or [])) or 'none'
               lines.append(
                   f"{label}: latest={s.get('latest_build')} state={s.get('latest_processing_state')} expired={s.get('latest_expired')} "
