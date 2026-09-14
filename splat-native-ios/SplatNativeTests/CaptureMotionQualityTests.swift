@@ -187,6 +187,29 @@ final class CaptureMotionQualityTests: XCTestCase {
         XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
     }
 
+    func testSatisfiedObjectCoverageReportsCompleteProgress() {
+        XCTAssertTrue(CapturePolicy.objectCoverageSatisfied(orbitSectors: 8, elevationBands: 1))
+        let score = CapturePolicy.coverageScore(
+            subjectDistance: 0.75,
+            orbitSectors: 8,
+            elevationBands: 1,
+            viewDirectionSectors: 0,
+            spatialCells: 0,
+            pathLength: 0
+        )
+        XCTAssertEqual(score, 1, accuracy: 0.0001)
+
+        let incompleteScore = CapturePolicy.coverageScore(
+            subjectDistance: 0.75,
+            orbitSectors: 7,
+            elevationBands: 1,
+            viewDirectionSectors: 0,
+            spatialCells: 0,
+            pathLength: 0
+        )
+        XCTAssertLessThan(incompleteScore, 1)
+    }
+
     func testCoverageScoreStaysFiniteAndBoundedForDamagedCheckpointValues() {
         let negative = CapturePolicy.coverageScore(
             subjectDistance: nil,
