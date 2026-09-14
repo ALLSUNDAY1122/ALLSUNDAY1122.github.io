@@ -46,6 +46,19 @@ enum ScanWorldMapArchiveStore {
         defer { try? FileManager.default.removeItem(at: candidateURL) }
 
         try data.write(to: candidateURL, options: .atomic)
+
+        // `Data.write(.atomic)` gives us replacement semantics, but successful return alone does not
+        // prove the candidate bytes have crossed the FileHandle durability boundary. Flush the fully
+        // written candidate before it can replace the last resumable WorldMap. If synchronization
+        // itself fails, preserve the previous archive rather than publishing a less durable generation.
+        do {
+            let handle = try FileHandle(forWritingTo: candidateURL)
+            defer { try? handle.close() }
+            try handle.synchronize()
+        } catch {
+            throw ScanWorldMapArchiveStoreError.verificationFailed
+        }
+
         let values = try candidateURL.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey])
         guard values.isRegularFile == true,
               values.fileSize == data.count,
