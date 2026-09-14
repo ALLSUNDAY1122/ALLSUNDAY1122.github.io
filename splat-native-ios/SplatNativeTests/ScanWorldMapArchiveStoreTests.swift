@@ -16,6 +16,22 @@ final class ScanWorldMapArchiveStoreTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: target), expected)
     }
 
+    func testWritePersistsExactArchiveAcrossVerificationChunkBoundary() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let target = directory.appendingPathComponent("worldmap-large.bin")
+        let byteCount = 1_024 * 1_024 + 257
+        let expected = Data((0..<byteCount).map { UInt8(truncatingIfNeeded: $0 * 17) })
+
+        try ScanWorldMapArchiveStore.write(expected, to: target)
+
+        XCTAssertEqual((try FileManager.default.attributesOfItem(atPath: target.path)[.size] as? NSNumber)?.intValue, byteCount)
+        XCTAssertEqual(try Data(contentsOf: target), expected)
+    }
+
     func testWriteReplacesExistingArchiveOnlyAfterCandidateValidation() throws {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
