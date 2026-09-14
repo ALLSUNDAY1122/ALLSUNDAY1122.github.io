@@ -1,0 +1,127 @@
+name: Tsukanshi Native Full Gate
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  full-gate:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[TSUKANSHI-FULL-GATE]'))
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Verify exact canonical source before any build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ICON='tsukanshi-sprint/native-ios/CanonicalAssets/02_通関士.png'
+          test "$(wc -c < "$ICON" | tr -d ' ')" = '556001'
+          echo 'ff9fd508930e8728ef54907ec64a7835dcffb69a1a773edc645b79715fbfccaa  '"$ICON" | shasum -a 256 -c -
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Product/content/icon/privacy preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash tsukanshi-sprint/native-ios/prepare-native.sh
+          plutil -lint tsukanshi-sprint/native-ios/PrivacyInfo.xcprivacy
+          test -f tsukanshi-sprint/native-ios/Resources/tsukanshi-questions.json
+          python3 - <<'PY'
+          import json
+          p='tsukanshi-sprint/native-ios/Resources/tsukanshi-questions.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['studyQuestionCount']==480
+          assert d['declarationCount']==12
+          assert len(d['questions'])==492
+          assert d['lawBaselineDate']=='2026-07-01'
+          assert len({q['id'] for q in d['questions']})==492
+          print('PASS: release content 480 study + 12 declaration, unique IDs, law baseline')
+          PY
+          ! grep -R -n -E 'WKWebView|import WebKit|UIViewRepresentable' tsukanshi-sprint/native-ios --include='*.swift'
+      - name: Generate project
+        shell: bash
+        run: |
+          cd tsukanshi-sprint/native-ios
+          xcodegen generate
+          test -d TsukanshiNative.xcodeproj
+      - name: Resolve available simulator
+        id: sim
+        shell: bash
+        run: |
+          set -euo pipefail
+          UDID="$(python3 - <<'PY'
+          import json,subprocess
+          d=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          candidates=[]
+          for runtime,devices in d['devices'].items():
+              if 'iOS' not in runtime: continue
+              for x in devices:
+                  if x.get('isAvailable') and x.get('name','').startswith('iPhone'):
+                      candidates.append((runtime,x['name'],x['udid']))
+          if not candidates: raise SystemExit('no available iPhone simulator')
+          preferred=[x for x in candidates if any(k in x[1] for k in ('16 Pro','16','15 Pro','15'))]
+          print((preferred or candidates)[-1][2])
+          PY
+          )"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+      - name: Unit + UI + learning Acceptance tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild test \
+            -project tsukanshi-sprint/native-ios/TsukanshiNative.xcodeproj \
+            -scheme TsukanshiNative \
+            -destination 'platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}' \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee /tmp/tsukanshi-xcode-test.log
+          grep -q 'Test Suite.*passed' /tmp/tsukanshi-xcode-test.log
+      - name: Release simulator build and packaged-resource audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          DERIVED=/tmp/tsukanshi-derived
+          xcodebuild build \
+            -project tsukanshi-sprint/native-ios/TsukanshiNative.xcodeproj \
+            -scheme TsukanshiNative \
+            -configuration Release \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$DERIVED" \
+            CODE_SIGNING_ALLOWED=NO
+          APP="$(find "$DERIVED/Build/Products" -type d -name 'TsukanshiNative.app' -print -quit)"
+          test -n "$APP"
+          test -f "$APP/tsukanshi-questions.json"
+          test -f "$APP/Assets.car"
+          test -f "$APP/PrivacyInfo.xcprivacy"
+          python3 - "$APP/tsukanshi-questions.json" <<'PY'
+          import json,sys
+          d=json.load(open(sys.argv[1],encoding='utf-8'))
+          assert d['studyQuestionCount']==480 and d['declarationCount']==12 and len(d['questions'])==492
+          print('PASS: packaged release simulator app contains exact audited learning corpus')
+          PY
+      - name: Upload diagnostic log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tsukanshi-native-full-gate-${{ github.run_id }}
+          path: /tmp/tsukanshi-xcode-test.log
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Report
+        if: always() && github.event_name == 'issues'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Tsukanshi Native Full Gate status=${{ job.status }} run_id=${context.runId} head=${context.sha}`});
