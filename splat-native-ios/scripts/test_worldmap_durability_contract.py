@@ -33,18 +33,21 @@ if finish.index("persistWorldMapForTransition") > finish.index("self.phase = .ca
 for needle in (
     "candidateURL",
     "data.write(to: candidateURL, options: .atomic)",
-    "values.fileSize == data.count",
+    "values.isRegularFile == true",
     "fileContentsEqual(data, at: candidateURL)",
     "verificationChunkByteCount = 1_024 * 1_024",
     "handle.read(upToCount: requestedCount)",
     "!chunk.isEmpty",
     "offset += chunk.count",
+    "handle.read(upToCount: 1)?.isEmpty ?? true",
     "replaceItemAt(targetURL, withItemAt: candidateURL)",
     "moveItem(at: candidateURL, to: targetURL)",
 ):
     if needle not in helper:
         raise SystemExit(f"WorldMap archive store missing verified replacement contract: {needle}")
 
+if "values.fileSize == data.count" in helper:
+    raise SystemExit("WorldMap verification must not rely on potentially stale post-fsync file-size metadata")
 if "chunk.count == requestedCount" in helper or "chunk.count == count" in helper:
     raise SystemExit("WorldMap streaming verification must tolerate legal short FileHandle reads")
 if "Data(contentsOf: candidateURL" in helper:
@@ -57,4 +60,4 @@ if "testWriteReplacesExistingArchiveOnlyAfterCandidateValidation" not in store_t
     raise SystemExit("missing WorldMap verified replacement regression")
 if "testWritePersistsExactArchiveAcrossVerificationChunkBoundary" not in store_tests:
     raise SystemExit("missing WorldMap streamed verification chunk-boundary regression")
-print("PASS: WorldMap pause/finish persistence is ordered, serialized, short-read-safe streamed-candidate-verified, and failure-aware")
+print("PASS: WorldMap pause/finish persistence is ordered, serialized, metadata-independent, short-read-safe streamed-candidate-verified, and failure-aware")
