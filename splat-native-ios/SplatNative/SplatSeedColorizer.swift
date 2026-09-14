@@ -243,11 +243,33 @@ enum SplatSeedColorizer {
             return Array(repeating: fallback, count: points.count)
         }
 
+        // Resolve and preflight source images before the point × frame ranking loop. Previously a
+        // missing, escaped, or unreadable image could still occupy one of the best three geometric
+        // assignments; the later raster load would then fail without promoting the fourth-best
+        // usable view. That silently reduced multi-view consensus or fell back to gray even when a
+        // valid camera observation was available.
+        let resolvedProjectRoot = projectURL.standardizedFileURL.resolvingSymlinksInPath()
+        var usableImageURLs: [Int: URL] = [:]
+        usableImageURLs.reserveCapacity(frames.count)
+        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        for (frameIndex, frame) in frames.enumerated() {
+            guard let imageURL = containedImageURL(
+                filePath: frame.filePath,
+                projectURL: projectURL,
+                resolvedProjectRoot: resolvedProjectRoot
+            ), FileManager.default.fileExists(atPath: imageURL.path),
+               let source = CGImageSourceCreateWithURL(imageURL as CFURL, sourceOptions),
+               CGImageSourceGetCount(source) > 0 else { continue }
+            usableImageURLs[frameIndex] = imageURL
+        }
+
         // Camera transforms are immutable for the entire colorization pass. The old path inverted
         // the same 4x4 matrix for every point x frame candidate; a 100k-point / 100-frame capture
         // could therefore perform up to ten million identical inversions before sampling a pixel.
         // Prepare each usable frame once and reuse its world-to-camera transform for all points.
-        let projections = prepareProjections(frames: frames)
+        let projections = prepareProjections(frames: frames).filter {
+            usableImageURLs[$0.frameIndex] != nil
+        }
         guard !projections.isEmpty else {
             return Array(repeating: fallback, count: points.count)
         }
@@ -269,18 +291,11 @@ enum SplatSeedColorizer {
             }
         }
 
-        // Resolve the project root once per pass. Candidate paths still resolve symlinks individually
-        // so an escaped capture cannot be sampled, but large captures do not repeat the same root
-        // filesystem resolution for every frame.
-        let resolvedProjectRoot = projectURL.standardizedFileURL.resolvingSymlinksInPath()
         for (frameIndex, items) in grouped {
-            guard frames.indices.contains(frameIndex) else { continue }
+            guard frames.indices.contains(frameIndex),
+                  let imageURL = usableImageURLs[frameIndex] else { continue }
             let frame = frames[frameIndex]
-            guard let imageURL = containedImageURL(
-                filePath: frame.filePath,
-                projectURL: projectURL,
-                resolvedProjectRoot: resolvedProjectRoot
-            ), let raster = loadRaster(url: imageURL) else { continue }
+            guard let raster = loadRaster(url: imageURL) else { continue }
             for item in items {
                 if let color = raster.sample(
                     x: item.x,
