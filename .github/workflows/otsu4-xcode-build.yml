@@ -14,36 +14,77 @@ on:
       - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
       - 'tools/otsu4-build-content-v2.mjs'
       - '.github/workflows/otsu4-xcode-build.yml'
+  workflow_dispatch:
+  issues:
+    types: [opened]
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   simulator-build:
+    if: >-
+      github.event_name != 'issues' ||
+      (github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTSU4-NATIVE-PREFLIGHT]'))
     runs-on: macos-latest
+    timeout-minutes: 35
+    env:
+      RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Materialize exact release source for controlled preflight
+        if: github.event_name == 'issues' || github.event_name == 'workflow_dispatch'
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RELEASE_SOURCE_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$RELEASE_SOURCE_SHA"
+      - name: Require native source
+        run: test -f native-ios/Otsu4Sprint/project.yml
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Foundation-only notice
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') == '' }}
-        run: echo 'Otsu4 Xcode project files are not present yet; simulator build will run on the product PR.'
       - name: Install XcodeGen
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: brew install xcodegen
       - name: Validate privacy manifest plist
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: plutil -lint native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy
       - name: Prepare audited native resources
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: bash native-ios/Otsu4Sprint/prepare-ios.sh
+      - name: Verify canonical release inputs
+        run: |
+          python3 - <<'PY'
+          import json, hashlib, pathlib
+          q=pathlib.Path('native-ios/Otsu4Sprint/Generated/questions.generated.json')
+          data=json.loads(q.read_text(encoding='utf-8'))
+          assert data['contentVersion']=='otsu4-2026-08-product-v2'
+          assert len(data['questions'])==360
+          icon=pathlib.Path('native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png')
+          assert hashlib.sha256(icon.read_bytes()).hexdigest()=='d0cb19b237ca3306413c481e4fbc0fb871705b390a1bc37619d9683fff19ff2d'
+          print('PASS canonical source: 360 questions + canonical icon')
+          PY
       - name: Generate Xcode project
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         working-directory: native-ios/Otsu4Sprint
         run: xcodegen generate
-      - name: Build iPhone Simulator app
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+      - name: Choose simulator
+        id: sim
+        run: |
+          DEVICE=$(xcrun simctl list devices available | grep -m1 'iPhone' | sed -E 's/^[[:space:]]*([^\(]+) \(.*/\1/' | sed 's/[[:space:]]*$//')
+          test -n "$DEVICE"
+          echo "device=$DEVICE" >> "$GITHUB_OUTPUT"
+      - name: Run native unit and UI tests
+        working-directory: native-ios/Otsu4Sprint
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -destination "platform=iOS Simulator,name=${{ steps.sim.outputs.device }}" \
+            CODE_SIGNING_ALLOWED=NO \
+            test | tee "$RUNNER_TEMP/otsu4-native-preflight.log"
+      - name: Build Release simulator artifact
         working-directory: native-ios/Otsu4Sprint
         run: |
           set -o pipefail
@@ -54,23 +95,39 @@ jobs:
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
-            build | xcpretty
+            build | tee "$RUNNER_TEMP/otsu4-release-build.log"
       - name: Verify release bundle resources
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: |
           APP=$(find "$HOME/Library/Developer/Xcode/DerivedData" -path '*Build/Products/Release-iphonesimulator/Otsu4Sprint.app' -type d | head -1)
           echo "APP=$APP"
           test -n "$APP"
-          find "$APP" -maxdepth 2 -type f -print | sort
           test -f "$APP/questions.generated.json"
           test -f "$APP/PrivacyInfo.xcprivacy"
           test -f "$APP/Assets.car"
-          plutil -p "$APP/Info.plist"
           /usr/bin/python3 - "$APP/questions.generated.json" <<'PY'
           import json,sys
-          p=sys.argv[1]
-          data=json.load(open(p,encoding='utf-8'))
+          data=json.load(open(sys.argv[1],encoding='utf-8'))
           assert data['contentVersion']=='otsu4-2026-08-product-v2'
           assert len(data['questions'])==360
-          print('bundle questions=',len(data['questions']))
+          print('PASS release bundle questions=',len(data['questions']))
           PY
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: otsu4-native-preflight
+          path: |
+            ${{ runner.temp }}/otsu4-native-preflight.log
+            ${{ runner.temp }}/otsu4-release-build.log
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Report issue-triggered result
+        if: always() && github.event_name == 'issues'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Otsu4 pinned Native Preflight finished. status=${{ job.status }}; run_id=${context.runId}; source=${process.env.RELEASE_SOURCE_SHA}. No TestFlight or App Store upload was performed.`
+            });
