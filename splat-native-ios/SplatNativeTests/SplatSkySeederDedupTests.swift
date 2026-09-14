@@ -39,9 +39,13 @@ final class SplatSkySeederDedupTests: XCTestCase {
         let frame = makeFrame(filePath: "sky.png", rows: identityRows)
         let xs: [Float] = [0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92]
         let geometryPoints = try xs.map { x in
+            // The projector intentionally rejects a 3 px edge margin. Put real geometry just
+            // inside that valid projection region while keeping it within the sky-border
+            // neighbourhood radius. This exercises the cached-projection suppression path instead
+            // of constructing points that the projector must discard before proximity testing.
             let farPoint = try XCTUnwrap(SplatSkySeeder.worldPoint(
                 normalizedX: x,
-                normalizedY: 0.035,
+                normalizedY: 0.055,
                 frame: frame,
                 distance: SplatSkySeeder.farDistance
             ))
