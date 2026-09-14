@@ -109,9 +109,11 @@ enum SplatStrongCompletionEvidence {
         }
 
         // A successful write + fsync is not treated as trust until the bytes can be read back and
-        // decode to the exact evidence/hash contract that was just verified. This prevents a damaged
-        // or partial seal from being reported as a completed integrity checkpoint in the same run.
-        guard let persisted = try? Data(contentsOf: sealURL), persisted == encoded,
+        // decode to the exact evidence/hash contract that was just verified. Use the same bounded
+        // reader as normal verification so this confirmation cannot reintroduce an unbounded trust-
+        // metadata allocation if the path is concurrently replaced or extended.
+        guard let persisted = try readExistingSealIfSafe(sealURL, fileManager: fileManager),
+              persisted == encoded,
               let decoded = try? JSONDecoder().decode(Seal.self, from: persisted),
               decoded.matches(evidence), decoded.sha256 == hash else {
             throw IntegrityError.evidencePersistenceFailed
