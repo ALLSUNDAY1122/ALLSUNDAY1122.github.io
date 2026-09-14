@@ -115,6 +115,11 @@ private struct SplatSeedColorAccumulator {
                 blue: average(first.blue, second.blue)
             )
         default:
+            // A per-channel median can synthesize a color that no camera observed. For example,
+            // saturated red/green/blue samples collapse toward black because each channel's median
+            // is low. Use the RGB medoid instead: the accepted observation with the smallest total
+            // squared distance to the other observations. It keeps the robust outlier rejection
+            // benefit while guaranteeing that the 3-view seed color came from a real source frame.
             return medoid3(first, second, third)
         }
     }
@@ -135,6 +140,9 @@ private struct SplatSeedColorAccumulator {
             let cost = samples.reduce(into: 0) { partial, other in
                 partial += colorDistanceSquared(candidate, other)
             }
+            // `grouped` resolves source frames through a Dictionary, whose iteration order is not
+            // part of the contract. Never make an exact medoid tie depend on append order; use a
+            // stable RGB ordering so identical inputs produce identical seeds across launches.
             if cost < bestCost || (cost == bestCost && colorPrecedes(candidate, best)) {
                 bestCost = cost
                 best = candidate
@@ -165,6 +173,10 @@ private struct SplatSeedRaster {
     func sample(x: Float, y: Float, sourceWidth: Int, sourceHeight: Int) -> SplatSeedSample? {
         guard width > 0, height > 0, sourceWidth > 0, sourceHeight > 0,
               x.isFinite, y.isFinite else { return nil }
+
+        // Map source pixel centres into the bounded decode, then interpolate instead of snapping
+        // to one thumbnail texel. This avoids adding raster memory while reducing colour aliasing
+        // when a large capture frame has been downsampled to maximumRasterDimension.
         let scaleX = Float(width) / Float(sourceWidth)
         let scaleY = Float(height) / Float(sourceHeight)
         let rasterX = min(Float(width - 1), max(0, (x + 0.5) * scaleX - 0.5))
@@ -231,6 +243,11 @@ enum SplatSeedColorizer {
             return Array(repeating: fallback, count: points.count)
         }
 
+        // Resolve and preflight source images before the point × frame ranking loop. Previously a
+        // missing, escaped, or unreadable image could still occupy one of the best three geometric
+        // assignments; the later raster load would then fail without promoting the fourth-best
+        // usable view. That silently reduced multi-view consensus or fell back to gray even when a
+        // valid camera observation was available.
         let resolvedProjectRoot = projectURL.standardizedFileURL.resolvingSymlinksInPath()
         var usableImageURLs: [Int: URL] = [:]
         usableImageURLs.reserveCapacity(frames.count)
@@ -247,6 +264,10 @@ enum SplatSeedColorizer {
             usableImageURLs[frameIndex] = imageURL
         }
 
+        // Camera transforms are immutable for the entire colorization pass. The old path inverted
+        // the same 4x4 matrix for every point x frame candidate; a 100k-point / 100-frame capture
+        // could therefore perform up to ten million identical inversions before sampling a pixel.
+        // Prepare each usable frame once and reuse its world-to-camera transform for all points.
         let projections = prepareProjections(frames: frames).filter {
             usableImageURLs[$0.frameIndex] != nil
         }
@@ -254,6 +275,13 @@ enum SplatSeedColorizer {
             return Array(repeating: fallback, count: points.count)
         }
 
+        // Use several nearby, low-off-axis views instead of trusting one frame. A single projection
+        // can land on a temporary occluder, highlight or exposure outlier; a small robust consensus
+        // gives the 3DGS initializer a more stable color while keeping raster memory bounded because
+        // only one source image is decoded at a time below.
+        // Retain only the information needed after view selection. frameIndex is already the bucket
+        // key and score is only needed while selecting the best views, so carrying both through the
+        // raster pass inflated the up-to-three-per-point grouped payload without changing output.
         var grouped: [Int: [SplatSeedSampleLocation]] = [:]
         var samples = Array(repeating: SplatSeedColorAccumulator(), count: points.count)
         for (pointIndex, point) in points.enumerated() {
