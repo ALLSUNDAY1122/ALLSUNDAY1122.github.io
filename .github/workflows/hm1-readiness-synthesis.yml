@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      KNOWN_VISUAL_PASS_SHA: 220a590eb55bd0b49be00f1e370fa6219b2cbbb0
+      KNOWN_VISUAL_PASS_SHA: 3a4a25bff4bd2c10b85c2926df3d0b53626dd07a
     steps:
       - uses: actions/checkout@v6
         with:
@@ -110,7 +110,7 @@ jobs:
             'ready': True,
             'updated_at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
             'product_sha': os.environ['BASELINE_SHA'],
-            'visual_pass_sha': '220a590eb55bd0b49be00f1e370fa6219b2cbbb0',
+            'visual_pass_sha': '3a4a25bff4bd2c10b85c2926df3d0b53626dd07a',
             'required': [
               'release_contract',
               'learning_acceptance',
