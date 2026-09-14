@@ -142,7 +142,14 @@ enum SplatSoftwareDepthSeedBuilder {
         projectURL: URL,
         frames sourceFrames: [SplatSeedFrame]
     ) -> Result {
-        let selected = selectFrames(sourceFrames, maximumCount: maximumSelectedFrames)
+        // Do not let a missing/traversal/obviously unreadable capture consume one of the globally
+        // bounded plane-sweep slots. Preflight is metadata-only; full thumbnail decode remains
+        // bounded to maximumSelectedFrames below.
+        let selected = selectLoadableFrames(
+            projectURL: projectURL,
+            frames: sourceFrames,
+            maximumCount: maximumSelectedFrames
+        )
         let maximumPixel = ProcessInfo.processInfo.physicalMemory >= 6_000_000_000 ? 224 : 192
         let frames = selected.compactMap { load($0, projectURL: projectURL, maximumPixel: maximumPixel) }
         guard frames.count >= 5 else {
@@ -644,6 +651,37 @@ enum SplatSoftwareDepthSeedBuilder {
             skySceneLuma: skySceneLuma,
             hasConfidentTopSky: hasConfidentTopSky(raster: rgbRaster, sceneLuma: skySceneLuma)
         )
+    }
+
+    static func selectLoadableFrames(
+        projectURL: URL,
+        frames: [SplatSeedFrame],
+        maximumCount: Int
+    ) -> [SplatSeedFrame] {
+        guard maximumCount > 0 else { return [] }
+        let loadable = frames.filter { source in
+            guard source.transformMatrix.count == 4,
+                  source.transformMatrix.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }),
+                  source.w > 0,
+                  source.h > 0,
+                  source.flX.isFinite,
+                  source.flY.isFinite,
+                  source.cx.isFinite,
+                  source.cy.isFinite,
+                  source.flX > 0,
+                  source.flY > 0,
+                  let fileURL = SplatDepthSeedBuilder.validatedDepthInputURL(
+                    projectURL: projectURL,
+                    relativePath: source.filePath
+                  ),
+                  let imageSource = CGImageSourceCreateWithURL(fileURL as CFURL, nil),
+                  CGImageSourceGetCount(imageSource) > 0,
+                  CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) != nil else {
+                return false
+            }
+            return true
+        }
+        return selectFrames(loadable, maximumCount: maximumCount)
     }
 
     private static func selectFrames(_ frames: [SplatSeedFrame], maximumCount: Int) -> [SplatSeedFrame] {
