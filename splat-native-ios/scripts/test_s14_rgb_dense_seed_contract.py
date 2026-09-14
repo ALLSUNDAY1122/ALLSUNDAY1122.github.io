@@ -69,7 +69,11 @@ for token in (
     "var retryPointIndexes = Set<Int>()",
     "if !failedFrameIndexes.isEmpty, !retryPointIndexes.isEmpty",
     "let retryProjections = projections.filter { !failedFrameIndexes.contains($0.frameIndex) }",
-    "let missingCount = maxColorViewsPerPoint - samples[pointIndex].count",
+    "var originalAcceptedCount = 0",
+    "var originalScoreCeiling = Float.greatestFiniteMagnitude",
+    "originalScoreCeiling = max(assignment.score * 1.8, assignment.score + 0.05)",
+    "let missingCount = max(0, originalAcceptedCount - samples[pointIndex].count)",
+    "assignment.score <= originalScoreCeiling",
     "!originallySelected.contains(assignment.frameIndex)",
 ):
     assert token in COLORIZER, f"missing seed-color frame admission/recovery contract: {token}"
