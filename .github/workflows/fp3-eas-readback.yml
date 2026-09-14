@@ -1,0 +1,103 @@
+name: FP3 EAS Readback
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  inspect:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      startsWith(github.event.issue.title, '[FP3-EAS-READ]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Inspect candidate FP3 Expo projects read-only
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$EXPO_TOKEN"
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+
+          token = os.environ['EXPO_TOKEN'].strip()
+          endpoint = 'https://api.expo.dev/graphql'
+          target_bundle = 'com.allsunday1122.fp3kakomoncoach'
+          candidates = [
+              '@allsunday1122/fp3-kakomon-coach',
+              '@allsunday1122/fp3-kakomoncoach',
+              '@allsunday1122/fp3kakomoncoach',
+              '@allsunday1122/fp3-speed',
+              '@allsunday1122/fp3-manabi-sprint',
+              '@allsunday1122/fp3',
+          ]
+          query = r'''
+          query FP3Project($projectFullName: String!) {
+            app {
+              byFullName(fullName: $projectFullName) {
+                id
+                iosAppCredentials {
+                  appleAppIdentifier {
+                    bundleIdentifier
+                  }
+                }
+              }
+            }
+          }
+          '''
+
+          matches=[]
+          checked=[]
+          for full_name in candidates:
+              body=json.dumps({'query':query,'variables':{'projectFullName':full_name}}, separators=(',',':')).encode()
+              req=urllib.request.Request(endpoint,data=body,method='POST',headers={
+                  'Authorization':f'Bearer {token}',
+                  'Content-Type':'application/json',
+                  'Accept':'application/json',
+              })
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      payload=json.loads(r.read().decode())
+              except urllib.error.HTTPError as exc:
+                  checked.append({'full_name':full_name,'http':exc.code,'resolved':False})
+                  continue
+              app=(((payload.get('data') or {}).get('app') or {}).get('byFullName') or {})
+              bundles=sorted({
+                  str((cred.get('appleAppIdentifier') or {}).get('bundleIdentifier'))
+                  for cred in (app.get('iosAppCredentials') or [])
+                  if isinstance(cred,dict) and (cred.get('appleAppIdentifier') or {}).get('bundleIdentifier')
+              }) if isinstance(app,dict) else []
+              resolved=bool(isinstance(app,dict) and app.get('id'))
+              checked.append({'full_name':full_name,'resolved':resolved,'bundle_ids':bundles})
+              if resolved and target_bundle in bundles:
+                  matches.append({'full_name':full_name,'project_id':str(app['id']),'bundle_id':target_bundle})
+
+          result={
+              'read_only': True,
+              'target_bundle': target_bundle,
+              'checked': checked,
+              'matches': matches,
+              'match_count': len(matches),
+          }
+          Path('/tmp/fp3-eas-readback.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(result,ensure_ascii=False))
+          PY
+      - name: Report sanitized result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            let body = 'FP3 EAS read-only inspection failed before producing a sanitized result.';
+            if (fs.existsSync('/tmp/fp3-eas-readback.json')) {
+              const txt = fs.readFileSync('/tmp/fp3-eas-readback.json','utf8');
+              body = `FP3 EAS read-only inspection finished.\n\n\`\`\`json\n${txt}\n\`\`\``;
+            }
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body});
