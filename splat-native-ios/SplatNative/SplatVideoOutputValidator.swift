@@ -10,6 +10,7 @@ enum SplatVideoOutputValidator {
         case missingOrEmpty
         case missingVideoTrack
         case unexpectedVideoTrackCount
+        case unexpectedAudioTrackCount
         case invalidVideoDimensions
         case unexpectedVideoDimensions
         case unexpectedColorProperties
@@ -59,6 +60,10 @@ enum SplatVideoOutputValidator {
         count == 1
     }
 
+    static func acceptsAudioTrackCount(_ count: Int) -> Bool {
+        count == 0
+    }
+
     static func validate(
         _ url: URL,
         expectedDimensions: (width: Int, height: Int)? = nil,
@@ -92,6 +97,15 @@ enum SplatVideoOutputValidator {
         // decoded or color-checked. Fail closed rather than validating only tracks.first.
         guard acceptsVideoTrackCount(tracks.count), let videoTrack = tracks.first else {
             throw ValidationError.unexpectedVideoTrackCount
+        }
+
+        // Orbit exports are intentionally silent: the writer creates no audio input. If an audio
+        // stream appears in the completed container, sharing it would expose media that did not
+        // originate from the renderer contract and that this validator otherwise never inspects.
+        let audioTracks = try await asset.loadTracks(withMediaType: .audio)
+        try Task.checkCancellation()
+        guard acceptsAudioTrackCount(audioTracks.count) else {
+            throw ValidationError.unexpectedAudioTrackCount
         }
 
         // A parsable container can still carry a degenerate video track. Reject zero, NaN and
