@@ -89,13 +89,14 @@ enum ScanWorldMapArchiveStore {
 
         var offset = 0
         while offset < expected.count {
-            let count = min(verificationChunkByteCount, expected.count - offset)
-            guard let chunk = try? handle.read(upToCount: count),
-                  chunk.count == count,
-                  chunk.elementsEqual(expected[offset..<(offset + count)]) else {
+            let requestedCount = min(verificationChunkByteCount, expected.count - offset)
+            guard let chunk = try? handle.read(upToCount: requestedCount),
+                  !chunk.isEmpty,
+                  chunk.count <= requestedCount,
+                  chunk.elementsEqual(expected[offset..<(offset + chunk.count)]) else {
                 return false
             }
-            offset += count
+            offset += chunk.count
         }
 
         guard let trailing = try? handle.read(upToCount: 1) else { return false }
