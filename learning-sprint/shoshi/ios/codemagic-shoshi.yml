@@ -65,10 +65,10 @@
           assert q.get('scoring_status')=='all_correct' and q.get('official_answer_no') is None
           print('PASS: Shoshi native 210-question bundle')
           PY
-      - name: Apply App Store signing profiles for internal TestFlight only
+      - name: Apply App Store signing profiles for App Store review
         script: |
           cd "$CM_BUILD_DIR/learning-sprint/shoshi/ios"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          xcode-project use-profiles
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \

@@ -27,7 +27,7 @@
 - Orientation: iPhone portrait
 - Signing: Automatic / App Store distribution
 - CI build number: `CM_BUILD_NUMBER`
-- TestFlight export: `testFlightInternalTestingOnly: true`
+- Export audience: App Store eligible（`testFlightInternalTestingOnly`を使用しない）
 - `submit_to_testflight`: false
 - `submit_to_app_store`: false
 

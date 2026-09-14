@@ -73,7 +73,7 @@ for (const text of [metadata, packet]) {
   includes(text, PRIVACY, 'privacy URL');
 }
 includes(packet, `SKU: \`${SKU}\``, 'fixed SKU');
-includes(packet, 'testFlightInternalTestingOnly: true', 'internal TestFlight export');
+includes(packet, 'testFlightInternalTestingOnly`を使用しない', 'App Store eligible export policy');
 includes(packet, '`submit_to_testflight`: false', 'manual TestFlight upload gate');
 includes(packet, '`submit_to_app_store`: false', 'manual App Review gate');
 includes(metadata, 'Type: Non-Consumable', 'IAP type');
@@ -95,7 +95,7 @@ includes(codemagicBlock, 'app_store_connect: codemagic', 'Codemagic ASC integrat
 includes(codemagicBlock, 'distribution_type: app_store', 'App Store distribution');
 includes(codemagicBlock, `bundle_identifier: ${BUNDLE}`, 'Codemagic bundle id');
 includes(codemagicBlock, `BUNDLE_ID: ${BUNDLE}`, 'Codemagic BUNDLE_ID');
-includes(codemagicBlock, 'testFlightInternalTestingOnly', 'internal TestFlight only export');
+must(!codemagicBlock.includes('testFlightInternalTestingOnly'), 'Shoshi export must remain App Store eligible');
 includes(codemagicBlock, 'apply-xcode-capabilities.py', 'generated-project capability normalization');
 includes(codemagicBlock, 'submit_to_testflight: false', 'no automatic TestFlight submission');
 includes(codemagicBlock, 'submit_to_app_store: false', 'no automatic App Store review submission');
