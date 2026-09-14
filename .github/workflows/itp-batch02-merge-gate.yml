@@ -1,0 +1,95 @@
+name: IT Passport batch 02 merge gate
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-merge:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[ITP-BATCH02-MERGE]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Validate staged batch against canonical contract
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import collections, json, re, unicodedata
+          from pathlib import Path
+
+          root=Path('apps/it-passport-rebuild')
+          canonical=json.loads((root/'questions/original-mock.json').read_text(encoding='utf-8'))
+          batch=json.loads((root/'questions/batch-02.json').read_text(encoding='utf-8'))
+          manifest=json.loads((root/'questions/manifest.json').read_text(encoding='utf-8'))
+          config=json.loads((root/'quality/exam-config.json').read_text(encoding='utf-8'))
+          def norm(s): return re.sub(r'\s+','',unicodedata.normalize('NFKC',s).lower())
+          assert len(canonical)==20, f'expected canonical=20 before batch02, got {len(canonical)}'
+          assert manifest['canonical']['original_mock']['current']==20
+          assert len(batch)==20, len(batch)
+          required=set(config['required_fields'])
+          ids={q['id'] for q in canonical}; texts={norm(q['question']) for q in canonical}
+          subjects=collections.Counter(); answers=collections.Counter()
+          for q in batch:
+              assert required <= set(q), (q.get('id'), required-set(q))
+              assert q['id'] not in ids, q['id']
+              assert norm(q['question']) not in texts, q['id']
+              assert q['round']==1, q['id']
+              assert q['subject'] in config['subjects'], q['id']
+              assert len(q['choices'])==4 and len({norm(x) for x in q['choices']})==4, q['id']
+              assert isinstance(q['correct_index'],int) and 0 <= q['correct_index'] < 4, q['id']
+              assert q['syllabus_version']==manifest['current_syllabus_version']=='6.5', q['id']
+              assert q['origin_type']=='original', q['id']
+              assert q['rights_basis']=='original_question_based_on_public_syllabus', q['id']
+              assert q['source_url']=='https://www.ipa.go.jp/shiken/syllabus/gaiyou.html', q['id']
+              assert q['reference_date']=='2026-09-15', q['id']
+              assert len(q['question']) >= 18 and len(q['explanation']) >= 25, q['id']
+              subjects[q['subject']]+=1; answers[q['correct_index']]+=1
+          assert subjects == {'ストラテジ系':7,'マネジメント系':4,'テクノロジ系':9}, subjects
+          assert answers == {0:5,1:5,2:5,3:5}, answers
+          print('PASS: batch-02 schema/provenance/distribution/answer-balance and canonical non-duplication')
+          PY
+
+      - name: Merge batch and update manifest atomically
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('apps/it-passport-rebuild')
+          qp=root/'questions'
+          canonical=json.loads((qp/'original-mock.json').read_text(encoding='utf-8'))
+          batch=json.loads((qp/'batch-02.json').read_text(encoding='utf-8'))
+          manifest=json.loads((qp/'manifest.json').read_text(encoding='utf-8'))
+          merged=canonical+batch
+          assert len(merged)==40
+          (qp/'original-mock.json').write_text(json.dumps(merged,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          manifest['baseline_date']='2026-09-15'
+          manifest['canonical']['original_mock']['current']=40
+          manifest['canonical']['original_mock']['status']='BUILDING'
+          manifest['canonical']['original_mock']['audit_status']='EXPECTED_FAIL_UNTIL_COMPLETE'
+          (qp/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          python3 apps/it-passport-rebuild/quality/validate-question-dataset.py
+          if python3 apps/it-passport-rebuild/quality/validate-question-dataset.py --release; then
+            echo 'Unexpected release PASS at 40 questions' >&2
+            exit 1
+          else
+            echo 'PASS: release remains fail-closed below 300 questions'
+          fi
+
+      - name: Commit canonical progress
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add apps/it-passport-rebuild/questions/original-mock.json apps/it-passport-rebuild/questions/manifest.json
+          git diff --cached --check
+          git commit -m 'content(itp): merge audited batch 02 to 40 questions'
+          git push origin HEAD:main
