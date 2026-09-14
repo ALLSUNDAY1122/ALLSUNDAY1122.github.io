@@ -98,7 +98,11 @@ enum SplatStrongCompletionEvidence {
 
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        try encoder.encode(Seal(evidence: evidence, sha256: hash)).write(to: sealURL, options: .atomic)
+        let encoded = try encoder.encode(Seal(evidence: evidence, sha256: hash))
+        try encoded.write(to: sealURL, options: .atomic)
+        let handle = try FileHandle(forWritingTo: sealURL)
+        defer { try? handle.close() }
+        try handle.synchronize()
         return hash
     }
 
