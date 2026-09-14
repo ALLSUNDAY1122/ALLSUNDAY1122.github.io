@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Safe Codemagic gateway for ChatGPT-driven release operations.
 
-Codemagic's public Builds API supports starting and cancelling builds, but does
-not expose a documented GET /builds/{id} status endpoint. Completion is therefore
-observed through the documented workflow status badge and, for iOS release
-artifacts, fresh App Store Connect/TestFlight readback.
+Codemagic's public Builds API supports starting builds and listing app builds.
+Completion for a known build is observed read-only by listing builds for the app
+and matching the exact build id. iOS artifacts uploaded to Apple must still be
+confirmed with fresh App Store Connect/TestFlight readback.
 """
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ import json
 import os
 import re
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -20,6 +21,7 @@ import yaml
 
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,100}$")
 WORKFLOW_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,120}$")
+BUILD_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,120}$")
 REPOSITORY_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 SENSITIVE_KEY_PARTS = ("secret", "token", "password", "credential", "private", "apikey", "api_key", "environment", "variable")
 SCANLAB_BUILD3_BRANCH = "testflight/splat-native-ios-20260824-build3"
@@ -79,8 +81,8 @@ def load_command(path: Path) -> dict:
     if not isinstance(request_id, str) or not REQUEST_ID_RE.fullmatch(request_id):
         raise ValueError("Invalid request_id.")
     action = data.get("action")
-    if action not in {"inspect", "inspect_workflow_status", "build"}:
-        raise ValueError("action must be inspect, inspect_workflow_status, or build.")
+    if action not in {"inspect", "inspect_workflow_status", "inspect_build", "build"}:
+        raise ValueError("action must be inspect, inspect_workflow_status, inspect_build, or build.")
     return data
 
 
@@ -143,6 +145,28 @@ def badge_state(svg: str) -> str:
     return "unclassified"
 
 
+def build_rows(payload: dict) -> list[dict]:
+    rows = payload.get("builds") or payload.get("data") or []
+    if isinstance(rows, dict):
+        rows = rows.get("builds") or []
+    return rows if isinstance(rows, list) else []
+
+
+def build_summary(build: dict) -> dict:
+    summary = {k: build.get(k) for k in (
+        "_id", "id", "status", "workflowId", "fileWorkflowId", "branch", "startedAt", "finishedAt", "createdAt",
+        "buildVersion", "buildNumber", "index", "app_store_connect_status", "instanceType", "message"
+    ) if build.get(k) is not None}
+    actions = build.get("actions")
+    artifacts = build.get("artifacts")
+    summary["actionCount"] = len(actions) if isinstance(actions, list) else (0 if actions is None else None)
+    summary["artifactCount"] = len(artifacts) if isinstance(artifacts, list) else (0 if artifacts is None else None)
+    commit = build.get("commit") or {}
+    if isinstance(commit, dict):
+        summary["commit"] = {k: commit.get(k) for k in ("hash", "message") if commit.get(k) is not None}
+    return sanitize(summary)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--command", default="automation/codemagic-build-command.json")
@@ -176,11 +200,31 @@ def main() -> int:
             return 0
 
         workflow_id = command.get("workflow_id")
-        if not isinstance(workflow_id, str) or not WORKFLOW_ID_RE.fullmatch(workflow_id):
-            raise ValueError("Valid workflow_id is required.")
+        if command["action"] != "inspect_build":
+            if not isinstance(workflow_id, str) or not WORKFLOW_ID_RE.fullmatch(workflow_id):
+                raise ValueError("Valid workflow_id is required.")
         requested_app_id = command.get("app_id") or app_id or os.environ.get("CM_APP_ID")
         if not requested_app_id:
             raise RuntimeError("Codemagic appId could not be resolved uniquely.")
+
+        if command["action"] == "inspect_build":
+            build_id = command.get("build_id")
+            if not isinstance(build_id, str) or not BUILD_ID_RE.fullmatch(build_id):
+                raise ValueError("Valid build_id is required for inspect_build.")
+            url = f"https://api.codemagic.io/builds?appId={urllib.parse.quote(str(requested_app_id))}"
+            list_status, payload = api_json(url, token)
+            if list_status < 200 or list_status >= 300:
+                raise RuntimeError(f"Codemagic build list failed with HTTP {list_status}: {sanitize(payload)}")
+            rows = build_rows(payload)
+            match = next((b for b in rows if str(b.get("_id") or b.get("id") or "") == build_id), None)
+            if not match:
+                result.update({"ok": False, "app_id": requested_app_id, "build_id": build_id, "build_count": len(rows)})
+                raise RuntimeError(f"Build id {build_id} not present in current app build list ({len(rows)} rows).")
+            result.update({"ok": True, "app_id": requested_app_id, "build_id": build_id, "build": build_summary(match),
+                           "note": "Exact read-only build-list match. Apple-side availability still requires fresh ASC/TestFlight readback."})
+            output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"PASS: exact Codemagic build readback id={build_id} status={match.get('status')}")
+            return 0
 
         if command["action"] == "inspect_workflow_status":
             badge_url = f"https://api.codemagic.io/apps/{requested_app_id}/{workflow_id}/status_badge.svg"
@@ -200,7 +244,7 @@ def main() -> int:
             raise ValueError("Branch is not allowed by the Codemagic gateway.")
         validate_workflow(repository, branch, workflow_id)
         if command.get("wait") is True:
-            raise ValueError("wait=true is unsupported: Codemagic's documented Builds API has no build-status GET endpoint. Start with wait=false and verify via workflow badge plus ASC/TestFlight readback.")
+            raise ValueError("wait=true is unsupported: start with wait=false and verify via exact inspect_build plus ASC/TestFlight readback.")
 
         payload = {"appId": requested_app_id, "workflowId": workflow_id, "branch": branch}
         start_status, start_response = api_json("https://api.codemagic.io/builds", token, method="POST", payload=payload)
@@ -211,9 +255,9 @@ def main() -> int:
             raise RuntimeError(f"Codemagic did not return a buildId: {sanitize(start_response)}")
         result.update({"ok": True, "app_id": requested_app_id, "workflow_id": workflow_id, "branch": branch, "build_id": build_id,
                        "build_url": f"https://codemagic.io/app/{requested_app_id}/build/{build_id}", "status": "started",
-                       "completion_verification": "Use inspect_workflow_status for latest workflow health and fresh ASC/TestFlight readback for uploaded iOS artifact."})
+                       "completion_verification": "Use inspect_build for exact Codemagic completion and fresh ASC/TestFlight readback for uploaded iOS artifact."})
         output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"Codemagic build started safely: workflow={workflow_id} build_id={build_id}; no unsupported polling attempted")
+        print(f"Codemagic build started safely: workflow={workflow_id} build_id={build_id}; no polling attempted")
         return 0
     except Exception as exc:
         result["error"] = str(exc)
