@@ -10,9 +10,11 @@ extension SplatPreviousResultEvidence {
     /// cheap structural checks so every library open does not hash the same large Splat twice;
     /// this path runs only after the strong verifier has already proved the current bytes untrusted.
     ///
-    /// Recovery is allowed only when the protected snapshot belongs to the exact same commit
-    /// evidence. A successful newer reconstruction therefore can never be replaced by an older
-    /// protected result merely because that backup still exists.
+    /// A protected previous result may belong to the immediately preceding commit evidence. That is
+    /// precisely the useful fallback when a newer, strongly sealed result is later found corrupt.
+    /// Recovery therefore validates the backup against the snapshot's original evidence/hash rather
+    /// than requiring that older evidence to equal the already-failed current evidence. A snapshot
+    /// from the future is rejected so stale/cross-run metadata cannot supersede a newer commit.
     static func recoverTrustedPreviousAfterIntegrityFailure(
         projectURL: URL,
         evidence: SplatCommitEvidence,
@@ -26,17 +28,21 @@ extension SplatPreviousResultEvidence {
               ),
               let snapshot = try? JSONDecoder().decode(Snapshot.self, from: snapshotData),
               snapshot.schemaVersion == Snapshot.currentSchemaVersion,
-              snapshot.originalEvidence == evidence,
+              snapshot.originalEvidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
+              snapshot.originalEvidence.fileName == ScanProjectStore.splatResultFileName,
               snapshot.originalEvidence.byteCount > 0,
               snapshot.originalEvidence.byteCount % 32 == 0,
+              snapshot.originalEvidence.completedAt <= evidence.completedAt,
+              snapshot.preservedAt <= evidence.completedAt,
               isIndependentRegularFileForIntegrityRecovery(backupURL),
-              try fileByteCountForIntegrityRecovery(backupURL, fileManager: fileManager) == evidence.byteCount,
+              try fileByteCountForIntegrityRecovery(backupURL, fileManager: fileManager) == snapshot.originalEvidence.byteCount,
               try sha256ForIntegrityRecovery(backupURL) == snapshot.sha256 else {
             return false
         }
 
         try Task.checkCancellation()
         let outputURL = projectURL.appendingPathComponent(ScanProjectStore.splatResultFileName)
+        let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
         let partialURL = projectURL.appendingPathComponent(".result.splat.integrity-recovery.partial")
         try? fileManager.removeItem(at: partialURL)
 
@@ -52,7 +58,7 @@ extension SplatPreviousResultEvidence {
                 fileManager: fileManager
             )
             guard isIndependentRegularFileForIntegrityRecovery(partialURL),
-                  try fileByteCountForIntegrityRecovery(partialURL, fileManager: fileManager) == evidence.byteCount,
+                  try fileByteCountForIntegrityRecovery(partialURL, fileManager: fileManager) == snapshot.originalEvidence.byteCount,
                   try sha256ForIntegrityRecovery(partialURL) == snapshot.sha256 else {
                 try? fileManager.removeItem(at: partialURL)
                 return false
@@ -61,13 +67,32 @@ extension SplatPreviousResultEvidence {
             try Task.checkCancellation()
 
             if fileManager.fileExists(atPath: outputURL.path) {
-                // Replace in one filesystem transaction. The previous remove+move sequence created
-                // a data-loss window: if the move failed after removing the corrupt-but-recoverable
-                // current result, the project was left with no result at all. The verified partial
-                // lives in the same project directory, so replaceItemAt can promote it atomically.
+                // Replace in one filesystem transaction. The verified partial lives in the same
+                // project directory, so promotion never creates a remove-then-move data-loss gap.
                 _ = try fileManager.replaceItemAt(outputURL, withItemAt: partialURL)
             } else {
                 try fileManager.moveItem(at: partialURL, to: outputURL)
+            }
+
+            // The bytes now belong to the previous trusted completion, so the commit evidence must
+            // move back with them. Leaving the newer evidence in place made the restored asset fail
+            // verification immediately after recovery, especially when both results had equal size.
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+            try writeIntegrityRecoveryMetadata(
+                encoder.encode(snapshot.originalEvidence),
+                to: evidenceURL
+            )
+
+            let store = ScanProjectStore(
+                rootURL: projectURL.deletingLastPathComponent(),
+                fileManager: fileManager
+            )
+            _ = try store.updateManifest(projectURL: projectURL) { manifest in
+                manifest.stage = .finished
+                manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+                manifest.recoveredAfterInterruption = true
+                manifest.lastError = "最新の3Dの整合性を確認できなかったため、直前の完成確認済み3Dを復元しました。"
             }
             return true
         } catch {
@@ -123,6 +148,11 @@ extension SplatPreviousResultEvidence {
         // survives a failed clone before falling back to FileManager's independent copy.
         try? fileManager.removeItem(at: destinationURL)
         try fileManager.copyItem(at: sourceURL, to: destinationURL)
+    }
+
+    private static func writeIntegrityRecoveryMetadata(_ data: Data, to url: URL) throws {
+        try data.write(to: url, options: .atomic)
+        try synchronizeIntegrityRecoveryFile(at: url)
     }
 
     private static func synchronizeIntegrityRecoveryFile(at url: URL) throws {
