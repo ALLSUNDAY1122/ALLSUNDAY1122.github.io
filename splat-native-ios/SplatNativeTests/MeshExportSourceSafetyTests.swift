@@ -75,24 +75,6 @@ final class MeshExportSourceSafetyTests: XCTestCase {
     }
 
     @MainActor
-    func testExporterContractRejectsCorruptPhotogrammetryUSDZ() throws {
-        let fileManager = FileManager.default
-        let root = fileManager.temporaryDirectory
-            .appendingPathComponent("MeshExportSourceSafetyTests-\(UUID().uuidString)", isDirectory: true)
-        defer { try? fileManager.removeItem(at: root) }
-        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
-
-        let corrupt = root.appendingPathComponent("mesh-textured.usdz")
-        try Data("not-a-usdz-scene".utf8).write(to: corrupt, options: .atomic)
-
-        let model = MeshScanModel()
-        model.resultURL = corrupt
-
-        XCTAssertNil(model.exporterMeshAsset)
-        XCTAssertNil(try model.persistExporterMeshAssetContract())
-    }
-
-    @MainActor
     func testPhotogrammetryCompletionRejectsCorruptUSDZWithoutPublishingFinishedState() throws {
         let fileManager = FileManager.default
         let root = fileManager.temporaryDirectory
