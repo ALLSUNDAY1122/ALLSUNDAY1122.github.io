@@ -5,7 +5,7 @@ enum MeshRawSceneValidator {
     /// geometry nodes, geometry containers with zero primitives, malformed geometry that has
     /// elements but no complete vertex-position payload, invalid indices, or only point/line
     /// primitives. None is a usable finished surface Mesh, so require at least one surface
-    /// primitive backed by complete vertex and index payloads.
+    /// primitive backed by complete, finite vertex and valid index payloads.
     static func containsGeometry(_ scene: SCNScene) -> Bool {
         if hasRenderableGeometry(scene.rootNode.geometry) {
             return true
@@ -23,7 +23,8 @@ enum MeshRawSceneValidator {
         guard let geometry,
               !geometry.elements.isEmpty,
               let vertices = geometry.sources(for: .vertex).first,
-              hasCompleteVertexPayload(vertices) else { return false }
+              hasCompleteVertexPayload(vertices),
+              hasFiniteVertexPositions(vertices) else { return false }
         return geometry.elements.contains { element in
             guard element.primitiveCount > 0 else { return false }
             switch element.primitiveType {
@@ -64,6 +65,36 @@ enum MeshRawSceneValidator {
         let (requiredBytes, payloadOverflow) = lastVectorStart.addingReportingOverflow(vectorBytes)
         guard !payloadOverflow else { return false }
         return requiredBytes <= source.data.count
+    }
+
+    private static func hasFiniteVertexPositions(_ source: SCNGeometrySource) -> Bool {
+        // Integer-backed vertex coordinates are finite by construction. For floating-point
+        // positions, reject NaN/Inf before they can reach framing, rendering, or export math.
+        guard source.usesFloatComponents else { return true }
+        guard source.bytesPerComponent == 4 || source.bytesPerComponent == 8 else { return false }
+
+        let componentBytes = source.bytesPerComponent
+        let vectorBytes = source.componentsPerVector * componentBytes
+        let stride = source.dataStride == 0 ? vectorBytes : source.dataStride
+
+        return source.data.withUnsafeBytes { rawBuffer in
+            guard let base = rawBuffer.baseAddress else { return false }
+            for vectorIndex in 0..<source.vectorCount {
+                let vectorStart = source.dataOffset + vectorIndex * stride
+                for componentIndex in 0..<3 {
+                    let pointer = base.advanced(by: vectorStart + componentIndex * componentBytes)
+                    switch componentBytes {
+                    case 4:
+                        if !pointer.loadUnaligned(as: Float.self).isFinite { return false }
+                    case 8:
+                        if !pointer.loadUnaligned(as: Double.self).isFinite { return false }
+                    default:
+                        return false
+                    }
+                }
+            }
+            return true
+        }
     }
 
     private static func hasValidIndexedSurface(_ element: SCNGeometryElement, vertexCount: Int) -> Bool {
