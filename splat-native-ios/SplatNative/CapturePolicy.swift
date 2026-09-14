@@ -170,9 +170,13 @@ enum CapturePolicy {
         previousTimestamp: TimeInterval,
         currentTimestamp: TimeInterval
     ) -> CaptureFrameDecision {
+        // The first accepted frame has no temporal or pose baseline to compare against. Applying the
+        // inter-frame cadence gate before this check can discard the opening view solely because the
+        // caller initialized both timestamps together, reducing coverage and delaying capture start.
+        guard let previous else { return .accept }
+
         let elapsed = currentTimestamp - previousTimestamp
         guard elapsed >= 0.16 else { return .tooSoon }
-        guard let previous else { return .accept }
 
         let delta = movement(from: previous, to: current)
         let minimum = minimumTranslation(subjectDistance: subjectDistance)
