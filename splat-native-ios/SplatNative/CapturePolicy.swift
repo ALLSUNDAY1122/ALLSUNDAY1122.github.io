@@ -354,17 +354,26 @@ enum CapturePolicy {
         spatialCells: Int,
         pathLength: Float
     ) -> Float {
-        let objectScore = min(1, Float(orbitSectors) / 8) * 0.82
-            + min(1, Float(elevationBands) / 2) * 0.18
-        let sceneScore = min(1, Float(viewDirectionSectors) / 5) * 0.35
-            + min(1, Float(spatialCells) / 5) * 0.30
-            + min(1, pathLength / 0.80) * 0.35
+        // Checkpoint values are persisted metadata and can be damaged independently of the live sets
+        // that normally produce non-negative counts and path length. Keep progress finite and bounded
+        // instead of letting a NaN/negative value leak into SwiftUI progress/framing calculations.
+        let safeOrbitSectors = max(0, orbitSectors)
+        let safeElevationBands = max(0, elevationBands)
+        let safeViewDirectionSectors = max(0, viewDirectionSectors)
+        let safeSpatialCells = max(0, spatialCells)
+        let safePathLength = pathLength.isFinite ? max(0, pathLength) : 0
+
+        let objectScore = min(1, Float(safeOrbitSectors) / 8) * 0.82
+            + min(1, Float(safeElevationBands) / 2) * 0.18
+        let sceneScore = min(1, Float(safeViewDirectionSectors) / 5) * 0.35
+            + min(1, Float(safeSpatialCells) / 5) * 0.30
+            + min(1, safePathLength / 0.80) * 0.35
 
         switch coverageMode(subjectDistance: subjectDistance) {
         case .object:
-            return min(1, objectScore)
+            return min(1, max(0, objectScore))
         case .scene:
-            return min(1, sceneScore)
+            return min(1, max(0, sceneScore))
         }
     }
 
