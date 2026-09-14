@@ -46,4 +46,21 @@ extension MeshProjectIntegrityTests {
 
         XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
     }
+
+    func testRawSceneValidatorRejectsFiniteInputsThatOverflowInWorldSpace() {
+        let scene = SCNScene()
+        let vertices = SCNGeometrySource(vertices: [
+            SCNVector3(Float.greatestFiniteMagnitude, 0, 0),
+            SCNVector3(1, 0, 0),
+            SCNVector3(0, 1, 0),
+        ])
+        let triangle = SCNGeometryElement(indices: [UInt16(0), 1, 2], primitiveType: .triangles)
+        let node = SCNNode(geometry: SCNGeometry(sources: [vertices], elements: [triangle]))
+        node.simdScale = SIMD3<Float>(repeating: 2)
+        scene.rootNode.addChildNode(node)
+
+        XCTAssertTrue(Float.greatestFiniteMagnitude.isFinite)
+        XCTAssertTrue(node.simdWorldTransform.columns.0.x.isFinite)
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
 }
