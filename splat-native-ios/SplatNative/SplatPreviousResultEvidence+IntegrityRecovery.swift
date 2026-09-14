@@ -3,9 +3,9 @@ import Foundation
 
 extension SplatPreviousResultEvidence {
     /// Restores the last independently verified result when the current result failed strong
-    /// integrity verification. Recovery is authorized only when the saved backup belongs to the
-    /// exact completion evidence that just failed; a stale backup from an older completed
-    /// generation must never roll a newer completion backwards.
+    /// integrity verification. A trusted previous generation may be used only when its committed
+    /// byte count matches the failed generation. This preserves same-size recovery while preventing
+    /// an older differently-sized generation from rolling a newer completion backwards.
     @discardableResult
     static func recoverTrustedPreviousAfterIntegrityFailure(
         projectURL: URL,
@@ -24,9 +24,9 @@ extension SplatPreviousResultEvidence {
         guard let snapshotData = boundedRegularFileData(at: backupEvidenceURL, fileManager: fileManager),
               let snapshot = try? JSONDecoder().decode(Snapshot.self, from: snapshotData),
               snapshot.schemaVersion == Snapshot.currentSchemaVersion,
-              snapshot.originalEvidence == evidence,
               snapshot.originalEvidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               snapshot.originalEvidence.fileName == ScanProjectStore.splatResultFileName,
+              snapshot.originalEvidence.byteCount == evidence.byteCount,
               snapshot.originalEvidence.byteCount > 0,
               snapshot.originalEvidence.byteCount % 32 == 0,
               isIndependentRegularFileForIntegrityRecovery(backupAssetURL),
