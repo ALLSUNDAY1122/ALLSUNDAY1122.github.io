@@ -120,9 +120,7 @@ enum MeshAssetContract {
         guard decoded == descriptor else {
             throw sidecarError("Mesh資産メタデータの復号検証に失敗しました")
         }
-        let handle = try FileHandle(forWritingTo: candidateURL)
-        defer { try? handle.close() }
-        try handle.synchronize()
+        try synchronizeFileBeforePublish(at: candidateURL)
 
         if fileManager.fileExists(atPath: sidecarURL.path) {
             _ = try fileManager.replaceItemAt(sidecarURL, withItemAt: candidateURL)
@@ -131,6 +129,12 @@ enum MeshAssetContract {
         }
         candidateCommitted = true
         return sidecarURL
+    }
+
+    private static func synchronizeFileBeforePublish(at url: URL) throws {
+        let handle = try FileHandle(forWritingTo: url)
+        defer { try? handle.close() }
+        try handle.synchronize()
     }
 
     private static func sidecarError(_ message: String) -> NSError {
