@@ -8,16 +8,25 @@ on:
       - 'scripts/fp3_release_state_probe.py'
       - '.github/workflows/fp3-release-state-probe.yml'
   workflow_dispatch:
+  issues:
+    types: [opened]
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   probe:
-    runs-on: macos-latest
+    if: >-
+      github.event_name != 'issues' ||
+      (github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[FP3-RELEASE-STATE]'))
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
       - name: Read FP3 App Store Connect release state
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
@@ -26,8 +35,19 @@ jobs:
         run: python3 scripts/fp3_release_state_probe.py
       - name: Upload sanitized release state
         if: always() && hashFiles('fp3-release-state.json') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: fp3-release-state-${{ github.run_id }}
           path: fp3-release-state.json
           retention-days: 7
+      - name: Report issue-triggered result
+        if: always() && github.event_name == 'issues'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `FP3 release-state probe finished. status=${{ job.status }}; run_id=${context.runId}. Read-only; no App Store Connect mutation was performed.`
+            });
