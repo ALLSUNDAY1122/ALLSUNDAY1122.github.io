@@ -15,6 +15,7 @@ RESOURCE = (ROOT / "SplatNative" / "SplatResourceGuard.swift").read_text()
 
 for token in (
     "maximumSelectedFrames = 18",
+    "maximumRecoveryWaves = 4",
     "maximumReferenceFrames = 8",
     "maximumNeighborFrames = 4",
     "hypothesisCount = 30",
@@ -33,6 +34,10 @@ for token in (
     "minimumUsablePointCount = 2_000",
     "selectLoadableFrames(",
     "CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) != nil",
+    "var attemptedPaths = Set(selected.map(\\.filePath))",
+    "while loaded.count < targetCount, recoveryWave < maximumRecoveryWaves",
+    "frames: sourceFrames.filter { !attemptedPaths.contains($0.filePath) }",
+    "attemptedPaths.insert(source.filePath)",
     "secondCost - bestCost > uniquenessMargin",
     "simd_dot(reference.forward, frames[index].forward)",
     "SIMD4<Float>(x, y, -depth, 1)",
@@ -95,7 +100,7 @@ assert SOFTWARE.index(backproject_token, SOFTWARE.index("private static func pat
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
     'metadataFileName = "s14-seed-recipe.json"',
-    "static let recipeVersion = 16",
+    "static let recipeVersion = 17",
     "case planeSweep",
     "SplatSoftwareDepthSeedBuilder.makeSeedPoints",
     "softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount",
