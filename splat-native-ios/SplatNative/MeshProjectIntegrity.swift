@@ -195,6 +195,10 @@ enum MeshProjectIntegrity {
 
         do {
             try encoded.write(to: candidateURL, options: .atomic)
+            let handle = try FileHandle(forWritingTo: candidateURL)
+            defer { try? handle.close() }
+            try handle.synchronize()
+
             let readBack = try Data(contentsOf: candidateURL)
             guard readBack == encoded else { throw IntegrityError.evidencePersistenceFailed }
 
