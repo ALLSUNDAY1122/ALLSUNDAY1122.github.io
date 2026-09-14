@@ -63,4 +63,36 @@ extension MeshProjectIntegrityTests {
         XCTAssertTrue(node.simdWorldTransform.columns.0.x.isFinite)
         XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
     }
+
+    func testRawSceneValidatorRejectsFullyDegenerateTriangles() {
+        let scene = SCNScene()
+        let vertices = SCNGeometrySource(vertices: [
+            SCNVector3(0, 0, 0),
+            SCNVector3(1, 0, 0),
+            SCNVector3(0, 1, 0),
+        ])
+        let triangles = SCNGeometryElement(
+            indices: [UInt16(0), 0, 0, 1, 1, 1],
+            primitiveType: .triangles
+        )
+        scene.rootNode.addChildNode(SCNNode(geometry: SCNGeometry(sources: [vertices], elements: [triangles])))
+
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
+    func testRawSceneValidatorAcceptsSurfaceWhenLaterTriangleIsNondegenerate() {
+        let scene = SCNScene()
+        let vertices = SCNGeometrySource(vertices: [
+            SCNVector3(0, 0, 0),
+            SCNVector3(1, 0, 0),
+            SCNVector3(0, 1, 0),
+        ])
+        let triangles = SCNGeometryElement(
+            indices: [UInt16(0), 0, 0, 0, 1, 2],
+            primitiveType: .triangles
+        )
+        scene.rootNode.addChildNode(SCNNode(geometry: SCNGeometry(sources: [vertices], elements: [triangles])))
+
+        XCTAssertTrue(MeshRawSceneValidator.containsGeometry(scene))
+    }
 }
