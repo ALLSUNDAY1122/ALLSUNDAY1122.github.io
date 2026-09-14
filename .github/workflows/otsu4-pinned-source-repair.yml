@@ -1,0 +1,82 @@
+name: Otsu4 Pinned Release Source Repair
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  repair:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      startsWith(github.event.issue.title, '[OTSU4-PINNED-SOURCE-REPAIR]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Restore audited pinned source materialization fail-closed
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          s=p.read_text(encoding='utf-8')
+          a=s.index('  otsu4-ios:')
+          b=s.index('\n  tsukanshi-ios:',a)
+          block=s[a:b]
+          assert 'bundle_identifier: jp.allsunday1122.otsu4' in block
+          assert 'submit_to_app_store: false' in block
+          assert 'submit_to_testflight: false' in block
+          assert 'testFlightInternalTestingOnly' not in block
+          sha='8912ef194955900ee4d64b17d37910b7a2931eb8'
+          if 'RELEASE_SOURCE_SHA:' not in block:
+              marker='      vars:\n'
+              if block.count(marker)!=1:
+                  raise SystemExit('BLOCKED: vars marker drift')
+              block=block.replace(marker, marker+f'        RELEASE_SOURCE_SHA: {sha}\n',1)
+          elif f'RELEASE_SOURCE_SHA: {sha}' not in block:
+              raise SystemExit('BLOCKED: unexpected pinned source SHA')
+          step='''      - name: Materialize audited pinned release source\n        script: |\n          set -euo pipefail\n          cd "$CM_BUILD_DIR"\n          git fetch --depth=1 origin "$RELEASE_SOURCE_SHA"\n          git checkout --detach FETCH_HEAD\n          test "$(git rev-parse HEAD)" = "$RELEASE_SOURCE_SHA"\n          test -f native-ios/Otsu4Sprint/project.yml\n'''
+          if 'name: Materialize audited pinned release source' not in block:
+              marker='    scripts:\n'
+              if block.count(marker)!=1:
+                  raise SystemExit('BLOCKED: scripts marker drift')
+              block=block.replace(marker, marker+step,1)
+          repaired=s[:a]+block+s[b:]
+          p.write_text(repaired,encoding='utf-8')
+          s2=p.read_text(encoding='utf-8')
+          a=s2.index('  otsu4-ios:'); b=s2.index('\n  tsukanshi-ios:',a); c=s2[a:b]
+          assert f'RELEASE_SOURCE_SHA: {sha}' in c
+          assert 'git fetch --depth=1 origin "$RELEASE_SOURCE_SHA"' in c
+          assert 'git checkout --detach FETCH_HEAD' in c
+          assert 'test "$(git rev-parse HEAD)" = "$RELEASE_SOURCE_SHA"' in c
+          assert 'testFlightInternalTestingOnly' not in c
+          assert 'submit_to_testflight: false' in c
+          assert 'submit_to_app_store: false' in c
+          print('PASS: Otsu4 RC now materializes the audited pinned source before any build step.')
+          PY
+          git diff --check
+          git diff -- codemagic.yaml
+      - name: Commit repair if needed
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- codemagic.yaml; then
+            echo 'No change required.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          git commit -m 'Restore Otsu4 pinned release source materialization'
+          git push origin HEAD:main
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Otsu4 pinned source repair finished. status=${{ job.status }}; run_id=${context.runId}. No build/upload/distribution/submission was performed.`});
