@@ -105,6 +105,41 @@ final class SplatVideoExporterTests: XCTestCase {
         )
     }
 
+    func testVideoPreflightAcceptsStrictCanonicalWhenCommentContainsEndHeaderToken() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("s6-video-strict-header-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        let pointCount = 10
+        try Data(repeating: 0x44, count: pointCount * 32).write(to: source, options: .atomic)
+        let digest = try SplatExportService.sha256Hex(fileURL: source)
+        let canonicalURL = try SplatCanonicalSHAsset.canonicalURL(
+            forLegacySplat: source,
+            verifiedDigest: digest
+        )
+
+        var completePLY = Data(canonicalSH3Header(
+            pointCount: pointCount,
+            comment: "comment provenance end_header marker"
+        ).utf8)
+        completePLY.append(Data(repeating: 0, count: pointCount * 48 * MemoryLayout<Float>.size))
+        try completePLY.write(to: canonicalURL, options: .atomic)
+
+        let admission = try SplatVideoMemoryPolicy.preflightAdmission(
+            sourceURL: source,
+            verifiedDigest: digest,
+            configuration: SplatVideoConfiguration(),
+            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+
+        XCTAssertEqual(admission.estimate.pointCount, pointCount)
+        XCTAssertEqual(admission.renderAssetURL.standardizedFileURL, canonicalURL.standardizedFileURL)
+    }
+
     func testExporterRejectsOversizedSceneBeforeDecode() async throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("s6-video-memory-large-\(UUID().uuidString)", isDirectory: true)
@@ -176,6 +211,14 @@ final class SplatVideoExporterTests: XCTestCase {
         let handle = try FileHandle(forWritingTo: url)
         try handle.truncate(atOffset: UInt64(pointCount * 32))
         try handle.close()
+    }
+
+    private func canonicalSH3Header(pointCount: Int, comment: String) -> String {
+        var header = "ply\nformat binary_little_endian 1.0\n\(comment)\nelement vertex \(pointCount)\n"
+        header += "property float f_dc_0\nproperty float f_dc_1\nproperty float f_dc_2\n"
+        for index in 0..<45 { header += "property float f_rest_\(index)\n" }
+        header += "end_header\n"
+        return header
     }
 
     private func byteCount(_ url: URL) throws -> Int {
