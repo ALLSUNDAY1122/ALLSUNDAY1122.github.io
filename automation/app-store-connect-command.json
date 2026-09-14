@@ -1,13 +1,7 @@
 {
-  "request_id": "toru-attach-build10-20260915-0642",
-  "action": "write",
-  "expected_app_id": "6795968222",
-  "expected_bundle_id": "com.allsunday1122.torutango",
-  "operations": [
-    {
-      "type": "attach_build",
-      "app_store_version_id": "c19fe956-165f-474c-af0b-bbfa86a138df",
-      "build_id": "03cf658a-0e65-402d-b766-be97f7ca9b09"
-    }
+  "request_id": "toru-post-attach-readback-20260915-0646",
+  "requests": [
+    {"label":"toru-version-build","method":"GET","path":"/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df?include=build"},
+    {"label":"toru-build10","method":"GET","path":"/v1/builds/03cf658a-0e65-402d-b766-be97f7ca9b09"}
   ]
 }
