@@ -197,9 +197,20 @@ enum ScanLabPublishPackageBuilder {
     }
 
     private static func manifestOnDiskMatches(_ package: ScanLabPublishPackage) throws -> Bool {
-        let data = try Data(contentsOf: package.manifestURL, options: [.mappedIfSafe])
+        guard let data = try readManifestDataIfSafe(package.manifestURL) else { return false }
         let decoded = try JSONDecoder().decode(ScanLabPublishManifest.self, from: data)
         return decoded == package.manifest
+    }
+
+    private static func readManifestDataIfSafe(_ url: URL) throws -> Data? {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        guard let data = try handle.read(upToCount: Int(maximumManifestBytes) + 1),
+              !data.isEmpty,
+              data.count <= Int(maximumManifestBytes) else {
+            return nil
+        }
+        return data
     }
 
     private static func markerURL(for directory: URL) -> URL {
