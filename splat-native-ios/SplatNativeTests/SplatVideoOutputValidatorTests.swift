@@ -1,3 +1,4 @@
+import CoreMedia
 import XCTest
 
 final class SplatVideoOutputValidatorTests: XCTestCase {
@@ -93,6 +94,12 @@ final class SplatVideoOutputValidatorTests: XCTestCase {
         XCTAssertFalse(SplatVideoOutputValidator.acceptsAudioTrackCount(1))
         XCTAssertFalse(SplatVideoOutputValidator.acceptsAudioTrackCount(2))
         XCTAssertFalse(SplatVideoOutputValidator.acceptsAudioTrackCount(Int.max))
+    }
+
+    func testExportContractRequiresH264Codec() {
+        XCTAssertTrue(SplatVideoOutputValidator.acceptsVideoCodec(kCMVideoCodecType_H264))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsVideoCodec(kCMVideoCodecType_HEVC))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsVideoCodec(kCMVideoCodecType_JPEG))
     }
 
     func testLeadingProbeDrainsBoundedOpeningWindow() {
