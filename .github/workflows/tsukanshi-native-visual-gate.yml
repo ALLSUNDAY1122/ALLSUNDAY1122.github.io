@@ -1,0 +1,137 @@
+name: Tsukanshi Native Visual Gate
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  visual-gate:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[TSUKANSHI-VISUAL-GATE]'))
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Prepare audited native product
+        shell: bash
+        run: |
+          set -euo pipefail
+          ICON='tsukanshi-sprint/native-ios/CanonicalAssets/02_通関士.png'
+          test "$(wc -c < "$ICON" | tr -d ' ')" = '556001'
+          echo 'ff9fd508930e8728ef54907ec64a7835dcffb69a1a773edc645b79715fbfccaa  '"$ICON" | shasum -a 256 -c -
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          bash tsukanshi-sprint/native-ios/prepare-native.sh
+          cd tsukanshi-sprint/native-ios
+          xcodegen generate
+
+      - name: Resolve small and large iPhone simulators
+        id: sims
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, subprocess
+          d=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          phones=[]
+          for runtime, devices in d['devices'].items():
+              if 'iOS' not in runtime:
+                  continue
+              for x in devices:
+                  if x.get('isAvailable') and x.get('name','').startswith('iPhone'):
+                      phones.append((runtime,x['name'],x['udid']))
+          if not phones:
+              raise SystemExit('no iPhone simulator available')
+          newest=max(r for r,_,_ in phones)
+          phones=[x for x in phones if x[0]==newest]
+          small=next((x for x in phones if 'SE' in x[1]), phones[0])
+          large=next((x for x in phones if 'Pro Max' in x[1]), phones[-1])
+          print(f'small_udid={small[2]}')
+          print(f'small_name={small[1]}')
+          print(f'large_udid={large[2]}')
+          print(f'large_name={large[1]}')
+          PY
+
+      - name: Small iPhone visual journey
+        shell: bash
+        run: |
+          set -euo pipefail
+          UDID='${{ steps.sims.outputs.small_udid }}'
+          rm -rf /tmp/tsukanshi-visual /tmp/tsukanshi-visual-small
+          mkdir -p /tmp/tsukanshi-visual-small
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl ui "$UDID" content_size large
+          xcodebuild test \
+            -project tsukanshi-sprint/native-ios/TsukanshiNative.xcodeproj \
+            -scheme TsukanshiNative \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -only-testing:TsukanshiNativeUITests \
+            CODE_SIGNING_ALLOWED=NO
+          test "$(find /tmp/tsukanshi-visual -type f -name '*.png' | wc -l | tr -d ' ')" = '5'
+          cp /tmp/tsukanshi-visual/*.png /tmp/tsukanshi-visual-small/
+
+      - name: Large iPhone + maximum Dynamic Type visual journey
+        shell: bash
+        run: |
+          set -euo pipefail
+          UDID='${{ steps.sims.outputs.large_udid }}'
+          rm -rf /tmp/tsukanshi-visual /tmp/tsukanshi-visual-large
+          mkdir -p /tmp/tsukanshi-visual-large
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl ui "$UDID" content_size accessibility-extra-extra-extra-large
+          xcodebuild test \
+            -project tsukanshi-sprint/native-ios/TsukanshiNative.xcodeproj \
+            -scheme TsukanshiNative \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -only-testing:TsukanshiNativeUITests \
+            CODE_SIGNING_ALLOWED=NO
+          test "$(find /tmp/tsukanshi-visual -type f -name '*.png' | wc -l | tr -d ' ')" = '5'
+          cp /tmp/tsukanshi-visual/*.png /tmp/tsukanshi-visual-large/
+
+      - name: Validate screenshot evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+          for variant in ('small','large'):
+              root=Path(f'/tmp/tsukanshi-visual-{variant}')
+              pngs=sorted(root.glob('*.png'))
+              assert len(pngs)==5, (variant,len(pngs))
+              for p in pngs:
+                  raw=p.read_bytes()
+                  assert raw[:8]==b'\x89PNG\r\n\x1a\n', p
+                  w,h=struct.unpack('>II',raw[16:24])
+                  assert w>0 and h>0 and len(raw)>20000, (p,w,h,len(raw))
+                  print(f'PASS {variant}/{p.name}: {w}x{h} bytes={len(raw)}')
+          PY
+
+      - name: Upload Visual Gate evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: tsukanshi-native-visual-gate-${{ github.run_id }}
+          path: |
+            /tmp/tsukanshi-visual-small/*.png
+            /tmp/tsukanshi-visual-large/*.png
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Report
+        if: always() && github.event_name == 'issues'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Tsukanshi Native Visual Gate status=${{ job.status }} run_id=${context.runId} head=${context.sha} small=${{ steps.sims.outputs.small_name }} large=${{ steps.sims.outputs.large_name }}`});
