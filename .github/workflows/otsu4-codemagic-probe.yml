@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   probe:
-    if: github.actor == 'ALLSUNDAY1122' && (startsWith(github.event.issue.title, '[OTS4-CM-PROBE]') || startsWith(github.event.issue.title, '[OTS4-ASC]') || startsWith(github.event.issue.title, '[OTS4-GROUP]'))
+    if: github.actor == 'ALLSUNDAY1122' && (startsWith(github.event.issue.title, '[OTS4-CM-PROBE]') || startsWith(github.event.issue.title, '[OTS4-TF1]') || startsWith(github.event.issue.title, '[OTS4-ASC]') || startsWith(github.event.issue.title, '[OTS4-GROUP]'))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -27,6 +27,8 @@ jobs:
               workflow='otsu4-asc-readback'
           elif title.startswith('[OTS4-GROUP]'):
               workflow='otsu4-internal-group-assign'
+          elif title.startswith('[OTS4-TF1]'):
+              workflow='otsu4-testflight'
           else:
               workflow='otsu4-ios'
           # main owns the current fail-closed contract and pins RELEASE_SOURCE_SHA itself.
