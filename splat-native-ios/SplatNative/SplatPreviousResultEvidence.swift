@@ -107,7 +107,7 @@ enum SplatPreviousResultEvidence {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         do {
-            try encoder.encode(snapshot).write(to: backupEvidenceURL, options: .atomic)
+            try writeDurableMetadata(encoder.encode(snapshot), to: backupEvidenceURL)
         } catch {
             discardBackup(projectURL: projectURL, fileManager: fileManager)
             throw error
@@ -157,7 +157,7 @@ enum SplatPreviousResultEvidence {
 
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-            try encoder.encode(snapshot.originalEvidence).write(to: currentEvidenceURL, options: .atomic)
+            try writeDurableMetadata(encoder.encode(snapshot.originalEvidence), to: currentEvidenceURL)
 
             let store = ScanProjectStore(
                 rootURL: projectURL.deletingLastPathComponent(),
@@ -246,6 +246,13 @@ enum SplatPreviousResultEvidence {
             try? fileManager.removeItem(at: partialURL)
             throw error
         }
+    }
+
+    private static func writeDurableMetadata(_ data: Data, to url: URL) throws {
+        try data.write(to: url, options: .atomic)
+        let handle = try FileHandle(forWritingTo: url)
+        defer { try? handle.close() }
+        try handle.synchronize()
     }
 
     private static func readTrustMetadataDataIfSafe(at url: URL, fileManager: FileManager) -> Data? {
