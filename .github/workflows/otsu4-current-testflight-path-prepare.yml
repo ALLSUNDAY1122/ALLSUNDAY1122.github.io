@@ -1,0 +1,82 @@
+name: Otsu4 Current TestFlight Path Prepare
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  prepare:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-TF1-PREPARE]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Clone verified 360 RC contract into dedicated TestFlight workflow
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          s=p.read_text(encoding='utf-8')
+          require_key='\n  otsu4-ios:'
+          next_key='\n  tsukanshi-ios:'
+          start=s.index(require_key)
+          end=s.index(next_key,start)
+          rc=s[start:end]
+          if '\n  otsu4-testflight:' in s:
+              raise SystemExit('otsu4-testflight already exists; refusing duplicate')
+          required=[
+              'RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8',
+              'distribution_type: app_store',
+              'len(data.get(\'questions\') or []) == 360',
+              "assert actual == expected",
+              "assert info.get('CFBundleIdentifier') == 'jp.allsunday1122.otsu4'",
+              'Verify packaged Otsu4 IPA',
+          ]
+          for token in required:
+              if token not in rc:
+                  raise SystemExit('RC contract missing required token: '+token)
+          if 'publishing:' in rc or 'submit_to_testflight' in rc or 'submit_to_app_store' in rc:
+              raise SystemExit('RC workflow must be generation-only before deriving TestFlight path')
+          tf=rc.replace('\n  otsu4-ios:', '\n  otsu4-testflight:',1)
+          tf=tf.replace('name: 危険物乙4 - iOS Release Candidate','name: 危険物乙4 - Human Test #1 Candidate',1)
+          tf += '''    publishing:\n      app_store_connect:\n        auth: integration\n        submit_to_testflight: true\n        submit_to_app_store: false\n'''
+          s=s[:end]+tf+s[end:]
+          p.write_text(s,encoding='utf-8')
+          PY
+          git diff --check
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('codemagic.yaml').read_text(encoding='utf-8')
+          start=s.index('\n  otsu4-testflight:')
+          end=s.index('\n  tsukanshi-ios:',start)
+          b=s[start:end]
+          required=[
+              'RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8',
+              'distribution_type: app_store',
+              'Verify packaged Otsu4 IPA',
+              'submit_to_testflight: true',
+              'submit_to_app_store: false',
+              'len(data.get(\'questions\') or []) == 360',
+          ]
+          for x in required: assert x in b, x
+          assert '720' not in b
+          print('PASS: current 360-question TestFlight workflow prepared; not triggered')
+          PY
+      - name: Commit prepared path
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          git commit -m 'ci(otsu4): prepare current 360-question TestFlight path'
+          git push origin HEAD:main
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Otsu4 current TestFlight path prepare finished. status=${{ job.status }}; run_id=${context.runId}`});
