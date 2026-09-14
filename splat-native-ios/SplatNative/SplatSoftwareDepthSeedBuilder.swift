@@ -11,6 +11,7 @@ import simd
 /// not invoke the legacy point×frame colorizer path.
 enum SplatSoftwareDepthSeedBuilder {
     static let maximumSelectedFrames = 18
+    static let maximumRecoveryWaves = 4
     static let maximumReferenceFrames = 8
     static let maximumNeighborFrames = 4
     static let hypothesisCount = 30
@@ -154,9 +155,9 @@ enum SplatSoftwareDepthSeedBuilder {
 
         // Preserve the normal temporal sample exactly when all selected thumbnails decode. If an
         // ImageIO source passes metadata preflight but later fails full thumbnail materialization,
-        // recover only the missing slots from a separately time-distributed candidate pool. This
-        // keeps healthy-path decode work fixed at <=18 frames and bounds failure recovery to <=18
-        // additional attempts rather than full-decoding every capture frame up front.
+        // recover only the missing slots from additional time-distributed candidate waves. Healthy
+        // captures still decode <=18 frames; failure recovery is capped at four extra 18-frame waves
+        // so a chain of corrupt thumbnails cannot permanently hide later healthy capture frames.
         var sourceOrder: [String: Int] = [:]
         sourceOrder.reserveCapacity(sourceFrames.count)
         for (index, source) in sourceFrames.enumerated() where sourceOrder[source.filePath] == nil {
@@ -168,16 +169,23 @@ enum SplatSoftwareDepthSeedBuilder {
         }
 
         if loaded.count < selected.count {
-            let selectedPaths = Set(selected.map(\.filePath))
-            let recoverySources = selectLoadableFrames(
-                projectURL: projectURL,
-                frames: sourceFrames.filter { !selectedPaths.contains($0.filePath) },
-                maximumCount: maximumSelectedFrames
-            )
+            var attemptedPaths = Set(selected.map(\.filePath))
             let targetCount = min(maximumSelectedFrames, selected.count)
-            for source in recoverySources where loaded.count < targetCount {
-                guard let frame = load(source, projectURL: projectURL, maximumPixel: maximumPixel) else { continue }
-                loaded.append((sourceOrder[source.filePath] ?? Int.max, frame))
+            var recoveryWave = 0
+            while loaded.count < targetCount, recoveryWave < maximumRecoveryWaves {
+                recoveryWave += 1
+                let recoverySources = selectLoadableFrames(
+                    projectURL: projectURL,
+                    frames: sourceFrames.filter { !attemptedPaths.contains($0.filePath) },
+                    maximumCount: maximumSelectedFrames
+                )
+                guard !recoverySources.isEmpty else { break }
+
+                for source in recoverySources where loaded.count < targetCount {
+                    attemptedPaths.insert(source.filePath)
+                    guard let frame = load(source, projectURL: projectURL, maximumPixel: maximumPixel) else { continue }
+                    loaded.append((sourceOrder[source.filePath] ?? Int.max, frame))
+                }
             }
         }
 
