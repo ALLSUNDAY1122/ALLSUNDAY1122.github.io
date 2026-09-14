@@ -292,11 +292,17 @@ enum SplatSeedColorizer {
             }
         }
 
+        var failedFrameIndexes = Set<Int>()
+        var retryPointIndexes = Set<Int>()
         for (frameIndex, items) in grouped {
             guard frames.indices.contains(frameIndex),
                   let imageURL = usableImageURLs[frameIndex] else { continue }
             let frame = frames[frameIndex]
-            guard let raster = loadRaster(url: imageURL) else { continue }
+            guard let raster = loadRaster(url: imageURL) else {
+                failedFrameIndexes.insert(frameIndex)
+                for item in items { retryPointIndexes.insert(item.pointIndex) }
+                continue
+            }
             for item in items {
                 if let color = raster.sample(
                     x: item.x,
@@ -305,6 +311,50 @@ enum SplatSeedColorizer {
                     sourceHeight: frame.h
                 ) {
                     samples[item.pointIndex].append(color)
+                }
+            }
+        }
+
+        // Metadata can be readable even when ImageIO later fails to materialize the thumbnail.
+        // Keep the normal path unchanged: only points that actually lost a selected frame pay for
+        // a second ranking pass, and only previously unselected healthy views are eligible. This
+        // avoids full-decoding every capture frame up front while allowing one bounded recovery pass.
+        if !failedFrameIndexes.isEmpty, !retryPointIndexes.isEmpty {
+            let retryProjections = projections.filter { !failedFrameIndexes.contains($0.frameIndex) }
+            var retryGrouped: [Int: [SplatSeedSampleLocation]] = [:]
+            for pointIndex in retryPointIndexes where points.indices.contains(pointIndex) {
+                let missingCount = maxColorViewsPerPoint - samples[pointIndex].count
+                guard missingCount > 0 else { continue }
+
+                var originallySelected = Set<Int>()
+                bestAssignments(for: points[pointIndex], projections: projections).forEachAccepted {
+                    originallySelected.insert($0.frameIndex)
+                }
+
+                var remaining = missingCount
+                bestAssignments(for: points[pointIndex], projections: retryProjections).forEachAccepted { assignment in
+                    guard remaining > 0, !originallySelected.contains(assignment.frameIndex) else { return }
+                    retryGrouped[assignment.frameIndex, default: []].append(
+                        SplatSeedSampleLocation(pointIndex: pointIndex, x: assignment.x, y: assignment.y)
+                    )
+                    remaining -= 1
+                }
+            }
+
+            for (frameIndex, items) in retryGrouped {
+                guard frames.indices.contains(frameIndex),
+                      let imageURL = usableImageURLs[frameIndex],
+                      let raster = loadRaster(url: imageURL) else { continue }
+                let frame = frames[frameIndex]
+                for item in items {
+                    if let color = raster.sample(
+                        x: item.x,
+                        y: item.y,
+                        sourceWidth: frame.w,
+                        sourceHeight: frame.h
+                    ) {
+                        samples[item.pointIndex].append(color)
+                    }
                 }
             }
         }
