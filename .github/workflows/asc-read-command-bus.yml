@@ -1,0 +1,139 @@
+name: ASC Read Command Bus
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: asc-read-command-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  read:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      startsWith(github.event.issue.title, '[ASC-READ-CMD]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Execute read-only App Store Connect batch
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          from scripts.app_store_connect_api import api_get, load_private_key, make_token
+
+          request_id_re = re.compile(r'^[A-Za-z0-9._-]{1,100}$')
+          payload = json.loads(os.environ.get('ISSUE_BODY', '').strip())
+          if not isinstance(payload, dict):
+              raise SystemExit('Issue body must be one JSON object')
+          request_id = payload.get('request_id')
+          if not isinstance(request_id, str) or not request_id_re.fullmatch(request_id):
+              raise SystemExit('Invalid request_id')
+          requests = payload.get('requests')
+          if not isinstance(requests, list) or not 1 <= len(requests) <= 50:
+              raise SystemExit('requests must contain 1..50 GET requests')
+
+          clean = []
+          for i, item in enumerate(requests):
+              if not isinstance(item, dict) or item.get('method', 'GET') != 'GET':
+                  raise SystemExit(f'requests[{i}] must be GET')
+              label = item.get('label', f'request-{i+1}')
+              path = item.get('path')
+              if not isinstance(label, str) or not request_id_re.fullmatch(label):
+                  raise SystemExit(f'Invalid requests[{i}].label')
+              if not isinstance(path, str) or not path.startswith(('/v1/', '/v2/')):
+                  raise SystemExit(f'Invalid requests[{i}].path')
+              if len(path) > 2000 or '\n' in path or '\r' in path:
+                  raise SystemExit(f'Invalid requests[{i}].path')
+              clean.append((label, path))
+
+          issuer_id = os.environ.get('ASC_ISSUER_ID')
+          key_id = os.environ.get('ASC_KEY_ID')
+          if not issuer_id or not key_id:
+              raise SystemExit('Missing ASC credentials')
+          key_path, cleanup = load_private_key()
+          try:
+              token = make_token(issuer_id, key_id, key_path)
+              results = []
+              for label, path in clean:
+                  status, body = api_get(token, path)
+                  results.append({'label': label, 'path': path, 'http_status': status, 'body': body})
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+
+          output = {'ok': True, 'request_id': request_id, 'action': 'read', 'results': results}
+          Path('release-result.json').write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding='utf-8')
+
+          keep_attrs = {
+              'versionString','appStoreState','platform','version','processingState','expired',
+              'buildAudienceType','uploadedDate','productId','name','referenceName','state',
+              'fileName','fileSize','locale','description','subscriptionPeriod'
+          }
+          compact_results = []
+          for result in results:
+              body = result.get('body') if isinstance(result.get('body'), dict) else {}
+              data = body.get('data')
+              rows = data if isinstance(data, list) else ([data] if isinstance(data, dict) else [])
+              compact_rows = []
+              for row in rows[:30]:
+                  attrs = row.get('attributes') if isinstance(row.get('attributes'), dict) else {}
+                  compact = {
+                      'id': row.get('id'),
+                      'type': row.get('type'),
+                      'attributes': {k: attrs.get(k) for k in keep_attrs if k in attrs},
+                  }
+                  rels = row.get('relationships')
+                  if isinstance(rels, dict):
+                      compact['relationships'] = {
+                          k: v.get('data') for k, v in rels.items()
+                          if isinstance(v, dict) and 'data' in v
+                      }
+                  compact_rows.append(compact)
+              compact_results.append({
+                  'label': result['label'],
+                  'http_status': result['http_status'],
+                  'count': len(rows),
+                  'data': compact_rows,
+              })
+          summary = {'ok': True, 'request_id': request_id, 'results': compact_results}
+          text = json.dumps(summary, ensure_ascii=False, separators=(',', ':'))
+          Path('release-summary.txt').write_text(text[:60000], encoding='utf-8')
+          print('ASC_READ_SUMMARY=' + text[:60000])
+          PY
+      - name: Upload full readback
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asc-read-result-${{ github.event.issue.number }}-${{ github.run_id }}
+          path: |
+            release-result.json
+            release-summary.txt
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report compact readback
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.existsSync('release-summary.txt') ? fs.readFileSync('release-summary.txt','utf8') : '';
+            const body = summary
+              ? `ASC read finished. status=${{ job.status }}; run_id=${context.runId}\n\n\`\`\`json\n${summary.slice(0, 50000)}\n\`\`\``
+              : `ASC read finished. status=${{ job.status }}; run_id=${context.runId}; no summary produced.`;
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body});
