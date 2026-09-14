@@ -21,11 +21,20 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Fetch and verify canonical Drive icon
-        env:
-          KANRI_ICON_MODE: canonical
-        run: bash kanrieiyoushi-sprint/ios/prepare-ios.sh
+      - name: Fetch canonical Drive icon only
+        shell: bash
+        run: |
+          set -euo pipefail
+          ICON='kanrieiyoushi-sprint/ios/AppIcon.png'
+          DRIVE_ID='11d72Dl76UH7QvU8Gxl-SgDjTV73GaxP4'
+          mkdir -p "$(dirname "$ICON")"
+          if [ ! -f "$ICON" ]; then
+            curl --fail --location --silent --show-error \
+              "https://drive.usercontent.google.com/download?id=${DRIVE_ID}&export=download&confirm=t" \
+              --output "$ICON"
+          fi
       - name: Independent exact binary audit
+        shell: bash
         run: |
           set -euo pipefail
           ICON=kanrieiyoushi-sprint/ios/AppIcon.png
@@ -42,16 +51,17 @@ jobs:
           print('PASS: canonical 管理栄養士 AppIcon exact binary')
           PY
       - name: Commit canonical source only
+        shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -f kanrieiyoushi-sprint/ios/AppIcon.png
-          test "$(git diff --cached --name-only)" = 'kanrieiyoushi-sprint/ios/AppIcon.png'
           if git diff --cached --quiet; then
             echo 'canonical icon already materialized identically'
             exit 0
           fi
+          test "$(git diff --cached --name-only)" = 'kanrieiyoushi-sprint/ios/AppIcon.png'
           git commit -m 'assets(kanri): materialize verified canonical AppIcon'
           git pull --rebase origin main
           git push origin HEAD:main
