@@ -486,17 +486,21 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 self.reconstructionProgress = 0.75
                 do {
                     let url = try self.exportOBJ(merged, suffix: "")
+                    let scene = self.makeScene(from: merged)
+                    try self.writeManifest(texturedModelAvailable: false)
                     self.rawOBJURL = url
                     self.resultURL = url
-                    self.previewScene = self.makeScene(from: merged)
+                    self.previewScene = scene
                     self.vertexCount = merged.vertices.count
                     self.faceCount = merged.triangles.count
                     self.reconstructionProgress = 1
                     self.phase = .finished
                     self.statusMessage = "実LiDARメッシュを生成しました。写真からテクスチャ版も再構築できます"
-                    try? self.writeManifest(texturedModelAvailable: false)
                 } catch {
-                    self.phase = .failed("LiDARメッシュを書き出せませんでした: \(error.localizedDescription)")
+                    self.resultURL = nil
+                    self.previewScene = nil
+                    self.reconstructionProgress = min(self.reconstructionProgress, 0.99)
+                    self.phase = .failed("LiDARメッシュを保存できませんでした: \(error.localizedDescription)")
                 }
             }
         }
@@ -592,17 +596,28 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
             return false
         }
 
+        do {
+            try writeManifest(texturedModelAvailable: true)
+        } catch {
+            resultURL = nil
+            previewScene = nil
+            reconstructionProgress = min(reconstructionProgress, 0.99)
+            let message = "フォトグラメトリ結果を保存できませんでした: \(error.localizedDescription)"
+            phase = .failed(message)
+            statusMessage = message
+            return false
+        }
+
         resultURL = outputURL
         previewScene = scene
         reconstructionProgress = 1
         phase = .finished
         statusMessage = "テクスチャ付きMeshを端末内で生成しました"
-        try? writeManifest(texturedModelAvailable: true)
         return true
     }
 
     private func writeManifest(texturedModelAvailable: Bool) throws {
-        guard let projectURL else { return }
+        guard let projectURL else { throw meshError("Meshプロジェクトの保存先がありません") }
         let manifest = MeshProjectManifest(
             schemaVersion: 1,
             captureMode: mode.rawValue,
@@ -615,7 +630,11 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         encoder.dateEncodingStrategy = .iso8601
-        try encoder.encode(manifest).write(to: projectURL.appendingPathComponent("mesh-project.json"), options: .atomic)
+        let manifestURL = projectURL.appendingPathComponent("mesh-project.json")
+        try encoder.encode(manifest).write(to: manifestURL, options: .atomic)
+        let handle = try FileHandle(forWritingTo: manifestURL)
+        defer { try? handle.close() }
+        try handle.synchronize()
     }
 
     private func exportOBJ(_ mesh: MergedMesh, suffix: String) throws -> URL {
