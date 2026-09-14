@@ -27,4 +27,23 @@ extension MeshProjectIntegrityTests {
 
         XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
     }
+
+    func testRawSceneValidatorRejectsNaNWorldTransform() {
+        let scene = SCNScene()
+        let node = SCNNode(geometry: SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0))
+        node.simdPosition.x = Float.nan
+        scene.rootNode.addChildNode(node)
+
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
+    func testRawSceneValidatorRejectsInfiniteAncestorTransform() {
+        let scene = SCNScene()
+        let container = SCNNode()
+        container.simdPosition.z = Float.infinity
+        container.addChildNode(SCNNode(geometry: SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)))
+        scene.rootNode.addChildNode(container)
+
+        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
+    }
 }
