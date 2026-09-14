@@ -20,11 +20,10 @@ extension SplatPreviousResultEvidence {
     ) throws -> Bool {
         let snapshotURL = projectURL.appendingPathComponent(fileName)
         let backupURL = projectURL.appendingPathComponent(assetFileName)
-        guard isIndependentRegularFileForIntegrityRecovery(snapshotURL),
-              let snapshotByteCount = try? fileByteCountForIntegrityRecovery(snapshotURL, fileManager: fileManager),
-              snapshotByteCount >= 0,
-              snapshotByteCount <= maximumIntegritySnapshotByteCount,
-              let snapshotData = try? Data(contentsOf: snapshotURL),
+        guard let snapshotData = readIntegritySnapshotDataIfSafe(
+                  at: snapshotURL,
+                  fileManager: fileManager
+              ),
               let snapshot = try? JSONDecoder().decode(Snapshot.self, from: snapshotData),
               snapshot.schemaVersion == Snapshot.currentSchemaVersion,
               snapshot.originalEvidence == evidence,
@@ -75,6 +74,29 @@ extension SplatPreviousResultEvidence {
             try? fileManager.removeItem(at: partialURL)
             throw error
         }
+    }
+
+    private static func readIntegritySnapshotDataIfSafe(
+        at url: URL,
+        fileManager: FileManager
+    ) -> Data? {
+        guard isIndependentRegularFileForIntegrityRecovery(url),
+              let size = try? fileByteCountForIntegrityRecovery(url, fileManager: fileManager),
+              size >= 0,
+              size <= maximumIntegritySnapshotByteCount,
+              let handle = try? FileHandle(forReadingFrom: url) else {
+            return nil
+        }
+        defer { try? handle.close() }
+
+        // Re-check through a bounded read instead of Data(contentsOf:). The metadata file can be
+        // replaced or extended after the size stat; reading at most cap + 1 keeps corruption or a
+        // concurrent writer from turning that TOCTOU window into an unbounded allocation.
+        guard let data = try? handle.read(upToCount: Int(maximumIntegritySnapshotByteCount) + 1),
+              data.count <= maximumIntegritySnapshotByteCount else {
+            return nil
+        }
+        return data
     }
 
     private static func isIndependentRegularFileForIntegrityRecovery(_ url: URL) -> Bool {
