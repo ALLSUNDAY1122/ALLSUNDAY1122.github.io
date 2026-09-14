@@ -40,6 +40,7 @@ enum SplatStrongCompletionEvidence {
         case sourceChangedAfterCommit
         case sourceChangedDuringVerification
         case hashMismatch
+        case evidencePersistenceFailed
 
         var errorDescription: String? {
             switch self {
@@ -48,9 +49,11 @@ enum SplatStrongCompletionEvidence {
             case .sourceChangedAfterCommit:
                 return "完成記録の後に3Dデータが変更されています。再生成してください。"
             case .sourceChangedDuringVerification:
-                return "3Dデータの確認中に内容が変化しました。再試行してください。"
+                return "3Dデータの確認中に内容が変化しました。もう一度開いてください。"
             case .hashMismatch:
                 return "3Dデータの内容が完成時の記録と一致しません。再生成してください。"
+            case .evidencePersistenceFailed:
+                return "完成3Dデータの整合性記録を安全に確定できませんでした。もう一度開いてください。"
             }
         }
     }
@@ -97,9 +100,22 @@ enum SplatStrongCompletionEvidence {
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let encoded = try encoder.encode(Seal(evidence: evidence, sha256: hash))
         try encoded.write(to: sealURL, options: .atomic)
-        let handle = try FileHandle(forWritingTo: sealURL)
-        defer { try? handle.close() }
-        try handle.synchronize()
+        do {
+            let handle = try FileHandle(forWritingTo: sealURL)
+            defer { try? handle.close() }
+            try handle.synchronize()
+        } catch {
+            throw IntegrityError.evidencePersistenceFailed
+        }
+
+        // A successful write + fsync is not treated as trust until the bytes can be read back and
+        // decode to the exact evidence/hash contract that was just verified. This prevents a damaged
+        // or partial seal from being reported as a completed integrity checkpoint in the same run.
+        guard let persisted = try? Data(contentsOf: sealURL), persisted == encoded,
+              let decoded = try? JSONDecoder().decode(Seal.self, from: persisted),
+              decoded.matches(evidence), decoded.sha256 == hash else {
+            throw IntegrityError.evidencePersistenceFailed
+        }
         return hash
     }
 
