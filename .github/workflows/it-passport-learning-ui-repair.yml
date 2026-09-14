@@ -1,0 +1,78 @@
+name: IT Passport Legacy Learning UI Repair
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: it-passport-learning-ui-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: github.event_name == 'workflow_dispatch' || (github.event.issue.author_association == 'OWNER' && github.event.issue.title == '[ITP-LEGACY-UI] APPLY LEARNING CONTRACT')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Apply fail-closed UI contract repair
+        run: python3 scripts/repair_it_passport_learning_ui.py
+      - name: Static contract audit
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('it-passport-swipe/index.html')
+          s=p.read_text(encoding='utf-8')
+          checks={
+            'home_header':'id="homeHeader"' in s,
+            'home_result':'id="homeResult"' in s,
+            'unknown':'id="unknown"' in s,
+            'manual_next':'id="next"' in s and 'setTimeout(()=>{index++;render()},2600)' not in s,
+            'resume':'itp_learning_progress_v1' in s and '続きから（残り${left}問）' in s,
+            'memory_line':'この問題で覚える一文' in s,
+            'irt_disclaimer':'本試験のIRT評価点とは異なる学習記録です。' in s,
+          }
+          failed=[k for k,v in checks.items() if not v]
+          if failed: raise SystemExit('contract audit failed: '+','.join(failed))
+          blocks=re.findall(r'<script>(.*?)</script>',s,flags=re.S)
+          if len(blocks)!=1: raise SystemExit(f'expected one product script, got {len(blocks)}')
+          Path('/tmp/itp-product.js').write_text(blocks[0],encoding='utf-8')
+          print('PASS',checks)
+          PY
+          node --check /tmp/itp-product.js
+      - name: Guard separate zero-base rebuild
+        run: |
+          git diff --name-only HEAD -- | tee /tmp/changed.txt
+          test "$(cat /tmp/changed.txt)" = "it-passport-swipe/index.html"
+      - name: Commit repaired legacy UI
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add it-passport-swipe/index.html
+          git diff --cached --check
+          git diff --cached --quiet && { echo 'no product change'; exit 0; }
+          git commit -m 'fix(itp): restore learning-contract navigation and manual review flow'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Report
+        if: github.event_name == 'issues' && always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Legacy IT Passport UI repair finished. status=${{ job.status }}; run_id=${context.runId}. No TestFlight/App Store action was performed.`
+            });
