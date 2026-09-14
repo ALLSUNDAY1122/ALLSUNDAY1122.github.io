@@ -20,11 +20,11 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
           old="xcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'"
           new='xcode-project use-profiles'
 
-          # Local workflow fragment: exact one occurrence.
           frag=Path('learning-sprint/shoshi/ios/codemagic-shoshi.yml')
           text=frag.read_text(encoding='utf-8')
           if text.count(old)!=1:
@@ -32,19 +32,16 @@ jobs:
           text=text.replace(old,new,1).replace('Apply App Store signing profiles for internal TestFlight only','Apply App Store signing profiles for App Store review',1)
           frag.write_text(text,encoding='utf-8')
 
-          # Root Codemagic: mutate only the shoshi workflow section.
           root=Path('codemagic.yaml')
           text=root.read_text(encoding='utf-8')
-          start=text.index('  shoshi-ios:\n')
-          try:
-              end=text.index('\n  ', start+3)
-          except ValueError:
-              end=len(text)
-          block=text[start:end]
+          m=re.search(r'(?ms)^  shoshi-ios:\n.*?(?=^  [A-Za-z0-9_-]+:\n|\Z)',text)
+          if not m:
+              raise SystemExit('root shoshi workflow not found')
+          block=m.group(0)
           if block.count(old)!=1:
               raise SystemExit(f'root shoshi internal-only marker count={block.count(old)}')
-          block=block.replace(old,new,1).replace('Apply App Store signing profiles for internal TestFlight only','Apply App Store signing profiles for App Store review',1)
-          text=text[:start]+block+text[end:]
+          repaired=block.replace(old,new,1).replace('Apply App Store signing profiles for internal TestFlight only','Apply App Store signing profiles for App Store review',1)
+          text=text[:m.start()]+repaired+text[m.end():]
           root.write_text(text,encoding='utf-8')
 
           packet=Path('learning-sprint/shoshi/app-store/APPLE_CONNECT_PACKET.md')
@@ -56,11 +53,11 @@ jobs:
 
           validator=Path('learning-sprint/shoshi/validate-apple-preflight.mjs')
           text=validator.read_text(encoding='utf-8')
-          old_packet="includes(packet, 'testFlightInternalTestingOnly: true', 'internal TestFlight export');"
-          new_packet="includes(packet, 'testFlightInternalTestingOnly`を使用しない', 'App Store eligible export policy');"
-          old_block="includes(codemagicBlock, 'testFlightInternalTestingOnly', 'internal TestFlight only export');"
-          new_block="must(!codemagicBlock.includes('testFlightInternalTestingOnly'), 'Shoshi export must remain App Store eligible');"
-          for a,b in ((old_packet,new_packet),(old_block,new_block)):
+          replacements=(
+            ("includes(packet, 'testFlightInternalTestingOnly: true', 'internal TestFlight export');","includes(packet, 'testFlightInternalTestingOnly`を使用しない', 'App Store eligible export policy');"),
+            ("includes(codemagicBlock, 'testFlightInternalTestingOnly', 'internal TestFlight only export');","must(!codemagicBlock.includes('testFlightInternalTestingOnly'), 'Shoshi export must remain App Store eligible');"),
+          )
+          for a,b in replacements:
               if text.count(a)!=1:
                   raise SystemExit(f'validator marker drifted: {a}')
               text=text.replace(a,b,1)
@@ -73,11 +70,11 @@ jobs:
           node learning-sprint/shoshi/validate-apple-preflight.mjs
           python3 - <<'PY'
           from pathlib import Path
+          import re
           root=Path('codemagic.yaml').read_text(encoding='utf-8')
-          start=root.index('  shoshi-ios:\n')
-          try: end=root.index('\n  ',start+3)
-          except ValueError: end=len(root)
-          block=root[start:end]
+          m=re.search(r'(?ms)^  shoshi-ios:\n.*?(?=^  [A-Za-z0-9_-]+:\n|\Z)',root)
+          assert m
+          block=m.group(0)
           assert 'testFlightInternalTestingOnly' not in block
           assert 'xcode-project use-profiles' in block
           assert 'submit_to_testflight: false' in block
