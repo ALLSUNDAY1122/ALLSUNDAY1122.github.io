@@ -33,17 +33,29 @@ jobs:
       - name: Choose simulator
         id: sim
         run: |
-          DEVICE=$(xcrun simctl list devices available | grep -m1 'iPhone' | sed -E 's/^[[:space:]]*([^\(]+) \(.*/\1/' | sed 's/[[:space:]]*$//')
+          set -euo pipefail
+          LINE=$(xcrun simctl list devices available | grep -m1 'iPhone')
+          DEVICE=$(printf '%s\n' "$LINE" | sed -E 's/^[[:space:]]*([^\(]+) \(.*/\1/' | sed 's/[[:space:]]*$//')
+          UDID=$(printf '%s\n' "$LINE" | sed -E 's/.*\(([0-9A-Fa-f-]{36})\).*/\1/')
           test -n "$DEVICE"
+          test -n "$UDID"
           echo "device=$DEVICE" >> "$GITHUB_OUTPUT"
-      - name: Run paywall UI capture
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: Reset simulator before paywall capture
+        run: |
+          set -euo pipefail
+          UDID='${{ steps.sim.outputs.udid }}'
+          xcrun simctl shutdown "$UDID" 2>/dev/null || true
+          xcrun simctl erase "$UDID"
+      - name: Run isolated paywall UI capture
         working-directory: fp3-manabi-sprint/ios
         run: |
           set -o pipefail
           xcodebuild \
             -project FP3ManabiSprint.xcodeproj \
             -scheme FP3ManabiSprint \
-            -destination "platform=iOS Simulator,name=${{ steps.sim.outputs.device }}" \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -only-testing:FP3ManabiSprintUITests/FP3PaywallReviewUITests/testCapturePremiumPaywall \
             -resultBundlePath "$RUNNER_TEMP/FP3Review.xcresult" \
             CODE_SIGNING_ALLOWED=NO \
             test | tee "$RUNNER_TEMP/fp3-review-test.log"
