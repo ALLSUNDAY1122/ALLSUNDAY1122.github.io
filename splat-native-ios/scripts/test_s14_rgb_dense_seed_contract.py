@@ -67,8 +67,8 @@ for token in (
     "CGImageSourceCopyPropertiesAtIndex(source, 0, nil) != nil",
     "var failedFrameIndexes = Set<Int>()",
     "var retryPointIndexes = Set<Int>()",
-    "if !failedFrameIndexes.isEmpty, !retryPointIndexes.isEmpty",
-    "var attemptedRetryFramesByPoint: [Int: Set<Int>] = [:]",
+    "if !retryPointIndexes.isEmpty",
+    "let initialSampleCounts = Dictionary(uniqueKeysWithValues:",
     "let maximumRetryWaves = min(8, max(1, projections.count))",
     "while !retryPointIndexes.isEmpty, wave < maximumRetryWaves",
     "let retryProjections = projections.filter { !failedFrameIndexes.contains($0.frameIndex) }",
@@ -76,11 +76,12 @@ for token in (
     "var originalScoreCeiling = Float.greatestFiniteMagnitude",
     "originalScoreCeiling = max(assignment.score * 1.8, assignment.score + 0.05)",
     "let missingCount = max(0, originalAcceptedCount - samples[pointIndex].count)",
+    "var successfulReplacementsToSkip = max(0, samples[pointIndex].count - initialCount)",
     "assignment.score <= originalScoreCeiling",
     "!originallySelected.contains(assignment.frameIndex)",
-    "!attemptedRetryFrames.contains(assignment.frameIndex)",
-    "attemptedRetryFramesByPoint[pointIndex, default: []].insert(assignment.frameIndex)",
+    "successfulReplacementsToSkip -= 1",
     "pointsNeedingAnotherWave.insert(item.pointIndex)",
+    "if frameSamplingFailed { failedFrameIndexes.insert(frameIndex) }",
 ):
     assert token in COLORIZER, f"missing seed-color frame admission/recovery contract: {token}"
 
@@ -130,8 +131,6 @@ assert new_voxel_budget(900, 1) == 900
 assert new_voxel_budget(0, 20) == 0
 
 # Hardware depth is sampled on its own raster but camera intrinsics describe the capture image.
-# Preserve center-to-center resampling: edge scaling produces a half-pixel bias that can expand to
-# several camera pixels when LiDAR depth is much smaller than RGB.
 for token in (
     "imagePixelCenterCoordinate(",
     "(Double(sampleIndex) + 0.5) * Double(destinationExtent) / Double(sourceExtent) - 0.5",
@@ -140,9 +139,7 @@ for token in (
 ):
     assert token in SEED, f"missing hardware-depth pixel-center mapping: {token}"
 
-# The S14 software seed intentionally inherits the already-shipped MeshPlaneSweepMVS camera/image
-# convention. Guard this explicitly: an isolated vertical flip or optical-axis rewrite in only one
-# implementation would make the same ARKit intrinsics/poses describe different pixels.
+# S14 and mesh MVS must keep the same camera/image convention.
 for token in (
     "kCGImageSourceCreateThumbnailWithTransform: false",
     "let y = -(v - frame.cy) / frame.fy * depth",
@@ -215,10 +212,7 @@ def project_world(point, fx, fy, cx, cy, camera_to_world):
 def centered_patch_cost(reference_values, neighbor_values):
     assert len(reference_values) == len(neighbor_values)
     mean_difference = sum(n - r for r, n in zip(reference_values, neighbor_values)) / len(reference_values)
-    return sum(
-        abs((n - r) - mean_difference)
-        for r, n in zip(reference_values, neighbor_values)
-    ) / len(reference_values)
+    return sum(abs((n - r) - mean_difference) for r, n in zip(reference_values, neighbor_values)) / len(reference_values)
 
 
 identity = (
@@ -265,9 +259,6 @@ assert math.isclose(nu, expected_u, abs_tol=1e-5), (expected_u, nu)
 assert math.isclose(nv, cy, abs_tol=1e-5)
 assert math.isclose(nd, 1.0, abs_tol=1e-5)
 
-# The local inverse-depth search must materially reduce the quantization floor introduced by
-# the 30-value coarse sweep. Evaluate the worst-case midpoint between adjacent coarse hypotheses;
-# it is exactly where the old seed was forced furthest onto the wrong front/back layer.
 near_depth, far_depth = 0.12, 2.8
 coarse_count = 30
 fine_count = 7
@@ -275,7 +266,6 @@ radius_steps = 0.55
 inv_near, inv_far = 1.0 / near_depth, 1.0 / far_depth
 coarse_step = (inv_near - inv_far) / (coarse_count - 1)
 coarse_inverse = [inv_near - i * coarse_step for i in range(coarse_count)]
-
 for index in (5, 12, 20, 27):
     true_inverse = (coarse_inverse[index] + coarse_inverse[index + 1]) / 2.0
     true_depth = 1.0 / true_inverse
@@ -290,7 +280,6 @@ for index in (5, 12, 20, 27):
     refined_error = min(abs((1.0 / inv) - true_depth) for inv in refined_inverse)
     assert refined_error < coarse_error * 0.25, (index, coarse_error, refined_error)
 
-# Additive auto-exposure changes must not turn the same local structure into a high-cost mismatch.
 reference_patch = [20.0, 35.0, 55.0, 30.0, 60.0, 90.0, 25.0, 50.0, 80.0]
 bright_patch = [value + 45.0 for value in reference_patch]
 raw_exposure_cost = sum(abs(a - b) for a, b in zip(reference_patch, bright_patch)) / len(reference_patch)
@@ -299,7 +288,6 @@ assert math.isclose(centered_patch_cost(reference_patch, bright_patch), 0.0, abs
 wrong_structure = [80.0, 50.0, 25.0, 90.0, 60.0, 30.0, 55.0, 35.0, 20.0]
 assert centered_patch_cost(reference_patch, wrong_structure) > 20.0
 
-# Multi-view cost must remain on the same per-pixel intensity scale while resisting one bad view.
 def robust_multiview_cost(costs):
     costs = sorted(costs)
     if len(costs) < 2:
@@ -318,7 +306,6 @@ assert sum([8.0, 9.0, 10.0, 120.0]) / 4.0 > 34.0
 assert robust_multiview_cost([8.0, 9.0, 10.0, 120.0]) < 34.0
 assert robust_multiview_cost([8.0]) is None
 
-# 1 cm voxelization must collapse sub-centimetre duplicates but retain distinct geometry.
 def voxel(p):
     return tuple(math.floor(v * 100.0) for v in p)
 
