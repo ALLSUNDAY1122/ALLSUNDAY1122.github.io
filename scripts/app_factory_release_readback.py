@@ -10,6 +10,7 @@ from pathlib import Path
 from app_store_connect_api import api_get, load_private_key, make_token
 
 APPS = {
+    "toru": ("6795968222", "com.allsunday1122.torutango"),
     "touhan": ("6802119268", "com.allsunday1122.tourokuhanbaisha"),
     "hm2": ("6799751657", "jp.allsunday1122.healthmanager2"),
     "hm1": ("6799581662", "jp.allsunday1122.healthmanager1"),
