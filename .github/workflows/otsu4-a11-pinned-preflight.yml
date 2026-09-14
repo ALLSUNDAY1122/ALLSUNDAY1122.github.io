@@ -1,0 +1,127 @@
+name: Otsu4 A11 Pinned Acceptance Preflight
+
+on:
+  push:
+    paths:
+      - '.github/workflows/otsu4-a11-pinned-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-acceptance:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    env:
+      RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8
+      ACCESSIBILITY_FIX_SHA: 80a96e3e97cb64d8da571cdbbb2d5bd49876c600
+      ACCEPTANCE_OVERLAY_SHA256: 71f3e8d012457d8cf41a5090165a4fe59e649aa91098287bde08fa96c5c356cf
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Materialize exact product release source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout --detach "$RELEASE_SOURCE_SHA"
+          test "$(git rev-parse HEAD)" = "$RELEASE_SOURCE_SHA"
+      - name: Overlay only validated Accessibility3 regression test
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show "$ACCESSIBILITY_FIX_SHA":native-ios/Otsu4Sprint/UITests/Otsu4SprintUITests.swift > native-ios/Otsu4Sprint/UITests/Otsu4SprintUITests.swift
+          grep -q 'scrollUntilHittable' native-ios/Otsu4Sprint/UITests/Otsu4SprintUITests.swift
+      - name: Overlay current independent Acceptance Contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show origin/main:.github/acceptance/otsu4/Otsu4AcceptanceUITests.swift > native-ios/Otsu4Sprint/UITests/Otsu4AcceptanceUITests.swift
+          ACTUAL=$(shasum -a 256 native-ios/Otsu4Sprint/UITests/Otsu4AcceptanceUITests.swift | awk '{print $1}')
+          echo "acceptance_sha=$ACTUAL"
+          test "$ACTUAL" = "$ACCEPTANCE_OVERLAY_SHA256"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Prepare and verify canonical release inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash native-ios/Otsu4Sprint/prepare-ios.sh
+          python3 - <<'PY'
+          import json, hashlib, pathlib
+          q=pathlib.Path('native-ios/Otsu4Sprint/Generated/questions.generated.json')
+          d=json.loads(q.read_text(encoding='utf-8'))
+          assert d['contentVersion']=='otsu4-2026-08-product-v2'
+          assert len(d['questions'])==360
+          icon=pathlib.Path('native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png')
+          assert hashlib.sha256(icon.read_bytes()).hexdigest()=='d0cb19b237ca3306413c481e4fbc0fb871705b390a1bc37619d9683fff19ff2d'
+          print('PASS canonical release source')
+          PY
+          cd native-ios/Otsu4Sprint
+          xcodegen generate
+      - name: Choose simulator
+        id: sim
+        shell: bash
+        run: |
+          set -euo pipefail
+          LINE=$(xcrun simctl list devices available | grep -m1 'iPhone')
+          UDID=$(printf '%s\n' "$LINE" | sed -E 's/.*\(([0-9A-Fa-f-]{36})\).*/\1/')
+          test -n "$UDID"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: Run baseline native tests including Accessibility3
+        working-directory: native-ios/Otsu4Sprint
+        shell: bash
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -skip-testing:Otsu4SprintUITests/Otsu4AcceptanceUITests \
+            -parallel-testing-enabled NO \
+            CODE_SIGNING_ALLOWED=NO | tee "$RUNNER_TEMP/otsu4-a11-baseline.log"
+      - name: Reset simulator before Acceptance Contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          UDID='${{ steps.sim.outputs.udid }}'
+          xcrun simctl shutdown "$UDID" 2>/dev/null || true
+          xcrun simctl erase "$UDID"
+      - name: Run independent learning-cycle Acceptance Contract
+        working-directory: native-ios/Otsu4Sprint
+        shell: bash
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -only-testing:Otsu4SprintUITests/Otsu4AcceptanceUITests/testLearningCycleResultReviewAndRetry \
+            -parallel-testing-enabled NO \
+            CODE_SIGNING_ALLOWED=NO | tee "$RUNNER_TEMP/otsu4-a11-acceptance.log"
+      - name: Build Release simulator artifact
+        working-directory: native-ios/Otsu4Sprint
+        shell: bash
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build | tee "$RUNNER_TEMP/otsu4-a11-release.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: otsu4-a11-pinned-preflight
+          path: |
+            ${{ runner.temp }}/otsu4-a11-baseline.log
+            ${{ runner.temp }}/otsu4-a11-acceptance.log
+            ${{ runner.temp }}/otsu4-a11-release.log
+          if-no-files-found: warn
+          retention-days: 7
