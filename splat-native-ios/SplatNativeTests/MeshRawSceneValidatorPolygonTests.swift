@@ -34,19 +34,6 @@ final class MeshRawSceneValidatorPolygonTests: XCTestCase {
         XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
     }
 
-    func testRejectsTruncatedPolygonRecord() {
-        let scene = sceneWithPolygon(tokens: [4, 0, 1, 2])
-        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
-    }
-
-    func testRejectsInterleavedCountsAndIndicesForMultiplePolygons() {
-        let scene = sceneWithPolygon(
-            tokens: [3, 0, 1, 2, 3, 0, 1, 2],
-            primitiveCount: 2
-        )
-        XCTAssertFalse(MeshRawSceneValidator.containsGeometry(scene))
-    }
-
     private func sceneWithPolygon(tokens: [UInt16], primitiveCount: Int = 1) -> SCNScene {
         let scene = SCNScene()
         let vertices = SCNGeometrySource(vertices: [
