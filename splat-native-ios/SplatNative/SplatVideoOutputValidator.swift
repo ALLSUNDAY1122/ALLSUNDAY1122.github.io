@@ -101,16 +101,18 @@ enum SplatVideoOutputValidator {
 
         // Scan Lab's SDR video contract is explicit BT.709. A valid H.264 container with missing or
         // conflicting primaries/transfer/matrix metadata can decode but appear materially different
-        // between Photos, QuickTime and social upload pipelines. Reject that output before Share.
+        // between Photos, QuickTime and social upload pipelines. A track can carry more than one
+        // format description across samples; checking only the first lets a later format transition
+        // silently violate the color contract. Require every declared description to remain BT.709.
         let formatDescriptions: [CMFormatDescription] = try await videoTrack.load(.formatDescriptions)
         try Task.checkCancellation()
-        guard let formatDescription = formatDescriptions.first else {
-            throw ValidationError.unexpectedColorProperties
-        }
-        let formatExtensions = formatDescription.extensions
-        guard formatExtensions[.colorPrimaries] == .colorPrimaries(.itu_R_709_2),
-              formatExtensions[.transferFunction] == .transferFunction(.itu_R_709_2),
-              formatExtensions[.yCbCrMatrix] == .yCbCrMatrix(.itu_R_709_2) else {
+        guard !formatDescriptions.isEmpty,
+              formatDescriptions.allSatisfy({ formatDescription in
+                  let formatExtensions = formatDescription.extensions
+                  return formatExtensions[.colorPrimaries] == .colorPrimaries(.itu_R_709_2) &&
+                      formatExtensions[.transferFunction] == .transferFunction(.itu_R_709_2) &&
+                      formatExtensions[.yCbCrMatrix] == .yCbCrMatrix(.itu_R_709_2)
+              }) else {
             throw ValidationError.unexpectedColorProperties
         }
 
