@@ -6,16 +6,25 @@ on:
     paths:
       - 'automation/sc-icon-transfer/**.b64part'
       - '.github/workflows/sc-appicon-materialize.yml'
+  issues:
+    types: [opened]
   workflow_dispatch:
 
 permissions:
   contents: write
+  issues: write
+
+concurrency:
+  group: sc-appicon-materialize
+  cancel-in-progress: false
 
 jobs:
   materialize:
-    runs-on: ubuntu-latest
+    if: github.event_name != 'issues' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[SC-ICON] MATERIALIZE CANONICAL')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Materialize canonical AppIcon
@@ -23,27 +32,48 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob
-          parts=(automation/sc-icon-transfer/*.b64part)
-          if [ ${#parts[@]} -eq 0 ]; then
-            echo 'No staged AppIcon parts; nothing to materialize.'
-            exit 0
-          fi
-          mkdir -p sc-manabi-sprint/native
-          cat "${parts[@]}" | tr -d '\r\n' | base64 --decode > sc-manabi-sprint/native/AppIcon-1024.png
-          actual="$(sha256sum sc-manabi-sprint/native/AppIcon-1024.png | awk '{print $1}')"
+          dst='sc-manabi-sprint/native/AppIcon-1024.png'
           expected='6bf2945788da0be45b9e448ea79d5c40ac197e97d6bed387d4215c50d486bb3d'
+          drive_id='1HuyIsiuQFmCbW266NbZIz5YM7tC08fON'
+          mkdir -p "$(dirname "$dst")"
+          parts=(automation/sc-icon-transfer/*.b64part)
+          if [ ${#parts[@]} -gt 0 ]; then
+            cat "${parts[@]}" | tr -d '\r\n' | base64 --decode > "$dst"
+          elif [ ! -f "$dst" ]; then
+            curl --fail --location --silent --show-error \
+              "https://drive.usercontent.google.com/download?id=${drive_id}&export=download&confirm=t" \
+              --output "$dst"
+          fi
+          actual="$(sha256sum "$dst" | awk '{print $1}')"
           test "$actual" = "$expected"
-          file sc-manabi-sprint/native/AppIcon-1024.png | grep -q 'PNG image data, 1024 x 1024'
+          python3 - "$dst" <<'PY'
+          from pathlib import Path
+          import struct,sys
+          b=Path(sys.argv[1]).read_bytes()
+          assert b[:8]==b'\x89PNG\r\n\x1a\n'
+          assert struct.unpack('>II',b[16:24])==(1024,1024)
+          print('PASS: canonical SC AppIcon exact binary and dimensions')
+          PY
           rm -f automation/sc-icon-transfer/*.b64part
       - name: Commit canonical AppIcon
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- sc-manabi-sprint/native/AppIcon-1024.png automation/sc-icon-transfer; then
-            exit 0
-          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add sc-manabi-sprint/native/AppIcon-1024.png automation/sc-icon-transfer
-          git commit -m 'release(sc): materialize canonical AppIcon'
-          git push
+          git add -f sc-manabi-sprint/native/AppIcon-1024.png
+          git add -u automation/sc-icon-transfer 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'canonical icon already materialized identically'
+            exit 0
+          fi
+          test "$(sha256sum sc-manabi-sprint/native/AppIcon-1024.png | awk '{print $1}')" = '6bf2945788da0be45b9e448ea79d5c40ac197e97d6bed387d4215c50d486bb3d'
+          git commit -m 'release(sc): materialize verified canonical AppIcon'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Report
+        if: github.event_name == 'issues' && always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: `Canonical SC AppIcon materialization finished. status=${{ job.status }}; run_id=${context.runId}. Expected SHA-256: 6bf2945788da0be45b9e448ea79d5c40ac197e97d6bed387d4215c50d486bb3d. No TestFlight/App Store action performed.`});
