@@ -1,0 +1,58 @@
+name: HM2 Release Prepare Diagnostic
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  diagnose:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[HM2-PREPARE-DIAG]'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      BUILD_NUMBER: '20260914999'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install release preparation dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends imagemagick webp
+      - name: Run the same product audits used by Codemagic
+        run: |
+          set -euo pipefail
+          python3 scripts/audit_sm2_storekit_ui.py
+          python3 scripts/audit_sm2_learning_contract.py
+          python3 scripts/audit_sm2_release_drift.py
+      - name: Run release asset preparation with explicit diagnostic build number
+        run: |
+          set -euo pipefail
+          bash -x ios/health-manager-2/prepare-web-assets.sh 2>&1 | tee /tmp/hm2-prepare-diagnostic.log
+      - name: Verify generated release inputs
+        run: |
+          set -euo pipefail
+          test -f ios/health-manager-2/HealthManager2/Web/index.html
+          test -f ios/health-manager-2/HealthManager2/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          grep -q 'CURRENT_PROJECT_VERSION: 20260914999' ios/health-manager-2/project.yml
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: hm2-release-prepare-diagnostic
+          path: /tmp/hm2-prepare-diagnostic.log
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Report
+        if: always() && github.event_name == 'issues'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner, repo:context.repo.repo, issue_number:context.issue.number, body:`HM2 release prepare diagnostic finished. status=${{ job.status }}; run_id=${context.runId}. No build, TestFlight upload, or App Store submission was performed.`});
