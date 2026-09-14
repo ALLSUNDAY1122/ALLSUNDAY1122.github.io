@@ -30,6 +30,8 @@ for token in (
     "voxelDensity: Float = 100",
     "maximumPointCount = 120_000",
     "minimumUsablePointCount = 2_000",
+    "selectLoadableFrames(",
+    "CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) != nil",
     "secondCost - bestCost > uniquenessMargin",
     "simd_dot(reference.forward, frames[index].forward)",
     "SIMD4<Float>(x, y, -depth, 1)",
@@ -69,7 +71,7 @@ assert SOFTWARE.index(backproject_token, SOFTWARE.index("private static func pat
 for token in (
     'legacyMetadataFileName = "s13-seed-recipe.json"',
     'metadataFileName = "s14-seed-recipe.json"',
-    "static let recipeVersion = 12",
+    "static let recipeVersion = 13",
     "case planeSweep",
     "SplatSoftwareDepthSeedBuilder.makeSeedPoints",
     "softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount",
