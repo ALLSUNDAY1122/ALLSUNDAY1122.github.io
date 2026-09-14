@@ -147,7 +147,7 @@ def validate_workflow(repository: str, branch: str, workflow_id: str) -> None:
 
 
 def get_build(token: str, build_id: str) -> dict:
-    status, response = api_json(f"https://codemagic.io/api/v3/builds/{build_id}", token)
+    status, response = api_json(f"https://api.codemagic.io/builds/{build_id}", token)
     if status < 200 or status >= 300:
         raise RuntimeError(f"Codemagic build status failed with HTTP {status}: {sanitize(response)}")
     if response.get("_empty_response") or response.get("_non_json_response"):
