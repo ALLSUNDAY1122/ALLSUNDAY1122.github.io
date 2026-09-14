@@ -1,0 +1,73 @@
+name: Otsu4 Unsigned Device Archive Preflight
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: otsu4-unsigned-archive-preflight
+  cancel-in-progress: true
+
+jobs:
+  archive:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[OTS4] Unsigned Device Archive Preflight'
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Materialize exact audited release source
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin 8912ef194955900ee4d64b17d37910b7a2931eb8
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = '8912ef194955900ee4d64b17d37910b7a2931eb8'
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Prepare audited release inputs
+        run: |
+          set -euo pipefail
+          bash native-ios/Otsu4Sprint/prepare-ios.sh
+          cd native-ios/Otsu4Sprint
+          xcodegen generate
+          test -f Generated/questions.generated.json
+          test -f Assets.xcassets/AppIcon.appiconset/Icon-1024.png
+      - name: Unsigned Release device archive
+        run: |
+          set -o pipefail
+          cd native-ios/Otsu4Sprint
+          xcodebuild \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/Otsu4Sprint.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            archive | tee "$RUNNER_TEMP/otsu4-device-archive.log"
+      - name: Audit archive
+        if: success()
+        run: |
+          set -euo pipefail
+          test -d "$RUNNER_TEMP/Otsu4Sprint.xcarchive/Products/Applications/Otsu4Sprint.app"
+          test -f "$RUNNER_TEMP/Otsu4Sprint.xcarchive/Products/Applications/Otsu4Sprint.app/questions.generated.json"
+          echo 'PASS: unsigned generic iOS Release archive created from exact audited source'
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: otsu4-unsigned-archive-${{ github.run_id }}
+          path: ${{ runner.temp }}/otsu4-device-archive.log
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Otsu4 unsigned device archive preflight finished. status=${{ job.status }}; run_id=${context.runId}. Exact audited source 8912ef194955900ee4d64b17d37910b7a2931eb8; no signing, TestFlight upload, or App Store submission performed.`});
