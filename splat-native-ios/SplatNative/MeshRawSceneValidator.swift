@@ -264,14 +264,13 @@ enum MeshRawSceneValidator {
             guard indexBuffer.baseAddress != nil else { return false }
             let availableTokens = element.data.count / element.bytesPerIndex
             var cursor = 0
-            var polygons: [(start: Int, count: Int)] = []
-            polygons.reserveCapacity(min(element.primitiveCount, 64))
 
+            // Pass 1 validates each variable-length polygon record and every referenced vertex
+            // without allocating an index-sized side buffer.
             for _ in 0..<element.primitiveCount {
                 guard cursor < availableTokens,
                       let rawCount = indexValue(cursor, element: element, rawBuffer: indexBuffer),
-                      rawCount >= 3,
-                      rawCount <= UInt32(Int.max) else { return false }
+                      rawCount >= 3 else { return false }
                 cursor += 1
                 let count = Int(rawCount)
                 let (end, overflow) = cursor.addingReportingOverflow(count)
@@ -280,21 +279,29 @@ enum MeshRawSceneValidator {
                     guard let value = indexValue(token, element: element, rawBuffer: indexBuffer),
                           value < UInt32(vertices.vectorCount) else { return false }
                 }
-                polygons.append((start: cursor, count: count))
                 cursor = end
             }
 
-            guard vertices.usesFloatComponents else { return !polygons.isEmpty }
+            // Integer-backed positions retain structural acceptance after the complete index-range
+            // validation above; production reconstruction uses floating coordinates.
+            guard vertices.usesFloatComponents else { return true }
+
             return vertices.data.withUnsafeBytes { vertexBuffer in
                 guard vertexBuffer.baseAddress != nil else { return false }
-                for polygon in polygons {
-                    guard let rawA = indexValue(polygon.start, element: element, rawBuffer: indexBuffer),
+                var cursor = 0
+                for _ in 0..<element.primitiveCount {
+                    guard let rawCount = indexValue(cursor, element: element, rawBuffer: indexBuffer),
+                          rawCount >= 3 else { return false }
+                    cursor += 1
+                    let count = Int(rawCount)
+                    let polygonStart = cursor
+                    guard let rawA = indexValue(polygonStart, element: element, rawBuffer: indexBuffer),
                           let a = worldPosition(Int(rawA), source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer) else {
                         return false
                     }
-                    for offset in 1..<(polygon.count - 1) {
-                        guard let rawB = indexValue(polygon.start + offset, element: element, rawBuffer: indexBuffer),
-                              let rawC = indexValue(polygon.start + offset + 1, element: element, rawBuffer: indexBuffer),
+                    for offset in 1..<(count - 1) {
+                        guard let rawB = indexValue(polygonStart + offset, element: element, rawBuffer: indexBuffer),
+                              let rawC = indexValue(polygonStart + offset + 1, element: element, rawBuffer: indexBuffer),
                               let b = worldPosition(Int(rawB), source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer),
                               let c = worldPosition(Int(rawC), source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer) else {
                             return false
@@ -303,6 +310,7 @@ enum MeshRawSceneValidator {
                             return true
                         }
                     }
+                    cursor += count
                 }
                 return false
             }
