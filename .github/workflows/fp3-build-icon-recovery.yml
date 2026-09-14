@@ -26,7 +26,9 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-        run: python3 scripts/fp3_build_icon_recovery.py
+        run: |
+          set -o pipefail
+          python3 scripts/fp3_build_icon_recovery.py 2>&1 | tee /tmp/fp3-build-icon-recovery.log
       - name: Upload recovered icon evidence
         if: always() && hashFiles('fp3-build9-appstore-icon-recovery.json') != ''
         uses: actions/upload-artifact@v6
@@ -46,6 +48,9 @@ jobs:
             let detail = '';
             if (fs.existsSync('fp3-build9-appstore-icon-recovery.json')) {
               detail = '\n\n```json\n' + fs.readFileSync('fp3-build9-appstore-icon-recovery.json','utf8') + '\n```';
+            } else if (fs.existsSync('/tmp/fp3-build-icon-recovery.log')) {
+              const lines = fs.readFileSync('/tmp/fp3-build-icon-recovery.log','utf8').trim().split('\n').slice(-12).join('\n');
+              detail = '\n\nSanitized diagnostic tail:\n```text\n' + lines.slice(0,5000) + '\n```';
             }
             await github.rest.issues.createComment({
               owner: context.repo.owner,
