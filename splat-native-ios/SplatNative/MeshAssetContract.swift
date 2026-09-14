@@ -120,6 +120,9 @@ enum MeshAssetContract {
         guard decoded == descriptor else {
             throw sidecarError("Mesh資産メタデータの復号検証に失敗しました")
         }
+        let handle = try FileHandle(forWritingTo: candidateURL)
+        defer { try? handle.close() }
+        try handle.synchronize()
 
         if fileManager.fileExists(atPath: sidecarURL.path) {
             _ = try fileManager.replaceItemAt(sidecarURL, withItemAt: candidateURL)
