@@ -2,9 +2,9 @@
 """Visual/interaction preflight for the exact FP3 native web bundle and Swift bridge.
 
 This does not replace the native simulator gate. It gives a runner-independent gate for
-information completeness, premium affordance, paywall visibility and mobile rendering by
-loading the HTML produced by prepare-ios.sh and evaluating the StoreKit bridge extracted
-verbatim from App.swift.
+information completeness, the full learning loop, premium affordance, paywall visibility
+and mobile rendering by loading the HTML produced by prepare-ios.sh and evaluating the
+StoreKit bridge extracted verbatim from App.swift.
 """
 from __future__ import annotations
 
@@ -51,6 +51,10 @@ def png_size(path: Path) -> tuple[int, int]:
     return struct.unpack(">II", raw[16:24])
 
 
+def shown(locator) -> bool:
+    return locator.evaluate("el => el.classList.contains('show')")
+
+
 def main() -> None:
     if not HTML.exists():
         raise RuntimeError("native Web/index.html missing; run prepare-ios.sh first")
@@ -60,7 +64,8 @@ def main() -> None:
 
     OUT.mkdir(parents=True, exist_ok=True)
     home_png = OUT / "01-home.png"
-    paywall_png = OUT / "02-paywall.png"
+    result_png = OUT / "02-learning-result.png"
+    paywall_png = OUT / "03-paywall.png"
 
     with sync_playwright() as p:
         browser = p.chromium.launch()
@@ -98,6 +103,75 @@ def main() -> None:
             raise RuntimeError(f"2024 Premium affordance missing from accessibility label: {aria!r}")
         page.screenshot(path=str(home_png), full_page=False)
 
+        # Learning Acceptance Contract: start -> understand -> progress -> result -> review -> retry.
+        start = page.locator("#start12")
+        if not start.is_visible() or not start.is_enabled():
+            raise RuntimeError("12-question learning entry is not usable")
+        start.click()
+        page.wait_for_selector("#quiz.active", timeout=5000)
+
+        for i in range(12):
+            qtext = page.locator("#qtext").inner_text().strip()
+            if not qtext:
+                raise RuntimeError(f"question text missing at item {i + 1}")
+            counter = page.locator("#counter").inner_text().strip()
+            if not counter:
+                raise RuntimeError(f"progress counter missing at item {i + 1}")
+            unknown = page.locator("#unknown")
+            if not unknown.is_visible() or not unknown.is_enabled():
+                raise RuntimeError(f"unknown-answer path unusable at item {i + 1}")
+            unknown.click()
+
+            feedback = page.locator("#feedback")
+            if not shown(feedback):
+                raise RuntimeError(f"immediate feedback missing at item {i + 1}")
+            remember = page.locator("#remember").inner_text().strip()
+            if not remember:
+                raise RuntimeError(f"understanding aid missing at item {i + 1}")
+
+            if i == 0:
+                detail = page.locator("#detailBtn")
+                if not detail.is_visible() or not detail.is_enabled():
+                    raise RuntimeError("detailed-explanation control is unavailable")
+                detail.click()
+                details = page.locator("#details")
+                if not shown(details):
+                    raise RuntimeError("detailed explanation did not open")
+                if not page.locator("#explanation").inner_text().strip():
+                    raise RuntimeError("detailed explanation content is empty")
+
+            nxt = page.locator("#next")
+            if not nxt.is_visible() or not nxt.is_enabled():
+                raise RuntimeError(f"next-question control unavailable at item {i + 1}")
+            nxt.click()
+            if i < 11:
+                page.wait_for_selector("#quiz.active", timeout=5000)
+
+        page.wait_for_selector("#result.active", timeout=5000)
+        if not page.locator("#resultScore").inner_text().strip():
+            raise RuntimeError("result score is missing")
+        result_meta = page.locator("#resultMeta").inner_text().strip()
+        if not result_meta:
+            raise RuntimeError("result progress summary is missing")
+        result_weak = page.locator("#resultWeak").inner_text().strip()
+        if not result_weak:
+            raise RuntimeError("result review summary is missing")
+        page.screenshot(path=str(result_png), full_page=False)
+
+        review = page.locator("#reviewWrong")
+        if not review.is_visible() or not review.is_enabled():
+            raise RuntimeError("review/retry control is unavailable after result")
+        review.click()
+        page.wait_for_selector("#quiz.active", timeout=5000)
+        if not page.locator("#qtext").inner_text().strip():
+            raise RuntimeError("review/retry did not reopen a question")
+        if not page.locator("#counter").inner_text().strip():
+            raise RuntimeError("review/retry progress is not visible")
+        page.locator("#quizHome").click()
+        page.wait_for_selector("#home.active", timeout=5000)
+
+        # Premium affordance/paywall and StoreKit state transition.
+        locked = page.locator("#years button", has_text="2024").first
         locked.click()
         paywall = page.locator("#fp3-native-paywall")
         if not paywall.is_visible():
@@ -125,13 +199,13 @@ def main() -> None:
 
         browser.close()
 
-    for shot in (home_png, paywall_png):
+    for shot in (home_png, result_png, paywall_png):
         if png_size(shot) != (1290, 2796):
             raise RuntimeError(f"unexpected mobile screenshot size for {shot}: {png_size(shot)}")
 
     if console_errors:
         raise RuntimeError("browser console/page errors: " + " | ".join(console_errors[-10:]))
-    print("PASS: FP3 bundled mobile visual + premium interaction preflight")
+    print("PASS: FP3 learning-cycle + bundled mobile visual + premium interaction preflight")
 
 
 if __name__ == "__main__":
