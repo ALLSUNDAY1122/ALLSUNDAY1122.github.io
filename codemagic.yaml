@@ -305,6 +305,17 @@ workflows:
         script: |
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcode-project use-profiles
+      - name: Force packaged bundle version
+        script: |
+          set -euo pipefail
+          case "$BUILD_NUMBER" in
+            ''|*[!0-9]*) echo "BUILD_NUMBER must be numeric: $BUILD_NUMBER" >&2; exit 1 ;;
+          esac
+          PLIST="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$PLIST"
+          ACTUAL="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$PLIST")"
+          test "$ACTUAL" = "$BUILD_NUMBER"
+          echo "PASS: source Info.plist CFBundleVersion=$ACTUAL"
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
@@ -412,6 +423,17 @@ workflows:
         script: |
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcode-project use-profiles
+      - name: Force packaged bundle version
+        script: |
+          set -euo pipefail
+          case "$BUILD_NUMBER" in
+            ''|*[!0-9]*) echo "BUILD_NUMBER must be numeric: $BUILD_NUMBER" >&2; exit 1 ;;
+          esac
+          PLIST="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$PLIST"
+          ACTUAL="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$PLIST")"
+          test "$ACTUAL" = "$BUILD_NUMBER"
+          echo "PASS: source Info.plist CFBundleVersion=$ACTUAL"
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
