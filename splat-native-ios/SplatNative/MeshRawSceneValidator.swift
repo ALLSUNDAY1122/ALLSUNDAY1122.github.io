@@ -1,4 +1,5 @@
 import SceneKit
+import simd
 
 enum MeshRawSceneValidator {
     /// SceneKit can successfully decode a syntactically valid USDZ whose scene contains either no
@@ -7,12 +8,15 @@ enum MeshRawSceneValidator {
     /// only point/line primitives. None is a usable finished surface Mesh, so require at least one
     /// surface primitive backed by complete, finite vertex/transform and valid index payloads.
     static func containsGeometry(_ scene: SCNScene) -> Bool {
-        if hasFiniteWorldTransform(scene.rootNode), hasRenderableGeometry(scene.rootNode.geometry) {
+        let root = scene.rootNode
+        if hasFiniteWorldTransform(root),
+           hasRenderableGeometry(root.geometry, worldTransform: root.simdWorldTransform) {
             return true
         }
         var containsGeometry = false
-        scene.rootNode.enumerateChildNodes { node, stop in
-            guard hasFiniteWorldTransform(node), hasRenderableGeometry(node.geometry) else { return }
+        root.enumerateChildNodes { node, stop in
+            guard hasFiniteWorldTransform(node),
+                  hasRenderableGeometry(node.geometry, worldTransform: node.simdWorldTransform) else { return }
             containsGeometry = true
             stop.pointee = true
         }
@@ -30,12 +34,15 @@ enum MeshRawSceneValidator {
         return true
     }
 
-    private static func hasRenderableGeometry(_ geometry: SCNGeometry?) -> Bool {
+    private static func hasRenderableGeometry(
+        _ geometry: SCNGeometry?,
+        worldTransform: simd_float4x4
+    ) -> Bool {
         guard let geometry,
               !geometry.elements.isEmpty,
               let vertices = geometry.sources(for: .vertex).first,
               hasCompleteVertexPayload(vertices),
-              hasFiniteVertexPositions(vertices) else { return false }
+              hasFiniteVertexPositions(vertices, worldTransform: worldTransform) else { return false }
         return geometry.elements.contains { element in
             guard element.primitiveCount > 0 else { return false }
             switch element.primitiveType {
@@ -78,9 +85,13 @@ enum MeshRawSceneValidator {
         return requiredBytes <= source.data.count
     }
 
-    private static func hasFiniteVertexPositions(_ source: SCNGeometrySource) -> Bool {
-        // Integer-backed vertex coordinates are finite by construction. For floating-point
-        // positions, reject NaN/Inf before they can reach framing, rendering, or export math.
+    private static func hasFiniteVertexPositions(
+        _ source: SCNGeometrySource,
+        worldTransform: simd_float4x4
+    ) -> Bool {
+        // Integer-backed local coordinates are finite by construction. The production Mesh paths
+        // use floating positions; validate those both locally and after the node's world transform
+        // so two individually finite values cannot overflow into Inf during framing/render/export.
         guard source.usesFloatComponents else { return true }
         guard source.bytesPerComponent == 4 || source.bytesPerComponent == 8 else { return false }
 
@@ -92,17 +103,36 @@ enum MeshRawSceneValidator {
             guard let base = rawBuffer.baseAddress else { return false }
             for vectorIndex in 0..<source.vectorCount {
                 let vectorStart = source.dataOffset + vectorIndex * stride
-                for componentIndex in 0..<3 {
-                    let pointer = base.advanced(by: vectorStart + componentIndex * componentBytes)
-                    switch componentBytes {
-                    case 4:
-                        if !pointer.loadUnaligned(as: Float.self).isFinite { return false }
-                    case 8:
-                        if !pointer.loadUnaligned(as: Double.self).isFinite { return false }
-                    default:
-                        return false
-                    }
+                let xPointer = base.advanced(by: vectorStart)
+                let yPointer = base.advanced(by: vectorStart + componentBytes)
+                let zPointer = base.advanced(by: vectorStart + componentBytes * 2)
+
+                let x: Float
+                let y: Float
+                let z: Float
+                switch componentBytes {
+                case 4:
+                    x = xPointer.loadUnaligned(as: Float.self)
+                    y = yPointer.loadUnaligned(as: Float.self)
+                    z = zPointer.loadUnaligned(as: Float.self)
+                case 8:
+                    let dx = xPointer.loadUnaligned(as: Double.self)
+                    let dy = yPointer.loadUnaligned(as: Double.self)
+                    let dz = zPointer.loadUnaligned(as: Double.self)
+                    guard dx.isFinite, dy.isFinite, dz.isFinite else { return false }
+                    x = Float(dx)
+                    y = Float(dy)
+                    z = Float(dz)
+                default:
+                    return false
                 }
+
+                guard x.isFinite, y.isFinite, z.isFinite else { return false }
+                let world = worldTransform * SIMD4<Float>(x, y, z, 1)
+                guard world.x.isFinite,
+                      world.y.isFinite,
+                      world.z.isFinite,
+                      world.w.isFinite else { return false }
             }
             return true
         }
