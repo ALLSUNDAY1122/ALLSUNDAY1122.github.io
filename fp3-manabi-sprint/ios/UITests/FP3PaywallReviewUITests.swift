@@ -1,4 +1,5 @@
 import XCTest
+import StoreKitTest
 
 final class FP3PaywallReviewUITests: XCTestCase {
     override func setUpWithError() throws {
@@ -6,6 +7,15 @@ final class FP3PaywallReviewUITests: XCTestCase {
     }
 
     func testCapturePremiumPaywall() throws {
+        // StoreKit configuration attached to the scheme's Run action is not
+        // automatically activated when the app is launched from an XCUITest.
+        // Start an explicit session from the test bundle before launching the AUT.
+        let storeKitSession = try SKTestSession(configurationFileNamed: "Review")
+        storeKitSession.disableDialogs = true
+        storeKitSession.clearTransactions()
+        storeKitSession.locale = Locale(identifier: "ja_JP")
+        storeKitSession.storefront = "JPN"
+
         let app = XCUIApplication()
         app.launchArguments += ["-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
         app.launch()
