@@ -1,0 +1,96 @@
+name: Shoshi Release Audience Repair
+
+on:
+  push:
+    paths:
+      - '.github/workflows/shoshi-release-audience-repair.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repair shoshi App Store export audience fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          old="xcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'"
+          new='xcode-project use-profiles'
+
+          # Local workflow fragment: exact one occurrence.
+          frag=Path('learning-sprint/shoshi/ios/codemagic-shoshi.yml')
+          text=frag.read_text(encoding='utf-8')
+          if text.count(old)!=1:
+              raise SystemExit(f'fragment internal-only marker count={text.count(old)}')
+          text=text.replace(old,new,1).replace('Apply App Store signing profiles for internal TestFlight only','Apply App Store signing profiles for App Store review',1)
+          frag.write_text(text,encoding='utf-8')
+
+          # Root Codemagic: mutate only the shoshi workflow section.
+          root=Path('codemagic.yaml')
+          text=root.read_text(encoding='utf-8')
+          start=text.index('  shoshi-ios:\n')
+          try:
+              end=text.index('\n  ', start+3)
+          except ValueError:
+              end=len(text)
+          block=text[start:end]
+          if block.count(old)!=1:
+              raise SystemExit(f'root shoshi internal-only marker count={block.count(old)}')
+          block=block.replace(old,new,1).replace('Apply App Store signing profiles for internal TestFlight only','Apply App Store signing profiles for App Store review',1)
+          text=text[:start]+block+text[end:]
+          root.write_text(text,encoding='utf-8')
+
+          packet=Path('learning-sprint/shoshi/app-store/APPLE_CONNECT_PACKET.md')
+          text=packet.read_text(encoding='utf-8')
+          marker='- TestFlight export: `testFlightInternalTestingOnly: true`'
+          if text.count(marker)!=1:
+              raise SystemExit('packet export marker drifted')
+          packet.write_text(text.replace(marker,'- Export audience: App Store eligible（`testFlightInternalTestingOnly`を使用しない）',1),encoding='utf-8')
+
+          validator=Path('learning-sprint/shoshi/validate-apple-preflight.mjs')
+          text=validator.read_text(encoding='utf-8')
+          old_packet="includes(packet, 'testFlightInternalTestingOnly: true', 'internal TestFlight export');"
+          new_packet="includes(packet, 'testFlightInternalTestingOnly`を使用しない', 'App Store eligible export policy');"
+          old_block="includes(codemagicBlock, 'testFlightInternalTestingOnly', 'internal TestFlight only export');"
+          new_block="must(!codemagicBlock.includes('testFlightInternalTestingOnly'), 'Shoshi export must remain App Store eligible');"
+          for a,b in ((old_packet,new_packet),(old_block,new_block)):
+              if text.count(a)!=1:
+                  raise SystemExit(f'validator marker drifted: {a}')
+              text=text.replace(a,b,1)
+          validator.write_text(text,encoding='utf-8')
+          PY
+      - name: Verify repair and existing release contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node learning-sprint/shoshi/validate-apple-preflight.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('codemagic.yaml').read_text(encoding='utf-8')
+          start=root.index('  shoshi-ios:\n')
+          try: end=root.index('\n  ',start+3)
+          except ValueError: end=len(root)
+          block=root[start:end]
+          assert 'testFlightInternalTestingOnly' not in block
+          assert 'xcode-project use-profiles' in block
+          assert 'submit_to_testflight: false' in block
+          assert 'submit_to_app_store: false' in block
+          print('PASS Shoshi is App Store eligible without automatic submission')
+          PY
+      - name: Commit repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add codemagic.yaml learning-sprint/shoshi/ios/codemagic-shoshi.yml learning-sprint/shoshi/app-store/APPLE_CONNECT_PACKET.md learning-sprint/shoshi/validate-apple-preflight.mjs
+          git diff --cached --quiet && exit 0
+          git commit -m 'fix(shoshi): make release artifacts App Store eligible'
+          git push
