@@ -248,11 +248,20 @@ workflows:
         distribution_type: app_store
         bundle_identifier: jp.allsunday1122.otsu4
       vars:
+        RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8
         BUNDLE_ID: jp.allsunday1122.otsu4
         XCODE_PROJECT: native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj
         XCODE_SCHEME: Otsu4Sprint
       xcode: latest
     scripts:
+      - name: Materialize audited pinned release source
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          git fetch --depth=1 origin "$RELEASE_SOURCE_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$RELEASE_SOURCE_SHA"
+          test -f native-ios/Otsu4Sprint/project.yml
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
       - name: Prepare audited 360-question resources and icon
