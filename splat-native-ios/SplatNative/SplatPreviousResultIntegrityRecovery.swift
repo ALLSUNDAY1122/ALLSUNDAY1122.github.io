@@ -10,11 +10,10 @@ extension SplatPreviousResultEvidence {
     /// cheap structural checks so every library open does not hash the same large Splat twice;
     /// this path runs only after the strong verifier has already proved the current bytes untrusted.
     ///
-    /// A protected previous result may belong to the immediately preceding commit evidence. That is
-    /// precisely the useful fallback when a newer, strongly sealed same-size result is later found
-    /// corrupt. Recovery therefore validates the backup against the snapshot's original hash while
-    /// requiring the old and failed current generations to have the same byte-count contract. A
-    /// differently sized newer reconstruction is never silently rolled back to an older geometry.
+    /// A protected previous result may either be a backup of this exact commit or the immediately
+    /// preceding same-size generation. The latter is the useful fallback when a newer, strongly
+    /// sealed result is later found corrupt. Differently sized newer reconstruction output is never
+    /// silently rolled back to older geometry.
     static func recoverTrustedPreviousAfterIntegrityFailure(
         projectURL: URL,
         evidence: SplatCommitEvidence,
@@ -32,9 +31,7 @@ extension SplatPreviousResultEvidence {
               snapshot.originalEvidence.fileName == ScanProjectStore.splatResultFileName,
               snapshot.originalEvidence.byteCount > 0,
               snapshot.originalEvidence.byteCount % 32 == 0,
-              snapshot.originalEvidence.byteCount == evidence.byteCount,
-              snapshot.originalEvidence.completedAt <= evidence.completedAt,
-              snapshot.preservedAt <= evidence.completedAt,
+              snapshotCanRecover(snapshot, failedEvidence: evidence),
               isIndependentRegularFileForIntegrityRecovery(backupURL),
               try fileByteCountForIntegrityRecovery(backupURL, fileManager: fileManager) == snapshot.originalEvidence.byteCount,
               try sha256ForIntegrityRecovery(backupURL) == snapshot.sha256 else {
@@ -100,6 +97,25 @@ extension SplatPreviousResultEvidence {
             try? fileManager.removeItem(at: partialURL)
             throw error
         }
+    }
+
+    private static func snapshotCanRecover(
+        _ snapshot: Snapshot,
+        failedEvidence: SplatCommitEvidence
+    ) -> Bool {
+        if snapshot.originalEvidence == failedEvidence {
+            // The backup was taken from this exact completed generation. Its preservation timestamp
+            // is necessarily after completion, so no cross-generation ordering check is needed.
+            return true
+        }
+
+        // A previous generation is eligible only when it has the same serialized-size contract and
+        // the backup was actually preserved before the failed newer commit completed. This permits
+        // deterministic same-size fallback without allowing a newer/different geometry generation
+        // to be replaced by an unrelated older asset.
+        return snapshot.originalEvidence.byteCount == failedEvidence.byteCount &&
+            snapshot.originalEvidence.completedAt <= failedEvidence.completedAt &&
+            snapshot.preservedAt <= failedEvidence.completedAt
     }
 
     private static func readIntegritySnapshotDataIfSafe(
