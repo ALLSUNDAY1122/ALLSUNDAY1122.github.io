@@ -82,19 +82,42 @@ jobs:
       - name: Choose simulator
         id: sim
         run: |
-          DEVICE=$(xcrun simctl list devices available | grep -m1 'iPhone' | sed -E 's/^[[:space:]]*([^\(]+) \(.*/\1/' | sed 's/[[:space:]]*$//')
+          set -euo pipefail
+          LINE=$(xcrun simctl list devices available | grep -m1 'iPhone')
+          DEVICE=$(printf '%s\n' "$LINE" | sed -E 's/^[[:space:]]*([^\(]+) \(.*/\1/' | sed 's/[[:space:]]*$//')
+          UDID=$(printf '%s\n' "$LINE" | sed -E 's/.*\(([0-9A-Fa-f-]{36})\).*/\1/')
           test -n "$DEVICE"
+          test -n "$UDID"
           echo "device=$DEVICE" >> "$GITHUB_OUTPUT"
-      - name: Run native unit and UI tests
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: Run baseline native unit and UI tests
         working-directory: native-ios/Otsu4Sprint
         run: |
           set -o pipefail
           xcodebuild \
             -project Otsu4Sprint.xcodeproj \
             -scheme Otsu4Sprint \
-            -destination "platform=iOS Simulator,name=${{ steps.sim.outputs.device }}" \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -skip-testing:Otsu4SprintUITests/Otsu4AcceptanceUITests \
             CODE_SIGNING_ALLOWED=NO \
-            test | tee "$RUNNER_TEMP/otsu4-native-preflight.log"
+            test | tee "$RUNNER_TEMP/otsu4-native-baseline.log"
+      - name: Reset simulator state before Acceptance Contract
+        run: |
+          set -euo pipefail
+          UDID='${{ steps.sim.outputs.udid }}'
+          xcrun simctl shutdown "$UDID" 2>/dev/null || true
+          xcrun simctl erase "$UDID"
+      - name: Run Acceptance Contract in isolated app state
+        working-directory: native-ios/Otsu4Sprint
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -only-testing:Otsu4SprintUITests/Otsu4AcceptanceUITests/testLearningCycleResultReviewAndRetry \
+            CODE_SIGNING_ALLOWED=NO \
+            test | tee "$RUNNER_TEMP/otsu4-acceptance-contract.log"
       - name: Build Release simulator artifact
         working-directory: native-ios/Otsu4Sprint
         run: |
@@ -127,7 +150,8 @@ jobs:
         with:
           name: otsu4-native-preflight
           path: |
-            ${{ runner.temp }}/otsu4-native-preflight.log
+            ${{ runner.temp }}/otsu4-native-baseline.log
+            ${{ runner.temp }}/otsu4-acceptance-contract.log
             ${{ runner.temp }}/otsu4-release-build.log
           if-no-files-found: warn
           retention-days: 7
