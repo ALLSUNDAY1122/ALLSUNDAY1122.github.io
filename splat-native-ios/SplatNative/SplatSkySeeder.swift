@@ -151,8 +151,11 @@ enum SplatSkySeeder {
               frame.w > 0, frame.h > 0,
               distance > 0 else { return nil }
 
-        let px = normalizedX * Float(frame.w)
-        let py = normalizedY * Float(frame.h)
+        // Normalized image coordinates elsewhere in sky sampling map 0...1 onto pixel centers
+        // 0...(extent-1). Use that same convention for the far-field ray; multiplying by the full
+        // extent shifts every sampled sky direction by up to almost one source pixel.
+        let px = normalizedX * Float(max(0, frame.w - 1))
+        let py = normalizedY * Float(max(0, frame.h - 1))
         let rawDirection = SIMD3<Float>(
             (px - frame.cx) / frame.flX,
             -(py - frame.cy) / frame.flY,
@@ -294,8 +297,8 @@ enum SplatSkySeeder {
         frame: SplatSeedFrame,
         points: [SIMD3<Float>]
     ) -> Bool {
-        let targetX = normalizedX * Float(frame.w)
-        let targetY = normalizedY * Float(frame.h)
+        let targetX = normalizedX * Float(max(0, frame.w - 1))
+        let targetY = normalizedY * Float(max(0, frame.h - 1))
         let radiusX = Float(frame.w) * 0.055
         let radiusY = Float(frame.h) * 0.055
         let step = max(1, points.count / 1_500)
