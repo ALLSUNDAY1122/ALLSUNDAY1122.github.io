@@ -158,6 +158,32 @@ final class SplatPreviousResultIntegrityRecoveryTests: XCTestCase {
         ))
     }
 
+    func testTruncatedNewerCommitNeverRollsBackToOlderTrustedBackup() throws {
+        let root = try makeRoot("truncated-newer-commit-no-rollback")
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Do not restore stale backup after truncation")
+        try makeProcessableRaw(in: projectURL, store: store)
+
+        let oldBytes = Data(repeating: 0x24, count: 64)
+        let oldResult = try commitResult(oldBytes, in: projectURL, store: store)
+        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: oldResult), oldResult)
+        try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: oldResult)
+
+        _ = try store.updateManifest(projectURL: projectURL) { value in value.stage = .processing }
+        let newBytes = Data(repeating: 0x56, count: 96)
+        let newResult = try commitResult(newBytes, in: projectURL, store: store)
+
+        let truncated = Data(repeating: 0x6B, count: 32)
+        try truncated.write(to: newResult, options: .atomic)
+        XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: newResult))
+        XCTAssertEqual(try Data(contentsOf: newResult), truncated)
+        XCTAssertTrue(FileManager.default.fileExists(
+            atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName).path
+        ))
+    }
+
     private func commitResult(
         _ bytes: Data,
         in projectURL: URL,
