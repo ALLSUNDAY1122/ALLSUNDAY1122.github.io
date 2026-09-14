@@ -28,7 +28,8 @@ final class Otsu4AcceptanceUITests: XCTestCase {
 
             XCTAssertTrue(unknown.waitForExistence(timeout: 5), "学習中に『わからない』を選べない")
             unknown.tap()
-            XCTAssertTrue(app.otherElements["memoryBlock"].waitForExistence(timeout: 5), "回答後に理解・復習情報が表示されない")
+            let memoryHeading = app.staticTexts["ここだけ覚える"]
+            XCTAssertTrue(memoryHeading.waitForExistence(timeout: 5), "回答後に理解・復習情報『ここだけ覚える』が表示されない")
 
             let result = app.buttons["結果を見る"]
             if result.exists {
