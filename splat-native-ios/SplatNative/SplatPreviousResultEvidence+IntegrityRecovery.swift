@@ -2,9 +2,10 @@ import CryptoKit
 import Foundation
 
 extension SplatPreviousResultEvidence {
-    /// Restores the last independently verified result when the current result passed legacy size
-    /// evidence but failed the strong SHA seal. The current evidence must still match the evidence
-    /// that failed verification; otherwise a concurrent/newer completion wins and recovery stops.
+    /// Restores the last independently verified result when the current result failed strong
+    /// integrity verification. Recovery is authorized only when the saved backup belongs to the
+    /// exact completion evidence that just failed; a stale backup from an older completed
+    /// generation must never roll a newer completion backwards.
     @discardableResult
     static func recoverTrustedPreviousAfterIntegrityFailure(
         projectURL: URL,
@@ -23,6 +24,7 @@ extension SplatPreviousResultEvidence {
         guard let snapshotData = boundedRegularFileData(at: backupEvidenceURL, fileManager: fileManager),
               let snapshot = try? JSONDecoder().decode(Snapshot.self, from: snapshotData),
               snapshot.schemaVersion == Snapshot.currentSchemaVersion,
+              snapshot.originalEvidence == evidence,
               snapshot.originalEvidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               snapshot.originalEvidence.fileName == ScanProjectStore.splatResultFileName,
               snapshot.originalEvidence.byteCount > 0,
