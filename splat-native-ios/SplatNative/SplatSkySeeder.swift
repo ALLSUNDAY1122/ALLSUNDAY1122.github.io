@@ -66,6 +66,10 @@ enum SplatSkySeeder {
                 ),
                       let raster = SkyRaster(url: url, maximumPixel: maximumRasterPixel),
                       let geometryProjection = geometryProjection(frame: frame) else { return }
+                let projectedGeometry = projectedGeometryPoints(
+                    points: geometryPoints,
+                    projection: geometryProjection
+                )
                 let baseline = lowerSceneLuma(raster: raster)
                 let xs: [Float] = [0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92]
                 let topY: Float = 0.035
@@ -76,7 +80,7 @@ enum SplatSkySeeder {
                             normalizedX: x,
                             normalizedY: topY,
                             projection: geometryProjection,
-                            points: geometryPoints
+                            projectedPoints: projectedGeometry
                         )
                 }
                 guard borderCandidates.count >= 5 else { return }
@@ -92,7 +96,7 @@ enum SplatSkySeeder {
                                 normalizedX: x,
                                 normalizedY: y,
                                 projection: geometryProjection,
-                                points: geometryPoints
+                                projectedPoints: projectedGeometry
                               ),
                               let position = worldPoint(
                                 normalizedX: x,
@@ -312,19 +316,32 @@ enum SplatSkySeeder {
         return count > 0 ? total / count : 0.5
     }
 
+    private static func projectedGeometryPoints(
+        points: [SIMD3<Float>],
+        projection: GeometryProjection
+    ) -> [SIMD2<Float>] {
+        guard !points.isEmpty else { return [] }
+        let step = max(1, points.count / 1_500)
+        var projectedPoints: [SIMD2<Float>] = []
+        projectedPoints.reserveCapacity(min(points.count, 1_501))
+        for index in stride(from: 0, to: points.count, by: step) {
+            guard let projected = project(point: points[index], projection: projection) else { continue }
+            projectedPoints.append(SIMD2<Float>(projected.x, projected.y))
+        }
+        return projectedPoints
+    }
+
     private static func hasGeometryNear(
         normalizedX: Float,
         normalizedY: Float,
         projection: GeometryProjection,
-        points: [SIMD3<Float>]
+        projectedPoints: [SIMD2<Float>]
     ) -> Bool {
         let targetX = normalizedX * Float(max(0, projection.width - 1))
         let targetY = normalizedY * Float(max(0, projection.height - 1))
         let radiusX = Float(projection.width) * 0.055
         let radiusY = Float(projection.height) * 0.055
-        let step = max(1, points.count / 1_500)
-        for index in stride(from: 0, to: points.count, by: step) {
-            guard let projected = project(point: points[index], projection: projection) else { continue }
+        for projected in projectedPoints {
             if abs(projected.x - targetX) <= radiusX && abs(projected.y - targetY) <= radiusY {
                 return true
             }
