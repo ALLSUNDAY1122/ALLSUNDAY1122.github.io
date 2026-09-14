@@ -5,12 +5,16 @@ on:
     paths:
       - '.github/workflows/otsu4-a11-pinned-preflight.yml'
   workflow_dispatch:
+  issues:
+    types: [opened]
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   pinned-acceptance:
+    if: github.event_name != 'issues' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[OTSU4-A11-PREFLIGHT]')
     runs-on: macos-latest
     timeout-minutes: 45
     env:
@@ -125,3 +129,9 @@ jobs:
             ${{ runner.temp }}/otsu4-a11-release.log
           if-no-files-found: warn
           retention-days: 7
+      - name: Report issue-triggered result
+        if: github.event_name == 'issues' && always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: `Otsu4 A11 pinned acceptance preflight finished. status=${{ job.status }}; run_id=${context.runId}. No RC/TestFlight/App Store action performed.`});
