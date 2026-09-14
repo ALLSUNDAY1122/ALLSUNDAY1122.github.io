@@ -62,7 +62,12 @@ enum CaptureImageQualityPolicy {
         if stats.meanLuma > 220, stats.highlightFraction >= 0.60 {
             return .tooBright
         }
-        if stats.laplacianScore < 2.0, stats.lumaStandardDeviation < 14 {
+        // A low Laplacian score alone is ambiguous on genuinely flat surfaces: a sharp painted wall
+        // and a motion-blurred low-texture frame can both have almost no local edges. Only classify
+        // softness when the luma samples contain enough contrast for the edge metric to be meaningful.
+        // This keeps useful depth/pose coverage from flat scene surfaces instead of discarding it as
+        // an asserted focus failure, while still rejecting blurred frames that actually contain texture.
+        if stats.laplacianScore < 2.0, stats.lumaStandardDeviation >= 8 {
             return .tooSoft
         }
         return nil
