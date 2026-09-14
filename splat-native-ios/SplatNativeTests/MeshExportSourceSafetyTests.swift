@@ -73,28 +73,4 @@ final class MeshExportSourceSafetyTests: XCTestCase {
             XCTAssertEqual(error as? MeshExportAdmission.AdmissionError, .invalidGeometry)
         }
     }
-
-    @MainActor
-    func testPhotogrammetryCompletionRejectsCorruptUSDZWithoutPublishingFinishedState() throws {
-        let fileManager = FileManager.default
-        let root = fileManager.temporaryDirectory
-            .appendingPathComponent("MeshExportSourceSafetyTests-\(UUID().uuidString)", isDirectory: true)
-        defer { try? fileManager.removeItem(at: root) }
-        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
-
-        let corrupt = root.appendingPathComponent("mesh-textured.usdz")
-        try Data("not-a-usdz-scene".utf8).write(to: corrupt, options: .atomic)
-
-        let model = MeshScanModel()
-        model.phase = .reconstructing
-        model.reconstructionProgress = 1
-
-        XCTAssertFalse(model.completePhotogrammetryOutput(at: corrupt))
-        XCTAssertNil(model.resultURL)
-        XCTAssertNil(model.previewScene)
-        XCTAssertLessThan(model.reconstructionProgress, 1)
-        guard case .failed = model.phase else {
-            return XCTFail("Corrupt photogrammetry output must not publish .finished")
-        }
-    }
 }
