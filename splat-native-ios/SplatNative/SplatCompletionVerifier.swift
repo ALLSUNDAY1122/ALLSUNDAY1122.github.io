@@ -50,7 +50,8 @@ enum SplatCompletionVerifier {
 
         let projectURL = sourceURL.deletingLastPathComponent()
         let expectedURL = projectURL.appendingPathComponent(ScanProjectStore.splatResultFileName)
-        guard normalized(sourceURL) == normalized(expectedURL) else {
+        guard normalized(sourceURL) == normalized(expectedURL),
+              !isSymbolicLink(expectedURL) else {
             throw VerificationError.unexpectedSource
         }
 
@@ -132,6 +133,10 @@ enum SplatCompletionVerifier {
             return false
         }
         return values.isRegularFile == true && values.isSymbolicLink != true
+    }
+
+    private static func isSymbolicLink(_ url: URL) -> Bool {
+        (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
     }
 
     private static func fileByteCount(_ url: URL, fileManager: FileManager) throws -> Int64 {
