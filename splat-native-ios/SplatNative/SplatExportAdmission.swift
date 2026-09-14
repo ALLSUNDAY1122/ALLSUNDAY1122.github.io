@@ -141,10 +141,7 @@ enum SplatExportAdmission {
         guard FileManager.default.fileExists(atPath: canonicalURL.path) else {
             return CanonicalInspection(candidateExists: false, completeAsset: nil)
         }
-        guard let values = try? canonicalURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
-              values.isRegularFile == true,
-              values.isSymbolicLink != true,
-              let descriptor = try? SplatCanonicalSHAsset.inspectPLYStrictHeader(canonicalURL),
+        guard let descriptor = try? SplatCanonicalSHAsset.inspectPLYStrictHeader(canonicalURL),
               descriptor.shDegree == SplatCanonicalSHAsset.requiredSHDegree,
               descriptor.pointCount == expectedPointCount,
               SplatCanonicalSHAsset.hasCompleteVertexPayload(
