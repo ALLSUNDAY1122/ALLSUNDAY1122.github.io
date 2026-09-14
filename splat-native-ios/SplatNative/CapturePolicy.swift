@@ -372,8 +372,24 @@ enum CapturePolicy {
 
         switch coverageMode(subjectDistance: subjectDistance) {
         case .object:
+            // Completion and progress must share the same hard gate. The object capture intentionally
+            // permits completion after one elevation band once the full orbit is covered; leaving the
+            // weighted score at 0.91 made the UI report 11/12 coverage after capture was already done.
+            if objectCoverageSatisfied(
+                orbitSectors: safeOrbitSectors,
+                elevationBands: safeElevationBands
+            ) {
+                return 1
+            }
             return min(1, max(0, objectScore))
         case .scene:
+            if sceneCoverageSatisfied(
+                viewDirectionSectors: safeViewDirectionSectors,
+                spatialCells: safeSpatialCells,
+                pathLength: safePathLength
+            ) {
+                return 1
+            }
             return min(1, max(0, sceneScore))
         }
     }
