@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   readback:
-    if: github.event_name == 'workflow_dispatch' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP-FACTORY] Platform Readback')
+    if: github.event_name == 'workflow_dispatch' || (github.event.issue.author_association == 'OWNER' && github.event.issue.title == '[APP-FACTORY] Platform Readback')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
