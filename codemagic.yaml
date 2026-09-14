@@ -270,10 +270,25 @@ workflows:
         script: |
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcodegen generate
-      - name: Set build number
+      - name: Set numeric build number
         script: |
-          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
-          agvtool new-version -all "$CM_BUILD_NUMBER"
+          set -euo pipefail
+          case "$CM_BUILD_NUMBER" in
+            ''|*[!0-9]*) echo "CM_BUILD_NUMBER must be numeric: $CM_BUILD_NUMBER" >&2; exit 1 ;;
+          esac
+          PBX="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj/project.pbxproj"
+          python3 - "$PBX" "$CM_BUILD_NUMBER" <<'PY2'
+          from pathlib import Path
+          import re,sys
+          path=Path(sys.argv[1]); number=sys.argv[2]
+          if not number.isdigit(): raise SystemExit('non-numeric build number')
+          text=path.read_text(encoding='utf-8')
+          text,n=re.subn(r'CURRENT_PROJECT_VERSION = [^;]+;', f'CURRENT_PROJECT_VERSION = {number};', text)
+          if n < 1: raise SystemExit('CURRENT_PROJECT_VERSION not found')
+          if re.search(r'CURRENT_PROJECT_VERSION = (YES|NO);', text): raise SystemExit('boolean build number remains')
+          path.write_text(text,encoding='utf-8')
+          print(f'PASS: CURRENT_PROJECT_VERSION={number} replacements={n}')
+          PY2
       - name: Verify release inputs
         script: |
           test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json"
