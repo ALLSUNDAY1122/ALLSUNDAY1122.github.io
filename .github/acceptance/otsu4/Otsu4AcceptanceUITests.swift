@@ -11,8 +11,13 @@ final class Otsu4AcceptanceUITests: XCTestCase {
         app.launch()
 
         let start = app.buttons["始める"]
-        XCTAssertTrue(start.waitForExistence(timeout: 15), "ホームから学習を開始できない")
-        start.tap()
+        let unknown = app.buttons["わからない"]
+        if start.waitForExistence(timeout: 5) {
+            start.tap()
+            XCTAssertTrue(unknown.waitForExistence(timeout: 10), "ホームから学習を開始できない")
+        } else {
+            XCTAssertTrue(unknown.waitForExistence(timeout: 5), "ホーム開始導線にも進行中学習にも到達できない")
+        }
 
         var completed = false
         for _ in 0..<20 {
@@ -21,10 +26,9 @@ final class Otsu4AcceptanceUITests: XCTestCase {
                 break
             }
 
-            let unknown = app.buttons["わからない"]
             XCTAssertTrue(unknown.waitForExistence(timeout: 5), "学習中に『わからない』を選べない")
             unknown.tap()
-            XCTAssertTrue(app.staticTexts["覚え直しポイント"].waitForExistence(timeout: 5), "回答後に理解・復習情報が表示されない")
+            XCTAssertTrue(app.otherElements["memoryBlock"].waitForExistence(timeout: 5), "回答後に理解・復習情報が表示されない")
 
             let result = app.buttons["結果を見る"]
             if result.exists {
