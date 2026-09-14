@@ -191,12 +191,11 @@ enum MeshRawSceneValidator {
 
         return element.data.withUnsafeBytes { indexBuffer in
             guard indexBuffer.baseAddress != nil else { return false }
-            var indices = [UInt32]()
-            indices.reserveCapacity(indexCount)
+            // Pass 1 validates the complete payload without materializing a second O(indexCount)
+            // array. Large reconstructed scenes can contain millions of indices.
             for index in 0..<indexCount {
                 guard let value = indexValue(index, element: element, rawBuffer: indexBuffer),
                       value < UInt32(vertices.vectorCount) else { return false }
-                indices.append(value)
             }
 
             // Integer-backed positions are not used by the production reconstruction paths and
@@ -211,19 +210,30 @@ enum MeshRawSceneValidator {
                 case .triangles:
                     triangleCount = element.primitiveCount
                 case .triangleStrip:
-                    triangleCount = max(0, indices.count - 2)
+                    triangleCount = max(0, indexCount - 2)
                 default:
                     return false
                 }
 
+                // Pass 2 only reads the three indices for each primitive and exits on the first
+                // usable surface. Valid meshes therefore pay no index-sized allocation and usually
+                // stop the area check after their first triangle.
                 for triangleIndex in 0..<triangleCount {
-                    let baseIndex = element.primitiveType == .triangles ? triangleIndex * 3 : triangleIndex
-                    let ia = Int(indices[baseIndex])
-                    let ib = Int(indices[baseIndex + 1])
-                    let ic = Int(indices[baseIndex + 2])
-                    guard let a = worldPosition(ia, source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer),
-                          let b = worldPosition(ib, source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer),
-                          let c = worldPosition(ic, source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer) else {
+                    let baseIndex: Int
+                    switch element.primitiveType {
+                    case .triangles:
+                        baseIndex = triangleIndex * 3
+                    case .triangleStrip:
+                        baseIndex = triangleIndex
+                    default:
+                        return false
+                    }
+                    guard let rawA = indexValue(baseIndex, element: element, rawBuffer: indexBuffer),
+                          let rawB = indexValue(baseIndex + 1, element: element, rawBuffer: indexBuffer),
+                          let rawC = indexValue(baseIndex + 2, element: element, rawBuffer: indexBuffer),
+                          let a = worldPosition(Int(rawA), source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer),
+                          let b = worldPosition(Int(rawB), source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer),
+                          let c = worldPosition(Int(rawC), source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer) else {
                         return false
                     }
                     let ab = b - a
