@@ -293,20 +293,25 @@ enum SplatVideoMemoryPolicy {
         guard FileManager.default.fileExists(atPath: canonicalURL.path) else {
             return CanonicalInspection(candidateExists: false, completeAsset: nil)
         }
-        guard let descriptor = try? SplatCanonicalSHAsset.inspectPLY(canonicalURL),
-              descriptor.shDegree == SplatCanonicalSHAsset.requiredSHDegree,
-              descriptor.pointCount == expectedPointCount else {
-            return CanonicalInspection(candidateExists: true, completeAsset: nil)
-        }
 
-        let asset = SplatCanonicalSHAsset.Asset(url: canonicalURL, descriptor: descriptor)
-        guard SplatCanonicalSHAsset.hasCompleteVertexPayload(
-            at: canonicalURL,
-            expectedPointCount: expectedPointCount
-        ) else {
-            return CanonicalInspection(candidateExists: true, completeAsset: nil)
+        // Keep candidate-exists semantics for fail-closed video admission, but delegate the actual
+        // schema/payload decision to the same strict resolver used by viewer/export. This prevents a
+        // legal comment containing the token `end_header` from making video alone reject a valid SH3
+        // asset through the legacy raw-token parser.
+        let completeAsset: SplatCanonicalSHAsset.Asset?
+        if let verifiedDigest {
+            completeAsset = SplatCanonicalSHAsset.existingCompleteAsset(
+                forLegacySplat: sourceURL,
+                verifiedDigest: verifiedDigest,
+                expectedPointCount: expectedPointCount
+            )
+        } else {
+            completeAsset = SplatCanonicalSHAsset.existingCompleteAsset(
+                forLegacySplat: sourceURL,
+                expectedPointCount: expectedPointCount
+            )
         }
-        return CanonicalInspection(candidateExists: true, completeAsset: asset)
+        return CanonicalInspection(candidateExists: true, completeAsset: completeAsset)
     }
 
     static func videoSurfaceReserveBytes(width: Int, height: Int) -> UInt64 {
