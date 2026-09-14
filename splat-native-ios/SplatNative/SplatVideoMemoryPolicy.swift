@@ -294,24 +294,22 @@ enum SplatVideoMemoryPolicy {
             return CanonicalInspection(candidateExists: false, completeAsset: nil)
         }
 
-        // Keep candidate-exists semantics for fail-closed video admission, but delegate the actual
-        // schema/payload decision to the same strict resolver used by viewer/export. This prevents a
-        // legal comment containing the token `end_header` from making video alone reject a valid SH3
-        // asset through the legacy raw-token parser.
-        let completeAsset: SplatCanonicalSHAsset.Asset?
-        if let verifiedDigest {
-            completeAsset = SplatCanonicalSHAsset.existingCompleteAsset(
-                forLegacySplat: sourceURL,
-                verifiedDigest: verifiedDigest,
+        // Video admission already resolved the exact content-addressed URL above. Validate that URL
+        // directly with the same strict line-aware schema + payload checks used elsewhere, rather than
+        // invoking a resolver that would hash a large legacy .splat a second time.
+        guard let descriptor = try? SplatCanonicalSHAsset.inspectPLYStrictHeader(canonicalURL),
+              descriptor.shDegree == SplatCanonicalSHAsset.requiredSHDegree,
+              descriptor.pointCount == expectedPointCount,
+              SplatCanonicalSHAsset.hasCompleteVertexPayload(
+                at: canonicalURL,
                 expectedPointCount: expectedPointCount
-            )
-        } else {
-            completeAsset = SplatCanonicalSHAsset.existingCompleteAsset(
-                forLegacySplat: sourceURL,
-                expectedPointCount: expectedPointCount
-            )
+              ) else {
+            return CanonicalInspection(candidateExists: true, completeAsset: nil)
         }
-        return CanonicalInspection(candidateExists: true, completeAsset: completeAsset)
+        return CanonicalInspection(
+            candidateExists: true,
+            completeAsset: SplatCanonicalSHAsset.Asset(url: canonicalURL, descriptor: descriptor)
+        )
     }
 
     static func videoSurfaceReserveBytes(width: Int, height: Int) -> UInt64 {
