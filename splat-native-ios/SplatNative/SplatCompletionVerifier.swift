@@ -63,12 +63,15 @@ enum SplatCompletionVerifier {
             throw VerificationError.projectNotFinished
         }
 
-        // The broad previous-result recovery path is for an interrupted reprocess. Once a manifest
-        // says a generation finished, never let that path silently replace it with an older backup;
-        // finished generations are handled below by strong integrity verification and bounded
-        // same-size trusted recovery only.
+        let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
+        // The broad previous-result path is for an interrupted reprocess. Store-level interruption
+        // repair can already have restored the manifest to `.finished` while the commit evidence is
+        // still absent, so stage alone cannot distinguish that recovery boundary. If a finished
+        // generation already has completion evidence, do not invoke the broad path: corruption of
+        // that generation belongs to the strong verifier and bounded same-size integrity recovery.
         let manifest: ScanProjectManifest
-        if loadedManifest.stage == .finished {
+        if loadedManifest.stage == .finished,
+           readCompletionEvidenceIfSafe(at: evidenceURL, fileManager: fileManager) != nil {
             manifest = loadedManifest
         } else {
             manifest = SplatPreviousResultEvidence.recoverTrustedPreviousIfNeeded(
@@ -82,7 +85,6 @@ enum SplatCompletionVerifier {
             throw VerificationError.projectNotFinished
         }
 
-        let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
         guard let evidence = loadValidEvidence(at: evidenceURL, fileManager: fileManager) else {
             throw VerificationError.completionEvidenceMissing
         }
