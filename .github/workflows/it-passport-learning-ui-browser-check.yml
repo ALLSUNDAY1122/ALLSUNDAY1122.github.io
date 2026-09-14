@@ -1,0 +1,75 @@
+name: IT Passport Legacy Browser Interaction Gate
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  browser-gate:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[ITP-LEGACY-UI] BROWSER GATE'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Serve legacy product locally
+        run: |
+          python3 -m http.server 8765 --directory . >/tmp/itp-http.log 2>&1 &
+          echo $! >/tmp/itp-http.pid
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/it-passport-swipe/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/itp-http.log
+          exit 1
+      - name: Run learning-contract browser journey
+        run: |
+          cat >/tmp/itp-browser-check.mjs <<'JS'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:390,height:844}});
+          const errors=[];
+          page.on('pageerror',e=>errors.push(String(e)));
+          await page.goto('http://127.0.0.1:8765/it-passport-swipe/',{waitUntil:'networkidle'});
+          await page.getByRole('button',{name:'12問スプリント'}).click();
+          await page.waitForTimeout(150);
+          if(!await page.locator('#homeHeader').isVisible()) throw new Error('homeHeader not visible');
+          if(!await page.locator('#unknown').isVisible()) throw new Error('unknown not visible');
+          const first=await page.locator('#question').innerText();
+          await page.locator('.choice').first().click();
+          if(!await page.locator('#next').isVisible()) throw new Error('explicit next not visible after answer');
+          const feedback=await page.locator('#feedback').innerText();
+          if(!feedback.includes('この問題で覚える一文')) throw new Error('memory line missing');
+          await page.waitForTimeout(3000);
+          if((await page.locator('#question').innerText())!==first) throw new Error('legacy timed auto-advance survived');
+          await page.locator('#next').click();
+          await page.waitForTimeout(100);
+          if((await page.locator('#question').innerText())===first) throw new Error('explicit next did not advance');
+          await page.locator('#homeHeader').click();
+          if(!await page.locator('#start').isVisible()) throw new Error('home did not open');
+          if(!await page.locator('#resume').isVisible()) throw new Error('resume not visible after interruption');
+          const resumeText=await page.locator('#resume').innerText();
+          if(!resumeText.includes('残り')) throw new Error('resume progress missing');
+          await page.locator('#resume').click();
+          if(!await page.locator('#quiz').isVisible()) throw new Error('resume did not reopen learning');
+          await page.locator('#unknown').click();
+          if(!await page.locator('#next').isVisible()) throw new Error('unknown answer did not reach review state');
+          if(errors.length) throw new Error('page errors: '+errors.join(' | '));
+          console.log('PASS: IT Passport learning-contract browser journey');
+          await browser.close();
+          JS
+          node /tmp/itp-browser-check.mjs
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: `IT Passport browser interaction gate finished. status=${{ job.status }}; run_id=${context.runId}. Journey: 12問開始 → 回答 → 3秒自動遷移なし → 明示次問 → ホーム → 続きから → わからない。No TestFlight/App Store action.`});
