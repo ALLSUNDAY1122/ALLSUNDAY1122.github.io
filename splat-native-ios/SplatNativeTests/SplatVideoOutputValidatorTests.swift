@@ -88,6 +88,13 @@ final class SplatVideoOutputValidatorTests: XCTestCase {
         XCTAssertFalse(SplatVideoOutputValidator.acceptsVideoTrackCount(Int.max))
     }
 
+    func testSilentExportContractRejectsAnyAudioTrack() {
+        XCTAssertTrue(SplatVideoOutputValidator.acceptsAudioTrackCount(0))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsAudioTrackCount(1))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsAudioTrackCount(2))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsAudioTrackCount(Int.max))
+    }
+
     func testLeadingProbeDrainsBoundedOpeningWindow() {
         XCTAssertEqual(
             SplatVideoOutputValidator.leadingProbeWindow(duration: 4),
