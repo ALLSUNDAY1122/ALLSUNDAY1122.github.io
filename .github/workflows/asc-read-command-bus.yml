@@ -71,13 +71,17 @@ jobs:
               token = make_token(issuer_id, key_id, key_path)
               results = []
               for label, path in clean:
-                  status, body = api_get(token, path)
-                  results.append({'label': label, 'path': path, 'http_status': status, 'body': body})
+                  try:
+                      status, body = api_get(token, path)
+                      results.append({'label': label, 'path': path, 'ok': True, 'http_status': status, 'body': body})
+                  except Exception as exc:
+                      results.append({'label': label, 'path': path, 'ok': False, 'error': str(exc)[:4000]})
           finally:
               if cleanup:
                   cleanup.unlink(missing_ok=True)
 
-          output = {'ok': True, 'request_id': request_id, 'action': 'read', 'results': results}
+          all_ok = all(item.get('ok') for item in results)
+          output = {'ok': all_ok, 'request_id': request_id, 'action': 'read', 'results': results}
           Path('release-result.json').write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding='utf-8')
 
           keep_attrs = {
@@ -87,6 +91,9 @@ jobs:
           }
           compact_results = []
           for result in results:
+              if not result.get('ok'):
+                  compact_results.append({'label': result['label'], 'ok': False, 'error': result.get('error')})
+                  continue
               body = result.get('body') if isinstance(result.get('body'), dict) else {}
               data = body.get('data')
               rows = data if isinstance(data, list) else ([data] if isinstance(data, dict) else [])
@@ -107,11 +114,12 @@ jobs:
                   compact_rows.append(compact)
               compact_results.append({
                   'label': result['label'],
+                  'ok': True,
                   'http_status': result['http_status'],
                   'count': len(rows),
                   'data': compact_rows,
               })
-          summary = {'ok': True, 'request_id': request_id, 'results': compact_results}
+          summary = {'ok': all_ok, 'request_id': request_id, 'results': compact_results}
           text = json.dumps(summary, ensure_ascii=False, separators=(',', ':'))
           Path('release-summary.txt').write_text(text[:60000], encoding='utf-8')
           print('ASC_READ_SUMMARY=' + text[:60000])
