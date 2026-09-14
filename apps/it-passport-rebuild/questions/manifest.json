@@ -1,7 +1,16 @@
 {
   "project": "new-it-passport-zero-base",
-  "baseline_date": "2026-08-25",
+  "baseline_date": "2026-09-14",
   "current_syllabus_version": "6.5",
+  "current_syllabus_published": "2026-01-08",
+  "current_syllabus_status": "LIVE_BASELINE",
+  "next_system": {
+    "planned_start_year": 2027,
+    "draft_syllabus_version": "0.1",
+    "draft_published": "2026-08-31",
+    "status": "DRAFT_DO_NOT_MIX_WITH_LIVE_POOL",
+    "source_url": "https://www.ipa.go.jp/shiken/syllabus/henkou/2026/20260630.html"
+  },
   "canonical": {
     "original_mock": {
       "path": "original-mock.json",
@@ -16,6 +25,11 @@
       "current": 0,
       "status": "PENDING_INGEST_AND_CURRENTNESS_AUDIT"
     }
+  },
+  "release_guards": {
+    "require_explicit_syllabus_version": true,
+    "block_draft_questions_from_live_pool": true,
+    "require_source_and_basis_date": true
   },
   "prototype_questions_are_canonical": false,
   "old_it_passport_assets_allowed": false
