@@ -24,6 +24,29 @@ final class SplatPreviousResultIntegrityRecoveryTests: XCTestCase {
         assertBackupMissing(projectURL)
     }
 
+    func testTruncatedCurrentResultRecoversFromExactTrustedBackup() throws {
+        let root = try makeRoot("truncated-current-recovery")
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Truncated integrity recovery")
+        try makeProcessableRaw(in: projectURL, store: store)
+
+        let trustedBytes = Data(repeating: 0x35, count: 64)
+        let result = try commitResult(trustedBytes, in: projectURL, store: store)
+        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: result), result)
+        try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: result)
+
+        let truncated = Data(repeating: 0x7A, count: 32)
+        try truncated.write(to: result, options: .atomic)
+        XCTAssertEqual(try Data(contentsOf: result), truncated)
+
+        let verified = try SplatCompletionVerifier.verifyWithDigest(sourceURL: result)
+        XCTAssertEqual(verified.url.standardizedFileURL, result.standardizedFileURL)
+        XCTAssertEqual(try Data(contentsOf: result), trustedBytes)
+        assertBackupMissing(projectURL)
+    }
+
     func testExternalSymlinkCannotActAsTrustedRecoveryBackup() throws {
         let root = try makeRoot("symlink-backup-rejected")
         let externalRoot = try makeRoot("symlink-backup-external")
