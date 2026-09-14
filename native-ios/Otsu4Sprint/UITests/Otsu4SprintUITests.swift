@@ -83,9 +83,22 @@ final class Otsu4SprintUITests: XCTestCase {
 
         let start = app.buttons["始める"]
         XCTAssertTrue(start.waitForExistence(timeout: 5))
+        XCTAssertTrue(start.isHittable, "Accessibility3でも『始める』が実際にタップ可能である必要がある。frame=\(start.frame)")
+        print("OTS4_AX3_START_BEFORE frame=\(start.frame) hittable=\(start.isHittable) enabled=\(start.isEnabled)")
         start.tap()
 
-        XCTAssertTrue(app.buttons["わからない"].waitForExistence(timeout: 10))
+        let unknown = app.buttons["わからない"]
+        if !unknown.waitForExistence(timeout: 10) {
+            let shot = XCUIScreen.main.screenshot()
+            let attachment = XCTAttachment(screenshot: shot)
+            attachment.name = "otsu4-accessibility3-after-start"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+            print("OTS4_AX3_AFTER_START startExists=\(start.exists) startHittable=\(start.isHittable)")
+            print("OTS4_AX3_HIERARCHY_BEGIN\n\(app.debugDescription)\nOTS4_AX3_HIERARCHY_END")
+            XCTFail("Accessibility3で『始める』tap後に学習画面へ遷移しない")
+            return
+        }
         assertVisibleContentFitsHorizontally(in: app)
         assertButtonsHaveAccessibilityLabels(in: app)
     }
