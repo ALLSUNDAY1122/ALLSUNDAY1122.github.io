@@ -75,6 +75,20 @@ final class MeshRawSceneValidatorTests: XCTestCase {
         XCTAssertTrue(MeshRawSceneValidator.containsGeometry(scene))
     }
 
+    func testAcceptsLargeFiniteTriangleWithoutFloatCrossProductOverflow() {
+        let scene = SCNScene()
+        let magnitude = Float.greatestFiniteMagnitude * 0.5
+        let vertices = SCNGeometrySource(vertices: [
+            SCNVector3(-magnitude, 0, 0),
+            SCNVector3(magnitude, 0, 0),
+            SCNVector3(0, magnitude, 0),
+        ])
+        let triangle = SCNGeometryElement(indices: [UInt16(0), 1, 2], primitiveType: .triangles)
+        scene.rootNode.addChildNode(SCNNode(geometry: SCNGeometry(sources: [vertices], elements: [triangle])))
+
+        XCTAssertTrue(MeshRawSceneValidator.containsGeometry(scene))
+    }
+
     func testRejectsPointCloudAsFinishedSurfaceMesh() {
         let scene = SCNScene()
         let vertices = SCNGeometrySource(vertices: [
