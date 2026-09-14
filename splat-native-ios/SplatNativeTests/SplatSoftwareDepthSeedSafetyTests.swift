@@ -50,6 +50,27 @@ final class SplatSoftwareDepthSeedSafetyTests: XCTestCase {
         XCTAssertTrue(result.points.isEmpty)
     }
 
+    func testMissingFrameDoesNotConsumeBoundedSelectionSlot() throws {
+        let project = try makeDirectory()
+        defer { try? FileManager.default.removeItem(at: project) }
+
+        for index in 1...18 {
+            try writeImage(to: project.appendingPathComponent("frame_\(index).png"))
+        }
+        let frames = (0...18).map { index in
+            frame(filePath: "frame_\(index).png")
+        }
+
+        let selected = SplatSoftwareDepthSeedBuilder.selectLoadableFrames(
+            projectURL: project,
+            frames: frames,
+            maximumCount: SplatSoftwareDepthSeedBuilder.maximumSelectedFrames
+        )
+
+        XCTAssertEqual(selected.count, 18)
+        XCTAssertEqual(selected.map(\.filePath), (1...18).map { "frame_\($0).png" })
+    }
+
     func testThumbnailPrincipalPointPreservesPixelCenterConvention() throws {
         XCTAssertEqual(
             try XCTUnwrap(SplatSoftwareDepthSeedBuilder.scaledPrincipalPointCoordinate(959.5, scale: 0.1)),
