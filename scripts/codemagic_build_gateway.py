@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
-"""Safe Codemagic build gateway for ChatGPT-driven release operations.
+"""Safe Codemagic gateway for ChatGPT-driven release operations.
 
-Credentials are read only from GitHub Actions secrets. The command file contains
-no secret values. App Store review submission is explicitly blocked.
+Codemagic's public Builds API supports starting and cancelling builds, but does
+not expose a documented GET /builds/{id} status endpoint. Completion is therefore
+observed through the documented workflow status badge and, for iOS release
+artifacts, fresh App Store Connect/TestFlight readback.
 """
-
 from __future__ import annotations
 
 import argparse
 import json
 import os
 import re
-import sys
-import time
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -22,12 +21,7 @@ import yaml
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,100}$")
 WORKFLOW_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,120}$")
 REPOSITORY_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
-BUILD_ID_RE = re.compile(r"^[A-Za-z0-9_-]{8,120}$")
-TERMINAL = {"finished", "failed", "canceled", "timeout", "skipped"}
-SENSITIVE_KEY_PARTS = (
-    "secret", "token", "password", "credential", "private",
-    "apikey", "api_key", "environment", "variable",
-)
+SENSITIVE_KEY_PARTS = ("secret", "token", "password", "credential", "private", "apikey", "api_key", "environment", "variable")
 SCANLAB_BUILD3_BRANCH = "testflight/splat-native-ios-20260824-build3"
 KANRIEIYOUSHI_RELEASE_BRANCH = "release/kanrieiyoushi-testflight-20260911"
 TORU_TANGO_RELEASE_BRANCH = "release/toru-tango-build10-20260912"
@@ -52,22 +46,28 @@ def api_json(url: str, token: str, method: str = "GET", payload: dict | None = N
     req.add_header("x-auth-token", token)
     try:
         with urllib.request.urlopen(req, timeout=30) as response:
-            raw = response.read().decode("utf-8", errors="replace")
-            return response.status, _parse_response(raw)
+            return response.status, _parse_response(response.read().decode("utf-8", errors="replace"))
     except urllib.error.HTTPError as exc:
-        raw = exc.read().decode("utf-8", errors="replace")
-        return exc.code, _parse_response(raw)
+        return exc.code, _parse_response(exc.read().decode("utf-8", errors="replace"))
+
+
+def api_text(url: str, token: str = "") -> tuple[int, str]:
+    req = urllib.request.Request(url, method="GET")
+    req.add_header("Accept", "image/svg+xml,text/plain,*/*")
+    if token:
+        req.add_header("x-auth-token", token)
+    try:
+        with urllib.request.urlopen(req, timeout=30) as response:
+            return response.status, response.read().decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as exc:
+        return exc.code, exc.read().decode("utf-8", errors="replace")
 
 
 def sanitize(value):
     if isinstance(value, dict):
-        clean = {}
-        for key, child in value.items():
-            lowered = str(key).lower()
-            clean[key] = "[REDACTED]" if any(part in lowered for part in SENSITIVE_KEY_PARTS) else sanitize(child)
-        return clean
+        return {k: ("[REDACTED]" if any(p in str(k).lower() for p in SENSITIVE_KEY_PARTS) else sanitize(v)) for k, v in value.items()}
     if isinstance(value, list):
-        return [sanitize(item) for item in value]
+        return [sanitize(v) for v in value]
     return value
 
 
@@ -79,21 +79,13 @@ def load_command(path: Path) -> dict:
     if not isinstance(request_id, str) or not REQUEST_ID_RE.fullmatch(request_id):
         raise ValueError("Invalid request_id.")
     action = data.get("action")
-    if action not in {"inspect", "inspect_build", "build"}:
-        raise ValueError("action must be inspect, inspect_build, or build.")
-    if action == "inspect_build":
-        build_id = data.get("build_id")
-        if not isinstance(build_id, str) or not BUILD_ID_RE.fullmatch(build_id):
-            raise ValueError("Invalid build_id.")
+    if action not in {"inspect", "inspect_workflow_status", "build"}:
+        raise ValueError("action must be inspect, inspect_workflow_status, or build.")
     return data
 
 
 def application_summary(app: dict) -> dict:
-    return {
-        "id": app.get("_id") or app.get("id"),
-        "name": app.get("appName") or app.get("name"),
-        "repositoryUrl": app.get("repositoryUrl") or app.get("repository_url") or app.get("repoUrl"),
-    }
+    return {"id": app.get("_id") or app.get("id"), "name": app.get("appName") or app.get("name"), "repositoryUrl": app.get("repositoryUrl") or app.get("repository_url") or app.get("repoUrl")}
 
 
 def find_app(apps: list[dict], repository: str) -> tuple[str | None, list[dict]]:
@@ -135,24 +127,20 @@ def workflow_config(repository: str, branch: str) -> dict:
 def validate_workflow(repository: str, branch: str, workflow_id: str) -> None:
     if not WORKFLOW_ID_RE.fullmatch(workflow_id):
         raise ValueError("Invalid workflow_id.")
-    config = workflow_config(repository, branch)
-    workflows = config.get("workflows") or {}
+    workflows = (workflow_config(repository, branch).get("workflows") or {})
     if workflow_id not in workflows:
         raise ValueError(f"Workflow not found in {repository}/codemagic.yaml: {workflow_id}")
-    workflow = workflows[workflow_id] or {}
-    publishing = workflow.get("publishing") or {}
-    asc = publishing.get("app_store_connect") or {}
+    asc = ((workflows[workflow_id] or {}).get("publishing") or {}).get("app_store_connect") or {}
     if asc.get("submit_to_app_store") is True:
         raise ValueError("Blocked: workflow is configured to submit to the App Store review/release path.")
 
 
-def get_build(token: str, build_id: str) -> dict:
-    status, response = api_json(f"https://api.codemagic.io/builds/{build_id}", token)
-    if status < 200 or status >= 300:
-        raise RuntimeError(f"Codemagic build status failed with HTTP {status}: {sanitize(response)}")
-    if response.get("_empty_response") or response.get("_non_json_response"):
-        raise RuntimeError(f"Codemagic build status returned unusable HTTP {status} body: {sanitize(response)}")
-    return response.get("data") or response
+def badge_state(svg: str) -> str:
+    text = re.sub(r"<[^>]+>", " ", svg).lower()
+    for state in ("building", "passing", "failing", "success", "failed", "unknown"):
+        if state in text:
+            return state
+    return "unclassified"
 
 
 def main() -> int:
@@ -160,25 +148,14 @@ def main() -> int:
     parser.add_argument("--command", default="automation/codemagic-build-command.json")
     parser.add_argument("--output", default="codemagic-result.json")
     args = parser.parse_args()
-
     output_path = Path(args.output)
     result: dict = {"ok": False}
     try:
         command = load_command(Path(args.command))
-        result["request_id"] = command["request_id"]
-        result["action"] = command["action"]
-
+        result.update({"request_id": command["request_id"], "action": command["action"]})
         token = os.environ.get("CM_API_TOKEN", "").strip()
         if not token:
             raise RuntimeError("Missing GitHub Actions secret CM_API_TOKEN.")
-
-        if command["action"] == "inspect_build":
-            build_id = command["build_id"]
-            details = get_build(token, build_id)
-            result.update({"ok": True, "build_id": build_id, "status": details.get("status"), "build_details": sanitize(details)})
-            output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-            print(f"PASS: inspected Codemagic build {build_id}; status={details.get('status')}")
-            return 0
 
         repository = command.get("repository") or os.environ.get("GITHUB_REPOSITORY") or "ALLSUNDAY1122/ALLSUNDAY1122.github.io"
         status, apps_response = api_json("https://api.codemagic.io/apps", token)
@@ -191,28 +168,39 @@ def main() -> int:
         result["application_candidates"] = candidates
 
         if command["action"] == "inspect":
-            result["ok"] = True
-            result["resolved_app_id"] = app_id
+            result.update({"ok": True, "resolved_app_id": app_id})
             if not app_id:
-                result["note"] = "Could not uniquely resolve appId; use one candidate id in the next build command."
+                result["note"] = "Could not uniquely resolve appId; provide an explicit app_id for workflow-specific commands."
             output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
             print(f"PASS: Codemagic API connected; candidates={len(candidates)} resolved={bool(app_id)}")
             return 0
 
         workflow_id = command.get("workflow_id")
-        branch = command.get("branch", "main")
-        if not isinstance(workflow_id, str):
-            raise ValueError("workflow_id is required for build action.")
-        allowed_branch = branch == "main" or (
-            repository == "ALLSUNDAY1122/ALLSUNDAY1122.github.io" and branch in PINNED_RELEASE_BRANCHES
-        )
-        if not allowed_branch:
-            raise ValueError("Branch is not allowed by the Codemagic gateway.")
-        validate_workflow(repository, branch, workflow_id)
-
+        if not isinstance(workflow_id, str) or not WORKFLOW_ID_RE.fullmatch(workflow_id):
+            raise ValueError("Valid workflow_id is required.")
         requested_app_id = command.get("app_id") or app_id or os.environ.get("CM_APP_ID")
         if not requested_app_id:
             raise RuntimeError("Codemagic appId could not be resolved uniquely.")
+
+        if command["action"] == "inspect_workflow_status":
+            badge_url = f"https://api.codemagic.io/apps/{requested_app_id}/{workflow_id}/status_badge.svg"
+            badge_status, svg = api_text(badge_url, token)
+            if badge_status < 200 or badge_status >= 300:
+                raise RuntimeError(f"Codemagic status badge failed with HTTP {badge_status}")
+            state = badge_state(svg)
+            result.update({"ok": True, "app_id": requested_app_id, "workflow_id": workflow_id, "workflow_status": state,
+                           "note": "Workflow badge is latest-workflow evidence, not a build-id-specific completion record. Confirm iOS release artifacts with fresh ASC/TestFlight readback."})
+            output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"PASS: Codemagic workflow badge status={state}; workflow={workflow_id}")
+            return 0
+
+        branch = command.get("branch", "main")
+        allowed_branch = branch == "main" or (repository == "ALLSUNDAY1122/ALLSUNDAY1122.github.io" and branch in PINNED_RELEASE_BRANCHES)
+        if not allowed_branch:
+            raise ValueError("Branch is not allowed by the Codemagic gateway.")
+        validate_workflow(repository, branch, workflow_id)
+        if command.get("wait") is True:
+            raise ValueError("wait=true is unsupported: Codemagic's documented Builds API has no build-status GET endpoint. Start with wait=false and verify via workflow badge plus ASC/TestFlight readback.")
 
         payload = {"appId": requested_app_id, "workflowId": workflow_id, "branch": branch}
         start_status, start_response = api_json("https://api.codemagic.io/builds", token, method="POST", payload=payload)
@@ -221,45 +209,16 @@ def main() -> int:
         build_id = start_response.get("buildId") or start_response.get("id")
         if not build_id:
             raise RuntimeError(f"Codemagic did not return a buildId: {sanitize(start_response)}")
-
-        result.update({"app_id": requested_app_id, "workflow_id": workflow_id, "branch": branch, "build_id": build_id,
-                       "build_url": f"https://codemagic.io/app/{requested_app_id}/build/{build_id}", "status": "started"})
+        result.update({"ok": True, "app_id": requested_app_id, "workflow_id": workflow_id, "branch": branch, "build_id": build_id,
+                       "build_url": f"https://codemagic.io/app/{requested_app_id}/build/{build_id}", "status": "started",
+                       "completion_verification": "Use inspect_workflow_status for latest workflow health and fresh ASC/TestFlight readback for uploaded iOS artifact."})
         output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"Codemagic build started: workflow={workflow_id} build_id={build_id}")
-
-        wait = command.get("wait", True)
-        if wait:
-            timeout_seconds = max(60, min(int(command.get("timeout_seconds", 3600)), 4200))
-            deadline = time.time() + timeout_seconds
-            last_status = ""
-            while time.time() < deadline:
-                details = get_build(token, build_id)
-                current = details.get("status")
-                if current != last_status:
-                    print(f"Codemagic status: {current}")
-                    last_status = current
-                result["status"] = current
-                if current in TERMINAL:
-                    result["build_details"] = sanitize(details)
-                output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-                if current in TERMINAL:
-                    result["ok"] = current == "finished"
-                    output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-                    if current != "finished":
-                        raise RuntimeError(f"Codemagic build ended with status: {current}")
-                    print(f"PASS: Codemagic build finished: {build_id}")
-                    return 0
-                time.sleep(30)
-            raise RuntimeError("Timed out waiting for Codemagic build.")
-
-        result["ok"] = True
-        output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"Codemagic build started safely: workflow={workflow_id} build_id={build_id}; no unsupported polling attempted")
         return 0
-
     except Exception as exc:
         result["error"] = str(exc)
         output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"FAIL: {exc}", file=sys.stderr)
+        print(f"FAIL: {exc}")
         return 1
 
 
