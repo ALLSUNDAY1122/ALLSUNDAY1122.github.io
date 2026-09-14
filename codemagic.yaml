@@ -394,8 +394,9 @@ workflows:
           case "$BUILD_NUMBER" in
             ''|*[!0-9]*) echo "BUILD_NUMBER must be numeric: $BUILD_NUMBER" >&2; exit 1 ;;
           esac
+          UPLOAD_BUILD_NUMBER="$((100 + BUILD_NUMBER))"
           PBX="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj/project.pbxproj"
-          python3 - "$PBX" "$BUILD_NUMBER" <<'PY2'
+          python3 - "$PBX" "$UPLOAD_BUILD_NUMBER" <<'PY2'
           from pathlib import Path
           import re,sys
           path=Path(sys.argv[1]); number=sys.argv[2]
@@ -429,10 +430,11 @@ workflows:
           case "$BUILD_NUMBER" in
             ''|*[!0-9]*) echo "BUILD_NUMBER must be numeric: $BUILD_NUMBER" >&2; exit 1 ;;
           esac
+          UPLOAD_BUILD_NUMBER="$((100 + BUILD_NUMBER))"
           PLIST="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Info.plist"
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $UPLOAD_BUILD_NUMBER" "$PLIST"
           ACTUAL="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$PLIST")"
-          test "$ACTUAL" = "$BUILD_NUMBER"
+          test "$ACTUAL" = "$UPLOAD_BUILD_NUMBER"
           echo "PASS: source Info.plist CFBundleVersion=$ACTUAL"
       - name: Build signed IPA
         script: |
@@ -448,7 +450,7 @@ workflows:
           unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
           APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
           test -n "$APP_DIR"
-          python3 - "$APP_DIR" "$BUILD_NUMBER" <<'PY2'
+          python3 - "$APP_DIR" "$((100 + BUILD_NUMBER))" <<'PY2'
           from pathlib import Path
           import json,plistlib,sys
           app=Path(sys.argv[1]); expected=sys.argv[2]
