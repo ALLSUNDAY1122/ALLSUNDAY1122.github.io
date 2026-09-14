@@ -80,9 +80,24 @@ enum SplatCompletionVerifier {
 
         guard fileManager.fileExists(atPath: expectedURL.path),
               let attributes = try? fileManager.attributesOfItem(atPath: expectedURL.path),
-              let size = attributes[.size] as? NSNumber,
-              size.int64Value == evidence.byteCount else {
+              let size = attributes[.size] as? NSNumber else {
             throw VerificationError.completionEvidenceMismatch
+        }
+
+        // A byte-count mismatch is normally a hard completion failure. The only exception is when
+        // this exact failed generation still has a separately SHA-verified previous result. Route
+        // that case through the same anti-rollback recovery contract used for same-size corruption;
+        // without a matching trusted backup this still fails closed immediately.
+        if size.int64Value != evidence.byteCount {
+            let recoveredDigest = try recoverTrustedPreviousAndVerify(
+                projectURL: projectURL,
+                expectedURL: expectedURL,
+                evidenceURL: evidenceURL,
+                failedEvidence: evidence,
+                fileManager: fileManager
+            )
+            SplatPreviousResultEvidence.discardBackup(projectURL: projectURL, fileManager: fileManager)
+            return Verification(url: expectedURL, sha256: recoveredDigest)
         }
 
         let verifiedDigest: String
@@ -95,28 +110,44 @@ enum SplatCompletionVerifier {
         } catch is CancellationError {
             throw CancellationError()
         } catch {
-            do {
-                guard try SplatPreviousResultEvidence.recoverTrustedPreviousAfterIntegrityFailure(
-                    projectURL: projectURL,
-                    evidence: evidence,
-                    fileManager: fileManager
-                ), let restoredEvidence = loadValidEvidence(at: evidenceURL, fileManager: fileManager) else {
-                    throw VerificationError.completionEvidenceMismatch
-                }
-                verifiedDigest = try SplatStrongCompletionEvidence.verifyOrSeal(
-                    sourceURL: expectedURL,
-                    evidence: restoredEvidence,
-                    fileManager: fileManager
-                )
-            } catch is CancellationError {
-                throw CancellationError()
-            } catch {
-                throw VerificationError.completionEvidenceMismatch
-            }
+            verifiedDigest = try recoverTrustedPreviousAndVerify(
+                projectURL: projectURL,
+                expectedURL: expectedURL,
+                evidenceURL: evidenceURL,
+                failedEvidence: evidence,
+                fileManager: fileManager
+            )
         }
 
         SplatPreviousResultEvidence.discardBackup(projectURL: projectURL, fileManager: fileManager)
         return Verification(url: expectedURL, sha256: verifiedDigest)
+    }
+
+    private static func recoverTrustedPreviousAndVerify(
+        projectURL: URL,
+        expectedURL: URL,
+        evidenceURL: URL,
+        failedEvidence: SplatCommitEvidence,
+        fileManager: FileManager
+    ) throws -> String {
+        do {
+            guard try SplatPreviousResultEvidence.recoverTrustedPreviousAfterIntegrityFailure(
+                projectURL: projectURL,
+                evidence: failedEvidence,
+                fileManager: fileManager
+            ), let restoredEvidence = loadValidEvidence(at: evidenceURL, fileManager: fileManager) else {
+                throw VerificationError.completionEvidenceMismatch
+            }
+            return try SplatStrongCompletionEvidence.verifyOrSeal(
+                sourceURL: expectedURL,
+                evidence: restoredEvidence,
+                fileManager: fileManager
+            )
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch {
+            throw VerificationError.completionEvidenceMismatch
+        }
     }
 
     private static func loadValidEvidence(
