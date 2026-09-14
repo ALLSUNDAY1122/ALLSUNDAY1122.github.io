@@ -6,7 +6,8 @@ enum MeshRawSceneValidator {
     /// geometry nodes, geometry containers with zero primitives, malformed geometry that has
     /// elements but no complete vertex-position payload, invalid indices, non-finite geometry, or
     /// only point/line primitives. None is a usable finished surface Mesh, so require at least one
-    /// surface primitive backed by complete, finite vertex/transform and valid index payloads.
+    /// surface primitive backed by complete, finite vertex/transform and valid non-degenerate index
+    /// payloads.
     static func containsGeometry(_ scene: SCNScene) -> Bool {
         let root = scene.rootNode
         if hasFiniteWorldTransform(root),
@@ -47,7 +48,11 @@ enum MeshRawSceneValidator {
             guard element.primitiveCount > 0 else { return false }
             switch element.primitiveType {
             case .triangles, .triangleStrip:
-                return hasValidIndexedSurface(element, vertexCount: vertices.vectorCount)
+                return hasValidIndexedSurface(
+                    element,
+                    vertices: vertices,
+                    worldTransform: worldTransform
+                )
             case .polygon:
                 // Polygon elements use variable-length per-polygon index records. SceneKit's
                 // decoder has already validated their container representation; keep accepting
@@ -95,51 +100,73 @@ enum MeshRawSceneValidator {
         guard source.usesFloatComponents else { return true }
         guard source.bytesPerComponent == 4 || source.bytesPerComponent == 8 else { return false }
 
-        let componentBytes = source.bytesPerComponent
-        let vectorBytes = source.componentsPerVector * componentBytes
-        let stride = source.dataStride == 0 ? vectorBytes : source.dataStride
-
         return source.data.withUnsafeBytes { rawBuffer in
-            guard let base = rawBuffer.baseAddress else { return false }
+            guard rawBuffer.baseAddress != nil else { return false }
             for vectorIndex in 0..<source.vectorCount {
-                let vectorStart = source.dataOffset + vectorIndex * stride
-                let xPointer = base.advanced(by: vectorStart)
-                let yPointer = base.advanced(by: vectorStart + componentBytes)
-                let zPointer = base.advanced(by: vectorStart + componentBytes * 2)
-
-                let x: Float
-                let y: Float
-                let z: Float
-                switch componentBytes {
-                case 4:
-                    x = xPointer.loadUnaligned(as: Float.self)
-                    y = yPointer.loadUnaligned(as: Float.self)
-                    z = zPointer.loadUnaligned(as: Float.self)
-                case 8:
-                    let dx = xPointer.loadUnaligned(as: Double.self)
-                    let dy = yPointer.loadUnaligned(as: Double.self)
-                    let dz = zPointer.loadUnaligned(as: Double.self)
-                    guard dx.isFinite, dy.isFinite, dz.isFinite else { return false }
-                    x = Float(dx)
-                    y = Float(dy)
-                    z = Float(dz)
-                default:
-                    return false
-                }
-
-                guard x.isFinite, y.isFinite, z.isFinite else { return false }
-                let world = worldTransform * SIMD4<Float>(x, y, z, 1)
-                guard world.x.isFinite,
-                      world.y.isFinite,
-                      world.z.isFinite,
-                      world.w.isFinite else { return false }
+                guard worldPosition(
+                    vectorIndex,
+                    source: source,
+                    worldTransform: worldTransform,
+                    rawBuffer: rawBuffer
+                ) != nil else { return false }
             }
             return true
         }
     }
 
-    private static func hasValidIndexedSurface(_ element: SCNGeometryElement, vertexCount: Int) -> Bool {
-        guard vertexCount > 0,
+    private static func worldPosition(
+        _ vectorIndex: Int,
+        source: SCNGeometrySource,
+        worldTransform: simd_float4x4,
+        rawBuffer: UnsafeRawBufferPointer
+    ) -> SIMD3<Float>? {
+        guard source.usesFloatComponents,
+              source.bytesPerComponent == 4 || source.bytesPerComponent == 8,
+              let base = rawBuffer.baseAddress else { return nil }
+
+        let componentBytes = source.bytesPerComponent
+        let vectorBytes = source.componentsPerVector * componentBytes
+        let stride = source.dataStride == 0 ? vectorBytes : source.dataStride
+        let vectorStart = source.dataOffset + vectorIndex * stride
+        let xPointer = base.advanced(by: vectorStart)
+        let yPointer = base.advanced(by: vectorStart + componentBytes)
+        let zPointer = base.advanced(by: vectorStart + componentBytes * 2)
+
+        let x: Float
+        let y: Float
+        let z: Float
+        switch componentBytes {
+        case 4:
+            x = xPointer.loadUnaligned(as: Float.self)
+            y = yPointer.loadUnaligned(as: Float.self)
+            z = zPointer.loadUnaligned(as: Float.self)
+        case 8:
+            let dx = xPointer.loadUnaligned(as: Double.self)
+            let dy = yPointer.loadUnaligned(as: Double.self)
+            let dz = zPointer.loadUnaligned(as: Double.self)
+            guard dx.isFinite, dy.isFinite, dz.isFinite else { return nil }
+            x = Float(dx)
+            y = Float(dy)
+            z = Float(dz)
+        default:
+            return nil
+        }
+
+        guard x.isFinite, y.isFinite, z.isFinite else { return nil }
+        let world = worldTransform * SIMD4<Float>(x, y, z, 1)
+        guard world.x.isFinite,
+              world.y.isFinite,
+              world.z.isFinite,
+              world.w.isFinite else { return nil }
+        return SIMD3<Float>(world.x, world.y, world.z)
+    }
+
+    private static func hasValidIndexedSurface(
+        _ element: SCNGeometryElement,
+        vertices: SCNGeometrySource,
+        worldTransform: simd_float4x4
+    ) -> Bool {
+        guard vertices.vectorCount > 0,
               element.bytesPerIndex == 1 || element.bytesPerIndex == 2 || element.bytesPerIndex == 4 else {
             return false
         }
@@ -162,24 +189,74 @@ enum MeshRawSceneValidator {
         let (requiredBytes, overflow) = indexCount.multipliedReportingOverflow(by: element.bytesPerIndex)
         guard !overflow, requiredBytes <= element.data.count else { return false }
 
-        return element.data.withUnsafeBytes { rawBuffer in
-            guard let base = rawBuffer.baseAddress else { return false }
+        return element.data.withUnsafeBytes { indexBuffer in
+            guard indexBuffer.baseAddress != nil else { return false }
+            var indices = [UInt32]()
+            indices.reserveCapacity(indexCount)
             for index in 0..<indexCount {
-                let pointer = base.advanced(by: index * element.bytesPerIndex)
-                let value: UInt32
-                switch element.bytesPerIndex {
-                case 1:
-                    value = UInt32(pointer.load(as: UInt8.self))
-                case 2:
-                    value = UInt32(UInt16(littleEndian: pointer.loadUnaligned(as: UInt16.self)))
-                case 4:
-                    value = UInt32(littleEndian: pointer.loadUnaligned(as: UInt32.self))
+                guard let value = indexValue(index, element: element, rawBuffer: indexBuffer),
+                      value < UInt32(vertices.vectorCount) else { return false }
+                indices.append(value)
+            }
+
+            // Integer-backed positions are not used by the production reconstruction paths and
+            // require format-specific normalization semantics. Preserve their prior structural
+            // acceptance rather than guessing coordinates here.
+            guard vertices.usesFloatComponents else { return true }
+
+            return vertices.data.withUnsafeBytes { vertexBuffer in
+                guard vertexBuffer.baseAddress != nil else { return false }
+                let triangleCount: Int
+                switch element.primitiveType {
+                case .triangles:
+                    triangleCount = element.primitiveCount
+                case .triangleStrip:
+                    triangleCount = max(0, indices.count - 2)
                 default:
                     return false
                 }
-                if value >= UInt32(vertexCount) { return false }
+
+                for triangleIndex in 0..<triangleCount {
+                    let baseIndex = element.primitiveType == .triangles ? triangleIndex * 3 : triangleIndex
+                    let ia = Int(indices[baseIndex])
+                    let ib = Int(indices[baseIndex + 1])
+                    let ic = Int(indices[baseIndex + 2])
+                    guard let a = worldPosition(ia, source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer),
+                          let b = worldPosition(ib, source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer),
+                          let c = worldPosition(ic, source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer) else {
+                        return false
+                    }
+                    let ab = b - a
+                    let ac = c - a
+                    guard ab.x.isFinite, ab.y.isFinite, ab.z.isFinite,
+                          ac.x.isFinite, ac.y.isFinite, ac.z.isFinite else { return false }
+                    let cross = simd_cross(ab, ac)
+                    guard cross.x.isFinite, cross.y.isFinite, cross.z.isFinite else { return false }
+                    if cross.x != 0 || cross.y != 0 || cross.z != 0 {
+                        return true
+                    }
+                }
+                return false
             }
-            return true
+        }
+    }
+
+    private static func indexValue(
+        _ index: Int,
+        element: SCNGeometryElement,
+        rawBuffer: UnsafeRawBufferPointer
+    ) -> UInt32? {
+        guard let base = rawBuffer.baseAddress else { return nil }
+        let pointer = base.advanced(by: index * element.bytesPerIndex)
+        switch element.bytesPerIndex {
+        case 1:
+            return UInt32(pointer.load(as: UInt8.self))
+        case 2:
+            return UInt32(UInt16(littleEndian: pointer.loadUnaligned(as: UInt16.self)))
+        case 4:
+            return UInt32(littleEndian: pointer.loadUnaligned(as: UInt32.self))
+        default:
+            return nil
         }
     }
 }
