@@ -3,20 +3,31 @@ import SceneKit
 enum MeshRawSceneValidator {
     /// SceneKit can successfully decode a syntactically valid USDZ whose scene contains either no
     /// geometry nodes, geometry containers with zero primitives, malformed geometry that has
-    /// elements but no complete vertex-position payload, invalid indices, or only point/line
-    /// primitives. None is a usable finished surface Mesh, so require at least one surface
-    /// primitive backed by complete, finite vertex and valid index payloads.
+    /// elements but no complete vertex-position payload, invalid indices, non-finite geometry, or
+    /// only point/line primitives. None is a usable finished surface Mesh, so require at least one
+    /// surface primitive backed by complete, finite vertex/transform and valid index payloads.
     static func containsGeometry(_ scene: SCNScene) -> Bool {
-        if hasRenderableGeometry(scene.rootNode.geometry) {
+        if hasFiniteWorldTransform(scene.rootNode), hasRenderableGeometry(scene.rootNode.geometry) {
             return true
         }
         var containsGeometry = false
         scene.rootNode.enumerateChildNodes { node, stop in
-            guard hasRenderableGeometry(node.geometry) else { return }
+            guard hasFiniteWorldTransform(node), hasRenderableGeometry(node.geometry) else { return }
             containsGeometry = true
             stop.pointee = true
         }
         return containsGeometry
+    }
+
+    private static func hasFiniteWorldTransform(_ node: SCNNode) -> Bool {
+        let transform = node.simdWorldTransform
+        for column in [transform.columns.0, transform.columns.1, transform.columns.2, transform.columns.3] {
+            guard column.x.isFinite,
+                  column.y.isFinite,
+                  column.z.isFinite,
+                  column.w.isFinite else { return false }
+        }
+        return true
     }
 
     private static func hasRenderableGeometry(_ geometry: SCNGeometry?) -> Bool {
