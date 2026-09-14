@@ -34,22 +34,29 @@ TORU_TANGO_RELEASE_BRANCH = "release/toru-tango-build10-20260912"
 PINNED_RELEASE_BRANCHES = {SCANLAB_BUILD3_BRANCH, KANRIEIYOUSHI_RELEASE_BRANCH, TORU_TANGO_RELEASE_BRANCH}
 
 
+def _parse_response(raw: str) -> dict:
+    if not raw:
+        return {"_empty_response": True}
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError:
+        return {"_non_json_response": raw[:2000]}
+    return parsed if isinstance(parsed, dict) else {"_json_response": parsed}
+
+
 def api_json(url: str, token: str, method: str = "GET", payload: dict | None = None) -> tuple[int, dict]:
     body = None if payload is None else json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(url, data=body, method=method)
     req.add_header("Content-Type", "application/json")
+    req.add_header("Accept", "application/json")
     req.add_header("x-auth-token", token)
     try:
         with urllib.request.urlopen(req, timeout=30) as response:
-            raw = response.read().decode("utf-8")
-            return response.status, json.loads(raw) if raw else {}
+            raw = response.read().decode("utf-8", errors="replace")
+            return response.status, _parse_response(raw)
     except urllib.error.HTTPError as exc:
         raw = exc.read().decode("utf-8", errors="replace")
-        try:
-            parsed = json.loads(raw) if raw else {}
-        except json.JSONDecodeError:
-            parsed = {"error": raw[:1000]}
-        return exc.code, parsed
+        return exc.code, _parse_response(raw)
 
 
 def sanitize(value):
@@ -143,6 +150,8 @@ def get_build(token: str, build_id: str) -> dict:
     status, response = api_json(f"https://codemagic.io/api/v3/builds/{build_id}", token)
     if status < 200 or status >= 300:
         raise RuntimeError(f"Codemagic build status failed with HTTP {status}: {sanitize(response)}")
+    if response.get("_empty_response") or response.get("_non_json_response"):
+        raise RuntimeError(f"Codemagic build status returned unusable HTTP {status} body: {sanitize(response)}")
     return response.get("data") or response
 
 
