@@ -57,12 +57,22 @@ jobs:
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           python3 - <<'PY'
+          import os, time
           from scripts.app_store_connect_api import api_get, load_private_key, make_token
           key, cleanup = load_private_key()
           try:
-              token = make_token(__import__('os').environ['ASC_ISSUER_ID'], __import__('os').environ['ASC_KEY_ID'], key)
-              _, versions = api_get(token, '/v1/apps/6799581662/appStoreVersions?filter[platform]=IOS&limit=20')
-              _, iap = api_get(token, '/v2/inAppPurchases/6799583540')
+              versions = iap = None
+              for attempt in range(2):
+                  try:
+                      token = make_token(os.environ['ASC_ISSUER_ID'], os.environ['ASC_KEY_ID'], key)
+                      _, versions = api_get(token, '/v1/apps/6799581662/appStoreVersions?filter[platform]=IOS&limit=20')
+                      _, iap = api_get(token, '/v2/inAppPurchases/6799583540')
+                      break
+                  except RuntimeError as exc:
+                      if attempt == 0 and 'HTTP 401' in str(exc):
+                          time.sleep(2)
+                          continue
+                      raise
           finally:
               if cleanup: cleanup.unlink(missing_ok=True)
           rows = versions.get('data') or []
