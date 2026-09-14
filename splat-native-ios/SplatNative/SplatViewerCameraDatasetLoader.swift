@@ -27,9 +27,9 @@ enum SplatViewerCameraDatasetLoader {
 
             while !frames.isAtEnd {
                 // JSONDecoder can spend noticeable time walking a near-32 MiB trajectory. The async
-                // viewer path runs this decoder off MainActor; make that work cooperatively cancellable
-                // so switching scans does not leave obsolete metadata decode consuming CPU.
-                if decodedFrameIndex % 1_024 == 0, Task.isCancelled {
+                // viewer path runs this decoder off MainActor; check cancellation often enough that
+                // switching scans cannot leave thousands of obsolete matrix rows consuming CPU.
+                if decodedFrameIndex % cancellationCheckFrameInterval == 0, Task.isCancelled {
                     throw CancellationError()
                 }
                 decodedFrameIndex += 1
@@ -188,6 +188,7 @@ enum SplatViewerCameraDatasetLoader {
 
     static let maximumTransformsBytes: Int64 = 32 * 1024 * 1024
     static let maximumReturnedPositions = 4_096
+    static let cancellationCheckFrameInterval = 256
 
     static func cameraPositions(for renderURL: URL, fileManager: FileManager = .default) -> [SIMD3<Float>] {
         let root = renderURL.deletingLastPathComponent().standardizedFileURL
@@ -216,10 +217,13 @@ enum SplatViewerCameraDatasetLoader {
         let worker = Task.detached(priority: .userInitiated) {
             cameraPositions(for: renderURL)
         }
-        return await withTaskCancellationHandler {
+        let positions = await withTaskCancellationHandler {
             await worker.value
         } onCancel: {
             worker.cancel()
         }
+        // A detached worker can complete at the same instant its parent is cancelled. Do not hand a
+        // stale trajectory back to a future caller that forgets to perform its own scan-identity gate.
+        return Task.isCancelled ? [] : positions
     }
 }
