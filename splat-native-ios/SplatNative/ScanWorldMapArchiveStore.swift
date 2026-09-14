@@ -61,9 +61,10 @@ enum ScanWorldMapArchiveStore {
             throw ScanWorldMapArchiveStoreError.verificationFailed
         }
 
-        let values = try candidateURL.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey])
+        // Byte-for-byte verification already proves exact length, so avoid relying on URL file-size
+        // metadata that can be stale immediately after an atomic write + fsync on Apple filesystems.
+        let values = try candidateURL.resourceValues(forKeys: [.isRegularFileKey])
         guard values.isRegularFile == true,
-              values.fileSize == data.count,
               fileContentsEqual(data, at: candidateURL) else {
             throw ScanWorldMapArchiveStoreError.verificationFailed
         }
@@ -99,7 +100,12 @@ enum ScanWorldMapArchiveStore {
             offset += chunk.count
         }
 
-        guard let trailing = try? handle.read(upToCount: 1) else { return false }
-        return trailing.isEmpty
+        do {
+            // FileHandle may represent EOF as either nil or empty Data depending on platform/runtime.
+            // Both mean there are no trailing bytes and therefore exact-length verification succeeded.
+            return try handle.read(upToCount: 1)?.isEmpty ?? true
+        } catch {
+            return false
+        }
     }
 }
