@@ -13,6 +13,28 @@ PRODUCT_PREFIXES = (
 
 text = CHECKLIST.read_text(encoding="utf-8")
 
+# Release CI providers may use a shallow checkout. The drift gate must compare
+# against the recorded baseline rather than fail merely because that commit is
+# not present locally. Fetch exactly the pinned baseline when needed; never
+# widen the comparison to an arbitrary available ancestor.
+present = subprocess.run(
+    ["git", "cat-file", "-e", f"{BASELINE}^{{commit}}"],
+    cwd=ROOT,
+    stdout=subprocess.DEVNULL,
+    stderr=subprocess.DEVNULL,
+).returncode == 0
+if not present:
+    fetch = subprocess.run(
+        ["git", "fetch", "--no-tags", "--depth=1", "origin", BASELINE],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    if fetch.returncode != 0:
+        print("FAIL: HM2 release drift guard cannot materialize pinned baseline")
+        print((fetch.stderr or fetch.stdout).strip()[:1200])
+        raise SystemExit(1)
+
 proc = subprocess.run(
     ["git", "diff", "--name-only", f"{BASELINE}..HEAD"],
     cwd=ROOT,
