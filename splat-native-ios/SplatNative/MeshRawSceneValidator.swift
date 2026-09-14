@@ -246,9 +246,10 @@ enum MeshRawSceneValidator {
         }
     }
 
-    /// SceneKit polygon elements encode each primitive as a vertex-count token followed by that
-    /// polygon's indices. Treating any non-empty polygon payload as a finished surface allowed a
-    /// malformed/out-of-range or fully degenerate polygon to bypass the triangle validator.
+    /// SceneKit polygon elements store two sequences: first one vertex-count value per polygon,
+    /// then the concatenated vertex indices for those polygons. Treating any non-empty polygon
+    /// payload as a finished surface allowed malformed/out-of-range or fully degenerate polygons
+    /// to bypass the triangle validator.
     private static func hasValidPolygonSurface(
         _ element: SCNGeometryElement,
         vertices: SCNGeometrySource,
@@ -258,43 +259,48 @@ enum MeshRawSceneValidator {
               element.primitiveCount > 0,
               vertices.vectorCount > 0,
               element.bytesPerIndex == 1 || element.bytesPerIndex == 2 || element.bytesPerIndex == 4,
-              !element.data.isEmpty else { return false }
+              !element.data.isEmpty,
+              element.data.count % element.bytesPerIndex == 0 else { return false }
 
         return element.data.withUnsafeBytes { indexBuffer in
             guard indexBuffer.baseAddress != nil else { return false }
             let availableTokens = element.data.count / element.bytesPerIndex
-            var cursor = 0
+            guard availableTokens >= element.primitiveCount else { return false }
 
-            // Pass 1 validates each variable-length polygon record and every referenced vertex
-            // without allocating an index-sized side buffer.
-            for _ in 0..<element.primitiveCount {
-                guard cursor < availableTokens,
-                      let rawCount = indexValue(cursor, element: element, rawBuffer: indexBuffer),
+            var totalVertexIndices = 0
+            for polygonIndex in 0..<element.primitiveCount {
+                guard let rawCount = indexValue(polygonIndex, element: element, rawBuffer: indexBuffer),
                       rawCount >= 3 else { return false }
-                cursor += 1
+                let (sum, overflow) = totalVertexIndices.addingReportingOverflow(Int(rawCount))
+                guard !overflow else { return false }
+                totalVertexIndices = sum
+            }
+            let (requiredTokens, tokenOverflow) = element.primitiveCount.addingReportingOverflow(totalVertexIndices)
+            guard !tokenOverflow, requiredTokens == availableTokens else { return false }
+
+            var indexCursor = element.primitiveCount
+            for polygonIndex in 0..<element.primitiveCount {
+                guard let rawCount = indexValue(polygonIndex, element: element, rawBuffer: indexBuffer) else { return false }
                 let count = Int(rawCount)
-                let (end, overflow) = cursor.addingReportingOverflow(count)
-                guard !overflow, end <= availableTokens else { return false }
-                for token in cursor..<end {
+                let end = indexCursor + count
+                for token in indexCursor..<end {
                     guard let value = indexValue(token, element: element, rawBuffer: indexBuffer),
                           value < UInt32(vertices.vectorCount) else { return false }
                 }
-                cursor = end
+                indexCursor = end
             }
 
-            // Integer-backed positions retain structural acceptance after the complete index-range
-            // validation above; production reconstruction uses floating coordinates.
+            // Integer-backed positions retain structural acceptance after complete payload/index
+            // validation; production reconstruction paths use floating coordinates.
             guard vertices.usesFloatComponents else { return true }
 
             return vertices.data.withUnsafeBytes { vertexBuffer in
                 guard vertexBuffer.baseAddress != nil else { return false }
-                var cursor = 0
-                for _ in 0..<element.primitiveCount {
-                    guard let rawCount = indexValue(cursor, element: element, rawBuffer: indexBuffer),
-                          rawCount >= 3 else { return false }
-                    cursor += 1
+                var indexCursor = element.primitiveCount
+                for polygonIndex in 0..<element.primitiveCount {
+                    guard let rawCount = indexValue(polygonIndex, element: element, rawBuffer: indexBuffer) else { return false }
                     let count = Int(rawCount)
-                    let polygonStart = cursor
+                    let polygonStart = indexCursor
                     guard let rawA = indexValue(polygonStart, element: element, rawBuffer: indexBuffer),
                           let a = worldPosition(Int(rawA), source: vertices, worldTransform: worldTransform, rawBuffer: vertexBuffer) else {
                         return false
@@ -310,7 +316,7 @@ enum MeshRawSceneValidator {
                             return true
                         }
                     }
-                    cursor += count
+                    indexCursor += count
                 }
                 return false
             }
