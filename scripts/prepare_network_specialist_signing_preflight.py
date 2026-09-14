@@ -14,7 +14,7 @@ canonical = r'''
     max_build_duration: 20
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: networkspecialist_appstore
+      app_store_connect: "Codemagic Shiwake Swipe"
     environment:
       ios_signing:
         distribution_type: app_store
@@ -62,4 +62,4 @@ if old == new:
     print('network-specialist-signing-preflight already canonical')
     raise SystemExit(0)
 path.write_text(text[:start] + new + text[end:], encoding='utf-8')
-print('repaired network-specialist-signing-preflight to app-specific integration and automatic signing')
+print('repaired network-specialist-signing-preflight to confirmed ASC integration and automatic signing')
