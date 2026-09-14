@@ -14,6 +14,9 @@ APPS = {
     "hm2": ("6799751657", "jp.allsunday1122.healthmanager2"),
     "hm1": ("6799581662", "jp.allsunday1122.healthmanager1"),
     "pharmacist": ("6799753724", "jp.allsunday1122.yakuzaishi"),
+    "otsu4": ("6799755566", "jp.allsunday1122.otsu4"),
+    "fp3": ("6796733578", "com.allsunday1122.fp3kakomoncoach"),
+    "ap": ("6799754343", "jp.allsunday1122.apmanabisprint"),
 }
 OUT = Path(os.environ.get("FACTORY_RELEASE_RESULT", "factory-release-readback.json"))
 
