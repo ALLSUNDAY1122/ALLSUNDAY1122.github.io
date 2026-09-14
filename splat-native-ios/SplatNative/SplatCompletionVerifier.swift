@@ -78,10 +78,14 @@ enum SplatCompletionVerifier {
             throw VerificationError.completionEvidenceMissing
         }
 
+        // Do not reject a truncated completed asset before the strong verifier runs. A byte-count
+        // mismatch is itself an integrity failure, and the late-integrity path may have an exact or
+        // same-size-generation trusted backup that can be safely restored. The recovery helper owns
+        // the anti-rollback contract and still refuses a backup whose generation byte count differs
+        // from the failed commit evidence.
         guard fileManager.fileExists(atPath: expectedURL.path),
               let attributes = try? fileManager.attributesOfItem(atPath: expectedURL.path),
-              let size = attributes[.size] as? NSNumber,
-              size.int64Value == evidence.byteCount else {
+              (attributes[.size] as? NSNumber) != nil else {
             throw VerificationError.completionEvidenceMismatch
         }
 
