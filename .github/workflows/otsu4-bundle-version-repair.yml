@@ -1,0 +1,59 @@
+name: Otsu4 Bundle Version Propagation Repair
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  repair:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-BUNDLEVER-FIX]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Force literal CFBundleVersion after signing profile mutation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          s=p.read_text(encoding='utf-8')
+          marker='''      - name: Apply App Store signing profiles for internal TestFlight only\n        script: |\n          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"\n          xcode-project use-profiles\n      - name: Build signed IPA\n'''
+          replacement='''      - name: Apply App Store signing profiles for internal TestFlight only\n        script: |\n          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"\n          xcode-project use-profiles\n      - name: Force packaged bundle version\n        script: |\n          set -euo pipefail\n          case "$BUILD_NUMBER" in\n            ''|*[!0-9]*) echo "BUILD_NUMBER must be numeric: $BUILD_NUMBER" >&2; exit 1 ;;\n          esac\n          PLIST="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Info.plist"\n          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$PLIST"\n          ACTUAL="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$PLIST")"\n          test "$ACTUAL" = "$BUILD_NUMBER"\n          echo "PASS: source Info.plist CFBundleVersion=$ACTUAL"\n      - name: Build signed IPA\n'''
+          n=s.count(marker)
+          if n != 2:
+              raise SystemExit(f'expected exact RC + TestFlight signing/build boundary twice, found {n}')
+          s=s.replace(marker,replacement)
+          p.write_text(s,encoding='utf-8')
+          PY
+          git diff --check
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('codemagic.yaml').read_text(encoding='utf-8')
+          for key,next_key in [('otsu4-ios','otsu4-testflight'),('otsu4-testflight','tsukanshi-ios')]:
+              start=s.index(f'\n  {key}:'); end=s.index(f'\n  {next_key}:',start)
+              b=s[start:end]
+              assert b.count('Force packaged bundle version') == 1
+              assert "Set :CFBundleVersion $BUILD_NUMBER" in b
+              assert "assert actual == expected" in b
+              assert 'len(data.get(\'questions\') or []) == 360' in b
+              assert 'RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8' in b
+          print('PASS: RC and TF1 paths both force then verify packaged numeric bundle version')
+          PY
+      - name: Commit repair
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          git commit -m 'fix(otsu4): propagate Codemagic build number into packaged Info.plist'
+          git push origin HEAD:main
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Otsu4 bundle-version repair finished. status=${{ job.status }}; run_id=${context.runId}`});
