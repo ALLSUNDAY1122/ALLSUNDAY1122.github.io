@@ -33,6 +33,12 @@ enum SplatVideoOutputValidator {
     static func boundedProbeWindows(duration: TimeInterval) -> [ProbeWindow] {
         guard duration.isFinite, duration > 1.5 else { return [] }
         let window = min(0.5, duration)
+
+        // Export presets are 4/8/12 seconds. One midpoint-only probe could miss a localized
+        // damaged GOP around the first or third quarter and still expose the movie to Share.
+        // Three half-second windows remain tightly bounded (<=1.5 s total decode) while sampling
+        // the whole timeline. Very short custom inputs retain the single centered probe to avoid
+        // overlapping the beginning/tail checks almost completely.
         let centers: [TimeInterval] = duration >= 4 ? [0.25, 0.50, 0.75] : [0.50]
         return centers.map { fraction in
             ProbeWindow(
@@ -45,13 +51,23 @@ enum SplatVideoOutputValidator {
     static func encodedPixelDimension(_ value: CGFloat) -> Int? {
         guard value.isFinite else { return nil }
         let rounded = abs(value).rounded()
+        // CGFloat(Int.max) rounds to 2^63 on 64-bit platforms. Reject that boundary before the
+        // conversion so hostile/corrupt track metadata cannot turn validation into a process trap.
         guard rounded > 0, rounded < CGFloat(Int.max) else { return nil }
         return Int(rounded)
     }
 
-    static func acceptsVideoTrackCount(_ count: Int) -> Bool { count == 1 }
-    static func acceptsAudioTrackCount(_ count: Int) -> Bool { count == 0 }
-    static func acceptsVideoCodec(_ codec: FourCharCode) -> Bool { codec == kCMVideoCodecType_H264 }
+    static func acceptsVideoTrackCount(_ count: Int) -> Bool {
+        count == 1
+    }
+
+    static func acceptsAudioTrackCount(_ count: Int) -> Bool {
+        count == 0
+    }
+
+    static func acceptsVideoCodec(_ codec: FourCharCode) -> Bool {
+        codec == kCMVideoCodecType_H264
+    }
 
     static func validate(
         _ url: URL,
@@ -75,18 +91,31 @@ enum SplatVideoOutputValidator {
 
         let asset = AVURLAsset(url: url)
         let tracks = try await asset.loadTracks(withMediaType: .video)
+        // A user can cancel while AVFoundation is parsing a large MP4. Do not let a validation
+        // result obtained after cancellation escape back to the export/share flow as success.
         try Task.checkCancellation()
-        guard !tracks.isEmpty else { throw ValidationError.missingVideoTrack }
+        guard !tracks.isEmpty else {
+            throw ValidationError.missingVideoTrack
+        }
+        // Scan Lab writes exactly one video stream. Accepting a container with an additional video
+        // track means later players/social pipelines may select a stream that this validator never
+        // decoded or color-checked. Fail closed rather than validating only tracks.first.
         guard acceptsVideoTrackCount(tracks.count), let videoTrack = tracks.first else {
             throw ValidationError.unexpectedVideoTrackCount
         }
 
+        // Orbit exports are intentionally silent: the writer creates no audio input. If an audio
+        // stream appears in the completed container, sharing it would expose media that did not
+        // originate from the renderer contract and that this validator otherwise never inspects.
         let audioTracks = try await asset.loadTracks(withMediaType: .audio)
         try Task.checkCancellation()
         guard acceptsAudioTrackCount(audioTracks.count) else {
             throw ValidationError.unexpectedAudioTrackCount
         }
 
+        // A parsable container can still carry a degenerate video track. Reject zero, NaN and
+        // infinite geometry before the file becomes shareable so downstream viewers do not receive
+        // an MP4 that has duration but no meaningful render surface.
         let naturalSize = try await videoTrack.load(.naturalSize)
         try Task.checkCancellation()
         guard let encodedWidth = encodedPixelDimension(naturalSize.width),
@@ -100,15 +129,18 @@ enum SplatVideoOutputValidator {
             }
         }
 
-        // The exporter intentionally writes H.264 for broad Photos/social compatibility. A file
-        // that silently changes codec is not the artifact this pipeline produced, even if iOS can
-        // decode it locally. Require every format description to remain H.264 as well as BT.709.
+        // Scan Lab's exporter intentionally emits H.264 SDR/BT.709 for broad Photos and social
+        // compatibility. A locally decodable HEVC/other track is not the artifact this pipeline
+        // produced, and downstream services may behave differently. Require every description to
+        // preserve both the H.264 codec and the complete BT.709 color contract.
         let formatDescriptions: [CMFormatDescription] = try await videoTrack.load(.formatDescriptions)
         try Task.checkCancellation()
         guard !formatDescriptions.isEmpty else {
             throw ValidationError.unexpectedVideoCodec
         }
-        guard formatDescriptions.allSatisfy({ acceptsVideoCodec(CMFormatDescriptionGetMediaSubType($0)) }) else {
+        guard formatDescriptions.allSatisfy({ formatDescription in
+            acceptsVideoCodec(CMFormatDescriptionGetMediaSubType(formatDescription))
+        }) else {
             throw ValidationError.unexpectedVideoCodec
         }
         guard formatDescriptions.allSatisfy({ formatDescription in
@@ -136,6 +168,10 @@ enum SplatVideoOutputValidator {
             }
         }
 
+        // Metadata alone is insufficient: a damaged MP4 can expose a video track and plausible
+        // duration while containing no frame that the system decoder can actually materialize.
+        // Drain the first bounded half-second rather than accepting the first decodable frame only;
+        // this catches an export with a valid first frame followed by a damaged opening GOP.
         try Task.checkCancellation()
         guard let leadingWindow = leadingProbeWindow(duration: duration.seconds) else {
             throw ValidationError.invalidDuration
@@ -154,6 +190,8 @@ enum SplatVideoOutputValidator {
         )
         try Task.checkCancellation()
 
+        // Drain bounded interior windows. Standard 4/8/12-second exports probe the first quarter,
+        // midpoint and third quarter, adding at most 1.5 seconds of decoded video at validation.
         for window in boundedProbeWindows(duration: duration.seconds) {
             let middleRange = CMTimeRange(
                 start: CMTime(seconds: window.start, preferredTimescale: 600),
@@ -170,6 +208,9 @@ enum SplatVideoOutputValidator {
             try Task.checkCancellation()
         }
 
+        // Restrict the final reader to the tail bounded window. Drain that entire window so a
+        // corrupt final GOP/frame cannot hide behind one decodable sample near the window start.
+        // At 30 fps this is normally <=15 decoded frames, keeping completion validation bounded.
         let tailWindowSeconds = min(0.5, duration.seconds)
         let tailStartSeconds = max(0, duration.seconds - tailWindowSeconds)
         let tailRange = CMTimeRange(
@@ -196,7 +237,9 @@ enum SplatVideoOutputValidator {
         drainRange: Bool
     ) throws {
         let reader = try AVAssetReader(asset: asset)
-        if let timeRange { reader.timeRange = timeRange }
+        if let timeRange {
+            reader.timeRange = timeRange
+        }
         let output = AVAssetReaderTrackOutput(
             track: track,
             outputSettings: [
@@ -204,9 +247,13 @@ enum SplatVideoOutputValidator {
             ]
         )
         output.alwaysCopiesSampleData = false
-        guard reader.canAdd(output) else { throw ValidationError.undecodableVideoFrame }
+        guard reader.canAdd(output) else {
+            throw ValidationError.undecodableVideoFrame
+        }
         reader.add(output)
-        guard reader.startReading() else { throw ValidationError.undecodableVideoFrame }
+        guard reader.startReading() else {
+            throw ValidationError.undecodableVideoFrame
+        }
         defer { reader.cancelReading() }
 
         var decodedFrameCount = 0
@@ -215,6 +262,9 @@ enum SplatVideoOutputValidator {
             guard let imageBuffer = CMSampleBufferGetImageBuffer(frame) else {
                 throw ValidationError.undecodableVideoFrame
             }
+
+            // Verify decoded pixels agree with the encoded track geometry. This catches containers whose
+            // metadata advertises one surface while the decoder yields a degenerate/inconsistent buffer.
             let decodedWidth = CVPixelBufferGetWidth(imageBuffer)
             let decodedHeight = CVPixelBufferGetHeight(imageBuffer)
             guard decodedWidth > 0,
@@ -227,9 +277,15 @@ enum SplatVideoOutputValidator {
             if !drainRange { break }
         }
 
-        guard decodedFrameCount > 0 else { throw ValidationError.undecodableVideoFrame }
-        if drainRange, reader.status != .completed {
+        guard decodedFrameCount > 0 else {
             throw ValidationError.undecodableVideoFrame
+        }
+        if drainRange {
+            // Reaching nil must mean the bounded range decoded normally, not that AVFoundation
+            // stopped because the media range was corrupt.
+            guard reader.status == .completed else {
+                throw ValidationError.undecodableVideoFrame
+            }
         }
     }
 }
