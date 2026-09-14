@@ -16,18 +16,16 @@ jobs:
       - uses: actions/checkout@v6
         with:
           ref: main
-      - name: Replace agvtool mutation with numeric pbxproj mutation
+      - name: Replace invalid CM_BUILD_NUMBER with Codemagic BUILD_NUMBER
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p=Path('codemagic.yaml')
           s=p.read_text(encoding='utf-8')
-          old='''      - name: Set build number\n        script: |\n          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"\n          agvtool new-version -all "$CM_BUILD_NUMBER"\n'''
-          new='''      - name: Set numeric build number\n        script: |\n          set -euo pipefail\n          case "$CM_BUILD_NUMBER" in\n            ''|*[!0-9]*) echo "CM_BUILD_NUMBER must be numeric: $CM_BUILD_NUMBER" >&2; exit 1 ;;\n          esac\n          PBX="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj/project.pbxproj"\n          python3 - "$PBX" "$CM_BUILD_NUMBER" <<'PY2'\n          from pathlib import Path\n          import re,sys\n          path=Path(sys.argv[1]); number=sys.argv[2]\n          if not number.isdigit(): raise SystemExit('non-numeric build number')\n          text=path.read_text(encoding='utf-8')\n          text,n=re.subn(r'CURRENT_PROJECT_VERSION = [^;]+;', f'CURRENT_PROJECT_VERSION = {number};', text)\n          if n < 1: raise SystemExit('CURRENT_PROJECT_VERSION not found')\n          if re.search(r'CURRENT_PROJECT_VERSION = (YES|NO);', text): raise SystemExit('boolean build number remains')\n          path.write_text(text,encoding='utf-8')\n          print(f'PASS: CURRENT_PROJECT_VERSION={number} replacements={n}')\n          PY2\n'''
-          if old not in s:
-              raise SystemExit('expected otsu4 agvtool block not found; refusing broad edit')
+          old='''      - name: Set numeric build number\n        script: |\n          set -euo pipefail\n          case "$CM_BUILD_NUMBER" in\n            ''|*[!0-9]*) echo "CM_BUILD_NUMBER must be numeric: $CM_BUILD_NUMBER" >&2; exit 1 ;;\n          esac\n          PBX="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj/project.pbxproj"\n          python3 - "$PBX" "$CM_BUILD_NUMBER" <<'PY2'\n          from pathlib import Path\n          import re,sys\n          path=Path(sys.argv[1]); number=sys.argv[2]\n          if not number.isdigit(): raise SystemExit('non-numeric build number')\n          text=path.read_text(encoding='utf-8')\n          text,n=re.subn(r'CURRENT_PROJECT_VERSION = [^;]+;', f'CURRENT_PROJECT_VERSION = {number};', text)\n          if n < 1: raise SystemExit('CURRENT_PROJECT_VERSION not found')\n          if re.search(r'CURRENT_PROJECT_VERSION = (YES|NO);', text): raise SystemExit('boolean build number remains')\n          path.write_text(text,encoding='utf-8')\n          print(f'PASS: CURRENT_PROJECT_VERSION={number} replacements={n}')\n          PY2\n'''
+          new='''      - name: Set numeric build number\n        script: |\n          set -euo pipefail\n          case "$BUILD_NUMBER" in\n            ''|*[!0-9]*) echo "BUILD_NUMBER must be numeric: $BUILD_NUMBER" >&2; exit 1 ;;\n          esac\n          PBX="$CM_BUILD_DIR/native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj/project.pbxproj"\n          python3 - "$PBX" "$BUILD_NUMBER" <<'PY2'\n          from pathlib import Path\n          import re,sys\n          path=Path(sys.argv[1]); number=sys.argv[2]\n          if not number.isdigit(): raise SystemExit('non-numeric build number')\n          text=path.read_text(encoding='utf-8')\n          text,n=re.subn(r'CURRENT_PROJECT_VERSION = [^;]+;', f'CURRENT_PROJECT_VERSION = {number};', text)\n          if n < 1: raise SystemExit('CURRENT_PROJECT_VERSION not found')\n          if re.search(r'CURRENT_PROJECT_VERSION = (YES|NO);', text): raise SystemExit('boolean build number remains')\n          path.write_text(text,encoding='utf-8')\n          print(f'PASS: CURRENT_PROJECT_VERSION={number} replacements={n}')\n          PY2\n'''
           if s.count(old) != 1:
-              raise SystemExit(f'expected one otsu4 agvtool block, found {s.count(old)}')
+              raise SystemExit(f'expected one current Otsu4 numeric block, found {s.count(old)}')
           p.write_text(s.replace(old,new),encoding='utf-8')
           PY
           git diff --check
@@ -37,7 +35,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add codemagic.yaml
-          git commit -m 'fix(otsu4): force numeric CURRENT_PROJECT_VERSION in RC build'
+          git commit -m 'fix(otsu4): use Codemagic BUILD_NUMBER in RC build'
           git push origin HEAD:main
       - name: Report
         if: always()
