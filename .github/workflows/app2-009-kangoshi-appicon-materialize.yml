@@ -5,9 +5,13 @@ on:
     branches: [main]
     paths:
       - 'automation/app2-009-kangoshi-appicon-command.json'
+  issues:
+    types: [opened]
+  workflow_dispatch:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: app2-009-kangoshi-appicon
@@ -15,23 +19,33 @@ concurrency:
 
 jobs:
   materialize:
-    runs-on: ubuntu-latest
+    if: github.event_name != 'issues' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[KANGOSHI-ICON] MATERIALIZE CANONICAL')
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Download canonical Drive icon
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install --disable-pip-version-check gdown
           target='kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          drive_id='1VDnbT0s9gEPde4baCfw9kXYfnEHLQrp3'
           mkdir -p "$(dirname "$target")"
-          gdown --id '1VDnbT0s9gEPde4baCfw9kXYfnEHLQrp3' -O "$target"
+          curl --fail --location --silent --show-error \
+            "https://drive.usercontent.google.com/download?id=${drive_id}&export=download&confirm=t" \
+            --output "$target"
           test "$(stat -c '%s' "$target")" = '683924'
           test "$(sha256sum "$target" | awk '{print $1}')" = '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80'
-          file "$target" | grep -q 'PNG image data, 1024 x 1024'
+          python3 - "$target" <<'PY'
+          from pathlib import Path
+          import struct,sys
+          b=Path(sys.argv[1]).read_bytes()
+          assert b[:8]==b'\x89PNG\r\n\x1a\n'
+          assert struct.unpack('>II',b[16:24])==(1024,1024)
+          print('PASS: canonical 看護師 AppIcon exact binary and dimensions')
+          PY
           python3 kangoshi-sprint/ios/tools/bind_canonical_appicon.py
       - name: Commit exact icon and binding
         shell: bash
@@ -39,11 +53,13 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png kangoshi-sprint/ios/project.yml
+          git add -f kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          git add kangoshi-sprint/ios/project.yml
           if git diff --cached --quiet; then
             echo 'Canonical icon already materialized.'
             exit 0
           fi
+          test "$(sha256sum kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | awk '{print $1}')" = '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80'
           git commit -m 'APP2-009: materialize exact Kangoshi AppIcon'
           for attempt in 1 2 3 4 5 6; do
             git pull --rebase origin main
@@ -51,3 +67,9 @@ jobs:
             sleep 2
           done
           exit 1
+      - name: Report
+        if: github.event_name == 'issues' && always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: `Canonical 看護師 AppIcon materialization finished. status=${{ job.status }}; run_id=${context.runId}. Expected SHA-256: 6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80. No TestFlight/App Store action performed.`});
