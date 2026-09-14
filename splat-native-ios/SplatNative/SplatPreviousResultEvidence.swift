@@ -236,6 +236,7 @@ enum SplatPreviousResultEvidence {
                   try sha256Hex(fileURL: partialURL) == expectedSHA256 else {
                 throw PreservationError.resultChangedDuringPreservation
             }
+            try synchronizeFile(at: partialURL)
 
             if fileManager.fileExists(atPath: destinationURL.path) {
                 _ = try fileManager.replaceItemAt(destinationURL, withItemAt: partialURL)
@@ -250,6 +251,10 @@ enum SplatPreviousResultEvidence {
 
     private static func writeDurableMetadata(_ data: Data, to url: URL) throws {
         try data.write(to: url, options: .atomic)
+        try synchronizeFile(at: url)
+    }
+
+    private static func synchronizeFile(at url: URL) throws {
         let handle = try FileHandle(forWritingTo: url)
         defer { try? handle.close() }
         try handle.synchronize()
