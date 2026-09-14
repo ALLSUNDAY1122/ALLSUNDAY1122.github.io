@@ -144,7 +144,13 @@ final class SplatCompletionVerifierTests: XCTestCase {
             manifest.stage = .finished
             manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
         }
-        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: resultURL), resultURL)
+
+        // Seal the new result without going through the full verifier: a normal successful verifier
+        // intentionally discards the trusted previous backup, while this regression needs to model a
+        // failure that happens before that final cleanup point.
+        let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
+        let newEvidence = try JSONDecoder().decode(SplatCommitEvidence.self, from: Data(contentsOf: evidenceURL))
+        _ = try SplatStrongCompletionEvidence.verifyOrSeal(sourceURL: resultURL, evidence: newEvidence)
 
         // Corrupt the new result without changing its byte count, then preserve its mtime so the
         // strong hash seal rather than the legacy size/mtime guard is what detects the damage.
