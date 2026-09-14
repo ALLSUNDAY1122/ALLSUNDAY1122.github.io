@@ -7,6 +7,7 @@ import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SOFTWARE = (ROOT / "SplatNative" / "SplatSoftwareDepthSeedBuilder.swift").read_text()
+COLORIZER = (ROOT / "SplatNative" / "SplatSeedColorizer.swift").read_text()
 SEED = (ROOT / "SplatNative" / "SplatDepthSeedBuilder.swift").read_text()
 MESH = (ROOT / "SplatNative" / "MeshDenseMVS.swift").read_text()
 POLICY = (ROOT / "SplatNative" / "SplatReconstructionPolicy.swift").read_text()
@@ -61,6 +62,13 @@ for forbidden in (
 ):
     assert forbidden not in SOFTWARE, f"inner plane-sweep allocation/reprojection regressed: {forbidden}"
 
+for token in (
+    "CGImageSourceGetCount(source) > 0",
+    "CGImageSourceCopyPropertiesAtIndex(source, 0, nil) != nil",
+):
+    assert token in COLORIZER, f"missing seed-color frame preflight: {token}"
+
+# The patch point must be backprojected before entering the neighbor loop, not once per neighbor.
 backproject_token = "let world = backproject(u: u + dx, v: v + dy, depth: depth, frame: reference)"
 neighbor_loop_token = "for neighborSlot in 0..<neighborCount"
 assert SOFTWARE.index(backproject_token, SOFTWARE.index("private static func patchCost")) < SOFTWARE.index(
@@ -93,6 +101,7 @@ for token in (
 
 assert "voxels[voxel] = world" not in SEED, "depth voxel fusion regressed to last-observation-wins"
 
+# Long captures must not let the first ~133 mostly-unique depth frames monopolize all 120k voxels.
 def new_voxel_budget(remaining_capacity, remaining_frames):
     if remaining_capacity <= 0 or remaining_frames <= 0:
         return 0
@@ -104,6 +113,9 @@ assert new_voxel_budget(60_000, 150) == 400
 assert new_voxel_budget(900, 1) == 900
 assert new_voxel_budget(0, 20) == 0
 
+# Hardware depth is sampled on its own raster but camera intrinsics describe the capture image.
+# Preserve center-to-center resampling: edge scaling produces a half-pixel bias that can expand to
+# several camera pixels when LiDAR depth is much smaller than RGB.
 for token in (
     "imagePixelCenterCoordinate(",
     "(Double(sampleIndex) + 0.5) * Double(destinationExtent) / Double(sourceExtent) - 0.5",
@@ -112,6 +124,9 @@ for token in (
 ):
     assert token in SEED, f"missing hardware-depth pixel-center mapping: {token}"
 
+# The S14 software seed intentionally inherits the already-shipped MeshPlaneSweepMVS camera/image
+# convention. Guard this explicitly: an isolated vertical flip or optical-axis rewrite in only one
+# implementation would make the same ARKit intrinsics/poses describe different pixels.
 for token in (
     "kCGImageSourceCreateThumbnailWithTransform: false",
     "let y = -(v - frame.cy) / frame.fy * depth",
@@ -234,6 +249,9 @@ assert math.isclose(nu, expected_u, abs_tol=1e-5), (expected_u, nu)
 assert math.isclose(nv, cy, abs_tol=1e-5)
 assert math.isclose(nd, 1.0, abs_tol=1e-5)
 
+# The local inverse-depth search must materially reduce the quantization floor introduced by
+# the 30-value coarse sweep. Evaluate the worst-case midpoint between adjacent coarse hypotheses;
+# it is exactly where the old seed was forced furthest onto the wrong front/back layer.
 near_depth, far_depth = 0.12, 2.8
 coarse_count = 30
 fine_count = 7
@@ -256,6 +274,7 @@ for index in (5, 12, 20, 27):
     refined_error = min(abs((1.0 / inv) - true_depth) for inv in refined_inverse)
     assert refined_error < coarse_error * 0.25, (index, coarse_error, refined_error)
 
+# Additive auto-exposure changes must not turn the same local structure into a high-cost mismatch.
 reference_patch = [20.0, 35.0, 55.0, 30.0, 60.0, 90.0, 25.0, 50.0, 80.0]
 bright_patch = [value + 45.0 for value in reference_patch]
 raw_exposure_cost = sum(abs(a - b) for a, b in zip(reference_patch, bright_patch)) / len(reference_patch)
@@ -264,7 +283,7 @@ assert math.isclose(centered_patch_cost(reference_patch, bright_patch), 0.0, abs
 wrong_structure = [80.0, 50.0, 25.0, 90.0, 60.0, 30.0, 55.0, 35.0, 20.0]
 assert centered_patch_cost(reference_patch, wrong_structure) > 20.0
 
-
+# Multi-view cost must remain on the same per-pixel intensity scale while resisting one bad view.
 def robust_multiview_cost(costs):
     costs = sorted(costs)
     if len(costs) < 2:
@@ -283,7 +302,7 @@ assert sum([8.0, 9.0, 10.0, 120.0]) / 4.0 > 34.0
 assert robust_multiview_cost([8.0, 9.0, 10.0, 120.0]) < 34.0
 assert robust_multiview_cost([8.0]) is None
 
-
+# 1 cm voxelization must collapse sub-centimetre duplicates but retain distinct geometry.
 def voxel(p):
     return tuple(math.floor(v * 100.0) for v in p)
 
