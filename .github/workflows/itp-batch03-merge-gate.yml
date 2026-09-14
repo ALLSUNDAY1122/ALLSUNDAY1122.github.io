@@ -1,0 +1,62 @@
+name: IT Passport batch 03 merge gate
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-merge:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[ITP-BATCH03-MERGE]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 0}
+      - name: Validate staged batch
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import collections,json,re,unicodedata
+          from pathlib import Path
+          root=Path('apps/it-passport-rebuild'); qp=root/'questions'
+          old=json.loads((qp/'original-mock.json').read_text()); batch=json.loads((qp/'batch-03.json').read_text()); manifest=json.loads((qp/'manifest.json').read_text()); config=json.loads((root/'quality/exam-config.json').read_text())
+          norm=lambda s: re.sub(r'\s+','',unicodedata.normalize('NFKC',s).lower())
+          assert len(old)==40 and manifest['canonical']['original_mock']['current']==40
+          assert len(batch)==20
+          ids={q['id'] for q in old}; texts={norm(q['question']) for q in old}; subjects=collections.Counter(); answers=collections.Counter(); req=set(config['required_fields'])
+          for q in batch:
+            assert req <= set(q); assert q['id'] not in ids; assert norm(q['question']) not in texts
+            assert q['subject'] in config['subjects']; assert q['round']==1; assert len(q['choices'])==4 and len({norm(x) for x in q['choices']})==4
+            assert isinstance(q['correct_index'],int) and 0<=q['correct_index']<4
+            assert q['syllabus_version']==manifest['current_syllabus_version']=='6.5'; assert q['origin_type']=='original'; assert q['rights_basis']=='original_question_based_on_public_syllabus'
+            assert q['source_url']=='https://www.ipa.go.jp/shiken/syllabus/gaiyou.html'; assert q['reference_date']=='2026-09-15'; assert len(q['question'])>=18 and len(q['explanation'])>=25
+            subjects[q['subject']]+=1; answers[q['correct_index']]+=1
+          assert subjects=={'ストラテジ系':7,'マネジメント系':4,'テクノロジ系':9},subjects
+          assert answers=={0:5,1:5,2:5,3:5},answers
+          print('PASS batch03')
+          PY
+      - name: Merge and validate canonical 60
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          qp=Path('apps/it-passport-rebuild/questions')
+          old=json.loads((qp/'original-mock.json').read_text()); batch=json.loads((qp/'batch-03.json').read_text()); manifest=json.loads((qp/'manifest.json').read_text())
+          merged=old+batch; assert len(merged)==60
+          (qp/'original-mock.json').write_text(json.dumps(merged,ensure_ascii=False,indent=2)+'\n')
+          manifest['baseline_date']='2026-09-15'; manifest['canonical']['original_mock']['current']=60; manifest['canonical']['original_mock']['status']='BUILDING'; manifest['canonical']['original_mock']['audit_status']='EXPECTED_FAIL_UNTIL_COMPLETE'
+          (qp/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          PY
+          python3 apps/it-passport-rebuild/quality/validate-question-dataset.py
+          if python3 apps/it-passport-rebuild/quality/validate-question-dataset.py --release; then echo 'unexpected release PASS' >&2; exit 1; else echo 'PASS: release remains fail-closed below 300'; fi
+      - name: Commit canonical progress
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add apps/it-passport-rebuild/questions/original-mock.json apps/it-passport-rebuild/questions/manifest.json
+          git diff --cached --check
+          git commit -m 'content(itp): merge audited batch 03 to 60 questions'
+          git push origin HEAD:main
