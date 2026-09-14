@@ -69,13 +69,10 @@ enum SplatStrongCompletionEvidence {
         let before = try snapshot(sourceURL, fileManager: fileManager)
         guard before.byteCount == evidence.byteCount else { throw IntegrityError.hashMismatch }
 
-        // Completion trust metadata must be physically owned by the project and tiny. Following a
-        // symlinked seal would let bytes outside the archived scan decide which local result hash is
-        // trusted, while reading an arbitrarily large corrupt JSON file would create avoidable peak
-        // memory pressure on library open/export. Fail closed before Data(contentsOf:) in both cases.
-        try validateExistingSealForBoundedRead(sealURL, fileManager: fileManager)
-
-        if let data = try? Data(contentsOf: sealURL),
+        // Completion trust metadata must be physically owned by the project and tiny. The bounded
+        // reader also closes the stat/read race so a concurrently replaced or extended seal cannot
+        // turn validation into an unbounded allocation on library open/export.
+        if let data = try readExistingSealIfSafe(sealURL, fileManager: fileManager),
            let seal = try? JSONDecoder().decode(Seal.self, from: data),
            seal.matches(evidence) {
             let hash = try sha256Hex(fileURL: sourceURL)
@@ -123,14 +120,22 @@ enum SplatStrongCompletionEvidence {
         return FileSnapshot(byteCount: size.int64Value, modificationDate: modificationDate)
     }
 
-    private static func validateExistingSealForBoundedRead(_ url: URL, fileManager: FileManager) throws {
-        guard let attributes = try? fileManager.attributesOfItem(atPath: url.path) else { return }
+    private static func readExistingSealIfSafe(_ url: URL, fileManager: FileManager) throws -> Data? {
+        guard let attributes = try? fileManager.attributesOfItem(atPath: url.path) else { return nil }
         guard (attributes[.type] as? FileAttributeType) == .typeRegular,
               let size = attributes[.size] as? NSNumber,
               size.int64Value >= 0,
               size.int64Value <= maximumSealByteCount else {
             throw IntegrityError.hashMismatch
         }
+
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        guard let data = try handle.read(upToCount: Int(maximumSealByteCount) + 1),
+              data.count <= Int(maximumSealByteCount) else {
+            throw IntegrityError.hashMismatch
+        }
+        return data
     }
 
     private static func sha256Hex(fileURL: URL) throws -> String {
