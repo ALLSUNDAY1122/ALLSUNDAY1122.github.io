@@ -9,6 +9,7 @@ from app_store_connect_api import api_get, load_private_key, make_token
 # Keep this list aligned with app_factory_release_readback.py so a factory run does
 # not silently claim a fresh platform read while only probing a small subset.
 APPS={
+ "toru":("6795968222","com.allsunday1122.torutango"),
  "touhan":("6802119268","com.allsunday1122.tourokuhanbaisha"),
  "hm2":("6799751657","jp.allsunday1122.healthmanager2"),
  "hm1":("6799581662","jp.allsunday1122.healthmanager1"),
@@ -38,13 +39,10 @@ CM_WORKFLOWS={
 OUT=Path(os.environ.get("FACTORY_PLATFORM_RESULT","factory-platform-readback.json"))
 SENSITIVE=("secret","token","password","credential","private","environment","variable")
 
-
 def sanitize(v):
-    if isinstance(v,dict):
-        return {k:("[REDACTED]" if any(x in str(k).lower() for x in SENSITIVE) else sanitize(x)) for k,x in v.items()}
+    if isinstance(v,dict): return {k:("[REDACTED]" if any(x in str(k).lower() for x in SENSITIVE) else sanitize(x)) for k,x in v.items()}
     if isinstance(v,list): return [sanitize(x) for x in v]
     return v
-
 
 def cm_get(url,token):
     req=urllib.request.Request(url,method="GET",headers={"x-auth-token":token,"Accept":"application/json"})
@@ -57,23 +55,18 @@ def cm_get(url,token):
         except Exception: body={"error":raw[:1000]}
         return e.code,body
 
-
 def list_data(payload):
     d=payload.get("data",[]) if isinstance(payload,dict) else []
     return d if isinstance(d,list) else ([] if d is None else [d])
 
-
 def latest_build(builds):
     if not builds: return None
     def key(item):
-        attrs=item.get("attributes") or {}
-        return str(attrs.get("uploadedDate") or attrs.get("expirationDate") or "")
+        attrs=item.get("attributes") or {}; return str(attrs.get("uploadedDate") or attrs.get("expirationDate") or "")
     return max(builds,key=key)
-
 
 def app_summary(app):
     return {"id":app.get("_id") or app.get("id"),"name":app.get("appName") or app.get("name"),"repositoryUrl":app.get("repositoryUrl") or app.get("repository_url") or app.get("repoUrl"),"workflowIds":app.get("workflowIds")}
-
 
 def cm_build_list(payload):
     if not isinstance(payload,dict): return []
@@ -81,10 +74,8 @@ def cm_build_list(payload):
     if isinstance(rows,dict): rows=rows.get("builds") or []
     return rows if isinstance(rows,list) else []
 
-
 def cm_time_key(build): return str(build.get("startedAt") or build.get("finishedAt") or build.get("createdAt") or "")
 def cm_workflow_id(build): return str(build.get("fileWorkflowId") or build.get("workflowId") or "")
-
 
 def cm_build_summary(build):
     if not build: return None
@@ -97,35 +88,27 @@ def cm_build_summary(build):
     if isinstance(commit,dict): out["commit"]={k:commit.get(k) for k in ("hash","message") if commit.get(k) is not None}
     return out
 
-
 def workflow_blocks(path=Path("codemagic.yaml")):
     """Return top-level codemagic workflow blocks without requiring PyYAML."""
     if not path.exists(): return {}
     text=path.read_text(encoding="utf-8")
-    starts=list(re.finditer(r"(?m)^  ([A-Za-z0-9][A-Za-z0-9_.-]*):\s*$",text))
-    out={}
+    starts=list(re.finditer(r"(?m)^  ([A-Za-z0-9][A-Za-z0-9_.-]*):\s*$",text)); out={}
     for i,m in enumerate(starts):
-        end=starts[i+1].start() if i+1<len(starts) else len(text)
-        out[m.group(1)]=text[m.start():end]
+        end=starts[i+1].start() if i+1<len(starts) else len(text); out[m.group(1)]=text[m.start():end]
     return out
 
-
 def resolve_workflows():
-    resolved=dict(CM_WORKFLOWS); source={k:"explicit" for k in resolved}
-    blocks=workflow_blocks()
+    resolved=dict(CM_WORKFLOWS); source={k:"explicit" for k in resolved}; blocks=workflow_blocks()
     for label,(_,bundle_id) in APPS.items():
         if label in resolved: continue
         hits=[wid for wid,block in blocks.items() if bundle_id in block]
         if hits:
-            # Prefer a TestFlight-capable workflow when several target one bundle.
             tf=[wid for wid in hits if "submit_to_testflight: true" in blocks[wid]]
             resolved[label]=(tf or hits)[0]; source[label]="codemagic-yaml-bundle"
     return resolved,source
 
-
 def main():
-    result={"completed_at":datetime.now(timezone.utc).isoformat(),"read_only":True,"testflight":{},"codemagic":{}}
-    asc_errors=[]
+    result={"completed_at":datetime.now(timezone.utc).isoformat(),"read_only":True,"testflight":{},"codemagic":{}}; asc_errors=[]
     kp,cleanup=load_private_key()
     try:
         token=make_token(os.environ["ASC_ISSUER_ID"],os.environ["ASC_KEY_ID"],kp)
@@ -137,19 +120,14 @@ def main():
                     status,body=api_get(token,path); entry[name]={"http_status":status,"body":body}
                 except Exception as exc:
                     entry[name]={"error":str(exc)[:600]}; asc_errors.append(f"{label}:{name}")
-            builds=list_data((entry.get("builds") or {}).get("body") or {})
-            newest=latest_build(builds); attrs=(newest or {}).get("attributes") or {}
-            entry["summary"]={"latest_build_id":(newest or {}).get("id"),"latest_build":attrs.get("version"),"latest_uploaded_date":attrs.get("uploadedDate"),"latest_processing_state":attrs.get("processingState"),"latest_expired":attrs.get("expired"),"build_count":len(builds),"beta_group_count":len(list_data((entry.get("beta_groups") or {}).get("body") or {}))}
-            result["testflight"][label]=entry
+            builds=list_data((entry.get("builds") or {}).get("body") or {}); newest=latest_build(builds); attrs=(newest or {}).get("attributes") or {}
+            entry["summary"]={"latest_build_id":(newest or {}).get("id"),"latest_build":attrs.get("version"),"latest_uploaded_date":attrs.get("uploadedDate"),"latest_processing_state":attrs.get("processingState"),"latest_expired":attrs.get("expired"),"build_count":len(builds),"beta_group_count":len(list_data((entry.get("beta_groups") or {}).get("body") or {}))}; result["testflight"][label]=entry
     finally:
         if cleanup: cleanup.unlink(missing_ok=True)
-
     cm_token=os.environ.get("CM_API_TOKEN","").strip()
-    if not cm_token:
-        result["codemagic"]={"error":"CM_API_TOKEN unavailable"}
+    if not cm_token: result["codemagic"]={"error":"CM_API_TOKEN unavailable"}
     else:
-        status,apps=cm_get("https://api.codemagic.io/apps",cm_token)
-        candidates=[]; raw=[]
+        status,apps=cm_get("https://api.codemagic.io/apps",cm_token); candidates=[]; raw=[]
         if 200<=status<300:
             raw=(apps.get("applications") or apps.get("data") or []) if isinstance(apps,dict) else []
             if isinstance(raw,dict): raw=raw.get("applications") or []
@@ -161,24 +139,18 @@ def main():
         if len(discovered_ids)==1: selected_app_id=next(iter(discovered_ids)); resolution="repository-discovery"
         else: selected_app_id=KNOWN_CM_APP_ID; resolution="known-monorepo-app-id-fallback"
         result["codemagic"].update({"apps_http_status":status,"application_count":len(raw) if isinstance(raw,list) else 0,"application_summaries":[app_summary(x) for x in raw] if isinstance(raw,list) else [],"repository_candidates":candidates,"selected_app_id":selected_app_id,"resolution":resolution})
-        bstatus,builds=cm_get(f"https://api.codemagic.io/builds?appId={urllib.parse.quote(str(selected_app_id))}",cm_token)
-        result["codemagic"].update({"builds_http_status":bstatus,"builds":sanitize(builds)})
-        arr=sorted(cm_build_list(builds),key=cm_time_key,reverse=True)
-        result["codemagic"]["latest_summary"]=cm_build_summary(arr[0]) if arr else None
+        bstatus,builds=cm_get(f"https://api.codemagic.io/builds?appId={urllib.parse.quote(str(selected_app_id))}",cm_token); result["codemagic"].update({"builds_http_status":bstatus,"builds":sanitize(builds)})
+        arr=sorted(cm_build_list(builds),key=cm_time_key,reverse=True); result["codemagic"]["latest_summary"]=cm_build_summary(arr[0]) if arr else None
         mapping,mapping_source=resolve_workflows(); per_workflow={}
         for label in APPS:
-            workflow_id=mapping.get(label)
-            row=next((b for b in arr if workflow_id and cm_workflow_id(b)==workflow_id),None)
+            workflow_id=mapping.get(label); row=next((b for b in arr if workflow_id and cm_workflow_id(b)==workflow_id),None)
             per_workflow[label]={"workflow_id":workflow_id,"mapping_source":mapping_source.get(label),"latest":cm_build_summary(row)}
-        result["codemagic"]["workflow_latest"]=per_workflow
-        result["codemagic"]["observed_workflow_latest"]={}
+        result["codemagic"]["workflow_latest"]=per_workflow; result["codemagic"]["observed_workflow_latest"]={}
         for b in arr:
             wid=cm_workflow_id(b)
             if wid and wid not in result["codemagic"]["observed_workflow_latest"]: result["codemagic"]["observed_workflow_latest"][wid]=cm_build_summary(b)
-
     OUT.write_text(json.dumps(sanitize(result),ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    summary={"completed_at":result["completed_at"],"testflight":{k:v.get("summary") for k,v in result["testflight"].items()},"asc_errors":asc_errors,"codemagic_apps_http":result["codemagic"].get("apps_http_status"),"codemagic_application_count":result["codemagic"].get("application_count"),"codemagic_builds_http":result["codemagic"].get("builds_http_status"),"codemagic_candidates":len(result["codemagic"].get("repository_candidates") or []),"codemagic_resolution":result["codemagic"].get("resolution"),"codemagic_latest":result["codemagic"].get("latest_summary"),"codemagic_workflows":result["codemagic"].get("workflow_latest")}
-    print(json.dumps(summary,ensure_ascii=False))
+    summary={"completed_at":result["completed_at"],"testflight":{k:v.get("summary") for k,v in result["testflight"].items()},"asc_errors":asc_errors,"codemagic_apps_http":result["codemagic"].get("apps_http_status"),"codemagic_application_count":result["codemagic"].get("application_count"),"codemagic_builds_http":result["codemagic"].get("builds_http_status"),"codemagic_candidates":len(result["codemagic"].get("repository_candidates") or []),"codemagic_resolution":result["codemagic"].get("resolution"),"codemagic_latest":result["codemagic"].get("latest_summary"),"codemagic_workflows":result["codemagic"].get("workflow_latest")}; print(json.dumps(summary,ensure_ascii=False))
     if asc_errors: raise SystemExit(f"ASC fresh readback incomplete: {asc_errors}")
     if result["codemagic"].get("apps_http_status")!=200: raise SystemExit("Codemagic fresh readback failed")
     if result["codemagic"].get("builds_http_status")!=200: raise SystemExit("Codemagic build readback failed")
