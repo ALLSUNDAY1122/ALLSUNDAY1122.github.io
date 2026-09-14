@@ -75,14 +75,31 @@ jobs:
       - name: Mark TestFlight readiness PASS with evidence
         run: |
           set -euo pipefail
+          git reset --hard HEAD
+          git clean -fd
+          git pull --rebase origin main
+          changed="$(git diff --name-only "$KNOWN_VISUAL_PASS_SHA..HEAD" -- \
+            ios/health-manager-1 \
+            apps/sanitary-manager-1 \
+            apps/sanitary-manager-2 \
+            scripts/audit_hm1_product_preflight.py \
+            scripts/audit_hm1_human_gate.py \
+            scripts/audit_hm1_release_contract.py)"
+          if [ -n "$changed" ]; then
+            echo 'HM1 visual/product drift appeared during readiness synthesis; refusing readiness:' >&2
+            echo "$changed" >&2
+            exit 1
+          fi
+          BASELINE_SHA="$(git rev-parse HEAD)"
+          export BASELINE_SHA
           python3 - <<'PY'
           from pathlib import Path
-          import json, datetime
+          import json, datetime, os
           p=Path('automation/hm1-testflight-readiness.json')
           data={
             'ready': True,
             'updated_at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            'product_sha': '${{ github.sha }}',
+            'product_sha': os.environ['BASELINE_SHA'],
             'visual_pass_sha': '220a590eb55bd0b49be00f1e370fa6219b2cbbb0',
             'evidence': [
               'no_visual_or_product_drift_since_visual_pass',
@@ -100,8 +117,6 @@ jobs:
           git add automation/hm1-testflight-readiness.json
           git diff --cached --exit-code && { echo 'Readiness already current'; exit 0; } || true
           git commit -m 'release(hm1): mark TestFlight readiness after fresh gates'
-          # Other independent app repairs may update main while this gate runs.
-          # Rebase the evidence-only commit instead of failing on a non-HM1 race.
           git pull --rebase origin main
           changed="$(git diff --name-only "$KNOWN_VISUAL_PASS_SHA..HEAD" -- \
             ios/health-manager-1 \
@@ -111,7 +126,7 @@ jobs:
             scripts/audit_hm1_human_gate.py \
             scripts/audit_hm1_release_contract.py)"
           if [ -n "$changed" ]; then
-            echo 'HM1 visual/product drift appeared during readiness synthesis; refusing push:' >&2
+            echo 'HM1 visual/product drift appeared during final serialization; refusing push:' >&2
             echo "$changed" >&2
             exit 1
           fi
