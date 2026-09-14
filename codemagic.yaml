@@ -1052,12 +1052,13 @@ workflows:
 
 
 
+
   network-specialist-signing-preflight:
     name: ネットワークスペシャリスト - Apple Signing Preflight
     max_build_duration: 20
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: networkspecialist_appstore
+      app_store_connect: "Codemagic Shiwake Swipe"
     environment:
       ios_signing:
         distribution_type: app_store
@@ -1088,7 +1089,6 @@ workflows:
         auth: integration
         submit_to_testflight: false
         submit_to_app_store: false
-
   sc-manabi-sprint-ios:
     name: 情報処理安全確保支援士 - iOS Internal TestFlight
     max_build_duration: 60
