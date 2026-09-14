@@ -44,7 +44,7 @@ jobs:
           from pathlib import Path
           d=json.loads(Path('factory-release-readback.json').read_text(encoding='utf-8'))
           lines=[f"completed_at={d.get('completed_at')} read_only={d.get('read_only')}"]
-          for label in ('touhan','hm2','hm1','pharmacist'):
+          for label in ('touhan','hm2','hm1','pharmacist','otsu4','fp3','ap'):
               s=((d.get('apps') or {}).get(label) or {}).get('summary') or {}
               iaps=','.join(f"{x.get('product_id')}={x.get('state')}" for x in (s.get('iaps') or [])) or 'none'
               lines.append(
