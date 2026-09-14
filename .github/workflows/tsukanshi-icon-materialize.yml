@@ -1,0 +1,84 @@
+name: Tsukanshi Canonical Icon Materialize
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  materialize:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[TSUKANSHI-ICON-MATERIALIZE]'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DRIVE_FILE_ID: 1fVipxbpieTaTW81ZlXYklWXqsViDcVw3
+      EXPECTED_SHA256: ff9fd508930e8728ef54907ec64a7835dcffb69a1a773edc645b79715fbfccaa
+      EXPECTED_BYTES: '556001'
+      TARGET: tsukanshi-sprint/native-ios/CanonicalAssets/02_通関士.png
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Fetch exact canonical source and verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp --suffix=.png)"
+          trap 'rm -f "$tmp"' EXIT
+          curl --fail --location --retry 2 --retry-delay 2 \
+            "https://drive.google.com/uc?export=download&id=${DRIVE_FILE_ID}" \
+            --output "$tmp"
+          test "$(wc -c < "$tmp" | tr -d ' ')" = "$EXPECTED_BYTES"
+          echo "$EXPECTED_SHA256  $tmp" | sha256sum --check --status
+          python3 - "$tmp" <<'PY'
+          import struct,sys
+          p=sys.argv[1]
+          b=open(p,'rb').read(33)
+          assert b[:8] == b'\x89PNG\r\n\x1a\n'
+          assert b[12:16] == b'IHDR'
+          w,h,depth,color,comp,filt,interlace=struct.unpack('>IIBBBBB',b[16:29])
+          assert (w,h)==(1024,1024), (w,h)
+          assert depth==8, depth
+          assert color==2, color  # truecolour RGB, no alpha
+          assert comp==0 and filt==0 and interlace in (0,1)
+          PY
+          mkdir -p "$(dirname "$TARGET")"
+          if test -f "$TARGET"; then
+            actual="$(sha256sum "$TARGET" | awk '{print $1}')"
+            test "$actual" = "$EXPECTED_SHA256" || { echo "existing target hash mismatch" >&2; exit 1; }
+            echo "canonical icon already materialized"
+          else
+            cp "$tmp" "$TARGET"
+          fi
+      - name: Commit only exact verified icon
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$EXPECTED_SHA256  $TARGET" | sha256sum --check --status
+          git add -- "$TARGET"
+          if git diff --cached --quiet; then
+            echo "No commit needed"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(tsukanshi): materialize canonical AppIcon source'
+          git push origin HEAD:main
+      - name: Report
+        if: always() && github.event_name == 'issues'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Tsukanshi canonical icon materializer finished. status=${{ job.status }}; run_id=${context.runId}. The workflow is fail-closed on Drive download, exact byte count/SHA-256, PNG 1024x1024 RGB/no-alpha, and existing-target mismatch.`
+            });
