@@ -53,15 +53,38 @@ jobs:
           if found: raise SystemExit('prohibited markers: '+repr(found))
           print('PASS: FP3 core static contract')
           PY
-      - name: Release identity gate
+      - name: Release identity and AppIcon gate
         run: |
           python - <<'PY'
           from pathlib import Path
-          p=Path('fp3-manabi-sprint/ios/project.yml').read_text(encoding='utf-8')
+          import json, struct
+          project=Path('fp3-manabi-sprint/ios/project.yml')
+          p=project.read_text(encoding='utf-8')
           expected='PRODUCT_BUNDLE_IDENTIFIER: com.allsunday1122.fp3kakomoncoach'
           if expected not in p:
               raise SystemExit('release bundle ID drift: expected existing ASC app com.allsunday1122.fp3kakomoncoach')
-          print('PASS: FP3 release identity matches App Store Connect app 6796733578')
+          if 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' not in p:
+              raise SystemExit('release AppIcon configuration missing: ASSETCATALOG_COMPILER_APPICON_NAME must be AppIcon')
+          catalog=Path('fp3-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/Contents.json')
+          if not catalog.is_file():
+              raise SystemExit(f'release AppIcon catalog missing: {catalog}')
+          data=json.loads(catalog.read_text(encoding='utf-8'))
+          marketing=[]
+          for image in data.get('images',[]):
+              if image.get('idiom') in ('ios-marketing','universal') and image.get('size') == '1024x1024':
+                  name=image.get('filename')
+                  if name: marketing.append(catalog.parent/name)
+          if not marketing:
+              raise SystemExit('release AppIcon catalog has no named 1024x1024 marketing/universal image')
+          for icon in marketing:
+              if not icon.is_file() or icon.stat().st_size == 0:
+                  raise SystemExit(f'release AppIcon binary missing/empty: {icon}')
+              raw=icon.read_bytes()
+              if raw[:8] == b'\x89PNG\r\n\x1a\n':
+                  width,height=struct.unpack('>II',raw[16:24])
+                  if (width,height)!=(1024,1024):
+                      raise SystemExit(f'release AppIcon must be 1024x1024, got {width}x{height}: {icon}')
+          print('PASS: FP3 release identity and AppIcon contract')
           PY
       - name: Native premium-boundary regression gates
         run: |
