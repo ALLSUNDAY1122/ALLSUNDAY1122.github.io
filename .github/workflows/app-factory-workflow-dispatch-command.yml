@@ -1,0 +1,36 @@
+name: App Factory allowlisted workflow dispatcher
+
+on:
+  issues:
+    types: [opened]
+permissions:
+  actions: write
+  contents: read
+  issues: write
+jobs:
+  dispatch:
+    if: startsWith(github.event.issue.title, '[FACTORY-WORKFLOW-DISPATCH]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse and validate allowlisted workflow
+        id: target
+        env:
+          BODY: ${{ github.event.issue.body }}
+        run: |
+          set -euo pipefail
+          workflow="$(printf '%s\n' "$BODY" | sed -n 's/^workflow=//p' | head -1)"
+          case "$workflow" in
+            itp-batch11-merge-gate.yml|touhan-visual-preflight.yml) ;;
+            *) echo "Not allowlisted: $workflow" >&2; exit 1 ;;
+          esac
+          echo "workflow=$workflow" >> "$GITHUB_OUTPUT"
+      - name: Dispatch workflow once
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run "${{ steps.target.outputs.workflow }}" --repo "${{ github.repository }}" --ref main
+      - name: Report
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Factory workflow dispatch finished. status=${{ job.status }}; target=${{ steps.target.outputs.workflow }}; dispatcher_run=${context.runId}`})
