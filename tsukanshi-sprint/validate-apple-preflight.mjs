@@ -25,8 +25,7 @@ includes(project, `MARKETING_VERSION: ${VERSION}`, 'native Xcode marketing versi
 includes(capabilityPatch, 'com.apple.InAppPurchase', 'generated-project In-App Purchase capability patch');
 includes(capabilityPatch, 'enabled = 1;', 'enabled generated-project capability');
 
-// Isolate exactly one top-level workflow. The previous split(marker)[1] consumed every
-// workflow that followed tsukanshi-native-ios, causing unrelated submit flags to fail this app's gate.
+// Isolate exactly one top-level workflow so unrelated app settings cannot affect this gate.
 const marker = '\n  tsukanshi-native-ios:';
 const start = codemagic.indexOf(marker);
 must(start >= 0, 'missing tsukanshi-native-ios workflow');
@@ -37,9 +36,12 @@ const block = nextWorkflow >= 0 ? rest.slice(0, nextWorkflow) : rest;
 must((codemagic.match(/\n  tsukanshi-native-ios:/g) || []).length === 1, 'tsukanshi-native-ios workflow must be unique');
 
 includes(block, 'app_store_connect: "Codemagic Shiwake Swipe"', 'Codemagic ASC integration');
-includes(block, 'distribution_type: app_store', 'App Store distribution');
+// Canonical root workflow pins the uploaded App Store provisioning profile explicitly.
+// Do not also require distribution_type: app_store: Codemagic supports either signing selector form.
+includes(block, 'provisioning_profiles:', 'Codemagic provisioning profile selector');
+includes(block, '- tsukanshi_appstore', 'Codemagic App Store provisioning profile');
 includes(block, `BUNDLE_ID: ${BUNDLE}`, 'Codemagic BUNDLE_ID');
-includes(block, 'tsukanshi_appstore', 'Codemagic signing profile');
+includes(block, 'APP_STORE_APPLE_ID: "6799753744"', 'App Store Connect app id');
 includes(block, 'testFlightInternalTestingOnly', 'internal TestFlight only export');
 includes(block, 'apply-xcode-capabilities.py', 'Codemagic generated-project capability normalization');
 includes(block, 'submit_to_testflight: false', 'no automatic TestFlight upload');
