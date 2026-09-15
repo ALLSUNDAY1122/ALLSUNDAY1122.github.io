@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   validate-and-merge:
-    if: github.actor == 'ALLSUNDAY1122'
+    if: github.actor == 'ALLSUNDAY1122' || github.actor == 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
