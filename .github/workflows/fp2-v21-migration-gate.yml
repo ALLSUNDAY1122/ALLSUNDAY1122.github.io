@@ -1,0 +1,26 @@
+name: FP2 Golden Master v2.1 migration gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'fp2-manabi-sprint/**'
+      - 'scripts/fp2_v21_migration_gate.py'
+      - '.github/workflows/fp2-v21-migration-gate.yml'
+  pull_request:
+    paths:
+      - 'fp2-manabi-sprint/**'
+      - 'scripts/fp2_v21_migration_gate.py'
+      - '.github/workflows/fp2-v21-migration-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  migration-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Golden Master v2.1 fail-closed audit
+        run: python3 scripts/fp2_v21_migration_gate.py
