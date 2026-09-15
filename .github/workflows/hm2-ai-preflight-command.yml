@@ -1,0 +1,34 @@
+name: HM2 AI Preflight command
+
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+  issues: write
+jobs:
+  preflight:
+    if: startsWith(github.event.issue.title, '[HM2-PREFLIGHT]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main}
+      - name: Run learning and release static gates
+        run: |
+          set -euo pipefail
+          python3 scripts/audit_sm2_storekit_ui.py
+          python3 scripts/audit_sm2_learning_contract.py
+          python3 scripts/audit_sm2_release_drift.py
+          python3 scripts/audit_sm2_difficulty.py
+      - name: Report PASS
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`HM2 AI Preflight: PASS\nrun_id=${context.runId}\nhead=${context.sha}\nStoreKit UI / learning contract / release drift / 300-question difficulty gates passed. No build/TestFlight/ASC mutation performed.`})
+      - name: Report FAIL
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`HM2 AI Preflight: FAIL\nrun_id=${context.runId}\nhead=${context.sha}\nInspect the failed assertion before Human Test or rebuild.`})
