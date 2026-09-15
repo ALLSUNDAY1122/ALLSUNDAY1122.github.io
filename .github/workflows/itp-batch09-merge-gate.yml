@@ -1,5 +1,6 @@
-# Registered trigger v5: validate and merge only after all batch09 checks pass.
+# Registered trigger v6: validate and merge only after all batch09 checks pass.
 # Topic reuse across rounds is allowed; novelty is enforced on IDs/questions, while batch-internal topic duplication remains blocked.
+# Explanation grounding accepts compound correct answers when every component is explicitly explained.
 name: IT Passport batch 09 merge gate
 
 on:
@@ -33,7 +34,10 @@ jobs:
             assert q['subject'] in config['subjects'], f'{q["id"]}: bad subject={q["subject"]}'; assert q['round']==2, f'{q["id"]}: round={q["round"]}'; assert len(q['choices'])==4 and len({norm(x) for x in q['choices']})==4, f'{q["id"]}: invalid choices'
             assert isinstance(q['correct_index'],int) and 0<=q['correct_index']<4, f'{q["id"]}: bad correct_index'; assert q['syllabus_version']==manifest['current_syllabus_version']=='6.5', f'{q["id"]}: syllabus mismatch'
             assert q['origin_type']=='original' and q['rights_basis']=='original_question_based_on_public_syllabus', f'{q["id"]}: provenance mismatch'; assert q['source_url']=='https://www.ipa.go.jp/shiken/syllabus/gaiyou.html' and q['reference_date']=='2026-09-15', f'{q["id"]}: source/date mismatch'
-            assert len(q['question'])>=20 and len(q['explanation'])>=35, f'{q["id"]}: text too short'; assert norm(q['choices'][q['correct_index']]) in norm(q['explanation']) or tp in norm(q['explanation']), f'{q["id"]}: explanation grounding weak'
+            assert len(q['question'])>=20 and len(q['explanation'])>=35, f'{q["id"]}: text too short'
+            correct=str(q['choices'][q['correct_index']]); exp=norm(q['explanation']); parts=[norm(x) for x in re.split(r'[と・/／,、\s]+',correct) if norm(x)]
+            grounded=norm(correct) in exp or tp in exp or (len(parts)>1 and all(x in exp for x in parts))
+            assert grounded, f'{q["id"]}: explanation grounding weak for correct={correct!r}'
             subjects[q['subject']]+=1; answers[q['correct_index']]+=1; seen_ids.add(q['id']); seen_texts.add(qt); seen_topics.add(tp)
           assert subjects=={'ストラテジ系':7,'マネジメント系':4,'テクノロジ系':9}, f'subject distribution={subjects}'; assert answers=={0:5,1:5,2:5,3:5}, f'answer distribution={answers}'; print('PASS batch09 premerge',subjects,answers)
           PY
