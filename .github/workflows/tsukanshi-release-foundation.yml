@@ -33,6 +33,9 @@ jobs:
           node --check tsukanshi-sprint/validate-apple-preflight.mjs
           python3 -m py_compile tsukanshi-sprint/ios/apply-xcode-capabilities.py
           bash -n tsukanshi-sprint/native-ios/prepare-native.sh
+          bash -n tsukanshi-sprint/native-ios/fetch-canonical-appicon.sh
+      - name: Prepare native resources and materialize canonical AppIcon
+        run: bash tsukanshi-sprint/native-ios/prepare-native.sh
       - name: Validate native privacy manifest
         run: |
           python3 - <<'PY'
