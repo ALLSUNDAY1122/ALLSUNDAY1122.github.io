@@ -1,3 +1,4 @@
+# Registered workflow trigger: restore only; no build or TestFlight submission.
 name: Tsukanshi Codemagic workflow restore
 
 on:
@@ -23,11 +24,8 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          root=Path('codemagic.yaml')
-          s=root.read_text(encoding='utf-8')
-          marker='\n  tsukanshi-ios:'
-          if marker in s:
-              raise SystemExit('tsukanshi-ios already exists; refusing duplicate restore')
+          root=Path('codemagic.yaml'); s=root.read_text(encoding='utf-8'); marker='\n  tsukanshi-ios:'
+          if marker in s: raise SystemExit('tsukanshi-ios already exists; refusing duplicate restore')
           candidate=Path('tsukanshi-sprint/native-ios/codemagic-native-workflow.yaml').read_text(encoding='utf-8')
           block=candidate[candidate.index('tsukanshi-ios:'):]
           block=block.replace('app_store_connect: codemagic','app_store_connect: "Codemagic Shiwake Swipe"',1)
@@ -37,8 +35,7 @@ jobs:
               if required not in block: raise SystemExit('missing required contract: '+required)
           indented='\n'.join(('  '+line if line else '') for line in block.splitlines())
           root.write_text(s.rstrip()+'\n\n'+indented+'\n',encoding='utf-8')
-          v=Path('tsukanshi-sprint/validate-apple-preflight.mjs')
-          t=v.read_text(encoding='utf-8')
+          v=Path('tsukanshi-sprint/validate-apple-preflight.mjs'); t=v.read_text(encoding='utf-8')
           old="includes(block, 'app_store_connect: codemagic', 'Codemagic ASC integration');"
           new="must(block.includes('app_store_connect: Codemagic Shiwake Swipe') || block.includes('app_store_connect: \\\"Codemagic Shiwake Swipe\\\"'), 'missing: Codemagic ASC integration');"
           if t.count(old) != 1: raise SystemExit('preflight before-state mismatch')
