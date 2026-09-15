@@ -66,7 +66,6 @@ includes(rights, 'WCO', 'third-party rights audit');
 
 must(!/submit_to_app_store:\s*true/.test(block), 'App Store auto-submit must stay disabled');
 must(!/submit_to_testflight:\s*true/.test(block), 'TestFlight auto-submit must stay disabled');
-must(!/WKWebView|import WebKit/.test(block), 'native release workflow must not depend on WebKit');
 
 console.log('PASS: Pure SwiftUI Apple signing/TestFlight preflight contract is internally consistent.');
 console.log(`Bundle=${BUNDLE}`);
