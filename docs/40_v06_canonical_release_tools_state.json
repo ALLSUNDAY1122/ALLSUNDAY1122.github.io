@@ -1,0 +1,40 @@
+{
+  "app": "AI引継ぎ帳",
+  "version": "0.6.0",
+  "build": "6",
+  "canonical_dispatcher": "scripts/ai_handover_release_tool_macos.sh",
+  "routes": {
+    "initial_submission": {
+      "command": "archive",
+      "implementation": "scripts/macincloud_testflight_submission.sh",
+      "api_key_required": false,
+      "manual_xcode_organizer_required": true
+    },
+    "csr": {
+      "command": "csr",
+      "implementation": "scripts/generate_apple_distribution_csr_macos.sh"
+    },
+    "p12": {
+      "command": "p12",
+      "implementation": "scripts/build_apple_distribution_p12_macos.sh"
+    },
+    "offline_validation": {
+      "command": "verify-offline",
+      "implementation": "scripts/verify_apple_signing_assets_macos.sh",
+      "network_access": false
+    },
+    "online_validation": {
+      "command": "verify-online",
+      "implementation": "scripts/validate_apple_release_credentials_macos.sh",
+      "network_access": true
+    },
+    "github_secret_setup": {
+      "command": "configure-github",
+      "implementation": "scripts/configure_github_testflight_environment_macos.sh"
+    }
+  },
+  "credentials_created": false,
+  "credentials_uploaded_to_github": false,
+  "testflight_uploaded": false,
+  "pr_870_merged": false
+}

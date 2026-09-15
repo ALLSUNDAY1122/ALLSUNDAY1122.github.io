@@ -1,0 +1,111 @@
+name: AI Handover Log v0.6 RC1 Freeze Guard
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ai-handover-log-v06-rc1-freeze-guard.yml'
+      - '.github/workflows/ai-handover-log-v06-device-release-ci.yml'
+      - '.github/workflows/ai-handover-log-v06-device-release-final.yml'
+      - '.github/workflows/ai-handover-log-v06-app-store-screenshots.yml'
+      - 'source_parts/**'
+      - 'patches/**'
+      - 'screenshots/**'
+      - 'scripts/generate_v05_brand_assets.py'
+      - 'scripts/harden_v06_ios_submission.py'
+      - 'scripts/compose_app_store_screenshots.py'
+      - 'config/app_store_metadata_ja_v06.json'
+      - 'config/testflight_acceptance_cases_v06.csv'
+      - 'config/testflight_submission_gate_v06.json'
+      - 'config/release_candidate_v06_rc1.json'
+      - 'docs/32_v06_rc1_presigning_freeze.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  freeze-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify RC1 application source has not drifted
+        shell: bash
+        env:
+          FREEZE_COMMIT: 407a1c9c7c94c63b4d909c1500bc43244631c4ea
+        run: |
+          set -euo pipefail
+
+          git cat-file -e "$FREEZE_COMMIT^{commit}"
+
+          mapfile -t changed < <(
+            git diff --name-only "$FREEZE_COMMIT..HEAD" -- \
+              .github/workflows/ai-handover-log-v06-device-release-ci.yml \
+              .github/workflows/ai-handover-log-v06-device-release-final.yml \
+              .github/workflows/ai-handover-log-v06-app-store-screenshots.yml \
+              source_parts \
+              patches \
+              screenshots \
+              scripts/generate_v05_brand_assets.py \
+              scripts/harden_v06_ios_submission.py \
+              scripts/compose_app_store_screenshots.py \
+              config/app_store_metadata_ja_v06.json \
+              config/testflight_acceptance_cases_v06.csv \
+              config/testflight_submission_gate_v06.json
+          )
+
+          if (( ${#changed[@]} > 0 )); then
+            echo 'RC1 application or submission source changed after the freeze commit:' >&2
+            printf ' - %s\n' "${changed[@]}" >&2
+            echo 'Create a new RC manifest and update the freeze commit before using changed output.' >&2
+            exit 1
+          fi
+
+          echo "RC1 application source matches freeze commit $FREEZE_COMMIT."
+
+      - name: Validate RC manifest fixed values
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('config/release_candidate_v06_rc1.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+
+          expected = {
+              'source_freeze_commit': '407a1c9c7c94c63b4d909c1500bc43244631c4ea',
+              'pull_request': 870,
+          }
+          for key, value in expected.items():
+              if data.get(key) != value:
+                  raise SystemExit(f'{key} mismatch: {data.get(key)!r}')
+
+          app = data['app']
+          checks = {
+              'bundle_id': 'jp.allsunday.aihandoverlog',
+              'version': '0.6.0',
+              'build': '6',
+              'minimum_ios': '13.0',
+              'device_family': ['iPhone'],
+              'orientations': ['Portrait'],
+              'non_exempt_encryption': False,
+              'data_collection': False,
+              'tracking': False,
+          }
+          for key, value in checks.items():
+              if app.get(key) != value:
+                  raise SystemExit(f'app.{key} mismatch: {app.get(key)!r}')
+
+          if not data['policy']['unsigned_artifacts_must_not_be_uploaded']:
+              raise SystemExit('unsigned artifact policy must remain enabled')
+          if not data['policy']['merge_requires_explicit_user_instruction']:
+              raise SystemExit('explicit merge authorization policy must remain enabled')
+          if not data['policy']['apple_credentials_must_not_be_committed']:
+              raise SystemExit('credential commit prohibition must remain enabled')
+
+          print('RC1_MANIFEST_OK')
+          PY

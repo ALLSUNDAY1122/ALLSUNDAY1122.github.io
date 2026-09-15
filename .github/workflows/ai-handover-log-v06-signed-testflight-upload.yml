@@ -1,0 +1,477 @@
+name: AI Handover Log v0.6 Signed TestFlight Upload
+
+run-name: AI引継ぎ帳 v0.6 Build 6 TestFlight upload
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: 'Type UPLOAD to authorize signing and TestFlight upload'
+        required: true
+        default: 'NO'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-handover-log-v06-testflight-production
+  cancel-in-progress: false
+
+jobs:
+  upload-testflight:
+    if: ${{ github.event.inputs.confirmation == 'UPLOAD' }}
+    runs-on: macos-26
+    timeout-minutes: 70
+    environment: testflight-production
+
+    env:
+      APP_NAME: AI引継ぎ帳
+      BUNDLE_ID: jp.allsunday.aihandoverlog
+      MARKETING_VERSION: 0.6.0
+      BUILD_NUMBER: '6'
+      FLUTTER_VERSION: 3.44.7
+
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_DISTRIBUTION_CERTIFICATE_P12_BASE64: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_P12_BASE64 }}
+      APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+      APPLE_PROVISIONING_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 }}
+      APPLE_TEMP_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_TEMP_KEYCHAIN_PASSWORD }}
+      APP_STORE_CONNECT_API_KEY_P8_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8_BASE64 }}
+      APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Verify required secrets without printing values
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            APPLE_TEAM_ID
+            APPLE_DISTRIBUTION_CERTIFICATE_P12_BASE64
+            APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD
+            APPLE_PROVISIONING_PROFILE_BASE64
+            APPLE_TEMP_KEYCHAIN_PASSWORD
+            APP_STORE_CONNECT_API_KEY_P8_BASE64
+            APP_STORE_CONNECT_API_KEY_ID
+            APP_STORE_CONNECT_ISSUER_ID
+          )
+          missing=()
+          for name in "${required[@]}"; do
+            if [[ -z "${!name:-}" ]]; then
+              missing+=("$name")
+            fi
+          done
+          if (( ${#missing[@]} > 0 )); then
+            printf 'Missing environment secrets:\n' >&2
+            printf ' - %s\n' "${missing[@]}" >&2
+            exit 1
+          fi
+          [[ "$APPLE_TEAM_ID" =~ ^[A-Z0-9]{10}$ ]] || {
+            echo "APPLE_TEAM_ID must be a 10-character Team ID." >&2
+            exit 1
+          }
+          [[ "$APP_STORE_CONNECT_API_KEY_ID" =~ ^[A-Z0-9]{10}$ ]] || {
+            echo "APP_STORE_CONNECT_API_KEY_ID must be a 10-character Key ID." >&2
+            exit 1
+          }
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Reconstruct and harden v0.6 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/source" "$RUNNER_TEMP/build" "$RUNNER_TEMP/release" "$RUNNER_TEMP/logs"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+          import os
+
+          archive = Path(os.environ["RUNNER_TEMP"]) / "source.tar.xz"
+          parts = sorted(Path("source_parts").glob("part_*.b64"))
+          if not parts:
+              raise SystemExit("source_parts/part_*.b64 not found")
+          with archive.open("wb") as output:
+              for part in parts:
+                  output.write(base64.b64decode("".join(part.read_text().split()), validate=True))
+          digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+          expected = "cdb7067a29385d346edadb7506f39f7e5cfd567a07e930e5b43344ae4f50e234"
+          print(f"source_parts={len(parts)} sha256={digest}")
+          if digest != expected:
+              raise SystemExit("source archive SHA-256 mismatch")
+          PY
+
+          tar -xJf "$RUNNER_TEMP/source.tar.xz" -C "$RUNNER_TEMP/source"
+          python3 patches/fix_v04_migration.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v05_mobile_ui.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v05_mobile_tests.py "$RUNNER_TEMP/source"
+          python3 patches/fix_v05_dialog_disposal.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v06_release_prep.py "$RUNNER_TEMP/source"
+
+          flutter create \
+            --platforms=ios \
+            --project-name=aihandoverlog \
+            --org=jp.allsunday \
+            "$RUNNER_TEMP/build"
+
+          rm -rf "$RUNNER_TEMP/build/lib" "$RUNNER_TEMP/build/test"
+          cp -R "$RUNNER_TEMP/source/lib" "$RUNNER_TEMP/build/lib"
+          cp -R "$RUNNER_TEMP/source/test" "$RUNNER_TEMP/build/test"
+          cp "$RUNNER_TEMP/source/pubspec.yaml" "$RUNNER_TEMP/build/pubspec.yaml"
+          cp "$RUNNER_TEMP/source/analysis_options.yaml" "$RUNNER_TEMP/build/analysis_options.yaml"
+          python3 scripts/generate_v05_brand_assets.py "$RUNNER_TEMP/build"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          import re
+
+          root = Path(os.environ["RUNNER_TEMP"]) / "build"
+          project = root / "ios/Runner.xcodeproj/project.pbxproj"
+          text = project.read_text(encoding="utf-8")
+          text = re.sub(
+              r"PRODUCT_BUNDLE_IDENTIFIER = [^;]+;",
+              "PRODUCT_BUNDLE_IDENTIFIER = jp.allsunday.aihandoverlog;",
+              text,
+          )
+          project.write_text(text, encoding="utf-8")
+          PY
+
+          python3 scripts/harden_v06_ios_submission.py "$RUNNER_TEMP/build"
+          plutil -lint "$RUNNER_TEMP/build/ios/Runner/Info.plist"
+          plutil -lint "$RUNNER_TEMP/build/ios/Runner/PrivacyInfo.xcprivacy"
+          grep -q 'version: 0.6.0+6' "$RUNNER_TEMP/build/pubspec.yaml"
+
+      - name: Install Apple certificate and provisioning profile
+        id: signing
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          CERTIFICATE_PATH="$RUNNER_TEMP/apple_distribution.p12"
+          PROFILE_PATH="$RUNNER_TEMP/app_store.mobileprovision"
+          PROFILE_PLIST="$RUNNER_TEMP/app_store_profile.plist"
+          KEYCHAIN_PATH="$RUNNER_TEMP/ai-handover-signing.keychain-db"
+
+          python3 - <<'PY'
+          import base64
+          import os
+          from pathlib import Path
+
+          mappings = {
+              "APPLE_DISTRIBUTION_CERTIFICATE_P12_BASE64": Path(os.environ["RUNNER_TEMP"]) / "apple_distribution.p12",
+              "APPLE_PROVISIONING_PROFILE_BASE64": Path(os.environ["RUNNER_TEMP"]) / "app_store.mobileprovision",
+          }
+          for env_name, path in mappings.items():
+              try:
+                  decoded = base64.b64decode(os.environ[env_name], validate=True)
+              except Exception as exc:
+                  raise SystemExit(f"{env_name} is not valid Base64: {exc}")
+              path.write_bytes(decoded)
+          PY
+
+          security create-keychain -p "$APPLE_TEMP_KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$APPLE_TEMP_KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERTIFICATE_PATH" \
+            -P "$APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD" \
+            -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security set-key-partition-list \
+            -S apple-tool:,apple: \
+            -k "$APPLE_TEMP_KEYCHAIN_PASSWORD" \
+            "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
+
+          security cms -D -i "$PROFILE_PATH" > "$PROFILE_PLIST"
+          PROFILE_UUID="$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$PROFILE_PLIST")"
+          PROFILE_NAME="$(/usr/libexec/PlistBuddy -c 'Print :Name' "$PROFILE_PLIST")"
+          PROFILE_TEAM_ID="$(/usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' "$PROFILE_PLIST")"
+          PROFILE_APP_IDENTIFIER="$(/usr/libexec/PlistBuddy -c 'Print :Entitlements:application-identifier' "$PROFILE_PLIST")"
+          PROFILE_GET_TASK_ALLOW="$(/usr/libexec/PlistBuddy -c 'Print :Entitlements:get-task-allow' "$PROFILE_PLIST" 2>/dev/null || true)"
+
+          [[ "$PROFILE_TEAM_ID" == "$APPLE_TEAM_ID" ]] || {
+            echo "Provisioning profile Team ID does not match APPLE_TEAM_ID." >&2
+            exit 1
+          }
+          [[ "$PROFILE_APP_IDENTIFIER" == "$APPLE_TEAM_ID.$BUNDLE_ID" ]] || {
+            echo "Provisioning profile application-identifier does not match the app." >&2
+            exit 1
+          }
+          [[ "$PROFILE_GET_TASK_ALLOW" != "true" ]] || {
+            echo "A development provisioning profile was supplied; App Store profile required." >&2
+            exit 1
+          }
+
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp "$PROFILE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+
+          echo "profile_name=$PROFILE_NAME" >> "$GITHUB_OUTPUT"
+          echo "profile_uuid=$PROFILE_UUID" >> "$GITHUB_OUTPUT"
+          echo "keychain_path=$KEYCHAIN_PATH" >> "$GITHUB_OUTPUT"
+
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH" \
+            | sed -E 's/"[^"]+"/"Apple Distribution identity"/g'
+
+      - name: Analyze, test, and compile unsigned release
+        working-directory: ${{ runner.temp }}/build
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -o pipefail
+
+          flutter --version | tee "$RUNNER_TEMP/logs/flutter-version.log"
+          xcodebuild -version | tee "$RUNNER_TEMP/logs/xcode-version.log"
+          flutter pub get
+          flutter analyze | tee "$RUNNER_TEMP/logs/flutter-analyze.log"
+          flutter test | tee "$RUNNER_TEMP/logs/flutter-test.log"
+          flutter build ios \
+            --release \
+            --no-codesign \
+            --build-name="$MARKETING_VERSION" \
+            --build-number="$BUILD_NUMBER" \
+            | tee "$RUNNER_TEMP/logs/flutter-ios-release.log"
+
+      - name: Create signed App Store archive
+        working-directory: ${{ runner.temp }}/build
+        shell: bash
+        env:
+          PROFILE_NAME: ${{ steps.signing.outputs.profile_name }}
+        run: |
+          set -euo pipefail
+          set -o pipefail
+
+          ARCHIVE_PATH="$RUNNER_TEMP/release/AI_Handover_Log_v0.6_build6.xcarchive"
+
+          xcodebuild \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -destination "generic/platform=iOS" \
+            -archivePath "$ARCHIVE_PATH" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME" \
+            PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
+            MARKETING_VERSION="$MARKETING_VERSION" \
+            CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
+            clean archive \
+            | tee "$RUNNER_TEMP/logs/xcode-signed-archive.log"
+
+          echo "ARCHIVE_PATH=$ARCHIVE_PATH" >> "$GITHUB_ENV"
+
+      - name: Inspect signed archive before export
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          APP_PATH="$ARCHIVE_PATH/Products/Applications/Runner.app"
+          INFO_PLIST="$APP_PATH/Info.plist"
+
+          [[ -d "$APP_PATH" ]] || { echo "Archived app not found." >&2; exit 1; }
+          [[ -f "$APP_PATH/PrivacyInfo.xcprivacy" ]] || {
+            echo "App-level PrivacyInfo.xcprivacy is missing." >&2
+            exit 1
+          }
+
+          ACTUAL_BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$INFO_PLIST")"
+          ACTUAL_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$INFO_PLIST")"
+          ACTUAL_BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$INFO_PLIST")"
+          FAMILY_0="$(/usr/libexec/PlistBuddy -c 'Print :UIDeviceFamily:0' "$INFO_PLIST")"
+          FAMILY_1="$(/usr/libexec/PlistBuddy -c 'Print :UIDeviceFamily:1' "$INFO_PLIST" 2>/dev/null || true)"
+          ORIENTATION_0="$(/usr/libexec/PlistBuddy -c 'Print :UISupportedInterfaceOrientations:0' "$INFO_PLIST")"
+          ORIENTATION_1="$(/usr/libexec/PlistBuddy -c 'Print :UISupportedInterfaceOrientations:1' "$INFO_PLIST" 2>/dev/null || true)"
+          ENCRYPTION="$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$INFO_PLIST")"
+
+          [[ "$ACTUAL_BUNDLE_ID" == "$BUNDLE_ID" ]]
+          [[ "$ACTUAL_VERSION" == "$MARKETING_VERSION" ]]
+          [[ "$ACTUAL_BUILD" == "$BUILD_NUMBER" ]]
+          [[ "$FAMILY_0" == "1" && -z "$FAMILY_1" ]]
+          [[ "$ORIENTATION_0" == "UIInterfaceOrientationPortrait" && -z "$ORIENTATION_1" ]]
+          [[ "$ENCRYPTION" == "false" ]]
+
+          codesign --verify --deep --strict --verbose=2 "$APP_PATH" \
+            2>&1 | tee "$RUNNER_TEMP/logs/codesign-verify.log"
+
+          find "$APP_PATH" -name PrivacyInfo.xcprivacy -print \
+            | tee "$RUNNER_TEMP/logs/privacy-manifest-files.log"
+          while IFS= read -r manifest; do
+            plutil -lint "$manifest"
+          done < "$RUNNER_TEMP/logs/privacy-manifest-files.log"
+
+          cat > "$RUNNER_TEMP/logs/archive-summary.json" <<EOF
+          {
+            "app": "AI引継ぎ帳",
+            "bundle_id": "$ACTUAL_BUNDLE_ID",
+            "version": "$ACTUAL_VERSION",
+            "build": "$ACTUAL_BUILD",
+            "device_family": [1],
+            "orientations": ["UIInterfaceOrientationPortrait"],
+            "non_exempt_encryption": false,
+            "signed": true
+          }
+          EOF
+
+      - name: Export signed IPA
+        shell: bash
+        env:
+          PROFILE_NAME: ${{ steps.signing.outputs.profile_name }}
+        run: |
+          set -euo pipefail
+          set -o pipefail
+
+          EXPORT_PATH="$RUNNER_TEMP/release/export"
+          EXPORT_OPTIONS="$RUNNER_TEMP/release/ExportOptions.plist"
+
+          python3 - <<'PY'
+          import os
+          import plistlib
+          from pathlib import Path
+
+          options = {
+              "method": "app-store-connect",
+              "destination": "export",
+              "signingStyle": "manual",
+              "teamID": os.environ["APPLE_TEAM_ID"],
+              "provisioningProfiles": {
+                  os.environ["BUNDLE_ID"]: os.environ["PROFILE_NAME"],
+              },
+              "manageAppVersionAndBuildNumber": False,
+              "stripSwiftSymbols": True,
+              "uploadSymbols": True,
+          }
+          path = Path(os.environ["RUNNER_TEMP"]) / "release/ExportOptions.plist"
+          with path.open("wb") as handle:
+              plistlib.dump(options, handle, fmt=plistlib.FMT_XML, sort_keys=False)
+          PY
+
+          plutil -lint "$EXPORT_OPTIONS"
+
+          xcodebuild \
+            -exportArchive \
+            -archivePath "$ARCHIVE_PATH" \
+            -exportPath "$EXPORT_PATH" \
+            -exportOptionsPlist "$EXPORT_OPTIONS" \
+            | tee "$RUNNER_TEMP/logs/xcode-export-ipa.log"
+
+          IPA_PATH="$(find "$EXPORT_PATH" -maxdepth 1 -name '*.ipa' -print -quit)"
+          [[ -n "$IPA_PATH" && -f "$IPA_PATH" ]] || {
+            echo "Exported IPA not found." >&2
+            exit 1
+          }
+
+          shasum -a 256 "$IPA_PATH" | tee "$RUNNER_TEMP/logs/ipa.sha256"
+          echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
+
+      - name: Install App Store Connect API key
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          API_KEY_DIR="$HOME/.appstoreconnect/private_keys"
+          API_KEY_PATH="$API_KEY_DIR/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
+          mkdir -p "$API_KEY_DIR"
+
+          python3 - <<'PY'
+          import base64
+          import os
+          from pathlib import Path
+
+          key_id = os.environ["APP_STORE_CONNECT_API_KEY_ID"]
+          path = Path.home() / ".appstoreconnect/private_keys" / f"AuthKey_{key_id}.p8"
+          try:
+              decoded = base64.b64decode(
+                  os.environ["APP_STORE_CONNECT_API_KEY_P8_BASE64"],
+                  validate=True,
+              )
+          except Exception as exc:
+              raise SystemExit(f"APP_STORE_CONNECT_API_KEY_P8_BASE64 is invalid: {exc}")
+          path.write_bytes(decoded)
+          PY
+
+          chmod 600 "$API_KEY_PATH"
+          grep -q "BEGIN PRIVATE KEY" "$API_KEY_PATH" || {
+            echo "Decoded API key is not a valid .p8 private key." >&2
+            exit 1
+          }
+
+      - name: Upload IPA to TestFlight
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -o pipefail
+
+          xcrun iTMSTransporter \
+            -m upload \
+            -assetFile "$IPA_PATH" \
+            -apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+            -apiIssuer "$APP_STORE_CONNECT_ISSUER_ID" \
+            -v informational \
+            2>&1 | tee "$RUNNER_TEMP/logs/transporter-upload.log"
+
+          grep -Eiq "success|uploaded|delivery succeeded" "$RUNNER_TEMP/logs/transporter-upload.log" || {
+            echo "Transporter did not emit a recognizable success message; inspect the log." >&2
+            exit 1
+          }
+
+          cat > "$RUNNER_TEMP/logs/testflight-upload-summary.json" <<EOF
+          {
+            "app": "AI引継ぎ帳",
+            "bundle_id": "$BUNDLE_ID",
+            "version": "$MARKETING_VERSION",
+            "build": "$BUILD_NUMBER",
+            "workflow_run": "$GITHUB_RUN_ID",
+            "commit": "$GITHUB_SHA",
+            "upload_command": "iTMSTransporter API key authentication",
+            "status": "upload accepted by Transporter; App Store Connect processing still required"
+          }
+          EOF
+
+      - name: Upload non-secret verification reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-v06-testflight-upload-reports-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/logs/archive-summary.json
+            ${{ runner.temp }}/logs/testflight-upload-summary.json
+            ${{ runner.temp }}/logs/flutter-version.log
+            ${{ runner.temp }}/logs/xcode-version.log
+            ${{ runner.temp }}/logs/flutter-analyze.log
+            ${{ runner.temp }}/logs/flutter-test.log
+            ${{ runner.temp }}/logs/codesign-verify.log
+            ${{ runner.temp }}/logs/privacy-manifest-files.log
+            ${{ runner.temp }}/logs/ipa.sha256
+            ${{ runner.temp }}/logs/transporter-upload.log
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Delete temporary signing credentials
+        if: ${{ always() }}
+        shell: bash
+        env:
+          PROFILE_UUID: ${{ steps.signing.outputs.profile_uuid }}
+          KEYCHAIN_PATH: ${{ steps.signing.outputs.keychain_path }}
+        run: |
+          set +e
+          if [[ -n "${KEYCHAIN_PATH:-}" ]]; then
+            security delete-keychain "$KEYCHAIN_PATH"
+          fi
+          if [[ -n "${PROFILE_UUID:-}" ]]; then
+            rm -f "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+          fi
+          rm -f "$RUNNER_TEMP/apple_distribution.p12"
+          rm -f "$RUNNER_TEMP/app_store.mobileprovision"
+          rm -f "$RUNNER_TEMP/app_store_profile.plist"
+          rm -rf "$HOME/.appstoreconnect/private_keys"

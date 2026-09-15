@@ -1,0 +1,139 @@
+name: AI Handover Log v0.6 Apple CSR Tools CI
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/ai-handover-log-v06-apple-csr-tools-ci.yml
+      - scripts/generate_apple_distribution_csr_macos.sh
+      - scripts/build_apple_distribution_p12_macos.sh
+      - scripts/capture_apple_release_evidence_macos.sh
+  push:
+    branches:
+      - agent/ai-handover-log-v04-binary
+    paths:
+      - .github/workflows/ai-handover-log-v06-apple-csr-tools-ci.yml
+      - scripts/generate_apple_distribution_csr_macos.sh
+      - scripts/build_apple_distribution_p12_macos.sh
+      - scripts/capture_apple_release_evidence_macos.sh
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  csr-and-p12-tools:
+    runs-on: macos-latest
+    timeout-minutes: 10
+
+    env:
+      CSR_PRIVATE_KEY_PASSWORD: CI-only-private-key-password-2026
+      P12_OUTPUT_PASSWORD: CI-only-p12-password-2026
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate shell syntax and safe help output
+        run: |
+          set -euo pipefail
+          bash -n scripts/generate_apple_distribution_csr_macos.sh
+          bash -n scripts/build_apple_distribution_p12_macos.sh
+          bash -n scripts/capture_apple_release_evidence_macos.sh
+          bash scripts/capture_apple_release_evidence_macos.sh --help \
+            | grep -q "sanitized Apple release evidence report"
+
+      - name: Generate encrypted private key and CSR
+        run: |
+          set -euo pipefail
+          OUTPUT_DIR="$RUNNER_TEMP/csr" \
+            bash scripts/generate_apple_distribution_csr_macos.sh \
+              --email "ci@example.invalid" \
+              --common-name "AI Handover Log CI" \
+              --output "$RUNNER_TEMP/csr"
+
+          test -s "$RUNNER_TEMP/csr/AppleDistribution.key.pem"
+          test -s "$RUNNER_TEMP/csr/AppleDistribution.certSigningRequest"
+          test -s "$RUNNER_TEMP/csr/AppleDistribution.csr-report.json"
+          openssl req \
+            -in "$RUNNER_TEMP/csr/AppleDistribution.certSigningRequest" \
+            -noout -verify
+
+      - name: Create CI-only certificate matching the CSR
+        run: |
+          set -euo pipefail
+          openssl x509 \
+            -req \
+            -sha256 \
+            -days 30 \
+            -in "$RUNNER_TEMP/csr/AppleDistribution.certSigningRequest" \
+            -signkey "$RUNNER_TEMP/csr/AppleDistribution.key.pem" \
+            -passin env:CSR_PRIVATE_KEY_PASSWORD \
+            -set_serial 1 \
+            -out "$RUNNER_TEMP/AppleDistribution-CI.cer"
+
+      - name: Build and validate CI-only PKCS12
+        run: |
+          set -euo pipefail
+          bash scripts/build_apple_distribution_p12_macos.sh \
+            --private-key "$RUNNER_TEMP/csr/AppleDistribution.key.pem" \
+            --certificate "$RUNNER_TEMP/AppleDistribution-CI.cer" \
+            --output "$RUNNER_TEMP/AppleDistribution-CI.p12" \
+            --report "$RUNNER_TEMP/AppleDistribution-CI-report.json" \
+            --allow-non-apple-test-certificate
+
+          test -s "$RUNNER_TEMP/AppleDistribution-CI.p12"
+          test -s "$RUNNER_TEMP/AppleDistribution-CI-report.json"
+
+          openssl pkcs12 \
+            -in "$RUNNER_TEMP/AppleDistribution-CI.p12" \
+            -passin env:P12_OUTPUT_PASSWORD \
+            -nocerts -nodes \
+            | grep -q "BEGIN PRIVATE KEY"
+
+      - name: Verify reports and evidence tool source contain no unsafe output behavior
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          reports = [
+              Path(os.environ["RUNNER_TEMP"]) / "csr/AppleDistribution.csr-report.json",
+              Path(os.environ["RUNNER_TEMP"]) / "AppleDistribution-CI-report.json",
+          ]
+          forbidden_report_values = [
+              os.environ["CSR_PRIVATE_KEY_PASSWORD"],
+              os.environ["P12_OUTPUT_PASSWORD"],
+              "BEGIN PRIVATE KEY",
+              "BEGIN ENCRYPTED PRIVATE KEY",
+          ]
+          for path in reports:
+              text = path.read_text(encoding="utf-8")
+              json.loads(text)
+              for marker in forbidden_report_values:
+                  if marker in text:
+                      raise SystemExit(f"sensitive marker found in {path.name}")
+
+          evidence = Path("scripts/capture_apple_release_evidence_macos.sh").read_text(
+              encoding="utf-8"
+          )
+          required_safety_markers = [
+              "read -r -s -p",
+              "private_key_exported_to_report\": False",
+              "password_exported_to_report\": False",
+              "Private material was detected in sanitized output",
+              "rm -f \"$REPORT_JSON\" \"$REPORT_MD\"",
+          ]
+          for marker in required_safety_markers:
+              if marker not in evidence:
+                  raise SystemExit(f"evidence safety marker missing: {marker}")
+          print("CSR_P12_EVIDENCE_TOOLS_SAFE")
+          PY
+
+      - name: Delete CI signing material
+        if: ${{ always() }}
+        run: |
+          rm -rf "$RUNNER_TEMP/csr"
+          rm -f "$RUNNER_TEMP/AppleDistribution-CI.cer"
+          rm -f "$RUNNER_TEMP/AppleDistribution-CI.p12"
+          rm -f "$RUNNER_TEMP/AppleDistribution-CI-report.json"
