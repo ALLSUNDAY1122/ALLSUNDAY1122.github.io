@@ -1,0 +1,36 @@
+{
+  "contract_version": "1.0",
+  "updated_at_jst": "2026-09-16",
+  "product_target_questions": 600,
+  "official_audit_reference": {
+    "rows": 180,
+    "purpose": "difficulty/source benchmark only",
+    "verbatim_product_reuse_authorized": false,
+    "note": "Audit-matrix presence is not a rights basis for redistributing official past-exam text."
+  },
+  "product_bank": {
+    "required_origin_type": "original",
+    "required_rights_basis": "original_question_based_on_primary_public_source",
+    "required_primary_source_url": true,
+    "required_reference_date": true,
+    "required_explanation": true,
+    "forbid_filler_or_padding": true,
+    "forbid_official_question_verbatim_copy": true,
+    "target_domain_counts": {
+      "ライフプランニングと資金計画": 100,
+      "リスク管理": 100,
+      "金融資産運用": 100,
+      "タックスプランニング": 100,
+      "不動産": 100,
+      "相続・事業承継": 100
+    }
+  },
+  "generation_policy": {
+    "batch_size": 20,
+    "pre_generation_topic_inventory_required": true,
+    "cross_batch_near_duplicate_gate_required": true,
+    "answer_position_balance_required": true,
+    "legal_baseline_check_required": true,
+    "release_fail_closed_until": 600
+  }
+}
