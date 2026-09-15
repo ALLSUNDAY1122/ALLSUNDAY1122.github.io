@@ -1,4 +1,4 @@
-# Registered trigger v3: validate and merge only after all batch09 checks pass.
+# Registered trigger v4: validate and merge only after all batch09 checks pass; emit precise fail-closed diagnostics.
 name: IT Passport batch 09 merge gate
 
 on:
@@ -24,17 +24,17 @@ jobs:
           from pathlib import Path
           root=Path('apps/it-passport-rebuild'); qp=root/'questions'; old=json.loads((qp/'original-mock.json').read_text()); batch=json.loads((qp/'batch-09.json').read_text()); manifest=json.loads((qp/'manifest.json').read_text()); config=json.loads((root/'quality/exam-config.json').read_text())
           norm=lambda s: re.sub(r'\s+','',unicodedata.normalize('NFKC',str(s)).lower())
-          assert len(old)==160 and manifest['canonical']['original_mock']['current']==160 and len(batch)==20
+          assert len(old)==160, f'canonical length={len(old)} expected=160'; assert manifest['canonical']['original_mock']['current']==160, f'manifest current={manifest["canonical"]["original_mock"]["current"]} expected=160'; assert len(batch)==20, f'batch length={len(batch)} expected=20'
           ids={q['id'] for q in old}; texts={norm(q['question']) for q in old}; topics={norm(q['topic']) for q in old}; subjects=collections.Counter(); answers=collections.Counter(); req=set(config['required_fields']); seen_ids=set(); seen_texts=set(); seen_topics=set()
           for q in batch:
-            assert req <= set(q); assert q['id'] not in ids and q['id'] not in seen_ids
-            qt=norm(q['question']); tp=norm(q['topic']); assert qt not in texts and qt not in seen_texts; assert tp not in topics and tp not in seen_topics
-            assert q['subject'] in config['subjects'] and q['round']==2 and len(q['choices'])==4 and len({norm(x) for x in q['choices']})==4
-            assert isinstance(q['correct_index'],int) and 0<=q['correct_index']<4 and q['syllabus_version']==manifest['current_syllabus_version']=='6.5'
-            assert q['origin_type']=='original' and q['rights_basis']=='original_question_based_on_public_syllabus' and q['source_url']=='https://www.ipa.go.jp/shiken/syllabus/gaiyou.html' and q['reference_date']=='2026-09-15'
-            assert len(q['question'])>=20 and len(q['explanation'])>=35 and (norm(q['choices'][q['correct_index']]) in norm(q['explanation']) or tp in norm(q['explanation']))
+            missing=req-set(q); assert not missing, f'{q.get("id")}: missing fields={sorted(missing)}'; assert q['id'] not in ids, f'duplicate canonical id={q["id"]}'; assert q['id'] not in seen_ids, f'duplicate batch id={q["id"]}'
+            qt=norm(q['question']); tp=norm(q['topic']); assert qt not in texts, f'duplicate canonical question={q["id"]}'; assert qt not in seen_texts, f'duplicate batch question={q["id"]}'; assert tp not in topics, f'duplicate canonical topic={q["id"]}:{q["topic"]}'; assert tp not in seen_topics, f'duplicate batch topic={q["id"]}:{q["topic"]}'
+            assert q['subject'] in config['subjects'], f'{q["id"]}: bad subject={q["subject"]}'; assert q['round']==2, f'{q["id"]}: round={q["round"]}'; assert len(q['choices'])==4 and len({norm(x) for x in q['choices']})==4, f'{q["id"]}: invalid choices'
+            assert isinstance(q['correct_index'],int) and 0<=q['correct_index']<4, f'{q["id"]}: bad correct_index'; assert q['syllabus_version']==manifest['current_syllabus_version']=='6.5', f'{q["id"]}: syllabus mismatch'
+            assert q['origin_type']=='original' and q['rights_basis']=='original_question_based_on_public_syllabus', f'{q["id"]}: provenance mismatch'; assert q['source_url']=='https://www.ipa.go.jp/shiken/syllabus/gaiyou.html' and q['reference_date']=='2026-09-15', f'{q["id"]}: source/date mismatch'
+            assert len(q['question'])>=20 and len(q['explanation'])>=35, f'{q["id"]}: text too short'; assert norm(q['choices'][q['correct_index']]) in norm(q['explanation']) or tp in norm(q['explanation']), f'{q["id"]}: explanation grounding weak'
             subjects[q['subject']]+=1; answers[q['correct_index']]+=1; seen_ids.add(q['id']); seen_texts.add(qt); seen_topics.add(tp)
-          assert subjects=={'ストラテジ系':7,'マネジメント系':4,'テクノロジ系':9}; assert answers=={0:5,1:5,2:5,3:5}; print('PASS batch09 premerge')
+          assert subjects=={'ストラテジ系':7,'マネジメント系':4,'テクノロジ系':9}, f'subject distribution={subjects}'; assert answers=={0:5,1:5,2:5,3:5}, f'answer distribution={answers}'; print('PASS batch09 premerge',subjects,answers)
           PY
       - name: Merge and validate canonical 180
         run: |
