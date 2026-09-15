@@ -1,0 +1,72 @@
+name: IT Passport batch 08 topic repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/itp-batch08-topic-repair.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.actor == 'ALLSUNDAY1122'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Repair duplicate topic granularity only
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('apps/it-passport-rebuild/questions/batch-08.json')
+          data=json.loads(p.read_text())
+          mapping={
+            'ip-r2-str-015':('SWOT分析','SWOT分析の4要素'),
+            'ip-r2-str-016':('損益分岐点','損益分岐点売上高'),
+            'ip-r2-str-018':('コンプライアンス','法令・社会規範の遵守'),
+            'ip-r2-str-019':('特許権','発明の独占実施権'),
+            'ip-r2-str-021':('DX','DXによるビジネス変革'),
+            'ip-r2-mgt-009':('WBS','WBSによる作業分解'),
+            'ip-r2-mgt-010':('SLA','SLAによるサービス水準合意'),
+            'ip-r2-mgt-011':('変更管理','ITサービスの変更統制'),
+            'ip-r2-tech-019':('キャッシュメモリ','CPUと主記憶の速度差対策'),
+            'ip-r2-tech-023':('公開鍵暗号方式','公開鍵暗号の鍵ペア'),
+            'ip-r2-tech-024':('デジタル署名','デジタル署名の真正性確認'),
+            'ip-r2-tech-025':('DNS','DNSによる名前解決'),
+          }
+          seen=set()
+          for q in data:
+            qid=q['id']
+            if qid in mapping:
+              old,new=mapping[qid]
+              assert q['topic']==old,(qid,q['topic'],old)
+              q['topic']=new
+              seen.add(qid)
+          assert seen==set(mapping), sorted(set(mapping)-seen)
+          p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
+          print('PASS: refined 12 duplicate topics without modifying question/choices/answer/explanation')
+          PY
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('apps/it-passport-rebuild/questions/batch-08.json')
+          d=json.loads(p.read_text()); assert len(d)==20
+          print('PASS: batch remains 20 questions')
+          PY
+      - name: Commit staged-topic repair only
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add apps/it-passport-rebuild/questions/batch-08.json
+          test "$(git diff --cached --name-only)" = 'apps/it-passport-rebuild/questions/batch-08.json'
+          git diff --cached --check
+          git commit -m 'content(itp): refine batch08 duplicate topic granularity'
+          git pull --rebase origin main
+          git push origin HEAD:main
