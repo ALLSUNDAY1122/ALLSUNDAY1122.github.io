@@ -25,9 +25,17 @@ includes(project, `MARKETING_VERSION: ${VERSION}`, 'native Xcode marketing versi
 includes(capabilityPatch, 'com.apple.InAppPurchase', 'generated-project In-App Purchase capability patch');
 includes(capabilityPatch, 'enabled = 1;', 'enabled generated-project capability');
 
+// Isolate exactly one top-level workflow. The previous split(marker)[1] consumed every
+// workflow that followed tsukanshi-native-ios, causing unrelated submit flags to fail this app's gate.
 const marker = '\n  tsukanshi-native-ios:';
-must(codemagic.includes(marker), 'missing tsukanshi-native-ios workflow');
-const block = codemagic.split(marker, 2)[1];
+const start = codemagic.indexOf(marker);
+must(start >= 0, 'missing tsukanshi-native-ios workflow');
+const bodyStart = start + marker.length;
+const rest = codemagic.slice(bodyStart);
+const nextWorkflow = rest.search(/\n  [A-Za-z0-9_-]+:\s*\n/);
+const block = nextWorkflow >= 0 ? rest.slice(0, nextWorkflow) : rest;
+must((codemagic.match(/\n  tsukanshi-native-ios:/g) || []).length === 1, 'tsukanshi-native-ios workflow must be unique');
+
 includes(block, 'app_store_connect: "Codemagic Shiwake Swipe"', 'Codemagic ASC integration');
 includes(block, 'distribution_type: app_store', 'App Store distribution');
 includes(block, `BUNDLE_ID: ${BUNDLE}`, 'Codemagic BUNDLE_ID');
@@ -55,6 +63,7 @@ includes(review, '税関・財務省の公式アプリではありません', 'r
 includes(rights, 'WCO', 'third-party rights audit');
 
 must(!/submit_to_app_store:\s*true/.test(block), 'App Store auto-submit must stay disabled');
+must(!/submit_to_testflight:\s*true/.test(block), 'TestFlight auto-submit must stay disabled');
 must(!/WKWebView|import WebKit/.test(block), 'native release workflow must not depend on WebKit');
 
 console.log('PASS: Pure SwiftUI Apple signing/TestFlight preflight contract is internally consistent.');
