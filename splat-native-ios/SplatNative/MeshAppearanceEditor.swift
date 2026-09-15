@@ -69,6 +69,12 @@ private enum MeshAppearanceProcessor {
             directive: "mtllib",
             replacement: editedMTL.lastPathComponent
         )
+        // The exporter contract is the durable pointer to this immutable edit generation. Flush
+        // every referenced file before that contract can be persisted so a crash/power loss cannot
+        // leave durable metadata pointing at an OBJ/MTL/JPG generation still only in page cache.
+        try synchronize(editedTexture)
+        try synchronize(editedMTL)
+        try synchronize(editedOBJ)
         committed = true
         return MeshAppearanceEditResult(objURL: editedOBJ, textureURL: editedTexture)
     }
@@ -94,6 +100,12 @@ private enum MeshAppearanceProcessor {
         try? FileManager.default.removeItem(at: base.appendingPathExtension("jpg"))
         try? FileManager.default.removeItem(at: base.appendingPathExtension("mtl"))
         try? FileManager.default.removeItem(at: objURL)
+    }
+
+    private static func synchronize(_ url: URL) throws {
+        let handle = try FileHandle(forWritingTo: url)
+        defer { try? handle.close() }
+        try handle.synchronize()
     }
 
     private static func error(_ text:String)->NSError{NSError(domain:"ScanLab.MeshAppearance",code:1,userInfo:[NSLocalizedDescriptionKey:text])}
