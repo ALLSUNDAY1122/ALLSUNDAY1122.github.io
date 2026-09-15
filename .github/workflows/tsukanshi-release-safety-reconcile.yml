@@ -1,0 +1,65 @@
+name: Tsukanshi release safety reconcile
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tsukanshi-release-safety-reconcile.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    if: github.actor == 'ALLSUNDAY1122'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Reconcile Tsukanshi to pre-TestFlight safety state
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml'); s=p.read_text(encoding='utf-8')
+          marker='\n  tsukanshi-ios:'
+          assert marker in s
+          start=s.index(marker); tail=s[start+1:]; rel=tail.find('\n  ',len('  tsukanshi-ios:')); end=len(s) if rel<0 else start+1+rel
+          block=s[start:end]
+          assert 'app_store_connect: Codemagic Shiwake Swipe' in block or 'app_store_connect: "Codemagic Shiwake Swipe"' in block
+          assert 'bundle_identifier: jp.allsunday1122.tsukanshi' in block
+          assert 'submit_to_app_store: false' in block
+          assert block.count('submit_to_testflight: true')==1
+          fixed=block.replace('submit_to_testflight: true','submit_to_testflight: false',1)
+          p.write_text(s[:start]+fixed+s[end:],encoding='utf-8')
+          v=Path('tsukanshi-sprint/validate-apple-preflight.mjs'); t=v.read_text(encoding='utf-8')
+          old="includes(block, 'app_store_connect: codemagic', 'Codemagic ASC integration');"
+          new="must(block.includes('app_store_connect: Codemagic Shiwake Swipe') || block.includes('app_store_connect: \\\"Codemagic Shiwake Swipe\\\"'), 'missing: Codemagic ASC integration');"
+          assert t.count(old)==1
+          v.write_text(t.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Validate fail-closed release contract
+        run: |
+          set -euo pipefail
+          node tsukanshi-sprint/validate-apple-preflight.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('codemagic.yaml').read_text(encoding='utf-8'); block=s.split('\n  tsukanshi-ios:',1)[1]
+          assert 'submit_to_testflight: false' in block
+          assert 'submit_to_app_store: false' in block
+          assert 'testFlightInternalTestingOnly' in block
+          assert 'bundle_identifier: jp.allsunday1122.tsukanshi' in block
+          print('PASS: Tsukanshi remains pre-TestFlight until Full Gate PASS')
+          PY
+      - name: Commit safety reconciliation
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml tsukanshi-sprint/validate-apple-preflight.mjs
+          git diff --cached --check
+          git commit -m 'fix(tsukanshi): restore pre-TestFlight release safety'
+          git pull --rebase origin main
+          git push origin HEAD:main
