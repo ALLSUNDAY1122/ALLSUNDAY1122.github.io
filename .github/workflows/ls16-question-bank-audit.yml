@@ -1,0 +1,113 @@
+name: LS16 OT question bank build and audit
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'sagyo-ryohoshi-sprint/tools/build_question_bank.py'
+      - 'sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py'
+      - 'sagyo-ryohoshi-sprint/tools/audit_difficulty.py'
+      - 'sagyo-ryohoshi-sprint/audit/exam-config.json'
+      - 'automation/learning-sprint-question-pipeline/validate_questions_v2.py'
+      - '.github/workflows/ls16-question-bank-audit.yml'
+  push:
+    branches: [learning-sprint-16-sagyo-dispatcher]
+    paths:
+      - 'sagyo-ryohoshi-sprint/tools/build_question_bank.py'
+      - 'sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py'
+      - 'sagyo-ryohoshi-sprint/tools/audit_difficulty.py'
+      - 'sagyo-ryohoshi-sprint/audit/exam-config.json'
+      - 'automation/learning-sprint-question-pipeline/validate_questions_v2.py'
+      - '.github/workflows/ls16-question-bank-audit.yml'
+permissions:
+  contents: write
+jobs:
+  build-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Install extraction dependencies
+        run: |
+          python -m pip install --disable-pip-version-check requests beautifulsoup4 'pypdf>=5,<6' 'pymupdf>=1.24,<2'
+          python -c "import pymupdf; print('PYMUPDF_OK')"
+      - name: Build canonical 600-question bank from MHLW official text-only pool
+        id: build
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py 2>&1 | tee sagyo-ryohoshi-sprint/audit/question-bank-ci.log
+      - name: Commit build diagnostic
+        if: always() && steps.build.outcome != 'success'
+        run: |
+          git config user.name 'LS16 Question Bank Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add sagyo-ryohoshi-sprint/audit/question-bank-ci.log
+          if ! git diff --cached --quiet; then
+            git commit -m 'diagnose LS16 question bank build [skip ci]'
+            git pull --rebase origin learning-sprint-16-sagyo-dispatcher
+            git push origin HEAD:learning-sprint-16-sagyo-dispatcher
+          fi
+      - name: Stop on build failure
+        if: always() && steps.build.outcome != 'success'
+        run: exit 1
+      - name: Validate v2 contract
+        if: steps.build.outcome == 'success'
+        run: >-
+          python automation/learning-sprint-question-pipeline/validate_questions_v2.py
+          --config sagyo-ryohoshi-sprint/audit/exam-config.json
+          sagyo-ryohoshi-sprint/data/questions-r1.json
+          sagyo-ryohoshi-sprint/data/questions-r2.json
+          sagyo-ryohoshi-sprint/data/questions-r3.json
+      - name: Audit national-exam difficulty profile
+        if: steps.build.outcome == 'success'
+        run: >-
+          python sagyo-ryohoshi-sprint/tools/audit_difficulty.py
+          --out sagyo-ryohoshi-sprint/audit/difficulty-audit.json
+          sagyo-ryohoshi-sprint/data/questions-r1.json
+          sagyo-ryohoshi-sprint/data/questions-r2.json
+          sagyo-ryohoshi-sprint/data/questions-r3.json
+      - name: Persist canonical output and audit evidence safely
+        if: steps.build.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch='learning-sprint-16-sagyo-dispatcher'
+          files=(
+            sagyo-ryohoshi-sprint/data/questions-r1.json
+            sagyo-ryohoshi-sprint/data/questions-r2.json
+            sagyo-ryohoshi-sprint/data/questions-r3.json
+            sagyo-ryohoshi-sprint/audit/bank-audit.json
+            sagyo-ryohoshi-sprint/audit/difficulty-audit.json
+          )
+          tmp="$(mktemp -d)"
+          for f in "${files[@]}"; do
+            mkdir -p "$tmp/$(dirname "$f")"
+            cp "$f" "$tmp/$f"
+          done
+          git config user.name 'LS16 Question Bank Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin "$branch"
+            git reset --hard "origin/$branch"
+            for f in "${files[@]}"; do
+              mkdir -p "$(dirname "$f")"
+              cp "$tmp/$f" "$f"
+            done
+            git add "${files[@]}"
+            if git diff --cached --quiet; then
+              echo 'CANONICAL_NO_CHANGE'
+              exit 0
+            fi
+            git commit -m 'Build audited LS16 OT 600-question bank [skip ci]'
+            if git push origin HEAD:"$branch"; then
+              exit 0
+            fi
+            echo "Push race on attempt $attempt; restoring validated outputs on newest branch."
+          done
+          echo 'Could not persist validated LS16 canonical outputs after 5 attempts.' >&2
+          exit 1
