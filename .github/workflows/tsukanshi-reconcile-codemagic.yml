@@ -1,3 +1,4 @@
+# trigger: 2026-09-15T19:24+09:00
 name: Tsukanshi reconcile Codemagic contract
 
 on:
@@ -35,33 +36,18 @@ jobs:
           if block.count('app_store_connect:') < 2:
               raise SystemExit('expected integration and publishing app_store_connect entries')
           block2=re.sub(r'(integrations:\s*\n\s+app_store_connect:)\s*[^\n]+', r'\1 "Codemagic Shiwake Swipe"', block, count=1)
-          required=[
-              'distribution_type: app_store',
-              'bundle_identifier: jp.allsunday1122.tsukanshi',
-              'BUNDLE_ID: jp.allsunday1122.tsukanshi',
-              'tsukanshi_appstore',
-              'TsukanshiNative.xcodeproj',
-              'testFlightInternalTestingOnly',
-              'submit_to_testflight: false',
-              'submit_to_app_store: false',
-          ]
+          required=['distribution_type: app_store','bundle_identifier: jp.allsunday1122.tsukanshi','BUNDLE_ID: jp.allsunday1122.tsukanshi','tsukanshi_appstore','TsukanshiNative.xcodeproj','testFlightInternalTestingOnly','submit_to_testflight: false','submit_to_app_store: false']
           for token in required:
-              if token not in block2:
-                  raise SystemExit(f'missing required token after reconcile: {token}')
-          if 'submit_to_testflight: true' in block2 or 'submit_to_app_store: true' in block2:
-              raise SystemExit('auto-submit must remain disabled')
-          out=s[:start]+block2+s[end:]
-          p.write_text(out,encoding='utf-8')
+              if token not in block2: raise SystemExit(f'missing required token after reconcile: {token}')
+          if 'submit_to_testflight: true' in block2 or 'submit_to_app_store: true' in block2: raise SystemExit('auto-submit must remain disabled')
+          p.write_text(s[:start]+block2+s[end:],encoding='utf-8')
           print('PASS: tsukanshi-native-ios Codemagic contract reconciled')
           PY
       - name: Run Apple preflight
         run: node tsukanshi-sprint/validate-apple-preflight.mjs
       - name: Commit reconciled contract
         run: |
-          if git diff --quiet -- codemagic.yaml; then
-            echo 'No change required'
-            exit 0
-          fi
+          if git diff --quiet -- codemagic.yaml; then echo 'No change required'; exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add codemagic.yaml
