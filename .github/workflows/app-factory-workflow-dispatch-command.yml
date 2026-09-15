@@ -20,7 +20,7 @@ jobs:
           set -euo pipefail
           workflow="$(printf '%s\n' "$BODY" | sed -n 's/^workflow=//p' | head -1)"
           case "$workflow" in
-            itp-batch11-merge-gate.yml|touhan-visual-preflight.yml) ;;
+            itp-batch11-merge-gate.yml|touhan-visual-preflight.yml|pharmacist-ios-preflight.yml|pharmacist-learning-preflight.yml|pharmacist-native-static.yml) ;;
             *) echo "Not allowlisted: $workflow" >&2; exit 1 ;;
           esac
           echo "workflow=$workflow" >> "$GITHUB_OUTPUT"
