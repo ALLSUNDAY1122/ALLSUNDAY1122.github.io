@@ -1,0 +1,47 @@
+name: TedoriLogInput
+options:
+  minimumXcodeGenVersion: 2.38.0
+  deploymentTarget:
+    iOS: "17.0"
+settings:
+  base:
+    SWIFT_VERSION: 5.9
+    MARKETING_VERSION: 0.1.0
+    CURRENT_PROJECT_VERSION: '1'
+    GENERATE_INFOPLIST_FILE: NO
+    TARGETED_DEVICE_FAMILY: "1"
+    SUPPORTS_MACCATALYST: NO
+    CODE_SIGN_STYLE: Automatic
+packages:
+  TedoriLogInput:
+    path: .
+targets:
+  TedoriLogInput:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: App
+    dependencies:
+      - package: TedoriLogInput
+        product: TedoriLogCore
+      - package: TedoriLogInput
+        product: TedoriLogVision
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.tedorilog.input
+        PRODUCT_NAME: TedoriLogInput
+        INFOPLIST_FILE: App/Info.plist
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: 手取りログ入力試作
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ITSAppUsesNonExemptEncryption: false
+        LSRequiresIPhoneOS: true
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSCameraUsageDescription: 紙の給与明細を撮影して読み取るために使います。撮影した画像は端末の外へ送信しません。
+        NSPhotoLibraryUsageDescription: 給与明細のスクリーンショットを読み取るために使います。選んだ画像は端末の外へ送信しません。
