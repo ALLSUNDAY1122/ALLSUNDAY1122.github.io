@@ -1,0 +1,30 @@
+name: EnglishListeningSprint
+options:
+  bundleIdPrefix: jp.allsunday1122
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    MARKETING_VERSION: 1.0.0
+    CURRENT_PROJECT_VERSION: 1
+    DEVELOPMENT_TEAM: MN3D2ZM44N
+targets:
+  EnglishListeningSprint:
+    type: application
+    platform: iOS
+    sources:
+      - path: EnglishListeningSprint
+    resources:
+      - path: Resources
+      - path: ../audio
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.englishlistening
+        INFOPLIST_FILE: EnglishListeningSprint/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: 1
+        CODE_SIGN_STYLE: Automatic
+    entitlements:
+      path: EnglishListeningSprint/EnglishListeningSprint.entitlements
+      properties:
+        com.apple.developer.associated-domains: []
