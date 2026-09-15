@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 
 struct MeshProjectSummary: Identifiable, Equatable, Sendable {
@@ -43,9 +44,9 @@ enum MeshProjectStoreError: LocalizedError {
 ///
 /// B currently deletes its working directory from `MeshScanModel.reset()`. C therefore snapshots
 /// a finished project outside B's working root before reset can destroy it. Because both locations
-/// are on the app's Documents volume, regular files are hard-linked first: deleting B's directory
-/// removes only its names while the library links keep the exact bytes alive without duplicating
-/// storage. Filesystems that reject hard links fall back to a capacity-checked physical copy.
+/// are normally on the same APFS volume, regular files are cloned copy-on-write first: deleting or
+/// mutating B's working files cannot mutate the archived library while unchanged extents remain
+/// storage-efficient. Filesystems that reject clones fall back to a capacity-checked physical copy.
 final class MeshProjectStore {
     static let projectExtension = "meshproject"
     static let sourceManifestFileName = "mesh-project.json"
@@ -128,8 +129,6 @@ final class MeshProjectStore {
         summaries(in: trashURL, includeHidden: true)
     }
 
-    /// Imports completed working projects left by builds that predate C's durable Mesh library.
-    /// Incomplete `.meshproject` directories are deliberately ignored and never promoted.
     func adoptLegacyCompletedProjects() {
         try? ensureDirectories()
         let children = (try? fileManager.contentsOfDirectory(
@@ -156,10 +155,14 @@ final class MeshProjectStore {
             throw MeshProjectStoreError.invalidProject
         }
 
-        // Saved-library results are already durable. Avoid snapshotting an archive into itself.
         if sourceProjectURL.deletingLastPathComponent().standardizedFileURL == libraryURL.standardizedFileURL {
             return try summary(at: sourceProjectURL)
         }
+
+        // A durable library entry must never depend on aliases outside its own project tree.
+        // Reject symlinked roots, symlinked descendants, and special filesystem nodes before any
+        // metadata is derived or a snapshot begins. Recheck before physical-copy fallback too.
+        try validateSnapshotTree(at: sourceProjectURL)
 
         let relativeResultPath = try relativePath(of: resultURL, inside: sourceProjectURL)
         let resultSnapshot = try regularFileSnapshot(at: resultURL)
@@ -168,13 +171,18 @@ final class MeshProjectStore {
         let sourceManifest = readSourceManifest(projectURL: sourceProjectURL)
         let projectID = sourceProjectURL.deletingPathExtension().lastPathComponent
         guard !projectID.isEmpty else { throw MeshProjectStoreError.invalidProject }
-        let rawRetained = hasRawImages(projectURL: sourceProjectURL)
+        let imagesURL = sourceProjectURL.appendingPathComponent("images", isDirectory: true)
+        let rawRetained = MeshRawInputValidator.hasAnyRawImageBytes(
+            in: imagesURL,
+            fileManager: fileManager
+        )
         let captureMode = sourceManifest?.captureMode ?? "unknown"
         let scanSize = sourceManifest?.scanSize ?? "unknown"
         let createdAt = sourceManifest?.createdAt
             ?? directoryDate(sourceProjectURL, key: .creationDate)
             ?? resultSnapshot.modificationDate
-        let reprocessSupported = captureMode == "photogrammetry" && rawRetained
+        let reprocessSupported = captureMode == "photogrammetry" &&
+            MeshRawInputValidator.hasMinimumUsableImages(in: imagesURL, fileManager: fileManager)
 
         let finalURL = libraryURL
             .appendingPathComponent(projectID)
@@ -195,9 +203,10 @@ final class MeshProjectStore {
 
         do {
             do {
-                try hardLinkSnapshotTree(from: sourceProjectURL, to: temporaryURL)
+                try cloneSnapshotTree(from: sourceProjectURL, to: temporaryURL)
             } catch {
                 try? fileManager.removeItem(at: temporaryURL)
+                try validateSnapshotTree(at: sourceProjectURL)
                 try preflightPhysicalCopy(of: sourceProjectURL)
                 try fileManager.copyItem(at: sourceProjectURL, to: temporaryURL)
             }
@@ -230,20 +239,26 @@ final class MeshProjectStore {
 
     func moveToTrash(projectURL: URL) throws {
         try ensureDirectories()
+        try validateArchivedProjectRoot(projectURL)
         guard projectURL.deletingLastPathComponent().standardizedFileURL == libraryURL.standardizedFileURL,
-              projectURL.pathExtension.lowercased() == Self.projectExtension,
               fileManager.fileExists(atPath: projectURL.path) else {
             throw MeshProjectStoreError.archiveMissing
         }
         let destination = trashURL.appendingPathComponent(projectURL.lastPathComponent, isDirectory: true)
-        if fileManager.fileExists(atPath: destination.path) { try fileManager.removeItem(at: destination) }
+        // A stale/corrupt duplicate in Trash must never be destroyed implicitly. Normal lifecycle
+        // cannot produce the same project ID in Library and Trash at once, so treat this as an
+        // integrity collision and preserve both sides for explicit recovery.
+        guard !fileManager.fileExists(atPath: destination.path) else {
+            throw MeshProjectStoreError.invalidProject
+        }
         try fileManager.moveItem(at: projectURL, to: destination)
     }
 
     func restoreFromTrash(id: String) throws {
         try ensureDirectories()
-        let source = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+        let source = try validatedTrashProjectURL(id: id)
         guard fileManager.fileExists(atPath: source.path) else { throw MeshProjectStoreError.archiveMissing }
+        try validateArchivedProjectRoot(source)
 
         var restoredID = id
         var destination = libraryURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
@@ -253,16 +268,42 @@ final class MeshProjectStore {
         }
         try fileManager.moveItem(at: source, to: destination)
         if restoredID != id {
-            var manifest = try readLibraryManifest(projectURL: destination)
-            manifest.id = restoredID
-            try writeLibraryManifest(manifest, projectURL: destination)
+            do {
+                var manifest = try readLibraryManifest(projectURL: destination)
+                guard manifest.id == id else { throw MeshProjectStoreError.invalidProject }
+                manifest.id = restoredID
+                try writeLibraryManifest(manifest, projectURL: destination)
+            } catch {
+                // Collision restore must be all-or-nothing. If the manifest cannot be rebound to
+                // the generated ID, return the archive to Trash instead of leaving an invisible
+                // library directory whose directory ID and manifest ID disagree.
+                if !fileManager.fileExists(atPath: source.path),
+                   fileManager.fileExists(atPath: destination.path) {
+                    try? fileManager.moveItem(at: destination, to: source)
+                }
+                throw error
+            }
         }
     }
 
     func permanentlyDeleteFromTrash(id: String) throws {
-        let target = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+        let target = try validatedTrashProjectURL(id: id)
         guard fileManager.fileExists(atPath: target.path) else { throw MeshProjectStoreError.archiveMissing }
+        try validateArchivedProjectRoot(target)
         try fileManager.removeItem(at: target)
+    }
+
+    private func validatedTrashProjectURL(id: String) throws -> URL {
+        guard !id.isEmpty, id != ".", id != "..",
+              !id.contains("/"), !id.contains("\\"), !id.contains("\0") else {
+            throw MeshProjectStoreError.invalidProject
+        }
+        let candidate = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension).standardizedFileURL
+        guard candidate.deletingLastPathComponent().standardizedFileURL == trashURL.standardizedFileURL,
+              candidate.lastPathComponent == "\(id).\(Self.projectExtension)" else {
+            throw MeshProjectStoreError.invalidProject
+        }
+        return candidate
     }
 
     private func summaries(in directory: URL, includeHidden: Bool) -> [MeshProjectSummary] {
@@ -279,13 +320,34 @@ final class MeshProjectStore {
     }
 
     private func summary(at projectURL: URL) throws -> MeshProjectSummary {
+        try validateArchivedProjectRoot(projectURL)
         let manifest = try readLibraryManifest(projectURL: projectURL)
-        let resultURL = projectURL.appendingPathComponent(manifest.resultFileName)
+        let expectedID = projectURL.deletingPathExtension().lastPathComponent
+        guard !expectedID.isEmpty, manifest.id == expectedID else {
+            throw MeshProjectStoreError.invalidProject
+        }
+        let resultURL = try archivedResultURL(
+            projectURL: projectURL,
+            resultFileName: manifest.resultFileName
+        )
         let resultSnapshot = try regularFileSnapshot(at: resultURL)
         guard resultSnapshot.byteCount == manifest.resultByteCount,
               resultSnapshot.byteCount > 0 else {
             throw MeshProjectStoreError.resultMissing
         }
+
+        // Manifest flags are a historical snapshot. RAW may have been cleared, partially deleted,
+        // or the archive may predate the stricter ImageIO eligibility contract. Recompute both
+        // concepts from current bytes: retention is a privacy/storage fact, while reprocessing has
+        // the stronger minimum-count + structural-readability requirement.
+        let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
+        let rawRetained = MeshRawInputValidator.hasAnyRawImageBytes(
+            in: imagesURL,
+            fileManager: fileManager
+        )
+        let reprocessSupported = manifest.captureMode == "photogrammetry" &&
+            MeshRawInputValidator.hasMinimumUsableImages(in: imagesURL, fileManager: fileManager)
+
         return MeshProjectSummary(
             id: manifest.id,
             projectURL: projectURL,
@@ -294,10 +356,24 @@ final class MeshProjectStore {
             scanSize: manifest.scanSize,
             createdAt: manifest.createdAt,
             updatedAt: manifest.archivedAt,
-            rawDataRetained: manifest.rawDataRetained,
-            reprocessSupported: manifest.reprocessSupported,
+            rawDataRetained: rawRetained,
+            reprocessSupported: reprocessSupported,
             storageBytes: logicalDirectorySize(projectURL)
         )
+    }
+
+    private func validateArchivedProjectRoot(_ projectURL: URL) throws {
+        guard projectURL.isFileURL,
+              projectURL.pathExtension.lowercased() == Self.projectExtension,
+              let values = try? projectURL.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              values.isDirectory == true,
+              values.isSymbolicLink != true else {
+            throw MeshProjectStoreError.invalidProject
+        }
+        let parent = projectURL.deletingLastPathComponent().standardizedFileURL
+        guard parent == libraryURL.standardizedFileURL || parent == trashURL.standardizedFileURL else {
+            throw MeshProjectStoreError.invalidProject
+        }
     }
 
     private func readSourceManifest(projectURL: URL) -> SourceManifest? {
@@ -339,19 +415,62 @@ final class MeshProjectStore {
         return nil
     }
 
-    private func hasRawImages(projectURL: URL) -> Bool {
-        let images = projectURL.appendingPathComponent("images", isDirectory: true)
-        guard let children = try? fileManager.contentsOfDirectory(
-            at: images,
-            includingPropertiesForKeys: [.isRegularFileKey],
-            options: [.skipsHiddenFiles]
-        ) else { return false }
-        return children.contains { url in
-            (try? url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile) == true
+    private func archivedResultURL(projectURL: URL, resultFileName: String) throws -> URL {
+        let trimmed = resultFileName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let characters = Array(trimmed)
+        let isWindowsAbsolute = characters.count >= 3 &&
+            characters[1] == ":" &&
+            (characters[2] == "\\" || characters[2] == "/")
+        guard !trimmed.isEmpty,
+              !trimmed.hasPrefix("/"),
+              !trimmed.hasPrefix("~"),
+              !isWindowsAbsolute else {
+            throw MeshProjectStoreError.invalidProject
+        }
+
+        let root = projectURL.standardizedFileURL
+        let candidate = root.appendingPathComponent(trimmed).standardizedFileURL
+        let rootPrefix = root.path.hasSuffix("/") ? root.path : root.path + "/"
+        guard candidate.path.hasPrefix(rootPrefix) else {
+            throw MeshProjectStoreError.invalidProject
+        }
+
+        let resolvedRoot = root.resolvingSymlinksInPath().standardizedFileURL
+        let resolvedCandidate = candidate.resolvingSymlinksInPath().standardizedFileURL
+        let resolvedPrefix = resolvedRoot.path.hasSuffix("/")
+            ? resolvedRoot.path
+            : resolvedRoot.path + "/"
+        guard resolvedCandidate.path.hasPrefix(resolvedPrefix) else {
+            throw MeshProjectStoreError.invalidProject
+        }
+        return candidate
+    }
+
+    private func validateSnapshotTree(at source: URL) throws {
+        guard source.isFileURL,
+              let rootValues = try? source.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              rootValues.isDirectory == true,
+              rootValues.isSymbolicLink != true,
+              let enumerator = fileManager.enumerator(
+                at: source,
+                includingPropertiesForKeys: [.isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey],
+                options: []
+              ) else {
+            throw MeshProjectStoreError.invalidProject
+        }
+
+        for case let itemURL as URL in enumerator {
+            let values = try itemURL.resourceValues(
+                forKeys: [.isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey]
+            )
+            guard values.isSymbolicLink != true,
+                  values.isDirectory == true || values.isRegularFile == true else {
+                throw MeshProjectStoreError.invalidProject
+            }
         }
     }
 
-    private func hardLinkSnapshotTree(from source: URL, to destination: URL) throws {
+    private func cloneSnapshotTree(from source: URL, to destination: URL) throws {
         try fileManager.createDirectory(at: destination, withIntermediateDirectories: true)
         guard let enumerator = fileManager.enumerator(
             at: source,
@@ -370,14 +489,22 @@ final class MeshProjectStore {
             guard !relative.isEmpty else { continue }
             let target = destination.appendingPathComponent(relative)
             let values = try standardized.resourceValues(forKeys: [.isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey])
+            guard values.isSymbolicLink != true else { throw MeshProjectStoreError.invalidProject }
             if values.isDirectory == true {
                 try fileManager.createDirectory(at: target, withIntermediateDirectories: true)
             } else if values.isRegularFile == true {
                 try fileManager.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
-                try fileManager.linkItem(at: standardized, to: target)
+                let cloned = standardized.withUnsafeFileSystemRepresentation { sourcePath in
+                    target.withUnsafeFileSystemRepresentation { destinationPath in
+                        guard let sourcePath, let destinationPath else { return false }
+                        return clonefile(sourcePath, destinationPath, 0) == 0
+                    }
+                }
+                if !cloned {
+                    throw CocoaError(.fileWriteUnknown)
+                }
             } else {
-                try fileManager.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
-                try fileManager.copyItem(at: standardized, to: target)
+                throw MeshProjectStoreError.invalidProject
             }
         }
     }

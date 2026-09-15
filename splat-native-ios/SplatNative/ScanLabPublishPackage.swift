@@ -38,44 +38,203 @@ enum ScanLabPublishPackageError: LocalizedError, Equatable {
 }
 
 enum ScanLabPublishPackageBuilder {
+    private static let directoryPrefix = "scanlab-publish-"
+    private static let ownershipMarker = ".scanlab-publish-package"
+    private static let maximumManifestBytes: Int64 = 64 * 1024
+    private static let stalePackageAge: TimeInterval = 24 * 60 * 60
+    private static let hashReadChunkBytes = 1024 * 1024
+
     static func build(from sourceURL: URL, maximumBytes: Int = 128 * 1024 * 1024, fileManager: FileManager = .default) throws -> ScanLabPublishPackage {
+        try Task.checkCancellation()
+        guard maximumBytes > 0, sourceURL.isFileURL else { throw ScanLabPublishPackageError.invalidSource }
+        cleanupStalePackages(
+            in: fileManager.temporaryDirectory,
+            olderThan: stalePackageAge,
+            now: Date(),
+            fileManager: fileManager
+        )
+        try Task.checkCancellation()
         let attributes: [FileAttributeKey: Any]
         do { attributes = try fileManager.attributesOfItem(atPath: sourceURL.path) } catch { throw ScanLabPublishPackageError.invalidSource }
-        guard let number = attributes[.size] as? NSNumber, number.int64Value > 0 else { throw ScanLabPublishPackageError.invalidSource }
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let number = attributes[.size] as? NSNumber,
+              number.int64Value > 0 else { throw ScanLabPublishPackageError.invalidSource }
         guard number.int64Value <= Int64(maximumBytes) else { throw ScanLabPublishPackageError.sourceTooLarge }
-        let source: Data
-        do { source = try Data(contentsOf: sourceURL, options: [.mappedIfSafe]) } catch { throw ScanLabPublishPackageError.invalidSource }
-        guard source.count == number.intValue, isDecodableSPZ(source) else { throw ScanLabPublishPackageError.invalidSPZ }
-        let directory = fileManager.temporaryDirectory.appendingPathComponent("scanlab-publish-\(UUID().uuidString.lowercased())", isDirectory: true)
+        let sourceByteCount = Int(number.int64Value)
+        let trustedSourceHash: String
+        do {
+            let source: Data
+            do { source = try Data(contentsOf: sourceURL, options: [.mappedIfSafe]) } catch { throw ScanLabPublishPackageError.invalidSource }
+            guard source.count == sourceByteCount, isDecodableSPZ(source) else { throw ScanLabPublishPackageError.invalidSPZ }
+            try Task.checkCancellation()
+            trustedSourceHash = sha256(source)
+            try Task.checkCancellation()
+        }
+        let directory = fileManager.temporaryDirectory.appendingPathComponent("\(directoryPrefix)\(UUID().uuidString.lowercased())", isDirectory: true)
         let sceneURL = directory.appendingPathComponent(ScanLabPublishPackage.sceneFilename)
         let manifestURL = directory.appendingPathComponent(ScanLabPublishPackage.manifestFilename)
         do {
             try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
-            try source.write(to: sceneURL, options: [.atomic])
-            let manifest = ScanLabPublishManifest(schemaVersion: ScanLabPublishManifest.currentSchemaVersion, sceneFile: ScanLabPublishPackage.sceneFilename, sceneByteCount: Int64(source.count), sceneSHA256: sha256(source), mediaType: ScanLabPublishPackage.manifestSceneMediaType, createdAt: ISO8601DateFormatter().string(from: Date()))
+            try Data().write(to: markerURL(for: directory), options: .atomic)
+            try Task.checkCancellation()
+            // The source is already a validated regular, non-empty SPZ file. Copy it as a file
+            // rather than asking Data.write(.atomic) to stage another 128 MB-class Data-backed write.
+            // The validation mapping above has left scope before this copy starts, and the streamed
+            // hash + size verification below still proves that the package contains those exact bytes.
+            try fileManager.copyItem(at: sourceURL, to: sceneURL)
+            try Task.checkCancellation()
+            let manifest = ScanLabPublishManifest(schemaVersion: ScanLabPublishManifest.currentSchemaVersion, sceneFile: ScanLabPublishPackage.sceneFilename, sceneByteCount: Int64(sourceByteCount), sceneSHA256: trustedSourceHash, mediaType: ScanLabPublishPackage.manifestSceneMediaType, createdAt: ISO8601DateFormatter().string(from: Date()))
             let encoder = JSONEncoder(); encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
             try encoder.encode(manifest).write(to: manifestURL, options: [.atomic])
             let package = ScanLabPublishPackage(directoryURL: directory, sceneURL: sceneURL, manifestURL: manifestURL, manifest: manifest)
-            guard try verify(package, fileManager: fileManager) else { throw ScanLabPublishPackageError.packageVerificationFailed }
+            // The source bytes were fully decoded as SPZ immediately above. During this same build,
+            // proving the copied bytes have the exact same SHA-256 is sufficient to preserve that
+            // semantic guarantee. Avoid decoding the 128 MB-class scene a second time; public verify()
+            // retains the full standalone decode for packages without this in-process source proof.
+            guard try verifyWrittenCopy(package, trustedSourceHash: trustedSourceHash, fileManager: fileManager) else {
+                throw ScanLabPublishPackageError.packageVerificationFailed
+            }
+            try Task.checkCancellation()
             return package
         } catch {
-            try? fileManager.removeItem(at: directory)
+            if isOwnedPackageDirectory(directory, fileManager: fileManager) { try? fileManager.removeItem(at: directory) }
+            if error is CancellationError { throw error }
             if error is ScanLabPublishPackageError { throw error }
             throw ScanLabPublishPackageError.packageWriteFailed
         }
     }
 
     static func verify(_ package: ScanLabPublishPackage, fileManager: FileManager = .default) throws -> Bool {
+        guard basicPackageStructureIsValid(package, fileManager: fileManager) else { return false }
+        let scene = try Data(contentsOf: package.sceneURL, options: [.mappedIfSafe])
+        guard isDecodableSPZ(scene),
+              Int64(scene.count) == package.manifest.sceneByteCount,
+              sha256(scene) == package.manifest.sceneSHA256 else { return false }
+        return try manifestOnDiskMatches(package)
+    }
+
+    static func cleanup(_ package: ScanLabPublishPackage, fileManager: FileManager = .default) {
+        guard isOwnedPackageDirectory(package.directoryURL, fileManager: fileManager) else { return }
+        try? fileManager.removeItem(at: package.directoryURL)
+    }
+
+    static func cleanupStalePackages(
+        in rootDirectory: URL,
+        olderThan age: TimeInterval,
+        now: Date = Date(),
+        fileManager: FileManager = .default
+    ) {
+        guard age.isFinite, age >= 0,
+              let entries = try? fileManager.contentsOfDirectory(
+                at: rootDirectory,
+                includingPropertiesForKeys: [.contentModificationDateKey, .isDirectoryKey, .isSymbolicLinkKey],
+                options: [.skipsHiddenFiles]
+              ) else { return }
+        let cutoff = now.addingTimeInterval(-age)
+        for entry in entries where entry.lastPathComponent.hasPrefix(directoryPrefix) {
+            guard isOwnedPackageDirectory(entry, fileManager: fileManager),
+                  let values = try? entry.resourceValues(forKeys: [.contentModificationDateKey]),
+                  let modified = values.contentModificationDate,
+                  modified <= cutoff else { continue }
+            try? fileManager.removeItem(at: entry)
+        }
+    }
+
+    private static func verifyWrittenCopy(
+        _ package: ScanLabPublishPackage,
+        trustedSourceHash: String,
+        fileManager: FileManager
+    ) throws -> Bool {
+        try Task.checkCancellation()
+        guard package.manifest.sceneSHA256 == trustedSourceHash,
+              basicPackageStructureIsValid(package, fileManager: fileManager) else { return false }
+        let digest = try streamingSHA256(package.sceneURL)
+        guard digest.byteCount == package.manifest.sceneByteCount,
+              digest.hash == trustedSourceHash else { return false }
+        return try manifestOnDiskMatches(package)
+    }
+
+    private static func streamingSHA256(_ url: URL) throws -> (byteCount: Int64, hash: String) {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        var hasher = SHA256()
+        var byteCount: Int64 = 0
+        while true {
+            try Task.checkCancellation()
+            let chunk = try handle.read(upToCount: hashReadChunkBytes) ?? Data()
+            if chunk.isEmpty { break }
+            let (nextCount, overflow) = byteCount.addingReportingOverflow(Int64(chunk.count))
+            guard !overflow else { throw ScanLabPublishPackageError.packageVerificationFailed }
+            byteCount = nextCount
+            hasher.update(data: chunk)
+        }
+        let hash = hasher.finalize().map { String(format: "%02x", $0) }.joined()
+        return (byteCount, hash)
+    }
+
+    private static func basicPackageStructureIsValid(
+        _ package: ScanLabPublishPackage,
+        fileManager: FileManager
+    ) -> Bool {
         guard package.manifest.schemaVersion == ScanLabPublishManifest.currentSchemaVersion,
               package.manifest.sceneFile == ScanLabPublishPackage.sceneFilename,
               package.manifest.mediaType == ScanLabPublishPackage.manifestSceneMediaType,
-              fileManager.fileExists(atPath: package.sceneURL.path), fileManager.fileExists(atPath: package.manifestURL.path) else { return false }
-        let scene = try Data(contentsOf: package.sceneURL, options: [.mappedIfSafe])
-        guard isDecodableSPZ(scene), Int64(scene.count) == package.manifest.sceneByteCount, sha256(scene) == package.manifest.sceneSHA256 else { return false }
-        let decoded = try JSONDecoder().decode(ScanLabPublishManifest.self, from: Data(contentsOf: package.manifestURL))
+              package.manifest.sceneByteCount > 0,
+              !package.manifest.sceneSHA256.isEmpty,
+              isOwnedPackageDirectory(package.directoryURL, fileManager: fileManager),
+              package.sceneURL.deletingLastPathComponent().standardizedFileURL == package.directoryURL.standardizedFileURL,
+              package.manifestURL.deletingLastPathComponent().standardizedFileURL == package.directoryURL.standardizedFileURL,
+              isRegularNonSymlinkFile(package.sceneURL),
+              isRegularNonSymlinkFile(package.manifestURL),
+              let sceneAttributes = try? fileManager.attributesOfItem(atPath: package.sceneURL.path),
+              let sceneSize = sceneAttributes[.size] as? NSNumber,
+              sceneSize.int64Value == package.manifest.sceneByteCount,
+              let manifestAttributes = try? fileManager.attributesOfItem(atPath: package.manifestURL.path),
+              let manifestSize = manifestAttributes[.size] as? NSNumber,
+              manifestSize.int64Value > 0,
+              manifestSize.int64Value <= maximumManifestBytes else { return false }
+        return true
+    }
+
+    private static func manifestOnDiskMatches(_ package: ScanLabPublishPackage) throws -> Bool {
+        guard let data = try readManifestDataIfSafe(package.manifestURL) else { return false }
+        let decoded = try JSONDecoder().decode(ScanLabPublishManifest.self, from: data)
         return decoded == package.manifest
     }
-    static func cleanup(_ package: ScanLabPublishPackage, fileManager: FileManager = .default) { try? fileManager.removeItem(at: package.directoryURL) }
+
+    private static func readManifestDataIfSafe(_ url: URL) throws -> Data? {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        guard let data = try handle.read(upToCount: Int(maximumManifestBytes) + 1),
+              !data.isEmpty,
+              data.count <= Int(maximumManifestBytes) else {
+            return nil
+        }
+        return data
+    }
+
+    private static func markerURL(for directory: URL) -> URL {
+        directory.appendingPathComponent(ownershipMarker, isDirectory: false)
+    }
+
+    private static func isOwnedPackageDirectory(_ directory: URL, fileManager: FileManager) -> Bool {
+        guard directory.isFileURL,
+              directory.lastPathComponent.hasPrefix(directoryPrefix),
+              let directoryValues = try? directory.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              directoryValues.isDirectory == true,
+              directoryValues.isSymbolicLink != true else { return false }
+        let marker = markerURL(for: directory)
+        guard let markerValues = try? marker.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              markerValues.isRegularFile == true,
+              markerValues.isSymbolicLink != true else { return false }
+        return fileManager.fileExists(atPath: marker.path)
+    }
+
+    private static func isRegularNonSymlinkFile(_ url: URL) -> Bool {
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]) else { return false }
+        return values.isRegularFile == true && values.isSymbolicLink != true
+    }
+
     private static func isDecodableSPZ(_ data: Data) -> Bool { do { _ = try SPZSceneReader(data).read(); return true } catch { return false } }
     private static func sha256(_ data: Data) -> String { SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined() }
 }

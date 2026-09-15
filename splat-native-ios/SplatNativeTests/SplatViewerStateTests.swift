@@ -10,17 +10,7 @@ final class SplatViewerStateTests: XCTestCase {
     }
 
     func testNormalizationClampsAndRepairsCropRanges() {
-        let settings = SplatEditSettings(
-            exposureEV: 8,
-            contrast: 0.1,
-            cropXMin: 0.92,
-            cropXMax: 0.20,
-            cropYMin: -2,
-            cropYMax: 4,
-            cropZMin: 0.40,
-            cropZMax: 0.405
-        ).normalized()
-
+        let settings = SplatEditSettings(exposureEV: 8, contrast: 0.1, cropXMin: 0.92, cropXMax: 0.20, cropYMin: -2, cropYMax: 4, cropZMin: 0.40, cropZMax: 0.405).normalized()
         XCTAssertEqual(settings.exposureEV, 2)
         XCTAssertEqual(settings.contrast, 0.5)
         XCTAssertGreaterThanOrEqual(settings.cropXMin, 0)
@@ -32,19 +22,210 @@ final class SplatViewerStateTests: XCTestCase {
     }
 
     func testEditSettingsRoundTripThroughJSON() throws {
-        let expected = SplatEditSettings(
-            exposureEV: 0.7,
-            contrast: 1.25,
-            cropXMin: 0.1,
-            cropXMax: 0.9,
-            cropYMin: 0.2,
-            cropYMax: 0.8,
-            cropZMin: 0.05,
-            cropZMax: 0.95
-        )
+        let expected = SplatEditSettings(exposureEV: 0.7, contrast: 1.25, cropXMin: 0.1, cropXMax: 0.9, cropYMin: 0.2, cropYMax: 0.8, cropZMin: 0.05, cropZMax: 0.95)
         let data = try JSONEncoder().encode(expected)
-        let decoded = try JSONDecoder().decode(SplatEditSettings.self, from: data)
-        XCTAssertEqual(decoded, expected)
+        XCTAssertEqual(try JSONDecoder().decode(SplatEditSettings.self, from: data), expected)
+    }
+
+    func testOlderSparseViewerJSONKeepsMissingFieldsAtSafeDefaults() throws {
+        let legacyJSON = Data(#"{"exposureEV":0.6,"contrast":1.2}"#.utf8)
+        let decoded = try JSONDecoder().decode(SplatEditSettings.self, from: legacyJSON).normalized()
+        XCTAssertEqual(decoded.exposureEV, 0.6)
+        XCTAssertEqual(decoded.contrast, 1.2)
+        XCTAssertEqual(decoded.cropXMin, 0)
+        XCTAssertEqual(decoded.cropXMax, 1)
+        XCTAssertEqual(decoded.cropYMin, 0)
+        XCTAssertEqual(decoded.cropYMax, 1)
+        XCTAssertEqual(decoded.cropZMin, 0)
+        XCTAssertEqual(decoded.cropZMax, 1)
+        XCTAssertFalse(decoded.hasCrop)
+    }
+
+    func testFirstViewerEditSaveSeedsRecoverableBackup() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let first = SplatEditSettings(exposureEV: 0.45, contrast: 1.15, cropXMin: 0.1, cropXMax: 0.9)
+
+        try SplatViewerEditStore.save(first, sourceURL: source)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: SplatViewerEditStore.backupURL(for: source).path))
+        try Data("corrupt".utf8).write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
+
+        let recovered = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
+        XCTAssertTrue(recovered.recoveredFromBackup)
+        XCTAssertEqual(recovered.settings, first.normalized())
+    }
+
+    func testViewerEditStoreRecoversLastKnownGoodSettingsFromBackup() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let first = SplatEditSettings(exposureEV: 0.4, contrast: 1.1, cropXMin: 0.1, cropXMax: 0.9, cropYMin: 0, cropYMax: 1, cropZMin: 0, cropZMax: 1)
+        let second = SplatEditSettings(exposureEV: -0.5, contrast: 0.9, cropXMin: 0.2, cropXMax: 0.8, cropYMin: 0.1, cropYMax: 0.9, cropZMin: 0, cropZMax: 1)
+        try SplatViewerEditStore.save(first, sourceURL: source)
+        try SplatViewerEditStore.save(second, sourceURL: source)
+        try Data("corrupt".utf8).write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
+
+        let recovered = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
+        XCTAssertTrue(recovered.recoveredFromBackup)
+        XCTAssertEqual(recovered.settings, first.normalized())
+        let healed = try JSONDecoder().decode(SplatEditSettings.self, from: Data(contentsOf: SplatViewerEditStore.primaryURL(for: source)))
+        XCTAssertEqual(healed, first.normalized())
+    }
+
+    func testViewerEditStoreDoesNotOverwriteGoodBackupWithCorruptPrimary() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let good = SplatEditSettings(exposureEV: 0.2, contrast: 1.2, cropXMin: 0, cropXMax: 1, cropYMin: 0, cropYMax: 1, cropZMin: 0.1, cropZMax: 0.9)
+        let newer = SplatEditSettings(exposureEV: 0.8, contrast: 1.3, cropXMin: 0.1, cropXMax: 0.9, cropYMin: 0, cropYMax: 1, cropZMin: 0, cropZMax: 1)
+        try SplatViewerEditStore.save(good, sourceURL: source)
+        try SplatViewerEditStore.save(newer, sourceURL: source)
+        let backupBefore = try Data(contentsOf: SplatViewerEditStore.backupURL(for: source))
+        try Data("bad".utf8).write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
+        try SplatViewerEditStore.save(newer, sourceURL: source)
+        XCTAssertEqual(try Data(contentsOf: SplatViewerEditStore.backupURL(for: source)), backupBefore)
+    }
+
+    func testViewerEditStoreReseedsCorruptBackupAfterSuccessfulSave() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let expected = SplatEditSettings(exposureEV: -0.25, contrast: 1.3, cropYMin: 0.1, cropYMax: 0.9).normalized()
+
+        try Data("truncated-backup".utf8).write(to: SplatViewerEditStore.backupURL(for: source), options: .atomic)
+        try SplatViewerEditStore.save(expected, sourceURL: source)
+        try Data("corrupt-primary".utf8).write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
+
+        let recovered = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
+        XCTAssertTrue(recovered.recoveredFromBackup)
+        XCTAssertEqual(recovered.settings, expected)
+    }
+
+    func testViewerEditStoreIgnoresOversizedPrimaryAndRecoversBoundedBackup() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let expected = SplatEditSettings(exposureEV: 0.55, contrast: 1.2)
+        try SplatViewerEditStore.save(expected, sourceURL: source)
+
+        let oversized = Data(repeating: 0x41, count: 64 * 1024 + 1)
+        try oversized.write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
+
+        let recovered = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
+        XCTAssertTrue(recovered.recoveredFromBackup)
+        XCTAssertEqual(recovered.settings, expected.normalized())
+    }
+
+    func testViewerEditStoreDoesNotReadExternalBackupAlias() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let externalRoot = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: externalRoot)
+        }
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: externalRoot, withIntermediateDirectories: true)
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let expected = SplatEditSettings(exposureEV: 0.25, contrast: 1.1)
+        let externalBackup = externalRoot.appendingPathComponent("viewer.json")
+        try JSONEncoder().encode(expected).write(to: externalBackup, options: .atomic)
+        try fileManager.createSymbolicLink(
+            at: SplatViewerEditStore.backupURL(for: source),
+            withDestinationURL: externalBackup
+        )
+
+        XCTAssertNil(SplatViewerEditStore.load(sourceURL: source))
+        XCTAssertTrue(fileManager.fileExists(atPath: externalBackup.path))
+    }
+
+    @MainActor
+    func testSwitchingScansFlushesPendingEditsToPreviousScan() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let firstSource = root.appendingPathComponent("first.splat")
+        let secondSource = root.appendingPathComponent("second.splat")
+        try Data([0]).write(to: firstSource)
+        try Data([0]).write(to: secondSource)
+
+        let state = SplatViewerState()
+        state.attach(url: firstSource)
+        state.exposureEV = 0.8
+        state.contrast = 1.25
+        state.schedulePersistence()
+        state.attach(url: secondSource)
+
+        let firstSaved = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: firstSource))
+        XCTAssertEqual(firstSaved.settings.exposureEV, 0.8, accuracy: 0.0001)
+        XCTAssertEqual(firstSaved.settings.contrast, 1.25, accuracy: 0.0001)
+        XCTAssertNil(SplatViewerEditStore.load(sourceURL: secondSource))
+        XCTAssertEqual(state.editSettings, .default)
+    }
+
+    @MainActor
+    func testBackupRecoveryWarningSurvivesRendererLifecycleUntilNextSuccessfulSave() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let expected = SplatEditSettings(exposureEV: 0.35, contrast: 1.1)
+        try SplatViewerEditStore.save(expected, sourceURL: source)
+        try Data("corrupt-primary".utf8).write(to: SplatViewerEditStore.primaryURL(for: source), options: .atomic)
+
+        let state = SplatViewerState()
+        state.attach(url: source)
+        XCTAssertEqual(state.warningMessage, "前回の編集設定をバックアップから復元しました")
+
+        state.rendererBeganLoading()
+        XCTAssertEqual(state.warningMessage, "前回の編集設定をバックアップから復元しました")
+        state.rendererBeganApplyingEdits()
+        state.rendererAppliedEdits(visible: 1)
+        XCTAssertEqual(state.warningMessage, "前回の編集設定をバックアップから復元しました")
+
+        state.persistNow()
+        XCTAssertNil(state.warningMessage)
+    }
+
+    @MainActor
+    func testMeasurementIgnoresExternalTransformsAlias() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let externalRoot = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? fileManager.removeItem(at: root)
+            try? fileManager.removeItem(at: externalRoot)
+        }
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: externalRoot, withIntermediateDirectories: true)
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+
+        let externalTransforms = externalRoot.appendingPathComponent("transforms.json")
+        let json = #"{"frames":[{"transform_matrix":[[1,0,0,-10],[0,1,0,0],[0,0,1,0],[0,0,0,1]]},{"transform_matrix":[[1,0,0,10],[0,1,0,0],[0,0,1,0],[0,0,0,1]]}]}"#
+        try Data(json.utf8).write(to: externalTransforms, options: .atomic)
+        try fileManager.createSymbolicLink(
+            at: root.appendingPathComponent("transforms.json"),
+            withDestinationURL: externalTransforms
+        )
+
+        let state = SplatViewerState()
+        state.attach(url: source)
+        state.rendererMeasured(meters: 1)
+        XCTAssertEqual(state.measurementText, "1.00 m")
     }
 
     func testMeasurementFormattingUsesPracticalUnits() {
@@ -54,24 +235,13 @@ final class SplatViewerStateTests: XCTestCase {
     }
 
     func testSceneNormalizationMatchesMsplatScaleAndCenter() {
-        let positions: [SIMD3<Float>] = [
-            SIMD3<Float>(-0.20, 0.00, 1.50),
-            SIMD3<Float>( 0.00, 0.10, 1.45),
-            SIMD3<Float>( 0.20, 0.00, 1.50),
-        ]
+        let positions: [SIMD3<Float>] = [SIMD3<Float>(-0.20, 0.00, 1.50), SIMD3<Float>(0.00, 0.10, 1.45), SIMD3<Float>(0.20, 0.00, 1.50)]
         let normalization = SplatSceneNormalization(cameraPositions: positions)
-
-        // Mean camera position is removed, then the largest absolute centered
-        // camera component (0.20 m here) is scaled to 1.0 by msplat.
         XCTAssertEqual(normalization.scale, 5.0, accuracy: 0.0001)
         XCTAssertEqual(normalization.metersPerSceneUnit, 0.20, accuracy: 0.0001)
         XCTAssertEqual(normalization.normalized(positions[0]).x, -1.0, accuracy: 0.0001)
         XCTAssertEqual(normalization.normalized(positions[2]).x, 1.0, accuracy: 0.0001)
-
-        let normalizedDistance = simd_distance(
-            normalization.normalized(positions[0]),
-            normalization.normalized(positions[2])
-        )
+        let normalizedDistance = simd_distance(normalization.normalized(positions[0]), normalization.normalized(positions[2]))
         XCTAssertEqual(normalizedDistance * normalization.metersPerSceneUnit, 0.40, accuracy: 0.0001)
     }
 }

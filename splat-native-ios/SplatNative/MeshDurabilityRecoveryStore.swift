@@ -1,4 +1,5 @@
 import Foundation
+import SceneKit
 
 struct MeshDurabilityProtectedResult: Equatable, Sendable {
     let projectURL: URL
@@ -14,6 +15,7 @@ struct MeshDurabilityRecoveryReport: Equatable, Sendable {
 enum MeshDurabilityRecoveryError: LocalizedError {
     case invalidResult
     case invalidProject
+    case unsafeRecoveryDirectory
     case movedResultMissing
 
     var errorDescription: String? {
@@ -22,6 +24,8 @@ enum MeshDurabilityRecoveryError: LocalizedError {
             return "保護するMesh結果を確認できません。"
         case .invalidProject:
             return "Mesh working projectをRecovery領域へ退避できません。"
+        case .unsafeRecoveryDirectory:
+            return "Mesh Recovery領域が安全な通常directoryではありません。"
         case .movedResultMissing:
             return "Recovery領域へ移動したMesh結果を確認できません。"
         }
@@ -51,16 +55,20 @@ struct MeshDurabilityRecoveryStore: Sendable {
     func protect(resultURL: URL) throws -> MeshDurabilityProtectedResult {
         let fileManager = FileManager.default
         guard resultURL.isFileURL,
-              fileManager.fileExists(atPath: resultURL.path) else {
+              isNonEmptyRegularFile(resultURL) else {
             throw MeshDurabilityRecoveryError.invalidResult
         }
 
         let sourceProjectURL = resultURL.deletingLastPathComponent().standardizedFileURL
-        guard sourceProjectURL.pathExtension.lowercased() == MeshProjectStore.projectExtension else {
+        guard sourceProjectURL.pathExtension.lowercased() == MeshProjectStore.projectExtension,
+              isRegularDirectory(sourceProjectURL) else {
             throw MeshDurabilityRecoveryError.invalidProject
         }
 
         try fileManager.createDirectory(at: recoveryURL, withIntermediateDirectories: true)
+        guard isRegularDirectory(recoveryURL) else {
+            throw MeshDurabilityRecoveryError.unsafeRecoveryDirectory
+        }
 
         if sourceProjectURL.deletingLastPathComponent().standardizedFileURL == recoveryURL.standardizedFileURL {
             return MeshDurabilityProtectedResult(projectURL: sourceProjectURL, resultURL: resultURL)
@@ -87,7 +95,14 @@ struct MeshDurabilityRecoveryStore: Sendable {
         // Same-volume rename deliberately avoids allocating another copy when storage is exhausted.
         try fileManager.moveItem(at: sourceProjectURL, to: destinationURL)
         let movedResultURL = destinationURL.appendingPathComponent(relativeResultPath)
-        guard fileManager.fileExists(atPath: movedResultURL.path) else {
+        guard isNonEmptyRegularFile(movedResultURL) else {
+            // The move and validation are one logical protection transaction. If a filesystem race
+            // or unexpected post-rename state makes the selected result disappear, restore the
+            // working project whenever doing so cannot overwrite a newly appeared source path.
+            if !fileManager.fileExists(atPath: sourceProjectURL.path),
+               fileManager.fileExists(atPath: destinationURL.path) {
+                try? fileManager.moveItem(at: destinationURL, to: sourceProjectURL)
+            }
             throw MeshDurabilityRecoveryError.movedResultMissing
         }
 
@@ -95,8 +110,12 @@ struct MeshDurabilityRecoveryStore: Sendable {
     }
 
     func cleanupProtectedResult(containing resultURL: URL) {
-        guard isProtected(resultURL: resultURL) else { return }
-        try? FileManager.default.removeItem(at: resultURL.deletingLastPathComponent())
+        let projectURL = resultURL.deletingLastPathComponent()
+        guard isRegularDirectory(recoveryURL),
+              isProtected(resultURL: resultURL),
+              isRegularDirectory(projectURL),
+              isNonEmptyRegularFile(resultURL) else { return }
+        try? FileManager.default.removeItem(at: projectURL)
     }
 
     func isProtected(resultURL: URL) -> Bool {
@@ -105,11 +124,26 @@ struct MeshDurabilityRecoveryStore: Sendable {
 
     func recoverPendingArchives() -> MeshDurabilityRecoveryReport {
         let fileManager = FileManager.default
-        try? fileManager.createDirectory(at: recoveryURL, withIntermediateDirectories: true)
+        do {
+            try fileManager.createDirectory(at: recoveryURL, withIntermediateDirectories: true)
+        } catch {
+            return MeshDurabilityRecoveryReport(
+                recoveredCount: 0,
+                remainingCount: 0,
+                lastErrorDescription: error.localizedDescription
+            )
+        }
+        guard isRegularDirectory(recoveryURL) else {
+            return MeshDurabilityRecoveryReport(
+                recoveredCount: 0,
+                remainingCount: 0,
+                lastErrorDescription: MeshDurabilityRecoveryError.unsafeRecoveryDirectory.localizedDescription
+            )
+        }
 
         let protectedProjects = projectDirectories(in: recoveryURL)
         let orphanedWorkingProjects = projectDirectories(in: appRootURL)
-            .filter { bestFinishedResult(in: $0) != nil }
+            .filter { !finishedResults(in: $0).isEmpty }
         let projects = protectedProjects + orphanedWorkingProjects
 
         var recoveredCount = 0
@@ -117,25 +151,43 @@ struct MeshDurabilityRecoveryStore: Sendable {
         let libraryStore = MeshProjectStore(appRootURL: appRootURL)
 
         for projectURL in projects {
-            guard let resultURL = bestFinishedResult(in: projectURL) else {
+            let candidates = finishedResults(in: projectURL)
+            guard !candidates.isEmpty else {
                 if projectURL.deletingLastPathComponent().standardizedFileURL == recoveryURL.standardizedFileURL {
                     lastErrorDescription = "Recovery内に完成Meshを確認できないprojectがあります。"
                 }
                 continue
             }
-            do {
-                let summary = try libraryStore.archiveFinishedProject(resultURL: resultURL)
-                _ = try MeshProjectIntegrity.verifyOrSeal(summary: summary)
-                try fileManager.removeItem(at: projectURL)
-                recoveredCount += 1
-            } catch {
-                lastErrorDescription = error.localizedDescription
+
+            var recovered = false
+            var candidateErrorDescription: String?
+            for resultURL in candidates {
+                // `archiveFinishedProject` commits a library directory before the integrity seal is
+                // created. Validate actual geometry first so a stale/truncated preferred result can
+                // neither block a valid lower-priority result nor replace an already-good archive.
+                guard containsUsableGeometry(resultURL) else {
+                    candidateErrorDescription = MeshProjectIntegrity.IntegrityError.invalidGeometry.localizedDescription
+                    continue
+                }
+                do {
+                    let summary = try libraryStore.archiveFinishedProject(resultURL: resultURL)
+                    _ = try MeshProjectIntegrity.verifyOrSeal(summary: summary)
+                    try fileManager.removeItem(at: projectURL)
+                    recoveredCount += 1
+                    recovered = true
+                    break
+                } catch {
+                    candidateErrorDescription = error.localizedDescription
+                }
+            }
+            if !recovered, let candidateErrorDescription {
+                lastErrorDescription = candidateErrorDescription
             }
         }
 
         let protectedRemaining = projectDirectories(in: recoveryURL).count
         let orphanedRemaining = projectDirectories(in: appRootURL)
-            .filter { bestFinishedResult(in: $0) != nil }
+            .filter { !finishedResults(in: $0).isEmpty }
             .count
 
         return MeshDurabilityRecoveryReport(
@@ -147,26 +199,29 @@ struct MeshDurabilityRecoveryStore: Sendable {
 
     private func projectDirectories(in directoryURL: URL) -> [URL] {
         let fileManager = FileManager.default
+        guard isRegularDirectory(directoryURL) else { return [] }
         return ((try? fileManager.contentsOfDirectory(
             at: directoryURL,
-            includingPropertiesForKeys: [.isDirectoryKey],
+            includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey],
             options: [.skipsHiddenFiles]
         )) ?? []).filter { url in
             guard url.pathExtension.lowercased() == MeshProjectStore.projectExtension else { return false }
-            return (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true
+            return isRegularDirectory(url)
         }
     }
 
-    private func bestFinishedResult(in projectURL: URL) -> URL? {
+    private func finishedResults(in projectURL: URL) -> [URL] {
+        guard isRegularDirectory(projectURL) else { return [] }
         let fileManager = FileManager.default
+        var candidates: [URL] = []
         for name in ["mesh-cropped.obj", "mesh-textured.usdz", "mesh.obj"] {
             let candidate = projectURL.appendingPathComponent(name)
-            if isNonEmptyRegularFile(candidate) { return candidate }
+            if isNonEmptyRegularFile(candidate) { candidates.append(candidate) }
         }
 
         let reprocessed = ((try? fileManager.contentsOfDirectory(
             at: projectURL,
-            includingPropertiesForKeys: [.isRegularFileKey, .contentModificationDateKey, .fileSizeKey],
+            includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .contentModificationDateKey, .fileSizeKey],
             options: [.skipsHiddenFiles]
         )) ?? [])
             .filter {
@@ -174,17 +229,36 @@ struct MeshDurabilityRecoveryStore: Sendable {
                 $0.pathExtension.lowercased() == "usdz" &&
                 isNonEmptyRegularFile($0)
             }
-            .sorted {
-                let lhs = (try? $0.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
-                let rhs = (try? $1.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
-                return lhs > rhs
-            }
-        return reprocessed.first
+        candidates.append(contentsOf: reprocessed)
+
+        // Recovery no longer has the live model's `resultURL`, so mtime is the closest durable
+        // representation of the user's last completed Mesh. Prefer the newest valid result and
+        // retain the existing geometry-validation fallback for a newer truncated/corrupt file.
+        return candidates.sorted {
+            let lhs = (try? $0.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
+            let rhs = (try? $1.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
+            if lhs != rhs { return lhs > rhs }
+            return $0.lastPathComponent < $1.lastPathComponent
+        }
+    }
+
+    private func containsUsableGeometry(_ url: URL) -> Bool {
+        guard isNonEmptyRegularFile(url),
+              let scene = try? SCNScene(url: url, options: nil) else { return false }
+        return MeshRawSceneValidator.containsGeometry(scene)
+    }
+
+    private func isRegularDirectory(_ url: URL) -> Bool {
+        guard let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              values.isDirectory == true,
+              values.isSymbolicLink != true else { return false }
+        return true
     }
 
     private func isNonEmptyRegularFile(_ url: URL) -> Bool {
-        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
-              values.isRegularFile == true else { return false }
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true else { return false }
         return (values.fileSize ?? 0) > 0
     }
 }

@@ -28,11 +28,7 @@ enum SplatProjectTrustRecovery {
     ) -> Bool {
         guard project.manifest.stage == .finished,
               trustedResultURL(for: project) == nil,
-              (try? store.loadCheckpoint(projectURL: project.projectURL)) != nil,
-              (try? store.reprocessRequest(
-                projectURL: project.projectURL,
-                representation: .splat
-              )) != nil else {
+              hasReprocessableRaw(project, store: store) else {
             return false
         }
         return true
@@ -45,12 +41,31 @@ enum SplatProjectTrustRecovery {
         _ project: ScanProjectSummary,
         store: ScanProjectStore
     ) throws {
-        if trustedResultURL(for: project) != nil {
+        // Strong verification can hash a completed Splat hundreds of megabytes in size. Do it once:
+        // calling canRecoverForReprocess here used to repeat the exact same SHA-256 scan immediately
+        // before checking raw availability, doubling recovery latency and storage I/O.
+        //
+        // Do not use trustedResultURL's `try?` here: the strong verifier is cooperatively cancellable,
+        // and swallowing CancellationError would reinterpret an abandoned verification as corruption
+        // and could then downgrade a healthy finished manifest after the user left the flow.
+        let candidate = project.projectURL.appendingPathComponent(ScanProjectStore.splatResultFileName)
+        do {
+            _ = try SplatCompletionVerifier.verify(sourceURL: candidate)
             throw RecoveryError.trustedResultAlreadyExists
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch let error as RecoveryError {
+            throw error
+        } catch {
+            // A real verification failure is the expected prerequisite for trust recovery.
         }
-        guard canRecoverForReprocess(project, store: store) else {
+
+        try Task.checkCancellation()
+        guard project.manifest.stage == .finished,
+              hasReprocessableRaw(project, store: store) else {
             throw RecoveryError.rawDataUnavailable
         }
+        try Task.checkCancellation()
 
         _ = try store.updateManifest(projectURL: project.projectURL) { manifest in
             manifest.stage = .captured
@@ -58,5 +73,19 @@ enum SplatProjectTrustRecovery {
             manifest.lastError = "以前の3Dは完了記録を確認できないため表示せず、保存済みrawデータから安全に再生成します。"
             manifest.rawDataRetained = true
         }
+    }
+
+    private static func hasReprocessableRaw(
+        _ project: ScanProjectSummary,
+        store: ScanProjectStore
+    ) -> Bool {
+        guard (try? store.loadCheckpoint(projectURL: project.projectURL)) != nil,
+              (try? store.reprocessRequest(
+                projectURL: project.projectURL,
+                representation: .splat
+              )) != nil else {
+            return false
+        }
+        return true
     }
 }

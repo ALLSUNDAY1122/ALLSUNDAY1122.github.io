@@ -1,5 +1,4 @@
 @preconcurrency import ARKit
-import CoreImage
 import Foundation
 import RealityKit
 import SceneKit
@@ -118,7 +117,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private var scanOrigin: SIMD3<Float>?
     private var lastSavedFrameTimestamp: TimeInterval = 0
     private var isWritingFrame = false
-    private let ciContext = CIContext(options: [.cacheIntermediates: false])
+    private let frameEncoder = MeshFrameJPEGEncoder()
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.mesh.capture", qos: .userInitiated)
     private var reconstructionTask: Task<Void, Never>?
     private var photogrammetrySession: PhotogrammetrySession?
@@ -388,10 +387,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
               !isWritingFrame,
               let imagesURL else { return }
 
-        let image = CIImage(cvPixelBuffer: frame.capturedImage)
-        guard let cgImage = ciContext.createCGImage(image, from: image.extent),
-              let jpeg = UIImage(cgImage: cgImage).jpegData(compressionQuality: 0.91) else { return }
-
+        let frameImage = MeshFrameImage(pixelBuffer: frame.capturedImage)
         let index = frames.count
         let fileName = String(format: "mesh_%05d.jpg", index)
         let fileURL = imagesURL.appendingPathComponent(fileName)
@@ -399,14 +395,19 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let transform = Self.rows(frame.camera.transform)
         let intrinsics = Self.rows3(frame.camera.intrinsics)
         let resolution = frame.camera.imageResolution
+        let frameEncoder = self.frameEncoder
         isWritingFrame = true
 
-        captureQueue.async { [weak self] in
+        captureQueue.async { [weak self, frameEncoder, frameImage] in
             let success: Bool
-            do {
-                try jpeg.write(to: fileURL, options: .atomic)
-                success = true
-            } catch {
+            if let jpeg = frameEncoder.encode(frameImage) {
+                do {
+                    try jpeg.write(to: fileURL, options: .atomic)
+                    success = true
+                } catch {
+                    success = false
+                }
+            } else {
                 success = false
             }
 
@@ -485,17 +486,21 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 self.reconstructionProgress = 0.75
                 do {
                     let url = try self.exportOBJ(merged, suffix: "")
+                    let scene = self.makeScene(from: merged)
+                    try self.writeManifest(texturedModelAvailable: false)
                     self.rawOBJURL = url
                     self.resultURL = url
-                    self.previewScene = self.makeScene(from: merged)
+                    self.previewScene = scene
                     self.vertexCount = merged.vertices.count
                     self.faceCount = merged.triangles.count
                     self.reconstructionProgress = 1
                     self.phase = .finished
                     self.statusMessage = "実LiDARメッシュを生成しました。写真からテクスチャ版も再構築できます"
-                    try? self.writeManifest(texturedModelAvailable: false)
                 } catch {
-                    self.phase = .failed("LiDARメッシュを書き出せませんでした: \(error.localizedDescription)")
+                    self.resultURL = nil
+                    self.previewScene = nil
+                    self.reconstructionProgress = min(self.reconstructionProgress, 0.99)
+                    self.phase = .failed("LiDARメッシュを保存できませんでした: \(error.localizedDescription)")
                 }
             }
         }
@@ -540,14 +545,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
                         case .requestProgress(_, let fractionComplete):
                             self.reconstructionProgress = fractionComplete
                         case .requestComplete(_, _):
-                            if FileManager.default.fileExists(atPath: outputURL.path) {
-                                self.resultURL = outputURL
-                                self.previewScene = try? SCNScene(url: outputURL, options: nil)
-                                self.reconstructionProgress = 1
-                                self.phase = .finished
-                                self.statusMessage = "テクスチャ付きMeshを端末内で生成しました"
-                                try? self.writeManifest(texturedModelAvailable: true)
-                            }
+                            _ = self.completePhotogrammetryOutput(at: outputURL)
                         case .requestError(_, let error):
                             self.phase = .failed("テクスチャ再構築に失敗しました: \(error.localizedDescription)")
                         case .invalidSample(_, _):
@@ -564,13 +562,8 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
                                 self.statusMessage = "再構築を中断しました"
                             }
                         case .processingComplete:
-                            if self.resultURL == nil && FileManager.default.fileExists(atPath: outputURL.path) {
-                                self.resultURL = outputURL
-                                self.previewScene = try? SCNScene(url: outputURL, options: nil)
-                                self.reconstructionProgress = 1
-                                self.phase = .finished
-                                self.statusMessage = "テクスチャ付きMeshを端末内で生成しました"
-                                try? self.writeManifest(texturedModelAvailable: true)
+                            if self.resultURL == nil && self.phase == .reconstructing {
+                                _ = self.completePhotogrammetryOutput(at: outputURL)
                             }
                         case .requestProgressInfo(_, _):
                             break
@@ -589,8 +582,42 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         }
     }
 
+    @discardableResult
+    func completePhotogrammetryOutput(at outputURL: URL) -> Bool {
+        guard FileManager.default.fileExists(atPath: outputURL.path),
+              let scene = try? SCNScene(url: outputURL, options: nil),
+              MeshRawSceneValidator.containsGeometry(scene) else {
+            resultURL = nil
+            previewScene = nil
+            reconstructionProgress = min(reconstructionProgress, 0.99)
+            let message = "フォトグラメトリ結果に有効な面形状を確認できませんでした。撮影条件を変えて再生成してください。"
+            phase = .failed(message)
+            statusMessage = message
+            return false
+        }
+
+        do {
+            try writeManifest(texturedModelAvailable: true)
+        } catch {
+            resultURL = nil
+            previewScene = nil
+            reconstructionProgress = min(reconstructionProgress, 0.99)
+            let message = "フォトグラメトリ結果を保存できませんでした: \(error.localizedDescription)"
+            phase = .failed(message)
+            statusMessage = message
+            return false
+        }
+
+        resultURL = outputURL
+        previewScene = scene
+        reconstructionProgress = 1
+        phase = .finished
+        statusMessage = "テクスチャ付きMeshを端末内で生成しました"
+        return true
+    }
+
     private func writeManifest(texturedModelAvailable: Bool) throws {
-        guard let projectURL else { return }
+        guard let projectURL else { throw meshError("Meshプロジェクトの保存先がありません") }
         let manifest = MeshProjectManifest(
             schemaVersion: 1,
             captureMode: mode.rawValue,
@@ -603,7 +630,11 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         encoder.dateEncodingStrategy = .iso8601
-        try encoder.encode(manifest).write(to: projectURL.appendingPathComponent("mesh-project.json"), options: .atomic)
+        let manifestURL = projectURL.appendingPathComponent("mesh-project.json")
+        try encoder.encode(manifest).write(to: manifestURL, options: .atomic)
+        let handle = try FileHandle(forWritingTo: manifestURL)
+        defer { try? handle.close() }
+        try handle.synchronize()
     }
 
     private func exportOBJ(_ mesh: MergedMesh, suffix: String) throws -> URL {

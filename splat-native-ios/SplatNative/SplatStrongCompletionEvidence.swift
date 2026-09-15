@@ -8,6 +8,7 @@ import Foundation
 /// same-size replacement cannot be accepted as the previously completed asset.
 enum SplatStrongCompletionEvidence {
     static let fileName = "result.splat.sha256.json"
+    private static let maximumSealByteCount: Int64 = 64 * 1024
 
     struct Seal: Codable, Equatable, Sendable {
         static let currentSchemaVersion = 1
@@ -39,6 +40,7 @@ enum SplatStrongCompletionEvidence {
         case sourceChangedAfterCommit
         case sourceChangedDuringVerification
         case hashMismatch
+        case evidencePersistenceFailed
 
         var errorDescription: String? {
             switch self {
@@ -47,31 +49,40 @@ enum SplatStrongCompletionEvidence {
             case .sourceChangedAfterCommit:
                 return "完成記録の後に3Dデータが変更されています。再生成してください。"
             case .sourceChangedDuringVerification:
-                return "3Dデータの確認中に内容が変化しました。再試行してください。"
+                return "3Dデータの確認中に内容が変化しました。もう一度開いてください。"
             case .hashMismatch:
                 return "3Dデータの内容が完成時の記録と一致しません。再生成してください。"
+            case .evidencePersistenceFailed:
+                return "完成3Dデータの整合性記録を安全に確定できませんでした。もう一度開いてください。"
             }
         }
     }
 
+    /// Returns the digest that was freshly computed during this verification. Callers that need the
+    /// content address immediately afterwards can reuse it without weakening the invariant that every
+    /// verification re-reads and hashes the completed result.
+    @discardableResult
     static func verifyOrSeal(
         sourceURL: URL,
         evidence: SplatCommitEvidence,
         fileManager: FileManager = .default
-    ) throws {
+    ) throws -> String {
         let projectURL = sourceURL.deletingLastPathComponent()
         let sealURL = projectURL.appendingPathComponent(fileName)
         let before = try snapshot(sourceURL, fileManager: fileManager)
         guard before.byteCount == evidence.byteCount else { throw IntegrityError.hashMismatch }
 
-        if let data = try? Data(contentsOf: sealURL),
+        // Completion trust metadata must be physically owned by the project and tiny. The bounded
+        // reader also closes the stat/read race so a concurrently replaced or extended seal cannot
+        // turn validation into an unbounded allocation on library open/export.
+        if let data = try readExistingSealIfSafe(sealURL, fileManager: fileManager),
            let seal = try? JSONDecoder().decode(Seal.self, from: data),
            seal.matches(evidence) {
             let hash = try sha256Hex(fileURL: sourceURL)
             let after = try snapshot(sourceURL, fileManager: fileManager)
             guard after == before else { throw IntegrityError.sourceChangedDuringVerification }
             guard hash == seal.sha256 else { throw IntegrityError.hashMismatch }
-            return
+            return hash
         }
 
         // A stale seal is expected after a newly committed reconstruction. It may be replaced only
@@ -87,7 +98,27 @@ enum SplatStrongCompletionEvidence {
 
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        try encoder.encode(Seal(evidence: evidence, sha256: hash)).write(to: sealURL, options: .atomic)
+        let encoded = try encoder.encode(Seal(evidence: evidence, sha256: hash))
+        try encoded.write(to: sealURL, options: .atomic)
+        do {
+            let handle = try FileHandle(forWritingTo: sealURL)
+            defer { try? handle.close() }
+            try handle.synchronize()
+        } catch {
+            throw IntegrityError.evidencePersistenceFailed
+        }
+
+        // A successful write + fsync is not treated as trust until the bytes can be read back and
+        // decode to the exact evidence/hash contract that was just verified. Use the same bounded
+        // reader as normal verification so this confirmation cannot reintroduce an unbounded trust-
+        // metadata allocation if the path is concurrently replaced or extended.
+        guard let persisted = try readExistingSealIfSafe(sealURL, fileManager: fileManager),
+              persisted == encoded,
+              let decoded = try? JSONDecoder().decode(Seal.self, from: persisted),
+              decoded.matches(evidence), decoded.sha256 == hash else {
+            throw IntegrityError.evidencePersistenceFailed
+        }
+        return hash
     }
 
     private struct FileSnapshot: Equatable {
@@ -98,11 +129,31 @@ enum SplatStrongCompletionEvidence {
     private static func snapshot(_ url: URL, fileManager: FileManager) throws -> FileSnapshot {
         guard fileManager.fileExists(atPath: url.path) else { throw IntegrityError.sourceMissing }
         let attributes = try fileManager.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber,
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.int64Value > 0,
               let modificationDate = attributes[.modificationDate] as? Date else {
             throw IntegrityError.sourceMissing
         }
         return FileSnapshot(byteCount: size.int64Value, modificationDate: modificationDate)
+    }
+
+    private static func readExistingSealIfSafe(_ url: URL, fileManager: FileManager) throws -> Data? {
+        guard let attributes = try? fileManager.attributesOfItem(atPath: url.path) else { return nil }
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.int64Value >= 0,
+              size.int64Value <= maximumSealByteCount else {
+            throw IntegrityError.hashMismatch
+        }
+
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        guard let data = try handle.read(upToCount: Int(maximumSealByteCount) + 1),
+              data.count <= Int(maximumSealByteCount) else {
+            throw IntegrityError.hashMismatch
+        }
+        return data
     }
 
     private static func sha256Hex(fileURL: URL) throws -> String {

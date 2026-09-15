@@ -19,9 +19,6 @@ env:
   GIT_LFS_SKIP_SMUDGE: '1'
 jobs:
   build:
-    # Feature branches use the lightweight Linux contract workflow on every push.
-    # The macOS/Xcode gate runs only when explicitly requested, on a PR, on HQ,
-    # or on a TestFlight release branch.
     if: >-
       github.event_name == 'workflow_dispatch' ||
       github.event_name == 'pull_request' ||
@@ -95,16 +92,21 @@ jobs:
           grep -q 'SplatVideoConfigurationTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatVideoExporterTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatTransientExportWorkspaceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatViewerSidecarWriteSafetyTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatViewerCameraDatasetLoaderTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshThirdPartyReaderCompatibilityTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportAdmissionTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportMemoryPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MeshExportSourceSafetyTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshProjectStoreTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshProjectIntegrityTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MeshDurabilityRecoverySymlinkTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'CaptureMotionQualityTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatResourceGuardAdaptiveTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatSeedColorizerMultiViewTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatSkySeederDedupTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatSkyGeometryRejectionTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'ScanLabSessionPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'ScanLabPublishPackageTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'ScanLabGeotagPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
@@ -141,6 +143,8 @@ jobs:
             -only-testing:SplatNativeTests/SplatResourceGuardAdaptiveTests \
             -only-testing:SplatNativeTests/SplatSeedColorizerMultiViewTests \
             -only-testing:SplatNativeTests/SplatSkySeederDedupTests \
+            -only-testing:SplatNativeTests/SplatSkyGeometryRejectionTests \
+            -only-testing:SplatNativeTests/SplatViewerCameraDatasetLoaderTests \
             -only-testing:SplatNativeTests/ScanProjectStoreTests \
             -only-testing:SplatNativeTests/ScanColdResumePersistenceTests \
             -only-testing:SplatNativeTests/ScanPersistenceIntegrationTests \
@@ -150,14 +154,18 @@ jobs:
             -only-testing:SplatNativeTests/SplatExportAdmissionTests \
             -only-testing:SplatNativeTests/SplatExportServiceTests \
             -only-testing:SplatNativeTests/SplatTransientExportWorkspaceTests \
+            -only-testing:SplatNativeTests/SplatViewerSidecarWriteSafetyTests \
             -only-testing:SplatNativeTests/ScanTrashLifecycleTests \
             -only-testing:SplatNativeTests/SplatVideoConfigurationTests \
             -only-testing:SplatNativeTests/SplatVideoExporterTests \
             -only-testing:SplatNativeTests/MeshExportServiceTests \
             -only-testing:SplatNativeTests/MeshExportAdmissionTests \
             -only-testing:SplatNativeTests/MeshExportMemoryPolicyTests \
+            -only-testing:SplatNativeTests/MeshExportResourcePressureTests \
+            -only-testing:SplatNativeTests/MeshExportSourceSafetyTests \
             -only-testing:SplatNativeTests/MeshProjectStoreTests \
             -only-testing:SplatNativeTests/MeshProjectIntegrityTests \
+            -only-testing:SplatNativeTests/MeshDurabilityRecoverySymlinkTests \
             2>&1 | tee /tmp/splat-integrated-tests.log
           status=${PIPESTATUS[0]}
           grep -E 'Test Case.*(failed|passed)|XCTAssert|error:|Testing failed|Failures:|failed on|threw error' /tmp/splat-integrated-tests.log | tail -240 > /tmp/splat-integrated-diagnostics.txt || true

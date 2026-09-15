@@ -8,6 +8,7 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     @Published private(set) var azimuthCoverage = 0
     @Published private(set) var elevationCoverage = 0
     @Published private(set) var pathLengthMeters: Float = 0
+    @Published private(set) var verticalSpanMeters: Float = 0
     @Published private(set) var stableSamples = 0
     @Published private(set) var qualityScore: Double = 0
     @Published private(set) var guidance = "対象の周囲をゆっくり移動してください"
@@ -15,72 +16,154 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     private var azimuthBins = Set<Int>()
     private var elevationBins = Set<Int>()
     private var lastPosition: SIMD3<Float>?
+    private var lastCoveragePosition: SIMD3<Float>?
+    private var minimumHeight: Float?
+    private var maximumHeight: Float?
     private var lastTimestamp: TimeInterval = -.greatestFiniteMagnitude
+    private var trackingInterrupted = false
 
     func reset() {
         azimuthBins.removeAll()
         elevationBins.removeAll()
         lastPosition = nil
+        lastCoveragePosition = nil
+        minimumHeight = nil
+        maximumHeight = nil
         lastTimestamp = -.greatestFiniteMagnitude
+        trackingInterrupted = false
         azimuthCoverage = 0
         elevationCoverage = 0
         pathLengthMeters = 0
+        verticalSpanMeters = 0
         stableSamples = 0
         qualityScore = 0
         guidance = "対象の周囲をゆっくり移動してください"
     }
 
     func record(frame: ARFrame, mode: MeshCaptureMode, size: MeshScanSize, frameCount: Int, faceCount: Int) {
-        guard frame.timestamp - lastTimestamp >= 0.16 else { return }
+        guard frame.timestamp.isFinite else {
+            trackingInterrupted = true
+            guidance = "撮影時刻を安定して取得できません。ゆっくり動かしてください"
+            return
+        }
+        let sampleElapsed: TimeInterval
+        if lastTimestamp == -.greatestFiniteMagnitude {
+            sampleElapsed = .greatestFiniteMagnitude
+        } else {
+            let elapsed = frame.timestamp - lastTimestamp
+            guard elapsed.isFinite, elapsed >= 0.16 else { return }
+            sampleElapsed = elapsed
+        }
+        // Throttle every tracking state, not only normal samples. During `.limited`, leaving the
+        // timestamp untouched turns this method into a per-AR-frame Published update loop exactly
+        // when tracking already needs CPU headroom.
+        lastTimestamp = frame.timestamp
         guard case .normal = frame.camera.trackingState else {
+            // A coordinate frame can move while ARKit is initializing/relocalizing. Even a
+            // sub-35 cm shift is large enough to manufacture path, height and viewpoint coverage,
+            // so the first normal sample after any tracking interruption is always a new baseline.
+            trackingInterrupted = true
             guidance = "追跡が安定するまで速度を落としてください"
             return
         }
-        lastTimestamp = frame.timestamp
 
         let transform = frame.camera.transform
         let position = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+        guard MeshCaptureCoveragePolicy.isFiniteCameraPosition(position) else {
+            // Do not retain a malformed transform as the next displacement baseline. Treat it like
+            // a relocalization boundary so the next valid sample establishes a fresh origin.
+            trackingInterrupted = true
+            guidance = "カメラ位置を安定して取得できません。ゆっくり動かしてください"
+            return
+        }
         let forwardRaw = SIMD3<Float>(-transform.columns.2.x, -transform.columns.2.y, -transform.columns.2.z)
-        let forward = simd_length_squared(forwardRaw) > 1e-8 ? simd_normalize(forwardRaw) : SIMD3<Float>(0, 0, -1)
+        guard let forward = MeshCaptureCoveragePolicy.normalizedForwardDirection(forwardRaw) else {
+            trackingInterrupted = true
+            guidance = "カメラの向きを安定して取得できません。ゆっくり動かしてください"
+            return
+        }
 
-        let yaw = atan2(forward.x, -forward.z)
-        let normalizedYaw = (yaw + .pi) / (2 * .pi)
-        let azimuth = min(11, max(0, Int(floor(normalizedYaw * 12))))
-        azimuthBins.insert(azimuth)
+        if trackingInterrupted {
+            trackingInterrupted = false
+            lastPosition = position
+            lastCoveragePosition = position
+            minimumHeight = position.y
+            maximumHeight = position.y
+            guidance = "位置追跡が復旧しました。対象を画面に入れたまま、ゆっくり撮影を続けてください"
+            return
+        }
 
-        let pitch = asin(min(1, max(-1, forward.y)))
-        let elevation: Int
-        if pitch < -0.16 { elevation = 0 }
-        else if pitch > 0.16 { elevation = 2 }
-        else { elevation = 1 }
-        elevationBins.insert(elevation)
-
-        if let previous = lastPosition {
-            let delta = simd_distance(position, previous)
-            if delta >= 0.006 && delta <= 0.35 {
-                pathLengthMeters += delta
-            }
+        let displacement = lastPosition.map { simd_distance(position, $0) }
+        let plausibleMotion = displacement.map {
+            MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement($0, elapsedSeconds: sampleElapsed)
+        } ?? true
+        if let displacement, plausibleMotion, displacement >= 0.006 {
+            pathLengthMeters += displacement
         }
         lastPosition = position
-        stableSamples += 1
+
+        // Only continuous camera motion contributes to physical height coverage. A relocalization
+        // jump can otherwise manufacture 10-20 cm of apparent vertical span in one sample.
+        if plausibleMotion {
+            minimumHeight = min(minimumHeight ?? position.y, position.y)
+            maximumHeight = max(maximumHeight ?? position.y, position.y)
+            let continuousSpan = max(0, (maximumHeight ?? position.y) - (minimumHeight ?? position.y))
+            verticalSpanMeters = max(verticalSpanMeters, continuousSpan)
+            stableSamples += 1
+        } else {
+            // Start a fresh continuous height range after the tracking discontinuity. Keep the
+            // already-earned span so a relocalization cannot erase legitimate earlier coverage.
+            minimumHeight = position.y
+            maximumHeight = position.y
+            guidance = "位置追跡が飛びました。対象を画面に入れたまま、ゆっくり撮影を続けてください"
+        }
+
+        // Camera heading alone is not evidence of viewpoint coverage: a user can rotate the
+        // phone in place and sweep every yaw bin without creating any reconstruction parallax.
+        // Credit new azimuth/elevation bins only after enough continuous physical translation since
+        // the previous credited viewpoint. Relocalization jumps reset this anchor instead.
+        let coverageDisplacement = lastCoveragePosition.map { simd_distance(position, $0) }
+        if !plausibleMotion {
+            lastCoveragePosition = position
+        } else if coverageDisplacement == nil || coverageDisplacement! >= Self.coverageTranslationThreshold(size: size) {
+            let yaw = atan2(forward.x, -forward.z)
+            let normalizedYaw = (yaw + .pi) / (2 * .pi)
+            let azimuth = min(11, max(0, Int(floor(normalizedYaw * 12))))
+            azimuthBins.insert(azimuth)
+
+            let pitch = asin(min(1, max(-1, forward.y)))
+            let elevation: Int
+            if pitch < -0.16 { elevation = 0 }
+            else if pitch > 0.16 { elevation = 2 }
+            else { elevation = 1 }
+            elevationBins.insert(elevation)
+            lastCoveragePosition = position
+        }
+
         azimuthCoverage = azimuthBins.count
         elevationCoverage = elevationBins.count
 
         let requiredAzimuth = mode == .lidar ? 7.0 : 9.0
         let requiredSamples = mode == .lidar ? 18.0 : 28.0
         let requiredPath = Double(pathThreshold(size: size))
+        let requiredVerticalSpan = Double(Self.verticalSpanThreshold(size: size))
         let faceFactor = mode == .lidar ? min(1, Double(faceCount) / 6_000.0) : 1
         let photoFactor = min(1, Double(frameCount) / (mode == .lidar ? 20.0 : 32.0))
         let azimuthFactor = min(1, Double(azimuthCoverage) / requiredAzimuth)
-        let elevationFactor = min(1, Double(elevationCoverage) / 2.0)
+        let pitchFactor = min(1, Double(elevationCoverage) / 2.0)
+        let physicalHeightFactor = min(1, Double(verticalSpanMeters) / max(0.01, requiredVerticalSpan))
+        let elevationFactor = min(pitchFactor, physicalHeightFactor)
         let pathFactor = min(1, Double(pathLengthMeters) / max(0.1, requiredPath))
         let sampleFactor = min(1, Double(stableSamples) / requiredSamples)
         qualityScore = 0.26 * azimuthFactor + 0.16 * elevationFactor + 0.18 * pathFactor + 0.12 * sampleFactor + 0.14 * photoFactor + 0.14 * faceFactor
 
+        guard plausibleMotion else { return }
         if azimuthCoverage < Int(requiredAzimuth) {
             guidance = "同じ側に偏っています。対象の反対側まで回り込んでください"
         } else if elevationCoverage < 2 {
             guidance = "高さが単調です。少し上・下からも撮影してください"
+        } else if verticalSpanMeters < Self.verticalSpanThreshold(size: size) {
+            guidance = "端末の高さがほぼ一定です。向きを変えるだけでなく、少し高い位置・低い位置へ移動して撮影してください"
         } else if pathLengthMeters < pathThreshold(size: size) {
             guidance = "移動量が不足しています。対象との距離を保ってもう少し回ってください"
         } else if mode == .lidar && faceCount < 6_000 {
@@ -95,18 +178,31 @@ final class MeshCaptureQualityAdvisor: ObservableObject {
     func isSufficient(mode: MeshCaptureMode, size: MeshScanSize, frameCount: Int, faceCount: Int) -> Bool {
         let azimuthOK = azimuthCoverage >= (mode == .lidar ? 7 : 9)
         let elevationOK = elevationCoverage >= 2
+        let physicalHeightOK = verticalSpanMeters >= Self.verticalSpanThreshold(size: size)
         let pathOK = pathLengthMeters >= pathThreshold(size: size)
         let samplesOK = stableSamples >= (mode == .lidar ? 18 : 28)
         let framesOK = frameCount >= (mode == .lidar ? 20 : 32)
         let geometryOK = mode != .lidar || faceCount >= 6_000
-        return azimuthOK && elevationOK && pathOK && samplesOK && framesOK && geometryOK
+        return azimuthOK && elevationOK && physicalHeightOK && pathOK && samplesOK && framesOK && geometryOK
     }
 
     var compactStatus: String {
-        "周回 \(azimuthCoverage)/12・高さ \(elevationCoverage)/3・移動 \(String(format: "%.1f", pathLengthMeters))m・品質 \(Int((qualityScore * 100).rounded()))%"
+        "周回 \(azimuthCoverage)/12・高さ \(elevationCoverage)/3 / \(String(format: "%.2f", verticalSpanMeters))m・移動 \(String(format: "%.1f", pathLengthMeters))m・品質 \(Int((qualityScore * 100).rounded()))%"
+    }
+
+    static func coverageTranslationThreshold(size: MeshScanSize) -> Float {
+        MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: pathThresholdValue(size: size))
+    }
+
+    static func verticalSpanThreshold(size: MeshScanSize) -> Float {
+        MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: pathThresholdValue(size: size))
     }
 
     private func pathThreshold(size: MeshScanSize) -> Float {
+        Self.pathThresholdValue(size: size)
+    }
+
+    private static func pathThresholdValue(size: MeshScanSize) -> Float {
         switch size {
         case .small: return 0.55
         case .medium: return 1.0

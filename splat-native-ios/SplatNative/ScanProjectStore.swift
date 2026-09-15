@@ -13,6 +13,10 @@ enum ScanRepresentationKind: String, Codable, CaseIterable {
     case mesh
 }
 
+private struct ScanSchemaVersionEnvelope: Decodable {
+    var schemaVersion: Int
+}
+
 struct ScanProjectManifest: Codable, Identifiable, Equatable {
     static let currentSchemaVersion = 1
 
@@ -183,14 +187,28 @@ struct ScanProjectSummary: Identifiable, Equatable {
 
     var thumbnailURL: URL? {
         guard let name = manifest.thumbnailFileName else { return nil }
-        let url = projectURL.appendingPathComponent(name)
-        return FileManager.default.fileExists(atPath: url.path) ? url : nil
+        return containedRegularFileURL(named: name)
     }
 
     var resultURL: URL? {
         guard let name = manifest.splatFileName else { return nil }
-        let url = projectURL.appendingPathComponent(name)
-        return FileManager.default.fileExists(atPath: url.path) ? url : nil
+        return containedRegularFileURL(named: name)
+    }
+
+    private func containedRegularFileURL(named name: String) -> URL? {
+        // Manifest filenames are durable metadata and may be stale/corrupt. Never let `../`, an
+        // absolute path, or an in-project symlink turn a library summary into an external file read.
+        guard !name.isEmpty,
+              !name.contains("/"),
+              !name.contains("\\"),
+              name != ".", name != ".." else { return nil }
+        let root = projectURL.standardizedFileURL
+        let candidate = root.appendingPathComponent(name).standardizedFileURL
+        guard candidate.deletingLastPathComponent() == root,
+              let values = try? candidate.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true else { return nil }
+        return candidate
     }
 }
 
@@ -208,6 +226,8 @@ enum ScanProjectStoreError: LocalizedError {
     case rawDataUnavailable
     case invalidManifest
     case invalidPendingResult
+    case unsupportedManifestSchemaVersion(Int)
+    case unsupportedCheckpointSchemaVersion(Int)
 
     var errorDescription: String? {
         switch self {
@@ -215,12 +235,14 @@ enum ScanProjectStoreError: LocalizedError {
         case .rawDataUnavailable: return "再処理に必要なrawデータがありません"
         case .invalidManifest: return "スキャン情報を読み込めません"
         case .invalidPendingResult: return "生成結果の安全な保存を完了できません"
+        case .unsupportedManifestSchemaVersion:
+            return "このスキャンは新しいバージョンで保存されています。アプリを更新して開いてください。"
+        case .unsupportedCheckpointSchemaVersion:
+            return "この撮影データは新しいバージョンで保存されています。アプリを更新して再開してください。"
         }
     }
 }
 
-/// File-system source of truth for local scans.
-/// Every project is self-contained so the library can be rebuilt after termination without an in-memory index.
 final class ScanProjectStore {
     static let projectExtension = "splatproject"
     static let manifestFileName = "manifest.json"
@@ -275,7 +297,7 @@ final class ScanProjectStore {
     }
 
     func loadProject(id: String) throws -> ScanProjectSummary {
-        let url = projectURL(for: id)
+        let url = try validatedProjectURL(id: id, in: rootURL)
         guard fileManager.fileExists(atPath: url.path) else { throw ScanProjectStoreError.projectNotFound }
         let manifest = try loadOrMigrateManifest(projectURL: url)
         let repaired = try repairIfNeeded(manifest: manifest, projectURL: url)
@@ -309,42 +331,59 @@ final class ScanProjectStore {
     }
 
     func writeManifest(_ manifest: ScanProjectManifest, to projectURL: URL) throws {
+        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }
+        guard manifest.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedManifestSchemaVersion(manifest.schemaVersion)
+        }
         let primary = projectURL.appendingPathComponent(Self.manifestFileName)
         let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
+        try rejectFutureManifestSchemaIfPresent(primary: primary, backup: backup)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let data = try encoder.encode(manifest)
-        try rotateBackup(primary: primary, backup: backup)
+        try rotateManifestBackupIfPrimaryIsValid(primary: primary, backup: backup)
         try data.write(to: primary, options: .atomic)
     }
 
     func saveCheckpoint(_ checkpoint: ScanCaptureCheckpoint, projectURL: URL) throws {
+        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }
+        guard checkpoint.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(checkpoint.schemaVersion)
+        }
         let primary = projectURL.appendingPathComponent(Self.checkpointFileName)
         let backup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
+        try rejectFutureCheckpointSchemaIfPresent(primary: primary, backup: backup)
         let encoder = PropertyListEncoder()
         encoder.outputFormat = .binary
         let data = try encoder.encode(checkpoint)
-        try rotateBackup(primary: primary, backup: backup)
+        try rotateCheckpointBackupIfPrimaryIsValid(primary: primary, backup: backup)
         try data.write(to: primary, options: .atomic)
     }
 
     func loadCheckpoint(projectURL: URL) throws -> ScanCaptureCheckpoint {
         let primary = projectURL.appendingPathComponent(Self.checkpointFileName)
         let backup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
+        try rejectFutureCheckpointSchemaIfPresent(primary: primary, backup: backup)
         let decoder = PropertyListDecoder()
-        if let data = try? Data(contentsOf: primary),
-           let value = try? decoder.decode(ScanCaptureCheckpoint.self, from: data) {
-            return value
+        if let data = try? Data(contentsOf: primary) {
+            do {
+                return try decodeSupportedCheckpoint(data, decoder: decoder)
+            } catch {
+            }
         }
-        if let data = try? Data(contentsOf: backup),
-           let value = try? decoder.decode(ScanCaptureCheckpoint.self, from: data) {
-            try? data.write(to: primary, options: .atomic)
-            return value
+        if let data = try? Data(contentsOf: backup) {
+            do {
+                let value = try decodeSupportedCheckpoint(data, decoder: decoder)
+                try? data.write(to: primary, options: .atomic)
+                return value
+            } catch {
+            }
         }
         throw ScanProjectStoreError.rawDataUnavailable
     }
 
     func setThumbnail(from sourceURL: URL, projectURL: URL) throws {
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
         guard fileManager.fileExists(atPath: sourceURL.path) else { return }
         let target = projectURL.appendingPathComponent(Self.thumbnailFileName)
         if sourceURL.standardizedFileURL != target.standardizedFileURL {
@@ -354,18 +393,20 @@ final class ScanProjectStore {
     }
 
     func setThumbnail(data: Data, projectURL: URL) throws {
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
         let target = projectURL.appendingPathComponent(Self.thumbnailFileName)
         try data.write(to: target, options: .atomic)
         _ = try updateManifest(projectURL: projectURL) { $0.thumbnailFileName = Self.thumbnailFileName }
     }
 
     func reprocessRequest(projectURL: URL, representation: ScanRepresentationKind) throws -> ScanReprocessRequest {
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
         let images = projectURL.appendingPathComponent("images", isDirectory: true)
         let transforms = projectURL.appendingPathComponent("transforms.json")
         let points = projectURL.appendingPathComponent("points3D.ply")
-        guard fileManager.fileExists(atPath: images.path),
-              fileManager.fileExists(atPath: transforms.path),
-              fileManager.fileExists(atPath: points.path) else {
+        guard isSafeDirectory(images),
+              isSafeRegularFile(transforms),
+              isSafeRegularFile(points) else {
             throw ScanProjectStoreError.rawDataUnavailable
         }
         return ScanReprocessRequest(
@@ -378,10 +419,8 @@ final class ScanProjectStore {
         )
     }
 
-    /// Commits a reconstruction only after the pending file has been completely exported.
-    /// The evidence file is written atomically before the rename so relaunch can distinguish a completed export
-    /// from an aligned partial write even if termination happens before the manifest reaches `.finished`.
     func commitPendingSplat(projectURL: URL) throws -> URL {
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
         let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
         let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
@@ -415,8 +454,6 @@ final class ScanProjectStore {
         }
     }
 
-    /// Returns only a Splat whose project state carries durable completion evidence.
-    /// Consumers such as export/share should use a repaired project summary instead of byte alignment alone.
     func trustedSplatURL(projectURL: URL) -> URL? {
         guard let manifest = try? loadManifest(projectURL: projectURL),
               manifest.stage == .finished,
@@ -426,47 +463,81 @@ final class ScanProjectStore {
     }
 
     func clearRawData(projectURL: URL) throws {
-        let manifest = try loadOrMigrateManifest(projectURL: projectURL)
-        let resultNames = Set(manifest.outputs.values)
-        let keep = resultNames.union([
-            Self.manifestFileName,
-            Self.manifestBackupFileName,
-            Self.thumbnailFileName,
-            Self.splatCommitEvidenceFileName
-        ])
-        let children = try fileManager.contentsOfDirectory(at: projectURL, includingPropertiesForKeys: nil)
-        for child in children where !keep.contains(child.lastPathComponent) {
-            try? fileManager.removeItem(at: child)
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
+
+        let rawNames: Set<String> = [
+            "images",
+            "depth",
+            "transforms.json",
+            "points3D.ply",
+            "training.msplat-checkpoint",
+            Self.checkpointFileName,
+            Self.checkpointBackupFileName,
+            Self.worldMapFileName,
+            "s13-seed-recipe.json",
+            "s14-seed-recipe.json"
+        ]
+        for name in rawNames {
+            let url = projectURL.appendingPathComponent(name)
+            if fileManager.fileExists(atPath: url.path) {
+                try fileManager.removeItem(at: url)
+            }
         }
+
         _ = try updateManifest(projectURL: projectURL) { $0.rawDataRetained = false }
     }
 
     func moveToTrash(projectURL: URL) throws {
         try ensureDirectories()
-        let destination = trashURL.appendingPathComponent(projectURL.lastPathComponent)
-        if fileManager.fileExists(atPath: destination.path) { try fileManager.removeItem(at: destination) }
+        let normalizedProject = projectURL.standardizedFileURL
+        guard isSafeProjectDirectory(normalizedProject),
+              normalizedProject.deletingLastPathComponent() == rootURL.standardizedFileURL,
+              normalizedProject.pathExtension == Self.projectExtension else {
+            throw ScanProjectStoreError.invalidManifest
+        }
+        let destination = trashURL.appendingPathComponent(normalizedProject.lastPathComponent)
+        // A duplicate project ID in Trash is an integrity collision. Never destroy the existing
+        // recoverable copy implicitly; preserve both sides and let the caller surface the failure.
+        guard !fileManager.fileExists(atPath: destination.path) else {
+            throw ScanProjectStoreError.invalidManifest
+        }
         try fileManager.moveItem(at: projectURL, to: destination)
     }
 
     func restoreFromTrash(id: String) throws {
         try ensureDirectories()
-        let source = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+        let source = try validatedProjectURL(id: id, in: trashURL)
         guard fileManager.fileExists(atPath: source.path) else { throw ScanProjectStoreError.projectNotFound }
+        guard isSafeProjectDirectory(source) else { throw ScanProjectStoreError.invalidManifest }
         var restoredID = id
         var destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
         if fileManager.fileExists(atPath: destination.path) {
+            _ = try loadOrMigrateManifest(projectURL: source)
             restoredID = UUID().uuidString
             destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
         }
         try fileManager.moveItem(at: source, to: destination)
         if restoredID != id {
-            _ = try updateManifest(projectURL: destination) { $0.id = restoredID }
+            do {
+                _ = try updateManifest(projectURL: destination) { $0.id = restoredID }
+            } catch {
+                // The move and manifest-ID rewrite form one logical restore transaction. If the
+                // atomic manifest write fails, put the project back in Trash instead of leaving a
+                // Library folder whose directory ID and manifest ID disagree. Never overwrite a
+                // newly appeared source path while rolling back.
+                if !fileManager.fileExists(atPath: source.path),
+                   fileManager.fileExists(atPath: destination.path) {
+                    try? fileManager.moveItem(at: destination, to: source)
+                }
+                throw error
+            }
         }
     }
 
     func permanentlyDeleteFromTrash(id: String) throws {
-        let url = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+        let url = try validatedProjectURL(id: id, in: trashURL)
         guard fileManager.fileExists(atPath: url.path) else { throw ScanProjectStoreError.projectNotFound }
+        guard isSafeProjectDirectory(url) else { throw ScanProjectStoreError.invalidManifest }
         try fileManager.removeItem(at: url)
     }
 
@@ -480,6 +551,20 @@ final class ScanProjectStore {
         rootURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
     }
 
+    private func validatedProjectURL(id: String, in directory: URL) throws -> URL {
+        guard !id.isEmpty, id != ".", id != "..",
+              !id.contains("/"), !id.contains("\\"), !id.contains("\0") else {
+            throw ScanProjectStoreError.invalidManifest
+        }
+        let root = directory.standardizedFileURL
+        let candidate = root.appendingPathComponent(id).appendingPathExtension(Self.projectExtension).standardizedFileURL
+        guard candidate.deletingLastPathComponent() == root,
+              candidate.lastPathComponent == "\(id).\(Self.projectExtension)" else {
+            throw ScanProjectStoreError.invalidManifest
+        }
+        return candidate
+    }
+
     func worldMapURL(projectURL: URL) -> URL {
         projectURL.appendingPathComponent(Self.worldMapFileName)
     }
@@ -491,6 +576,26 @@ final class ScanProjectStore {
     private func ensureDirectories() throws {
         try fileManager.createDirectory(at: rootURL, withIntermediateDirectories: true)
         try fileManager.createDirectory(at: trashURL, withIntermediateDirectories: true)
+    }
+
+    private func isSafeProjectDirectory(_ url: URL) -> Bool {
+        isSafeDirectory(url)
+    }
+
+    private func isSafeDirectory(_ url: URL) -> Bool {
+        guard url.isFileURL,
+              let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              values.isDirectory == true,
+              values.isSymbolicLink != true else { return false }
+        return true
+    }
+
+    private func isSafeRegularFile(_ url: URL) -> Bool {
+        guard url.isFileURL,
+              let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true else { return false }
+        return true
     }
 
     private func summaries(in directory: URL, includeHidden: Bool) throws -> [ScanProjectSummary] {
@@ -509,18 +614,63 @@ final class ScanProjectStore {
         return values.sorted { $0.manifest.updatedAt > $1.manifest.updatedAt }
     }
 
+    private func rejectFutureManifestSchemaIfPresent(primary: URL, backup: URL) throws {
+        let decoder = JSONDecoder()
+        for url in [primary, backup] {
+            guard let data = try? Data(contentsOf: url),
+                  let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }
+            guard envelope.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+                throw ScanProjectStoreError.unsupportedManifestSchemaVersion(envelope.schemaVersion)
+            }
+        }
+    }
+
+    private func rejectFutureCheckpointSchemaIfPresent(primary: URL, backup: URL) throws {
+        let decoder = PropertyListDecoder()
+        for url in [primary, backup] {
+            guard let data = try? Data(contentsOf: url),
+                  let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }
+            guard envelope.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {
+                throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(envelope.schemaVersion)
+            }
+        }
+    }
+
+    private func decodeSupportedManifest(_ data: Data, decoder: JSONDecoder) throws -> ScanProjectManifest {
+        let envelope = try decoder.decode(ScanSchemaVersionEnvelope.self, from: data)
+        guard envelope.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedManifestSchemaVersion(envelope.schemaVersion)
+        }
+        return try decoder.decode(ScanProjectManifest.self, from: data)
+    }
+
+    private func decodeSupportedCheckpoint(_ data: Data, decoder: PropertyListDecoder) throws -> ScanCaptureCheckpoint {
+        let envelope = try decoder.decode(ScanSchemaVersionEnvelope.self, from: data)
+        guard envelope.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(envelope.schemaVersion)
+        }
+        return try decoder.decode(ScanCaptureCheckpoint.self, from: data)
+    }
+
     private func loadOrMigrateManifest(projectURL: URL) throws -> ScanProjectManifest {
+        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }
         let primary = projectURL.appendingPathComponent(Self.manifestFileName)
         let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
+        try rejectFutureManifestSchemaIfPresent(primary: primary, backup: backup)
         let decoder = JSONDecoder()
-        if let data = try? Data(contentsOf: primary),
-           let manifest = try? decoder.decode(ScanProjectManifest.self, from: data) {
-            return manifest
+        if let data = try? Data(contentsOf: primary) {
+            do {
+                return try decodeSupportedManifest(data, decoder: decoder)
+            } catch {
+            }
         }
-        if let data = try? Data(contentsOf: backup),
-           let manifest = try? decoder.decode(ScanProjectManifest.self, from: data) {
-            try? data.write(to: primary, options: .atomic)
-            return manifest
+        if let data = try? Data(contentsOf: backup) {
+            do {
+                let manifest = try decodeSupportedManifest(data, decoder: decoder)
+                try? data.write(to: primary, options: .atomic)
+                return manifest
+            } catch {
+            }
         }
 
         guard fileManager.fileExists(atPath: projectURL.path) else { throw ScanProjectStoreError.projectNotFound }
@@ -583,6 +733,9 @@ final class ScanProjectStore {
     }
 
     private func repairIfNeeded(manifest input: ScanProjectManifest, projectURL: URL) throws -> ScanProjectManifest {
+        guard input.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedManifestSchemaVersion(input.schemaVersion)
+        }
         var manifest = input
         var changed = false
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
@@ -645,7 +798,7 @@ final class ScanProjectStore {
             manifest.rawDataRetained = rawExists
             changed = true
         }
-        if manifest.schemaVersion != ScanProjectManifest.currentSchemaVersion {
+        if manifest.schemaVersion < ScanProjectManifest.currentSchemaVersion {
             manifest.schemaVersion = ScanProjectManifest.currentSchemaVersion
             changed = true
         }
@@ -683,8 +836,6 @@ final class ScanProjectStore {
         if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
     }
 
-    /// A `.processing` manifest is repaired only from durable completion evidence.
-    /// Record alignment by itself is structural validation, never proof that export reached completion.
     private func recoverInterruptedProcessing(projectURL: URL) throws -> (url: URL?, message: String?) {
         let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
@@ -747,10 +898,18 @@ final class ScanProjectStore {
         return size.int64Value == evidence.byteCount
     }
 
-    private func rotateBackup(primary: URL, backup: URL) throws {
-        guard fileManager.fileExists(atPath: primary.path) else { return }
-        if fileManager.fileExists(atPath: backup.path) { try? fileManager.removeItem(at: backup) }
-        try fileManager.copyItem(at: primary, to: backup)
+    private func rotateManifestBackupIfPrimaryIsValid(primary: URL, backup: URL) throws {
+        guard let data = try? Data(contentsOf: primary) else { return }
+        let decoder = JSONDecoder()
+        guard (try? decodeSupportedManifest(data, decoder: decoder)) != nil else { return }
+        try data.write(to: backup, options: .atomic)
+    }
+
+    private func rotateCheckpointBackupIfPrimaryIsValid(primary: URL, backup: URL) throws {
+        guard let data = try? Data(contentsOf: primary) else { return }
+        let decoder = PropertyListDecoder()
+        guard (try? decodeSupportedCheckpoint(data, decoder: decoder)) != nil else { return }
+        try data.write(to: backup, options: .atomic)
     }
 
     private func validSplatByteCount(at url: URL) -> Int64? {

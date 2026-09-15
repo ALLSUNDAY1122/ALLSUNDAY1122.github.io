@@ -96,16 +96,27 @@ extension ScanLabBackend {
 
         let package: ScanLabPublishPackage
         do {
-            package = try ScanLabPublishPackageBuilder.build(
+            package = try await ScanLabPublishPackageBuilder.buildAsync(
                 from: resultURL,
                 maximumBytes: ScanLabConfig.maximumAssetBytes
             )
+        } catch is CancellationError {
+            throw CancellationError()
         } catch ScanLabPublishPackageError.sourceTooLarge {
             throw ScanLabBackendError.assetTooLarge
         } catch {
             throw ScanLabBackendError.invalidAsset
         }
         defer { ScanLabPublishPackageBuilder.cleanup(package) }
+
+        // A cancelled publish should not spend more MainActor time encoding a preview or create
+        // server-side draft metadata after the expensive local package worker has completed.
+        try Task.checkCancellation()
+
+        // Encode before creating server-side metadata. If JPEG encoding fails, publish without a
+        // preview instead of persisting a preview_path for an object that was never uploaded.
+        let previewData = previewImage?.jpegData(compressionQuality: 0.82)
+        try Task.checkCancellation()
 
         // D2-004 + D2-015 convergence: create the owner-bound draft first.
         // The final Storage policy intentionally rejects uploads that are not attached
@@ -134,25 +145,32 @@ extension ScanLabBackend {
             throw ScanLabBackendError.invalidServerResponse
         }
 
-        let previewPath = previewImage == nil ? nil : initialized.paths.previewJpeg
+        let previewPath = previewData == nil ? nil : initialized.paths.previewJpeg
 
         do {
+            // Keep cancellation cooperative across the network/storage phases. Once the draft
+            // exists, any cancellation observed here is routed through the same rollback path as
+            // an upload failure, so no owner-bound partial draft is left behind.
+            try Task.checkCancellation()
             try await client.storage.from("scanlab-assets").upload(
                 initialized.paths.scene,
                 fileURL: package.sceneURL,
                 options: FileOptions(contentType: ScanLabPublishPackage.sceneMediaType)
             )
+            try Task.checkCancellation()
             try await client.storage.from("scanlab-assets").upload(
                 initialized.paths.manifest,
                 fileURL: package.manifestURL,
                 options: FileOptions(contentType: "application/json")
             )
-            if let previewPath, let previewData = previewImage?.jpegData(compressionQuality: 0.82) {
+            try Task.checkCancellation()
+            if let previewPath, let previewData {
                 try await client.storage.from("scanlab-assets").upload(
                     previewPath,
                     data: previewData,
                     options: FileOptions(contentType: "image/jpeg")
                 )
+                try Task.checkCancellation()
             }
 
             let settings = ScanLabTrustedDraftSettings(
@@ -172,6 +190,7 @@ extension ScanLabBackend {
                 .eq("owner_id", value: session.user.id)
                 .eq("status", value: "draft")
                 .execute()
+            try Task.checkCancellation()
 
             let validation: ScanLabUploadValidateResponse = try await client.functions.invoke(
                 "scanlab-upload",
@@ -186,6 +205,7 @@ extension ScanLabBackend {
             guard validation.scanId == scanID, validation.ready else {
                 throw ScanLabBackendError.invalidServerResponse
             }
+            try Task.checkCancellation()
 
             // Private cloud storage intentionally remains an owner-only draft. A private
             // row must never enter the published lifecycle or receive a share URL.
@@ -199,6 +219,7 @@ extension ScanLabBackend {
                 )
             }
 
+            try Task.checkCancellation()
             let published: ScanLabPublishResponse = try await client.functions.invoke(
                 "scanlab-publish",
                 options: FunctionInvokeOptions(

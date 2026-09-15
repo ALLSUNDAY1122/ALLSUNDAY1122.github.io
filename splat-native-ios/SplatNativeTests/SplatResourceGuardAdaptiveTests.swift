@@ -74,6 +74,19 @@ final class SplatResourceGuardAdaptiveTests: XCTestCase {
         XCTAssertEqual(SplatReconstructionPolicy.makeConfig().shDegree, 3)
     }
 
+    func testEnhancementTargetSaturatesCorruptHugeIterationWithoutOverflow() {
+        XCTAssertEqual(
+            SplatReconstructionPolicy.enhancementTarget(from: Int.max),
+            SplatReconstructionPolicy.trainingHorizon
+        )
+        XCTAssertEqual(
+            SplatReconstructionPolicy.enhancementTarget(from: Int.max - 1),
+            SplatReconstructionPolicy.trainingHorizon
+        )
+        XCTAssertEqual(SplatReconstructionPolicy.enhancementTarget(from: 7_000), 12_000)
+        XCTAssertEqual(SplatReconstructionPolicy.enhancementTarget(from: 29_000), 30_000)
+    }
+
     func testFairThermalStateDoesNotPauseByItself() {
         let guardrail = SplatResourceGuard(physicalMemoryBytes: 8 * 1_073_741_824)
         guardrail.resetForPass()
@@ -140,5 +153,106 @@ final class SplatResourceGuardAdaptiveTests: XCTestCase {
             report.minimumAvailableMemoryReserveBytes,
             guardrail.limits.minimumAvailableMemoryReserveBytes
         )
+    }
+
+    func testViewerMemoryAdmissionShrinksOnlyUnderResourcePressure() {
+        let physicalMemory = UInt64(4 * 1_073_741_824)
+        let normal = SplatViewerMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let lowPower = SplatViewerMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: true
+        )
+        let critical = SplatViewerMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .critical,
+            isLowPowerModeEnabled: false
+        )
+
+        XCTAssertEqual(lowPower, normal / 4 * 3)
+        XCTAssertEqual(critical, normal / 2)
+        XCTAssertTrue(SplatViewerMemoryPolicy.canUseCanonicalSH3(
+            pointCount: 1_000_000,
+            physicalMemoryBytes: physicalMemory,
+            availableMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        ))
+        XCTAssertFalse(SplatViewerMemoryPolicy.canUseCanonicalSH3(
+            pointCount: 1_000_000,
+            physicalMemoryBytes: physicalMemory,
+            availableMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: true
+        ))
+    }
+
+    func testViewerZeroAvailableMemoryTelemetryFallsBackToStaticBudget() {
+        let physicalMemory = UInt64(4 * 1_073_741_824)
+        let expected = SplatViewerMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let effective = SplatViewerMemoryPolicy.effectiveBudgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            availableMemoryBytes: 0,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+
+        XCTAssertEqual(effective, expected)
+    }
+
+    func testVideoMemoryAdmissionShrinksUnderThermalAndLowPowerPressure() {
+        let physicalMemory = UInt64(8 * 1_073_741_824)
+        let normal = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let serious = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .serious,
+            isLowPowerModeEnabled: false
+        )
+        let lowPower = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: true
+        )
+
+        XCTAssertEqual(serious, normal / 4 * 3)
+        XCTAssertEqual(lowPower, normal / 4 * 3)
+    }
+
+    func testVideoAdmissionUsesLiveHeadroomButTreatsZeroTelemetryAsUnknown() {
+        let physicalMemory = UInt64(8 * 1_073_741_824)
+        let staticBudget = SplatVideoMemoryPolicy.budgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let zeroTelemetryBudget = SplatVideoMemoryPolicy.effectiveBudgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            availableMemoryBytes: 0,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+        let constrainedAvailableMemory = UInt64(256 * 1_048_576)
+        let constrainedBudget = SplatVideoMemoryPolicy.effectiveBudgetBytes(
+            physicalMemoryBytes: physicalMemory,
+            availableMemoryBytes: constrainedAvailableMemory,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+
+        XCTAssertEqual(zeroTelemetryBudget, staticBudget)
+        XCTAssertEqual(constrainedBudget, constrainedAvailableMemory / 4 * 3)
+        XCTAssertLessThan(constrainedBudget, staticBudget)
     }
 }

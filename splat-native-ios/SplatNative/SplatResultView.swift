@@ -10,6 +10,12 @@ struct SplatResultView: View {
     @State private var selectedTool: ViewerTool = .view
     @State private var confirmNewScan = false
     @State private var reprocessError: String?
+    @State private var preferredViewerURL: URL?
+    @State private var preferredViewerResolutionTask: Task<Void, Never>?
+    @State private var reprocessPreparationTask: Task<Void, Never>?
+    @State private var isPreparingReprocess = false
+    @State private var editHistory = SplatEditHistory()
+    @State private var editHistoryTask: Task<Void, Never>?
 
     private enum ViewerTool: String, CaseIterable, Hashable {
         case view = "見る"
@@ -21,8 +27,13 @@ struct SplatResultView: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack {
-                SplatViewer(url: url, state: viewerState)
-                    .ignoresSafeArea(edges: .top)
+                if let preferredViewerURL {
+                    SplatViewer(url: preferredViewerURL, state: viewerState)
+                        .ignoresSafeArea(edges: .top)
+                } else {
+                    ProgressView("3Dデータを確認中")
+                        .tint(.white)
+                }
 
                 VStack {
                     topOverlay
@@ -38,17 +49,48 @@ struct SplatResultView: View {
             controls
         }
         .background(Color.black)
-        .onAppear { viewerState.attach(url: url) }
+        .onAppear {
+            viewerState.attach(url: url)
+            editHistory.reset(to: viewerState.editSettings)
+            resolvePreferredViewerAsset(for: url)
+        }
         .onChange(of: url) { _, newURL in
+            reprocessPreparationTask?.cancel()
+            reprocessPreparationTask = nil
+            isPreparingReprocess = false
+            editHistoryTask?.cancel()
+            editHistoryTask = nil
+            preferredViewerURL = nil
             viewerState.attach(url: newURL)
+            editHistory.reset(to: viewerState.editSettings)
+            resolvePreferredViewerAsset(for: newURL)
         }
         .onChange(of: viewerState.editSettings) { _, _ in
-            // Output/publish controls live outside this view as well, so persist each tiny JSON
-            // edit atomically before an external action can consume stale viewer state.
+            viewerState.schedulePersistence()
+            scheduleEditHistoryCommit()
+        }
+        .onChange(of: viewerState.measurementEnabled) { _, _ in
+            viewerState.requestMeasurementClear()
+        }
+        .onChange(of: selectedTool) { _, newTool in
+            if newTool != .measure {
+                viewerState.measurementEnabled = false
+            }
+        }
+        .onDisappear {
+            reprocessPreparationTask?.cancel()
+            reprocessPreparationTask = nil
+            isPreparingReprocess = false
+            preferredViewerResolutionTask?.cancel()
+            preferredViewerResolutionTask = nil
+            editHistoryTask?.cancel()
+            editHistoryTask = nil
+            editHistory.commit(viewerState.editSettings)
             viewerState.persistNow()
         }
         .confirmationDialog("新しい撮影を開始しますか？", isPresented: $confirmNewScan, titleVisibility: .visible) {
             Button("保存したまま新しい撮影へ") {
+                editHistory.commit(viewerState.editSettings)
                 viewerState.persistNow()
                 model.returnHomePreservingProject()
             }
@@ -83,10 +125,10 @@ struct SplatResultView: View {
 
             Spacer()
 
-            if viewerState.isLoading || viewerState.isApplyingEdits {
+            if viewerState.isLoading || viewerState.isApplyingEdits || isPreparingReprocess {
                 HStack(spacing: 8) {
                     ProgressView().tint(.white)
-                    Text(viewerState.isLoading ? "読込中" : "反映中")
+                    Text(isPreparingReprocess ? "保護中" : (viewerState.isLoading ? "読込中" : "反映中"))
                         .font(.caption.bold())
                 }
                 .padding(.horizontal, 12)
@@ -108,6 +150,27 @@ struct SplatResultView: View {
 
             toolPanel
 
+            if selectedTool != .measure {
+                HStack(spacing: 10) {
+                    Button {
+                        undoEdit()
+                    } label: {
+                        Label("元に戻す", systemImage: "arrow.uturn.backward")
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!canUndoEdit)
+
+                    Button {
+                        redoEdit()
+                    } label: {
+                        Label("やり直す", systemImage: "arrow.uturn.forward")
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!canRedoEdit)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
             if let warning = viewerState.warningMessage {
                 Label(warning, systemImage: "exclamationmark.triangle.fill")
                     .font(.caption)
@@ -126,14 +189,17 @@ struct SplatResultView: View {
                     Label("品質向上", systemImage: "sparkles")
                 }
                 .buttonStyle(ViewerActionButtonStyle())
+                .disabled(isPreparingReprocess)
 
                 Button {
+                    editHistory.commit(viewerState.editSettings)
                     viewerState.persistNow()
                     showingShare = true
                 } label: {
                     Label("書き出す", systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(ViewerActionButtonStyle())
+                .disabled(isPreparingReprocess)
             }
 
             HStack(spacing: 9) {
@@ -145,7 +211,7 @@ struct SplatResultView: View {
                     Label("再処理", systemImage: "arrow.clockwise")
                 }
                 .buttonStyle(ViewerActionButtonStyle())
-                .disabled(!model.canRetryGeneration)
+                .disabled(!model.canRetryGeneration || isPreparingReprocess)
 
                 Button {
                     confirmNewScan = true
@@ -153,6 +219,7 @@ struct SplatResultView: View {
                     Label("新規", systemImage: "camera")
                 }
                 .buttonStyle(ViewerActionButtonStyle())
+                .disabled(isPreparingReprocess)
             }
         }
         .padding(.horizontal, 14)
@@ -179,7 +246,7 @@ struct SplatResultView: View {
                     .buttonStyle(.bordered)
 
                     Button {
-                        viewerState.resetEdits()
+                        resetAllEdits()
                     } label: {
                         Label("編集を全解除", systemImage: "arrow.uturn.backward")
                     }
@@ -237,13 +304,130 @@ struct SplatResultView: View {
         }
     }
 
-    private func beginProtectedReprocess(_ action: () -> Void) {
+    private var canUndoEdit: Bool {
+        editHistory.canUndo || viewerState.editSettings != editHistory.current
+    }
+
+    private var canRedoEdit: Bool {
+        viewerState.editSettings == editHistory.current && editHistory.canRedo
+    }
+
+    private func scheduleEditHistoryCommit() {
+        editHistoryTask?.cancel()
+        let snapshot = viewerState.editSettings
+        editHistoryTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            guard !Task.isCancelled else { return }
+            editHistory.commit(snapshot)
+            editHistoryTask = nil
+        }
+    }
+
+    private func resetAllEdits() {
+        editHistoryTask?.cancel()
+        editHistoryTask = nil
+        // A slider/crop change is intentionally debounced for 300 ms. Capture the live state before
+        // reset destroys it so an immediate “reset all” remains a reversible single user action.
+        editHistory.commit(viewerState.editSettings)
+        viewerState.resetEdits()
+        // Reset is a deliberate edit boundary, not another debounced slider sample. Commit the
+        // default state immediately so an edit started within the next 300 ms cannot skip the reset
+        // state in the undo chain. The onChange debounce observes the same value and becomes a no-op.
+        editHistory.commit(viewerState.editSettings)
+    }
+
+    private func undoEdit() {
+        editHistoryTask?.cancel()
+        editHistoryTask = nil
+        editHistory.commit(viewerState.editSettings)
+        guard let settings = editHistory.undo() else { return }
+        viewerState.applyHistorySettings(settings)
         viewerState.persistNow()
-        do {
-            try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: url)
-            action()
-        } catch {
-            reprocessError = error.localizedDescription
+    }
+
+    private func redoEdit() {
+        editHistoryTask?.cancel()
+        editHistoryTask = nil
+        guard viewerState.editSettings == editHistory.current,
+              let settings = editHistory.redo() else { return }
+        viewerState.applyHistorySettings(settings)
+        viewerState.persistNow()
+    }
+
+    private func beginProtectedReprocess(_ action: @escaping @MainActor () -> Void) {
+        guard !isPreparingReprocess else { return }
+        reprocessError = nil
+        isPreparingReprocess = true
+        let sourceURL = url
+        let projectURL = sourceURL.deletingLastPathComponent()
+
+        reprocessPreparationTask = Task {
+            defer {
+                if url == sourceURL {
+                    isPreparingReprocess = false
+                    reprocessPreparationTask = nil
+                }
+            }
+            do {
+                // This must be the first project-file operation in the reprocess path. A future
+                // manifest belongs to the newer app, so even viewer sidecars must remain untouched
+                // until compatibility has been established.
+                _ = try ScanProjectStore().loadManifest(projectURL: projectURL)
+                try Task.checkCancellation()
+                editHistory.commit(viewerState.editSettings)
+                viewerState.persistNow()
+                try await SplatPreviousResultEvidence.preserveBeforeReprocessAsync(sourceURL: sourceURL)
+                try Task.checkCancellation()
+                guard url == sourceURL else { return }
+                action()
+            } catch is CancellationError {
+                return
+            } catch {
+                guard url == sourceURL else { return }
+                reprocessError = error.localizedDescription
+            }
+        }
+    }
+
+    private func resolvePreferredViewerAsset(for sourceURL: URL) {
+        preferredViewerResolutionTask?.cancel()
+        preferredViewerResolutionTask = Task {
+            let worker = Task.detached(priority: .userInitiated) { () throws -> URL in
+                try Task.checkCancellation()
+                guard let pointCount = try? SplatExportService.sourcePointCount(sourceURL) else {
+                    try Task.checkCancellation()
+                    return sourceURL
+                }
+                try Task.checkCancellation()
+                guard SplatViewerMemoryPolicy.canUseCanonicalSH3(pointCount: pointCount) else {
+                    return sourceURL
+                }
+                try Task.checkCancellation()
+                // A canonical PLY can retain a valid header after its binary body is truncated.
+                // Only prefer SH3 when the declared vertex payload is complete; otherwise keep the
+                // legacy result viewable instead of feeding a corrupt asset to the renderer.
+                let resolved = SplatCanonicalSHAsset.existingCompleteAsset(
+                    forLegacySplat: sourceURL,
+                    expectedPointCount: pointCount
+                )?.url ?? sourceURL
+                try Task.checkCancellation()
+                return resolved
+            }
+
+            let resolved: URL
+            do {
+                resolved = try await withTaskCancellationHandler {
+                    try await worker.value
+                } onCancel: {
+                    worker.cancel()
+                }
+            } catch is CancellationError {
+                return
+            } catch {
+                return
+            }
+            guard !Task.isCancelled, url == sourceURL else { return }
+            preferredViewerURL = resolved
         }
     }
 

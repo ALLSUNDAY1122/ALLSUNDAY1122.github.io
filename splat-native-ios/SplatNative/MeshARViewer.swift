@@ -22,7 +22,7 @@ struct MeshARViewerSheet: View {
             if let url = model.resultURL {
                 switch displayMode {
                 case .ar:
-                    MeshARPlacementView(modelURL: url)
+                    MeshARPlacementView(modelURL: url, preparedScene: model.previewScene)
                         .ignoresSafeArea()
                 case .object:
                     if let scene = model.previewScene {
@@ -78,9 +78,10 @@ struct MeshARViewerSheet: View {
 @MainActor
 struct MeshARPlacementView: UIViewRepresentable {
     let modelURL: URL
+    let preparedScene: SCNScene?
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(modelURL: modelURL)
+        Coordinator(modelURL: modelURL, preparedScene: preparedScene)
     }
 
     func makeUIView(context: Context) -> ARSCNView {
@@ -95,6 +96,22 @@ struct MeshARPlacementView: UIViewRepresentable {
         configuration.planeDetection = [.horizontal]
         configuration.environmentTexturing = .automatic
         view.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+
+        // A raw raycast failure is invisible to the user. Let ARKit coach motion only while a
+        // usable horizontal support surface is unavailable, then dismiss automatically so it
+        // never competes with normal placement gestures after tracking is ready.
+        let coaching = ARCoachingOverlayView()
+        coaching.session = view.session
+        coaching.goal = .horizontalPlane
+        coaching.activatesAutomatically = true
+        coaching.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(coaching)
+        NSLayoutConstraint.activate([
+            coaching.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            coaching.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            coaching.topAnchor.constraint(equalTo: view.topAnchor),
+            coaching.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
         return view
     }
 
@@ -107,11 +124,13 @@ struct MeshARPlacementView: UIViewRepresentable {
     @MainActor
     final class Coordinator: NSObject {
         private let modelURL: URL
+        private let preparedScene: SCNScene?
         private weak var view: ARSCNView?
         private var placedNode: SCNNode?
 
-        init(modelURL: URL) {
+        init(modelURL: URL, preparedScene: SCNScene?) {
             self.modelURL = modelURL
+            self.preparedScene = preparedScene
         }
 
         func attach(to view: ARSCNView) {
@@ -124,34 +143,77 @@ struct MeshARPlacementView: UIViewRepresentable {
             guard let view else { return }
             let point = recognizer.location(in: view)
 
-            let horizontal = view.raycastQuery(
-                from: point,
+            // Keep placement consistent with the UI contract: a saved scan is always placed
+            // upright on a horizontal support surface. Falling back to `.estimatedPlane(.any)`
+            // can accept a wall and rotate the whole mesh sideways, which is especially unstable
+            // while ARKit is still refining plane estimates.
+            let result = raycast(
+                view: view,
+                point: point,
+                allowing: .existingPlaneGeometry,
+                alignment: .horizontal
+            ) ?? raycast(
+                view: view,
+                point: point,
+                allowing: .existingPlaneInfinite,
+                alignment: .horizontal
+            ) ?? raycast(
+                view: view,
+                point: point,
                 allowing: .estimatedPlane,
                 alignment: .horizontal
-            ).flatMap { view.session.raycast($0).first }
-
-            let result = horizontal ?? view.raycastQuery(
-                from: point,
-                allowing: .estimatedPlane,
-                alignment: .any
-            ).flatMap { view.session.raycast($0).first }
+            )
 
             guard let result else { return }
-            place(at: result.worldTransform)
+            place(at: Self.translationOnlyPlacement(from: result.worldTransform))
+        }
+
+        private func raycast(
+            view: ARSCNView,
+            point: CGPoint,
+            allowing target: ARRaycastQuery.Target,
+            alignment: ARRaycastQuery.TargetAlignment
+        ) -> ARRaycastResult? {
+            guard let query = view.raycastQuery(from: point, allowing: target, alignment: alignment) else {
+                return nil
+            }
+            return view.session.raycast(query).first
         }
 
         private func place(at transform: simd_float4x4) {
             guard let view else { return }
-            placedNode?.removeFromParentNode()
-            guard let source = try? SCNScene(url: modelURL, options: nil) else { return }
+
+            // Repositioning an already loaded scan must not parse and clone the entire model again.
+            // The anchor owns the recentered model subtree, so changing only its transform produces
+            // the same placement result while keeping repeated taps responsive on large meshes.
+            if let placedNode {
+                placedNode.simdTransform = transform
+                return
+            }
+
+            // MeshScanModel has already parsed and validated previewScene before this sheet opens.
+            // Reuse that in-memory scene on the first AR placement instead of synchronously parsing
+            // the same potentially large OBJ/USDZ from disk on the user's tap. Keep the URL fallback
+            // for restored/legacy flows where a preview scene is not available.
+            let source: SCNScene
+            if let preparedScene, MeshRawSceneValidator.containsGeometry(preparedScene) {
+                source = preparedScene
+            } else if let loaded = try? SCNScene(url: modelURL, options: nil),
+                      MeshRawSceneValidator.containsGeometry(loaded) {
+                source = loaded
+            } else {
+                return
+            }
 
             let anchor = SCNNode()
             anchor.simdTransform = transform
 
+            // Preserve the imported scene root itself rather than reparenting only its children.
+            // Some OBJ/USDZ readers attach scale/orientation or geometry directly to rootNode;
+            // dropping that root changes the saved model's transform and can misplace or resize it.
+            // A neutral wrapper still gives recenterForPlacement a stable coordinate space.
             let modelRoot = SCNNode()
-            for child in source.rootNode.childNodes {
-                modelRoot.addChildNode(child.clone())
-            }
+            modelRoot.addChildNode(source.rootNode.clone())
             recenterForPlacement(modelRoot)
             anchor.addChildNode(modelRoot)
 
@@ -171,6 +233,7 @@ struct MeshARPlacementView: UIViewRepresentable {
                 for corner in corners {
                     let local = node.convertPosition(corner, to: root)
                     let p = SIMD3<Float>(local.x, local.y, local.z)
+                    guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
                     minimum = simd_min(minimum, p)
                     maximum = simd_max(maximum, p)
                     found = true
@@ -178,8 +241,27 @@ struct MeshARPlacementView: UIViewRepresentable {
             }
 
             guard found else { return }
-            let center = (minimum + maximum) / 2
+            // Finite extrema can still overflow when subtracted or averaged. Keep the existing
+            // placement untouched instead of creating an Inf/NaN node transform for corrupt or
+            // pathologically large imported geometry.
+            let extent = maximum - minimum
+            guard extent.x.isFinite, extent.y.isFinite, extent.z.isFinite else { return }
+            let center = minimum + extent / 2
+            guard center.x.isFinite, center.y.isFinite, center.z.isFinite else { return }
             root.position = SCNVector3(-center.x, -minimum.y, -center.z)
+        }
+
+        nonisolated static func translationOnlyPlacement(from raycastTransform: simd_float4x4) -> simd_float4x4 {
+            // Mesh reconstruction already uses gravity world alignment. ARRaycastResult orientation
+            // is an estimate of the support plane and can change yaw as ARKit refines that plane;
+            // applying it verbatim makes the same saved scan visibly spin between placement taps.
+            // Preserve the scan's own orientation and use only the hit position.
+            var transform = matrix_identity_float4x4
+            let translation = raycastTransform.columns.3
+            if translation.x.isFinite, translation.y.isFinite, translation.z.isFinite {
+                transform.columns.3 = SIMD4<Float>(translation.x, translation.y, translation.z, 1)
+            }
+            return transform
         }
 
         private static func corners(minimum: SCNVector3, maximum: SCNVector3) -> [SCNVector3] {

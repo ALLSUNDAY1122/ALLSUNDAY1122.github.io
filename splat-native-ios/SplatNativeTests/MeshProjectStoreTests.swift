@@ -27,7 +27,7 @@ final class MeshProjectStoreTests: XCTestCase {
         XCTAssertFalse(archived.reprocessSupported)
         XCTAssertEqual(try Data(contentsOf: archived.resultURL), Data(repeating: 0x11, count: 256))
         XCTAssertTrue(FileManager.default.fileExists(
-            atPath: archived.projectURL.appendingPathComponent("images/mesh_00000.jpg").path
+            atPath: archived.projectURL.appendingPathComponent("images/frame-00000.png").path
         ))
 
         try FileManager.default.removeItem(at: live)
@@ -54,6 +54,31 @@ final class MeshProjectStoreTests: XCTestCase {
         XCTAssertTrue(summary.reprocessSupported)
     }
 
+    func testPhotogrammetryArchiveDoesNotAdvertiseInsufficientOrUnreadableRaw() throws {
+        let live = try makeLiveProject(
+            mode: "photogrammetry",
+            resultName: "mesh-textured.usdz",
+            marker: 0x23
+        )
+        let images = live.appendingPathComponent("images", isDirectory: true)
+        try FileManager.default.removeItem(at: images)
+        try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
+        for index in 0..<19 {
+            try usablePNGData().write(to: images.appendingPathComponent("frame-\(index).png"))
+        }
+        try Data(repeating: 0x41, count: 128).write(to: images.appendingPathComponent("corrupt.jpg"))
+
+        let summary = try store.archiveFinishedProject(
+            resultURL: live.appendingPathComponent("mesh-textured.usdz")
+        )
+
+        XCTAssertTrue(summary.rawDataRetained)
+        XCTAssertFalse(summary.reprocessSupported)
+        XCTAssertTrue(MeshRawProjectBridge.discover(appRootURL: rootURL).filter {
+            $0.sourceProjectURL.standardizedFileURL == summary.projectURL.standardizedFileURL
+        }.isEmpty)
+    }
+
     func testArchiveRefreshesWhenFinishedResultChanges() throws {
         let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x33)
         _ = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
@@ -65,6 +90,46 @@ final class MeshProjectStoreTests: XCTestCase {
         XCTAssertEqual(refreshed.resultURL.lastPathComponent, "mesh-cropped.obj")
         XCTAssertEqual(try Data(contentsOf: refreshed.resultURL), Data(repeating: 0x44, count: 384))
         XCTAssertEqual(store.listProjects().count, 1)
+    }
+
+    func testLibraryManifestCannotEscapeArchivedProjectResultRoot() throws {
+        let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x34)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        let outside = rootURL.appendingPathComponent("outside.obj")
+        try Data(repeating: 0x71, count: 256).write(to: outside)
+
+        let manifestURL = archived.projectURL.appendingPathComponent(MeshProjectStore.libraryManifestFileName)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        var manifest = try decoder.decode(
+            MeshProjectStore.LibraryManifest.self,
+            from: Data(contentsOf: manifestURL)
+        )
+        manifest.resultFileName = "../../outside.obj"
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        try encoder.encode(manifest).write(to: manifestURL, options: .atomic)
+
+        let relaunched = MeshProjectStore(appRootURL: rootURL)
+        XCTAssertTrue(relaunched.listProjects().isEmpty)
+        XCTAssertEqual(try Data(contentsOf: outside), Data(repeating: 0x71, count: 256))
+    }
+
+    func testMoveToTrashPreservesBothSidesWhenDestinationIsAlreadyOccupied() throws {
+        let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x53)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        let destination = store.trashURL.appendingPathComponent(archived.projectURL.lastPathComponent)
+        try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: true)
+        let sentinel = destination.appendingPathComponent("sentinel")
+        try Data([0xAC]).write(to: sentinel)
+
+        XCTAssertThrowsError(try store.moveToTrash(projectURL: archived.projectURL)) { error in
+            guard case MeshProjectStoreError.invalidProject = error else {
+                return XCTFail("Expected invalidProject, got \(error)")
+            }
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: archived.projectURL.path))
+        XCTAssertEqual(try Data(contentsOf: sentinel), Data([0xAC]))
     }
 
     func testTrashRestoreAndPermanentDeleteSurviveStoreRecreation() throws {
@@ -85,6 +150,95 @@ final class MeshProjectStoreTests: XCTestCase {
         relaunched = MeshProjectStore(appRootURL: rootURL)
         try relaunched.permanentlyDeleteFromTrash(id: restored.id)
         XCTAssertTrue(relaunched.listTrash().isEmpty)
+    }
+
+    func testCollisionRestoreRollsBackToTrashWhenManifestCannotBeRebound() throws {
+        let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x54)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        try store.moveToTrash(projectURL: archived.projectURL)
+
+        // Force the collision path while keeping the existing library entry out of the semantic list.
+        let collision = store.libraryURL
+            .appendingPathComponent(archived.id)
+            .appendingPathExtension(MeshProjectStore.projectExtension)
+        try FileManager.default.createDirectory(at: collision, withIntermediateDirectories: true)
+
+        let trashEntry = store.trashURL
+            .appendingPathComponent(archived.id)
+            .appendingPathExtension(MeshProjectStore.projectExtension)
+        try Data("not-json".utf8).write(
+            to: trashEntry.appendingPathComponent(MeshProjectStore.libraryManifestFileName),
+            options: .atomic
+        )
+
+        XCTAssertThrowsError(try store.restoreFromTrash(id: archived.id))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: trashEntry.path))
+        let meshDirectories = try FileManager.default.contentsOfDirectory(
+            at: store.libraryURL,
+            includingPropertiesForKeys: nil
+        ).filter { $0.pathExtension == MeshProjectStore.projectExtension }
+        XCTAssertEqual(meshDirectories.map(\.lastPathComponent), [collision.lastPathComponent])
+    }
+
+    func testTrashRestoreRejectsTraversalIDWithoutMovingOutsideArchive() throws {
+        let outside = rootURL.appendingPathComponent("escape").appendingPathExtension(MeshProjectStore.projectExtension)
+        try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+        try Data([0xAA]).write(to: outside.appendingPathComponent("sentinel"))
+
+        XCTAssertThrowsError(try store.restoreFromTrash(id: "../../escape")) { error in
+            guard case MeshProjectStoreError.invalidProject = error else {
+                return XCTFail("Expected invalidProject, got \(error)")
+            }
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outside.appendingPathComponent("sentinel").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outside.path))
+    }
+
+    func testTrashPermanentDeleteRejectsTraversalIDWithoutDeletingOutsideArchive() throws {
+        let outside = rootURL.appendingPathComponent("escape-delete").appendingPathExtension(MeshProjectStore.projectExtension)
+        try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+        try Data([0xBB]).write(to: outside.appendingPathComponent("sentinel"))
+
+        XCTAssertThrowsError(try store.permanentlyDeleteFromTrash(id: "../../escape-delete")) { error in
+            guard case MeshProjectStoreError.invalidProject = error else {
+                return XCTFail("Expected invalidProject, got \(error)")
+            }
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outside.appendingPathComponent("sentinel").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outside.path))
+    }
+
+    func testLibraryListingRejectsManifestIDThatDoesNotMatchArchiveDirectory() throws {
+        let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x5A)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        let manifestURL = archived.projectURL.appendingPathComponent(MeshProjectStore.libraryManifestFileName)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        var manifest = try decoder.decode(MeshProjectStore.LibraryManifest.self, from: Data(contentsOf: manifestURL))
+        manifest.id = "different-id"
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        try encoder.encode(manifest).write(to: manifestURL, options: .atomic)
+
+        XCTAssertTrue(store.listProjects().isEmpty)
+    }
+
+    func testTrashListingAndRestoreRejectSymlinkedArchiveRoot() throws {
+        let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x5B)
+        let archived = try store.archiveFinishedProject(resultURL: live.appendingPathComponent("mesh.obj"))
+        try store.moveToTrash(projectURL: archived.projectURL)
+        let trashEntry = store.trashURL.appendingPathComponent(archived.id).appendingPathExtension(MeshProjectStore.projectExtension)
+        let external = rootURL.appendingPathComponent("external-archive").appendingPathExtension(MeshProjectStore.projectExtension)
+        try FileManager.default.moveItem(at: trashEntry, to: external)
+        try FileManager.default.createSymbolicLink(at: trashEntry, withDestinationURL: external)
+
+        XCTAssertTrue(store.listTrash().isEmpty)
+        XCTAssertThrowsError(try store.restoreFromTrash(id: archived.id)) { error in
+            guard case MeshProjectStoreError.invalidProject = error else {
+                return XCTFail("Expected invalidProject, got \(error)")
+            }
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: external.path))
     }
 
     func testAdoptsLegacyCompletedWorkingProjectButIgnoresIncompleteOne() throws {
@@ -119,7 +273,7 @@ final class MeshProjectStoreTests: XCTestCase {
         let splatStore = ScanProjectStore(rootURL: rootURL)
         let (projectURL, _) = try splatStore.createProject(title: "Splat source")
         let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
-        try Data(repeating: 0xAB, count: 32).write(to: imagesURL.appendingPathComponent("frame-0001.jpg"))
+        try writeUsableRawImages(to: imagesURL)
         try Data("{}".utf8).write(to: projectURL.appendingPathComponent("transforms.json"))
         try Data("ply\n".utf8).write(to: projectURL.appendingPathComponent("points3D.ply"))
 
@@ -128,7 +282,7 @@ final class MeshProjectStoreTests: XCTestCase {
 
         XCTAssertEqual(source.sourceProjectURL.standardizedFileURL, projectURL.standardizedFileURL)
         XCTAssertEqual(source.imagesURL.standardizedFileURL, imagesURL.standardizedFileURL)
-        XCTAssertEqual(source.imageCount, 1)
+        XCTAssertEqual(source.imageCount, MeshRawInputValidator.minimumPhotogrammetryImageCount)
         XCTAssertEqual(source.title, "Splat source")
     }
 
@@ -136,7 +290,7 @@ final class MeshProjectStoreTests: XCTestCase {
         let splatStore = ScanProjectStore(rootURL: rootURL)
         let (projectURL, _) = try splatStore.createProject(title: "Splat source")
         let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
-        try Data(repeating: 0xCD, count: 32).write(to: imagesURL.appendingPathComponent("frame-0001.jpg"))
+        try writeUsableRawImages(to: imagesURL)
         try Data("{}".utf8).write(to: projectURL.appendingPathComponent("transforms.json"))
         try Data("ply\n".utf8).write(to: projectURL.appendingPathComponent("points3D.ply"))
 
@@ -161,7 +315,38 @@ final class MeshProjectStoreTests: XCTestCase {
 
         XCTAssertFalse(FileManager.default.fileExists(atPath: prepared.projectURL.path))
         XCTAssertTrue(FileManager.default.fileExists(atPath: projectURL.path))
-        XCTAssertTrue(FileManager.default.fileExists(atPath: imagesURL.appendingPathComponent("frame-0001.jpg").path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: imagesURL.appendingPathComponent("frame-00000.png").path))
+    }
+
+    func testCrossRepresentationBridgeRejectsInsufficientUsableRawBeforeWorkspaceCreation() throws {
+        let splatStore = ScanProjectStore(rootURL: rootURL)
+        let (projectURL, _) = try splatStore.createProject(title: "Insufficient Splat source")
+        let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
+        for index in 0..<19 {
+            try usablePNGData().write(to: imagesURL.appendingPathComponent("frame-\(index).png"))
+        }
+        try Data(repeating: 0xAA, count: 128).write(to: imagesURL.appendingPathComponent("renamed.jpg"))
+        try Data("{}".utf8).write(to: projectURL.appendingPathComponent("transforms.json"))
+        try Data("ply\n".utf8).write(to: projectURL.appendingPathComponent("points3D.ply"))
+
+        XCTAssertTrue(MeshRawProjectBridge.discover(appRootURL: rootURL).allSatisfy {
+            $0.sourceProjectURL.standardizedFileURL != projectURL.standardizedFileURL
+        })
+
+        let directCandidate = MeshRawProject(
+            id: "splat:stale",
+            sourceKind: .splatProject,
+            sourceProjectURL: projectURL,
+            imagesURL: imagesURL,
+            imageCount: 20,
+            modifiedAt: Date(),
+            title: "Stale candidate"
+        )
+        XCTAssertThrowsError(try MeshRawProjectBridge.prepareWorkingProject(for: directCandidate)) { error in
+            guard case MeshRawProjectBridgeError.rawUnavailable = error else {
+                return XCTFail("Expected rawUnavailable, got \(error)")
+            }
+        }
     }
 
     private func makeLiveProject(
@@ -173,7 +358,7 @@ final class MeshProjectStoreTests: XCTestCase {
         let project = rootURL.appendingPathComponent(id).appendingPathExtension("meshproject")
         let images = project.appendingPathComponent("images", isDirectory: true)
         try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
-        try Data(repeating: 0xA5, count: 128).write(to: images.appendingPathComponent("mesh_00000.jpg"))
+        try writeUsableRawImages(to: images)
 
         let manifest: [String: Any] = [
             "schemaVersion": 1,
@@ -189,5 +374,19 @@ final class MeshProjectStoreTests: XCTestCase {
         try Data(repeating: marker, count: mode == "photogrammetry" ? 512 : 256)
             .write(to: project.appendingPathComponent(resultName), options: .atomic)
         return project
+    }
+
+    private func writeUsableRawImages(to directory: URL) throws {
+        let image = usablePNGData()
+        for index in 0..<MeshRawInputValidator.minimumPhotogrammetryImageCount {
+            try image.write(
+                to: directory.appendingPathComponent(String(format: "frame-%05d.png", index)),
+                options: .atomic
+            )
+        }
+    }
+
+    private func usablePNGData() -> Data {
+        Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAATUlEQVR42u3PQQ0AAAgEIDX5RTeFDzdoQCepz6aeExAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQELi3oiwCAJt186UAAAAASUVORK5CYII=")!
     }
 }
