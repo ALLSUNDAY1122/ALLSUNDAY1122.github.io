@@ -1,0 +1,45 @@
+name: Tsukanshi release gate command
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  gate:
+    if: startsWith(github.event.issue.title, '[TSUKANSHI-RELEASE-GATE]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Run fail-closed release gate
+        run: |
+          set -euo pipefail
+          node tsukanshi-sprint/validate-content.mjs
+          node tsukanshi-sprint/validate-editorial-final.mjs
+          bash tsukanshi-sprint/native-ios/prepare-native.sh
+          node tsukanshi-sprint/validate-apple-preflight.mjs
+          test -f tsukanshi-sprint/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          test "$(sha256sum tsukanshi-sprint/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | awk '{print $1}')" = 'ff9fd508930e8728ef54907ec64a7835dcffb69a1a773edc645b79715fbfccaa'
+          ! grep -R -n -E 'WKWebView|import WebKit|UIViewRepresentable' tsukanshi-sprint/native-ios --include='*.swift'
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.tsukanshi' tsukanshi-sprint/native-ios/project.yml
+          grep -q 'MARKETING_VERSION: 1.0.0' tsukanshi-sprint/native-ios/project.yml
+          test -f tsukanshi-sprint/support.html
+          test -f tsukanshi-sprint/privacy.html
+      - name: Report PASS
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Tsukanshi release gate: PASS\nrun_id=${context.runId}\nhead=${context.sha}\nCanonical icon was materialized from the staged 556001-byte source and all fail-closed checks passed. No build/TestFlight/ASC mutation was performed.`})
+      - name: Report FAIL
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Tsukanshi release gate: FAIL\nrun_id=${context.runId}\nhead=${context.sha}\nInspect the failed assertion before any build/TestFlight action.`})
