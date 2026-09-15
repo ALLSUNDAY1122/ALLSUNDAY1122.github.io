@@ -1,0 +1,46 @@
+name: IT Passport batch 11 round repair
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/itp-batch11-round-repair.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.actor == 'ALLSUNDAY1122' || github.actor == 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 0}
+      - name: Normalize staged Batch11 to round 3
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          qp=Path('apps/it-passport-rebuild/questions')
+          p=qp/'batch-11.json'; batch=json.loads(p.read_text()); old=json.loads((qp/'original-mock.json').read_text())
+          assert len(old)==200 and len(batch)==20
+          old_ids={q['id'] for q in old}
+          new=[]
+          for q in batch:
+              q=dict(q)
+              assert q['round'] in (2,3)
+              q['round']=3
+              q['id']=re.sub(r'^ip-r2-', 'ip-r3-', q['id'])
+              assert q['id'].startswith('ip-r3-') and q['id'] not in old_ids
+              new.append(q)
+          assert len({q['id'] for q in new})==20
+          p.write_text(json.dumps(new,ensure_ascii=False,indent=2)+'\n')
+          print('PASS: normalized 20 staged questions to round 3 with unique r3 IDs')
+          PY
+          git diff --check
+      - name: Commit repaired staged batch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add apps/it-passport-rebuild/questions/batch-11.json
+          git diff --cached --quiet && { echo 'Already normalized'; exit 0; }
+          git commit -m 'fix(itp): normalize batch 11 to round 3'
+          git push origin HEAD:main
