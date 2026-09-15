@@ -22,15 +22,17 @@ jobs:
           set -euo pipefail
           node tsukanshi-sprint/validate-content.mjs
           node tsukanshi-sprint/validate-editorial-final.mjs
-          node tsukanshi-sprint/native-ios/export-questions.mjs
-          node tsukanshi-sprint/native-ios/validate-native-resources.mjs
-          bash tsukanshi-sprint/native-ios/fetch-canonical-appicon.sh
+          mkdir -p tsukanshi-sprint/native-ios/Resources
+          (cd tsukanshi-sprint && node export-native-content.mjs native-ios/Resources/tsukanshi-questions.json)
           python3 - <<'PY'
-          import plistlib
-          with open('tsukanshi-sprint/native-ios/PrivacyInfo.xcprivacy','rb') as f: d=plistlib.load(f)
-          assert d['NSPrivacyTracking'] is False and d['NSPrivacyCollectedDataTypes']==[]
-          print('PASS: PrivacyInfo.xcprivacy')
+          import json,plistlib
+          p='tsukanshi-sprint/native-ios/Resources/tsukanshi-questions.json'; d=json.load(open(p,encoding='utf-8'))
+          assert d['studyQuestionCount']==480 and d['declarationCount']==12 and len(d['questions'])==492
+          with open('tsukanshi-sprint/native-ios/PrivacyInfo.xcprivacy','rb') as f: privacy=plistlib.load(f)
+          assert privacy['NSPrivacyTracking'] is False and privacy['NSPrivacyCollectedDataTypes']==[]
+          print('PASS: native JSON 492 + PrivacyInfo.xcprivacy')
           PY
+          bash tsukanshi-sprint/native-ios/fetch-canonical-appicon.sh
           node tsukanshi-sprint/validate-apple-preflight.mjs
           test -f tsukanshi-sprint/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           test "$(sha256sum tsukanshi-sprint/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | awk '{print $1}')" = 'ff9fd508930e8728ef54907ec64a7835dcffb69a1a773edc645b79715fbfccaa'
@@ -44,7 +46,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Tsukanshi release gate: PASS\nrun_id=${context.runId}\nhead=${context.sha}\nCanonical icon was materialized from the staged 556001-byte source and all fail-closed checks passed. No build/TestFlight/ASC mutation was performed.`})
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Tsukanshi release gate: PASS\nrun_id=${context.runId}\nhead=${context.sha}\nCanonical content and icon were materialized and all fail-closed checks passed. No build/TestFlight/ASC mutation was performed.`})
       - name: Report FAIL
         if: failure()
         uses: actions/github-script@v7
