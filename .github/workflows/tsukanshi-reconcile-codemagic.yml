@@ -1,0 +1,69 @@
+name: Tsukanshi reconcile Codemagic contract
+
+on:
+  push:
+    paths:
+      - '.github/workflows/tsukanshi-reconcile-codemagic.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Reconcile only tsukanshi-native-ios workflow
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('codemagic.yaml')
+          s=p.read_text(encoding='utf-8')
+          marker='\n  tsukanshi-native-ios:'
+          start=s.find(marker)
+          if start < 0:
+              raise SystemExit('missing tsukanshi-native-ios')
+          body_start=start+len(marker)
+          rest=s[body_start:]
+          m=re.search(r'\n  [A-Za-z0-9_-]+:\s*\n', rest)
+          end=body_start+(m.start() if m else len(rest))
+          block=s[start:end]
+          if block.count('app_store_connect:') < 2:
+              raise SystemExit('expected integration and publishing app_store_connect entries')
+          block2=re.sub(r'(integrations:\s*\n\s+app_store_connect:)\s*[^\n]+', r'\1 "Codemagic Shiwake Swipe"', block, count=1)
+          required=[
+              'distribution_type: app_store',
+              'bundle_identifier: jp.allsunday1122.tsukanshi',
+              'BUNDLE_ID: jp.allsunday1122.tsukanshi',
+              'tsukanshi_appstore',
+              'TsukanshiNative.xcodeproj',
+              'testFlightInternalTestingOnly',
+              'submit_to_testflight: false',
+              'submit_to_app_store: false',
+          ]
+          for token in required:
+              if token not in block2:
+                  raise SystemExit(f'missing required token after reconcile: {token}')
+          if 'submit_to_testflight: true' in block2 or 'submit_to_app_store: true' in block2:
+              raise SystemExit('auto-submit must remain disabled')
+          out=s[:start]+block2+s[end:]
+          p.write_text(out,encoding='utf-8')
+          print('PASS: tsukanshi-native-ios Codemagic contract reconciled')
+          PY
+      - name: Run Apple preflight
+        run: node tsukanshi-sprint/validate-apple-preflight.mjs
+      - name: Commit reconciled contract
+        run: |
+          if git diff --quiet -- codemagic.yaml; then
+            echo 'No change required'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          git commit -m 'fix(tsukanshi): align Codemagic ASC integration'
+          git push origin HEAD:main
