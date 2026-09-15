@@ -1,0 +1,51 @@
+name: CPA R8 official content audit
+
+on:
+  push:
+    branches:
+      - feature/cpa-r8-content-loop-v3
+    paths:
+      - 'learning-sprint/cpa-short-answer/r8-content/**'
+      - '.github/workflows/cpa-r8-content-loop.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'learning-sprint/cpa-short-answer/r8-content/**'
+      - '.github/workflows/cpa-r8-content-loop.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/cpa-r8-content-loop-v3
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install extractor dependencies
+        run: python -m pip install --disable-pip-version-check requests pypdf
+      - name: Extract 186 official questions
+        run: python learning-sprint/cpa-short-answer/r8-content/extract_r8_official_v4.py
+      - name: Validate question-unit content
+        run: python learning-sprint/cpa-short-answer/r8-content/validate_r8_content_v2.py
+      - name: Persist generated audit artifacts
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add learning-sprint/cpa-short-answer/r8-content/questions-r8-official.json \
+                  learning-sprint/cpa-short-answer/r8-content/extraction-report.json \
+                  learning-sprint/cpa-short-answer/r8-content/audit-result.json
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+          else
+            git commit -m "Generate audited CPA R8 official question data"
+            git push origin HEAD:feature/cpa-r8-content-loop-v3
+          fi
