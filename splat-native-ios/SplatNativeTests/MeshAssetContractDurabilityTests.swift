@@ -124,6 +124,7 @@ final class MeshAssetContractDurabilityTests: XCTestCase {
         XCTAssertEqual(values.isSymbolicLink, true)
     }
 
+    @MainActor
     func testExporterPublishRejectsSymlinkAssetWithoutCreatingSidecar() throws {
         let parent = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeshExporterAssetSymlink-\(UUID().uuidString)", isDirectory: true)
