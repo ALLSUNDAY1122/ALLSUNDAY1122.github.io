@@ -7,7 +7,7 @@ permissions:
   contents: write
 jobs:
   validate-and-merge:
-    if: github.event_name == 'workflow_dispatch' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP-FACTORY] ITP Batch12 Merge Gate')
+    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[APP-FACTORY] ITP Batch12 Merge Gate'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
