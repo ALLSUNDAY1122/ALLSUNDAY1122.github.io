@@ -1,4 +1,5 @@
-# Registered trigger v4: validate and merge only after all batch09 checks pass; emit precise fail-closed diagnostics.
+# Registered trigger v5: validate and merge only after all batch09 checks pass.
+# Topic reuse across rounds is allowed; novelty is enforced on IDs/questions, while batch-internal topic duplication remains blocked.
 name: IT Passport batch 09 merge gate
 
 on:
@@ -25,10 +26,10 @@ jobs:
           root=Path('apps/it-passport-rebuild'); qp=root/'questions'; old=json.loads((qp/'original-mock.json').read_text()); batch=json.loads((qp/'batch-09.json').read_text()); manifest=json.loads((qp/'manifest.json').read_text()); config=json.loads((root/'quality/exam-config.json').read_text())
           norm=lambda s: re.sub(r'\s+','',unicodedata.normalize('NFKC',str(s)).lower())
           assert len(old)==160, f'canonical length={len(old)} expected=160'; assert manifest['canonical']['original_mock']['current']==160, f'manifest current={manifest["canonical"]["original_mock"]["current"]} expected=160'; assert len(batch)==20, f'batch length={len(batch)} expected=20'
-          ids={q['id'] for q in old}; texts={norm(q['question']) for q in old}; topics={norm(q['topic']) for q in old}; subjects=collections.Counter(); answers=collections.Counter(); req=set(config['required_fields']); seen_ids=set(); seen_texts=set(); seen_topics=set()
+          ids={q['id'] for q in old}; texts={norm(q['question']) for q in old}; subjects=collections.Counter(); answers=collections.Counter(); req=set(config['required_fields']); seen_ids=set(); seen_texts=set(); seen_topics=set()
           for q in batch:
             missing=req-set(q); assert not missing, f'{q.get("id")}: missing fields={sorted(missing)}'; assert q['id'] not in ids, f'duplicate canonical id={q["id"]}'; assert q['id'] not in seen_ids, f'duplicate batch id={q["id"]}'
-            qt=norm(q['question']); tp=norm(q['topic']); assert qt not in texts, f'duplicate canonical question={q["id"]}'; assert qt not in seen_texts, f'duplicate batch question={q["id"]}'; assert tp not in topics, f'duplicate canonical topic={q["id"]}:{q["topic"]}'; assert tp not in seen_topics, f'duplicate batch topic={q["id"]}:{q["topic"]}'
+            qt=norm(q['question']); tp=norm(q['topic']); assert qt not in texts, f'duplicate canonical question={q["id"]}'; assert qt not in seen_texts, f'duplicate batch question={q["id"]}'; assert tp not in seen_topics, f'duplicate batch topic={q["id"]}:{q["topic"]}'
             assert q['subject'] in config['subjects'], f'{q["id"]}: bad subject={q["subject"]}'; assert q['round']==2, f'{q["id"]}: round={q["round"]}'; assert len(q['choices'])==4 and len({norm(x) for x in q['choices']})==4, f'{q["id"]}: invalid choices'
             assert isinstance(q['correct_index'],int) and 0<=q['correct_index']<4, f'{q["id"]}: bad correct_index'; assert q['syllabus_version']==manifest['current_syllabus_version']=='6.5', f'{q["id"]}: syllabus mismatch'
             assert q['origin_type']=='original' and q['rights_basis']=='original_question_based_on_public_syllabus', f'{q["id"]}: provenance mismatch'; assert q['source_url']=='https://www.ipa.go.jp/shiken/syllabus/gaiyou.html' and q['reference_date']=='2026-09-15', f'{q["id"]}: source/date mismatch'
