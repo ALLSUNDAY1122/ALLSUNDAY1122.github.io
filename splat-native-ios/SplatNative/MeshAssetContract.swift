@@ -101,9 +101,11 @@ enum MeshAssetContract {
 
         // Validate the exact candidate before replacing the last known-good sidecar. Atomic write
         // alone protects against a torn rename, but it does not prove that the bytes now on disk
-        // still decode to the asset generation the viewer/exporter is about to expose.
+        // still decode to the asset generation the viewer/exporter is about to expose. Use the same
+        // bounded regular-file reader as normal admission so a concurrently replaced candidate cannot
+        // turn this verification into an unbounded allocation or an alias read.
         try expected.write(to: candidateURL, options: .atomic)
-        let persisted = try Data(contentsOf: candidateURL, options: [.mappedIfSafe])
+        let persisted = try readExistingSidecarIfSafe(at: candidateURL, fileManager: fileManager)
         guard persisted == expected else {
             throw sidecarError("Mesh資産メタデータの書込み検証に失敗しました")
         }
@@ -119,6 +121,17 @@ enum MeshAssetContract {
             try fileManager.moveItem(at: candidateURL, to: sidecarURL)
         }
         candidateCommitted = true
+
+        // The rename/replace is the actual publication boundary. Re-read the published path through
+        // the bounded regular-file reader and require byte-for-byte identity before telling callers
+        // the contract is durable. This catches a failed/replaced publication instead of returning a
+        // URL that downstream export/share code would trust as the just-written generation.
+        let published = try readExistingSidecarIfSafe(at: sidecarURL, fileManager: fileManager)
+        guard published == expected,
+              let publishedDescriptor = try? JSONDecoder().decode(MeshAssetDescriptor.self, from: published),
+              publishedDescriptor == descriptor else {
+            throw sidecarError("Mesh資産メタデータの公開後検証に失敗しました")
+        }
         return sidecarURL
     }
 
