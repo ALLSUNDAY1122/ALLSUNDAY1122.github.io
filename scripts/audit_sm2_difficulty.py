@@ -13,7 +13,8 @@ SPECIAL=('法令上','選任','衛生管理者','産業医','健康診断','労�
 
 def load_questions():
     qs=[]
-    for p in sorted(APP.glob('q*.js'), key=lambda x:int(re.search(r'(\d+)',x.stem).group(1))):
+    files=[p for p in APP.glob('q*.js') if re.fullmatch(r'q\d+\.js',p.name)]
+    for p in sorted(files, key=lambda x:int(re.search(r'(\d+)',x.stem).group(1))):
         txt=p.read_text(encoding='utf-8')
         m=re.search(r'push\(\.\.\.(\[.*\])\);?\s*$',txt,re.S)
         if not m:
