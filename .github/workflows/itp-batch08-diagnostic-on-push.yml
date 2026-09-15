@@ -1,0 +1,81 @@
+name: IT Passport batch 08 diagnostic on push
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/itp-batch08-diagnostic-on-push.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    if: github.actor == 'ALLSUNDAY1122'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Diagnose without relaxing gates
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import collections,json,re,unicodedata
+          from pathlib import Path
+          root=Path('apps/it-passport-rebuild'); qp=root/'questions'
+          old=json.loads((qp/'original-mock.json').read_text()); batch=json.loads((qp/'batch-08.json').read_text()); manifest=json.loads((qp/'manifest.json').read_text()); config=json.loads((root/'quality/exam-config.json').read_text())
+          norm=lambda s: re.sub(r'\s+','',unicodedata.normalize('NFKC',str(s)).lower())
+          violations=[]
+          def bad(kind,detail): violations.append({'kind':kind,'detail':detail})
+          if len(old)!=140: bad('canonical_count',len(old))
+          if manifest['canonical']['original_mock']['current']!=140: bad('manifest_count',manifest['canonical']['original_mock']['current'])
+          if len(batch)!=20: bad('batch_count',len(batch))
+          ids={q.get('id') for q in old}; texts={norm(q.get('question','')) for q in old}; topics={norm(q.get('topic','')) for q in old}
+          subjects=collections.Counter(); answers=collections.Counter(); req=set(config['required_fields']); seen_ids=set(); seen_texts=set(); seen_topics=set()
+          for i,q in enumerate(batch):
+            qid=q.get('id',f'index:{i}'); missing=sorted(req-set(q))
+            if missing: bad('missing_fields',{'id':qid,'fields':missing})
+            if q.get('id') in ids or q.get('id') in seen_ids: bad('duplicate_id',qid)
+            qt=norm(q.get('question','')); tp=norm(q.get('topic',''))
+            if qt in texts or qt in seen_texts: bad('duplicate_question',qid)
+            if tp in topics: bad('topic_vs_canonical',{'id':qid,'topic':q.get('topic')})
+            if tp in seen_topics: bad('topic_within_batch',{'id':qid,'topic':q.get('topic')})
+            if q.get('subject') not in config['subjects']: bad('subject',{'id':qid,'value':q.get('subject')})
+            if q.get('round')!=2: bad('round',{'id':qid,'value':q.get('round')})
+            choices=q.get('choices',[])
+            if len(choices)!=4 or len({norm(x) for x in choices})!=4: bad('choices',qid)
+            if any(len(norm(x))<2 for x in choices): bad('choice_too_short',qid)
+            ci=q.get('correct_index')
+            if not isinstance(ci,int) or not 0<=ci<4: bad('correct_index',{'id':qid,'value':ci})
+            if q.get('syllabus_version')!=manifest.get('current_syllabus_version') or q.get('syllabus_version')!='6.5': bad('syllabus',{'id':qid,'value':q.get('syllabus_version')})
+            if q.get('origin_type')!='original': bad('origin_type',qid)
+            if q.get('rights_basis')!='original_question_based_on_public_syllabus': bad('rights_basis',qid)
+            if q.get('source_url')!='https://www.ipa.go.jp/shiken/syllabus/gaiyou.html': bad('source_url',qid)
+            if q.get('reference_date')!='2026-09-15': bad('reference_date',{'id':qid,'value':q.get('reference_date')})
+            if len(q.get('question',''))<20: bad('question_length',qid)
+            if len(q.get('explanation',''))<35: bad('explanation_length',qid)
+            if isinstance(ci,int) and 0<=ci<len(choices):
+              if norm(choices[ci]) not in norm(q.get('explanation','')) and tp not in norm(q.get('explanation','')): bad('explanation_grounding',qid)
+            subjects[q.get('subject')]+=1
+            if isinstance(ci,int): answers[ci]+=1
+            seen_ids.add(q.get('id')); seen_texts.add(qt); seen_topics.add(tp)
+          expected_subjects={'ストラテジ系':7,'マネジメント系':4,'テクノロジ系':9}
+          expected_answers={0:5,1:5,2:5,3:5}
+          if dict(subjects)!=expected_subjects: bad('subject_balance',dict(subjects))
+          if dict(answers)!=expected_answers: bad('answer_balance',dict(answers))
+          report={'canonical_count':len(old),'batch_count':len(batch),'subjects':dict(subjects),'answers':dict(answers),'violation_count':len(violations),'violations':violations}
+          out=root/'quality/batch08-diagnostic.json'; out.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit diagnostic only
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add apps/it-passport-rebuild/quality/batch08-diagnostic.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'audit(itp): record batch08 gate violations'
+          git pull --rebase origin main
+          git push origin HEAD:main
