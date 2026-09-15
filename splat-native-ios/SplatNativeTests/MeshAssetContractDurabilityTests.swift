@@ -124,6 +124,31 @@ final class MeshAssetContractDurabilityTests: XCTestCase {
         XCTAssertEqual(values.isSymbolicLink, true)
     }
 
+    func testExporterPublishRejectsSymlinkAssetWithoutCreatingSidecar() throws {
+        let parent = FileManager.default.temporaryDirectory
+            .appendingPathComponent("MeshExporterAssetSymlink-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: parent) }
+        let root = parent.appendingPathComponent("project.meshproject", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+        let externalURL = parent.appendingPathComponent("external.obj")
+        let externalBytes = Data("v 0 0 0\n".utf8)
+        try externalBytes.write(to: externalURL, options: .atomic)
+        let assetURL = root.appendingPathComponent("mesh.obj")
+        try FileManager.default.createSymbolicLink(at: assetURL, withDestinationURL: externalURL)
+
+        let model = MeshScanModel()
+        model.resultURL = assetURL
+
+        XCTAssertThrowsError(try model.persistExporterMeshAssetContract())
+        XCTAssertEqual(try Data(contentsOf: externalURL), externalBytes)
+        XCTAssertFalse(
+            FileManager.default.fileExists(
+                atPath: assetURL.deletingPathExtension().appendingPathExtension("mesh-asset.json").path
+            )
+        )
+    }
+
     func testTexturedTrimGenerationRemainsTexturedAndMetric() throws {
         let trimmedURL = URL(fileURLWithPath: "/tmp/mesh-textured-trimmed-1234.obj")
         let descriptor = try XCTUnwrap(MeshAssetContract.descriptor(for: trimmedURL))
