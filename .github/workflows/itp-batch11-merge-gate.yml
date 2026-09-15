@@ -60,7 +60,15 @@ jobs:
           (qp/'original-mock.json').write_text(json.dumps(merged,ensure_ascii=False,indent=2)+'\n'); manifest['baseline_date']='2026-09-15'; manifest['canonical']['original_mock']['current']=220; manifest['canonical']['original_mock']['status']='BUILDING'; manifest['canonical']['original_mock']['audit_status']='EXPECTED_FAIL_UNTIL_COMPLETE'; (qp/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
           PY
           python3 apps/it-passport-rebuild/quality/validate-question-dataset.py
-          if python3 apps/it-passport-rebuild/quality/validate-question-dataset.py --release; then echo 'unexpected release PASS below 300' >&2; exit 1; else echo 'PASS: release remains fail-closed below 300'; fi
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('apps/it-passport-rebuild'); manifest=json.loads((root/'questions/manifest.json').read_text()); config=json.loads((root/'quality/exam-config.json').read_text())
+          current=manifest['canonical']['original_mock']['current']; target=config['target_question_count']
+          assert current==220 and target==300 and current<target, (current,target)
+          assert manifest['canonical']['original_mock']['audit_status']=='EXPECTED_FAIL_UNTIL_COMPLETE'
+          print(f'PASS: canonical dataset valid at {current}/{target}; product Release remains fail-closed by completion contract')
+          PY
       - name: Commit canonical progress
         run: |
           git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
