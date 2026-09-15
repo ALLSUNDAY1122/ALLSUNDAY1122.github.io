@@ -1,0 +1,665 @@
+[
+  {
+    "id": "YOBI-M2GEN-QNT-001",
+    "practice_mock_id": "practice-mock-2",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "加重平均",
+    "question": "グループAは20人で平均70点、グループBは30人で平均80点だった。50人全体の平均点は何点か。",
+    "choices": [
+      "74点",
+      "75点",
+      "76点",
+      "77点"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "人数が異なる二群の平均は、平均点を単純に二つ足して2で割らない。Aの総得点は20×70＝1400点、Bは30×80＝2400点で、合計3800点を総人数50人で割ると76点になる。人数の多いBの平均80点が全体平均へより強く反映される。",
+    "memory": "人数が違う平均は人数で重み付けする。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "人数と平均点を本アプリ用に独自設定した決定論問題で、学校成績・調査結果・既存教材の数値を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "weighted_mean",
+      "values": [
+        70,
+        80
+      ],
+      "weights": [
+        20,
+        30
+      ],
+      "correct_value": 76
+    },
+    "distractor_notes": [
+      "74点では総得点が3700点となり、設定された各群の総得点3800点と一致しない。",
+      "75点は70点と80点の単純平均であり、人数20人と30人の違いを反映していない。",
+      null,
+      "77点では総得点が3850点となり、実際の3800点を50点上回る。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "weighted_mean"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M2GEN-QNT-002",
+    "practice_mock_id": "practice-mock-2",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "割合の逆算",
+    "question": "ある数量を20％増やした結果が120になった。増加前の数量はいくつか。",
+    "choices": [
+      "90",
+      "96",
+      "100",
+      "104"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "20％増加後は元の数量の120％、つまり1.2倍である。増加前をxとすると1.2x＝120なので、x＝120÷1.2＝100となる。120から20を引く方法では、20％が元の数量を基準にした割合であることを無視するため正しく逆算できない。",
+    "memory": "増加後から元へ戻すときは増加倍率で割る。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "数量120と増加率20％を独自設定した逆算問題で、実在統計・価格データ・第三者教材を転用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "reverse_percent",
+      "after": 120,
+      "percent": 120,
+      "correct_value": 100
+    },
+    "distractor_notes": [
+      "90を20％増やすと108であり120にならない。",
+      "96を20％増やすと115.2で120に届かない。",
+      null,
+      "104を20％増やすと124.8となり120を超える。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "reverse_percent"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M2GEN-QNT-003",
+    "practice_mock_id": "practice-mock-2",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "単利計算",
+    "question": "元金10,000円を年利3％の単利で2年間運用すると、利息の合計はいくらか。",
+    "choices": [
+      "300円",
+      "600円",
+      "609円",
+      "1,200円"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "単利では毎年の利息を元金10,000円だけに対して計算する。1年分は10,000×0.03＝300円で、2年間では300×2＝600円となる。609円のように前年利息へさらに利息を付ける計算は複利の考え方であり、本問の単利条件とは異なる。",
+    "memory": "単利は毎年元金だけに利率を掛ける。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "元金・利率・期間を架空に設定した自作算術問題で、金融商品の実在条件や第三者資料を参照していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "simple_interest",
+      "principal": 10000,
+      "annual_rate_percent": 3,
+      "years": 2,
+      "correct_value": 600
+    },
+    "distractor_notes": [
+      "300円は1年間だけの利息で、2年間分を計上していない。",
+      null,
+      "609円は複利的な計算を混ぜた値で、単利条件に合わない。",
+      "1,200円は正しい利息600円の2倍であり、年数を重複して数えている。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "simple_interest"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M2GEN-QNT-004",
+    "practice_mock_id": "practice-mock-2",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "一次方程式",
+    "question": "3x＋5＝26を満たすxの値はどれか。",
+    "choices": [
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "両辺から5を引くと3x＝21となり、さらに3で割るとx＝7である。検算すると3×7＋5＝21＋5＝26となって元の式を満たす。5、6、8を代入した場合はそれぞれ20、23、29となり26にはならない。",
+    "memory": "一次方程式は逆算して未知数を孤立させる。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "方程式と選択肢を本アプリ用に独自作成した基礎代数問題で、既存問題集や第三者著作物を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "solve_linear",
+      "a": 3,
+      "b": 5,
+      "c": 26,
+      "correct_value": 7
+    },
+    "distractor_notes": [
+      "x＝5なら左辺は20で26に一致しない。",
+      "x＝6なら左辺は23で26に一致しない。",
+      null,
+      "x＝8なら左辺は29となり26を超える。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "solve_linear"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M2GEN-QNT-005",
+    "practice_mock_id": "practice-mock-2",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "等差数列",
+    "question": "4、7、10、13、…と3ずつ増える数列の第8項はどれか。",
+    "choices": [
+      "22",
+      "24",
+      "25",
+      "28"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "初項4、公差3の等差数列である。第8項は4＋(8－1)×3＝4＋21＝25となる。実際に並べても4、7、10、13、16、19、22、25で第8項は25と確認できる。項番号8をそのまま3倍して24とするのは初項4を反映していない。",
+    "memory": "等差数列の第n項＝初項＋(n－1)×公差。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "数列の初項・公差・設問を独自作成し、既存試験や数学教材の問題文を転用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "arithmetic_sequence",
+      "first": 4,
+      "difference": 3,
+      "n": 8,
+      "correct_value": 25
+    },
+    "distractor_notes": [
+      "22は第7項であり、第8項ではない。",
+      "24は8×3とした値で初項4とn－1の関係を反映していない。",
+      null,
+      "28は第9項であり一つ先まで進めている。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "arithmetic_sequence"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M2GEN-QNT-006",
+    "practice_mock_id": "practice-mock-2",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "パーセントポイント",
+    "question": "ある割合が35％から47％になった。割合の変化をパーセントポイントで表すとどれか。",
+    "choices": [
+      "8ポイント上昇",
+      "12ポイント上昇",
+      "12％上昇",
+      "47ポイント上昇"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "パーセントポイント差は二つの割合をそのまま引き算する。47％－35％＝12なので12ポイント上昇である。これは元の35％に対する相対増加率とは別の指標であり、『12％上昇』という表現とは区別する必要がある。",
+    "memory": "パーセントポイントは割合どうしの単純差。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "割合35％・47％を架空設定した自作データ問題で、実在調査や公的統計の数値を利用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "percent_point_diff",
+      "before_percent": 35,
+      "after_percent": 47,
+      "correct_value": 12
+    },
+    "distractor_notes": [
+      "47－35は8ではなく12なので8ポイントではない。",
+      null,
+      "12という差はパーセントポイントであり、相対的な12％増加という意味ではない。",
+      "47ポイントは変化量ではなく変化後の割合の数値をそのまま使っている。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "percent_point_diff"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M2GEN-QNT-007",
+    "practice_mock_id": "practice-mock-2",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "補集合の確率",
+    "question": "同じ確率で1枚を引く10枚のカードのうち、赤いカードが3枚ある。赤以外を引く確率は何％か。",
+    "choices": [
+      "30%",
+      "60%",
+      "70%",
+      "80%"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "全10枚のうち赤は3枚なので、赤以外は10－3＝7枚である。したがって赤以外を引く確率は7÷10×100＝70％となる。赤を引く確率30％の補集合として100％－30％＝70％と求めても同じ結果になる。",
+    "memory": "起こらない側の確率＝100％－対象事象の確率。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "カード枚数と色の条件を独自設定した確率問題で、既存教材・ゲーム仕様・第三者文章を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "probability_complement_percent",
+      "event_count": 3,
+      "total_count": 10,
+      "correct_value": 70
+    },
+    "distractor_notes": [
+      "30％は赤を引く確率であり、問われている赤以外の確率ではない。",
+      "60％なら赤以外が6枚の場合に相当し、実際は7枚ある。",
+      null,
+      "80％なら赤以外が8枚必要で、赤3枚という条件と両立しない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "probability_complement_percent"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M2GEN-QNT-008",
+    "practice_mock_id": "practice-mock-2",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "平均速度",
+    "question": "最初の90kmを1時間、次の150kmを3時間で移動した。全行程240kmの平均時速は何kmか。",
+    "choices": [
+      "50km/h",
+      "55km/h",
+      "60km/h",
+      "70km/h"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "平均速度は区間ごとの速度の単純平均ではなく、総距離を総時間で割る。総距離は90＋150＝240km、総時間は1＋3＝4時間なので240÷4＝60km/hである。各区間速度90km/hと50km/hを単純平均して70km/hとするのは誤りである。",
+    "memory": "平均速度＝総距離÷総時間。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "距離と時間を架空に設定した自作移動問題で、実在交通経路・速度データ・第三者教材を利用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "applied",
+    "verification": {
+      "kind": "average_speed",
+      "distances": [
+        90,
+        150
+      ],
+      "times": [
+        1,
+        3
+      ],
+      "correct_value": 60
+    },
+    "distractor_notes": [
+      "50km/hは後半区間だけの速度で全行程平均ではない。",
+      "55km/hでは4時間で220kmにしかならず総距離240kmと一致しない。",
+      null,
+      "70km/hは90km/hと50km/hの単純平均で、区間時間の違いを無視している。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "average_speed"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M2GEN-QNT-009",
+    "practice_mock_id": "practice-mock-2",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "組合せ",
+    "question": "6人が互いに1回ずつ握手するとき、握手の組合せは全部で何通りか。",
+    "choices": [
+      "6通り",
+      "12通り",
+      "15通り",
+      "30通り"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "握手1回は6人から順序を区別せず2人を選ぶ組合せである。6×5÷2＝15通りとなる。30はAとB、BとAを別の組として二重に数えた場合の値である。各ペアは一度だけ握手する条件なので2で割って重複を除く。",
+    "memory": "2人組の数はn(n－1)÷2。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "6人という人数と握手条件を独自設定した組合せ問題で、既存試験問題・教材文を流用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "combination_count_2",
+      "n": 6,
+      "correct_value": 15
+    },
+    "distractor_notes": [
+      "6通りは人数そのもので、各人間の異なるペア数を数えていない。",
+      "12通りでは実際の全15ペアを3組落としている。",
+      null,
+      "30通りは順序を区別して同じペアを2回ずつ数えた値である。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "combination_count_2"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M2GEN-QNT-010",
+    "practice_mock_id": "practice-mock-2",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "面積",
+    "question": "縦7m、横12mの長方形の面積は何m²か。",
+    "choices": [
+      "19m²",
+      "38m²",
+      "84m²",
+      "168m²"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "長方形の面積は縦と横を掛けて求める。7×12＝84なので84m²が正しい。19は縦と横を足した値、38は周長2×(7＋12)であり面積ではない。単位も長さmではなく平方メートルm²になる。",
+    "memory": "長方形の面積＝縦×横。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "寸法7m・12mを独自設定した図形計算問題で、外部図版・実在建物・第三者教材を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "rectangle_area",
+      "width": 12,
+      "height": 7,
+      "correct_value": 84
+    },
+    "distractor_notes": [
+      "19は7＋12の和で、面積ではない。",
+      "38は長方形の周長であり面積と異なる。",
+      null,
+      "168は正しい面積84を2倍しており過大である。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "rectangle_area"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M2GEN-QNT-011",
+    "practice_mock_id": "practice-mock-2",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "単価",
+    "question": "同じ品物5個の合計価格が1,350円だった。1個当たりの価格はいくらか。",
+    "choices": [
+      "250円",
+      "260円",
+      "270円",
+      "280円"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "同じ品物5個で合計1,350円なので、1個当たりの単価は1,350÷5＝270円である。検算すると270×5＝1,350円となり合計価格と一致する。合計を個数で割るという単位当たり量の基本を使い、個数を掛ける方向と逆にしない。",
+    "memory": "単価＝合計価格÷個数。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "個数・合計価格を架空に設定した自作単価問題で、実在商品の価格や第三者販売情報を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "unit_cost",
+      "total_cost": 1350,
+      "count": 5,
+      "correct_value": 270
+    },
+    "distractor_notes": [
+      "250円なら5個合計は1,250円で提示1,350円に届かない。",
+      "260円なら5個合計は1,300円で50円不足する。",
+      null,
+      "280円なら5個合計は1,400円で50円多い。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "unit_cost"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  }
+]

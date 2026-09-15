@@ -1,0 +1,23 @@
+{
+  "version": "1.0",
+  "checkedAt": "2026-08-13",
+  "scope": "questions.candidates.v1.json",
+  "status": "PASS",
+  "policy": "2026-01-01時点e-Gov法令本文のbasis marker監査PASSを前提に、正答index、設問の限定、解説、誤答肢が条文から直接導けるかを別レイヤーで確認する。判例解釈や学説対立を含む問題は本監査対象に入れない。",
+  "items": [
+    {"id":"YOBI-CAND-CON-001","expectedAnswer":0,"verdict":"PASS","risk":"low","note":"憲法81条が最高裁判所を違憲審査の終審裁判所と明記。他の選択肢は条文上の最終権限者ではない。"},
+    {"id":"YOBI-CAND-CON-002","expectedAnswer":0,"verdict":"PASS","risk":"low","note":"憲法84条の文言どおり、租税の新設・変更は法律又は法律の定める条件による。"},
+    {"id":"YOBI-CAND-ADM-001","expectedAnswer":0,"verdict":"PASS","risk":"low","note":"行政事件訴訟法2条が抗告・当事者・民衆・機関の4類型を列挙。"},
+    {"id":"YOBI-CAND-ADM-002","expectedAnswer":0,"verdict":"PASS","risk":"low","note":"行政事件訴訟法3条1項の抗告訴訟定義を直接問う。"},
+    {"id":"YOBI-CAND-CIV-001","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"民法4条の成年年齢18歳を直接問う。"},
+    {"id":"YOBI-CAND-CIV-002","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"民法5条2項の原則的効果は取消可能。設問に『原則として』を置き例外との混同を回避。"},
+    {"id":"YOBI-CAND-COM-001","expectedAnswer":2,"verdict":"PASS","risk":"low","note":"会社法39条1項により取締役会設置会社の設立時取締役は3人以上。"},
+    {"id":"YOBI-CAND-COM-002","expectedAnswer":0,"verdict":"PASS","risk":"low","note":"会社法2条7号の定義を直接問う。任意設置と法定設置の双方を含む。"},
+    {"id":"YOBI-CAND-CVP-001","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"民事訴訟法4条1項の普通裁判籍による原則管轄は被告側。"},
+    {"id":"YOBI-CAND-CVP-002","expectedAnswer":0,"verdict":"PASS","risk":"low","note":"民事訴訟法2条が当事者に信義に従い誠実な訴訟追行を要求。"},
+    {"id":"YOBI-CAND-CRM-001","expectedAnswer":2,"verdict":"PASS","risk":"low","note":"刑法41条は14歳に満たない者の行為を罰しない。『14歳以下』ではない点も解説済み。"},
+    {"id":"YOBI-CAND-CRM-002","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"刑法43条ただし書の中止未遂は刑を減軽し又は免除。任意的減軽のみの一般未遂と区別。"},
+    {"id":"YOBI-CAND-CRP-001","expectedAnswer":0,"verdict":"PASS","risk":"low","note":"刑事訴訟法199条1項の通常逮捕は原則として裁判官があらかじめ発する逮捕状による。"},
+    {"id":"YOBI-CAND-CRP-002","expectedAnswer":0,"verdict":"PASS","risk":"low","note":"刑事訴訟法60条1項の勾留事由の一つとして定まった住居を有しないことを明記。設問は『掲げているものはどれか』に限定。"}
+  ]
+}
