@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Difficulty audit benchmarked against current public exam style.
-import json, re, statistics
+import json, re, statistics, subprocess
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -12,17 +12,21 @@ EASY_NEG=('関係しない','含まれない','できない','不要である','
 SPECIAL=('法令上','選任','衛生管理者','産業医','健康診断','労働時間','休憩','年次有給休暇','衛生委員会','自律神経','血液','呼吸','代謝','体温','腎臓','肝臓','ストレス','BMI')
 
 def load_questions():
-    qs=[]
-    files=[p for p in APP.glob('q*.js') if re.fullmatch(r'q\d+\.js',p.name)]
-    for p in sorted(files, key=lambda x:int(re.search(r'(\d+)',x.stem).group(1))):
-        txt=p.read_text(encoding='utf-8')
-        m=re.search(r'push\(\.\.\.(\[.*\])\);?\s*$',txt,re.S)
-        if not m:
-            raise SystemExit(f'cannot parse {p}')
-        arr=json.loads(m.group(1))
-        for q in arr:
-            q['_file']=p.name
-            qs.append(q)
+    # q10+ use deterministic JS builders rather than literal JSON arrays. Execute only
+    # canonical qNN.js files in a sandbox-like Node context and inspect the resulting bank.
+    js=r'''
+const fs=require('fs'),path=require('path'),vm=require('vm');
+const dir=process.argv[1]; global.window={Q_PARTS:[]};
+const files=fs.readdirSync(dir).filter(x=>/^q\d+\.js$/.test(x)).sort((a,b)=>Number(a.match(/\d+/)[0])-Number(b.match(/\d+/)[0]));
+for(const f of files){vm.runInThisContext(fs.readFileSync(path.join(dir,f),'utf8'),{filename:f});}
+process.stdout.write(JSON.stringify(window.Q_PARTS));
+'''
+    r=subprocess.run(['node','-e',js,str(APP)],text=True,capture_output=True)
+    if r.returncode:
+        raise SystemExit('cannot evaluate canonical qNN.js bank: '+r.stderr.strip())
+    try: qs=json.loads(r.stdout)
+    except Exception as e: raise SystemExit(f'cannot parse evaluated question bank: {e}')
+    if not qs: raise SystemExit('evaluated question bank is empty')
     return qs
 
 def score(q):
