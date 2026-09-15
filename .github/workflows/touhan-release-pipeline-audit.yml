@@ -1,3 +1,4 @@
+# audit-refresh: 2026-09-15T19:30+09:00
 name: Touhan Release Pipeline Audit
 
 on:
@@ -38,18 +39,10 @@ jobs:
           for token in required:
               if token not in text:
                   raise SystemExit(f'installer release contract missing: {token}')
-          # The installer intentionally contains each obsolete token once in its own
-          # local forbidden-token regression list. More than one occurrence means
-          # the executable workflow template has reintroduced the obsolete mode.
-          expected_self_reference_counts = {
-              'testFlightInternalTestingOnly': 1,
-              'Internal TestFlight': 1,
-          }
+          expected_self_reference_counts = {'testFlightInternalTestingOnly': 1,'Internal TestFlight': 1}
           for token, expected in expected_self_reference_counts.items():
               actual = text.count(token)
               if actual != expected:
-                  raise SystemExit(
-                      f'installer obsolete-token occurrence mismatch: {token}: {actual} != {expected}'
-                  )
+                  raise SystemExit(f'installer obsolete-token occurrence mismatch: {token}: {actual} != {expected}')
           print('PASS: Touhan installer cannot restore internal-only release mode')
           PY
