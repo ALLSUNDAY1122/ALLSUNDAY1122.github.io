@@ -1,0 +1,160 @@
+name: Splat S16 Codemagic Release Gateway
+
+on:
+  push:
+    branches:
+      - feature/splat-native-ios-poc
+    paths:
+      - automation/scanlab-release-request.json
+
+permissions:
+  contents: write
+
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Validate request
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('automation/scanlab-release-request.json').read_text(encoding='utf-8'))
+          if d.get('action') not in {'inspect','build','poll'}: raise SystemExit('invalid action')
+          if d.get('repository') != 'ALLSUNDAY1122/ALLSUNDAY1122.github.io': raise SystemExit('repository mismatch')
+          if d.get('branch') != 'release/scanlab-testflight': raise SystemExit('release branch mismatch')
+          if d.get('workflow_id') != 'scanlab-ios': raise SystemExit('workflow mismatch')
+          if d.get('source_build_id') != '6a99756109c439ed22acd91c': raise SystemExit('Build 14 identity mismatch')
+          if d.get('submit_to_app_store') is not False: raise SystemExit('App Store submission must remain false')
+          if d.get('action') == 'poll' and not d.get('target_build_id'): raise SystemExit('poll requires target_build_id')
+          PY
+
+      - name: Inspect, start, or poll pinned Scan Lab TestFlight build
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$CM_API_TOKEN"
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+
+          token=os.environ['CM_API_TOKEN'].strip()
+          cmd=json.loads(Path('automation/scanlab-release-request.json').read_text(encoding='utf-8'))
+
+          def api(url, method='GET', payload=None):
+              body=None if payload is None else json.dumps(payload).encode('utf-8')
+              req=urllib.request.Request(url, data=body, method=method)
+              req.add_header('Content-Type','application/json')
+              req.add_header('x-auth-token',token)
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      raw=r.read().decode('utf-8')
+                      return r.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode('utf-8',errors='replace')
+                  raise SystemExit(f'Codemagic HTTP {e.code}: {raw[:500]}')
+
+          status, response=api('https://api.codemagic.io/apps')
+          if not 200 <= status < 300: raise SystemExit(f'app listing failed: {status}')
+          apps=response.get('applications') or response.get('data') or []
+          if isinstance(apps,dict): apps=apps.get('applications') or []
+
+          def summary(a):
+              return {'id':a.get('_id') or a.get('id'),'name':a.get('appName') or a.get('name'),'repositoryUrl':a.get('repositoryUrl') or a.get('repository_url') or a.get('repoUrl')}
+          all_apps=[summary(a) for a in apps]
+          all_apps=[a for a in all_apps if a.get('id')]
+          app_ids={a['id'] for a in all_apps}
+
+          def unwrap(resp):
+              return resp.get('data') or resp
+
+          def find_app_ids(v):
+              found=set()
+              def walk(x):
+                  if isinstance(x,dict):
+                      for y in x.values(): walk(y)
+                  elif isinstance(x,list):
+                      for y in x: walk(y)
+                  elif isinstance(x,str) and x in app_ids:
+                      found.add(x)
+              walk(v)
+              return sorted(found)
+
+          source_id=cmd['source_build_id']
+          _, source_resp=api(f'https://codemagic.io/api/v3/builds/{source_id}')
+          source=unwrap(source_resp)
+          found=find_app_ids(source)
+
+          out={
+              'request_id':cmd.get('request_id'), 'action':cmd['action'],
+              'repository':cmd['repository'], 'branch':cmd['branch'], 'workflow_id':cmd['workflow_id'],
+              'source_build_id':source_id, 'source_build_status':source.get('status'),
+              'source_build_branch':source.get('branch'), 'source_build_app_matches':found,
+              'applications':all_apps, 'secret_values_persisted':False,
+          }
+
+          if cmd['action']=='inspect':
+              out['ok']=True
+              Path('automation/scanlab-release-result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              print(f'PASS inspect Build14 app matches={found}')
+              raise SystemExit(0)
+
+          app_id=cmd.get('app_id')
+          if len(found)!=1 or app_id not in found:
+              raise SystemExit(f'requested app_id is not uniquely tied to Build 14: matches={found}')
+          matching=[a for a in all_apps if a.get('id')==app_id]
+          if len(matching)!=1: raise SystemExit('Build 14 app not present in current Codemagic apps')
+
+          if cmd['action']=='poll':
+              build_id=cmd['target_build_id']
+              _, build_resp=api(f'https://codemagic.io/api/v3/builds/{build_id}')
+              build=unwrap(build_resp)
+              build_matches=find_app_ids(build)
+              if app_id not in build_matches:
+                  raise SystemExit(f'target build is not tied to pinned app: matches={build_matches}')
+              branch=build.get('branch')
+              if branch != cmd['branch']:
+                  raise SystemExit(f'target build branch mismatch: {branch}')
+              out.update({
+                  'ok':True,
+                  'app_id':app_id,
+                  'app_name':matching[0].get('name'),
+                  'build_id':build_id,
+                  'status':build.get('status'),
+                  'build_branch':branch,
+                  'build_app_matches':build_matches,
+                  'started_at':build.get('startedAt') or build.get('started_at'),
+                  'finished_at':build.get('finishedAt') or build.get('finished_at'),
+                  'build_number':build.get('buildNumber') or build.get('build_number'),
+              })
+              Path('automation/scanlab-release-result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              print(f"PASS polled pinned Scan Lab build {build_id} status={out.get('status')}")
+              raise SystemExit(0)
+
+          payload={'appId':app_id,'workflowId':'scanlab-ios','branch':'release/scanlab-testflight'}
+          bstatus,bresp=api('https://api.codemagic.io/builds',method='POST',payload=payload)
+          if not 200 <= bstatus < 300: raise SystemExit(f'build start failed: {bstatus}')
+          build_id=bresp.get('buildId') or bresp.get('id')
+          if not build_id: raise SystemExit('Codemagic did not return build id')
+          out.update({'ok':True,'app_id':app_id,'app_name':matching[0].get('name'),'build_id':build_id,'status':'started'})
+          Path('automation/scanlab-release-result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(f'PASS started pinned Scan Lab TestFlight build {build_id}')
+          PY
+
+      - name: Persist sanitized result
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/scanlab-release-result.json
+          git commit -m 'ci: record Scan Lab Codemagic release result' || exit 0
+          if git push origin HEAD:feature/splat-native-ios-poc; then exit 0; fi
+          git fetch origin feature/splat-native-ios-poc
+          git rebase origin/feature/splat-native-ios-poc
+          git push origin HEAD:feature/splat-native-ios-poc
