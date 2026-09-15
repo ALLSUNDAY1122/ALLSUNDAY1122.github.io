@@ -9,7 +9,6 @@ on:
     paths: ['.github/workflows/itp-batch11-merge-gate.yml']
   workflow_dispatch:
 
-# Factory trigger marker: 2026-09-16T06:50+09:00
 permissions:
   contents: write
 
@@ -37,7 +36,7 @@ jobs:
             missing=req-set(q); assert not missing, f'{q.get("id")}: missing fields={sorted(missing)}'
             assert q['id'] not in ids and q['id'] not in seen_ids, f'duplicate id={q["id"]}'
             qt=norm(q['question']); tp=norm(q['topic']); assert qt not in texts and qt not in seen_texts, f'duplicate question={q["id"]}'; assert tp not in seen_topics, f'duplicate batch topic={q["id"]}:{q["topic"]}'
-            assert q['subject'] in config['subjects'] and q['round']==2
+            assert q['subject'] in config['subjects'] and q['round']==3
             assert len(q['choices'])==4 and len({norm(x) for x in q['choices']})==4
             assert isinstance(q['correct_index'],int) and 0<=q['correct_index']<4
             assert q['syllabus_version']==manifest['current_syllabus_version']=='6.5'
@@ -65,7 +64,7 @@ jobs:
           import json
           from pathlib import Path
           root=Path('apps/it-passport-rebuild'); manifest=json.loads((root/'questions/manifest.json').read_text()); config=json.loads((root/'quality/exam-config.json').read_text())
-          current=manifest['canonical']['original_mock']['current']; target=config['target_question_count']
+          current=manifest['canonical']['original_mock']['current']; target=config['rounds'] * sum(config['subjects'].values())
           assert current==220 and target==300 and current<target, (current,target)
           assert manifest['canonical']['original_mock']['audit_status']=='EXPECTED_FAIL_UNTIL_COMPLETE'
           print(f'PASS: canonical dataset valid at {current}/{target}; product Release remains fail-closed by completion contract')
