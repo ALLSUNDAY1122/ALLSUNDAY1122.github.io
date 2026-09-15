@@ -25,19 +25,19 @@ includes(project, `MARKETING_VERSION: ${VERSION}`, 'native Xcode marketing versi
 includes(capabilityPatch, 'com.apple.InAppPurchase', 'generated-project In-App Purchase capability patch');
 includes(capabilityPatch, 'enabled = 1;', 'enabled generated-project capability');
 
-// Isolate exactly one top-level workflow so unrelated app settings cannot affect this gate.
 const marker = '\n  tsukanshi-native-ios:';
 const start = codemagic.indexOf(marker);
 must(start >= 0, 'missing tsukanshi-native-ios workflow');
 const bodyStart = start + marker.length;
 const rest = codemagic.slice(bodyStart);
-const nextWorkflow = rest.search(/\n  [A-Za-z0-9_-]+:\s*\n/);
-const block = nextWorkflow >= 0 ? rest.slice(0, nextWorkflow) : rest;
+const genericNext = rest.search(/\n  [A-Za-z0-9_-]+:\s*\n/);
+const legacyNext = rest.indexOf('\n  tsukanshi-ios:');
+const cuts = [genericNext, legacyNext].filter((x) => x >= 0);
+const cut = cuts.length ? Math.min(...cuts) : -1;
+const block = cut >= 0 ? rest.slice(0, cut) : rest;
 must((codemagic.match(/\n  tsukanshi-native-ios:/g) || []).length === 1, 'tsukanshi-native-ios workflow must be unique');
 
 includes(block, 'app_store_connect: "Codemagic Shiwake Swipe"', 'Codemagic ASC integration');
-// Canonical root workflow pins the uploaded App Store provisioning profile explicitly.
-// Do not also require distribution_type: app_store: Codemagic supports either signing selector form.
 includes(block, 'provisioning_profiles:', 'Codemagic provisioning profile selector');
 includes(block, '- tsukanshi_appstore', 'Codemagic App Store provisioning profile');
 includes(block, `BUNDLE_ID: ${BUNDLE}`, 'Codemagic BUNDLE_ID');
