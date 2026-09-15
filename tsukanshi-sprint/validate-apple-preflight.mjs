@@ -42,7 +42,7 @@ includes(prepareIos, 'storekit-ui-guard.js', 'StoreKit price guard native bundle
 const marker = '\n  tsukanshi-ios:';
 must(codemagic.includes(marker), 'missing tsukanshi-ios workflow');
 const block = codemagic.split(marker, 2)[1];
-includes(block, 'app_store_connect: codemagic', 'Codemagic ASC integration');
+includes(block, 'app_store_connect: Codemagic Shiwake Swipe', 'Codemagic ASC integration');
 includes(block, 'distribution_type: app_store', 'App Store distribution');
 includes(block, `bundle_identifier: ${BUNDLE}`, 'Codemagic bundle id');
 includes(block, `BUNDLE_ID: ${BUNDLE}`, 'Codemagic BUNDLE_ID');
