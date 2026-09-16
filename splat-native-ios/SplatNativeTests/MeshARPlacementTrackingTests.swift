@@ -1,19 +1,18 @@
 import ARKit
 import XCTest
-@testable import SplatNative
 
 final class MeshARPlacementTrackingTests: XCTestCase {
     func testNormalTrackingAllowsPlacement() {
-        XCTAssertTrue(MeshARPlacementView.Coordinator.isStableTracking(.normal))
+        XCTAssertTrue(MeshARPlacementPolicy.isStableTracking(.normal))
     }
 
     func testLimitedTrackingRejectsPlacement() {
-        XCTAssertFalse(MeshARPlacementView.Coordinator.isStableTracking(.limited(.initializing)))
-        XCTAssertFalse(MeshARPlacementView.Coordinator.isStableTracking(.limited(.excessiveMotion)))
-        XCTAssertFalse(MeshARPlacementView.Coordinator.isStableTracking(.limited(.insufficientFeatures)))
+        XCTAssertFalse(MeshARPlacementPolicy.isStableTracking(.limited(.initializing)))
+        XCTAssertFalse(MeshARPlacementPolicy.isStableTracking(.limited(.excessiveMotion)))
+        XCTAssertFalse(MeshARPlacementPolicy.isStableTracking(.limited(.insufficientFeatures)))
     }
 
     func testUnavailableTrackingRejectsPlacement() {
-        XCTAssertFalse(MeshARPlacementView.Coordinator.isStableTracking(.notAvailable))
+        XCTAssertFalse(MeshARPlacementPolicy.isStableTracking(.notAvailable))
     }
 }
