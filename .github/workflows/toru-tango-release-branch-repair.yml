@@ -1,10 +1,13 @@
 name: Toru Tango Release Branch Repair
 on:
   workflow_dispatch:
+  issues:
+    types: [opened]
 permissions:
   contents: write
 jobs:
   repair:
+    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[TORU-TANGO-RELEASE-REPAIR] execute actual Build10 lineage speech fix'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
