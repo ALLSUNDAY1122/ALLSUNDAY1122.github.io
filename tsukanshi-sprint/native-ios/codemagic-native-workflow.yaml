@@ -7,7 +7,7 @@ tsukanshi-ios:
   max_build_duration: 60
   instance_type: mac_mini_m2
   integrations:
-    app_store_connect: codemagic
+    app_store_connect: "Codemagic Shiwake Swipe"
   environment:
     ios_signing:
       distribution_type: app_store
@@ -22,7 +22,6 @@ tsukanshi-ios:
   scripts:
     - name: Install XcodeGen
       script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-
     - name: Audit native release inputs
       script: |
         set -euo pipefail
@@ -32,7 +31,6 @@ tsukanshi-ios:
         bash tsukanshi-sprint/native-ios/prepare-native.sh
         plutil -lint tsukanshi-sprint/native-ios/PrivacyInfo.xcprivacy
         ! grep -R -n -E 'WKWebView|import WebKit|UIViewRepresentable' tsukanshi-sprint/native-ios --include='*.swift'
-
     - name: Set CI build number and generate native Xcode project
       script: |
         set -euo pipefail
@@ -49,7 +47,6 @@ tsukanshi-ios:
         python3 ../ios/apply-xcode-capabilities.py TsukanshiNative.xcodeproj/project.pbxproj
         grep -q 'com.apple.InAppPurchase' TsukanshiNative.xcodeproj/project.pbxproj
         ! grep -q 'SystemCapabilities = "' TsukanshiNative.xcodeproj/project.pbxproj
-
     - name: Verify native app resources
       script: |
         set -euo pipefail
@@ -57,29 +54,23 @@ tsukanshi-ios:
         test -f "$CM_BUILD_DIR/tsukanshi-sprint/native-ios/PrivacyInfo.xcprivacy"
         test -f "$CM_BUILD_DIR/tsukanshi-sprint/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
         test "$(shasum -a 256 "$CM_BUILD_DIR/tsukanshi-sprint/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" | awk '{print $1}')" = "ff9fd508930e8728ef54907ec64a7835dcffb69a1a773edc645b79715fbfccaa"
-
     - name: Apply App Store signing profiles for Internal TestFlight only
       script: |
         set -euo pipefail
         cd "$CM_BUILD_DIR/tsukanshi-sprint/native-ios"
         echo "Expected Codemagic profile reference: $EXPECTED_CODEMAGIC_PROFILE"
         xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
-
     - name: Build signed native IPA
       script: |
         set -euo pipefail
-        xcode-project build-ipa \
-          --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-          --scheme "$XCODE_SCHEME"
-
+        xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
   artifacts:
     - build/ios/ipa/*.ipa
     - /tmp/xcodebuild_logs/*.log
     - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
     - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
-
   publishing:
     app_store_connect:
       auth: integration
-      submit_to_testflight: true
+      submit_to_testflight: false
       submit_to_app_store: false
