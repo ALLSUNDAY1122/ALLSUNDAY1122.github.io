@@ -2,10 +2,6 @@ import CryptoKit
 import Foundation
 
 /// Strengthens the legacy byte-count completion evidence without changing its on-disk schema.
-///
-/// The first verification is allowed to seal only when the completed Splat has not been modified
-/// after the commit evidence timestamp. Once sealed, every verification recomputes SHA-256 so a
-/// same-size replacement cannot be accepted as the previously completed asset.
 enum SplatStrongCompletionEvidence {
     static let fileName = "result.splat.sha256.json"
     private static let maximumSealByteCount: Int64 = 64 * 1024
@@ -58,9 +54,6 @@ enum SplatStrongCompletionEvidence {
         }
     }
 
-    /// Returns the digest that was freshly computed during this verification. Callers that need the
-    /// content address immediately afterwards can reuse it without weakening the invariant that every
-    /// verification re-reads and hashes the completed result.
     @discardableResult
     static func verifyOrSeal(
         sourceURL: URL,
@@ -72,9 +65,6 @@ enum SplatStrongCompletionEvidence {
         let before = try snapshot(sourceURL, fileManager: fileManager)
         guard before.byteCount == evidence.byteCount else { throw IntegrityError.hashMismatch }
 
-        // Completion trust metadata must be physically owned by the project and tiny. The bounded
-        // reader also closes the stat/read race so a concurrently replaced or extended seal cannot
-        // turn validation into an unbounded allocation on library open/export.
         if let data = try readExistingSealIfSafe(sealURL, fileManager: fileManager),
            let seal = try? JSONDecoder().decode(Seal.self, from: data),
            seal.matches(evidence) {
@@ -85,9 +75,6 @@ enum SplatStrongCompletionEvidence {
             return hash
         }
 
-        // A stale seal is expected after a newly committed reconstruction. It may be replaced only
-        // when the new result still carries the modification timestamp from before its commit record.
-        // A same-size overwrite after completion changes mtime and therefore fails closed here.
         guard before.modificationDate <= evidence.completedAt else {
             throw IntegrityError.sourceChangedAfterCommit
         }
@@ -99,19 +86,12 @@ enum SplatStrongCompletionEvidence {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let encoded = try encoder.encode(Seal(evidence: evidence, sha256: hash))
-        try encoded.write(to: sealURL, options: .atomic)
         do {
-            let handle = try FileHandle(forWritingTo: sealURL)
-            defer { try? handle.close() }
-            try handle.synchronize()
+            try writeSealAtomicallyAndSynchronize(encoded, to: sealURL, fileManager: fileManager)
         } catch {
             throw IntegrityError.evidencePersistenceFailed
         }
 
-        // A successful write + fsync is not treated as trust until the bytes can be read back and
-        // decode to the exact evidence/hash contract that was just verified. Use the same bounded
-        // reader as normal verification so this confirmation cannot reintroduce an unbounded trust-
-        // metadata allocation if the path is concurrently replaced or extended.
         guard let persisted = try readExistingSealIfSafe(sealURL, fileManager: fileManager),
               persisted == encoded,
               let decoded = try? JSONDecoder().decode(Seal.self, from: persisted),
@@ -139,12 +119,18 @@ enum SplatStrongCompletionEvidence {
     }
 
     private static func readExistingSealIfSafe(_ url: URL, fileManager: FileManager) throws -> Data? {
-        guard let attributes = try? fileManager.attributesOfItem(atPath: url.path) else { return nil }
-        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true,
+              let attributes = try? fileManager.attributesOfItem(atPath: url.path),
               let size = attributes[.size] as? NSNumber,
               size.int64Value >= 0,
               size.int64Value <= maximumSealByteCount else {
-            throw IntegrityError.hashMismatch
+            if fileManager.fileExists(atPath: url.path) ||
+                (try? fileManager.destinationOfSymbolicLink(atPath: url.path)) != nil {
+                throw IntegrityError.hashMismatch
+            }
+            return nil
         }
 
         let handle = try FileHandle(forReadingFrom: url)
@@ -154,6 +140,39 @@ enum SplatStrongCompletionEvidence {
             throw IntegrityError.hashMismatch
         }
         return data
+    }
+
+    private static func writeSealAtomicallyAndSynchronize(
+        _ data: Data,
+        to sealURL: URL,
+        fileManager: FileManager
+    ) throws {
+        if (try? fileManager.destinationOfSymbolicLink(atPath: sealURL.path)) != nil {
+            throw IntegrityError.evidencePersistenceFailed
+        }
+        if fileManager.fileExists(atPath: sealURL.path) {
+            guard let values = try? sealURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+                  values.isRegularFile == true,
+                  values.isSymbolicLink != true else {
+                throw IntegrityError.evidencePersistenceFailed
+            }
+        }
+
+        let candidate = sealURL.deletingLastPathComponent()
+            .appendingPathComponent(".\(sealURL.lastPathComponent).candidate-\(UUID().uuidString)")
+        var committed = false
+        defer { if !committed { try? fileManager.removeItem(at: candidate) } }
+        try data.write(to: candidate, options: .atomic)
+        let handle = try FileHandle(forWritingTo: candidate)
+        defer { try? handle.close() }
+        try handle.synchronize()
+
+        if fileManager.fileExists(atPath: sealURL.path) {
+            _ = try fileManager.replaceItemAt(sealURL, withItemAt: candidate)
+        } else {
+            try fileManager.moveItem(at: candidate, to: sealURL)
+        }
+        committed = true
     }
 
     private static func sha256Hex(fileURL: URL) throws -> String {
