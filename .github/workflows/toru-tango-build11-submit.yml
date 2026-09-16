@@ -1,0 +1,323 @@
+name: Toru Tango Build11 Submit
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: toru-tango-build11-submit
+  cancel-in-progress: false
+
+jobs:
+  build-and-submit:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Build11 App Review submit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare Build 11 release branch
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin release/toru-tango-build10-20260912
+          git checkout -B release/toru-tango-build11-20260916 origin/release/toru-tango-build10-20260912
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('toru-tango-mobile/app/(tabs)/cards.tsx')
+          s = p.read_text(encoding='utf-8')
+          if '🔊 表を読む' not in s:
+              old = """  const [answer, setAnswer] = useState('');\n  const [note, setNote] = useState('');"""
+              new = """  const [answer, setAnswer] = useState('');\n  const [note, setNote] = useState('');\n  const [speakingKey, setSpeakingKey] = useState<string | null>(null);"""
+              if s.count(old) != 1:
+                  raise SystemExit('cards state anchor mismatch')
+              s = s.replace(old, new, 1)
+
+              old = """  const speak = (text: string) => {\n    void Speech.stop();\n    Speech.speak(text, { language: 'ja-JP', rate: 0.95 });\n  };"""
+              new = """  const speak = (text: string, key: string) => {\n    const value = text.trim();\n    if (!value) {\n      Alert.alert('読み上げできません', '読み上げる内容がありません。');\n      return;\n    }\n    void Speech.stop();\n    setSpeakingKey(key);\n    Speech.speak(value, {\n      language: 'ja-JP',\n      rate: 0.95,\n      onStart: () => setSpeakingKey(key),\n      onDone: () => setSpeakingKey(null),\n      onStopped: () => setSpeakingKey(null),\n      onError: () => {\n        setSpeakingKey(null);\n        Alert.alert('読み上げできません', '音声を再生できませんでした。端末の音量や消音設定を確認して、もう一度お試しください。');\n      }\n    });\n  };"""
+              if s.count(old) != 1:
+                  raise SystemExit('cards speak anchor mismatch')
+              s = s.replace(old, new, 1)
+
+              old = """                <View style={styles.actionGrid}>\n                  <Pressable onPress={() => speak(card.question)} style={styles.smallAction}>\n                    <Text style={styles.smallActionText}>🔊 表</Text>\n                  </Pressable>\n                  <Pressable onPress={() => speak(card.answer)} style={styles.smallAction}>\n                    <Text style={styles.smallActionText}>🔊 裏</Text>\n                  </Pressable>"""
+              new = """                <View style={styles.actionGrid}>\n                  <Pressable\n                    accessibilityRole=\"button\"\n                    accessibilityLabel=\"表面を読み上げる\"\n                    onPress={() => speak(card.question, `${card.id}:front`)}\n                    style={styles.smallAction}\n                  >\n                    <Text style={styles.smallActionText}>\n                      {speakingKey === `${card.id}:front` ? '🔊 表を再生中…' : '🔊 表を読む'}\n                    </Text>\n                  </Pressable>\n                  <Pressable\n                    accessibilityRole=\"button\"\n                    accessibilityLabel=\"裏面を読み上げる\"\n                    onPress={() => speak(card.answer, `${card.id}:back`)}\n                    style={styles.smallAction}\n                  >\n                    <Text style={styles.smallActionText}>\n                      {speakingKey === `${card.id}:back` ? '🔊 裏を再生中…' : '🔊 裏を読む'}\n                    </Text>\n                  </Pressable>"""
+              if s.count(old) != 1:
+                  raise SystemExit('cards action anchor mismatch')
+              s = s.replace(old, new, 1)
+
+              old = """                </View>\n              </>\n            )}"""
+              new = """                </View>\n                {speakingKey?.startsWith(`${card.id}:`) ? (\n                  <Text accessibilityLiveRegion=\"polite\" style={styles.speechHint}>読み上げています。音が聞こえない場合はiPhoneの消音モードと音量を確認してください。</Text>\n                ) : null}\n              </>\n            )}"""
+              if s.count(old) < 1:
+                  raise SystemExit('cards feedback anchor mismatch')
+              s = s.replace(old, new, 1)
+
+              old = """  smallActionText: { color: colors.text, fontSize: 11, fontWeight: '800' },"""
+              new = """  smallActionText: { color: colors.text, fontSize: 11, fontWeight: '800' },\n  speechHint: { color: colors.muted, fontSize: 11, lineHeight: 16 },"""
+              if s.count(old) != 1:
+                  raise SystemExit('cards style anchor mismatch')
+              s = s.replace(old, new, 1)
+              p.write_text(s, encoding='utf-8')
+
+          cfg = Path('toru-tango-mobile/app.config.ts')
+          c = cfg.read_text(encoding='utf-8')
+          c = c.replace('// Build 10: byte-equivalent release source to accepted Build 9, with build number advanced because Build 9 expired in App Store Connect.', '// Build 11: Build 10 release source plus the Human Test #1 speech-affordance fix.')
+          if "buildNumber: '10'" in c:
+              c = c.replace("buildNumber: '10'", "buildNumber: '11'", 1)
+          elif "buildNumber: '11'" not in c:
+              raise SystemExit('Build number anchor mismatch')
+          cfg.write_text(c, encoding='utf-8')
+          PY
+          git diff --check
+          changed="$(git diff --name-only | sort)"
+          expected="$(printf '%s\n' 'toru-tango-mobile/app/(tabs)/cards.tsx' 'toru-tango-mobile/app.config.ts' | sort)"
+          test "$changed" = "$expected"
+          grep -q "buildNumber: '11'" toru-tango-mobile/app.config.ts
+          grep -q '🔊 表を読む' 'toru-tango-mobile/app/(tabs)/cards.tsx'
+          grep -q '🔊 裏を読む' 'toru-tango-mobile/app/(tabs)/cards.tsx'
+          grep -q 'accessibilityLiveRegion' 'toru-tango-mobile/app/(tabs)/cards.tsx'
+          git add 'toru-tango-mobile/app/(tabs)/cards.tsx' toru-tango-mobile/app.config.ts
+          git commit -m 'release(toru-tango): Build 11 speech fix'
+          git push --force-with-lease origin HEAD:refs/heads/release/toru-tango-build11-20260916
+          git rev-parse HEAD > /tmp/toru-build11-sha.txt
+
+      - name: Validate Build 11 source
+        run: |
+          set -euo pipefail
+          cd toru-tango-mobile
+          npm ci
+          npm run typecheck
+          npm run lint
+          npx expo-doctor
+
+      - name: Start and wait for Codemagic Build 11
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, time, urllib.request, urllib.error
+          from pathlib import Path
+
+          token = os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('CM_API_TOKEN missing')
+          app_id = '6a769d81a1add9d06020b524'
+          workflow = 'toru-tango-ios-testflight'
+          branch = 'release/toru-tango-build11-20260916'
+
+          def api(url, method='GET', payload=None):
+              body = None if payload is None else json.dumps(payload).encode()
+              req = urllib.request.Request(url, data=body, method=method)
+              req.add_header('Content-Type','application/json')
+              req.add_header('x-auth-token', token)
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      raw=r.read().decode()
+                      return r.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode(errors='replace')
+                  try: data=json.loads(raw) if raw else {}
+                  except Exception: data={'error':raw[:2000]}
+                  return e.code,data
+
+          status, started = api('https://api.codemagic.io/builds','POST',{'appId':app_id,'workflowId':workflow,'branch':branch})
+          if not 200 <= status < 300:
+              raise SystemExit(f'Codemagic start failed HTTP {status}: {started}')
+          build_id = started.get('buildId') or started.get('id')
+          if not build_id:
+              raise SystemExit(f'No Codemagic build id: {started}')
+          Path('/tmp/toru-cm-build-id.txt').write_text(build_id)
+
+          deadline=time.time()+3000
+          terminal={'finished','failed','canceled','timeout','skipped'}
+          final=None
+          while time.time()<deadline:
+              s,payload=api(f'https://api.codemagic.io/builds?appId={app_id}')
+              if not 200 <= s < 300:
+                  raise SystemExit(f'Codemagic inspect failed HTTP {s}: {payload}')
+              rows=payload.get('builds') or payload.get('data') or []
+              if isinstance(rows,dict): rows=rows.get('builds') or []
+              match=next((b for b in rows if str(b.get('_id') or b.get('id') or '')==build_id),None)
+              if match and match.get('status') in terminal:
+                  final=match
+                  break
+              time.sleep(20)
+          if final is None:
+              raise SystemExit('Codemagic Build 11 timeout')
+          if final.get('status') != 'finished':
+              raise SystemExit(f"Codemagic Build 11 ended {final.get('status')}")
+          Path('/tmp/toru-cm-result.json').write_text(json.dumps({'build_id':build_id,'status':final.get('status'),'branch':branch},indent=2))
+          PY
+
+      - name: Wait for Apple Build 11 and submit App Review
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, sys, time
+          from datetime import datetime, timezone
+          from pathlib import Path
+          sys.path.insert(0,'scripts')
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          APP_ID='6795968222'
+          BUNDLE_ID='com.allsunday1122.torutango'
+          VERSION='1.0'
+          BUILD='11'
+          out=Path('/tmp/toru-final-result.json')
+          result={'app_id':APP_ID,'bundle_id':BUNDLE_ID,'version':VERSION,'build':BUILD,'submitted':False,'release_performed':False,'completed_at':datetime.now(timezone.utc).isoformat()}
+
+          issuer=os.environ.get('ASC_ISSUER_ID'); key_id=os.environ.get('ASC_KEY_ID')
+          if not issuer or not key_id: raise SystemExit('ASC credentials missing')
+          key_path,cleanup=load_private_key()
+          try:
+              token=make_token(issuer,key_id,key_path)
+              _,app_r=api_get(token,f'/v1/apps/{APP_ID}')
+              app=(app_r or {}).get('data') or {}
+              if (app.get('attributes') or {}).get('bundleId') != BUNDLE_ID:
+                  raise RuntimeError('Bundle ID preflight mismatch')
+
+              deadline=time.time()+1500
+              build_res=None
+              while time.time()<deadline:
+                  _,b_r=api_get(token,f'/v1/apps/{APP_ID}/builds?sort=-uploadedDate&limit=100')
+                  rows=(b_r or {}).get('data') or []
+                  for b in rows:
+                      a=b.get('attributes') or {}
+                      if str(a.get('version'))==BUILD:
+                          if a.get('processingState')=='VALID' and not a.get('expired',False):
+                              build_res=b
+                              break
+                  if build_res: break
+                  time.sleep(20)
+              if not build_res:
+                  raise RuntimeError('Apple Build 11 did not reach VALID before timeout')
+              build_id=build_res['id']; result['build_id']=build_id
+
+              _,v_r=api_get(token,f'/v1/apps/{APP_ID}/appStoreVersions?limit=100')
+              versions=(v_r or {}).get('data') or []
+              version=next((v for v in versions if (v.get('attributes') or {}).get('versionString')==VERSION and (v.get('attributes') or {}).get('platform')=='IOS'),None)
+              if not version:
+                  raise RuntimeError('App Store Version 1.0 not found')
+              version_id=version['id']; result['version_id']=version_id
+              va=version.get('attributes') or {}
+              state=va.get('appStoreState') or va.get('appVersionState')
+              result['pre_submit_version_state']=state
+              if state not in {'PREPARE_FOR_SUBMISSION','DEVELOPER_REJECTED','REJECTED','METADATA_REJECTED'}:
+                  raise RuntimeError(f'Version state not submittable: {state}')
+
+              if va.get('releaseType') != 'MANUAL':
+                  patch={'data':{'type':'appStoreVersions','id':version_id,'attributes':{'releaseType':'MANUAL'}}}
+                  api_request(token,f'/v1/appStoreVersions/{version_id}',method='PATCH',payload=patch)
+                  _,vr2=api_get(token,f'/v1/appStoreVersions/{version_id}')
+                  if (((vr2 or {}).get('data') or {}).get('attributes') or {}).get('releaseType') != 'MANUAL':
+                      raise RuntimeError('Could not enforce MANUAL releaseType')
+              result['release_type']='MANUAL'
+
+              attach={'data':{'type':'builds','id':build_id}}
+              api_request(token,f'/v1/appStoreVersions/{version_id}/relationships/build',method='PATCH',payload=attach)
+              _,rel=api_get(token,f'/v1/appStoreVersions/{version_id}/relationships/build')
+              if ((rel or {}).get('data') or {}).get('id') != build_id:
+                  raise RuntimeError('Build 11 attach readback mismatch')
+
+              _,loc_r=api_get(token,f'/v1/appStoreVersions/{version_id}/appStoreVersionLocalizations?limit=100')
+              locs=(loc_r or {}).get('data') or []
+              loc=next((x for x in locs if (x.get('attributes') or {}).get('locale')=='ja-JP'), locs[0] if locs else None)
+              if not loc:
+                  raise RuntimeError('Version localization missing')
+              la=loc.get('attributes') or {}
+              for k in ('description','keywords','supportUrl'):
+                  if not la.get(k): raise RuntimeError(f'Version localization missing {k}')
+              loc_id=loc['id']; result['localization_id']=loc_id
+
+              _,sets_r=api_get(token,f'/v1/appStoreVersionLocalizations/{loc_id}/appScreenshotSets?limit=200&include=appScreenshots')
+              sets=(sets_r or {}).get('data') or []
+              included=(sets_r or {}).get('included') or []
+              complete=sum(1 for x in included if x.get('type')=='appScreenshots' and (((x.get('attributes') or {}).get('assetDeliveryState') or {}).get('state')=='COMPLETE'))
+              if not sets or complete < 1:
+                  raise RuntimeError('Required App Store screenshot is not COMPLETE')
+              result['complete_screenshot_count']=complete
+
+              _,review_r=api_get(token,f'/v1/appStoreVersions/{version_id}/appStoreReviewDetail')
+              detail=(review_r or {}).get('data') or {}
+              da=detail.get('attributes') or {}
+              required=('contactFirstName','contactLastName','contactPhone','contactEmail','notes')
+              missing=[k for k in required if not da.get(k)]
+              if missing: raise RuntimeError(f'App Review detail incomplete: {missing}')
+              result['review_detail_complete']=True
+
+              _,subs_r=api_get(token,f'/v1/apps/{APP_ID}/reviewSubmissions?limit=200&include=items,appStoreVersionForReview')
+              subs=(subs_r or {}).get('data') or []
+              active_states={'READY_FOR_REVIEW','WAITING_FOR_REVIEW','IN_REVIEW','UNRESOLVED_ISSUES','CANCELING','COMPLETING'}
+              active=[s for s in subs if (s.get('attributes') or {}).get('state') in active_states]
+              already=next((s for s in active if (s.get('attributes') or {}).get('state') in {'WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING'}),None)
+              if already:
+                  result.update({'submitted':True,'idempotent':True,'review_submission_id':already['id'],'review_submission_state':(already.get('attributes') or {}).get('state')})
+              else:
+                  draft=next((s for s in active if (s.get('attributes') or {}).get('state')=='READY_FOR_REVIEW'),None)
+                  if draft is None:
+                      payload={'data':{'type':'reviewSubmissions','relationships':{'app':{'data':{'type':'apps','id':APP_ID}}}}}
+                      _,created=api_request(token,'/v1/reviewSubmissions',method='POST',payload=payload)
+                      draft=(created or {}).get('data') or {}
+                  sid=draft.get('id')
+                  if not sid: raise RuntimeError('Review submission draft missing id')
+
+                  _,items_r=api_get(token,f'/v1/reviewSubmissions/{sid}/items?limit=100&include=appStoreVersion')
+                  items=(items_r or {}).get('data') or []
+                  attached=False
+                  for item in items:
+                      relv=((item.get('relationships') or {}).get('appStoreVersion') or {}).get('data') or {}
+                      if relv.get('id')==version_id: attached=True; break
+                  if not attached:
+                      payload={'data':{'type':'reviewSubmissionItems','relationships':{'reviewSubmission':{'data':{'type':'reviewSubmissions','id':sid}},'appStoreVersion':{'data':{'type':'appStoreVersions','id':version_id}}}}}
+                      api_request(token,'/v1/reviewSubmissionItems',method='POST',payload=payload)
+
+                  payload={'data':{'type':'reviewSubmissions','id':sid,'attributes':{'submitted':True}}}
+                  api_request(token,f'/v1/reviewSubmissions/{sid}',method='PATCH',payload=payload)
+                  _,after=api_get(token,f'/v1/reviewSubmissions/{sid}')
+                  sub=(after or {}).get('data') or {}
+                  ss=(sub.get('attributes') or {}).get('state')
+                  if ss not in {'WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING'}:
+                      raise RuntimeError(f'Unexpected review submission state: {ss}')
+                  result.update({'submitted':True,'idempotent':False,'review_submission_id':sid,'review_submission_state':ss})
+
+              out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              print(json.dumps(result,ensure_ascii=False))
+          except Exception as exc:
+              result['error']=str(exc)
+              out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              raise
+          finally:
+              if cleanup: cleanup.unlink(missing_ok=True)
+          PY
+
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            let body = '撮る単語帳 Build 11 / App Review pipeline finished.\n';
+            if (fs.existsSync('/tmp/toru-build11-sha.txt')) body += `source_sha=${fs.readFileSync('/tmp/toru-build11-sha.txt','utf8').trim()}\n`;
+            if (fs.existsSync('/tmp/toru-cm-build-id.txt')) body += `codemagic_build_id=${fs.readFileSync('/tmp/toru-cm-build-id.txt','utf8').trim()}\n`;
+            if (fs.existsSync('/tmp/toru-final-result.json')) {
+              const r = JSON.parse(fs.readFileSync('/tmp/toru-final-result.json','utf8'));
+              body += `submitted=${r.submitted}\nreview_submission_state=${r.review_submission_state || ''}\nversion_state_before=${r.pre_submit_version_state || ''}\nbuild=${r.build || ''}\nbuild_id=${r.build_id || ''}\nrelease_performed=${r.release_performed}\n`;
+              if (r.error) body += `error=${r.error}\n`;
+            } else {
+              body += 'submitted=false\nerror=pipeline_failed_before_final_submission_step\n';
+            }
+            body += `job_status=${{ toJSON(job.status) }}`;
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body});
