@@ -1,0 +1,32 @@
+name: Network Specialist canonical Drive icon bridge
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/network-specialist-drive-icon-bridge.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 0}
+      - name: Fetch exact canonical Google Drive object without image processing
+        run: |
+          set -euo pipefail
+          curl -fL --retry 2 --retry-delay 2 'https://drive.usercontent.google.com/download?id=1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8&export=download&confirm=t' -o /tmp/network-specialist.png
+          test "$(wc -c </tmp/network-specialist.png)" -eq 678646
+          echo '5b53032021cea4a3e71e737c1a48e1aa8d6495b3647cb770b0e5d917bb0d8729  /tmp/network-specialist.png' | sha256sum -c -
+          file /tmp/network-specialist.png | grep -q 'PNG image data, 1024 x 1024'
+      - name: Install canonical source and materialize exact AppIcon bytes
+        run: |
+          set -euo pipefail
+          cp /tmp/network-specialist.png network-specialist-sprint/07_ネットワークスペシャリスト試験.png
+          python3 network-specialist-sprint/materialize-appicon.py
+          echo '5b53032021cea4a3e71e737c1a48e1aa8d6495b3647cb770b0e5d917bb0d8729  network-specialist-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png' | sha256sum -c -
+      - name: Run existing release preflight
+        run: node network-specialist-sprint/validate-release-preflight.mjs
+      - name: Commit exact bytes only after all gates pass
+        run: |
+          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'; git add network-specialist-sprint/07_ネットワークスペシャリスト試験.png network-specialist-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png; git diff --cached --check; git commit -m 'assets(network-specialist): materialize canonical AppIcon exact bytes'; git push origin HEAD:main
