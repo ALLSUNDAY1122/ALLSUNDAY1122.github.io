@@ -114,6 +114,22 @@ final class SplatTransientExportWorkspaceTests: XCTestCase {
         XCTAssertTrue(fileManager.fileExists(atPath: directory.path))
     }
 
+    func testRemoveRefusesEmptyLegacyOwnershipMarker() throws {
+        let fileManager = FileManager.default
+        let directory = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-export-empty-marker-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? fileManager.removeItem(at: directory) }
+        try Data().write(to: directory.appendingPathComponent(".scanlab-transient-export"))
+        let sentinel = directory.appendingPathComponent("keep.dat")
+        try Data([0x4C]).write(to: sentinel)
+
+        SplatTransientExportWorkspace.remove(directory, fileManager: fileManager)
+
+        XCTAssertTrue(fileManager.fileExists(atPath: directory.path))
+        XCTAssertTrue(fileManager.fileExists(atPath: sentinel.path))
+    }
+
     func testRemoveRefusesOversizedOwnershipMarker() throws {
         let fileManager = FileManager.default
         let directory = fileManager.temporaryDirectory
