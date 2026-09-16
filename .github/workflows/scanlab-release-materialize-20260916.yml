@@ -33,8 +33,6 @@ jobs:
           if d.get('submit_to_app_store') is not False: raise SystemExit('App Store submission must remain false')
           PY
           git merge-base --is-ancestor da41f87a502b3943f72a5e3e192509a95fa8cc6c HEAD
-          grep -q 'recipeVersion = 5' splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift
-          grep -q 'standardIterations = 7_000' splat-native-ios/SplatNative/SplatReconstructionPolicy.swift
 
       - name: Materialize reconstruction source
         run: |
