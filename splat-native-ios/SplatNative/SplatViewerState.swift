@@ -193,27 +193,16 @@ struct SplatViewerEditStore {
                     primaryData,
                     fallback: backupSettings
                ) {
-                // Keep every independently readable value from the newer primary, but source only
-                // the damaged fields from the complete previous generation. Persist the repaired
-                // generation so future opens do not repeat corruption recovery.
                 try? save(merged, sourceURL: sourceURL, fileManager: fileManager)
                 return (merged, true)
             }
 
-            // A valid backup remains useful even when the primary node is unsafe. Do not attempt the
-            // self-heal through an existing symlink/special node: normal viewer loading must never write
-            // outside the scan project merely because the primary sidecar was replaced by an alias.
             if writeDestinationIsSafeOrMissing(at: primary, fileManager: fileManager) {
-                try? data.write(to: primary, options: .atomic)
+                try? publishAtomicallyAndSynchronize(data, to: primary, fileManager: fileManager)
             }
             return (backupSettings, true)
         }
 
-        // With no healthy backup, independently decodable primary fields are still better than
-        // discarding every user edit. Damaged/missing siblings fall back to schema defaults only in
-        // this last-resort path. Persist that normalized salvage immediately so the next launch uses
-        // ordinary decoding and regains the two-generation durability contract instead of reparsing
-        // the same damaged JSON forever. `save` fails closed for unsafe primary/backup nodes.
         if let primaryData = partiallyCorruptPrimaryData,
            let salvaged = SplatEditSettings.salvagingPartiallyCorruptJSON(primaryData) {
             try? save(salvaged, sourceURL: sourceURL, fileManager: fileManager)
@@ -238,7 +227,7 @@ struct SplatViewerEditStore {
         var preservedPreviousGeneration = false
         if let oldData = readSettingsDataIfSafe(at: primary, fileManager: fileManager),
            (try? decoder.decode(SplatEditSettings.self, from: oldData)) != nil {
-            try oldData.write(to: backup, options: .atomic)
+            try publishAtomicallyAndSynchronize(oldData, to: backup, fileManager: fileManager)
             preservedPreviousGeneration = true
         }
 
@@ -250,16 +239,14 @@ struct SplatViewerEditStore {
             existingBackupIsValid = false
         }
 
-        try data.write(to: primary, options: .atomic)
+        try publishAtomicallyAndSynchronize(data, to: primary, fileManager: fileManager)
 
         if !preservedPreviousGeneration && !existingBackupIsValid {
-            try data.write(to: backup, options: .atomic)
+            try publishAtomicallyAndSynchronize(data, to: backup, fileManager: fileManager)
         }
     }
 
     private static func writeDestinationIsSafeOrMissing(at url: URL, fileManager: FileManager) -> Bool {
-        // `fileExists` follows symlinks and returns false for a dangling alias. Probe the node type
-        // first so a broken external link cannot masquerade as a safe missing destination.
         if (try? fileManager.destinationOfSymbolicLink(atPath: url.path)) != nil {
             return false
         }
@@ -280,7 +267,41 @@ struct SplatViewerEditStore {
               size.int64Value <= maximumSidecarByteCount else {
             return nil
         }
-        return try? Data(contentsOf: url)
+        let handle: FileHandle
+        do { handle = try FileHandle(forReadingFrom: url) } catch { return nil }
+        defer { try? handle.close() }
+        guard let data = try? handle.read(upToCount: Int(maximumSidecarByteCount) + 1),
+              let data,
+              data.count <= Int(maximumSidecarByteCount) else {
+            return nil
+        }
+        return data
+    }
+
+    private static func publishAtomicallyAndSynchronize(
+        _ data: Data,
+        to destination: URL,
+        fileManager: FileManager
+    ) throws {
+        let candidate = destination.deletingLastPathComponent()
+            .appendingPathComponent(".\(destination.lastPathComponent).candidate-\(UUID().uuidString)")
+        var candidateCommitted = false
+        defer {
+            if !candidateCommitted { try? fileManager.removeItem(at: candidate) }
+        }
+        try data.write(to: candidate, options: .atomic)
+        let handle = try FileHandle(forWritingTo: candidate)
+        defer { try? handle.close() }
+        try handle.synchronize()
+        guard writeDestinationIsSafeOrMissing(at: destination, fileManager: fileManager) else {
+            throw SplatViewerEditStoreError.unsafeWriteTarget
+        }
+        if fileManager.fileExists(atPath: destination.path) {
+            _ = try fileManager.replaceItemAt(destination, withItemAt: candidate)
+        } else {
+            try fileManager.moveItem(at: candidate, to: destination)
+        }
+        candidateCommitted = true
     }
 }
 
@@ -298,9 +319,6 @@ struct SplatSceneNormalization: Equatable, Sendable {
             return
         }
 
-        // Accumulate the centroid in Double with an online mean. A plain SIMD3<Float> sum can
-        // overflow even when every camera position and the mathematical mean are finite; that used
-        // to collapse measurement scaling to the 1:1 fallback for otherwise valid datasets.
         var mean = SIMD3<Double>.zero
         var sampleCount = 0.0
         for position in finitePositions {
@@ -327,8 +345,6 @@ struct SplatSceneNormalization: Equatable, Sendable {
             return
         }
 
-        // Compute the spread before narrowing back to Float. Opposite large-but-finite Float
-        // coordinates can have a finite center while their subtraction overflows in Float.
         var maxAbs = 0.0
         for position in finitePositions {
             maxAbs = max(
@@ -407,9 +423,6 @@ final class SplatViewerState: ObservableObject {
         }
         measurementScaleTask?.cancel()
         sourceURL = url
-        // `transforms.json` is allowed to be tens of MiB. Keep attach/UI responsiveness independent
-        // of trajectory size without ever exposing the temporary 1:1 fallback as a completed
-        // measurement. A measurement finished during decode is held and reformatted once scale is ready.
         metersPerSceneUnit = 1
         measurementScaleReady = false
         pendingMeasurementSceneUnits = nil
