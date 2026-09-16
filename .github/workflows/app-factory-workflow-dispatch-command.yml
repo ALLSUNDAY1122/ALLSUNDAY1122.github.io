@@ -20,7 +20,7 @@ jobs:
           set -euo pipefail
           workflow="$(printf '%s\n' "$BODY" | sed -n 's/^workflow=//p' | head -1)"
           case "$workflow" in
-            itp-batch11-merge-gate.yml|itp-batch12-merge-gate.yml|touhan-visual-preflight.yml|pharmacist-ios-preflight.yml|pharmacist-learning-preflight.yml|pharmacist-native-static.yml|otsu4-a11-pinned-preflight.yml|app-factory-platform-readback.yml|tsukanshi-native-visual-gate.yml|toru-tango-human-defect-preflight.yml|toru-tango-release-branch-repair.yml|shoshi-ios-release-gate.yml|shoshi-codemagic-provenance-repair.yml) ;;
+            itp-batch11-merge-gate.yml|itp-batch12-merge-gate.yml|touhan-visual-preflight.yml|pharmacist-ios-preflight.yml|pharmacist-learning-preflight.yml|pharmacist-native-static.yml|otsu4-a11-pinned-preflight.yml|app-factory-platform-readback.yml|tsukanshi-native-visual-gate.yml|toru-tango-human-defect-preflight.yml|toru-tango-release-branch-repair.yml|toru-tango-lockfile-sync.yml|shoshi-ios-release-gate.yml|shoshi-codemagic-provenance-repair.yml) ;;
             *) echo "Not allowlisted: $workflow" >&2; exit 1 ;;
           esac
           echo "workflow=$workflow" >> "$GITHUB_OUTPUT"
