@@ -1,0 +1,34 @@
+name: Kangoshi canonical Drive icon bridge
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/kangoshi-drive-icon-bridge.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 0}
+      - name: Fetch exact canonical Google Drive object without image processing
+        run: |
+          set -euo pipefail
+          curl -fL --retry 2 --retry-delay 2 'https://drive.usercontent.google.com/download?id=1VDnbT0s9gEPde4baCfw9kXYfnEHLQrp3&export=download&confirm=t' -o /tmp/kangoshi.png
+          test "$(wc -c </tmp/kangoshi.png)" -eq 683924
+          echo '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80  /tmp/kangoshi.png' | sha256sum -c -
+          file /tmp/kangoshi.png | grep -q 'PNG image data, 1024 x 1024'
+      - name: Install byte-identical AppIcon source only
+        run: |
+          set -euo pipefail
+          mkdir -p learning-sprint/kangoshi/ios/Assets.xcassets/AppIcon.appiconset
+          cp /tmp/kangoshi.png learning-sprint/kangoshi/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png
+          echo '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80  learning-sprint/kangoshi/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png' | sha256sum -c -
+      - name: Run existing preflight after bridge
+        run: |
+          python3 automation/learning-sprint-question-pipeline/validate_questions.py learning-sprint/kangoshi/content-loop/learning-sprint-audit.json
+          node learning-sprint/kangoshi/validate-apple-preflight.mjs
+      - name: Commit exact bytes only after all gates pass
+        run: |
+          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'; git add learning-sprint/kangoshi/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png; git diff --cached --check; git commit -m 'assets(kangoshi): materialize canonical AppIcon exact bytes'; git push origin HEAD:main
