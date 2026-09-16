@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import * as Speech from 'expo-speech';
 import { AppButton, ChoiceRow, commonStyles, EmptyState, Field, Page, Section, colors } from '@/src/components/ui';
@@ -6,12 +6,19 @@ import { useAppStore } from '@/src/context/AppStore';
 import type { StudyMode } from '@/src/types';
 import { isWeakCard } from '@/src/utils/data';
 
+type SpeakingTarget = { cardId: string; side: 'front' | 'back' } | null;
+
 export default function CardsScreen() {
   const { cards, updateCard, deleteCard, clearAll } = useAppStore();
   const [filter, setFilter] = useState<StudyMode>('all');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [speaking, setSpeaking] = useState<SpeakingTarget>(null);
+
+  useEffect(() => () => {
+    Speech.stop();
+  }, []);
 
   const filtered = useMemo(() => cards.filter((card) => {
     if (filter === 'weak') return isWeakCard(card);
@@ -19,14 +26,25 @@ export default function CardsScreen() {
     return true;
   }), [cards, filter]);
 
-  const speak = (text: string) => {
+  const speak = (text: string, cardId: string, side: 'front' | 'back') => {
     const value = text.trim();
     if (!value) {
       Alert.alert('読み上げできません', '読み上げる内容がありません。');
       return;
     }
     Speech.stop();
-    Speech.speak(value, { language: 'ja-JP', rate: 0.95 });
+    setSpeaking({ cardId, side });
+    Speech.speak(value, {
+      language: 'ja-JP',
+      rate: 0.95,
+      onStart: () => setSpeaking({ cardId, side }),
+      onDone: () => setSpeaking(null),
+      onStopped: () => setSpeaking(null),
+      onError: () => {
+        setSpeaking(null);
+        Alert.alert('読み上げできません', '音声を再生できませんでした。端末の音量や消音設定を確認して、もう一度お試しください。');
+      }
+    });
   };
 
   const beginEdit = (id: string) => {
@@ -73,7 +91,10 @@ export default function CardsScreen() {
           { value: 'weak', label: '苦手' },
           { value: 'unseen', label: '未学習' }
         ]} />
-        {!filtered.length ? <EmptyState>該当するカードがありません。</EmptyState> : filtered.map((card) => (
+        {!filtered.length ? <EmptyState>該当するカードがありません。</EmptyState> : filtered.map((card) => {
+          const speakingFront = speaking?.cardId === card.id && speaking.side === 'front';
+          const speakingBack = speaking?.cardId === card.id && speaking.side === 'back';
+          return (
           <View key={card.id} style={styles.cardRow}>
             {editingId === card.id ? <>
               <Field label="問題" value={question} onChangeText={setQuestion} />
@@ -87,14 +108,16 @@ export default function CardsScreen() {
               <Text style={styles.answer}>{card.answer}</Text>
               <Text style={styles.stats}>正解 {card.correct}回・もう一度 {card.wrong}回</Text>
               <View style={commonStyles.row}>
-                <AppButton label="🔊 表を読む" accessibilityLabel="表面を読み上げる" variant="secondary" onPress={() => speak(card.question)} />
-                <AppButton label="🔊 裏を読む" accessibilityLabel="裏面を読み上げる" variant="secondary" onPress={() => speak(card.answer)} />
+                <AppButton label={speakingFront ? '🔊 表を再生中…' : '🔊 表を読む'} accessibilityLabel="表面を読み上げる" variant="secondary" onPress={() => speak(card.question, card.id, 'front')} />
+                <AppButton label={speakingBack ? '🔊 裏を再生中…' : '🔊 裏を読む'} accessibilityLabel="裏面を読み上げる" variant="secondary" onPress={() => speak(card.answer, card.id, 'back')} />
                 <AppButton label="編集" variant="secondary" onPress={() => beginEdit(card.id)} />
                 <AppButton label="削除" variant="danger" onPress={() => confirmDelete(card.id)} />
               </View>
+              {(speakingFront || speakingBack) ? <Text accessibilityLiveRegion="polite" style={styles.speechStatus}>{speakingFront ? '表面を読み上げています。' : '裏面を読み上げています。'}</Text> : null}
             </>}
           </View>
-        ))}
+          );
+        })}
       </Section>
     </Page>
   );
@@ -104,5 +127,6 @@ const styles = StyleSheet.create({
   cardRow: { borderTopColor: colors.border, borderTopWidth: 1, gap: 8, paddingVertical: 14 },
   question: { color: colors.text, fontSize: 16, fontWeight: '800', lineHeight: 23 },
   answer: { color: colors.muted, fontSize: 15, lineHeight: 22 },
-  stats: { color: colors.muted, fontSize: 12 }
+  stats: { color: colors.muted, fontSize: 12 },
+  speechStatus: { color: colors.muted, fontSize: 12, lineHeight: 18 }
 });
