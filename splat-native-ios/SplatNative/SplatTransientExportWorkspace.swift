@@ -104,7 +104,6 @@ enum SplatTransientExportWorkspace {
         do { markerHandle = try FileHandle(forReadingFrom: marker) } catch { return false }
         defer { try? markerHandle.close() }
         guard let data = try? markerHandle.read(upToCount: maximumMarkerByteCount + 1),
-              let data,
               !data.isEmpty,
               data.count <= maximumMarkerByteCount,
               let recordedPath = String(data: data, encoding: .utf8) else { return false }
