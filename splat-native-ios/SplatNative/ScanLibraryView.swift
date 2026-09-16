@@ -51,8 +51,11 @@ struct ScanLibraryView: View {
                     ContentUnavailableView(
                         "保存済みスキャンはありません",
                         systemImage: "cube.transparent",
-                        description: Text("完成したSplatはここから何度でも開けます。")
+                        description: Text(trash.isEmpty
+                            ? "完成したSplatはここから何度でも開けます。"
+                            : "最近削除に\(trash.count)件あります。右上のゴミ箱から復元できます。")
                     )
+                    // S14D durability: empty active library still surfaces recoverable Trash
                 } else {
                     List {
                         ForEach(projects) { project in
@@ -62,6 +65,25 @@ struct ScanLibraryView: View {
                                         moveToTrash(project)
                                     }
                                 }
+
+                            if SplatProjectTrustRecovery.trustedResultURL(for: project) != nil,
+                               canReprocessTrusted(project) {
+                                // S13 iOS 26 tap routing: reprocess is a separate List row.
+                                Button {
+                                    model.restoreFinishedProjectForS13Reprocess(id: project.id)
+                                    NotificationCenter.default.post(name: .scanLabRouteToScanForReprocess, object: nil)
+                                    dismiss()
+                                } label: {
+                                    Label("同じ撮影から再生成", systemImage: "arrow.triangle.2.circlepath")
+                                        .font(.body.weight(.semibold))
+                                        .frame(maxWidth: .infinity)
+                                        .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .tint(.mint)
+                                .foregroundStyle(.black)
+                                .accessibilityHint("現在の完成3Dを保護し、保存済みraw撮影だけを使って再生成します")
+                            }
                         }
                     }
                     .listStyle(.plain)
@@ -102,26 +124,13 @@ struct ScanLibraryView: View {
     @ViewBuilder
     private func projectRow(_ project: ScanProjectSummary) -> some View {
         if let trustedURL = SplatProjectTrustRecovery.trustedResultURL(for: project) {
-            VStack(alignment: .leading, spacing: 8) {
-                NavigationLink {
-                    SavedSplatView(
-                        url: trustedURL,
-                        title: project.manifest.title
-                    )
-                } label: {
-                    rowLabel(project, canOpen: true)
-                }
-                if canReprocessTrusted(project) {
-                    Button {
-                        model.restoreFinishedProjectForS13Reprocess(id: project.id)
-                        dismiss()
-                    } label: {
-                        Label("同じ撮影から再生成", systemImage: "arrow.triangle.2.circlepath")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.bordered)
-                    .accessibilityHint("現在の完成3Dを保護し、保存済みraw撮影だけを使って再生成します")
-                }
+            NavigationLink {
+                SavedSplatView(
+                    url: trustedURL,
+                    title: project.manifest.title
+                )
+            } label: {
+                rowLabel(project, canOpen: true)
             }
         } else if canContinue(project) {
             VStack(alignment: .leading, spacing: 8) {
@@ -325,6 +334,8 @@ struct ScanLibraryView: View {
                 try SplatProjectTrustRecovery.prepareForReprocess(project, store: store)
             }
             model.restoreSavedProject(id: project.id)
+            // S13 same-raw routing: continued project returns to Scan tab
+            NotificationCenter.default.post(name: .scanLabRouteToScanForReprocess, object: nil)
             dismiss()
         } catch {
             errorMessage = error.localizedDescription

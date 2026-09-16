@@ -234,6 +234,8 @@ struct RootScanView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var showingShare = false
     @State private var showingMesh = false
+    // S14D durability: failed project discard requires explicit confirmation
+    @State private var confirmDiscardFailedProject = false
 
     private var isCapturing: Bool { model.phase == .capturing }
 
@@ -284,6 +286,18 @@ struct RootScanView: View {
             if let url = model.resultURL {
                 SplatExportOptionsView(sourceURL: url)
             }
+        }
+        .confirmationDialog(
+            "保存済みraw撮影を最近削除へ移しますか？",
+            isPresented: $confirmDiscardFailedProject,
+            titleVisibility: .visible
+        ) {
+            Button("最近削除へ移して撮り直す", role: .destructive) {
+                model.discardAndReset()
+            }
+            Button("キャンセル", role: .cancel) {}
+        } message: {
+            Text("raw撮影と再生成可能な状態はLibraryの「最近削除」へ移ります。完全削除するまでは復元できます。")
         }
         .onChange(of: scenePhase) { _, newPhase in
             switch newPhase {
@@ -567,16 +581,18 @@ struct RootScanView: View {
                     model.retryGeneration()
                 }
                 .buttonStyle(PrimaryButtonStyle())
-                Button("撮影からやり直す") {
-                    model.discardAndReset()
-                }
-                .foregroundStyle(.secondary)
-            } else {
-                Button("撮影からやり直す") {
-                    model.discardAndReset()
-                }
-                .buttonStyle(PrimaryButtonStyle())
             }
+
+            Button("ライブラリに残して終了") {
+                model.returnHomePreservingProject()
+            }
+            .buttonStyle(SecondaryButtonStyle())
+
+            Button("撮影データを最近削除へ移して撮り直す", role: .destructive) {
+                confirmDiscardFailedProject = true
+            }
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(.red)
             Spacer()
         }
         .padding(24)
