@@ -35,15 +35,24 @@ if (!/accessibilityState=\{\{ disabled \}\}/.test(ui)) {
 const cards = fs.readFileSync(cardsPath, 'utf8');
 const required = [
   "import * as Speech from 'expo-speech'",
-  'label="🔊 表を読む"',
+  "useEffect(() => () => {\n    Speech.stop();",
+  "setSpeaking({ cardId, side });",
+  "onDone: () => setSpeaking(null)",
+  "onStopped: () => setSpeaking(null)",
+  "onError: () => {",
+  "音声を再生できませんでした。端末の音量や消音設定を確認して、もう一度お試しください。",
+  "'🔊 表を再生中…' : '🔊 表を読む'",
   'accessibilityLabel="表面を読み上げる"',
-  'onPress={() => speak(card.question)}',
-  'label="🔊 裏を読む"',
+  "speak(card.question, card.id, 'front')",
+  "'🔊 裏を再生中…' : '🔊 裏を読む'",
   'accessibilityLabel="裏面を読み上げる"',
-  'onPress={() => speak(card.answer)}'
+  "speak(card.answer, card.id, 'back')",
+  'accessibilityLiveRegion="polite"',
+  '表面を読み上げています。',
+  '裏面を読み上げています。'
 ];
 for (const token of required) {
-  if (!cards.includes(token)) failures.push(`app/(tabs)/cards.tsx: missing regression token ${token}`);
+  if (!cards.includes(token)) failures.push(`app/(tabs)/cards.tsx: missing observable-action regression token ${token}`);
 }
 
 if (failures.length) {
@@ -51,4 +60,4 @@ if (failures.length) {
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exit(1);
 }
-console.log('Interactive affordance regression gate PASS');
+console.log('Interactive affordance regression gate PASS: handlers + accessibility + observable audio feedback');
