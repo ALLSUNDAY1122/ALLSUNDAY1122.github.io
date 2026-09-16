@@ -1,0 +1,30 @@
+name: Tsukanshi candidate preflight
+on:
+  push:
+    branches: [main]
+    paths:
+      - tsukanshi-sprint/native-ios/codemagic-native-workflow.yaml
+      - tsukanshi-sprint/**
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate content and editorial gates
+        run: |
+          set -euo pipefail
+          node tsukanshi-sprint/validate-content.mjs
+          node tsukanshi-sprint/validate-editorial-final.mjs
+      - name: Validate safe Codemagic candidate contract
+        run: |
+          set -euo pipefail
+          f=tsukanshi-sprint/native-ios/codemagic-native-workflow.yaml
+          grep -Fq 'app_store_connect: "Codemagic Shiwake Swipe"' "$f"
+          grep -Fq 'bundle_identifier: jp.allsunday1122.tsukanshi' "$f"
+          grep -Fq 'submit_to_testflight: false' "$f"
+          grep -Fq 'submit_to_app_store: false' "$f"
+          ! grep -Eq 'app_store_connect:[[:space:]]+codemagic$' "$f"
+          echo 'PASS: Tsukanshi candidate uses configured ASC integration and cannot auto-publish'
