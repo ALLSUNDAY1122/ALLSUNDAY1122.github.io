@@ -190,22 +190,6 @@ enum SplatViewerCameraDatasetLoader {
     static let maximumReturnedPositions = 4_096
     static let cancellationCheckFrameInterval = 256
 
-    private static func readTransformsDataBounded(at url: URL) -> Data? {
-        guard maximumTransformsBytes >= 0,
-              maximumTransformsBytes < Int64(Int.max),
-              let handle = try? FileHandle(forReadingFrom: url) else {
-            return nil
-        }
-        defer { try? handle.close() }
-        do {
-            let data = try handle.read(upToCount: Int(maximumTransformsBytes) + 1) ?? Data()
-            guard !data.isEmpty, data.count <= Int(maximumTransformsBytes) else { return nil }
-            return data
-        } catch {
-            return nil
-        }
-    }
-
     static func cameraPositions(for renderURL: URL, fileManager: FileManager = .default) -> [SIMD3<Float>] {
         let root = renderURL.deletingLastPathComponent().standardizedFileURL
         let url = root.appendingPathComponent("transforms.json").standardizedFileURL
@@ -219,7 +203,9 @@ enum SplatViewerCameraDatasetLoader {
               let size = values.fileSize,
               size > 0,
               Int64(size) <= maximumTransformsBytes,
-              let data = readTransformsDataBounded(at: url),
+              let data = try? Data(contentsOf: url, options: .mappedIfSafe),
+              !data.isEmpty,
+              data.count <= Int(maximumTransformsBytes),
               let dataset = try? JSONDecoder().decode(Dataset.self, from: data),
               !dataset.positions.isEmpty else {
             return []
@@ -228,7 +214,7 @@ enum SplatViewerCameraDatasetLoader {
     }
 
     static func cameraPositionsAsync(for renderURL: URL) async -> [SIMD3<Float>] {
-        // SplatViewerRenderer is @MainActor. Keep bounded file IO + JSON decoding out of the render/UI
+        // SplatViewerRenderer is @MainActor. Keep mapped file IO + JSON decoding out of the render/UI
         // executor; only the small normalized position set crosses back to MainActor.
         let worker = Task.detached(priority: .userInitiated) {
             cameraPositions(for: renderURL)
