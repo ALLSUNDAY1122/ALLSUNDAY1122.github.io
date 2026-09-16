@@ -19,7 +19,7 @@ jobs:
           from pathlib import Path
           p=Path('codemagic.yaml')
           s=p.read_text()
-          old_branch='feature/shoshi-ios-native-storekit'
+          old_branch='feature/shoshi-native-swiftui'
           old_sha='37c006838463df56e9fd84b22d250005856cfff3'
           new_sha='8c817e19b5ee0a158bbaf75e73a5d13e81299d0e'
           assert s.count(old_branch) == 1, f'expected one old branch pin, found {s.count(old_branch)}'
