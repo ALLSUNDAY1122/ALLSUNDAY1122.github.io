@@ -1,0 +1,21 @@
+name: IT Passport staged future batches audit
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/itp-staged-future-batches-audit.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Batch12 current contract
+        run: python3 apps/it-passport-rebuild/quality/validate-staged-batch.py batch-12.json
+      - name: Validate Batch13 including Batch12 exclusions
+        run: python3 apps/it-passport-rebuild/quality/validate-staged-batch.py batch-13.json
+      - name: Validate Batch14 including prior staged exclusions
+        run: python3 apps/it-passport-rebuild/quality/validate-staged-batch.py batch-14.json
+      - name: Validate Batch15 including prior staged exclusions
+        run: python3 apps/it-passport-rebuild/quality/validate-staged-batch.py batch-15.json
