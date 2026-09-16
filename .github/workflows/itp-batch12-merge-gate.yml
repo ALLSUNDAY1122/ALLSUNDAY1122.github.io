@@ -27,11 +27,11 @@ jobs:
           norm=lambda s: re.sub(r'\s+','',unicodedata.normalize('NFKC',str(s)).lower())
           assert len(old)==220 and manifest['canonical']['original_mock']['current']==220
           assert len(batch)==20
-          ids={q['id'] for q in old}; texts={norm(q['question']) for q in old}; subjects=collections.Counter(); answers=collections.Counter(); req=set(config['required_fields']); seen_ids=set(); seen_texts=set(); seen_topics=set()
+          ids={q['id'] for q in old}; texts={norm(q['question']) for q in old}; old_topics={norm(q.get('topic','')) for q in old}; subjects=collections.Counter(); answers=collections.Counter(); req=set(config['required_fields']); seen_ids=set(); seen_texts=set(); seen_topics=set()
           for q in batch:
             missing=req-set(q); assert not missing, f'{q.get("id")}: missing fields={sorted(missing)}'
             assert q['id'] not in ids and q['id'] not in seen_ids, f'duplicate id={q["id"]}'
-            qt=norm(q['question']); tp=norm(q['topic']); assert qt not in texts and qt not in seen_texts, f'duplicate question={q["id"]}'; assert tp not in seen_topics, f'duplicate batch topic={q["id"]}:{q["topic"]}'
+            qt=norm(q['question']); tp=norm(q['topic']); assert qt not in texts and qt not in seen_texts, f'duplicate question={q["id"]}'; assert tp not in old_topics and tp not in seen_topics, f'duplicate canonical/batch topic={q["id"]}:{q["topic"]}'
             assert q['subject'] in config['subjects'] and q['round']==3
             assert len(q['choices'])==4 and len({norm(x) for x in q['choices']})==4
             assert isinstance(q['correct_index'],int) and 0<=q['correct_index']<4
@@ -44,7 +44,7 @@ jobs:
             subjects[q['subject']]+=1; answers[q['correct_index']]+=1; seen_ids.add(q['id']); seen_texts.add(qt); seen_topics.add(tp)
           assert subjects=={'ストラテジ系':7,'マネジメント系':4,'テクノロジ系':9}, subjects
           assert answers=={0:5,1:5,2:5,3:5}, answers
-          print('PASS batch12 premerge',subjects,answers)
+          print('PASS batch12 premerge + canonical topic novelty',subjects,answers)
           PY
       - name: Merge and validate canonical 240
         run: |
