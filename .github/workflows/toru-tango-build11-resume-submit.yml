@@ -1,0 +1,160 @@
+name: Toru Tango Build11 Resume Submit
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: toru-tango-build11-resume-submit
+  cancel-in-progress: false
+
+jobs:
+  resume-and-submit:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Build11 Resume App Review submit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - name: Checkout main tooling
+        uses: actions/checkout@v4
+        with:
+          path: main-src
+
+      - name: Checkout exact Build 11 release branch
+        uses: actions/checkout@v4
+        with:
+          ref: release/toru-tango-build11-20260916
+          path: release-src
+
+      - name: Set up Node 22.13
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.0'
+
+      - name: Validate exact Build 11 source
+        id: validate
+        working-directory: release-src/toru-tango-mobile
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD | tee /tmp/toru-build11-sha.txt
+          grep -q "buildNumber: '11'" app.config.ts
+          grep -q '🔊 表を読む' 'app/(tabs)/cards.tsx'
+          grep -q '🔊 裏を読む' 'app/(tabs)/cards.tsx'
+          grep -q 'accessibilityLiveRegion' 'app/(tabs)/cards.tsx'
+          npm ci
+          npm run typecheck
+          npm run lint
+          npx expo-doctor
+
+      - name: Start and wait for Codemagic Build 11
+        id: codemagic
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, time, urllib.request, urllib.error
+          from pathlib import Path
+
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token: raise SystemExit('CM_API_TOKEN missing')
+          app_id='6a769d81a1add9d06020b524'
+          workflow='toru-tango-ios-testflight'
+          branch='release/toru-tango-build11-20260916'
+
+          def api(url, method='GET', payload=None):
+              body=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request(url,data=body,method=method)
+              req.add_header('Content-Type','application/json')
+              req.add_header('x-auth-token',token)
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode()
+                      return r.status,json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode(errors='replace')
+                  try: data=json.loads(raw) if raw else {}
+                  except Exception: data={'error':raw[:2000]}
+                  return e.code,data
+
+          status,started=api('https://api.codemagic.io/builds','POST',{'appId':app_id,'workflowId':workflow,'branch':branch})
+          if not 200 <= status < 300: raise SystemExit(f'Codemagic start failed HTTP {status}: {started}')
+          build_id=started.get('buildId') or started.get('id')
+          if not build_id: raise SystemExit(f'Codemagic did not return buildId: {started}')
+          Path('/tmp/toru-cm-build-id.txt').write_text(build_id)
+          print(f'Codemagic Build 11 started: {build_id}')
+
+          terminal={'finished','failed','canceled','timeout','skipped'}
+          deadline=time.time()+3000
+          final=None
+          while time.time()<deadline:
+              s,payload=api(f'https://api.codemagic.io/builds?appId={app_id}')
+              if not 200 <= s < 300: raise SystemExit(f'Codemagic inspect failed HTTP {s}: {payload}')
+              rows=payload.get('builds') or payload.get('data') or []
+              if isinstance(rows,dict): rows=rows.get('builds') or []
+              match=next((b for b in rows if str(b.get('_id') or b.get('id') or '')==build_id),None)
+              if match and match.get('status') in terminal:
+                  final=match
+                  break
+              time.sleep(20)
+          if final is None: raise SystemExit('Codemagic Build 11 timeout')
+          result={'build_id':build_id,'status':final.get('status'),'branch':branch,'workflow':workflow}
+          Path('/tmp/toru-cm-result.json').write_text(json.dumps(result,indent=2))
+          if final.get('status')!='finished': raise SystemExit(f"Codemagic Build 11 ended {final.get('status')}")
+          print(f'Codemagic Build 11 finished: {build_id}')
+          PY
+
+      - name: Wait for Apple Build 11 and submit App Review
+        id: submit
+        working-directory: main-src
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          python scripts/toru_tango_build11_submit_review.py --output /tmp/toru-final-result.json --wait-seconds 1500
+
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-build11-submit-${{ github.run_id }}
+          path: |
+            /tmp/toru-build11-sha.txt
+            /tmp/toru-cm-build-id.txt
+            /tmp/toru-cm-result.json
+            /tmp/toru-final-result.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs=require('fs');
+            const lines=['撮る単語帳 Build 11 resume / App Review result.'];
+            if(fs.existsSync('/tmp/toru-build11-sha.txt')) lines.push(`source_sha=${fs.readFileSync('/tmp/toru-build11-sha.txt','utf8').trim()}`);
+            if(fs.existsSync('/tmp/toru-cm-build-id.txt')) lines.push(`codemagic_build_id=${fs.readFileSync('/tmp/toru-cm-build-id.txt','utf8').trim()}`);
+            if(fs.existsSync('/tmp/toru-cm-result.json')) {
+              const c=JSON.parse(fs.readFileSync('/tmp/toru-cm-result.json','utf8')); lines.push(`codemagic_status=${c.status||''}`);
+            }
+            if(fs.existsSync('/tmp/toru-final-result.json')) {
+              const r=JSON.parse(fs.readFileSync('/tmp/toru-final-result.json','utf8'));
+              lines.push(`submitted=${r.submitted}`);
+              lines.push(`review_submission_state=${r.review_submission_state||''}`);
+              lines.push(`apple_build_id=${r.build_id||''}`);
+              lines.push(`release_type=${r.release_type||''}`);
+              lines.push(`release_performed=${r.release_performed}`);
+              if(r.error) lines.push(`error=${r.error}`);
+            } else {
+              lines.push('submitted=false');
+              lines.push('error=pipeline_failed_before_final_submission_result');
+            }
+            lines.push(`job_status=${{ toJSON(job.status) }}`);
+            lines.push(`run_id=${context.runId}`);
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:lines.join('\n')});
