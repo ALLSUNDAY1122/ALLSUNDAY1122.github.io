@@ -2,11 +2,12 @@ name: Shoshi Codemagic Provenance Repair
 on:
   issues:
     types: [opened]
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
   repair:
-    if: github.event.issue.title == '[SHOSHI] Repair Codemagic Provenance'
+    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == '[SHOSHI] Repair Codemagic Provenance'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
