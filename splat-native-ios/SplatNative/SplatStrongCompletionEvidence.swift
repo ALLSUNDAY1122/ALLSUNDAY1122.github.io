@@ -107,7 +107,14 @@ enum SplatStrongCompletionEvidence {
     }
 
     private static func snapshot(_ url: URL, fileManager: FileManager) throws -> FileSnapshot {
-        guard fileManager.fileExists(atPath: url.path) else { throw IntegrityError.sourceMissing }
+        if (try? fileManager.destinationOfSymbolicLink(atPath: url.path)) != nil {
+            throw IntegrityError.sourceMissing
+        }
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true else {
+            throw IntegrityError.sourceMissing
+        }
         let attributes = try fileManager.attributesOfItem(atPath: url.path)
         guard (attributes[.type] as? FileAttributeType) == .typeRegular,
               let size = attributes[.size] as? NSNumber,
