@@ -25,6 +25,15 @@ jobs:
           npm run typecheck
           npm run lint
           npm run doctor
-      - name: Commit lockfile only
+      - name: Commit lockfile only when changed
         run: |
-          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'; git add toru-tango-mobile/package-lock.json; git diff --cached --check; git commit -m 'build(toru-tango): pin Expo 57 dependency graph'; git push origin HEAD:main
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add toru-tango-mobile/package-lock.json
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'package-lock.json is already deterministic and aligned; nothing to commit.'
+            exit 0
+          fi
+          git commit -m 'build(toru-tango): pin Expo 57 dependency graph'
+          git push origin HEAD:main
