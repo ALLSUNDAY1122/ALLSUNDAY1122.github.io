@@ -24,21 +24,14 @@ export const colors = {
 export function Page({ children }: PropsWithChildren) {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={styles.page}
-      >
+      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.page}>
         {children}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-export function Section({
-  title,
-  children,
-  right
-}: PropsWithChildren<{ title: string; right?: ReactNode }>) {
+export function Section({ title, children, right }: PropsWithChildren<{ title: string; right?: ReactNode }>) {
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
@@ -56,12 +49,14 @@ export function AppButton({
   label,
   onPress,
   variant = 'primary',
-  disabled = false
+  disabled = false,
+  accessibilityLabel
 }: {
   label: string;
   onPress: () => void;
   variant?: ButtonVariant;
   disabled?: boolean;
+  accessibilityLabel?: string;
 }) {
   const variantStyle = {
     primary: styles.buttonPrimary,
@@ -73,6 +68,8 @@ export function AppButton({
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel ?? label}
+      accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
@@ -82,23 +79,14 @@ export function AppButton({
         disabled && styles.disabled
       ]}
     >
-      <Text
-        style={[
-          styles.buttonText,
-          variant === 'secondary' && styles.secondaryButtonText
-        ]}
-      >
+      <Text style={[styles.buttonText, variant === 'secondary' && styles.secondaryButtonText]}>
         {label}
       </Text>
     </Pressable>
   );
 }
 
-export function Field({
-  label,
-  multiline,
-  ...props
-}: TextInputProps & { label: string }) {
+export function Field({ label, multiline, ...props }: TextInputProps & { label: string }) {
   return (
     <View style={styles.fieldWrap}>
       <Text style={styles.label}>{label}</Text>
@@ -112,11 +100,7 @@ export function Field({
   );
 }
 
-export function ChoiceRow<T extends string>({
-  value,
-  options,
-  onChange
-}: {
+export function ChoiceRow<T extends string>({ value, options, onChange }: {
   value: T;
   options: { value: T; label: string }[];
   onChange: (value: T) => void;
@@ -126,18 +110,12 @@ export function ChoiceRow<T extends string>({
       {options.map((option) => (
         <Pressable
           key={option.value}
+          accessibilityRole="button"
+          accessibilityState={{ selected: value === option.value }}
           onPress={() => onChange(option.value)}
-          style={[
-            styles.choice,
-            value === option.value && styles.choiceActive
-          ]}
+          style={[styles.choice, value === option.value && styles.choiceActive]}
         >
-          <Text
-            style={[
-              styles.choiceText,
-              value === option.value && styles.choiceTextActive
-            ]}
-          >
+          <Text style={[styles.choiceText, value === option.value && styles.choiceTextActive]}>
             {option.label}
           </Text>
         </Pressable>
@@ -155,55 +133,20 @@ export function MutedText({ children }: PropsWithChildren) {
 }
 
 export const commonStyles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8
-  },
-  title: {
-    color: colors.text,
-    fontSize: 28,
-    fontWeight: '800'
-  },
-  subtitle: {
-    color: colors.muted,
-    marginTop: 4,
-    marginBottom: 12
-  }
+  row: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  title: { color: colors.text, fontSize: 28, fontWeight: '800' },
+  subtitle: { color: colors.muted, marginTop: 4, marginBottom: 12 }
 });
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
   page: { padding: 14, paddingBottom: 40 },
-  section: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: 18,
-    borderWidth: 1,
-    padding: 16,
-    marginBottom: 12,
-    gap: 10
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
+  section: { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: 18, borderWidth: 1, padding: 16, marginBottom: 12, gap: 10 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   sectionTitle: { color: colors.text, fontSize: 18, fontWeight: '800' },
-  button: {
-    minHeight: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 10
-  },
+  button: { minHeight: 44, justifyContent: 'center', alignItems: 'center', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 10 },
   buttonPrimary: { backgroundColor: colors.primary },
-  buttonSecondary: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderWidth: 1
-  },
+  buttonSecondary: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1 },
   buttonDanger: { backgroundColor: colors.danger },
   buttonSuccess: { backgroundColor: colors.success },
   buttonText: { color: '#ffffff', fontWeight: '800' },
@@ -212,26 +155,10 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.45 },
   fieldWrap: { gap: 5 },
   label: { color: colors.muted, fontSize: 13, fontWeight: '600' },
-  input: {
-    backgroundColor: colors.background,
-    borderColor: colors.border,
-    borderRadius: 12,
-    borderWidth: 1,
-    color: colors.text,
-    minHeight: 44,
-    paddingHorizontal: 12,
-    paddingVertical: 10
-  },
+  input: { backgroundColor: colors.background, borderColor: colors.border, borderRadius: 12, borderWidth: 1, color: colors.text, minHeight: 44, paddingHorizontal: 12, paddingVertical: 10 },
   multiline: { minHeight: 120, textAlignVertical: 'top' },
   choiceRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 7 },
-  choice: {
-    borderColor: colors.border,
-    borderRadius: 999,
-    borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: colors.surface
-  },
+  choice: { borderColor: colors.border, borderRadius: 999, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: colors.surface },
   choiceActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   choiceText: { color: colors.text, fontWeight: '700', fontSize: 13 },
   choiceTextActive: { color: '#ffffff' },
