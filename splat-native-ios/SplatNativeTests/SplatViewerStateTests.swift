@@ -151,6 +151,38 @@ final class SplatViewerStateTests: XCTestCase {
         XCTAssertTrue(fileManager.fileExists(atPath: externalBackup.path))
     }
 
+    func testViewerEditStoreRejectsDanglingPrimaryAliasOnSave() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? fileManager.removeItem(at: root) }
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+        let primary = SplatViewerEditStore.primaryURL(for: source)
+        let missingTarget = root.appendingPathComponent("missing-viewer.json")
+        try fileManager.createSymbolicLink(at: primary, withDestinationURL: missingTarget)
+
+        XCTAssertThrowsError(try SplatViewerEditStore.save(.default, sourceURL: source)) { error in
+            XCTAssertEqual(error as? SplatViewerEditStoreError, .unsafeWriteTarget)
+        }
+        XCTAssertFalse(fileManager.fileExists(atPath: missingTarget.path))
+    }
+
+    func testViewerEditStoreSaveLeavesNoCandidateFiles() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? fileManager.removeItem(at: root) }
+        let source = root.appendingPathComponent("result.splat")
+        try Data([0]).write(to: source)
+
+        try SplatViewerEditStore.save(SplatEditSettings(exposureEV: 0.3), sourceURL: source)
+
+        let entries = try fileManager.contentsOfDirectory(atPath: root.path)
+        XCTAssertFalse(entries.contains { $0.contains(".candidate-") })
+        XCTAssertNotNil(SplatViewerEditStore.load(sourceURL: source))
+    }
+
     @MainActor
     func testSwitchingScansFlushesPendingEditsToPreviousScan() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
