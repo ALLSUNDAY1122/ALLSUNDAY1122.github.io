@@ -5,11 +5,14 @@ on:
     paths:
       - 'toru-tango-mobile/**'
       - '.github/workflows/toru-tango-human-defect-preflight.yml'
+  issues:
+    types: [opened]
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   preflight:
+    if: github.event_name != 'issues' || github.event.issue.title == '[TORU-TANGO] Human Defect Preflight'
     runs-on: ubuntu-latest
     defaults:
       run:
