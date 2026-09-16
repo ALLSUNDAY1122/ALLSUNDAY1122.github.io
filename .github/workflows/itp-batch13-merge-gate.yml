@@ -1,0 +1,36 @@
+name: IT Passport batch 13 merge gate
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/itp-batch13-merge-gate.yml'
+      - 'apps/it-passport-rebuild/questions/batch-13.json'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  validate-and-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 0}
+      - name: Require Batch12 canonical predecessor
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          q=Path('apps/it-passport-rebuild/questions'); old=json.loads((q/'original-mock.json').read_text()); m=json.loads((q/'manifest.json').read_text()); assert len(old)==240 and m['canonical']['original_mock']['current']==240, f'WAIT_PREDECESSOR canonical={len(old)} manifest={m["canonical"]["original_mock"]["current"]}'
+          PY
+      - name: Validate Batch13 staged contract and novelty
+        run: python3 apps/it-passport-rebuild/quality/validate-staged-batch.py batch-13.json
+      - name: Merge and validate canonical 260
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          q=Path('apps/it-passport-rebuild/questions'); old=json.loads((q/'original-mock.json').read_text()); batch=json.loads((q/'batch-13.json').read_text()); m=json.loads((q/'manifest.json').read_text()); merged=old+batch; assert len(merged)==260; (q/'original-mock.json').write_text(json.dumps(merged,ensure_ascii=False,indent=2)+'\n'); m['baseline_date']='2026-09-16'; m['canonical']['original_mock']['current']=260; m['canonical']['original_mock']['status']='BUILDING'; m['canonical']['original_mock']['audit_status']='EXPECTED_FAIL_UNTIL_COMPLETE'; (q/'manifest.json').write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')
+          PY
+          python3 apps/it-passport-rebuild/quality/validate-question-dataset.py
+      - name: Commit canonical progress
+        run: |
+          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'; git add apps/it-passport-rebuild/questions/original-mock.json apps/it-passport-rebuild/questions/manifest.json; git diff --cached --check; git commit -m 'content(itp): merge audited batch 13 to 260 questions'; git push origin HEAD:main
