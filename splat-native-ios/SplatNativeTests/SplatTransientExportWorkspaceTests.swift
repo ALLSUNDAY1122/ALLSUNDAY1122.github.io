@@ -114,6 +114,46 @@ final class SplatTransientExportWorkspaceTests: XCTestCase {
         XCTAssertTrue(fileManager.fileExists(atPath: directory.path))
     }
 
+    func testRemoveRefusesOversizedOwnershipMarker() throws {
+        let fileManager = FileManager.default
+        let directory = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-export-oversized-marker-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? fileManager.removeItem(at: directory) }
+        let marker = directory.appendingPathComponent(".scanlab-transient-export")
+        try Data(repeating: 0x41, count: 4 * 1024 + 1).write(to: marker)
+        let sentinel = directory.appendingPathComponent("keep.dat")
+        try Data([0x5A]).write(to: sentinel)
+
+        SplatTransientExportWorkspace.remove(directory, fileManager: fileManager)
+
+        XCTAssertTrue(fileManager.fileExists(atPath: directory.path))
+        XCTAssertTrue(fileManager.fileExists(atPath: sentinel.path))
+    }
+
+    func testRemoveRefusesCopiedOwnershipMarkerBoundToAnotherWorkspace() throws {
+        let fileManager = FileManager.default
+        let root = fileManager.temporaryDirectory
+            .appendingPathComponent("scanlab-export-copied-marker-root-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? fileManager.removeItem(at: root) }
+
+        let owned = try SplatTransientExportWorkspace.create(rootDirectory: root, fileManager: fileManager)
+        let forged = root.appendingPathComponent("scanlab-export-forged-\(UUID().uuidString)", isDirectory: true)
+        try fileManager.createDirectory(at: forged, withIntermediateDirectories: true)
+        let ownedMarker = owned.appendingPathComponent(".scanlab-transient-export")
+        let forgedMarker = forged.appendingPathComponent(".scanlab-transient-export")
+        try fileManager.copyItem(at: ownedMarker, to: forgedMarker)
+        let sentinel = forged.appendingPathComponent("keep.dat")
+        try Data([0x6B]).write(to: sentinel)
+
+        SplatTransientExportWorkspace.remove(forged, fileManager: fileManager)
+
+        XCTAssertTrue(fileManager.fileExists(atPath: forged.path))
+        XCTAssertTrue(fileManager.fileExists(atPath: sentinel.path))
+        XCTAssertTrue(fileManager.fileExists(atPath: owned.path))
+    }
+
     func testCleanupRemovesOnlyStaleOwnedExportDirectories() throws {
         let fileManager = FileManager.default
         let root = fileManager.temporaryDirectory.appendingPathComponent("scanlab-export-cleanup-test-\(UUID().uuidString)", isDirectory: true)
