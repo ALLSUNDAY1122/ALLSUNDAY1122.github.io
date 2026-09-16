@@ -1,0 +1,33 @@
+name: Toru Tango Human Defect Preflight
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'toru-tango-mobile/**'
+      - '.github/workflows/toru-tango-human-defect-preflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: toru-tango-mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.0'
+          cache: npm
+          cache-dependency-path: toru-tango-mobile/package-lock.json
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Human defect interaction regression gate
+        run: npm run interaction-gate
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Expo doctor
+        run: npm run doctor
