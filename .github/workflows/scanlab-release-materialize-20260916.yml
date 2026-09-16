@@ -55,10 +55,14 @@ jobs:
           set -euo pipefail
           python3 splat-native-ios/scripts/diagnose_s15_pose_trajectory.py --self-test
 
-      - name: Verify native validation contract
+      - name: Trace native validation contract
         run: |
-          set -euo pipefail
-          bash splat-native-ios/scripts/validate.sh
+          set +e
+          bash -x splat-native-ios/scripts/validate.sh > automation/scanlab-validate-20260916.log 2>&1
+          code=$?
+          printf '%s\n' "$code" > automation/scanlab-validate-20260916.exitcode
+          cat automation/scanlab-validate-20260916.log
+          exit 0
 
       - name: Verify immutable Codemagic release topology
         run: |
@@ -69,7 +73,7 @@ jobs:
             exit 1
           fi
 
-      - name: Persist materialized source
+      - name: Persist materialized source and validation trace
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
@@ -78,6 +82,13 @@ jobs:
             splat-native-ios/SplatNative/ScanModel.swift \
             splat-native-ios/SplatNative/ScanLibraryView.swift \
             splat-native-ios/SplatNative/RootScanView.swift \
-            splat-native-ios/SplatNative/SplatResultView.swift
-          git commit -m 'scanlab: materialize latest release source for TestFlight' || true
+            splat-native-ios/SplatNative/SplatResultView.swift \
+            automation/scanlab-validate-20260916.log \
+            automation/scanlab-validate-20260916.exitcode
+          git commit -m 'scanlab: materialize release and persist validation trace' || true
           git push origin HEAD:release/scanlab-testflight-20260916
+
+      - name: Enforce native validation result
+        run: |
+          set -euo pipefail
+          test "$(cat automation/scanlab-validate-20260916.exitcode)" = "0"
