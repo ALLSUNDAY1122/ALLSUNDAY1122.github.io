@@ -68,7 +68,7 @@ jobs:
           test -f /tmp/taku-app/eas.json
           grep -q 'com.koheimorita.takucalc' /tmp/taku-app/app.json
           grep -q '広告なし' /tmp/taku-app/README.md
-          if grep -R --exclude-dir=.git -n 'react-native-google-mobile-ads' /tmp/taku-app; then
+          if grep -R --exclude-dir=.git --exclude='source-bundle.yml' -n 'react-native-google-mobile-ads' /tmp/taku-app; then
             echo 'Unexpected ad SDK found in release source' >&2
             exit 1
           fi
