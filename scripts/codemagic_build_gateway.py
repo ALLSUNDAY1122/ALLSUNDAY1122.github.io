@@ -25,9 +25,10 @@ BUILD_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,120}$")
 REPOSITORY_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 SENSITIVE_KEY_PARTS = ("secret", "token", "password", "credential", "private", "apikey", "api_key", "environment", "variable")
 SCANLAB_BUILD3_BRANCH = "testflight/splat-native-ios-20260824-build3"
+SCANLAB_LATEST_RELEASE_BRANCH = "release/scanlab-testflight-20260916"
 KANRIEIYOUSHI_RELEASE_BRANCH = "release/kanrieiyoushi-testflight-20260911"
 TORU_TANGO_RELEASE_BRANCH = "release/toru-tango-build10-20260912"
-PINNED_RELEASE_BRANCHES = {SCANLAB_BUILD3_BRANCH, KANRIEIYOUSHI_RELEASE_BRANCH, TORU_TANGO_RELEASE_BRANCH}
+PINNED_RELEASE_BRANCHES = {SCANLAB_BUILD3_BRANCH, SCANLAB_LATEST_RELEASE_BRANCH, KANRIEIYOUSHI_RELEASE_BRANCH, TORU_TANGO_RELEASE_BRANCH}
 
 
 def _parse_response(raw: str) -> dict:
