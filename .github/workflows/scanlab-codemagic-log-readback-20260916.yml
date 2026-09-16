@@ -1,0 +1,87 @@
+name: ScanLab Codemagic Log Readback 20260916
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  readback:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[CM-LOG] ScanLab')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Read failed Codemagic step logs
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request, urllib.parse
+          from pathlib import Path
+
+          cmd=json.loads(os.environ['ISSUE_BODY'])
+          build_id=str(cmd.get('build_id','')).strip()
+          if not re.fullmatch(r'[A-Za-z0-9._-]{8,120}', build_id):
+              raise SystemExit('invalid build_id')
+          wanted=str(cmd.get('step_name','')).strip()
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('missing CM_API_TOKEN')
+
+          def get_json(url):
+              req=urllib.request.Request(url, headers={'x-auth-token':token,'Accept':'application/json'})
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return json.loads(r.read().decode('utf-8','replace'))
+
+          actions=[]
+          page=1
+          while True:
+              d=get_json(f'https://codemagic.io/api/v3/builds/{urllib.parse.quote(build_id)}/actions?page={page}&page_size=100')
+              rows=d.get('data') or []
+              actions.extend(rows)
+              if page >= int(d.get('total_pages') or 1) or not rows:
+                  break
+              page += 1
+
+          selected=[]
+          for a in actions:
+              name=str(a.get('name') or '')
+              typ=str(a.get('type') or '')
+              status=str(a.get('status') or '')
+              if wanted:
+                  if wanted == name or wanted == typ:
+                      selected.append(a)
+              elif status == 'failed':
+                  selected.append(a)
+
+          out={'build_id':build_id,'actions':[{'id':a.get('id'),'name':a.get('name'),'type':a.get('type'),'status':a.get('status')} for a in actions],'logs':[]}
+          for a in selected:
+              sid=str(a.get('id') or '')
+              req=urllib.request.Request(f'https://api.codemagic.io/builds/{urllib.parse.quote(build_id)}/step/{urllib.parse.quote(sid)}', headers={'x-auth-token':token,'Accept':'text/plain'})
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  text=r.read().decode('utf-8','replace')
+              # Keep the diagnostic tail and redact lines likely to contain credential material.
+              tail=text[-30000:]
+              safe=[]
+              secret_line=re.compile(r'(?i)(authorization:|bearer\s+[A-Za-z0-9._-]{12,}|password\s*=|token\s*=|private[_ -]?key\s*=|secret\s*=)')
+              for line in tail.splitlines():
+                  safe.append('[REDACTED CREDENTIAL LINE]' if secret_line.search(line) else line)
+              out['logs'].append({'name':a.get('name'),'type':a.get('type'),'status':a.get('status'),'tail':'\n'.join(safe)})
+          Path('codemagic-log-readback.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'build_id':build_id,'action_count':len(actions),'selected_count':len(selected)},ensure_ascii=False))
+          PY
+      - name: Upload log readback
+        uses: actions/upload-artifact@v4
+        with:
+          name: scanlab-codemagic-log-${{ github.event.issue.number }}-${{ github.run_id }}
+          path: codemagic-log-readback.json
+          retention-days: 1
+      - name: Report locator
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: `Codemagic log readback finished. run_id=${context.runId}; artifact=scanlab-codemagic-log-${context.issue.number}-${context.runId}`});
