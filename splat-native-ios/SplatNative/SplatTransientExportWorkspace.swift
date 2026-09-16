@@ -13,9 +13,6 @@ enum SplatTransientExportWorkspace {
         rootDirectory: URL = FileManager.default.temporaryDirectory,
         fileManager: FileManager = .default
     ) throws -> URL {
-        // A terminated app never receives the share-sheet completion callback, so its transient
-        // export directory would otherwise survive indefinitely. Only prune our own old prefix and
-        // keep recent directories intact so another active share/export cannot be disturbed.
         cleanupStaleExports(
             in: rootDirectory,
             olderThan: staleAge,
@@ -27,14 +24,15 @@ enum SplatTransientExportWorkspace {
             .appendingPathComponent("\(prefix)\(UUID().uuidString)", isDirectory: true)
         try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
         do {
-            // Bind the deletion capability to the exact directory it was created for. A copied or
-            // accidentally recreated marker in another prefixed directory must not authorize a
-            // recursive delete there.
             let marker = Data(canonicalPath(of: url).utf8)
             guard !marker.isEmpty, marker.count <= maximumMarkerByteCount else {
                 throw CocoaError(.fileWriteInvalidFileName)
             }
-            try marker.write(to: markerURL(for: url), options: .atomic)
+            let markerURL = markerURL(for: url)
+            try marker.write(to: markerURL, options: .atomic)
+            let markerHandle = try FileHandle(forWritingTo: markerURL)
+            defer { try? markerHandle.close() }
+            try markerHandle.synchronize()
         } catch {
             try? fileManager.removeItem(at: url)
             throw error
@@ -48,9 +46,6 @@ enum SplatTransientExportWorkspace {
     ) {
         guard let url,
               isOwnedWorkspace(url, fileManager: fileManager) else { return }
-        // Cleanup is intentionally fail-closed. Cancellation/dismissal must never turn a mistakenly
-        // propagated project URL into a recursive delete target; only a directory created by this
-        // helper and carrying its ownership marker can be removed.
         try? fileManager.removeItem(at: url)
     }
 
@@ -93,9 +88,6 @@ enum SplatTransientExportWorkspace {
               workspaceValues.isDirectory == true,
               workspaceValues.isSymbolicLink != true else { return false }
 
-        // The marker is our deletion capability. Requiring an actual regular non-symlink file
-        // prevents an unrelated prefixed directory from borrowing a marker through an external
-        // alias and being mistaken for a workspace that this helper created.
         let marker = markerURL(for: url)
         guard let markerValues = try? marker.resourceValues(
             forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
@@ -108,11 +100,12 @@ enum SplatTransientExportWorkspace {
             return false
         }
 
-        // New workspaces carry their exact canonical path. Keep compatibility with the previous
-        // empty-marker schema only for production's direct children of the process temp directory;
-        // this lets already-created share workspaces clean up after an app update without allowing
-        // an empty marker elsewhere in the filesystem to authorize deletion.
-        guard let data = try? Data(contentsOf: marker) else { return false }
+        let markerHandle: FileHandle
+        do { markerHandle = try FileHandle(forReadingFrom: marker) } catch { return false }
+        defer { try? markerHandle.close() }
+        guard let data = try? markerHandle.read(upToCount: maximumMarkerByteCount + 1),
+              let data,
+              data.count <= maximumMarkerByteCount else { return false }
         if data.isEmpty {
             return canonicalPath(of: url.deletingLastPathComponent())
                 == canonicalPath(of: fileManager.temporaryDirectory)
