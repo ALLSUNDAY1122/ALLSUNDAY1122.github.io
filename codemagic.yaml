@@ -91,7 +91,7 @@ workflows:
           cd "$CM_BUILD_DIR"
           python3 splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
           python3 splat-native-ios/scripts/diagnose_s15_pose_trajectory.py --self-test
-          grep -q 'recipeVersion = 5' splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift
+          grep -q 'recipeVersion = 17' splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift
           grep -q 'standardIterations = 7_000' splat-native-ios/SplatNative/SplatReconstructionPolicy.swift
           grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' splat-native-ios/SplatNative/ScanModel.swift
           grep -q 'let depthSeedFrames = captured.map' splat-native-ios/SplatNative/ScanModel.swift
