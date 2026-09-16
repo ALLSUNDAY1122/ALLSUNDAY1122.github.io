@@ -1,0 +1,36 @@
+name: Toru Tango Release Branch Repair
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cherry-pick scoped Build 10 defect fix onto release lineage
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin feature/on-device-ai-card-generation
+          git checkout -B fix/toru-build10-speech origin/feature/on-device-ai-card-generation
+          for sha in \
+            2c43b2b285ca08273a119681114605008706493e \
+            175d9945a1b41dc93f291b51ddcb67ef25a14158 \
+            11a70b4b8795fc2e29145cb7b7bb4f026b08d036 \
+            bdb38f85e43e4092681d6819593ca8063584270d \
+            8b739579f515f8bd0e5471ec4cb29413df53b32d
+          do
+            git cherry-pick "$sha"
+          done
+          changed="$(git diff --name-only origin/feature/on-device-ai-card-generation...HEAD)"
+          printf '%s\n' "$changed"
+          test -n "$changed"
+          if printf '%s\n' "$changed" | grep -Ev '^(toru-tango-mobile/)' ; then
+            echo 'ERROR: release repair escaped toru-tango-mobile scope' >&2
+            exit 1
+          fi
+          git push --force-with-lease origin HEAD:refs/heads/fix/toru-build10-speech
