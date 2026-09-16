@@ -1,3 +1,13 @@
+/Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios/SplatNative/ScanLabBackend.swift:433:146: warning: non-sendable result type 'PostgrestResponse<Void>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'
+        try await client.from("scanlab_blocks").delete().eq("blocker_id", value: session.user.id).eq("blocked_id", value: blockedUser.blockedId).execute()
+                                                                                                                                                 ^
+/Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/SourcePackages/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
+public struct PostgrestResponse<T> {
+              ^
+/Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios/SplatNative/ScanModel.swift:1078:13: warning: result of 'try?' is unused
+            try? projectStore.updateManifest(projectURL: projectURL) { manifest in
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios/SplatNative/ScanReportBackend.swift:19:119: warning: non-sendable result type 'PostgrestResponse<Bool>' cannot be sent from nonisolated context in call to instance method 'execute(options:)'
         return try await client.rpc("scanlab_has_reported", params: ScanReportStatusRPCParams(targetScanID: scan.id)).execute().value
                                                                                                                       ^
 /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/SourcePackages/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
@@ -9,16 +19,6 @@ public struct PostgrestResponse<T> {
 /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/SourcePackages/checkouts/supabase-swift/Sources/PostgREST/Types.swift:37:15: note: generic struct 'PostgrestResponse' does not conform to the 'Sendable' protocol
 public struct PostgrestResponse<T> {
               ^
-/Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios/SplatNative/SplatVideoExporter.swift:382:20: warning: capture of 'writer' with non-sendable type 'AVAssetWriter' in a '@Sendable' closure
-                if writer.status == .completed {
-                   ^
-/Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVAssetWriter.h:65:12: note: class 'AVAssetWriter' does not conform to the 'Sendable' protocol
-@interface AVAssetWriter : NSObject
-           ^
-/Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios/SplatNative/SplatVideoExporter.swift:1:1: warning: add '@preconcurrency' to treat 'Sendable'-related errors from module 'AVFoundation' as warnings
-import AVFoundation
-^
-@preconcurrency 
 
 SwiftDriver\ Compilation SplatNative normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SplatNative' from project 'SplatNative')
     cd /Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios
@@ -110,8 +110,8 @@ Ignoring --strip-bitcode because --sign was not passed
 ExtractAppIntentsMetadata (in target 'SplatNative' from project 'SplatNative')
     cd /Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios
     /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name Splat_Lab_Native --sdk-root /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.5.sdk --xcode-version 16F6 --platform-family iOS --deployment-target 18.0 --bundle-identifier jp.allsunday1122.splatlab --output /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Products/Release-iphoneos/Splat\ Lab\ Native.app --target-triple arm64-apple-ios18.0 --binary-file /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Products/Release-iphoneos/Splat\ Lab\ Native.app/Splat\ Lab\ Native --dependency-file /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Intermediates.noindex/SplatNative.build/Release-iphoneos/SplatNative.build/Objects-normal/arm64/Splat\ Lab\ Native_dependency_info.dat --stringsdata-file /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Intermediates.noindex/SplatNative.build/Release-iphoneos/SplatNative.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Intermediates.noindex/SplatNative.build/Release-iphoneos/SplatNative.build/Objects-normal/arm64/Splat\ Lab\ Native.SwiftFileList --metadata-file-list /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Intermediates.noindex/SplatNative.build/Release-iphoneos/SplatNative.build/Splat\ Lab\ Native.DependencyMetadataFileList --static-metadata-file-list /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Intermediates.noindex/SplatNative.build/Release-iphoneos/SplatNative.build/Splat\ Lab\ Native.DependencyStaticMetadataFileList --swift-const-vals-list /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Intermediates.noindex/SplatNative.build/Release-iphoneos/SplatNative.build/Objects-normal/arm64/Splat\ Lab\ Native.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
-2026-09-16 08:14:36.878 appintentsmetadataprocessor[7716:25210] Starting appintentsmetadataprocessor export
-2026-09-16 08:14:36.886 appintentsmetadataprocessor[7716:25210] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
+2026-09-16 08:21:32.036 appintentsmetadataprocessor[12477:39268] Starting appintentsmetadataprocessor export
+2026-09-16 08:21:32.045 appintentsmetadataprocessor[12477:39268] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
 
 GenerateDSYMFile /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Products/Release-iphoneos/Splat\ Lab\ Native.app.dSYM /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Products/Release-iphoneos/Splat\ Lab\ Native.app/Splat\ Lab\ Native (in target 'SplatNative' from project 'SplatNative')
     cd /Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios
@@ -120,8 +120,8 @@ GenerateDSYMFile /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-d
 AppIntentsSSUTraining (in target 'SplatNative' from project 'SplatNative')
     cd /Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios
     /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Products/Release-iphoneos/Splat\ Lab\ Native.app/Info.plist --temp-dir-path /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Intermediates.noindex/SplatNative.build/Release-iphoneos/SplatNative.build/ssu --bundle-id jp.allsunday1122.splatlab --product-path /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Products/Release-iphoneos/Splat\ Lab\ Native.app --extracted-metadata-path /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Products/Release-iphoneos/Splat\ Lab\ Native.app/Metadata.appintents --metadata-file-list /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Intermediates.noindex/SplatNative.build/Release-iphoneos/SplatNative.build/Splat\ Lab\ Native.DependencyMetadataFileList --archive-ssu-assets
-2026-09-16 08:14:36.953 appintentsnltrainingprocessor[7718:25212] Parsing options for appintentsnltrainingprocessor
-2026-09-16 08:14:36.955 appintentsnltrainingprocessor[7718:25212] No AppShortcuts found - Skipping.
+2026-09-16 08:21:32.134 appintentsnltrainingprocessor[12481:39274] Parsing options for appintentsnltrainingprocessor
+2026-09-16 08:21:32.145 appintentsnltrainingprocessor[12481:39274] No AppShortcuts found - Skipping.
 
 RegisterExecutionPolicyException /Users/runner/Library/Developer/Xcode/DerivedData/SplatNative-dwmjesbccinwnzhdvkeajvbyatnj/Build/Products/Release-iphoneos/Splat\ Lab\ Native.app (in target 'SplatNative' from project 'SplatNative')
     cd /Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios

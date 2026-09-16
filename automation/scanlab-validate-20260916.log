@@ -397,43 +397,43 @@ TAP version 13
 # Subtest: public without geotag only requires content privacy and rights confirmations
 ok 1 - public without geotag only requires content privacy and rights confirmations
   ---
-  duration_ms: 1.35225
+  duration_ms: 1.878708
   type: 'test'
   ...
 # Subtest: partial or invalid public geotag fails closed
 ok 2 - partial or invalid public geotag fails closed
   ---
-  duration_ms: 0.1315
+  duration_ms: 0.202375
   type: 'test'
   ...
 # Subtest: public geotag requires place confirmation and stores normalized location
 ok 3 - public geotag requires place confirmation and stores normalized location
   ---
-  duration_ms: 0.094625
+  duration_ms: 0.17
   type: 'test'
   ...
 # Subtest: public to unlisted clears geodata and rotates the private link
 ok 4 - public to unlisted clears geodata and rotates the private link
   ---
-  duration_ms: 0.058042
+  duration_ms: 0.0745
   type: 'test'
   ...
 # Subtest: unlisted to private revokes link generation state and clears sharing attestations
 ok 5 - unlisted to private revokes link generation state and clears sharing attestations
   ---
-  duration_ms: 0.104
+  duration_ms: 0.175167
   type: 'test'
   ...
 # Subtest: private to unlisted requires sharing confirmation and rotates token
 ok 6 - private to unlisted requires sharing confirmation and rotates token
   ---
-  duration_ms: 0.090292
+  duration_ms: 0.129959
   type: 'test'
   ...
 # Subtest: unknown target fails closed and same target is a no-op
 ok 7 - unknown target fails closed and same target is a no-op
   ---
-  duration_ms: 0.047458
+  duration_ms: 0.06825
   type: 'test'
   ...
 1..7
@@ -444,7 +444,7 @@ ok 7 - unknown target fails closed and same target is a no-op
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 8.609875
+# duration_ms 11.068709
 + require_text supabase/functions/scanlab-visibility/index.ts '#token='
 + grep -q '#token=' supabase/functions/scanlab-visibility/index.ts
 + for f in viewer/index.html viewer/viewer.js viewer/viewer.css viewer/share-url.js
