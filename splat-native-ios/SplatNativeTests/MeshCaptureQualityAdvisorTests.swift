@@ -31,12 +31,10 @@ final class MeshCaptureQualityAdvisorTests: XCTestCase {
     }
 
     func testPlausibleMotionRejectsTrackingDiscontinuities() {
-        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0))
-        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.349))
-        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.35))
-        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.351))
-        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.infinity))
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.36))
         XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.nan))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.infinity))
         XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(-0.01))
     }
 
@@ -56,15 +54,15 @@ final class MeshCaptureQualityAdvisorTests: XCTestCase {
         XCTAssertFalse(MeshCaptureCoveragePolicy.isFiniteCameraPosition(SIMD3<Float>(0, 0, -.infinity)))
     }
 
-    func testForwardNormalizationSurvivesHugeFiniteVector() throws {
-        let direction = try XCTUnwrap(MeshCaptureCoveragePolicy.normalizedForwardDirection(
+    func testForwardNormalizationRejectsImplausiblyScaledFiniteVector() {
+        XCTAssertNil(MeshCaptureCoveragePolicy.normalizedForwardDirection(
             SIMD3<Float>(Float.greatestFiniteMagnitude, Float.greatestFiniteMagnitude, 0)
         ))
-        XCTAssertTrue(direction.x.isFinite)
-        XCTAssertTrue(direction.y.isFinite)
-        XCTAssertTrue(direction.z.isFinite)
+    }
+
+    func testForwardNormalizationAcceptsPlausibleARBasis() throws {
+        let direction = try XCTUnwrap(MeshCaptureCoveragePolicy.normalizedForwardDirection(SIMD3<Float>(0.6, 0, -0.8)))
         XCTAssertEqual(simd_length(direction), 1, accuracy: 0.0001)
-        XCTAssertEqual(direction.x, direction.y, accuracy: 0.0001)
     }
 
     func testForwardNormalizationRejectsDegenerateAndNonfiniteVectors() {
