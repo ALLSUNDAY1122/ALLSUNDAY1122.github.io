@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   materialize:
-    runs-on: ubuntu-latest
+    runs-on: macos-15
     steps:
       - name: Checkout pinned release branch
         uses: actions/checkout@v6
@@ -61,7 +61,7 @@ jobs:
           bash -x splat-native-ios/scripts/validate.sh > automation/scanlab-validate-20260916.log 2>&1
           code=$?
           printf '%s\n' "$code" > automation/scanlab-validate-20260916.exitcode
-          tail -n 40 automation/scanlab-validate-20260916.log > automation/scanlab-validate-20260916-tail.log
+          tail -n 80 automation/scanlab-validate-20260916.log > automation/scanlab-validate-20260916-tail.log
           cat automation/scanlab-validate-20260916-tail.log
           exit 0
 
