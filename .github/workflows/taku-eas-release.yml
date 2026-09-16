@@ -94,7 +94,7 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add -A
           git commit -qm "Prepare canonical TAKU release source"
-          npx eas-cli@24.3.0 build --platform ios --profile production --non-interactive --auto-submit --what-to-test '卓 TAKU CALC 1.5.0 広告なし最終候補。10モード、履歴・保存・共有、機内モード動作を確認してください。' --json > /tmp/taku-eas-build.json
+          npx eas-cli@24.3.0 build --platform ios --profile production --non-interactive --auto-submit --json > /tmp/taku-eas-build.json
           python3 - <<'PY'
           import json
           from pathlib import Path
