@@ -1,0 +1,98 @@
+name: TAKU CALC Upload App Store Screenshot
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  upload:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TAKU-ASC] Upload screenshot'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Parse request and download screenshot artifact
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          d=json.loads(os.environ['ISSUE_BODY'])
+          required={'request_id','artifact_url','source_sha'}
+          if set(d) != required:
+              raise SystemExit('Unexpected request fields')
+          if not re.fullmatch(r'[A-Za-z0-9._-]{1,100}', d['request_id']):
+              raise SystemExit('Invalid request_id')
+          if not d['artifact_url'].startswith('https://'):
+              raise SystemExit('artifact_url must be https')
+          if not re.fullmatch(r'[0-9a-f]{40}', d['source_sha']):
+              raise SystemExit('Invalid source_sha')
+          Path('/tmp/request.json').write_text(json.dumps(d), encoding='utf-8')
+          PY
+          URL=$(python3 -c "import json;print(json.load(open('/tmp/request.json'))['artifact_url'])")
+          curl --fail --location --retry 2 "$URL" -o /tmp/taku-screenshot-artifact.zip
+          mkdir -p /tmp/taku-shot
+          unzip -q /tmp/taku-screenshot-artifact.zip -d /tmp/taku-shot
+          IMAGE=$(find /tmp/taku-shot -type f -iname '*.png' | head -n1)
+          test -n "$IMAGE"
+          cp "$IMAGE" /tmp/taku-appstore-home.png
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+          p=Path('/tmp/taku-appstore-home.png')
+          raw=p.read_bytes()
+          if len(raw) < 50000 or raw[:8] != b'\x89PNG\r\n\x1a\n':
+              raise SystemExit('Invalid or unexpectedly small PNG')
+          w,h=struct.unpack('>II', raw[16:24])
+          print(f'PNG dimensions: {w}x{h}, bytes={len(raw)}')
+          if h <= w:
+              raise SystemExit('Expected portrait App Store screenshot')
+          PY
+
+      - name: Upload to App Store Connect
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${ASC_ISSUER_ID:-}"
+          test -n "${ASC_KEY_ID:-}"
+          test -n "${ASC_PRIVATE_KEY:-}"
+          python3 scripts/app2_011_upload_screenshot.py --image /tmp/taku-appstore-home.png --output /tmp/taku-screenshot-upload-result.json
+
+      - name: Upload proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: taku-asc-screenshot-${{ github.run_id }}
+          path: /tmp/taku-screenshot-upload-result.json
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            let extra = '';
+            try {
+              const d = JSON.parse(fs.readFileSync('/tmp/taku-screenshot-upload-result.json', 'utf8'));
+              extra = `; screenshot_id=${d.screenshot_id}; state=${d.state}; uploaded_new=${d.uploaded_new}`;
+            } catch (_) {}
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `TAKU screenshot upload status=${{ job.status }}; run_id=${context.runId}${extra}`
+            });
