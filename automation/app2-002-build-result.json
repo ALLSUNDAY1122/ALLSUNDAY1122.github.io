@@ -3,11 +3,11 @@
   "app_id": "6a66134ea9f671d548da335a",
   "workflow_id": "ios-native",
   "branch": "codex/nomikai-arcade-ios-release",
-  "codemagic_build_id": "6aaa3b0bbb4e80458745659e",
+  "codemagic_build_id": "6aaa3f93214b49c56beac311",
   "start_http_status": 200,
-  "requested_apple_build_number": 9,
+  "requested_apple_build_number": 10,
   "submit_to_app_store": false,
-  "reason": "Retry exactly once after diagnosing and fixing Codemagic YAML parse failure at the multiline Swift injection block. ASC preflight confirms Build 9 does not exist. Upload Build 9 to TestFlight only; do not submit App Store review.",
+  "reason": "Generate exactly one Internal TestFlight Build 10 after Build 9 launch crash. Build 10 removes Google Mobile Ads and UMP from runtime to verify core SwiftUI + WKWebView launch before any ad layer is restored. Do not submit App Store review.",
   "status": "finished",
   "finished_at": null
 }
