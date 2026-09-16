@@ -12,6 +12,12 @@ ICON_DRIVE_ID="1lALyLGEVFvdWvMZVsQqdRnEJmJzUOFu7"
 ICON_SHA256="c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506"
 ICON_MODE="${SHOSHI_ICON_MODE:-canonical}"
 
+# Preserve an already-audited repository icon before rebuilding Assets.xcassets.
+# This avoids unnecessary anonymous Drive transport while still failing closed on SHA below.
+if [ ! -f "$ICON_SRC" ] && [ -f "$ASSET_DIR/AppIcon.png" ]; then
+  cp "$ASSET_DIR/AppIcon.png" "$ICON_SRC"
+fi
+
 rm -rf "$WEB_DST" "$SCRIPT_DIR/Assets.xcassets"
 mkdir -p "$WEB_DST" "$ASSET_DIR"
 
