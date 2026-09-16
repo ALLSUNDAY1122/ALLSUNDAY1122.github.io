@@ -65,6 +65,35 @@ jobs:
           cat automation/scanlab-validate-20260916-tail.log
           exit 0
 
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Reproduce Xcode compile without signing
+        run: |
+          set +e
+          cd "$GITHUB_WORKSPACE/splat-native-ios"
+          xcodegen generate > "$GITHUB_WORKSPACE/automation/scanlab-xcodegen-20260916.log" 2>&1
+          gen_code=$?
+          if [ "$gen_code" -ne 0 ]; then
+            printf '%s\n' "$gen_code" > "$GITHUB_WORKSPACE/automation/scanlab-xcodebuild-20260916.exitcode"
+            tail -n 120 "$GITHUB_WORKSPACE/automation/scanlab-xcodegen-20260916.log" > "$GITHUB_WORKSPACE/automation/scanlab-xcodebuild-20260916-tail.log"
+            exit 0
+          fi
+          xcodebuild \
+            -project SplatNative.xcodeproj \
+            -scheme SplatNative \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build > "$GITHUB_WORKSPACE/automation/scanlab-xcodebuild-20260916.log" 2>&1
+          code=$?
+          printf '%s\n' "$code" > "$GITHUB_WORKSPACE/automation/scanlab-xcodebuild-20260916.exitcode"
+          tail -n 160 "$GITHUB_WORKSPACE/automation/scanlab-xcodebuild-20260916.log" > "$GITHUB_WORKSPACE/automation/scanlab-xcodebuild-20260916-tail.log"
+          cat "$GITHUB_WORKSPACE/automation/scanlab-xcodebuild-20260916-tail.log"
+          exit 0
+
       - name: Verify immutable Codemagic release topology
         run: |
           set -euo pipefail
@@ -74,7 +103,7 @@ jobs:
             exit 1
           fi
 
-      - name: Persist materialized source and validation trace
+      - name: Persist materialized source and validation traces
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
@@ -86,11 +115,20 @@ jobs:
             splat-native-ios/SplatNative/SplatResultView.swift \
             automation/scanlab-validate-20260916.log \
             automation/scanlab-validate-20260916-tail.log \
-            automation/scanlab-validate-20260916.exitcode
-          git commit -m 'scanlab: materialize release and persist validation trace' || true
+            automation/scanlab-validate-20260916.exitcode \
+            automation/scanlab-xcodegen-20260916.log \
+            automation/scanlab-xcodebuild-20260916.log \
+            automation/scanlab-xcodebuild-20260916-tail.log \
+            automation/scanlab-xcodebuild-20260916.exitcode
+          git commit -m 'scanlab: persist Xcode compile diagnostics' || true
           git push origin HEAD:release/scanlab-testflight-20260916
 
       - name: Enforce native validation result
         run: |
           set -euo pipefail
           test "$(cat automation/scanlab-validate-20260916.exitcode)" = "0"
+
+      - name: Enforce Xcode compile result
+        run: |
+          set -euo pipefail
+          test "$(cat automation/scanlab-xcodebuild-20260916.exitcode)" = "0"
