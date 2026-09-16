@@ -1,3 +1,4 @@
+# execute once: 2026-09-16
 name: Tsukanshi promote visual-gated source
 on:
   push:
@@ -21,14 +22,13 @@ jobs:
           block=s[start:end]
           old='RELEASE_SOURCE_SHA: a6a6dc6974326c552f62a3c2d16da6426c8d2273'
           new='RELEASE_SOURCE_SHA: c11fefeef02f188ac0392325cb9abb0d2074c238'
-          assert block.count(old)==1, 'expected old pinned SHA exactly once in Tsukanshi block'
+          assert block.count(old)==1
           assert 'app_store_connect: "Codemagic Shiwake Swipe"' in block
           assert 'submit_to_testflight: false' in block and 'submit_to_app_store: false' in block
           block=block.replace(old,new)
           p.write_text(s[:start]+block+s[end:])
           PY
           git diff --check
-          git diff -- codemagic.yaml
       - name: Commit promoted pin
         run: |
           git config user.name 'github-actions[bot]'
