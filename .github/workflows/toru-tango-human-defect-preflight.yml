@@ -19,10 +19,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22.13.0'
-          cache: npm
-          cache-dependency-path: toru-tango-mobile/package-lock.json
-      - name: Install locked dependencies
-        run: npm ci
+      - name: Install dependencies for preflight
+        run: npm install --package-lock=false --ignore-scripts
       - name: Human defect interaction regression gate
         run: npm run interaction-gate
       - name: Typecheck
