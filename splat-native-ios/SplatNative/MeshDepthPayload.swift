@@ -19,15 +19,19 @@ enum MeshDepthPayload {
 
         // Pointer arithmetic below walks to `(height - 1) * sourceRowBytes` and then copies one
         // complete row. Validate that span in Int before touching the caller's buffer so corrupt
-        // stride metadata cannot wrap an address and turn a rejected frame into memory corruption.
-        let (lastRowOffset, offsetOverflow) = (height - 1).multipliedReportingOverflow(by: sourceRowBytes)
-        let (_, spanOverflow) = lastRowOffset.addingReportingOverflow(rowBytes)
-        guard !offsetOverflow, !spanOverflow, lastRowOffset >= 0 else { return nil }
+        // stride metadata cannot wrap an address and turn a rejected frame into a process crash.
+        let (lastRowOffset, sourceOffsetOverflow) = (height - 1).multipliedReportingOverflow(by: sourceRowBytes)
+        guard !sourceOffsetOverflow else { return nil }
+        let (_, sourceSpanOverflow) = lastRowOffset.addingReportingOverflow(rowBytes)
+        guard !sourceSpanOverflow else { return nil }
 
         var data = Data(count: totalBytes)
         data.withUnsafeMutableBytes { destination in
             guard let destinationBase = destination.baseAddress else { return }
             if sourceRowBytes == rowBytes {
+                // ARKit commonly supplies an already tightly packed Float32 plane. Copy it as one
+                // contiguous span instead of performing one memcpy per image row. The padded-row
+                // path below remains unchanged for buffers whose stride exceeds their pixel width.
                 destinationBase.copyMemory(from: baseAddress, byteCount: totalBytes)
                 return
             }
