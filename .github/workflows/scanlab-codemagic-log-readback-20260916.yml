@@ -59,18 +59,41 @@ jobs:
                   selected.append(a)
 
           out={'build_id':build_id,'actions':[{'id':a.get('id'),'name':a.get('name'),'type':a.get('type'),'status':a.get('status')} for a in actions],'logs':[]}
+          secret_line=re.compile(r'(?i)(authorization:|bearer\s+[A-Za-z0-9._-]{12,}|password\s*=|token\s*=|private[_ -]?key\s*=|secret\s*=)')
+          diagnostic=re.compile(r'(?i)(error:|fatal error|command .* failed|emitswiftmodule|swiftcompile|archive failed|exportarchive|provisioning profile|codesign|code sign|undefined symbols|linker command failed|cannot find|no such module|ambiguous|does not conform|extra argument|missing argument|use of unresolved|invalid redeclaration|actor-isolated|main actor|non-sendable|not available)')
+
+          def safe_line(line):
+              if secret_line.search(line):
+                  return '[REDACTED CREDENTIAL LINE]'
+              line=re.sub(r'\x1b\[[0-9;]*[A-Za-z]', '', line)
+              return line[:6000]
+
           for a in selected:
               sid=str(a.get('id') or '')
               req=urllib.request.Request(f'https://api.codemagic.io/builds/{urllib.parse.quote(build_id)}/step/{urllib.parse.quote(sid)}', headers={'x-auth-token':token,'Accept':'text/plain'})
               with urllib.request.urlopen(req, timeout=30) as r:
                   text=r.read().decode('utf-8','replace')
-              # Keep the diagnostic tail and redact lines likely to contain credential material.
-              tail=text[-30000:]
-              safe=[]
-              secret_line=re.compile(r'(?i)(authorization:|bearer\s+[A-Za-z0-9._-]{12,}|password\s*=|token\s*=|private[_ -]?key\s*=|secret\s*=)')
-              for line in tail.splitlines():
-                  safe.append('[REDACTED CREDENTIAL LINE]' if secret_line.search(line) else line)
-              out['logs'].append({'name':a.get('name'),'type':a.get('type'),'status':a.get('status'),'tail':'\n'.join(safe)})
+              lines=text.splitlines()
+              hit_indexes=[i for i,line in enumerate(lines) if diagnostic.search(line)]
+              context_indexes=[]
+              seen=set()
+              for i in hit_indexes:
+                  for j in range(max(0,i-3), min(len(lines),i+4)):
+                      if j not in seen:
+                          seen.add(j); context_indexes.append(j)
+              context_indexes=sorted(context_indexes)[:600]
+              extracted=[f'{i+1}: {safe_line(lines[i])}' for i in context_indexes]
+              out['logs'].append({
+                  'name':a.get('name'),
+                  'type':a.get('type'),
+                  'status':a.get('status'),
+                  'total_chars':len(text),
+                  'total_lines':len(lines),
+                  'diagnostic_hit_count':len(hit_indexes),
+                  'diagnostics':'\n'.join(extracted),
+                  'head':'\n'.join(safe_line(x) for x in lines[:60]),
+                  'tail':'\n'.join(safe_line(x) for x in lines[-100:]),
+              })
           Path('codemagic-log-readback.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
           print(json.dumps({'build_id':build_id,'action_count':len(actions),'selected_count':len(selected)},ensure_ascii=False))
           PY
