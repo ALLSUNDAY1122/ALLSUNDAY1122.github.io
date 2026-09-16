@@ -1,0 +1,139 @@
+name: TAKU CALC EAS Release
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: taku-eas-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TAKU-EAS] Build ad-free release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - name: Parse sanitized request
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          d=json.loads(os.environ['ISSUE_BODY'])
+          required={'request_id','source_url','archive_sha256','source_sha'}
+          if set(d) != required:
+              raise SystemExit('Unexpected request fields')
+          if not re.fullmatch(r'[A-Za-z0-9._-]{1,100}', d['request_id']):
+              raise SystemExit('Invalid request_id')
+          if not d['source_url'].startswith('https://'):
+              raise SystemExit('source_url must be https')
+          if not re.fullmatch(r'[0-9a-f]{64}', d['archive_sha256']):
+              raise SystemExit('Invalid archive sha256')
+          if not re.fullmatch(r'[0-9a-f]{40}', d['source_sha']):
+              raise SystemExit('Invalid source sha')
+          Path('/tmp/request.json').write_text(json.dumps(d), encoding='utf-8')
+          PY
+
+      - name: Verify Expo authentication
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${EXPO_TOKEN:-}"
+          npx --yes eas-cli@24.3.0 whoami
+
+      - name: Download and verify canonical source
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_URL=$(python3 -c "import json;print(json.load(open('/tmp/request.json'))['source_url'])")
+          EXPECTED_ARCHIVE=$(python3 -c "import json;print(json.load(open('/tmp/request.json'))['archive_sha256'])")
+          EXPECTED_SOURCE=$(python3 -c "import json;print(json.load(open('/tmp/request.json'))['source_sha'])")
+          curl --fail --location --retry 2 "$SOURCE_URL" -o /tmp/taku-source.zip
+          mkdir -p /tmp/wrapper /tmp/taku-app
+          unzip -q /tmp/taku-source.zip -d /tmp/wrapper
+          test "$(cat /tmp/wrapper/source-sha.txt | tr -d '\r\n')" = "$EXPECTED_SOURCE"
+          echo "$EXPECTED_ARCHIVE  /tmp/wrapper/taku-calc-main.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/wrapper/taku-calc-main.tar.gz -C /tmp/taku-app
+          test -f /tmp/taku-app/app.json
+          test -f /tmp/taku-app/eas.json
+          grep -q 'com.koheimorita.takucalc' /tmp/taku-app/app.json
+          grep -q '広告なし' /tmp/taku-app/README.md
+          if grep -R --exclude-dir=.git -n 'react-native-google-mobile-ads' /tmp/taku-app; then
+            echo 'Unexpected ad SDK found in release source' >&2
+            exit 1
+          fi
+
+      - name: Release verification
+        working-directory: /tmp/taku-app
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run verify:release
+          npx expo install --check
+          npx expo-doctor
+          npm run export:ios
+
+      - name: Build iOS production and submit to TestFlight
+        working-directory: /tmp/taku-app
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx eas-cli@24.3.0 build --platform ios --profile production --non-interactive --auto-submit --what-to-test '卓 TAKU CALC 1.5.0 広告なし最終候補。10モード、履歴・保存・共有、機内モード動作を確認してください。' --json > /tmp/taku-eas-build.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/taku-eas-build.json').read_text())
+          rows=d if isinstance(d,list) else [d]
+          row=rows[0]
+          build_id=row.get('id') or row.get('_id')
+          if not build_id:
+              raise SystemExit('EAS build id missing')
+          Path('/tmp/build-id.txt').write_text(str(build_id))
+          Path('/tmp/build-summary.json').write_text(json.dumps({
+              'build_id': build_id,
+              'status': row.get('status'),
+              'platform': row.get('platform'),
+              'appVersion': row.get('appVersion'),
+              'appBuildVersion': row.get('appBuildVersion'),
+              'source_sha': json.load(open('/tmp/request.json'))['source_sha'],
+              'auto_submit_requested': True,
+          }, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Upload sanitized release result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: taku-eas-release-${{ github.run_id }}
+          path: /tmp/build-summary.json
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Report result locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            let extra = '';
+            try {
+              const d = JSON.parse(fs.readFileSync('/tmp/build-summary.json', 'utf8'));
+              extra = `; build_id=${d.build_id}; build_number=${d.appBuildVersion || 'unknown'}`;
+            } catch (_) {}
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `TAKU release workflow status=${{ job.status }}; run_id=${context.runId}${extra}`
+            });
