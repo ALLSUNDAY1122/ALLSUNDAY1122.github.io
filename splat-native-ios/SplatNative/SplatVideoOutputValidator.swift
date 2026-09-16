@@ -9,6 +9,9 @@ enum SplatVideoOutputValidator {
     enum ValidationError: Error, Equatable {
         case missingOrEmpty
         case missingVideoTrack
+        case unexpectedVideoTrackCount
+        case unexpectedAudioTrackCount
+        case unexpectedVideoCodec
         case invalidVideoDimensions
         case unexpectedVideoDimensions
         case unexpectedColorProperties
@@ -54,6 +57,18 @@ enum SplatVideoOutputValidator {
         return Int(rounded)
     }
 
+    static func acceptsVideoTrackCount(_ count: Int) -> Bool {
+        count == 1
+    }
+
+    static func acceptsAudioTrackCount(_ count: Int) -> Bool {
+        count == 0
+    }
+
+    static func acceptsVideoCodec(_ codec: FourCharCode) -> Bool {
+        codec == kCMVideoCodecType_H264
+    }
+
     static func validate(
         _ url: URL,
         expectedDimensions: (width: Int, height: Int)? = nil,
@@ -79,8 +94,23 @@ enum SplatVideoOutputValidator {
         // A user can cancel while AVFoundation is parsing a large MP4. Do not let a validation
         // result obtained after cancellation escape back to the export/share flow as success.
         try Task.checkCancellation()
-        guard let videoTrack = tracks.first else {
+        guard !tracks.isEmpty else {
             throw ValidationError.missingVideoTrack
+        }
+        // Scan Lab writes exactly one video stream. Accepting a container with an additional video
+        // track means later players/social pipelines may select a stream that this validator never
+        // decoded or color-checked. Fail closed rather than validating only tracks.first.
+        guard acceptsVideoTrackCount(tracks.count), let videoTrack = tracks.first else {
+            throw ValidationError.unexpectedVideoTrackCount
+        }
+
+        // Orbit exports are intentionally silent: the writer creates no audio input. If an audio
+        // stream appears in the completed container, sharing it would expose media that did not
+        // originate from the renderer contract and that this validator otherwise never inspects.
+        let audioTracks = try await asset.loadTracks(withMediaType: .audio)
+        try Task.checkCancellation()
+        guard acceptsAudioTrackCount(audioTracks.count) else {
+            throw ValidationError.unexpectedAudioTrackCount
         }
 
         // A parsable container can still carry a degenerate video track. Reject zero, NaN and
@@ -99,20 +129,26 @@ enum SplatVideoOutputValidator {
             }
         }
 
-        // Scan Lab's SDR video contract is explicit BT.709. A valid H.264 container with missing or
-        // conflicting primaries/transfer/matrix metadata can decode but appear materially different
-        // between Photos, QuickTime and social upload pipelines. A track can carry more than one
-        // format description across samples; checking only the first lets a later format transition
-        // silently violate the color contract. Require every declared description to remain BT.709.
+        // Scan Lab's exporter intentionally emits H.264 SDR/BT.709 for broad Photos and social
+        // compatibility. A locally decodable HEVC/other track is not the artifact this pipeline
+        // produced, and downstream services may behave differently. Require every description to
+        // preserve both the H.264 codec and the complete BT.709 color contract.
         let formatDescriptions: [CMFormatDescription] = try await videoTrack.load(.formatDescriptions)
         try Task.checkCancellation()
-        guard !formatDescriptions.isEmpty,
-              formatDescriptions.allSatisfy({ formatDescription in
-                  let formatExtensions = formatDescription.extensions
-                  return formatExtensions[.colorPrimaries] == .colorPrimaries(.itu_R_709_2) &&
-                      formatExtensions[.transferFunction] == .transferFunction(.itu_R_709_2) &&
-                      formatExtensions[.yCbCrMatrix] == .yCbCrMatrix(.itu_R_709_2)
-              }) else {
+        guard !formatDescriptions.isEmpty else {
+            throw ValidationError.unexpectedVideoCodec
+        }
+        guard formatDescriptions.allSatisfy({ formatDescription in
+            acceptsVideoCodec(CMFormatDescriptionGetMediaSubType(formatDescription))
+        }) else {
+            throw ValidationError.unexpectedVideoCodec
+        }
+        guard formatDescriptions.allSatisfy({ formatDescription in
+            let formatExtensions = formatDescription.extensions
+            return formatExtensions[.colorPrimaries] == .colorPrimaries(.itu_R_709_2) &&
+                formatExtensions[.transferFunction] == .transferFunction(.itu_R_709_2) &&
+                formatExtensions[.yCbCrMatrix] == .yCbCrMatrix(.itu_R_709_2)
+        }) else {
             throw ValidationError.unexpectedColorProperties
         }
 

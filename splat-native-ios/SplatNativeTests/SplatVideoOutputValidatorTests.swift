@@ -1,3 +1,4 @@
+import CoreMedia
 import XCTest
 
 final class SplatVideoOutputValidatorTests: XCTestCase {
@@ -79,6 +80,26 @@ final class SplatVideoOutputValidatorTests: XCTestCase {
         } catch {
             XCTFail("Expected CancellationError, got \(error)")
         }
+    }
+
+    func testExportContractRequiresExactlyOneVideoTrack() {
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsVideoTrackCount(0))
+        XCTAssertTrue(SplatVideoOutputValidator.acceptsVideoTrackCount(1))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsVideoTrackCount(2))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsVideoTrackCount(Int.max))
+    }
+
+    func testSilentExportContractRejectsAnyAudioTrack() {
+        XCTAssertTrue(SplatVideoOutputValidator.acceptsAudioTrackCount(0))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsAudioTrackCount(1))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsAudioTrackCount(2))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsAudioTrackCount(Int.max))
+    }
+
+    func testExportContractRequiresH264Codec() {
+        XCTAssertTrue(SplatVideoOutputValidator.acceptsVideoCodec(kCMVideoCodecType_H264))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsVideoCodec(kCMVideoCodecType_HEVC))
+        XCTAssertFalse(SplatVideoOutputValidator.acceptsVideoCodec(kCMVideoCodecType_JPEG))
     }
 
     func testLeadingProbeDrainsBoundedOpeningWindow() {
