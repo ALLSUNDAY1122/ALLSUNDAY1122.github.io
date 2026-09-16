@@ -1,6 +1,11 @@
 name: Shoshi iOS Release Gate
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'learning-sprint/shoshi/**'
+      - '.github/workflows/shoshi-ios-release-gate.yml'
   pull_request:
     branches: [main]
     paths:
@@ -99,10 +104,9 @@ jobs:
 
   canonical-icon-transport:
     runs-on: ubuntu-24.04
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v6
-      - name: Canonical Drive icon must reproduce exact bytes
+      - name: Canonical repository icon must reproduce exact bytes
         run: bash learning-sprint/shoshi/ios/prepare-ios.sh
       - name: Verify exact canonical hash
         run: |
