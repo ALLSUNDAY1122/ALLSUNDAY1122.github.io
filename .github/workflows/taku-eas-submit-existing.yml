@@ -1,0 +1,151 @@
+name: TAKU CALC Submit Existing EAS Build
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: taku-eas-submit-existing
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TAKU-EAS] Submit existing build'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - name: Parse request
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          d=json.loads(os.environ['ISSUE_BODY'])
+          required={'request_id','build_id','source_url','archive_sha256','source_sha'}
+          if set(d) != required:
+              raise SystemExit('Unexpected request fields')
+          if not re.fullmatch(r'[A-Za-z0-9._-]{1,100}', d['request_id']):
+              raise SystemExit('Invalid request_id')
+          if not re.fullmatch(r'[0-9a-f-]{36}', d['build_id']):
+              raise SystemExit('Invalid build_id')
+          if not d['source_url'].startswith('https://'):
+              raise SystemExit('source_url must be https')
+          if not re.fullmatch(r'[0-9a-f]{64}', d['archive_sha256']):
+              raise SystemExit('Invalid archive sha256')
+          if not re.fullmatch(r'[0-9a-f]{40}', d['source_sha']):
+              raise SystemExit('Invalid source sha')
+          Path('/tmp/request.json').write_text(json.dumps(d), encoding='utf-8')
+          PY
+
+      - name: Verify Expo authentication
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${EXPO_TOKEN:-}"
+          npx --yes eas-cli@24.3.0 whoami
+
+      - name: Restore canonical app config
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_URL=$(python3 -c "import json;print(json.load(open('/tmp/request.json'))['source_url'])")
+          EXPECTED_ARCHIVE=$(python3 -c "import json;print(json.load(open('/tmp/request.json'))['archive_sha256'])")
+          EXPECTED_SOURCE=$(python3 -c "import json;print(json.load(open('/tmp/request.json'))['source_sha'])")
+          curl --fail --location --retry 2 "$SOURCE_URL" -o /tmp/taku-source.zip
+          mkdir -p /tmp/wrapper /tmp/taku-app
+          unzip -q /tmp/taku-source.zip -d /tmp/wrapper
+          test "$(tr -d '\r\n' < /tmp/wrapper/source-sha.txt)" = "$EXPECTED_SOURCE"
+          echo "$EXPECTED_ARCHIVE  /tmp/wrapper/taku-calc-main.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/wrapper/taku-calc-main.tar.gz -C /tmp/taku-app
+          grep -q 'com.koheimorita.takucalc' /tmp/taku-app/app.json
+          cd /tmp/taku-app
+          git init -q
+          git config user.name "TAKU Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -qm "Prepare canonical TAKU release source"
+
+      - name: Wait for EAS build 9 to finish
+        working-directory: /tmp/taku-app
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUILD_ID=$(python3 -c "import json;print(json.load(open('/tmp/request.json'))['build_id'])")
+          for i in $(seq 1 160); do
+            npx eas-cli@24.3.0 build:view "$BUILD_ID" --json > /tmp/build-view.json
+            STATUS=$(python3 - <<'PY'
+          import json
+          print(json.load(open('/tmp/build-view.json')).get('status',''))
+          PY
+          )
+            echo "EAS build status: $STATUS"
+            case "$STATUS" in
+              FINISHED) exit 0 ;;
+              ERRORED|CANCELED) echo "Build ended with status $STATUS" >&2; exit 1 ;;
+            esac
+            sleep 30
+          done
+          echo 'Timed out waiting for EAS build' >&2
+          exit 1
+
+      - name: Submit finished build to App Store Connect
+        working-directory: /tmp/taku-app
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUILD_ID=$(python3 -c "import json;print(json.load(open('/tmp/request.json'))['build_id'])")
+          npx eas-cli@24.3.0 submit --platform ios --id "$BUILD_ID" --profile production --non-interactive --wait
+          npx eas-cli@24.3.0 submit:status --platform ios --profile production --json --non-interactive > /tmp/submit-status.json || true
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          req=json.load(open('/tmp/request.json'))
+          build=json.load(open('/tmp/build-view.json'))
+          out={
+            'build_id': req['build_id'],
+            'build_number': build.get('appBuildVersion'),
+            'app_version': build.get('appVersion'),
+            'build_status': build.get('status'),
+            'source_sha': req['source_sha'],
+            'submitted': True,
+          }
+          Path('/tmp/submit-summary.json').write_text(json.dumps(out, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: taku-submit-existing-${{ github.run_id }}
+          path: |
+            /tmp/submit-summary.json
+            /tmp/submit-status.json
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            let extra = '';
+            try {
+              const d = JSON.parse(fs.readFileSync('/tmp/submit-summary.json', 'utf8'));
+              extra = `; build_id=${d.build_id}; build_number=${d.build_number || 'unknown'}; submitted=${d.submitted}`;
+            } catch (_) {}
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `TAKU existing-build submit status=${{ job.status }}; run_id=${context.runId}${extra}`
+            });
