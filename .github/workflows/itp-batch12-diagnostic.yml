@@ -1,0 +1,68 @@
+name: IT Passport batch 12 diagnostic
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  diagnose:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, '[ITP-B12-DIAG-RUN]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 0}
+      - name: Diagnose every premerge assertion without mutation
+        id: diag
+        run: |
+          python3 - <<'PY' | tee /tmp/diag.txt
+          import collections,json,re,unicodedata
+          from pathlib import Path
+          root=Path('apps/it-passport-rebuild'); qp=root/'questions'
+          old=json.loads((qp/'original-mock.json').read_text()); batch=json.loads((qp/'batch-12.json').read_text()); manifest=json.loads((qp/'manifest.json').read_text()); config=json.loads((root/'quality/exam-config.json').read_text())
+          norm=lambda s: re.sub(r'\s+','',unicodedata.normalize('NFKC',str(s)).lower())
+          failures=[]
+          def check(ok,msg):
+            if not ok: failures.append(msg)
+          check(len(old)==220,f'canonical len={len(old)} expected=220')
+          check(manifest['canonical']['original_mock']['current']==220,f"manifest current={manifest['canonical']['original_mock']['current']} expected=220")
+          check(len(batch)==20,f'batch len={len(batch)} expected=20')
+          ids={q['id'] for q in old}; texts={norm(q['question']) for q in old}; old_topics={norm(q.get('topic','')) for q in old}; subjects=collections.Counter(); answers=collections.Counter(); req=set(config['required_fields']); seen_ids=set(); seen_texts=set(); seen_topics=set()
+          for q in batch:
+            qid=q.get('id','<missing-id>'); missing=req-set(q); check(not missing,f'{qid}: missing fields={sorted(missing)}')
+            check(qid not in ids and qid not in seen_ids,f'{qid}: duplicate id')
+            qt=norm(q.get('question','')); tp=norm(q.get('topic',''))
+            check(qt not in texts and qt not in seen_texts,f'{qid}: duplicate question')
+            check(tp not in seen_topics,f'{qid}: duplicate batch topic={q.get("topic")}')
+            if tp in old_topics: print(f'WARN {qid}: topic already exists in canonical: {q.get("topic")}')
+            check(q.get('subject') in config['subjects'],f'{qid}: invalid subject={q.get("subject")}'); check(q.get('round')==3,f'{qid}: round={q.get("round")}')
+            choices=q.get('choices',[]); check(len(choices)==4,f'{qid}: choices len={len(choices)}'); check(len({norm(x) for x in choices})==4,f'{qid}: duplicate choices')
+            ci=q.get('correct_index'); check(isinstance(ci,int) and 0<=ci<4,f'{qid}: correct_index={ci}')
+            check(q.get('syllabus_version')==manifest['current_syllabus_version']=='6.5',f'{qid}: syllabus mismatch')
+            check(q.get('origin_type')=='original' and q.get('rights_basis')=='original_question_based_on_public_syllabus',f'{qid}: rights metadata mismatch')
+            check(q.get('source_url')=='https://www.ipa.go.jp/shiken/syllabus/gaiyou.html' and q.get('reference_date')=='2026-09-16',f'{qid}: source/date mismatch')
+            check(len(q.get('question',''))>=20,f'{qid}: question too short len={len(q.get("question",""))}')
+            check(len(q.get('explanation',''))>=35,f'{qid}: explanation too short len={len(q.get("explanation",""))}')
+            if isinstance(ci,int) and 0<=ci<len(choices):
+              correct=str(choices[ci]); exp=norm(q.get('explanation','')); parts=[norm(x) for x in re.split(r'[と・/／,、\s]+',correct) if norm(x)]
+              check(norm(correct) in exp or tp in exp or (len(parts)>1 and all(x in exp for x in parts)),f'{qid}: weak explanation grounding correct={correct} topic={q.get("topic")}')
+            if q.get('subject') in config['subjects']: subjects[q['subject']]+=1
+            if isinstance(ci,int): answers[ci]+=1
+            seen_ids.add(qid); seen_texts.add(qt); seen_topics.add(tp)
+          check(subjects=={'ストラテジ系':7,'マネジメント系':4,'テクノロジ系':9},f'subjects={dict(subjects)}')
+          check(answers=={0:5,1:5,2:5,3:5},f'answers={dict(answers)}')
+          if failures:
+            print('FAILURES')
+            for f in failures: print('-',f)
+            raise SystemExit(1)
+          print('PASS: all Batch12 premerge assertions')
+          PY
+      - name: Comment diagnostic result
+        if: always() && github.event_name == 'issues'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          body=$(cat /tmp/diag.txt 2>/dev/null || echo 'diagnostic output unavailable')
+          printf 'Batch12 diagnostic result:\n```text\n%s\n```\n' "$body" > /tmp/comment.md
+          gh issue comment "${{ github.event.issue.number }}" --body-file /tmp/comment.md
