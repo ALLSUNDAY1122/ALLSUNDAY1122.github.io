@@ -63,18 +63,22 @@ final class HM2PaywallReviewUITests: XCTestCase {
         let restore = app.buttons.matching(
             NSPredicate(format: "label CONTAINS %@", "購入を復元")
         ).firstMatch
-        let monthlyPrice = app.staticTexts.matching(
+
+        // WKWebView exposes the visible price text as part of each purchase
+        // button's accessibility label rather than as a separate StaticText.
+        // Assert the canonical prices against that real accessibility surface.
+        let monthlyPrice = app.buttons.matching(
             NSPredicate(format: "label CONTAINS %@", "¥200")
         ).firstMatch
-        let lifetimePrice = app.staticTexts.matching(
+        let lifetimePrice = app.buttons.matching(
             NSPredicate(format: "label CONTAINS %@", "¥800")
         ).firstMatch
 
         require(monthly, timeout: 8, message: "Monthly plan was not visible", stage: "paywall-monthly", app: app)
         require(lifetime, timeout: 3, message: "Lifetime plan was not visible", stage: "paywall-lifetime", app: app)
         require(restore, timeout: 3, message: "Restore purchase was not visible", stage: "paywall-restore", app: app)
-        require(monthlyPrice, timeout: 3, message: "Canonical monthly price was not visible", stage: "paywall-monthly-price", app: app)
-        require(lifetimePrice, timeout: 3, message: "Canonical lifetime price was not visible", stage: "paywall-lifetime-price", app: app)
+        require(monthlyPrice, timeout: 3, message: "Canonical monthly price was not visible in purchase button", stage: "paywall-monthly-price", app: app)
+        require(lifetimePrice, timeout: 3, message: "Canonical lifetime price was not visible in purchase button", stage: "paywall-lifetime-price", app: app)
 
         guard monthly.exists, lifetime.exists, restore.exists, monthlyPrice.exists, lifetimePrice.exists else { return }
         let screenshot = XCUIScreen.main.screenshot()
