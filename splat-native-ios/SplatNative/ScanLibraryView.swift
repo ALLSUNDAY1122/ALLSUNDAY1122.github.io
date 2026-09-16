@@ -102,13 +102,26 @@ struct ScanLibraryView: View {
     @ViewBuilder
     private func projectRow(_ project: ScanProjectSummary) -> some View {
         if let trustedURL = SplatProjectTrustRecovery.trustedResultURL(for: project) {
-            NavigationLink {
-                SavedSplatView(
-                    url: trustedURL,
-                    title: project.manifest.title
-                )
-            } label: {
-                rowLabel(project, canOpen: true)
+            VStack(alignment: .leading, spacing: 8) {
+                NavigationLink {
+                    SavedSplatView(
+                        url: trustedURL,
+                        title: project.manifest.title
+                    )
+                } label: {
+                    rowLabel(project, canOpen: true)
+                }
+                if canReprocessTrusted(project) {
+                    Button {
+                        model.restoreFinishedProjectForS13Reprocess(id: project.id)
+                        dismiss()
+                    } label: {
+                        Label("同じ撮影から再生成", systemImage: "arrow.triangle.2.circlepath")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityHint("現在の完成3Dを保護し、保存済みraw撮影だけを使って再生成します")
+                }
             }
         } else if canContinue(project) {
             VStack(alignment: .leading, spacing: 8) {
@@ -124,6 +137,19 @@ struct ScanLibraryView: View {
         } else {
             rowLabel(project, canOpen: false)
         }
+    }
+
+    private func canReprocessTrusted(_ project: ScanProjectSummary) -> Bool {
+        guard project.manifest.stage == .finished,
+              project.manifest.rawDataRetained,
+              (try? store.loadCheckpoint(projectURL: project.projectURL)) != nil,
+              (try? store.reprocessRequest(
+                projectURL: project.projectURL,
+                representation: .splat
+              )) != nil else {
+            return false
+        }
+        return true
     }
 
     private func canContinue(_ project: ScanProjectSummary) -> Bool {

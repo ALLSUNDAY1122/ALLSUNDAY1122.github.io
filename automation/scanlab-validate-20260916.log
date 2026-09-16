@@ -1,0 +1,372 @@
++ set -euo pipefail
++++ dirname splat-native-ios/scripts/validate.sh
+++ cd splat-native-ios/scripts/..
+++ pwd
++ ROOT=/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios
++ cd /home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios
++ require_file project.yml
++ test -f project.yml
++ require_file SplatNative/PrivacyInfo.xcprivacy
++ test -f SplatNative/PrivacyInfo.xcprivacy
++ require_file APP_REVIEW_NOTES_JA.md
++ test -f APP_REVIEW_NOTES_JA.md
++ require_file SplatNative/Resources/Licenses/msplat-APACHE-2.0.txt
++ test -f SplatNative/Resources/Licenses/msplat-APACHE-2.0.txt
++ require_file SplatNative/Resources/Licenses/MetalSplatter-MIT.txt
++ test -f SplatNative/Resources/Licenses/MetalSplatter-MIT.txt
++ require_text project.yml jp.allsunday1122.splatlab
++ grep -q jp.allsunday1122.splatlab project.yml
++ require_text project.yml 'MARKETING_VERSION: 1.0.0'
++ grep -q 'MARKETING_VERSION: 1.0.0' project.yml
++ require_text project.yml SplatNative/CapturePolicy.swift
++ grep -q SplatNative/CapturePolicy.swift project.yml
++ require_text project.yml SplatNative/SplatViewerState.swift
++ grep -q SplatNative/SplatViewerState.swift project.yml
++ require_text project.yml SplatNative/ScanProjectStore.swift
++ grep -q SplatNative/ScanProjectStore.swift project.yml
++ for f in ScanModel.swift ScanModel+SessionLifecycle.swift CapturePolicy.swift RootScanView.swift CapturePolicyTests.swift
++ [[ ScanModel.swift == *Tests.swift ]]
++ require_file SplatNative/ScanModel.swift
++ test -f SplatNative/ScanModel.swift
++ for f in ScanModel.swift ScanModel+SessionLifecycle.swift CapturePolicy.swift RootScanView.swift CapturePolicyTests.swift
++ [[ ScanModel+SessionLifecycle.swift == *Tests.swift ]]
++ require_file SplatNative/ScanModel+SessionLifecycle.swift
++ test -f SplatNative/ScanModel+SessionLifecycle.swift
++ for f in ScanModel.swift ScanModel+SessionLifecycle.swift CapturePolicy.swift RootScanView.swift CapturePolicyTests.swift
++ [[ CapturePolicy.swift == *Tests.swift ]]
++ require_file SplatNative/CapturePolicy.swift
++ test -f SplatNative/CapturePolicy.swift
++ for f in ScanModel.swift ScanModel+SessionLifecycle.swift CapturePolicy.swift RootScanView.swift CapturePolicyTests.swift
++ [[ RootScanView.swift == *Tests.swift ]]
++ require_file SplatNative/RootScanView.swift
++ test -f SplatNative/RootScanView.swift
++ for f in ScanModel.swift ScanModel+SessionLifecycle.swift CapturePolicy.swift RootScanView.swift CapturePolicyTests.swift
++ [[ CapturePolicyTests.swift == *Tests.swift ]]
++ require_file SplatNativeTests/CapturePolicyTests.swift
++ test -f SplatNativeTests/CapturePolicyTests.swift
++ require_text SplatNative/ScanModel.swift CapturePolicy.shouldAcceptFrame
++ grep -q CapturePolicy.shouldAcceptFrame SplatNative/ScanModel.swift
++ require_text SplatNative/ScanModel.swift CapturePolicy.coverageSatisfied
++ grep -q CapturePolicy.coverageSatisfied SplatNative/ScanModel.swift
++ require_text SplatNative/ScanModel.swift sceneDepth
++ grep -q sceneDepth SplatNative/ScanModel.swift
++ require_text SplatNative/ScanModel.swift 'func pauseCapture'
++ grep -q 'func pauseCapture' SplatNative/ScanModel.swift
++ require_text SplatNative/ScanModel.swift 'func resumeCapture'
++ grep -q 'func resumeCapture' SplatNative/ScanModel.swift
++ require_file SplatNative/ScanWorldMapArchiveStore.swift
++ test -f SplatNative/ScanWorldMapArchiveStore.swift
++ require_text SplatNative/ScanModel.swift persistWorldMapForTransition
++ grep -q persistWorldMapForTransition SplatNative/ScanModel.swift
++ require_text SplatNative/ScanModel.swift schedulePeriodicWorldMapPersistence
++ grep -q schedulePeriodicWorldMapPersistence SplatNative/ScanModel.swift
++ require_text SplatNative/ScanModel.swift isWorldMapPersistencePending
++ grep -q isWorldMapPersistencePending SplatNative/ScanModel.swift
++ require_text SplatNative/ScanModel.swift restoreSavedProject
++ grep -q restoreSavedProject SplatNative/ScanModel.swift
++ require_text SplatNative/ScanModel+SessionLifecycle.swift sessionShouldAttemptRelocalization
++ grep -q sessionShouldAttemptRelocalization SplatNative/ScanModel+SessionLifecycle.swift
++ python3 -
+PASS: in-memory resume preserves coordinates; cold resume restores ARWorldMap
++ for f in SplatReconstructionPolicy.swift SplatSeedColorizer.swift SplatSkySeeder.swift SplatResourceGuard.swift
++ require_file SplatNative/SplatReconstructionPolicy.swift
++ test -f SplatNative/SplatReconstructionPolicy.swift
++ for f in SplatReconstructionPolicy.swift SplatSeedColorizer.swift SplatSkySeeder.swift SplatResourceGuard.swift
++ require_file SplatNative/SplatSeedColorizer.swift
++ test -f SplatNative/SplatSeedColorizer.swift
++ for f in SplatReconstructionPolicy.swift SplatSeedColorizer.swift SplatSkySeeder.swift SplatResourceGuard.swift
++ require_file SplatNative/SplatSkySeeder.swift
++ test -f SplatNative/SplatSkySeeder.swift
++ for f in SplatReconstructionPolicy.swift SplatSeedColorizer.swift SplatSkySeeder.swift SplatResourceGuard.swift
++ require_file SplatNative/SplatResourceGuard.swift
++ test -f SplatNative/SplatResourceGuard.swift
++ require_text SplatNative/ScanModel.swift trainer.saveCheckpoint
++ grep -q trainer.saveCheckpoint SplatNative/ScanModel.swift
++ require_text SplatNative/ScanModel.swift trainer.loadCheckpoint
++ grep -q trainer.loadCheckpoint SplatNative/ScanModel.swift
++ require_text SplatNative/ScanModel.swift SplatSkySeeder.makeSeeds
++ grep -q SplatSkySeeder.makeSeeds SplatNative/ScanModel.swift
++ require_text SplatNative/ScanModel.swift passResourceGuard.evaluate
++ grep -q passResourceGuard.evaluate SplatNative/ScanModel.swift
++ require_text SplatNative/SplatReconstructionPolicy.swift 'trainingHorizon = 30_000'
++ grep -q 'trainingHorizon = 30_000' SplatNative/SplatReconstructionPolicy.swift
++ require_text SplatNative/SplatReconstructionPolicy.swift 'standardIterations = 7_000'
++ grep -q 'standardIterations = 7_000' SplatNative/SplatReconstructionPolicy.swift
++ require_text SplatNative/SplatReconstructionPolicy.swift 'enhancementIncrement = 5_000'
++ grep -q 'enhancementIncrement = 5_000' SplatNative/SplatReconstructionPolicy.swift
++ for f in SplatViewer.swift SplatViewerState.swift SplatResultView.swift
++ require_file SplatNative/SplatViewer.swift
++ test -f SplatNative/SplatViewer.swift
++ for f in SplatViewer.swift SplatViewerState.swift SplatResultView.swift
++ require_file SplatNative/SplatViewerState.swift
++ test -f SplatNative/SplatViewerState.swift
++ for f in SplatViewer.swift SplatViewerState.swift SplatResultView.swift
++ require_file SplatNative/SplatResultView.swift
++ test -f SplatNative/SplatResultView.swift
++ require_file SplatNativeTests/SplatViewerStateTests.swift
++ test -f SplatNativeTests/SplatViewerStateTests.swift
++ require_text SplatNative/SplatViewer.swift 'robustFraming(for: points)'
++ grep -q 'robustFraming(for: points)' SplatNative/SplatViewer.swift
++ require_text SplatNative/SplatViewer.swift scenePan
++ grep -q scenePan SplatNative/SplatViewer.swift
++ require_text SplatNative/SplatViewer.swift measureTap
++ grep -q measureTap SplatNative/SplatViewer.swift
++ require_text SplatNative/SplatViewer.swift editedPoints
++ grep -q editedPoints SplatNative/SplatViewer.swift
++ require_text SplatNative/SplatResultView.swift 切り抜き
++ grep -q 切り抜き SplatNative/SplatResultView.swift
++ require_text SplatNative/SplatResultView.swift 調整
++ grep -q 調整 SplatNative/SplatResultView.swift
++ require_text SplatNative/SplatResultView.swift 計測
++ grep -q 計測 SplatNative/SplatResultView.swift
++ require_text SplatNative/SplatResultView.swift 品質向上
++ grep -q 品質向上 SplatNative/SplatResultView.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshScanModel.swift
++ test -f SplatNative/MeshScanModel.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshScanView.swift
++ test -f SplatNative/MeshScanView.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshAdvancedSupervisor.swift
++ test -f SplatNative/MeshAdvancedSupervisor.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshDepthRecorder.swift
++ test -f SplatNative/MeshDepthRecorder.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshLiDARDenseFusion.swift
++ test -f SplatNative/MeshLiDARDenseFusion.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshDenseMVS.swift
++ test -f SplatNative/MeshDenseMVS.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshDenseTextureBaker.swift
++ test -f SplatNative/MeshDenseTextureBaker.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshGeometryRefiner.swift
++ test -f SplatNative/MeshGeometryRefiner.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshAppearanceEditor.swift
++ test -f SplatNative/MeshAppearanceEditor.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshTrimEditor.swift
++ test -f SplatNative/MeshTrimEditor.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshDetailSimplifier.swift
++ test -f SplatNative/MeshDetailSimplifier.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshRawReprocess.swift
++ test -f SplatNative/MeshRawReprocess.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshARViewer.swift
++ test -f SplatNative/MeshARViewer.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshParityAuditor.swift
++ test -f SplatNative/MeshParityAuditor.swift
++ for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
++ require_file SplatNative/MeshAssetContract.swift
++ test -f SplatNative/MeshAssetContract.swift
++ require_text SplatNative/MeshScanModel.swift sceneReconstruction
++ grep -q sceneReconstruction SplatNative/MeshScanModel.swift
++ require_text SplatNative/MeshScanModel.swift PhotogrammetrySession
++ grep -q PhotogrammetrySession SplatNative/MeshScanModel.swift
++ require_text SplatNative/MeshScanView.swift 2点タップで計測
++ grep -q 2点タップで計測 SplatNative/MeshScanView.swift
++ require_text SplatNative/MeshAdvancedSupervisor.swift MeshDepthRecorder
++ grep -q MeshDepthRecorder SplatNative/MeshAdvancedSupervisor.swift
++ require_text SplatNative/MeshAdvancedSupervisor.swift fuseLiDARDenseDepth
++ grep -q fuseLiDARDenseDepth SplatNative/MeshAdvancedSupervisor.swift
++ require_text SplatNative/MeshAdvancedSupervisor.swift refineMetricGeometry
++ grep -q refineMetricGeometry SplatNative/MeshAdvancedSupervisor.swift
++ require_text SplatNative/MeshAdvancedSupervisor.swift bakeDenseRGBTextureAtlas
++ grep -q bakeDenseRGBTextureAtlas SplatNative/MeshAdvancedSupervisor.swift
++ require_text SplatNative/MeshAdvancedSupervisor.swift runMeshParityAudit
++ grep -q runMeshParityAudit SplatNative/MeshAdvancedSupervisor.swift
++ require_text SplatNative/RootScanView.swift Meshをスキャン
++ grep -q Meshをスキャン SplatNative/RootScanView.swift
++ require_file SplatNative/ScanProjectStore.swift
++ test -f SplatNative/ScanProjectStore.swift
++ require_file SplatNative/ScanLibraryView.swift
++ test -f SplatNative/ScanLibraryView.swift
++ require_file SplatNativeTests/ScanProjectStoreTests.swift
++ test -f SplatNativeTests/ScanProjectStoreTests.swift
++ require_file SplatNativeTests/ScanColdResumePersistenceTests.swift
++ test -f SplatNativeTests/ScanColdResumePersistenceTests.swift
++ require_text SplatNative/ScanProjectStore.swift commitPendingSplat
++ grep -q commitPendingSplat SplatNative/ScanProjectStore.swift
++ require_text SplatNative/ScanProjectStore.swift reprocessRequest
++ grep -q reprocessRequest SplatNative/ScanProjectStore.swift
++ require_text SplatNative/ScanProjectStore.swift moveToTrash
++ grep -q moveToTrash SplatNative/ScanProjectStore.swift
++ require_text SplatNative/ScanProjectStore.swift recoverInterruptedProcessing
++ grep -q recoverInterruptedProcessing SplatNative/ScanProjectStore.swift
++ require_text SplatNative/ScanProjectStore.swift worldMapURL
++ grep -q worldMapURL SplatNative/ScanProjectStore.swift
++ require_text SplatNative/ScanLibraryView.swift restoreSavedProject
++ grep -q restoreSavedProject SplatNative/ScanLibraryView.swift
++ grep -R -n おもちゃばこ SplatNative project.yml
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabBackend.swift
++ test -f SplatNative/ScanLabBackend.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabBackend+TrustedPublish.swift
++ test -f SplatNative/ScanLabBackend+TrustedPublish.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabBackend+PublishLifecycle.swift
++ test -f SplatNative/ScanLabBackend+PublishLifecycle.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabShellView.swift
++ test -f SplatNative/ScanLabShellView.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabDiscoverFeedStore.swift
++ test -f SplatNative/ScanLabDiscoverFeedStore.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabProfilePolicy.swift
++ test -f SplatNative/ScanLabProfilePolicy.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabProfileService.swift
++ test -f SplatNative/ScanLabProfileService.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabProfileView.swift
++ test -f SplatNative/ScanLabProfileView.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabSessionPolicy.swift
++ test -f SplatNative/ScanLabSessionPolicy.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabPublishPackage.swift
++ test -f SplatNative/ScanLabPublishPackage.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabGeotagPolicy.swift
++ test -f SplatNative/ScanLabGeotagPolicy.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanReportPolicy.swift
++ test -f SplatNative/ScanReportPolicy.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanReportBackend.swift
++ test -f SplatNative/ScanReportBackend.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/PublicBrowsePolicy.swift
++ test -f SplatNative/PublicBrowsePolicy.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/PublishScanView.swift
++ test -f SplatNative/PublishScanView.swift
++ for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
++ require_file SplatNative/ScanLabAccountView.swift
++ test -f SplatNative/ScanLabAccountView.swift
++ require_text SplatNative/SplatNativeApp.swift 'ScanLabShellView()'
++ grep -q 'ScanLabShellView()' SplatNative/SplatNativeApp.swift
++ require_text SplatNative/ScanLabShellView.swift 'RootScanView()'
++ grep -q 'RootScanView()' SplatNative/ScanLabShellView.swift
++ require_text SplatNative/ScanLabBackend.swift 'import Supabase'
++ grep -q 'import Supabase' SplatNative/ScanLabBackend.swift
++ require_text SplatNative/ScanLabBackend.swift ScanLabVisibility
++ grep -q ScanLabVisibility SplatNative/ScanLabBackend.swift
++ require_text SplatNative/ScanLabBackend.swift 'func deleteAccount() async throws'
++ grep -q 'func deleteAccount() async throws' SplatNative/ScanLabBackend.swift
++ require_text SplatNative/ScanLabBackend+TrustedPublish.swift ScanLabUploadInitRequest
++ grep -q ScanLabUploadInitRequest SplatNative/ScanLabBackend+TrustedPublish.swift
++ require_text SplatNative/ScanLabBackend+TrustedPublish.swift ScanLabUploadValidateRequest
++ grep -q ScanLabUploadValidateRequest SplatNative/ScanLabBackend+TrustedPublish.swift
++ require_text SplatNative/ScanLabBackend+TrustedPublish.swift cleanupFailedDraft
++ grep -q cleanupFailedDraft SplatNative/ScanLabBackend+TrustedPublish.swift
++ require_text SplatNative/PublishScanView.swift contentConfirmed
++ grep -q contentConfirmed SplatNative/PublishScanView.swift
++ require_text SplatNative/PublishScanView.swift publicPlaceConfirmed
++ grep -q publicPlaceConfirmed SplatNative/PublishScanView.swift
++ require_text SplatNative/PublishScanView.swift 位置情報を付けなくてもDiscoverへ公開できます
++ grep -q 位置情報を付けなくてもDiscoverへ公開できます SplatNative/PublishScanView.swift
++ require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "cursor"'
++ grep -q 'URLQueryItem(name: "cursor"' SplatNative/ScanLabDiscoverFeedStore.swift
++ require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "q"'
++ grep -q 'URLQueryItem(name: "q"' SplatNative/ScanLabDiscoverFeedStore.swift
++ require_text SplatNative/ScanLabShellView.swift searchable
++ grep -q searchable SplatNative/ScanLabShellView.swift
++ require_text SplatNative/ScanLabShellView.swift 続きを再試行
++ grep -q 続きを再試行 SplatNative/ScanLabShellView.swift
++ require_text SplatNative/ScanLabShellView.swift ScanReportReason.allCases
++ grep -q ScanReportReason.allCases SplatNative/ScanLabShellView.swift
++ require_text SplatNative/ScanLabShellView.swift 'backend.submitReport(scan'
++ grep -q 'backend.submitReport(scan' SplatNative/ScanLabShellView.swift
++ require_text SplatNative/ScanLabShellView.swift 'backend.hasReported(scan)'
++ grep -q 'backend.hasReported(scan)' SplatNative/ScanLabShellView.swift
++ require_text project.yml 'package: Supabase'
++ grep -q 'package: Supabase' project.yml
++ require_text project.yml INFOPLIST_KEY_NSCameraUsageDescription
++ grep -q INFOPLIST_KEY_NSCameraUsageDescription project.yml
++ require_text project.yml INFOPLIST_KEY_NSLocationWhenInUseUsageDescription
++ grep -q INFOPLIST_KEY_NSLocationWhenInUseUsageDescription project.yml
++ grep -qE 'INFOPLIST_KEY_NSLocationAlways|INFOPLIST_KEY_NSLocationAlwaysAndWhenInUse' project.yml
++ grep -qE 'INFOPLIST_KEY_NSPhotoLibrary|INFOPLIST_KEY_NSMicrophoneUsageDescription|INFOPLIST_KEY_NSUserTrackingUsageDescription' project.yml
++ grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
++ grep -R -nE 'Firebase|Amplitude|Mixpanel|AppsFlyer|Adjust' SplatNative '--include=*.swift'
+SplatNative/SplatVideoMemoryPolicy.swift:90:        let thermallyAdjusted: UInt64
+SplatNative/SplatVideoMemoryPolicy.swift:93:            thermallyAdjusted = baseBudget
+SplatNative/SplatVideoMemoryPolicy.swift:95:            thermallyAdjusted = baseBudget / 4 * 3
+SplatNative/SplatVideoMemoryPolicy.swift:97:            thermallyAdjusted = baseBudget / 2
+SplatNative/SplatVideoMemoryPolicy.swift:99:            thermallyAdjusted = baseBudget / 2
+SplatNative/SplatVideoMemoryPolicy.swift:101:        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
+SplatNative/SplatVideoMemoryPolicy.swift:347:        let needsColorAdjustment =
+SplatNative/SplatVideoMemoryPolicy.swift:351:        if hasCanonicalSH3 && needsColorAdjustment {
+SplatNative/SplatExportService.swift:249:        let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
+SplatNative/SplatExportService.swift:260:            guard needsColorAdjustment else {
+SplatNative/SplatExportService.swift:266:    edited.color = SplatColorAdjustment.apply(
+SplatNative/SplatColorAdjustment.swift:5:enum SplatColorAdjustment {
+SplatNative/SplatPersistedEditMaterializer+Cancellation.swift:206:        let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
+SplatNative/SplatPersistedEditMaterializer+Cancellation.swift:219:            guard needsColorAdjustment else {
+SplatNative/SplatPersistedEditMaterializer+Cancellation.swift:225:    edited.color = SplatColorAdjustment.apply(
+SplatNative/SplatViewerMemoryPolicy.swift:40:        let thermallyAdjusted: UInt64
+SplatNative/SplatViewerMemoryPolicy.swift:43:            thermallyAdjusted = baseBudget
+SplatNative/SplatViewerMemoryPolicy.swift:45:            thermallyAdjusted = baseBudget / 4 * 3
+SplatNative/SplatViewerMemoryPolicy.swift:47:            thermallyAdjusted = baseBudget / 2
+SplatNative/SplatViewerMemoryPolicy.swift:50:            thermallyAdjusted = baseBudget / 2
+SplatNative/SplatViewerMemoryPolicy.swift:52:        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
+SplatNative/SplatViewer.swift:111:    private var cameraWasManuallyAdjusted = false
+SplatNative/SplatViewer.swift:182:                self.cameraWasManuallyAdjusted = false
+SplatNative/SplatViewer.swift:235:        cameraWasManuallyAdjusted = true
+SplatNative/SplatViewer.swift:253:        cameraWasManuallyAdjusted = true
+SplatNative/SplatViewer.swift:261:        cameraWasManuallyAdjusted = true
+SplatNative/SplatViewer.swift:339:        guard loadedURL != nil, !cameraWasManuallyAdjusted else { return }
+SplatNative/SplatViewer.swift:366:        cameraWasManuallyAdjusted = false
+SplatNative/SplatViewer.swift:634:        let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
+SplatNative/SplatViewer.swift:654:        if !needsCrop && !needsColorAdjustment {
+SplatNative/SplatViewer.swift:679:            guard needsColorAdjustment else {
+SplatNative/SplatViewer.swift:685:    edited.color = SplatColorAdjustment.apply(
+SplatNative/MeshExportMemoryPolicy.swift:50:        let thermallyAdjusted: UInt64
+SplatNative/MeshExportMemoryPolicy.swift:53:            thermallyAdjusted = baseBudget
+SplatNative/MeshExportMemoryPolicy.swift:55:            thermallyAdjusted = baseBudget / 4 * 3
+SplatNative/MeshExportMemoryPolicy.swift:57:            thermallyAdjusted = baseBudget / 2
+SplatNative/MeshExportMemoryPolicy.swift:59:            thermallyAdjusted = baseBudget / 2
+SplatNative/MeshExportMemoryPolicy.swift:61:        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
+SplatNative/MeshAppearanceEditor.swift:30:        let exposureFilter = CIFilter.exposureAdjust(); exposureFilter.inputImage = input; exposureFilter.ev = Float(exposure)
++ require_file scripts/scanlab_auth_readiness.mjs
++ test -f scripts/scanlab_auth_readiness.mjs
++ require_file scripts/scanlab_auth_e2e.mjs
++ test -f scripts/scanlab_auth_e2e.mjs
++ require_file ../.github/workflows/splat-native-ios.yml
++ test -f ../.github/workflows/splat-native-ios.yml
++ require_text scripts/scanlab_auth_readiness.mjs /auth/v1/settings
++ grep -q /auth/v1/settings scripts/scanlab_auth_readiness.mjs
++ require_text scripts/scanlab_auth_readiness.mjs 'external?.email'
++ grep -q 'external?.email' scripts/scanlab_auth_readiness.mjs
++ require_text scripts/scanlab_auth_readiness.mjs disable_signup
++ grep -q disable_signup scripts/scanlab_auth_readiness.mjs
++ require_text ../.github/workflows/splat-native-ios.yml 'Hosted ScanLab auth readiness gate'
++ grep -q 'Hosted ScanLab auth readiness gate' ../.github/workflows/splat-native-ios.yml
++ require_text ../.github/workflows/splat-native-ios.yml 'node splat-native-ios/scripts/scanlab_auth_readiness.mjs'
++ grep -q 'node splat-native-ios/scripts/scanlab_auth_readiness.mjs' ../.github/workflows/splat-native-ios.yml
++ require_text ../.github/workflows/splat-native-ios.yml 'Live ScanLab auth/session/profile E2E gate'
++ grep -q 'Live ScanLab auth/session/profile E2E gate' ../.github/workflows/splat-native-ios.yml
++ require_text ../.github/workflows/splat-native-ios.yml secrets.SCANLAB_E2E_EMAIL
++ grep -q secrets.SCANLAB_E2E_EMAIL ../.github/workflows/splat-native-ios.yml
++ require_text ../.github/workflows/splat-native-ios.yml secrets.SCANLAB_E2E_PASSWORD
++ grep -q secrets.SCANLAB_E2E_PASSWORD ../.github/workflows/splat-native-ios.yml
++ require_text ../.github/workflows/splat-native-ios.yml LIVE_E2E_BLOCKED_BY_TEST_IDENTITY
++ grep -q LIVE_E2E_BLOCKED_BY_TEST_IDENTITY ../.github/workflows/splat-native-ios.yml
++ require_text ../.github/workflows/splat-native-ios.yml 'node splat-native-ios/scripts/scanlab_auth_e2e.mjs'
++ grep -q 'node splat-native-ios/scripts/scanlab_auth_e2e.mjs' ../.github/workflows/splat-native-ios.yml
++ grep -R -nE 'SCANLAB_E2E_(EMAIL|PASSWORD)=' scripts . --exclude=validate.sh --exclude-dir=.git
+./evidence/d2-w01-auth-profile-wave1.md:58:SCANLAB_E2E_EMAIL='...' SCANLAB_E2E_PASSWORD='...' \
++ require_file SplatNativeTests/ScanLabSessionPolicyTests.swift
++ test -f SplatNativeTests/ScanLabSessionPolicyTests.swift
++ bash scripts/test_session_policy.sh
+scripts/test_session_policy.sh: line 28: xcrun: command not found
