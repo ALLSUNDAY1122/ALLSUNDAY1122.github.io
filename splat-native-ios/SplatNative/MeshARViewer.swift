@@ -26,20 +26,15 @@ struct MeshARViewerSheet: View {
                         .ignoresSafeArea()
                 case .object:
                     if let scene = model.previewScene {
-                        SceneView(
-                            scene: scene,
-                            options: [.allowsCameraControl, .autoenablesDefaultLighting]
-                        )
-                        .ignoresSafeArea()
+                        SceneView(scene: scene, options: [.allowsCameraControl, .autoenablesDefaultLighting])
+                            .ignoresSafeArea()
                     }
                 }
             }
 
             VStack(spacing: 0) {
                 HStack {
-                    Button {
-                        dismiss()
-                    } label: {
+                    Button { dismiss() } label: {
                         Image(systemName: "xmark")
                             .font(.headline)
                             .frame(width: 42, height: 42)
@@ -47,9 +42,7 @@ struct MeshARViewerSheet: View {
                     }
                     Spacer()
                     Picker("表示", selection: $displayMode) {
-                        ForEach(DisplayMode.allCases) { mode in
-                            Text(mode.rawValue).tag(mode)
-                        }
+                        ForEach(DisplayMode.allCases) { mode in Text(mode.rawValue).tag(mode) }
                     }
                     .pickerStyle(.segmented)
                     .frame(width: 190)
@@ -80,9 +73,7 @@ struct MeshARPlacementView: UIViewRepresentable {
     let modelURL: URL
     let preparedScene: SCNScene?
 
-    func makeCoordinator() -> Coordinator {
-        Coordinator(modelURL: modelURL, preparedScene: preparedScene)
-    }
+    func makeCoordinator() -> Coordinator { Coordinator(modelURL: modelURL, preparedScene: preparedScene) }
 
     func makeUIView(context: Context) -> ARSCNView {
         let view = ARSCNView(frame: .zero)
@@ -97,9 +88,6 @@ struct MeshARPlacementView: UIViewRepresentable {
         configuration.environmentTexturing = .automatic
         view.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
 
-        // A raw raycast failure is invisible to the user. Let ARKit coach motion only while a
-        // usable horizontal support surface is unavailable, then dismiss automatically so it
-        // never competes with normal placement gestures after tracking is ready.
         let coaching = ARCoachingOverlayView()
         coaching.session = view.session
         coaching.goal = .horizontalPlane
@@ -117,9 +105,7 @@ struct MeshARPlacementView: UIViewRepresentable {
 
     func updateUIView(_ uiView: ARSCNView, context: Context) {}
 
-    static func dismantleUIView(_ uiView: ARSCNView, coordinator: Coordinator) {
-        uiView.session.pause()
-    }
+    static func dismantleUIView(_ uiView: ARSCNView, coordinator: Coordinator) { uiView.session.pause() }
 
     @MainActor
     final class Coordinator: NSObject {
@@ -140,66 +126,40 @@ struct MeshARPlacementView: UIViewRepresentable {
         }
 
         @objc private func placeFromTap(_ recognizer: UITapGestureRecognizer) {
-            guard let view else { return }
+            guard let view,
+                  let frame = view.session.currentFrame,
+                  Self.isStableTracking(frame.camera.trackingState) else { return }
             let point = recognizer.location(in: view)
 
-            // Keep placement consistent with the UI contract: a saved scan is always placed
-            // upright on a horizontal support surface. Falling back to `.estimatedPlane(.any)`
-            // can accept a wall and rotate the whole mesh sideways, which is especially unstable
-            // while ARKit is still refining plane estimates.
-            let result = raycast(
-                view: view,
-                point: point,
-                allowing: .existingPlaneGeometry,
-                alignment: .horizontal
-            ) ?? raycast(
-                view: view,
-                point: point,
-                allowing: .existingPlaneInfinite,
-                alignment: .horizontal
-            ) ?? raycast(
-                view: view,
-                point: point,
-                allowing: .estimatedPlane,
-                alignment: .horizontal
-            )
+            let result = raycast(view: view, point: point, allowing: .existingPlaneGeometry, alignment: .horizontal)
+                ?? raycast(view: view, point: point, allowing: .existingPlaneInfinite, alignment: .horizontal)
+                ?? raycast(view: view, point: point, allowing: .estimatedPlane, alignment: .horizontal)
 
             guard let result else { return }
             place(at: Self.translationOnlyPlacement(from: result.worldTransform))
         }
 
-        private func raycast(
-            view: ARSCNView,
-            point: CGPoint,
-            allowing target: ARRaycastQuery.Target,
-            alignment: ARRaycastQuery.TargetAlignment
-        ) -> ARRaycastResult? {
-            guard let query = view.raycastQuery(from: point, allowing: target, alignment: alignment) else {
-                return nil
-            }
+        nonisolated static func isStableTracking(_ state: ARCamera.TrackingState) -> Bool {
+            if case .normal = state { return true }
+            return false
+        }
+
+        private func raycast(view: ARSCNView, point: CGPoint, allowing target: ARRaycastQuery.Target, alignment: ARRaycastQuery.TargetAlignment) -> ARRaycastResult? {
+            guard let query = view.raycastQuery(from: point, allowing: target, alignment: alignment) else { return nil }
             return view.session.raycast(query).first
         }
 
         private func place(at transform: simd_float4x4) {
             guard let view else { return }
-
-            // Repositioning an already loaded scan must not parse and clone the entire model again.
-            // The anchor owns the recentered model subtree, so changing only its transform produces
-            // the same placement result while keeping repeated taps responsive on large meshes.
             if let placedNode {
                 placedNode.simdTransform = transform
                 return
             }
 
-            // MeshScanModel has already parsed and validated previewScene before this sheet opens.
-            // Reuse that in-memory scene on the first AR placement instead of synchronously parsing
-            // the same potentially large OBJ/USDZ from disk on the user's tap. Keep the URL fallback
-            // for restored/legacy flows where a preview scene is not available.
             let source: SCNScene
             if let preparedScene, MeshRawSceneValidator.containsGeometry(preparedScene) {
                 source = preparedScene
-            } else if let loaded = try? SCNScene(url: modelURL, options: nil),
-                      MeshRawSceneValidator.containsGeometry(loaded) {
+            } else if let loaded = try? SCNScene(url: modelURL, options: nil), MeshRawSceneValidator.containsGeometry(loaded) {
                 source = loaded
             } else {
                 return
@@ -207,16 +167,10 @@ struct MeshARPlacementView: UIViewRepresentable {
 
             let anchor = SCNNode()
             anchor.simdTransform = transform
-
-            // Preserve the imported scene root itself rather than reparenting only its children.
-            // Some OBJ/USDZ readers attach scale/orientation or geometry directly to rootNode;
-            // dropping that root changes the saved model's transform and can misplace or resize it.
-            // A neutral wrapper still gives recenterForPlacement a stable coordinate space.
             let modelRoot = SCNNode()
             modelRoot.addChildNode(source.rootNode.clone())
             recenterForPlacement(modelRoot)
             anchor.addChildNode(modelRoot)
-
             view.scene.rootNode.addChildNode(anchor)
             placedNode = anchor
         }
@@ -241,9 +195,6 @@ struct MeshARPlacementView: UIViewRepresentable {
             }
 
             guard found else { return }
-            // Finite extrema can still overflow when subtracted or averaged. Keep the existing
-            // placement untouched instead of creating an Inf/NaN node transform for corrupt or
-            // pathologically large imported geometry.
             let extent = maximum - minimum
             guard extent.x.isFinite, extent.y.isFinite, extent.z.isFinite else { return }
             let center = minimum + extent / 2
@@ -252,10 +203,6 @@ struct MeshARPlacementView: UIViewRepresentable {
         }
 
         nonisolated static func translationOnlyPlacement(from raycastTransform: simd_float4x4) -> simd_float4x4 {
-            // Mesh reconstruction already uses gravity world alignment. ARRaycastResult orientation
-            // is an estimate of the support plane and can change yaw as ARKit refines that plane;
-            // applying it verbatim makes the same saved scan visibly spin between placement taps.
-            // Preserve the scan's own orientation and use only the hit position.
             var transform = matrix_identity_float4x4
             let translation = raycastTransform.columns.3
             if translation.x.isFinite, translation.y.isFinite, translation.z.isFinite {
@@ -266,14 +213,10 @@ struct MeshARPlacementView: UIViewRepresentable {
 
         private static func corners(minimum: SCNVector3, maximum: SCNVector3) -> [SCNVector3] {
             [
-                SCNVector3(minimum.x, minimum.y, minimum.z),
-                SCNVector3(maximum.x, minimum.y, minimum.z),
-                SCNVector3(minimum.x, maximum.y, minimum.z),
-                SCNVector3(maximum.x, maximum.y, minimum.z),
-                SCNVector3(minimum.x, minimum.y, maximum.z),
-                SCNVector3(maximum.x, minimum.y, maximum.z),
-                SCNVector3(minimum.x, maximum.y, maximum.z),
-                SCNVector3(maximum.x, maximum.y, maximum.z)
+                SCNVector3(minimum.x, minimum.y, minimum.z), SCNVector3(maximum.x, minimum.y, minimum.z),
+                SCNVector3(minimum.x, maximum.y, minimum.z), SCNVector3(maximum.x, maximum.y, minimum.z),
+                SCNVector3(minimum.x, minimum.y, maximum.z), SCNVector3(maximum.x, minimum.y, maximum.z),
+                SCNVector3(minimum.x, maximum.y, maximum.z), SCNVector3(maximum.x, maximum.y, maximum.z)
             ]
         }
     }
