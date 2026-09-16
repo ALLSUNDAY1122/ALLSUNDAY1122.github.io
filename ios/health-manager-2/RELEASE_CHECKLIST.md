@@ -1,6 +1,6 @@
 # RELEASE_CHECKLIST｜第二種衛生管理者｜学びスプリント
 
-更新: 2026-09-13
+更新: 2026-09-16
 
 ## 1. 教材・構造
 - [x] 全300問
@@ -86,9 +86,9 @@
 - [x] App Store本審査自動提出OFF
 
 ### Current release candidate
-- [ ] AI Preflight PASS
-- [ ] Learning Acceptance Contract PASS
-- [ ] StoreKit UI Regression Gate PASS
+- [x] AI Preflight PASS — run `35096193594`, source head `ed0cd9dea290ac15b103137a79001fc0b1114885`
+- [x] Learning Acceptance Contract PASS
+- [x] StoreKit UI Regression Gate PASS
 - [ ] Visual Gate PASS
 - [ ] current HEADを含む新Build生成
 - [ ] 新Build `VALID / APP_STORE_ELIGIBLE / expired=false` read-back
