@@ -94,7 +94,7 @@ enum SplatTransientExportWorkspace {
         ), markerValues.isRegularFile == true,
            markerValues.isSymbolicLink != true,
            let markerSize = markerValues.fileSize,
-           markerSize >= 0,
+           markerSize > 0,
            markerSize <= maximumMarkerByteCount,
            fileManager.fileExists(atPath: marker.path) else {
             return false
@@ -105,12 +105,9 @@ enum SplatTransientExportWorkspace {
         defer { try? markerHandle.close() }
         guard let data = try? markerHandle.read(upToCount: maximumMarkerByteCount + 1),
               let data,
-              data.count <= maximumMarkerByteCount else { return false }
-        if data.isEmpty {
-            return canonicalPath(of: url.deletingLastPathComponent())
-                == canonicalPath(of: fileManager.temporaryDirectory)
-        }
-        guard let recordedPath = String(data: data, encoding: .utf8) else { return false }
+              !data.isEmpty,
+              data.count <= maximumMarkerByteCount,
+              let recordedPath = String(data: data, encoding: .utf8) else { return false }
         return recordedPath == canonicalPath(of: url)
     }
 
