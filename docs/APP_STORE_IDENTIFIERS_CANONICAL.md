@@ -1,6 +1,6 @@
 # 【正本ミラー】対象アプリ識別情報｜App Store Connect / Codemagic
 
-更新: 2026-09-14
+更新: 2026-09-16
 
 このファイルは、Notion正本「【正本】対象アプリ識別情報｜App Store Connect / Codemagic」のGitHubミラーです。
 識別情報はユーザー指定値を最上位正本として扱い、外部検索、過去チャット、既存コード、命名規則、推測で変更・補完しません。ユーザーが命名判断を明示的にAIへ委任した場合は、その委任範囲に限りAIが値を決定して正本へ記録できます。Appleが自動発行する数値IDは実発行値だけを記録します。
@@ -26,12 +26,12 @@ https://app.notion.com/p/3b709c10697d8138a352c422d4dd5c47
 | 1 | 危険物乙4｜学びスプリント | `jp.allsunday1122.otsu4` | `6799755566` | `otsu4_appstore` | `jp.allsunday1122.otsu4.premium` |
 | 2 | 通関士｜学びスプリント | `jp.allsunday1122.tsukanshi` | `6799753744` | `tsukanshi_appstore` | 未記載 |
 | 4 | 管理栄養士国家試験｜学びスプリント | `jp.allsunday1122.kanrieiyoushi` | `6799753841` | `kanrieiyoushi_appstore` | 未記載 |
-| 5 | 薬剤師国家試験｜学びスプリント | `jp.allsunday1122.yakuzaishi` | `6799753724` | `yakuzaishi_appstore` | 未記載 |
+| 5 | 薬剤師国家試験｜学びスプリント | `jp.allsunday1122.yakuzaishi` | `6799753724` | `yakuzaishi_appstore` | 未記載（現製品契約は課金なし） |
 | 6 | 応用情報技術者試験｜学びスプリント | `jp.allsunday1122.apmanabisprint` | `6799754343` | `apmanabisprint_appstore` | 未記載（現製品契約は課金なし） |
-| 7 | ネットワークスペシャリスト試験｜学びスプリント | `jp.allsunday1122.networkspecialist` | 未記載・推測禁止 | `networkspecialist_appstore` | 未記載 |
+| 7 | ネットワークスペシャリスト試験｜学びスプリント | `jp.allsunday1122.networkspecialist` | `6799754573` | `networkspecialist_appstore` | 未記載 |
 | 9 | 公認会計士短答｜学びスプリント | `jp.allsunday1122.cpamanabisprint` | `6799754783` | `cpamanabisprint_appstore` | 未記載 |
 | 10 | 司法書士｜学びスプリント | `jp.allsunday1122.shoshi` | `6799755748` | `shoshi_appstore` | `jp.allsunday1122.shoshi.premium` |
-| 13 | 保健師国家試験｜学びスプリント | `jp.allsunday1122.hokenshi` | Apple発行待ち・推測禁止 | `hokenshi_appstore` | `jp.allsunday1122.hokenshi.premium` |
+| 13 | 保健師国家試験｜学びスプリント | `jp.allsunday1122.hokenshi` | `6801783499` | `hokenshi_appstore` | `jp.allsunday1122.hokenshi.premium` |
 
 ## 運用ルール
 
