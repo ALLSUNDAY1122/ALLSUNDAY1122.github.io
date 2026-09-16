@@ -1,0 +1,34 @@
+name: Shoshi pure-native release diagnostic
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/shoshi-pure-native-diagnostic.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate question audit
+        run: python3 automation/learning-sprint-question-pipeline/validate_questions.py learning-sprint/shoshi/content-loop/learning-sprint-audit.json
+      - name: Validate Apple preflight
+        run: node learning-sprint/shoshi/validate-apple-preflight.mjs
+      - name: Validate prepare script syntax and capabilities
+        run: |
+          bash -n learning-sprint/shoshi/ios/prepare-ios.sh
+          python3 -m py_compile learning-sprint/shoshi/ios/apply-xcode-capabilities.py
+      - name: Validate Privacy Manifest
+        run: |
+          python3 - <<'PY'
+          import plistlib
+          p='learning-sprint/shoshi/ios/PrivacyInfo.xcprivacy'; data=plistlib.load(open(p,'rb')); assert data.get('NSPrivacyTracking') is False; assert data.get('NSPrivacyCollectedDataTypes')==[]; assert data.get('NSPrivacyAccessedAPITypes')==[]; print('PASS privacy')
+          PY
+      - name: Validate canonical icon bytes already in repository
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          p=Path('learning-sprint/shoshi/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png'); assert p.is_file(); digest=hashlib.sha256(p.read_bytes()).hexdigest(); print(p.stat().st_size,digest); assert digest=='c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506'
+          PY
