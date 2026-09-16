@@ -45,12 +45,24 @@ jobs:
           grep -q 'restoreFinishedProjectForS13Reprocess' splat-native-ios/SplatNative/ScanModel.swift
           grep -q 'canReprocessTrusted' splat-native-ios/SplatNative/ScanLibraryView.swift
 
-      - name: Verify dense reconstruction contracts
+      - name: Verify S14 RGB dense seed contract
         run: |
           set -euo pipefail
           python3 splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
+
+      - name: Verify S15 pose trajectory contract
+        run: |
+          set -euo pipefail
           python3 splat-native-ios/scripts/diagnose_s15_pose_trajectory.py --self-test
+
+      - name: Verify native validation contract
+        run: |
+          set -euo pipefail
           bash splat-native-ios/scripts/validate.sh
+
+      - name: Verify immutable Codemagic release topology
+        run: |
+          set -euo pipefail
           grep -q 'Verify immutable materialized reconstruction source' codemagic.yaml
           if grep -q 'python3 splat-native-ios/scripts/apply_s13_depth_seed.py' codemagic.yaml; then
             echo 'Codemagic must not mutate reconstruction source' >&2
