@@ -2,8 +2,8 @@
 +++ dirname splat-native-ios/scripts/validate.sh
 ++ cd splat-native-ios/scripts/..
 ++ pwd
-+ ROOT=/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios
-+ cd /home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios
++ ROOT=/Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios
++ cd /Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/splat-native-ios
 + require_file project.yml
 + test -f project.yml
 + require_file SplatNative/PrivacyInfo.xcprivacy
@@ -113,14 +113,14 @@ PASS: in-memory resume preserves coordinates; cold resume restores ARWorldMap
 + grep -q measureTap SplatNative/SplatViewer.swift
 + require_text SplatNative/SplatViewer.swift editedPoints
 + grep -q editedPoints SplatNative/SplatViewer.swift
-+ require_text SplatNative/SplatResultView.swift åˆ‡ã‚ŠæŠœã
-+ grep -q åˆ‡ã‚ŠæŠœã SplatNative/SplatResultView.swift
-+ require_text SplatNative/SplatResultView.swift èª¿æ•´
-+ grep -q èª¿æ•´ SplatNative/SplatResultView.swift
-+ require_text SplatNative/SplatResultView.swift è¨ˆæ¸¬
-+ grep -q è¨ˆæ¸¬ SplatNative/SplatResultView.swift
-+ require_text SplatNative/SplatResultView.swift å“è³ªå‘ä¸Š
-+ grep -q å“è³ªå‘ä¸Š SplatNative/SplatResultView.swift
++ require_text SplatNative/SplatResultView.swift $'å\210\207ã\202\212æ\212\234ã\201\215'
++ grep -q $'å\210\207ã\202\212æ\212\234ã\201\215' SplatNative/SplatResultView.swift
++ require_text SplatNative/SplatResultView.swift $'èª¿æ\225´'
++ grep -q $'èª¿æ\225´' SplatNative/SplatResultView.swift
++ require_text SplatNative/SplatResultView.swift $'è¨\210æ¸¬'
++ grep -q $'è¨\210æ¸¬' SplatNative/SplatResultView.swift
++ require_text SplatNative/SplatResultView.swift $'å\223\201è³ªå\220\221ä¸\212'
++ grep -q $'å\223\201è³ªå\220\221ä¸\212' SplatNative/SplatResultView.swift
 + for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift
 + require_file SplatNative/MeshScanModel.swift
 + test -f SplatNative/MeshScanModel.swift
@@ -170,8 +170,8 @@ PASS: in-memory resume preserves coordinates; cold resume restores ARWorldMap
 + grep -q sceneReconstruction SplatNative/MeshScanModel.swift
 + require_text SplatNative/MeshScanModel.swift PhotogrammetrySession
 + grep -q PhotogrammetrySession SplatNative/MeshScanModel.swift
-+ require_text SplatNative/MeshScanView.swift 2ç‚¹ã‚¿ãƒƒãƒ—ã§è¨ˆæ¸¬
-+ grep -q 2ç‚¹ã‚¿ãƒƒãƒ—ã§è¨ˆæ¸¬ SplatNative/MeshScanView.swift
++ require_text SplatNative/MeshScanView.swift $'2ç\202¹ã\202¿ã\203\203ã\203\227ã\201§è¨\210æ¸¬'
++ grep -q $'2ç\202¹ã\202¿ã\203\203ã\203\227ã\201§è¨\210æ¸¬' SplatNative/MeshScanView.swift
 + require_text SplatNative/MeshAdvancedSupervisor.swift MeshDepthRecorder
 + grep -q MeshDepthRecorder SplatNative/MeshAdvancedSupervisor.swift
 + require_text SplatNative/MeshAdvancedSupervisor.swift fuseLiDARDenseDepth
@@ -182,8 +182,8 @@ PASS: in-memory resume preserves coordinates; cold resume restores ARWorldMap
 + grep -q bakeDenseRGBTextureAtlas SplatNative/MeshAdvancedSupervisor.swift
 + require_text SplatNative/MeshAdvancedSupervisor.swift runMeshParityAudit
 + grep -q runMeshParityAudit SplatNative/MeshAdvancedSupervisor.swift
-+ require_text SplatNative/RootScanView.swift Meshã‚’ã‚¹ã‚­ãƒ£ãƒ³
-+ grep -q Meshã‚’ã‚¹ã‚­ãƒ£ãƒ³ SplatNative/RootScanView.swift
++ require_text SplatNative/RootScanView.swift $'Meshã\202\222ã\202¹ã\202\255ã\203£ã\203³'
++ grep -q $'Meshã\202\222ã\202¹ã\202\255ã\203£ã\203³' SplatNative/RootScanView.swift
 + require_file SplatNative/ScanProjectStore.swift
 + test -f SplatNative/ScanProjectStore.swift
 + require_file SplatNative/ScanLibraryView.swift
@@ -204,7 +204,7 @@ PASS: in-memory resume preserves coordinates; cold resume restores ARWorldMap
 + grep -q worldMapURL SplatNative/ScanProjectStore.swift
 + require_text SplatNative/ScanLibraryView.swift restoreSavedProject
 + grep -q restoreSavedProject SplatNative/ScanLibraryView.swift
-+ grep -R -n ãŠã‚‚ã¡ã‚ƒã°ã“ SplatNative project.yml
++ grep -R -n $'ã\201\212ã\202\202ã\201¡ã\202\203ã\201°ã\201\223' SplatNative project.yml
 + for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift
 + require_file SplatNative/ScanLabBackend.swift
 + test -f SplatNative/ScanLabBackend.swift
@@ -273,16 +273,16 @@ PASS: in-memory resume preserves coordinates; cold resume restores ARWorldMap
 + grep -q contentConfirmed SplatNative/PublishScanView.swift
 + require_text SplatNative/PublishScanView.swift publicPlaceConfirmed
 + grep -q publicPlaceConfirmed SplatNative/PublishScanView.swift
-+ require_text SplatNative/PublishScanView.swift ä½ç½®æƒ…å ±ã‚’ä»˜ã‘ãªãã¦ã‚‚Discoverã¸å…¬é–‹ã§ãã¾ã™
-+ grep -q ä½ç½®æƒ…å ±ã‚’ä»˜ã‘ãªãã¦ã‚‚Discoverã¸å…¬é–‹ã§ãã¾ã™ SplatNative/PublishScanView.swift
++ require_text SplatNative/PublishScanView.swift $'ä½\215ç½®æ\203\205å ±ã\202\222ä»\230ã\201\221ã\201ªã\201\217ã\201¦ã\202\202Discoverã\201¸å\205¬é\226\213ã\201§ã\201\215ã\201¾ã\201\231'
++ grep -q $'ä½\215ç½®æ\203\205å ±ã\202\222ä»\230ã\201\221ã\201ªã\201\217ã\201¦ã\202\202Discoverã\201¸å\205¬é\226\213ã\201§ã\201\215ã\201¾ã\201\231' SplatNative/PublishScanView.swift
 + require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "cursor"'
 + grep -q 'URLQueryItem(name: "cursor"' SplatNative/ScanLabDiscoverFeedStore.swift
 + require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "q"'
 + grep -q 'URLQueryItem(name: "q"' SplatNative/ScanLabDiscoverFeedStore.swift
 + require_text SplatNative/ScanLabShellView.swift searchable
 + grep -q searchable SplatNative/ScanLabShellView.swift
-+ require_text SplatNative/ScanLabShellView.swift ç¶šãã‚’å†è©¦è¡Œ
-+ grep -q ç¶šãã‚’å†è©¦è¡Œ SplatNative/ScanLabShellView.swift
++ require_text SplatNative/ScanLabShellView.swift $'ç¶\232ã\201\215ã\202\222å\206\215è©¦è¡\214'
++ grep -q $'ç¶\232ã\201\215ã\202\222å\206\215è©¦è¡\214' SplatNative/ScanLabShellView.swift
 + require_text SplatNative/ScanLabShellView.swift ScanReportReason.allCases
 + grep -q ScanReportReason.allCases SplatNative/ScanLabShellView.swift
 + require_text SplatNative/ScanLabShellView.swift 'backend.submitReport(scan'
@@ -299,6 +299,19 @@ PASS: in-memory resume preserves coordinates; cold resume restores ARWorldMap
 + grep -qE 'INFOPLIST_KEY_NSPhotoLibrary|INFOPLIST_KEY_NSMicrophoneUsageDescription|INFOPLIST_KEY_NSUserTrackingUsageDescription' project.yml
 + grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
 + grep -R -nE 'Firebase|Amplitude|Mixpanel|AppsFlyer|Adjust' SplatNative '--include=*.swift'
+SplatNative/SplatColorAdjustment.swift:5:enum SplatColorAdjustment {
+SplatNative/SplatExportService.swift:249:        let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
+SplatNative/SplatExportService.swift:260:            guard needsColorAdjustment else {
+SplatNative/SplatExportService.swift:266:    edited.color = SplatColorAdjustment.apply(
+SplatNative/SplatPersistedEditMaterializer+Cancellation.swift:206:        let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
+SplatNative/SplatPersistedEditMaterializer+Cancellation.swift:219:            guard needsColorAdjustment else {
+SplatNative/SplatPersistedEditMaterializer+Cancellation.swift:225:    edited.color = SplatColorAdjustment.apply(
+SplatNative/MeshExportMemoryPolicy.swift:50:        let thermallyAdjusted: UInt64
+SplatNative/MeshExportMemoryPolicy.swift:53:            thermallyAdjusted = baseBudget
+SplatNative/MeshExportMemoryPolicy.swift:55:            thermallyAdjusted = baseBudget / 4 * 3
+SplatNative/MeshExportMemoryPolicy.swift:57:            thermallyAdjusted = baseBudget / 2
+SplatNative/MeshExportMemoryPolicy.swift:59:            thermallyAdjusted = baseBudget / 2
+SplatNative/MeshExportMemoryPolicy.swift:61:        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
 SplatNative/SplatVideoMemoryPolicy.swift:90:        let thermallyAdjusted: UInt64
 SplatNative/SplatVideoMemoryPolicy.swift:93:            thermallyAdjusted = baseBudget
 SplatNative/SplatVideoMemoryPolicy.swift:95:            thermallyAdjusted = baseBudget / 4 * 3
@@ -307,19 +320,6 @@ SplatNative/SplatVideoMemoryPolicy.swift:99:            thermallyAdjusted = base
 SplatNative/SplatVideoMemoryPolicy.swift:101:        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
 SplatNative/SplatVideoMemoryPolicy.swift:347:        let needsColorAdjustment =
 SplatNative/SplatVideoMemoryPolicy.swift:351:        if hasCanonicalSH3 && needsColorAdjustment {
-SplatNative/SplatExportService.swift:249:        let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
-SplatNative/SplatExportService.swift:260:            guard needsColorAdjustment else {
-SplatNative/SplatExportService.swift:266:    edited.color = SplatColorAdjustment.apply(
-SplatNative/SplatColorAdjustment.swift:5:enum SplatColorAdjustment {
-SplatNative/SplatPersistedEditMaterializer+Cancellation.swift:206:        let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
-SplatNative/SplatPersistedEditMaterializer+Cancellation.swift:219:            guard needsColorAdjustment else {
-SplatNative/SplatPersistedEditMaterializer+Cancellation.swift:225:    edited.color = SplatColorAdjustment.apply(
-SplatNative/SplatViewerMemoryPolicy.swift:40:        let thermallyAdjusted: UInt64
-SplatNative/SplatViewerMemoryPolicy.swift:43:            thermallyAdjusted = baseBudget
-SplatNative/SplatViewerMemoryPolicy.swift:45:            thermallyAdjusted = baseBudget / 4 * 3
-SplatNative/SplatViewerMemoryPolicy.swift:47:            thermallyAdjusted = baseBudget / 2
-SplatNative/SplatViewerMemoryPolicy.swift:50:            thermallyAdjusted = baseBudget / 2
-SplatNative/SplatViewerMemoryPolicy.swift:52:        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
 SplatNative/SplatViewer.swift:111:    private var cameraWasManuallyAdjusted = false
 SplatNative/SplatViewer.swift:182:                self.cameraWasManuallyAdjusted = false
 SplatNative/SplatViewer.swift:235:        cameraWasManuallyAdjusted = true
@@ -331,13 +331,13 @@ SplatNative/SplatViewer.swift:634:        let needsColorAdjustment = abs(setting
 SplatNative/SplatViewer.swift:654:        if !needsCrop && !needsColorAdjustment {
 SplatNative/SplatViewer.swift:679:            guard needsColorAdjustment else {
 SplatNative/SplatViewer.swift:685:    edited.color = SplatColorAdjustment.apply(
-SplatNative/MeshExportMemoryPolicy.swift:50:        let thermallyAdjusted: UInt64
-SplatNative/MeshExportMemoryPolicy.swift:53:            thermallyAdjusted = baseBudget
-SplatNative/MeshExportMemoryPolicy.swift:55:            thermallyAdjusted = baseBudget / 4 * 3
-SplatNative/MeshExportMemoryPolicy.swift:57:            thermallyAdjusted = baseBudget / 2
-SplatNative/MeshExportMemoryPolicy.swift:59:            thermallyAdjusted = baseBudget / 2
-SplatNative/MeshExportMemoryPolicy.swift:61:        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
 SplatNative/MeshAppearanceEditor.swift:30:        let exposureFilter = CIFilter.exposureAdjust(); exposureFilter.inputImage = input; exposureFilter.ev = Float(exposure)
+SplatNative/SplatViewerMemoryPolicy.swift:40:        let thermallyAdjusted: UInt64
+SplatNative/SplatViewerMemoryPolicy.swift:43:            thermallyAdjusted = baseBudget
+SplatNative/SplatViewerMemoryPolicy.swift:45:            thermallyAdjusted = baseBudget / 4 * 3
+SplatNative/SplatViewerMemoryPolicy.swift:47:            thermallyAdjusted = baseBudget / 2
+SplatNative/SplatViewerMemoryPolicy.swift:50:            thermallyAdjusted = baseBudget / 2
+SplatNative/SplatViewerMemoryPolicy.swift:52:        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
 + require_file scripts/scanlab_auth_readiness.mjs
 + test -f scripts/scanlab_auth_readiness.mjs
 + require_file scripts/scanlab_auth_e2e.mjs
@@ -369,4 +369,189 @@ SplatNative/MeshAppearanceEditor.swift:30:        let exposureFilter = CIFilter.
 + require_file SplatNativeTests/ScanLabSessionPolicyTests.swift
 + test -f SplatNativeTests/ScanLabSessionPolicyTests.swift
 + bash scripts/test_session_policy.sh
-scripts/test_session_policy.sh: line 28: xcrun: command not found
+session-policy regression gate passed
++ require_file SplatNativeTests/ScanLabProfilePolicyTests.swift
++ test -f SplatNativeTests/ScanLabProfilePolicyTests.swift
++ require_text SplatNative/ScanLabProfileService.swift scanlab_public_profile
++ grep -q scanlab_public_profile SplatNative/ScanLabProfileService.swift
++ require_text SplatNative/ScanLabProfilePolicy.swift normalizedAvatarURL
++ grep -q normalizedAvatarURL SplatNative/ScanLabProfilePolicy.swift
++ require_file supabase/functions/scanlab-upload/index.ts
++ test -f supabase/functions/scanlab-upload/index.ts
++ python3 scripts/d2_trusted_upload_gate.py
+D2 trusted upload gate: PASS
++ require_file SplatNativeTests/ScanLabPublishPackageTests.swift
++ test -f SplatNativeTests/ScanLabPublishPackageTests.swift
++ require_text SplatNative/ScanLabPublishPackage.swift scene.spz
++ grep -q scene.spz SplatNative/ScanLabPublishPackage.swift
++ require_text SplatNative/ScanLabPublishPackage.swift manifest.json
++ grep -q manifest.json SplatNative/ScanLabPublishPackage.swift
++ require_text SplatNative/ScanLabPublishPackage.swift SHA256.hash
++ grep -q SHA256.hash SplatNative/ScanLabPublishPackage.swift
++ require_file supabase/functions/scanlab-public/asset_delivery.mjs
++ test -f supabase/functions/scanlab-public/asset_delivery.mjs
++ node scripts/test_scanlab_public_asset_delivery.mjs
+scanlab public durable asset delivery contract: PASS
++ node supabase/functions/scanlab-visibility/visibility_contract.test.mjs
+TAP version 13
+# Subtest: public without geotag only requires content privacy and rights confirmations
+ok 1 - public without geotag only requires content privacy and rights confirmations
+  ---
+  duration_ms: 1.737084
+  type: 'test'
+  ...
+# Subtest: partial or invalid public geotag fails closed
+ok 2 - partial or invalid public geotag fails closed
+  ---
+  duration_ms: 0.148167
+  type: 'test'
+  ...
+# Subtest: public geotag requires place confirmation and stores normalized location
+ok 3 - public geotag requires place confirmation and stores normalized location
+  ---
+  duration_ms: 0.104708
+  type: 'test'
+  ...
+# Subtest: public to unlisted clears geodata and rotates the private link
+ok 4 - public to unlisted clears geodata and rotates the private link
+  ---
+  duration_ms: 0.061958
+  type: 'test'
+  ...
+# Subtest: unlisted to private revokes link generation state and clears sharing attestations
+ok 5 - unlisted to private revokes link generation state and clears sharing attestations
+  ---
+  duration_ms: 0.108541
+  type: 'test'
+  ...
+# Subtest: private to unlisted requires sharing confirmation and rotates token
+ok 6 - private to unlisted requires sharing confirmation and rotates token
+  ---
+  duration_ms: 0.095416
+  type: 'test'
+  ...
+# Subtest: unknown target fails closed and same target is a no-op
+ok 7 - unknown target fails closed and same target is a no-op
+  ---
+  duration_ms: 0.049833
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10.076709
++ require_text supabase/functions/scanlab-visibility/index.ts '#token='
++ grep -q '#token=' supabase/functions/scanlab-visibility/index.ts
++ for f in viewer/index.html viewer/viewer.js viewer/viewer.css viewer/share-url.js
++ require_file viewer/index.html
++ test -f viewer/index.html
++ for f in viewer/index.html viewer/viewer.js viewer/viewer.css viewer/share-url.js
++ require_file viewer/viewer.js
++ test -f viewer/viewer.js
++ for f in viewer/index.html viewer/viewer.js viewer/viewer.css viewer/share-url.js
++ require_file viewer/viewer.css
++ test -f viewer/viewer.css
++ for f in viewer/index.html viewer/viewer.js viewer/viewer.css viewer/share-url.js
++ require_file viewer/share-url.js
++ test -f viewer/share-url.js
++ require_text viewer/viewer.js history.replaceState
++ grep -q history.replaceState viewer/viewer.js
++ require_text viewer/viewer.js previewImageUrl
++ grep -q previewImageUrl viewer/viewer.js
++ require_text viewer/viewer.js runtime_load_failed
++ grep -q runtime_load_failed viewer/viewer.js
++ require_text viewer/index.html no-referrer
++ grep -q no-referrer viewer/index.html
++ require_file SplatNativeTests/ScanLabGeotagPolicyTests.swift
++ test -f SplatNativeTests/ScanLabGeotagPolicyTests.swift
++ python3 scripts/test_geotag_publish_contracts.py
+PASS: UI uses trusted publish package
+PASS: app has no legacy publish callsites
+PASS: public copy states location is optional
+PASS: visibility copy matches optional Map behavior
+PASS: public action supports Discover without location
+PASS: policy strips non-public location
+PASS: policy allows public without geotag
+PASS: edge derives independent latitude/longitude presence
+PASS: edge rejects partial public geotag
+PASS: edge requires place attestation only when geotagged
+PASS: edge requires privacy and rights for public
+PASS: DB enforces public-only location
+PASS: DB enforces coordinate pair integrity
++ require_file SplatNative/ScanLabMapQuery.swift
++ test -f SplatNative/ScanLabMapQuery.swift
++ require_file SplatNativeTests/ScanLabMapQueryTests.swift
++ test -f SplatNativeTests/ScanLabMapQueryTests.swift
++ require_text SplatNative/ScanLabShellView.swift ScanLabMapBounds.make
++ grep -q ScanLabMapBounds.make SplatNative/ScanLabShellView.swift
++ python3 -
+D2-012 Discover cursor/search regression gate PASS
++ require_text SplatNative/ScanLabShellView.swift ScanLabAuthorScanBrowserView
++ grep -q ScanLabAuthorScanBrowserView SplatNative/ScanLabShellView.swift
++ require_text SplatNative/ScanLabShellView.swift 'ScanLabPublicProfileView(handle: author.handle)'
++ grep -q 'ScanLabPublicProfileView(handle: author.handle)' SplatNative/ScanLabShellView.swift
++ require_file supabase/functions/scanlab-unpublish/index.ts
++ test -f supabase/functions/scanlab-unpublish/index.ts
++ require_text SplatNative/ScanLabBackend+PublishLifecycle.swift unpublishPublishedScan
++ grep -q unpublishPublishedScan SplatNative/ScanLabBackend+PublishLifecycle.swift
++ require_text SplatNative/ScanLabBackend+PublishLifecycle.swift 'func republish'
++ grep -q 'func republish' SplatNative/ScanLabBackend+PublishLifecycle.swift
++ python3 scripts/test_d2_owner_delete.py
+D2-015 owner-delete regression gate PASS
++ require_file tests/account-delete-contract.test.mjs
++ test -f tests/account-delete-contract.test.mjs
++ require_file tests/account-delete-live-e2e.ts
++ test -f tests/account-delete-live-e2e.ts
++ node tests/account-delete-contract.test.mjs
+account-delete-contract: PASS
++ require_file SplatNativeTests/ScanReportPolicyTests.swift
++ test -f SplatNativeTests/ScanReportPolicyTests.swift
++ require_text SplatNative/ScanReportBackend.swift scanlab_submit_report
++ grep -q scanlab_submit_report SplatNative/ScanReportBackend.swift
++ require_text SplatNative/ScanReportBackend.swift scanlab_has_reported
++ grep -q scanlab_has_reported SplatNative/ScanReportBackend.swift
++ grep -q 'backend.report(scan' SplatNative/ScanLabShellView.swift
++ require_text supabase/functions/scanlab-public/index.ts blockedUserIds
++ grep -q blockedUserIds supabase/functions/scanlab-public/index.ts
++ require_text supabase/functions/scanlab-public/index.ts 'blocked.has(data.owner_id)'
++ grep -q 'blocked.has(data.owner_id)' supabase/functions/scanlab-public/index.ts
++ require_text SplatNative/ScanLabBackend.swift 'func unblock('
++ grep -q 'func unblock(' SplatNative/ScanLabBackend.swift
++ require_text SplatNative/ScanLabAccountView.swift ScanLabBlockedUsersSection
++ grep -q ScanLabBlockedUsersSection SplatNative/ScanLabAccountView.swift
++ python3 scripts/verify_d2_w19_safety.py
+PASS objectionable text guard remains
+PASS report abuse guard available for histories without atomic quota
+PASS existing report quota is not stacked
+PASS report identity binding
+PASS publish fallback rate limit
+PASS report fallback rate limit
+PASS race serialization
+PASS existing publish token bucket reused
+PASS private-to-shared transition consumes quota
+PASS owner moderation state protected
+PASS nested server moderation remains possible
+PASS abuse tables closed to clients
+PASS three-distinct-report moderation threshold preserved
+PASS single report does not directly hide
+PASS moderation audit
+PASS failure hint
+PASS bounded retention
+D2-019 safety regression gate PASS
++ node scripts/d2_hq_integration_contracts.mjs
+D2 HQ cross-worker integration contracts: PASS
++ plutil -lint SplatNative/PrivacyInfo.xcprivacy
++ python3 scripts/privacy_manifest_preflight.py
+privacy-preflight: PASS
+  NSPrivacyAccessedAPICategoryDiskSpace: E174.1
+  NSPrivacyAccessedAPICategoryFileTimestamp: C617.1
+  NSPrivacyAccessedAPICategorySystemBootTime: 35F9.1
++ python3 -
+PASS: D2 privacy manifest / permissions / App Review explanation are aligned
++ echo 'PASS: integrated Scan Lab static contracts'
+PASS: integrated Scan Lab static contracts

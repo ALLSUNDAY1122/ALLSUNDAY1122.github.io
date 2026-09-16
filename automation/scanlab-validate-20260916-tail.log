@@ -1,40 +1,80 @@
-SplatNative/SplatViewer.swift:685:    edited.color = SplatColorAdjustment.apply(
-SplatNative/MeshExportMemoryPolicy.swift:50:        let thermallyAdjusted: UInt64
-SplatNative/MeshExportMemoryPolicy.swift:53:            thermallyAdjusted = baseBudget
-SplatNative/MeshExportMemoryPolicy.swift:55:            thermallyAdjusted = baseBudget / 4 * 3
-SplatNative/MeshExportMemoryPolicy.swift:57:            thermallyAdjusted = baseBudget / 2
-SplatNative/MeshExportMemoryPolicy.swift:59:            thermallyAdjusted = baseBudget / 2
-SplatNative/MeshExportMemoryPolicy.swift:61:        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
-SplatNative/MeshAppearanceEditor.swift:30:        let exposureFilter = CIFilter.exposureAdjust(); exposureFilter.inputImage = input; exposureFilter.ev = Float(exposure)
-+ require_file scripts/scanlab_auth_readiness.mjs
-+ test -f scripts/scanlab_auth_readiness.mjs
-+ require_file scripts/scanlab_auth_e2e.mjs
-+ test -f scripts/scanlab_auth_e2e.mjs
-+ require_file ../.github/workflows/splat-native-ios.yml
-+ test -f ../.github/workflows/splat-native-ios.yml
-+ require_text scripts/scanlab_auth_readiness.mjs /auth/v1/settings
-+ grep -q /auth/v1/settings scripts/scanlab_auth_readiness.mjs
-+ require_text scripts/scanlab_auth_readiness.mjs 'external?.email'
-+ grep -q 'external?.email' scripts/scanlab_auth_readiness.mjs
-+ require_text scripts/scanlab_auth_readiness.mjs disable_signup
-+ grep -q disable_signup scripts/scanlab_auth_readiness.mjs
-+ require_text ../.github/workflows/splat-native-ios.yml 'Hosted ScanLab auth readiness gate'
-+ grep -q 'Hosted ScanLab auth readiness gate' ../.github/workflows/splat-native-ios.yml
-+ require_text ../.github/workflows/splat-native-ios.yml 'node splat-native-ios/scripts/scanlab_auth_readiness.mjs'
-+ grep -q 'node splat-native-ios/scripts/scanlab_auth_readiness.mjs' ../.github/workflows/splat-native-ios.yml
-+ require_text ../.github/workflows/splat-native-ios.yml 'Live ScanLab auth/session/profile E2E gate'
-+ grep -q 'Live ScanLab auth/session/profile E2E gate' ../.github/workflows/splat-native-ios.yml
-+ require_text ../.github/workflows/splat-native-ios.yml secrets.SCANLAB_E2E_EMAIL
-+ grep -q secrets.SCANLAB_E2E_EMAIL ../.github/workflows/splat-native-ios.yml
-+ require_text ../.github/workflows/splat-native-ios.yml secrets.SCANLAB_E2E_PASSWORD
-+ grep -q secrets.SCANLAB_E2E_PASSWORD ../.github/workflows/splat-native-ios.yml
-+ require_text ../.github/workflows/splat-native-ios.yml LIVE_E2E_BLOCKED_BY_TEST_IDENTITY
-+ grep -q LIVE_E2E_BLOCKED_BY_TEST_IDENTITY ../.github/workflows/splat-native-ios.yml
-+ require_text ../.github/workflows/splat-native-ios.yml 'node splat-native-ios/scripts/scanlab_auth_e2e.mjs'
-+ grep -q 'node splat-native-ios/scripts/scanlab_auth_e2e.mjs' ../.github/workflows/splat-native-ios.yml
-+ grep -R -nE 'SCANLAB_E2E_(EMAIL|PASSWORD)=' scripts . --exclude=validate.sh --exclude-dir=.git
-./evidence/d2-w01-auth-profile-wave1.md:58:SCANLAB_E2E_EMAIL='...' SCANLAB_E2E_PASSWORD='...' \
-+ require_file SplatNativeTests/ScanLabSessionPolicyTests.swift
-+ test -f SplatNativeTests/ScanLabSessionPolicyTests.swift
-+ bash scripts/test_session_policy.sh
-scripts/test_session_policy.sh: line 28: xcrun: command not found
+PASS: policy strips non-public location
+PASS: policy allows public without geotag
+PASS: edge derives independent latitude/longitude presence
+PASS: edge rejects partial public geotag
+PASS: edge requires place attestation only when geotagged
+PASS: edge requires privacy and rights for public
+PASS: DB enforces public-only location
+PASS: DB enforces coordinate pair integrity
++ require_file SplatNative/ScanLabMapQuery.swift
++ test -f SplatNative/ScanLabMapQuery.swift
++ require_file SplatNativeTests/ScanLabMapQueryTests.swift
++ test -f SplatNativeTests/ScanLabMapQueryTests.swift
++ require_text SplatNative/ScanLabShellView.swift ScanLabMapBounds.make
++ grep -q ScanLabMapBounds.make SplatNative/ScanLabShellView.swift
++ python3 -
+D2-012 Discover cursor/search regression gate PASS
++ require_text SplatNative/ScanLabShellView.swift ScanLabAuthorScanBrowserView
++ grep -q ScanLabAuthorScanBrowserView SplatNative/ScanLabShellView.swift
++ require_text SplatNative/ScanLabShellView.swift 'ScanLabPublicProfileView(handle: author.handle)'
++ grep -q 'ScanLabPublicProfileView(handle: author.handle)' SplatNative/ScanLabShellView.swift
++ require_file supabase/functions/scanlab-unpublish/index.ts
++ test -f supabase/functions/scanlab-unpublish/index.ts
++ require_text SplatNative/ScanLabBackend+PublishLifecycle.swift unpublishPublishedScan
++ grep -q unpublishPublishedScan SplatNative/ScanLabBackend+PublishLifecycle.swift
++ require_text SplatNative/ScanLabBackend+PublishLifecycle.swift 'func republish'
++ grep -q 'func republish' SplatNative/ScanLabBackend+PublishLifecycle.swift
++ python3 scripts/test_d2_owner_delete.py
+D2-015 owner-delete regression gate PASS
++ require_file tests/account-delete-contract.test.mjs
++ test -f tests/account-delete-contract.test.mjs
++ require_file tests/account-delete-live-e2e.ts
++ test -f tests/account-delete-live-e2e.ts
++ node tests/account-delete-contract.test.mjs
+account-delete-contract: PASS
++ require_file SplatNativeTests/ScanReportPolicyTests.swift
++ test -f SplatNativeTests/ScanReportPolicyTests.swift
++ require_text SplatNative/ScanReportBackend.swift scanlab_submit_report
++ grep -q scanlab_submit_report SplatNative/ScanReportBackend.swift
++ require_text SplatNative/ScanReportBackend.swift scanlab_has_reported
++ grep -q scanlab_has_reported SplatNative/ScanReportBackend.swift
++ grep -q 'backend.report(scan' SplatNative/ScanLabShellView.swift
++ require_text supabase/functions/scanlab-public/index.ts blockedUserIds
++ grep -q blockedUserIds supabase/functions/scanlab-public/index.ts
++ require_text supabase/functions/scanlab-public/index.ts 'blocked.has(data.owner_id)'
++ grep -q 'blocked.has(data.owner_id)' supabase/functions/scanlab-public/index.ts
++ require_text SplatNative/ScanLabBackend.swift 'func unblock('
++ grep -q 'func unblock(' SplatNative/ScanLabBackend.swift
++ require_text SplatNative/ScanLabAccountView.swift ScanLabBlockedUsersSection
++ grep -q ScanLabBlockedUsersSection SplatNative/ScanLabAccountView.swift
++ python3 scripts/verify_d2_w19_safety.py
+PASS objectionable text guard remains
+PASS report abuse guard available for histories without atomic quota
+PASS existing report quota is not stacked
+PASS report identity binding
+PASS publish fallback rate limit
+PASS report fallback rate limit
+PASS race serialization
+PASS existing publish token bucket reused
+PASS private-to-shared transition consumes quota
+PASS owner moderation state protected
+PASS nested server moderation remains possible
+PASS abuse tables closed to clients
+PASS three-distinct-report moderation threshold preserved
+PASS single report does not directly hide
+PASS moderation audit
+PASS failure hint
+PASS bounded retention
+D2-019 safety regression gate PASS
++ node scripts/d2_hq_integration_contracts.mjs
+D2 HQ cross-worker integration contracts: PASS
++ plutil -lint SplatNative/PrivacyInfo.xcprivacy
++ python3 scripts/privacy_manifest_preflight.py
+privacy-preflight: PASS
+  NSPrivacyAccessedAPICategoryDiskSpace: E174.1
+  NSPrivacyAccessedAPICategoryFileTimestamp: C617.1
+  NSPrivacyAccessedAPICategorySystemBootTime: 35F9.1
++ python3 -
+PASS: D2 privacy manifest / permissions / App Review explanation are aligned
++ echo 'PASS: integrated Scan Lab static contracts'
+PASS: integrated Scan Lab static contracts
