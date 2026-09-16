@@ -377,16 +377,11 @@ enum SplatVideoExporter {
     }
 
     private static func finish(_ writer: AVAssetWriter) async throws {
-        try await withCheckedThrowingContinuation { continuation in
-            writer.finishWriting {
-                if writer.status == .completed {
-                    continuation.resume(returning: ())
-                } else {
-                    continuation.resume(throwing: ExportError.writerFailed(
-                        writer.error?.localizedDescription ?? "finishWriting failed"
-                    ))
-                }
-            }
+        await writer.finishWriting()
+        guard writer.status == .completed else {
+            throw ExportError.writerFailed(
+                writer.error?.localizedDescription ?? "finishWriting failed"
+            )
         }
     }
 }
