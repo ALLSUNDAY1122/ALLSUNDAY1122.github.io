@@ -1,0 +1,38 @@
+name: Tsukanshi promote visual-gated source
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/tsukanshi-promote-visual-gated-source.yml]
+permissions:
+  contents: write
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 0}
+      - name: Promote only visual-gated Tsukanshi source
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml'); s=p.read_text()
+          marker='\n  tsukanshi-native-ios:\n'; start=s.index(marker); end=s.find('\n  ', start+len(marker)); end=len(s) if end<0 else end
+          block=s[start:end]
+          old='RELEASE_SOURCE_SHA: a6a6dc6974326c552f62a3c2d16da6426c8d2273'
+          new='RELEASE_SOURCE_SHA: c11fefeef02f188ac0392325cb9abb0d2074c238'
+          assert block.count(old)==1, 'expected old pinned SHA exactly once in Tsukanshi block'
+          assert 'app_store_connect: "Codemagic Shiwake Swipe"' in block
+          assert 'submit_to_testflight: false' in block and 'submit_to_app_store: false' in block
+          block=block.replace(old,new)
+          p.write_text(s[:start]+block+s[end:])
+          PY
+          git diff --check
+          git diff -- codemagic.yaml
+      - name: Commit promoted pin
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          git commit -m 'ci(tsukanshi): pin visual-gated native source'
+          git push origin HEAD:main
