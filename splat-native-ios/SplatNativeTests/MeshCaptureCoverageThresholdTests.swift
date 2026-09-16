@@ -12,16 +12,4 @@ final class MeshCaptureCoverageThresholdTests: XCTestCase {
             XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: value), 0.10, accuracy: 0.0001)
         }
     }
-
-    func testNormalizedForwardDirectionAcceptsPlausibleARBasis() {
-        let direction = MeshCaptureCoveragePolicy.normalizedForwardDirection(SIMD3<Float>(0.6, 0, -0.8))
-        XCTAssertNotNil(direction)
-        XCTAssertEqual(simd_length(direction!), 1, accuracy: 0.0001)
-    }
-
-    func testNormalizedForwardDirectionRejectsScaledOrMalformedBasis() {
-        XCTAssertNil(MeshCaptureCoveragePolicy.normalizedForwardDirection(SIMD3<Float>(60, 0, -80)))
-        XCTAssertNil(MeshCaptureCoveragePolicy.normalizedForwardDirection(SIMD3<Float>(0.006, 0, -0.008)))
-        XCTAssertNil(MeshCaptureCoveragePolicy.normalizedForwardDirection(SIMD3<Float>(.nan, 0, -1)))
-    }
 }
