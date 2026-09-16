@@ -61,7 +61,8 @@ jobs:
           bash -x splat-native-ios/scripts/validate.sh > automation/scanlab-validate-20260916.log 2>&1
           code=$?
           printf '%s\n' "$code" > automation/scanlab-validate-20260916.exitcode
-          cat automation/scanlab-validate-20260916.log
+          tail -n 160 automation/scanlab-validate-20260916.log > automation/scanlab-validate-20260916-tail.log
+          cat automation/scanlab-validate-20260916-tail.log
           exit 0
 
       - name: Verify immutable Codemagic release topology
@@ -84,6 +85,7 @@ jobs:
             splat-native-ios/SplatNative/RootScanView.swift \
             splat-native-ios/SplatNative/SplatResultView.swift \
             automation/scanlab-validate-20260916.log \
+            automation/scanlab-validate-20260916-tail.log \
             automation/scanlab-validate-20260916.exitcode
           git commit -m 'scanlab: materialize release and persist validation trace' || true
           git push origin HEAD:release/scanlab-testflight-20260916
