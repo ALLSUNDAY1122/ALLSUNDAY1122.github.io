@@ -64,6 +64,7 @@ export default function CardsScreen() {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [note, setNote] = useState('');
+  const [speakingKey, setSpeakingKey] = useState<string | null>(null);
 
   const deckSummaries = useMemo<DeckSummary[]>(() => {
     const grouped = new Map<string, Card[]>();
@@ -148,9 +149,25 @@ export default function CardsScreen() {
     setEditingId(null);
   };
 
-  const speak = (text: string) => {
+  const speak = (text: string, key: string) => {
+    const value = text.trim();
+    if (!value) {
+      Alert.alert('読み上げできません', '読み上げる内容がありません。');
+      return;
+    }
     void Speech.stop();
-    Speech.speak(text, { language: 'ja-JP', rate: 0.95 });
+    setSpeakingKey(key);
+    Speech.speak(value, {
+      language: 'ja-JP',
+      rate: 0.95,
+      onStart: () => setSpeakingKey(key),
+      onDone: () => setSpeakingKey(null),
+      onStopped: () => setSpeakingKey(null),
+      onError: () => {
+        setSpeakingKey(null);
+        Alert.alert('読み上げできません', '音声を再生できませんでした。端末の音量や消音設定を確認して、もう一度お試しください。');
+      }
+    });
   };
 
   const confirmDelete = (id: string) => {
@@ -433,11 +450,25 @@ export default function CardsScreen() {
                 {card.note ? <Text style={styles.noteText} numberOfLines={1}>メモ：{card.note}</Text> : null}
 
                 <View style={styles.actionGrid}>
-                  <Pressable onPress={() => speak(card.question)} style={styles.smallAction}>
-                    <Text style={styles.smallActionText}>🔊 表</Text>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="表面を読み上げる"
+                    onPress={() => speak(card.question, `${card.id}:front`)}
+                    style={styles.smallAction}
+                  >
+                    <Text style={styles.smallActionText}>
+                      {speakingKey === `${card.id}:front` ? '🔊 表を再生中…' : '🔊 表を読む'}
+                    </Text>
                   </Pressable>
-                  <Pressable onPress={() => speak(card.answer)} style={styles.smallAction}>
-                    <Text style={styles.smallActionText}>🔊 裏</Text>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="裏面を読み上げる"
+                    onPress={() => speak(card.answer, `${card.id}:back`)}
+                    style={styles.smallAction}
+                  >
+                    <Text style={styles.smallActionText}>
+                      {speakingKey === `${card.id}:back` ? '🔊 裏を再生中…' : '🔊 裏を読む'}
+                    </Text>
                   </Pressable>
                   <Pressable
                     onPress={() => setCardHidden(card.id, !card.isHidden)}
@@ -451,6 +482,9 @@ export default function CardsScreen() {
                     <Text style={styles.smallActionText}>✎ 編集</Text>
                   </Pressable>
                 </View>
+                {speakingKey?.startsWith(`${card.id}:`) ? (
+                  <Text accessibilityLiveRegion="polite" style={styles.speechHint}>読み上げています。音が聞こえない場合はiPhoneの消音モードと音量を確認してください。</Text>
+                ) : null}
               </>
             )}
           </View>
@@ -650,6 +684,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 9
   },
   smallActionText: { color: colors.text, fontSize: 11, fontWeight: '800' },
+  speechHint: { color: colors.muted, fontSize: 11, lineHeight: 16 },
   smallActionActive: { backgroundColor: colors.primarySoft, borderColor: colors.primary },
   smallActionActiveText: { color: colors.primaryDark },
   editWrap: { gap: 10 },
