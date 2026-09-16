@@ -1,5 +1,10 @@
 name: IT Passport batch 12 diagnostic
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/it-passport-rebuild/questions/batch-12.json'
+      - '.github/workflows/itp-batch12-diagnostic.yml'
   issues:
     types: [opened]
   workflow_dispatch:
@@ -8,7 +13,7 @@ permissions:
   issues: write
 jobs:
   diagnose:
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, '[ITP-B12-DIAG-RUN]')
+    if: github.event_name != 'issues' || startsWith(github.event.issue.title, '[ITP-B12-DIAG-RUN]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,8 +39,7 @@ jobs:
             check(qid not in ids and qid not in seen_ids,f'{qid}: duplicate id')
             qt=norm(q.get('question','')); tp=norm(q.get('topic',''))
             check(qt not in texts and qt not in seen_texts,f'{qid}: duplicate question')
-            check(tp not in seen_topics,f'{qid}: duplicate batch topic={q.get("topic")}')
-            if tp in old_topics: print(f'WARN {qid}: topic already exists in canonical: {q.get("topic")}')
+            check(tp not in old_topics and tp not in seen_topics,f'{qid}: duplicate canonical/batch topic={q.get("topic")}')
             check(q.get('subject') in config['subjects'],f'{qid}: invalid subject={q.get("subject")}'); check(q.get('round')==3,f'{qid}: round={q.get("round")}')
             choices=q.get('choices',[]); check(len(choices)==4,f'{qid}: choices len={len(choices)}'); check(len({norm(x) for x in choices})==4,f'{qid}: duplicate choices')
             ci=q.get('correct_index'); check(isinstance(ci,int) and 0<=ci<4,f'{qid}: correct_index={ci}')
@@ -56,7 +60,7 @@ jobs:
             print('FAILURES')
             for f in failures: print('-',f)
             raise SystemExit(1)
-          print('PASS: all Batch12 premerge assertions')
+          print('PASS: all Batch12 premerge assertions including cross-batch topic novelty')
           PY
       - name: Comment diagnostic result
         if: always() && github.event_name == 'issues'
