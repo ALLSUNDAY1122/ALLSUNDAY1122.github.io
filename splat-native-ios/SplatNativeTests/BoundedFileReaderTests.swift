@@ -34,6 +34,9 @@ final class BoundedFileReaderTests: XCTestCase {
         XCTAssertThrowsError(try BoundedFileReader.read(url, maximumBytes: 0)) { error in
             XCTAssertEqual(error as? BoundedFileReaderError, .invalidLimit)
         }
+        XCTAssertThrowsError(try BoundedFileReader.read(url, maximumBytes: -1)) { error in
+            XCTAssertEqual(error as? BoundedFileReaderError, .invalidLimit)
+        }
     }
 
     func testRejectsOverflowingLimit() throws {
@@ -48,6 +51,22 @@ final class BoundedFileReaderTests: XCTestCase {
         let link = target.deletingLastPathComponent().appendingPathComponent("link.bin")
         try FileManager.default.createSymbolicLink(at: link, withDestinationURL: target)
         XCTAssertThrowsError(try BoundedFileReader.read(link, maximumBytes: 64)) { error in
+            XCTAssertEqual(error as? BoundedFileReaderError, .unsafeFile)
+        }
+    }
+
+    func testRejectsDirectory() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        addTeardownBlock { try? FileManager.default.removeItem(at: directory) }
+        XCTAssertThrowsError(try BoundedFileReader.read(directory, maximumBytes: 64)) { error in
+            XCTAssertEqual(error as? BoundedFileReaderError, .unsafeFile)
+        }
+    }
+
+    func testRejectsNonFileURL() {
+        let url = URL(string: "https://example.invalid/metadata.bin")!
+        XCTAssertThrowsError(try BoundedFileReader.read(url, maximumBytes: 64)) { error in
             XCTAssertEqual(error as? BoundedFileReaderError, .unsafeFile)
         }
     }
