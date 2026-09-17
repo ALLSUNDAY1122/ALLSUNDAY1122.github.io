@@ -107,7 +107,6 @@ struct MeshARPlacementView: UIViewRepresentable {
         @objc private func placeFromTap(_ recognizer: UITapGestureRecognizer) {
             guard let view, let frame = view.session.currentFrame, MeshARPlacementPolicy.isStableTracking(frame.camera.trackingState) else { return }
             let point = recognizer.location(in: view)
-            // Estimated planes can move while ARKit refines a surface. Place only on detected horizontal planes.
             let result = raycast(view: view, point: point, allowing: .existingPlaneGeometry, alignment: .horizontal) ?? raycast(view: view, point: point, allowing: .existingPlaneInfinite, alignment: .horizontal)
             guard let result else { return }; place(at: Self.translationOnlyPlacement(from: result.worldTransform))
         }
@@ -115,10 +114,7 @@ struct MeshARPlacementView: UIViewRepresentable {
             guard let placedNode else { return }
             switch recognizer.state {
             case .began, .changed:
-                let delta = Float(recognizer.rotation)
-                guard delta.isFinite else { recognizer.rotation = 0; return }
-                yaw -= delta
-                if !yaw.isFinite { yaw = 0 }
+                yaw = MeshARPlacementPolicy.updatedYaw(current: yaw, gestureDelta: Float(recognizer.rotation))
                 placedNode.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0))
                 recognizer.rotation = 0
             default:
