@@ -31,6 +31,13 @@ final class BoundedFileReaderTests: XCTestCase {
         }
     }
 
+    func testRejectsOverflowingLimit() throws {
+        let url = try temporaryFile(Data())
+        XCTAssertThrowsError(try BoundedFileReader.read(url, maximumBytes: Int.max)) { error in
+            XCTAssertEqual(error as? BoundedFileReaderError, .invalidLimit)
+        }
+    }
+
     func testRejectsSymlink() throws {
         let target = try temporaryFile(Data([1, 2, 3]))
         let link = target.deletingLastPathComponent().appendingPathComponent("link.bin")
