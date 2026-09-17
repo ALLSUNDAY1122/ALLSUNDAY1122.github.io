@@ -14,7 +14,8 @@ enum BoundedFileReader {
         }
         guard url.isFileURL else { throw BoundedFileReaderError.unsafeFile }
 
-        let before = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
+        let keys: Set<URLResourceKey> = [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey, .fileResourceIdentifierKey]
+        let before = try url.resourceValues(forKeys: keys)
         guard before.isRegularFile == true, before.isSymbolicLink != true else {
             throw BoundedFileReaderError.unsafeFile
         }
@@ -27,11 +28,13 @@ enum BoundedFileReader {
         let data = try handle.read(upToCount: maximumBytes + 1) ?? Data()
         guard data.count <= maximumBytes else { throw BoundedFileReaderError.fileTooLarge }
 
-        let after = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
+        let after = try url.resourceValues(forKeys: keys)
         guard after.isRegularFile == true, after.isSymbolicLink != true else {
             throw BoundedFileReaderError.unsafeFile
         }
-        guard before.fileSize == after.fileSize, after.fileSize == data.count else {
+        guard before.fileResourceIdentifier == after.fileResourceIdentifier,
+              before.fileSize == after.fileSize,
+              after.fileSize == data.count else {
             throw BoundedFileReaderError.fileChangedDuringRead
         }
         return data
