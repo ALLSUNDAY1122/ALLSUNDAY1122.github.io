@@ -72,6 +72,9 @@ private struct MeshObjectSceneView: UIViewRepresentable {
         view.preferredFramesPerSecond = 60
         view.backgroundColor = .black
         view.rendersContinuously = false
+        view.defaultCameraController.interactionMode = .orbitTurntable
+        view.defaultCameraController.inertiaEnabled = true
+        view.defaultCameraController.inertiaFriction = 0.05
         return view
     }
 
