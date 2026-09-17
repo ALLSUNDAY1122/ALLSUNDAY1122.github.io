@@ -66,7 +66,7 @@ struct MeshARPlacementView: UIViewRepresentable {
     func makeCoordinator() -> Coordinator { Coordinator(modelURL: modelURL, preparedScene: preparedScene) }
     func makeUIView(context: Context) -> ARSCNView {
         let view = ARSCNView(frame: .zero)
-        view.automaticallyUpdatesLighting = true; view.autoenablesDefaultLighting = true; view.scene = SCNScene(); context.coordinator.attach(to: view)
+        view.automaticallyUpdatesLighting = true; view.autoenablesDefaultLighting = true; view.antialiasingMode = .multisampling4X; view.scene = SCNScene(); context.coordinator.attach(to: view)
         let configuration = ARWorldTrackingConfiguration(); configuration.worldAlignment = .gravity; configuration.planeDetection = [.horizontal]; configuration.environmentTexturing = .automatic
         view.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         let coaching = ARCoachingOverlayView(); coaching.session = view.session; coaching.goal = .horizontalPlane; coaching.activatesAutomatically = true; coaching.translatesAutoresizingMaskIntoConstraints = false; view.addSubview(coaching)
