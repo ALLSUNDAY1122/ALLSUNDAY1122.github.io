@@ -18,8 +18,7 @@ struct MeshARViewerSheet: View {
             if let url = model.resultURL {
                 switch displayMode {
                 case .ar: MeshARPlacementView(modelURL: url, preparedScene: model.previewScene).ignoresSafeArea()
-                case .object:
-                    if let scene = model.previewScene { SceneView(scene: scene, options: [.allowsCameraControl, .autoenablesDefaultLighting]).ignoresSafeArea() }
+                case .object: MeshObjectPreviewView(modelURL: url, preparedScene: model.previewScene).ignoresSafeArea()
                 }
             }
             VStack(spacing: 0) {
@@ -32,6 +31,30 @@ struct MeshARViewerSheet: View {
                 Spacer()
                 if displayMode == .ar { Text("水平面をタップすると、実寸Meshをその位置へ置き直します").font(.caption).padding(.horizontal, 14).padding(.vertical, 9).background(.black.opacity(0.68), in: Capsule()).padding(.bottom, 18) }
             }.foregroundStyle(.white)
+        }
+    }
+}
+
+@MainActor
+private struct MeshObjectPreviewView: View {
+    private let scene: SCNScene?
+
+    init(modelURL: URL, preparedScene: SCNScene?) {
+        if let preparedScene, MeshRawSceneValidator.containsGeometry(preparedScene) {
+            scene = preparedScene
+        } else if let loaded = try? SCNScene(url: modelURL, options: nil), MeshRawSceneValidator.containsGeometry(loaded) {
+            scene = loaded
+        } else {
+            scene = nil
+        }
+    }
+
+    var body: some View {
+        if let scene {
+            SceneView(scene: scene, options: [.allowsCameraControl, .autoenablesDefaultLighting])
+        } else {
+            ContentUnavailableView("3Dモデルを表示できません", systemImage: "cube.transparent")
+                .foregroundStyle(.white)
         }
     }
 }
