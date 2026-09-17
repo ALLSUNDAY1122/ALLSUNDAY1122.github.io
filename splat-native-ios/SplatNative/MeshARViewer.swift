@@ -75,6 +75,8 @@ private struct MeshObjectSceneView: UIViewRepresentable {
         view.defaultCameraController.interactionMode = .orbitTurntable
         view.defaultCameraController.inertiaEnabled = true
         view.defaultCameraController.inertiaFriction = 0.05
+        view.defaultCameraController.minimumVerticalAngle = -89
+        view.defaultCameraController.maximumVerticalAngle = 89
         return view
     }
 
