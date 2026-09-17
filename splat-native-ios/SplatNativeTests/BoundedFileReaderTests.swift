@@ -11,6 +11,11 @@ final class BoundedFileReaderTests: XCTestCase {
         return url
     }
 
+    func testReadsEmptyFileWithPositiveLimit() throws {
+        let url = try temporaryFile(Data())
+        XCTAssertEqual(try BoundedFileReader.read(url, maximumBytes: 1), Data())
+    }
+
     func testReadsFileAtLimit() throws {
         let payload = Data(repeating: 0x41, count: 64)
         let url = try temporaryFile(payload)
