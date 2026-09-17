@@ -51,11 +51,32 @@ private struct MeshObjectPreviewView: View {
 
     var body: some View {
         if let scene {
-            SceneView(scene: scene, options: [.allowsCameraControl, .autoenablesDefaultLighting])
+            MeshObjectSceneView(scene: scene)
         } else {
             ContentUnavailableView("3Dモデルを表示できません", systemImage: "cube.transparent")
                 .foregroundStyle(.white)
         }
+    }
+}
+
+@MainActor
+private struct MeshObjectSceneView: UIViewRepresentable {
+    let scene: SCNScene
+
+    func makeUIView(context: Context) -> SCNView {
+        let view = SCNView(frame: .zero)
+        view.scene = scene
+        view.allowsCameraControl = true
+        view.autoenablesDefaultLighting = true
+        view.antialiasingMode = .multisampling2X
+        view.preferredFramesPerSecond = 60
+        view.backgroundColor = .black
+        view.rendersContinuously = false
+        return view
+    }
+
+    func updateUIView(_ uiView: SCNView, context: Context) {
+        if uiView.scene !== scene { uiView.scene = scene }
     }
 }
 
