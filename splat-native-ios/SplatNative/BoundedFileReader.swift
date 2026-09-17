@@ -9,7 +9,9 @@ enum BoundedFileReaderError: Error, Equatable {
 
 enum BoundedFileReader {
     static func read(_ url: URL, maximumBytes: Int) throws -> Data {
-        guard maximumBytes > 0 else { throw BoundedFileReaderError.invalidLimit }
+        guard maximumBytes > 0, maximumBytes < Int.max else {
+            throw BoundedFileReaderError.invalidLimit
+        }
         guard url.isFileURL else { throw BoundedFileReaderError.unsafeFile }
 
         let before = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
