@@ -29,7 +29,7 @@ struct MeshARViewerSheet: View {
                     Spacer(); Color.clear.frame(width: 42, height: 42)
                 }.padding(.horizontal, 14).padding(.top, 10)
                 Spacer()
-                if displayMode == .ar { Text("水平面をタップすると、実寸Meshをその位置へ置き直します").font(.caption).padding(.horizontal, 14).padding(.vertical, 9).background(.black.opacity(0.68), in: Capsule()).padding(.bottom, 18) }
+                if displayMode == .ar { Text("水平面をタップして配置・2本指で回転（実寸は維持）").font(.caption).padding(.horizontal, 14).padding(.vertical, 9).background(.black.opacity(0.68), in: Capsule()).padding(.bottom, 18) }
             }.foregroundStyle(.white)
         }
     }
@@ -97,9 +97,13 @@ struct MeshARPlacementView: UIViewRepresentable {
     func updateUIView(_ uiView: ARSCNView, context: Context) {}
     static func dismantleUIView(_ uiView: ARSCNView, coordinator: Coordinator) { uiView.session.pause() }
     @MainActor final class Coordinator: NSObject {
-        private let modelURL: URL; private let preparedScene: SCNScene?; private weak var view: ARSCNView?; private var placedNode: SCNNode?
+        private let modelURL: URL; private let preparedScene: SCNScene?; private weak var view: ARSCNView?; private var placedNode: SCNNode?; private var yaw: Float = 0
         init(modelURL: URL, preparedScene: SCNScene?) { self.modelURL = modelURL; self.preparedScene = preparedScene }
-        func attach(to view: ARSCNView) { self.view = view; view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(placeFromTap(_:)))) }
+        func attach(to view: ARSCNView) {
+            self.view = view
+            view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(placeFromTap(_:))))
+            view.addGestureRecognizer(UIRotationGestureRecognizer(target: self, action: #selector(rotatePlacedModel(_:))))
+        }
         @objc private func placeFromTap(_ recognizer: UITapGestureRecognizer) {
             guard let view, let frame = view.session.currentFrame, MeshARPlacementPolicy.isStableTracking(frame.camera.trackingState) else { return }
             let point = recognizer.location(in: view)
@@ -107,12 +111,31 @@ struct MeshARPlacementView: UIViewRepresentable {
             let result = raycast(view: view, point: point, allowing: .existingPlaneGeometry, alignment: .horizontal) ?? raycast(view: view, point: point, allowing: .existingPlaneInfinite, alignment: .horizontal)
             guard let result else { return }; place(at: Self.translationOnlyPlacement(from: result.worldTransform))
         }
+        @objc private func rotatePlacedModel(_ recognizer: UIRotationGestureRecognizer) {
+            guard let placedNode else { return }
+            switch recognizer.state {
+            case .began, .changed:
+                let delta = Float(recognizer.rotation)
+                guard delta.isFinite else { recognizer.rotation = 0; return }
+                yaw -= delta
+                if !yaw.isFinite { yaw = 0 }
+                placedNode.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0))
+                recognizer.rotation = 0
+            default:
+                break
+            }
+        }
         private func raycast(view: ARSCNView, point: CGPoint, allowing target: ARRaycastQuery.Target, alignment: ARRaycastQuery.TargetAlignment) -> ARRaycastResult? { guard let query = view.raycastQuery(from: point, allowing: target, alignment: alignment) else { return nil }; return view.session.raycast(query).first }
         private func place(at transform: simd_float4x4) {
-            guard let view else { return }; if let placedNode { placedNode.simdTransform = transform; return }
+            guard let view else { return }
+            if let placedNode {
+                placedNode.simdTransform = transform
+                placedNode.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0))
+                return
+            }
             let source: SCNScene
             if let preparedScene, MeshRawSceneValidator.containsGeometry(preparedScene) { source = preparedScene } else if let loaded = try? SCNScene(url: modelURL, options: nil), MeshRawSceneValidator.containsGeometry(loaded) { source = loaded } else { return }
-            let anchor = SCNNode(); anchor.simdTransform = transform; let modelRoot = SCNNode(); modelRoot.addChildNode(source.rootNode.clone()); recenterForPlacement(modelRoot); anchor.addChildNode(modelRoot); view.scene.rootNode.addChildNode(anchor); placedNode = anchor
+            let anchor = SCNNode(); anchor.simdTransform = transform; anchor.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0)); let modelRoot = SCNNode(); modelRoot.addChildNode(source.rootNode.clone()); recenterForPlacement(modelRoot); anchor.addChildNode(modelRoot); view.scene.rootNode.addChildNode(anchor); placedNode = anchor
         }
         private func recenterForPlacement(_ root: SCNNode) {
             var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude); var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude); var found = false
