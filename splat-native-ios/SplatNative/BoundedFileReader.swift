@@ -14,7 +14,7 @@ enum BoundedFileReader {
         }
         guard url.isFileURL else { throw BoundedFileReaderError.unsafeFile }
 
-        let keys: Set<URLResourceKey> = [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey, .fileResourceIdentifierKey]
+        let keys: Set<URLResourceKey> = [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
         let before = try url.resourceValues(forKeys: keys)
         guard before.isRegularFile == true, before.isSymbolicLink != true else {
             throw BoundedFileReaderError.unsafeFile
@@ -22,6 +22,7 @@ enum BoundedFileReader {
         if let size = before.fileSize, size > maximumBytes {
             throw BoundedFileReaderError.fileTooLarge
         }
+        let beforeIdentity = fileIdentity(at: url)
 
         let handle = try FileHandle(forReadingFrom: url)
         defer { try? handle.close() }
@@ -32,11 +33,25 @@ enum BoundedFileReader {
         guard after.isRegularFile == true, after.isSymbolicLink != true else {
             throw BoundedFileReaderError.unsafeFile
         }
-        guard before.fileResourceIdentifier == after.fileResourceIdentifier,
+        guard let beforeIdentity,
+              let afterIdentity = fileIdentity(at: url),
+              beforeIdentity == afterIdentity,
               before.fileSize == after.fileSize,
               after.fileSize == data.count else {
             throw BoundedFileReaderError.fileChangedDuringRead
         }
         return data
+    }
+
+    private static func fileIdentity(at url: URL) -> FileIdentity? {
+        guard let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
+              let systemNumber = attributes[.systemNumber] as? NSNumber,
+              let fileNumber = attributes[.systemFileNumber] as? NSNumber else { return nil }
+        return FileIdentity(systemNumber: systemNumber.uint64Value, fileNumber: fileNumber.uint64Value)
+    }
+
+    private struct FileIdentity: Equatable {
+        let systemNumber: UInt64
+        let fileNumber: UInt64
     }
 }
