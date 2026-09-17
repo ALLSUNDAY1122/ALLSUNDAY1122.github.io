@@ -1,0 +1,77 @@
+name: Yobi Mock Bank Pipeline
+
+on:
+  push:
+    branches:
+      - feature/yobi-tantou-native-swiftui
+    paths:
+      - 'learning-sprint/yobi-tantou/content-loop/mock-bank/**'
+      - 'learning-sprint/yobi-tantou/content-loop/validate_candidates.py'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py'
+      - 'learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py'
+      - 'learning-sprint/yobi-tantou/content-loop/promote_practice_release.py'
+      - '.github/workflows/yobi-mock-bank-pipeline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: yobi-mock-bank-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  audit-selected-batches:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/yobi-tantou-native-swiftui
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run only affected mock-bank batches
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          ARGS=(--persist)
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            ARGS+=(--all)
+          else
+            ARGS+=(--git-base "$BEFORE_SHA" --git-head "$HEAD_SHA")
+          fi
+          python learning-sprint/yobi-tantou/content-loop/mock-bank/run_mock_bank_pipeline.py "${ARGS[@]}"
+      - name: Persist changed promoted canonicals
+        run: |
+          ROOT=learning-sprint/yobi-tantou/content-loop/mock-bank
+          mapfile -t FILES < <(find "$ROOT" -maxdepth 1 -type f -name '*.release.json' -print | sort)
+          if [ "${#FILES[@]}" -eq 0 ]; then
+            echo 'No promoted canonical files exist yet.'
+            exit 0
+          fi
+          git add "${FILES[@]}"
+          if git diff --cached --quiet; then
+            echo 'No canonical change.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore(yobi): persist audited mock-bank batches'
+          git push origin HEAD:feature/yobi-tantou-native-swiftui
+      - name: Syntax
+        run: |
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/run_mock_bank_pipeline.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/merge_distractor_notes.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/audit_global_uniqueness.py
+      - name: Upload generated audit bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yobi-mock-bank-audit-${{ github.run_id }}
+          path: learning-sprint/yobi-tantou/content-loop/mock-bank/generated/
+          if-no-files-found: ignore
