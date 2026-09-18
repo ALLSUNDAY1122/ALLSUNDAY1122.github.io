@@ -8,6 +8,7 @@ enum MeshARPlacementPolicy {
     private static let maximumPlacementDistance: Float = 50
     private static let minimumPlacementDistanceSquared = minimumPlacementDistance * minimumPlacementDistance
     private static let maximumPlacementDistanceSquared = maximumPlacementDistance * maximumPlacementDistance
+    private static let minimumForwardProjection: Float = 0.02
     private static let affineTolerance: Float = 0.001
     private static let minimumCameraAxisLengthSquared: Float = 0.81
     private static let maximumCameraAxisLengthSquared: Float = 1.21
@@ -46,7 +47,7 @@ enum MeshARPlacementPolicy {
         let cameraZ = SIMD3<Float>(cameraTransform.columns.2.x, cameraTransform.columns.2.y, cameraTransform.columns.2.z)
         let forward = -cameraZ
         let forwardProjection = simd_dot(delta, forward)
-        return forwardProjection.isFinite && forwardProjection > 0
+        return forwardProjection.isFinite && forwardProjection >= minimumForwardProjection
     }
 
     nonisolated static func translationOnlyPlacement(from raycastTransform: simd_float4x4) -> simd_float4x4 {
