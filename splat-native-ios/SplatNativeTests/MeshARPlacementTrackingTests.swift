@@ -62,6 +62,35 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         camera.columns.2 = SIMD4<Float>(0, 0, 0, 0)
         XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
     }
+    func testPlausiblePlacementRejectsShearedCameraBasis() {
+        var camera = matrix_identity_float4x4
+        var target = matrix_identity_float4x4
+        target.columns.3.z = -1
+        camera.columns.1.x = 0.2
+        XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+    }
+    func testPlausiblePlacementRejectsReflectedCameraBasis() {
+        var camera = matrix_identity_float4x4
+        var target = matrix_identity_float4x4
+        target.columns.3.z = -1
+        camera.columns.0.x = -1
+        XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+    }
+    func testPlausiblePlacementRejectsExtremeEdgeOfCameraCone() {
+        let camera = matrix_identity_float4x4
+        var target = matrix_identity_float4x4
+        target.columns.3 = SIMD4<Float>(2, 0, -0.2, 1)
+        XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+        target.columns.3 = SIMD4<Float>(0.5, 0, -1, 1)
+        XCTAssertTrue(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+    }
+    func testForwardProjectionIsIndependentOfSmallCameraAxisScale() {
+        var camera = matrix_identity_float4x4
+        var target = matrix_identity_float4x4
+        target.columns.3 = SIMD4<Float>(0.5, 0, -1, 1)
+        camera.columns.2.z = 1.05
+        XCTAssertTrue(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+    }
     func testTranslationOnlyPlacementPreservesPositionAndRemovesRaycastTilt() {
         var raycast = matrix_identity_float4x4
         raycast.columns.0 = SIMD4<Float>(0, 1, 0, 0)
