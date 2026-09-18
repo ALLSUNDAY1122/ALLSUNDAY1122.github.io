@@ -56,8 +56,12 @@ enum BoundedFileReader {
             let chunk = try handle.read(upToCount: requestBytes) ?? Data()
             try Task.checkCancellation()
             if chunk.isEmpty { break }
+            // Reject before append so an over-limit file can never force Data to grow beyond the
+            // caller's memory budget, even by the one-byte oversize probe.
+            guard chunk.count <= maximumBytes - data.count else {
+                throw BoundedFileReaderError.fileTooLarge
+            }
             data.append(chunk)
-            if data.count > maximumBytes { throw BoundedFileReaderError.fileTooLarge }
         }
 
         try Task.checkCancellation()
