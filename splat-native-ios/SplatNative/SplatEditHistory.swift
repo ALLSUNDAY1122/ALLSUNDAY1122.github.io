@@ -4,6 +4,8 @@ import Foundation
 /// across launches; this bounded stack exists only to make interactive crop/color adjustments
 /// reversible without rewriting or duplicating the source Gaussian asset.
 struct SplatEditHistory: Equatable, Sendable {
+    static let hardMaximumDepth = 1_024
+
     private(set) var current: SplatEditSettings
     private(set) var undoStack: [SplatEditSettings] = []
     private(set) var redoStack: [SplatEditSettings] = []
@@ -11,7 +13,7 @@ struct SplatEditHistory: Equatable, Sendable {
 
     init(current: SplatEditSettings = .default, maximumDepth: Int = 256) {
         self.current = current.normalized()
-        self.maximumDepth = max(1, maximumDepth)
+        self.maximumDepth = min(Self.hardMaximumDepth, max(1, maximumDepth))
     }
 
     var canUndo: Bool { !undoStack.isEmpty }
