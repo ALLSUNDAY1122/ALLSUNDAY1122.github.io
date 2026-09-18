@@ -140,7 +140,9 @@ struct MeshARPlacementView: UIViewRepresentable {
             guard let view else { return }
             if let placedNode {
                 let target = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-                if simd_distance(placedNode.simdPosition, target) >= 0.002 {
+                let delta = placedNode.simdPosition - target
+                let distanceSquared = simd_length_squared(delta)
+                if distanceSquared.isFinite, distanceSquared >= 0.000004 {
                     placedNode.simdTransform = transform
                     placedNode.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0))
                     if feedback { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
