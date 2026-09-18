@@ -1,6 +1,7 @@
 import ARKit
 import XCTest
 
+@MainActor
 final class MeshARPlacementTrackingTests: XCTestCase {
     func testNormalTrackingAllowsPlacement() {
         XCTAssertTrue(MeshARPlacementPolicy.isStableTracking(.normal))
