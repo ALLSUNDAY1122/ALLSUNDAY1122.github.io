@@ -73,6 +73,7 @@ private struct MeshObjectSceneView: UIViewRepresentable {
         view.backgroundColor = .black
         view.rendersContinuously = false
         view.defaultCameraController.interactionMode = .orbitTurntable
+        view.defaultCameraController.automaticTarget = true
         view.defaultCameraController.inertiaEnabled = true
         view.defaultCameraController.inertiaFriction = 0.05
         view.defaultCameraController.minimumVerticalAngle = -89
