@@ -11,8 +11,6 @@ enum BoundedFileReaderError: Error, Equatable {
 enum BoundedFileReader {
     private static let readChunkBytes = 64 * 1024
     private static let reserveCapacityCeilingBytes = 1024 * 1024
-    // Metadata/sidecar reads should never become a caller-controlled giant allocation.
-    // Larger payloads must use a streaming format-specific reader instead.
     private static let absoluteMaximumBytes = 256 * 1024 * 1024
 
     static func read(_ url: URL, maximumBytes: Int) throws -> Data {
@@ -35,7 +33,11 @@ enum BoundedFileReader {
             throw BoundedFileReaderError.fileChangedDuringRead
         }
 
-        let handle = try FileHandle(forReadingFrom: url)
+        // O_NOFOLLOW closes the lstat->open race where the path could be swapped to a symlink
+        // targeting the same inode between validation and FileHandle construction.
+        let descriptor = Darwin.open(url.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW)
+        guard descriptor >= 0 else { throw BoundedFileReaderError.unsafeFile }
+        let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
         defer { try? handle.close() }
         try Task.checkCancellation()
         guard let openedIdentity = handleIdentity(handle), openedIdentity == beforeIdentity else { throw BoundedFileReaderError.fileChangedDuringRead }
