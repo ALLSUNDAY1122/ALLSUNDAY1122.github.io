@@ -28,16 +28,18 @@ enum BoundedFileReader {
         var data = Data()
         if let size = before.fileSize { data.reserveCapacity(min(size, maximumBytes)) }
         while data.count <= maximumBytes {
-            if Task.isCancelled { throw CancellationError() }
+            try Task.checkCancellation()
             let remainingProbe = maximumBytes - data.count + 1
             let requestBytes = min(Self.readChunkBytes, remainingProbe)
             guard requestBytes > 0 else { break }
             let chunk = try handle.read(upToCount: requestBytes) ?? Data()
+            try Task.checkCancellation()
             if chunk.isEmpty { break }
             data.append(chunk)
             if data.count > maximumBytes { throw BoundedFileReaderError.fileTooLarge }
         }
 
+        try Task.checkCancellation()
         let after = try url.resourceValues(forKeys: keys)
         guard after.isRegularFile == true, after.isSymbolicLink != true else { throw BoundedFileReaderError.unsafeFile }
         guard let afterIdentity = pathIdentity(at: url),
