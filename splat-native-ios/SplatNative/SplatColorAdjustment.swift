@@ -38,12 +38,19 @@ enum SplatColorAdjustment {
                     + SIMD3<Float>(repeating: bias)
                     - midpoint
             ) * SplatPoint.Color.INV_SH_C0
+            let original = coefficients
             coefficients[0] = coefficients[0] * linearGain + dcOffset
             if coefficients.count > 1 {
                 for index in 1..<coefficients.count {
                     coefficients[index] = coefficients[index] * linearGain
                 }
             }
+            // Individually finite imported SH coefficients can still overflow after a legitimate
+            // exposure/contrast gain. Never persist or render an edit containing NaN/Inf; keep the
+            // pre-edit color so the user can recover without poisoning the canonical scene.
+            guard coefficients.allSatisfy({ coefficient in
+                coefficient.x.isFinite && coefficient.y.isFinite && coefficient.z.isFinite
+            }) else { return .sphericalHarmonicFloat(original) }
             return .sphericalHarmonicFloat(coefficients)
 
         case .sRGBUInt8:
