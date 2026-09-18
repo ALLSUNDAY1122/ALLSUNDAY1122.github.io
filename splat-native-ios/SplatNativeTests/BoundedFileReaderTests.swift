@@ -61,8 +61,11 @@ final class BoundedFileReaderTests: XCTestCase {
         }
     }
 
-    func testRejectsOverflowingLimit() throws {
+    func testRejectsUnreasonablyLargeLimit() throws {
         let url = try temporaryFile(Data())
+        XCTAssertThrowsError(try BoundedFileReader.read(url, maximumBytes: 256 * 1024 * 1024 + 1)) { error in
+            XCTAssertEqual(error as? BoundedFileReaderError, .invalidLimit)
+        }
         XCTAssertThrowsError(try BoundedFileReader.read(url, maximumBytes: Int.max)) { error in
             XCTAssertEqual(error as? BoundedFileReaderError, .invalidLimit)
         }
