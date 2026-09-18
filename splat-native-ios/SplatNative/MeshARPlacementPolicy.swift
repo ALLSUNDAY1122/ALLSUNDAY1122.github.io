@@ -11,6 +11,7 @@ enum MeshARPlacementPolicy {
     private static let affineTolerance: Float = 0.001
     private static let minimumCameraAxisLengthSquared: Float = 0.81
     private static let maximumCameraAxisLengthSquared: Float = 1.21
+    private static let maximumCameraAxisDot: Float = 0.02
 
     nonisolated static func isStableTracking(_ state: ARCamera.TrackingState) -> Bool {
         if case .normal = state { return true }
@@ -31,7 +32,7 @@ enum MeshARPlacementPolicy {
     }
 
     nonisolated static func isPlausiblePlacement(_ transform: simd_float4x4, cameraTransform: simd_float4x4) -> Bool {
-        guard isFiniteAffineTransform(transform), isFiniteAffineTransform(cameraTransform) else { return false }
+        guard isFiniteAffineTransform(transform), isPlausibleCameraTransform(cameraTransform) else { return false }
         let target = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
         let camera = SIMD3<Float>(cameraTransform.columns.3.x, cameraTransform.columns.3.y, cameraTransform.columns.3.z)
         let delta = target - camera
@@ -42,10 +43,6 @@ enum MeshARPlacementPolicy {
 
         let cameraZ = SIMD3<Float>(cameraTransform.columns.2.x, cameraTransform.columns.2.y, cameraTransform.columns.2.z)
         let forward = -cameraZ
-        let forwardLengthSquared = simd_length_squared(forward)
-        guard forwardLengthSquared.isFinite,
-              forwardLengthSquared >= minimumCameraAxisLengthSquared,
-              forwardLengthSquared <= maximumCameraAxisLengthSquared else { return false }
         let forwardProjection = simd_dot(delta, forward)
         return forwardProjection.isFinite && forwardProjection > 0
     }
@@ -56,6 +53,22 @@ enum MeshARPlacementPolicy {
         let translation = raycastTransform.columns.3
         transform.columns.3 = SIMD4<Float>(translation.x, translation.y, translation.z, 1)
         return transform
+    }
+
+    private nonisolated static func isPlausibleCameraTransform(_ transform: simd_float4x4) -> Bool {
+        guard isFiniteAffineTransform(transform) else { return false }
+        let x = SIMD3<Float>(transform.columns.0.x, transform.columns.0.y, transform.columns.0.z)
+        let y = SIMD3<Float>(transform.columns.1.x, transform.columns.1.y, transform.columns.1.z)
+        let z = SIMD3<Float>(transform.columns.2.x, transform.columns.2.y, transform.columns.2.z)
+        let lengths = [simd_length_squared(x), simd_length_squared(y), simd_length_squared(z)]
+        guard lengths.allSatisfy({ $0.isFinite && $0 >= minimumCameraAxisLengthSquared && $0 <= maximumCameraAxisLengthSquared }) else { return false }
+        let xy = simd_dot(x, y)
+        let xz = simd_dot(x, z)
+        let yz = simd_dot(y, z)
+        return xy.isFinite && xz.isFinite && yz.isFinite
+            && abs(xy) <= maximumCameraAxisDot
+            && abs(xz) <= maximumCameraAxisDot
+            && abs(yz) <= maximumCameraAxisDot
     }
 
     private nonisolated static func isFiniteAffineTransform(_ transform: simd_float4x4) -> Bool {
