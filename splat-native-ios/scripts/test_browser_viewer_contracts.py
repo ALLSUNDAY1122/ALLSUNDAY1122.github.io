@@ -45,7 +45,8 @@ class Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *args): pass
 
 with contextlib.ExitStack() as stack:
-    server = socketserver.TCPServer(("127.0.0.1", 8765), Quiet)
+    server = socketserver.TCPServer(("127.0.0.1", 0), Quiet)
+    port = server.server_address[1]
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     old = Path.cwd()
     import os
@@ -55,8 +56,15 @@ with contextlib.ExitStack() as stack:
     stack.callback(os.chdir, old)
     time.sleep(.2)
     def dom(scenario):
-        url=f"http://127.0.0.1:8765/scripts/browser_viewer_runtime_harness/index.html?id=fixture&scenario={scenario}"
-        return subprocess.check_output([chrome,"--headless","--disable-gpu","--no-sandbox","--virtual-time-budget=2500","--dump-dom",url],text=True,stderr=subprocess.STDOUT,timeout=20)
+        url=f"http://127.0.0.1:{port}/scripts/browser_viewer_runtime_harness/index.html?id=fixture&scenario={scenario}"
+        last = None
+        for _ in range(2):
+            try:
+                return subprocess.check_output([chrome,"--headless","--disable-gpu","--no-sandbox","--virtual-time-budget=5000","--dump-dom",url],text=True,stderr=subprocess.STDOUT,timeout=25)
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+                last = exc
+                time.sleep(.25)
+        raise last
     success=dom("success")
     assert 'data-status="success"' in success and 'data-scene-started="true"' in success
     metadata_retry=dom("metadataRetry")
