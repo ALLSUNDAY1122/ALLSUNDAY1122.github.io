@@ -45,16 +45,17 @@ final class MeshFrameJPEGEncoderTests: XCTestCase {
         let data = try XCTUnwrap(encoder.encode(MeshFrameImage(pixelBuffer: buffer)))
         try assertDecodable(data, width: width, height: height)
 
-        // Quality is a caller-controlled boundary; values outside ImageIO's 0...1 range
-        // must be clamped instead of turning a capture frame into an encoding failure.
-        let highQuality = try XCTUnwrap(
-            encoder.encode(MeshFrameImage(pixelBuffer: buffer), compressionQuality: 2)
-        )
-        let lowQuality = try XCTUnwrap(
-            encoder.encode(MeshFrameImage(pixelBuffer: buffer), compressionQuality: -1)
-        )
+        let highQuality = try XCTUnwrap(encoder.encode(MeshFrameImage(pixelBuffer: buffer), compressionQuality: 2))
+        let lowQuality = try XCTUnwrap(encoder.encode(MeshFrameImage(pixelBuffer: buffer), compressionQuality: -1))
         try assertDecodable(highQuality, width: width, height: height)
         try assertDecodable(lowQuality, width: width, height: height)
+    }
+
+    func testInputDimensionPolicyRejectsOverflowAndImplausiblyLargeFrames() {
+        XCTAssertTrue(MeshFrameJPEGEncoder.isPlausiblePixelDimensions(width: 8_192, height: 4_320))
+        XCTAssertFalse(MeshFrameJPEGEncoder.isPlausiblePixelDimensions(width: 0, height: 1_080))
+        XCTAssertFalse(MeshFrameJPEGEncoder.isPlausiblePixelDimensions(width: Int.max, height: 2))
+        XCTAssertFalse(MeshFrameJPEGEncoder.isPlausiblePixelDimensions(width: 10_000, height: 10_000))
     }
 
     private func assertDecodable(_ data: Data, width: Int, height: Int) throws {
@@ -63,9 +64,7 @@ final class MeshFrameJPEGEncoderTests: XCTestCase {
         XCTAssertEqual(Array(data.suffix(2)), [0xFF, 0xD9])
 
         let source = try XCTUnwrap(CGImageSourceCreateWithData(data as CFData, nil))
-        let properties = try XCTUnwrap(
-            CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any]
-        )
+        let properties = try XCTUnwrap(CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any])
         XCTAssertEqual(properties[kCGImagePropertyPixelWidth] as? Int, width)
         XCTAssertEqual(properties[kCGImagePropertyPixelHeight] as? Int, height)
     }
