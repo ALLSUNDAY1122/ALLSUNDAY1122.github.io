@@ -7,6 +7,10 @@ enum MeshARPlacementPolicy {
         return false
     }
 
+    nonisolated static func shouldUseEstimatedPlane(hasPlacedModel: Bool) -> Bool {
+        !hasPlacedModel
+    }
+
     nonisolated static func updatedYaw(current: Float, gestureDelta: Float) -> Float {
         guard current.isFinite else { return 0 }
         guard gestureDelta.isFinite else { return current }
