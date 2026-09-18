@@ -9,6 +9,8 @@ enum MeshARPlacementPolicy {
     private static let minimumPlacementDistanceSquared = minimumPlacementDistance * minimumPlacementDistance
     private static let maximumPlacementDistanceSquared = maximumPlacementDistance * maximumPlacementDistance
     private static let affineTolerance: Float = 0.001
+    private static let minimumCameraAxisLengthSquared: Float = 0.81
+    private static let maximumCameraAxisLengthSquared: Float = 1.21
 
     nonisolated static func isStableTracking(_ state: ARCamera.TrackingState) -> Bool {
         if case .normal = state { return true }
@@ -20,8 +22,7 @@ enum MeshARPlacementPolicy {
     nonisolated static func updatedYaw(current: Float, gestureDelta: Float) -> Float {
         guard current.isFinite else { return 0 }
         guard gestureDelta.isFinite, abs(gestureDelta) <= maximumGestureDelta else { return normalizedYaw(current) }
-        let normalizedCurrent = normalizedYaw(current)
-        return normalizedYaw(normalizedCurrent - gestureDelta)
+        return normalizedYaw(normalizedYaw(current) - gestureDelta)
     }
 
     nonisolated static func hasFiniteTranslation(_ transform: simd_float4x4) -> Bool {
@@ -42,7 +43,9 @@ enum MeshARPlacementPolicy {
         let cameraZ = SIMD3<Float>(cameraTransform.columns.2.x, cameraTransform.columns.2.y, cameraTransform.columns.2.z)
         let forward = -cameraZ
         let forwardLengthSquared = simd_length_squared(forward)
-        guard forwardLengthSquared.isFinite, forwardLengthSquared > 0.25, forwardLengthSquared < 4 else { return false }
+        guard forwardLengthSquared.isFinite,
+              forwardLengthSquared >= minimumCameraAxisLengthSquared,
+              forwardLengthSquared <= maximumCameraAxisLengthSquared else { return false }
         let forwardProjection = simd_dot(delta, forward)
         return forwardProjection.isFinite && forwardProjection > 0
     }
