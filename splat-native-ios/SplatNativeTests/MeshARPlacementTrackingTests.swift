@@ -88,8 +88,10 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         var camera = matrix_identity_float4x4
         var target = matrix_identity_float4x4
         target.columns.3 = SIMD4<Float>(0.5, 0, -1, 1)
-        camera.columns.2.z = 1.05
+        camera.columns.2.z = 1.005
         XCTAssertTrue(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+        camera.columns.2.z = 1.05
+        XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
     }
     func testTranslationOnlyPlacementPreservesPositionAndRemovesRaycastTilt() {
         var raycast = matrix_identity_float4x4
