@@ -4,11 +4,7 @@ import SwiftUI
 
 @MainActor
 struct MeshARViewerSheet: View {
-    enum DisplayMode: String, CaseIterable, Identifiable {
-        case ar = "AR"
-        case object = "オブジェクト"
-        var id: String { rawValue }
-    }
+    enum DisplayMode: String, CaseIterable, Identifiable { case ar = "AR"; case object = "オブジェクト"; var id: String { rawValue } }
     @EnvironmentObject var model: MeshScanModel
     @Environment(\.dismiss) private var dismiss
     @State private var displayMode: DisplayMode = .ar
@@ -38,31 +34,20 @@ struct MeshARViewerSheet: View {
 @MainActor
 private struct MeshObjectPreviewView: View {
     private let scene: SCNScene?
-
     init(modelURL: URL, preparedScene: SCNScene?) {
-        if let preparedScene, MeshRawSceneValidator.containsGeometry(preparedScene) {
-            scene = preparedScene
-        } else if let loaded = try? SCNScene(url: modelURL, options: nil), MeshRawSceneValidator.containsGeometry(loaded) {
-            scene = loaded
-        } else {
-            scene = nil
-        }
+        if let preparedScene, MeshRawSceneValidator.containsGeometry(preparedScene) { scene = preparedScene }
+        else if let loaded = try? SCNScene(url: modelURL, options: nil), MeshRawSceneValidator.containsGeometry(loaded) { scene = loaded }
+        else { scene = nil }
     }
-
     var body: some View {
-        if let scene {
-            MeshObjectSceneView(scene: scene)
-        } else {
-            ContentUnavailableView("3Dモデルを表示できません", systemImage: "cube.transparent")
-                .foregroundStyle(.white)
-        }
+        if let scene { MeshObjectSceneView(scene: scene) }
+        else { ContentUnavailableView("3Dモデルを表示できません", systemImage: "cube.transparent").foregroundStyle(.white) }
     }
 }
 
 @MainActor
 private struct MeshObjectSceneView: UIViewRepresentable {
     let scene: SCNScene
-
     func makeUIView(context: Context) -> SCNView {
         let view = SCNView(frame: .zero)
         view.scene = scene
@@ -80,10 +65,7 @@ private struct MeshObjectSceneView: UIViewRepresentable {
         view.defaultCameraController.maximumVerticalAngle = 89
         return view
     }
-
-    func updateUIView(_ uiView: SCNView, context: Context) {
-        if uiView.scene !== scene { uiView.scene = scene }
-    }
+    func updateUIView(_ uiView: SCNView, context: Context) { if uiView.scene !== scene { uiView.scene = scene } }
 }
 
 @MainActor
@@ -102,6 +84,7 @@ struct MeshARPlacementView: UIViewRepresentable {
     }
     func updateUIView(_ uiView: ARSCNView, context: Context) {}
     static func dismantleUIView(_ uiView: ARSCNView, coordinator: Coordinator) { uiView.session.pause() }
+
     @MainActor final class Coordinator: NSObject {
         private let modelURL: URL; private let preparedScene: SCNScene?; private weak var view: ARSCNView?; private var placedNode: SCNNode?; private var yaw: Float = 0
         init(modelURL: URL, preparedScene: SCNScene?) { self.modelURL = modelURL; self.preparedScene = preparedScene }
@@ -115,9 +98,10 @@ struct MeshARPlacementView: UIViewRepresentable {
             let point = recognizer.location(in: view)
             let confirmed = raycast(view: view, point: point, allowing: .existingPlaneGeometry, alignment: .horizontal)
                 ?? raycast(view: view, point: point, allowing: .existingPlaneInfinite, alignment: .horizontal)
-            let result = confirmed ?? (placedNode == nil ? raycast(view: view, point: point, allowing: .estimatedPlane, alignment: .horizontal) : nil)
-            guard let result, Self.hasFiniteTranslation(result.worldTransform) else { return }
-            place(at: Self.translationOnlyPlacement(from: result.worldTransform))
+            let allowEstimated = MeshARPlacementPolicy.shouldUseEstimatedPlane(hasPlacedModel: placedNode != nil)
+            let result = confirmed ?? (allowEstimated ? raycast(view: view, point: point, allowing: .estimatedPlane, alignment: .horizontal) : nil)
+            guard let result, MeshARPlacementPolicy.hasFiniteTranslation(result.worldTransform) else { return }
+            place(at: MeshARPlacementPolicy.translationOnlyPlacement(from: result.worldTransform))
         }
         @objc private func rotatePlacedModel(_ recognizer: UIRotationGestureRecognizer) {
             guard let placedNode else { return }
@@ -126,11 +110,13 @@ struct MeshARPlacementView: UIViewRepresentable {
                 yaw = MeshARPlacementPolicy.updatedYaw(current: yaw, gestureDelta: Float(recognizer.rotation))
                 placedNode.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0))
                 recognizer.rotation = 0
-            default:
-                break
+            default: break
             }
         }
-        private func raycast(view: ARSCNView, point: CGPoint, allowing target: ARRaycastQuery.Target, alignment: ARRaycastQuery.TargetAlignment) -> ARRaycastResult? { guard let query = view.raycastQuery(from: point, allowing: target, alignment: alignment) else { return nil }; return view.session.raycast(query).first }
+        private func raycast(view: ARSCNView, point: CGPoint, allowing target: ARRaycastQuery.Target, alignment: ARRaycastQuery.TargetAlignment) -> ARRaycastResult? {
+            guard let query = view.raycastQuery(from: point, allowing: target, alignment: alignment) else { return nil }
+            return view.session.raycast(query).first
+        }
         private func place(at transform: simd_float4x4) {
             guard let view else { return }
             if let placedNode {
@@ -139,7 +125,9 @@ struct MeshARPlacementView: UIViewRepresentable {
                 return
             }
             let source: SCNScene
-            if let preparedScene, MeshRawSceneValidator.containsGeometry(preparedScene) { source = preparedScene } else if let loaded = try? SCNScene(url: modelURL, options: nil), MeshRawSceneValidator.containsGeometry(loaded) { source = loaded } else { return }
+            if let preparedScene, MeshRawSceneValidator.containsGeometry(preparedScene) { source = preparedScene }
+            else if let loaded = try? SCNScene(url: modelURL, options: nil), MeshRawSceneValidator.containsGeometry(loaded) { source = loaded }
+            else { return }
             let anchor = SCNNode(); anchor.simdTransform = transform; anchor.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0)); let modelRoot = SCNNode(); modelRoot.addChildNode(source.rootNode.clone()); recenterForPlacement(modelRoot); anchor.addChildNode(modelRoot); view.scene.rootNode.addChildNode(anchor); placedNode = anchor
         }
         private func recenterForPlacement(_ root: SCNNode) {
@@ -147,8 +135,6 @@ struct MeshARPlacementView: UIViewRepresentable {
             root.enumerateChildNodes { node, _ in guard let geometry = node.geometry else { return }; let bounds = geometry.boundingBox; for corner in Self.corners(minimum: bounds.min, maximum: bounds.max) { let local = node.convertPosition(corner, to: root); let p = SIMD3<Float>(local.x, local.y, local.z); guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }; minimum = simd_min(minimum, p); maximum = simd_max(maximum, p); found = true } }
             guard found else { return }; let extent = maximum - minimum; guard extent.x.isFinite, extent.y.isFinite, extent.z.isFinite else { return }; let center = minimum + extent / 2; guard center.x.isFinite, center.y.isFinite, center.z.isFinite else { return }; root.position = SCNVector3(-center.x, -minimum.y, -center.z)
         }
-        nonisolated static func hasFiniteTranslation(_ transform: simd_float4x4) -> Bool { let translation = transform.columns.3; return translation.x.isFinite && translation.y.isFinite && translation.z.isFinite }
-        nonisolated static func translationOnlyPlacement(from raycastTransform: simd_float4x4) -> simd_float4x4 { var transform = matrix_identity_float4x4; let translation = raycastTransform.columns.3; if translation.x.isFinite, translation.y.isFinite, translation.z.isFinite { transform.columns.3 = SIMD4<Float>(translation.x, translation.y, translation.z, 1) }; return transform }
         private static func corners(minimum: SCNVector3, maximum: SCNVector3) -> [SCNVector3] { [SCNVector3(minimum.x, minimum.y, minimum.z), SCNVector3(maximum.x, minimum.y, minimum.z), SCNVector3(minimum.x, maximum.y, minimum.z), SCNVector3(maximum.x, maximum.y, minimum.z), SCNVector3(minimum.x, minimum.y, maximum.z), SCNVector3(maximum.x, minimum.y, maximum.z), SCNVector3(minimum.x, maximum.y, maximum.z), SCNVector3(maximum.x, maximum.y, maximum.z)] }
     }
 }
