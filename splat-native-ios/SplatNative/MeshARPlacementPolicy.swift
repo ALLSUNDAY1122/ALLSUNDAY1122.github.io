@@ -10,7 +10,7 @@ enum MeshARPlacementPolicy {
     private static let maximumPlacementDistanceSquared = maximumPlacementDistance * maximumPlacementDistance
     private static let minimumForwardProjection: Float = 0.05
     private static let minimumForwardCosineSquared: Float = 0.25
-    private static let affineTolerance: Float = 0.001
+    private static let affineTolerance: Float = 0.00001
     private static let minimumCameraAxisLengthSquared: Float = 0.9801
     private static let maximumCameraAxisLengthSquared: Float = 1.0201
     private static let maximumCameraAxisDot: Float = 0.02
