@@ -100,25 +100,27 @@ struct MeshARPlacementView: UIViewRepresentable {
         }
         @objc private func placeFromTap(_ recognizer: UITapGestureRecognizer) {
             guard let view, let frame = view.session.currentFrame, MeshARPlacementPolicy.isStableTracking(frame.camera.trackingState) else { return }
-            placeFromScreenPoint(recognizer.location(in: view), in: view, allowEstimated: placedNode == nil)
+            placeFromScreenPoint(recognizer.location(in: view), in: view, allowEstimated: placedNode == nil, feedback: true)
         }
         @objc private func repositionFromPan(_ recognizer: UIPanGestureRecognizer) {
-            guard recognizer.state == .began || recognizer.state == .changed,
+            guard recognizer.state == .began || recognizer.state == .changed || recognizer.state == .ended,
                   let view, placedNode != nil,
                   let frame = view.session.currentFrame,
                   MeshARPlacementPolicy.isStableTracking(frame.camera.trackingState) else { return }
             let now = CACurrentMediaTime()
             if recognizer.state == .changed, now - lastPanRaycastTime < (1.0 / 60.0) { return }
             lastPanRaycastTime = now
-            placeFromScreenPoint(recognizer.location(in: view), in: view, allowEstimated: false)
+            placeFromScreenPoint(recognizer.location(in: view), in: view, allowEstimated: false, feedback: recognizer.state == .ended)
         }
-        private func placeFromScreenPoint(_ point: CGPoint, in view: ARSCNView, allowEstimated: Bool) {
+        private func placeFromScreenPoint(_ point: CGPoint, in view: ARSCNView, allowEstimated: Bool, feedback: Bool) {
             let confirmed = raycast(view: view, point: point, allowing: .existingPlaneGeometry, alignment: .horizontal)
                 ?? raycast(view: view, point: point, allowing: .existingPlaneInfinite, alignment: .horizontal)
             let mayEstimate = allowEstimated && MeshARPlacementPolicy.shouldUseEstimatedPlane(hasPlacedModel: placedNode != nil)
             let result = confirmed ?? (mayEstimate ? raycast(view: view, point: point, allowing: .estimatedPlane, alignment: .horizontal) : nil)
-            guard let result, MeshARPlacementPolicy.hasFiniteTranslation(result.worldTransform) else { return }
-            place(at: MeshARPlacementPolicy.translationOnlyPlacement(from: result.worldTransform))
+            guard let result,
+                  let cameraTransform = view.session.currentFrame?.camera.transform,
+                  MeshARPlacementPolicy.isPlausiblePlacement(result.worldTransform, cameraTransform: cameraTransform) else { return }
+            place(at: MeshARPlacementPolicy.translationOnlyPlacement(from: result.worldTransform), feedback: feedback)
         }
         @objc private func rotatePlacedModel(_ recognizer: UIRotationGestureRecognizer) {
             guard let placedNode else { return }
@@ -134,11 +136,15 @@ struct MeshARPlacementView: UIViewRepresentable {
             guard let query = view.raycastQuery(from: point, allowing: target, alignment: alignment) else { return nil }
             return view.session.raycast(query).first
         }
-        private func place(at transform: simd_float4x4) {
+        private func place(at transform: simd_float4x4, feedback: Bool) {
             guard let view else { return }
             if let placedNode {
-                placedNode.simdTransform = transform
-                placedNode.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0))
+                let target = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+                if simd_distance(placedNode.simdPosition, target) >= 0.002 {
+                    placedNode.simdTransform = transform
+                    placedNode.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0))
+                }
+                if feedback { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
                 return
             }
             let source: SCNScene
