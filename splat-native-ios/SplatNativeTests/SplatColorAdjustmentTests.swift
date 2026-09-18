@@ -31,9 +31,6 @@ final class SplatColorAdjustmentTests: XCTestCase {
     }
 
     func testSHAdjustmentPreservesUnclippedDCEnergy() {
-        // SplatIO's asSRGBFloat clamps SH0 into 0...1. Use coefficients whose decoded red is
-        // above 1 and blue is below 0 so a round-trip through display RGB would irreversibly flatten
-        // both channels before the edit. Coefficient-domain affine adjustment must preserve them.
         let original = [
             SIMD3<Float>(3.0, 0.2, -2.2),
             SIMD3<Float>(0.05, -0.03, 0.01)
@@ -107,6 +104,22 @@ final class SplatColorAdjustmentTests: XCTestCase {
             return XCTFail("Expected unchanged sRGB color")
         }
         XCTAssertEqual(preservedBytes, originalBytes)
+    }
+
+    func testFiniteSHInputThatOverflowsDuringEditPreservesOriginalCoefficients() {
+        let original = [
+            SIMD3<Float>(Float.greatestFiniteMagnitude, 0.1, -0.1),
+            SIMD3<Float>(0.02, Float.greatestFiniteMagnitude, 0.03)
+        ]
+        let result = SplatColorAdjustment.apply(
+            .sphericalHarmonicFloat(original),
+            exposureEV: 2.0,
+            contrast: 1.5
+        )
+        guard case .sphericalHarmonicFloat(let coefficients) = result else {
+            return XCTFail("Expected SH color")
+        }
+        XCTAssertEqual(coefficients, original)
     }
 
     func testSRGBEditStillClampsToDisplayRange() {
