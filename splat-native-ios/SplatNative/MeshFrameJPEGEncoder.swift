@@ -47,6 +47,10 @@ final class MeshFrameJPEGEncoder: @unchecked Sendable {
 
     func encode(_ frameImage: MeshFrameImage, compressionQuality: CGFloat = 0.91) -> Data? {
         autoreleasepool {
+            // Capture teardown can cancel the task while a retained camera frame is still queued.
+            // Do not spend a multi-megapixel Core Image render on a frame that can no longer be
+            // committed to the active scan. This also shortens the lifetime of the retained buffer.
+            guard !Task.isCancelled else { return nil }
             let width = CVPixelBufferGetWidth(frameImage.pixelBuffer)
             let height = CVPixelBufferGetHeight(frameImage.pixelBuffer)
             guard Self.isPlausiblePixelDimensions(width: width, height: height) else { return nil }
@@ -62,11 +66,14 @@ final class MeshFrameJPEGEncoder: @unchecked Sendable {
             // full-size CGImage materialization that the previous ImageIO bridge required and
             // lowers the transient capture working set for multi-megapixel AR camera frames.
             let quality = Self.normalizedCompressionQuality(compressionQuality)
-            return context.jpegRepresentation(
+            guard let data = context.jpegRepresentation(
                 of: image,
                 colorSpace: outputColorSpace,
                 options: [compressionQualityKey: quality]
-            )
+            ) else { return nil }
+            // Cancellation may race the synchronous Core Image call. Do not hand stale encoded data
+            // back to persistence after the capture generation has already been abandoned.
+            return Task.isCancelled ? nil : data
         }
     }
 }
