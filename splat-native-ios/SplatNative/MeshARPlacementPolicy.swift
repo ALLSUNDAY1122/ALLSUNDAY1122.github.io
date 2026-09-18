@@ -4,6 +4,7 @@ import simd
 
 enum MeshARPlacementPolicy {
     private static let maximumGestureDelta = Float.pi
+    private static let minimumPlacementDistance: Float = 0.05
     private static let maximumPlacementDistance: Float = 50
 
     nonisolated static func isStableTracking(_ state: ARCamera.TrackingState) -> Bool {
@@ -35,7 +36,7 @@ enum MeshARPlacementPolicy {
         let target = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
         let camera = SIMD3<Float>(cameraTransform.columns.3.x, cameraTransform.columns.3.y, cameraTransform.columns.3.z)
         let distance = simd_distance(target, camera)
-        return distance.isFinite && distance <= maximumPlacementDistance
+        return distance.isFinite && distance >= minimumPlacementDistance && distance <= maximumPlacementDistance
     }
 
     nonisolated static func translationOnlyPlacement(from raycastTransform: simd_float4x4) -> simd_float4x4 {
