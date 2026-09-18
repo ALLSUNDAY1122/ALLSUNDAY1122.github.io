@@ -142,13 +142,13 @@ struct MeshARPlacementView: UIViewRepresentable {
             if let preparedScene, MeshRawSceneValidator.containsGeometry(preparedScene) { source = preparedScene }
             else if let loaded = try? SCNScene(url: modelURL, options: nil), MeshRawSceneValidator.containsGeometry(loaded) { source = loaded }
             else { return }
-            let anchor = SCNNode(); anchor.simdTransform = transform; anchor.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0)); let modelRoot = SCNNode(); modelRoot.addChildNode(source.rootNode.clone()); recenterForPlacement(modelRoot); anchor.addChildNode(modelRoot); view.scene.rootNode.addChildNode(anchor); placedNode = anchor
+            let anchor = SCNNode(); anchor.simdTransform = transform; anchor.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0)); let modelRoot = SCNNode(); modelRoot.addChildNode(source.rootNode.clone()); guard recenterForPlacement(modelRoot) else { return }; anchor.addChildNode(modelRoot); view.scene.rootNode.addChildNode(anchor); placedNode = anchor
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         }
-        private func recenterForPlacement(_ root: SCNNode) {
+        private func recenterForPlacement(_ root: SCNNode) -> Bool {
             var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude); var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude); var found = false
             root.enumerateChildNodes { node, _ in guard let geometry = node.geometry else { return }; let bounds = geometry.boundingBox; for corner in Self.corners(minimum: bounds.min, maximum: bounds.max) { let local = node.convertPosition(corner, to: root); let p = SIMD3<Float>(local.x, local.y, local.z); guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }; minimum = simd_min(minimum, p); maximum = simd_max(maximum, p); found = true } }
-            guard found else { return }; let extent = maximum - minimum; guard extent.x.isFinite, extent.y.isFinite, extent.z.isFinite else { return }; let center = minimum + extent / 2; guard center.x.isFinite, center.y.isFinite, center.z.isFinite else { return }; root.position = SCNVector3(-center.x, -minimum.y, -center.z)
+            guard found else { return false }; let extent = maximum - minimum; guard extent.x.isFinite, extent.y.isFinite, extent.z.isFinite else { return false }; let center = minimum + extent / 2; guard center.x.isFinite, center.y.isFinite, center.z.isFinite else { return false }; root.position = SCNVector3(-center.x, -minimum.y, -center.z); return true
         }
         private static func corners(minimum: SCNVector3, maximum: SCNVector3) -> [SCNVector3] { [SCNVector3(minimum.x, minimum.y, minimum.z), SCNVector3(maximum.x, minimum.y, minimum.z), SCNVector3(minimum.x, maximum.y, minimum.z), SCNVector3(maximum.x, maximum.y, minimum.z), SCNVector3(minimum.x, minimum.y, maximum.z), SCNVector3(maximum.x, minimum.y, maximum.z), SCNVector3(minimum.x, maximum.y, maximum.z), SCNVector3(maximum.x, maximum.y, maximum.z)] }
     }
