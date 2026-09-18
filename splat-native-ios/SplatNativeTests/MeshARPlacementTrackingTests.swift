@@ -41,4 +41,16 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         transform.columns.3.z = .infinity
         XCTAssertFalse(MeshARPlacementView.Coordinator.hasFiniteTranslation(transform))
     }
+
+    func testTranslationOnlyPlacementPreservesPositionAndRemovesRaycastTilt() {
+        var raycast = matrix_identity_float4x4
+        raycast.columns.0 = SIMD4<Float>(0, 1, 0, 0)
+        raycast.columns.1 = SIMD4<Float>(-1, 0, 0, 0)
+        raycast.columns.3 = SIMD4<Float>(1.25, -0.5, 2.75, 1)
+        let placement = MeshARPlacementView.Coordinator.translationOnlyPlacement(from: raycast)
+        XCTAssertEqual(placement.columns.0, matrix_identity_float4x4.columns.0)
+        XCTAssertEqual(placement.columns.1, matrix_identity_float4x4.columns.1)
+        XCTAssertEqual(placement.columns.2, matrix_identity_float4x4.columns.2)
+        XCTAssertEqual(placement.columns.3, SIMD4<Float>(1.25, -0.5, 2.75, 1))
+    }
 }
