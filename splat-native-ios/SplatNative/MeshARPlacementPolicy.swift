@@ -6,6 +6,8 @@ enum MeshARPlacementPolicy {
     private static let maximumGestureDelta = Float.pi
     private static let minimumPlacementDistance: Float = 0.05
     private static let maximumPlacementDistance: Float = 50
+    private static let minimumPlacementDistanceSquared = minimumPlacementDistance * minimumPlacementDistance
+    private static let maximumPlacementDistanceSquared = maximumPlacementDistance * maximumPlacementDistance
 
     nonisolated static func isStableTracking(_ state: ARCamera.TrackingState) -> Bool {
         if case .normal = state { return true }
@@ -34,8 +36,13 @@ enum MeshARPlacementPolicy {
         guard hasFiniteTranslation(transform), hasFiniteTranslation(cameraTransform) else { return false }
         let target = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
         let camera = SIMD3<Float>(cameraTransform.columns.3.x, cameraTransform.columns.3.y, cameraTransform.columns.3.z)
-        let distance = simd_distance(target, camera)
-        return distance.isFinite && distance >= minimumPlacementDistance && distance <= maximumPlacementDistance
+        let delta = target - camera
+        // Compare squared distance so a malformed but finite coordinate cannot overflow inside sqrt
+        // and so the high-frequency drag path avoids an unnecessary square root.
+        let distanceSquared = simd_length_squared(delta)
+        return distanceSquared.isFinite
+            && distanceSquared >= minimumPlacementDistanceSquared
+            && distanceSquared <= maximumPlacementDistanceSquared
     }
 
     nonisolated static func translationOnlyPlacement(from raycastTransform: simd_float4x4) -> simd_float4x4 {
