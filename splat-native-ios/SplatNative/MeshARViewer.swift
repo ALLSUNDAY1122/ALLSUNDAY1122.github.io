@@ -63,9 +63,13 @@ private struct MeshObjectSceneView: UIViewRepresentable {
         view.defaultCameraController.inertiaFriction = 0.05
         view.defaultCameraController.minimumVerticalAngle = -89
         view.defaultCameraController.maximumVerticalAngle = 89
+        view.pointOfView?.camera?.automaticallyAdjustsZRange = true
         return view
     }
-    func updateUIView(_ uiView: SCNView, context: Context) { if uiView.scene !== scene { uiView.scene = scene } }
+    func updateUIView(_ uiView: SCNView, context: Context) {
+        if uiView.scene !== scene { uiView.scene = scene }
+        uiView.pointOfView?.camera?.automaticallyAdjustsZRange = true
+    }
 }
 
 @MainActor
