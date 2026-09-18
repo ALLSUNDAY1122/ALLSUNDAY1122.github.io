@@ -10,6 +10,7 @@ enum BoundedFileReaderError: Error, Equatable {
 
 enum BoundedFileReader {
     private static let readChunkBytes = 64 * 1024
+    private static let reserveCapacityCeilingBytes = 1024 * 1024
     // Metadata/sidecar reads should never become a caller-controlled giant allocation.
     // Larger payloads must use a streaming format-specific reader instead.
     private static let absoluteMaximumBytes = 256 * 1024 * 1024
@@ -41,7 +42,9 @@ enum BoundedFileReader {
         if openedIdentity.byteCount > Int64(maximumBytes) { throw BoundedFileReaderError.fileTooLarge }
 
         var data = Data()
-        if let size = before.fileSize { data.reserveCapacity(min(size, maximumBytes)) }
+        if let size = before.fileSize {
+            data.reserveCapacity(min(size, maximumBytes, Self.reserveCapacityCeilingBytes))
+        }
         while data.count <= maximumBytes {
             try Task.checkCancellation()
             let remainingProbe = maximumBytes - data.count + 1
