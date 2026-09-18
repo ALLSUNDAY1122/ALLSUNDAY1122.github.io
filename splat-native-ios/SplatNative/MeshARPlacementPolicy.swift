@@ -3,6 +3,8 @@ import Foundation
 import simd
 
 enum MeshARPlacementPolicy {
+    private static let maximumGestureDelta = Float.pi
+
     nonisolated static func isStableTracking(_ state: ARCamera.TrackingState) -> Bool {
         if case .normal = state { return true }
         return false
@@ -14,7 +16,7 @@ enum MeshARPlacementPolicy {
 
     nonisolated static func updatedYaw(current: Float, gestureDelta: Float) -> Float {
         guard current.isFinite else { return 0 }
-        guard gestureDelta.isFinite else { return current }
+        guard gestureDelta.isFinite, abs(gestureDelta) <= maximumGestureDelta else { return current }
         let twoPi = Float.pi * 2
         var value = (current - gestureDelta).truncatingRemainder(dividingBy: twoPi)
         if value > .pi { value -= twoPi }
