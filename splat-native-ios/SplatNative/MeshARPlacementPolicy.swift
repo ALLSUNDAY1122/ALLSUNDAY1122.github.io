@@ -4,11 +4,11 @@ import simd
 
 enum MeshARPlacementPolicy {
     private static let maximumGestureDelta = Float.pi
-    private static let minimumPlacementDistance: Float = 0.05
+    private static let minimumPlacementDistance: Float = 0.10
     private static let maximumPlacementDistance: Float = 20
     private static let minimumPlacementDistanceSquared = minimumPlacementDistance * minimumPlacementDistance
     private static let maximumPlacementDistanceSquared = maximumPlacementDistance * maximumPlacementDistance
-    private static let minimumForwardProjection: Float = 0.02
+    private static let minimumForwardProjection: Float = 0.05
     private static let minimumForwardCosineSquared: Float = 0.25
     private static let affineTolerance: Float = 0.001
     private static let minimumCameraAxisLengthSquared: Float = 0.9801
