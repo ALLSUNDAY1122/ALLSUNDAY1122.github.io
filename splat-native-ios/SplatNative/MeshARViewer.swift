@@ -25,7 +25,7 @@ struct MeshARViewerSheet: View {
                     Spacer(); Color.clear.frame(width: 42, height: 42)
                 }.padding(.horizontal, 14).padding(.top, 10)
                 Spacer()
-                if displayMode == .ar { Text("水平面をタップして配置・2本指で回転（実寸は維持）").font(.caption).padding(.horizontal, 14).padding(.vertical, 9).background(.black.opacity(0.68), in: Capsule()).padding(.bottom, 18) }
+                if displayMode == .ar { Text("水平面をタップ/ドラッグして配置・2本指で回転（実寸は維持）").font(.caption).padding(.horizontal, 14).padding(.vertical, 9).background(.black.opacity(0.68), in: Capsule()).padding(.bottom, 18) }
             }.foregroundStyle(.white)
         }
     }
@@ -91,15 +91,25 @@ struct MeshARPlacementView: UIViewRepresentable {
         func attach(to view: ARSCNView) {
             self.view = view
             view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(placeFromTap(_:))))
+            let pan = UIPanGestureRecognizer(target: self, action: #selector(repositionFromPan(_:))); pan.minimumNumberOfTouches = 1; pan.maximumNumberOfTouches = 1; view.addGestureRecognizer(pan)
             view.addGestureRecognizer(UIRotationGestureRecognizer(target: self, action: #selector(rotatePlacedModel(_:))))
         }
         @objc private func placeFromTap(_ recognizer: UITapGestureRecognizer) {
             guard let view, let frame = view.session.currentFrame, MeshARPlacementPolicy.isStableTracking(frame.camera.trackingState) else { return }
-            let point = recognizer.location(in: view)
+            placeFromScreenPoint(recognizer.location(in: view), in: view, allowEstimated: placedNode == nil)
+        }
+        @objc private func repositionFromPan(_ recognizer: UIPanGestureRecognizer) {
+            guard recognizer.state == .began || recognizer.state == .changed,
+                  let view, placedNode != nil,
+                  let frame = view.session.currentFrame,
+                  MeshARPlacementPolicy.isStableTracking(frame.camera.trackingState) else { return }
+            placeFromScreenPoint(recognizer.location(in: view), in: view, allowEstimated: false)
+        }
+        private func placeFromScreenPoint(_ point: CGPoint, in view: ARSCNView, allowEstimated: Bool) {
             let confirmed = raycast(view: view, point: point, allowing: .existingPlaneGeometry, alignment: .horizontal)
                 ?? raycast(view: view, point: point, allowing: .existingPlaneInfinite, alignment: .horizontal)
-            let allowEstimated = MeshARPlacementPolicy.shouldUseEstimatedPlane(hasPlacedModel: placedNode != nil)
-            let result = confirmed ?? (allowEstimated ? raycast(view: view, point: point, allowing: .estimatedPlane, alignment: .horizontal) : nil)
+            let mayEstimate = allowEstimated && MeshARPlacementPolicy.shouldUseEstimatedPlane(hasPlacedModel: placedNode != nil)
+            let result = confirmed ?? (mayEstimate ? raycast(view: view, point: point, allowing: .estimatedPlane, alignment: .horizontal) : nil)
             guard let result, MeshARPlacementPolicy.hasFiniteTranslation(result.worldTransform) else { return }
             place(at: MeshARPlacementPolicy.translationOnlyPlacement(from: result.worldTransform))
         }
