@@ -10,20 +10,35 @@ enum BoundedFileReaderError: Error, Equatable {
 
 enum BoundedFileReader {
     private static let readChunkBytes = 64 * 1024
+    // Metadata/sidecar reads should never become a caller-controlled giant allocation.
+    // Larger payloads must use a streaming format-specific reader instead.
+    private static let absoluteMaximumBytes = 256 * 1024 * 1024
 
     static func read(_ url: URL, maximumBytes: Int) throws -> Data {
-        guard maximumBytes > 0, maximumBytes < Int.max else { throw BoundedFileReaderError.invalidLimit }
+        guard maximumBytes > 0,
+              maximumBytes <= absoluteMaximumBytes else { throw BoundedFileReaderError.invalidLimit }
         guard url.isFileURL else { throw BoundedFileReaderError.unsafeFile }
+        try Task.checkCancellation()
 
         let keys: Set<URLResourceKey> = [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
         let before = try url.resourceValues(forKeys: keys)
         guard before.isRegularFile == true, before.isSymbolicLink != true else { throw BoundedFileReaderError.unsafeFile }
-        if let size = before.fileSize, size > maximumBytes { throw BoundedFileReaderError.fileTooLarge }
+        if let size = before.fileSize {
+            guard size >= 0 else { throw BoundedFileReaderError.unsafeFile }
+            if size > maximumBytes { throw BoundedFileReaderError.fileTooLarge }
+        }
         guard let beforeIdentity = pathIdentity(at: url) else { throw BoundedFileReaderError.fileChangedDuringRead }
+        guard beforeIdentity.byteCount >= 0 else { throw BoundedFileReaderError.unsafeFile }
+        if beforeIdentity.byteCount > Int64(maximumBytes) { throw BoundedFileReaderError.fileTooLarge }
+        if let size = before.fileSize, Int64(size) != beforeIdentity.byteCount {
+            throw BoundedFileReaderError.fileChangedDuringRead
+        }
 
         let handle = try FileHandle(forReadingFrom: url)
         defer { try? handle.close() }
+        try Task.checkCancellation()
         guard let openedIdentity = handleIdentity(handle), openedIdentity == beforeIdentity else { throw BoundedFileReaderError.fileChangedDuringRead }
+        if openedIdentity.byteCount > Int64(maximumBytes) { throw BoundedFileReaderError.fileTooLarge }
 
         var data = Data()
         if let size = before.fileSize { data.reserveCapacity(min(size, maximumBytes)) }
