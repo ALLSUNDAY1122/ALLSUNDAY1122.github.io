@@ -45,7 +45,9 @@ enum MeshARPlacementPolicy {
               distanceSquared <= maximumPlacementDistanceSquared else { return false }
 
         let cameraZ = SIMD3<Float>(cameraTransform.columns.2.x, cameraTransform.columns.2.y, cameraTransform.columns.2.z)
-        let forward = -cameraZ
+        let forwardLength = simd_length(cameraZ)
+        guard forwardLength.isFinite, forwardLength > 0 else { return false }
+        let forward = -cameraZ / forwardLength
         let forwardProjection = simd_dot(delta, forward)
         return forwardProjection.isFinite && forwardProjection >= minimumForwardProjection
     }
