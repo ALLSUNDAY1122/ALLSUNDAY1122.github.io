@@ -15,7 +15,7 @@ enum MeshDepthPayload {
         height: Int,
         sourceRowBytes: Int
     ) -> Data? {
-        guard width > 0, height > 0 else { return nil }
+        guard !Task.isCancelled, width > 0, height > 0 else { return nil }
 
         let (rowBytes, rowOverflow) = width.multipliedReportingOverflow(by: MemoryLayout<Float>.size)
         guard !rowOverflow, sourceRowBytes >= rowBytes else { return nil }
@@ -29,20 +29,27 @@ enum MeshDepthPayload {
         let (_, sourceSpanOverflow) = lastRowOffset.addingReportingOverflow(rowBytes)
         guard !sourceSpanOverflow else { return nil }
 
+        var cancelled = false
         var data = Data(count: totalBytes)
         data.withUnsafeMutableBytes { destination in
             guard let destinationBase = destination.baseAddress else { return }
             if sourceRowBytes == rowBytes {
+                guard !Task.isCancelled else { cancelled = true; return }
                 destinationBase.copyMemory(from: baseAddress, byteCount: totalBytes)
+                cancelled = Task.isCancelled
                 return
             }
             for row in 0..<height {
+                if Task.isCancelled {
+                    cancelled = true
+                    return
+                }
                 destinationBase.advanced(by: row * rowBytes).copyMemory(
                     from: baseAddress.advanced(by: row * sourceRowBytes),
                     byteCount: rowBytes
                 )
             }
         }
-        return data
+        return cancelled || Task.isCancelled ? nil : data
     }
 }
