@@ -22,6 +22,20 @@ final class BoundedFileReaderTests: XCTestCase {
         XCTAssertEqual(try BoundedFileReader.read(url, maximumBytes: 64), payload)
     }
 
+    func testReadsAcrossInternalChunkBoundary() throws {
+        let payload = Data((0..<(64 * 1024 + 37)).map { UInt8(truncatingIfNeeded: $0) })
+        let url = try temporaryFile(payload)
+        XCTAssertEqual(try BoundedFileReader.read(url, maximumBytes: payload.count), payload)
+    }
+
+    func testRejectsOversizeAcrossInternalChunkBoundary() throws {
+        let payload = Data(repeating: 0x7f, count: 64 * 1024 + 1)
+        let url = try temporaryFile(payload)
+        XCTAssertThrowsError(try BoundedFileReader.read(url, maximumBytes: 64 * 1024)) { error in
+            XCTAssertEqual(error as? BoundedFileReaderError, .fileTooLarge)
+        }
+    }
+
     func testReadsRegularHardLink() throws {
         let payload = Data([1, 2, 3, 4])
         let target = try temporaryFile(payload)
