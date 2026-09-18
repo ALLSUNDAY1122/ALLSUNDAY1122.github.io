@@ -16,6 +16,11 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         XCTAssertFalse(MeshARPlacementPolicy.isStableTracking(.notAvailable))
     }
 
+    func testEstimatedPlaneFallbackOnlyAppliesBeforeInitialPlacement() {
+        XCTAssertTrue(MeshARPlacementPolicy.shouldUseEstimatedPlane(hasPlacedModel: false))
+        XCTAssertFalse(MeshARPlacementPolicy.shouldUseEstimatedPlane(hasPlacedModel: true))
+    }
+
     func testYawUpdatePreservesGestureDirection() {
         XCTAssertEqual(MeshARPlacementPolicy.updatedYaw(current: 0, gestureDelta: 0.25), -0.25, accuracy: 0.0001)
     }
