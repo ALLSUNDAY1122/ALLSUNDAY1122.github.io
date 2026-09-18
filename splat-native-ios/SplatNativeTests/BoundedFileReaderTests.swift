@@ -36,12 +36,14 @@ final class BoundedFileReaderTests: XCTestCase {
         }
     }
 
-    func testReadsRegularHardLink() throws {
+    func testRejectsHardLink() throws {
         let payload = Data([1, 2, 3, 4])
         let target = try temporaryFile(payload)
         let link = target.deletingLastPathComponent().appendingPathComponent("hardlink.bin")
         try FileManager.default.linkItem(at: target, to: link)
-        XCTAssertEqual(try BoundedFileReader.read(link, maximumBytes: 64), payload)
+        XCTAssertThrowsError(try BoundedFileReader.read(link, maximumBytes: 64)) { error in
+            XCTAssertEqual(error as? BoundedFileReaderError, .unsafeFile)
+        }
     }
 
     func testRejectsFileLargerThanLimit() throws {
