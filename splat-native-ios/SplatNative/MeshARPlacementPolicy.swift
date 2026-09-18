@@ -40,9 +40,19 @@ enum MeshARPlacementPolicy {
         // Compare squared distance so a malformed but finite coordinate cannot overflow inside sqrt
         // and so the high-frequency drag path avoids an unnecessary square root.
         let distanceSquared = simd_length_squared(delta)
-        return distanceSquared.isFinite
-            && distanceSquared >= minimumPlacementDistanceSquared
-            && distanceSquared <= maximumPlacementDistanceSquared
+        guard distanceSquared.isFinite,
+              distanceSquared >= minimumPlacementDistanceSquared,
+              distanceSquared <= maximumPlacementDistanceSquared else { return false }
+
+        // ARKit camera looks down local -Z. A stale/malformed raycast must never teleport the model
+        // behind the viewer even when its translation is otherwise finite and within range.
+        let cameraZ = SIMD3<Float>(cameraTransform.columns.2.x, cameraTransform.columns.2.y, cameraTransform.columns.2.z)
+        guard cameraZ.x.isFinite, cameraZ.y.isFinite, cameraZ.z.isFinite else { return false }
+        let forward = -cameraZ
+        let forwardLengthSquared = simd_length_squared(forward)
+        guard forwardLengthSquared.isFinite, forwardLengthSquared > 0.25, forwardLengthSquared < 4 else { return false }
+        let forwardProjection = simd_dot(delta, forward)
+        return forwardProjection.isFinite && forwardProjection > 0
     }
 
     nonisolated static func translationOnlyPlacement(from raycastTransform: simd_float4x4) -> simd_float4x4 {
