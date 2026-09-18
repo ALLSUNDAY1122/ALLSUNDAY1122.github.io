@@ -26,8 +26,8 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         XCTAssertLessThanOrEqual(abs(yaw), .pi)
     }
 
-    func testYawUpdateRejectsNonFiniteInput() {
+    func testYawUpdateRejectsNonFiniteInputWithoutSnappingValidOrientation() {
         XCTAssertEqual(MeshARPlacementPolicy.updatedYaw(current: .infinity, gestureDelta: 0.1), 0)
-        XCTAssertEqual(MeshARPlacementPolicy.updatedYaw(current: 0.1, gestureDelta: .nan), 0)
+        XCTAssertEqual(MeshARPlacementPolicy.updatedYaw(current: 0.1, gestureDelta: .nan), 0.1, accuracy: 0.0001)
     }
 }
