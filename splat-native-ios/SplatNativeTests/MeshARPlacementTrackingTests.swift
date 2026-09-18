@@ -35,6 +35,16 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         transform.columns.3.z = .infinity
         XCTAssertFalse(MeshARPlacementPolicy.hasFiniteTranslation(transform))
     }
+    func testPlausiblePlacementRejectsNearCameraAndExcessiveDistance() {
+        let camera = matrix_identity_float4x4
+        var target = matrix_identity_float4x4
+        target.columns.3.z = -0.01
+        XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+        target.columns.3.z = -1
+        XCTAssertTrue(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+        target.columns.3.z = -51
+        XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+    }
     func testTranslationOnlyPlacementPreservesPositionAndRemovesRaycastTilt() {
         var raycast = matrix_identity_float4x4
         raycast.columns.0 = SIMD4<Float>(0, 1, 0, 0)
