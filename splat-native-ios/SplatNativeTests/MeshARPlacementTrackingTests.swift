@@ -30,4 +30,15 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         XCTAssertEqual(MeshARPlacementPolicy.updatedYaw(current: .infinity, gestureDelta: 0.1), 0)
         XCTAssertEqual(MeshARPlacementPolicy.updatedYaw(current: 0.1, gestureDelta: .nan), 0.1, accuracy: 0.0001)
     }
+
+    func testPlacementTranslationRequiresFiniteCoordinates() {
+        var transform = matrix_identity_float4x4
+        transform.columns.3 = SIMD4<Float>(1, 2, 3, 1)
+        XCTAssertTrue(MeshARPlacementView.Coordinator.hasFiniteTranslation(transform))
+        transform.columns.3.x = .nan
+        XCTAssertFalse(MeshARPlacementView.Coordinator.hasFiniteTranslation(transform))
+        transform = matrix_identity_float4x4
+        transform.columns.3.z = .infinity
+        XCTAssertFalse(MeshARPlacementView.Coordinator.hasFiniteTranslation(transform))
+    }
 }
