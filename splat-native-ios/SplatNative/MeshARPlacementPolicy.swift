@@ -36,7 +36,7 @@ enum MeshARPlacementPolicy {
     }
 
     nonisolated static func isPlausiblePlacement(_ transform: simd_float4x4, cameraTransform: simd_float4x4) -> Bool {
-        guard isFiniteAffineTransform(transform), isPlausibleCameraTransform(cameraTransform) else { return false }
+        guard isRigidTransform(transform), isRigidTransform(cameraTransform) else { return false }
         let target = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
         let camera = SIMD3<Float>(cameraTransform.columns.3.x, cameraTransform.columns.3.y, cameraTransform.columns.3.z)
         let delta = target - camera
@@ -57,13 +57,13 @@ enum MeshARPlacementPolicy {
 
     nonisolated static func translationOnlyPlacement(from raycastTransform: simd_float4x4) -> simd_float4x4 {
         var transform = matrix_identity_float4x4
-        guard isFiniteAffineTransform(raycastTransform) else { return transform }
+        guard isRigidTransform(raycastTransform) else { return transform }
         let translation = raycastTransform.columns.3
         transform.columns.3 = SIMD4<Float>(translation.x, translation.y, translation.z, 1)
         return transform
     }
 
-    private nonisolated static func isPlausibleCameraTransform(_ transform: simd_float4x4) -> Bool {
+    private nonisolated static func isRigidTransform(_ transform: simd_float4x4) -> Bool {
         guard isFiniteAffineTransform(transform) else { return false }
         let x = SIMD3<Float>(transform.columns.0.x, transform.columns.0.y, transform.columns.0.z)
         let y = SIMD3<Float>(transform.columns.1.x, transform.columns.1.y, transform.columns.1.z)
