@@ -8,11 +8,12 @@ enum MeshARPlacementPolicy {
     }
 
     nonisolated static func updatedYaw(current: Float, gestureDelta: Float) -> Float {
-        guard current.isFinite, gestureDelta.isFinite else { return 0 }
+        guard current.isFinite else { return 0 }
+        guard gestureDelta.isFinite else { return current }
         let twoPi = Float.pi * 2
         var value = (current - gestureDelta).truncatingRemainder(dividingBy: twoPi)
         if value > .pi { value -= twoPi }
         if value < -.pi { value += twoPi }
-        return value.isFinite ? value : 0
+        return value.isFinite ? value : current
     }
 }
