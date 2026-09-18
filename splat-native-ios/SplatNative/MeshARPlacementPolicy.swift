@@ -12,6 +12,8 @@ enum MeshARPlacementPolicy {
     private static let minimumCameraAxisLengthSquared: Float = 0.81
     private static let maximumCameraAxisLengthSquared: Float = 1.21
     private static let maximumCameraAxisDot: Float = 0.02
+    private static let minimumCameraDeterminant: Float = 0.7
+    private static let maximumCameraDeterminant: Float = 1.3
 
     nonisolated static func isStableTracking(_ state: ARCamera.TrackingState) -> Bool {
         if case .normal = state { return true }
@@ -65,10 +67,14 @@ enum MeshARPlacementPolicy {
         let xy = simd_dot(x, y)
         let xz = simd_dot(x, z)
         let yz = simd_dot(y, z)
-        return xy.isFinite && xz.isFinite && yz.isFinite
-            && abs(xy) <= maximumCameraAxisDot
-            && abs(xz) <= maximumCameraAxisDot
-            && abs(yz) <= maximumCameraAxisDot
+        guard xy.isFinite && xz.isFinite && yz.isFinite,
+              abs(xy) <= maximumCameraAxisDot,
+              abs(xz) <= maximumCameraAxisDot,
+              abs(yz) <= maximumCameraAxisDot else { return false }
+        let determinant = simd_dot(x, simd_cross(y, z))
+        return determinant.isFinite
+            && determinant >= minimumCameraDeterminant
+            && determinant <= maximumCameraDeterminant
     }
 
     private nonisolated static func isFiniteAffineTransform(_ transform: simd_float4x4) -> Bool {
