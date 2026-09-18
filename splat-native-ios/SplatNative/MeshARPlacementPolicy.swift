@@ -18,12 +18,11 @@ enum MeshARPlacementPolicy {
 
     nonisolated static func updatedYaw(current: Float, gestureDelta: Float) -> Float {
         guard current.isFinite else { return 0 }
-        guard gestureDelta.isFinite, abs(gestureDelta) <= maximumGestureDelta else { return current }
-        let twoPi = Float.pi * 2
-        var value = (current - gestureDelta).truncatingRemainder(dividingBy: twoPi)
-        if value > .pi { value -= twoPi }
-        if value < -.pi { value += twoPi }
-        return value.isFinite ? value : current
+        guard gestureDelta.isFinite, abs(gestureDelta) <= maximumGestureDelta else { return normalizedYaw(current) }
+        // Normalize first. Subtracting a small gesture from an extremely large accumulated Float
+        // loses the gesture entirely before remainder reduction.
+        let normalizedCurrent = normalizedYaw(current)
+        return normalizedYaw(normalizedCurrent - gestureDelta)
     }
 
     nonisolated static func hasFiniteTranslation(_ transform: simd_float4x4) -> Bool {
@@ -45,5 +44,14 @@ enum MeshARPlacementPolicy {
         guard translation.x.isFinite, translation.y.isFinite, translation.z.isFinite else { return transform }
         transform.columns.3 = SIMD4<Float>(translation.x, translation.y, translation.z, 1)
         return transform
+    }
+
+    private nonisolated static func normalizedYaw(_ value: Float) -> Float {
+        guard value.isFinite else { return 0 }
+        let twoPi = Float.pi * 2
+        var result = value.truncatingRemainder(dividingBy: twoPi)
+        if result > .pi { result -= twoPi }
+        if result < -.pi { result += twoPi }
+        return result.isFinite ? result : 0
     }
 }
