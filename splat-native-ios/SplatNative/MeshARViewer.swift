@@ -116,7 +116,8 @@ struct MeshARPlacementView: UIViewRepresentable {
             let result = raycast(view: view, point: point, allowing: .existingPlaneGeometry, alignment: .horizontal)
                 ?? raycast(view: view, point: point, allowing: .existingPlaneInfinite, alignment: .horizontal)
                 ?? raycast(view: view, point: point, allowing: .estimatedPlane, alignment: .horizontal)
-            guard let result else { return }; place(at: Self.translationOnlyPlacement(from: result.worldTransform))
+            guard let result, Self.hasFiniteTranslation(result.worldTransform) else { return }
+            place(at: Self.translationOnlyPlacement(from: result.worldTransform))
         }
         @objc private func rotatePlacedModel(_ recognizer: UIRotationGestureRecognizer) {
             guard let placedNode else { return }
@@ -146,6 +147,7 @@ struct MeshARPlacementView: UIViewRepresentable {
             root.enumerateChildNodes { node, _ in guard let geometry = node.geometry else { return }; let bounds = geometry.boundingBox; for corner in Self.corners(minimum: bounds.min, maximum: bounds.max) { let local = node.convertPosition(corner, to: root); let p = SIMD3<Float>(local.x, local.y, local.z); guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }; minimum = simd_min(minimum, p); maximum = simd_max(maximum, p); found = true } }
             guard found else { return }; let extent = maximum - minimum; guard extent.x.isFinite, extent.y.isFinite, extent.z.isFinite else { return }; let center = minimum + extent / 2; guard center.x.isFinite, center.y.isFinite, center.z.isFinite else { return }; root.position = SCNVector3(-center.x, -minimum.y, -center.z)
         }
+        nonisolated static func hasFiniteTranslation(_ transform: simd_float4x4) -> Bool { let translation = transform.columns.3; return translation.x.isFinite && translation.y.isFinite && translation.z.isFinite }
         nonisolated static func translationOnlyPlacement(from raycastTransform: simd_float4x4) -> simd_float4x4 { var transform = matrix_identity_float4x4; let translation = raycastTransform.columns.3; if translation.x.isFinite, translation.y.isFinite, translation.z.isFinite { transform.columns.3 = SIMD4<Float>(translation.x, translation.y, translation.z, 1) }; return transform }
         private static func corners(minimum: SCNVector3, maximum: SCNVector3) -> [SCNVector3] { [SCNVector3(minimum.x, minimum.y, minimum.z), SCNVector3(maximum.x, minimum.y, minimum.z), SCNVector3(minimum.x, maximum.y, minimum.z), SCNVector3(maximum.x, maximum.y, minimum.z), SCNVector3(minimum.x, minimum.y, maximum.z), SCNVector3(maximum.x, minimum.y, maximum.z), SCNVector3(minimum.x, maximum.y, maximum.z), SCNVector3(maximum.x, maximum.y, maximum.z)] }
     }
