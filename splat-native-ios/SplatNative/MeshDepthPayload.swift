@@ -1,6 +1,11 @@
 import Foundation
 
 enum MeshDepthPayload {
+    // A depth frame is transient capture input, not an arbitrary file payload. Keep malformed
+    // dimensions from turning one frame into a process-sized allocation. This remains well above
+    // expected iPhone/iPad depth-map sizes.
+    private static let maximumPackedByteCount = 128 * 1024 * 1024
+
     /// Copies a Float32 depth plane into the tightly packed on-disk layout used by MeshDepthRecorder.
     /// ARKit pixel buffers may pad each source row; allocate the destination once and copy only the
     /// meaningful width so capture does not create one temporary Data allocation per row.
@@ -15,11 +20,10 @@ enum MeshDepthPayload {
         let (rowBytes, rowOverflow) = width.multipliedReportingOverflow(by: MemoryLayout<Float>.size)
         guard !rowOverflow, sourceRowBytes >= rowBytes else { return nil }
         let (totalBytes, totalOverflow) = rowBytes.multipliedReportingOverflow(by: height)
-        guard !totalOverflow, totalBytes > 0 else { return nil }
+        guard !totalOverflow,
+              totalBytes > 0,
+              totalBytes <= Self.maximumPackedByteCount else { return nil }
 
-        // Pointer arithmetic below walks to `(height - 1) * sourceRowBytes` and then copies one
-        // complete row. Validate that span in Int before touching the caller's buffer so corrupt
-        // stride metadata cannot wrap an address and turn a rejected frame into a process crash.
         let (lastRowOffset, sourceOffsetOverflow) = (height - 1).multipliedReportingOverflow(by: sourceRowBytes)
         guard !sourceOffsetOverflow else { return nil }
         let (_, sourceSpanOverflow) = lastRowOffset.addingReportingOverflow(rowBytes)
@@ -29,19 +33,14 @@ enum MeshDepthPayload {
         data.withUnsafeMutableBytes { destination in
             guard let destinationBase = destination.baseAddress else { return }
             if sourceRowBytes == rowBytes {
-                // ARKit commonly supplies an already tightly packed Float32 plane. Copy it as one
-                // contiguous span instead of performing one memcpy per image row. The padded-row
-                // path below remains unchanged for buffers whose stride exceeds their pixel width.
                 destinationBase.copyMemory(from: baseAddress, byteCount: totalBytes)
                 return
             }
             for row in 0..<height {
-                destinationBase
-                    .advanced(by: row * rowBytes)
-                    .copyMemory(
-                        from: baseAddress.advanced(by: row * sourceRowBytes),
-                        byteCount: rowBytes
-                    )
+                destinationBase.advanced(by: row * rowBytes).copyMemory(
+                    from: baseAddress.advanced(by: row * sourceRowBytes),
+                    byteCount: rowBytes
+                )
             }
         }
         return data
