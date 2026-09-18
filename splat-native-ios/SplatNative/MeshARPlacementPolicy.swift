@@ -11,11 +11,11 @@ enum MeshARPlacementPolicy {
     private static let minimumForwardProjection: Float = 0.02
     private static let minimumForwardCosineSquared: Float = 0.25
     private static let affineTolerance: Float = 0.001
-    private static let minimumCameraAxisLengthSquared: Float = 0.81
-    private static let maximumCameraAxisLengthSquared: Float = 1.21
+    private static let minimumCameraAxisLengthSquared: Float = 0.9801
+    private static let maximumCameraAxisLengthSquared: Float = 1.0201
     private static let maximumCameraAxisDot: Float = 0.02
-    private static let minimumCameraDeterminant: Float = 0.7
-    private static let maximumCameraDeterminant: Float = 1.3
+    private static let minimumCameraDeterminant: Float = 0.97
+    private static let maximumCameraDeterminant: Float = 1.03
 
     nonisolated static func isStableTracking(_ state: ARCamera.TrackingState) -> Bool {
         if case .normal = state { return true }
