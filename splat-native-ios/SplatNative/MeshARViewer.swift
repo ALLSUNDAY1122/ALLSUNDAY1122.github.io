@@ -108,7 +108,7 @@ struct MeshARPlacementView: UIViewRepresentable {
                   let frame = view.session.currentFrame,
                   MeshARPlacementPolicy.isStableTracking(frame.camera.trackingState) else { return }
             let now = CACurrentMediaTime()
-            if recognizer.state == .changed, now - lastPanRaycastTime < (1.0 / 60.0) { return }
+            if recognizer.state == .changed, now - lastPanRaycastTime < (1.0 / 30.0) { return }
             lastPanRaycastTime = now
             placeFromScreenPoint(recognizer.location(in: view), in: view, allowEstimated: false, feedback: recognizer.state == .ended)
         }
