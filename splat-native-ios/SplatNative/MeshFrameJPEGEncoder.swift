@@ -19,6 +19,7 @@ final class MeshFrameImage: @unchecked Sendable {
 /// The caller serializes access on the mesh capture queue, so there is at most one
 /// encode/write in flight and camera frames cannot build an unbounded backlog.
 final class MeshFrameJPEGEncoder: @unchecked Sendable {
+    private static let maximumInputPixelCount = 50_000_000
     private let context: CIContext
     private let outputColorSpace: CGColorSpace
     private let compressionQualityKey = CIImageRepresentationOption(
@@ -38,8 +39,18 @@ final class MeshFrameJPEGEncoder: @unchecked Sendable {
         return min(max(value, 0), 1)
     }
 
+    static func isPlausiblePixelDimensions(width: Int, height: Int) -> Bool {
+        guard width > 0, height > 0 else { return false }
+        let (pixels, overflow) = width.multipliedReportingOverflow(by: height)
+        return !overflow && pixels <= maximumInputPixelCount
+    }
+
     func encode(_ frameImage: MeshFrameImage, compressionQuality: CGFloat = 0.91) -> Data? {
         autoreleasepool {
+            let width = CVPixelBufferGetWidth(frameImage.pixelBuffer)
+            let height = CVPixelBufferGetHeight(frameImage.pixelBuffer)
+            guard Self.isPlausiblePixelDimensions(width: width, height: height) else { return nil }
+
             let image = CIImage(cvPixelBuffer: frameImage.pixelBuffer)
             guard !image.extent.isEmpty,
                   image.extent.width.isFinite,
