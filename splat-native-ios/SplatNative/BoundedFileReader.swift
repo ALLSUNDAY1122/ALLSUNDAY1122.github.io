@@ -29,7 +29,7 @@ enum BoundedFileReader {
             if size > maximumBytes { throw BoundedFileReaderError.fileTooLarge }
         }
         guard let beforeIdentity = pathIdentity(at: url) else { throw BoundedFileReaderError.fileChangedDuringRead }
-        guard beforeIdentity.byteCount >= 0 else { throw BoundedFileReaderError.unsafeFile }
+        guard beforeIdentity.byteCount >= 0, beforeIdentity.linkCount == 1 else { throw BoundedFileReaderError.unsafeFile }
         if beforeIdentity.byteCount > Int64(maximumBytes) { throw BoundedFileReaderError.fileTooLarge }
         if let size = before.fileSize, Int64(size) != beforeIdentity.byteCount {
             throw BoundedFileReaderError.fileChangedDuringRead
@@ -39,6 +39,7 @@ enum BoundedFileReader {
         defer { try? handle.close() }
         try Task.checkCancellation()
         guard let openedIdentity = handleIdentity(handle), openedIdentity == beforeIdentity else { throw BoundedFileReaderError.fileChangedDuringRead }
+        guard openedIdentity.linkCount == 1 else { throw BoundedFileReaderError.unsafeFile }
         if openedIdentity.byteCount > Int64(maximumBytes) { throw BoundedFileReaderError.fileTooLarge }
 
         var data = Data()
@@ -64,6 +65,8 @@ enum BoundedFileReader {
               let finalOpenedIdentity = handleIdentity(handle),
               beforeIdentity == afterIdentity,
               openedIdentity == finalOpenedIdentity,
+              afterIdentity.linkCount == 1,
+              finalOpenedIdentity.linkCount == 1,
               before.fileSize == after.fileSize,
               after.fileSize == data.count,
               finalOpenedIdentity.byteCount == Int64(data.count) else { throw BoundedFileReaderError.fileChangedDuringRead }
@@ -88,6 +91,7 @@ enum BoundedFileReader {
         FileIdentity(
             systemNumber: UInt64(info.st_dev),
             fileNumber: UInt64(info.st_ino),
+            linkCount: UInt64(info.st_nlink),
             byteCount: Int64(info.st_size),
             modificationSeconds: Int64(info.st_mtimespec.tv_sec),
             modificationNanoseconds: Int64(info.st_mtimespec.tv_nsec),
@@ -99,6 +103,7 @@ enum BoundedFileReader {
     private struct FileIdentity: Equatable {
         let systemNumber: UInt64
         let fileNumber: UInt64
+        let linkCount: UInt64
         let byteCount: Int64
         let modificationSeconds: Int64
         let modificationNanoseconds: Int64
