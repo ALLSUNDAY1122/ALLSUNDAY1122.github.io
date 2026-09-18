@@ -17,7 +17,12 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         XCTAssertEqual(MeshARPlacementPolicy.updatedYaw(current: 0, gestureDelta: 0.25), -0.25, accuracy: 0.0001)
     }
     func testYawUpdateRemainsBoundedAfterLargeAccumulation() {
-        let yaw = MeshARPlacementPolicy.updatedYaw(current: 1_000_000, gestureDelta: -1_000_000)
+        let yaw = MeshARPlacementPolicy.updatedYaw(current: 1_000_000, gestureDelta: -1)
+        XCTAssertTrue(yaw.isFinite)
+        XCTAssertLessThanOrEqual(abs(yaw), .pi)
+    }
+    func testRejectedGestureStillNormalizesAccumulatedYaw() {
+        let yaw = MeshARPlacementPolicy.updatedYaw(current: 1_000_000, gestureDelta: .infinity)
         XCTAssertTrue(yaw.isFinite)
         XCTAssertLessThanOrEqual(abs(yaw), .pi)
     }
