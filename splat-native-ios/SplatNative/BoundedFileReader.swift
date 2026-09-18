@@ -9,6 +9,8 @@ enum BoundedFileReaderError: Error, Equatable {
 }
 
 enum BoundedFileReader {
+    private static let readChunkBytes = 64 * 1024
+
     static func read(_ url: URL, maximumBytes: Int) throws -> Data {
         guard maximumBytes > 0, maximumBytes < Int.max else {
             throw BoundedFileReaderError.invalidLimit
@@ -32,8 +34,25 @@ enum BoundedFileReader {
         guard let openedIdentity = handleIdentity(handle), openedIdentity == beforeIdentity else {
             throw BoundedFileReaderError.fileChangedDuringRead
         }
-        let data = try handle.read(upToCount: maximumBytes + 1) ?? Data()
-        guard data.count <= maximumBytes else { throw BoundedFileReaderError.fileTooLarge }
+
+        // A single `read(upToCount:)` is allowed to return fewer bytes than requested. Read to EOF
+        // in bounded chunks so a legitimate short read is not misclassified as concurrent mutation,
+        // while still probing one byte beyond the admission ceiling to fail closed on oversize data.
+        var data = Data()
+        if let size = before.fileSize {
+            data.reserveCapacity(min(size, maximumBytes))
+        }
+        while data.count <= maximumBytes {
+            let remainingProbe = maximumBytes - data.count + 1
+            let requestBytes = min(Self.readChunkBytes, remainingProbe)
+            guard requestBytes > 0 else { break }
+            let chunk = try handle.read(upToCount: requestBytes) ?? Data()
+            if chunk.isEmpty { break }
+            data.append(chunk)
+            if data.count > maximumBytes {
+                throw BoundedFileReaderError.fileTooLarge
+            }
+        }
 
         let after = try url.resourceValues(forKeys: keys)
         guard after.isRegularFile == true, after.isSymbolicLink != true else {
