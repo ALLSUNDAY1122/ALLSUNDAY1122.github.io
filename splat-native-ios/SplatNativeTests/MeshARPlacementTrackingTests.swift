@@ -40,7 +40,7 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         transform.columns.3.z = .infinity
         XCTAssertFalse(MeshARPlacementPolicy.hasFiniteTranslation(transform))
     }
-    func testPlausiblePlacementRejectsNearCameraAndExcessiveDistance() {
+    func testPlausiblePlacementRejectsNearCameraExcessiveDistanceAndBehindCamera() {
         let camera = matrix_identity_float4x4
         var target = matrix_identity_float4x4
         target.columns.3.z = -0.01
@@ -48,6 +48,18 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         target.columns.3.z = -1
         XCTAssertTrue(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
         target.columns.3.z = -51
+        XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+        target.columns.3.z = 1
+        XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+    }
+    func testPlausiblePlacementRejectsMalformedCameraForwardAxis() {
+        var camera = matrix_identity_float4x4
+        var target = matrix_identity_float4x4
+        target.columns.3.z = -1
+        camera.columns.2.z = .nan
+        XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+        camera = matrix_identity_float4x4
+        camera.columns.2 = SIMD4<Float>(0, 0, 0, 0)
         XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
     }
     func testTranslationOnlyPlacementPreservesPositionAndRemovesRaycastTilt() {
