@@ -113,9 +113,9 @@ struct MeshARPlacementView: UIViewRepresentable {
         @objc private func placeFromTap(_ recognizer: UITapGestureRecognizer) {
             guard let view, let frame = view.session.currentFrame, MeshARPlacementPolicy.isStableTracking(frame.camera.trackingState) else { return }
             let point = recognizer.location(in: view)
-            let result = raycast(view: view, point: point, allowing: .existingPlaneGeometry, alignment: .horizontal)
+            let confirmed = raycast(view: view, point: point, allowing: .existingPlaneGeometry, alignment: .horizontal)
                 ?? raycast(view: view, point: point, allowing: .existingPlaneInfinite, alignment: .horizontal)
-                ?? raycast(view: view, point: point, allowing: .estimatedPlane, alignment: .horizontal)
+            let result = confirmed ?? (placedNode == nil ? raycast(view: view, point: point, allowing: .estimatedPlane, alignment: .horizontal) : nil)
             guard let result, Self.hasFiniteTranslation(result.worldTransform) else { return }
             place(at: Self.translationOnlyPlacement(from: result.worldTransform))
         }
