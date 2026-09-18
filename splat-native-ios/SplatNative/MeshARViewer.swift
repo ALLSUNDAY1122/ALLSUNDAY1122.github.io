@@ -90,7 +90,7 @@ struct MeshARPlacementView: UIViewRepresentable {
     static func dismantleUIView(_ uiView: ARSCNView, coordinator: Coordinator) { uiView.session.pause() }
 
     @MainActor final class Coordinator: NSObject {
-        private let modelURL: URL; private let preparedScene: SCNScene?; private weak var view: ARSCNView?; private var placedNode: SCNNode?; private var yaw: Float = 0
+        private let modelURL: URL; private let preparedScene: SCNScene?; private weak var view: ARSCNView?; private var placedNode: SCNNode?; private var yaw: Float = 0; private var lastPanRaycastTime: CFTimeInterval = 0
         init(modelURL: URL, preparedScene: SCNScene?) { self.modelURL = modelURL; self.preparedScene = preparedScene }
         func attach(to view: ARSCNView) {
             self.view = view
@@ -107,6 +107,9 @@ struct MeshARPlacementView: UIViewRepresentable {
                   let view, placedNode != nil,
                   let frame = view.session.currentFrame,
                   MeshARPlacementPolicy.isStableTracking(frame.camera.trackingState) else { return }
+            let now = CACurrentMediaTime()
+            if recognizer.state == .changed, now - lastPanRaycastTime < (1.0 / 60.0) { return }
+            lastPanRaycastTime = now
             placeFromScreenPoint(recognizer.location(in: view), in: view, allowEstimated: false)
         }
         private func placeFromScreenPoint(_ point: CGPoint, in view: ARSCNView, allowEstimated: Bool) {
