@@ -139,6 +139,7 @@ struct MeshARPlacementView: UIViewRepresentable {
             else if let loaded = try? SCNScene(url: modelURL, options: nil), MeshRawSceneValidator.containsGeometry(loaded) { source = loaded }
             else { return }
             let anchor = SCNNode(); anchor.simdTransform = transform; anchor.simdOrientation = simd_quatf(angle: yaw, axis: SIMD3<Float>(0, 1, 0)); let modelRoot = SCNNode(); modelRoot.addChildNode(source.rootNode.clone()); recenterForPlacement(modelRoot); anchor.addChildNode(modelRoot); view.scene.rootNode.addChildNode(anchor); placedNode = anchor
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         }
         private func recenterForPlacement(_ root: SCNNode) {
             var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude); var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude); var found = false
