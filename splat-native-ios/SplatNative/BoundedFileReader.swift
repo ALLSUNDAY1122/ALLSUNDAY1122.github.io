@@ -16,7 +16,7 @@ enum BoundedFileReader {
     static func read(_ url: URL, maximumBytes: Int) throws -> Data {
         guard maximumBytes > 0,
               maximumBytes <= absoluteMaximumBytes else { throw BoundedFileReaderError.invalidLimit }
-        guard url.isFileURL else { throw BoundedFileReaderError.unsafeFile }
+        guard url.isFileURL, !url.path.contains("\0") else { throw BoundedFileReaderError.unsafeFile }
         try Task.checkCancellation()
 
         let keys: Set<URLResourceKey> = [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
@@ -33,9 +33,6 @@ enum BoundedFileReader {
             throw BoundedFileReaderError.fileChangedDuringRead
         }
 
-        // O_NOFOLLOW closes the lstat->open symlink race. O_NONBLOCK also prevents a malicious
-        // regular-file -> FIFO/device swap from hanging the reader before fstat can reject it;
-        // regular-file reads ignore O_NONBLOCK on Darwin.
         let descriptor = Darwin.open(url.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
         guard descriptor >= 0 else { throw BoundedFileReaderError.unsafeFile }
         let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
