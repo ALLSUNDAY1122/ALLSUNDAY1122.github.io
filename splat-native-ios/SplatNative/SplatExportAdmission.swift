@@ -66,8 +66,12 @@ enum SplatExportAdmission {
         let pointCount = Int(sourceBytes / 32)
         let canonicalInspection = inspectCanonicalOnce(sourceURL: trustedURL, verifiedDigest: verification.sha256, expectedPointCount: pointCount)
         if canonicalInspection.candidateExists && canonicalInspection.completeAsset == nil { throw AdmissionError.untrustedSource }
-        let canonical = canonicalInspection.completeAsset
-        let canonicalBytes = canonical.flatMap { try? fileSize(at: $0.url) }
+        let canonicalBytes: Int64?
+        if let canonical = canonicalInspection.completeAsset {
+            canonicalBytes = try fileSize(at: canonical.url)
+        } else {
+            canonicalBytes = nil
+        }
         let required = estimatedRequiredFreeBytes(sourceBytes: sourceBytes, canonicalAssetBytes: canonicalBytes, kind: kind)
         let detectedCapacity = availableCapacityOverride == nil ? availableCapacity(at: projectURL) : nil
         let available = try resolvedAvailableCapacity(override: availableCapacityOverride, detected: detectedCapacity)
