@@ -255,26 +255,8 @@ enum MeshProjectIntegrity {
         at url: URL,
         fileManager: FileManager
     ) -> Data? {
-        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
-              values.isRegularFile == true,
-              values.isSymbolicLink != true,
-              let attributes = try? fileManager.attributesOfItem(atPath: url.path),
-              let size = attributes[.size] as? NSNumber,
-              size.int64Value >= 0,
-              size.int64Value <= maximumTrustMetadataByteCount,
-              let handle = try? FileHandle(forReadingFrom: url) else {
-            return nil
-        }
-        defer { try? handle.close() }
-
-        // Bound the actual read, not only the pre-read stat. If metadata is replaced or extended
-        // between those operations, cap + 1 detects the race without allocating the attacker/
-        // corruption-controlled full file on library open or export.
-        guard let data = try? handle.read(upToCount: Int(maximumTrustMetadataByteCount) + 1),
-              data.count <= Int(maximumTrustMetadataByteCount) else {
-            return nil
-        }
-        return data
+        _ = fileManager
+        return try? BoundedFileReader.read(url, maximumBytes: Int(maximumTrustMetadataByteCount))
     }
 
     private static func sha256Hex(fileURL: URL) throws -> String {

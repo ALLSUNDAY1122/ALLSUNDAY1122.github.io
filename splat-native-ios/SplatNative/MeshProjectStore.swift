@@ -378,7 +378,7 @@ final class MeshProjectStore {
 
     private func readSourceManifest(projectURL: URL) -> SourceManifest? {
         let url = projectURL.appendingPathComponent(Self.sourceManifestFileName)
-        guard let data = try? Data(contentsOf: url) else { return nil }
+        guard let data = try? BoundedFileReader.read(url, maximumBytes: 1024 * 1024) else { return nil }
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         return try? decoder.decode(SourceManifest.self, from: data)
@@ -386,7 +386,9 @@ final class MeshProjectStore {
 
     private func readLibraryManifest(projectURL: URL) throws -> LibraryManifest {
         let url = projectURL.appendingPathComponent(Self.libraryManifestFileName)
-        let data = try Data(contentsOf: url)
+        let data: Data
+        do { data = try BoundedFileReader.read(url, maximumBytes: 1024 * 1024) }
+        catch { throw MeshProjectStoreError.invalidProject }
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         let manifest = try decoder.decode(LibraryManifest.self, from: data)
