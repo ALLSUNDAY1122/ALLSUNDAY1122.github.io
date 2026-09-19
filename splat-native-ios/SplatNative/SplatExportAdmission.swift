@@ -154,14 +154,27 @@ enum SplatExportAdmission {
         let descriptor = Darwin.open(url.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
         guard descriptor >= 0 else { throw AdmissionError.sourceSizeUnavailable }
         defer { Darwin.close(descriptor) }
-        var info = stat()
-        guard fstat(descriptor, &info) == 0,
-              (info.st_mode & S_IFMT) == S_IFREG,
-              info.st_nlink == 1,
-              info.st_size >= 0 else {
+        var opened = stat()
+        guard fstat(descriptor, &opened) == 0,
+              (opened.st_mode & S_IFMT) == S_IFREG,
+              opened.st_nlink == 1,
+              opened.st_size >= 0 else {
             throw AdmissionError.sourceSizeUnavailable
         }
-        return Int64(info.st_size)
+        var named = stat()
+        guard lstat(url.path, &named) == 0,
+              (named.st_mode & S_IFMT) == S_IFREG,
+              named.st_nlink == 1,
+              named.st_dev == opened.st_dev,
+              named.st_ino == opened.st_ino,
+              named.st_size == opened.st_size,
+              named.st_mtimespec.tv_sec == opened.st_mtimespec.tv_sec,
+              named.st_mtimespec.tv_nsec == opened.st_mtimespec.tv_nsec,
+              named.st_ctimespec.tv_sec == opened.st_ctimespec.tv_sec,
+              named.st_ctimespec.tv_nsec == opened.st_ctimespec.tv_nsec else {
+            throw AdmissionError.sourceSizeUnavailable
+        }
+        return Int64(opened.st_size)
     }
 
     private static func availableCapacity(at url: URL) -> Int64? {
