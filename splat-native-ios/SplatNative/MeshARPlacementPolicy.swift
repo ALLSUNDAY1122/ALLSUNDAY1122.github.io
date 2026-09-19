@@ -23,14 +23,15 @@ enum MeshARPlacementPolicy {
     nonisolated static func updatedYaw(current: Float, gestureDelta: Float) -> Float {
         guard current.isFinite else { return 0 }
         guard gestureDelta.isFinite else { return normalizedYaw(current) }
-        // A long frame or fast two-finger turn can legitimately accumulate more than π radians
-        // between callbacks. Dropping that entire sample makes the model appear to freeze. Bound the
-        // per-callback contribution instead, preserving direction while keeping orientation finite.
         let boundedDelta = min(max(gestureDelta, -maximumGestureDelta), maximumGestureDelta)
         return normalizedYaw(normalizedYaw(current) - boundedDelta)
     }
     nonisolated static func hasFiniteTranslation(_ transform: simd_float4x4) -> Bool {
-        let translation = transform.columns.3; return translation.x.isFinite && translation.y.isFinite && translation.z.isFinite
+        let translation = transform.columns.3
+        guard translation.x.isFinite, translation.y.isFinite, translation.z.isFinite else { return false }
+        return abs(translation.x) <= maximumAbsoluteTranslation &&
+            abs(translation.y) <= maximumAbsoluteTranslation &&
+            abs(translation.z) <= maximumAbsoluteTranslation
     }
     nonisolated static func isPlausiblePlacement(_ transform: simd_float4x4, cameraTransform: simd_float4x4) -> Bool {
         guard isRigidTransform(transform), isRigidTransform(cameraTransform) else { return false }
