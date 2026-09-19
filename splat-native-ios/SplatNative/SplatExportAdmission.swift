@@ -125,7 +125,18 @@ enum SplatExportAdmission {
     }
 
     private static func fileSize(at url: URL) throws -> Int64 {
-        guard url.isFileURL, url.path.hasPrefix("/"), !url.path.contains("\0") else {
+        guard url.isFileURL,
+              url.baseURL == nil,
+              !url.path.isEmpty,
+              url.path.hasPrefix("/"),
+              !url.path.contains("\0"),
+              url.host == nil,
+              url.user == nil,
+              url.password == nil,
+              url.port == nil,
+              url.query == nil,
+              url.fragment == nil,
+              url.standardizedFileURL.path == url.path else {
             throw AdmissionError.sourceSizeUnavailable
         }
         let descriptor = Darwin.open(url.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
