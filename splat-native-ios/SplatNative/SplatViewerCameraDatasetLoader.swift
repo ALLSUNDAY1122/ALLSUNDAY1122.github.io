@@ -77,8 +77,9 @@ enum SplatViewerCameraDatasetLoader {
                     if columnIndex == 3 { translationComponent = value }
                 }
                 guard row.isAtEnd else { position = nil; return }
-                let safeAccumulationComponent = Float.greatestFiniteMagnitude / Float(maximumReturnedPositions * 2)
-                guard let component = translationComponent, component.isFinite, abs(component) <= safeAccumulationComponent else { position = nil; return }
+                guard let component = translationComponent,
+                      component.isFinite,
+                      abs(component) <= maximumAbsolutePositionMeters else { position = nil; return }
                 translation[rowIndex] = component
             }
             guard !matrix.isAtEnd, var finalRow = try? matrix.nestedUnkeyedContainer() else { position = nil; return }
@@ -97,6 +98,7 @@ enum SplatViewerCameraDatasetLoader {
     static let maximumTransformsBytes: Int64 = 32 * 1024 * 1024
     static let maximumReturnedPositions = 4_096
     static let cancellationCheckFrameInterval = 256
+    static let maximumAbsolutePositionMeters: Float = 1_000_000
 
     static func cameraPositions(for renderURL: URL, fileManager: FileManager = .default) -> [SIMD3<Float>] {
         let root = renderURL.deletingLastPathComponent().standardizedFileURL
