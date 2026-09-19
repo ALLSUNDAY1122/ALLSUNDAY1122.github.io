@@ -1,0 +1,50 @@
+name: Splat HQ previous-result hash binding
+
+on:
+  push:
+    branches: [automation/splat-previous-hash-20260920]
+    paths: ['.github/workflows/splat-hq-previous-hash.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch-verify-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: automation/splat-previous-hash-20260920
+          fetch-depth: 0
+      - name: Patch previous-result hash reader
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('splat-native-ios/SplatNative/SplatPreviousResultEvidence.swift')
+          s=p.read_text()
+          if 'import Darwin\n' not in s:
+              s=s.replace('import CryptoKit\n', 'import CryptoKit\nimport Darwin\n', 1)
+          old='''    private static func sha256Hex(fileURL: URL) throws -> String {\n        let handle = try FileHandle(forReadingFrom: fileURL)\n        defer { try? handle.close() }\n\n        var hasher = SHA256()\n        while true {\n            try Task.checkCancellation()\n            guard let chunk = try handle.read(upToCount: 1_024 * 1_024), !chunk.isEmpty else { break }\n            hasher.update(data: chunk)\n        }\n        return hasher.finalize().map { String(format: "%02x", $0) }.joined()\n    }'''
+          new='''    private static func sha256Hex(fileURL: URL) throws -> String {\n        let descriptor = Darwin.open(fileURL.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)\n        guard descriptor >= 0 else { throw PreservationError.resultChangedDuringPreservation }\n        let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)\n        defer { try? handle.close() }\n        var opened = stat()\n        guard fstat(descriptor, &opened) == 0, (opened.st_mode & S_IFMT) == S_IFREG, opened.st_nlink == 1 else {\n            throw PreservationError.resultChangedDuringPreservation\n        }\n        var hasher = SHA256()\n        while true {\n            try Task.checkCancellation()\n            guard let chunk = try handle.read(upToCount: 1_024 * 1_024), !chunk.isEmpty else { break }\n            hasher.update(data: chunk)\n        }\n        var finalOpened = stat(); var named = stat()\n        guard fstat(descriptor, &finalOpened) == 0, lstat(fileURL.path, &named) == 0,\n              (named.st_mode & S_IFMT) == S_IFREG, named.st_nlink == 1,\n              finalOpened.st_dev == opened.st_dev, finalOpened.st_ino == opened.st_ino,\n              finalOpened.st_nlink == opened.st_nlink, finalOpened.st_size == opened.st_size,\n              finalOpened.st_mtimespec.tv_sec == opened.st_mtimespec.tv_sec, finalOpened.st_mtimespec.tv_nsec == opened.st_mtimespec.tv_nsec,\n              finalOpened.st_ctimespec.tv_sec == opened.st_ctimespec.tv_sec, finalOpened.st_ctimespec.tv_nsec == opened.st_ctimespec.tv_nsec,\n              named.st_dev == opened.st_dev, named.st_ino == opened.st_ino, named.st_size == opened.st_size,\n              named.st_mtimespec.tv_sec == opened.st_mtimespec.tv_sec, named.st_mtimespec.tv_nsec == opened.st_mtimespec.tv_nsec,\n              named.st_ctimespec.tv_sec == opened.st_ctimespec.tv_sec, named.st_ctimespec.tv_nsec == opened.st_ctimespec.tv_nsec else {\n            throw PreservationError.resultChangedDuringPreservation\n        }\n        return hasher.finalize().map { String(format: "%02x", $0) }.joined()\n    }'''
+          if s.count(old)!=1: raise SystemExit('previous hash anchor mismatch')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Verify build and tests
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO build-for-testing
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNative -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+      - name: Commit verified previous-result hardening
+        run: |
+          set -euo pipefail
+          git config user.name 'Splat HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/SplatPreviousResultEvidence.swift
+          git commit -m 'fix(splat): bind previous-result hash to file generation'
+          git push origin HEAD:automation/splat-previous-hash-20260920
