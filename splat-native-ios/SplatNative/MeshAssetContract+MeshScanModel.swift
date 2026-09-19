@@ -70,23 +70,35 @@ extension MeshScanModel {
             )
         }
 
-        // Revalidate the currently named path after synchronization. The durable sidecar may only
-        // describe the same single-link inode/device generation that was actually synchronized.
+        // Revalidate both the open descriptor and the currently named path after synchronization.
+        // This detects same-inode writes that occur while fsync is in flight as well as path swaps;
+        // the sidecar may only describe the exact single-link generation that was synchronized.
+        var syncedStat = stat()
         var namedStat = stat()
-        guard lstat(descriptor.fileURL.path, &namedStat) == 0,
+        guard fstat(descriptorFD, &syncedStat) == 0,
+              (syncedStat.st_mode & S_IFMT) == S_IFREG,
+              syncedStat.st_nlink == 1,
+              syncedStat.st_dev == openedStat.st_dev,
+              syncedStat.st_ino == openedStat.st_ino,
+              syncedStat.st_size == openedStat.st_size,
+              syncedStat.st_mtimespec.tv_sec == openedStat.st_mtimespec.tv_sec,
+              syncedStat.st_mtimespec.tv_nsec == openedStat.st_mtimespec.tv_nsec,
+              syncedStat.st_ctimespec.tv_sec == openedStat.st_ctimespec.tv_sec,
+              syncedStat.st_ctimespec.tv_nsec == openedStat.st_ctimespec.tv_nsec,
+              lstat(descriptor.fileURL.path, &namedStat) == 0,
               (namedStat.st_mode & S_IFMT) == S_IFREG,
               namedStat.st_nlink == 1,
-              namedStat.st_dev == openedStat.st_dev,
-              namedStat.st_ino == openedStat.st_ino,
-              namedStat.st_size == openedStat.st_size,
-              namedStat.st_mtimespec.tv_sec == openedStat.st_mtimespec.tv_sec,
-              namedStat.st_mtimespec.tv_nsec == openedStat.st_mtimespec.tv_nsec,
-              namedStat.st_ctimespec.tv_sec == openedStat.st_ctimespec.tv_sec,
-              namedStat.st_ctimespec.tv_nsec == openedStat.st_ctimespec.tv_nsec else {
+              namedStat.st_dev == syncedStat.st_dev,
+              namedStat.st_ino == syncedStat.st_ino,
+              namedStat.st_size == syncedStat.st_size,
+              namedStat.st_mtimespec.tv_sec == syncedStat.st_mtimespec.tv_sec,
+              namedStat.st_mtimespec.tv_nsec == syncedStat.st_mtimespec.tv_nsec,
+              namedStat.st_ctimespec.tv_sec == syncedStat.st_ctimespec.tv_sec,
+              namedStat.st_ctimespec.tv_nsec == syncedStat.st_ctimespec.tv_nsec else {
             throw NSError(
                 domain: "ScanLab.MeshAssetContract",
                 code: 4,
-                userInfo: [NSLocalizedDescriptionKey: "Mesh資産が公開準備中に差し替えられたため、書き出し情報を更新しません"]
+                userInfo: [NSLocalizedDescriptionKey: "Mesh資産が公開準備中に変更されたため、書き出し情報を更新しません"]
             )
         }
 
