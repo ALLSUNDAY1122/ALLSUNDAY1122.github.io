@@ -112,6 +112,24 @@ final class BoundedFileReaderTests: XCTestCase {
         }
     }
 
+    func testRejectsFileURLWithAuthorityComponents() {
+        for raw in ["file://user@localhost/tmp/metadata.bin", "file://localhost:123/tmp/metadata.bin"] {
+            guard let url = URL(string: raw) else { return XCTFail("invalid test URL") }
+            XCTAssertThrowsError(try BoundedFileReader.read(url, maximumBytes: 64)) { error in
+                XCTAssertEqual(error as? BoundedFileReaderError, .unsafeFile)
+            }
+        }
+    }
+
+    func testRejectsRelativeFileURLWithBaseURL() throws {
+        let target = try temporaryFile(Data([1, 2, 3]))
+        let relative = URL(fileURLWithPath: target.lastPathComponent, relativeTo: target.deletingLastPathComponent())
+        XCTAssertNotNil(relative.baseURL)
+        XCTAssertThrowsError(try BoundedFileReader.read(relative, maximumBytes: 64)) { error in
+            XCTAssertEqual(error as? BoundedFileReaderError, .unsafeFile)
+        }
+    }
+
     func testRejectsNonCanonicalFilePath() throws {
         let target = try temporaryFile(Data([1, 2, 3]))
         let url = target.deletingLastPathComponent().appendingPathComponent("subdir/../metadata.bin")
