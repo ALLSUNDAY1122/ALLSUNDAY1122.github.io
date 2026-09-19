@@ -17,28 +17,36 @@ extension MeshScanModel {
     func persistExporterMeshAssetContract() throws -> URL? {
         guard let descriptor = exporterMeshAsset else { return nil }
 
-        // The sidecar is the durable contract that tells downstream export/share code which
-        // generation of the Mesh asset is safe to expose. Do not publish that contract until the
-        // referenced OBJ/USDZ itself has crossed a durability boundary; otherwise a crash can
-        // leave a durable descriptor pointing at asset bytes that never reached stable storage.
-        // Also reject aliases before opening for write: FileHandle follows symlinks, so accepting
-        // one here could synchronize and then publish a contract for bytes outside the scan's
-        // immutable asset generation rather than the result path the viewer actually selected.
-        let values = try descriptor.fileURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
+        // Open the asset itself without following a symlink. A resourceValues preflight followed by
+        // FileHandle(forWritingTo:) still leaves a path-swap race between validation and open.
+        guard descriptor.fileURL.isFileURL,
+              !descriptor.fileURL.path.contains("\0"),
+              descriptor.fileURL.host == nil,
+              descriptor.fileURL.query == nil,
+              descriptor.fileURL.fragment == nil,
+              descriptor.fileURL.standardizedFileURL.path == descriptor.fileURL.path else {
+            throw NSError(
+                domain: "ScanLab.MeshAssetContract",
+                code: 2,
+                userInfo: [NSLocalizedDescriptionKey: "Mesh資産のパスが安全でないため、書き出し情報を更新できません"]
+            )
+        }
+
+        let descriptorFD = Darwin.open(descriptor.fileURL.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
+        guard descriptorFD >= 0 else {
             throw NSError(
                 domain: "ScanLab.MeshAssetContract",
                 code: 2,
                 userInfo: [NSLocalizedDescriptionKey: "Mesh資産が通常ファイルではないため、書き出し情報を更新できません"]
             )
         }
-        let assetHandle = try FileHandle(forWritingTo: descriptor.fileURL)
-        defer { try? assetHandle.close() }
+        defer { Darwin.close(descriptorFD) }
 
-        // Capture identity from the already-open descriptor. Reading attributes from the path here
-        // would only compare the path with itself and would miss a rename/symlink swap after open.
         var openedStat = stat()
-        guard fstat(assetHandle.fileDescriptor, &openedStat) == 0 else {
+        guard fstat(descriptorFD, &openedStat) == 0,
+              (openedStat.st_mode & S_IFMT) == S_IFREG,
+              openedStat.st_nlink == 1,
+              openedStat.st_size > 0 else {
             throw NSError(
                 domain: "ScanLab.MeshAssetContract",
                 code: 3,
@@ -46,18 +54,29 @@ extension MeshScanModel {
             )
         }
 
-        try assetHandle.synchronize()
+        // fsync on the already-open descriptor establishes the durability boundary for exactly the
+        // inode generation we validated above, without reopening the path through Foundation.
+        guard fsync(descriptorFD) == 0 else {
+            throw NSError(
+                domain: "ScanLab.MeshAssetContract",
+                code: 3,
+                userInfo: [NSLocalizedDescriptionKey: "Mesh資産の公開準備中に永続化を確認できません"]
+            )
+        }
 
         // Revalidate the currently named path after synchronization. The durable sidecar may only
-        // describe the same inode/device generation that was actually synchronized above.
-        let postValues = try descriptor.fileURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        let postAttributes = try FileManager.default.attributesOfItem(atPath: descriptor.fileURL.path)
-        let postFileNumber = postAttributes[.systemFileNumber] as? NSNumber
-        let postSystemNumber = postAttributes[.systemNumber] as? NSNumber
-        guard postValues.isRegularFile == true,
-              postValues.isSymbolicLink != true,
-              postFileNumber?.uint64Value == UInt64(openedStat.st_ino),
-              postSystemNumber?.uint64Value == UInt64(openedStat.st_dev) else {
+        // describe the same single-link inode/device generation that was actually synchronized.
+        var namedStat = stat()
+        guard lstat(descriptor.fileURL.path, &namedStat) == 0,
+              (namedStat.st_mode & S_IFMT) == S_IFREG,
+              namedStat.st_nlink == 1,
+              namedStat.st_dev == openedStat.st_dev,
+              namedStat.st_ino == openedStat.st_ino,
+              namedStat.st_size == openedStat.st_size,
+              namedStat.st_mtimespec.tv_sec == openedStat.st_mtimespec.tv_sec,
+              namedStat.st_mtimespec.tv_nsec == openedStat.st_mtimespec.tv_nsec,
+              namedStat.st_ctimespec.tv_sec == openedStat.st_ctimespec.tv_sec,
+              namedStat.st_ctimespec.tv_nsec == openedStat.st_ctimespec.tv_nsec else {
             throw NSError(
                 domain: "ScanLab.MeshAssetContract",
                 code: 4,
