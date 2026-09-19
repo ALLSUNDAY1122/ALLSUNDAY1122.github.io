@@ -387,7 +387,8 @@ final class ScanProjectStore {
         guard fileManager.fileExists(atPath: sourceURL.path) else { return }
         let target = projectURL.appendingPathComponent(Self.thumbnailFileName)
         if sourceURL.standardizedFileURL != target.standardizedFileURL {
-            try Data(contentsOf: sourceURL).write(to: target, options: .atomic)
+            let thumbnail = try BoundedFileReader.read(sourceURL, maximumBytes: 32 * 1024 * 1024)
+            try thumbnail.write(to: target, options: .atomic)
         }
         _ = try updateManifest(projectURL: projectURL) { $0.thumbnailFileName = Self.thumbnailFileName }
     }
@@ -723,7 +724,8 @@ final class ScanProjectStore {
         )
         if let firstImage = imageURLs.first {
             let thumbnail = projectURL.appendingPathComponent(Self.thumbnailFileName)
-            if !fileManager.fileExists(atPath: thumbnail.path), let data = try? Data(contentsOf: firstImage) {
+            if !fileManager.fileExists(atPath: thumbnail.path),
+               let data = try? BoundedFileReader.read(firstImage, maximumBytes: 32 * 1024 * 1024) {
                 try? data.write(to: thumbnail, options: .atomic)
             }
             if fileManager.fileExists(atPath: thumbnail.path) { manifest.thumbnailFileName = Self.thumbnailFileName }
