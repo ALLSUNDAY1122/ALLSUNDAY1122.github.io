@@ -1,0 +1,58 @@
+name: Splat HQ bounded sidecar reads
+
+on:
+  push:
+    branches: [feature/splat-native-ios-poc]
+    paths: ['.github/workflows/splat-hq-bounded-sidecars.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch-verify-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-native-ios-poc
+          fetch-depth: 0
+      - name: Patch sidecar readers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p=Path('splat-native-ios/SplatNative/SplatViewerState.swift')
+          s=p.read_text()
+          old='''    private static func readSettingsDataIfSafe(at url: URL, fileManager: FileManager) -> Data? {\n        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),\n              values.isRegularFile == true,\n              values.isSymbolicLink != true,\n              let attributes = try? fileManager.attributesOfItem(atPath: url.path),\n              let size = attributes[.size] as? NSNumber,\n              size.int64Value >= 0,\n              size.int64Value <= maximumSidecarByteCount else {\n            return nil\n        }\n        return try? Data(contentsOf: url)\n    }'''
+          new='''    private static func readSettingsDataIfSafe(at url: URL, fileManager: FileManager) -> Data? {\n        // Bind the sidecar bytes to one regular, single-link descriptor generation. The former\n        // resourceValues/attributes preflight followed by Data(contentsOf:) reopened the path, so\n        // a swap between those operations could follow an alias or read an oversized replacement.\n        try? BoundedFileReader.read(url, maximumBytes: Int(maximumSidecarByteCount))\n    }'''
+          if s.count(old)!=1: raise SystemExit('viewer sidecar anchor mismatch')
+          p.write_text(s.replace(old,new,1))
+
+          p=Path('splat-native-ios/SplatNative/SplatPreviousResultEvidence.swift')
+          s=p.read_text()
+          old='''    private static func readTrustMetadataDataIfSafe(at url: URL, fileManager: FileManager) -> Data? {\n        guard isIndependentRegularFile(url),\n              let size = try? fileByteCount(url, fileManager: fileManager),\n              size >= 0,\n              size <= maximumTrustMetadataByteCount,\n              let handle = try? FileHandle(forReadingFrom: url) else {\n            return nil\n        }\n        defer { try? handle.close() }\n\n        // Keep the read bounded even if the metadata is replaced or extended after the size stat.\n        // Reading at most cap + 1 turns that race into a fail-closed rejection rather than an\n        // unbounded Data(contentsOf:) allocation on a corruption/recovery path.\n        guard let data = try? handle.read(upToCount: Int(maximumTrustMetadataByteCount) + 1),\n              data.count <= Int(maximumTrustMetadataByteCount) else {\n            return nil\n        }\n        return data\n    }'''
+          new='''    private static func readTrustMetadataDataIfSafe(at url: URL, fileManager: FileManager) -> Data? {\n        // Trust metadata decides whether a previous completed result may be restored. Keep that\n        // decision bound to one regular, single-link descriptor generation instead of preflighting\n        // the path and reopening it through FileHandle.\n        try? BoundedFileReader.read(url, maximumBytes: Int(maximumTrustMetadataByteCount))\n    }'''
+          if s.count(old)!=1: raise SystemExit('recovery metadata anchor mismatch')
+          p.write_text(s.replace(old,new,1))
+          PY
+          ! grep -q 'return try? Data(contentsOf: url)' splat-native-ios/SplatNative/SplatViewerState.swift
+          grep -q 'BoundedFileReader.read(url, maximumBytes: Int(maximumTrustMetadataByteCount))' splat-native-ios/SplatNative/SplatPreviousResultEvidence.swift
+      - name: Verify build and tests
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO build-for-testing
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNative -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+      - name: Commit verified sidecar wiring
+        run: |
+          set -euo pipefail
+          git config user.name 'Splat HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/SplatViewerState.swift splat-native-ios/SplatNative/SplatPreviousResultEvidence.swift
+          git commit -m 'fix(splat): bind sidecar reads to file generations'
+          git push origin HEAD:feature/splat-native-ios-poc
