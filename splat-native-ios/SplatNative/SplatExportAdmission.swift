@@ -41,7 +41,7 @@ enum SplatExportAdmission {
     }
 
     private static let safetyReserveBytes: Int64 = 128 * 1_024 * 1_024
-    private static let maximumViewerSidecarByteCount: Int64 = 64 * 1_024
+    private static let maximumViewerSidecarByteCount = 64 * 1_024
 
     static func preflight(sourceURL: URL, kind: Kind, availableCapacityOverride: Int64? = nil) throws -> URL {
         try preflightResult(sourceURL: sourceURL, kind: kind, availableCapacityOverride: availableCapacityOverride).trustedURL
@@ -125,14 +125,15 @@ enum SplatExportAdmission {
 
     private static func viewerPrimarySidecarIsSafeOrMissing(sourceURL: URL, fileManager: FileManager = .default) -> Bool {
         let primary = SplatViewerEditStore.primaryURL(for: sourceURL)
-        if (try? fileManager.destinationOfSymbolicLink(atPath: primary.path)) != nil { return false }
-        guard fileManager.fileExists(atPath: primary.path) else { return true }
-        guard let values = try? primary.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
-              values.isRegularFile == true,
-              values.isSymbolicLink != true,
-              let attributes = try? fileManager.attributesOfItem(atPath: primary.path),
-              let size = attributes[.size] as? NSNumber else { return false }
-        return size.int64Value >= 0 && size.int64Value <= maximumViewerSidecarByteCount
+        guard fileManager.fileExists(atPath: primary.path) else {
+            return (try? fileManager.destinationOfSymbolicLink(atPath: primary.path)) == nil
+        }
+        do {
+            _ = try BoundedFileReader.read(primary, maximumBytes: maximumViewerSidecarByteCount)
+            return true
+        } catch {
+            return false
+        }
     }
 
     private static func fileSize(at url: URL) throws -> Int64 {
