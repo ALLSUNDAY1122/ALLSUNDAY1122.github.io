@@ -18,6 +18,7 @@ enum SplatExportAdmission {
     enum AdmissionError: LocalizedError {
         case untrustedSource
         case sourceSizeUnavailable
+        case invalidExportConfiguration
         case availableCapacityUnavailable
         case insufficientStorage(required: Int64, available: Int64)
 
@@ -25,6 +26,7 @@ enum SplatExportAdmission {
             switch self {
             case .untrustedSource: return "完成確認できていない3Dデータは書き出せません。再生成または保存済みスキャンから開き直してください。"
             case .sourceSizeUnavailable: return "3Dデータのサイズを確認できないため、書き出しを開始できません。"
+            case .invalidExportConfiguration: return "書き出し設定が不正なため、安全な書き出しを開始できません。"
             case .availableCapacityUnavailable: return "端末の空き容量を確認できないため、安全な書き出しを開始できません。"
             case .insufficientStorage(let required, let available):
                 let formatter = ByteCountFormatter(); formatter.countStyle = .file
@@ -46,6 +48,7 @@ enum SplatExportAdmission {
     }
 
     static func preflightResult(sourceURL: URL, kind: Kind, availableCapacityOverride: Int64? = nil) throws -> Result {
+        try validate(kind: kind)
         let verification: SplatCompletionVerifier.Verification
         do { verification = try SplatCompletionVerifier.verifyWithDigest(sourceURL: sourceURL) }
         catch { throw AdmissionError.untrustedSource }
@@ -86,16 +89,24 @@ enum SplatExportAdmission {
         case .spz:
             outputEstimate = max(effectiveSource, 32 * 1_024 * 1_024)
         case .video(let width, let height, let framesPerSecond, let duration):
-            let pixelsPerSecond = Double(max(1, width)) * Double(max(1, height)) * Double(max(1, framesPerSecond))
+            guard width > 0, height > 0, framesPerSecond > 0, duration.isFinite, duration > 0 else { return Int64.max }
+            let pixelsPerSecond = Double(width) * Double(height) * Double(framesPerSecond)
             let estimatedBitrate = max(2_000_000, pixelsPerSecond * 0.12)
-            let safeDuration = duration.isFinite ? max(1, duration) : 1
-            let estimatedVideoBytes = estimatedBitrate * safeDuration / 8
+            let estimatedVideoBytes = estimatedBitrate * duration / 8
             let videoBytes: Int64
             if !estimatedVideoBytes.isFinite || estimatedVideoBytes >= Double(Int64.max) { videoBytes = Int64.max }
             else { videoBytes = Int64(max(0, estimatedVideoBytes).rounded(.up)) }
             outputEstimate = videoBytes
         }
         return saturatingAdd(outputEstimate, safetyReserveBytes)
+    }
+
+    private static func validate(kind: Kind) throws {
+        guard case .video(let width, let height, let framesPerSecond, let duration) = kind else { return }
+        guard width > 0, height > 0, framesPerSecond > 0,
+              duration.isFinite, duration > 0 else {
+            throw AdmissionError.invalidExportConfiguration
+        }
     }
 
     private static func inspectCanonicalOnce(sourceURL: URL, verifiedDigest: String, expectedPointCount: Int) -> CanonicalInspection {
