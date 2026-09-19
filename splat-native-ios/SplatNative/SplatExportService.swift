@@ -1,4 +1,5 @@
 import CryptoKit
+import Darwin
 import Foundation
 import Msplat
 import SplatIO
@@ -639,22 +640,29 @@ enum SplatExportService {
     }
 
     static func sourcePointCount(_ sourceURL: URL) throws -> Int {
-        guard sourceURL.isFileURL,
-              FileManager.default.fileExists(atPath: sourceURL.path) else {
-            throw ExportError.sourceMissing
-        }
+        guard canonicalLocalFileURL(sourceURL) else { throw ExportError.sourceMissing }
         guard sourceURL.pathExtension.lowercased() == "splat" else {
             throw ExportError.unsupportedSource
         }
-
-        let attributes = try FileManager.default.attributesOfItem(atPath: sourceURL.path)
-        guard let number = attributes[.size] as? NSNumber else {
+        let descriptor = Darwin.open(sourceURL.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
+        guard descriptor >= 0 else { throw ExportError.sourceMissing }
+        defer { Darwin.close(descriptor) }
+        var opened = stat()
+        guard fstat(descriptor, &opened) == 0,
+              (opened.st_mode & S_IFMT) == S_IFREG,
+              opened.st_nlink == 1 else { throw ExportError.corruptSource }
+        let bytes = Int64(opened.st_size)
+        guard bytes > 0 else { throw ExportError.emptySource }
+        guard bytes % Int64(dotSplatRecordByteWidth) == 0,
+              bytes / Int64(dotSplatRecordByteWidth) <= Int64(Int.max) else {
             throw ExportError.corruptSource
         }
-        let bytes = number.intValue
-        guard bytes > 0 else { throw ExportError.emptySource }
-        guard bytes % dotSplatRecordByteWidth == 0 else { throw ExportError.corruptSource }
-        return bytes / dotSplatRecordByteWidth
+        var named = stat(); var finalOpened = stat()
+        guard lstat(sourceURL.path, &named) == 0, fstat(descriptor, &finalOpened) == 0,
+              sameGeneration(opened, named), sameGeneration(opened, finalOpened) else {
+            throw ExportError.corruptSource
+        }
+        return Int(bytes / Int64(dotSplatRecordByteWidth))
     }
 
     static func sha256Hex(_ data: Data) -> String {
@@ -662,16 +670,40 @@ enum SplatExportService {
     }
 
     static func sha256Hex(fileURL: URL) throws -> String {
-        let handle = try FileHandle(forReadingFrom: fileURL)
+        guard canonicalLocalFileURL(fileURL) else { throw ExportError.sourceMissing }
+        let descriptor = Darwin.open(fileURL.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
+        guard descriptor >= 0 else { throw ExportError.sourceMissing }
+        let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
         defer { try? handle.close() }
-
+        var opened = stat()
+        guard fstat(descriptor, &opened) == 0, (opened.st_mode & S_IFMT) == S_IFREG, opened.st_nlink == 1 else {
+            throw ExportError.corruptSource
+        }
         var hasher = SHA256()
         while true {
             try Task.checkCancellation()
             guard let chunk = try handle.read(upToCount: hashChunkBytes), !chunk.isEmpty else { break }
             hasher.update(data: chunk)
         }
+        var finalOpened = stat(); var named = stat()
+        guard fstat(descriptor, &finalOpened) == 0, lstat(fileURL.path, &named) == 0,
+              sameGeneration(opened, finalOpened), sameGeneration(opened, named) else {
+            throw ExportError.corruptSource
+        }
         return hasher.finalize().map { String(format: "%02x", $0) }.joined()
+    }
+
+    private static func canonicalLocalFileURL(_ url: URL) -> Bool {
+        url.isFileURL && url.baseURL == nil && !url.path.isEmpty && url.path.hasPrefix("/") &&
+            !url.path.contains("\0") && url.host == nil && url.user == nil && url.password == nil &&
+            url.port == nil && url.query == nil && url.fragment == nil && url.standardizedFileURL.path == url.path
+    }
+
+    private static func sameGeneration(_ lhs: stat, _ rhs: stat) -> Bool {
+        (rhs.st_mode & S_IFMT) == S_IFREG && rhs.st_nlink == 1 &&
+            lhs.st_dev == rhs.st_dev && lhs.st_ino == rhs.st_ino && lhs.st_size == rhs.st_size &&
+            lhs.st_mtimespec.tv_sec == rhs.st_mtimespec.tv_sec && lhs.st_mtimespec.tv_nsec == rhs.st_mtimespec.tv_nsec &&
+            lhs.st_ctimespec.tv_sec == rhs.st_ctimespec.tv_sec && lhs.st_ctimespec.tv_nsec == rhs.st_ctimespec.tv_nsec
     }
 
     private static func validateRetainedSphericalHarmonics(
