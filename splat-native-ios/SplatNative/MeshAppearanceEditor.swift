@@ -1,5 +1,6 @@
 import CoreImage
 import CoreImage.CIFilterBuiltins
+import Darwin
 import Foundation
 import ImageIO
 import SceneKit
@@ -74,9 +75,27 @@ private enum MeshAppearanceProcessor {
     }
 
     private static func synchronize(_ url: URL) throws {
-        let handle = try FileHandle(forWritingTo: url)
-        defer { try? handle.close() }
-        try handle.synchronize()
+        guard url.isFileURL,
+              url.baseURL == nil,
+              !url.path.isEmpty,
+              url.path.hasPrefix("/"),
+              !url.path.contains("\0"),
+              url.host == nil,
+              url.user == nil,
+              url.password == nil,
+              url.port == nil,
+              url.query == nil,
+              url.fragment == nil,
+              url.standardizedFileURL.path == url.path else { throw error("編集ファイルのパスが安全ではありません") }
+        let fd = Darwin.open(url.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
+        guard fd >= 0 else { throw error("編集ファイルを安全に開けません") }
+        defer { Darwin.close(fd) }
+        var info = stat()
+        guard fstat(fd, &info) == 0,
+              (info.st_mode & S_IFMT) == S_IFREG,
+              info.st_nlink == 1,
+              info.st_size > 0,
+              fsync(fd) == 0 else { throw error("編集ファイルの永続化を確認できません") }
     }
 
     private static func error(_ text:String)->NSError{NSError(domain:"ScanLab.MeshAppearance",code:1,userInfo:[NSLocalizedDescriptionKey:text])}
