@@ -90,6 +90,8 @@ struct MeshARPlacementView: UIViewRepresentable {
     static func dismantleUIView(_ uiView: ARSCNView, coordinator: Coordinator) { uiView.session.pause() }
 
     @MainActor final class Coordinator: NSObject {
+        private static let minimumModelExtent: Float = 0.00001
+        private static let maximumModelExtent: Float = 100
         private let modelURL: URL; private let preparedScene: SCNScene?; private weak var view: ARSCNView?; private var placedNode: SCNNode?; private var yaw: Float = 0; private var lastPanRaycastTime: CFTimeInterval = 0
         init(modelURL: URL, preparedScene: SCNScene?) { self.modelURL = modelURL; self.preparedScene = preparedScene }
         func attach(to view: ARSCNView) {
@@ -159,7 +161,10 @@ struct MeshARPlacementView: UIViewRepresentable {
         private func recenterForPlacement(_ root: SCNNode) -> Bool {
             var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude); var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude); var found = false
             root.enumerateChildNodes { node, _ in guard let geometry = node.geometry else { return }; let bounds = geometry.boundingBox; for corner in Self.corners(minimum: bounds.min, maximum: bounds.max) { let local = node.convertPosition(corner, to: root); let p = SIMD3<Float>(local.x, local.y, local.z); guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }; minimum = simd_min(minimum, p); maximum = simd_max(maximum, p); found = true } }
-            guard found else { return false }; let extent = maximum - minimum; guard extent.x.isFinite, extent.y.isFinite, extent.z.isFinite else { return false }; let center = minimum + extent / 2; guard center.x.isFinite, center.y.isFinite, center.z.isFinite else { return false }; root.position = SCNVector3(-center.x, -minimum.y, -center.z); return true
+            guard found else { return false }; let extent = maximum - minimum; guard extent.x.isFinite, extent.y.isFinite, extent.z.isFinite else { return false }
+            let largestExtent = max(extent.x, max(extent.y, extent.z))
+            guard largestExtent >= Self.minimumModelExtent, largestExtent <= Self.maximumModelExtent else { return false }
+            let center = minimum + extent / 2; guard center.x.isFinite, center.y.isFinite, center.z.isFinite else { return false }; root.position = SCNVector3(-center.x, -minimum.y, -center.z); return true
         }
         private static func corners(minimum: SCNVector3, maximum: SCNVector3) -> [SCNVector3] { [SCNVector3(minimum.x, minimum.y, minimum.z), SCNVector3(maximum.x, minimum.y, minimum.z), SCNVector3(minimum.x, maximum.y, minimum.z), SCNVector3(maximum.x, maximum.y, minimum.z), SCNVector3(minimum.x, minimum.y, maximum.z), SCNVector3(maximum.x, minimum.y, maximum.z), SCNVector3(minimum.x, maximum.y, maximum.z), SCNVector3(maximum.x, maximum.y, maximum.z)] }
     }
