@@ -365,13 +365,13 @@ final class ScanProjectStore {
         let backup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
         try rejectFutureCheckpointSchemaIfPresent(primary: primary, backup: backup)
         let decoder = PropertyListDecoder()
-        if let data = try? Data(contentsOf: primary) {
+        if let data = try? BoundedFileReader.read(primary, maximumBytes: 64 * 1024 * 1024) {
             do {
                 return try decodeSupportedCheckpoint(data, decoder: decoder)
             } catch {
             }
         }
-        if let data = try? Data(contentsOf: backup) {
+        if let data = try? BoundedFileReader.read(backup, maximumBytes: 64 * 1024 * 1024) {
             do {
                 let value = try decodeSupportedCheckpoint(data, decoder: decoder)
                 try? data.write(to: primary, options: .atomic)
@@ -617,7 +617,7 @@ final class ScanProjectStore {
     private func rejectFutureManifestSchemaIfPresent(primary: URL, backup: URL) throws {
         let decoder = JSONDecoder()
         for url in [primary, backup] {
-            guard let data = try? Data(contentsOf: url),
+            guard let data = try? BoundedFileReader.read(url, maximumBytes: 1024 * 1024),
                   let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }
             guard envelope.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
                 throw ScanProjectStoreError.unsupportedManifestSchemaVersion(envelope.schemaVersion)
@@ -628,7 +628,7 @@ final class ScanProjectStore {
     private func rejectFutureCheckpointSchemaIfPresent(primary: URL, backup: URL) throws {
         let decoder = PropertyListDecoder()
         for url in [primary, backup] {
-            guard let data = try? Data(contentsOf: url),
+            guard let data = try? BoundedFileReader.read(url, maximumBytes: 64 * 1024 * 1024),
                   let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }
             guard envelope.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {
                 throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(envelope.schemaVersion)
@@ -658,13 +658,13 @@ final class ScanProjectStore {
         let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
         try rejectFutureManifestSchemaIfPresent(primary: primary, backup: backup)
         let decoder = JSONDecoder()
-        if let data = try? Data(contentsOf: primary) {
+        if let data = try? BoundedFileReader.read(primary, maximumBytes: 1024 * 1024) {
             do {
                 return try decodeSupportedManifest(data, decoder: decoder)
             } catch {
             }
         }
-        if let data = try? Data(contentsOf: backup) {
+        if let data = try? BoundedFileReader.read(backup, maximumBytes: 1024 * 1024) {
             do {
                 let manifest = try decodeSupportedManifest(data, decoder: decoder)
                 try? data.write(to: primary, options: .atomic)
@@ -864,7 +864,7 @@ final class ScanProjectStore {
 
     private func committedSplatURL(projectURL: URL) throws -> URL? {
         let evidenceURL = projectURL.appendingPathComponent(Self.splatCommitEvidenceFileName)
-        guard let data = try? Data(contentsOf: evidenceURL),
+        guard let data = try? BoundedFileReader.read(evidenceURL, maximumBytes: 64 * 1024),
               let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: data),
               evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               evidence.fileName == Self.splatResultFileName,
@@ -899,14 +899,14 @@ final class ScanProjectStore {
     }
 
     private func rotateManifestBackupIfPrimaryIsValid(primary: URL, backup: URL) throws {
-        guard let data = try? Data(contentsOf: primary) else { return }
+        guard let data = try? BoundedFileReader.read(primary, maximumBytes: 1024 * 1024) else { return }
         let decoder = JSONDecoder()
         guard (try? decodeSupportedManifest(data, decoder: decoder)) != nil else { return }
         try data.write(to: backup, options: .atomic)
     }
 
     private func rotateCheckpointBackupIfPrimaryIsValid(primary: URL, backup: URL) throws {
-        guard let data = try? Data(contentsOf: primary) else { return }
+        guard let data = try? BoundedFileReader.read(primary, maximumBytes: 64 * 1024 * 1024) else { return }
         let decoder = PropertyListDecoder()
         guard (try? decodeSupportedCheckpoint(data, decoder: decoder)) != nil else { return }
         try data.write(to: backup, options: .atomic)
