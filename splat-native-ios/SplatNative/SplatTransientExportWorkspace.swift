@@ -96,17 +96,12 @@ enum SplatTransientExportWorkspace {
            let markerSize = markerValues.fileSize,
            markerSize > 0,
            markerSize <= maximumMarkerByteCount,
-           fileManager.fileExists(atPath: marker.path) else {
+           fileManager.fileExists(atPath: marker.path),
+           let data = try? BoundedFileReader.read(marker, maximumBytes: maximumMarkerByteCount),
+           !data.isEmpty,
+           let recordedPath = String(data: data, encoding: .utf8) else {
             return false
         }
-
-        let markerHandle: FileHandle
-        do { markerHandle = try FileHandle(forReadingFrom: marker) } catch { return false }
-        defer { try? markerHandle.close() }
-        guard let data = try? markerHandle.read(upToCount: maximumMarkerByteCount + 1),
-              !data.isEmpty,
-              data.count <= maximumMarkerByteCount,
-              let recordedPath = String(data: data, encoding: .utf8) else { return false }
         return recordedPath == canonicalPath(of: url)
     }
 
