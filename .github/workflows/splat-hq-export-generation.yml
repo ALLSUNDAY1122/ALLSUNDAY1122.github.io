@@ -1,0 +1,88 @@
+name: Splat HQ export generation binding
+
+on:
+  push:
+    branches: [automation/splat-export-hardening-20260920]
+    paths: ['.github/workflows/splat-hq-export-generation.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch-verify-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: automation/splat-export-hardening-20260920
+          fetch-depth: 0
+      - name: Patch export source reads
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('splat-native-ios/SplatNative/SplatExportService.swift')
+          s=p.read_text()
+          if 'import Darwin\n' not in s:
+              s=s.replace('import CryptoKit\n', 'import CryptoKit\nimport Darwin\n', 1)
+          old='''    static func sourcePointCount(_ sourceURL: URL) throws -> Int {\n        guard sourceURL.isFileURL,\n              FileManager.default.fileExists(atPath: sourceURL.path) else {\n            throw ExportError.sourceMissing\n        }\n        guard sourceURL.pathExtension.lowercased() == "splat" else {\n            throw ExportError.unsupportedSource\n        }\n\n        let attributes = try FileManager.default.attributesOfItem(atPath: sourceURL.path)\n        guard let number = attributes[.size] as? NSNumber else {\n            throw ExportError.corruptSource\n        }\n        let bytes = number.intValue\n        guard bytes > 0 else { throw ExportError.emptySource }\n        guard bytes % dotSplatRecordByteWidth == 0 else { throw ExportError.corruptSource }\n        return bytes / dotSplatRecordByteWidth\n    }'''
+          new='''    static func sourcePointCount(_ sourceURL: URL) throws -> Int {\n        guard canonicalLocalFileURL(sourceURL) else { throw ExportError.sourceMissing }\n        guard sourceURL.pathExtension.lowercased() == "splat" else {\n            throw ExportError.unsupportedSource\n        }\n        let descriptor = Darwin.open(sourceURL.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)\n        guard descriptor >= 0 else { throw ExportError.sourceMissing }\n        defer { Darwin.close(descriptor) }\n        var opened = stat()\n        guard fstat(descriptor, &opened) == 0,\n              (opened.st_mode & S_IFMT) == S_IFREG,\n              opened.st_nlink == 1 else { throw ExportError.corruptSource }\n        let bytes = Int64(opened.st_size)\n        guard bytes > 0 else { throw ExportError.emptySource }\n        guard bytes % Int64(dotSplatRecordByteWidth) == 0,\n              bytes / Int64(dotSplatRecordByteWidth) <= Int64(Int.max) else {\n            throw ExportError.corruptSource\n        }\n        var named = stat(); var finalOpened = stat()\n        guard lstat(sourceURL.path, &named) == 0, fstat(descriptor, &finalOpened) == 0,\n              sameGeneration(opened, named), sameGeneration(opened, finalOpened) else {\n            throw ExportError.corruptSource\n        }\n        return Int(bytes / Int64(dotSplatRecordByteWidth))\n    }'''
+          if s.count(old)!=1: raise SystemExit('sourcePointCount anchor mismatch')
+          s=s.replace(old,new,1)
+          old='''    static func sha256Hex(fileURL: URL) throws -> String {\n        let handle = try FileHandle(forReadingFrom: fileURL)\n        defer { try? handle.close() }\n\n        var hasher = SHA256()\n        while true {\n            try Task.checkCancellation()\n            guard let chunk = try handle.read(upToCount: hashChunkBytes), !chunk.isEmpty else { break }\n            hasher.update(data: chunk)\n        }\n        return hasher.finalize().map { String(format: "%02x", $0) }.joined()\n    }'''
+          new='''    static func sha256Hex(fileURL: URL) throws -> String {\n        guard canonicalLocalFileURL(fileURL) else { throw ExportError.sourceMissing }\n        let descriptor = Darwin.open(fileURL.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)\n        guard descriptor >= 0 else { throw ExportError.sourceMissing }\n        let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)\n        defer { try? handle.close() }\n        var opened = stat()\n        guard fstat(descriptor, &opened) == 0, (opened.st_mode & S_IFMT) == S_IFREG, opened.st_nlink == 1 else {\n            throw ExportError.corruptSource\n        }\n        var hasher = SHA256()\n        while true {\n            try Task.checkCancellation()\n            guard let chunk = try handle.read(upToCount: hashChunkBytes), !chunk.isEmpty else { break }\n            hasher.update(data: chunk)\n        }\n        var finalOpened = stat(); var named = stat()\n        guard fstat(descriptor, &finalOpened) == 0, lstat(fileURL.path, &named) == 0,\n              sameGeneration(opened, finalOpened), sameGeneration(opened, named) else {\n            throw ExportError.corruptSource\n        }\n        return hasher.finalize().map { String(format: "%02x", $0) }.joined()\n    }\n\n    private static func canonicalLocalFileURL(_ url: URL) -> Bool {\n        url.isFileURL && url.baseURL == nil && !url.path.isEmpty && url.path.hasPrefix("/") &&\n            !url.path.contains("\\0") && url.host == nil && url.user == nil && url.password == nil &&\n            url.port == nil && url.query == nil && url.fragment == nil && url.standardizedFileURL.path == url.path\n    }\n\n    private static func sameGeneration(_ lhs: stat, _ rhs: stat) -> Bool {\n        (rhs.st_mode & S_IFMT) == S_IFREG && rhs.st_nlink == 1 &&\n            lhs.st_dev == rhs.st_dev && lhs.st_ino == rhs.st_ino && lhs.st_size == rhs.st_size &&\n            lhs.st_mtimespec.tv_sec == rhs.st_mtimespec.tv_sec && lhs.st_mtimespec.tv_nsec == rhs.st_mtimespec.tv_nsec &&\n            lhs.st_ctimespec.tv_sec == rhs.st_ctimespec.tv_sec && lhs.st_ctimespec.tv_nsec == rhs.st_ctimespec.tv_nsec\n    }'''
+          if s.count(old)!=1: raise SystemExit('sha256 anchor mismatch')
+          p.write_text(s.replace(old,new,1))
+          PY
+          cat > splat-native-ios/SplatNativeTests/SplatExportGenerationSafetyTests.swift <<'SWIFT'
+          import Foundation
+          import XCTest
+
+          final class SplatExportGenerationSafetyTests: XCTestCase {
+              func testPointCountRejectsSymlinkAndHardLinkSources() throws {
+                  let fm = FileManager.default
+                  let root = fm.temporaryDirectory.appendingPathComponent("SplatExportGenerationSafety-\(UUID().uuidString)", isDirectory: true)
+                  defer { try? fm.removeItem(at: root) }
+                  try fm.createDirectory(at: root, withIntermediateDirectories: true)
+                  let real = root.appendingPathComponent("real.splat")
+                  try Data(repeating: 0, count: 64).write(to: real)
+                  let alias = root.appendingPathComponent("alias.splat")
+                  try fm.createSymbolicLink(at: alias, withDestinationURL: real)
+                  XCTAssertThrowsError(try SplatExportService.sourcePointCount(alias))
+                  let hard = root.appendingPathComponent("hard.splat")
+                  try fm.linkItem(at: real, to: hard)
+                  XCTAssertThrowsError(try SplatExportService.sourcePointCount(real))
+                  XCTAssertThrowsError(try SplatExportService.sourcePointCount(hard))
+              }
+
+              func testStreamingHashRejectsSymlinkSource() throws {
+                  let fm = FileManager.default
+                  let root = fm.temporaryDirectory.appendingPathComponent("SplatExportHashSafety-\(UUID().uuidString)", isDirectory: true)
+                  defer { try? fm.removeItem(at: root) }
+                  try fm.createDirectory(at: root, withIntermediateDirectories: true)
+                  let real = root.appendingPathComponent("real.spz")
+                  try Data(repeating: 7, count: 4096).write(to: real)
+                  let alias = root.appendingPathComponent("alias.spz")
+                  try fm.createSymbolicLink(at: alias, withDestinationURL: real)
+                  XCTAssertThrowsError(try SplatExportService.sha256Hex(fileURL: alias))
+              }
+          }
+          SWIFT
+      - name: Verify build and tests
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO build-for-testing
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNative -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+      - name: Commit verified export hardening
+        run: |
+          set -euo pipefail
+          git config user.name 'Splat HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/SplatExportService.swift splat-native-ios/SplatNativeTests/SplatExportGenerationSafetyTests.swift
+          git commit -m 'fix(splat): bind export reads to file generations'
+          git push origin HEAD:automation/splat-export-hardening-20260920
