@@ -38,6 +38,13 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         XCTAssertFalse(MeshARPlacementPolicy.hasFiniteTranslation(transform)); transform = matrix_identity_float4x4; transform.columns.3.z = .infinity
         XCTAssertFalse(MeshARPlacementPolicy.hasFiniteTranslation(transform))
     }
+    func testPlacementTranslationRejectsImplausibleFiniteWorldCoordinates() {
+        var transform = matrix_identity_float4x4
+        transform.columns.3 = SIMD4<Float>(1_000, -1_000, 999, 1)
+        XCTAssertTrue(MeshARPlacementPolicy.hasFiniteTranslation(transform))
+        transform.columns.3.x = 1_000.01
+        XCTAssertFalse(MeshARPlacementPolicy.hasFiniteTranslation(transform))
+    }
     func testPlausiblePlacementRejectsNearCameraExcessiveDistanceAndBehindCamera() {
         let camera = matrix_identity_float4x4; var target = matrix_identity_float4x4
         target.columns.3.z = -0.01; XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
