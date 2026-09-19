@@ -16,6 +16,7 @@ enum MeshARPlacementPolicy {
     private static let maximumCameraAxisDot: Float = 0.02
     private static let minimumCameraDeterminant: Float = 0.97
     private static let maximumCameraDeterminant: Float = 1.03
+    private static let maximumAbsoluteTranslation: Float = 1_000
 
     nonisolated static func isStableTracking(_ state: ARCamera.TrackingState) -> Bool { if case .normal = state { return true }; return false }
     nonisolated static func shouldUseEstimatedPlane(hasPlacedModel: Bool) -> Bool { !hasPlacedModel }
@@ -45,6 +46,10 @@ enum MeshARPlacementPolicy {
     }
     private nonisolated static func isRigidTransform(_ transform: simd_float4x4) -> Bool {
         guard isFiniteAffineTransform(transform) else { return false }
+        let translation = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+        guard abs(translation.x) <= maximumAbsoluteTranslation,
+              abs(translation.y) <= maximumAbsoluteTranslation,
+              abs(translation.z) <= maximumAbsoluteTranslation else { return false }
         let x = SIMD3<Float>(transform.columns.0.x, transform.columns.0.y, transform.columns.0.z), y = SIMD3<Float>(transform.columns.1.x, transform.columns.1.y, transform.columns.1.z), z = SIMD3<Float>(transform.columns.2.x, transform.columns.2.y, transform.columns.2.z)
         let lengths = [simd_length_squared(x), simd_length_squared(y), simd_length_squared(z)]
         guard lengths.allSatisfy({ $0.isFinite && $0 >= minimumCameraAxisLengthSquared && $0 <= maximumCameraAxisLengthSquared }) else { return false }
