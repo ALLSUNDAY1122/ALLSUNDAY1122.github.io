@@ -1,4 +1,5 @@
 import Foundation
+import Darwin
 
 enum SplatExportAdmission {
     enum Kind: Equatable, Sendable {
@@ -41,52 +42,29 @@ enum SplatExportAdmission {
     private static let maximumViewerSidecarByteCount: Int64 = 64 * 1_024
 
     static func preflight(sourceURL: URL, kind: Kind, availableCapacityOverride: Int64? = nil) throws -> URL {
-        try preflightResult(
-            sourceURL: sourceURL,
-            kind: kind,
-            availableCapacityOverride: availableCapacityOverride
-        ).trustedURL
+        try preflightResult(sourceURL: sourceURL, kind: kind, availableCapacityOverride: availableCapacityOverride).trustedURL
     }
 
-    static func preflightResult(
-        sourceURL: URL,
-        kind: Kind,
-        availableCapacityOverride: Int64? = nil
-    ) throws -> Result {
+    static func preflightResult(sourceURL: URL, kind: Kind, availableCapacityOverride: Int64? = nil) throws -> Result {
         let verification: SplatCompletionVerifier.Verification
         do { verification = try SplatCompletionVerifier.verifyWithDigest(sourceURL: sourceURL) }
         catch { throw AdmissionError.untrustedSource }
         let trustedURL = verification.url
 
-        guard viewerPrimarySidecarIsSafeOrMissing(sourceURL: trustedURL) else {
-            throw AdmissionError.untrustedSource
-        }
+        guard viewerPrimarySidecarIsSafeOrMissing(sourceURL: trustedURL) else { throw AdmissionError.untrustedSource }
         _ = SplatViewerEditStore.load(sourceURL: trustedURL)
-        guard viewerPrimarySidecarIsSafeOrMissing(sourceURL: trustedURL) else {
-            throw AdmissionError.untrustedSource
-        }
+        guard viewerPrimarySidecarIsSafeOrMissing(sourceURL: trustedURL) else { throw AdmissionError.untrustedSource }
 
         let projectURL = trustedURL.deletingLastPathComponent()
         let sourceBytes = try fileSize(at: trustedURL)
         let pointCount = Int(sourceBytes / 32)
-
-        let canonicalInspection = inspectCanonicalOnce(
-            sourceURL: trustedURL,
-            verifiedDigest: verification.sha256,
-            expectedPointCount: pointCount
-        )
-        if canonicalInspection.candidateExists && canonicalInspection.completeAsset == nil {
-            throw AdmissionError.untrustedSource
-        }
+        let canonicalInspection = inspectCanonicalOnce(sourceURL: trustedURL, verifiedDigest: verification.sha256, expectedPointCount: pointCount)
+        if canonicalInspection.candidateExists && canonicalInspection.completeAsset == nil { throw AdmissionError.untrustedSource }
         let canonical = canonicalInspection.completeAsset
-
         let canonicalBytes = canonical.flatMap { try? fileSize(at: $0.url) }
         let required = estimatedRequiredFreeBytes(sourceBytes: sourceBytes, canonicalAssetBytes: canonicalBytes, kind: kind)
         let detectedCapacity = availableCapacityOverride == nil ? availableCapacity(at: projectURL) : nil
-        let available = try resolvedAvailableCapacity(
-            override: availableCapacityOverride,
-            detected: detectedCapacity
-        )
+        let available = try resolvedAvailableCapacity(override: availableCapacityOverride, detected: detectedCapacity)
         if available < required { throw AdmissionError.insufficientStorage(required: required, available: available) }
         return Result(verification: verification)
     }
@@ -113,76 +91,54 @@ enum SplatExportAdmission {
             let safeDuration = duration.isFinite ? max(1, duration) : 1
             let estimatedVideoBytes = estimatedBitrate * safeDuration / 8
             let videoBytes: Int64
-            if !estimatedVideoBytes.isFinite || estimatedVideoBytes >= Double(Int64.max) {
-                videoBytes = Int64.max
-            } else {
-                videoBytes = Int64(max(0, estimatedVideoBytes).rounded(.up))
-            }
+            if !estimatedVideoBytes.isFinite || estimatedVideoBytes >= Double(Int64.max) { videoBytes = Int64.max }
+            else { videoBytes = Int64(max(0, estimatedVideoBytes).rounded(.up)) }
             outputEstimate = videoBytes
         }
         return saturatingAdd(outputEstimate, safetyReserveBytes)
     }
 
-    private static func inspectCanonicalOnce(
-        sourceURL: URL,
-        verifiedDigest: String,
-        expectedPointCount: Int
-    ) -> CanonicalInspection {
-        guard let canonicalURL = try? SplatCanonicalSHAsset.canonicalURL(
-            forLegacySplat: sourceURL,
-            verifiedDigest: verifiedDigest
-        ) else {
+    private static func inspectCanonicalOnce(sourceURL: URL, verifiedDigest: String, expectedPointCount: Int) -> CanonicalInspection {
+        guard let canonicalURL = try? SplatCanonicalSHAsset.canonicalURL(forLegacySplat: sourceURL, verifiedDigest: verifiedDigest) else {
             return CanonicalInspection(candidateExists: false, completeAsset: nil)
         }
-        guard FileManager.default.fileExists(atPath: canonicalURL.path) else {
-            return CanonicalInspection(candidateExists: false, completeAsset: nil)
-        }
+        guard FileManager.default.fileExists(atPath: canonicalURL.path) else { return CanonicalInspection(candidateExists: false, completeAsset: nil) }
         guard let descriptor = try? SplatCanonicalSHAsset.inspectPLYStrictHeader(canonicalURL),
               descriptor.shDegree == SplatCanonicalSHAsset.requiredSHDegree,
               descriptor.pointCount == expectedPointCount,
-              SplatCanonicalSHAsset.hasCompleteVertexPayload(
-                at: canonicalURL,
-                expectedPointCount: expectedPointCount
-              ) else {
+              SplatCanonicalSHAsset.hasCompleteVertexPayload(at: canonicalURL, expectedPointCount: expectedPointCount) else {
             return CanonicalInspection(candidateExists: true, completeAsset: nil)
         }
-        return CanonicalInspection(
-            candidateExists: true,
-            completeAsset: SplatCanonicalSHAsset.Asset(url: canonicalURL, descriptor: descriptor)
-        )
+        return CanonicalInspection(candidateExists: true, completeAsset: SplatCanonicalSHAsset.Asset(url: canonicalURL, descriptor: descriptor))
     }
 
-    private static func viewerPrimarySidecarIsSafeOrMissing(
-        sourceURL: URL,
-        fileManager: FileManager = .default
-    ) -> Bool {
+    private static func viewerPrimarySidecarIsSafeOrMissing(sourceURL: URL, fileManager: FileManager = .default) -> Bool {
         let primary = SplatViewerEditStore.primaryURL(for: sourceURL)
-        if (try? fileManager.destinationOfSymbolicLink(atPath: primary.path)) != nil {
-            return false
-        }
+        if (try? fileManager.destinationOfSymbolicLink(atPath: primary.path)) != nil { return false }
         guard fileManager.fileExists(atPath: primary.path) else { return true }
         guard let values = try? primary.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
               values.isRegularFile == true,
               values.isSymbolicLink != true,
               let attributes = try? fileManager.attributesOfItem(atPath: primary.path),
-              let size = attributes[.size] as? NSNumber else {
-            return false
-        }
+              let size = attributes[.size] as? NSNumber else { return false }
         return size.int64Value >= 0 && size.int64Value <= maximumViewerSidecarByteCount
     }
 
     private static func fileSize(at url: URL) throws -> Int64 {
-        guard url.isFileURL,
-              let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
-              values.isRegularFile == true,
-              values.isSymbolicLink != true,
-              let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
-              (attributes[.type] as? FileAttributeType) == .typeRegular,
-              let size = attributes[.size] as? NSNumber,
-              size.int64Value >= 0 else {
+        guard url.isFileURL, url.path.hasPrefix("/"), !url.path.contains("\0") else {
             throw AdmissionError.sourceSizeUnavailable
         }
-        return size.int64Value
+        let descriptor = Darwin.open(url.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
+        guard descriptor >= 0 else { throw AdmissionError.sourceSizeUnavailable }
+        defer { Darwin.close(descriptor) }
+        var info = stat()
+        guard fstat(descriptor, &info) == 0,
+              (info.st_mode & S_IFMT) == S_IFREG,
+              info.st_nlink == 1,
+              info.st_size >= 0 else {
+            throw AdmissionError.sourceSizeUnavailable
+        }
+        return Int64(info.st_size)
     }
 
     private static func availableCapacity(at url: URL) -> Int64? {
