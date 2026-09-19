@@ -187,7 +187,19 @@ enum SplatExportAdmission {
               named.st_ctimespec.tv_nsec == opened.st_ctimespec.tv_nsec else {
             throw AdmissionError.sourceSizeUnavailable
         }
-        return Int64(opened.st_size)
+        var finalOpened = stat()
+        guard fstat(descriptor, &finalOpened) == 0,
+              finalOpened.st_dev == opened.st_dev,
+              finalOpened.st_ino == opened.st_ino,
+              finalOpened.st_nlink == opened.st_nlink,
+              finalOpened.st_size == opened.st_size,
+              finalOpened.st_mtimespec.tv_sec == opened.st_mtimespec.tv_sec,
+              finalOpened.st_mtimespec.tv_nsec == opened.st_mtimespec.tv_nsec,
+              finalOpened.st_ctimespec.tv_sec == opened.st_ctimespec.tv_sec,
+              finalOpened.st_ctimespec.tv_nsec == opened.st_ctimespec.tv_nsec else {
+            throw AdmissionError.sourceSizeUnavailable
+        }
+        return Int64(finalOpened.st_size)
     }
 
     private static func availableCapacity(at url: URL) -> Int64? {
