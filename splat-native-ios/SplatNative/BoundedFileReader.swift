@@ -18,6 +18,7 @@ enum BoundedFileReader {
         guard url.isFileURL,
               url.baseURL == nil,
               !url.path.isEmpty,
+              url.path.hasPrefix("/"),
               !url.path.contains("\0"),
               url.host == nil,
               url.user == nil,
