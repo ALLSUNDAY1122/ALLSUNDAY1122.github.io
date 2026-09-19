@@ -73,7 +73,7 @@ enum SplatViewerCameraDatasetLoader {
                 guard !matrix.isAtEnd, var row = try? matrix.nestedUnkeyedContainer() else { position = nil; return }
                 var translationComponent: Float?
                 for columnIndex in 0..<4 {
-                    guard !row.isAtEnd, let value = try? row.decode(Float.self) else { position = nil; return }
+                    guard !row.isAtEnd, let value = try? row.decode(Float.self), value.isFinite else { position = nil; return }
                     if columnIndex == 3 { translationComponent = value }
                 }
                 guard row.isAtEnd else { position = nil; return }
