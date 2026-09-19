@@ -1,0 +1,61 @@
+name: Splat HQ bounded project store reads
+
+on:
+  push:
+    branches: [feature/splat-native-ios-poc]
+    paths: ['.github/workflows/splat-hq-bounded-project-store.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch-verify-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-native-ios-poc
+          fetch-depth: 0
+      - name: Patch metadata reads
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('splat-native-ios/SplatNative/ScanProjectStore.swift')
+          s=p.read_text()
+          replacements=[
+          ('if let data = try? Data(contentsOf: primary) {\n            do {\n                return try decodeSupportedCheckpoint(data, decoder: decoder)', 'if let data = try? BoundedFileReader.read(primary, maximumBytes: 64 * 1024 * 1024) {\n            do {\n                return try decodeSupportedCheckpoint(data, decoder: decoder)'),
+          ('if let data = try? Data(contentsOf: backup) {\n            do {\n                let value = try decodeSupportedCheckpoint(data, decoder: decoder)', 'if let data = try? BoundedFileReader.read(backup, maximumBytes: 64 * 1024 * 1024) {\n            do {\n                let value = try decodeSupportedCheckpoint(data, decoder: decoder)'),
+          ('guard let data = try? Data(contentsOf: url),\n                  let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }\n            guard envelope.schemaVersion <= ScanProjectManifest.currentSchemaVersion', 'guard let data = try? BoundedFileReader.read(url, maximumBytes: 1024 * 1024),\n                  let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }\n            guard envelope.schemaVersion <= ScanProjectManifest.currentSchemaVersion'),
+          ('guard let data = try? Data(contentsOf: url),\n                  let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }\n            guard envelope.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion', 'guard let data = try? BoundedFileReader.read(url, maximumBytes: 64 * 1024 * 1024),\n                  let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }\n            guard envelope.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion'),
+          ('if let data = try? Data(contentsOf: primary) {\n            do {\n                return try decodeSupportedManifest(data, decoder: decoder)', 'if let data = try? BoundedFileReader.read(primary, maximumBytes: 1024 * 1024) {\n            do {\n                return try decodeSupportedManifest(data, decoder: decoder)'),
+          ('if let data = try? Data(contentsOf: backup) {\n            do {\n                let manifest = try decodeSupportedManifest(data, decoder: decoder)', 'if let data = try? BoundedFileReader.read(backup, maximumBytes: 1024 * 1024) {\n            do {\n                let manifest = try decodeSupportedManifest(data, decoder: decoder)'),
+          ('guard let data = try? Data(contentsOf: evidenceURL),\n              let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: data)', 'guard let data = try? BoundedFileReader.read(evidenceURL, maximumBytes: 64 * 1024),\n              let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: data)'),
+          ('guard let data = try? Data(contentsOf: primary) else { return }\n        let decoder = JSONDecoder()', 'guard let data = try? BoundedFileReader.read(primary, maximumBytes: 1024 * 1024) else { return }\n        let decoder = JSONDecoder()'),
+          ('guard let data = try? Data(contentsOf: primary) else { return }\n        let decoder = PropertyListDecoder()', 'guard let data = try? BoundedFileReader.read(primary, maximumBytes: 64 * 1024 * 1024) else { return }\n        let decoder = PropertyListDecoder()')]
+          for old,new in replacements:
+              count=s.count(old)
+              if count != 1: raise SystemExit(f'anchor count {count}: {old[:90]!r}')
+              s=s.replace(old,new,1)
+          p.write_text(s)
+          PY
+          grep -q 'BoundedFileReader.read(primary, maximumBytes: 64 \* 1024 \* 1024)' splat-native-ios/SplatNative/ScanProjectStore.swift
+          grep -q 'BoundedFileReader.read(evidenceURL, maximumBytes: 64 \* 1024)' splat-native-ios/SplatNative/ScanProjectStore.swift
+      - name: Verify build and tests
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO build-for-testing
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNative -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+      - name: Commit verified production wiring
+        run: |
+          set -euo pipefail
+          git config user.name 'Splat HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/ScanProjectStore.swift
+          git commit -m 'fix(splat): bound durable project metadata reads'
+          git push origin HEAD:feature/splat-native-ios-poc
