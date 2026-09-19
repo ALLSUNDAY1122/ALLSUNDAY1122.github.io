@@ -1,0 +1,53 @@
+name: Splat HQ thumbnail bounds
+
+on:
+  push:
+    branches: [automation/splat-thumbnail-hardening-20260920]
+    paths: ['.github/workflows/splat-hq-thumbnail-bounds.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch-verify-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: automation/splat-thumbnail-hardening-20260920
+          fetch-depth: 0
+      - name: Patch thumbnail reads
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('splat-native-ios/SplatNative/ScanProjectStore.swift')
+          s=p.read_text()
+          old='''        let target = projectURL.appendingPathComponent(Self.thumbnailFileName)\n        if sourceURL.standardizedFileURL != target.standardizedFileURL {\n            try Data(contentsOf: sourceURL).write(to: target, options: .atomic)\n        }'''
+          new='''        let target = projectURL.appendingPathComponent(Self.thumbnailFileName)\n        if sourceURL.standardizedFileURL != target.standardizedFileURL {\n            let thumbnail = try BoundedFileReader.read(sourceURL, maximumBytes: 32 * 1024 * 1024)\n            try thumbnail.write(to: target, options: .atomic)\n        }'''
+          if s.count(old)!=1: raise SystemExit('setThumbnail anchor mismatch')
+          s=s.replace(old,new,1)
+          old='''            if !fileManager.fileExists(atPath: thumbnail.path), let data = try? Data(contentsOf: firstImage) {\n                try? data.write(to: thumbnail, options: .atomic)\n            }'''
+          new='''            if !fileManager.fileExists(atPath: thumbnail.path),\n               let data = try? BoundedFileReader.read(firstImage, maximumBytes: 32 * 1024 * 1024) {\n                try? data.write(to: thumbnail, options: .atomic)\n            }'''
+          if s.count(old)!=1: raise SystemExit('migration thumbnail anchor mismatch')
+          p.write_text(s.replace(old,new,1))
+          PY
+          ! grep -q 'Data(contentsOf: sourceURL)' splat-native-ios/SplatNative/ScanProjectStore.swift
+      - name: Verify build and tests
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO build-for-testing
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNative -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+      - name: Commit verified thumbnail hardening
+        run: |
+          set -euo pipefail
+          git config user.name 'Splat HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/ScanProjectStore.swift
+          git commit -m 'fix(splat): bound thumbnail ingestion reads'
+          git push origin HEAD:automation/splat-thumbnail-hardening-20260920
