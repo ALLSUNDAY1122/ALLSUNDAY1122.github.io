@@ -10,9 +10,10 @@ enum SplatColorAdjustment {
     ) -> SplatPoint.Color {
         // Persisted settings are normally normalized before this helper is reached, but keep the
         // shared color primitive safe in isolation too. A NaN/Inf gain can propagate into SH data;
-        // on the byte path it can also reach a floating-point-to-Int conversion. Preserve the last
-        // valid appearance instead of letting corrupt parameters turn an edit into invalid output.
-        guard exposureEV.isFinite, contrast.isFinite else { return color }
+        // on the byte path it can also reach a floating-point-to-Int conversion. Negative contrast
+        // is outside the editor contract and would invert SH energy around the midpoint, so reject
+        // it here as well instead of allowing a corrupt direct caller to poison canonical color.
+        guard exposureEV.isFinite, contrast.isFinite, contrast >= 0 else { return color }
         let contrastValue = Float(contrast)
         let linearGain = Float(pow(2.0, exposureEV)) * contrastValue
         let bias = Float(0.5) * (1 - contrastValue)
