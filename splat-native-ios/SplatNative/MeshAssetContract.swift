@@ -1,4 +1,5 @@
 import Foundation
+import Darwin
 
 enum MeshAssetFormat: String, Codable, Sendable {
     case obj
@@ -86,12 +87,8 @@ enum MeshAssetContract {
             }
         }
 
-        // Never downgrade a sidecar written by a newer app. Before reading an existing sidecar,
-        // require an independent regular file and a small bounded payload. The bounded FileHandle
-        // read also closes the stat/read race: replacing or extending the file after the size check
-        // cannot turn metadata validation into an unbounded allocation.
         if fileManager.fileExists(atPath: sidecarURL.path) {
-            let existing = try readExistingSidecarIfSafe(at: sidecarURL, fileManager: fileManager)
+            let existing = try readExistingSidecarIfSafe(at: sidecarURL)
             if let object = try? JSONSerialization.jsonObject(with: existing) as? [String: Any],
                let version = object["schemaVersion"] as? NSNumber,
                version.intValue > descriptor.schemaVersion {
@@ -99,13 +96,8 @@ enum MeshAssetContract {
             }
         }
 
-        // Validate the exact candidate before replacing the last known-good sidecar. Atomic write
-        // alone protects against a torn rename, but it does not prove that the bytes now on disk
-        // still decode to the asset generation the viewer/exporter is about to expose. Use the same
-        // bounded regular-file reader as normal admission so a concurrently replaced candidate cannot
-        // turn this verification into an unbounded allocation or an alias read.
         try expected.write(to: candidateURL, options: .atomic)
-        let persisted = try readExistingSidecarIfSafe(at: candidateURL, fileManager: fileManager)
+        let persisted = try readExistingSidecarIfSafe(at: candidateURL)
         guard persisted == expected else {
             throw sidecarError("Mesh資産メタデータの書込み検証に失敗しました")
         }
@@ -122,11 +114,7 @@ enum MeshAssetContract {
         }
         candidateCommitted = true
 
-        // The rename/replace is the actual publication boundary. Re-read the published path through
-        // the bounded regular-file reader and require byte-for-byte identity before telling callers
-        // the contract is durable. This catches a failed/replaced publication instead of returning a
-        // URL that downstream export/share code would trust as the just-written generation.
-        let published = try readExistingSidecarIfSafe(at: sidecarURL, fileManager: fileManager)
+        let published = try readExistingSidecarIfSafe(at: sidecarURL)
         guard published == expected,
               let publishedDescriptor = try? JSONDecoder().decode(MeshAssetDescriptor.self, from: published),
               publishedDescriptor == descriptor else {
@@ -135,24 +123,12 @@ enum MeshAssetContract {
         return sidecarURL
     }
 
-    private static func readExistingSidecarIfSafe(at url: URL, fileManager: FileManager) throws -> Data {
-        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
-              values.isRegularFile == true,
-              values.isSymbolicLink != true,
-              let attributes = try? fileManager.attributesOfItem(atPath: url.path),
-              let size = attributes[.size] as? NSNumber,
-              size.int64Value >= 0,
-              size.int64Value <= maximumSidecarByteCount else {
+    private static func readExistingSidecarIfSafe(at url: URL) throws -> Data {
+        do {
+            return try BoundedFileReader.read(url, maximumBytes: Int(maximumSidecarByteCount))
+        } catch {
             throw sidecarError("既存のMesh資産メタデータを安全に確認できません。原本を保護するため更新しません")
         }
-
-        let handle = try FileHandle(forReadingFrom: url)
-        defer { try? handle.close() }
-        guard let data = try handle.read(upToCount: Int(maximumSidecarByteCount) + 1),
-              data.count <= Int(maximumSidecarByteCount) else {
-            throw sidecarError("既存のMesh資産メタデータを安全に確認できません。原本を保護するため更新しません")
-        }
-        return data
     }
 
     private static func synchronizeFileBeforePublish(at url: URL) throws {
