@@ -97,4 +97,26 @@ final class BoundedFileReaderTests: XCTestCase {
             XCTAssertEqual(error as? BoundedFileReaderError, .unsafeFile)
         }
     }
+
+    func testRejectsFileURLWithQueryOrFragment() throws {
+        let target = try temporaryFile(Data([1, 2, 3]))
+        var query = URLComponents(url: target, resolvingAgainstBaseURL: false)!
+        query.query = "version=1"
+        XCTAssertThrowsError(try BoundedFileReader.read(query.url!, maximumBytes: 64)) { error in
+            XCTAssertEqual(error as? BoundedFileReaderError, .unsafeFile)
+        }
+        var fragment = URLComponents(url: target, resolvingAgainstBaseURL: false)!
+        fragment.fragment = "metadata"
+        XCTAssertThrowsError(try BoundedFileReader.read(fragment.url!, maximumBytes: 64)) { error in
+            XCTAssertEqual(error as? BoundedFileReaderError, .unsafeFile)
+        }
+    }
+
+    func testRejectsNonCanonicalFilePath() throws {
+        let target = try temporaryFile(Data([1, 2, 3]))
+        let url = target.deletingLastPathComponent().appendingPathComponent("subdir/../metadata.bin")
+        XCTAssertThrowsError(try BoundedFileReader.read(url, maximumBytes: 64)) { error in
+            XCTAssertEqual(error as? BoundedFileReaderError, .unsafeFile)
+        }
+    }
 }
