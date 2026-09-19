@@ -1,0 +1,62 @@
+name: Splat HQ mesh manifest hardening
+
+on:
+  push:
+    branches: [automation/mesh-manifest-hardening-20260920]
+    paths: ['.github/workflows/splat-hq-mesh-manifests.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch-verify-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: automation/mesh-manifest-hardening-20260920
+          fetch-depth: 0
+      - name: Patch Mesh trust metadata reads
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('splat-native-ios/SplatNative/MeshProjectStore.swift')
+          s=p.read_text()
+          old='''    private func readSourceManifest(projectURL: URL) -> SourceManifest? {\n        let url = projectURL.appendingPathComponent(Self.sourceManifestFileName)\n        guard let data = try? Data(contentsOf: url) else { return nil }\n        let decoder = JSONDecoder()'''
+          new='''    private func readSourceManifest(projectURL: URL) -> SourceManifest? {\n        let url = projectURL.appendingPathComponent(Self.sourceManifestFileName)\n        guard let data = try? BoundedFileReader.read(url, maximumBytes: 1024 * 1024) else { return nil }\n        let decoder = JSONDecoder()'''
+          if s.count(old)!=1: raise SystemExit('source manifest anchor mismatch')
+          s=s.replace(old,new,1)
+          old='''    private func readLibraryManifest(projectURL: URL) throws -> LibraryManifest {\n        let url = projectURL.appendingPathComponent(Self.libraryManifestFileName)\n        let data = try Data(contentsOf: url)\n        let decoder = JSONDecoder()'''
+          new='''    private func readLibraryManifest(projectURL: URL) throws -> LibraryManifest {\n        let url = projectURL.appendingPathComponent(Self.libraryManifestFileName)\n        let data: Data\n        do { data = try BoundedFileReader.read(url, maximumBytes: 1024 * 1024) }\n        catch { throw MeshProjectStoreError.invalidProject }\n        let decoder = JSONDecoder()'''
+          if s.count(old)!=1: raise SystemExit('library manifest anchor mismatch')
+          p.write_text(s.replace(old,new,1))
+
+          p=Path('splat-native-ios/SplatNative/MeshProjectIntegrity.swift')
+          s=p.read_text()
+          start=s.index('    private static func readTrustMetadataIfSafe(')
+          end=s.index('\n    private static func sha256Hex', start)
+          new='''    private static func readTrustMetadataIfSafe(\n        at url: URL,\n        fileManager: FileManager\n    ) -> Data? {\n        _ = fileManager\n        return try? BoundedFileReader.read(url, maximumBytes: Int(maximumTrustMetadataByteCount))\n    }\n'''
+          s=s[:start]+new+s[end:]
+          p.write_text(s)
+          PY
+          grep -q 'BoundedFileReader.read(url, maximumBytes: 1024 \* 1024)' splat-native-ios/SplatNative/MeshProjectStore.swift
+          grep -q 'BoundedFileReader.read(url, maximumBytes: Int(maximumTrustMetadataByteCount))' splat-native-ios/SplatNative/MeshProjectIntegrity.swift
+      - name: Verify build and tests
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO build-for-testing
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNative -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+      - name: Commit verified Mesh metadata hardening
+        run: |
+          set -euo pipefail
+          git config user.name 'Splat HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/MeshProjectStore.swift splat-native-ios/SplatNative/MeshProjectIntegrity.swift
+          git commit -m 'fix(mesh): bound durable manifest and integrity reads'
+          git push origin HEAD:automation/mesh-manifest-hardening-20260920
