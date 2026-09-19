@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 import SceneKit
 
@@ -45,10 +46,6 @@ enum MeshExportAdmission {
         guard sourceURL.isFileURL, FileManager.default.fileExists(atPath: sourceURL.path) else {
             throw AdmissionError.sourceMissing
         }
-        // Preserve the pre-existing `sourceSizeUnavailable` contract for directories/special nodes,
-        // while explicitly rejecting aliases before `attributesOfItem` follows them to an external
-        // regular file. That closes the self-contained export hole without broadening behavior for
-        // malformed non-file inputs.
         if let sourceValues = try? sourceURL.resourceValues(forKeys: [.isSymbolicLinkKey]),
            sourceValues.isSymbolicLink == true {
             throw AdmissionError.unsafeSource
@@ -57,11 +54,6 @@ enum MeshExportAdmission {
         let sourceBytes = try fileSize(at: sourceURL)
         let sourceExtension = sourceURL.pathExtension.lowercased()
 
-        // RealityKit can report a modelFile request complete as soon as a USDZ exists. File
-        // existence alone does not prove SceneKit can decode a usable surface. Export/share is a
-        // last irreversible hand-off to other apps, so fail closed here for malformed, empty,
-        // non-finite, out-of-range, or fully degenerate USDZ geometry. This runs on the detached
-        // export preflight path, not the viewer's MainActor.
         if sourceExtension == "usdz" {
             guard let scene = try? SCNScene(url: sourceURL, options: nil),
                   MeshRawSceneValidator.containsGeometry(scene) else {
@@ -75,11 +67,6 @@ enum MeshExportAdmission {
             format: format
         )
 
-        // Assimp/Model I/O scene conversion and exact OBJ delivery may follow every referenced
-        // material/texture. Validate those companions and reserve their on-disk bytes because the
-        // converted container can embed/copy them while the originals and partial output coexist.
-        // PLY/LAS uses our bounded parser instead: it validates contained, decodable textures and
-        // deliberately falls back to geometry-only points when texture metadata is stale/damaged.
         if sourceExtension == "obj" {
             switch format {
             case .fbx, .obj, .glb, .usdz, .stl:
@@ -108,15 +95,6 @@ enum MeshExportAdmission {
         return sourceURL
     }
 
-    /// Conservative disk estimate for the atomic pipeline. Exact-format passthrough only needs
-    /// one share copy. Direct OBJ point-cloud output can expand a compact indexed OBJ substantially
-    /// because each triangle corner becomes a full point record (up to 26 bytes in LAS 1.2 with
-    /// RGB), so reserve 12x source bytes. Non-OBJ point-cloud conversion first materializes a text
-    /// OBJ bridge and then expands that bridge again into PLY/LAS; compressed/binary inputs such as
-    /// GLB can therefore consume substantially more disk than their source size suggests, so that
-    /// two-stage path reserves 24x source bytes. Non-OBJ FBX/OBJ/GLB/STL conversion also creates a
-    /// temporary text OBJ bridge before writing the final container; reserve 8x source bytes there
-    /// instead of the direct-OBJ 3x path. USDZ is exported directly by Model I/O and keeps 3x.
     static func estimatedRequiredFreeBytes(
         sourceBytes: Int64,
         sourceExtension: String,
@@ -140,14 +118,47 @@ enum MeshExportAdmission {
         return saturatingAdd(saturatingMultiply(source, by: multiplier), safetyReserveBytes)
     }
 
+    /// Read source size from one no-follow descriptor and verify that the named path still refers
+    /// to the same generation. Export admission must not size one file and later approve a swapped
+    /// alias/replacement with different resource requirements.
     private static func fileSize(at url: URL) throws -> Int64 {
-        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
-              let size = attributes[.size] as? NSNumber,
-              size.int64Value > 0 else {
+        guard url.isFileURL,
+              url.baseURL == nil,
+              url.host == nil,
+              url.user == nil,
+              url.password == nil,
+              url.port == nil,
+              url.query == nil,
+              url.fragment == nil else {
+            throw AdmissionError.unsafeSource
+        }
+        let path = url.path
+        let descriptor = open(path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
+        guard descriptor >= 0 else { throw AdmissionError.unsafeSource }
+        defer { close(descriptor) }
+
+        var opened = stat()
+        guard fstat(descriptor, &opened) == 0,
+              (opened.st_mode & S_IFMT) == S_IFREG,
+              opened.st_nlink == 1,
+              opened.st_size > 0 else {
             throw AdmissionError.sourceSizeUnavailable
         }
-        return size.int64Value
+
+        var named = stat()
+        guard lstat(path, &named) == 0,
+              (named.st_mode & S_IFMT) == S_IFREG,
+              named.st_nlink == 1,
+              named.st_dev == opened.st_dev,
+              named.st_ino == opened.st_ino,
+              named.st_size == opened.st_size,
+              named.st_mtimespec.tv_sec == opened.st_mtimespec.tv_sec,
+              named.st_mtimespec.tv_nsec == opened.st_mtimespec.tv_nsec,
+              named.st_ctimespec.tv_sec == opened.st_ctimespec.tv_sec,
+              named.st_ctimespec.tv_nsec == opened.st_ctimespec.tv_nsec else {
+            throw AdmissionError.unsafeSource
+        }
+        return Int64(opened.st_size)
     }
 
     private static func availableCapacity(at url: URL) -> Int64? {
