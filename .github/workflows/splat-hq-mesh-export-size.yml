@@ -1,0 +1,50 @@
+name: Splat HQ mesh export generation
+
+on:
+  push:
+    branches: [automation/mesh-export-hardening-20260920]
+    paths: ['.github/workflows/splat-hq-mesh-export-size.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch-verify-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: automation/mesh-export-hardening-20260920
+          fetch-depth: 0
+      - name: Patch Mesh export source sizing
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('splat-native-ios/SplatNative/MeshExportAdmission.swift')
+          s=p.read_text()
+          if 'import Darwin\n' not in s:
+              s=s.replace('import Foundation\n', 'import Darwin\nimport Foundation\n', 1)
+          old='''    private static func fileSize(at url: URL) throws -> Int64 {\n        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)\n        guard (attributes[.type] as? FileAttributeType) == .typeRegular,\n              let size = attributes[.size] as? NSNumber,\n              size.int64Value > 0 else {\n            throw AdmissionError.sourceSizeUnavailable\n        }\n        return size.int64Value\n    }'''
+          new='''    private static func fileSize(at url: URL) throws -> Int64 {\n        guard url.isFileURL, url.baseURL == nil, !url.path.isEmpty, url.path.hasPrefix("/"),\n              !url.path.contains("\\0"), url.host == nil, url.user == nil, url.password == nil,\n              url.port == nil, url.query == nil, url.fragment == nil,\n              url.standardizedFileURL.path == url.path else {\n            throw AdmissionError.sourceSizeUnavailable\n        }\n        let descriptor = Darwin.open(url.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)\n        guard descriptor >= 0 else { throw AdmissionError.sourceSizeUnavailable }\n        defer { Darwin.close(descriptor) }\n        var opened = stat(); var named = stat(); var finalOpened = stat()\n        guard fstat(descriptor, &opened) == 0,\n              (opened.st_mode & S_IFMT) == S_IFREG, opened.st_nlink == 1, opened.st_size > 0,\n              lstat(url.path, &named) == 0, (named.st_mode & S_IFMT) == S_IFREG, named.st_nlink == 1,\n              named.st_dev == opened.st_dev, named.st_ino == opened.st_ino, named.st_size == opened.st_size,\n              named.st_mtimespec.tv_sec == opened.st_mtimespec.tv_sec, named.st_mtimespec.tv_nsec == opened.st_mtimespec.tv_nsec,\n              named.st_ctimespec.tv_sec == opened.st_ctimespec.tv_sec, named.st_ctimespec.tv_nsec == opened.st_ctimespec.tv_nsec,\n              fstat(descriptor, &finalOpened) == 0, finalOpened.st_dev == opened.st_dev,\n              finalOpened.st_ino == opened.st_ino, finalOpened.st_nlink == opened.st_nlink,\n              finalOpened.st_size == opened.st_size,\n              finalOpened.st_mtimespec.tv_sec == opened.st_mtimespec.tv_sec, finalOpened.st_mtimespec.tv_nsec == opened.st_mtimespec.tv_nsec,\n              finalOpened.st_ctimespec.tv_sec == opened.st_ctimespec.tv_sec, finalOpened.st_ctimespec.tv_nsec == opened.st_ctimespec.tv_nsec else {\n            throw AdmissionError.sourceSizeUnavailable\n        }\n        return Int64(finalOpened.st_size)\n    }'''
+          if s.count(old)!=1: raise SystemExit('Mesh export fileSize anchor mismatch')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Verify build and tests
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO build-for-testing
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNative -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+      - name: Commit verified Mesh export hardening
+        run: |
+          set -euo pipefail
+          git config user.name 'Splat HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/MeshExportAdmission.swift
+          git commit -m 'fix(mesh): bind export size checks to file generation'
+          git push origin HEAD:automation/mesh-export-hardening-20260920
