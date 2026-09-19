@@ -1,0 +1,48 @@
+name: Splat S12 Quality-aware Bounded Densification
+
+on:
+  pull_request:
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-s12-bounded-densification.yml'
+  push:
+    branches:
+      - 'scaniverse/s12-bounded-densification'
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-s12-bounded-densification.yml'
+
+jobs:
+  bounded-densification-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Materialize exact pinned Msplat with S7-S12 composition
+        working-directory: splat-native-ios
+        run: bash scripts/materialize_msplat_s7_wave1.sh
+      - name: Verify S12 generated-source contract
+        working-directory: splat-native-ios
+        run: python3 scripts/test_s12_bounded_densification_patch.py Packages/MsplatMemory
+      - name: Verify S10 regression contract
+        working-directory: splat-native-ios
+        run: python3 scripts/test_s10_bounded_memory_patch.py Packages/MsplatMemory
+      - name: Verify S12 app policy and protected quality values
+        working-directory: splat-native-ios
+        run: |
+          python3 scripts/test_s7_wave1_integration_contracts.py
+          grep -Fq 'static let standardIterations = 7_000' SplatNative/SplatReconstructionPolicy.swift
+          grep -Fq 'static let datasetDownscale: Float = 4.0' SplatNative/SplatReconstructionPolicy.swift
+          grep -Fq 'config.shDegree = 3' SplatNative/SplatReconstructionPolicy.swift
+          grep -Fq 'config.densifyGradThresh = 0.0002' SplatNative/SplatReconstructionPolicy.swift
+          grep -Fq 'config.densifySizeThresh = 0.01' SplatNative/SplatReconstructionPolicy.swift
+          grep -Fq 'jpegData(compressionQuality: 0.90)' SplatNative/ScanModel.swift
+          grep -Fq 'let maximumBudget = 1_536 * mib' SplatNative/SplatResourceGuard.swift
+          grep -Fq 'let minimumReserve = 256 * mib' SplatNative/SplatResourceGuard.swift
+          grep -Fq 'let maximumReserve = 512 * mib' SplatNative/SplatResourceGuard.swift
+          grep -Fq 'var densificationBudgetCount: Int { maxSplatCount }' SplatNative/SplatResourceGuard.swift
+          if grep -Fq 'else if splatCount >= limits.maxSplatCount' SplatNative/SplatResourceGuard.swift; then
+            echo 'terminal splat-count pause must not return in S12' >&2
+            exit 1
+          fi

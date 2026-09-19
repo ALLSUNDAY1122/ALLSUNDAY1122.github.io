@@ -1,0 +1,65 @@
+name: Splat Smoke Diagnostic
+# Diagnostic-only workflow for capturing the failing simulator build-for-testing output.
+on:
+  push:
+    paths:
+      - '.github/workflows/splat-smoke-diagnostic.yml'
+  pull_request:
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-smoke-diagnostic.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  GIT_LFS_SKIP_SMUDGE: '1'
+jobs:
+  diagnose:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Disable Git LFS smudge
+        run: git lfs install --skip-smudge --skip-repo
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        working-directory: splat-native-ios
+        run: |
+          python3 scripts/make_test_icon.py
+          xcodegen generate
+          xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
+      - name: Capture smoke-test diagnostics
+        id: smoke
+        continue-on-error: true
+        timeout-minutes: 10
+        shell: bash
+        working-directory: splat-native-ios
+        run: |
+          set +e
+          set -o pipefail
+          rm -f /tmp/splat-smoke-build.log /tmp/splat-smoke-diagnostics.txt
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO build-for-testing \
+            2>&1 | tee /tmp/splat-smoke-build.log
+          status=${PIPESTATUS[0]}
+          grep -E '(^|:) error:|fatal error:|BUILD FAILED|The following build commands failed:|Command .* failed|linker command failed|Undefined symbols|duplicate symbol|Could not|unable to' /tmp/splat-smoke-build.log | tail -300 > /tmp/splat-smoke-diagnostics.txt || true
+          if [ "$status" -ne 0 ] && [ ! -s /tmp/splat-smoke-diagnostics.txt ]; then
+            tail -300 /tmp/splat-smoke-build.log > /tmp/splat-smoke-diagnostics.txt
+          fi
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+      - name: Upload smoke diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: splat-smoke-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            /tmp/splat-smoke-build.log
+            /tmp/splat-smoke-diagnostics.txt
+      - name: Fail if smoke build failed
+        if: steps.smoke.outcome == 'failure'
+        run: exit 1
