@@ -20,8 +20,14 @@ extension MeshScanModel {
         // Open the asset itself without following a symlink. A resourceValues preflight followed by
         // FileHandle(forWritingTo:) still leaves a path-swap race between validation and open.
         guard descriptor.fileURL.isFileURL,
+              descriptor.fileURL.baseURL == nil,
+              !descriptor.fileURL.path.isEmpty,
+              descriptor.fileURL.path.hasPrefix("/"),
               !descriptor.fileURL.path.contains("\0"),
               descriptor.fileURL.host == nil,
+              descriptor.fileURL.user == nil,
+              descriptor.fileURL.password == nil,
+              descriptor.fileURL.port == nil,
               descriptor.fileURL.query == nil,
               descriptor.fileURL.fragment == nil,
               descriptor.fileURL.standardizedFileURL.path == descriptor.fileURL.path else {
