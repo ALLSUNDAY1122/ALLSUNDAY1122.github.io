@@ -42,6 +42,9 @@ enum SplatExportAdmission {
 
     private static let safetyReserveBytes: Int64 = 128 * 1_024 * 1_024
     private static let maximumViewerSidecarByteCount = 64 * 1_024
+    private static let maximumVideoDimension = 16_384
+    private static let maximumVideoFramesPerSecond = 240
+    private static let maximumVideoDuration: TimeInterval = 3_600
 
     static func preflight(sourceURL: URL, kind: Kind, availableCapacityOverride: Int64? = nil) throws -> URL {
         try preflightResult(sourceURL: sourceURL, kind: kind, availableCapacityOverride: availableCapacityOverride).trustedURL
@@ -89,7 +92,7 @@ enum SplatExportAdmission {
         case .spz:
             outputEstimate = max(effectiveSource, 32 * 1_024 * 1_024)
         case .video(let width, let height, let framesPerSecond, let duration):
-            guard width > 0, height > 0, framesPerSecond > 0, duration.isFinite, duration > 0 else { return Int64.max }
+            guard validVideoConfiguration(width: width, height: height, framesPerSecond: framesPerSecond, duration: duration) else { return Int64.max }
             let pixelsPerSecond = Double(width) * Double(height) * Double(framesPerSecond)
             let estimatedBitrate = max(2_000_000, pixelsPerSecond * 0.12)
             let estimatedVideoBytes = estimatedBitrate * duration / 8
@@ -103,10 +106,16 @@ enum SplatExportAdmission {
 
     private static func validate(kind: Kind) throws {
         guard case .video(let width, let height, let framesPerSecond, let duration) = kind else { return }
-        guard width > 0, height > 0, framesPerSecond > 0,
-              duration.isFinite, duration > 0 else {
+        guard validVideoConfiguration(width: width, height: height, framesPerSecond: framesPerSecond, duration: duration) else {
             throw AdmissionError.invalidExportConfiguration
         }
+    }
+
+    private static func validVideoConfiguration(width: Int, height: Int, framesPerSecond: Int, duration: TimeInterval) -> Bool {
+        width > 0 && width <= maximumVideoDimension &&
+        height > 0 && height <= maximumVideoDimension &&
+        framesPerSecond > 0 && framesPerSecond <= maximumVideoFramesPerSecond &&
+        duration.isFinite && duration > 0 && duration <= maximumVideoDuration
     }
 
     private static func inspectCanonicalOnce(sourceURL: URL, verifiedDigest: String, expectedPointCount: Int) -> CanonicalInspection {
