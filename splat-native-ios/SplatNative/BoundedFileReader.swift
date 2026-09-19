@@ -16,6 +16,7 @@ enum BoundedFileReader {
     static func read(_ url: URL, maximumBytes: Int) throws -> Data {
         guard maximumBytes > 0, maximumBytes <= absoluteMaximumBytes else { throw BoundedFileReaderError.invalidLimit }
         guard url.isFileURL,
+              url.baseURL == nil,
               !url.path.isEmpty,
               !url.path.contains("\0"),
               url.host == nil,
