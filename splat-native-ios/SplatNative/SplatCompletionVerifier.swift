@@ -193,22 +193,11 @@ enum SplatCompletionVerifier {
         at url: URL,
         fileManager: FileManager
     ) -> Data? {
-        guard isIndependentRegularFile(url),
-              let evidenceByteCount = try? fileByteCount(url, fileManager: fileManager),
-              evidenceByteCount >= 0,
-              evidenceByteCount <= maximumCompletionEvidenceByteCount,
-              let handle = try? FileHandle(forReadingFrom: url) else {
-            return nil
-        }
-        defer { try? handle.close() }
-
-        // The pre-read stat is only an early rejection. Keep the actual read bounded as well so a
-        // corrupt or concurrently replaced completion record cannot become an unbounded allocation.
-        guard let data = try? handle.read(upToCount: Int(maximumCompletionEvidenceByteCount) + 1),
-              data.count <= Int(maximumCompletionEvidenceByteCount) else {
-            return nil
-        }
-        return data
+        // Keep the injected file-manager argument for call-site/test compatibility, but bind the
+        // actual read to one verified descriptor generation. This closes the precheck→open path
+        // replacement window while retaining the existing 64 KiB completion-record ceiling.
+        _ = fileManager
+        return try? BoundedFileReader.read(url, maximumBytes: Int(maximumCompletionEvidenceByteCount))
     }
 
     private static func isIndependentRegularFile(_ url: URL) -> Bool {
