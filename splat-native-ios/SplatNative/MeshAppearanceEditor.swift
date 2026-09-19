@@ -90,12 +90,37 @@ private enum MeshAppearanceProcessor {
         let fd = Darwin.open(url.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
         guard fd >= 0 else { throw error("編集ファイルを安全に開けません") }
         defer { Darwin.close(fd) }
-        var info = stat()
-        guard fstat(fd, &info) == 0,
-              (info.st_mode & S_IFMT) == S_IFREG,
-              info.st_nlink == 1,
-              info.st_size > 0,
+        var before = stat()
+        guard fstat(fd, &before) == 0,
+              (before.st_mode & S_IFMT) == S_IFREG,
+              before.st_nlink == 1,
+              before.st_size > 0,
               fsync(fd) == 0 else { throw error("編集ファイルの永続化を確認できません") }
+
+        var after = stat()
+        var named = stat()
+        guard fstat(fd, &after) == 0,
+              (after.st_mode & S_IFMT) == S_IFREG,
+              after.st_nlink == 1,
+              after.st_dev == before.st_dev,
+              after.st_ino == before.st_ino,
+              after.st_size == before.st_size,
+              after.st_mtimespec.tv_sec == before.st_mtimespec.tv_sec,
+              after.st_mtimespec.tv_nsec == before.st_mtimespec.tv_nsec,
+              after.st_ctimespec.tv_sec == before.st_ctimespec.tv_sec,
+              after.st_ctimespec.tv_nsec == before.st_ctimespec.tv_nsec,
+              lstat(url.path, &named) == 0,
+              (named.st_mode & S_IFMT) == S_IFREG,
+              named.st_nlink == 1,
+              named.st_dev == after.st_dev,
+              named.st_ino == after.st_ino,
+              named.st_size == after.st_size,
+              named.st_mtimespec.tv_sec == after.st_mtimespec.tv_sec,
+              named.st_mtimespec.tv_nsec == after.st_mtimespec.tv_nsec,
+              named.st_ctimespec.tv_sec == after.st_ctimespec.tv_sec,
+              named.st_ctimespec.tv_nsec == after.st_ctimespec.tv_nsec else {
+            throw error("編集ファイルが永続化中に変更されたため採用しません")
+        }
     }
 
     private static func error(_ text:String)->NSError{NSError(domain:"ScanLab.MeshAppearance",code:1,userInfo:[NSLocalizedDescriptionKey:text])}
