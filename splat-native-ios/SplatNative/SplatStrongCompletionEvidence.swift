@@ -126,27 +126,16 @@ enum SplatStrongCompletionEvidence {
     }
 
     private static func readExistingSealIfSafe(_ url: URL, fileManager: FileManager) throws -> Data? {
-        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
-              values.isRegularFile == true,
-              values.isSymbolicLink != true,
-              let attributes = try? fileManager.attributesOfItem(atPath: url.path),
-              let size = attributes[.size] as? NSNumber,
-              size.int64Value >= 0,
-              size.int64Value <= maximumSealByteCount else {
-            if fileManager.fileExists(atPath: url.path) ||
-                (try? fileManager.destinationOfSymbolicLink(atPath: url.path)) != nil {
-                throw IntegrityError.hashMismatch
-            }
-            return nil
-        }
-
-        let handle = try FileHandle(forReadingFrom: url)
-        defer { try? handle.close() }
-        guard let data = try handle.read(upToCount: Int(maximumSealByteCount) + 1),
-              data.count <= Int(maximumSealByteCount) else {
+        let exists = fileManager.fileExists(atPath: url.path)
+        let isSymlink = (try? fileManager.destinationOfSymbolicLink(atPath: url.path)) != nil
+        guard exists || isSymlink else { return nil }
+        do {
+            return try BoundedFileReader.read(url, maximumBytes: Int(maximumSealByteCount))
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch {
             throw IntegrityError.hashMismatch
         }
-        return data
     }
 
     private static func writeSealAtomicallyAndSynchronize(
