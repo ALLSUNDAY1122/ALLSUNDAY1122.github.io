@@ -118,10 +118,6 @@ enum SplatExportAdmission {
             } else {
                 videoBytes = Int64(max(0, estimatedVideoBytes).rounded(.up))
             }
-            // The trusted legacy/canonical scene already occupies storage before export starts.
-            // Video materialization is in memory and the writer creates only one partial MP4 that
-            // is renamed in place on success, so charging existing scene bytes again can reject a
-            // perfectly safe video solely because the scan itself is large.
             outputEstimate = videoBytes
         }
         return saturatingAdd(outputEstimate, safetyReserveBytes)
@@ -176,8 +172,16 @@ enum SplatExportAdmission {
     }
 
     private static func fileSize(at url: URL) throws -> Int64 {
-        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber else { throw AdmissionError.sourceSizeUnavailable }
+        guard url.isFileURL,
+              let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true,
+              let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
+              (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.int64Value >= 0 else {
+            throw AdmissionError.sourceSizeUnavailable
+        }
         return size.int64Value
     }
 
