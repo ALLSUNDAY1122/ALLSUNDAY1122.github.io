@@ -39,6 +39,13 @@ final class MeshARPlacementTrackingTests: XCTestCase {
         target.columns.3.z = -51; XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
         target.columns.3.z = 1; XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
     }
+    func testPlausiblePlacementRejectsImplausibleAbsoluteWorldCoordinates() {
+        var camera = matrix_identity_float4x4; var target = matrix_identity_float4x4
+        camera.columns.3 = SIMD4<Float>(10_000, 0, 0, 1)
+        target.columns.3 = SIMD4<Float>(10_000, 0, -1, 1)
+        XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
+        XCTAssertEqual(MeshARPlacementPolicy.translationOnlyPlacement(from: target), matrix_identity_float4x4)
+    }
     func testPlausiblePlacementRejectsMalformedCameraForwardAxis() {
         var camera = matrix_identity_float4x4; var target = matrix_identity_float4x4; target.columns.3.z = -1
         camera.columns.2.z = .nan; XCTAssertFalse(MeshARPlacementPolicy.isPlausiblePlacement(target, cameraTransform: camera))
