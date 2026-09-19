@@ -271,16 +271,10 @@ struct SplatViewerEditStore {
     }
 
     private static func readSettingsDataIfSafe(at url: URL, fileManager: FileManager) -> Data? {
-        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
-              values.isRegularFile == true,
-              values.isSymbolicLink != true,
-              let attributes = try? fileManager.attributesOfItem(atPath: url.path),
-              let size = attributes[.size] as? NSNumber,
-              size.int64Value >= 0,
-              size.int64Value <= maximumSidecarByteCount else {
-            return nil
-        }
-        return try? Data(contentsOf: url)
+        // Bind the sidecar bytes to one regular, single-link descriptor generation. The former
+        // resourceValues/attributes preflight followed by Data(contentsOf:) reopened the path, so
+        // a swap between those operations could follow an alias or read an oversized replacement.
+        try? BoundedFileReader.read(url, maximumBytes: Int(maximumSidecarByteCount))
     }
 }
 

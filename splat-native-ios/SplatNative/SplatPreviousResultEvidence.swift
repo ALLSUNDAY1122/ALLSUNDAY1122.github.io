@@ -261,23 +261,10 @@ enum SplatPreviousResultEvidence {
     }
 
     private static func readTrustMetadataDataIfSafe(at url: URL, fileManager: FileManager) -> Data? {
-        guard isIndependentRegularFile(url),
-              let size = try? fileByteCount(url, fileManager: fileManager),
-              size >= 0,
-              size <= maximumTrustMetadataByteCount,
-              let handle = try? FileHandle(forReadingFrom: url) else {
-            return nil
-        }
-        defer { try? handle.close() }
-
-        // Keep the read bounded even if the metadata is replaced or extended after the size stat.
-        // Reading at most cap + 1 turns that race into a fail-closed rejection rather than an
-        // unbounded Data(contentsOf:) allocation on a corruption/recovery path.
-        guard let data = try? handle.read(upToCount: Int(maximumTrustMetadataByteCount) + 1),
-              data.count <= Int(maximumTrustMetadataByteCount) else {
-            return nil
-        }
-        return data
+        // Trust metadata decides whether a previous completed result may be restored. Keep that
+        // decision bound to one regular, single-link descriptor generation instead of preflighting
+        // the path and reopening it through FileHandle.
+        try? BoundedFileReader.read(url, maximumBytes: Int(maximumTrustMetadataByteCount))
     }
 
     private static func isIndependentRegularFile(_ url: URL) -> Bool {
