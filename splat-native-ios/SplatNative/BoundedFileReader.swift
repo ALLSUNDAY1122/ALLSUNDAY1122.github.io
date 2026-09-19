@@ -33,9 +33,10 @@ enum BoundedFileReader {
             throw BoundedFileReaderError.fileChangedDuringRead
         }
 
-        // O_NOFOLLOW closes the lstat->open race where the path could be swapped to a symlink
-        // targeting the same inode between validation and FileHandle construction.
-        let descriptor = Darwin.open(url.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW)
+        // O_NOFOLLOW closes the lstat->open symlink race. O_NONBLOCK also prevents a malicious
+        // regular-file -> FIFO/device swap from hanging the reader before fstat can reject it;
+        // regular-file reads ignore O_NONBLOCK on Darwin.
+        let descriptor = Darwin.open(url.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
         guard descriptor >= 0 else { throw BoundedFileReaderError.unsafeFile }
         let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
         defer { try? handle.close() }
@@ -56,8 +57,6 @@ enum BoundedFileReader {
             let chunk = try handle.read(upToCount: requestBytes) ?? Data()
             try Task.checkCancellation()
             if chunk.isEmpty { break }
-            // Reject before append so an over-limit file can never force Data to grow beyond the
-            // caller's memory budget, even by the one-byte oversize probe.
             guard chunk.count <= maximumBytes - data.count else {
                 throw BoundedFileReaderError.fileTooLarge
             }
