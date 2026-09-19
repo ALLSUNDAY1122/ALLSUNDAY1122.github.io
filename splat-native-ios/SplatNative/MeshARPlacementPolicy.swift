@@ -21,8 +21,13 @@ enum MeshARPlacementPolicy {
     nonisolated static func isStableTracking(_ state: ARCamera.TrackingState) -> Bool { if case .normal = state { return true }; return false }
     nonisolated static func shouldUseEstimatedPlane(hasPlacedModel: Bool) -> Bool { !hasPlacedModel }
     nonisolated static func updatedYaw(current: Float, gestureDelta: Float) -> Float {
-        guard current.isFinite else { return 0 }; guard gestureDelta.isFinite, abs(gestureDelta) <= maximumGestureDelta else { return normalizedYaw(current) }
-        return normalizedYaw(normalizedYaw(current) - gestureDelta)
+        guard current.isFinite else { return 0 }
+        guard gestureDelta.isFinite else { return normalizedYaw(current) }
+        // A long frame or fast two-finger turn can legitimately accumulate more than π radians
+        // between callbacks. Dropping that entire sample makes the model appear to freeze. Bound the
+        // per-callback contribution instead, preserving direction while keeping orientation finite.
+        let boundedDelta = min(max(gestureDelta, -maximumGestureDelta), maximumGestureDelta)
+        return normalizedYaw(normalizedYaw(current) - boundedDelta)
     }
     nonisolated static func hasFiniteTranslation(_ transform: simd_float4x4) -> Bool {
         let translation = transform.columns.3; return translation.x.isFinite && translation.y.isFinite && translation.z.isFinite
