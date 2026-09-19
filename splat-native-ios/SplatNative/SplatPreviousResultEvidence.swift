@@ -283,14 +283,31 @@ enum SplatPreviousResultEvidence {
     }
 
     private static func sha256Hex(fileURL: URL) throws -> String {
-        let handle = try FileHandle(forReadingFrom: fileURL)
+        let descriptor = Darwin.open(fileURL.path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
+        guard descriptor >= 0 else { throw PreservationError.resultChangedDuringPreservation }
+        let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
         defer { try? handle.close() }
-
+        var opened = stat()
+        guard fstat(descriptor, &opened) == 0, (opened.st_mode & S_IFMT) == S_IFREG, opened.st_nlink == 1 else {
+            throw PreservationError.resultChangedDuringPreservation
+        }
         var hasher = SHA256()
         while true {
             try Task.checkCancellation()
             guard let chunk = try handle.read(upToCount: 1_024 * 1_024), !chunk.isEmpty else { break }
             hasher.update(data: chunk)
+        }
+        var finalOpened = stat(); var named = stat()
+        guard fstat(descriptor, &finalOpened) == 0, lstat(fileURL.path, &named) == 0,
+              (named.st_mode & S_IFMT) == S_IFREG, named.st_nlink == 1,
+              finalOpened.st_dev == opened.st_dev, finalOpened.st_ino == opened.st_ino,
+              finalOpened.st_nlink == opened.st_nlink, finalOpened.st_size == opened.st_size,
+              finalOpened.st_mtimespec.tv_sec == opened.st_mtimespec.tv_sec, finalOpened.st_mtimespec.tv_nsec == opened.st_mtimespec.tv_nsec,
+              finalOpened.st_ctimespec.tv_sec == opened.st_ctimespec.tv_sec, finalOpened.st_ctimespec.tv_nsec == opened.st_ctimespec.tv_nsec,
+              named.st_dev == opened.st_dev, named.st_ino == opened.st_ino, named.st_size == opened.st_size,
+              named.st_mtimespec.tv_sec == opened.st_mtimespec.tv_sec, named.st_mtimespec.tv_nsec == opened.st_mtimespec.tv_nsec,
+              named.st_ctimespec.tv_sec == opened.st_ctimespec.tv_sec, named.st_ctimespec.tv_nsec == opened.st_ctimespec.tv_nsec else {
+            throw PreservationError.resultChangedDuringPreservation
         }
         return hasher.finalize().map { String(format: "%02x", $0) }.joined()
     }
