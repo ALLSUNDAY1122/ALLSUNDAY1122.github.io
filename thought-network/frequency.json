@@ -1,0 +1,34 @@
+{
+  "version": "0.1",
+  "generated_at": "2026-09-21T17:49:00+09:00",
+  "method": "retrieval_lower_bound",
+  "note": "過去会話検索で再取得できた別チャットの確認数を下限として集計。全チャット全文の完全走査ではないため、件数は総数ではなく最低確認数。",
+  "formula": "score = 0.50*chat_hit_norm + 0.25*duration_norm + 0.25*recency",
+  "themes": [
+    {"theme":"アプリ開発 / iOS公開","confirmed_chats_min":14,"duration_months":3,"recency":100,"score":76.7,"confidence":"high"},
+    {"theme":"GitHub・Notion開発基盤","confirmed_chats_min":13,"duration_months":3,"recency":100,"score":73.1,"confidence":"high"},
+    {"theme":"AI・自動化・エージェント","confirmed_chats_min":12,"duration_months":44,"recency":100,"score":92.9,"confidence":"high"},
+    {"theme":"Codex中心の開発","confirmed_chats_min":11,"duration_months":3,"recency":100,"score":66.0,"confidence":"high"},
+    {"theme":"App Store / TestFlight","confirmed_chats_min":11,"duration_months":3,"recency":100,"score":66.0,"confidence":"high"},
+    {"theme":"学びスプリント / 資格アプリ","confirmed_chats_min":8,"duration_months":3,"recency":95,"score":54.0,"confidence":"high"},
+    {"theme":"自律ループ / APP FACTORY","confirmed_chats_min":6,"duration_months":2,"recency":95,"score":46.3,"confidence":"high"},
+    {"theme":"保険・営業・マネジメント","confirmed_chats_min":6,"duration_months":36,"recency":95,"score":65.6,"confidence":"high"},
+    {"theme":"投資・市場・競馬AI","confirmed_chats_min":5,"duration_months":16,"recency":95,"score":50.7,"confidence":"medium"},
+    {"theme":"キャリア・市場価値・資格","confirmed_chats_min":5,"duration_months":23,"recency":85,"score":52.2,"confidence":"medium-high"},
+    {"theme":"自己理解・熱中・退屈","confirmed_chats_min":3,"duration_months":12,"recency":100,"score":42.5,"confidence":"high"},
+    {"theme":"知識管理・Obsidian・樹形図","confirmed_chats_min":3,"duration_months":1,"recency":100,"score":36.3,"confidence":"medium"},
+    {"theme":"創作・3D・ホラー","confirmed_chats_min":3,"duration_months":3,"recency":95,"score":36.2,"confidence":"medium"},
+    {"theme":"家族・生活・家計","confirmed_chats_min":3,"duration_months":5,"recency":95,"score":37.3,"confidence":"medium"}
+  ],
+  "tokens": [
+    {"token":"GitHub","confirmed_chats_min":12},
+    {"token":"Notion","confirmed_chats_min":12},
+    {"token":"Codex","confirmed_chats_min":11},
+    {"token":"TestFlight","confirmed_chats_min":11},
+    {"token":"App Store","confirmed_chats_min":10},
+    {"token":"ChatGPT","confirmed_chats_min":10},
+    {"token":"SwiftUI","confirmed_chats_min":8},
+    {"token":"学びスプリント","confirmed_chats_min":8},
+    {"token":"Flutter","confirmed_chats_min":4}
+  ]
+}
