@@ -17,12 +17,12 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Submit Version 1.5.0 for App Review
+      - name: Attach valid Build 10 and submit Version 1.5.0 for App Review
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-        run: python3 scripts/app2_011_submit_review.py --output app2-011-submit-result.json
+        run: python3 scripts/app2_011_submit_review_build10.py --output app2-011-submit-result.json
       - name: Upload sanitized result
         if: always()
         uses: actions/upload-artifact@v4
