@@ -15,44 +15,148 @@ concurrency:
 jobs:
   submit-only:
     if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Build11 Submit Only'
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
+    runs-on: macos-15
+    timeout-minutes: 55
+    env:
+      APP_BUNDLE_ID: com.allsunday1122.torutango
+      CI: '1'
     steps:
       - name: Checkout main tooling
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          path: main-src
 
-      - name: Patch unsupported ASC builds sort parameter
+      - name: Checkout exact Build 11 source
+        uses: actions/checkout@v6
+        with:
+          ref: release/toru-tango-build11-20260916
+          path: release-src
+
+      - name: Select newest installed Xcode
+        shell: bash
+        run: |
+          set -euo pipefail
+          latest=$(find /Applications -maxdepth 1 -type d -name 'Xcode*.app' -print | sort -V | tail -1)
+          test -n "$latest"
+          sudo xcode-select -s "$latest/Contents/Developer"
+          xcodebuild -version
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.0'
+          cache: npm
+          cache-dependency-path: release-src/toru-tango-mobile/package-lock.json
+
+      - name: Install dependencies
+        working-directory: release-src/toru-tango-mobile
+        run: npm ci
+
+      - name: Validate exact Build 11 source
+        working-directory: release-src/toru-tango-mobile
+        run: |
+          set -euo pipefail
+          grep -q "buildNumber: '11'" app.config.ts
+          grep -q '🔊 表を読む' 'app/(tabs)/cards.tsx'
+          grep -q '🔊 裏を読む' 'app/(tabs)/cards.tsx'
+
+      - name: Generate native iOS project
+        working-directory: release-src/toru-tango-mobile
+        run: npx expo prebuild --platform ios --clean
+
+      - name: Install CocoaPods
+        working-directory: release-src/toru-tango-mobile/ios
+        run: pod install
+
+      - name: Pick accepted large-iPhone simulator
+        shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
+          import json, subprocess
           from pathlib import Path
-          p=Path('scripts/toru_tango_build11_submit_review.py')
-          s=p.read_text()
-          old='/v1/apps/{APP_ID}/builds?sort=-uploadedDate&limit=100'
-          new='/v1/apps/{APP_ID}/builds?limit=100'
-          if old not in s:
-              raise SystemExit('expected unsupported sort expression not found')
-          p.write_text(s.replace(old,new))
+          data=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          rows=[]
+          for runtime,items in data.get('devices',{}).items():
+              if 'iOS' in runtime:
+                  rows.extend([x for x in items if x.get('isAvailable') and str(x.get('name','')).startswith('iPhone')])
+          preferred=['iPhone 16 Pro Max','iPhone 16 Plus','iPhone 15 Pro Max','iPhone 15 Plus','iPhone 14 Pro Max']
+          hit=None
+          for name in preferred:
+              hit=next((x for x in rows if x.get('name')==name),None)
+              if hit: break
+          if not hit: raise SystemExit('No accepted large-iPhone simulator available')
+          Path('/tmp/toru-shot-udid').write_text(hit['udid'])
+          Path('/tmp/toru-shot-device').write_text(hit['name'])
+          print(hit['name'],hit['udid'])
           PY
 
-      - name: Submit existing Apple Build 11 for App Review
+      - name: Build release app for Simulator
+        working-directory: release-src/toru-tango-mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace=$(find ios -maxdepth 2 -name '*.xcworkspace' -print | head -1)
+          test -n "$workspace"
+          scheme=$(xcodebuild -workspace "$workspace" -list -json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["workspace"]["schemes"][0])')
+          udid=$(cat /tmp/toru-shot-udid)
+          xcodebuild \
+            -workspace "$workspace" \
+            -scheme "$scheme" \
+            -configuration Release \
+            -destination "platform=iOS Simulator,id=$udid" \
+            -derivedDataPath /tmp/toru-derived \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+          app=$(find /tmp/toru-derived/Build/Products -path '*Release-iphonesimulator/*.app' -print | head -1)
+          test -n "$app"
+          echo "$app" > /tmp/toru-app-path
+
+      - name: Capture real Build 11 App Store screenshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          udid=$(cat /tmp/toru-shot-udid)
+          app=$(cat /tmp/toru-app-path)
+          mkdir -p /tmp/toru-final-screens
+          xcrun simctl boot "$udid" 2>/dev/null || true
+          xcrun simctl bootstatus "$udid" -b
+          xcrun simctl status_bar "$udid" override --time '9:41' --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
+          xcrun simctl install "$udid" "$app"
+          xcrun simctl launch --terminate-running-process "$udid" "$APP_BUNDLE_ID"
+          sleep 8
+          out=/tmp/toru-final-screens/01-folders.png
+          xcrun simctl io "$udid" screenshot "$out"
+          width=$(sips -g pixelWidth "$out" | awk '/pixelWidth/{print $2}')
+          height=$(sips -g pixelHeight "$out" | awk '/pixelHeight/{print $2}')
+          echo "screenshot=${width}x${height} device=$(cat /tmp/toru-shot-device)"
+          case "${width}x${height}" in
+            1260x2736|1290x2796|1320x2868|1284x2778|1242x2688) ;;
+            *) echo "Unexpected screenshot size: ${width}x${height}"; exit 1 ;;
+          esac
+
+      - name: Upload screenshot and submit existing Apple Build 11 for App Review
         id: submit
+        working-directory: main-src
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           set -euo pipefail
-          python scripts/toru_tango_build11_submit_review.py --output /tmp/toru-final-result.json --wait-seconds 1500
+          python scripts/toru_tango_finalize_submission.py --screens /tmp/toru-final-screens --output /tmp/toru-final-result.json
 
-      - name: Upload result
+      - name: Upload result evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: toru-tango-build11-submit-only-${{ github.run_id }}-${{ github.run_attempt }}
-          path: /tmp/toru-final-result.json
+          path: |
+            /tmp/toru-final-result.json
+            /tmp/toru-final-screens
+            /tmp/toru-shot-device
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: 30
 
       - name: Report result
         if: always()
@@ -66,6 +170,10 @@ jobs:
               lines.push(`submitted=${r.submitted}`);
               lines.push(`review_submission_state=${r.review_submission_state||''}`);
               lines.push(`apple_build_id=${r.build_id||''}`);
+              lines.push(`build_processing_state=${r.build_processing_state||''}`);
+              lines.push(`build_attached=${r.build_attached||false}`);
+              lines.push(`complete_screenshot_count=${r.complete_screenshot_count||0}`);
+              lines.push(`screenshots_uploaded_new=${r.screenshots_uploaded_new||0}`);
               lines.push(`release_type=${r.release_type||''}`);
               lines.push(`release_performed=${r.release_performed}`);
               if(r.error) lines.push(`error=${r.error}`);
