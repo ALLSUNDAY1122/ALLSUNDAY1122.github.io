@@ -1,0 +1,78 @@
+name: Toru Tango Build11 Submit Only
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: toru-tango-build11-submit-only
+  cancel-in-progress: false
+
+jobs:
+  submit-only:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Build11 Submit Only'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout main tooling
+        uses: actions/checkout@v4
+
+      - name: Patch unsupported ASC builds sort parameter
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/toru_tango_build11_submit_review.py')
+          s=p.read_text()
+          old='/v1/apps/{APP_ID}/builds?sort=-uploadedDate&limit=100'
+          new='/v1/apps/{APP_ID}/builds?limit=100'
+          if old not in s:
+              raise SystemExit('expected unsupported sort expression not found')
+          p.write_text(s.replace(old,new))
+          PY
+
+      - name: Submit existing Apple Build 11 for App Review
+        id: submit
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          python scripts/toru_tango_build11_submit_review.py --output /tmp/toru-final-result.json --wait-seconds 1500
+
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-build11-submit-only-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/toru-final-result.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs=require('fs');
+            const lines=['撮る単語帳 Build 11 submit-only / App Review result.'];
+            if(fs.existsSync('/tmp/toru-final-result.json')) {
+              const r=JSON.parse(fs.readFileSync('/tmp/toru-final-result.json','utf8'));
+              lines.push(`submitted=${r.submitted}`);
+              lines.push(`review_submission_state=${r.review_submission_state||''}`);
+              lines.push(`apple_build_id=${r.build_id||''}`);
+              lines.push(`release_type=${r.release_type||''}`);
+              lines.push(`release_performed=${r.release_performed}`);
+              if(r.error) lines.push(`error=${r.error}`);
+            } else {
+              lines.push('submitted=false');
+              lines.push('error=pipeline_failed_before_final_submission_result');
+            }
+            lines.push(`job_status=${{ toJSON(job.status) }}`);
+            lines.push(`run_id=${context.runId}`);
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.payload.issue.number,body:lines.join('\n')});
