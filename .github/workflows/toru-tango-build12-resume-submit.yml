@@ -1,0 +1,218 @@
+name: Toru Tango Build12 Resume Submit
+
+on:
+  issues:
+    types: [opened]
+  push:
+    paths:
+      - automation/toru-tango-build12-resume.trigger
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: toru-tango-build12-resume-submit
+  cancel-in-progress: false
+
+jobs:
+  resume-and-submit:
+    if: github.event_name == 'push' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Build12 Resume App Review submit')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout main tooling
+        uses: actions/checkout@v4
+        with:
+          path: main-src
+
+      - name: Checkout exact Build 12 release branch
+        uses: actions/checkout@v4
+        with:
+          ref: release/toru-tango-build12-20260923
+          path: release-src
+
+      - name: Set up Node 22.13
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+
+      - name: Validate exact Build 12 source
+        working-directory: release-src/toru-tango-mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD | tee /tmp/toru-build12-sha.txt
+          grep -q "buildNumber: '12'" app.config.ts
+          grep -q 'renameDeck' src/context/AppStore.tsx
+          grep -q 'deleteDeck' src/context/AppStore.tsx
+          grep -q 'reorderCards' src/context/AppStore.tsx
+          grep -q 'フォルダ名を編集' 'app/(tabs)/cards.tsx'
+          grep -q '並べ替え完了' 'app/(tabs)/cards.tsx'
+          npm ci
+          npm run typecheck
+          npm run lint
+
+          set +e
+          npx expo-doctor 2>&1 | tee /tmp/toru-expo-doctor.txt
+          doctor_rc=${PIPESTATUS[0]}
+          set -e
+          if [ "$doctor_rc" -ne 0 ]; then
+            grep -q 'Check that packages match versions required by installed Expo SDK' /tmp/toru-expo-doctor.txt || exit "$doctor_rc"
+            grep -q 'Patch version mismatches' /tmp/toru-expo-doctor.txt || exit "$doctor_rc"
+            grep -Eq '^1 check(s)? failed' /tmp/toru-expo-doctor.txt || exit "$doctor_rc"
+            if grep -Eq 'Major version mismatches|Minor version mismatches' /tmp/toru-expo-doctor.txt; then
+              exit "$doctor_rc"
+            fi
+            echo '::warning::Accepted known Expo SDK patch-only dependency drift.'
+          fi
+
+      - name: Start and wait for Codemagic Build 12
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, time, urllib.request, urllib.error
+          from pathlib import Path
+
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('CM_API_TOKEN missing')
+          app_id='6a769d81a1add9d06020b524'
+          workflow='toru-tango-ios-testflight'
+          branch='release/toru-tango-build12-20260923'
+
+          def api(url, method='GET', payload=None):
+              body=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request(url,data=body,method=method)
+              req.add_header('Content-Type','application/json')
+              req.add_header('x-auth-token',token)
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode()
+                      return r.status,json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode(errors='replace')
+                  try:
+                      data=json.loads(raw) if raw else {}
+                  except Exception:
+                      data={'error':raw[:2000]}
+                  return e.code,data
+
+          status,started=api('https://api.codemagic.io/builds','POST',{
+              'appId':app_id,
+              'workflowId':workflow,
+              'branch':branch,
+          })
+          if not 200 <= status < 300:
+              raise SystemExit(f'Codemagic start failed HTTP {status}: {started}')
+          build_id=str(started.get('buildId') or started.get('id') or '')
+          if not build_id:
+              raise SystemExit(f'Codemagic did not return buildId: {started}')
+          Path('/tmp/toru-cm-build-id.txt').write_text(build_id)
+          print(f'Codemagic Build 12 started: {build_id}')
+
+          terminal={'finished','failed','canceled','timeout','skipped'}
+          deadline=time.time()+3600
+          final=None
+          while time.time()<deadline:
+              s,payload=api(f'https://api.codemagic.io/builds?appId={app_id}')
+              if not 200 <= s < 300:
+                  raise SystemExit(f'Codemagic inspect failed HTTP {s}: {payload}')
+              rows=payload.get('builds') or payload.get('data') or []
+              if isinstance(rows,dict):
+                  rows=rows.get('builds') or []
+              match=next((b for b in rows if str(b.get('_id') or b.get('id') or '')==build_id),None)
+              if match and match.get('status') in terminal:
+                  final=match
+                  break
+              time.sleep(20)
+          if final is None:
+              raise SystemExit('Codemagic Build 12 timeout')
+          result={'build_id':build_id,'status':final.get('status'),'branch':branch,'workflow':workflow}
+          Path('/tmp/toru-cm-result.json').write_text(json.dumps(result,indent=2))
+          if final.get('status')!='finished':
+              raise SystemExit(f"Codemagic Build 12 ended {final.get('status')}")
+          print(f'Codemagic Build 12 finished: {build_id}')
+          PY
+
+      - name: Wait for Apple Build 12 and submit App Review
+        working-directory: main-src
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=scripts python3 - <<'PY'
+          import os, time
+          from app_store_connect_api import api_get, load_private_key, make_token
+          app_id='6795968222'
+          target='12'
+          key_path, cleanup = load_private_key()
+          try:
+              token=make_token(os.environ['ASC_ISSUER_ID'],os.environ['ASC_KEY_ID'],key_path)
+              deadline=time.time()+1800
+              last=[]
+              while time.time()<deadline:
+                  _,payload=api_get(token,f'/v1/apps/{app_id}/builds?sort=-uploadedDate&limit=100')
+                  rows=(payload or {}).get('data') or []
+                  matches=[x for x in rows if str((x.get('attributes') or {}).get('version'))==target]
+                  last=[((x.get('attributes') or {}).get('processingState'),(x.get('attributes') or {}).get('expired')) for x in matches]
+                  if any((x.get('attributes') or {}).get('processingState')=='VALID' and not (x.get('attributes') or {}).get('expired',False) for x in matches):
+                      print('Apple Build 12 VALID')
+                      break
+                  time.sleep(20)
+              else:
+                  raise SystemExit(f'Apple Build 12 did not become VALID: {last}')
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+          PY
+
+          PYTHONPATH=scripts python3 - <<'PY'
+          import sys
+          import toru_tango_finalize_submission as submitter
+          submitter.BUILD='12'
+          sys.argv=['toru_tango_finalize_submission.py','--output','/tmp/toru-build12-final-result.json']
+          submitter.main()
+          PY
+
+      - name: Verify final submission result
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/toru-build12-final-result.json')
+          if not p.exists():
+              raise SystemExit('final result missing')
+          r=json.loads(p.read_text())
+          if r.get('submitted') is not True:
+              raise SystemExit(f"not submitted: {r}")
+          if r.get('review_submission_state') not in {'WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING','PENDING_DEVELOPER_RELEASE','READY_FOR_SALE'}:
+              raise SystemExit(f"unexpected review state: {r.get('review_submission_state')}")
+          if r.get('release_type') != 'MANUAL':
+              raise SystemExit(f"release type is not MANUAL: {r.get('release_type')}")
+          if r.get('release_performed') is not False:
+              raise SystemExit('unexpected release performed')
+          print(json.dumps(r,ensure_ascii=False))
+          PY
+
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-build12-resume-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/toru-build12-sha.txt
+            /tmp/toru-expo-doctor.txt
+            /tmp/toru-cm-build-id.txt
+            /tmp/toru-cm-result.json
+            /tmp/toru-build12-final-result.json
+          if-no-files-found: warn
+          retention-days: 30
