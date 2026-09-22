@@ -1,5 +1,14 @@
-import { useMemo, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { type ReactNode, useMemo, useRef, useState } from 'react';
+import {
+  Alert,
+  Animated,
+  PanResponder,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Speech from 'expo-speech';
 import {
@@ -15,7 +24,7 @@ import { useAppStore } from '@/src/context/AppStore';
 import type { Card } from '@/src/types';
 import { getCardReviewStage, isReviewDue } from '@/src/utils/data';
 
-type CardSort = 'updated' | 'newest' | 'weakest' | 'alphabetical';
+type CardSort = 'manual' | 'updated' | 'newest' | 'weakest' | 'alphabetical';
 type CardFilter = 'all' | 'unseen' | 'weak' | 'visible' | 'hidden';
 
 type DeckSummary = {
@@ -44,12 +53,86 @@ function formatUpdatedAt(value: string): string {
   return new Date(value).toLocaleDateString('ja-JP');
 }
 
+function ReorderableCardRow({
+  children,
+  enabled,
+  hidden,
+  index,
+  count,
+  onDrop
+}: {
+  children: ReactNode;
+  enabled: boolean;
+  hidden: boolean;
+  index: number;
+  count: number;
+  onDrop: (fromIndex: number, toIndex: number) => void;
+}) {
+  const translateY = useRef(new Animated.Value(0)).current;
+  const [dragging, setDragging] = useState(false);
+
+  const finishDrag = (dy: number) => {
+    const rowStep = 88;
+    const target = Math.max(0, Math.min(count - 1, index + Math.round(dy / rowStep)));
+    if (target !== index) onDrop(index, target);
+    Animated.spring(translateY, {
+      toValue: 0,
+      useNativeDriver: true,
+      tension: 180,
+      friction: 18
+    }).start(() => setDragging(false));
+  };
+
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => enabled,
+        onMoveShouldSetPanResponder: (_, gestureState) =>
+          enabled && Math.abs(gestureState.dy) > 2,
+        onPanResponderGrant: () => setDragging(true),
+        onPanResponderMove: (_, gestureState) => translateY.setValue(gestureState.dy),
+        onPanResponderRelease: (_, gestureState) => finishDrag(gestureState.dy),
+        onPanResponderTerminate: (_, gestureState) => finishDrag(gestureState.dy),
+        onPanResponderTerminationRequest: () => !dragging
+      }),
+    [count, dragging, enabled, index, onDrop, translateY]
+  );
+
+  return (
+    <Animated.View
+      style={[
+        styles.cardRow,
+        hidden && styles.cardRowHidden,
+        dragging && styles.cardRowDragging,
+        { transform: [{ translateY }] }
+      ]}
+    >
+      {enabled ? (
+        <View
+          {...panResponder.panHandlers}
+          accessibilityLabel={`${index + 1}番目のカード。上下にドラッグして並べ替え`}
+          accessibilityRole="adjustable"
+          style={styles.dragHandle}
+        >
+          <Text style={styles.dragHandleIcon}>≡</Text>
+          <Text style={styles.dragHandleText}>長押しせず、そのまま上下にドラッグ</Text>
+          <Text style={styles.dragPosition}>{index + 1}/{count}</Text>
+        </View>
+      ) : null}
+      {children}
+    </Animated.View>
+  );
+}
+
 export default function CardsScreen() {
   const router = useRouter();
   const {
     cards,
     decks,
     addDeck,
+    renameDeck,
+    deleteDeck,
+    reorderCards,
     updateCard,
     setCardHidden,
     deleteCard,
@@ -59,8 +142,9 @@ export default function CardsScreen() {
   const [folderSearch, setFolderSearch] = useState('');
   const [cardSearch, setCardSearch] = useState('');
   const [filter, setFilter] = useState<CardFilter>('all');
-  const [sort, setSort] = useState<CardSort>('updated');
+  const [sort, setSort] = useState<CardSort>('manual');
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [reorderMode, setReorderMode] = useState(false);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [note, setNote] = useState('');
@@ -125,6 +209,7 @@ export default function CardsScreen() {
       return true;
     });
 
+    if (sort === 'manual') return result;
     return result.sort((left, right) => {
       if (sort === 'newest') return right.createdAt.localeCompare(left.createdAt);
       if (sort === 'weakest') return right.wrong - left.wrong;
@@ -134,6 +219,7 @@ export default function CardsScreen() {
   }, [cardSearch, filter, selectedDeckCards, sort]);
 
   const beginEdit = (card: Card) => {
+    setReorderMode(false);
     setEditingId(card.id);
     setQuestion(card.question);
     setAnswer(card.answer);
@@ -215,6 +301,79 @@ export default function CardsScreen() {
     );
   };
 
+  const promptRenameFolder = (name: string) => {
+    Alert.prompt(
+      'フォルダ名を編集',
+      '新しいフォルダ名を入力してください。',
+      [
+        { text: 'キャンセル', style: 'cancel' },
+        {
+          text: '保存',
+          onPress: (value?: string) => {
+            const nextName = value?.trim() ?? '';
+            if (!renameDeck(name, nextName)) {
+              Alert.alert('変更できません', '未入力または同名フォルダがないか確認してください。');
+              return;
+            }
+            if (selectedDeck === name) setSelectedDeck(nextName);
+          }
+        }
+      ],
+      'plain-text',
+      name
+    );
+  };
+
+  const confirmDeleteFolder = (name: string, cardCount: number) => {
+    Alert.alert(
+      'フォルダを削除',
+      cardCount > 0
+        ? `「${name}」と中のカード${cardCount}枚、関連する学習履歴を削除します。この操作は取り消せません。`
+        : `「${name}」を削除します。この操作は取り消せません。`,
+      [
+        { text: 'キャンセル', style: 'cancel' },
+        {
+          text: '削除',
+          style: 'destructive',
+          onPress: () => {
+            deleteDeck(name);
+            if (selectedDeck === name) setSelectedDeck(null);
+          }
+        }
+      ]
+    );
+  };
+
+  const promptFolderActions = (name: string, cardCount: number) => {
+    Alert.alert(name, 'フォルダの操作を選んでください。', [
+      { text: '名前を編集', onPress: () => promptRenameFolder(name) },
+      { text: '削除', style: 'destructive', onPress: () => confirmDeleteFolder(name, cardCount) },
+      { text: 'キャンセル', style: 'cancel' }
+    ]);
+  };
+
+  const toggleReorderMode = () => {
+    setReorderMode((current) => {
+      const next = !current;
+      if (next) {
+        setEditingId(null);
+        setCardSearch('');
+        setFilter('all');
+        setSort('manual');
+      }
+      return next;
+    });
+  };
+
+  const moveCard = (fromIndex: number, toIndex: number) => {
+    if (!selectedDeck || fromIndex === toIndex) return;
+    const ordered = [...selectedDeckCards];
+    const [moved] = ordered.splice(fromIndex, 1);
+    if (!moved) return;
+    ordered.splice(toIndex, 0, moved);
+    reorderCards(selectedDeck, ordered.map((card) => card.id));
+  };
+
   const openCreate = () => router.push('/(tabs)/create');
 
   if (!selectedDeck) {
@@ -294,6 +453,8 @@ export default function CardsScreen() {
                     setSelectedDeck(deck.name);
                     setCardSearch('');
                     setFilter('all');
+                    setSort('manual');
+                    setReorderMode(false);
                   }}
                   style={({ pressed }) => [styles.folderCard, pressed && styles.folderPressed]}
                 >
@@ -301,7 +462,18 @@ export default function CardsScreen() {
                     <View style={[styles.folderIcon, { backgroundColor: `${accent}18` }]}>
                       <Text style={styles.folderIconText}>📁</Text>
                     </View>
-                    <Text style={styles.moreText}>•••</Text>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={`${deck.name}の名前編集または削除`}
+                      hitSlop={10}
+                      onPress={(event) => {
+                        event.stopPropagation();
+                        promptFolderActions(deck.name, deck.total);
+                      }}
+                      style={({ pressed }) => [styles.moreButton, pressed && styles.pressed]}
+                    >
+                      <Text style={styles.moreText}>•••</Text>
+                    </Pressable>
                   </View>
                   <Text style={styles.folderName} numberOfLines={2}>{deck.name}</Text>
                   <Text style={styles.folderMeta}>{deck.total}枚</Text>
@@ -335,6 +507,7 @@ export default function CardsScreen() {
           onPress={() => {
             void Speech.stop();
             setEditingId(null);
+            setReorderMode(false);
             setSelectedDeck(null);
           }}
           style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}
@@ -352,7 +525,10 @@ export default function CardsScreen() {
         <TextInput
           accessibilityLabel="カードを検索"
           value={cardSearch}
-          onChangeText={setCardSearch}
+          onChangeText={(value) => {
+            setCardSearch(value);
+            if (value) setReorderMode(false);
+          }}
           placeholder="カードを検索"
           placeholderTextColor="#98a2b3"
           style={styles.searchInput}
@@ -362,7 +538,10 @@ export default function CardsScreen() {
 
       <ChoiceRow
         value={filter}
-        onChange={setFilter}
+        onChange={(value) => {
+          setFilter(value);
+          if (value !== 'all') setReorderMode(false);
+        }}
         options={[
           { value: 'all', label: 'すべて' },
           { value: 'unseen', label: '未学習' },
@@ -373,24 +552,58 @@ export default function CardsScreen() {
       />
 
       <View style={styles.listHeader}>
-        <Text style={styles.cardCount}>{filteredCards.length}枚</Text>
-        <ChoiceRow
-          value={sort}
-          onChange={setSort}
-          options={[
-            { value: 'updated', label: '更新順' },
-            { value: 'newest', label: '新しい順' },
-            { value: 'weakest', label: '弱点順' },
-            { value: 'alphabetical', label: '問題順' }
-          ]}
-        />
+        <View style={styles.listHeaderTop}>
+          <Text style={styles.cardCount}>{filteredCards.length}枚</Text>
+          {selectedDeckCards.length > 1 ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ selected: reorderMode }}
+              onPress={toggleReorderMode}
+              style={[styles.reorderButton, reorderMode && styles.reorderButtonActive]}
+            >
+              <Text style={[styles.reorderButtonText, reorderMode && styles.reorderButtonTextActive]}>
+                {reorderMode ? '✓ 並べ替え完了' : '↕ 並べ替え'}
+              </Text>
+            </Pressable>
+          ) : null}
+        </View>
+        {reorderMode ? (
+          <View style={styles.reorderNotice}>
+            <Text style={styles.reorderNoticeTitle}>カード順を編集</Text>
+            <Text style={styles.reorderNoticeText}>
+              各カード上部の「≡」を上下にドラッグしてください。移動後の順番は自動保存されます。
+            </Text>
+          </View>
+        ) : (
+          <ChoiceRow
+            value={sort}
+            onChange={(value) => {
+              setSort(value);
+              setReorderMode(false);
+            }}
+            options={[
+              { value: 'manual', label: '手動順' },
+              { value: 'updated', label: '更新順' },
+              { value: 'newest', label: '新しい順' },
+              { value: 'weakest', label: '弱点順' },
+              { value: 'alphabetical', label: '問題順' }
+            ]}
+          />
+        )}
       </View>
 
       {!filteredCards.length ? (
         <EmptyState>この条件に合うカードはありません。</EmptyState>
       ) : (
-        filteredCards.map((card) => (
-          <View key={card.id} style={[styles.cardRow, card.isHidden && styles.cardRowHidden]}>
+        filteredCards.map((card, index) => (
+          <ReorderableCardRow
+            key={card.id}
+            enabled={reorderMode}
+            hidden={Boolean(card.isHidden)}
+            index={index}
+            count={filteredCards.length}
+            onDrop={moveCard}
+          >
             {editingId === card.id ? (
               <View style={styles.editWrap}>
                 <Text style={styles.editTitle}>カードを編集</Text>
@@ -449,45 +662,47 @@ export default function CardsScreen() {
 
                 {card.note ? <Text style={styles.noteText} numberOfLines={1}>メモ：{card.note}</Text> : null}
 
-                <View style={styles.actionGrid}>
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel="表面を読み上げる"
-                    onPress={() => speak(card.question, `${card.id}:front`)}
-                    style={styles.smallAction}
-                  >
-                    <Text style={styles.smallActionText}>
-                      {speakingKey === `${card.id}:front` ? '🔊 表を再生中…' : '🔊 表を読む'}
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel="裏面を読み上げる"
-                    onPress={() => speak(card.answer, `${card.id}:back`)}
-                    style={styles.smallAction}
-                  >
-                    <Text style={styles.smallActionText}>
-                      {speakingKey === `${card.id}:back` ? '🔊 裏を再生中…' : '🔊 裏を読む'}
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    onPress={() => setCardHidden(card.id, !card.isHidden)}
-                    style={[styles.smallAction, card.isHidden && styles.smallActionActive]}
-                  >
-                    <Text style={[styles.smallActionText, card.isHidden && styles.smallActionActiveText]}>
-                      {card.isHidden ? '表示' : '非表示'}
-                    </Text>
-                  </Pressable>
-                  <Pressable onPress={() => beginEdit(card)} style={styles.smallAction}>
-                    <Text style={styles.smallActionText}>✎ 編集</Text>
-                  </Pressable>
-                </View>
+                {!reorderMode ? (
+                  <View style={styles.actionGrid}>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="表面を読み上げる"
+                      onPress={() => speak(card.question, `${card.id}:front`)}
+                      style={styles.smallAction}
+                    >
+                      <Text style={styles.smallActionText}>
+                        {speakingKey === `${card.id}:front` ? '🔊 表を再生中…' : '🔊 表を読む'}
+                      </Text>
+                    </Pressable>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="裏面を読み上げる"
+                      onPress={() => speak(card.answer, `${card.id}:back`)}
+                      style={styles.smallAction}
+                    >
+                      <Text style={styles.smallActionText}>
+                        {speakingKey === `${card.id}:back` ? '🔊 裏を再生中…' : '🔊 裏を読む'}
+                      </Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => setCardHidden(card.id, !card.isHidden)}
+                      style={[styles.smallAction, card.isHidden && styles.smallActionActive]}
+                    >
+                      <Text style={[styles.smallActionText, card.isHidden && styles.smallActionActiveText]}>
+                        {card.isHidden ? '表示' : '非表示'}
+                      </Text>
+                    </Pressable>
+                    <Pressable onPress={() => beginEdit(card)} style={styles.smallAction}>
+                      <Text style={styles.smallActionText}>✎ 編集</Text>
+                    </Pressable>
+                  </View>
+                ) : null}
                 {speakingKey?.startsWith(`${card.id}:`) ? (
                   <Text accessibilityLiveRegion="polite" style={styles.speechHint}>読み上げています。音が聞こえない場合はiPhoneの消音モードと音量を確認してください。</Text>
                 ) : null}
               </>
             )}
-          </View>
+          </ReorderableCardRow>
         ))
       )}
 
@@ -589,7 +804,14 @@ const styles = StyleSheet.create({
     width: 40
   },
   folderIconText: { fontSize: 20 },
-  moreText: { color: '#98a2b3', fontSize: 15, fontWeight: '900' },
+  moreButton: {
+    alignItems: 'center',
+    borderRadius: 10,
+    height: 36,
+    justifyContent: 'center',
+    width: 40
+  },
+  moreText: { color: '#667085', fontSize: 17, fontWeight: '900', letterSpacing: 1 },
   folderName: { color: colors.text, fontSize: 16, fontWeight: '800', lineHeight: 21, marginTop: 10 },
   folderMeta: { color: colors.text, fontSize: 13, fontWeight: '700', marginTop: 7 },
   folderSubMeta: { color: colors.muted, fontSize: 10, marginTop: 2 },
@@ -614,8 +836,37 @@ const styles = StyleSheet.create({
   deckTitle: { color: colors.text, flex: 1, fontSize: 21, fontWeight: '800', textAlign: 'center' },
   headerAddButton: { alignItems: 'center', justifyContent: 'center', minHeight: 44, minWidth: 64 },
   headerAddText: { color: colors.primary, fontSize: 30, fontWeight: '500' },
-  listHeader: { gap: 7, marginBottom: 8, marginTop: 10 },
+  listHeader: { gap: 8, marginBottom: 8, marginTop: 10 },
+  listHeaderTop: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
   cardCount: { color: colors.text, fontSize: 14, fontWeight: '800' },
+  reorderButton: {
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderRadius: 10,
+    borderWidth: 1,
+    justifyContent: 'center',
+    minHeight: 40,
+    paddingHorizontal: 12
+  },
+  reorderButtonActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+  reorderButtonText: { color: colors.primaryDark, fontSize: 12, fontWeight: '800' },
+  reorderButtonTextActive: { color: '#ffffff' },
+  reorderNotice: {
+    backgroundColor: colors.primarySoft,
+    borderColor: '#b7e8ef',
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 3,
+    paddingHorizontal: 11,
+    paddingVertical: 9
+  },
+  reorderNoticeTitle: { color: colors.primaryDark, fontSize: 13, fontWeight: '900' },
+  reorderNoticeText: { color: colors.muted, fontSize: 11, lineHeight: 16 },
   cardRow: {
     backgroundColor: colors.surface,
     borderColor: colors.border,
@@ -631,6 +882,27 @@ const styles = StyleSheet.create({
     elevation: 1
   },
   cardRowHidden: { backgroundColor: '#fafafa', opacity: 0.8 },
+  cardRowDragging: {
+    borderColor: colors.primary,
+    elevation: 8,
+    opacity: 0.96,
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    zIndex: 20
+  },
+  dragHandle: {
+    alignItems: 'center',
+    backgroundColor: '#f0f7f8',
+    borderColor: '#d4edf1',
+    borderRadius: 10,
+    borderWidth: 1,
+    flexDirection: 'row',
+    minHeight: 42,
+    paddingHorizontal: 10
+  },
+  dragHandleIcon: { color: colors.primaryDark, fontSize: 24, fontWeight: '900', marginRight: 8 },
+  dragHandleText: { color: colors.primaryDark, flex: 1, fontSize: 11, fontWeight: '800' },
+  dragPosition: { color: colors.muted, fontSize: 10, fontWeight: '700' },
   facesRow: { flexDirection: 'row', gap: 9 },
   faceColumn: { flex: 1, minHeight: 56 },
   faceDivider: { backgroundColor: colors.border, width: 1 },
