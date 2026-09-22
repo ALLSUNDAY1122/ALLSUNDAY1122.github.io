@@ -1,0 +1,95 @@
+name: Toru Tango Reorder Lint Fix
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  patch-and-validate:
+    if: github.event.issue.title == '[TORU-TANGO] fix reorder lint 20260923'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/toru-folder-edit-reorder-20260923
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.0'
+          cache: npm
+          cache-dependency-path: toru-tango-mobile/package-lock.json
+
+      - name: Patch React 19 ref lint issue
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('toru-tango-mobile/app/(tabs)/cards.tsx')
+          s = p.read_text(encoding='utf-8')
+          replacements = [
+              (
+                  "import { type ReactNode, useMemo, useRef, useState } from 'react';",
+                  "import { type ReactNode, useCallback, useMemo, useState } from 'react';",
+              ),
+              (
+                  "  const translateY = useRef(new Animated.Value(0)).current;",
+                  "  const [translateY] = useState(() => new Animated.Value(0));",
+              ),
+              (
+                  "  const finishDrag = (dy: number) => {\n    const rowStep = 88;",
+                  "  const finishDrag = useCallback((dy: number) => {\n    const rowStep = 88;",
+              ),
+              (
+                  "    }).start(() => setDragging(false));\n  };\n\n  const panResponder",
+                  "    }).start(() => setDragging(false));\n  }, [count, index, onDrop, translateY]);\n\n  const panResponder",
+              ),
+              (
+                  "    [count, dragging, enabled, index, onDrop, translateY]\n  );",
+                  "    [dragging, enabled, finishDrag, translateY]\n  );",
+              ),
+          ]
+          for old, new in replacements:
+              if old not in s:
+                  raise SystemExit(f'expected pattern not found: {old[:100]!r}')
+              s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Install dependencies
+        working-directory: toru-tango-mobile
+        run: npm ci
+
+      - name: TypeScript
+        working-directory: toru-tango-mobile
+        run: npm run typecheck
+
+      - name: ESLint
+        working-directory: toru-tango-mobile
+        run: npm run lint
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'toru-tango-mobile/app/(tabs)/cards.tsx'
+          git commit -m "fix(toru-tango): satisfy React 19 drag lint"
+          git push origin HEAD:feature/toru-folder-edit-reorder-20260923
+
+      - name: Report result
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Reorder lint fix committed to feature/toru-folder-edit-reorder-20260923 at ${context.sha}. TypeScript + ESLint passed before push.`
+            })
