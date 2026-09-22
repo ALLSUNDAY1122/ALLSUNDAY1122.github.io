@@ -36,6 +36,9 @@ export type AppStoreValue = {
   studyDays: string[];
   hydrated: boolean;
   addDeck: (name: string) => boolean;
+  renameDeck: (oldName: string, newName: string) => boolean;
+  deleteDeck: (name: string) => void;
+  reorderCards: (deckName: string, orderedIds: string[]) => void;
   addCard: (question: string, answer: string, deckName?: string) => boolean;
   addCards: (candidates: QuestionCandidate[], deckName?: string) => number;
   updateCard: (id: string, question: string, answer: string, note?: string) => boolean;
@@ -99,6 +102,89 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
     },
     [decks]
   );
+
+  const renameDeck = useCallback(
+    (oldName: string, newName: string): boolean => {
+      const normalizedOld = normalizeDeckName(oldName);
+      const normalizedNew = newName.trim();
+      if (!normalizedNew) return false;
+      if (normalizedOld === normalizedNew) return true;
+      if (
+        decks.some(
+          (deck) =>
+            normalizeDeckName(deck) !== normalizedOld &&
+            deck.localeCompare(normalizedNew, 'ja', { sensitivity: 'accent' }) === 0
+        )
+      ) {
+        return false;
+      }
+
+      const now = new Date().toISOString();
+      setDecks((current) =>
+        uniqueDecks([
+          ...current.map((deck) =>
+            normalizeDeckName(deck) === normalizedOld ? normalizedNew : deck
+          ),
+          normalizedNew
+        ])
+      );
+      setCards((current) =>
+        current.map((card) =>
+          normalizeDeckName(card.deckName) === normalizedOld
+            ? { ...card, deckName: normalizedNew, updatedAt: now }
+            : card
+        )
+      );
+      return true;
+    },
+    [decks]
+  );
+
+  const deleteDeck = useCallback(
+    (name: string) => {
+      const normalized = normalizeDeckName(name);
+      const deletedCardIds = new Set(
+        cards
+          .filter((card) => normalizeDeckName(card.deckName) === normalized)
+          .map((card) => card.id)
+      );
+      setCards((current) =>
+        current.filter((card) => normalizeDeckName(card.deckName) !== normalized)
+      );
+      setHistory((current) =>
+        current.filter((entry) => !deletedCardIds.has(entry.cardId))
+      );
+      setDecks((current) =>
+        current.filter((deck) => normalizeDeckName(deck) !== normalized)
+      );
+    },
+    [cards]
+  );
+
+  const reorderCards = useCallback((deckName: string, orderedIds: string[]) => {
+    const normalized = normalizeDeckName(deckName);
+    const uniqueIds = [...new Set(orderedIds)];
+    setCards((current) => {
+      const deckCards = current.filter(
+        (card) => normalizeDeckName(card.deckName) === normalized
+      );
+      if (deckCards.length < 2) return current;
+
+      const byId = new Map(deckCards.map((card) => [card.id, card] as const));
+      const ordered = uniqueIds
+        .map((id) => byId.get(id))
+        .filter((card): card is Card => Boolean(card));
+      const included = new Set(ordered.map((card) => card.id));
+      ordered.push(...deckCards.filter((card) => !included.has(card.id)));
+
+      let nextIndex = 0;
+      return current.map((card) =>
+        normalizeDeckName(card.deckName) === normalized
+          ? ordered[nextIndex++] ?? card
+          : card
+      );
+    });
+  }, []);
 
   const addCard = useCallback(
     (question: string, answer: string, deckName = 'メイン'): boolean => {
@@ -311,6 +397,9 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       studyDays,
       hydrated,
       addDeck,
+      renameDeck,
+      deleteDeck,
+      reorderCards,
       addCard,
       addCards,
       updateCard,
@@ -329,6 +418,9 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       studyDays,
       hydrated,
       addDeck,
+      renameDeck,
+      deleteDeck,
+      reorderCards,
       addCard,
       addCards,
       updateCard,
