@@ -3,6 +3,9 @@ name: Toru Tango Build11 Resume Submit
 on:
   issues:
     types: [opened]
+  push:
+    paths:
+      - automation/toru-tango-build11-submit.trigger
 
 permissions:
   contents: read
@@ -14,7 +17,7 @@ concurrency:
 
 jobs:
   resume-and-submit:
-    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Build11 Resume App Review submit'
+    if: github.event_name == 'push' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Build11 Resume App Review submit')
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
@@ -48,9 +51,6 @@ jobs:
           npm run typecheck
           npm run lint
 
-          # expo-doctor's moving SDK recommendation can flag older patch releases
-          # within the same Expo SDK. Accept only the known patch-only drift;
-          # any other doctor failure remains blocking.
           set +e
           npx expo-doctor 2>&1 | tee /tmp/toru-expo-doctor.txt
           doctor_rc=${PIPESTATUS[0]}
@@ -138,7 +138,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: toru-tango-build11-submit-${{ github.run_id }}
+          name: toru-tango-build11-submit-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             /tmp/toru-build11-sha.txt
             /tmp/toru-cm-build-id.txt
@@ -173,4 +173,5 @@ jobs:
             }
             lines.push(`job_status=${{ toJSON(job.status) }}`);
             lines.push(`run_id=${context.runId}`);
-            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:lines.join('\n')});
+            const issueNumber=context.payload.issue?.number || 5531;
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:issueNumber,body:lines.join('\n')});
