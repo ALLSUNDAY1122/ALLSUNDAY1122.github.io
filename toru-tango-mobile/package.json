@@ -18,6 +18,25 @@
   "engines": {
     "node": ">=22.13.0"
   },
+  "expo": {
+    "install": {
+      "exclude": [
+        "expo",
+        "expo-constants",
+        "expo-dev-client",
+        "expo-document-picker",
+        "expo-file-system",
+        "expo-image-picker",
+        "expo-linking",
+        "expo-router",
+        "expo-sharing",
+        "expo-speech",
+        "expo-splash-screen",
+        "react-native",
+        "eslint-config-expo"
+      ]
+    }
+  },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~57.0.15",
