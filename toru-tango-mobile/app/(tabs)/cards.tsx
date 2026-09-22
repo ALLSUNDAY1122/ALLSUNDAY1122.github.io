@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo, useRef, useState } from 'react';
+import { type ReactNode, useCallback, useMemo, useState } from 'react';
 import {
   Alert,
   Animated,
@@ -68,10 +68,10 @@ function ReorderableCardRow({
   count: number;
   onDrop: (fromIndex: number, toIndex: number) => void;
 }) {
-  const translateY = useRef(new Animated.Value(0)).current;
+  const [translateY] = useState(() => new Animated.Value(0));
   const [dragging, setDragging] = useState(false);
 
-  const finishDrag = (dy: number) => {
+  const finishDrag = useCallback((dy: number) => {
     const rowStep = 88;
     const target = Math.max(0, Math.min(count - 1, index + Math.round(dy / rowStep)));
     if (target !== index) onDrop(index, target);
@@ -81,7 +81,7 @@ function ReorderableCardRow({
       tension: 180,
       friction: 18
     }).start(() => setDragging(false));
-  };
+  }, [count, index, onDrop, translateY]);
 
   const panResponder = useMemo(
     () =>
@@ -95,7 +95,7 @@ function ReorderableCardRow({
         onPanResponderTerminate: (_, gestureState) => finishDrag(gestureState.dy),
         onPanResponderTerminationRequest: () => !dragging
       }),
-    [count, dragging, enabled, index, onDrop, translateY]
+    [dragging, enabled, finishDrag, translateY]
   );
 
   return (
