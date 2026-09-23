@@ -56,7 +56,7 @@ jobs:
           key_path, cleanup = load_private_key()
           try:
               token = make_token(os.environ['ASC_ISSUER_ID'], os.environ['ASC_KEY_ID'], key_path)
-              _, payload = api_get(token, f'/v1/apps/{app_id}/builds?sort=-uploadedDate&limit=100')
+              _, payload = api_get(token, f'/v1/apps/{app_id}/builds?limit=100')
               rows = (payload or {}).get('data') or []
               matches = [x for x in rows if str((x.get('attributes') or {}).get('version')) == target_build]
               probe['matches'] = [
