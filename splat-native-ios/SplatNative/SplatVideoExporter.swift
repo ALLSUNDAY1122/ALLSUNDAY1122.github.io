@@ -51,8 +51,7 @@ enum SplatVideoExporter {
             case .cannotCreateWriter: return "動画ファイルを作成できません。"
             case .cannotAddVideoInput: return "動画エンコーダを初期化できません。"
             case .cannotStartWriter: return "動画の書き込みを開始できません。"
-            case .pixelBufferPoolUnavailable: return "動画フレーム用バッファを作成できません。"
-            case .pixelBufferAllocationFailed: return "動画フレームのメモリを確保できません。"
+            case .pixelBufferPoolUnavailable: return "動画フレームのメモリを確保できません。"
             case .textureCacheFailed: return "動画フレームをMetalへ接続できません。"
             case .textureCreationFailed: return "動画フレームのMetal textureを作成できません。"
             case .commandBufferFailed: return "動画フレームのGPU処理に失敗しました。"
@@ -203,7 +202,7 @@ enum SplatVideoExporter {
         writer.add(input)
 
         let attributes: [String: Any] = [
-            kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA),
+            kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelBufferPixelFormatType_32BGRA),
             kCVPixelBufferWidthKey as String: dimensions.width,
             kCVPixelBufferHeightKey as String: dimensions.height,
             kCVPixelBufferMetalCompatibilityKey as String: true,
@@ -328,7 +327,7 @@ enum SplatVideoExporter {
                 }
                 if didRender {
                     commandBuffer.commit()
-                    commandBuffer.waitUntilCompleted()
+                    await commandBuffer.completed()
                     try Task.checkCancellation()
                     guard commandBuffer.status != .error else {
                         throw ExportError.writerFailed(commandBuffer.error?.localizedDescription ?? "Metal command failed")
