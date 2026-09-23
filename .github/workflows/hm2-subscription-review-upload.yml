@@ -1,0 +1,67 @@
+name: HM2 Subscription Review Screenshot Upload
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/hm2-subscription-review-upload-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Read command
+        id: command
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          c=json.loads(Path('automation/hm2-subscription-review-upload-command.json').read_text())
+          run_id=c.get('source_run_id'); artifact=c.get('artifact_name')
+          if not isinstance(run_id,int) or run_id<=0: raise SystemExit('invalid source_run_id')
+          if artifact!='hm2-iap-review-paywall': raise SystemExit('unexpected artifact')
+          print(f'run_id={run_id}')
+          PY
+      - name: Download fresh audited paywall screenshot
+        uses: actions/download-artifact@v5
+        with:
+          name: hm2-iap-review-paywall
+          path: /tmp/hm2-review
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.command.outputs.run_id }}
+      - name: Select exactly one PNG
+        id: shot
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t pngs < <(find /tmp/hm2-review -type f -iname '*.png' | sort)
+          test "${#pngs[@]}" -eq 1
+          test -s "${pngs[0]}"
+          echo "path=${pngs[0]}" >> "$GITHUB_OUTPUT"
+      - name: Upload monthly review screenshot and verify
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          HM2_SUB_REVIEW_SCREENSHOT: ${{ steps.shot.outputs.path }}
+        run: python3 scripts/hm2_upload_subscription_review_screenshot.py
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: hm2-subscription-review-upload-result-${{ github.run_id }}
+          path: hm2-subscription-review-screenshot-result.json
+          if-no-files-found: warn
+          retention-days: 7
