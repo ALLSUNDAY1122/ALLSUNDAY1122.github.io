@@ -92,7 +92,7 @@ jobs:
               print(f'PASS {p.name}: {size[0]}x{size[1]} bytes={len(raw)}')
           PY
 
-      - name: Re-assert exact Japan pricing, premium metadata, and review contact
+      - name: Re-assert all machine-fixable App Store prerequisites
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
@@ -100,9 +100,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python -m pip install --disable-pip-version-check --quiet pillow
           python scripts/hm2_configure_standard_iap_prices.py
           python scripts/hm2_configure_iap_metadata.py
           python scripts/hm2_fill_review_contact_from_donor.py
+          python scripts/hm2_fix_submission_prereqs.py \
+            --source-screen /tmp/hm2-app-store-screens/01-home.png \
+            --output /tmp/hm2-submission-prereqs.json
 
       - name: Submit Build 22 with monthly and lifetime products
         id: submit
@@ -132,7 +136,8 @@ jobs:
           import json
           from pathlib import Path
           log=Path('/tmp/app2-006-hm2-submit.log').read_text(encoding='utf-8',errors='replace') if Path('/tmp/app2-006-hm2-submit.log').exists() else 'submission script did not run'
-          Path('automation/asc-results/app2-006-hm2-submit-result.json').write_text(json.dumps({'task_id':'APP2-006','submitted':False,'error':log[-4000:]},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          prereq=Path('/tmp/hm2-submission-prereqs.json').read_text(encoding='utf-8',errors='replace') if Path('/tmp/hm2-submission-prereqs.json').exists() else ''
+          Path('automation/asc-results/app2-006-hm2-submit-result.json').write_text(json.dumps({'task_id':'APP2-006','submitted':False,'error':(prereq+'\n'+log)[-6000:]},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
           fi
           git config user.name "github-actions[bot]"
