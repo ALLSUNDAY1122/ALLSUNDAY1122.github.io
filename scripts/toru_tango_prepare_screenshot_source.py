@@ -5,20 +5,21 @@ from pathlib import Path
 
 root = Path(sys.argv[1] if len(sys.argv) > 1 else "toru-tango-mobile")
 
-# Metro's Release bundler does not resolve the TS @ alias for the root JSON import.
-hits = list(root.rglob("src/constants/appInfo.ts"))
-if len(hits) != 1:
-    raise SystemExit(f"expected one src/constants/appInfo.ts, found {len(hits)}: {hits}")
-app_info = hits[0]
-text = app_info.read_text(encoding="utf-8")
-text = text.replace("@/app.json", "../../app.json")
-app_info.write_text(text, encoding="utf-8")
-if "@/app.json" in app_info.read_text(encoding="utf-8"):
-    raise SystemExit("Metro JSON alias patch failed")
+# Some later branches introduced src/constants/appInfo.ts with a root JSON alias.
+# Build 12 predates that file, so patch it only when it actually exists.
+app_info = root / "src/constants/appInfo.ts"
+if app_info.exists():
+    text = app_info.read_text(encoding="utf-8")
+    text = text.replace("@/app.json", "../../app.json")
+    app_info.write_text(text, encoding="utf-8")
+    if "@/app.json" in app_info.read_text(encoding="utf-8"):
+        raise SystemExit("Metro JSON alias patch failed")
 
 # Add screenshot-only fixture data. This changes only the temporary CI checkout used
 # to produce App Store screenshots; the already-uploaded Apple Build 12 is untouched.
 storage = root / "src/repositories/storage.ts"
+if not storage.exists():
+    raise SystemExit(f"storage file missing: {storage}")
 text = storage.read_text(encoding="utf-8")
 marker = "  return {\n    cards,\n    history,\n    decks: normalizeDecks([...storedDecks, ...decksFromCards]),\n    studyDays: normalizeStudyDays([...storedStudyDays, ...legacyStudyDays])\n  };"
 if marker not in text:
