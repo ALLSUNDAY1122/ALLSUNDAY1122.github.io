@@ -1,0 +1,112 @@
+name: Toru Tango Build12 Simulator Diagnose
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  diagnose:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Diagnose Build12 Simulator'
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/toru-tango-build12-20260923
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+          cache: npm
+          cache-dependency-path: toru-tango-mobile/package-lock.json
+
+      - name: Prepare native project
+        working-directory: toru-tango-mobile
+        run: |
+          npm ci
+          npx expo prebuild --platform ios --clean
+          cd ios
+          pod install
+
+      - name: Diagnose simulator build
+        id: build
+        working-directory: toru-tango-mobile
+        shell: bash
+        run: |
+          set -uo pipefail
+          workspace=$(find ios -maxdepth 2 -name '*.xcworkspace' -print | head -1)
+          echo "workspace=$workspace" | tee /tmp/toru-diag.txt
+          xcodebuild -workspace "$workspace" -list -json > /tmp/toru-xcode-list.json
+          python3 - <<'PY' | tee -a /tmp/toru-diag.txt
+          import json
+          d=json.load(open('/tmp/toru-xcode-list.json'))
+          print('schemes='+repr(d.get('workspace',{}).get('schemes',[])))
+          PY
+          scheme=$(python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/toru-xcode-list.json'))
+          schemes=d.get('workspace',{}).get('schemes',[])
+          preferred=[s for s in schemes if 'toru' in s.lower() or 'tango' in s.lower()]
+          print((preferred or schemes)[0])
+          PY
+          )
+          echo "selected_scheme=$scheme" | tee -a /tmp/toru-diag.txt
+          set +e
+          EXPO_PUBLIC_SCREENSHOT_FIXTURES=1 xcodebuild \
+            -workspace "$workspace" \
+            -scheme "$scheme" \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath /tmp/toru-derived \
+            CODE_SIGNING_ALLOWED=NO \
+            build 2>&1 | tee /tmp/toru-xcodebuild.log
+          status=${PIPESTATUS[0]}
+          set -e
+          echo "xcode_status=$status" | tee -a /tmp/toru-diag.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('/tmp/toru-xcodebuild.log')
+          lines=p.read_text(errors='replace').splitlines() if p.exists() else []
+          pats=re.compile(r'(error:|fatal error|PhaseScriptExecution|Undefined symbols|BUILD FAILED|Command .* failed|No such module|could not build|cannot find|not found)', re.I)
+          hits=[x for x in lines if pats.search(x)]
+          out=[]
+          seen=set()
+          for x in hits:
+              x=x.strip()
+              if x and x not in seen:
+                  seen.add(x); out.append(x)
+          if not out:
+              out=lines[-80:]
+          text='\n'.join(out[-120:])
+          Path('/tmp/toru-xcode-errors.txt').write_text(text[-12000:],encoding='utf-8')
+          PY
+          exit "$status"
+
+      - name: Post diagnostics
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('fs');
+            const diag=fs.existsSync('/tmp/toru-diag.txt')?fs.readFileSync('/tmp/toru-diag.txt','utf8'):'no diag';
+            const err=fs.existsSync('/tmp/toru-xcode-errors.txt')?fs.readFileSync('/tmp/toru-xcode-errors.txt','utf8'):'no error extract';
+            const body=['Build12 simulator diagnostic', '```', diag, err.slice(-12000), '```', `run_id=${context.runId}`].join('\n');
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body});
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-build12-sim-diagnostics-${{ github.run_id }}
+          path: |
+            /tmp/toru-diag.txt
+            /tmp/toru-xcode-list.json
+            /tmp/toru-xcode-errors.txt
+            /tmp/toru-xcodebuild.log
+          if-no-files-found: warn
