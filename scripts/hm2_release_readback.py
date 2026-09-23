@@ -12,6 +12,7 @@ APP_ID = "6799751657"
 BUNDLE_ID = "jp.allsunday1122.healthmanager2"
 SUB_ID = "6802988571"
 IAP_ID = "6802989207"
+GROUP_ID = "22319275"
 OUT = Path(os.environ.get("HM2_ASC_RESULT", "hm2-release-readback.json"))
 
 
@@ -76,7 +77,18 @@ def main():
 
         if len(editable) == 1:
             vid = editable[0]["id"]
-            result["version_localizations"] = summarize_collection(get(token, f"/v1/appStoreVersions/{vid}/appStoreVersionLocalizations?limit=50"))
+            locs = summarize_collection(get(token, f"/v1/appStoreVersions/{vid}/appStoreVersionLocalizations?limit=50"))
+            result["version_localizations"] = locs
+            for loc in locs if isinstance(locs, list) else []:
+                lid = loc.get("id")
+                if not lid:
+                    continue
+                sets = summarize_collection(get(token, f"/v1/appStoreVersionLocalizations/{lid}/appScreenshotSets?limit=200"))
+                result.setdefault("app_screenshot_sets", {})[lid] = sets
+                for shot_set in sets if isinstance(sets, list) else []:
+                    sid = shot_set.get("id")
+                    if sid:
+                        result.setdefault("app_screenshots", {})[sid] = summarize_collection(get(token, f"/v1/appScreenshotSets/{sid}/appScreenshots?limit=200"))
             result["selected_build_relationship"] = get(token, f"/v1/appStoreVersions/{vid}/relationships/build")
             result["review_detail"] = get(token, f"/v1/appStoreVersions/{vid}/appStoreReviewDetail")
 
@@ -84,12 +96,15 @@ def main():
         result["beta_groups"] = summarize_collection(get(token, f"/v1/apps/{APP_ID}/betaGroups?limit=50"))
         result["beta_app_localizations"] = summarize_collection(get(token, f"/v1/apps/{APP_ID}/betaAppLocalizations?limit=50"))
         result["app_infos"] = summarize_collection(get(token, f"/v1/apps/{APP_ID}/appInfos?limit=20"))
+        result["review_submissions"] = summarize_collection(get(token, f"/v1/apps/{APP_ID}/reviewSubmissions?limit=200"))
 
         result["subscription"] = get(token, f"/v1/subscriptions/{SUB_ID}")
         result["subscription_localizations"] = summarize_collection(get(token, f"/v1/subscriptions/{SUB_ID}/subscriptionLocalizations?limit=50"))
         result["subscription_prices_jpn"] = get(token, f"/v1/subscriptions/{SUB_ID}/prices?filter[territory]=JPN&include=subscriptionPricePoint,territory&limit=200")
         result["subscription_availability"] = get(token, f"/v1/subscriptions/{SUB_ID}/subscriptionAvailability?include=availableTerritories&limit[availableTerritories]=50")
         result["subscription_review_screenshot"] = get(token, f"/v1/subscriptions/{SUB_ID}/appStoreReviewScreenshot")
+        result["subscription_versions"] = summarize_collection(get(token, f"/v1/subscriptions/{SUB_ID}/versions?limit=50"))
+        result["subscription_group_versions"] = summarize_collection(get(token, f"/v1/subscriptionGroups/{GROUP_ID}/versions?limit=50"))
 
         # In-app purchases use v2 relationship endpoints. The old v1 relationship URLs returned 404 and
         # were an audit bug, not evidence that metadata was missing.
@@ -98,6 +113,7 @@ def main():
         result["lifetime_price_schedule"] = get(token, f"/v2/inAppPurchases/{IAP_ID}/iapPriceSchedule?include=baseTerritory,manualPrices&limit[manualPrices]=50")
         result["lifetime_availability"] = get(token, f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseAvailability?include=availableTerritories&limit[availableTerritories]=50")
         result["lifetime_review_screenshot"] = get(token, f"/v2/inAppPurchases/{IAP_ID}/appStoreReviewScreenshot")
+        result["lifetime_versions"] = summarize_collection(get(token, f"/v2/inAppPurchases/{IAP_ID}/versions?limit=50"))
 
         # Fail only on canonical target/version path. Optional endpoint failures remain evidence and make
         # the readback explicit rather than turning an API-shape issue into a false product failure.
