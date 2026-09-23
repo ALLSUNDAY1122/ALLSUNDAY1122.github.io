@@ -55,7 +55,6 @@ jobs:
           code=$?
           set -e
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
-          # Preserve diagnostics even when XCTest fails; final gate enforces code.
           exit 0
       - name: Export screenshot attachments
         if: always()
@@ -67,6 +66,43 @@ jobs:
               --output-path "$RUNNER_TEMP/hm2-review-attachments"
           fi
           find "$RUNNER_TEMP/hm2-review-attachments" -type f -maxdepth 3 -print || true
+      - name: Build deterministic review and App Store assets
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          export ATTACH_DIR="$RUNNER_TEMP/hm2-review-attachments"
+          export REVIEW_DIR="$RUNNER_TEMP/hm2-iap-review"
+          export STORE_DIR="$RUNNER_TEMP/hm2-app-store-screens"
+          mkdir -p "$REVIEW_DIR" "$STORE_DIR"
+          python3 - <<'PY'
+          import json, os, shutil
+          from pathlib import Path
+          root=Path(os.environ['ATTACH_DIR'])
+          manifest=json.loads((root/'manifest.json').read_text())
+          found={}
+          for group in manifest:
+              for item in group.get('attachments',[]):
+                  name=item.get('suggestedHumanReadableName','')
+                  src=root/item.get('exportedFileName','')
+                  if not src.is_file():
+                      continue
+                  if name.startswith('HM2-AppStore-Home'):
+                      found['home']=src
+                  if name.startswith('HM2-IAP-Review-Paywall'):
+                      found['premium']=src
+          if set(found) != {'home','premium'}:
+              raise SystemExit(f'missing named screenshots: {found}')
+          shutil.copy2(found['premium'], Path(os.environ['REVIEW_DIR'])/'hm2-premium-review.png')
+          shutil.copy2(found['home'], Path(os.environ['STORE_DIR'])/'01-home-raw.png')
+          shutil.copy2(found['premium'], Path(os.environ['STORE_DIR'])/'02-premium-raw.png')
+          PY
+          magick "$STORE_DIR/01-home-raw.png" -resize 1260x2736! "$STORE_DIR/01-home.png"
+          magick "$STORE_DIR/02-premium-raw.png" -resize 1260x2736! "$STORE_DIR/02-premium.png"
+          rm "$STORE_DIR/01-home-raw.png" "$STORE_DIR/02-premium-raw.png"
+          test "$(magick identify -format '%wx%h' "$STORE_DIR/01-home.png")" = "1260x2736"
+          test "$(magick identify -format '%wx%h' "$STORE_DIR/02-premium.png")" = "1260x2736"
+          test -s "$REVIEW_DIR/hm2-premium-review.png"
       - name: Summarize UI capture diagnostics
         if: always()
         shell: bash
@@ -81,26 +117,37 @@ jobs:
             fi
             echo 'Attachments:'
             find "$RUNNER_TEMP/hm2-review-attachments" -type f -maxdepth 3 -printf '%f\n' 2>/dev/null || true
+            echo 'App Store assets:'
+            find "$RUNNER_TEMP/hm2-app-store-screens" -type f -maxdepth 2 -printf '%f\n' 2>/dev/null || true
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Count captured review PNGs
         if: always()
         id: png_gate
         shell: bash
         run: |
-          COUNT=$(find "$RUNNER_TEMP/hm2-review-attachments" -type f \( -name '*.png' -o -name '*.PNG' \) | wc -l | tr -d ' ')
-          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
-          echo "Captured review PNG count: $COUNT"
+          REVIEW_COUNT=$(find "$RUNNER_TEMP/hm2-iap-review" -type f -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+          STORE_COUNT=$(find "$RUNNER_TEMP/hm2-app-store-screens" -type f -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+          echo "review_count=$REVIEW_COUNT" >> "$GITHUB_OUTPUT"
+          echo "store_count=$STORE_COUNT" >> "$GITHUB_OUTPUT"
+          echo "Review PNG count: $REVIEW_COUNT"
+          echo "App Store PNG count: $STORE_COUNT"
       - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: hm2-iap-review-paywall
-          path: |
-            ${{ runner.temp }}/hm2-review-attachments
-            ${{ runner.temp }}/hm2-review-test.log
+          path: ${{ runner.temp }}/hm2-iap-review
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: hm2-app-store-screens
+          path: ${{ runner.temp }}/hm2-app-store-screens
           if-no-files-found: error
           retention-days: 7
       - name: Enforce review screenshot gate
         if: always()
         run: |
           test "${{ steps.ui_capture.outputs.exit_code }}" = "0"
-          test "${{ steps.png_gate.outputs.count }}" -ge 1
+          test "${{ steps.png_gate.outputs.review_count }}" = "1"
+          test "${{ steps.png_gate.outputs.store_count }}" = "2"
