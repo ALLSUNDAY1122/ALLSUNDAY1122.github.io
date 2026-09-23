@@ -1,0 +1,131 @@
+name: Toru Tango Build12 ASC-only Submit
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: toru-tango-build12-asc-only-submit
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Build12 ASC-only App Review submit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Report workflow start
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Build 12 ASC-only submission started. run_id=${context.runId}`
+            })
+
+      - name: Checkout submission tooling
+        uses: actions/checkout@v4
+
+      - name: Verify Apple Build 12 and submit App Review
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=scripts python3 - <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          from app_store_connect_api import api_get, load_private_key, make_token
+          import toru_tango_finalize_submission as submitter
+
+          app_id = '6795968222'
+          target_build = '12'
+          probe = {'app_id': app_id, 'target_build': target_build, 'valid_build_found': False}
+
+          key_path, cleanup = load_private_key()
+          try:
+              token = make_token(os.environ['ASC_ISSUER_ID'], os.environ['ASC_KEY_ID'], key_path)
+              _, payload = api_get(token, f'/v1/apps/{app_id}/builds?sort=-uploadedDate&limit=100')
+              rows = (payload or {}).get('data') or []
+              matches = [x for x in rows if str((x.get('attributes') or {}).get('version')) == target_build]
+              probe['matches'] = [
+                  {
+                      'id': str(x.get('id')),
+                      'processingState': (x.get('attributes') or {}).get('processingState'),
+                      'expired': (x.get('attributes') or {}).get('expired', False),
+                      'uploadedDate': (x.get('attributes') or {}).get('uploadedDate'),
+                  }
+                  for x in matches
+              ]
+              valid = next((x for x in matches if (x.get('attributes') or {}).get('processingState') == 'VALID' and not (x.get('attributes') or {}).get('expired', False)), None)
+              if valid is None:
+                  Path('/tmp/toru-build12-asc-probe.json').write_text(json.dumps(probe, ensure_ascii=False, indent=2), encoding='utf-8')
+                  raise SystemExit(f'Apple Build 12 VALID not found: {probe["matches"]}')
+              probe['valid_build_found'] = True
+              probe['valid_build_id'] = str(valid.get('id'))
+              Path('/tmp/toru-build12-asc-probe.json').write_text(json.dumps(probe, ensure_ascii=False, indent=2), encoding='utf-8')
+              print(f'Apple Build 12 VALID: {probe["valid_build_id"]}')
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+
+          submitter.BUILD = target_build
+          sys.argv = ['toru_tango_finalize_submission.py', '--output', '/tmp/toru-build12-final-result.json']
+          submitter.main()
+          PY
+
+      - name: Verify final submission result
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('/tmp/toru-build12-final-result.json')
+          if not p.exists():
+              raise SystemExit('final result missing')
+          r = json.loads(p.read_text(encoding='utf-8'))
+          if r.get('submitted') is not True:
+              raise SystemExit(f'not submitted: {r}')
+          if r.get('review_submission_state') not in {'WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING','PENDING_DEVELOPER_RELEASE','READY_FOR_SALE','PROCESSING_FOR_DISTRIBUTION'}:
+              raise SystemExit(f'unexpected review state: {r.get("review_submission_state")}')
+          if r.get('release_type') != 'MANUAL':
+              raise SystemExit(f'release type is not MANUAL: {r.get("release_type")}')
+          if r.get('release_performed') is not False:
+              raise SystemExit('unexpected release performed')
+          print(json.dumps(r, ensure_ascii=False))
+          PY
+
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-build12-asc-only-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/toru-build12-asc-probe.json
+            /tmp/toru-build12-final-result.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Report successful submission
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Build 12 App Review submission completed successfully. run_id=${context.runId}. Public release remains MANUAL.`
+            })
