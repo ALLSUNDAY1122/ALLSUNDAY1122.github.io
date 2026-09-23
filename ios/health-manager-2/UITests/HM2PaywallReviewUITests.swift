@@ -41,17 +41,34 @@ final class HM2PaywallReviewUITests: XCTestCase {
         app.launchEnvironment["HM2_REVIEW_LIFETIME_PRICE"] = "¥800"
         app.launch()
 
+        let sprint = app.buttons.matching(
+            NSPredicate(format: "label CONTAINS %@", "今日のスプリント")
+        ).firstMatch
         let unlock = app.buttons.matching(
             NSPredicate(format: "label CONTAINS %@", "全300問を解放")
         ).firstMatch
         require(
-            unlock,
+            sprint,
             timeout: 12,
+            message: "Home sprint entry was not visible",
+            stage: "home-sprint-entry",
+            app: app
+        )
+        require(
+            unlock,
+            timeout: 8,
             message: "Premium entry was not visible",
             stage: "home-premium-entry",
             app: app
         )
-        guard unlock.exists else { return }
+        guard sprint.exists, unlock.exists else { return }
+
+        // WKWebView accessibility can become available slightly before the
+        // compositor has painted the page. Give the rendered surface a stable
+        // window before taking the App Store screenshot.
+        XCTAssertTrue(sprint.isHittable, "Home sprint entry should be hittable before capture")
+        XCTAssertTrue(unlock.isHittable, "Premium entry should be hittable before capture")
+        Thread.sleep(forTimeInterval: 2.0)
 
         let homeScreenshot = XCUIScreen.main.screenshot()
         let homeAttachment = XCTAttachment(screenshot: homeScreenshot)
@@ -88,6 +105,7 @@ final class HM2PaywallReviewUITests: XCTestCase {
         require(lifetimePrice, timeout: 3, message: "Canonical lifetime price was not visible in purchase button", stage: "paywall-lifetime-price", app: app)
 
         guard monthly.exists, lifetime.exists, restore.exists, monthlyPrice.exists, lifetimePrice.exists else { return }
+        Thread.sleep(forTimeInterval: 0.5)
         let screenshot = XCUIScreen.main.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot)
         attachment.name = "HM2-IAP-Review-Paywall"
