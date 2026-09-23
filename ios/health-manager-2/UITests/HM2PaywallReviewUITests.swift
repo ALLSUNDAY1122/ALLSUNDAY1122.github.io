@@ -52,6 +52,13 @@ final class HM2PaywallReviewUITests: XCTestCase {
             app: app
         )
         guard unlock.exists else { return }
+
+        let homeScreenshot = XCUIScreen.main.screenshot()
+        let homeAttachment = XCTAttachment(screenshot: homeScreenshot)
+        homeAttachment.name = "HM2-AppStore-Home"
+        homeAttachment.lifetime = .keepAlways
+        add(homeAttachment)
+
         unlock.tap()
 
         let monthly = app.buttons.matching(
