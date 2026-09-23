@@ -59,7 +59,7 @@ jobs:
           if age < timedelta(minutes=-5) or age > timedelta(hours=24):
               raise SystemExit(f'HUMAN_GATE: approval is stale or future-dated; age={age}')
           print(f'run_id={run_id}')
-          print('PASS: explicit approval bound to HM2 Build 22')
+          print('approval_status=pass')
           PY
 
       - name: Download audited App Store screenshots
