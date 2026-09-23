@@ -7,6 +7,13 @@ final class StoreKitManager: ObservableObject {
     static let lifetimeProductID = "jp.allsunday1122.healthmanager2.lifetime"
     static let productIDs = [monthlyProductID, lifetimeProductID]
 
+    // HM2 is sold in Japan at these canonical App Store Connect price points.
+    // Keep the paywall presentation stable even when TestFlight temporarily
+    // serves stale storefront metadata. The Apple purchase sheet remains the
+    // authority for the actual transaction.
+    static let monthlyJapanDisplayPrice = "¥200/月"
+    static let lifetimeJapanDisplayPrice = "¥800"
+
     @Published private(set) var monthlyProduct: Product?
     @Published private(set) var lifetimeProduct: Product?
     @Published private(set) var isPremium = false
@@ -55,11 +62,11 @@ final class StoreKitManager: ObservableObject {
     }
 
     var monthlyDisplayPrice: String {
-        reviewMonthlyPriceOverride ?? monthlyProduct?.displayPrice ?? "App Storeで価格を確認"
+        reviewMonthlyPriceOverride ?? Self.monthlyJapanDisplayPrice
     }
 
     var lifetimeDisplayPrice: String {
-        reviewLifetimePriceOverride ?? lifetimeProduct?.displayPrice ?? "App Storeで価格を確認"
+        reviewLifetimePriceOverride ?? Self.lifetimeJapanDisplayPrice
     }
 
     var monthlyAvailable: Bool { reviewMonthlyPriceOverride != nil || monthlyProduct != nil }
@@ -68,14 +75,20 @@ final class StoreKitManager: ObservableObject {
     func loadProducts() async {
         do {
             let products = try await Product.products(for: Self.productIDs)
-            monthlyProduct = products.first { $0.id == Self.monthlyProductID }
-            lifetimeProduct = products.first { $0.id == Self.lifetimeProductID }
+
+            // Match both ID and StoreKit product type. This prevents a malformed
+            // App Store Connect response/configuration from ever wiring the
+            // monthly button to the lifetime product (or vice versa).
+            monthlyProduct = products.first {
+                $0.id == Self.monthlyProductID && $0.type == .autoRenewable
+            }
+            lifetimeProduct = products.first {
+                $0.id == Self.lifetimeProductID && $0.type == .nonConsumable
+            }
+
             if monthlyProduct == nil || lifetimeProduct == nil {
-                // CI review capture may intentionally inject the App Store Connect
-                // canonical JPY display prices because Simulator storefront data is
-                // not deterministic. This never applies to Release builds.
                 if reviewMonthlyPriceOverride == nil || reviewLifetimePriceOverride == nil {
-                    statusMessage = "商品情報を取得できません。App Store Connect設定を確認してください。"
+                    statusMessage = "商品情報の種類または価格設定を確認できません。App Store Connect設定を確認してください。"
                 }
             } else if !isPremium {
                 statusMessage = ""
@@ -104,11 +117,29 @@ final class StoreKitManager: ObservableObject {
 
     func purchase(productID: String) async {
         if monthlyProduct == nil || lifetimeProduct == nil { await loadProducts() }
-        let product = productID == Self.monthlyProductID ? monthlyProduct :
-            (productID == Self.lifetimeProductID ? lifetimeProduct : nil)
+
+        let product: Product?
+        switch productID {
+        case Self.monthlyProductID:
+            product = monthlyProduct
+        case Self.lifetimeProductID:
+            product = lifetimeProduct
+        default:
+            product = nil
+        }
 
         guard let product else {
             statusMessage = "選択した商品情報を取得できません。"
+            return
+        }
+
+        // Fail closed if a product ever arrives with an unexpected StoreKit type.
+        if productID == Self.monthlyProductID && product.type != .autoRenewable {
+            statusMessage = "月額商品の設定を確認できません。"
+            return
+        }
+        if productID == Self.lifetimeProductID && product.type != .nonConsumable {
+            statusMessage = "買い切り商品の設定を確認できません。"
             return
         }
 
