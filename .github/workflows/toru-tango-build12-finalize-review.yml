@@ -150,12 +150,12 @@ jobs:
           EXPO_PUBLIC_SCREENSHOT_FIXTURES=1 xcodebuild \
             -workspace "$workspace" \
             -scheme "$scheme" \
-            -configuration Release \
+            -configuration Debug \
             -destination "platform=iOS Simulator,id=$udid" \
             -derivedDataPath /tmp/toru-derived \
             CODE_SIGNING_ALLOWED=NO \
             build
-          app=$(find /tmp/toru-derived/Build/Products -path '*Release-iphonesimulator/*.app' -print | head -1)
+          app=$(find /tmp/toru-derived/Build/Products -path '*Debug-iphonesimulator/*.app' -print | head -1)
           test -n "$app"
           echo "$app" > /tmp/toru-app-path
 
