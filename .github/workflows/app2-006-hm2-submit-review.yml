@@ -1,0 +1,166 @@
+name: APP2-006 HM2 App Review Submission
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-006-hm2-submit-command.json
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: app2-006-hm2-submit-review
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Require explicit fresh approval and exact immutable build
+        id: command
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+          cmd=json.loads(Path('automation/app2-006-hm2-submit-command.json').read_text(encoding='utf-8'))
+          if cmd.get('approved_by_user') is not True:
+              raise SystemExit('HUMAN_GATE: approved_by_user must be true')
+          if cmd.get('action') != 'submit_hm2_build22_for_review':
+              raise SystemExit('HUMAN_GATE: unexpected submit action')
+          if str(cmd.get('app_id')) != '6799751657':
+              raise SystemExit('HUMAN_GATE: target app mismatch')
+          if str(cmd.get('bundle_id')) != 'jp.allsunday1122.healthmanager2':
+              raise SystemExit('HUMAN_GATE: target bundle mismatch')
+          if str(cmd.get('build')) != '22':
+              raise SystemExit('HUMAN_GATE: only approved Build 22 may be submitted')
+          if str(cmd.get('build_id')) != 'd97f10a1-dcce-40ed-be25-5e0a6563d7aa':
+              raise SystemExit('HUMAN_GATE: immutable Build 22 id mismatch')
+          if cmd.get('artifact_name') != 'hm2-app-store-screens':
+              raise SystemExit('HUMAN_GATE: unexpected screenshot artifact')
+          run_id=cmd.get('source_run_id')
+          if not isinstance(run_id,int) or run_id <= 0:
+              raise SystemExit('HUMAN_GATE: invalid screenshot source run')
+          raw=str(cmd.get('approved_at') or '').replace('Z','+00:00')
+          try: approved_at=datetime.fromisoformat(raw)
+          except Exception: raise SystemExit('HUMAN_GATE: approved_at missing or invalid')
+          if approved_at.tzinfo is None:
+              raise SystemExit('HUMAN_GATE: approved_at must include timezone')
+          age=datetime.now(timezone.utc)-approved_at.astimezone(timezone.utc)
+          if age < timedelta(minutes=-5) or age > timedelta(hours=24):
+              raise SystemExit(f'HUMAN_GATE: approval is stale or future-dated; age={age}')
+          print(f'run_id={run_id}')
+          print('PASS: explicit approval bound to HM2 Build 22')
+          PY
+
+      - name: Download audited App Store screenshots
+        uses: actions/download-artifact@v5
+        with:
+          name: hm2-app-store-screens
+          path: /tmp/hm2-app-store-screens
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.command.outputs.run_id }}
+
+      - name: Validate exact screenshot set
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import struct
+          from pathlib import Path
+          root=Path('/tmp/hm2-app-store-screens')
+          expected=[root/'01-home.png',root/'02-premium.png']
+          pngs=sorted(root.glob('*.png'))
+          if pngs != expected:
+              raise SystemExit(f'Expected exact screenshot files {expected}; found {pngs}')
+          for p in expected:
+              raw=p.read_bytes()
+              if raw[:8] != b'\x89PNG\r\n\x1a\n':
+                  raise SystemExit(f'Not PNG: {p}')
+              size=struct.unpack('>II',raw[16:24])
+              if size != (1260,2736):
+                  raise SystemExit(f'Unexpected screenshot size {p.name}: {size}')
+              print(f'PASS {p.name}: {size[0]}x{size[1]} bytes={len(raw)}')
+          PY
+
+      - name: Re-assert exact Japan pricing and premium metadata
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/hm2_configure_standard_iap_prices.py
+          python scripts/hm2_configure_iap_metadata.py
+
+      - name: Submit Build 22 with monthly and lifetime products
+        id: submit
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          set -o pipefail
+          python scripts/app2_006_hm2_submit_review.py \
+            --screens /tmp/hm2-app-store-screens \
+            --output /tmp/app2-006-hm2-submit-result.json \
+            2>&1 | tee /tmp/app2-006-hm2-submit.log
+
+      - name: Persist submission evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p automation/asc-results
+          if [ -f /tmp/app2-006-hm2-submit-result.json ]; then
+            cp /tmp/app2-006-hm2-submit-result.json automation/asc-results/app2-006-hm2-submit-result.json
+          else
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          log=Path('/tmp/app2-006-hm2-submit.log').read_text(encoding='utf-8',errors='replace') if Path('/tmp/app2-006-hm2-submit.log').exists() else 'submission script did not run'
+          Path('automation/asc-results/app2-006-hm2-submit-result.json').write_text(json.dumps({'task_id':'APP2-006','submitted':False,'error':log[-4000:]},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/asc-results/app2-006-hm2-submit-result.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Persist APP2-006 App Review submission evidence"
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then break; fi
+              sleep $((attempt * 2))
+            done
+          fi
+
+      - name: Enforce successful submission
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/asc-results/app2-006-hm2-submit-result.json')
+          if not p.exists():
+              raise SystemExit('submission result missing')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          if not data.get('submitted'):
+              raise SystemExit('APP2-006 submission did not complete: '+str(data.get('error')))
+          state=str(data.get('review_submission_state'))
+          if state not in {'WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING'}:
+              raise SystemExit('Unexpected submission state: '+state)
+          print('PASS: APP2-006 submitted state='+state)
+          PY
