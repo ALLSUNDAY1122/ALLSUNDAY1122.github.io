@@ -22,6 +22,10 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
+      - name: Install ImageMagick required by audited asset preparation
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y imagemagick
       - name: Prepare exact HM2 web bundle
         env:
           BUILD_NUMBER: '22'
@@ -36,7 +40,7 @@ jobs:
           set -euo pipefail
           mkdir -p /tmp/hm2-app-store-screens
           python - <<'PY'
-          import contextlib, http.server, socketserver, threading, time
+          import http.server, socketserver, threading
           from pathlib import Path
           from PIL import Image, ImageStat
           from playwright.sync_api import sync_playwright
@@ -81,7 +85,6 @@ jobs:
               if im.size != (1260,2736):
                   raise SystemExit(f'Unexpected screenshot size {p.name}: {im.size}')
               stat=ImageStat.Stat(im)
-              # Blank/near-solid screenshots have negligible channel variance.
               if max(stat.var) < 100:
                   raise SystemExit(f'Screenshot appears blank/near-solid: {p.name}, variance={stat.var}')
               print(f'PASS {p.name}: size={im.size} variance={stat.var}')
