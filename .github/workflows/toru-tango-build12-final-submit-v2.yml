@@ -1,0 +1,240 @@
+name: Toru Tango Build12 Final Submit V2
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: toru-tango-build12-final-submit-v2
+  cancel-in-progress: false
+
+env:
+  APP_BUNDLE_ID: com.allsunday1122.torutango
+  EXPO_PUBLIC_SCREENSHOT_FIXTURES: '1'
+  CI: '1'
+
+jobs:
+  finalize:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Build12 Final Submit V2'
+    runs-on: macos-15
+    timeout-minutes: 55
+    steps:
+      - name: Report workflow start
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Build 12 final submission V2 started. run_id=${context.runId}`})
+
+      - name: Checkout main tooling
+        uses: actions/checkout@v4
+        with:
+          path: main-src
+
+      - name: Checkout exact Build 12 source
+        uses: actions/checkout@v4
+        with:
+          ref: release/toru-tango-build12-20260923
+          path: release-src
+
+      - name: Select newest installed Xcode
+        shell: bash
+        run: |
+          set -euo pipefail
+          latest=$(find /Applications -maxdepth 1 -type d -name 'Xcode*.app' -print | sort -V | tail -1)
+          test -n "$latest"
+          sudo xcode-select -s "$latest/Contents/Developer"
+          xcodebuild -version
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+          cache: npm
+          cache-dependency-path: release-src/toru-tango-mobile/package-lock.json
+
+      - name: Install dependencies
+        working-directory: release-src/toru-tango-mobile
+        run: npm ci
+
+      - name: Fix Metro JSON alias for screenshot-only simulator build
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('release-src/toru-tango-mobile')
+          hits=list(root.rglob('src/constants/appInfo.ts'))
+          if len(hits) != 1:
+              raise SystemExit(f'expected one appInfo.ts, found {len(hits)}: {hits}')
+          p=hits[0]
+          s=p.read_text(encoding='utf-8')
+          if '@/app.json' in s:
+              s=s.replace('@/app.json','../../app.json')
+              p.write_text(s,encoding='utf-8')
+          if '@/app.json' in p.read_text(encoding='utf-8'):
+              raise SystemExit('Metro JSON alias patch did not apply')
+          print(f'patched {p}')
+          PY
+
+      - name: Inject screenshot-only sample data
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('release-src/toru-tango-mobile/src/repositories/storage.ts')
+          text=p.read_text(encoding='utf-8')
+          marker="  return {\n    cards,\n    history,\n    decks: normalizeDecks([...storedDecks, ...decksFromCards]),\n    studyDays: normalizeStudyDays([...storedStudyDays, ...legacyStudyDays])\n  };"
+          if marker not in text:
+              raise SystemExit('storage fixture injection marker not found')
+          fixture="""  if (!cards.length && process.env.EXPO_PUBLIC_SCREENSHOT_FIXTURES === '1') {
+            const now = '2026-09-23T00:00:00.000Z';
+            const fixtureCards: Card[] = [
+              { id:'m1', question:'abandon', answer:'捨てる・断念する', deckName:'メイン', correct:5, wrong:1, lastStudiedAt:now, createdAt:now, updatedAt:now },
+              { id:'m2', question:'accurate', answer:'正確な', deckName:'メイン', correct:4, wrong:0, lastStudiedAt:now, createdAt:now, updatedAt:now },
+              { id:'k1', question:'いとをかし', answer:'とても趣がある', deckName:'古文', correct:3, wrong:1, lastStudiedAt:now, createdAt:now, updatedAt:now },
+              { id:'e1', question:'implement', answer:'実行する・実装する', deckName:'英語', correct:2, wrong:1, lastStudiedAt:now, createdAt:now, updatedAt:now },
+              { id:'h1', question:'大政奉還が行われた年は？', answer:'1867年', deckName:'世界史', correct:2, wrong:1, lastStudiedAt:now, createdAt:now, updatedAt:now },
+              { id:'g1', question:'日本で最も面積が大きい都道府県は？', answer:'北海道', deckName:'地理', correct:4, wrong:0, lastStudiedAt:now, createdAt:now, updatedAt:now }
+            ];
+            const fixtureHistory: StudyHistory[] = [
+              { id:'r1', cardId:'m1', answeredAt:now, dateKey:'2026-09-23', correct:true },
+              { id:'r2', cardId:'k1', answeredAt:now, dateKey:'2026-09-23', correct:false }
+            ];
+            return { cards: fixtureCards, history: fixtureHistory, decks: ['古文','メイン','英語','漢文','世界史','地理'], studyDays: ['2026-09-23'] };
+          }
+"""
+          p.write_text(text.replace(marker,fixture+marker),encoding='utf-8')
+          PY
+
+      - name: Validate source
+        working-directory: release-src/toru-tango-mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "buildNumber: '12'" app.config.ts
+          npm run typecheck
+          npm run lint
+
+      - name: Generate native iOS project
+        working-directory: release-src/toru-tango-mobile
+        run: npx expo prebuild --platform ios --clean
+
+      - name: Install CocoaPods
+        working-directory: release-src/toru-tango-mobile/ios
+        run: pod install
+
+      - name: Pick accepted large-iPhone simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          data=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          rows=[]
+          for runtime,items in data.get('devices',{}).items():
+              if 'iOS' in runtime:
+                  rows.extend([x for x in items if x.get('isAvailable') and str(x.get('name','')).startswith('iPhone')])
+          preferred=['iPhone 16 Pro Max','iPhone 16 Plus','iPhone 15 Pro Max','iPhone 15 Plus','iPhone 14 Pro Max']
+          hit=next((x for n in preferred for x in rows if x.get('name')==n),None)
+          if not hit: raise SystemExit('No accepted large-iPhone simulator available')
+          Path('/tmp/toru-shot-udid').write_text(hit['udid'])
+          Path('/tmp/toru-shot-device').write_text(hit['name'])
+          print(hit['name'],hit['udid'])
+          PY
+
+      - name: Build screenshot app with CocoaPods workspace
+        working-directory: release-src/toru-tango-mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace=$(find ios -maxdepth 1 -type d -name '*.xcworkspace' -print | head -1)
+          test -n "$workspace"
+          case "$workspace" in *.xcodeproj/project.xcworkspace) echo 'Refusing internal project workspace'; exit 1;; esac
+          scheme=$(xcodebuild -workspace "$workspace" -list -json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["workspace"]["schemes"][0])')
+          udid=$(cat /tmp/toru-shot-udid)
+          EXPO_PUBLIC_SCREENSHOT_FIXTURES=1 xcodebuild -workspace "$workspace" -scheme "$scheme" -configuration Release -destination "platform=iOS Simulator,id=$udid" -derivedDataPath /tmp/toru-derived CODE_SIGNING_ALLOWED=NO build
+          app=$(find /tmp/toru-derived/Build/Products -path '*Release-iphonesimulator/*.app' -print | head -1)
+          test -n "$app"
+          echo "$app" >/tmp/toru-app-path
+
+      - name: Capture four App Store screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          udid=$(cat /tmp/toru-shot-udid)
+          app=$(cat /tmp/toru-app-path)
+          mkdir -p /tmp/toru-final-screens
+          xcrun simctl boot "$udid" 2>/dev/null || true
+          xcrun simctl bootstatus "$udid" -b
+          xcrun simctl status_bar "$udid" override --time '9:41' --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
+          xcrun simctl install "$udid" "$app"
+          xcrun simctl launch --terminate-running-process "$udid" "$APP_BUNDLE_ID"
+          sleep 8
+          capture(){ out="/tmp/toru-final-screens/$1.png"; xcrun simctl io "$udid" screenshot "$out"; size=$(sips -g pixelWidth -g pixelHeight "$out" | awk '/pixelWidth/{w=$2}/pixelHeight/{h=$2}END{print w"x"h}'); echo "$1 $size"; case "$size" in 1260x2736|1290x2796|1320x2868|1284x2778|1242x2688) ;; *) echo "Unexpected screenshot size: $size"; exit 1;; esac; }
+          capture 01-folders
+          xcrun simctl openurl "$udid" 'torutango://create'; sleep 3; capture 02-create
+          xcrun simctl openurl "$udid" 'torutango://study'; sleep 3; capture 03-study
+          xcrun simctl openurl "$udid" 'torutango://records'; sleep 3; capture 04-records
+
+      - name: Submit existing Apple Build 12 for App Review
+        working-directory: main-src
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=scripts python3 - <<'PY'
+          import sys
+          import toru_tango_finalize_submission as submitter
+          submitter.BUILD='12'
+          sys.argv=['toru_tango_finalize_submission.py','--screens','/tmp/toru-final-screens','--output','/tmp/toru-build12-final-result.json']
+          submitter.main()
+          PY
+
+      - name: Verify final submission result
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('/tmp/toru-build12-final-result.json').read_text(encoding='utf-8'))
+          if r.get('submitted') is not True: raise SystemExit(f'not submitted: {r}')
+          if r.get('release_type') != 'MANUAL': raise SystemExit(f'not MANUAL: {r}')
+          if r.get('release_performed') is not False: raise SystemExit(f'unexpected release: {r}')
+          print(json.dumps(r,ensure_ascii=False))
+          PY
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-build12-final-v2-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/toru-final-screens
+            /tmp/toru-build12-final-result.json
+            /tmp/toru-shot-device
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('fs');
+            const lines=['撮る単語帳 Build 12 final App Review V2 result.'];
+            if(fs.existsSync('/tmp/toru-build12-final-result.json')){
+              const r=JSON.parse(fs.readFileSync('/tmp/toru-build12-final-result.json','utf8'));
+              for(const k of ['submitted','review_submission_state','build_id','build_processing_state','build_attached','complete_screenshot_count','screenshots_uploaded_new','release_type','release_performed','error']) if(r[k]!==undefined) lines.push(`${k}=${r[k]}`);
+            } else { lines.push('submitted=false'); lines.push('error=workflow_failed_before_final_submission_result'); }
+            lines.push(`job_status=${{ toJSON(job.status) }}`); lines.push(`run_id=${context.runId}`);
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:lines.join('\n')});
