@@ -1,0 +1,94 @@
+name: HM2 App Store Screens Browser
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/hm2-app-store-screens-trigger.txt
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hm2-app-store-screens-browser
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Prepare exact HM2 web bundle
+        env:
+          BUILD_NUMBER: '22'
+        run: bash ios/health-manager-2/prepare-web-assets.sh
+      - name: Install Chromium capture tool
+        run: |
+          python -m pip install --disable-pip-version-check playwright pillow
+          python -m playwright install --with-deps chromium
+      - name: Capture rendered home and premium screens
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/hm2-app-store-screens
+          python - <<'PY'
+          import contextlib, http.server, socketserver, threading, time
+          from pathlib import Path
+          from PIL import Image, ImageStat
+          from playwright.sync_api import sync_playwright
+
+          root=Path('ios/health-manager-2/Resources').resolve()
+          class Quiet(http.server.SimpleHTTPRequestHandler):
+              def log_message(self,*args): pass
+          handler=lambda *a,**kw: Quiet(*a,directory=str(root),**kw)
+          server=socketserver.TCPServer(('127.0.0.1',0),handler)
+          port=server.server_address[1]
+          thread=threading.Thread(target=server.serve_forever,daemon=True); thread.start()
+          out=Path('/tmp/hm2-app-store-screens')
+          try:
+              with sync_playwright() as p:
+                  browser=p.chromium.launch()
+                  ctx=browser.new_context(viewport={'width':420,'height':912},device_scale_factor=3,locale='ja-JP')
+                  page=ctx.new_page()
+                  page.add_init_script("window.webkit={messageHandlers:{storekit:{postMessage:function(){}}}};")
+                  page.goto(f'http://127.0.0.1:{port}/index.html',wait_until='load')
+                  page.wait_for_function("typeof home==='function' && typeof showPaywall==='function'")
+                  page.evaluate("""() => {
+                    window.SM2_STORE={isPremium:false,entitlementSource:'none',monthlyPrice:'¥200/月',lifetimePrice:'¥800',monthlyAvailable:true,lifetimeAvailable:true,message:''};
+                    home();
+                  }""")
+                  page.get_by_text('今日のスプリント').wait_for(state='visible')
+                  page.get_by_text('全300問を解放').wait_for(state='visible')
+                  page.wait_for_timeout(600)
+                  page.screenshot(path=str(out/'01-home.png'))
+                  page.evaluate("showPaywall('home')")
+                  page.get_by_text('月額プラン').wait_for(state='visible')
+                  page.get_by_text('買い切り').wait_for(state='visible')
+                  page.get_by_text('¥200/月').wait_for(state='visible')
+                  page.get_by_text('¥800').wait_for(state='visible')
+                  page.wait_for_timeout(300)
+                  page.screenshot(path=str(out/'02-premium.png'))
+                  browser.close()
+          finally:
+              server.shutdown(); server.server_close()
+
+          for p in (out/'01-home.png',out/'02-premium.png'):
+              im=Image.open(p).convert('RGB')
+              if im.size != (1260,2736):
+                  raise SystemExit(f'Unexpected screenshot size {p.name}: {im.size}')
+              stat=ImageStat.Stat(im)
+              # Blank/near-solid screenshots have negligible channel variance.
+              if max(stat.var) < 100:
+                  raise SystemExit(f'Screenshot appears blank/near-solid: {p.name}, variance={stat.var}')
+              print(f'PASS {p.name}: size={im.size} variance={stat.var}')
+          PY
+      - uses: actions/upload-artifact@v6
+        with:
+          name: hm2-app-store-screens
+          path: /tmp/hm2-app-store-screens
+          if-no-files-found: error
+          retention-days: 7
