@@ -1,4 +1,4 @@
-name: TAKU CALC Upload App Store Screenshot
+name: TAKU CALC Upload App Store Screenshots
 
 on:
   issues:
@@ -43,32 +43,41 @@ jobs:
           PY
           URL=$(python3 -c "import json;print(json.load(open('/tmp/request.json'))['artifact_url'])")
           curl --fail --location --retry 2 "$URL" -o /tmp/taku-screenshot-artifact.zip
+          rm -rf /tmp/taku-shot
           mkdir -p /tmp/taku-shot
           unzip -q /tmp/taku-screenshot-artifact.zip -d /tmp/taku-shot
-          IMAGE=$(find /tmp/taku-shot -type f -iname '*.png' | head -n1)
-          test -n "$IMAGE"
-          cp "$IMAGE" /tmp/taku-appstore-home.png
+          mapfile -t IMAGES < <(find /tmp/taku-shot -type f -iname '*.png' | sort)
+          test "${#IMAGES[@]}" -eq 3
+          printf '%s\n' "${IMAGES[@]}" > /tmp/taku-image-list.txt
           python3 - <<'PY'
           import struct
           from pathlib import Path
-          p=Path('/tmp/taku-appstore-home.png')
-          raw=p.read_bytes()
-          if len(raw) < 50000 or raw[:8] != b'\x89PNG\r\n\x1a\n':
-              raise SystemExit('Invalid or unexpectedly small PNG')
-          w,h=struct.unpack('>II', raw[16:24])
-          print(f'PNG dimensions: {w}x{h}, bytes={len(raw)}')
-          if h <= w:
-              raise SystemExit('Expected portrait App Store screenshot')
+          images=[Path(x) for x in Path('/tmp/taku-image-list.txt').read_text().splitlines()]
+          if len(images) != 3:
+              raise SystemExit(f'Expected 3 PNGs, got {len(images)}')
+          for p in images:
+              raw=p.read_bytes()
+              if len(raw) < 40000 or raw[:8] != b'\x89PNG\r\n\x1a\n':
+                  raise SystemExit(f'Invalid or unexpectedly small PNG: {p}')
+              w,h=struct.unpack('>II', raw[16:24])
+              print(f'{p.name}: {w}x{h}, bytes={len(raw)}')
+              if (w,h) != (1179,2556):
+                  raise SystemExit(f'Unexpected App Store screenshot dimensions for {p.name}: {w}x{h}')
           PY
 
-      - name: Upload to App Store Connect
+      - name: Upload all screenshots to App Store Connect
         shell: bash
         run: |
           set -euo pipefail
           test -n "${ASC_ISSUER_ID:-}"
           test -n "${ASC_KEY_ID:-}"
           test -n "${ASC_PRIVATE_KEY:-}"
-          python3 scripts/app2_011_upload_screenshot.py --image /tmp/taku-appstore-home.png --output /tmp/taku-screenshot-upload-result.json
+          mapfile -t IMAGES < /tmp/taku-image-list.txt
+          python3 scripts/app2_011_upload_screenshot.py \
+            --image "${IMAGES[0]}" \
+            --image "${IMAGES[1]}" \
+            --image "${IMAGES[2]}" \
+            --output /tmp/taku-screenshot-upload-result.json
 
       - name: Upload proof
         if: always()
@@ -88,7 +97,7 @@ jobs:
             let extra = '';
             try {
               const d = JSON.parse(fs.readFileSync('/tmp/taku-screenshot-upload-result.json', 'utf8'));
-              extra = `; screenshot_id=${d.screenshot_id}; state=${d.state}; uploaded_new=${d.uploaded_new}`;
+              extra = `; complete_count=${d.complete_count}; display_type=${d.display_type}`;
             } catch (_) {}
             await github.rest.issues.createComment({
               owner: context.repo.owner,
