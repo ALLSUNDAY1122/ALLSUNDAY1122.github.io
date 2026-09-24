@@ -1,0 +1,60 @@
+name: APP2-011 TAKU Prepare Submission
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  prepare:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      github.event.issue.title == '[APP2-011] prepare TAKU submission prerequisites'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+      TAKU_PREP_OUTPUT: /tmp/app2-011-prepare-submission-result.json
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Prepare App Store submission prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${ASC_ISSUER_ID:-}"
+          test -n "${ASC_KEY_ID:-}"
+          test -n "${ASC_PRIVATE_KEY:-}"
+          python3 scripts/app2_011_prepare_submission.py
+
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app2-011-prepare-submission-${{ github.run_id }}
+          path: /tmp/app2-011-prepare-submission-result.json
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            let extra = '';
+            try {
+              const d = JSON.parse(fs.readFileSync('/tmp/app2-011-prepare-submission-result.json', 'utf8'));
+              extra = `; success=${d.success}; actions=${JSON.stringify(d.actions || [])}; copyright=${d.copyright || ''}; content_rights=${d.content_rights || ''}; pricing=${JSON.stringify(d.pricing || {})}`;
+            } catch (_) {}
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `APP2-011 TAKU submission prerequisites status=${{ job.status }}; run_id=${context.runId}${extra}`
+            });
