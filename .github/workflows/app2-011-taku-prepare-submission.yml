@@ -30,7 +30,7 @@ jobs:
           test -n "${ASC_ISSUER_ID:-}"
           test -n "${ASC_KEY_ID:-}"
           test -n "${ASC_PRIVATE_KEY:-}"
-          python3 scripts/app2_011_prepare_submission_v2.py
+          python3 scripts/app2_011_prepare_submission_v3.py
 
       - name: Upload sanitized result
         if: always()
