@@ -61,8 +61,8 @@ jobs:
                   raise SystemExit(f'Invalid or unexpectedly small PNG: {p}')
               w,h=struct.unpack('>II', raw[16:24])
               print(f'{p.name}: {w}x{h}, bytes={len(raw)}')
-              if (w,h) != (1179,2556):
-                  raise SystemExit(f'Unexpected App Store screenshot dimensions for {p.name}: {w}x{h}')
+              if (w,h) != (1242,2688):
+                  raise SystemExit(f'Unexpected APP_IPHONE_65 dimensions for {p.name}: {w}x{h}')
           PY
 
       - name: Upload all screenshots to App Store Connect
