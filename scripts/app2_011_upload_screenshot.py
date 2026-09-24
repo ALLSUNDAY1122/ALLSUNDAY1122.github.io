@@ -17,8 +17,9 @@ APP_ID = "6794350490"
 BUNDLE_ID = "com.koheimorita.takucalc"
 VERSION_ID = "65ef287d-3ea2-42d6-a0df-32ff6d62c08c"
 LOCALIZATION_ID = "c28c2619-d76f-4efd-b0d7-225f2a7e2069"
-# 1179x2556 screenshots (iPhone 14/15 class) map to APP_IPHONE_61 in ASC API.
-DISPLAY_TYPE = "APP_IPHONE_61"
+# App Review requires either APP_IPHONE_67 or APP_IPHONE_65 for this app.
+# These uploads are 1242x2688 and target the iPhone 6.5-inch set.
+DISPLAY_TYPE = "APP_IPHONE_65"
 
 
 def one_data(response: object, label: str) -> dict:
