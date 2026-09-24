@@ -1,0 +1,148 @@
+{
+  "request_id": "hm2-fix-pricing-safearea-inspect-20260924-2047",
+  "ok": true,
+  "action": "inspect_build",
+  "workflow_id": null,
+  "branch": null,
+  "resolved_app_id": null,
+  "application_candidates": [
+    {
+      "id": "6a769d81a1add9d06020b524",
+      "name": "ALLSUNDAY1122.github.io",
+      "repositoryUrl": null
+    }
+  ],
+  "note": "Exact read-only build-list match. Apple-side availability still requires fresh ASC/TestFlight readback.",
+  "build_id": "6ab337d10928d669d4758c5f",
+  "status": null,
+  "app_id": "6a769d81a1add9d06020b524",
+  "error": null,
+  "build_details": null,
+  "actions": {
+    "data": [
+      {
+        "id": "6ab337d20114289af2d83817",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-23T02:22:19.361000Z",
+        "finished_at": "2026-09-23T02:22:45.296000Z"
+      },
+      {
+        "id": "6ab337d20114289af2d83818",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-23T02:22:45.296000Z",
+        "finished_at": "2026-09-23T02:22:53.544000Z"
+      },
+      {
+        "id": "6ab337d20114289af2d83816",
+        "name": "Set up code signing identities",
+        "type": "setup_code_signing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-23T02:22:53.544000Z",
+        "finished_at": "2026-09-23T02:22:56.138000Z"
+      },
+      {
+        "id": "6ab337d20114289af2d83819",
+        "name": "Audit learning content before macOS build",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR\"\nnode \"$CM_BUILD_DIR/ios/health-manager-2/export-audit-data.cjs\"\npython3 \"$CM_BUILD_DIR/automation/learning-sprint-question-pipeline/validate_questions.py\" \\\n  \"$CM_BUILD_DIR/ios/health-manager-2/learning-sprint-audit.json\"\nbash -n \"$CM_BUILD_DIR/ios/health-manager-2/prepare-web-assets.sh\"\npython3 - <<'PY'\nimport plistlib\nwith open('ios/health-manager-2/HealthManager2/PrivacyInfo.xcprivacy','rb') as f:\n    data=plistlib.load(f)\nassert data.get('NSPrivacyTracking') is False\nassert data.get('NSPrivacyCollectedDataTypes') == []\nprint('PASS: Privacy Manifest parses and matches no-data-collection implementation.')\nPY",
+        "status": "success",
+        "started_at": "2026-09-23T02:22:56.138000Z",
+        "finished_at": "2026-09-23T02:22:58.404000Z"
+      },
+      {
+        "id": "6ab337d20114289af2d8381a",
+        "name": "Install project tools",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nHOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick",
+        "status": "success",
+        "started_at": "2026-09-23T02:22:58.404000Z",
+        "finished_at": "2026-09-23T02:23:09.884000Z"
+      },
+      {
+        "id": "6ab337d20114289af2d8381b",
+        "name": "Prepare bundled web assets",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nbash \"$CM_BUILD_DIR/ios/health-manager-2/prepare-web-assets.sh\"",
+        "status": "success",
+        "started_at": "2026-09-23T02:23:09.884000Z",
+        "finished_at": "2026-09-23T02:23:12.215000Z"
+      },
+      {
+        "id": "6ab337d20114289af2d8381c",
+        "name": "Generate Xcode project",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/ios/health-manager-2\"\nxcodegen generate\nPLIST=\"$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Info.plist\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleIconName AppIcon\" \"$PLIST\" 2>/dev/null || /usr/libexec/PlistBuddy -c \"Add :CFBundleIconName string AppIcon\" \"$PLIST\"\n/usr/libexec/PlistBuddy -c \"Delete :CFBundleIconFiles\" \"$PLIST\" 2>/dev/null || true\n/usr/libexec/PlistBuddy -c \"Add :CFBundleIconFiles array\" \"$PLIST\"\n/usr/libexec/PlistBuddy -c \"Add :CFBundleIconFiles:0 string AppIcon-120.png\" \"$PLIST\"\n/usr/libexec/PlistBuddy -c \"Add :CFBundleIconFiles:1 string AppIcon-152\" \"$PLIST\"\n/usr/libexec/PlistBuddy -c \"Add :CFBundleIconFiles:2 string AppIcon-167\" \"$PLIST\"\n/usr/libexec/PlistBuddy -c \"Add :CFBundleIconFiles:3 string AppIcon-180\" \"$PLIST\"",
+        "status": "success",
+        "started_at": "2026-09-23T02:23:12.215000Z",
+        "finished_at": "2026-09-23T02:23:12.662000Z"
+      },
+      {
+        "id": "6ab337d20114289af2d8381d",
+        "name": "Verify bundled release inputs",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\ntest -f \"$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/index.html\"\ntest -f \"$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/audit-fixes.js\"\ntest -f \"$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/question-order-v1.js\"\ntest -f \"$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/PrivacyInfo.xcprivacy\"\ntest -f \"$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Assets.xcassets/AppIcon.appiconset/AppIcon.png\"\n/usr/libexec/PlistBuddy -c \"Print :CFBundleIconName\" \"$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Info.plist\"\ntest -f \"$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/AppIcon-120.png\"\ntest -f \"$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/AppIcon-152.png\"",
+        "status": "success",
+        "started_at": "2026-09-23T02:23:12.662000Z",
+        "finished_at": "2026-09-23T02:23:13.109000Z"
+      },
+      {
+        "id": "6ab337d20114289af2d8381e",
+        "name": "Apply App Store signing profiles",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/ios/health-manager-2\"\nxcode-project use-profiles\nPLIST=\"$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Info.plist\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleIconName AppIcon\" \"$PLIST\" 2>/dev/null || /usr/libexec/PlistBuddy -c \"Add :CFBundleIconName string AppIcon\" \"$PLIST\"\n/usr/libexec/PlistBuddy -c \"Delete :CFBundleIconFiles\" \"$PLIST\" 2>/dev/null || true\n/usr/libexec/PlistBuddy -c \"Add :CFBundleIconFiles array\" \"$PLIST\"\n/usr/libexec/PlistBuddy -c \"Add :CFBundleIconFiles:0 string AppIcon-120\" \"$PLIST\"",
+        "status": "success",
+        "started_at": "2026-09-23T02:23:13.109000Z",
+        "finished_at": "2026-09-23T02:23:14.525000Z"
+      },
+      {
+        "id": "6ab337d20114289af2d8381f",
+        "name": "Build signed IPA",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
+        "status": "success",
+        "started_at": "2026-09-23T02:23:14.525000Z",
+        "finished_at": "2026-09-23T02:23:56.801000Z"
+      },
+      {
+        "id": "6ab337d20114289af2d83820",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-23T02:23:56.801000Z",
+        "finished_at": "2026-09-23T02:25:20.332000Z"
+      },
+      {
+        "id": "6ab337d20114289af2d83821",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-23T02:25:20.332000Z",
+        "finished_at": "2026-09-23T02:25:23.950000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
