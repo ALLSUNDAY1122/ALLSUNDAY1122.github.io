@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 jobs:
@@ -16,6 +16,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -25,6 +27,34 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: python scripts/hm2_configure_iap_metadata.py
+      - name: Persist sanitized ASC read-back
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f hm2-iap-metadata-result.json ]; then
+            echo 'No result file produced; see workflow log.'
+            exit 0
+          fi
+          mkdir -p automation/asc-results
+          cp hm2-iap-metadata-result.json automation/asc-results/hm2-iap-metadata-result.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/asc-results/hm2-iap-metadata-result.json
+          if git diff --cached --quiet; then
+            echo 'ASC read-back unchanged.'
+            exit 0
+          fi
+          git commit -m 'chore(hm2): persist IAP metadata read-back'
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          echo 'Failed to persist HM2 IAP metadata read-back after retries.' >&2
+          exit 1
       - name: Upload sanitized result
         if: always()
         uses: actions/upload-artifact@v4
