@@ -1,0 +1,39 @@
+name: App Release Registry Audit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'automation/app-release-registry.json'
+      - 'scripts/app_release_registry_audit.py'
+      - 'scripts/app_factory_release_readback.py'
+      - '.github/workflows/app-release-registry-audit.yml'
+  pull_request:
+    paths:
+      - 'automation/app-release-registry.json'
+      - 'scripts/app_release_registry_audit.py'
+      - 'scripts/app_factory_release_readback.py'
+      - '.github/workflows/app-release-registry-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Audit canonical release registry
+        run: python3 scripts/app_release_registry_audit.py
+      - name: Upload audit evidence
+        if: always() && hashFiles('automation/app-release-registry-audit.json') != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: app-release-registry-audit
+          path: automation/app-release-registry-audit.json
+          if-no-files-found: error
+          retention-days: 7
