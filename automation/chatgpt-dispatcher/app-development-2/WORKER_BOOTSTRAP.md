@@ -1,4 +1,4 @@
-# アプリ開発②｜13セッション再開 Worker契約 v0.2
+# アプリ開発②｜13セッション再開 Worker契約 v0.3
 
 対象は ChatGPTプロジェクト **「アプリ開発②」** 内で再開する13個のアプリ専用セッション。
 
@@ -7,7 +7,9 @@
 - 各アプリのNotion正本ページ
 - Notion「🚀 【標準手順】AIアプリ開発・公開フロー v2.8」
 - Notion「申請手順」（2026-09-25 One-Pass Release + Verified Read-back改訂）
+- Notion「【正本】対象アプリ識別情報｜App Store Connect / Codemagic」
 - GitHub `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
+- GitHub `automation/app-release-registry.json`（公開工程で使うApp ID / Bundle ID / APP2 Task対応の機械正本）
 - App Store Connect / Codemagic の現在実状態
 - Dispatcher control branch `automation/app-development-2-session-dispatcher`
 - Queue `automation/chatgpt-dispatcher/app-development-2/queue.json`
@@ -30,11 +32,13 @@
 15. GitHub Actions Artifact等の期限付き一時成果物を、申請に必要なスクリーンショット・metadataの唯一の正本にしない。恒久正本または決定論的再生成経路を使う。
 16. ユーザーが対象アプリについて「本申請して」「本審査に進んで」「申請して」と明示した場合、直前にread-backした同一App ID・Version・BuildへのFINAL-APPROVALとして扱う。Version/Build/価格/重要metadataが変わった場合のみ再承認する。
 17. metadata・IAP・TestFlight割当・Version紐付け・Apple processing等、binary変更を必要としない原因では再Buildしない。
+18. 公開工程を開始する前に `automation/app-release-registry.json` で自分の `app2_task` を引き、App ID / Bundle IDをNotion識別正本と照合する。不一致ならwrite/build/submitを止めて正本を修復する。Apple App IDがnullの場合は推測せず `UNKNOWN/APPLE_ID_PENDING` とする。
 
 ## 起動時に必ず行うこと
 - Notion台帳の状態・次の作業を取得
 - 各アプリ正本を取得
 - GitHubの対象branch / recent PR / CI / mainとの差分を確認
+- 公開工程対象なら `automation/app-release-registry.json` から自分のAPP2 Taskを解決し、Notion識別正本と一致確認
 - Apple到達済みアプリはASCのBuild/TestFlight/App version状態を確認
 - 直近ユーザー実機報告を「未解決の可能性がある観測」として扱い、コード・Build・実機証拠で解消済みか判定
 - その結果に基づき、今回のセッションで進める最大未完了差分を決定する
