@@ -1,0 +1,228 @@
+import AVFoundation
+import Metal
+import SplatIO
+import simd
+import XCTest
+
+final class SplatVideoExporterTests: XCTestCase {
+    func testRealSplatRendersToReadableMP4() async throws {
+        guard MTLCreateSystemDefaultDevice() != nil else {
+            throw XCTSkip("Metal device is unavailable on this simulator runner")
+        }
+
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("s6-video-export-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        let writer = try DotSplatSceneWriter(toFileAtPath: source.path)
+        try await writer.write(makePoints())
+        try await writer.close()
+
+        var configuration = SplatVideoConfiguration()
+        configuration.aspectRatio = .square1x1
+        configuration.cameraMotion = .fixed
+        configuration.speed = .fast
+        // Keep the regression fast while still exercising multiple encoded frames.
+        configuration.framesPerSecond = 1
+
+        let output = try await SplatVideoExporter.export(
+            sourceURL: source,
+            configuration: configuration,
+            destinationDirectory: root
+        )
+
+        XCTAssertEqual(output.pathExtension.lowercased(), "mp4")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: output.path))
+        XCTAssertGreaterThan(try byteCount(output), 1_000)
+
+        let asset = AVURLAsset(url: output)
+        let duration = try await asset.load(.duration)
+        XCTAssertGreaterThan(CMTimeGetSeconds(duration), 2.5)
+
+        let videoTracks = try await asset.loadTracks(withMediaType: .video)
+        let track = try XCTUnwrap(videoTracks.first)
+        let naturalSize = try await track.load(.naturalSize)
+        XCTAssertEqual(Int(abs(naturalSize.width)), configuration.dimensions.width)
+        XCTAssertEqual(Int(abs(naturalSize.height)), configuration.dimensions.height)
+
+        // Reuse the already-encoded positive fixture to prove the validator fails closed when
+        // the file is real and playable but does not match the quality/aspect requested by UI.
+        let mismatchedDimensions = (
+            width: max(1, configuration.dimensions.width / 2),
+            height: max(1, configuration.dimensions.height / 2)
+        )
+        do {
+            try await SplatVideoOutputValidator.validate(
+                output,
+                expectedDimensions: mismatchedDimensions
+            )
+            XCTFail("Expected a playable MP4 with the wrong dimensions to be rejected")
+        } catch let error as SplatVideoOutputValidator.ValidationError {
+            XCTAssertEqual(error, .unexpectedVideoDimensions)
+        }
+
+        // A truncated writer can leave a perfectly parsable MP4 with the correct dimensions.
+        // Duration therefore has to be part of the shareability contract as well. Use the same
+        // real encoded fixture and demand a timeline longer than it contains to exercise that gate
+        // without relying on malformed container bytes.
+        do {
+            try await SplatVideoOutputValidator.validate(
+                output,
+                expectedDimensions: configuration.dimensions,
+                minimumDuration: configuration.duration + 1
+            )
+            XCTFail("Expected a playable but too-short MP4 to be rejected")
+        } catch let error as SplatVideoOutputValidator.ValidationError {
+            XCTAssertEqual(error, .unexpectedlyShortDuration)
+        }
+    }
+
+    func testMemoryPreflightProducesBoundedEstimateForNormalScene() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("s6-video-memory-normal-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        try makeSparseDotSplat(source, pointCount: 500_000)
+
+        var configuration = SplatVideoConfiguration()
+        configuration.aspectRatio = .landscape16x9
+
+        let estimate = try SplatVideoMemoryPolicy.preflight(
+            sourceURL: source,
+            configuration: configuration,
+            physicalMemoryBytes: 4 * 1024 * 1024 * 1024
+        )
+
+        XCTAssertEqual(estimate.pointCount, 500_000)
+        XCTAssertLessThan(estimate.estimatedPeakBytes, estimate.budgetBytes)
+        print(
+            "S6_MEMORY_PREFLIGHT normal pointCount=\(estimate.pointCount) "
+            + "estimatedPeakMB=\(estimate.estimatedPeakMegabytes) budgetMB=\(estimate.budgetMegabytes)"
+        )
+    }
+
+    func testVideoPreflightAcceptsStrictCanonicalWhenCommentContainsEndHeaderToken() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("s6-video-strict-header-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        let pointCount = 10
+        try Data(repeating: 0x44, count: pointCount * 32).write(to: source, options: .atomic)
+        let digest = try SplatExportService.sha256Hex(fileURL: source)
+        let canonicalURL = try SplatCanonicalSHAsset.canonicalURL(
+            forLegacySplat: source,
+            verifiedDigest: digest
+        )
+
+        var completePLY = Data(canonicalSH3Header(
+            pointCount: pointCount,
+            comment: "comment provenance end_header marker"
+        ).utf8)
+        completePLY.append(Data(repeating: 0, count: pointCount * 48 * MemoryLayout<Float>.size))
+        try completePLY.write(to: canonicalURL, options: .atomic)
+
+        let admission = try SplatVideoMemoryPolicy.preflightAdmission(
+            sourceURL: source,
+            verifiedDigest: digest,
+            configuration: SplatVideoConfiguration(),
+            physicalMemoryBytes: 8 * 1_024 * 1_024 * 1_024,
+            thermalState: .nominal,
+            isLowPowerModeEnabled: false
+        )
+
+        XCTAssertEqual(admission.estimate.pointCount, pointCount)
+        XCTAssertEqual(admission.renderAssetURL.standardizedFileURL, canonicalURL.standardizedFileURL)
+    }
+
+    func testExporterRejectsOversizedSceneBeforeDecode() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("s6-video-memory-large-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        // 3,000,000 * 32 bytes is a valid fixed-width .splat length but exceeds the
+        // exporter's capped working-set budget. A sparse file keeps this regression cheap.
+        try makeSparseDotSplat(source, pointCount: 3_000_000)
+
+        var configuration = SplatVideoConfiguration()
+        configuration.aspectRatio = .square1x1
+        configuration.cameraMotion = .fixed
+        configuration.speed = .fast
+        configuration.framesPerSecond = 1
+
+        do {
+            _ = try await SplatVideoExporter.export(
+                sourceURL: source,
+                configuration: configuration,
+                destinationDirectory: root
+            )
+            XCTFail("Expected memory preflight to reject the oversized scene")
+        } catch let error as SplatVideoMemoryPolicy.PolicyError {
+            guard case let .sceneTooLarge(pointCount, estimatedPeakMegabytes, budgetMegabytes) = error else {
+                return XCTFail("Unexpected policy error: \(error)")
+            }
+            XCTAssertEqual(pointCount, 3_000_000)
+            XCTAssertGreaterThan(estimatedPeakMegabytes, budgetMegabytes)
+            XCTAssertTrue(error.localizedDescription.contains("安全に動画化できません"))
+            print(
+                "S6_MEMORY_PREFLIGHT rejected pointCount=\(pointCount) "
+                + "estimatedPeakMB=\(estimatedPeakMegabytes) budgetMB=\(budgetMegabytes)"
+            )
+        } catch {
+            XCTFail("Oversized source reached a later decode/render failure instead of preflight: \(error)")
+        }
+    }
+
+    private func makePoints() -> [SplatPoint] {
+        [
+            SplatPoint(
+                position: SIMD3<Float>(-0.18, -0.10, 0.0),
+                color: .sRGBUInt8(SIMD3<UInt8>(235, 60, 50)),
+                opacity: .linearFloat(0.95),
+                scale: .linearFloat(SIMD3<Float>(0.10, 0.10, 0.10)),
+                rotation: simd_quatf(angle: 0, axis: SIMD3<Float>(0, 1, 0))
+            ),
+            SplatPoint(
+                position: SIMD3<Float>(0.18, -0.10, 0.0),
+                color: .sRGBUInt8(SIMD3<UInt8>(55, 220, 95)),
+                opacity: .linearFloat(0.95),
+                scale: .linearFloat(SIMD3<Float>(0.10, 0.10, 0.10)),
+                rotation: simd_quatf(angle: 0, axis: SIMD3<Float>(0, 1, 0))
+            ),
+            SplatPoint(
+                position: SIMD3<Float>(0.0, 0.20, 0.0),
+                color: .sRGBUInt8(SIMD3<UInt8>(55, 105, 240)),
+                opacity: .linearFloat(0.95),
+                scale: .linearFloat(SIMD3<Float>(0.10, 0.10, 0.10)),
+                rotation: simd_quatf(angle: 0, axis: SIMD3<Float>(0, 1, 0))
+            ),
+        ]
+    }
+
+    private func makeSparseDotSplat(_ url: URL, pointCount: Int) throws {
+        XCTAssertTrue(FileManager.default.createFile(atPath: url.path, contents: nil))
+        let handle = try FileHandle(forWritingTo: url)
+        try handle.truncate(atOffset: UInt64(pointCount * 32))
+        try handle.close()
+    }
+
+    private func canonicalSH3Header(pointCount: Int, comment: String) -> String {
+        var header = "ply\nformat binary_little_endian 1.0\n\(comment)\nelement vertex \(pointCount)\n"
+        header += "property float f_dc_0\nproperty float f_dc_1\nproperty float f_dc_2\n"
+        for index in 0..<45 { header += "property float f_rest_\(index)\n" }
+        header += "end_header\n"
+        return header
+    }
+
+    private func byteCount(_ url: URL) throws -> Int {
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        return try XCTUnwrap(attributes[.size] as? NSNumber).intValue
+    }
+}

@@ -1,0 +1,947 @@
+import Foundation
+
+enum ScanProjectStage: String, Codable, CaseIterable {
+    case capturing
+    case captured
+    case processing
+    case finished
+    case failed
+}
+
+enum ScanRepresentationKind: String, Codable, CaseIterable {
+    case splat
+    case mesh
+}
+
+private struct ScanSchemaVersionEnvelope: Decodable {
+    var schemaVersion: Int
+}
+
+struct ScanProjectManifest: Codable, Identifiable, Equatable {
+    static let currentSchemaVersion = 1
+
+    var schemaVersion: Int
+    var id: String
+    var title: String
+    var createdAt: Date
+    var updatedAt: Date
+    var stage: ScanProjectStage
+    var acceptedFrames: Int
+    var targetFrames: Int
+    var featurePointCount: Int
+    var coverageSectorCount: Int
+    var rawDataRetained: Bool
+    var outputs: [String: String]
+    var thumbnailFileName: String?
+    var lastError: String?
+    var recoveredAfterInterruption: Bool
+
+    init(
+        id: String,
+        title: String = "スキャン",
+        createdAt: Date = Date(),
+        updatedAt: Date = Date(),
+        stage: ScanProjectStage = .capturing,
+        acceptedFrames: Int = 0,
+        targetFrames: Int = 48,
+        featurePointCount: Int = 0,
+        coverageSectorCount: Int = 0,
+        rawDataRetained: Bool = true,
+        outputs: [String: String] = [:],
+        thumbnailFileName: String? = nil,
+        lastError: String? = nil,
+        recoveredAfterInterruption: Bool = false
+    ) {
+        self.schemaVersion = Self.currentSchemaVersion
+        self.id = id
+        self.title = title
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.stage = stage
+        self.acceptedFrames = acceptedFrames
+        self.targetFrames = targetFrames
+        self.featurePointCount = featurePointCount
+        self.coverageSectorCount = coverageSectorCount
+        self.rawDataRetained = rawDataRetained
+        self.outputs = outputs
+        self.thumbnailFileName = thumbnailFileName
+        self.lastError = lastError
+        self.recoveredAfterInterruption = recoveredAfterInterruption
+    }
+
+    var splatFileName: String? { outputs[ScanRepresentationKind.splat.rawValue] }
+    var meshFileName: String? { outputs[ScanRepresentationKind.mesh.rawValue] }
+}
+
+struct StoredCapturedFrame: Codable, Equatable {
+    var id: Int
+    var filePath: String
+    var transformMatrix: [[Float]]
+    var flX: Float
+    var flY: Float
+    var cx: Float
+    var cy: Float
+    var w: Int
+    var h: Int
+    var depthFilePath: String? = nil
+    var depthWidth: Int? = nil
+    var depthHeight: Int? = nil
+    var depthBytesPerRow: Int? = nil
+}
+
+struct StoredFeaturePoint: Codable, Equatable {
+    var id: UInt64
+    var x: Float
+    var y: Float
+    var z: Float
+}
+
+struct StoredVector3: Codable, Equatable {
+    var x: Float
+    var y: Float
+    var z: Float
+}
+
+struct StoredGridCell: Codable, Equatable {
+    var x: Int
+    var z: Int
+}
+
+struct ScanCaptureCheckpoint: Codable, Equatable {
+    static let currentSchemaVersion = 2
+
+    var schemaVersion: Int
+    var savedAt: Date
+    var frames: [StoredCapturedFrame]
+    var featurePoints: [StoredFeaturePoint]
+    var coverageSectors: [Int]
+    var estimatedTargetCenter: StoredVector3?
+    var lastAcceptedTransform: [[Float]]?
+    var lastAcceptedTimestamp: TimeInterval
+    var elevationBands: [Int]? = nil
+    var viewDirectionSectors: [Int]? = nil
+    var spatialCells: [StoredGridCell]? = nil
+    var estimatedSubjectDistance: Float? = nil
+    var previousCoveragePosition: StoredVector3? = nil
+    var pathLengthMeters: Float? = nil
+    var accumulatedCaptureSeconds: Double? = nil
+    var ignoreLiDAR: Bool? = nil
+
+    init(
+        savedAt: Date = Date(),
+        frames: [StoredCapturedFrame],
+        featurePoints: [StoredFeaturePoint],
+        coverageSectors: [Int],
+        estimatedTargetCenter: StoredVector3?,
+        lastAcceptedTransform: [[Float]]?,
+        lastAcceptedTimestamp: TimeInterval,
+        elevationBands: [Int]? = nil,
+        viewDirectionSectors: [Int]? = nil,
+        spatialCells: [StoredGridCell]? = nil,
+        estimatedSubjectDistance: Float? = nil,
+        previousCoveragePosition: StoredVector3? = nil,
+        pathLengthMeters: Float? = nil,
+        accumulatedCaptureSeconds: Double? = nil,
+        ignoreLiDAR: Bool? = nil
+    ) {
+        self.schemaVersion = Self.currentSchemaVersion
+        self.savedAt = savedAt
+        self.frames = frames
+        self.featurePoints = featurePoints
+        self.coverageSectors = coverageSectors
+        self.estimatedTargetCenter = estimatedTargetCenter
+        self.lastAcceptedTransform = lastAcceptedTransform
+        self.lastAcceptedTimestamp = lastAcceptedTimestamp
+        self.elevationBands = elevationBands
+        self.viewDirectionSectors = viewDirectionSectors
+        self.spatialCells = spatialCells
+        self.estimatedSubjectDistance = estimatedSubjectDistance
+        self.previousCoveragePosition = previousCoveragePosition
+        self.pathLengthMeters = pathLengthMeters
+        self.accumulatedCaptureSeconds = accumulatedCaptureSeconds
+        self.ignoreLiDAR = ignoreLiDAR
+    }
+}
+
+struct SplatCommitEvidence: Codable, Equatable {
+    static let currentSchemaVersion = 1
+
+    var schemaVersion: Int
+    var fileName: String
+    var byteCount: Int64
+    var completedAt: Date
+
+    init(fileName: String, byteCount: Int64, completedAt: Date = Date()) {
+        self.schemaVersion = Self.currentSchemaVersion
+        self.fileName = fileName
+        self.byteCount = byteCount
+        self.completedAt = completedAt
+    }
+}
+
+struct ScanProjectSummary: Identifiable, Equatable {
+    var id: String { manifest.id }
+    var manifest: ScanProjectManifest
+    var projectURL: URL
+    var storageBytes: Int64
+
+    var thumbnailURL: URL? {
+        guard let name = manifest.thumbnailFileName else { return nil }
+        return containedRegularFileURL(named: name)
+    }
+
+    var resultURL: URL? {
+        guard let name = manifest.splatFileName else { return nil }
+        return containedRegularFileURL(named: name)
+    }
+
+    private func containedRegularFileURL(named name: String) -> URL? {
+        // Manifest filenames are durable metadata and may be stale/corrupt. Never let `../`, an
+        // absolute path, or an in-project symlink turn a library summary into an external file read.
+        guard !name.isEmpty,
+              !name.contains("/"),
+              !name.contains("\\"),
+              name != ".", name != ".." else { return nil }
+        let root = projectURL.standardizedFileURL
+        let candidate = root.appendingPathComponent(name).standardizedFileURL
+        guard candidate.deletingLastPathComponent() == root,
+              let values = try? candidate.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true else { return nil }
+        return candidate
+    }
+}
+
+struct ScanReprocessRequest: Equatable {
+    var projectID: String
+    var projectURL: URL
+    var representation: ScanRepresentationKind
+    var transformsURL: URL
+    var pointCloudURL: URL
+    var imagesURL: URL
+}
+
+enum ScanProjectStoreError: LocalizedError {
+    case projectNotFound
+    case rawDataUnavailable
+    case invalidManifest
+    case invalidPendingResult
+    case unsupportedManifestSchemaVersion(Int)
+    case unsupportedCheckpointSchemaVersion(Int)
+
+    var errorDescription: String? {
+        switch self {
+        case .projectNotFound: return "保存済みスキャンが見つかりません"
+        case .rawDataUnavailable: return "再処理に必要なrawデータがありません"
+        case .invalidManifest: return "スキャン情報を読み込めません"
+        case .invalidPendingResult: return "生成結果の安全な保存を完了できません"
+        case .unsupportedManifestSchemaVersion:
+            return "このスキャンは新しいバージョンで保存されています。アプリを更新して開いてください。"
+        case .unsupportedCheckpointSchemaVersion:
+            return "この撮影データは新しいバージョンで保存されています。アプリを更新して再開してください。"
+        }
+    }
+}
+
+final class ScanProjectStore {
+    static let projectExtension = "splatproject"
+    static let manifestFileName = "manifest.json"
+    static let manifestBackupFileName = "manifest.json.bak"
+    static let checkpointFileName = "capture-checkpoint.plist"
+    static let checkpointBackupFileName = "capture-checkpoint.plist.bak"
+    static let worldMapFileName = "worldmap.arexperience"
+    static let thumbnailFileName = "thumbnail.jpg"
+    static let splatResultFileName = "result.splat"
+    static let pendingSplatFileName = "result.pending.splat"
+    static let previousSplatFileName = "result.previous.splat"
+    static let splatCommitEvidenceFileName = "result.splat.complete.json"
+    static let trashDirectoryName = ".Trash"
+
+    let rootURL: URL
+    let trashURL: URL
+    private let fileManager: FileManager
+
+    init(rootURL: URL? = nil, fileManager: FileManager = .default) {
+        self.fileManager = fileManager
+        if let rootURL {
+            self.rootURL = rootURL
+        } else {
+            self.rootURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("SplatLab", isDirectory: true)
+        }
+        self.trashURL = self.rootURL.appendingPathComponent(Self.trashDirectoryName, isDirectory: true)
+        try? ensureDirectories()
+    }
+
+    @discardableResult
+    func createProject(title: String = "スキャン", targetFrames: Int = 48) throws -> (URL, ScanProjectManifest) {
+        try ensureDirectories()
+        let id = UUID().uuidString
+        let projectURL = rootURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+        try fileManager.createDirectory(
+            at: projectURL.appendingPathComponent("images", isDirectory: true),
+            withIntermediateDirectories: true
+        )
+        var manifest = ScanProjectManifest(id: id, title: title, targetFrames: targetFrames)
+        manifest.updatedAt = Date()
+        try writeManifest(manifest, to: projectURL)
+        return (projectURL, manifest)
+    }
+
+    func listProjects() -> [ScanProjectSummary] {
+        (try? summaries(in: rootURL, includeHidden: false)) ?? []
+    }
+
+    func listTrash() -> [ScanProjectSummary] {
+        (try? summaries(in: trashURL, includeHidden: true)) ?? []
+    }
+
+    func loadProject(id: String) throws -> ScanProjectSummary {
+        let url = try validatedProjectURL(id: id, in: rootURL)
+        guard fileManager.fileExists(atPath: url.path) else { throw ScanProjectStoreError.projectNotFound }
+        let manifest = try loadOrMigrateManifest(projectURL: url)
+        let repaired = try repairIfNeeded(manifest: manifest, projectURL: url)
+        return ScanProjectSummary(manifest: repaired, projectURL: url, storageBytes: directorySize(url))
+    }
+
+    func loadManifest(projectURL: URL) throws -> ScanProjectManifest {
+        try repairIfNeeded(manifest: loadOrMigrateManifest(projectURL: projectURL), projectURL: projectURL)
+    }
+
+    func updateManifest(projectURL: URL, _ mutate: (inout ScanProjectManifest) -> Void) throws -> ScanProjectManifest {
+        var manifest = try loadOrMigrateManifest(projectURL: projectURL)
+        let previousManifest = manifest
+        mutate(&manifest)
+        manifest.schemaVersion = ScanProjectManifest.currentSchemaVersion
+        manifest.updatedAt = Date()
+
+        if manifest.stage == .processing, previousManifest.stage != .processing {
+            try preparePriorSplatForProcessing(
+                projectURL: projectURL,
+                preserveCurrentResult: previousManifest.stage == .finished && previousManifest.splatFileName == Self.splatResultFileName
+            )
+        }
+
+        try writeManifest(manifest, to: projectURL)
+
+        if manifest.stage == .finished {
+            cleanupSplatSwapArtifacts(projectURL: projectURL)
+        }
+        return manifest
+    }
+
+    func writeManifest(_ manifest: ScanProjectManifest, to projectURL: URL) throws {
+        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }
+        guard manifest.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedManifestSchemaVersion(manifest.schemaVersion)
+        }
+        let primary = projectURL.appendingPathComponent(Self.manifestFileName)
+        let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
+        try rejectFutureManifestSchemaIfPresent(primary: primary, backup: backup)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(manifest)
+        try rotateManifestBackupIfPrimaryIsValid(primary: primary, backup: backup)
+        try data.write(to: primary, options: .atomic)
+    }
+
+    func saveCheckpoint(_ checkpoint: ScanCaptureCheckpoint, projectURL: URL) throws {
+        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }
+        guard checkpoint.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(checkpoint.schemaVersion)
+        }
+        let primary = projectURL.appendingPathComponent(Self.checkpointFileName)
+        let backup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
+        try rejectFutureCheckpointSchemaIfPresent(primary: primary, backup: backup)
+        let encoder = PropertyListEncoder()
+        encoder.outputFormat = .binary
+        let data = try encoder.encode(checkpoint)
+        try rotateCheckpointBackupIfPrimaryIsValid(primary: primary, backup: backup)
+        try data.write(to: primary, options: .atomic)
+    }
+
+    func loadCheckpoint(projectURL: URL) throws -> ScanCaptureCheckpoint {
+        let primary = projectURL.appendingPathComponent(Self.checkpointFileName)
+        let backup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
+        try rejectFutureCheckpointSchemaIfPresent(primary: primary, backup: backup)
+        let decoder = PropertyListDecoder()
+        if let data = try? BoundedFileReader.read(primary, maximumBytes: 64 * 1024 * 1024) {
+            do {
+                return try decodeSupportedCheckpoint(data, decoder: decoder)
+            } catch {
+            }
+        }
+        if let data = try? BoundedFileReader.read(backup, maximumBytes: 64 * 1024 * 1024) {
+            do {
+                let value = try decodeSupportedCheckpoint(data, decoder: decoder)
+                try? data.write(to: primary, options: .atomic)
+                return value
+            } catch {
+            }
+        }
+        throw ScanProjectStoreError.rawDataUnavailable
+    }
+
+    func setThumbnail(from sourceURL: URL, projectURL: URL) throws {
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
+        guard fileManager.fileExists(atPath: sourceURL.path) else { return }
+        let target = projectURL.appendingPathComponent(Self.thumbnailFileName)
+        if sourceURL.standardizedFileURL != target.standardizedFileURL {
+            try Data(contentsOf: sourceURL).write(to: target, options: .atomic)
+        }
+        _ = try updateManifest(projectURL: projectURL) { $0.thumbnailFileName = Self.thumbnailFileName }
+    }
+
+    func setThumbnail(data: Data, projectURL: URL) throws {
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
+        let target = projectURL.appendingPathComponent(Self.thumbnailFileName)
+        try data.write(to: target, options: .atomic)
+        _ = try updateManifest(projectURL: projectURL) { $0.thumbnailFileName = Self.thumbnailFileName }
+    }
+
+    func reprocessRequest(projectURL: URL, representation: ScanRepresentationKind) throws -> ScanReprocessRequest {
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
+        let images = projectURL.appendingPathComponent("images", isDirectory: true)
+        let transforms = projectURL.appendingPathComponent("transforms.json")
+        let points = projectURL.appendingPathComponent("points3D.ply")
+        guard isSafeDirectory(images),
+              isSafeRegularFile(transforms),
+              isSafeRegularFile(points) else {
+            throw ScanProjectStoreError.rawDataUnavailable
+        }
+        return ScanReprocessRequest(
+            projectID: projectURL.deletingPathExtension().lastPathComponent,
+            projectURL: projectURL,
+            representation: representation,
+            transformsURL: transforms,
+            pointCloudURL: points,
+            imagesURL: images
+        )
+    }
+
+    func commitPendingSplat(projectURL: URL) throws -> URL {
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
+        let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
+        let evidenceURL = projectURL.appendingPathComponent(Self.splatCommitEvidenceFileName)
+        guard let byteCount = validSplatByteCount(at: pending) else {
+            throw ScanProjectStoreError.invalidPendingResult
+        }
+
+        let evidence = SplatCommitEvidence(fileName: Self.splatResultFileName, byteCount: byteCount)
+        try writeCommitEvidence(evidence, projectURL: projectURL)
+
+        do {
+            if fileManager.fileExists(atPath: output.path) {
+                if fileManager.fileExists(atPath: previous.path) { try fileManager.removeItem(at: previous) }
+                try fileManager.moveItem(at: output, to: previous)
+            }
+            try fileManager.moveItem(at: pending, to: output)
+            guard try committedSplatURL(projectURL: projectURL) != nil else {
+                throw ScanProjectStoreError.invalidPendingResult
+            }
+            if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
+            return output
+        } catch {
+            try? fileManager.removeItem(at: evidenceURL)
+            if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
+            if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+            if fileManager.fileExists(atPath: previous.path) {
+                try? fileManager.moveItem(at: previous, to: output)
+            }
+            throw error
+        }
+    }
+
+    func trustedSplatURL(projectURL: URL) -> URL? {
+        guard let manifest = try? loadManifest(projectURL: projectURL),
+              manifest.stage == .finished,
+              manifest.splatFileName == Self.splatResultFileName else { return nil }
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        return validSplat(at: output) ? output : nil
+    }
+
+    func clearRawData(projectURL: URL) throws {
+        _ = try loadOrMigrateManifest(projectURL: projectURL)
+
+        let rawNames: Set<String> = [
+            "images",
+            "depth",
+            "transforms.json",
+            "points3D.ply",
+            "training.msplat-checkpoint",
+            Self.checkpointFileName,
+            Self.checkpointBackupFileName,
+            Self.worldMapFileName,
+            "s13-seed-recipe.json",
+            "s14-seed-recipe.json"
+        ]
+        for name in rawNames {
+            let url = projectURL.appendingPathComponent(name)
+            if fileManager.fileExists(atPath: url.path) {
+                try fileManager.removeItem(at: url)
+            }
+        }
+
+        _ = try updateManifest(projectURL: projectURL) { $0.rawDataRetained = false }
+    }
+
+    func moveToTrash(projectURL: URL) throws {
+        try ensureDirectories()
+        let normalizedProject = projectURL.standardizedFileURL
+        guard isSafeProjectDirectory(normalizedProject),
+              normalizedProject.deletingLastPathComponent() == rootURL.standardizedFileURL,
+              normalizedProject.pathExtension == Self.projectExtension else {
+            throw ScanProjectStoreError.invalidManifest
+        }
+        let destination = trashURL.appendingPathComponent(normalizedProject.lastPathComponent)
+        // A duplicate project ID in Trash is an integrity collision. Never destroy the existing
+        // recoverable copy implicitly; preserve both sides and let the caller surface the failure.
+        guard !fileManager.fileExists(atPath: destination.path) else {
+            throw ScanProjectStoreError.invalidManifest
+        }
+        try fileManager.moveItem(at: projectURL, to: destination)
+    }
+
+    func restoreFromTrash(id: String) throws {
+        try ensureDirectories()
+        let source = try validatedProjectURL(id: id, in: trashURL)
+        guard fileManager.fileExists(atPath: source.path) else { throw ScanProjectStoreError.projectNotFound }
+        guard isSafeProjectDirectory(source) else { throw ScanProjectStoreError.invalidManifest }
+        var restoredID = id
+        var destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
+        if fileManager.fileExists(atPath: destination.path) {
+            _ = try loadOrMigrateManifest(projectURL: source)
+            restoredID = UUID().uuidString
+            destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
+        }
+        try fileManager.moveItem(at: source, to: destination)
+        if restoredID != id {
+            do {
+                _ = try updateManifest(projectURL: destination) { $0.id = restoredID }
+            } catch {
+                // The move and manifest-ID rewrite form one logical restore transaction. If the
+                // atomic manifest write fails, put the project back in Trash instead of leaving a
+                // Library folder whose directory ID and manifest ID disagree. Never overwrite a
+                // newly appeared source path while rolling back.
+                if !fileManager.fileExists(atPath: source.path),
+                   fileManager.fileExists(atPath: destination.path) {
+                    try? fileManager.moveItem(at: destination, to: source)
+                }
+                throw error
+            }
+        }
+    }
+
+    func permanentlyDeleteFromTrash(id: String) throws {
+        let url = try validatedProjectURL(id: id, in: trashURL)
+        guard fileManager.fileExists(atPath: url.path) else { throw ScanProjectStoreError.projectNotFound }
+        guard isSafeProjectDirectory(url) else { throw ScanProjectStoreError.invalidManifest }
+        try fileManager.removeItem(at: url)
+    }
+
+    func storageBytes(includeTrash: Bool = true) -> Int64 {
+        var total = directorySize(rootURL)
+        if !includeTrash { total -= directorySize(trashURL) }
+        return max(0, total)
+    }
+
+    func projectURL(for id: String) -> URL {
+        rootURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+    }
+
+    private func validatedProjectURL(id: String, in directory: URL) throws -> URL {
+        guard !id.isEmpty, id != ".", id != "..",
+              !id.contains("/"), !id.contains("\\"), !id.contains("\0") else {
+            throw ScanProjectStoreError.invalidManifest
+        }
+        let root = directory.standardizedFileURL
+        let candidate = root.appendingPathComponent(id).appendingPathExtension(Self.projectExtension).standardizedFileURL
+        guard candidate.deletingLastPathComponent() == root,
+              candidate.lastPathComponent == "\(id).\(Self.projectExtension)" else {
+            throw ScanProjectStoreError.invalidManifest
+        }
+        return candidate
+    }
+
+    func worldMapURL(projectURL: URL) -> URL {
+        projectURL.appendingPathComponent(Self.worldMapFileName)
+    }
+
+    func hasWorldMap(projectURL: URL) -> Bool {
+        fileManager.fileExists(atPath: worldMapURL(projectURL: projectURL).path)
+    }
+
+    private func ensureDirectories() throws {
+        try fileManager.createDirectory(at: rootURL, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: trashURL, withIntermediateDirectories: true)
+    }
+
+    private func isSafeProjectDirectory(_ url: URL) -> Bool {
+        isSafeDirectory(url)
+    }
+
+    private func isSafeDirectory(_ url: URL) -> Bool {
+        guard url.isFileURL,
+              let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              values.isDirectory == true,
+              values.isSymbolicLink != true else { return false }
+        return true
+    }
+
+    private func isSafeRegularFile(_ url: URL) -> Bool {
+        guard url.isFileURL,
+              let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
+              values.isRegularFile == true,
+              values.isSymbolicLink != true else { return false }
+        return true
+    }
+
+    private func summaries(in directory: URL, includeHidden: Bool) throws -> [ScanProjectSummary] {
+        try ensureDirectories()
+        let urls = try fileManager.contentsOfDirectory(
+            at: directory,
+            includingPropertiesForKeys: [.isDirectoryKey, .creationDateKey, .contentModificationDateKey],
+            options: includeHidden ? [] : [.skipsHiddenFiles]
+        )
+        var values: [ScanProjectSummary] = []
+        for url in urls where url.pathExtension == Self.projectExtension {
+            guard let manifest = try? loadOrMigrateManifest(projectURL: url),
+                  let repaired = try? repairIfNeeded(manifest: manifest, projectURL: url) else { continue }
+            values.append(ScanProjectSummary(manifest: repaired, projectURL: url, storageBytes: directorySize(url)))
+        }
+        return values.sorted { $0.manifest.updatedAt > $1.manifest.updatedAt }
+    }
+
+    private func rejectFutureManifestSchemaIfPresent(primary: URL, backup: URL) throws {
+        let decoder = JSONDecoder()
+        for url in [primary, backup] {
+            guard let data = try? BoundedFileReader.read(url, maximumBytes: 1024 * 1024),
+                  let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }
+            guard envelope.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+                throw ScanProjectStoreError.unsupportedManifestSchemaVersion(envelope.schemaVersion)
+            }
+        }
+    }
+
+    private func rejectFutureCheckpointSchemaIfPresent(primary: URL, backup: URL) throws {
+        let decoder = PropertyListDecoder()
+        for url in [primary, backup] {
+            guard let data = try? BoundedFileReader.read(url, maximumBytes: 64 * 1024 * 1024),
+                  let envelope = try? decoder.decode(ScanSchemaVersionEnvelope.self, from: data) else { continue }
+            guard envelope.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {
+                throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(envelope.schemaVersion)
+            }
+        }
+    }
+
+    private func decodeSupportedManifest(_ data: Data, decoder: JSONDecoder) throws -> ScanProjectManifest {
+        let envelope = try decoder.decode(ScanSchemaVersionEnvelope.self, from: data)
+        guard envelope.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedManifestSchemaVersion(envelope.schemaVersion)
+        }
+        return try decoder.decode(ScanProjectManifest.self, from: data)
+    }
+
+    private func decodeSupportedCheckpoint(_ data: Data, decoder: PropertyListDecoder) throws -> ScanCaptureCheckpoint {
+        let envelope = try decoder.decode(ScanSchemaVersionEnvelope.self, from: data)
+        guard envelope.schemaVersion <= ScanCaptureCheckpoint.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedCheckpointSchemaVersion(envelope.schemaVersion)
+        }
+        return try decoder.decode(ScanCaptureCheckpoint.self, from: data)
+    }
+
+    private func loadOrMigrateManifest(projectURL: URL) throws -> ScanProjectManifest {
+        guard isSafeProjectDirectory(projectURL) else { throw ScanProjectStoreError.invalidManifest }
+        let primary = projectURL.appendingPathComponent(Self.manifestFileName)
+        let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
+        try rejectFutureManifestSchemaIfPresent(primary: primary, backup: backup)
+        let decoder = JSONDecoder()
+        if let data = try? BoundedFileReader.read(primary, maximumBytes: 1024 * 1024) {
+            do {
+                return try decodeSupportedManifest(data, decoder: decoder)
+            } catch {
+            }
+        }
+        if let data = try? BoundedFileReader.read(backup, maximumBytes: 1024 * 1024) {
+            do {
+                let manifest = try decodeSupportedManifest(data, decoder: decoder)
+                try? data.write(to: primary, options: .atomic)
+                return manifest
+            } catch {
+            }
+        }
+
+        guard fileManager.fileExists(atPath: projectURL.path) else { throw ScanProjectStoreError.projectNotFound }
+        let id = projectURL.deletingPathExtension().lastPathComponent
+        let attrs = try? fileManager.attributesOfItem(atPath: projectURL.path)
+        let createdAt = (attrs?[.creationDate] as? Date) ?? (attrs?[.modificationDate] as? Date) ?? Date()
+        let imagesDirectory = projectURL.appendingPathComponent("images", isDirectory: true)
+        let imageURLs = ((try? fileManager.contentsOfDirectory(at: imagesDirectory, includingPropertiesForKeys: nil)) ?? [])
+            .filter { ["jpg", "jpeg", "png", "heic"].contains($0.pathExtension.lowercased()) }
+            .sorted { $0.lastPathComponent < $1.lastPathComponent }
+        let hasTransforms = fileManager.fileExists(atPath: projectURL.appendingPathComponent("transforms.json").path)
+        let hasPoints = fileManager.fileExists(atPath: projectURL.appendingPathComponent("points3D.ply").path)
+        let resultURL = projectURL.appendingPathComponent(Self.splatResultFileName)
+        let structurallyValidLegacyResult = validSplat(at: resultURL)
+        let committedResult: URL? = try? committedSplatURL(projectURL: projectURL)
+        let hasProcessableRaw = hasTransforms && hasPoints && !imageURLs.isEmpty
+
+        let stage: ScanProjectStage
+        let migrationError: String?
+        if committedResult != nil {
+            stage = .finished
+            migrationError = nil
+        } else if hasProcessableRaw {
+            stage = .captured
+            migrationError = structurallyValidLegacyResult
+                ? "旧バージョンの3D結果は完了確認情報がないため、rawデータから安全に再生成できます。"
+                : nil
+        } else if structurallyValidLegacyResult {
+            stage = .failed
+            migrationError = "旧バージョンの3D結果は完了確認情報がなく、完成データとして安全に確認できません。ファイル自体は削除していません。"
+        } else {
+            stage = .capturing
+            migrationError = nil
+        }
+
+        var outputs: [String: String] = [:]
+        if let committedResult {
+            outputs[ScanRepresentationKind.splat.rawValue] = committedResult.lastPathComponent
+        }
+        var manifest = ScanProjectManifest(
+            id: id,
+            title: "保存済みスキャン",
+            createdAt: createdAt,
+            updatedAt: (attrs?[.modificationDate] as? Date) ?? createdAt,
+            stage: stage,
+            acceptedFrames: imageURLs.count,
+            rawDataRetained: !imageURLs.isEmpty,
+            outputs: outputs,
+            lastError: migrationError
+        )
+        if let firstImage = imageURLs.first {
+            let thumbnail = projectURL.appendingPathComponent(Self.thumbnailFileName)
+            if !fileManager.fileExists(atPath: thumbnail.path), let data = try? Data(contentsOf: firstImage) {
+                try? data.write(to: thumbnail, options: .atomic)
+            }
+            if fileManager.fileExists(atPath: thumbnail.path) { manifest.thumbnailFileName = Self.thumbnailFileName }
+        }
+        try writeManifest(manifest, to: projectURL)
+        return manifest
+    }
+
+    private func repairIfNeeded(manifest input: ScanProjectManifest, projectURL: URL) throws -> ScanProjectManifest {
+        guard input.schemaVersion <= ScanProjectManifest.currentSchemaVersion else {
+            throw ScanProjectStoreError.unsupportedManifestSchemaVersion(input.schemaVersion)
+        }
+        var manifest = input
+        var changed = false
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
+
+        if manifest.stage == .processing {
+            let recovery = try recoverInterruptedProcessing(projectURL: projectURL)
+            if let recoveredURL = recovery.url {
+                manifest.outputs[ScanRepresentationKind.splat.rawValue] = recoveredURL.lastPathComponent
+                manifest.stage = .finished
+                manifest.recoveredAfterInterruption = true
+                manifest.lastError = recovery.message
+                changed = true
+            } else {
+                let canRetry = (try? reprocessRequest(projectURL: projectURL, representation: .splat)) != nil
+                manifest.stage = canRetry ? .captured : .failed
+                manifest.outputs.removeValue(forKey: ScanRepresentationKind.splat.rawValue)
+                manifest.recoveredAfterInterruption = true
+                manifest.lastError = canRetry
+                    ? "前回の3D生成は完了確認前に終了しました。rawデータから安全に生成をやり直せます。"
+                    : "前回の3D生成は途中で終了し、再処理に必要なrawデータも見つかりません。"
+                changed = true
+            }
+        } else if let committed = try committedSplatURL(projectURL: projectURL) {
+            if manifest.splatFileName != committed.lastPathComponent {
+                manifest.outputs[ScanRepresentationKind.splat.rawValue] = committed.lastPathComponent
+                changed = true
+            }
+            if manifest.stage != .finished {
+                manifest.stage = .finished
+                manifest.recoveredAfterInterruption = true
+                if manifest.lastError == nil {
+                    manifest.lastError = "完成済み3Dの保存記録から状態を復元しました。"
+                }
+                changed = true
+            }
+            cleanupSplatSwapArtifacts(projectURL: projectURL)
+        } else if manifest.stage == .finished,
+                  manifest.splatFileName == Self.splatResultFileName,
+                  validSplat(at: output) {
+            cleanupSplatSwapArtifacts(projectURL: projectURL)
+        } else if validSplat(at: previous) {
+            if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
+            try fileManager.moveItem(at: previous, to: output)
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = output.lastPathComponent
+            manifest.stage = .finished
+            manifest.recoveredAfterInterruption = true
+            if manifest.lastError == nil {
+                manifest.lastError = "再生成中断後、以前の完成済み3Dを復元しました。"
+            }
+            changed = true
+        }
+
+        let checkpointPrimary = projectURL.appendingPathComponent(Self.checkpointFileName)
+        let checkpointBackup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
+        let rawExists = (try? reprocessRequest(projectURL: projectURL, representation: .splat)) != nil
+            || fileManager.fileExists(atPath: checkpointPrimary.path)
+            || fileManager.fileExists(atPath: checkpointBackup.path)
+        if manifest.rawDataRetained != rawExists {
+            manifest.rawDataRetained = rawExists
+            changed = true
+        }
+        if manifest.schemaVersion < ScanProjectManifest.currentSchemaVersion {
+            manifest.schemaVersion = ScanProjectManifest.currentSchemaVersion
+            changed = true
+        }
+        if changed {
+            manifest.updatedAt = Date()
+            try writeManifest(manifest, to: projectURL)
+        }
+        return manifest
+    }
+
+    private func preparePriorSplatForProcessing(projectURL: URL, preserveCurrentResult: Bool) throws {
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
+        let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
+        let evidence = projectURL.appendingPathComponent(Self.splatCommitEvidenceFileName)
+
+        if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+        if fileManager.fileExists(atPath: evidence.path) { try? fileManager.removeItem(at: evidence) }
+        if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
+
+        guard fileManager.fileExists(atPath: output.path) else { return }
+        if preserveCurrentResult, validSplat(at: output) {
+            try fileManager.moveItem(at: output, to: previous)
+        } else {
+            try fileManager.removeItem(at: output)
+        }
+    }
+
+    private func cleanupSplatSwapArtifacts(projectURL: URL) {
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        guard validSplat(at: output) else { return }
+        let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
+        let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
+        if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
+        if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+    }
+
+    private func recoverInterruptedProcessing(projectURL: URL) throws -> (url: URL?, message: String?) {
+        let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
+        let evidence = projectURL.appendingPathComponent(Self.splatCommitEvidenceFileName)
+
+        if let committed = try committedSplatURL(projectURL: projectURL) {
+            if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
+            if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+            return (committed, "前回の3D生成は完了していました。完成記録から安全に復元しました。")
+        }
+
+        if fileManager.fileExists(atPath: evidence.path) { try? fileManager.removeItem(at: evidence) }
+        if validSplat(at: previous) {
+            if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
+            if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+            try fileManager.moveItem(at: previous, to: output)
+            return (output, "再生成は完了確認前に中断しました。以前の完成済み3Dを復元しました。")
+        }
+
+        if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
+        if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+        if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
+        return (nil, nil)
+    }
+
+    private func committedSplatURL(projectURL: URL) throws -> URL? {
+        let evidenceURL = projectURL.appendingPathComponent(Self.splatCommitEvidenceFileName)
+        guard let data = try? BoundedFileReader.read(evidenceURL, maximumBytes: 64 * 1024),
+              let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: data),
+              evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
+              evidence.fileName == Self.splatResultFileName,
+              evidence.byteCount > 0,
+              evidence.byteCount % 32 == 0 else { return nil }
+
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        if fileMatchesCommitEvidence(output, evidence: evidence) {
+            return output
+        }
+
+        let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
+        if fileMatchesCommitEvidence(pending, evidence: evidence) {
+            if fileManager.fileExists(atPath: output.path) { try fileManager.removeItem(at: output) }
+            try fileManager.moveItem(at: pending, to: output)
+            return fileMatchesCommitEvidence(output, evidence: evidence) ? output : nil
+        }
+        return nil
+    }
+
+    private func writeCommitEvidence(_ evidence: SplatCommitEvidence, projectURL: URL) throws {
+        let url = projectURL.appendingPathComponent(Self.splatCommitEvidenceFileName)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        try encoder.encode(evidence).write(to: url, options: .atomic)
+    }
+
+    private func fileMatchesCommitEvidence(_ url: URL, evidence: SplatCommitEvidence) -> Bool {
+        guard let attrs = try? fileManager.attributesOfItem(atPath: url.path),
+              let size = attrs[.size] as? NSNumber else { return false }
+        return size.int64Value == evidence.byteCount
+    }
+
+    private func rotateManifestBackupIfPrimaryIsValid(primary: URL, backup: URL) throws {
+        guard let data = try? BoundedFileReader.read(primary, maximumBytes: 1024 * 1024) else { return }
+        let decoder = JSONDecoder()
+        guard (try? decodeSupportedManifest(data, decoder: decoder)) != nil else { return }
+        try data.write(to: backup, options: .atomic)
+    }
+
+    private func rotateCheckpointBackupIfPrimaryIsValid(primary: URL, backup: URL) throws {
+        guard let data = try? BoundedFileReader.read(primary, maximumBytes: 64 * 1024 * 1024) else { return }
+        let decoder = PropertyListDecoder()
+        guard (try? decodeSupportedCheckpoint(data, decoder: decoder)) != nil else { return }
+        try data.write(to: backup, options: .atomic)
+    }
+
+    private func validSplatByteCount(at url: URL) -> Int64? {
+        guard let attrs = try? fileManager.attributesOfItem(atPath: url.path),
+              let size = attrs[.size] as? NSNumber,
+              size.int64Value > 0,
+              size.int64Value % 32 == 0 else { return nil }
+        return size.int64Value
+    }
+
+    private func validSplat(at url: URL) -> Bool {
+        validSplatByteCount(at: url) != nil
+    }
+
+    private func directorySize(_ url: URL) -> Int64 {
+        guard fileManager.fileExists(atPath: url.path) else { return 0 }
+        if let attrs = try? fileManager.attributesOfItem(atPath: url.path),
+           (attrs[.type] as? FileAttributeType) == .typeRegular,
+           let size = attrs[.size] as? NSNumber {
+            return size.int64Value
+        }
+        guard let enumerator = fileManager.enumerator(
+            at: url,
+            includingPropertiesForKeys: [.isRegularFileKey, .fileAllocatedSizeKey, .totalFileAllocatedSizeKey],
+            options: []
+        ) else { return 0 }
+        var total: Int64 = 0
+        for case let fileURL as URL in enumerator {
+            guard let values = try? fileURL.resourceValues(forKeys: [.isRegularFileKey, .fileAllocatedSizeKey, .totalFileAllocatedSizeKey]),
+                  values.isRegularFile == true else { continue }
+            total += Int64(values.totalFileAllocatedSize ?? values.fileAllocatedSize ?? 0)
+        }
+        return total
+    }
+}

@@ -1,0 +1,111 @@
+import Darwin.Mach
+import Foundation
+
+/// Chooses whether the live viewer can safely retain the canonical SH3 representation in memory.
+/// The legacy `.splat` remains a quality-reduced fallback for scenes whose SH3 working set would
+/// consume too much device RAM. This keeps view-dependent color where practical without trading it
+/// for jetsam or severe edit-time memory pressure on large scans.
+enum SplatViewerMemoryPolicy {
+    private static let mib: UInt64 = 1_048_576
+
+    // SH3 points coexist with the immutable source array, an edited/cropped candidate during
+    // interactive rebuilds, Metal staging/sort data and renderer state. This is deliberately more
+    // conservative than the serialized PLY byte width.
+    static let estimatedWorkingBytesPerSH3Point: UInt64 = 448
+    static let fixedRendererReserveBytes: UInt64 = 96 * mib
+    static let minimumBudgetBytes: UInt64 = 256 * mib
+    static let maximumBudgetBytes: UInt64 = 768 * mib
+    static let physicalMemoryDivisor: UInt64 = 6
+
+    /// Thermal pressure is a useful proxy for sustained device contention during long scans. Keeping
+    /// the nominal memory budget while the SoC is already serious/critical can select a large SH3
+    /// scene that technically fits RAM but causes sustained frame drops or raises jetsam risk once
+    /// Metal sorting and edit buffers overlap. Low Power Mode is handled similarly: the user has
+    /// explicitly asked iOS to constrain sustained work, so large SH3 scenes should fall back earlier
+    /// while normal-mode quality remains unchanged.
+    static func budgetBytes(
+        physicalMemoryBytes: UInt64,
+        thermalState: ProcessInfo.ThermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
+    ) -> UInt64 {
+        let proportional = physicalMemoryBytes / physicalMemoryDivisor
+        let nominalFloorApplied = min(maximumBudgetBytes, max(minimumBudgetBytes, proportional))
+        // `ProcessInfo.physicalMemory` is normally several GiB on supported iPhones, but tests,
+        // future runtimes, or transient platform-reporting failures can provide a much smaller value.
+        // Never let the 256 MiB quality floor claim more than half of the RAM we were actually told
+        // exists. Normal 4/6/8 GiB device budgets are unchanged; malformed/tiny reports fail safe to
+        // the legacy representation instead of selecting an SH3 working set larger than the device.
+        let physicalSafetyCap = physicalMemoryBytes / 2
+        let baseBudget = min(nominalFloorApplied, physicalSafetyCap)
+        let thermallyAdjusted: UInt64
+        switch thermalState {
+        case .nominal, .fair:
+            thermallyAdjusted = baseBudget
+        case .serious:
+            thermallyAdjusted = baseBudget / 4 * 3
+        case .critical:
+            thermallyAdjusted = baseBudget / 2
+        @unknown default:
+            // Unknown future states should be conservative rather than silently assuming nominal.
+            thermallyAdjusted = baseBudget / 2
+        }
+        return isLowPowerModeEnabled ? thermallyAdjusted / 4 * 3 : thermallyAdjusted
+    }
+
+    /// Simulator headroom describes the macOS runner rather than a simulated iPhone and can be only
+    /// a few MiB during CI. Mark it unavailable there; real iPhones still use live headroom telemetry.
+    static func currentAvailableMemoryBytes() -> UInt64 {
+#if targetEnvironment(simulator)
+        return 0
+#else
+        return UInt64(os_proc_available_memory())
+#endif
+    }
+
+    /// Physical RAM alone is not enough to decide whether a high-quality SH3 scene is safe to open:
+    /// another app, the just-finished reconstruction, or an export can temporarily consume most of
+    /// the process headroom. Keep one quarter of the currently available memory outside the SH3
+    /// estimate so Metal staging/sorting and Swift copy-on-write edits do not immediately push the
+    /// viewer into memory pressure. The static physical/thermal budget remains the upper ceiling.
+    /// A zero reading means the platform did not provide usable headroom telemetry; it must not be
+    /// interpreted as literal zero bytes because that would force every SH3 scene onto the legacy
+    /// representation even when the physical/thermal budget is otherwise safe.
+    static func effectiveBudgetBytes(
+        physicalMemoryBytes: UInt64,
+        availableMemoryBytes: UInt64,
+        thermalState: ProcessInfo.ThermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
+    ) -> UInt64 {
+        let staticBudget = budgetBytes(
+            physicalMemoryBytes: physicalMemoryBytes,
+            thermalState: thermalState,
+            isLowPowerModeEnabled: isLowPowerModeEnabled
+        )
+        guard availableMemoryBytes > 0 else { return staticBudget }
+        let availableSafetyBudget = availableMemoryBytes / 4 * 3
+        return min(staticBudget, availableSafetyBudget)
+    }
+
+    static func canUseCanonicalSH3(
+        pointCount: Int,
+        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory,
+        availableMemoryBytes: UInt64 = currentAvailableMemoryBytes(),
+        thermalState: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState,
+        isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
+    ) -> Bool {
+        guard pointCount > 0 else { return false }
+        let safePointCount = UInt64(pointCount)
+        let pointBytes: UInt64
+        if safePointCount > (UInt64.max - fixedRendererReserveBytes) / estimatedWorkingBytesPerSH3Point {
+            pointBytes = UInt64.max
+        } else {
+            pointBytes = safePointCount * estimatedWorkingBytesPerSH3Point + fixedRendererReserveBytes
+        }
+        return pointBytes <= effectiveBudgetBytes(
+            physicalMemoryBytes: physicalMemoryBytes,
+            availableMemoryBytes: availableMemoryBytes,
+            thermalState: thermalState,
+            isLowPowerModeEnabled: isLowPowerModeEnabled
+        )
+    }
+}
