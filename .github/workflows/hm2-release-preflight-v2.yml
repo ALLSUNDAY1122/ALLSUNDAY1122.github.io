@@ -61,58 +61,156 @@ jobs:
           set -euo pipefail
           mkdir -p automation/release-assets/hm2
           python - <<'PY'
-          import hashlib, http.server, json, socketserver, threading
+          import hashlib, http.server, json, socketserver, threading, traceback
           from pathlib import Path
           from PIL import Image, ImageStat
           from playwright.sync_api import sync_playwright
 
           root=Path('ios/health-manager-2/HealthManager2/Web').resolve()
           out=Path('automation/release-assets/hm2')
+          diag_path=out/'capture-diagnostic.json'
+          diag={
+              'schema_version':1,
+              'stage':'init',
+              'root':str(root),
+              'root_exists':root.exists(),
+              'console':[],
+              'page_errors':[],
+              'files':{},
+          }
+          page=None
+          browser=None
+
+          def persist_diag():
+              try:
+                  if page is not None:
+                      try:
+                          diag['url']=page.url
+                          diag['body_text']=page.locator('body').inner_text(timeout=2000)[:12000]
+                      except Exception as e:
+                          diag['body_read_error']=repr(e)
+                  diag_path.write_text(json.dumps(diag,ensure_ascii=False,indent=2,default=str)+'\n',encoding='utf-8')
+              except Exception:
+                  pass
+
+          def wait_text(text):
+              page.wait_for_function(
+                  "(t) => document.body && document.body.innerText.includes(t)",
+                  arg=text,
+                  timeout=10000,
+              )
+
           class Quiet(http.server.SimpleHTTPRequestHandler):
               def log_message(self,*args): pass
+
+          if not (root/'index.html').is_file():
+              diag['stage']='precheck'
+              diag['exception']='generated index.html missing'
+              persist_diag()
+              raise SystemExit('Generated HM2 index.html missing')
+
           handler=lambda *a,**kw: Quiet(*a,directory=str(root),**kw)
           server=socketserver.TCPServer(('127.0.0.1',0),handler)
           port=server.server_address[1]
           threading.Thread(target=server.serve_forever,daemon=True).start()
           try:
               with sync_playwright() as p:
+                  diag['stage']='launch_browser'
                   browser=p.chromium.launch()
-                  ctx=browser.new_context(viewport={'width':420,'height':912},device_scale_factor=3,locale='ja-JP')
+                  ctx=browser.new_context(
+                      viewport={'width':420,'height':912},
+                      device_scale_factor=3,
+                      locale='ja-JP',
+                      reduced_motion='reduce',
+                  )
                   page=ctx.new_page()
+                  page.on('console', lambda msg: diag['console'].append({'type':msg.type,'text':msg.text}))
+                  page.on('pageerror', lambda exc: diag['page_errors'].append(str(exc)))
                   page.add_init_script("window.webkit={messageHandlers:{storekit:{postMessage:function(){}}}};")
-                  page.goto(f'http://127.0.0.1:{port}/index.html',wait_until='load')
-                  page.wait_for_function("typeof home==='function' && typeof showPaywall==='function'")
+
+                  diag['stage']='navigate'
+                  response=page.goto(f'http://127.0.0.1:{port}/index.html',wait_until='load',timeout=15000)
+                  diag['http_status']=response.status if response else None
+                  diag['ready_state']=page.evaluate('document.readyState')
+
+                  diag['stage']='wait_functions'
+                  page.wait_for_function(
+                      "() => typeof home==='function' && typeof showPaywall==='function'",
+                      timeout=10000,
+                  )
+
+                  diag['stage']='render_home'
                   page.evaluate("""() => {
-                    window.SM2_STORE={isPremium:false,entitlementSource:'none',monthlyPrice:'¥200/月',lifetimePrice:'¥800',monthlyAvailable:true,lifetimeAvailable:true,message:''};
+                    window.SM2_STORE={
+                      isPremium:false,
+                      entitlementSource:'none',
+                      monthlyPrice:'¥200/月',
+                      lifetimePrice:'¥800',
+                      monthlyAvailable:true,
+                      lifetimeAvailable:true,
+                      message:''
+                    };
                     home();
                   }""")
-                  page.get_by_text('今日のスプリント').wait_for(state='visible')
-                  page.get_by_text('全300問を解放').wait_for(state='visible')
+                  wait_text('今日のスプリント')
+                  wait_text('全300問を解放')
                   page.wait_for_timeout(500)
-                  page.screenshot(path=str(out/'01-home.png'))
-                  page.evaluate("showPaywall('home')")
-                  page.get_by_text('月額プラン').wait_for(state='visible')
-                  page.get_by_text('買い切り').wait_for(state='visible')
-                  page.get_by_text('¥200/月').wait_for(state='visible')
-                  page.get_by_text('¥800').wait_for(state='visible')
+
+                  diag['stage']='screenshot_home'
+                  home_path=out/'01-home.png'
+                  page.screenshot(path=str(home_path),full_page=False,animations='disabled')
+                  diag['files']['01-home.png']={'exists':home_path.exists(),'bytes':home_path.stat().st_size if home_path.exists() else 0}
+
+                  diag['stage']='render_paywall'
+                  page.evaluate("showPaywall()")
+                  for text in ('月額プラン','買い切り','¥200/月','¥800'):
+                      wait_text(text)
                   page.wait_for_timeout(300)
-                  page.screenshot(path=str(out/'02-premium.png'))
+
+                  diag['stage']='screenshot_premium'
+                  premium_path=out/'02-premium.png'
+                  page.screenshot(path=str(premium_path),full_page=False,animations='disabled')
+                  diag['files']['02-premium.png']={'exists':premium_path.exists(),'bytes':premium_path.stat().st_size if premium_path.exists() else 0}
+
+                  diag['stage']='browser_complete'
                   browser.close()
+                  browser=None
+          except Exception as e:
+              diag['exception']=repr(e)
+              diag['traceback']=traceback.format_exc()
+              persist_diag()
+              raise
           finally:
+              try:
+                  if browser is not None:
+                      browser.close()
+              except Exception:
+                  pass
               server.shutdown(); server.server_close()
 
+          diag['stage']='validate_images'
           files=[]
-          for name in ('01-home.png','02-premium.png'):
-              path=out/name
-              im=Image.open(path).convert('RGB')
-              if im.size != (1260,2736):
-                  raise SystemExit(f'Unexpected screenshot size {name}: {im.size}')
-              variance=ImageStat.Stat(im).var
-              if max(variance) < 100:
-                  raise SystemExit(f'Screenshot appears blank/near-solid: {name}; variance={variance}')
-              raw=path.read_bytes()
-              files.append({'name':name,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'size':'1260x2736'})
-              print(f'PASS {name}: 1260x2736')
+          try:
+              for name in ('01-home.png','02-premium.png'):
+                  path=out/name
+                  im=Image.open(path).convert('RGB')
+                  size=list(im.size)
+                  variance=ImageStat.Stat(im).var
+                  diag['files'].setdefault(name,{})
+                  diag['files'][name].update({'size':size,'variance':variance})
+                  if im.size != (1260,2736):
+                      raise RuntimeError(f'Unexpected screenshot size {name}: {im.size}')
+                  if max(variance) < 100:
+                      raise RuntimeError(f'Screenshot appears blank/near-solid: {name}; variance={variance}')
+                  raw=path.read_bytes()
+                  files.append({'name':name,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'size':'1260x2736'})
+                  print(f'PASS {name}: 1260x2736')
+          except Exception as e:
+              diag['exception']=repr(e)
+              diag['traceback']=traceback.format_exc()
+              persist_diag()
+              raise
+
           (out/'manifest.json').write_text(json.dumps({
               'schema_version':2,
               'source':'hm2-release-preflight-v2.yml',
@@ -125,6 +223,9 @@ jobs:
               'lifetime_display_price':'¥800',
               'files':files
           },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          diag['stage']='complete'
+          diag['status']='PASS'
+          persist_diag()
           PY
 
       - name: Re-assert machine-fixable ASC prerequisites
