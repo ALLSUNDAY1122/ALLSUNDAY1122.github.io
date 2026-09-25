@@ -1,0 +1,197 @@
+name: HM2 Release Preflight v2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/hm2-release-preflight-v2-trigger.txt'
+      - '.github/workflows/hm2-release-preflight-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hm2-release-preflight-v2
+  cancel-in-progress: true
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Audit canonical release registry
+        run: python3 scripts/app_release_registry_audit.py
+
+      - name: Prepare exact HM2 web bundle
+        env:
+          BUILD_NUMBER: '22'
+        run: bash ios/health-manager-2/prepare-web-assets.sh
+
+      - name: Install capture dependencies
+        run: |
+          python -m pip install --disable-pip-version-check playwright pillow
+          python -m playwright install --with-deps chromium
+
+      - name: Capture canonical 6.7-inch App Store screens
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p automation/release-assets/hm2
+          python - <<'PY'
+          import hashlib, http.server, json, socketserver, threading
+          from pathlib import Path
+          from PIL import Image, ImageStat
+          from playwright.sync_api import sync_playwright
+
+          root=Path('ios/health-manager-2/Resources').resolve()
+          out=Path('automation/release-assets/hm2')
+          class Quiet(http.server.SimpleHTTPRequestHandler):
+              def log_message(self,*args): pass
+          handler=lambda *a,**kw: Quiet(*a,directory=str(root),**kw)
+          server=socketserver.TCPServer(('127.0.0.1',0),handler)
+          port=server.server_address[1]
+          threading.Thread(target=server.serve_forever,daemon=True).start()
+          try:
+              with sync_playwright() as p:
+                  browser=p.chromium.launch()
+                  ctx=browser.new_context(viewport={'width':420,'height':912},device_scale_factor=3,locale='ja-JP')
+                  page=ctx.new_page()
+                  page.add_init_script("window.webkit={messageHandlers:{storekit:{postMessage:function(){}}}};")
+                  page.goto(f'http://127.0.0.1:{port}/index.html',wait_until='load')
+                  page.wait_for_function("typeof home==='function' && typeof showPaywall==='function'")
+                  page.evaluate("""() => {
+                    window.SM2_STORE={isPremium:false,entitlementSource:'none',monthlyPrice:'¥200/月',lifetimePrice:'¥800',monthlyAvailable:true,lifetimeAvailable:true,message:''};
+                    home();
+                  }""")
+                  page.get_by_text('今日のスプリント').wait_for(state='visible')
+                  page.get_by_text('全300問を解放').wait_for(state='visible')
+                  page.wait_for_timeout(500)
+                  page.screenshot(path=str(out/'01-home.png'))
+                  page.evaluate("showPaywall('home')")
+                  page.get_by_text('月額プラン').wait_for(state='visible')
+                  page.get_by_text('買い切り').wait_for(state='visible')
+                  page.get_by_text('¥200/月').wait_for(state='visible')
+                  page.get_by_text('¥800').wait_for(state='visible')
+                  page.wait_for_timeout(300)
+                  page.screenshot(path=str(out/'02-premium.png'))
+                  browser.close()
+          finally:
+              server.shutdown(); server.server_close()
+
+          files=[]
+          for name in ('01-home.png','02-premium.png'):
+              path=out/name
+              im=Image.open(path).convert('RGB')
+              if im.size != (1260,2736):
+                  raise SystemExit(f'Unexpected screenshot size {name}: {im.size}')
+              variance=ImageStat.Stat(im).var
+              if max(variance) < 100:
+                  raise SystemExit(f'Screenshot appears blank/near-solid: {name}; variance={variance}')
+              raw=path.read_bytes()
+              files.append({'name':name,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'size':'1260x2736'})
+              print(f'PASS {name}: 1260x2736')
+          (out/'manifest.json').write_text(json.dumps({
+              'schema_version':2,
+              'source':'hm2-release-preflight-v2.yml',
+              'canonical':True,
+              'app_id':'6799751657',
+              'bundle_id':'jp.allsunday1122.healthmanager2',
+              'version':'1.0',
+              'build':'22',
+              'monthly_display_price':'¥200/月',
+              'lifetime_display_price':'¥800',
+              'files':files
+          },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Re-assert machine-fixable ASC prerequisites
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/hm2_configure_standard_iap_prices.py
+          python scripts/hm2_configure_iap_metadata.py
+          python scripts/hm2_fill_review_contact_from_donor.py
+          python scripts/hm2_fix_submission_prereqs.py \
+            --source-screen automation/release-assets/hm2/01-home.png \
+            --output /tmp/hm2-submission-prereqs.json
+          mkdir -p automation/asc-results
+          cp hm2-iap-metadata-result.json automation/asc-results/hm2-iap-metadata-result.json
+          cp /tmp/hm2-submission-prereqs.json automation/asc-results/hm2-submission-prereqs.json
+
+      - name: Fresh App Store Connect read-back
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          HM2_ASC_RESULT: automation/asc-results/hm2-release-readback.json
+        run: python3 scripts/hm2_release_readback.py
+
+      - name: Verify exact release target
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/asc-results/hm2-release-readback.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          if str(d.get('app_id')) != '6799751657':
+              raise SystemExit('ASC app_id mismatch')
+          versions=d.get('versions') or []
+          v=next((x for x in versions if (x.get('attributes') or {}).get('versionString')=='1.0'),None)
+          if not v:
+              raise SystemExit('ASC version 1.0 missing')
+          raw=p.read_text(encoding='utf-8')
+          if 'd97f10a1-dcce-40ed-be25-5e0a6563d7aa' not in raw or '"version": "22"' not in raw:
+              raise SystemExit('ASC Build 22 exact target missing from read-back')
+          print('PASS: exact target App 6799751657 / Version 1.0 / Build 22 present in fresh ASC read-back')
+          PY
+
+      - name: Persist canonical release evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/release-assets/hm2 automation/asc-results/hm2-iap-metadata-result.json automation/asc-results/hm2-submission-prereqs.json automation/asc-results/hm2-release-readback.json || true
+          if git diff --cached --quiet; then
+            echo 'HM2 preflight evidence unchanged.'
+            exit 0
+          fi
+          git commit -m 'chore(hm2): persist verified release preflight evidence'
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          echo 'Failed to persist HM2 preflight evidence after retries.' >&2
+          exit 1
+
+      - name: Upload secondary evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: hm2-release-preflight-v2
+          path: |
+            automation/release-assets/hm2
+            automation/asc-results/hm2-iap-metadata-result.json
+            automation/asc-results/hm2-submission-prereqs.json
+            automation/asc-results/hm2-release-readback.json
+          if-no-files-found: warn
+          retention-days: 14
