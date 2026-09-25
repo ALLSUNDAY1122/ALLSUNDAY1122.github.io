@@ -52,3 +52,5 @@ jobs:
           test -f ios/health-manager-2/HealthManager2/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           grep -q 'CURRENT_PROJECT_VERSION: 22' ios/health-manager-2/project.yml
           echo 'PASS: preflight environment reproducer completed for Build 22'
+
+# Existing-on-main second push trigger for deterministic diagnostic dispatch.
