@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-09-25T13:10:00Z",
+  "policy": {
+    "final_approval": "Explicit user approval is required for the exact App ID / Version / Build immediately read back before App Review submission.",
+    "submission_complete": "Only App Store Connect read-back at WAITING_FOR_REVIEW or a later review state counts as App Review submission complete.",
+    "temporary_artifacts": "GitHub Actions/Codemagic temporary artifacts must not be the sole canonical source for screenshots or submission metadata.",
+    "unknown_state": "If remote read-back fails, report UNKNOWN and isolate the failing layer instead of claiming Apple processing."
+  },
+  "apps": {
+    "shiwake": {
+      "name": "仕訳スワイプ",
+      "app_id": "6794796078",
+      "bundle_id": "jp.allsunday1122.shiwakeswipe",
+      "app2_task": "APP2-001",
+      "status": "active",
+      "readback": true
+    },
+    "nomidokoro": {
+      "name": "呑み処アーケード",
+      "app_id": "6794847479",
+      "bundle_id": "jp.allsunday1122.nomikaiarcade",
+      "app2_task": "APP2-002",
+      "status": "active",
+      "readback": true
+    },
+    "yoru": {
+      "name": "夜の書架",
+      "app_id": "6794137637",
+      "bundle_id": "io.github.allsunday1122.yorunoshoka",
+      "app2_task": "APP2-003",
+      "status": "active",
+      "readback": true
+    },
+    "pharmacist": {
+      "name": "薬剤師国家試験",
+      "app_id": "6799753724",
+      "bundle_id": "jp.allsunday1122.yakuzaishi",
+      "app2_task": "APP2-004",
+      "status": "active",
+      "readback": true
+    },
+    "hm1": {
+      "name": "第一種衛生管理者",
+      "app_id": "6799581662",
+      "bundle_id": "jp.allsunday1122.healthmanager1",
+      "app2_task": "APP2-005",
+      "status": "active",
+      "readback": true
+    },
+    "hm2": {
+      "name": "第二種衛生管理者",
+      "app_id": "6799751657",
+      "bundle_id": "jp.allsunday1122.healthmanager2",
+      "app2_task": "APP2-006",
+      "status": "active",
+      "readback": true
+    },
+    "otsu4": {
+      "name": "危険物乙4",
+      "app_id": "6799755566",
+      "bundle_id": "jp.allsunday1122.otsu4",
+      "app2_task": "APP2-007",
+      "status": "active",
+      "readback": true
+    },
+    "itpass": {
+      "name": "ITパスポート",
+      "app_id": "6796310458",
+      "bundle_id": "jp.allsunday1122.itpassportquiz",
+      "app2_task": "APP2-008",
+      "status": "active",
+      "readback": true
+    },
+    "kangoshi": {
+      "name": "看護師国家試験",
+      "app_id": "6801792293",
+      "bundle_id": "jp.allsunday1122.kangoshi",
+      "app2_task": "APP2-009",
+      "status": "active",
+      "readback": true
+    },
+    "touhan": {
+      "name": "登録販売者",
+      "app_id": "6802119268",
+      "bundle_id": "com.allsunday1122.tourokuhanbaisha",
+      "app2_task": "APP2-010",
+      "status": "active",
+      "readback": true
+    },
+    "taku": {
+      "name": "卓 TAKU CALC",
+      "app_id": "6794350490",
+      "bundle_id": "com.koheimorita.takucalc",
+      "app2_task": "APP2-011",
+      "status": "active",
+      "readback": true
+    },
+    "network": {
+      "name": "ネットワークスペシャリスト",
+      "app_id": "6799754573",
+      "bundle_id": "jp.allsunday1122.networkspecialist",
+      "app2_task": "APP2-012",
+      "status": "active",
+      "readback": true
+    },
+    "sagyoryouhoushi": {
+      "name": "作業療法士国家試験",
+      "app_id": null,
+      "bundle_id": "jp.allsunday1122.sagyoryouhoushi",
+      "app2_task": "APP2-013",
+      "status": "apple_id_pending",
+      "readback": false
+    },
+    "toru": {
+      "name": "撮る単語帳",
+      "app_id": "6795968222",
+      "bundle_id": "com.allsunday1122.torutango",
+      "app2_task": null,
+      "status": "active",
+      "readback": true
+    },
+    "fp3": {
+      "name": "FP3級 過去問コーチ",
+      "app_id": "6796733578",
+      "bundle_id": "com.allsunday1122.fp3kakomoncoach",
+      "app2_task": null,
+      "status": "active",
+      "readback": true
+    },
+    "ap": {
+      "name": "応用情報技術者試験",
+      "app_id": "6799754343",
+      "bundle_id": "jp.allsunday1122.apmanabisprint",
+      "app2_task": null,
+      "status": "active",
+      "readback": true
+    },
+    "tsukanshi": {
+      "name": "通関士",
+      "app_id": "6799753744",
+      "bundle_id": "jp.allsunday1122.tsukanshi",
+      "app2_task": null,
+      "status": "active",
+      "readback": true
+    },
+    "cpa": {
+      "name": "公認会計士短答",
+      "app_id": "6799754783",
+      "bundle_id": "jp.allsunday1122.cpamanabisprint",
+      "app2_task": null,
+      "status": "active",
+      "readback": true
+    },
+    "shoshi": {
+      "name": "司法書士",
+      "app_id": "6799755748",
+      "bundle_id": "jp.allsunday1122.shoshi",
+      "app2_task": null,
+      "status": "active",
+      "readback": true
+    },
+    "kanteishi": {
+      "name": "不動産鑑定士試験・短答式",
+      "app_id": "6801787074",
+      "bundle_id": "jp.allsunday1122.kanteishishortanswer",
+      "app2_task": null,
+      "status": "active",
+      "readback": true
+    },
+    "kanrieiyoushi": {
+      "name": "管理栄養士国家試験",
+      "app_id": "6799753841",
+      "bundle_id": "jp.allsunday1122.kanrieiyoushi",
+      "app2_task": null,
+      "status": "active",
+      "readback": true
+    },
+    "hokenshi": {
+      "name": "保健師国家試験",
+      "app_id": "6801783499",
+      "bundle_id": "jp.allsunday1122.hokenshi",
+      "app2_task": null,
+      "status": "active",
+      "readback": true
+    }
+  }
+}
