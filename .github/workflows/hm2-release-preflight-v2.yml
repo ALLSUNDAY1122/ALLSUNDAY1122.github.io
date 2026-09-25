@@ -28,6 +28,20 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install release preparation dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends imagemagick webp
+          if ! command -v magick >/dev/null 2>&1 && command -v convert >/dev/null 2>&1; then
+            mkdir -p "$RUNNER_TEMP/bin"
+            cat > "$RUNNER_TEMP/bin/magick" <<'SH'
+          #!/bin/sh
+          exec convert "$@"
+          SH
+            chmod +x "$RUNNER_TEMP/bin/magick"
+            echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          fi
+
       - name: Audit canonical release registry
         run: python3 scripts/app_release_registry_audit.py
 
@@ -52,7 +66,7 @@ jobs:
           from PIL import Image, ImageStat
           from playwright.sync_api import sync_playwright
 
-          root=Path('ios/health-manager-2/Resources').resolve()
+          root=Path('ios/health-manager-2/HealthManager2/Web').resolve()
           out=Path('automation/release-assets/hm2')
           class Quiet(http.server.SimpleHTTPRequestHandler):
               def log_message(self,*args): pass
