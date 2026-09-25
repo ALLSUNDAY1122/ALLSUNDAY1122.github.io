@@ -1,0 +1,103 @@
+name: App Release Final Submit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/app-release-submit-command.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app-release-final-submit
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Audit canonical release registry
+        run: python3 scripts/app_release_registry_audit.py
+      - name: Verify approval packet shape
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/app-release-submit-command.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          required=('request_id','approved','app_key','version','build','approval_scope')
+          missing=[k for k in required if k not in d]
+          if missing:
+              raise SystemExit('missing command fields: '+','.join(missing))
+          if d.get('approved') is not True:
+              raise SystemExit('FINAL_APPROVAL is not true')
+          scope=d.get('approval_scope')
+          if not isinstance(scope,dict):
+              raise SystemExit('approval_scope must be an object')
+          scope_required=('app_id','bundle_id','version','build')
+          missing_scope=[k for k in scope_required if not scope.get(k)]
+          if missing_scope:
+              raise SystemExit('missing approval_scope fields: '+','.join(missing_scope))
+          print(f"approval packet: request_id={d['request_id']} app_key={d['app_key']} version={d['version']} build={d['build']}")
+          PY
+      - name: Final submit and verified App Store Connect read-back
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 scripts/app_release_submit.py \
+            --command automation/app-release-submit-command.json \
+            --output automation/asc-results/app-release-submit-last-result.json
+      - name: Enforce submitted read-back
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/asc-results/app-release-submit-last-result.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          allowed={'WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING','PENDING_DEVELOPER_RELEASE','PROCESSING_FOR_DISTRIBUTION','READY_FOR_SALE'}
+          if d.get('submitted') is not True:
+              raise SystemExit('submission not confirmed by ASC read-back')
+          if d.get('review_submission_state') not in allowed:
+              raise SystemExit('unexpected ASC review state: '+str(d.get('review_submission_state')))
+          print(f"verified submission: {d.get('app_key')} {d.get('version')}({d.get('build')}) -> {d.get('review_submission_state')}")
+          PY
+      - name: Upload sanitized evidence
+        if: always() && hashFiles('automation/asc-results/app-release-submit-last-result.json') != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: app-release-submit-result
+          path: automation/asc-results/app-release-submit-last-result.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Persist verified read-back evidence
+        if: always() && hashFiles('automation/asc-results/app-release-submit-last-result.json') != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/asc-results/app-release-submit-last-result.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          request_id="$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('automation/asc-results/app-release-submit-last-result.json').read_text(encoding='utf-8'))
+          print(str(d.get('request_id') or 'unknown'))
+          PY
+          )"
+          git commit -m "Record App Review read-back ${request_id}"
+          git pull --rebase origin main
+          git push origin HEAD:main
