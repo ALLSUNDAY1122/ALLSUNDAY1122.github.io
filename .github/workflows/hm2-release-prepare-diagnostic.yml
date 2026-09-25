@@ -36,23 +36,78 @@ jobs:
             chmod +x "$RUNNER_TEMP/bin/magick"
             echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
           fi
-      - name: Run the same product audits used by Codemagic
+
+      - name: Audit HM2 StoreKit UI
         run: |
           set -euo pipefail
           command -v magick
           python3 scripts/audit_sm2_storekit_ui.py
+
+      - name: Audit HM2 learning contract
+        run: |
+          set -euo pipefail
           python3 scripts/audit_sm2_learning_contract.py
+
+      - name: Audit HM2 release drift
+        run: |
+          set -euo pipefail
           python3 scripts/audit_sm2_release_drift.py
+
+      - name: Verify HM2 web source inventory
+        run: |
+          set -euo pipefail
+          root=apps/sanitary-manager-2
+          for file in \
+            index.html gm-style.css \
+            q1.js q2.js q3.js q4.js q5.js q6.js q7.js q8.js q9.js q10.js q11.js q12.js \
+            difficulty-patch-v5.js \
+            audit-patch-v2.js audit-patch-v3.js audit-patch-v4.js audit-fixes.js question-order-v1.js \
+            gm1.js gm2.js gm3.js gm4.js manifest.json icon.svg; do
+            test -f "$root/$file" || { echo "Missing $root/$file" >&2; exit 1; }
+          done
+          echo 'PASS: HM2 web source inventory complete'
+
+      - name: Verify approved icon transport independently
+        run: |
+          set -euo pipefail
+          source=apps/sanitary-manager-2/approved-app-icon.png
+          parts=apps/sanitary-manager-2/approved-icon-v4
+          expected=4cefe840198dde91fddb6c5fe0fdece7d41a8bebfed415eb034752491cd7977c
+          if [ -f "$source" ]; then
+            echo 'PASS: canonical approved-app-icon.png already present'
+            exit 0
+          fi
+          test -d "$parts"
+          test "$(find "$parts" -maxdepth 1 -type f -name 'part*.b64' | wc -l | tr -d ' ')" = '4'
+          tmp="$RUNNER_TEMP/hm2-approved-icon.webp"
+          cat "$parts"/part01.b64 "$parts"/part02.b64 "$parts"/part03.b64 "$parts"/part04.b64 | tr -d '\r\n' | base64 --decode > "$tmp"
+          python3 - "$tmp" "$expected" <<'PY'
+          from pathlib import Path
+          import hashlib, struct, sys
+          p=Path(sys.argv[1]); expected=sys.argv[2]
+          b=p.read_bytes()
+          assert len(b)==28904, len(b)
+          assert b[:4]==b'RIFF' and b[8:12]==b'WEBP'
+          assert struct.unpack('<I', b[4:8])[0]+8 == len(b)
+          assert hashlib.sha256(b).hexdigest()==expected
+          print('PASS: approved icon transport bytes/hash verified')
+          PY
+          magick "$tmp" -alpha off "$RUNNER_TEMP/hm2-approved-icon.png"
+          test -s "$RUNNER_TEMP/hm2-approved-icon.png"
+          echo 'PASS: approved icon transport decodes through installed ImageMagick'
+
       - name: Run release asset preparation with explicit diagnostic build number
         run: |
           set -euo pipefail
           bash -x ios/health-manager-2/prepare-web-assets.sh 2>&1 | tee /tmp/hm2-prepare-diagnostic.log
+
       - name: Verify generated release inputs
         run: |
           set -euo pipefail
           test -f ios/health-manager-2/HealthManager2/Web/index.html
           test -f ios/health-manager-2/HealthManager2/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           grep -q 'CURRENT_PROJECT_VERSION: 20260914999' ios/health-manager-2/project.yml
+
       - uses: actions/upload-artifact@v6
         if: always()
         with:
@@ -60,6 +115,7 @@ jobs:
           path: /tmp/hm2-prepare-diagnostic.log
           if-no-files-found: warn
           retention-days: 7
+
       - name: Report
         if: always() && github.event_name == 'issues'
         uses: actions/github-script@v8
