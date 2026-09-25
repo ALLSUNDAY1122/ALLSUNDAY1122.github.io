@@ -1,0 +1,137 @@
+name: App Release Submission Preflight
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_key:
+        description: Canonical app key from automation/app-release-registry.json
+        required: true
+        type: string
+      version:
+        description: Exact App Store version
+        required: true
+        type: string
+      build:
+        description: Exact Apple build number
+        required: true
+        type: string
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: app-release-submission-preflight
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    if: github.event_name == 'workflow_dispatch' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP-RELEASE] Preflight')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Resolve request
+        id: request
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_APP_KEY: ${{ inputs.app_key }}
+          INPUT_VERSION: ${{ inputs.version }}
+          INPUT_BUILD: ${{ inputs.build }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          if os.environ['EVENT_NAME'] == 'workflow_dispatch':
+              values={
+                  'app_key': os.environ.get('INPUT_APP_KEY','').strip(),
+                  'version': os.environ.get('INPUT_VERSION','').strip(),
+                  'build': os.environ.get('INPUT_BUILD','').strip(),
+              }
+          else:
+              values={}
+              for raw in os.environ.get('ISSUE_BODY','').splitlines():
+                  if '=' not in raw:
+                      continue
+                  k,v=raw.split('=',1)
+                  if k.strip() in {'app_key','version','build'}:
+                      values[k.strip()]=v.strip()
+          missing=[k for k in ('app_key','version','build') if not values.get(k)]
+          if missing:
+              raise SystemExit('missing request fields: '+','.join(missing))
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              for k in ('app_key','version','build'):
+                  f.write(f"{k}={values[k]}\n")
+          print(values)
+          PY
+      - name: Audit canonical release registry
+        run: python3 scripts/app_release_registry_audit.py
+      - name: Read-only App Store submission preflight
+        id: probe
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/app_release_submission_preflight.py \
+            --app '${{ steps.request.outputs.app_key }}' \
+            --version '${{ steps.request.outputs.version }}' \
+            --build '${{ steps.request.outputs.build }}' \
+            --output automation/asc-results/app-release-preflight-last-result.json 2>&1 | tee /tmp/app-release-preflight.log
+      - name: Build concise summary
+        id: summary
+        if: always() && hashFiles('automation/asc-results/app-release-preflight-last-result.json') != ''
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          d=json.loads(Path('automation/asc-results/app-release-preflight-last-result.json').read_text(encoding='utf-8'))
+          lines=[
+              f"stage={d.get('stage')} submission_ready={d.get('submission_ready')}",
+              f"app={d.get('app_key')} app_id={d.get('app_id')} bundle_id={d.get('bundle_id')}",
+              f"version={d.get('version')} build={d.get('build')}",
+              f"errors={','.join(d.get('errors') or []) or 'none'}",
+              f"warnings={','.join(d.get('warnings') or []) or 'none'}",
+          ]
+          candidate=d.get('approval_candidate')
+          if candidate:
+              lines.append('approval_candidate='+json.dumps(candidate,ensure_ascii=False,separators=(',',':')))
+          text='\n'.join(lines)
+          print(text)
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write('text<<APP_RELEASE_EOF\n'+text+'\nAPP_RELEASE_EOF\n')
+          PY
+      - name: Upload preflight evidence
+        if: always() && hashFiles('automation/asc-results/app-release-preflight-last-result.json') != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: app-release-submission-preflight
+          path: |
+            automation/asc-results/app-release-preflight-last-result.json
+            /tmp/app-release-preflight.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Report issue result
+        if: github.event_name == 'issues' && always()
+        uses: actions/github-script@v8
+        env:
+          SUMMARY: ${{ steps.summary.outputs.text }}
+        with:
+          script: |
+            const summary = process.env.SUMMARY || 'preflight result unavailable';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `App Release submission preflight finished. job_status=${{ job.status }}; run_id=${context.runId}\n\n\`\`\`text\n${summary}\n\`\`\``
+            });
