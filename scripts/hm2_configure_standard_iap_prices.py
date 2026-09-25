@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Configure HM2 ordinary 1-month subscription + lifetime IAP for Japan.
 
-Do not use SubscriptionPlanType.MONTHLY here: Apple's current plan type means
-monthly payments over a 12-month commitment, which is not this product.
+Apple's current subscription availability API is plan-scoped. For this ordinary
+ONE_MONTH auto-renewable subscription, the customer pays the full one-month billing
+period up front, so the plan type is UPFRONT. MONTHLY is Apple's separate 12-month
+commitment paid monthly option and is not this product.
 """
 import json, os
 from pathlib import Path
@@ -13,6 +15,7 @@ BUNDLE_ID='jp.allsunday1122.healthmanager2'
 SUB_ID='6802988571'
 IAP_ID='6802989207'
 JPN='JPN'
+PLAN_TYPE='UPFRONT'
 
 
 def items(x):
@@ -37,29 +40,53 @@ def preflight(t):
     assert (((i.get('data') or {}).get('attributes') or {}).get('productId'))=='jp.allsunday1122.healthmanager2.lifetime'
 
 
-def ensure_sub_availability(t,r):
-    try:
-        _,av=api_get(t,f'/v1/subscriptions/{SUB_ID}/subscriptionAvailability?include=availableTerritories&limit[availableTerritories]=50')
-        inc=av.get('included') or []
-        if any(x.get('type')=='territories' and x.get('id')==JPN for x in inc):
-            r['subscription_availability']={'changed':False,'jpn':True}; return
-    except RuntimeError as e:
-        if 'HTTP 404' not in str(e): raise
-    payload={'data':{'type':'subscriptionAvailabilities','attributes':{'availableInNewTerritories':False},'relationships':{'availableTerritories':{'data':[{'type':'territories','id':JPN}]},'subscription':{'data':{'type':'subscriptions','id':SUB_ID}}}}}
-    status,_=api_request(t,'/v1/subscriptionAvailabilities',method='POST',payload=payload)
-    r['subscription_availability']={'changed':True,'http_status':status,'jpn':True}
+def territory_ids(payload):
+    ids=set()
+    for x in (payload.get('included') or []) if isinstance(payload,dict) else []:
+        if x.get('type')=='territories' and x.get('id'):
+            ids.add(x['id'])
+    return ids
+
+
+def ensure_sub_plan_availability(t,r):
+    _,av=api_get(t,f'/v1/subscriptions/{SUB_ID}/planAvailabilities?include=availableTerritories&limit=20')
+    current=items(av)
+    r['plan_availabilities_before']=[{
+        'id':x.get('id'),
+        'planType':(x.get('attributes') or {}).get('planType'),
+        'availableInNewTerritories':(x.get('attributes') or {}).get('availableInNewTerritories'),
+        'territories':[z.get('id') for z in (((x.get('relationships') or {}).get('availableTerritories') or {}).get('data') or []) if isinstance(z,dict)]
+    } for x in current]
+
+    target=next((x for x in current if (x.get('attributes') or {}).get('planType')==PLAN_TYPE),None)
+    if target:
+        linked=[z.get('id') for z in (((target.get('relationships') or {}).get('availableTerritories') or {}).get('data') or []) if isinstance(z,dict)]
+        if JPN not in linked:
+            payload={'data':[{'type':'territories','id':JPN}]}
+            status,_=api_request(t,f'/v1/subscriptionPlanAvailabilities/{target["id"]}/relationships/availableTerritories',method='PATCH',payload=payload)
+            r['subscription_plan_availability']={'changed':True,'http_status':status,'id':target['id'],'planType':PLAN_TYPE,'jpn':True}
+        else:
+            r['subscription_plan_availability']={'changed':False,'id':target['id'],'planType':PLAN_TYPE,'jpn':True}
+    else:
+        payload={'data':{'type':'subscriptionPlanAvailabilities','attributes':{'planType':PLAN_TYPE,'availableInNewTerritories':False},'relationships':{'subscription':{'data':{'type':'subscriptions','id':SUB_ID}},'availableTerritories':{'data':[{'type':'territories','id':JPN}]}}}}
+        status,out=api_request(t,'/v1/subscriptionPlanAvailabilities',method='POST',payload=payload)
+        r['subscription_plan_availability']={'changed':True,'http_status':status,'id':((out or {}).get('data') or {}).get('id'),'planType':PLAN_TYPE,'jpn':True}
 
 
 def set_sub_price(t,r):
-    ensure_sub_availability(t,r)
+    ensure_sub_plan_availability(t,r)
     _,points=api_get(t,f'/v1/subscriptions/{SUB_ID}/pricePoints?filter[territory]=JPN&include=territory&limit=200')
     p=pp_for(points,'200')
     _,cur=api_get(t,f'/v1/subscriptions/{SUB_ID}/prices?filter[territory]=JPN&include=subscriptionPricePoint,territory&limit=200')
-    if any(((((x.get('relationships') or {}).get('subscriptionPricePoint') or {}).get('data') or {}).get('id'))==p['id'] and (x.get('attributes') or {}).get('startDate') is None for x in items(cur)):
-        r['monthly_price']={'changed':False,'price':'200','price_point_id':p['id']}; return
-    payload={'data':{'type':'subscriptionPrices','attributes':{'startDate':None},'relationships':{'subscription':{'data':{'type':'subscriptions','id':SUB_ID}},'subscriptionPricePoint':{'data':{'type':'subscriptionPricePoints','id':p['id']}}}}}
+    for x in items(cur):
+        attrs=x.get('attributes') or {}
+        point_id=((((x.get('relationships') or {}).get('subscriptionPricePoint') or {}).get('data') or {}).get('id'))
+        if point_id==p['id'] and attrs.get('startDate') is None and attrs.get('planType')==PLAN_TYPE:
+            r['monthly_price']={'changed':False,'price':'200','price_point_id':p['id'],'planType':PLAN_TYPE}
+            return
+    payload={'data':{'type':'subscriptionPrices','attributes':{'startDate':None,'planType':PLAN_TYPE},'relationships':{'subscription':{'data':{'type':'subscriptions','id':SUB_ID}},'subscriptionPricePoint':{'data':{'type':'subscriptionPricePoints','id':p['id']}}}}}
     status,res=api_request(t,'/v1/subscriptionPrices',method='POST',payload=payload)
-    r['monthly_price']={'changed':True,'http_status':status,'price':'200','price_point_id':p['id'],'created_id':((res or {}).get('data') or {}).get('id')}
+    r['monthly_price']={'changed':True,'http_status':status,'price':'200','price_point_id':p['id'],'planType':PLAN_TYPE,'created_id':((res or {}).get('data') or {}).get('id')}
 
 
 def ensure_iap_availability(t,r):
@@ -99,14 +126,15 @@ def set_iap_price(t,r):
 def main():
     issuer=os.environ.get('ASC_ISSUER_ID'); keyid=os.environ.get('ASC_KEY_ID')
     if not issuer or not keyid: raise SystemExit('missing ASC credentials')
-    kp,cleanup=load_private_key(); r={'app_id':APP_ID,'territory':'JPN'}
+    kp,cleanup=load_private_key(); r={'app_id':APP_ID,'territory':'JPN','subscription_plan_type':PLAN_TYPE}
     try:
         t=make_token(issuer,keyid,kp); preflight(t); set_sub_price(t,r); set_iap_price(t,r)
+        _,r['plan_availabilities_readback']=api_get(t,f'/v1/subscriptions/{SUB_ID}/planAvailabilities?include=availableTerritories&limit=20')
         _,r['monthly_readback']=api_get(t,f'/v1/subscriptions/{SUB_ID}/prices?filter[territory]=JPN&include=subscriptionPricePoint,territory&limit=200')
         _,r['lifetime_readback']=api_get(t,f'/v2/inAppPurchases/{IAP_ID}/iapPriceSchedule?include=baseTerritory,manualPrices&limit[manualPrices]=50')
     finally:
         if cleanup: cleanup.unlink(missing_ok=True)
     Path('hm2-iap-price-result.json').write_text(json.dumps(r,ensure_ascii=False,indent=2),encoding='utf-8')
-    print('PASS: standard HM2 monthly 200 JPY + lifetime 800 JPY configured')
+    print('PASS: standard HM2 monthly 200 JPY + lifetime 800 JPY configured with UPFRONT plan availability')
 
 if __name__=='__main__': main()
