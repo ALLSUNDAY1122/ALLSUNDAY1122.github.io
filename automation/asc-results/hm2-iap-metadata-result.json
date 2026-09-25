@@ -1,13 +1,30 @@
 {
+  "schema_version": 2,
+  "api_mode": "version_scoped_metadata",
+  "subscription_id": "6802988571",
+  "subscription_group_id": "22319275",
+  "lifetime_iap_id": "6802989207",
+  "subscription_version": {
+    "changed": false,
+    "id": "46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9",
+    "state": "PREPARE_FOR_SUBMISSION"
+  },
   "monthly_localization": {
     "changed": false,
-    "id": "92b433ee-3ddf-45ce-9ee7-d7f57aec80b6"
+    "id": "92b433ee-3ddf-45ce-9ee7-d7f57aec80b6",
+    "version_id": "46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9"
+  },
+  "group_version": {
+    "changed": false,
+    "id": "636fc506-f994-4dd2-8f9e-56af0416ddf4",
+    "state": "PREPARE_FOR_SUBMISSION"
   },
   "group_localization": {
     "changed": false,
-    "id": "bbdbb3dd-7f30-4a1e-aace-2f6c67bc9668"
+    "id": "bbdbb3dd-7f30-4a1e-aace-2f6c67bc9668",
+    "version_id": "636fc506-f994-4dd2-8f9e-56af0416ddf4"
   },
-  "lifetime_version": {
+  "iap_version": {
     "changed": false,
     "id": "9ac95eb6-e0c3-4440-9e1e-effa0aa78740",
     "state": "PREPARE_FOR_SUBMISSION"
@@ -23,345 +40,544 @@
   "lifetime_review_note": {
     "changed": false
   },
-  "monthly_readback": {
-    "data": {
-      "type": "subscriptions",
-      "id": "6802988571",
-      "attributes": {
-        "name": "第二種衛生管理者 月額プレミアム",
-        "productId": "jp.allsunday1122.healthmanager2.monthly",
-        "familySharable": false,
-        "state": "MISSING_METADATA",
-        "subscriptionPeriod": "ONE_MONTH",
-        "reviewNote": "第二種衛生管理者の学習アプリです。無料範囲は最新1回相当30問と今日のスプリント。月額または買い切りで同一のPremium権利を付与し、全300問・全30セット・全分野・苦手復習を解放します。購入復元は設定画面から実行できます。",
-        "groupLevel": 1,
-        "multiSeatStatus": "ENABLED",
-        "marketSettings": [
-          "APP_STORE",
-          "APPLE_BUSINESS",
-          "APPLE_SCHOOL"
-        ]
-      },
-      "relationships": {
-        "subscriptionLocalizations": {
-          "meta": {
-            "paging": {
-              "total": 1,
-              "limit": 10
+  "monthly_product_readback": {
+    "http_status": 200,
+    "body": {
+      "data": {
+        "type": "subscriptions",
+        "id": "6802988571",
+        "attributes": {
+          "name": "第二種衛生管理者 月額プレミアム",
+          "productId": "jp.allsunday1122.healthmanager2.monthly",
+          "familySharable": false,
+          "state": "MISSING_METADATA",
+          "subscriptionPeriod": "ONE_MONTH",
+          "reviewNote": "第二種衛生管理者の学習アプリです。無料範囲は最新1回相当30問と今日のスプリント。月額または買い切りで同一のPremium権利を付与し、全300問・全30セット・全分野・苦手復習を解放します。購入復元は設定画面から実行できます。",
+          "groupLevel": 1,
+          "multiSeatStatus": "ENABLED",
+          "marketSettings": [
+            "APP_STORE",
+            "APPLE_BUSINESS",
+            "APPLE_SCHOOL"
+          ]
+        },
+        "relationships": {
+          "subscriptionLocalizations": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/subscriptionLocalizations",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/subscriptionLocalizations"
             }
           },
-          "data": [
-            {
-              "type": "subscriptionLocalizations",
-              "id": "92b433ee-3ddf-45ce-9ee7-d7f57aec80b6"
+          "appStoreReviewScreenshot": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/appStoreReviewScreenshot",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/appStoreReviewScreenshot"
             }
-          ],
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/subscriptionLocalizations",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/subscriptionLocalizations"
+          },
+          "introductoryOffers": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/introductoryOffers",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/introductoryOffers"
+            }
+          },
+          "promotionalOffers": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/promotionalOffers",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/promotionalOffers"
+            }
+          },
+          "offerCodes": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/offerCodes",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/offerCodes"
+            }
+          },
+          "prices": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/prices",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/prices"
+            }
+          },
+          "pricePoints": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/pricePoints",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/pricePoints"
+            }
+          },
+          "promotedPurchase": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/promotedPurchase",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/promotedPurchase"
+            }
+          },
+          "subscriptionAvailability": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/subscriptionAvailability",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/subscriptionAvailability"
+            }
+          },
+          "winBackOffers": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/winBackOffers",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/winBackOffers"
+            }
+          },
+          "images": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/images",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/images"
+            }
+          },
+          "planAvailabilities": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/planAvailabilities",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/planAvailabilities"
+            }
+          },
+          "versions": {
+            "meta": {
+              "paging": {
+                "total": 1,
+                "limit": 10
+              }
+            },
+            "data": [
+              {
+                "type": "subscriptionVersions",
+                "id": "46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9"
+              }
+            ],
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/versions",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/versions"
+            }
           }
-        },
-        "appStoreReviewScreenshot": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/appStoreReviewScreenshot",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/appStoreReviewScreenshot"
-          }
-        },
-        "introductoryOffers": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/introductoryOffers",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/introductoryOffers"
-          }
-        },
-        "promotionalOffers": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/promotionalOffers",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/promotionalOffers"
-          }
-        },
-        "offerCodes": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/offerCodes",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/offerCodes"
-          }
-        },
-        "prices": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/prices",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/prices"
-          }
-        },
-        "pricePoints": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/pricePoints",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/pricePoints"
-          }
-        },
-        "promotedPurchase": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/promotedPurchase",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/promotedPurchase"
-          }
-        },
-        "subscriptionAvailability": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/subscriptionAvailability",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/subscriptionAvailability"
-          }
-        },
-        "winBackOffers": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/winBackOffers",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/winBackOffers"
-          }
-        },
-        "images": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/images",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/images"
-          }
-        },
-        "planAvailabilities": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/planAvailabilities",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/planAvailabilities"
-          }
-        },
-        "versions": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/relationships/versions",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571/versions"
-          }
-        }
-      },
-      "links": {
-        "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571"
-      }
-    },
-    "included": [
-      {
-        "type": "subscriptionLocalizations",
-        "id": "92b433ee-3ddf-45ce-9ee7-d7f57aec80b6",
-        "attributes": {
-          "name": "月額プレミアム",
-          "locale": "ja",
-          "description": "学習を継続しながら、全300問・全30セット・全分野・苦手復習を利用できます。",
-          "state": "PREPARE_FOR_SUBMISSION"
         },
         "links": {
-          "self": "https://api.appstoreconnect.apple.com/v1/subscriptionLocalizations/92b433ee-3ddf-45ce-9ee7-d7f57aec80b6"
+          "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571"
         }
+      },
+      "included": [
+        {
+          "type": "subscriptionVersions",
+          "id": "46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9",
+          "attributes": {
+            "version": 1,
+            "state": "PREPARE_FOR_SUBMISSION"
+          },
+          "relationships": {
+            "image": {
+              "links": {
+                "self": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/relationships/image",
+                "related": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/image"
+              }
+            },
+            "images": {
+              "links": {
+                "self": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/relationships/images",
+                "related": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/images"
+              }
+            },
+            "localizations": {
+              "links": {
+                "self": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/relationships/localizations",
+                "related": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/localizations"
+              }
+            }
+          },
+          "links": {
+            "self": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571?include=versions"
       }
-    ],
-    "links": {
-      "self": "https://api.appstoreconnect.apple.com/v1/subscriptions/6802988571?include=subscriptionLocalizations"
     }
   },
-  "group_readback": {
-    "data": {
-      "type": "subscriptionGroups",
-      "id": "22319275",
-      "attributes": {
-        "referenceName": "第二種衛生管理者 プレミアム"
-      },
-      "relationships": {
-        "subscriptions": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/relationships/subscriptions",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/subscriptions"
-          }
-        },
-        "subscriptionGroupLocalizations": {
-          "meta": {
-            "paging": {
-              "total": 1,
-              "limit": 10
-            }
-          },
-          "data": [
-            {
-              "type": "subscriptionGroupLocalizations",
-              "id": "bbdbb3dd-7f30-4a1e-aace-2f6c67bc9668"
-            }
-          ],
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/relationships/subscriptionGroupLocalizations",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/subscriptionGroupLocalizations"
-          }
-        },
-        "versions": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/relationships/versions",
-            "related": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/versions"
-          }
-        }
-      },
-      "links": {
-        "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275"
-      }
-    },
-    "included": [
-      {
-        "type": "subscriptionGroupLocalizations",
-        "id": "bbdbb3dd-7f30-4a1e-aace-2f6c67bc9668",
+  "monthly_version_readback": {
+    "http_status": 200,
+    "body": {
+      "data": {
+        "type": "subscriptionVersions",
+        "id": "46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9",
         "attributes": {
-          "name": "プレミアム学習",
-          "customAppName": null,
-          "locale": "ja",
+          "version": 1,
           "state": "PREPARE_FOR_SUBMISSION"
         },
+        "relationships": {
+          "image": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/relationships/image",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/image"
+            }
+          },
+          "images": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/relationships/images",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/images"
+            }
+          },
+          "localizations": {
+            "meta": {
+              "paging": {
+                "total": 1,
+                "limit": 10
+              }
+            },
+            "data": [
+              {
+                "type": "subscriptionLocalizations",
+                "id": "92b433ee-3ddf-45ce-9ee7-d7f57aec80b6"
+              }
+            ],
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/relationships/localizations",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9/localizations"
+            }
+          }
+        },
         "links": {
-          "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroupLocalizations/bbdbb3dd-7f30-4a1e-aace-2f6c67bc9668"
+          "self": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9"
         }
+      },
+      "included": [
+        {
+          "type": "subscriptionLocalizations",
+          "id": "92b433ee-3ddf-45ce-9ee7-d7f57aec80b6",
+          "attributes": {
+            "name": "月額プレミアム",
+            "locale": "ja",
+            "description": "学習を継続しながら、全300問・全30セット・全分野・苦手復習を利用できます。"
+          },
+          "links": {
+            "self": "https://api.appstoreconnect.apple.com/v2/subscriptionLocalizations/92b433ee-3ddf-45ce-9ee7-d7f57aec80b6"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://api.appstoreconnect.apple.com/v1/subscriptionVersions/46dc67ae-ee21-4a9a-9ef9-8db1d4c9e0a9?include=localizations"
       }
-    ],
-    "links": {
-      "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275?include=subscriptionGroupLocalizations"
+    }
+  },
+  "group_product_readback": {
+    "http_status": 200,
+    "body": {
+      "data": {
+        "type": "subscriptionGroups",
+        "id": "22319275",
+        "attributes": {
+          "referenceName": "第二種衛生管理者 プレミアム"
+        },
+        "relationships": {
+          "subscriptions": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/relationships/subscriptions",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/subscriptions"
+            }
+          },
+          "subscriptionGroupLocalizations": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/relationships/subscriptionGroupLocalizations",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/subscriptionGroupLocalizations"
+            }
+          },
+          "versions": {
+            "meta": {
+              "paging": {
+                "total": 1,
+                "limit": 10
+              }
+            },
+            "data": [
+              {
+                "type": "subscriptionGroupVersions",
+                "id": "636fc506-f994-4dd2-8f9e-56af0416ddf4"
+              }
+            ],
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/relationships/versions",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275/versions"
+            }
+          }
+        },
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275"
+        }
+      },
+      "included": [
+        {
+          "type": "subscriptionGroupVersions",
+          "id": "636fc506-f994-4dd2-8f9e-56af0416ddf4",
+          "attributes": {
+            "version": 1,
+            "state": "PREPARE_FOR_SUBMISSION"
+          },
+          "relationships": {
+            "localizations": {
+              "links": {
+                "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroupVersions/636fc506-f994-4dd2-8f9e-56af0416ddf4/relationships/localizations",
+                "related": "https://api.appstoreconnect.apple.com/v1/subscriptionGroupVersions/636fc506-f994-4dd2-8f9e-56af0416ddf4/localizations"
+              }
+            }
+          },
+          "links": {
+            "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroupVersions/636fc506-f994-4dd2-8f9e-56af0416ddf4"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroups/22319275?include=versions"
+      }
+    }
+  },
+  "group_version_readback": {
+    "http_status": 200,
+    "body": {
+      "data": {
+        "type": "subscriptionGroupVersions",
+        "id": "636fc506-f994-4dd2-8f9e-56af0416ddf4",
+        "attributes": {
+          "version": 1,
+          "state": "PREPARE_FOR_SUBMISSION"
+        },
+        "relationships": {
+          "localizations": {
+            "meta": {
+              "paging": {
+                "total": 1,
+                "limit": 10
+              }
+            },
+            "data": [
+              {
+                "type": "subscriptionGroupLocalizations",
+                "id": "bbdbb3dd-7f30-4a1e-aace-2f6c67bc9668"
+              }
+            ],
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroupVersions/636fc506-f994-4dd2-8f9e-56af0416ddf4/relationships/localizations",
+              "related": "https://api.appstoreconnect.apple.com/v1/subscriptionGroupVersions/636fc506-f994-4dd2-8f9e-56af0416ddf4/localizations"
+            }
+          }
+        },
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroupVersions/636fc506-f994-4dd2-8f9e-56af0416ddf4"
+        }
+      },
+      "included": [
+        {
+          "type": "subscriptionGroupLocalizations",
+          "id": "bbdbb3dd-7f30-4a1e-aace-2f6c67bc9668",
+          "attributes": {
+            "name": "プレミアム学習",
+            "customAppName": null,
+            "locale": "ja"
+          },
+          "links": {
+            "self": "https://api.appstoreconnect.apple.com/v2/subscriptionGroupLocalizations/bbdbb3dd-7f30-4a1e-aace-2f6c67bc9668"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://api.appstoreconnect.apple.com/v1/subscriptionGroupVersions/636fc506-f994-4dd2-8f9e-56af0416ddf4?include=localizations"
+      }
     }
   },
   "lifetime_product_readback": {
-    "data": {
-      "type": "inAppPurchases",
-      "id": "6802989207",
-      "attributes": {
-        "name": "第二種衛生管理者 買い切りプレミアム",
-        "productId": "jp.allsunday1122.healthmanager2.lifetime",
-        "inAppPurchaseType": "NON_CONSUMABLE",
-        "state": "READY_TO_SUBMIT",
-        "reviewNote": "第二種衛生管理者の学習アプリです。無料範囲は最新1回相当30問と今日のスプリント。月額または買い切りで同一のPremium権利を付与し、全300問・全30セット・全分野・苦手復習を解放します。購入復元は設定画面から実行できます。",
-        "familySharable": false,
-        "contentHosting": false
-      },
-      "relationships": {
-        "inAppPurchaseLocalizations": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/inAppPurchaseLocalizations",
-            "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/inAppPurchaseLocalizations"
+    "http_status": 200,
+    "body": {
+      "data": {
+        "type": "inAppPurchases",
+        "id": "6802989207",
+        "attributes": {
+          "name": "第二種衛生管理者 買い切りプレミアム",
+          "productId": "jp.allsunday1122.healthmanager2.lifetime",
+          "inAppPurchaseType": "NON_CONSUMABLE",
+          "state": "READY_TO_SUBMIT",
+          "reviewNote": "第二種衛生管理者の学習アプリです。無料範囲は最新1回相当30問と今日のスプリント。月額または買い切りで同一のPremium権利を付与し、全300問・全30セット・全分野・苦手復習を解放します。購入復元は設定画面から実行できます。",
+          "familySharable": false,
+          "contentHosting": false
+        },
+        "relationships": {
+          "inAppPurchaseLocalizations": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/inAppPurchaseLocalizations",
+              "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/inAppPurchaseLocalizations"
+            }
+          },
+          "pricePoints": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/pricePoints",
+              "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/pricePoints"
+            }
+          },
+          "content": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/content",
+              "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/content"
+            }
+          },
+          "appStoreReviewScreenshot": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/appStoreReviewScreenshot",
+              "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/appStoreReviewScreenshot"
+            }
+          },
+          "promotedPurchase": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/promotedPurchase",
+              "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/promotedPurchase"
+            }
+          },
+          "iapPriceSchedule": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/iapPriceSchedule",
+              "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/iapPriceSchedule"
+            }
+          },
+          "inAppPurchaseAvailability": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/inAppPurchaseAvailability",
+              "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/inAppPurchaseAvailability"
+            }
+          },
+          "images": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/images",
+              "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/images"
+            }
+          },
+          "offerCodes": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/offerCodes",
+              "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/offerCodes"
+            }
+          },
+          "versions": {
+            "meta": {
+              "paging": {
+                "total": 1,
+                "limit": 10
+              }
+            },
+            "data": [
+              {
+                "type": "inAppPurchaseVersions",
+                "id": "9ac95eb6-e0c3-4440-9e1e-effa0aa78740"
+              }
+            ],
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/versions",
+              "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/versions"
+            }
           }
         },
-        "pricePoints": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/pricePoints",
-            "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/pricePoints"
-          }
-        },
-        "content": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/content",
-            "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/content"
-          }
-        },
-        "appStoreReviewScreenshot": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/appStoreReviewScreenshot",
-            "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/appStoreReviewScreenshot"
-          }
-        },
-        "promotedPurchase": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/promotedPurchase",
-            "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/promotedPurchase"
-          }
-        },
-        "iapPriceSchedule": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/iapPriceSchedule",
-            "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/iapPriceSchedule"
-          }
-        },
-        "inAppPurchaseAvailability": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/inAppPurchaseAvailability",
-            "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/inAppPurchaseAvailability"
-          }
-        },
-        "images": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/images",
-            "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/images"
-          }
-        },
-        "offerCodes": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/offerCodes",
-            "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/offerCodes"
-          }
-        },
-        "versions": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/relationships/versions",
-            "related": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207/versions"
-          }
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207"
         }
       },
+      "included": [
+        {
+          "type": "inAppPurchaseVersions",
+          "id": "9ac95eb6-e0c3-4440-9e1e-effa0aa78740",
+          "attributes": {
+            "version": 1,
+            "state": "PREPARE_FOR_SUBMISSION"
+          },
+          "relationships": {
+            "image": {
+              "links": {
+                "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/relationships/image",
+                "related": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/image"
+              }
+            },
+            "images": {
+              "links": {
+                "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/relationships/images",
+                "related": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/images"
+              }
+            },
+            "localizations": {
+              "links": {
+                "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/relationships/localizations",
+                "related": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/localizations"
+              }
+            }
+          },
+          "links": {
+            "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740"
+          }
+        }
+      ],
       "links": {
-        "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207"
+        "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207?include=versions"
       }
-    },
-    "links": {
-      "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchases/6802989207"
     }
   },
   "lifetime_version_readback": {
-    "data": {
-      "type": "inAppPurchaseVersions",
-      "id": "9ac95eb6-e0c3-4440-9e1e-effa0aa78740",
-      "attributes": {
-        "version": 1,
-        "state": "PREPARE_FOR_SUBMISSION"
-      },
-      "relationships": {
-        "image": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/relationships/image",
-            "related": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/image"
-          }
+    "http_status": 200,
+    "body": {
+      "data": {
+        "type": "inAppPurchaseVersions",
+        "id": "9ac95eb6-e0c3-4440-9e1e-effa0aa78740",
+        "attributes": {
+          "version": 1,
+          "state": "PREPARE_FOR_SUBMISSION"
         },
-        "images": {
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/relationships/images",
-            "related": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/images"
-          }
-        },
-        "localizations": {
-          "meta": {
-            "paging": {
-              "total": 1,
-              "limit": 10
+        "relationships": {
+          "image": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/relationships/image",
+              "related": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/image"
             }
           },
-          "data": [
-            {
-              "type": "inAppPurchaseLocalizations",
-              "id": "90d5b7ab-5c5d-423b-a39e-4ada63835a6c"
+          "images": {
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/relationships/images",
+              "related": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/images"
             }
-          ],
-          "links": {
-            "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/relationships/localizations",
-            "related": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/localizations"
+          },
+          "localizations": {
+            "meta": {
+              "paging": {
+                "total": 1,
+                "limit": 10
+              }
+            },
+            "data": [
+              {
+                "type": "inAppPurchaseLocalizations",
+                "id": "90d5b7ab-5c5d-423b-a39e-4ada63835a6c"
+              }
+            ],
+            "links": {
+              "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/relationships/localizations",
+              "related": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740/localizations"
+            }
           }
-        }
-      },
-      "links": {
-        "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740"
-      }
-    },
-    "included": [
-      {
-        "type": "inAppPurchaseLocalizations",
-        "id": "90d5b7ab-5c5d-423b-a39e-4ada63835a6c",
-        "attributes": {
-          "name": "買い切りプレミアム",
-          "locale": "ja",
-          "description": "一度の購入で、全300問・全30セット・全分野・苦手復習を期限なく利用できます。"
         },
         "links": {
-          "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchaseLocalizations/90d5b7ab-5c5d-423b-a39e-4ada63835a6c"
+          "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740"
         }
+      },
+      "included": [
+        {
+          "type": "inAppPurchaseLocalizations",
+          "id": "90d5b7ab-5c5d-423b-a39e-4ada63835a6c",
+          "attributes": {
+            "name": "買い切りプレミアム",
+            "locale": "ja",
+            "description": "一度の購入で、全300問・全30セット・全分野・苦手復習を期限なく利用できます。"
+          },
+          "links": {
+            "self": "https://api.appstoreconnect.apple.com/v2/inAppPurchaseLocalizations/90d5b7ab-5c5d-423b-a39e-4ada63835a6c"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740?include=localizations"
       }
-    ],
-    "links": {
-      "self": "https://api.appstoreconnect.apple.com/v1/inAppPurchaseVersions/9ac95eb6-e0c3-4440-9e1e-effa0aa78740?include=localizations"
     }
   },
   "monthly_availability_readback": {
