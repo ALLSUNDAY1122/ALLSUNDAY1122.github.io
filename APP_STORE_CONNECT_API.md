@@ -17,6 +17,33 @@ Prefer API/CI for App Store Connect metadata and localizations, versions and bui
 
 Do not expose a generic arbitrary-write gateway. Write operations must be implemented as named/allowlisted release actions with target validation and idempotency. Final App Review submission, production release, destructive deletion, contracts/payment/tax/banking and identity verification remain human gates even when an API technically exists.
 
+## Canonical release registry
+
+`automation/app-release-registry.json` is the machine-readable registry for release operations. It binds each supported app to its canonical Bundle ID, Apple-issued App Store Connect App ID when available, APP2 task where applicable, and read-back eligibility.
+
+Release tooling must not maintain a second hard-coded app list when the registry can be used instead. Before any build, upload, TestFlight assignment, metadata write, IAP write, or App Review submission:
+
+1. Resolve the registry entry.
+2. Cross-check Bundle ID and App Store Connect App ID against the authoritative Notion identification page and current App Store Connect state.
+3. Refuse to guess a missing Apple App ID. An unresolved Apple ID remains `apple_id_pending` / `UNKNOWN` until Apple has actually issued it.
+4. Abort on duplicate App IDs, duplicate Bundle IDs, or APP2 task collisions.
+
+`scripts/app_release_registry_audit.py` validates these invariants. `.github/workflows/app-release-registry-audit.yml` enforces them when the registry or common release tooling changes.
+
+## Verified release-state contract
+
+Build, upload, TestFlight, and App Review are separate states. A successful CI job or a started submit script is not proof that Apple accepted the transition.
+
+Use these normalized release states when reporting progress:
+
+`BUILDING → BINARY_UPLOADED → APPLE_PROCESSING → BUILD_VALID → TESTFLIGHT_READY → SUBMISSION_READY → WAITING_FINAL_APPROVAL → SUBMITTING → WAITING_FOR_REVIEW → IN_REVIEW → APPROVED/REJECTED → RELEASED`
+
+If a required remote read fails, report `UNKNOWN` and isolate the failing layer. Do not label an unknown state as "Apple processing" or "Apple waiting".
+
+App Review submission is complete only after App Store Connect read-back confirms `WAITING_FOR_REVIEW` or a later review state. Production release is complete only after the release state itself is read back and, when required, the App Store listing is externally visible.
+
+Temporary GitHub Actions or Codemagic artifact URLs must not be the only canonical source for screenshots, previews, or submission metadata. Those assets must be stored durably or reproducible deterministically.
+
 ## Secret contract
 
 Provide credentials only through a secure secret store or a local environment. Never commit or paste the credential values into GitHub files, Notion, issues, pull requests, or chat logs.
@@ -40,6 +67,8 @@ python3 scripts/app_store_connect_api.py
 The default request is `GET /v1/apps?limit=1`. The script creates a short-lived ES256 JWT and does not print the JWT or credential values.
 
 `.github/workflows/app-store-connect-api-gateway.yml` provides the current bounded read gateway. It is intentionally read-only until each write capability is added as a semantic allowlisted action.
+
+For cross-app release status, use `scripts/app_factory_release_readback.py`. It reads the canonical release registry, skips unresolved Apple IDs instead of guessing them, and persists read-only evidence for each registered app.
 
 ## Safety boundaries
 
