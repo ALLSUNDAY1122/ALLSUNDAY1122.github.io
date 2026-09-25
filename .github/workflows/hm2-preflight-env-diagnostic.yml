@@ -1,0 +1,54 @@
+name: HM2 Preflight Environment Diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/hm2-preflight-env-diagnostic.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install release preparation dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends imagemagick webp
+          if ! command -v magick >/dev/null 2>&1 && command -v convert >/dev/null 2>&1; then
+            mkdir -p "$RUNNER_TEMP/bin"
+            cat > "$RUNNER_TEMP/bin/magick" <<'SH'
+          #!/bin/sh
+          exec convert "$@"
+          SH
+            chmod +x "$RUNNER_TEMP/bin/magick"
+            echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          fi
+
+      - name: Audit canonical release registry
+        run: python3 scripts/app_release_registry_audit.py
+
+      - name: Prepare exact HM2 web bundle with production build number
+        env:
+          BUILD_NUMBER: '22'
+        run: bash -x ios/health-manager-2/prepare-web-assets.sh
+
+      - name: Verify generated release inputs
+        run: |
+          set -euo pipefail
+          test -f ios/health-manager-2/HealthManager2/Web/index.html
+          test -f ios/health-manager-2/HealthManager2/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          grep -q 'CURRENT_PROJECT_VERSION: 22' ios/health-manager-2/project.yml
+          echo 'PASS: preflight environment reproducer completed for Build 22'
