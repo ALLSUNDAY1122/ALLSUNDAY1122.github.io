@@ -1,6 +1,5 @@
 name: HM2 Release Readback
 
-# manual-trigger marker: 2026-09-23T13:16+09:00
 on:
   push:
     branches: [main]
@@ -10,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: hm2-release-readback
@@ -22,6 +21,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -30,13 +31,37 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-          HM2_ASC_RESULT: hm2-release-readback.json
-        run: python3 scripts/hm2_release_readback.py
+          HM2_ASC_RESULT: automation/asc-results/hm2-release-readback.json
+        run: |
+          mkdir -p automation/asc-results
+          python3 scripts/hm2_release_readback.py
+      - name: Persist sanitized read-back
+        if: always() && hashFiles('automation/asc-results/hm2-release-readback.json') != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/asc-results/hm2-release-readback.json
+          if git diff --cached --quiet; then
+            echo 'HM2 read-back unchanged.'
+            exit 0
+          fi
+          git commit -m 'Persist HM2 App Store Connect read-back'
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          echo 'Failed to persist HM2 read-back after retries.' >&2
+          exit 1
       - name: Upload sanitized result
-        if: always() && hashFiles('hm2-release-readback.json') != ''
+        if: always() && hashFiles('automation/asc-results/hm2-release-readback.json') != ''
         uses: actions/upload-artifact@v6
         with:
           name: hm2-release-readback
-          path: hm2-release-readback.json
+          path: automation/asc-results/hm2-release-readback.json
           if-no-files-found: error
           retention-days: 14
