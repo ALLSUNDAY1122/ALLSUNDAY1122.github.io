@@ -5,9 +5,11 @@ on:
     branches: [main]
     paths:
       - automation/hm2-app-store-screens-trigger.txt
+      - .github/workflows/hm2-app-store-screens-browser.yml
+  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: hm2-app-store-screens-browser
@@ -19,6 +21,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -94,6 +98,51 @@ jobs:
                   raise SystemExit(f'Screenshot appears blank/near-solid: {p.name}, variance={stat.var}')
               print(f'PASS {p.name}: size={im.size} variance={stat.var}')
           PY
+      - name: Persist canonical App Store screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='automation/release-assets/hm2'
+          mkdir -p "$target"
+          cp /tmp/hm2-app-store-screens/01-home.png "$target/01-home.png"
+          cp /tmp/hm2-app-store-screens/02-premium.png "$target/02-premium.png"
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          root=Path('automation/release-assets/hm2')
+          files=[]
+          for name in ('01-home.png','02-premium.png'):
+              p=root/name
+              files.append({
+                  'name':name,
+                  'bytes':p.stat().st_size,
+                  'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
+                  'size':'1260x2736'
+              })
+          (root/'manifest.json').write_text(json.dumps({
+              'source':'hm2-app-store-screens-browser.yml',
+              'canonical':True,
+              'build':'22',
+              'files':files
+          },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$target/01-home.png" "$target/02-premium.png" "$target/manifest.json"
+          if git diff --cached --quiet; then
+            echo 'Canonical screenshots unchanged.'
+            exit 0
+          fi
+          git commit -m 'Persist HM2 canonical App Store screenshots'
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          echo 'Failed to persist canonical screenshots after retries.' >&2
+          exit 1
       - uses: actions/upload-artifact@v6
         with:
           name: hm2-app-store-screens
