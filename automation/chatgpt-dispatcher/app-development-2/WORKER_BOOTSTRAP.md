@@ -1,12 +1,12 @@
-# アプリ開発②｜13セッション再開 Worker契約 v0.1
+# アプリ開発②｜13セッション再開 Worker契約 v0.2
 
 対象は ChatGPTプロジェクト **「アプリ開発②」** 内で再開する13個のアプリ専用セッション。
 
 ## 正本
 - Notion「アプリ開発台帳」
 - 各アプリのNotion正本ページ
-- Notion「🚀 【標準手順】AIアプリ開発・公開フロー v2.7」
-- Notion「申請手順」
+- Notion「🚀 【標準手順】AIアプリ開発・公開フロー v2.8」
+- Notion「申請手順」（2026-09-25 One-Pass Release + Verified Read-back改訂）
 - GitHub `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
 - App Store Connect / Codemagic の現在実状態
 - Dispatcher control branch `automation/app-development-2-session-dispatcher`
@@ -25,6 +25,11 @@
 10. secret、token、`.p8`、署名鍵等をGitHub/Notionへ保存しない。
 11. App Store最終提出・公開、契約/税/銀行、2FA、iPhone実機でしか判断できない最終価値確認など真正なHUMAN_REQUIREDだけで停止する。
 12. Task終了時は証拠を `evidence_path` へ保存し、Queueの自分のTaskだけをDONE/HUMAN_REQUIREDへ更新してread-backする。
+13. TestFlight / App Store申請では `BUILDING → BINARY_UPLOADED → APPLE_PROCESSING → BUILD_VALID → TESTFLIGHT_READY → SUBMISSION_READY → WAITING_FINAL_APPROVAL → SUBMITTING → WAITING_FOR_REVIEW` を別状態として扱う。CI成功やsubmit script起動だけで「申請済み」「Apple待ち」と報告しない。
+14. 本申請完了はApp Store Connectのread-backで `WAITING_FOR_REVIEW` またはそれ以降を確認した場合だけとする。read-back不能なら `UNKNOWN` とし、停止地点を切り分ける。
+15. GitHub Actions Artifact等の期限付き一時成果物を、申請に必要なスクリーンショット・metadataの唯一の正本にしない。恒久正本または決定論的再生成経路を使う。
+16. ユーザーが対象アプリについて「本申請して」「本審査に進んで」「申請して」と明示した場合、直前にread-backした同一App ID・Version・BuildへのFINAL-APPROVALとして扱う。Version/Build/価格/重要metadataが変わった場合のみ再承認する。
+17. metadata・IAP・TestFlight割当・Version紐付け・Apple processing等、binary変更を必要としない原因では再Buildしない。
 
 ## 起動時に必ず行うこと
 - Notion台帳の状態・次の作業を取得
@@ -33,3 +38,4 @@
 - Apple到達済みアプリはASCのBuild/TestFlight/App version状態を確認
 - 直近ユーザー実機報告を「未解決の可能性がある観測」として扱い、コード・Build・実機証拠で解消済みか判定
 - その結果に基づき、今回のセッションで進める最大未完了差分を決定する
+- 申請工程にいる場合は、現在状態 / 最終成功工程 / 停止工程 / 停止理由 / 自動続行可否 / HUMAN_REQUIRED有無を必ず分離して記録する
