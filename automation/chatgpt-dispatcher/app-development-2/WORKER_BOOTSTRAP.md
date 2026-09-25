@@ -1,4 +1,4 @@
-# アプリ開発②｜13セッション再開 Worker契約 v0.3
+# アプリ開発②｜13セッション再開 Worker契約 v0.4
 
 対象は ChatGPTプロジェクト **「アプリ開発②」** 内で再開する13個のアプリ専用セッション。
 
@@ -10,6 +10,8 @@
 - Notion「【正本】対象アプリ識別情報｜App Store Connect / Codemagic」
 - GitHub `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
 - GitHub `automation/app-release-registry.json`（公開工程で使うApp ID / Bundle ID / APP2 Task対応の機械正本）
+- GitHub `scripts/app_release_submission_preflight.py` / `.github/workflows/app-release-submission-preflight.yml`
+- GitHub `scripts/app_release_submit.py` / `.github/workflows/app-release-submit.yml`
 - App Store Connect / Codemagic の現在実状態
 - Dispatcher control branch `automation/app-development-2-session-dispatcher`
 - Queue `automation/chatgpt-dispatcher/app-development-2/queue.json`
@@ -33,6 +35,9 @@
 16. ユーザーが対象アプリについて「本申請して」「本審査に進んで」「申請して」と明示した場合、直前にread-backした同一App ID・Version・BuildへのFINAL-APPROVALとして扱う。Version/Build/価格/重要metadataが変わった場合のみ再承認する。
 17. metadata・IAP・TestFlight割当・Version紐付け・Apple processing等、binary変更を必要としない原因では再Buildしない。
 18. 公開工程を開始する前に `automation/app-release-registry.json` で自分の `app2_task` を引き、App ID / Bundle IDをNotion識別正本と照合する。不一致ならwrite/build/submitを止めて正本を修復する。Apple App IDがnullの場合は推測せず `UNKNOWN/APPLE_ID_PENDING` とする。
+19. 本申請直前は、個別submit scriptを新規作成せず、まず共通 `app-release-submission-preflight` を使用してApple実値のApp ID / Bundle ID / Version / Build / Build選択 / Review Detail / localization / screenshotsをread-only確認する。課金アプリはこれに加えアプリ固有IAP PreflightをPASSさせる。
+20. FINAL-APPROVAL後の最終提出は、原則 `automation/app-release-submit-command.json` → `.github/workflows/app-release-submit.yml` → `scripts/app_release_submit.py` の共通経路を使う。既存のアプリ専用final-submit Workflowは互換維持のため残してよいが、新規増殖は禁止し、修正時は共通経路へ移行する。
+21. 共通Final SubmitはApp Store Connect上で対象Versionに選択されたBuildが承認packetのBuildと一致し、Review Detailが存在する場合だけ提出する。提出後は同じVersion/Buildを再read-backし、`WAITING_FOR_REVIEW`等を確認して証拠JSONを保存する。
 
 ## 起動時に必ず行うこと
 - Notion台帳の状態・次の作業を取得
@@ -40,6 +45,8 @@
 - GitHubの対象branch / recent PR / CI / mainとの差分を確認
 - 公開工程対象なら `automation/app-release-registry.json` から自分のAPP2 Taskを解決し、Notion識別正本と一致確認
 - Apple到達済みアプリはASCのBuild/TestFlight/App version状態を確認
+- 本申請直前なら共通Submission Preflightを実行し、承認対象App ID / Version / BuildをApple実値から固定する
+- FINAL-APPROVAL済みなら共通Final Submitを優先し、個別submit Workflowへ戻らない
 - 直近ユーザー実機報告を「未解決の可能性がある観測」として扱い、コード・Build・実機証拠で解消済みか判定
 - その結果に基づき、今回のセッションで進める最大未完了差分を決定する
 - 申請工程にいる場合は、現在状態 / 最終成功工程 / 停止工程 / 停止理由 / 自動続行可否 / HUMAN_REQUIRED有無を必ず分離して記録する
