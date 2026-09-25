@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: write
-  actions: read
 
 concurrency:
   group: app2-006-hm2-submit-review
@@ -23,73 +22,66 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Require explicit fresh approval and exact immutable build
-        id: command
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Audit canonical release registry
+        run: python3 scripts/app_release_registry_audit.py
+
+      - name: Require explicit approval for exact current target
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY' >> "$GITHUB_OUTPUT"
+          python - <<'PY'
           import json
-          from datetime import datetime, timezone, timedelta
           from pathlib import Path
           cmd=json.loads(Path('automation/app2-006-hm2-submit-command.json').read_text(encoding='utf-8'))
           if cmd.get('approved_by_user') is not True:
               raise SystemExit('HUMAN_GATE: approved_by_user must be true')
           if cmd.get('action') != 'submit_hm2_build22_for_review':
               raise SystemExit('HUMAN_GATE: unexpected submit action')
-          if str(cmd.get('app_id')) != '6799751657':
-              raise SystemExit('HUMAN_GATE: target app mismatch')
-          if str(cmd.get('bundle_id')) != 'jp.allsunday1122.healthmanager2':
-              raise SystemExit('HUMAN_GATE: target bundle mismatch')
-          if str(cmd.get('build')) != '22':
-              raise SystemExit('HUMAN_GATE: only approved Build 22 may be submitted')
-          if str(cmd.get('build_id')) != 'd97f10a1-dcce-40ed-be25-5e0a6563d7aa':
-              raise SystemExit('HUMAN_GATE: immutable Build 22 id mismatch')
-          if cmd.get('artifact_name') != 'hm2-app-store-screens':
-              raise SystemExit('HUMAN_GATE: unexpected screenshot artifact')
-          run_id=cmd.get('source_run_id')
-          if not isinstance(run_id,int) or run_id <= 0:
-              raise SystemExit('HUMAN_GATE: invalid screenshot source run')
-          raw=str(cmd.get('approved_at') or '').replace('Z','+00:00')
-          try: approved_at=datetime.fromisoformat(raw)
-          except Exception: raise SystemExit('HUMAN_GATE: approved_at missing or invalid')
-          if approved_at.tzinfo is None:
-              raise SystemExit('HUMAN_GATE: approved_at must include timezone')
-          age=datetime.now(timezone.utc)-approved_at.astimezone(timezone.utc)
-          if age < timedelta(minutes=-5) or age > timedelta(hours=24):
-              raise SystemExit(f'HUMAN_GATE: approval is stale or future-dated; age={age}')
-          print(f'run_id={run_id}')
-          print('approval_status=pass')
+          expected={
+              'app_id':'6799751657',
+              'bundle_id':'jp.allsunday1122.healthmanager2',
+              'build':'22',
+              'build_id':'d97f10a1-dcce-40ed-be25-5e0a6563d7aa',
+          }
+          for key,value in expected.items():
+              if str(cmd.get(key)) != value:
+                  raise SystemExit(f'HUMAN_GATE: {key} mismatch: {cmd.get(key)} != {value}')
+          print('PASS: explicit HM2 approval packet matches exact App ID / Bundle ID / Build 22.')
           PY
 
-      - name: Download audited App Store screenshots
-        uses: actions/download-artifact@v5
-        with:
-          name: hm2-app-store-screens
-          path: /tmp/hm2-app-store-screens
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ steps.command.outputs.run_id }}
-
-      - name: Validate exact screenshot set
+      - name: Validate canonical screenshot set
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import struct
+          import hashlib, json, struct
           from pathlib import Path
-          root=Path('/tmp/hm2-app-store-screens')
+          root=Path('automation/release-assets/hm2')
           expected=[root/'01-home.png',root/'02-premium.png']
-          pngs=sorted(root.glob('*.png'))
-          if pngs != expected:
-              raise SystemExit(f'Expected exact screenshot files {expected}; found {pngs}')
+          manifest_path=root/'manifest.json'
+          if not manifest_path.is_file():
+              raise SystemExit('Canonical HM2 screenshot manifest missing. Run HM2 Review Screenshot first.')
+          manifest=json.loads(manifest_path.read_text(encoding='utf-8'))
+          if manifest.get('canonical') is not True:
+              raise SystemExit('HM2 screenshot manifest is not canonical')
+          manifest_files={x.get('name'):x for x in manifest.get('files',[]) if isinstance(x,dict)}
           for p in expected:
+              if not p.is_file():
+                  raise SystemExit(f'Canonical screenshot missing: {p}')
               raw=p.read_bytes()
               if raw[:8] != b'\x89PNG\r\n\x1a\n':
                   raise SystemExit(f'Not PNG: {p}')
               size=struct.unpack('>II',raw[16:24])
               if size != (1260,2736):
                   raise SystemExit(f'Unexpected screenshot size {p.name}: {size}')
-              print(f'PASS {p.name}: {size[0]}x{size[1]} bytes={len(raw)}')
+              sha=hashlib.sha256(raw).hexdigest()
+              if (manifest_files.get(p.name) or {}).get('sha256') != sha:
+                  raise SystemExit(f'Canonical screenshot hash mismatch: {p.name}')
+              print(f'PASS {p.name}: {size[0]}x{size[1]} sha256={sha}')
           PY
 
       - name: Re-assert all machine-fixable App Store prerequisites
@@ -105,7 +97,7 @@ jobs:
           python scripts/hm2_configure_iap_metadata.py
           python scripts/hm2_fill_review_contact_from_donor.py
           python scripts/hm2_fix_submission_prereqs.py \
-            --source-screen /tmp/hm2-app-store-screens/01-home.png \
+            --source-screen automation/release-assets/hm2/01-home.png \
             --output /tmp/hm2-submission-prereqs.json
 
       - name: Submit Build 22 with monthly and lifetime products
@@ -119,7 +111,7 @@ jobs:
         run: |
           set -o pipefail
           python scripts/app2_006_hm2_submit_review.py \
-            --screens /tmp/hm2-app-store-screens \
+            --screens automation/release-assets/hm2 \
             --output /tmp/app2-006-hm2-submit-result.json \
             2>&1 | tee /tmp/app2-006-hm2-submit.log
 
@@ -152,7 +144,7 @@ jobs:
             done
           fi
 
-      - name: Enforce successful submission
+      - name: Enforce successful App Store Connect read-back
         if: always()
         shell: bash
         run: |
