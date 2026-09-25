@@ -5,15 +5,25 @@ on:
   push:
     paths:
       - 'automation/app-release-registry.json'
+      - 'automation/app-release-submit-command.example.json'
       - 'scripts/app_release_registry_audit.py'
       - 'scripts/app_factory_release_readback.py'
+      - 'scripts/app_release_submission_preflight.py'
+      - 'scripts/app_release_submit.py'
       - '.github/workflows/app-release-registry-audit.yml'
+      - '.github/workflows/app-release-submission-preflight.yml'
+      - '.github/workflows/app-release-submit.yml'
   pull_request:
     paths:
       - 'automation/app-release-registry.json'
+      - 'automation/app-release-submit-command.example.json'
       - 'scripts/app_release_registry_audit.py'
       - 'scripts/app_factory_release_readback.py'
+      - 'scripts/app_release_submission_preflight.py'
+      - 'scripts/app_release_submit.py'
       - '.github/workflows/app-release-registry-audit.yml'
+      - '.github/workflows/app-release-submission-preflight.yml'
+      - '.github/workflows/app-release-submit.yml'
 
 permissions:
   contents: read
@@ -29,6 +39,15 @@ jobs:
           python-version: '3.12'
       - name: Audit canonical release registry
         run: python3 scripts/app_release_registry_audit.py
+      - name: Static-check common release scripts
+        run: |
+          python3 -m py_compile \
+            scripts/app_release_registry_audit.py \
+            scripts/app_factory_release_readback.py \
+            scripts/app_release_submission_preflight.py \
+            scripts/app_release_submit.py
+          python3 -m json.tool automation/app-release-registry.json >/dev/null
+          python3 -m json.tool automation/app-release-submit-command.example.json >/dev/null
       - name: Upload audit evidence
         if: always() && hashFiles('automation/app-release-registry-audit.json') != ''
         uses: actions/upload-artifact@v6
