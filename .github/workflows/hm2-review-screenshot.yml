@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   capture:
@@ -65,7 +65,7 @@ jobs:
               --path "$RUNNER_TEMP/HM2Review.xcresult" \
               --output-path "$RUNNER_TEMP/hm2-review-attachments"
           fi
-          find "$RUNNER_TEMP/hm2-review-attachments" -type f -maxdepth 3 -print || true
+          find "$RUNNER_TEMP/hm2-review-attachments" -maxdepth 3 -type f -print || true
       - name: Build deterministic review and App Store assets
         if: always()
         shell: bash
@@ -116,9 +116,9 @@ jobs:
               echo '```'
             fi
             echo 'Attachments:'
-            find "$RUNNER_TEMP/hm2-review-attachments" -type f -maxdepth 3 -printf '%f\n' 2>/dev/null || true
+            find "$RUNNER_TEMP/hm2-review-attachments" -maxdepth 3 -type f -print 2>/dev/null || true
             echo 'App Store assets:'
-            find "$RUNNER_TEMP/hm2-app-store-screens" -type f -maxdepth 2 -printf '%f\n' 2>/dev/null || true
+            find "$RUNNER_TEMP/hm2-app-store-screens" -maxdepth 2 -type f -print 2>/dev/null || true
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Count captured review PNGs
         if: always()
@@ -151,3 +151,38 @@ jobs:
           test "${{ steps.ui_capture.outputs.exit_code }}" = "0"
           test "${{ steps.png_gate.outputs.review_count }}" = "1"
           test "${{ steps.png_gate.outputs.store_count }}" = "2"
+      - name: Persist canonical App Store screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='automation/release-assets/hm2'
+          mkdir -p "$target"
+          cp "$RUNNER_TEMP/hm2-app-store-screens/01-home.png" "$target/01-home.png"
+          cp "$RUNNER_TEMP/hm2-app-store-screens/02-premium.png" "$target/02-premium.png"
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          root=Path('automation/release-assets/hm2')
+          files=[]
+          for name in ('01-home.png','02-premium.png'):
+              p=root/name
+              files.append({'name':name,'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'size':'1260x2736'})
+          (root/'manifest.json').write_text(json.dumps({'source':'hm2-review-screenshot.yml','canonical':True,'files':files},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$target/01-home.png" "$target/02-premium.png" "$target/manifest.json"
+          if git diff --cached --quiet; then
+            echo 'Canonical screenshots unchanged.'
+            exit 0
+          fi
+          git commit -m 'Persist HM2 canonical App Store screenshots'
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          echo 'Failed to persist canonical screenshots after retries.' >&2
+          exit 1
