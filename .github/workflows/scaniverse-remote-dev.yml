@@ -1,0 +1,47 @@
+name: Scaniverse Remote Dev Fast Gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'codex/scaniverse-*'
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/scaniverse-remote-dev.yml'
+      - '.github/workflows/splat-native-ios.yml'
+
+concurrency:
+  group: scaniverse-remote-dev-${{ github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python contract gates
+        run: |
+          set -euo pipefail
+          python3 splat-native-ios/scripts/test_reconstruction_contracts.py
+          python3 splat-native-ios/scripts/test_mesh_durability_contract.py
+          python3 splat-native-ios/scripts/test_worldmap_durability_contract.py
+          python3 splat-native-ios/scripts/test_s9_memory_drain_contract.py
+          python3 splat-native-ios/scripts/test_s13_depth_seed_contract.py
+          python3 splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
+
+      - name: Materialization composition gate (S7-S14D)
+        working-directory: splat-native-ios
+        run: |
+          set -euo pipefail
+          bash scripts/materialize_msplat_s7_wave1.sh
+          grep -q 'SplatSoftwareDepthSeedBuilder.makeSeedPoints' SplatNative/SplatDepthSeedBuilder.swift
+          grep -q 'ライブラリに残して終了' SplatNative/RootScanView.swift
+          grep -q 'splatStore.listTrash().count' SplatNative/MeshLibraryView.swift
+
+      - name: Diff hygiene
+        run: git diff --check

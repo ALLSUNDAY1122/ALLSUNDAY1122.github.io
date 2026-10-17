@@ -1,0 +1,151 @@
+name: Splat S20 Codemagic Failure Probe
+
+on:
+  push:
+    branches:
+      - feature/splat-native-ios-poc
+    paths:
+      - automation/scanlab-codemagic-probe-request.json
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Compare builds and perform guarded distribution action
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$CM_API_TOKEN"
+          python3 - <<'PY'
+          import json, os, re, urllib.request, urllib.error
+          from pathlib import Path
+
+          req = json.loads(Path('automation/scanlab-codemagic-probe-request.json').read_text(encoding='utf-8'))
+          if req.get('repository') != 'ALLSUNDAY1122/ALLSUNDAY1122.github.io': raise SystemExit('repository mismatch')
+          if req.get('app_id') != '6a769d81a1add9d06020b524': raise SystemExit('app mismatch')
+          if req.get('branch') not in {None, 'release/scanlab-testflight'}: raise SystemExit('branch mismatch')
+          if req.get('workflow_id') not in {None, 'scanlab-ios'}: raise SystemExit('workflow mismatch')
+          if req.get('good_build_id') != '6aa1bb55b7af1ef0d6ac5484': raise SystemExit('known-good build mismatch')
+          if req.get('failed_build_id') != '6aa1f88a7784a14a74795f9b': raise SystemExit('target failure mismatch')
+          if req.get('submit_to_app_store') not in {None, False}: raise SystemExit('App Store submission must remain false')
+
+          token = os.environ['CM_API_TOKEN'].strip()
+          def api(url, method='GET', payload=None, accept_208=False):
+              body = None if payload is None else json.dumps(payload).encode('utf-8')
+              r = urllib.request.Request(url, data=body, method=method)
+              r.add_header('Content-Type', 'application/json')
+              r.add_header('x-auth-token', token)
+              try:
+                  with urllib.request.urlopen(r, timeout=30) as resp:
+                      raw = resp.read().decode('utf-8')
+                      return resp.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  if accept_208 and e.code == 208: return 208, {}
+                  raise
+          def get(build_id):
+              _, raw = api(f'https://codemagic.io/api/v3/builds/{build_id}')
+              return raw.get('data') or raw
+
+          allowed = {'status','state','name','title','phase','step','stage','result','conclusion','error','message','reason','exitcode','exit_code','startedat','started_at','finishedat','finished_at','duration','buildnumber','build_number','branch','workflowid','workflow_id'}
+          secretish = re.compile(r'(?i)(token|secret|password|private[_ -]?key|authorization|certificate)')
+          def clean(v):
+              if not isinstance(v, str): return v
+              return re.sub(r'(?i)(token|secret|password|key)=\S+', r'\1=<redacted>', v)[:500]
+          def summarize(x):
+              out = {'top_level_keys': sorted(x.keys()) if isinstance(x, dict) else []}
+              scalars = []
+              def walk(v, path=''):
+                  if isinstance(v, dict):
+                      for k, child in v.items():
+                          if secretish.search(str(k)): continue
+                          p = f'{path}.{k}' if path else str(k)
+                          if isinstance(child, (str,int,float,bool)) or child is None:
+                              if str(k).lower() in allowed: scalars.append({'path': p, 'value': clean(child)})
+                          elif isinstance(child, (dict,list)): walk(child, p)
+                  elif isinstance(v, list):
+                      for i, child in enumerate(v[:100]): walk(child, f'{path}[{i}]')
+              walk(x)
+              out['safe_status_fields'] = scalars[:300]
+              return out
+
+          good = get(req['good_build_id']); failed = get(req['failed_build_id'])
+          result = {'schema':'scanlab.codemagic-safe-probe.v5','request_id':req.get('request_id'),'good_build_id':req['good_build_id'],'failed_build_id':req['failed_build_id'],'good':summarize(good),'failed':summarize(failed),'secret_values_persisted':False}
+          action = req.get('action') or 'probe'
+          if action == 'build':
+              status, started = api('https://api.codemagic.io/builds', method='POST', payload={'appId':req['app_id'],'workflowId':'scanlab-ios','branch':'release/scanlab-testflight'})
+              if not 200 <= status < 300: raise SystemExit(f'build start failed: {status}')
+              build_id = started.get('buildId') or started.get('id')
+              if not build_id: raise SystemExit('Codemagic did not return build id')
+              result['retry'] = {'build_id':build_id,'status':'started','branch':'release/scanlab-testflight','workflow_id':'scanlab-ios','app_id':req['app_id']}
+          elif action == 'poll':
+              build_id = req.get('target_build_id'); target = get(build_id)
+              if target.get('app_id') != req['app_id'] or target.get('branch') != 'release/scanlab-testflight': raise SystemExit('poll target identity mismatch')
+              result['retry'] = {'build_id':build_id,'summary':summarize(target)}
+          elif action == 'cancel':
+              build_id = req.get('target_build_id'); target = get(build_id)
+              if target.get('app_id') != req['app_id'] or target.get('branch') != 'release/scanlab-testflight': raise SystemExit('cancel target identity mismatch')
+              status, _ = api(f'https://api.codemagic.io/builds/{build_id}/cancel', method='POST', accept_208=True)
+              result['retry'] = {'build_id':build_id,'cancel_http_status':status,'before':summarize(target)}
+          elif action == 'materialize':
+              if req.get('recipe_version') != 5: raise SystemExit('materialize recipe epoch mismatch')
+              result['materialize'] = {'branch':'release/scanlab-testflight','recipe_version':5,'status':'requested'}
+          elif action != 'probe': raise SystemExit('invalid action')
+
+          Path('automation/scanlab-codemagic-probe-result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PASS guarded Scan Lab distribution action')
+          PY
+
+      - name: Materialize dense release source when requested
+        run: |
+          set -euo pipefail
+          ACTION="$(python3 -c 'import json; print(json.load(open("automation/scanlab-codemagic-probe-request.json")).get("action", "probe"))')"
+          if [ "$ACTION" != "materialize" ]; then
+            exit 0
+          fi
+          rm -rf /tmp/scanlab-release
+          git fetch origin release/scanlab-testflight
+          git worktree add -B scanlab-release-materialize /tmp/scanlab-release origin/release/scanlab-testflight
+          cd /tmp/scanlab-release
+          grep -q 'static let recipeVersion = 5' splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift
+          grep -q 'static let standardIterations = 7_000' splat-native-ios/SplatNative/SplatReconstructionPolicy.swift
+          python3 splat-native-ios/scripts/apply_s13_depth_seed.py
+          grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'seedDepthFrames' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'seedColorFrames' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q '同じ撮影から再生成' splat-native-ios/SplatNative/ScanLibraryView.swift
+          python3 splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
+          python3 splat-native-ios/scripts/diagnose_s15_pose_trajectory.py --self-test
+          bash splat-native-ios/scripts/validate.sh
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            splat-native-ios/SplatNative/ScanModel.swift \
+            splat-native-ios/SplatNative/ScanLibraryView.swift \
+            splat-native-ios/SplatNative/RootScanView.swift \
+            splat-native-ios/SplatNative/SplatResultView.swift
+          if git diff --cached --quiet; then
+            echo 'Dense release source already materialized.'
+          else
+            git commit -m 'scanlab: materialize epoch-5 dense release source'
+            git push origin HEAD:release/scanlab-testflight
+          fi
+
+      - name: Persist sanitized probe
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/scanlab-codemagic-probe-result.json
+          git commit -m 'ci: record Scan Lab Codemagic failure probe' || exit 0
+          if git push origin HEAD:feature/splat-native-ios-poc; then exit 0; fi
+          git fetch origin feature/splat-native-ios-poc
+          git rebase origin/feature/splat-native-ios-poc
+          git push origin HEAD:feature/splat-native-ios-poc
