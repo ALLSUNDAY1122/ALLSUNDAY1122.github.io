@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "project": "PJ-APP2 Scan Lab Scaniverse parity",
+  "control_branch": "automation/scanlab-hq-control-20261020",
+  "updated_at": "2026-10-20",
+  "policy": {
+    "claim": "Atomic GitHub contents SHA compare-and-swap; re-read after write",
+    "attempt": "Each task attempt has unique short-lived branch",
+    "resource_fencing": "Only current claim epoch may mutate assigned surface",
+    "checkpoint": "Push and remote-readback every 3 implementation responses",
+    "release": "Registry -> Preflight -> Build -> Upload -> Apple readback -> Internal TestFlight assignment readback; no App Review submission"
+  },
+  "tasks": [
+    {
+      "id": "SCANLAB-HQ-001",
+      "title": "Release registry, queue ownership and release evidence chain",
+      "owner": "HQ",
+      "status": "READY",
+      "attempt": 0,
+      "claim_epoch": 0,
+      "claim_token": null,
+      "attempt_branch": null,
+      "base_sha": "2bcbbd6128863739ad168610cd2e3f8e3b01b458",
+      "resource_lock": "scanlab:governance-release",
+      "evidence": []
+    },
+    {
+      "id": "SCANLAB-W1-001",
+      "title": "T34-T36 capture/reconstruction/export P0 implementation",
+      "owner": "WORKER_1",
+      "status": "READY",
+      "attempt": 0,
+      "claim_epoch": 0,
+      "claim_token": null,
+      "attempt_branch": null,
+      "base_sha": "2bcbbd6128863739ad168610cd2e3f8e3b01b458",
+      "resource_lock": "scanlab:native-capture-reconstruction-export",
+      "evidence": []
+    },
+    {
+      "id": "SCANLAB-W2-001",
+      "title": "T37-T39 viewer/library/publish/privacy P0 implementation",
+      "owner": "WORKER_2",
+      "status": "READY",
+      "attempt": 0,
+      "claim_epoch": 0,
+      "claim_token": null,
+      "attempt_branch": null,
+      "base_sha": "2bcbbd6128863739ad168610cd2e3f8e3b01b458",
+      "resource_lock": "scanlab:viewer-library-publish-privacy",
+      "evidence": []
+    }
+  ]
+}
