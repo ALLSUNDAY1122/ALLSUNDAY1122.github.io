@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-25T13:10:00Z",
+  "updated_at": "2026-10-20",
   "policy": {
     "final_approval": "Explicit user approval is required for the exact App ID / Version / Build immediately read back before App Review submission.",
     "submission_complete": "Only App Store Connect read-back at WAITING_FOR_REVIEW or a later review state counts as App Review submission complete.",
@@ -183,6 +183,20 @@
       "app2_task": null,
       "status": "active",
       "readback": true
+    },
+    "scanlab": {
+      "name": "Scan Lab",
+      "app_id": "6803778932",
+      "bundle_id": "jp.allsunday1122.splatlab",
+      "app2_task": "SCANLAB-HQ-001",
+      "status": "internal_testflight_historical_readback",
+      "readback": false,
+      "last_verified_build": "17",
+      "last_verified_at": "2026-09-10",
+      "historical_readback_path": "automation/scanlab-asc-readback-result.json",
+      "release_provider": "codemagic",
+      "release_workflow": "scanlab-ios",
+      "next_build": "UNKNOWN_PENDING_LIVE_APPLE_READBACK"
     }
   }
 }
