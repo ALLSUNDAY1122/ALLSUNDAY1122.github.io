@@ -34,3 +34,14 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - Worker tasks remain READY; prompts do not constitute Atomic Claims. Workers must CAS and read back before edits.
 - Verified example Swift anchor files on 2bcbbd61. Product code, CI, Codemagic, Apple state unchanged by this STEP.
 - NEXT: implement isolated, safe ASC readback route with group assignment and then authorize Worker claims.
+
+## STEP04 (2026-10-20) — Live Apple evidence
+- Implemented isolated ASC readback at automation/scanlab-development/asc_isolated_readback.py and .github/workflows/scanlab-isolated-asc-readback.yml, with read-only GitHub contents permissions, no push to production branch.
+- Run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/39343291138 completed SUCCESS for trigger commit 686c134378389a1a2e4e33ade98ada19ad8b4b34.
+- Independently retrieved job logs: PASS latest_build=18; internal_group_explicitly_linked=True; app identity assertions PASS; beta group schema PASS.
+- Evidence artifact ID 12229568807 (expires after 7d), ZIP SHA256 1c33c453a1b69089ef1581e6734057e9f6ac1ef68969bd480f1d876e462cf613.
+- Current processingState and internalBuildState were captured to workflow artifact but not independently inspected by HQ; retain UNKNOWN for these fields. Build 18 is live latest by ASC query.
+- Workflow only READ Apple API, no new Build/Upload, no group mutations, no App Review Submit.
+- Risk: Repository push also started unrelated workflows. They reported failures in GitHub runs; avoid additional broad push triggers until scope/trigger guards reviewed. No evidence of a Scan Lab product Build triggered by these failures.
+- Worker queues remain READY/unclaimed; each assigned worker claims its own task by GitHub SHA CAS and reads it back.
+- NEXT: harden/review isolated workflow and obtain durable evidence of processingState/internal group details; then authorize Worker Claim & P0 implementation.
