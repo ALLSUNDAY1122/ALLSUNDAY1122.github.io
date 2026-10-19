@@ -42,4 +42,18 @@ fixture = """  if (!cards.length && process.env.EXPO_PUBLIC_SCREENSHOT_FIXTURES 
   }
 """
 storage.write_text(text.replace(marker, fixture + marker), encoding="utf-8")
+
+# The Xcode 26.3 clang bundled with macos-15 rejects Swift ownership annotations
+# on C++ constructors in ExpoModulesJSI. This patch is restricted to the
+# screenshot-only checkout's node_modules; it does not modify Apple Build 12.
+header = root / "node_modules/expo-modules-jsi/apple/Sources/ExpoModulesJSI-Cxx/include/RuntimeScheduler.h"
+if not header.is_file():
+    raise SystemExit(f"screenshot compatibility header missing: {header}")
+header_text = header.read_text(encoding="utf-8")
+annotation = "SWIFT_RETURNS_RETAINED RuntimeScheduler("
+if header_text.count(annotation) != 2:
+    raise SystemExit(f"Unexpected RuntimeScheduler constructor annotations: {header_text.count(annotation)}")
+header.write_text(header_text.replace(annotation, "RuntimeScheduler("), encoding="utf-8")
+print("patched two ExpoModulesJSI constructor annotations for screenshot-only Xcode 26.3 build")
+
 print(f"prepared screenshot source under {root}")
