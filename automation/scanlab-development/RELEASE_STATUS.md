@@ -26,3 +26,11 @@ Date: 2026-10-20. State: IN_PROGRESS. App Review Submit prohibited.
 
 ## Next
 Reviewable PR for registry and governance, then authenticated Apple readback and precise file ownership allocation before Workers alter product code.
+
+## STEP03 (2026-10-20)
+- Worker ownership contract saved at automation/scanlab-development/OWNERSHIP_CONTRACT.md.
+- Existing S17 readback workflow is branch-push-triggered and writes result to shared feature branch; current HQ release governance lock does not authorize that shared branch write. Not executed. Apple current state UNKNOWN.
+- Existing S17 readback fetches latest build fields but not betaGroup relationship; assignment remains unverified.
+- Worker tasks remain READY; prompts do not constitute Atomic Claims. Workers must CAS and read back before edits.
+- Verified example Swift anchor files on 2bcbbd61. Product code, CI, Codemagic, Apple state unchanged by this STEP.
+- NEXT: implement isolated, safe ASC readback route with group assignment and then authorize Worker claims.
