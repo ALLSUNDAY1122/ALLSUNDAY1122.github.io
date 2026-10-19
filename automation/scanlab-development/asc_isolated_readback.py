@@ -4,8 +4,10 @@
 import base64, json, os, subprocess, tempfile, time, urllib.parse, urllib.request, urllib.error
 from pathlib import Path
 
-cmd=json.loads(Path('automation/scanlab-asc-readback-request.json').read_text(encoding='utf-8'))
+cmd=json.loads(Path('automation/scanlab-development/asc-readback-trigger.json').read_text(encoding='utf-8'))
 expected_bundle='jp.allsunday1122.splatlab'
+if cmd.get('app_id') != '6803778932':
+    raise SystemExit('Apple app ID mismatch')
 if cmd.get('bundle_id') != expected_bundle:
     raise SystemExit('bundle id mismatch')
 if cmd.get('read_only') is not True:
