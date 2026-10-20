@@ -124,3 +124,7 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - Native PR #5622 HEAD 439a75f9f8: Mesh generation-fenced frame writes, camera pose/previous pose/time negative tests. Smoke/Privacy/S9/S10/S12 success; full Native run39371960452 IN_PROGRESS, not PASS at readback.
 - Viewer PR #5619 HEAD 38a3887cb0: latest Native run39369794864 FAILED, 248 XCTest / 2 assertions in SplatCompletionVerifierTests previous-result integrity recovery. Both PRs still HOLD.
 - HQ comments PR5622 6283899051 and PR5619 6283899425; HQ audit HQ_STEP18_DUAL_PR_GATE.md. No merge/Build/TestFlight/App Review.
+
+### STEP18 late verified CI readback
+- Native takeover PR #5622 HEAD 439a75f9f80278ade8899c3c0726b268e194e914 full Native iOS run39371960452 completed SUCCESS, integrated XCTest 245 tests / 0 failures and static checks PASS. This supersedes the earlier IN_PROGRESS readback in STEP18. Worker2's native change set is CI_GREEN; additional P0 acceptance/combined T40 remain needed.
+- Viewer PR #5619 HEAD38a3887c latest run39369794864 FAILED 248 XCTest / 2 assertions; do NOT merge or release combined app yet.
