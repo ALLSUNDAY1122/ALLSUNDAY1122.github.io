@@ -139,9 +139,18 @@ require(
 finish = MODEL.index("func finishCapture()")
 train = MODEL.index("private func startTraining(")
 detached = MODEL.index("Task.detached", train)
-prepare = MODEL.index("Self.preparePointCloudPLY", detached)
+# Two validated release recipes exist: legacy in-model point preparation and the
+# S13/S14 depth/RGB seed builder. Both must execute in the detached worker before
+# GaussianDataset is initialized, never on the capture UI transition.
+legacy_prepare = "Self.preparePointCloudPLY"
+dense_prepare = "SplatDepthSeedBuilder.preparePointCloudPLY"
+preparation_calls = [call for call in (legacy_prepare, dense_prepare) if call in MODEL[detached:]]
+assert len(preparation_calls) == 1, "exactly one point-cloud preparation recipe must run in detached worker"
+prepare = MODEL.index(preparation_calls[0], detached)
 dataset = MODEL.index("let dataset = GaussianDataset", prepare)
 assert finish < train < detached < prepare < dataset
+if preparation_calls[0] == dense_prepare:
+    assert "static let recipeVersion = 5" in Path("splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift").read_text(), "dense S13/S14 builder requires epoch-5 recipe"
 assert "preparePointCloudPLY" not in MODEL[finish:train]
 
 # Scaniverse-style splats retain background and sky. S2 therefore must not universally replace the
