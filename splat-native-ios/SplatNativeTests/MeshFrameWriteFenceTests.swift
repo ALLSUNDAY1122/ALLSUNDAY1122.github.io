@@ -1,6 +1,13 @@
 import Foundation
 import XCTest
 
+private final class MeshFenceCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count = 0
+    func increment() { lock.lock(); count += 1; lock.unlock() }
+    func snapshot() -> Int { lock.lock(); defer { lock.unlock() }; return count }
+}
+
 final class MeshFrameWriteFenceTests: XCTestCase {
     func testStaleGenerationNeverRunsWriteClosure() {
         let fence = MeshFrameWriteFence()
@@ -28,15 +35,12 @@ final class MeshFrameWriteFenceTests: XCTestCase {
         let writerMayFinish = DispatchSemaphore(value: 0)
         let resetFinished = DispatchSemaphore(value: 0)
         let queue = DispatchQueue(label: "mesh-fence-tests", attributes: .concurrent)
-        let guardLock = NSLock()
-        var writeCount = 0
+        let counter = MeshFenceCounter()
         queue.async {
             _ = fence.performIfCurrent(previous) {
                 writerEntered.signal()
                 guard writerMayFinish.wait(timeout: .now() + 3) == .success else { return false }
-                guardLock.lock()
-                writeCount += 1
-                guardLock.unlock()
+                counter.increment()
                 return true
             }
         }
@@ -49,15 +53,10 @@ final class MeshFrameWriteFenceTests: XCTestCase {
         writerMayFinish.signal()
         XCTAssertEqual(resetFinished.wait(timeout: .now() + 3), .success)
         let rejected = fence.performIfCurrent(previous) {
-            guardLock.lock()
-            writeCount += 1
-            guardLock.unlock()
+            counter.increment()
             return true
         }
         XCTAssertNil(rejected)
-        guardLock.lock()
-        let count = writeCount
-        guardLock.unlock()
-        XCTAssertEqual(count, 1)
+        XCTAssertEqual(counter.snapshot(), 1)
     }
 }
