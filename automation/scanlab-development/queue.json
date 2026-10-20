@@ -29,27 +29,54 @@
       "id": "SCANLAB-W1-001",
       "title": "T34-T36 capture/reconstruction/export P0 implementation",
       "owner": "WORKER_1",
-      "status": "READY",
-      "attempt": 0,
-      "claim_epoch": 0,
-      "claim_token": null,
-      "attempt_branch": null,
+      "status": "CLAIMED",
+      "attempt": 1,
+      "claim_epoch": 1,
+      "claim_token": "SCANLAB-W1-001-a1-20261020",
+      "attempt_branch": "attempt/scanlab-w1-20261020-a1",
       "base_sha": "2bcbbd6128863739ad168610cd2e3f8e3b01b458",
       "resource_lock": "scanlab:native-capture-reconstruction-export",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-20",
+      "claimed_by": "HQ_DELEGATED_TO_WORKER_1"
     },
     {
       "id": "SCANLAB-W2-001",
       "title": "T37-T39 viewer/library/publish/privacy P0 implementation",
       "owner": "WORKER_2",
-      "status": "READY",
-      "attempt": 0,
-      "claim_epoch": 0,
-      "claim_token": null,
-      "attempt_branch": null,
+      "status": "CLAIMED",
+      "attempt": 1,
+      "claim_epoch": 1,
+      "claim_token": "SCANLAB-W2-001-a1-20261020",
+      "attempt_branch": "attempt/scanlab-w2-20261020-a1",
       "base_sha": "2bcbbd6128863739ad168610cd2e3f8e3b01b458",
       "resource_lock": "scanlab:viewer-library-publish-privacy",
-      "evidence": []
+      "evidence": [],
+      "claimed_at": "2026-10-20",
+      "claimed_by": "HQ_DELEGATED_TO_WORKER_2"
     }
-  ]
+  ],
+  "resource_locks": {
+    "scanlab:native-capture-reconstruction-export": {
+      "task_id": "SCANLAB-W1-001",
+      "epoch": 1,
+      "claim_token": "SCANLAB-W1-001-a1-20261020",
+      "attempt_branch": "attempt/scanlab-w1-20261020-a1",
+      "base_sha": "2bcbbd6128863739ad168610cd2e3f8e3b01b458"
+    },
+    "scanlab:viewer-library-publish-privacy": {
+      "task_id": "SCANLAB-W2-001",
+      "epoch": 1,
+      "claim_token": "SCANLAB-W2-001-a1-20261020",
+      "attempt_branch": "attempt/scanlab-w2-20261020-a1",
+      "base_sha": "2bcbbd6128863739ad168610cd2e3f8e3b01b458"
+    },
+    "scanlab:governance-release": {
+      "task_id": "SCANLAB-HQ-001",
+      "epoch": 1,
+      "claim_token": "SCANLAB-HQ-001-a1-20261020",
+      "attempt_branch": "attempt/scanlab-hq-001-20261020-a1",
+      "base_sha": "2bcbbd6128863739ad168610cd2e3f8e3b01b458"
+    }
+  }
 }
