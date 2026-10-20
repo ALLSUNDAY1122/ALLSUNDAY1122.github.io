@@ -5,3 +5,10 @@ Task SCANLAB-W1-001: owner WORKER_2, epoch2 token SCANLAB-W1-001-a2-W2-20261020;
 Baseline Native CI 39367475853 SUCCESS; XCTest 245, 0 failures verified from build log. Source audit found MeshCapture generation guard was only applied to the asynchronous completion, *after* JPEG disk write. Queued old writes could still reach disk after reset. Commit 36cc862ec1d9915d75adb89412fbdd560c8a37e7 adds NSLock-protected MeshFrameWriteFence rotate at both resets and gates worker JPEG write through performIfCurrent. Commit af25f5cccf8fee74aac4c8476a73a972ca0e1e6d updates static Mesh durability contract to require fence rotation before project detachment and queued writer fencing. Source and test readback verified.
 
 Latest new Native iOS run 39369715024 pending at report creation; no PASS claim for new commits. Remaining: live lease/reset race tests, RAW/depth and export nondestruction under fault injection, physical device L4, HQ review. No merge, TestFlight upload or App Review.
+
+## 2026-10-20 13:50 JST follow-up
+- Commit 3139f6baeae77c87e0bc0a0f9dbabda000ed6bbf CapturePolicy.swift adds isValidCameraPose validating finite, homogeneous, orthonormal, right-handed transforms, including prior pose. Invalid timestamp rejects before capture write.
+- Commit ab6ce6ecd24df81ef2d3adeb0003e4f7c6c8cc6b MeshScanModel.swift applies same pose/timestamp check before scanOrigin and JPEG/RAW capture.
+- Commit 7f2aa5f52617148bd23cdb2d8144d6562456507d CapturePolicyTests.swift adds negative current/prior pose and time tests.
+- Remote source/test file SHA readback completed, PR #5622 head 7f2aa5f. Native run 39371900498 IN_PROGRESS on check; no full PASS claim for new edits.
+- Cross-branch CI observation: W2 PR #5619 Native run 39369794864 FAILED 248 XCTest, 2 assertions (1 unexpected), SplatCompletionVerifierTests.testRestoresTrustedPreviousResultWhenCurrentSameSizeResultFailsStrongIntegrity. Library negative tests all passed. This existing integrity recovery behavior belongs to T34-T36; do not fix by permitting unsafe cross-generation rollback or silently weaken assertions. The transient test cause remains under investigation.
