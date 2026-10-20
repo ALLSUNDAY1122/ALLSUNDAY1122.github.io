@@ -139,3 +139,9 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - HQ isolated integration branch attempt/scanlab-hq-t40-integration-20261020-a1 created from native head. Viewer-to-isolated HQ PR #5623 merged successfully (expected head18987c29eda); merge SHA 0c0b7207c80e9c6294a4d7487d1de92de04ca46b, independently read-back.
 - Draft combined QA PR #5624 opened to feature/splat-native-ios-poc; NOT merged. Combined PR Native run39382480195 in progress at readback; other targeted checks started. Evidence HQ_STEP20_INTEGRATED_T40.md.
 - No production merge, Codemagic, Apple upload, TestFlight update, App Review submission. Last live ASC Build18.
+
+## STEP21 — 2026-10-20
+- T40 combined integration PR #5624 Native iOS run39382480195 completed SUCCESS, 251 XCTest/0 failures, static + Mesh repeated tests. Smoke/Privacy/S9/S10/S12/S13 success. Live Auth E2E SKIPPED (missing test identity), physical QA/privacy revocation acceptance outstanding.
+- Verified PR #5624 expected HEAD0c0b7207, marked ready, merged into product `feature/splat-native-ios-poc` at new SHA01b08971a313045b3e5dc4aec79cc19d47ad1c38; remote branch readback exact match. Postmerge CI pending at original observation.
+- Release source `release/scanlab-testflight` HEAD3cbd4dcfe6505fb2fc9223062a7ec8feaeb0bf2a differs 7 unique commits. HQ isolated release-sync branch `attempt/scanlab-hq-release-sync-20261020-a1` from it; Draft PR #5625 pointing product source there, mergeable true but very broad 227 files / 1528 commits. NOT MERGED. Existing S16/S21 gateway tied to older release materialization needs validation before build.
+- HQ report HQ_STEP21_T40_PRODUCT_AND_RELEASE_GATE.md. No Codemagic Start, Apple Upload, TestFlight assignment or App Review submit.
