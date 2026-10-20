@@ -1,6 +1,6 @@
 import SwiftUI
 
-private enum ScanLibraryReadOnlyCensus {
+enum ScanLibraryReadOnlyCensus {
     struct Result {
         let projects: [ScanProjectSummary]
         let unknownCount: Int
