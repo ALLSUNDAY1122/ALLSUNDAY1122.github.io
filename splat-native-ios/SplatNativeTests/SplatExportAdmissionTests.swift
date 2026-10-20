@@ -93,6 +93,7 @@ final class SplatExportAdmissionTests: XCTestCase {
 
         _ = try SplatExportAdmission.preflight(sourceURL: result, kind: .spz, availableCapacityOverride: Int64.max)
 
+        XCTAssertEqual(SplatPersistedEditMaterializer.loadSettings(sourceURL: result), knownGood.normalized())
         XCTAssertEqual(try Data(contentsOf: SplatViewerEditStore.primaryURL(for: result)), Data("corrupt".utf8))
     }
 
