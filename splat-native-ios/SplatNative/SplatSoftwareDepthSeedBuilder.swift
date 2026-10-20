@@ -1,0 +1,803 @@
+import CoreGraphics
+import Foundation
+import ImageIO
+import simd
+
+/// S14 non-LiDAR reconstruction initialization.
+///
+/// Uses the same ARKit-pose plane-sweep geometry conventions and acceptance thresholds as
+/// MeshPlaneSweepMVS, but emits a bounded point cloud for Gaussian initialization instead of a mesh.
+/// The reference-frame RGB sample is carried with each accepted point so dense initialization does
+/// not invoke the legacy point×frame colorizer path.
+enum SplatSoftwareDepthSeedBuilder {
+    static let maximumSelectedFrames = 18
+    static let maximumRecoveryWaves = 4
+    static let maximumReferenceFrames = 8
+    static let maximumNeighborFrames = 4
+    static let hypothesisCount = 30
+    static let refinementHypothesisCount = 7
+    static let refinementRadiusInCoarseSteps: Float = 0.55
+    static let pixelStride = 2
+    static let border = 5
+    static let bestCostThreshold: Float = 34
+    static let uniquenessMargin: Float = 3.5
+    static let minimumBaseline: Float = 0.025
+    static let maximumBaseline: Float = 0.75
+    static let minimumDirectionDot: Float = 0.50
+    static let nearDepth: Float = 0.12
+    static let farDepth: Float = 2.8
+    static let voxelDensity: Float = 100
+    static let maximumPointCount = 120_000
+    static let minimumUsablePointCount = 2_000
+    static let maximumTopConnectedSkyY: Float = 0.60
+
+    struct Result: Sendable {
+        let points: [SIMD3<Float>]
+        let colors: [SplatSeedSample]
+        let framesUsed: Int
+        let rawPointCount: Int
+    }
+
+    private struct Voxel: Hashable {
+        let x: Int
+        let y: Int
+        let z: Int
+
+        init?(_ point: SIMD3<Float>) {
+            guard let x = Int(exactly: floor(Double(point.x) * Double(voxelDensity))),
+                  let y = Int(exactly: floor(Double(point.y) * Double(voxelDensity))),
+                  let z = Int(exactly: floor(Double(point.z) * Double(voxelDensity))) else {
+                return nil
+            }
+            self.x = x
+            self.y = y
+            self.z = z
+        }
+    }
+
+    private struct Candidate {
+        let point: SIMD3<Float>
+        let color: SplatSeedSample
+        let cost: Float
+    }
+
+    private struct GrayRaster {
+        let pixels: [UInt8]
+        let width: Int
+        let height: Int
+
+        func sample(_ x: Float, _ y: Float) -> Float? {
+            guard x.isFinite, y.isFinite else { return nil }
+            let ix = Int(x.rounded())
+            let iy = Int(y.rounded())
+            guard ix >= 0, iy >= 0, ix < width, iy < height else { return nil }
+            return Float(pixels[iy * width + ix])
+        }
+
+        func sampleBilinear(_ x: Float, _ y: Float) -> Float? {
+            guard x.isFinite, y.isFinite else { return nil }
+            let x0 = Int(floor(x))
+            let y0 = Int(floor(y))
+            let x1 = x0 + 1
+            let y1 = y0 + 1
+            guard x0 >= 0, y0 >= 0, x1 < width, y1 < height else { return nil }
+
+            let tx = x - Float(x0)
+            let ty = y - Float(y0)
+            let p00 = Float(pixels[y0 * width + x0])
+            let p10 = Float(pixels[y0 * width + x1])
+            let p01 = Float(pixels[y1 * width + x0])
+            let p11 = Float(pixels[y1 * width + x1])
+            let top = p00 + (p10 - p00) * tx
+            let bottom = p01 + (p11 - p01) * tx
+            return top + (bottom - top) * ty
+        }
+    }
+
+    private struct RGBRaster {
+        let pixels: [UInt8]
+        let width: Int
+        let height: Int
+
+        func sample(_ x: Float, _ y: Float) -> SplatSeedSample? {
+            guard x.isFinite, y.isFinite else { return nil }
+            let ix = Int(x.rounded())
+            let iy = Int(y.rounded())
+            guard ix >= 0, iy >= 0, ix < width, iy < height else { return nil }
+            let offset = (iy * width + ix) * 4
+            guard offset + 2 < pixels.count else { return nil }
+            return SplatSeedSample(
+                red: pixels[offset],
+                green: pixels[offset + 1],
+                blue: pixels[offset + 2]
+            )
+        }
+
+        func sample(normalizedX: Float, normalizedY: Float) -> SplatSeedSample? {
+            guard width > 0,
+                  height > 0,
+                  normalizedX.isFinite,
+                  normalizedY.isFinite else { return nil }
+            let x = min(1, max(0, normalizedX)) * Float(width - 1)
+            let y = min(1, max(0, normalizedY)) * Float(height - 1)
+            return sample(x, y)
+        }
+    }
+
+    private struct Frame {
+        let gray: GrayRaster
+        let rgb: RGBRaster
+        let cameraToWorld: simd_float4x4
+        let worldToCamera: simd_float4x4
+        let fx: Float
+        let fy: Float
+        let cx: Float
+        let cy: Float
+        let position: SIMD3<Float>
+        let forward: SIMD3<Float>
+        let skySceneLuma: Float
+        let hasConfidentTopSky: Bool
+    }
+
+    static func makeSeedPoints(
+        projectURL: URL,
+        frames sourceFrames: [SplatSeedFrame]
+    ) -> Result {
+        // Do not let a missing/traversal/obviously unreadable capture consume one of the globally
+        // bounded plane-sweep slots. Preflight is metadata-only; full thumbnail decode remains
+        // bounded to maximumSelectedFrames on the healthy path below.
+        let selected = selectLoadableFrames(
+            projectURL: projectURL,
+            frames: sourceFrames,
+            maximumCount: maximumSelectedFrames
+        )
+        let maximumPixel = ProcessInfo.processInfo.physicalMemory >= 6_000_000_000 ? 224 : 192
+
+        // Preserve the normal temporal sample exactly when all selected thumbnails decode. If an
+        // ImageIO source passes metadata preflight but later fails full thumbnail materialization,
+        // recover only the missing slots from additional time-distributed candidate waves. Healthy
+        // captures still decode <=18 frames; failure recovery is capped at four extra 18-frame waves
+        // so a chain of corrupt thumbnails cannot permanently hide later healthy capture frames.
+        var sourceOrder: [String: Int] = [:]
+        sourceOrder.reserveCapacity(sourceFrames.count)
+        for (index, source) in sourceFrames.enumerated() where sourceOrder[source.filePath] == nil {
+            sourceOrder[source.filePath] = index
+        }
+        var loaded: [(order: Int, frame: Frame)] = selected.compactMap { source in
+            guard let frame = load(source, projectURL: projectURL, maximumPixel: maximumPixel) else { return nil }
+            return (sourceOrder[source.filePath] ?? Int.max, frame)
+        }
+
+        if loaded.count < selected.count {
+            var attemptedPaths = Set(selected.map(\.filePath))
+            let targetCount = min(maximumSelectedFrames, selected.count)
+            var recoveryWave = 0
+            while loaded.count < targetCount, recoveryWave < maximumRecoveryWaves {
+                recoveryWave += 1
+                let recoverySources = selectLoadableFrames(
+                    projectURL: projectURL,
+                    frames: sourceFrames.filter { !attemptedPaths.contains($0.filePath) },
+                    maximumCount: maximumSelectedFrames
+                )
+                guard !recoverySources.isEmpty else { break }
+
+                for source in recoverySources where loaded.count < targetCount {
+                    attemptedPaths.insert(source.filePath)
+                    guard let frame = load(source, projectURL: projectURL, maximumPixel: maximumPixel) else { continue }
+                    loaded.append((sourceOrder[source.filePath] ?? Int.max, frame))
+                }
+            }
+        }
+
+        let frames = loaded.sorted { lhs, rhs in lhs.order < rhs.order }.map(\.frame)
+        guard frames.count >= 5 else {
+            return Result(points: [], colors: [], framesUsed: frames.count, rawPointCount: 0)
+        }
+
+        let references = referenceIndices(frames.count, maximumCount: maximumReferenceFrames)
+        var voxels: [Voxel: Candidate] = [:]
+        voxels.reserveCapacity(maximumPointCount)
+        var rawPointCount = 0
+        var referencesUsed = 0
+
+        for referenceIndex in references {
+            if voxels.count >= maximumPointCount { break }
+            let reference = frames[referenceIndex]
+            let neighbors = neighborIndices(referenceIndex: referenceIndex, frames: frames)
+            guard neighbors.count >= 2 else { continue }
+
+            let columns = max(0, (reference.gray.width - border * 2) / pixelStride)
+            let rows = max(0, (reference.gray.height - border * 2) / pixelStride)
+            guard columns > 2, rows > 2 else { continue }
+            var acceptedInReference = 0
+
+            for gridY in 0..<rows {
+                if voxels.count >= maximumPointCount { break }
+                for gridX in 0..<columns {
+                    if voxels.count >= maximumPointCount { break }
+                    let u = Float(border + gridX * pixelStride)
+                    let v = Float(border + gridY * pixelStride)
+                    guard hasTexture(u: u, v: v, raster: reference.gray),
+                          !isTopConnectedSky(u: u, v: v, frame: reference) else { continue }
+
+                    var bestCost = Float.greatestFiniteMagnitude
+                    var secondCost = Float.greatestFiniteMagnitude
+                    var bestDepth: Float = 0
+
+                    for hypothesis in 0..<hypothesisCount {
+                        let t = Float(hypothesis) / Float(hypothesisCount - 1)
+                        let inverseDepth = (1 / nearDepth) * (1 - t) + (1 / farDepth) * t
+                        let depth = 1 / inverseDepth
+                        guard let cost = patchCost(
+                            u: u,
+                            v: v,
+                            depth: depth,
+                            reference: reference,
+                            neighborIndices: neighbors,
+                            frames: frames
+                        ) else { continue }
+
+                        if cost < bestCost {
+                            secondCost = bestCost
+                            bestCost = cost
+                            bestDepth = depth
+                        } else if cost < secondCost {
+                            secondCost = cost
+                        }
+                    }
+
+                    guard bestDepth > 0,
+                          bestCost < bestCostThreshold,
+                          secondCost.isFinite,
+                          secondCost - bestCost > uniquenessMargin,
+                          let color = reference.rgb.sample(u, v) else { continue }
+
+                    let refined = refinedDepth(
+                        u: u,
+                        v: v,
+                        coarseDepth: bestDepth,
+                        coarseCost: bestCost,
+                        reference: reference,
+                        neighborIndices: neighbors,
+                        frames: frames
+                    )
+                    let world = backproject(u: u, v: v, depth: refined.depth, frame: reference)
+                    guard world.x.isFinite,
+                          world.y.isFinite,
+                          world.z.isFinite,
+                          let key = Voxel(world) else { continue }
+                    rawPointCount += 1
+                    acceptedInReference += 1
+                    let candidate = Candidate(point: world, color: color, cost: refined.cost)
+                    if let existing = voxels[key] {
+                        if candidate.cost < existing.cost { voxels[key] = candidate }
+                    } else {
+                        voxels[key] = candidate
+                    }
+                }
+            }
+
+            if acceptedInReference > 0 { referencesUsed += 1 }
+        }
+
+        let ordered = voxels.sorted { lhs, rhs in
+            if lhs.key.x != rhs.key.x { return lhs.key.x < rhs.key.x }
+            if lhs.key.y != rhs.key.y { return lhs.key.y < rhs.key.y }
+            return lhs.key.z < rhs.key.z
+        }.map(\.value)
+        return Result(
+            points: ordered.map(\.point),
+            colors: ordered.map(\.color),
+            framesUsed: referencesUsed,
+            rawPointCount: rawPointCount
+        )
+    }
+
+    private static func hasTexture(u: Float, v: Float, raster: GrayRaster) -> Bool {
+        guard let center = raster.sample(u, v),
+              let left = raster.sample(u - 2, v),
+              let right = raster.sample(u + 2, v),
+              let up = raster.sample(u, v - 2),
+              let down = raster.sample(u, v + 2) else { return false }
+        let spread = max(abs(left - right), abs(up - down))
+        let localContrast = max(
+            max(abs(center - left), abs(center - right)),
+            max(abs(center - up), abs(center - down))
+        )
+        return max(spread, localContrast) >= 8
+    }
+
+    /// Plane sweep can assign finite parallax to textured clouds even though sky belongs at
+    /// effectively infinite depth. Reject only sky-colored pixels that are connected to a strongly
+    /// sky-like top border, leaving isolated blue objects and interior blue surfaces eligible for
+    /// reconstruction. This also prevents false near geometry from suppressing SplatSkySeeder's
+    /// far-field sky seeds.
+    private static func isTopConnectedSky(u: Float, v: Float, frame: Frame) -> Bool {
+        guard frame.hasConfidentTopSky,
+              frame.rgb.height > 1,
+              frame.rgb.width > 1 else { return false }
+        let normalizedY = v / Float(frame.rgb.height - 1)
+        guard normalizedY.isFinite,
+              normalizedY <= maximumTopConnectedSkyY,
+              let candidate = frame.rgb.sample(u, v),
+              SplatSkySeeder.isHighConfidenceSky(candidate, sceneLuma: frame.skySceneLuma) else {
+            return false
+        }
+
+        let topY = 0.035 * Float(frame.rgb.height - 1)
+        guard v > topY else { return true }
+        let sampleCount = 5
+        var skySamples = 0
+        for index in 0..<sampleCount {
+            let t = Float(index) / Float(sampleCount - 1)
+            let y = topY + (v - topY) * t
+            if let pixel = frame.rgb.sample(u, y),
+               SplatSkySeeder.isHighConfidenceSky(pixel, sceneLuma: frame.skySceneLuma) {
+                skySamples += 1
+            }
+        }
+        return skySamples >= 4
+    }
+
+    private static func lowerSceneLuma(raster: RGBRaster) -> Float {
+        let xs: [Float] = [0.20, 0.40, 0.60, 0.80]
+        let ys: [Float] = [0.55, 0.72]
+        var total: Float = 0
+        var count: Float = 0
+        for y in ys {
+            for x in xs {
+                guard let pixel = raster.sample(normalizedX: x, normalizedY: y) else { continue }
+                total += (0.2126 * Float(pixel.red) + 0.7152 * Float(pixel.green) + 0.0722 * Float(pixel.blue)) / 255
+                count += 1
+            }
+        }
+        return count > 0 ? total / count : 0.5
+    }
+
+    private static func hasConfidentTopSky(raster: RGBRaster, sceneLuma: Float) -> Bool {
+        let xs: [Float] = [0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92]
+        var matches = 0
+        for x in xs {
+            if let pixel = raster.sample(normalizedX: x, normalizedY: 0.035),
+               SplatSkySeeder.isHighConfidenceSky(pixel, sceneLuma: sceneLuma) {
+                matches += 1
+            }
+        }
+        return matches >= 5
+    }
+
+    private static func refinedDepth(
+        u: Float,
+        v: Float,
+        coarseDepth: Float,
+        coarseCost: Float,
+        reference: Frame,
+        neighborIndices: [Int],
+        frames: [Frame]
+    ) -> (depth: Float, cost: Float) {
+        guard refinementHypothesisCount >= 3,
+              refinementHypothesisCount <= 8,
+              hypothesisCount > 1,
+              coarseDepth.isFinite,
+              coarseDepth > 0 else {
+            return (coarseDepth, coarseCost)
+        }
+
+        let maximumInverseDepth = 1 / nearDepth
+        let minimumInverseDepth = 1 / farDepth
+        let coarseStep = (maximumInverseDepth - minimumInverseDepth) / Float(hypothesisCount - 1)
+        let centerInverseDepth = 1 / coarseDepth
+        let radius = coarseStep * refinementRadiusInCoarseSteps
+        let denominator = Float(refinementHypothesisCount - 1)
+        let centerHypothesis = refinementHypothesisCount / 2
+
+        var bestDepth = coarseDepth
+        var bestCost = patchCost(
+            u: u,
+            v: v,
+            depth: coarseDepth,
+            reference: reference,
+            neighborIndices: neighborIndices,
+            frames: frames,
+            useBilinearNeighborSampling: true
+        ) ?? coarseCost
+        var bestHypothesis = centerHypothesis
+        var sampledCosts = SIMD8<Float>(repeating: .infinity)
+        var sampledInverseDepths = SIMD8<Float>(repeating: 0)
+        sampledCosts[centerHypothesis] = bestCost
+        sampledInverseDepths[centerHypothesis] = centerInverseDepth
+
+        for hypothesis in 0..<refinementHypothesisCount {
+            if hypothesis == centerHypothesis { continue }
+            let t = Float(hypothesis) / denominator
+            let proposedInverseDepth = centerInverseDepth - radius + (2 * radius * t)
+            let inverseDepth = min(maximumInverseDepth, max(minimumInverseDepth, proposedInverseDepth))
+            let depth = 1 / inverseDepth
+            guard let cost = patchCost(
+                u: u,
+                v: v,
+                depth: depth,
+                reference: reference,
+                neighborIndices: neighborIndices,
+                frames: frames,
+                useBilinearNeighborSampling: true
+            ) else { continue }
+            sampledCosts[hypothesis] = cost
+            sampledInverseDepths[hypothesis] = inverseDepth
+            if cost < bestCost {
+                bestCost = cost
+                bestDepth = depth
+                bestHypothesis = hypothesis
+            }
+        }
+
+        if bestHypothesis > 0,
+           bestHypothesis + 1 < refinementHypothesisCount {
+            let leftIndex = bestHypothesis - 1
+            let rightIndex = bestHypothesis + 1
+            let leftCost = sampledCosts[leftIndex]
+            let centerCost = sampledCosts[bestHypothesis]
+            let rightCost = sampledCosts[rightIndex]
+            let leftInverseDepth = sampledInverseDepths[leftIndex]
+            let centerSampleInverseDepth = sampledInverseDepths[bestHypothesis]
+            let rightInverseDepth = sampledInverseDepths[rightIndex]
+            let leftStep = centerSampleInverseDepth - leftInverseDepth
+            let rightStep = rightInverseDepth - centerSampleInverseDepth
+
+            if leftStep.isFinite,
+               rightStep.isFinite,
+               leftStep > 0,
+               rightStep > 0,
+               abs(leftStep - rightStep) <= max(leftStep, rightStep) * 0.001,
+               let offset = parabolicMinimumOffset(
+                leftCost: leftCost,
+                centerCost: centerCost,
+                rightCost: rightCost
+               ) {
+                let interpolatedInverseDepth = centerSampleInverseDepth + offset * ((leftStep + rightStep) * 0.5)
+                if interpolatedInverseDepth.isFinite,
+                   interpolatedInverseDepth >= minimumInverseDepth,
+                   interpolatedInverseDepth <= maximumInverseDepth {
+                    let interpolatedDepth = 1 / interpolatedInverseDepth
+                    if interpolatedDepth.isFinite,
+                       interpolatedDepth > 0,
+                       let interpolatedCost = patchCost(
+                        u: u,
+                        v: v,
+                        depth: interpolatedDepth,
+                        reference: reference,
+                        neighborIndices: neighborIndices,
+                        frames: frames,
+                        useBilinearNeighborSampling: true
+                       ),
+                       interpolatedCost < bestCost {
+                        bestDepth = interpolatedDepth
+                        bestCost = interpolatedCost
+                    }
+                }
+            }
+        }
+
+        return (bestDepth, bestCost)
+    }
+
+    static func parabolicMinimumOffset(
+        leftCost: Float,
+        centerCost: Float,
+        rightCost: Float
+    ) -> Float? {
+        guard leftCost.isFinite,
+              centerCost.isFinite,
+              rightCost.isFinite else { return nil }
+        let curvature = leftCost - (2 * centerCost) + rightCost
+        guard curvature.isFinite, curvature > 1e-5 else { return nil }
+        let offset = 0.5 * (leftCost - rightCost) / curvature
+        guard offset.isFinite, abs(offset) <= 1 else { return nil }
+        return offset
+    }
+
+    private static func patchCost(
+        u: Float,
+        v: Float,
+        depth: Float,
+        reference: Frame,
+        neighborIndices: [Int],
+        frames: [Frame],
+        useBilinearNeighborSampling: Bool = false
+    ) -> Float? {
+        let offsets: [Float] = [-2, 0, 2]
+        let neighborCount = min(neighborIndices.count, maximumNeighborFrames)
+        var differences = SIMD64<Float>(repeating: 0)
+        var differenceTotals = SIMD4<Float>(repeating: 0)
+        var sampleCounts = SIMD4<Int32>(repeating: 0)
+
+        for dy in offsets {
+            for dx in offsets {
+                guard let referenceValue = reference.gray.sample(u + dx, v + dy) else { continue }
+                let world = backproject(u: u + dx, v: v + dy, depth: depth, frame: reference)
+                for neighborSlot in 0..<neighborCount {
+                    let neighbor = frames[neighborIndices[neighborSlot]]
+                    guard let pixel = project(world, frame: neighbor) else { continue }
+                    let neighborValue = useBilinearNeighborSampling
+                        ? neighbor.gray.sampleBilinear(pixel.x, pixel.y)
+                        : neighbor.gray.sample(pixel.x, pixel.y)
+                    guard let neighborValue else { continue }
+                    let sampleIndex = Int(sampleCounts[neighborSlot])
+                    guard sampleIndex < 16 else { continue }
+                    let difference = neighborValue - referenceValue
+                    differences[neighborSlot * 16 + sampleIndex] = difference
+                    differenceTotals[neighborSlot] += difference
+                    sampleCounts[neighborSlot] += 1
+                }
+            }
+        }
+
+        var neighborCosts = SIMD4<Float>(repeating: 0)
+        var neighborCostCount = 0
+        for neighborSlot in 0..<neighborCount {
+            let samples = Int(sampleCounts[neighborSlot])
+            guard samples >= 5 else { continue }
+            let meanDifference = differenceTotals[neighborSlot] / Float(samples)
+            var centeredTotal: Float = 0
+            let base = neighborSlot * 16
+            for sampleIndex in 0..<samples {
+                centeredTotal += abs(differences[base + sampleIndex] - meanDifference)
+            }
+            neighborCosts[neighborCostCount] = centeredTotal / Float(samples)
+            neighborCostCount += 1
+        }
+
+        guard neighborCostCount >= 2 else { return nil }
+        if neighborCostCount == 2 {
+            return (neighborCosts[0] + neighborCosts[1]) * 0.5
+        }
+        var total: Float = 0
+        var minimum = Float.greatestFiniteMagnitude
+        var maximum = -Float.greatestFiniteMagnitude
+        for index in 0..<neighborCostCount {
+            let value = neighborCosts[index]
+            total += value
+            minimum = min(minimum, value)
+            maximum = max(maximum, value)
+        }
+        if neighborCostCount == 3 {
+            return total - minimum - maximum
+        }
+        return (total - minimum - maximum) / Float(neighborCostCount - 2)
+    }
+
+    static func scaledPrincipalPointCoordinate(_ coordinate: Float, scale: Float) -> Float? {
+        guard coordinate.isFinite, scale.isFinite, scale > 0 else { return nil }
+        let scaled = (Double(coordinate) + 0.5) * Double(scale) - 0.5
+        guard scaled.isFinite else { return nil }
+        return Float(scaled)
+    }
+
+    private static func load(
+        _ source: SplatSeedFrame,
+        projectURL: URL,
+        maximumPixel: Int
+    ) -> Frame? {
+        guard source.transformMatrix.count == 4,
+              source.transformMatrix.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }),
+              source.w > 0,
+              source.h > 0,
+              source.flX.isFinite,
+              source.flY.isFinite,
+              source.cx.isFinite,
+              source.cy.isFinite,
+              source.flX > 0,
+              source.flY > 0,
+              let fileURL = SplatDepthSeedBuilder.validatedDepthInputURL(
+                projectURL: projectURL,
+                relativePath: source.filePath
+              ),
+              let imageSource = CGImageSourceCreateWithURL(fileURL as CFURL, nil),
+              let image = CGImageSourceCreateThumbnailAtIndex(
+                imageSource,
+                0,
+                [
+                    kCGImageSourceCreateThumbnailFromImageAlways: true,
+                    kCGImageSourceThumbnailMaxPixelSize: maximumPixel,
+                    kCGImageSourceCreateThumbnailWithTransform: false
+                ] as CFDictionary
+              ) else { return nil }
+
+        let width = image.width
+        let height = image.height
+        guard width > 0,
+              height > 0,
+              width <= maximumPixel,
+              height <= maximumPixel else { return nil }
+        let (grayCount, grayOverflow) = width.multipliedReportingOverflow(by: height)
+        let (rgbaCount, rgbaOverflow) = grayCount.multipliedReportingOverflow(by: 4)
+        let (rgbaBytesPerRow, rowOverflow) = width.multipliedReportingOverflow(by: 4)
+        guard !grayOverflow, !rgbaOverflow, !rowOverflow, grayCount > 0 else { return nil }
+
+        var grayBytes = [UInt8](repeating: 0, count: grayCount)
+        guard let grayContext = CGContext(
+            data: &grayBytes,
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
+            bytesPerRow: width,
+            space: CGColorSpaceCreateDeviceGray(),
+            bitmapInfo: CGImageAlphaInfo.none.rawValue
+        ) else { return nil }
+        grayContext.translateBy(x: 0, y: CGFloat(height))
+        grayContext.scaleBy(x: 1, y: -1)
+        grayContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+
+        var rgbaBytes = [UInt8](repeating: 0, count: rgbaCount)
+        let bitmapInfo = CGBitmapInfo.byteOrder32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue
+        let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB()
+        guard let rgbContext = CGContext(
+            data: &rgbaBytes,
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
+            bytesPerRow: rgbaBytesPerRow,
+            space: colorSpace,
+            bitmapInfo: bitmapInfo
+        ) else { return nil }
+        rgbContext.translateBy(x: 0, y: CGFloat(height))
+        rgbContext.scaleBy(x: 1, y: -1)
+        rgbContext.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+
+        let cameraToWorld = matrix(source.transformMatrix)
+        guard matrixIsFinite(cameraToWorld) else { return nil }
+        let worldToCamera = simd_inverse(cameraToWorld)
+        guard matrixIsFinite(worldToCamera) else { return nil }
+        let position = SIMD3<Float>(
+            cameraToWorld.columns.3.x,
+            cameraToWorld.columns.3.y,
+            cameraToWorld.columns.3.z
+        )
+        let forwardRaw = SIMD3<Float>(
+            -cameraToWorld.columns.2.x,
+            -cameraToWorld.columns.2.y,
+            -cameraToWorld.columns.2.z
+        )
+        let forwardLengthSquared = simd_length_squared(forwardRaw)
+        let forward = forwardLengthSquared.isFinite && forwardLengthSquared > 1e-8
+            ? simd_normalize(forwardRaw)
+            : SIMD3<Float>(0, 0, -1)
+        let scaleX = Float(width) / Float(source.w)
+        let scaleY = Float(height) / Float(source.h)
+        let fx = source.flX * scaleX
+        let fy = source.flY * scaleY
+        guard let cx = scaledPrincipalPointCoordinate(source.cx, scale: scaleX),
+              let cy = scaledPrincipalPointCoordinate(source.cy, scale: scaleY),
+              fx.isFinite,
+              fy.isFinite,
+              fx > 0,
+              fy > 0 else { return nil }
+
+        let rgbRaster = RGBRaster(pixels: rgbaBytes, width: width, height: height)
+        let skySceneLuma = lowerSceneLuma(raster: rgbRaster)
+        return Frame(
+            gray: GrayRaster(pixels: grayBytes, width: width, height: height),
+            rgb: rgbRaster,
+            cameraToWorld: cameraToWorld,
+            worldToCamera: worldToCamera,
+            fx: fx,
+            fy: fy,
+            cx: cx,
+            cy: cy,
+            position: position,
+            forward: forward,
+            skySceneLuma: skySceneLuma,
+            hasConfidentTopSky: hasConfidentTopSky(raster: rgbRaster, sceneLuma: skySceneLuma)
+        )
+    }
+
+    static func selectLoadableFrames(
+        projectURL: URL,
+        frames: [SplatSeedFrame],
+        maximumCount: Int
+    ) -> [SplatSeedFrame] {
+        guard maximumCount > 0 else { return [] }
+        let loadable = frames.filter { source in
+            guard source.transformMatrix.count == 4,
+                  source.transformMatrix.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }),
+                  source.w > 0,
+                  source.h > 0,
+                  source.flX.isFinite,
+                  source.flY.isFinite,
+                  source.cx.isFinite,
+                  source.cy.isFinite,
+                  source.flX > 0,
+                  source.flY > 0,
+                  let fileURL = SplatDepthSeedBuilder.validatedDepthInputURL(
+                    projectURL: projectURL,
+                    relativePath: source.filePath
+                  ),
+                  let imageSource = CGImageSourceCreateWithURL(fileURL as CFURL, nil),
+                  CGImageSourceGetCount(imageSource) > 0,
+                  CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) != nil else {
+                return false
+            }
+            return true
+        }
+        return selectFrames(loadable, maximumCount: maximumCount)
+    }
+
+    private static func selectFrames(_ frames: [SplatSeedFrame], maximumCount: Int) -> [SplatSeedFrame] {
+        guard frames.count > maximumCount else { return frames }
+        return (0..<maximumCount).map { index in
+            let sourceIndex = Int(
+                (Double(index) * Double(frames.count - 1) / Double(maximumCount - 1)).rounded()
+            )
+            return frames[sourceIndex]
+        }
+    }
+
+    private static func referenceIndices(_ count: Int, maximumCount: Int) -> [Int] {
+        let selectedCount = min(maximumCount, count)
+        guard selectedCount > 1 else { return count > 0 ? [0] : [] }
+        return (0..<selectedCount).map { index in
+            Int((Double(index) * Double(count - 1) / Double(selectedCount - 1)).rounded())
+        }
+    }
+
+    private static func neighborIndices(referenceIndex: Int, frames: [Frame]) -> [Int] {
+        let reference = frames[referenceIndex]
+        let candidates: [(index: Int, score: Float)] = frames.indices.compactMap { index in
+            guard index != referenceIndex else { return nil }
+            let baseline = simd_distance(reference.position, frames[index].position)
+            let directionDot = simd_dot(reference.forward, frames[index].forward)
+            guard baseline.isFinite,
+                  directionDot.isFinite,
+                  baseline >= minimumBaseline,
+                  baseline <= maximumBaseline,
+                  directionDot > minimumDirectionDot else { return nil }
+            let score = abs(baseline - 0.16) + (1 - directionDot) * 0.12
+            guard score.isFinite else { return nil }
+            return (index, score)
+        }
+        return candidates.sorted { $0.score < $1.score }.prefix(maximumNeighborFrames).map(\.index)
+    }
+
+    private static func backproject(u: Float, v: Float, depth: Float, frame: Frame) -> SIMD3<Float> {
+        let x = (u - frame.cx) / frame.fx * depth
+        let y = -(v - frame.cy) / frame.fy * depth
+        let cameraPoint = SIMD4<Float>(x, y, -depth, 1)
+        let world = frame.cameraToWorld * cameraPoint
+        return SIMD3<Float>(world.x, world.y, world.z)
+    }
+
+    private static func project(_ point: SIMD3<Float>, frame: Frame) -> SIMD2<Float>? {
+        guard point.x.isFinite, point.y.isFinite, point.z.isFinite else { return nil }
+        let camera = frame.worldToCamera * SIMD4<Float>(point.x, point.y, point.z, 1)
+        guard camera.x.isFinite, camera.y.isFinite, camera.z.isFinite else { return nil }
+        let depth = -camera.z
+        guard depth.isFinite, depth > 0.05 else { return nil }
+        let x = frame.cx + frame.fx * camera.x / depth
+        let y = frame.cy - frame.fy * camera.y / depth
+        guard x.isFinite,
+              y.isFinite,
+              x >= 2,
+              y >= 2,
+              x < Float(frame.gray.width - 2),
+              y < Float(frame.gray.height - 2) else { return nil }
+        return SIMD2<Float>(x, y)
+    }
+
+    private static func matrixIsFinite(_ matrix: simd_float4x4) -> Bool {
+        for column in 0..<4 {
+            for row in 0..<4 where !matrix[column][row].isFinite {
+                return false
+            }
+        }
+        return true
+    }
+
+    private static func matrix(_ rows: [[Float]]) -> simd_float4x4 {
+        simd_float4x4(columns: (
+            SIMD4<Float>(rows[0][0], rows[1][0], rows[2][0], rows[3][0]),
+            SIMD4<Float>(rows[0][1], rows[1][1], rows[2][1], rows[3][1]),
+            SIMD4<Float>(rows[0][2], rows[1][2], rows[2][2], rows[3][2]),
+            SIMD4<Float>(rows[0][3], rows[1][3], rows[2][3], rows[3][3])
+        ))
+    }
+}
