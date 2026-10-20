@@ -104,7 +104,8 @@ require_text SplatNative/ScanLabBackend.swift 'ScanLabVisibility'
 require_text SplatNative/ScanLabBackend.swift 'func deleteAccount() async throws'
 require_text SplatNative/ScanLabBackend+TrustedPublish.swift 'ScanLabUploadInitRequest'
 require_text SplatNative/ScanLabBackend+TrustedPublish.swift 'ScanLabUploadValidateRequest'
-require_text SplatNative/ScanLabBackend+TrustedPublish.swift 'cleanupFailedDraft'
+if grep -qE 'cleanupFailedDraft|scanlab-delete-scan' SplatNative/ScanLabBackend+TrustedPublish.swift; then echo 'unsafe publish rollback delete detected'; exit 1; fi
+python3 scripts/test_scanlab_publish_ack_safety.py
 require_text SplatNative/PublishScanView.swift 'contentConfirmed'
 require_text SplatNative/PublishScanView.swift 'publicPlaceConfirmed'
 require_text SplatNative/PublishScanView.swift '位置情報を付けなくてもDiscoverへ公開できます'

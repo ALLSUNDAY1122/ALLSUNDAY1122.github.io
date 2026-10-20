@@ -8,14 +8,38 @@ private struct MeshRefineKey: Hashable, Sendable {
     let z: Int
 }
 
+private struct MeshRefineAccumulator: Sendable {
+    var sum = SIMD3<Double>.zero
+    var count = 0
+}
+
+private struct MeshRefineComponentSummary: Sendable {
+    var faceCount = 0
+    var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
+    var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
+}
+
 private struct MeshRefineFaceKey: Hashable, Sendable {
     let a: Int
     let b: Int
     let c: Int
 
     init(_ x: Int, _ y: Int, _ z: Int) {
-        let sorted = [x, y, z].sorted()
-        a = sorted[0]; b = sorted[1]; c = sorted[2]
+        if x <= y {
+            if y <= z {
+                a = x; b = y; c = z
+            } else if x <= z {
+                a = x; b = z; c = y
+            } else {
+                a = z; b = x; c = y
+            }
+        } else if x <= z {
+            a = y; b = x; c = z
+        } else if y <= z {
+            a = y; b = z; c = x
+        } else {
+            a = z; b = y; c = x
+        }
     }
 }
 
@@ -33,29 +57,45 @@ struct MeshGeometryRefineResult: Sendable {
 }
 
 private enum MeshGeometryRefinerEngine {
+    private static let outputFlushThresholdBytes = 256 * 1024
+    private static let objInputChunkSize = 256 * 1024
+    private static let maximumOBJLineBytes = 8 * 1024 * 1024
+
     static func refine(url: URL, weldMeters: Float = 0.0015) throws -> MeshGeometryRefineResult {
-        let source = try String(contentsOf: url, encoding: .utf8)
-        let parsed = parse(source)
+        guard weldMeters.isFinite, weldMeters >= 0.000001, weldMeters <= 0.1 else {
+            throw error("Mesh精製の統合距離が不正です")
+        }
+        var parsed = try parse(url)
         guard parsed.vertices.count >= 3, !parsed.faces.isEmpty else {
             throw error("有効なOBJ三角形がありません")
         }
+        let sourceFaceCount = parsed.faces.count
 
-        var sums: [MeshRefineKey: SIMD3<Float>] = [:]
-        var counts: [MeshRefineKey: Int] = [:]
+        var accumulators: [MeshRefineKey: MeshRefineAccumulator] = [:]
         var keys: [MeshRefineKey] = []
         keys.reserveCapacity(parsed.vertices.count)
-        for p in parsed.vertices {
+        for point in parsed.vertices {
+            let scaled = point / weldMeters
+            guard scaled.x.isFinite, scaled.y.isFinite, scaled.z.isFinite,
+                  abs(Double(scaled.x)) <= Double(Int.max) - 1,
+                  abs(Double(scaled.y)) <= Double(Int.max) - 1,
+                  abs(Double(scaled.z)) <= Double(Int.max) - 1 else {
+                throw error("Mesh座標が精製可能な範囲を超えています")
+            }
             let key = MeshRefineKey(
-                x: Int((p.x / weldMeters).rounded()),
-                y: Int((p.y / weldMeters).rounded()),
-                z: Int((p.z / weldMeters).rounded())
+                x: Int(scaled.x.rounded()),
+                y: Int(scaled.y.rounded()),
+                z: Int(scaled.z.rounded())
             )
             keys.append(key)
-            sums[key, default: .zero] += p
-            counts[key, default: 0] += 1
+            var accumulator = accumulators[key] ?? MeshRefineAccumulator()
+            accumulator.sum += SIMD3<Double>(Double(point.x), Double(point.y), Double(point.z))
+            accumulator.count += 1
+            accumulators[key] = accumulator
         }
+        parsed.vertices.removeAll(keepingCapacity: false)
 
-        let ordered = sums.keys.sorted {
+        var ordered = accumulators.keys.sorted {
             if $0.x != $1.x { return $0.x < $1.x }
             if $0.y != $1.y { return $0.y < $1.y }
             return $0.z < $1.z
@@ -65,75 +105,260 @@ private enum MeshGeometryRefinerEngine {
         vertices.reserveCapacity(ordered.count)
         for key in ordered {
             keyToIndex[key] = vertices.count
-            vertices.append((sums[key] ?? .zero) / Float(max(1, counts[key] ?? 1)))
+            let accumulator = accumulators[key] ?? MeshRefineAccumulator()
+            let divisor = Double(max(1, accumulator.count))
+            let mean = accumulator.sum / divisor
+            guard mean.x.isFinite, mean.y.isFinite, mean.z.isFinite,
+                  abs(mean.x) <= Double(Float.greatestFiniteMagnitude),
+                  abs(mean.y) <= Double(Float.greatestFiniteMagnitude),
+                  abs(mean.z) <= Double(Float.greatestFiniteMagnitude) else {
+                throw error("Meshの統合座標を確定できません")
+            }
+            vertices.append(SIMD3<Float>(Float(mean.x), Float(mean.y), Float(mean.z)))
         }
+
+        var sourceToWelded: [Int] = []
+        sourceToWelded.reserveCapacity(keys.count)
+        for key in keys {
+            guard let index = keyToIndex[key] else {
+                throw error("Mesh頂点の統合対応を確定できません")
+            }
+            sourceToWelded.append(index)
+        }
+        keys.removeAll(keepingCapacity: false)
+        ordered.removeAll(keepingCapacity: false)
+        accumulators.removeAll(keepingCapacity: false)
+        keyToIndex.removeAll(keepingCapacity: false)
 
         var faces: [SIMD3<Int>] = []
         var faceSet = Set<MeshRefineFaceKey>()
         faces.reserveCapacity(parsed.faces.count)
-        for f in parsed.faces {
-            guard f.x >= 0, f.y >= 0, f.z >= 0,
-                  f.x < keys.count, f.y < keys.count, f.z < keys.count,
-                  let a = keyToIndex[keys[f.x]],
-                  let b = keyToIndex[keys[f.y]],
-                  let c = keyToIndex[keys[f.z]],
-                  a != b, b != c, a != c else { continue }
+        for face in parsed.faces {
+            guard face.x >= 0, face.y >= 0, face.z >= 0,
+                  face.x < sourceToWelded.count,
+                  face.y < sourceToWelded.count,
+                  face.z < sourceToWelded.count else { continue }
+            let a = sourceToWelded[face.x]
+            let b = sourceToWelded[face.y]
+            let c = sourceToWelded[face.z]
+            guard a != b, b != c, a != c else { continue }
             let cross = simd_cross(vertices[b] - vertices[a], vertices[c] - vertices[a])
-            guard simd_length_squared(cross) > 1e-10 else { continue }
+            let area = simd_length_squared(cross)
+            guard area.isFinite, area > 1e-10 else { continue }
             guard faceSet.insert(MeshRefineFaceKey(a, b, c)).inserted else { continue }
             faces.append(SIMD3<Int>(a, b, c))
         }
+        sourceToWelded.removeAll(keepingCapacity: false)
+        faceSet.removeAll(keepingCapacity: false)
+        parsed.faces.removeAll(keepingCapacity: false)
 
         guard !faces.isEmpty else { throw error("統合後に有効な面が残りませんでした") }
-        let componentResult = filterMicroscopicComponents(vertices: vertices, faces: faces)
-        faces = componentResult.faces
+        let removedComponents = filterMicroscopicComponents(vertices: vertices, faces: &faces)
+        guard !faces.isEmpty else { throw error("ノイズ除去後に有効な面が残りませんでした") }
         let compacted = compact(vertices: vertices, faces: faces)
         let normals = recomputeNormals(vertices: compacted.vertices, faces: compacted.faces)
 
-        let outputURL = url.deletingLastPathComponent().appendingPathComponent("mesh-refined.obj")
-        var output = "# Scan Lab refined metric mesh\n"
-        output += "# conservative weld_m \(weldMeters)\n"
-        output += "# source_faces \(parsed.faces.count) refined_faces \(compacted.faces.count)\n"
-        for p in compacted.vertices { output += "v \(p.x) \(p.y) \(p.z)\n" }
-        for n in normals { output += "vn \(n.x) \(n.y) \(n.z)\n" }
-        for f in compacted.faces {
-            output += "f \(f.x + 1)//\(f.x + 1) \(f.y + 1)//\(f.y + 1) \(f.z + 1)//\(f.z + 1)\n"
-        }
-        try output.write(to: outputURL, atomically: true, encoding: .utf8)
+        let outputURL = url.deletingLastPathComponent()
+            .appendingPathComponent("mesh-refined-\(UUID().uuidString.lowercased()).obj")
+        try writeOBJ(
+            to: outputURL,
+            weldMeters: weldMeters,
+            sourceFaceCount: sourceFaceCount,
+            vertices: compacted.vertices,
+            normals: normals,
+            faces: compacted.faces
+        )
         return MeshGeometryRefineResult(
             url: outputURL,
             vertexCount: compacted.vertices.count,
             faceCount: compacted.faces.count,
-            removedFaces: max(0, parsed.faces.count - compacted.faces.count),
-            removedComponents: componentResult.removedComponents
+            removedFaces: max(0, sourceFaceCount - compacted.faces.count),
+            removedComponents: removedComponents
         )
     }
 
-    private static func parse(_ text: String) -> MeshRefineMesh {
+    static func discard(_ result: MeshGeometryRefineResult) {
+        try? FileManager.default.removeItem(at: result.url)
+        let sidecar = result.url.deletingPathExtension().appendingPathExtension("mesh-asset.json")
+        try? FileManager.default.removeItem(at: sidecar)
+    }
+
+    private static func writeOBJ(
+        to outputURL: URL,
+        weldMeters: Float,
+        sourceFaceCount: Int,
+        vertices: [SIMD3<Float>],
+        normals: [SIMD3<Float>],
+        faces: [SIMD3<Int>]
+    ) throws {
+        guard FileManager.default.createFile(atPath: outputURL.path, contents: nil) else {
+            throw error("精製後OBJの出力ファイルを作成できません")
+        }
+        let handle: FileHandle
+        do {
+            handle = try FileHandle(forWritingTo: outputURL)
+        } catch {
+            try? FileManager.default.removeItem(at: outputURL)
+            throw error
+        }
+
+        do {
+            var buffer = ""
+            buffer.reserveCapacity(outputFlushThresholdBytes)
+            var bufferedBytes = 0
+
+            func append(_ line: String) throws {
+                buffer.append(line)
+                bufferedBytes += line.utf8.count
+                if bufferedBytes >= outputFlushThresholdBytes {
+                    try handle.write(contentsOf: Data(buffer.utf8))
+                    buffer.removeAll(keepingCapacity: true)
+                    bufferedBytes = 0
+                }
+            }
+
+            try append("# Scan Lab refined metric mesh\n")
+            try append("# conservative weld_m \(weldMeters)\n")
+            try append("# source_faces \(sourceFaceCount) refined_faces \(faces.count)\n")
+            for (index, point) in vertices.enumerated() {
+                if index & 0xFFF == 0 { try Task.checkCancellation() }
+                try append("v \(point.x) \(point.y) \(point.z)\n")
+            }
+            for (index, normal) in normals.enumerated() {
+                if index & 0xFFF == 0 { try Task.checkCancellation() }
+                try append("vn \(normal.x) \(normal.y) \(normal.z)\n")
+            }
+            for (index, face) in faces.enumerated() {
+                if index & 0xFFF == 0 { try Task.checkCancellation() }
+                try append("f \(face.x + 1)//\(face.x + 1) \(face.y + 1)//\(face.y + 1) \(face.z + 1)//\(face.z + 1)\n")
+            }
+            if !buffer.isEmpty {
+                try handle.write(contentsOf: Data(buffer.utf8))
+            }
+            try handle.synchronize()
+            try handle.close()
+        } catch {
+            try? handle.close()
+            try? FileManager.default.removeItem(at: outputURL)
+            throw error
+        }
+    }
+
+    private static func parse(_ url: URL) throws -> MeshRefineMesh {
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        guard (attributes[.type] as? FileAttributeType) == .typeRegular,
+              let size = attributes[.size] as? NSNumber,
+              size.uint64Value > 0 else {
+            throw error("OBJファイルを読み込めません")
+        }
+        let sourceByteCount = Int(clamping: size.uint64Value)
         var vertices: [SIMD3<Float>] = []
         var faces: [SIMD3<Int>] = []
-        for line in text.split(whereSeparator: \.isNewline) {
-            if line.hasPrefix("v ") {
-                let p = line.split(separator: " ", omittingEmptySubsequences: true)
-                if p.count >= 4, let x = Float(p[1]), let y = Float(p[2]), let z = Float(p[3]) {
-                    vertices.append(SIMD3<Float>(x, y, z))
+        vertices.reserveCapacity(max(128, sourceByteCount / 80))
+
+        try forEachOBJLine(at: url) { line in
+            let content = line[..<(line.firstIndex(of: "#") ?? line.endIndex)]
+            let fields = content.split(whereSeparator: \.isWhitespace)
+            guard let directive = fields.first else { return }
+            if directive == "mtllib" || directive == "usemtl" || directive == "vt" {
+                throw error("テクスチャ付きMeshは色を失うため精製しません")
+            }
+            if directive == "v" {
+                guard fields.count >= 4,
+                      let x = Float(fields[1]), let y = Float(fields[2]), let z = Float(fields[3]),
+                      x.isFinite, y.isFinite, z.isFinite else {
+                    throw error("OBJ頂点定義が不正です")
                 }
-            } else if line.hasPrefix("f ") {
-                let p = line.split(separator: " ", omittingEmptySubsequences: true)
-                let ids = p.dropFirst().compactMap { token -> Int? in
-                    guard let s = token.split(separator: "/", omittingEmptySubsequences: false).first,
-                          let raw = Int(s) else { return nil }
-                    return raw > 0 ? raw - 1 : vertices.count + raw
+                if fields.count >= 7 {
+                    throw error("頂点色付きMeshは色を失うため精製しません")
                 }
-                if ids.count >= 3 {
-                    for i in 1..<(ids.count - 1) { faces.append(SIMD3<Int>(ids[0], ids[i], ids[i + 1])) }
+                vertices.append(SIMD3<Float>(x, y, z))
+            } else if directive == "f" {
+                var firstIndex: Int?
+                var previousIndex: Int?
+                var faceVertexCount = 0
+                for token in fields.dropFirst() {
+                    let vertexToken: Substring
+                    if let slash = token.firstIndex(of: "/") {
+                        vertexToken = token[..<slash]
+                    } else {
+                        vertexToken = token
+                    }
+                    guard !vertexToken.isEmpty,
+                          let raw = Int(vertexToken), raw != 0 else {
+                        throw error("OBJ面定義が不正です")
+                    }
+                    let index = raw > 0 ? raw - 1 : vertices.count + raw
+                    guard index >= 0, index < vertices.count else {
+                        throw error("OBJ面インデックスが範囲外です")
+                    }
+                    if faceVertexCount == 0 {
+                        firstIndex = index
+                    } else if faceVertexCount >= 2,
+                              let firstIndex,
+                              let previousIndex {
+                        faces.append(SIMD3<Int>(firstIndex, previousIndex, index))
+                    }
+                    previousIndex = index
+                    faceVertexCount += 1
                 }
+                guard faceVertexCount >= 3 else { throw error("OBJ面定義が不正です") }
             }
         }
         return MeshRefineMesh(vertices: vertices, faces: faces)
     }
 
-    private static func filterMicroscopicComponents(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> (faces: [SIMD3<Int>], removedComponents: Int) {
+    private static func forEachOBJLine(
+        at url: URL,
+        body: (Substring) throws -> Void
+    ) throws {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        var buffer = Data()
+        buffer.reserveCapacity(objInputChunkSize * 2)
+
+        while let chunk = try handle.read(upToCount: objInputChunkSize), !chunk.isEmpty {
+            try Task.checkCancellation()
+            buffer.append(chunk)
+            var start = buffer.startIndex
+            while start < buffer.endIndex,
+                  let newline = buffer[start...].firstIndex(of: 0x0A) {
+                var end = newline
+                if end > start {
+                    let previous = buffer.index(before: end)
+                    if buffer[previous] == 0x0D { end = previous }
+                }
+                guard buffer.distance(from: start, to: end) <= maximumOBJLineBytes else {
+                    throw error("OBJの1行が安全な上限を超えています")
+                }
+                let lineString = String(decoding: buffer[start..<end], as: UTF8.self)
+                try body(lineString[...])
+                start = buffer.index(after: newline)
+            }
+            if start > buffer.startIndex {
+                buffer.removeSubrange(buffer.startIndex..<start)
+            }
+            guard buffer.count <= maximumOBJLineBytes else {
+                throw error("OBJの1行が安全な上限を超えています")
+            }
+        }
+
+        if !buffer.isEmpty {
+            try Task.checkCancellation()
+            var end = buffer.endIndex
+            if end > buffer.startIndex {
+                let previous = buffer.index(before: end)
+                if buffer[previous] == 0x0D { end = previous }
+            }
+            guard buffer.distance(from: buffer.startIndex, to: end) <= maximumOBJLineBytes else {
+                throw error("OBJの1行が安全な上限を超えています")
+            }
+            let lineString = String(decoding: buffer[buffer.startIndex..<end], as: UTF8.self)
+            try body(lineString[...])
+        }
+    }
+
+    private static func filterMicroscopicComponents(vertices: [SIMD3<Float>], faces: inout [SIMD3<Int>]) -> Int {
         var parent = Array(0..<vertices.count)
         func find(_ x: Int) -> Int {
             var i = x
@@ -144,50 +369,73 @@ private enum MeshGeometryRefinerEngine {
             let ra = find(a), rb = find(b)
             if ra != rb { parent[rb] = ra }
         }
-        for f in faces { union(f.x, f.y); union(f.y, f.z); union(f.z, f.x) }
+        for face in faces { union(face.x, face.y); union(face.y, face.z); union(face.z, face.x) }
 
-        var groups: [Int: [Int]] = [:]
-        for (index, f) in faces.enumerated() { groups[find(f.x), default: []].append(index) }
-        var keep = Set<Int>()
+        var summaries: [Int: MeshRefineComponentSummary] = [:]
+        for face in faces {
+            let root = find(face.x)
+            var summary = summaries[root] ?? MeshRefineComponentSummary()
+            summary.faceCount += 1
+            let a = vertices[face.x]
+            let b = vertices[face.y]
+            let c = vertices[face.z]
+            summary.minimum = simd_min(summary.minimum, simd_min(a, simd_min(b, c)))
+            summary.maximum = simd_max(summary.maximum, simd_max(a, simd_max(b, c)))
+            summaries[root] = summary
+        }
+
+        var keptRoots = Set<Int>()
         var removed = 0
-        for indices in groups.values {
-            var minP = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
-            var maxP = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
-            for faceIndex in indices {
-                let f = faces[faceIndex]
-                for id in [f.x, f.y, f.z] { minP = simd_min(minP, vertices[id]); maxP = simd_max(maxP, vertices[id]) }
-            }
-            let diagonal = simd_length(maxP - minP)
-            if indices.count >= 4 || diagonal >= 0.006 {
-                keep.formUnion(indices)
+        for (root, summary) in summaries {
+            let diagonal = simd_length(summary.maximum - summary.minimum)
+            if diagonal.isFinite, summary.faceCount >= 4 || diagonal >= 0.006 {
+                keptRoots.insert(root)
             } else {
                 removed += 1
             }
         }
-        return (faces.enumerated().compactMap { keep.contains($0.offset) ? $0.element : nil }, removed)
+        faces.removeAll { !keptRoots.contains(find($0.x)) }
+        return removed
     }
 
     private static func compact(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> MeshRefineMesh {
-        var used = Set<Int>()
-        for f in faces { used.insert(f.x); used.insert(f.y); used.insert(f.z) }
-        let ordered = used.sorted()
-        var map: [Int: Int] = [:]
-        var outV: [SIMD3<Float>] = []
-        for old in ordered { map[old] = outV.count; outV.append(vertices[old]) }
-        let outF = faces.compactMap { f -> SIMD3<Int>? in
-            guard let a = map[f.x], let b = map[f.y], let c = map[f.z] else { return nil }
-            return SIMD3<Int>(a, b, c)
+        var remap = Array(repeating: -1, count: vertices.count)
+        for face in faces {
+            remap[face.x] = 0
+            remap[face.y] = 0
+            remap[face.z] = 0
         }
-        return MeshRefineMesh(vertices: outV, faces: outF)
+        var outputVertices: [SIMD3<Float>] = []
+        for oldIndex in remap.indices where remap[oldIndex] == 0 {
+            remap[oldIndex] = outputVertices.count
+            outputVertices.append(vertices[oldIndex])
+        }
+        var outputFaces: [SIMD3<Int>] = []
+        outputFaces.reserveCapacity(faces.count)
+        for face in faces {
+            let a = remap[face.x]
+            let b = remap[face.y]
+            let c = remap[face.z]
+            guard a >= 0, b >= 0, c >= 0 else { continue }
+            outputFaces.append(SIMD3<Int>(a, b, c))
+        }
+        return MeshRefineMesh(vertices: outputVertices, faces: outputFaces)
     }
 
     private static func recomputeNormals(vertices: [SIMD3<Float>], faces: [SIMD3<Int>]) -> [SIMD3<Float>] {
         var normals = Array(repeating: SIMD3<Float>.zero, count: vertices.count)
-        for f in faces {
-            let n = simd_cross(vertices[f.y] - vertices[f.x], vertices[f.z] - vertices[f.x])
-            normals[f.x] += n; normals[f.y] += n; normals[f.z] += n
+        for face in faces {
+            let normal = simd_cross(vertices[face.y] - vertices[face.x], vertices[face.z] - vertices[face.x])
+            guard normal.x.isFinite, normal.y.isFinite, normal.z.isFinite else { continue }
+            normals[face.x] += normal; normals[face.y] += normal; normals[face.z] += normal
         }
-        return normals.map { simd_length_squared($0) > 1e-12 ? simd_normalize($0) : SIMD3<Float>(0, 1, 0) }
+        for index in normals.indices {
+            let lengthSquared = simd_length_squared(normals[index])
+            normals[index] = lengthSquared.isFinite && lengthSquared > 1e-12
+                ? simd_normalize(normals[index])
+                : SIMD3<Float>(0, 1, 0)
+        }
+        return normals
     }
 
     private static func error(_ message: String) -> NSError {
@@ -211,12 +459,38 @@ extension MeshScanModel {
                 let result = try await Task.detached(priority: .userInitiated) {
                     try MeshGeometryRefinerEngine.refine(url: source)
                 }.value
-                guard let self else { return }
+                guard let self else {
+                    MeshGeometryRefinerEngine.discard(result)
+                    return
+                }
+                guard let candidateScene = try? SCNScene(url: result.url, options: nil) else {
+                    MeshGeometryRefinerEngine.discard(result)
+                    throw NSError(domain:"ScanLab.MeshGeometryRefiner", code:2, userInfo:[NSLocalizedDescriptionKey:"精製後のMeshを検証できませんでした。元Meshを保持します。"])
+                }
+
+                let previousRawURL = self.rawOBJURL
+                let previousResultURL = self.resultURL
+                let previousScene = self.previewScene
+                let previousVertexCount = self.vertexCount
+                let previousFaceCount = self.faceCount
+
                 self.rawOBJURL = result.url
                 self.resultURL = result.url
-                self.previewScene = try? SCNScene(url: result.url, options: nil)
+                self.previewScene = candidateScene
                 self.vertexCount = result.vertexCount
                 self.faceCount = result.faceCount
+                do {
+                    try self.persistExporterMeshAssetContract()
+                } catch {
+                    self.rawOBJURL = previousRawURL
+                    self.resultURL = previousResultURL
+                    self.previewScene = previousScene
+                    self.vertexCount = previousVertexCount
+                    self.faceCount = previousFaceCount
+                    MeshGeometryRefinerEngine.discard(result)
+                    throw error
+                }
+
                 self.reconstructionProgress = 1
                 self.phase = .finished
                 self.statusMessage = "Mesh精製完了：微小ノイズ\(result.removedComponents)成分を除去、薄い可視部品は保持"
