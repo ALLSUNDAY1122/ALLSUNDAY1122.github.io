@@ -168,3 +168,9 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - HQ isolated Apple read-only run39444146086 SUCCESS latest Build18, internal group linked, artifact12274529425; no upload.
 - Release/scanlab-testflight head3cbd4dcfe650 diverged from product and contains 7 release-only materialization commits. HQ created isolated release bridge branch at release head, merged product HEAD69f365816bb into bridge via PR #5632, merge SHA42cca234e634. Product and release branches are unmodified by this bridge operation.
 - Draft PR #5633 from isolated bridge to release branch created, full native CI run39444484745 IN_PROGRESS; no merge or Codemagic started pending gate. See HQ_STEP22_RELEASE_BRIDGE.md.
+
+## STEP24 — 2026-10-21
+- PR #5624 verified MERGED to feature branch, merge commit 01b08971; product HEAD69f365816bb1, latest Native run39444336078 SUCCESS and targeted privacy/memory/smoke PASS.
+- Critical Codemagic source provenance: release/scanlab-testflight HEAD3cbd4dcf diverged from product; S16 gateway pinned release branch, so launching before sync would build stale code.
+- HQ created staging branch attempt/scanlab-hq-release-source-sync-20261021-a1 at old release head, replaced ONLY splat-native-ios subtree with exact verified product tree SHA757a14502078705deebecfb4bcd1720d0c58f2c0. New commit ba6d75100824; Codemagic signed-release YAML SHA49b4456a833c70ef474342ee11194b9e46dbc30c preserved by remote tree readback.
+- Draft PR #5634 opened to release branch. Release-source Native CI run39452914519 IN_PROGRESS; no release branch merge/Build/Upload. See HQ_STEP24_RELEASE_SYNC.md.
