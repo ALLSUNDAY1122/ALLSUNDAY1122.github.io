@@ -479,7 +479,7 @@ final class SplatViewerState: ObservableObject {
             return
         }
         pendingMeasurementSceneUnits = nil
-        measurementText = SplatMeasurementFormatter.string(meters: sceneUnits * metersPerSceneUnit)
+        measurementText = String(format: "%.3f シーン単位（実寸未校正）", sceneUnits)
     }
 
     private func loadPersistedEdits() {
