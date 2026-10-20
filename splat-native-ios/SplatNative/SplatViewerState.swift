@@ -196,16 +196,14 @@ struct SplatViewerEditStore {
                 // Keep every independently readable value from the newer primary, but source only
                 // the damaged fields from the complete previous generation. Persist the repaired
                 // generation so future opens do not repeat corruption recovery.
-                try? save(merged, sourceURL: sourceURL, fileManager: fileManager)
+                // Read-only recovery: never mutate user files while opening the viewer.
                 return (merged, true)
             }
 
             // A valid backup remains useful even when the primary node is unsafe. Do not attempt the
             // self-heal through an existing symlink/special node: normal viewer loading must never write
             // outside the scan project merely because the primary sidecar was replaced by an alias.
-            if writeDestinationIsSafeOrMissing(at: primary, fileManager: fileManager) {
-                try? data.write(to: primary, options: .atomic)
-            }
+            // Preserving the corrupt primary is essential for forensic recovery.
             return (backupSettings, true)
         }
 
@@ -216,7 +214,7 @@ struct SplatViewerEditStore {
         // the same damaged JSON forever. `save` fails closed for unsafe primary/backup nodes.
         if let primaryData = partiallyCorruptPrimaryData,
            let salvaged = SplatEditSettings.salvagingPartiallyCorruptJSON(primaryData) {
-            try? save(salvaged, sourceURL: sourceURL, fileManager: fileManager)
+            // Partial recovery must not overwrite the only surviving source.
             return (salvaged, false)
         }
         return nil
