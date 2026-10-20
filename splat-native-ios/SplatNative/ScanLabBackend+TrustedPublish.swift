@@ -106,7 +106,9 @@ extension ScanLabBackend {
         } catch {
             throw ScanLabBackendError.invalidAsset
         }
-        defer { ScanLabPublishPackageBuilder.cleanup(package) }
+        // Retain staging bytes whenever server state or ACK is uncertain.
+        var serverOutcomeConfirmed = false
+        defer { if serverOutcomeConfirmed { ScanLabPublishPackageBuilder.cleanup(package) } }
 
         // A cancelled publish should not spend more MainActor time encoding a preview or create
         // server-side draft metadata after the expensive local package worker has completed.
@@ -211,6 +213,7 @@ extension ScanLabBackend {
             // row must never enter the published lifecycle or receive a share URL.
             if visibility == .private {
                 await loadOwnerScans()
+                serverOutcomeConfirmed = true
                 return ScanLabPublishResponse(
                     id: scanID,
                     visibility: ScanLabVisibility.private.rawValue,
@@ -234,6 +237,7 @@ extension ScanLabBackend {
 
             await loadOwnerScans()
             if visibility == .public { await loadPublicScans() }
+            serverOutcomeConfirmed = true
             return published
         } catch {
             // A network error or lost ACK cannot authorize deletion of server-owned assets.
