@@ -78,3 +78,8 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - HQ independent review written: automation/scanlab-development/HQ_STEP10_REVIEW.md.
 - Both tasks CLAIMED epoch1 unchanged; neither integrated; no new Codemagic/Apple build/upload/review.
 - NEXT: Worker-specific fixes and passing complete CI before integration.
+
+## STEP11 — 2026-10-20
+- Worker1 HEAD 31ba91f unchanged; full Native iOS CI run 39354568521 failed old mesh durability static contract before XCTest; PR #5620 actionable escalation comment 6281816710.
+- Worker2 HEAD 30b9a777 (11 commits); Swift publish ACK failure no longer triggers destructive owner cleanup. Full Native iOS CI run 39356743067 failed old Node contract requiring literal cleanupFailedDraft, before XCTest; PR #5619 actionable comment 6281816314. Previous corrupt primary export recovery failure still unverified.
+- HQ review automation/scanlab-development/HQ_STEP11_AUDIT.md. Both HOLD, no release.
