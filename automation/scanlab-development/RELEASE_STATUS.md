@@ -118,3 +118,9 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - PR #5622 native takeover head fe50fa70f80 (8 commits ahead); native run39369790036 IN_PROGRESS. Previous run39367980809 attempt2 CANCELLED, not PASS.
 - PR #5619 viewer/publish head 38a3887cb0dd (25 ahead); run39369794864 native FAILED, 248 tests with 2 assertions in SplatCompletionVerifierTests trusted previous restoration (completionEvidenceMismatch, prior trusted backup retained). Other targeted CI success cannot override this.
 - HQ commented #5619 comment6283650982 and #5622 comment6283651429 to Worker2, and wrote HQ_STEP17_CURRENT_HEAD_CI.md with shared recovery diagnosis. Both PRs draft/unmerged. No Codemagic/Apple/new TestFlight/App Review submit.
+
+## STEP18 — 2026-10-20
+- Queue lock/claims unchanged since transfer: owner WORKER_2 both implementation tasks, native epoch2, viewer epoch1. Worker1 stopped.
+- Native PR #5622 HEAD 439a75f9f8: Mesh generation-fenced frame writes, camera pose/previous pose/time negative tests. Smoke/Privacy/S9/S10/S12 success; full Native run39371960452 IN_PROGRESS, not PASS at readback.
+- Viewer PR #5619 HEAD 38a3887cb0: latest Native run39369794864 FAILED, 248 XCTest / 2 assertions in SplatCompletionVerifierTests previous-result integrity recovery. Both PRs still HOLD.
+- HQ comments PR5622 6283899051 and PR5619 6283899425; HQ audit HQ_STEP18_DUAL_PR_GATE.md. No merge/Build/TestFlight/App Review.
