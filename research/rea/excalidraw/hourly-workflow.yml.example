@@ -1,0 +1,60 @@
+# Proposal only: not installed or executed.
+name: REA hourly evidence
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: rea-hourly
+  cancel-in-progress: false
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.19.0'
+      - name: Prepare isolated runner and target
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/rea-run/out" /tmp/targets
+          git clone --depth 1 https://github.com/excalidraw/excalidraw /tmp/targets/excalidraw
+          cd "$RUNNER_TEMP/rea-run"
+          npm install --ignore-scripts --no-audit --no-fund rea-agents@6.7.0
+          git -C /tmp/targets/excalidraw rev-parse HEAD > out/target-commit.txt
+          node -v > out/node.txt
+          npm -v > out/npm.txt
+          npx --no-install rea --version > out/rea-version.txt
+      - name: Capture setup, doctor, and real analysis
+        working-directory: ${{ runner.temp }}/rea-run
+        shell: bash
+        run: |
+          # Capture exact streams without printing environment or credentials.
+          set +e
+          npx --no-install rea setup > out/setup.stdout 2> out/setup.stderr
+          echo "$?" > out/setup.exit-code
+          npx --no-install rea doctor --json > out/doctor.json 2> out/doctor.stderr
+          echo "$?" > out/doctor.exit-code
+          date -u +%FT%TZ > out/started-at.txt
+          started=$(date +%s)
+          npx --no-install rea analyze-javascript-application /tmp/targets/excalidraw --json > out/raw.json 2> out/run.log
+          analysis_exit=$?
+          echo "$analysis_exit" > out/analysis.exit-code
+          echo "$(( $(date +%s) - started ))" > out/elapsed-seconds.txt
+          set -e
+          if [ "$analysis_exit" -eq 0 ]; then
+            node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync("out/raw.json","utf8"));fs.writeFileSync("out/coverage.json",JSON.stringify({statistics:x.normalized_result.statistics,coverage:x.normalized_result.graph.coverage},null,2))'
+          fi
+          sha256sum out/raw.json > out/raw.sha256
+          gzip -n out/raw.json
+          exit "$analysis_exit"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rea-excalidraw-${{ github.run_id }}
+          path: ${{ runner.temp }}/rea-run/out/
+          retention-days: 7
+          if-no-files-found: error

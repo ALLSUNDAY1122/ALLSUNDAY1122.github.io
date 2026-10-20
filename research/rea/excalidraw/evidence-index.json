@@ -1,0 +1,1375 @@
+{
+  "evidence_id": "ev_199ebd1a37a6245ebeb7125433a10b22aa77677b2e30f681c374d8eb64bdee36",
+  "subject": {
+    "name": "excalidraw",
+    "digest": {
+      "sha256": "30ca66940f6d1524867f109ed42afc3031e4b95e407bc241b685555830d27988"
+    },
+    "local_path": "/tmp/targets/excalidraw",
+    "format": "directory",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rea-javascript-application",
+    "name": "REA JavaScript application analyzer",
+    "version": "1"
+  },
+  "node_count": 3682,
+  "edge_count": 4197,
+  "integrity_contradictions": [],
+  "limitations_count": 1212,
+  "limitations_sample": [
+    "CommonJS and ESM binding relationships were recovered from inert syntax and resolved only within the inventoried artifact container.",
+    "Electron relationships are derived from inert syntax; runtime registration, reachability, defaults, and enforcement remain unproven.",
+    "Graph coverage is incomplete; unavailable facts remain explicit and must not be read as absence.",
+    "JavaScript and HTML were parsed as inert text; bundle bootstrap code was never executed.",
+    "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/element/src/distance.ts exceed the parent's result budget; complete static facts were retained on the file node",
+    "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/element/src/distribute.ts exceed the parent's result budget; complete static facts were retained on the file node",
+    "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/element/src/dragElements.ts exceed the parent's result budget; complete static facts were retained on the file node",
+    "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/element/src/duplicate.ts exceed the parent's result budget; complete static facts were retained on the file node"
+  ],
+  "selected_observations": {
+    "packages/element/src/shape.ts": [],
+    "packages/excalidraw/data/reconcile.ts": [],
+    "packages/excalidraw/data/encryption.ts": [],
+    "excalidraw-app/collab/Portal.tsx": [],
+    "excalidraw-app/data/LocalData.ts": [
+      {
+        "json_pointer": "/normalized_result/graph/nodes/428/observations/0",
+        "node_id": "jag_node_1e86e5de8cde4efef64a26ce26081e2872d9bc15a06c3f8c4424c793a09ae4fe",
+        "observation_id": "jag_observation_82e74dd96183c2aedbc6a99f59e34aa381f549aaeab8afd5d755cb1857eb36c5",
+        "label": "local-storage",
+        "properties": {
+          "storage_kind": "local-storage",
+          "name": null,
+          "mechanism": "call:localStorage.setItem"
+        },
+        "location": {
+          "kind": "source-range",
+          "source": "excalidraw-app/data/LocalData.ts",
+          "start": {
+            "line": 94,
+            "column": 4
+          },
+          "end": {
+            "line": 97,
+            "column": 5
+          }
+        },
+        "authority": "ast-static-analysis",
+        "state": "observed"
+      },
+      {
+        "json_pointer": "/normalized_result/graph/nodes/428/observations/1",
+        "node_id": "jag_node_1e86e5de8cde4efef64a26ce26081e2872d9bc15a06c3f8c4424c793a09ae4fe",
+        "observation_id": "jag_observation_f3e95a0f715c564e0b7889c6bdec8e1ed9cc055142791b14021b9affa56f0961",
+        "label": "local-storage",
+        "properties": {
+          "storage_kind": "local-storage",
+          "name": null,
+          "mechanism": "call:localStorage.setItem"
+        },
+        "location": {
+          "kind": "source-range",
+          "source": "excalidraw-app/data/LocalData.ts",
+          "start": {
+            "line": 90,
+            "column": 4
+          },
+          "end": {
+            "line": 93,
+            "column": 5
+          }
+        },
+        "authority": "ast-static-analysis",
+        "state": "observed"
+      },
+      {
+        "json_pointer": "/normalized_result/graph/nodes/3090/observations/0",
+        "node_id": "jag_node_d6e1e7931b3d0a25b635c0693141102b8a3caaacd6bd430bc5c6daac10c1b12e",
+        "observation_id": "jag_observation_64af8f6e8d073c53d023e9418f75b5e96b384f2a18de94e5c9642f40933bc6f0",
+        "label": "excalidraw-app/data/LocalData.ts:LocalData:return-shapes",
+        "properties": {
+          "semantic_role": "export-return-shapes",
+          "module_path": "excalidraw-app/data/LocalData.ts",
+          "exported_name": "LocalData",
+          "callable_id": "callable:class:3593:6841",
+          "callable_kind": "class",
+          "static_return_shapes": [],
+          "return_shape_coverage": {
+            "status": "complete",
+            "retained_return_sites": 0,
+            "omitted_return_sites": 0,
+            "omitted_fields": 0,
+            "omitted_property_coverage": 0,
+            "projection_complete": true
+          }
+        },
+        "location": {
+          "kind": "source-range",
+          "source": "excalidraw-app/data/LocalData.ts",
+          "start": {
+            "line": 117,
+            "column": 7
+          },
+          "end": {
+            "line": 228,
+            "column": 1
+          }
+        },
+        "authority": "static-relationship-inference",
+        "state": "inferred"
+      },
+      {
+        "json_pointer": "/normalized_result/graph/nodes/3090/observations/1",
+        "node_id": "jag_node_d6e1e7931b3d0a25b635c0693141102b8a3caaacd6bd430bc5c6daac10c1b12e",
+        "observation_id": "jag_observation_f92f1f185bb9a887cf89c52cfc5891f852b5abaeab44682361b649ecf771603f",
+        "label": "excalidraw-app/data/LocalData.ts:LocalData",
+        "properties": {
+          "semantic_role": "export-binding",
+          "module_path": "excalidraw-app/data/LocalData.ts",
+          "relationship_kind": "export",
+          "exported_name": "LocalData",
+          "local_name": "LocalData",
+          "imported_name": null,
+          "declared_specifier": null
+        },
+        "location": {
+          "kind": "source-range",
+          "source": "excalidraw-app/data/LocalData.ts",
+          "start": {
+            "line": 117,
+            "column": 7
+          },
+          "end": {
+            "line": 228,
+            "column": 1
+          }
+        },
+        "authority": "ast-static-analysis",
+        "state": "observed"
+      }
+    ],
+    "packages/excalidraw/data/json.ts": [],
+    "packages/excalidraw/scene/export.ts": []
+  },
+  "statistics": {
+    "relevant_files": 811,
+    "nested_asar_containers": 0,
+    "text_bytes_read": 10509113,
+    "invalid_utf8_files": 0,
+    "parsed_javascript_files": 714,
+    "skipped_javascript_files": 0,
+    "visited_ast_nodes": 856926,
+    "findings": 6193,
+    "modules": 0,
+    "parse_failures": 3
+  },
+  "graph_coverage": {
+    "status": "partial",
+    "truncated": false,
+    "omitted_count": null,
+    "limits": [
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 0,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 13008,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 2300238,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 26514,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 34223804,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 36568708,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 43500,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 457794,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 54816,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 61014,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 7986,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 966,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_result_budget_bytes",
+        "value": 945790980,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_semantic_result_budget_bytes",
+        "value": 0,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_worker_heap_limit_bytes",
+        "value": 1098907648,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_worker_timeout_ms",
+        "value": 300000,
+        "unit": "milliseconds"
+      }
+    ]
+  },
+  "file_observations": {
+    "packages/element/src/shape.ts": {
+      "json_pointer": "/normalized_result/graph/nodes/1349/observations/1",
+      "observation_id": "jag_observation_2fa95bf76951574ae6500e371c76172743782482c20b510ef09d227bd3bba769",
+      "evidence": {
+        "authority": "ast-static-analysis",
+        "state": "observed",
+        "confidence": "exact",
+        "artifact": {
+          "available": true,
+          "artifact_id": "art_1121578b920a03e74e713bcf5ec454faedd09b46a327a55296948e038cfe97b2",
+          "sha256": "1121578b920a03e74e713bcf5ec454faedd09b46a327a55296948e038cfe97b2"
+        },
+        "location": {
+          "available": true,
+          "value": {
+            "kind": "source-range",
+            "source": "packages/element/src/shape.ts",
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1347,
+              "column": 0
+            }
+          }
+        },
+        "extractor": {
+          "name": "rea-javascript-artifact-reconstruction",
+          "version": "1",
+          "operation": "retain-unexpanded-static-findings",
+          "executable_sha256": null
+        },
+        "coverage": {
+          "status": "partial",
+          "truncated": false,
+          "omitted_count": null,
+          "limits": []
+        },
+        "limitations": [
+          "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence.",
+          "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/element/src/shape.ts exceed the parent's result budget; complete static facts were retained on the file node"
+        ],
+        "evidence_ids": []
+      },
+      "static_analysis": {
+        "parse_status": "partial",
+        "parse_error_count": 0,
+        "visited_ast_nodes": 4523,
+        "references": [
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 65
+              }
+            },
+            "kind": "static-import",
+            "specifier": "points-on-curve",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 2,
+                "column": 0
+              },
+              "end": {
+                "line": 2,
+                "column": 62
+              }
+            },
+            "kind": "static-import",
+            "specifier": "perfect-freehand",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 3,
+                "column": 0
+              },
+              "end": {
+                "line": 3,
+                "column": 57
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/laser-pointer",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 5,
+                "column": 0
+              },
+              "end": {
+                "line": 12,
+                "column": 33
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/utils/shape",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 14,
+                "column": 0
+              },
+              "end": {
+                "line": 20,
+                "column": 26
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/math",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 21,
+                "column": 0
+              },
+              "end": {
+                "line": 30,
+                "column": 28
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/common",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 32,
+                "column": 0
+              },
+              "end": {
+                "line": 32,
+                "column": 55
+              }
+            },
+            "kind": "static-import",
+            "specifier": "roughjs/bin/generator",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 48,
+                "column": 0
+              },
+              "end": {
+                "line": 48,
+                "column": 57
+              }
+            },
+            "kind": "static-import",
+            "specifier": "./renderElement",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 50,
+                "column": 0
+              },
+              "end": {
+                "line": 57,
+                "column": 22
+              }
+            },
+            "kind": "static-import",
+            "specifier": "./typeChecks",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 58,
+                "column": 0
+              },
+              "end": {
+                "line": 58,
+                "column": 55
+              }
+            },
+            "kind": "static-import",
+            "specifier": "./utils",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 59,
+                "column": 0
+              },
+              "end": {
+                "line": 59,
+                "column": 56
+              }
+            },
+            "kind": "static-import",
+            "specifier": "./heading",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 61,
+                "column": 0
+              },
+              "end": {
+                "line": 61,
+                "column": 51
+              }
+            },
+            "kind": "static-import",
+            "specifier": "./comparisons",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 62,
+                "column": 0
+              },
+              "end": {
+                "line": 67,
+                "column": 18
+              }
+            },
+            "kind": "static-import",
+            "specifier": "./bounds",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 68,
+                "column": 0
+              },
+              "end": {
+                "line": 68,
+                "column": 47
+              }
+            },
+            "kind": "static-import",
+            "specifier": "./collision",
+            "expression": null
+          }
+        ],
+        "endpoints": [],
+        "storage": [],
+        "bundler_registrations": [],
+        "role_paths": [],
+        "source_map_urls": [],
+        "vendors": [],
+        "electron": {
+          "browser_windows": [],
+          "context_bridge_apis": [],
+          "ipc": [],
+          "sender_validations": [],
+          "utility_processes": [],
+          "native_addon_bindings": []
+        },
+        "limitations": [
+          "One or more static keys, expressions, or Electron boundary values were dynamic and remain unknown.",
+          "JavaScript syntax was parsed as data and was never evaluated."
+        ]
+      },
+      "application_projection_failure": {
+        "code": "resource_constraint",
+        "category": "resource_constraint",
+        "message": "Expanded application relationships for packages/element/src/shape.ts exceed the parent's result budget; complete static facts were retained on the file node",
+        "retryable": false,
+        "remediation": {
+          "action": "Read the complete static facts on the file node or analyze fewer source files. Expanded application relationships exceed the parent result budget; increasing the worker heap alone does not increase it."
+        },
+        "details": {
+          "operation": "analyze_javascript_application",
+          "resource": "memory",
+          "reason": "Expanded application relationships for packages/element/src/shape.ts exceed the parent's result budget; complete static facts were retained on the file node",
+          "reported_limits": {
+            "parent_result_budget_bytes": 945790980,
+            "parent_available_result_budget_bytes": 0,
+            "application_projection_required_bytes": 2029120
+          }
+        }
+      }
+    },
+    "packages/excalidraw/data/reconcile.ts": {
+      "json_pointer": "/normalized_result/graph/nodes/1362/observations/0",
+      "observation_id": "jag_observation_5395b46a91da257c3acb0998ca71bdc0aeccca2f8bf8eb2cbda421971b9588bb",
+      "evidence": {
+        "authority": "ast-static-analysis",
+        "state": "observed",
+        "confidence": "exact",
+        "artifact": {
+          "available": true,
+          "artifact_id": "art_07ee09fe90a94db2cf44e5a4c0c838a7c7005ffc3a03c9c8e227de4bdcbf4db0",
+          "sha256": "07ee09fe90a94db2cf44e5a4c0c838a7c7005ffc3a03c9c8e227de4bdcbf4db0"
+        },
+        "location": {
+          "available": true,
+          "value": {
+            "kind": "source-range",
+            "source": "packages/excalidraw/data/reconcile.ts",
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 119,
+              "column": 0
+            }
+          }
+        },
+        "extractor": {
+          "name": "rea-javascript-artifact-reconstruction",
+          "version": "1",
+          "operation": "retain-unexpanded-static-findings",
+          "executable_sha256": null
+        },
+        "coverage": {
+          "status": "complete",
+          "truncated": false,
+          "omitted_count": 0,
+          "limits": []
+        },
+        "limitations": [
+          "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/excalidraw/data/reconcile.ts exceed the parent's result budget; complete static facts were retained on the file node"
+        ],
+        "evidence_ids": []
+      },
+      "static_analysis": {
+        "parse_status": "complete",
+        "parse_error_count": 0,
+        "visited_ast_nodes": 399,
+        "references": [
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 39
+              }
+            },
+            "kind": "static-import",
+            "specifier": "lodash.throttle",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 3,
+                "column": 0
+              },
+              "end": {
+                "line": 3,
+                "column": 69
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/common",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 5,
+                "column": 0
+              },
+              "end": {
+                "line": 9,
+                "column": 29
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/element",
+            "expression": null
+          }
+        ],
+        "endpoints": [],
+        "storage": [],
+        "bundler_registrations": [],
+        "role_paths": [],
+        "source_map_urls": [],
+        "vendors": [],
+        "electron": {
+          "browser_windows": [],
+          "context_bridge_apis": [],
+          "ipc": [],
+          "sender_validations": [],
+          "utility_processes": [],
+          "native_addon_bindings": []
+        },
+        "limitations": [
+          "JavaScript syntax was parsed as data and was never evaluated."
+        ]
+      },
+      "application_projection_failure": {
+        "code": "resource_constraint",
+        "category": "resource_constraint",
+        "message": "Expanded application relationships for packages/excalidraw/data/reconcile.ts exceed the parent's result budget; complete static facts were retained on the file node",
+        "retryable": false,
+        "remediation": {
+          "action": "Read the complete static facts on the file node or analyze fewer source files. Expanded application relationships exceed the parent result budget; increasing the worker heap alone does not increase it."
+        },
+        "details": {
+          "operation": "analyze_javascript_application",
+          "resource": "memory",
+          "reason": "Expanded application relationships for packages/excalidraw/data/reconcile.ts exceed the parent's result budget; complete static facts were retained on the file node",
+          "reported_limits": {
+            "parent_result_budget_bytes": 945790980,
+            "parent_available_result_budget_bytes": 0,
+            "application_projection_required_bytes": 450784
+          }
+        }
+      }
+    },
+    "packages/excalidraw/scene/export.ts": {
+      "json_pointer": "/normalized_result/graph/nodes/1631/observations/0",
+      "observation_id": "jag_observation_5024fefd89795038918cf7915b97864b11a33eb051c138b41427cc8fca4ece64",
+      "evidence": {
+        "authority": "ast-static-analysis",
+        "state": "observed",
+        "confidence": "exact",
+        "artifact": {
+          "available": true,
+          "artifact_id": "art_9b981fc80524fd0bc5b6cc0816045150a7d85957113c97ac1d346123bb42fb63",
+          "sha256": "9b981fc80524fd0bc5b6cc0816045150a7d85957113c97ac1d346123bb42fb63"
+        },
+        "location": {
+          "available": true,
+          "value": {
+            "kind": "source-range",
+            "source": "packages/excalidraw/scene/export.ts",
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1398,
+              "column": 0
+            }
+          }
+        },
+        "extractor": {
+          "name": "rea-javascript-artifact-reconstruction",
+          "version": "1",
+          "operation": "retain-unexpanded-static-findings",
+          "executable_sha256": null
+        },
+        "coverage": {
+          "status": "partial",
+          "truncated": false,
+          "omitted_count": null,
+          "limits": []
+        },
+        "limitations": [
+          "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence.",
+          "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/excalidraw/scene/export.ts exceed the parent's result budget; complete static facts were retained on the file node"
+        ],
+        "evidence_ids": []
+      },
+      "static_analysis": {
+        "parse_status": "partial",
+        "parse_error_count": 0,
+        "visited_ast_nodes": 4072,
+        "references": [
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 38
+              }
+            },
+            "kind": "static-import",
+            "specifier": "roughjs/bin/rough",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 3,
+                "column": 0
+              },
+              "end": {
+                "line": 18,
+                "column": 28
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/common",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 20,
+                "column": 0
+              },
+              "end": {
+                "line": 20,
+                "column": 80
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/element",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 22,
+                "column": 0
+              },
+              "end": {
+                "line": 28,
+                "column": 29
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/element",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 30,
+                "column": 0
+              },
+              "end": {
+                "line": 30,
+                "column": 53
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/element",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 32,
+                "column": 0
+              },
+              "end": {
+                "line": 32,
+                "column": 57
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/element",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 34,
+                "column": 0
+              },
+              "end": {
+                "line": 39,
+                "column": 29
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/element",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 41,
+                "column": 0
+              },
+              "end": {
+                "line": 41,
+                "column": 57
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/element",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 43,
+                "column": 0
+              },
+              "end": {
+                "line": 43,
+                "column": 64
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/common/utility-types",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 45,
+                "column": 0
+              },
+              "end": {
+                "line": 45,
+                "column": 53
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/element",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 58,
+                "column": 0
+              },
+              "end": {
+                "line": 58,
+                "column": 53
+              }
+            },
+            "kind": "static-import",
+            "specifier": "../appState",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 59,
+                "column": 0
+              },
+              "end": {
+                "line": 59,
+                "column": 80
+              }
+            },
+            "kind": "static-import",
+            "specifier": "../data/encode",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 60,
+                "column": 0
+              },
+              "end": {
+                "line": 60,
+                "column": 47
+              }
+            },
+            "kind": "static-import",
+            "specifier": "../data/json",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 61,
+                "column": 0
+              },
+              "end": {
+                "line": 61,
+                "column": 67
+              }
+            },
+            "kind": "static-import",
+            "specifier": "../data/restore",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 62,
+                "column": 0
+              },
+              "end": {
+                "line": 62,
+                "column": 50
+              }
+            },
+            "kind": "static-import",
+            "specifier": "../data/image",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 64,
+                "column": 0
+              },
+              "end": {
+                "line": 64,
+                "column": 33
+              }
+            },
+            "kind": "static-import",
+            "specifier": "../fonts",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 66,
+                "column": 0
+              },
+              "end": {
+                "line": 66,
+                "column": 60
+              }
+            },
+            "kind": "static-import",
+            "specifier": "../renderer/staticScene",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 67,
+                "column": 0
+              },
+              "end": {
+                "line": 67,
+                "column": 62
+              }
+            },
+            "kind": "static-import",
+            "specifier": "../renderer/staticSvgScene",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 69,
+                "column": 0
+              },
+              "end": {
+                "line": 73,
+                "column": 22
+              }
+            },
+            "kind": "static-import",
+            "specifier": "../clipboard",
+            "expression": null
+          }
+        ],
+        "endpoints": [],
+        "storage": [],
+        "bundler_registrations": [],
+        "role_paths": [],
+        "source_map_urls": [],
+        "vendors": [],
+        "electron": {
+          "browser_windows": [],
+          "context_bridge_apis": [],
+          "ipc": [],
+          "sender_validations": [],
+          "utility_processes": [],
+          "native_addon_bindings": []
+        },
+        "limitations": [
+          "One or more static keys, expressions, or Electron boundary values were dynamic and remain unknown.",
+          "Compiler options are unavailable; inline type-only imports or re-exports may preserve a module side-effect dependency.",
+          "JavaScript syntax was parsed as data and was never evaluated."
+        ]
+      },
+      "application_projection_failure": {
+        "code": "resource_constraint",
+        "category": "resource_constraint",
+        "message": "Expanded application relationships for packages/excalidraw/scene/export.ts exceed the parent's result budget; complete static facts were retained on the file node",
+        "retryable": false,
+        "remediation": {
+          "action": "Read the complete static facts on the file node or analyze fewer source files. Expanded application relationships exceed the parent result budget; increasing the worker heap alone does not increase it."
+        },
+        "details": {
+          "operation": "analyze_javascript_application",
+          "resource": "memory",
+          "reason": "Expanded application relationships for packages/excalidraw/scene/export.ts exceed the parent's result budget; complete static facts were retained on the file node",
+          "reported_limits": {
+            "parent_result_budget_bytes": 945790980,
+            "parent_available_result_budget_bytes": 0,
+            "application_projection_required_bytes": 2782784
+          }
+        }
+      }
+    },
+    "packages/excalidraw/data/json.ts": {
+      "json_pointer": "/normalized_result/graph/nodes/1770/observations/0",
+      "observation_id": "jag_observation_32e03c5dd051433afc5feafac0276473ef0ad59f7e52cfb45778d0df68d52cdc",
+      "evidence": {
+        "authority": "ast-static-analysis",
+        "state": "observed",
+        "confidence": "exact",
+        "artifact": {
+          "available": true,
+          "artifact_id": "art_d38e58836b569507a40f6f3a745d600c589202a43627762ee7a578331a3d514d",
+          "sha256": "d38e58836b569507a40f6f3a745d600c589202a43627762ee7a578331a3d514d"
+        },
+        "location": {
+          "available": true,
+          "value": {
+            "kind": "source-range",
+            "source": "packages/excalidraw/data/json.ts",
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 160,
+              "column": 0
+            }
+          }
+        },
+        "extractor": {
+          "name": "rea-javascript-artifact-reconstruction",
+          "version": "1",
+          "operation": "retain-unexpanded-static-findings",
+          "executable_sha256": null
+        },
+        "coverage": {
+          "status": "complete",
+          "truncated": false,
+          "omitted_count": 0,
+          "limits": []
+        },
+        "limitations": [
+          "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/excalidraw/data/json.ts exceed the parent's result budget; complete static facts were retained on the file node"
+        ],
+        "evidence_ids": []
+      },
+      "static_analysis": {
+        "parse_status": "complete",
+        "parse_error_count": 0,
+        "visited_ast_nodes": 577,
+        "references": [
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 6,
+                "column": 28
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/common",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 12,
+                "column": 0
+              },
+              "end": {
+                "line": 12,
+                "column": 79
+              }
+            },
+            "kind": "static-import",
+            "specifier": "../appState",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 14,
+                "column": 0
+              },
+              "end": {
+                "line": 14,
+                "column": 57
+              }
+            },
+            "kind": "static-import",
+            "specifier": "./blob",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 15,
+                "column": 0
+              },
+              "end": {
+                "line": 15,
+                "column": 50
+              }
+            },
+            "kind": "static-import",
+            "specifier": "./filesystem",
+            "expression": null
+          }
+        ],
+        "endpoints": [],
+        "storage": [],
+        "bundler_registrations": [],
+        "role_paths": [],
+        "source_map_urls": [],
+        "vendors": [],
+        "electron": {
+          "browser_windows": [],
+          "context_bridge_apis": [],
+          "ipc": [],
+          "sender_validations": [],
+          "utility_processes": [],
+          "native_addon_bindings": []
+        },
+        "limitations": [
+          "JavaScript syntax was parsed as data and was never evaluated."
+        ]
+      },
+      "application_projection_failure": {
+        "code": "resource_constraint",
+        "category": "resource_constraint",
+        "message": "Expanded application relationships for packages/excalidraw/data/json.ts exceed the parent's result budget; complete static facts were retained on the file node",
+        "retryable": false,
+        "remediation": {
+          "action": "Read the complete static facts on the file node or analyze fewer source files. Expanded application relationships exceed the parent result budget; increasing the worker heap alone does not increase it."
+        },
+        "details": {
+          "operation": "analyze_javascript_application",
+          "resource": "memory",
+          "reason": "Expanded application relationships for packages/excalidraw/data/json.ts exceed the parent's result budget; complete static facts were retained on the file node",
+          "reported_limits": {
+            "parent_result_budget_bytes": 945790980,
+            "parent_available_result_budget_bytes": 0,
+            "application_projection_required_bytes": 590976
+          }
+        }
+      }
+    },
+    "packages/excalidraw/data/encryption.ts": {
+      "json_pointer": "/normalized_result/graph/nodes/3209/observations/1",
+      "observation_id": "jag_observation_d00a810e8b63cab6306a607cfe6d6d6a2dc2e51710cea8932879af9397a4fcc4",
+      "evidence": {
+        "authority": "ast-static-analysis",
+        "state": "observed",
+        "confidence": "exact",
+        "artifact": {
+          "available": true,
+          "artifact_id": "art_cf0459f24fadf50018db8d78f69c0d44333bc53fb88ec34435fa7fad37e602ed",
+          "sha256": "cf0459f24fadf50018db8d78f69c0d44333bc53fb88ec34435fa7fad37e602ed"
+        },
+        "location": {
+          "available": true,
+          "value": {
+            "kind": "source-range",
+            "source": "packages/excalidraw/data/encryption.ts",
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 95,
+              "column": 0
+            }
+          }
+        },
+        "extractor": {
+          "name": "rea-javascript-artifact-reconstruction",
+          "version": "1",
+          "operation": "retain-unexpanded-static-findings",
+          "executable_sha256": null
+        },
+        "coverage": {
+          "status": "complete",
+          "truncated": false,
+          "omitted_count": 0,
+          "limits": []
+        },
+        "limitations": [
+          "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/excalidraw/data/encryption.ts exceed the parent's result budget; complete static facts were retained on the file node"
+        ],
+        "evidence_ids": []
+      },
+      "static_analysis": {
+        "parse_status": "complete",
+        "parse_error_count": 0,
+        "visited_ast_nodes": 363,
+        "references": [
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 57
+              }
+            },
+            "kind": "static-import",
+            "specifier": "@excalidraw/common",
+            "expression": null
+          },
+          {
+            "module_key": null,
+            "location": {
+              "start": {
+                "line": 3,
+                "column": 0
+              },
+              "end": {
+                "line": 3,
+                "column": 43
+              }
+            },
+            "kind": "static-import",
+            "specifier": "./blob",
+            "expression": null
+          }
+        ],
+        "endpoints": [],
+        "storage": [],
+        "bundler_registrations": [],
+        "role_paths": [],
+        "source_map_urls": [],
+        "vendors": [],
+        "electron": {
+          "browser_windows": [],
+          "context_bridge_apis": [],
+          "ipc": [],
+          "sender_validations": [],
+          "utility_processes": [],
+          "native_addon_bindings": []
+        },
+        "limitations": [
+          "JavaScript syntax was parsed as data and was never evaluated."
+        ]
+      },
+      "application_projection_failure": {
+        "code": "resource_constraint",
+        "category": "resource_constraint",
+        "message": "Expanded application relationships for packages/excalidraw/data/encryption.ts exceed the parent's result budget; complete static facts were retained on the file node",
+        "retryable": false,
+        "remediation": {
+          "action": "Read the complete static facts on the file node or analyze fewer source files. Expanded application relationships exceed the parent result budget; increasing the worker heap alone does not increase it."
+        },
+        "details": {
+          "operation": "analyze_javascript_application",
+          "resource": "memory",
+          "reason": "Expanded application relationships for packages/excalidraw/data/encryption.ts exceed the parent's result budget; complete static facts were retained on the file node",
+          "reported_limits": {
+            "parent_result_budget_bytes": 945790980,
+            "parent_available_result_budget_bytes": 0,
+            "application_projection_required_bytes": 305120
+          }
+        }
+      }
+    }
+  },
+  "parse_failures": []
+}
