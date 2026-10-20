@@ -91,7 +91,13 @@ extension SplatPreviousResultEvidence {
             if fileManager.fileExists(atPath: outputURL.path) {
                 // Replace in one filesystem transaction. The verified partial lives in the same
                 // project directory, so promotion never creates a remove-then-move data-loss gap.
-                _ = try fileManager.replaceItemAt(outputURL, withItemAt: partialURL)
+                // Keep the verified backup clone's metadata. Default replacement inherits the
+                // corrupt destination's newer mtime, which falsely invalidates the
+                // previous-generation completion seal after recovery.
+                _ = try fileManager.replaceItemAt(
+                    outputURL, withItemAt: partialURL, backupItemName: nil,
+                    options: [.usingNewMetadataOnly]
+                )
             } else {
                 try fileManager.moveItem(at: partialURL, to: outputURL)
             }
