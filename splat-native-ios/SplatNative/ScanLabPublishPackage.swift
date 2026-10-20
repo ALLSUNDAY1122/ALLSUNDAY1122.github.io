@@ -43,12 +43,17 @@ enum ScanLabPublishPackageBuilder {
     private static let maximumManifestBytes: Int64 = 64 * 1024
     private static let stalePackageAge: TimeInterval = 24 * 60 * 60
     private static let hashReadChunkBytes = 1024 * 1024
+    private static let maximumPendingStagingPackages = 8
 
     static func build(from sourceURL: URL, maximumBytes: Int = 128 * 1024 * 1024, fileManager: FileManager = .default) throws -> ScanLabPublishPackage {
         try Task.checkCancellation()
         guard maximumBytes > 0, sourceURL.isFileURL else { throw ScanLabPublishPackageError.invalidSource }
         // Never age-delete staging directories while a publish ACK may be uncertain.
         // An explicit server-reconciled cleanup policy is required before deletion.
+        // Fail closed instead of deleting ACK-uncertain packages to free space.
+        guard pendingPackageCount(in: fileManager.temporaryDirectory, fileManager: fileManager) < maximumPendingStagingPackages else {
+            throw ScanLabPublishPackageError.packageWriteFailed
+        }
         try Task.checkCancellation()
         let attributes: [FileAttributeKey: Any]
         do { attributes = try fileManager.attributesOfItem(atPath: sourceURL.path) } catch { throw ScanLabPublishPackageError.invalidSource }
@@ -134,6 +139,20 @@ enum ScanLabPublishPackageBuilder {
                   modified <= cutoff else { continue }
             try? fileManager.removeItem(at: entry)
         }
+    }
+
+    private static func pendingPackageCount(in root: URL, fileManager: FileManager) -> Int {
+        guard let entries = try? fileManager.contentsOfDirectory(
+            at: root, includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey],
+            options: [.skipsHiddenFiles]
+        ) else { return maximumPendingStagingPackages }
+        var count = 0
+        for entry in entries where entry.lastPathComponent.hasPrefix(directoryPrefix) {
+            guard isOwnedPackageDirectory(entry, fileManager: fileManager) else { continue }
+            count += 1
+            if count >= maximumPendingStagingPackages { return count }
+        }
+        return count
     }
 
     private static func verifyWrittenCopy(
