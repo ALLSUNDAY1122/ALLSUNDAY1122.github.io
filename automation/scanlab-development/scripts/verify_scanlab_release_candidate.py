@@ -53,10 +53,10 @@ def main():
     result = git("show", f"{CANDIDATE}:codemagic.yaml")
     require(result.returncode == 0, "Candidate missing codemagic.yaml")
     config = result.stdout
-    require(re.search(r"(?m)^  scanlab-ios:\\s*$", config) is not None, "Missing scanlab-ios workflow")
+    require(re.search(r"(?m)^  scanlab-ios:\s*$", config) is not None, "Missing scanlab-ios workflow")
     chunk = config.split("  scanlab-ios:", 1)[1]
     # Inspect just this workflow (not unrelated app definitions).
-    chunk = re.split(r"(?m)^  [a-zA-Z][\\w-]*:\\s*$", chunk, maxsplit=1)[0]
+    chunk = re.split(r"(?m)^  [a-zA-Z][\w-]*:\s*$", chunk, maxsplit=1)[0]
     required = (
         "jp.allsunday1122.splatlab",
         "6803778932",
