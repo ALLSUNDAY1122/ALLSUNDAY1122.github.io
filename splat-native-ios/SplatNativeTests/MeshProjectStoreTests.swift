@@ -17,6 +17,35 @@ final class MeshProjectStoreTests: XCTestCase {
         rootURL = nil
     }
 
+    // Part of the CI-selected MeshProjectStoreTests suite, so the fence test runs rather
+    // than merely compiling as an undiscovered standalone XCTest class.
+    func testCaptureFenceRejectsQueuedOldGenerationWithoutDiskSideEffects() {
+        let fence = MeshFrameWriteFence()
+        let old = fence.rotate()
+        let current = fence.rotate()
+        var writes = 0
+        let stale = fence.performIfCurrent(old) {
+            writes += 1
+            return true
+        }
+        XCTAssertNil(stale)
+        XCTAssertEqual(writes, 0)
+        XCTAssertEqual(fence.performIfCurrent(current) {
+            writes += 1
+            return true
+        }, true)
+        XCTAssertEqual(writes, 1)
+    }
+
+    func testCaptureFencePreservesFailureOfCurrentGeneration() {
+        let fence = MeshFrameWriteFence()
+        let current = fence.rotate()
+        let outcome = fence.performIfCurrent(current) { false }
+        XCTAssertEqual(outcome, false)
+        _ = fence.rotate()
+        XCTAssertNil(fence.performIfCurrent(current) { true })
+    }
+
     func testArchiveSurvivesWorkingProjectDeletionWithRawImages() throws {
         let live = try makeLiveProject(mode: "lidar", resultName: "mesh.obj", marker: 0x11)
         let result = live.appendingPathComponent("mesh.obj")

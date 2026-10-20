@@ -4,6 +4,7 @@ from pathlib import Path
 coordinator = Path("splat-native-ios/SplatNative/MeshDurabilityCoordinator.swift").read_text()
 recovery = Path("splat-native-ios/SplatNative/MeshDurabilityRecoveryStore.swift").read_text()
 model = Path("splat-native-ios/SplatNative/MeshScanModel.swift").read_text()
+fence = Path("splat-native-ios/SplatNative/MeshFrameWriteFence.swift").read_text()
 mesh_view = Path("splat-native-ios/SplatNative/MeshScanView.swift").read_text()
 shell = Path("splat-native-ios/SplatNative/IntegratedScanLabShellView.swift").read_text()
 
@@ -51,9 +52,25 @@ reset_start = model.index("@discardableResult\n    func reset() -> Bool")
 reset_end = model.index("nonisolated func session", reset_start)
 reset_block = model[reset_start:reset_end]
 guard_pos = reset_block.index("if let reason = destructiveResetBlockedReason")
-delete_pos = reset_block.index("FileManager.default.removeItem")
-if not guard_pos < delete_pos:
-    raise SystemExit("Mesh reset guard must execute before deleting the working .meshproject")
+generation_pos = reset_block.index("captureGeneration = frameWriteFence.rotate()")
+project_detach_pos = reset_block.index("projectURL = nil")
+if not guard_pos < generation_pos < project_detach_pos:
+    raise SystemExit("Mesh reset must reject blocked resets before invalidating capture and detaching the working project")
+# The reset contract has been strengthened: resetting the UI never deletes a
+# durable mesh project. Deletion is a distinct authorized retention operation.
+# Check the entire reset body, not just the branch following the block guard.
+if "removeItem(" in reset_block or "removeItem (" in reset_block:
+    raise SystemExit("Mesh reset must not delete the working project, including after the guard")
+if "projectURL = nil" not in reset_block:
+    raise SystemExit("Mesh reset must detach the old project without deleting its RAW contents")
+
+# The camera write must hold the same fence that reset rotates before project detachment.
+for needle in ("class MeshFrameWriteFence", "func performIfCurrent(", "guard generation == expected else { return nil }"):
+    if needle not in fence:
+        raise SystemExit(f"Mesh writer generation fence implementation missing: {needle}")
+for needle in ("let writeFence = frameWriteFence", "writeFence.performIfCurrent(generation)", "guard let success = outcome else { return }"):
+    if needle not in model:
+        raise SystemExit(f"Mesh writer admission missing: {needle}")
 
 protect_start = recovery.index("func protect(resultURL: URL)")
 protect_end = recovery.index("func cleanupProtectedResult", protect_start)

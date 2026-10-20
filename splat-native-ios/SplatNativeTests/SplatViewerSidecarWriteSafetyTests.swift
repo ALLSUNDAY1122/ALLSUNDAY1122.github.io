@@ -145,10 +145,6 @@ final class SplatViewerSidecarWriteSafetyTests: XCTestCase {
 
         XCTAssertEqual(SplatPersistedEditMaterializer.loadSettings(sourceURL: source), expected)
 
-        let healed = try JSONDecoder().decode(
-            SplatEditSettings.self,
-            from: Data(contentsOf: primary)
-        ).normalized()
-        XCTAssertEqual(healed, expected)
+        XCTAssertEqual(try Data(contentsOf: primary), Data("corrupt-primary".utf8))
     }
 }

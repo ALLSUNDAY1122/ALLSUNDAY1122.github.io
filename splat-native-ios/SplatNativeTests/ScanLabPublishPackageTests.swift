@@ -84,6 +84,20 @@ final class ScanLabPublishPackageTests: XCTestCase {
         ScanLabPublishPackageBuilder.cleanup(package, fileManager: fileManager)
         XCTAssertTrue(fileManager.fileExists(atPath: sentinel.path))
     }
+    func testFailedBuildDoesNotAgeDeleteAnotherPendingPublishPackage() throws {
+        let fm = FileManager.default
+        let staging = fm.temporaryDirectory.appendingPathComponent("scanlab-publish-\(UUID().uuidString.lowercased())", isDirectory: true)
+        try fm.createDirectory(at: staging, withIntermediateDirectories: true)
+        defer { try? fm.removeItem(at: staging) }
+        let marker = staging.appendingPathComponent(".scanlab-publish-package")
+        try Data().write(to: marker, options: .atomic)
+        let sentinel = staging.appendingPathComponent("pending-ack.dat")
+        try Data("KEEP".utf8).write(to: sentinel, options: .atomic)
+        try fm.setAttributes([.modificationDate: Date(timeIntervalSinceNow: -3 * 86_400)], ofItemAtPath: staging.path)
+        let missing = fm.temporaryDirectory.appendingPathComponent("missing-\(UUID().uuidString).spz")
+        XCTAssertThrowsError(try ScanLabPublishPackageBuilder.build(from: missing, fileManager: fm))
+        XCTAssertEqual(try Data(contentsOf: sentinel), Data("KEEP".utf8))
+    }
     private func temporaryValidSPZ() async throws -> URL {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)

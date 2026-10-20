@@ -17,6 +17,80 @@ final class ScanProjectStoreTests: XCTestCase {
         rootURL = nil
     }
 
+    func testLibraryCensusShowsUnknownInsteadOfEmptyAndPreservesBytes() throws {
+        let (project, _) = try store.createProject(title: "Unknown census")
+        let primary = project.appendingPathComponent(ScanProjectStore.manifestFileName)
+        let backup = project.appendingPathComponent(ScanProjectStore.manifestBackupFileName)
+        try Data("damaged primary".utf8).write(to: primary, options: .atomic)
+        try Data("damaged backup".utf8).write(to: backup, options: .atomic)
+        let beforePrimary = try Data(contentsOf: primary)
+        let beforeBackup = try Data(contentsOf: backup)
+
+        let census = ScanLibraryReadOnlyCensus.inspect(rootURL: rootURL)
+        XCTAssertTrue(census.projects.isEmpty)
+        XCTAssertEqual(census.unknownCount, 1)
+        XCTAssertFalse(census.scanFailed)
+        XCTAssertEqual(try Data(contentsOf: primary), beforePrimary)
+        XCTAssertEqual(try Data(contentsOf: backup), beforeBackup)
+    }
+
+    func testLibraryCensusUsesBackupWithoutRepairingCorruptPrimary() throws {
+        let (project, manifest) = try store.createProject(title: "Backup census")
+        _ = try store.updateManifest(projectURL: project) { $0.title = "Older backup" }
+        _ = try store.updateManifest(projectURL: project) { $0.title = "Newer primary" }
+        let primary = project.appendingPathComponent(ScanProjectStore.manifestFileName)
+        let backup = project.appendingPathComponent(ScanProjectStore.manifestBackupFileName)
+        let backupBefore = try Data(contentsOf: backup)
+        let corrupt = Data("unreadable".utf8)
+        try corrupt.write(to: primary, options: .atomic)
+
+        let census = ScanLibraryReadOnlyCensus.inspect(rootURL: rootURL)
+        XCTAssertEqual(census.projects.count, 1)
+        XCTAssertEqual(census.projects.first?.manifest.id, manifest.id)
+        XCTAssertEqual(census.projects.first?.manifest.title, "Older backup")
+        XCTAssertEqual(census.unknownCount, 0)
+        XCTAssertEqual(try Data(contentsOf: primary), corrupt)
+        XCTAssertEqual(try Data(contentsOf: backup), backupBefore)
+    }
+
+    func testLibraryCensusDoesNotFollowExternalProjectSymlink() throws {
+        let fm = FileManager.default
+        let external = fm.temporaryDirectory.appendingPathComponent("scanlab-external-\(UUID().uuidString)", isDirectory: true)
+        try fm.createDirectory(at: external, withIntermediateDirectories: true)
+        defer { try? fm.removeItem(at: external) }
+        let marker = external.appendingPathComponent("keep.dat")
+        let bytes = Data("untouched".utf8)
+        try bytes.write(to: marker, options: .atomic)
+        let link = rootURL.appendingPathComponent("untrusted.splatproject")
+        try fm.createSymbolicLink(at: link, withDestinationURL: external)
+        let census = ScanLibraryReadOnlyCensus.inspect(rootURL: rootURL)
+        XCTAssertEqual(census.unknownCount, 1)
+        XCTAssertTrue(census.projects.isEmpty)
+        XCTAssertEqual(try Data(contentsOf: marker), bytes)
+        XCTAssertEqual(try link.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink, true)
+    }
+
+    func testPublishStagingQuotaFailsClosedWithoutDeletingPendingPackages() throws {
+        let fm = FileManager.default
+        var created: [URL] = []
+        defer { for directory in created { try? fm.removeItem(at: directory) } }
+        for _ in 0..<8 {
+            let directory = fm.temporaryDirectory.appendingPathComponent(
+                "scanlab-publish-\(UUID().uuidString.lowercased())", isDirectory: true
+            )
+            try fm.createDirectory(at: directory, withIntermediateDirectories: true)
+            try Data().write(to: directory.appendingPathComponent(".scanlab-publish-package"), options: .atomic)
+            created.append(directory)
+        }
+        let nonexistent = fm.temporaryDirectory.appendingPathComponent("absent-\(UUID().uuidString).spz")
+        XCTAssertThrowsError(try ScanLabPublishPackageBuilder.build(from: nonexistent, fileManager: fm)) {
+            XCTAssertEqual($0 as? ScanLabPublishPackageError, .packageWriteFailed)
+        }
+        for directory in created {
+            XCTAssertTrue(fm.fileExists(atPath: directory.appendingPathComponent(".scanlab-publish-package").path))
+        }
+    }
+
     func testProjectSurvivesStoreRecreation() throws {
         let created = try store.createProject(title: "机")
         try makeProcessableRaw(in: created.0)

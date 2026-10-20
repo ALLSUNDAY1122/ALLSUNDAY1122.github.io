@@ -32,7 +32,6 @@ private struct ScanLabUploadValidateResponse: Decodable {
 }
 
 private struct ScanLabTrustedPublishRequest: Encodable { let scanId: String }
-private struct ScanLabDeleteDraftRequest: Encodable { let scanId: String }
 
 private struct ScanLabTrustedDraftSettings: Encodable {
     let visibility: String
@@ -107,7 +106,9 @@ extension ScanLabBackend {
         } catch {
             throw ScanLabBackendError.invalidAsset
         }
-        defer { ScanLabPublishPackageBuilder.cleanup(package) }
+        // Retain staging bytes whenever server state or ACK is uncertain.
+        var serverOutcomeConfirmed = false
+        defer { if serverOutcomeConfirmed { ScanLabPublishPackageBuilder.cleanup(package) } }
 
         // A cancelled publish should not spend more MainActor time encoding a preview or create
         // server-side draft metadata after the expensive local package worker has completed.
@@ -141,7 +142,8 @@ extension ScanLabBackend {
               initialized.paths.previewJpeg == "\(expectedPrefix)/preview.jpg",
               initialized.paths.previewPng == "\(expectedPrefix)/preview.png",
               Set(initialized.required) == Set(["scene.spz", "manifest.json"]) else {
-            await cleanupFailedDraft(scanID)
+            // A network error or lost ACK cannot authorize deletion of server-owned assets.
+            // Preserve the initialized draft/published bytes for server-side reconciliation.
             throw ScanLabBackendError.invalidServerResponse
         }
 
@@ -211,6 +213,7 @@ extension ScanLabBackend {
             // row must never enter the published lifecycle or receive a share URL.
             if visibility == .private {
                 await loadOwnerScans()
+                serverOutcomeConfirmed = true
                 return ScanLabPublishResponse(
                     id: scanID,
                     visibility: ScanLabVisibility.private.rawValue,
@@ -234,27 +237,14 @@ extension ScanLabBackend {
 
             await loadOwnerScans()
             if visibility == .public { await loadPublicScans() }
+            serverOutcomeConfirmed = true
             return published
         } catch {
-            await cleanupFailedDraft(scanID)
+            // A network error or lost ACK cannot authorize deletion of server-owned assets.
+            // Preserve the initialized draft/published bytes for server-side reconciliation.
             throw error
         }
     }
 
-    private func cleanupFailedDraft(_ scanID: UUID) async {
-        // D2-015 is idempotent and also cleans an orphaned canonical folder when the
-        // metadata row has already disappeared, so it is the only rollback path used.
-        let _: ScanLabDeleteDraftResponse? = try? await client.functions.invoke(
-            "scanlab-delete-scan",
-            options: FunctionInvokeOptions(
-                region: .apSoutheast1,
-                body: ScanLabDeleteDraftRequest(scanId: scanID.uuidString.lowercased()),
-                timeoutInterval: 30
-            )
-        )
-    }
-}
 
-private struct ScanLabDeleteDraftResponse: Decodable {
-    let deleted: Bool
 }
