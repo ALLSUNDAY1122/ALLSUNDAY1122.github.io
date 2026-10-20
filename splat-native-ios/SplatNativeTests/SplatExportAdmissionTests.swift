@@ -93,9 +93,7 @@ final class SplatExportAdmissionTests: XCTestCase {
 
         _ = try SplatExportAdmission.preflight(sourceURL: result, kind: .spz, availableCapacityOverride: Int64.max)
 
-        let healedData = try Data(contentsOf: SplatViewerEditStore.primaryURL(for: result))
-        let healed = try JSONDecoder().decode(SplatEditSettings.self, from: healedData)
-        XCTAssertEqual(healed.normalized(), knownGood.normalized())
+        XCTAssertEqual(try Data(contentsOf: SplatViewerEditStore.primaryURL(for: result)), Data("corrupt".utf8))
     }
 
     func testPreflightRejectsExternalViewerEditAliasWithoutBackup() throws {
