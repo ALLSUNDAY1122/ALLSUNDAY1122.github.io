@@ -169,6 +169,25 @@ enum CapturePolicy {
 
     static let maximumRotationSpeed: Float = 1.80
 
+    static func isValidCameraPose(_ matrix: simd_float4x4) -> Bool {
+        let columns = [matrix.columns.0, matrix.columns.1, matrix.columns.2, matrix.columns.3]
+        guard columns.allSatisfy({ $0.x.isFinite && $0.y.isFinite && $0.z.isFinite && $0.w.isFinite }),
+              abs(matrix.columns.0.w) < 0.0001,
+              abs(matrix.columns.1.w) < 0.0001,
+              abs(matrix.columns.2.w) < 0.0001,
+              abs(matrix.columns.3.w - 1) < 0.0001 else { return false }
+        let x = SIMD3<Float>(matrix.columns.0.x, matrix.columns.0.y, matrix.columns.0.z)
+        let y = SIMD3<Float>(matrix.columns.1.x, matrix.columns.1.y, matrix.columns.1.z)
+        let z = SIMD3<Float>(matrix.columns.2.x, matrix.columns.2.y, matrix.columns.2.z)
+        return abs(simd_length_squared(x) - 1) < 0.03
+            && abs(simd_length_squared(y) - 1) < 0.03
+            && abs(simd_length_squared(z) - 1) < 0.03
+            && abs(simd_dot(x, y)) < 0.03
+            && abs(simd_dot(y, z)) < 0.03
+            && abs(simd_dot(z, x)) < 0.03
+            && simd_dot(simd_cross(x, y), z) > 0.97
+    }
+
     static func frameDecision(
         previous: simd_float4x4?,
         current: simd_float4x4,
@@ -181,17 +200,11 @@ enum CapturePolicy {
         // caller initialized both timestamps together, reducing coverage and delaying capture start.
         // Fail closed before admitting the first frame: without a previous pose the movement
         // validator cannot detect malformed ARKit transforms. Never persist invalid pose evidence.
-        let columns = [current.columns.0, current.columns.1, current.columns.2, current.columns.3]
-        guard columns.allSatisfy({ $0.x.isFinite && $0.y.isFinite && $0.z.isFinite && $0.w.isFinite }),
-              abs(current.columns.0.w) < 0.0001,
-              abs(current.columns.1.w) < 0.0001,
-              abs(current.columns.2.w) < 0.0001,
-              abs(current.columns.3.w - 1) < 0.0001,
-              currentTimestamp.isFinite else {
+        guard isValidCameraPose(current), currentTimestamp.isFinite else {
             return .relocalizationJump
         }
         guard let previous else { return .accept }
-        guard previousTimestamp.isFinite else { return .relocalizationJump }
+        guard isValidCameraPose(previous), previousTimestamp.isFinite else { return .relocalizationJump }
 
         let elapsed = currentTimestamp - previousTimestamp
         guard elapsed >= 0.16 else { return .tooSoon }
