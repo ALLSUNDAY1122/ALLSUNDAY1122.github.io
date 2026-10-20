@@ -17,6 +17,80 @@ final class ScanProjectStoreTests: XCTestCase {
         rootURL = nil
     }
 
+    func testLibraryCensusShowsUnknownInsteadOfEmptyAndPreservesBytes() throws {
+        let (project, _) = try store.createProject(title: "Unknown census")
+        let primary = project.appendingPathComponent(ScanProjectStore.manifestFileName)
+        let backup = project.appendingPathComponent(ScanProjectStore.manifestBackupFileName)
+        try Data("damaged primary".utf8).write(to: primary, options: .atomic)
+        try Data("damaged backup".utf8).write(to: backup, options: .atomic)
+        let beforePrimary = try Data(contentsOf: primary)
+        let beforeBackup = try Data(contentsOf: backup)
+
+        let census = ScanLibraryReadOnlyCensus.inspect(rootURL: rootURL)
+        XCTAssertTrue(census.projects.isEmpty)
+        XCTAssertEqual(census.unknownCount, 1)
+        XCTAssertFalse(census.scanFailed)
+        XCTAssertEqual(try Data(contentsOf: primary), beforePrimary)
+        XCTAssertEqual(try Data(contentsOf: backup), beforeBackup)
+    }
+
+    func testLibraryCensusUsesBackupWithoutRepairingCorruptPrimary() throws {
+        let (project, manifest) = try store.createProject(title: "Backup census")
+        _ = try store.updateManifest(projectURL: project) { $0.title = "Older backup" }
+        _ = try store.updateManifest(projectURL: project) { $0.title = "Newer primary" }
+        let primary = project.appendingPathComponent(ScanProjectStore.manifestFileName)
+        let backup = project.appendingPathComponent(ScanProjectStore.manifestBackupFileName)
+        let backupBefore = try Data(contentsOf: backup)
+        let corrupt = Data("unreadable".utf8)
+        try corrupt.write(to: primary, options: .atomic)
+
+        let census = ScanLibraryReadOnlyCensus.inspect(rootURL: rootURL)
+        XCTAssertEqual(census.projects.count, 1)
+        XCTAssertEqual(census.projects.first?.manifest.id, manifest.id)
+        XCTAssertEqual(census.projects.first?.manifest.title, "Older backup")
+        XCTAssertEqual(census.unknownCount, 0)
+        XCTAssertEqual(try Data(contentsOf: primary), corrupt)
+        XCTAssertEqual(try Data(contentsOf: backup), backupBefore)
+    }
+
+    func testLibraryCensusDoesNotFollowExternalProjectSymlink() throws {
+        let fm = FileManager.default
+        let external = fm.temporaryDirectory.appendingPathComponent("scanlab-external-\(UUID().uuidString)", isDirectory: true)
+        try fm.createDirectory(at: external, withIntermediateDirectories: true)
+        defer { try? fm.removeItem(at: external) }
+        let marker = external.appendingPathComponent("keep.dat")
+        let bytes = Data("untouched".utf8)
+        try bytes.write(to: marker, options: .atomic)
+        let link = rootURL.appendingPathComponent("untrusted.splatproject")
+        try fm.createSymbolicLink(at: link, withDestinationURL: external)
+        let census = ScanLibraryReadOnlyCensus.inspect(rootURL: rootURL)
+        XCTAssertEqual(census.unknownCount, 1)
+        XCTAssertTrue(census.projects.isEmpty)
+        XCTAssertEqual(try Data(contentsOf: marker), bytes)
+        XCTAssertEqual(try link.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink, true)
+    }
+
+    func testPublishStagingQuotaFailsClosedWithoutDeletingPendingPackages() throws {
+        let fm = FileManager.default
+        var created: [URL] = []
+        defer { for directory in created { try? fm.removeItem(at: directory) } }
+        for _ in 0..<8 {
+            let directory = fm.temporaryDirectory.appendingPathComponent(
+                "scanlab-publish-\(UUID().uuidString.lowercased())", isDirectory: true
+            )
+            try fm.createDirectory(at: directory, withIntermediateDirectories: true)
+            try Data().write(to: directory.appendingPathComponent(".scanlab-publish-package"), options: .atomic)
+            created.append(directory)
+        }
+        let nonexistent = fm.temporaryDirectory.appendingPathComponent("absent-\(UUID().uuidString).spz")
+        XCTAssertThrowsError(try ScanLabPublishPackageBuilder.build(from: nonexistent, fileManager: fm)) {
+            XCTAssertEqual($0 as? ScanLabPublishPackageError, .packageWriteFailed)
+        }
+        for directory in created {
+            XCTAssertTrue(fm.fileExists(atPath: directory.appendingPathComponent(".scanlab-publish-package").path))
+        }
+    }
+
     func testProjectSurvivesStoreRecreation() throws {
         let created = try store.createProject(title: "机")
         try makeProcessableRaw(in: created.0)
@@ -64,6 +138,87 @@ final class ScanProjectStoreTests: XCTestCase {
         )
         let recovered = try ScanProjectStore(rootURL: rootURL).loadProject(id: created.1.id)
         XCTAssertEqual(recovered.manifest.title, "復元対象")
+    }
+
+    func testFutureManifestFailsClosedWithoutChangingProjectBytes() throws {
+        let created = try store.createProject(title: "future manifest")
+        _ = try store.updateManifest(projectURL: created.0) { $0.acceptedFrames = 7 }
+        let primary = created.0.appendingPathComponent(ScanProjectStore.manifestFileName)
+        let backup = created.0.appendingPathComponent(ScanProjectStore.manifestBackupFileName)
+        let futureData = try futureJSONData(
+            basedOn: primary,
+            schemaVersion: ScanProjectManifest.currentSchemaVersion + 1
+        )
+        try futureData.write(to: primary, options: .atomic)
+        let backupBefore = try Data(contentsOf: backup)
+
+        XCTAssertThrowsError(try store.loadProject(id: created.1.id)) { error in
+            guard case ScanProjectStoreError.unsupportedManifestSchemaVersion(let version) = error else {
+                return XCTFail("unexpected error: \(error)")
+            }
+            XCTAssertEqual(version, ScanProjectManifest.currentSchemaVersion + 1)
+        }
+        XCTAssertEqual(try Data(contentsOf: primary), futureData)
+        XCTAssertEqual(try Data(contentsOf: backup), backupBefore)
+
+        let thumbnail = created.0.appendingPathComponent(ScanProjectStore.thumbnailFileName)
+        XCTAssertThrowsError(try store.setThumbnail(data: Data(repeating: 0xAA, count: 8), projectURL: created.0))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: thumbnail.path))
+        XCTAssertEqual(try Data(contentsOf: primary), futureData)
+    }
+
+    func testFutureBackupIsNotUsedToOverwriteCorruptPrimary() throws {
+        let created = try store.createProject(title: "future backup")
+        _ = try store.updateManifest(projectURL: created.0) { $0.acceptedFrames = 3 }
+        let primary = created.0.appendingPathComponent(ScanProjectStore.manifestFileName)
+        let backup = created.0.appendingPathComponent(ScanProjectStore.manifestBackupFileName)
+        let futureBackup = try futureJSONData(
+            basedOn: primary,
+            schemaVersion: ScanProjectManifest.currentSchemaVersion + 4
+        )
+        try futureBackup.write(to: backup, options: .atomic)
+        let corruptPrimary = Data("broken-json".utf8)
+        try corruptPrimary.write(to: primary, options: .atomic)
+
+        XCTAssertThrowsError(try store.loadProject(id: created.1.id)) { error in
+            guard case ScanProjectStoreError.unsupportedManifestSchemaVersion(let version) = error else {
+                return XCTFail("unexpected error: \(error)")
+            }
+            XCTAssertEqual(version, ScanProjectManifest.currentSchemaVersion + 4)
+        }
+        XCTAssertEqual(try Data(contentsOf: primary), corruptPrimary)
+        XCTAssertEqual(try Data(contentsOf: backup), futureBackup)
+    }
+
+    func testFutureCheckpointFailsClosedWithoutChangingPrimaryOrBackup() throws {
+        let created = try store.createProject(title: "future checkpoint")
+        let first = ScanCaptureCheckpoint(
+            frames: [], featurePoints: [], coverageSectors: [0], estimatedTargetCenter: nil,
+            lastAcceptedTransform: nil, lastAcceptedTimestamp: 10
+        )
+        let second = ScanCaptureCheckpoint(
+            frames: [], featurePoints: [], coverageSectors: [0, 1], estimatedTargetCenter: nil,
+            lastAcceptedTransform: nil, lastAcceptedTimestamp: 20
+        )
+        try store.saveCheckpoint(first, projectURL: created.0)
+        try store.saveCheckpoint(second, projectURL: created.0)
+        let primary = created.0.appendingPathComponent(ScanProjectStore.checkpointFileName)
+        let backup = created.0.appendingPathComponent(ScanProjectStore.checkpointBackupFileName)
+        let futureData = try futurePlistData(
+            basedOn: primary,
+            schemaVersion: ScanCaptureCheckpoint.currentSchemaVersion + 1
+        )
+        try futureData.write(to: primary, options: .atomic)
+        let backupBefore = try Data(contentsOf: backup)
+
+        XCTAssertThrowsError(try store.loadCheckpoint(projectURL: created.0)) { error in
+            guard case ScanProjectStoreError.unsupportedCheckpointSchemaVersion(let version) = error else {
+                return XCTFail("unexpected error: \(error)")
+            }
+            XCTAssertEqual(version, ScanCaptureCheckpoint.currentSchemaVersion + 1)
+        }
+        XCTAssertEqual(try Data(contentsOf: primary), futureData)
+        XCTAssertEqual(try Data(contentsOf: backup), backupBefore)
     }
 
     func testInterruptedProcessingReturnsToCapturedWhenRawExists() throws {
@@ -209,6 +364,18 @@ final class ScanProjectStoreTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: created.0.appendingPathComponent("images").path))
     }
 
+    func testMoveToTrashPreservesBothProjectsWhenDestinationAlreadyExists() throws {
+        let created = try store.createProject(title: "live")
+        let destination = store.trashURL.appendingPathComponent(created.0.lastPathComponent)
+        try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: true)
+        let sentinel = destination.appendingPathComponent("sentinel")
+        try Data([0xAC]).write(to: sentinel)
+
+        XCTAssertThrowsError(try store.moveToTrash(projectURL: created.0))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: created.0.path))
+        XCTAssertEqual(try Data(contentsOf: sentinel), Data([0xAC]))
+    }
+
     func testTrashIsRecoverableAcrossRelaunchBeforePermanentDelete() throws {
         let created = try store.createProject(title: "削除テスト")
         try store.moveToTrash(projectURL: created.0)
@@ -242,6 +409,26 @@ final class ScanProjectStoreTests: XCTestCase {
         XCTAssertNil(migrated.manifest.splatFileName)
         XCTAssertTrue(FileManager.default.fileExists(atPath: result.path))
         XCTAssertTrue(migrated.manifest.lastError?.contains("完了確認情報がない") == true)
+    }
+
+    private func futureJSONData(basedOn url: URL, schemaVersion: Int) throws -> Data {
+        let source = try Data(contentsOf: url)
+        guard var object = try JSONSerialization.jsonObject(with: source) as? [String: Any] else {
+            throw ScanProjectStoreError.invalidManifest
+        }
+        object["schemaVersion"] = schemaVersion
+        object["futureOnlyField"] = ["preserve": "exactly"]
+        return try JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted, .sortedKeys])
+    }
+
+    private func futurePlistData(basedOn url: URL, schemaVersion: Int) throws -> Data {
+        let source = try Data(contentsOf: url)
+        guard var object = try PropertyListSerialization.propertyList(from: source, options: [], format: nil) as? [String: Any] else {
+            throw ScanProjectStoreError.rawDataUnavailable
+        }
+        object["schemaVersion"] = schemaVersion
+        object["futureOnlyField"] = "preserve exactly"
+        return try PropertyListSerialization.data(fromPropertyList: object, format: .binary, options: 0)
     }
 
     private func makeProcessableRaw(in projectURL: URL) throws {

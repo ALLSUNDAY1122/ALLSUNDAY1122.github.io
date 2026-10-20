@@ -2,6 +2,17 @@ import XCTest
 import simd
 
 final class CaptureMotionQualityTests: XCTestCase {
+    func testInitialFrameIsAcceptedWithoutArtificialCadenceDelay() {
+        let decision = CapturePolicy.frameDecision(
+            previous: nil,
+            current: matrix_identity_float4x4,
+            subjectDistance: 0.75,
+            previousTimestamp: 5.0,
+            currentTimestamp: 5.0
+        )
+        XCTAssertEqual(decision, .accept)
+    }
+
     func testCloseObjectRejectsFastTranslationThatWouldBlurOverlap() {
         var current = matrix_identity_float4x4
         current.columns.3.x = 0.30
@@ -65,6 +76,33 @@ final class CaptureMotionQualityTests: XCTestCase {
         XCTAssertEqual(decision, .relocalizationJump)
     }
 
+    func testMeshCoverageViewpointRequiresPhysicalTranslation() {
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 0.55), 0.015, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 1.0), 0.020, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.translationThreshold(pathThresholdMeters: 1.8), 0.036, accuracy: 0.0001)
+    }
+
+    func testMeshCoverageRejectsCoordinateDiscontinuityAsPhysicalMotion() {
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20))
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.35))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.351))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.infinity))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(.nan))
+    }
+
+    func testMeshCoverageRejectsMotionFasterThanCapturePipelineCanAccept() {
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: 0.20))
+        XCTAssertTrue(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.30, elapsedSeconds: 0.30))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.30, elapsedSeconds: 0.16))
+        XCTAssertFalse(MeshCaptureCoveragePolicy.isPlausibleSampleDisplacement(0.20, elapsedSeconds: 0))
+    }
+
+    func testMeshVerticalCoverageRequiresRealCameraHeightChange() {
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 0.55), 0.10, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 1.0), 0.12, accuracy: 0.0001)
+        XCTAssertEqual(MeshCaptureCoveragePolicy.verticalSpanThreshold(pathThresholdMeters: 1.8), 0.216, accuracy: 0.0001)
+    }
+
     func testRejectsSeverelyDarkFrame() {
         let stats = CaptureImageQualityStats(
             meanLuma: 24,
@@ -101,6 +139,30 @@ final class CaptureMotionQualityTests: XCTestCase {
         XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooSoft)
     }
 
+    func testFlatLowTextureSurfaceIsNotMisclassifiedAsBlur() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 126,
+            darkFraction: 0,
+            highlightFraction: 0,
+            lumaStandardDeviation: 3,
+            laplacianScore: 0.5,
+            sampleCount: 512
+        )
+        XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
+    }
+
+    func testHighContrastLowLaplacianFrameKeepsPreviousAcceptanceBehavior() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 118,
+            darkFraction: 0.04,
+            highlightFraction: 0.03,
+            lumaStandardDeviation: 22,
+            laplacianScore: 1.1,
+            sampleCount: 512
+        )
+        XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
+    }
+
     func testAcceptsNormallyExposedDetailedFrame() {
         let stats = CaptureImageQualityStats(
             meanLuma: 116,
@@ -123,5 +185,102 @@ final class CaptureMotionQualityTests: XCTestCase {
             sampleCount: 12
         )
         XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
+    }
+
+    func testSatisfiedObjectCoverageReportsCompleteProgress() {
+        XCTAssertTrue(CapturePolicy.objectCoverageSatisfied(orbitSectors: 8, elevationBands: 1))
+        let score = CapturePolicy.coverageScore(
+            subjectDistance: 0.75,
+            orbitSectors: 8,
+            elevationBands: 1,
+            viewDirectionSectors: 0,
+            spatialCells: 0,
+            pathLength: 0
+        )
+        XCTAssertEqual(score, 1, accuracy: 0.0001)
+
+        let incompleteScore = CapturePolicy.coverageScore(
+            subjectDistance: 0.75,
+            orbitSectors: 7,
+            elevationBands: 1,
+            viewDirectionSectors: 0,
+            spatialCells: 0,
+            pathLength: 0
+        )
+        XCTAssertLessThan(incompleteScore, 1)
+    }
+
+    func testIncompleteSceneCoverageDoesNotRoundToCompleteProgress() {
+        XCTAssertFalse(CapturePolicy.sceneCoverageSatisfied(
+            viewDirectionSectors: 5,
+            spatialCells: 5,
+            pathLength: 0.75
+        ))
+        let score = CapturePolicy.coverageScore(
+            subjectDistance: nil,
+            orbitSectors: 0,
+            elevationBands: 0,
+            viewDirectionSectors: 5,
+            spatialCells: 5,
+            pathLength: 0.75
+        )
+        XCTAssertEqual(score, 0.95, accuracy: 0.0001)
+        XCTAssertEqual(Int((score * 12).rounded()), 11)
+    }
+
+    func testCoverageScoreStaysFiniteAndBoundedForDamagedCheckpointValues() {
+        let negative = CapturePolicy.coverageScore(
+            subjectDistance: nil,
+            orbitSectors: -4,
+            elevationBands: -2,
+            viewDirectionSectors: -5,
+            spatialCells: -8,
+            pathLength: -3
+        )
+        XCTAssertEqual(negative, 0, accuracy: 0.0001)
+
+        let notANumber = CapturePolicy.coverageScore(
+            subjectDistance: nil,
+            orbitSectors: 2,
+            elevationBands: 1,
+            viewDirectionSectors: 3,
+            spatialCells: 2,
+            pathLength: .nan
+        )
+        XCTAssertTrue(notANumber.isFinite)
+        XCTAssertGreaterThanOrEqual(notANumber, 0)
+        XCTAssertLessThanOrEqual(notANumber, 1)
+    }
+
+    func testInvalidPoseCoverageIndexingDoesNotTrap() {
+        var transform = matrix_identity_float4x4
+        transform.columns.2.x = .nan
+        XCTAssertEqual(CapturePolicy.viewDirectionSector(transform: transform, count: 8), 0)
+
+        transform = matrix_identity_float4x4
+        transform.columns.2.z = .infinity
+        XCTAssertEqual(CapturePolicy.viewDirectionSector(transform: transform, count: 8), 0)
+
+        XCTAssertNil(CapturePolicy.orbitSector(
+            cameraPosition: SIMD3<Float>(.nan, 0, 1),
+            center: .zero,
+            count: 8
+        ))
+        XCTAssertNil(CapturePolicy.elevationBand(
+            cameraPosition: SIMD3<Float>(1, .infinity, 0),
+            center: .zero
+        ))
+        XCTAssertEqual(
+            CapturePolicy.spatialCell(cameraPosition: SIMD3<Float>(.nan, 0, .infinity)),
+            CaptureGridCell(x: 0, z: 0)
+        )
+        XCTAssertEqual(
+            CapturePolicy.spatialCell(cameraPosition: SIMD3<Float>(.greatestFiniteMagnitude, 0, -.greatestFiniteMagnitude)),
+            CaptureGridCell(x: 1_000_000, z: -1_000_000)
+        )
+        XCTAssertEqual(
+            CapturePolicy.spatialCell(cameraPosition: SIMD3<Float>(1, 0, -1), cellSize: .nan),
+            CaptureGridCell(x: 4, z: -4)
+        )
     }
 }

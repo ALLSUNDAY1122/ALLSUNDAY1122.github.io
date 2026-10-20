@@ -29,6 +29,38 @@ final class SplatSkySeederDedupTests: XCTestCase {
         XCTAssertLessThanOrEqual(repeated.count, SplatSkySeeder.maxTotalSeeds)
     }
 
+    func testGeometryAcrossSkyBorderStillSuppressesFarFieldSeeds() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("splat-sky-geometry-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        try writeSolidSkyImage(name: "sky.png", root: root)
+        let frame = makeFrame(filePath: "sky.png", rows: identityRows)
+        let xs: [Float] = [0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92]
+        let geometryPoints = try xs.map { x in
+            // The projector intentionally rejects a 3 px edge margin. Put real geometry just
+            // inside that valid projection region while keeping it within the sky-border
+            // neighbourhood radius. This exercises the cached-projection suppression path instead
+            // of constructing points that the projector must discard before proximity testing.
+            let farPoint = try XCTUnwrap(SplatSkySeeder.worldPoint(
+                normalizedX: x,
+                normalizedY: 0.055,
+                frame: frame,
+                distance: SplatSkySeeder.farDistance
+            ))
+            return farPoint * 0.1
+        }
+
+        let seeds = SplatSkySeeder.makeSeeds(
+            frames: [frame],
+            geometryPoints: geometryPoints,
+            projectURL: root
+        )
+
+        XCTAssertTrue(seeds.isEmpty)
+    }
+
     func testDirectionBinsIgnoreDistanceAlongSameRay() throws {
         let near = try XCTUnwrap(SplatSkySeeder.directionKey(
             worldDirection: SIMD3<Float>(0.25, 0.35, -1.0)

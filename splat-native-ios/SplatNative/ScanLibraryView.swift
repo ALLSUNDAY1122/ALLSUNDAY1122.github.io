@@ -1,4 +1,5 @@
 import SwiftUI
+
 import UIKit
 
 @MainActor
@@ -41,13 +42,21 @@ struct ScanLibraryView: View {
     @State private var showingTrash = false
     @State private var pendingPermanentDelete: ScanProjectSummary?
     @State private var errorMessage: String?
+    @State private var unknownProjectCount = 0
+    @State private var censusFailed = false
 
     private let store = ScanProjectStore()
 
     var body: some View {
         NavigationStack {
             Group {
-                if projects.isEmpty {
+                if projects.isEmpty && (unknownProjectCount > 0 || censusFailed) {
+                    ContentUnavailableView(
+                        "保存状態を確認できないスキャンがあります",
+                        systemImage: "externaldrive.badge.exclamationmark",
+                        description: Text("データは削除されていません。保存ファイルの確認が必要です。")
+                    )
+                } else if projects.isEmpty {
                     ContentUnavailableView(
                         "保存済みスキャンはありません",
                         systemImage: "cube.transparent",
@@ -65,6 +74,14 @@ struct ScanLibraryView: View {
                         }
                     }
                     .listStyle(.plain)
+                }
+            }
+            .safeAreaInset(edge: .top) {
+                if unknownProjectCount > 0 || censusFailed {
+                    Text(censusFailed ? "ライブラリを安全に読み取れませんでした。削除や修復は行っていません。" : "状態不明のスキャンが\(unknownProjectCount)件あります。自動削除・修復は行っていません。")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                        .padding(10)
                 }
             }
             .navigationTitle("保存済みスキャン")
@@ -102,26 +119,13 @@ struct ScanLibraryView: View {
     @ViewBuilder
     private func projectRow(_ project: ScanProjectSummary) -> some View {
         if let trustedURL = SplatProjectTrustRecovery.trustedResultURL(for: project) {
-            VStack(alignment: .leading, spacing: 8) {
-                NavigationLink {
-                    SavedSplatView(
-                        url: trustedURL,
-                        title: project.manifest.title
-                    )
-                } label: {
-                    rowLabel(project, canOpen: true)
-                }
-                if canReprocessTrusted(project) {
-                    Button {
-                        model.restoreFinishedProjectForS13Reprocess(id: project.id)
-                        dismiss()
-                    } label: {
-                        Label("同じ撮影から再生成", systemImage: "arrow.triangle.2.circlepath")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.bordered)
-                    .accessibilityHint("現在の完成3Dを保護し、保存済みraw撮影だけを使って再生成します")
-                }
+            NavigationLink {
+                SavedSplatView(
+                    url: trustedURL,
+                    title: project.manifest.title
+                )
+            } label: {
+                rowLabel(project, canOpen: true)
             }
         } else if canContinue(project) {
             VStack(alignment: .leading, spacing: 8) {
@@ -137,19 +141,6 @@ struct ScanLibraryView: View {
         } else {
             rowLabel(project, canOpen: false)
         }
-    }
-
-    private func canReprocessTrusted(_ project: ScanProjectSummary) -> Bool {
-        guard project.manifest.stage == .finished,
-              project.manifest.rawDataRetained,
-              (try? store.loadCheckpoint(projectURL: project.projectURL)) != nil,
-              (try? store.reprocessRequest(
-                projectURL: project.projectURL,
-                representation: .splat
-              )) != nil else {
-            return false
-        }
-        return true
     }
 
     private func canContinue(_ project: ScanProjectSummary) -> Bool {
@@ -314,8 +305,16 @@ struct ScanLibraryView: View {
     }
 
     private func refresh() {
-        projects = store.listProjects()
-        trash = store.listTrash()
+        // Inspect the directory before consulting legacy listProjects(), which may silently skip
+        // unreadable entries or migrate/rewrite manifests during a nominally read-only refresh.
+        let census = ScanLibraryReadOnlyCensus.inspect(rootURL: store.rootURL)
+        unknownProjectCount = census.unknownCount
+        censusFailed = census.scanFailed
+        projects = census.projects
+        let deleted = ScanLibraryReadOnlyCensus.inspect(rootURL: store.trashURL)
+        trash = deleted.projects
+        unknownProjectCount += deleted.unknownCount
+        censusFailed = censusFailed || deleted.scanFailed
     }
 
     private func continueProject(_ project: ScanProjectSummary) {
