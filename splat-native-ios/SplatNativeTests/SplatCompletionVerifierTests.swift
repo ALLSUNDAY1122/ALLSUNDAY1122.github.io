@@ -193,6 +193,87 @@ final class SplatCompletionVerifierTests: XCTestCase {
         ))
     }
 
+    func testIntegrityRecoveryRejectsCorruptBackupWithoutDeletingEitherResult() throws {
+        let fixture = try makeTwoGenerationRecoveryFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.root) }
+        let backup = fixture.project.appendingPathComponent(SplatPreviousResultEvidence.assetFileName)
+        let mutatedBackup = Data(repeating: 0x7B, count: 64)
+        try mutatedBackup.write(to: backup, options: .atomic)
+        let damagedCurrent = try Data(contentsOf: fixture.result)
+
+        XCTAssertFalse(try SplatPreviousResultEvidence.recoverTrustedPreviousAfterIntegrityFailure(
+            projectURL: fixture.project, evidence: fixture.evidence
+        ))
+        XCTAssertEqual(try Data(contentsOf: fixture.result), damagedCurrent)
+        XCTAssertEqual(try Data(contentsOf: backup), mutatedBackup)
+        XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: fixture.result))
+        XCTAssertEqual(try Data(contentsOf: backup), mutatedBackup)
+        XCTAssertEqual(try Data(contentsOf: fixture.result), damagedCurrent)
+    }
+
+    func testIntegrityRecoveryRejectsUnprovenFuturePreservationTimestamp() throws {
+        let fixture = try makeTwoGenerationRecoveryFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.root) }
+        let snapshotURL = fixture.project.appendingPathComponent(SplatPreviousResultEvidence.fileName)
+        let backupURL = fixture.project.appendingPathComponent(SplatPreviousResultEvidence.assetFileName)
+        let original = try JSONDecoder().decode(
+            SplatPreviousResultEvidence.Snapshot.self, from: Data(contentsOf: snapshotURL)
+        )
+        let future = SplatPreviousResultEvidence.Snapshot(
+            originalEvidence: original.originalEvidence,
+            sha256: original.sha256,
+            preservedAt: fixture.evidence.completedAt.addingTimeInterval(60)
+        )
+        let backupBefore = try Data(contentsOf: backupURL)
+        let currentBefore = try Data(contentsOf: fixture.result)
+        try JSONEncoder().encode(future).write(to: snapshotURL, options: .atomic)
+
+        XCTAssertFalse(try SplatPreviousResultEvidence.recoverTrustedPreviousAfterIntegrityFailure(
+            projectURL: fixture.project, evidence: fixture.evidence
+        ))
+        XCTAssertEqual(try Data(contentsOf: backupURL), backupBefore)
+        XCTAssertEqual(try Data(contentsOf: fixture.result), currentBefore)
+    }
+
+    private func makeTwoGenerationRecoveryFixture() throws -> (
+        root: URL, project: URL, result: URL, evidence: SplatCommitEvidence
+    ) {
+        let root = try makeRoot()
+        do {
+            let store = ScanProjectStore(rootURL: root)
+            let (project, _) = try store.createProject(title: "Recovery fault fixture")
+            let pending = project.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+            let result = project.appendingPathComponent(ScanProjectStore.splatResultFileName)
+            try Data(repeating: 0x51, count: 64).write(to: pending, options: .atomic)
+            _ = try store.commitPendingSplat(projectURL: project)
+            _ = try store.updateManifest(projectURL: project) { manifest in
+                manifest.stage = .finished
+                manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+            }
+            _ = try SplatCompletionVerifier.verify(sourceURL: result)
+            try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: result)
+            try Data(repeating: 0x61, count: 64).write(to: pending, options: .atomic)
+            _ = try store.commitPendingSplat(projectURL: project)
+            _ = try store.updateManifest(projectURL: project) { manifest in
+                manifest.stage = .finished
+                manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+            }
+            let evidenceURL = project.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
+            let evidence = try JSONDecoder().decode(
+                SplatCommitEvidence.self, from: Data(contentsOf: evidenceURL)
+            )
+            _ = try SplatStrongCompletionEvidence.verifyOrSeal(sourceURL: result, evidence: evidence)
+            let modified = try FileManager.default.attributesOfItem(atPath: result.path)
+            let mtime = try XCTUnwrap(modified[.modificationDate] as? Date)
+            try Data(repeating: 0x71, count: 64).write(to: result, options: .atomic)
+            try FileManager.default.setAttributes([.modificationDate: mtime], ofItemAtPath: result.path)
+            return (root, project, result, evidence)
+        } catch {
+            try? FileManager.default.removeItem(at: root)
+            throw error
+        }
+    }
+
     func testRejectsSiblingSplatEvenWhenProjectHasCommittedResult() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
