@@ -91,9 +91,11 @@ final class SplatExportAdmissionTests: XCTestCase {
         try SplatViewerEditStore.save(newer, sourceURL: result)
         try Data("corrupt".utf8).write(to: SplatViewerEditStore.primaryURL(for: result), options: .atomic)
 
+        let preservedBackup = try Data(contentsOf: SplatViewerEditStore.backupURL(for: result))
         _ = try SplatExportAdmission.preflight(sourceURL: result, kind: .spz, availableCapacityOverride: Int64.max)
 
         XCTAssertEqual(SplatPersistedEditMaterializer.loadSettings(sourceURL: result), knownGood.normalized())
+        XCTAssertEqual(try Data(contentsOf: SplatViewerEditStore.backupURL(for: result)), preservedBackup)
         XCTAssertEqual(try Data(contentsOf: SplatViewerEditStore.primaryURL(for: result)), Data("corrupt".utf8))
     }
 
