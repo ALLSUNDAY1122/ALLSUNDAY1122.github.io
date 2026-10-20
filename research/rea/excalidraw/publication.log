@@ -1,0 +1,19 @@
+Observed administrative commands (elapsed time not measured):
+cwd=/workspace
+$ git clone https://github.com/morluto/rea.git /workspace/rea
+exit_code=128
+fatal: unable to access https://github.com/morluto/rea.git/: Failed to connect to proxy port 8080 after 0 ms: Could not connect to server
+Network-permission retry tool call was aborted; no shell exit code was returned.
+$ git clone https://github.com/morluto/rea.git /workspace/rea
+exit_code=0
+Cloning into /workspace/rea...
+cwd=/workspace/rea
+$ git switch -c research/rea-first-run
+exit_code=0
+$ gh api repos/morluto/rea --jq permissions
+exit_code=0
+permissions: admin=false maintain=false pull=true push=false triage=false
+$ gh repo fork morluto/rea --clone=false --remote=false
+exit_code=1
+failed to fork: HTTP 403: Resource not accessible by integration (https://api.github.com/repos/morluto/rea/forks)
+No push or create-PR command was run: no writable remote branch could be established.
