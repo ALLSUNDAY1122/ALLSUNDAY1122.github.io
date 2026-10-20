@@ -133,3 +133,9 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - Current T37-T39 PR #5619 HEAD c1f7f150d3cf: native run39374009604 SUCCESS with 248 XCTest/0 failures; same-HEAD privacy/smoke/depth/memory targets PASS. CI green but remaining security acceptance still separate.
 - Current T34-T36 takeover PR #5622 HEAD 7934b750b701: native run39376012429 FAILED 247 XCTest, 2 assertions in one prior trusted result restoration test (completionEvidenceMismatch, backup retained); same-HEAD targeted jobs PASS. Prior success on old head37a13dea72 not sufficient.
 - HQ direct comment PR5622 #6284491597, failed-jobs rerun requested on run39376012429; rerun pending. HQ evidence HQ_STEP19_RESTORATION_CI_GATE.md. Ownership unchanged: native Worker2 epoch2, viewer Worker2 epoch1. Worker1 stopped. Do not merge/build/upload.
+
+## STEP20 — 2026-10-20
+- Worker2 native head dbcc8ba02cff: Native CI run39380199091 SUCCESS 247 XCTest/0. Worker2 Viewer head18987c29eda: Native CI run39380203683 SUCCESS 249 XCTest/0. Current Queue verified native epoch2, viewer epoch1, HQ epoch1; Worker1 stopped.
+- HQ isolated integration branch attempt/scanlab-hq-t40-integration-20261020-a1 created from native head. Viewer-to-isolated HQ PR #5623 merged successfully (expected head18987c29eda); merge SHA 0c0b7207c80e9c6294a4d7487d1de92de04ca46b, independently read-back.
+- Draft combined QA PR #5624 opened to feature/splat-native-ios-poc; NOT merged. Combined PR Native run39382480195 in progress at readback; other targeted checks started. Evidence HQ_STEP20_INTEGRATED_T40.md.
+- No production merge, Codemagic, Apple upload, TestFlight update, App Review submission. Last live ASC Build18.
