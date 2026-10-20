@@ -112,3 +112,9 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - Native successor PR #5622 head a050e1fd78de. Companion PR #5621 run39367475853 Native CI SUCCESS 245/0; successor PR #5622 run39367980809 Native CI FAILURE 245 tests / 2 failed assertions in SplatCompletionVerifierTests restoration/previous trusted asset cleanup (completionEvidenceMismatch). Differing PR merge bases may explain effective source differences; needs runner SHA/readback, not assume flakiness.
 - HQ commented PR #5622 ID6283324587, triggered rerun failed workflow run jobs for 39367980809; attempt2 IN_PROGRESS at readback. HQ investigation file HQ_STEP16_TRANSFER_QA.md.
 - Current W2 T37-39 head 067902285e71, release acceptance still OPEN. No integration, Codemagic, Apple upload or App Review submit. Prior latest Apple Build18.
+
+## STEP17 — 2026-10-20
+- User-stopped Worker1 remains stopped; ownership Queue b96837c epoch2 native assigned to Worker2, its viewer/publish task epoch1 unchanged.
+- PR #5622 native takeover head fe50fa70f80 (8 commits ahead); native run39369790036 IN_PROGRESS. Previous run39367980809 attempt2 CANCELLED, not PASS.
+- PR #5619 viewer/publish head 38a3887cb0dd (25 ahead); run39369794864 native FAILED, 248 tests with 2 assertions in SplatCompletionVerifierTests trusted previous restoration (completionEvidenceMismatch, prior trusted backup retained). Other targeted CI success cannot override this.
+- HQ commented #5619 comment6283650982 and #5622 comment6283651429 to Worker2, and wrote HQ_STEP17_CURRENT_HEAD_CI.md with shared recovery diagnosis. Both PRs draft/unmerged. No Codemagic/Apple/new TestFlight/App Review submit.
