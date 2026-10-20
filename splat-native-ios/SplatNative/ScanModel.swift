@@ -7,6 +7,29 @@ import SwiftUI
 import UIKit
 import simd
 
+// The lock covers both admission and the complete RGB/depth write. Merely checking an
+// epoch before dispatch is insufficient: reset could invalidate it between the check and I/O.
+// The critical section can delay reset during disk I/O, but never destroys older RAW.
+private final class CaptureFrameWriteFence: @unchecked Sendable {
+    private let lock = NSLock()
+    private var generation = UUID()
+
+    func rotate() -> UUID {
+        lock.lock()
+        defer { lock.unlock() }
+        generation = UUID()
+        return generation
+    }
+
+    func performIfCurrent(_ expected: UUID, _ body: () -> Void) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        guard generation == expected else { return false }
+        body()
+        return true
+    }
+}
+
 struct CapturedView: Codable, Identifiable {
     let id: Int
     let filePath: String
@@ -177,6 +200,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     // Immutable lease identity for the active capture attempt. Stale callbacks may not
     // clear the active writer flag or append frames to a later capture (ABA fencing).
     private var captureGeneration = UUID()
+    private let captureWriteFence = CaptureFrameWriteFence()
     private var trackingNeedsRecovery = false
     private var stableTrackingFrames = 0
     private var activeCaptureStartedAt: TimeInterval?
@@ -1130,6 +1154,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let imagesURL = imagesURL
         let depthURL = depthURL
         let generation = captureGeneration
+        let writeFence = captureWriteFence
 
         captureQueue.async { [weak self] in
             guard let imagesURL else {
@@ -1145,16 +1170,20 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             var depthRelativePath: String?
             var writeError: Error?
 
-            do {
-                try jpegData.write(to: fileURL, options: .atomic)
-                if let depthPayload, let depthURL {
-                    let depthName = String(format: "depth_%05d.f32", index)
-                    try depthPayload.data.write(to: depthURL.appendingPathComponent(depthName), options: .atomic)
-                    depthRelativePath = "depth/\(depthName)"
+            let wasCurrent = writeFence.performIfCurrent(generation) {
+                do {
+                    try jpegData.write(to: fileURL, options: .atomic)
+                    if let depthPayload, let depthURL {
+                        let depthName = String(format: "depth_%05d.f32", index)
+                        try depthPayload.data.write(to: depthURL.appendingPathComponent(depthName), options: .atomic)
+                        depthRelativePath = "depth/\(depthName)"
+                    }
+                } catch {
+                    writeError = error
                 }
-            } catch {
-                writeError = error
             }
+            // Superseded operations perform no disk writes and emit no completion callback.
+            guard wasCurrent else { return }
 
             Task { @MainActor [weak self] in
                 guard let self, self.captureGeneration == generation else { return }
@@ -1814,7 +1843,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
     private func resetCaptureStateForNewProject() {
         // Invalidate prior callbacks before the writer slot is reused by a new project.
-        captureGeneration = UUID()
+        captureGeneration = captureWriteFence.rotate()
         invalidateWorldMapPersistence()
         captured.removeAll(keepingCapacity: true)
         featurePoints.removeAll(keepingCapacity: true)
