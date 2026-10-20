@@ -6,6 +6,26 @@ import SwiftUI
 import UIKit
 import simd
 
+// Serialize Mesh writer admission with reset to prevent stale queued JPEG writes.
+private final class MeshFrameWriteFence: @unchecked Sendable {
+    private let lock = NSLock()
+    private var generation = UUID()
+
+    func rotate() -> UUID {
+        lock.lock()
+        defer { lock.unlock() }
+        generation = UUID()
+        return generation
+    }
+
+    func performIfCurrent(_ expected: UUID, _ body: () -> Bool) -> Bool? {
+        lock.lock()
+        defer { lock.unlock() }
+        guard generation == expected else { return nil }
+        return body()
+    }
+}
+
 enum MeshCaptureMode: String, CaseIterable, Identifiable {
     case lidar
     case photogrammetry
@@ -120,6 +140,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
     // Identity is unique per capture attempt, preventing stale async completions from
     // releasing a writer lease or appending frames to a newer scan (ABA protection).
     private var captureGeneration = UUID()
+    private let frameWriteFence = MeshFrameWriteFence()
     private let frameEncoder = MeshFrameJPEGEncoder()
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.mesh.capture", qos: .userInitiated)
     private var reconstructionTask: Task<Void, Never>?
@@ -278,7 +299,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         }
 
         // Invalidate all pending capture callbacks before changing any current-state flags.
-        captureGeneration = UUID()
+        captureGeneration = frameWriteFence.rotate()
         reconstructionTask?.cancel()
         reconstructionTask = nil
         photogrammetrySession?.cancel()
@@ -349,7 +370,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     private func resetCaptureStateKeepingProject() {
-        captureGeneration = UUID()
+        captureGeneration = frameWriteFence.rotate()
         frames.removeAll(keepingCapacity: true)
         meshChunks.removeAll(keepingCapacity: true)
         sourceMesh = nil
@@ -404,20 +425,21 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let resolution = frame.camera.imageResolution
         let frameEncoder = self.frameEncoder
         let generation = captureGeneration
+        let writeFence = frameWriteFence
         isWritingFrame = true
 
         captureQueue.async { [weak self, frameEncoder, frameImage] in
-            let success: Bool
-            if let jpeg = frameEncoder.encode(frameImage) {
+            let outcome = writeFence.performIfCurrent(generation) { () -> Bool in
+                guard let jpeg = frameEncoder.encode(frameImage) else { return false }
                 do {
                     try jpeg.write(to: fileURL, options: .atomic)
-                    success = true
+                    return true
                 } catch {
-                    success = false
+                    return false
                 }
-            } else {
-                success = false
             }
+            // No write and no callback if reset invalidated this queued capture.
+            guard let success = outcome else { return }
 
             Task { @MainActor [weak self] in
                 guard let self else { return }
