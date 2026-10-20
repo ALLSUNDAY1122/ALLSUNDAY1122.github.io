@@ -156,3 +156,9 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - Post-merge PR #5625 synthetic merge SHA2fe980a triggered Native CI run39384694423 failure at S2 source contract before XCTest; source in synthetic merge uses SplatDepthSeedBuilder.preparePointCloudPLY rather than legacy Self.preparePointCloudPLY (product HEAD unchanged). Live auth E2E in same run PASSED.
 - HQ fixed only reconstruction contract Python to accept either implementation in detached worker, before GaussianDataset and never in finishCapture. Isolated branch attempt/scanlab-hq-s2-s13-contract-20261020-a1 commit6bb72e0688, Draft PR #5627 to product. PR Native CI run39412070392 IN_PROGRESS; not yet merged. Audit HQ_STEP22_PRODUCTION_CI_LINEAGE.md.
 - Queue W2 native epoch2, W2 viewer epoch1 and HQ epoch1 read back intact; Worker1 stopped. No Codemagic, Apple upload, TestFlight assignment or App Review submit. Apple latest confirmed Build18, not freshly re-read this STEP.
+
+## STEP23 — 2026-10-20
+- PR #5627 one-file reconstruction contract fix merged to product with SHA69f365816bb1ae61a558f40778279b507bd705d6, from verified 251 XCTest/0 Native run39412070392. Latest product CI run39425625513 IN_PROGRESS at readback.
+- Release candidate assembled on isolated branch attempt/scanlab-hq-release-sync-20261020-a1 via PR #5625 merge SHA781466ef84c9db9f1be6ccabf07b67f1082beb71. Real release/scanlab-testflight unchanged SHA3cbd4dcfe6505fb2fc9223062a7ec8feaeb0bf2a.
+- Draft release-candidate QA PR #5628 to real release branch exists but is UNMERGED; full Native CI run39425853659 in progress at readback. Source lineage diverges by 227 changed files and requires full acceptance; isolated Codemagic scanlab-ios checks Xcode26+, epoch5 recipe, Apple Build+1, signing and TestFlight-only publishing.
+- Neither unsafe S16/S21 gateway triggered. No Codemagic build, Apple upload, TestFlight assignment or App Review submit. HQ evidence HQ_STEP23_RELEASE_CANDIDATE.md.
