@@ -88,19 +88,17 @@ extension SplatPreviousResultEvidence {
                 return false
             }
 
-            if fileManager.fileExists(atPath: outputURL.path) {
-                // Replace in one filesystem transaction. The verified partial lives in the same
-                // project directory, so promotion never creates a remove-then-move data-loss gap.
-                // Keep the verified backup clone's metadata. Default replacement inherits the
-                // corrupt destination's newer mtime, which falsely invalidates the
-                // previous-generation completion seal after recovery.
-                _ = try fileManager.replaceItemAt(
-                    outputURL, withItemAt: partialURL, backupItemName: nil,
-                    options: [.usingNewMetadataOnly]
-                )
-            } else {
-                try fileManager.moveItem(at: partialURL, to: outputURL)
+            // POSIX rename atomically installs the SHA-verified partial on this same
+            // volume without inheriting the corrupt destination's modification time.
+            // Never remove-then-move: a failed promotion must preserve the existing path.
+            // The independently SHA-verified trusted backup remains untouched.
+            let promoted = partialURL.withUnsafeFileSystemRepresentation { partialPath in
+                outputURL.withUnsafeFileSystemRepresentation { outputPath in
+                    guard let partialPath, let outputPath else { return false }
+                    return rename(partialPath, outputPath) == 0
+                }
             }
+            guard promoted else { throw CocoaError(.fileWriteUnknown) }
 
             // The bytes now belong to the previous trusted completion, so the commit evidence must
             // move back with them. Leaving the newer evidence in place made the restored asset fail
