@@ -63,3 +63,11 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - Independent integration review: automation/scanlab-development/HQ_STEP06_INTEGRATION_REVIEW.md, HOLD both workers; do not merge or build.
 - Queue claims unchanged epoch1; other work remains isolated. Apple live latest Build18 from STEP04.
 - NEXT: complete P0 changes and obtain targeted XCTest/CI evidence per worker, then merge in serial after rechecking live locks.
+
+## STEP08 — 2026-10-20
+- Control Queue CLAIMED W1/W2 epoch 1; live worker HEAD W1=f5bb67a83f0d912ed56c64e180b41b7e0b7507b8, W2=c1b836d69cd84fa8fb91c66e87cfae3e4cd36aa3.
+- W1 expanded to 3 production files: CapturePolicy.swift, MeshScanModel.swift, ScanModel.swift. Native iOS run 39350766509 SKIPPED due to workflow job `if` restrictions on worker attempt branches; no passing full native suite verified.
+- W2 remains same HEAD. Native iOS run 39348580713 FAILED 245 XCTest / 2 failure, invalid primary JSON still unrepaired after export preflight/materialization.
+- HQ root-cause inspection: SplatViewerEditStore.load() now read-only (desirable), but export preflight/materializer and two preexisting tests expect explicit durable repair. No code ownership crossing by HQ.
+- Detailed contract: automation/scanlab-development/HQ_STEP08_RECOVERY_CI_CONTRACT.md. W1/W2 integration HOLD. No merge, Codemagic, Apple Upload, new Build, or App Review Submit.
+- NEXT: explicit export repair (W2) plus nonmutating viewer read test, W1 pose/generation tests, full native CI via eligible PR/check.
