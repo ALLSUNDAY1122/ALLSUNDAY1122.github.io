@@ -51,9 +51,17 @@ reset_start = model.index("@discardableResult\n    func reset() -> Bool")
 reset_end = model.index("nonisolated func session", reset_start)
 reset_block = model[reset_start:reset_end]
 guard_pos = reset_block.index("if let reason = destructiveResetBlockedReason")
-delete_pos = reset_block.index("FileManager.default.removeItem")
-if not guard_pos < delete_pos:
-    raise SystemExit("Mesh reset guard must execute before deleting the working .meshproject")
+generation_pos = reset_block.index("captureGeneration = UUID()")
+project_detach_pos = reset_block.index("projectURL = nil")
+if not guard_pos < generation_pos < project_detach_pos:
+    raise SystemExit("Mesh reset must reject blocked resets before invalidating capture and detaching the working project")
+# The reset contract has been strengthened: resetting the UI never deletes a
+# durable mesh project. Deletion is a distinct authorized retention operation.
+# Check the entire reset body, not just the branch following the block guard.
+if "removeItem(" in reset_block or "removeItem (" in reset_block:
+    raise SystemExit("Mesh reset must not delete the working project, including after the guard")
+if "projectURL = nil" not in reset_block:
+    raise SystemExit("Mesh reset must detach the old project without deleting its RAW contents")
 
 protect_start = recovery.index("func protect(resultURL: URL)")
 protect_end = recovery.index("func cleanupProtectedResult", protect_start)
