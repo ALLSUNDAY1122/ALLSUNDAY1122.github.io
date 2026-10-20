@@ -83,3 +83,9 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - Worker1 HEAD 31ba91f unchanged; full Native iOS CI run 39354568521 failed old mesh durability static contract before XCTest; PR #5620 actionable escalation comment 6281816710.
 - Worker2 HEAD 30b9a777 (11 commits); Swift publish ACK failure no longer triggers destructive owner cleanup. Full Native iOS CI run 39356743067 failed old Node contract requiring literal cleanupFailedDraft, before XCTest; PR #5619 actionable comment 6281816314. Previous corrupt primary export recovery failure still unverified.
 - HQ review automation/scanlab-development/HQ_STEP11_AUDIT.md. Both HOLD, no release.
+
+## STEP13 — 2026-10-20
+- W2 HEAD 285933362b6d: native CI run 39360508896 SUCCESS; 245 XCTest executed, 0 failures, static checks PASS. Separate smoke/privacy/memory CI GREEN. Source assertion for old destructive cleanup corrected.
+- CI_GREEN does not imply full P0 acceptance. ExportAdmission test now checks corrupted primary remains byte-for-byte unchanged, but does not prove actual export uses backed-up settings. Lost ACK source-only sentinel and T38 revocation race are not sufficient security proof. HQ comment PR #5619 ID 6282411350 and audit HQ_STEP13_CI_GREEN_SEMANTICS_GATES.md.
+- W1 HEAD 31ba91fd stagnant; Native PR CI 39354568521 static failure; no passing full XCTest.
+- Both locks CLAIMED epoch1; neither code branch merged. Apple last live Build18; no new build/upload/review.
