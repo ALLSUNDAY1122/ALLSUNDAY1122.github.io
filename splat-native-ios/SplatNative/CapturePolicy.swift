@@ -62,7 +62,13 @@ enum CaptureImageQualityPolicy {
         if stats.meanLuma > 220, stats.highlightFraction >= 0.60 {
             return .tooBright
         }
-        if stats.laplacianScore < 2.0, stats.lumaStandardDeviation < 14 {
+        // A low Laplacian score alone is ambiguous on genuinely flat surfaces: a sharp painted wall
+        // and a motion-blurred low-texture frame can both have almost no local edges. Preserve the
+        // existing softness band only when there is enough contrast for the edge metric to be useful,
+        // without expanding rejection to high-contrast frames that were previously accepted.
+        if stats.laplacianScore < 2.0,
+           stats.lumaStandardDeviation >= 8,
+           stats.lumaStandardDeviation < 14 {
             return .tooSoft
         }
         return nil
@@ -163,6 +169,25 @@ enum CapturePolicy {
 
     static let maximumRotationSpeed: Float = 1.80
 
+    static func isValidCameraPose(_ matrix: simd_float4x4) -> Bool {
+        let columns = [matrix.columns.0, matrix.columns.1, matrix.columns.2, matrix.columns.3]
+        guard columns.allSatisfy({ $0.x.isFinite && $0.y.isFinite && $0.z.isFinite && $0.w.isFinite }),
+              abs(matrix.columns.0.w) < 0.0001,
+              abs(matrix.columns.1.w) < 0.0001,
+              abs(matrix.columns.2.w) < 0.0001,
+              abs(matrix.columns.3.w - 1) < 0.0001 else { return false }
+        let x = SIMD3<Float>(matrix.columns.0.x, matrix.columns.0.y, matrix.columns.0.z)
+        let y = SIMD3<Float>(matrix.columns.1.x, matrix.columns.1.y, matrix.columns.1.z)
+        let z = SIMD3<Float>(matrix.columns.2.x, matrix.columns.2.y, matrix.columns.2.z)
+        return abs(simd_length_squared(x) - 1) < 0.03
+            && abs(simd_length_squared(y) - 1) < 0.03
+            && abs(simd_length_squared(z) - 1) < 0.03
+            && abs(simd_dot(x, y)) < 0.03
+            && abs(simd_dot(y, z)) < 0.03
+            && abs(simd_dot(z, x)) < 0.03
+            && simd_dot(simd_cross(x, y), z) > 0.97
+    }
+
     static func frameDecision(
         previous: simd_float4x4?,
         current: simd_float4x4,
@@ -170,9 +195,19 @@ enum CapturePolicy {
         previousTimestamp: TimeInterval,
         currentTimestamp: TimeInterval
     ) -> CaptureFrameDecision {
+        // The first accepted frame has no temporal or pose baseline to compare against. Applying the
+        // inter-frame cadence gate before this check can discard the opening view solely because the
+        // caller initialized both timestamps together, reducing coverage and delaying capture start.
+        // Fail closed before admitting the first frame: without a previous pose the movement
+        // validator cannot detect malformed ARKit transforms. Never persist invalid pose evidence.
+        guard isValidCameraPose(current), currentTimestamp.isFinite else {
+            return .relocalizationJump
+        }
+        guard let previous else { return .accept }
+        guard isValidCameraPose(previous), previousTimestamp.isFinite else { return .relocalizationJump }
+
         let elapsed = currentTimestamp - previousTimestamp
         guard elapsed >= 0.16 else { return .tooSoon }
-        guard let previous else { return .accept }
 
         let delta = movement(from: previous, to: current)
         let minimum = minimumTranslation(subjectDistance: subjectDistance)
@@ -258,7 +293,7 @@ enum CapturePolicy {
         guard count > 0 else { return nil }
         let dx = cameraPosition.x - center.x
         let dz = cameraPosition.z - center.z
-        guard hypot(dx, dz) >= 0.08 else { return nil }
+        guard dx.isFinite, dz.isFinite, hypot(dx, dz) >= 0.08 else { return nil }
         let angle = atan2(dx, dz)
         let normalized = (angle + .pi) / (2 * .pi)
         return min(count - 1, max(0, Int(floor(normalized * Float(count)))))
@@ -267,27 +302,36 @@ enum CapturePolicy {
     static func viewDirectionSector(transform: simd_float4x4, count: Int) -> Int {
         guard count > 1 else { return 0 }
         let forward = SIMD3<Float>(-transform.columns.2.x, -transform.columns.2.y, -transform.columns.2.z)
+        guard forward.x.isFinite, forward.z.isFinite else { return 0 }
         let angle = atan2(forward.x, forward.z)
+        guard angle.isFinite else { return 0 }
         let normalized = (angle + .pi) / (2 * .pi)
+        guard normalized.isFinite else { return 0 }
         return min(count - 1, max(0, Int(floor(normalized * Float(count)))))
     }
 
     static func elevationBand(cameraPosition: SIMD3<Float>, center: SIMD3<Float>) -> Int? {
         let delta = cameraPosition - center
         let horizontal = hypot(delta.x, delta.z)
-        guard horizontal >= 0.08 else { return nil }
+        guard horizontal.isFinite, delta.y.isFinite, horizontal >= 0.08 else { return nil }
         let angle = atan2(delta.y, horizontal)
+        guard angle.isFinite else { return nil }
         if angle < -0.18 { return 0 }
         if angle > 0.18 { return 2 }
         return 1
     }
 
     static func spatialCell(cameraPosition: SIMD3<Float>, cellSize: Float = 0.25) -> CaptureGridCell {
-        let safeSize = max(0.10, cellSize)
-        return CaptureGridCell(
-            x: Int(floor(cameraPosition.x / safeSize)),
-            z: Int(floor(cameraPosition.z / safeSize))
-        )
+        let safeSize = cellSize.isFinite && cellSize >= 0.10 ? cellSize : 0.25
+        guard cameraPosition.x.isFinite, cameraPosition.z.isFinite else {
+            return CaptureGridCell(x: 0, z: 0)
+        }
+        // Scene coordinates are expected to stay close to the capture origin. Clamp before Int
+        // conversion so corrupt/extreme AR transforms can never trap while computing coverage.
+        let maxIndex: Float = 1_000_000
+        let x = max(-maxIndex, min(maxIndex, floor(cameraPosition.x / safeSize)))
+        let z = max(-maxIndex, min(maxIndex, floor(cameraPosition.z / safeSize)))
+        return CaptureGridCell(x: Int(x), z: Int(z))
     }
 
     static func objectCoverageSatisfied(orbitSectors: Int, elevationBands: Int) -> Bool {
@@ -336,17 +380,46 @@ enum CapturePolicy {
         spatialCells: Int,
         pathLength: Float
     ) -> Float {
-        let objectScore = min(1, Float(orbitSectors) / 8) * 0.82
-            + min(1, Float(elevationBands) / 2) * 0.18
-        let sceneScore = min(1, Float(viewDirectionSectors) / 5) * 0.35
-            + min(1, Float(spatialCells) / 5) * 0.30
-            + min(1, pathLength / 0.80) * 0.35
+        // Checkpoint values are persisted metadata and can be damaged independently of the live sets
+        // that normally produce non-negative counts and path length. Keep progress finite and bounded
+        // instead of letting a NaN/negative value leak into SwiftUI progress/framing calculations.
+        let safeOrbitSectors = max(0, orbitSectors)
+        let safeElevationBands = max(0, elevationBands)
+        let safeViewDirectionSectors = max(0, viewDirectionSectors)
+        let safeSpatialCells = max(0, spatialCells)
+        let safePathLength = pathLength.isFinite ? max(0, pathLength) : 0
+
+        let objectScore = min(1, Float(safeOrbitSectors) / 8) * 0.82
+            + min(1, Float(safeElevationBands) / 2) * 0.18
+        let sceneScore = min(1, Float(safeViewDirectionSectors) / 5) * 0.35
+            + min(1, Float(safeSpatialCells) / 5) * 0.30
+            + min(1, safePathLength / 0.80) * 0.35
+        // Reserve the final 5% of progress for the hard completion gate. The UI rounds this score
+        // into 12 coverage steps; without a reserve, a near-complete scene (for example 0.75m of the
+        // required 0.80m path) can round to 12/12 while capture is still legitimately incomplete.
+        let maximumIncompleteScore: Float = 0.95
 
         switch coverageMode(subjectDistance: subjectDistance) {
         case .object:
-            return min(1, objectScore)
+            // Completion and progress must share the same hard gate. The object capture intentionally
+            // permits completion after one elevation band once the full orbit is covered; leaving the
+            // weighted score at 0.91 made the UI report 11/12 coverage after capture was already done.
+            if objectCoverageSatisfied(
+                orbitSectors: safeOrbitSectors,
+                elevationBands: safeElevationBands
+            ) {
+                return 1
+            }
+            return min(maximumIncompleteScore, max(0, objectScore))
         case .scene:
-            return min(1, sceneScore)
+            if sceneCoverageSatisfied(
+                viewDirectionSectors: safeViewDirectionSectors,
+                spatialCells: safeSpatialCells,
+                pathLength: safePathLength
+            ) {
+                return 1
+            }
+            return min(maximumIncompleteScore, max(0, sceneScore))
         }
     }
 

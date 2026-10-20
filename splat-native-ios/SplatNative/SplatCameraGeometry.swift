@@ -6,18 +6,57 @@ enum SplatCameraGeometry {
     struct Framing: Equatable, Sendable {
         let center: SIMD3<Float>
         let distance: Float
+        let radius: Float
+    }
+
+    // The viewer gesture envelope already permits up to 7x the 60-unit robust framing floor.
+    // Keep camera helpers and aspect-fitted exports inside the same finite 420-unit envelope so
+    // large/narrow scenes can actually move far enough away without accepting unbounded state.
+    static let maximumCameraDistance: Float = 420
+    // Keep finite camera pitch inside the same envelope used by the live viewer. Corrupt persisted
+    // state or future callers can otherwise pass a finite but pole-crossing value that flips the
+    // camera basis even though the ordinary gesture path never permits it.
+    static let maximumOrbitPitch: Float = 1.15
+
+    static func framingSampleStride(pointCount: Int, targetSampleCount: Int = 6_000) -> Int {
+        guard pointCount > 0, targetSampleCount > 0 else { return 1 }
+        let quotient = pointCount / targetSampleCount
+        let remainder = pointCount % targetSampleCount
+        return max(1, quotient + (remainder == 0 ? 0 : 1))
+    }
+
+    /// Produces a bounded, evenly distributed sample over the complete point ordering. A fixed
+    /// ceil-stride keeps memory bounded, but its sample count drops abruptly at stride boundaries
+    /// (for example 12,001 points -> only 4,001 samples) and can omit the tail of ordered scans.
+    /// Keeping up to 6,000 evenly spaced indices preserves the same O(6k log 6k) framing bound
+    /// while avoiding viewer/video framing quality discontinuities as scene size crosses a boundary.
+    static func framingSampleIndices(pointCount: Int, targetSampleCount: Int = 6_000) -> [Int] {
+        guard pointCount > 0, targetSampleCount > 0 else { return [] }
+        let sampleCount = min(pointCount, targetSampleCount)
+        guard sampleCount > 1 else { return [0] }
+        if sampleCount == pointCount { return Array(0..<pointCount) }
+
+        let lastIndex = pointCount - 1
+        let denominator = sampleCount - 1
+        return (0..<sampleCount).map { sampleIndex in
+            // Compute floor(sampleIndex * lastIndex / denominator) exactly without overflowing the
+            // machine word. The previous Double fallback could round Int.max-scale values to 2^63
+            // and trap during Double -> Int conversion even though the mathematical quotient fits.
+            let product = sampleIndex.multipliedFullWidth(by: lastIndex)
+            return denominator.dividingFullWidth(product).quotient
+        }
     }
 
     static func robustFraming(for points: [SplatPoint]) -> Framing {
-        let strideSize = max(1, points.count / 6_000)
+        let sampleIndices = framingSampleIndices(pointCount: points.count)
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
-        xs.reserveCapacity(min(points.count, 6_000))
-        ys.reserveCapacity(min(points.count, 6_000))
-        zs.reserveCapacity(min(points.count, 6_000))
+        xs.reserveCapacity(sampleIndices.count)
+        ys.reserveCapacity(sampleIndices.count)
+        zs.reserveCapacity(sampleIndices.count)
 
-        for index in stride(from: 0, to: points.count, by: strideSize) {
+        for index in sampleIndices {
             let p = points[index].position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
             xs.append(p.x)
@@ -25,70 +64,232 @@ enum SplatCameraGeometry {
             zs.append(p.z)
         }
 
-        guard !xs.isEmpty else { return Framing(center: .zero, distance: 2.5) }
+        guard !xs.isEmpty else { return Framing(center: .zero, distance: 2.5, radius: 0.10) }
         xs.sort(); ys.sort(); zs.sort()
-        let middle = xs.count / 2
-        let center = SIMD3<Float>(xs[middle], ys[middle], zs[middle])
+        // Most bounded large-scene samples contain exactly 6,000 points. Choosing the upper of the
+        // two middle coordinates biases the camera center toward +X/+Y/+Z and can visibly shift the
+        // scene as sample parity changes. Use the statistical median for even samples as well.
+        let center = SIMD3<Float>(
+            median(ofSorted: xs),
+            median(ofSorted: ys),
+            median(ofSorted: zs)
+        )
 
         var radii: [Float] = []
         radii.reserveCapacity(xs.count)
-        for index in stride(from: 0, to: points.count, by: strideSize) {
+        for index in sampleIndices {
             let p = points[index].position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
-            radii.append(simd_distance(p, center))
+            // `simd_distance` evaluates the squared Float magnitude first and can overflow to
+            // Infinity for individually finite large coordinates. Compute in Double and saturate
+            // back into Float so one large-but-valid scene cannot collapse framing to the 2.5-unit
+            // fallback simply because every radius overflowed during the intermediate square.
+            guard let radius = finiteDistance(p, center) else { continue }
+            radii.append(radius)
         }
         radii.sort()
-        guard !radii.isEmpty else { return Framing(center: center, distance: 2.5) }
+        guard !radii.isEmpty else { return Framing(center: center, distance: 2.5, radius: 0.10) }
         let percentileIndex = min(radii.count - 1, Int(Float(radii.count - 1) * 0.90))
         let radius = max(0.10, radii[percentileIndex])
-        let framingDistance = max(0.35, min(12.0, radius * 2.8))
-        return Framing(center: center, distance: framingDistance)
+        // Initial live framing remains intentionally bounded to 60 units. Users can then zoom out
+        // through the larger camera envelope, while video aspect fitting may also move farther away
+        // when a narrow output requires it.
+        let framingDistance = max(0.35, min(60.0, radius * 2.8))
+        return Framing(center: center, distance: framingDistance, radius: radius)
+    }
+
+    /// Returns a camera distance that preserves the robust scene radius through the limiting
+    /// dimension of the requested output. The previous fixed 2.8x-radius framing was generous
+    /// for square/landscape output, but a 9:16 frame has a much narrower horizontal field of view
+    /// and could crop the same scene that appeared complete in the viewer.
+    static func aspectFittedDistance(
+        framing: Framing,
+        fovY: Float,
+        aspect: Float,
+        margin: Float = 1.10
+    ) -> Float {
+        // Export dimensions, persisted framing state, or caller-provided FOV can be malformed.
+        // Never let NaN/Inf escape into camera distance: a non-finite distance poisons every
+        // subsequent view/projection matrix and can make the entire export render disappear.
+        let safeAspect = aspect.isFinite && aspect > 0.1 ? aspect : 1
+        let safeFOVY = fovY.isFinite
+            ? min(max(fovY, 0.10), Float.pi - 0.10)
+            : Float.pi / 3
+        let safeRadius = framing.radius.isFinite ? max(0.10, framing.radius) : 0.10
+        let safeMargin = margin.isFinite ? max(1, margin) : 1.10
+        let safeFloor = framing.distance.isFinite
+            ? min(maximumCameraDistance, max(0.35, framing.distance))
+            : 2.5
+
+        let halfVerticalFOV = max(0.05, safeFOVY * 0.5)
+        let halfHorizontalFOV = atan(tan(halfVerticalFOV) * safeAspect)
+        let limitingHalfFOV = max(0.05, min(halfVerticalFOV, halfHorizontalFOV))
+        let requiredForSphere = safeRadius / sin(limitingHalfFOV) * safeMargin
+        // Preserve the existing live-view framing as a floor; only move farther away when the
+        // output aspect ratio actually needs more room. Clamp to the finite camera envelope rather
+        // than the 60-unit initial framing floor so room/building scenes remain complete in 9:16.
+        return min(maximumCameraDistance, max(safeFloor, requiredForSphere))
     }
 
     static func eye(center: SIMD3<Float>, distance: Float, yaw: Float, pitch: Float) -> SIMD3<Float> {
-        center + SIMD3<Float>(
-            sin(yaw) * cos(pitch) * distance,
-            sin(pitch) * distance,
-            cos(yaw) * cos(pitch) * distance
+        // Gesture state and persisted camera values can be interrupted mid-write or restored from
+        // older schemas. Keep malformed scalars from poisoning or inverting the view matrix before
+        // lookAt gets a chance to sanitize it. The 420-unit cap matches the viewer gesture envelope
+        // and export aspect fitter while still preventing unbounded persisted values.
+        let safeCenter = isFinite(center) ? center : .zero
+        let safeDistance = distance.isFinite ? min(maximumCameraDistance, max(0.35, distance)) : 2.5
+        let safeYaw = normalizedAngle(yaw)
+        let safePitch = pitch.isFinite
+            ? min(maximumOrbitPitch, max(-maximumOrbitPitch, pitch))
+            : 0
+        let eye = safeCenter + SIMD3<Float>(
+            sin(safeYaw) * cos(safePitch) * safeDistance,
+            sin(safePitch) * safeDistance,
+            cos(safeYaw) * cos(safePitch) * safeDistance
         )
+        return isFinite(eye) ? eye : safeCenter + SIMD3<Float>(0, 0, 2.5)
     }
 
     static func perspective(fovY: Float, aspect: Float, near: Float, far: Float) -> simd_float4x4 {
-        let y = 1 / tan(fovY * 0.5)
-        let x = y / aspect
-        let z = far / (near - far)
+        // SwiftUI/Metal surfaces can transiently report malformed dimensions or persisted camera
+        // planes. Very large but finite near values are as dangerous as NaN: `near + 1` can round
+        // back to `near`, collapsing the projection denominator to zero. Keep planes in the range
+        // the viewer can meaningfully use before constructing the matrix.
+        let safeFOV = fovY.isFinite ? min(max(fovY, 0.01), Float.pi - 0.01) : Float.pi / 3
+        let safeAspect = aspect.isFinite && aspect > 0.001 ? aspect : 1
+        let safeNear = near.isFinite && near > 0.0001 && near <= 1_000 ? near : 0.01
+        let fallbackFar = max(100, safeNear * 100)
+        let safeFar = far.isFinite && far > safeNear + 0.001 && far <= 1_000_000
+            ? far
+            : fallbackFar
+
+        let y = 1 / tan(safeFOV * 0.5)
+        let x = y / safeAspect
+        let z = safeFar / (safeNear - safeFar)
         return simd_float4x4(columns: (
             SIMD4<Float>(x, 0, 0, 0),
             SIMD4<Float>(0, y, 0, 0),
             SIMD4<Float>(0, 0, z, -1),
-            SIMD4<Float>(0, 0, z * near, 0)
+            SIMD4<Float>(0, 0, z * safeNear, 0)
         ))
     }
 
     static func lookAt(eye: SIMD3<Float>, center: SIMD3<Float>, up: SIMD3<Float>) -> simd_float4x4 {
-        let z = simd_normalize(eye - center)
-        var x = simd_cross(up, z)
-        if simd_length_squared(x) < 1e-8 {
-            x = SIMD3<Float>(1, 0, 0)
-        } else {
-            x = simd_normalize(x)
+        // A malformed persisted camera state must not inject NaN/Inf into either the orientation
+        // basis or the translation column. Sanitize both positions before any matrix arithmetic.
+        let safeCenter = isFinite(center) ? center : .zero
+        let safeEye = isFinite(eye) ? eye : safeCenter + SIMD3<Float>(0, 0, 1)
+        // Subtracting two opposite, individually finite near-Float.max coordinates in Float can
+        // overflow before normalization. Form the direction in Double and normalize its scaled
+        // representation so huge imported/corrupt scenes still point the camera at the true target.
+        let z = stableDirection(from: safeCenter, to: safeEye) ?? SIMD3<Float>(0, 0, 1)
+
+        let normalizedUp = stableNormalize(up) ?? SIMD3<Float>(0, 1, 0)
+
+        var x = simd_cross(normalizedUp, z)
+        if stableNormalize(x) == nil {
+            // Pick an axis that is not parallel to the viewing direction. Using a fixed X axis
+            // fails when the camera itself looks along X and produces a zero Y basis vector.
+            let fallbackUp = abs(z.y) < 0.9
+                ? SIMD3<Float>(0, 1, 0)
+                : SIMD3<Float>(1, 0, 0)
+            x = simd_cross(fallbackUp, z)
         }
-        let y = simd_cross(z, x)
+        x = stableNormalize(x) ?? SIMD3<Float>(1, 0, 0)
+        let y = stableNormalize(simd_cross(z, x)) ?? SIMD3<Float>(0, 1, 0)
         return simd_float4x4(columns: (
             SIMD4<Float>(x.x, y.x, z.x, 0),
             SIMD4<Float>(x.y, y.y, z.y, 0),
             SIMD4<Float>(x.z, y.z, z.z, 0),
-            SIMD4<Float>(-simd_dot(x, eye), -simd_dot(y, eye), -simd_dot(z, eye), 1)
+            SIMD4<Float>(-finiteDot(x, safeEye), -finiteDot(y, safeEye), -finiteDot(z, safeEye), 1)
         ))
     }
 
     static func rotationZ(_ angle: Float) -> simd_float4x4 {
-        let c = cos(angle), s = sin(angle)
+        // Display-correction state should never be able to poison an otherwise valid camera matrix.
+        let safeAngle = normalizedAngle(angle)
+        let c = cos(safeAngle), s = sin(safeAngle)
         return simd_float4x4(columns: (
             SIMD4<Float>(c, s, 0, 0),
             SIMD4<Float>(-s, c, 0, 0),
             SIMD4<Float>(0, 0, 1, 0),
             SIMD4<Float>(0, 0, 0, 1)
         ))
+    }
+
+    /// Persisted/gesture angles are periodic, but a corrupt finite value can still be enormous.
+    /// Reduce it before trigonometric evaluation so viewer/video camera matrices do not depend on
+    /// low-order precision lost while range-reducing a Float close to its maximum magnitude.
+    private static func normalizedAngle(_ value: Float) -> Float {
+        guard value.isFinite else { return 0 }
+        let fullTurn = Float.pi * 2
+        let normalized = value.truncatingRemainder(dividingBy: fullTurn)
+        return normalized.isFinite ? normalized : 0
+    }
+
+    private static func median(ofSorted values: [Float]) -> Float {
+        let upperIndex = values.count / 2
+        guard values.count.isMultiple(of: 2) else { return values[upperIndex] }
+        // Halving before addition avoids overflow when two large finite coordinates share a sign.
+        return values[upperIndex - 1] * 0.5 + values[upperIndex] * 0.5
+    }
+
+    /// Measures finite Float points without squaring Float-scale deltas. The subtraction and norm
+    /// live in Double, whose exponent range comfortably covers all finite Float coordinates; values
+    /// beyond Float's representable range saturate so downstream framing remains finite and bounded.
+    private static func finiteDistance(_ lhs: SIMD3<Float>, _ rhs: SIMD3<Float>) -> Float? {
+        guard isFinite(lhs), isFinite(rhs) else { return nil }
+        let dx = Double(lhs.x) - Double(rhs.x)
+        let dy = Double(lhs.y) - Double(rhs.y)
+        let dz = Double(lhs.z) - Double(rhs.z)
+        let distance = sqrt(dx * dx + dy * dy + dz * dz)
+        guard distance.isFinite else { return nil }
+        return Float(min(distance, Double(Float.greatestFiniteMagnitude)))
+    }
+
+    /// Returns the unit direction from `from` to `to` without first performing a potentially
+    /// overflowing Float subtraction. Scaling the Double delta before converting back to Float
+    /// preserves direction while keeping every component inside [-1, 1].
+    private static func stableDirection(from: SIMD3<Float>, to: SIMD3<Float>) -> SIMD3<Float>? {
+        guard isFinite(from), isFinite(to) else { return nil }
+        let dx = Double(to.x) - Double(from.x)
+        let dy = Double(to.y) - Double(from.y)
+        let dz = Double(to.z) - Double(from.z)
+        let scale = max(abs(dx), max(abs(dy), abs(dz)))
+        guard scale.isFinite, scale > Double.leastNonzeroMagnitude else { return nil }
+        return stableNormalize(SIMD3<Float>(
+            Float(dx / scale),
+            Float(dy / scale),
+            Float(dz / scale)
+        ))
+    }
+
+    /// Normalizes without squaring the original magnitude first. `simd_normalize` can overflow its
+    /// length calculation for very large but finite vectors, producing an invalid camera basis.
+    /// Scaling by the largest component keeps the intermediate norm near one and preserves direction.
+    private static func stableNormalize(_ value: SIMD3<Float>) -> SIMD3<Float>? {
+        guard isFinite(value) else { return nil }
+        let scale = max(abs(value.x), max(abs(value.y), abs(value.z)))
+        guard scale.isFinite, scale > Float.leastNonzeroMagnitude else { return nil }
+        let scaled = value / scale
+        let lengthSquared = simd_length_squared(scaled)
+        guard lengthSquared.isFinite, lengthSquared > 1e-12 else { return nil }
+        return scaled / sqrt(lengthSquared)
+    }
+
+    /// Computes a translation dot product in Double and clamps it back into the finite Float range.
+    /// Unit camera axes multiplied by three individually finite near-Float.max coordinates can sum
+    /// beyond Float.max even though every input component is valid.
+    private static func finiteDot(_ lhs: SIMD3<Float>, _ rhs: SIMD3<Float>) -> Float {
+        let value = Double(lhs.x) * Double(rhs.x)
+            + Double(lhs.y) * Double(rhs.y)
+            + Double(lhs.z) * Double(rhs.z)
+        guard value.isFinite else { return 0 }
+        let limit = Double(Float.greatestFiniteMagnitude)
+        return Float(min(limit, max(-limit, value)))
+    }
+
+    private static func isFinite(_ value: SIMD3<Float>) -> Bool {
+        value.x.isFinite && value.y.isFinite && value.z.isFinite
     }
 }
