@@ -2,6 +2,45 @@ import XCTest
 import simd
 
 final class CapturePolicyTests: XCTestCase {
+    func testNonRigidAndMalformedPoseRejectedBeforeFirstCapture() {
+        let good = matrix_identity_float4x4
+        XCTAssertTrue(CapturePolicy.isValidCameraPose(good))
+        var scaled = good
+        scaled.columns.0.x = 1.3
+        var reflected = good
+        reflected.columns.2.z = -1
+        var malformed = good
+        malformed.columns.0.w = 0.5
+        var nanPose = good
+        nanPose.columns.3.x = .nan
+        for invalid in [scaled, reflected, malformed, nanPose] {
+            XCTAssertFalse(CapturePolicy.isValidCameraPose(invalid))
+            XCTAssertFalse(CapturePolicy.shouldAcceptFrame(
+                previous: nil, current: invalid, subjectDistance: nil,
+                previousTimestamp: 0, currentTimestamp: 0
+            ))
+        }
+        XCTAssertFalse(CapturePolicy.shouldAcceptFrame(
+            previous: nil, current: good, subjectDistance: nil,
+            previousTimestamp: 0, currentTimestamp: .nan
+        ))
+    }
+
+    func testInvalidPreviousPoseIsRejectedBeforeMovementComputation() {
+        var previous = matrix_identity_float4x4
+        previous.columns.1.y = 0.5
+        var current = matrix_identity_float4x4
+        current.columns.3.x = 0.25
+        XCTAssertFalse(CapturePolicy.shouldAcceptFrame(
+            previous: previous, current: current, subjectDistance: 1,
+            previousTimestamp: 1, currentTimestamp: 1.5
+        ))
+        XCTAssertFalse(CapturePolicy.shouldAcceptFrame(
+            previous: matrix_identity_float4x4, current: current, subjectDistance: 1,
+            previousTimestamp: .infinity, currentTimestamp: 1.5
+        ))
+    }
+
     func testRotationInPlaceNeverCountsAsUsefulCaptureMotion() {
         let previous = matrix_identity_float4x4
         let rotation = simd_float4x4(simd_quatf(angle: 0.55, axis: SIMD3<Float>(0, 1, 0)))

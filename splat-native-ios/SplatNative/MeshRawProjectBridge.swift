@@ -37,17 +37,16 @@ enum MeshRawProjectBridgeError: LocalizedError {
         case .rawUnavailable:
             return "Mesh再処理に必要な保存済みraw画像が見つかりません。"
         case .workspacePreparationFailed:
-            return "Splat rawからMesh再処理用の一時プロジェクトを準備できません。"
+            return "保存済みrawからMesh再処理用の一時プロジェクトを準備できません。"
         }
     }
 }
 
 /// Cross-representation bridge owned by HQ/C integration.
 ///
-/// Saved Splat projects remain the source of truth for their raw capture package. When the user asks
-/// to generate a Mesh from that raw, we create only a short-lived `.meshproject` container for the
-/// derived result. The source images are read in-place through `ScanProjectStore.reprocessRequest` and
-/// are never copied into the transient Mesh workspace.
+/// Saved projects remain the source of truth for their raw capture package. When the user asks
+/// to generate a Mesh from archived raw, we create only a short-lived `.meshproject` container for
+/// the derived result. Source images are read in place and never copied into that transient workspace.
 enum MeshRawProjectBridge {
     static let derivedMarkerFileName = ".derived-from-splat.json"
 
@@ -57,6 +56,7 @@ enum MeshRawProjectBridge {
     ) -> [MeshRawProject] {
         let root = appRootURL ?? defaultAppRoot(fileManager: fileManager)
         var projects: [MeshRawProject] = []
+        var meshIDs = Set<String>()
 
         let meshChildren = (try? fileManager.contentsOfDirectory(
             at: root,
@@ -71,14 +71,41 @@ enum MeshRawProjectBridge {
             let modifiedAt = (try? projectURL.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate)
                 ?? .distantPast
             let projectID = projectURL.deletingPathExtension().lastPathComponent
+            let id = "mesh:\(projectID)"
+            meshIDs.insert(id)
             projects.append(MeshRawProject(
-                id: "mesh:\(projectID)",
+                id: id,
                 sourceKind: .meshProject,
                 sourceProjectURL: projectURL,
                 imagesURL: imagesURL,
                 imageCount: imageCount,
                 modifiedAt: modifiedAt,
                 title: projectID
+            ))
+        }
+
+        // A finished Mesh is copied into MeshLibrary so the working project can later be reset.
+        // The old discovery path only scanned the working root, which made retained RAW disappear
+        // from "reprocess" as soon as that working directory was deleted. Re-expose archived RAW,
+        // while preferring an extant working project with the same logical ID to avoid duplicate IDs.
+        // `rawDataRetained` is intentionally broader than the original capture mode: LiDAR captures
+        // can still carry camera images that are valid inputs for a later photogrammetry reprocess.
+        let meshStore = MeshProjectStore(appRootURL: root, fileManager: fileManager)
+        for summary in meshStore.listProjects() where summary.rawDataRetained {
+            let id = "mesh:\(summary.id)"
+            guard !meshIDs.contains(id) else { continue }
+            let imagesURL = summary.projectURL.appendingPathComponent("images", isDirectory: true)
+            let imageCount = countImages(in: imagesURL, fileManager: fileManager)
+            guard imageCount > 0 else { continue }
+            meshIDs.insert(id)
+            projects.append(MeshRawProject(
+                id: id,
+                sourceKind: .meshProject,
+                sourceProjectURL: summary.projectURL,
+                imagesURL: imagesURL,
+                imageCount: imageCount,
+                modifiedAt: summary.updatedAt,
+                title: summary.id
             ))
         }
 
@@ -111,12 +138,25 @@ enum MeshRawProjectBridge {
         for project: MeshRawProject,
         fileManager: FileManager = .default
     ) throws -> PreparedMeshRawProject {
-        guard project.imageCount > 0,
-              fileManager.fileExists(atPath: project.imagesURL.path) else {
+        // A candidate can become stale after discovery, and direct callers can provide their own
+        // metadata. Re-run the same authoritative decodability gate used by discovery before any
+        // transient workspace is created. Stopping at the minimum count bounds the ImageIO work
+        // while preventing a corrupt/renamed twentieth file from bypassing RAW admission.
+        guard MeshRawInputValidator.hasMinimumUsableImages(
+            in: project.imagesURL,
+            fileManager: fileManager
+        ) else {
             throw MeshRawProjectBridgeError.rawUnavailable
         }
 
-        if project.sourceKind == .meshProject {
+        let sourceParent = project.sourceProjectURL.deletingLastPathComponent()
+        let isArchivedMesh = project.sourceKind == .meshProject
+            && sourceParent.lastPathComponent == MeshProjectStore.libraryDirectoryName
+
+        // A live working Mesh project is already an appropriate write target. Archived MeshLibrary
+        // snapshots are different: writing a regenerated result into them would mutate the user's
+        // saved original and could invalidate its library manifest. Treat archived RAW as read-only.
+        if project.sourceKind == .meshProject, !isArchivedMesh {
             return PreparedMeshRawProject(
                 source: project,
                 projectURL: project.sourceProjectURL,
@@ -124,7 +164,9 @@ enum MeshRawProjectBridge {
             )
         }
 
-        let root = project.sourceProjectURL.deletingLastPathComponent()
+        let root = isArchivedMesh
+            ? sourceParent.deletingLastPathComponent()
+            : sourceParent
         try fileManager.createDirectory(at: root, withIntermediateDirectories: true)
         let sourceID = project.sourceProjectURL.deletingPathExtension().lastPathComponent
         let safeID = sanitizedFileComponent(sourceID)
@@ -137,7 +179,7 @@ enum MeshRawProjectBridge {
 
             let sourceManifest = DerivedMeshSourceManifest(
                 captureMode: "photogrammetry",
-                scanSize: "source-splat",
+                scanSize: project.sourceKind == .splatProject ? "source-splat" : "source-mesh",
                 createdAt: project.modifiedAt
             )
             let encoder = JSONEncoder()
@@ -202,19 +244,12 @@ enum MeshRawProjectBridge {
     }
 
     private static func countImages(in directory: URL, fileManager: FileManager) -> Int {
-        guard let files = try? fileManager.contentsOfDirectory(
-            at: directory,
-            includingPropertiesForKeys: [.isRegularFileKey],
-            options: [.skipsHiddenFiles]
-        ) else { return 0 }
-        let extensions = Set(["jpg", "jpeg", "heic", "png"])
-        return files.reduce(into: 0) { count, url in
-            guard extensions.contains(url.pathExtension.lowercased()),
-                  (try? url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile) == true else {
-                return
-            }
-            count += 1
-        }
+        let usableCount = MeshRawInputValidator.usableImageCount(
+            in: directory,
+            fileManager: fileManager
+        )
+        guard usableCount >= MeshRawInputValidator.minimumPhotogrammetryImageCount else { return 0 }
+        return usableCount
     }
 
     private static func sanitizedFileComponent(_ value: String) -> String {

@@ -141,12 +141,16 @@ struct SplatExportOptionsView: View {
             var workspace: URL?
             do {
                 let kind: SplatExportAdmission.Kind = format == .ply ? .ply : .spz
-                let trustedURL = try SplatExportAdmission.preflight(sourceURL: sourceURL, kind: kind)
+                let admission = try await SplatExportAdmission.preflightResultAsync(
+                    sourceURL: sourceURL,
+                    kind: kind
+                )
                 try Task.checkCancellation()
                 let createdWorkspace = try SplatTransientExportWorkspace.create()
                 workspace = createdWorkspace
                 let url = try await SplatExportService.export(
-                    sourceURL: trustedURL,
+                    sourceURL: admission.trustedURL,
+                    verifiedDigest: admission.verifiedDigest,
                     format: format,
                     destinationDirectory: createdWorkspace
                 )
@@ -177,7 +181,7 @@ struct SplatExportOptionsView: View {
             var workspace: URL?
             do {
                 let dimensions = configuration.dimensions
-                let trustedURL = try SplatExportAdmission.preflight(
+                let admission = try await SplatExportAdmission.preflightResultAsync(
                     sourceURL: sourceURL,
                     kind: .video(
                         width: dimensions.width,
@@ -190,7 +194,8 @@ struct SplatExportOptionsView: View {
                 let createdWorkspace = try SplatTransientExportWorkspace.create()
                 workspace = createdWorkspace
                 let url = try await SplatVideoExporter.export(
-                    sourceURL: trustedURL,
+                    sourceURL: admission.trustedURL,
+                    verifiedDigest: admission.verifiedDigest,
                     configuration: configuration,
                     destinationDirectory: createdWorkspace
                 )

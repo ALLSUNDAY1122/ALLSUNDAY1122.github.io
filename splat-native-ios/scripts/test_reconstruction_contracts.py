@@ -18,6 +18,7 @@ COLORIZER = (ROOT / "SplatNative" / "SplatSeedColorizer.swift").read_text()
 SKY = (ROOT / "SplatNative" / "SplatSkySeeder.swift").read_text()
 RESOURCE = (ROOT / "SplatNative" / "SplatResourceGuard.swift").read_text()
 TESTS = (ROOT / "SplatNativeTests" / "SplatReconstructionPolicyTests.swift").read_text()
+SKY_GEOMETRY_TESTS = (ROOT / "SplatNativeTests" / "SplatSkyGeometryRejectionTests.swift").read_text()
 
 
 def require(pattern: str, text: str, message: str) -> re.Match[str]:
@@ -55,8 +56,23 @@ for contract in (
 ):
     require(contract, POLICY, f"reconstruction policy contract missing: {contract}")
 
-assert "base + enhancementIncrement" in POLICY
-assert "min(trainingHorizon" in POLICY
+# Enhancement arithmetic must keep the normal +5k progression while saturating before Int addition.
+# A corrupt persisted iteration near Int.max must never trap before the 30k training horizon clamp.
+require(
+    r"let\s+base\s*=\s*min\(trainingHorizon,\s*max\(standardIterations,\s*currentIteration\)\)",
+    POLICY,
+    "enhancement target must clamp the resumed iteration before arithmetic",
+)
+require(
+    r"let\s+remaining\s*=\s*trainingHorizon\s*-\s*base",
+    POLICY,
+    "enhancement target must derive non-negative remaining horizon",
+)
+require(
+    r"return\s+base\s*\+\s*min\(enhancementIncrement,\s*remaining\)",
+    POLICY,
+    "enhancement target must preserve bounded +increment progression",
+)
 for ply_field in ("property uchar red", "property uchar green", "property uchar blue"):
     assert ply_field in MODEL, f"colored seed PLY contract missing: {ply_field}"
 
@@ -129,13 +145,18 @@ assert finish < train < detached < prepare < dataset
 assert "preparePointCloudPLY" not in MODEL[finish:train]
 
 # Scaniverse-style splats retain background and sky. S2 therefore must not universally replace the
-# background with a foreground mask; only conservative far-field sky seeds are added.
+# background with a foreground mask. Far-field seeding may include bright overcast, but near geometry
+# suppression must remain conservative and blue-sky-only so bright neutral indoor ceilings survive.
 assert "SplatForegroundIsolator" not in MODEL
 assert "SplatSkySeeder.makeSeeds" in MODEL
 assert "farDistance: Float = 20" in SKY
 assert "borderCandidates.count >= 5" in SKY
 assert "hasGeometryNear" in SKY
-assert "brightOvercast" in SKY and "blueSky" in SKY
+assert "isHighConfidenceSkyForSeeding" in SKY
+require(r"b\s*>=\s*0\.46[\s\S]{0,120}b\s*-\s*r\s*>=\s*0\.08", SKY, "blue-sky geometry predicate missing")
+require(r"luma\s*>=\s*max\(0\.72,\s*sceneLuma\s*\+\s*0\.12\)[\s\S]{0,80}saturation\s*<=\s*0\.18", SKY, "overcast far-field seeding predicate missing")
+assert "brightNeutralCeiling" in SKY_GEOMETRY_TESTS
+assert "XCTAssertFalse" in SKY_GEOMETRY_TESTS
 assert "prepareProjectImages" not in COLORIZER
 
 # S8 Sev-2 #4157: training cannot densify without a bounded resource strategy. The process must
