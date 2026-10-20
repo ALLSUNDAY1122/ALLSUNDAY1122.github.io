@@ -28,17 +28,39 @@
     {
       "id": "SCANLAB-W1-001",
       "title": "T34-T36 capture/reconstruction/export P0 implementation",
-      "owner": "WORKER_1",
+      "owner": "WORKER_2",
       "status": "CLAIMED",
-      "attempt": 1,
-      "claim_epoch": 1,
-      "claim_token": "SCANLAB-W1-001-a1-20261020",
-      "attempt_branch": "attempt/scanlab-w1-20261020-a1",
-      "base_sha": "2bcbbd6128863739ad168610cd2e3f8e3b01b458",
+      "attempt": 2,
+      "claim_epoch": 2,
+      "claim_token": "SCANLAB-W1-001-a2-W2-20261020",
+      "attempt_branch": "attempt/scanlab-w1-takeover-w2-20261020-a2",
+      "base_sha": "a050e1fd78deb8094178242c4515aeb2819cb64a",
       "resource_lock": "scanlab:native-capture-reconstruction-export",
       "evidence": [],
       "claimed_at": "2026-10-20",
-      "claimed_by": "HQ_DELEGATED_TO_WORKER_1"
+      "claimed_by": "HQ_DELEGATED_TO_WORKER_2_USER_AUTHORIZED_TRANSFER",
+      "transfer_history": [
+        {
+          "date": "2026-10-20",
+          "from": "WORKER_1",
+          "to": "WORKER_2",
+          "previous": {
+            "owner": "WORKER_1",
+            "claim_epoch": 1,
+            "claim_token": "SCANLAB-W1-001-a1-20261020",
+            "attempt_branch": "attempt/scanlab-w1-20261020-a1",
+            "claimed_by": "HQ_DELEGATED_TO_WORKER_1",
+            "head_sha": "31ba91fdd7f6a550952ab0a814692377033783cf",
+            "reason": "User explicitly stopped W1 because GitHub writes repeatedly blocked by safety checks"
+          },
+          "authorized_by": "USER",
+          "companion_commit": "a050e1fd78deb8094178242c4515aeb2819cb64a",
+          "companion_pr": 5621,
+          "source_pr": 5620
+        }
+      ],
+      "previous_owner_disabled": true,
+      "transfer_reason": "USER_STOPPED_WORKER_1_OPENAI_SAFETY_WRITE_BLOCKS"
     },
     {
       "id": "SCANLAB-W2-001",
@@ -59,10 +81,13 @@
   "resource_locks": {
     "scanlab:native-capture-reconstruction-export": {
       "task_id": "SCANLAB-W1-001",
-      "epoch": 1,
-      "claim_token": "SCANLAB-W1-001-a1-20261020",
-      "attempt_branch": "attempt/scanlab-w1-20261020-a1",
-      "base_sha": "2bcbbd6128863739ad168610cd2e3f8e3b01b458"
+      "epoch": 2,
+      "claim_token": "SCANLAB-W1-001-a2-W2-20261020",
+      "attempt_branch": "attempt/scanlab-w1-takeover-w2-20261020-a2",
+      "base_sha": "a050e1fd78deb8094178242c4515aeb2819cb64a",
+      "owner": "WORKER_2",
+      "authorized_by": "USER",
+      "transferred_from": "WORKER_1"
     },
     "scanlab:viewer-library-publish-privacy": {
       "task_id": "SCANLAB-W2-001",
@@ -78,5 +103,11 @@
       "attempt_branch": "attempt/scanlab-hq-001-20261020-a1",
       "base_sha": "2bcbbd6128863739ad168610cd2e3f8e3b01b458"
     }
+  },
+  "worker_stop_policy": {
+    "worker_1": "STOPPED_BY_USER_NO_FURTHER_ACTIONS",
+    "worker_2": "SOLE_ACTIVE_IMPLEMENTATION_WORKER_FOR_T34_T39",
+    "hq": "RELEASE_AND_INTEGRATION_ONLY",
+    "transferred_at": "2026-10-20"
   }
 }
