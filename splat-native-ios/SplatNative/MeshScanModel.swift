@@ -390,7 +390,9 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     private func handleFrame(_ frame: ARFrame) {
-        guard phase == .scanning else { return }
+        guard phase == .scanning,
+              CapturePolicy.isValidCameraPose(frame.camera.transform),
+              frame.timestamp.isFinite else { return }
 
         switch frame.camera.trackingState {
         case .normal:
