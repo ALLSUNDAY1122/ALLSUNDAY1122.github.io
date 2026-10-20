@@ -70,6 +70,27 @@ final class ScanProjectStoreTests: XCTestCase {
         XCTAssertEqual(try link.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink, true)
     }
 
+    func testPublishStagingQuotaFailsClosedWithoutDeletingPendingPackages() throws {
+        let fm = FileManager.default
+        var created: [URL] = []
+        defer { for directory in created { try? fm.removeItem(at: directory) } }
+        for _ in 0..<8 {
+            let directory = fm.temporaryDirectory.appendingPathComponent(
+                "scanlab-publish-\(UUID().uuidString.lowercased())", isDirectory: true
+            )
+            try fm.createDirectory(at: directory, withIntermediateDirectories: true)
+            try Data().write(to: directory.appendingPathComponent(".scanlab-publish-package"), options: .atomic)
+            created.append(directory)
+        }
+        let nonexistent = fm.temporaryDirectory.appendingPathComponent("absent-\(UUID().uuidString).spz")
+        XCTAssertThrowsError(try ScanLabPublishPackageBuilder.build(from: nonexistent, fileManager: fm)) {
+            XCTAssertEqual($0 as? ScanLabPublishPackageError, .packageWriteFailed)
+        }
+        for directory in created {
+            XCTAssertTrue(fm.fileExists(atPath: directory.appendingPathComponent(".scanlab-publish-package").path))
+        }
+    }
+
     func testProjectSurvivesStoreRecreation() throws {
         let created = try store.createProject(title: "机")
         try makeProcessableRaw(in: created.0)
