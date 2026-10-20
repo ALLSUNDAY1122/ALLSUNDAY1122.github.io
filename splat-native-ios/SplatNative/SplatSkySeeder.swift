@@ -1,6 +1,6 @@
 import CoreGraphics
 import Foundation
-import UIKit
+import ImageIO
 import simd
 
 struct SplatSkySeed: Sendable {
@@ -26,12 +26,23 @@ enum SplatSkySeeder {
         var samples: [SplatSeedSample]
     }
 
+    private struct GeometryProjection {
+        let worldToCamera: simd_float4x4
+        let flX: Float
+        let flY: Float
+        let cx: Float
+        let cy: Float
+        let width: Int
+        let height: Int
+    }
+
     static let farDistance: Float = 20
     static let maxSeedsPerFrame = 24
     static let maxTotalSeeds = 512
     static let azimuthBinCount = 48
     static let elevationBinCount = 12
     static let maxColorSamplesPerDirection = 5
+    static let maximumRasterPixel = 512
 
     static func makeSeeds(
         frames: [SplatSeedFrame],
@@ -40,27 +51,41 @@ enum SplatSkySeeder {
     ) -> [SplatSkySeed] {
         guard !frames.isEmpty else { return [] }
 
-        // The same far-field direction is visible in many overlapping capture frames. Emitting a
-        // fresh Gaussian seed every time can create thousands of nearly duplicate sky points and
-        // waste the splat/memory budget before training has learned useful foreground geometry.
-        // Keep a bounded world-direction grid instead and use repeated observations to stabilize
-        // the seed color rather than increasing seed count.
         var order: [DirectionKey] = []
-        order.reserveCapacity(min(maxTotalSeeds, frames.count * maxSeedsPerFrame))
+        let (reserveEstimate, reserveOverflow) = frames.count.multipliedReportingOverflow(by: maxSeedsPerFrame)
+        let boundedReserve = reserveOverflow ? maxTotalSeeds : min(maxTotalSeeds, reserveEstimate)
+        order.reserveCapacity(boundedReserve)
         var accumulators: [DirectionKey: SkyAccumulator] = [:]
-        accumulators.reserveCapacity(min(maxTotalSeeds, frames.count * maxSeedsPerFrame))
+        accumulators.reserveCapacity(boundedReserve)
 
         for frame in frames {
             autoreleasepool {
-                let url = projectURL.appendingPathComponent(frame.filePath)
-                guard let raster = SkyRaster(url: url) else { return }
+                guard let url = SplatDepthSeedBuilder.validatedDepthInputURL(
+                    projectURL: projectURL,
+                    relativePath: frame.filePath
+                ),
+                      let raster = SkyRaster(url: url, maximumPixel: maximumRasterPixel),
+                      let geometryProjection = geometryProjection(frame: frame) else { return }
                 let baseline = lowerSceneLuma(raster: raster)
                 let xs: [Float] = [0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92]
                 let topY: Float = 0.035
-                let borderCandidates = xs.filter { x in
+                let skyBorderCandidates = xs.filter { x in
                     let pixel = raster.sample(normalizedX: x, normalizedY: topY)
-                    return isHighConfidenceSky(pixel, sceneLuma: baseline) &&
-                        !hasGeometryNear(normalizedX: x, normalizedY: topY, frame: frame, points: geometryPoints)
+                    return isHighConfidenceSkyForSeeding(pixel, sceneLuma: baseline)
+                }
+                guard skyBorderCandidates.count >= 5 else { return }
+
+                let projectedGeometry = projectedGeometryPoints(
+                    points: geometryPoints,
+                    projection: geometryProjection
+                )
+                let borderCandidates = skyBorderCandidates.filter { x in
+                    !hasGeometryNear(
+                        normalizedX: x,
+                        normalizedY: topY,
+                        projection: geometryProjection,
+                        projectedPoints: projectedGeometry
+                    )
                 }
                 guard borderCandidates.count >= 5 else { return }
 
@@ -70,8 +95,13 @@ enum SplatSkySeeder {
                     for x in xs {
                         guard frameContributions < maxSeedsPerFrame else { break }
                         let pixel = raster.sample(normalizedX: x, normalizedY: y)
-                        guard isHighConfidenceSky(pixel, sceneLuma: baseline),
-                              !hasGeometryNear(normalizedX: x, normalizedY: y, frame: frame, points: geometryPoints),
+                        guard isHighConfidenceSkyForSeeding(pixel, sceneLuma: baseline),
+                              !hasGeometryNear(
+                                normalizedX: x,
+                                normalizedY: y,
+                                projection: geometryProjection,
+                                projectedPoints: projectedGeometry
+                              ),
                               let position = worldPoint(
                                 normalizedX: x,
                                 normalizedY: y,
@@ -107,7 +137,20 @@ enum SplatSkySeeder {
         }
     }
 
-    static func isHighConfidenceSky(_ pixel: SplatSeedSample, sceneLuma: Float) -> Bool {
+    /// Conservative predicate for suppressing near plane-sweep geometry. Keep this blue-sky-only:
+    /// bright low-saturation indoor ceilings can look like overcast sky when scene luma is dark.
+    static func isHighConfidenceSky(_ pixel: SplatSeedSample, sceneLuma _: Float) -> Bool {
+        let r = Float(pixel.red) / 255
+        let g = Float(pixel.green) / 255
+        let b = Float(pixel.blue) / 255
+        return b >= 0.46 && b - r >= 0.08 && g - r >= 0.02
+    }
+
+    /// Far-field background seeding can safely be broader than geometry suppression because it also
+    /// requires top-border consensus and absence of nearby reconstructed geometry. Preserve bright
+    /// overcast support here without allowing that heuristic to erase real indoor surfaces.
+    private static func isHighConfidenceSkyForSeeding(_ pixel: SplatSeedSample, sceneLuma: Float) -> Bool {
+        if isHighConfidenceSky(pixel, sceneLuma: sceneLuma) { return true }
         let r = Float(pixel.red) / 255
         let g = Float(pixel.green) / 255
         let b = Float(pixel.blue) / 255
@@ -115,10 +158,7 @@ enum SplatSkySeeder {
         let minValue = min(r, min(g, b))
         let saturation = maxValue > 0 ? (maxValue - minValue) / maxValue : 0
         let luma = 0.2126 * r + 0.7152 * g + 0.0722 * b
-
-        let blueSky = b >= 0.46 && b - r >= 0.08 && g - r >= 0.02
-        let brightOvercast = luma >= max(0.72, sceneLuma + 0.12) && saturation <= 0.18
-        return blueSky || brightOvercast
+        return luma >= max(0.72, sceneLuma + 0.12) && saturation <= 0.18
     }
 
     static func worldPoint(
@@ -127,24 +167,42 @@ enum SplatSkySeeder {
         frame: SplatSeedFrame,
         distance: Float
     ) -> SIMD3<Float>? {
-        guard frame.transformMatrix.count == 4,
-              frame.transformMatrix.allSatisfy({ $0.count == 4 }),
+        guard normalizedX.isFinite,
+              normalizedY.isFinite,
+              distance.isFinite,
+              frame.transformMatrix.count == 4,
+              frame.transformMatrix.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }),
+              frame.flX.isFinite,
+              frame.flY.isFinite,
+              frame.cx.isFinite,
+              frame.cy.isFinite,
               frame.flX > 0, frame.flY > 0,
               frame.w > 0, frame.h > 0,
               distance > 0 else { return nil }
 
-        let px = normalizedX * Float(frame.w)
-        let py = normalizedY * Float(frame.h)
-        let cameraDirection = simd_normalize(SIMD3<Float>(
+        // Normalized image coordinates elsewhere in sky sampling map 0...1 onto pixel centers
+        // 0...(extent-1). Use that same convention for the far-field ray; multiplying by the full
+        // extent shifts every sampled sky direction by up to almost one source pixel.
+        let px = normalizedX * Float(max(0, frame.w - 1))
+        let py = normalizedY * Float(max(0, frame.h - 1))
+        let rawDirection = SIMD3<Float>(
             (px - frame.cx) / frame.flX,
             -(py - frame.cy) / frame.flY,
             -1
-        ))
+        )
+        let rawLength = simd_length(rawDirection)
+        guard rawLength.isFinite, rawLength > 1e-6 else { return nil }
+        let cameraDirection = rawDirection / rawLength
         let m = matrix(fromRows: frame.transformMatrix)
         let worldDirection4 = m * SIMD4<Float>(cameraDirection.x, cameraDirection.y, cameraDirection.z, 0)
-        let worldDirection = simd_normalize(SIMD3<Float>(worldDirection4.x, worldDirection4.y, worldDirection4.z))
+        let worldDirectionRaw = SIMD3<Float>(worldDirection4.x, worldDirection4.y, worldDirection4.z)
+        let worldLength = simd_length(worldDirectionRaw)
+        guard worldLength.isFinite, worldLength > 1e-6 else { return nil }
+        let worldDirection = worldDirectionRaw / worldLength
         let origin = SIMD3<Float>(m.columns.3.x, m.columns.3.y, m.columns.3.z)
-        return origin + worldDirection * distance
+        let result = origin + worldDirection * distance
+        guard result.x.isFinite, result.y.isFinite, result.z.isFinite else { return nil }
+        return result
     }
 
     static func directionKey(position: SIMD3<Float>, frame: SplatSeedFrame) -> DirectionKey? {
@@ -186,6 +244,46 @@ enum SplatSkySeeder {
         )
     }
 
+    static func bilinearSample(
+        bytes: [UInt8],
+        width: Int,
+        height: Int,
+        normalizedX: Float,
+        normalizedY: Float
+    ) -> SplatSeedSample {
+        guard width > 0,
+              height > 0,
+              normalizedX.isFinite,
+              normalizedY.isFinite else { return SplatSeedColorizer.fallback }
+        let (pixelCount, pixelOverflow) = width.multipliedReportingOverflow(by: height)
+        let (requiredBytes, byteOverflow) = pixelCount.multipliedReportingOverflow(by: 4)
+        guard !pixelOverflow,
+              !byteOverflow,
+              requiredBytes > 0,
+              bytes.count >= requiredBytes else { return SplatSeedColorizer.fallback }
+
+        let fx = min(Float(width - 1), max(0, normalizedX * Float(width - 1)))
+        let fy = min(Float(height - 1), max(0, normalizedY * Float(height - 1)))
+        let x0 = Int(floor(fx))
+        let y0 = Int(floor(fy))
+        let x1 = min(width - 1, x0 + 1)
+        let y1 = min(height - 1, y0 + 1)
+        let tx = fx - Float(x0)
+        let ty = fy - Float(y0)
+
+        func channel(_ x: Int, _ y: Int, _ offset: Int) -> Float {
+            Float(bytes[(y * width + x) * 4 + offset])
+        }
+        func interpolate(_ offset: Int) -> UInt8 {
+            let top = channel(x0, y0, offset) * (1 - tx) + channel(x1, y0, offset) * tx
+            let bottom = channel(x0, y1, offset) * (1 - tx) + channel(x1, y1, offset) * tx
+            let value = top * (1 - ty) + bottom * ty
+            return UInt8(min(255, max(0, value.rounded())))
+        }
+
+        return SplatSeedSample(red: interpolate(0), green: interpolate(1), blue: interpolate(2))
+    }
+
     private static func median(_ values: [UInt8]) -> UInt8 {
         guard !values.isEmpty else { return 128 }
         let sorted = values.sorted()
@@ -198,9 +296,13 @@ enum SplatSkySeeder {
 
     private static func cameraOrigin(frame: SplatSeedFrame) -> SIMD3<Float>? {
         guard frame.transformMatrix.count == 4,
-              frame.transformMatrix.allSatisfy({ $0.count == 4 }) else { return nil }
+              frame.transformMatrix.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }) else {
+            return nil
+        }
         let m = matrix(fromRows: frame.transformMatrix)
-        return SIMD3<Float>(m.columns.3.x, m.columns.3.y, m.columns.3.z)
+        let origin = SIMD3<Float>(m.columns.3.x, m.columns.3.y, m.columns.3.z)
+        guard origin.x.isFinite, origin.y.isFinite, origin.z.isFinite else { return nil }
+        return origin
     }
 
     private static func lowerSceneLuma(raster: SkyRaster) -> Float {
@@ -218,24 +320,82 @@ enum SplatSkySeeder {
         return count > 0 ? total / count : 0.5
     }
 
+    private static func projectedGeometryPoints(
+        points: [SIMD3<Float>],
+        projection: GeometryProjection
+    ) -> [SIMD2<Float>] {
+        guard !points.isEmpty else { return [] }
+        let step = max(1, points.count / 1_500)
+        var projectedPoints: [SIMD2<Float>] = []
+        projectedPoints.reserveCapacity(min(points.count, 1_501))
+        for index in stride(from: 0, to: points.count, by: step) {
+            guard let projected = project(point: points[index], projection: projection) else { continue }
+            projectedPoints.append(SIMD2<Float>(projected.x, projected.y))
+        }
+        return projectedPoints
+    }
+
     private static func hasGeometryNear(
         normalizedX: Float,
         normalizedY: Float,
-        frame: SplatSeedFrame,
-        points: [SIMD3<Float>]
+        projection: GeometryProjection,
+        projectedPoints: [SIMD2<Float>]
     ) -> Bool {
-        let targetX = normalizedX * Float(frame.w)
-        let targetY = normalizedY * Float(frame.h)
-        let radiusX = Float(frame.w) * 0.055
-        let radiusY = Float(frame.h) * 0.055
-        let step = max(1, points.count / 1_500)
-        for index in stride(from: 0, to: points.count, by: step) {
-            guard let projected = SplatSeedColorizer.project(point: points[index], frame: frame) else { continue }
+        let targetX = normalizedX * Float(max(0, projection.width - 1))
+        let targetY = normalizedY * Float(max(0, projection.height - 1))
+        let radiusX = Float(projection.width) * 0.055
+        let radiusY = Float(projection.height) * 0.055
+        for projected in projectedPoints {
             if abs(projected.x - targetX) <= radiusX && abs(projected.y - targetY) <= radiusY {
                 return true
             }
         }
         return false
+    }
+
+    private static func geometryProjection(frame: SplatSeedFrame) -> GeometryProjection? {
+        guard frame.transformMatrix.count == 4,
+              frame.transformMatrix.allSatisfy({ row in row.count == 4 && row.allSatisfy({ $0.isFinite }) }),
+              frame.flX.isFinite,
+              frame.flY.isFinite,
+              frame.cx.isFinite,
+              frame.cy.isFinite,
+              frame.flX > 0,
+              frame.flY > 0,
+              frame.w > 0,
+              frame.h > 0 else { return nil }
+        let worldToCamera = simd_inverse(matrix(fromRows: frame.transformMatrix))
+        for column in 0..<4 {
+            for row in 0..<4 where !worldToCamera[column][row].isFinite {
+                return nil
+            }
+        }
+        return GeometryProjection(
+            worldToCamera: worldToCamera,
+            flX: frame.flX,
+            flY: frame.flY,
+            cx: frame.cx,
+            cy: frame.cy,
+            width: frame.w,
+            height: frame.h
+        )
+    }
+
+    private static func project(point: SIMD3<Float>, projection: GeometryProjection) -> SIMD3<Float>? {
+        guard point.x.isFinite, point.y.isFinite, point.z.isFinite else { return nil }
+        let cameraPoint = projection.worldToCamera * SIMD4<Float>(point.x, point.y, point.z, 1)
+        guard cameraPoint.x.isFinite, cameraPoint.y.isFinite, cameraPoint.z.isFinite else { return nil }
+        let depth = -cameraPoint.z
+        guard depth.isFinite, depth > 0.05 else { return nil }
+        let x = projection.flX * cameraPoint.x / depth + projection.cx
+        let y = projection.cy - projection.flY * cameraPoint.y / depth
+        guard x.isFinite, y.isFinite else { return nil }
+        let margin: Float = 3
+        guard x >= margin,
+              y >= margin,
+              x < Float(projection.width) - margin,
+              y < Float(projection.height) - margin else { return nil }
+        return SIMD3<Float>(x, y, depth)
     }
 
     private static func matrix(fromRows rows: [[Float]]) -> simd_float4x4 {
@@ -253,20 +413,39 @@ private struct SkyRaster {
     let height: Int
     let bytes: [UInt8]
 
-    init?(url: URL) {
-        guard let image = UIImage(contentsOfFile: url.path)?.cgImage else { return nil }
+    init?(url: URL, maximumPixel: Int) {
+        guard maximumPixel > 0,
+              let source = CGImageSourceCreateWithURL(url as CFURL, nil),
+              let image = CGImageSourceCreateThumbnailAtIndex(
+                source,
+                0,
+                [
+                    kCGImageSourceCreateThumbnailFromImageAlways: true,
+                    kCGImageSourceThumbnailMaxPixelSize: maximumPixel,
+                    kCGImageSourceCreateThumbnailWithTransform: false
+                ] as CFDictionary
+              ) else { return nil }
         width = image.width
         height = image.height
-        guard width > 0, height > 0 else { return nil }
-        var storage = [UInt8](repeating: 0, count: width * height * 4)
+        guard width > 0,
+              height > 0,
+              width <= maximumPixel,
+              height <= maximumPixel else { return nil }
+        let (pixelCount, pixelOverflow) = width.multipliedReportingOverflow(by: height)
+        let (byteCount, byteOverflow) = pixelCount.multipliedReportingOverflow(by: 4)
+        let (bytesPerRow, rowOverflow) = width.multipliedReportingOverflow(by: 4)
+        guard !pixelOverflow, !byteOverflow, !rowOverflow, byteCount > 0 else { return nil }
+
+        var storage = [UInt8](repeating: 0, count: byteCount)
+        let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB()
         let info = CGBitmapInfo.byteOrder32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue
         guard let context = CGContext(
             data: &storage,
             width: width,
             height: height,
             bitsPerComponent: 8,
-            bytesPerRow: width * 4,
-            space: CGColorSpaceCreateDeviceRGB(),
+            bytesPerRow: bytesPerRow,
+            space: colorSpace,
             bitmapInfo: info
         ) else { return nil }
         context.translateBy(x: 0, y: CGFloat(height))
@@ -276,9 +455,12 @@ private struct SkyRaster {
     }
 
     func sample(normalizedX: Float, normalizedY: Float) -> SplatSeedSample {
-        let x = min(width - 1, max(0, Int((normalizedX * Float(width - 1)).rounded())))
-        let y = min(height - 1, max(0, Int((normalizedY * Float(height - 1)).rounded())))
-        let offset = (y * width + x) * 4
-        return SplatSeedSample(red: bytes[offset], green: bytes[offset + 1], blue: bytes[offset + 2])
+        SplatSkySeeder.bilinearSample(
+            bytes: bytes,
+            width: width,
+            height: height,
+            normalizedX: normalizedX,
+            normalizedY: normalizedY
+        )
     }
 }
