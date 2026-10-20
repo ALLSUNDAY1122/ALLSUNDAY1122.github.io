@@ -53,6 +53,23 @@ final class ScanProjectStoreTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: backup), backupBefore)
     }
 
+    func testLibraryCensusDoesNotFollowExternalProjectSymlink() throws {
+        let fm = FileManager.default
+        let external = fm.temporaryDirectory.appendingPathComponent("scanlab-external-\(UUID().uuidString)", isDirectory: true)
+        try fm.createDirectory(at: external, withIntermediateDirectories: true)
+        defer { try? fm.removeItem(at: external) }
+        let marker = external.appendingPathComponent("keep.dat")
+        let bytes = Data("untouched".utf8)
+        try bytes.write(to: marker, options: .atomic)
+        let link = rootURL.appendingPathComponent("untrusted.splatproject")
+        try fm.createSymbolicLink(at: link, withDestinationURL: external)
+        let census = ScanLibraryReadOnlyCensus.inspect(rootURL: rootURL)
+        XCTAssertEqual(census.unknownCount, 1)
+        XCTAssertTrue(census.projects.isEmpty)
+        XCTAssertEqual(try Data(contentsOf: marker), bytes)
+        XCTAssertEqual(try link.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink, true)
+    }
+
     func testProjectSurvivesStoreRecreation() throws {
         let created = try store.createProject(title: "机")
         try makeProcessableRaw(in: created.0)
