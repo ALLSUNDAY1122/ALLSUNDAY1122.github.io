@@ -174,3 +174,9 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - Critical Codemagic source provenance: release/scanlab-testflight HEAD3cbd4dcf diverged from product; S16 gateway pinned release branch, so launching before sync would build stale code.
 - HQ created staging branch attempt/scanlab-hq-release-source-sync-20261021-a1 at old release head, replaced ONLY splat-native-ios subtree with exact verified product tree SHA757a14502078705deebecfb4bcd1720d0c58f2c0. New commit ba6d75100824; Codemagic signed-release YAML SHA49b4456a833c70ef474342ee11194b9e46dbc30c preserved by remote tree readback.
 - Draft PR #5634 opened to release branch. Release-source Native CI run39452914519 IN_PROGRESS; no release branch merge/Build/Upload. See HQ_STEP24_RELEASE_SYNC.md.
+
+## STEP23 — 2026-10-21
+- PR #5624 merged 01b08971a313, current production feature HEAD 69f365816bb1. Native iOS run39444336078 SUCCESS 251 XCTest/0, privacy/smoke/S9/S10/S12/S13/S14 SUCCESS.
+- Fresh read-only ASC run39456131379 SUCCESS, latest Build18, internal group explicitly linked. Artifact12281336252 SHA256 ed78eb827bb3299eac162d782471ffbe37b6bf7384b8816d3ec46e4e763c5f2b, expiring 2026-10-27. No new upload.
+- Release/scanlab-testflight HEAD3cbd4dcfe650 diverged 7 release-only commits vs product ~1530, must not build obsolete branch. Opened draft PR #5635 syncing product into release for provenance review; not merged, no Codemagic build.
+- HQ source gate report HQ_STEP23_RELEASE_SOURCE_GATE.md. Worker1 stopped, HQ controls release.
