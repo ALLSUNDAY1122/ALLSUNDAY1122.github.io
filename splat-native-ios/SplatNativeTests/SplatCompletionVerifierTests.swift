@@ -274,6 +274,31 @@ final class SplatCompletionVerifierTests: XCTestCase {
         }
     }
 
+    func testRecoveryRejectsChangedCommitEvidenceAndPreservesBackup() throws {
+        let fixture = try makeTwoGenerationRecoveryFixture()
+        defer { try? FileManager.default.removeItem(at: fixture.root) }
+        let backup = fixture.project.appendingPathComponent(SplatPreviousResultEvidence.assetFileName)
+        let evidenceURL = fixture.project.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
+        let changed = SplatCommitEvidence(
+            fileName: ScanProjectStore.splatResultFileName,
+            byteCount: fixture.evidence.byteCount,
+            completedAt: fixture.evidence.completedAt.addingTimeInterval(30)
+        )
+        try JSONEncoder().encode(changed).write(to: evidenceURL, options: .atomic)
+        let existingResult = try Data(contentsOf: fixture.result)
+        let existingBackup = try Data(contentsOf: backup)
+
+        XCTAssertFalse(try SplatPreviousResultEvidence.recoverTrustedPreviousAfterIntegrityFailure(
+            projectURL: fixture.project, evidence: fixture.evidence
+        ))
+        XCTAssertEqual(try Data(contentsOf: fixture.result), existingResult)
+        XCTAssertEqual(try Data(contentsOf: backup), existingBackup)
+        XCTAssertEqual(
+            try JSONDecoder().decode(SplatCommitEvidence.self, from: Data(contentsOf: evidenceURL)),
+            changed
+        )
+    }
+
     func testRejectsSiblingSplatEvenWhenProjectHasCommittedResult() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
