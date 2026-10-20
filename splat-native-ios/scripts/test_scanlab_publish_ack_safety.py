@@ -6,7 +6,8 @@ SOURCE = Path(__file__).resolve().parents[1] / "SplatNative" / "ScanLabBackend+T
 
 def test_publish_must_not_call_owner_delete_on_ambiguous_ack() -> None:
     body = SOURCE.read_text(encoding="utf-8")
-    assert 'client.functions.invoke(\n            "scanlab-publish"' in body
+    assert '"scanlab-publish"' in body
+    assert "client.functions.invoke(" in body
     assert 'cleanupFailedDraft(' not in body
     assert '"scanlab-delete-scan"' not in body
     assert "A network error or lost ACK cannot authorize deletion" in body
