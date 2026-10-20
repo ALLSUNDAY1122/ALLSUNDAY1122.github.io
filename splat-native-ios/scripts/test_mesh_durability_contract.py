@@ -51,7 +51,7 @@ reset_start = model.index("@discardableResult\n    func reset() -> Bool")
 reset_end = model.index("nonisolated func session", reset_start)
 reset_block = model[reset_start:reset_end]
 guard_pos = reset_block.index("if let reason = destructiveResetBlockedReason")
-generation_pos = reset_block.index("captureGeneration = UUID()")
+generation_pos = reset_block.index("captureGeneration = frameWriteFence.rotate()")
 project_detach_pos = reset_block.index("projectURL = nil")
 if not guard_pos < generation_pos < project_detach_pos:
     raise SystemExit("Mesh reset must reject blocked resets before invalidating capture and detaching the working project")
@@ -62,6 +62,11 @@ if "removeItem(" in reset_block or "removeItem (" in reset_block:
     raise SystemExit("Mesh reset must not delete the working project, including after the guard")
 if "projectURL = nil" not in reset_block:
     raise SystemExit("Mesh reset must detach the old project without deleting its RAW contents")
+
+# The camera write must hold the same fence that reset rotates before project detachment.
+for needle in ("class MeshFrameWriteFence", "func performIfCurrent(", "let writeFence = frameWriteFence", "writeFence.performIfCurrent(generation)", "guard let success = outcome else { return }"):
+    if needle not in model:
+        raise SystemExit(f"Mesh writer generation fence missing: {needle}")
 
 protect_start = recovery.index("func protect(resultURL: URL)")
 protect_end = recovery.index("func cleanupProtectedResult", protect_start)
