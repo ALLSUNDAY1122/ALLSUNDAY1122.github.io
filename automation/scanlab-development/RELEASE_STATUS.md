@@ -128,3 +128,8 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 ### STEP18 late verified CI readback
 - Native takeover PR #5622 HEAD 439a75f9f80278ade8899c3c0726b268e194e914 full Native iOS run39371960452 completed SUCCESS, integrated XCTest 245 tests / 0 failures and static checks PASS. This supersedes the earlier IN_PROGRESS readback in STEP18. Worker2's native change set is CI_GREEN; additional P0 acceptance/combined T40 remain needed.
 - Viewer PR #5619 HEAD38a3887c latest run39369794864 FAILED 248 XCTest / 2 assertions; do NOT merge or release combined app yet.
+
+## STEP19 — 2026-10-20
+- Current T37-T39 PR #5619 HEAD c1f7f150d3cf: native run39374009604 SUCCESS with 248 XCTest/0 failures; same-HEAD privacy/smoke/depth/memory targets PASS. CI green but remaining security acceptance still separate.
+- Current T34-T36 takeover PR #5622 HEAD 7934b750b701: native run39376012429 FAILED 247 XCTest, 2 assertions in one prior trusted result restoration test (completionEvidenceMismatch, backup retained); same-HEAD targeted jobs PASS. Prior success on old head37a13dea72 not sufficient.
+- HQ direct comment PR5622 #6284491597, failed-jobs rerun requested on run39376012429; rerun pending. HQ evidence HQ_STEP19_RESTORATION_CI_GATE.md. Ownership unchanged: native Worker2 epoch2, viewer Worker2 epoch1. Worker1 stopped. Do not merge/build/upload.
