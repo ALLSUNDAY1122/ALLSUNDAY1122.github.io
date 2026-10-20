@@ -62,7 +62,7 @@ const initIndex = trustedPublish.indexOf('"scanlab-upload"');
 const uploadIndex = trustedPublish.indexOf('.storage.from("scanlab-assets").upload');
 assert.ok(initIndex >= 0 && uploadIndex > initIndex, 'trusted draft init must precede Storage upload');
 assert.match(trustedPublish, /ScanLabUploadValidateRequest/);
-assert.match(trustedPublish, /cleanupFailedDraft/);
+assert.doesNotMatch(trustedPublish, /cleanupFailedDraft|scanlab-delete-scan/);
 assert.match(trustedPublish, /if visibility == \.private/);
 assert.match(trustedPublish, /visibility: ScanLabVisibility\.private\.rawValue/);
 

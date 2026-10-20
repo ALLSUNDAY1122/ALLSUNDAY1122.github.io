@@ -223,7 +223,11 @@ enum SplatPersistedEditMaterializer {
         var outputPointCount = 0
         for try await points in stream {
             try Task.checkCancellation()
-            outputPointCount += eligiblePointCount(points, settings: settings, bounds: bounds)
+            outputPointCount += try eligiblePointCountCancellable(
+                points,
+                settings: settings,
+                bounds: bounds
+            )
         }
         guard outputPointCount > 0 else { throw MaterializeError.emptyEditedScene }
         return Plan(settings: settings, bounds: bounds, outputPointCount: outputPointCount)
@@ -242,12 +246,15 @@ enum SplatPersistedEditMaterializer {
     static func apply(_ points: [SplatPoint], plan: Plan) -> [SplatPoint] {
         guard !plan.isIdentity else { return points }
         let settings = plan.settings
-        let exposureGain = Float(pow(2.0, settings.exposureEV))
-        let contrast = Float(settings.contrast)
         let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
 
         var result: [SplatPoint] = []
-        result.reserveCapacity(points.count)
+        // A crop can discard most of a large scene. Reserving the full input count up front
+        // creates avoidable peak heap pressure; let the array grow with surviving points instead.
+        // Keep the full reservation for color-only edits where every point is retained.
+        if !settings.hasCrop {
+            result.reserveCapacity(points.count)
+        }
         for point in points {
             guard isEligible(point, settings: settings, bounds: plan.bounds) else { continue }
             guard needsColorAdjustment else {
@@ -256,55 +263,46 @@ enum SplatPersistedEditMaterializer {
             }
 
             var edited = point
-            let base = point.color.asSRGBFloat
-            let exposed = base * exposureGain
-            let midpoint = SIMD3<Float>(repeating: 0.5)
-            let adjusted = simd_clamp((exposed - midpoint) * contrast + midpoint, .zero, .one)
-            switch point.color {
-            case .sphericalHarmonicFloat(var coefficients):
-                if !coefficients.isEmpty {
-                    coefficients[0] = (adjusted - midpoint) * SplatPoint.Color.INV_SH_C0
-                    edited.color = .sphericalHarmonicFloat(coefficients)
-                }
-            case .sRGBUInt8:
-                edited.color = .sRGBUInt8(SIMD3<UInt8>(
-                    byte(adjusted.x), byte(adjusted.y), byte(adjusted.z)
-                ))
-            }
-            result.append(edited)
+    edited.color = SplatColorAdjustment.apply(
+        point.color,
+        exposureEV: settings.exposureEV,
+        contrast: settings.contrast
+    )
+    result.append(edited)
         }
         return result
     }
 
     static func loadSettings(sourceURL: URL) -> SplatEditSettings {
-        let sidecar = sourceURL.deletingPathExtension().appendingPathExtension("viewer.json")
-        guard let data = try? Data(contentsOf: sidecar),
-              let decoded = try? JSONDecoder().decode(SplatEditSettings.self, from: data) else {
-            return .default
-        }
-        return decoded.normalized()
+        SplatViewerEditStore.load(sourceURL: sourceURL)?.settings ?? .default
     }
 
     private static func sampledCropBounds(sourceURL: URL, sourcePointCount: Int) async throws -> CropBounds {
-        let sampleStride = max(1, sourcePointCount / 8_000)
+        let sampleIndices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: sourcePointCount,
+            targetSampleCount: 8_000
+        )
         let reader = try AutodetectSceneReader(sourceURL)
         let stream = try await reader.read()
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
-        xs.reserveCapacity(min(sourcePointCount, 8_001))
-        ys.reserveCapacity(min(sourcePointCount, 8_001))
-        zs.reserveCapacity(min(sourcePointCount, 8_001))
+        xs.reserveCapacity(sampleIndices.count)
+        ys.reserveCapacity(sampleIndices.count)
+        zs.reserveCapacity(sampleIndices.count)
         var globalIndex = 0
+        var nextSampleOffset = 0
 
         for try await points in stream {
             try Task.checkCancellation()
             for point in points {
-                if globalIndex % sampleStride == 0 {
+                if nextSampleOffset < sampleIndices.count,
+                   globalIndex == sampleIndices[nextSampleOffset] {
                     let p = point.position
                     if p.x.isFinite, p.y.isFinite, p.z.isFinite {
                         xs.append(p.x); ys.append(p.y); zs.append(p.z)
                     }
+                    nextSampleOffset += 1
                 }
                 globalIndex += 1
             }
@@ -313,11 +311,17 @@ enum SplatPersistedEditMaterializer {
     }
 
     private static func robustCropBounds(for points: [SplatPoint]) -> CropBounds {
-        let strideSize = max(1, points.count / 8_000)
+        let sampleIndices = SplatCameraGeometry.framingSampleIndices(
+            pointCount: points.count,
+            targetSampleCount: 8_000
+        )
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
-        for index in stride(from: 0, to: points.count, by: strideSize) {
+        xs.reserveCapacity(sampleIndices.count)
+        ys.reserveCapacity(sampleIndices.count)
+        zs.reserveCapacity(sampleIndices.count)
+        for index in sampleIndices {
             let p = points[index].position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
             xs.append(p.x); ys.append(p.y); zs.append(p.z)
@@ -465,15 +469,25 @@ enum SplatExportService {
 
     static func export(
         sourceURL: URL,
+        verifiedDigest: String? = nil,
         format: Format,
         destinationDirectory: URL? = nil,
         outputBaseName: String? = nil
     ) async throws -> URL {
         let sourcePointCount = try sourcePointCount(sourceURL)
-        let canonical = SplatCanonicalSHAsset.existingAsset(
-            forLegacySplat: sourceURL,
-            expectedPointCount: sourcePointCount
-        )
+        let canonical: SplatCanonicalSHAsset.Asset?
+        if let verifiedDigest {
+            canonical = SplatCanonicalSHAsset.existingCompleteAsset(
+                forLegacySplat: sourceURL,
+                verifiedDigest: verifiedDigest,
+                expectedPointCount: sourcePointCount
+            )
+        } else {
+            canonical = SplatCanonicalSHAsset.existingCompleteAsset(
+                forLegacySplat: sourceURL,
+                expectedPointCount: sourcePointCount
+            )
+        }
         let retainedAssetURL = canonical?.url ?? sourceURL
         let retainedSHDegree = canonical?.descriptor.shDegree ?? 0
         let editPlan = try await SplatPersistedEditMaterializer.makePlan(
@@ -510,7 +524,10 @@ enum SplatExportService {
                 )
                 for try await points in stream {
                     try Task.checkCancellation()
-                    let outputPoints = SplatPersistedEditMaterializer.apply(points, plan: editPlan)
+                    let outputPoints = try SplatPersistedEditMaterializer.applyCancellable(
+                        points,
+                        plan: editPlan
+                    )
                     if !outputPoints.isEmpty {
                         try await writer.write(outputPoints)
                         pointsWritten += outputPoints.count
@@ -523,7 +540,10 @@ enum SplatExportService {
                 try await writer.start(numPoints: pointCount)
                 for try await points in stream {
                     try Task.checkCancellation()
-                    let outputPoints = SplatPersistedEditMaterializer.apply(points, plan: editPlan)
+                    let outputPoints = try SplatPersistedEditMaterializer.applyCancellable(
+                        points,
+                        plan: editPlan
+                    )
                     if !outputPoints.isEmpty {
                         try await writer.write(outputPoints)
                         pointsWritten += outputPoints.count
@@ -561,7 +581,7 @@ enum SplatExportService {
         previewJPEG: Data? = nil,
         rootDirectory: URL = FileManager.default.temporaryDirectory
     ) async throws -> BrowserSharePackage {
-        let trustedURL = try SplatExportAdmission.preflight(sourceURL: sourceURL, kind: .spz)
+        let admission = try await SplatExportAdmission.preflightResultAsync(sourceURL: sourceURL, kind: .spz)
         try Task.checkCancellation()
 
         let packageURL = rootDirectory
@@ -570,7 +590,8 @@ enum SplatExportService {
 
         do {
             let assetURL = try await export(
-                sourceURL: trustedURL,
+                sourceURL: admission.trustedURL,
+                verifiedDigest: admission.verifiedDigest,
                 format: .spz,
                 destinationDirectory: packageURL,
                 outputBaseName: "scene"
