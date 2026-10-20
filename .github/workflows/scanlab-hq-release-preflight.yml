@@ -1,6 +1,12 @@
 name: Scan Lab HQ Release Source Preflight (read only)
 
 on:
+  pull_request:
+    branches:
+      - attempt/scanlab-hq-001-20261020-a1
+    paths:
+      - .github/workflows/scanlab-hq-release-preflight.yml
+      - automation/scanlab-development/scripts/verify_scanlab_release_candidate.py
   push:
     branches:
       - attempt/scanlab-hq-001-20261020-a1
