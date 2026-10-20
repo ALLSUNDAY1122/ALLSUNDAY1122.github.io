@@ -56,3 +56,10 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - P0 Swift code changes, CI verification and new Codemagic Build: NOT_RUN.
 - Future integration requires head reread plus lock epoch recheck. Existing PR #4145 stays draft/unmerged.
 - NEXT: each Worker executes first P0 implementation under their claimed attempt branch; HQ integrates only independently verified PRs and validates Build18 evidence baseline.
+
+## STEP06 (2026-10-20 09:34 JST)
+- W1 remote HEAD dc1dc00c5452f9ffdac6a3c889fce49be0acc8a9; exactly one changed file CapturePolicy.swift, +12 lines. Validation of current pose and timestamp added, prior pose and orthonormality still unverified. No test status contexts returned.
+- W2 remote HEAD 1d2aab05fbbc6783d7a7c840779206810ada8e35; only W2_STEP04_FINDINGS.md added. Describes uncalibrated meters and read-time sidecar write, no fix yet. No test status contexts returned.
+- Independent integration review: automation/scanlab-development/HQ_STEP06_INTEGRATION_REVIEW.md, HOLD both workers; do not merge or build.
+- Queue claims unchanged epoch1; other work remains isolated. Apple live latest Build18 from STEP04.
+- NEXT: complete P0 changes and obtain targeted XCTest/CI evidence per worker, then merge in serial after rechecking live locks.
