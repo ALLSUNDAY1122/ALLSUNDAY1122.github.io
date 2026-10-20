@@ -47,12 +47,8 @@ enum ScanLabPublishPackageBuilder {
     static func build(from sourceURL: URL, maximumBytes: Int = 128 * 1024 * 1024, fileManager: FileManager = .default) throws -> ScanLabPublishPackage {
         try Task.checkCancellation()
         guard maximumBytes > 0, sourceURL.isFileURL else { throw ScanLabPublishPackageError.invalidSource }
-        cleanupStalePackages(
-            in: fileManager.temporaryDirectory,
-            olderThan: stalePackageAge,
-            now: Date(),
-            fileManager: fileManager
-        )
+        // Never age-delete staging directories while a publish ACK may be uncertain.
+        // An explicit server-reconciled cleanup policy is required before deletion.
         try Task.checkCancellation()
         let attributes: [FileAttributeKey: Any]
         do { attributes = try fileManager.attributesOfItem(atPath: sourceURL.path) } catch { throw ScanLabPublishPackageError.invalidSource }
