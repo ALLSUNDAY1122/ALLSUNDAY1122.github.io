@@ -150,7 +150,7 @@ prepare = MODEL.index(preparation_calls[0], detached)
 dataset = MODEL.index("let dataset = GaussianDataset", prepare)
 assert finish < train < detached < prepare < dataset
 if preparation_calls[0] == dense_prepare:
-    assert "static let recipeVersion = 5" in Path("splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift").read_text(), "dense S13/S14 builder requires epoch-5 recipe"
+    assert "static let recipeVersion = 5" in __import__("pathlib").Path("splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift").read_text(), "dense S13/S14 builder requires epoch-5 recipe"
 assert "preparePointCloudPLY" not in MODEL[finish:train]
 
 # Scaniverse-style splats retain background and sky. S2 therefore must not universally replace the
