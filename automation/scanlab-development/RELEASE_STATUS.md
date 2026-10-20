@@ -94,3 +94,8 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - W2 HEAD 26839ecc8a51 ahead17; Native iOS run 39362812776 SUCCESS, 245 XCTest / 0 failures; privacy/smoke/S10/S12 success. Publish temporary package retained on uncertain ACK, removed only after confirmed server outcome. Outstanding: bounded retention/reconciliation, real lost-ACK fault tests, T38 revocation/republish, backup settings applied on export. HQ PR #5619 comment 6282770714.
 - W1 HEAD 31ba91fdd7 stagnant, Native CI run 39354568521 static mesh durability failure, XCTest blocked. HQ PR #5620 comment 6282772587.
 - HQ audit automation/scanlab-development/HQ_STEP14_RELEASE_RISK_REVIEW.md. Both source branches unmerged; no Codemagic, Apple upload, TestFlight update, App Review submit. Apple last live Build18.
+
+## STEP15 — 2026-10-20
+- W1 reset source `MeshScanModel.reset()` confirmed nondestructive: guard before generation change, projectURL detach without removeItem. Old static check assumed removeItem existed and failed. HQ created separate branch `attempt/scanlab-hq-mesh-contract-20261020-a1` fork W1 HEAD 31ba91fd and patched only `scripts/test_mesh_durability_contract.py` to verify nondestructive reset invariant. Companion commit a050e1fd78de, Draft PR #5621 into W1 attempt. Pull request Native iOS run 39367475853 IN_PROGRESS at readback, not PASS. W1 source branch unchanged.
+- W2 HEAD 26839ecc unchanged, prior Native CI run 39362812776 SUCCESS (245 XCTest, 0 failures); T37/T38 fault injection and staging reconciliation still pending.
+- HQ audit `automation/scanlab-development/HQ_STEP15_MESH_CONTRACT_PATCH.md`. Worker locks epoch1 maintained, product unmerged. No new Codemagic, Apple upload, TestFlight assignment, App Review submission.
