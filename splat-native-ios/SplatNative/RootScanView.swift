@@ -521,6 +521,12 @@ struct RootScanView: View {
                 .font(.title2.bold())
             Text(model.trainingStageText)
                 .font(.body.weight(.medium))
+            if let seedEvidence = model.reconstructionSeedEvidenceText {
+                Text(seedEvidence)
+                    .font(.caption.monospacedDigit().weight(.semibold))
+                    .foregroundStyle(.mint)
+                    .multilineTextAlignment(.center)
+            }
             Text("\(Int(model.trainingProgress * 100))%")
                 .font(.title3.monospacedDigit())
                 .foregroundStyle(.secondary)
