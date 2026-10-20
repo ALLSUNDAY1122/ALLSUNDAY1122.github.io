@@ -111,16 +111,18 @@ final class MeshDurabilityCoordinator: ObservableObject {
 
         pendingSourceURL = nil
         archivingSourceURL = sourceURL
+        // Creating the library directory is only the first half of the durability transaction.
+        // Keep the working project protected until the archived result has passed semantic/hash
+        // verification and its trust evidence has been flushed. Otherwise a reset between archive
+        // creation and verification can remove the only known-good source before the snapshot is
+        // actually trusted.
+        model.blockDestructiveReset("Meshの安全な保存と整合性を確認しています。")
 
         let summary: MeshProjectSummary
         do {
-            // Critical durability boundary: finish the hard-link/capacity-checked snapshot before
-            // returning control to SwiftUI. Once this succeeds, reset may safely remove B's working
-            // name because C's library holds its own hard links/copy.
             summary = try archiveFinishedProject(sourceURL)
             warningMessage = nil
             blockingMessage = nil
-            model.allowDestructiveReset()
             model.statusMessage = "Meshを安全に保存しました。整合性を確認しています…"
         } catch {
             archivingSourceURL = nil
