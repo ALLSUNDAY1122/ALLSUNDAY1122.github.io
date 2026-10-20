@@ -4,6 +4,7 @@ from pathlib import Path
 coordinator = Path("splat-native-ios/SplatNative/MeshDurabilityCoordinator.swift").read_text()
 recovery = Path("splat-native-ios/SplatNative/MeshDurabilityRecoveryStore.swift").read_text()
 model = Path("splat-native-ios/SplatNative/MeshScanModel.swift").read_text()
+fence = Path("splat-native-ios/SplatNative/MeshFrameWriteFence.swift").read_text()
 mesh_view = Path("splat-native-ios/SplatNative/MeshScanView.swift").read_text()
 shell = Path("splat-native-ios/SplatNative/IntegratedScanLabShellView.swift").read_text()
 
@@ -64,9 +65,12 @@ if "projectURL = nil" not in reset_block:
     raise SystemExit("Mesh reset must detach the old project without deleting its RAW contents")
 
 # The camera write must hold the same fence that reset rotates before project detachment.
-for needle in ("class MeshFrameWriteFence", "func performIfCurrent(", "let writeFence = frameWriteFence", "writeFence.performIfCurrent(generation)", "guard let success = outcome else { return }"):
+for needle in ("class MeshFrameWriteFence", "func performIfCurrent(", "guard generation == expected else { return nil }"):
+    if needle not in fence:
+        raise SystemExit(f"Mesh writer generation fence implementation missing: {needle}")
+for needle in ("let writeFence = frameWriteFence", "writeFence.performIfCurrent(generation)", "guard let success = outcome else { return }"):
     if needle not in model:
-        raise SystemExit(f"Mesh writer generation fence missing: {needle}")
+        raise SystemExit(f"Mesh writer admission missing: {needle}")
 
 protect_start = recovery.index("func protect(resultURL: URL)")
 protect_end = recovery.index("func cleanupProtectedResult", protect_start)
