@@ -44,8 +44,9 @@ enum SplatReconstructionPolicy {
     }
 
     static func enhancementTarget(from currentIteration: Int) -> Int {
-        let base = max(standardIterations, currentIteration)
-        return min(trainingHorizon, base + enhancementIncrement)
+        let base = min(trainingHorizon, max(standardIterations, currentIteration))
+        let remaining = trainingHorizon - base
+        return base + min(enhancementIncrement, remaining)
     }
 
     static func boundedTarget(_ target: Int, resumedIteration: Int) -> Int {

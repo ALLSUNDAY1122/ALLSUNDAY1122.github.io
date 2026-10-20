@@ -7,6 +7,29 @@ import SwiftUI
 import UIKit
 import simd
 
+// The lock covers both admission and the complete RGB/depth write. Merely checking an
+// epoch before dispatch is insufficient: reset could invalidate it between the check and I/O.
+// The critical section can delay reset during disk I/O, but never destroys older RAW.
+private final class CaptureFrameWriteFence: @unchecked Sendable {
+    private let lock = NSLock()
+    private var generation = UUID()
+
+    func rotate() -> UUID {
+        lock.lock()
+        defer { lock.unlock() }
+        generation = UUID()
+        return generation
+    }
+
+    func performIfCurrent(_ expected: UUID, _ body: () -> Void) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        guard generation == expected else { return false }
+        body()
+        return true
+    }
+}
+
 struct CapturedView: Codable, Identifiable {
     let id: Int
     let filePath: String
@@ -142,7 +165,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     @Published var activeCaptureSeconds: Double = 0
     @Published var ignoreLiDAR = false
     @Published var depthCaptureActive = false
-    @Published private(set) var reconstructionSeedEvidenceText: String?
     @Published private(set) var isWorldMapPersistencePending = false
 
     let coverageSectorTotal = 12
@@ -175,6 +197,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private let ciContext = CIContext(options: [.cacheIntermediates: false])
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.capture", qos: .userInitiated)
     private var isWritingFrame = false
+    // Immutable lease identity for the active capture attempt. Stale callbacks may not
+    // clear the active writer flag or append frames to a later capture (ABA fencing).
+    private var captureGeneration = UUID()
+    private let captureWriteFence = CaptureFrameWriteFence()
     private var trackingNeedsRecovery = false
     private var stableTrackingFrames = 0
     private var activeCaptureStartedAt: TimeInterval?
@@ -264,12 +290,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     var trainingStageText: String {
-        switch trainingProgress {
-        case ..<0.18: return "写真の位置関係を確認しています"
-        case ..<0.58: return "立体の形を組み立てています"
-        case ..<0.88: return "色と細部を整えています"
-        default: return "見返せる形に仕上げています"
+        guard trainingIteration > 0 else {
+            return "初期3Dデータと学習データを準備しています"
         }
+        return "Splatを最適化しています（\(trainingIteration) / \(max(1, pendingTrainingTarget))）"
     }
 
     private var coverageMode: CaptureCoverageMode {
@@ -574,21 +598,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let checkpoint = projectURL.appendingPathComponent("training.msplat-checkpoint")
         let geometryPoints = Array(featurePoints.values)
         let seedFrames = captured.map(Self.seedFrame(from:))
-        let depthSeedFrames = captured.map { frame in
-            SplatDepthSeedFrame(
-                depthFilePath: frame.depthFilePath,
-                depthWidth: frame.depthWidth,
-                depthHeight: frame.depthHeight,
-                depthBytesPerRow: frame.depthBytesPerRow,
-                transformMatrix: frame.transformMatrix,
-                flX: frame.flX,
-                flY: frame.flY,
-                cx: frame.cx,
-                cy: frame.cy,
-                w: frame.w,
-                h: frame.h
-            )
-        }
         let firstSourceFrame = captured.first
         let runContext = SplatReconstructionRunContext(
             runID: runToken.runID,
@@ -644,26 +653,14 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 writeEarlyReport("running-preflight", .preflight, nil, nil)
 
                 do {
-                    let seedOutcome = try SplatDepthSeedBuilder.preparePointCloudPLY(
-                        projectURL: projectURL,
-                        depthFrames: depthSeedFrames,
-                        fallbackPoints: geometryPoints,
-                        colorFrames: seedFrames
-                    )
-                    let seedEvidenceText = "S13 seed: \(seedOutcome.source.rawValue) · depth \(seedOutcome.depthFrameCount) frames · geometry \(seedOutcome.geometryPointCount)"
-                    Task { @MainActor [weak self] in
-                        self?.reconstructionSeedEvidenceText = seedEvidenceText
+                    let plyURL = projectURL.appendingPathComponent("points3D.ply")
+                    if !FileManager.default.fileExists(atPath: plyURL.path) {
+                        try Self.preparePointCloudPLY(
+                            projectURL: projectURL,
+                            points: geometryPoints,
+                            frames: seedFrames
+                        )
                     }
-                    if seedOutcome.requiresFreshTrainer,
-                       FileManager.default.fileExists(atPath: checkpoint.path) {
-                        try? FileManager.default.removeItem(at: checkpoint)
-                    }
-                    writeEarlyReport(
-                        "running-preflight-seed-\(seedOutcome.source.rawValue)",
-                        .preflight,
-                        nil,
-                        nil
-                    )
                 } catch {
                     let message = "初期3Dデータを準備できませんでした: \(error.localizedDescription)"
                     writeEarlyReport("failed-preflight", .preflight, .other, message)
@@ -1145,7 +1142,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         }
 
         absorbFeaturePoints(frame.rawFeaturePoints, cameraTransform: frame.camera.transform)
-        let depthPayload = ignoreLiDAR ? nil : Self.copyDepthPayload((frame.smoothedSceneDepth ?? frame.sceneDepth)?.depthMap)
+        let depthPayload = ignoreLiDAR ? nil : Self.copyDepthPayload(frame.sceneDepth?.depthMap)
 
         isWritingFrame = true
         let index = acceptedFrames
@@ -1156,12 +1153,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let timestamp = frame.timestamp
         let imagesURL = imagesURL
         let depthURL = depthURL
+        let generation = captureGeneration
+        let writeFence = captureWriteFence
 
         captureQueue.async { [weak self] in
             guard let imagesURL else {
                 Task { @MainActor [weak self] in
-                    self?.isWritingFrame = false
-                    self?.trackingMessage = "撮影データの保存先を確認できませんでした"
+                    guard let self, self.captureGeneration == generation else { return }
+                    self.isWritingFrame = false
+                    self.trackingMessage = "撮影データの保存先を確認できませんでした"
                 }
                 return
             }
@@ -1170,19 +1170,23 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             var depthRelativePath: String?
             var writeError: Error?
 
-            do {
-                try jpegData.write(to: fileURL, options: .atomic)
-                if let depthPayload, let depthURL {
-                    let depthName = String(format: "depth_%05d.f32", index)
-                    try depthPayload.data.write(to: depthURL.appendingPathComponent(depthName), options: .atomic)
-                    depthRelativePath = "depth/\(depthName)"
+            let wasCurrent = writeFence.performIfCurrent(generation) {
+                do {
+                    try jpegData.write(to: fileURL, options: .atomic)
+                    if let depthPayload, let depthURL {
+                        let depthName = String(format: "depth_%05d.f32", index)
+                        try depthPayload.data.write(to: depthURL.appendingPathComponent(depthName), options: .atomic)
+                        depthRelativePath = "depth/\(depthName)"
+                    }
+                } catch {
+                    writeError = error
                 }
-            } catch {
-                writeError = error
             }
+            // Superseded operations perform no disk writes and emit no completion callback.
+            guard wasCurrent else { return }
 
             Task { @MainActor [weak self] in
-                guard let self else { return }
+                guard let self, self.captureGeneration == generation else { return }
                 self.isWritingFrame = false
                 guard self.phase == .capturing, !self.isCapturePaused else { return }
                 guard writeError == nil else {
@@ -1538,62 +1542,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         }
     }
 
-    /// S13 physical A/B entry: re-run reconstruction from the exact same durable raw capture.
-    /// The current trusted result is protected before entering `.captured`, while the on-disk
-    /// manifest intentionally remains `.finished`. When `train()` transitions it to `.processing`,
-    /// the normal Store swap therefore preserves the current result as the previous result.
-    func restoreFinishedProjectForS13Reprocess(id: String) {
-        do {
-            let summary = try projectStore.loadProject(id: id)
-            guard summary.manifest.stage == .finished,
-                  summary.manifest.rawDataRetained,
-                  let trustedURL = SplatProjectTrustRecovery.trustedResultURL(for: summary),
-                  (try? projectStore.reprocessRequest(
-                    projectURL: summary.projectURL,
-                    representation: .splat
-                  )) != nil else {
-                throw dataError("同じ撮影から再生成するためのrawデータを確認できません")
-            }
-            let checkpoint = try projectStore.loadCheckpoint(projectURL: summary.projectURL)
-            try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: trustedURL)
-
-            invalidateWorldMapPersistence()
-            session?.pause()
-            closeActiveCaptureTiming()
-            projectURL = summary.projectURL
-            imagesURL = summary.projectURL.appendingPathComponent("images", isDirectory: true)
-            depthURL = summary.projectURL.appendingPathComponent("depth", isDirectory: true)
-            restoreCaptureCheckpoint(checkpoint)
-            targetFrames = summary.manifest.targetFrames
-            pendingTrainingTarget = SplatReconstructionPolicy.standardIterations
-            pendingResumeWorldMap = loadPersistedWorldMap(projectURL: summary.projectURL)
-            requiresWorldMapForResume = true
-            userPauseRequested = false
-            systemPausedCapture = false
-            activeCaptureStartedAt = nil
-            resultURL = trustedURL
-            reconstructionSeedEvidenceText = nil
-            if let thumbnail = summary.thumbnailURL {
-                previewImage = UIImage(contentsOfFile: thumbnail.path)
-            }
-            datasetReady = true
-            phase = .captured
-            isCapturePaused = false
-            trackingNeedsRecovery = false
-            stableTrackingFrames = 0
-            trainingProgress = 0
-            trainingIteration = 0
-            splatCount = 0
-            trackingMessage = "同じ撮影rawを読み込みました。撮影を追加せず「3Dを生成」でS13比較を開始できます"
-            UIApplication.shared.isIdleTimerDisabled = false
-        } catch {
-            let message = "同じ撮影から再生成する準備に失敗しました: \(error.localizedDescription)"
-            phase = .failed(message)
-            trackingMessage = message
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
-    }
-
     func restoreSavedProject(id: String) {
         do {
             let summary = try projectStore.loadProject(id: id)
@@ -1894,6 +1842,8 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     private func resetCaptureStateForNewProject() {
+        // Invalidate prior callbacks before the writer slot is reused by a new project.
+        captureGeneration = captureWriteFence.rotate()
         invalidateWorldMapPersistence()
         captured.removeAll(keepingCapacity: true)
         featurePoints.removeAll(keepingCapacity: true)
@@ -1923,7 +1873,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         accumulatedCaptureSeconds = 0
         activeCaptureSeconds = 0
         depthCaptureActive = false
-        reconstructionSeedEvidenceText = nil
         systemPausedCapture = false
         pendingResumeWorldMap = nil
         requiresWorldMapForResume = false
