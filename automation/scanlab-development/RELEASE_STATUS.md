@@ -71,3 +71,10 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - HQ root-cause inspection: SplatViewerEditStore.load() now read-only (desirable), but export preflight/materializer and two preexisting tests expect explicit durable repair. No code ownership crossing by HQ.
 - Detailed contract: automation/scanlab-development/HQ_STEP08_RECOVERY_CI_CONTRACT.md. W1/W2 integration HOLD. No merge, Codemagic, Apple Upload, new Build, or App Review Submit.
 - NEXT: explicit export repair (W2) plus nonmutating viewer read test, W1 pose/generation tests, full native CI via eligible PR/check.
+
+## STEP10 — 2026-10-20
+- W1 HEAD 31ba91fdd7 unchanged: PR #5620 native static contract FAILURE, XCTest not reached. HQ PR comment 6281537287 posted.
+- W2 HEAD c2e66169b76f: Library read-only census added. Full native CI run 39354704378 FAILED: 245 tests, 1 failure Export preflight backup recovery. HQ PR comment 6281537703 posted.
+- HQ independent review written: automation/scanlab-development/HQ_STEP10_REVIEW.md.
+- Both tasks CLAIMED epoch1 unchanged; neither integrated; no new Codemagic/Apple build/upload/review.
+- NEXT: Worker-specific fixes and passing complete CI before integration.
