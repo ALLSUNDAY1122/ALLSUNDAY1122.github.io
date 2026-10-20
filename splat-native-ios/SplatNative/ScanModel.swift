@@ -174,6 +174,9 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private let ciContext = CIContext(options: [.cacheIntermediates: false])
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.capture", qos: .userInitiated)
     private var isWritingFrame = false
+    // Immutable lease identity for the active capture attempt. Stale callbacks may not
+    // clear the active writer flag or append frames to a later capture (ABA fencing).
+    private var captureGeneration = UUID()
     private var trackingNeedsRecovery = false
     private var stableTrackingFrames = 0
     private var activeCaptureStartedAt: TimeInterval?
@@ -1126,12 +1129,14 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let timestamp = frame.timestamp
         let imagesURL = imagesURL
         let depthURL = depthURL
+        let generation = captureGeneration
 
         captureQueue.async { [weak self] in
             guard let imagesURL else {
                 Task { @MainActor [weak self] in
-                    self?.isWritingFrame = false
-                    self?.trackingMessage = "撮影データの保存先を確認できませんでした"
+                    guard let self, self.captureGeneration == generation else { return }
+                    self.isWritingFrame = false
+                    self.trackingMessage = "撮影データの保存先を確認できませんでした"
                 }
                 return
             }
@@ -1152,7 +1157,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             }
 
             Task { @MainActor [weak self] in
-                guard let self else { return }
+                guard let self, self.captureGeneration == generation else { return }
                 self.isWritingFrame = false
                 guard self.phase == .capturing, !self.isCapturePaused else { return }
                 guard writeError == nil else {
@@ -1808,6 +1813,8 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     private func resetCaptureStateForNewProject() {
+        // Invalidate prior callbacks before the writer slot is reused by a new project.
+        captureGeneration = UUID()
         invalidateWorldMapPersistence()
         captured.removeAll(keepingCapacity: true)
         featurePoints.removeAll(keepingCapacity: true)
