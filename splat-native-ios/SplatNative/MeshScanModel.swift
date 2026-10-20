@@ -117,6 +117,9 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private var scanOrigin: SIMD3<Float>?
     private var lastSavedFrameTimestamp: TimeInterval = 0
     private var isWritingFrame = false
+    // Identity is unique per capture attempt, preventing stale async completions from
+    // releasing a writer lease or appending frames to a newer scan (ABA protection).
+    private var captureGeneration = UUID()
     private let frameEncoder = MeshFrameJPEGEncoder()
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.mesh.capture", qos: .userInitiated)
     private var reconstructionTask: Task<Void, Never>?
@@ -274,12 +277,15 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
             return false
         }
 
+        // Invalidate all pending capture callbacks before changing any current-state flags.
+        captureGeneration = UUID()
         reconstructionTask?.cancel()
         reconstructionTask = nil
         photogrammetrySession?.cancel()
         photogrammetrySession = nil
         session?.pause()
-        if let projectURL { try? FileManager.default.removeItem(at: projectURL) }
+        // Reset the UI/session only. A previous RAW project is retained for recovery.
+        // Deletion must be a separate, explicitly authorized retention operation.
         projectURL = nil
         imagesURL = nil
         phase = .ready
@@ -343,6 +349,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     private func resetCaptureStateKeepingProject() {
+        captureGeneration = UUID()
         frames.removeAll(keepingCapacity: true)
         meshChunks.removeAll(keepingCapacity: true)
         sourceMesh = nil
@@ -396,6 +403,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let intrinsics = Self.rows3(frame.camera.intrinsics)
         let resolution = frame.camera.imageResolution
         let frameEncoder = self.frameEncoder
+        let generation = captureGeneration
         isWritingFrame = true
 
         captureQueue.async { [weak self, frameEncoder, frameImage] in
@@ -413,6 +421,9 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
             Task { @MainActor [weak self] in
                 guard let self else { return }
+                // Check the captured generation BEFORE releasing the writer flag.
+                // An old completion cannot mutate a new capture's state or manifest.
+                guard self.captureGeneration == generation else { return }
                 self.isWritingFrame = false
                 guard self.phase == .scanning else { return }
                 guard success else {
