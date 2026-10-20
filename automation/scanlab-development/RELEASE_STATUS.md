@@ -162,3 +162,9 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - Release candidate assembled on isolated branch attempt/scanlab-hq-release-sync-20261020-a1 via PR #5625 merge SHA781466ef84c9db9f1be6ccabf07b67f1082beb71. Real release/scanlab-testflight unchanged SHA3cbd4dcfe6505fb2fc9223062a7ec8feaeb0bf2a.
 - Draft release-candidate QA PR #5628 to real release branch exists but is UNMERGED; full Native CI run39425853659 in progress at readback. Source lineage diverges by 227 changed files and requires full acceptance; isolated Codemagic scanlab-ios checks Xcode26+, epoch5 recipe, Apple Build+1, signing and TestFlight-only publishing.
 - Neither unsafe S16/S21 gateway triggered. No Codemagic build, Apple upload, TestFlight assignment or App Review submit. HQ evidence HQ_STEP23_RELEASE_CANDIDATE.md.
+
+## Post T40 Product Release Source Bridge — 2026-10-20
+- Product PR #5624 merged commit01b08971a313; feature head69f365816bb Native CI run39433159753 SUCCESS 251 XCTest/0, Privacy/Smoke/S9-S14 success. Live auth E2E skipped due to missing identity.
+- HQ isolated Apple read-only run39444146086 SUCCESS latest Build18, internal group linked, artifact12274529425; no upload.
+- Release/scanlab-testflight head3cbd4dcfe650 diverged from product and contains 7 release-only materialization commits. HQ created isolated release bridge branch at release head, merged product HEAD69f365816bb into bridge via PR #5632, merge SHA42cca234e634. Product and release branches are unmodified by this bridge operation.
+- Draft PR #5633 from isolated bridge to release branch created, full native CI run39444484745 IN_PROGRESS; no merge or Codemagic started pending gate. See HQ_STEP22_RELEASE_BRIDGE.md.
