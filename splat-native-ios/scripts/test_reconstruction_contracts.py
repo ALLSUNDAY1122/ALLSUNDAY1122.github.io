@@ -139,10 +139,22 @@ require(
 finish = MODEL.index("func finishCapture()")
 train = MODEL.index("private func startTraining(")
 detached = MODEL.index("Task.detached", train)
-prepare = MODEL.index("Self.preparePointCloudPLY", detached)
+# The native S2 fallback and S13 depth-aware seed builder are alternative
+# implementations. Both must execute inside the detached reconstruction worker.
+# Guard both source layouts without restoring a retired call to pass CI.
+seed_calls = (
+    "Self.preparePointCloudPLY",
+    "SplatDepthSeedBuilder.preparePointCloudPLY",
+)
+positions = [MODEL.find(call, detached) for call in seed_calls]
+seed_positions = [pos for pos in positions if pos >= 0]
+assert seed_positions, "Reconstruction must prepare the point cloud in the detached worker"
+prepare = min(seed_positions)
 dataset = MODEL.index("let dataset = GaussianDataset", prepare)
 assert finish < train < detached < prepare < dataset
-assert "preparePointCloudPLY" not in MODEL[finish:train]
+assert all(call not in MODEL[finish:train] for call in seed_calls), (
+    "Point cloud preparation must not block finishCapture on the main actor"
+)
 
 # Scaniverse-style splats retain background and sky. S2 therefore must not universally replace the
 # background with a foreground mask. Far-field seeding may include bright overcast, but near geometry
