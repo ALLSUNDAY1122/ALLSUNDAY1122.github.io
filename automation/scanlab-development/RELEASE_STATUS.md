@@ -106,3 +106,9 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - New takeover branch attempt/scanlab-w1-takeover-w2-20261020-a2 created from companion commit a050e1fd78de (original W1 head + HQ nondestructive Mesh reset static contract correction). Draft PR #5622 to product feature; original #5620 and companion #5621 historical/unmerged. W2 original PR #5619 stays active on its own branch (HEAD 067902285e71c15af5d53623b66b9d06688d622f at transfer check).
 - Ownership contract amended by HQ. PR #5619 transfer notice comment 6283158823. Native iOS run 39367980809 IN_PROGRESS on takeover PR at check; not PASS yet. No integration, Codemagic, Apple upload or App Review submit.
 - Sole implementation worker is now W2 for T34–T39; each task still has a separate fenced branch/claim. HQ alone owns integration/release.
+
+## STEP16 — 2026-10-20 (after W1->W2 transfer)
+- Queue readback: former W1 task owner WORKER_2 epoch2, native lock epoch2. Original W2 task WORKER_2 epoch1. HQ epoch1. Worker1 stopped, no contact.
+- Native successor PR #5622 head a050e1fd78de. Companion PR #5621 run39367475853 Native CI SUCCESS 245/0; successor PR #5622 run39367980809 Native CI FAILURE 245 tests / 2 failed assertions in SplatCompletionVerifierTests restoration/previous trusted asset cleanup (completionEvidenceMismatch). Differing PR merge bases may explain effective source differences; needs runner SHA/readback, not assume flakiness.
+- HQ commented PR #5622 ID6283324587, triggered rerun failed workflow run jobs for 39367980809; attempt2 IN_PROGRESS at readback. HQ investigation file HQ_STEP16_TRANSFER_QA.md.
+- Current W2 T37-39 head 067902285e71, release acceptance still OPEN. No integration, Codemagic, Apple upload or App Review submit. Prior latest Apple Build18.
