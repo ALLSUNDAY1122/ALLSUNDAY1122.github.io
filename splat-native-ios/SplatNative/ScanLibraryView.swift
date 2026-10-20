@@ -1,4 +1,73 @@
 import SwiftUI
+
+private enum ScanLibraryReadOnlyCensus {
+    struct Result {
+        let projects: [ScanProjectSummary]
+        let unknownCount: Int
+        let scanFailed: Bool
+    }
+
+    static func inspect(rootURL: URL, fileManager: FileManager = .default) -> Result {
+        guard let rootValues = try? rootURL.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+              rootValues.isDirectory == true, rootValues.isSymbolicLink != true,
+              let entries = try? fileManager.contentsOfDirectory(
+                  at: rootURL, includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey],
+                  options: []
+              ) else {
+            return Result(projects: [], unknownCount: 0, scanFailed: true)
+        }
+        var known: [ScanProjectSummary] = []
+        var unknown = 0
+        let decoder = JSONDecoder()
+        for url in entries where url.pathExtension == ScanProjectStore.projectExtension {
+            guard let attributes = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+                  attributes.isDirectory == true, attributes.isSymbolicLink != true else {
+                unknown += 1
+                continue
+            }
+            let baseName = url.deletingPathExtension().lastPathComponent
+            var verified: ScanProjectManifest?
+            for name in [ScanProjectStore.manifestFileName, ScanProjectStore.manifestBackupFileName] {
+                let candidate = url.appendingPathComponent(name)
+                guard let data = try? BoundedFileReader.read(candidate, maximumBytes: 1024 * 1024),
+                      let manifest = try? decoder.decode(ScanProjectManifest.self, from: data),
+                      manifest.schemaVersion == ScanProjectManifest.currentSchemaVersion,
+                      manifest.id == baseName else { continue }
+                verified = manifest
+                break
+            }
+            guard let manifest = verified else {
+                unknown += 1
+                continue
+            }
+            known.append(ScanProjectSummary(
+                manifest: manifest, projectURL: url, storageBytes: fileSizeEstimate(url, fileManager: fileManager)
+            ))
+        }
+        return Result(
+            projects: known.sorted { $0.manifest.updatedAt > $1.manifest.updatedAt },
+            unknownCount: unknown, scanFailed: false
+        )
+    }
+
+    private static func fileSizeEstimate(_ url: URL, fileManager: FileManager) -> Int64 {
+        guard let enumerator = fileManager.enumerator(
+            at: url, includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
+            options: [.skipsHiddenFiles, .skipsPackageDescendants]
+        ) else { return 0 }
+        var total: Int64 = 0
+        for case let entry as URL in enumerator {
+            guard let values = try? entry.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]),
+                  values.isRegularFile == true, values.isSymbolicLink != true else { continue }
+            let bytes = Int64(max(0, values.fileSize ?? 0))
+            let (next, overflow) = total.addingReportingOverflow(bytes)
+            if overflow { return Int64.max }
+            total = next
+        }
+        return total
+    }
+}
+
 import UIKit
 
 @MainActor
@@ -41,13 +110,21 @@ struct ScanLibraryView: View {
     @State private var showingTrash = false
     @State private var pendingPermanentDelete: ScanProjectSummary?
     @State private var errorMessage: String?
+    @State private var unknownProjectCount = 0
+    @State private var censusFailed = false
 
     private let store = ScanProjectStore()
 
     var body: some View {
         NavigationStack {
             Group {
-                if projects.isEmpty {
+                if projects.isEmpty && (unknownProjectCount > 0 || censusFailed) {
+                    ContentUnavailableView(
+                        "保存状態を確認できないスキャンがあります",
+                        systemImage: "externaldrive.badge.exclamationmark",
+                        description: Text("データは削除されていません。保存ファイルの確認が必要です。")
+                    )
+                } else if projects.isEmpty {
                     ContentUnavailableView(
                         "保存済みスキャンはありません",
                         systemImage: "cube.transparent",
@@ -65,6 +142,14 @@ struct ScanLibraryView: View {
                         }
                     }
                     .listStyle(.plain)
+                }
+            }
+            .safeAreaInset(edge: .top) {
+                if unknownProjectCount > 0 || censusFailed {
+                    Text(censusFailed ? "ライブラリを安全に読み取れませんでした。削除や修復は行っていません。" : "状態不明のスキャンが\(unknownProjectCount)件あります。自動削除・修復は行っていません。")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                        .padding(10)
                 }
             }
             .navigationTitle("保存済みスキャン")
@@ -288,8 +373,16 @@ struct ScanLibraryView: View {
     }
 
     private func refresh() {
-        projects = store.listProjects()
-        trash = store.listTrash()
+        // Inspect the directory before consulting legacy listProjects(), which may silently skip
+        // unreadable entries or migrate/rewrite manifests during a nominally read-only refresh.
+        let census = ScanLibraryReadOnlyCensus.inspect(rootURL: store.rootURL)
+        unknownProjectCount = census.unknownCount
+        censusFailed = census.scanFailed
+        projects = census.projects
+        let deleted = ScanLibraryReadOnlyCensus.inspect(rootURL: store.trashURL)
+        trash = deleted.projects
+        unknownProjectCount += deleted.unknownCount
+        censusFailed = censusFailed || deleted.scanFailed
     }
 
     private func continueProject(_ project: ScanProjectSummary) {
