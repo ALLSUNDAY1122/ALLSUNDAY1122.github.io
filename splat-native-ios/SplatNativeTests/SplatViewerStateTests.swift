@@ -73,8 +73,7 @@ final class SplatViewerStateTests: XCTestCase {
         let recovered = try XCTUnwrap(SplatViewerEditStore.load(sourceURL: source))
         XCTAssertTrue(recovered.recoveredFromBackup)
         XCTAssertEqual(recovered.settings, first.normalized())
-        let healed = try JSONDecoder().decode(SplatEditSettings.self, from: Data(contentsOf: SplatViewerEditStore.primaryURL(for: source)))
-        XCTAssertEqual(healed, first.normalized())
+        XCTAssertEqual(try Data(contentsOf: SplatViewerEditStore.primaryURL(for: source)), Data("corrupt".utf8))
     }
 
     func testViewerEditStoreDoesNotOverwriteGoodBackupWithCorruptPrimary() throws {
@@ -257,7 +256,7 @@ final class SplatViewerStateTests: XCTestCase {
         let state = SplatViewerState()
         state.attach(url: source)
         state.rendererMeasured(meters: 1)
-        XCTAssertEqual(state.measurementText, "1.00 m")
+        XCTAssertEqual(state.measurementText, "1.000 シーン単位（実寸未校正）")
     }
 
     func testMeasurementFormattingUsesPracticalUnits() {
