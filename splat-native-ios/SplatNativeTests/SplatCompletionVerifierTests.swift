@@ -159,6 +159,30 @@ final class SplatCompletionVerifierTests: XCTestCase {
         try Data(repeating: 0x71, count: 64).write(to: resultURL, options: .atomic)
         try FileManager.default.setAttributes([.modificationDate: modificationDate], ofItemAtPath: resultURL.path)
 
+        // HQ2 STEP29: metadata-only witnesses; no scene bytes or hashes are emitted.
+        let snapshotURL = projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName)
+        let backupURL = projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName)
+        let snapshot = try JSONDecoder().decode(
+            SplatPreviousResultEvidence.Snapshot.self, from: Data(contentsOf: snapshotURL)
+        )
+        let failedEvidence = try JSONDecoder().decode(
+            SplatCommitEvidence.self, from: Data(contentsOf: evidenceURL)
+        )
+        let backupAttributes = try FileManager.default.attributesOfItem(atPath: backupURL.path)
+        let resultAttributes = try FileManager.default.attributesOfItem(atPath: resultURL.path)
+        let backupLength = (backupAttributes[.size] as? NSNumber)?.int64Value ?? -1
+        let resultLength = (resultAttributes[.size] as? NSNumber)?.int64Value ?? -1
+        let timestampPredicate = snapshot.originalEvidence.completedAt <= failedEvidence.completedAt
+            && snapshot.preservedAt <= failedEvidence.completedAt
+        print("SCANLAB_RECOVERY_WITNESS",
+              "schemaOK=\(snapshot.schemaVersion == SplatPreviousResultEvidence.Snapshot.currentSchemaVersion)",
+              "sameSize=\(snapshot.originalEvidence.byteCount == failedEvidence.byteCount)",
+              "timestampPredicate=\(timestampPredicate)",
+              "backupBytesMatch=\(backupLength == snapshot.originalEvidence.byteCount)",
+              "resultBytesMatch=\(resultLength == failedEvidence.byteCount)",
+              "previousAt=\(snapshot.originalEvidence.completedAt.timeIntervalSince1970)",
+              "preservedAt=\(snapshot.preservedAt.timeIntervalSince1970)",
+              "currentAt=\(failedEvidence.completedAt.timeIntervalSince1970)")
         XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: resultURL), resultURL)
         XCTAssertEqual(try Data(contentsOf: resultURL), trustedBytes)
         let recovered = try store.loadManifest(projectURL: projectURL)
