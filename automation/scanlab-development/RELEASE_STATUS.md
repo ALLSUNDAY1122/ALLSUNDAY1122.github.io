@@ -45,3 +45,14 @@ Reviewable PR for registry and governance, then authenticated Apple readback and
 - Risk: Repository push also started unrelated workflows. They reported failures in GitHub runs; avoid additional broad push triggers until scope/trigger guards reviewed. No evidence of a Scan Lab product Build triggered by these failures.
 - Worker queues remain READY/unclaimed; each assigned worker claims its own task by GitHub SHA CAS and reads it back.
 - NEXT: harden/review isolated workflow and obtain durable evidence of processingState/internal group details; then authorize Worker Claim & P0 implementation.
+
+## STEP05 (2026-10-20) — atomic worker delegation
+- Live control Queue readback: automation/scanlab-hq-control-20261020 @ commit 7196cc2776f38fe9260c6cf5fa244fba4c5563c0.
+- Atomic SHA-CAS claim update, then remote-readback verified three task claims and three resource lock records.
+- W1: SCANLAB-W1-001 CLAIMED epoch 1, token SCANLAB-W1-001-a1-20261020, branch attempt/scanlab-w1-20261020-a1.
+- W2: SCANLAB-W2-001 CLAIMED epoch 1, token SCANLAB-W2-001-a1-20261020, branch attempt/scanlab-w2-20261020-a1.
+- Both attempt branches created successfully and independently read back at immutable baseline 2bcbbd6128863739ad168610cd2e3f8e3b01b458.
+- Ownership delegation was performed by HQ; individual Worker chats must independently read-back the token and lock before any source change. Do not generate a second claim for already CLAIMED tasks.
+- P0 Swift code changes, CI verification and new Codemagic Build: NOT_RUN.
+- Future integration requires head reread plus lock epoch recheck. Existing PR #4145 stays draft/unmerged.
+- NEXT: each Worker executes first P0 implementation under their claimed attempt branch; HQ integrates only independently verified PRs and validates Build18 evidence baseline.
