@@ -179,7 +179,19 @@ enum CapturePolicy {
         // The first accepted frame has no temporal or pose baseline to compare against. Applying the
         // inter-frame cadence gate before this check can discard the opening view solely because the
         // caller initialized both timestamps together, reducing coverage and delaying capture start.
+        // Fail closed before admitting the first frame: without a previous pose the movement
+        // validator cannot detect malformed ARKit transforms. Never persist invalid pose evidence.
+        let columns = [current.columns.0, current.columns.1, current.columns.2, current.columns.3]
+        guard columns.allSatisfy({ $0.x.isFinite && $0.y.isFinite && $0.z.isFinite && $0.w.isFinite }),
+              abs(current.columns.0.w) < 0.0001,
+              abs(current.columns.1.w) < 0.0001,
+              abs(current.columns.2.w) < 0.0001,
+              abs(current.columns.3.w - 1) < 0.0001,
+              currentTimestamp.isFinite else {
+            return .relocalizationJump
+        }
         guard let previous else { return .accept }
+        guard previousTimestamp.isFinite else { return .relocalizationJump }
 
         let elapsed = currentTimestamp - previousTimestamp
         guard elapsed >= 0.16 else { return .tooSoon }
