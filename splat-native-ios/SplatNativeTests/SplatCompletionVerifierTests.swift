@@ -136,6 +136,14 @@ final class SplatCompletionVerifierTests: XCTestCase {
         }
         XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: resultURL), resultURL)
         try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: resultURL)
+        // Deterministic fault injection: the protected inode's mtime becomes later
+        // than its authenticated original completion, without changing backed-up bytes.
+        // Recovery must validate SHA and normalize only the verified staged copy.
+        let backupForMetadataFault = projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName)
+        try FileManager.default.setAttributes(
+            [.modificationDate: Date().addingTimeInterval(3_600)],
+            ofItemAtPath: backupForMetadataFault.path
+        )
 
         let newBytes = Data(repeating: 0x61, count: 64)
         try newBytes.write(to: pendingURL, options: .atomic)
