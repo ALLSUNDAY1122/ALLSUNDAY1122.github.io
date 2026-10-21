@@ -152,6 +152,28 @@ final class SplatCompletionVerifierTests: XCTestCase {
         let newEvidence = try JSONDecoder().decode(SplatCommitEvidence.self, from: Data(contentsOf: evidenceURL))
         _ = try SplatStrongCompletionEvidence.verifyOrSeal(sourceURL: resultURL, evidence: newEvidence)
 
+        // Targeted, bounded recovery witness. Only fixture timestamps and predicate booleans:
+        // no model bytes, hashes, credentials, owner identifiers or filesystem paths are logged.
+        let snapshotURL = projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName)
+        let snapshotData = try Data(contentsOf: snapshotURL)
+        let snapshot = try JSONDecoder().decode(SplatPreviousResultEvidence.Snapshot.self, from: snapshotData)
+        let hasBackup = FileManager.default.fileExists(
+            atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName).path
+        )
+        let sameSize = snapshot.originalEvidence.byteCount == newEvidence.byteCount
+        let orderedEvidence = snapshot.originalEvidence.completedAt <= newEvidence.completedAt
+        let orderedPreservation = snapshot.preservedAt <= newEvidence.completedAt
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        print("SCANLAB_RECOVERY_FIXTURE snapshotDecoded=true backupExists=\(hasBackup) sizeMatches=\(sameSize) oldBeforeNew=\(orderedEvidence) preservedBeforeNew=\(orderedPreservation)")
+        print("SCANLAB_RECOVERY_FIXTURE oldCompleted=\(dateFormatter.string(from: snapshot.originalEvidence.completedAt)) preserved=\(dateFormatter.string(from: snapshot.preservedAt)) newCompleted=\(dateFormatter.string(from: newEvidence.completedAt))")
+        XCTAssertTrue(hasBackup)
+        XCTAssertTrue(sameSize)
+        XCTAssertTrue(orderedEvidence)
+        XCTAssertTrue(orderedPreservation)
+        setenv("SCANLAB_RECOVERY_DIAGNOSTICS", "1", 1)
+        defer { unsetenv("SCANLAB_RECOVERY_DIAGNOSTICS") }
+
         // Corrupt the new result without changing its byte count, then preserve its mtime so the
         // strong hash seal rather than the legacy size/mtime guard is what detects the damage.
         let attributes = try FileManager.default.attributesOfItem(atPath: resultURL.path)
