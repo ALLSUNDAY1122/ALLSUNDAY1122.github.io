@@ -27,3 +27,10 @@ Date: 2026-10-21 JST. State: BLOCKED_CI_DISPATCH / IN_PROGRESS. Task SCANLAB-W1-
 3. HQ2 separately audits and reconciles diverged branch before integrating. NO-GO until full Native XCTest green.
 
 No Queue mutation or unauthorized release branch writes.
+
+## STEP39 continuation — PR reopened trigger attempt
+- Reverified queue file SHA `ebba8d4a793b53a0abfd4f18bad0c6144f17b4bd`; lock Worker2 epoch2 unchanged.
+- PR #5639 prior head `70393f62acb7ea3b8ee525db07b31b075f41be22`, Draft/open, and Native workflow dispatch tool unavailable in connected GitHub interface.
+- Triggered a non-code `pull_request: reopened` attempt by closing and immediately reopening same PR through GitHub; API readback confirmed open/Draft, original head unchanged, base unchanged, no merge.
+- Immediately after reopening, Actions list (branch and pull_request event queries) still showed only old Native cancelled #39533009521 at obsolete SHA and older skipped push jobs, no new exact-head run. Thus this is an event attempt, **not proof that a workflow was scheduled**.
+- Current full Native XCTest success is UNKNOWN and HQ NO-GO remains. No new release, upload, App Review, or Queue mutation.
