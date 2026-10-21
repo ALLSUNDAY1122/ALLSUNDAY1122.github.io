@@ -32,6 +32,11 @@ extension SplatPreviousResultEvidence {
             return false
         }
 
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["SCANLAB_RECOVERY_DIAGNOSTICS"] == "1" {
+            print("SCANLAB_RECOVERY_STAGE evidenceEqual=\(currentEvidence == evidence)")
+        }
+        #endif
         let snapshotURL = projectURL.appendingPathComponent(fileName)
         let backupURL = projectURL.appendingPathComponent(assetFileName)
         guard let snapshotData = readIntegritySnapshotDataIfSafe(
@@ -51,6 +56,11 @@ extension SplatPreviousResultEvidence {
             return false
         }
 
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["SCANLAB_RECOVERY_DIAGNOSTICS"] == "1" {
+            print("SCANLAB_RECOVERY_STAGE snapshotSchema=true sizeAndSHA=true eligible=true")
+        }
+        #endif
         try Task.checkCancellation()
         let outputURL = projectURL.appendingPathComponent(ScanProjectStore.splatResultFileName)
         let partialURL = projectURL.appendingPathComponent(".result.splat.integrity-recovery.partial")
@@ -73,6 +83,11 @@ extension SplatPreviousResultEvidence {
                 try? fileManager.removeItem(at: partialURL)
                 return false
             }
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["SCANLAB_RECOVERY_DIAGNOSTICS"] == "1" {
+                print("SCANLAB_RECOVERY_STAGE stagedPartialSHA=true")
+            }
+            #endif
             try synchronizeIntegrityRecoveryFile(at: partialURL)
             try Task.checkCancellation()
 
@@ -122,6 +137,11 @@ extension SplatPreviousResultEvidence {
                 manifest.recoveredAfterInterruption = true
                 manifest.lastError = "最新の3Dの整合性を確認できなかったため、直前の完成確認済み3Dを復元しました。"
             }
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["SCANLAB_RECOVERY_DIAGNOSTICS"] == "1" {
+                print("SCANLAB_RECOVERY_STAGE promotionCompleted=true metadataCommitted=true")
+            }
+            #endif
             return true
         } catch {
             try? fileManager.removeItem(at: partialURL)
