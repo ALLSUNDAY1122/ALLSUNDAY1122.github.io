@@ -1,3 +1,4 @@
+import CryptoKit
 import XCTest
 
 final class SplatCompletionVerifierTests: XCTestCase {
@@ -150,6 +151,24 @@ final class SplatCompletionVerifierTests: XCTestCase {
         // failure that happens before that final cleanup point.
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
         let newEvidence = try JSONDecoder().decode(SplatCommitEvidence.self, from: Data(contentsOf: evidenceURL))
+        // HQ2 STEP37: sanitized diagnostic witnesses; asset bytes are never logged.
+        let snapshotURL = projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName)
+        let previousURL = projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName)
+        let snapshot = try JSONDecoder().decode(
+            SplatPreviousResultEvidence.Snapshot.self, from: Data(contentsOf: snapshotURL)
+        )
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let previousDigest = SHA256.hash(data: try Data(contentsOf: previousURL))
+            .map { String(format: "%02x", $0) }.joined()
+        print("SCANLAB_RECOVERY_STEP37_WITNESS " +
+              "sameByteCount=\(snapshot.originalEvidence.byteCount == newEvidence.byteCount) " +
+              "priorCompletedBeforeNew=\(snapshot.originalEvidence.completedAt <= newEvidence.completedAt) " +
+              "preservedBeforeNew=\(snapshot.preservedAt <= newEvidence.completedAt) " +
+              "backupSHAValid=\(previousDigest == snapshot.sha256) " +
+              "oldCompleted=\(dateFormatter.string(from: snapshot.originalEvidence.completedAt)) " +
+              "preserved=\(dateFormatter.string(from: snapshot.preservedAt)) " +
+              "newCompleted=\(dateFormatter.string(from: newEvidence.completedAt))")
         _ = try SplatStrongCompletionEvidence.verifyOrSeal(sourceURL: resultURL, evidence: newEvidence)
 
         // Corrupt the new result without changing its byte count, then preserve its mtime so the
