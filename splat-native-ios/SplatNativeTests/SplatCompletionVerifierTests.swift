@@ -150,6 +150,16 @@ final class SplatCompletionVerifierTests: XCTestCase {
         // failure that happens before that final cleanup point.
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
         let newEvidence = try JSONDecoder().decode(SplatCommitEvidence.self, from: Data(contentsOf: evidenceURL))
+        let previousMetadataURL = projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName)
+        let previousBackupURL = projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName)
+        let previousSnapshot = try JSONDecoder().decode(
+            SplatPreviousResultEvidence.Snapshot.self, from: Data(contentsOf: previousMetadataURL)
+        )
+        let dateFormat = ISO8601DateFormatter()
+        dateFormat.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let backupDigest = SHA256.hash(data: try Data(contentsOf: previousBackupURL))
+            .map { String(format: "%02x", $0) }.joined()
+        print("SCANLAB_RECOVERY_FIXTURE sameSize=\(previousSnapshot.originalEvidence.byteCount == newEvidence.byteCount) oldBeforeNew=\(previousSnapshot.originalEvidence.completedAt <= newEvidence.completedAt) preservedBeforeNew=\(previousSnapshot.preservedAt <= newEvidence.completedAt) backupSHA=\(backupDigest == previousSnapshot.sha256) oldDate=\(dateFormat.string(from: previousSnapshot.originalEvidence.completedAt)) preservedDate=\(dateFormat.string(from: previousSnapshot.preservedAt)) newDate=\(dateFormat.string(from: newEvidence.completedAt))")
         _ = try SplatStrongCompletionEvidence.verifyOrSeal(sourceURL: resultURL, evidence: newEvidence)
 
         // Corrupt the new result without changing its byte count, then preserve its mtime so the
