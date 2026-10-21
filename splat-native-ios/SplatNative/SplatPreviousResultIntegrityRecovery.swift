@@ -34,20 +34,32 @@ extension SplatPreviousResultEvidence {
 
         let snapshotURL = projectURL.appendingPathComponent(fileName)
         let backupURL = projectURL.appendingPathComponent(assetFileName)
-        guard let snapshotData = readIntegritySnapshotDataIfSafe(
-                  at: snapshotURL,
-                  fileManager: fileManager
-              ),
-              let snapshot = try? JSONDecoder().decode(Snapshot.self, from: snapshotData),
-              snapshot.schemaVersion == Snapshot.currentSchemaVersion,
-              snapshot.originalEvidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
-              snapshot.originalEvidence.fileName == ScanProjectStore.splatResultFileName,
-              snapshot.originalEvidence.byteCount > 0,
-              snapshot.originalEvidence.byteCount % 32 == 0,
-              snapshotCanRecover(snapshot, failedEvidence: evidence),
-              isIndependentRegularFileForIntegrityRecovery(backupURL),
-              try fileByteCountForIntegrityRecovery(backupURL, fileManager: fileManager) == snapshot.originalEvidence.byteCount,
-              try sha256ForIntegrityRecovery(backupURL) == snapshot.sha256 else {
+        let snapshotData = readIntegritySnapshotDataIfSafe(at: snapshotURL, fileManager: fileManager)
+        let snapshot = snapshotData.flatMap { try? JSONDecoder().decode(Snapshot.self, from: $0) }
+        let schemaValid = snapshot?.schemaVersion == Snapshot.currentSchemaVersion
+        let evidenceSchemaValid = snapshot?.originalEvidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion
+        let filenameValid = snapshot?.originalEvidence.fileName == ScanProjectStore.splatResultFileName
+        let byteCountValid = (snapshot?.originalEvidence.byteCount ?? 0) > 0
+            && (snapshot?.originalEvidence.byteCount ?? 0) % 32 == 0
+        let sizeMatches = snapshot.map { $0.originalEvidence.byteCount == evidence.byteCount } ?? false
+        let oldBeforeNew = snapshot.map { $0.originalEvidence.completedAt <= evidence.completedAt } ?? false
+        let savedBeforeNew = snapshot.map { $0.preservedAt <= evidence.completedAt } ?? false
+        let generationEligible = snapshot.map { snapshotCanRecover($0, failedEvidence: evidence) } ?? false
+        let regularBackup = isIndependentRegularFileForIntegrityRecovery(backupURL)
+        let backupSizeValid = snapshot.map {
+            (try? fileByteCountForIntegrityRecovery(backupURL, fileManager: fileManager)) == $0.originalEvidence.byteCount
+        } ?? false
+        let backupSHAValid = snapshot.map {
+            (try? sha256ForIntegrityRecovery(backupURL)) == $0.sha256
+        } ?? false
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["SCANLAB_RECOVERY_DIAGNOSTICS"] == "1" {
+            print("SCANLAB_RECOVERY_PREDICATES snapshotReadable=\(snapshotData != nil) snapshotDecodable=\(snapshot != nil) schema=\(schemaValid) evidenceSchema=\(evidenceSchemaValid) filename=\(filenameValid) byteCount=\(byteCountValid) sameSize=\(sizeMatches) oldBeforeNew=\(oldBeforeNew) preservedBeforeNew=\(savedBeforeNew) generationEligible=\(generationEligible) regularBackup=\(regularBackup) backupSize=\(backupSizeValid) backupSHA=\(backupSHAValid)")
+        }
+        #endif
+        guard let snapshot,
+              schemaValid, evidenceSchemaValid, filenameValid, byteCountValid,
+              generationEligible, regularBackup, backupSizeValid, backupSHAValid else {
             return false
         }
 
