@@ -1,3 +1,4 @@
+import Darwin
 import CryptoKit
 import XCTest
 
@@ -178,6 +179,8 @@ final class SplatCompletionVerifierTests: XCTestCase {
         try Data(repeating: 0x71, count: 64).write(to: resultURL, options: .atomic)
         try FileManager.default.setAttributes([.modificationDate: modificationDate], ofItemAtPath: resultURL.path)
 
+        setenv("SCANLAB_RECOVERY_DIAGNOSTICS", "1", 1)
+        defer { unsetenv("SCANLAB_RECOVERY_DIAGNOSTICS") }
         XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: resultURL), resultURL)
         XCTAssertEqual(try Data(contentsOf: resultURL), trustedBytes)
         let recovered = try store.loadManifest(projectURL: projectURL)
