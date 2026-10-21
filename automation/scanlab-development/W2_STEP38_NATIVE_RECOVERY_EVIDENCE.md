@@ -55,3 +55,9 @@ No Queue mutation or unauthorized release branch writes.
 - Cause hypothesis: PR events created with GitHub App credentials may not trigger Actions automatically; this has not been conclusively verified via GitHub installation or repository Actions settings. Do not claim a confirmed root cause.
 - Recommended action: an authorized human/CI actor triggers `Splat Native iOS Build` via GitHub Actions `Run workflow` selecting `attempt/scanlab-w2-step41-native-ci-20261021-a3`. Verify run.head_sha equals `a6de3b0918da24fe62532f8ed7f396afa8c446f1`, then inspect completed/success, integrated XCTest count, zero failures, logs and artifact. Alternatively use a properly authorized workflow_dispatch interface. Avoid further PR close/reopen or meaningless source commits.
 - No merge or HQ release actions; no Queue mutation. Status BLOCKED_CI_DISPATCH / HQ NO-GO.
+
+## STEP43 — no new CI / safety stop
+- PR #5640 remains open/Draft at immutable exact-source SHA `a6de3b0918da24fe62532f8ed7f396afa8c446f1`.
+- GitHub API `actions/runs?head_sha=a6de3b0918da24fe62532f8ed7f396afa8c446f1` returned `total_count: 0`. Queue blob remains `ebba8d4a793b53a0abfd4f18bad0c6144f17b4bd`; Worker2 Native lock epoch2 preserved.
+- CI blocker unchanged: native workflow has a workflow_dispatch path but connected GitHub tools offer no new dispatch operation. Re-running a historical old-SHA job cannot test the new SHA. Repeated PR toggles or source commits solely for trigger are avoided.
+- Requires authorized GitHub UI Actions > Splat Native iOS Build > Run workflow > branch `attempt/scanlab-w2-step41-native-ci-20261021-a3`. Verify exact head SHA, completed/success and XCTest test count=actual log/zero failures. **NO-GO** until verified.
