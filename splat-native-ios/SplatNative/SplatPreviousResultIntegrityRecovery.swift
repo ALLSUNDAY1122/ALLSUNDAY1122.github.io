@@ -100,6 +100,7 @@ extension SplatPreviousResultEvidence {
                     ofItemAtPath: partialURL.path
                 )
                 guard try sha256ForIntegrityRecovery(partialURL) == snapshot.sha256 else {
+                    try? fileManager.removeItem(at: partialURL)
                     return false
                 }
             }
