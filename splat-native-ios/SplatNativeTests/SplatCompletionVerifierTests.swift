@@ -120,6 +120,41 @@ final class SplatCompletionVerifierTests: XCTestCase {
         XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: resultURL))
     }
 
+    func testPreviousGenerationEligibilityRejectsTimestampAndSizeRegressions() {
+        let old = SplatCommitEvidence(
+            fileName: ScanProjectStore.splatResultFileName,
+            byteCount: 64,
+            completedAt: Date(timeIntervalSince1970: 10)
+        )
+        let newer = SplatCommitEvidence(
+            fileName: ScanProjectStore.splatResultFileName,
+            byteCount: 64,
+            completedAt: Date(timeIntervalSince1970: 30)
+        )
+        let valid = SplatPreviousResultEvidence.Snapshot(
+            originalEvidence: old, sha256: "sha-fixture",
+            preservedAt: Date(timeIntervalSince1970: 20)
+        )
+        XCTAssertTrue(SplatPreviousResultEvidence.snapshotCanRecover(valid, failedEvidence: newer))
+        let latePreservation = SplatPreviousResultEvidence.Snapshot(
+            originalEvidence: old, sha256: "sha-fixture",
+            preservedAt: Date(timeIntervalSince1970: 40)
+        )
+        XCTAssertFalse(SplatPreviousResultEvidence.snapshotCanRecover(latePreservation, failedEvidence: newer))
+        let earlierGeneration = SplatCommitEvidence(
+            fileName: ScanProjectStore.splatResultFileName,
+            byteCount: 64,
+            completedAt: Date(timeIntervalSince1970: 5)
+        )
+        XCTAssertFalse(SplatPreviousResultEvidence.snapshotCanRecover(valid, failedEvidence: earlierGeneration))
+        let wrongSize = SplatCommitEvidence(
+            fileName: ScanProjectStore.splatResultFileName,
+            byteCount: 96,
+            completedAt: Date(timeIntervalSince1970: 30)
+        )
+        XCTAssertFalse(SplatPreviousResultEvidence.snapshotCanRecover(valid, failedEvidence: wrongSize))
+    }
+
     func testRestoresTrustedPreviousResultWhenCurrentSameSizeResultFailsStrongIntegrity() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
