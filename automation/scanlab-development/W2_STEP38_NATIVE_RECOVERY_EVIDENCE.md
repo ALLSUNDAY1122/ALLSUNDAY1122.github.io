@@ -34,3 +34,10 @@ No Queue mutation or unauthorized release branch writes.
 - Triggered a non-code `pull_request: reopened` attempt by closing and immediately reopening same PR through GitHub; API readback confirmed open/Draft, original head unchanged, base unchanged, no merge.
 - Immediately after reopening, Actions list (branch and pull_request event queries) still showed only old Native cancelled #39533009521 at obsolete SHA and older skipped push jobs, no new exact-head run. Thus this is an event attempt, **not proof that a workflow was scheduled**.
 - Current full Native XCTest success is UNKNOWN and HQ NO-GO remains. No new release, upload, App Review, or Queue mutation.
+
+## STEP40 continuation — diagnostic rerun of old cancelled job
+- Date 2026-10-21 JST. Queue SHA remains `ebba8d4a793b53a0abfd4f18bad0c6144f17b4bd`; Worker2 Native claim epoch2 unchanged.
+- PR #5639 currently open/Draft, before this evidence commit HEAD `1d801fad091d512e88f7b3a17d513890331ac5d1`; no exact-head Native workflow runs found.
+- Connected GitHub Actions API lacks create workflow_dispatch; has rerun_workflow_job. Requested rerun of previously cancelled native job `119003092478` from workflow run `39533009521`, returned `success:true`.
+- Independent readback: run `39533009521` now attempt 2, status `queued`, associated historical source SHA `525fc662fd6700e03c98abc6c5eade51bafa204a`, new build job `119037069871` queued. Run URL: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/39533009521
+- This is **historical-source diagnostic ONLY**. NEVER use results as exact-head acceptance of later recovery commits (`361b0ed5`, `0969228c`, `133c1e04`, `70393f62`, `1d801fad`). Current repair HEAD Native XCTest: NOT CERTIFIED. HQ release NO-GO.
