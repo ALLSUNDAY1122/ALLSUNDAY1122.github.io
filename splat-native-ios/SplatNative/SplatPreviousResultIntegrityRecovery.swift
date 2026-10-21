@@ -85,6 +85,24 @@ extension SplatPreviousResultEvidence {
                 try? fileManager.removeItem(at: partialURL)
                 return false
             }
+            // A clone/copy may retain a backup inode's later mtime. The previous
+            // generation is authenticated by its SHA-256 snapshot and commit evidence,
+            // but the post-recovery strong verifier also requires result mtime no later
+            // than the restored completion timestamp. Normalize ONLY the verified
+            // staged copy; never rewrite the preserved backup or the untrusted result.
+            let stagedAttributes = try fileManager.attributesOfItem(atPath: partialURL.path)
+            guard let stagedModification = stagedAttributes[.modificationDate] as? Date else {
+                return false
+            }
+            if stagedModification > snapshot.originalEvidence.completedAt {
+                try fileManager.setAttributes(
+                    [.modificationDate: snapshot.originalEvidence.completedAt],
+                    ofItemAtPath: partialURL.path
+                )
+                guard try sha256ForIntegrityRecovery(partialURL) == snapshot.sha256 else {
+                    return false
+                }
+            }
             try synchronizeIntegrityRecoveryFile(at: partialURL)
             try Task.checkCancellation()
 
