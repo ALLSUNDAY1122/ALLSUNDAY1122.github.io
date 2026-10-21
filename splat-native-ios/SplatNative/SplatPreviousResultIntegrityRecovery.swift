@@ -149,7 +149,7 @@ extension SplatPreviousResultEvidence {
         }
     }
 
-    private static func snapshotCanRecover(
+    static func snapshotCanRecover(
         _ snapshot: Snapshot,
         failedEvidence: SplatCommitEvidence
     ) -> Bool {
