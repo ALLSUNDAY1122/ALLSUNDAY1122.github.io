@@ -155,18 +155,38 @@ enum SplatCompletionVerifier {
         fileManager: FileManager
     ) throws -> String {
         do {
-            guard try SplatPreviousResultEvidence.recoverTrustedPreviousAfterIntegrityFailure(
+            let restored = try SplatPreviousResultEvidence.recoverTrustedPreviousAfterIntegrityFailure(
                 projectURL: projectURL,
                 evidence: failedEvidence,
                 fileManager: fileManager
-            ), let restoredEvidence = loadValidEvidence(at: evidenceURL, fileManager: fileManager) else {
-                throw VerificationError.completionEvidenceMismatch
-            }
-            return try SplatStrongCompletionEvidence.verifyOrSeal(
-                sourceURL: expectedURL,
-                evidence: restoredEvidence,
-                fileManager: fileManager
             )
+            let restoredEvidence = restored ? loadValidEvidence(at: evidenceURL, fileManager: fileManager) : nil
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["SCANLAB_RECOVERY_DIAGNOSTICS"] == "1" {
+                print("SCANLAB_RECOVERY_VERIFY recovered=\(restored) restoredEvidenceValid=\(restoredEvidence != nil) evidenceChanged=\(restoredEvidence.map { $0 != failedEvidence } ?? false)")
+            }
+            #endif
+            guard let restoredEvidence else { throw VerificationError.completionEvidenceMismatch }
+            do {
+                let hash = try SplatStrongCompletionEvidence.verifyOrSeal(
+                    sourceURL: expectedURL,
+                    evidence: restoredEvidence,
+                    fileManager: fileManager
+                )
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["SCANLAB_RECOVERY_DIAGNOSTICS"] == "1" {
+                    print("SCANLAB_RECOVERY_VERIFY strongSeal=true")
+                }
+                #endif
+                return hash
+            } catch {
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["SCANLAB_RECOVERY_DIAGNOSTICS"] == "1" {
+                    print("SCANLAB_RECOVERY_VERIFY strongSeal=false errorKind=\(String(describing: type(of: error)))")
+                }
+                #endif
+                throw error
+            }
         } catch is CancellationError {
             throw CancellationError()
         } catch {
