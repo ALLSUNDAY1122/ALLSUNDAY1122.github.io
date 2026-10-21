@@ -47,3 +47,11 @@ No Queue mutation or unauthorized release branch writes.
 - Exact prior repair source HEAD `a6de3b0918da24fe62532f8ed7f396afa8c446f1` was cloned without modifying contents into branch `attempt/scanlab-w2-step41-native-ci-20261021-a3`.
 - Created Draft PR #5640 https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/pull/5640 against existing Worker2 Native base `attempt/scanlab-w1-takeover-w2-20261020-a2` to elicit a fresh pull_request Native CI for exact source commit. Readback PR HEAD matched `a6de3b0918da24fe62532f8ed7f396afa8c446f1`.
 - Immediately after creation, branch-scoped Actions query was empty; do NOT assert run scheduled or completed. Recheck and collect full logs, count and status before acceptance. No merge, Queue edit, release, Codemagic, Apple action.
+
+## STEP42 — exact-source PR remains without CI
+- As of 2026-10-21 14:39 JST, PR #5640 https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/pull/5640 remains open/Draft with head exactly `a6de3b0918da24fe62532f8ed7f396afa8c446f1`; base head `6046660061b25efec0029b9ee9b95c7af19d3a7d`.
+- Independent GitHub Actions readbacks: workflow runs filtered by branch `attempt/scanlab-w2-step41-native-ci-20261021-a3` empty; runs filtered by exact head SHA also total_count=0. Native XCTest on this SHA NOT CERTIFIED.
+- Connected GitHub tool catalog does not expose a workflow_dispatch endpoint, only rerun of existing job. Earlier old-SHA rerun succeeded but cannot certify new source.
+- Cause hypothesis: PR events created with GitHub App credentials may not trigger Actions automatically; this has not been conclusively verified via GitHub installation or repository Actions settings. Do not claim a confirmed root cause.
+- Recommended action: an authorized human/CI actor triggers `Splat Native iOS Build` via GitHub Actions `Run workflow` selecting `attempt/scanlab-w2-step41-native-ci-20261021-a3`. Verify run.head_sha equals `a6de3b0918da24fe62532f8ed7f396afa8c446f1`, then inspect completed/success, integrated XCTest count, zero failures, logs and artifact. Alternatively use a properly authorized workflow_dispatch interface. Avoid further PR close/reopen or meaningless source commits.
+- No merge or HQ release actions; no Queue mutation. Status BLOCKED_CI_DISPATCH / HQ NO-GO.
