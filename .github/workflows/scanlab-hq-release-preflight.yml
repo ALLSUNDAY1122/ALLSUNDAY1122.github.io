@@ -1,0 +1,53 @@
+name: Scan Lab HQ Release Source Preflight (read only)
+
+on:
+  pull_request:
+    branches:
+      - attempt/scanlab-hq-001-20261020-a1
+    paths:
+      - .github/workflows/scanlab-hq-release-preflight.yml
+      - automation/scanlab-development/scripts/verify_scanlab_release_candidate.py
+  push:
+    branches:
+      - attempt/scanlab-hq-001-20261020-a1
+    paths:
+      - .github/workflows/scanlab-hq-release-preflight.yml
+      - automation/scanlab-development/scripts/verify_scanlab_release_candidate.py
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scanlab-hq-release-preflight
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify pinned source and Codemagic release policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout HQ preflight only
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Fetch source refs without mutation
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin \
+            +refs/heads/feature/splat-native-ios-poc:refs/remotes/origin/feature/splat-native-ios-poc \
+            +refs/heads/release/scanlab-testflight:refs/remotes/origin/release/scanlab-testflight \
+            +refs/heads/attempt/scanlab-release-candidate-20261020-a1:refs/remotes/origin/attempt/scanlab-release-candidate-20261020-a1
+      - name: Execute pinned read-only provenance preflight
+        run: |
+          set -euo pipefail
+          python3 automation/scanlab-development/scripts/verify_scanlab_release_candidate.py \
+            --product origin/feature/splat-native-ios-poc \
+            --release origin/release/scanlab-testflight \
+            --candidate origin/attempt/scanlab-release-candidate-20261020-a1
+      - name: Record limitations
+        if: always()
+        run: |
+          echo "This job does not run Native XCTest, build IPA, sign, upload, or assign internal TestFlight." >> "$GITHUB_STEP_SUMMARY"
+          echo "Native full CI PASS is a separately required release gate." >> "$GITHUB_STEP_SUMMARY"

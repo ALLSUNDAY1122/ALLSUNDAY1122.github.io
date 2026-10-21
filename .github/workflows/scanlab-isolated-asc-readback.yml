@@ -1,0 +1,54 @@
+name: Scan Lab Isolated ASC Build and Internal Group Readback
+
+on:
+  push:
+    branches:
+      - attempt/scanlab-hq-001-20261020-a1
+    paths:
+      - automation/scanlab-development/asc-readback-trigger.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated_readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify immutable target identity
+        run: |
+          python3 - <<'PY'
+          import json
+          with open('automation/scanlab-development/asc-readback-trigger.json',encoding='utf-8') as f: d=json.load(f)
+          assert d.get('bundle_id') == 'jp.allsunday1122.splatlab'
+          assert d.get('app_id') == '6803778932'
+          assert d.get('read_only') is True
+          assert d.get('submit_to_app_store') is False
+          PY
+      - name: Read Apple Build and internal group relationships
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 automation/scanlab-development/asc_isolated_readback.py
+      - name: Verify Apple app identity and result schema
+        run: |
+          python3 - <<'PY'
+          import json
+          with open('scanlab-asc-isolated-result.json',encoding='utf-8') as f: x=json.load(f)
+          assert x['app_id'] == '6803778932' and x['bundle_id'] == 'jp.allsunday1122.splatlab'
+          assert x['credentials_persisted'] is False and x['read_only'] is True
+          assert isinstance(x['beta_groups'],list)
+          print('PASS isolated identity and beta-group schema; release promotion still blocked')
+          PY
+      - name: Preserve non-secret evidence without writing to product branch
+        uses: actions/upload-artifact@v4
+        with:
+          name: scanlab-isolated-apple-readback-${{ github.run_id }}
+          path: scanlab-asc-isolated-result.json
+          retention-days: 7
+          if-no-files-found: error
