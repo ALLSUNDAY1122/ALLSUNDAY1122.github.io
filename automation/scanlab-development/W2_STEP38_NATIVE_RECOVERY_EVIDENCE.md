@@ -41,3 +41,9 @@ No Queue mutation or unauthorized release branch writes.
 - Connected GitHub Actions API lacks create workflow_dispatch; has rerun_workflow_job. Requested rerun of previously cancelled native job `119003092478` from workflow run `39533009521`, returned `success:true`.
 - Independent readback: run `39533009521` now attempt 2, status `queued`, associated historical source SHA `525fc662fd6700e03c98abc6c5eade51bafa204a`, new build job `119037069871` queued. Run URL: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/39533009521
 - This is **historical-source diagnostic ONLY**. NEVER use results as exact-head acceptance of later recovery commits (`361b0ed5`, `0969228c`, `133c1e04`, `70393f62`, `1d801fad`). Current repair HEAD Native XCTest: NOT CERTIFIED. HQ release NO-GO.
+
+## STEP41 — old SHA diagnostic PASS; exact-code CI PR created
+- Historical run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/39533009521, attempt 2, source `525fc662fd6700e03c98abc6c5eade51bafa204a`: completed/success. Full integrated XCTest runner output: 248 tests, 0 failures. Job ID `119037069871`. Diagnostic only; this does not certify the later changes.
+- Exact prior repair source HEAD `a6de3b0918da24fe62532f8ed7f396afa8c446f1` was cloned without modifying contents into branch `attempt/scanlab-w2-step41-native-ci-20261021-a3`.
+- Created Draft PR #5640 https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/pull/5640 against existing Worker2 Native base `attempt/scanlab-w1-takeover-w2-20261020-a2` to elicit a fresh pull_request Native CI for exact source commit. Readback PR HEAD matched `a6de3b0918da24fe62532f8ed7f396afa8c446f1`.
+- Immediately after creation, branch-scoped Actions query was empty; do NOT assert run scheduled or completed. Recheck and collect full logs, count and status before acceptance. No merge, Queue edit, release, Codemagic, Apple action.
