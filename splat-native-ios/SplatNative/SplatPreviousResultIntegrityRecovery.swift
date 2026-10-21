@@ -34,6 +34,26 @@ extension SplatPreviousResultEvidence {
 
         let snapshotURL = projectURL.appendingPathComponent(fileName)
         let backupURL = projectURL.appendingPathComponent(assetFileName)
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["SCANLAB_RECOVERY_DIAGNOSTICS"] == "1" {
+            let diagnosticData = readIntegritySnapshotDataIfSafe(at: snapshotURL, fileManager: fileManager)
+            let diagnosticSnapshot = diagnosticData.flatMap { try? JSONDecoder().decode(Snapshot.self, from: $0) }
+            let fileSafe = isIndependentRegularFileForIntegrityRecovery(backupURL)
+            let backupCount = fileSafe ? try? fileByteCountForIntegrityRecovery(backupURL, fileManager: fileManager) : nil
+            let verifiedHash = fileSafe ? try? sha256ForIntegrityRecovery(backupURL) : nil
+            let sameBytes = diagnosticSnapshot.map { $0.originalEvidence.byteCount == evidence.byteCount } ?? false
+            let generationOrder = diagnosticSnapshot.map { $0.originalEvidence.completedAt <= evidence.completedAt } ?? false
+            let preservationOrder = diagnosticSnapshot.map { $0.preservedAt <= evidence.completedAt } ?? false
+            let backupLengthOK = diagnosticSnapshot.map { backupCount == $0.originalEvidence.byteCount } ?? false
+            let backupHashOK = diagnosticSnapshot.map { verifiedHash == $0.sha256 } ?? false
+            let iso = ISO8601DateFormatter()
+            iso.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            print("SCANLAB_RECOVERY_GUARD snapshotParsed=\(diagnosticSnapshot != nil) schema=\(diagnosticSnapshot.map { $0.schemaVersion == Snapshot.currentSchemaVersion } ?? false) backupRegular=\(fileSafe) sameSize=\(sameBytes) orderedGeneration=\(generationOrder) orderedPreservation=\(preservationOrder) backupSize=\(backupLengthOK) backupSHA=\(backupHashOK)")
+            if let diagnosticSnapshot {
+                print("SCANLAB_RECOVERY_GUARD oldCompleted=\(iso.string(from: diagnosticSnapshot.originalEvidence.completedAt)) preserved=\(iso.string(from: diagnosticSnapshot.preservedAt)) failedCompleted=\(iso.string(from: evidence.completedAt))")
+            }
+        }
+        #endif
         guard let snapshotData = readIntegritySnapshotDataIfSafe(
                   at: snapshotURL,
                   fileManager: fileManager
