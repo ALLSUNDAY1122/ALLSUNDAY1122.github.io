@@ -159,7 +159,29 @@ final class SplatCompletionVerifierTests: XCTestCase {
         try Data(repeating: 0x71, count: 64).write(to: resultURL, options: .atomic)
         try FileManager.default.setAttributes([.modificationDate: modificationDate], ofItemAtPath: resultURL.path)
 
-        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: resultURL), resultURL)
+        setenv("SCANLAB_RECOVERY_DIAGNOSTICS", "1", 1)
+        defer { unsetenv("SCANLAB_RECOVERY_DIAGNOSTICS") }
+        do {
+            XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: resultURL), resultURL)
+        } catch {
+            let backup = projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName)
+            let metadata = projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName)
+            let snapshot = try? JSONDecoder().decode(
+                SplatPreviousResultEvidence.Snapshot.self, from: Data(contentsOf: metadata)
+            )
+            let persisted = try? JSONDecoder().decode(
+                SplatCommitEvidence.self, from: Data(contentsOf: evidenceURL)
+            )
+            let backupIsPresent = FileManager.default.fileExists(atPath: backup.path)
+            let restoredBytes = (try? Data(contentsOf: resultURL)) == trustedBytes
+            let restoredEvidence = snapshot.map { persisted == $0.originalEvidence } ?? false
+            let currentModification = (try? FileManager.default.attributesOfItem(atPath: resultURL.path)[.modificationDate]) as? Date
+            let restoredMtimeValid = snapshot.map { previous in
+                currentModification.map { $0 <= previous.originalEvidence.completedAt } ?? false
+            } ?? false
+            print("SCANLAB_RECOVERY_FAILURE_WITNESS backupPresent=\(backupIsPresent) restoredBytes=\(restoredBytes) restoredEvidence=\(restoredEvidence) restoredMtimeValid=\(restoredMtimeValid) errorType=\(String(describing: type(of: error)))")
+            throw error
+        }
         XCTAssertEqual(try Data(contentsOf: resultURL), trustedBytes)
         let recovered = try store.loadManifest(projectURL: projectURL)
         XCTAssertTrue(recovered.recoveredAfterInterruption)
