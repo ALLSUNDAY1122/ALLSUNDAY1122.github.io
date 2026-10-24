@@ -1,2 +1,4 @@
 beautifulsoup4==4.12.3
 requests==2.32.3
+# Prevent vulnerable TLS CA bundles (GHSA-6q48-6c7w-9gw2).
+certifi>=2026.10.19
