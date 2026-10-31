@@ -29,8 +29,8 @@ jobs:
           pin=json.loads(Path("automation/app2-002/build11-release-pin.json").read_text(encoding="utf-8"))
           cfg=yaml.safe_load(Path("automation/app2-002/build11-codemagic-snapshot.yaml").read_text(encoding="utf-8"))["workflows"][pin["workflow_id"]]
           assert pin["repository"] == "ALLSUNDAY1122/nomikai-arcade-ios"
-          assert pin["branch"] == "release/nomikai-build11-pinned-20261031"
-          assert pin["source_commit"] == "fe7c09888cedc9a6be267c3d5c0f0e9d305baa6a"
+          assert pin["branch"] == "release/nomikai-build11-pinned2-20261031"
+          assert pin["source_commit"] == "6d6245ae2d99a345ef236a1d5e8d3ba3dd38b292"
           assert pin["codemagic_app_id"] == "6a66134ea9f671d548da335a"
           assert registry["app_id"] == pin["app_store_app_id"] == "6794847479"
           assert registry["bundle_id"] == pin["bundle_id"] == "jp.allsunday1122.nomikaiarcade"
