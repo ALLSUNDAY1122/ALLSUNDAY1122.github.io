@@ -1,39 +1,63 @@
 {
-  "request_id": "pitari-asc-readback-20261031-assets-d",
-  "completed_at": "2026-10-31T13:53:02.737720+00:00",
+  "request_id": "pitari-asc-20261031-build11-assets-preflight2",
+  "completed_at": "2026-10-31T14:02:17.506507+00:00",
   "results": [
     {
-      "label": "pitari-localization",
+      "label": "selected-build",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "d0ac3685-4e7b-49d9-a86f-0736e8088e76",
+          "type": "builds",
+          "attributes": {}
+        }
+      ]
+    },
+    {
+      "label": "screenshots",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "e268c8c1-bb46-44e2-8bf0-7163a6367fd0",
+          "type": "appScreenshots",
+          "attributes": {}
+        },
+        {
+          "id": "911e8b77-4d7f-42b2-b441-5c666a1d0826",
+          "type": "appScreenshots",
+          "attributes": {}
+        }
+      ]
+    },
+    {
+      "label": "review-submissions",
+      "http_status": 200,
+      "data": []
+    },
+    {
+      "label": "version",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "e0aa7c21-0569-4e59-85e7-3cc3afe65dff",
+          "type": "appStoreVersions",
+          "attributes": {
+            "versionString": "1.0",
+            "platform": "IOS",
+            "appStoreState": "PREPARE_FOR_SUBMISSION",
+            "appVersionState": "PREPARE_FOR_SUBMISSION"
+          }
+        }
+      ]
+    },
+    {
+      "label": "app-version-l10n",
       "http_status": 200,
       "data": [
         {
           "id": "415714d1-5d12-4f37-87e2-7da943a70518",
           "type": "appStoreVersionLocalizations",
           "attributes": {}
-        }
-      ]
-    },
-    {
-      "label": "pitari-screenshot-sets",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "32b924ca-603f-4003-b61f-46b41a1e469e",
-          "type": "appScreenshotSets",
-          "attributes": {}
-        }
-      ]
-    },
-    {
-      "label": "pitari-app-info-localizations",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "14b47cfe-c755-4106-aa1f-8e281ca11f5b",
-          "type": "appInfoLocalizations",
-          "attributes": {
-            "name": "ぴたりサイズ"
-          }
         }
       ]
     }
