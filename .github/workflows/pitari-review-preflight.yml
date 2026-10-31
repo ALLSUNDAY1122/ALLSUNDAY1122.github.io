@@ -1,0 +1,70 @@
+name: Pitari Build 11 App Review Read-Only Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-review-preflight-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Verify authoritative app identity and run read-only review preflight
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          python scripts/app_release_registry_audit.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cmd=json.loads(Path('automation/pitari-review-preflight-command.json').read_text())
+          required={'app_id':'6795941132','bundle_id':'jp.allsunday.pitariresize','version':'1.0','build':'11'}
+          if any(str(cmd.get(k))!=v for k,v in required.items()):
+              raise SystemExit('Preflight target mismatch; refusing to query')
+          registry=json.loads(Path('automation/app-release-registry.json').read_text())
+          if 'pitari' in registry['apps'] and (str(registry['apps']['pitari'].get('app_id'))!='6795941132' or registry['apps']['pitari'].get('bundle_id')!='jp.allsunday.pitariresize'):
+              raise SystemExit('Registry identity conflict')
+          # Temporary identity overlay permits READ-ONLY diagnostic, not release submission.
+          registry['apps']['pitari']={'name':'ぴたりサイズ','app_id':'6795941132','bundle_id':'jp.allsunday.pitariresize','app2_task':None,'status':'diagnostic_only','readback':True}
+          Path('/tmp/pitari-readonly-registry.json').write_text(json.dumps(registry))
+          PY
+          set +e
+          APP_RELEASE_REGISTRY=/tmp/pitari-readonly-registry.json python scripts/app_release_submission_preflight.py --app pitari --version 1.0 --build 11 --output /tmp/pitari-review-preflight.json
+          code=$?
+          set -e
+          if [ ! -s /tmp/pitari-review-preflight.json ]; then echo "No preflight result" >&2; exit 1; fi
+          echo "Read-only preflight returned code $code (non-zero is expected when review gates are blocked)"
+      - name: Preserve sanitized read-only evidence in unique path
+        if: always()
+        run: |
+          set -euo pipefail
+          if [ ! -s /tmp/pitari-review-preflight.json ]; then exit 0; fi
+          path="automation/asc-results/pitari-review-preflight-${GITHUB_RUN_ID}.json"
+          cp /tmp/pitari-review-preflight.json "$path"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$path"
+          git commit -m "evidence: Pitari iOS 1.0 Build 11 read-only App Review preflight"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Upload preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pitari-build11-review-preflight
+          path: /tmp/pitari-review-preflight.json
+          if-no-files-found: warn
