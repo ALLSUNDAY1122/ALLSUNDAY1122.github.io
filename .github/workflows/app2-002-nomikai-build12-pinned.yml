@@ -29,7 +29,7 @@ jobs:
           pin=json.loads(Path("automation/app2-002/build12-release-pin.json").read_text(encoding="utf-8"))
           cfg=yaml.safe_load(Path("automation/app2-002/build12-codemagic-snapshot.yaml").read_text(encoding="utf-8"))["workflows"][pin["workflow_id"]]
           assert pin["repository"] == "ALLSUNDAY1122/nomikai-arcade-ios"
-          assert pin["branch"] == "release/nomikai-build12-pinned2-20261031"
+          assert pin["branch"] == "release/nomikai-build12-qa-fix-20261101"
           assert pin["source_commit"] == "90921eeb5a471353de68e86483670de2d5a76e12"
           assert pin["codemagic_app_id"] == "6a66134ea9f671d548da335a"
           assert registry["app_id"] == pin["app_store_app_id"] == "6794847479"
@@ -65,7 +65,7 @@ jobs:
           build_id=data.get("buildId") or data.get("id")
           if not build_id or status not in (200,201,202):
             raise SystemExit(f"Codemagic did not confirm build start (HTTP {status})")
-          record={"app_id":pin["codemagic_app_id"],"branch":pin["branch"],"source_commit_expected":pin["source_commit"],"workflow_id":pin["workflow_id"],"build_number_expected":"11","build_id":build_id,"status":"started","app_review_submitted":False,"build_url":"https://codemagic.io/app/"+pin["codemagic_app_id"]+"/build/"+str(build_id)}
+          record={"app_id":pin["codemagic_app_id"],"branch":pin["branch"],"source_commit_expected":pin["source_commit"],"workflow_id":pin["workflow_id"],"build_number_expected":"12","build_id":build_id,"status":"started","app_review_submitted":False,"build_url":"https://codemagic.io/app/"+pin["codemagic_app_id"]+"/build/"+str(build_id)}
           Path("nomikai-build12-result.json").write_text(json.dumps(record,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
           print("Codemagic pinned TestFlight build started: "+str(build_id))
           PY
