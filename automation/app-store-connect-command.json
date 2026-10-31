@@ -1,30 +1,30 @@
 {
-  "request_id": "pitari-asc-20261031-build11-assets-preflight2",
+  "request_id": "nomikai-asc-state-20261031-2313",
   "requests": [
     {
-      "label": "selected-build",
+      "label": "app",
       "method": "GET",
-      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff/relationships/build"
+      "path": "/v1/apps/6794847479"
     },
     {
-      "label": "screenshots",
+      "label": "versions",
       "method": "GET",
-      "path": "/v1/appScreenshotSets/32b924ca-603f-4003-b61f-46b41a1e469e/appScreenshots?limit=100"
+      "path": "/v1/apps/6794847479/appStoreVersions?limit=50"
+    },
+    {
+      "label": "builds",
+      "method": "GET",
+      "path": "/v1/apps/6794847479/builds?limit=100"
     },
     {
       "label": "review-submissions",
       "method": "GET",
-      "path": "/v1/apps/6795941132/reviewSubmissions?limit=50"
+      "path": "/v1/apps/6794847479/reviewSubmissions?limit=50"
     },
     {
-      "label": "version",
+      "label": "app-infos",
       "method": "GET",
-      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff"
-    },
-    {
-      "label": "app-version-l10n",
-      "method": "GET",
-      "path": "/v1/appStoreVersionLocalizations/415714d1-5d12-4f37-87e2-7da943a70518"
+      "path": "/v1/apps/6794847479/appInfos?limit=20&include=appInfoLocalizations"
     }
   ]
 }
