@@ -1,15 +1,25 @@
 {
-  "request_id": "nomikai-app-review-detail-screen-sets-20261031-2402",
+  "request_id": "nomikai-build11-beta-screenshots-20261031-2410",
   "requests": [
     {
-      "label": "review-detail-link",
+      "label": "groups",
       "method": "GET",
-      "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b/relationships/appStoreReviewDetail"
+      "path": "/v1/apps/6794847479/betaGroups?limit=100"
     },
     {
-      "label": "screenshot-sets",
+      "label": "assigned-groups",
       "method": "GET",
-      "path": "/v1/appStoreVersionLocalizations/c5594cd3-427f-4d2a-8b62-55358c7825b6/appScreenshotSets?limit=100"
+      "path": "/v1/builds/9089d080-0d27-43bd-aa3e-aedf8b639e61/betaGroups?limit=100"
+    },
+    {
+      "label": "screenshot-assets",
+      "method": "GET",
+      "path": "/v1/appScreenshotSets/97823792-2bbe-42fb-a738-6b5e4b7e9c4d/appScreenshots?limit=100"
+    },
+    {
+      "label": "build-beta-detail",
+      "method": "GET",
+      "path": "/v1/builds/9089d080-0d27-43bd-aa3e-aedf8b639e61/buildBetaDetail"
     }
   ]
 }
