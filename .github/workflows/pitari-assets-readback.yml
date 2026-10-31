@@ -1,0 +1,46 @@
+name: Pitari App Store Asset Readback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-assets-readback-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Run official Apple API read-only inspection
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/pitari_asc_assets_readback.py
+      - name: Persist unique sanitized readback
+        run: |
+          set -euo pipefail
+          p="automation/asc-results/pitari-assets-${GITHUB_RUN_ID}.json"
+          cp /tmp/pitari-asset-check.json "$p"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$p"
+          git commit -m "evidence: Pitari Apple screenshot and IAP readback"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pitari-asset-readback
+          path: /tmp/pitari-asset-check.json
+          if-no-files-found: warn
