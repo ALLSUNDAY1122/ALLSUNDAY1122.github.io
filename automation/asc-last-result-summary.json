@@ -1,7 +1,78 @@
 {
-  "request_id": "nomikai-asc-detail-20261031-2328",
-  "completed_at": "2026-10-31T14:19:46.022007+00:00",
+  "request_id": "nomikai-build11-metadata-read-20261031-2350",
+  "completed_at": "2026-10-31T14:28:02.725599+00:00",
   "results": [
+    {
+      "label": "build11",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "9089d080-0d27-43bd-aa3e-aedf8b639e61",
+          "type": "builds",
+          "attributes": {
+            "version": "11",
+            "uploadedDate": "2026-10-31T07:25:51-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2027-01-29T06:25:51-08:00",
+            "minOsVersion": "16.0"
+          }
+        }
+      ]
+    },
+    {
+      "label": "version",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "7dcad63e-8c82-4d19-8dc5-873458bca58b",
+          "type": "appStoreVersions",
+          "attributes": {
+            "versionString": "1.0.0",
+            "platform": "IOS",
+            "appStoreState": "PREPARE_FOR_SUBMISSION",
+            "appVersionState": "PREPARE_FOR_SUBMISSION",
+            "copyright": "2026 KOHEI MORITA"
+          }
+        }
+      ]
+    },
+    {
+      "label": "version-ja",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "c5594cd3-427f-4d2a-8b62-55358c7825b6",
+          "type": "appStoreVersionLocalizations",
+          "attributes": {
+            "locale": "ja",
+            "description": "「リレーアーケード」は、2〜4人が1台のiPhoneを順番に使って遊ぶ、同じ場所向けのパーティーゲーム集です。\n\n名前を入れたら、すぐにゲーム開始。アカウント、通信、追加の道具は必要ありません。\n\n独自の「リレーカップ」では、3・5・7ラウンドから大会の長さを選択。毎回ランダムに選ばれるミニゲームを全員で遊び、ラウンドごとの勝者を記録して合計得点でチャンピオンを決めます。途中経過は端末内に保存されるため、大会を中断しても続きから再開できます。\n\nゲームは「お通し」「サラダ」「一品料理」「名物」「〆」の順に分類。短く軽いゲームから、会話が深まるゲームまで、その場の空気に合わせて選べます。\n\n最後に遊ぶ「〆にどうぞ」では、全員が1人ずつ秘密投票。「今夜の盛り上げ役」と、遊んだ中から「今夜の一皿」を選び、その会だけの結果を一枚にまとめます。\n\n収録ゲームは全20種類。\n\n・瞬間タップバトル\n・数字クライシス\n・お題連想バトル\n・ミステリーカプセル\n・光の記憶\n・早押し雑学バトル\n・シェイク対決\n・絶妙タイマー\n・運命の割り勘ルーレット\n・ワードウルフ\n・ミラクルダービー\n・カウント30\n・ドキドキ質問ルーレット\n・王様ゲーム・ライト\n・指ツイスター\n・以心伝心ワード\n・秘密の多数決\n・カップル成立シミュレーター\n・ホンネ or パス\n・〆にどうぞ\n\nBGMと効果音は個別に切り替え可能。プレイヤー名、大会の途中経過、チャレンジ記録、その会で遊んだゲーム、〆の結果、音量設定は端末内に保存されます。\n\n本アプリに飲酒を要求・推奨するルールはありません。飲み物の有無を問わず、友達や家族と遊べます。",
+            "keywords": "パーティー,ミニゲーム,対戦,友達,家族,ワードウルフ,クイズ,反射神経,記憶,オフライン",
+            "promotionalText": "スマホ1台をみんなで回して対戦。軽い「お通し」から最後の「〆」まで、遊びの重さで選べる20種類を収録。",
+            "supportUrl": "https://nomikai-arcade-support.bon110159.chatgpt.site/",
+            "marketingUrl": null,
+            "whatsNew": null
+          }
+        }
+      ]
+    },
+    {
+      "label": "app-info-ja",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "693f9319-d865-4d81-867e-df2df6345a06",
+          "type": "appInfoLocalizations",
+          "attributes": {
+            "name": "呑み処アーケード",
+            "locale": "ja",
+            "subtitle": "みんなで遊べる宴会ゲーム19選",
+            "privacyPolicyUrl": "https://nomikai-arcade-support.bon110159.chatgpt.site/privacy",
+            "privacyChoicesUrl": null
+          }
+        }
+      ]
+    },
     {
       "label": "selected-build",
       "http_status": 200,
@@ -10,43 +81,6 @@
           "id": "f0a3be6b-8857-4c8d-9c31-00594aa6340f",
           "type": "builds",
           "attributes": {}
-        }
-      ]
-    },
-    {
-      "label": "version-localizations",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "c5594cd3-427f-4d2a-8b62-55358c7825b6",
-          "type": "appStoreVersionLocalizations",
-          "attributes": {}
-        }
-      ]
-    },
-    {
-      "label": "app-localizations",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "693f9319-d865-4d81-867e-df2df6345a06",
-          "type": "appInfoLocalizations",
-          "attributes": {
-            "name": "呑み処アーケード"
-          }
-        }
-      ]
-    },
-    {
-      "label": "review-submission-items",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "ZGE4NDI0NjctMjc5NC00NzE3LWEzNzQtM2QyNTFkNGQ2NTdjfDZ8ODg4ODY1NjQ4",
-          "type": "reviewSubmissionItems",
-          "attributes": {
-            "state": "APPROVED"
-          }
         }
       ]
     }
