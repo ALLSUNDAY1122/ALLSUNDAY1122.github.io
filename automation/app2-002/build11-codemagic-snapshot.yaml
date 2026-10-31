@@ -1,0 +1,132 @@
+workflows:
+  ios-native:
+    name: 呑み処アーケード iOS TestFlight
+    max_build_duration: 40
+    instance_type: mac_mini_m2
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: codex/nomikai-review-compliance-20261031
+          include: true
+      cancel_previous_builds: true
+    integrations:
+      app_store_connect: Codemagic Shiwake Swipe
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.nomikaiarcade
+      vars:
+        BUNDLE_ID: "jp.allsunday1122.nomikaiarcade"
+        APP_STORE_APPLE_ID: "6794847479"
+        XCODE_PROJECT: "NomikaiArcade.xcodeproj"
+        XCODE_SCHEME: "NomikaiArcade"
+      xcode: latest
+    scripts:
+      - name: Verify Build 11 core startup isolation contract
+        script: |
+          cd "$CM_BUILD_DIR"
+          grep -q '<title>呑み処アーケード</title>' nomikai-arcade.html
+          grep -q '<h1 class="site-title">呑み処アーケード</h1>' nomikai-arcade.html
+          grep -q '<div class="lantern-row">' nomikai-arcade.html
+          grep -q 'ホンネ or パス' nomikai-arcade.html
+          grep -q '〆にどうぞ' nomikai-arcade.html
+          grep -q 'GAMES.shime = ' nomikai-arcade.html
+          if grep -Eq '一口飲|飲ませ|逃げて飲む|笑ったら両方飲む' nomikai-arcade.html; then
+            echo 'FAIL: drinking penalties remain in gameplay source'
+            exit 1
+          fi
+          if grep -q '〆にどうぞ' nomikai-arcade.html; then
+            echo 'FAIL: removed closing copy is still present in source HTML'
+            exit 1
+          fi
+          grep -q '^import SwiftUI$' NomikaiArcadeApp.swift
+          if grep -Eq 'GoogleMobileAds|UserMessagingPlatform|MobileAds|ConsentForm|GADApplicationIdentifier|ca-app-pub-' NomikaiArcadeApp.swift; then
+            echo 'FAIL: ad/consent SDK runtime code remains in app entry point'
+            exit 1
+          fi
+          if grep -Eq 'Google-Mobile-Ads-SDK|GoogleUserMessagingPlatform' Podfile; then
+            echo 'FAIL: ad/consent CocoaPods remain in Build 11 isolation Podfile'
+            exit 1
+          fi
+          echo 'PASS: Build 11 launches only SwiftUI + local WKWebView core.'
+      - name: Set Build 11 and export compliance key
+        script: |
+          cd "$CM_BUILD_DIR"
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('NomikaiArcade.xcodeproj/project.pbxproj')
+          text = p.read_text(encoding='utf-8')
+          old = 'CURRENT_PROJECT_VERSION = 1;'
+          count = text.count(old)
+          if count != 2:
+              raise SystemExit(f'Expected two project build-number entries, found {count}')
+          text = text.replace(old, 'CURRENT_PROJECT_VERSION = 11;')
+          anchor = 'INFOPLIST_KEY_CFBundleDisplayName = "呑み処アーケード";'
+          if text.count(anchor) != 2:
+              raise SystemExit('Expected two CFBundleDisplayName anchors')
+          replacement = anchor + '\n\t\t\t\tINFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;'
+          text = text.replace(anchor, replacement)
+          if 'GADApplicationIdentifier' in text:
+              raise SystemExit('Build 11 isolation must not contain GADApplicationIdentifier')
+          p.write_text(text, encoding='utf-8')
+          print('PASS: Build 11 + export compliance key set; no ad plist key injected')
+          PY
+      - name: Verify Xcode project
+        script: |
+          xcodebuild -list \
+            -project "$CM_BUILD_DIR/$XCODE_PROJECT"
+      - name: Apply App Store signing profile
+        script: |
+          xcode-project use-profiles \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT"
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+      - name: Verify signed IPA core-only contract
+        script: |
+          cd "$CM_BUILD_DIR"
+          IPA="$(find build/ios/ipa -name '*.ipa' -type f | head -1)"
+          test -n "$IPA" -a -f "$IPA"
+          rm -rf /tmp/nomikai-ipa-check
+          mkdir -p /tmp/nomikai-ipa-check
+          unzip -q "$IPA" -d /tmp/nomikai-ipa-check
+          APP="$(find /tmp/nomikai-ipa-check/Payload -maxdepth 1 -name '*.app' -type d | head -1)"
+          test -n "$APP" -a -d "$APP"
+          HTML="$APP/nomikai-arcade.html"
+          test -f "$HTML"
+          grep -q '<h1 class="site-title">呑み処アーケード</h1>' "$HTML"
+          grep -q '<div class="lantern-row">' "$HTML"
+          grep -q 'ホンネ or パス' "$HTML"
+          grep -q '〆にどうぞ' "$HTML"
+          grep -q 'GAMES.shime = ' "$HTML"
+          if grep -Eq '一口飲|飲ませ|逃げて飲む|笑ったら両方飲む' "$HTML"; then
+            echo 'FAIL: drinking penalties remain in signed IPA'
+            exit 1
+          fi
+          if grep -q '〆にどうぞ' "$HTML"; then
+            echo 'FAIL: removed closing copy is still present in signed IPA'
+            exit 1
+          fi
+          PLIST="$APP/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$PLIST" | grep -Fxq '11'
+          /usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$PLIST" | grep -q 'false'
+          if /usr/libexec/PlistBuddy -c 'Print :GADApplicationIdentifier' "$PLIST" >/dev/null 2>&1; then
+            echo 'FAIL: GADApplicationIdentifier exists in Build 11 isolation IPA'
+            exit 1
+          fi
+          if find "$APP" -maxdepth 2 \( -name 'GoogleMobileAdsResources.bundle' -o -name 'UserMessagingPlatformResources.bundle' \) | grep -q .; then
+            echo 'FAIL: Google ad/UMP resource bundle exists in Build 11 isolation IPA'
+            exit 1
+          fi
+          echo 'PASS: signed Build 11 is core-only and contains the real 20-game HTML.'
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
