@@ -1,5 +1,5 @@
 {
-  "request_id": "nomikai-build12-processing-verification-20261101-v1",
+  "request_id": "nomikai-build12-selected-confirm-20261101-v1",
   "requests": [
     {
       "label": "build12",
@@ -7,14 +7,14 @@
       "path": "/v1/builds/4666f53b-7713-4d77-a04d-c3516885b2cc"
     },
     {
-      "label": "build12-beta",
-      "method": "GET",
-      "path": "/v1/builds/4666f53b-7713-4d77-a04d-c3516885b2cc/buildBetaDetail"
-    },
-    {
       "label": "version",
       "method": "GET",
       "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b"
+    },
+    {
+      "label": "selected-build",
+      "method": "GET",
+      "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b/relationships/build"
     }
   ]
 }
