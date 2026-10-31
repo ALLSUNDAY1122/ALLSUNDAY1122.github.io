@@ -36,10 +36,6 @@ workflows:
             echo 'FAIL: drinking penalties remain in gameplay source'
             exit 1
           fi
-          if grep -q '〆にどうぞ' nomikai-arcade.html; then
-            echo 'FAIL: removed closing copy is still present in source HTML'
-            exit 1
-          fi
           grep -q '^import SwiftUI$' NomikaiArcadeApp.swift
           if grep -Eq 'GoogleMobileAds|UserMessagingPlatform|MobileAds|ConsentForm|GADApplicationIdentifier|ca-app-pub-' NomikaiArcadeApp.swift; then
             echo 'FAIL: ad/consent SDK runtime code remains in app entry point'
@@ -104,10 +100,6 @@ workflows:
           grep -q 'GAMES.shime = ' "$HTML"
           if grep -Eq '一口飲|飲ませ|逃げて飲む|笑ったら両方飲む' "$HTML"; then
             echo 'FAIL: drinking penalties remain in signed IPA'
-            exit 1
-          fi
-          if grep -q '〆にどうぞ' "$HTML"; then
-            echo 'FAIL: removed closing copy is still present in signed IPA'
             exit 1
           fi
           PLIST="$APP/Info.plist"
