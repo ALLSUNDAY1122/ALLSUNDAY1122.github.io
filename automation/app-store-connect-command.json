@@ -1,30 +1,30 @@
 {
-  "request_id": "nomikai-build11-asc-readback-20261031-2343",
+  "request_id": "nomikai-build11-metadata-read-20261031-2350",
   "requests": [
     {
-      "label": "app",
+      "label": "build11",
       "method": "GET",
-      "path": "/v1/apps/6794847479"
+      "path": "/v1/builds/9089d080-0d27-43bd-aa3e-aedf8b639e61"
     },
     {
-      "label": "versions",
+      "label": "version",
       "method": "GET",
-      "path": "/v1/apps/6794847479/appStoreVersions?limit=50"
+      "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b"
     },
     {
-      "label": "builds",
+      "label": "version-ja",
       "method": "GET",
-      "path": "/v1/apps/6794847479/builds?limit=100"
+      "path": "/v1/appStoreVersionLocalizations/c5594cd3-427f-4d2a-8b62-55358c7825b6"
+    },
+    {
+      "label": "app-info-ja",
+      "method": "GET",
+      "path": "/v1/appInfoLocalizations/693f9319-d865-4d81-867e-df2df6345a06"
     },
     {
       "label": "selected-build",
       "method": "GET",
       "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b/relationships/build"
-    },
-    {
-      "label": "review-submissions",
-      "method": "GET",
-      "path": "/v1/apps/6794847479/reviewSubmissions?limit=50"
     }
   ]
 }
