@@ -1,25 +1,25 @@
 {
-  "request_id": "pitari-asc-readback-20261031-preflight-b",
+  "request_id": "pitari-asc-readback-20261031-assets-c",
   "requests": [
     {
-      "label": "selected-build",
+      "label": "pitari-localization",
       "method": "GET",
-      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff/relationships/build"
+      "path": "/v1/appStoreVersionLocalizations/415714d1-5d12-4f37-87e2-7da943a70518"
     },
     {
-      "label": "review-detail",
+      "label": "pitari-screenshot-sets",
       "method": "GET",
-      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff/appStoreReviewDetail"
+      "path": "/v1/appStoreVersionLocalizations/415714d1-5d12-4f37-87e2-7da943a70518/appScreenshotSets?limit=100"
     },
     {
-      "label": "version-localizations",
+      "label": "pitari-app-info-localizations",
       "method": "GET",
-      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff/appStoreVersionLocalizations?limit=50"
+      "path": "/v1/appInfos/563220f9-d9e6-425b-9221-703c2bc5435a/appInfoLocalizations?limit=50"
     },
     {
-      "label": "app-infos",
+      "label": "pitari-ipa-versions",
       "method": "GET",
-      "path": "/v1/apps/6795941132/appInfos?limit=50"
+      "path": "/v1/inAppPurchases/6798713983/inAppPurchaseLocalizations?limit=50"
     }
   ]
 }
