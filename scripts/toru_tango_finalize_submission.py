@@ -72,7 +72,8 @@ def png_size(path: Path) -> tuple[int, int]:
 def display_type_for(path: Path) -> str:
     size = png_size(path)
     mapping = {
-        (1320, 2868): "APP_IPHONE_69",
+        # 1320x2868 is the 6.9-inch iPhone pixel size; the ASC API uses the consolidated APP_IPHONE_67 type.
+        (1320, 2868): "APP_IPHONE_67",
         (1290, 2796): "APP_IPHONE_67",
         (1284, 2778): "APP_IPHONE_65",
         (1242, 2688): "APP_IPHONE_65",
