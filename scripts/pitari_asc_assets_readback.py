@@ -49,7 +49,7 @@ def main():
                         "display_type":attrs(ss).get("screenshotDisplayType"),
                         "screenshots_count":len(rows(shots.get("data"))) if shots["ok"] else None,
                         "screenshots_ok":shots["ok"],
-                        "screenshots":[{"id":im.get("id"),"asset_status":attrs(im).get("assetDeliveryState",{}).get("state") if isinstance(attrs(im).get("assetDeliveryState"),dict) else None} for im in rows(shots.get("data"))] if shots["ok"] else []
+                        "screenshots":[{"id":im.get("id"),"file_name":attrs(im).get("fileName"),"file_size":attrs(im).get("fileSize"),"image_asset":attrs(im).get("imageAsset"),"delivery":attrs(im).get("assetDeliveryState")} for im in rows(shots.get("data"))] if shots["ok"] else []
                     })
             else: entry["screenshot_sets_error"]=sets["error_type"]
             result["localizations"].append(entry)
