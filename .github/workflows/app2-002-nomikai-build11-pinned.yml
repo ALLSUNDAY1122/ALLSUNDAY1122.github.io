@@ -1,0 +1,91 @@
+name: APP2-002 Pinned Build11 TestFlight via Shared Codemagic Token
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: app2-002-build11-pinned
+  cancel-in-progress: false
+
+jobs:
+  start:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP2-002] Start pinned Build11 TestFlight'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate canonical app target and frozen safe TestFlight workflow
+        run: |
+          python -m pip install --disable-pip-version-check PyYAML
+          python3 - <<'PY'
+          import json, yaml
+          from pathlib import Path
+          registry=json.loads(Path("automation/app-release-registry.json").read_text(encoding="utf-8"))["apps"]["nomidokoro"]
+          pin=json.loads(Path("automation/app2-002/build11-release-pin.json").read_text(encoding="utf-8"))
+          cfg=yaml.safe_load(Path("automation/app2-002/build11-codemagic-snapshot.yaml").read_text(encoding="utf-8"))["workflows"][pin["workflow_id"]]
+          assert pin["repository"] == "ALLSUNDAY1122/nomikai-arcade-ios"
+          assert pin["branch"] == "release/nomikai-build11-pinned-20261031"
+          assert pin["source_commit"] == "fe7c09888cedc9a6be267c3d5c0f0e9d305baa6a"
+          assert pin["codemagic_app_id"] == "6a66134ea9f671d548da335a"
+          assert registry["app_id"] == pin["app_store_app_id"] == "6794847479"
+          assert registry["bundle_id"] == pin["bundle_id"] == "jp.allsunday1122.nomikaiarcade"
+          assert pin["app_review_submit_enabled"] is False
+          assert cfg["environment"]["vars"]["APP_STORE_APPLE_ID"] == pin["app_store_app_id"]
+          assert cfg["environment"]["vars"]["BUNDLE_ID"] == pin["bundle_id"]
+          publishing=cfg["publishing"]["app_store_connect"]
+          assert publishing["submit_to_app_store"] is False, "App Review submission is forbidden"
+          assert publishing["submit_to_testflight"] is True
+          scripts="\n".join(step.get("script","") for step in cfg["scripts"])
+          assert "CURRENT_PROJECT_VERSION = 11;" in scripts
+          assert "GAMES.shime = " in scripts
+          print("PASS: canonical registry, pinned source, signed TestFlight-only workflow")
+          PY
+      - name: Request exactly one pinned Codemagic build
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          test -n "$CM_API_TOKEN" || { echo "BLOCKED: missing shared CM_API_TOKEN"; exit 1; }
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          pin=json.loads(Path("automation/app2-002/build11-release-pin.json").read_text(encoding="utf-8"))
+          payload={"appId":pin["codemagic_app_id"],"workflowId":pin["workflow_id"],"branch":pin["branch"]}
+          req=urllib.request.Request("https://api.codemagic.io/builds",data=json.dumps(payload).encode("utf-8"),headers={"x-auth-token":os.environ["CM_API_TOKEN"],"Content-Type":"application/json","Accept":"application/json"},method="POST")
+          try:
+            with urllib.request.urlopen(req,timeout=30) as res:
+              data=json.loads(res.read().decode("utf-8"))
+              status=res.status
+          except urllib.error.HTTPError as ex:
+            raise SystemExit(f"Codemagic POST rejected: HTTP {ex.code}") from None
+          build_id=data.get("buildId") or data.get("id")
+          if not build_id or status not in (200,201,202):
+            raise SystemExit(f"Codemagic did not confirm build start (HTTP {status})")
+          record={"app_id":pin["codemagic_app_id"],"branch":pin["branch"],"source_commit_expected":pin["source_commit"],"workflow_id":pin["workflow_id"],"build_number_expected":"11","build_id":build_id,"status":"started","app_review_submitted":False,"build_url":"https://codemagic.io/app/"+pin["codemagic_app_id"]+"/build/"+str(build_id)}
+          Path("nomikai-build11-result.json").write_text(json.dumps(record,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          print("Codemagic pinned TestFlight build started: "+str(build_id))
+          PY
+      - name: Upload sanitized build locator
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app2-002-nomikai-build11-${{ github.run_id }}
+          path: nomikai-build11-result.json
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Report to command issue
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            let line = 'Build11 pinned TestFlight command: status=${{ job.status }}; run_id=' + context.runId;
+            if (fs.existsSync('nomikai-build11-result.json')) {
+              const r = JSON.parse(fs.readFileSync('nomikai-build11-result.json','utf8'));
+              line += '; build_id=' + r.build_id + '; build_url=' + r.build_url;
+            }
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: line});
