@@ -111,6 +111,16 @@ def validate_write_operation(item: object, index: int) -> dict:
             "app_info_id": validate_resource_id(item.get("app_info_id"), "app info id"),
             "attributes": validate_attributes(item.get("attributes"), APP_INFO_LOCALIZATION_ATTRS, op_type),
         }
+    if op_type == "update_review_notes":
+        notes = item.get("notes")
+        if not isinstance(notes, str) or not notes.strip() or len(notes) > 4000:
+            raise ValueError("Review notes must be a non-empty string under 4000 characters.")
+        return {
+            "type": op_type,
+            "app_store_version_id": validate_resource_id(item.get("app_store_version_id"), "app store version id"),
+            "review_detail_id": validate_resource_id(item.get("review_detail_id"), "review detail id"),
+            "notes": notes,
+        }
     if op_type == "attach_build":
         return {
             "type": op_type,
@@ -400,6 +410,42 @@ def execute_write(token: str, command: dict) -> list[dict]:
                 f"/v1/appInfoLocalizations/{op['id']}",
                 op["attributes"],
             )
+        elif op_type == "update_review_notes":
+            version_id = op["app_store_version_id"]
+            review_detail_id = op["review_detail_id"]
+            ensure_version_belongs_to_app(token, app_id, version_id)
+            _, linkage = api_get(token, f"/v1/appStoreVersions/{version_id}/relationships/appStoreReviewDetail")
+            if review_detail_id not in get_data_ids(linkage):
+                raise RuntimeError("Review detail does not belong to target App Store version.")
+            path = f"/v1/appStoreReviewDetails/{review_detail_id}"
+            _, before = api_get(token, path)
+            before_attrs = (before.get("data") or {}).get("attributes") or {}
+            changed = before_attrs.get("notes") != op["notes"]
+            patch_status = None
+            if changed:
+                payload = {
+                    "data": {
+                        "type": "appStoreReviewDetails",
+                        "id": review_detail_id,
+                        "attributes": {"notes": op["notes"]},
+                    }
+                }
+                patch_status, _ = api_request(token, path, method="PATCH", payload=payload)
+            _, after = api_get(token, path)
+            attrs = (after.get("data") or {}).get("attributes") or {}
+            if attrs.get("notes") != op["notes"]:
+                raise RuntimeError("Review notes read-back mismatch.")
+            # Do not emit private reviewer contact details or raw review notes to public CI artifacts.
+            outcome = {
+                "changed": changed,
+                "http_status": patch_status,
+                "review_detail_id": review_detail_id,
+                "notes_match": True,
+                "contact_phone_present": bool(attrs.get("contactPhone")),
+                "contact_email_present": bool(attrs.get("contactEmail")),
+                "contact_name_present": bool(attrs.get("contactFirstName")) and bool(attrs.get("contactLastName")),
+                "demo_account_required": attrs.get("demoAccountRequired"),
+            }
         elif op_type == "attach_build":
             ensure_version_belongs_to_app(token, app_id, op["app_store_version_id"])
             ensure_build_belongs_to_app(token, app_id, op["build_id"])
