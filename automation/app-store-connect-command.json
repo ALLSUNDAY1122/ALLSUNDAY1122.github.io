@@ -1,30 +1,15 @@
 {
-  "request_id": "nomikai-build11-postwrite-verify-20261031-2358",
+  "request_id": "nomikai-app-review-detail-screen-sets-20261031-2402",
   "requests": [
     {
-      "label": "build11",
+      "label": "review-detail-link",
       "method": "GET",
-      "path": "/v1/builds/9089d080-0d27-43bd-aa3e-aedf8b639e61"
+      "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b/relationships/appStoreReviewDetail"
     },
     {
-      "label": "version",
+      "label": "screenshot-sets",
       "method": "GET",
-      "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b"
-    },
-    {
-      "label": "selected-build",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b/relationships/build"
-    },
-    {
-      "label": "store-description",
-      "method": "GET",
-      "path": "/v1/appStoreVersionLocalizations/c5594cd3-427f-4d2a-8b62-55358c7825b6"
-    },
-    {
-      "label": "store-subtitle-privacy",
-      "method": "GET",
-      "path": "/v1/appInfoLocalizations/693f9319-d865-4d81-867e-df2df6345a06"
+      "path": "/v1/appStoreVersionLocalizations/c5594cd3-427f-4d2a-8b62-55358c7825b6/appScreenshotSets?limit=100"
     }
   ]
 }
