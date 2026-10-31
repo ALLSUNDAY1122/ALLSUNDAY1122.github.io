@@ -1,0 +1,49 @@
+name: APP2-002 Verify Public Support and Privacy Pages
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  verify:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP2-002] Verify Nomikai support pages'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify HTTP status and exact deployed content
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="https://allsunday1122.github.io/nomikai-arcade-support"
+          for ITEM in "support:/" "privacy:/privacy/"; do
+            KIND="${ITEM%%:*}"
+            ROUTE="${ITEM#*:}"
+            TARGET="$BASE$ROUTE"
+            BODY="/tmp/nomikai-$KIND.html"
+            HTTP_CODE="$(curl -sSL --max-time 25 -o "$BODY" -w '%{http_code}' "$TARGET")"
+            echo "$KIND HTTP=$HTTP_CODE"
+            test "$HTTP_CODE" = "200"
+            grep -q '呑み処アーケード' "$BODY"
+            if [ "$KIND" = "privacy" ]; then
+              grep -q '広告配信・広告目的の追跡' "$BODY"
+              grep -q '秘密投票' "$BODY"
+            else
+              grep -q '〆にどうぞ' "$BODY"
+            fi
+          done
+          echo 'PASS: support and privacy publicly reachable, content current'
+      - name: Report verification
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: 'Support and privacy public HTTP verification: status=${{ job.status }}; run_id=' + context.runId
+            });
