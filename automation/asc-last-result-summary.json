@@ -1,6 +1,6 @@
 {
-  "request_id": "nomikai-build12-processing-verification-20261101-v1",
-  "completed_at": "2026-10-31T22:12:29.591021+00:00",
+  "request_id": "nomikai-build12-selected-confirm-20261101-v1",
+  "completed_at": "2026-10-31T22:14:02.605471+00:00",
   "results": [
     {
       "label": "build12",
@@ -22,20 +22,6 @@
       ]
     },
     {
-      "label": "build12-beta",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "4666f53b-7713-4d77-a04d-c3516885b2cc",
-          "type": "buildBetaDetails",
-          "attributes": {
-            "internalBuildState": "IN_BETA_TESTING",
-            "externalBuildState": "READY_FOR_BETA_SUBMISSION"
-          }
-        }
-      ]
-    },
-    {
       "label": "version",
       "http_status": 200,
       "data": [
@@ -49,6 +35,17 @@
             "appVersionState": "PREPARE_FOR_SUBMISSION",
             "copyright": "2026 KOHEI MORITA"
           }
+        }
+      ]
+    },
+    {
+      "label": "selected-build",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "4666f53b-7713-4d77-a04d-c3516885b2cc",
+          "type": "builds",
+          "attributes": {}
         }
       ]
     }
