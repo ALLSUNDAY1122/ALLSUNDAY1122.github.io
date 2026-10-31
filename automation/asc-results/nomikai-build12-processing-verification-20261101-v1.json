@@ -1,0 +1,56 @@
+{
+  "request_id": "nomikai-build12-processing-verification-20261101-v1",
+  "completed_at": "2026-10-31T22:12:29.591021+00:00",
+  "results": [
+    {
+      "label": "build12",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "4666f53b-7713-4d77-a04d-c3516885b2cc",
+          "type": "builds",
+          "attributes": {
+            "version": "12",
+            "uploadedDate": "2026-10-31T15:11:20-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2027-01-29T14:11:20-08:00",
+            "minOsVersion": "16.0",
+            "buildAudienceType": "APP_STORE_ELIGIBLE"
+          }
+        }
+      ]
+    },
+    {
+      "label": "build12-beta",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "4666f53b-7713-4d77-a04d-c3516885b2cc",
+          "type": "buildBetaDetails",
+          "attributes": {
+            "internalBuildState": "IN_BETA_TESTING",
+            "externalBuildState": "READY_FOR_BETA_SUBMISSION"
+          }
+        }
+      ]
+    },
+    {
+      "label": "version",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "7dcad63e-8c82-4d19-8dc5-873458bca58b",
+          "type": "appStoreVersions",
+          "attributes": {
+            "versionString": "1.0.0",
+            "platform": "IOS",
+            "appStoreState": "PREPARE_FOR_SUBMISSION",
+            "appVersionState": "PREPARE_FOR_SUBMISSION",
+            "copyright": "2026 KOHEI MORITA"
+          }
+        }
+      ]
+    }
+  ]
+}
