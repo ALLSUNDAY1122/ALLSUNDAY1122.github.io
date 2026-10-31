@@ -1,7 +1,30 @@
 {
-  "request_id": "toru-build-relationship-readback-20260915-0630",
+  "request_id": "pitari-asc-readback-20261031-build11-a",
   "requests": [
-    {"label":"toru-version-build-relationship","method":"GET","path":"/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/relationships/build"},
-    {"label":"toru-build10","method":"GET","path":"/v1/builds/03cf658a-0e65-402d-b766-be97f7ca9b09"}
+    {
+      "label": "pitari-app",
+      "method": "GET",
+      "path": "/v1/apps/6795941132"
+    },
+    {
+      "label": "pitari-versions",
+      "method": "GET",
+      "path": "/v1/apps/6795941132/appStoreVersions?limit=100"
+    },
+    {
+      "label": "pitari-builds",
+      "method": "GET",
+      "path": "/v1/apps/6795941132/builds?limit=200"
+    },
+    {
+      "label": "pitari-review",
+      "method": "GET",
+      "path": "/v1/apps/6795941132/reviewSubmissions?limit=100"
+    },
+    {
+      "label": "pitari-iap",
+      "method": "GET",
+      "path": "/v1/apps/6795941132/inAppPurchasesV2?limit=100"
+    }
   ]
 }
