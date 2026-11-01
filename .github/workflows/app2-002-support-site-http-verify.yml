@@ -30,9 +30,10 @@ jobs:
             grep -q '呑み処アーケード' "$BODY"
             if [ "$KIND" = "privacy" ]; then
               grep -q '広告配信・広告目的の追跡' "$BODY"
-              grep -q '秘密投票' "$BODY"
+              ! grep -q '秘密投票' "$BODY"
             else
-              grep -q '〆にどうぞ' "$BODY"
+              grep -q '19種類のゲーム' "$BODY"
+              ! grep -q '〆にどうぞ' "$BODY"
             fi
           done
           echo 'PASS: support and privacy publicly reachable, content current'
