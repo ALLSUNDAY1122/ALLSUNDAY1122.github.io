@@ -1,20 +1,30 @@
 {
-  "request_id": "nomikai-build12-selected-confirm-20261101-v1",
+  "request_id": "nomikai-build13-19games-readback-20261101-1020",
   "requests": [
-    {
-      "label": "build12",
-      "method": "GET",
-      "path": "/v1/builds/4666f53b-7713-4d77-a04d-c3516885b2cc"
-    },
     {
       "label": "version",
       "method": "GET",
       "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b"
     },
     {
+      "label": "build-list",
+      "method": "GET",
+      "path": "/v1/apps/6794847479/builds?limit=100"
+    },
+    {
       "label": "selected-build",
       "method": "GET",
       "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b/relationships/build"
+    },
+    {
+      "label": "description",
+      "method": "GET",
+      "path": "/v1/appStoreVersionLocalizations/c5594cd3-427f-4d2a-8b62-55358c7825b6"
+    },
+    {
+      "label": "subtitle",
+      "method": "GET",
+      "path": "/v1/appInfoLocalizations/693f9319-d865-4d81-867e-df2df6345a06"
     }
   ]
 }
