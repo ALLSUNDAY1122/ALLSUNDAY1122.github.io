@@ -111,6 +111,14 @@ def validate_write_operation(item: object, index: int) -> dict:
             "app_info_id": validate_resource_id(item.get("app_info_id"), "app info id"),
             "attributes": validate_attributes(item.get("attributes"), APP_INFO_LOCALIZATION_ATTRS, op_type),
         }
+    if op_type == "set_nomikai_alcohol_reference_rating":
+        if item.get("app_info_id") != "f48984ff-b308-432a-a8a8-d53db07bb61b":
+            raise ValueError("Nomikai app info ID mismatch")
+        if item.get("age_rating_id") != "f48984ff-b308-432a-a8a8-d53db07bb61b":
+            raise ValueError("Nomikai age rating ID mismatch")
+        if item.get("value") != "INFREQUENT":
+            raise ValueError("Only INFREQUENT alcohol references are authorized")
+        return {"type":op_type,"app_info_id":item["app_info_id"],"age_rating_id":item["age_rating_id"],"value":"INFREQUENT"}
     if op_type == "update_review_notes":
         notes = item.get("notes")
         if not isinstance(notes, str) or not notes.strip() or len(notes) > 4000:
@@ -409,6 +417,17 @@ def execute_write(token: str, command: dict) -> list[dict]:
                 op["id"],
                 f"/v1/appInfoLocalizations/{op['id']}",
                 op["attributes"],
+            )
+        elif op_type == "set_nomikai_alcohol_reference_rating":
+            if app_id != "6794847479":
+                raise RuntimeError("Wrong app for Nomikai age rating")
+            _, linkage = api_get(token, f"/v1/appInfos/{op['app_info_id']}/ageRatingDeclaration")
+            if op["age_rating_id"] not in get_data_ids(linkage):
+                raise RuntimeError("Age rating declaration does not belong to the intended app")
+            outcome = update_resource_attributes(
+                token, "ageRatingDeclarations", op["age_rating_id"],
+                f"/v1/ageRatingDeclarations/{op['age_rating_id']}",
+                {"alcoholTobaccoOrDrugUseOrReferences":op["value"]},
             )
         elif op_type == "update_review_notes":
             version_id = op["app_store_version_id"]
