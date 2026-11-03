@@ -1,29 +1,64 @@
 {
-  "request_id": "nomikai-uploaded-screenshot-state-20261103-1124",
-  "completed_at": "2026-11-03T02:21:55.072306+00:00",
+  "request_id": "nomikai-review-final-independent-readback-20261103-1130",
+  "completed_at": "2026-11-03T02:31:10.588084+00:00",
   "results": [
     {
-      "label": "sets",
+      "label": "review-submission",
       "http_status": 200,
       "data": [
         {
-          "id": "97823792-2bbe-42fb-a738-6b5e4b7e9c4d",
-          "type": "appScreenshotSets",
+          "id": "3065afba-5b6e-4dd6-a73d-b927e42bf239",
+          "type": "reviewSubmissions",
           "attributes": {
-            "screenshotDisplayType": "APP_IPHONE_65"
-          }
-        },
-        {
-          "id": "1dd79094-8178-4e4c-a709-18306d4df918",
-          "type": "appScreenshotSets",
-          "attributes": {
-            "screenshotDisplayType": "APP_IPHONE_61"
+            "platform": "IOS",
+            "state": "WAITING_FOR_REVIEW"
           }
         }
       ]
     },
     {
-      "label": "home",
+      "label": "review-items",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "MzA2NWFmYmEtNWI2ZS00ZGQ2LWE3M2QtYjkyN2U0MmJmMjM5fDZ8ODg4ODY1NjQ4",
+          "type": "reviewSubmissionItems",
+          "attributes": {
+            "state": "READY_FOR_REVIEW"
+          }
+        }
+      ]
+    },
+    {
+      "label": "version",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "7dcad63e-8c82-4d19-8dc5-873458bca58b",
+          "type": "appStoreVersions",
+          "attributes": {
+            "versionString": "1.0.0",
+            "platform": "IOS",
+            "appStoreState": "WAITING_FOR_REVIEW",
+            "appVersionState": "WAITING_FOR_REVIEW",
+            "copyright": "2026 KOHEI MORITA"
+          }
+        }
+      ]
+    },
+    {
+      "label": "selected-build",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "3f27d9b8-4c16-4bce-a75f-b5add1a76ecd",
+          "type": "builds",
+          "attributes": {}
+        }
+      ]
+    },
+    {
+      "label": "screenshots-current",
       "http_status": 200,
       "data": [
         {
@@ -38,13 +73,7 @@
               "state": "COMPLETE"
             }
           }
-        }
-      ]
-    },
-    {
-      "label": "friends",
-      "http_status": 200,
-      "data": [
+        },
         {
           "id": "eb800019-5012-84f7-8039-32feee99409c",
           "type": "appScreenshots",
@@ -54,16 +83,10 @@
             "assetDeliveryState": {
               "errors": [],
               "warnings": null,
-              "state": "UPLOAD_COMPLETE"
+              "state": "COMPLETE"
             }
           }
-        }
-      ]
-    },
-    {
-      "label": "conversation",
-      "http_status": 200,
-      "data": [
+        },
         {
           "id": "a1000019-5012-84f7-8014-b05b7c88adbd",
           "type": "appScreenshots",
@@ -78,6 +101,11 @@
           }
         }
       ]
+    },
+    {
+      "label": "screenshots-old",
+      "http_status": 200,
+      "data": []
     }
   ]
 }
