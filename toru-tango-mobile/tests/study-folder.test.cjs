@@ -18,7 +18,7 @@ vm.runInNewContext(js, {
   module: moduleRef,
   Math,
   getCardReviewStage: (card) => card.reviewStage || 'review',
-  isReviewDue: (card) => !card.nextReviewAt
+  isReviewDue: (card) => (card.reviewStage || 'review') === 'review' && !card.nextReviewAt
 }, { timeout: 1000 });
 const { buildStudyQueue } = moduleRef.exports;
 
