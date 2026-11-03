@@ -1,0 +1,44 @@
+name: Toru Tango App Store Content Rights Fix
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  fix:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Set missing content rights'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify strict content rights script
+        run: |
+          python3 -m py_compile scripts/toru_tango_content_rights.py
+          grep -q 'APP_ID="6795968222"' scripts/toru_tango_content_rights.py
+          grep -q 'VALUE="DOES_NOT_USE_THIRD_PARTY_CONTENT"' scripts/toru_tango_content_rights.py
+      - name: Update and independently verify Apple declaration
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/toru_tango_content_rights.py
+      - name: Save non-secret result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-rights-${{ github.run_id }}
+          path: toru-rights-result.json
+          if-no-files-found: ignore
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs=require('fs');
+            const proof=fs.existsSync('toru-rights-result.json') ? JSON.parse(fs.readFileSync('toru-rights-result.json','utf8')) : null;
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,
+              body:'Toru Tango content rights: status=${{ job.status }}; run_id='+context.runId+(proof?'; verified='+proof.verified+'; content_rights='+proof.content_rights:'')});
