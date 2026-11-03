@@ -1,0 +1,74 @@
+name: APP2-002 Nomikai 19-game App Store Screenshot Sync
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: app2-002-screenshots
+  cancel-in-progress: false
+
+jobs:
+  screenshots:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      (github.event.issue.title == '[APP2-002] Upload 19-game screenshots' ||
+       github.event.issue.title == '[APP2-002] Remove outdated screenshots')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Confirm pinned screenshot manifest and safe Apple target
+        run: |
+          python3 -m py_compile scripts/nomikai_appstore_screenshot_upload.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('automation/app2-002/screenshots/20261103/manifest.json').read_text(encoding='utf-8'))
+          assert data['app_id']=='6794847479'
+          assert data['bundle_id']=='jp.allsunday1122.nomikaiarcade'
+          assert data['build']=='13'
+          assert len(data['entries'])==3
+          for e in data['entries']:
+            assert e['width']==1179 and e['height']==2556
+            assert e['name'] in ('01-home-1179x2556.jpg','02-friends-1179x2556.jpg','03-conversation-1179x2556.jpg')
+            assert Path('automation/app2-002/screenshots/20261103',e['name']).stat().st_size==e['bytes']
+          print('PASS: manifest and physical screenshot assets correspond to Build 13')
+          PY
+      - name: Upload or safely retire legacy screenshots
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          COMMAND_TITLE: ${{ github.event.issue.title }}
+        run: |
+          set -euo pipefail
+          case "$COMMAND_TITLE" in
+            '[APP2-002] Upload 19-game screenshots') PHASE=upload ;;
+            '[APP2-002] Remove outdated screenshots') PHASE=cleanup ;;
+            *) echo 'Unexpected command title'; exit 1 ;;
+          esac
+          python3 scripts/nomikai_appstore_screenshot_upload.py --phase="$PHASE"
+      - name: Save non-secret App Store screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app2-002-screenshot-result-${{ github.run_id }}
+          path: nomikai-screenshot-result.json
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Report execution result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs=require('fs');
+            const obj=fs.existsSync('nomikai-screenshot-result.json')
+              ? JSON.parse(fs.readFileSync('nomikai-screenshot-result.json','utf8')) : null;
+            const note='19-game screenshot sync: status=${{ job.status }}; run_id='+context.runId+
+              (obj ? '; stage='+obj.stage+'; screenshot_count='+obj.images.length+'; review_submitted='+obj.review_submitted : '');
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:note});
