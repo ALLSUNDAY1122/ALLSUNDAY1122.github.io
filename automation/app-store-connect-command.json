@@ -1,35 +1,20 @@
 {
-  "request_id": "torutango-review-details-screen-retry-20261103-1228",
+  "request_id": "torutango-build12-screens-20261103-1230",
   "requests": [
     {
-      "label": "sets",
+      "label": "screens",
       "method": "GET",
-      "path": "/v1/appStoreVersionLocalizations/5e089062-31d4-4b43-b707-e50d6bafb74b/appScreenshotSets?limit=100&include=appScreenshots"
+      "path": "/v1/appScreenshotSets/b6eee5a9-da7e-46e6-ab3b-a0e42643c791/appScreenshots?limit=100"
     },
     {
-      "label": "review-detail",
+      "label": "build12",
       "method": "GET",
-      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/appStoreReviewDetail"
+      "path": "/v1/builds/b184c739-80ca-406d-8c4d-34ab156c3966"
     },
     {
-      "label": "info-localizations",
+      "label": "price",
       "method": "GET",
-      "path": "/v1/appInfos/02b9fefd-04a8-40ba-8fed-c93a2ac2472d/appInfoLocalizations?limit=50"
-    },
-    {
-      "label": "submission-items",
-      "method": "GET",
-      "path": "/v1/reviewSubmissions/455b11ba-3475-4d9b-bed9-680ffcdc600b/items?limit=50&include=appStoreVersion"
-    },
-    {
-      "label": "app",
-      "method": "GET",
-      "path": "/v1/apps/6795968222"
-    },
-    {
-      "label": "version",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df"
+      "path": "/v1/apps/6795968222/appPriceSchedule?include=baseTerritory"
     }
   ]
 }
