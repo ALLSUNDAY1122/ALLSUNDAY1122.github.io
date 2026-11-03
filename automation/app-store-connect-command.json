@@ -1,25 +1,35 @@
 {
-  "request_id": "nomikai-uploaded-screenshot-state-20261103-1124",
+  "request_id": "nomikai-review-final-independent-readback-20261103-1130",
   "requests": [
     {
-      "label": "sets",
+      "label": "review-submission",
       "method": "GET",
-      "path": "/v1/appStoreVersionLocalizations/c5594cd3-427f-4d2a-8b62-55358c7825b6/appScreenshotSets?limit=50"
+      "path": "/v1/reviewSubmissions/3065afba-5b6e-4dd6-a73d-b927e42bf239"
     },
     {
-      "label": "home",
+      "label": "review-items",
       "method": "GET",
-      "path": "/v1/appScreenshots/c7c00019-5012-84f7-802a-902580d20c7b"
+      "path": "/v1/reviewSubmissions/3065afba-5b6e-4dd6-a73d-b927e42bf239/items?limit=20"
     },
     {
-      "label": "friends",
+      "label": "version",
       "method": "GET",
-      "path": "/v1/appScreenshots/eb800019-5012-84f7-8039-32feee99409c"
+      "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b"
     },
     {
-      "label": "conversation",
+      "label": "selected-build",
       "method": "GET",
-      "path": "/v1/appScreenshots/a1000019-5012-84f7-8014-b05b7c88adbd"
+      "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b/relationships/build"
+    },
+    {
+      "label": "screenshots-current",
+      "method": "GET",
+      "path": "/v1/appScreenshotSets/1dd79094-8178-4e4c-a709-18306d4df918/appScreenshots?limit=20"
+    },
+    {
+      "label": "screenshots-old",
+      "method": "GET",
+      "path": "/v1/appScreenshotSets/97823792-2bbe-42fb-a738-6b5e4b7e9c4d/appScreenshots?limit=20"
     }
   ]
 }
