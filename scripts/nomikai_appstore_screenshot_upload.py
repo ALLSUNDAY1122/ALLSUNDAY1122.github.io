@@ -96,7 +96,7 @@ def manifest():
         data=(ROOT/name).read_bytes()
         if hashlib.sha256(data).hexdigest()!=e["sha256"] or len(data)!=e["bytes"]:
             raise RuntimeError("Screenshot SHA-256 or byte length mismatch")
-        if e["width"] != 1179 or e["height"] != 2556 or not data.startswith(b"\\xff\\xd8"):
+        if e["width"] != 1179 or e["height"] != 2556 or not data.startswith(b"\xff\xd8"):
             raise RuntimeError("Screenshot format or dimensions invalid")
     return entries
 
