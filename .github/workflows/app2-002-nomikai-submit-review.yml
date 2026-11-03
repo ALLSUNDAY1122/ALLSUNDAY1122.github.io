@@ -1,0 +1,62 @@
+name: APP2-002 Submit User-Approved Nomikai Build13 to App Review
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: app2-002-final-app-review
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP2-002] Submit Nomikai Build13 to App Review'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Confirm explicit user approval and fixed app identity
+        env:
+          COMMAND_BODY: ${{ github.event.issue.body }}
+        run: |
+          python3 -m py_compile scripts/nomikai_submit_app_review.py
+          python3 - <<'PY'
+          import os,json
+          data=json.loads(os.environ["COMMAND_BODY"])
+          assert data["app_id"]=="6794847479"
+          assert data["bundle_id"]=="jp.allsunday1122.nomikaiarcade"
+          assert data["version"]=="1.0.0"
+          assert data["build"]=="13"
+          assert data["user_approved_submission"] is True
+          assert data["approval_date_jst"]=="2026-11-03"
+          print("PASS: explicit release submission authorization and fixed app target")
+          PY
+      - name: Submit and independently read back Apple's review status
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/nomikai_submit_app_review.py
+      - name: Preserve non-secret submission evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app2-002-nomikai-review-submit-${{ github.run_id }}
+          path: nomikai-review-result.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Report Apple result to command issue
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs=require('fs');
+            const r=fs.existsSync('nomikai-review-result.json')
+              ? JSON.parse(fs.readFileSync('nomikai-review-result.json','utf8')) : null;
+            const message='Nomikai Build13 App Review: status=${{ job.status }}; run_id='+context.runId+
+              (r ? '; submission_id='+r.submission_id+'; apple_state='+r.apple_state+'; confirmed_submitted='+r.submitted_to_app_review : '; no verified submission result');
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:message});
