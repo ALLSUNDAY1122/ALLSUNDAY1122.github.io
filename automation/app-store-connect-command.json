@@ -1,50 +1,40 @@
 {
-  "request_id": "torutango-review-preflight-20261103-1221",
+  "request_id": "torutango-review-details-screenshots-20261103-1227",
   "requests": [
     {
-      "label": "app",
+      "label": "version-ja",
+      "method": "GET",
+      "path": "/v1/appStoreVersionLocalizations/5e089062-31d4-4b43-b707-e50d6bafb74b"
+    },
+    {
+      "label": "sets",
+      "method": "GET",
+      "path": "/v1/appStoreVersionLocalizations/5e089062-31d4-4b43-b707-e50d6bafb74b/appScreenshotSets?limit=100"
+    },
+    {
+      "label": "review-notes",
+      "method": "GET",
+      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/appStoreReviewDetail"
+    },
+    {
+      "label": "info-localizations",
+      "method": "GET",
+      "path": "/v1/appInfos/02b9fefd-04a8-40ba-8fed-c93a2ac2472d/appInfoLocalizations?limit=50"
+    },
+    {
+      "label": "review-items",
+      "method": "GET",
+      "path": "/v1/reviewSubmissions/455b11ba-3475-4d9b-bed9-680ffcdc600b/items?limit=50&include=appStoreVersion"
+    },
+    {
+      "label": "content-rights",
       "method": "GET",
       "path": "/v1/apps/6795968222"
     },
     {
-      "label": "versions",
+      "label": "data-usages",
       "method": "GET",
-      "path": "/v1/apps/6795968222/appStoreVersions?limit=100"
-    },
-    {
-      "label": "builds",
-      "method": "GET",
-      "path": "/v1/apps/6795968222/builds?limit=100"
-    },
-    {
-      "label": "submissions",
-      "method": "GET",
-      "path": "/v1/apps/6795968222/reviewSubmissions?limit=50"
-    },
-    {
-      "label": "appInfos",
-      "method": "GET",
-      "path": "/v1/apps/6795968222/appInfos?limit=30&include=appInfoLocalizations"
-    },
-    {
-      "label": "age-rating",
-      "method": "GET",
-      "path": "/v1/appInfos/02b9fefd-04a8-40ba-8fed-c93a2ac2472d/ageRatingDeclaration"
-    },
-    {
-      "label": "selected-build",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/relationships/build"
-    },
-    {
-      "label": "version-localizations",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/appStoreVersionLocalizations?limit=50"
-    },
-    {
-      "label": "review-details",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/appStoreReviewDetail"
+      "path": "/v1/apps/6795968222/appDataUsages?limit=100"
     }
   ]
 }
