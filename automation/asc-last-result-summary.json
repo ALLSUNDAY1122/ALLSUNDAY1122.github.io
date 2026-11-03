@@ -1,44 +1,60 @@
 {
-  "request_id": "torutango-build13-beta-access-20261103-1316",
-  "completed_at": "2026-11-03T04:16:07.635808+00:00",
+  "request_id": "pitari-review-info-20261104-0804",
+  "completed_at": "2026-11-03T23:06:19.876807+00:00",
   "results": [
     {
-      "label": "build13-beta",
+      "label": "pitari-app",
       "http_status": 200,
       "data": [
         {
-          "id": "4235c3cb-b6ab-4b3f-ad24-a9bd15e8f26d",
-          "type": "buildBetaDetails",
+          "id": "6795941132",
+          "type": "apps",
           "attributes": {
-            "internalBuildState": "IN_BETA_TESTING",
-            "externalBuildState": "READY_FOR_BETA_SUBMISSION"
+            "name": "ぴたりサイズ",
+            "bundleId": "jp.allsunday.pitariresize",
+            "sku": "EX1785329847415",
+            "primaryLocale": "en-US",
+            "contentRightsDeclaration": "DOES_NOT_USE_THIRD_PARTY_CONTENT"
           }
         }
       ]
     },
     {
-      "label": "app-beta-groups",
+      "label": "pitari-versions",
       "http_status": 200,
       "data": [
         {
-          "id": "4f2f8315-ba4c-4691-b5fb-afbfff955c11",
-          "type": "betaGroups",
+          "id": "e0aa7c21-0569-4e59-85e7-3cc3afe65dff",
+          "type": "appStoreVersions",
           "attributes": {
-            "name": "allsunday",
-            "isInternalGroup": true,
-            "hasAccessToAllBuilds": true,
-            "publicLinkEnabled": null
+            "versionString": "1.0",
+            "platform": "IOS",
+            "appStoreState": "PREPARE_FOR_SUBMISSION",
+            "appVersionState": "PREPARE_FOR_SUBMISSION",
+            "copyright": "© 2026 ALLSUNDAY1122"
           }
-        },
+        }
+      ]
+    },
+    {
+      "label": "pitari-selected-build",
+      "http_status": 200,
+      "data": [
         {
-          "id": "5e4d3e67-da3d-498d-b9f0-8c7426604b3d",
-          "type": "betaGroups",
-          "attributes": {
-            "name": "sunday",
-            "isInternalGroup": false,
-            "hasAccessToAllBuilds": null,
-            "publicLinkEnabled": true
-          }
+          "id": "d0ac3685-4e7b-49d9-a86f-0736e8088e76",
+          "type": "builds",
+          "attributes": {}
+        }
+      ]
+    },
+    {
+      "label": "pitari-review-detail",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "7416f717-4d3b-475d-9c86-7f1f00a34627",
+          "type": "appStoreReviewDetails",
+          "attributes": {}
         }
       ]
     }
