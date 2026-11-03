@@ -49,6 +49,12 @@ jobs:
           set -o pipefail
           npm run lint 2>&1 | tee ci-logs/lint.log
 
+      - name: Study folder selection regression tests
+        run: |
+          mkdir -p ci-logs
+          set -o pipefail
+          node --test tests/study-folder.test.cjs 2>&1 | tee ci-logs/study-folder-tests.log
+
       - name: Expo Doctor
         run: |
           mkdir -p ci-logs
