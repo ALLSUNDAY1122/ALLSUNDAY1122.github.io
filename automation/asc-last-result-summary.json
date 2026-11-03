@@ -1,47 +1,248 @@
 {
-  "request_id": "nomikai-review-final-independent-readback-20261103-1130",
-  "completed_at": "2026-11-03T02:31:10.588084+00:00",
+  "request_id": "torutango-review-preflight-20261103-1221",
+  "completed_at": "2026-11-03T03:23:10.334490+00:00",
   "results": [
     {
-      "label": "review-submission",
+      "label": "app",
       "http_status": 200,
       "data": [
         {
-          "id": "3065afba-5b6e-4dd6-a73d-b927e42bf239",
-          "type": "reviewSubmissions",
+          "id": "6795968222",
+          "type": "apps",
           "attributes": {
-            "platform": "IOS",
-            "state": "WAITING_FOR_REVIEW"
+            "name": "撮る単語帳",
+            "bundleId": "com.allsunday1122.torutango",
+            "sku": "toru-tango-ios-1",
+            "primaryLocale": "ja",
+            "contentRightsDeclaration": null
           }
         }
       ]
     },
     {
-      "label": "review-items",
+      "label": "versions",
       "http_status": 200,
       "data": [
         {
-          "id": "MzA2NWFmYmEtNWI2ZS00ZGQ2LWE3M2QtYjkyN2U0MmJmMjM5fDZ8ODg4ODY1NjQ4",
-          "type": "reviewSubmissionItems",
+          "id": "c19fe956-165f-474c-af0b-bbfa86a138df",
+          "type": "appStoreVersions",
           "attributes": {
+            "versionString": "1.0",
+            "platform": "IOS",
+            "appStoreState": "PREPARE_FOR_SUBMISSION",
+            "appVersionState": "PREPARE_FOR_SUBMISSION",
+            "copyright": "2026 KOHEI MORITA"
+          }
+        }
+      ]
+    },
+    {
+      "label": "builds",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "76d69e5f-e484-41a1-a7e6-df3c0a9c3488",
+          "type": "builds",
+          "attributes": {
+            "version": "9",
+            "uploadedDate": "2026-08-20T15:47:35-07:00",
+            "processingState": "VALID",
+            "expired": true,
+            "expirationDate": "2026-09-02T06:24:51-07:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        },
+        {
+          "id": "98ebdf79-193e-49a6-ac2c-ec946293a82a",
+          "type": "builds",
+          "attributes": {
+            "version": "11",
+            "uploadedDate": "2026-09-21T20:02:09-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-12-20T19:02:09-08:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        },
+        {
+          "id": "03cf658a-0e65-402d-b766-be97f7ca9b09",
+          "type": "builds",
+          "attributes": {
+            "version": "10",
+            "uploadedDate": "2026-09-11T09:39:26-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-12-10T08:39:26-08:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        },
+        {
+          "id": "4046db0e-8483-4652-9244-e8e453b7fee7",
+          "type": "builds",
+          "attributes": {
+            "version": "8",
+            "uploadedDate": "2026-08-20T06:48:56-07:00",
+            "processingState": "VALID",
+            "expired": true,
+            "expirationDate": "2026-09-02T06:24:51-07:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        },
+        {
+          "id": "8e215189-420a-4547-95f6-752312d98cb3",
+          "type": "builds",
+          "attributes": {
+            "version": "1",
+            "uploadedDate": "2026-07-30T06:48:15-07:00",
+            "processingState": "VALID",
+            "expired": true,
+            "expirationDate": "2026-09-02T06:24:51-07:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        },
+        {
+          "id": "b184c739-80ca-406d-8c4d-34ab156c3966",
+          "type": "builds",
+          "attributes": {
+            "version": "12",
+            "uploadedDate": "2026-09-22T16:19:29-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-12-21T15:19:29-08:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        },
+        {
+          "id": "bf58363d-63c6-4527-a3b9-941e5ca50796",
+          "type": "builds",
+          "attributes": {
+            "version": "5",
+            "uploadedDate": "2026-08-08T18:44:53-07:00",
+            "processingState": "VALID",
+            "expired": true,
+            "expirationDate": "2026-09-02T06:24:51-07:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        },
+        {
+          "id": "09d89bdf-a035-4fe1-879c-9955a4883252",
+          "type": "builds",
+          "attributes": {
+            "version": "4",
+            "uploadedDate": "2026-08-07T22:07:05-07:00",
+            "processingState": "VALID",
+            "expired": true,
+            "expirationDate": "2026-09-02T06:24:51-07:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        },
+        {
+          "id": "7b8f2866-8b2d-4ec9-9bcf-a42d146b799a",
+          "type": "builds",
+          "attributes": {
+            "version": "6",
+            "uploadedDate": "2026-08-09T00:18:43-07:00",
+            "processingState": "VALID",
+            "expired": true,
+            "expirationDate": "2026-09-02T06:24:51-07:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        },
+        {
+          "id": "a07edc5d-1ec4-4b03-8c26-8c0defa80e1d",
+          "type": "builds",
+          "attributes": {
+            "version": "3",
+            "uploadedDate": "2026-08-06T06:34:59-07:00",
+            "processingState": "VALID",
+            "expired": true,
+            "expirationDate": "2026-09-02T06:24:51-07:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        },
+        {
+          "id": "a4437a1c-b9b8-4baa-ad2a-af62b27468ad",
+          "type": "builds",
+          "attributes": {
+            "version": "2",
+            "uploadedDate": "2026-08-01T00:22:24-07:00",
+            "processingState": "VALID",
+            "expired": true,
+            "expirationDate": "2026-09-02T06:24:51-07:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        }
+      ]
+    },
+    {
+      "label": "submissions",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "455b11ba-3475-4d9b-bed9-680ffcdc600b",
+          "type": "reviewSubmissions",
+          "attributes": {
+            "platform": "IOS",
             "state": "READY_FOR_REVIEW"
           }
         }
       ]
     },
     {
-      "label": "version",
+      "label": "appInfos",
       "http_status": 200,
       "data": [
         {
-          "id": "7dcad63e-8c82-4d19-8dc5-873458bca58b",
-          "type": "appStoreVersions",
+          "id": "02b9fefd-04a8-40ba-8fed-c93a2ac2472d",
+          "type": "appInfos",
           "attributes": {
-            "versionString": "1.0.0",
-            "platform": "IOS",
-            "appStoreState": "WAITING_FOR_REVIEW",
-            "appVersionState": "WAITING_FOR_REVIEW",
-            "copyright": "2026 KOHEI MORITA"
+            "appStoreState": "PREPARE_FOR_SUBMISSION",
+            "state": "PREPARE_FOR_SUBMISSION"
+          }
+        }
+      ]
+    },
+    {
+      "label": "age-rating",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "02b9fefd-04a8-40ba-8fed-c93a2ac2472d",
+          "type": "ageRatingDeclarations",
+          "attributes": {
+            "advertising": false,
+            "alcoholTobaccoOrDrugUseOrReferences": "NONE",
+            "contests": "NONE",
+            "gambling": false,
+            "gamblingSimulated": "NONE",
+            "matureOrSuggestiveThemes": "NONE",
+            "sexualContentOrNudity": "NONE",
+            "unrestrictedWebAccess": false,
+            "userGeneratedContent": false,
+            "profanityOrCrudeHumor": "NONE",
+            "ageRatingOverrideV2": "NONE"
           }
         }
       ]
@@ -51,61 +252,41 @@
       "http_status": 200,
       "data": [
         {
-          "id": "3f27d9b8-4c16-4bce-a75f-b5add1a76ecd",
+          "id": "b184c739-80ca-406d-8c4d-34ab156c3966",
           "type": "builds",
           "attributes": {}
         }
       ]
     },
     {
-      "label": "screenshots-current",
+      "label": "version-localizations",
       "http_status": 200,
       "data": [
         {
-          "id": "c7c00019-5012-84f7-802a-902580d20c7b",
-          "type": "appScreenshots",
+          "id": "5e089062-31d4-4b43-b707-e50d6bafb74b",
+          "type": "appStoreVersionLocalizations",
           "attributes": {
-            "fileName": "01-home-1179x2556.jpg",
-            "fileSize": 264529,
-            "assetDeliveryState": {
-              "errors": [],
-              "warnings": null,
-              "state": "COMPLETE"
-            }
-          }
-        },
-        {
-          "id": "eb800019-5012-84f7-8039-32feee99409c",
-          "type": "appScreenshots",
-          "attributes": {
-            "fileName": "02-friends-1179x2556.jpg",
-            "fileSize": 264238,
-            "assetDeliveryState": {
-              "errors": [],
-              "warnings": null,
-              "state": "COMPLETE"
-            }
-          }
-        },
-        {
-          "id": "a1000019-5012-84f7-8014-b05b7c88adbd",
-          "type": "appScreenshots",
-          "attributes": {
-            "fileName": "03-conversation-1179x2556.jpg",
-            "fileSize": 293227,
-            "assetDeliveryState": {
-              "errors": [],
-              "warnings": null,
-              "state": "COMPLETE"
-            }
+            "locale": "ja",
+            "description": "撮る単語帳は、教材を撮影・取り込みして、自分だけの単語カードを作成・学習できるアプリです。\n\n主な機能\n・教材写真をOCRで文字認識\n・iPhone内AIまたは端末内の簡易作問でカード作成\n・必要に応じてGemini AIによる作問/OCRも選択可能\n・フォルダごとのカード整理\n・表/裏の読み上げと自動送り\n・苦手/未学習カードの絞り込み\n・連続学習や正答率の記録\n・JSONバックアップ/復元\n\nカードと学習履歴は原則として端末内に保存されます。外部AI機能を選択した場合のみ、対象の教材本文または画像を外部処理へ送信します。",
+            "keywords": "単語帳,暗記,学習,勉強,OCR,AI,フラッシュカード,読み上げ,資格,受験",
+            "promotionalText": null,
+            "supportUrl": "https://allsunday1122.github.io/toru-tango/support.html",
+            "marketingUrl": null,
+            "whatsNew": null
           }
         }
       ]
     },
     {
-      "label": "screenshots-old",
+      "label": "review-details",
       "http_status": 200,
-      "data": []
+      "data": [
+        {
+          "id": "35d92906-cb1c-4024-8ed9-8c9dcf582439",
+          "type": "appStoreReviewDetails",
+          "attributes": {}
+        }
+      ]
     }
   ]
 }
