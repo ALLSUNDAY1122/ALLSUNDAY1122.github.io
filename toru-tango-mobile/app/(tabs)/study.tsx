@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Switch, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import * as Speech from 'expo-speech';
 import {
   AppButton,
@@ -35,18 +35,25 @@ function buildStudyQueue(
   cards: Card[],
   mode: StudyMode,
   order: StudyOrder,
-  range: StudyRange
+  range: StudyRange,
+  selectedDeck: string | null
 ): Card[] {
-  const ranged = range === 'visible' ? cards.filter((card) => !card.isHidden) : cards;
+  const scoped = selectedDeck === null
+    ? cards
+    : cards.filter((card) => (card.deckName?.trim() || 'メイン') === selectedDeck);
+  const ranged = range === 'visible' ? scoped.filter((card) => !card.isHidden) : scoped;
   const filtered = filterByMode(ranged, mode);
   return order === 'random' ? shuffle(filtered) : [...filtered];
 }
 
 export default function StudyScreen() {
-  const { cards, gradeCard, recordStudyActivity } = useAppStore();
+  const { cards, decks, gradeCard, recordStudyActivity } = useAppStore();
   const [mode, setMode] = useState<StudyMode>('all');
   const [order, setOrder] = useState<StudyOrder>('normal');
   const [range, setRange] = useState<StudyRange>('visible');
+  const [selectedDeck, setSelectedDeck] = useState<string | null>(null);
+  const [deckPickerOpen, setDeckPickerOpen] = useState(false);
+  const [sessionDeck, setSessionDeck] = useState<string | null>(null);
   const [direction, setDirection] = useState<Direction>('front');
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [fullRead, setFullRead] = useState(true);
@@ -77,9 +84,32 @@ export default function StudyScreen() {
       : currentCard.question
     : '';
 
+  const deckCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const name of decks) {
+      const normalized = name.trim();
+      if (normalized) counts.set(normalized, 0);
+    }
+    for (const card of cards) {
+      const name = card.deckName?.trim() || 'メイン';
+      counts.set(name, (counts.get(name) ?? 0) + 1);
+    }
+    return counts;
+  }, [cards, decks]);
+  const deckNames = useMemo(() => [...deckCounts.keys()], [deckCounts]);
+
+  // Folders may be renamed or deleted from another tab. Never silently study
+  // an unrelated folder with a stale selection.
+  useEffect(() => {
+    if (selectedDeck !== null && !deckCounts.has(selectedDeck)) {
+      setSelectedDeck(null);
+      setDeckPickerOpen(false);
+    }
+  }, [deckCounts, selectedDeck]);
+
   const eligibleCount = useMemo(
-    () => buildStudyQueue(cards, mode, 'normal', range).length,
-    [cards, mode, range]
+    () => buildStudyQueue(cards, mode, 'normal', range, selectedDeck).length,
+    [cards, mode, range, selectedDeck]
   );
 
   const cancelTimer = useCallback(() => {
@@ -182,7 +212,9 @@ export default function StudyScreen() {
 
   const start = () => {
     cancelPlayback();
-    const selected = buildStudyQueue(cards, mode, order, range);
+    const selected = buildStudyQueue(cards, mode, order, range, selectedDeck);
+    if (!selected.length) return;
+    setSessionDeck(selectedDeck);
     setQueue(selected.map((card) => card.id));
     setPosition(0);
     setRevealed(false);
@@ -245,6 +277,61 @@ export default function StudyScreen() {
               <Text style={styles.infoText}>表の読み上げ後と裏の読み上げ後の両方に、同じ待ち時間を入れます。</Text>
             </View>
           </View>
+
+          <Section title="学習するフォルダ">
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`学習するフォルダ：${selectedDeck ?? '全フォルダ'}`}
+              accessibilityHint="タップすると学習するフォルダを選択できます"
+              accessibilityState={{ expanded: deckPickerOpen }}
+              onPress={() => setDeckPickerOpen((current) => !current)}
+              style={styles.deckPickerButton}
+            >
+              <Text style={styles.deckPickerLabel} numberOfLines={1}>
+                {selectedDeck ?? '全フォルダ'}
+              </Text>
+              <Text style={styles.deckPickerChevron}>{deckPickerOpen ? '▲' : '▼'}</Text>
+            </Pressable>
+            {deckPickerOpen ? (
+              <ScrollView
+                style={styles.deckPickerOptions}
+                nestedScrollEnabled
+                showsVerticalScrollIndicator
+                accessibilityLabel="学習フォルダの選択肢"
+              >
+                {([null, ...deckNames] as (string | null)[]).map((name) => {
+                  const checked = selectedDeck === name;
+                  return (
+                    <Pressable
+                      key={name ?? '__all_folders__'}
+                      accessibilityRole="button"
+                      accessibilityLabel={name ?? '全フォルダ'}
+                      accessibilityState={{ selected: checked }}
+                      onPress={() => {
+                        setSelectedDeck(name);
+                        setDeckPickerOpen(false);
+                      }}
+                      style={[styles.deckOption, checked && styles.deckOptionSelected]}
+                    >
+                      <Text style={[styles.deckOptionText, checked && styles.deckOptionTextSelected]} numberOfLines={1}>
+                        {name ?? '全フォルダ'}
+                      </Text>
+                      <Text style={[styles.deckOptionCount, checked && styles.deckOptionTextSelected]}>
+                        {name === null ? cards.length : (deckCounts.get(name) ?? 0)}枚
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+            ) : null}
+            <Text style={styles.rangeHint}>
+              {selectedDeck === null ? '全フォルダを対象に学習します。' : `「${selectedDeck}」のカードだけを出題します。`}
+              {' '}対象 {eligibleCount}枚
+            </Text>
+            {selectedDeck !== null && eligibleCount === 0 ? (
+              <Text style={styles.emptyDeckHint}>選択したフォルダには現在の出題条件に合うカードがありません。</Text>
+            ) : null}
+          </Section>
 
           <Section title="学習の向き">
             <ChoiceRow
@@ -370,7 +457,9 @@ export default function StudyScreen() {
         <View style={styles.sessionSummary}>
           <View style={styles.sessionSummaryCopy}>
             <Text style={styles.sessionSummaryTitle}>学習中</Text>
-            <Text style={styles.sessionSummaryText}>{directionLabel}・{modeLabel}・{delayLabel}</Text>
+            <Text style={styles.sessionSummaryText} numberOfLines={2}>
+              {sessionDeck ?? '全フォルダ'}・{directionLabel}・{modeLabel}・{delayLabel}
+            </Text>
           </View>
           <Pressable onPress={() => {
             cancelPlayback();
@@ -477,6 +566,33 @@ const styles = StyleSheet.create({
   infoTitle: { color: colors.primaryDark, fontSize: 14, fontWeight: '900', lineHeight: 19 },
   infoText: { color: colors.muted, fontSize: 12, lineHeight: 17, marginTop: 2 },
   rangeHint: { color: colors.muted, fontSize: 12, lineHeight: 18 },
+  emptyDeckHint: { color: colors.warning, fontSize: 12, lineHeight: 18 },
+  deckPickerButton: {
+    alignItems: 'center',
+    backgroundColor: colors.surfaceMuted,
+    borderColor: colors.border,
+    borderRadius: 12,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 46,
+    paddingHorizontal: 14
+  },
+  deckPickerLabel: { color: colors.text, flex: 1, fontSize: 15, fontWeight: '800' },
+  deckPickerChevron: { color: colors.primaryDark, marginLeft: 12, fontSize: 12 },
+  deckPickerOptions: { maxHeight: 240, borderColor: colors.border, borderWidth: 1, borderRadius: 12 },
+  deckOption: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 43,
+    paddingHorizontal: 12,
+    paddingVertical: 9
+  },
+  deckOptionSelected: { backgroundColor: colors.primarySoft },
+  deckOptionText: { color: colors.text, flex: 1, fontSize: 14, fontWeight: '700' },
+  deckOptionTextSelected: { color: colors.primaryDark },
+  deckOptionCount: { color: colors.muted, fontSize: 12, marginLeft: 8 },
   settingRow: {
     alignItems: 'center',
     flexDirection: 'row',
