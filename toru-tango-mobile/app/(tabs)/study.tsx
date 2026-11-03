@@ -98,18 +98,13 @@ export default function StudyScreen() {
   }, [cards, decks]);
   const deckNames = useMemo(() => [...deckCounts.keys()], [deckCounts]);
 
-  // Folders may be renamed or deleted from another tab. Never silently study
-  // an unrelated folder with a stale selection.
-  useEffect(() => {
-    if (selectedDeck !== null && !deckCounts.has(selectedDeck)) {
-      setSelectedDeck(null);
-      setDeckPickerOpen(false);
-    }
-  }, [deckCounts, selectedDeck]);
+  // A deleted or renamed folder must not be treated as a valid study target.
+  // Derive the fallback without synchronously setting state from an effect.
+  const activeDeck = selectedDeck !== null && deckCounts.has(selectedDeck) ? selectedDeck : null;
 
   const eligibleCount = useMemo(
-    () => buildStudyQueue(cards, mode, 'normal', range, selectedDeck).length,
-    [cards, mode, range, selectedDeck]
+    () => buildStudyQueue(cards, mode, 'normal', range, activeDeck).length,
+    [cards, mode, range, activeDeck]
   );
 
   const cancelTimer = useCallback(() => {
@@ -212,9 +207,9 @@ export default function StudyScreen() {
 
   const start = () => {
     cancelPlayback();
-    const selected = buildStudyQueue(cards, mode, order, range, selectedDeck);
+    const selected = buildStudyQueue(cards, mode, order, range, activeDeck);
     if (!selected.length) return;
-    setSessionDeck(selectedDeck);
+    setSessionDeck(activeDeck);
     setQueue(selected.map((card) => card.id));
     setPosition(0);
     setRevealed(false);
@@ -281,14 +276,14 @@ export default function StudyScreen() {
           <Section title="学習するフォルダ">
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel={`学習するフォルダ：${selectedDeck ?? '全フォルダ'}`}
+              accessibilityLabel={`学習するフォルダ：${activeDeck ?? '全フォルダ'}`}
               accessibilityHint="タップすると学習するフォルダを選択できます"
               accessibilityState={{ expanded: deckPickerOpen }}
               onPress={() => setDeckPickerOpen((current) => !current)}
               style={styles.deckPickerButton}
             >
               <Text style={styles.deckPickerLabel} numberOfLines={1}>
-                {selectedDeck ?? '全フォルダ'}
+                {activeDeck ?? '全フォルダ'}
               </Text>
               <Text style={styles.deckPickerChevron}>{deckPickerOpen ? '▲' : '▼'}</Text>
             </Pressable>
@@ -300,7 +295,7 @@ export default function StudyScreen() {
                 accessibilityLabel="学習フォルダの選択肢"
               >
                 {([null, ...deckNames] as (string | null)[]).map((name) => {
-                  const checked = selectedDeck === name;
+                  const checked = activeDeck === name;
                   return (
                     <Pressable
                       key={name ?? '__all_folders__'}
@@ -325,10 +320,10 @@ export default function StudyScreen() {
               </ScrollView>
             ) : null}
             <Text style={styles.rangeHint}>
-              {selectedDeck === null ? '全フォルダを対象に学習します。' : `「${selectedDeck}」のカードだけを出題します。`}
+              {activeDeck === null ? '全フォルダを対象に学習します。' : `「${activeDeck}」のカードだけを出題します。`}
               {' '}対象 {eligibleCount}枚
             </Text>
-            {selectedDeck !== null && eligibleCount === 0 ? (
+            {activeDeck !== null && eligibleCount === 0 ? (
               <Text style={styles.emptyDeckHint}>選択したフォルダには現在の出題条件に合うカードがありません。</Text>
             ) : null}
           </Section>
