@@ -1,0 +1,104 @@
+name: Toru Tango Build13 Study Folder TestFlight
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: toru-tango-build13-study-folder
+  cancel-in-progress: false
+
+jobs:
+  deliver:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-TANGO] Build13 Study Folder TestFlight'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    defaults:
+      run:
+        working-directory: toru-tango-mobile
+    steps:
+      - name: Checkout pinned Build13 source
+        uses: actions/checkout@v4
+        with:
+          ref: release/toru-tango-build13-study-folder-20261103
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Assert target App ID and Build13
+        run: |
+          set -euo pipefail
+          grep -q "buildNumber: '13'" app.config.ts
+          grep -q 'com.allsunday1122.torutango' app.config.ts
+          grep -q '学習するフォルダ' 'app/(tabs)/study.tsx'
+          grep -q '6795968222' eas.json
+      - name: Install and validate production source
+        run: |
+          npm ci --include=dev --no-audit --no-fund
+          npm run typecheck
+          npm run lint
+          node --test tests/study-folder.test.cjs
+      - name: Verify Expo account key is configured
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          test -n "$EXPO_TOKEN" || { echo 'EXPO_TOKEN missing'; exit 1; }
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Create signed iOS TestFlight-ready Build13
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          CI: '1'
+        run: |
+          set -euo pipefail
+          mkdir -p release-logs
+          eas build --platform ios --profile production --non-interactive --wait --json > release-logs/eas-build.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('release-logs/eas-build.json').read_text())
+          if isinstance(data,list): data=data[0]
+          build_id=data.get('id')
+          if not build_id or data.get('status') not in ('FINISHED','finished'):
+            raise SystemExit('Signed build not FINISHED')
+          Path('release-logs/eas-build-id.txt').write_text(build_id+'\n')
+          print('Signed EAS Build13 FINISHED; build reference generated')
+          PY
+      - name: Upload Build13 binary to App Store Connect for TestFlight only
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          CI: '1'
+        run: |
+          set -euo pipefail
+          build_id=$(cat release-logs/eas-build-id.txt)
+          eas submit --platform ios --profile production --id "$build_id" --non-interactive > release-logs/eas-submit.log 2>&1
+          echo 'EAS submit to App Store Connect accepted; not App Review' 
+      - name: Save sanitized release state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-build13-study-folder-${{ github.run_id }}
+          path: toru-tango-mobile/release-logs/eas-build-id.txt
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Report outcome
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs=require('fs');
+            const file='toru-tango-mobile/release-logs/eas-build-id.txt';
+            const build_id=fs.existsSync(file)?fs.readFileSync(file,'utf8').trim():'';
+            await github.rest.issues.createComment({
+              owner:context.repo.owner,
+              repo:context.repo.repo,
+              issue_number:context.issue.number,
+              body:'Build13 Study Folder TestFlight: job=${{ job.status }}; run_id='+context.runId+
+                (build_id?'; EAS build id='+build_id:'; build id unavailable')+
+                '; App Review submission is not part of this workflow'
+            });
