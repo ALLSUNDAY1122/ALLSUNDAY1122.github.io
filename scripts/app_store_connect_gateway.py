@@ -424,11 +424,22 @@ def execute_write(token: str, command: dict) -> list[dict]:
             _, linkage = api_get(token, f"/v1/appInfos/{op['app_info_id']}/ageRatingDeclaration")
             if op["age_rating_id"] not in get_data_ids(linkage):
                 raise RuntimeError("Age rating declaration does not belong to the intended app")
-            outcome = update_resource_attributes(
-                token, "ageRatingDeclarations", op["age_rating_id"],
-                f"/v1/ageRatingDeclarations/{op['age_rating_id']}",
-                {"alcoholTobaccoOrDrugUseOrReferences":op["value"]},
-            )
+            before_attrs = (linkage.get("data") or {}).get("attributes") or {}
+            changed = before_attrs.get("alcoholTobaccoOrDrugUseOrReferences") != op["value"]
+            if changed:
+                payload = {
+                    "data": {
+                        "type": "ageRatingDeclarations",
+                        "id": op["age_rating_id"],
+                        "attributes": {"alcoholTobaccoOrDrugUseOrReferences": op["value"]},
+                    }
+                }
+                api_request(token, f"/v1/ageRatingDeclarations/{op['age_rating_id']}", method="PATCH", payload=payload)
+            _, after_linkage = api_get(token, f"/v1/appInfos/{op['app_info_id']}/ageRatingDeclaration")
+            after_attrs = (after_linkage.get("data") or {}).get("attributes") or {}
+            if after_attrs.get("alcoholTobaccoOrDrugUseOrReferences") != op["value"]:
+                raise RuntimeError("Age rating read-back mismatch")
+            outcome = {"changed": changed, "alcohol_references": op["value"], "readback_match": True}
         elif op_type == "update_review_notes":
             version_id = op["app_store_version_id"]
             review_detail_id = op["review_detail_id"]
