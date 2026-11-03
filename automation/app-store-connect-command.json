@@ -1,5 +1,5 @@
 {
-  "request_id": "nomikai-review-final-preflight-20261103-1106",
+  "request_id": "nomikai-final-age-rights-check-20261103-1115",
   "requests": [
     {
       "label": "app",
@@ -7,49 +7,24 @@
       "path": "/v1/apps/6794847479"
     },
     {
-      "label": "version",
+      "label": "age-rating",
+      "method": "GET",
+      "path": "/v1/appInfos/f48984ff-b308-432a-a8a8-d53db07bb61b/ageRatingDeclaration"
+    },
+    {
+      "label": "build13",
+      "method": "GET",
+      "path": "/v1/builds/3f27d9b8-4c16-4bce-a75f-b5add1a76ecd"
+    },
+    {
+      "label": "store-version",
       "method": "GET",
       "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b"
-    },
-    {
-      "label": "selected-build",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b/relationships/build"
-    },
-    {
-      "label": "description-ja",
-      "method": "GET",
-      "path": "/v1/appStoreVersionLocalizations/c5594cd3-427f-4d2a-8b62-55358c7825b6"
-    },
-    {
-      "label": "metadata-ja",
-      "method": "GET",
-      "path": "/v1/appInfoLocalizations/693f9319-d865-4d81-867e-df2df6345a06"
-    },
-    {
-      "label": "screenshot-sets",
-      "method": "GET",
-      "path": "/v1/appStoreVersionLocalizations/c5594cd3-427f-4d2a-8b62-55358c7825b6/appScreenshotSets?limit=100"
-    },
-    {
-      "label": "screenshot-assets",
-      "method": "GET",
-      "path": "/v1/appScreenshotSets/97823792-2bbe-42fb-a738-6b5e4b7e9c4d/appScreenshots?limit=100"
-    },
-    {
-      "label": "review-details",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/7dcad63e-8c82-4d19-8dc5-873458bca58b/appStoreReviewDetail"
     },
     {
       "label": "review-submissions",
       "method": "GET",
       "path": "/v1/apps/6794847479/reviewSubmissions?limit=50"
-    },
-    {
-      "label": "age-rating",
-      "method": "GET",
-      "path": "/v1/appInfos/f48984ff-b308-432a-a8a8-d53db07bb61b/ageRatingDeclaration"
     }
   ]
 }
