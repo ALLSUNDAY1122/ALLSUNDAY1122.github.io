@@ -81,6 +81,8 @@ def assert_preflight(token):
         raise RuntimeError("App Review contact information incomplete")
     if "Build 13" not in (review.get("notes") or ""):
         raise RuntimeError("Review notes do not describe Build 13")
+    if review.get("demoAccountRequired") is True:
+        raise RuntimeError("Review metadata wrongly requires a demo account")
     sets=rows(get(token,f"/v1/appStoreVersionLocalizations/{LOCALE}/appScreenshotSets?limit=100"))
     new_ids=[r["id"] for r in sets if attributes(r).get("screenshotDisplayType")=="APP_IPHONE_61"]
     if len(new_ids)!=1:
@@ -104,7 +106,7 @@ def assert_preflight(token):
     return {"build":13,"screenshots":3,"age_references":age.get("alcoholTobaccoOrDrugUseOrReferences"),"release_type":"MANUAL","review_contact_present":True}
 
 def submission_items(token, submission_id):
-    return rows(get(token,f"/v1/reviewSubmissions/{submission_id}/items?limit=50"))
+    return rows(get(token,f"/v1/reviewSubmissions/{submission_id}/items?limit=50&include=appStoreVersion"))
 
 def item_has_version(item):
     rel=(item.get("relationships") or {}).get("appStoreVersion") or {}
