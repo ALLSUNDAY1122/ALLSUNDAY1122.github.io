@@ -1,25 +1,15 @@
 {
-  "request_id": "pitari-review-info-20261104-0804",
+  "request_id": "pitari-builds-review-20261104-0808",
   "requests": [
     {
-      "label": "pitari-app",
+      "label": "pitari-builds",
       "method": "GET",
-      "path": "/v1/apps/6795941132"
+      "path": "/v1/apps/6795941132/builds?limit=50"
     },
     {
-      "label": "pitari-versions",
+      "label": "pitari-review-contacts",
       "method": "GET",
-      "path": "/v1/apps/6795941132/appStoreVersions?limit=20"
-    },
-    {
-      "label": "pitari-selected-build",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff/relationships/build"
-    },
-    {
-      "label": "pitari-review-detail",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff/relationships/appStoreReviewDetail"
+      "path": "/v1/appStoreReviewDetails/7416f717-4d3b-475d-9c86-7f1f00a34627"
     }
   ]
 }
