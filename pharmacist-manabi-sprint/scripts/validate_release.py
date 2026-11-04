@@ -74,6 +74,12 @@ for token in ('第110回試験', '2026年4月1日施行', '紫外線吸収法', 
         errors.append('P110-140: current environmental standard note missing: ' + token)
 if q.get('legal_source_url') != 'https://www.env.go.jp/hourei/04/000105.html':
     errors.append('P110-140: official environmental standard source URL missing')
+q = by_id.get('P111-077', {})
+for token in ('第111回試験日', '2026年4月1日から適用', 'メチルフェニデートの区分は変わらない'):
+    if token not in q.get('explanation', ''):
+        errors.append('P111-077: current psychotropic classification note missing: ' + token)
+if q.get('legal_source_url') != 'https://www.mhlw.go.jp/web/t_doc?dataId=81103000&dataType=0':
+    errors.append('P111-077: official psychotropic decree source URL missing')
 for q in questions:
     if not str(q.get('source_url', '')).startswith('https://'):
         errors.append(str(q.get('id')) + ': official source URL missing')
