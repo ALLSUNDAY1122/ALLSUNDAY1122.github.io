@@ -63,16 +63,22 @@ def read_once(token, command):
     _, beta_payload = request(token, f"/v1/builds/{build_id}/buildBetaDetail")
     beta = beta_payload["data"]
     beta_attrs = beta.get("attributes", {})
-    # Use the build-to-betaGroups relationship directly rather than iterating
-    # every app group and requesting each group's full build list.
-    _, groups_payload = request(token, f"/v1/builds/{build_id}/betaGroups?limit=200")
-    memberships = [
-        {
+    # ASC does not permit GET_RELATED on /builds/{id}/betaGroups (403).
+    # Read the app's groups, then query each internal group's /builds endpoint,
+    # which is the supported read path for verifying build-to-group membership.
+    _, groups_payload = request(token, f"/v1/apps/{APP_ID}/betaGroups?limit=200")
+    memberships = []
+    for group in items(groups_payload):
+        ga = group.get("attributes", {})
+        if not ga.get("isInternalGroup"):
+            continue
+        _, group_builds_payload = request(token, f"/v1/betaGroups/{group['id']}/builds?limit=200")
+        group_build_ids = {b.get("id") for b in items(group_builds_payload)}
+        memberships.append({
             "id": group.get("id"),
-            "attributes": attrs(group, ["name", "isInternalGroup", "hasAccessToAllBuilds", "publicLinkEnabled"])
-        }
-        for group in items(groups_payload)
-    ]
+            "attributes": attrs(group, ["name", "isInternalGroup", "hasAccessToAllBuilds", "publicLinkEnabled"]),
+            "has_build_access": build_id in group_build_ids
+        })
     result = {
         "request_id": command.get("request_id"),
         "read_only": True,
@@ -82,7 +88,7 @@ def read_once(token, command):
         "buildBetaDetail": {"id": beta.get("id"), "attributes": attrs(beta, ["internalBuildState", "externalBuildState", "autoNotifyEnabled"])},
         "beta_group_memberships": memberships
     }
-    internal = any(g.get("attributes", {}).get("isInternalGroup") for g in memberships)
+    internal = any(g.get("attributes", {}).get("isInternalGroup") and g.get("has_build_access") for g in memberships)
     ready = a.get("processingState") == "VALID" and a.get("buildAudienceType") == "INTERNAL_ONLY" and beta_attrs.get("internalBuildState") == "IN_BETA_TESTING" and internal
     return {"ready": ready, "result": result, "reason": None if ready else "processing_or_internal_distribution_pending"}
 
