@@ -99,7 +99,7 @@ jobs:
               'branch':command.get('branch') or result.get('branch'),'resolved_app_id':result.get('resolved_app_id'),
               'application_candidates':result.get('application_candidates'),'note':result.get('note'),
               'build_id':result.get('build_id'),'status':result.get('status'),'app_id':result.get('app_id'),
-              'error':result.get('error'),'build_details':result.get('build_details')}
+              'error':result.get('error'),'build':result.get('build'),'build_details':result.get('build_details')}
           actions=Path('codemagic-actions.json')
           if actions.exists(): allowed['actions']=json.loads(actions.read_text(encoding='utf-8'))
           payload=json.dumps(allowed,ensure_ascii=False,indent=2)+'\n'
