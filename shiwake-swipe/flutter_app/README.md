@@ -38,6 +38,29 @@ Dart公式Advisory [GHSA-frr6-h895-5pxp](https://github.com/dart-lang/sdk/securi
 
 iOS向けのビルド、署名、TestFlightアップロードはmacOSとXcode上で行います。MacinCloudへリポジトリを取得後、Bundle ID、Signing Team、バージョンを設定します。
 
+### App Storeの「言語：EN」を日本語にする（必須）
+
+Flutterの画面が日本語でも、生成直後のiOSプロジェクトはApp Storeで英語（EN）と判定されることがあります。
+このリポジトリは生成後の ios/ フォルダを管理していないため、iOSプロジェクトを生成・更新するたびに、ビルド前に以下を実行します。
+
+```bash
+cd shiwake-swipe/flutter_app
+flutter create --platforms=ios .
+flutter pub get
+python3 scripts/set_ios_japanese_locale.py
+python3 scripts/set_ios_japanese_locale.py --check
+flutter analyze
+flutter test
+flutter build ipa --release
+```
+
+スクリプトはInfo.plistで CFBundleDevelopmentRegion=ja と CFBundleLocalizations=[ja] を設定し、Xcodeプロジェクトの developmentRegion と knownRegions も日本語へ変更します。
+実際にアップロードするIPAの Payload/Runner.app/Info.plist で CFBundleLocalizations が日本語であることを検証します。また、不要な英語リソースが含まれていないか確認してください。
+App Store Connectのメタデータのプライマリ言語とは別管理です。新しいビルドの審査承認後にストアの「言語」欄を再確認します。
+
+参考: https://docs.flutter.dev/ui/internationalization#localizing-for-ios-updating-the-ios-app-bundle
+参考: https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundlelocalizations
+
 ## 未実装
 
 - App Store用PNGアイコン一式
