@@ -15,7 +15,7 @@ from app_store_connect_api import api_get, api_request, load_private_key, make_t
 APP_ID = "6799753724"
 BUNDLE_ID = "jp.allsunday1122.yakuzaishi"
 TARGET_VERSION = "1.0"
-TARGET_BUILD = "5"
+TARGET_BUILD = "202609140032"
 SUPPORT_URL = "https://allsunday1122.github.io/pharmacist-manabi-sprint/support.html"
 PRIVACY_URL = "https://allsunday1122.github.io/pharmacist-manabi-sprint/privacy.html"
 
