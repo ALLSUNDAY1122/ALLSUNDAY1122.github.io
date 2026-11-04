@@ -8,7 +8,7 @@ from app_store_connect_api import load_private_key, make_token
 from app2_004_yakuzaishi_iap_bootstrap import request
 
 COMMAND = Path("automation/pharmacist-testflight-asc-command.json")
-RESULT = Path("automation/asc-results/pharmacist-testflight-readback.json")
+RESULT_DIR = Path("automation/asc-results")
 APP_ID = "6799753724"
 BUNDLE_ID = "jp.allsunday1122.yakuzaishi"
 
@@ -103,7 +103,8 @@ def main():
                 break
             if attempt < 35:
                 time.sleep(10)
-        RESULT.parent.mkdir(parents=True, exist_ok=True)
+        RESULT_DIR.mkdir(parents=True, exist_ok=True)
+        result_path = RESULT_DIR / f"pharmacist-testflight-readback-{command['request_id']}.json"
         payload = latest.get("result") or {
             "request_id": command.get("request_id"),
             "read_only": True,
@@ -113,7 +114,7 @@ def main():
             "candidate_count": latest.get("candidate_count")
         }
         payload["ready"] = bool(latest.get("ready"))
-        RESULT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        result_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(json.dumps(payload, ensure_ascii=False))
         if not latest.get("ready"):
             raise SystemExit("ASC build has not reached VALID / IN_BETA_TESTING / internal group membership")
