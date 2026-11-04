@@ -48,7 +48,7 @@ jobs:
           for qid in ('P111-220','P111-221'):
               stem=qs[qid].get('sharedStem') or ''
               assert 'デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）' in stem, (qid,stem)
-              assert not re.search(r'デュロキセチン塩酸塩カプセル\\s+20\\s+mg\\s+1\\s+回\\s+1\\s+錠',stem), qid
+              assert not re.search(r'デュロキセチン塩酸塩カプセル\s+20\s+mg\s+1\s+回\s+1\s+錠',stem), qid
           print('PASS: official correction is present in both product records')
           PY
           git config user.name 'github-actions[bot]'
