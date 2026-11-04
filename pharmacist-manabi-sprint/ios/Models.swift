@@ -25,9 +25,9 @@ struct Question: Codable, Identifiable, Hashable {
     let numberedChoiceCount: Int
     let attribution: String
     let modificationDisclosure: String
-    let sourceURL: String? = nil
-    let legalSourceURL: String? = nil
-    let correctionSourceURL: String? = nil
+    let sourceURL: String?
+    let legalSourceURL: String?
+    let correctionSourceURL: String?
     let canonicalId: String
 
     var isScored: Bool { scoringStatus != "excluded" }
