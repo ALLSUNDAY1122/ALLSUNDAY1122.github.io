@@ -16,7 +16,7 @@ DETAIL="7416f717-4d3b-475d-9c86-7f1f00a34627"
 LOC="415714d1-5d12-4f37-87e2-7da943a70518"
 IAP="6798713983"
 FILES={
- "video":{"type":"appStoreReviewAttachments","file_name":"pitari_app_review_ios27_2_batch_20261104.mp4","size":634130},
+ "video":{"type":"appStoreReviewAttachments","file_name":"pitari_app_review_combined_20261104.mp4","size":9266107},
  "screenshot":{"type":"appScreenshots","file_name":"pitari_build12_iphone_screenshot_20261104.png","size":417730,"display":"APP_IPHONE_61"}
 }
 OLD_FAILED={"e268c8c1-bb46-44e2-8bf0-7163a6367fd0","911e8b77-4d7f-42b2-b441-5c666a1d0826"}
@@ -87,6 +87,75 @@ def audit(token,version,detail):
  return {"app_id":APP,"bundle_id":BUNDLE,"version_id":VERSION,"build_id":BUILD,"app_store_state":attrs(version).get("appStoreState"),"review_notes":{"present":bool(notes),"length":len(notes),"sha256":hashlib.sha256(notes.encode()).hexdigest(),"demo_account_required":a.get("demoAccountRequired"),"contact_present":{k:bool(a.get(k)) for k in ["contactFirstName","contactLastName","contactPhone","contactEmail"]}},"assets":{k:[sanitized_asset(r) for r in v] for k,v in assets.items()},"iap":{"id":IAP,"state":attrs(iap).get("state"),"review_screenshot":sanitized_asset(shot),"versions":[{"id":r["id"],"state":attrs(r).get("state")} for r in iv]},"review_submissions":[{"id":r["id"],"state":attrs(r).get("state")} for r in rows(call(token,f"/v1/reviewSubmissions?filter[app]={APP}&limit=100"))]}
 def execute(token,command):
  version,detail=preflight(token);action=command["action"]
+
+ if action=="replace_video_reservation":
+  assert command.get("replacement_sha256")=="7e28f053605f255bb6f98b671fdea8bdfeef5190fe34dead3391be12b602731f","Unexpected replacement bytes"
+  sealed({},command["recipient_public_key"])
+  existing=collections(token)["video"]
+  old=[r for r in existing if r["id"]=="825e0bce-5342-4b42-b64d-b58ef8aef900"]
+  if old:
+   assert len(existing)==1 and attrs(old[0]).get("fileName")=="pitari_app_review_demo_original_20261104.mp4" and delivery(old[0]).get("state")=="COMPLETE","Old attachment target changed"
+   call(token,"/v1/appStoreReviewAttachments/825e0bce-5342-4b42-b64d-b58ef8aef900","DELETE")
+   assert "825e0bce-5342-4b42-b64d-b58ef8aef900" not in ids(call(token,f"/v1/appStoreReviewDetails/{DETAIL}/appStoreReviewAttachments")),"Old reservation still present"
+  next_command=dict(command);next_command["action"]="reserve_assets"
+  return execute(token,next_command)
+ if action=="save_review_info":
+  notes=command.get("notes","")
+  assert 0<len(notes)<=4000 and "iOS 27.2" in notes and FILES["video"]["file_name"] in notes,"Incomplete review notes"
+  source=one(call(token,"/v1/apps/6794796078"))
+  assert attrs(source).get("name")=="仕訳スワイプ","Contact source app mismatch"
+  source_versions=[r for r in rows(call(token,"/v1/apps/6794796078/appStoreVersions?limit=200")) if attrs(r).get("versionString")=="1.0" and attrs(r).get("platform")=="IOS"]
+  assert len(source_versions)==1,"Ambiguous contact source version"
+  source_detail=one(call(token,f"/v1/appStoreVersions/{source_versions[0]['id']}/appStoreReviewDetail"))
+  keys=["contactFirstName","contactLastName","contactPhone","contactEmail"]
+  contact={k:attrs(source_detail).get(k) for k in keys}
+  assert all(isinstance(v,str) and v.strip() for v in contact.values()),"Source contact incomplete"
+  payload={**contact,"notes":notes,"demoAccountRequired":False}
+  call(token,f"/v1/appStoreReviewDetails/{DETAIL}","PATCH",{"data":{"type":"appStoreReviewDetails","id":DETAIL,"attributes":payload}})
+  readback=attrs(one(call(token,f"/v1/appStoreReviewDetails/{DETAIL}")))
+  assert all(readback.get(k)==v for k,v in payload.items()),"Review info readback mismatch"
+  return {"contact_source_app_id":"6794796078","contact_values_match":True,"contact_fields_present":{k:bool(readback.get(k)) for k in keys},"notes_match":True,"notes_sha256":hashlib.sha256(notes.encode()).hexdigest(),"notes_length":len(notes)}
+ if action=="submit_review":
+  a=audit(token,version,detail)
+  assert command.get("privacy_audit_confirmed") is True,"Privacy declaration audit required"
+  assert a["review_notes"]["sha256"]==command.get("expected_notes_sha256") and a["review_notes"]["present"],"Expected saved notes required"
+  assert all(a["review_notes"]["contact_present"].values()),"Review contact required"
+  assert all(r["state"]=="COMPLETE" for group in a["assets"].values() for r in group),"All reserved assets must be COMPLETE"
+  assert any(r["file_name"]==FILES["video"]["file_name"] for r in a["assets"]["video"]),"Combined evidence video required"
+  assert any(r["id"]=="4fc00019-511d-850c-800e-088e0d9e8b05" and r["state"]=="COMPLETE" for r in a["assets"]["screenshot"]),"Required screenshot missing"
+  assert a["iap"]["review_screenshot"]["state"]=="COMPLETE","IAP review image incomplete"
+  assert a["iap"]["state"] in {"READY_TO_SUBMIT","WAITING_FOR_REVIEW","IN_REVIEW","APPROVED"},"IAP not ready"
+  submissions=rows(call(token,f"/v1/reviewSubmissions?filter[app]={APP}&limit=100"))
+  active=[r for r in submissions if attrs(r).get("state") in {"READY_FOR_REVIEW","WAITING_FOR_REVIEW","IN_REVIEW","UNRESOLVED_ISSUES"}]
+  assert len(active)<=1,"Ambiguous active review submission"
+  if active:sub=active[0]
+  else:sub=one(call(token,"/v1/reviewSubmissions","POST",{"data":{"type":"reviewSubmissions","attributes":{"platform":"IOS"},"relationships":{"app":rel("apps",APP)}}}))
+  sid=sub["id"]
+  assert attrs(sub).get("state") in {"READY_FOR_REVIEW","WAITING_FOR_REVIEW","IN_REVIEW"},"Existing submission has unresolved issues; do not blindly resubmit"
+  iv=[r for r in a["iap"]["versions"] if r["id"]=="ef6394de-91a3-434d-b1da-92246c04c927"]
+  assert len(iv)==1,"IAP version mismatch"
+  items=rows(call(token,f"/v1/reviewSubmissions/{sid}/items?include=appStoreVersion,inAppPurchaseVersion&limit=100"))
+  expected={("appStoreVersion",VERSION),("inAppPurchaseVersion",iv[0]["id"])}
+  present=set()
+  for item in items:
+   found=[]
+   for key,value in (item.get("relationships") or {}).items():
+    data=value.get("data")
+    if isinstance(data,dict):found.append((key,data.get("id")))
+   assert len(found)==1 and found[0] in expected,"Unrelated submission item present"
+   present.add(found[0])
+  if attrs(sub).get("state") in {"WAITING_FOR_REVIEW","IN_REVIEW"}:
+   assert expected==present,"Active submission does not contain both intended items"
+   return {"submission_id":sid,"submission_complete":a["app_store_state"] in {"WAITING_FOR_REVIEW","IN_REVIEW"},"state":attrs(sub)["state"],"audit":a}
+  for key,target in sorted(expected-present):
+   typ="appStoreVersions" if key=="appStoreVersion" else "inAppPurchaseVersions"
+   call(token,"/v1/reviewSubmissionItems","POST",{"data":{"type":"reviewSubmissionItems","relationships":{"reviewSubmission":rel("reviewSubmissions",sid),key:rel(typ,target)}}})
+  call(token,f"/v1/reviewSubmissions/{sid}","PATCH",{"data":{"type":"reviewSubmissions","id":sid,"attributes":{"submitted":True}}})
+  sub=one(call(token,f"/v1/reviewSubmissions/{sid}"))
+  after=one(call(token,f"/v1/appStoreVersions/{VERSION}"))
+  state=attrs(sub).get("state")
+  return {"submission_id":sid,"state":state,"app_store_state":attrs(after).get("appStoreState"),"submission_complete":state in {"WAITING_FOR_REVIEW","IN_REVIEW","COMPLETE"} and attrs(after).get("appStoreState") in {"WAITING_FOR_REVIEW","IN_REVIEW","PENDING_DEVELOPER_RELEASE","READY_FOR_SALE"}}
+
  if action=="audit": return audit(token,version,detail)
  if action=="reserve_assets":
   # Validate recipient before creating any Apple resource.
