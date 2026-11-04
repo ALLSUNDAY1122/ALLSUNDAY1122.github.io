@@ -71,7 +71,7 @@ def read_once(token, command):
         "beta_group_memberships": memberships
     }
     internal = any(g.get("attributes", {}).get("isInternalGroup") for g in memberships)
-    ready = a.get("processingState") == "VALID" and beta_attrs.get("internalBuildState") == "IN_BETA_TESTING" and internal
+    ready = a.get("processingState") == "VALID" and a.get("buildAudienceType") == "INTERNAL_ONLY" and beta_attrs.get("internalBuildState") == "IN_BETA_TESTING" and internal
     return {"ready": ready, "result": result, "reason": None if ready else "processing_or_internal_distribution_pending"}
 
 def main():
