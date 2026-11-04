@@ -1,6 +1,6 @@
 {
-  "request_id": "shiwake-ios-101-build6-20261104",
-  "action": "build",
+  "request_id": "shiwake-ios-101-build6-readback-20261104-01",
+  "action": "inspect_build",
   "ok": true,
   "app_id": "6a769d81a1add9d06020b524",
   "application_candidates": [
@@ -10,8 +10,20 @@
       "repositoryUrl": null
     }
   ],
-  "workflow_id": "shiwake-swipe-ios",
   "build_id": "6aeb30b0f554dd0931b516cd",
-  "branch": "main",
-  "status": "started"
+  "build": {
+    "_id": "6aeb30b0f554dd0931b516cd",
+    "status": "queued",
+    "fileWorkflowId": "shiwake-swipe-ios",
+    "branch": "main",
+    "createdAt": "2026-11-04T13:18:41.221000+00:00",
+    "index": 1,
+    "instanceType": "mac_mini_m2",
+    "actionCount": 0,
+    "artifactCount": 0,
+    "commit": {
+      "hash": "08bd32c7d771b56fa953f9ed9a9ee816aa21bbee"
+    }
+  },
+  "note": "Exact read-only build-list match. Apple-side availability still requires fresh ASC/TestFlight readback."
 }
