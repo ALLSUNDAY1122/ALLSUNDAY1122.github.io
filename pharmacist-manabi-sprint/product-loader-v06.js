@@ -9,7 +9,7 @@ function mapQuestion(q){
   var caseStem=q.sharedStem||'';
   if(Number(q.sourceExam)===111 && (Number(q.questionNo)===220 || Number(q.questionNo)===221)){
     // MHLW correction table 001677936.pdf: capsule count unit in the shared case.
-    caseStem=caseStem.replace(/デュロキセチン塩酸塩カプセル\\s*20\\s*mg\\s*1\\s*回\\s*1\\s*錠\\s*[（(]\\s*1\\s*日\\s*2\\s*錠\\s*[）)]/,'デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）');
+    caseStem=caseStem.replace(/デュロキセチン塩酸塩カプセル\s*20\s*mg\s*1\s*回\s*1\s*錠\s*[（(]\s*1\s*日\s*2\s*錠\s*[）)]/,'デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）');
     if(caseStem.indexOf('デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）')<0){
       throw new Error('MHLW correction missing in '+q.id);
     }
