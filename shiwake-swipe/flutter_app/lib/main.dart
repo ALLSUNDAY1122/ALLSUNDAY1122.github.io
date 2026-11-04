@@ -57,7 +57,6 @@ class ShiwakeSwipeApp extends StatelessWidget {
         splashFactory: InkSparkle.splashFactory,
         pageTransitionsTheme: PageTransitionsTheme(
           builders: {
-            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
             TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
           },
         ),
