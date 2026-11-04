@@ -20,6 +20,19 @@ data = json.loads(src.read_text(encoding='utf-8'))
 raw = data.get('questions', [])
 assert len(raw) == 1035, len(raw)
 
+# Release-blocking official corrigendum gate: the 111th exam Q220/Q221 share
+# a prescription stem whose dosage unit must be capsules, not tablets.
+by_id = {q.get('id'): q for q in raw}
+expected_q220_221 = 'デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）'
+for qid in ('P111-220', 'P111-221'):
+    stem = str(by_id[qid].get('sharedStem') or '')
+    assert expected_q220_221 in stem, f'MHLW correction missing from source {qid}: {stem}'
+    assert not __import__('re').search(
+        r'デュロキセチン塩酸塩カプセル\\s+20\\s+mg\\s+1\\s+回\\s+1\\s+錠',
+        stem,
+    ), f'obsolete tablet unit remains in source {qid}'
+print('PASS: MHLW corrigendum verified in source records P111-220/P111-221')
+
 questions = []
 active = excluded = flexible = free = 0
 media_copied = set()
@@ -91,6 +104,10 @@ assert all(q['sourceURL'].startswith('https://') for q in questions), 'every que
 assert all(q['modificationDisclosure'].startswith('加工：学びスプリント開発者') for q in questions), 'PDL1.0 modification actor disclosure missing'
 assert all(not q['legalSourceURL'] or q['legalSourceURL'].startswith('https://') for q in questions)
 assert all(not q['correctionSourceURL'] or q['correctionSourceURL'].startswith('https://') for q in questions)
+native_by_id = {q['id']: q for q in questions}
+for qid in ('P111-220', 'P111-221'):
+    assert expected_q220_221 in native_by_id[qid]['sharedStem'], f'MHLW correction lost in native bundle {qid}'
+print('PASS: MHLW corrigendum preserved in generated native question bundle')
 
 bundle = {
     'schemaVersion': 1,
