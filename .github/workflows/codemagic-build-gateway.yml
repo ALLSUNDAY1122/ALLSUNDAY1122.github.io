@@ -90,7 +90,7 @@ jobs:
               action_id = action.get('id') or action.get('_id')
               if not action_id:
                   continue
-              log_req = urllib.request.Request(f'https://codemagic.io/builds/{build_id}/step/{action_id}',headers={'x-auth-token': token, 'Accept': 'text/plain,*/*'},method='GET')
+              log_req = urllib.request.Request(f'https://api.codemagic.io/builds/{build_id}/step/{action_id}',headers={'x-auth-token': token, 'Accept': 'text/plain,*/*'},method='GET')
               try:
                   with urllib.request.urlopen(log_req, timeout=30) as response:
                       log_text = response.read().decode('utf-8', errors='replace')
