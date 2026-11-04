@@ -7,7 +7,10 @@ final class QuestionModelTests: XCTestCase {
         exam: Int = 111,
         section: String = "必須",
         answer: [Int] = [1],
-        accepted: [[Int]] = []
+        accepted: [[Int]] = [],
+        sourceURL: String? = nil,
+        legalSourceURL: String? = nil,
+        correctionSourceURL: String? = nil
     ) -> Question {
         Question(
             id: id, exam: exam, questionNo: 1, section: section, field: "物理・化学・生物",
@@ -15,15 +18,27 @@ final class QuestionModelTests: XCTestCase {
             acceptedAnswers: accepted, scoringStatus: accepted.isEmpty ? "normal" : "multiple_accepted",
             memoryPoint: "要点", explanation: "解説", sharedStem: "", displayMode: "textChoices",
             mediaAssets: [], numberedChoiceCount: 0, attribution: "出典", modificationDisclosure: "加工して作成",
+            sourceURL: sourceURL, legalSourceURL: legalSourceURL, correctionSourceURL: correctionSourceURL,
             canonicalId: id
         )
     }
 
-    func testQuestionSourceLinksDecodeAndRemainOptionalForFixtures() {
-        let q = question()
-        XCTAssertNil(q.sourceURL)
-        XCTAssertNil(q.legalSourceURL)
-        XCTAssertNil(q.correctionSourceURL)
+    func testQuestionSourceLinksDecodeAndRemainOptionalForFixtures() throws {
+        let fixture = question()
+        XCTAssertNil(fixture.sourceURL)
+        XCTAssertNil(fixture.legalSourceURL)
+        XCTAssertNil(fixture.correctionSourceURL)
+
+        let sourced = question(
+            sourceURL: "https://www.mhlw.go.jp/content/example.pdf",
+            legalSourceURL: "https://www.env.go.jp/hourei/example.html",
+            correctionSourceURL: "https://www.mhlw.go.jp/content/correction.pdf"
+        )
+        let data = try JSONEncoder().encode(sourced)
+        let decoded = try JSONDecoder().decode(Question.self, from: data)
+        XCTAssertEqual(decoded.sourceURL, sourced.sourceURL)
+        XCTAssertEqual(decoded.legalSourceURL, sourced.legalSourceURL)
+        XCTAssertEqual(decoded.correctionSourceURL, sourced.correctionSourceURL)
     }
 
     func testSingleChoiceScoring() {
