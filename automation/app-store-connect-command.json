@@ -1,30 +1,19 @@
 {
-  "request_id": "pitari-prewrite-check-20261104-1849",
-  "requests": [
+  "request_id": "pitari-build12-notes-20261104-1850",
+  "action": "write",
+  "expected_app_id": "6795941132",
+  "expected_bundle_id": "jp.allsunday.pitariresize",
+  "operations": [
     {
-      "label": "version",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff"
+      "type": "attach_build",
+      "app_store_version_id": "e0aa7c21-0569-4e59-85e7-3cc3afe65dff",
+      "build_id": "b0821263-a794-467f-baf0-41b386f6f233"
     },
     {
-      "label": "selected",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff/relationships/build"
-    },
-    {
-      "label": "build12",
-      "method": "GET",
-      "path": "/v1/builds/b0821263-a794-467f-baf0-41b386f6f233"
-    },
-    {
-      "label": "review",
-      "method": "GET",
-      "path": "/v1/appStoreReviewDetails/7416f717-4d3b-475d-9c86-7f1f00a34627"
-    },
-    {
-      "label": "review-attachments",
-      "method": "GET",
-      "path": "/v1/appStoreReviewDetails/7416f717-4d3b-475d-9c86-7f1f00a34627/appStoreReviewAttachments?limit=50"
+      "type": "update_review_notes",
+      "app_store_version_id": "e0aa7c21-0569-4e59-85e7-3cc3afe65dff",
+      "review_detail_id": "7416f717-4d3b-475d-9c86-7f1f00a34627",
+      "notes": "Pitari Size (ぴたりサイズ) — App Review information, iOS 1.0 Build 12\n\n1. PHYSICAL-DEVICE DEMONSTRATION\nA physical iPhone screen-recording demonstration has been prepared (pitari_app_review_demo_20261104.mp4, approx. 52 seconds). It shows: launching the app; selecting a video, compressing it and saving the result; selecting a photo, resizing and saving it; selecting two photos and converting/saving them together. The recording must be uploaded separately to App Review Attachments before review resubmission. The demo was recorded on an iPhone running iOS 26.\n\n2. PURPOSE / AUDIENCE\nPitari Size is a utility for individuals who need to resize photos, reduce media file sizes for sharing or storage, or convert several photos together. The free features include single-photo resizing. A one-time nonconsumable Pro purchase unlocks video compression and batch photo conversion; there is no subscription.\n\n3. ACCESS AND TEST INSTRUCTIONS\nNo account registration, login, or demo credentials are required. The app works with local test photos/videos.\nPhoto: Launch > Select Photo > choose a size preset or capacity > Convert > Save to Photos.\nVideo (Pro): Select Video > choose a target capacity > Compress Video > Save Video.\nBatch (Pro): Select multiple photos in the Photos picker > choose settings > Convert All > Save to Photos.\nThe user must grant Photos access where iOS requests it. Pro status is shown on the home screen when a purchase is active. Purchases may be restored using the Restore Purchase control in the purchase screen.\n\n4. SERVICES / TOOLS\nCore processing occurs locally on the iPhone using native media processing libraries through React Native/Expo; selected media is not uploaded to our server. Apple's Photos library, native sharing and Apple StoreKit are used. The app does not require external account login, data providers, cloud media conversion, or an AI service for its core functionality.\n\n5. REGIONS\nPhoto/video conversion features are the same in all supported regions. For new Pro purchases, the current Build 12 validates that StoreKit has provided a Japanese-yen (JPY) storefront price; a non-JPY price disables the purchase action. Existing purchases may still be restored. There is no region-specific media content.\n\n6. REGULATION / THIRD-PARTY CONTENT\nNot applicable. This app is a general-purpose photo/video utility, does not offer regulated professional services or host public user-generated content, and does not supply or distribute protected third-party content. Users select their own files."
     }
   ]
 }
