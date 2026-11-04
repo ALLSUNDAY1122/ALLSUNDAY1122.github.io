@@ -84,6 +84,10 @@ for q in raw:
 assert (active, excluded, flexible, free) == (1031, 4, 3, 90), (active, excluded, flexible, free)
 assert all(q['id'] and q['exam'] in (109,110,111) and q['section'] in ('必須','理論','実践') for q in questions)
 assert all(q['memoryPoint'] and q['explanation'] for q in questions)
+assert all(q['sourceURL'].startswith('https://') for q in questions), 'every question must carry an HTTPS source URL'
+assert all(q['modificationDisclosure'].startswith('加工：学びスプリント開発者') for q in questions), 'PDL1.0 modification actor disclosure missing'
+assert all(not q['legalSourceURL'] or q['legalSourceURL'].startswith('https://') for q in questions)
+assert all(not q['correctionSourceURL'] or q['correctionSourceURL'].startswith('https://') for q in questions)
 
 bundle = {
     'schemaVersion': 1,
