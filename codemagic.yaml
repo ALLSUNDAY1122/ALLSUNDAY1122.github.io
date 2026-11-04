@@ -610,9 +610,9 @@ workflows:
           cd "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios"
           # Codemagic's per-workflow CM_BUILD_NUMBER can collide with a build
           # already present in App Store Connect after workflow history resets.
-          # Use the current UTC minute as a monotonically advancing numeric build
-          # identifier. App Store review submission remains disabled.
-          RELEASE_BUILD_NUMBER="$(date -u +%Y%m%d%H%M)"
+          # UTC seconds avoid collisions with existing App Store Connect builds.
+          # This workflow uploads to internal TestFlight only; App Review is disabled.
+          RELEASE_BUILD_NUMBER="$(date -u +%Y%m%d%H%M%S)"
           export RELEASE_BUILD_NUMBER
           python3 - <<'PY'
           from pathlib import Path
@@ -647,7 +647,27 @@ workflows:
           assert (len(q),len(active),len(free),len(media))==(1035,1031,90,154)
           print('PASS: native pharmacist release inputs and canonical AppIcon')
           PY
-      - name: Apply App Store signing profiles for App Store review
+      - name: Run native unit and UI tests before TestFlight
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          UDID="$(python3 - <<'PY'
+          import json, subprocess
+          data=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          for devices in data['devices'].values():
+              for device in devices:
+                  if device.get('isAvailable') and device.get('name','').startswith('iPhone'):
+                      print(device['udid'])
+                      raise SystemExit(0)
+          raise SystemExit('No available iPhone Simulator')
+          PY
+          )"
+          xcodebuild test \
+            -project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Apply App Store signing profiles for TestFlight
         script: |
           cd "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios"
           xcode-project use-profiles
