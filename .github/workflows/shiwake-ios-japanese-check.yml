@@ -96,7 +96,7 @@ jobs:
               print(json.dumps(state, ensure_ascii=False, indent=2))
               out = Path('automation/asc-results/shiwake-store-readback-20261104.json')
               out.parent.mkdir(parents=True, exist_ok=True)
-              out.write_text(json.dumps(state, ensure_ascii=False, indent=2) + '\\n', encoding='utf-8')
+              out.write_text(json.dumps(state, ensure_ascii=False, indent=2) + chr(10), encoding='utf-8')
           finally:
               if cleanup:
                   cleanup.unlink(missing_ok=True)
