@@ -1,0 +1,100 @@
+name: Shiwake Swipe iOS Japanese and Store Readback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "shiwake-swipe/flutter_app/**"
+      - ".github/workflows/shiwake-ios-japanese-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ios-japanese:
+    runs-on: macos-15
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: shiwake-swipe/flutter_app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate iOS and apply Japanese-only localization
+        run: |
+          flutter create --platforms=ios .
+          flutter pub get
+          python3 scripts/set_ios_japanese_locale.py
+          python3 scripts/set_ios_japanese_locale.py --check
+      - name: Build iOS Simulator app
+        run: flutter build ios --simulator --debug
+      - name: Confirm generated app declares Japanese
+        run: |
+          python3 - <<'PY'
+          import pathlib, plistlib
+          p = pathlib.Path('build/ios/iphonesimulator/Runner.app/Info.plist')
+          assert p.is_file(), f'Not built: {p}'
+          data = plistlib.loads(p.read_bytes())
+          assert data.get('CFBundleLocalizations') == ['ja'], data.get('CFBundleLocalizations')
+          assert data.get('CFBundleDevelopmentRegion') == 'ja', data.get('CFBundleDevelopmentRegion')
+          print('PASS: built Runner.app supports Japanese locale (ja)')
+          PY
+
+  app-store-readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read live App Store Connect state (no writes)
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import os, sys, json
+          from pathlib import Path
+          sys.path.insert(0, str(Path('scripts').resolve()))
+          from app_store_connect_api import api_get, load_private_key, make_token
+
+          APP_ID = '6794796078'
+          BUNDLE = 'jp.allsunday1122.shiwakeswipe'
+          key, cleanup = load_private_key()
+          try:
+              token = make_token(os.environ['ASC_ISSUER_ID'], os.environ['ASC_KEY_ID'], key)
+              def get(path):
+                  return api_get(token, path)[1]
+              app = get(f'/v1/apps/{APP_ID}')['data']
+              assert app['attributes']['bundleId'] == BUNDLE, 'Bundle ID mismatch'
+              versions = get(f'/v1/apps/{APP_ID}/appStoreVersions?limit=50')['data']
+              state = {'appId': APP_ID, 'bundleId': BUNDLE,
+                       'primaryLocale': app['attributes'].get('primaryLocale'),
+                       'versions': []}
+              for version in versions:
+                  vid=version['id']
+                  v={'version': version['attributes'].get('versionString'),
+                     'state': version['attributes'].get('appStoreState'), 'id': vid}
+                  locs = get(f'/v1/appStoreVersions/{vid}/appStoreVersionLocalizations?limit=100')['data']
+                  v['localizations']=[]
+                  for loc in locs:
+                      lid=loc['id']
+                      sets = get(f'/v1/appStoreVersionLocalizations/{lid}/appScreenshotSets?limit=100')['data']
+                      l={'locale': loc['attributes'].get('locale'), 'screenshotSets': []}
+                      for screenshot_set in sets:
+                          sid=screenshot_set['id']
+                          screenshots=get(f'/v1/appScreenshotSets/{sid}/appScreenshots?limit=100')['data']
+                          l['screenshotSets'].append({
+                            'displayType': screenshot_set['attributes'].get('screenshotDisplayType'),
+                            'count':len(screenshots),
+                            'files':[s['attributes'].get('fileName') for s in screenshots]})
+                      v['localizations'].append(l)
+                  state['versions'].append(v)
+              print(json.dumps(state, ensure_ascii=False, indent=2))
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+          PY
