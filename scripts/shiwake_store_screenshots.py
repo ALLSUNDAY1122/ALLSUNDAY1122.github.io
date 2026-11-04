@@ -25,11 +25,11 @@ CURRENT_VERSION = "1.0"
 NEW_VERSION = "1.0.1"
 DISPLAY_TYPE = "APP_IPHONE_67"
 SOURCE = Path("automation/app2-001/screenshots/20261104/shiwake-store-ja.zip")
-EXPECTED_ZIP_SHA256 = "515971bb1606afb315ad18221e2e92fdf6800923379343e25220571248ff7658"
+EXPECTED_ZIP_SHA256 = "7f3441bc9a1743a40f0f73e3df2df34c84fb2cff57973f019029000619b5af7d"
 FILES = (
-    ("shiwake_appstore_01_1320x2868.png", "e55bade2caff17abb46d303e5aa273c9e16518dbde1cc366a39aba96bff27435"),
+    ("shiwake_appstore_01_1320x2868.png", "175ac52202a1bc26e929ec45942bcfdb0acd4a4e0e0c0b2a4ad309f8ba36675b"),
     ("shiwake_appstore_02_1320x2868.png", "715ead530ea9d20eafe07f80425331f59b3f12c97a57b4930313642094220e02"),
-    ("shiwake_appstore_03_1320x2868.png", "4856ed67c3f352297b7b03d3db6f0b74c672604fe03e2394bc8806d5d3179704"),
+    ("shiwake_appstore_03_1320x2868.png", "51c49428e88dc2a20954490d79785765abdbf9192f861ec5e3c903d171677c36"),
 )
 
 
