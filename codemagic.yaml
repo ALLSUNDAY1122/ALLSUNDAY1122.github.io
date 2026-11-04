@@ -564,6 +564,13 @@ workflows:
 
   pharmacist-ios:
     name: 薬剤師国家試験 - iOS App Store Candidate
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+      cancel_previous_builds: true
     max_build_duration: 60
     instance_type: mac_mini_m2
     integrations:
