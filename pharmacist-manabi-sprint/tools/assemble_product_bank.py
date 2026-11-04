@@ -48,6 +48,17 @@ def normalize_case(q, qmap):
         if m and m.start()>20:
             stem=clean_ws(q['question'][:m.start()]); own=clean_ws(q['question'][m.end():])
             if len(stem)>30 and len(own)>10:
+                # MHLW correction table 001677936.pdf: 111th exam Q220/Q221.
+                # The dosage form is a capsule; retain the corrected unit in the
+                # shared case stem before it is emitted to Web and native bundles.
+                if exam == 111 and n == 220:
+                    stem, replacements = re.subn(
+                        r'(デュロキセチン塩酸塩カプセル\\s+20\\s+mg\\s+1\\s+回\\s+1\\s+)錠(\\s*[（(]\\s*1\\s+日\\s+2\\s+)錠',
+                        r'\\1カプセル\\2カプセル',
+                        stem,
+                    )
+                    if replacements != 1:
+                        raise ValueError(f'MHLW correction 001677936.pdf did not match exactly once in {q["id"]}: {replacements}')
                 q['sharedStem']=stem;q['question']=own
                 nxt=qmap.get(f'P{exam}-{n+1:03d}')
                 if nxt and nxt.get('caseGroupId')==gid:nxt['sharedStem']=stem
@@ -82,6 +93,16 @@ def main():
         else:q['displayMode']='textChoices'
         q['canonicalContentHash']=canonical_hash(q);q['attributionDisplay']=q.get('attribution') or f"出典：厚生労働省『第{q['sourceExam']}回薬剤師国家試験問題及び解答』";q['modificationDisclosureDisplay']='厚生労働省公開問題をもとに、学習表示・解説を加工して作成'
     for q in qs:normalize_case(q,qmap)
+    # Release-blocking regression assertion: both linked questions must carry
+    # the official dosage-form correction in their displayed shared stem.
+    corrected_ids = ('P111-220', 'P111-221')
+    for qid in corrected_ids:
+        q = qmap[qid]
+        stem = clean_ws(q.get('sharedStem'))
+        if 'デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）' not in stem:
+            raise SystemExit(f'FAIL: MHLW correction missing from {qid} sharedStem')
+        if re.search(r'デュロキセチン塩酸塩カプセル\\s+20\\s+mg\\s+1\\s+回\\s+1\\s+錠', stem):
+            raise SystemExit(f'FAIL: obsolete tablet dosage remains in {qid} sharedStem')
     for q in qs:q['canonicalContentHash']=canonical_hash(q)
     hashes={}
     for q in qs:
