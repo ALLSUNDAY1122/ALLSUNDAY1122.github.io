@@ -121,9 +121,9 @@
         "type": "script",
         "has_test_results": false,
         "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR\"\nUDID=\"$(python3 - <<'PY'\nimport json, subprocess\ndata=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))\nfor devices in data['devices'].values():\n    for device in devices:\n        if device.get('isAvailable') and device.get('name','').startswith('iPhone'):\n            print(device['udid'])\n            raise SystemExit(0)\nraise SystemExit('No available iPhone Simulator')\nPY\n)\"\n# Xcode 26.4's iOS 26.4 simulator intermittently fails to initialize\n# XCTest UIAccessibility before any UI test executes (AX loaded notification\n# timeout). Compile the complete UI test target here, but execute unit tests\n# only. The separate Xcode 16 macOS 14 preflight runs the full UI Visual Gate\n# and requires seven captured screenshots before this release is mergeable.\nxcodebuild build-for-testing \\\n  -project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  -scheme \"$XCODE_SCHEME\" \\\n  -destination \"platform=iOS Simulator,id=$UDID\" \\\n  CODE_SIGNING_ALLOWED=NO\nxcodebuild test-without-building \\\n  -project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  -scheme \"$XCODE_SCHEME\" \\\n  -destination \"platform=iOS Simulator,id=$UDID\" \\\n  -only-testing:PharmacistSprintTests \\\n  -parallel-testing-enabled NO \\\n  CODE_SIGNING_ALLOWED=NO",
-        "status": null,
+        "status": "success",
         "started_at": "2026-11-04T18:53:51.648000Z",
-        "finished_at": null
+        "finished_at": "2026-11-04T18:56:42.988000Z"
       },
       {
         "id": "6aeb7ef8ab844959c377b9bf",
@@ -132,7 +132,7 @@
         "has_test_results": false,
         "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
         "status": null,
-        "started_at": null,
+        "started_at": "2026-11-04T18:56:42.988000Z",
         "finished_at": null
       },
       {
@@ -5026,17 +5026,17 @@
             "name": "Build native UI tests and run unit tests before TestFlight",
             "type": null,
             "logUrl": null,
-            "status": null,
+            "status": "success",
             "startedAt": "2026-11-04T18:53:51.648000+00:00",
-            "finishedAt": null,
+            "finishedAt": "2026-11-04T18:56:42.988000+00:00",
             "results": [],
             "subactions": [
               {
                 "command": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR\"\nUDID=\"$(python3 - <<'PY'\nimport json, subprocess\ndata=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))\nfor devices in data['devices'].values():\n    for device in devices:\n        if device.get('isAvailable') and device.get('name','').startswith('iPhone'):\n            print(device['udid'])\n            raise SystemExit(0)\nraise SystemExit('No available iPhone Simulator')\nPY\n)\"\n# Xcode 26.4's iOS 26.4 simulator intermittently fails to initialize\n# XCTest UIAccessibility before any UI test executes (AX loaded notification\n# timeout). Compile the complete UI test target here, but execute unit tests\n# only. The separate Xcode 16 macOS 14 preflight runs the full UI Visual Gate\n# and requires seven captured screenshots before this release is mergeable.\nxcodebuild build-for-testing \\\n  -project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  -scheme \"$XCODE_SCHEME\" \\\n  -destination \"platform=iOS Simulator,id=$UDID\" \\\n  CODE_SIGNING_ALLOWED=NO\nxcodebuild test-without-building \\\n  -project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  -scheme \"$XCODE_SCHEME\" \\\n  -destination \"platform=iOS Simulator,id=$UDID\" \\\n  -only-testing:PharmacistSprintTests \\\n  -parallel-testing-enabled NO \\\n  CODE_SIGNING_ALLOWED=NO",
-                "status": null,
+                "status": "success",
                 "startedAt": "2026-11-04T18:53:51.648000+00:00",
-                "logUrl": null,
-                "finishedAt": null
+                "logUrl": "https://api.codemagic.io/builds/6aeb7ef7d3989a3017e8f118/step/6aeb7ef8ab844959c377b9be",
+                "finishedAt": "2026-11-04T18:56:42.541000+00:00"
               }
             ]
           },
@@ -5046,14 +5046,14 @@
             "type": null,
             "logUrl": null,
             "status": null,
-            "startedAt": null,
+            "startedAt": "2026-11-04T18:56:42.988000+00:00",
             "finishedAt": null,
             "results": [],
             "subactions": [
               {
                 "command": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
                 "status": null,
-                "startedAt": null,
+                "startedAt": "2026-11-04T18:56:42.988000+00:00",
                 "logUrl": null,
                 "finishedAt": null
               }
