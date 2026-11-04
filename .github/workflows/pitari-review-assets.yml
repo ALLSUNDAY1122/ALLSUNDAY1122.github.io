@@ -1,0 +1,61 @@
+name: Pitari private review asset bridge
+on:
+  push:
+    branches: [main]
+    paths: ['automation/pitari-review-command.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: pitari-review-6795941132
+  cancel-in-progress: false
+jobs:
+  review-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install encryption support
+        run: python3 -m pip install --disable-pip-version-check --quiet cryptography==46.0.3
+      - name: Execute target-bound command
+        id: execute
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/pitari_review_assets.py
+      - name: Persist only sanitized and encrypted receipt
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json,re,shutil
+          from pathlib import Path
+          c=json.loads(Path('automation/pitari-review-command.json').read_text())
+          rid=c['request_id']
+          assert re.fullmatch(r'[A-Za-z0-9._-]{1,100}',rid)
+          p=Path('automation/pitari-review-results')/(rid+'.json')
+          assert p.is_file()
+          shutil.copyfile(p,'/tmp/pitari-receipt.json')
+          Path('/tmp/pitari-rid.txt').write_text(rid)
+          PY
+          RID="$(cat /tmp/pitari-rid.txt)"
+          TARGET="automation/pitari-review-results/${RID}.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$TARGET"
+          git diff --cached --quiet && exit 0
+          git commit -m "Record Pitari review receipt ${RID}"
+          if ! git push; then
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p automation/pitari-review-results
+            cp /tmp/pitari-receipt.json "$TARGET"
+            git add "$TARGET"
+            git diff --cached --quiet && exit 0
+            git commit -m "Record Pitari review receipt ${RID}"
+            git push
+          fi
+      - name: Propagate operation failure
+        if: steps.execute.outcome == 'failure'
+        run: exit 1
