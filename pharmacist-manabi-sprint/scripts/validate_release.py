@@ -59,6 +59,27 @@ if (len(questions), len(active), len(excluded), len(flexible)) != (1035, 1031, 4
 if web_audit.get('pass') is not True:
     errors.append('web/source audit not PASS')
 
+# Critical Q0/Q1 source checks: current official corrections and currentness notes must be in the shipped bank.
+by_id = {q.get('id'): q for q in questions}
+for qid in ('P111-220', 'P111-221'):
+    q = by_id.get(qid, {})
+    stem = q.get('sharedStem', '')
+    if '1回1カプセル' not in stem or '1日2カプセル' not in stem or '1回1錠（1日2錠）' in stem:
+        errors.append(qid + ': official corrigendum not applied to sharedStem')
+    if q.get('correction_source_url') != 'https://www.mhlw.go.jp/content/001677936.pdf':
+        errors.append(qid + ': official corrigendum source URL missing')
+q = by_id.get('P110-140', {})
+for token in ('第110回試験', '2026年4月1日施行', '紫外線吸収法', 'エチレンを用いる化学発光法'):
+    if token not in q.get('explanation', ''):
+        errors.append('P110-140: current environmental standard note missing: ' + token)
+if q.get('legal_source_url') != 'https://www.env.go.jp/hourei/04/000105.html':
+    errors.append('P110-140: official environmental standard source URL missing')
+for q in questions:
+    if not str(q.get('source_url', '')).startswith('https://'):
+        errors.append(str(q.get('id')) + ': official source URL missing')
+    if not str(q.get('modificationDisclosureDisplay', '')).startswith('加工：学びスプリント開発者'):
+        errors.append(str(q.get('id')) + ': PDL1.0 modification actor disclosure missing')
+
 with open(R / 'ios/Info.plist', 'rb') as f:
     info = plistlib.load(f)
 if info.get('ITSAppUsesNonExemptEncryption') is not False:
