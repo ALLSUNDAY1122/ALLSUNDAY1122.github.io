@@ -44,7 +44,7 @@ AGE_RATING_ATTRIBUTES = {
     "horrorOrFearThemes": "NONE",
     "lootBox": False,
     "matureOrSuggestiveThemes": "NONE",
-    "medicalOrTreatmentInformation": "FREQUENT_OR_INTENSE",
+    "medicalOrTreatmentInformation": "FREQUENT",
     "messagingAndChat": False,
     "parentalControls": False,
     "profanityOrCrudeHumor": "NONE",
@@ -148,6 +148,13 @@ def ensure_app_info(token: str) -> dict:
     if not infos:
         raise RuntimeError("AppInfo missing")
     info_id = str(infos[0]["id"])
+    # The audited question bank includes public-sector third-party materials
+    # used under the Ministry of Health, Labour and Welfare PDL 1.0 terms.
+    patch(token, f"/v1/apps/{APP_ID}", "apps", APP_ID, attributes={"contentRightsDeclaration":"USES_THIRD_PARTY_CONTENT"})
+    _, app_readback = api_get(token, f"/v1/apps/{APP_ID}")
+    app_attrs = (one(app_readback, "app after content-rights update").get("attributes") or {})
+    if app_attrs.get("contentRightsDeclaration") != "USES_THIRD_PARTY_CONTENT":
+        raise RuntimeError("App content-rights declaration read-back mismatch")
     try:
         patch(token, f"/v1/appInfos/{info_id}", "appInfos", info_id, relationships={"primaryCategory":{"data":{"type":"appCategories","id":"EDUCATION"}}})
     except Exception:
