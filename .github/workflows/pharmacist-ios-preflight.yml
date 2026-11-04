@@ -71,7 +71,16 @@ jobs:
               echo "PR validation: use regenerated Web bundle in this job; never push generated files to main from a pull_request token."
             else
               git commit -m 'pharmacist: regenerate official corrected Q220/Q221 bundle [skip ci]'
-              git push origin HEAD:main
+              for attempt in 1 2 3 4 5; do
+                git pull --rebase origin main
+                if git push origin HEAD:main; then
+                  exit 0
+                fi
+                git rebase --abort || true
+                sleep $((attempt * 2))
+              done
+              echo "Could not persist generated Web bundle after five non-fast-forward retries." >&2
+              exit 1
             fi
           fi
 
