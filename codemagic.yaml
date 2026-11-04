@@ -566,10 +566,14 @@ workflows:
     name: 薬剤師国家試験 - iOS App Store Candidate
     triggering:
       events:
-        - push
+        - pull_request
       branch_patterns:
+        - pattern: fix/pharmacist-testflight-20261105-clean-run
+          include: true
+          source: true
         - pattern: main
           include: true
+          source: false
       cancel_previous_builds: true
     max_build_duration: 60
     instance_type: mac_mini_m2
