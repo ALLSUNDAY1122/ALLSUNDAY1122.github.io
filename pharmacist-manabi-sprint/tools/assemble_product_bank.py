@@ -53,8 +53,8 @@ def normalize_case(q, qmap):
                 # shared case stem before it is emitted to Web and native bundles.
                 if exam == 111 and n == 220:
                     stem, replacements = re.subn(
-                        r'(デュロキセチン塩酸塩カプセル\\s+20\\s+mg\\s+1\\s+回\\s+1\\s+)錠(\\s*[（(]\\s*1\\s+日\\s+2\\s+)錠',
-                        r'\\1カプセル\\2カプセル',
+                        r'(デュロキセチン塩酸塩カプセル\s+20\s+mg\s+1\s+回\s+1\s+)錠(\s*[（(]\s*1\s+日\s+2\s+)錠',
+                        r'\1カプセル\2カプセル',
                         stem,
                     )
                     if replacements != 1:
@@ -101,7 +101,7 @@ def main():
         stem = clean_ws(q.get('sharedStem'))
         if 'デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）' not in stem:
             raise SystemExit(f'FAIL: MHLW correction missing from {qid} sharedStem')
-        if re.search(r'デュロキセチン塩酸塩カプセル\\s+20\\s+mg\\s+1\\s+回\\s+1\\s+錠', stem):
+        if re.search(r'デュロキセチン塩酸塩カプセル\s+20\s+mg\s+1\s+回\s+1\s+錠', stem):
             raise SystemExit(f'FAIL: obsolete tablet dosage remains in {qid} sharedStem')
     for q in qs:q['canonicalContentHash']=canonical_hash(q)
     hashes={}
