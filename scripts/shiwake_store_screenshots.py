@@ -197,7 +197,7 @@ def upload(token: str) -> dict:
         if retry < 29:
             time.sleep(6)
     if not report:
-        raise RuntimeError("Screenshot processing not confirmed COMPLETE")
+        raise RuntimeError(f"Screenshot processing not confirmed COMPLETE: {locals().get('states', {})}")
     return report
 
 
