@@ -5,7 +5,10 @@
   "scope": "keyword-assisted legal and regulatory review queue; not a legal classification",
   "counts": {
     "cross-domain-keyword": 16,
-    "legal-domain": 90
+    "legal-domain": 90,
+    "manual-regulatory-candidate": 1,
+    "totalTracked": 107,
+    "keywordScreeningTotal": 106
   },
   "items": [
     {
@@ -1869,8 +1872,29 @@
       "lawVersionDate": null,
       "officialLawUrl": null,
       "impactOfLaterAmendments": null
+    },
+    {
+      "id": "P110-140",
+      "exam": 110,
+      "questionNo": 140,
+      "subject": "衛生",
+      "domain": "衛生",
+      "candidateType": "manual-regulatory-candidate",
+      "examDate": "2025-02-23",
+      "sourceUrl": "https://www.mhlw.go.jp/content/001455152.pdf",
+      "matchedTerms": [
+        "光化学オキシダント",
+        "測定法",
+        "中性ヨウ化カリウム法"
+      ],
+      "status": "POST_EXAM_STANDARD_REVISION_IDENTIFIED; HISTORICAL_ANSWER_VALID; CURRENT_EXPLANATION_UPDATE_REQUIRED",
+      "lawName": "大気の汚染に係る環境基準（光化学オキシダントの測定方法）",
+      "article": "環境庁告示第25号（昭和48年）および平成8年環告第73号改正、令和8年環境省告示第8号（2026-01-30改正）",
+      "lawVersionDate": "出題時点2025-02-23と現行2026-01-30改正後を区別",
+      "officialLawUrl": "https://www.env.go.jp/kijun/taiki.html ; https://www.nies.go.jp/eqsbasis/air.html",
+      "impactOfLaterAmendments": "第110回試験時点では中性ヨウ化カリウム法は測定方法の一つとして正しい。2026-01-30改正後の現行測定方法は紫外線吸収法またはエチレンを用いる化学発光法であり、中性ヨウ化カリウム法は現行の標準測定方法から外れた。設問の歴史的正答は維持しつつ、解説に現行法への改正注記が必要。"
     }
   ],
   "updatedAt": "2026-11-04",
-  "progressNote": "初期法令一次資料の確認を開始。法令の試験日現在の版と現行版の差分は引き続き確認中。"
+  "progressNote": "法規領域90＋他分野キーワード候補16＝106件に加え、条文・告示の改正日照合でP110-140を手動追加。合計107件。"
 }
