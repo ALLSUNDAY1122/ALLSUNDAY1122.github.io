@@ -181,12 +181,14 @@
       "examDate": "2026-02-22",
       "sourceUrl": "https://www.mhlw.go.jp/content/001677927.pdf",
       "matchedTerms": [],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
-      "article": null,
-      "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "status": "PRIMARY_SOURCE_CONFIRMED; REGULATORY_SYSTEM; EXAM_DATE_CONTEXT_PARTIAL",
+      "lawName": "薬価調査（薬価基準改定のための市場実勢価格調査）",
+      "article": "法令条文ではなく、中医協・厚生労働省の薬価調査制度資料",
+      "lawVersionDate": "2026-01-16時点の中医協資料を確認",
+      "officialLawUrl": "https://www.mhlw.go.jp/stf/newpage_75339.html",
+      "impactOfLaterAmendments": "厚生労働省資料は市場実勢価格を卸売販売業者と保険医療機関・保険薬局間の取引価格と説明。2026-01-16中医協議事録は販売側の卸営業所等の販売価格、購入側の医療機関等の購入価格を調査すると記録。設問の主たる取引と整合する。法令条文ではなく制度運用資料で確認。",
+      "auditConclusion": "公式制度資料で市場実勢価格の定義と取引当事者を確認。図中の選択肢Cが卸売業者から医療機関・薬局への取引を示すことは、公式問題PDFの図版と照合して最終確認する（図版の文字配置は本バッチで未目視）。",
+      "evidenceLevel": "OFFICIAL_POLICY_PRIMARY_SOURCE; QUESTION_DIAGRAM_VISUAL_PENDING"
     },
     {
       "id": "P111-079",
@@ -198,12 +200,14 @@
       "examDate": "2026-02-22",
       "sourceUrl": "https://www.mhlw.go.jp/content/001677927.pdf",
       "matchedTerms": [],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
+      "status": "OFFICIAL_STATISTICS_CONFIRMED; NONLEGAL_DATA_QUESTION",
+      "lawName": "該当する個別法令なし（国民医療費統計）",
       "article": null,
-      "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "lawVersionDate": "2021年度統計（設問の対象年度）",
+      "officialLawUrl": "https://www.mhlw.go.jp/toukei/saikin/hw/k-iryohi/21/dl/kekka.pdf",
+      "impactOfLaterAmendments": "厚生労働省の令和3年度国民医療費では公費38.0%、保険料50.0%、その他12.1%。設問の近年2018〜2021年度における公費の概数40%と整合。これは法令の条文適用問題ではなく公的統計の読み取り。",
+      "auditConclusion": "公式統計で2021年度の公費比率38.0%を確認。法令候補キュー上の非法令候補として分類し、Q0法令版監査からは除外。統計の年度・出典表示の妥当性は教材監査に引き継ぐ。",
+      "evidenceLevel": "OFFICIAL_STATISTICS"
     },
     {
       "id": "P111-080",
@@ -215,12 +219,14 @@
       "examDate": "2026-02-22",
       "sourceUrl": "https://www.mhlw.go.jp/content/001677927.pdf",
       "matchedTerms": [],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
+      "status": "NONLEGAL_CONCEPT; KEYWORD_QUEUE_FALSE_POSITIVE",
+      "lawName": "該当する個別法令なし（医療コミュニケーション概念）",
       "article": null,
       "lawVersionDate": null,
       "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "impactOfLaterAmendments": "設問は医療コミュニケーションにおける相互信頼関係「ラポール」の用語理解を問う。法令・告示・制度要件を直接問わない。",
+      "auditConclusion": "キーワード抽出上の非法令候補。Q0法令版監査からは除外し、一般教材の用語・解説正確性確認へ引き継ぐ。",
+      "evidenceLevel": "NOT_A_LEGAL_QUESTION"
     },
     {
       "id": "P111-123",
@@ -234,12 +240,14 @@
       "matchedTerms": [
         "法律"
       ],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
-      "article": null,
+      "status": "OFFICIAL_LAWS_LOCATED; EXAM_DATE_VERSION_REVIEW_PENDING",
+      "lawName": "健康増進法、がん登録等の推進に関する法律、高齢者の医療の確保に関する法律",
+      "article": "健康増進法第10条・第11条、がん登録等の推進に関する法律第5条、高齢者の医療の確保に関する法律第20条、関連省令第1条",
       "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=78aa3837 ; https://www.mhlw.go.jp/web/t_doc?dataId=78ab3706&dataType=0&pageNo=1 ; https://laws.e-gov.go.jp/document?lawid=357AC0000000080_20240401_505AC0000000019",
+      "impactOfLaterAmendments": "健康増進法第10条は国民健康・栄養調査を規定し、第11条は調査対象選定を毎年行うと規定。したがって「5年ごと」は誤り。がん登録等の推進に関する法律第5条は全国がん登録データベースの整備を規定。高確法第20条と実施基準第1条は40歳以上（当該年度40〜74歳に達する加入者）を対象とし、設問の30〜64歳は誤り。設問の正答1・5の法的根拠と整合。",
+      "auditConclusion": "3法令の現行一次資料を特定し、設問の法令参照事項と選択肢の正誤方向を確認。試験日2026-02-22時点の各条文・省令の沿革と改正施行日を完全には再構成していないため、試験日版は保留。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_TEXT; HISTORICAL_VERSION_PENDING"
     },
     {
       "id": "P111-141",
@@ -251,12 +259,14 @@
       "examDate": "2026-02-22",
       "sourceUrl": "https://www.mhlw.go.jp/content/001677928.pdf",
       "matchedTerms": [],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
-      "article": null,
-      "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "status": "PRIMARY_SOURCE_CONFIRMED; NONSTATUTORY_RESEARCH_ETHICS_DECLARATION",
+      "lawName": "世界医師会「ヘルシンキ宣言」",
+      "article": "序文1（本人を特定できるヒト試料・データを用いる研究を含む）",
+      "lawVersionDate": "2024-10改訂（第75回WMA総会）",
+      "officialLawUrl": "https://www.wma.net/doh-japanese/",
+      "impactOfLaterAmendments": "WMA公式和文は2024年10月改訂を示し、序文1で本人を特定できるヒト試料またはデータを用いる研究を含むと明記。2026-02-22試験日より前の現行版と設問の正答は整合。宣言は法令ではなく研究倫理規範。",
+      "auditConclusion": "WMA公式一次資料で正答肢の記述を確認。法令問題ではなく国際的研究倫理規範として分類。",
+      "evidenceLevel": "PRIMARY_SOURCE"
     },
     {
       "id": "P111-142",
@@ -268,12 +278,14 @@
       "examDate": "2026-02-22",
       "sourceUrl": "https://www.mhlw.go.jp/content/001677928.pdf",
       "matchedTerms": [],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
-      "article": null,
+      "status": "OFFICIAL_LAW_TEXTS_LOCATED; EXAM_DATE_VERSION_REVIEW_PENDING",
+      "lawName": "刑法、薬剤師法、民法（不法行為責任）",
+      "article": "刑法第134条、薬剤師法第5条・第8条、民法第709条",
       "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=81001000 ; https://www.mhlw.go.jp/web/t_doc?dataId=00tc5403&dataType=1 ; https://laws.e-gov.go.jp/law/129AC0000000089",
+      "impactOfLaterAmendments": "厚労省資料は刑法134条の秘密漏示罪の主体に薬剤師を明記。薬剤師法8条は戒告・3年以内の業務停止・免許取消しの3種類を規定し、罰金以上の刑に処せられた場合も5条該当性等に基づく裁量処分であるため、選択肢3の「業務停止又は取消しのいずれか」と限定する記述は不正確。調剤過誤で健康被害を与えた場合の損害賠償は民法709条等の不法行為責任が問題となる。選択肢2・5の正答方向と整合。",
+      "auditConclusion": "秘密漏示罪と薬剤師法上の行政処分構造を厚労省公式資料で確認。民法709条の試験日版・事案への具体的適用、PL法との境界を追加確認する必要がある。試験日版は保留。",
+      "evidenceLevel": "OFFICIAL_TEXTS_PARTIAL"
     },
     {
       "id": "P111-143",
@@ -287,12 +299,14 @@
       "matchedTerms": [
         "医療法"
       ],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
-      "article": null,
+      "status": "CURRENT_OFFICIAL_TEXT_LOCATED; HISTORICAL_NUMBERING_REVIEW_PENDING",
+      "lawName": "医療法、医療法施行規則",
+      "article": "医療法第30条の3・第30条の4第2項、医療法施行規則第30条の29",
       "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=80090000&dataType=0&pageNo=2 ; https://www.mhlw.go.jp/web/t_doc?dataId=80092000&dataType=0&pageNo=4",
+      "impactOfLaterAmendments": "厚労省掲載法令では、医療計画を定める主体は都道府県であり、市町村ではない。医療計画には医療従事者の確保に関する事項が含まれる。医療法施行規則第30条の29は、二次医療圏を特殊な医療等を除く入院医療提供体制の確保を図る地域単位として設定すると規定。正答肢3・5の趣旨と整合。2025年法律第87号による改正が公布済みで、施行期日が段階設定されているため、2026-02-22に有効な旧番号・条文版の差分を別途固定する。",
+      "auditConclusion": "現在の公式法令で基本構造と定義を確認。後日改正の施行段階を踏まえた試験日版の条文番号確定は未了。設問正答の方向性は確認できたがQ0は保留。",
+      "evidenceLevel": "OFFICIAL_CURRENT_TEXT; HISTORICAL_VERSION_PENDING"
     },
     {
       "id": "P111-144",
@@ -304,12 +318,14 @@
       "examDate": "2026-02-22",
       "sourceUrl": "https://www.mhlw.go.jp/content/001677928.pdf",
       "matchedTerms": [],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
-      "article": null,
+      "status": "CURRENT_OFFICIAL_TEXT_LOCATED; EXAM_DATE_VERSION_REVIEW_PENDING",
+      "lawName": "医薬品、医療機器等の品質、有効性及び安全性の確保等に関する法律",
+      "article": "第2条第1項・第2項、第12条、第24条等",
       "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=81004000&dataType=0&pageNo=1",
+      "impactOfLaterAmendments": "薬機法第2条第2項は、人体作用が緩和な医薬部外品に、ねずみ・はえ・蚊等の防除目的の物を含める。また、同条第2項第3号は医薬品と同じ目的の一部の指定品目を含む。第2条第1項第1号は日本薬局方収載品を医薬品とするため、日本薬局方白色ワセリンは医薬部外品ではない。医薬部外品は医薬品販売業許可の対象となる「医薬品」とは別区分。試験日版の改正履歴差分は未確認。",
+      "auditConclusion": "厚労省掲載の現行一次条文で医薬部外品の定義と区分を確認。選択肢1・2の正答方向と整合。試験日版の改正履歴は保留。",
+      "evidenceLevel": "OFFICIAL_CURRENT_TEXT_ONLY"
     },
     {
       "id": "P111-145",
@@ -321,12 +337,14 @@
       "examDate": "2026-02-22",
       "sourceUrl": "https://www.mhlw.go.jp/content/001677928.pdf",
       "matchedTerms": [],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
-      "article": null,
-      "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "status": "PRIMARY_SOURCE_CONFIRMED; EXAM_DATE_GUIDANCE_VERSION_IDENTIFIED",
+      "lawName": "医薬品の承認申請に際し留意すべき事項について（厚生労働省通知）",
+      "article": "別表1ニ（薬理作用に関する資料）・ホ（吸収、分布、代謝、排泄）",
+      "lawVersionDate": "2024-10-09適用（試験日2026-02-22に先行する確認済み通知）",
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc8769&dataType=1&pageNo=1",
+      "impactOfLaterAmendments": "2024-10-09の厚労省通知は、副次的薬理を期待した治療標的に関連しない作用・効果機序、安全性薬理を生体生理機能への望ましくない薬理作用と定義。ADMEは吸収・分布・代謝・排泄に関する試験。2026-02-27付の後日改正通知は試験日後であり、これを試験日基準へ遡及しない。選択肢2・3の正答方向と整合。",
+      "auditConclusion": "厚労省一次通知で副次的薬理と安全性薬理の区別を確認し、試験日より前の2024年改正通知を特定。2026-02-27後日改正は別途差分記録が必要だが、本設問の2・3の定義は2024年通知で確認できる。",
+      "evidenceLevel": "PRIMARY_SOURCE"
     },
     {
       "id": "P111-146",
@@ -1937,5 +1955,29 @@
     },
     "note": "候補キューの先頭7件を個別確認。現行条文の確認と試験日現在の法令版確認を区別。P111-072/073は法令問題ではなく、候補抽出上の非法令項目として分類。",
     "reviewer": "ChatGPT-assisted source audit; independent human legal review not performed"
+  },
+  "auditBatch02": {
+    "checkedAt": "2026-11-05",
+    "reviewedIds": [
+      "P111-078",
+      "P111-079",
+      "P111-080",
+      "P111-123",
+      "P111-141",
+      "P111-142",
+      "P111-143",
+      "P111-144",
+      "P111-145"
+    ],
+    "counts": {
+      "reviewed": 9,
+      "primarySourceConfirmed": 2,
+      "officialCurrentTextOnly": 2,
+      "officialTextsPartial": 1,
+      "officialPolicyOrStatistics": 2,
+      "nonlegalCandidates": 2,
+      "historicalVersionPending": 4
+    },
+    "note": "第111回問78-80、123、141-145を個別確認。制度資料・統計・倫理宣言・法令通知を区別し、後日改正を試験日へ遡及させない。"
   }
 }
