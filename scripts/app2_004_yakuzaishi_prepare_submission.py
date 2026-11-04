@@ -316,12 +316,14 @@ def main() -> None:
         patch(token, f"/v1/appStoreVersionLocalizations/{loc_id}", "appStoreVersionLocalizations", loc_id, attributes={"description":DESCRIPTION,"keywords":KEYWORDS,"supportUrl":SUPPORT_URL})
         patch(token, f"/v1/appStoreVersions/{version_id}", "appStoreVersions", version_id, attributes={"usesIdfa": False})
         result.update(ensure_app_info(token))
-        result["review_detail_id"] = ensure_review_detail(token, version_id)
         build = wait_valid_build(token); build_id = str(build["id"])
         result["build_id"] = build_id
         result["build_processing_state"] = (build.get("attributes") or {}).get("processingState")
         attach_build(token, version_id, build_id)
+        # Complete every machine-controlled preparation step before requiring
+        # the real App Review contact, which must come from the account owner.
         result["screenshot"] = ensure_screenshot(token, loc_id, screen)
+        result["review_detail_id"] = ensure_review_detail(token, version_id)
         result["review_submission"] = ensure_submission_draft(token, version_id)
         result["submission_ready"] = result["review_submission"]["state"] in {"READY_FOR_REVIEW", "WAITING_FOR_REVIEW", "IN_REVIEW", "COMPLETING"}
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
