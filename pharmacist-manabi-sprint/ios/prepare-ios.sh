@@ -74,7 +74,10 @@ for q in raw:
         'mediaAssets': media_assets,
         'numberedChoiceCount': int(q.get('numberedChoiceCount') or 0),
         'attribution': str(q.get('attributionDisplay') or f"出典：厚生労働省『第{exam}回薬剤師国家試験問題及び解答』"),
-        'modificationDisclosure': str(q.get('modificationDisclosureDisplay') or '加工：学びスプリント開発者。厚生労働省公開問題をもとに、学習用に表示形式を整え、解説を付加。'),
+        'modificationDisclosure': (
+            lambda value: value if value.startswith('加工：学びスプリント開発者')
+            else '加工：学びスプリント開発者。' + value
+        )(str(q.get('modificationDisclosureDisplay') or '厚生労働省公開問題をもとに、学習用に表示形式を整え、解説を付加。')),
         'sourceURL': str(q.get('source_url') or ''),
         'legalSourceURL': str(q.get('legal_source_url') or ''),
         'correctionSourceURL': str(q.get('correction_source_url') or ''),
