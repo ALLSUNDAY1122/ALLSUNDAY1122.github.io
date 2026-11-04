@@ -63,8 +63,8 @@ if web_audit.get('pass') is not True:
 by_id = {q.get('id'): q for q in questions}
 for qid in ('P111-220', 'P111-221'):
     q = by_id.get(qid, {})
-    stem = q.get('sharedStem', '')
-    if '1回1カプセル' not in stem or '1日2カプセル' not in stem or '1回1錠（1日2錠）' in stem:
+    stem = re.sub(r'\s+', '', q.get('sharedStem', ''))
+    if '1回1カプセル（1日2カプセル）' not in stem or '1回1錠（1日2錠）' in stem:
         errors.append(qid + ': official corrigendum not applied to sharedStem')
     if q.get('correction_source_url') != 'https://www.mhlw.go.jp/content/001677936.pdf':
         errors.append(qid + ': official corrigendum source URL missing')
