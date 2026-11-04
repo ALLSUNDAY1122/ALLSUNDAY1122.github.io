@@ -254,6 +254,32 @@ struct QuizView: View {
             DisclosureGroup("もう少し詳しく") {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(f.question.attribution)
+                    if let source = f.question.sourceURL, let url = URL(string: source) {
+                        Link(destination: url) {
+                            Text(source)
+                                .font(.system(size: 10))
+                                .underline()
+                                .textSelection(.enabled)
+                        }
+                    }
+                    if let source = f.question.legalSourceURL, let url = URL(string: source) {
+                        Text("関連法令・基準の原典")
+                        Link(destination: url) {
+                            Text(source)
+                                .font(.system(size: 10))
+                                .underline()
+                                .textSelection(.enabled)
+                        }
+                    }
+                    if let source = f.question.correctionSourceURL, let url = URL(string: source) {
+                        Text("公式正誤表")
+                        Link(destination: url) {
+                            Text(source)
+                                .font(.system(size: 10))
+                                .underline()
+                                .textSelection(.enabled)
+                        }
+                    }
                     Text(f.question.modificationDisclosure)
                     if f.question.scoringStatus == "excluded" {
                         Text("公式正答が『解なし』のため採点対象外です。")
