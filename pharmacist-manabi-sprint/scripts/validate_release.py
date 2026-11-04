@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import hashlib, json, plistlib, struct, subprocess, sys
+import hashlib, json, plistlib, re, struct, subprocess, sys
 
 R = Path(__file__).resolve().parents[1]
 ROOT = R.parent
