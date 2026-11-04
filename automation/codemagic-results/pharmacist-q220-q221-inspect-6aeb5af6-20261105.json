@@ -1,0 +1,148 @@
+{
+  "request_id": "pharmacist-q220-q221-inspect-6aeb5af6-20261105",
+  "ok": true,
+  "action": "inspect_build",
+  "workflow_id": null,
+  "branch": null,
+  "resolved_app_id": null,
+  "application_candidates": [
+    {
+      "id": "6a769d81a1add9d06020b524",
+      "name": "ALLSUNDAY1122.github.io",
+      "repositoryUrl": null
+    }
+  ],
+  "note": "Exact read-only build-list match. Apple-side availability still requires fresh ASC/TestFlight readback.",
+  "build_id": "6aeb5af6a12275533ec255a1",
+  "status": null,
+  "app_id": "6a769d81a1add9d06020b524",
+  "error": null,
+  "build_details": null,
+  "actions": {
+    "data": [
+      {
+        "id": "6aeb5af7fab53a6ea476faf4",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-11-04T16:32:25.715000Z",
+        "finished_at": "2026-11-04T16:32:54.424000Z"
+      },
+      {
+        "id": "6aeb5af7fab53a6ea476faf5",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-11-04T16:32:54.424000Z",
+        "finished_at": "2026-11-04T16:33:02.722000Z"
+      },
+      {
+        "id": "6aeb5af7fab53a6ea476faf3",
+        "name": "Set up code signing identities",
+        "type": "setup_code_signing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-11-04T16:33:02.722000Z",
+        "finished_at": "2026-11-04T16:33:05.578000Z"
+      },
+      {
+        "id": "6aeb5af7fab53a6ea476faf6",
+        "name": "Release audit before signed native build",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR\"\npython3 pharmacist-manabi-sprint/tools/assemble_product_bank.py\npython3 pharmacist-manabi-sprint/tools/build_web_bundle.py\npython3 - <<'PY'\nimport json\nd=json.load(open('pharmacist-manabi-sprint/content/product/questions.json',encoding='utf-8'))\nqs={q['id']:q for q in d['questions']}\nexpected='デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）'\nfor qid in ('P111-220','P111-221'):\n    assert expected in (qs[qid].get('sharedStem') or ''), qid\nprint('PASS: MHLW Q220/Q221 dosage-form correction in release source')\nPY\npython3 pharmacist-manabi-sprint/scripts/validate_release.py\nbash -n pharmacist-manabi-sprint/ios/prepare-ios.sh\npython3 -m py_compile pharmacist-manabi-sprint/ios/apply-xcode-capabilities.py\ntest \"$BUNDLE_ID\" = \"jp.allsunday1122.yakuzaishi\"\ntest \"$APP_STORE_CONNECT_APP_ID\" = \"6799753724\"\ntest \"$CODEMAGIC_PROFILE_REF\" = \"yakuzaishi_appstore\"",
+        "status": "success",
+        "started_at": "2026-11-04T16:33:05.578000Z",
+        "finished_at": "2026-11-04T16:33:08.130000Z"
+      },
+      {
+        "id": "6aeb5af7fab53a6ea476faf7",
+        "name": "Install XcodeGen",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nHOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen",
+        "status": "success",
+        "started_at": "2026-11-04T16:33:08.130000Z",
+        "finished_at": "2026-11-04T16:33:21.616000Z"
+      },
+      {
+        "id": "6aeb5af7fab53a6ea476faf8",
+        "name": "Prepare audited native resources and canonical icon",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nbash \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/prepare-ios.sh\"",
+        "status": "success",
+        "started_at": "2026-11-04T16:33:21.616000Z",
+        "finished_at": "2026-11-04T16:33:22.999000Z"
+      },
+      {
+        "id": "6aeb5af7fab53a6ea476faf9",
+        "name": "Set unique release build number and generate native project",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\"\n# Codemagic's per-workflow CM_BUILD_NUMBER can collide with a build\n# already present in App Store Connect after workflow history resets.\n# Use the current UTC minute as a monotonically advancing numeric build\n# identifier. App Store review submission remains disabled.\nRELEASE_BUILD_NUMBER=\"$(date -u +%Y%m%d%H%M)\"\nexport RELEASE_BUILD_NUMBER\npython3 - <<'PY'\nfrom pathlib import Path\nimport os, re\np=Path('project.yml')\ntext=p.read_text(encoding='utf-8')\nupdated,count=re.subn(r'(?m)^(\\s*CURRENT_PROJECT_VERSION:\\s*)\\d+\\s*$', r'\\g<1>'+os.environ['RELEASE_BUILD_NUMBER'], text, count=1)\nif count != 1:\n    raise SystemExit('CURRENT_PROJECT_VERSION was not updated exactly once')\np.write_text(updated,encoding='utf-8')\nprint('PASS: Pharmacist release build number='+os.environ['RELEASE_BUILD_NUMBER'])\nPY\nxcodegen generate\npython3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj\n/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' PharmacistSprint/Info.plist 2>/dev/null || true",
+        "status": "success",
+        "started_at": "2026-11-04T16:33:22.999000Z",
+        "finished_at": "2026-11-04T16:33:24.271000Z"
+      },
+      {
+        "id": "6aeb5af7fab53a6ea476fafa",
+        "name": "Verify signed native release inputs",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\ntest -f \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Generated/questions.native.json\"\ntest -f \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/PrivacyInfo.xcprivacy\"\ntest -f \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\"\ngrep -q 'com.apple.InAppPurchase' \"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\"\n! grep -q 'SystemCapabilities = \"' \"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\"\n! grep -R -q 'WKWebView\\|import WebKit' --include='*.swift' \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\"\npython3 - <<'PY'\nimport hashlib,json\np='pharmacist-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'\nassert hashlib.sha256(open(p,'rb').read()).hexdigest()=='dfc7dfe4a1c13afbe98658cde591274e11665b016c39e2a4411de4dbe86127ec'\nd=json.load(open('pharmacist-manabi-sprint/ios/Generated/questions.native.json',encoding='utf-8'))\nq=d['questions']; active=[x for x in q if x['scoringStatus']!='excluded']\nfree=[x for x in active if x['exam']==111 and x['section']=='必須']\nmedia=[x for x in q if x['displayMode']=='officialQuestionImage']\nassert (len(q),len(active),len(free),len(media))==(1035,1031,90,154)\nprint('PASS: native pharmacist release inputs and canonical AppIcon')\nPY",
+        "status": "success",
+        "started_at": "2026-11-04T16:33:24.271000Z",
+        "finished_at": "2026-11-04T16:33:25.447000Z"
+      },
+      {
+        "id": "6aeb5af7fab53a6ea476fafb",
+        "name": "Apply App Store signing profiles for App Store review",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\"\nxcode-project use-profiles",
+        "status": "success",
+        "started_at": "2026-11-04T16:33:25.447000Z",
+        "finished_at": "2026-11-04T16:33:27.841000Z"
+      },
+      {
+        "id": "6aeb5af7fab53a6ea476fafc",
+        "name": "Build signed IPA",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
+        "status": "success",
+        "started_at": "2026-11-04T16:33:27.841000Z",
+        "finished_at": "2026-11-04T16:34:22.575000Z"
+      },
+      {
+        "id": "6aeb5af7fab53a6ea476fafd",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-11-04T16:34:22.575000Z",
+        "finished_at": "2026-11-04T16:35:52.446000Z"
+      },
+      {
+        "id": "6aeb5af7fab53a6ea476fafe",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-11-04T16:35:52.446000Z",
+        "finished_at": "2026-11-04T16:35:57.978000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
