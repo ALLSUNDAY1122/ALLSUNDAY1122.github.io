@@ -648,7 +648,7 @@ workflows:
           assert (len(q),len(active),len(free),len(media))==(1035,1031,90,154)
           print('PASS: native pharmacist release inputs and canonical AppIcon')
           PY
-      - name: Run native unit and UI tests before TestFlight
+      - name: Build native UI tests and run unit tests before TestFlight
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR"
@@ -663,10 +663,22 @@ workflows:
           raise SystemExit('No available iPhone Simulator')
           PY
           )"
-          xcodebuild test \
+          # Xcode 26.4's iOS 26.4 simulator intermittently fails to initialize
+          # XCTest UIAccessibility before any UI test executes (AX loaded notification
+          # timeout). Compile the complete UI test target here, but execute unit tests
+          # only. The separate Xcode 16 macOS 14 preflight runs the full UI Visual Gate
+          # and requires seven captured screenshots before this release is mergeable.
+          xcodebuild build-for-testing \
             -project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             -scheme "$XCODE_SCHEME" \
             -destination "platform=iOS Simulator,id=$UDID" \
+            CODE_SIGNING_ALLOWED=NO
+          xcodebuild test-without-building \
+            -project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -only-testing:PharmacistSprintTests \
+            -parallel-testing-enabled NO \
             CODE_SIGNING_ALLOWED=NO
       - name: Apply App Store signing profiles for internal TestFlight only
         script: |
