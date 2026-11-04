@@ -1669,12 +1669,14 @@
       "examDate": "2024-02-18",
       "sourceUrl": "https://www.mhlw.go.jp/content/001226760.pdf",
       "matchedTerms": [],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
-      "article": null,
-      "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "status": "OFFICIAL_PRIMARY_PMDA_SOURCE_CONFIRMED; EXAM_DATE_VERSION_PENDING",
+      "lawName": "生物由来製品感染等被害救済制度（PMDA法に基づく救済業務）",
+      "article": "生物由来製品感染等被害救済制度の給付対象・給付種類",
+      "lawVersionDate": "試験日2024-02-18。制度創設2004-04-01。現行ページの一部は後年更新で、試験日版資料固定は未了。",
+      "officialLawUrl": "https://www.pmda.go.jp/relief-services/infections/0001.html ; https://www.pmda.go.jp/relief-services/infections/0003.html ; https://www.pmda.go.jp/relief-services/infections/0030.html",
+      "impactOfLaterAmendments": "適正に使用された生物由来製品による感染被害を救済。医療費・医療手当は入院治療を要する程度の疾病が対象。給付は医療費・医療手当・障害年金・障害児養育年金・遺族年金・遺族一時金・葬祭料の7種類。原因企業のみの全額負担ではなく製造販売業者の拠出金等で賄う。正答1・3。",
+      "auditConclusion": "PMDA公式資料で制度目的・入院要件・7給付種類・拠出金構造を確認。試験日版資料・法令沿革を固定できていないためQ0保留。",
+      "evidenceLevel": "OFFICIAL_PMDA_PRIMARY_SOURCE"
     },
     {
       "id": "P109-135",
@@ -1707,12 +1709,14 @@
       "examDate": "2024-02-18",
       "sourceUrl": "https://www.mhlw.go.jp/content/001226760.pdf",
       "matchedTerms": [],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
-      "article": null,
-      "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "status": "OFFICIAL_PRIMARY_STATUTE_CONFIRMED; APPLICATION_PRECEDENT_PENDING",
+      "lawName": "製造物責任法",
+      "article": "第2条第2項（欠陥）、第3条（製造物責任）、第4条（免責）",
+      "lawVersionDate": "試験日2024-02-18。平成29年法律45号改正は2020-04-01施行済。具体的適用資料は未確認。",
+      "officialLawUrl": "https://laws.e-gov.go.jp/law/406AC0000000085?occasion_date=20240218",
+      "impactOfLaterAmendments": "PL法は製造物の欠陥による生命・身体・財産損害について製造業者等の責任を定め、被害者による製造業者の過失立証を要件としない。副作用があるだけで直ちに欠陥とはならず、製品特性・効用・危険性等を総合評価。薬局が製造・加工を行い製造業者等に該当する場合がある。正答1・4。",
+      "auditConclusion": "e-Gov一次条文を確認。薬局が製造業者等に該当する具体的条件及び医薬品の欠陥判断に関する公式解説・判例の適用確認は未了。Q0保留。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE; APPLICATION_PENDING"
     },
     {
       "id": "P109-143",
@@ -2287,5 +2291,18 @@
       "nonlegal": 2
     },
     "note": "第109回問116、135は分子生物学・衛生化学で法令直接問題ではない。Q1へ移管。"
+  },
+  "auditBatch09c": {
+    "checkedAt": "2026-11-05",
+    "reviewedIds": [
+      "P109-122",
+      "P109-142"
+    ],
+    "counts": {
+      "reviewed": 2,
+      "officialPrimarySourceConfirmed": 2,
+      "examDateVersionOrApplicationPending": 2
+    },
+    "note": "第109回問122はPMDA現行一次資料で制度要件を確認したが試験日版未固定。問142はPL法条文確認済みだが薬局の製造業者該当性の具体的適用確認は未了。"
   }
 }
