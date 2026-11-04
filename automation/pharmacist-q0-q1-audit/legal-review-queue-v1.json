@@ -1165,14 +1165,25 @@
       "examDate": "2025-02-23",
       "sourceUrl": "https://www.mhlw.go.jp/content/001455152.pdf",
       "matchedTerms": [],
-      "status": "OFFICIAL_PRIMARY_STATUTE_CONFIRMED; EXAM_DATE_VERSION_PARTIAL",
+      "status": "EXAM_DATE_VERSION_CONFIRMED; PRIMARY_STATUTE_AND_ENFORCEMENT_RULE_VERIFIED",
       "lawName": "医薬品医療機器等法",
       "article": "第44条、第47条、第48条、第49条",
-      "lawVersionDate": "試験日2025-02-23。劇薬の区別保管、交付制限、譲受文書及び保存期間を確認。",
-      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=81004000&dataType=0&pageNo=3",
-      "impactOfLaterAmendments": "劇薬は他の物と区別して貯蔵・陳列するが、施錠義務は毒薬に限られる。18歳未満ではなく14歳未満への交付が禁止。譲渡時の文書には品名・数量等の記載が必要で、譲渡文書の保存期間は2年間であり3年間ではない。正答1・4と整合。",
-      "auditConclusion": "厚労省掲載薬機法の一次条文で正答1・4の根拠を確認。試験日版の全改正履歴は未完了。",
-      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE"
+      "lawVersionDate": "試験日2025-02-23。薬機法第46条第1項・第4項、第47条、第48条第1項・第2項。",
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=81004000&dataType=0&pageNo=3 ; https://www.mhlw.go.jp/content/11120000/000666297.pdf",
+      "impactOfLaterAmendments": "第46条第1項は譲受人から品名・数量・使用目的・譲渡年月日・譲受人の氏名住所職業を記載した文書の交付を受けることを要求。第46条第4項の文書保存期間は譲渡日から2年間。第47条の交付禁止対象は14歳未満等。第48条は毒薬又は劇薬を他の物と区別して貯蔵・陳列し、施錠義務は毒薬のみ。よって選択肢1・4が正しい。",
+      "auditConclusion": "薬機法の厚労省掲載一次条文・条文参照PDFで第46条から48条を直接確認。劇薬の分離保管は必要だが施錠は毒薬のみ、年齢制限は14歳未満、譲受文書に使用目的が必要、保存期間は2年。公式正答1・4と一致。試験日後の改正を適用していない。解消。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE_AND_ENFORCEMENT_RULE",
+      "versionAudit": {
+        "examDate": "2025-02-23",
+        "articles": [
+          "薬機法第46条第1項・第4項",
+          "同第47条",
+          "同第48条第1項・第2項"
+        ],
+        "retentionPeriod": "2年",
+        "ageLimit": "14歳未満",
+        "locking": "毒薬のみ"
+      }
     },
     {
       "id": "P110-146",
@@ -1186,14 +1197,22 @@
       "matchedTerms": [
         "医療法"
       ],
-      "status": "OFFICIAL_PRIMARY_STATUTE_AND_GUIDANCE_CONFIRMED; EXAM_DATE_VERSION_PARTIAL",
+      "status": "EXAM_DATE_VERSION_CONFIRMED; PRIMARY_MEDICAL_ACT_AND_MHLW_GUIDANCE_VERIFIED",
       "lawName": "医療法、医療法施行規則",
       "article": "医療法第6条の10、第6条の11",
-      "lawVersionDate": "試験日2025-02-23。医療事故調査制度は2015-10-01施行後の制度。",
-      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=80090000 ; https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000086544.html",
-      "impactOfLaterAmendments": "医療事故調査制度の対象は医療に起因又は起因すると疑われる予期しなかった死亡又は死産であり、入院を要する健康被害ではない。病院等の管理者は医療事故調査・支援センターへ遅滞なく報告し、原因を明らかにするための院内調査を行う。PMDAや開設許可権者への該当性判定申出ではない。正答4・5と整合。",
-      "auditConclusion": "医療法と厚労省Q&Aの一次資料で正答4・5の根拠を確認。試験日版の全改正沿革は追加確認が必要。",
-      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE_AND_GUIDANCE"
+      "lawVersionDate": "試験日2025-02-23。医療法第6条の10・第6条の11。医療事故調査制度は2014年改正により創設、2015-10-01施行。2025年改正法87号の施行後条項は本問に適用しない。",
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=80090000&dataType=0 ; https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000061201.html",
+      "impactOfLaterAmendments": "医療事故は医療に起因し又は起因が疑われる予期しなかった死亡又は死産。管理者は遅滞なく医療事故調査・支援センターへ報告し、速やかに原因究明の調査を行う。入院を要する健康被害一般ではなく、報告先はPMDAではない。正答4・5。",
+      "auditConclusion": "医療法第6条の10・11の厚労省掲載条文で医療事故の定義、報告義務、院内調査義務を確認。制度開始時の厚労省一次資料・Q&Aと照合し、試験日までの条項に変更がないことを確認。解消。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE_AND_MHLW_SYSTEM_GUIDANCE",
+      "versionAudit": {
+        "examDate": "2025-02-23",
+        "articles": [
+          "医療法第6条の10",
+          "同第6条の11"
+        ],
+        "systemEffectiveDate": "2015-10-01"
+      }
     },
     {
       "id": "P110-147",
@@ -1205,14 +1224,23 @@
       "examDate": "2025-02-23",
       "sourceUrl": "https://www.mhlw.go.jp/content/001455152.pdf",
       "matchedTerms": [],
-      "status": "OFFICIAL_PRIMARY_STATUTE_AND_SYSTEM_SOURCES_CONFIRMED; EXAM_DATE_VERSION_PARTIAL",
+      "status": "EXAM_DATE_VERSION_CONFIRMED; PRIMARY_INSURANCE_LAWS_AND_MHLW_SYSTEM_SOURCES_VERIFIED",
       "lawName": "国民健康保険法、健康保険法、高齢者の医療の確保に関する法律",
       "article": "国民健康保険法第5条等；健康保険法第55条・第63条等；高齢者医療確保法第67条",
-      "lawVersionDate": "試験日2025-02-23。国民皆保険・療養給付の負担構造・労災との区分を確認。",
-      "officialLawUrl": "https://laws.e-gov.go.jp/law/333AC0000000192?occasion_date=20250223 ; https://laws.e-gov.go.jp/law/211AC0000000070?occasion_date=20250223 ; https://laws.e-gov.go.jp/law/357AC0000000080?occasion_date=20250223",
-      "impactOfLaterAmendments": "日本の公的医療保険は国民皆保険を基礎とし、保険者負担は原則として療養給付費から患者一部負担を除いた額。75歳以上の窓口負担割合は所得区分により異なる。被用者保険の被扶養者は原則として独立した国保加入対象ではない。業務上・通勤災害は労災保険の給付対象で、健康保険の業務外給付とは区別される。正答1・2と整合。",
-      "auditConclusion": "各制度の根拠法令を確認。被用者保険と労災の給付調整等、試験日版の関連条文横断確認が残るためQ0保留。",
-      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTES"
+      "lawVersionDate": "試験日2025-02-23。健康保険法第55条・第63条、国民健康保険法第5条・第6条、高齢者の医療の確保に関する法律第67条・第74条等。",
+      "officialLawUrl": "https://laws.e-gov.go.jp/law/129AC0000000070?occasion_date=20250223 ; https://laws.e-gov.go.jp/law/333AC0000000192?occasion_date=20250223 ; https://laws.e-gov.go.jp/law/357AC0000000080?occasion_date=20250223",
+      "impactOfLaterAmendments": "国民皆保険の下で公的医療保険加入が原則。保険者負担は療養給付費から一部負担金等を除いた額。75歳以上の窓口負担割合は所得に応じ1・2・3割。被用者保険の被扶養配偶者・子は国民健康保険の対象外。労働者の業務災害は労災保険給付が優先し、健康保険の療養給付は行わない。正答1・2。",
+      "auditConclusion": "健康保険法・国保法・高齢者医療確保法の試験日指定e-Gov条文、厚労省の国保加入資格資料、労災保険給付概要を照合。被扶養者の国保除外、業務災害の労災優先、75歳以上の所得別負担を確認。解消。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTES_AND_MHLW_SYSTEM_DOCUMENTS",
+      "versionAudit": {
+        "examDate": "2025-02-23",
+        "laws": [
+          "健康保険法",
+          "国民健康保険法",
+          "高齢者の医療の確保に関する法律"
+        ],
+        "copayment75Plus": "所得に応じ1・2・3割"
+      }
     },
     {
       "id": "P110-148",
@@ -1319,14 +1347,19 @@
       "examDate": "2025-02-23",
       "sourceUrl": "https://www.mhlw.go.jp/content/001455162.pdf",
       "matchedTerms": [],
-      "status": "OFFICIAL_PRIMARY_STATUTE_AND_GUIDANCE_CONFIRMED; EXAM_DATE_AMENDMENT_CUTOFF_PARTIAL",
+      "status": "EXAM_DATE_VERSION_CONFIRMED; PRIMARY_STATUTE_AND_2024_OFFICIAL_HANDBOOK_VERIFIED",
       "lawName": "医薬品医療機器等法、同法施行規則、要指導医薬品販売に関する厚生労働省通知",
       "article": "薬機法第36条の5・第36条の6、施行規則第158条の12等",
-      "lawVersionDate": "第110回試験日2025-02-23。2025年改正法の一部は試験日後施行のため、当該時点の条文と施行規則を分離して確認する必要あり。",
-      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=81004000&dataType=0&pageNo=3 ; https://www.mhlw.go.jp/content/11121000/001091158.pdf",
-      "impactOfLaterAmendments": "要指導医薬品は薬局開設者又は店舗販売業者が薬剤師に販売させる。販売時は対面等による必要情報提供・指導、購入者の理解確認を行い、販売・情報提供した薬剤師の氏名等を伝達する。特定販売（インターネット販売）は認められない。薬局のみでなく店舗販売業でも販売できる。正答2・5と整合。厚労省の対面販売フローは購入者の理解確認と薬剤師氏名の伝達を明示。",
-      "auditConclusion": "薬機法36条の5・6と厚労省の要指導医薬品販売フローを確認し、正答2・5の方向を確認。2025年改正の施行日と省令細目の試験日版沿革は最終固定未了のためQ0保留。",
-      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE_AND_GUIDANCE"
+      "lawVersionDate": "試験日2025-02-23。薬機法第36条の5・第36条の6、薬機法施行規則第158条の11・第158条の12。試験日後の令和7年法律第37号による要指導医薬品制度の改正及び令和7年厚労省令第117号は試験日に適用しない。",
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=81004000&dataType=0&pageNo=3 ; https://www.mhlw.go.jp/web/t_doc?dataId=81006000&dataType=0&pageNo=8 ; https://www.mhlw.go.jp/content/001477984.pdf ; https://www.mhlw.go.jp/web/t_doc?dataId=00tb9889&dataType=1",
+      "impactOfLaterAmendments": "販売時は購入者が情報提供・指導内容を理解し質問がないことを確認する必要があり、販売した薬剤師の氏名・薬局名称・連絡先を伝える必要がある。2024年4月改訂の厚労省手引きでは特定販売の対象区分は一般用医薬品・薬局製造販売医薬品等で、要指導医薬品は対象に含まれない。2025年法律第37号の後続改正（2026年施行分）を試験日判断に混入しない。正答2・5。",
+      "auditConclusion": "試験日前の厚労省令・薬機法本文と2024年4月版の公式試験問題作成手引き、平成26年厚労省施行通知を照合。理解確認と薬剤師氏名伝達の義務、要指導医薬品の対面販売・特定販売対象外を確認。試験日後の制度変更を除外し解消。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE_SUBORDINATE_REGULATION_AND_EXAM_DATE_MHLW_HANDBOOK",
+      "versionAudit": {
+        "examDate": "2025-02-23",
+        "postExamReformExcluded": "令和7年法律第37号・令和7年厚労省令第117号",
+        "relevantRule": "要指導医薬品は試験日当時特定販売の対象外"
+      }
     },
     {
       "id": "P110-312",
@@ -1359,14 +1392,22 @@
       "matchedTerms": [
         "薬剤師法"
       ],
-      "status": "OFFICIAL_PRIMARY_STATUTE_AND_INSURANCE_RULE_CONFIRMED; EXAM_DATE_VERSION_PARTIAL",
+      "status": "EXAM_DATE_VERSION_CONFIRMED; PRIMARY_PHARMACIST_ACT_AND_INSURANCE_RULE_VERIFIED",
       "lawName": "薬剤師法、保険薬局及び保険薬剤師療養担当規則",
       "article": "薬剤師法第28条（調剤録）；療担規則第8条第2項（服薬状況・薬剤服用歴確認）、第10条等",
-      "lawVersionDate": "第110回試験日2025-02-23。2025年時点の薬剤師法28条は調剤録の備付・薬剤師による記入を規定。現行法には後年改正が含まれるため試験日版を分けて管理。",
-      "officialLawUrl": "https://laws.e-gov.go.jp/law/335AC0000000146?occasion_date=20250223 ; https://www.mhlw.go.jp/web/t_doc?dataId=84046000&dataType=0&pageNo=1",
-      "impactOfLaterAmendments": "薬剤師法28条1項は薬局開設者に調剤録の備付義務、同条2項は薬剤師に記入義務を規定。療担規則8条2項は保険薬剤師に患者の服薬状況・薬剤服用歴確認を義務付ける。したがって正答3・5と整合。保険薬局での薬剤服用歴管理が診療報酬上の対象でないという選択肢4は誤り。薬剤師法上の調剤録と療担規則上の保険調剤録の区別に注意。",
-      "auditConclusion": "薬剤師法28条と療担規則8条2項の一次資料で正答3・5の根拠を確認。試験日版の保存期間・記載事項・療担規則関連条項の完全な横断確認は未完了。法令沿革未確認のためQ0保留。",
-      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE_AND_RULE"
+      "lawVersionDate": "試験日2025-02-23。薬剤師法第28条、薬剤師法施行規則第16条、保険薬局及び保険薬剤師療養担当規則第8条第2項。",
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=81001000 ; https://www.mhlw.go.jp/web/t_doc?dataId=81003000&dataType=0&pageNo=1 ; https://www.mhlw.go.jp/web/t_doc?dataId=84046000&dataType=0&pageNo=1",
+      "impactOfLaterAmendments": "薬局開設者は調剤録を備え、薬剤師は調剤時に省令所定事項を記入する。調剤済み処方箋の場合でも、調剤・情報提供・指導の年月日、薬剤師氏名、情報提供・指導内容の要点は記載対象。保険薬剤師は調剤時に患者の服薬状況及び薬剤服用歴を確認しなければならない。正答3・5。",
+      "auditConclusion": "薬剤師法28条、施行規則16条、療担規則8条2項の厚労省一次資料を確認。調剤済み処方箋の場合の記録事項の例外は限定列挙で、情報提供・指導内容の要点は記録対象。保険薬剤師の薬剤服用歴確認義務も条文に明記。試験日版の該当規定に影響する後続改正なしを確認し解消。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE_AND_SUBORDINATE_RULES",
+      "versionAudit": {
+        "examDate": "2025-02-23",
+        "articles": [
+          "薬剤師法第28条",
+          "薬剤師法施行規則第16条",
+          "療担規則第8条第2項"
+        ]
+      }
     },
     {
       "id": "P110-314",
@@ -1435,14 +1476,22 @@
       "examDate": "2025-02-23",
       "sourceUrl": "https://www.mhlw.go.jp/content/001455162.pdf",
       "matchedTerms": [],
-      "status": "OFFICIAL_CARE_INSURANCE_RULES_LOCATED; EXAM_DATE_VERSION_AND_ITEM_DETAIL_PENDING",
+      "status": "EXAM_DATE_VERSION_CONFIRMED; PRIMARY_CARE_ACT_AND_FEE_SCHEDULE_VERIFIED",
       "lawName": "介護保険法、指定居宅サービス等の事業の人員、設備及び運営に関する基準、令和6年度介護報酬告示・留意事項通知",
       "article": "居宅療養管理指導（薬剤師による訪問）算定要件・指定基準",
-      "lawVersionDate": "第110回試験日2025-02-23。令和6年度介護報酬改定（2024-04-01適用）を基準とする。該当告示・通知の設問選択肢ごとの完全照合は未了。",
-      "officialLawUrl": "https://www.mhlw.go.jp/stf/newpage_38790.html",
-      "impactOfLaterAmendments": "本問は介護保険による薬剤師の居宅療養管理指導の算定要件を問う法規・制度問題。在宅患者訪問薬剤管理指導料（医療保険）と混同してはならない。候補論点は薬剤師の実務経験要件、薬局の指定・届出の取扱い、月間訪問回数制限、関係者への情報提供義務。公式正答および令和6年度告示・留意事項通知を選択肢単位で突合するまで未確認を維持する。",
-      "auditConclusion": "介護報酬改定の公式入口は特定したが、令和6年度の該当告示・留意事項通知の本文と設問各肢を直接突合できていない。PASSにしない。Q0保留。",
-      "evidenceLevel": "OFFICIAL_SOURCE_ENTRY; PRIMARY_DETAIL_PENDING"
+      "lawVersionDate": "試験日2025-02-23。介護保険法第71条、指定居宅サービスに要する費用の額の算定に関する基準（平成12年厚生省告示第19号）ハ(2)注1、令和6年度介護報酬改定後。",
+      "officialLawUrl": "https://laws.e-gov.go.jp/law/409AC0000000123?occasion_date=20250223 ; https://www.mhlw.go.jp/web/t_doc?dataId=82aa0253&dataType=0&pageNo=1 ; https://www.mhlw.go.jp/file/05-Shingikai-12404000-Hokenkyoku-Iryouka/0000162530.pdf",
+      "impactOfLaterAmendments": "介護保険法71条により保険薬局は居宅療養管理指導の指定を受けたものとみなされ、通常は別途指定申請を要しない。薬局薬剤師による居宅療養管理指導は原則月4回を上限とし、特別な対象者には週2回・月8回の例外がある。ケアプラン策定等に必要な情報を介護支援専門員へ提供する。正答3・4。",
+      "auditConclusion": "介護保険法71条の厚労省公式説明、令和6年度介護報酬告示第19号の薬局薬剤師区分・注1、厚労省留意事項通知を照合。保険薬局のみなし指定と月4回上限を確認し、選択肢3・4と一致。試験日後改正を除外し解消。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_ACT_AND_CARE_FEE_SCHEDULE",
+      "versionAudit": {
+        "examDate": "2025-02-23",
+        "articles": [
+          "介護保険法第71条",
+          "指定居宅サービス費用算定基準 ハ(2)注1"
+        ],
+        "monthlyVisits": "原則4回"
+      }
     },
     {
       "id": "P110-322",
@@ -1473,14 +1522,20 @@
       "examDate": "2025-02-23",
       "sourceUrl": "https://www.mhlw.go.jp/content/001455162.pdf",
       "matchedTerms": [],
-      "status": "OFFICIAL_PRIMARY_ETHICS_GUIDELINE_CONFIRMED; VERSIONED_GUIDANCE_REVIEW_PENDING",
+      "status": "EXAM_DATE_VERSION_CONFIRMED; PRIMARY_ETHICS_GUIDELINE_AND_2024_GUIDANCE_VERIFIED",
       "lawName": "人を対象とする生命科学・医学系研究に関する倫理指針（令和5年3月27日一部改正）",
       "article": "第8の5（研究に関する情報公開等）等",
-      "lawVersionDate": "試験日2025-02-23時点では令和5年3月27日一部改正版および令和6年4月1日ガイダンスを対象とする。令和8年改正は試験日後のため適用しない。",
-      "officialLawUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hokabunya/kenkyujigyou/i-kenkyu/index.html",
-      "impactOfLaterAmendments": "薬局の既存薬歴を用いる後ろ向き観察研究で、個別同意取得が困難な場合の情報公開・拒否機会（オプトアウト）が論点。ポスターに研究目的と研究協力を拒否する方法を記載する必要があり、公式問題データの正答1・2と整合。研究参加者全員の連絡先や倫理審査委員氏名、研究費の記載を問うものではない。",
-      "auditConclusion": "厚労省の公式指針ページで試験日前に有効な令和5年改正版と令和6年4月ガイダンスの存在を確認。本文の該当節・ガイダンスをダウンロードし、試験日版の項目別記載要件と突合する作業は未了。Q0保留。なお本問は法令そのものではなく倫理指針に基づく研究倫理問題。",
-      "evidenceLevel": "OFFICIAL_PRIMARY_ETHICS_GUIDELINE; DETAILED_CLAUSE_REVIEW_PENDING"
+      "lawVersionDate": "試験日2025-02-23。人を対象とする生命科学・医学系研究に関する倫理指針（令和5年3月27日一部改正）第8の1(3)ウ(ア)、第8の7。ガイダンスは令和6年4月1日一部改訂版。",
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=00012250 ; https://www.mhlw.go.jp/content/001237478.pdf ; https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hokabunya/kenkyujigyou/i-kenkyu/index.html",
+      "impactOfLaterAmendments": "自機関で保有する既存情報のみを用い、指針第8の1(3)ウ(ア)の要件を満たす研究では、第8の7①～③及び⑦～⑩の事項を通知又は容易に知り得る状態に置き、原則として拒否機会を保障する。必要事項には利用目的・方法、対象項目、利用開始予定日、利用者の範囲、管理責任者、利用停止の申出方法等が含まれる。研究目的及び拒否方法は必要。正答1・2。",
+      "auditConclusion": "厚労省の倫理指針本文（2023年改正）で既存情報研究のオプトアウト要件を確認。2024年4月1日版ガイダンスの版頭・改訂履歴と本文の具体的手続を照合し、研究目的及び拒否方法が必要事項に含まれることを確認。2026年改正は試験日後として除外し解消。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_ETHICS_GUIDELINE_AND_VERSIONED_MHLW_GUIDANCE",
+      "versionAudit": {
+        "examDate": "2025-02-23",
+        "guideline": "令和5年3月27日一部改正",
+        "guidance": "令和6年4月1日一部改訂",
+        "postExamAmendmentExcluded": "令和8年8月27日改正"
+      }
     },
     {
       "id": "P110-330",
@@ -1595,14 +1650,19 @@
       "examDate": "2024-02-18",
       "sourceUrl": "https://www.mhlw.go.jp/content/001226759.pdf",
       "matchedTerms": [],
-      "status": "OFFICIAL_PRIMARY_STATUTE_CONFIRMED; EXAM_DATE_AMENDMENT_HISTORY_PARTIAL",
+      "status": "EXAM_DATE_VERSION_CONFIRMED; PRIMARY_PERSONAL_INFORMATION_ACT_VERIFIED",
       "lawName": "個人情報の保護に関する法律",
       "article": "第2条第3項（要配慮個人情報）",
-      "lawVersionDate": "第109回試験日2024-02-18。令和4年4月1日全面施行後の個人情報保護法を基準とする。試験日版統合条文の沿革・政令定義の全体固定は未了。",
-      "officialLawUrl": "https://laws.e-gov.go.jp/law/415AC0000000057?occasion_date=20240218",
-      "impactOfLaterAmendments": "要配慮個人情報は本人の人種・信条・社会的身分・病歴・犯罪の経歴等を含む個人情報であり、選択肢のうち病歴が該当する。個人情報保護委員会の通則ガイドラインも法2条3項を示す。正答2と整合。生年月日・住所・学歴・電話番号はそれ自体では法定の要配慮個人情報に該当しない。",
-      "auditConclusion": "e-Gov法令及び個人情報保護委員会公式ガイドラインで病歴の該当を確認。試験日版の法令・政令・ガイドラインの改正履歴を完全固定していないためQ0保留。",
-      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE_AND_PPC_GUIDANCE"
+      "lawVersionDate": "試験日2024-02-18。個人情報の保護に関する法律第2条第3項、個人情報の保護に関する法律施行令第2条。",
+      "officialLawUrl": "https://laws.e-gov.go.jp/law/415AC0000000057?occasion_date=20240218 ; https://www.ppc.go.jp/personalinfo/legal/guidelines_tsusoku/",
+      "impactOfLaterAmendments": "個人情報保護法第2条第3項は、病歴を要配慮個人情報に含める。生年月日・住所・学歴・電話番号はそれ自体では同項の列挙に該当しない。正答2。",
+      "auditConclusion": "試験日指定e-Gov法令本文と個人情報保護委員会の公式通則ガイドラインを確認。病歴が法定の要配慮個人情報であることを直接確認し、試験日までに第2条第3項の該当文言を変える改正がないことを確認。解消。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE_AND_PPC_GUIDELINE",
+      "versionAudit": {
+        "examDate": "2024-02-18",
+        "article": "個人情報保護法第2条第3項",
+        "sensitiveData": "病歴"
+      }
     },
     {
       "id": "P109-073",
@@ -1616,14 +1676,18 @@
       "matchedTerms": [
         "薬剤師法"
       ],
-      "status": "OFFICIAL_PRIMARY_STATUTE_CONFIRMED; EXAM_DATE_AMENDMENT_HISTORY_PARTIAL",
+      "status": "EXAM_DATE_VERSION_CONFIRMED; PRIMARY_PHARMACIST_ACT_VERIFIED",
       "lawName": "薬剤師法",
       "article": "第24条（処方箋中の疑義）",
-      "lawVersionDate": "第109回試験日2024-02-18。2024-02-18指定のe-Gov法令条文を基準とする。",
-      "officialLawUrl": "https://laws.e-gov.go.jp/law/335AC0000000146?occasion_date=20240218",
-      "impactOfLaterAmendments": "薬剤師法24条は処方箋中に疑わしい点があるとき、処方箋を交付した医師・歯科医師に問い合わせて確認した後でなければ調剤してはならないと規定。正答4と整合。薬局開設許可は薬機法、一般用医薬品取扱いは薬機法、守秘義務は複数法令等にまたがり、本問で薬剤師法に規定される選択肢は疑義照会。",
-      "auditConclusion": "e-Gov一次法令で薬剤師法24条を確認。試験日版の全改正沿革および他選択肢の関連法令との完全な横断確認は未了のためQ0保留。",
-      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE"
+      "lawVersionDate": "試験日2024-02-18。薬剤師法第24条。",
+      "officialLawUrl": "https://laws.e-gov.go.jp/law/335AC0000000146?occasion_date=20240218 ; https://www.mhlw.go.jp/web/t_doc?dataId=81001000&dataType=0&pageNo=1",
+      "impactOfLaterAmendments": "薬剤師法第24条は、処方箋中に疑わしい点があるとき、交付した医師・歯科医師・獣医師へ問い合わせて疑義を確かめた後でなければ調剤してはならないと規定する。正答4。",
+      "auditConclusion": "試験日指定e-Gov薬剤師法と厚労省掲載条文で第24条を確認。処方箋中の疑義照会が薬剤師法の規定事項であることを確認し、試験日後の改正を混入していない。解消。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE",
+      "versionAudit": {
+        "examDate": "2024-02-18",
+        "article": "薬剤師法第24条"
+      }
     },
     {
       "id": "P109-074",
@@ -1635,14 +1699,19 @@
       "examDate": "2024-02-18",
       "sourceUrl": "https://www.mhlw.go.jp/content/001226759.pdf",
       "matchedTerms": [],
-      "status": "OFFICIAL_PRIMARY_ORDINANCE_AND_MHLW_QA_CONFIRMED; EXAM_DATE_HISTORY_PARTIAL",
+      "status": "EXAM_DATE_VERSION_CONFIRMED; PRIMARY_GVP_ORDINANCE_VERIFIED",
       "lawName": "医薬品、医薬部外品、化粧品、医療機器及び再生医療等製品の製造販売後安全管理の基準に関する省令（GVP省令）",
       "article": "第10条（市販直後調査）",
-      "lawVersionDate": "第109回試験日2024-02-18。GVP省令第10条及び令和4年5月31日厚労省事務連絡を基準に確認。試験日版省令の完全な沿革固定は未了。",
-      "officialLawUrl": "https://laws.e-gov.go.jp/law/416M60000100135?occasion_date=20240218 ; https://www.mhlw.go.jp/web/t_doc?dataId=00tc6777&dataType=1&pageNo=1",
-      "impactOfLaterAmendments": "GVP省令10条は市販直後調査を医薬品の販売開始後6か月間に行うものと定義。厚労省2022-05-31 Q&Aは、原則として製造販売業者が定めた発売日を開始日とする。承認日・薬価収載日・RMP策定日ではない。正答3と整合。",
-      "auditConclusion": "試験日前の省令条文と厚労省Q&Aを確認し、販売開始日から6か月の根拠を確認。試験日版の全改正沿革を固定していないためQ0保留。",
-      "evidenceLevel": "OFFICIAL_PRIMARY_ORDINANCE_AND_MHLW_QA"
+      "lawVersionDate": "試験日2024-02-18。医薬品、医薬部外品、化粧品、医療機器及び再生医療等製品の製造販売後安全管理の基準に関する省令（平成16年厚生労働省令第135号）第10条。",
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=81aa6391&dataType=0&pageNo=1",
+      "impactOfLaterAmendments": "GVP省令第10条は、市販直後調査を医薬品の販売開始後6か月間実施するものと定義する。承認時又は薬価収載時ではなく、販売開始時を起算点とする。正答3。",
+      "auditConclusion": "厚労省掲載のGVP省令第10条本文と市販直後調査Q&Aを照合し、販売開始後6か月と明記されていることを確認。条文末尾の改正注記と試験日までの改正範囲を確認し、本問の起算点に影響する後続改正なし。解消。",
+      "evidenceLevel": "OFFICIAL_PRIMARY_ORDINANCE_AND_MHLW_QA",
+      "versionAudit": {
+        "examDate": "2024-02-18",
+        "article": "GVP省令第10条",
+        "period": "販売開始後6か月"
+      }
     },
     {
       "id": "P109-075",
@@ -2539,11 +2608,11 @@
     "status": "BLOCKED",
     "candidateCount": 107,
     "individuallyReviewed": 107,
-    "unresolvedCount": 43,
-    "legalOrRegulatoryVersionOrApplicationPending": 42,
+    "unresolvedCount": 33,
+    "legalOrRegulatoryVersionOrApplicationPending": 32,
     "nonlegalPrimarySourceOrFigureReviewPending": 1,
     "clearNonlegalOrNonstatutoryCandidates": 42,
-    "passCount": 14,
+    "passCount": 24,
     "failCount": 0,
     "majorFindings": [
       "多数の法令候補で試験日版沿革・省令通知・個別適用の完全突合が未了",
@@ -2552,7 +2621,7 @@
       "P110-140は2026-04-01施行の測定方法改正を受け、現行解説の更新注記が必要"
     ],
     "appReview": "NOT_SUBMITTED",
-    "latestBatch": "auditBatch15"
+    "latestBatch": "auditBatch16"
   },
   "auditBatch12": {
     "checkedAt": "2026-11-05",
@@ -2695,5 +2764,60 @@
       "unresolved": 10
     },
     "note": "一次資料を追加確認。P110-076は評価療養告示495号1条2号に治験診療の明文を確認したが、試験日版の告示改正履歴と同号への影響の分離が未了。P111-320は2022年省令改正通知の施行日を確認したが、2022-04-01から試験日までの全改正履歴の網羅が未了。ほかの問題も具体的適用・当時版ガイダンス・省令との突合に一次資料不足が残る。いずれもPASSへ変更せず保留。"
+  },
+  "q0Triage": {
+    "checkedAt": "2026-11-05",
+    "basis": "A＝現在取得可能な一次資料・版付き公式資料を用いて具体的な追加検証を進められる案件。B＝具体的適用判例、製品固有資料、歴史的創設時資料、当時版保存資料など、現時点で必要一次資料が不足し、未確認のまま維持する案件。分類はPASSを意味しない。",
+    "initialUnresolved": 43,
+    "initialA": 36,
+    "initialB": 7,
+    "bIds": [
+      "P111-142",
+      "P111-306",
+      "P111-310",
+      "P110-079",
+      "P110-142",
+      "P109-142",
+      "P109-312"
+    ],
+    "afterBatch": {
+      "aRemaining": 26,
+      "bRemaining": 7,
+      "totalRemaining": 33
+    }
+  },
+  "auditBatch16": {
+    "checkedAt": "2026-11-05",
+    "reviewedIds": [
+      "P110-145",
+      "P110-146",
+      "P110-147",
+      "P110-310",
+      "P110-313",
+      "P110-320",
+      "P110-324",
+      "P109-072",
+      "P109-073",
+      "P109-074"
+    ],
+    "resolvedIds": [
+      "P110-145",
+      "P110-146",
+      "P110-147",
+      "P110-310",
+      "P110-313",
+      "P110-320",
+      "P110-324",
+      "P109-072",
+      "P109-073",
+      "P109-074"
+    ],
+    "unresolvedIds": [],
+    "counts": {
+      "reviewed": 10,
+      "resolved": 10,
+      "unresolved": 0
+    },
+    "note": "A区分から新規10件を選択。第15バッチで保留した10件は再審査せず、一次資料が取得できる別問題を進行。各問題について試験日指定の法令・省令・告示・通知・公式ガイダンスを確認し、試験日後の改正を除外して正答根拠を確認した。"
   }
 }
