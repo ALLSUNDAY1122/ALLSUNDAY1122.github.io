@@ -643,7 +643,27 @@ workflows:
           assert (len(q),len(active),len(free),len(media))==(1035,1031,90,154)
           print('PASS: native pharmacist release inputs and canonical AppIcon')
           PY
-      - name: Apply App Store signing profiles for App Store review
+      - name: Run native unit and UI tests before TestFlight
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          UDID="$(python3 - <<'PY'
+          import json, subprocess
+          data=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          for runtime, devices in data['devices'].items():
+              for device in devices:
+                  if device.get('isAvailable') and device.get('name','').startswith('iPhone'):
+                      print(device['udid'])
+                      raise SystemExit(0)
+          raise SystemExit('No available iPhone Simulator')
+          PY
+          )"
+          xcodebuild test \\
+            -project "$CM_BUILD_DIR/$XCODE_PROJECT" \\
+            -scheme "$XCODE_SCHEME" \\
+            -destination "platform=iOS Simulator,id=$UDID" \\
+            CODE_SIGNING_ALLOWED=NO
+      - name: Apply App Store signing profiles for TestFlight
         script: |
           cd "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios"
           xcode-project use-profiles
