@@ -25,6 +25,17 @@ def main():
   qa=pa[len(stem):].strip();qb=pb[len(stem):].strip()
   if len(qa)<8 or len(qb)<8:continue
   a['sharedStem']=stem;b['sharedStem']=stem;a['question']=qa;b['question']=qb;extracted.append({'caseGroupId':gid,'questions':[a['id'],b['id']],'stemLength':len(stem)})
+ # Preserve the MHLW correction even when case stems are normalized again.
+ qmap={q['id']:q for q in qs}
+ expected='デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）'
+ for qid in ('P111-220','P111-221'):
+  stem=clean(qmap[qid].get('sharedStem'))
+  if expected not in stem:
+   stem,count=re.subn(r'(デュロキセチン塩酸塩カプセル\\s+20\\s+mg\\s+1\\s+回\\s+1\\s+)錠(\\s*[（(]\\s*1\\s+日\\s+2\\s+)錠',r'\\1カプセル\\2カプセル',stem)
+   if count != 1:raise SystemExit(f'MHLW correction 001677936.pdf missing or ambiguous in {qid}: {count}')
+   qmap[qid]['sharedStem']=stem
+  if expected not in clean(qmap[qid].get('sharedStem')):
+   raise SystemExit(f'MHLW correction not preserved for {qid}')
  # Rebuild canonical exact-repeat markers after normalization.
  roots={}
  for q in qs:
