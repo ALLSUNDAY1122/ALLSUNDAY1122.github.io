@@ -667,10 +667,10 @@ workflows:
             -scheme "$XCODE_SCHEME" \
             -destination "platform=iOS Simulator,id=$UDID" \
             CODE_SIGNING_ALLOWED=NO
-      - name: Apply App Store signing profiles for TestFlight
+      - name: Apply App Store signing profiles for internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios"
-          xcode-project use-profiles
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
