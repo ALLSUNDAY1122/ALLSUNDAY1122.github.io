@@ -48,19 +48,31 @@ def read_once(token, command):
         return {"ready": False, "reason": "matching_build_not_found", "candidate_count": len(candidates)}
     build_id = target["id"]
     a = target.get("attributes", {})
+    if a.get("processingState") == "VALID" and a.get("buildAudienceType") != "INTERNAL_ONLY":
+        return {
+            "ready": False,
+            "reason": "build_audience_is_not_internal_only",
+            "result": {
+                "request_id": command.get("request_id"),
+                "read_only": True,
+                "checked_at": datetime.now(timezone.utc).isoformat(),
+                "app": {"id": APP_ID, "bundle_id": BUNDLE_ID},
+                "build": {"id": build_id, "attributes": attrs(target, ["version", "uploadedDate", "processingState", "expired", "expirationDate", "minOsVersion", "buildAudienceType"])},
+            }
+        }
     _, beta_payload = request(token, f"/v1/builds/{build_id}/buildBetaDetail")
     beta = beta_payload["data"]
     beta_attrs = beta.get("attributes", {})
-    _, groups_payload = request(token, f"/v1/apps/{APP_ID}/betaGroups?limit=100")
-    groups = items(groups_payload)
-    memberships = []
-    for group in groups:
-        _, group_builds_payload = request(token, f"/v1/betaGroups/{group['id']}/builds?limit=200")
-        if build_id in {x.get("id") for x in items(group_builds_payload)}:
-            memberships.append({
-                "id": group.get("id"),
-                "attributes": attrs(group, ["name", "isInternalGroup", "hasAccessToAllBuilds", "publicLinkEnabled"])
-            })
+    # Use the build-to-betaGroups relationship directly rather than iterating
+    # every app group and requesting each group's full build list.
+    _, groups_payload = request(token, f"/v1/builds/{build_id}/betaGroups?limit=200")
+    memberships = [
+        {
+            "id": group.get("id"),
+            "attributes": attrs(group, ["name", "isInternalGroup", "hasAccessToAllBuilds", "publicLinkEnabled"])
+        }
+        for group in items(groups_payload)
+    ]
     result = {
         "request_id": command.get("request_id"),
         "read_only": True,
