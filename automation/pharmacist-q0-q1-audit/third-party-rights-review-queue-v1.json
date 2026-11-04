@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-11-04",
+  "scope": "Four cases identified in content/media/third-party-review.json and content/reviewed/third-party-replacements.json. This is a rights/source review queue, not a legal conclusion.",
+  "status": "ALL_PENDING",
+  "items": [
+    {
+      "id": "P109-025",
+      "exam": 109,
+      "questionNo": 25,
+      "sourceTitle": "令和3年度公害苦情調査結果報告書",
+      "sourceOrganization": "総務省 公害等調整委員会",
+      "originalSourcePage": "https://www.soumu.go.jp/kouchoi/knowledge/report/kujyou-r3_index.html",
+      "originalSourcePdf": "https://www.soumu.go.jp/main_content/000917834.pdf",
+      "appUse": "典型七公害の種類別苦情件数のうち騒音が最多という集計事実を用いた独自文章問題。原グラフは転載しない方針。",
+      "currentAppSource": "https://www.mhlw.go.jp/content/001226759.pdf",
+      "rightsAssessment": "数値・集計事実のみの利用であれば著作権保護対象外となる可能性が高いが、提供元の利用条件と正確な出典表示を確認する。総務省サイトの利用条件の適用確認は未完了。",
+      "requiredAction": "原報告書・元データを照合し、総務省の利用条件、出典URL、利用日、独自文章化の表示を確認。",
+      "status": "SOURCE_FOUND_TERMS_AND_ATTRIBUTION_PENDING"
+    },
+    {
+      "id": "P109-124",
+      "exam": 109,
+      "questionNo": 124,
+      "sourceTitle": "人口推計（2022年10月1日現在）",
+      "sourceOrganization": "総務省統計局",
+      "originalSourcePage": "https://www.stat.go.jp/data/jinsui/2022np/index.htm",
+      "termsUrl": "https://www.stat.go.jp/info/riyou.html",
+      "originalSourcePdf": "https://www.stat.go.jp/data/jinsui/2022np/pdf/2022np.pdf",
+      "appUse": "15歳未満11.6%、15～64歳59.4%、65歳以上29.0%、75歳以上15.5%の数値を用い、指数を独自計算した文章問題。原グラフは転載しない方針。",
+      "currentAppSource": "https://www.mhlw.go.jp/content/001226760.pdf",
+      "rightsAssessment": "統計局はPDL1.0準拠を明示し、商用利用を認める。数値データは著作権保護対象外とされる。ただし、出典URLおよび加工主体の表示が必要。",
+      "requiredAction": "元統計表と全数値を照合し、統計局URL・PDL1.0・加工主体をアプリ内に表示。",
+      "status": "PDL1_CONFIRMED_ATTRIBUTION_AND_DATA_CHECK_PENDING"
+    },
+    {
+      "id": "P110-122",
+      "exam": 110,
+      "questionNo": 122,
+      "sourceTitle": "Alcohol Drinking and Colorectal Cancer in Japanese: A Pooled Analysis of Results from Five Cohort Studies",
+      "sourceOrganization": "Mizoue et al., American Journal of Epidemiology 167(12), 1397–1406 (2008)",
+      "doi": "https://doi.org/10.1093/aje/kwn073",
+      "originalSourcePage": "https://academic.oup.com/aje/issue/167/12",
+      "accessibleArticlePdf": "https://mhlw-grants.niph.go.jp/system/files/2008/083031/200823001B/200823001B0004.pdf",
+      "appUse": "公式試験問題PDFが示す数値を再集計し、非飲酒群142、23g/日以上群196（10万観察人年当たり）を用いた独自文章問題。原表・図版・原文の転載は行わない方針。",
+      "currentAppSource": "https://www.mhlw.go.jp/content/001455152.pdf",
+      "rightsAssessment": "原著のライセンス・再利用条件は未確認。事実・数値・独自計算と、原表の表現・選択配列・図表の再利用を分離して法的評価する。許諾済みとは扱わない。",
+      "requiredAction": "公式問題PDFと原著Table 2を突合し、142・196の算出根拠、27～28%の計算、元表の表現を転載していないことを確認。原著DOIと出典を表示し、必要なら問題をさらに独立再構成。",
+      "status": "FACTUAL_REUSE_REVIEW_REQUIRED"
+    },
+    {
+      "id": "P110-140",
+      "exam": 110,
+      "questionNo": 140,
+      "sourceTitle": "光化学オキシダント測定方法・大気汚染物質発生源",
+      "sourceOrganization": "環境省・国立環境研究所",
+      "originalSourcePage": "https://www.nies.go.jp/eqsbasis/air.html",
+      "measurementStandardUrl": "https://www.env.go.jp/kijun/taiki.html",
+      "currentAppSource": "https://www.mhlw.go.jp/content/001455152.pdf",
+      "appUse": "NIES季節変動グラフは再利用せず、NOx発生源と光化学オキシダントの測定法に関する文章問題へ再構成。",
+      "rightsAssessment": "図表転載はしていないとされるが、NOx発生源の具体的根拠URLが不足。測定法は環境省告示・基準の改正履歴を確認する必要がある。",
+      "regulatoryDateIssue": "第110回試験日2025-02-23時点では中性ヨウ化カリウム法は測定法の一つ。2026-01-30改正後の現行方法は紫外線吸収法またはエチレンを用いる化学発光法。正答は歴史的に維持し、現行法の注記を追加する。",
+      "requiredAction": "NOx発生源の一次資料を特定し、出題時点と現行の環境基準・測定方法を区別した出典表示と解説を作成。",
+      "status": "SOURCE_AND_CURRENTNESS_REVIEW_REQUIRED"
+    }
+  ]
+}
