@@ -32,14 +32,17 @@ jobs:
         if: always()
         run: |
           set -euo pipefail
-          test -f automation/asc-results/pharmacist-testflight-readback.json
-          cp automation/asc-results/pharmacist-testflight-readback.json /tmp/pharmacist-testflight-readback.json
+          REQUEST_ID="$(python3 -c "import json; print(json.load(open('automation/pharmacist-testflight-asc-command.json'))['request_id'])")"
+          RESULT_PATH="automation/asc-results/pharmacist-testflight-readback-${REQUEST_ID}.json"
+          test -f "$RESULT_PATH"
+          cp "$RESULT_PATH" /tmp/pharmacist-testflight-readback.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git fetch origin main
           git reset --hard origin/main
-          cp /tmp/pharmacist-testflight-readback.json automation/asc-results/pharmacist-testflight-readback.json
-          git add automation/asc-results/pharmacist-testflight-readback.json
+          mkdir -p automation/asc-results
+          cp /tmp/pharmacist-testflight-readback.json "$RESULT_PATH"
+          git add "$RESULT_PATH"
           if ! git diff --cached --quiet; then
             git commit -m 'Persist pharmacist TestFlight ASC readback'
             git push origin HEAD:main
