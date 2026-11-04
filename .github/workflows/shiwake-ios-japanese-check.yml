@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   ios-japanese:
@@ -94,7 +94,19 @@ jobs:
                       v['localizations'].append(l)
                   state['versions'].append(v)
               print(json.dumps(state, ensure_ascii=False, indent=2))
+              out = Path('automation/asc-results/shiwake-store-readback-20261104.json')
+              out.parent.mkdir(parents=True, exist_ok=True)
+              out.write_text(json.dumps(state, ensure_ascii=False, indent=2) + '\\n', encoding='utf-8')
           finally:
               if cleanup:
                   cleanup.unlink(missing_ok=True)
           PY
+      - name: Commit sanitized Shiwake store readback
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/asc-results/shiwake-store-readback-20261104.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Record Shiwake App Store readback for localization fix"
+          git pull --rebase origin main
+          git push origin HEAD:main
