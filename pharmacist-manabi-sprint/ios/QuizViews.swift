@@ -132,6 +132,8 @@ struct QuizView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
+                sourceCitation(q)
+
                 if q.selectionCount > 1 && learning.feedback == nil {
                     Text("正しいものを\(q.selectionCount)つ選んでください。選択 \(learning.selectedAnswers.count) / \(q.selectionCount)")
                         .font(.system(size: 12, weight: .semibold))
@@ -156,6 +158,27 @@ struct QuizView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 16)
+    }
+
+    private func sourceCitation(_ q: Question) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(q.attribution)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(Color.sprintInk3)
+            if let source = q.sourceURL, let url = URL(string: source) {
+                Link(destination: url) {
+                    Text(source)
+                        .font(.system(size: 10))
+                        .underline()
+                        .textSelection(.enabled)
+                }
+                .accessibilityLabel("公式出典URLを開く")
+            }
+            Text(q.modificationDisclosure)
+                .font(.system(size: 10))
+                .foregroundStyle(Color.sprintInk3)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func choices(_ q: Question) -> some View {
@@ -254,6 +277,32 @@ struct QuizView: View {
             DisclosureGroup("もう少し詳しく") {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(f.question.attribution)
+                    if let source = f.question.sourceURL, let url = URL(string: source) {
+                        Link(destination: url) {
+                            Text(source)
+                                .font(.system(size: 10))
+                                .underline()
+                                .textSelection(.enabled)
+                        }
+                    }
+                    if let source = f.question.legalSourceURL, let url = URL(string: source) {
+                        Text("関連法令・基準の原典")
+                        Link(destination: url) {
+                            Text(source)
+                                .font(.system(size: 10))
+                                .underline()
+                                .textSelection(.enabled)
+                        }
+                    }
+                    if let source = f.question.correctionSourceURL, let url = URL(string: source) {
+                        Text("公式正誤表")
+                        Link(destination: url) {
+                            Text(source)
+                                .font(.system(size: 10))
+                                .underline()
+                                .textSelection(.enabled)
+                        }
+                    }
                     Text(f.question.modificationDisclosure)
                     if f.question.scoringStatus == "excluded" {
                         Text("公式正答が『解なし』のため採点対象外です。")
