@@ -1,26 +1,9 @@
 {
-  "request_id": "pitari-review-info-20261104-0804",
-  "completed_at": "2026-11-03T23:06:19.876807+00:00",
+  "request_id": "pitari-prewrite-check-20261104-1849",
+  "completed_at": "2026-11-04T09:49:06.105288+00:00",
   "results": [
     {
-      "label": "pitari-app",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "6795941132",
-          "type": "apps",
-          "attributes": {
-            "name": "ぴたりサイズ",
-            "bundleId": "jp.allsunday.pitariresize",
-            "sku": "EX1785329847415",
-            "primaryLocale": "en-US",
-            "contentRightsDeclaration": "DOES_NOT_USE_THIRD_PARTY_CONTENT"
-          }
-        }
-      ]
-    },
-    {
-      "label": "pitari-versions",
+      "label": "version",
       "http_status": 200,
       "data": [
         {
@@ -37,7 +20,7 @@
       ]
     },
     {
-      "label": "pitari-selected-build",
+      "label": "selected",
       "http_status": 200,
       "data": [
         {
@@ -48,7 +31,27 @@
       ]
     },
     {
-      "label": "pitari-review-detail",
+      "label": "build12",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "b0821263-a794-467f-baf0-41b386f6f233",
+          "type": "builds",
+          "attributes": {
+            "version": "12",
+            "uploadedDate": "2026-11-03T05:30:44-08:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2027-02-01T05:30:44-08:00",
+            "minOsVersion": "16.4",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          }
+        }
+      ]
+    },
+    {
+      "label": "review",
       "http_status": 200,
       "data": [
         {
@@ -57,6 +60,11 @@
           "attributes": {}
         }
       ]
+    },
+    {
+      "label": "review-attachments",
+      "http_status": 200,
+      "data": []
     }
   ]
 }
