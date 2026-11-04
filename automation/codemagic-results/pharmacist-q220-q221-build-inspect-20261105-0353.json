@@ -19,7 +19,7 @@
   "error": null,
   "build": {
     "_id": "6aeb7ef7d3989a3017e8f118",
-    "status": "building",
+    "status": "publishing",
     "fileWorkflowId": "pharmacist-ios",
     "branch": "main",
     "startedAt": "2026-11-04T18:52:57.885000+00:00",
@@ -131,9 +131,9 @@
         "type": "script",
         "has_test_results": false,
         "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
-        "status": null,
+        "status": "success",
         "started_at": "2026-11-04T18:56:42.988000Z",
-        "finished_at": null
+        "finished_at": "2026-11-04T18:56:45.695000Z"
       },
       {
         "id": "6aeb7ef8ab844959c377b9c0",
@@ -141,9 +141,9 @@
         "type": "script",
         "has_test_results": false,
         "script": "#!/usr/bin/env bash\n\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
-        "status": null,
-        "started_at": null,
-        "finished_at": null
+        "status": "success",
+        "started_at": "2026-11-04T18:56:45.695000Z",
+        "finished_at": "2026-11-04T18:57:07.392000Z"
       },
       {
         "id": "6aeb7ef8ab844959c377b9c1",
@@ -152,7 +152,7 @@
         "has_test_results": false,
         "script": null,
         "status": null,
-        "started_at": null,
+        "started_at": "2026-11-04T18:57:07.392000Z",
         "finished_at": null
       },
       {
@@ -4860,8 +4860,8 @@
         "_id": "6aeb7ef7d3989a3017e8f118",
         "index": 23,
         "appId": "6a769d81a1add9d06020b524",
-        "status": "building",
-        "version": null,
+        "status": "publishing",
+        "version": "1.0.0",
         "branch": "main",
         "startedAt": "2026-11-04T18:52:57.885000+00:00",
         "startedBy": "6a65b96c614117482b2dcbde",
@@ -4891,7 +4891,79 @@
           }
         },
         "dynamicConfig": {},
-        "artefacts": [],
+        "artefacts": [
+          {
+            "name": "PharmacistSprint.ipa",
+            "type": "ipa",
+            "url": "https://api.codemagic.io/artifacts/8245b9a7-bf6a-4179-84c0-e0cdf59de30c/3aa4cf99-87c4-4dbe-98e4-ef08e903edea/PharmacistSprint.ipa",
+            "size": 18547715,
+            "version": "1.0.0",
+            "versionName": "1.0.0",
+            "versionCode": "20261104185349",
+            "version_code": "20261104185349",
+            "supportedPlatforms": [
+              "iPhoneOS"
+            ],
+            "path": "8245b9a7-bf6a-4179-84c0-e0cdf59de30c/3aa4cf99-87c4-4dbe-98e4-ef08e903edea/PharmacistSprint.ipa",
+            "minOsVersion": "16.0"
+          },
+          {
+            "name": "PharmacistSprint.app.zip",
+            "type": "app",
+            "url": "https://api.codemagic.io/artifacts/9b32c0cf-eee8-4dac-a54d-700cbc4edaa1/2f26e5ff-fda6-49e6-8cf5-d723b91d5ec0/PharmacistSprint.app.zip",
+            "size": 23180665,
+            "version": "1.0.0",
+            "versionName": null,
+            "versionCode": "20261104185349",
+            "version_code": "20261104185349",
+            "supportedPlatforms": [
+              "iPhoneSimulator"
+            ],
+            "path": "9b32c0cf-eee8-4dac-a54d-700cbc4edaa1/2f26e5ff-fda6-49e6-8cf5-d723b91d5ec0/PharmacistSprint.app.zip",
+            "minOsVersion": "16.0"
+          },
+          {
+            "name": "PharmacistSprintUITests-Runner.app.zip",
+            "type": "app",
+            "url": "https://api.codemagic.io/artifacts/3e0b7386-f943-44c8-b094-866165f256ca/b15ab5a2-f778-494f-9010-6a5f64b5c7d3/PharmacistSprintUITests-Runner.app.zip",
+            "size": 5668625,
+            "version": "1.0",
+            "versionName": null,
+            "versionCode": "1",
+            "version_code": "1",
+            "supportedPlatforms": [
+              "iPhoneSimulator"
+            ],
+            "path": "3e0b7386-f943-44c8-b094-866165f256ca/b15ab5a2-f778-494f-9010-6a5f64b5c7d3/PharmacistSprintUITests-Runner.app.zip",
+            "minOsVersion": "13.0"
+          },
+          {
+            "name": "PharmacistSprint.app.dSYM.zip",
+            "type": "dsym",
+            "url": "https://api.codemagic.io/artifacts/9a3ff057-d610-45a3-9f28-4246e64a6af9/d2d89939-cbdb-4468-8386-c4556f2188a9/PharmacistSprint.app.dSYM.zip",
+            "size": 1194592,
+            "version": null,
+            "versionName": null,
+            "versionCode": null,
+            "version_code": null,
+            "supportedPlatforms": null,
+            "path": "9a3ff057-d610-45a3-9f28-4246e64a6af9/d2d89939-cbdb-4468-8386-c4556f2188a9/PharmacistSprint.app.dSYM.zip",
+            "minOsVersion": null
+          },
+          {
+            "name": "ALLSUNDAY1122.github.io_23_artifacts.zip",
+            "type": "bundle",
+            "url": "https://api.codemagic.io/artifacts/e4370d56-326e-4aa9-90c3-0dc2884cebbd/c6a42b29-dcde-40e4-99ef-64c93a94aa1c/ALLSUNDAY1122.github.io_23_artifacts.zip",
+            "size": 18544,
+            "version": null,
+            "versionName": null,
+            "versionCode": null,
+            "version_code": null,
+            "supportedPlatforms": null,
+            "path": "e4370d56-326e-4aa9-90c3-0dc2884cebbd/c6a42b29-dcde-40e4-99ef-64c93a94aa1c/ALLSUNDAY1122.github.io_23_artifacts.zip",
+            "minOsVersion": null
+          }
+        ],
         "buildActions": [
           {
             "_id": "6aeb7ef8ab844959c377b9b7",
@@ -5045,17 +5117,17 @@
             "name": "Apply App Store signing profiles for internal TestFlight only",
             "type": null,
             "logUrl": null,
-            "status": null,
+            "status": "success",
             "startedAt": "2026-11-04T18:56:42.988000+00:00",
-            "finishedAt": null,
+            "finishedAt": "2026-11-04T18:56:45.695000+00:00",
             "results": [],
             "subactions": [
               {
                 "command": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
-                "status": null,
+                "status": "success",
                 "startedAt": "2026-11-04T18:56:42.988000+00:00",
-                "logUrl": null,
-                "finishedAt": null
+                "logUrl": "https://api.codemagic.io/builds/6aeb7ef7d3989a3017e8f118/step/6aeb7ef8ab844959c377b9bf",
+                "finishedAt": "2026-11-04T18:56:44.847000+00:00"
               }
             ]
           },
@@ -5064,17 +5136,17 @@
             "name": "Build signed IPA",
             "type": null,
             "logUrl": null,
-            "status": null,
-            "startedAt": null,
-            "finishedAt": null,
+            "status": "success",
+            "startedAt": "2026-11-04T18:56:45.695000+00:00",
+            "finishedAt": "2026-11-04T18:57:07.392000+00:00",
             "results": [],
             "subactions": [
               {
                 "command": "#!/usr/bin/env bash\n\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
-                "status": null,
-                "startedAt": null,
-                "logUrl": null,
-                "finishedAt": null
+                "status": "success",
+                "startedAt": "2026-11-04T18:56:45.695000+00:00",
+                "logUrl": "https://api.codemagic.io/builds/6aeb7ef7d3989a3017e8f118/step/6aeb7ef8ab844959c377b9c0",
+                "finishedAt": "2026-11-04T18:57:06.910000+00:00"
               }
             ]
           },
@@ -5084,7 +5156,7 @@
             "type": "publishing",
             "logUrl": null,
             "status": null,
-            "startedAt": null,
+            "startedAt": "2026-11-04T18:57:07.392000+00:00",
             "finishedAt": null,
             "results": [],
             "subactions": []
