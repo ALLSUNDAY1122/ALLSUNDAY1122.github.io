@@ -6,9 +6,17 @@ function mapQuestion(q){
   var choices=media?Array.from({length:Number(q.numberedChoiceCount)||5},function(_,i){return '選択肢 '+(i+1)}):(Array.isArray(q.choices)?q.choices.slice():[]);
   var answer=asArray(q.answer);
   var accepted=Array.isArray(q.accepted_answers)?q.accepted_answers.map(function(x){return asArray(x)}):null;
+  var caseStem=q.sharedStem||'';
+  if(Number(q.sourceExam)===111 && (Number(q.questionNo)===220 || Number(q.questionNo)===221)){
+    // MHLW correction table 001677936.pdf: capsule count unit in the shared case.
+    caseStem=caseStem.replace(/デュロキセチン塩酸塩カプセル\\s*20\\s*mg\\s*1\\s*回\\s*1\\s*錠\\s*[（(]\\s*1\\s*日\\s*2\\s*錠\\s*[）)]/,'デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）');
+    if(caseStem.indexOf('デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）')<0){
+      throw new Error('MHLW correction missing in '+q.id);
+    }
+  }
   return {
     id:q.id,exam:Number(q.sourceExam),sourceQuestionNo:Number(q.questionNo),f:q.subject,s:q.domain,
-    q:q.question||'',caseStem:q.sharedStem||'',c:choices,a:answer,accepted:accepted,
+    q:q.question||'',caseStem:caseStem,c:choices,a:answer,accepted:accepted,
     pick:accepted&&accepted.length?accepted[0].length:Math.max(1,answer.length),
     p:q.memoryPoint||'',d:q.explanation||'',detail:(q.attributionDisplay||'')+'。'+(q.modificationDisclosureDisplay||''),
     scored:q.scoring_status!=='excluded',scoringStatus:q.scoring_status,rightsStatus:'cleared',sourceType:'mhlw_product',
