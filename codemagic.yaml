@@ -578,7 +578,8 @@ workflows:
         CODEMAGIC_PROFILE_REF: yakuzaishi_appstore
         XCODE_PROJECT: pharmacist-manabi-sprint/ios/PharmacistSprint.xcodeproj
         XCODE_SCHEME: PharmacistSprint
-      xcode: 16.2
+      # App Store Connect now requires the iOS 26 SDK or later.
+      xcode: 26.4
     scripts:
       - name: Release audit before signed native build
         script: |
