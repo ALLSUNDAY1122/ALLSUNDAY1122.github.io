@@ -564,6 +564,13 @@ workflows:
 
   pharmacist-ios:
     name: 薬剤師国家試験 - iOS App Store Candidate
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: push
     max_build_duration: 60
     instance_type: mac_mini_m2
     integrations:
@@ -583,6 +590,17 @@ workflows:
       - name: Release audit before signed native build
         script: |
           cd "$CM_BUILD_DIR"
+          python3 pharmacist-manabi-sprint/tools/assemble_product_bank.py
+          python3 pharmacist-manabi-sprint/tools/build_web_bundle.py
+          python3 - <<'PY'
+          import json
+          d=json.load(open('pharmacist-manabi-sprint/content/product/questions.json',encoding='utf-8'))
+          qs={q['id']:q for q in d['questions']}
+          expected='デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）'
+          for qid in ('P111-220','P111-221'):
+              assert expected in (qs[qid].get('sharedStem') or ''), qid
+          print('PASS: MHLW Q220/Q221 dosage-form correction in release source')
+          PY
           python3 pharmacist-manabi-sprint/scripts/validate_release.py
           bash -n pharmacist-manabi-sprint/ios/prepare-ios.sh
           python3 -m py_compile pharmacist-manabi-sprint/ios/apply-xcode-capabilities.py
