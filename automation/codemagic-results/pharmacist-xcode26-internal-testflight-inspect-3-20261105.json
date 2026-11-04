@@ -19,13 +19,15 @@
   "error": null,
   "build": {
     "_id": "6aeb65fe80e65d9bb447a6da",
-    "status": "building",
+    "status": "failed",
     "fileWorkflowId": "pharmacist-ios",
     "branch": "main",
     "startedAt": "2026-11-04T17:06:12.473000+00:00",
+    "finishedAt": "2026-11-04T17:15:56.786000+00:00",
     "createdAt": "2026-11-04T17:06:06.428000+00:00",
     "index": 22,
     "instanceType": "mac_mini_m2",
+    "message": "Step 8 script `Run native unit and UI tests before TestFlight` exited with status code 65",
     "actionCount": 0,
     "artifactCount": 0,
     "commit": {
@@ -121,9 +123,9 @@
         "type": "script",
         "has_test_results": false,
         "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR\"\nUDID=\"$(python3 - <<'PY'\nimport json, subprocess\ndata=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))\nfor devices in data['devices'].values():\n    for device in devices:\n        if device.get('isAvailable') and device.get('name','').startswith('iPhone'):\n            print(device['udid'])\n            raise SystemExit(0)\nraise SystemExit('No available iPhone Simulator')\nPY\n)\"\nxcodebuild test \\\n  -project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  -scheme \"$XCODE_SCHEME\" \\\n  -destination \"platform=iOS Simulator,id=$UDID\" \\\n  CODE_SIGNING_ALLOWED=NO",
-        "status": null,
+        "status": "failed",
         "started_at": "2026-11-04T17:07:16.751000Z",
-        "finished_at": null
+        "finished_at": "2026-11-04T17:15:48.833000Z"
       },
       {
         "id": "6aeb65ffab844959c377aa27",
@@ -131,9 +133,9 @@
         "type": "script",
         "has_test_results": false,
         "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
-        "status": null,
-        "started_at": null,
-        "finished_at": null
+        "status": "skipped",
+        "started_at": "2026-11-04T17:15:48.833000Z",
+        "finished_at": "2026-11-04T17:15:49.436000Z"
       },
       {
         "id": "6aeb65ffab844959c377aa28",
@@ -141,9 +143,9 @@
         "type": "script",
         "has_test_results": false,
         "script": "#!/usr/bin/env bash\n\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
-        "status": null,
-        "started_at": null,
-        "finished_at": null
+        "status": "skipped",
+        "started_at": "2026-11-04T17:15:49.436000Z",
+        "finished_at": "2026-11-04T17:15:50.038000Z"
       },
       {
         "id": "6aeb65ffab844959c377aa29",
@@ -151,9 +153,9 @@
         "type": "publishing",
         "has_test_results": false,
         "script": null,
-        "status": null,
-        "started_at": null,
-        "finished_at": null
+        "status": "success",
+        "started_at": "2026-11-04T17:15:50.038000Z",
+        "finished_at": "2026-11-04T17:15:56.074000Z"
       },
       {
         "id": "6aeb65ffab844959c377aa2a",
@@ -161,9 +163,9 @@
         "type": "finishing",
         "has_test_results": false,
         "script": null,
-        "status": null,
-        "started_at": null,
-        "finished_at": null
+        "status": "success",
+        "started_at": "2026-11-04T17:15:56.074000Z",
+        "finished_at": "2026-11-04T17:15:56.786000Z"
       }
     ],
     "page_size": 30,
@@ -4860,13 +4862,13 @@
         "_id": "6aeb65fe80e65d9bb447a6da",
         "index": 22,
         "appId": "6a769d81a1add9d06020b524",
-        "status": "building",
-        "version": null,
+        "status": "failed",
+        "version": "1.0.0",
         "branch": "main",
         "startedAt": "2026-11-04T17:06:12.473000+00:00",
         "startedBy": "6a65b96c614117482b2dcbde",
         "createdAt": "2026-11-04T17:06:06.428000+00:00",
-        "finishedAt": null,
+        "finishedAt": "2026-11-04T17:15:56.786000+00:00",
         "workflowId": null,
         "fileWorkflowId": "pharmacist-ios",
         "instanceType": "mac_mini_m2",
@@ -4891,7 +4893,38 @@
           }
         },
         "dynamicConfig": {},
-        "artefacts": [],
+        "artefacts": [
+          {
+            "name": "PharmacistSprint.app.zip",
+            "type": "app",
+            "url": "https://api.codemagic.io/artifacts/a0a389ac-e141-4e1d-a400-fad0ec8fc97d/3f924eaf-70f0-492c-8d62-8015cce897a1/PharmacistSprint.app.zip",
+            "size": 23180663,
+            "version": "1.0.0",
+            "versionName": null,
+            "versionCode": "20261104170714",
+            "version_code": "20261104170714",
+            "supportedPlatforms": [
+              "iPhoneSimulator"
+            ],
+            "path": "a0a389ac-e141-4e1d-a400-fad0ec8fc97d/3f924eaf-70f0-492c-8d62-8015cce897a1/PharmacistSprint.app.zip",
+            "minOsVersion": "16.0"
+          },
+          {
+            "name": "PharmacistSprintUITests-Runner.app.zip",
+            "type": "app",
+            "url": "https://api.codemagic.io/artifacts/bf11c5d7-b45c-4739-bbdd-8f4f673bd029/cbd54a9a-a327-4e51-a37e-b21eba9eed0c/PharmacistSprintUITests-Runner.app.zip",
+            "size": 5668623,
+            "version": "1.0",
+            "versionName": null,
+            "versionCode": "1",
+            "version_code": "1",
+            "supportedPlatforms": [
+              "iPhoneSimulator"
+            ],
+            "path": "bf11c5d7-b45c-4739-bbdd-8f4f673bd029/cbd54a9a-a327-4e51-a37e-b21eba9eed0c/PharmacistSprintUITests-Runner.app.zip",
+            "minOsVersion": "13.0"
+          }
+        ],
         "buildActions": [
           {
             "_id": "6aeb65ffab844959c377aa1f",
@@ -5026,17 +5059,17 @@
             "name": "Run native unit and UI tests before TestFlight",
             "type": null,
             "logUrl": null,
-            "status": null,
+            "status": "failed",
             "startedAt": "2026-11-04T17:07:16.751000+00:00",
-            "finishedAt": null,
+            "finishedAt": "2026-11-04T17:15:48.833000+00:00",
             "results": [],
             "subactions": [
               {
                 "command": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR\"\nUDID=\"$(python3 - <<'PY'\nimport json, subprocess\ndata=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))\nfor devices in data['devices'].values():\n    for device in devices:\n        if device.get('isAvailable') and device.get('name','').startswith('iPhone'):\n            print(device['udid'])\n            raise SystemExit(0)\nraise SystemExit('No available iPhone Simulator')\nPY\n)\"\nxcodebuild test \\\n  -project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  -scheme \"$XCODE_SCHEME\" \\\n  -destination \"platform=iOS Simulator,id=$UDID\" \\\n  CODE_SIGNING_ALLOWED=NO",
-                "status": null,
+                "status": "failed",
                 "startedAt": "2026-11-04T17:07:16.751000+00:00",
-                "logUrl": null,
-                "finishedAt": null
+                "logUrl": "https://api.codemagic.io/builds/6aeb65fe80e65d9bb447a6da/step/6aeb65ffab844959c377aa26",
+                "finishedAt": "2026-11-04T17:15:47.513000+00:00"
               }
             ]
           },
@@ -5045,15 +5078,15 @@
             "name": "Apply App Store signing profiles for internal TestFlight only",
             "type": null,
             "logUrl": null,
-            "status": null,
-            "startedAt": null,
-            "finishedAt": null,
+            "status": "skipped",
+            "startedAt": "2026-11-04T17:15:48.833000+00:00",
+            "finishedAt": "2026-11-04T17:15:49.436000+00:00",
             "results": [],
             "subactions": [
               {
                 "command": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
                 "status": null,
-                "startedAt": null,
+                "startedAt": "2026-11-04T17:15:48.833000+00:00",
                 "logUrl": null,
                 "finishedAt": null
               }
@@ -5064,15 +5097,15 @@
             "name": "Build signed IPA",
             "type": null,
             "logUrl": null,
-            "status": null,
-            "startedAt": null,
-            "finishedAt": null,
+            "status": "skipped",
+            "startedAt": "2026-11-04T17:15:49.436000+00:00",
+            "finishedAt": "2026-11-04T17:15:50.038000+00:00",
             "results": [],
             "subactions": [
               {
                 "command": "#!/usr/bin/env bash\n\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
                 "status": null,
-                "startedAt": null,
+                "startedAt": "2026-11-04T17:15:49.436000+00:00",
                 "logUrl": null,
                 "finishedAt": null
               }
@@ -5082,10 +5115,10 @@
             "_id": "6aeb65ffab844959c377aa29",
             "name": "Publishing",
             "type": "publishing",
-            "logUrl": null,
-            "status": null,
-            "startedAt": null,
-            "finishedAt": null,
+            "logUrl": "https://api.codemagic.io/builds/6aeb65fe80e65d9bb447a6da/step/6aeb65ffab844959c377aa29",
+            "status": "success",
+            "startedAt": "2026-11-04T17:15:50.038000+00:00",
+            "finishedAt": "2026-11-04T17:15:56.074000+00:00",
             "results": [],
             "subactions": []
           },
@@ -5093,15 +5126,15 @@
             "_id": "6aeb65ffab844959c377aa2a",
             "name": "Cleaning up",
             "type": "finishing",
-            "logUrl": null,
-            "status": null,
-            "startedAt": null,
-            "finishedAt": null,
+            "logUrl": "https://api.codemagic.io/builds/6aeb65fe80e65d9bb447a6da/step/6aeb65ffab844959c377aa2a",
+            "status": "success",
+            "startedAt": "2026-11-04T17:15:56.074000+00:00",
+            "finishedAt": "2026-11-04T17:15:56.786000+00:00",
             "results": [],
             "subactions": []
           }
         ],
-        "message": null,
+        "message": "Step 8 script `Run native unit and UI tests before TestFlight` exited with status code 65",
         "screenshots": null,
         "pullRequest": null,
         "tag": null,
@@ -5110,6 +5143,14 @@
         "appStoreConnectTasks": [],
         "labels": []
       }
-    }
+    },
+    "failed_action_logs": [
+      {
+        "action_id": "6aeb65ffab844959c377aa26",
+        "name": "Run native unit and UI tests before TestFlight",
+        "status": "failed",
+        "log_tail": "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/Frameworks\n\nCopy /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/Frameworks/XCTestSupport.framework /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTestSupport.framework (in target 'PharmacistSprintUITests' from project 'PharmacistSprint')\n    cd /Users/builder/clone/pharmacist-manabi-sprint/ios\n    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \\*.tbd -resolve-src-symlinks /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTestSupport.framework /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/Frameworks\n\nCopy /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/Frameworks/XCTestCore.framework /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTestCore.framework (in target 'PharmacistSprintUITests' from project 'PharmacistSprint')\n    cd /Users/builder/clone/pharmacist-manabi-sprint/ios\n    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \\*.tbd -resolve-src-symlinks /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTestCore.framework /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/Frameworks\n\nCopy /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/Frameworks/XCTest.framework /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework (in target 'PharmacistSprintUITests' from project 'PharmacistSprint')\n    cd /Users/builder/clone/pharmacist-manabi-sprint/ios\n    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \\*.tbd -resolve-src-symlinks /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/Frameworks\n\nCopy /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/Frameworks/XCTAutomationSupport.framework /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTAutomationSupport.framework (in target 'PharmacistSprintUITests' from project 'PharmacistSprint')\n    cd /Users/builder/clone/pharmacist-manabi-sprint/ios\n    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \\*.tbd -resolve-src-symlinks /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/XCTAutomationSupport.framework /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/Frameworks\n\nCopy /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/Frameworks/Testing.framework /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/Testing.framework (in target 'PharmacistSprintUITests' from project 'PharmacistSprint')\n    cd /Users/builder/clone/pharmacist-manabi-sprint/ios\n    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \\*.tbd -resolve-src-symlinks /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/Testing.framework /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/Frameworks\n\nRegisterExecutionPolicyException /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/PlugIns/PharmacistSprintUITests.xctest (in target 'PharmacistSprintUITests' from project 'PharmacistSprint')\n    cd /Users/builder/clone/pharmacist-manabi-sprint/ios\n    builtin-RegisterExecutionPolicyException /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/PlugIns/PharmacistSprintUITests.xctest\n\nTouch /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/PlugIns/PharmacistSprintUITests.xctest (in target 'PharmacistSprintUITests' from project 'PharmacistSprint')\n    cd /Users/builder/clone/pharmacist-manabi-sprint/ios\n    /usr/bin/touch -c /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Build/Products/Debug-iphonesimulator/PharmacistSprintUITests-Runner.app/PlugIns/PharmacistSprintUITests.xctest\n\nIOSurfaceClientSetSurfaceNotify failed e00002c7\n2026-11-04 17:09:16.064020+0000 PharmacistSprint[1844:16130] fopen failed for data file: errno = 2 (No such file or directory)\n2026-11-04 17:09:16.535702+0000 PharmacistSprint[1844:16130] fopen failed for data file: errno = 2 (No such file or directory)\n2026-11-04 17:09:16.625513+0000 PharmacistSprint[1844:16130] [error] building pipeline stroke_lines-oia6pa8feba4 took 0.562388 seconds\n2026-11-04 17:09:16.682387+0000 PharmacistSprint[1844:16353] [General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric\n2026-11-04 17:09:16.793648+0000 PharmacistSprint[1844:16355] [General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics\nTest Suite 'All tests' started at 2026-11-04 17:09:18.564.\nTest Suite 'PharmacistSprintTests.xctest' started at 2026-11-04 17:09:18.567.\nTest Suite 'QuestionModelTests' started at 2026-11-04 17:09:18.567.\nTest Case '-[PharmacistSprintTests.QuestionModelTests testDailySprintMatchesOfficialSectionRatio]' started.\nTest Case '-[PharmacistSprintTests.QuestionModelTests testDailySprintMatchesOfficialSectionRatio]' passed (0.118 seconds).\nTest Case '-[PharmacistSprintTests.QuestionModelTests testFieldBatchesCoverEveryQuestionWithoutEightQuestionLimit]' started.\nTest Case '-[PharmacistSprintTests.QuestionModelTests testFieldBatchesCoverEveryQuestionWithoutEightQuestionLimit]' passed (0.048 seconds).\nTest Case '-[PharmacistSprintTests.QuestionModelTests testLearningStateJSONRoundTripPreservesDailyAndWeakData]' started.\nTest Case '-[PharmacistSprintTests.QuestionModelTests testLearningStateJSONRoundTripPreservesDailyAndWeakData]' passed (0.008 seconds).\nTest Case '-[PharmacistSprintTests.QuestionModelTests testMultipleAcceptedPairScoring]' started.\nTest Case '-[PharmacistSprintTests.QuestionModelTests testMultipleAcceptedPairScoring]' passed (0.001 seconds).\nTest Case '-[PharmacistSprintTests.QuestionModelTests testNoIAPReleaseHasAllScoredQuestionsAvailable]' started.\nTest Case '-[PharmacistSprintTests.QuestionModelTests testNoIAPReleaseHasAllScoredQuestionsAvailable]' passed (0.057 seconds).\nTest Case '-[PharmacistSprintTests.QuestionModelTests testQuestionSourceLinksDecodeAndRemainOptionalForFixtures]' started.\nTest Case '-[PharmacistSprintTests.QuestionModelTests testQuestionSourceLinksDecodeAndRemainOptionalForFixtures]' passed (0.001 seconds).\nTest Case '-[PharmacistSprintTests.QuestionModelTests testSingleChoiceScoring]' started.\nTest Case '-[PharmacistSprintTests.QuestionModelTests testSingleChoiceScoring]' passed (0.000 seconds).\nTest Case '-[PharmacistSprintTests.QuestionModelTests testWrongOrUnknownAnswerStillAdvancesDailyHeatmapAndAchievement]' started.\nTest Case '-[PharmacistSprintTests.QuestionModelTests testWrongOrUnknownAnswerStillAdvancesDailyHeatmapAndAchievement]' passed (0.054 seconds).\nTest Suite 'QuestionModelTests' passed at 2026-11-04 17:09:18.862.\n\t Executed 8 tests, with 0 failures (0 unexpected) in 0.288 (0.295) seconds\nTest Suite 'PharmacistSprintTests.xctest' passed at 2026-11-04 17:09:18.862.\n\t Executed 8 tests, with 0 failures (0 unexpected) in 0.288 (0.296) seconds\nTest Suite 'All tests' passed at 2026-11-04 17:09:18.863.\n\t Executed 8 tests, with 0 failures (0 unexpected) in 0.288 (0.299) seconds\n2026-11-04 17:09:22.916944+0000 PharmacistSprintUITests-Runner[1876:16714] [Default] Running tests...\nobjc[1876]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23E254a/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.4.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x107860310) and /Library/Developer/CoreSimulator/Volumes/iOS_23E254a/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.4.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x106cec398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.\n2026-11-04 17:10:28.559913+0000 PharmacistSprintUITests-Runner[1876:16714] [Default] Failed to initialize for UI testing: Error Domain=XCTDaemonErrorDomain Code=18 \"Timed out waiting for AX loaded notification\" UserInfo={NSLocalizedDescription=Timed out waiting for AX loaded notification}\n\n\n*** If you believe this error represents a bug, please attach the result bundle at /Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Logs/Test/Test-PharmacistSprint-2026.11.04_17-07-51-+0000.xcresult\n\n2026-11-04 17:15:37.839 xcodebuild[1486:11993] [MT] IDETestOperationsObserverDebug: 449.633 elapsed -- Testing started completed.\n2026-11-04 17:15:37.841 xcodebuild[1486:11993] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start\n2026-11-04 17:15:37.841 xcodebuild[1486:11993] [MT] IDETestOperationsObserverDebug: 449.633 sec, +449.633 sec -- end\n\nTest session results, code coverage, and logs:\n\t/Users/builder/Library/Developer/Xcode/DerivedData/PharmacistSprint-hirtxthewvktsggnziqvqsweomef/Logs/Test/Test-PharmacistSprint-2026.11.04_17-07-51-+0000.xcresult\n\nTesting failed:\n\tPharmacistSprintUITests-Runner (1876) encountered an error (The test runner failed to initialize for UI testing. (Underlying Error: Timed out waiting for AX loaded notification))\n\n** TEST FAILED **\n\nTesting started\n\n\nBuild failed :|\nStep 8 script `Run native unit and UI tests before TestFlight` exited with status code 65"
+      }
+    ]
   }
 }
