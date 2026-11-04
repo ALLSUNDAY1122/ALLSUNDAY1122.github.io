@@ -1,0 +1,46 @@
+name: Pharmacist TestFlight ASC Readback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pharmacist-testflight-asc-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pharmacist-testflight-asc-readback
+  cancel-in-progress: false
+
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read exact pharmacist build and internal TestFlight state
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/pharmacist_testflight_asc_readback.py
+      - name: Persist read-only ASC evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f automation/asc-results/pharmacist-testflight-readback.json
+          cp automation/asc-results/pharmacist-testflight-readback.json /tmp/pharmacist-testflight-readback.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/pharmacist-testflight-readback.json automation/asc-results/pharmacist-testflight-readback.json
+          git add automation/asc-results/pharmacist-testflight-readback.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Persist pharmacist TestFlight ASC readback'
+            git push origin HEAD:main
+          fi

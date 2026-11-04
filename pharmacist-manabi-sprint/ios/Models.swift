@@ -25,6 +25,10 @@ struct Question: Codable, Identifiable, Hashable {
     let numberedChoiceCount: Int
     let attribution: String
     let modificationDisclosure: String
+    // Keep optional provenance fields without default values so synthesized Codable decodes them from the shipped JSON.
+    let sourceURL: String?
+    let legalSourceURL: String?
+    let correctionSourceURL: String?
     let canonicalId: String
 
     var isScored: Bool { scoringStatus != "excluded" }

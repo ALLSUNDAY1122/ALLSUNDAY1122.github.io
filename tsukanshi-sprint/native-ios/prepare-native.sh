@@ -33,7 +33,14 @@ print('INFO: structured metadata warnings =',len(data.get('auditWarnings',[])))
 for warning in data.get('auditWarnings',[])[:5]: print('WARN:',warning)
 PY
 
-plutil -lint "$NATIVE_DIR/PrivacyInfo.xcprivacy"
+python3 - "$NATIVE_DIR/PrivacyInfo.xcprivacy" <<'PY'
+import plistlib,sys
+with open(sys.argv[1],"rb") as f:
+    data=plistlib.load(f)
+assert data.get("NSPrivacyTracking") is False
+assert data.get("NSPrivacyCollectedDataTypes") == []
+print("PASS: Tsukanshi Privacy Manifest (portable plistlib validation)")
+PY
 
 grep -q 'jp.allsunday1122.tsukanshi' "$NATIVE_DIR/TsukanshiNativeConfig.swift"
 grep -q '6799753744' "$NATIVE_DIR/TsukanshiNativeConfig.swift"
