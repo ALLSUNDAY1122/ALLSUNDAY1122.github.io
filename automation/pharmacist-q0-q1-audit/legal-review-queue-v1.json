@@ -1650,12 +1650,14 @@
       "matchedTerms": [
         "規則"
       ],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
+      "status": "NONLEGAL_MOLECULAR_BIOLOGY; Q0_FALSE_POSITIVE",
+      "lawName": "該当する個別法令なし（プリオン蛋白質の立体構造・二次構造）",
       "article": null,
-      "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "lawVersionDate": "第109回試験日2024-02-18",
+      "officialLawUrl": "https://www.mhlw.go.jp/content/001226760.pdf",
+      "impactOfLaterAmendments": "PrPの二次構造、βシート、プロリン・グリシン、GPIアンカーを問う分子生物学問題。正答1・3。「規則」は生物学記述中の語で法令候補誤検出。",
+      "auditConclusion": "Q0法令監査対象外。Q1分子生物学・図表読解へ移管。",
+      "evidenceLevel": "OFFICIAL_EXAM; NONLEGAL"
     },
     {
       "id": "P109-122",
@@ -1686,12 +1688,14 @@
       "matchedTerms": [
         "法律"
       ],
-      "status": "PENDING_MANUAL_REVIEW",
-      "lawName": null,
+      "status": "NONLEGAL_ENVIRONMENTAL_CHEMISTRY_AND_PRTR_DATA; Q0_FALSE_POSITIVE",
+      "lawName": "化管法PRTR公表データを題材とする衛生・環境化学問題",
       "article": null,
-      "lawVersionDate": null,
-      "officialLawUrl": null,
-      "impactOfLaterAmendments": null
+      "lawVersionDate": "図表は令和3年度PRTRデータ（2021年度）。試験日2024-02-18。",
+      "officialLawUrl": "https://www.env.go.jp/chemi/prtr/result/gaiyo.html",
+      "impactOfLaterAmendments": "PRTR上位物質の排出・移動量と代謝・室内濃度指針値・毒性・異性体を問う衛生化学問題。正答6。化管法は図表出典制度として登場するだけで条文適用問題ではない。",
+      "auditConclusion": "Q0法令監査対象外。Q1で令和3年度PRTR一次データと物質同定根拠を確認。問題自体をPASSとしない。",
+      "evidenceLevel": "OFFICIAL_ENVIRONMENTAL_DATA; NONLEGAL"
     },
     {
       "id": "P109-142",
@@ -2271,5 +2275,17 @@
       "examDateVersionOrAmendmentReviewPending": 4
     },
     "note": "第109回問75-80。問77の2024-12-12改正は試験日後として除外。問75は2024-04-01審議会名称変更前。"
+  },
+  "auditBatch09b": {
+    "checkedAt": "2026-11-05",
+    "reviewedIds": [
+      "P109-116",
+      "P109-135"
+    ],
+    "counts": {
+      "reviewed": 2,
+      "nonlegal": 2
+    },
+    "note": "第109回問116、135は分子生物学・衛生化学で法令直接問題ではない。Q1へ移管。"
   }
 }
