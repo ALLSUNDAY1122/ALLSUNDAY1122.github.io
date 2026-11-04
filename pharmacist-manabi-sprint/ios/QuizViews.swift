@@ -132,6 +132,8 @@ struct QuizView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
+                sourceCitation(q)
+
                 if q.selectionCount > 1 && learning.feedback == nil {
                     Text("正しいものを\(q.selectionCount)つ選んでください。選択 \(learning.selectedAnswers.count) / \(q.selectionCount)")
                         .font(.system(size: 12, weight: .semibold))
@@ -156,6 +158,27 @@ struct QuizView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 16)
+    }
+
+    private func sourceCitation(_ q: Question) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(q.attribution)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(Color.sprintInk3)
+            if let source = q.sourceURL, let url = URL(string: source) {
+                Link(destination: url) {
+                    Text(source)
+                        .font(.system(size: 10))
+                        .underline()
+                        .textSelection(.enabled)
+                }
+                .accessibilityLabel("公式出典URLを開く")
+            }
+            Text(q.modificationDisclosure)
+                .font(.system(size: 10))
+                .foregroundStyle(Color.sprintInk3)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func choices(_ q: Question) -> some View {
