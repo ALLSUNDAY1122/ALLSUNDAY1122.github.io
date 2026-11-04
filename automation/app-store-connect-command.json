@@ -1,20 +1,50 @@
 {
-  "request_id": "pitari-postwrite-read-20261104-1858",
+  "request_id": "pitari-preflight-20261104-2007",
   "requests": [
+    {
+      "label": "app",
+      "method": "GET",
+      "path": "/v1/apps/6795941132"
+    },
     {
       "label": "version",
       "method": "GET",
       "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff"
     },
     {
-      "label": "build-selected",
+      "label": "selected-build",
       "method": "GET",
-      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff/relationships/build"
+      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff/build"
+    },
+    {
+      "label": "build12",
+      "method": "GET",
+      "path": "/v1/builds/b0821263-a794-467f-baf0-41b386f6f233"
     },
     {
       "label": "review-detail",
       "method": "GET",
       "path": "/v1/appStoreReviewDetails/7416f717-4d3b-475d-9c86-7f1f00a34627"
+    },
+    {
+      "label": "attachments",
+      "method": "GET",
+      "path": "/v1/appStoreReviewDetails/7416f717-4d3b-475d-9c86-7f1f00a34627/appStoreReviewAttachments"
+    },
+    {
+      "label": "iap",
+      "method": "GET",
+      "path": "/v2/inAppPurchases/6798713983"
+    },
+    {
+      "label": "localizations",
+      "method": "GET",
+      "path": "/v1/appStoreVersions/e0aa7c21-0569-4e59-85e7-3cc3afe65dff/appStoreVersionLocalizations"
+    },
+    {
+      "label": "review-submissions",
+      "method": "GET",
+      "path": "/v1/reviewSubmissions?filter[app]=6795941132&limit=100"
     }
   ]
 }
