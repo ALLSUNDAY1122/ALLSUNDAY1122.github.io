@@ -118,6 +118,10 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m 'Persist APP2-004 App Review preparation evidence'
             for attempt in 1 2 3 4 5; do
+              # Release preparation mutates generated Xcode files in the runner.
+              # The evidence commit already contains the screenshot and JSON;
+              # discard only uncommitted build byproducts before rebasing.
+              git reset --hard HEAD
               git pull --rebase origin main
               if git push origin HEAD:main; then break; fi
               sleep $((attempt * 2))
