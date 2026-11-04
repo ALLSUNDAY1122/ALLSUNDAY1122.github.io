@@ -28,7 +28,7 @@ for qid in ('P111-220', 'P111-221'):
     stem = str(by_id[qid].get('sharedStem') or '')
     assert expected_q220_221 in stem, f'MHLW correction missing from source {qid}: {stem}'
     assert not __import__('re').search(
-        r'デュロキセチン塩酸塩カプセル\\s+20\\s+mg\\s+1\\s+回\\s+1\\s+錠',
+        r'デュロキセチン塩酸塩カプセル\s+20\s+mg\s+1\s+回\s+1\s+錠',
         stem,
     ), f'obsolete tablet unit remains in source {qid}'
 print('PASS: MHLW corrigendum verified in source records P111-220/P111-221')
