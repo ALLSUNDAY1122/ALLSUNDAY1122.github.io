@@ -1,6 +1,6 @@
 # RELEASE STATUS｜薬剤師国家試験｜学びスプリント
 
-更新：2026-08-25 JST
+更新：2026-11-04 JST
 担当：ChatGPT
 GitHub正本：`main`
 
@@ -9,7 +9,7 @@ GitHub正本：`main`
 - Bundle ID：`jp.allsunday1122.yakuzaishi`
 - App Store Connect App ID：`6799753724`
 - Version：`1.0.0`
-- 次回Build：`5`
+- 次回Build：Codemagic workflow実行時にUTC timestamp（YYYYMMDDHHMMSS）で採番
 - Codemagic workflow：`pharmacist-ios`
 - 価格：無料
 - アプリ内課金：なし
@@ -39,17 +39,19 @@ GitHub正本：`main`
 - SwiftUIネイティブ、WKWebViewなし
 - ログインなし、広告なし、解析SDKなし、独自クラウド同期なし
 
-## 直前Build
-Build 4は2026-08-23時点で `VALID / INTERNAL_ONLY / IN_BETA_TESTING`、internal group `sun` まで到達し、ユーザー実機確認済み。ただし課金方針変更により申請には使用しない。
+## 直前Build・今回のTestFlight方針
+旧Build 4は2026-08-23時点で `VALID / INTERNAL_ONLY / IN_BETA_TESTING`、internal group `sun` まで到達したが、no-IAP変更前のため今回の確認には使用しない。直近のASC読取記録（2026-11-04）では旧Build `202609140032` が `VALID`。これは今回の品質修正を含まないため再利用しない。
 
-## 次工程
-1. no-IAP変更をStatic Gate / XCTest / Xcode16 Release / iOS Preflightで検証
-2. mainへ統合
-3. Build 5を署名・App Store Connectへupload
-4. Build 5 processing/read-back
-5. App Store Version 1.0.0へBuild 5を紐付け
-6. Store metadata / Privacy / Age Rating / Review Detail / Screenshotsを申請手順に沿って監査・補完
-7. 新BuildのHuman Device Acceptanceを満たす
-8. Review Submissionへ追加し、本申請
+今回の目的は、最新品質修正版をInternal TestFlightへアップロードし、ユーザーが実機で最終確認できる状態にすること。App Store Reviewへの追加・提出は行わない。Codemagic `pharmacist-ios` は `submit_to_testflight: true` / `submit_to_app_store: false` を維持する。
+
+## 次工程｜TestFlight限定
+1. 公式正誤表・法令改正・出典表示の重大欠陥を修正
+2. Static Gate / XCTest / Xcode16 Release / iOS Preflightを再実行
+3. mainへ統合
+4. Codemagic `pharmacist-ios` で署名IPAを生成・ASCへupload
+5. ASCでprocessing完了、Build `VALID`、Internal TestFlight登録をread-back
+6. ユーザーが実機で最終受入確認
+
+App Review用VersionへのBuild紐付け、Review Submission追加、Add for Review、Submit for Reviewは今回実施しない。
 
 ユーザーは2026-08-25に本申請を明示承認済み。ただし申請手順上、新BinaryのiPhone実機受入が真正なHUMAN_REQUIREDとして残る場合は、そのGateを偽装せず停止する。
