@@ -34,6 +34,11 @@ def main():
         app=read(token,f"/v1/apps/{APP_ID}")
         if not app["ok"] or attrs(rows(app["data"])[0]).get("bundleId")!=BUNDLE_ID:
             raise RuntimeError("App identity mismatch; aborting")
+        selected=read(token,f"/v1/appStoreVersions/{VERSION_ID}/relationships/build")
+        result["selected_build"]={"read_ok":selected["ok"],"build_ids":[x.get("id") for x in rows(selected.get("data"))] if selected["ok"] else []}
+        detail=read(token,"/v1/appStoreReviewDetails/7416f717-4d3b-475d-9c86-7f1f00a34627")
+        note_text=attrs(rows(detail.get("data"))[0]).get("notes","") if detail["ok"] and rows(detail.get("data")) else ""
+        result["review_note_status"]={"read_ok":detail["ok"],"present":bool(note_text),"length":len(note_text),"mentions_demo_file":("pitari_app_review_demo_20261104.mp4" in note_text)}
         locs=read(token,f"/v1/appStoreVersions/{VERSION_ID}/appStoreVersionLocalizations?limit=100")
         if not locs["ok"]: raise RuntimeError("Version localization list failed")
         for loc in rows(locs["data"]):
