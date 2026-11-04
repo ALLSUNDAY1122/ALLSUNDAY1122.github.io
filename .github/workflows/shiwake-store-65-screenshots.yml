@@ -1,0 +1,50 @@
+name: Shiwake Swipe Draft iPhone 6.5 Image Replacement
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/shiwake-store-65-screenshots.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replace-screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Prepare resampling
+        run: python3 -m pip install --disable-pip-version-check Pillow
+      - name: Safely replace old 6.5-inch screenshots in editable 1.0.1 only
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/shiwake_store_65_screenshots.py
+      - name: Preserve verified Apple result
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/asc-results/shiwake-65-screenshots-20261104.json
+          git commit -m "Record Shiwake iPhone 6.5-inch screenshot replacement" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          cp automation/asc-results/shiwake-65-screenshots-20261104.json /tmp/shiwake65.json
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/shiwake65.json automation/asc-results/shiwake-65-screenshots-20261104.json
+          git add automation/asc-results/shiwake-65-screenshots-20261104.json
+          git commit -m "Record Shiwake iPhone 6.5-inch screenshot replacement"
+          git push origin HEAD:main
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shiwake-65-screenshot-result
+          path: automation/asc-results/shiwake-65-screenshots-20261104.json
+          if-no-files-found: ignore
