@@ -74,6 +74,34 @@ jobs:
                   payload = json.loads(response.read().decode('utf-8'))
           except urllib.error.HTTPError as exc:
               payload = {'http_status': exc.code, 'error': exc.read().decode('utf-8', errors='replace')[:2000]}
+          # Also read the legacy build detail endpoint used by Codemagic's UI;
+          # it may contain the publishing error that the v3 action summary omits.
+          detail_req = urllib.request.Request(f'https://api.codemagic.io/builds/{build_id}',headers={'x-auth-token': token, 'Accept': 'application/json'},method='GET')
+          try:
+              with urllib.request.urlopen(detail_req, timeout=30) as response:
+                  payload['legacy_build_detail'] = json.loads(response.read().decode('utf-8'))
+          except Exception as exc:
+              payload['legacy_build_detail_error'] = str(exc)[:1000]
+          action_rows = payload.get('data', []) if isinstance(payload, dict) else []
+          failed_logs = []
+          for action in action_rows:
+              if not isinstance(action, dict) or str(action.get('status','')).lower() not in ('failed','failure','error'):
+                  continue
+              action_id = action.get('id') or action.get('_id')
+              if not action_id:
+                  continue
+              log_req = urllib.request.Request(f'https://codemagic.io/builds/{build_id}/step/{action_id}',headers={'x-auth-token': token, 'Accept': 'text/plain,*/*'},method='GET')
+              try:
+                  with urllib.request.urlopen(log_req, timeout=30) as response:
+                      log_text = response.read().decode('utf-8', errors='replace')
+              except Exception as exc:
+                  log_text = f'LOG_FETCH_ERROR: {str(exc)}'
+              for secret_value in (token,):
+                  if secret_value:
+                      log_text = log_text.replace(secret_value, '[REDACTED]')
+              failed_logs.append({'action_id': action_id, 'name': action.get('name'), 'status': action.get('status'), 'log_tail': log_text[-12000:]})
+          if failed_logs:
+              payload['failed_action_logs'] = failed_logs
           sensitive = ('secret','token','password','credential','private','apikey','api_key','environment','variable')
           def clean(value):
               if isinstance(value,dict): return {k:('[REDACTED]' if any(p in str(k).lower() for p in sensitive) else clean(v)) for k,v in value.items()}
