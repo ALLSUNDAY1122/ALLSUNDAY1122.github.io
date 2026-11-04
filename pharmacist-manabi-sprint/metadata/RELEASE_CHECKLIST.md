@@ -31,7 +31,7 @@
 - [x] App Store説明・審査メモから旧課金文言を除去
 - [x] 旧月額・買い切り商品は今回のVersionへ紐付けない
 
-## 新Build 5 Gate
+## 新TestFlight候補ビルド Gate（Build番号はCodemagic UTC timestamp採番）
 - [ ] Static Gate PASS
 - [ ] XCTest PASS
 - [ ] Xcode16 Release build PASS
@@ -39,9 +39,27 @@
 - [ ] main統合
 - [ ] 署名IPA生成
 - [ ] App Store Connect upload
-- [ ] Build 5 processingState VALID
-- [ ] Build 5をVersion 1.0.0へ紐付け
-- [ ] Internal TestFlight配布
+- [ ] 新Build processingState VALID
+- [ ] 新BuildがVersion 1.0.0に対応（App Review提出操作はしない）
+- [ ] Internal TestFlight配布（submit_to_testflight=true）
+
+## 2026-11-04 Q0/Q1重大欠陥修正 Gate
+- [ ] 第111回問220・221の公式正誤表訂正（カプセル／1日2カプセル）を共通症例文へ反映
+- [ ] 第110回問140の2026-04-01施行・現行測定方法を解説へ追記
+- [ ] 第111回問77の2026-04-01適用の向精神薬政令改正を解説へ追記
+- [ ] 全1,035問の公式出典URLを回答前画面に表示
+- [ ] PDL1.0に基づく加工主体表示を全1,035問へ付与
+- [ ] 公式正誤表・法令原典URLを該当問題の解説詳細に表示
+- [ ] Static Gate / XCTest / Xcode16 Release build / iOS Preflight PASS
+
+## TestFlight-only delivery
+- [ ] Codemagic workflow `pharmacist-ios` finished
+- [ ] IPA signing and App Store Connect upload success
+- [ ] App Store Connect processing complete
+- [ ] New build `VALID`
+- [ ] Internal TestFlight group `sun` (or current internal group) available
+- [ ] No App Review submission created or submitted
+- [ ] User device acceptance remains for final user check
 
 ## App Store Submission Preflight
 - [ ] Version Localization
@@ -74,3 +92,6 @@ Build 4はユーザー実機確認済みだが、課金除去でBinaryが変わ�
 - [ ] Add for Review / Review Submission item追加
 - [ ] Submit for Review
 - [ ] App Store Connect状態をread-backし `WAITING_FOR_REVIEW` または現行相当状態を証拠保存
+
+## Current instruction (2026-11-04)
+本作業ではTestFlight内部配布まで。App Review用Versionへの紐付け、Review Submissionへの追加、Add for Review、Submit for Reviewは禁止。ユーザーはTestFlightの実機最終確認のみを残す。
