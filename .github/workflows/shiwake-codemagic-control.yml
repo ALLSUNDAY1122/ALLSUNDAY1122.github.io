@@ -1,0 +1,72 @@
+name: Shiwake Swipe Codemagic Control
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "automation/app2-001/codemagic-command.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  gateway:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install YAML dependency
+        run: python -m pip install --disable-pip-version-check PyYAML
+      - name: Execute only requested Shiwake Codemagic action
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          CM_APP_ID: ${{ vars.CM_APP_ID }}
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('automation/app2-001/codemagic-command.json').read_text())
+          assert x.get('repository')=='ALLSUNDAY1122/ALLSUNDAY1122.github.io'
+          assert x.get('action') in ('inspect', 'build', 'inspect_build')
+          if x.get('action')=='build':
+              assert x.get('workflow_id')=='shiwake-swipe-ios'
+              assert x.get('branch')=='main'
+          PY
+          python scripts/codemagic_build_gateway.py --command automation/app2-001/codemagic-command.json --output /tmp/shiwake-codemagic-result.json
+      - name: Archive sanitized result
+        if: always()
+        run: |
+          if [ ! -f /tmp/shiwake-codemagic-result.json ]; then exit 0; fi
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          r=json.loads(Path('/tmp/shiwake-codemagic-result.json').read_text())
+          fields=['request_id','action','ok','error','app_id','resolved_app_id','application_candidates','workflow_id','build_id','branch','status','build','note']
+          clean={k:r[k] for k in fields if k in r}
+          out=Path('automation/app2-001/codemagic-readback.json')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(clean,ensure_ascii=False,indent=2)+'\n')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/app2-001/codemagic-readback.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Record Shiwake Codemagic command result"
+          if git push origin HEAD:main; then exit 0; fi
+          cp automation/app2-001/codemagic-readback.json /tmp/shiwake-record.json
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/shiwake-record.json automation/app2-001/codemagic-readback.json
+          git add automation/app2-001/codemagic-readback.json
+          git commit -m "Record Shiwake Codemagic command result"
+          git push origin HEAD:main
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shiwake-codemagic-readback
+          path: /tmp/shiwake-codemagic-result.json
+          if-no-files-found: ignore
