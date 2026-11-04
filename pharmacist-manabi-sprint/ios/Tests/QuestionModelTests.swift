@@ -19,6 +19,13 @@ final class QuestionModelTests: XCTestCase {
         )
     }
 
+    func testQuestionSourceLinksDecodeAndRemainOptionalForFixtures() {
+        let q = question()
+        XCTAssertNil(q.sourceURL)
+        XCTAssertNil(q.legalSourceURL)
+        XCTAssertNil(q.correctionSourceURL)
+    }
+
     func testSingleChoiceScoring() {
         let q = question(answer: [1])
         XCTAssertTrue(q.accepts([1]))
