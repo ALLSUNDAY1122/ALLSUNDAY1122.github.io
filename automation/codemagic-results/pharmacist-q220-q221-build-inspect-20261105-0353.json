@@ -151,9 +151,9 @@
         "type": "publishing",
         "has_test_results": false,
         "script": null,
-        "status": null,
+        "status": "success",
         "started_at": "2026-11-04T18:57:07.392000Z",
-        "finished_at": null
+        "finished_at": "2026-11-04T18:58:42.644000Z"
       },
       {
         "id": "6aeb7ef8ab844959c377b9c2",
@@ -162,7 +162,7 @@
         "has_test_results": false,
         "script": null,
         "status": null,
-        "started_at": null,
+        "started_at": "2026-11-04T18:58:42.644000Z",
         "finished_at": null
       }
     ],
@@ -5154,10 +5154,10 @@
             "_id": "6aeb7ef8ab844959c377b9c1",
             "name": "Publishing",
             "type": "publishing",
-            "logUrl": null,
-            "status": null,
+            "logUrl": "https://api.codemagic.io/builds/6aeb7ef7d3989a3017e8f118/step/6aeb7ef8ab844959c377b9c1",
+            "status": "success",
             "startedAt": "2026-11-04T18:57:07.392000+00:00",
-            "finishedAt": null,
+            "finishedAt": "2026-11-04T18:58:42.644000+00:00",
             "results": [],
             "subactions": []
           },
@@ -5167,7 +5167,7 @@
             "type": "finishing",
             "logUrl": null,
             "status": null,
-            "startedAt": null,
+            "startedAt": "2026-11-04T18:58:42.644000+00:00",
             "finishedAt": null,
             "results": [],
             "subactions": []
@@ -5179,7 +5179,18 @@
         "tag": null,
         "sshAccessEnabled": false,
         "scheduledBuildId": null,
-        "appStoreConnectTasks": [],
+        "appStoreConnectTasks": [
+          {
+            "_id": "6aeb8062c9e0fa5c847ebd51",
+            "name": "App Store Connect distribution",
+            "buildId": "6aeb7ef7d3989a3017e8f118",
+            "createdAt": "2026-11-04T18:58:42.664000+00:00",
+            "status": "pending",
+            "finishedAt": null,
+            "logUrl": null,
+            "errorMessage": null
+          }
+        ],
         "labels": []
       }
     }
