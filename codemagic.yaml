@@ -599,9 +599,9 @@ workflows:
           cd "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios"
           # Codemagic's per-workflow CM_BUILD_NUMBER can collide with a build
           # already present in App Store Connect after workflow history resets.
-          # Use the current UTC minute as a monotonically advancing numeric build
-          # identifier. App Store review submission remains disabled.
-          RELEASE_BUILD_NUMBER="$(date -u +%Y%m%d%H%M)"
+          # Use UTC seconds to avoid same-minute collisions with existing ASC builds.
+          # App Store review submission remains disabled.
+          RELEASE_BUILD_NUMBER="$(date -u +%Y%m%d%H%M%S)"
           export RELEASE_BUILD_NUMBER
           python3 - <<'PY'
           from pathlib import Path
