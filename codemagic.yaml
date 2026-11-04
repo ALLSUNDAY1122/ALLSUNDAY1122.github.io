@@ -658,10 +658,10 @@ workflows:
           raise SystemExit('No available iPhone Simulator')
           PY
           )"
-          xcodebuild test \\
-            -project "$CM_BUILD_DIR/$XCODE_PROJECT" \\
-            -scheme "$XCODE_SCHEME" \\
-            -destination "platform=iOS Simulator,id=$UDID" \\
+          xcodebuild test \
+            -project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -destination "platform=iOS Simulator,id=$UDID" \
             CODE_SIGNING_ALLOWED=NO
       - name: Apply App Store signing profiles for TestFlight
         script: |
