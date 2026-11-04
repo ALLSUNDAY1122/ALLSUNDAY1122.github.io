@@ -16,7 +16,7 @@ DETAIL="7416f717-4d3b-475d-9c86-7f1f00a34627"
 LOC="415714d1-5d12-4f37-87e2-7da943a70518"
 IAP="6798713983"
 FILES={
- "video":{"type":"appStoreReviewAttachments","file_name":"pitari_app_review_demo_original_20261104.mp4","size":24300829},
+ "video":{"type":"appStoreReviewAttachments","file_name":"pitari_app_review_ios27_2_batch_20261104.mp4","size":634130},
  "screenshot":{"type":"appScreenshots","file_name":"pitari_build12_iphone_screenshot_20261104.png","size":417730,"display":"APP_IPHONE_61"}
 }
 OLD_FAILED={"e268c8c1-bb46-44e2-8bf0-7163a6367fd0","911e8b77-4d7f-42b2-b441-5c666a1d0826"}
