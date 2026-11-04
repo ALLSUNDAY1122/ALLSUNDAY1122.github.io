@@ -90,7 +90,7 @@ jobs:
                           l['screenshotSets'].append({
                             'displayType': screenshot_set['attributes'].get('screenshotDisplayType'),
                             'count':len(screenshots),
-                            'files':[s['attributes'].get('fileName') for s in screenshots]})
+                            'files':[{'name':s['attributes'].get('fileName'), 'assetDeliveryState':s['attributes'].get('assetDeliveryState'), 'uploaded':s['attributes'].get('uploaded'), 'fileSize':s['attributes'].get('fileSize')} for s in screenshots]})
                       v['localizations'].append(l)
                   state['versions'].append(v)
               print(json.dumps(state, ensure_ascii=False, indent=2))
