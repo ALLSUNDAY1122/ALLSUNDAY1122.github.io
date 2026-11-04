@@ -101,7 +101,7 @@ class _GameScreenState extends State<GameScreen> {
         _correct++;
         _combo++;
         _bestCombo = max(_bestCombo, _combo);
-        points = 100 + max(0, 50 - elapsed ~/ 100) + min(_combo, 20) * 5;
+        points = (100 + max(0, 50 - elapsed ~/ 100) + min(_combo, 20) * 5).toInt();
         _score += points;
         _showComboBurst = _combo > 0 && _combo % 5 == 0;
       } else {
