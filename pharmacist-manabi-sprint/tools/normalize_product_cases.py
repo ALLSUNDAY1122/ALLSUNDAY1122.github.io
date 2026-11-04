@@ -31,7 +31,7 @@ def main():
  for qid in ('P111-220','P111-221'):
   stem=clean(qmap[qid].get('sharedStem'))
   if expected not in stem:
-   stem,count=re.subn(r'(デュロキセチン塩酸塩カプセル\\s+20\\s+mg\\s+1\\s+回\\s+1\\s+)錠(\\s*[（(]\\s*1\\s+日\\s+2\\s+)錠',r'\\1カプセル\\2カプセル',stem)
+   stem,count=re.subn(r'(デュロキセチン塩酸塩カプセル\s+20\s+mg\s+1\s+回\s+1\s+)錠(\s*[（(]\s*1\s+日\s+2\s+)錠',r'\1カプセル\2カプセル',stem)
    if count != 1:raise SystemExit(f'MHLW correction 001677936.pdf missing or ambiguous in {qid}: {count}')
    qmap[qid]['sharedStem']=stem
   if expected not in clean(qmap[qid].get('sharedStem')):
