@@ -1,0 +1,42 @@
+name: Shiwake Swipe App Store Japanese Screenshots
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/shiwake-store-screenshots.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate and upload Japanese screenshots to editable Shiwake 1.0.1
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/shiwake_store_screenshots.py
+      - name: Save Apple confirmation of screenshot uploads
+        if: success()
+        run: |
+          test -f automation/asc-results/shiwake-screenshots-20261104.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/asc-results/shiwake-screenshots-20261104.json
+          git commit -m "Save Apple Shiwake 1.0.1 screenshot readback" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Archive sanitized readback
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shiwake-screenshot-update
+          path: automation/asc-results/shiwake-screenshots-20261104.json
+          if-no-files-found: ignore
+          retention-days: 14
