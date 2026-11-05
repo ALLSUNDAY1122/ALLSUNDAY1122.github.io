@@ -98,11 +98,15 @@ def main():
     corrected_ids = ('P111-220', 'P111-221')
     for qid in corrected_ids:
         q = qmap[qid]
+        q['correction_source_url'] = 'https://www.mhlw.go.jp/content/001677936.pdf'
         stem = clean_ws(q.get('sharedStem'))
         if 'デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）' not in stem:
             raise SystemExit(f'FAIL: MHLW correction missing from {qid} sharedStem')
         if re.search(r'デュロキセチン塩酸塩カプセル\s+20\s+mg\s+1\s+回\s+1\s+錠', stem):
             raise SystemExit(f'FAIL: obsolete tablet dosage remains in {qid} sharedStem')
+    if qmap['P111-220'].get('mediaAssets') != ['assets/official-questions/111/q220-2.webp']:
+        raise SystemExit('FAIL: Q220 must use corrected sharedStem and reaction/choice page only')
+    qmap['P110-140']['legal_source_url'] = 'https://www.env.go.jp/air/osen/pc_oxidant/kijun.html'
     for q in qs:q['canonicalContentHash']=canonical_hash(q)
     hashes={}
     for q in qs:
