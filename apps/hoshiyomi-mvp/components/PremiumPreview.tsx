@@ -14,12 +14,12 @@ export default function PremiumPreview({input}:{input:Input}){
  const valid=validYear(extra.birthYear)&&validYear(extra.otherYear)&&validYear(extra.parentYear)&&validBirthday(extra.otherBirthday)&&validBirthday(extra.parentBirthday)&&(!extra.birthYear||input.birthday!=='02-29'||Number(extra.birthYear)%4===0&&Number(extra.birthYear)%100!==0||Number(extra.birthYear)%400===0)&&(!extra.otherYear||extra.otherBirthday!=='02-29'||Number(extra.otherYear)%4===0&&Number(extra.otherYear)%100!==0||Number(extra.otherYear)%400===0);
  const result=useMemo(()=>valid?buildDeepReading(input,extra):null,[input.kind,input.birthday,input.partnerBirthday,input.concern,input.stage,input.goal,input.situation,extra,valid]);
  return <section className="premium" aria-label="多層鑑定の品質検証版">
-  <p className="eyebrow">CHAPTER 03｜もっと深い星の世界へ</p>
-  <h2>一つの星座だけでは、語りきれない。</h2>
+  <div className="constellationDivider" aria-hidden="true">✦ · · · ☾ · · · ✦</div><p className="eyebrow">CHAPTER III · DEEPER INTO YOUR STARS</p>
+  <h2>星を重ねるたび、<em>物語は深くなる。</em></h2>
   <p>あなたの太陽星座に、<strong>生まれ年と干支、数秘、血液型の物語</strong>を重ねると、同じ星座でも違う読み解きが生まれます。さらに、気になる人や親の誕生日を重ね、二人の星の関係をたどります。</p>
-  <div className="specGrid"><div><strong>干支 × 太陽星座</strong><small>生まれ年が添える物語</small></div><div><strong>生年月日の数秘</strong><small>星座が同じでも異なる数字</small></div><div><strong>血液型の象徴</strong><small>任意・娯楽的な読み物</small></div><div><strong>大切な人との星</strong><small>恋人・家族・友人との縁</small></div></div>
+  <div className="specGrid spiritualFeatures"><div><strong>干支 × 太陽星座</strong><small>生まれ年が添える物語</small></div><div><strong>生年月日の数秘</strong><small>星座が同じでも異なる数字</small></div><div><strong>血液型の象徴</strong><small>任意・娯楽的な読み物</small></div><div><strong>大切な人との星</strong><small>恋人・家族・友人との縁</small></div></div>
   <p className="disclaimer">有料想定：自分の多層鑑定480円／相手や家族との関係鑑定980円。現在は全内容を無料体験できます。販売・決済は行いません。</p>
-  <div className="premiumStudio">
+  <div className="premiumStudio"><div className="starChart" aria-hidden="true"><span className="starChartRing ringA"/><span className="starChartRing ringB"/><span className="chartStar">✧</span></div>
    <h3>追加情報を重ねて、星の続きを読む</h3>
    <p>出生年や血液型は任意です。分からない場合は空欄にできます。入力した情報から計算できる占いのみ表示します。</p>
    <div className="formgrid">
@@ -42,10 +42,10 @@ export default function PremiumPreview({input}:{input:Input}){
    {!valid&&<p className="error" role="alert">生まれ年は1900〜2026、誕生日はMM-DD形式で入力してください。2月29日はうるう年のみ有効です。</p>}
    {result&&<div className="premiumSpec"><strong>この入力で重なる星の層</strong><div className="layerPills">{result.summary.map((s,i)=><span key={i}>{s}</span>)}</div></div>}
    <button className="secondary" type="button" disabled={!valid} onClick={()=>setOpened(v=>!v)}>{opened?'多層鑑定を閉じる':'重なった星の鑑定結果を読む（無料体験）'}</button>
-   {opened&&result&&<article className="deepResult" aria-live="polite">
+   {opened&&result&&<article className="deepResult revealScene" aria-live="polite">
     <h2>{result.title}</h2><p className="lead">{result.intro}</p>
-    {result.chapters.map((chapter,i)=><section className="deepChapter" key={i}><p className="eyebrow">{chapter.label}</p><h3>{chapter.title}</h3><p>{chapter.body}</p></section>)}
-    <div className="method"><h3>鑑定方法と限界</h3><p>{result.method}</p><p>占術を重ねた結果は創作的・文化的な解釈です。相手の本心、親子関係、未来の成否を実際に知るものではありません。</p></div>
+    {result.chapters.map((chapter,i)=><details className="deepChapter" key={i} open={i===0?true:undefined}><summary><span className="eyebrow">{chapter.label}</span><strong>{chapter.title}</strong><span className="openHint">ひらく</span></summary><div className="detailBody"><p>{chapter.body}</p></div></details>)}
+    <details className="method"><summary>鑑定方法と限界について</summary><p>{result.method}</p><p>占術を重ねた結果は創作的・文化的な解釈です。相手の本心、親子関係、未来の成否を実際に知るものではありません。</p></details>
    </article>}
   </div>
  </section>;
