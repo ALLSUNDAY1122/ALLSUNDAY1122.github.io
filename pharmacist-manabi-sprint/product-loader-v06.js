@@ -6,6 +6,15 @@ function mapQuestion(q){
   var choices=media?Array.from({length:Number(q.numberedChoiceCount)||5},function(_,i){return '選択肢 '+(i+1)}):(Array.isArray(q.choices)?q.choices.slice():[]);
   var answer=asArray(q.answer);
   var accepted=Array.isArray(q.accepted_answers)?q.accepted_answers.map(function(x){return asArray(x)}):null;
+  // P110-140 HISTORICAL EXAM: preserve the 2025 official answer; display the 2026-04-01 standard change.
+  var questionText=q.question||'';
+  var memoryText=q.memoryPoint||'';
+  var explanationText=q.explanation||'';
+  if(q.id==='P110-140'){
+    questionText='【2025年2月23日の試験日当時の基準で解答】'+questionText;
+    memoryText='試験時点では中性ヨウ化カリウム法を光化学オキシダント測定に使用できた。2026年4月1日以降の環境基準は紫外線吸収法又はエチレン化学発光法。';
+    explanationText=(explanationText?explanationText+'\n\n':'')+'【制度改正の注意】2025年2月23日の試験当時は中性ヨウ化カリウム法が測定法の一つであり、正答は変更しない。2026年1月30日の環境省告示改正（同年4月1日施行）後、光化学オキシダントの環境基準の指定測定法は紫外線吸収法又はエチレンを用いる化学発光法となり、中性ヨウ化カリウム法は含まれない。出典：環境省「大気汚染に係る環境基準」https://www.env.go.jp/kijun/taiki.html';
+  }
   var caseStem=q.sharedStem||'';
   if(Number(q.sourceExam)===111 && (Number(q.questionNo)===220 || Number(q.questionNo)===221)){
     // MHLW correction table 001677936.pdf: capsule count unit in the shared case.
@@ -16,9 +25,9 @@ function mapQuestion(q){
   }
   return {
     id:q.id,exam:Number(q.sourceExam),sourceQuestionNo:Number(q.questionNo),f:q.subject,s:q.domain,
-    q:q.question||'',caseStem:caseStem,c:choices,a:answer,accepted:accepted,
+    q:questionText,caseStem:caseStem,c:choices,a:answer,accepted:accepted,
     pick:accepted&&accepted.length?accepted[0].length:Math.max(1,answer.length),
-    p:q.memoryPoint||'',d:q.explanation||'',detail:(q.attributionDisplay||'')+'。'+(q.modificationDisclosureDisplay||''),
+    p:memoryText,d:explanationText,detail:(q.attributionDisplay||'')+'。'+(q.modificationDisclosureDisplay||''),
     scored:q.scoring_status!=='excluded',scoringStatus:q.scoring_status,rightsStatus:'cleared',sourceType:'mhlw_product',
     displayMode:q.displayMode,mediaAssets:Array.isArray(q.mediaAssets)?q.mediaAssets.slice():[],
     mediaAlt:'厚生労働省 第'+q.sourceExam+'回薬剤師国家試験 問'+q.questionNo+' 公式問題画像',
