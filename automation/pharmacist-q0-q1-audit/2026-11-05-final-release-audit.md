@@ -77,3 +77,14 @@
 ## 再開条件・人間操作
 追加の提出承認待ちではない。内容監査と独立した専門レビュー、第三者4問の権利根拠確認、法令時点・画像の個別監査と記録、解説改善、修正候補の実機通し受入が必要。
 必須ゲート通過後に本番対象の新規Buildを生成し、Native XCTest/Release/CI、APP_STORE_ELIGIBLE、VALID、commit照合、実機受入を確認する。ASC versionString1.0と要求1.0.0の扱い、copyright等の必須項目を最終整備して手動リリース設定で正式Submit for Reviewを実行し、Appleの提出状態・IDを読み戻す。
+
+## 2026-11-06 追記：P109-124 第三者元統計・出典表示の部分修正
+
+- 総務省統計局「人口推計（2022年10月1日現在）」公式HTML（https://www.stat.go.jp/data/jinsui/2022np/index.htm）で4割合 15歳未満11.6％、15–64歳59.4％、65歳以上29.0％、75歳以上15.5％を確認。年少人口指数 11.6 ÷ 59.4 × 100 ≈ 19.5 も再計算。
+- 利用条件（https://www.stat.go.jp/info/riyou.html）と統計データの引用・転載案内（https://www.stat.go.jp/data/jinsui/riyou.html）でPDL1.0準拠、商用利用可能、原資料の出典と加工表示が必要なことを確認。元グラフは転載しない方針。これは個別のデータ・利用条件の確認であり、全問の著作権・内容監査PASSを意味しない。
+- 元の試験問題PDFのURLと、元統計資料のURLは異なる。ネイティブモデルに任意の originalDataSourceURL を追加し、教材生成時にP109-124の元統計URLを付与。問題画面と解説画面に元統計資料を表示。Web版の当該問題にも原資料URL・加工主体の表示を追加。
+- 実装commit: 9bd8a3f0bd866e72e103d5ed5fb613dd61f819d9、20059cdbbaf192599e561ff6b52a30d2b7416f15、50c51d9687ca72c97f4917ec3ac7ead3b220f327、92c5302576090aa266447bb74caa90431740b599、15c3c8bf2f8630e4bd54c08d3c6ab30d4665870a。
+- 回帰テストに元統計URLのモデル保持確認を追加。Pharmacist Learning Preflight 42115375988=SUCCESS、Pharmacist v0.6 Web Validation 42115384052=SUCCESS。
+- Native iOS Preflight 42115375991 はCANCELLED（再実行もCANCELLED、コンパイル成功を証明できない）。署名IPAとiPhone実機の表示確認は未実施。該当問題のゲートは「公式値・規約確認済み／表示実装済み／Native最終検証待ち」。
+- 4件の第三者素材キューのうち、P109-124のみ部分的に進展。残り3件と全体Q0〜Q5は引き続き未通過。本番申請と公開用ビルド生成は行っていない。
+- ASC 2026-11-06 06:29 JST 読戻し：PREPARE_FOR_SUBMISSION、reviewSubmissions=0、審査Versionに旧Build202609140032が紐付いたまま。本番用の修正反映Buildはなし。証跡：automation/asc-results/pharmacist-asc-readback-20261106-0629-r2.json。
