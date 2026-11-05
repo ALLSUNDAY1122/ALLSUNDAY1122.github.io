@@ -42,5 +42,5 @@ export function report(input:Input,product:Product){
  if(product==='pair'&&input.kind!=='compatibility')throw Error('Invalid pair');
  const free=reading(input);
  const kit=makePremiumKit(input);
- return {...free,product:products[product].name,sections:kit.sections,kit};
+ return {...free,product:products[product].name,sections:[...kit.sections,...(kit.pairExercise?[{title:kit.pairExercise.title,body:kit.pairExercise.steps.join('\\n')+'\\n'+kit.pairExercise.agreement}]:[])],kit};
 }
