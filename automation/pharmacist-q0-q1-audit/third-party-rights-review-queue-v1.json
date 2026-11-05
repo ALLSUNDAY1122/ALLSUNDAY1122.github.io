@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "createdAt": "2026-11-04",
   "scope": "Four cases identified in content/media/third-party-review.json and content/reviewed/third-party-replacements.json. This is a rights/source review queue, not a legal conclusion.",
-  "status": "ALL_PENDING",
+  "status": "PARTIAL_REVIEW_IN_PROGRESS",
   "items": [
     {
       "id": "P109-025",
@@ -29,9 +29,22 @@
       "originalSourcePdf": "https://www.stat.go.jp/data/jinsui/2022np/pdf/2022np.pdf",
       "appUse": "15歳未満11.6%、15～64歳59.4%、65歳以上29.0%、75歳以上15.5%の数値を用い、指数を独自計算した文章問題。原グラフは転載しない方針。",
       "currentAppSource": "https://www.mhlw.go.jp/content/001226760.pdf",
-      "rightsAssessment": "統計局はPDL1.0準拠を明示し、商用利用を認める。数値データは著作権保護対象外とされる。ただし、出典URLおよび加工主体の表示が必要。",
-      "requiredAction": "元統計表と全数値を照合し、統計局URL・PDL1.0・加工主体をアプリ内に表示。",
-      "status": "PDL1_CONFIRMED_ATTRIBUTION_AND_DATA_CHECK_PENDING"
+      "rightsAssessment": "総務省統計局の2022年10月1日現在の公表人口割合4項目を同局公式HTMLで確認。年少人口指数11.6/59.4*100≈19.5も整合。統計局利用規約はPDL1.0に準拠し商用利用を認め、数値は著作権保護対象外と説明する。原グラフは掲載しない方針。元データの出典表示と加工主体の開示が必要。2026-11-06にネイティブ及びWebへの元データURL表示修正をソースへ適用したが、バイナリ生成と実機確認は未実施。",
+      "requiredAction": "元データのリンクと加工表示が実際のUIで表示されることをNative XCTest・Web・署名IPA・実機で確認し、問題文・選択肢の独立性を検証。完了後に個別ゲート再評価。",
+      "status": "SOURCE_DATA_AND_TERMS_CONFIRMED; NATIVE_AND_WEB_DISPLAY_VALIDATION_PENDING",
+      "verifiedAt": "2026-11-06 JST",
+      "verifiedStatistics": {
+        "under15Percent": 11.6,
+        "age15to64Percent": 59.4,
+        "age65plusPercent": 29,
+        "age75plusPercent": 15.5,
+        "youngAgeDependencyRatioApprox": 19.5
+      },
+      "verificationEvidence": [
+        "https://www.stat.go.jp/data/jinsui/2022np/index.htm",
+        "https://www.stat.go.jp/info/riyou.html",
+        "https://www.stat.go.jp/data/jinsui/riyou.html"
+      ]
     },
     {
       "id": "P110-122",
@@ -63,5 +76,6 @@
       "requiredAction": "NOx発生源の一次資料を特定し、出題時点と現行の環境基準・測定方法を区別した出典表示と解説を作成。",
       "status": "SOURCE_AND_CURRENTNESS_REVIEW_REQUIRED"
     }
-  ]
+  ],
+  "updatedAt": "2026-11-06"
 }
