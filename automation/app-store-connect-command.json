@@ -1,13 +1,30 @@
 {
-  "request_id": "hm2-select-build23-20261106-r1",
-  "action": "write",
-  "expected_app_id": "6799751657",
-  "expected_bundle_id": "jp.allsunday1122.healthmanager2",
-  "operations": [
+  "request_id": "pharmacist-asc-readback-20261106-0629-r2",
+  "requests": [
     {
-      "type": "attach_build",
-      "app_store_version_id": "c0372f0c-c99a-4e4f-a8a3-28d13969091a",
-      "build_id": "7a31835c-760a-4c5c-a0a6-ff4f3ec3f83d"
+      "label": "app",
+      "method": "GET",
+      "path": "/v1/apps/6799753724"
+    },
+    {
+      "label": "versions",
+      "method": "GET",
+      "path": "/v1/apps/6799753724/appStoreVersions?limit=50"
+    },
+    {
+      "label": "builds",
+      "method": "GET",
+      "path": "/v1/apps/6799753724/builds?limit=50"
+    },
+    {
+      "label": "submissions",
+      "method": "GET",
+      "path": "/v1/apps/6799753724/reviewSubmissions?limit=50"
+    },
+    {
+      "label": "attached-build",
+      "method": "GET",
+      "path": "/v1/appStoreVersions/430ba445-fae0-4d1d-9301-95d1ea342ac7/relationships/build"
     }
   ]
 }
