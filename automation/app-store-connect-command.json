@@ -1,30 +1,25 @@
 {
-  "request_id": "pharmacist-release-status-20261105-resume",
+  "request_id": "hm2-asc-read-20261106-r1",
   "requests": [
     {
       "label": "app",
       "method": "GET",
-      "path": "/v1/apps/6799753724"
-    },
-    {
-      "label": "versions",
-      "method": "GET",
-      "path": "/v1/apps/6799753724/appStoreVersions?include=build&limit=20"
+      "path": "/v1/apps/6799751657"
     },
     {
       "label": "builds",
       "method": "GET",
-      "path": "/v1/builds?filter[app]=6799753724&sort=-uploadedDate&limit=10"
+      "path": "/v1/builds?filter[app]=6799751657&sort=-uploadedDate&limit=20"
     },
     {
-      "label": "internal-build",
+      "label": "groups",
       "method": "GET",
-      "path": "/v1/builds/0ed211f5-60c9-4fde-adad-3ba16c1601a5"
+      "path": "/v1/apps/6799751657/betaGroups?limit=50"
     },
     {
-      "label": "submissions",
+      "label": "versions",
       "method": "GET",
-      "path": "/v1/reviewSubmissions?filter[app]=6799753724&limit=20"
+      "path": "/v1/apps/6799751657/appStoreVersions?limit=20"
     }
   ]
 }
