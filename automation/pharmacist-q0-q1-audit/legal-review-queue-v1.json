@@ -2285,14 +2285,20 @@
       "examDate": "2024-02-18",
       "sourceUrl": "https://www.mhlw.go.jp/content/001226764.pdf",
       "matchedTerms": [],
-      "status": "CLINICAL_RESEARCH_REGULATION_APPLICABILITY_PENDING; Q0_NOT_PASS",
+      "status": "EXAM_DATE_PRIMARY_CLINICAL_RESEARCH_ACT_AND_PRE_EXAM_ICH_E9_VERIFIED",
       "lawName": "臨床研究法・人を対象とする生命科学・医学系研究に関する倫理指針",
       "article": "臨床研究法第2条（特定臨床研究の定義）、第23条以下（認定臨床研究審査委員会）等",
-      "lawVersionDate": "試験日2024-02-18。承認済医薬品を承認適応外で用いる介入研究であり、特定臨床研究該当性の確認が必要。2025年改正・施行後の制度を遡及適用しない。",
-      "officialLawUrl": "https://laws.e-gov.go.jp/law/429AC0000000016?occasion_date=20240218 ; https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000163417.html",
+      "lawVersionDate": "第109回試験日2024-02-18。臨床研究法2条2項の承認適応外医薬品を用いる特定臨床研究の試験日版（2024-06-14法改正より前）。1998-11-30厚生省医薬審第1047号ICH E9臨床試験のための統計的原則（試験日より前）。",
+      "officialLawUrl": "https://www.mhlw.go.jp/web/t_doc?dataId=80ab5894&dataType=0&pageNo=1 ; https://www.mhlw.go.jp/web/t_doc?dataId=00ta7565&dataType=1&pageNo=1 ; https://www.pmda.go.jp/int-activities/int-harmony/ich/0031.html ; https://www.mhlw.go.jp/web/t_doc?dataId=00tc8582&dataType=1&pageNo=1",
       "impactOfLaterAmendments": "医薬品Aは心不全適応がない状態で心不全患者に介入投与する計画であり、未承認・適応外使用を伴う臨床研究として臨床研究法上の特定臨床研究に該当する可能性が高い。計画書では服薬遵守率のみで解析対象から除外する設計や、盲検性確保のための外観同一化等の科学的妥当性が問われる。公式正答1・5。",
-      "auditConclusion": "試験日2024-02-18時点の臨床研究法第2条の特定臨床研究該当性と、解析対象から低服薬遵守患者を除外することの科学的・倫理的妥当性の原典根拠を全選択肢で確定できず、正答表だけを根拠にPASSとしない。Q1研究倫理との整合確認が必要。",
-      "evidenceLevel": "OFFICIAL_PRIMARY_STATUTE_LOCATED; FULL_TRIAL_DESIGN_EVIDENCE_MISSING"
+      "auditConclusion": "適応外使用を伴う無作為化比較試験は試験日版臨床研究法の特定臨床研究対象（2024-06-14公布改正の適応外使用除外特例は試験日後で適用しない）。ICH E9 (1998) 5.2.2、5.2.3及びQ9は、事前設定された服薬遵守等の基準による治験実施計画書適合集団（PPS）の解析を認め、その除外理由を記録すると規定。低遵守者を全解析から無条件に除外するという意味ではなく、最大解析対象集団（FAS）とPPSを区別しバイアスを評価する必要がある。プラセボとの外観一致は二重盲検の維持に必要。公式正答1・5について、PPSの適切な事前設定という条件の下でQ0一次資料と整合。Q1では解析集団の言葉足らずの解説の改善対象として別途監査する。",
+      "evidenceLevel": "PRE_EXAM_OFFICIAL_MHLW_STATUTE_AND_ICH_E9_GUIDANCE",
+      "versionAudit": {
+        "examDate": "2024-02-18",
+        "reformExcluded": "令和6年6月14日臨床研究法改正",
+        "statisticalGuideline": "1998-11-30 ICH E9",
+        "qualifiedPrimaryAnalysis": "FAS/ITTを原則としてPPSは事前規定・補助解析、無条件の全症例除外ではない"
+      }
     },
     {
       "id": "P109-316",
@@ -2424,14 +2430,14 @@
         "測定法",
         "中性ヨウ化カリウム法"
       ],
-      "status": "EXAM_DATE_CORRECT; SOURCE_EXPLANATION_PATCHED; BUILD_AND_RELEASE_VERIFICATION_PENDING",
+      "status": "MAIN_RUNTIME_PATCH_CONFIRMED; DISTRIBUTION_AND_TESTFLIGHT_UNVERIFIED",
       "lawName": "大気の汚染に係る環境基準（光化学オキシダント測定方法）",
       "article": "環境庁告示第25号（昭和48年）、平成8年環告第73号改正、令和8年環境省告示第8号（2026-01-30）",
       "lawVersionDate": "第110回試験日2025-02-23は中性ヨウ化カリウム法を正答根拠として使用可能。2026-01-30告示改正、2026-04-01施行の後日変更を分離。",
       "officialLawUrl": "https://www.env.go.jp/air/osen/pc_oxidant/kijun.html ; https://www.env.go.jp/air/osen/pc_oxidant/henkou.html",
       "impactOfLaterAmendments": "第110回試験時点では中性ヨウ化カリウム溶液を用いる吸光光度法・電量法も測定方法として位置付けられていた。2026-01-30公布・2026-04-01施行の改正後は紫外線吸収法又はエチレンを用いる化学発光法に整理され、中性ヨウ化カリウム法は現行の標準測定方法から外れた。試験時点の正答を誤りに変更せず、解説に現行法への改正注記を追加する必要がある。",
-      "auditConclusion": "改正注記を監査ブランチのpharmacist-manabi-sprint/content/reviewed/third-party-replacements.jsonで修正（commit 2c62375e）。監査ブランチとmainの比較でmainは旧文面であることを確認。GitHubの修正commitに紐づくPRトリガーのworkflow runは0件、commit combined statusも空。ビルド実行・成功、生成配信データへの反映、TestFlight表示反映を確認できていないためBLOCKED。古い本番の回答は変更していない。",
-      "evidenceLevel": "PRIMARY_ENV_NOTICE; AUDIT_BRANCH_SOURCE_PATCH_VERIFIED; MAIN_BUILD_DISTRIBUTION_NOT_VERIFIED"
+      "auditConclusion": "環境省2026-01-30告示、2026-04-01施行の改正を試験日2025-02-23から分離。mainのcontent/reviewed/third-party-replacements.jsonに修正反映（commit c97c1f932ca98ed3db8a870cd5d1710326614f10）。アプリはcontent/product/questions.jsonを直接読み込むため、mainのproduct-loader-v06.jsにP110-140の改正注記表示処理を追加（commit dacee8528262e84003573108152865480088fc6a）。mainファイル再取得で存在を確認。CI workflow pharmacist-v06-web.ymlはproduct-loader-v06.jsのmain pushを監視する設定だが、実際の成功ログ・ビルド成果物は確認できていない。GitHub commit statusesは空、PRトリガー実行0件。生成済みproduct/questions.jsonそのものの改訂・配信成果物・TestFlight画面の反映は未確認。App Review提出なし。",
+      "evidenceLevel": "ENV_PRIMARY_NOTICE_MAIN_SOURCE_AND_RUNTIME_PATCH_VERIFIED; CI_DISTRIBUTION_TF_NOT_VERIFIED"
     }
   ],
   "updatedAt": "2026-11-04",
@@ -2742,19 +2748,19 @@
     "status": "BLOCKED",
     "candidateCount": 107,
     "individuallyReviewed": 107,
-    "unresolvedCount": 9,
+    "unresolvedCount": 8,
     "legalOrRegulatoryVersionOrApplicationPending": 12,
     "nonlegalPrimarySourceOrFigureReviewPending": 1,
     "clearNonlegalOrNonstatutoryCandidates": 42,
     "passCount": 44,
     "failCount": 0,
     "majorFindings": [
-      "P109-314：臨床研究法・研究計画の個別適用が未確定",
-      "P110-140：監査ブランチで改正注記を修正したがmain・配信データ・ビルド・TestFlight未確認",
-      "B7件：新規一次資料が得られるまで保留・再調査なし"
+      "P110-140 mainの修正ソースは確認済みだが、CI・配信データ・Internal TestFlightの成功証跡は未確認",
+      "B7件は一次資料不足で保留継続",
+      "P109-314の公式正答における低服薬遵守者の除外はPPS解析に限定して理解する必要があり、Q1の説明精度レビューを要する"
     ],
     "appReview": "NOT_SUBMITTED",
-    "latestBatch": "auditBatch20"
+    "latestBatch": "auditBatch21"
   },
   "auditBatch12": {
     "checkedAt": "2026-11-05",
@@ -2937,6 +2943,11 @@
       "aRemaining": 2,
       "bRemaining": 7,
       "totalRemaining": 9
+    },
+    "afterBatch21": {
+      "aRemaining": 1,
+      "bRemaining": 7,
+      "totalRemaining": 8
     }
   },
   "auditBatch16": {
@@ -3099,5 +3110,38 @@
       "testFlightStatus": "NOT_VERIFIED"
     },
     "note": "B7件は再調査していない。P109-318は試験前の薬機法・施行令・構造設備規則・2022年厚労省公式手引きで全5肢を照合し解消。P109-314は研究計画の具体的妥当性根拠不足で保留。P110-140は監査ブランチに説明修正が存在するがmain・配信データ・ビルド・TestFlightで未反映/未検証のため保留。"
+  },
+  "auditBatch21": {
+    "checkedAt": "2026-11-05",
+    "reviewedIds": [
+      "P109-314",
+      "P110-140"
+    ],
+    "resolvedIds": [
+      "P109-314"
+    ],
+    "unresolvedIds": [
+      "P110-140"
+    ],
+    "counts": {
+      "reviewed": 2,
+      "resolved": 1,
+      "unresolved": 1
+    },
+    "P110_140": {
+      "mainOverrideFile": {
+        "commit": "c97c1f932ca98ed3db8a870cd5d1710326614f10",
+        "verified": true
+      },
+      "mainRuntimePatch": {
+        "commit": "dacee8528262e84003573108152865480088fc6a",
+        "verified": true
+      },
+      "build": "UNVERIFIED",
+      "delivery": "UNVERIFIED",
+      "testFlight": "UNVERIFIED",
+      "appReview": "NOT_SUBMITTED"
+    },
+    "notes": "P109-314は試験日前の臨床研究法と1998年ICH E9により適応外介入研究、PPS事前設定（FAS/ITTとは区別）、二重盲検の薬剤外観一致を確認し解消。P110-140はmainのオーバーライド＋実際のアプリ読み込み処理を修正したが、CI・配信物・TF未確認のため保留。B7件は一切再調査していない。"
   }
 }
