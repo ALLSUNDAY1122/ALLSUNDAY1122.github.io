@@ -1,0 +1,136 @@
+name: HM2 Genuine iPad Simulator Screenshot for App Review
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/hm2-ipad-screenshot-20261106.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  capture-and-upload:
+    runs-on: macos-15
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install tools
+        run: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick
+          python3 -m pip install --disable-pip-version-check pillow
+      - name: Prepare and compile actual HM2 app for iPad Simulator
+        run: |
+          set -euo pipefail
+          BUILD_NUMBER=23 bash ios/health-manager-2/prepare-web-assets.sh
+          (cd ios/health-manager-2 && xcodegen generate)
+          xcodebuild -project ios/health-manager-2/HealthManager2.xcodeproj \
+            -scheme HealthManager2 -configuration Release -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/hm2-sim" CODE_SIGNING_ALLOWED=NO build > "$RUNNER_TEMP/hm2-build.log" 2>&1 || {
+              tail -n 120 "$RUNNER_TEMP/hm2-build.log"
+              exit 1
+            }
+          test -d "$RUNNER_TEMP/hm2-sim/Build/Products/Release-iphonesimulator/HealthManager2.app"
+      - name: Boot genuine 13-inch iPad Simulator and capture app
+        run: |
+          set -euo pipefail
+          DEVICE_ID="$(python3 - <<'PY'
+          import json,subprocess
+          j=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','--json']))
+          rows=[d for ds in (j.get('devices') or {}).values() for d in ds if d.get('isAvailable') and 'iPad Pro 13-inch' in d.get('name','')]
+          if not rows:raise SystemExit('No 13-inch iPad Simulator available; do not fabricate an iPad screenshot')
+          print(rows[0]['udid'])
+          PY
+          )"
+          echo "iPad Simulator ID selected"
+          xcrun simctl boot "$DEVICE_ID"
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl install "$DEVICE_ID" "$RUNNER_TEMP/hm2-sim/Build/Products/Release-iphonesimulator/HealthManager2.app"
+          xcrun simctl launch "$DEVICE_ID" jp.allsunday1122.healthmanager2
+          sleep 6
+          mkdir -p automation/release-assets/hm2 automation/asc-results
+          xcrun simctl io "$DEVICE_ID" screenshot automation/release-assets/hm2/03-ipad-13-simulator.png
+          python3 - <<'PY'
+          from PIL import Image,ImageStat
+          p='automation/release-assets/hm2/03-ipad-13-simulator.png'
+          im=Image.open(p).convert('RGB')
+          if im.size not in ((2048,2732),(2064,2752)):raise SystemExit(f'Not a valid 13-inch iPad screenshot: {im.size}')
+          if max(ImageStat.Stat(im).var)<150:raise SystemExit('Screenshot is blank; abort upload')
+          print('PASS: actual iPad Simulator capture',im.size)
+          PY
+      - name: Upload verified actual iPad capture to existing HM2 App Store localization
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,sys
+          from pathlib import Path
+          from PIL import Image
+          sys.path.insert(0,'scripts')
+          from app_store_connect_api import api_get,load_private_key,make_token
+          from app2_006_hm2_submit_review import one,many,request_ok,upload_operations,patch,wait_complete
+          app_id='6799751657';version_id='c0372f0c-c99a-4e4f-a8a3-28d13969091a'
+          locale_id='b5fb2eb3-0af8-41e1-a226-f39febf0b0ed'
+          source=Path('automation/release-assets/hm2/03-ipad-13-simulator.png')
+          result={'app_id':app_id,'version_id':version_id,'source':'genuine-iPad-Simulator','screenshot_size':list(Image.open(source).size),'uploaded':False}
+          output=Path('automation/asc-results/hm2-ipad-screenshot-20261106.json')
+          kp,cleanup=load_private_key()
+          try:
+              t=make_token(os.environ['ASC_ISSUER_ID'],os.environ['ASC_KEY_ID'],kp)
+              app=one(api_get(t,f'/v1/apps/{app_id}')[1],'app')
+              assert (app.get('attributes') or {}).get('bundleId')=='jp.allsunday1122.healthmanager2'
+              ver=one(api_get(t,f'/v1/appStoreVersions/{version_id}')[1],'version')
+              assert (ver.get('attributes') or {}).get('versionString')=='1.0'
+              sets=many(api_get(t,f'/v1/appStoreVersionLocalizations/{locale_id}/appScreenshotSets?limit=50')[1])
+              ss=next((s for s in sets if (s.get('attributes') or {}).get('screenshotDisplayType')=='APP_IPAD_PRO_3GEN_129'),None)
+              if ss is None:
+                  body={'data':{'type':'appScreenshotSets','attributes':{'screenshotDisplayType':'APP_IPAD_PRO_3GEN_129'},'relationships':{'appStoreVersionLocalization':{'data':{'type':'appStoreVersionLocalizations','id':locale_id}}}}}
+                  ss=one(request_ok(t,'/v1/appScreenshotSets','POST',body),'set')
+              sid=ss['id']
+              existing=many(api_get(t,f'/v1/appScreenshotSets/{sid}/appScreenshots?limit=20')[1])
+              if existing:
+                  result['status']='Existing screenshots found; preserved without overwrite'
+                  result['existing_count']=len(existing)
+              else:
+                  raw=source.read_bytes();checksum=hashlib.md5(raw).hexdigest()
+                  body={'data':{'type':'appScreenshots','attributes':{'fileSize':len(raw),'fileName':source.name},'relationships':{'appScreenshotSet':{'data':{'type':'appScreenshotSets','id':sid}}}}}
+                  shot=one(request_ok(t,'/v1/appScreenshots','POST',body),'reserved screenshot')
+                  upload_operations((shot.get('attributes') or {}).get('uploadOperations') or [],raw)
+                  patch(t,f"/v1/appScreenshots/{shot['id']}",'appScreenshots',shot['id'],attributes={'uploaded':True,'sourceFileChecksum':checksum})
+                  wait_complete(t,f"/v1/appScreenshots/{shot['id']}",'iPad screenshot')
+                  result['uploaded']=True;result['screenshot_id']=shot['id']
+              result['screenshot_set_id']=sid;result['ok']=True
+          except Exception as e:
+              result['error']=str(e)[:1400]
+              raise
+          finally:
+              if cleanup:cleanup.unlink(missing_ok=True)
+              output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Persist screenshot and evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/release-assets/hm2/03-ipad-13-simulator.png automation/asc-results/hm2-ipad-screenshot-20261106.json || true
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record genuine HM2 iPad simulator screenshot and ASC evidence'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hm2-ipad-13-evidence
+          path: |
+            automation/release-assets/hm2/03-ipad-13-simulator.png
+            automation/asc-results/hm2-ipad-screenshot-20261106.json
+          if-no-files-found: warn
