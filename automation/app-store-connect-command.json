@@ -1,45 +1,35 @@
 {
-  "request_id": "hm2-review-preflight-20261106-r1",
+  "request_id": "pharmacist-asc-readback-20261106-0625",
   "requests": [
     {
       "label": "app",
       "method": "GET",
-      "path": "/v1/apps/6799751657"
+      "path": "/v1/apps/6799753724"
     },
     {
-      "label": "version",
+      "label": "versions",
       "method": "GET",
-      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a"
-    },
-    {
-      "label": "selected-build",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/relationships/build"
-    },
-    {
-      "label": "review-detail",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/appStoreReviewDetail"
-    },
-    {
-      "label": "localizations",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/appStoreVersionLocalizations?limit=20"
-    },
-    {
-      "label": "submissions",
-      "method": "GET",
-      "path": "/v1/apps/6799751657/reviewSubmissions?limit=20"
-    },
-    {
-      "label": "app-infos",
-      "method": "GET",
-      "path": "/v1/apps/6799751657/appInfos?limit=20"
+      "path": "/v1/apps/6799753724/appStoreVersions?limit=50"
     },
     {
       "label": "builds",
       "method": "GET",
-      "path": "/v1/apps/6799751657/builds?limit=10"
+      "path": "/v1/apps/6799753724/builds?limit=30&sort=-uploadedDate"
+    },
+    {
+      "label": "submissions",
+      "method": "GET",
+      "path": "/v1/apps/6799753724/reviewSubmissions?limit=50"
+    },
+    {
+      "label": "attached-build",
+      "method": "GET",
+      "path": "/v1/appStoreVersions/430ba445-fae0-4d1d-9301-95d1ea342ac7/relationships/build"
+    },
+    {
+      "label": "version-localizations",
+      "method": "GET",
+      "path": "/v1/appStoreVersions/430ba445-fae0-4d1d-9301-95d1ea342ac7/appStoreVersionLocalizations?limit=20"
     }
   ]
 }
