@@ -27,6 +27,7 @@ struct Question: Codable, Identifiable, Hashable {
     let modificationDisclosure: String
     // Keep optional provenance fields without default values so synthesized Codable decodes them from the shipped JSON.
     let sourceURL: String?
+    let originalDataSourceURL: String?
     let legalSourceURL: String?
     let correctionSourceURL: String?
     let canonicalId: String
