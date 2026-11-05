@@ -2430,14 +2430,14 @@
         "測定法",
         "中性ヨウ化カリウム法"
       ],
-      "status": "MAIN_RUNTIME_PATCH_CONFIRMED; DISTRIBUTION_AND_TESTFLIGHT_UNVERIFIED",
+      "status": "MAIN_GENERATED_CONTENT_AND_RUNTIME_PATCH_CONFIRMED; POST_PATCH_BUILD_AND_INTERNAL_TESTFLIGHT_UNVERIFIED",
       "lawName": "大気の汚染に係る環境基準（光化学オキシダント測定方法）",
       "article": "環境庁告示第25号（昭和48年）、平成8年環告第73号改正、令和8年環境省告示第8号（2026-01-30）",
       "lawVersionDate": "第110回試験日2025-02-23は中性ヨウ化カリウム法を正答根拠として使用可能。2026-01-30告示改正、2026-04-01施行の後日変更を分離。",
       "officialLawUrl": "https://www.env.go.jp/air/osen/pc_oxidant/kijun.html ; https://www.env.go.jp/air/osen/pc_oxidant/henkou.html",
       "impactOfLaterAmendments": "第110回試験時点では中性ヨウ化カリウム溶液を用いる吸光光度法・電量法も測定方法として位置付けられていた。2026-01-30公布・2026-04-01施行の改正後は紫外線吸収法又はエチレンを用いる化学発光法に整理され、中性ヨウ化カリウム法は現行の標準測定方法から外れた。試験時点の正答を誤りに変更せず、解説に現行法への改正注記を追加する必要がある。",
-      "auditConclusion": "環境省2026-01-30告示、2026-04-01施行の改正を試験日2025-02-23から分離。mainのcontent/reviewed/third-party-replacements.jsonに修正反映（commit c97c1f932ca98ed3db8a870cd5d1710326614f10）。アプリはcontent/product/questions.jsonを直接読み込むため、mainのproduct-loader-v06.jsにP110-140の改正注記表示処理を追加（commit dacee8528262e84003573108152865480088fc6a）。mainファイル再取得で存在を確認。CI workflow pharmacist-v06-web.ymlはproduct-loader-v06.jsのmain pushを監視する設定だが、実際の成功ログ・ビルド成果物は確認できていない。GitHub commit statusesは空、PRトリガー実行0件。生成済みproduct/questions.jsonそのものの改訂・配信成果物・TestFlight画面の反映は未確認。App Review提出なし。",
-      "evidenceLevel": "ENV_PRIMARY_NOTICE_MAIN_SOURCE_AND_RUNTIME_PATCH_VERIFIED; CI_DISTRIBUTION_TF_NOT_VERIFIED"
+      "auditConclusion": "2026-11-05 main上の原本オーバーライド（commit c97c1f9）とproduct-loader-v06.js（commit dacee85）の時点差注記を再取得・検証。さらにmainのcontent/product/questions.json（blob 06066d711d152e36a96e844766c1a358c9afd8b7）を直接取得してJSON.parseに成功し、1035件中P110-140のexplanationとmemoryPointに2026-04-01改正注記が既に含まれること、answer=[1,4]の歴史的正答を維持していることを確認した。従ってGitHub mainの生成済み配信ソースまで反映はCONFIRMED。一方、main改修後のGitHub Actions workflow runの成功ログ・ビルド成果物・実際の公開配信レスポンス・Internal TestFlightのビルド番号とインストール後表示確認を取得できず、配信済み／TF完了とは判定しない。2026-08-09のweb smoke exit=0は改修前なので今回ビルド成功の根拠に使用しない。App Review未提出。",
+      "evidenceLevel": "MAIN_PRODUCT_JSON_DIRECT_BLOB_READ_CONFIRMED; HISTORIC_ANSWER_PRESERVED; NEW_CI_PUBLIC_DELIVERY_INTERNAL_TF_UNVERIFIED"
     }
   ],
   "updatedAt": "2026-11-04",
@@ -2755,12 +2755,11 @@
     "passCount": 44,
     "failCount": 0,
     "majorFindings": [
-      "P110-140 mainの修正ソースは確認済みだが、CI・配信データ・Internal TestFlightの成功証跡は未確認",
-      "B7件は一次資料不足で保留継続",
-      "P109-314の公式正答における低服薬遵守者の除外はPPS解析に限定して理解する必要があり、Q1の説明精度レビューを要する"
+      "P110-140：mainの生成済みquestions.jsonは改正注記・正答保持を確認したが、修正後ビルド・実配信・Internal TestFlight確認ができていない",
+      "B7件：一次資料不足のため未確認継続、今回の再調査なし"
     ],
     "appReview": "NOT_SUBMITTED",
-    "latestBatch": "auditBatch21"
+    "latestBatch": "auditBatch22"
   },
   "auditBatch12": {
     "checkedAt": "2026-11-05",
@@ -2945,6 +2944,11 @@
       "totalRemaining": 9
     },
     "afterBatch21": {
+      "aRemaining": 1,
+      "bRemaining": 7,
+      "totalRemaining": 8
+    },
+    "afterBatch22": {
       "aRemaining": 1,
       "bRemaining": 7,
       "totalRemaining": 8
@@ -3143,5 +3147,41 @@
       "appReview": "NOT_SUBMITTED"
     },
     "notes": "P109-314は試験日前の臨床研究法と1998年ICH E9により適応外介入研究、PPS事前設定（FAS/ITTとは区別）、二重盲検の薬剤外観一致を確認し解消。P110-140はmainのオーバーライド＋実際のアプリ読み込み処理を修正したが、CI・配信物・TF未確認のため保留。B7件は一切再調査していない。"
+  },
+  "auditBatch22": {
+    "checkedAt": "2026-11-05",
+    "reviewedIds": [
+      "P110-140"
+    ],
+    "resolvedIds": [],
+    "unresolvedIds": [
+      "P110-140"
+    ],
+    "counts": {
+      "reviewed": 1,
+      "resolved": 0,
+      "unresolved": 1
+    },
+    "buildVerification": {
+      "sourceMainPatchCommits": [
+        "c97c1f932ca98ed3db8a870cd5d1710326614f10",
+        "dacee8528262e84003573108152865480088fc6a"
+      ],
+      "generatedProductJsonBlob": "06066d711d152e36a96e844766c1a358c9afd8b7",
+      "generatedProductQuestionsCount": 1035,
+      "generatedProductExplanationPatched": true,
+      "generatedProductMemoryPointPatched": true,
+      "answerIndices": [
+        1,
+        4
+      ],
+      "mainSourceAndGeneratedJson": "CONFIRMED",
+      "ciPostPatch": "NOT_VERIFIED",
+      "historicalSmokeLog": "2026-08-09 PASS but predates source changes; not acceptable as current build evidence",
+      "publicDistribution": "NOT_VERIFIED",
+      "internalTestFlight": "NOT_VERIFIED",
+      "appReview": "NOT_SUBMITTED"
+    },
+    "notes": "ユーザー指定のA1のみ再確認、B7は調査対象に含めていない。GitHub mainの生成済みquestions.jsonをblobで実読した結果、改正注記が反映済み。ただし配信先・Internal TestFlightまでの成功証跡不足のためPASSにせず。"
   }
 }
