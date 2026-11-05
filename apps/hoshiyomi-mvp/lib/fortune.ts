@@ -51,7 +51,7 @@ export function report(input:Input,product:Product){
  const free=reading(input),base=library[input.kind][input.concern??'uncertainty'],stage=input.stage??'ongoing';
  const pace=stage==='strained'?'心身の負担が強い場合はこの日の課題を休み、安心できる人への相談を優先して構いません。':stage==='early'?'始まったばかりの状況では、断定よりも情報を集める行動を選んでください。':'これまでの経緯も振り返り、繰り返す傾向があるかを確認してください。';
  const personal=personalize(input);const week:Section[]=base.week.map((s,i)=>{
-  const g=dayGuides[i];return {title:'Day '+(i+1)+'｜'+s,body:'目的：'+s+'。\n具体的な手順：'+g.instruction+'\n記録する成果物：'+g.deliverable+'。\n自己確認の基準：'+g.check+'。\n調整：'+pace};
+  const g=dayGuides[i];return {title:'Day '+(i+1)+'｜'+s,body:'目的：'+s+'。\n具体的な手順：'+g.instruction+'\n記録する成果物：'+g.deliverable+'。\n自己確認の基準：'+g.check+'。\n今回の状況に即した行動：'+personal.planPrefix+'\n調整：'+pace};
  });
  const extra:Section[]=[
  {title:'今回のテーマに使える会話例',body:'次の表現をそのまま使う必要はありません。相手の状況を尊重できる言い方へ調整してください。\n例：「'+base.script.replace(/^「|」$/g,'')+'」\n話し終えたら、相手の回答を推測で埋めずに実際の言葉で記録してください。'},
