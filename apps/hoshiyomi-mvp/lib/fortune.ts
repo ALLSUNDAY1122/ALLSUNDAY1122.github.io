@@ -1,4 +1,4 @@
-import {makePremiumKit} from './premium-kit';
+import {buildDeepReading,type Extra} from './deep-reading';
 import {personalize,type Situation,type Goal} from './personalization';
 export type Kind='love'|'compatibility'|'career';
 export type Product='detail'|'pair';
@@ -6,7 +6,7 @@ export type Concern='uncertainty'|'communication'|'decision';
 export type Stage='early'|'ongoing'|'strained';
 export type Input={kind:Kind;birthday:string;partnerBirthday?:string;concern?:Concern;stage?:Stage;situation?:Situation;goal?:Goal};
 export type Section={title:string;body:string};
-export const products={detail:{name:'実践設計レポート',price:480},pair:{name:'ふたりの対話設計レポート',price:980}} as const;
+export const products={detail:{name:'星座・干支・数秘の多層鑑定',price:480},pair:{name:'大切な人との関係・相性鑑定',price:980}} as const;
 export const concernOptions:Record<Kind,{value:Concern;label:string}[]>={
  love:[{value:'uncertainty',label:'相手の気持ちが分からない'},{value:'communication',label:'連絡や会話が噛み合わない'},{value:'decision',label:'関係を進めるか迷っている'}],
  compatibility:[{value:'uncertainty',label:'価値観の違いが気になる'},{value:'communication',label:'すれ違いが続いている'},{value:'decision',label:'将来を話し合いたい'}],
@@ -37,10 +37,12 @@ const library:Record<Kind,Record<Concern,{insight:string;pitfall:string;question
 const stageNotes:Record<Stage,string>={early:'まだ関係・状況の情報が少ない段階です。確信よりも観察と小さな試行を優先してください。',ongoing:'ある程度の経緯がある段階です。直近1回より繰り返すパターンと改善例を比べてください。',strained:'負担が大きい段階です。無理に話し合いを進めず、自分の安全・休息・信頼できる相談先を優先してください。'};
 const signLenses=['慎重に条件を見直す','自由な選択肢を探す','気持ちを言葉にする','まず小さく動く','安定を大事にする','異なる視点を並べる','安心できる環境を作る','自分の意思を明確にする','現実的に整理する','相手と均衡を探す','深い本音を見つめる','少し先の可能性を描く'];
 export function reading(input:Input){if(!validInput(input))throw Error('Invalid input');const concern=input.concern??'uncertainty',stage=input.stage??'ongoing',base=library[input.kind][concern],first=sign(input.birthday),other=input.kind==='compatibility'?sign(input.partnerBirthday!):undefined;const lens=signLenses[signs.indexOf(first)];const personalized=personalize(input);return {title:other?first+' × '+other+'｜関係を整えるための読み解き':first+'｜'+({love:'恋愛',compatibility:'相性',career:'仕事'} as const)[input.kind]+'の読み解き',subtitle:concernOptions[input.kind].find(x=>x.value===concern)!.label+'｜'+personalized.focusLabel,intro:personalized.intro,sections:[{title:'いまの状況を読み解く',body:base.insight},{title:'星座からの振り返り視点',body:first+'を物語のモチーフにするなら「'+lens+'」が今回のキーワード。占星術から実際の性格を判定したわけではありません。この問いが自分に役立つかを確かめてください。'},{title:'見落としやすい注意点',body:base.pitfall+' '+stageNotes[stage]},{title:'今日できる具体的な一歩',body:base.action},{title:'自分への問い',body:base.question},...personalized.sections],hint:base.insight,caveat:'占いは娯楽・自己理解のためのものです。誕生日から性格、相手の気持ち、未来の出来事を科学的に推定するものではありません。',productPreview:{what:'自分の状況に合わせた7日間の行動プラン、具体的な会話例、変化を確かめるチェック項目、進まない場合の代替策',example:base.script}}}
-export function report(input:Input,product:Product){
+// 決済は未接続。将来の注文データ構造を整備する際は Extra を安全に保持・検証する。
+export function report(input:Input,product:Product,extra?:Extra){
  if(!validInput(input))throw Error('Invalid input');
  if(product==='pair'&&input.kind!=='compatibility')throw Error('Invalid pair');
  const free=reading(input);
- const kit=makePremiumKit(input);
- return {...free,product:products[product].name,sections:[...kit.sections,...(kit.pairExercise?[{title:kit.pairExercise.title,body:kit.pairExercise.steps.join('\\n')+'\\n'+kit.pairExercise.agreement}]:[])],kit};
+ const fallback:Extra={birthYear:'',blood:'unknown',otherBirthday:input.partnerBirthday??'',otherYear:'',otherBlood:'unknown',relation:'partner',parentBirthday:'',parentYear:''};
+ const deep=buildDeepReading(input,extra??fallback);
+ return {...free,product:products[product].name,sections:deep.chapters.map(c=>({title:c.title,body:c.body})),deep};
 }
