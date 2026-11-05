@@ -1,30 +1,25 @@
 {
-  "request_id": "pharmacist-asc-readback-20261106-0629-r2",
+  "request_id": "hm2-review-final-preflight-20261106-r2",
   "requests": [
     {
-      "label": "app",
+      "label": "selected-build",
       "method": "GET",
-      "path": "/v1/apps/6799753724"
+      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/relationships/build"
     },
     {
-      "label": "versions",
+      "label": "screens",
       "method": "GET",
-      "path": "/v1/apps/6799753724/appStoreVersions?limit=50"
+      "path": "/v1/appScreenshotSets/7e61fe88-803d-4710-8395-90743dd6c0ac/appScreenshots?limit=50"
     },
     {
-      "label": "builds",
+      "label": "iap",
       "method": "GET",
-      "path": "/v1/apps/6799753724/builds?limit=50"
+      "path": "/v2/inAppPurchases/6802989207"
     },
     {
-      "label": "submissions",
+      "label": "sub",
       "method": "GET",
-      "path": "/v1/apps/6799753724/reviewSubmissions?limit=50"
-    },
-    {
-      "label": "attached-build",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/430ba445-fae0-4d1d-9301-95d1ea342ac7/relationships/build"
+      "path": "/v1/subscriptions/6802988571"
     }
   ]
 }
