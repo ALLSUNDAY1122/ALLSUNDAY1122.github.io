@@ -84,7 +84,14 @@ def app_price_schedule(token: str) -> dict | None:
 
 
 def manual_prices(token: str, schedule_id: str) -> list[dict]:
-    _, payload = api_get(token, f"/v1/appPriceSchedules/{schedule_id}/manualPrices?include=appPricePoint,territory&limit=200")
+    try:
+        _, payload = api_get(token, f"/v1/appPriceSchedules/{schedule_id}/manualPrices?include=appPricePoint,territory&limit=200")
+    except RuntimeError as exc:
+        # ASC sometimes returns a synthetic empty schedule whose ID is the app ID.
+        # It has no manualPrices resource until a real schedule is created.
+        if schedule_id == APP_ID and "HTTP 404" in str(exc):
+            return []
+        raise
     included = payload.get("included") or []
     point_attrs = {
         str(x.get("id")): (x.get("attributes") or {})
