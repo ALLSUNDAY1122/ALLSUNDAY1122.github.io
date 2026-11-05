@@ -1,55 +1,43 @@
 # RELEASE STATUS｜薬剤師国家試験｜学びスプリント
 
-更新：2026-08-25 JST
-担当：ChatGPT
-GitHub正本：`main`
+更新：2026-11-05 JST
+最終判定：BLOCKED（正式提出は未実行）
 
-## 対象アプリ
-- App：薬剤師国家試験｜学びスプリント
-- Bundle ID：`jp.allsunday1122.yakuzaishi`
-- App Store Connect App ID：`6799753724`
-- Version：`1.0.0`
-- 次回Build：`5`
-- Codemagic workflow：`pharmacist-ios`
-- 価格：無料
-- アプリ内課金：なし
-- 利用範囲：第111・110・109回、採点対象1,031問を追加購入なしで全開放
+## 対象とApple正本
+- App ID：6799753724
+- Bundle ID：jp.allsunday1122.yakuzaishi
+- ソースVersion：1.0.0 / ASC versionString：1.0
+- ASC Version ID：430ba445-fae0-4d1d-9301-95d1ea342ac7
+- 2026-11-05T03:33:20.678249Z読戻し：PREPARE_FOR_SUBMISSION、reviewSubmissionsは0件
+- 最新Apple Build：20261105002905、VALID、INTERNAL_ONLY
+- Apple Build ID：0ed211f5-60c9-4fde-adad-3ba16c1601a5
+- Codemagic Build ID：6aebcd99f5f3c51e569a2f3e
+- 対応ソース：82591fe0174f26df006271cd5ba267c38a8d7735
+- 本番APP_STORE_ELIGIBLE新規Build：品質ゲート未通過のため未生成
+- 価格：無料 / IAPなし / 1035レコード・採点対象1031問・除外4問
 
-## 2026-08-25 方針変更
-ユーザーの明示指示により、初回公開では課金システムを搭載しない。旧Build 4のStoreKit／無料90問／プレミアム制限は申請対象外とする。
+## 品質判定
+|Gate|判定|理由|
+|---|---|---|
+|Q0|BLOCKED|第三者4問の権利、法令107候補の時点照合、旧B7との対応証跡が未完了|
+|Q1|FAIL|全問の内容監査、画像154問の最終目視監査が未完了|
+|Q2|FAIL|画像問題の汎用的な解説が残る。問220の反応選択の根拠説明が不足|
+|Q3|NOT_TESTED|今回の修正候補に対する全機能・実機の最終動作確認は未実施|
+|Q4|BLOCKED|独立内容レビューと全機能の実機受入証跡が不足|
+|Q5|BLOCKED|上記未解決事項と本番対象バイナリ未生成|
 
-申請対象Buildでは以下を必須とする。
-- StoreKit実装をXcodeターゲットから除去
-- Paywall、購入、復元、サブスクリプション管理を除去
-- 分野別・模試・苦手・今日のスプリントを購入状態に依存させない
-- 採点対象1,031問を全ユーザーへ開放
-- App Storeメタデータを「無料・アプリ内課金なし」へ統一
-- 旧IAP商品はVersionへ紐付けず、今回の審査対象に含めない
+## 今回の修正
+- 問220の旧処方表記画像を参照から除去。訂正済み共通文と反応・選択肢画像を残す。
+- メディア再生成とnative教材生成に回帰防止チェックを追加。
+- 問220・221の公式訂正URL、P110-140の現行環境基準URLを教材生成へ追加。
+- 古いBuild 5指定とStoreKit課金に関する記載を更新。
+- ソース修正は最新の内部TestFlightバイナリへ未反映。再配信確認済みとは扱わない。
 
-## 品質正本
-- 問題バンク：1,035問
-- 採点対象：1,031問
-- 解なし：4問
-- 第111・110・109回：各345問
-- 生成補充：0
-- 難易度方針：厚生労働省公式過去問のみ
-- 公式紙面画像：全画面＋最大6倍ピンチズーム＋ドラッグ＋ダブルタップ
-- 分野別：約20問ずつの均等セット
-- 今日のスプリント：4／8／16問
-- SwiftUIネイティブ、WKWebViewなし
-- ログインなし、広告なし、解析SDKなし、独自クラウド同期なし
-
-## 直前Build
-Build 4は2026-08-23時点で `VALID / INTERNAL_ONLY / IN_BETA_TESTING`、internal group `sun` まで到達し、ユーザー実機確認済み。ただし課金方針変更により申請には使用しない。
+## 検証の範囲
+ローカルの構造検証と教材生成は成功。1035レコード、採点1031、除外4、特殊採点3、画像154問、同梱画像290件を確認し、問220の旧画像は新規生成先に存在しない。正答・採点条件に差分なし。これは医学・薬学・権利適合の保証ではない。
+従前のCodemagic内部テストビルドのXCTest・Release工程成功は旧ソースの証跡であり、今回修正後の署名済みRelease検証ではない。
+ユーザーの画面確認と自動テストを全機能の実機受入と混同しない。
 
 ## 次工程
-1. no-IAP変更をStatic Gate / XCTest / Xcode16 Release / iOS Preflightで検証
-2. mainへ統合
-3. Build 5を署名・App Store Connectへupload
-4. Build 5 processing/read-back
-5. App Store Version 1.0.0へBuild 5を紐付け
-6. Store metadata / Privacy / Age Rating / Review Detail / Screenshotsを申請手順に沿って監査・補完
-7. 新BuildのHuman Device Acceptanceを満たす
-8. Review Submissionへ追加し、本申請
-
-ユーザーは2026-08-25に本申請を明示承認済み。ただし申請手順上、新BinaryのiPhone実機受入が真正なHUMAN_REQUIREDとして残る場合は、そのGateを偽装せず停止する。
+内容・権利・法令の独立監査を完了し、Q0〜Q5を再判定する。通過後にpharmacist-iosで新しいAPP_STORE_ELIGIBLEビルドを生成し、VALID・commit・配布区分と実機動作を確認して正式提出する。原則手動リリース。内部専用ビルドや古いBuild 5を流用しない。
+詳細は automation/pharmacist-q0-q1-audit/2026-11-05-final-release-audit.md を参照。
