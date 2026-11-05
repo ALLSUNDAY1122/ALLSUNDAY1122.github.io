@@ -1,3 +1,4 @@
+import {makePremiumKit} from './premium-kit';
 import {personalize,type Situation,type Goal} from './personalization';
 export type Kind='love'|'compatibility'|'career';
 export type Product='detail'|'pair';
@@ -36,29 +37,10 @@ const library:Record<Kind,Record<Concern,{insight:string;pitfall:string;question
 const stageNotes:Record<Stage,string>={early:'まだ関係・状況の情報が少ない段階です。確信よりも観察と小さな試行を優先してください。',ongoing:'ある程度の経緯がある段階です。直近1回より繰り返すパターンと改善例を比べてください。',strained:'負担が大きい段階です。無理に話し合いを進めず、自分の安全・休息・信頼できる相談先を優先してください。'};
 const signLenses=['慎重に条件を見直す','自由な選択肢を探す','気持ちを言葉にする','まず小さく動く','安定を大事にする','異なる視点を並べる','安心できる環境を作る','自分の意思を明確にする','現実的に整理する','相手と均衡を探す','深い本音を見つめる','少し先の可能性を描く'];
 export function reading(input:Input){if(!validInput(input))throw Error('Invalid input');const concern=input.concern??'uncertainty',stage=input.stage??'ongoing',base=library[input.kind][concern],first=sign(input.birthday),other=input.kind==='compatibility'?sign(input.partnerBirthday!):undefined;const lens=signLenses[signs.indexOf(first)];const personalized=personalize(input);return {title:other?first+' × '+other+'｜関係を整えるための読み解き':first+'｜'+({love:'恋愛',compatibility:'相性',career:'仕事'} as const)[input.kind]+'の読み解き',subtitle:concernOptions[input.kind].find(x=>x.value===concern)!.label+'｜'+personalized.focusLabel,intro:personalized.intro,sections:[{title:'いまの状況を読み解く',body:base.insight},{title:'星座からの振り返り視点',body:first+'を物語のモチーフにするなら「'+lens+'」が今回のキーワード。占星術から実際の性格を判定したわけではありません。この問いが自分に役立つかを確かめてください。'},{title:'見落としやすい注意点',body:base.pitfall+' '+stageNotes[stage]},{title:'今日できる具体的な一歩',body:base.action},{title:'自分への問い',body:base.question},...personalized.sections],hint:base.insight,caveat:'占いは娯楽・自己理解のためのものです。誕生日から性格、相手の気持ち、未来の出来事を科学的に推定するものではありません。',productPreview:{what:'自分の状況に合わせた7日間の行動プラン、具体的な会話例、変化を確かめるチェック項目、進まない場合の代替策',example:base.script}}}
-const dayGuides=[
- {instruction:'まず直近の具体的な出来事を3つ挙げ、各出来事について「起こった事実」「自分の解釈」「まだ確認できないこと」を別々の列に記録してください。',deliverable:'出来事3件の事実・推測メモ',check:'推測を事実として書いていないか'},
- {instruction:'この悩みで「今週は改善したいこと」「譲れないこと」「今は判断しなくてよいこと」を一つずつ決めてください。',deliverable:'希望・境界線・保留の3行',check:'他者を動かす目標ではなく自分が選べる行動になっているか'},
- {instruction:'次の一歩を一つだけ小さく実行します。実行前に所要時間と負担を見積もり、難しいときは半分の作業に縮めてください。',deliverable:'実施記録とそのときの感情1行',check:'成果ではなく、自分で決めた行動を実行できたか'},
- {instruction:'前日までの結果を「変わったこと」「変わらないこと」「判断できないこと」に整理してください。相手がいる場合は同意や事情を尊重してください。',deliverable:'観察結果3分類',check:'一度の反応だけで結論づけていないか'},
- {instruction:'続ける・変える・いったん休むの3案を作り、期待できることと負担をそれぞれ短く比較してください。',deliverable:'3案×メリット・負担の比較表',check:'実行可能性と心身の負担を含めているか'},
- {instruction:'信頼できる情報源や人から別の見方を一つ集めてください。断定的な予言ではなく、確認できる情報を優先します。',deliverable:'新しい視点1件と未確認の点1件',check:'新たに分かったことと依然不明なことを分けているか'},
- {instruction:'一週間を振り返り、次週も続ける行動を一つ、やめる行動を一つ決めてください。結論を保留する選択も認めます。',deliverable:'次の7日間に残す行動1件',check:'現実の変化を確認でき、無理な継続を前提としていないか'}
-] as const;
 export function report(input:Input,product:Product){
  if(!validInput(input))throw Error('Invalid input');
  if(product==='pair'&&input.kind!=='compatibility')throw Error('Invalid pair');
- const free=reading(input),base=library[input.kind][input.concern??'uncertainty'],stage=input.stage??'ongoing';
- const pace=stage==='strained'?'心身の負担が強い場合はこの日の課題を休み、安心できる人への相談を優先して構いません。':stage==='early'?'始まったばかりの状況では、断定よりも情報を集める行動を選んでください。':'これまでの経緯も振り返り、繰り返す傾向があるかを確認してください。';
- const personal=personalize(input);const week:Section[]=base.week.map((s,i)=>{
-  const g=dayGuides[i];return {title:'Day '+(i+1)+'｜'+s,body:'目的：'+s+'。\n具体的な手順：'+g.instruction+'\n記録する成果物：'+g.deliverable+'。\n自己確認の基準：'+g.check+'。\n今回の状況に即した行動：'+personal.planPrefix+'\n調整：'+pace};
- });
- const extra:Section[]=[
- {title:'今回のテーマに使える会話例',body:'次の表現をそのまま使う必要はありません。相手の状況を尊重できる言い方へ調整してください。\n例：「'+base.script.replace(/^「|」$/g,'')+'」\n話し終えたら、相手の回答を推測で埋めずに実際の言葉で記録してください。'},
- {title:'変化を見極める観察指標',body:'観察すること：'+base.signal+'。今回の重点指標：'+personal.check+'。\n判断の方法：初日・4日目・7日目に「自分が行動できたか」「相手や環境に変化があったか」「まだ判断できないこと」をそれぞれ記録します。'},
- {title:'想定どおりに進まない場合',body:'①反応がない場合：要求を重ねず、時間を置いて別の選択肢を検討。②話し合いが難しい場合：目的を一つに絞り、別の日にする。③心身の負担が強い場合：行動計画を中断し、信頼できる人や適切な専門家に相談。無理に成功と判断する必要はありません。'},
- {title:'7日後に決めること',body:'続ける／方法を変える／休む の3つから選びます。根拠は「観察した事実」と「自分の希望」の両方を挙げてください。占い文を根拠に仕事や人間関係の重大な決断をしないでください。'},
- ...(product==='pair'?[{title:'ふたりの話し合いシート',body:'各自が「最も大事にしたいこと3つ」「譲れること2つ」「譲れないこと1つ」を別々に書きます。共通点と違いを見比べたら、今回決めることは1つだけに限定。答えが一致しない項目は保留し、話し合いを続けるかも含めて互いに選べるようにしてください。'}]:[])
- ];
- return {...free,product:products[product].name,sections:[...free.sections,...week,...extra]};
+ const free=reading(input);
+ const kit=makePremiumKit(input);
+ return {...free,product:products[product].name,sections:kit.sections,kit};
 }
