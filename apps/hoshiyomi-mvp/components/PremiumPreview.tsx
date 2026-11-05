@@ -10,7 +10,7 @@ function validBirthday(s:string){if(s==='')return true;if(!/^\d{2}-\d{2}$/.test(
 export default function PremiumPreview({input}:{input:Input}){
  const [extra,setExtra]=useState<Extra>({...defaultExtra,otherBirthday:input.kind==='compatibility'?input.partnerBirthday??'':''});
  const [opened,setOpened]=useState(false);
- const update=<K extends keyof Extra>(key:K,value:Extra[K])=>{setExtra(p=>({...p,[key]:value}));setOpened(false)};
+ const update=<K extends keyof Extra,>(key:K,value:Extra[K])=>{setExtra(p=>({...p,[key]:value}));setOpened(false)};
  const valid=validYear(extra.birthYear)&&validYear(extra.otherYear)&&validYear(extra.parentYear)&&validBirthday(extra.otherBirthday)&&validBirthday(extra.parentBirthday)&&(!extra.birthYear||input.birthday!=='02-29'||Number(extra.birthYear)%4===0&&Number(extra.birthYear)%100!==0||Number(extra.birthYear)%400===0)&&(!extra.otherYear||extra.otherBirthday!=='02-29'||Number(extra.otherYear)%4===0&&Number(extra.otherYear)%100!==0||Number(extra.otherYear)%400===0);
  const result=useMemo(()=>valid?buildDeepReading(input,extra):null,[input.kind,input.birthday,input.partnerBirthday,input.concern,input.stage,input.goal,input.situation,extra,valid]);
  return <section className="premium" aria-label="多層鑑定の品質検証版">
