@@ -1,35 +1,30 @@
 {
-  "request_id": "pharmacist-asc-readback-20261106-0625",
+  "request_id": "hm2-review-assets-20261106-r1",
   "requests": [
     {
-      "label": "app",
+      "label": "screenshots",
       "method": "GET",
-      "path": "/v1/apps/6799753724"
+      "path": "/v1/appStoreVersionLocalizations/b5fb2eb3-0af8-41e1-a226-f39febf0b0ed/appScreenshotSets?limit=50"
     },
     {
-      "label": "versions",
+      "label": "submission-items",
       "method": "GET",
-      "path": "/v1/apps/6799753724/appStoreVersions?limit=50"
+      "path": "/v1/reviewSubmissions/ce607087-bf41-4f0c-b155-f6bfb0ad5ce0/items?limit=50"
     },
     {
-      "label": "builds",
+      "label": "iap",
       "method": "GET",
-      "path": "/v1/apps/6799753724/builds?limit=30&sort=-uploadedDate"
+      "path": "/v2/inAppPurchases/6802989207"
     },
     {
-      "label": "submissions",
+      "label": "subscription",
       "method": "GET",
-      "path": "/v1/apps/6799753724/reviewSubmissions?limit=50"
+      "path": "/v1/subscriptions/6802988571"
     },
     {
-      "label": "attached-build",
+      "label": "app-privacy",
       "method": "GET",
-      "path": "/v1/appStoreVersions/430ba445-fae0-4d1d-9301-95d1ea342ac7/relationships/build"
-    },
-    {
-      "label": "version-localizations",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/430ba445-fae0-4d1d-9301-95d1ea342ac7/appStoreVersionLocalizations?limit=20"
+      "path": "/v1/apps/6799751657/appInfos?limit=20"
     }
   ]
 }
