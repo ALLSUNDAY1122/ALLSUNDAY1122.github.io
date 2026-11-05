@@ -1,0 +1,1 @@
+export default function Home(){return <section className="panel"><h2>無料診断を選ぶ</h2><p>会員登録不要・年や氏名の入力不要。まずは3種類の診断からお試しください。</p><nav><a href="/love">♡ 恋愛運</a><a href="/compatibility">✧ 相性診断</a><a href="/career">✦ 仕事運</a></nav><p>有料鑑定：480円／980円。現在テスト決済の接続準備中です。</p></section>}
