@@ -27,6 +27,7 @@ export default function PremiumPreview({input}:{input:Input}){
    <h3>3｜相手や状況の反応で次の一歩を変える</h3>
    <div className="branchTabs">{kit.branches.map((b,i)=><button type="button" key={i} className={branch===i?'selectedBranch':'secondary'} onClick={()=>setBranch(i)} aria-pressed={branch===i}>{b.label.split('｜')[0]}</button>)}</div>
    <div className="branchBody"><strong>{kit.branches[branch].label}</strong><p>{kit.branches[branch].action}</p></div>
+   {kit.pairExercise&&<div className="pairExercise"><p className="eyebrow">相性鑑定980円版の追加内容</p><h3>{kit.pairExercise.title}</h3><p>生年月日だけで相手の本心を決めつけず、双方の希望を本人が記入・確認する実践シートです。</p><ol>{kit.pairExercise.steps.map((step,i)=><li key={i}>{step}</li>)}</ol><p>{kit.pairExercise.agreement}</p></div>}
    <h3>4｜7日間の実行チェックリスト</h3>
    <p>達成率：{complete} / 7日。各日は必要に応じて休み、実施できた日だけチェックします。記録はこのページを閉じると失われます。</p>
    {kit.days.map((d,i)=><div className="dayCard" key={i}><label className="dayTitle"><input type="checkbox" checked={checked[i]} onChange={e=>setChecked(current=>current.map((v,j)=>i===j?e.target.checked:v))}/><strong>Day {d.day}｜{d.title}</strong></label><p>{d.do}</p><p><strong>残すもの：</strong>{d.record}</p><p><strong>判断基準：</strong>{d.gate}</p></div>)}
