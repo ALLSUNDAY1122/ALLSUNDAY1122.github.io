@@ -1,14 +1,30 @@
 {
-  "request_id": "pitari-notes-20261104-2012",
-  "action": "write",
-  "expected_app_id": "6795941132",
-  "expected_bundle_id": "jp.allsunday.pitariresize",
-  "operations": [
+  "request_id": "pharmacist-release-status-20261105",
+  "requests": [
     {
-      "type": "update_review_notes",
-      "app_store_version_id": "e0aa7c21-0569-4e59-85e7-3cc3afe65dff",
-      "review_detail_id": "7416f717-4d3b-475d-9c86-7f1f00a34627",
-      "notes": "Guideline 2.1 response - Pitari Size (ぴたりサイズ), iOS 1.0, Build 12.\n1. Physical-device demonstration\nThe attached pitari_app_review_demo_original_20261104.mp4 is a 52-second recording of the app running on a physical iPhone, supplied on November 4, 2026. It demonstrates video compression and saving, single-photo conversion and saving, and batch conversion and saving of two photos. This is private App Review supporting material, not an App Store product-page preview.\n\n2. Purpose, users and value\nPitari Size is a local photo-resizing and video-compression utility for people preparing their own media for marketplace listings, social posts, email or document uploads. Users choose a purpose preset, target file size or custom photo dimensions, convert, then save/share the result. No app account, registration or login is required.\n\n3. Main features and test steps\nFree: tap 写真を選ぶ (Choose photos), select one photo, choose 用途 (purpose preset), 容量 (capacity target) or 自由指定 (custom dimensions), select JPEG/PNG/WEBP, then 変換する (Convert). Save the result to Photos or use the system share sheet. Allow photo-library access when requested.\nPro: a one-time non-consumable in-app purchase (jp.allsunday.pitariresize.pro.lifetime), not a subscription, unlocks video compression and batch photo conversion. To test video, unlock/restore Pro, tap 動画を選ぶ (Choose video), select a local video, select a target capacity, convert and save. Keep the app visible while encoding; sufficient free storage is required. To test batch photos, choose two photos, select settings, convert and save. Photo selection supports up to 30 items.\nTap 購入を復元 (Restore purchases) with the same Apple Account to restore an existing Pro entitlement. The app calls Apple's restore flow and refreshes available purchases; Pro becomes active when the matching product is returned. With no matching purchase, restoration does not grant Pro. The restore button is not restricted by the price currency.\n\n4. External services/tools/platforms\nImplemented with Expo/React Native, expo-image-picker, expo-image-manipulator, expo-media-library, expo-file-system, expo-sharing, fflate and react-native-compressor. Selected media is processed locally on the device; there is no developer media-upload server, advertising SDK or analytics. Apple StoreKit via expo-iap handles product lookup, purchases and restoration. System Photos/iCloud may download selected cloud-only items; system sharing sends files only to the destination the user chooses. Presets named Instagram, X, Gmail or LINE are sizing shortcuts, not service integrations or logins.\n\n5. Regional behavior\nThe conversion algorithms and free single-photo feature are the same in all regions. Build 12 permits a new Pro purchase only when Apple's product information provides a valid JPY price. A non-JPY or unavailable JPY price disables new purchase; it is not converted to a fabricated yen price. For purchase testing, use a Japan storefront/Sandbox account. Existing-purchase restoration has no JPY-price gate. No region-specific media content or server feature is provided.\n\n6. Regulated services / protected third-party content\nThe app provides no regulated financial, gambling, medical or similar service. It does not supply or stream a third-party content catalog, bypass DRM, or download protected content. Users select their own photos/videos through the system picker and are responsible for having the rights to process and share them."
+      "label": "app",
+      "method": "GET",
+      "path": "/v1/apps/6799753724"
+    },
+    {
+      "label": "versions",
+      "method": "GET",
+      "path": "/v1/apps/6799753724/appStoreVersions?include=build&limit=20"
+    },
+    {
+      "label": "builds",
+      "method": "GET",
+      "path": "/v1/builds?filter[app]=6799753724&sort=-uploadedDate&limit=10"
+    },
+    {
+      "label": "internal-build",
+      "method": "GET",
+      "path": "/v1/builds/0ed211f5-60c9-4fde-adad-3ba16c1601a5"
+    },
+    {
+      "label": "submissions",
+      "method": "GET",
+      "path": "/v1/reviewSubmissions?filter[app]=6799753724&limit=20"
     }
   ]
 }
