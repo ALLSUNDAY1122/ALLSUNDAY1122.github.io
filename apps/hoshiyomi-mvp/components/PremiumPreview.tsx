@@ -1,41 +1,52 @@
 'use client';
-import {useState} from 'react';
-import {makePremiumKit} from '../lib/premium-kit';
+import {useMemo,useState} from 'react';
 import type {Input} from '../lib/fortune';
-
+import {buildDeepReading,type Blood,type Relation,type Extra} from '../lib/deep-reading';
+const bloodOptions:{value:Blood;label:string}[]=[{value:'unknown',label:'選択しない'},{value:'A',label:'A型'},{value:'B',label:'B型'},{value:'O',label:'O型'},{value:'AB',label:'AB型'}];
+const relationOptions:{value:Relation;label:string}[]=[{value:'partner',label:'恋人・気になる人'},{value:'friend',label:'友人'},{value:'mother',label:'母親'},{value:'father',label:'父親'},{value:'child',label:'子ども'},{value:'sibling',label:'きょうだい'},{value:'colleague',label:'職場の相手'}];
+const defaultExtra:Extra={birthYear:'',blood:'unknown',otherBirthday:'',otherYear:'',otherBlood:'unknown',relation:'partner',parentBirthday:'',parentYear:''};
+function validYear(s:string){return s===''||/^\d{4}$/.test(s)&&Number(s)>=1900&&Number(s)<=2026}
+function validBirthday(s:string){if(s==='')return true;if(!/^\d{2}-\d{2}$/.test(s))return false;const[m,d]=s.split('-').map(Number);return m>=1&&m<=12&&d>=1&&d<=new Date(Date.UTC(2024,m,0)).getUTCDate()}
 export default function PremiumPreview({input}:{input:Input}){
- const kit=makePremiumKit(input);
- const [open,setOpen]=useState(false);
- const [branch,setBranch]=useState(0);
- const [checked,setChecked]=useState<boolean[]>(Array(7).fill(false));
- const [notes,setNotes]=useState<string[]>(Array(5).fill(''));
- const complete=checked.filter(Boolean).length;
- return <section className="premium" aria-label="有料商品品質評価">
-  <p className="eyebrow">NEXT STEP｜あなた専用の実行設計書</p>
-  <h2>「どうしたらいい？」を具体的な選択肢に変える</h2>
-  <p>無料で分かったのは、星座の物語と、いま整理したい問題です。詳細レポートではその続きとして、<strong>いつ・何を伝え・反応別にどう動き・何を根拠に判断するか</strong>まで設計します。</p>
-  <div className="premiumSpec"><p><strong>今回選んだ状況から作成</strong></p><p>{kit.context}</p></div>
-  <div className="specGrid"><div><strong>3案比較</strong><small>進める・整理する・保留</small></div><div><strong>会話文3種類</strong><small>初回・曖昧・区切り</small></div><div><strong>7日間の計画</strong><small>行動・記録・判断基準</small></div><div><strong>反応別3分岐</strong><small>青・黄・赤の対応</small></div></div>
-  <p className="disclaimer">商品予定価格：{input.kind==='compatibility'?'980':'480'}円（税込）。現在はコンテンツ品質評価中のため、<strong>課金せず全内容を試せます</strong>。本番販売は開始していません。</p>
-  <button className="secondary" type="button" onClick={()=>setOpen(x=>!x)} aria-expanded={open}>{open?'実行設計書を閉じる':'この条件の実行設計書を無料で試す'}</button>
-  {open&&<div className="premiumStudio">
-   <h3>{kit.title}</h3><p>{kit.promise}</p>
-   <h3>1｜まず3つの方針を比較する</h3>
-   <div className="optionGrid">{kit.options.map((o,i)=><div className="optionCard" key={i}><h4>{o.name}</h4><p><strong>得られること：</strong>{o.benefit}</p><p><strong>注意：</strong>{o.cost}</p><p><strong>次の一歩：</strong>{o.next}</p></div>)}</div>
-   <h3>2｜今すぐ使える文面</h3><p>選んだ出来事に合わせた文面です。相手の意思を尊重し、実際の事情に合わせて調整してください。</p>
-   {kit.scripts.map((s,i)=><div className="scriptBox" key={i}><strong>{s.label}</strong><p>{s.text}</p></div>)}
-   <h3>3｜相手や状況の反応で次の一歩を変える</h3>
-   <div className="branchTabs">{kit.branches.map((b,i)=><button type="button" key={i} className={branch===i?'selectedBranch':'secondary'} onClick={()=>setBranch(i)} aria-pressed={branch===i}>{b.label.split('｜')[0]}</button>)}</div>
-   <div className="branchBody"><strong>{kit.branches[branch].label}</strong><p>{kit.branches[branch].action}</p></div>
-   {kit.pairExercise&&<div className="pairExercise"><p className="eyebrow">相性鑑定980円版の追加内容</p><h3>{kit.pairExercise.title}</h3><p>生年月日だけで相手の本心を決めつけず、双方の希望を本人が記入・確認する実践シートです。</p><ol>{kit.pairExercise.steps.map((step,i)=><li key={i}>{step}</li>)}</ol><p>{kit.pairExercise.agreement}</p></div>}
-   <h3>4｜7日間の実行チェックリスト</h3>
-   <p>達成率：{complete} / 7日。各日は必要に応じて休み、実施できた日だけチェックします。記録はこのページを閉じると失われます。</p>
-   {kit.days.map((d,i)=><div className="dayCard" key={i}><label className="dayTitle"><input type="checkbox" checked={checked[i]} onChange={e=>setChecked(current=>current.map((v,j)=>i===j?e.target.checked:v))}/><strong>Day {d.day}｜{d.title}</strong></label><p>{d.do}</p><p><strong>残すもの：</strong>{d.record}</p><p><strong>判断基準：</strong>{d.gate}</p></div>)}
-   <h3>5｜自分の状況を言語化する記入ワーク</h3>
-   {kit.worksheet.map((w,i)=><label className="noteLabel" key={i}>{w.label}<small>{w.help}</small><textarea rows={2} maxLength={500} placeholder="自分の言葉で記入（保存・送信されません）" value={notes[i]} onChange={e=>setNotes(a=>a.map((v,j)=>i===j?e.target.value:v))}/></label>)}
-   <p className="disclaimer">入力メモはブラウザの一時的な状態として扱い、サーバーには送信しません。ページを閉じると失われます。</p>
-   <button className="secondary" type="button" onClick={()=>{const text=[kit.title,...kit.worksheet.map((w,i)=>w.label+'：'+notes[i])].join('\n');const b=new Blob([text],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='hoshiyomi-workbook.txt';a.click();URL.revokeObjectURL(u)}}>記入したワークをテキスト保存</button>
-   <h3>最後に確認</h3><p>{kit.stopRule}</p><p className="disclaimer">{kit.closing}</p>
-  </div>}
- </section>
+ const [extra,setExtra]=useState<Extra>({...defaultExtra,otherBirthday:input.kind==='compatibility'?input.partnerBirthday??'':''});
+ const [opened,setOpened]=useState(false);
+ const update=<K extends keyof Extra>(key:K,value:Extra[K])=>{setExtra(p=>({...p,[key]:value}));setOpened(false)};
+ const valid=validYear(extra.birthYear)&&validYear(extra.otherYear)&&validYear(extra.parentYear)&&validBirthday(extra.otherBirthday)&&validBirthday(extra.parentBirthday)&&(!extra.birthYear||input.birthday!=='02-29'||Number(extra.birthYear)%4===0&&Number(extra.birthYear)%100!==0||Number(extra.birthYear)%400===0)&&(!extra.otherYear||extra.otherBirthday!=='02-29'||Number(extra.otherYear)%4===0&&Number(extra.otherYear)%100!==0||Number(extra.otherYear)%400===0);
+ const result=useMemo(()=>valid?buildDeepReading(input,extra):null,[input.kind,input.birthday,input.partnerBirthday,input.concern,input.stage,input.goal,input.situation,extra,valid]);
+ return <section className="premium" aria-label="多層鑑定の品質検証版">
+  <p className="eyebrow">CHAPTER 03｜もっと深い星の世界へ</p>
+  <h2>一つの星座だけでは、語りきれない。</h2>
+  <p>あなたの太陽星座に、<strong>生まれ年と干支、数秘、血液型の物語</strong>を重ねると、同じ星座でも違う読み解きが生まれます。さらに、気になる人や親の誕生日を重ね、二人の星の関係をたどります。</p>
+  <div className="specGrid"><div><strong>干支 × 太陽星座</strong><small>生まれ年が添える物語</small></div><div><strong>生年月日の数秘</strong><small>星座が同じでも異なる数字</small></div><div><strong>血液型の象徴</strong><small>任意・娯楽的な読み物</small></div><div><strong>大切な人との星</strong><small>恋人・家族・友人との縁</small></div></div>
+  <p className="disclaimer">有料想定：自分の多層鑑定480円／相手や家族との関係鑑定980円。現在は全内容を無料体験できます。販売・決済は行いません。</p>
+  <div className="premiumStudio">
+   <h3>追加情報を重ねて、星の続きを読む</h3>
+   <p>出生年や血液型は任意です。分からない場合は空欄にできます。入力した情報から計算できる占いのみ表示します。</p>
+   <div className="formgrid">
+    <label htmlFor="extra-year">あなたの生まれ年（西暦）<input id="extra-year" inputMode="numeric" value={extra.birthYear} maxLength={4} placeholder="例：1992" onChange={e=>update('birthYear',e.target.value)} /></label>
+    <label htmlFor="extra-blood">あなたの血液型<select id="extra-blood" value={extra.blood} onChange={e=>update('blood',e.target.value as Blood)}>{bloodOptions.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></label>
+   </div>
+   <div className="explain">
+    <h3>気になる人との縁を重ねる</h3>
+    <div className="formgrid">
+     <label htmlFor="extra-rel">その人との関係<select id="extra-rel" value={extra.relation} onChange={e=>update('relation',e.target.value as Relation)}>{relationOptions.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></label>
+     <label htmlFor="extra-other">相手の誕生日（月-日）<input id="extra-other" placeholder="例：09-23" value={extra.otherBirthday} maxLength={5} onChange={e=>update('otherBirthday',e.target.value)}/></label>
+     <label htmlFor="extra-other-year">相手の生まれ年（任意）<input id="extra-other-year" inputMode="numeric" placeholder="例：1991" maxLength={4} value={extra.otherYear} onChange={e=>update('otherYear',e.target.value)}/></label>
+     <label htmlFor="extra-other-blood">相手の血液型（任意）<select id="extra-other-blood" value={extra.otherBlood} onChange={e=>update('otherBlood',e.target.value as Blood)}>{bloodOptions.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></label>
+    </div>
+   </div>
+   <details className="familyDetails"><summary>さらに親の誕生日を重ねて読む（任意）</summary>
+    <div className="formgrid"><label htmlFor="parent-md">親の誕生日（月-日）<input id="parent-md" value={extra.parentBirthday} placeholder="例：06-15" maxLength={5} onChange={e=>update('parentBirthday',e.target.value)}/></label><label htmlFor="parent-year">親の生まれ年（任意）<input id="parent-year" value={extra.parentYear} placeholder="例：1965" inputMode="numeric" maxLength={4} onChange={e=>update('parentYear',e.target.value)}/></label></div>
+   </details>
+   <p className="disclaimer">入力値はこのブラウザ内でのみ処理し、当サイトのサーバーには送信・保存しません。他者の誕生日は本人のプライバシーに配慮して入力してください。</p>
+   {!valid&&<p className="error" role="alert">生まれ年は1900〜2026、誕生日はMM-DD形式で入力してください。2月29日はうるう年のみ有効です。</p>}
+   {result&&<div className="premiumSpec"><strong>この入力で重なる星の層</strong><div className="layerPills">{result.summary.map((s,i)=><span key={i}>{s}</span>)}</div></div>}
+   <button className="secondary" type="button" disabled={!valid} onClick={()=>setOpened(v=>!v)}>{opened?'多層鑑定を閉じる':'重なった星の鑑定結果を読む（無料体験）'}</button>
+   {opened&&result&&<article className="deepResult" aria-live="polite">
+    <h2>{result.title}</h2><p className="lead">{result.intro}</p>
+    {result.chapters.map((chapter,i)=><section className="deepChapter" key={i}><p className="eyebrow">{chapter.label}</p><h3>{chapter.title}</h3><p>{chapter.body}</p></section>)}
+    <div className="method"><h3>鑑定方法と限界</h3><p>{result.method}</p><p>占術を重ねた結果は創作的・文化的な解釈です。相手の本心、親子関係、未来の成否を実際に知るものではありません。</p></div>
+   </article>}
+  </div>
+ </section>;
 }
