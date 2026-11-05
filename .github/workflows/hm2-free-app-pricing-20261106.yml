@@ -1,0 +1,66 @@
+name: HM2 Apple Free-App Pricing Preflight 20261106
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/hm2-free-app-pricing-20261106.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  set-free-price:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pillow
+      - name: Ensure Japan free-app price and read back
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python - <<'PY'
+          import json,sys
+          from pathlib import Path
+          sys.path.insert(0,'scripts')
+          from app_store_connect_api import api_get,load_private_key,make_token
+          from hm2_fix_submission_prereqs import ensure_free_app_pricing
+          out=Path('automation/asc-results/hm2-free-price-20261106.json')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          result={'app_id':'6799751657','bundle_id':'jp.allsunday1122.healthmanager2','success':False}
+          kp,cleanup=load_private_key()
+          try:
+              import os
+              t=make_token(os.environ['ASC_ISSUER_ID'],os.environ['ASC_KEY_ID'],kp)
+              _,app=api_get(t,'/v1/apps/6799751657')
+              actual=((app.get('data') or {}).get('attributes') or {}).get('bundleId')
+              if actual!='jp.allsunday1122.healthmanager2':raise RuntimeError('target bundle mismatch')
+              result['app_price']=ensure_free_app_pricing(t)
+              result['success']=True
+          except Exception as exc:
+              result['error']=str(exc)[:1000]
+              raise
+          finally:
+              if cleanup:cleanup.unlink(missing_ok=True)
+              out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Persist request-scoped result
+        if: always()
+        run: |
+          test -f automation/asc-results/hm2-free-price-20261106.json || exit 0
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/asc-results/hm2-free-price-20261106.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record HM2 free app pricing readback'
+          git pull --rebase origin main
+          git push origin HEAD:main
