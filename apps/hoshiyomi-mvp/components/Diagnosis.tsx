@@ -2,19 +2,21 @@
 import {useState} from 'react';
 import {reading,validInput,products,concernOptions,stageOptions,report,sign,type Input,type Kind,type Concern,type Stage,type Product} from '../lib/fortune';
 import {lore,elementalMeaning,modeMeaning} from '../lib/astrology';
+import {situationOptions,goalOptions,type Situation,type Goal} from '../lib/personalization';
 
 export default function Diagnosis({kind}:{kind:Kind}){
  const [birthday,setBirthday]=useState('03-21'),[partnerBirthday,setPartner]=useState('09-23');
  const [concern,setConcern]=useState<Concern>('uncertainty'),[stage,setStage]=useState<Stage>('ongoing');
+ const [situation,setSituation]=useState<Situation>('mixed'),[goal,setGoal]=useState<Goal>('understand');
  const [show,setShow]=useState(false),[showSample,setShowSample]=useState(false);
- const [busy,setBusy]=useState(false),[error,setError]=useState('');
- const input:Input={kind,birthday,concern,stage,...(kind==='compatibility'?{partnerBirthday}:{})};
+ const [error,setError]=useState('');
+ const input:Input={kind,birthday,concern,stage,situation,goal,...(kind==='compatibility'?{partnerBirthday}:{})};
  const valid=validInput(input);
  const result=valid?reading(input):null;
  const first=valid?lore[sign(birthday)]:null;
  const other=valid&&kind==='compatibility'?lore[sign(partnerBirthday)]:null;
  const paid=valid?report(input,kind==='compatibility'?'pair':'detail'):null;
- async function pay(product:Product){setBusy(true);setError('');try{const r=await fetch('/api/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({input,product})});const j=await r.json();if(!r.ok||!j.url)throw Error(j.error||'決済を開始できません');location.assign(j.url)}catch(e){setError(e instanceof Error?e.message:'通信エラー');setBusy(false)}}
+
  return <section className="panel">
   <p className="eyebrow">星詠みの無料鑑定</p>
   <h2>{kind==='love'?'恋愛運':kind==='career'?'仕事運':'相性診断'}を深く読み解く</h2>
@@ -25,6 +27,8 @@ export default function Diagnosis({kind}:{kind:Kind}){
    {kind==='compatibility'&&<label htmlFor="partner">お相手の誕生日（月-日）<input id="partner" value={partnerBirthday} onChange={e=>{setPartner(e.target.value);setShow(false)}} maxLength={5} placeholder="09-23"/></label>}
   </div>
   <label htmlFor="concern">いま一番知りたいこと</label><select id="concern" value={concern} onChange={e=>{setConcern(e.target.value as Concern);setShow(false)}}>{concernOptions[kind].map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select>
+  <label htmlFor="situation">直近で気になった出来事</label><select id="situation" value={situation} onChange={e=>{setSituation(e.target.value as Situation);setShow(false)}}>{situationOptions[kind].map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select>
+  <label htmlFor="goal">今回の鑑定で整理したいこと</label><select id="goal" value={goal} onChange={e=>{setGoal(e.target.value as Goal);setShow(false)}}>{goalOptions[kind].map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select>
   <label htmlFor="stage">現在の状況</label><select id="stage" value={stage} onChange={e=>{setStage(e.target.value as Stage);setShow(false)}}>{stageOptions.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select>
   <button disabled={!valid} onClick={()=>{setShow(true);setShowSample(false);setError('')}}>星の物語と鑑定結果を読む（無料）</button>
   {!valid&&<p className="error">月日を MM-DD で正しく入力してください。</p>}
@@ -35,7 +39,7 @@ export default function Diagnosis({kind}:{kind:Kind}){
    <h3>この星座が語る「光」と「影」</h3><p>{first.gift}</p><p>{first.shadow}</p>
    <p>{kind==='career'?first.career:first.love}</p>
    {other&&<div className="explain"><h3>もうひとつの星座 — {other.name}</h3><p>{other.origin}</p><p>二人の物語を照らし合わせるなら、片方の正しさを証明するのではなく、それぞれの大切にしたいことを言葉にするための材料として使います。</p></div>}
-   <div className="storyhead"><p className="eyebrow">CHAPTER 02 — あなたの今を読み解く</p><h2>{result.title}</h2><p>テーマ：{result.subtitle}</p></div>
+   <div className="storyhead"><p className="eyebrow">CHAPTER 02 — あなたの今を読み解く</p><h2>{result.title}</h2><p>テーマ：{result.subtitle}</p><p className="lead">{result.intro}</p></div>
    {result.sections.map((s,i)=><div className="readingSection" key={i}><p className="step">0{i+1}</p><h3>{s.title}</h3><p>{s.body}</p></div>)}
    <p className="disclaimer">{result.caveat}</p>
    <div className="premium">
