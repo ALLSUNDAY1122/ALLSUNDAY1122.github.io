@@ -85,6 +85,6 @@
 - 元の試験問題PDFのURLと、元統計資料のURLは異なる。ネイティブモデルに任意の originalDataSourceURL を追加し、教材生成時にP109-124の元統計URLを付与。問題画面と解説画面に元統計資料を表示。Web版の当該問題にも原資料URL・加工主体の表示を追加。
 - 実装commit: 9bd8a3f0bd866e72e103d5ed5fb613dd61f819d9、20059cdbbaf192599e561ff6b52a30d2b7416f15、50c51d9687ca72c97f4917ec3ac7ead3b220f327、92c5302576090aa266447bb74caa90431740b599、15c3c8bf2f8630e4bd54c08d3c6ab30d4665870a。
 - 回帰テストに元統計URLのモデル保持確認を追加。Pharmacist Learning Preflight 42115375988=SUCCESS、Pharmacist v0.6 Web Validation 42115384052=SUCCESS。
-- Native iOS Preflight 42115375991 はCANCELLED（再実行もCANCELLED、コンパイル成功を証明できない）。署名IPAとiPhone実機の表示確認は未実施。該当問題のゲートは「公式値・規約確認済み／表示実装済み／Native最終検証待ち」。
+- Native iOS Preflight 42115375991 はCANCELLED（再実行もCANCELLED、コンパイル成功を証明できない）。一方、LinuxでのSwift構文解析・ネイティブ教材生成・問124原統計URLの回帰検証を追加した Learning Preflight 42116015112 はSUCCESS（commit 47edcff5c63da76cd952ac64df852cbfd8f7c715）。署名IPAとiPhone実機の表示確認は未実施。該当問題のゲートは「公式値・規約確認済み／表示実装済み／Native最終検証待ち」。
 - 4件の第三者素材キューのうち、P109-124のみ部分的に進展。残り3件と全体Q0〜Q5は引き続き未通過。本番申請と公開用ビルド生成は行っていない。
 - ASC 2026-11-06 06:29 JST 読戻し：PREPARE_FOR_SUBMISSION、reviewSubmissions=0、審査Versionに旧Build202609140032が紐付いたまま。本番用の修正反映Buildはなし。証跡：automation/asc-results/pharmacist-asc-readback-20261106-0629-r2.json。
