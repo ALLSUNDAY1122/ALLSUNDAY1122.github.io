@@ -174,6 +174,18 @@ struct QuizView: View {
                 }
                 .accessibilityLabel("公式出典URLを開く")
             }
+            if let source = q.originalDataSourceURL, !source.isEmpty, let url = URL(string: source) {
+                Text("元統計資料：総務省統計局『人口推計（2022年10月1日現在）』")
+                    .font(.system(size: 10))
+                    .foregroundStyle(Color.sprintInk3)
+                Link(destination: url) {
+                    Text(source)
+                        .font(.system(size: 10))
+                        .underline()
+                        .textSelection(.enabled)
+                }
+                .accessibilityLabel("元統計資料を開く")
+            }
             Text(q.modificationDisclosure)
                 .font(.system(size: 10))
                 .foregroundStyle(Color.sprintInk3)
@@ -278,6 +290,15 @@ struct QuizView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(f.question.attribution)
                     if let source = f.question.sourceURL, let url = URL(string: source) {
+                        Link(destination: url) {
+                            Text(source)
+                                .font(.system(size: 10))
+                                .underline()
+                                .textSelection(.enabled)
+                        }
+                    }
+                    if let source = f.question.originalDataSourceURL, !source.isEmpty, let url = URL(string: source) {
+                        Text("元統計資料：総務省統計局『人口推計（2022年10月1日現在）』")
                         Link(destination: url) {
                             Text(source)
                                 .font(.system(size: 10))
