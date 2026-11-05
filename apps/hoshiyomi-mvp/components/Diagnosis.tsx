@@ -1,21 +1,20 @@
 'use client';
 import {useState} from 'react';
-import {reading,validInput,products,concernOptions,stageOptions,report,sign,type Input,type Kind,type Concern,type Stage,type Product} from '../lib/fortune';
+import {reading,validInput,concernOptions,stageOptions,sign,type Input,type Kind,type Concern,type Stage} from '../lib/fortune';
 import {lore,elementalMeaning,modeMeaning} from '../lib/astrology';
+import PremiumPreview from './PremiumPreview';
 import {situationOptions,goalOptions,type Situation,type Goal} from '../lib/personalization';
 
 export default function Diagnosis({kind}:{kind:Kind}){
  const [birthday,setBirthday]=useState('03-21'),[partnerBirthday,setPartner]=useState('09-23');
  const [concern,setConcern]=useState<Concern>('uncertainty'),[stage,setStage]=useState<Stage>('ongoing');
  const [situation,setSituation]=useState<Situation>('mixed'),[goal,setGoal]=useState<Goal>('understand');
- const [show,setShow]=useState(false),[showSample,setShowSample]=useState(false);
- const [error,setError]=useState('');
+ const [show,setShow]=useState(false);
  const input:Input={kind,birthday,concern,stage,situation,goal,...(kind==='compatibility'?{partnerBirthday}:{})};
  const valid=validInput(input);
  const result=valid?reading(input):null;
  const first=valid?lore[sign(birthday)]:null;
  const other=valid&&kind==='compatibility'?lore[sign(partnerBirthday)]:null;
- const paid=valid?report(input,kind==='compatibility'?'pair':'detail'):null;
 
  return <section className="panel">
   <p className="eyebrow">星詠みの無料鑑定</p>
@@ -30,7 +29,7 @@ export default function Diagnosis({kind}:{kind:Kind}){
   <label htmlFor="situation">直近で気になった出来事</label><select id="situation" value={situation} onChange={e=>{setSituation(e.target.value as Situation);setShow(false)}}>{situationOptions[kind].map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select>
   <label htmlFor="goal">今回の鑑定で整理したいこと</label><select id="goal" value={goal} onChange={e=>{setGoal(e.target.value as Goal);setShow(false)}}>{goalOptions[kind].map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select>
   <label htmlFor="stage">現在の状況</label><select id="stage" value={stage} onChange={e=>{setStage(e.target.value as Stage);setShow(false)}}>{stageOptions.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select>
-  <button disabled={!valid} onClick={()=>{setShow(true);setShowSample(false);setError('')}}>星の物語と鑑定結果を読む（無料）</button>
+  <button disabled={!valid} onClick={()=>{setShow(true);}}>星の物語と鑑定結果を読む（無料）</button>
   {!valid&&<p className="error">月日を MM-DD で正しく入力してください。</p>}
   {show&&result&&first&&<article className="result" aria-live="polite">
    <div className="storyhead"><p className="eyebrow">CHAPTER 01 — 星座が受け継いできた物語</p><h2>{first.name} — {first.symbol}</h2><p>{first.period} 生まれ</p></div>
@@ -42,16 +41,7 @@ export default function Diagnosis({kind}:{kind:Kind}){
    <div className="storyhead"><p className="eyebrow">CHAPTER 02 — あなたの今を読み解く</p><h2>{result.title}</h2><p>テーマ：{result.subtitle}</p><p className="lead">{result.intro}</p></div>
    {result.sections.map((s,i)=><div className="readingSection" key={i}><p className="step">0{i+1}</p><h3>{s.title}</h3><p>{s.body}</p></div>)}
    <p className="disclaimer">{result.caveat}</p>
-   <div className="premium">
-    <p className="eyebrow">CHAPTER 03 — さらに具体的な次の一歩</p><h2>有料版で追加される内容</h2>
-    <p>無料版はここまでで完結します。有料版は一般的な性格説明を繰り返さず、今回選んだ悩みに合わせて「実際にどう動くか」を整理するためのレポートです。</p>
-    <ul><li>7日間の行動計画（各日の課題と振り返り）</li><li>相手や周囲に伝えるための会話例</li><li>進捗を判断する観察指標</li><li>うまく進まない場合の代替案</li>{kind==='compatibility'&&<li>ふたりの価値観を並べる対話ワーク</li>}</ul>
-    <button className="secondary" onClick={()=>setShowSample(v=>!v)}>{showSample?'サンプルを閉じる':'有料レポートの内容を確認する（無料）'}</button>
-    {showSample&&paid&&<div className="sample"><p className="eyebrow">サンプル — 購入前の内容確認</p><h3>{paid.sections[5]?.title}</h3><p>{paid.sections[5]?.body}</p><p>実際の有料版は、これに続く残り6日分の計画と、会話例・チェック項目などで構成します。現在は品質検証中です。</p></div>}
-    <p className="disclaimer">価格予定：{kind==='compatibility'?products.pair.price:products.detail.price}円（税込）。テスト決済は未接続のため、購入できません。</p>
-    <button disabled className="disabledPay">{kind==='compatibility'?products.pair.name:products.detail.name}（準備中）</button>
-    {error&&<p className="error" role="alert">{error}</p>}
-   </div>
+   <PremiumPreview key={[kind,birthday,partnerBirthday,concern,stage,situation,goal].join('-')} input={input}/>
   </article>}
  </section>
 }
