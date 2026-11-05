@@ -30,6 +30,25 @@ jobs:
           set -euo pipefail
           python3 pharmacist-manabi-sprint/scripts/validate_release.py
 
+      - name: Swift syntax and native-source attribution regression
+        shell: bash
+        env:
+          PREFLIGHT_PLACEHOLDER_ICON: '1'
+        run: |
+          set -euo pipefail
+          swiftc -parse pharmacist-manabi-sprint/ios/*.swift pharmacist-manabi-sprint/ios/Tests/*.swift
+          bash pharmacist-manabi-sprint/ios/prepare-ios.sh
+          python3 - <<'PY'
+          import json
+          p='pharmacist-manabi-sprint/ios/Generated/questions.native.json'
+          data=json.load(open(p,encoding='utf-8'))
+          rows={q['id']:q for q in data['questions']}
+          assert len(rows)==1035
+          assert rows['P109-124']['originalDataSourceURL']=='https://www.stat.go.jp/data/jinsui/2022np/index.htm'
+          assert all(q['sourceURL'].startswith('https://') for q in rows.values())
+          print('PASS: Swift syntax and verified original data attribution in generated native bundle')
+          PY
+
       - name: Learning Acceptance Contract
         shell: bash
         run: |
