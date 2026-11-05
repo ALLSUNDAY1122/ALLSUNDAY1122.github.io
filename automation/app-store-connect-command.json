@@ -1,10 +1,10 @@
 {
-  "request_id": "hm2-asc-postpublish-20261106-r3",
+  "request_id": "hm2-asc-recheck-20261106-r4",
   "requests": [
     {
       "label": "builds",
       "method": "GET",
-      "path": "/v1/builds?filter[app]=6799751657&sort=-uploadedDate&limit=20"
+      "path": "/v1/builds?filter[app]=6799751657&sort=-uploadedDate&limit=30"
     },
     {
       "label": "sun-builds",
@@ -12,9 +12,9 @@
       "path": "/v1/betaGroups/168d820a-3671-446d-9918-d75a4dad5b1e/builds?limit=50"
     },
     {
-      "label": "groups",
+      "label": "group",
       "method": "GET",
-      "path": "/v1/apps/6799751657/betaGroups?limit=50"
+      "path": "/v1/betaGroups/168d820a-3671-446d-9918-d75a4dad5b1e"
     }
   ]
 }
