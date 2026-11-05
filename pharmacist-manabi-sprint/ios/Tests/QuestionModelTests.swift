@@ -9,6 +9,7 @@ final class QuestionModelTests: XCTestCase {
         answer: [Int] = [1],
         accepted: [[Int]] = [],
         sourceURL: String? = nil,
+        originalDataSourceURL: String? = nil,
         legalSourceURL: String? = nil,
         correctionSourceURL: String? = nil
     ) -> Question {
@@ -18,7 +19,7 @@ final class QuestionModelTests: XCTestCase {
             acceptedAnswers: accepted, scoringStatus: accepted.isEmpty ? "normal" : "multiple_accepted",
             memoryPoint: "要点", explanation: "解説", sharedStem: "", displayMode: "textChoices",
             mediaAssets: [], numberedChoiceCount: 0, attribution: "出典", modificationDisclosure: "加工して作成",
-            sourceURL: sourceURL, legalSourceURL: legalSourceURL, correctionSourceURL: correctionSourceURL,
+            sourceURL: sourceURL, originalDataSourceURL: originalDataSourceURL, legalSourceURL: legalSourceURL, correctionSourceURL: correctionSourceURL,
             canonicalId: id
         )
     }
@@ -26,17 +27,20 @@ final class QuestionModelTests: XCTestCase {
     func testQuestionSourceLinksDecodeAndRemainOptionalForFixtures() throws {
         let fixture = question()
         XCTAssertNil(fixture.sourceURL)
+        XCTAssertNil(fixture.originalDataSourceURL)
         XCTAssertNil(fixture.legalSourceURL)
         XCTAssertNil(fixture.correctionSourceURL)
 
         let sourced = question(
             sourceURL: "https://www.mhlw.go.jp/content/example.pdf",
+            originalDataSourceURL: "https://www.stat.go.jp/data/jinsui/2022np/index.htm",
             legalSourceURL: "https://www.env.go.jp/hourei/example.html",
             correctionSourceURL: "https://www.mhlw.go.jp/content/correction.pdf"
         )
         let data = try JSONEncoder().encode(sourced)
         let decoded = try JSONDecoder().decode(Question.self, from: data)
         XCTAssertEqual(decoded.sourceURL, sourced.sourceURL)
+        XCTAssertEqual(decoded.originalDataSourceURL, sourced.originalDataSourceURL)
         XCTAssertEqual(decoded.legalSourceURL, sourced.legalSourceURL)
         XCTAssertEqual(decoded.correctionSourceURL, sourced.correctionSourceURL)
     }
