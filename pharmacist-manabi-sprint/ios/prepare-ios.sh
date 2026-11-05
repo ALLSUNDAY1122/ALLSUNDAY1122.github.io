@@ -23,6 +23,9 @@ assert len(raw) == 1035, len(raw)
 # Release-blocking official corrigendum gate: the 111th exam Q220/Q221 share
 # a prescription stem whose dosage unit must be capsules, not tablets.
 by_id = {q.get('id'): q for q in raw}
+obsolete_crop = 'assets/official-questions/111/q220-1.webp'
+assert all(obsolete_crop not in (q.get('mediaAssets') or []) for q in raw), 'uncorrected prescription image must not ship'
+assert by_id['P111-220'].get('mediaAssets') == ['assets/official-questions/111/q220-2.webp'], 'Q220 reaction choices must remain available'
 expected_q220_221 = 'デュロキセチン塩酸塩カプセル 20 mg 1 回 1 カプセル （ 1 日 2 カプセル）'
 for qid in ('P111-220', 'P111-221'):
     stem = str(by_id[qid].get('sharedStem') or '')
