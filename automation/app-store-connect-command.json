@@ -1,25 +1,20 @@
 {
-  "request_id": "hm2-asc-postpublish-20261106-r2",
+  "request_id": "hm2-asc-postpublish-20261106-r3",
   "requests": [
-    {
-      "label": "app",
-      "method": "GET",
-      "path": "/v1/apps/6799751657"
-    },
     {
       "label": "builds",
       "method": "GET",
       "path": "/v1/builds?filter[app]=6799751657&sort=-uploadedDate&limit=20"
     },
     {
+      "label": "sun-builds",
+      "method": "GET",
+      "path": "/v1/betaGroups/168d820a-3671-446d-9918-d75a4dad5b1e/builds?limit=50"
+    },
+    {
       "label": "groups",
       "method": "GET",
       "path": "/v1/apps/6799751657/betaGroups?limit=50"
-    },
-    {
-      "label": "versions",
-      "method": "GET",
-      "path": "/v1/apps/6799751657/appStoreVersions?limit=20"
     }
   ]
 }
