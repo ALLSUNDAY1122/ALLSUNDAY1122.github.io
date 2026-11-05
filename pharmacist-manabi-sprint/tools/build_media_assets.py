@@ -108,6 +108,13 @@ def main():
                 for pno in range(sp,ep+1):
                     top=max(8,sy-7) if pno==sp else 16; bottom=(ey-7 if pno==ep else pages[pno]['height']-16); out=ASSET_ROOT/str(exam)/f'q{n:03d}-{len(assets)+1}.webp'; crop_segment(pdf,f'{exam}-{part_id}',pages,pno,top,bottom,out); assets.append(str(out.relative_to(ROOT)).replace('\\','/'))
             except Exception as e: failures.append({'id':qid,'reason':repr(e)}); continue
+            # The first Q220 crop is the shared prescription printed before the
+            # official capsule-unit correction (001677936.pdf). Display the
+            # corrected sharedStem text and retain only the reaction/choice page.
+            if qid == 'P111-220':
+                assets = [a for a in assets if not a.endswith('/q220-1.webp')]
+                if assets != ['assets/official-questions/111/q220-2.webp']:
+                    raise RuntimeError('Q220 crop layout changed; visual review required')
             manifest[qid]={'assets':assets,'sourceUrl':url,'attribution':f"出典：厚生労働省『第{exam}回薬剤師国家試験問題及び解答』",'modified':True,'license':'PDL1.0','releaseStatus':'asset_ready_pending_final_visual_review'}; exported+=1
     (REPORT_DIR/'media-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8'); (REPORT_DIR/'third-party-review.json').write_text(json.dumps(third,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     report={'mediaQueue':len(mids),'assetReady':exported,'thirdPartyBlocked':len(third),'failures':failures,'complete':exported+len(third)==len(mids) and not failures}; (REPORT_DIR/'media-build-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8'); print(json.dumps(report,ensure_ascii=False))
