@@ -60,6 +60,8 @@ jobs:
           explanation=rows['P111-220']['explanation']
           assert all(w in explanation for w in ('NADPH','ソルビトール','反応5','反応1','反応2','反応3','反応4')), explanation
           assert rows['P111-220']['answer']==[4], 'official choice 5 zero-based'
+          assert rows['P111-221']['answer']==[4], 'Q221 official choice 5 zero-based'
+          assert all(w in rows['P111-221']['explanation'] for w in ('CYP2D6', 'セロトニン', 'ミロガバリン', '選択肢1', '4のデュロキセチン減量'))
           print('PASS: Swift syntax, four provenance links and aldose reductase teaching rationale')
           PY
 
