@@ -27,7 +27,7 @@ function mapQuestion(q){
     id:q.id,exam:Number(q.sourceExam),sourceQuestionNo:Number(q.questionNo),f:q.subject,s:q.domain,
     q:questionText,caseStem:caseStem,c:choices,a:answer,accepted:accepted,
     pick:accepted&&accepted.length?accepted[0].length:Math.max(1,answer.length),
-    p:memoryText,d:explanationText,detail:(q.attributionDisplay||'')+'。'+(q.modificationDisclosureDisplay||'')+(q.id==='P109-124'?'。元統計資料：総務省統計局「人口推計（2022年10月1日現在）」https://www.stat.go.jp/data/jinsui/2022np/index.htm　加工：学びスプリント開発者（統計値による独自設問）':''),
+    p:memoryText,d:explanationText,detail:(q.attributionDisplay||'')+'。'+(q.modificationDisclosureDisplay||'')+(q.originalDataSourceURL?'。元資料：'+(q.originalDataSourceTitle||'原典')+'　'+q.originalDataSourceURL+'　加工：学びスプリント開発者（公表データを基に独自設問へ加工）':''),
     scored:q.scoring_status!=='excluded',scoringStatus:q.scoring_status,rightsStatus:'cleared',sourceType:'mhlw_product',
     displayMode:q.displayMode,mediaAssets:Array.isArray(q.mediaAssets)?q.mediaAssets.slice():[],
     mediaAlt:'厚生労働省 第'+q.sourceExam+'回薬剤師国家試験 問'+q.questionNo+' 公式問題画像',

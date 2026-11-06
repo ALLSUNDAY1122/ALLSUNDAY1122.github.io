@@ -66,6 +66,7 @@ def normalize_case(q, qmap):
 
 def main():
     overlays,prov=load_overlays(); media_manifest=load_json_or(MEDIA/'media-manifest.json',{}); third_list=load_json_or(MEDIA/'third-party-review.json',[]); third={x['id']:x for x in third_list}
+    source_citations=load_json_or(CONTENT/'third-party-source-citations.json',{}).get('items',{})
     qs=[]
     for exam in (111,110,109):
         d=json.loads((RAW/f'exam-{exam}-raw.json').read_text(encoding='utf-8'));qs.extend(d['questions'])
@@ -91,6 +92,12 @@ def main():
                 q['displayMode']='thirdPartyRebuildRequired';q['thirdPartyReview']=third[q['id']];q['release_status']='blocked_third_party_asset'
             else:q['release_status']='blocked_missing_media_asset'
         else:q['displayMode']='textChoices'
+        citation=source_citations.get(q['id'])
+        if citation:
+            if not str(citation.get('url','')).startswith('https://') or not citation.get('title'):
+                raise SystemExit(f'FAIL: incomplete primary provenance for {q["id"]}')
+            q['originalDataSourceURL']=citation['url']
+            q['originalDataSourceTitle']=citation['title']
         q['canonicalContentHash']=canonical_hash(q);q['attributionDisplay']=q.get('attribution') or f"出典：厚生労働省『第{q['sourceExam']}回薬剤師国家試験問題及び解答』";q['modificationDisclosureDisplay']='厚生労働省公開問題をもとに、学習表示・解説を加工して作成'
     for q in qs:normalize_case(q,qmap)
     # Release-blocking regression assertion: both linked questions must carry

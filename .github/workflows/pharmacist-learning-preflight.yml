@@ -28,6 +28,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python3 pharmacist-manabi-sprint/tools/assemble_product_bank.py
+          python3 pharmacist-manabi-sprint/tools/build_web_bundle.py
           python3 pharmacist-manabi-sprint/scripts/validate_release.py
 
       - name: Swift syntax and native-source attribution regression
@@ -44,9 +46,23 @@ jobs:
           data=json.load(open(p,encoding='utf-8'))
           rows={q['id']:q for q in data['questions']}
           assert len(rows)==1035
-          assert rows['P109-124']['originalDataSourceURL']=='https://www.stat.go.jp/data/jinsui/2022np/index.htm'
+          expected={
+            'P109-025':'https://www.e-stat.go.jp/stat-search/files?layout=datalist&lid=000001306196&page=1',
+            'P109-124':'https://www.stat.go.jp/data/jinsui/2022np/index.htm',
+            'P110-122':'https://doi.org/10.1093/aje/kwn073',
+            'P110-140':'https://www.env.go.jp/air/osen/pc_oxidant/kijun.html',
+          }
+          for qid,url in expected.items():
+              assert rows[qid]['originalDataSourceURL']==url, qid
+              assert len(rows[qid]['originalDataSourceTitle'])>8, qid
+          assert sum(bool(q['originalDataSourceURL']) for q in rows.values())==4
           assert all(q['sourceURL'].startswith('https://') for q in rows.values())
-          print('PASS: Swift syntax and verified original data attribution in generated native bundle')
+          explanation=rows['P111-220']['explanation']
+          assert all(w in explanation for w in ('NADPH','ソルビトール','反応5','反応1','反応2','反応3','反応4')), explanation
+          assert rows['P111-220']['answer']==[4], 'official choice 5 zero-based'
+          assert rows['P111-221']['answer']==[4], 'Q221 official choice 5 zero-based'
+          assert all(w in rows['P111-221']['explanation'] for w in ('CYP2D6', 'セロトニン', 'ミロガバリン', '選択肢1', '4のデュロキセチン減量'))
+          print('PASS: Swift syntax, four provenance links and aldose reductase teaching rationale')
           PY
 
       - name: Learning Acceptance Contract
