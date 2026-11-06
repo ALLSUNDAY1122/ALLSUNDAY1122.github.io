@@ -1,0 +1,42 @@
+name: Rigaku Fast Quality Gate
+
+on:
+  pull_request:
+    paths:
+      - 'rigaku-sprint/**'
+      - 'native-ios/LearningSprintCore/Sources/**'
+      - '.github/workflows/rigaku-content-audit.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rigaku-fast-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fast-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static native and active-root audit
+        run: python3 rigaku-sprint/ios/static_audit.py
+
+      - name: Privacy manifest and Required Reason API audit
+        run: python3 rigaku-sprint/ios/privacy_audit.py
+
+      - name: Official 600-slot and scoring audit
+        run: python3 rigaku-sprint/product-content/validate_exam_structure.py
+
+      - name: Official 600-answer audit
+        run: python3 rigaku-sprint/product-content/validate_official_answers.py
+
+      - name: Audited 600-question release gate
+        run: python3 rigaku-sprint/product-content/validate_question_batches.py
+
+      - name: Evidence specificity audit
+        run: python3 rigaku-sprint/product-content/validate_evidence_quality.py
+
+      - name: Classification summary
+        run: python3 rigaku-sprint/product-content/summarize_classification.py

@@ -44,6 +44,9 @@ public struct LearningQuestion: Codable, Identifiable, Hashable, Sendable {
     public let prompt: String
     public let choices: [String]
     public let correctIndices: [Int]
+    /// 公式訂正等により複数の解答パターンを正解として扱う場合に使用する。
+    /// nil/空配列の場合は従来どおり `correctIndices` のみを正解とする。
+    public let acceptedIndexSets: [[Int]]?
     public let correctNumber: Double?
     public let acceptedRange: Double?
     public let unit: String?
@@ -72,6 +75,7 @@ public struct LearningQuestion: Codable, Identifiable, Hashable, Sendable {
         prompt: String,
         choices: [String] = [],
         correctIndices: [Int] = [],
+        acceptedIndexSets: [[Int]]? = nil,
         correctNumber: Double? = nil,
         acceptedRange: Double? = nil,
         unit: String? = nil,
@@ -99,6 +103,7 @@ public struct LearningQuestion: Codable, Identifiable, Hashable, Sendable {
         self.prompt = prompt
         self.choices = choices
         self.correctIndices = correctIndices
+        self.acceptedIndexSets = acceptedIndexSets
         self.correctNumber = correctNumber
         self.acceptedRange = acceptedRange
         self.unit = unit
