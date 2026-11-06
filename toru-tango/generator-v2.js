@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+
   const MAX_QUESTION_LENGTH = 160;
   const MAX_ANSWER_LENGTH = 100;
   const TIME_EXPRESSION = '(?:(?:約|およそ)?\\d+(?:\\.\\d+)?万?\\d*年前(?:±\\d+(?:\\.\\d+)?万?\\d*年)?|数百万年前)';
@@ -16,7 +17,7 @@
         .replace(/^[\\/＿_=<>#~|¦・･…\s]+/, '')
         .replace(/[ \t]+/g, ' ')
         .trim();
-      for (let i = 0; i < 5; i += 1) {
+      for (let index = 0; index < 5; index += 1) {
         line = line
           .replace(new RegExp(`([${JP}0-9])\\s+([${JP}0-9])`, 'g'), '$1$2')
           .replace(new RegExp(`([${JP}])\\s+([A-Za-z])(?=[${JP}])`, 'g'), '$1$2')
@@ -50,11 +51,16 @@
   const normalizeKey = (value) => normalizeText(value)
     .replace(/[\s「」『』（）()、，。・：:！？!?＿＿＿_\[\]]/g, '')
     .toLowerCase();
-  const cleanEntity = (value) => normalizeText(value)
-    .replace(/^.*?(?:では|によると)[、，]?/, '')
-    .replace(/^(?:そして|また|一方|なお|現在のところ|最古の|猿人の一種|一種|いわゆる)/, '')
-    .replace(/[、，]$/, '')
-    .trim();
+  const cleanEntity = (value) => {
+    let cleaned = normalizeText(value)
+      .replace(/^.*?(?:では|によると)[、，]?/, '')
+      .replace(/^(?:そして|また|一方|なお|現在のところ|最古の|猿人の一種|一種|いわゆる)/, '')
+      .replace(/[、，]$/, '')
+      .trim();
+    const descriptors = cleaned.split(/(?:とよばれる|と呼ばれる|である[、，]?)/);
+    if (descriptors.length > 1) cleaned = descriptors.at(-1).trim();
+    return cleaned;
+  };
   const splitSentencesV2 = (text) => normalizeText(text)
     .split(/(?<=[。！？!?])|\n+/)
     .map((sentence) => sentence.trim().replace(/[。！？!?]+$/, ''))
@@ -62,7 +68,13 @@
     .filter((sentence) => !/^(?:\[[0-9]+\]|出典|参考文献|脚注)$/.test(sentence));
   const makeFact = (question, answer, source, priority = 50, factKey = '') => {
     const q = normalizeText(question).replace(/[。]+$/, '');
-    return { question: q + (/[？?]$/.test(q) ? '' : '？'), answer: normalizeText(answer).replace(/[。]+$/, ''), source: normalizeText(source), priority, factKey: factKey || normalizeKey(`${question}|${answer}`) };
+    return {
+      question: q + (/[？?]$/.test(q) ? '' : '？'),
+      answer: normalizeText(answer).replace(/[。]+$/, ''),
+      source: normalizeText(source),
+      priority,
+      factKey: factKey || normalizeKey(`${question}|${answer}`)
+    };
   };
   const isValidFact = (fact) => {
     if (!fact.question || !fact.answer || !fact.source) return false;
@@ -73,6 +85,7 @@
     return !normalizeKey(fact.question).includes(normalizeKey(fact.answer));
   };
   const yen = (value) => `${String(value).replace(/[^0-9]/g, '')}万円`;
+
   function extractStructuredFacts(text) {
     const source = normalizeText(text);
     const compact = source.replace(/\s+/g, '');
@@ -114,6 +127,13 @@
     return facts;
   }
 
+  function extractLocation(sentence, eventWord) {
+    const beforeEvent = eventWord && sentence.includes(eventWord) ? sentence.split(eventWord)[0] : sentence;
+    const candidates = [...beforeEvent.matchAll(/(?:^|[、，])([^、，]{2,70}?(?:大陸|州|国|地方|地域|村付近|村|付近|半島|沿岸|タンザニア|エチオピア|アフリカ|ヨーロッパ|アジア))(?:で|では)[、，]?/g)];
+    if (!candidates.length) return '';
+    return cleanEntity(candidates.at(-1)[1]).replace(new RegExp(`^${TIME_EXPRESSION}(?:に)?`), '').trim();
+  }
+
   function extractFacts(sentence) {
     const facts = [];
     const age = sentence.match(new RegExp(TIME_EXPRESSION));
@@ -121,16 +141,43 @@
     const named = sentence.match(/「([^」]{2,30})」と名付けられた/);
     if (named) {
       const name = named[1];
-      if (age) facts.push(makeFact(`「${name}」と名付けられた資料は、約何年前のものか`, age[0], sentence, 100, `name-age-${name}`));
+      const objectName = sentence.includes('化石骨') ? '化石骨' : sentence.includes('化石') ? '化石' : '資料';
+      if (age) facts.push(makeFact(`「${name}」と名付けられた${objectName}は、約何年前のものか`, age[0], sentence, 100, `name-age-${name}`));
       if (exactDate) facts.push(makeFact(`「${name}」が発見されたのはいつか`, exactDate[0], sentence, 99, `name-date-${name}`));
+      const location = extractLocation(sentence, '発見');
+      if (location) facts.push(makeFact(`「${name}」が発見された場所はどこか`, location, sentence, 98, `name-location-${name}`));
     }
-    const eventPattern = new RegExp(`([^、，]{2,70}?)が(?:初めて)?(登場|誕生|成立|開始|発生|発見)(?:する|した|したとされる|するとされる)のは[、，]?\\s*(${TIME_EXPRESSION})`, 'g');
+    const birthPattern = new RegExp(`^([^、，]{1,30}?)は[、，]?(${TIME_EXPRESSION})に?([^、，]{2,70}?)で(?:誕生した|誕生した、とされている|誕生したとされている)`);
+    const birth = sentence.match(birthPattern);
+    if (birth) {
+      const subject = cleanEntity(birth[1]);
+      const location = cleanEntity(birth[3]);
+      if (subject && birth[2]) facts.push(makeFact(`${subject}が誕生したとされるのは約何年前か`, birth[2], sentence, 97, `birth-age-${normalizeKey(subject)}`));
+      if (subject && location) facts.push(makeFact(`${subject}はどこで誕生したとされているか`, location, sentence, 96, `birth-location-${normalizeKey(subject)}`));
+    }
+    const eventPattern = new RegExp(`([^、，]{2,70}?)が(?:初めて)?(登場|誕生|成立|開始|発生|発見)(?:したとされる|するとされる|した|する)のは[、，]?\\s*(${TIME_EXPRESSION})`, 'g');
     for (const match of sentence.matchAll(eventPattern)) {
       const subject = cleanEntity(match[1]);
       if (subject) facts.push(makeFact(`${subject}が${match[2]}したのは約何年前か`, match[3], sentence, 97, `event-${match[2]}-${normalizeKey(subject)}`));
     }
+    const ageFirstEventPattern = new RegExp(`^(${TIME_EXPRESSION})(?:に)?([^、，]{0,70}?)(?:で[、，]?)?(.{2,70}?)が(登場|誕生|成立|開始|発生|発見)(?:した|する)`);
+    const ageFirstEvent = sentence.match(ageFirstEventPattern);
+    if (ageFirstEvent) {
+      const subject = cleanEntity(ageFirstEvent[3]);
+      if (subject) facts.push(makeFact(`${subject}が${ageFirstEvent[4]}したのは約何年前か`, ageFirstEvent[1], sentence, 95, `age-first-${ageFirstEvent[4]}-${normalizeKey(subject)}`));
+      const location = cleanEntity(ageFirstEvent[2].replace(/で[、，]?$/, ''));
+      if (subject && location && /(?:大陸|州|国|地方|地域|村|半島|沿岸|アフリカ|ヨーロッパ|アジア)/.test(location)) facts.push(makeFact(`${subject}が${ageFirstEvent[4]}した場所はどこか`, location, sentence, 90, `age-first-location-${normalizeKey(subject)}`));
+    }
+    const fossil = sentence.match(/([^、，（）()]{2,40}?)(?:[（(][^）)]*[）)])?の化石(?:骨)?が(?:[^、，]*?)発見され(?:た|、)/);
+    if (fossil) {
+      const entity = cleanEntity(fossil[1]);
+      const location = extractLocation(sentence, '発見');
+      if (entity && location) facts.push(makeFact(`${entity}の化石が発見された場所はどこか`, location, sentence, 94, `fossil-location-${normalizeKey(entity)}`));
+      if (entity && exactDate && !named) facts.push(makeFact(`${entity}の化石が発見されたのはいつか`, exactDate[0], sentence, 91, `fossil-date-${normalizeKey(entity)}`));
+    }
+    if (/西方/.test(sentence) && /東方/.test(sentence) && /分かれて/.test(sentence)) facts.push(makeFact('ユーラシアへ広がった人類は、どの二方向に分かれたと考えられているか', '西方と東方', sentence, 93, 'migration-directions'));
     if (!facts.length) {
-      const definition = sentence.match(/^([^、，]{2,45}?)(?:とは|は)[、，]?\s*([^。]{3,90}?)(?:をいう|と呼ばれる|である|とされている|とされる)$/);
+      const definition = sentence.match(/^([^、，]{2,45}?)(?:とは|は)[、，]?\\s*([^。]{3,90}?)(?:をいう|と呼ばれる|である|とされている|とされる)$/);
       if (definition) {
         const subject = cleanEntity(definition[1]);
         const answer = cleanEntity(definition[2]);
@@ -139,6 +186,7 @@
     }
     return facts.filter(isValidFact);
   }
+
   const toCloze = (fact) => {
     if (!fact.source.includes(fact.answer) || fact.source.length > 180) return null;
     const cloze = fact.source.replace(fact.answer, '（　　）');
@@ -170,6 +218,7 @@
     }
     return output;
   }
+
   globalThis.ToruTangoGeneratorV2 = { generateQuestionsV2, repairOcrText, splitSentencesV2, extractFacts, extractStructuredFacts };
 
   if (typeof document !== 'undefined') {
