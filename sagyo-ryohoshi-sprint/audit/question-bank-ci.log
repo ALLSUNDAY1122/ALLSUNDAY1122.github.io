@@ -1,0 +1,26 @@
+SOURCE_LINK_FAIL R56: OT section not found: https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp210416-08_09.html
+SOURCE_LINK_FAIL R55: OT section not found: https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp200414-08_09.html
+SOURCE_LINK_FAIL R54: OT section not found: https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp190415-08_09.html
+SOURCE_LINK_FAIL R53: OT section not found: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000205477.html
+SOURCE_LINK_FAIL R52: OT section not found: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000162866.html
+SOURCE_FAIL R51: pm: detected 0 question starts, expected 100; last=None
+SOURCE_LINK_FAIL R50: OT section not found: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000084766.html
+SOURCE_LINK_FAIL R49: OT section not found: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000045218.html
+SOURCE_LINK_FAIL R48: OT section not found: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000020475.html
+SOURCE_LINK_FAIL R47: OT section not found: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000020571.html
+SOURCE_LINK_FAIL R46: OT section not found: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000020666.html
+SOURCE_LINK_FAIL R45: OT section not found: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000020574.html
+SOURCE_OK R60 eligible=170 pooled general=145 practical=25
+SOURCE_OK R59 eligible=0 pooled general=145 practical=25
+SOURCE_OK R58 eligible=176 pooled general=297 practical=49
+SOURCE_OK R57 eligible=175 pooled general=448 practical=73
+Traceback (most recent call last):
+  File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py", line 176, in <module>
+    bank.main()
+  File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank.py", line 195, in main
+    rounds,dedupe_stats=choose_bank(pool); errors,subjects,source_counts=audit(rounds)
+                        ^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank.py", line 150, in choose_bank
+    if len(bytype['general'])<TARGET_GENERAL or len(bytype['practical'])<TARGET_PRACTICAL: raise RuntimeError(f'insufficient unique eligible pool: general={len(bytype["general"])} practical={len(bytype["practical"])}')
+                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: insufficient unique eligible pool: general=436 practical=72
