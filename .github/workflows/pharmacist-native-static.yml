@@ -15,7 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Release static audit
-        run: python3 pharmacist-manabi-sprint/scripts/validate_release.py
+        run: |
+          python3 pharmacist-manabi-sprint/tools/assemble_product_bank.py
+          python3 pharmacist-manabi-sprint/tools/build_web_bundle.py
+          python3 pharmacist-manabi-sprint/scripts/validate_release.py
       - name: Swift syntax parse
         run: |
           swiftc -version
