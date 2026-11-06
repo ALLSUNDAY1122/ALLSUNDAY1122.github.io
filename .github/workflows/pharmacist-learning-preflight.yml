@@ -7,6 +7,7 @@ on:
       - 'pharmacist-manabi-sprint/ios/**'
       - 'pharmacist-manabi-sprint/content/product/**'
       - 'pharmacist-manabi-sprint/scripts/validate_release.py'
+      - 'pharmacist-manabi-sprint/tools/release_readiness.py'
       - '.github/workflows/pharmacist-learning-preflight.yml'
   workflow_dispatch:
 
@@ -64,6 +65,29 @@ jobs:
           assert all(w in rows['P111-221']['explanation'] for w in ('CYP2D6', 'セロトニン', 'ミロガバリン', '選択肢1', '4のデュロキセチン減量'))
           print('PASS: Swift syntax, four provenance links and aldose reductase teaching rationale')
           PY
+
+      - name: Independent content readiness evidence (does not declare release PASS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 pharmacist-manabi-sprint/tools/release_readiness.py --out /tmp/pharmacist-release-readiness.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/pharmacist-release-readiness.json',encoding='utf-8'))
+          assert d['counts']['questions']==1035
+          assert d['counts']['images']==154
+          assert d['counts']['legalCandidates']==107
+          assert d['counts']['thirdPartyItems']==4
+          assert d['structuralAuditPassIsNotContentApproval'] is True
+          print('PASS: quality readiness report generated; Q0-Q5 retain evidence-based decisions')
+          PY
+
+      - name: Upload content readiness evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: pharmacist-release-readiness
+          path: /tmp/pharmacist-release-readiness.json
+          retention-days: 14
 
       - name: Learning Acceptance Contract
         shell: bash
