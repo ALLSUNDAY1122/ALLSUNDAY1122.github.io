@@ -88,3 +88,23 @@
 - Native iOS Preflight 42115375991 はCANCELLED（再実行もCANCELLED、コンパイル成功を証明できない）。一方、LinuxでのSwift構文解析・ネイティブ教材生成・問124原統計URLの回帰検証を追加した Learning Preflight 42116015112 はSUCCESS（commit 47edcff5c63da76cd952ac64df852cbfd8f7c715）。署名IPAとiPhone実機の表示確認は未実施。該当問題のゲートは「公式値・規約確認済み／表示実装済み／Native最終検証待ち」。
 - 4件の第三者素材キューのうち、P109-124のみ部分的に進展。残り3件と全体Q0〜Q5は引き続き未通過。本番申請と公開用ビルド生成は行っていない。
 - ASC 2026-11-06 06:29 JST 読戻し：PREPARE_FOR_SUBMISSION、reviewSubmissions=0、審査Versionに旧Build202609140032が紐付いたまま。本番用の修正反映Buildはなし。証跡：automation/asc-results/pharmacist-asc-readback-20261106-0629-r2.json。
+
+## 2026-11-06 14時台｜アプリ開発をChatGPT、App Review提出のみCodexへ分離
+
+### mainで完了した開発
+- PR #5690、merge commit `2ab8e6562e8fdf51299d9455fd2dd12adbfecc8a`：第三者由来4問の元出典タイトル・URLを一元管理し、SwiftUI/Web双方へ伝播。元資料の照合・リンク追加は著作権の個別最終クリアとは異なる。
+- 同PR：P111-220のアルドース還元酵素・NADPH・ソルビトール、P111-221のCYP2D6相互作用等を正答の理由が分かるように改稿。
+- P111-003/005/006/007/008/009/018/048/053/054の10問を、厚労省第111回公式問題PDFの図と公式正答PDFに照らして、具体的解説へ修正。メインの教材再生成CI `42166851943`, `42166983558` ともSUCCESS。正答値と公式図を確認したが、薬学専門家による独立レビューと157（正しくは154）画像の完全視認監査は別工程。
+- `tools/release_readiness.py` を新設：構造検査PASSと実際のQ0/Q1/Q2などの品質ゲートを混同せず、未監査件数をCI artifactに保存。Learning Preflight `42167378532` SUCCESS。
+- 2026-11-06時点：定型・汎用的な説明の検出は135件→125件。未監査ステータスが残る教材は1,035レコード、個別最終目視未了画像154問、適用時点未確認の法令候補107件、著作権最終審査未了4問。`missingThirdPartyProvenance=0` は原典リンクの欠落がないという意味だけ。
+- PR #5691、merge commit `dd925a60e259f02dbc224840365fcafe178511d1`：Github-hosted `macos-14` は2026-11-02に退役済み（GitHub Changelog）と確定し、Native CIランナーを `macos-15` に変更。Xcode 16を選ぶ既存構成を保持。
+- PR #5691の Native Compile Xcode16 `42167148312` SUCCESS（XCTestとRelease simulator build 成功）。Native iOS Preflight `42167148310` SUCCESS（Native unit/UI Visual Gate・7枚の画像証跡・Release simulator build・Resources確認成功）。**これはXcode SimulatorのCI PASSであり、署名IPA・TestFlightでの実機受入PASSではない**。
+- APP_STORE_ELIGIBLEの最新署名ビルドは生成・検証していない。Codexが担当するのは、全品質ゲートと最終署名ビルド受入が整った後の**App Review正式提出操作のみ**。
+
+### 開発担当としての次工程
+1. 汎用解説の残り125問と全1,035問の正答根拠・誤答理由・法令更新影響を個別点検。未監査を自動で一括PASSへ変更しない。
+2. 法令107候補は、各試験日の適用法令版・条文・改正差分を公開一次資料に照合。107件すべてが誤りという意味ではない。
+3. 画像154問の原問題PDFとクロップの最終目視、訂正・選択肢対応・出典・第三者素材を記録。
+4. 原データ由来4問の独立した権利評価を完了。特にP110-122論文の142/196数値を原著Table 2に突合。
+5. 署名された最新の開発ビルドを内部TestFlightで実機受入。品質完了後、本番公開用APP_STORE_ELIGIBLE IPAを生成してVALID確認。Codexにはその最終ID等を渡す。
+6. Q0〜Q5の最終証跡を揃えるまで正式App Review提出を行わない。
