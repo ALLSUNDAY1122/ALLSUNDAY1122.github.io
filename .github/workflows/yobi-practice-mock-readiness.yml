@@ -1,0 +1,58 @@
+name: Yobi Practice Mock Readiness Canonical
+
+on:
+  push:
+    branches:
+      - feature/yobi-tantou-native-swiftui
+    paths:
+      - 'learning-sprint/yobi-tantou/ios/Resources/questions.release.json'
+      - 'learning-sprint/yobi-tantou/content-loop/mock-bank/*.release.json'
+      - 'learning-sprint/yobi-tantou/content-loop/general-bank/*.release.json'
+      - 'learning-sprint/yobi-tantou/content-loop/practice-mock-config.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/official-exam-structure.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_practice_mock_readiness.py'
+      - '.github/workflows/yobi-practice-mock-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: yobi-practice-mock-readiness
+  cancel-in-progress: false
+
+jobs:
+  canonical-readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/yobi-tantou-native-swiftui
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recompute three-mock readiness
+        run: python learning-sprint/yobi-tantou/content-loop/audit_practice_mock_readiness.py
+      - name: Validate readiness JSON
+        run: python -m json.tool learning-sprint/yobi-tantou/content-loop/practice-mock-readiness.v1.json >/dev/null
+      - name: Persist canonical readiness report
+        run: |
+          FILE=learning-sprint/yobi-tantou/content-loop/practice-mock-readiness.v1.json
+          git add "$FILE"
+          if git diff --cached --quiet; then
+            echo 'No readiness change.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore(yobi): refresh three-mock readiness canonical'
+          for attempt in 1 2 3; do
+            if git push origin HEAD:feature/yobi-tantou-native-swiftui; then
+              exit 0
+            fi
+            git fetch origin feature/yobi-tantou-native-swiftui
+            git rebase origin/feature/yobi-tantou-native-swiftui
+          done
+          echo 'Failed to persist readiness after three rebase attempts.' >&2
+          exit 1

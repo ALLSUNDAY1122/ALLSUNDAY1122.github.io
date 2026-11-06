@@ -1,0 +1,23 @@
+{
+  "version": "1.0-standard",
+  "checkedAt": "2026-08-14",
+  "scope": "questions.standard.candidates.v1.json",
+  "status": "PASS",
+  "policy": "2026-01-01時点e-Gov法令本文のbasis marker監査PASSを前提に、standard層について正答index、条文上の例外・期間・対抗要件・手続要件が直接導けるかを確認する。判例解釈や学説対立を含む問題は対象外。",
+  "items": [
+    {"id":"YOBI-STD-CON-001","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"憲法59条2項の法律案再議決要件は出席議員の3分の2以上。総議員数基準ではない。"},
+    {"id":"YOBI-STD-CON-002","expectedAnswer":2,"verdict":"PASS","risk":"low","note":"憲法60条2項の予算に関する参議院不議決期間は休会期間を除く30日。法律案の60日と区別。"},
+    {"id":"YOBI-STD-ADM-001","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"行訴法9条1項は処分効果消滅後でも取消しで回復すべき法律上の利益を有する者を含む。"},
+    {"id":"YOBI-STD-ADM-002","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"行訴法14条は知った日から6か月、処分等の日から1年を原則とし、各項に正当理由の例外がある。"},
+    {"id":"YOBI-STD-CIV-001","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"民法177条により不動産物権変動を第三者へ対抗するには登記が必要。設問は典型的二重譲渡に限定。"},
+    {"id":"YOBI-STD-CIV-002","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"民法541条ただし書により催告期間経過時の不履行が軽微なら催告解除はできない。"},
+    {"id":"YOBI-STD-COM-001","expectedAnswer":0,"verdict":"PASS","risk":"low","note":"会社法309条2項の特別決議は原則として議決権過半数出席と出席議決権3分の2以上を要する。"},
+    {"id":"YOBI-STD-COM-002","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"会社法339条は役員等をいつでも株主総会決議で解任可能とし、正当理由なき解任には損害賠償を定める。"},
+    {"id":"YOBI-STD-CVP-001","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"民訴法179条は裁判所で当事者が自白した事実と顕著な事実を証明不要とする。"},
+    {"id":"YOBI-STD-CVP-002","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"民訴法159条2項は相手方主張事実を知らない旨の陳述を争ったものと推定する。"},
+    {"id":"YOBI-STD-CRM-001","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"刑法36条1項は急迫不正の侵害に対する自己又は他人の権利の防衛を対象とする。"},
+    {"id":"YOBI-STD-CRM-002","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"刑法37条1項の緊急避難は生じた害が避けようとした害の程度を超えないことを要求する。"},
+    {"id":"YOBI-STD-CRP-001","expectedAnswer":1,"verdict":"PASS","risk":"low","note":"刑訴法203条1項は司法警察員による身体拘束から48時間以内の検察官送致手続を定める。"},
+    {"id":"YOBI-STD-CRP-002","expectedAnswer":0,"verdict":"PASS","risk":"low","note":"刑訴法205条は検察官受領後24時間以内の勾留請求と、身体拘束から72時間を超えない全体制限を定める。"}
+  ]
+}

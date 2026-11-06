@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "qualification": "司法試験予備試験・短答式",
+  "updatedAt": "2026-08-14",
+  "basis": {
+    "officialStructureFile": "official-exam-structure.v1.json",
+    "structureYear": 2026,
+    "lawBasisDate": "2026-01-01",
+    "policy": "公式年度問題本文の再録とは分離した独自模試。法務省R8の現行科目構成・問題数・選択数・満点だけを構造根拠として利用し、公式問題本文・選択肢は流用しない。"
+  },
+  "targetPerMock": {
+    "subjects": {
+      "憲法": 12,
+      "行政法": 12,
+      "民法": 15,
+      "商法": 15,
+      "民事訴訟法": 15,
+      "刑法": 13,
+      "刑事訴訟法": 13
+    },
+    "legalQuestionTotal": 95,
+    "generalEducation": {
+      "offered": 44,
+      "select": 20,
+      "pointsPerSelectedQuestion": 3,
+      "maxPoints": 60
+    },
+    "totalOfferedQuestionCount": 139,
+    "legalMaxPoints": 210,
+    "totalMaxPoints": 270
+  },
+  "mocks": [
+    {
+      "id": "practice-mock-1",
+      "displayName": "独自模試 1",
+      "officialExamYear": null,
+      "contentOrigin": "original_from_primary_source",
+      "seedDifficulty": "foundation"
+    },
+    {
+      "id": "practice-mock-2",
+      "displayName": "独自模試 2",
+      "officialExamYear": null,
+      "contentOrigin": "original_from_primary_source",
+      "seedDifficulty": "standard"
+    },
+    {
+      "id": "practice-mock-3",
+      "displayName": "独自模試 3",
+      "officialExamYear": null,
+      "contentOrigin": "original_from_primary_source",
+      "seedDifficulty": "applied"
+    }
+  ],
+  "completionGate": {
+    "requiredMockCount": 3,
+    "requiredTotalOfferedQuestions": 417,
+    "requiredLegalQuestions": 285,
+    "requiredGeneralEducationQuestions": 132,
+    "duplicateQuestionIdsAcrossMocks": 0,
+    "highSimilarityInflation": 0,
+    "wrongAnswers": 0,
+    "missingPrimarySources": 0,
+    "missingRightsBasis": 0,
+    "requireCurrentLawBasisForLegal": true
+  },
+  "releaseRule": "3回分の全規定数一致と問題生成・監査ループPASSまではpractice mock completionをPASSにしない。既存42問はseedとしてのみ数え、未作成枠を水増しで埋めない。"
+}

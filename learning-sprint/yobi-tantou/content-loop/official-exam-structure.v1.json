@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "qualification": "司法試験予備試験・短答式",
+  "verifiedAt": "2026-08-13",
+  "verificationMethod": "法務省公式HTMLからPDF直リンクを取得し、GitHub Actions runnerで公式PDF本文を抽出。科目見出し・問題見出し・問題集冒頭の総問題数表示・正解及び配点・短答式結果PDFを照合。",
+  "commonScoring": {
+    "legalMaxPoints": 210,
+    "generalEducationMaxPoints": 60,
+    "totalMaxPoints": 270
+  },
+  "years": {
+    "2024": {
+      "reiwa": 6,
+      "lawBasisDate": "2024-01-01",
+      "subjects": {
+        "憲法": 12,
+        "行政法": 12,
+        "民法": 15,
+        "商法": 15,
+        "民事訴訟法": 15,
+        "刑法": 13,
+        "刑事訴訟法": 13
+      },
+      "legalQuestionTotal": 95,
+      "legalMaxPoints": 210,
+      "generalEducation": {"offered":42,"select":20,"pointsPerSelectedQuestion":3,"maxPoints":60},
+      "totalMaxPoints": 270,
+      "officialPassScore": 165,
+      "officialResultPDF": "https://www.moj.go.jp/content/001422722.pdf",
+      "officialAnswerAndPointsAvailable": true,
+      "questionPDFs": {
+        "憲法・行政法": "https://www.moj.go.jp/content/001421751.pdf",
+        "民法・商法・民事訴訟法": "https://www.moj.go.jp/content/001421752.pdf",
+        "刑法・刑事訴訟法": "https://www.moj.go.jp/content/001421753.pdf",
+        "一般教養科目": "https://www.moj.go.jp/content/001421754.pdf"
+      },
+      "answerPDFs": {
+        "憲法・行政法": "https://www.moj.go.jp/content/001422569.pdf",
+        "民法・商法・民事訴訟法": "https://www.moj.go.jp/content/001422570.pdf",
+        "刑法・刑事訴訟法": "https://www.moj.go.jp/content/001422571.pdf",
+        "一般教養科目": "https://www.moj.go.jp/content/001422572.pdf"
+      }
+    },
+    "2025": {
+      "reiwa": 7,
+      "lawBasisDate": "2025-01-01",
+      "subjects": {
+        "憲法": 12,
+        "行政法": 12,
+        "民法": 15,
+        "商法": 15,
+        "民事訴訟法": 15,
+        "刑法": 13,
+        "刑事訴訟法": 13
+      },
+      "legalQuestionTotal": 95,
+      "legalMaxPoints": 210,
+      "generalEducation": {"offered":44,"select":20,"pointsPerSelectedQuestion":3,"maxPoints":60},
+      "totalMaxPoints": 270,
+      "officialPassScore": 159,
+      "officialResultPDF": "https://www.moj.go.jp/content/001444503.pdf",
+      "officialAnswerAndPointsAvailable": true,
+      "correction": {
+        "pdf": "https://www.moj.go.jp/content/001444169.pdf",
+        "noticeDate": "2025-08-07",
+        "affectedGeneralEducationQuestions": [41,42],
+        "line": 23,
+        "misprint": "were",
+        "correct": "wire",
+        "scoringEffect": "no_special_measure",
+        "officialReason": "当該誤記が解答に影響を与えたものとは認められないため、特段の措置は行わない。"
+      },
+      "questionPDFs": {
+        "憲法・行政法": "https://www.moj.go.jp/content/001443616.pdf",
+        "民法・商法・民事訴訟法": "https://www.moj.go.jp/content/001443617.pdf",
+        "刑法・刑事訴訟法": "https://www.moj.go.jp/content/001443618.pdf",
+        "一般教養科目": "https://www.moj.go.jp/content/001443619.pdf"
+      },
+      "answerPDFs": {
+        "憲法・行政法": "https://www.moj.go.jp/content/001444173.pdf",
+        "民法・商法・民事訴訟法": "https://www.moj.go.jp/content/001444174.pdf",
+        "刑法・刑事訴訟法": "https://www.moj.go.jp/content/001444175.pdf",
+        "一般教養科目": "https://www.moj.go.jp/content/001444176.pdf"
+      }
+    },
+    "2026": {
+      "reiwa": 8,
+      "lawBasisDate": "2026-01-01",
+      "subjects": {
+        "憲法": 12,
+        "行政法": 12,
+        "民法": 15,
+        "商法": 15,
+        "民事訴訟法": 15,
+        "刑法": 13,
+        "刑事訴訟法": 13
+      },
+      "legalQuestionTotal": 95,
+      "legalMaxPoints": 210,
+      "generalEducation": {"offered":44,"select":20,"pointsPerSelectedQuestion":3,"maxPoints":60},
+      "totalMaxPoints": 270,
+      "officialPassScore": null,
+      "officialResultPDF": null,
+      "officialAnswerAndPointsAvailable": false,
+      "officialAnswerStatus": "法務省令和8年結果親ページを2026-08-13に取得したが、短答式正解及び配点PDFへのリンクを確認できず。過年度から推測しない。",
+      "questionPDFs": {
+        "憲法・行政法": "https://www.moj.go.jp/content/001466957.pdf",
+        "民法・商法・民事訴訟法": "https://www.moj.go.jp/content/001466958.pdf",
+        "刑法・刑事訴訟法": "https://www.moj.go.jp/content/001466959.pdf",
+        "一般教養科目": "https://www.moj.go.jp/content/001466960.pdf"
+      },
+      "answerPDFs": null
+    }
+  },
+  "releaseNote": "構成・満点・R6/R7合格点の確定は公式PDF本文に基づく。公式問題本文を製品に収録する権利判定・問題単位の正答/配点構造・第三者権利監査は別ゲートであり、このファイルだけでは教材Releaseを許可しない。"
+}
