@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project.local/moises/separation/fixture-rights.schema.json",
+  "title": "Rights-aware separation fixture manifest",
+  "type": "object",
+  "required": [
+    "schema_version", "fixture_id", "class", "title_alias", "rights_record_id",
+    "rights_basis", "rights_status", "redistribution_allowed",
+    "commercial_engineering_use_allowed", "reference_service_submission_allowed",
+    "real_recorded_music", "synthetic", "requested_roles", "mixture",
+    "duration_seconds", "sample_rate_hz", "channels", "genre_bucket", "hard_cases"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "fixture_id": {"type": "string", "minLength": 1},
+    "class": {"enum": ["PROJECT_OWNED_REAL_MULTITRACK", "RIGHTS_CLEARED_REAL_REFERENCE", "PUBLIC_RESEARCH_NONCOMMERCIAL", "LICENSED_SYNTHETIC", "GENERATED_SIGNAL"]},
+    "title_alias": {"type": "string", "minLength": 1},
+    "rights_record_id": {"type": "string", "minLength": 1, "description": "Opaque ID only. Signed agreement remains outside public repository."},
+    "rights_basis": {"type": "string", "minLength": 1},
+    "rights_status": {"const": "VERIFIED"},
+    "redistribution_allowed": {"type": "boolean"},
+    "commercial_engineering_use_allowed": {"type": "boolean"},
+    "reference_service_submission_allowed": {"type": "boolean"},
+    "real_recorded_music": {"type": "boolean"},
+    "synthetic": {"type": "boolean"},
+    "requested_roles": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "mixture": {"$ref": "#/$defs/fileHash"},
+    "reference_stems": {"type": "object", "additionalProperties": {"$ref": "#/$defs/fileHash"}},
+    "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "sample_rate_hz": {"type": "integer", "minimum": 8000},
+    "channels": {"type": "integer", "minimum": 1},
+    "genre_bucket": {"type": "string", "minLength": 1},
+    "hard_cases": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"}
+  },
+  "$defs": {
+    "fileHash": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^(sha256:)?[0-9a-fA-F]{64}$"}
+      }
+    }
+  }
+}

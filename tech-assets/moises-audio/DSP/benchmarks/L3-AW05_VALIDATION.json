@@ -1,0 +1,38 @@
+{
+  "wave_id": "L3-AW05",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "apple_sdk_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "self_test": {
+    "status": "PASS",
+    "stress_discontinuities": 1000000,
+    "coverage": [
+      "stale audio completion token rejection",
+      "stale click generation rejection",
+      "pending replacement blocks old binding",
+      "dual-generation successful commit",
+      "failure poisons replacement gate",
+      "dual-generation recovery",
+      "failed intent replay rejection",
+      "playback generation equality/regression rejection",
+      "click generation equality/regression rejection",
+      "playback UInt64 overflow fail-closed",
+      "transaction serial overflow fail-closed"
+    ]
+  },
+  "benchmark": {
+    "rounds": 20,
+    "operations_per_round": 100000,
+    "median_ms": 5.936,
+    "p95_ms": 6.203,
+    "p99_max_ms": 6.203,
+    "checksum": 200021000000
+  },
+  "parity_claimed": false
+}

@@ -1,0 +1,96 @@
+{
+  "wave_id": "L3-AW17",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_UNIFIED_PRODUCTION_TRANSPORT_AUTHORITY_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "implementation": [
+    "single project-scoped authority for continuous and discrete token-producing Playback routes",
+    "seek/loop/tempo latest-wins coalescing before Playback generation",
+    "play/pause ordering barrier flushes older continuous intents before discrete token",
+    "media load/replacement/interruption/recovery lifecycle barrier supersedes older pending continuous intents before token",
+    "global serialized drain for every actual token-producing route",
+    "tempo route uses PracticeDSPGenerationCoordinator.applyTempoRatio only",
+    "recovery route uses PracticeDSPGenerationCoordinator.recover only",
+    "generic transport bind rejects tempoChange/recovery routes",
+    "post-token backend failure reconstructs issued generation from Playback fence snapshot and attempts strictly newer recovery",
+    "failed or unknown recovery enters recoveryBlocked and rejects normal product intents before token",
+    "missing nonthrowing pause token enters recoveryBlocked",
+    "caller cancellation after actual dispatch never disguises an already-issued generation"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "rapid_seek": {
+      "submitted": 500,
+      "executed": 1,
+      "superseded_before_token": 499,
+      "actual_playback_tokens": 1
+    },
+    "ordered_seek_then_play": "PASS",
+    "media_replacement_supersedes_pending_seek_before_token": true,
+    "interruption_began_supersedes_pending_tempo_before_token": true,
+    "media_load_route": "PASS",
+    "pause_route": "PASS",
+    "interruption_ended_route": "PASS",
+    "forced_play_backend_failure_auto_recovery": "PASS",
+    "forced_seek_failure_plus_recovery_failure_blocks_normal_tokens": "PASS",
+    "explicit_recovery_reopens_dispatch": "PASS",
+    "missing_pause_token_fail_closed": "PASS",
+    "pending_cancellation_consumes_no_token": true,
+    "observed_route_sequence": [
+      "seek",
+      "seek",
+      "play",
+      "mediaReplacement",
+      "interruptionBegan",
+      "mediaLoad",
+      "pause",
+      "interruptionEnded",
+      "play",
+      "recovery",
+      "seek",
+      "recovery",
+      "recovery",
+      "recovery"
+    ]
+  },
+  "barrier_stress": {
+    "seek_then_play_flush_cycles": 5000,
+    "tempo_then_interruption_supersede_cycles": 5000,
+    "total_actual_playback_tokens": 15000,
+    "stale_continuous_tokens_crossing_lifecycle_barrier": 0,
+    "status": "PASS"
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "seek_submissions_per_round": 2000,
+    "discrete_play_pause_per_round": 200,
+    "expected_executed_per_round": 201,
+    "expected_superseded_seek_per_round": 1999,
+    "expected_actual_playback_tokens_per_round": 201,
+    "median_ms": 26.794,
+    "p95_ms": 40.730,
+    "max_ms": 46.662,
+    "checksum": 168810,
+    "scope": "exact AW17 authority source with interface-compatible lightweight Playback/coordinator types; excludes AVAudioEngine, AudioUnit, real backend work, PCM, file/device IO and current-Moises execution"
+  },
+  "repository_validation": {
+    "production_authority_authored": true,
+    "full_source_self_test_authored": true,
+    "full_source_benchmark_authored": true,
+    "swift6_async_assertions_hardened": true,
+    "selected_integrated_execution_pending": true
+  },
+  "default_continuous_quiet_period_ms": 16,
+  "default_quiet_period_final_device_tuning_claimed": false,
+  "device_timing_claimed": false,
+  "audible_artifact_claimed": false,
+  "standardized_perceptual_metric_claimed": false,
+  "parity_claimed": false
+}

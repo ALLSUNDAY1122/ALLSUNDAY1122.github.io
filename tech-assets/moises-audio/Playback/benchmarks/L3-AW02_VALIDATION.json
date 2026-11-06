@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "wave": "L3-AW02",
+  "area": "Playback/live Apple gain-ramp backend integration",
+  "status": "PASS_PORTABLE_BACKEND_PATH_NON_PARITY",
+  "validation_environment": {
+    "swift": "6.2.1",
+    "portable_target": "x86_64-unknown-linux-gnu",
+    "apple_sdk_compile": false,
+    "physical_device": false,
+    "actual_audio_capture": false
+  },
+  "implementation": {
+    "backend_gain_application_planner": "Playback/Sources/PlaybackBackendGainApplication.swift",
+    "transactional_apple_gain_stage": "Playback/Sources/AppleTransactionalStemGainRampStage.swift",
+    "ramped_backend": "Playback/Sources/AppleRampedMultiTrackPlaybackBackend.swift",
+    "playing_behavior": "preflight every changed stem, then schedule Audio Unit ramps",
+    "paused_behavior": "preflight complete loaded-stem target map, then apply immediate parameter values",
+    "rapid_retarget_behavior": "new ramp starts from Audio Unit current render value rather than forcing stale prior target",
+    "load_failure_behavior": "gain-stage ramp capability is checked before old graph teardown",
+    "legacy_backend_preserved": true,
+    "hq_switch_required": true,
+    "ramp_policy_seconds": 0.012,
+    "policy_status": "engineering guardrail only; not Moises-derived"
+  },
+  "tests": {
+    "self_test": "PASS",
+    "coverage": [
+      "playing transport selects ramped application",
+      "paused transport selects immediate application",
+      "complete loaded-stem normalization with omitted requested gain -> unity",
+      "stale committed stem ignored after graph replacement",
+      "deterministic StemID execution order",
+      "44.1/48/96 kHz ramp-frame derivation",
+      "unchanged transition elision",
+      "duplicate loaded stem rejection",
+      "unknown requested stem rejection",
+      "missing render sample-rate rejection",
+      "10000 rapid retarget committed-state transitions"
+    ]
+  },
+  "benchmark": {
+    "rounds": 20,
+    "plans_per_round": 50000,
+    "stems_per_plan": 8,
+    "playing_ratio": 0.75,
+    "sample_rates_hz": [44100, 48000, 96000],
+    "median_ms": 816.148,
+    "p95_ms": 847.456,
+    "p99_ms": 847.456,
+    "max_ms": 847.456,
+    "checksum": 5618999424,
+    "scope": "portable planner only; not Audio Unit render performance"
+  },
+  "parity_promotion_allowed": false,
+  "remaining_gates": [
+    "compile AppleRampedMultiTrackPlaybackBackend and AppleTransactionalStemGainRampStage with selected Xcode/iOS SDK",
+    "HQ integration must select the ramped backend instead of the preserved legacy immediate-volume backend",
+    "verify global mixer volume parameter availability and ramp flag on target iPhone",
+    "physical-iPhone click/pop/zipper capture through L3-M01 measurement harness",
+    "rights-cleared real-track listening and measurement",
+    "current-Moises differential comparison"
+  ]
+}

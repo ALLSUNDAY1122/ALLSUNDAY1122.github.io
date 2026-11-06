@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "approval_state": "APPROVED",
+  "provider": {
+    "provider_id": "REPLACE_WITH_APPROVED_PROVIDER_ID",
+    "provider_kind": "HOSTED_API",
+    "account_tier": "REPLACE_WITH_PRODUCTION_ACCOUNT_TIER",
+    "service_region": "REPLACE_WITH_CONTRACTED_REGION",
+    "capability_snapshot": {
+      "captured_at": "REPLACE_WITH_ISO_TIMESTAMP",
+      "document_path": "private-documents/provider-capability-snapshot.json",
+      "sha256": "REPLACE_WITH_CAPABILITY_SNAPSHOT_SHA256",
+      "models": [
+        {
+          "model_name": "REPLACE_WITH_EXACT_PROVIDER_MODEL",
+          "model_version": "REPLACE_WITH_EXACT_PROVIDER_VERSION",
+          "quality_profile": "standard",
+          "canonical_roles": ["vocals", "instrumental"]
+        }
+      ]
+    }
+  },
+  "credentials": {
+    "environment_names": ["SEPARATION_PRODUCTION_API_KEY"],
+    "server_side_only": true,
+    "client_distribution_prohibited": true
+  },
+  "terms": {
+    "commercial_use": {"record_id":"REPLACE_WITH_COMMERCIAL_APPROVAL_RECORD","document_path":"private-documents/commercial-use.bin","sha256":"REPLACE_WITH_SHA256","effective_date":"REPLACE_WITH_DATE","expires_date":null},
+    "privacy_retention": {"record_id":"REPLACE_WITH_PRIVACY_RECORD","document_path":"private-documents/privacy-retention.bin","sha256":"REPLACE_WITH_SHA256","effective_date":"REPLACE_WITH_DATE","expires_date":null},
+    "confidentiality": {"record_id":"REPLACE_WITH_CONFIDENTIALITY_RECORD","document_path":"private-documents/confidentiality.bin","sha256":"REPLACE_WITH_SHA256","effective_date":"REPLACE_WITH_DATE","expires_date":null},
+    "output_use": {"record_id":"REPLACE_WITH_OUTPUT_USE_RECORD","document_path":"private-documents/output-use.bin","sha256":"REPLACE_WITH_SHA256","effective_date":"REPLACE_WITH_DATE","expires_date":null},
+    "pricing": {"record_id":"REPLACE_WITH_PRICING_RECORD","document_path":"private-documents/pricing.bin","sha256":"REPLACE_WITH_SHA256","effective_date":"REPLACE_WITH_DATE","expires_date":null}
+  },
+  "operational_terms": {
+    "consumer_app_commercial_use_allowed": true,
+    "input_confidential": true,
+    "output_commercial_use_allowed": true,
+    "output_export_to_end_user_allowed": true,
+    "provider_training_on_user_content_allowed": false,
+    "data_region": "REPLACE_WITH_CONTRACTED_REGION",
+    "uploaded_asset_retention_seconds": null,
+    "output_url_ttl_seconds": null,
+    "delete_api_available": false,
+    "delete_confirmation_semantics": "NOT_AVAILABLE",
+    "pricing": {
+      "currency": "USD",
+      "billing_unit": "AUDIO_MINUTE",
+      "unit_price": "REPLACE_WITH_APPROVED_DECIMAL_RATE",
+      "minimum_charge": "0"
+    }
+  }
+}

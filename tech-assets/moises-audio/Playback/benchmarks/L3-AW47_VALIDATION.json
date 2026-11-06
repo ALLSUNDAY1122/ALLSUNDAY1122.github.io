@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW47",
+  "title": "Streaming PCM Identity SHA Input",
+  "result": "COMPLETE_NON_PARITY",
+  "canonical_audit": {
+    "assignment_epoch": 2,
+    "planning_revision": 4,
+    "integration_head_observed": "25f3c00563a25a2f3dbdaa12084aea9cb34e59a1",
+    "integration_epoch_observed": 37,
+    "hq_integrated_lane3_through": "L3-AW46",
+    "worker_branch_start_head": "7b6967b7aeb6414a3c2bfcf6d5a3884f8f58229a",
+    "ownership_changed": false,
+    "shared_app_modified": false,
+    "parity_matrix_modified": false,
+    "parity_promotions_observed": 0
+  },
+  "implementation": {
+    "pcm_chunk_uint8_materialization_removed": true,
+    "existing_float_storage_streamed_to_sha_on_little_endian": true,
+    "sha_64_byte_blocks_consumed_from_raw_buffer": true,
+    "big_endian_canonical_fallback_present": true,
+    "sha256_float32_le_v1_format_changed": false,
+    "aw46_metadata_stability_fence_preserved": true,
+    "aw44_aw45_receipt_schema_changed": false,
+    "full_track_pcm_retained": false,
+    "raw_pcm_persisted": false,
+    "source_path_included": false,
+    "authenticity_signature_included": false,
+    "parity_promotion_allowed": false
+  },
+  "allocation_boundary": {
+    "chunk_frames_example": 4096,
+    "channels_example": 2,
+    "former_conversion_buffer_bytes_per_full_chunk": 32768,
+    "aw47_conversion_buffer_bytes_per_chunk": 0,
+    "default_chunk_frames": 16384,
+    "default_stereo_conversion_buffer_bytes_removed_per_full_chunk": 131072,
+    "sha_partial_block_bytes_upper_bound": 64,
+    "source_float_chunk_still_bounded": true
+  },
+  "portable_focused_verification": {
+    "result": "PASS",
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "swift_language_mode": 6,
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "optimized_build": true,
+    "legacy_buffered_vs_raw_chunk_sizes_verified": [1, 7, 64, 257, 4096, 16384, 65536],
+    "long_synthetic_sha256": "fed6505b0fcb3b01a65fccc8e3b913772cb50e90e2835f9a0e51e74f6719bab2",
+    "special_float_bit_pattern_count": 16,
+    "special_float_sha256": "a44c84af8d97712aa378026410127ed758b73d0024b0aa8d053f3156291745cb",
+    "independent_python_hashlib_special_digest_equal": true,
+    "deterministic_cpu_speedup_claimed": false,
+    "observed_focused_timing_ratio_range": [0.9619, 1.0928],
+    "timing_note": "optimized focused runs were close/noisy; allocation/copy elimination is the durable claim"
+  },
+  "repository_native_coverage": {
+    "raw_byte_compatibility_self_test_authored": true,
+    "chunk_boundary_stress_authored": true,
+    "chunk_boundary_stress_cells": 200,
+    "streaming_production_benchmark_authored": true,
+    "aw46_metadata_regression_must_be_rerun": true,
+    "aw44_aw45_binding_regression_must_be_rerun": true,
+    "repository_native_tests_executed_in_worker_environment": false,
+    "complete_worker_branch_typecheck_executed": false,
+    "hq_full_lane3_strict_typecheck_required": true
+  },
+  "external_gates": {
+    "xcode_compile": false,
+    "avfaudio_runtime": false,
+    "physical_iphone_execution": false,
+    "rights_cleared_real_30_minute_codec_family": false,
+    "physical_rss": false,
+    "thermal": false,
+    "battery": false,
+    "current_moises_differential": false,
+    "human_listening": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015",
+    "MOI-P021"
+  ]
+}

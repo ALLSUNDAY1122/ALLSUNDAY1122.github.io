@@ -1,0 +1,70 @@
+{
+  "bundle_id": "L3-M03",
+  "lane_id": "LANE-3-PLAYBACK-DSP",
+  "status": "PORTABLE_CONTROL_SEMANTICS_COMPLETE_DEVICE_AUDIO_PENDING",
+  "parity_claim": false,
+  "implementation": {
+    "gain_ramp_policy_seconds": 0.012,
+    "gain_ramp_reference_derived": false,
+    "mute_overrides_solo": true,
+    "solo_suppresses_non_solo": true,
+    "state_restore_atomic": true,
+    "schedule_generation_checked_overflow": true,
+    "backend_unavailable_fail_closed": true,
+    "backend_rejection_preserves_last_applied": true,
+    "strictly_increasing_source_beats": true,
+    "reject_same_render_sample_click_collision": true,
+    "negative_render_sample_rejected": true
+  },
+  "portable_validation": {
+    "swift": "6.2.1",
+    "platform": "x86_64-unknown-linux-gnu",
+    "self_test": "PASS",
+    "solo_mute_boolean_cases": 16,
+    "default_48khz_ramp_frames": 576,
+    "tested_negative_cases": [
+      "nonfinite gain",
+      "duplicate stem id",
+      "invalid sample rate",
+      "nonfinite tempo",
+      "invalid restored pitch",
+      "schedule generation overflow",
+      "backend unavailable",
+      "backend rejection",
+      "duplicate beat timestamp",
+      "multiple beats quantized to same render sample",
+      "negative render sample",
+      "insufficient count-in preroll"
+    ]
+  },
+  "benchmark": {
+    "optimized": true,
+    "rounds": 20,
+    "gain_transition_plans_per_round": 50000,
+    "practice_state_validations_per_round": 5000,
+    "metronome_plans_per_round": 5000,
+    "beat_events_per_metronome_plan": 256,
+    "planned_click_events_per_round": 1280000,
+    "median_ms": 1059.026,
+    "p95_ms": 1094.893,
+    "p99_max_ms": 1094.893,
+    "scope": "portable control/planning CPU only; not device render or interaction latency"
+  },
+  "device_gates_pending": [
+    "AVFAudio compile of complete Lane-3 Apple sources",
+    "sample/ramp-capable Apple live mixer execution",
+    "Apple or approved backend wiring for transactional DSP application",
+    "rights-cleared real-track tempo/pitch render",
+    "physical-iPhone click/pop/zipper and control latency measurement",
+    "metronome/count-in actual onset and drift measurement",
+    "human listening/artifact review",
+    "Differential Moises comparison"
+  ],
+  "parity_rows_not_promoted": [
+    "MOI-P006",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015"
+  ]
+}

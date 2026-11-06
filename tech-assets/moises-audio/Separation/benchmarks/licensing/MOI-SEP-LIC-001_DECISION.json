@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-SEP-LIC-001",
+  "captured_at": "2026-08-22",
+  "integration_epoch": 1,
+  "parity_impact": {
+    "state_change": false,
+    "rows": ["MOI-P003", "MOI-P004", "MOI-P005"],
+    "result": "remain_MISSING"
+  },
+  "candidates": [
+    {
+      "id": "spleeter_pretrained_2_4_5",
+      "code_license": "MIT",
+      "pretrained_weight_status": "NOT_CLEARED",
+      "training_data_status": "Deezer internal datasets; public training corpus unavailable due copyright constraints",
+      "shipping_status": "BLOCKED_RIGHTS",
+      "reason": "Historical JOSS text describes code and pretrained models as MIT-distributed, but current repository language identifies code as MIT and GitHub issue #957 remains open without a Deezer maintainer answer on commercial weight use, conversion, and redistribution.",
+      "evidence": [
+        "https://github.com/deezer/spleeter/blob/master/LICENSE",
+        "https://github.com/deezer/spleeter",
+        "https://joss.theoj.org/papers/10.21105/joss.02154",
+        "https://github.com/deezer/spleeter/issues/957"
+      ]
+    },
+    {
+      "id": "demucs_htdemucs_official_pretrained",
+      "code_license": "MIT",
+      "pretrained_weight_status": "SCIENTIFIC_ONLY",
+      "training_data_status": "MUSDB/MUSDB-HQ plus additional corpus depending on model",
+      "shipping_status": "EXCLUDED",
+      "reason": "A Demucs author/contributor states official model weights are not covered by MIT and are provided only for scientific purposes; MUSDB family data is also not a default commercial-training corpus.",
+      "evidence": [
+        "https://github.com/facebookresearch/demucs/blob/main/LICENSE",
+        "https://github.com/facebookresearch/demucs/issues/327",
+        "https://github.com/facebookresearch/demucs",
+        "https://github.com/facebookresearch/demucs/blob/main/docs/training.md"
+      ]
+    },
+    {
+      "id": "open_unmix_umxl",
+      "code_license": "MIT",
+      "pretrained_weight_status": "CC_BY_NC_SA_4_0",
+      "training_data_status": "private stems dataset",
+      "shipping_status": "EXCLUDED_NONCOMMERCIAL",
+      "evidence": [
+        "https://github.com/sigsep/open-unmix-pytorch/blob/master/LICENSE",
+        "https://sigsep.github.io/open-unmix/"
+      ]
+    },
+    {
+      "id": "open_unmix_umxhq_umx",
+      "code_license": "MIT",
+      "pretrained_weight_status": "NOT_INDEPENDENTLY_CLEARED",
+      "training_data_status": "MUSDB18-HQ or MUSDB18",
+      "shipping_status": "RESEARCH_ONLY_UNTIL_RIGHTS_CLEARED",
+      "evidence": [
+        "https://sigsep.github.io/open-unmix/",
+        "https://zenodo.org/records/1117372",
+        "https://zenodo.org/records/3338373"
+      ]
+    },
+    {
+      "id": "project_owned_demucs_class",
+      "code_license": "MIT architecture/code",
+      "pretrained_weight_status": "PROJECT_OWNED_FROM_SCRATCH",
+      "training_data_status": "rights-cleared project-owned/commissioned real multitracks plus optional CC BY 4.0 Slakh2100 supplementary synthetic data",
+      "shipping_status": "SELECTED_LAWFUL_PATH",
+      "conditions": [
+        "do not initialize from official Demucs, Spleeter, or Open-Unmix pretrained weights",
+        "do not use MUSDB18 or MUSDB18-HQ for commercial training without separate express rights",
+        "every real training item requires explicit commercial ML-training and resulting-weight rights",
+        "maintain training manifest with dataset rights record IDs and output weight hashes",
+        "validate on rights-cleared real multi-genre audio; synthetic-only quality evidence is insufficient"
+      ],
+      "evidence": [
+        "https://github.com/facebookresearch/demucs/blob/main/LICENSE",
+        "https://github.com/facebookresearch/demucs/blob/main/docs/training.md",
+        "https://www.slakh.com/"
+      ]
+    }
+  ],
+  "selected_path": {
+    "architecture": "Demucs/HTDemucs-class permissively licensed code",
+    "weights": "project-owned weights trained from scratch",
+    "training_corpus": "rights-cleared project-owned or commissioned real multitracks; Slakh2100 only supplementary",
+    "initial_topology": "server-side inference",
+    "why": "This is the shortest path currently identified that avoids unresolved or explicitly noncommercial pretrained-weight rights while preserving a route to high-quality multi-stem separation."
+  },
+  "optional_fast_track": {
+    "path": "written commercial license/procurement from a separator vendor such as Spleeter Pro",
+    "status": "TBD_CONTRACT",
+    "required_terms": [
+      "commercial inference grant for intended server topology",
+      "exact model/weight identity",
+      "conversion and redistribution grant if an on-device derivative is later required",
+      "retention, support, and termination terms compatible with production"
+    ]
+  },
+  "risks": {
+    "data_acquisition": "HIGH",
+    "training_compute": "MEDIUM_HIGH",
+    "quality_convergence": "HIGH",
+    "server_runtime_cost": "UNKNOWN_UNTIL_BENCHMARKED",
+    "schedule": "MULTI_WEEK_RISK"
+  },
+  "acceptance": {
+    "separate_code_weight_data_rights": true,
+    "lawful_multi_stem_path_selected": true,
+    "spleeter_not_marked_commercially_cleared": true,
+    "official_demucs_weights_excluded": true,
+    "cost_data_runtime_schedule_risks_recorded": true
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lane1-dependency-audit-report-v2.schema.json",
+  "title": "L1-A26 Lane 1 Full Dependency Audit Report v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "tool_version", "evidence_state", "parity_claim", "overall_state",
+    "git_head_binding", "owned_source_snapshot", "python_compile", "json_syntax",
+    "json_schema_self_validation", "dependency_contracts", "unittest_discovery",
+    "stable_error_code_inventory"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "tool_version": {"const": "L1-A26-v2"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "parity_claim": {"const": "NONE"},
+    "overall_state": {"enum": ["PASS", "FAIL"]},
+    "git_head_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "expected_git_head", "actual_git_head"],
+      "properties": {
+        "state": {"enum": ["PASS", "FAIL_EXPECTED_HEAD_REQUIRED", "FAIL_EXPECTED_HEAD_INVALID", "FAIL_GIT_HEAD_UNAVAILABLE", "FAIL_GIT_HEAD_MISMATCH"]},
+        "expected_git_head": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "actual_git_head": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "owned_source_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "stable_error_code", "snapshot"],
+      "properties": {
+        "state": {"enum": ["PASS", "FAIL"]},
+        "stable_error_code": {"type": ["string", "null"]},
+        "snapshot": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["schema_version", "tool_version", "evidence_state", "scope", "file_count", "files", "source_snapshot_sha256", "parity_claim"],
+              "properties": {
+                "schema_version": {"const": 1},
+                "tool_version": {"const": "L1-A26-SOURCE-SNAPSHOT-v1"},
+                "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+                "scope": {"const": ["Separation/**", "Processing/**"]},
+                "file_count": {"type": "integer", "minimum": 1},
+                "files": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["path", "bytes", "sha256"],
+                    "properties": {
+                      "path": {"type": "string", "pattern": "^(Separation|Processing)/"},
+                      "bytes": {"type": "integer", "minimum": 0},
+                      "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+                    }
+                  }
+                },
+                "source_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                "parity_claim": {"const": "NONE"}
+              }
+            }
+          ]
+        }
+      }
+    },
+    "python_compile": {"$ref": "#/$defs/basicResult"},
+    "json_syntax": {"$ref": "#/$defs/basicResult"},
+    "json_schema_self_validation": {"type": "object"},
+    "dependency_contracts": {"$ref": "#/$defs/basicResult"},
+    "unittest_discovery": {"type": "object"},
+    "stable_error_code_inventory": {"type": "object"}
+  },
+  "$defs": {
+    "basicResult": {
+      "type": "object",
+      "required": ["state"],
+      "properties": {"state": {"type": "string"}}
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"overall_state": {"const": "PASS"}}},
+      "then": {
+        "properties": {
+          "git_head_binding": {"properties": {"state": {"const": "PASS"}}},
+          "owned_source_snapshot": {"properties": {"state": {"const": "PASS"}}},
+          "python_compile": {"properties": {"state": {"const": "PASS"}}},
+          "json_syntax": {"properties": {"state": {"const": "PASS"}}},
+          "json_schema_self_validation": {"properties": {"state": {"const": "PASS"}}},
+          "dependency_contracts": {"properties": {"state": {"const": "PASS"}}},
+          "unittest_discovery": {"properties": {"state": {"const": "PASS"}}}
+        }
+      }
+    }
+  ]
+}

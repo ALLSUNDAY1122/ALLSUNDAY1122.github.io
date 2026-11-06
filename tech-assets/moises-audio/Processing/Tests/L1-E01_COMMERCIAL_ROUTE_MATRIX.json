@@ -1,0 +1,62 @@
+{
+  "wave": "L1-E01",
+  "engineering_result": "READY_PENDING_EXTERNAL_INPUT",
+  "live_gate_result": "PENDING_EXTERNAL_INPUT",
+  "parity_claim": "NONE",
+  "acceptance": {
+    "credential_policy": "server-side environment only; credential values are never persisted",
+    "terms_binding": ["commercial_use","privacy_retention","confidentiality","output_use","pricing"],
+    "provider_binding": "provider ID/kind/account tier/region plus physical capability snapshot SHA and exact model/version/quality/role bindings",
+    "secret_scan": "when credentials are present, exact credential bytes are streamed across repository files and any match fails closed",
+    "sanitized_evidence": "document paths, raw approval record IDs, credential values and numeric pricing values are omitted"
+  },
+  "fault_cases": [
+    "valid sanitized approval evidence",
+    "missing external credential",
+    "terms document SHA mismatch",
+    "missing terms document",
+    "placeholder approval record",
+    "expired terms",
+    "not-yet-effective terms",
+    "commercial use not approved",
+    "end-user output export not approved",
+    "provider training on user content enabled",
+    "credential not server-side-only",
+    "client credential distribution not prohibited",
+    "duplicate credential environment name",
+    "invalid environment name",
+    "capability snapshot SHA mismatch",
+    "missing model version",
+    "duplicate model/version/quality binding",
+    "duplicate canonical role",
+    "delete API/confirmation semantic mismatch",
+    "unsupported pricing unit",
+    "invalid decimal pricing",
+    "unknown secret-bearing manifest field",
+    "document path traversal",
+    "symlinked approval document",
+    "repository exact-secret scan clean",
+    "repository exact-secret leak",
+    "secret spanning scan chunk boundary",
+    "unexpectedly short credential",
+    "model order invariant approval identity",
+    "pricing mutation changes policy hash while price remains unpersisted"
+  ],
+  "machine_tests": {
+    "tests": 30,
+    "failures": 0,
+    "py_compile": "PASS",
+    "credential_used": "synthetic test credential only",
+    "real_provider_called": false,
+    "real_contracts_used": false
+  },
+  "live_inputs_required": [
+    "production/evaluation credential",
+    "written commercial-use approval",
+    "privacy/retention/deletion terms",
+    "confidentiality terms",
+    "output-use/export terms",
+    "approved pricing/billing terms",
+    "production account capability snapshot with exact model/version access"
+  ]
+}

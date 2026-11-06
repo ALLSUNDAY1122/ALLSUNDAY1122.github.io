@@ -1,0 +1,67 @@
+{
+  "wave_id": "L3-AW14",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "production_hardening": [
+    "new Playback generation received while coordinator is poisoned becomes a recovery floor",
+    "genuinely newer wrong-route Playback token revokes stale replacement authority and poisons",
+    "stale/replayed wrong-route token does not destroy valid current binding",
+    "rejected/newly observed Playback generation cannot be reused as recovery generation",
+    "click generation advanced by rejected recovery remains a recovery floor"
+  ],
+  "differential": {
+    "status": "PASS",
+    "seed_hex": "0xA14D1FF3E2",
+    "randomized_operations": 200000,
+    "final_recovery_operations": 1,
+    "final_operation_serial": 200001,
+    "final_playback_generation": 125929,
+    "final_click_generation": 133399,
+    "successful_click_invalidations": 118760,
+    "operation_counts": {
+      "successful_transport": 37563,
+      "successful_tempo": 7508,
+      "successful_click_only": 14981,
+      "forced_transport_click_failure": 7377,
+      "forced_click_only_failure": 7262,
+      "invalid_control_rejection": 14823,
+      "stale_or_replayed_token_rejection": 14987,
+      "new_wrong_route_playback_fail_closed": 7356,
+      "new_playback_rejected_while_poisoned": 29436,
+      "same_generation_recovery_reuse_rejected": 29366,
+      "successful_recovery": 29342
+    },
+    "compared_after_every_operation": [
+      "operation serial",
+      "click generation",
+      "poison state",
+      "exact active replacement binding",
+      "tempo ratio",
+      "metronome enabled",
+      "pending count-in"
+    ],
+    "final_binding_replacement_validation": true
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "operations_per_round": 10000,
+    "median_ms": 432.860,
+    "p95_ms": 530.156,
+    "max_ms": 530.661,
+    "scope": "interface-compatible production semantic harness plus independent AW11-derived oracle; excludes AVAudioEngine, AudioUnit, PCM analysis, file IO, device IO and current-Moises execution"
+  },
+  "evidence_scope": "LANE3_MODEL_PRODUCTION_DIFFERENTIAL_NON_PARITY",
+  "repository_full_lane3_compile_pending": true,
+  "apple_sdk_compile_pending": true,
+  "device_timing_claimed": false,
+  "audible_artifact_claimed": false,
+  "standardized_perceptual_metric_claimed": false,
+  "parity_claimed": false
+}

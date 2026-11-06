@@ -1,0 +1,24 @@
+{
+  "schema_version":1,
+  "evidence_state":"NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim":"NONE",
+  "decision_id":"lane1-route-decision-REPLACE",
+  "policy":{
+    "required_mode_classes":["FREE_CORE","MAJOR"],
+    "allowed_service_regions":["JP","LOCAL_DEVICE"],
+    "allowed_data_regions":["JP","LOCAL_DEVICE"],
+    "maximum_mean_execution_total_ms":120000,
+    "maximum_final_failure_fraction":0.1,
+    "maximum_retry_fraction":0.25,
+    "cost_currency":"USD",
+    "maximum_mean_cost_per_successful_run":2.0,
+    "maximum_non_cancel_degraded_fraction":0.2,
+    "maximum_uploaded_asset_retention_seconds":86400,
+    "require_deletion_control":true,
+    "require_capacity_attestation":true,
+    "minimum_overall_usability_delta":-0.25,
+    "minimum_primary_score_margin":0.02,
+    "ranking_weights":{"quality":0.4,"latency":0.25,"reliability":0.2,"cost":0.15},
+    "engineering_policy_not_reference_fact":true
+  }
+}

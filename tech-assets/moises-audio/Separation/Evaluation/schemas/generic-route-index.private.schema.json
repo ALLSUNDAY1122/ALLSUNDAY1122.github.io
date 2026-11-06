@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "generic-route-index.private.schema.json",
+  "title": "Lane 1 E09 Private Route Evidence Index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","private","routes"],
+  "properties": {
+    "schema_version": {"const":1},
+    "private": {"const":true},
+    "routes": {"type":"object","minProperties":1,"additionalProperties":{"type":"object","additionalProperties":false,"required":["evidence_path_kind","evidence"],"properties":{"evidence_path_kind":{"enum":["LEGACY_E06_HOSTED","GENERIC_E07_E08"]},"evidence":{"type":"object"}}}}
+  }
+}

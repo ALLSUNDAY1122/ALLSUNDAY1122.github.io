@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW36",
+  "title": "Cancellation Admission / Late-Delivery Retention Hardening",
+  "result": "COMPLETE_NON_PARITY",
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "optimized_stress_and_benchmark": true
+  },
+  "production_change": {
+    "authority_integrated": true,
+    "explicit_admission_window": true,
+    "pre_enqueue_cancellation_retained_only_for_live_admission": true,
+    "late_retired_cancellation_not_retained": true,
+    "late_retired_cancellation_counted": true,
+    "cancelled_marker_subset_of_admission_invariant": true,
+    "aw34_fixed_window_semantics_changed": false,
+    "discrete_barrier_semantics_changed": false,
+    "recovery_semantics_changed": false,
+    "selected_inner_tempo_quiet_period_changed": false
+  },
+  "self_test": {
+    "executed": true,
+    "result": "PASS",
+    "pre_enqueue_cancellation_consumed": true,
+    "normal_admission_consumed_without_marker": true,
+    "abandoned_admission_retained": false,
+    "late_retired_cancellations": 2,
+    "retained_admission_tickets": 0,
+    "retained_cancellation_markers": 0,
+    "invariant_holds": true
+  },
+  "stress": {
+    "executed": true,
+    "result": "PASS",
+    "events": 1000000,
+    "pre_enqueue_cancellations": 200000,
+    "late_retired_cancellations": 400000,
+    "retained_admission_tickets": 0,
+    "retained_cancellation_markers": 0,
+    "invariant_violations": 0
+  },
+  "portable_bookkeeping_benchmark": {
+    "executed": true,
+    "rounds": 20,
+    "operations_per_round": 1000000,
+    "median_ms": 44.723,
+    "p95_ms": 50.038,
+    "max_ms": 53.359,
+    "checksum": 5000192,
+    "scope": "cancellation admission-fence bookkeeping only"
+  },
+  "apple_and_parity_gates": {
+    "complete_selected_swiftpm_xcode_execution": false,
+    "actual_authority_actor_race_executed_on_apple_runtime": false,
+    "physical_iphone_executed": false,
+    "real_audio_executed": false,
+    "current_moises_differential_executed": false,
+    "human_listening_executed": false,
+    "automatic_repeated_loop_seam_envelope_implemented": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015"
+  ]
+}

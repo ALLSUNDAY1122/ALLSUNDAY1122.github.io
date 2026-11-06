@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A29",
+  "title": "Provider Delete Interruption / Reconciliation Matrix",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "implementation": [
+    "Separation/Server/provider_delete_reconciliation.py",
+    "Separation/Tests/test_provider_delete_reconciliation.py"
+  ],
+  "observed_focused_results": {
+    "interface_compatible_logic_harness": "11/11 PASS",
+    "py_compile": "PASS",
+    "exact_worker_branch_full_suite": "NOT_OBSERVED_A26_GATE_PENDING"
+  },
+  "cases": [
+    {
+      "id": "A29-01",
+      "scenario": "ambiguous asset/task delete is later observed confirmed/not_found",
+      "expected": "registry reaches erasure-complete without replaying provider delete",
+      "covered": true
+    },
+    {
+      "id": "A29-02",
+      "scenario": "reconciliation attempted without prior durable delete reservation",
+      "expected": "fail closed SEP_PRIVACY_RECONCILE_DELETE_NOT_RESERVED",
+      "covered": true
+    },
+    {
+      "id": "A29-03",
+      "scenario": "observation object hash does not match registered provider object hash",
+      "expected": "fail closed SEP_PRIVACY_RECONCILE_OBJECT_HASH_MISMATCH",
+      "covered": true
+    },
+    {
+      "id": "A29-04",
+      "scenario": "provider observation says object remains present",
+      "expected": "persist reconciled_present and never claim erasure complete",
+      "covered": true
+    },
+    {
+      "id": "A29-05",
+      "scenario": "terminal confirmed/not_found/expired state receives a downgrade observation",
+      "expected": "fail closed SEP_PRIVACY_RECONCILE_TERMINAL_DOWNGRADE",
+      "covered": true
+    },
+    {
+      "id": "A29-06",
+      "scenario": "same authoritative observation is applied repeatedly or concurrently",
+      "expected": "one deterministic durable receipt; registry update remains idempotent",
+      "covered": true
+    },
+    {
+      "id": "A29-07",
+      "scenario": "observation is durably recorded but registry application fails",
+      "expected": "ledger retains observed_not_applied for safe recovery instead of pretending success",
+      "covered": true
+    },
+    {
+      "id": "A29-08",
+      "scenario": "documented expiry is used to claim provider confirmation or task expiry",
+      "expected": "fail closed; expiry evidence is asset-only and cannot impersonate provider confirmation",
+      "covered": true
+    },
+    {
+      "id": "A29-09",
+      "scenario": "public durable ledger inspection",
+      "expected": "contains object/authority hashes only; no raw provider IDs, URL or content path",
+      "covered": true
+    },
+    {
+      "id": "A29-10",
+      "scenario": "reconciliation ledger is corrupt or schema-invalid",
+      "expected": "fail closed instead of ignoring evidence corruption",
+      "covered": true
+    }
+  ],
+  "remaining_external_or_hq_gates": [
+    "A29 does not define a provider-specific authoritative status API; live provider/console/support evidence remains private external input.",
+    "A29 is single-host file-backed evidence; multi-host coordination remains governed by A27 and requires a real shared transactional backend.",
+    "P024/P020/P025 remain HQ PARITY decisions requiring integrated current-iPhone/live-runtime evidence.",
+    "A26 exact Worker checkout full audit remains required after A29 because owned bytes changed."
+  ]
+}

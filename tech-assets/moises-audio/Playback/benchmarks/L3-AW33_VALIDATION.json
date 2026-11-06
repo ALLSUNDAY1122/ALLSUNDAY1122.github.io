@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW33",
+  "title": "Selected Stack Reconstruction / Poison Recovery",
+  "result": "COMPLETE_NON_PARITY",
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "optimization": "-O"
+  },
+  "portable_recovery_stress": {
+    "executed": true,
+    "cycles": 1000000,
+    "first_failure_ticket_preserved": 1000000,
+    "stale_tickets_rejected": 1000000,
+    "clean_exact_ticket_replacements_installed": 1000000,
+    "stale_ticket_acceptances": 0,
+    "checksum": 15500023499964
+  },
+  "portable_recovery_benchmark": {
+    "executed": true,
+    "rounds": 20,
+    "operations_per_round": 100000,
+    "median_ms": 3.056,
+    "p95_ms": 3.130,
+    "max_ms": 3.240,
+    "checksum": 100024000000,
+    "scope": "recovery-ticket/latch/replacement-policy CPU bookkeeping only"
+  },
+  "repository_regression": {
+    "actual_selected_facade_slot_test_authored": true,
+    "actual_recovery_latch_benchmark_authored": true,
+    "complete_repository_execution_in_worker_environment": false,
+    "cases": [
+      "tempo commit restart failure latches reconstruction",
+      "old facade operation rejected before backend after latch",
+      "stale recovery ticket rejected",
+      "exact clean replacement advances slot generation",
+      "old facade remains latched after replacement",
+      "non-tempo selected backend poison latches reconstruction",
+      "tempo cancel restart failure latches reconstruction"
+    ]
+  },
+  "selected_contract": {
+    "one_way_facade_recovery_latch": true,
+    "in_place_poison_reset_available": false,
+    "public_selected_route_is_reconstruction_slot": true,
+    "raw_selected_facade_factory_publicly_exposed": false,
+    "replacement_drains_in_flight_operations": true,
+    "replacement_requires_exact_ticket": true,
+    "replacement_generation_fenced": true,
+    "poisoned_replacement_rejected": true,
+    "submit_recovery_bypasses_reconstruction_latch": false,
+    "old_facade_reused_after_replacement": false
+  },
+  "apple_and_parity_gates": {
+    "selected_xcode_compile_executed": false,
+    "physical_iphone_executed": false,
+    "actual_avaudioengine_reconstruction_executed": false,
+    "avaudiosession_runtime_reconstruction_executed": false,
+    "real_persisted_project_state_restore_executed": false,
+    "real_audio_executed": false,
+    "pcm_listening_executed": false,
+    "current_moises_differential_executed": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015"
+  ]
+}

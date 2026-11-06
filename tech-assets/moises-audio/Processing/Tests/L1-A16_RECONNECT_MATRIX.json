@@ -1,0 +1,82 @@
+{
+  "wave": "L1-A16",
+  "result": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "invariant": "A relaunch never promotes stale local non-terminal state over current server/provider authority, never recreates an ambiguous provider task, never resurrects a deleted job, and never publishes provider-ready outputs until the local committed result exists.",
+  "recovery_precedence": [
+    "deleted_tombstone",
+    "logical_cancellation",
+    "server_committed_outputs",
+    "provider_or_server_authoritative_observe",
+    "stale_nonterminal_cache_as_diagnostic_only"
+  ],
+  "durable_identity": [
+    "logical_job_id",
+    "project_id",
+    "asset_id",
+    "requested_profile_id",
+    "canonical_requested_models",
+    "idempotency_key_sha256",
+    "request_fingerprint_after_backend_bind",
+    "source_sha256_after_backend_bind",
+    "provider_asset_id_after_backend_bind",
+    "provider_task_id_after_backend_bind",
+    "recovery_attempt_count",
+    "authoritative_snapshot_revision",
+    "deleted_tombstone"
+  ],
+  "never_persist": [
+    "raw_idempotency_key",
+    "source_path",
+    "source_filename",
+    "signed_output_url",
+    "raw_audio"
+  ],
+  "scenarios": [
+    {"id":"intent-before-backend-start","expected":"DURABLE_QUEUED"},
+    {"id":"process-dies-after-intent-before-start","expected":"UNKNOWN_RETRYABLE_NO_PROVIDER_CREATE"},
+    {"id":"restart-bound-separating-job","expected":"REFRESH_FROM_PROVIDER"},
+    {"id":"provider-progress-regresses-vs-cache","expected":"PROVIDER_SNAPSHOT_WINS"},
+    {"id":"provider-ready","expected":"COLLECT_AND_COMMIT_BEFORE_READY"},
+    {"id":"provider-ready-local-copy-fails","expected":"RECOVERING_NOT_READY"},
+    {"id":"local-committed-provider-retention-404","expected":"LOCAL_READY_WINS"},
+    {"id":"network-unavailable-after-stale-separating","expected":"UNKNOWN_WITH_PREVIOUS_PHASE_ONLY"},
+    {"id":"provider-job-404","expected":"UNKNOWN_NONRETRYABLE_NO_RECREATE","code":"SEP_RECOVERY_PROVIDER_JOB_MISSING"},
+    {"id":"local-upload-failure-terminal","expected":"FAILED_WITHOUT_PROVIDER_OBSERVE"},
+    {"id":"ambiguous-create-unique-metadata-match","expected":"RECONCILE_WITHOUT_SECOND_START"},
+    {"id":"ambiguous-create-zero-match","expected":"UNKNOWN_NONRETRYABLE_NO_REPOST"},
+    {"id":"ambiguous-create-multiple-matches","expected":"UNKNOWN_NONRETRYABLE","code":"SEP_PROVIDER_DUPLICATE_TASKS_DETECTED"},
+    {"id":"logical-cancel-vs-provider-ready","expected":"CANCELLED_OUTPUT_DISCARDED"},
+    {"id":"deleted-tombstone-vs-provider-ready","expected":"DELETED_NO_RESURRECTION"},
+    {"id":"backend-job-without-a16-registration","expected":"FAIL_CLOSED","code":"SEP_RECOVERY_JOB_NOT_REGISTERED"},
+    {"id":"backend-model-identity-change","expected":"FAIL_CLOSED","code":"SEP_RECOVERY_BACKEND_MODELS_MISMATCH"},
+    {"id":"backend-start-raises-after-a06-persist","expected":"BIND_EXISTING_RECORD_FOR_RELAUNCH"},
+    {"id":"same-idempotency-key-different-profile","expected":"FAIL_CLOSED","code":"SEP_RECOVERY_INTENT_CONFLICT"},
+    {"id":"same-model-set-different-order","expected":"SAME_CANONICAL_INTENT"},
+    {"id":"corrupt-recovery-registry","expected":"FAIL_CLOSED","code":"SEP_RECOVERY_REGISTRY_CORRUPT"},
+    {"id":"recovery-attempts-across-service-restart","expected":"DURABLE_INCREMENT"},
+    {"id":"recover-all-mixed-active-deleted","expected":"DETERMINISTIC_REFRESH_WITH_TOMBSTONE_PRESERVED"},
+    {"id":"bound-registry-privacy-redaction","expected":"NO_RAW_KEY_PATH_FILENAME_OR_URL"},
+    {"id":"authority-loss-after-valid-snapshot","expected":"CURRENT_UNKNOWN_PREVIOUS_DIAGNOSTIC_ONLY"}
+  ],
+  "machine_tests": {
+    "python_suite": "Separation/Tests/test_durable_reconnect_registry.py",
+    "tests": 25,
+    "failures": 0,
+    "py_compile": "PASS"
+  },
+  "semantics": {
+    "retryable_on_unknown": "May retry authoritative recovery/observe later. It never authorizes a blind provider task create.",
+    "ready": "Only local committed outputs are user-ready. Provider ready alone is recovering until collect_ready_outputs commits the result.",
+    "cancelled": "Logical cancellation outranks a provider-ready race and outputs remain discarded.",
+    "deleted": "Tombstone is terminal for this logical job identity and cannot be resurrected by later provider state.",
+    "stale_cache": "Previous phase is diagnostic metadata only when current authority is unavailable."
+  },
+  "external_gaps": [
+    "real production provider credential and live provider restart behavior",
+    "real iPhone app termination/background relaunch wiring",
+    "multi-process/horizontally-scaled transactional deployment store",
+    "actual provider task disappearance/retention timing",
+    "rights-cleared real-audio current-iPhone differential evidence"
+  ]
+}

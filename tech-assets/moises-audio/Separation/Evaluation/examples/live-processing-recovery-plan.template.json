@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "recovery_campaign_id": "L1-E05-REPLACE-LIVE-001",
+  "scenarios": [
+    {"scenario_id": "network-interruption", "scenario_kind": "NETWORK_INTERRUPTION"},
+    {"scenario_id": "cancel-upload", "scenario_kind": "CANCEL_UPLOAD"},
+    {"scenario_id": "cancel-separating", "scenario_kind": "CANCEL_SEPARATING"},
+    {"scenario_id": "cancel-finalizing", "scenario_kind": "CANCEL_FINALIZING"},
+    {"scenario_id": "ambiguous-create-retry", "scenario_kind": "AMBIGUOUS_CREATE_RETRY"},
+    {"scenario_id": "relaunch", "scenario_kind": "RELAUNCH"},
+    {"scenario_id": "output-expiry", "scenario_kind": "OUTPUT_EXPIRY"},
+    {"scenario_id": "rate-limit", "scenario_kind": "RATE_LIMIT"},
+    {"scenario_id": "long-track", "scenario_kind": "LONG_TRACK"},
+    {"scenario_id": "storage-pressure", "scenario_kind": "STORAGE_PRESSURE"}
+  ]
+}

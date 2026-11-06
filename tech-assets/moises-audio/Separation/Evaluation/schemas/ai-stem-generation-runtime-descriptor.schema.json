@@ -1,0 +1,22 @@
+{
+  "$id": "ai-stem-generation-runtime-descriptor.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority_kind": {"enum": ["HOSTED_PROVIDER_ACCOUNT", "LOCAL_RUNTIME", "PROJECT_OWNED_RUNTIME"]},
+    "capability_snapshot_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "credential_env_names": {"items": {"pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$", "type": "string"}, "type": "array", "uniqueItems": true},
+    "descriptor_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "driver_artifact_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "protocol_version": {"const": "L1-A22-GENERATION-RUNTIME-v1"},
+    "runtime_id": {"pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$", "type": "string"},
+    "runtime_identity_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "schema_version": {"const": 1},
+    "supports_cancel": {"type": "boolean"},
+    "supports_reconcile": {"type": "boolean"}
+  },
+  "required": ["schema_version","evidence_state","protocol_version","runtime_id","authority_kind","runtime_identity_sha256","driver_artifact_sha256","capability_snapshot_sha256","supports_cancel","supports_reconcile","credential_env_names","descriptor_sha256"],
+  "title": "Lane 1 A22 AI Stem Generation Runtime Descriptor",
+  "type": "object"
+}

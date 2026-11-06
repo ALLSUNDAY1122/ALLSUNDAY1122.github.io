@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "runtime-authority-live-evidence.schema.json",
+  "title": "Lane 1 E08 Generic Runtime-Authority Live Gate Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "tool_version", "evidence_kind", "evidence_state", "gate_state", "parity_claim", "gate_id", "route_id", "route_kind", "authority", "runtime_artifact_sha256", "source_evidence", "policy", "summary", "checks", "scenarios", "capacity_evidence", "privacy", "e08_live_authority_lock_sha256", "parity_reason"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"const": "L1-E08-v1"},
+    "evidence_kind": {"const": "RUNTIME_AUTHORITY_LIVE_GATE"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "gate_state": {"enum": ["READY_FOR_HQ_E08_LIVE_REVIEW", "PENDING_EXTERNAL_EVIDENCE", "LIVE_AUTHORITY_REJECTED"]},
+    "parity_claim": {"const": "NONE"},
+    "gate_id": {"type": "string", "minLength": 1},
+    "route_id": {"type": "string", "minLength": 1},
+    "route_kind": {"enum": ["LICENSED_LOCAL_INFERENCE_SDK", "ALTERNATE_WRITTEN_COMMERCIAL_PROVIDER", "PROJECT_OWNED_MODEL_IF_RIGHTS_CLEARED_TRAINING_DATA_AVAILABLE"]},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "provenance_sha256"],
+      "properties": {
+        "kind": {"enum": ["HOSTED_PROVIDER_ACCOUNT", "LOCAL_RUNTIME", "PROJECT_OWNED_RUNTIME"]},
+        "provenance_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "runtime_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_evidence": {"type": "object"},
+    "policy": {"type": "object"},
+    "summary": {"type": "object"},
+    "checks": {"type": "object"},
+    "scenarios": {"type": "array", "minItems": 10, "maxItems": 10},
+    "capacity_evidence": {"type": "object"},
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["credential_values_emitted", "authority_ids_emitted", "provider_account_ids_emitted", "private_paths_emitted", "raw_capacity_values_emitted", "raw_billing_records_emitted", "raw_audio_emitted"],
+      "properties": {
+        "credential_values_emitted": {"const": false},
+        "authority_ids_emitted": {"const": false},
+        "provider_account_ids_emitted": {"const": false},
+        "private_paths_emitted": {"const": false},
+        "raw_capacity_values_emitted": {"const": false},
+        "raw_billing_records_emitted": {"const": false},
+        "raw_audio_emitted": {"const": false}
+      }
+    },
+    "e08_live_authority_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "parity_reason": {"type": "string", "minLength": 1}
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","evidence_state","batch_id","reference_system","asset_policy","cases"],
+  "properties": {
+    "schema_version":{"const":1},
+    "evidence_state":{"const":"NON_PARITY_EVIDENCE_ONLY"},
+    "batch_id":{"type":"string","minLength":1},
+    "reference_system":{"const":"MOISES_CURRENT_IPHONE"},
+    "asset_policy":{"const":"REFERENCE_ASSETS_ARE_EXTERNALLY_CAPTURED_AND_REFERENCED_BY_MANIFEST_PATH_ONLY"},
+    "cases":{"type":"array","minItems":1,"items":{"type":"object","required":["case_id","genre","duration_bucket","target_roles","fixture_manifest","fixture_manifest_sha256","project_run_manifest","project_run_manifest_sha256","reference_run_manifest","reference_run_manifest_sha256","reference_assets_copied_by_executor"],"properties":{"case_id":{"type":"string"},"genre":{"type":"string"},"duration_bucket":{"type":"string"},"target_roles":{"type":"array","minItems":2,"items":{"type":"string"}},"fixture_manifest":{"type":"string"},"fixture_manifest_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"project_run_manifest":{"type":"string"},"project_run_manifest_sha256":{"type":["string","null"],"pattern":"^[0-9a-f]{64}$"},"reference_run_manifest":{"type":"string"},"reference_run_manifest_sha256":{"type":["string","null"],"pattern":"^[0-9a-f]{64}$"},"reference_assets_copied_by_executor":{"const":false}},"additionalProperties":false}}
+  }
+}

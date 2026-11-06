@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A11",
+  "parity_state": "NON_PARITY_EVIDENCE_ONLY",
+  "scenarios": [
+    {"id":"A11-001","case":"2-stem fixed profile","expected":"PASS exact vocals+instrumental"},
+    {"id":"A11-002","case":"4-stem fixed profile","expected":"PASS exact vocals+drums+bass+other"},
+    {"id":"A11-003","case":"fixed profile role override","expected":"FAIL_CLOSED"},
+    {"id":"A11-004","case":"custom profile on Free tier","expected":"FAIL_CLOSED entitlement"},
+    {"id":"A11-005","case":"custom profile empty selection","expected":"FAIL_CLOSED"},
+    {"id":"A11-006","case":"custom direct-observed vocals+guitar+bass","expected":"PASS"},
+    {"id":"A11-007","case":"custom role not in current Reference floor","expected":"FAIL_CLOSED pending A12/reference evidence"},
+    {"id":"A11-008","case":"Hi-Fi custom on Premium","expected":"FAIL_CLOSED Pro entitlement"},
+    {"id":"A11-009","case":"Hi-Fi custom on Pro","expected":"PASS product request"},
+    {"id":"A11-010","case":"Hi-Fi basic profile","expected":"FAIL_CLOSED not inferred from current Reference"},
+    {"id":"A11-011","case":"current AudioShake adapter basic profiles","expected":"PASS standard only"},
+    {"id":"A11-012","case":"current AudioShake adapter custom/Hi-Fi","expected":"FAIL_CLOSED capability absent"},
+    {"id":"A11-013","case":"provider missing role / role alias collision / target limit / incompatible combination","expected":"FAIL_CLOSED"},
+    {"id":"A11-014","case":"required output missing/extra/duplicate","expected":"FAIL_CLOSED exact-set completeness"},
+    {"id":"A11-015","case":"public profile snapshot","expected":"PASS vendor-neutral, NON_PARITY"},
+    {"id":"A11-016","case":"corrupt/duplicate profile registry","expected":"FAIL_CLOSED"}
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "generated-stem-delete-request.schema.json",
+  "title": "L1-A24 Generated Stem Delete Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "project_ref_hash", "role", "generation_ref_hash", "variant_index", "request_reason", "delete_intent_evidence_sha256"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "project_ref_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "role": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "generation_ref_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "variant_index": {"type": "integer", "minimum": 0},
+    "request_reason": {"enum": ["USER_DELETE", "PROJECT_DELETE", "ACCOUNT_DELETE", "CANCEL_CLEANUP", "RETENTION_EXPIRED", "REGENERATION_CLEANUP"]},
+    "delete_intent_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

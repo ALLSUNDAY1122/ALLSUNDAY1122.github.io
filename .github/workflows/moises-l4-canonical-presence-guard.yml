@@ -1,0 +1,61 @@
+name: Moises L4 Canonical Presence Guard
+
+on:
+  push:
+    branches:
+      - tech/moises-separation
+    paths:
+      - 'tech-assets/moises-audio/Package.swift'
+      - 'tech-assets/moises-audio/Analysis/**'
+      - 'tech-assets/moises-audio/iOS/HostCore/**'
+      - '.github/workflows/moises-l4-canonical-presence-guard.yml'
+  pull_request:
+    paths:
+      - 'tech-assets/moises-audio/Package.swift'
+      - 'tech-assets/moises-audio/Analysis/**'
+      - 'tech-assets/moises-audio/iOS/HostCore/**'
+      - '.github/workflows/moises-l4-canonical-presence-guard.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lane4-analysis-presence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Prove Lane4 Analysis is canonical and compiled
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f Analysis/AnalysisSignal.swift
+          test -f Analysis/AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustody.swift
+          test -f iOS/HostCore/AnalysisIOSBridgeNormalizedDurabilityProbeCoordinator.swift
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          text = Path('Package.swift').read_text()
+          start = text.index('name: "MoisesAudioCore"', text.index('targets:'))
+          try:
+              end = text.index('name: "MoisesAudioLane2"', start)
+          except ValueError:
+              end = len(text)
+          core = text[start:end]
+
+          assert '"Analysis",' not in core, 'MoisesAudioCore must not exclude the entire Analysis directory'
+          assert '"Analysis/benchmarks"' in core, 'Only Analysis/benchmarks may remain excluded from the core source target'
+          assert '"Analysis/AnalysisSignal.swift"' in core
+          assert '"Analysis/AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustody.swift"' in core
+          assert '"iOS/HostCore/AnalysisIOSBridgeNormalizedDurabilityProbeCoordinator.swift"' in core
+
+          analysis_sources = re.findall(r'"Analysis/[^"\n]+\.swift"', core)
+          host_sources = re.findall(r'"iOS/HostCore/[^"\n]+\.swift"', core)
+          assert len(analysis_sources) >= 100, f'Lane4 Analysis source inventory unexpectedly small: {len(analysis_sources)}'
+          assert len(host_sources) >= 8, f'Lane4 HostCore source inventory unexpectedly small: {len(host_sources)}'
+          print(f'L4_CANONICAL_PRESENCE_PASS analysis_sources={len(analysis_sources)} host_sources={len(host_sources)}')
+          PY

@@ -1,0 +1,96 @@
+{
+  "schema_version": 2,
+  "project": "moises-equivalence",
+  "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
+  "assignment_epoch": 2,
+  "planning_revision": 4,
+  "planning_policy": {
+    "task_author": "WORKER_WITHIN_OWN_LANE",
+    "hq_preloads_tasks": false,
+    "global_queue_dispatch": false,
+    "one_next_equals": "ONE_SELF_PLANNED_MACRO_WAVE",
+    "target_work_size": "approximately 25-40 minutes equivalent meaningful work",
+    "worker_replans_every_next": true,
+    "worker_may_continue_without_hq": true,
+    "finite_backlog_exhaustion_is_not_a_stop_condition": true,
+    "quality_rule": "Every self-planned wave must reduce a real implementation, correctness, recovery, performance, security, privacy, evidence, integration-readiness or PARITY gap. Filler work is forbidden.",
+    "shared_contract_policy": "Shared/App remain HQ-owned and epoch-frozen. A Worker records a precise HQ contract request rather than editing them.",
+    "integration_policy": "HQ performs semantic late integration at useful checkpoints; normal Worker progress does not depend on HQ task release or other lanes completing."
+  },
+  "self_planning_priority": [
+    "current-iPhone PARITY gaps directly owned by the lane",
+    "known_gaps in the worker status that can be solved within owned scope",
+    "missing failure/recovery/edge-case behavior",
+    "correctness, durability, performance, security and privacy hardening",
+    "missing tests, benchmarks and durable evidence",
+    "late-integration adapters, measurement hooks and runbooks that can be prepared without editing other lanes",
+    "external-gated work: finish all meaningful preparation that does not require the missing credential, rights-cleared fixture, device or human decision"
+  ],
+  "stop_policy": {
+    "allowed": [
+      "No meaningful lane-local implementation, hardening or validation preparation remains without an external/human input",
+      "A frozen Shared/App contract change is genuinely required",
+      "The remaining solution requires editing another lane's owned scope",
+      "The operation would be unsafe or technically impossible"
+    ],
+    "forbidden": [
+      "No preloaded task exists",
+      "All old Macro Bundle IDs were consumed",
+      "HQ did not replenish work",
+      "Another worker has not finished",
+      "Global Queue has no READY task"
+    ]
+  },
+  "lanes": [
+    {
+      "lane_id": "LANE-1-SEPARATION-PROCESSING",
+      "worker_id": "Moises-Worker-1",
+      "work_branch": "moises/wp1-separation-processing",
+      "owned_scope": ["tech-assets/moises-audio/Separation/**", "tech-assets/moises-audio/Processing/**"],
+      "mission": "Own the complete lawful source-separation and processing lifecycle surface, including provider/runtime behavior, artifact assurance, failure recovery, evaluation readiness and production hardening.",
+      "current_major_gaps": ["real lawful production separator route/credentials", "rights-cleared G1/G2 real-audio evidence", "live quality/latency/cost/cancellation/retention evidence", "current-iPhone long-track/background/relaunch evidence"],
+      "worker_instruction": "At every next, inspect current branch/status/PARITY and choose the highest-value lane-local wave. External separation credentials or fixtures must not prevent independent processing, validation, security, recovery or evidence-readiness work."
+    },
+    {
+      "lane_id": "LANE-2-IO-LIBRARY",
+      "worker_id": "Moises-Worker-2",
+      "work_branch": "moises/wp2-io-library",
+      "owned_scope": ["tech-assets/moises-audio/IO/**", "tech-assets/moises-audio/Library/**"],
+      "mission": "Own durable media import/export and project/library persistence from app-owned file acquisition through metadata lifecycle, migration, corruption handling, deletion and recovery.",
+      "current_major_gaps": ["Apple Core Data runtime execution", "actual iPhone picker/share/codec evidence", "interruption and storage-pressure recovery", "large-library and migration/corruption hardening"],
+      "worker_instruction": "Do not wait for iOS shell integration. Continue selecting persistence, IO safety, recovery, scalability, codec-boundary and evidence work that can be completed inside IO/Library."
+    },
+    {
+      "lane_id": "LANE-3-PLAYBACK-DSP",
+      "worker_id": "Moises-Worker-3",
+      "work_branch": "moises/wp3-playback-dsp",
+      "owned_scope": ["tech-assets/moises-audio/Playback/**", "tech-assets/moises-audio/DSP/**"],
+      "mission": "Own synchronized multitrack playback and practice DSP semantics, timing safety, control behavior, offline/reference evidence and device-measurement readiness.",
+      "current_major_gaps": ["final Xcode/AVFAudio compile", "physical-iPhone timing and audible artifact evidence", "live Apple gain-ramp execution", "rights-cleared real-track and Moises differential evidence"],
+      "worker_instruction": "Lack of an Apple device is not a reason to stop while portable correctness, deterministic planning, backend safety, offline/reference tooling or measurement preparation can still be improved."
+    },
+    {
+      "lane_id": "LANE-4-IOS-ANALYSIS",
+      "worker_id": "Moises-Worker-4",
+      "work_branch": "moises/wp4-analysis-platform",
+      "owned_scope": ["tech-assets/moises-audio/Analysis/**", "tech-assets/moises-audio/Package.swift", "tech-assets/moises-audio/Tests/**", "tech-assets/moises-audio/iOS/**"],
+      "mission": "Own the standalone iOS host/platform surface and music-analysis implementation/evidence while leaving cross-lane semantic integration to HQ.",
+      "current_major_gaps": ["actual Apple Xcode/simulator/device build evidence", "rights-cleared real-audio MIR accuracy evidence", "current-Moises analysis differential", "physical-device latency/RSS/thermal/battery evidence"],
+      "worker_instruction": "Do not merge other lanes. Continue choosing iOS-host robustness, Analysis correctness, evaluator, vocabulary/unknown semantics, performance preparation and integration-slot work that stays inside owned scope."
+    }
+  ],
+  "late_integration_gate": {
+    "owner": "HQ",
+    "responsibilities": [
+      "merge coherent lane checkpoints when integration has value",
+      "resolve Shared/App contract and adapter changes centrally",
+      "compile the real integrated iOS target with all lane implementations",
+      "run cross-feature regression",
+      "run real-device and real-audio evidence",
+      "run Differential Moises comparison",
+      "update PARITY_MATRIX"
+    ],
+    "non_responsibility": "HQ does not author or replenish the normal lane-local work backlog."
+  },
+  "historical_note": "Epoch-2 M01-M04 bundles were the bootstrap mechanism for v3 and remain preserved in Git/worker status history. From planning revision 4 onward they are not the Worker task source."
+}

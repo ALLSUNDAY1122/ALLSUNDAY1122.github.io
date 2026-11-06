@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A44",
+  "title": "AudioShake Task Target Contract Preflight",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "targets": ["MOI-P003", "MOI-P004", "MOI-P005"],
+  "provider_contract_observed_at": "2026-08-27",
+  "provider_contract": {
+    "create_task_target_array_min": 1,
+    "create_task_target_array_max": 20,
+    "model_discovery_endpoint": "GET /models",
+    "model_access_is_account_specific": true,
+    "model_limits_are_optional_model_specific_fields": true
+  },
+  "closed_gap": "The canonical advanced production route can now validate AudioShake task target-count and account-enabled model availability before source-file IO, duration analysis, cost reservation or user-content upload, with a second validation before POST /tasks.",
+  "formal_repository_tests": {
+    "path": "tech-assets/moises-audio/Separation/Tests/test_a44_audioshake_task_target_contract.py",
+    "scenario_count": 10,
+    "execution_state": "NOT_OBSERVED_ON_EXACT_CHECKOUT",
+    "scenarios": [
+      "documented task cap is 20",
+      "deployment policy may narrow cap",
+      "deployment policy cannot widen provider cap",
+      "invalid configured cap fails closed",
+      "contract-bound capability exposes max_targets=20",
+      "exactly 20 canonical targets pass preflight",
+      "21 targets fail before discovery/upload/POST",
+      "create-task defense rechecks contract before POST",
+      "account-disabled model fails without media upload",
+      "budgeted production preflight wins before missing-source IO and cost"
+    ]
+  },
+  "dependency_binding": {
+    "path": "tech-assets/moises-audio/Separation/Tests/test_a44_dependency_binding.py",
+    "scenario_count": 4,
+    "execution_state": "NOT_OBSERVED_ON_EXACT_CHECKOUT"
+  },
+  "focused_interface_harness": {
+    "state": "PASS",
+    "assertions": 9,
+    "scope": "task-cap narrowing/widening and provider-preflight ordering model",
+    "exact_repository_native": false
+  },
+  "exact_checkout": {
+    "state": "BLOCKED_ENVIRONMENT",
+    "reason": "git ls-remote failed because the execution container could not resolve github.com",
+    "a26_closed": false
+  },
+  "non_claims": [
+    "No AudioShake credentialed production Task was created in this wave.",
+    "No rights-cleared user audio was uploaded in this wave.",
+    "No current-iPhone latency, memory, thermal, battery or audible-quality evidence was produced.",
+    "No current-Moises differential was executed.",
+    "P003/P004/P005 remain MISSING and are not promoted by contract/preflight evidence."
+  ]
+}

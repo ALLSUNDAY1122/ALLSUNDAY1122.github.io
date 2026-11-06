@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW35",
+  "title": "Selected Reconstruction + Interactive Continuity Evidence Hardening",
+  "result": "COMPLETE_NON_PARITY",
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "optimized_stress_and_benchmark": true
+  },
+  "implementation": {
+    "bounded_ring_buffer": true,
+    "default_capacity": 4096,
+    "minimum_capacity": 16,
+    "maximum_capacity": 65536,
+    "saturating_capacity_drop_counter": true,
+    "slot_generation_at_intent_and_completion": true,
+    "transport_ticket_field": true,
+    "playback_generation_field": true,
+    "first_intent_timestamp_field": true,
+    "token_issued_timestamp_field": true,
+    "audible_result_timestamp_field": true,
+    "requested_and_applied_seek_loop_targets": true,
+    "nearest_rank_p50_p95_p99": true,
+    "parity_promotion_allowed": false
+  },
+  "negative_validation": {
+    "executed_cross_generation_rejected": true,
+    "stale_rejection_without_generation_change_rejected": true,
+    "token_before_intent_rejected": true,
+    "audible_before_intent_rejected": true,
+    "audible_before_token_rejected": true,
+    "executed_without_transport_ticket_rejected": true,
+    "executed_without_playback_generation_rejected": true,
+    "executed_without_applied_target_rejected": true,
+    "target_shape_mismatch_rejected": true,
+    "target_tolerance_violation_rejected": true,
+    "invalid_device_context_rejected": true
+  },
+  "self_test": {
+    "executed": true,
+    "result": "PASS",
+    "retained_observations": 51,
+    "executed_observations": 50,
+    "stale_generation_rejections": 1,
+    "token_p95_nanoseconds": 1940000,
+    "token_p99_nanoseconds": 1980000,
+    "bounded_capacity": 16,
+    "bounded_capacity_drops": 84,
+    "oldest_retained_sample_id": 84,
+    "newest_retained_sample_id": 99
+  },
+  "stress": {
+    "executed": true,
+    "result": "PASS",
+    "total_observations": 1000000,
+    "retained_observations": 4096,
+    "capacity_drops": 995904,
+    "retained_stale_generation_rejections": 4,
+    "analyzer_issue_count": 0,
+    "token_p99_nanoseconds": 2000000,
+    "audible_result_p99_nanoseconds": 8000000
+  },
+  "portable_bookkeeping_benchmark": {
+    "executed": true,
+    "rounds": 20,
+    "operations_per_round": 1000000,
+    "median_ms": 46.832,
+    "p95_ms": 57.979,
+    "max_ms": 72.568,
+    "checksum": 59918060,
+    "scope": "bounded continuity observation ring-buffer bookkeeping only"
+  },
+  "apple_and_parity_gates": {
+    "selected_xcode_compile_executed": false,
+    "physical_iphone_executed": false,
+    "exact_first_intent_to_token_device_measurement_executed": false,
+    "first_intent_to_audible_result_device_measurement_executed": false,
+    "reconstruction_during_interactive_device_sequence_executed": false,
+    "rights_cleared_real_audio_executed": false,
+    "current_moises_differential_executed": false,
+    "human_listening_executed": false,
+    "automatic_repeated_loop_seam_envelope_implemented": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015"
+  ]
+}

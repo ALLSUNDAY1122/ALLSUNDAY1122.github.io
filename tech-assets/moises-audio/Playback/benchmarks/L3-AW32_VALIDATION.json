@@ -1,0 +1,102 @@
+{
+  "wave_id": "L3-AW32",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_BOUNDARY_ENVELOPE_RESTART_GAP_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "selected_xcode_compile": false,
+    "physical_iphone": false,
+    "real_avfaudio_master_gain_runtime": false,
+    "real_audio": false,
+    "av_audio_session_runtime": false,
+    "current_moises_differential": false,
+    "human_listening": false
+  },
+  "implementation": [
+    "provisional 8 ms fade-out and 8 ms fade-in boundary envelope planning",
+    "generation fence rejects stale restart fade-in authority after a newer boundary",
+    "Apple master gain decorator is placed after the exact AW31 shared AVAudioUnitTimePitch node",
+    "selected restart envelope covers seek, loop mutation, tempo boundary, play and resume-style restart paths",
+    "selected muted tempo boundary uses immediate DSP apply instead of the AW28 live ramp barrier",
+    "AW17 inner tempo quiet period remains zero so no post-fade double debounce is introduced",
+    "raw AW31 Playback backend remains private behind selected stack and RescheduleFencedPlaybackBackend",
+    "automatic repeated-loop seam runtime envelope remains intentionally unavailable"
+  ],
+  "portable_validation": {
+    "planner_self_test": "PASS",
+    "sample_rate_48000_fade_out_frames": 384,
+    "sample_rate_48000_fade_in_frames": 384,
+    "start_lead_seconds": 0.075,
+    "invalid_policy_fail_closed": true,
+    "late_loop_arming_detected": true,
+    "loop_envelope_overlap_risk_detected": true
+  },
+  "stress": {
+    "planner_cycles": 1000000,
+    "safe_plans": 999066,
+    "overlap_risk_plans": 934,
+    "late_arm_plans": 433,
+    "planner_checksum": 1625.424550,
+    "generation_fence_stale_rejected": 500000,
+    "generation_fence_current_consumed": 500000,
+    "generation_fence_final_generation": 1000000,
+    "status": "PASS"
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "operations_per_round": 250000,
+    "median_ms": 7.661,
+    "p95_ms": 8.456,
+    "max_ms": 8.456,
+    "checksum": 3733982613.420,
+    "scope": "boundary envelope planner and loop-risk planning CPU cost only; excludes AVAudioEngine, AudioUnit scheduling, file/device IO, render latency, real audio and listening"
+  },
+  "tempo_restart_gap": {
+    "selected_muted_boundary_recommended_barrier_nanoseconds": 0,
+    "live_baseline_from_0_5_to_2_0_at_48000_recommended_barrier_nanoseconds": 44000000,
+    "selected_policy": "PracticeDSPTempoTransitionPolicy.boundaryMutedImmediate",
+    "live_aw28_policy_preserved": true
+  },
+  "source_identity": {
+    "Playback/Sources/PlaybackBoundaryEnvelope.swift": "3e9aa2bd43201814124ac8e603dfe343a4a41cca",
+    "Playback/Sources/AppleBoundaryEnvelopedPlaybackBackend.swift": "6154df37f7a0ed545b551fd82989174f19091abb",
+    "Playback/Sources/Lane3AppleTempoAwarePlaybackDSPStack.swift": "8f08a1ab313802bc2060bbacef140cd541ce07df",
+    "DSP/Sources/PracticeDSPBoundaryTempoPolicy.swift": "2c00d8e67d2589d46e7f662657581755e397056f",
+    "Playback/Tests/L3_AW32_BoundaryEnvelopePlannerSelfTest.swift": "63c5bda2c1d06547163d77495e9e0c28a736f7f8",
+    "Playback/Tests/L3_AW32_BoundaryEnvelopeStress.swift": "eb5b6cfe3c68735cad14ea3a4a4c665abea455c5",
+    "Playback/Tests/L3_AW32_BoundaryEnvelopeBenchmark.swift": "bbf5d2c8db8e63c659a877ad3fcbcedaf989bfb6",
+    "Playback/Tests/L3_AW32_BoundaryEnvelopeGenerationFenceSelfTest.swift": "cb6074e31711b805025bbbd51adeedfac281b800",
+    "DSP/Tests/L3_AW32_BoundaryMutedTempoPolicySelfTest.swift": "2ec4abe411026b7ddc7eb4ab569d497dd7ede382"
+  },
+  "selected_apple_runtime_contract": {
+    "master_gain_after_shared_time_pitch": true,
+    "seek_restart_envelope_available": true,
+    "loop_mutation_restart_envelope_available": true,
+    "tempo_restart_envelope_available": true,
+    "play_restart_envelope_available": true,
+    "stale_fade_in_generation_guarded": true,
+    "automatic_repeated_loop_seam_envelope_available": false,
+    "audible_artifact_elimination_claimed": false
+  },
+  "known_open_gates": [
+    "complete selected Xcode/iOS SDK compile and physical-iPhone runtime of the AW32 Apple decorator",
+    "real PCM capture and listening around seek/loop mutation/tempo/play/pause/interruption restart boundaries",
+    "automatic repeated-loop seam exact-host envelope or separate device evidence proving no unacceptable seam artifact",
+    "75 ms common-host start lead remains provisional and requires device tuning",
+    "8 ms fade-out/fade-in durations remain provisional and require device tuning",
+    "current-Moises real-track differential and listening",
+    "PARITY remains false"
+  ],
+  "claims": {
+    "physical_iphone_claimed": false,
+    "real_audio_claimed": false,
+    "click_pop_elimination_claimed": false,
+    "automatic_loop_seam_hardened_claimed": false,
+    "current_moises_differential_claimed": false,
+    "human_listening_claimed": false,
+    "parity_claimed": false
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/moises/rights-cleared-audio-evidence.schema.json",
+  "title": "Lane 1 E02 sanitized rights-cleared real-audio intake evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "tool_version", "evidence_kind", "evidence_state", "intake_state", "parity_state", "corpus_id", "corpus_revision", "a19_corpus_lock_sha256", "e02_rights_intake_lock_sha256", "fixtures", "privacy", "limitations", "parity_reason"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"const": "L1-E02-v1"},
+    "evidence_kind": {"const": "RIGHTS_CLEARED_REAL_AUDIO_INTAKE"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "intake_state": {"const": "READY_FOR_HQ_LIVE_AUDIO_GATE"},
+    "parity_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "corpus_id": {"type": "string", "minLength": 1},
+    "corpus_revision": {"type": "string", "minLength": 1},
+    "a19_corpus_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "e02_rights_intake_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fixtures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["fixture_id", "group", "manifest_sha256", "mixture_sha256", "reference_sha256_by_role", "grant_record_sha256", "rights_record_ref_hash", "origin_record_ref_hash", "source_document_sha256", "effective_date", "expires_date", "permission_profile_sha256"],
+        "properties": {
+          "fixture_id": {"type": "string", "minLength": 1},
+          "group": {"enum": ["G1", "G2"]},
+          "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "mixture_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "reference_sha256_by_role": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+          "grant_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "rights_record_ref_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "origin_record_ref_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "source_document_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "effective_date": {"type": "string", "format": "date"},
+          "expires_date": {"type": ["string", "null"], "format": "date"},
+          "permission_profile_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "privacy": {"type": "object"},
+    "limitations": {"type": "object"},
+    "parity_reason": {"type": "string", "minLength": 1}
+  }
+}

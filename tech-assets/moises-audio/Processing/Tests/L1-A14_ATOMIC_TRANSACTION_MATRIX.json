@@ -1,0 +1,57 @@
+{
+  "wave": "L1-A14",
+  "result": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "invariant": "No project-visible StemArtifact set is trusted unless every required role is present as an exact filename/hash set and the committed ledger is durably saved.",
+  "transaction_phases": [
+    "prepared_staging_verified",
+    "assembling_incoming",
+    "incoming_verified",
+    "promotion_ready",
+    "final_promoted",
+    "ledger_committed",
+    "scratch_cleaned"
+  ],
+  "scenarios": [
+    {"id":"happy-exact-set","expected":"PASS","rule":"all required stems hash-match before promotion"},
+    {"id":"ledger-save-fails-after-final-promotion","expected":"RECOVER","rule":"ledger remains prepared; relaunch finalizes only if final exact set matches"},
+    {"id":"complete-incoming-staging-missing","expected":"RECOVER","rule":"verified incoming can finish without provider re-download"},
+    {"id":"final-promoted-ledger-not-saved","expected":"RECOVER","rule":"exact final set can finalize committed ledger"},
+    {"id":"partial-incoming-with-protected-prior-final","expected":"ROLLBACK","rule":"restore prior final and keep verified staging"},
+    {"id":"incoming-extra-file","expected":"FAIL_CLOSED","rule":"exact filename set required"},
+    {"id":"incoming-missing-file","expected":"FAIL_CLOSED","rule":"partial role set never promotes"},
+    {"id":"incoming-hash-mismatch","expected":"FAIL_CLOSED","rule":"role-to-SHA journal binding required"},
+    {"id":"journal-identity-mismatch","expected":"FAIL_CLOSED","code":"SEP_COMMIT_JOURNAL_IDENTITY_MISMATCH"},
+    {"id":"journal-corrupt","expected":"FAIL_CLOSED","code":"SEP_COMMIT_JOURNAL_CORRUPT"},
+    {"id":"orphan-staging-no-ledger","expected":"CLEANUP","rule":"remove job-local staging/incoming/journal when no ledger and no protected backup"},
+    {"id":"orphan-backup-no-ledger","expected":"FAIL_CLOSED","code":"SEP_COMMIT_RECOVERY_LEDGER_MISSING","rule":"never destroy the only possible prior user result"},
+    {"id":"committed-final-tampered","expected":"FAIL_CLOSED","code":"SEP_COMMIT_COMMITTED_FINAL_MISMATCH"},
+    {"id":"deleted-ledger-backup-present","expected":"FAIL_CLOSED","code":"SEP_COMMIT_RECOVERY_DELETED_WITH_BACKUP","rule":"never resurrect or silently destroy ambiguous deleted-state backup"},
+    {"id":"existing-final-replaced-only-after-full-incoming","expected":"PASS"},
+    {"id":"prepared-local-set-vendor-url-expired","expected":"PASS","rule":"already downloaded+verified hashes do not require signed URL freshness"},
+    {"id":"no-local-set-vendor-url-expired","expected":"FAIL_RETRYABLE_BEFORE_DOWNLOAD","code":"SEP_OUTPUT_URL_EXPIRING"},
+    {"id":"prepared-delete-with-backup","expected":"ROLLBACK_AND_CLEAN","rule":"restore previous final, delete this job's staging/incoming/journal"},
+    {"id":"prepared-delete-no-backup-exact-final","expected":"DELETE_UNCOMMITTED_FINAL_AND_CLEAN"},
+    {"id":"committed-delete","expected":"DELETE_ONLY_AFTER_FINAL_HASH_SET_MATCH"},
+    {"id":"same-role-duplicate-verified-output","expected":"FAIL_CLOSED","code":"SEP_COMMIT_EXPECTED_SET_INVALID"},
+    {"id":"symlink-in-commit-directory","expected":"FAIL_CLOSED","rule":"commit set cannot contain symlinked stem files"},
+    {"id":"scratch-cleanup-after-committed-ledger","expected":"IDEMPOTENT_RECOVERY","rule":"committed final validated before scratch removal"},
+    {"id":"ambiguous-final-and-backup-with-complete-incoming","expected":"FAIL_CLOSED","code":"SEP_COMMIT_RECOVERY_AMBIGUOUS_FINALS"}
+  ],
+  "machine_tests": {
+    "swift_version": "6.2.1",
+    "platform": "x86_64-unknown-linux-gnu",
+    "transaction_fault_model": {"tests": 14, "failures": 0},
+    "url_expiry_boundary_model": {"tests": 2, "failures": 0},
+    "prepared_deletion_model": {"tests": 2, "failures": 0},
+    "total": {"tests": 18, "failures": 0},
+    "checked_in_selftest_scenarios": 10
+  },
+  "durable_selftest": "tech-assets/moises-audio/Separation/Tests/L1_A14_AtomicTransactionSelfTest.swift",
+  "external_gaps": [
+    "real device process-kill/power-loss during filesystem rename and ledger atomic-write windows",
+    "real provider output URL re-sign/refresh behavior when no complete local verified set exists",
+    "disk-full behavior across large multi-stem promotion is exercised further in L1-A15/L1-A17",
+    "live real-audio and current-iPhone differential evidence remain required for PARITY"
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "wave": "L1-A18",
+  "result": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "schema_version": 1,
+  "machine_tests": {
+    "privacy_safe_observability": {"tests": 35, "failures": 0, "result": "PASS"},
+    "py_compile": {"modules": 2, "result": "PASS"}
+  },
+  "record_schema": {
+    "job_ref_hash": "domain-separated-sha256",
+    "profile_id": "safe_identifier",
+    "target_count": "positive_integer",
+    "provider_kind": "safe_identifier",
+    "model_name": "safe_identifier",
+    "model_version": "safe_identifier",
+    "currency": "3_uppercase",
+    "estimated_cost": "nonnegative_decimal_string",
+    "actual_cost": "nonnegative_decimal_string|null",
+    "duration_milliseconds": "positive_integer",
+    "source_bytes": "positive_integer",
+    "terminal_state": ["active", "cancelled", "deleted", "failed", "ready", "unknown"],
+    "stable_error_code": "stable_code|null",
+    "phase_stats": {
+      "allowed_phases": [
+        "artifact_validate", "delete", "intent", "ledger_commit", "output_download", "poll",
+        "promotion", "provider_create", "recover", "staging", "storage_preflight", "upload"
+      ],
+      "metrics": [
+        "attempts", "retry_count", "elapsed_milliseconds", "bytes_transferred",
+        "failure_count", "last_error_code"
+      ]
+    },
+    "artifacts": {
+      "key": "canonical_role",
+      "fields": ["role", "sha256", "byte_count"],
+      "max_items": 64
+    }
+  },
+  "bridges": {
+    "A06_A15_job_record": "consume only output model/sha256/bytes and stable_error_code; ignore project/asset/provider IDs, relative paths and request identity fields",
+    "A10_cost": "consume actual cost only from privacy-safe cost evidence; registration already binds currency/estimate/duration/target count",
+    "A15_long_track": "consume aggregate upload/download bytes and elapsed milliseconds plus stable error code",
+    "A17_fault": "consume stable error code only; operation_retryable does not increment actual retry_count"
+  },
+  "forbidden": {
+    "arbitrary_metadata": true,
+    "api_key_or_secret": true,
+    "raw_audio_or_bytes": true,
+    "user_filename_or_path": true,
+    "signed_or_download_url": true,
+    "raw_provider_operational_ids": true,
+    "raw_idempotency_key": true,
+    "raw_logical_job_id": true,
+    "free_text_error_message": true
+  },
+  "negative_guards": [
+    "raw logical job ID is never persisted; only a domain-separated SHA-256 reference is stored",
+    "API key, authorization, secret and token-like key names fail closed",
+    "HTTP/file/signed URL values fail closed even under an otherwise innocent key",
+    "raw bytes and arbitrary object types fail closed",
+    "user filename/path and provider asset/task operational IDs are not accepted by the evidence envelope",
+    "free-text error messages are rejected; stable codes only",
+    "unknown/injected store fields fail closed on load rather than being silently retained",
+    "artifact role/hash/byte conflicts fail closed",
+    "retry count records actual retries only and cannot exceed attempt count",
+    "ready results may transition to deleted, but a deleted tombstone cannot resurrect"
+  ],
+  "durability": {
+    "write": "temp-file + fsync + atomic replace",
+    "coordination": "process advisory lock; multi-host deployment requires an equivalent transactional sink"
+  },
+  "remaining_external_gaps": [
+    "HQ has not selected the production telemetry backend, access controls or evidence retention period",
+    "live provider error payload aliases, Retry-After and authoritative actual-cost reconciliation remain unverified",
+    "integrated iPhone telemetry/privacy review and account/project deletion evidence remain required for P024",
+    "real provider, rights-cleared audio, device and current-reference differential evidence remain required for PARITY"
+  ],
+  "parity_state": "NON_PARITY_EVIDENCE_ONLY"
+}

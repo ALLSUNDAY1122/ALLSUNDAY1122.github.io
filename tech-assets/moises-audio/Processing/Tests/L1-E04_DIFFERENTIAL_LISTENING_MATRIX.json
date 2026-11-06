@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "wave": "L1-E04",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "live_gate": "PENDING_EXTERNAL_INPUT",
+  "local_verification": {
+    "regression_fault_scenarios": 21,
+    "passed": 21,
+    "failed": 0,
+    "py_compile": "PASS",
+    "fixture_kind": "SYNTHETIC_CONTROL_ONLY"
+  },
+  "covered_semantics": [
+    "WAITING_REVIEW persists a private blind session",
+    "completed independent reviews can resume the same session",
+    "blinding seed remains stable across score additions",
+    "sanitized evidence omits reference paths reviewer IDs and seed",
+    "material practical inferiority produces DIFFERENTIAL_FAIL",
+    "E03 not-ready is rejected",
+    "E03 to E02 rights-lock mismatch is rejected",
+    "E03 fixture group mutation relative to E02 is rejected",
+    "project run manifest SHA mismatch is rejected",
+    "project artifact SHA mismatch relative to E03 is rejected",
+    "current-iPhone input mixture SHA mismatch is rejected",
+    "reference capture provenance mutation is rejected",
+    "non-independent or conflicted active reviewer is rejected",
+    "insufficient reviewer count is rejected",
+    "unsafe reference path / repository-copy attempt is rejected",
+    "blindness-compromised review is rejected",
+    "duplicate assignment review is rejected",
+    "session source/policy identity mutation is rejected",
+    "successful E03 run without artifact evidence is rejected",
+    "non-current-iPhone reference identity is rejected",
+    "invalid score / unknown assignment / invalid material vote / private-root-in-repository faults are rejected"
+  ],
+  "live_acceptance_not_exercised": [
+    "real E02 G2 corpus",
+    "real E03 production project outputs",
+    "current-iPhone Moises reference captures",
+    "independent human blind listening",
+    "HQ provenance review"
+  ],
+  "parity_claim": "NONE"
+}

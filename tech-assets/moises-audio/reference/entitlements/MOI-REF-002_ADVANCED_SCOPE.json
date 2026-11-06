@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-REF-002",
+  "captured_at": "2026-08-22",
+  "reference_platform": "current iPhone app",
+  "classification_rule": "plan entitlement is not sufficient evidence of native iPhone execution; require explicit mobile/iOS source or current-device observation",
+  "features": [
+    {
+      "parity_row": "MOI-P005",
+      "feature": "advanced instrument separation",
+      "current_iphone_scope": true,
+      "tiers": {
+        "FREE": "basic 2-track/4-track core governed by verified MOI-REF-001",
+        "PREMIUM": "advanced custom instrument separation",
+        "PRO": "Premium plus Hi-Fi and professional stem modules"
+      },
+      "confidence": "HIGH",
+      "parity_state_change_by_worker": false,
+      "notes": "Current App Store tier text plus direct current-device custom separation/Hi-Fi evidence. Remains MISSING pending implementation/quality proof."
+    },
+    {
+      "parity_row": "MOI-P025",
+      "feature": "AI Stem Generation",
+      "current_iphone_scope": true,
+      "tiers": {
+        "FREE": "available; credit-limited",
+        "PREMIUM": "available; tier-specific credits",
+        "PRO": "available; tier-specific credits"
+      },
+      "execution_surfaces": ["mobile", "web", "desktop"],
+      "confidence": "HIGH",
+      "parity_state_change_by_worker": false,
+      "notes": "Official Moises material explicitly says mobile availability for Free/Premium/Pro. Exact current account credit numbers require in-app recapture at implementation time."
+    },
+    {
+      "parity_row": "MOI-P026",
+      "feature": "Video Recording / performance capture",
+      "current_iphone_scope": true,
+      "tiers": {
+        "FREE": "available",
+        "PREMIUM": "available",
+        "PRO": "available"
+      },
+      "execution_surfaces": ["iOS", "Android"],
+      "mobile_only": true,
+      "observed_contract": [
+        "camera entry",
+        "headphones required",
+        "smart sync correction",
+        "manual sync adjustment",
+        "post-recording audio enhancement/mix",
+        "picture-in-picture while recording"
+      ],
+      "confidence": "HIGH",
+      "parity_state_change_by_worker": false
+    },
+    {
+      "parity_row": "MOI-P027",
+      "feature": "AI Studio / generative production workspace",
+      "current_iphone_scope": false,
+      "account_tier_scope": "available across Moises users with feature/credit differences by tier",
+      "execution_surfaces": ["web", "desktop"],
+      "confidence": "HIGH",
+      "hq_action_proposal": "preserve row and canonicalize current-platform scope; do not require native-iPhone AI Studio unless later evidence supersedes",
+      "parity_state_change_by_worker": false,
+      "notes": "AI Studio must not be conflated with mobile AI Stem Generation."
+    },
+    {
+      "parity_row": "MOI-P028",
+      "feature": "Voice Studio / AI voice conversion",
+      "current_iphone_scope": false,
+      "tiers": {
+        "FREE": "account can access/experiment subject to current processing/export limits",
+        "PREMIUM": "account can access/experiment subject to current processing/export limits",
+        "PRO": "full/unlocked export benefits in current plan messaging"
+      },
+      "execution_surfaces": ["web", "desktop"],
+      "confidence": "HIGH",
+      "hq_action_proposal": "preserve row and distinguish account entitlement from native-iPhone feature; do not infer mobile UI from App Store subscription benefit",
+      "parity_state_change_by_worker": false
+    }
+  ],
+  "sources": [
+    {
+      "id": "app-store-jp",
+      "url": "https://apps.apple.com/jp/app/moises-%E3%83%9F%E3%83%A5%E3%83%BC%E3%82%B8%E3%82%B7%E3%83%A3%E3%83%B3%E3%82%A2%E3%83%97%E3%83%AA/id1515796612",
+      "authority": "Apple listing supplied by Moises"
+    },
+    {
+      "id": "moises-separation-help",
+      "url": "https://help.moises.ai/hc/en-us/articles/360010972019-Which-instruments-can-be-separated-on-Moises",
+      "authority": "Moises Help"
+    },
+    {
+      "id": "moises-video-mobile-help",
+      "url": "https://help.moises.ai/hc/en-us/articles/21169867017116-Video-recording-on-Mobile",
+      "authority": "Moises Help"
+    },
+    {
+      "id": "moises-latest-releases",
+      "url": "https://moises.ai/blog/latest/improvements-latest-releases/",
+      "authority": "Moises product release documentation"
+    },
+    {
+      "id": "moises-app-product",
+      "url": "https://moises.ai/products/moises-app/",
+      "authority": "Moises product page"
+    },
+    {
+      "id": "moises-ai-studio",
+      "url": "https://moises.ai/features/ai-studio-music-creation/",
+      "authority": "Moises product page"
+    },
+    {
+      "id": "moises-voice-studio",
+      "url": "https://moises.ai/features/ai-voice-models/",
+      "authority": "Moises product page"
+    },
+    {
+      "id": "moises-web-desktop-benefits",
+      "url": "https://moises.ai/web-app-benefits/",
+      "authority": "Moises product page"
+    }
+  ],
+  "remaining_unknowns": [
+    "exact current in-app AI Stem Generation credit counters by subscription tier",
+    "region/account-specific paywall experiments",
+    "future native-mobile releases of AI Studio or Voice Studio"
+  ],
+  "parity_rows_remain_worker_unmodified": ["MOI-P005", "MOI-P025", "MOI-P026", "MOI-P027", "MOI-P028"]
+}

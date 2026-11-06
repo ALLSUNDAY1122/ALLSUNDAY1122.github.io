@@ -1,0 +1,85 @@
+{
+  "schema_version": 3,
+  "project": "moises-equivalence",
+  "assignment_epoch": 2,
+  "planning_revision": 4,
+  "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
+  "lane_plan": "automation/chatgpt-dispatcher/moises-equivalence/lane-plan-v3.json",
+  "allocation_rule": "Four exclusive lanes run independently against one frozen Shared/App contract snapshot. HQ fixes ownership boundaries; each Worker creates its own next lane-local Macro Wave from current gaps and PARITY needs.",
+  "macro_rule": {
+    "one_next_equals": "one worker-self-planned macro wave",
+    "target_work_size": "approximately 25-40 minutes equivalent meaningful work",
+    "hq_preloads_or_replenishes_tasks": false,
+    "worker_replans_every_next": true,
+    "worker_auto_advance": true,
+    "hq_release_between_waves": false,
+    "integration_after_each_wave": false,
+    "finite_backlog_exhaustion_is_not_a_stop_condition": true
+  },
+  "global_hq_owned": [
+    "automation/chatgpt-dispatcher/moises-equivalence/queue.json",
+    "automation/chatgpt-dispatcher/moises-equivalence/work-packages.json",
+    "automation/chatgpt-dispatcher/moises-equivalence/lane-plan-v3.json",
+    "automation/chatgpt-dispatcher/moises-equivalence/resource-locks.json",
+    "tech-assets/moises-audio/Shared/**",
+    "tech-assets/moises-audio/App/**",
+    "tech-assets/moises-audio/PARITY_MATRIX.json"
+  ],
+  "packages": [
+    {
+      "lane_id": "LANE-1-SEPARATION-PROCESSING",
+      "worker_id": "Moises-Worker-1",
+      "worker_number": 1,
+      "work_branch": "moises/wp1-separation-processing",
+      "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-1.json",
+      "owned_resources": ["source-separation-model", "processing-lifecycle"],
+      "write_scope": ["tech-assets/moises-audio/Separation/**", "tech-assets/moises-audio/Processing/**"],
+      "planning_mode": "WORKER_AUTONOMOUS"
+    },
+    {
+      "lane_id": "LANE-2-IO-LIBRARY",
+      "worker_id": "Moises-Worker-2",
+      "worker_number": 2,
+      "work_branch": "moises/wp2-io-library",
+      "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-2.json",
+      "owned_resources": ["import-export", "library-persistence"],
+      "write_scope": ["tech-assets/moises-audio/IO/**", "tech-assets/moises-audio/Library/**"],
+      "planning_mode": "WORKER_AUTONOMOUS"
+    },
+    {
+      "lane_id": "LANE-3-PLAYBACK-DSP",
+      "worker_id": "Moises-Worker-3",
+      "worker_number": 3,
+      "work_branch": "moises/wp3-playback-dsp",
+      "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-3.json",
+      "owned_resources": ["audio-playback-engine", "time-pitch-dsp"],
+      "write_scope": ["tech-assets/moises-audio/Playback/**", "tech-assets/moises-audio/DSP/**"],
+      "planning_mode": "WORKER_AUTONOMOUS"
+    },
+    {
+      "lane_id": "LANE-4-IOS-ANALYSIS",
+      "worker_id": "Moises-Worker-4",
+      "worker_number": 4,
+      "work_branch": "moises/wp4-analysis-platform",
+      "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-4.json",
+      "owned_resources": ["music-analysis-engine", "build-harness", "ios-platform"],
+      "write_scope": ["tech-assets/moises-audio/Analysis/**", "tech-assets/moises-audio/Package.swift", "tech-assets/moises-audio/Tests/**", "tech-assets/moises-audio/iOS/**"],
+      "planning_mode": "WORKER_AUTONOMOUS"
+    }
+  ],
+  "lane_execution_rules": [
+    "At each user '次', the Worker reads its current branch/status/PARITY and chooses the highest-value lane-local work itself.",
+    "The Worker defines a 25-40 minute-equivalent goal/rationale/done_when and executes it in the same response; planning alone is not a completed wave.",
+    "Old M01-M04 bundle IDs are historical bootstrap records only and are not a finite task source.",
+    "No preloaded task, no HQ replenishment, no READY queue item and another Worker being unfinished are all invalid stop reasons.",
+    "If one area is externally blocked, the Worker must continue another meaningful lane-local implementation, hardening or evidence-preparation area when one exists.",
+    "Worker-to-Worker code dependencies are deferred to HQ late integration. A Worker must not modify another lane to make its own work pass.",
+    "The Worker may stop only for a genuine external/human gate after all meaningful lane-local preparation is exhausted, a required frozen Shared/App contract change, an ownership boundary, or unsafe/impossible operation."
+  ],
+  "integration_rules": [
+    "HQ does not merge after every self-planned Macro Wave.",
+    "HQ integrates when a coherent checkpoint has integration value or a cross-lane/contract gate requires it.",
+    "HQ performs semantic merge, cross-lane compile, device/real-audio validation and PARITY judgment.",
+    "After integration HQ updates canonical contracts/status/PARITY; HQ does not author the next normal lane-local backlog."
+  ]
+}

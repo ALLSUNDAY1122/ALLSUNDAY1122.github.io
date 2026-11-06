@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "generated-stem-normalization-plan.schema.json",
+  "title": "L1-A23 Generated Stem Normalization Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "tool_version", "evidence_state", "raw_artifact_sha256", "source_sha256", "policy_sha256", "timeline_origin_frames", "alignment_evidence_sha256", "actions", "projected_frame_count", "ready_without_normalization", "parity_claim"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"const": "L1-A23-v1"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "raw_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "policy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "timeline_origin_frames": {"const": 0},
+    "alignment_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "actions": {"type": "array", "uniqueItems": true, "items": {"enum": ["RESAMPLE", "CHANNEL_REMIX", "SAMPLE_FORMAT_CONVERT", "TRIM_END", "PAD_END"]}},
+    "projected_frame_count": {"type": "integer", "minimum": 1},
+    "ready_without_normalization": {"type": "boolean"},
+    "parity_claim": {"const": "NONE"}
+  }
+}

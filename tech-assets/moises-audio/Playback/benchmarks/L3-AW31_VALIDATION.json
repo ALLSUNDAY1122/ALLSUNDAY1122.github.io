@@ -1,0 +1,103 @@
+{
+  "wave_id": "L3-AW31",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_TEMPO_AWARE_SEEK_LOOP_BOUNDARY_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "selected_xcode_compile": false,
+    "physical_iphone": false,
+    "real_avfaudio_shared_graph_runtime": false,
+    "real_av_audio_unit_time_pitch_runtime": false,
+    "real_audio": false,
+    "av_audio_session_runtime": false,
+    "current_moises_differential": false,
+    "human_listening": false
+  },
+  "root_cause": {
+    "prior_project_clock_assumed_one_x_host_time": true,
+    "prior_loop_host_boundary_used_unscaled_project_duration": true,
+    "prior_selected_playback_dsp_shared_graph_not_mandatory": true,
+    "fade_only_fix_rejected_as_insufficient": true
+  },
+  "implementation": [
+    "project/source position advances by elapsed host time multiplied by active tempo ratio",
+    "project duration converts to host duration by division by active tempo ratio",
+    "loop wrapping remains in project/source coordinates",
+    "one shared AVAudioEngine graph contains the exact AVAudioUnitTimePitch node configured by DSP",
+    "two-phase Playback tempo boundary captures old source position before DSP mutation and commits or cancels after existing AW18/AW17/coordinator authority resolves",
+    "rapid tempo latest-wins occurs before Playback is frozen",
+    "tempo takes exclusive admission against seek/loop/play/pause/media/recovery/interruption during its boundary transaction",
+    "selected AW31 factory forces upstream AW17 tempoQuietPeriod to zero so the facade is the only tempo coalescing stage",
+    "successful tempo preserves one public AW17 tempoChange token; backend schedule generation remains private stale-callback authority",
+    "boundary commit or cancel restart failure poisons the Apple backend and requires selected stack reconstruction"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "clock_source_shaped_compile": "PASS",
+    "tempo_2x_project_clock": "PASS",
+    "tempo_0_5x_project_clock": "PASS",
+    "project_coordinate_loop_wrap": "PASS",
+    "host_duration_scaling": "PASS",
+    "clock_stress_cycles": 1000000,
+    "clock_stress_checksum": 5061869.057960,
+    "admission_model_status": "PASS",
+    "rapid_tempo_intents": 20000,
+    "rapid_tempo_bursts": 100,
+    "executed_boundaries": 100,
+    "superseded_before_boundary": 19900,
+    "shared_operation_boundary_violations": 0,
+    "injected_failure_cancelled_not_committed": true
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "operations_per_round": 1000000,
+    "position_operations_per_round": 500000,
+    "duration_operations_per_round": 500000,
+    "median_ms": 7.413,
+    "p95_ms": 7.558,
+    "max_ms": 7.849,
+    "checksum": 94495496.064050,
+    "scope": "portable project-clock and host-duration arithmetic only; excludes AVAudioEngine, AVAudioUnitTimePitch, Audio Unit transition ramps, file IO, device output, audible restart gap and scheduling latency"
+  },
+  "source_identity": {
+    "Playback/Sources/PlaybackTempoBoundaryReschedule.swift": "ef3a135131347504bd8c30064392fe5e2662af8e",
+    "Playback/Sources/AppleTempoAwareRampedMultiTrackPlaybackBackend.swift": "77cd4638ff5cfe18035a791111b414824b992bff",
+    "Playback/Sources/Lane3TempoBoundarySelectedTransportFacade.swift": "5620719d364f2d2f7247766714f5a010096f0779",
+    "Playback/Sources/Lane3AppleTempoAwarePlaybackDSPStack.swift": "8fdd1315f3d4fb6389aecd92d2b85b89f058b6c4",
+    "Playback/Sources/Lane3ApplePlaybackCompileSurface.swift": "33922df6088c02a13951748f99e7c729bf958f48",
+    "Playback/Tests/L3_AW31_TempoBoundaryClockSelfTest.swift": "920e844245f020e5e5ca7ecaaa792c7209015293",
+    "Playback/Tests/L3_AW31_TempoBoundarySelectedFacadeSelfTest.swift": "dedd9d699f6cbeb515cf4ea79c8a9c234ddeec04",
+    "Playback/Tests/L3_AW31_TempoBoundaryClockStress.swift": "2bddd1b7f87b69547834d29c68ffd16c03ded3fd",
+    "Playback/Tests/L3_AW31_TempoBoundaryClockBenchmark.swift": "24ff0773376db69d794aa9fc6118a9199fcc4b57"
+  },
+  "repository_validation": {
+    "clock_self_test_authored": true,
+    "selected_facade_self_test_authored": true,
+    "clock_stress_authored": true,
+    "clock_benchmark_authored": true,
+    "apple_compile_guard_updated": true,
+    "apple_sdk_compile_pending": true,
+    "repository_integrated_pass_claimed": false
+  },
+  "selected_route_contract": {
+    "construct_aw17_via_aw31_stack_factory": true,
+    "upstream_aw17_tempo_quiet_period_zero": true,
+    "facade_owns_pre_boundary_tempo_coalescing": true,
+    "direct_raw_playback_backend_bypass_allowed": false,
+    "direct_aw17_tempo_entry_bypass_allowed": false,
+    "boundary_commit_failure_recovery": "fail_closed_and_reconstruct_selected_lane3_apple_stack"
+  },
+  "claims": {
+    "selected_xcode_compile_claimed": false,
+    "physical_iphone_claimed": false,
+    "real_audio_claimed": false,
+    "avfaudio_shared_graph_runtime_claimed": false,
+    "audible_click_pop_improvement_claimed": false,
+    "current_moises_differential_claimed": false,
+    "human_listening_claimed": false,
+    "parity_claimed": false
+  }
+}

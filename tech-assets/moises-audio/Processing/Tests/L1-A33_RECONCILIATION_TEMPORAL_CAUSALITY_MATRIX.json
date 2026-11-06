@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A33",
+  "title": "Provider Delete Reconciliation Temporal Causality",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "implementation": {
+    "source": "tech-assets/moises-audio/Separation/Server/provider_delete_reconciliation.py",
+    "tool_version": "L1-A33-v1",
+    "default_max_future_skew_seconds": 300,
+    "remote_blob_sha": "07db9eceda29d6af190b18711e65c5959142a86d"
+  },
+  "invariants": [
+    "provider-delete reconciliation evidence must be bound to the registered provider-object hash",
+    "provider-delete reconciliation evidence must not predate the durable delete request",
+    "provider-delete reconciliation evidence beyond the configured future-clock skew fails closed",
+    "temporal validation occurs before observed_not_applied becomes an applying ordering watermark",
+    "temporally invalid high-epoch evidence therefore cannot block a later valid observation by becoming an ordering authority",
+    "missing or invalid durable delete timestamp fails closed",
+    "invalid runtime clock values fail closed",
+    "A32 applying/applied crash-ordering semantics remain in force after temporal validation"
+  ],
+  "focused_model": {
+    "state": "PASS",
+    "tests_run": 8,
+    "failures": 0,
+    "errors": 0,
+    "cases": [
+      "observation before delete request rejected",
+      "observation exactly at delete epoch accepted",
+      "observation beyond future skew rejected",
+      "future-skew boundary accepted",
+      "missing delete epoch rejected",
+      "boolean delete epoch rejected",
+      "invalid runtime clock rejected",
+      "provider-object hash mismatch retains precedence over temporal acceptance"
+    ]
+  },
+  "repository_regression": {
+    "path": "tech-assets/moises-audio/Separation/Tests/test_provider_delete_reconciliation_temporal_causality.py",
+    "test_methods": 9,
+    "execution_state": "COMMITTED_NOT_OBSERVED_ON_EXACT_WORKER_CHECKOUT",
+    "coverage": [
+      "pre-delete observation cannot become watermark",
+      "delete-epoch boundary acceptance",
+      "future-skew rejection before watermark",
+      "future-skew boundary acceptance",
+      "future invalid high epoch does not block later valid observation",
+      "missing delete epoch fail-closed",
+      "invalid runtime clock fail-closed",
+      "resume preserves temporally invalid observation as pending with stable error",
+      "invalid future-skew configuration rejected"
+    ]
+  },
+  "negative_boundaries": {
+    "pre_delete_stable_error": "SEP_PRIVACY_RECONCILE_OBSERVATION_PRECEDES_DELETE",
+    "future_stable_error": "SEP_PRIVACY_RECONCILE_OBSERVATION_FROM_FUTURE",
+    "delete_epoch_stable_error": "SEP_PRIVACY_RECONCILE_DELETE_EPOCH_INVALID",
+    "clock_stable_error": "SEP_PRIVACY_RECONCILE_CLOCK_INVALID",
+    "skew_config_stable_error": "SEP_PRIVACY_RECONCILE_FUTURE_SKEW_INVALID"
+  },
+  "limits": [
+    "This is single-host reconciliation safety; it is not distributed coordination.",
+    "No provider-specific delete-status API contract is claimed.",
+    "No real provider deletion, current-iPhone flow, or real user-content deletion was executed.",
+    "Exact Worker-branch unittest discovery and A26 full dependency audit remain unobserved because an exact checkout/CI runner is unavailable.",
+    "This evidence does not promote MOI-P024 or any other PARITY row."
+  ]
+}

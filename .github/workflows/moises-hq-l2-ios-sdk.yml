@@ -1,0 +1,66 @@
+name: Moises HQ Lane2 iOS SDK
+
+on:
+  push:
+    branches:
+      - tech/moises-separation
+    paths:
+      - 'tech-assets/moises-audio/Shared/**'
+      - 'tech-assets/moises-audio/IO/**'
+      - 'tech-assets/moises-audio/Library/**'
+      - '.github/workflows/moises-hq-l2-ios-sdk.yml'
+  pull_request:
+    paths:
+      - 'tech-assets/moises-audio/Shared/**'
+      - 'tech-assets/moises-audio/IO/**'
+      - 'tech-assets/moises-audio/Library/**'
+      - '.github/workflows/moises-hq-l2-ios-sdk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: moises-hq-l2-ios-sdk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apple-lane2-ios-sdk-source-typecheck:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Selected Xcode and iOS SDK
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          xcrun --sdk iphoneos --show-sdk-path
+      - name: Lane 2 IO plus Library iOS SDK typecheck
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sources=(
+            Shared/DomainContracts.swift
+            Shared/LibraryContracts.swift
+            IO/Sources/*.swift
+            Library/Sources/*.swift
+          )
+          if [ "${#sources[@]}" -lt 6 ]; then
+            echo "Lane 2 source discovery unexpectedly small: ${#sources[@]}" >&2
+            exit 1
+          fi
+          SDK_PATH="$(xcrun --sdk iphoneos --show-sdk-path)"
+          printf 'Lane 2 iOS SDK typecheck source count: %s\n' "${#sources[@]}"
+          xcrun --sdk iphoneos swiftc \
+            -target arm64-apple-ios17.0 \
+            -sdk "$SDK_PATH" \
+            -swift-version 6 \
+            -warnings-as-errors \
+            -strict-concurrency=complete \
+            -parse-as-library \
+            -typecheck \
+            "${sources[@]}"

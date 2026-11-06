@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW43",
+  "title": "Representative Codec / Corruption / Truncation Execution Evidence",
+  "result": "COMPLETE_NON_PARITY",
+  "canonical_audit": {
+    "integration_epoch_observed": 30,
+    "assignment_epoch": 2,
+    "planning_revision": 4,
+    "epoch_contract_sha": "c9e8ec5d191108db6eb20fbd40db0dab3c46b725",
+    "ownership_changed": false,
+    "rebase_required": false,
+    "worker_branch_base_head": "5f4c85914211747f9ced52d8ebdeeb0194841497",
+    "hq_integrated_lane3_through": "L3-AW41",
+    "hq_portable_full_lane3_typecheck_gate_observed": true,
+    "parity_promotions_observed": 0
+  },
+  "ownership": {
+    "playback_only": true,
+    "lane2_import_policy_modified": false,
+    "shared_app_modified": false,
+    "parity_matrix_modified": false
+  },
+  "implementation": {
+    "fixture_manifest_binding": true,
+    "declared_codec_label": true,
+    "clean_truncated_corrupted_expectations": true,
+    "unmodified_baseline_frame_count_required": true,
+    "rights_cleared_flag": true,
+    "thirty_minute_baseline_gate": true,
+    "full_sequential_bounded_sweep": true,
+    "whole_track_pcm_retention": false,
+    "source_path_persisted": false,
+    "raw_compressed_bytes_persisted": false,
+    "rolling_pcm_checksum_only": true,
+    "clean_exact_sweep_required": true,
+    "truncation_metadata_or_decoder_fault_required": true,
+    "corruption_decoder_fault_required": true,
+    "silently_accepted_corrupt_fixture_fails_completion": true,
+    "per_codec_three_cell_matrix": true,
+    "physical_iphone_environment_distinct_from_simulator": true,
+    "apple_failure_codes_path_free": true,
+    "parity_promotion_allowed": false
+  },
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "swift_language_mode": 6,
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true
+  },
+  "portable_self_test": {
+    "result": "PASS",
+    "clean_full_sweep": true,
+    "truncation_metadata_detection": true,
+    "corruption_midstream_rejection": true,
+    "typed_short_read_mapping": true,
+    "silent_corruption_acceptance_rejected": true,
+    "sub_30_minute_matrix_rejected": true,
+    "rights_uncleared_matrix_rejected": true,
+    "portable_contract_complete_but_physical_complete_false": true
+  },
+  "portable_stress": {
+    "result": "PASS",
+    "frames": 1000000,
+    "channels": 2,
+    "chunk_frames": 4096,
+    "read_calls": 245,
+    "frames_read": 1000000,
+    "non_finite_samples": 0,
+    "approximate_elapsed_seconds": 0.002506,
+    "scope": "synthetic bounded sweep only"
+  },
+  "portable_benchmark": {
+    "result": "PASS",
+    "runs": 20,
+    "frames_per_run": 100000,
+    "median_nanoseconds": 232551,
+    "p95_nanoseconds": 300143,
+    "max_nanoseconds": 300574,
+    "checksum": 15965826248408535780,
+    "scope": "portable bounded-read bookkeeping and rolling checksum only"
+  },
+  "selected_repository_execution": {
+    "apple_adapter_authored": true,
+    "complete_worker_branch_swiftpm_execution": false,
+    "xcode_execution": false,
+    "avfaudio_runtime_execution": false,
+    "physical_iphone_execution": false
+  },
+  "external_gates": {
+    "required_codec_labels_from_current_reference_lane2": false,
+    "rights_cleared_30_minute_codec_matrix": false,
+    "corruption_truncation_real_file_execution": false,
+    "rss_measured": false,
+    "thermal_measured": false,
+    "battery_measured": false,
+    "current_moises_differential_executed": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015",
+    "MOI-P021"
+  ]
+}

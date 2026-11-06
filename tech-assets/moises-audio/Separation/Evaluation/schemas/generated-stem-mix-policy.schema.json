@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "generated-stem-mix-policy.schema.json",
+  "title": "L1-A23 Generated Stem Mix Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "allow_resample", "allow_channel_remix", "allow_sample_format_convert", "max_edge_adjustment_frames", "require_zero_timeline_origin"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "allow_resample": {"type": "boolean"},
+    "allow_channel_remix": {"type": "boolean"},
+    "allow_sample_format_convert": {"type": "boolean"},
+    "max_edge_adjustment_frames": {"type": "integer", "minimum": 0},
+    "require_zero_timeline_origin": {"const": true}
+  }
+}

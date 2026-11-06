@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "reference_id": "MOI-REF-001",
+  "captured_at": "2026-08-22",
+  "parity_state": "NON_PARITY_EVIDENCE_ONLY",
+  "canonical_roles": [
+    "vocals",
+    "instrumental",
+    "drums",
+    "bass",
+    "other",
+    "guitar",
+    "piano_keys",
+    "strings",
+    "winds"
+  ],
+  "quality_modes": ["standard", "hifi"],
+  "profiles": [
+    {
+      "profile_id": "sep.basic.v1.vocals_instrumental",
+      "selection_mode": "fixed",
+      "fixed_roles": ["vocals", "instrumental"],
+      "custom_role_allowlist": [],
+      "minimum_tier": "free",
+      "allowed_quality_modes": ["standard"],
+      "hifi_minimum_tier": null,
+      "output_policy": "exact_set",
+      "reference_basis": "direct_current_iphone_and_official",
+      "reference_note": "Current iPhone recording and official Free documentation confirm the 2-track vocals/instrumental mode."
+    },
+    {
+      "profile_id": "sep.basic.v1.vocals_drums_bass_other",
+      "selection_mode": "fixed",
+      "fixed_roles": ["vocals", "drums", "bass", "other"],
+      "custom_role_allowlist": [],
+      "minimum_tier": "free",
+      "allowed_quality_modes": ["standard"],
+      "hifi_minimum_tier": null,
+      "output_policy": "exact_set",
+      "reference_basis": "direct_current_iphone_and_official",
+      "reference_note": "Current iPhone recording confirms the 4-track vocals/drums/bass/other mode."
+    },
+    {
+      "profile_id": "sep.custom.v1.reference_floor",
+      "selection_mode": "custom",
+      "fixed_roles": [],
+      "custom_role_allowlist": ["vocals", "guitar", "bass"],
+      "minimum_tier": "premium",
+      "allowed_quality_modes": ["standard", "hifi"],
+      "hifi_minimum_tier": "pro",
+      "output_policy": "exact_set",
+      "reference_basis": "direct_current_iphone_floor_only",
+      "reference_note": "The supplied current-iPhone recording directly shows custom separation with at least vocals/guitar/bass and a HI-FI toggle. The complete current custom-instrument/lock map is intentionally not inferred here."
+    }
+  ],
+  "unknowns": [
+    "Complete current-iPhone custom-instrument role list and lock map remain unverified.",
+    "Hi-Fi compatibility beyond the directly observed custom-selection flow is not inferred.",
+    "Provider-specific model names and quality flags are deliberately excluded from this registry."
+  ]
+}

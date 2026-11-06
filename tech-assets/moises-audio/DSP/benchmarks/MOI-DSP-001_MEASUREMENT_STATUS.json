@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-DSP-001",
+  "captured_at": "2026-08-22",
+  "worker": "Moises-Worker-3",
+  "work_package": "MOI-WP3-PLAYBACK-DSP",
+  "implementation": {
+    "tempo_pitch_backend": "AVAudioUnitTimePitch baseline",
+    "sample_timeline_planner": true,
+    "sample_time_click_scheduler": true,
+    "offline_real_track_renderer_seam": true,
+    "transport_owner": "Playback",
+    "wall_clock_audio_scheduling": false
+  },
+  "executed_current_environment": {
+    "platform": "Linux",
+    "swift_version": "6.2.1",
+    "core_self_test": "PASS",
+    "planner_60min_7200beats_200_iterations": {
+      "median_ms": 0.0384,
+      "p99_ms": 0.0700,
+      "max_ms": 0.1055,
+      "meaning": "pure schedule planning CPU time only"
+    },
+    "avfaudio_runtime_available": false,
+    "canonical_ios_app_target_available": false
+  },
+  "acceptance": {
+    "tempo_pitch_real_track": "BLOCKED_EXECUTOR",
+    "sample_time_math": "PASS_LOCAL",
+    "actual_click_onset_sync": "BLOCKED_EXECUTOR",
+    "artifact_gate": "BLOCKED_EXECUTOR",
+    "render_latency_gate": "BLOCKED_EXECUTOR",
+    "overall": "BLOCKED"
+  },
+  "required_next_measurements": [
+    "AVFAudio compile/run on macOS or iOS",
+    "rights-cleared multi-genre offline time/pitch renders",
+    "duration/tempo and pitch accuracy",
+    "objective plus listening artifact rubric",
+    "target-iPhone click onset/drift at baseline and tempo changes",
+    "seek/loop reschedule and stale-generation rejection under real transport"
+  ],
+  "parity_rows": {
+    "MOI-P010": "MISSING",
+    "MOI-P012": "MISSING",
+    "MOI-P014": "MISSING",
+    "MOI-P015": "MISSING"
+  },
+  "scope_integrity": "No Shared/App/Package/PARITY modification by WP3"
+}

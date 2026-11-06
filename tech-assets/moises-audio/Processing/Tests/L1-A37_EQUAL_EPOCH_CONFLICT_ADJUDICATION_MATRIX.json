@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A37",
+  "title": "Equal-Epoch Provider Deletion Conflict Adjudication",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "implementation": {
+    "module": "tech-assets/moises-audio/Separation/Server/provider_delete_conflict_resolution.py",
+    "module_blob_sha": "62ccaeae0983f6830796e2c66dbf65e5a2719412",
+    "regression": "tech-assets/moises-audio/Separation/Tests/test_provider_delete_reconciliation_conflict_resolution.py",
+    "regression_blob_sha": "bfc33a377bee3b719e4868aec99b59d4f9993690"
+  },
+  "safety_properties": [
+    {
+      "id": "A37-S01",
+      "property": "No adjudication preserves base fail-closed equal-epoch conflict behavior",
+      "state": "COVERED"
+    },
+    {
+      "id": "A37-S02",
+      "property": "Decision must choose an existing observation receipt for the exact logical job, object kind and observation epoch",
+      "state": "COVERED"
+    },
+    {
+      "id": "A37-S03",
+      "property": "Decision authority and rationale persist only as SHA-256 references",
+      "state": "COVERED"
+    },
+    {
+      "id": "A37-S04",
+      "property": "First durable decision for a conflict key is immutable; replacement is rejected",
+      "state": "COVERED"
+    },
+    {
+      "id": "A37-S05",
+      "property": "Decision sidecar is fsync plus atomic-replace durable and corruption fails closed",
+      "state": "COVERED"
+    },
+    {
+      "id": "A37-S06",
+      "property": "Chosen observation is revalidated against provider object hash, deletion timing and registry binding",
+      "state": "COVERED"
+    },
+    {
+      "id": "A37-S07",
+      "property": "Terminal erasure cannot be downgraded by adjudication",
+      "state": "COVERED"
+    },
+    {
+      "id": "A37-S08",
+      "property": "A newer applied or applying watermark makes an older equal-epoch adjudication stale",
+      "state": "COVERED"
+    },
+    {
+      "id": "A37-S09",
+      "property": "After restart, durable decision can resume and retire the pending equal-epoch conflict",
+      "state": "COVERED"
+    },
+    {
+      "id": "A37-S10",
+      "property": "Late same-epoch losing observations are ignored; equivalent chosen-state observations remain idempotently acceptable",
+      "state": "COVERED"
+    },
+    {
+      "id": "A37-S11",
+      "property": "Asset and task conflict keys remain independently scoped",
+      "state": "COVERED"
+    },
+    {
+      "id": "A37-S12",
+      "property": "Sidecar remains single-host evidence and does not claim distributed synchronization or product PARITY",
+      "state": "COVERED"
+    }
+  ],
+  "verification": {
+    "exact_new_module_py_compile": "PASS_LOCAL_CANDIDATE",
+    "exact_new_regression_py_compile": "PASS_LOCAL_CANDIDATE",
+    "isolated_interface_compatibility_harness": {
+      "state": "PASS",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "scope": "new A37 logic against a contract-compatible in-memory base reconciler/registry stub"
+    },
+    "repository_native_regression_execution": "NOT_OBSERVED_NO_EXECUTABLE_FULL_CHECKOUT",
+    "full_worker_branch_unittest_discovery": "NOT_OBSERVED_A26_EXTERNAL_EXECUTION_GATE"
+  },
+  "known_limits": [
+    "A37 does not create provider truth; a human/HQ decision must still be backed by private authoritative evidence whose public durable representation is only a SHA-256 reference.",
+    "The base reconciliation ledger and A37 decision sidecar are single-host file-backed state. They are not a distributed transactional authority.",
+    "A37 does not establish provider deletion, account deletion, billing reversal, current-iPhone behavior or any PARITY row.",
+    "HQ/App must deliberately instantiate or integrate the conflict-resolving reconciler path; Shared/App composition is outside Worker 1 ownership.",
+    "A26 exact final-tip dependency/provenance audit remains separately pending on an executable full checkout or CI runner."
+  ]
+}

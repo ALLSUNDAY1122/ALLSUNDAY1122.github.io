@@ -1,0 +1,27 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://project.local/moises/separation/differential-reproducibility-audit.schema.json",
+  "title":"L1-A20 differential reproducibility audit",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema_version","tool_version","evidence_kind","evidence_state","batch_id","batch_identity_sha256","acceptance_policy_sha256","acceptance_policy","golden_corpus_lock_sha256","toolchain","review","acceptance_result","acceptance_checks","evidence_chain_sha256","parity_state","parity_reason"],
+  "properties":{
+    "schema_version":{"const":1},
+    "tool_version":{"const":"L1-A20-v1"},
+    "evidence_kind":{"const":"DIFFERENTIAL_REPRODUCIBILITY_AUDIT"},
+    "evidence_state":{"const":"NON_PARITY_EVIDENCE_ONLY"},
+    "batch_id":{"type":"string","minLength":1},
+    "batch_identity_sha256":{"$ref":"#/$defs/sha"},
+    "acceptance_policy_sha256":{"$ref":"#/$defs/sha"},
+    "acceptance_policy":{"type":"object"},
+    "golden_corpus_lock_sha256":{"anyOf":[{"$ref":"#/$defs/sha"},{"type":"null"}]},
+    "toolchain":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["name","sha256"],"properties":{"name":{"type":"string","minLength":1},"sha256":{"$ref":"#/$defs/sha"}}}},
+    "review":{"type":"object"},
+    "acceptance_result":{"enum":["LANE_GATE_CANDIDATE_PASS","LANE_GATE_CANDIDATE_FAIL"]},
+    "acceptance_checks":{"type":"array"},
+    "evidence_chain_sha256":{"$ref":"#/$defs/sha"},
+    "parity_state":{"const":"NON_PARITY_EVIDENCE_ONLY"},
+    "parity_reason":{"type":"string","minLength":1}
+  },
+  "$defs":{"sha":{"type":"string","pattern":"^[0-9a-f]{64}$"}}
+}

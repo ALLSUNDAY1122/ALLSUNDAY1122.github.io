@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "worker_id": "Moises-Worker-2",
+  "lane_id": "LANE-2-IO-LIBRARY",
+  "work_package_id": "MOI-WP2-IO-LIBRARY",
+  "assignment_epoch": 2,
+  "operating_model": "FOUR_INDEPENDENT_LANES_LATE_INTEGRATION",
+  "work_branch": "moises/wp2-io-library",
+  "state": "IN_PROGRESS",
+  "current_bundle": "L2-M02",
+  "completed_bundles": ["L2-M01"],
+  "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
+  "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
+  "head_sha": "d1ee036a03910904a1106823821eeacd3e13495d",
+  "existing_unintegrated_commits_at_epoch_start": [],
+  "commits": [
+    "0bd1887a479dd6098a28d47d3051ea22b7a2a1eb",
+    "72f854a8eaf3a94d2d1dbe7bcb0294714d8262ec",
+    "6dbc8dbc1d5fd2f089fc33d9f08737ba71680136",
+    "5a4cb12c375064a566b495843edb4c3083fb6efa",
+    "1b0c550c160c8b885e73dea331749c955914b504",
+    "d1ee036a03910904a1106823821eeacd3e13495d"
+  ],
+  "legacy_v2_commits": [
+    "b287a7ec0807663fe6dcfc8be312237c639cbc74",
+    "1c698b0ffe9790fd46e10f2ef564105ad6d1a885",
+    "1c0cee2312eccabbc47d52a17ba5729207fe68c3",
+    "bf4b7a552cfbe025608079f7fe11093af7526b0b"
+  ],
+  "tests": [
+    "v3 migration safety check: integration -> work branch before sync was ahead 0 / behind 90; no unintegrated Worker-2 owned-scope commits",
+    "L2-M01 Swift 6.2.1 Linux: LibraryPersistencePolicy.swift typecheck with frozen-contract-equivalent stubs => PASS",
+    "L2-M01 Swift 6.2.1 Linux: LibraryPersistencePolicyTests.swift + XCTest typecheck => PASS",
+    "L2-M01 executable self-check => PASS path/recovery/stem invariants",
+    "L2-M01 frozen ProjectLibraryPersisting surface scan => PASS all 13 methods present; no JSONEncoder/NSKeyedArchiver/bookmark blob persistence",
+    "L2-M01 CoreDataProjectLibraryStoreTests committed: full project round-trip, isolated SQLite close/reopen, setlist ordering/delete, negative cases, recovery transitions and idempotent delete; Apple Core Data runtime execution pending late integration"
+  ],
+  "evidence": [
+    "Independent Lane Worker contract v3 SHA 2edf4411f69af37f9b57a363096fb2787ecfc713 and lane plan v3 SHA 32be5c934fcdf8f17c677c4c2d30db0808813fa5 re-read before L2-M01",
+    "Frozen epoch-2 Shared LibraryContracts.swift blob 908cf757ba18d9cc813d9edf063076d775c7c240 defines the 13-method ProjectLibraryPersisting surface implemented by L2-M01",
+    "Library/Sources/CoreDataProjectLibraryStore.swift implements versioned Core Data SQLite/in-memory persistence using private records and a serialized private-queue context",
+    "Library/Sources/LibraryPersistencePolicy.swift enforces app-owned relative path, scalar, stem identity, edit identity, setlist name and processing recovery invariants",
+    "Library/Tests/LibraryPersistencePolicyTests.swift adds portable negative/edge coverage",
+    "Library/Tests/CoreDataProjectLibraryStoreTests.swift adds in-memory and isolated SQLite relaunch contract coverage for Apple runtime",
+    "Library/L2-M01_VALIDATION.md records contract coverage, executed evidence and explicit Apple-runtime gaps",
+    "epoch base a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f -> work branch after L2-M01: ahead 6 / behind 0; changed files are Library/** only"
+  ],
+  "known_gaps": [
+    "Apple Core Data framework body and committed Core Data XCTest suite cannot execute in the current Linux environment; late integration must compile/run them with the supported Apple SDK",
+    "L2-M02 still owns artifact cleanup, orphan sweep and interrupted tombstone recovery; L2-M01 deleteProject intentionally establishes the contract-level idempotent tombstone baseline only",
+    "Library PARITY rows MOI-P017/MOI-P018/MOI-P020 remain MISSING until Apple runtime, interruption, integrated iPhone and full recovery evidence satisfy their gates",
+    "Legacy IO iPhone picker/share/runtime codec evidence remains late-integration work and does not block Lane 2 durability implementation"
+  ],
+  "hq_requests": [
+    "Keep Shared/** and App/** frozen for Lane 2 at epoch contract SHA a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f until checkpoint unless explicit contract rescue is required",
+    "At late integration, include Library/Sources and Library/Tests in the Apple build harness and run the Core Data in-memory plus isolated SQLite reopen suite",
+    "Late integration must still run actual iPhone Files/File Provider/direct URL/M4A share and codec scenarios; Lane 2 will not edit iOS shell",
+    "No Shared contract change was required by L2-M01"
+  ],
+  "migration_note": "v3 migration is complete. L2-M01 completed under the frozen epoch-2 contract without Queue claiming or cross-lane edits.",
+  "last_updated": "2026-08-22T17:28:00+09:00",
+  "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads it for lane checkpoint integration and remains sole PARITY authority."
+}

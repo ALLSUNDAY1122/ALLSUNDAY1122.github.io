@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "bundle": "L1-M02",
+  "parity_impact": "NONE",
+  "scenarios": [
+    {"id":"START-LOCAL-DUPLICATE","fault":"same request submitted twice while job binding is durable","capability":"none required","expected":"reuse existing job; provider start count remains one","evidence":"MOI_PROC_001_SelfTest.testStartIsLocallyIdempotent"},
+    {"id":"START-RESPONSE-LOST-NONIDEMPOTENT","fault":"network timeout after provider may have accepted start","capability":"stable idempotency unavailable","expected":"startAmbiguous; automatic duplicate retry forbidden","evidence":"MOI_PROC_001_SelfTest.testAmbiguousStartRequiresExplicitRetry"},
+    {"id":"START-RESPONSE-LOST-IDEMPOTENT","fault":"network timeout with stable provider start key","capability":"StableIdempotentSeparationStarting","expected":"same durable generation key reused; later retry rebinds same job","evidence":"L1_M02_SelfTest.testAmbiguousNetworkRetryUsesSameKeyAndRebinds"},
+    {"id":"START-ACCESS-DENIED","fault":"definitive authorization failure","capability":"stable idempotency optional","expected":"failed nonretryable; local transaction rollback","evidence":"L1_M02_SelfTest.testDefinitiveAccessDeniedFailsClosed"},
+    {"id":"START-STATE-WRITE-FAIL","fault":"state store fails after stable provider returns job","capability":"stable idempotency required","expected":"old ambiguous record remains; retry uses same key rather than duplicate generation","evidence":"L1_M02_SelfTest.testStateStoreFailureAfterProviderSuccessPreservesAmbiguity"},
+    {"id":"START-PROJECT-PERSIST-FAIL","fault":"secondary project persistence fails after durable job binding","capability":"stable idempotency required","expected":"active job binding remains canonical; reconnect/replay without cancelling known job","evidence":"L1_M02_SelfTest.testProjectPersistenceFailureKeepsDurableJobBinding"},
+    {"id":"SNAPSHOT-NETWORK-LOSS","fault":"snapshot request network failure","capability":"none required","expected":"durable active job remains; caller retries snapshot/reconnect, never restarts job","evidence":"ProcessingLifecycleCoordinator.poll contract"},
+    {"id":"PROGRESS-REGRESSION","fault":"provider fraction or phase moves backward","capability":"none required","expected":"fail closed with PROC_PROGRESS_REGRESSION/PROC_PHASE_REGRESSION","evidence":"MOI_PROC_001_SelfTest.testProgressRegressionRejected"},
+    {"id":"CANCEL-ACTIVE","fault":"user cancel during active processing","capability":"none required","expected":"intent persisted before provider cancel; terminal poll rolls back partial output","evidence":"MOI_PROC_001_SelfTest.testCancelRollsBackAfterProviderConfirmation"},
+    {"id":"CANCEL-AMBIGUOUS-START","fault":"user cancellation persisted while original start job ID is unknown","capability":"stable idempotency required","expected":"rebind same provider job, persist job on cancellationRequested, cancel remote job, rollback, then mark cancelled","evidence":"L1_M02_SelfTest.testCancellationIntentSurvivesAmbiguousStart"},
+    {"id":"CANCEL-CLEANUP-STORAGE-FAIL","fault":"rollback fails after remote cancel due storage/filesystem failure","capability":"stable idempotency required","expected":"state remains cancellationRequested with recovered jobID so relaunch can repeat cancel/cleanup","evidence":"L1_M02_SelfTest.testRollbackFailureDoesNotEraseCancelledBinding"},
+    {"id":"RESULT-DB-WRITE-FAIL","fault":"recordStems fails after provider result is locally staged","capability":"none required","expected":"resultStaged remains durable; relaunch retries DB write without provider refetch","evidence":"MOI_PROC_001_SelfTest.testResultPersistenceResumesWithoutRefetch"},
+    {"id":"OUTPUT-ROLLBACK-OLD-STEMS","fault":"replacement processing fails after writing partial new stems","capability":"none required","expected":"previous stem set restored; partial new outputs removed","evidence":"MOI_PROC_001_SelfTest.testFileRollbackRestoresPreviousStemSet"},
+    {"id":"OUTPUT-BACKUP-CRASH","fault":"app terminates during backup preparation before transaction marker","capability":"none required","expected":"live stems untouched; partial backup discarded on rollback","evidence":"MOI_PROC_001_SelfTest.testInterruptedBackupPreparationNeverDeletesLiveStems"}
+  ]
+}

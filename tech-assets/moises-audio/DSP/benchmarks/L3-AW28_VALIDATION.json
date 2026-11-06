@@ -1,0 +1,83 @@
+{
+  "wave_id": "L3-AW28",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_TEMPO_TRANSITION_ARTIFACT_HARDENING_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true,
+    "selected_xcode_compile": false,
+    "apple_avfaudio_transition_executed": false,
+    "physical_iphone": false,
+    "real_audio": false,
+    "current_moises_differential": false,
+    "human_listening": false
+  },
+  "implementation": [
+    "symmetric log-ratio tempo transition planner and explicit transition receipt",
+    "tempo-only asynchronous transaction barrier inside PracticeDSPTransactionalApplicationGate",
+    "begin/finalize/readback rollback with fail-closed desynchronization on rollback failure",
+    "one existing controller schedule-generation increment retained per tempo command with no extra AW28 generation",
+    "Apple NewTimePitch rate scheduleParameterBlock adapter with explicit runtime fallbacks",
+    "AW22 telemetry wrapper preserves tempo transition capability",
+    "combined tempo+pitch restore remains atomic immediate rather than fabricating a tempo-only ramp"
+  ],
+  "default_policy": {
+    "immediate_log_ratio_threshold": 0.01,
+    "minimum_ramp_seconds": 0.008,
+    "seconds_per_natural_log_ratio": 0.04,
+    "maximum_ramp_seconds": 0.04,
+    "settle_seconds": 0.004,
+    "maximum_ramp_frames": 4096,
+    "provisional_device_tunable": true
+  },
+  "portable_validation": {
+    "status": "PASS",
+    "behavior_probe": "AW28 tempo transition PASS rampFrames=1331 begins=5 finalizes=3 cancels=3",
+    "reciprocal_duration_symmetry": "PASS",
+    "invalid_ratio_and_sample_rate": "PASS",
+    "transaction_reentrancy_blocked": "PASS",
+    "explicit_fallback_not_mislabeled_ramp": "PASS",
+    "forged_receipt_rejected_and_rolled_back": "PASS",
+    "finalize_failure_rolled_back": "PASS",
+    "post_finalize_mismatch_rolled_back": "PASS",
+    "rollback_failure_desynchronizes": "PASS",
+    "controller_single_generation_increment_preserved": "PASS",
+    "same_value_tempo_generation_semantics_preserved": "PASS",
+    "combined_restore_immediate_path": "PASS",
+    "telemetry_transition_capability_strict_compile": "PASS"
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "operations_per_round": 5000,
+    "median_ms": 84.419,
+    "p95_ms": 109.474,
+    "max_ms": 109.474,
+    "checksum": 1250000,
+    "scope": "fake in-memory transition backend plus no-op transition sleeper; excludes Apple/audio/ramp wait/Playback/click/file/device cost"
+  },
+  "source_identity": {
+    "PracticeDSPTempoTransition.swift": "e94bdb0c487dd9d197a31240410861428584c3dc",
+    "PracticeDSPTransactionalApplication.swift": "86215336a7da7bdbe26358367ab983b1a4eb5d70",
+    "AppleTimePitchTempoTransition.swift": "c2f475edc08fb672e1a5a54942eecf39d64093e5",
+    "Lane3DSPRuntimeTelemetryAdapters.swift": "476e09f5af7a685a1aa075866cd2edef65f92449"
+  },
+  "repository_validation": {
+    "tempo_transition_self_test_authored": true,
+    "tempo_transition_benchmark_authored": true,
+    "apple_compile_probe_authored": true,
+    "selected_complete_lane3_execution_pending": true,
+    "repository_integrated_pass_claimed": false
+  },
+  "claims": {
+    "apple_rate_parameter_ramp_runtime_claimed": false,
+    "audible_click_pop_improvement_claimed": false,
+    "warble_or_phasiness_quality_claimed": false,
+    "metronome_phase_parity_claimed": false,
+    "real_audio_claimed": false,
+    "current_moises_differential_claimed": false,
+    "human_listening_claimed": false,
+    "parity_claimed": false
+  }
+}

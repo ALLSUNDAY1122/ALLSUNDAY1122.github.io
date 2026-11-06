@@ -1,0 +1,89 @@
+{
+  "wave": "L1-A19",
+  "result": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "evidence_kind": "GOLDEN_G1_G2_CORPUS_INTAKE_HARDENING",
+  "real_golden_corpus_received": false,
+  "real_golden_corpus_lock_issued": false,
+  "invariants": [
+    "Only M01-validated real rights-cleared G1/G2 fixture classes can enter a Golden candidate corpus.",
+    "Fixture manifest SHA, mixture SHA and G1 reference-stem SHA identities are bound into the corpus lock.",
+    "Duplicate mixture audio cannot be counted as independent coverage when duplicate rejection is enabled.",
+    "Declared sample rate, channels and duration must agree with the actual WAV mixture; G1 references must align with the mixture.",
+    "G1 and G2 class/group roles cannot be swapped by the corpus index.",
+    "Corpus coverage is checked across genre, duration, production bucket, requested role sets and hard-case diversity.",
+    "The intake report contains hashes/coverage metadata only and omits media paths, titles and raw rights-record IDs.",
+    "READY_FOR_HQ_GOLDEN_GATE is intake readiness only and never a PARITY claim."
+  ],
+  "negative_classes": [
+    "manifest hash mismatch",
+    "audio hash mismatch",
+    "synthetic/non-real fixture",
+    "commercial engineering rights denied",
+    "reference-service submission denied",
+    "G1/G2 group-class mismatch",
+    "G1 reference stem missing",
+    "duplicate fixture identity",
+    "duplicate mixture audio",
+    "duplicate G1 reference audio",
+    "mixture metadata mismatch",
+    "G1 reference sample-rate/channel/duration mismatch",
+    "G1 reference equals mixture",
+    "insufficient G1/G2 fixture count",
+    "insufficient global/per-group genre diversity",
+    "insufficient global/per-group duration coverage",
+    "insufficient global/per-group production coverage",
+    "required role-set coverage missing",
+    "hard-case coverage missing",
+    "path traversal",
+    "symlinked manifest/audio path",
+    "unknown schema field",
+    "overlapping/open-ended-invalid duration policy",
+    "corrupt manifest JSON"
+  ],
+  "machine_verification": {
+    "broad_fault_suite": {
+      "tests": 50,
+      "failures": 0,
+      "note": "Executed against the final A19 module with an M01-compatible evaluation_core seam; all fixtures are synthetic fault/schema test material and are not Golden evidence."
+    },
+    "checked_in_critical_suite": {
+      "tests": 8,
+      "failures": 0,
+      "path": "tech-assets/moises-audio/Separation/Tests/test_golden_corpus_intake.py",
+      "note": "Executed in repository-equivalent Evaluation/Tests layout; synthetic fixtures only."
+    },
+    "python_compile": {
+      "implementation": "PASS",
+      "test": "PASS"
+    },
+    "current_m01_interface_audit": {
+      "status": "PASS",
+      "imports": [
+        "EvaluationError",
+        "load_json",
+        "normalize_sha256",
+        "read_wav_info",
+        "safe_relative_path",
+        "sha256_file",
+        "validate_fixture_manifest"
+      ],
+      "note": "Current branch evaluation_core source was inspected and the imported interfaces/semantics used by A19 are present."
+    }
+  },
+  "schemas": [
+    "tech-assets/moises-audio/Separation/Evaluation/schemas/golden-corpus-index.schema.json",
+    "tech-assets/moises-audio/Separation/Evaluation/schemas/golden-corpus-policy.schema.json",
+    "tech-assets/moises-audio/Separation/Evaluation/schemas/golden-corpus-report.schema.json"
+  ],
+  "templates": [
+    "tech-assets/moises-audio/Separation/Evaluation/examples/golden-corpus-index.template.json",
+    "tech-assets/moises-audio/Separation/Evaluation/examples/golden-corpus-policy.template.json"
+  ],
+  "external_gaps": [
+    "No rights-cleared real G1/G2 corpus has been supplied, so no production Golden corpus lock exists.",
+    "A19 cannot infer legal rights or prove real/non-synthetic provenance from waveform content alone; verified rights records/attestations remain authoritative inputs.",
+    "HQ must approve the final corpus coverage policy values before an actual Golden corpus is accepted.",
+    "Live separator, current-iPhone Moises differential, blind review and real-device evidence remain separate gates."
+  ]
+}

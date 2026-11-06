@@ -1,0 +1,57 @@
+{
+  "wave_id": "L3-AW09",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "apple_sdk_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "integration_surface": [
+    "AW05 Playback transport generation token",
+    "AW05 PracticeDSP two-phase generation binding",
+    "AW06 offline render fixture/control/render receipt",
+    "AW07 PCM time-domain alignment/onset/discontinuity report",
+    "AW08 spectral/perceptual-proxy report using AW07 global lag"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "assembly_stress_iterations": 200000,
+    "coverage": [
+      "valid integrated +12-semitone evidence report",
+      "Codable JSON report round-trip",
+      "stale transport receipt rejection",
+      "rendered frame mismatch rejection",
+      "AW06 click-event count mismatch rejection",
+      "AW07 onset count mismatch guard",
+      "AW07/AW08 global alignment mismatch rejection",
+      "comparison intent versus expected frequency ratio rejection",
+      "non-finite evidence rejection",
+      "sample-rate mismatch rejection",
+      "component perceptual/PARITY claim rejection",
+      "reference PCM frame count bound to AW07 report",
+      "production adapter compile/run against interface-compatible AW05/AW07/AW08 types"
+    ]
+  },
+  "benchmark": {
+    "rounds": 20,
+    "operations_per_round": 100000,
+    "receipt_frames": 2880000,
+    "median_ms_per_round": 17.181,
+    "p95_ms_per_round": 18.529,
+    "max_ms_per_round": 20.039,
+    "checksum": 532000000,
+    "scope": "integrated evidence receipt/report coherence assembly only; excludes AVAudioEngine, AW07 PCM analysis and AW08 STFT"
+  },
+  "apple_bridge": {
+    "plan_manifest_observation_identity_validation": true,
+    "fixture_control_signature_frame_count_sample_rate_checks": true,
+    "linux_status": "inactive canImport(AVFAudio) branch parsed but not Apple-SDK typechecked"
+  },
+  "evidence_scope": "LANE3_INTEGRATED_PLAYBACK_DSP_EVIDENCE_NON_PARITY",
+  "standardized_perceptual_metric_claimed": false,
+  "human_audibility_claimed": false,
+  "parity_claimed": false
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "wave": "L3-AW01",
+  "area": "Playback/Apple gain ramp execution primitive",
+  "status": "PASS_PORTABLE_NON_PARITY",
+  "validation_environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "apple_sdk_compile": false,
+    "physical_device": false,
+    "actual_audio_capture": false
+  },
+  "implementation": {
+    "portable_batch_planner": "Playback/Sources/PlaybackGainRampExecution.swift",
+    "apple_gain_stage": "Playback/Sources/AppleStemGainRampStage.swift",
+    "ramp_policy_seconds": 0.012,
+    "policy_status": "engineering guardrail only; not Moises-derived",
+    "apple_execution_semantics": "AUScheduleParameterBlock target ramp from current render value; fail closed when volume parameter is absent or not rampable"
+  },
+  "tests": {
+    "self_test": "PASS",
+    "coverage": [
+      "deterministic StemID ordering",
+      "44.1/48/96 kHz frame derivation",
+      "unchanged-gain elision",
+      "missing target preserves current gain",
+      "unknown stem rejection",
+      "out-of-range and nonfinite gain rejection",
+      "invalid sample-rate rejection",
+      "invalid ramp-duration rejection",
+      "10000 rapid retarget state transitions"
+    ]
+  },
+  "benchmark": {
+    "rounds": 20,
+    "plans_per_round": 50000,
+    "stems_per_plan": 8,
+    "sample_rates_hz": [44100, 48000, 96000],
+    "median_ms": 688.208,
+    "p95_ms": 705.710,
+    "p99_ms": 705.710,
+    "max_ms": 705.710,
+    "checksum": 5619000000,
+    "scope": "CPU planner only; not AudioUnit render performance"
+  },
+  "parity_promotion_allowed": false,
+  "remaining_gates": [
+    "wire AppleStemGainRampStage into AppleMultiTrackPlaybackBackend",
+    "compile with selected Xcode/iOS SDK",
+    "verify mixer parameter availability and ramp flag on target devices",
+    "physical-iPhone click/pop/zipper capture",
+    "rights-cleared real-track listening and measurement",
+    "current-Moises differential comparison"
+  ]
+}

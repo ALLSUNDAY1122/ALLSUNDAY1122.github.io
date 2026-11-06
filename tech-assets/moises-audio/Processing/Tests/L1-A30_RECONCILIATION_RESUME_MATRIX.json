@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A30",
+  "title": "Provider Delete Reconciliation Durable Resume Matrix",
+  "status": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "problem_closed": "A29 could durably record an authoritative provider deletion observation before registry application, but had no first-class restart path that could recover using only the persisted observation ledger.",
+  "implementation": {
+    "module": "tech-assets/moises-audio/Separation/Server/provider_delete_reconciliation.py",
+    "test": "tech-assets/moises-audio/Separation/Tests/test_provider_delete_reconciliation_resume.py",
+    "tool_version": "L1-A30-v1",
+    "properties": [
+      "resume_pending re-applies only already-persisted reconciliation observations and never replays the original provider DELETE side effect",
+      "pending observations are reconstructed from hash-bound ledger fields and processed deterministically by observed_at_epoch plus receipt ordering",
+      "failed local application remains observed_not_applied and is surfaced as INCOMPLETE with a stable error code",
+      "snapshot exposes pending_observation_count and reconciliation_required",
+      "ledger load validates application_state, observation semantics and receipt/content SHA-256 binding",
+      "ledger directory fsync failure is no longer silently accepted as durable success"
+    ]
+  },
+  "focused_validation": {
+    "environment": "local interface-compatible harness because an executable exact Worker checkout is unavailable in this session",
+    "tests_run": 8,
+    "failures": 0,
+    "errors": 0,
+    "state": "PASS",
+    "py_compile": "PASS",
+    "cases": [
+      "restart resumes one persisted observation",
+      "asset and task pending observations resume together",
+      "object-hash mismatch remains pending with stable failure code",
+      "snapshot truthfully exposes pending reconciliation",
+      "invalid application_state fails closed",
+      "event-content/receipt tamper fails closed",
+      "already-applied observation is not replayed",
+      "terminal downgrade remains pending for operator review"
+    ]
+  },
+  "exact_worker_branch_validation": {
+    "state": "NOT_OBSERVED",
+    "reason": "container git access still cannot resolve github.com; no qualifying exact-checkout CI runner is available",
+    "required_by": "L1-A26"
+  },
+  "safety_boundaries": [
+    "A30 does not contact a provider status/delete endpoint and fabricates no provider observation.",
+    "A30 does not make file-backed state multi-host safe.",
+    "Raw provider identifiers, credentials and private authority artifacts remain outside durable public evidence.",
+    "P024 and all other PARITY rows remain unchanged until HQ has real integrated privacy/deletion evidence."
+  ]
+}

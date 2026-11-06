@@ -1,0 +1,19 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"ai-stem-generation-capability.schema.json",
+  "title":"Lane 1 A21 AI Stem Generation Capability Snapshot",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","evidence_state","reference_confidence","allowed_tiers","allowed_roles","supported_modes","credit_unit_seconds","credits_per_unit","per_output_role_multiplier","free_before_purchased","source_evidence_sha256","max_source_duration_seconds","snapshot_sha256"],
+  "properties":{
+    "schema_version":{"const":1},"evidence_state":{"const":"NON_PARITY_EVIDENCE_ONLY"},
+    "reference_confidence":{"enum":["OFFICIAL_CROSS_PLATFORM_ONLY","CURRENT_IPHONE_CAPTURED"]},
+    "allowed_tiers":{"type":"array","minItems":1,"uniqueItems":true,"items":{"enum":["FREE","PREMIUM","PRO"]}},
+    "allowed_roles":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"}},
+    "supported_modes":{"type":"array","minItems":1,"uniqueItems":true,"items":{"enum":["AUTO_MATCH","PRESET","CUSTOM_TEXT","REFERENCE_AUDIO"]}},
+    "credit_unit_seconds":{"type":"integer","minimum":1},"credits_per_unit":{"type":"integer","minimum":1},
+    "per_output_role_multiplier":{"type":"boolean"},"free_before_purchased":{"type":"boolean"},
+    "source_evidence_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "max_source_duration_seconds":{"type":["integer","null"],"minimum":1},
+    "snapshot_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+  }
+}
