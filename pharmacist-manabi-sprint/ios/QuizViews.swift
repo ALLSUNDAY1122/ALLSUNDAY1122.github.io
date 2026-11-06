@@ -175,7 +175,7 @@ struct QuizView: View {
                 .accessibilityLabel("公式出典URLを開く")
             }
             if let source = q.originalDataSourceURL, !source.isEmpty, let url = URL(string: source) {
-                Text("元統計資料：総務省統計局『人口推計（2022年10月1日現在）』")
+                Text("元資料：\(q.originalDataSourceTitle ?? "出典")")
                     .font(.system(size: 10))
                     .foregroundStyle(Color.sprintInk3)
                 Link(destination: url) {
@@ -298,7 +298,7 @@ struct QuizView: View {
                         }
                     }
                     if let source = f.question.originalDataSourceURL, !source.isEmpty, let url = URL(string: source) {
-                        Text("元統計資料：総務省統計局『人口推計（2022年10月1日現在）』")
+                        Text("元資料：\(f.question.originalDataSourceTitle ?? "出典")")
                         Link(destination: url) {
                             Text(source)
                                 .font(.system(size: 10))
