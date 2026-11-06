@@ -95,11 +95,9 @@ for q in raw:
             else '加工：学びスプリント開発者。' + value
         )(str(q.get('modificationDisclosureDisplay') or '厚生労働省公開問題をもとに、学習用に表示形式を整え、解説を付加。')),
         'sourceURL': str(q.get('source_url') or ''),
-        # The exam PDF is a separate source from the original statistics used for an adapted item.
-        # Only add source links whose original data and reuse conditions were independently checked.
-        'originalDataSourceURL': {
-            'P109-124': 'https://www.stat.go.jp/data/jinsui/2022np/index.htm',
-        }.get(str(q['id']), ''),
+        # Provenance is not equivalent to permission: release clearance is audited separately.
+        'originalDataSourceURL': str(q.get('originalDataSourceURL') or ''),
+        'originalDataSourceTitle': str(q.get('originalDataSourceTitle') or ''),
         'legalSourceURL': str(q.get('legal_source_url') or ''),
         'correctionSourceURL': str(q.get('correction_source_url') or ''),
         'canonicalId': str(q.get('dailySprintCanonicalId') or q['id']),
@@ -111,6 +109,8 @@ assert all(q['memoryPoint'] and q['explanation'] for q in questions)
 assert all(q['sourceURL'].startswith('https://') for q in questions), 'every question must carry an HTTPS source URL'
 assert all(not q['originalDataSourceURL'] or q['originalDataSourceURL'].startswith('https://') for q in questions)
 assert next(q for q in questions if q['id'] == 'P109-124')['originalDataSourceURL'] == 'https://www.stat.go.jp/data/jinsui/2022np/index.htm'
+assert all(q['originalDataSourceTitle'] for q in questions if q['originalDataSourceURL']), 'source URL must have a title'
+assert sum(bool(q['originalDataSourceURL']) for q in questions) == 4, 'four distinct third-party provenance entries expected'
 assert all(q['modificationDisclosure'].startswith('加工：学びスプリント開発者') for q in questions), 'PDL1.0 modification actor disclosure missing'
 assert all(not q['legalSourceURL'] or q['legalSourceURL'].startswith('https://') for q in questions)
 assert all(not q['correctionSourceURL'] or q['correctionSourceURL'].startswith('https://') for q in questions)
