@@ -1,0 +1,67 @@
+name: "AI引継ぎ帳｜機能要望"
+description: "AI引継ぎ帳の改善案や機能要望を送ります。個人情報・顧客情報・秘密情報は記載しないでください。"
+title: "[AI引継ぎ帳][要望] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        改善案をご共有いただきありがとうございます。
+
+        **実際のプロジェクト内容、顧客情報、パスワード、秘密鍵、アクセストークン、未公開情報は記載・添付しないでください。**
+
+  - type: checkboxes
+    id: privacy-confirmation
+    attributes:
+      label: 投稿前の確認
+      options:
+        - label: 個人情報・顧客情報・秘密情報を含めていません
+          required: true
+
+  - type: textarea
+    id: situation
+    attributes:
+      label: 困っていること・利用場面
+      description: どのような作業で、何が不便かを架空の例で説明してください。
+      placeholder: 複数のAI担当を切り替える際、直近の未完了タスクだけを確認したい。
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 希望する機能・改善内容
+      placeholder: 未完了タスクだけを表示できるフィルターを追加してほしい。
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefit
+    attributes:
+      label: 改善される点
+      placeholder: 次に対応すべき作業を短時間で確認できる。
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 希望度
+      options:
+        - あると便利
+        - よく使うので欲しい
+        - 現在の作業が止まるため必要
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternative
+    attributes:
+      label: 現在の代替方法
+      description: 現在どのように対応しているか、なければ「なし」と記載してください。
+      placeholder: タスク一覧を目視で探している。
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 補足
+      description: 画面案などを添付する場合は、個人情報や実データを含めないでください。
