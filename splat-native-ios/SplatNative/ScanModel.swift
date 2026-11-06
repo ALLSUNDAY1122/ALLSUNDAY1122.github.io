@@ -166,6 +166,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     @Published var ignoreLiDAR = false
     @Published var depthCaptureActive = false
     @Published private(set) var isWorldMapPersistencePending = false
+    @Published private(set) var reconstructionDiagnosticText: String?
 
     let coverageSectorTotal = 12
     let minimumCoverageSectors = 8
@@ -592,6 +593,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         phase = .training
         trainingProgress = 0
         splatCount = 0
+        reconstructionDiagnosticText = nil
         UIApplication.shared.isIdleTimerDisabled = true
 
         let path = projectURL.path
@@ -691,7 +693,13 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     )
                     SplatReconstructionRunReport.write(report, projectURL: projectURL)
                     Task { @MainActor [weak self] in
-                        self?.failTraining(reason.userMessage)
+                        let diagnostic = reason.diagnosticText(
+                            evaluation: preflightEvaluation,
+                            limits: passResourceGuard.limits,
+                            iteration: 0,
+                            splatCount: 0
+                        )
+                        self?.failTraining(reason.userMessage, diagnostic: diagnostic)
                     }
                     return
                 }
@@ -816,7 +824,13 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                         nil
                     )
                     Task { @MainActor [weak self] in
-                        self?.failTraining(reason.userMessage)
+                        let diagnostic = reason.diagnosticText(
+                            evaluation: initialResourceEvaluation,
+                            limits: passResourceGuard.limits,
+                            iteration: resumedIteration,
+                            splatCount: trainer.splatCount
+                        )
+                        self?.failTraining(reason.userMessage, diagnostic: diagnostic)
                     }
                     return
                 }
@@ -907,7 +921,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                             }
                         }
 
-                        if let reason = resourcePauseReason {
+                        if let reason = resourcePauseReason, let resourceEvaluation {
                             writeRunReport(
                                 "paused-\(reason.rawValue)",
                                 .trainingStep,
@@ -918,7 +932,13 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                                 nil
                             )
                             Task { @MainActor [weak self] in
-                                self?.failTraining(reason.userMessage)
+                                        let diagnostic = reason.diagnosticText(
+                                    evaluation: resourceEvaluation,
+                                    limits: passResourceGuard.limits,
+                                    iteration: iteration,
+                                    splatCount: stats.splatCount
+                                )
+                                self?.failTraining(reason.userMessage, diagnostic: diagnostic)
                             }
                             return
                         }
@@ -1072,7 +1092,8 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         }
     }
 
-    private func failTraining(_ message: String) {
+    private func failTraining(_ message: String, diagnostic: String? = nil) {
+        reconstructionDiagnosticText = diagnostic
         if let projectURL {
             try? projectStore.updateManifest(projectURL: projectURL) { manifest in
                 manifest.stage = .failed
