@@ -78,6 +78,8 @@ jobs:
           assert d['counts']['images']==154
           assert d['counts']['legalCandidates']==107
           assert d['counts']['thirdPartyItems']==4
+          assert d['counts']['genericExplanations'] <= 125, 'generic teaching explanations regressed or recent revisions not bundled'
+          assert d['counts']['missingThirdPartyProvenance']==0
           assert d['structuralAuditPassIsNotContentApproval'] is True
           print('PASS: quality readiness report generated; Q0-Q5 retain evidence-based decisions')
           PY
