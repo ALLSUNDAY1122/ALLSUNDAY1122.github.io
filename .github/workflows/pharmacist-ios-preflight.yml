@@ -29,7 +29,9 @@ concurrency:
   cancel-in-progress: false
 jobs:
   preflight:
-    runs-on: macos-14
+    # macos-14 GitHub-hosted runner was retired 2026-11-02.
+    # macos-15 carries Xcode 16.x for backward-compatibility regression testing.
+    runs-on: macos-15
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
