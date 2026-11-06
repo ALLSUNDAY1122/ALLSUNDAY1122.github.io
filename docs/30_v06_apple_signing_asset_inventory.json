@@ -1,0 +1,54 @@
+{
+  "app": "AI引継ぎ帳",
+  "bundle_id": "jp.allsunday.aihandoverlog",
+  "assets": [
+    {
+      "name": "Apple Distribution certificate",
+      "format": ".p12",
+      "secret": true,
+      "status": "not_created_or_not_provided",
+      "storage": "MacinCloud secure local folder and GitHub Environment secret as Base64",
+      "never_commit": true
+    },
+    {
+      "name": "App Store Connect provisioning profile",
+      "format": ".mobileprovision",
+      "secret": true,
+      "status": "not_created_or_not_provided",
+      "storage": "MacinCloud secure local folder and GitHub Environment secret as Base64",
+      "never_commit": true
+    },
+    {
+      "name": "App Store Connect API private key",
+      "format": "AuthKey_<KEY_ID>.p8",
+      "secret": true,
+      "status": "not_created_or_not_provided",
+      "storage": "secure local storage and GitHub Environment secret as Base64",
+      "download_count": "one-time",
+      "never_commit": true
+    },
+    {
+      "name": "Team ID",
+      "format": "10 characters",
+      "secret": false,
+      "status": "not_recorded"
+    },
+    {
+      "name": "API Key ID",
+      "format": "10 characters",
+      "secret": false,
+      "status": "not_recorded"
+    },
+    {
+      "name": "Issuer ID",
+      "format": "UUID",
+      "secret": false,
+      "status": "not_recorded"
+    }
+  ],
+  "validation_script": "scripts/validate_apple_signing_assets_macos.sh",
+  "secret_scanner": "scripts/scan_forbidden_apple_secrets.py",
+  "secret_safety_workflow": ".github/workflows/ai-handover-log-v06-secret-safety.yml",
+  "credentials_received_by_chatgpt": false,
+  "ready_for_signing": false
+}

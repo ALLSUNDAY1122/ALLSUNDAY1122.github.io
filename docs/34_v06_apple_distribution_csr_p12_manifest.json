@@ -1,0 +1,18 @@
+{
+  "app": "AI引継ぎ帳",
+  "bundle_id": "jp.allsunday.aihandoverlog",
+  "version": "0.6.0",
+  "build": "6",
+  "purpose": "Create and verify Apple Distribution CSR and PKCS#12 signing identity",
+  "files": [
+    "scripts/generate_apple_distribution_csr_macos.sh",
+    "scripts/build_apple_distribution_p12_macos.sh",
+    ".github/workflows/ai-handover-log-v06-apple-csr-tools-ci.yml",
+    "docs/33_v06_apple_distribution_csr_and_p12.md"
+  ],
+  "private_material_committed": false,
+  "production_certificate_created": false,
+  "production_p12_created": false,
+  "ci_uses_self_signed_test_certificate_only": true,
+  "initial_release_preferred_path": "MacinCloud Xcode Organizer automatic signing"
+}

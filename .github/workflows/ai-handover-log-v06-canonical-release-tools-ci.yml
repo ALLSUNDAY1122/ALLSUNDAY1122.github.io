@@ -1,0 +1,286 @@
+name: AI Handover Log v0.6 Canonical Release Tools CI
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/ai-handover-log-v06-canonical-release-tools-ci.yml
+      - scripts/ai_handover_release_tool_macos.sh
+      - scripts/verify_apple_signing_assets_macos.sh
+      - scripts/verify_apple_provisioning_profile.py
+      - scripts/generate_apple_distribution_csr_macos.sh
+      - scripts/build_apple_distribution_p12_macos.sh
+      - scripts/validate_apple_release_credentials_macos.sh
+      - scripts/configure_github_testflight_environment_macos.sh
+      - scripts/macincloud_testflight_submission.sh
+      - docs/39_v06_canonical_release_tool_index.md
+      - docs/40_v06_canonical_release_tools_state.json
+  push:
+    branches:
+      - agent/ai-handover-log-v04-binary
+    paths:
+      - .github/workflows/ai-handover-log-v06-canonical-release-tools-ci.yml
+      - scripts/ai_handover_release_tool_macos.sh
+      - scripts/verify_apple_signing_assets_macos.sh
+      - scripts/verify_apple_provisioning_profile.py
+      - scripts/generate_apple_distribution_csr_macos.sh
+      - scripts/build_apple_distribution_p12_macos.sh
+      - scripts/validate_apple_release_credentials_macos.sh
+      - scripts/configure_github_testflight_environment_macos.sh
+      - scripts/macincloud_testflight_submission.sh
+      - docs/39_v06_canonical_release_tool_index.md
+      - docs/40_v06_canonical_release_tools_state.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  profile-validator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile provisioning profile validator
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/verify_apple_provisioning_profile.py
+
+      - name: Test valid App Store profile metadata
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/profile-test"
+
+          openssl req \
+            -x509 \
+            -newkey rsa:2048 \
+            -nodes \
+            -days 2 \
+            -subj "/CN=Apple Distribution: CI Test/OU=ABCDEFGHIJ/O=CI Test/C=JP" \
+            -keyout "$RUNNER_TEMP/profile-test/key.pem" \
+            -out "$RUNNER_TEMP/profile-test/cert.pem" \
+            >/dev/null 2>&1
+
+          openssl x509 \
+            -in "$RUNNER_TEMP/profile-test/cert.pem" \
+            -outform DER \
+            -out "$RUNNER_TEMP/profile-test/cert.der"
+
+          python3 - <<'PY'
+          from datetime import datetime, timedelta
+          import os
+          import plistlib
+          from pathlib import Path
+
+          root = Path(os.environ["RUNNER_TEMP"]) / "profile-test"
+          cert = (root / "cert.der").read_bytes()
+          now = datetime.utcnow()
+
+          profile = {
+              "Name": "AI Handover Log App Store CI",
+              "UUID": "00000000-0000-0000-0000-000000000001",
+              "TeamName": "CI Test",
+              "TeamIdentifier": ["ABCDEFGHIJ"],
+              "CreationDate": now,
+              "ExpirationDate": now + timedelta(days=30),
+              "DeveloperCertificates": [cert],
+              "Entitlements": {
+                  "application-identifier": "ABCDEFGHIJ.jp.allsunday.aihandoverlog",
+                  "com.apple.developer.team-identifier": "ABCDEFGHIJ",
+                  "get-task-allow": False,
+                  "beta-reports-active": True,
+              },
+          }
+
+          with (root / "valid-profile.plist").open("wb") as handle:
+              plistlib.dump(profile, handle, fmt=plistlib.FMT_XML)
+          PY
+
+          python3 scripts/verify_apple_provisioning_profile.py \
+            --profile-plist "$RUNNER_TEMP/profile-test/valid-profile.plist" \
+            --certificate-der "$RUNNER_TEMP/profile-test/cert.der" \
+            --team-id ABCDEFGHIJ \
+            --bundle-id jp.allsunday.aihandoverlog \
+            --output "$RUNNER_TEMP/profile-test/valid-result.json"
+
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          result = json.loads(
+              (Path(os.environ["RUNNER_TEMP"]) / "profile-test/valid-result.json")
+              .read_text(encoding="utf-8")
+          )
+          assert result["result"] == "passed"
+          assert all(result["checks"].values())
+          assert result["profile"]["get_task_allow"] is False
+          assert result["profile"]["beta_reports_active"] is True
+          print("VALID_APP_STORE_PROFILE_ACCEPTED")
+          PY
+
+      - name: Reject development provisioning profile metadata
+        run: |
+          set -euo pipefail
+
+          python3 - <<'PY'
+          import os
+          import plistlib
+          from pathlib import Path
+
+          root = Path(os.environ["RUNNER_TEMP"]) / "profile-test"
+          with (root / "valid-profile.plist").open("rb") as handle:
+              profile = plistlib.load(handle)
+          profile["Entitlements"]["get-task-allow"] = True
+          profile["ProvisionedDevices"] = ["0000000000000000000000000000000000000000"]
+          with (root / "development-profile.plist").open("wb") as handle:
+              plistlib.dump(profile, handle, fmt=plistlib.FMT_XML)
+          PY
+
+          if python3 scripts/verify_apple_provisioning_profile.py \
+            --profile-plist "$RUNNER_TEMP/profile-test/development-profile.plist" \
+            --certificate-der "$RUNNER_TEMP/profile-test/cert.der" \
+            --team-id ABCDEFGHIJ \
+            --bundle-id jp.allsunday.aihandoverlog \
+            --output "$RUNNER_TEMP/profile-test/development-result.json"
+          then
+            echo "Development profile was incorrectly accepted." >&2
+            exit 1
+          fi
+
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          result = json.loads(
+              (Path(os.environ["RUNNER_TEMP"]) / "profile-test/development-result.json")
+              .read_text(encoding="utf-8")
+          )
+          assert result["result"] == "failed"
+          assert result["checks"]["not_development_profile"] is False
+          assert result["checks"]["has_no_registered_devices"] is False
+          print("DEVELOPMENT_PROFILE_REJECTED")
+          PY
+
+  canonical-macos-tools:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Bash syntax
+        run: |
+          set -euo pipefail
+          bash -n scripts/ai_handover_release_tool_macos.sh
+          bash -n scripts/verify_apple_signing_assets_macos.sh
+          bash -n scripts/generate_apple_distribution_csr_macos.sh
+          bash -n scripts/build_apple_distribution_p12_macos.sh
+          bash -n scripts/validate_apple_release_credentials_macos.sh
+          bash -n scripts/configure_github_testflight_environment_macos.sh
+          bash -n scripts/macincloud_testflight_submission.sh
+
+      - name: Validate canonical dispatcher help and routes
+        run: |
+          set -euo pipefail
+          chmod +x scripts/ai_handover_release_tool_macos.sh
+          scripts/ai_handover_release_tool_macos.sh help > "$RUNNER_TEMP/release-tool-help.txt"
+
+          for command_name in csr p12 verify-offline verify-online configure-github archive; do
+            grep -q "$command_name" "$RUNNER_TEMP/release-tool-help.txt"
+          done
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          dispatcher = Path("scripts/ai_handover_release_tool_macos.sh").read_text(
+              encoding="utf-8"
+          )
+          required = {
+              "csr": "scripts/generate_apple_distribution_csr_macos.sh",
+              "p12": "scripts/build_apple_distribution_p12_macos.sh",
+              "verify-offline": "scripts/verify_apple_signing_assets_macos.sh",
+              "verify-online": "scripts/validate_apple_release_credentials_macos.sh",
+              "configure-github": "scripts/configure_github_testflight_environment_macos.sh",
+              "archive": "scripts/macincloud_testflight_submission.sh",
+          }
+          for command_name, path_text in required.items():
+              path = Path(path_text)
+              if not path.is_file():
+                  raise SystemExit(f"missing route target: {path}")
+              if command_name not in dispatcher or path.name not in dispatcher:
+                  raise SystemExit(
+                      f"dispatcher route missing: {command_name} -> {path.name}"
+                  )
+          print("CANONICAL_ROUTES_VALID")
+          PY
+
+      - name: Verify offline credential validator safety
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          shell = Path("scripts/verify_apple_signing_assets_macos.sh").read_text(
+              encoding="utf-8"
+          )
+          helper = Path("scripts/verify_apple_provisioning_profile.py").read_text(
+              encoding="utf-8"
+          )
+
+          required_shell = [
+              "-passin env:P12_PASSWORD",
+              "unset P12_PASSWORD",
+              'chmod 700 "$TEMP_DIR"',
+              "CN=Apple Distribution:",
+              "OU=$TEAM_ID",
+              "prime256v1|P-256",
+              "secrets_in_report",
+              "verify_apple_provisioning_profile.py",
+          ]
+          for marker in required_shell:
+              if marker not in shell:
+                  raise SystemExit(f"missing offline validator marker: {marker}")
+
+          forbidden_shell = [
+              '-passin "pass:$P12_PASSWORD"',
+              "-passin pass:$P12_PASSWORD",
+              'cat "$API_KEY_PATH"',
+              'cat "$PRIVATE_KEY_PEM"',
+          ]
+          for marker in forbidden_shell:
+              if marker in shell:
+                  raise SystemExit(f"forbidden secret handling found: {marker}")
+
+          required_helper = [
+              "beta-reports-active",
+              "certificate_is_in_profile",
+              "not_development_profile",
+              "has_no_registered_devices",
+              "not_enterprise_profile",
+          ]
+          for marker in required_helper:
+              if marker not in helper:
+                  raise SystemExit(f"missing profile validator marker: {marker}")
+
+          print("OFFLINE_VALIDATOR_SAFETY_VALID")
+          PY
+
+      - name: Reject committed Apple secret file types
+        run: |
+          set -euo pipefail
+          forbidden="$(
+            find . -type f \
+              \( -name '*.p12' \
+                 -o -name '*.mobileprovision' \
+                 -o -name 'AuthKey_*.p8' \
+                 -o -name 'AppleDistribution.key.pem' \) \
+              -not -path './.git/*' \
+              -print
+          )"
+          if [[ -n "$forbidden" ]]; then
+            echo "Forbidden Apple secret files found:" >&2
+            printf '%s\n' "$forbidden" >&2
+            exit 1
+          fi
+          echo "NO_COMMITTED_APPLE_SECRET_FILES"
