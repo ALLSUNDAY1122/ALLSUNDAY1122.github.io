@@ -1,0 +1,145 @@
+[
+  {
+    "command": [
+      "npx",
+      "rea-agents",
+      "setup"
+    ],
+    "exit_code": 1,
+    "elapsed_seconds": 70.354,
+    "timestamp_utc": "2026-10-20T13:33:08.791148+00:00"
+  },
+  {
+    "command": [
+      "npx",
+      "rea-agents",
+      "setup"
+    ],
+    "exit_code": 1,
+    "elapsed_seconds": 0.465,
+    "started_at_utc": "2026-10-20T13:57:50.128791+00:00",
+    "cwd": "/workspace/rea",
+    "capture": "setup-retry"
+  },
+  {
+    "command": [
+      "npx",
+      "rea-agents",
+      "setup"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 22.316,
+    "started_at_utc": "2026-10-20T13:58:00.473295+00:00",
+    "cwd": "/tmp",
+    "capture": "setup-published"
+  },
+  {
+    "command": [
+      "npx",
+      "-y",
+      "rea-agents@latest",
+      "doctor",
+      "--json"
+    ],
+    "exit_code": 1,
+    "elapsed_seconds": 17.475,
+    "started_at_utc": "2026-10-20T14:03:16.681247+00:00",
+    "cwd": "/tmp",
+    "capture": "doctor"
+  },
+  {
+    "command": [
+      "git",
+      "clone",
+      "--depth",
+      "1",
+      "https://github.com/excalidraw/excalidraw",
+      "/tmp/targets/excalidraw"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 5.227,
+    "started_at_utc": "2026-10-20T14:03:34.188319+00:00",
+    "cwd": "/tmp",
+    "capture": "clone-target"
+  },
+  {
+    "command": [
+      "npx",
+      "-y",
+      "rea-agents@latest",
+      "--version"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 1.577,
+    "started_at_utc": "2026-10-20T14:03:39.449299+00:00",
+    "cwd": "/tmp",
+    "capture": "version"
+  },
+  {
+    "command": [
+      "node",
+      "-v"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.008,
+    "started_at_utc": "2026-10-20T14:04:42.769117+00:00",
+    "cwd": "/tmp",
+    "capture": "node"
+  },
+  {
+    "command": [
+      "npm",
+      "-v"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.115,
+    "started_at_utc": "2026-10-20T14:04:42.814697+00:00",
+    "cwd": "/tmp",
+    "capture": "npm"
+  },
+  {
+    "command": [
+      "npx",
+      "-y",
+      "rea-agents@6.7.0",
+      "doctor",
+      "--help"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 10.695,
+    "started_at_utc": "2026-10-20T14:04:42.961373+00:00",
+    "cwd": "/tmp",
+    "capture": "doctor-help"
+  },
+  {
+    "command": [
+      "npx",
+      "-y",
+      "rea-agents@latest",
+      "analyze-javascript-application",
+      "/tmp/targets/excalidraw",
+      "--json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 66.411,
+    "started_at_utc": "2026-10-20T14:03:54.418958+00:00",
+    "cwd": "/tmp",
+    "capture": "analyze"
+  },
+  {
+    "command": [
+      "npx",
+      "-y",
+      "rea-agents@6.7.0",
+      "doctor",
+      "--target",
+      "/tmp/targets/excalidraw",
+      "--json"
+    ],
+    "exit_code": 1,
+    "elapsed_seconds": 1.802,
+    "started_at_utc": "2026-10-20T14:05:02.803158+00:00",
+    "cwd": "/tmp",
+    "capture": "doctor-target"
+  }
+]

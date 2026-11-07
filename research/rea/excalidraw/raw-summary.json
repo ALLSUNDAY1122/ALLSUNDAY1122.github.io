@@ -1,0 +1,136 @@
+{
+  "evidence_id": "ev_199ebd1a37a6245ebeb7125433a10b22aa77677b2e30f681c374d8eb64bdee36",
+  "subject": {
+    "name": "excalidraw",
+    "digest": {
+      "sha256": "30ca66940f6d1524867f109ed42afc3031e4b95e407bc241b685555830d27988"
+    },
+    "local_path": "/tmp/targets/excalidraw",
+    "format": "directory",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rea-javascript-application",
+    "name": "REA JavaScript application analyzer",
+    "version": "1"
+  },
+  "node_count": 3682,
+  "edge_count": 4197,
+  "statistics": {
+    "relevant_files": 811,
+    "nested_asar_containers": 0,
+    "text_bytes_read": 10509113,
+    "invalid_utf8_files": 0,
+    "parsed_javascript_files": 714,
+    "skipped_javascript_files": 0,
+    "visited_ast_nodes": 856926,
+    "findings": 6193,
+    "modules": 0,
+    "parse_failures": 3
+  },
+  "graph_coverage": {
+    "status": "partial",
+    "truncated": false,
+    "omitted_count": null,
+    "limits": [
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 0,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 13008,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 2300238,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 26514,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 34223804,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 36568708,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 43500,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 457794,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 54816,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 61014,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 7986,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_available_result_budget_bytes",
+        "value": 966,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_parent_result_budget_bytes",
+        "value": 945790980,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_semantic_result_budget_bytes",
+        "value": 0,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_worker_heap_limit_bytes",
+        "value": 1098907648,
+        "unit": "bytes"
+      },
+      {
+        "name": "javascript_analysis_worker_timeout_ms",
+        "value": 300000,
+        "unit": "milliseconds"
+      }
+    ]
+  },
+  "limitations_count": 1212,
+  "limitations_sample": [
+    "CommonJS and ESM binding relationships were recovered from inert syntax and resolved only within the inventoried artifact container.",
+    "Electron relationships are derived from inert syntax; runtime registration, reachability, defaults, and enforcement remain unproven.",
+    "Graph coverage is incomplete; unavailable facts remain explicit and must not be read as absence.",
+    "JavaScript and HTML were parsed as inert text; bundle bootstrap code was never executed.",
+    "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/element/src/distance.ts exceed the parent's result budget; complete static facts were retained on the file node",
+    "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/element/src/distribute.ts exceed the parent's result budget; complete static facts were retained on the file node",
+    "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/element/src/dragElements.ts exceed the parent's result budget; complete static facts were retained on the file node",
+    "Resource constraint during analyze_javascript_application: Expanded application relationships for packages/element/src/duplicate.ts exceed the parent's result budget; complete static facts were retained on the file node"
+  ],
+  "cli_version": "6.7.0",
+  "exit_code": 0,
+  "elapsed_seconds": 66.411,
+  "raw_uncompressed_bytes": 124851778,
+  "raw_uncompressed_sha256": "196e9343786784b0e624b2fd6d3eac5783bfd4152ec23928afdfe7c79c667ea9",
+  "compressed_file": "raw.json.gz",
+  "compressed_bytes": 23576915
+}
