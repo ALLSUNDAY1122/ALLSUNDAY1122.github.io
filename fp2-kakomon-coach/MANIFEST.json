@@ -1,0 +1,32 @@
+{
+  "product": "FP2級 過去問コーチ",
+  "version": "1.0.0",
+  "generatedAt": "2026-08-02",
+  "generatedBy": "Claude (本開発担当AI)",
+  "notes": "本開発初期成果物一式。GitHub登録・ネイティブビルド・App Store申請は未実施（次工程Codexまたは人間の担当範囲）。sha256はsha256sumコマンドの実行結果をそのまま転記。",
+  "files": [
+    { "path": "FP2_KAKOMON_COACH_v1.0.0.html", "sizeBytes": 426330, "sha256": "aee6d52b9328ac3013049a355590b7b438663b08ff897e2c79345ec3ece3b8b9", "description": "アプリ本体（単一HTML、180問データ埋め込み）" },
+    { "path": "SPEC.md", "sizeBytes": 4730, "sha256": "d5f010aa0c151964cb7c14b24e2aecaf59da303a45363975491877f43b35a751", "description": "企画・仕様書" },
+    { "path": "AI_TASK.md", "sizeBytes": 3502, "sha256": "eda254835005aa46fea1d612d440ab09fac0bf6a9c637fa5b3106b3da279a5b6", "description": "次工程への引継ぎタスク" },
+    { "path": "DEVELOPMENT_HANDOFF.md", "sizeBytes": 6820, "sha256": "cd490dd16bd7654707b2ddd90ffc9aa7a8c09157af1d93c110fac88b08d07761", "description": "開発判断・既知の問題の記録" },
+    { "path": "TEST_RESULTS.md", "sizeBytes": 6790, "sha256": "7bec1126995f130d8fe27740a8871169837c692c51067076bf5f6800bd1f695a", "description": "実施した試験と結果" },
+    { "path": "HUMAN_FEEDBACK.md", "sizeBytes": 1927, "sha256": "4ffcfbfe75eb7e0dc62e0f03a39d6ee1745894e7733ba9e70a4341eb7336c360", "description": "人間による実機確認後の記入用テンプレート（空欄）" },
+    { "path": "AUDIT_MATRIX_FP2.csv", "sizeBytes": 24423, "sha256": "888d3f4691357aa7bb6acab44574c025338d392b34352afedb9061cc18790df5", "description": "全180問の監査マトリクス（ID・出典・正解・確認状況）" },
+    { "path": "FULL_AUDIT_REPORT_FP2.md", "sizeBytes": 6141, "sha256": "a746b55755af7a1965afd3772f29bf5fa001bae901da060dd36b662018ba7d87", "description": "監査方法・既知の限界の説明" },
+    { "path": "FINAL_VALIDATION_FP2.md", "sizeBytes": 4032, "sha256": "4089b60374a2b1b6cc20d498ebf5963c839133ecd7efa6eccf8e004b5651a17a", "description": "JSON構文・件数・重複・必須フィールド検証結果" },
+    { "path": "questions/question_bank_fp2.json", "sizeBytes": 425071, "sha256": "c4339cbd7d5b0cdd280132a735028504ee5732aaae01bc7f2f2c0feb66a0681b", "description": "統合済み180問マスターデータ" },
+    { "path": "questions/part_2026_05.json", "sizeBytes": 130580, "sha256": "c0eb3f0818e8b8b50c67d658ebf4266c92762e35900ff59a35e6c01a59d8dba6", "description": "2026年5月分60問（中間ファイル）" },
+    { "path": "questions/part_2025_05.json", "sizeBytes": 149785, "sha256": "0811c6d420b3faeb5c5a85e61df03e28a661d01decc6f682b0747c64fd212011", "description": "2025年5月分60問（中間ファイル）" },
+    { "path": "questions/part_2025_01.json", "sizeBytes": 138452, "sha256": "ec50be8e33fe52d24bb3b385f9861806ff09f797d7812376e8b802fe0051e14c", "description": "2025年1月分60問（中間ファイル）" },
+    { "path": "scripts/merge_and_validate.py", "sizeBytes": 2939, "sha256": "5eb8c93c5277792cd50e1beff4b062900e4353bff93f2bb169f17a8fd4f52437", "description": "180問統合・検証スクリプト" },
+    { "path": "scripts/make_audit_matrix.py", "sizeBytes": 919, "sha256": "08c2f77c34e0183104b9f6d31149b582433d5c237985ed051a5a517713f28f74", "description": "AUDIT_MATRIX_FP2.csv生成スクリプト" },
+    { "path": "scripts/build_app.py", "sizeBytes": 799, "sha256": "72337b733f3d17c00e613047d8b9668c640b94e814f7a15e17af79aede5c8414", "description": "question_bank_fp2.jsonをapp_template.htmlに埋め込みHTML生成" },
+    { "path": "scripts/app_template.html", "sizeBytes": 24683, "sha256": "b3ae04b278e4d6d5cd701c4b89643160c404b9aa533baf4f33d137a06aac43ff", "description": "アプリテンプレート（データ埋め込み前）" },
+    { "path": "scripts/tests/algo_test.js", "sizeBytes": 5397, "sha256": "a003246f7977d6aed40ce70f247f16feffe372f5386040280a38ee40552d5ea5", "description": "セッション抽出・弱点ロジックの自動テスト" },
+    { "path": "scripts/tests/dom_smoke_test.js", "sizeBytes": 2147, "sha256": "ea35aaada1a59fc9e884c7f2a95c42bc3a11e860a1c7294c87e2f1933995fc79", "description": "JS構文・DOM実行のスモークテスト" }
+  ],
+  "knownResidualArtifacts": [
+    { "path": "questions/build.py", "reason": "サブエージェントが問題JSON生成に使用した中間スクリプトの残骸。サンドボックスの権限問題により削除できなかったが、成果物には無関係・無害。" },
+    { "path": "scripts/_check/", "reason": "検証作業中の中間ファイル（抽出したJSON/JS断片、中断したnpm installの残骸）。同様に削除できなかったが無害。" }
+  ]
+}
