@@ -1,0 +1,92 @@
+{
+  "generated_by": "tools/generate_fixtures.py",
+  "note": "全て合成データ。実在の給与明細・個人情報は含まない。",
+  "cases": [
+    {
+      "id": "case01",
+      "title": "Web明細PDF・3ブロック罫線あり（標準表記）",
+      "kind": "text_pdf",
+      "note": "最も標準的なWeb給与明細PDF。支給/控除が左右ブロック、合計が別行。",
+      "file": "rendered/case01.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "case02",
+      "title": "Web明細PDF・2段組（支給/控除を左右に並列）+ 括弧マイナス表記",
+      "kind": "text_pdf",
+      "note": "同一行に支給ラベル・支給額・控除ラベル・控除額が並ぶ。行内の項目境界判定が必要。",
+      "file": "rendered/case02.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "case03",
+      "title": "Web明細PDF・縦1列ラベル/値、金額右端（ラベルとの距離が大）",
+      "kind": "text_pdf",
+      "note": "ラベルと金額が同一行だが水平距離が離れている。円記号付き。",
+      "file": "rendered/case03.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "case04",
+      "title": "Web明細PDF・略語表記＋列ヘッダ縦対応（金額がラベルの下）",
+      "kind": "text_pdf",
+      "note": "健保/厚年/雇保/市民税など略語。ラベルの真下に金額があり、同一行探索では取れない。",
+      "file": "rendered/case04.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "case05",
+      "title": "スクリーンショット・Web明細標準表（OCR）",
+      "kind": "screenshot",
+      "note": "PC画面のスクリーンショット想定。文字は鮮明でOCR条件は良好。",
+      "file": "rendered/case05.png",
+      "ocr_source": "rendered/case05.png",
+      "scale": 2.4
+    },
+    {
+      "id": "case06",
+      "title": "スクリーンショット・低コントラスト（薄いグレー文字）（OCR）",
+      "kind": "screenshot",
+      "note": "文字色が薄くOCRの文字欠落が起きやすい条件。手取額という表記ゆれを含む。",
+      "file": "rendered/case06.png",
+      "ocr_source": "rendered/case06.png",
+      "scale": 2.4
+    },
+    {
+      "id": "case07",
+      "title": "スクリーンショット・スマホ縦長（ラベル左端/金額右端）（OCR）",
+      "kind": "screenshot",
+      "note": "スマホWeb明細。行の左右端に離れて配置。略語＋残業代/振込額の表記ゆれ。",
+      "file": "rendered/case07.png",
+      "ocr_source": "rendered/case07.png",
+      "scale": 3.0
+    },
+    {
+      "id": "case08",
+      "title": "紙明細の写真・傾き＋ノイズ＋影（OCR）",
+      "kind": "photo",
+      "note": "紙をスマホで撮影した想定。回転2.5度、影グラデーション、ガウシアンノイズ。",
+      "file": "rendered/case08.jpg",
+      "ocr_source": "rendered/case08.jpg",
+      "scale": 2.6
+    },
+    {
+      "id": "case09",
+      "title": "紙明細の写真・罫線なし等幅（ドットプリンタ風）（OCR）",
+      "kind": "photo",
+      "note": "罫線が無く、桁区切りも無い。ラベルと金額が空白で区切られるのみ。",
+      "file": "rendered/case09.jpg",
+      "ocr_source": "rendered/case09.jpg",
+      "scale": 2.8
+    },
+    {
+      "id": "case10",
+      "title": "画像PDF（スキャン）・2段組＋△マイナス表記（OCR）",
+      "kind": "image_pdf",
+      "note": "テキストを持たないスキャンPDF。PDF直接抽出が失敗しOCR経路へフォールバックする。",
+      "file": "rendered/case10.pdf",
+      "ocr_source": "rendered/case10.jpg",
+      "scale": 2.6
+    }
+  ]
+}
