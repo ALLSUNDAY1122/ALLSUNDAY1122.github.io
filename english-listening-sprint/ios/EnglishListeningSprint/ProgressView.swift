@@ -1,0 +1,7 @@
+import SwiftUI
+
+struct LearningProgressView: View {
+    @EnvironmentObject private var store: LearningStore
+    var body: some View { NavigationStack { VStack(alignment: .leading, spacing: 16) { Text("学習記録").font(.title2.weight(.bold)); HStack { Stat(title: "完了", value: "\(store.completedLessonIDs.count)/30"); Stat(title: "正答", value: "\(store.answerHistory.values.filter { $0 }.count)"); Stat(title: "進捗", value: "\(Int(Double(store.completedLessonIDs.count) / 30 * 100))%") }; Text("地域別の進捗").font(.headline).padding(.top, 8); ForEach(["Canada", "Australia", "United Kingdom", "United States", "India"], id: \.self) { region in let total = store.lessons.filter { $0.region == region }.count; let done = store.lessons.filter { $0.region == region && store.completedLessonIDs.contains($0.id) }.count; VStack(alignment: .leading) { HStack { Text(region); Spacer(); Text("\(done)/\(total)").foregroundStyle(SprintTheme.muted) }; SwiftUI.ProgressView(value: Double(done), total: Double(max(total, 1))).tint(SprintTheme.accent) } }; Spacer() }.padding(16).background(SprintTheme.background).navigationTitle("Progress") } }
+}
+private struct Stat: View { let title: String; let value: String; var body: some View { VStack(spacing: 5) { Text(value).font(.title3.weight(.bold)); Text(title).font(.caption).foregroundStyle(SprintTheme.muted) }.frame(maxWidth: .infinity).padding(12).background(SprintTheme.panel, in: RoundedRectangle(cornerRadius: 14)) } }

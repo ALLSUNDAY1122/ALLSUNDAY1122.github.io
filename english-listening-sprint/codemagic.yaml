@@ -1,0 +1,38 @@
+workflows:
+  ios-testflight:
+    name: English Listening Sprint — iOS TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      groups:
+        - app_store_connect
+      vars:
+        XCODE_WORKSPACE: EnglishListeningSprint.xcodeproj
+        XCODE_SCHEME: EnglishListeningSprint
+        BUNDLE_ID: jp.allsunday1122.englishlistening
+      xcode: latest
+    scripts:
+      - name: Generate Xcode project
+        script: |
+          brew install xcodegen
+          cd ios
+          xcodegen generate
+      - name: Validate release assets
+        script: |
+          cd ios
+          test -f EnglishListeningSprint/PrivacyInfo.xcprivacy
+          test -d EnglishListeningSprint/Assets.xcassets/AppIcon.appiconset || { echo "Canonical AppIcon is required before archive"; exit 1; }
+      - name: Build signed IPA
+        script: |
+          cd ios
+          xcode-project use-profiles
+          xcode-project build-ipa --project "$XCODE_WORKSPACE" --scheme "$XCODE_SCHEME"
+    artifacts:
+      - ios/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - Internal Testers
