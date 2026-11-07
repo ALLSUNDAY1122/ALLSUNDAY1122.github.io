@@ -82,7 +82,7 @@ def main() -> None:
             token,
             f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseAvailability",
         )
-        _, loc = api_get(token, f"/v1/inAppPurchases/{IAP_ID}/inAppPurchaseLocalizations?limit=50")
+        _, loc = api_get(token, f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseLocalizations?limit=50")
         price = safe_get(
             token,
             f"/v2/inAppPurchases/{IAP_ID}/iapPriceSchedule?include=baseTerritory,manualPrices&limit[manualPrices]=50",
