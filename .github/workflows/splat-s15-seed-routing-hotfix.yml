@@ -1,0 +1,67 @@
+name: Splat S15 Materialized Seed Path Audit
+
+on:
+  push:
+    branches:
+      - feature/splat-native-ios-poc
+    paths:
+      - '.github/workflows/splat-s15-seed-routing-hotfix.yml'
+
+permissions:
+  contents: read
+
+env:
+  GIT_LFS_SKIP_SMUDGE: '1'
+
+jobs:
+  audit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-native-ios-poc
+
+      - name: Verify S14 source contracts before materialization
+        run: |
+          set -euo pipefail
+          python3 splat-native-ios/scripts/test_s14_rgb_dense_seed_contract.py
+          python3 splat-native-ios/scripts/test_s13_depth_seed_contract.py
+
+      - name: Materialize the actual release path in the runner only
+        working-directory: splat-native-ios
+        run: |
+          set -euo pipefail
+          python3 scripts/apply_s13_depth_seed.py
+          python3 scripts/apply_s13_ios26_reprocess_tap_fix.py
+          grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' SplatNative/ScanModel.swift
+          grep -q 'depthFrames: depthSeedFrames' SplatNative/ScanModel.swift
+          grep -q 'seedOutcome.requiresFreshTrainer' SplatNative/ScanModel.swift
+          grep -q 'FileManager.default.removeItem(at: checkpoint)' SplatNative/ScanModel.swift
+          grep -q 'reconstructionSeedEvidenceText' SplatNative/ScanModel.swift
+          grep -q 'restoreFinishedProjectForS13Reprocess' SplatNative/ScanModel.swift
+          grep -q 'SplatSoftwareDepthSeedBuilder.makeSeedPoints' SplatNative/SplatDepthSeedBuilder.swift
+          grep -q 'metadataFileName = "s14-seed-recipe.json"' SplatNative/SplatDepthSeedBuilder.swift
+          grep -q 'case planeSweep' SplatNative/SplatDepthSeedBuilder.swift
+          test "$(git diff --name-only | grep -E '^splat-native-ios/' | wc -l | tr -d ' ')" -ge 1
+
+      - name: Prepare proven iOS build environment
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          python3 scripts/make_test_icon.py
+          xcodegen generate
+          xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
+
+      - name: Compile materialized tests and unsigned device Release
+        working-directory: splat-native-ios
+        run: |
+          set -euo pipefail
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO build-for-testing
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNative \
+            -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO build

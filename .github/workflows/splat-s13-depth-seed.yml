@@ -1,0 +1,67 @@
+name: Splat S13 Depth Seed Geometry
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift'
+      - 'splat-native-ios/scripts/apply_s13_depth_seed.py'
+      - 'splat-native-ios/scripts/apply_s13_ios26_reprocess_tap_fix.py'
+      - 'splat-native-ios/scripts/test_s13_depth_seed_contract.py'
+      - 'splat-native-ios/scripts/materialize_msplat_s7_wave1.sh'
+      - 'splat-native-ios/project.yml'
+      - '.github/workflows/splat-s13-depth-seed.yml'
+  pull_request:
+    paths:
+      - 'splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift'
+      - 'splat-native-ios/scripts/apply_s13_depth_seed.py'
+      - 'splat-native-ios/scripts/apply_s13_ios26_reprocess_tap_fix.py'
+      - 'splat-native-ios/scripts/test_s13_depth_seed_contract.py'
+      - 'splat-native-ios/scripts/materialize_msplat_s7_wave1.sh'
+      - 'splat-native-ios/project.yml'
+      - '.github/workflows/splat-s13-depth-seed.yml'
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: S13 depth-seed source contract
+        run: python3 splat-native-ios/scripts/test_s13_depth_seed_contract.py
+      - name: Materialize S13 callsites
+        working-directory: splat-native-ios
+        run: |
+          python3 scripts/apply_s13_depth_seed.py
+          python3 scripts/apply_s13_depth_seed.py
+          python3 scripts/apply_s13_ios26_reprocess_tap_fix.py
+          python3 scripts/apply_s13_ios26_reprocess_tap_fix.py
+          grep -q 'frame.smoothedSceneDepth ?? frame.sceneDepth' SplatNative/ScanModel.swift
+          grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' SplatNative/ScanModel.swift
+          grep -q 'seedOutcome.requiresFreshTrainer' SplatNative/ScanModel.swift
+          grep -q 'restoreFinishedProjectForS13Reprocess' SplatNative/ScanModel.swift
+          grep -q 'SplatPreviousResultEvidence.preserveBeforeReprocess' SplatNative/ScanModel.swift
+          grep -q 'reconstructionSeedEvidenceText' SplatNative/ScanModel.swift
+          grep -q '同じ撮影から再生成' SplatNative/ScanLibraryView.swift
+          grep -q 'canReprocessTrusted' SplatNative/ScanLibraryView.swift
+          grep -q 'S13 iOS 26 tap routing' SplatNative/ScanLibraryView.swift
+          grep -q 'contentShape(Rectangle())' SplatNative/ScanLibraryView.swift
+          grep -q 'scanLabRouteToScanForReprocess' SplatNative/ScanLibraryView.swift
+          grep -q 'continued project returns to Scan tab' SplatNative/ScanLibraryView.swift
+          grep -q 'TabView(selection: $selectedTab)' SplatNative/IntegratedScanLabShellView.swift
+          grep -q 'tag(IntegratedScanLabTab.scan)' SplatNative/IntegratedScanLabShellView.swift
+          grep -q 'tag(IntegratedScanLabTab.library)' SplatNative/IntegratedScanLabShellView.swift
+          grep -q 'publisher(for: .scanLabRouteToScanForReprocess)' SplatNative/IntegratedScanLabShellView.swift
+          grep -q 'reconstructionSeedEvidenceText' SplatNative/RootScanView.swift
+          grep -q 'reconstructionSeedEvidenceText' SplatNative/SplatResultView.swift
+          grep -q 'S13 seed:' SplatNative/ScanModel.swift
+      - name: Preserve Build 8 reconstruction invariants
+        working-directory: splat-native-ios
+        run: |
+          grep -q 'standardIterations = 7_000' SplatNative/SplatReconstructionPolicy.swift
+          grep -q 'datasetDownscale: Float = 4.0' SplatNative/SplatReconstructionPolicy.swift
+          grep -q 'config.shDegree = 3' SplatNative/SplatReconstructionPolicy.swift
+          grep -q 'config.densifyGradThresh = 0.0002' SplatNative/SplatReconstructionPolicy.swift
+          grep -q 'config.densifySizeThresh = 0.01' SplatNative/SplatReconstructionPolicy.swift
+          grep -q 'residentMemoryBudgetBytes' SplatNative/SplatResourceGuard.swift
+          grep -q 'minimumAvailableMemoryReserveBytes' SplatNative/SplatResourceGuard.swift

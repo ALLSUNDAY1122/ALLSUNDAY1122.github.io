@@ -1,0 +1,392 @@
+import AVFoundation
+import CoreVideo
+import Foundation
+import Metal
+import MetalSplatter
+import SplatIO
+import simd
+
+enum SplatVideoExporter {
+    static let renderPixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
+    static let renderFovY: Float = 55 * .pi / 180
+    static let videoColorProperties: [String: String] = [
+        AVVideoColorPrimariesKey: AVVideoColorPrimaries_ITU_R_709_2,
+        AVVideoTransferFunctionKey: AVVideoTransferFunction_ITU_R_709_2,
+        AVVideoYCbCrMatrixKey: AVVideoYCbCrMatrix_ITU_R_709_2,
+    ]
+
+    static func renderViewMatrix(eye: SIMD3<Float>, center: SIMD3<Float>) -> simd_float4x4 {
+        let baseView = SplatCameraGeometry.lookAt(
+            eye: eye,
+            center: center,
+            up: SIMD3<Float>(0, 1, 0)
+        )
+        // Match the live viewer exactly. The display correction belongs in camera space; applying
+        // it on the right rotates translated scenes around world space and can move them off-center.
+        return SplatCameraGeometry.rotationZ(.pi) * baseView
+    }
+
+    enum ExportError: LocalizedError {
+        case metalUnavailable
+        case commandQueueUnavailable
+        case emptyScene
+        case cannotCreateWriter
+        case cannotAddVideoInput
+        case cannotStartWriter
+        case pixelBufferPoolUnavailable
+        case pixelBufferAllocationFailed
+        case textureCacheFailed
+        case textureCreationFailed
+        case commandBufferFailed
+        case renderSkipped
+        case appendFailed
+        case writerFailed(String)
+        case outputMissing
+
+        var errorDescription: String? {
+            switch self {
+            case .metalUnavailable: return "この端末では動画用のMetal描画を開始できません。"
+            case .commandQueueUnavailable: return "動画用のGPUコマンドを作成できません。"
+            case .emptyScene: return "動画にするGaussianがありません。"
+            case .cannotCreateWriter: return "動画ファイルを作成できません。"
+            case .cannotAddVideoInput: return "動画エンコーダを初期化できません。"
+            case .cannotStartWriter: return "動画の書き込みを開始できません。"
+            case .pixelBufferPoolUnavailable: return "動画フレーム用バッファを作成できません。"
+            case .pixelBufferAllocationFailed: return "動画フレームのメモリを確保できません。"
+            case .textureCacheFailed: return "動画フレームをMetalへ接続できません。"
+            case .textureCreationFailed: return "動画フレームのMetal textureを作成できません。"
+            case .commandBufferFailed: return "動画フレームのGPU処理に失敗しました。"
+            case .renderSkipped: return "3D描画の準備が完了せず動画化できませんでした。"
+            case .appendFailed: return "動画フレームを保存できませんでした。"
+            case .writerFailed(let message): return "動画の保存に失敗しました。\n\(message)"
+            case .outputMissing: return "動画ファイルを完成できませんでした。"
+            }
+        }
+    }
+
+    static func export(
+        sourceURL: URL,
+        verifiedDigest: String? = nil,
+        configuration: SplatVideoConfiguration,
+        destinationDirectory: URL? = nil
+    ) async throws -> URL {
+        try Task.checkCancellation()
+
+        let admission = try await SplatVideoMemoryPolicy.preflightAdmissionAsync(
+            sourceURL: sourceURL,
+            verifiedDigest: verifiedDigest,
+            configuration: configuration
+        )
+        try Task.checkCancellation()
+
+        guard let device = MTLCreateSystemDefaultDevice() else {
+            throw ExportError.metalUnavailable
+        }
+        guard let commandQueue = device.makeCommandQueue() else {
+            throw ExportError.commandQueueUnavailable
+        }
+
+        // Apply persisted edits while streaming the source asset. When crop/exposure/contrast is
+        // active this avoids keeping a complete unedited scene alive beside the edited render array.
+        // Identity exports retain the direct readAll path inside the materializer for throughput.
+        let points = try await SplatPersistedEditMaterializer.materializeStreamingCancellable(
+            sourceURL: sourceURL,
+            assetURL: admission.renderAssetURL,
+            sourcePointCount: admission.estimate.pointCount
+        )
+        guard !points.isEmpty else { throw ExportError.emptyScene }
+        try Task.checkCancellation()
+
+        let framing = SplatCameraGeometry.robustFraming(for: points)
+        let chunk = try SplatChunk(device: device, from: points)
+        let background = configuration.backgroundStyle.rgb
+        let renderer = try SplatRenderer(
+            device: device,
+            colorFormat: renderPixelFormat,
+            depthFormat: .invalid,
+            sampleCount: 1,
+            maxViewCount: 1,
+            maxSimultaneousRenders: 1,
+            highQualityDepth: false,
+            clearColor: MTLClearColor(
+                red: background.red,
+                green: background.green,
+                blue: background.blue,
+                alpha: 1
+            )
+        )
+        await renderer.addChunk(chunk)
+
+        let directory = destinationDirectory ?? sourceURL.deletingLastPathComponent()
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let finalURL = directory.appendingPathComponent("scan-video-\(UUID().uuidString).mp4")
+        let partialURL = directory.appendingPathComponent(".\(finalURL.lastPathComponent).partial.mp4")
+        try? FileManager.default.removeItem(at: partialURL)
+
+        do {
+            let result = try await encode(
+                renderer: renderer,
+                commandQueue: commandQueue,
+                device: device,
+                framing: framing,
+                configuration: configuration,
+                outputURL: partialURL
+            )
+            guard result else { throw ExportError.outputMissing }
+            try Task.checkCancellation()
+
+            if FileManager.default.fileExists(atPath: finalURL.path) {
+                try FileManager.default.removeItem(at: finalURL)
+            }
+            try FileManager.default.moveItem(at: partialURL, to: finalURL)
+            do {
+                let durationTolerance = max(
+                    0.5,
+                    2.0 / Double(max(1, configuration.framesPerSecond))
+                )
+                let minimumDuration = max(0, configuration.duration - durationTolerance)
+                try await SplatVideoOutputValidator.validate(
+                    finalURL,
+                    expectedDimensions: configuration.dimensions,
+                    minimumDuration: minimumDuration
+                )
+            } catch is CancellationError {
+                throw CancellationError()
+            } catch {
+                throw ExportError.outputMissing
+            }
+            try Task.checkCancellation()
+            return finalURL
+        } catch {
+            try? FileManager.default.removeItem(at: partialURL)
+            try? FileManager.default.removeItem(at: finalURL)
+            throw error
+        }
+    }
+
+    private static func encode(
+        renderer: SplatRenderer,
+        commandQueue: MTLCommandQueue,
+        device: MTLDevice,
+        framing: SplatCameraGeometry.Framing,
+        configuration: SplatVideoConfiguration,
+        outputURL: URL
+    ) async throws -> Bool {
+        let dimensions = configuration.dimensions
+        let writer: AVAssetWriter
+        do {
+            writer = try AVAssetWriter(outputURL: outputURL, fileType: .mp4)
+        } catch {
+            throw ExportError.cannotCreateWriter
+        }
+
+        let bitsPerPixel = 0.12
+        let bitrate = max(
+            2_000_000,
+            Int(Double(dimensions.width * dimensions.height * configuration.framesPerSecond) * bitsPerPixel)
+        )
+        let settings: [String: Any] = [
+            AVVideoCodecKey: AVVideoCodecType.h264,
+            AVVideoWidthKey: dimensions.width,
+            AVVideoHeightKey: dimensions.height,
+            AVVideoColorPropertiesKey: videoColorProperties,
+            AVVideoCompressionPropertiesKey: [
+                AVVideoAverageBitRateKey: bitrate,
+                AVVideoExpectedSourceFrameRateKey: configuration.framesPerSecond,
+                AVVideoMaxKeyFrameIntervalKey: configuration.framesPerSecond * 2,
+            ],
+        ]
+
+        let input = AVAssetWriterInput(mediaType: .video, outputSettings: settings)
+        input.expectsMediaDataInRealTime = false
+        guard writer.canAdd(input) else { throw ExportError.cannotAddVideoInput }
+        writer.add(input)
+
+        let attributes: [String: Any] = [
+            kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA),
+            kCVPixelBufferWidthKey as String: dimensions.width,
+            kCVPixelBufferHeightKey as String: dimensions.height,
+            kCVPixelBufferMetalCompatibilityKey as String: true,
+            kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+        ]
+        let adaptor = AVAssetWriterInputPixelBufferAdaptor(
+            assetWriterInput: input,
+            sourcePixelBufferAttributes: attributes
+        )
+        guard writer.startWriting() else { throw ExportError.cannotStartWriter }
+        writer.startSession(atSourceTime: .zero)
+
+        var encodingCompleted = false
+        defer {
+            if !encodingCompleted, writer.status == .writing {
+                writer.cancelWriting()
+            }
+        }
+
+        guard let pixelBufferPool = adaptor.pixelBufferPool else {
+            throw ExportError.pixelBufferPoolUnavailable
+        }
+        var textureCache: CVMetalTextureCache?
+        guard CVMetalTextureCacheCreate(kCFAllocatorDefault, nil, device, nil, &textureCache) == kCVReturnSuccess,
+              let textureCache else {
+            throw ExportError.textureCacheFailed
+        }
+
+        let frameDuration = CMTime(value: 1, timescale: CMTimeScale(configuration.framesPerSecond))
+        let baseDistance = SplatCameraGeometry.aspectFittedDistance(
+            framing: framing,
+            fovY: renderFovY,
+            aspect: Float(dimensions.width) / Float(dimensions.height)
+        )
+        let totalFrames = configuration.totalFrames
+
+        for frameIndex in 0..<totalFrames {
+            try Task.checkCancellation()
+            try await waitUntilReady(input, writer: writer)
+
+            var pixelBuffer: CVPixelBuffer?
+            guard CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pixelBufferPool, &pixelBuffer) == kCVReturnSuccess,
+                  let pixelBuffer else {
+                throw ExportError.pixelBufferAllocationFailed
+            }
+
+            var cvTexture: CVMetalTexture?
+            guard CVMetalTextureCacheCreateTextureFromImage(
+                kCFAllocatorDefault,
+                textureCache,
+                pixelBuffer,
+                nil,
+                renderPixelFormat,
+                dimensions.width,
+                dimensions.height,
+                0,
+                &cvTexture
+            ) == kCVReturnSuccess,
+                  let cvTexture,
+                  let texture = CVMetalTextureGetTexture(cvTexture) else {
+                throw ExportError.textureCreationFailed
+            }
+
+            let normalizedTime = totalFrames > 1
+                ? Double(frameIndex) / Double(totalFrames - 1)
+                : 0
+            let camera = configuration.cameraSample(progress: normalizedTime)
+            let eye = SplatCameraGeometry.eye(
+                center: framing.center,
+                distance: baseDistance * camera.distanceMultiplier,
+                yaw: camera.yaw,
+                pitch: camera.pitch
+            )
+            // Keep the complete robust scene inside the depth range as the camera moves farther
+            // away for narrow output or cinematic motion. A fixed far=100 clipped large scenes even
+            // after aspect fitting had correctly moved the eye beyond the original 60-unit floor.
+            let eyeDistance = simd_distance(eye, framing.center)
+            let safeEyeDistance = eyeDistance.isFinite ? eyeDistance : baseDistance
+            let farPlane = max(100, safeEyeDistance + framing.radius * 2 + 10)
+            let projection = SplatCameraGeometry.perspective(
+                fovY: renderFovY,
+                aspect: Float(dimensions.width) / Float(dimensions.height),
+                near: 0.01,
+                far: farPlane
+            )
+            let view = renderViewMatrix(eye: eye, center: framing.center)
+            let viewport = SplatRenderer.ViewportDescriptor(
+                viewport: MTLViewport(
+                    originX: 0,
+                    originY: 0,
+                    width: Double(dimensions.width),
+                    height: Double(dimensions.height),
+                    znear: 0,
+                    zfar: 1
+                ),
+                projectionMatrix: projection,
+                viewMatrix: view,
+                screenSize: SIMD2<Int>(dimensions.width, dimensions.height)
+            )
+
+            var didRender = false
+            var renderAttempts = 0
+            let maxRenderAttempts = 6
+            while !didRender {
+                try Task.checkCancellation()
+                renderAttempts += 1
+                guard let commandBuffer = commandQueue.makeCommandBuffer() else {
+                    throw ExportError.commandBufferFailed
+                }
+                do {
+                    didRender = try renderer.render(
+                        viewports: [viewport],
+                        colorTexture: texture,
+                        colorStoreAction: .store,
+                        depthTexture: nil,
+                        rasterizationRateMap: nil,
+                        renderTargetArrayLength: 1,
+                        to: commandBuffer
+                    )
+                } catch {
+                    throw ExportError.writerFailed(error.localizedDescription)
+                }
+                if didRender {
+                    commandBuffer.commit()
+                    commandBuffer.waitUntilCompleted()
+                    try Task.checkCancellation()
+                    guard commandBuffer.status != .error else {
+                        throw ExportError.writerFailed(commandBuffer.error?.localizedDescription ?? "Metal command failed")
+                    }
+                } else {
+                    guard renderAttempts < maxRenderAttempts else {
+                        throw ExportError.renderSkipped
+                    }
+                    try await Task.sleep(for: .milliseconds(10))
+                }
+            }
+
+            let presentationTime = CMTimeMultiply(frameDuration, multiplier: Int32(frameIndex))
+            guard adaptor.append(pixelBuffer, withPresentationTime: presentationTime) else {
+                throw ExportError.writerFailed(writer.error?.localizedDescription ?? "append failed")
+            }
+
+            if frameIndex % 30 == 0 {
+                CVMetalTextureCacheFlush(textureCache, 0)
+            }
+        }
+
+        try Task.checkCancellation()
+        input.markAsFinished()
+        try await finish(writer)
+        CVMetalTextureCacheFlush(textureCache, 0)
+
+        if writer.status == .failed {
+            throw ExportError.writerFailed(writer.error?.localizedDescription ?? "finishWriting failed")
+        }
+        encodingCompleted = writer.status == .completed
+        return encodingCompleted
+    }
+
+    private static func waitUntilReady(_ input: AVAssetWriterInput, writer: AVAssetWriter) async throws {
+        while !input.isReadyForMoreMediaData {
+            try Task.checkCancellation()
+            if writer.status == .failed {
+                throw ExportError.writerFailed(writer.error?.localizedDescription ?? "writer failed")
+            }
+            if writer.status == .cancelled {
+                throw CancellationError()
+            }
+            try await Task.sleep(for: .milliseconds(2))
+        }
+    }
+
+    private static func finish(_ writer: AVAssetWriter) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            writer.finishWriting {
+                if writer.status == .completed {
+                    continuation.resume(returning: ())
+                } else {
+                    continuation.resume(throwing: ExportError.writerFailed(
+                        writer.error?.localizedDescription ?? "finishWriting failed"
+                    ))
+                }
+            }
+        }
+    }
+}
