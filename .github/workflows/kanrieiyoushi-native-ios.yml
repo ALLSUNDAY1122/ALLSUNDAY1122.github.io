@@ -61,6 +61,14 @@ jobs:
           grep -q 'com.apple.InAppPurchase' KanriEiyoushiSprint.xcodeproj/project.pbxproj
       - name: Unit and UI tests on two iPhone sizes
         run: bash kanrieiyoushi-sprint/scripts/run_native_ui_tests.sh
+      - name: Upload XCTest diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kanrieiyoushi-native-ui-logs
+          path: /tmp/kanri-native-ui/**
+          if-no-files-found: warn
+          retention-days: 7
       - name: Release configuration compile without signing
         run: |
           cd kanrieiyoushi-sprint/ios

@@ -1,44 +1,136 @@
 {
   "qualification": "管理栄養士国家試験",
-  "updatedAt": "2026-08-09T20:57:00+09:00",
-  "web": {
-    "version": "v0.6.2",
-    "questionBank": 600,
-    "status": "PASS"
-  },
-  "ios": {
-    "status": "TECHNICAL_GATE_PASS_RELEASE_BLOCKED_EXTERNAL",
-    "productizationPR": 4123,
-    "mergeCommit": "ccff97cabed2c54cd7b426cce98120a9a7f6d5b7",
+  "updatedAt": "2026-08-10T18:10:00+09:00",
+  "owner": "ChatGPT native iOS development chat",
+  "identity": {
     "bundleID": "jp.allsunday1122.kanrieiyoushi",
-    "iap": {
-      "type": "Non-Consumable",
-      "productID": "jp.allsunday1122.kanrieiyoushi.premium",
-      "priceDisplay": "StoreKit Product.displayPrice only",
-      "freeScope": "第1回10分類×各6問＝60問",
-      "premiumScope": "全600問・200問模試×3・全苦手復習・詳細記録"
-    },
-    "implementation": [
-      "SwiftUI + WKWebView local bundled web",
-      "Transaction.currentEntitlements",
-      "Transaction.updates",
-      "purchase success/cancel/pending/error",
-      "explicit restore via AppStore.sync()",
-      "revocation handling",
-      "PrivacyInfo.xcprivacy",
-      "native-only entitlement gate",
-      "Codemagic Internal TestFlight workflow with automatic submission disabled"
-    ]
+    "appStoreConnectAppID": "6799753841",
+    "version": "1.0.0",
+    "buildNumber": "1 (project.yml source default; Codemagic signed-build number is not yet assigned because CM_BUILD_NUMBER overrides this value at build time)",
+    "codemagicWorkflow": "kanrieiyoushi-ios / 管理栄養士 - Native iOS Internal TestFlight",
+    "codemagicSigningProfileOrIntegration": "kanrieiyoushi_appstore",
+    "storeKitProductID": "jp.allsunday1122.kanrieiyoushi.premium"
   },
-  "ci": {
-    "releaseGateRun": 31311911002,
-    "releaseGateConclusion": "SUCCESS",
-    "staticPreflight": "PASS",
-    "macOSReleaseSimulatorBuild": "PASS",
-    "builtAppAssetInspection": "PASS",
-    "webRegressionRun": 31311911011,
-    "webRegressionConclusion": "SUCCESS",
-    "canonicalIconTransport": "BLOCKED_EXTERNAL"
+  "sourceState": {
+    "pullRequest": 4131,
+    "pullRequestURL": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/pull/4131",
+    "branch": "chatgpt/kanrieiyoushi-native-swiftui-r2",
+    "headCommit": "2efd06a3e295225588da7209e7f114a451a198e5",
+    "prState": "open draft",
+    "mergeable": false,
+    "appStoreSubmission": "not submitted; automatic App Store submission remains false"
+  },
+  "actualStatus": {
+    "notionCanonicalCheck": {
+      "status": "PASS",
+      "evidence": [
+        "https://app.notion.com/p/3a909c10697d81e0961bd0fd27a77d39",
+        "https://app.notion.com/p/3b009c10697d81eba325f86d8af55481",
+        "https://app.notion.com/p/3b609c10697d81f0b3d0f78d160a819f",
+        "https://app.notion.com/p/3b609c10697d81fe9021fa01136faf58"
+      ]
+    },
+    "uiRequirementsCheck": {
+      "status": "PASS",
+      "evidence": [
+        "Golden Master v2.1: https://app.notion.com/p/3b609c10697d81f0b3d0f78d160a819f",
+        "PR #4131",
+        "kanrieiyoushi-sprint/ios/KanriEiyoushiSprint/HomeMockViews.swift",
+        "kanrieiyoushi-sprint/ios/KanriEiyoushiSprint/HistorySettingsViews.swift",
+        "kanrieiyoushi-sprint/ios/KanriEiyoushiSprint/QuizResultViews.swift",
+        "Native static-audit job PASS in Actions run 31365516927"
+      ]
+    },
+    "nativeImplementation": {
+      "status": "PASS",
+      "evidence": [
+        "PR #4131",
+        "head commit 2efd06a3e295225588da7209e7f114a451a198e5",
+        "kanrieiyoushi-sprint/ios/KanriEiyoushiSprint/",
+        "Native static-audit: No WebView in app target PASS, run 31365516927",
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31365516927"
+      ],
+      "note": "Pure SwiftUI target; legacy WKWebView app implementation is not used by this PR."
+    },
+    "dataAudit": {
+      "status": "PASS",
+      "evidence": [
+        "600 UI Integration Audit run 31365516940 SUCCESS",
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31365516940",
+        "Native static audit rebuilt canonical 600 and questions.native.json, run 31365516927",
+        "kanrieiyoushi-sprint/audit/data/questions.round1-2-3.canonical.json",
+        "kanrieiyoushi-sprint/ios/Resources/questions.native.json"
+      ]
+    },
+    "storeKit2": {
+      "status": "FAIL",
+      "evidence": [
+        "native-ios/LearningSprintCore/Sources/LearningSprintCore/PurchaseController.swift",
+        "kanrieiyoushi-sprint/ios/codemagic-kanrieiyoushi.yml",
+        "IAP capability generation PASS in run 31365516927"
+      ],
+      "reason": "StoreKit 2 implementation/static capability exists, but Sandbox purchase, restore, pending/cancel and entitlement unlock have not been verified on a signed TestFlight build. The purchase audit exit condition is therefore not met."
+    },
+    "offlineResumeBackup": {
+      "status": "PASS",
+      "evidence": [
+        "Learning Sprint Native Core run 31365516917 SUCCESS",
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31365516917",
+        "13 Core tests PASS including testBackupRoundTripAndCrossAppGuard, testWeakQuestionGraduatesAfterThreeConsecutiveCorrectAnswers, testWrongAnswerResetsWeakStreak",
+        "native-ios/LearningSprintCore/Sources/LearningSprintCore/LearningStateStore.swift",
+        "600 native questions are bundled locally at kanrieiyoushi-sprint/ios/Resources/questions.native.json"
+      ]
+    },
+    "specialistAudit": {
+      "status": "未実施",
+      "evidence": [
+        "Automated data/content-rights audits exist, but no evidence of a completed qualified dietitian/medical specialist review for the pure SwiftUI release is recorded."
+      ],
+      "reason": "Do not convert automated content/rights checks into a specialist-review PASS."
+    },
+    "reaudit": {
+      "status": "FAIL",
+      "evidence": [
+        "Latest Native SwiftUI Audit run 31365516927 overall conclusion cancelled",
+        "native-simulator job 93383070438 conclusion cancelled",
+        "Log: 2026-08-10T07:52:16Z 'The operation was canceled.'",
+        "Unit and UI tests on two iPhone sizes: cancelled",
+        "Release configuration compile without signing: skipped"
+      ],
+      "reason": "Simulator acceptance suite did not complete, so the post-fix re-audit has no PASS evidence."
+    },
+    "releaseBuild": {
+      "status": "未実施",
+      "evidence": [
+        "In run 31365516927 the step 'Release configuration compile without signing' was skipped after simulator cancellation."
+      ]
+    },
+    "signedIPA": {
+      "status": "未実施",
+      "evidence": [],
+      "reason": "No current pure-SwiftUI signed IPA artifact/build ID exists."
+    },
+    "appStoreConnectUpload": {
+      "status": "未実施",
+      "evidence": [],
+      "reason": "No upload/build processing evidence exists for App Store Connect App ID 6799753841."
+    },
+    "internalTestFlight": {
+      "status": "未実施",
+      "evidence": [],
+      "reason": "No Internal TestFlight build number or tester-install evidence exists."
+    }
+  },
+  "codemagic": {
+    "configEvidence": "kanrieiyoushi-sprint/ios/codemagic-kanrieiyoushi.yml",
+    "appStoreConnectIntegration": "kanrieiyoushi_appstore",
+    "bundleIdentifier": "jp.allsunday1122.kanrieiyoushi",
+    "appStoreConnectAppID": "6799753841",
+    "testFlightInternalTestingOnly": true,
+    "submitToTestFlight": true,
+    "submitToAppStore": false,
+    "actualCredentialAndProvisioningRetrievalVerified": false,
+    "canonicalAppIconReleaseMaterialized": false
   },
   "canonicalAppIcon": {
     "name": "04_管理栄養士国家試験.png",
@@ -47,24 +139,48 @@
     "height": 1024,
     "bytes": 726223,
     "sha256": "294481351106502f20958359d02bb2fb117ae18399654388425aad0e264fe31f",
-    "connectorRawFileVerified": true,
-    "releaseEnvironmentMaterialized": false,
-    "note": "匿名DriveダウンロードURLは正本と異なるレスポンスを返すため、仮アイコンでArchive/TestFlightへ進めない。"
+    "releaseEnvironmentMaterialized": false
   },
-  "externalHumanGates": [
-    "App Store Connect App record",
-    "Bundle ID / signing setup",
-    "Non-Consumable IAP creation and official price",
-    "Codemagic App Store Connect signing integration",
-    "Canonical AppIcon transport into signed release environment",
-    "Signed IPA upload to Internal TestFlight",
-    "iPhone real-device launch and free-60 verification",
-    "Sandbox purchase",
-    "Purchase restore",
-    "Pending/cancel behavior",
-    "Premium 600-question and mock unlock verification"
+  "incomplete": [
+    {
+      "item": "Native Simulator re-audit",
+      "failureReason": "Latest run cancelled while executing the two-size Unit/UI acceptance suite.",
+      "chatGPTCanDo": "Refine CI/XCTest runner, rerun GitHub Actions, fix code/test failures, and record evidence.",
+      "userOrExternalOperation": "None unless hosted macOS/Codemagic capacity or authentication blocks execution.",
+      "nextAction": "Complete the split test-without-building acceptance suite and obtain an all-green Native SwiftUI Audit run."
+    },
+    {
+      "item": "Specialist audit",
+      "failureReason": "No qualified specialist-review evidence is recorded for this release.",
+      "chatGPTCanDo": "Run automated source/evidence consistency audits and prepare a specialist review checklist.",
+      "userOrExternalOperation": "If a human qualified specialist review is required by project policy, the user must arrange/approve that reviewer.",
+      "nextAction": "Define the accepted specialist-audit evidence and complete it before release gate PASS."
+    },
+    {
+      "item": "Release / signing / AppIcon",
+      "failureReason": "Pure SwiftUI Release build has not completed; canonical AppIcon is not materialized in the signed Codemagic environment; actual signing credential retrieval is unverified.",
+      "chatGPTCanDo": "Maintain release scripts/gates, validate Codemagic YAML and icon hash requirements.",
+      "userOrExternalOperation": "Start/authorize Codemagic if required and ensure kanrieiyoushi_appstore can access Apple signing/App Store Connect credentials. Provide a secure canonical AppIcon path/variable if Codemagic cannot obtain it automatically.",
+      "nextAction": "After re-audit PASS, run Codemagic and record CM_BUILD_NUMBER, archive log and signed IPA artifact."
+    },
+    {
+      "item": "App Store Connect / Internal TestFlight",
+      "failureReason": "No signed IPA upload has occurred.",
+      "chatGPTCanDo": "Verify configuration and resulting logs if available.",
+      "userOrExternalOperation": "Apple/Codemagic authentication or 2FA if prompted; then install the Internal TestFlight build on iPhone and perform StoreKit Sandbox/restore/pending/cancel verification.",
+      "nextAction": "Upload only to Internal TestFlight. Do not submit for App Store review."
+    }
   ],
-  "automaticBetaReview": false,
-  "automaticAppStoreSubmission": false,
-  "nextGate": "Apple-side setup + canonical icon materialization + signed Internal TestFlight + real-device StoreKit verification"
+  "testFlightDecision": "NOT_READY",
+  "readyCriteriaMissing": [
+    "StoreKit 2 end-to-end purchase audit PASS",
+    "specialist audit PASS",
+    "post-fix re-audit PASS",
+    "Release build PASS",
+    "actual signed build number assigned",
+    "signed IPA or verified Codemagic signing execution",
+    "App Store Connect upload",
+    "Internal TestFlight"
+  ],
+  "appStoreReviewSubmission": "PROHIBITED_AND_NOT_SUBMITTED"
 }
