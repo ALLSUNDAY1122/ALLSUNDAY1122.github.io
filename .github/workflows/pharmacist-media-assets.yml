@@ -26,7 +26,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils
-          python -m pip install --disable-pip-version-check pillow==11.3.0
+          # GHSA-5x8w-8jj5-q52h: Pillow <13.0.0 has an FPX decoder heap overflow.
+          python -m pip install --disable-pip-version-check pillow==13.0.0
       - name: Build cropped media assets
         id: build
         shell: bash
