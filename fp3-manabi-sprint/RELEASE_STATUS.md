@@ -32,6 +32,13 @@
 - `privacy.html` / `terms.html` / `support.html` を作成。PR段階のため公開URLのHTTP確認は未完了。
 - Apple読み取りスクリプトの件数上限・v2 localizationパスを修正し、実APIで成功確認。
 
+## 今回の検証結果
+
+- セッション回帰6件、API/FP2構造検査回帰11件がPASS。GitHubの資格情報を使用しない回帰CIも成功。
+- [iPhone Simulatorの実走](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42356365949)が成功。iPhone 17 Proで購入画面・価格表示・復元ボタンを確認し、PNGを取得・目視確認済み。
+- Simulatorの価格は同梱 `Review.storekit` のテスト価格。実App Storeの価格確認や実機での購入・返金検証を代替しない。
+- 詳細は `audits/VALIDATION_20261107.md`。
+
 ## 提出までの残作業（順序）
 
 1. **正本AppIconを供給・確定**：9月の調査で原本不在と記録済み。新しい原本がない状態で同じ探索やAppleの加工済みBuildIconの逆利用を繰り返さない。Release用Asset Catalogへ登録し、1024px・不透明・対象Bundleを確認。
