@@ -1,0 +1,1 @@
+import {notFound} from 'next/navigation';import Diagnosis from '../../components/Diagnosis';export default async function Page({params}:{params:Promise<{kind:string}>}){const {kind}=await params;if(!['love','compatibility','career'].includes(kind))notFound();return <Diagnosis kind={kind as 'love'|'compatibility'|'career'}/>}
