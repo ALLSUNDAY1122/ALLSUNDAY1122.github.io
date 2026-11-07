@@ -1,0 +1,33 @@
+name: FP release preparation regression
+
+on:
+  pull_request:
+    paths:
+      - 'fp2-manabi-sprint/**'
+      - 'fp3-manabi-sprint/**'
+      - 'scripts/fp3_release_state_probe.py'
+      - 'scripts/tests/*fp*'
+      - '.github/workflows/fp-release-regression.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Session resume regression
+        run: node --test scripts/tests/fp3-session.test.mjs
+      - name: Readback and FP2 structural gate regression
+        run: python -B -m unittest discover -s scripts/tests -p 'test_fp*.py'
+      - name: Preserve canonical FP3 bank structure
+        run: python -B fp3-manabi-sprint/tools/audit_learning_bank.py
