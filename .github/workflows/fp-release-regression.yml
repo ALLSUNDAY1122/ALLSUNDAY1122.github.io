@@ -76,6 +76,6 @@ jobs:
       - name: Build iOS Simulator
         working-directory: fp3-manabi-sprint/ios
         run: |
-          xcodebuild -project FP3ManabiSprint.xcodeproj \\
-            -scheme FP3ManabiSprint -sdk iphonesimulator \\
+          xcodebuild -project FP3ManabiSprint.xcodeproj \
+            -scheme FP3ManabiSprint -sdk iphonesimulator \
             -configuration Debug CODE_SIGNING_ALLOWED=NO build
