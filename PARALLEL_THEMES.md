@@ -21,6 +21,7 @@
 - FP3 AppIcon正本・XcodeGen・Simulatorビルドは既存のCI実績があるが、FP3専用Preflightワークフロー実行は未確認。`FP3-PREFLIGHT` はこの残件だけを調べる。
 - FP2公式過去問500問は**検証前の計画目標**。原典の実数、利用条件、学科/実技の回次を確認するまで完成数と断定しない。旧180問は再利用が自動承認されたわけではない。FP2の従前 `CONTENT_BATCH_PLAN.md` の独自600問方針は今回の製品方針と不一致であり、製品へは適用しない。
 - FP2旧180問「R1～R3」は仮の回次グループ識別子。実際の原典回次と旧180問の対応・件数を最初に確認し、**IDの昇順で原典回次を並べた第1・第2・第3群**として固定する。180問の実回次数が3でない場合は成果をBLOCKEDにして管理者へ分割修正を要求し、同じ原典回次を複数担当へ割り当てない。回次未確定時の推測による監査は不可。
+- **FP2-OLD-R1/R2/R3共通前提（2026-11-09更新）:** 旧180問の監査台帳にはID・回次・問番号・正答・原典URL・法令基準日などのメタデータのみがあり、問題文・選択肢・解説の実体はない。旧台帳の「済」は再検証PASSを意味しない。R1は正答・基準日・原典URLの照合工程を完了し、残る原典逐語照合・解説・出典/加工表示・権利確認は**公式問題のデータ化工程に統合**する。R2/R3も同じ前提で、既存正答はデータ化時の照合材料にすぎない。**R1のDONEは製品採用承認を意味しない**（R1 PASS0/UNVERIFIED60）。R2/R3はOPENを維持し、未照合を合格扱いしない。
 - FP2学科/実技シャードA/Bは原本台帳で確定する「未収録分」の原典回次・IDを昇順ソートし、連続する前半/後半に分割する（奇数件では前半が1件多い）。旧180問で再利用承認となったIDを除く。原本台帳未確定時は依存未完了として取得しない。
 
 ## テーマ一覧
@@ -42,9 +43,9 @@
 | FP3-PREFLIGHT | FP3 | FP3専用Preflight実行・XcodeGen/Simulator結果記録（既成功と再実行を区別） | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_PREFLIGHT.md` |
 | FP3-CONSOLIDATE | FP3 | 年度シャードを正本へ統合し180問の重複・欠番・判定集計・原典照合ゲート確認 | OPEN | FP3-24-A,FP3-24-B,FP3-24-C,FP3-25-A,FP3-25-B,FP3-25-C,FP3-26-A,FP3-26-B,FP3-26-HOLD,FP3-FIX-2 | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_CONSOLIDATION.md` |
 | FP2-SOURCE | FP2 | 公式過去問原本・許諾条件・回次別学科/実技実数台帳（計画500と実数を分離） | DONE | - | MUSE-EXT-SRC | 2026-11-09T06:19:24+09:00 | 9ca2a98801d922c02a028b9f063b720b942e764e | 2026-11-09T06:27:00+09:00 | `fp2-manabi-sprint/audits/parallel/FP2_OFFICIAL_SOURCE_LEDGER.md` / 500819800b2382b1159bef14fcbaa109737c48ca / 実技法令基準日5回次、旧学科180問=3回次各60確認。旧個票採否・CBT個別設問日付は後続監査 |
-| FP2-OLD-R1 | FP2 | 旧180問の原典回次第1群の再検証（回次別ID・件数確定） | BLOCKED | - | MUSE-EXT-R1 | 2026-11-09T06:34:00+09:00 | 49c17476424f9aac3aa09d6dc426d91c66e739ec | 2026-11-09T06:37:23+09:00 | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_01.md` / 511359ee4ff6e6059beb75c5cc7563c46a0b2e6e / 第1群2025-01学科60件：旧台帳正答・回次・番号・法令日・原典URL一致60、正答不一致0。ただし問題文・全選択肢・解説・出典/加工表示の実体不在で製品判定PASS0 FAIL0 UNVERIFIED60（採用0）。旧60問実体取得と逐語/表示照合完了までBLOCKED |
-| FP2-OLD-R2 | FP2 | 旧180問の原典回次第2群の再検証（回次別ID・件数確定） | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_02.md` |
-| FP2-OLD-R3 | FP2 | 旧180問の原典回次第3群の再検証（回次別ID・件数確定） | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_03.md` |
+| FP2-OLD-R1 | FP2 | 旧180問の原典回次第1群：正答・法令基準日・原典URL照合（実体再検証はデータ化工程へ統合） | DONE | - | MUSE-EXT-R1 | 2026-11-09T06:34:00+09:00 | 49c17476424f9aac3aa09d6dc426d91c66e739ec | 2026-11-09T06:37:23+09:00 | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_01.md` / 511359ee4ff6e6059beb75c5cc7563c46a0b2e6e / 第1群2025-01学科60件：旧台帳の正答・法令基準日・原典URL・問番号の照合まで完了（一致60、正答不一致0）。旧180問台帳には問題文・選択肢・解説の実体データが存在しないため、原典逐語再検証・表示/権利確認は公式過去問のデータ化工程へ統合。これはメタデータ照合工程のDONEであり、製品採用PASS0・UNVERIFIED60・採用承認0。 |
+| FP2-OLD-R2 | FP2 | 旧180問の原典回次第2群（2025-05学科60件）：正答等の照合材料確認。問題文・選択肢・解説の実体なし、原典逐語照合はデータ化工程へ統合 | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_02.md` / 旧台帳の正答・基準日・URLはデータ化時の照合材料に限定。原典照合や製品承認済みと数えない。 |
+| FP2-OLD-R3 | FP2 | 旧180問の原典回次第3群（2026-05学科60件）：正答等の照合材料確認。問題文・選択肢・解説の実体なし、原典逐語照合はデータ化工程へ統合 | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_03.md` / 旧台帳の正答・基準日・URLはデータ化時の照合材料に限定。原典照合や製品承認済みと数えない。 |
 | FP2-ACA-A | FP2 | 公式学科の未収録分：原典台帳順の前半をデータ化 | CLAIMED | FP2-SOURCE | MUSE-EXT-ACAA | 2026-11-09T06:52:00+09:00 | - | - | `fp2-manabi-sprint/batches/official/academic_part_a.json` |
 | FP2-ACA-B | FP2 | 公式学科の未収録分：原典台帳順の後半をデータ化 | OPEN | FP2-SOURCE | - | - | - | - | `fp2-manabi-sprint/batches/official/academic_part_b.json` |
 | FP2-PRAC-A | FP2 | 公式実技未収録分：原典台帳順の前半をデータ化 | OPEN | FP2-SOURCE | - | - | - | - | `fp2-manabi-sprint/batches/official/practical_part_a.json` |
