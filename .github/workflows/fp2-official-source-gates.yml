@@ -7,6 +7,8 @@ on:
       - 'fp2-manabi-sprint/tools/test_audit_product_bank.py'
       - 'fp2-manabi-sprint/official-source-catalog.json'
       - 'fp2-manabi-sprint/audits/parallel/FP2_REAL_COUNT_GATES.md'
+      - 'scripts/tests/test_fp2_product_bank.py'
+      - 'scripts/fp2_v21_migration_gate.py'
       - '.github/workflows/fp2-official-source-gates.yml'
   pull_request:
     paths:
@@ -27,6 +29,8 @@ jobs:
           python-version: '3.12'
       - name: Synthetic positive and negative gate regressions
         run: python3 -B -m unittest -v fp2-manabi-sprint/tools/test_audit_product_bank.py
+      - name: Legacy global FP2 test entrypoint must use the new gate
+        run: python3 -B -m unittest discover -s scripts/tests -p 'test_fp2_product_bank.py' -v
       - name: Current real bank must stay BLOCKED until source audit complete
         run: |
           set +e
