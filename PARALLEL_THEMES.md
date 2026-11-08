@@ -38,7 +38,7 @@
 | FP3-25-C | FP3 | 2025年度41–60を監査 | DONE | FP3-25-CLAUDE | MUSE-EXT-25C | 2026-11-09T06:41:47+09:00 | 56523947df028266aaa01091251f3af9e85431b0 | 2026-11-09T06:48:00+09:00 | `fp3-manabi-sprint/audits/parallel/FP3_2025_41_60.md` / a9b954de3a44c707a9359fb9d9d858c3e6ec9df9 / 制度論点PASS19 FAIL0 UNVERIFIED1（53）、公式問題逐語照合20件未実施・製品ゲートBLOCKED |
 | FP3-26-A | FP3 | 2026年度16–35は全件判定済み：重複監査禁止 | DONE | FP3-26-CLAUDE | - | - | - | 2026-11-08（外部シャード） | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2026.md` / 5f184b9 |
 | FP3-26-B | FP3 | 2026年度37–60を監査（36判定済み） | DONE | FP3-26-CLAUDE | MUSE-EXT-26B | 2026-11-09T06:51:00+09:00 | c2ca49b295eab59cd9291cb7388fcbba0ba1c40d | 2026-11-09T06:59:00+09:00 | `fp3-manabi-sprint/audits/parallel/FP3_2026_36_60.md` / 331224e0466b9f19260e2a54bc69f38cafb7b6f5 / 制度論点PASS22 FAIL0 UNVERIFIED2（38・57）、公式問題逐語照合24件未実施・製品ゲートBLOCKED |
-| FP3-26-HOLD | FP3 | 2026-20保留の施行日・法令基準日照合と判定 | CLAIMED | - | MUSE-EXT-HOLD-RESOLVE | 2026-11-09T07:10:00+09:00 | pending | - | `fp3-manabi-sprint/audits/parallel/FP3_HOLD_RESOLUTION.md`（21件横断・2026-20含む） |
+| FP3-26-HOLD | FP3 | 2026-20保留の施行日・法令基準日照合と判定 | DONE | - | MUSE-EXT-HOLD-RESOLVE | 2026-11-09T07:10:00+09:00 | 04c5997f26d49bb2751f8b5a38bea5a807519e02 | 2026-11-09 JST | `fp3-manabi-sprint/audits/parallel/FP3_HOLD_RESOLUTION.md` / c7ad2f20a60df257d401316df0323975385cd34c / 2026-20制度論点PASS・解説時点の改訂未適用。保留21問を追加照合しPASS16・UNVERIFIED5（2024-41,2025-08,2025-09,2025-25,2026-57）。全件解消ではなく製品ゲートBLOCKED維持 |
 | FP3-FIX-2 | FP3 | 4問（2024-48/53・2025-15/17）の解説/文言修正（ロック解除承認待ち） | BLOCKED | FP3-24-C | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_EXPLANATION_FIX.md` |
 | FP3-PREFLIGHT | FP3 | FP3専用Preflight実行・XcodeGen/Simulator結果記録（既成功と再実行を区別） | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_PREFLIGHT.md` |
 | FP3-CONSOLIDATE | FP3 | 年度シャードを正本へ統合し180問の重複・欠番・判定集計・原典照合ゲート確認 | OPEN | FP3-24-A,FP3-24-B,FP3-24-C,FP3-25-A,FP3-25-B,FP3-25-C,FP3-26-A,FP3-26-B,FP3-26-HOLD,FP3-FIX-2 | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_CONSOLIDATION.md` |
@@ -54,6 +54,10 @@
 | FP2-MERGE | FP2 | 監査合格の公式過去問シャードのみ製品JSONへ統合、A01独自問題除外 | OPEN | FP2-OLD-R1,FP2-OLD-R2,FP2-OLD-R3,FP2-ACA-A,FP2-ACA-B,FP2-PRAC-A,FP2-PRAC-B,FP2-GATES | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_PRODUCT_MERGE.md` |
 | FP2-UI | FP2 | FP2製品UIを公式過去問スキーマに移行・暫定モックで画面検証 | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_UI_MIGRATION.md` |
 | FP2-E2E | FP2 | 製品JSON実数・UI・CI・権利表示の最終統合検査 | OPEN | FP2-MERGE,FP2-UI | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_E2E.md` |
+
+## 保留解消追加照合（2026-11-09）
+
+- `FP3_HOLD_RESOLUTION.md` に一次判定の保留21問を集約：**制度論点PASS16、UNVERIFIED5、FAIL0**。未解消5問（2024-41、2025-08、2025-09、2025-25、2026-57）は別途一次資料・条件修正待ちであり製品採用不可。`FP3-26-HOLD` のDONEは2026-20個別の制度論点確定を意味し、21問全件解消を意味しない。2026-20は2026年度税制改正の施行日と適用年分を解説へ追記する作業が未完。製品ゲートBLOCKED継続。
 
 ## 完了条件と依存上の注意
 
