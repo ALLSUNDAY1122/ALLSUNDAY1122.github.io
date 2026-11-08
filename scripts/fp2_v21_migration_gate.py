@@ -33,9 +33,9 @@ require('reduced-motion handling missing', 'prefers-reduced-motion' in s)
 
 # Product-data guard: the public product cannot be promoted while it still self-identifies as an 8-question UI-only sample.
 require('UI-only sample marker remains', '公開状態：Safari UI検証版（独自表現8問）' not in s)
-require('600-question product bank not evidenced', ('600問' in s and '製品版データは別途600問監査後に置換します' not in s))
+require('obsolete fixed-600 product declaration remains', '製品版データは別途600問監査後に置換します' not in s)
 require('canonical bank must be wired into the product UI', 'question_bank.json' in s)
-require('600-question content contract not satisfied', subprocess.run(
+require('official-source provenance/rights product gate not satisfied', subprocess.run(
     [sys.executable, 'fp2-manabi-sprint/tools/audit_product_bank.py'], check=False
 ).returncode == 0)
 
