@@ -1,30 +1,15 @@
 {
-  "request_id": "pharmacist-release-status-20261108-independent-r2",
+  "request_id": "pharmacist-selected-build-20261108",
   "requests": [
     {
-      "label": "app-identity",
+      "label": "selected-build",
       "method": "GET",
-      "path": "/v1/apps/6799753724"
+      "path": "/v1/appStoreVersions/430ba445-fae0-4d1d-9301-95d1ea342ac7/build"
     },
     {
-      "label": "ios-versions",
+      "label": "iap-products",
       "method": "GET",
-      "path": "/v1/apps/6799753724/appStoreVersions?filter[platform]=IOS&limit=10"
-    },
-    {
-      "label": "selected-version-build",
-      "method": "GET",
-      "path": "/v1/appStoreVersions/430ba445-fae0-4d1d-9301-95d1ea342ac7?include=build"
-    },
-    {
-      "label": "latest-builds",
-      "method": "GET",
-      "path": "/v1/apps/6799753724/builds?limit=200"
-    },
-    {
-      "label": "review-submissions",
-      "method": "GET",
-      "path": "/v1/apps/6799753724/reviewSubmissions?limit=10"
+      "path": "/v1/apps/6799753724/inAppPurchasesV2?limit=50"
     }
   ]
 }
