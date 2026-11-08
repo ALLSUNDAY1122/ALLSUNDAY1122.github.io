@@ -27,7 +27,7 @@
 
 | ID | 対象 | テーマ・排他範囲 | 状態 | 依存（全DONEが必須） | owner | claimed_at | claim_commit | completed_at | evidence / 主な許可出力 |
 |---|---|---|---|---|---|---|---|---|---|
-| FP3-24-A | FP3 | 2024年度01–20（既判定04を除外）一次資料再監査 | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2024_01_20.md` |
+| FP3-24-A | FP3 | 2024年度01–20（既判定04を除外）一次資料再監査 | CLAIMED | - | MUSE-EXT-24A | 2026-11-09T06:19:32+09:00 | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2024_01_20.md` |
 | FP3-24-B | FP3 | 2024年度21–40 一次資料再監査 | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2024_21_40.md` |
 | FP3-24-C | FP3 | 2024年度41–60（既判定48・53を除外）一次資料再監査 | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2024_41_60.md` |
 | FP3-25-CLAUDE | FP3 | 2025年度01～20の20問（合格11・要修正2・保留7） | DONE | - | MUSE-EXTERNAL | 取得時刻未確認 | external-unverified | 2026-11-08（コミット日・時刻の詳細は当該コミット） | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2025.md` / `826bfe9e817006d3e0193481ba99622ce41780ca` |
