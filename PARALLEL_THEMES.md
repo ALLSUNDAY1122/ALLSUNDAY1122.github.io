@@ -36,7 +36,7 @@
 | FP3-25-B | FP3 | 2025年度21–40（26既判定除外）を監査 | DONE | FP3-25-CLAUDE | MUSE-EXT-25B | 2026-11-09T06:19:37+09:00 | abe7672ca123e01a275b55fd7f738bfd6aff77b2 | 2026-11-09T06:21:55+09:00 | `fp3-manabi-sprint/audits/parallel/FP3_2025_21_40.md` / 880e44a / 19件 PASS18 FAIL0 UNVERIFIED1（2025-25保留）、原典逐語照合未完 |
 | FP3-25-C | FP3 | 2025年度41–60を監査 | DONE | FP3-25-CLAUDE | MUSE-EXT-25C | 2026-11-09T06:41:47+09:00 | 56523947df028266aaa01091251f3af9e85431b0 | 2026-11-09T06:48:00+09:00 | `fp3-manabi-sprint/audits/parallel/FP3_2025_41_60.md` / a9b954de3a44c707a9359fb9d9d858c3e6ec9df9 / 制度論点PASS19 FAIL0 UNVERIFIED1（53）、公式問題逐語照合20件未実施・製品ゲートBLOCKED |
 | FP3-26-A | FP3 | 2026年度16–35は全件判定済み：重複監査禁止 | DONE | FP3-26-CLAUDE | - | - | - | 2026-11-08（外部シャード） | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2026.md` / 5f184b9 |
-| FP3-26-B | FP3 | 2026年度37–60を監査（36判定済み） | OPEN | FP3-26-CLAUDE | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2026_36_60.md` |
+| FP3-26-B | FP3 | 2026年度37–60を監査（36判定済み） | CLAIMED | FP3-26-CLAUDE | MUSE-EXT-26B | 2026-11-09T06:51:00+09:00 | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2026_36_60.md` |
 | FP3-26-HOLD | FP3 | 2026-20保留の施行日・法令基準日照合と判定 | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2026_20_HOLD.md` |
 | FP3-FIX-2 | FP3 | 4問（2024-48/53・2025-15/17）の解説/文言修正（ロック解除承認待ち） | BLOCKED | FP3-24-C | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_EXPLANATION_FIX.md` |
 | FP3-PREFLIGHT | FP3 | FP3専用Preflight実行・XcodeGen/Simulator結果記録（既成功と再実行を区別） | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_PREFLIGHT.md` |
