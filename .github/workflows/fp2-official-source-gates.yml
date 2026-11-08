@@ -1,0 +1,43 @@
+name: FP2 official-source fail-closed gate tests
+on:
+  push:
+    branches: [codex/fp-parallel-themes-20261108]
+    paths:
+      - 'fp2-manabi-sprint/tools/audit_product_bank.py'
+      - 'fp2-manabi-sprint/tools/test_audit_product_bank.py'
+      - 'fp2-manabi-sprint/official-source-catalog.json'
+      - 'fp2-manabi-sprint/audits/parallel/FP2_REAL_COUNT_GATES.md'
+      - '.github/workflows/fp2-official-source-gates.yml'
+  pull_request:
+    paths:
+      - 'fp2-manabi-sprint/tools/audit_product_bank.py'
+      - 'fp2-manabi-sprint/tools/test_audit_product_bank.py'
+      - 'fp2-manabi-sprint/official-source-catalog.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Synthetic positive and negative gate regressions
+        run: python3 -B -m unittest -v fp2-manabi-sprint/tools/test_audit_product_bank.py
+      - name: Current real bank must stay BLOCKED until source audit complete
+        run: |
+          set +e
+          python3 -B fp2-manabi-sprint/tools/audit_product_bank.py --report /tmp/fp2-real-gate.json
+          result=$?
+          set -e
+          test "$result" -eq 1
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/fp2-real-gate.json'))
+          assert r['release_ready'] is False
+          assert r['status']=='FAIL'
+          print('PASS: current incomplete bank is fail-closed', r['errors'][:3])
+          PY
