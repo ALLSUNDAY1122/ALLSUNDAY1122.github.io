@@ -104,6 +104,18 @@ def main():
             q['originalDataSourceTitle']=citation['title']
         q['canonicalContentHash']=canonical_hash(q);q['attributionDisplay']=q.get('attribution') or f"出典：厚生労働省『第{q['sourceExam']}回薬剤師国家試験問題及び解答』";q['modificationDisclosureDisplay']='厚生労働省公開問題をもとに、学習表示・解説を加工して作成'
     for q in qs:normalize_case(q,qmap)
+    # Explicit, source-verified continuations of four-question cases.
+    # Do not infer shared clinical context from adjacent question numbers.
+    for q in qs:
+        donor_id = overlays.get(q['id'], {}).get('shared_stem_from')
+        if donor_id:
+            donor = qmap.get(donor_id)
+            if (not donor or donor['sourceExam'] != q['sourceExam']
+                    or donor_id == q['id'] or not donor.get('sharedStem')
+                    or q.get('sharedStem')):
+                raise SystemExit(f'FAIL: invalid explicit shared stem source for {q["id"]}')
+            q['sharedStem'] = donor['sharedStem']
+
     # Release-blocking regression assertion: both linked questions must carry
     # the official dosage-form correction in their displayed shared stem.
     corrected_ids = ('P111-220', 'P111-221')
