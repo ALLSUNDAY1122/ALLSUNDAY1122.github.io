@@ -9,6 +9,7 @@ import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from app_store_connect_api import api_get, load_private_key, make_token
 
@@ -29,12 +30,30 @@ def safe_get(token: str, path: str) -> dict:
         raise
 
 
-def included_territories(payload: dict) -> list[str]:
-    result = []
-    for item in (payload.get("included") or []):
-        if isinstance(item, dict) and item.get("type") == "territories" and item.get("id"):
-            result.append(str(item["id"]))
-    return sorted(set(result))
+def list_territories(token: str, availability_id: str) -> list[str]:
+    """Read all pages; an include is capped at 50 and is not a complete list."""
+    resource = f"/v1/inAppPurchaseAvailabilities/{availability_id}/availableTerritories"
+    path = resource + "?limit=50"
+    result: set[str] = set()
+    visited: set[str] = set()
+    while path:
+        if path in visited or len(visited) >= 20:
+            raise RuntimeError("Invalid territory pagination")
+        visited.add(path)
+        _, payload = api_get(token, path)
+        for item in payload.get("data") or []:
+            if item.get("type") != "territories" or not item.get("id"):
+                raise RuntimeError("Invalid territory response")
+            result.add(str(item["id"]))
+        next_url = (payload.get("links") or {}).get("next")
+        if not next_url:
+            break
+        parsed = urlsplit(next_url)
+        if ((parsed.netloc and (parsed.scheme != "https" or parsed.netloc != "api.appstoreconnect.apple.com"))
+                or parsed.path != resource or parsed.fragment):
+            raise RuntimeError("Unexpected territory pagination target")
+        path = parsed.path + ("?" + parsed.query if parsed.query else "")
+    return sorted(result)
 
 
 def main() -> None:
@@ -61,16 +80,29 @@ def main() -> None:
 
         iap_av = safe_get(
             token,
-            f"/v1/inAppPurchaseAvailabilities/{IAP_ID}?include=availableTerritories&limit[availableTerritories]=200",
+            f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseAvailability",
         )
-        _, loc = api_get(token, f"/v1/inAppPurchases/{IAP_ID}/inAppPurchaseLocalizations?limit=50")
+        _, loc = api_get(token, f"/v2/inAppPurchases/{IAP_ID}/inAppPurchaseLocalizations?limit=50")
         price = safe_get(
             token,
             f"/v2/inAppPurchases/{IAP_ID}/iapPriceSchedule?include=baseTerritory,manualPrices&limit[manualPrices]=50",
         )
         screenshot = safe_get(token, f"/v2/inAppPurchases/{IAP_ID}/appStoreReviewScreenshot")
 
-        iap_available = included_territories(iap_av["payload"]) if iap_av["ok"] else []
+        iap_available = []
+        if iap_av["ok"]:
+            availability_id = (iap_av["payload"].get("data") or {}).get("id")
+            if not availability_id or not str(availability_id).isdigit():
+                raise RuntimeError("Invalid IAP availability identity")
+            iap_available = list_territories(token, str(availability_id))
+
+        _, versions = api_get(token, f"/v1/apps/{APP_ID}/appStoreVersions?limit=10")
+        version_summary = [
+            {"version": (v.get("attributes") or {}).get("versionString"),
+             "platform": (v.get("attributes") or {}).get("platform"),
+             "state": (v.get("attributes") or {}).get("appStoreState")}
+            for v in versions.get("data") or []
+        ]
         localizations = []
         for item in loc.get("data") or []:
             attrs = item.get("attributes") or {}
@@ -91,10 +123,12 @@ def main() -> None:
             "checked_at": datetime.now(timezone.utc).isoformat(),
             "app": {"id": APP_ID, "bundle_id": BUNDLE_ID, "name": app_attrs.get("name")},
             "iap": {"id": IAP_ID, "product_id": PRODUCT_ID, "state": iap_attrs.get("state")},
+            "app_store_versions": version_summary,
             "iap_availability": {
                 "exists": iap_av["ok"],
                 "status": iap_av["status"],
                 "available_territories": iap_available,
+                "complete": iap_av["ok"],
             },
             "localizations": localizations,
             "price_schedule": price_summary,
