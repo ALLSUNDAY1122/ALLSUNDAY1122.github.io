@@ -75,6 +75,10 @@ def main():
         ov=overlays.get(q['id'],{})
         if ov.get('question_override'):q['question']=ov['question_override']
         if ov.get('choices_override'):q['choices']=ov['choices_override']
+        if ov.get('legal_source_url'):
+            if not str(ov['legal_source_url']).startswith('https://'):
+                raise SystemExit(f'FAIL: legal source must use HTTPS for {q["id"]}')
+            q['legal_source_url']=ov['legal_source_url']
         if ov.get('media_rebuild_status')=='text_rebuilt':
             q['requires_media']=False;q['mediaAuditStatus']='rebuilt_as_independent_text';q['mediaRebuildProvenance']=ov.get('rebuild_source')
         q['memoryPoint']=ov.get('memoryPoint');q['explanation']=ov.get('explanation');q['explanationProvenance']=prov.get(q['id']);q['explanationReviewRequired']=bool(ov.get('reviewRequired',False)) if ov else True
