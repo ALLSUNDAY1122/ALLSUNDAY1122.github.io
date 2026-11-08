@@ -1,0 +1,4313 @@
+{
+  "title": "第111回薬剤師国家試験 115問 独立AI監査（添付資料限定・外部一次情報補足）",
+  "scope": "P111-231〜P111-345",
+  "basis": {
+    "json": "111C.json",
+    "official_questions": [
+      "001677930(1).pdf",
+      "001677931.pdf",
+      "001677932.pdf"
+    ],
+    "official_answers": "001677933(1).pdf",
+    "errata": "001677936(2).pdf",
+    "app_images": "111C-app-images.pdf"
+  },
+  "method": [
+    "Python json.loadで115件全件を抽出しID・正答数・複数許容解・選択肢数を照合",
+    "PyMuPDFで厚労省PDF全対象ページの問題位置・文字層を取得。回答表は各セルの文字座標で独立抽出",
+    "共有症例48件の文字照合。原本からの表変換と図の有無を個別確認",
+    "全問題原本のPDF図形/画像オブジェクトを走査し、候補ページのレンダリングを目視検証。17枚のアプリ画像PDFを目視点検",
+    "医学薬学的根拠は説明が実質的にないものはFAIL。3問（238,239,244）は原本と一次根拠を独立照合",
+    "法令の現行版対照は未完了。図表の第三者権利は未許諾を違法と推定せず権利留保に分類"
+  ],
+  "counts": {
+    "total": 115,
+    "PASS": 3,
+    "FAIL": 112,
+    "UNVERIFIED": 0,
+    "officialAnswersMatched": 115,
+    "subjectMislabeled": 63,
+    "genericExplanations": 101,
+    "missingFigureItems": 4,
+    "blankAssets": 6,
+    "lawItemsWithUnverifiedCurrentComparison": 10,
+    "findings": 190
+  },
+  "PASS_criteria": "全選択肢/問題文/症例/正答/単位が原本と一致し、実図の欠落がなく、説明を独立した一次資料/計算で検証。図なし項目。実機動作は監査対象外。",
+  "statusGroups": {
+    "FAIL": [
+      "P111-231",
+      "P111-232",
+      "P111-233",
+      "P111-234",
+      "P111-235",
+      "P111-236",
+      "P111-237",
+      "P111-240",
+      "P111-241",
+      "P111-242",
+      "P111-243",
+      "P111-245",
+      "P111-246",
+      "P111-247",
+      "P111-248",
+      "P111-249",
+      "P111-250",
+      "P111-251",
+      "P111-252",
+      "P111-253",
+      "P111-254",
+      "P111-255",
+      "P111-256",
+      "P111-257",
+      "P111-258",
+      "P111-259",
+      "P111-260",
+      "P111-261",
+      "P111-262",
+      "P111-263",
+      "P111-264",
+      "P111-265",
+      "P111-266",
+      "P111-267",
+      "P111-268",
+      "P111-269",
+      "P111-270",
+      "P111-271",
+      "P111-272",
+      "P111-273",
+      "P111-274",
+      "P111-275",
+      "P111-276",
+      "P111-277",
+      "P111-278",
+      "P111-279",
+      "P111-280",
+      "P111-281",
+      "P111-282",
+      "P111-283",
+      "P111-284",
+      "P111-285",
+      "P111-286",
+      "P111-287",
+      "P111-288",
+      "P111-289",
+      "P111-290",
+      "P111-291",
+      "P111-292",
+      "P111-293",
+      "P111-294",
+      "P111-295",
+      "P111-296",
+      "P111-297",
+      "P111-298",
+      "P111-299",
+      "P111-300",
+      "P111-301",
+      "P111-302",
+      "P111-303",
+      "P111-304",
+      "P111-305",
+      "P111-306",
+      "P111-307",
+      "P111-308",
+      "P111-309",
+      "P111-310",
+      "P111-311",
+      "P111-312",
+      "P111-313",
+      "P111-314",
+      "P111-315",
+      "P111-316",
+      "P111-317",
+      "P111-318",
+      "P111-319",
+      "P111-320",
+      "P111-321",
+      "P111-322",
+      "P111-323",
+      "P111-324",
+      "P111-325",
+      "P111-326",
+      "P111-327",
+      "P111-328",
+      "P111-329",
+      "P111-330",
+      "P111-331",
+      "P111-332",
+      "P111-333",
+      "P111-334",
+      "P111-335",
+      "P111-336",
+      "P111-337",
+      "P111-338",
+      "P111-339",
+      "P111-340",
+      "P111-341",
+      "P111-342",
+      "P111-343",
+      "P111-344",
+      "P111-345"
+    ],
+    "PASS": [
+      "P111-238",
+      "P111-239",
+      "P111-244"
+    ]
+  },
+  "items": [
+    {
+      "id": "P111-231",
+      "status": "FAIL",
+      "officialSubject": "衛生",
+      "jsonSubject": "実務",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 43,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 98.4
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-232",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "衛生",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 45,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 98.8
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-233",
+      "status": "FAIL",
+      "officialSubject": "衛生",
+      "jsonSubject": "実務",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 45,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 98.8
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED"
+      ]
+    },
+    {
+      "id": "P111-234",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "衛生",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 46,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 100.0
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED"
+      ]
+    },
+    {
+      "id": "P111-235",
+      "status": "FAIL",
+      "officialSubject": "衛生",
+      "jsonSubject": "実務",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 47,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [],
+        "sharedStemSimilarityPct": 100.0
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "EMPTY_IMAGE_ASSET"
+      ]
+    },
+    {
+      "id": "P111-236",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "衛生",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 49,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 98.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED"
+      ]
+    },
+    {
+      "id": "P111-237",
+      "status": "FAIL",
+      "officialSubject": "衛生",
+      "jsonSubject": "実務",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 49,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [],
+        "sharedStemSimilarityPct": 98.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "EMPTY_IMAGE_ASSET"
+      ]
+    },
+    {
+      "id": "P111-238",
+      "status": "PASS",
+      "officialSubject": "衛生",
+      "jsonSubject": "衛生",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 51,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.5
+      },
+      "issueCategories": []
+    },
+    {
+      "id": "P111-239",
+      "status": "PASS",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 51,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.5
+      },
+      "issueCategories": []
+    },
+    {
+      "id": "P111-240",
+      "status": "FAIL",
+      "officialSubject": "衛生",
+      "jsonSubject": "衛生",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 53,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.0
+      },
+      "issueCategories": [
+        "SOURCE_FIGURE_MISSING"
+      ]
+    },
+    {
+      "id": "P111-241",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 53,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.0
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE",
+        "SOURCE_FIGURE_MISSING"
+      ]
+    },
+    {
+      "id": "P111-242",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "衛生",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 55,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 98.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-243",
+      "status": "FAIL",
+      "officialSubject": "衛生",
+      "jsonSubject": "実務",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 55,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 98.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-244",
+      "status": "PASS",
+      "officialSubject": "衛生",
+      "jsonSubject": "衛生",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 57,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 98.3
+      },
+      "issueCategories": []
+    },
+    {
+      "id": "P111-245",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677930(1).pdf",
+      "pdfPage": 57,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 98.3
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-246",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬理",
+      "pdf": "001677931.pdf",
+      "pdfPage": 3,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.8
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-247",
+      "status": "FAIL",
+      "officialSubject": "薬理",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 3,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.8
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-248",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬理",
+      "pdf": "001677931.pdf",
+      "pdfPage": 5,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.6
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-249",
+      "status": "FAIL",
+      "officialSubject": "薬理",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 5,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "NOT_FOUND"
+        ],
+        "sharedStemSimilarityPct": 99.6
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "CHOICE_TRANSCRIPTION_ERROR"
+      ]
+    },
+    {
+      "id": "P111-250",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬理",
+      "pdf": "001677931.pdf",
+      "pdfPage": 7,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.4
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED"
+      ]
+    },
+    {
+      "id": "P111-251",
+      "status": "FAIL",
+      "officialSubject": "薬理",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 7,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": false,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.4
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED"
+      ]
+    },
+    {
+      "id": "P111-252",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬理",
+      "pdf": "001677931.pdf",
+      "pdfPage": 9,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.7
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED"
+      ]
+    },
+    {
+      "id": "P111-253",
+      "status": "FAIL",
+      "officialSubject": "薬理",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 9,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.7
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED"
+      ]
+    },
+    {
+      "id": "P111-254",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬理",
+      "pdf": "001677931.pdf",
+      "pdfPage": 11,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED"
+      ]
+    },
+    {
+      "id": "P111-255",
+      "status": "FAIL",
+      "officialSubject": "薬理",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 11,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-256",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬理",
+      "pdf": "001677931.pdf",
+      "pdfPage": 13,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-257",
+      "status": "FAIL",
+      "officialSubject": "薬理",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 13,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": false,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-258",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬理",
+      "pdf": "001677931.pdf",
+      "pdfPage": 15,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.1
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-259",
+      "status": "FAIL",
+      "officialSubject": "薬理",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 15,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.1
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-260",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬理",
+      "pdf": "001677931.pdf",
+      "pdfPage": 17,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.1
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-261",
+      "status": "FAIL",
+      "officialSubject": "薬理",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 17,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.1
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-262",
+      "status": "FAIL",
+      "officialSubject": "薬理",
+      "jsonSubject": "薬理",
+      "pdf": "001677931.pdf",
+      "pdfPage": 19,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": false,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.5
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-263",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 19,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.5
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-264",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬理",
+      "pdf": "001677931.pdf",
+      "pdfPage": 21,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.7
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-265",
+      "status": "FAIL",
+      "officialSubject": "薬理",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 21,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.7
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-266",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬剤",
+      "pdf": "001677931.pdf",
+      "pdfPage": 23,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.6
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-267",
+      "status": "FAIL",
+      "officialSubject": "薬剤",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 23,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.6
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-268",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬剤",
+      "pdf": "001677931.pdf",
+      "pdfPage": 25,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-269",
+      "status": "FAIL",
+      "officialSubject": "薬剤",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 25,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-270",
+      "status": "FAIL",
+      "officialSubject": "薬剤",
+      "jsonSubject": "薬剤",
+      "pdf": "001677931.pdf",
+      "pdfPage": 27,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.4
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-271",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 27,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.4
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-272",
+      "status": "FAIL",
+      "officialSubject": "薬剤",
+      "jsonSubject": "薬剤",
+      "pdf": "001677931.pdf",
+      "pdfPage": 29,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.4
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-273",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 29,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.4
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-274",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬剤",
+      "pdf": "001677931.pdf",
+      "pdfPage": 31,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.7
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-275",
+      "status": "FAIL",
+      "officialSubject": "薬剤",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 31,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.7
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "EMPTY_IMAGE_ASSET"
+      ]
+    },
+    {
+      "id": "P111-276",
+      "status": "FAIL",
+      "officialSubject": "薬剤",
+      "jsonSubject": "薬剤",
+      "pdf": "001677931.pdf",
+      "pdfPage": 33,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 93.9
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-277",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 33,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 93.9
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-278",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬剤",
+      "pdf": "001677931.pdf",
+      "pdfPage": 35,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.3
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-279",
+      "status": "FAIL",
+      "officialSubject": "薬剤",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 35,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.3
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-280",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬剤",
+      "pdf": "001677931.pdf",
+      "pdfPage": 36,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 100.0
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-281",
+      "status": "FAIL",
+      "officialSubject": "薬剤",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 37,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [],
+        "sharedStemSimilarityPct": 100.0
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "EMPTY_IMAGE_ASSET"
+      ]
+    },
+    {
+      "id": "P111-282",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "薬剤",
+      "pdf": "001677931.pdf",
+      "pdfPage": 38,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 100.0
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-283",
+      "status": "FAIL",
+      "officialSubject": "薬剤",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 39,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 100.0
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "EMPTY_IMAGE_ASSET"
+      ]
+    },
+    {
+      "id": "P111-284",
+      "status": "FAIL",
+      "officialSubject": "薬剤",
+      "jsonSubject": "薬剤",
+      "pdf": "001677931.pdf",
+      "pdfPage": 42,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 93.9
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE",
+        "SOURCE_FIGURE_MISSING"
+      ]
+    },
+    {
+      "id": "P111-285",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677931.pdf",
+      "pdfPage": 42,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 93.9
+      },
+      "issueCategories": [
+        "SOURCE_FIGURE_MISSING"
+      ]
+    },
+    {
+      "id": "P111-286",
+      "status": "FAIL",
+      "officialSubject": "病態・薬物治療",
+      "jsonSubject": "病態・薬物治療",
+      "pdf": "001677932.pdf",
+      "pdfPage": 3,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.6
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-287",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 3,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.6
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-288",
+      "status": "FAIL",
+      "officialSubject": "病態・薬物治療",
+      "jsonSubject": "病態・薬物治療",
+      "pdf": "001677932.pdf",
+      "pdfPage": 5,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.7
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-289",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 5,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.7
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-290",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "病態・薬物治療",
+      "pdf": "001677932.pdf",
+      "pdfPage": 7,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.4
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-291",
+      "status": "FAIL",
+      "officialSubject": "病態・薬物治療",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 7,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.4
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-292",
+      "status": "FAIL",
+      "officialSubject": "病態・薬物治療",
+      "jsonSubject": "病態・薬物治療",
+      "pdf": "001677932.pdf",
+      "pdfPage": 9,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.2
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-293",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 9,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.2
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-294",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "病態・薬物治療",
+      "pdf": "001677932.pdf",
+      "pdfPage": 11,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.6
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-295",
+      "status": "FAIL",
+      "officialSubject": "病態・薬物治療",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 12,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.6
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-296",
+      "status": "FAIL",
+      "officialSubject": "病態・薬物治療",
+      "jsonSubject": "病態・薬物治療",
+      "pdf": "001677932.pdf",
+      "pdfPage": 15,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 96.8
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-297",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 15,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 96.8
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-298",
+      "status": "FAIL",
+      "officialSubject": "病態・薬物治療",
+      "jsonSubject": "病態・薬物治療",
+      "pdf": "001677932.pdf",
+      "pdfPage": 17,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.0
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-299",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 17,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.0
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-300",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "病態・薬物治療",
+      "pdf": "001677932.pdf",
+      "pdfPage": 19,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.0
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-301",
+      "status": "FAIL",
+      "officialSubject": "病態・薬物治療",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 19,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.0
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-302",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "病態・薬物治療",
+      "pdf": "001677932.pdf",
+      "pdfPage": 21,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.1
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-303",
+      "status": "FAIL",
+      "officialSubject": "病態・薬物治療",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 21,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.1
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-304",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "病態・薬物治療",
+      "pdf": "001677932.pdf",
+      "pdfPage": 23,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.6
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-305",
+      "status": "FAIL",
+      "officialSubject": "病態・薬物治療",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 23,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.6
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-306",
+      "status": "FAIL",
+      "officialSubject": "法規・制度・倫理",
+      "jsonSubject": "法規・制度・倫理",
+      "pdf": "001677932.pdf",
+      "pdfPage": 25,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.7
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE",
+        "EXAM_VS_CURRENT_LAW_NOT_VALIDATED"
+      ]
+    },
+    {
+      "id": "P111-307",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 25,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.7
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-308",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "法規・制度・倫理",
+      "pdf": "001677932.pdf",
+      "pdfPage": 27,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.7
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-309",
+      "status": "FAIL",
+      "officialSubject": "法規・制度・倫理",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 27,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.7
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "EXAM_VS_CURRENT_LAW_NOT_VALIDATED"
+      ]
+    },
+    {
+      "id": "P111-310",
+      "status": "FAIL",
+      "officialSubject": "法規・制度・倫理",
+      "jsonSubject": "法規・制度・倫理",
+      "pdf": "001677932.pdf",
+      "pdfPage": 29,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.7
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE",
+        "EXAM_VS_CURRENT_LAW_NOT_VALIDATED"
+      ]
+    },
+    {
+      "id": "P111-311",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 29,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.7
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-312",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "法規・制度・倫理",
+      "pdf": "001677932.pdf",
+      "pdfPage": 31,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 98.9
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-313",
+      "status": "FAIL",
+      "officialSubject": "法規・制度・倫理",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 31,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 98.9
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "EXAM_VS_CURRENT_LAW_NOT_VALIDATED"
+      ]
+    },
+    {
+      "id": "P111-314",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "法規・制度・倫理",
+      "pdf": "001677932.pdf",
+      "pdfPage": 33,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.2
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-315",
+      "status": "FAIL",
+      "officialSubject": "法規・制度・倫理",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 33,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.2
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "EXAM_VS_CURRENT_LAW_NOT_VALIDATED"
+      ]
+    },
+    {
+      "id": "P111-316",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "法規・制度・倫理",
+      "pdf": "001677932.pdf",
+      "pdfPage": 35,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.3
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-317",
+      "status": "FAIL",
+      "officialSubject": "法規・制度・倫理",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 35,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.3
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "EXAM_VS_CURRENT_LAW_NOT_VALIDATED"
+      ]
+    },
+    {
+      "id": "P111-318",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "法規・制度・倫理",
+      "pdf": "001677932.pdf",
+      "pdfPage": 37,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.0
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-319",
+      "status": "FAIL",
+      "officialSubject": "法規・制度・倫理",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 37,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.0
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "EXAM_VS_CURRENT_LAW_NOT_VALIDATED"
+      ]
+    },
+    {
+      "id": "P111-320",
+      "status": "FAIL",
+      "officialSubject": "法規・制度・倫理",
+      "jsonSubject": "法規・制度・倫理",
+      "pdf": "001677932.pdf",
+      "pdfPage": 39,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.4
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE",
+        "EXAM_VS_CURRENT_LAW_NOT_VALIDATED"
+      ]
+    },
+    {
+      "id": "P111-321",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 39,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.4
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-322",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "法規・制度・倫理",
+      "pdf": "001677932.pdf",
+      "pdfPage": 41,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-323",
+      "status": "FAIL",
+      "officialSubject": "法規・制度・倫理",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 41,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 97.5
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "EXAM_VS_CURRENT_LAW_NOT_VALIDATED"
+      ]
+    },
+    {
+      "id": "P111-324",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "法規・制度・倫理",
+      "pdf": "001677932.pdf",
+      "pdfPage": 43,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": 99.3
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-325",
+      "status": "FAIL",
+      "officialSubject": "法規・制度・倫理",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 43,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "NOT_FOUND"
+        ],
+        "sharedStemSimilarityPct": 99.3
+      },
+      "issueCategories": [
+        "SUBJECT_MISCLASSIFIED",
+        "EXPLANATION_INADEQUATE",
+        "CHOICE_CONTAMINATED",
+        "EXAM_VS_CURRENT_LAW_NOT_VALIDATED",
+        "REGULATORY_TIME_SCOPE"
+      ]
+    },
+    {
+      "id": "P111-326",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 44,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": false,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-327",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 44,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-328",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 45,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-329",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 46,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": false,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-330",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 48,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": false,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-331",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 50,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-332",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 50,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-333",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 51,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-334",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 52,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-335",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 53,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": false,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "TABLE_HEADER_DESTRUCTURED"
+      ]
+    },
+    {
+      "id": "P111-336",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 54,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": false,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-337",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 55,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-338",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 57,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": false,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-339",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 57,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-340",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 58,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "NOT_FOUND",
+          "NOT_FOUND",
+          "NOT_FOUND",
+          "NOT_FOUND",
+          "NOT_FOUND"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE",
+        "CHOICE_TABLE_LAYOUT_LOST"
+      ]
+    },
+    {
+      "id": "P111-341",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 60,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": false,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE",
+        "EMPTY_IMAGE_ASSET",
+        "THIRD_PARTY_RIGHTS_HOLD"
+      ]
+    },
+    {
+      "id": "P111-342",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 62,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": false,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-343",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 63,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-344",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 64,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    },
+    {
+      "id": "P111-345",
+      "status": "FAIL",
+      "officialSubject": "実務",
+      "jsonSubject": "実務",
+      "pdf": "001677932.pdf",
+      "pdfPage": 64,
+      "answerConfirmed": true,
+      "textMatches": {
+        "question": true,
+        "choices": [
+          "exact",
+          "exact",
+          "exact",
+          "exact",
+          "exact"
+        ],
+        "sharedStemSimilarityPct": null
+      },
+      "issueCategories": [
+        "EXPLANATION_INADEQUATE"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "P111-231",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677930(1).pdf p.43（見出し「衛生」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「衛生」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-231",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677930(1).pdf p.43; 001677933(1).pdf p.2; 111C.json P111-231",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-232",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677930(1).pdf p.45（見出し「実務」）; 111C.json subject=\"衛生\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-232",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677930(1).pdf p.45; 001677933(1).pdf p.2; 111C.json P111-232",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-233",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677930(1).pdf p.45（見出し「衛生」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「衛生」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-234",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677930(1).pdf p.46（見出し「実務」）; 111C.json subject=\"衛生\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-235",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677930(1).pdf p.47（見出し「衛生」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「衛生」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-235",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677930(1).pdf p.47; 001677933(1).pdf p.2; 111C.json P111-235",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-235",
+      "severity": "MEDIUM",
+      "category": "EMPTY_IMAGE_ASSET",
+      "evidence": "111C-app-images.pdf p.2; 001677930(1).pdf p.47",
+      "suggestedFix": "空白（トンボのみ）の画像2を配信対象から除外し、対応する実図だけを保持する。画面表示で白紙が出ないことを確認する。"
+    },
+    {
+      "id": "P111-236",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677930(1).pdf p.49（見出し「実務」）; 111C.json subject=\"衛生\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-237",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677930(1).pdf p.49（見出し「衛生」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「衛生」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-237",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677930(1).pdf p.49; 001677933(1).pdf p.2; 111C.json P111-237",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-237",
+      "severity": "MEDIUM",
+      "category": "EMPTY_IMAGE_ASSET",
+      "evidence": "111C-app-images.pdf p.4; 001677930(1).pdf p.49",
+      "suggestedFix": "空白（トンボのみ）の画像4を配信対象から除外し、対応する実図だけを保持する。画面表示で白紙が出ないことを確認する。"
+    },
+    {
+      "id": "P111-240",
+      "severity": "HIGH",
+      "category": "SOURCE_FIGURE_MISSING",
+      "evidence": "001677930(1).pdf p.52（プール配置図A/B/C/X/Y）; 111C-app-images.pdf 全17頁（該当図なし）",
+      "suggestedFix": "原本の該当図表を共有症例と同時に表示できる状態で収録する。図内の数値・凡例・座標を原本照合し、権利者の留保も確認する。"
+    },
+    {
+      "id": "P111-241",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677930(1).pdf p.53; 001677933(1).pdf p.2; 111C.json P111-241",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-241",
+      "severity": "HIGH",
+      "category": "SOURCE_FIGURE_MISSING",
+      "evidence": "001677930(1).pdf p.52（プール配置図A/B/C/X/Y）; 111C-app-images.pdf 全17頁（該当図なし）",
+      "suggestedFix": "原本の該当図表を共有症例と同時に表示できる状態で収録する。図内の数値・凡例・座標を原本照合し、権利者の留保も確認する。"
+    },
+    {
+      "id": "P111-242",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677930(1).pdf p.55（見出し「実務」）; 111C.json subject=\"衛生\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-242",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677930(1).pdf p.55; 001677933(1).pdf p.2; 111C.json P111-242",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-243",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677930(1).pdf p.55（見出し「衛生」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「衛生」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-243",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677930(1).pdf p.55; 001677933(1).pdf p.2; 111C.json P111-243",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-245",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677930(1).pdf p.57; 001677933(1).pdf p.2; 111C.json P111-245",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-246",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.3（見出し「実務」）; 111C.json subject=\"薬理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-246",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.3; 001677933(1).pdf p.2; 111C.json P111-246",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-247",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.3（見出し「薬理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-247",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.3; 001677933(1).pdf p.2; 111C.json P111-247",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-248",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.5（見出し「実務」）; 111C.json subject=\"薬理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-248",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.5; 001677933(1).pdf p.2; 111C.json P111-248",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-249",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.5（見出し「薬理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-249",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.5; 001677933(1).pdf p.2; 111C.json P111-249",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-249",
+      "severity": "HIGH",
+      "category": "CHOICE_TRANSCRIPTION_ERROR",
+      "evidence": "001677931.pdf p.5 問249 選択肢5; 111C.json P111-249 choices[4]",
+      "suggestedFix": "正答肢5を「カテコール-O-メチルトランスフェラーゼ（COMT）を阻害する。」に訂正。漏れたOおよびハイフンを原本通り復元する。"
+    },
+    {
+      "id": "P111-250",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.7（見出し「実務」）; 111C.json subject=\"薬理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-251",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.7（見出し「薬理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-252",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.9（見出し「実務」）; 111C.json subject=\"薬理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-253",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.9（見出し「薬理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-254",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.11（見出し「実務」）; 111C.json subject=\"薬理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-255",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.11（見出し「薬理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-255",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.11; 001677933(1).pdf p.2; 111C.json P111-255",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-256",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.13（見出し「実務」）; 111C.json subject=\"薬理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-256",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.13; 001677933(1).pdf p.2; 111C.json P111-256",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-257",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.13（見出し「薬理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-257",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.13; 001677933(1).pdf p.2; 111C.json P111-257",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-258",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.15（見出し「実務」）; 111C.json subject=\"薬理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-258",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.15; 001677933(1).pdf p.2; 111C.json P111-258",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-259",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.15（見出し「薬理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-259",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.15; 001677933(1).pdf p.2; 111C.json P111-259",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-260",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.17（見出し「実務」）; 111C.json subject=\"薬理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-260",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.17; 001677933(1).pdf p.2; 111C.json P111-260",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-261",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.17（見出し「薬理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-261",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.17; 001677933(1).pdf p.2; 111C.json P111-261",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-262",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.19; 001677933(1).pdf p.2; 111C.json P111-262",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-263",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.19; 001677933(1).pdf p.2; 111C.json P111-263",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-264",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.21（見出し「実務」）; 111C.json subject=\"薬理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-264",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.21; 001677933(1).pdf p.2; 111C.json P111-264",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-265",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.21（見出し「薬理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-265",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.21; 001677933(1).pdf p.2; 111C.json P111-265",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-266",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.23（見出し「実務」）; 111C.json subject=\"薬剤\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-266",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.23; 001677933(1).pdf p.2; 111C.json P111-266",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-267",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.23（見出し「薬剤」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬剤」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-267",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.23; 001677933(1).pdf p.2; 111C.json P111-267",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-268",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.25（見出し「実務」）; 111C.json subject=\"薬剤\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-268",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.25; 001677933(1).pdf p.2; 111C.json P111-268",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-269",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.25（見出し「薬剤」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬剤」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-269",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.25; 001677933(1).pdf p.2; 111C.json P111-269",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-270",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.27; 001677933(1).pdf p.2; 111C.json P111-270",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-271",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.27; 001677933(1).pdf p.2; 111C.json P111-271",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-272",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.29; 001677933(1).pdf p.2; 111C.json P111-272",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-273",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.29; 001677933(1).pdf p.2; 111C.json P111-273",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-274",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.31（見出し「実務」）; 111C.json subject=\"薬剤\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-274",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.31; 001677933(1).pdf p.2; 111C.json P111-274",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-275",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.31（見出し「薬剤」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬剤」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-275",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.31; 001677933(1).pdf p.2; 111C.json P111-275",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-275",
+      "severity": "MEDIUM",
+      "category": "EMPTY_IMAGE_ASSET",
+      "evidence": "111C-app-images.pdf p.6; 001677931.pdf p.31",
+      "suggestedFix": "空白（トンボのみ）の画像6を配信対象から除外し、対応する実図だけを保持する。画面表示で白紙が出ないことを確認する。"
+    },
+    {
+      "id": "P111-276",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.33; 001677933(1).pdf p.2; 111C.json P111-276",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-277",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.33; 001677933(1).pdf p.2; 111C.json P111-277",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-278",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.35（見出し「実務」）; 111C.json subject=\"薬剤\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-278",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.35; 001677933(1).pdf p.2; 111C.json P111-278",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-279",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.35（見出し「薬剤」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬剤」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-279",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.35; 001677933(1).pdf p.2; 111C.json P111-279",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-280",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.36（見出し「実務」）; 111C.json subject=\"薬剤\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-280",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.36; 001677933(1).pdf p.2; 111C.json P111-280",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-281",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.37（見出し「薬剤」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬剤」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-281",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.37; 001677933(1).pdf p.2; 111C.json P111-281",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-281",
+      "severity": "MEDIUM",
+      "category": "EMPTY_IMAGE_ASSET",
+      "evidence": "111C-app-images.pdf p.10; 001677931.pdf p.37",
+      "suggestedFix": "空白（トンボのみ）の画像10を配信対象から除外し、対応する実図だけを保持する。画面表示で白紙が出ないことを確認する。"
+    },
+    {
+      "id": "P111-282",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.38（見出し「実務」）; 111C.json subject=\"薬剤\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-282",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.38; 001677933(1).pdf p.2; 111C.json P111-282",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-283",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677931.pdf p.39（見出し「薬剤」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「薬剤」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-283",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.39; 001677933(1).pdf p.2; 111C.json P111-283",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-283",
+      "severity": "MEDIUM",
+      "category": "EMPTY_IMAGE_ASSET",
+      "evidence": "111C-app-images.pdf p.12; 001677931.pdf p.39",
+      "suggestedFix": "空白（トンボのみ）の画像12を配信対象から除外し、対応する実図だけを保持する。画面表示で白紙が出ないことを確認する。"
+    },
+    {
+      "id": "P111-284",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677931.pdf p.42; 001677933(1).pdf p.2; 111C.json P111-284",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-284",
+      "severity": "HIGH",
+      "category": "SOURCE_FIGURE_MISSING",
+      "evidence": "001677931.pdf pp.40-41（生物学的同等性・濃度推移グラフ3点）; 111C-app-images.pdf 全17頁（該当図なし）",
+      "suggestedFix": "原本の該当図表を共有症例と同時に表示できる状態で収録する。図内の数値・凡例・座標を原本照合し、権利者の留保も確認する。"
+    },
+    {
+      "id": "P111-285",
+      "severity": "HIGH",
+      "category": "SOURCE_FIGURE_MISSING",
+      "evidence": "001677931.pdf pp.40-41（生物学的同等性・濃度推移グラフ3点）; 111C-app-images.pdf 全17頁（該当図なし）",
+      "suggestedFix": "原本の該当図表を共有症例と同時に表示できる状態で収録する。図内の数値・凡例・座標を原本照合し、権利者の留保も確認する。"
+    },
+    {
+      "id": "P111-286",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.3; 001677933(1).pdf p.2; 111C.json P111-286",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-287",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.3; 001677933(1).pdf p.2; 111C.json P111-287",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-288",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.5; 001677933(1).pdf p.2; 111C.json P111-288",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-289",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.5; 001677933(1).pdf p.2; 111C.json P111-289",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-290",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.7（見出し「実務」）; 111C.json subject=\"病態・薬物治療\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-290",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.7; 001677933(1).pdf p.2; 111C.json P111-290",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-291",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.7（見出し「病態・薬物治療」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「病態・薬物治療」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-291",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.7; 001677933(1).pdf p.2; 111C.json P111-291",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-292",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.9; 001677933(1).pdf p.2; 111C.json P111-292",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-293",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.9; 001677933(1).pdf p.2; 111C.json P111-293",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-294",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.11（見出し「実務」）; 111C.json subject=\"病態・薬物治療\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-294",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.11; 001677933(1).pdf p.2; 111C.json P111-294",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-295",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.12（見出し「病態・薬物治療」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「病態・薬物治療」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-295",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.12; 001677933(1).pdf p.2; 111C.json P111-295",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-296",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.15; 001677933(1).pdf p.2; 111C.json P111-296",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-297",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.15; 001677933(1).pdf p.2; 111C.json P111-297",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-298",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.17; 001677933(1).pdf p.2; 111C.json P111-298",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-299",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.17; 001677933(1).pdf p.2; 111C.json P111-299",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-300",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.19（見出し「実務」）; 111C.json subject=\"病態・薬物治療\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-300",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.19; 001677933(1).pdf p.2; 111C.json P111-300",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-301",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.19（見出し「病態・薬物治療」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「病態・薬物治療」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-301",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.19; 001677933(1).pdf p.2; 111C.json P111-301",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-302",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.21（見出し「実務」）; 111C.json subject=\"病態・薬物治療\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-302",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.21; 001677933(1).pdf p.2; 111C.json P111-302",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-303",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.21（見出し「病態・薬物治療」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「病態・薬物治療」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-303",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.21; 001677933(1).pdf p.2; 111C.json P111-303",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-304",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.23（見出し「実務」）; 111C.json subject=\"病態・薬物治療\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-304",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.23; 001677933(1).pdf p.2; 111C.json P111-304",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-305",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.23（見出し「病態・薬物治療」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「病態・薬物治療」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-305",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.23; 001677933(1).pdf p.2; 111C.json P111-305",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-306",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.25; 001677933(1).pdf p.2; 111C.json P111-306",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-306",
+      "severity": "UNVERIFIED",
+      "category": "EXAM_VS_CURRENT_LAW_NOT_VALIDATED",
+      "evidence": "001677932.pdf p.25（2026年2月実施の設問）; 111C.json P111-306 explanation",
+      "suggestedFix": "試験時点（2026年2月）と現行（2026年11月）の適用法令・省令・告示・診療報酬を別欄で一次資料照合する。未照合の現行説明は断定しない。"
+    },
+    {
+      "id": "P111-307",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.25; 001677933(1).pdf p.2; 111C.json P111-307",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-308",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.27（見出し「実務」）; 111C.json subject=\"法規・制度・倫理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-308",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.27; 001677933(1).pdf p.2; 111C.json P111-308",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-309",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.27（見出し「法規・制度・倫理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「法規・制度・倫理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-309",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.27; 001677933(1).pdf p.2; 111C.json P111-309",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-309",
+      "severity": "UNVERIFIED",
+      "category": "EXAM_VS_CURRENT_LAW_NOT_VALIDATED",
+      "evidence": "001677932.pdf p.27（2026年2月実施の設問）; 111C.json P111-309 explanation",
+      "suggestedFix": "試験時点（2026年2月）と現行（2026年11月）の適用法令・省令・告示・診療報酬を別欄で一次資料照合する。未照合の現行説明は断定しない。"
+    },
+    {
+      "id": "P111-310",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.29; 001677933(1).pdf p.2; 111C.json P111-310",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-310",
+      "severity": "UNVERIFIED",
+      "category": "EXAM_VS_CURRENT_LAW_NOT_VALIDATED",
+      "evidence": "001677932.pdf p.29（2026年2月実施の設問）; 111C.json P111-310 explanation",
+      "suggestedFix": "試験時点（2026年2月）と現行（2026年11月）の適用法令・省令・告示・診療報酬を別欄で一次資料照合する。未照合の現行説明は断定しない。"
+    },
+    {
+      "id": "P111-311",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.29; 001677933(1).pdf p.2; 111C.json P111-311",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-312",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.31（見出し「実務」）; 111C.json subject=\"法規・制度・倫理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-312",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.31; 001677933(1).pdf p.2; 111C.json P111-312",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-313",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.31（見出し「法規・制度・倫理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「法規・制度・倫理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-313",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.31; 001677933(1).pdf p.2; 111C.json P111-313",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-313",
+      "severity": "UNVERIFIED",
+      "category": "EXAM_VS_CURRENT_LAW_NOT_VALIDATED",
+      "evidence": "001677932.pdf p.31（2026年2月実施の設問）; 111C.json P111-313 explanation",
+      "suggestedFix": "試験時点（2026年2月）と現行（2026年11月）の適用法令・省令・告示・診療報酬を別欄で一次資料照合する。未照合の現行説明は断定しない。"
+    },
+    {
+      "id": "P111-314",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.33（見出し「実務」）; 111C.json subject=\"法規・制度・倫理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-314",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.33; 001677933(1).pdf p.2; 111C.json P111-314",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-315",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.33（見出し「法規・制度・倫理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「法規・制度・倫理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-315",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.33; 001677933(1).pdf p.2; 111C.json P111-315",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-315",
+      "severity": "UNVERIFIED",
+      "category": "EXAM_VS_CURRENT_LAW_NOT_VALIDATED",
+      "evidence": "001677932.pdf p.33（2026年2月実施の設問）; 111C.json P111-315 explanation",
+      "suggestedFix": "試験時点（2026年2月）と現行（2026年11月）の適用法令・省令・告示・診療報酬を別欄で一次資料照合する。未照合の現行説明は断定しない。"
+    },
+    {
+      "id": "P111-316",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.35（見出し「実務」）; 111C.json subject=\"法規・制度・倫理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-316",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.35; 001677933(1).pdf p.2; 111C.json P111-316",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-317",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.35（見出し「法規・制度・倫理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「法規・制度・倫理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-317",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.35; 001677933(1).pdf p.2; 111C.json P111-317",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-317",
+      "severity": "UNVERIFIED",
+      "category": "EXAM_VS_CURRENT_LAW_NOT_VALIDATED",
+      "evidence": "001677932.pdf p.35（2026年2月実施の設問）; 111C.json P111-317 explanation",
+      "suggestedFix": "試験時点（2026年2月）と現行（2026年11月）の適用法令・省令・告示・診療報酬を別欄で一次資料照合する。未照合の現行説明は断定しない。"
+    },
+    {
+      "id": "P111-318",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.37（見出し「実務」）; 111C.json subject=\"法規・制度・倫理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-318",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.37; 001677933(1).pdf p.2; 111C.json P111-318",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-319",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.37（見出し「法規・制度・倫理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「法規・制度・倫理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-319",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.37; 001677933(1).pdf p.2; 111C.json P111-319",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-319",
+      "severity": "UNVERIFIED",
+      "category": "EXAM_VS_CURRENT_LAW_NOT_VALIDATED",
+      "evidence": "001677932.pdf p.37（2026年2月実施の設問）; 111C.json P111-319 explanation",
+      "suggestedFix": "試験時点（2026年2月）と現行（2026年11月）の適用法令・省令・告示・診療報酬を別欄で一次資料照合する。未照合の現行説明は断定しない。"
+    },
+    {
+      "id": "P111-320",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.39; 001677933(1).pdf p.2; 111C.json P111-320",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-320",
+      "severity": "UNVERIFIED",
+      "category": "EXAM_VS_CURRENT_LAW_NOT_VALIDATED",
+      "evidence": "001677932.pdf p.39（2026年2月実施の設問）; 111C.json P111-320 explanation",
+      "suggestedFix": "試験時点（2026年2月）と現行（2026年11月）の適用法令・省令・告示・診療報酬を別欄で一次資料照合する。未照合の現行説明は断定しない。"
+    },
+    {
+      "id": "P111-321",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.39; 001677933(1).pdf p.2; 111C.json P111-321",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-322",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.41（見出し「実務」）; 111C.json subject=\"法規・制度・倫理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-322",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.41; 001677933(1).pdf p.2; 111C.json P111-322",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-323",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.41（見出し「法規・制度・倫理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「法規・制度・倫理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-323",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.41; 001677933(1).pdf p.2; 111C.json P111-323",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-323",
+      "severity": "UNVERIFIED",
+      "category": "EXAM_VS_CURRENT_LAW_NOT_VALIDATED",
+      "evidence": "001677932.pdf p.41（2026年2月実施の設問）; 111C.json P111-323 explanation",
+      "suggestedFix": "試験時点（2026年2月）と現行（2026年11月）の適用法令・省令・告示・診療報酬を別欄で一次資料照合する。未照合の現行説明は断定しない。"
+    },
+    {
+      "id": "P111-324",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.43（見出し「実務」）; 111C.json subject=\"法規・制度・倫理\"",
+      "suggestedFix": "subjectを原本の「実務」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-324",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.43; 001677933(1).pdf p.2; 111C.json P111-324",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-325",
+      "severity": "HIGH",
+      "category": "SUBJECT_MISCLASSIFIED",
+      "evidence": "001677932.pdf p.43（見出し「法規・制度・倫理」）; 111C.json subject=\"実務\"",
+      "suggestedFix": "subjectを原本の「法規・制度・倫理」に修正し、科目別出題・履歴・成績の集計キーも再生成する。"
+    },
+    {
+      "id": "P111-325",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.43; 001677933(1).pdf p.2; 111C.json P111-325",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-325",
+      "severity": "HIGH",
+      "category": "CHOICE_CONTAMINATED",
+      "evidence": "001677932.pdf p.43 問325 選択肢5; 111C.json P111-325 choices[4]",
+      "suggestedFix": "選択肢5末尾に混入した「一般問題（薬学実践問題）【実務】」を削除する。問題・解説の境界抽出器を再点検する。"
+    },
+    {
+      "id": "P111-325",
+      "severity": "UNVERIFIED",
+      "category": "EXAM_VS_CURRENT_LAW_NOT_VALIDATED",
+      "evidence": "001677932.pdf p.43（2026年2月実施の設問）; 111C.json P111-325 explanation",
+      "suggestedFix": "試験時点（2026年2月）と現行（2026年11月）の適用法令・省令・告示・診療報酬を別欄で一次資料照合する。未照合の現行説明は断定しない。"
+    },
+    {
+      "id": "P111-325",
+      "severity": "MEDIUM",
+      "category": "REGULATORY_TIME_SCOPE",
+      "evidence": "001677932.pdf p.43 問325; 厚生労働省「令和8年度診療報酬改定について」 https://www.mhlw.go.jp/stf/newpage_67729.html",
+      "suggestedFix": "問325は試験時点の制度に基づく正答である旨を固定し、2026年4月以降の調剤報酬項目・施設基準との違いを別途記載する。"
+    },
+    {
+      "id": "P111-326",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.44; 001677933(1).pdf p.2; 111C.json P111-326",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-327",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.44; 001677933(1).pdf p.2; 111C.json P111-327",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-328",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.45; 001677933(1).pdf p.2; 111C.json P111-328",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-329",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.46; 001677933(1).pdf p.2; 111C.json P111-329",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-330",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.48; 001677933(1).pdf p.2; 111C.json P111-330",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-331",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.50; 001677933(1).pdf p.2; 111C.json P111-331",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-332",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.50; 001677933(1).pdf p.2; 111C.json P111-332",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-333",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.51; 001677933(1).pdf p.2; 111C.json P111-333",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-334",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.52; 001677933(1).pdf p.2; 111C.json P111-334",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-335",
+      "severity": "HIGH",
+      "category": "TABLE_HEADER_DESTRUCTURED",
+      "evidence": "001677932.pdf p.53 問335（輸液成分の4列表）; 111C.json P111-335 question/choices",
+      "suggestedFix": "4列の列見出し「生理食塩液／塩化カルシウム注射液／50 w/v%ブドウ糖注射液／注射用水」と各行の数値を一対一で対応付ける表構造で再収録する。"
+    },
+    {
+      "id": "P111-336",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.54; 001677933(1).pdf p.2; 111C.json P111-336",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-337",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.55; 001677933(1).pdf p.2; 111C.json P111-337",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-338",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.57; 001677933(1).pdf p.2; 111C.json P111-338",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-339",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.57; 001677933(1).pdf p.2; 111C.json P111-339",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-340",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.58; 001677933(1).pdf p.2; 111C.json P111-340",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-340",
+      "severity": "HIGH",
+      "category": "CHOICE_TABLE_LAYOUT_LOST",
+      "evidence": "001677932.pdf p.58 問340（成分と成人1回量の対照表）; 111C.json P111-340 choices",
+      "suggestedFix": "成分欄と成人1回量欄を明示的に分離した表で再収録する。選択肢番号ごとに原本と1列ずつ比較する。"
+    },
+    {
+      "id": "P111-341",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.60; 001677933(1).pdf p.2; 111C.json P111-341",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-341",
+      "severity": "MEDIUM",
+      "category": "EMPTY_IMAGE_ASSET",
+      "evidence": "111C-app-images.pdf p.17; 001677932.pdf p.60",
+      "suggestedFix": "空白（トンボのみ）の画像17を配信対象から除外し、対応する実図だけを保持する。画面表示で白紙が出ないことを確認する。"
+    },
+    {
+      "id": "P111-341",
+      "severity": "UNVERIFIED",
+      "category": "THIRD_PARTY_RIGHTS_HOLD",
+      "evidence": "001677932.pdf p.60（経口避妊剤の写真・表）; 111C-app-images.pdf pp.15-16; 厚労省利用規約 https://www.mhlw.go.jp/chosakuken/",
+      "suggestedFix": "写真・商品外観について出所と第三者著作権/商標権等の留保を個別確認する。政府資料公開を理由に無条件で再利用可能とは判定しない。"
+    },
+    {
+      "id": "P111-342",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.62; 001677933(1).pdf p.2; 111C.json P111-342",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-343",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.63; 001677933(1).pdf p.2; 111C.json P111-343",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-344",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.64; 001677933(1).pdf p.2; 111C.json P111-344",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    },
+    {
+      "id": "P111-345",
+      "severity": "HIGH",
+      "category": "EXPLANATION_INADEQUATE",
+      "evidence": "001677932.pdf p.64; 001677933(1).pdf p.2; 111C.json P111-345",
+      "suggestedFix": "正答番号の言い換えではなく、症例条件に基づく正答の根拠、誤答肢の理由、薬理・薬剤・法令の一次根拠と確認日を記載し、別担当で照合する。",
+      "notes": "現在の説明は正答肢の反復・一般的な判断手順に留まり、独立した論証として不足。"
+    }
+  ],
+  "uncompleted": [
+    "厚労省問題原本とアプリに実際に配信されている全画面との実機照合",
+    "第111回試験時（2026年2月）と2026年11月の法令・報酬の差分の全件逐条照合",
+    "第三者の写真・図表等の出所・許諾の個別証跡取得（とくに問341）",
+    "101件の解説の具体的論拠・全誤答肢の独立薬学/医学検証と再執筆",
+    "欠落した共有症例図・薬物動態グラフ・空白画像の配信アセット修正・再検証",
+    "テキスト完全一致が取れなかった軽微な表記差や行列配置を含む、出題UIでの完全再現確認"
+  ],
+  "externalSources": {
+    "mhlw_exam": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198929.html",
+    "mhlw_license": "https://www.mhlw.go.jp/chosakuken/",
+    "mhlw_2026_revision": "https://www.mhlw.go.jp/stf/newpage_67729.html",
+    "mhlw_hardness_formula": "https://www.mhlw.go.jp/web/t_doc?dataId=79aa5142&dataType=0&pageNo=2",
+    "pmda_risedronate_guide": "https://www.info.pmda.go.jp/downfiles/guide/ph/400186_3999019F2146_1_00G.pdf",
+    "environment_wbgt": "https://www.wbgt.env.go.jp/sp/doc_observation.php"
+  },
+  "limitations": "独立AI監査であり、専門家の教材監修、著作権者許諾、実機・実利用者による判読性テストの代替ではない。FAIL以外の未検証観点も含み、PASSはあくまで添付資料ベースのAI監査による。"
+}

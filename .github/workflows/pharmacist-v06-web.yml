@@ -19,7 +19,7 @@ on:
       - '.github/workflows/pharmacist-v06-web.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate:
@@ -36,6 +36,15 @@ jobs:
           node --check pharmacist-manabi-sprint/app-v06.js
           node --check pharmacist-manabi-sprint/record-fix-v061.js
           node --check pharmacist-manabi-sprint/sw.js
+      - name: Rebuild current bank before validation
+        run: |
+          python3 pharmacist-manabi-sprint/tools/assemble_product_bank.py
+          python3 pharmacist-manabi-sprint/tools/normalize_product_cases.py
+          python3 pharmacist-manabi-sprint/tools/build_web_bundle.py
+          python3 -c "from pathlib import Path; Path('pharmacist-manabi-sprint/content/product/final-audit-v2.json').unlink(missing_ok=True)"
+      - name: Generate current content audit report
+        continue-on-error: true
+        run: python3 pharmacist-manabi-sprint/tools/final_product_audit_v2.py
       - name: Static product/web audit
         run: python3 pharmacist-manabi-sprint/tools/validate_v06_web.py
       - name: Install Playwright Chromium
@@ -72,17 +81,26 @@ jobs:
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
       - name: Save validation reports
         if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add pharmacist-manabi-sprint/content/product/web-static-audit.json pharmacist-manabi-sprint/content/product/web-smoke.log pharmacist-manabi-sprint/content/product/web-smoke.exit pharmacist-manabi-sprint/content/product/record-smoke.log pharmacist-manabi-sprint/content/product/record-smoke.exit 2>/dev/null || true
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'pharmacist: v0.6.1 record validation result [skip ci]'
-          git pull --rebase origin main
-          git push
+        uses: actions/upload-artifact@v4
+        with:
+          name: pharmacist-web-static-${{ github.run_id }}
+          path: |
+            pharmacist-manabi-sprint/content/product/final-audit-v2.json
+            pharmacist-manabi-sprint/content/product/web-static-audit.json
+          retention-days: 14
+      - name: Save executed browser diagnostics
+        if: always() && steps.smoke.outputs.exit_code != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: pharmacist-web-smoke-${{ github.run_id }}
+          path: |
+            pharmacist-manabi-sprint/content/product/web-smoke.log
+            pharmacist-manabi-sprint/content/product/web-smoke.exit
+            pharmacist-manabi-sprint/content/product/record-smoke.log
+            pharmacist-manabi-sprint/content/product/record-smoke.exit
+          retention-days: 14
       - name: Enforce browser smoke gate
         run: test "${{ steps.smoke.outputs.exit_code }}" = '0'
       - name: Enforce record regression gate
         run: test "${{ steps.record_smoke.outputs.exit_code }}" = '0'
+

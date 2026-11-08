@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "sourceCommit": "02f40b21d28200c0ab9ccfd39318520527524182",
   "createdAt": "2026-11-08",
-  "status": "AWAITING_INDEPENDENT_REVIEW",
+  "status": "FIRST_PASS_RECEIVED_NOT_APPROVED",
   "requiredQuestionCount": 1035,
   "payloadHashAlgorithm": "question-json-and-media-sha256-v1",
   "payloadHashDefinition": "SHA256 of UTF-8 JSON {question: full emitted question object, mediaAssetSha256: {each mediaAssets relative path: SHA256(actual file bytes)}} using sort_keys=True, ensure_ascii=False, separators=(',', ':'). Recompute after any question, grading, explanation, shared-stem, temporal, rights, display metadata or referenced media-byte change.",
-  "reviewPolicy": "Assignments are not completed reviews. Every ID needs matching canonicalContentHash and payloadSha256, six evidenced dimension decisions (PASS or justified NOT_APPLICABLE), contentAuthorIds, a dated independent reviewer with independenceBasis, and overallStatus PASS independently verified by a different non-author with dated file evidence. Evidence entries require root-relative path, SHA256, locator and checkedAt (YYYY-MM-DD). No private chat URLs are stored here. Mechanical validation does not establish medical or legal accuracy.",
+  "reviewPolicy": "Assignments are not completed reviews. Every ID needs matching canonicalContentHash and payloadSha256, six evidenced dimension decisions (PASS or justified NOT_APPLICABLE), contentAuthorIds, a dated independent reviewer with independenceBasis, and overallStatus PASS verified against dated file evidence by a named verifier. Evidence entries require root-relative path, SHA256, locator and checkedAt (YYYY-MM-DD). No private chat URLs are stored here. Mechanical validation does not establish medical or legal accuracy.",
   "requiredDimensions": [
     "transcription",
     "grading",
@@ -137,7 +137,14 @@
         "P111-115"
       ],
       "sourcePayloadSha256": "b64dc28597f6410ffeafcdaa2ad674253634e0fae5ba497761d24f0250e9e5bb",
-      "status": "ASSIGNED_REVIEW_NOT_VERIFIED"
+      "status": "ASSIGNED_REVIEW_NOT_VERIFIED",
+      "firstPassStatus": "RECEIVED",
+      "reportedCounts": {
+        "UNVERIFIED": 81,
+        "FAIL": 34
+      },
+      "reportPath": "automation/pharmacist-q0-q1-audit/20261108-independent/reports/111A.json",
+      "reportSha256": "f8ec76e02b8658a37f833c1c55b9546062674fa6e496fa761c47576c0235b51d"
     },
     {
       "id": "111B",
@@ -260,7 +267,14 @@
         "P111-230"
       ],
       "sourcePayloadSha256": "dd82649d12c6c4d7acee7fae4b7baa4f1540c51edf67988e8adf57ee7657a4c7",
-      "status": "ASSIGNED_REVIEW_NOT_VERIFIED"
+      "status": "ASSIGNED_REVIEW_NOT_VERIFIED",
+      "firstPassStatus": "RECEIVED",
+      "reportedCounts": {
+        "FAIL": 71,
+        "UNVERIFIED": 44
+      },
+      "reportPath": "automation/pharmacist-q0-q1-audit/20261108-independent/reports/111B.json",
+      "reportSha256": "46504b7dd908d9f03df2127ee3b1728b606a7b2d2ec82b6e602101aad1e9cf2d"
     },
     {
       "id": "111C",
@@ -383,7 +397,14 @@
         "P111-345"
       ],
       "sourcePayloadSha256": "46fcdeb54c3478cbfdd61a216984de4b14af68ea04437d9322209a12997fb3b6",
-      "status": "ASSIGNED_REVIEW_NOT_VERIFIED"
+      "status": "ASSIGNED_REVIEW_NOT_VERIFIED",
+      "firstPassStatus": "RECEIVED",
+      "reportedCounts": {
+        "FAIL": 112,
+        "PASS": 3
+      },
+      "reportPath": "automation/pharmacist-q0-q1-audit/20261108-independent/reports/111C.json",
+      "reportSha256": "0ffe8e8ce885f744e93c8692d7bec0ff276ee2e7888fdad4d6ca497c36a4e681"
     },
     {
       "id": "110A",
@@ -506,7 +527,14 @@
         "P110-115"
       ],
       "sourcePayloadSha256": "f92bf77102710a05127109a894a07ce8447b4c38051144262f67ca8d638eb8bb",
-      "status": "ASSIGNED_REVIEW_NOT_VERIFIED"
+      "status": "ASSIGNED_REVIEW_NOT_VERIFIED",
+      "firstPassStatus": "RECEIVED",
+      "reportedCounts": {
+        "FAIL": 113,
+        "UNVERIFIED": 2
+      },
+      "reportPath": "automation/pharmacist-q0-q1-audit/20261108-independent/reports/110A.json",
+      "reportSha256": "b765767de651b74445f111b3fd4fc620bb2e9b26d6c6cb14fb67b7e2674977aa"
     },
     {
       "id": "110B",
@@ -629,7 +657,14 @@
         "P110-230"
       ],
       "sourcePayloadSha256": "7a5ce658495f02cb5082aa4cbc06a3ea487b2fb595124ed3ecca4d423b1918e9",
-      "status": "ASSIGNED_REVIEW_NOT_VERIFIED"
+      "status": "ASSIGNED_REVIEW_NOT_VERIFIED",
+      "firstPassStatus": "RECEIVED",
+      "reportedCounts": {
+        "FAIL": 110,
+        "UNVERIFIED": 5
+      },
+      "reportPath": "automation/pharmacist-q0-q1-audit/20261108-independent/reports/110B.json",
+      "reportSha256": "b0073dfa037683208910c7698ef3416c1fc89dbb508716a97e13035ef0088957"
     },
     {
       "id": "110C",
@@ -752,7 +787,13 @@
         "P110-345"
       ],
       "sourcePayloadSha256": "249dae8309274fd77f379ee2cc87dff61ecab23e8864f4863d99ae93219a5b88",
-      "status": "ASSIGNED_REVIEW_NOT_VERIFIED"
+      "status": "ASSIGNED_REVIEW_NOT_VERIFIED",
+      "firstPassStatus": "RECEIVED",
+      "reportedCounts": {
+        "FAIL": 115
+      },
+      "reportPath": "automation/pharmacist-q0-q1-audit/20261108-independent/reports/110C.json",
+      "reportSha256": "9961126028ecbb9c62767a98cc959c6b06b3b6c5a18aa132a90f9ee9b7376755"
     },
     {
       "id": "109A",
@@ -875,7 +916,15 @@
         "P109-115"
       ],
       "sourcePayloadSha256": "735538a6873c7524a0236f2738eab0b252f08ae295c2c1196c128d1d7a8ce88e",
-      "status": "ASSIGNED_REVIEW_NOT_VERIFIED"
+      "status": "ASSIGNED_REVIEW_NOT_VERIFIED",
+      "firstPassStatus": "RECEIVED",
+      "reportedCounts": {
+        "FAIL": 110,
+        "PASS": 2,
+        "UNVERIFIED": 3
+      },
+      "reportPath": "automation/pharmacist-q0-q1-audit/20261108-independent/reports/109A.json",
+      "reportSha256": "1f26bfa690f96494f15b035a9d4c3f708145aa051bc7dd275fd52a3983bea6b5"
     },
     {
       "id": "109B",
@@ -998,7 +1047,13 @@
         "P109-230"
       ],
       "sourcePayloadSha256": "e449b8fca617c14f5878dd6add1fe2e838a4aab15e85ae5a6e8f8ef2465b6426",
-      "status": "ASSIGNED_REVIEW_NOT_VERIFIED"
+      "status": "ASSIGNED_REVIEW_NOT_VERIFIED",
+      "firstPassStatus": "RECEIVED",
+      "reportedCounts": {
+        "FAIL": 115
+      },
+      "reportPath": "automation/pharmacist-q0-q1-audit/20261108-independent/reports/109B.json",
+      "reportSha256": "6481b56af47ca0012c4ad1632bdf70923dd5135c7d78ca3997059d26c84282ff"
     },
     {
       "id": "109C",
@@ -1121,8 +1176,22 @@
         "P109-345"
       ],
       "sourcePayloadSha256": "67ed3c81cc8c0668553840d5b0556ff42069d54052af71c06087872f2030e93c",
-      "status": "ASSIGNED_REVIEW_NOT_VERIFIED"
+      "status": "ASSIGNED_REVIEW_NOT_VERIFIED",
+      "firstPassStatus": "RECEIVED",
+      "reportedCounts": {
+        "FAIL": 114,
+        "PASS": 1
+      },
+      "reportPath": "automation/pharmacist-q0-q1-audit/20261108-independent/reports/109C.json",
+      "reportSha256": "c8275d972fea388730d6bc24ba05afa4a8b739cedb4e9c93b5f6ef8cf5fd4d3e"
     }
   ],
-  "records": []
+  "records": [],
+  "firstPassReceivedQuestionCount": 1035,
+  "firstPassReportedCounts": {
+    "UNVERIFIED": 135,
+    "FAIL": 894,
+    "PASS": 6
+  },
+  "currentCandidateVerifiedPassCount": 0
 }

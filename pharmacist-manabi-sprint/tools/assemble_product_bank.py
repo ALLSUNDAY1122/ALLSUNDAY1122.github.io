@@ -24,7 +24,8 @@ def load_overlays():
     ranked.sort(key=lambda x:x[0])
     out={}; provenance={}
     for rank,name,x in ranked:
-        qid=x['id']; out[qid]={**out.get(qid,{}),**x}; provenance[qid]=name
+        qid=x['id']; out[qid]={**out.get(qid,{}),**x}
+        if x.get('explanation'): provenance[qid]=name
     return out,provenance
 
 
@@ -75,6 +76,10 @@ def main():
         ov=overlays.get(q['id'],{})
         if ov.get('question_override'):q['question']=ov['question_override']
         if ov.get('choices_override'):q['choices']=ov['choices_override']
+        if ov.get('domain_override'):
+            if ov['domain_override'] not in {'物理・化学・生物','衛生','薬理','薬剤','病態・薬物治療','法規・制度・倫理','実務'}:
+                raise SystemExit(f'FAIL: invalid official domain override for {q["id"]}')
+            q['domain']=ov['domain_override']
         if ov.get('legal_source_url'):
             if not str(ov['legal_source_url']).startswith('https://'):
                 raise SystemExit(f'FAIL: legal source must use HTTPS for {q["id"]}')

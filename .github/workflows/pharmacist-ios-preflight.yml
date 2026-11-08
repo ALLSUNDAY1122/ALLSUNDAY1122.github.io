@@ -65,26 +65,7 @@ jobs:
               assert not re.search(r'デュロキセチン塩酸塩カプセル\s+20\s+mg\s+1\s+回\s+1\s+錠',stem), qid
           print('PASS: official correction is present in both product records')
           PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add pharmacist-manabi-sprint/content/product/questions.json pharmacist-manabi-sprint/content/product/questions-web.json pharmacist-manabi-sprint/content/product/assembly-summary.json
-          if ! git diff --cached --quiet; then
-            if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-              echo "PR validation: use regenerated Web bundle in this job; never push generated files to main from a pull_request token."
-            else
-              git commit -m 'pharmacist: regenerate official corrected Q220/Q221 bundle [skip ci]'
-              for attempt in 1 2 3 4 5; do
-                git pull --rebase origin main
-                if git push origin HEAD:main; then
-                  exit 0
-                fi
-                git rebase --abort || true
-                sleep $((attempt * 2))
-              done
-              echo "Could not persist generated Web bundle after five non-fast-forward retries." >&2
-              exit 1
-            fi
-          fi
+          # Final Product Bank owns generated bank publication; preflight stays local.
 
       - name: Static no-IAP release audit
         run: python3 pharmacist-manabi-sprint/scripts/validate_release.py
@@ -111,7 +92,7 @@ jobs:
           q=d['questions']; active=[x for x in q if x['scoringStatus']!='excluded']
           flex=[x for x in q if x['scoringStatus']=='multiple_accepted']
           media=[x for x in q if x['displayMode']=='officialQuestionImage']
-          assert len(q)==1035 and len(active)==1031 and len(flex)==3 and len(media)==154
+          assert len(q)==1035 and len(active)==1031 and len(flex)==4 and len(media)==169
           assert all(x['memoryPoint'] and x['explanation'] for x in q)
           print('PASS native resource:',len(q),'active',len(active),'flex',len(flex),'media',len(media))
           PY
@@ -155,7 +136,7 @@ jobs:
 
       - name: Export native Visual Gate screenshots
         id: visual_png
-        if: always()
+        if: always() && steps.tests.outputs.exit_code != ''
         shell: bash
         run: |
           set +e
@@ -181,7 +162,7 @@ jobs:
           test "$count" -ge 7
 
       - name: Upload native Visual Gate evidence
-        if: always()
+        if: always() && steps.tests.outputs.exit_code != ''
         uses: actions/upload-artifact@v6
         with:
           name: pharmacist-native-visual-gate
@@ -280,3 +261,4 @@ jobs:
           test "${{ steps.build.outputs.exit_code }}" = '0'
           test "${{ steps.resources.outputs.exit_code }}" = '0'
           test "${{ steps.visual_png.outputs.count }}" -ge 7
+

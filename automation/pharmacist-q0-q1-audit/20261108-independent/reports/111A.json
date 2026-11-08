@@ -1,0 +1,2458 @@
+{
+  "title": "第111回薬剤師国家試験 111A 独立AI監査",
+  "date_jst": "2026-11-08",
+  "reviewType": "Independent AI document/figure/data comparison; not human/real-device approval",
+  "sourceFiles": {
+    "appJSON": "111A.json",
+    "officialQuestions": [
+      "001677927.pdf",
+      "001677928.pdf"
+    ],
+    "officialAnswer": "001677933.pdf",
+    "errata": "001677936.pdf",
+    "appAssetPackage": "111A-app-images.pdf"
+  },
+  "scope": {
+    "questionIDs": "P111-001..P111-115",
+    "total": 115,
+    "officialQuestionPDFPages": [
+      38,
+      44
+    ],
+    "answerPDFPages": 2,
+    "errataPDFPages": 1,
+    "assetPDFPages": 39,
+    "imageSourceQuestions": 25,
+    "blankAssetPdfPages": [
+      5,
+      8,
+      11,
+      17,
+      19,
+      23,
+      26,
+      28,
+      30,
+      32,
+      34,
+      36,
+      39
+    ],
+    "pageCountNote": "Asset package contains 13 essentially empty rendered pages, all referenced by one of the 25 image-source questions"
+  },
+  "methods": [
+    "Read and validated all 115 JSON objects, ids, arrays, answers, scoring flags and image-page associations",
+    "Read all attached official answer rows 1–115 as PDF extracted text and checked answer arrays",
+    "Read official errata and compared Q92 exclusion/corrections",
+    "Extracted all original question PDF pages, normalized wording and compared question/choice text by program",
+    "Rendered PDF pages and independently visually inspected original diagrams, missing figures and contact sheets of all 39 asset pages; machine pixel-density checks flagged 13 blank pages",
+    "Examined all 115 explanations in a textual survey, but did not externally substantiate every scientific/medical claim",
+    "Checked MHLW website terms PDL1.0 and third-party rights reservation; did not establish per-figure author/license",
+    "No app installation, actual mobile display test, legal review, or human pharmaceutical specialist review"
+  ],
+  "summary": {
+    "PASS": 0,
+    "FAIL": 34,
+    "UNVERIFIED": 81,
+    "officialAnswerMismatches": 0,
+    "excludedOfficialAndJSON": [
+      92
+    ],
+    "appAssetBlankPages": 13,
+    "choiceArraysZero": 15,
+    "specialNote": "A zero-length choices array can be appropriate when all options are inside a verified image; Q108 non-empty array with four NMR table fragments and official answer 5 is a defect."
+  },
+  "records": [
+    {
+      "id": "P111-001",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 2,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-002",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 2,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-003",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 3,
+      "assetPDFPages": [
+        1
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-004",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 3,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-005",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 4,
+      "assetPDFPages": [
+        2
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-006",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 4,
+      "assetPDFPages": [
+        3
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-007",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 4,
+      "assetPDFPages": [
+        4,
+        5
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-008",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 5,
+      "assetPDFPages": [
+        6
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-009",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 5,
+      "assetPDFPages": [
+        7,
+        8
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-010",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 6,
+      "assetPDFPages": [
+        9
+      ],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-011",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 6,
+      "assetPDFPages": [
+        10,
+        11
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-012",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 7,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-013",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 7,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-014",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 7,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-015",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 8,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-016",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 9,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-017",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 9,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-018",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 10,
+      "assetPDFPages": [
+        12
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-019",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 10,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-020",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 11,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-021",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 11,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-022",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 11,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-023",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 12,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-024",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 12,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-025",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 12,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-026",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 13,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-027",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 13,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-028",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 13,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-029",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 14,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-030",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 14,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-031",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 14,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-032",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 15,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-033",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 15,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-034",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 15,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-035",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 16,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-036",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 16,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-037",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 16,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-038",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 17,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-039",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 17,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-040",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 17,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-041",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 18,
+      "assetPDFPages": [
+        13
+      ],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-042",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 18,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-043",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 19,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-044",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 19,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-045",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 19,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-046",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 20,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-047",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 20,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-048",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 21,
+      "assetPDFPages": [
+        14
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-049",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 21,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-050",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 22,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-051",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 22,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-052",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 22,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-053",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 23,
+      "assetPDFPages": [
+        15
+      ],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-054",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 23,
+      "assetPDFPages": [
+        16,
+        17
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-055",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 24,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-056",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 25,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-057",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 25,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-058",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 25,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-059",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 26,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-060",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 26,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-061",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 26,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-062",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 27,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-063",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 27,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-064",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 27,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-065",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 28,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-066",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 28,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-067",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 28,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-068",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 29,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-069",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 29,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-070",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 29,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-071",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 30,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-072",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 30,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-073",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 30,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-074",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 31,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-075",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 31,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-076",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 31,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-077",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 32,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-078",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 32,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-079",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 33,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-080",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 33,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-081",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 34,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-082",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 34,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-083",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 34,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-084",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 35,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-085",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 35,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-086",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 36,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-087",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 37,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-088",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 37,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-089",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        3
+      ],
+      "jsonAnswer": [
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 38,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-090",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677927.pdf",
+      "sourcePage": 38,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-091",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認",
+      "officialAnswer": [
+        3,
+        4
+      ],
+      "jsonAnswer": [
+        3,
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 2,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-092",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認",
+      "officialAnswer": [],
+      "jsonAnswer": [],
+      "scoring": "excluded",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 2,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-093",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        4,
+        5
+      ],
+      "jsonAnswer": [
+        4,
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 3,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-094",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1,
+        3
+      ],
+      "jsonAnswer": [
+        1,
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 3,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-095",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        2,
+        5
+      ],
+      "jsonAnswer": [
+        2,
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 3,
+      "assetPDFPages": [
+        18,
+        19
+      ],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-096",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        1,
+        2
+      ],
+      "jsonAnswer": [
+        1,
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 4,
+      "assetPDFPages": [
+        20,
+        21
+      ],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-097",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 5,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-098",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認",
+      "officialAnswer": [
+        1,
+        5
+      ],
+      "jsonAnswer": [
+        1,
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 6,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-099",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        4,
+        5
+      ],
+      "jsonAnswer": [
+        4,
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 7,
+      "assetPDFPages": [
+        22,
+        23
+      ],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-100",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        2,
+        3
+      ],
+      "jsonAnswer": [
+        2,
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 8,
+      "assetPDFPages": [
+        24
+      ],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-101",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 8,
+      "assetPDFPages": [
+        25,
+        26
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-102",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 9,
+      "assetPDFPages": [
+        27,
+        28
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-103",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        2
+      ],
+      "jsonAnswer": [
+        2
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 10,
+      "assetPDFPages": [
+        29,
+        30
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-104",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        2,
+        4
+      ],
+      "jsonAnswer": [
+        2,
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 11,
+      "assetPDFPages": [
+        31,
+        32
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-105",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        4,
+        5
+      ],
+      "jsonAnswer": [
+        4,
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 12,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-106",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        4
+      ],
+      "jsonAnswer": [
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 13,
+      "assetPDFPages": [
+        33,
+        34
+      ],
+      "choiceCount": 0
+    },
+    {
+      "id": "P111-107",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認",
+      "officialAnswer": [
+        1,
+        4
+      ],
+      "jsonAnswer": [
+        1,
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 14,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-108",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        5
+      ],
+      "jsonAnswer": [
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 16,
+      "assetPDFPages": [
+        35,
+        36
+      ],
+      "choiceCount": 4
+    },
+    {
+      "id": "P111-109",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        2,
+        5
+      ],
+      "jsonAnswer": [
+        2,
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 17,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-110",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        1
+      ],
+      "jsonAnswer": [
+        1
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 18,
+      "assetPDFPages": [
+        37
+      ],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-111",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1,
+        3
+      ],
+      "jsonAnswer": [
+        1,
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 18,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-112",
+      "status": "UNVERIFIED",
+      "reason": "解説全肢の学術的根拠まで独立検証未完了",
+      "officialAnswer": [
+        1,
+        4
+      ],
+      "jsonAnswer": [
+        1,
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 19,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-113",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／2026-11-08時点の現行法令・通知等との網羅的照合未完了",
+      "officialAnswer": [
+        1,
+        3
+      ],
+      "jsonAnswer": [
+        1,
+        3
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 19,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-114",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認",
+      "officialAnswer": [
+        1,
+        5
+      ],
+      "jsonAnswer": [
+        1,
+        5
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 20,
+      "assetPDFPages": [],
+      "choiceCount": 5
+    },
+    {
+      "id": "P111-115",
+      "status": "FAIL",
+      "reason": "原本差分または説明不足を具体的に確認／図画像の権利・実機可読性未確認",
+      "officialAnswer": [
+        1,
+        4
+      ],
+      "jsonAnswer": [
+        1,
+        4
+      ],
+      "scoring": "normal",
+      "sourcePDF": "001677928.pdf",
+      "sourcePage": 21,
+      "assetPDFPages": [
+        38,
+        39
+      ],
+      "choiceCount": 5
+    }
+  ],
+  "findings": [
+    {
+      "id": "P111-002",
+      "severity": "HIGH",
+      "category": "CHOICES_FORMULAE",
+      "evidence": "001677927.pdf p.2",
+      "finding": "選択肢1〜4の式が原本と別物。原本1はΣcᵢzᵢ、2はΣcᵢ²zᵢ、3はΣcᵢzᵢ²、4は(1/2)Σcᵢ²zᵢ。JSONは省略・置換した式。",
+      "suggestedFix": "原本の5式を指数・下付・Σを保持して再収録し、視覚照合する。"
+    },
+    {
+      "id": "P111-003",
+      "severity": "HIGH",
+      "category": "STEM_SYMBOLS",
+      "evidence": "001677927.pdf p.3; 111A-app-images.pdf p.1",
+      "finding": "設問中の速度定数k、ln k、絶対温度T、1/Tの変数が欠損。画像に正しい原本があってもJSON設問は破損。",
+      "suggestedFix": "JSON設問を記号込み原文に復元し二重表示の矛盾を除く。"
+    },
+    {
+      "id": "P111-008",
+      "severity": "HIGH",
+      "category": "STEM_SYMBOLS",
+      "evidence": "001677927.pdf p.5; 111A-app-images.pdf p.6",
+      "finding": "「E配置」のEがJSON設問から消失。",
+      "suggestedFix": "E配置の指定を原文どおり修復。"
+    },
+    {
+      "id": "P111-010",
+      "severity": "MEDIUM",
+      "category": "EXPLANATION_INSUFFICIENT",
+      "evidence": "001677927.pdf p.6; 111A-app-images.pdf p.9",
+      "finding": "解説が公式正答「フラノクマリン」の再掲中心で、図のどの環の融合によりフラノクマリンと判断するかを説明しない。",
+      "suggestedFix": "構造上のフラン環とクマリン骨格を特定し誤答肢と対比した説明に修正。"
+    },
+    {
+      "id": "P111-041",
+      "severity": "MEDIUM",
+      "category": "EXPLANATION_INSUFFICIENT",
+      "evidence": "001677927.pdf p.18; 111A-app-images.pdf p.13",
+      "finding": "LAT1を選ぶ根拠が構造式から説明されず「官能基を確認」等の雛形文。",
+      "suggestedFix": "対象薬物を同定しLAT1輸送との関係を一次資料で説明。"
+    },
+    {
+      "id": "P111-045",
+      "severity": "HIGH",
+      "category": "STEM_CHOICES_SYMBOLS",
+      "evidence": "001677927.pdf p.19",
+      "finding": "イヌリン血漿Cₚ・原尿C原尿・尿C尿のC識別子が設問と選択肢の双方で欠落。",
+      "suggestedFix": "Cₚ、C原尿、C尿の3記号を正確に復元し原本照合。"
+    },
+    {
+      "id": "P111-061",
+      "severity": "HIGH",
+      "category": "STEM_OMISSION",
+      "evidence": "001677927.pdf p.26",
+      "finding": "原本の学名Clostridioides difficileがJSON中「（ ）」へ欠落。",
+      "suggestedFix": "学名を原本の綴りで復元し学名・学術用語を壊さない整形へ変更。"
+    },
+    {
+      "id": "P111-070",
+      "severity": "CRITICAL",
+      "category": "CHOICES_REWRITTEN",
+      "evidence": "001677927.pdf p.29",
+      "finding": "選択肢1〜3が改変。原本は1 BRCA1/2、2 EGFR、3 KRAS/NRASだがJSONは1 EGFR、2 ALK、3 BRAF。正答5の一致だけでは原問再現にならない。",
+      "suggestedFix": "5選択肢を原本どおり復元。改変を続けるなら「独自改題」と明示し公式過去問扱いしない。"
+    },
+    {
+      "id": "P111-072",
+      "severity": "MEDIUM",
+      "category": "STEM_BLANK_MARKER",
+      "evidence": "001677927.pdf p.30",
+      "finding": "原本の穴埋め箇所を示す空欄がJSONでは単なる空白で、挿入位置が判読しづらい。",
+      "suggestedFix": "原本の空欄を視認可能な〔　〕等で明示する。"
+    },
+    {
+      "id": "P111-074",
+      "severity": "MEDIUM",
+      "category": "STEM_BLANK_MARKER",
+      "evidence": "001677927.pdf p.31",
+      "finding": "医療法条文の穴埋め位置がJSONでは空白のみとなり視認性が低い。",
+      "suggestedFix": "条文中の空欄位置を明示し、条文を試験時点版として示す。"
+    },
+    {
+      "id": "P111-078",
+      "severity": "CRITICAL",
+      "category": "FIGURE_MISSING_AND_CHOICES_REWRITTEN",
+      "evidence": "001677927.pdf p.32; 111A.json assetPdfPages=[]",
+      "finding": "原本の製造業者→卸→薬局→患者の経路図A〜Eが欠落。原本の選択肢はA〜Eで、JSONは独自の文章5肢に変更。",
+      "suggestedFix": "経路図とA〜Eの選択肢を復元するか、改題教材として原本と分離する。"
+    },
+    {
+      "id": "P111-079",
+      "severity": "CRITICAL",
+      "category": "TABLE_MISSING",
+      "evidence": "001677927.pdf p.33; 111A.json assetPdfPages=[]",
+      "finding": "原本の医療費財源表（総数100%、公費A、保険料B、その他C）がJSONにもassetPdfPagesにもない。",
+      "suggestedFix": "財源表とAを復元し、2018〜2021年度に限定した資料と明示。"
+    },
+    {
+      "id": "P111-086",
+      "severity": "CRITICAL",
+      "category": "FIGURE_MISSING_AND_CHOICES_REWRITTEN",
+      "evidence": "001677927.pdf p.36; 111A.json assetPdfPages=[]",
+      "finding": "原本は人体図上の①〜⑤の位置を選ぶ問題。図が欠落し、選択肢が位置説明の別問へ改変。",
+      "suggestedFix": "人体図と①〜⑤の選択肢を復元。"
+    },
+    {
+      "id": "P111-091",
+      "severity": "HIGH",
+      "category": "STEM_CHOICES_REWRITTEN",
+      "evidence": "001677928.pdf p.2",
+      "finding": "状態方程式を短縮し、選択肢の原文を言い換えた。特に肢5の「分子間相互作用」が「分子間引力だけ」に変更。",
+      "suggestedFix": "式・5肢・単位注釈を公式原本どおり再転記。"
+    },
+    {
+      "id": "P111-092",
+      "severity": "HIGH",
+      "category": "ERRATUM_NOT_APPLIED",
+      "evidence": "001677928.pdf p.2; 001677936.pdf p.1; 001677933.pdf p.1",
+      "finding": "採点scoring=excludedおよびanswer=[]は公式の「解なし」と一致。一方、JSONの設問には正誤表の訂正（ΔfH°標準生成→ΔrH°標準反応）が反映されず、化学式の(g)/(s)とNH3表記も崩れている。",
+      "suggestedFix": "除外状態を維持し、参考表示する場合は訂正後の式を再収録して「解なし・採点対象外」を明記。"
+    },
+    {
+      "id": "P111-095",
+      "severity": "MEDIUM",
+      "category": "EXPLANATION_INSUFFICIENT",
+      "evidence": "001677928.pdf p.3; 111A-app-images.pdf p.18",
+      "finding": "解説は公式正答2・5の再掲が中心で、赤外とラマンの差や波数換算・指紋領域等の判断根拠が示されない。",
+      "suggestedFix": "4000cm⁻¹→2.5μmの算出、IRの双極子変化とラマンの分極率変化等を根拠つき説明。"
+    },
+    {
+      "id": "P111-096",
+      "severity": "CRITICAL",
+      "category": "SHARED_CASE_SYMBOLS",
+      "evidence": "001677928.pdf p.4; 001677928.pdf pp.4-5; 111A-app-images.pdf pp.20-21",
+      "finding": "問96-97共有本文の滴定量A・Bや(A−B)がJSONでは無記号になり、測定条件を再現できない。",
+      "suggestedFix": "共有症例をstems等に明示的保持し、A/Bおよび構造式a/bを式・図とともに正確に復元する。"
+    },
+    {
+      "id": "P111-097",
+      "severity": "CRITICAL",
+      "category": "SHARED_CASE_REWRITTEN",
+      "evidence": "001677928.pdf p.5; 001677928.pdf pp.4-5",
+      "finding": "原本は前問の滴定条件を使い「B=0.25mL」。JSONは独立設問に変え「0.500mLを消費」と数値と関係を変更。たまたま同じ正答2でも原本と異なる。",
+      "suggestedFix": "問96との共有定量法を復元し、B=0.25mL・0.5mol/L硫酸（f=1.000）を原文どおり記載。"
+    },
+    {
+      "id": "P111-098",
+      "severity": "CRITICAL",
+      "category": "STEM_CHOICES_REWRITTEN",
+      "evidence": "001677928.pdf p.6",
+      "finding": "逐次錯形成の原本平衡式・K1〜Kn・βnの定義条件を省略。選択肢2などの式が文に作り変えられている。",
+      "suggestedFix": "平衡反応式と5肢の式を復元して解説に平衡定数定義を入れる。"
+    },
+    {
+      "id": "P111-099",
+      "severity": "HIGH",
+      "category": "CHOICE_SYMBOLS_AND_EXPLANATION",
+      "evidence": "001677928.pdf p.7; 111A-app-images.pdf pp.22-23",
+      "finding": "選択肢1の化学試薬名中のN,N′等の記号が欠落。解説も公式正答の再掲中心で確認反応原理の説明がない。",
+      "suggestedFix": "試薬の官能基識別子を戻し、各確認反応の化学的理由を説明。"
+    },
+    {
+      "id": "P111-100",
+      "severity": "HIGH",
+      "category": "CHOICE_SYMBOLS_AND_EXPLANATION",
+      "evidence": "001677928.pdf p.8; 111A-app-images.pdf p.24",
+      "finding": "選択肢3「m/z値」がJSONで「/ 値」になり、質量電荷比の分子が欠落。解説も正答の復唱でTOF-MSの関係式に触れていない。",
+      "suggestedFix": "m/zを復元し飛行時間と質量電荷比の関係を説明。"
+    },
+    {
+      "id": "P111-101",
+      "severity": "MEDIUM",
+      "category": "EXPLANATION_INSUFFICIENT",
+      "evidence": "001677928.pdf p.8; 111A-app-images.pdf p.25",
+      "finding": "インドール臭素化のカチオン中間体の位置・共鳴安定化を示す説明がなく、画像を見よという雛形文のみ。",
+      "suggestedFix": "構造選択肢ごとに正電荷位置と芳香族求電子置換機構を比較する。"
+    },
+    {
+      "id": "P111-102",
+      "severity": "MEDIUM",
+      "category": "EXPLANATION_INSUFFICIENT",
+      "evidence": "001677928.pdf p.9; 111A-app-images.pdf p.27",
+      "finding": "求核アシル置換の反応性順序や脱離基安定性を説明せず、画像照合のみを促す。",
+      "suggestedFix": "酸塩化物、無水物、エステル、アミド等の反応性判断の理由を明記する。"
+    },
+    {
+      "id": "P111-103",
+      "severity": "MEDIUM",
+      "category": "EXPLANATION_INSUFFICIENT",
+      "evidence": "001677928.pdf p.10; 111A-app-images.pdf p.29",
+      "finding": "有機反応の反応進行性・主生成物判定の機構がなく、正答2の再掲だけ。",
+      "suggestedFix": "原反応図を参照した試薬と反応機構、誤答の理由を示す。"
+    },
+    {
+      "id": "P111-104",
+      "severity": "MEDIUM",
+      "category": "EXPLANATION_INSUFFICIENT",
+      "evidence": "001677928.pdf p.11; 111A-app-images.pdf p.31",
+      "finding": "ラセミ体となる2反応について平面中間体・立体選択性の理由を示さない。",
+      "suggestedFix": "2・4がラセミ体となる立体化学の機構を原図と対応づける。"
+    },
+    {
+      "id": "P111-105",
+      "severity": "CRITICAL",
+      "category": "FIGURE_MISSING_AND_CHOICES_REWRITTEN",
+      "evidence": "001677928.pdf p.12; 111A.json assetPdfPages=[]",
+      "finding": "原本のシスプラチン、異性体A、DNA部分構造の図が欠落。肢2と5は図中のA・アを参照するが、JSONはそれを別文に変更。",
+      "suggestedFix": "3構造図と原選択肢を復元、立体配置と配位子解離の解説を対応させる。"
+    },
+    {
+      "id": "P111-106",
+      "severity": "MEDIUM",
+      "category": "EXPLANATION_INSUFFICIENT",
+      "evidence": "001677928.pdf p.13; 111A-app-images.pdf p.33",
+      "finding": "アリスキレンの遷移状態アナログと化学構造のどの部分が対応するか解説せず、正答番号と「画像で確認」の定型文のみ。",
+      "suggestedFix": "レニン基質の遷移状態とアリスキレン部分構造を比較し根拠を記す。"
+    },
+    {
+      "id": "P111-107",
+      "severity": "CRITICAL",
+      "category": "REACTION_FIGURE_MISSING_AND_CHOICES_REWRITTEN",
+      "evidence": "001677928.pdf p.14; 001677928.pdf pp.14-15; 111A.json assetPdfPages=[]",
+      "finding": "原本のPLP-P5P/ASTの反応経路図（A〜F、ア・イ・X）が全欠落。5肢も反応図を問う原文から一般知識の別問へ置換。",
+      "suggestedFix": "反応経路図を原本どおり載せ、A〜Fと対応した5選択肢へ戻す。"
+    },
+    {
+      "id": "P111-108",
+      "severity": "CRITICAL",
+      "category": "CHOICES_STRUCTURE_BROKEN",
+      "evidence": "001677928.pdf p.16; 111A-app-images.pdf p.35",
+      "finding": "選択肢配列が4件しかないのに公式正答は5。JSONの4件は本来の1H NMRピーク表の断片であり、構造選択肢1〜5ではない。R配置、化学シフト1.6/2.1/3.7/4.3の小数点等も本文から脱落。",
+      "suggestedFix": "NMRピーク表を共有データとして再収録し、構造肢1〜5を画像対応で管理、JSON選択肢数5を検証する。"
+    },
+    {
+      "id": "P111-109",
+      "severity": "CRITICAL",
+      "category": "CHEMICAL_FIGURES_MISSING_AND_CHOICES_REWRITTEN",
+      "evidence": "001677928.pdf p.17; 111A.json assetPdfPages=[]",
+      "finding": "黄連解毒湯の化合物A〜Cの化学構造図が欠落。5肢も原本のA/B/C参照から物質名への改題で、原問題の図構造判断が消失。",
+      "suggestedFix": "化合物A〜Cの構造図と公式5肢を復元し、改題する場合は別教材として扱う。"
+    },
+    {
+      "id": "P111-110",
+      "severity": "MEDIUM",
+      "category": "EXPLANATION_INSUFFICIENT",
+      "evidence": "001677928.pdf p.18; 111A-app-images.pdf p.37",
+      "finding": "顕微鏡写真の管状組織・木部繊維をシャクヤクと識別する具体的な鑑別所見がなく、答えの再掲のみ。",
+      "suggestedFix": "顕微鏡写真と生薬の鑑別根拠を専門書・薬局方記載に基づき説明。"
+    },
+    {
+      "id": "P111-113",
+      "severity": "MEDIUM",
+      "category": "EXPLANATION_INSUFFICIENT",
+      "evidence": "001677928.pdf p.19",
+      "finding": "正答1・3の文字列を再掲するのみで、誤答肢の産生器官・ホルモン作用の誤りを説明しない。",
+      "suggestedFix": "インクレチン・グルカゴン等の分泌器官と血糖作用を資料に基づいて説明する。"
+    },
+    {
+      "id": "P111-114",
+      "severity": "CRITICAL",
+      "category": "EXPERIMENT_FIGURE_MISSING",
+      "evidence": "001677928.pdf p.20; 111A.json assetPdfPages=[]",
+      "finding": "原本のIgG1構造図1とSDS-PAGE泳動図2が両方欠落。JSONは図1・図2やバンド番号を参照しており、図がなければ解答不能。",
+      "suggestedFix": "図1・図2を原本どおり追加し、ジスルフィド結合還元後の泳動とバンドの解説を示す。"
+    },
+    {
+      "id": "P111-115",
+      "severity": "MEDIUM",
+      "category": "EXPLANATION_INSUFFICIENT",
+      "evidence": "001677928.pdf p.21; 111A-app-images.pdf p.38",
+      "finding": "酵素A/Bのグルコース濃度依存曲線に基づく親和性差・フィードバック阻害の説明がなく、公式正答1・4の引用だけ。",
+      "suggestedFix": "グルコキナーゼ・ヘキソキナーゼのKm、組織、阻害機構を曲線から説明。"
+    }
+  ],
+  "assetPackageFindings": [
+    {
+      "id": "P111-007",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.5",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-009",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.8",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-011",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.11",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-054",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.17",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-095",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.19",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-099",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.23",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-101",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.26",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-102",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.28",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-103",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.30",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-104",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.32",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-106",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.34",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-108",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.36",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    },
+    {
+      "id": "P111-115",
+      "severity": "MEDIUM",
+      "category": "ASSET_PACKAGE_BLANK_PAGE",
+      "evidence": "111A-app-images.pdf p.39",
+      "finding": "資産PDFの該当ページが実質空白。原画像が別ページに存在する可能性はあるが、アプリへ表示される画像との対応は未確認。",
+      "suggestedFix": "ページ単位の重複・空白を除去し、アプリが利用する実ファイル名とハッシュで対応を確定する。"
+    }
+  ],
+  "unverifiedItems": {
+    "explanations": "Independent external citations and option-by-option verification for all 115 explanations not complete. Generic-template failures are separately marked FAIL.",
+    "currentLaw": {
+      "ids": [
+        "P111-019",
+        "P111-024",
+        "P111-025",
+        "P111-056",
+        "P111-057",
+        "P111-071",
+        "P111-072",
+        "P111-074",
+        "P111-075",
+        "P111-076",
+        "P111-077",
+        "P111-078",
+        "P111-079",
+        "P111-081",
+        "P111-082",
+        "P111-084",
+        "P111-090",
+        "P111-095",
+        "P111-096",
+        "P111-099",
+        "P111-105",
+        "P111-109",
+        "P111-113"
+      ],
+      "reason": "As-of-2026-11-08 consolidated statutes, pharmacopoeia, medical package inserts, doping regulations and public fee/statistics not fully checked against 2026 exam wording"
+    },
+    "rights": {
+      "imageQuestionIds": [
+        "P111-003",
+        "P111-005",
+        "P111-006",
+        "P111-007",
+        "P111-008",
+        "P111-009",
+        "P111-010",
+        "P111-011",
+        "P111-018",
+        "P111-041",
+        "P111-048",
+        "P111-053",
+        "P111-054",
+        "P111-095",
+        "P111-096",
+        "P111-099",
+        "P111-100",
+        "P111-101",
+        "P111-102",
+        "P111-103",
+        "P111-104",
+        "P111-106",
+        "P111-108",
+        "P111-110",
+        "P111-115"
+      ],
+      "reason": "PDL1.0 provides conditions for government content, but third party images may require distinct permissions; no provenance and license ledger for each figure. Rights are UNVERIFIED, not assumed infringement."
+    },
+    "realDevice": "No actual app render or tap/zoom check. Audit package cannot prove how app presents assets.",
+    "roundtripRepro": "Source commit is user JSON self-assertion only; no GitHub tree or actual app content state verified."
+  },
+  "externalReferences": [
+    {
+      "source": "厚労省コンテンツ利用規約",
+      "url": "https://www.mhlw.go.jp/chosakuken/"
+    },
+    {
+      "source": "デジタル庁公共データ利用規約 第1.0版",
+      "url": "https://www.digital.go.jp/resources/open_data/public_data_license_v1.0"
+    },
+    {
+      "source": "厚労省第111回薬剤師国家試験問題及び解答",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198929.html"
+    }
+  ]
+}
