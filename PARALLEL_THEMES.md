@@ -33,7 +33,7 @@
 | FP3-25-CLAUDE | FP3 | 2025年度01～20の20問（合格11・要修正2・保留7） | DONE | - | MUSE-EXTERNAL | 取得時刻未確認 | external-unverified | 2026-11-08（コミット日・時刻の詳細は当該コミット） | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2025.md` / `826bfe9e817006d3e0193481ba99622ce41780ca` |
 | FP3-26-CLAUDE | FP3 | 2026年度16～19・21～36の20問（合格18・要修正0・保留2） | DONE | - | MUSE-EXTERNAL | 取得時刻未確認 | external-unverified | 2026-11-08（コミット日・時刻の詳細は当該コミット） | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2026.md` / `5f184b977aaa8e2d0fc10ed4db9f146cd547b8c5` |
 | FP3-25-A | FP3 | 2025年度01–20は全件判定済み：重複監査禁止 | DONE | FP3-25-CLAUDE | - | - | - | 2026-11-08（外部シャード） | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2025.md` / 826bfe9 |
-| FP3-25-B | FP3 | 2025年度21–40（26既判定除外）を監査 | CLAIMED | FP3-25-CLAUDE | MUSE-EXT-25B | 2026-11-09T06:19:37+09:00 | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2025_21_40.md` |
+| FP3-25-B | FP3 | 2025年度21–40（26既判定除外）を監査 | DONE | FP3-25-CLAUDE | MUSE-EXT-25B | 2026-11-09T06:19:37+09:00 | abe7672ca123e01a275b55fd7f738bfd6aff77b2 | 2026-11-09T06:21:55+09:00 | `fp3-manabi-sprint/audits/parallel/FP3_2025_21_40.md` / 880e44a / 19件 PASS18 FAIL0 UNVERIFIED1（2025-25保留）、原典逐語照合未完 |
 | FP3-25-C | FP3 | 2025年度41–60を監査 | OPEN | FP3-25-CLAUDE | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2025_41_60.md` |
 | FP3-26-A | FP3 | 2026年度16–35は全件判定済み：重複監査禁止 | DONE | FP3-26-CLAUDE | - | - | - | 2026-11-08（外部シャード） | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2026.md` / 5f184b9 |
 | FP3-26-B | FP3 | 2026年度37–60を監査（36判定済み） | OPEN | FP3-26-CLAUDE | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2026_36_60.md` |
