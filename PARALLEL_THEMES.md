@@ -41,7 +41,7 @@
 | FP3-FIX-2 | FP3 | 4問（2024-48/53・2025-15/17）の解説/文言修正（ロック解除承認待ち） | BLOCKED | FP3-24-C | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_EXPLANATION_FIX.md` |
 | FP3-PREFLIGHT | FP3 | FP3専用Preflight実行・XcodeGen/Simulator結果記録（既成功と再実行を区別） | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_PREFLIGHT.md` |
 | FP3-CONSOLIDATE | FP3 | 年度シャードを正本へ統合し180問の重複・欠番・判定集計・原典照合ゲート確認 | OPEN | FP3-24-A,FP3-24-B,FP3-24-C,FP3-25-A,FP3-25-B,FP3-25-C,FP3-26-A,FP3-26-B,FP3-26-HOLD,FP3-FIX-2 | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_CONSOLIDATION.md` |
-| FP2-SOURCE | FP2 | 公式過去問原本・許諾条件・回次別学科/実技実数台帳（計画500と実数を分離） | CLAIMED | - | MUSE-EXT-SRC | 2026-11-09T06:19:24+09:00 | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OFFICIAL_SOURCE_LEDGER.md` |
+| FP2-SOURCE | FP2 | 公式過去問原本・許諾条件・回次別学科/実技実数台帳（計画500と実数を分離） | CLAIMED | - | MUSE-EXT-SRC | 2026-11-09T06:19:24+09:00 | 9ca2a98801d922c02a028b9f063b720b942e764e | - | `fp2-manabi-sprint/audits/parallel/FP2_OFFICIAL_SOURCE_LEDGER.md` |
 | FP2-OLD-R1 | FP2 | 旧180問の原典回次第1群の再検証（回次別ID・件数確定） | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_01.md` |
 | FP2-OLD-R2 | FP2 | 旧180問の原典回次第2群の再検証（回次別ID・件数確定） | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_02.md` |
 | FP2-OLD-R3 | FP2 | 旧180問の原典回次第3群の再検証（回次別ID・件数確定） | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_03.md` |
