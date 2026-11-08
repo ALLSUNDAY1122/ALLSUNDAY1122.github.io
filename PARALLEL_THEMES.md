@@ -42,7 +42,7 @@
 | FP3-PREFLIGHT | FP3 | FP3専用Preflight実行・XcodeGen/Simulator結果記録（既成功と再実行を区別） | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_PREFLIGHT.md` |
 | FP3-CONSOLIDATE | FP3 | 年度シャードを正本へ統合し180問の重複・欠番・判定集計・原典照合ゲート確認 | OPEN | FP3-24-A,FP3-24-B,FP3-24-C,FP3-25-A,FP3-25-B,FP3-25-C,FP3-26-A,FP3-26-B,FP3-26-HOLD,FP3-FIX-2 | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_CONSOLIDATION.md` |
 | FP2-SOURCE | FP2 | 公式過去問原本・許諾条件・回次別学科/実技実数台帳（計画500と実数を分離） | DONE | - | MUSE-EXT-SRC | 2026-11-09T06:19:24+09:00 | 9ca2a98801d922c02a028b9f063b720b942e764e | 2026-11-09T06:27:00+09:00 | `fp2-manabi-sprint/audits/parallel/FP2_OFFICIAL_SOURCE_LEDGER.md` / 500819800b2382b1159bef14fcbaa109737c48ca / 実技法令基準日5回次、旧学科180問=3回次各60確認。旧個票採否・CBT個別設問日付は後続監査 |
-| FP2-OLD-R1 | FP2 | 旧180問の原典回次第1群の再検証（回次別ID・件数確定） | CLAIMED | - | MUSE-EXT-R1 | 2026-11-09T06:34:00+09:00 | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_01.md` |
+| FP2-OLD-R1 | FP2 | 旧180問の原典回次第1群の再検証（回次別ID・件数確定） | BLOCKED | - | MUSE-EXT-R1 | 2026-11-09T06:34:00+09:00 | 49c17476424f9aac3aa09d6dc426d91c66e739ec | 2026-11-09T06:37:23+09:00 | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_01.md` / 511359ee4ff6e6059beb75c5cc7563c46a0b2e6e / 第1群2025-01学科60件：旧台帳正答・回次・番号・法令日・原典URL一致60、正答不一致0。ただし問題文・全選択肢・解説・出典/加工表示の実体不在で製品判定PASS0 FAIL0 UNVERIFIED60（採用0）。旧60問実体取得と逐語/表示照合完了までBLOCKED |
 | FP2-OLD-R2 | FP2 | 旧180問の原典回次第2群の再検証（回次別ID・件数確定） | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_02.md` |
 | FP2-OLD-R3 | FP2 | 旧180問の原典回次第3群の再検証（回次別ID・件数確定） | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_03.md` |
 | FP2-ACA-A | FP2 | 公式学科の未収録分：原典台帳順の前半をデータ化 | OPEN | FP2-SOURCE | - | - | - | - | `fp2-manabi-sprint/batches/official/academic_part_a.json` |
