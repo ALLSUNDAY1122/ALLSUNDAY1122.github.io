@@ -1,25 +1,30 @@
 {
-  "request_id": "hm2-review-final-preflight-20261106-r2",
+  "request_id": "pharmacist-release-status-20261108-independent",
   "requests": [
     {
-      "label": "selected-build",
+      "label": "app-identity",
       "method": "GET",
-      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/relationships/build"
+      "path": "/v1/apps/6799753724"
     },
     {
-      "label": "screens",
+      "label": "ios-versions",
       "method": "GET",
-      "path": "/v1/appScreenshotSets/7e61fe88-803d-4710-8395-90743dd6c0ac/appScreenshots?limit=50"
+      "path": "/v1/apps/6799753724/appStoreVersions?filter[platform]=IOS&limit=10"
     },
     {
-      "label": "iap",
+      "label": "selected-version-build",
       "method": "GET",
-      "path": "/v2/inAppPurchases/6802989207"
+      "path": "/v1/appStoreVersions/430ba445-fae0-4d1d-9301-95d1ea342ac7?include=build"
     },
     {
-      "label": "sub",
+      "label": "latest-builds",
       "method": "GET",
-      "path": "/v1/subscriptions/6802988571"
+      "path": "/v1/apps/6799753724/builds?sort=-uploadedDate&limit=10"
+    },
+    {
+      "label": "review-submissions",
+      "method": "GET",
+      "path": "/v1/apps/6799753724/reviewSubmissions?limit=10"
     }
   ]
 }
