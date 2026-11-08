@@ -1,0 +1,166 @@
+{
+  "status": "BLOCKED",
+  "app": {
+    "name": "薬剤師国家試験｜学びスプリント",
+    "id": "6799753724",
+    "bundleId": "jp.allsunday1122.yakuzaishi",
+    "sourceVersion": "1.0.0",
+    "appStoreVersion": "1.0",
+    "appStoreVersionId": "430ba445-fae0-4d1d-9301-95d1ea342ac7"
+  },
+  "sourceCommit": "b77d76723cb1a674a238e3a2dd32a921821cf876",
+  "initialSourceFixCommit": "4a79cac944a130db39a8f70c33d70269748e4f9e",
+  "generatedMainReadback": "a07040a2a451667d32070495a60ecc6a09ac4869",
+  "gates": {
+    "Q0": "BLOCKED",
+    "Q1": "FAIL",
+    "Q2": "FAIL",
+    "Q3": "NOT_TESTED",
+    "Q4": "BLOCKED",
+    "Q5": "BLOCKED"
+  },
+  "independentReview": {
+    "sessions": 9,
+    "questionCount": 1035,
+    "reported": {
+      "PASS": 6,
+      "FAIL": 894,
+      "UNVERIFIED": 135
+    },
+    "verifiedCurrentCandidatePass": 0,
+    "note": "Initial source packets, not final current-candidate approval. FAIL includes incomplete/generic explanations."
+  },
+  "fixes": {
+    "officialFiguresRestored": 15,
+    "explicitSubjectMappingsCorrected": 231,
+    "officialHeadersCompared": 390,
+    "specialScoringQuestions": 4,
+    "mediaQuestions": 169,
+    "nativeCopiedAssets": 309
+  },
+  "checks": {
+    "localBrowserSmoke": "PASS",
+    "nativeDataPackaging": "PASS",
+    "nativeAssetBytes": "PASS",
+    "nativeFieldMapping": "PASS",
+    "coverageGuardRegression": "PASS",
+    "NativeXCTest": "NOT_RUN",
+    "signedRelease": "NOT_RUN",
+    "fullIPhoneAcceptance": "NOT_RUN",
+    "CI": [
+      {
+        "runId": 42452070521,
+        "jobId": 128643225658,
+        "name": "preflight",
+        "failed": [
+          "Static no-IAP release audit"
+        ],
+        "skipped": [
+          "Shell and Python syntax",
+          "Install XcodeGen",
+          "Prepare audited native resources",
+          "Verify generated native question bundle",
+          "Generate Xcode project and enforce no IAP capability",
+          "Native unit + UI Visual Gate",
+          "Export native Visual Gate screenshots",
+          "Upload native Visual Gate evidence",
+          "Release simulator build",
+          "Verify Release app resources",
+          "Enforce native Preflight + Visual Gate"
+        ],
+        "conflictDetected": false,
+        "observedFailureLines": [
+          "2026-11-08T05:46:42.3284940Z {\"schemaVersion\": 4, \"independentAuditCoverage\": {\"requiredCount\": 1035, \"recordCount\": 0, \"verifiedPassCount\": 0, \"missingCount\": 1035, \"duplicateIdCount\": 0, \"manifestComplete\": false, \"allCovered\": false, \"issues\": {\"source manifest fullProblemAuditComplete is not true\": 1, \"missing per-ID independent audit records\": 1, \"verified independent coverage 0/1035\": 1}, \"samples\": {\"missing per-ID independent audit records\": [\"P109-001,P109-002,P109-003,P109-004,P109-005\"]}}, \"questionCount\": 1035, \"errors\": [\"independent audit: source manifest fullProblemAuditComplete is not true (1)\", \"independent audit: missing per-ID independent audit records (1)\", \"independent a",
+          "2026-11-08T05:46:42.3622050Z {\"pass\": false, \"architecture\": \"SwiftUI-native\", \"monetization\": \"none\", \"allScoredQuestionsUnlocked\": true, \"webViewRuntime\": false, \"errors\": [\"fresh final question audit failed\", \"final question audit not PASS\"], \"warnings\": [], \"questions\": 1035, \"active\": 1031, \"excluded\": 4, \"flexible\": 4, \"iconMaterialized\": true, \"bundleId\": \"jp.allsunday1122.yakuzaishi\", \"appStoreConnectAppId\": \"6799753724\"}",
+          "2026-11-08T05:46:42.3775960Z ##[error]Process completed with exit code 1.",
+          "2026-11-08T05:46:42.5226490Z {\"pass\": false, \"architecture\": \"SwiftUI-native\", \"monetization\": \"none\", \"allScoredQuestionsUnlocked\": true, \"webViewRuntime\": false, \"unitAndVisualGateExit\": 999, \"releaseBuildExit\": 999, \"resourceAuditExit\": 999, \"visualScreenshotCount\": 0, \"visualEvidenceArtifact\": \"pharmacist-native-visual-gate\", \"bundleId\": \"jp.allsunday1122.yakuzaishi\", \"appStoreConnectAppId\": \"6799753724\", \"version\": \"1.0.0\", \"questionBank\": 1035, \"activeQuestions\": 1031, \"note\": \"No IAP. All 1,031 scored questions are available without purchase.\"}"
+        ]
+      },
+      {
+        "runId": 42452070450,
+        "jobId": 128643225336,
+        "name": "assemble-audit",
+        "failed": [
+          "Enforce final bank gate"
+        ],
+        "skipped": [],
+        "conflictDetected": false,
+        "observedFailureLines": [
+          "2026-11-08T05:46:37.2753887Z {\"schemaVersion\": 4, \"independentAuditCoverage\": {\"requiredCount\": 1035, \"recordCount\": 0, \"verifiedPassCount\": 0, \"missingCount\": 1035, \"duplicateIdCount\": 0, \"manifestComplete\": false, \"allCovered\": false, \"issues\": {\"source manifest fullProblemAuditComplete is not true\": 1, \"missing per-ID independent audit records\": 1, \"verified independent coverage 0/1035\": 1}, \"samples\": {\"missing per-ID independent audit records\": [\"P109-001,P109-002,P109-003,P109-004,P109-005\"]}}, \"questionCount\": 1035, \"errors\": [\"independent audit: source manifest fullProblemAuditComplete is not true (1)\", \"independent audit: missing per-ID independent audit records (1)\", \"independent a",
+          "2026-11-08T05:46:39.9929806Z ##[error]Process completed with exit code 1."
+        ]
+      },
+      {
+        "runId": 42452070423,
+        "jobId": 128643225494,
+        "name": "validate",
+        "failed": [
+          "Static product/web audit"
+        ],
+        "skipped": [
+          "Install Playwright Chromium",
+          "Browser smoke with durable diagnostics",
+          "Record screen regression smoke",
+          "Save executed browser diagnostics",
+          "Enforce browser smoke gate",
+          "Enforce record regression gate",
+          "Post Run actions/setup-node@v4"
+        ],
+        "conflictDetected": false,
+        "observedFailureLines": [
+          "2026-11-08T05:46:39.7955779Z {\"schemaVersion\": 4, \"independentAuditCoverage\": {\"requiredCount\": 1035, \"recordCount\": 0, \"verifiedPassCount\": 0, \"missingCount\": 1035, \"duplicateIdCount\": 0, \"manifestComplete\": false, \"allCovered\": false, \"issues\": {\"source manifest fullProblemAuditComplete is not true\": 1, \"missing per-ID independent audit records\": 1, \"verified independent coverage 0/1035\": 1}, \"samples\": {\"missing per-ID independent audit records\": [\"P109-001,P109-002,P109-003,P109-004,P109-005\"]}}, \"questionCount\": 1035, \"errors\": [\"independent audit: source manifest fullProblemAuditComplete is not true (1)\", \"independent audit: missing per-ID independent audit records (1)\", \"independent a",
+          "2026-11-08T05:46:39.8031539Z ##[error]Process completed with exit code 1.",
+          "2026-11-08T05:46:39.8507736Z {\"pass\": false, \"errors\": [\"final product audit is not PASS\"], \"total\": 1035, \"active\": 1031, \"excluded\": 4, \"flexible\": 4, \"media\": 169, \"rebuiltMedia\": 4}",
+          "2026-11-08T05:46:39.8571977Z ##[error]Process completed with exit code 1."
+        ]
+      }
+    ]
+  },
+  "apple": {
+    "readAtUTC": "2026-11-08T05:32:34.234764+00:00",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "reviewSubmissions": [],
+    "selectedBuildReadAtUTC": "2026-11-08T05:33:53.558545+00:00",
+    "selectedBuild": {
+      "version": "202609140032",
+      "state": "VALID",
+      "audience": "APP_STORE_ELIGIBLE",
+      "containsCurrentFixes": false
+    },
+    "latestUploadedBuild": {
+      "version": "20261105002905",
+      "state": "VALID",
+      "audience": "INTERNAL_ONLY",
+      "containsCurrentFixes": false
+    },
+    "legacyIAP": {
+      "id": "6802918851",
+      "state": "MISSING_METADATA",
+      "deleted": false
+    },
+    "copyright": null
+  },
+  "codemagic": {
+    "newRunStarted": false,
+    "previousInternalRunId": "6aebcd99f5f3c51e569a2f3e",
+    "previousSourceCommit": "82591fe0174f26df006271cd5ba267c38a8d7735"
+  },
+  "submission": {
+    "started": false,
+    "submitted": false,
+    "submittedAt": null,
+    "submissionId": null,
+    "releaseModeIntended": "MANUAL"
+  },
+  "remaining": [
+    "Correct and independently re-review outstanding transcription, dosage units, tables, figures and substantive pharmaceutical explanations.",
+    "Complete third-party rights, historical/current law and original B7 correspondence evidence.",
+    "Run current-source Native XCTest/Release checks; generate a new eligible build only after required content gates pass.",
+    "Complete required store metadata including copyright, privacy, age, screenshots, review contact and legacy-IAP consistency.",
+    "Accept the final candidate on a physical iPhone, then submit and independently read Apple review state."
+  ],
+  "humanOperation": {
+    "immediateRequest": false,
+    "eventuallyRequired": "Final-candidate physical iPhone acceptance; provide rights evidence if source rights cannot otherwise be established."
+  }
+}
