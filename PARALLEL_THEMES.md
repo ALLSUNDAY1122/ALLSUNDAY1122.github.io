@@ -45,7 +45,7 @@
 | FP2-OLD-R1 | FP2 | 旧180問の原典回次第1群の再検証（回次別ID・件数確定） | BLOCKED | - | MUSE-EXT-R1 | 2026-11-09T06:34:00+09:00 | 49c17476424f9aac3aa09d6dc426d91c66e739ec | 2026-11-09T06:37:23+09:00 | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_01.md` / 511359ee4ff6e6059beb75c5cc7563c46a0b2e6e / 第1群2025-01学科60件：旧台帳正答・回次・番号・法令日・原典URL一致60、正答不一致0。ただし問題文・全選択肢・解説・出典/加工表示の実体不在で製品判定PASS0 FAIL0 UNVERIFIED60（採用0）。旧60問実体取得と逐語/表示照合完了までBLOCKED |
 | FP2-OLD-R2 | FP2 | 旧180問の原典回次第2群の再検証（回次別ID・件数確定） | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_02.md` |
 | FP2-OLD-R3 | FP2 | 旧180問の原典回次第3群の再検証（回次別ID・件数確定） | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OLD_ROUND_03.md` |
-| FP2-ACA-A | FP2 | 公式学科の未収録分：原典台帳順の前半をデータ化 | OPEN | FP2-SOURCE | - | - | - | - | `fp2-manabi-sprint/batches/official/academic_part_a.json` |
+| FP2-ACA-A | FP2 | 公式学科の未収録分：原典台帳順の前半をデータ化 | CLAIMED | FP2-SOURCE | MUSE-EXT-ACAA | 2026-11-09T06:52:00+09:00 | - | - | `fp2-manabi-sprint/batches/official/academic_part_a.json` |
 | FP2-ACA-B | FP2 | 公式学科の未収録分：原典台帳順の後半をデータ化 | OPEN | FP2-SOURCE | - | - | - | - | `fp2-manabi-sprint/batches/official/academic_part_b.json` |
 | FP2-PRAC-A | FP2 | 公式実技未収録分：原典台帳順の前半をデータ化 | OPEN | FP2-SOURCE | - | - | - | - | `fp2-manabi-sprint/batches/official/practical_part_a.json` |
 | FP2-PRAC-B | FP2 | 公式実技未収録分：原典台帳順の後半をデータ化 | OPEN | FP2-SOURCE | - | - | - | - | `fp2-manabi-sprint/batches/official/practical_part_b.json` |
