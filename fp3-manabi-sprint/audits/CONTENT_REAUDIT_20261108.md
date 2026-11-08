@@ -83,3 +83,29 @@ https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm
 - 今回新たに5件を「合格（制度論点）」と判定。累計：合格7件、要修正2件、保留1件、**未判定170件**（7+2+1+170=180）。保留1件は未判定170件とは別集計。
 - 2026-20は施行日・適用年分の追加検証が完了しておらず保留を維持。上記2件の解説差分は提案段階であり未適用。
 - 次は未判定170件を分野・法令改正リスク順に一次資料で再監査する。全180件の原典PDFと設問・全選択肢・正答の突合、法令基準日の横断検証、解説差分の適用後監査が終わるまで製品ゲートBLOCKEDを維持する。
+
+## 第3回追記：未判定10問の制度論点再監査（2026-11-08）
+
+### 対象・方法
+- 既存監査で未判定だった `fp3-2026-06` ～ `fp3-2026-15` の10件を選定。ロック済みJSONの問題文、正答、解説、補足を読み、制度運営主体・行政機関・指数算出主体等の一次資料と対照した。
+- この10件はいずれも `law_basis_date=2025-04-01`、`current_exam_basis=2026-04-01`。下記は**制度・正答・解説の論点判定**であり、日本FP協会公式問題PDFの全文・全選択肢との逐語照合は未完了。旧メタデータのPASSを根拠に合格へ繰り入れていない。
+- 「合格」は確認した制度論点の整合、「要修正」は教材表現の訂正が必要、「保留」は資料照合不足を意味する。問題データの編集は一切行わない。
+
+| ID | 今回判定 | アプリ正答 | 一次資料との照合・留意事項 | 一次資料URL |
+|---|---|---|---|---|
+| fp3-2026-06 | 合格（制度論点） | false維持 | 契約者貸付は解約返戻金の一定範囲が限度であり死亡保険金額ではない。未返済時の保険金からの控除も解説と整合。 | https://www.jili.or.jp/knows_learns/basic/continuance/93.html |
+| fp3-2026-07 | 合格（制度論点） | true維持 | 収入保障保険の年金を一時金にすると、年金現価相当額で計算するため、一般に名目年金受取総額より少ない。 | https://www.jili.or.jp/knows_learns/kind/main/40.html |
+| fp3-2026-08 | 合格（制度論点） | false維持 | 確定年金は所定の確定期間中、生死にかかわらず支給し、死亡後の残存受取分が受取人等に支払われる。「生存者だけ」の設問は誤り。 | https://www.jili.or.jp/knows_learns/kind/main/30.html |
+| fp3-2026-09 | 合格（制度論点） | true維持 | 居住用建物の地震による倒壊損害は通常の火災保険の対象外。地震保険は火災保険に付帯して契約する。 | https://www.mof.go.jp/faq/financial_system/ei01.html |
+| fp3-2026-10 | 合格（制度論点・契約条件注意） | false維持 | 豪雨・洪水による車両水没は契約する車両保険によって補償され得る。解説の「一般的な車両保険では」を踏まえれば整合するが、無条件に全商品で補償されるとは断定しない。 | https://www.caa.go.jp/policies/policy/consumer_policy/caution/pdf/consumer_policy_caution_190131_0001.pdf |
+| fp3-2026-11 | 合格（制度論点） | false維持 | 日銀の売却・売現先オペは市場からの資金吸収に当たる。「資金量を増やす売りオペ」は誤り。金利方向は一般的な効果として記述されている。 | https://www.boj.or.jp/about/education/oshiete/seisaku/b34.htm |
+| fp3-2026-12 | 合格（制度論点） | false維持 | ETFにも信託報酬があり、信託財産から差し引かれる。上場と費用の有無は別問題。 | https://www.jpx.co.jp/equities/products/etfs/etf-outline/01.html |
+| fp3-2026-13 | 合格（制度論点） | true維持 | 個人向け国債の利率下限年0.05%、最低購入1万円・1万円単位は財務省の商品概要と整合。2026年12月募集から予定される販売対象拡大・名称変更は、今回の設問の数値を変更しない。 | https://www.mof.go.jp/jgbs/individual/kojinmuke/main/outline/index.html ; https://www.mof.go.jp/jgbs/individual/kojinmuke/plus/ |
+| fp3-2026-14 | 合格（制度論点） | false維持 | 日経平均は東証プライム全銘柄でなく選定された225銘柄の株価平均型指数。TOPIXは時価総額加重型で整合。 | https://indexes.nikkei.co.jp/nkave/index/profile ; https://www.jpx.co.jp/faq/stock_price_index.html |
+| fp3-2026-15 | 合格（制度論点） | true維持 | 消費者契約法4条1項1号。重要事項の不実告知による誤認と申込・承諾の因果関係があれば取消し可能。設問・解説と整合。 | https://www.caa.go.jp/policies/policy/consumer_system/consumer_contract_act/annotations/assets/consumer_system_cms203_230915_07.pdf |
+
+### 第3回集計・変更禁止事項
+- 第3回新規10問：**合格10、要修正0、保留0**。
+- 累計180問：**判定済20問（合格17、要修正2、保留1）、未判定160問**（17+2+1+160=180）。
+- `fp3-2026-20` の保留1件、`fp3-2024-53`・`fp3-2024-48` の要修正2件は従前どおり。解説差分案は未適用。
+- 問題文・正答・選択肢・ステータス・`question_bank_180.payload.json`・`SOURCE_LOCK.md` は無変更。公式原典の逐語照合等は未完了のため製品ゲート **BLOCKED** 継続。
