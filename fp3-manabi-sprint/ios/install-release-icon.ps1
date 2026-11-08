@@ -1,8 +1,8 @@
 # Run on the owner's Windows PC; source is never regenerated or modified.
-# PowerShell 5.1+ on Windows. Use: powershell -ExecutionPolicy Bypass -File .\fp3-manabi-sprint\ios\install-release-icon.ps1
+# PowerShell 5.1+ on Windows. Use: powershell -ExecutionPolicy Bypass -File .\fp3-manabi-sprint\ios\install-release-icon.ps1 -Source <downloaded canonical image path>
 [CmdletBinding()]
 param(
-  [string]$Source = 'C:\Users\PC\Documents\アプリ開発\fp3-kakomon-coach\fp3-kakomon-coach\ios-app\assets\icon.png'
+  [Parameter(Mandatory=$true)][string]$Source
 )
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
@@ -11,6 +11,9 @@ $target = Join-Path $catalog 'AppIcon-1024.png'
 $manifest = Join-Path $catalog 'Contents.json'
 if (-not (Test-Path -LiteralPath $Source -PathType Leaf)) { throw "AppIcon source not found: $Source" }
 $sourceFull = (Resolve-Path -LiteralPath $Source).Path
+$expected = '095f23a9829f0e1e8316e92160da2af8cec0c24c4ae53cb7582ccbb9b88ef51f'
+$actual = (Get-FileHash -LiteralPath $sourceFull -Algorithm SHA256).Hash.ToLowerInvariant()
+if ($actual -ne $expected) { throw "Non-canonical icon source SHA256: $actual" }
 if (-not [String]::Equals([IO.Path]::GetExtension($sourceFull), '.png', [StringComparison]::OrdinalIgnoreCase)) {
   throw 'Source must be PNG.'
 }
@@ -54,7 +57,7 @@ $contents = @'
 [IO.File]::WriteAllText($manifest, $contents, (New-Object System.Text.UTF8Encoding($false)))
 $sourceHash = (Get-FileHash -LiteralPath $sourceFull -Algorithm SHA256).Hash.ToLowerInvariant()
 $destHash = (Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant()
-if ($sourceHash -ne $destHash) { throw 'SHA256 mismatch after copy.' }
+if ($sourceHash -ne $destHash -or $destHash -ne $expected) { throw 'SHA256 mismatch after copy.' }
 Write-Host "PASS: 1024x1024 PNG, pixel alpha 255 everywhere, source/destination SHA256 match."
 Write-Host "SOURCE: $sourceFull"
 Write-Host "DEST: $target"
