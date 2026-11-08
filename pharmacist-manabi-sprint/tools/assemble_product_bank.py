@@ -79,6 +79,9 @@ def main():
             if not str(ov['legal_source_url']).startswith('https://'):
                 raise SystemExit(f'FAIL: legal source must use HTTPS for {q["id"]}')
             q['legal_source_url']=ov['legal_source_url']
+        if ov.get('requires_media') is True:
+            q['requires_media'] = True
+            q['mediaAuditStatus'] = 'source_image_pending_independent_visual_review'
         if ov.get('media_rebuild_status')=='text_rebuilt':
             q['requires_media']=False;q['mediaAuditStatus']='rebuilt_as_independent_text';q['mediaRebuildProvenance']=ov.get('rebuild_source')
         q['memoryPoint']=ov.get('memoryPoint');q['explanation']=ov.get('explanation');q['explanationProvenance']=prov.get(q['id']);q['explanationReviewRequired']=bool(ov.get('reviewRequired',False)) if ov else True

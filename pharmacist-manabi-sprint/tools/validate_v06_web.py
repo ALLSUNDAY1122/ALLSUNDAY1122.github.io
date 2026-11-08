@@ -22,9 +22,9 @@ if len(qs)!=1035: err(f'product count {len(qs)}/1035')
 active=[q for q in qs if q.get('scoring_status')!='excluded']; excluded=[q for q in qs if q.get('scoring_status')=='excluded']
 if len(excluded)!=4: err(f'excluded count {len(excluded)}/4')
 flex=[q for q in qs if q.get('scoring_status')=='multiple_accepted']
-if len(flex)!=3: err(f'flexible answer count {len(flex)}/3')
+if len(flex)!=4: err(f'flexible answer count {len(flex)}/4')
 media=[q for q in qs if q.get('displayMode')=='officialQuestionImage']; rebuilt=[q for q in qs if q.get('mediaAuditStatus')=='rebuilt_as_independent_text']
-if len(media)!=154: err(f'media image count {len(media)}/154')
+if len(media)!=169: err(f'media image count {len(media)}/169')
 if len(rebuilt)!=4: err(f'rebuilt text media count {len(rebuilt)}/4')
 for q in media:
     for rel in q.get('mediaAssets',[]):
@@ -39,8 +39,11 @@ for q in active:
 for q in flex:
     acc=q.get('accepted_answers') or []
     if len(acc)!=3 or any(len(x)!=2 for x in acc): err('flexible rule malformed '+q.get('id','?'))
-# Verify exact three official flexible rule IDs.
-if {q['id'] for q in flex}!={'P111-287','P110-331','P109-305'}: err('flexible rule IDs mismatch')
+# Verify exact four official flexible rule IDs.
+if {q['id'] for q in flex}!={'P111-287','P110-119','P110-331','P109-305'}: err('flexible rule IDs mismatch')
+q119=next((q for q in qs if q.get('id')=='P110-119'),{})
+if (q119.get('answer'),q119.get('accepted_answers'),q119.get('officialAnswerNumbers'))!=([0,2],[[0,2],[0,4],[2,4]],[1,3,5]):
+    err('P110-119 official any-two rule mismatch')
 report={'pass':not errors,'errors':errors,'total':len(qs),'active':len(active),'excluded':len(excluded),'flexible':len(flex),'media':len(media),'rebuiltMedia':len(rebuilt)}
 (ROOT/'content/product/web-static-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(report,ensure_ascii=False))

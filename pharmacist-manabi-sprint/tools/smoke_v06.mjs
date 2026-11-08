@@ -18,7 +18,7 @@ try{
   await page.waitForFunction(()=>window.PHARM_PRODUCT_META && window.PHARM_PRODUCT_META.total===1035,{timeout:60000});
   await page.waitForFunction(()=>document.querySelector('.qaNote')?.textContent.includes('v0.6'),{timeout:30000});
   const meta=await page.evaluate(()=>({meta:window.PHARM_PRODUCT_META,media:window.PHARM_QUESTIONS.filter(q=>q.displayMode==='officialQuestionImage').length,flex:window.PHARM_QUESTIONS.filter(q=>q.accepted&&q.accepted.length).length}));
-  assert(meta.meta.total===1035,'total!=1035'); assert(meta.meta.active===1031,'active!=1031'); assert(meta.meta.excluded===4,'excluded!=4'); assert(meta.media===154,'media!=154'); assert(meta.flex===3,'flex!=3');
+  assert(meta.meta.total===1035,'total!=1035'); assert(meta.meta.active===1031,'active!=1031'); assert(meta.meta.excluded===4,'excluded!=4'); assert(meta.media===169,'media!=169'); assert(meta.flex===4,'flex!=4');
   assert(await page.locator('#fieldList .fieldCard').count()>=7,'field cards missing');
   await noOverflow('home');
 
@@ -66,7 +66,26 @@ try{
   await page.waitForSelector('#feedback:not(.hidden)');
   assert((await page.locator('#fbHead').innerText()).includes('正解'),'flexible accepted pair not graded correct');
   await noOverflow('flexible answer feedback');
+
+  // Q119's official three-number answer pool permits any two, not three selections.
+  const q119=await page.evaluate(()=>{const q=window.PHARM_QUESTIONS.find(x=>x.id==='P110-119');return {pick:q.pick,answer:q.a,accepted:q.accepted}});
+  assert(q119.pick===2 && JSON.stringify(q119.answer)==='[0,2]' && JSON.stringify(q119.accepted)==='[[0,2],[0,4],[2,4]]','Q119 any-two grading data invalid');
+  for(const {combo,correct} of [
+    {combo:[0,2],correct:true}, {combo:[4,0],correct:true},
+    {combo:[2,4],correct:true}, {combo:[0,1],correct:false}
+  ]){
+    const st=blankState({title:'問119採点確認',field:'理論',ids:['P110-119'],index:0,results:[],orders:{},isMock:false});
+    await page.evaluate(({key,st})=>localStorage.setItem(key,JSON.stringify(st)),{key,st});
+    await page.reload({waitUntil:'domcontentloaded'}); await page.waitForFunction(()=>window.PHARM_PRODUCT_META?.total===1035); await page.waitForSelector('#resumeBtn.show'); await page.click('#resumeBtn');
+    await page.click(`#choices .choice[data-orig="${combo[0]}"]`);
+    assert(await page.locator('#feedback').evaluate(el=>el.classList.contains('hidden')),'Q119 graded before two selections');
+    await page.click(`#choices .choice[data-orig="${combo[1]}"]`);
+    await page.waitForSelector('#feedback:not(.hidden)');
+    assert((await page.locator('#fbHead').innerText())===(correct?'正解':'惜しい'),'Q119 pair graded incorrectly: '+JSON.stringify(combo));
+    assert((await page.locator('#reason').innerText()).includes('任意2肢'),'Q119 official special rule missing from explanation');
+    await noOverflow('Q119 pair feedback');
+  }
   assert(pageErrors.length===0,'page errors: '+JSON.stringify(pageErrors));
 
-  console.log(JSON.stringify({pass:true,total:meta.meta.total,active:meta.meta.active,media:meta.media,flex:meta.flex,mockCards:9,heatmap:35,mediaAccessibility:true,horizontalOverflow:false,pageErrors:0}));
+  console.log(JSON.stringify({pass:true,total:meta.meta.total,active:meta.meta.active,media:meta.media,flex:meta.flex,mockCards:9,heatmap:35,mediaAccessibility:true,q119Pairs:4,horizontalOverflow:false,pageErrors:0}));
 } finally { await browser.close(); }

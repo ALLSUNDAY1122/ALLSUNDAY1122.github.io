@@ -1,0 +1,30 @@
+[
+  {
+    "step": "tools/assemble_product_bank.py",
+    "exit": 0
+  },
+  {
+    "step": "tools/normalize_product_cases.py",
+    "exit": 0
+  },
+  {
+    "step": "tools/validate_raw_import.py",
+    "exit": 0
+  },
+  {
+    "step": "tools/build_web_bundle.py",
+    "exit": 0
+  },
+  {
+    "step": "tools/final_product_audit_v2.py",
+    "exit": 1
+  },
+  {
+    "step": "tools/validate_v06_web.py",
+    "exit": 1
+  },
+  {
+    "step": "scripts/validate_release.py",
+    "exit": 1
+  }
+]

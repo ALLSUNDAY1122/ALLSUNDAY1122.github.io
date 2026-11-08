@@ -33,7 +33,13 @@ jobs:
         run: |
           mkdir -p pharmacist-manabi-sprint/content/media
           set +e
-          python pharmacist-manabi-sprint/tools/build_media_assets.py > pharmacist-manabi-sprint/content/media/media-build.log 2>&1
+          # Pushes replay only source-verified corrections and retain legacy assets.
+          # A full legacy rebuild remains an explicit workflow_dispatch operation.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python pharmacist-manabi-sprint/tools/build_media_assets.py > pharmacist-manabi-sprint/content/media/media-build.log 2>&1
+          else
+            python pharmacist-manabi-sprint/tools/build_media_assets.py --verified-only > pharmacist-manabi-sprint/content/media/media-build.log 2>&1
+          fi
           code=$?
           set -e
           cat pharmacist-manabi-sprint/content/media/media-build.log
@@ -55,3 +61,4 @@ jobs:
           fi
       - name: Enforce media build gate
         run: test "${{ steps.build.outputs.exit_code }}" = '0'
+

@@ -103,7 +103,7 @@ for q in raw:
         'canonicalId': str(q.get('dailySprintCanonicalId') or q['id']),
     })
 
-assert (active, excluded, flexible, free) == (1031, 4, 3, 90), (active, excluded, flexible, free)
+assert (active, excluded, flexible, free) == (1031, 4, 4, 90), (active, excluded, flexible, free)
 assert all(q['id'] and q['exam'] in (109,110,111) and q['section'] in ('必須','理論','実践') for q in questions)
 assert all(q['memoryPoint'] and q['explanation'] for q in questions)
 assert all(q['sourceURL'].startswith('https://') for q in questions), 'every question must carry an HTTPS source URL'

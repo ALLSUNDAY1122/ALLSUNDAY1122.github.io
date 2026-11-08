@@ -54,7 +54,7 @@ questions = bank.get('questions', [])
 active = [q for q in questions if q.get('scoring_status') != 'excluded']
 excluded = [q for q in questions if q.get('scoring_status') == 'excluded']
 flexible = [q for q in questions if q.get('scoring_status') == 'multiple_accepted']
-if (len(questions), len(active), len(excluded), len(flexible)) != (1035, 1031, 4, 3):
+if (len(questions), len(active), len(excluded), len(flexible)) != (1035, 1031, 4, 4):
     errors.append(f'bank counts invalid {(len(questions), len(active), len(excluded), len(flexible))}')
 if web_audit.get('pass') is not True:
     errors.append('web/source audit not PASS')
