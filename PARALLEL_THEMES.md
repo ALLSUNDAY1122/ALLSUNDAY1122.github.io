@@ -49,7 +49,7 @@
 | FP2-ACA-B | FP2 | 公式学科の未収録分：原典台帳順の後半をデータ化 | OPEN | FP2-SOURCE | - | - | - | - | `fp2-manabi-sprint/batches/official/academic_part_b.json` |
 | FP2-PRAC-A | FP2 | 公式実技未収録分：原典台帳順の前半をデータ化 | OPEN | FP2-SOURCE | - | - | - | - | `fp2-manabi-sprint/batches/official/practical_part_a.json` |
 | FP2-PRAC-B | FP2 | 公式実技未収録分：原典台帳順の後半をデータ化 | OPEN | FP2-SOURCE | - | - | - | - | `fp2-manabi-sprint/batches/official/practical_part_b.json` |
-| FP2-GATES | FP2 | 固定500/600前提を廃止し実数・出典対応・重複・権利で判定する検査ゲートを改修 | OPEN | FP2-SOURCE | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_REAL_COUNT_GATES.md` |
+| FP2-GATES | FP2 | 固定500/600前提を廃止し実数・出典対応・重複・権利で判定する検査ゲートを改修 | CLAIMED | FP2-SOURCE | MUSE-EXT-GATE | 2026-11-09T06:34:00+09:00 | - | - | `fp2-manabi-sprint/audits/parallel/FP2_REAL_COUNT_GATES.md` |
 | FP2-MERGE | FP2 | 監査合格の公式過去問シャードのみ製品JSONへ統合、A01独自問題除外 | OPEN | FP2-OLD-R1,FP2-OLD-R2,FP2-OLD-R3,FP2-ACA-A,FP2-ACA-B,FP2-PRAC-A,FP2-PRAC-B,FP2-GATES | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_PRODUCT_MERGE.md` |
 | FP2-UI | FP2 | FP2製品UIを公式過去問スキーマに移行・暫定モックで画面検証 | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_UI_MIGRATION.md` |
 | FP2-E2E | FP2 | 製品JSON実数・UI・CI・権利表示の最終統合検査 | OPEN | FP2-MERGE,FP2-UI | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_E2E.md` |
