@@ -68,10 +68,63 @@
       "accessibleArticlePdf": "https://mhlw-grants.niph.go.jp/system/files/2008/083031/200823001B/200823001B0004.pdf",
       "appUse": "公式試験問題PDFが示す数値を再集計し、非飲酒群142、23g/日以上群196（10万観察人年当たり）を用いた独自文章問題。原表・図版・原文の転載は行わない方針。",
       "currentAppSource": "https://www.mhlw.go.jp/content/001455152.pdf",
-      "rightsAssessment": "原論文DOIと抄録は確認。原著は出版社のAll rights reserved表示があり、無許諾の表・図・本文再利用は行わない。独自文章に記した142・196の出典表照合と出典/加工表示の実機検証は未完了。",
-      "requiredAction": "公式問題PDFと原著Table 2を突合し、142・196の算出根拠、27～28%の計算、元表の表現を転載していないことを確認。原著DOIと出典を表示し、必要なら問題をさらに独立再構成。",
-      "status": "ARTICLE_IDENTIFIED; TABLE_VALUES_AND_RIGHTS_PENDING; APP_SOURCE_LINK_IMPLEMENTED",
-      "currentStatusEvidence": "原論文DOI・PubMed PMID18420544の書誌情報および23g/日以上の危険比について原著抄録を確認。142/196の表中値は原著本文Table 2への突合未完了。出版者サイトはAll rights reservedと表記。リンクだけを表示し、表・本文を転載しない。"
+      "rightsAssessment": "原著Table 2を公的研究成果PDFの画像で照合。非飲酒群311/218867×10万≒142、23g/日以上4群の合計1031/524754×10万≒196。試験で与えられた丸め値から(196−142)/196≒27.55%で約28%。原著本文の人口寄与割合27%とは指標・計算を混同しない。原表や原文はアプリへ転載しない。数値確認は権利適合の最終承認ではない。",
+      "requiredAction": "第三者の表現を複製しない独立文章であることの権利レビュー、表示出典・加工表記の実機確認、独立した内容レビューを完了する。",
+      "status": "TABLE2_NUMERICS_AND_EXAM_ROUNDING_CONFIRMED; RIGHTS_AND_DEVICE_REVIEW_PENDING",
+      "currentStatusEvidence": "原論文DOI・PubMed PMID18420544の書誌情報および23g/日以上の危険比について原著抄録を確認。142/196の表中値は原著本文Table 2への突合未完了。出版者サイトはAll rights reservedと表記。リンクだけを表示し、表・本文を転載しない。",
+      "verifiedEvidence": {
+        "verifiedAt": "2026-11-08",
+        "sourcePdf": "https://mhlw-grants.niph.go.jp/system/files/2008/083031/200823001B/200823001B0004.pdf",
+        "sha256": "0cfa98769a3d31253e34724e9b7447a03cf38572701d906a830c5a4002f5ade9",
+        "pdfPage": 1,
+        "table": "Table 2; printed page 58 / manuscript page 5",
+        "nondrinkers": {
+          "cases": 311,
+          "personYears": 218867,
+          "ratePer100000": 142.09542781689336
+        },
+        "exposed": {
+          "cases": [
+            363,
+            374,
+            182,
+            112
+          ],
+          "personYears": [
+            220367,
+            175414,
+            83438,
+            45535
+          ],
+          "sumCases": 1031,
+          "sumPersonYears": 524754,
+          "ratePer100000": 196.47301402180832
+        },
+        "examRoundedRates": [
+          142,
+          196
+        ],
+        "attributableFractionUsingExamRates": 0.2755102040816326,
+        "colonCancerConfidenceIntervals": [
+          [
+            1.31,
+            1.95
+          ],
+          [
+            1.51,
+            2.57
+          ],
+          [
+            1.45,
+            2.49
+          ],
+          [
+            2.5,
+            4.72
+          ]
+        ],
+        "scope": "AI visual comparison and arithmetic; not human review or copyright clearance"
+      }
     },
     {
       "id": "P110-140",
@@ -83,12 +136,20 @@
       "measurementStandardUrl": "https://www.env.go.jp/kijun/taiki.html",
       "currentAppSource": "https://www.mhlw.go.jp/content/001455152.pdf",
       "appUse": "NIES季節変動グラフは再利用せず、NOx発生源と光化学オキシダントの測定法に関する文章問題へ再構成。",
-      "rightsAssessment": "図表転載はしていないとされるが、NOx発生源の具体的根拠URLが不足。測定法は環境省告示・基準の改正履歴を確認する必要がある。",
+      "rightsAssessment": "現行文章では元のNIES季節変動グラフを使用しない。自動車・家庭用燃焼機器の発生源は国交省一次資料、測定法の新旧は環境省通知とNIES改定経緯で裏付けた。独立権利レビューと実機での出典表示確認は未完了。",
       "regulatoryDateIssue": "第110回試験日2025-02-23時点では中性ヨウ化カリウム法は測定法の一つ。2026-01-30改正後の現行方法は紫外線吸収法またはエチレンを用いる化学発光法。正答は歴史的に維持し、現行法の注記を追加する。",
-      "requiredAction": "NOx発生源の一次資料を特定し、出題時点と現行の環境基準・測定方法を区別した出典表示と解説を作成。",
-      "status": "2026_STANDARD_AMENDMENT_CONFIRMED; HISTORICAL_LAW_AND_NOX_SOURCE_PENDING",
-      "currentRegulationEvidence": "環境省公式ページが2026-01-30告示改正・2026-04-01施行を確認。出題時点の環境基準法令版の確定・NOx発生源の一次資料および独立レビューは未完了。"
+      "requiredAction": "元図の非同梱・新旧根拠と加工表示を独立レビューし、署名済み修正候補の実機表示を確認する。",
+      "status": "HISTORICAL_AND_CURRENT_METHOD_AND_NOX_SOURCE_CORROBORATED; INDEPENDENT_AND_DEVICE_REVIEW_PENDING",
+      "currentRegulationEvidence": "環境省公式ページが2026-01-30告示改正・2026-04-01施行を確認。出題時点の環境基準法令版の確定・NOx発生源の一次資料および独立レビューは未完了。",
+      "verifiedEvidence": {
+        "verifiedAt": "2026-11-08",
+        "historicalNotice": "https://www.env.go.jp/hourei/01/000052.html",
+        "currentNotice": "https://www.env.go.jp/content/000373249.pdf",
+        "timeline": "https://www.nies.go.jp/eqsbasis/air.html",
+        "noxSource": "https://www.ktr.mlit.go.jp/chiba/jihaikyoku/yogo/no2.htm",
+        "scope": "1996 notice retains neutral KI and adds UV/ethylene; NIES chronology and 2026 notice document removal; MLIT confirms vehicle/household combustion sources. Not an exhaustive legal opinion."
+      }
     }
   ],
-  "updatedAt": "2026-11-06"
+  "updatedAt": "2026-11-08"
 }
