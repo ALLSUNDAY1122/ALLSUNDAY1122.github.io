@@ -14,10 +14,10 @@
 
 ## 現状と保護対象
 
-- FP3正本 `fp3-manabi-sprint/audits/CONTENT_REAUDIT_20261108.md` は2026-11-08第3回追記時点で**180問中20問判定済み（合格17・要修正2・保留1）、未判定160問**。依頼で指定された最初の10問も含む。新規シャード・他セッションの追記は作業開始前に再確認。
-- 既判定ID: `2024-04`（合格）、`2024-48`・`2024-53`（要修正）、`2025-26`（合格）、`2026-01`～`2026-15`（合格15件）、`2026-20`（保留）。保留は再判定担当 `FP3-26-HOLD` のみ扱う。既判定に対する解説修正は `FP3-FIX-2` が専任。
-- Museが並行担当する `FP3-25-MUSE`/`FP3-26-MUSE` は**既存の外部取得としてCLAIMEDを先行登録**。2025/26の作業番号がまだ完全に確定しないため両年度の他シャードは、Muse成果の確定・完了（DONE）まで依存で保護する。これにより年度内の重複防止を優先。
-- FP3の初期認識10件から追加10件が判定済みになっている。監査の合格は制度論点の判定であって原典全選択肢の逐語照合完了ではない。製品ゲートはBLOCKED。
+- FP3監査の**集約値**（主監査記録第3回20問＋2025年度シャード20問＋2026年度シャード20問）は**180問中60問判定済み（合格46・要修正4・保留10）、未判定120問**。主監査記録 `fp3-manabi-sprint/audits/CONTENT_REAUDIT_20261108.md` 自体の集計はまだ20問であり、ここでの60問は3ファイルのID非重複集計。追加シャード・他セッションの追記は作業開始前に再確認。
+- 既判定ID: `2024-04`（合格）、`2024-48`・`2024-53`（要修正）、`2025-01`～`2025-20`（合格11・要修正2・保留7）、`2025-26`（合格）、`2026-01`～`2026-15`（合格15件）、`2026-16`～`2026-19`・`2026-21`～`2026-36`（合格18・保留2）、`2026-20`（保留）。要修正4問は `2024-48`,`2024-53`,`2025-15`,`2025-17`。判定済みのシャードIDを再監査しない。`2026-20`の保留再判定は`FP3-26-HOLD`のみ。要修正4問への反映は`FP3-FIX-2`が専任。
+- Muse/Claude担当の2025年度シャード（`FP3-25-CLAUDE`、`826bfe9e817006d3e0193481ba99622ce41780ca`、2025-01～20）と2026年度シャード（`FP3-26-CLAUDE`、`5f184b977aaa8e2d0fc10ed4db9f146cd547b8c5`、2026-16～19・21～36）は**ともにDONE**。成果の元ブランチは `codex/fp-release-preparation-20261107`。依存していた2025/2026残範囲テーマは取得可能。ただし各テーマはこれら既判定IDを除外する。
+- FP3の累計は主監査20問＋外部シャード40問＝60問（合格46・要修正4・保留10）。監査の合格は制度論点の判定であって原典全選択肢の逐語照合完了ではない。製品ゲートはBLOCKED。
 - FP3 AppIcon正本・XcodeGen・Simulatorビルドは既存のCI実績があるが、FP3専用Preflightワークフロー実行は未確認。`FP3-PREFLIGHT` はこの残件だけを調べる。
 - FP2公式過去問500問は**検証前の計画目標**。原典の実数、利用条件、学科/実技の回次を確認するまで完成数と断定しない。旧180問は再利用が自動承認されたわけではない。FP2の従前 `CONTENT_BATCH_PLAN.md` の独自600問方針は今回の製品方針と不一致であり、製品へは適用しない。
 - FP2旧180問「R1～R3」は仮の回次グループ識別子。実際の原典回次と旧180問の対応・件数を最初に確認し、**IDの昇順で原典回次を並べた第1・第2・第3群**として固定する。180問の実回次数が3でない場合は成果をBLOCKEDにして管理者へ分割修正を要求し、同じ原典回次を複数担当へ割り当てない。回次未確定時の推測による監査は不可。
@@ -30,15 +30,15 @@
 | FP3-24-A | FP3 | 2024年度01–20（既判定04を除外）一次資料再監査 | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2024_01_20.md` |
 | FP3-24-B | FP3 | 2024年度21–40 一次資料再監査 | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2024_21_40.md` |
 | FP3-24-C | FP3 | 2024年度41–60（既判定48・53を除外）一次資料再監査 | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2024_41_60.md` |
-| FP3-25-MUSE | FP3 | Muse実行中：2025年度未判定最大20問（既判定26除外、担当IDは成果で確定） | CLAIMED | - | MUSE-EXTERNAL | 外部実行中・取得時刻未確認 | external-unverified | - | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2025.md` |
-| FP3-26-MUSE | FP3 | Muse実行中：2026年度未判定最大20問（既判定01–15・20除外、担当IDは成果で確定） | CLAIMED | - | MUSE-EXTERNAL | 外部実行中・取得時刻未確認 | external-unverified | - | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2026.md` |
-| FP3-25-A | FP3 | 2025年度01–20のMuse非取得IDを監査 | OPEN | FP3-25-MUSE | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2025_01_20.md` |
-| FP3-25-B | FP3 | 2025年度21–40のMuse非取得IDを監査（26既判定） | OPEN | FP3-25-MUSE | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2025_21_40.md` |
-| FP3-25-C | FP3 | 2025年度41–60のMuse非取得IDを監査 | OPEN | FP3-25-MUSE | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2025_41_60.md` |
-| FP3-26-A | FP3 | 2026年度16–35のMuse非取得IDを監査（20保留の再判定は別作業） | OPEN | FP3-26-MUSE | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2026_16_35.md` |
-| FP3-26-B | FP3 | 2026年度36–60のMuse非取得IDを監査 | OPEN | FP3-26-MUSE | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2026_36_60.md` |
+| FP3-25-CLAUDE | FP3 | 2025年度01～20の20問（合格11・要修正2・保留7） | DONE | - | MUSE-EXTERNAL | 取得時刻未確認 | external-unverified | 2026-11-08（コミット日・時刻の詳細は当該コミット） | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2025.md` / `826bfe9e817006d3e0193481ba99622ce41780ca` |
+| FP3-26-CLAUDE | FP3 | 2026年度16～19・21～36の20問（合格18・要修正0・保留2） | DONE | - | MUSE-EXTERNAL | 取得時刻未確認 | external-unverified | 2026-11-08（コミット日・時刻の詳細は当該コミット） | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2026.md` / `5f184b977aaa8e2d0fc10ed4db9f146cd547b8c5` |
+| FP3-25-A | FP3 | 2025年度01–20は全件判定済み：重複監査禁止 | DONE | FP3-25-CLAUDE | - | - | - | 2026-11-08（外部シャード） | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2025.md` / 826bfe9 |
+| FP3-25-B | FP3 | 2025年度21–40（26既判定除外）を監査 | OPEN | FP3-25-CLAUDE | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2025_21_40.md` |
+| FP3-25-C | FP3 | 2025年度41–60を監査 | OPEN | FP3-25-CLAUDE | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2025_41_60.md` |
+| FP3-26-A | FP3 | 2026年度16–35は全件判定済み：重複監査禁止 | DONE | FP3-26-CLAUDE | - | - | - | 2026-11-08（外部シャード） | `fp3-manabi-sprint/audits/REAUDIT_SHARD_2026.md` / 5f184b9 |
+| FP3-26-B | FP3 | 2026年度37–60を監査（36判定済み） | OPEN | FP3-26-CLAUDE | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2026_36_60.md` |
 | FP3-26-HOLD | FP3 | 2026-20保留の施行日・法令基準日照合と判定 | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_2026_20_HOLD.md` |
-| FP3-FIX-2 | FP3 | 2024-48/53の監査済み解説差分を反映（ロック解除承認待ち） | BLOCKED | FP3-24-C | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_EXPLANATION_FIX.md` |
+| FP3-FIX-2 | FP3 | 4問（2024-48/53・2025-15/17）の解説/文言修正（ロック解除承認待ち） | BLOCKED | FP3-24-C | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_EXPLANATION_FIX.md` |
 | FP3-PREFLIGHT | FP3 | FP3専用Preflight実行・XcodeGen/Simulator結果記録（既成功と再実行を区別） | OPEN | - | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_PREFLIGHT.md` |
 | FP3-CONSOLIDATE | FP3 | 年度シャードを正本へ統合し180問の重複・欠番・判定集計・原典照合ゲート確認 | OPEN | FP3-24-A,FP3-24-B,FP3-24-C,FP3-25-A,FP3-25-B,FP3-25-C,FP3-26-A,FP3-26-B,FP3-26-HOLD,FP3-FIX-2 | - | - | - | - | `fp3-manabi-sprint/audits/parallel/FP3_CONSOLIDATION.md` |
 | FP2-SOURCE | FP2 | 公式過去問原本・許諾条件・回次別学科/実技実数台帳（計画500と実数を分離） | OPEN | - | - | - | - | - | `fp2-manabi-sprint/audits/parallel/FP2_OFFICIAL_SOURCE_LEDGER.md` |
@@ -57,8 +57,8 @@
 ## 完了条件と依存上の注意
 
 - 各監査成果は対象ID、原典/法令の一次資料URL、対象基準日、確認範囲、PASS/FAIL/UNVERIFIED相当判定、問題数と未完了件数を残す。取得後に既判定やMuse取得IDを発見した場合はスキップし理由を記載。
-- `FP3-25-MUSE`/`FP3-26-MUSE` のDONE化は、該当する外部担当のpush済み成果ファイル・コミットを確認した管理者だけが行う。外部担当のタイムスタンプを捏造しない。
-- `FP3-FIX-2` はロック済みデータの編集承認とソースロック解除手順が未確認のため初期BLOCKED。監査記録への差分提案は既存であり、明示許可のない実データ変更は禁止。承認後も対象の解説以外は変更しない。
+- `FP3-25-CLAUDE`/`FP3-26-CLAUDE` は指定コミットで成果を確認しDONEに変更済み。依存が解けた他テーマでも、判定済みの2025-01～20・2026-16～19/21～36は再担当しない。`FP3-25-A`/`FP3-26-A` は全対象判定済みのため作業不要DONEとし、成果は各CLAUDEシャードを参照する。
+- `FP3-FIX-2` は対象4問（2024-48・2024-53・2025-15・2025-17）。2025-15は犯収法の確認記録/取引記録文言区別、2025-17は2024年分と2025年分以降の給与所得控除の時点区別。ロック済みデータの編集承認とソースロック解除手順が未確認のためBLOCKEDを維持し、問題文言の変更可否も別途判断する。
 - `FP3-CONSOLIDATE` は各年度の監査ファイルを集計する。製品ゲート解除は全180問の必要な原典照合・解説反映検証完了と別判定。監査ログの単純集計をリリース承認としない。
 - `FP2-SOURCE` は公表物を収集・出典識別子を定義し、正規の使用条件と加工明示を記載。 `FP2-OLD-R*` は先行して旧データの原典回次を照会できるが、原典回次割当が分からなければBLOCKEDにする。
 - `FP2-GATES` は未監査/不一致/権利不明・不明な原典IDをFAILまたはBLOCKEDとする。製品問題数は実数とし、固定500件への水増しを禁止。
