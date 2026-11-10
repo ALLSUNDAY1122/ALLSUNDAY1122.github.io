@@ -1,0 +1,26 @@
+name: HM2 stem cluster audit
+on:
+  push:
+    branches: [audit/hm2-quality-20261110]
+    paths:
+      - scripts/audit_sm2_question_stem_clusters.cjs
+      - scripts/redesign_sm2_largest_stem_cluster.cjs
+      - apps/sanitary-manager-2/audit-fixes.js
+      - .github/workflows/hm2-stem-cluster-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Enumerate duplicate clusters and IDs
+        run: node scripts/audit_sm2_question_stem_clusters.cjs
+      - name: Verify previous seven source fixes
+        run: node scripts/verify_sm2_seven_primary_sources.cjs
+      - name: Verify previous fifteen multiple-answer fixes
+        run: node scripts/verify_sm2_15_unique_answers.cjs
