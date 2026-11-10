@@ -14,3 +14,94 @@ const SM2_AUDIT_FIXES={
 "sm2-r7a-027":{topic:"筋収縮とクレアチンリン酸",question:"短時間の強い運動を開始した直後、筋内でATPをすばやく再合成するために利用される物質はどれか。",choices:["胆汁酸","クレアチンリン酸","尿素","ビリルビン","抗体"],answer:2,quick:"運動開始直後のATP再合成には、筋内のクレアチンリン酸がすばやく使われる。",explanation:"筋収縮そのものにはATPが必要だが、ATP貯蔵量は少ない。短時間の高強度運動ではクレアチンリン酸がリン酸基を供与し、ATPを迅速に再合成する。",basis:"筋のエネルギー代謝"}
 };
 for(const q of (window.Q_PARTS||[])){const f=SM2_AUDIT_FIXES[q.id];if(f)Object.assign(q,f)}
+
+
+// SM2_15_SINGLE_ANSWER_20261110
+// These explicit, independently distinguishable mismatched pairs replace auto-paired
+// distractors implicated in 15 potentially multiple-correct questions.
+// Applied AFTER difficulty-patch-v5 in browser and AFTER audit overlays in release export.
+(function(){
+'use strict';
+const cases=[
+ ['sm2-5y-r06-hyg-06','心の健康づくり計画','mh'],
+ ['sm2-5y-r06-hyg-07','健康情報の保護','mh'],
+ ['sm2-5y-r06-hyg-08','職場復帰支援','mh'],
+ ['sm2-5y-r09-hyg-08','脊椎損傷の疑い','aid'],
+ ['sm2-5y-r09-hyg-09','健康診断後の事後措置','aid'],
+ ['sm2-5y-r09-hyg-10','保健指導','aid'],
+ ['sm2-5y-r06-phy-03','肺活量','resp'],
+ ['sm2-5y-r06-phy-04','呼吸中枢','resp'],
+ ['sm2-5y-r06-phy-05','二酸化炭素と呼吸調節','resp'],
+ ['sm2-5y-r08-phy-03','大脳皮質','sense'],
+ ['sm2-5y-r08-phy-04','瞳孔','sense'],
+ ['sm2-5y-r08-phy-05','水晶体','sense'],
+ ['sm2-5y-r08-phy-07','杆体','sense'],
+ ['sm2-5y-r08-phy-08','錐体','sense'],
+ ['sm2-5y-r08-phy-09','蝸牛','sense']
+];
+const wrong={
+ mh:[
+ 'セルフケア ― 管理監督者が部下の相談対応や職場環境改善を担う。',
+ 'ラインによるケア ― 事業場外の専門機関を活用した支援のみを指す。',
+ '事業場外資源によるケア ― 労働者が自らストレスに気づいて対処する活動を指す。',
+ '一次予防 ― 疾病の発生後にリハビリテーションを行い社会復帰を支援する。',
+ '二次予防 ― 疾病の発生前に危険因子を低減して発症を予防する。',
+ '事業場内産業保健スタッフ等によるケア ― 産業医等を除き、外部の専門機関だけで実施する。',
+ 'ラインによるケア ― 健康情報の本人同意を不要とする管理監督者の権限をいう。'
+ ],
+ aid:[
+ '骨折の固定 ― 出血部位の圧迫のみで骨折部位の不動化を完了する処置をいう。',
+ '直接圧迫止血 ― 意識・呼吸の確認に続いて胸骨圧迫を行う手順をいう。',
+ 'AED ― 皮膚の熱傷部位を流水で冷却するための救急資器材をいう。',
+ '胸骨圧迫のテンポ ― 成人では毎分60～80回を標準とする。',
+ '一次救命処置 ― 反応がない傷病者に対して、呼吸の有無にかかわらず直ちに水を飲ませる。',
+ '健康診断後の事後措置 ― 医師等の意見を聴かず、健診結果の数値のみで一律に配置転換する。',
+ '保健指導 ― 医学的判断を伴う就業禁止を本人への説明なく自動で決定することをいう。'
+ ],
+ resp:[
+ '一回換気量 ― 最大吸息後に努力して吐き出せる最大の空気量をいう。',
+ '肺活量 ― 安静な1回の呼吸で吸い込み又は吐き出す空気量をいう。',
+ '呼吸中枢 ― 腎臓に存在し、糸球体で原尿を形成する部位をいう。',
+ '二酸化炭素と呼吸調節 ― 血中二酸化炭素の増加は通常、換気を低下させる方向に働く。',
+ 'ネフロン ― 延髄にある呼吸リズム形成の神経回路をいう。',
+ '抗利尿ホルモン ― 腎臓の水再吸収を減らして尿量を増やす方向に働く。',
+ '糸球体 ― 原尿中の水分を選択的に血液へ戻す尿細管部分をいう。'
+ ],
+ sense:[
+ '小脳 ― 視細胞を含み、光刺激を神経信号へ変換する眼球内の膜をいう。',
+ '大脳皮質 ― 内耳の半規管内で頭部回転の加速度だけを受容する部位をいう。',
+ '網膜 ― 虹彩の収縮により開口部の径を直接変える眼球の透明なレンズをいう。',
+ '瞳孔 ― 厚みを変えることにより遠近の焦点調節を担う透明な組織をいう。',
+ '水晶体 ― 光を電気信号に変換する杆体・錐体が密集する神経組織をいう。',
+ '杆体 ― 明るい場所での色識別を主に担い、暗所視にはほとんど関与しない。',
+ '錐体 ― 暗所で主に機能し、色の識別は行わない視細胞である。',
+ '蝸牛 ― 頭部の回転運動を検出する半規管の感覚器である。',
+ '半規管 ― 音刺激の周波数分析を主に担う蝸牛の感覚上皮をいう。'
+ ]
+};
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+for(let n=0;n<cases.length;n++){
+ const [id,topic,group]=cases[n];
+ const q=byId.get(id);
+ if(!q||q.topic!==topic||!Number.isInteger(q.answer)||q.answer<1||q.answer>5){
+   throw new Error('SM2 15-answer audit target mismatch: '+id);
+ }
+ const termDefinition=String(q.quick||'').split('：').slice(1).join('：').trim();
+ if(!termDefinition)throw new Error('Missing definition for '+id);
+ const correct=topic+' ― '+termDefinition;
+ const pool=wrong[group];
+ // Rotate to avoid presenting identical distractor groups in adjacent questions.
+ const distractors=[0,1,2,3].map(k=>pool[(n+k*2)%pool.length]);
+ const choices=distractors.slice();
+ choices.splice(q.answer-1,0,correct);
+ if(new Set(choices).size!==5)throw new Error('Duplicate choice: '+id);
+ q.question='次の「項目―内容」の組合せのうち、正しいものはどれか。';
+ q.choices=choices;
+ q.quick=correct;
+ q.explanation='正解は「'+correct+'」。それ以外の4組は、制度・器官・指標・処置の対象、機能又は定義を入れ替えた不一致の組合せである。'+
+  '原典・基礎根拠：'+q.basis+'。';
+ q.singleAnswerAudit='2026-11-10-15-items';
+ q.answerAuditMethod='four explicit false pairings, answer index preserved';
+}
+window.SM2_SINGLE_ANSWER_15={total:cases.length,ids:cases.map(c=>c[0])};
+})();
