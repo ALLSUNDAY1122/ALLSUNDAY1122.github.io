@@ -130,7 +130,7 @@ const fixes=[{"id":"sm2-demo-015","topic":"健康保持増進対策","question":
 const qs=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
 for(const fix of fixes){const q=qs.get(fix.id);if(!q||q.topic!==fix.topic)throw Error('HM2 seven-source target mismatch '+fix.id);
 if(!Array.isArray(fix.choices)||fix.choices.length!==5||new Set(fix.choices).size!==5||q.answer!==fix.answer)throw Error('HM2 seven-source choice/position mismatch '+fix.id);
-Object.assign(q,fix,{baselineDate:'2026-11-10',contentChecked:'2026-11-10',auditStatus:'一次資料再照合済',publicationStatus:'公開候補',primarySourceVerified:'2026-11-10'});
+Object.assign(q,fix,{baselineDate:'2026-11-10',contentChecked:'2026-11-10',auditStatus:q.fiveYearExpansion?(q.lawRelated?'一次資料照合済':'内容監査済'):'一次資料再照合済',publicationStatus:'公開候補',primarySourceVerified:'2026-11-10'});
 if(q.lawRelated)q.legalChecked='2026-11-10';}
 window.SM2_SEVEN_PRIMARY_SOURCE_AUDIT={ids:fixes.map(x=>x.id),total:fixes.length};
 })();
