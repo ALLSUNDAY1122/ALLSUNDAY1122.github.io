@@ -29,7 +29,7 @@ for(const [mode,files] of [['browser',[...base,'difficulty-patch-v5.js',...overl
  const clusters=new Map();for(const q of qs){const n=normal(q.question);clusters.set(n,(clusters.get(n)||0)+1)}
  const largest=Math.max(...clusters.values());
  const clusterCounts=[...clusters.values()].filter(n=>n>1).sort((a,b)=>b-a);
- if(mode==='browser'){assert.equal(largest,39,'max should shrink below 40');assert.equal(clusters.size,153,'113+40 distinct expected');assert.deepEqual(clusterCounts,[39,38,38,37]);}
+ if(mode==='browser'){assert.equal(largest,39,'max should shrink below 40');assert.equal(clusters.size,152,'113 - one removed shared stem + 40 distinct cases');assert.deepEqual(clusterCounts,[39,38,38,37]);}
  if(mode==='release-export'){assert.equal(clusters.size,300);}
  console.log('PASS',mode,JSON.stringify({questions:qs.length,uniqueStems:clusters.size,largest,clusterCounts,redesigned:seen.size}));
 }
