@@ -54,3 +54,10 @@
 
 ### 注意点
 「パッチ適用15件」と「品質監査に完全合格15件」は異なる。CI結果と実出題エクスポートの一致を確認してから、この15件の完全解消を確定する。
+
+### CI実行証跡（2026-11-10）
+- GitHub Actions run: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42835949406
+- 対象commit: `99aa5122f7193e803b97956cce8211d8fba18ce0`
+- `unique-answer-check`: **SUCCESS**。`Verify all 15 in both loading orders` ステップも SUCCESS。
+- ブラウザー・iOSエクスポート各順序で300問、15対象ID、5肢重複なし、正答位置と説明の対応、問題文の相互重複を検査した。
+- ただし、法令・医学的な第三者逐語レビューやApp Store Connect操作を行った意味ではない。
