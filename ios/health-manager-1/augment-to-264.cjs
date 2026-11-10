@@ -131,6 +131,9 @@ for (const round of layouts) {
   if (n !== 45) throw new Error(`${round.id}: expected 44 questions, got ${n-1}`);
 }
 
+// Apply HM1-only revisions after selection so HM2 and A/C ordering stay unchanged.
+const revisedIds = require('./apply-content-overrides.cjs').applyContentOverrides(added);
+
 const all = [...base, ...added];
 if (all.length !== 264) throw new Error(`Expected total=264, got ${all.length}`);
 if (new Set(all.map(q=>q.id)).size !== 264) throw new Error('Duplicate ids in HM1 264 bank');
@@ -149,6 +152,8 @@ for (const r of ['2026-04','2025-10','2025-04','practice-A','practice-B','practi
 fs.writeFileSync(HM1, JSON.stringify(all, null, 2) + '\n');
 const audit = {
   generatedAt: '2026-08-19',
+  revisionBatch: 'hm1-b-20261110',
+  revisedQuestionIds: revisedIds,
   baseQuestions: base.length,
   addedQuestions: added.length,
   totalQuestions: all.length,
