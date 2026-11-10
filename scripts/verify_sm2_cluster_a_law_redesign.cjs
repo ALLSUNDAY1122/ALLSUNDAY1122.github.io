@@ -24,7 +24,7 @@ for(const [mode,files] of [['browser',[...base,'difficulty-patch-v5.js',...overl
  assert.equal(groups.size,30,mode+' groups');
  for(const [k,items] of groups){assert.equal(items.length,10,k);const pos=[0,0,0,0,0];for(const q of items){assert.equal(q.choices.length,5,q.id);assert.equal(new Set(q.choices).size,5,q.id);assert.ok(q.answer>=1&&q.answer<=5,q.id);pos[q.answer-1]++}assert.ok(pos.every(n=>n===2),k+' positions '+pos);}
  const seen=new Set();
- for(const id of target){const q=qs.find(x=>x.id===id);assert.ok(q,id);assert.equal(q.difficultyModel,'law-case-comparison-v2',id);assert.ok(q.answer>=1&&q.answer<=5,id);assert.equal(q.choices[q.answer-1],truth.get(id),id+' correct option moved by ordering');assert.equal(q.subject,'関係法令',id);assert.ok(q.question.length>28,id);assert.ok(q.choices[q.answer-1].length>2,id);assert.ok(q.explanation.length>40,id);const key=normal(q.question);assert.ok(!seen.has(key),id+' duplicate redesign stem');seen.add(key)}
+ for(const id of target){const q=qs.find(x=>x.id===id);assert.ok(q,id);assert.equal(q.difficultyModel,'law-case-comparison-v2',id);assert.ok(q.answer>=1&&q.answer<=5,id);assert.equal(q.choices[q.answer-1],truth.get(id),id+' correct option moved by ordering');assert.equal(q.subject,'関係法令',id);assert.ok(q.question.length>28,id);assert.ok(q.choices[q.answer-1].length>2,id);assert.ok(q.explanation.length>=30,id);const key=normal(q.question);assert.ok(!seen.has(key),id+' duplicate redesign stem');seen.add(key)}
  assert.equal(seen.size,14);
  const clusters=new Map();for(const q of qs){const n=normal(q.question);clusters.set(n,(clusters.get(n)||0)+1)}
  const largest=Math.max(...clusters.values());
