@@ -38,7 +38,7 @@ assert.equal(new Set(after.map(q=>q.id)).size,264);
 for(const round of ['2026-04','2025-10','2025-04','practice-A','practice-B','practice-C'])
   assert.equal(after.filter(q=>q.round===round).length,44);
 const changed=after.filter((q,i)=>JSON.stringify(q)!==JSON.stringify(before[i])).map(q=>q.id).sort();
-assert.deepEqual(changed,targets,'Only seven requested rows may change');
+assert.deepEqual(changed,targets,'Only registered override rows may change');
 assert.deepEqual(after.filter(q=>q.round!=='practice-B'),before.filter(q=>q.round!=='practice-B'),'Base/A/C unchanged');
 for(const q of after){
   assert.equal(q.choices.length,5);
@@ -71,4 +71,4 @@ assert(re.test(index),'Existing bundle embed marker');
 const materialized=index.replace(re,'const QUESTIONS='+compact+';\nconst DOMAINS=');
 const embedded=JSON.parse(materialized.match(/const QUESTIONS=(\[.*?\]);\nconst DOMAINS=/s)[1]);
 assert.deepEqual(embedded,after,'Release embedding preserves revisions');
-console.log(JSON.stringify({pass:true,total:264,changed,unchanged:257,deterministic:true,driftRejected:true,bundleRoundtrip:true,fixture:dir},null,2));
+console.log(JSON.stringify({pass:true,total:264,changed,unchanged:247,deterministic:true,driftRejected:true,bundleRoundtrip:true,fixture:dir},null,2));
