@@ -461,3 +461,13 @@ if(fixes.length!==5||new Set(fixes.map(f=>f.id)).size!==5)throw Error('HM2 seven
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 seventeenth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
 window.SM2_INDEPENDENT_SEVENTEENTH10_METADATA_FIX5_IDS=fixes.map(f=>f.id);
 })();
+
+
+// SM2_INDEPENDENT_EIGHTEENTH9_METADATA_FIX4_20261111: final legacy topic review No.174,176-178; topic/basis only. All questions, answers, sources and release gates unchanged.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r08-phy-10","topic":"対光反射による縮瞳と瞳孔括約筋","basis":"視覚・自律神経生理／副交感神経遠心路と瞳孔括約筋"},{"id":"sm2-5y-r09-phy-02","topic":"骨格筋の滑走説とアクチン・ミオシン","basis":"筋生理／筋原線維の滑走機構"},{"id":"sm2-5y-r09-phy-03","topic":"対光反射の副交感神経性縮瞳","basis":"視覚・自律神経生理／瞳孔括約筋と対光反射"},{"id":"sm2-5y-r09-phy-04","topic":"死腔量を考慮した毎分肺胞換気量","basis":"呼吸生理／肺胞換気量と死腔・呼吸数"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==4||new Set(fixes.map(f=>f.id)).size!==4)throw Error('HM2 eighteenth9 metadata fix count/IDs invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 eighteenth9 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
+window.SM2_INDEPENDENT_EIGHTEENTH9_METADATA_FIX4_IDS=fixes.map(f=>f.id);
+})();
