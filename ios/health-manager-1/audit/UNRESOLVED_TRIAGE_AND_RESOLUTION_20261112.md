@@ -106,3 +106,23 @@
 ### C. 引き継ぎ
 - **今回の問題データ変更ID：演習A Q27・Q33、演習B Q27・Q31、演習C Q04の5問**。正答・設問・全選択肢は変更なし。B31・C04は解説フィールド変更。
 - 本コミットの5問は264問Node CLI再生成・限定差分・Web/iOS配布JSONバイト比較・SHA256未実施。次にMuse側の独立検証を必須とする。a群の分類母数85件（未解消85件の意味ではない）。全肢逐語証明・商用権利・法令施行日・実機未了。**リリースゲートFAIL/BLOCKED維持**。
+
+
+## 続編第5回：Muse演習5問限定差分PASS、（a）群基本Q02・Q04・Q08・Q12・Q14・Q20の6問（2026-11-12）
+
+### Muse側実施済みの演習5問・264問再生成（ユーザー提供）
+- 比較基準`abf8d31`と前回修正後状態でそれぞれNode CLI264問再生成成功。
+- 差分は`practice-A-Q27`・`practice-A-Q33`・`practice-B-Q27`・`practice-B-Q31`・`practice-C-Q04`の**5問のみ**。出典参照・監査ステータス・出典URL、一部の解説の変更。正答index全問不変、**他259問完全一致**。**限定差分PASS（Muse側報告）**。
+- 今回の担当ではMuseローカルの再実行・Web/iOS配布バイトSHA256の独立照合をしていない。今回の新規基本6問の判定に前回PASSを転用しない。
+
+### a群第5次・基本6問の登録原典照合
+- **`2026-04-Q02`／DIRECT_CENTRAL_STATUTORY_STANDARD**：平成26年厚労省告示第455号（令和5年改正を含む）第1条・第5条：防じん用電動ファン付き呼吸用保護具の規格・18%未満酸素濃度の適用外・面体密着確認構造。検定・個別着用確認を一体視しない。。登録URL：`https://anzeninfo.mhlw.go.jp/yougo/yougo88_1.html`、今回採用の直接確認URL：`https://www.mhlw.go.jp/web/t_doc?dataId=74ab4390&dataType=0&pageNo=1`。変更：`auditSourceURL、auditStatus`、正答index 3 不変。**保留**：型式検定全要件・各選択肢の個別逐語反証は未完了。
+- **`2026-04-Q04`／DIRECT_CENTRAL_OFFICIAL_LICENSE_REQUIREMENT**：厚労省『化学物質の製造許可手続き』が安衛法56条、特化則第一類物質の製造には厚生労働大臣の許可を必要と明記。所轄労基署は申請・相談窓口で許可主体ではない。。登録URL：`https://www.mhlw.go.jp/web/t_doc?dataId=74097000&dataType=0`、今回採用の直接確認URL：`https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/sekimen/other/pamph/index_00001.html`。変更：`auditSourceURL、auditStatus`、正答index 1 不変。**保留**：試験研究・少量製造等の例外全件と2026年適用施行版は未逐語照合。
+- **`2026-04-Q08`／DIRECT_CENTRAL_OFFICIAL_QA**：厚労省ラベル/SDS Q&A Q11-1は小型容器にも個別ラベルまたはタグ、SDSのホームページアドレス伝達は容器ラベルの代替にはならないと明記。。登録URL：`https://www.mhlw.go.jp/stf/newpage_11237.html`、今回採用の直接確認URL：`https://www.mhlw.go.jp/stf/newpage_11237.html`。変更：`auditStatus`、正答index 1 不変。**保留**：全法定例外と適用製品区分は未照合。
+- **`2026-04-Q12`／DIRECT_CENTRAL_OFFICIAL_RISK_ASSESSMENT_QA**：厚労省化学物質RA Q&A Q3-6は代替後の危険有害性・RA再評価、危険性が低いことが明らかな物質への代替を推奨。。登録URL：`https://www.mhlw.go.jp/stf/newpage_11389.html`、今回採用の直接確認URL：`https://www.mhlw.go.jp/stf/newpage_11389.html`。変更：`auditStatus`、正答index 0 不変。**保留**：全措置優先順位を一資料で逐語確認したわけではない。
+- **`2026-04-Q14`／DIRECT_CENTRAL_OFFICIAL_NOISE_GUIDELINE**：令和5年改訂の騒音障害防止ガイドラインは85～90dB未満の設備・作業方法改善、必要に応じた聴覚保護具と測定結果の考慮を明記。設問88dBを包含。。登録URL：`https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1`、今回採用の直接確認URL：`https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1`。変更：`auditStatus`、正答index 4 不変。**保留**：保護具の公称遮音と個人実効遮音の関係は追加資料確認が必要。
+- **`2026-04-Q20`／DIRECT_CENTRAL_SOLVENT_REGULATION**：厚労省有機溶剤中毒予防規則第29条・別表等にノルマルヘキサンでの尿中2,5-ヘキサンジオン検査が明記、キシレン・トルエン等との違いを直接確認。。登録URL：`https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1`、今回採用の直接確認URL：`https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1`。変更：`auditStatus`、正答index 3 不変。**保留**：採尿時間・分析法・法改正の全ての特例の独立逐語確認は未完了。
+- Q02、Q04は登録URLが中心命題を直接説明する厚労省資料とは異なったため、公開一次資料へ置換。他のQ08、Q12、Q14、Q20は登録URLに直接説明が存在し、URLを維持し監査状態だけを更新。
+- 生成元`Resources/questions.json`の変更は**上記6問のみ**。他126問不変、基本132問の全問題文・全5肢・正答index・解説は不変。原典の中心命題に関する照合ができたことと、各問題の全5肢独立逐語証明済み判定は異なる。
+- 個別追証台帳：`audit/PRIMARY_SOURCE_AUDIT_A_BATCH5_20261112.json`。元URL、採用URL、原典上の根拠、保留、実変更キーを記録。
+- 次はこのコミットの基本6問に対するMuse側の264問再生成・限定差分・配布SHA256確認。公開基準の独立全肢直接証明、法令施行日、商用利用権の検証は未了。**ゲートFAIL/BLOCKED維持**。

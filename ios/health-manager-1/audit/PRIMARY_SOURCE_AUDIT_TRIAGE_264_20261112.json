@@ -1511,5 +1511,112 @@
       "allFiveDirectProofPass": false
     }
   ],
-  "disclaimer": "旧個別台帳に残るPENDING/PARTIALは過去のスナップショット。今回5問は中心命題追証までであり全肢独立逐語証明や最新適用法令バージョンまで公開承認した意味ではない。"
+  "disclaimer": "旧個別台帳に残るPENDING/PARTIALは過去のスナップショット。今回5問は中心命題追証までであり全肢独立逐語証明や最新適用法令バージョンまで公開承認した意味ではない。",
+  "batchFiveMuseValidation": {
+    "method": "Muse side local regeneration result supplied by user",
+    "baseline": "abf8d31",
+    "baselineRegenerated": true,
+    "currentRegenerated": true,
+    "changedQuestionIds": [
+      "practice-A-Q27",
+      "practice-A-Q33",
+      "practice-B-Q27",
+      "practice-B-Q31",
+      "practice-C-Q04"
+    ],
+    "changedFields": "sourceRef/auditStatus/auditSourceURL and some detail",
+    "answersUnchanged": true,
+    "other259Identical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentRunInThisSession": false
+  },
+  "batchFiveResolutions": [
+    {
+      "id": "2026-04-Q02",
+      "url": "https://www.mhlw.go.jp/web/t_doc?dataId=74ab4390&dataType=0&pageNo=1",
+      "evidence": "平成26年厚労省告示第455号（令和5年改正を含む）第1条・第5条：防じん用電動ファン付き呼吸用保護具の規格・18%未満酸素濃度の適用外・面体密着確認構造。検定・個別着用確認を一体視しない。",
+      "state": "DIRECT_CENTRAL_STATUTORY_STANDARD",
+      "caveat": "型式検定全要件・各選択肢の個別逐語反証は未完了",
+      "previousAuditURL": "https://anzeninfo.mhlw.go.jp/yougo/yougo88_1.html",
+      "verifiedAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74ab4390&dataType=0&pageNo=1",
+      "answerIndex": 3,
+      "changeFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "fullFiveChoicePass": false
+    },
+    {
+      "id": "2026-04-Q04",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/sekimen/other/pamph/index_00001.html",
+      "evidence": "厚労省『化学物質の製造許可手続き』が安衛法56条、特化則第一類物質の製造には厚生労働大臣の許可を必要と明記。所轄労基署は申請・相談窓口で許可主体ではない。",
+      "state": "DIRECT_CENTRAL_OFFICIAL_LICENSE_REQUIREMENT",
+      "caveat": "試験研究・少量製造等の例外全件と2026年適用施行版は未逐語照合",
+      "previousAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74097000&dataType=0",
+      "verifiedAuditURL": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/sekimen/other/pamph/index_00001.html",
+      "answerIndex": 1,
+      "changeFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "fullFiveChoicePass": false
+    },
+    {
+      "id": "2026-04-Q08",
+      "url": null,
+      "evidence": "厚労省ラベル/SDS Q&A Q11-1は小型容器にも個別ラベルまたはタグ、SDSのホームページアドレス伝達は容器ラベルの代替にはならないと明記。",
+      "state": "DIRECT_CENTRAL_OFFICIAL_QA",
+      "caveat": "全法定例外と適用製品区分は未照合",
+      "previousAuditURL": "https://www.mhlw.go.jp/stf/newpage_11237.html",
+      "verifiedAuditURL": "https://www.mhlw.go.jp/stf/newpage_11237.html",
+      "answerIndex": 1,
+      "changeFields": [
+        "auditStatus"
+      ],
+      "fullFiveChoicePass": false
+    },
+    {
+      "id": "2026-04-Q12",
+      "url": null,
+      "evidence": "厚労省化学物質RA Q&A Q3-6は代替後の危険有害性・RA再評価、危険性が低いことが明らかな物質への代替を推奨。",
+      "state": "DIRECT_CENTRAL_OFFICIAL_RISK_ASSESSMENT_QA",
+      "caveat": "全措置優先順位を一資料で逐語確認したわけではない",
+      "previousAuditURL": "https://www.mhlw.go.jp/stf/newpage_11389.html",
+      "verifiedAuditURL": "https://www.mhlw.go.jp/stf/newpage_11389.html",
+      "answerIndex": 0,
+      "changeFields": [
+        "auditStatus"
+      ],
+      "fullFiveChoicePass": false
+    },
+    {
+      "id": "2026-04-Q14",
+      "url": null,
+      "evidence": "令和5年改訂の騒音障害防止ガイドラインは85～90dB未満の設備・作業方法改善、必要に応じた聴覚保護具と測定結果の考慮を明記。設問88dBを包含。",
+      "state": "DIRECT_CENTRAL_OFFICIAL_NOISE_GUIDELINE",
+      "caveat": "保護具の公称遮音と個人実効遮音の関係は追加資料確認が必要",
+      "previousAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1",
+      "verifiedAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1",
+      "answerIndex": 4,
+      "changeFields": [
+        "auditStatus"
+      ],
+      "fullFiveChoicePass": false
+    },
+    {
+      "id": "2026-04-Q20",
+      "url": null,
+      "evidence": "厚労省有機溶剤中毒予防規則第29条・別表等にノルマルヘキサンでの尿中2,5-ヘキサンジオン検査が明記、キシレン・トルエン等との違いを直接確認。",
+      "state": "DIRECT_CENTRAL_SOLVENT_REGULATION",
+      "caveat": "採尿時間・分析法・法改正の全ての特例の独立逐語確認は未完了",
+      "previousAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1",
+      "verifiedAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1",
+      "answerIndex": 3,
+      "changeFields": [
+        "auditStatus"
+      ],
+      "fullFiveChoicePass": false
+    }
+  ],
+  "openStateNotice": "a群85IDは分類母数。前回5問のMuse限定差分PASSを記録。今回基本6問は中心命題まで追証し、配布再生成・全肢段落逐語証明はまだ未検証。"
 }
