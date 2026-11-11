@@ -1,0 +1,74 @@
+name: HM1 exact six Q131-Q132 A Q02 Q05 Q07 Q08
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - .github/workflows/hm1-exact-six-q131-q132-a01-a08.yml
+      - ios/health-manager-1/Resources/questions.json
+      - ios/health-manager-1/audit/practice_a_fixes_01_10.json
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regenerate both 264 banks and compare exact six ID records
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/hm1-six-base 7eb478382369a6126313118231013c2e0dc77dc4
+          node /tmp/hm1-six-base/ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-six-base.log
+          node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-six-head.log
+          node - <<'NODE'
+          'use strict';
+          const fs = require('fs');
+          const base = JSON.parse(fs.readFileSync('/tmp/hm1-six-base/ios/health-manager-1/Resources/questions.json','utf8'));
+          const next = JSON.parse(fs.readFileSync('ios/health-manager-1/Resources/questions.json','utf8'));
+          const wanted = [
+            '2025-04-Q43','2025-04-Q44',
+            'practice-A-Q02','practice-A-Q05','practice-A-Q07','practice-A-Q08'
+          ].sort();
+          const normalize = s => String(s||'').normalize('NFKC').replace(/[\s\p{P}\p{S}]/gu,'').toLowerCase();
+          for (const [label,bank] of [['before',base],['after',next]]) {
+            if (bank.length !== 264) throw Error(label+' count: '+bank.length);
+            if (new Set(bank.map(q=>q.id)).size !== 264) throw Error(label+' duplicate IDs');
+            if (new Set(bank.map(q=>normalize(q.stem))).size !== 264) throw Error(label+' duplicate normalized stems');
+            for (const q of bank) {
+              if (!Array.isArray(q.choices) || q.choices.length !== 5 || new Set(q.choices).size !== 5)
+                throw Error(label+' five-choice check '+q.id);
+              if (!Number.isInteger(q.ans) || q.ans < 0 || q.ans > 4)
+                throw Error(label+' index '+q.id);
+            }
+          }
+          if (base.some((q,i)=>q.id !== next[i].id)) throw Error('ID sequence changed');
+          const changed=next.filter((q,i)=>JSON.stringify(q)!==JSON.stringify(base[i])).map(q=>q.id).sort();
+          if (JSON.stringify(changed)!==JSON.stringify(wanted)) throw Error('Changed IDs: '+JSON.stringify(changed));
+          const expected = {
+            '2025-04-Q43': {index:2, phrase:'HPA'},
+            '2025-04-Q44': {index:3, phrase:'松果体'},
+            'practice-A-Q02': {index:4, phrase:'遅滞なく通知'},
+            'practice-A-Q05': {index:3, phrase:'電子情報処理組織'},
+            'practice-A-Q07': {index:2, phrase:'1年以内'},
+            'practice-A-Q08': {index:3, phrase:'45条2項'}
+          };
+          for (let i=0;i<next.length;i++){
+            if (!wanted.includes(next[i].id)) continue;
+            const q=next[i],old=base[i],sentinel=expected[q.id];
+            if (q.ans!==old.ans || q.ans!==sentinel.index) throw Error(q.id+' correct index changed');
+            if (!q.choices[q.ans].includes(sentinel.phrase)) throw Error(q.id+' answer content incorrect');
+            for (const key of new Set([...Object.keys(q),...Object.keys(old)])) {
+              if (JSON.stringify(q[key])!==JSON.stringify(old[key]) &&
+                  !['stem','choices','short','detail','key','sourceRef','auditSourceURL'].includes(key))
+                throw Error(q.id+' unexpected field '+key);
+            }
+          }
+          console.log('PASS: both regenerated 264; six and only six IDs changed; other 258 records identical; answer semantics/index, ID/stem uniqueness and all five-choice records valid.');
+          NODE
