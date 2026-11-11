@@ -136,9 +136,10 @@ for (const round of layouts) {
 const cFixes = {
   ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_01_10.json'), 'utf8')).questions,
   ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_11_20.json'), 'utf8')).questions,
-  ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_21_30.json'), 'utf8')).questions
+  ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_21_30.json'), 'utf8')).questions,
+  ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_31_40.json'), 'utf8')).questions
 };
-const cIds = Array.from({length:30}, (_,i) => 'practice-C-Q' + String(i+1).padStart(2, '0'));
+const cIds = Array.from({length:40}, (_,i) => 'practice-C-Q' + String(i+1).padStart(2, '0'));
 if (JSON.stringify(Object.keys(cFixes).sort()) !== JSON.stringify([...cIds].sort())) {
   throw new Error('Practice C override ID set mismatch');
 }
@@ -146,7 +147,7 @@ for (const id of cIds) {
   const matches = added.filter(q => q.id === id);
   if (matches.length !== 1) throw new Error(id + ': missing/duplicate generated ID');
   const q = matches[0], patch = cFixes[id];
-  if (q.round !== 'practice-C' || q.label !== (Number(id.slice(-2)) <= 14 ? '関係法令' : '労働衛生') ||
+  if (q.round !== 'practice-C' || q.label !== (Number(id.slice(-2)) <= 14 ? '関係法令' : Number(id.slice(-2)) <= 29 ? '労働衛生' : '労働生理') ||
       !q.conceptKey.startsWith('hm2:' + patch.expectedSourceId + ':')) {
     throw new Error(id + ': source mismatch: ' + q.conceptKey);
   }
@@ -161,7 +162,7 @@ for (const id of cIds) {
   q.originalExpression = true;
   q.independenceReason = 'HM1 C-specific audit rewrite with source-ID verification.';
 }
-console.log('PASS: Practice-C Q01-Q30 source-matched rewrites applied (30)');
+console.log('PASS: Practice-C Q01-Q40 source-matched rewrites applied (40)');
 
 const all = [...base, ...added];
 if (all.length !== 264) throw new Error(`Expected total=264, got ${all.length}`);
