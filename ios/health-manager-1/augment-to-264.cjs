@@ -131,6 +131,83 @@ for (const round of layouts) {
   if (n !== 45) throw new Error(`${round.id}: expected 44 questions, got ${n-1}`);
 }
 
+// Apply HM1-only reviewed rewrites after stable HM2 selection, preserving IDs and
+// source lineage. This makes the fixes survive every release materialization.
+const fixPath = path.join(IOS_DIR, 'audit', 'practice_a_fixes_01_10.json');
+const fixPack = JSON.parse(fs.readFileSync(fixPath, 'utf8'));
+// HM1-specific patches follow the ACTUAL generated round layout:
+// A Q01-Q15: law, Q16-Q30: hygiene, Q31-Q44: physiology.
+// Verify original source ID before each override to prevent misapplication if
+// upstream HM2 selection or ordering changes.
+const expectedFixIds = Array.from({length:44}, (_,i) => `practice-A-Q${String(i+1).padStart(2,'0')}`);
+if (JSON.stringify(Object.keys(fixPack.questions).sort()) !== JSON.stringify(expectedFixIds)) {
+  throw new Error('Practice-A Q01-Q44 stored patch IDs mismatch');
+}
+for (const id of expectedFixIds) {
+  const q = added.find(q => q.id === id);
+  const idx = Number(id.slice(-2));
+  const sourceRound = idx <= 10 ? 'r04' : idx <= 15 ? 'r05' : idx <= 25 ? 'r04'
+    : idx <= 30 ? 'r05' : idx <= 40 ? 'r04' : 'r05';
+  const sourceSubject = idx <= 15 ? 'law' : idx <= 30 ? 'hyg' : 'phy';
+  const sourceNumber = idx <= 10 ? idx : idx <= 15 ? idx-10 : idx <= 25 ? idx-15
+    : idx <= 30 ? idx-25 : idx <= 40 ? idx-30 : idx-40;
+  const expectedSource = `hm2:sm2-5y-${sourceRound}-${sourceSubject}-${String(sourceNumber).padStart(2,'0')}`;
+  if (!q || !q.conceptKey.startsWith(expectedSource + ':')) {
+    throw new Error(`${id}: expected ${expectedSource}; actual ${q?.conceptKey || 'missing'}`);
+  }
+  const patch = fixPack.questions[id];
+  if (!Array.isArray(patch.choices) || patch.choices.length !== 5 ||
+      !Number.isInteger(patch.ans) || patch.ans < 0 || patch.ans > 4 ||
+      !patch.stem || !patch.detail || !patch.sourceRef) {
+    throw new Error(`${id}: invalid patch data`);
+  }
+  Object.assign(q, patch, {
+    short: `正解は「${patch.choices[patch.ans]}」です。`,
+    originalExpression: true,
+    independenceReason: 'HM1現行ID監査の指摘に基づく個別の条件判断型再設計。'
+  });
+}
+console.log('PASS: HM1 practice-A source-matched Q01-Q44 source-matched overrides applied (44)');
+
+// Apply HM1-only revisions after selection so HM2 and A/C ordering stay unchanged.
+const revisedIds = require('./apply-content-overrides.cjs').applyContentOverrides(added);
+
+
+// HM1-only Practice C Q01-Q44 rewrites. Apply after source selection.
+// Stop if HM2 source ordering changes rather than patching an unrelated question.
+const cFixes = {
+  ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_01_10.json'), 'utf8')).questions,
+  ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_11_20.json'), 'utf8')).questions,
+  ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_21_30.json'), 'utf8')).questions,
+  ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_31_40.json'), 'utf8')).questions,
+  ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_41_44.json'), 'utf8')).questions
+};
+const cIds = Array.from({length:44}, (_,i) => 'practice-C-Q' + String(i+1).padStart(2, '0'));
+if (JSON.stringify(Object.keys(cFixes).sort()) !== JSON.stringify([...cIds].sort())) {
+  throw new Error('Practice C override ID set mismatch');
+}
+for (const id of cIds) {
+  const matches = added.filter(q => q.id === id);
+  if (matches.length !== 1) throw new Error(id + ': missing/duplicate generated ID');
+  const q = matches[0], patch = cFixes[id];
+  if (q.round !== 'practice-C' || q.label !== (Number(id.slice(-2)) <= 14 ? '関係法令' : Number(id.slice(-2)) <= 29 ? '労働衛生' : '労働生理') ||
+      !q.conceptKey.startsWith('hm2:' + patch.expectedSourceId + ':')) {
+    throw new Error(id + ': source mismatch: ' + q.conceptKey);
+  }
+  if (!patch.stem || !patch.detail || !patch.sourceRef || !patch.auditSourceURL ||
+      !Array.isArray(patch.choices) || patch.choices.length !== 5 ||
+      new Set(patch.choices).size !== 5 ||
+      !Number.isInteger(patch.ans) || patch.ans < 0 || patch.ans > 4) {
+    throw new Error(id + ': invalid rewrite');
+  }
+  for (const k of ['stem','choices','ans','detail','key','sourceRef','auditSourceURL','lawAsOf','auditStatus']) q[k] = patch[k];
+  q.short = '正解は「' + q.choices[q.ans] + '」です。';
+  q.originalExpression = true;
+  q.independenceReason = 'HM1 C-specific audit rewrite with source-ID verification.';
+}
+console.log('PASS: Practice-C Q01-Q44 source-matched rewrites applied (44)');
+
+
 const all = [...base, ...added];
 if (all.length !== 264) throw new Error(`Expected total=264, got ${all.length}`);
 if (new Set(all.map(q=>q.id)).size !== 264) throw new Error('Duplicate ids in HM1 264 bank');
@@ -149,6 +226,10 @@ for (const r of ['2026-04','2025-10','2025-04','practice-A','practice-B','practi
 fs.writeFileSync(HM1, JSON.stringify(all, null, 2) + '\n');
 const audit = {
   generatedAt: '2026-08-19',
+  revisionBatch: 'hm1-integrated-basic-abc-20261111',
+  revisedPracticeBQuestionIds: revisedIds,
+  practiceARewrites: 44,
+  practiceCRewrites: 44,
   baseQuestions: base.length,
   addedQuestions: added.length,
   totalQuestions: all.length,
