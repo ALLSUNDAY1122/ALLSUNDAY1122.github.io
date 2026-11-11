@@ -149,3 +149,22 @@
 - 残り53 ID：`2025-10-Q01`、`2025-10-Q02`、`2025-10-Q06`、`2025-10-Q10`、`2025-10-Q14`、`2025-10-Q15`、`2026-04-Q19`、`2026-04-Q29`、`2026-04-Q31`、`2026-04-Q33`、`2026-04-Q41`、`2026-04-Q44`、`practice-A-Q08`、`practice-A-Q11`、`practice-A-Q13`、`practice-A-Q20`、`practice-A-Q21`、`practice-A-Q26`、`practice-A-Q28`、`practice-A-Q34`、`practice-A-Q37`、`practice-A-Q39`、`practice-B-Q08`、`practice-B-Q20`、`practice-B-Q28`、`practice-B-Q33`、`practice-C-Q01`、`practice-C-Q02`、`practice-C-Q03`、`practice-C-Q05`、`practice-C-Q06`、`practice-C-Q07`、`practice-C-Q08`、`practice-C-Q09`、`practice-C-Q10`、`practice-C-Q14`、`practice-C-Q15`、`practice-C-Q17`、`practice-C-Q18`、`practice-C-Q19`、`practice-C-Q20`、`practice-C-Q21`、`practice-C-Q22`、`practice-C-Q26`、`practice-C-Q30`、`practice-C-Q31`、`practice-C-Q32`、`practice-C-Q33`、`practice-C-Q35`、`practice-C-Q36`、`practice-C-Q37`、`practice-C-Q41`、`practice-C-Q44`。
 - **注意：これは中心命題の出典問題の解消状況を示す管理上の数字**。全5肢それぞれの独立逐語根拠が揃い、法令版・商用権利・配布一致を通過した問題の数ではない。全5肢無条件PASSの基準では今回の母数85件に未達項目が残る。
 - 今回の4問の264問Node CLI再生成、他260問限定差分、Web/iOS配布バイト照合、SHA256は**未実施**。Muse側で検証後、差分を確定すること。公開ゲート**FAIL/BLOCKED維持**。
+
+
+## 続編第7回：Muse基本4問限定差分PASS受領、a群基本4問追証（2026-11-12）
+
+### 前回修正4問のMuse側ローカル検証（ユーザー提供）
+- 比較基準 `a48f4b6` と修正後状態の双方で264問Node CLI再生成成功（Muse側報告）。差分は `2026-04-Q28`、`2026-04-Q30`、`2026-04-Q34`、`2026-04-Q42` の4問だけ。正答index全問不変、他260問完全一致、限定差分PASS。
+- 当担当による独立再実行、Web/iOS配布バイト照合、SHA256検証は未実施。今回の新規修正4問へPASSを転用しない。
+
+### a群中心命題・今回の4問
+- **`2025-10-Q01`**（正答index 3不変）：安衛令第2条第2号：製造業は事業場ごと常時300人以上が対象。A300人・B200人ならAのみ該当。 出典 `https://anzeninfo.mhlw.go.jp/yougo/yougo35_1.html` → `https://www.mhlw.go.jp/web/t_doc?dataId=74002000&dataType=0`。変更：`auditSourceURL`、`auditStatus`のみ。留保：会社内の別事業場である前提に依拠。全5肢の独立逐語証明未完。
+- **`2025-10-Q02`**（正答index 1不変）：安衛令第6条第1号の高圧室内作業、および同令別表第6第5号の石炭貯蔵ホッパー内部が中心命題の直接根拠。 出典 `https://anzeninfo.mhlw.go.jp/yougo/yougo34_1.html` → `https://www.mhlw.go.jp/web/t_doc?dataId=74002000&dataType=0`。変更：`auditSourceURL`、`auditStatus`のみ。留保：高圧則・酸欠則の詳細適用と全5肢の独立逐語証明未完。
+- **`2025-10-Q06`**（正答index 2不変）：粉じん則第2条・別表第1・別表第2で粉じん作業と特定粉じん発生源を区分。袋詰め・目視のみから一律該当とせず、条件別に照合する。 出典 `https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0` → `https://www.mhlw.go.jp/web/t_doc?dataId=74107000&dataType=0`。変更：`auditSourceURL`、`auditStatus`のみ。留保：炭素質粉体の材質・設備条件未指定につき特定発生源の実体該当性は未確定。全5肢逐語証明未完。
+- **`2025-10-Q10`**（正答index 2不変）：労基則第18条第1・2・4・6号には暑熱・低温・著しい粉じん・振動業務が列挙されるが、不活性ガスタンク内部という名称単独は列挙されない。 出典 `https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0` → `https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0`。変更：`auditSourceURL`、`auditStatus`のみ。留保：安衛令別表第6第11号の酸欠危険場所規制とは区別。他の有害要因と全5肢逐語証明は未完。
+
+### 残件・引き継ぎ
+- 管理上の中心命題照合は**36/85件**、次の照合待ちは**49件（53→49）**。全5肢の独立逐語証明とは別の集計であり、全肢無条件PASSは0件扱い。
+- 変更対象ID：`2025-10-Q01`、`2025-10-Q02`、`2025-10-Q06`、`2025-10-Q10`。問題文・5肢・正答index・解説は不変。基本132問の構造差分で対象外128問不変を確認。
+- 今回の変更の264問再生成、限定差分、Web/iOS配布SHA256一致は未実施。次は `2025-10-Q14`、`2025-10-Q15`、`2026-04-Q19`、`2026-04-Q29` などを順次照合。全5肢逐語証明・法令時点・商用利用権は未完、**ゲートFAIL/BLOCKED**、mainマージ・配信・審査申請なし。
+- 個別根拠は `PRIMARY_SOURCE_AUDIT_A_BATCH7_20261112.json`、進捗は `PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json` を参照。
