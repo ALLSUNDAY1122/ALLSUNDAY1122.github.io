@@ -351,3 +351,12 @@ if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 sixth
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 sixth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;if(f.sourceUrl)q.sourceUrl=f.sourceUrl;}
 window.SM2_INDEPENDENT_SIXTH10_METADATA_FIX2_IDS=fixes.map(f=>f.id);
 })();
+
+// SM2_INDEPENDENT_SEVENTH10_METADATA_FIX8_20261111: topic and primary basis corrections for audited gate IDs 60-69; update two mismatched sources; keep independent approval blocked.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r04-hyg-05","topic":"空気調和設備の相対湿度40〜70％努力目標","basis":"事務所衛生基準規則5条3項（相対湿度40〜70％は努力義務）"},{"id":"sm2-5y-r04-hyg-08","topic":"屋外日射下のWBGT算出（湿球・黒球・気温）","basis":"厚生労働省『職場における熱中症予防基本対策要綱』（日射ありWBGT算定式）"},{"id":"sm2-5y-r04-hyg-09","topic":"情報機器作業の視覚負担と画面環境","basis":"厚生労働省『情報機器作業における労働衛生管理のためのガイドライン』"},{"id":"sm2-5y-r04-hyg-10","topic":"屋外日射下のWBGT算出","basis":"厚生労働省『職場における熱中症予防基本対策要綱』（日射ありWBGT算定式）"},{"id":"sm2-5y-r05-hyg-02","topic":"視作業に応じた照度とまぶしさの管理","basis":"事務所衛生基準規則10条1項・2項（作業区分に応じた照度・まぶしさ防止）"},{"id":"sm2-5y-r05-hyg-03","topic":"心停止疑い時の一次救命処置とAED","basis":"日本赤十字社『救急法』（心肺蘇生・AED使用）"},{"id":"sm2-5y-r05-hyg-04","topic":"騒音障害防止の発生源・伝搬経路対策","basis":"厚生労働省『騒音障害防止のためのガイドライン』（令和5年4月改訂）","sourceUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1"},{"id":"sm2-5y-r05-hyg-05","topic":"換気回数の算定（換気量÷室容積）","basis":"産業技術総合研究所『換気回数』の定義（換気量Q÷室容積V）","sourceUrl":"https://www.aist.go.jp/aist_j/new_research/2020/nr20201224/nr20201224.html"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==8||new Set(fixes.map(f=>f.id)).size!==8)throw Error('HM2 seventh10 metadata fix count invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 seventh10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;if(f.sourceUrl)q.sourceUrl=f.sourceUrl;}
+window.SM2_INDEPENDENT_SEVENTH10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
+})();
