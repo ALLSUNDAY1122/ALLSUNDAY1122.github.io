@@ -410,13 +410,13 @@
         "約167％"
       ],
       "ans": 1,
-      "detail": "相対湿度は、同じ温度での水蒸気の飽和に対する実際の水蒸気の割合を百分率で示す。12÷20×100=60％。肢0は差分を百分率と混同、2は数値誤算、3・4は割り算の順序や飽和条件を誤る。実際の厳密な定義は水蒸気圧比であり、本問の水蒸気量比は同温度の簡易近似として用いる。",
+      "detail": "相対湿度は、同一温度での実際の水蒸気圧と飽和水蒸気圧の比を百分率で示す。理想気体近似では水蒸気圧は同温・同体積当たりの水蒸気質量に比例するため、与えられた質量濃度から12÷20×100＝60％（肢1）となる。肢0は差分を割合と混同し、肢2は計算違い、肢3・4は分子分母や100％超の解釈を誤る。厳密な定義は水蒸気圧比であり、乾燥空気1kg当たりの混合比と単純混同しない。気象庁の用語定義と環境省の観測マニュアルで対応を確認した。",
       "key": "相対湿度の定量的な理解",
-      "sourceRef": "https://www.jma.go.jp/jma/kishou/know/yougo_hp/kion.html",
-      "auditSourceURL": "https://www.jma.go.jp/jma/kishou/know/yougo_hp/kion.html",
+      "sourceRef": "https://www.env.go.jp/content/900402537.pdf",
+      "auditSourceURL": "https://www.env.go.jp/content/900402537.pdf",
       "lawAsOf": "2026-11-11",
-      "auditStatus": "revised-pending-release-audit",
-      "difficultyAudit": "correct-source-scenario-rewrite-2026-11-11"
+      "auditStatus": "revised-pending-independent-recheck",
+      "difficultyAudit": "relative-humidity-direct-pressure-definition-2026-11-12"
     },
     "practice-A-Q24": {
       "stem": "作業場の気温・湿度・ふく射条件をほぼ一定にして送風を強くした。作業者の体感に生じ得る変化として正しいものはどれか。",
@@ -464,13 +464,13 @@
         "作業場所のWBGTが同じなら、作業強度や服装に関係なく熱ストレスの許容条件も同じである"
       ],
       "ans": 0,
-      "detail": "実効温度ETは気温・湿度・気流の総合効果を表す従来指標。強いふく射がある作業場では自然湿球温度と黒球温度を用いるWBGTで熱ストレスを評価する。肢1は環境要素の欠落、2は屋内WBGT算式の誤り、3はETとWBGTの混同、4は作業強度・衣服補正の無視。ETの三要素は公表試験問題の技術説明、WBGTの評価・算式は厚労省通達で確認した。CETの直接技術原典は未照合のため、CETに関する旧記述は削除した。",
+      "detail": "従来の実効温度（ET）は、気温・湿度・気流の総合効果から温熱感覚を表す経験的指標であり、ふく射熱を十分には捉えない。NIOSHの暑熱環境基準文書はETをtemperature・humidity・air movementの指標と定義する。高温炉のふく射があるBでは、黒球温度と自然湿球温度を含むWBGTを評価する（肢0）。肢1は温熱因子を欠落、2はWBGT算式の誤認、3はETとWBGTの要素の混同、4は作業代謝率・着衣補正を無視。WBGTは気流の影響が自然湿球温度に反映されるが、気流速度を独立変数として必ず直接代入する式ではない。ETと新実効温度ET*・修正実効温度CETを同一視しない。",
       "key": "ETの三要素と黒球温度を含むWBGTの使い分け",
-      "sourceRef": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
-      "auditSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "sourceRef": "https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf",
+      "auditSourceURL": "https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf",
       "lawAsOf": "2026-11-11",
       "auditStatus": "revised-pending-independent-recheck",
-      "difficultyAudit": "primary-source-grounded-et-wbgt-2026-11-11"
+      "difficultyAudit": "niosh-et-direct-source-wbgt-crosscheck-2026-11-12"
     },
     "practice-A-Q27": {
       "stem": "ある事務室でCO₂の発生量が0.03m³/h、外気濃度が0.0004（体積比）、目標室内濃度が0.0010（体積比）である。完全混合・定常状態を仮定すると、必要換気量はいくらか。",
