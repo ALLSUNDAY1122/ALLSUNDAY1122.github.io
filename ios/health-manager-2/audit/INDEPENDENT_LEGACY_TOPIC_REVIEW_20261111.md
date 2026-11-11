@@ -1592,3 +1592,10 @@
 - **現行正答の明白な誤り0・明白な複数正答0**。難度上の課題は誤答肢の極端な表現が多いこと。**source_urlは10問すべて試験協会の公表問題一覧**で、ATP生成・内分泌・止血・脂質吸収等の生理機序に関する直接根拠を指していない。直接出典の精密化・権利監査は別工程。
 - 実質重複：No.151/153（ADHと集合管の水再吸収）、No.156/138/142（インスリンによる糖取り込み）。No.150はNo.139の腎機能と関連、No.152は既存の筋代謝関連と類似性を別途確認。
 - **累計159/178問点検済、残19問**。次回は固定No.160〜169。今回は**監査記録のみ**更新し、生成元JS・iOS JSON・レビュー承認/公開状態・ビルド・TestFlight・App Reviewは不変更。公開品質ゲート **BLOCKED** 継続。
+
+
+## 2026-11-11追補｜第16バッチ指摘7件修正と全300問再生成・限定差分検証
+- 固定No.151・152・154・156・157・158・159（`sm2-5y-r06-phy-07/08/10`, `sm2-5y-r07-phy-02/03/04/05`）の7問を対象。生成元`apps/sanitary-manager-2/audit-fixes.js`に`SM2_INDEPENDENT_SIXTEENTH10_METADATA_FIX7_20261111`を追加し、各問の`topic`と`basis`のみ題意に合わせて修正。出典URL、設問、選択肢、正答、quick、解説、監査・公開状態は不変更。
+- 生成元修正コミット：`82cdc237811d6be60a297aa6d07c353af31a28e2`。GitHub Actions `HM2 canonical iOS question JSON rebuild` run `42973816573` は**SUCCESS**。再生成JSONコミット：`7a55a2a2b9615bea56189932ceb5cd653ee8f321`。
+- `ios/health-manager-2/release-questions.json` 旧blob `acfccc09bae7eb68160adecebb8a7b44f7a640ef`と新blob `2353e3a7bcbbd3aff9dfdae06f0772ad0dc15edc`の**全300問**で問題ID・配列順・全フィールドを比較。差分は指定7問の`topic`・`primary_basis`だけ。他293問の全フィールドは完全一致。問題文・選択肢・正答番号・quick・解説・source_url・公開/承認フラグには変更なし。
+- 独立レビュー進捗は**159/178問、残19問**で不変。次回点検は固定No.160〜169。No.151/153などの実質重複、個別生理学出典の不足、低識別難度は修正未了の別工程。公開品質ゲート **BLOCKED**、新規iOSビルド・TestFlight・App Reviewは実行しない。
