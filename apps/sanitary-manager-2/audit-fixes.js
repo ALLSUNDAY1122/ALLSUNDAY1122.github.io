@@ -1453,3 +1453,18 @@ if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==
 q.sourceUrl=f.newUrl;
 window.HM2_170_B16_NO157_DIRECT_STANDING_SOURCE_APPLIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_LEGAL_CLASSIFICATION_20261112: statutory duty vs practical calculation/hygiene.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r08-law-10","subject":"関係法令","topic":"事務室の1人当たり気積の単純計算","question":"一般事務所で気積を算定するとき、床面積120㎡・室高3mの室内に10人が勤務している。設備等が占める容積を除かない単純計算による1人当たり気積はどれか。","basis":"事務所衛生基準規則2条（法定算定条件との区別）","sourceUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1","correct":"36m³。","choices":["12m³。","30m³。","36m³。","360m³。","40m³。"],"oldLaw":true,"newLaw":false},{"id":"sm2-5y-r09-hyg-09","subject":"労働衛生","topic":"健康診断の医師意見と事業者の就業措置の決定主体","question":"健康診断で異常所見がある労働者について医師が就業上の制限を提案した。労働安全衛生法66条の4・66条の5に照らし事業者の対応として適切なのはどれか。","basis":"労働安全衛生法66条の4・66条の5／医師意見聴取と事業者の措置義務","sourceUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0&pageNo=2","correct":"医師意見を勘案し本人の実情を考慮して、必要性に応じて就業場所の変更や労働時間短縮等の措置を事業者が講ずる。","choices":["医師意見を聴取すれば事業者は必要な就業措置を検討する必要がない。","医師意見を勘案し本人の実情を考慮して、必要性に応じて就業場所の変更や労働時間短縮等の措置を事業者が講ずる。","就業上の措置は医師の意見を無視し、本人の実情を一切考慮せず機械的に決定する。","医師意見は事業者に一切共有できず、適切な措置の判断にも利用できない。","医師意見にかかわらず異常所見者を全員一律に解雇しなければならない。"],"oldLaw":false,"newLaw":true}];
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 classification list integrity');
+for(const f of fixes){
+ const hits=(window.Q_PARTS||[]).filter(q=>q.id===f.id);
+ if(hits.length!==1)throw Error('HM2 law classification target count '+f.id);
+ const q=hits[0];
+ if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==f.basis||q.sourceUrl!==f.sourceUrl||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correct||JSON.stringify([...q.choices].sort())!==JSON.stringify([...f.choices].sort())||q.lawRelated!==f.oldLaw)throw Error('HM2 classification strict old-state mismatch '+f.id);
+ q.lawRelated=f.newLaw;
+}
+window.HM2_170_CLASSIFICATION_REJUDGEMENT_20261112_APPLIED=true;
+})();
