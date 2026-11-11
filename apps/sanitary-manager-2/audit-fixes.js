@@ -901,3 +901,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH05_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH06_20261111: direct source URLs only, with ID and answer guards.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r06-hyg-10","sourceUrl":"https://stacks.cdc.gov/view/cdc/193774","question":"健康診断の検査で、病気のある100人のうち90人が陽性だった。陰性者の情報がない場合、この数値から直接求められる指標はどれか。","correctText":"感度90％"},{"id":"sm2-5y-r07-hyg-01","sourceUrl":"https://www.cdc.gov/mmwr/preview/mmwrhtml/00016403.htm","question":"疾病の治療後に職場復帰した労働者について、再発防止と就業への適応を支援する取組は予防のどの段階か。","correctText":"三次予防"},{"id":"sm2-5y-r07-hyg-06","sourceUrl":"https://stacks.cdc.gov/view/cdc/198512","question":"ある検査で陽性となった労働者が80人おり、このうち確定検査で実際に疾病があると判明したのは20人だった。この検査の陽性的中率は何％か。","correctText":"25％"},{"id":"sm2-5y-r08-hyg-09","sourceUrl":"https://www.osha.gov/otm/section-3-health-hazards/chapter-5","question":"機械の騒音について、同じ測定方法で音の強さが10倍となった。音の強さのレベル差はおよそ何dBか。","correctText":"10dB。"},{"id":"sm2-5y-r09-hyg-03","sourceUrl":"https://www.osha.gov/otm/section-3-health-hazards/chapter-5","question":"工場の騒音源から2mの位置と4mの位置で音を評価する。自由音場の点音源を仮定し、他の反射・減衰条件が同じなら距離を2倍にしたときの音圧レベルの変化として近いものはどれか。","correctText":"約6dB低下する。"},{"id":"sm2-5y-r09-hyg-08","sourceUrl":"https://www.redcross.org/take-a-class/first-aid/performing-first-aid/first-aid-steps","question":"次の事項と内容の組合せで、最も適切なものはどれか。","correctText":"脊椎損傷の疑い ― 頭頸部や脊椎の損傷が疑われる場合は、不要な体動を避ける。"},{"id":"sm2-5y-r10-hyg-06","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK613065/","question":"暑い作業場で大量の発汗後、水分摂取が不足した作業者の尿量が減少した。脱水時の尿の性状として一般に起こりやすいのはどれか。","correctText":"尿の量が減り、尿が濃縮する。"},{"id":"sm2-5y-r04-phy-01","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK539701/","question":"健康な成人が平地から標高の高い場所へ急に移動した。吸入気の酸素分圧が低下し、肺での酸素取り込みが減少する条件で、移動直後の血液酸素化について最も適切なのはどれか。ただしヘモグロビン濃度は移動前後で変わらないものとする。","correctText":"肺胞・動脈血の酸素分圧が低下するとヘモグロビンの酸素飽和度が低下し、単位血液量当たりの酸素含有量も減り得る。"},{"id":"sm2-5y-r04-phy-02","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK57139/","question":"健康な成人が安静時から運動を始め、活動筋による酸素消費が増加した。動脈血のヘモグロビン濃度と酸素飽和度はほぼ一定であり、比較する筋からの静脈還流にほかの組織の血液が混入しないものとする。活動筋での酸素抽出が増加した場合、最も適切なのはどれか。","correctText":"動脈血酸素含有量がほぼ一定でも、活動筋による酸素抽出が増せば筋から戻る静脈血の酸素含有量は低くなり、動静脈酸素含有量較差は大きくなる。"},{"id":"sm2-5y-r04-phy-03","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK470455/","question":"安静時の心拍数が70回/分、一回拍出量が70mLの成人について、心拍出量をL/分で求めるとどれか。","correctText":"約4.9L/分。"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch06 target count/ID');
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+  !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correctText||
+  (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.sourceUrl))
+  throw Error('HM2 X-01 batch06 unexpected source/content '+f.id);
+ q.sourceUrl=f.sourceUrl;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH06_IDS=fixes.map(f=>f.id);
+})();
