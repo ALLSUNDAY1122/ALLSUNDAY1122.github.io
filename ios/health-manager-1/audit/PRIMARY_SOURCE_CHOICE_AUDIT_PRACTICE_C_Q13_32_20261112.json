@@ -1,0 +1,999 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "sourceCommit": "09d21548184fe9c10d86f74a4b81599c19d97844",
+  "scope": "原典照合第13バッチ 演習C Q13〜Q32（20問100肢）",
+  "sourcePolicy": "最終上書きファイルの20問を抽出。中心命題の直接資料確認と全肢逐語証明を厳格に区別。登録/books/がreCAPTCHAのとき/sites/books/同一記事本文で補完。",
+  "classification": "DIRECT=中心命題を登録原典または同一原典の代替経路で確認、PARTIAL=適用条件の独立根拠に不足、PENDING=中心命題原典への到達不能",
+  "counts": {
+    "DIRECT": 18,
+    "PARTIAL": 2,
+    "PENDING": 0
+  },
+  "questionCount": 20,
+  "choiceCount": 100,
+  "unconditionalPass": 0,
+  "questions": [
+    {
+      "id": "practice-C-Q13",
+      "stem": "4週間の起算日を固定している事業場で、ある4週間（28日）に第1週0日、第2週2日、第3週1日、第4週1日の休日を与えた。労基法35条の法定休日の最低付与日数について適切な判断はどれか。ただし休日はそれぞれ暦日単位で、当該4週間の起算日など必要事項は明確である。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/322AC0000000049",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0",
+      "sourceLocator": "労基法35条2項・四週四日",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_SOURCE_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "第1週に休日がないため、4週4日方式でも当該4週間の休日付与は必ず違法になる",
+          "expectedCorrect": false,
+          "assessmentReason": "毎週1日制と四週四日方式を混同",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "第2週に2日の休日を与えた分は、4週4日方式で1日だけしか算入できない",
+          "expectedCorrect": false,
+          "assessmentReason": "週内の2日を合計に算入可能",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "合計4日の休日があるため、固定した4週間の単位で判定する4週4日方式の最低日数を満たす",
+          "expectedCorrect": true,
+          "assessmentReason": "0+2+1+1=4日で最低日数を満たす",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "4週4日方式ではすべての週に最低2日の休日が必要である",
+          "expectedCorrect": false,
+          "assessmentReason": "週2日の法定最低休日数はない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "4週間の最初の週に休日がない場合、残り3週の休日数に関係なく必ず4日の休日を追加しなければならない",
+          "expectedCorrect": false,
+          "assessmentReason": "最初の週の0日だけで別途4日追加とはならない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q14",
+      "stem": "事業場が4週4日の休日制を採用する場合、就業規則その他これに準ずるものに定める事項として適切なものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/322M40000100023",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0",
+      "sourceLocator": "労基則12条の2第2項",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "EGOV_FULLTEXT_NOT_VERIFIED_MHLW_EQUIVALENT_READABLE",
+      "limitations": "登録e-Gov条文本文の直接取得は未確認、厚労省同条で代替",
+      "choices": [
+        {
+          "index": 0,
+          "text": "4週間の起算日を明らかにし、各4週間に4日以上の休日を確保する",
+          "expectedCorrect": true,
+          "assessmentReason": "4週間の起算日を明示する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "起算日を特定せず、任意に選んだ直近28日間で4日あれば十分とする",
+          "expectedCorrect": false,
+          "assessmentReason": "任意の28日では起算日が固定されない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "起算日は毎月の給与支給日と法律上必ず同日とする",
+          "expectedCorrect": false,
+          "assessmentReason": "給与支給日と起算日は必ずしも同日でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "4週間に3日の休日でも、36協定があれば常に足りる",
+          "expectedCorrect": false,
+          "assessmentReason": "36協定で休日を3日へ短縮できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "4週4日制を採用した場合には、休憩を一切与えなくてよい",
+          "expectedCorrect": false,
+          "assessmentReason": "休憩義務と休日制度は別",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q15",
+      "stem": "健康診断で無症状の従業員に高血圧が疑われる所見が見つかった。発症や重症化を早期に防ぐ二次予防の観点から、職場の対応として最も適切なものはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/roudoukijun_kenshin_0001.html",
+      "verifiedSourceURL": "https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/roudoukijun_kenshin_0001.html",
+      "sourceLocator": "東京労働局健診案内・二次予防の概念",
+      "verificationLevel": "PARTIAL",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_SOURCE_READABLE",
+      "limitations": "東京労働局案内に二次予防の厳密分類や高血圧疑いの精密検査判断を逐語記述しているか未確認",
+      "choices": [
+        {
+          "index": 0,
+          "text": "異常所見を把握したが本人に知らせず、次年度の健診まで健康相談を保留する",
+          "expectedCorrect": false,
+          "assessmentReason": "精密検査の必要性を先送りする",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "異常所見を確認した段階で必ず職場復帰訓練を開始し、診療や精査は行わない",
+          "expectedCorrect": false,
+          "assessmentReason": "復職訓練は発症後の三次予防と混同",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "全従業員に運動を勧めれば、当該有所見者への健診後の個別対応は不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "全員向け運動勧奨は個別の二次予防を代替しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "健診異常があるだけで本人の病名を職場全体へ公開し、業務から直ちに無期限で除外する",
+          "expectedCorrect": false,
+          "assessmentReason": "病名を全員に公表するのは過剰",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "健診所見を本人に伝え、必要な受診・精密検査につなげ、結果に応じて早期の治療・支援を検討する",
+          "expectedCorrect": true,
+          "assessmentReason": "健診所見の通知・受診勧奨・早期対応は二次予防",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q16",
+      "stem": "脳卒中で休業した従業員が、リハビリテーションを経て段階的な職場復帰を希望している。三次予防に位置づく復帰支援として最も適切なものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=75ac0780&dataType=0&pageNo=1",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=75ac0780&dataType=0&pageNo=1",
+      "sourceLocator": "治療と就業の両立支援指針5(5)",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_SOURCE_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "主治医や産業医等の意見と本人の意向を踏まえ、業務負荷や勤務時間を調整した復帰支援計画を検討し、復帰後も状態に応じて見直す",
+          "expectedCorrect": true,
+          "assessmentReason": "主治医等と本人の意向を踏まえる復職支援",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "疾患名が同じ従業員には全員同じ復職日と担当業務を設定し、本人の希望は確認しない",
+          "expectedCorrect": false,
+          "assessmentReason": "同じ診断でも状態と希望は個別",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "病状や残存機能に関する評価を行わず、欠勤前と同じ負荷で復帰させることが三次予防の原則である",
+          "expectedCorrect": false,
+          "assessmentReason": "医学的評価なしの原職同一負荷は不適切",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "健診の受診勧奨だけを実施すれば、発症後の再発防止や就業配慮は不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "発症後の復職支援を受診勧奨だけで代替しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "産業医等による助言を得た場合でも、復帰後の業務負荷を見直すことは避けなければならない",
+          "expectedCorrect": false,
+          "assessmentReason": "復職後の見直し・フォローアップが必要",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q17",
+      "stem": "ある疾病の検査を疾病あり100人・疾病なし200人に実施した。疾病ありのうち陽性90人、陰性10人だった。感度として正しいものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/",
+      "sourceLocator": "StatPearls 感度TP/(TP+FN)",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_URL_RECAPTCHA_SAME_ARTICLE_SITES_BOOKS_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "90÷(90+10)=90%",
+          "expectedCorrect": true,
+          "assessmentReason": "感度=TP/(TP+FN)=90/100",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "90÷(90+200)=約31%",
+          "expectedCorrect": false,
+          "assessmentReason": "疾患なし200人は感度の分母外",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "10÷(90+10)=10%",
+          "expectedCorrect": false,
+          "assessmentReason": "偽陰性率10%で感度ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "90÷(90+190)=約32%",
+          "expectedCorrect": false,
+          "assessmentReason": "疾病なし人数を分母へ誤混入",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "200÷(100+200)=約67%",
+          "expectedCorrect": false,
+          "assessmentReason": "全300人の構成比を計算",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q18",
+      "stem": "疾病なしの200人に検査したところ、陰性180人、陽性20人だった。この検査の特異度として正しいものはどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/",
+      "sourceLocator": "StatPearls 特異度TN/(TN+FP)",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_URL_RECAPTCHA_SAME_ARTICLE_SITES_BOOKS_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "20÷200=10%",
+          "expectedCorrect": false,
+          "assessmentReason": "偽陽性率10%で特異度ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "陽性者全体のうち疾病ありの割合を求める",
+          "expectedCorrect": false,
+          "assessmentReason": "陽性的中率の説明",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "180÷(180+20+疾病あり人数)である",
+          "expectedCorrect": false,
+          "assessmentReason": "疾患あり人数を分母に含めない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "180÷(180+20)=90%",
+          "expectedCorrect": true,
+          "assessmentReason": "特異度=TN/(TN+FP)=180/200",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "疾病ありの者が陽性になる割合を求める",
+          "expectedCorrect": false,
+          "assessmentReason": "感度の定義と混同",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q19",
+      "stem": "ある検査の陽性判定閾値を下げた。疾病あり100人、疾病なし100人の同じ集団で、閾値変更前は真陽性70人・偽陽性10人、変更後は真陽性85人・偽陽性25人となった。感度と特異度の変化として正しいものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/",
+      "sourceLocator": "StatPearls 感度・特異度と閾値",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_URL_RECAPTCHA_SAME_ARTICLE_SITES_BOOKS_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "感度は70%から85%へ上がり、特異度は90%から75%へ下がる",
+          "expectedCorrect": true,
+          "assessmentReason": "感度70→85%、特異度90→75%",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "感度は70%から85%へ上がり、特異度も90%から95%へ上がる",
+          "expectedCorrect": false,
+          "assessmentReason": "特異度は低下する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "感度は90%から75%へ下がり、特異度は70%から85%へ上がる",
+          "expectedCorrect": false,
+          "assessmentReason": "感度・特異度を入替",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "感度は10%から25%へ上がり、特異度は30%から15%へ下がる",
+          "expectedCorrect": false,
+          "assessmentReason": "偽陽性率を感度と混同",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "閾値変更前後で陽性者数は変わったが、感度も特異度も100%のままである",
+          "expectedCorrect": false,
+          "assessmentReason": "検査結果が変わり両指標100%とはならない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q20",
+      "stem": "ある検査を疾病あり100人・疾病なし200人に実施した。疾病ありでは陽性80人・陰性20人、疾病なしでは陽性40人・陰性160人だった。検査結果が陰性だった人のうち、実際に疾病がない割合（陰性的中率）として正しいものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/",
+      "sourceLocator": "StatPearls 陰性的中率TN/(TN+FN)",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_URL_RECAPTCHA_SAME_ARTICLE_SITES_BOOKS_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "160÷(160+20)＝約88.9%",
+          "expectedCorrect": true,
+          "assessmentReason": "陰性的中率=TN/(TN+FN)=160/180",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "20÷(80+20)＝20.0%",
+          "expectedCorrect": false,
+          "assessmentReason": "偽陰性率20%",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "160÷(160+40)＝80.0%",
+          "expectedCorrect": false,
+          "assessmentReason": "特異度80%",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "80÷(80+40)＝約66.7%",
+          "expectedCorrect": false,
+          "assessmentReason": "陽性的中率80/120",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "20÷(160+20)＝約11.1%",
+          "expectedCorrect": false,
+          "assessmentReason": "陰性者内の疾病あり比率11.1%",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q21",
+      "stem": "有病率1%、感度90%、特異度90%の検査を無症状の1,000人に行った。陽性者への説明として最も適切なのはどれか（人数は期待値）。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/",
+      "sourceLocator": "StatPearls 陽性的中率TP/(TP+FP)",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_URL_RECAPTCHA_SAME_ARTICLE_SITES_BOOKS_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "陽性者のうち真に疾患を有する割合は約8%と推計され、陽性だけで確定診断せず確認検査を検討する",
+          "expectedCorrect": true,
+          "assessmentReason": "TP=9、FP=99、PPV=9/108=8.3%",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "感度が90%なので陽性者の90%が疾患を有すると断定する",
+          "expectedCorrect": false,
+          "assessmentReason": "感度を陽性的中率と混同",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "特異度が90%なので陽性者の偽陽性割合は常に10%と説明する",
+          "expectedCorrect": false,
+          "assessmentReason": "特異度を陽性者中の真偽割合と混同",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "有病率が低ければ検査陽性はすべて偽陽性と判断する",
+          "expectedCorrect": false,
+          "assessmentReason": "低有病率でも全陽性が偽陽性ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "陽性結果は疾患の確定診断と同義で追加確認を要しない",
+          "expectedCorrect": false,
+          "assessmentReason": "陽性のみで確定診断と断定できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q22",
+      "stem": "1,000人の集団（疾患あり100人、なし900人）で、検査Aは感度90%・特異度80%、検査Bは感度80%・特異度95%だった。陽性者を精密検査に紹介する場合の比較として正しいものはどれか（期待人数）。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/",
+      "sourceLocator": "StatPearls 感度・特異度と期待人数",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_URL_RECAPTCHA_SAME_ARTICLE_SITES_BOOKS_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "Aは特異度80%なので、疾患なし900人中の偽陽性は80人である",
+          "expectedCorrect": false,
+          "assessmentReason": "Aの偽陽性は900×0.2=180人",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "Aは真陽性90人・偽陽性180人、Bは真陽性80人・偽陽性45人であり、Aは見逃しが少ないが紹介対象の偽陽性は多い",
+          "expectedCorrect": true,
+          "assessmentReason": "A TP90/FP180、B TP80/FP45",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "Bは特異度95%なので、疾患あり100人全員が陽性となる",
+          "expectedCorrect": false,
+          "assessmentReason": "Bの特異度95%は感度100%でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "感度が高いAでは疾患なしの人は陽性にならない",
+          "expectedCorrect": false,
+          "assessmentReason": "Aの高感度でも偽陽性あり",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "両検査とも同一集団に用いるため、陽性者数と偽陽性者数は同一である",
+          "expectedCorrect": false,
+          "assessmentReason": "検査特性が異なり陽性人数も異なる",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q23",
+      "stem": "身長1.70m・体重72kgの甲と、身長・体重は同じだが筋肉量がより多い乙について、適切な体格評価はどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.cdc.gov/BMI/about/index.html",
+      "verifiedSourceURL": "https://www.cdc.gov/BMI/about/index.html",
+      "sourceLocator": "CDC BMIの体組成限界",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_SOURCE_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "BMIが同じなら甲と乙の体脂肪率は必ず同じである",
+          "expectedCorrect": false,
+          "assessmentReason": "同じBMIでも体脂肪率は異なる",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "筋肉量が多い乙は同じ身長・体重でもBMIが甲より低い",
+          "expectedCorrect": false,
+          "assessmentReason": "身長・体重同じならBMIも同じ",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "両者のBMIは約24.9で同じだが、体脂肪率や内臓脂肪量まで同じとは判断できず、必要に応じ腹囲などを併用する",
+          "expectedCorrect": true,
+          "assessmentReason": "72÷1.7²=約24.9、脂肪分布は不明",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "BMIは筋肉量を差し引いた体重で算定する",
+          "expectedCorrect": false,
+          "assessmentReason": "BMIは筋肉量を差し引かない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "BMIが約24.9なら体組成や腹囲に関係なく疾病リスクは完全に同じである",
+          "expectedCorrect": false,
+          "assessmentReason": "同じBMIでも病気のリスクは必ず同一でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q24",
+      "stem": "ある成人の1週間平均の摂取は2,400kcal/日、推定総消費は2,100kcal/日だった。一方、週末の体重は週初より0.4kg減った。評価として最も適切なのはどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3302369/",
+      "verifiedSourceURL": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3302369/",
+      "sourceLocator": "PMC Energy balance and its components",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_SOURCE_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "週末の0.4kg減少はすべて体脂肪の減少であると確定する",
+          "expectedCorrect": false,
+          "assessmentReason": "短期の体重差は全部体脂肪とは限らない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "体重が減少したので摂取と消費の差は定義上−300kcal/日となる",
+          "expectedCorrect": false,
+          "assessmentReason": "推定収支+300kcal/日を符号逆転",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "正のエネルギー収支なら体重測定値は毎日例外なく増加する",
+          "expectedCorrect": false,
+          "assessmentReason": "水分で短期体重が上下し得る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "推定収支は+300kcal/日だが、短期の体重差には水分・測定条件・推定誤差が影響するため、同条件で推移を継続評価する",
+          "expectedCorrect": true,
+          "assessmentReason": "摂取−消費=+300kcal、体重には水分変化",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "体重が減ったという事実だけで摂取量と消費量の推定値がともに正確と証明される",
+          "expectedCorrect": false,
+          "assessmentReason": "体重差だけで推計精度は証明できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q25",
+      "stem": "運動習慣がなく速歩で息切れしやすい成人が全身持久力を高めたいと相談した。運動禁忌となる急性疾患等がない場合の初期計画で最も適切なのはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://kennet.mhlw.go.jp/information/information/exercise/s-00-002.html",
+      "verifiedSourceURL": "https://kennet.mhlw.go.jp/information/information/exercise/s-00-002.html",
+      "sourceLocator": "厚労省 身体活動・運動ガイド2023",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_SOURCE_READABLE",
+      "limitations": "会話可能強度の厳密な安全閾値は登録資料のみでは未確定",
+      "choices": [
+        {
+          "index": 0,
+          "text": "初日に短時間歩ければ翌日は必ず最大強度へ増やす",
+          "expectedCorrect": false,
+          "assessmentReason": "運動量の急増は漸進性を欠く",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "初回から最大心拍数付近で長時間運動し症状があっても継続する",
+          "expectedCorrect": false,
+          "assessmentReason": "症状を無視した最大強度運動は不適切",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "速歩で息切れする人は有酸素性運動を一切実施できないと断定する",
+          "expectedCorrect": false,
+          "assessmentReason": "すべての有酸素運動が不可能とは限らない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "最大重量挙上のみが全身持久力向上の唯一の方法である",
+          "expectedCorrect": false,
+          "assessmentReason": "最大挙上のみは全身持久力の唯一の手段でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "会話できる程度の歩行を短時間から始め、体調を観察しながら頻度・時間を段階的に増やす",
+          "expectedCorrect": true,
+          "assessmentReason": "体調を確認し低強度歩行から段階的増量",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q26",
+      "stem": "深夜交替勤務が続くフォークリフト運転者から、作業中に強い眠気で注意が途切れそうになると申告があった。管理者の初動として適切なのはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.cdc.gov/niosh/fatigue/about/index.html",
+      "verifiedSourceURL": "https://www.cdc.gov/niosh/fatigue/about/index.html",
+      "sourceLocator": "NIOSH Fatigue and Work",
+      "verificationLevel": "PARTIAL",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_SOURCE_READABLE",
+      "limitations": "NIOSHは疲労・夜勤の安全リスクを示すがフォークリフトの即時配置転換の具体策を逐語明示しない",
+      "choices": [
+        {
+          "index": 0,
+          "text": "危険作業の安全確保を優先して配置等を見直し、睡眠・勤務間隔・休養感を確認し必要に応じ産業保健職や医療機関に相談する",
+          "expectedCorrect": true,
+          "assessmentReason": "安全確保・休養・勤務調整・専門相談が妥当",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "事故がまだ発生していないため運転を従来どおり単独で継続させる",
+          "expectedCorrect": false,
+          "assessmentReason": "事故がなくても強い眠気は事故リスク",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "本人の意欲だけで眠気は完全に解消できるので勤務設計を確認しない",
+          "expectedCorrect": false,
+          "assessmentReason": "意欲だけで睡眠不足を完全に治せない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "勤務シフトを変更すれば睡眠障害が必ず治るので眠気の持続を確認しない",
+          "expectedCorrect": false,
+          "assessmentReason": "シフト変更だけで治るとは限らない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "仮眠を取れば危険作業中の眠気は必ずゼロになると判断する",
+          "expectedCorrect": false,
+          "assessmentReason": "仮眠で眠気が必ずゼロにはならない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q27",
+      "stem": "健康増進法上の第二種施設に該当する一般事務所で屋内に喫煙場所を設ける場合、受動喫煙防止の対応として最も適切なのはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://jyudokitsuen.mhlw.go.jp/smoking_room/",
+      "verifiedSourceURL": "https://jyudokitsuen.mhlw.go.jp/smoking_room/",
+      "sourceLocator": "厚労省 各種喫煙室早わかり",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_SOURCE_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "空気清浄機を置けば構造や標識などすべての要件が免除される",
+          "expectedCorrect": false,
+          "assessmentReason": "空気清浄機では構造・標識義務が消えない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "喫煙専用室等の施設区分別要件、室外への煙の流出防止の技術基準、標識・20歳未満立入禁止等を確認する",
+          "expectedCorrect": true,
+          "assessmentReason": "第二種施設の技術・標識・年齢制限を確認",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "執務室で喫煙者と非喫煙者の席を分ければ法令上十分である",
+          "expectedCorrect": false,
+          "assessmentReason": "座席分離では法定喫煙室要件を満たさない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "20歳未満の労働者は清掃目的なら喫煙専用室への立入りを常に認められる",
+          "expectedCorrect": false,
+          "assessmentReason": "20歳未満は清掃でも立入禁止",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "窓を開ければ第二種施設の屋内喫煙の法定要件は適用されない",
+          "expectedCorrect": false,
+          "assessmentReason": "窓開放で法的規制は解除されない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q28",
+      "stem": "アルコール度数5%のビール500mLに含まれる純アルコール量の概算として最も適切なものはどれか（アルコールの比重を0.8とする）。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/stf/newpage_38541.html",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/stf/newpage_38541.html",
+      "sourceLocator": "厚労省 純アルコール量算式",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_SOURCE_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "約10gである",
+          "expectedCorrect": false,
+          "assessmentReason": "純アルコール20gを半分に誤算",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "約25gである",
+          "expectedCorrect": false,
+          "assessmentReason": "25mLを25gと誤算",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "約20gである",
+          "expectedCorrect": true,
+          "assessmentReason": "500×0.05×0.8=20g",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "約40gである",
+          "expectedCorrect": false,
+          "assessmentReason": "設定値の2倍",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "約50gである",
+          "expectedCorrect": false,
+          "assessmentReason": "設定値の2.5倍",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q29",
+      "stem": "研修で鶏肉を中心まで十分に加熱したが、加熱前の生鶏肉に触れたトングを洗浄せず盛付けにも使った。最も適切な評価はどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000126281.html",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/campylobacterqa.html",
+      "sourceLocator": "厚労省 カンピロバクター食中毒予防Q&A",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_URL_MOVED_NOTICE_ALTERNATE_OFFICIAL_READABLE",
+      "limitations": "旧登録URLは新サイト移転案内のみ",
+      "choices": [
+        {
+          "index": 0,
+          "text": "トングを水で濡らすだけであらゆる病原体が必ず除去される",
+          "expectedCorrect": false,
+          "assessmentReason": "水濡らしだけで病原菌を除去できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "肉を十分加熱していれば、盛付け時に生肉用器具が触れても汚染しない",
+          "expectedCorrect": false,
+          "assessmentReason": "加熱後も生肉用器具から再汚染あり",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "トングを使えば生肉由来の菌が加熱済み食品へ移動することはない",
+          "expectedCorrect": false,
+          "assessmentReason": "トングでも交差汚染し得る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "加熱済み食品へ生肉用トングから交差汚染が生じ得るため、器具を区分し適切に洗浄・消毒する",
+          "expectedCorrect": true,
+          "assessmentReason": "生肉用器具を分け洗浄・消毒",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "中心まで加熱した後は器具の衛生管理を行う必要がない",
+          "expectedCorrect": false,
+          "assessmentReason": "加熱後も器具の衛生管理が必要",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q30",
+      "stem": "水分不足により血漿浸透圧が上昇し腎機能は保たれている成人について、抗利尿ホルモン（ADH）と集合管の水輸送に関する正しい組合せはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK1177/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK1177/",
+      "sourceLocator": "NCBI GeneReviews AVP V2/AQP2",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_URL_RECAPTCHA_SAME_ARTICLE_SITES_BOOKS_READABLE",
+      "limitations": "高浸透圧によるADH分泌は補助PMC資料でも確認",
+      "choices": [
+        {
+          "index": 0,
+          "text": "血漿浸透圧はADH分泌と無関係で集合管の水透過性は常に一定である",
+          "expectedCorrect": false,
+          "assessmentReason": "浸透圧はADH分泌に影響する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "ADH分泌が減り、アクアポリン2の挿入が増えて水再吸収が増える",
+          "expectedCorrect": false,
+          "assessmentReason": "ADH減少とAQP2増加を不整合に記述",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "ADH分泌が増えると集合管の水透過性は低下し尿が必ず希釈される",
+          "expectedCorrect": false,
+          "assessmentReason": "ADHは水透過性を上げる",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "アルドステロンがV2受容体に結合してADHと同一の主作用を担う",
+          "expectedCorrect": false,
+          "assessmentReason": "V2受容体はアルドステロン受容体でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "ADH分泌が増え、V2受容体を介するアクアポリン2の管腔側膜への挿入が進み、水再吸収が増えて尿は濃縮される方向に働く",
+          "expectedCorrect": true,
+          "assessmentReason": "ADH→V2→AQP2挿入で水再吸収増",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q31",
+      "stem": "腎機能が保たれた患者で血清K濃度が上昇している。一方、別の患者では水分不足により血漿浸透圧が上昇している。主なホルモン作用の比較として最も適切なのはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK470339/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK470339/",
+      "sourceLocator": "NCBI StatPearls Aldosterone",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_URL_RECAPTCHA_SAME_ARTICLE_SITES_BOOKS_READABLE",
+      "limitations": "ADH作用の確認にC30同一記事を併用",
+      "choices": [
+        {
+          "index": 0,
+          "text": "高K血症ではアルドステロンが遠位ネフロンでK分泌を促し、高浸透圧ではADHが集合管の水透過性を高める方向に働く",
+          "expectedCorrect": true,
+          "assessmentReason": "高KでアルドステロンK分泌、高浸透圧でADH水保持",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "高K血症ではADHがK分泌を直接主導し、高浸透圧ではアルドステロンがアクアポリン2挿入を直接主導する",
+          "expectedCorrect": false,
+          "assessmentReason": "2つのホルモンの主作用を逆に記載",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "高K血症ではアルドステロンがK再吸収を促し、高浸透圧ではADHが水再吸収を減らす",
+          "expectedCorrect": false,
+          "assessmentReason": "K再吸収と水排出の作用方向が逆",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "両条件ともアルドステロンはNa排泄を増やし、ADHは水排泄を増やす方向に働く",
+          "expectedCorrect": false,
+          "assessmentReason": "Na排泄と水排泄の主作用が逆",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "高K血症ではアルドステロンの分泌が必ず停止し、高浸透圧ではADHの分泌が必ず停止する",
+          "expectedCorrect": false,
+          "assessmentReason": "刺激で両ホルモンが必ず停止とはいえない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q32",
+      "stem": "甲状腺機能検査でTSHが基準範囲より低値、遊離T4が高値であった。典型的な負のフィードバックを踏まえた解釈として適切なのはどれか（薬剤や特殊な病態の影響はないものとする）。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK500006/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK500006/",
+      "sourceLocator": "NCBI StatPearls Thyroid Hormone",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_URL_RECAPTCHA_SAME_ARTICLE_SITES_BOOKS_READABLE",
+      "limitations": "設問の中心命題を確認したが、全誤答肢の各段落直接逐語反証・法令版や商用権利までは未証明",
+      "choices": [
+        {
+          "index": 0,
+          "text": "TSH低値と遊離T4高値の組合せは、TSHの分泌が必ず亢進していることを示す",
+          "expectedCorrect": false,
+          "assessmentReason": "低TSHは分泌亢進を示さない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "遊離T4高値による下垂体への負のフィードバックでTSHが抑制される状態と整合するが、これだけで原因疾患までは確定できない",
+          "expectedCorrect": true,
+          "assessmentReason": "FT4高値の負帰還でTSH抑制、原因は未確定",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "遊離T4高値は必ずTSH高値を引き起こすため、測定値の組合せは生理学的に不可能である",
+          "expectedCorrect": false,
+          "assessmentReason": "FT4増加でTSH必ず上昇とはならない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "遊離T4高値は下垂体後葉からのTSH放出を直接増加させることを示す",
+          "expectedCorrect": false,
+          "assessmentReason": "TSHは下垂体前葉由来",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "TSH低値だけから甲状腺ホルモン濃度も必ず低いと判断し、遊離T4の測定値を無視できる",
+          "expectedCorrect": false,
+          "assessmentReason": "TSHとFT4の高低は逆でも矛盾しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    }
+  ]
+}
