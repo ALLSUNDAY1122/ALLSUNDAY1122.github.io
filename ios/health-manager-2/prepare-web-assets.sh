@@ -39,6 +39,9 @@ p.write_text(updated, encoding='utf-8')
 print(f'PASS: HealthManager2 CURRENT_PROJECT_VERSION={build_number}')
 PY
 
+node "$SCRIPT_DIR/export-audit-data.cjs"
+test -s "$SCRIPT_DIR/release-questions.json"
+
 rm -rf "$WEB_DST"
 rm -rf "$SCRIPT_DIR/HealthManager2/Assets.xcassets"
 mkdir -p "$WEB_DST" "$ASSET_DIR"
@@ -57,6 +60,9 @@ for file in "${files[@]}"; do
   test -f "$WEB_SRC/$file"
   cp "$WEB_SRC/$file" "$WEB_DST/$file"
 done
+
+# Bundle the same canonical 300-question JSON validated by the release exporter.
+cp "$SCRIPT_DIR/release-questions.json" "$WEB_DST/release-questions.json"
 
 # The artwork was explicitly user-approved. v4 stores a compression-only WebP
 # derivative of the exact approved Drive PNG in four deterministic chunks.
