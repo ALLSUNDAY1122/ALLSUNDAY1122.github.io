@@ -1,0 +1,70 @@
+name: HM1 exact seven practice A Q09-Q18 regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - .github/workflows/hm1-exact-seven-a-q09-q18.yml
+      - ios/health-manager-1/audit/practice_a_fixes_01_10.json
+  workflow_dispatch:
+jobs:
+  rebuild-compare:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild exactly 264 at audit baseline and current revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/hm1-a15-baseline 48f85ae7aa62b6cb6ae92106ec58cb5a30212c28
+          node /tmp/hm1-a15-baseline/ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-a15-baseline.log
+          node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-a15-current.log
+          node - <<'NODE'
+          'use strict';
+          const fs = require('fs');
+          const old = JSON.parse(fs.readFileSync('/tmp/hm1-a15-baseline/ios/health-manager-1/Resources/questions.json','utf8'));
+          const now = JSON.parse(fs.readFileSync('ios/health-manager-1/Resources/questions.json','utf8'));
+          const target = ['practice-A-Q10','practice-A-Q11','practice-A-Q13','practice-A-Q14','practice-A-Q15','practice-A-Q16','practice-A-Q18'].sort();
+          const norm = s => String(s || '').normalize('NFKC').replace(/[\s\p{P}\p{S}]/gu, '').toLowerCase();
+          for(const [name, qs] of [['old',old],['now',now]]){
+            if(qs.length!==264) throw Error(name+' count '+qs.length);
+            if(new Set(qs.map(x=>x.id)).size!==264) throw Error(name+' duplicated ID');
+            if(new Set(qs.map(x=>norm(x.stem))).size!==264) throw Error(name+' duplicate normalized stem');
+            for(const q of qs){
+              if(!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5)throw Error(name+' bad choices '+q.id);
+              if(!Number.isInteger(q.ans)||q.ans<0||q.ans>4)throw Error(name+' bad index '+q.id);
+            }
+          }
+          if(old.some((q,i)=>q.id!==now[i].id))throw Error('order changed');
+          const changed=now.filter((q,i)=>JSON.stringify(q)!==JSON.stringify(old[i])).map(x=>x.id).sort();
+          if(JSON.stringify(changed)!==JSON.stringify(target))throw Error('Changed IDs: '+JSON.stringify(changed));
+          const correct={
+            'practice-A-Q10':{ans:2,contains:'検便'},
+            'practice-A-Q11':{ans:0,contains:'65時間'},
+            'practice-A-Q13':{ans:1,contains:'医師面接指導'},
+            'practice-A-Q14':{ans:3,contains:'5年間'},
+            'practice-A-Q15':{ans:4,contains:'医師の意見'},
+            'practice-A-Q16':{ans:1,contains:'30.0℃'},
+            'practice-A-Q18':{ans:0,contains:'報告先'}
+          };
+          for(let i=0;i<now.length;i++){
+            const q=now[i],prev=old[i];
+            if(!target.includes(q.id))continue;
+            if(q.ans!==correct[q.id].ans||!q.choices[q.ans].includes(correct[q.id].contains))throw Error('answer content/index mismatch '+q.id);
+            for(const key of new Set([...Object.keys(prev),...Object.keys(q)])){
+              if(JSON.stringify(prev[key])!==JSON.stringify(q[key])&&
+                 !['stem','choices','ans','short','detail','key','sourceRef','auditSourceURL','auditStatus','difficultyAudit'].includes(key))
+                throw Error('unexpected field '+q.id+' '+key);
+            }
+          }
+          const wbgt=now.find(q=>q.id==='practice-A-Q16');
+          if(wbgt.choices[0].startsWith('29.0℃')||!wbgt.choices[3].startsWith('29.8℃'))throw Error('distractor arithmetic');
+          console.log('PASS: regenerated 264 both revisions; exactly 7 specified records changed; other 257 records identical; 5 unique choices; stable ID/order; answer-index semantics and WBGT arithmetic verified.');
+          NODE
