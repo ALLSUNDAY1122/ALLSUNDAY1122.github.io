@@ -35,3 +35,10 @@
 
 - **累計50/170問点検、未点検120問**。No.037/038のURL修正は適用済み。第5バッチの10問はURL・設問内容の追加修正対象なし。ただしNo.037のbasis整合等の**非URL改善**を継続管理。
 - 次回はMuse CLIの新JSON独立検証とNo.037`primary_basis`／分類の妥当性の精査を優先し、次のNo.051〜060を固定台帳順に照合。監査未証明の項目を公開PASSとせず、本番公開**BLOCKED**。
+
+
+## 2026-11-12｜Muse側独立生成再現性の追補（No.037/038 URL修正後）
+
+- 利用者提供のMuse側独立検証：`sm2-r7a-011`（労働安全衛生総合研究所）・`sm2-r7a-012`（厚生労働省 基発0520第6号）の**2問のsource_url差替え後**に `node ios/health-manager-2/export-canonical-snapshot.cjs` が正常終了し、再生成結果と配布用 `ios/health-manager-2/release-questions.json` が**バイト単位で完全一致**。報告SHA-256：`a5a4e158f3e09d8ae97ccee6da17f1242b0af62a16046eccf1bd3d82b22d898c`。
+- 対象は配布JSON更新コミット `f3c57b5b3c95ed793d1c2ccaa927e0cdac56461b` 後のデータ。JSON blobは `1dcbb5b66c215f14168ddca03a33e0dc3063e0fb`。新しい改訂が入った後の一致証拠・SHAへは流用しない。
+- これは**ユーザーから受領したMuse独立検証報告**であり、このGitHub連携セッション自体がNode CLIを実行しSHAを算出したという主張ではない。対象2件の修正後再現性は**Muse実測PASS**。170問全件の出典確認、178件公開状態照合、専門家査読の合格を意味しない。本番公開 **BLOCKED**。
