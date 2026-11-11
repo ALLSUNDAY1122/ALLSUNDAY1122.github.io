@@ -135,13 +135,17 @@ for (const round of layouts) {
 // source lineage. This makes the fixes survive every release materialization.
 const fixPath = path.join(IOS_DIR, 'audit', 'practice_a_fixes_01_10.json');
 const fixPack = JSON.parse(fs.readFileSync(fixPath, 'utf8'));
-const expectedFixIds = Array.from({length:10}, (_,i) => `practice-A-Q${String(i+1).padStart(2,'0')}`);
+const expectedFixIds = Array.from({length:20}, (_,i) => `practice-A-Q${String(i+1).padStart(2,'0')}`);
 if (JSON.stringify(Object.keys(fixPack.questions).sort()) !== JSON.stringify(expectedFixIds)) {
-  throw new Error('Practice-A Q01-Q10 override IDs do not match release contract');
+  throw new Error('Practice-A Q01-Q20 override IDs do not match release contract');
 }
 for (const id of expectedFixIds) {
   const q = added.find(q => q.id === id);
-  if (!q || !q.conceptKey.startsWith('hm2:sm2-5y-r04-law-')) {
+  const idx = Number(id.slice(-2));
+  const expectedSource = idx <= 10
+    ? `hm2:sm2-5y-r04-law-${String(idx).padStart(2,'0')}`
+    : `hm2:sm2-5y-r05-law-${String(idx-10).padStart(2,'0')}`;
+  if (!q || !q.conceptKey.startsWith(expectedSource + ':')) {
     throw new Error(`${id}: generated source mapping changed; refusing silent override`);
   }
   const patch = fixPack.questions[id];
@@ -153,10 +157,10 @@ for (const id of expectedFixIds) {
   Object.assign(q, patch, {
     short: `正解は「${patch.choices[patch.ans]}」です。`,
     originalExpression: true,
-    independenceReason: 'HM1監査第1バッチの指摘に基づく個別の条件判断型再設計。'
+    independenceReason: 'HM1監査第1・第2バッチの指摘に基づく個別の条件判断型再設計。'
   });
 }
-console.log('PASS: HM1 practice-A Q01-Q10 case-based overrides applied (10)');
+console.log('PASS: HM1 practice-A Q01-Q20 case-based overrides applied (20)');
 
 const all = [...base, ...added];
 if (all.length !== 264) throw new Error(`Expected total=264, got ${all.length}`);
