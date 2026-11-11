@@ -717,7 +717,13 @@ function HM2_P2_CORRECT_CONTENT_MATCH(q,f) {
     new Set(q.choices).size!==5||!Number.isInteger(q.answer)||
     q.answer<1||q.answer>5)return false;
   const expected=HM2_P2_EXPECTED_CORRECT_CHOICE[f.id];
-  return typeof expected==='string'&&q.choices[q.answer-1]===expected;
+  if(typeof expected!=='string')return false;
+  if(q.choices[q.answer-1]===expected)return true;
+  // P2-2 cochlea redesign replaces the earlier generic association question itself.
+  return f.id==='sm2-5y-r08-phy-09'&&q.answer===4&&
+    q.question==='次の項目・説明の対応で、誤りのないものはどれか。'&&
+    q.choices[q.answer-1]==='蝸牛 ― 内耳にあり、音の振動を神経信号へ変換する聴覚器官である。';
+
 }
 
 // HM2_P2_1_R05_HYG_08_NOISE_PRIMARY_SOURCE_20261111: replace indirect source with 2023 MHLW notification; clarify non-mandatory visual alert supplement.
@@ -797,7 +803,7 @@ function HM2_P2_CORRECT_CONTENT_MATCH(q,f) {
 
 
 // HM2_P2_2_P2_3_R08_PHY_09_COCHLEA_20261111
-(function(){'use strict';const f={"id":"sm2-5y-r08-phy-09","answer":2,"question":"音刺激が内耳に伝わったとき、蝸牛の有毛細胞と前庭器官の働きについて、正しいものはどれか。","choices":["蝸牛の有毛細胞は、頭部の角加速度を検出して聴神経へ信号を送る。","蝸牛では基底膜の振動に伴う有毛細胞の機械電気変換により聴覚信号が生じ、蝸牛神経を介して伝わる。","半規管の膨大部稜は、音の周波数ごとに基底膜が振動する部位である。","卵形嚢と球形嚢は、主として音圧の強弱を周波数別に分析する聴覚器官である。","蝸牛の基底膜は、全周波数の音に対して常に同じ位置が最大に振動する。"],"quick":"蝸牛の基底膜振動に伴う有毛細胞の機械電気変換で聴覚信号が生じ、蝸牛神経を介して伝わる。","explanation":"第2肢が正しい。音による内耳液の運動で蝸牛の基底膜が振動し、有毛細胞の感覚毛が変位して機械刺激が電気信号へ変換され、蝸牛神経を通じて聴覚情報が伝達される。第1肢は誤り。頭部の回転（角加速度）を感知するのは半規管の有毛細胞であり、蝸牛は聴覚を担う。第3肢は誤り。半規管の膨大部稜は回転運動を検出し、音の周波数に応じた場所の違いに関係するのは蝸牛の基底膜である。第4肢は誤り。卵形嚢・球形嚢の耳石器は頭部の傾きや直線加速度を検出し、音圧の周波数分析は担わない。第5肢は誤り。蝸牛基底膜の振動が最大となる場所は音の周波数によって異なり、高周波は基部寄り、低周波は頂部寄りである。従って第2肢だけが正しい。","basis":"聴覚・前庭生理／蝸牛の有毛細胞と基底膜の周波数局在、半規管・耳石器の機能","difficulty_model":"auditory-vestibular-discrimination-v2"};const q=(window.Q_PARTS||[]).find(x=>x.id===f.id);if(!q||q.subject!=='労働生理'||!HM2_P2_CORRECT_CONTENT_MATCH(q,f))throw Error('HM2 cochlea mismatch');Object.assign(q,{question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,basis:f.basis,difficultyModel:f.difficulty_model});})();
+(function(){'use strict';const f={"id":"sm2-5y-r08-phy-09","answer":2,"question":"音刺激が内耳に伝わったとき、蝸牛の有毛細胞と前庭器官の働きについて、正しいものはどれか。","choices":["蝸牛の有毛細胞は、頭部の角加速度を検出して聴神経へ信号を送る。","蝸牛では基底膜の振動に伴う有毛細胞の機械電気変換により聴覚信号が生じ、蝸牛神経を介して伝わる。","半規管の膨大部稜は、音の周波数ごとに基底膜が振動する部位である。","卵形嚢と球形嚢は、主として音圧の強弱を周波数別に分析する聴覚器官である。","蝸牛の基底膜は、全周波数の音に対して常に同じ位置が最大に振動する。"],"quick":"蝸牛の基底膜振動に伴う有毛細胞の機械電気変換で聴覚信号が生じ、蝸牛神経を介して伝わる。","explanation":"第2肢が正しい。音による内耳液の運動で蝸牛の基底膜が振動し、有毛細胞の感覚毛が変位して機械刺激が電気信号へ変換され、蝸牛神経を通じて聴覚情報が伝達される。第1肢は誤り。頭部の回転（角加速度）を感知するのは半規管の有毛細胞であり、蝸牛は聴覚を担う。第3肢は誤り。半規管の膨大部稜は回転運動を検出し、音の周波数に応じた場所の違いに関係するのは蝸牛の基底膜である。第4肢は誤り。卵形嚢・球形嚢の耳石器は頭部の傾きや直線加速度を検出し、音圧の周波数分析は担わない。第5肢は誤り。蝸牛基底膜の振動が最大となる場所は音の周波数によって異なり、高周波は基部寄り、低周波は頂部寄りである。従って第2肢だけが正しい。","basis":"聴覚・前庭生理／蝸牛の有毛細胞と基底膜の周波数局在、半規管・耳石器の機能","difficulty_model":"auditory-vestibular-discrimination-v2"};const q=(window.Q_PARTS||[]).find(x=>x.id===f.id);if(!q||q.subject!=='労働生理'||!HM2_P2_CORRECT_CONTENT_MATCH(q,f))throw Error('HM2 cochlea mismatch');Object.assign(q,{answer:f.answer,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,basis:f.basis,difficultyModel:f.difficulty_model});})();
 
 
 // HM2_P2_1_R09_HYG_05_HEAT_ACCLIMATIZATION_SOURCE_20261111: retain direct MHLW URL, specify exact sections and option-specific reasoning.
