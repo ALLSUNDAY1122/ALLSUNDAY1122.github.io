@@ -1,0 +1,57 @@
+name: HM1 exact nine practice-B Q01-Q10 regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/content-overrides-b-20261110.json'
+      - '.github/workflows/hm1-exact-nine-b-q01-q10.yml'
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regenerate baseline and current 264 banks and compare question records
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=4a30279198245df4fd83654a0abc3b61c55f45a2
+          git worktree add --detach /tmp/hm1-b-before "$BASE"
+          git worktree add --detach /tmp/hm1-b-after HEAD
+          (cd /tmp/hm1-b-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-b-before.log)
+          (cd /tmp/hm1-b-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-b-after.log)
+          python3 - <<'PY'
+          import json,unicodedata
+          from pathlib import Path
+          rel='ios/health-manager-1/Resources/questions.json'
+          old=json.loads((Path('/tmp/hm1-b-before')/rel).read_text())
+          new=json.loads((Path('/tmp/hm1-b-after')/rel).read_text())
+          changed_expected={f'practice-B-Q{i:02}' for i in [1,2,4,5,6,7,8,9,10]}
+          assert len(old)==len(new)==264,(len(old),len(new))
+          assert [q['id'] for q in old]==[q['id'] for q in new], 'IDs or order changed'
+          assert len({q['id'] for q in new})==264, 'duplicate question IDs'
+          def norm(s):return ''.join(c for c in unicodedata.normalize('NFKC',s).casefold() if not c.isspace())
+          assert len({norm(q['stem']) for q in new})==264, 'duplicate normalized stems'
+          delta={a['id'] for a,b in zip(old,new) if a!=b}
+          assert delta==changed_expected,f'Unexpected changed IDs: {sorted(delta)}'
+          for a,b in zip(old,new):
+              if a['id'] not in changed_expected: assert a==b,a['id']
+          expected_ans={'practice-B-Q01':1,'practice-B-Q02':3,'practice-B-Q04':2,'practice-B-Q05':4,'practice-B-Q06':2,'practice-B-Q07':4,'practice-B-Q08':0,'practice-B-Q09':2,'practice-B-Q10':4}
+          for q in new:
+              assert isinstance(q['choices'],list) and len(q['choices'])==5,q['id']
+              assert len({norm(x) for x in q['choices']})==5,q['id']
+              assert type(q['ans']) is int and 0<=q['ans']<5,q['id']
+              if q['id'] in expected_ans:
+                  assert q['ans']==expected_ans[q['id']],q['id']
+                  assert q['short'],q['id']
+          assert next(a for a in old if a['id']=='practice-B-Q03')==next(b for b in new if b['id']=='practice-B-Q03')
+          print('PASS: regenerated 264 before+after; exact nine changed; other 255 identical; Q03 unchanged')
+          PY
