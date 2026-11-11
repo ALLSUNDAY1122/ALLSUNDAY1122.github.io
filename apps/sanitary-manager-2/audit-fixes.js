@@ -986,3 +986,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH10_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH11_20261111: verified direct references; sourceUrl-only changes.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r08-phy-04","sourceUrl":"https://www.ncbi.nlm.nih.gov/sites/books/NBK532252/","question":"専門事項とその機能の対応で正しいものはどれか。","correctText":"瞳孔 ― 虹彩によって大きさが調節され、眼に入る光量を調整する。"},{"id":"sm2-5y-r08-phy-05","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK560568/","question":"若い頃は手元の小さな文字を無理なく読めた成人が、加齢とともに近くの文字に焦点を合わせにくくなり、読む物を遠ざけるようになった。主に老視による変化と考えられる場合、最も適切な説明はどれか。","correctText":"水晶体の硬化・弾性低下などにより調節力が弱まり、近点が遠ざかる。"},{"id":"sm2-5y-r08-phy-06","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK10885/","question":"網膜で受けた光刺激が視神経を通じて中枢へ伝わるまでの主な情報の流れとして、正常な網膜に最も適切なのはどれか。","correctText":"杆体・錐体の視細胞で光が電気的応答に変換され、双極細胞などを介して神経節細胞へ伝わり、その軸索が視神経を構成する。"},{"id":"sm2-5y-r08-phy-07","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK11525/","question":"十分明るい場所から暗い通路へ移った健康な作業者が、しばらくすると暗い場所の輪郭を以前より見分けやすくなった。この変化に関する説明として最も適切なのはどれか。","correctText":"暗所順応では視物質の再生などに伴って杆体の感度が高まり、低照度での検出が改善する。"},{"id":"sm2-5y-r08-phy-08","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK10848/","question":"暗い場所で正面の微弱な星を凝視するより、視線を少しずらした方が見つけやすいことがある。この現象を、正常な網膜の視細胞分布から説明したものとして最も適切なのはどれか。","correctText":"中心窩は錐体が高密度で杆体を欠き、中心窩から離れた網膜には微弱光に高感度な杆体が分布するためである。"},{"id":"sm2-5y-r08-phy-09","sourceUrl":"https://www.ncbi.nlm.nih.gov/sites/books/NBK531483/","question":"音刺激が内耳に伝わったとき、蝸牛の有毛細胞と前庭器官の働きについて、正しいものはどれか。","correctText":"蝸牛では基底膜の振動に伴う有毛細胞の機械電気変換により聴覚信号が生じ、蝸牛神経を介して伝わる。"},{"id":"sm2-5y-r08-phy-10","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK553169/","question":"両眼の視神経・動眼神経と虹彩の機能が正常な人について、暗い部屋で右眼だけに光を当てた。左眼には直接光が入らない条件で、通常生じる反応として正しいものはどれか。","correctText":"右眼の直接対光反射に加え、左眼にも間接（共同）対光反射による縮瞳が起こる。"},{"id":"sm2-5y-r09-phy-01","sourceUrl":"https://www.ncbi.nlm.nih.gov/sites/books/NBK532258/","question":"立ち上がる際に大腿四頭筋が収縮した。自分の意思で運動を起こし、横紋が見られる筋組織はどれか。","correctText":"骨格筋"},{"id":"sm2-5y-r09-phy-02","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK26888/","question":"肘を曲げる際、上腕二頭筋の筋線維が短縮して力を出す。骨格筋の滑り説で、相互に滑り込む主なタンパク質はどれか。","correctText":"アクチンとミオシン"},{"id":"sm2-5y-r09-phy-03","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK553169/","question":"健常者が明るい屋外から暗い室内に移動し、暗さに適応して瞳孔が大きくなった。直接対光反射による縮瞳とは反対のこの変化について、主に関与する自律神経と虹彩の筋の組合せとして適切なのはどれか。","correctText":"交感神経―虹彩の瞳孔散大筋が収縮して散瞳する。"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch11 target count/ID');
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+ !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correctText||
+ (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.sourceUrl))
+ throw Error('HM2 X-01 batch11 unexpected source/content '+f.id);
+ q.sourceUrl=f.sourceUrl;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH11_IDS=fixes.map(f=>f.id);
+})();
