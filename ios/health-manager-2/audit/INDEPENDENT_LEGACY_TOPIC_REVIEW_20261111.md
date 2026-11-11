@@ -1107,3 +1107,13 @@
 - **10問点検、topic・basis要修正8問（No.71〜74、76〜79）、整合2問（No.70、75）**。既存正答の明白な誤り0、全5肢で明白な複数正答0。ただし極端な誤答肢が多く、実質重複候補No.70/77、換気論点No.58/76/78を別途再設計候補とする。
 - source_urlの直接性要確認：No.72、78。直接出典への差替え推奨：No.74、79。No.73は熱中症の救急対応の解説補強を推奨。
 - **累計79/178問点検済、残99問**。次は固定ID No.80〜89。今回は監査記録のみ更新し、問題生成元JS・iOS JSON・監査承認フラグ・公開状態・ビルド・TestFlight・App Reviewには変更しない。品質ゲートは引き続き **BLOCKED**。
+
+
+## 2026-11-11追補｜独立レビュー第8バッチ8件の分類・根拠修正とJSON再生成
+
+- 対象は固定No.71〜74・76〜79（`sm2-5y-r05-hyg-07/08/09/10`、`sm2-5y-r06-hyg-02/03/04/05`）の8件。生成元 `apps/sanitary-manager-2/audit-fixes.js` に `SM2_INDEPENDENT_EIGHTH10_METADATA_FIX8_20261111` を追記し、各問の `topic` と `basis` のみ修正。生成元コミット `6998169c17ebbc86a4aae9c80f7681ec67fe451a`。
+- GitHub Actions `HM2 canonical iOS question JSON rebuild` run `42966842967` **SUCCESS**：https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42966842967 。JSON自動生成コミット `0ec3221491c180bae43b4ac7b6082acd3f227df0`。
+- 修正生成元コミット時点の `ios/health-manager-2/release-questions.json` 旧blob `610430cb37cd92be40474ab5258886f6990c57bb` とブランチ現行の新blob `9bfd29c9e15016b8bf9ea59ec96bceb8f3faaaa8` を全300問、同順・同IDの全フィールドで比較した。**差分は指定8問のみ**、8問すべて `topic` と `primary_basis` だけが変更。他292問の全フィールド一致。全300問の設問・全5肢・正答番号・quick・解説・source_url・監査フラグ・公開フラグは不変。
+- GitHubコミット比較でも生成元コミット→JSON自動生成コミットの変更ファイルは `release-questions.json` のみ（16行追加・16行削除）。
+- No.72・74・78・79の参照URLの直接性・改善は別課題であり、今回の分類根拠修正に含めない。No.73の熱中症初期対応の解説補強、No.70/77ほかの実質重複解消も未着手。
+- 独立レビューは引き続き **79/178問点検済、残99問**。次はNo.80〜89。専門家最終承認なし。品質ゲート **BLOCKED**。新規iOSビルド・TestFlight・App Review提出なし。
