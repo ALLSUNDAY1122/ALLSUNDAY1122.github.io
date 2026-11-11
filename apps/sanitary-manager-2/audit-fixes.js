@@ -411,3 +411,13 @@ if(fixes.length!==5||new Set(fixes.map(f=>f.id)).size!==5||fixes.filter(f=>f.sou
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 twelfth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;if(f.sourceUrl)q.sourceUrl=f.sourceUrl;}
 window.SM2_INDEPENDENT_TWELFTH10_METADATA_FIX5_IDS=fixes.map(f=>f.id);
 })();
+
+
+// SM2_INDEPENDENT_THIRTEENTH10_METADATA_FIX6_20261111: fixed No.122-124,127-129; keep content and release flags unchanged.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r10-hyg-08","topic":"健診有所見率の集団分析と勤務条件評価","basis":"健診情報の適正な取扱い・職場健康管理"},{"id":"sm2-5y-r10-hyg-09","topic":"WBGT測定地点と暑熱曝露条件","basis":"厚生労働省『職場における熱中症防止対策のためのガイドライン』（令和8年3月18日・基発0318第1号）","sourceUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1"},{"id":"sm2-5y-r10-hyg-10","topic":"情報機器作業のグレア・映り込み防止","basis":"厚生労働省『情報機器作業における労働衛生管理のためのガイドライン』"},{"id":"sm2-5y-r04-phy-03","topic":"心拍出量の計算","basis":"循環生理：心拍出量＝心拍数×一回拍出量"},{"id":"sm2-5y-r04-phy-04","topic":"運動時の心拍出量と活動筋血流","basis":"循環生理・運動時の循環調節"},{"id":"sm2-5y-r04-phy-05","topic":"肺循環から左心房への還流","basis":"心臓の構造・肺循環と体循環"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==6||new Set(fixes.map(f=>f.id)).size!==6||fixes.filter(f=>f.sourceUrl).length!==1)throw Error('HM2 thirteenth metadata fix count invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 thirteenth missing '+f.id);q.topic=f.topic;q.basis=f.basis;if(f.sourceUrl)q.sourceUrl=f.sourceUrl;}
+window.SM2_INDEPENDENT_THIRTEENTH10_METADATA_FIX6_IDS=fixes.map(f=>f.id);
+})();
