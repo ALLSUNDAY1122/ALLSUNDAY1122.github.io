@@ -1,0 +1,1016 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "baseCommit": "17520112b59ebd7662a4f5cd976b26459c87ed8e",
+  "scope": "演習A Q21-Q40、20問×5肢＝100肢、生成元audit/practice_a_fixes_01_10.json",
+  "classificationRule": "DIRECT=中心命題の原典/代替一次資料を直接確認、PARTIAL=資料は閲覧できるが当該詳細の照合不足、PENDING=登録原典不達で代替資料による直接確認も未了。DIRECTは全5肢の逐語反証を意味しない。",
+  "counts": {
+    "DIRECT": 12,
+    "PARTIAL": 3,
+    "PENDING": 5
+  },
+  "unconditionalAllChoicePass": 0,
+  "questions": [
+    {
+      "id": "practice-A-Q21",
+      "stem": "同じWBGT31℃の屋外作業で、A班は軽い点検を短時間、B班は防護衣を着用した重量物運搬を予定している。両班の作業計画として最も適切なのはどれか。",
+      "ans": 4,
+      "sourceRegistered": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "sourceRef": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "checkedSource": "NIOSH 暑熱基準 2016-106、基発0520第6号",
+      "classification": "PARTIAL",
+      "limitation": "同一WBGTでも代謝率・着衣の補正が必要。登録厚労省PDFの該当図表画像まで確認していない",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "WBGTが同じなら作業強度と衣服に関係なく両班の連続作業時間を同一にする",
+          "expectedTruth": false,
+          "reason": "作業強度・衣服差を無視している",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "B班の作業を早く終えるため連続作業時間を増やし、休憩はA班だけに割り当てる",
+          "expectedTruth": false,
+          "reason": "高強度班だけ休憩削減は逆",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "A班は軽作業のため体調確認を省略でき、B班は水分補給をすれば休憩を省略できる",
+          "expectedTruth": false,
+          "reason": "軽作業でも体調確認、高強度でも休憩が必要",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "防護衣の影響はWBGT値に自動的に含まれているためB班の計画には個別調整を要しない",
+          "expectedTruth": false,
+          "reason": "WBGT値だけに着衣補正が自動包含されない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "B班の方が暑熱負荷が高い可能性を考慮し、作業時間の短縮、休憩増加、衣服条件の見直し等を優先的に検討する",
+          "expectedTruth": true,
+          "reason": "高強度・防護衣班の休憩・負荷調整",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "同一WBGTでも代謝率・着衣の補正が必要。登録厚労省PDFの該当図表画像まで確認していない"
+    },
+    {
+      "id": "practice-A-Q22",
+      "stem": "熱中症の報告体制と対応手順が事前に整備・周知された屋外作業場で、作業者Aが同僚Bのふらつきと受け答えの鈍さを発見した。現場の初動として最も適切なのはどれか。",
+      "ans": 3,
+      "sourceRegistered": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "sourceRef": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "checkedSource": "厚労省 基発0520第6号 安衛則612条の2",
+      "classification": "DIRECT",
+      "limitation": "他者発見の報告、離脱・冷却・医療手順を通達で確認",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "B本人の自発的申出がない限り、Aは報告せず次の巡視時刻まで待つ",
+          "expectedTruth": false,
+          "reason": "発見者も報告できる",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "Bの症状が熱中症と医師により確定するまでは、Aは通常作業を続けさせる",
+          "expectedTruth": false,
+          "reason": "診断確定前にも初動が必要",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "Aはまず全員の作業を終了させ、報告先には翌日まとめて連絡する",
+          "expectedTruth": false,
+          "reason": "連絡翌日では遅い",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "Aは定められた報告先へ直ちに連絡し、Bの作業離脱・冷却と救急対応を手順に沿って進める",
+          "expectedTruth": true,
+          "reason": "速やかな報告と冷却・医療へ接続",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "AはBに水を飲ませて作業に戻し、改善しなければ初めて報告する",
+          "expectedTruth": false,
+          "reason": "反応異常者に飲水と復帰を強制しない",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "他者発見の報告、離脱・冷却・医療手順を通達で確認"
+    },
+    {
+      "id": "practice-A-Q23",
+      "stem": "同じ温度での飽和水蒸気量が20g/m³、実際の水蒸気量が12g/m³だった。相対湿度として正しいものはどれか。",
+      "ans": 3,
+      "sourceRegistered": "https://www.env.go.jp/content/900402537.pdf",
+      "sourceRef": "https://www.env.go.jp/content/900402537.pdf",
+      "checkedSource": "気象庁 気温・湿度 用語",
+      "classification": "DIRECT",
+      "limitation": "登録環境省PDFは直接未照合。気象庁HTMLで同温の実際の水蒸気量/飽和水蒸気量を確認",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "40％",
+          "expectedTruth": false,
+          "reason": "40%は誤計算",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "120％",
+          "expectedTruth": false,
+          "reason": "120%は過大",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "80％",
+          "expectedTruth": false,
+          "reason": "80%は誤計算",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "60％",
+          "expectedTruth": true,
+          "reason": "12/20×100=60%",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "約167％",
+          "expectedTruth": false,
+          "reason": "167%は分母分子の逆転",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録環境省PDFは直接未照合。気象庁HTMLで同温の実際の水蒸気量/飽和水蒸気量を確認"
+    },
+    {
+      "id": "practice-A-Q24",
+      "stem": "作業場の気温・湿度・ふく射条件をほぼ一定にして送風を強くした。作業者の体感に生じ得る変化として正しいものはどれか。",
+      "ans": 2,
+      "sourceRegistered": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "sourceRef": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "checkedSource": "NIOSH Occupational Exposure to Heat（2016）",
+      "classification": "DIRECT",
+      "limitation": "皮膚温より高い気流時は対流熱取得の可能性をNIOSH基準で確認",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "気流が変わっても対流や蒸発による熱の移動には影響しない",
+          "expectedTruth": false,
+          "reason": "気流は熱交換へ影響する",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "送風を強くすればどんな高温環境でも必ず体熱の放散が増える",
+          "expectedTruth": false,
+          "reason": "高温空気なら常に放熱増とは限らない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "一般に気流は対流や発汗の蒸発に影響するが、気温が皮膚温より高い場合などは条件による",
+          "expectedTruth": true,
+          "reason": "気流は対流/蒸発を変えるが方向は条件依存",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "気流はふく射熱と完全に同じ仕組みで熱を運ぶ",
+          "expectedTruth": false,
+          "reason": "ふく射と対流は異なる",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "送風を強めると相対湿度は必ず0％になる",
+          "expectedTruth": false,
+          "reason": "送風だけでは湿度0%にならない",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "皮膚温より高い気流時は対流熱取得の可能性をNIOSH基準で確認"
+    },
+    {
+      "id": "practice-A-Q25",
+      "stem": "炉前作業で、送風を強めても身体前面の強い熱さが改善しない。作業位置を変えずに炉と作業者の間へ適切な遮熱板を置いたところ、周囲の気温はほぼ同じなのに身体前面の熱さが軽減した。最も妥当な説明はどれか。",
+      "ans": 1,
+      "sourceRegistered": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "sourceRef": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "checkedSource": "NIOSH Occupational Exposure to Heat（2016）",
+      "classification": "DIRECT",
+      "limitation": "高温放射源との間の遮熱板で放射熱取得を抑える記載を確認",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "遮熱板が空気の相対湿度を必ず下げたため、ふく射熱の評価は不要となった",
+          "expectedTruth": false,
+          "reason": "遮熱で相対湿度が必ず低下しない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "遮熱板が炉からのふく射による熱取得を減らした。気温・気流だけでなく黒球温度等も含め評価する",
+          "expectedTruth": true,
+          "reason": "遮熱板は放射熱取得を低減",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "送風を強めても改善しなかったので、炉前では対流による熱交換が存在しない",
+          "expectedTruth": false,
+          "reason": "対流現象は引き続き起きる",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "遮熱板の効果は熱源との直接接触を断ったことだけで説明できる",
+          "expectedTruth": false,
+          "reason": "直接接触だけでは説明不足",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "気温が変わらない以上、遮熱板設置前後で作業者が受ける熱負荷は同一である",
+          "expectedTruth": false,
+          "reason": "気温不変でも熱負荷変動する",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "高温放射源との間の遮熱板で放射熱取得を抑える記載を確認"
+    },
+    {
+      "id": "practice-A-Q26",
+      "stem": "作業場Aでは気温・湿度・気流による温熱感覚を比較し、作業場Bでは高温炉からのふく射による熱ストレスを評価したい。指標の使い分けとして適切なのはどれか。",
+      "ans": 0,
+      "sourceRegistered": "https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf",
+      "sourceRef": "https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf",
+      "checkedSource": "NIOSH Occupational Exposure to Heat（2016）",
+      "classification": "PARTIAL",
+      "limitation": "ETの温湿度気流の構成とWBGT黒球の違いは裏づけあり。登録PDF全ページの現物スクリーンショット未実施",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "Aでは実効温度（ET）の三要素を参考にし、Bでは黒球温度を含むWBGTによる評価を検討する",
+          "expectedTruth": true,
+          "reason": "ETとWBGTを目的に応じ使い分け",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "A・Bとも気温だけを測れば湿度・気流・ふく射を含めた評価が完結する",
+          "expectedTruth": false,
+          "reason": "気温だけでは湿度と放射を捉えない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "WBGTは屋内では乾球温度だけで計算し、黒球温度は使用しない",
+          "expectedTruth": false,
+          "reason": "WBGTでは黒球・湿球を利用",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "ETは気流を考慮しない一方、WBGTは気流速度を独立変数として必ず数式に代入する",
+          "expectedTruth": false,
+          "reason": "ETには気流、WBGT式に気流速度直接項なし",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "作業場所のWBGTが同じなら、作業強度や服装に関係なく熱ストレスの許容条件も同じである",
+          "expectedTruth": false,
+          "reason": "同WBGTでも作業強度と衣類で負荷違う",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "ETの温湿度気流の構成とWBGT黒球の違いは裏づけあり。登録PDF全ページの現物スクリーンショット未実施"
+    },
+    {
+      "id": "practice-A-Q27",
+      "stem": "ある事務室でCO₂の発生量が0.03m³/h、外気濃度が0.0004（体積比）、目標室内濃度が0.0010（体積比）である。完全混合・定常状態を仮定すると、必要換気量はいくらか。",
+      "ans": 2,
+      "sourceRegistered": "https://www.nra.go.jp/data/000464217.pdf",
+      "sourceRef": "https://www.nra.go.jp/data/000464217.pdf",
+      "checkedSource": "原子力規制委員会 PDF 000464217",
+      "classification": "PENDING",
+      "limitation": "登録PDFが取得エラー（400 OK）。定常CO2物質収支の一次式を直接証明する代替原典が未確定",
+      "sourceAccessibility": "REGISTERED_SOURCE_UNREACHABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "約18m³/h",
+          "expectedTruth": false,
+          "reason": "18は必要換気量より小さい",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "約30m³/h",
+          "expectedTruth": false,
+          "reason": "30は小さい",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "約50m³/h",
+          "expectedTruth": true,
+          "reason": "0.03/(0.0010-0.0004)=50m³/h",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "約75m³/h",
+          "expectedTruth": false,
+          "reason": "75は過大",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "約300m³/h",
+          "expectedTruth": false,
+          "reason": "300は過大",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録PDFが取得エラー（400 OK）。定常CO2物質収支の一次式を直接証明する代替原典が未確定"
+    },
+    {
+      "id": "practice-A-Q28",
+      "stem": "同じ人数が参加する会議室で、換気量の増加後にCO₂濃度が1,400ppmから800ppmに低下した。一方、室内では溶剤を用いる清掃作業が別途行われている。測定結果から判断できることとして最も適切なのはどれか。",
+      "ans": 1,
+      "sourceRegistered": "https://www.mhlw.go.jp/content/10900000/000896863.pdf",
+      "sourceRef": "https://www.mhlw.go.jp/content/10900000/000896863.pdf",
+      "checkedSource": "厚労省 建築物衛生管理検討会報告書2021",
+      "classification": "PARTIAL",
+      "limitation": "PDF本文と表紙画像に到達。CO2基準と必要換気量を記載。ただし濃度変化を換気改善とみなすには時間・人数・外気条件の統制が必要",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "CO₂が800ppmまで下がったため、溶剤蒸気についても必ず安全な濃度と判断できる",
+          "expectedTruth": false,
+          "reason": "CO2のみでは溶剤安全性を保証できない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "CO₂の低下は人数が同じでも換気状態の改善を示唆し得るが、溶剤蒸気の濃度や曝露は別途評価する必要がある",
+          "expectedTruth": true,
+          "reason": "他条件一定なら換気改善を示唆、溶剤は別途評価",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "CO₂が低下しても換気量との関係はないため、今回の測定には何の意味もない",
+          "expectedTruth": false,
+          "reason": "CO2変化と換気は関連し得る",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "CO₂が1,400ppmだったときは酸素欠乏症の発生が確定していたと判断できる",
+          "expectedTruth": false,
+          "reason": "1400ppmで酸欠確定ではない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "CO₂の測定値が分かれば、溶剤蒸気の種類に関係なく局所排気の捕集速度を一意に算出できる",
+          "expectedTruth": false,
+          "reason": "CO2から局排捕集速度は一意に出ない",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "PDF本文と表紙画像に到達。CO2基準と必要換気量を記載。ただし濃度変化を換気改善とみなすには時間・人数・外気条件の統制が必要"
+    },
+    {
+      "id": "practice-A-Q29",
+      "stem": "窓の正面に置いたディスプレイに明るい窓面が映り込み、画面の文字が見づらい。画面の文字サイズは適切で、明るさも調整可能である。反射グレアを抑える対策として最も適切なのはどれか。",
+      "ans": 3,
+      "sourceRegistered": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1",
+      "sourceRef": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1",
+      "checkedSource": "厚労省 情報機器作業ガイドライン 基発0712第3号",
+      "classification": "DIRECT",
+      "limitation": "窓・照明の映り込みと輝度差を視環境の対策として確認",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "窓面が画面に映り込む位置を維持したまま、画面の輝度だけを最大値にして反射を打ち消す",
+          "expectedTruth": false,
+          "reason": "輝度最大のみで反射防止とはならない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "画面を窓に対して直角方向へ向ければ、どの配置でも映り込みが必ずなくなる",
+          "expectedTruth": false,
+          "reason": "窓との直角配置が万能とは限らない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "画面の背後に強い照明を追加し、作業面と画面周辺の輝度差をさらに大きくする",
+          "expectedTruth": false,
+          "reason": "背景強光は輝度差を拡大",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "窓の遮光と画面の向き・傾きを調整し、映り込みと周囲の過大な輝度差を合わせて低減する",
+          "expectedTruth": true,
+          "reason": "遮光と向き・傾き調整で反射低減",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "照明器具を変更せず、反射防止フィルターだけを使えば文字の鮮明度が低下することはない",
+          "expectedTruth": false,
+          "reason": "フィルターだけでは必ず鮮明とは限らない",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "窓・照明の映り込みと輝度差を視環境の対策として確認"
+    },
+    {
+      "id": "practice-A-Q30",
+      "stem": "情報機器作業を90分間連続して行い、眼の乾燥を訴える作業者がいる。次回の作業計画として、厚生労働省ガイドラインの作業時間管理の指導に最も合うものはどれか。",
+      "ans": 1,
+      "sourceRegistered": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1",
+      "sourceRef": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1",
+      "checkedSource": "厚労省 情報機器作業ガイドライン 基発0712第3号",
+      "classification": "DIRECT",
+      "limitation": "1時間以内、10～15分休止、一連続中1～2回の小休止を原典で確認",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "90分連続して作業し、作業終了後に15分休止することを標準とする",
+          "expectedTruth": false,
+          "reason": "90分連続は目安を超える",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "一連続作業を60分以内とし、次の連続作業までに10〜15分の作業休止時間を設け、途中に1〜2回程度の小休止もとる",
+          "expectedTruth": true,
+          "reason": "60分以内、10〜15分間休止と小休止",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "一連続作業を60分以内にすれば、その途中の小休止も作業間の休止も不要とする",
+          "expectedTruth": false,
+          "reason": "連続作業中小休止を省略できない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "30分ごとに1分だけ休止すれば、120分連続の画面注視を一連続作業として扱わなくてよい",
+          "expectedTruth": false,
+          "reason": "120分連続を1分休憩で代用できない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "一連続作業が45分なら、乾燥症状が強くても作業条件や環境の見直しは不要とする",
+          "expectedTruth": false,
+          "reason": "個人の症状があれば追加配慮必要",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "1時間以内、10～15分休止、一連続中1～2回の小休止を原典で確認"
+    },
+    {
+      "id": "practice-A-Q31",
+      "stem": "安静時に動脈血の酸素飽和度がともに98%であるA（ヘモグロビン14g/dL）とB（ヘモグロビン7g/dL）を比較する。動脈血の酸素含有量に関する説明として最も適切なのはどれか（溶存酸素と酸素分圧の差は小さいものとする）。",
+      "ans": 4,
+      "sourceRegistered": "https://www.ncbi.nlm.nih.gov/books/NBK54103/",
+      "sourceRef": "https://www.ncbi.nlm.nih.gov/books/NBK54103/",
+      "checkedSource": "NCBI Bookshelf Oxygen Transport NBK54103（検索用閲覧本文）",
+      "classification": "DIRECT",
+      "limitation": "直接URLはreCAPTCHAだが検索閲覧本文で酸素含有量とHb濃度の比例を確認",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "酸素飽和度が同じなのでAとBの酸素含有量は必ず等しい",
+          "expectedTruth": false,
+          "reason": "同じ飽和度でもHb量が違う",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "Bでは血漿中の溶存酸素が必ず倍増するため、酸素含有量はAと等しくなる",
+          "expectedTruth": false,
+          "reason": "溶存酸素は必ず倍増しない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "Bの酸素含有量は、ヘモグロビン濃度が半分なのでAの2倍となる",
+          "expectedTruth": false,
+          "reason": "Hb半減で含有量が2倍にはならない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "酸素含有量は酸素飽和度だけから決まり、ヘモグロビン濃度には依存しない",
+          "expectedTruth": false,
+          "reason": "飽和度のみでは酸素含有量不定",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "Bのヘモグロビン濃度が低いため、飽和度が同じでもBの酸素含有量はAより小さい",
+          "expectedTruth": true,
+          "reason": "低HbのBの酸素含有量が低い",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "直接URLはreCAPTCHAだが検索閲覧本文で酸素含有量とHb濃度の比例を確認"
+    },
+    {
+      "id": "practice-A-Q32",
+      "stem": "運動中の骨格筋では、安静時に比べて局所の温度と二酸化炭素分圧が上昇し、pHが低下している。ほかの条件が同じ場合、ヘモグロビンの酸素解離曲線と組織への酸素供給について最も適切なのはどれか。",
+      "ans": 2,
+      "sourceRegistered": "https://www.ncbi.nlm.nih.gov/books/NBK499818/",
+      "sourceRef": "https://www.ncbi.nlm.nih.gov/books/NBK499818/",
+      "checkedSource": "NCBI Bookshelf Oxygen Transport NBK54103（代替全文）",
+      "classification": "DIRECT",
+      "limitation": "登録NBK499818はreCAPTCHA。別のBookshelf NBK54103から温度/pH/CO2による右方シフトを確認",
+      "sourceAccessibility": "REGISTERED_CAPTCHA_ALTERNATIVE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "酸素解離曲線は左方移動し、同じ酸素分圧で酸素を放出しやすくなる",
+          "expectedTruth": false,
+          "reason": "左方シフトでは酸素放出しにくい",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "酸素解離曲線は右方移動するが、同じ酸素分圧でのヘモグロビン酸素飽和度は高くなる",
+          "expectedTruth": false,
+          "reason": "右方シフト時は同PO2で飽和度低下",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "酸素解離曲線は右方移動し、同じ酸素分圧で酸素を放出しやすくなる",
+          "expectedTruth": true,
+          "reason": "右方シフトで酸素放出促進",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "酸素解離曲線は変わらず、酸素放出量は温度・pH・CO₂の影響を受けない",
+          "expectedTruth": false,
+          "reason": "温度やCO2、pHで解離曲線が動く",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "酸素解離曲線は左方移動し、組織側での酸素親和性が低下する",
+          "expectedTruth": false,
+          "reason": "左方シフトでは親和性は増す",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録NBK499818はreCAPTCHA。別のBookshelf NBK54103から温度/pH/CO2による右方シフトを確認"
+    },
+    {
+      "id": "practice-A-Q33",
+      "stem": "好中球増加を認めたAは発熱・局所疼痛があり、Bは最近ステロイド薬を開始したが感染症状は乏しい。両者の所見を比較するとき、最も適切なのはどれか。",
+      "ans": 0,
+      "sourceRegistered": "https://www.rcpa.edu.au/Manuals/RCPA-Manual/Clinical-Presentations-and-Diagnoses/N/Neutrophilia",
+      "sourceRef": "https://www.rcpa.edu.au/Manuals/RCPA-Manual/Clinical-Presentations-and-Diagnoses/N/Neutrophilia",
+      "checkedSource": "RCPA Manual Neutrophilia",
+      "classification": "PENDING",
+      "limitation": "登録URLは403 Forbidden、本文取得不可。薬剤性好中球増加の一次資料追証必要",
+      "sourceAccessibility": "REGISTERED_SOURCE_UNREACHABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "Aの好中球増加は感染を示唆するが、症状・分画・炎症所見等を合わせて評価し、Bでは薬剤性の増加も鑑別に挙げる",
+          "expectedTruth": true,
+          "reason": "感染疑いとステロイド歴を区別して評価",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "好中球増加の原因がステロイド薬なら、血液像や投与歴は確認せず細菌感染を確定する",
+          "expectedTruth": false,
+          "reason": "ステロイド投与で細菌感染を自動確定しない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "Aで局所症状があっても、好中球が増加すれば培養などの追加評価は常に不要となる",
+          "expectedTruth": false,
+          "reason": "局所症状があれば追加検査要否は個別判断",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "Bに感染症状が乏しければ、好中球増加は必ず血液悪性疾患だけによるものと判断する",
+          "expectedTruth": false,
+          "reason": "好中球増加が必ず悪性疾患とは限らない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "好中球が増加した症例では、単球・リンパ球の分画と既往採血値を参照すると鑑別能力が必ず低下する",
+          "expectedTruth": false,
+          "reason": "既往血液像や分画は鑑別に役立つ",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録URLは403 Forbidden、本文取得不可。薬剤性好中球増加の一次資料追証必要"
+    },
+    {
+      "id": "practice-A-Q34",
+      "stem": "血小板数が著しく少ない患者Aは点状出血を示し、血小板数が保たれた患者Bでは凝固因子活性低下が判明している。一次・二次止血の役割を踏まえた判断として最も適切なのはどれか。",
+      "ans": 4,
+      "sourceRegistered": "https://www.ncbi.nlm.nih.gov/books/NBK507850/",
+      "sourceRef": "https://www.ncbi.nlm.nih.gov/books/NBK507850/",
+      "checkedSource": "NCBI Bookshelf NBK507850",
+      "classification": "PENDING",
+      "limitation": "登録ページreCAPTCHA。一次/二次止血の教科書補助資料で照合が必要",
+      "sourceAccessibility": "REGISTERED_SOURCE_UNREACHABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "Aは凝固因子のみ、Bは血小板のみの障害であり、臨床の出血様式と止血機序は区別できない",
+          "expectedTruth": false,
+          "reason": "一次止血は血小板中心",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "AとBの止血障害は独立しており、血小板表面を介した凝固反応との関連を考慮する必要はない",
+          "expectedTruth": false,
+          "reason": "血小板と凝固反応は相互作用",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "Aの血小板減少はフィブリンの産生量を必ず増やすため、一次止血の評価は不要になる",
+          "expectedTruth": false,
+          "reason": "血小板減少は一次止血障害になり得る",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "Bの凝固因子活性低下は、血小板粘着の有無にかかわらず止血栓を常に正常に安定化する",
+          "expectedTruth": false,
+          "reason": "凝固因子不足で止血栓の安定化が障害される",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "Aでは血小板による初期止血栓形成が障害され得る一方、Bではフィブリン形成による止血栓の安定化が障害され得る",
+          "expectedTruth": true,
+          "reason": "血小板初期栓と凝固因子フィブリンの分担",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録ページreCAPTCHA。一次/二次止血の教科書補助資料で照合が必要"
+    },
+    {
+      "id": "practice-A-Q35",
+      "stem": "凝固検査用のクエン酸ナトリウム採血管で採血した。必要量の約半分しか採血されていないが、検体を遠心すれば血漿自体は得られる見込みである。凝固時間の測定に向けた前処理として最も適切なのはどれか。",
+      "ans": 3,
+      "sourceRegistered": "https://onlinelibrary.wiley.com/doi/full/10.1111/ijlh.13584",
+      "sourceRef": "https://onlinelibrary.wiley.com/doi/full/10.1111/ijlh.13584",
+      "checkedSource": "ICSH 2021 recommendations blood collection ijlh.13584",
+      "classification": "DIRECT",
+      "limitation": "クエン酸管の適正採血量と9対1比率、80%未満不適切を原典確認",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "血漿が得られるので採血量不足を無視し、抗凝固剤が過剰なままPT・APTTを通常どおり測定する",
+          "expectedTruth": false,
+          "reason": "半量でも結果正確とは限らない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "不足量を採血後に水で補い、抗凝固剤と血液の適正な比率を回復させる",
+          "expectedTruth": false,
+          "reason": "水による後付け補充は干渉する",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "採血管を強く振って凝固を促進させ、上清を血清として凝固因子活性の測定に回す",
+          "expectedTruth": false,
+          "reason": "強振で血清化しても適正血漿にならない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "採血量不足による血液とクエン酸の比率のずれを考慮し、施設手順に従い不適切な検体を再採血する",
+          "expectedTruth": true,
+          "reason": "半量は血液対クエン酸の比率不適・再採血",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "採血量が不足した場合は、遠心時間を延長すれば抗凝固剤の比率ずれによる測定バイアスを必ず解消できる",
+          "expectedTruth": false,
+          "reason": "遠心時間で比率は戻らない",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "クエン酸管の適正採血量と9対1比率、80%未満不適切を原典確認"
+    },
+    {
+      "id": "practice-A-Q36",
+      "stem": "PT・APTT用のクエン酸加血漿を遠心処理し、別日に凝固検査を行うため凍結保存する予定である。検体処理の判断として最も適切なのはどれか（施設の検証済み手順に従う）。",
+      "ans": 1,
+      "sourceRegistered": "https://onlinelibrary.wiley.com/doi/full/10.1111/ijlh.13702",
+      "sourceRef": "https://onlinelibrary.wiley.com/doi/full/10.1111/ijlh.13702",
+      "checkedSource": "ICSH 2021 recommendations processing ijlh.13702",
+      "classification": "DIRECT",
+      "limitation": "遠心・血小板数・凍結条件の評価を原典で確認",
+      "sourceAccessibility": "SOURCE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "血清を得るため採血管を凝固させてから遠心し、その上清をクエン酸加血漿として凍結する",
+          "expectedTruth": false,
+          "reason": "血清化はクエン酸血漿と違う",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "凝固検査に適合するクエン酸加検体から血小板の残存を十分に減らした血漿を調製し、検査項目と施設手順に応じて必要な追加遠心後に凍結する",
+          "expectedTruth": true,
+          "reason": "残存血小板を減らした血漿・検査別に再遠心",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "クエン酸加採血管なら遠心せず全血のまま凍結しても、全検査項目について血小板の影響は受けない",
+          "expectedTruth": false,
+          "reason": "全血まま凍結は一般化できない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "最初の遠心後に血球層を十分に混ぜ戻してから凍結すれば、凝固検査用血漿としての精度が向上する",
+          "expectedTruth": false,
+          "reason": "血球混入で精度向上しない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "採血管がクエン酸加であれば、血小板残存量・遠心条件・凍結前処理に関係なく測定結果は必ず同じになる",
+          "expectedTruth": false,
+          "reason": "血小板残存量・凍結前処理が影響",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "遠心・血小板数・凍結条件の評価を原典で確認"
+    },
+    {
+      "id": "practice-A-Q37",
+      "stem": "心臓の左心室の圧力が上昇して大動脈圧を上回る駆出期に入った。正常な心臓での大動脈弁・僧帽弁の状態と血流として最も適切なのはどれか。",
+      "ans": 2,
+      "sourceRegistered": "https://www.ncbi.nlm.nih.gov/books/NBK459327/",
+      "sourceRef": "https://www.ncbi.nlm.nih.gov/books/NBK459327/",
+      "checkedSource": "NCBI Bookshelf NBK459327",
+      "classification": "PENDING",
+      "limitation": "登録URL reCAPTCHAで本文未確認。心臓弁生理の代替資料要",
+      "sourceAccessibility": "REGISTERED_SOURCE_UNREACHABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "大動脈弁は閉じ、僧帽弁は開いて左心房から左心室への流入が主となる",
+          "expectedTruth": false,
+          "reason": "駆出期は大動脈弁開く",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "大動脈弁も僧帽弁も開き、左心室から左心房と大動脈へ同時に駆出する",
+          "expectedTruth": false,
+          "reason": "僧帽弁は閉じる",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "大動脈弁が開き、僧帽弁は閉じ、左心室から大動脈へ血液が駆出される",
+          "expectedTruth": true,
+          "reason": "大動脈弁開き左室から大動脈へ",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "大動脈弁は開くが、僧帽弁も必ず開いたままで左心房へ逆流する",
+          "expectedTruth": false,
+          "reason": "正常な僧帽弁開放で左房逆流しない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "大動脈弁と僧帽弁は閉鎖し、左心室の容積が減少する駆出期が続く",
+          "expectedTruth": false,
+          "reason": "両弁閉鎖は等容期で駆出期でない",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録URL reCAPTCHAで本文未確認。心臓弁生理の代替資料要"
+    },
+    {
+      "id": "practice-A-Q38",
+      "stem": "肺のある区域で気管支が完全閉塞し、その区域への肺毛細血管血流は保たれている。隣接する肺区域では換気・血流とも正常である。閉塞区域の換気血流比（V/Q）と全身の酸素化に関する説明として最も適切なのはどれか。",
+      "ans": 3,
+      "sourceRegistered": "https://www.ncbi.nlm.nih.gov/books/NBK526127/",
+      "sourceRef": "https://www.ncbi.nlm.nih.gov/books/NBK526127/",
+      "checkedSource": "NCBI Respiratory Failure in Adults NBK526127 reader",
+      "classification": "DIRECT",
+      "limitation": "登録URLはreCAPTCHA、同一資料の?report=readerでV/Qゼロはシャントを直接確認",
+      "sourceAccessibility": "REGISTERED_CAPTCHA_ALTERNATIVE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "血流が保たれているため、換気がゼロになっても閉塞区域のV/Qは無限大となり、肺胞死腔に分類される",
+          "expectedTruth": false,
+          "reason": "換気0で血流ありならVQ無限大ではない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "換気を失った肺区域では肺毛細血管の血液が必ず完全に酸素化されるため、全身の酸素化には影響しない",
+          "expectedTruth": false,
+          "reason": "換気0では局所血液の十分な酸素化困難",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "閉塞区域は血流があるのでV/Qが必ず正常域となり、気管支の閉塞は換気血流不均衡の原因とならない",
+          "expectedTruth": false,
+          "reason": "血流あり換気なしで正常VQにならない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "閉塞区域は換気がゼロで血流が保たれればV/Qは0に近づき、シャント様の血流が酸素化された区域からの血液と混合して全身の酸素化を下げ得る",
+          "expectedTruth": true,
+          "reason": "換気0・血流ありならVQ0、シャント様",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "閉塞区域のV/Qは換気停止に伴い必ず上昇し、肺血流がゼロの区域と生理的に同じである",
+          "expectedTruth": false,
+          "reason": "血流ゼロと換気ゼロのVQ効果は逆",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録URLはreCAPTCHA、同一資料の?report=readerでV/Qゼロはシャントを直接確認"
+    },
+    {
+      "id": "practice-A-Q39",
+      "stem": "肺循環は体循環と比べて、安静時には同程度の血流量をより低い血管内圧で運ぶ。肺循環の特徴を説明するものとして最も適切なのはどれか。",
+      "ans": 3,
+      "sourceRegistered": "https://www.ncbi.nlm.nih.gov/books/NBK525948/",
+      "sourceRef": "https://www.ncbi.nlm.nih.gov/books/NBK525948/",
+      "checkedSource": "NCBI Bookshelf NBK525948",
+      "classification": "PENDING",
+      "limitation": "登録URLがreCAPTCHA、肺循環の低圧・低抵抗系の一次本文未確認",
+      "sourceAccessibility": "REGISTERED_SOURCE_UNREACHABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "肺循環の血管抵抗は体循環より高いため、肺動脈圧も大動脈圧より通常高い",
+          "expectedTruth": false,
+          "reason": "肺循環の抵抗は体循環より低い",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "肺循環は心拍出量の一部しか受けないため、血流量が体循環より常に著しく少ない",
+          "expectedTruth": false,
+          "reason": "肺血流量は体循環とほぼ等しい",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "肺循環の低圧は肺動脈が閉鎖して血液をほとんど通さないことによる",
+          "expectedTruth": false,
+          "reason": "肺動脈閉鎖で低圧ではない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "肺循環は低圧・低抵抗系であり、通常は右室からの拍出血液が肺毛細血管へ流れ、ガス交換に適した血流を維持する",
+          "expectedTruth": true,
+          "reason": "肺循環低抵抗・右室から肺へ血液",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "肺血管抵抗が上昇しても右心室にかかる負荷は変化しない",
+          "expectedTruth": false,
+          "reason": "肺血管抵抗上昇は右心負荷増",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録URLがreCAPTCHA、肺循環の低圧・低抵抗系の一次本文未確認"
+    },
+    {
+      "id": "practice-A-Q40",
+      "stem": "ある肺領域では肺胞への空気の流入が保たれているが、周囲の肺毛細血管への血流が著しく減少した。換気血流比（V/Q）とガス交換の理解として最も適切なのはどれか。",
+      "ans": 1,
+      "sourceRegistered": "https://www.ncbi.nlm.nih.gov/books/NBK526127/",
+      "sourceRef": "https://www.ncbi.nlm.nih.gov/books/NBK526127/",
+      "checkedSource": "NCBI Respiratory Failure in Adults NBK526127 reader",
+      "classification": "DIRECT",
+      "limitation": "登録URLはreCAPTCHAだがreader本文では換気過剰/灌流不足はVQ上昇・死腔様と明記",
+      "sourceAccessibility": "REGISTERED_CAPTCHA_ALTERNATIVE_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "その領域では血流が減少するほど、必ず全肺の酸素化効率が向上する",
+          "expectedTruth": false,
+          "reason": "灌流低下が全肺酸素化を必ず改善するとはいえない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 1,
+          "text": "換気が保たれて血流が減少した領域ではV/Qが高くなり、換気の一部が有効な血液ガス交換に結びつきにくくなる",
+          "expectedTruth": true,
+          "reason": "換気保持・灌流低下はVQ上昇",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 2,
+          "text": "血流が減っても肺胞に空気が届けば、換気血流比は常に変化しない",
+          "expectedTruth": false,
+          "reason": "分母の血流低下で比は変わる",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 3,
+          "text": "換気血流比は血液中のヘモグロビン濃度だけを表す指標である",
+          "expectedTruth": false,
+          "reason": "VQはヘモグロビン濃度でない",
+          "independentlyVerbatimProven": false
+        },
+        {
+          "index": 4,
+          "text": "血流が減るほどV/Qは低下し、局所の肺胞換気がゼロになった状態と同じになる",
+          "expectedTruth": false,
+          "reason": "灌流低下はシャントでなく死腔様",
+          "independentlyVerbatimProven": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録URLはreCAPTCHAだがreader本文では換気過剰/灌流不足はVQ上昇・死腔様と明記"
+    }
+  ]
+}
