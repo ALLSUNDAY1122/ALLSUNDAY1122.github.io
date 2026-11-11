@@ -511,3 +511,13 @@ const exp=byId.get('sm2-5y-r05-hyg-09');
 exp.explanation='熱中症が疑われる場合は直ちに作業を中断し、涼しい場所へ移動して身体を冷却し、意識状態を確認する。意識障害など重篤な兆候があれば速やかに救急要請し、単独で放置しない。2026年3月18日の新ガイドラインに基づき、事業場の連絡・救急搬送手順も確認する。';
 window.HM2_P0_3_HEATSTROKE_GUIDELINE_AFFECTED_IDS=ids;
 })();
+
+
+// HM2_P0_4_LEGAL_DATES_EFILING_20261111: verify 2026-10-19 guidance (2026-11-02 erratum) and 2025-01-01 electronic periodic-health-report mandate. Explanations only; preserve source, choices, correct index, publication flags.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r10-hyg-07","explanation":"健康保持増進のための指針公示第13号は2026年10月19日に公示・同日適用。一次予防に加え、がん、女性特有の健康課題、歯科疾患、骨粗しょう症、眼科疾患等に関する検診・精密検査の受診勧奨（二次予防）、医療保険者等との連携、治療と就業の両立支援を指針上に明確に位置づけた。厚生労働省は同年11月2日に公示掲載資料の一部を訂正・差替えた。これは健康保持増進の取組を示す指針であり、列挙された全検診を全事業者に一律義務化したという意味ではない。根拠：厚生労働省・健康保持増進のための指針公示第13号（2026年10月19日、11月2日掲載訂正）。"},{"id":"sm2-5y-r08-law-05","explanation":"労働安全衛生規則52条により、常時50人以上の労働者を使用する事業者は定期健康診断の結果を所定の報告書で遅滞なく所轄労働基準監督署長へ報告する。健康診断個人票の保存（同51条）や受診者本人への結果通知とは別の義務である。定期健康診断結果報告は2025年1月1日から原則として電子申請が義務化されており、『報告書を提出する』という正答は提出義務を表し、手続方法としては電子申請を用いる。根拠：安衛則52条、厚生労働省『労働安全衛生関係の一部の手続の電子申請義務化』。"},{"id":"sm2-5y-r08-law-07","explanation":"労働安全衛生規則52条は常時50人以上の労働者を使用する事業者に、定期健康診断結果を遅滞なく所轄労働基準監督署長へ報告することを求める。100人未満でも50人以上なら対象であり、健康診断個人票の5年保存だけで報告義務は免除されない。2025年1月1日から定期健康診断結果報告は原則電子申請が義務化されたため、実務上は電子申請による提出を行う。第2肢は報告先と期限について正しく、他肢はいずれも誤りである。根拠：安衛則52条、厚生労働省の電子申請義務化案内。"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==3||new Set(fixes.map(f=>f.id)).size!==3)throw Error('HM2 P0-4 fix count invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 P0-4 missing '+f.id);q.explanation=f.explanation;}
+window.HM2_P0_4_VERIFIED_IDS=fixes.map(f=>f.id);
+})();
