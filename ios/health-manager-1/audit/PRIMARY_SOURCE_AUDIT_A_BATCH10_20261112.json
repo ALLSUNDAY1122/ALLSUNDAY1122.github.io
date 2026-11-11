@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "parentCommit": "e3e62cb8e0dfd83cd3076864bc99fe16790c1746",
+  "reportedMusePreviousFourQuestionRegeneration": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "3ba09ca",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "2026-04-Q31",
+      "2026-04-Q33",
+      "2026-04-Q41",
+      "2026-04-Q44"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL where applicable"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN",
+    "fieldClarification": "Q31 and Q41 changed URL and status; Q33 and Q44 changed status only."
+  },
+  "subject": "a群第10次 practice-A-Q08/Q11/Q13/Q20",
+  "outcomes": [
+    {
+      "id": "practice-A-Q08",
+      "oldAuditURL": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "secondaryEvidenceURL": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "evidence": "安衛則45条2項は前回健診で44条1項6〜9号および11号を受診し医師が不要と認めるときに定期の特定業務健診で該当項目を省略可能とする。3項は44条3項の『一年間』を『六月間』に読み替え、正答肢3と一致。",
+      "caveat": "医師の個別判断・他健診への準用条件を含む全5肢逐語証明は独立完了していない。",
+      "correctIndex": 3,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q11",
+      "oldAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "secondaryEvidenceURL": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "evidence": "安衛則52条の2第1〜3項は休憩除く週40時間超過分の月80時間超判定、毎月1回以上の一定期日での算定、超過労働者への速やかな通知を明記。指定の4週間は(60-40)+(58-40)+(55-40)+(52-40)=65時間となり、80時間超通知の閾値未満。",
+      "caveat": "指定された算定期間が法定の1か月期間とされる設問条件に依拠。月跨ぎ・変形労働時間制・休日労働の詳細および全5肢逐語証明は別途検証。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q13",
+      "oldAuditURL": "https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/",
+      "newAuditURL": "https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "evidence": "安衛則52条の5は事業者指定以外の希望医師による法定面接指導相当の結果証明について、実施年月日・本人/医師氏名・疲労蓄積状況・心身状況の記載を要求。同52条の6はその場合も事業者の記録保存義務を定める。",
+      "caveat": "2026-11現在の規定に依拠。2027年以降改正案の条文とは混同しない。全5肢逐語証明および66条の8第4項の意見聴取の網羅検査は未完。",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q20",
+      "oldAuditURL": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "newAuditURL": "https://www.mhlw.go.jp/content/001476821.pdf",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1",
+      "evidence": "厚労省『熱中症のおそれのある者に対する処置の例』では、作業離脱・身体冷却後、返事がおかしい/ぼーっとする等の意識異常は救急隊要請、異常がなく自力摂取できるときに水分摂取・経過観察と区分。Bは嚥下安全性が不明で経口摂取を強制せず救急連絡、Aは水分塩分補給と休憩を継続。",
+      "caveat": "臨床的重症度・各誤答肢の全逐語証明、およびガイドライン細目は未完。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "progress": {
+    "aGroupOriginal": 85,
+    "centralClaimSupportedUnique": 48,
+    "centralClaimNotYetRecorded": 37,
+    "pendingIds": [
+      "practice-A-Q21",
+      "practice-A-Q26",
+      "practice-A-Q28",
+      "practice-A-Q34",
+      "practice-A-Q37",
+      "practice-A-Q39",
+      "practice-B-Q08",
+      "practice-B-Q20",
+      "practice-B-Q28",
+      "practice-B-Q33",
+      "practice-C-Q01",
+      "practice-C-Q02",
+      "practice-C-Q03",
+      "practice-C-Q05",
+      "practice-C-Q06",
+      "practice-C-Q07",
+      "practice-C-Q08",
+      "practice-C-Q09",
+      "practice-C-Q10",
+      "practice-C-Q14",
+      "practice-C-Q15",
+      "practice-C-Q17",
+      "practice-C-Q18",
+      "practice-C-Q19",
+      "practice-C-Q20",
+      "practice-C-Q21",
+      "practice-C-Q22",
+      "practice-C-Q26",
+      "practice-C-Q30",
+      "practice-C-Q31",
+      "practice-C-Q32",
+      "practice-C-Q33",
+      "practice-C-Q35",
+      "practice-C-Q36",
+      "practice-C-Q37",
+      "practice-C-Q41",
+      "practice-C-Q44"
+    ],
+    "fullFiveChoicesIndependentDirectProofStillNotClosed": 85
+  },
+  "currentBatchIndependent264Regeneration": "NOT_RUN",
+  "currentBatchWebIosByteCheck": "NOT_RUN",
+  "releaseGate": "FAIL/BLOCKED"
+}

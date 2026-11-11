@@ -212,3 +212,23 @@
 - 今回の4問に対する264問Node CLI再生成・限定差分・Web/iOS配布一致・SHA256は未実施。次の対象は `practice-A-Q08`、`practice-A-Q11`、`practice-A-Q13`、`practice-A-Q20` など。
 - 全5肢直接逐語証明・法令版・商用権利・実機検証は未完了。**リリースゲートFAIL/BLOCKED維持**、mainマージ・公開・審査申請なし。
 - 詳細は `PRIMARY_SOURCE_AUDIT_A_BATCH9_20261112.json`、残件は `PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
+
+
+## 続編第10回：Muse基本4問再生成PASS受領、a群演習A4問の中心命題照合（2026-11-12）
+
+### A. Muse側実施済み264問再生成の受領
+- 比較基準 `3ba09ca` と現行修正後の双方で264問Node CLI再生成が成功（Muse側ローカルのユーザー提供結果）。差分は基本 `2026-04-Q31`・`Q33`・`Q41`・`Q44` の4問のみ。監査ステータス・適用問の出典URL変更、正答index全問不変、他260問完全一致、限定差分PASS。
+- 前回のQ31/Q41は出典URLと監査状態、Q33/Q44は監査状態のみ変更。GitHub当担当で両状態の再生成・配布Web/iOSバイト・SHA256を独立実行していない。今回の演習A4問へPASS転用をしない。
+
+### B. （a）群の演習A4問・原典追証
+- **`practice-A-Q08`**（正答index `3` 不変）：安衛則45条2項は前回健診で44条1項6〜9号および11号を受診し医師が不要と認めるときに定期の特定業務健診で該当項目を省略可能とする。3項は44条3項の『一年間』を『六月間』に読み替え、正答肢3と一致。 登録原典 `https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101` → `https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0`。補助資料 `https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101`。変更フィールド：`auditSourceURL`、`auditStatus`。留保：医師の個別判断・他健診への準用条件を含む全5肢逐語証明は独立完了していない。
+- **`practice-A-Q11`**（正答index `0` 不変）：安衛則52条の2第1〜3項は休憩除く週40時間超過分の月80時間超判定、毎月1回以上の一定期日での算定、超過労働者への速やかな通知を明記。指定の4週間は(60-40)+(58-40)+(55-40)+(52-40)=65時間となり、80時間超通知の閾値未満。 登録原典 `https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2` → `https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2`。補助資料 `https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101`。変更フィールド：`auditStatus`。留保：指定された算定期間が法定の1か月期間とされる設問条件に依拠。月跨ぎ・変形労働時間制・休日労働の詳細および全5肢逐語証明は別途検証。
+- **`practice-A-Q13`**（正答index `4` 不変）：安衛則52条の5は事業者指定以外の希望医師による法定面接指導相当の結果証明について、実施年月日・本人/医師氏名・疲労蓄積状況・心身状況の記載を要求。同52条の6はその場合も事業者の記録保存義務を定める。 登録原典 `https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/` → `https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/`。補助資料 `https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0`。変更フィールド：`auditStatus`。留保：2026-11現在の規定に依拠。2027年以降改正案の条文とは混同しない。全5肢逐語証明および66条の8第4項の意見聴取の網羅検査は未完。
+- **`practice-A-Q20`**（正答index `0` 不変）：厚労省『熱中症のおそれのある者に対する処置の例』では、作業離脱・身体冷却後、返事がおかしい/ぼーっとする等の意識異常は救急隊要請、異常がなく自力摂取できるときに水分摂取・経過観察と区分。Bは嚥下安全性が不明で経口摂取を強制せず救急連絡、Aは水分塩分補給と休憩を継続。 登録原典 `https://www.mhlw.go.jp/content/11303000/001618734.pdf` → `https://www.mhlw.go.jp/content/001476821.pdf`。補助資料 `https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1`。変更フィールド：`auditSourceURL`、`auditStatus`。留保：臨床的重症度・各誤答肢の全逐語証明、およびガイドライン細目は未完。
+
+### C. 進捗と引継ぎ
+- 中心命題の累計公開原典照合・記録 **48/85 ID**、次の照合待ち **37 ID**（41→37）。全5肢の独立逐語根拠・法令施行日・配布一致の完全合格とは別。全5肢無条件PASSはまだ0件扱い。
+- **生成元変更ID：`practice-A-Q08`、`practice-A-Q11`、`practice-A-Q13`、`practice-A-Q20`。** 演習A正本上書きファイル `audit/practice_a_fixes_01_10.json` でQ08/Q20は`auditSourceURL`と`auditStatus`、Q11/Q13は`auditStatus`のみ変更。問題文・5肢・正答index・解説は不変。上書きファイルの対象外40問は構造比較で不変。
+- 今回の4問の264問Node CLI再生成・限定差分、配布Web/iOSのバイト・SHA256比較は未実施。次はMuse側独立検証後、`practice-A-Q21`、`Q26`、`Q28`、`Q34`を中心に追証。
+- 原典の中心命題追証と全5肢の独立逐語PASSは異なる。商用権利・法令適用時点の横断審査・実機は未了。**リリースゲートFAIL/BLOCKED**、mainマージ・App Store申請・公開なし。
+- 個別証跡：`audit/PRIMARY_SOURCE_AUDIT_A_BATCH10_20261112.json`、累積残件：`audit/PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。

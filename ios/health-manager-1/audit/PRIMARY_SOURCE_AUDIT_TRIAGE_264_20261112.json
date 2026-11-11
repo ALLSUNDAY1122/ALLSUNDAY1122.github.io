@@ -1699,13 +1699,9 @@
   "aGroupProgress": {
     "countingMethod": "a群85IDのうち中心命題への公開一次資料追証・法令根拠修正を記録済みの固有IDだけを1回計上。前回のC29、C34、C42、Q25および第2〜第6次バッチを含む。完全5肢逐語原典PASSの残数ではない。",
     "aGroupOriginal": 85,
-    "centralClaimSupportedUnique": 44,
-    "centralClaimNotYetRecorded": 41,
+    "centralClaimSupportedUnique": 48,
+    "centralClaimNotYetRecorded": 37,
     "centralClaimPendingIds": [
-      "practice-A-Q08",
-      "practice-A-Q11",
-      "practice-A-Q13",
-      "practice-A-Q20",
       "practice-A-Q21",
       "practice-A-Q26",
       "practice-A-Q28",
@@ -1966,6 +1962,85 @@
       "caveat": "Aは加齢性難聴の典型に整合するが他疾患の除外診断は未完。全5肢逐語証明未完。",
       "correctIndex": 4,
       "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "batchTenMuseValidation": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "3ba09ca",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "2026-04-Q31",
+      "2026-04-Q33",
+      "2026-04-Q41",
+      "2026-04-Q44"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL where applicable"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN",
+    "fieldClarification": "Q31 and Q41 changed URL and status; Q33 and Q44 changed status only."
+  },
+  "batchTenResolutions": [
+    {
+      "id": "practice-A-Q08",
+      "oldAuditURL": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "secondaryEvidenceURL": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "evidence": "安衛則45条2項は前回健診で44条1項6〜9号および11号を受診し医師が不要と認めるときに定期の特定業務健診で該当項目を省略可能とする。3項は44条3項の『一年間』を『六月間』に読み替え、正答肢3と一致。",
+      "caveat": "医師の個別判断・他健診への準用条件を含む全5肢逐語証明は独立完了していない。",
+      "correctIndex": 3,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q11",
+      "oldAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "secondaryEvidenceURL": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "evidence": "安衛則52条の2第1〜3項は休憩除く週40時間超過分の月80時間超判定、毎月1回以上の一定期日での算定、超過労働者への速やかな通知を明記。指定の4週間は(60-40)+(58-40)+(55-40)+(52-40)=65時間となり、80時間超通知の閾値未満。",
+      "caveat": "指定された算定期間が法定の1か月期間とされる設問条件に依拠。月跨ぎ・変形労働時間制・休日労働の詳細および全5肢逐語証明は別途検証。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q13",
+      "oldAuditURL": "https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/",
+      "newAuditURL": "https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "evidence": "安衛則52条の5は事業者指定以外の希望医師による法定面接指導相当の結果証明について、実施年月日・本人/医師氏名・疲労蓄積状況・心身状況の記載を要求。同52条の6はその場合も事業者の記録保存義務を定める。",
+      "caveat": "2026-11現在の規定に依拠。2027年以降改正案の条文とは混同しない。全5肢逐語証明および66条の8第4項の意見聴取の網羅検査は未完。",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q20",
+      "oldAuditURL": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "newAuditURL": "https://www.mhlw.go.jp/content/001476821.pdf",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1",
+      "evidence": "厚労省『熱中症のおそれのある者に対する処置の例』では、作業離脱・身体冷却後、返事がおかしい/ぼーっとする等の意識異常は救急隊要請、異常がなく自力摂取できるときに水分摂取・経過観察と区分。Bは嚥下安全性が不明で経口摂取を強制せず救急連絡、Aは水分塩分補給と休憩を継続。",
+      "caveat": "臨床的重症度・各誤答肢の全逐語証明、およびガイドライン細目は未完。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditSourceURL",
         "auditStatus"
       ],
       "allFiveIndependentDirectProof": false
