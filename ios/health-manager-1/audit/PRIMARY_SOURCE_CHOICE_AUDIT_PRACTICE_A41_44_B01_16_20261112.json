@@ -1,0 +1,1057 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "sourceCommit": "aed2e713414ed02b8704bbcf983b66802a3e61bb",
+  "scope": "演習A Q41-Q44 (4問20肢) + 演習B Q01-Q16 (16問80肢)",
+  "sourcePolicy": "最終生成器はAにpractice_a_fixes_01_10.json、Bにcontent-overrides-b-20261110.jsonの書換えを適用。生成結果の現物バイト比較は未実施。",
+  "classification": "DIRECTは問題中心命題を一次法令/公式・専門原典で確認、PARTIALは具体的条件・資料細部や解説不整合を保留。全5肢独立逐語PASSとは区別。",
+  "counts": {
+    "DIRECT": 18,
+    "PARTIAL": 2,
+    "PENDING": 0
+  },
+  "unconditionalPass": 0,
+  "questions": [
+    {
+      "id": "practice-A-Q41",
+      "stem": "左心室の拡張終期容積が130mL、収縮終期容積が50mL、心拍数が75回/分だった。左心室の一回拍出量と心拍出量の組合せとして最も適切なのはどれか（値は一定と仮定する）。",
+      "correctIndex": 3,
+      "sourceKind": "practice-A-override-44",
+      "sourcePath": "ios/health-manager-1/audit/practice_a_fixes_01_10.json",
+      "expectedConceptKey": null,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK547686/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK547686/",
+      "sourceLocator": "Physiology, Stroke Volume, Introduction",
+      "verificationLevel": "DIRECT",
+      "limitations": "登録/books/はアクセス制限となり得るが同一記事の/sites/books/で計算式を直接確認",
+      "registeredSourceReachability": "NCBI_BOOKS_PATH_MAY_SHOW_RECAPTCHA_ALTERNATIVE_SITES_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "一回拍出量50mL、心拍出量3.75L/分",
+          "expectedCorrect": false,
+          "assessmentReason": "SVは80で50ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "一回拍出量130mL、心拍出量9.75L/分",
+          "expectedCorrect": false,
+          "assessmentReason": "SVは80で130ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "一回拍出量180mL、心拍出量13.5L/分",
+          "expectedCorrect": false,
+          "assessmentReason": "EDVからESVを差し引く、足さない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "一回拍出量80mL、心拍出量6.0L/分",
+          "expectedCorrect": true,
+          "assessmentReason": "130−50=80mL、80×75=6000mL/分",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "一回拍出量80mL、心拍出量0.80L/分",
+          "expectedCorrect": false,
+          "assessmentReason": "心拍出量の単位と倍率が違う",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-A-Q42",
+      "stem": "冠動脈に中等度の狭窄があり、安静時は胸部症状がない。階段を急いで上ると心拍数・収縮力が増し胸痛が出現し、休息すると軽快する。運動時の虚血の成立と冠血流予備能について最も適切なのはどれか。",
+      "correctIndex": 2,
+      "sourceKind": "practice-A-override-44",
+      "sourcePath": "ios/health-manager-1/audit/practice_a_fixes_01_10.json",
+      "expectedConceptKey": null,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK499897/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK499897/",
+      "sourceLocator": "Physiology, Myocardial Oxygen Demand, Function",
+      "verificationLevel": "DIRECT",
+      "limitations": "冠動脈狭窄による需給不均衡と頻脈による拡張期短縮を直接確認。症状だけで確診不可",
+      "registeredSourceReachability": "NCBI_BOOKS_PATH_MAY_SHOW_RECAPTCHA_ALTERNATIVE_SITES_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "安静時に心筋酸素供給が足りていれば、運動時も冠血流量は一切増える必要がない",
+          "expectedCorrect": false,
+          "assessmentReason": "安静時十分でも運動時は需要が増える",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "心拍数が上がるほど拡張期の冠灌流時間が延長するため、狭窄の影響は必ず小さくなる",
+          "expectedCorrect": false,
+          "assessmentReason": "頻脈では通常拡張期が短縮する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "狭窄があると運動時に必要な冠血流増加が制限され、酸素需要の増加に供給が追い付かず虚血を生じ得る",
+          "expectedCorrect": true,
+          "assessmentReason": "冠狭窄で運動時の供給増加が制限され虚血を生じ得る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "運動時の心筋酸素需要は主として血液中のヘモグロビン濃度だけで決まり、心拍数や収縮力に左右されない",
+          "expectedCorrect": false,
+          "assessmentReason": "需要は心拍数と収縮力等にも左右される",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "胸痛が休息で軽快する場合は冠血流予備能の低下を否定でき、虚血の可能性を除外してよい",
+          "expectedCorrect": false,
+          "assessmentReason": "休息で軽快しても虚血を除外できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-A-Q43",
+      "stem": "静脈うっ血によってある組織の毛細血管内静水圧が上昇し、血漿アルブミン濃度は変化していない。さらにリンパ還流が低下した場合、組織液の動態について最も適切なのはどれか（血管壁の透過性は不変とする）。",
+      "correctIndex": 0,
+      "sourceKind": "practice-A-override-44",
+      "sourcePath": "ios/health-manager-1/audit/practice_a_fixes_01_10.json",
+      "expectedConceptKey": null,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK541067/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK541067/",
+      "sourceLocator": "Physiology, Colloid Osmotic Pressure, Introduction/Mechanism",
+      "verificationLevel": "DIRECT",
+      "limitations": "Starlingの従来モデルに対する修正・リンパ還流を含む",
+      "registeredSourceReachability": "NCBI_BOOKS_PATH_MAY_SHOW_RECAPTCHA_ALTERNATIVE_SITES_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "毛細血管内静水圧の上昇は間質への濾過を促し、リンパ還流低下は余分な間質液の排出を妨げるため浮腫が生じやすい",
+          "expectedCorrect": true,
+          "assessmentReason": "静水圧上昇は濾過促進、リンパ低下は間質液排除阻害",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "アルブミン濃度が変わらなければ、静水圧上昇やリンパ還流低下があっても正味濾過と浮腫の可能性は変化しない",
+          "expectedCorrect": false,
+          "assessmentReason": "アルブミン一定でも静水圧/リンパ変動で浮腫が増え得る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "リンパ還流が低下すると必ず血漿膠質浸透圧が急上昇し、静水圧上昇分を完全に相殺する",
+          "expectedCorrect": false,
+          "assessmentReason": "リンパ低下で血漿膠質浸透圧必ず増すわけでない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "毛細血管内静水圧の上昇は組織から血管内への水の回収を促すため、リンパ還流が低下しても浮腫は生じにくくなる",
+          "expectedCorrect": false,
+          "assessmentReason": "静水圧上昇で血管内への再吸収が増すのは逆",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "毛細血管内静水圧とリンパ還流はどちらも酸素分圧のみに作用し、組織液の蓄積とは関係しない",
+          "expectedCorrect": false,
+          "assessmentReason": "間質液動態と酸素分圧だけの話ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-A-Q44",
+      "stem": "安静時に上腕動脈血圧が126/78mmHgと測定された。脈圧と平均動脈圧（拡張期圧＋脈圧の1/3で近似）の組合せとして最も適切なのはどれか。",
+      "correctIndex": 0,
+      "sourceKind": "practice-A-override-44",
+      "sourcePath": "ios/health-manager-1/audit/practice_a_fixes_01_10.json",
+      "expectedConceptKey": null,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK538226/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK538226/",
+      "sourceLocator": "Physiology, Mean Arterial Pressure, Mechanism",
+      "verificationLevel": "DIRECT",
+      "limitations": "MAP=DBP+(SBP−DBP)/3 の定義を確認。正常安静時近似で厳密動脈圧波形測定ではない",
+      "registeredSourceReachability": "NCBI_BOOKS_PATH_MAY_SHOW_RECAPTCHA_ALTERNATIVE_SITES_READABLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "脈圧48mmHg、平均動脈圧約94mmHg",
+          "expectedCorrect": true,
+          "assessmentReason": "126−78=48、78+48/3=94",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "脈圧48mmHg、平均動脈圧約110mmHg",
+          "expectedCorrect": false,
+          "assessmentReason": "MAPは約94で110ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "脈圧204mmHg、平均動脈圧約94mmHg",
+          "expectedCorrect": false,
+          "assessmentReason": "脈圧は204でなく48",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "脈圧48mmHg、平均動脈圧約62mmHg",
+          "expectedCorrect": false,
+          "assessmentReason": "MAPは約94で62ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "脈圧78mmHg、平均動脈圧約126mmHg",
+          "expectedCorrect": false,
+          "assessmentReason": "脈圧は78でなく48",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q01",
+      "stem": "同一企業に属する甲事業場は常時49人、乙事業場は常時51人の労働者を使用している。いずれも独立した事業場で、産業医に関する特別な選任要件を生じる業務はない。産業医の法定選任義務の判断として正しいものはどれか。",
+      "correctIndex": 1,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r05-law-06:産業医の選任基準",
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/347CO0000000318",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0",
+      "sourceLocator": "安衛法13条・施行令5条",
+      "verificationLevel": "DIRECT",
+      "limitations": "産業医は独立の事業場で50人以上から選任。施行令条文の現行施行日追加追証要",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "企業全体で100人なので、甲・乙それぞれに産業医を選任しなければならない",
+          "expectedCorrect": false,
+          "assessmentReason": "独立49人の甲に義務はない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "甲には選任義務がなく、乙には事業場単位で産業医の選任義務がある",
+          "expectedCorrect": true,
+          "assessmentReason": "49人は非義務、51人乙は義務",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "甲と乙を合算して100人の1事業場とみなし、企業で産業医1人を選任すれば常に足りる",
+          "expectedCorrect": false,
+          "assessmentReason": "両事業場合算は不可",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "甲は49人なので衛生委員会を設置する義務があり、乙は51人なので産業医の選任義務がない",
+          "expectedCorrect": false,
+          "assessmentReason": "産業医人数と衛生委員会の閾値を逆転",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "産業医の選任義務は企業全体の労働者が300人以上になって初めて発生する",
+          "expectedCorrect": false,
+          "assessmentReason": "300人ではなく50人",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q02",
+      "stem": "次の事業場では、産業医の資格要件を満たす医師を選任済みである。原則として専属産業医への切替えが必要となる組合せはどれか（労働局長の特例許可はないものとする）。甲：事務作業のみで常時999人。乙：事務作業のみで常時1,000人。丙：安衛則13条1項3号所定の有害業務に常時500人が従事し、事業場全体は700人。",
+      "correctIndex": 3,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r05-law-07:専属産業医の基準",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則13条1項3号",
+      "verificationLevel": "DIRECT",
+      "limitations": "1000人以上、規定有害業務従事者500人以上の境界と専属条件",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "甲のみ",
+          "expectedCorrect": false,
+          "assessmentReason": "甲999人は非該当",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "甲と丙",
+          "expectedCorrect": false,
+          "assessmentReason": "甲は非該当・丙は該当",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "甲と乙",
+          "expectedCorrect": false,
+          "assessmentReason": "乙該当だが甲は非該当",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "乙と丙",
+          "expectedCorrect": true,
+          "assessmentReason": "乙1000人・丙有害業務500人の双方該当",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "甲・乙・丙すべて",
+          "expectedCorrect": false,
+          "assessmentReason": "甲999人は専属必須ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q03",
+      "stem": "産業医の資格要件は満たしているものとする。次の候補者のうち、労働安全衛生規則第13条第1項第2号により選任できない者はどれか。",
+      "correctIndex": 0,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r05-law-08:産業医を2人以上選任する基準",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則13条1項2号",
+      "verificationLevel": "DIRECT",
+      "limitations": "代表者・統括管理者の利害関係除外",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "事業場の運営に利害関係を有する、当該法人の代表者",
+          "expectedCorrect": true,
+          "assessmentReason": "法人代表者かつ利害関係ありで除外",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "事業場の運営を統括管理していない、当該法人の勤務医",
+          "expectedCorrect": false,
+          "assessmentReason": "通常の勤務医は資格があれば一律除外でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "事業場の運営に利害関係を有しない、外部医療機関の医師",
+          "expectedCorrect": false,
+          "assessmentReason": "無利害の外部医師は本号除外でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "当該法人の代表者ではなく、統括管理もしていない医師",
+          "expectedCorrect": false,
+          "assessmentReason": "統括管理者でない医師は本号除外でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "当該法人の役員ではなく、統括管理もしていない外部医師",
+          "expectedCorrect": false,
+          "assessmentReason": "無利害外部医師は本号除外でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q04",
+      "stem": "産業医の選任義務がある事業場で、選任すべき事由が2026年11月1日に発生した。法令上の特例許可はない。産業医の選任時期と選任後の届出の説明として最も適切なのはどれか。",
+      "correctIndex": 2,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r05-law-09:産業医の選任期限",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則13条1項1号・同2項",
+      "verificationLevel": "DIRECT",
+      "limitations": "選任14日以内、選任後の届出は遅滞なく",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "選任の期限は事由発生から1か月で、監督署長への報告は年度末にまとめて行えばよい",
+          "expectedCorrect": false,
+          "assessmentReason": "選任14日で1か月ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "14日以内なのは選任報告だけで、産業医の選任時期には期限がない",
+          "expectedCorrect": false,
+          "assessmentReason": "選任行為にも14日期限あり",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "事由発生日から14日以内に産業医を選任し、選任後は監督署長へ遅滞なく所定事項を報告する",
+          "expectedCorrect": true,
+          "assessmentReason": "14日選任と遅滞ない報告は両方必要",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "事由発生日から14日以内に産業医を選任すれば、その後の選任報告は省略できる",
+          "expectedCorrect": false,
+          "assessmentReason": "選任しただけで報告免除にならない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "産業医の選任と選任報告は、いずれも選任した本人が直接実施する義務であり事業者に義務はない",
+          "expectedCorrect": false,
+          "assessmentReason": "選任報告の義務主体は事業者",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q05",
+      "stem": "2026年9月、常時60人の事業場で産業医が辞任し、後任を選任した。辞任の旨・理由は衛生委員会に報告済みだが、労働基準監督署長への手続は未了である。2026年8月施行の規定を踏まえ、最も適切な対応はどれか。",
+      "correctIndex": 4,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r05-law-10:産業医の辞任等の報告",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00td0095&dataType=1&pageNo=1",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00td0095&dataType=1&pageNo=1",
+      "sourceLocator": "令和8年基発0428第4号（2026-08-01施行）",
+      "verificationLevel": "DIRECT",
+      "limitations": "衛生委員会向けと監督署向けの別義務、後任選任報告代替を直接確認",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "衛生委員会へ報告済みなので、所轄労働基準監督署長への辞任等報告は常に不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "委員会報告は監督署報告を代替しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "後任産業医の選任報告に所定の辞任等事項を併記しても、辞任等報告の代替には一切ならない",
+          "expectedCorrect": false,
+          "assessmentReason": "後任の所定事項報告で代替可能",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "辞任等報告は産業医本人だけの義務で、事業者による報告は不要である",
+          "expectedCorrect": false,
+          "assessmentReason": "辞任等は事業者が監督署報告",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "監督署長への辞任等報告は、選任義務のある事業場でも翌年の定期報告まで留保できる",
+          "expectedCorrect": false,
+          "assessmentReason": "監督署への遅滞ない報告を翌年まで遅延不可",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "事業者は監督署長への辞任等の報告を遅滞なく行う。後任選任報告で所定の辞任等事項を報告した場合は、当該報告で代替できる",
+          "expectedCorrect": true,
+          "assessmentReason": "辞任等報告は遅滞なく、選任報告の所定事項で代替可能",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q06",
+      "stem": "同じ法人に、常時60人の製造業事業場Aと常時60人の情報サービス業事業場Bがある。両事業場に衛生管理者を各1人選任する場合、第一種・第二種衛生管理者免許について正しい組合せはどれか（両事業場とも有資格者の医師等は候補に含めない）。",
+      "correctIndex": 4,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r06-law-01:衛生管理者の選任基準",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則7条1項3号イ・ロ",
+      "verificationLevel": "DIRECT",
+      "limitations": "製造業と情報サービス業の免許区分を確認",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "Aは第二種免許のみの者で足り、Bは第一種免許のみの者を選任しなければならない",
+          "expectedCorrect": false,
+          "assessmentReason": "製造業は二種のみでは不可、情報業は一種必須ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "AとBとも、第二種免許のみの者を選任してよい",
+          "expectedCorrect": false,
+          "assessmentReason": "製造業は二種のみ不可",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "Aは衛生管理者を選任する必要がなく、Bのみ選任すればよい",
+          "expectedCorrect": false,
+          "assessmentReason": "両事業場とも50人以上で選任必要",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "AとBとも、衛生管理者の免許は不要である",
+          "expectedCorrect": false,
+          "assessmentReason": "免許不要ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "Aは第一種免許を有する者を選任し、Bは第二種免許を有する者も選任できる",
+          "expectedCorrect": true,
+          "assessmentReason": "製造業は一種等、情報業は二種候補可",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q07",
+      "stem": "常時60人の製造業事業場で、衛生管理者が退職した。後任候補Aは第一種衛生管理者免許保有者で当該事業場に所属するが、前任者退職から20日後の着任予定である。労働局長による特例許可は受けていない。事業者の対応として適切なのはどれか。",
+      "correctIndex": 4,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r06-law-02:衛生管理者の選任期限",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則7条1項1号・8条",
+      "verificationLevel": "DIRECT",
+      "limitations": "衛生管理者の14日以内、特例許可は設問で除外",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "Aが有資格者なので、事由発生から20日後の選任であっても期限を満たす",
+          "expectedCorrect": false,
+          "assessmentReason": "有資格でも20日では期限超過",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "衛生管理者は産業医と異なり、選任すべき事由発生日から30日以内ならよい",
+          "expectedCorrect": false,
+          "assessmentReason": "30日でなく14日",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "後任候補が第一種免許を持てば、事業者による選任手続自体を省略できる",
+          "expectedCorrect": false,
+          "assessmentReason": "免許だけで事業者の選任手続不要とはならない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "退職後の未選任期間は人数にかかわらず制限されず、初回巡視までに選任すれば足りる",
+          "expectedCorrect": false,
+          "assessmentReason": "未選任期間の無制限はない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "資格を満たしていても20日後の選任予定では原則14日以内の期限に間に合わないため、期限内の有資格者選任を確保する",
+          "expectedCorrect": true,
+          "assessmentReason": "20日予定では期限に間に合わず、期限内選任を確保",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q08",
+      "stem": "常時80人の事務所で衛生管理者を選任した。選任から数日経過したが、事業者は『14日以内の選任は済んだので届出不要』として所轄監督署長への報告をしていない。適切な説明はどれか。",
+      "correctIndex": 0,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r06-law-03:衛生管理者の選任報告",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則7条3項・2025電子申請制度",
+      "verificationLevel": "PARTIAL",
+      "limitations": "選任報告と14日選任の区別は確認。2025年からの電子申請・添付電磁的記録の全例外条件は未逐語",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "衛生管理者の選任報告は、事業者が所定事項と資格を証する記録等を添えて、原則として電子申請により監督署長へ遅滞なく行う",
+          "expectedCorrect": true,
+          "assessmentReason": "期限内選任でも報告・資格証明が必要",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "選任自体を期限内に済ませれば、選任報告は一切不要である",
+          "expectedCorrect": false,
+          "assessmentReason": "選任と報告は別",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "衛生管理者の資格証明書は選任期限を遅らせるためだけの書類なので、選任報告とは無関係である",
+          "expectedCorrect": false,
+          "assessmentReason": "資格を証する書類は届出と関係する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "選任報告は、衛生管理者が最初の定期巡視を終えたときに限って必要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "巡視終了を報告要件にしない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "選任報告は、衛生委員会で議決した場合にのみ必要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "委員会議決は報告要件でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q09",
+      "stem": "衛生管理者を1人選任する必要がある事業場で、候補Xは当該事業場に所属する有資格者で衛生管理業務と他の通常業務を兼ねる。候補Yは別の事業場に所属する有資格者で、週に一度だけ訪問する。その他の特別な専任要件は生じないものとする。原則の専属性と専任の違いに関する説明として適切なのはどれか。",
+      "correctIndex": 4,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r06-law-04:衛生管理者の専属原則",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則7条1項2号・5号",
+      "verificationLevel": "DIRECT",
+      "limitations": "専属と専任の区別。現行detailが正答index4を誤肢扱いする誤記を検出",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "衛生管理者は必ず衛生管理業務だけに専任する必要があるので、Xを選任できない",
+          "expectedCorrect": false,
+          "assessmentReason": "専任義務のないXは他業務兼務可能",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "Yは同じ法人に雇用されている場合、別事業場所属でも常に専属とみなせる",
+          "expectedCorrect": false,
+          "assessmentReason": "別事業場所属のYは原則専属に当たらない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "Yを選任すれば、当該事業場で衛生管理者を選任したことにはならないため、選任報告も不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "非専属不適格でも報告義務の結論は別",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "XもYも有資格者である限り、所属事業場を問わず専属原則を満たす",
+          "expectedCorrect": false,
+          "assessmentReason": "資格だけで専属を満たすわけでない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "Xは当該事業場に専属という要件に適合し得る。専属と専任は別の概念であり、通常業務との兼務が直ちに禁止されるわけではない",
+          "expectedCorrect": true,
+          "assessmentReason": "Xは当該事業場所属、専属と専任は別",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q10",
+      "stem": "衛生管理者を2人選任すべき事業場で、Aは当該事業場に所属する第一種衛生管理者、Bは別事業場に所属する労働衛生コンサルタントで衛生管理者に必要な資格を満たす。所定のその他要件も満たしている。安衛則7条1項2号ただし書の適用として正しいものはどれか。",
+      "correctIndex": 4,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r06-law-05:衛生管理者の専属例外",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudoukijun/faq/5.html",
+      "sourceLocator": "厚労省衛生管理者FAQ・安衛則7条1項2号但書",
+      "verificationLevel": "DIRECT",
+      "limitations": "2人以上と労働衛生コンサルタントの1人非専属例外",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "2人以上選任する場合でも、非専属の者を衛生管理者に含めることは一切認められない",
+          "expectedCorrect": false,
+          "assessmentReason": "2人以上の場合は1名非専属の例外あり",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "Aが第一種免許を有するため、Bが労働衛生コンサルタントかどうかに関係なくAを非専属扱いできる",
+          "expectedCorrect": false,
+          "assessmentReason": "免許だけで非専属例外にはならない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "同じ法人の別事業場に所属するというだけで、Bがコンサルタント資格を持たなくても非専属にできる",
+          "expectedCorrect": false,
+          "assessmentReason": "法人内別事業場所属だけでは資格例外なし",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "AとBの双方を非専属扱いにしても、2人選任した事実だけで専属要件を満たす",
+          "expectedCorrect": false,
+          "assessmentReason": "2人とも非専属は認められない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "Aを専属者として選任し、資格を満たすBを非専属の労働衛生コンサルタントとして1人選任することは法定例外の対象となり得る",
+          "expectedCorrect": true,
+          "assessmentReason": "A専属・B非専属コンサルタント1名なら例外対象",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q11",
+      "stem": "特例許可等がない事業場で、常時使用する労働者数と坑内労働に常時従事する人数が次のとおりである。衛生管理者の少なくとも1人を専任とする義務が生じるものはどれか。",
+      "correctIndex": 1,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r06-law-06:専任衛生管理者の規模基準",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則7条1項5号イ・ロ",
+      "verificationLevel": "DIRECT",
+      "limitations": "500人超と有害業務30人以上、1000人超の境界",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "労働者500人、うち坑内労働に30人",
+          "expectedCorrect": false,
+          "assessmentReason": "500人丁度では該当しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "労働者600人、うち坑内労働に30人",
+          "expectedCorrect": true,
+          "assessmentReason": "600人・坑内30人は専任必要",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "労働者600人、うち坑内労働に29人",
+          "expectedCorrect": false,
+          "assessmentReason": "600人・坑内29人は不足",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "労働者1,000人、坑内労働その他の対象業務なし",
+          "expectedCorrect": false,
+          "assessmentReason": "1000人丁度はイ号1000人超でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "労働者500人、うち坑内労働に50人",
+          "expectedCorrect": false,
+          "assessmentReason": "500人では30人超有害従事でも非対象",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q12",
+      "stem": "衛生管理者の巡視で、局所排気装置に不調が見つかった。事業者は定常的な設備更新予算の決裁は役員会に残し、緊急時の作業停止・立入制限等の衛生措置は衛生管理者の判断で実施できる体制を検討している。安衛則11条2項に最も適合するのはどれか。",
+      "correctIndex": 4,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r06-law-07:衛生管理者の定期巡視",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則11条2項",
+      "verificationLevel": "PARTIAL",
+      "limitations": "衛生管理者への措置権限付与を直接確認。ただしdetailで正答index4を誤肢扱いしており要修正",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "更新予算の決裁権がないため、衛生管理者に必要な衛生措置の権限を与えたとは評価できない",
+          "expectedCorrect": false,
+          "assessmentReason": "通常更新予算決裁権は必須ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "衛生管理者に予算の決裁権だけを与え、労働者の健康障害を避けるための現場措置は一切行えないようにする",
+          "expectedCorrect": false,
+          "assessmentReason": "予算決裁だけで衛生措置権限を欠けば不十分",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "衛生管理者には毎週巡視の担当だけを割り当て、現場の危険を認めてもすべての措置を次回の役員会に付議する",
+          "expectedCorrect": false,
+          "assessmentReason": "現場の必要措置をすべて役員会待ちにするのは不十分",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "産業医からの助言を受ける体制を設ければ、事業者による衛生管理者への必要な権限付与は代替される",
+          "expectedCorrect": false,
+          "assessmentReason": "産業医助言は権限付与の代替ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "事業者が衛生管理者に有害のおそれに応じた必要な衛生措置の権限を明示し、設備更新など通常の予算決裁と緊急対応の権限を区別する",
+          "expectedCorrect": true,
+          "assessmentReason": "現場措置権限と予算決裁を区別",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q13",
+      "stem": "外付け式局所排気フードは設計どおりの排風量で運転している。しかし設備の隣に強力な送風機を新設したところ、発散源からフードへ向かう捕集気流が横方向に乱れ、作業者の呼吸域に溶剤蒸気が流れるようになった。改善策として最も適切なのはどれか。",
+      "correctIndex": 3,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r06-law-08:巡視時の健康障害防止措置",
+      "registeredSourceURL": "https://www.osha.gov/otm/section-3-health-hazards/chapter-3",
+      "verifiedSourceURL": "https://www.osha.gov/otm/section-3-health-hazards/chapter-3",
+      "sourceLocator": "OSHA OTM III-3 ventilation crossdraft",
+      "verificationLevel": "DIRECT",
+      "limitations": "横風で捕集風速が乱される、作業者呼吸域を避けた局排設計",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "排風量の表示が設計値なら横方向の気流の影響はないため、送風機の配置を評価しない",
+          "expectedCorrect": false,
+          "assessmentReason": "設計排風量でも横風で捕集低下あり得る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "溶剤蒸気が作業者の呼吸域を通っても、フードの吸込口で風速を測れば必ず曝露を防止できる",
+          "expectedCorrect": false,
+          "assessmentReason": "開口風速だけで曝露防止確定できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "横風による捕集阻害は保護具の着用によって設備上の対策を検討する必要が常に消滅する",
+          "expectedCorrect": false,
+          "assessmentReason": "保護具だけで設備対策放棄しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "送風機の方向・位置を調整して横風を減らし、発散源とフード間の捕集気流や呼吸域への漏出を実運転条件で確認する",
+          "expectedCorrect": true,
+          "assessmentReason": "送風機の横風・風向を調整し捕集状態を確認",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "横風による乱れを増やせば溶剤は必ず希釈されるため、送風機を発散源へ強く向ける",
+          "expectedCorrect": false,
+          "assessmentReason": "横風増強で必ず希釈安全とならない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q14",
+      "stem": "常時120人の製造業事業場では、安全委員会と衛生委員会の設置対象となっている。両委員会の機能を兼ねる安全衛生委員会の運用として適切なのはどれか。",
+      "correctIndex": 2,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r06-law-09:衛生委員会の設置基準",
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/347AC0000000057",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0",
+      "sourceLocator": "安衛法19条・17条・18条",
+      "verificationLevel": "DIRECT",
+      "limitations": "安全衛生委員会に双方の審議事項を統合",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "安全衛生委員会を設置する場合、作業環境や健康診断結果など衛生に関する審議事項は扱わなくてよい",
+          "expectedCorrect": false,
+          "assessmentReason": "衛生事項も扱う",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "安全衛生委員会は衛生委員会の代わりにはなるが、安全委員会の審議事項を扱うことは禁止される",
+          "expectedCorrect": false,
+          "assessmentReason": "安全事項も扱う",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "安全委員会・衛生委員会の双方の設置に代えて安全衛生委員会を置く場合、両委員会に係る必要事項を調査審議する",
+          "expectedCorrect": true,
+          "assessmentReason": "二委員会の代わりに安全衛生委員会を設置可能",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "安全衛生委員会を置けば、産業医・衛生管理者など別制度の選任義務も免除される",
+          "expectedCorrect": false,
+          "assessmentReason": "産業医等の選任義務は別",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "安全衛生委員会を置くと毎月の開催等に関する委員会の運営規定は適用されなくなる",
+          "expectedCorrect": false,
+          "assessmentReason": "委員会の運営規定の免除ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q15",
+      "stem": "衛生委員会を4月は開催せず、5月に2回開催する計画がある。開催頻度の規定に照らした判断として正しいものはどれか。",
+      "correctIndex": 4,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r06-law-10:衛生委員会の開催頻度",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則23条1項",
+      "verificationLevel": "DIRECT",
+      "limitations": "毎月1回以上の開催。平均や翌月の複数開催で代替不能",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "年間で12回開けばよいので、この計画で足りる",
+          "expectedCorrect": false,
+          "assessmentReason": "年間12回だけでは各月開催要件不足",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "2か月平均で月1回になるので、この計画で足りる",
+          "expectedCorrect": false,
+          "assessmentReason": "2か月平均1回で代替不可",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "労働者代表の同意があれば、4月の省略が認められる",
+          "expectedCorrect": false,
+          "assessmentReason": "代表者同意は月次開催免除でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "4月に調査審議事項が少なければ、省略が認められる",
+          "expectedCorrect": false,
+          "assessmentReason": "議題少ない月も毎月必要",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "毎月1回以上の規定なので、5月2回では4月分を補えない",
+          "expectedCorrect": true,
+          "assessmentReason": "5月2回でも4月未開催を補えない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q16",
+      "stem": "情報機器作業で、作業者は身長が低く、適切なキーボード高さに椅子を合わせると足裏が浮く。高さ調整可能な椅子・机、足台が利用できる。首・肩・下肢の負担を抑える調整として最も適切なのはどれか。",
+      "correctIndex": 4,
+      "sourceKind": "practice-B-replacement-44",
+      "sourcePath": "ios/health-manager-1/content-overrides-b-20261110.json",
+      "expectedConceptKey": "hm2:sm2-5y-r05-hyg-06:情報機器作業の姿勢",
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1",
+      "sourceLocator": "情報機器作業ガイドライン改正（2021）",
+      "verificationLevel": "DIRECT",
+      "limitations": "足台と机・椅子・肘の高さ調整を直接確認",
+      "registeredSourceReachability": "REGISTERED_OR_OFFICIAL_ALTERNATIVE_ACCESSIBLE",
+      "choices": [
+        {
+          "index": 0,
+          "text": "足裏の接地を優先して椅子を低く固定し、キーボード操作時の肩が上がる状態は維持する",
+          "expectedCorrect": false,
+          "assessmentReason": "肩を上げる姿勢は不適切",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "机だけを高くして肘より高い位置でキーボード操作を続け、足台は用いない",
+          "expectedCorrect": false,
+          "assessmentReason": "肘より高い入力位置が負担",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "全員の椅子を同一の高さに設定して、個々の肘・膝の角度は調整しない",
+          "expectedCorrect": false,
+          "assessmentReason": "一律の椅子高さは体形差を無視",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "画面を作業者の頭上に近い高さへ置けば、足の支持と前腕の姿勢を同時に解決できる",
+          "expectedCorrect": false,
+          "assessmentReason": "画面高さだけで足裏の支持を代替不可",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "キーボードに無理なく手が届くよう椅子と机を調整し、足裏が浮く場合は適切な足台で支持する",
+          "expectedCorrect": true,
+          "assessmentReason": "机椅子を調整し必要なら足台",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    }
+  ]
+}
