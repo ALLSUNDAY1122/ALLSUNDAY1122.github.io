@@ -621,3 +621,13 @@ if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 P1-10
 for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='労働生理'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('HM2 P1-10 target '+f.id);Object.assign(q,{topic:f.topic,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,basis:f.primary_basis});}
 window.HM2_P1_10_DISTINCT_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_P1_11_CONSENSUAL_LIGHT_REFLEX_VS_DARK_MYDRIASIS_20261111: differentiate bilateral consensual reflex from sympathetic dilation in darkness; preserve answer positions and release states.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r08-phy-10","answer":4,"topic":"対光反射の直接反射と間接（共同）反射","question":"両眼の視神経・動眼神経と虹彩の機能が正常な人について、暗い部屋で右眼だけに光を当てた。左眼には直接光が入らない条件で、通常生じる反応として正しいものはどれか。","choices":["光を当てた右眼だけが縮瞳し、左眼の瞳孔径は変化しない。","左右とも散瞳する。","左眼だけが散瞳し、右眼の瞳孔径は変化しない。","右眼の直接対光反射に加え、左眼にも間接（共同）対光反射による縮瞳が起こる。","光を受けない左眼では、網膜に入射光がないため間接対光反射は必ず消失する。"],"quick":"片眼を照らすと正常な両眼では、照射眼の直接対光反射と反対眼の間接対光反射で両眼が縮瞳する。","explanation":"正常な対光反射では、片眼の網膜からの求心性情報が中脳で左右の動眼神経副交感神経系へ伝わるため、照射眼の直接対光反射だけでなく、対側眼にも間接（共同）対光反射による縮瞳が起こる。第4肢のみ適切。第1・5肢は間接反射を否定し、第2肢は反応を散瞳と逆転し、第3肢は反対眼の散瞳と照射眼の無反応を誤る。視神経や動眼神経に障害がある場合は反応が異なるため、本問は両側の反射経路が正常という条件を明記した。","primary_basis":"視覚・自律神経生理／直接対光反射・間接（共同）対光反射"},{"id":"sm2-5y-r09-phy-03","answer":5,"topic":"暗所での散瞳と交感神経による瞳孔散大筋","question":"健常者が明るい屋外から暗い室内に移動し、暗さに適応して瞳孔が大きくなった。直接対光反射による縮瞳とは反対のこの変化について、主に関与する自律神経と虹彩の筋の組合せとして適切なのはどれか。","choices":["副交感神経―瞳孔括約筋が収縮して散瞳する。","副交感神経―瞳孔散大筋が収縮して散瞳する。","体性運動神経―外眼筋が収縮して瞳孔径を直接大きくする。","交感神経―瞳孔括約筋が収縮して散瞳する。","交感神経―虹彩の瞳孔散大筋が収縮して散瞳する。"],"quick":"暗所では交感神経性の瞳孔散大筋収縮などにより瞳孔が拡大し、明所の副交感神経性縮瞳と区別する。","explanation":"暗所で瞳孔が拡大する散瞳では、交感神経による虹彩の瞳孔散大筋の収縮が関与する。また、明所で働く副交感神経性の括約筋収縮の低下も散瞳方向に寄与するため、第5肢が最も適切。第1肢と第4肢は瞳孔括約筋の収縮を散瞳と誤り、第2肢は散大筋の神経支配を誤り、第3肢は外眼筋の眼球運動と瞳孔径の調節を混同する。明るい場所での対光反射は副交感神経による瞳孔括約筋収縮・縮瞳であり、本問の暗所条件とは異なる。","primary_basis":"視覚・自律神経生理／暗所散瞳・交感神経・虹彩瞳孔散大筋"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 P1-11 IDs invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='労働生理'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('HM2 P1-11 source mismatch '+f.id);Object.assign(q,{topic:f.topic,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,basis:f.primary_basis});}
+window.HM2_P1_11_PUPIL_DISTINCT_IDS=fixes.map(f=>f.id);
+})();
