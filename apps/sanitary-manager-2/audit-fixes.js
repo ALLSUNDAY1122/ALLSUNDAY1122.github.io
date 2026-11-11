@@ -1373,3 +1373,15 @@ q.sourceUrl=f.newUrl;
 q.basis=f.newBasis;
 window.HM2_170_B10_NO097_SOURCE_BASIS_APPLIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH11_NO107_20261112: replace reachable but off-target PDF with legal article 66-10.
+(function(){'use strict';
+const f={"id":"sm2-5y-r10-law-07","subject":"関係法令","topic":"ストレスチェック後の医師面接指導","question":"ストレスチェックで医師による面接指導が必要と判定された労働者から申出があった。事業者が取るべき対応はどれか。","basis":"労働安全衛生法66条の10・労働安全衛生規則52条の15・52条の16","oldUrl":"https://www.mhlw.go.jp/content/11303000/001509876.pdf","newUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=74001000","correct":"医師による面接指導を実施し、申出を理由とする不利益取扱いをしない。","choices":["本人の申出があっても面接指導は常に任意である。","申出を理由に懲戒処分をする。","医師による面接指導を実施し、申出を理由とする不利益取扱いをしない。","人事評価だけで医師による面接指導を代替する。","本人の同意を得ず個別結果を部署全員へ公表する。"]};
+const m=(window.Q_PARTS||[]).filter(q=>q.id===f.id);
+if(m.length!==1)throw Error('HM2 B11 No107 ID count mismatch');
+const q=m[0];
+if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==f.basis||q.sourceUrl!==f.oldUrl||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correct||JSON.stringify([...q.choices].sort())!==JSON.stringify([...f.choices].sort()))throw Error('HM2 B11 No107 strict old-state mismatch');
+q.sourceUrl=f.newUrl;
+window.HM2_170_B11_NO107_LEGAL_SOURCE_APPLIED=true;
+})();
