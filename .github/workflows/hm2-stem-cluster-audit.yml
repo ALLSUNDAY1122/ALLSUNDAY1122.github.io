@@ -7,6 +7,7 @@ on:
       - scripts/verify_sm2_cluster_a_law_redesign.cjs
       - scripts/verify_sm2_cluster_a_hyg_phy_26.cjs
       - scripts/verify_sm2_cluster_b_law_14.cjs
+      - scripts/verify_sm2_cluster_b_hyg_first10.cjs
       - apps/sanitary-manager-2/audit-fixes.js
       - .github/workflows/hm2-stem-cluster-audit.yml
   workflow_dispatch:
@@ -28,6 +29,8 @@ jobs:
         run: node scripts/verify_sm2_cluster_a_hyg_phy_26.cjs
       - name: Verify fourteen cluster B legal scenarios and regenerated question sets
         run: node scripts/verify_sm2_cluster_b_law_14.cjs
+      - name: Verify B hygiene first ten and reconstituted questions
+        run: node scripts/verify_sm2_cluster_b_hyg_first10.cjs
       - name: Verify previous seven source fixes
         run: node scripts/verify_sm2_seven_primary_sources.cjs
       - name: Verify previous fifteen multiple-answer fixes
