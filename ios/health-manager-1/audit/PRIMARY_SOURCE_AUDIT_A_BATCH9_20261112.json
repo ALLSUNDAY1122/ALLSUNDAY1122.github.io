@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "parentCommit": "3ba09ca5302ad5713f296fd89d571c7d366b3cc6",
+  "reportedMusePreviousFourQuestionRegeneration": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "79a3175",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "2025-10-Q14",
+      "2025-10-Q15",
+      "2026-04-Q19",
+      "2026-04-Q29"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL where applicable"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN",
+    "note": "GitHub previous change detail: Q14 auditStatus+auditSourceURL, remaining three auditStatus only. Muse report 'status and source URL' describes overall changed field classes."
+  },
+  "subject": "（a）群第9次・基本2026-04-Q31・Q33・Q41・Q44",
+  "outcomes": [
+    {
+      "id": "2026-04-Q31",
+      "oldAuditURL": "https://www.stroke.org/en/about-stroke/stroke-symptoms",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK535369/",
+      "secondaryEvidenceURL": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13441289/",
+      "centralClaimEvidence": "急性脳卒中では最終健常確認時刻と抗凝固薬使用・最終服薬時刻が再灌流治療適否の評価に関係し、心房細動は心原性脳塞栓症の鑑別で重要。頭蓋内出血が初期画像で見られないことだけで塞栓症を確定してはならない。",
+      "caveat": "原典は診療概要・臨床教育であり、2026年日本国内の全治療薬適応・更新ガイドラインとの完全同期、および全5肢逐語根拠は未確認。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2026-04-Q33",
+      "oldAuditURL": "https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir5329.pdf",
+      "newAuditURL": "https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir5329.pdf",
+      "secondaryEvidenceURL": "https://www.nist.gov/publications/investigating-uncertainty-relationship-between-indoor-steady-state-co2-concentrations",
+      "centralClaimEvidence": "NISTIR5329 4.9.2（原本59頁、PDF表示ページ70）にQ=在室者数×1人当たりCO₂発生量/(室内平衡濃度−外気濃度)を明記。20人600m³/h→40人1200m³/hを直接導出。",
+      "caveat": "均一混合・外気濃度と発生量一定・定常状態が必要。NIST自身が個室・非定常実測への単純適用を警告。全5肢逐語証明未完。",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2026-04-Q41",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK553169/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK542189/",
+      "secondaryEvidenceURL": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6589714/",
+      "centralClaimEvidence": "NCBI『Physiology, Accommodation』で近見反応の構成要素を分け、輻輳は両眼内直筋の収縮・外直筋の弛緩、調節は毛様体筋による水晶体形状変更と明記。独立する生理機構を直接確認。",
+      "caveat": "近見反応の協調と臨床的分離障害の詳細鑑別、全5肢の逐語反証は未完。",
+      "correctIndex": 2,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2026-04-Q44",
+      "oldAuditURL": "https://www.nidcd.nih.gov/health/age-related-hearing-loss",
+      "newAuditURL": "https://www.nidcd.nih.gov/health/age-related-hearing-loss",
+      "secondaryEvidenceURL": "https://www.nidcd.nih.gov/health/sudden-deafness",
+      "centralClaimEvidence": "NIDCD加齢性難聴ページに両側で徐々に進む難聴と雑音下の聞き取り改善策（背景音を下げる、顔を向ける等）。同機関の突発性難聴ページは急な片側難聴を医療緊急事態として受診推奨。",
+      "caveat": "Aは加齢性難聴の典型に整合するが他疾患の除外診断は未完。全5肢逐語証明未完。",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "progress": {
+    "aGroupOriginal": 85,
+    "centralClaimSupportedUnique": 44,
+    "centralClaimNotYetRecorded": 41,
+    "centralClaimPendingIds": [
+      "practice-A-Q08",
+      "practice-A-Q11",
+      "practice-A-Q13",
+      "practice-A-Q20",
+      "practice-A-Q21",
+      "practice-A-Q26",
+      "practice-A-Q28",
+      "practice-A-Q34",
+      "practice-A-Q37",
+      "practice-A-Q39",
+      "practice-B-Q08",
+      "practice-B-Q20",
+      "practice-B-Q28",
+      "practice-B-Q33",
+      "practice-C-Q01",
+      "practice-C-Q02",
+      "practice-C-Q03",
+      "practice-C-Q05",
+      "practice-C-Q06",
+      "practice-C-Q07",
+      "practice-C-Q08",
+      "practice-C-Q09",
+      "practice-C-Q10",
+      "practice-C-Q14",
+      "practice-C-Q15",
+      "practice-C-Q17",
+      "practice-C-Q18",
+      "practice-C-Q19",
+      "practice-C-Q20",
+      "practice-C-Q21",
+      "practice-C-Q22",
+      "practice-C-Q26",
+      "practice-C-Q30",
+      "practice-C-Q31",
+      "practice-C-Q32",
+      "practice-C-Q33",
+      "practice-C-Q35",
+      "practice-C-Q36",
+      "practice-C-Q37",
+      "practice-C-Q41",
+      "practice-C-Q44"
+    ],
+    "fullFiveChoicesIndependentDirectProofStillNotClosed": 85
+  },
+  "newFourIndependent264Regeneration": "NOT_RUN",
+  "newFourWebIosByteCheck": "NOT_RUN",
+  "releaseGate": "FAIL/BLOCKED"
+}

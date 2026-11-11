@@ -1699,13 +1699,9 @@
   "aGroupProgress": {
     "countingMethod": "a群85IDのうち中心命題への公開一次資料追証・法令根拠修正を記録済みの固有IDだけを1回計上。前回のC29、C34、C42、Q25および第2〜第6次バッチを含む。完全5肢逐語原典PASSの残数ではない。",
     "aGroupOriginal": 85,
-    "centralClaimSupportedUnique": 40,
-    "centralClaimNotYetRecorded": 45,
+    "centralClaimSupportedUnique": 44,
+    "centralClaimNotYetRecorded": 41,
     "centralClaimPendingIds": [
-      "2026-04-Q31",
-      "2026-04-Q33",
-      "2026-04-Q41",
-      "2026-04-Q44",
       "practice-A-Q08",
       "practice-A-Q11",
       "practice-A-Q13",
@@ -1890,6 +1886,85 @@
       "evidence": "厚労省2026-10-19健康保持増進指針公示13号、2026-11-02訂正: explicitly includes secondary prevention, examination referrals, health insurance coordination and work-treatment support in THP. This does not replace legally required health examinations.",
       "caveat": "法定健診の代替不可の根拠条文を別途突合する必要あり。全5肢逐語証明未実施。",
       "correctIndex": 1,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "batchNineMuseValidation": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "79a3175",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "2025-10-Q14",
+      "2025-10-Q15",
+      "2026-04-Q19",
+      "2026-04-Q29"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL where applicable"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN",
+    "note": "GitHub previous change detail: Q14 auditStatus+auditSourceURL, remaining three auditStatus only. Muse report 'status and source URL' describes overall changed field classes."
+  },
+  "batchNineResolutions": [
+    {
+      "id": "2026-04-Q31",
+      "oldAuditURL": "https://www.stroke.org/en/about-stroke/stroke-symptoms",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK535369/",
+      "secondaryEvidenceURL": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13441289/",
+      "centralClaimEvidence": "急性脳卒中では最終健常確認時刻と抗凝固薬使用・最終服薬時刻が再灌流治療適否の評価に関係し、心房細動は心原性脳塞栓症の鑑別で重要。頭蓋内出血が初期画像で見られないことだけで塞栓症を確定してはならない。",
+      "caveat": "原典は診療概要・臨床教育であり、2026年日本国内の全治療薬適応・更新ガイドラインとの完全同期、および全5肢逐語根拠は未確認。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2026-04-Q33",
+      "oldAuditURL": "https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir5329.pdf",
+      "newAuditURL": "https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir5329.pdf",
+      "secondaryEvidenceURL": "https://www.nist.gov/publications/investigating-uncertainty-relationship-between-indoor-steady-state-co2-concentrations",
+      "centralClaimEvidence": "NISTIR5329 4.9.2（原本59頁、PDF表示ページ70）にQ=在室者数×1人当たりCO₂発生量/(室内平衡濃度−外気濃度)を明記。20人600m³/h→40人1200m³/hを直接導出。",
+      "caveat": "均一混合・外気濃度と発生量一定・定常状態が必要。NIST自身が個室・非定常実測への単純適用を警告。全5肢逐語証明未完。",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2026-04-Q41",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK553169/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK542189/",
+      "secondaryEvidenceURL": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6589714/",
+      "centralClaimEvidence": "NCBI『Physiology, Accommodation』で近見反応の構成要素を分け、輻輳は両眼内直筋の収縮・外直筋の弛緩、調節は毛様体筋による水晶体形状変更と明記。独立する生理機構を直接確認。",
+      "caveat": "近見反応の協調と臨床的分離障害の詳細鑑別、全5肢の逐語反証は未完。",
+      "correctIndex": 2,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2026-04-Q44",
+      "oldAuditURL": "https://www.nidcd.nih.gov/health/age-related-hearing-loss",
+      "newAuditURL": "https://www.nidcd.nih.gov/health/age-related-hearing-loss",
+      "secondaryEvidenceURL": "https://www.nidcd.nih.gov/health/sudden-deafness",
+      "centralClaimEvidence": "NIDCD加齢性難聴ページに両側で徐々に進む難聴と雑音下の聞き取り改善策（背景音を下げる、顔を向ける等）。同機関の突発性難聴ページは急な片側難聴を医療緊急事態として受診推奨。",
+      "caveat": "Aは加齢性難聴の典型に整合するが他疾患の除外診断は未完。全5肢逐語証明未完。",
+      "correctIndex": 4,
       "changedFields": [
         "auditStatus"
       ],

@@ -190,3 +190,25 @@
 - 出典はQ14：OSHA Technical Manual `https://www.osha.gov/otm/section-3-health-hazards/chapter-5`、Q15：厚労省化学物質RA Q&A `https://www.mhlw.go.jp/stf/newpage_11389.html`、Q19：ACGIH BEI Introduction `https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/`、Q29：厚労省2026年改正THP指針公示 `https://www.mhlw.go.jp/stf/newpage_76807.html`。
 - 法令適用日・全5肢独立逐語・商用利用権・最終配布一致・実機検証は未完了。リリースゲート**FAIL/BLOCKED**維持。mainマージ・公開・審査申請なし。
 - 個別台帳：`PRIMARY_SOURCE_AUDIT_A_BATCH8_20261112.json`、分類・残件正本：`PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
+
+
+## 続編第9回：Muse基本4問限定差分PASS受領、a群次4問の中心命題照合（2026-11-12）
+
+### Muse側の前回基本4問再生成（ユーザー提供）
+- 比較基準 `79a3175` および修正後状態の両方で264問Node CLI再生成成功。差分は `2025-10-Q14`・`2025-10-Q15`・`2026-04-Q19`・`2026-04-Q29` の4問だけ。正答index全問不変、他260問完全一致、限定差分PASS。
+- 差分のキーは監査ステータスと出典URL（適用問のみ）。実際の前回修正ではQ14のみ出典URLも変更、Q15・Q19・Q29はステータスのみ。
+- Muse側ローカル報告の転記であり、当担当による独立再生成・Web/iOS配布バイト比較・SHA256検証ではない。今回修正分へのPASS転用はしない。
+
+### a群第9次：次4問の中心命題の直接追証
+- **`2026-04-Q31`**（正答index `0` 不変）：急性脳卒中では最終健常確認時刻と抗凝固薬使用・最終服薬時刻が再灌流治療適否の評価に関係し、心房細動は心原性脳塞栓症の鑑別で重要。頭蓋内出血が初期画像で見られないことだけで塞栓症を確定してはならない。 登録先 `https://www.stroke.org/en/about-stroke/stroke-symptoms` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK535369/`、追加根拠 `https://pmc.ncbi.nlm.nih.gov/articles/PMC13441289/`。変更キー：`auditSourceURL`、`auditStatus`。留保：原典は診療概要・臨床教育であり、2026年日本国内の全治療薬適応・更新ガイドラインとの完全同期、および全5肢逐語根拠は未確認。
+- **`2026-04-Q33`**（正答index `4` 不変）：NISTIR5329 4.9.2（原本59頁、PDF表示ページ70）にQ=在室者数×1人当たりCO₂発生量/(室内平衡濃度−外気濃度)を明記。20人600m³/h→40人1200m³/hを直接導出。 登録先 `https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir5329.pdf` → `https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir5329.pdf`、追加根拠 `https://www.nist.gov/publications/investigating-uncertainty-relationship-between-indoor-steady-state-co2-concentrations`。変更キー：`auditStatus`。留保：均一混合・外気濃度と発生量一定・定常状態が必要。NIST自身が個室・非定常実測への単純適用を警告。全5肢逐語証明未完。
+- **`2026-04-Q41`**（正答index `2` 不変）：NCBI『Physiology, Accommodation』で近見反応の構成要素を分け、輻輳は両眼内直筋の収縮・外直筋の弛緩、調節は毛様体筋による水晶体形状変更と明記。独立する生理機構を直接確認。 登録先 `https://www.ncbi.nlm.nih.gov/books/NBK553169/` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK542189/`、追加根拠 `https://pmc.ncbi.nlm.nih.gov/articles/PMC6589714/`。変更キー：`auditSourceURL`、`auditStatus`。留保：近見反応の協調と臨床的分離障害の詳細鑑別、全5肢の逐語反証は未完。
+- **`2026-04-Q44`**（正答index `4` 不変）：NIDCD加齢性難聴ページに両側で徐々に進む難聴と雑音下の聞き取り改善策（背景音を下げる、顔を向ける等）。同機関の突発性難聴ページは急な片側難聴を医療緊急事態として受診推奨。 登録先 `https://www.nidcd.nih.gov/health/age-related-hearing-loss` → `https://www.nidcd.nih.gov/health/age-related-hearing-loss`、追加根拠 `https://www.nidcd.nih.gov/health/sudden-deafness`。変更キー：`auditStatus`。留保：Aは加齢性難聴の典型に整合するが他疾患の除外診断は未完。全5肢逐語証明未完。
+
+### 残件と引き継ぎ
+- 当初（a）群85 IDのうち中心命題追証の累計 **44件**、次の照合待ち **41件**（45→41）。全5肢独立逐語PASSの件数とは区別し、全肢無条件PASSは0件扱い。
+- **問題データ変更IDは `2026-04-Q31`、`2026-04-Q33`、`2026-04-Q41`、`2026-04-Q44`。** Q31・Q41は出典URLと監査状態、Q33・Q44は監査状態のみ。問題文、選択肢、解説、正答indexは不変。基本132問について他128問不変を構造差分で確認。
+- NIST原典は PDF表示ページ70（冊子59頁）を画像でも確認。Q33のモデル仮定は実測時の制約として監査留保に残す。
+- 今回の4問に対する264問Node CLI再生成・限定差分・Web/iOS配布一致・SHA256は未実施。次の対象は `practice-A-Q08`、`practice-A-Q11`、`practice-A-Q13`、`practice-A-Q20` など。
+- 全5肢直接逐語証明・法令版・商用権利・実機検証は未完了。**リリースゲートFAIL/BLOCKED維持**、mainマージ・公開・審査申請なし。
+- 詳細は `PRIMARY_SOURCE_AUDIT_A_BATCH9_20261112.json`、残件は `PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
