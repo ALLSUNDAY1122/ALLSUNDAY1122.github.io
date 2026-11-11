@@ -1,0 +1,1256 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-12",
+  "scope": "第一種衛生管理者 基本Q21〜Q40、2026-04-Q21〜Q40、20問×5肢=100肢",
+  "sourceBranch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "sourceCommit": "dc8bbfab36bd67a3c854c76a00fc0545fb95c609",
+  "definition": "DIRECT=設問の中心命題が一次資料で確認可能、PARTIAL=関連資料が読めるが対象範囲/数値/例外/該当記述に留保、PENDING=登録根拠の不達などで確認できず。DIRECTは全肢が個別直接照合済みという意味ではない。",
+  "counts": {
+    "DIRECT": 12,
+    "PARTIAL": 7,
+    "PENDING": 1
+  },
+  "unconditionalPass": 0,
+  "questions": [
+    {
+      "id": "2026-04-Q21",
+      "question": "常時900人を使用し、そのうち特定の有害業務（安衛則13条1項3号所定）に常時500人を従事させるA事業場と、常時3,001人を使用するB事業場について、産業医の法定選任要件として適切な組合せはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/347M50002000032",
+      "verifiedSourceURL": "https://laws.e-gov.go.jp/law/347M50002000032",
+      "sourceLocator": "安衛則13条1項3・4号",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CENTRAL_CLAIM_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "人数及び業務条件を法令で確認。改正施行日の最終照合は別工程",
+      "asOfCheck": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "Aは非専属産業医1人以上で足り、Bは専属産業医1人以上で足りる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "Aの有害業務500人以上は専属必要",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "Aは専属産業医1人以上が必要で、Bは専属産業医2人以上が必要である",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "A専属1人、Bは3000人超で2人以上",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "Aは専属産業医2人以上が必要で、Bは専属産業医1人以上が必要である",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "Aには2人を要求しない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "Aは産業医の選任義務がなく、Bのみ専属産業医2人以上が必要である",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "Aも50人以上で選任義務がある",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "A・Bとも非専属産業医2人以上でよい",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "両者とも専属性要件を満たす必要がある",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "人数及び業務条件を法令で確認。改正施行日の最終照合は別工程"
+    },
+    {
+      "id": "2026-04-Q22",
+      "question": "労働衛生コンサルタント試験に合格した甲は、合格証だけを受領し、所定の登録申請・登録証交付はまだ受けていない。甲が労働衛生コンサルタントの名称で有償の診断・指導を始める際の説明として、最も適切なのはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74146000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74146000&dataType=0",
+      "sourceLocator": "労働安全衛生法84条、コンサルタント規則17条",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CENTRAL_CLAIM_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "登録申請と登録証交付の原文確認",
+      "asOfCheck": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "試験合格が直ちに登録の効力を生じるので、登録証の交付前でも名称を使用してよい",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "試験合格だけでは登録成立せず",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "事務所を開設すれば試験合格の有無にかかわらず登録手続を省略できる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "事務所開設は登録を代替しない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "試験合格と登録は別手続であり、所定の申請・名簿登録を受けてから、その名称を使用して業務を行う",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "合格証添付の登録申請後に登録される",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "衛生管理者免許を同時に持てば、コンサルタント登録を申請せず名称使用できる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "衛生管理者免許は別制度",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "登録を受けていなくても、診断書に報酬額を記載しなければ名称使用の制限は適用されない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "無償・有償により名称使用制限は免除されない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "登録申請と登録証交付の原文確認"
+    },
+    {
+      "id": "2026-04-Q23",
+      "question": "一般定期健康診断で省略できない基本項目はどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "sourceLocator": "安衛則44条",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CENTRAL_CLAIM_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "省略対象に含まれない既往歴及び業務歴と省略可能検査の対比。年齢・条件は別途確認",
+      "asOfCheck": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "年齢や医師の判断など一定の条件を満たす場合の胸部エックス線検査",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "胸部X線は条件によって省略あり",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "貧血検査",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "貧血検査は条件によって省略あり",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "既往歴および業務歴の調査",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "既往歴及び業務歴は省略可能項目に入らない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "腹囲",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "腹囲は条件によって省略あり",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "心電図検査",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "心電図は条件によって省略あり",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "省略対象に含まれない既往歴及び業務歴と省略可能検査の対比。年齢・条件は別途確認"
+    },
+    {
+      "id": "2026-04-Q24",
+      "question": "一般労働者に対する長時間労働者の面接指導に関する次の記述のうち、正しいものはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "sourceLocator": "安衛法66条の8、安衛則52条の2以下",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CENTRAL_CLAIM_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "一般労働者と研究開発・高プロ例外の区別必要",
+      "asOfCheck": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "時間外・休日労働が月80時間を超えれば、疲労の蓄積や本人の申出に関係なく一律に面接指導を行う",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "80時間超だけでは一律実施とならない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "時間外・休日労働が月80時間を超え、疲労の蓄積が認められ、本人から申出があった場合に医師による面接指導を行う",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "80時間超・疲労蓄積・本人申出の組合せ",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "時間外・休日労働が月100時間未満であれば、本人が申し出ても面接指導の対象にならない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "100時間未満でも要件該当する",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "面接指導の対象者については、労働時間の状況を把握する必要はない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "労働時間状況把握が必要",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "産業医を選任していない事業場では、長時間労働者への面接指導制度は適用されない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "産業医未選任でも適用を免れない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "一般労働者と研究開発・高プロ例外の区別必要"
+    },
+    {
+      "id": "2026-04-Q25",
+      "question": "十分な換気能力のある設備がない屋内作業場で、床面積が200㎡、直接外気へ開放できる窓等の合計面積が8㎡の場合、原則的な開口面積基準について正しいものはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1",
+      "sourceLocator": "事務所衛生基準規則3条",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CLAIM_PARTIAL",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "登録資料は『事務所』に適用。問題文は広い『屋内作業場』であり対象範囲の不一致があり要修正候補",
+      "asOfCheck": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "床面積の1/10以上が必要で、さらに12㎡必要",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "1/10で20㎡という閾値は原典と異なる",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "床面積の1/50以上が必要なので現状で十分",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "1/50は誤りで現状充足を説明できない",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "床面積の1/20以上が必要で、さらに2㎡必要",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "200/20=10㎡、8㎡から2㎡不足（事務所なら妥当）",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "床面積の1/20以上が必要で、現状8㎡で十分",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "8㎡は10㎡より不足",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "換気設備がなくても開口面積に関する基準はない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "原則開口面積基準があるが対象範囲限定",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "HOLD_PARTIAL_SOURCE",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "登録資料は『事務所』に適用。問題文は広い『屋内作業場』であり対象範囲の不一致があり要修正候補"
+    },
+    {
+      "id": "2026-04-Q26",
+      "question": "年次有給休暇が10日以上付与される労働者について、使用者は基準日から1年以内に5日を取得させる義務がある。労働者が既に自ら請求して3日取得し、計画的付与によって1日取得した場合、同期間内に使用者がさらに取得を確保すべき日数は何日か。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.mhlw.go.jp/content/000463186.pdf",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/content/000350327.pdf",
+      "sourceLocator": "労基法39条7・8項、厚労省別PDF「000350327.pdf」",
+      "sourceAccess": "HTTP_404_REGISTERED_ALTERNATIVE_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "登録000463186.pdfは404。代替公式PDFで時季指定・計画付与の控除を確認",
+      "asOfCheck": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "1日",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "5−3−1=1日",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "2日",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "残数2日は計画付与1日を控除していない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "3日",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "残数3日は本人取得3日の一部を無視",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "4日",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "残数4日は既取得4日を無視",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "5日",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "残数5日は既取得分を全部無視",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "登録000463186.pdfは404。代替公式PDFで時季指定・計画付与の控除を確認"
+    },
+    {
+      "id": "2026-04-Q27",
+      "question": "一般事業における36協定の特別条項について、法定休日労働の算入範囲も含めて正しいものはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0",
+      "sourceLocator": "労基法36条、厚労省の働き方改革解説",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CENTRAL_CLAIM_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "上限規制の例外業種・業務の適用を区別",
+      "asOfCheck": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "年720時間以内も単月100時間未満も、いずれも休日労働を含めない時間外労働のみで判定する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "単月規制は休日労働込みなので誤り",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "時間外労働は年720時間以内、時間外労働と法定休日労働の合計は単月100時間未満かつ2～6か月平均80時間以内",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "年720時間は時間外のみ、単月100未満・2〜6月80以内は休日込み",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "時間外労働と法定休日労働の合計が年720時間以内なら単月100時間を超えてよい",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "年720時間のみで単月100超過できない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "月45時間を超える時間外労働は年12か月まで認められる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "月45時間超は年6か月以内",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "通常の限度時間は月60時間・年480時間である",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "通常の限度は月45時間・年360時間",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "上限規制の例外業種・業務の適用を区別"
+    },
+    {
+      "id": "2026-04-Q28",
+      "question": "暑熱作業場でWBGT値が身体作業強度と暑熱順化状態に応じた基準値を超え、通気性の低い防護服も使用することになった。作業責任者が実施すべき対応として最も適切なのはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.mhlw.go.jp/content/001476821.pdf",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/content/001476821.pdf",
+      "sourceLocator": "厚労省 熱中症予防対策PDF 001476821.pdf",
+      "sourceAccess": "PDF_ACCESSIBLE_PARTIAL_SCREENSHOT",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "PDF表示確認。ただし該当ページの着衣補正表・WBGT基準・施行日まで確認未了",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "WBGT値が同じなら、暑熱順化している者と非順化者に同一の作業時間を割り当て、着衣の影響だけを後から調べる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "順化の差を無視している",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "WBGTを作業強度別の基準と照合し、着衣補正・順化状態を考慮して発生源の低減や作業負荷・時間・休憩・補水等を調整し、体調異常時の報告・対応体制も確認する",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "WBGT・着衣・作業負荷・休憩・補水・対応体制を統合",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "WBGTの実測結果よりも防護服の製品表示にある耐熱性だけを採用し、現場の暑さ指数による再評価は省く",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "防護服表示だけで実測を代替できない",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "作業時間を短縮する案を採用した場合は、休憩場所の確保や水分塩分摂取の計画を不要としてよい",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "短時間化だけでは補水・休憩を免れない",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "暑熱順化が確認できていれば、防護服の着衣補正を考慮しないまま基準値超過の作業を継続する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "順化しても着衣補正を無視できない",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "HOLD_PARTIAL_SOURCE",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "PDF表示確認。ただし該当ページの着衣補正表・WBGT基準・施行日まで確認未了"
+    },
+    {
+      "id": "2026-04-Q29",
+      "question": "2026年10月19日適用の改正健康保持増進指針を踏まえ、事業場で健診後の健康課題と治療中の労働者への対応を検討する。THPの取組として正しいものはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.mhlw.go.jp/stf/newpage_76807.html",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/stf/newpage_76807.html",
+      "sourceLocator": "厚労省 THP公示 newpage_76807",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CLAIM_PARTIAL",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "登録ページ到達。10/19適用・11/2訂正・二次予防の該当一次本文は未確定",
+      "asOfCheck": "2026-11-02",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "THPは一次予防に限定され、検診後の受診勧奨は対象外となる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "二次予防を一律排除は不適切",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "健康測定や健診結果等を踏まえた指導と、必要な受診勧奨・治療と就業の両立支援との連携を検討する",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "健康測定・受診勧奨・両立支援の連携は文脈上妥当だが逐語未了",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "THPを実施すれば法定健康診断と事後措置を省略できる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "法定健診の代替ではない",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "治療中の労働者だけが健康相談の対象となり未受診者は対象外である",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "健康相談の対象を治療中だけに限定しない",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "医療保険者等との連携は指針上認められない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "医療保険者連携の否定は根拠不足",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "HOLD_PARTIAL_SOURCE",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "登録ページ到達。10/19適用・11/2訂正・二次予防の該当一次本文は未確定"
+    },
+    {
+      "id": "2026-04-Q30",
+      "question": "四肢の骨折が疑われる傷病者に副子を用いて固定するときの方法として、最も適切なものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.redcross.org/take-a-class/resources/learn-first-aid/fractures",
+      "verifiedSourceURL": "https://www.redcross.org/take-a-class/resources/learn-first-aid/fractures",
+      "sourceLocator": "American Red Cross fracturesページ",
+      "sourceAccess": "PAGE_ACCESSIBLE_SPECIFIC_SPLINT_CLAIM_NOT_FOUND",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "ページは取得可能だが、上下関節を含む副子固定・末梢循環の明示箇所は確認できない。補助原典が必要",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "骨折部の上下の関節を含む範囲を固定し、無理な整復は行わず、固定後も末梢の循環状態を確認する",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "上下関節・末梢循環チェックの直接根拠は追加必要",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "骨折部だけを短い副子で固定し、上下の関節は動かせる状態を保つ",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "骨折部だけの固定では不足する可能性",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "変形がみられる場合は、固定前に抵抗があっても正常な形へ戻してから副子を当てる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "抵抗に逆らう整復は危険",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "副子を当てた後は固定を強くするほどよく、末梢の脈拍や皮膚色の確認は不要である",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "強い締付けと循環チェック省略は不適切",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "歩行できる場合は骨折の可能性が低いので、副子固定をせず荷重させて状態を確認する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "歩けるから骨折を除外できない",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "HOLD_PARTIAL_SOURCE",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "ページは取得可能だが、上下関節を含む副子固定・末梢循環の明示箇所は確認できない。補助原典が必要"
+    },
+    {
+      "id": "2026-04-Q31",
+      "question": "心房細動がある人に突然の失語と右片麻痺が出現した。発症後約30分で救急隊が到着し、初期画像で頭蓋内出血を認めない。病型評価と治療機会を失わない対応として最も適切なのはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.stroke.org/en/about-stroke/stroke-symptoms",
+      "verifiedSourceURL": "https://www.stroke.org/en/about-stroke/stroke-symptoms",
+      "sourceLocator": "American Stroke Association B.E.F.A.S.T.",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CLAIM_PARTIAL",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "症状・緊急受診は直接確認。抗凝固薬内服と血栓回収適応・脳塞栓病型の原典は不足",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "心原性脳塞栓症を鑑別に入れ、最終健常確認時刻・服薬歴（抗凝固薬を含む）を速やかに共有し、脳卒中診療施設で治療適応の評価を受ける",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "失語・麻痺の緊急対応と治療判断、AFの原因評価が妥当",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "初期画像で出血がないため心原性脳塞栓症と確定し、血管閉塞部位や治療適応の追加評価は不要とする",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "出血なしだけで心原性と確定できない",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "心房細動があっても脳梗塞の病型に関係しないので、初期対応では最終健常確認時刻を確認する必要はない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "AFと最終健常時刻を無視できない",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "症状が一時的に軽快したら脳血管イベントの可能性は消えるため、専門施設への搬送を取りやめる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "一時軽快でも救急判断が必要",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "抗凝固薬の内服歴は急性期治療の検討に影響しないため、問診せずに画像所見だけで治療方針を決める",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "抗凝固薬歴は治療適応判断に重要だが直接原典追加",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "HOLD_PARTIAL_SOURCE",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "症状・緊急受診は直接確認。抗凝固薬内服と血栓回収適応・脳塞栓病型の原典は不足"
+    },
+    {
+      "id": "2026-04-Q32",
+      "question": "腰痛を訴える作業者が1日40回、床の近くから20kgの箱を持ち上げて90度方向転換している。腰部負担を減らす改善案として、最も適切なのはどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://www.mhlw.go.jp/stf/houdou/2r98520000034et4.html",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/stf/houdou/2r98520000034et4.html",
+      "sourceLocator": "厚労省 腰痛予防対策資料（登録URL）",
+      "sourceAccess": "HTTP_404_REGISTERED",
+      "verificationLevel": "PENDING",
+      "sourceLimitations": "登録 https://www.mhlw.go.jp/stf/houdou/2r98520000034et4.html は404。代替指針の直接本文未照合",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "荷物を身体に近づける姿勢を指導するだけで、持上げ頻度・作業台の高さ・方向転換方法は変更しない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "姿勢指導だけでは工程負荷を残す",
+          "evidenceLevel": "PENDING",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "腰部保護ベルトの着用を標準化し、反復持上げ回数と床からの持上げを維持する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "ベルトだけでは反復重量物負荷が残る",
+          "evidenceLevel": "PENDING",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "腰を曲げずに持つため腕を伸ばして箱を身体から遠ざけ、回転動作の時間を短縮する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "箱を遠ざけると腰部モーメントが増す",
+          "evidenceLevel": "PENDING",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "昇降台・運搬補助具で床からの持上げと反復負荷を減らし、方向転換は足を踏み替えて体幹のひねりを避ける",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "昇降台・補助具・足の踏替え等による負荷軽減",
+          "evidenceLevel": "PENDING",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "持上げ回数が多い場合でも、1回ごとに全力で素早く持ち上げれば累積負荷は減る",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "全力で速く持ち上げることは安全対策にならない",
+          "evidenceLevel": "PENDING",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "BLOCKED_SOURCE_UNREACHABLE",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "登録 https://www.mhlw.go.jp/stf/houdou/2r98520000034et4.html は404。代替指針の直接本文未照合"
+    },
+    {
+      "id": "2026-04-Q33",
+      "question": "換気設備のある室内で、同程度の活動量の在室者20人に対し外気導入量を毎時600m³としている。外気CO₂濃度と1人当たり発生量が一定のとき、40人に増えても室内CO₂濃度の外気からの上昇分を同程度に保つには、外気導入量をおよそいくらにすべきか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir5329.pdf",
+      "verifiedSourceURL": "https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir5329.pdf",
+      "sourceLocator": "NISTIR5329（1994） 換気測定評価マニュアル",
+      "sourceAccess": "PDF_READABLE_EXACT_EQUATION_NOT_LOCATED",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "PDF閲覧・一部ページ画像確認。該当CO2収支式の正確なページ同定・画像照合は未了",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "毎時300m³",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "20人時600から40人時300は逆",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "毎時600m³",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "人数倍のため600維持は不足",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "毎時900m³",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "900は増員比を満たさない",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "毎時2,400m³",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "2400は4倍で過剰",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "毎時1,200m³",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "定常・同条件なら600×40/20=1200",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "HOLD_PARTIAL_SOURCE",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "PDF閲覧・一部ページ画像確認。該当CO2収支式の正確なページ同定・画像照合は未了"
+    },
+    {
+      "id": "2026-04-Q34",
+      "question": "高年齢労働者が細かな部品の検査を行う作業台で、照度不足を改善するため局部照明を追加したところ、光沢部品の反射によるまぶしさと周囲との強い明暗差を訴えた。最も適切な改善策はどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/newpage_00007.html",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/newpage_00007.html",
+      "sourceLocator": "高年齢者の労働災害防止指針 厚労省ページ",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CLAIM_PARTIAL",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "2026-04-01適用の公式紹介ページ確認。反射グレア・局部照明の該当条項は未照合",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "局部照明の照度をさらに上げ、反射光の方向は変更しない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "照度増のみで反射まぶしさを残す",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "局部照明を全て撤去し、作業面を元の低照度に戻す",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "低照度へ戻すと視認性を損なう",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "作業台の照度は確保したまま周囲の照明を消し、対象物のコントラストだけを高める",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "周囲を暗くすると明暗差増大",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "作業面の必要照度を維持し、照明の位置・遮光・拡散と周辺照明を調整して反射グレアや急な明暗差を低減する",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "照度維持とグレア・周辺照度の両立",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "作業者の眼を照明の光源に向けさせて、明るさに慣れることを優先する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "光源を直視させても不快グレアを低減しない",
+          "evidenceLevel": "PARTIAL",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "HOLD_PARTIAL_SOURCE",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "2026-04-01適用の公式紹介ページ確認。反射グレア・局部照明の該当条項は未照合"
+    },
+    {
+      "id": "2026-04-Q35",
+      "question": "頭を右にゆっくり傾け静止したときと、回転椅子の回転速度を急に上げた直後とでは、主として働く前庭受容器はどう異なるか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception",
+      "verifiedSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception",
+      "sourceLocator": "OpenStax 14.1 平衡感覚",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CENTRAL_CLAIM_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "半規管回転・耳石器傾きの教材確認。一定速度での応答減衰の明示箇所は追加要確認",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "静止した頭部の傾きは耳石器、回転の角加速度は半規管が主に検出し、一定速度で回転が続くと半規管の反応は次第に減弱し得る",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "耳石器は傾斜、半規管は回転を主に検出",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "静止した頭部の傾きは半規管、回転開始の角加速度は耳石器が主に検出する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "傾きと角加速度の受容器が逆",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "耳石器は回転角速度だけを検出し、半規管は重力方向を常時検出する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "耳石器・半規管の役割が逆",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "一定速度で回転する間も、半規管は初期の角加速度への応答を減衰なく維持する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "一定角速度の応答は時間とともに減弱し得る",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "頭部の傾きは主として蝸牛が、回転の角加速度は耳小骨が検出する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "蝸牛・耳小骨は平衡受容器ではない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "半規管回転・耳石器傾きの教材確認。一定速度での応答減衰の明示箇所は追加要確認"
+    },
+    {
+      "id": "2026-04-Q36",
+      "question": "胆汁の腸内流入が低下した人Aと、膵外分泌機能が低下し膵リパーゼ分泌が減った人Bを比較する。脂質の消化吸収に関する説明として最も適切なものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-7-chemical-digestion-and-absorption-a-closer-look",
+      "verifiedSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-7-chemical-digestion-and-absorption-a-closer-look",
+      "sourceLocator": "OpenStax 23.7 Chemical Digestion",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CENTRAL_CLAIM_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "胆汁酸と膵リパーゼの異なる役割を原典で確認",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "Aは胆汁酸による乳化・ミセル形成が障害され、Bは中性脂肪の酵素的加水分解が障害されるため、異なる段階から脂質吸収が低下し得る",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "胆汁酸は乳化・ミセル、膵リパーゼは加水分解",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "Aでは膵リパーゼの分泌が必ず止まり、Bでは胆汁酸が肝臓で合成されなくなるため両者の障害段階は同じである",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "膵リパーゼと胆汁酸の発生場所を混同",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "Aでは胆汁酸が消化酵素として中性脂肪を加水分解できなくなるが、Bでは乳化だけが障害される",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "胆汁酸を加水分解酵素とする誤り",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "AもBも脂肪吸収に影響せず、脂質の分解と吸収は胆汁酸・膵リパーゼのいずれからも独立する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "双方が脂質吸収に無関係ではない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "Bでは膵リパーゼが減ると小腸内で胆汁酸の生成が増加して脂肪分解を完全に代替する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "胆汁酸生成でリパーゼ欠乏を完全代替しない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "胆汁酸と膵リパーゼの異なる役割を原典で確認"
+    },
+    {
+      "id": "2026-04-Q37",
+      "question": "末梢神経障害が疑われる患者で、脊髄後根神経節の感覚ニューロン細胞体は保たれる一方、脊髄白質後索の上行線維が障害された。障害部位と伝導経路に関する説明として最も適切なのはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-2-central-processing",
+      "verifiedSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-2-central-processing",
+      "sourceLocator": "OpenStax 14.2 Central Processing",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CENTRAL_CLAIM_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "脊髄後索と後根神経節、脊髄視床路の解剖を直接確認",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "後根神経節にある一次感覚ニューロンの細胞体が保たれても、脊髄後索の上行線維が障害されると精細な触覚や位置覚の中枢伝達に障害が生じ得る",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "後根神経節が残っても後索断裂で位置覚など障害",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "後根神経節が保たれていれば、その中枢側にある脊髄後索が障害されても位置覚情報は必ず正常に大脳へ届く",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "後索が損傷しても必ず正常伝導とはいえない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "脊髄後索は運動神経の末梢神経節であり、上行性感覚情報の伝導とは無関係である",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "後索は運動末梢神経節でなく感覚上行路",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "後根神経節の細胞体は脊髄白質の上行路そのものなので、両者は異なる部位として障害されることはない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "後根神経節と後索は異なる解剖部位",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "脊髄後索が障害されると痛覚と温度覚だけが選択的に消失し、位置覚・振動覚は原則保たれる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "痛温覚中心は主に脊髄視床路",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "脊髄後索と後根神経節、脊髄視床路の解剖を直接確認"
+    },
+    {
+      "id": "2026-04-Q38",
+      "question": "肝硬変による尿素回路の処理能力低下が疑われるAと、腎機能低下で血中尿素窒素が上昇したBについて、窒素代謝を比較した説明として最も適切なものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/24-4-protein-metabolism",
+      "verifiedSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/24-4-protein-metabolism",
+      "sourceLocator": "OpenStax 24.4 Protein Metabolism",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CENTRAL_CLAIM_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "尿素回路の肝代謝と腎排泄の分担を確認",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "Aではアンモニアから尿素への変換が低下し血中アンモニアが上がり得る。Bでは生成済み尿素の腎排泄が低下して血中尿素窒素が上がり得る",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "肝アンモニア処理低下と腎尿素排泄低下を区別",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "Aでは腎臓が尿素を合成できなくなるためアンモニアが必ず低下し、Bでは肝臓が尿素を排泄できなくなる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "尿素合成の主体は肝、腎は排泄",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "AもBも尿素回路は主に腎尿細管にあるため、肝機能と尿素生成は無関係である",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "尿素回路は主に肝であり腎尿細管ではない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "Aでは肝での尿素合成が低下すれば必ず血中尿素窒素が上がり、Bでは腎排泄低下で必ず血中尿素窒素が下がる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "産生低下と排泄低下の増減が逆",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "Bでは腎臓が生成済み尿素を全てアンモニアに分解するため、血中尿素窒素の上昇は説明できない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "腎は尿素を全てアンモニア分解しない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "尿素回路の肝代謝と腎排泄の分担を確認"
+    },
+    {
+      "id": "2026-04-Q39",
+      "question": "糖尿病治療中で血糖値が高い患者Aは尿糖陽性・尿蛋白陰性、患者Bは持続的なアルブミン尿がある。健常腎の濾過と尿細管再吸収の仕組みから最も適切な説明はどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption",
+      "verifiedSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption",
+      "sourceLocator": "OpenStax 25.6 Tubular Reabsorption",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CENTRAL_CLAIM_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "近位尿細管ブドウ糖再吸収と輸送最大量を明示確認。アルブミン漏出は別原典が必要",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "Aの尿糖は血糖上昇で近位尿細管の糖再吸収能力を超えたことと整合し、Bのアルブミン尿は糸球体濾過障壁の異常などの評価を要する",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "高血糖による輸送飽和と蛋白尿の機序を区別",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "Aの尿糖は血中ブドウ糖が健常糸球体で一切濾過されないことを意味する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "ブドウ糖は糸球体で濾過される",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "Bのアルブミン尿があれば糸球体からの蛋白漏出以外の要因を考える必要はなく、原因疾患を確定できる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "アルブミン尿だけで原因疾患は確定しない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "近位尿細管ではブドウ糖は通常再吸収されず、健常者でも濾過されたブドウ糖はそのまま尿中へ排泄される",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "近位尿細管で通常ブドウ糖は再吸収される",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "糸球体ではアルブミンだけが自由に濾過され、ブドウ糖は大きさのため通常は通過できない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "アルブミンとブドウ糖の透過性は逆",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "近位尿細管ブドウ糖再吸収と輸送最大量を明示確認。アルブミン漏出は別原典が必要"
+    },
+    {
+      "id": "2026-04-Q40",
+      "question": "全血100mLのうち赤血球容積が45mLで、残りは主に血漿、少量の白血球と血小板である。この検体について最も適切な血球容積比の解釈はどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://medlineplus.gov/lab-tests/hematocrit-test/",
+      "verifiedSourceURL": "https://medlineplus.gov/lab-tests/hematocrit-test/",
+      "sourceLocator": "MedlinePlus hematocrit test",
+      "sourceAccess": "SOURCE_ACCESSIBLE_CENTRAL_CLAIM_FOUND",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "全血に占める赤血球比率と脱水時上昇を直接確認",
+      "asOfCheck": "基準日フィールド未設定：公開前確認要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "ヘマトクリットは全血中の血漿の割合なので約55%であり、赤血球の大きさには影響されない",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "55%は血漿割合でヘマトクリットではない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 1,
+          "choice": "ヘマトクリットは全血容積に占める赤血球容積の割合で約45%。他の有形成分を含む割合とは厳密には異なる",
+          "claimedTruth": true,
+          "assessment": "登録正答と整合する方向。根拠限定条件を確認",
+          "reason": "45/100=45%で赤血球容積比率",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 2,
+          "choice": "白血球が増加した場合、ヘマトクリットは赤血球容積が一定でも必ずその白血球容積分だけ増加する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "白血球数増だけで赤血球容積比は一定とは限らない",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 3,
+          "choice": "赤血球数だけ同じなら、赤血球の平均容積や血漿量が異なってもヘマトクリット値は常に一定となる",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "同じ赤血球数でもMCVや血漿量で比率変動",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        },
+        {
+          "index": 4,
+          "choice": "脱水で血漿量が減る場合、赤血球量が一定でもヘマトクリットは必ず減少する",
+          "claimedTruth": false,
+          "assessment": "誤肢として内容上否定できる方向。全肢の直接引用対照は未完成",
+          "reason": "脱水では血漿減少で比率上昇し得る",
+          "evidenceLevel": "DIRECT",
+          "independentDirectProofForThisChoice": false
+        }
+      ],
+      "questionVerdict": "CONDITIONAL_SOURCE_ALIGNED",
+      "unconditionalAllFiveChoicesPass": false,
+      "followUp": "全血に占める赤血球比率と脱水時上昇を直接確認"
+    }
+  ]
+}
