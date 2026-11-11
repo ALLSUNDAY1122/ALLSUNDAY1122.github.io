@@ -804,3 +804,13 @@
 - No.39は事務所則2条における設備等控除前の単純計算であることを明記した現行条件下では正答が一意。実際の法定気積算定とは同一視しない。
 - **固定ゲート対象39/178件を個別点検済み、残139件。** 前バッチまでの修正適用と今回の監査記録を混同せず、今回の4問は未修正・レビュー承認前とする。公開用エクスポートは引き続きBLOCKED。生成元・JSON・`contentReviewStatus`・`auditStatus`・`legalChecked`・公開状態は変更しない。
 - 次回は固定一覧No.40〜49の10問を抽出して点検する。
+
+
+## 2026-11-11追補｜第4バッチ分類・根拠4件適用、JSON再生成と限定差分検証
+
+- 対象：`sm2-5y-r08-law-02`、`sm2-5y-r08-law-03`、`sm2-5y-r08-law-04`、`sm2-5y-r08-law-05`。
+- 生成元 `apps/sanitary-manager-2/audit-fixes.js` 末尾に `SM2_INDEPENDENT_FOURTH10_METADATA_FIX4_20261111` を追加。4件の `topic` と `basis` のみ改訂。生成元コミット `5678fb88dcff30523bc869db2104c03cf34861f4`。
+- GitHub Actions `HM2 canonical iOS question JSON rebuild` run `42962613827` **SUCCESS**：https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42962613827 。自動再生成JSONコミット `200539a9bbe3ff5e6aa6a009664208e91f2a14c3`。
+- `ios/health-manager-2/release-questions.json` を再生成コミット直前と更新後で全300問ID順に全フィールド比較：差分は指定4問のみ、全件 `topic` と `primary_basis` のみ変更。他296問および他フィールドは不変。GitHub比較でもJSONのみ8行追加・8行削除。旧blob `b0feae7b7d742662dfc783cc8c2821aecfc64614`、新blob `5eaa419492b17784d9284b195ffc2ad12b92a283`。
+- `r08-law-02` のsource_urlの条文参照強化、および `r08-law-05` と `r08-law-07` の実質重複解消・電子申請義務の解説補完は今回の分類・根拠修正の範囲外であり未着手。出典改善と出題再設計を次の別作業で行うこと。
+- 独立レビュー進捗は **39/178問点検済・未点検139問**。レビュー用状態や公開品質ゲートを変更せず、公開ゲートは引き続きBLOCKED。新規iOSビルド・TestFlight・App Review提出なし。
