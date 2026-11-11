@@ -551,3 +551,13 @@ if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 P1-3 
 for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='関係法令'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('HM2 P1-3 target mismatch '+f.id);Object.assign(q,{question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,topic:f.topic,basis:f.basis});}
 window.HM2_P1_3_HEALTH_RECORD_DISTINCT_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_P1_4_WBGT_CONDITION_DISTINCT_20261111: one numeric WBGT calculation, one sunlight-condition formula-selection judgment; preserve source and release flags.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r04-hyg-08","answer":4,"topic":"日射下のWBGT算定と温度3要素の重み","question":"日射のある屋外の清掃作業場所で、自然湿球温度27℃、黒球温度33℃、気温31℃を同時に測定した。屋外日射下のWBGT算定式（自然湿球温度×0.7＋黒球温度×0.2＋気温×0.1）に従った値はどれか。","choices":["27.0℃","27.6℃","30.2℃","28.6℃","31.0℃"],"quick":"日射ありのWBGTは0.7×27＋0.2×33＋0.1×31＝28.6℃。","explanation":"屋外で日射がある条件では、自然湿球温度に0.7、黒球温度に0.2、気温に0.1を掛けて加算する。18.9＋6.6＋3.1＝28.6℃で第4肢のみ正しい。第1肢は湿球温度のみ、第2肢は黒球・気温の寄与を取り違えた値、第3肢は温度の重みを取り違えた値、第5肢は気温のみを採用した値であり、測定した3要素を式どおり組み合わせていない。WBGTは気温そのものではない。"},{"id":"sm2-5y-r04-hyg-10","answer":3,"topic":"WBGTの測定条件と日射の有無による算定方法の選択","question":"工場敷地内の屋外作業場所Aは直射日光を受け、同じ敷地の屋内作業場所Bには日射がない。両地点で自然湿球温度・黒球温度・気温を測定した。WBGTの算定方法の選択として適切なものはどれか。","choices":["A・Bとも気温だけをWBGTとして用いる。","Aでは自然湿球温度と黒球温度だけを用い、気温の寄与は常に無視する。","Aでは自然湿球温度0.7・黒球温度0.2・気温0.1を加重し、Bでは自然湿球温度0.7・黒球温度0.3を加重する。","Aでは自然湿球温度0.7・黒球温度0.3を加重し、Bでは自然湿球温度0.7・黒球温度0.2・気温0.1を加重する。","A・Bとも黒球温度だけをWBGTとして用いる。"],"quick":"日射ありは自然湿球0.7＋黒球0.2＋気温0.1、日射なしは自然湿球0.7＋黒球0.3。","explanation":"WBGTの算定は日射の有無で式が異なる。日射のある屋外Aでは0.7×自然湿球温度＋0.2×黒球温度＋0.1×気温、日射のない屋内Bでは0.7×自然湿球温度＋0.3×黒球温度を用いるため、第3肢のみ正しい。第1・5肢は単一の温度だけで代用し、第2肢は日射下の気温項を欠き、第4肢は日射あり・なしの式を逆転している。実際の暑熱環境評価では測定地点と日射条件を確認する。"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 P1-4 target IDs invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='労働衛生'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('HM2 P1-4 target mismatch '+f.id);Object.assign(q,{topic:f.topic,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation});}
+window.HM2_P1_4_WBGT_DISTINCT_IDS=fixes.map(f=>f.id);
+})();
