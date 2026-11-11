@@ -723,3 +723,13 @@
 一次法令参照先：労基法 https://laws.e-gov.go.jp/law/322AC0000000049 、安衛法 https://laws.e-gov.go.jp/law/347AC0000000057 、安衛則 https://laws.e-gov.go.jp/law/347M50002000032 、安衛令 https://laws.e-gov.go.jp/law/347CO0000000318 。
 
 **進捗：公開ゲート対象29/178件点検済、未点検149件。** 候補180件では先行20件＋今回10件の30件点検済（うちゲート外1件）。公開ゲートは178件のままBLOCKED。教材・JSON・公開承認フラグ・iOSビルド・TestFlight・App Reviewには変更なし。次回は本固定一覧から既点検29件を除いた先頭10件を点検する。
+
+
+## 2026-11-11追補｜第3バッチ分類・根拠6件の修正とJSON再生成
+
+- 対象：`sm2-5y-r06-law-08`、`r06-law-09`、`r07-law-02`、`r07-law-03`、`r07-law-04`、`r07-law-05`（略記はすべて`sm2-5y-`を補う）。
+- 生成元 `apps/sanitary-manager-2/audit-fixes.js` に `SM2_INDEPENDENT_THIRD10_METADATA_FIX6_20261111` を追加。`topic`・`basis`のみ更新し、正答・問題文・選択肢・解説・出典・レビュー状態は不変。生成元コミット：`6f3830f245d8456b1dc50c1ea017cf3bfd3bfba3`。
+- GitHub Actions `HM2 canonical iOS question JSON rebuild` 実行 `42962066769` **SUCCESS**。https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42962066769
+- 自動再生成した `ios/health-manager-2/release-questions.json` の保存コミット：`01113011f55707ad3134a1a32082acf29027c3f9`。JSON変更前のGit blob `f98f5a1905a2d9b18f38c94a8587f9d0b75814d2`、変更後 `b0feae7b7d742662dfc783cc8c2821aecfc64614`。
+- 変更前後のJSONを300問すべてID順で比較。**差分は指定6問のみ**、各問の変更フィールドは`topic`と`primary_basis`の2項目のみ。他294問は完全一致。6件の独立レビュー指摘は分類・根拠修正済み。
+- 本作業はメタデータ修正であって一次資料の専門家による内容承認ではない。公開用独立レビューゲートは引き続き**BLOCKED**、レビュー済29/178・未点検149/178、公開ゲート停止対象178件は変更しない。新しいビルド・TestFlight・App Review申請なし。
