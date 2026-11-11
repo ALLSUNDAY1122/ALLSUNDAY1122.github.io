@@ -1,0 +1,67 @@
+name: HM1 exact eight Q111-Q120 rebuild regression
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - .github/workflows/hm1-exact-eight-q111-q120.yml
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild 264 before and after and assert only the eight audited changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/hm1-q111-base 13603a369306efc889d2ba725c7b3847266ebfa6
+          node /tmp/hm1-q111-base/ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-q111-base.log
+          node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-q111-head.log
+          node - <<'NODE'
+          const fs=require('fs');
+          const base=JSON.parse(fs.readFileSync('/tmp/hm1-q111-base/ios/health-manager-1/Resources/questions.json','utf8'));
+          const cur=JSON.parse(fs.readFileSync('ios/health-manager-1/Resources/questions.json','utf8'));
+          const wanted=['2025-04-Q23','2025-04-Q24','2025-04-Q25','2025-04-Q26','2025-04-Q29','2025-04-Q30','2025-04-Q31','2025-04-Q32'].sort();
+          const norm=s=>String(s||'').normalize('NFKC').replace(/[\\s\\p{P}\\p{S}]/gu,'').toLowerCase();
+          for(const [tag,bank] of [['before',base],['after',cur]]){
+            if(bank.length!==264)throw Error(tag+' count '+bank.length);
+            if(new Set(bank.map(q=>q.id)).size!==264)throw Error(tag+' duplicate ids');
+            if(new Set(bank.map(q=>norm(q.stem))).size!==264)throw Error(tag+' duplicate stems');
+            for(const q of bank){
+              if(!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5)throw Error(tag+' wrong choices '+q.id);
+              if(!Number.isInteger(q.ans)||q.ans<0||q.ans>4)throw Error(tag+' wrong index '+q.id);
+            }
+          }
+          if(base.some((q,i)=>q.id!==cur[i].id))throw Error('ID order differs');
+          const diff=cur.filter((q,i)=>JSON.stringify(q)!==JSON.stringify(base[i])).map(q=>q.id).sort();
+          if(JSON.stringify(diff)!==JSON.stringify(wanted))throw Error('Changed IDs '+JSON.stringify(diff));
+          for(let i=0;i<264;i++){
+            if(!wanted.includes(cur[i].id))continue;
+            if(cur[i].ans!==base[i].ans)throw Error('answer index changed '+cur[i].id);
+            for(const k of new Set([...Object.keys(base[i]),...Object.keys(cur[i])])){
+              if(JSON.stringify(base[i][k])!==JSON.stringify(cur[i][k])&&!['stem','choices','short','detail','auditSourceURL'].includes(k))
+                throw Error('Unexpected field '+cur[i].id+' '+k);
+            }
+          }
+          const good={
+            '2025-04-Q23':'法定第一号委員',
+            '2025-04-Q24':'本人同意',
+            '2025-04-Q25':'専用',
+            '2025-04-Q26':'軽易',
+            '2025-04-Q29':'2%',
+            '2025-04-Q30':'健康課題',
+            '2025-04-Q31':'心房細動',
+            '2025-04-Q32':'第二種'
+          };
+          for(const q of cur.filter(q=>wanted.includes(q.id))){
+            if(!q.choices[q.ans].includes(good[q.id]))throw Error('Correct option semantic sentinel mismatch '+q.id+' '+q.choices[q.ans]);
+          }
+          console.log('PASS: rebuilt 264 before and after, exact 8 target IDs differ, other 256 records unchanged, IDs/order/normalized stems valid, 5 unique choices, unchanged correct indexes, answer-choice sentinel checks passed.');
+          NODE
