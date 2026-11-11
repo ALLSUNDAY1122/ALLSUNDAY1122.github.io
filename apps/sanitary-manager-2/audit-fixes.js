@@ -884,3 +884,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH04_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH05_20261111: directly relevant medical/physiology sources, source URL only.
+(function(){'use strict';
+const fixes=[{"id":"sm2-r7a-021","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK545263/","question":"止血機構に関する記述として、正しいものはどれか。","correctText":"血管損傷部では血小板の粘着・凝集による一次止血に続き、凝固系によりフィブリンが形成され止血栓が安定化する"},{"id":"sm2-r7a-022","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK545205/","question":"肺で酸素を受け取った血液が心臓へ戻るときに通る血管はどれか。","correctText":"肺静脈"},{"id":"sm2-r7a-023","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK539907/","question":"肺胞でのガス交換について、正しいものはどれか。","correctText":"肺胞と毛細血管の間では分圧差に従って酸素・二酸化炭素が拡散する"},{"id":"sm2-r7a-024","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK544242/","question":"糖質の消化吸収に関する記述として、正しいものはどれか。","correctText":"唾液アミラーゼは口腔内ででんぷんの消化を開始する"},{"id":"sm2-r7a-025","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK232852/","question":"寒冷環境での体温調節反応について、正しいものはどれか。","correctText":"皮膚血管収縮により皮膚血流を減らし、熱放散を抑える"},{"id":"sm2-r7a-026","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK526069/","question":"抗利尿ホルモン（ADH）と体液調節について、正しいものはどれか。","correctText":"ADH分泌が増えると集合管での水再吸収が増加し、尿量は減少する方向に働く"},{"id":"sm2-r7a-027","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4898252/","question":"短時間の強い運動を開始した直後、筋内でATPをすばやく再合成するために利用される物質はどれか。","correctText":"クレアチンリン酸"},{"id":"sm2-r7a-028","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK542189/","question":"近見時の眼の調節について、正しいものはどれか。","correctText":"毛様体筋が収縮し、チン小帯の張力が低下して水晶体が厚くなる"},{"id":"sm2-r7a-029","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK541120/","question":"長期間にわたる強いストレス反応について、最も適切なものはどれか。","correctText":"自律神経・内分泌・睡眠などに影響し、心身の不調や作業能力低下につながることがある"},{"id":"sm2-r7a-030","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK500006/","question":"甲状腺ホルモンとその調節について、正しいものはどれか。","correctText":"サイロキシン（T4）などの甲状腺ホルモンは代謝調節に関与し、その分泌は下垂体のTSHなどで調節される"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch05 target count/ID');
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+  !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correctText||
+  (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.sourceUrl))
+  throw Error('HM2 X-01 batch05 unexpected source/content '+f.id);
+ q.sourceUrl=f.sourceUrl;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH05_IDS=fixes.map(f=>f.id);
+})();
