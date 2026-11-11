@@ -441,3 +441,13 @@ if(fixes.length!==6||new Set(fixes.map(f=>f.id)).size!==6)throw Error('HM2 fifte
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 fifteenth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
 window.SM2_INDEPENDENT_FIFTEENTH10_METADATA_FIX6_IDS=fixes.map(f=>f.id);
 })();
+
+
+// SM2_INDEPENDENT_SIXTEENTH10_METADATA_FIX7_20261111: fixed No.151,152,154,156-159; topic/basis only; content, sources and review gates unchanged.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r06-phy-07","topic":"抗利尿ホルモンによる集合管水再吸収","basis":"腎・体液の生理／バソプレシンと集合管水透過性"},{"id":"sm2-5y-r06-phy-08","topic":"骨格筋の酸化的リン酸化とATP生成","basis":"細胞・筋のエネルギー代謝／電子伝達系とATP合成酵素"},{"id":"sm2-5y-r06-phy-10","topic":"心臓の刺激伝導系と伝導順序","basis":"心臓・循環生理／洞房結節・房室結節・ヒス束・脚・プルキンエ線維"},{"id":"sm2-5y-r07-phy-02","topic":"膵β細胞のインスリン分泌と血糖低下","basis":"糖代謝・内分泌生理／インスリンによる筋・脂肪細胞の糖取り込み"},{"id":"sm2-5y-r07-phy-03","topic":"血小板の一次止血と粘着・凝集","basis":"血液生理／血小板と一次止血・二次止血の区別"},{"id":"sm2-5y-r07-phy-04","topic":"長鎖脂肪酸由来脂質のカイロミクロン・リンパ輸送","basis":"消化吸収生理／小腸脂質吸収と乳び管"},{"id":"sm2-5y-r07-phy-05","topic":"寒冷時の皮膚血管収縮と熱放散抑制","basis":"体温調節・自律神経生理／交感神経性皮膚血流制御"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==7||new Set(fixes.map(f=>f.id)).size!==7)throw Error('HM2 sixteenth10 metadata fixes invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 sixteenth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
+window.SM2_INDEPENDENT_SIXTEENTH10_METADATA_FIX7_IDS=fixes.map(f=>f.id);
+})();
