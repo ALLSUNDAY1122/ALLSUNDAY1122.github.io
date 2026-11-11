@@ -136,18 +136,21 @@ for (const round of layouts) {
 const fixPath = path.join(IOS_DIR, 'audit', 'practice_a_fixes_01_10.json');
 const fixPack = JSON.parse(fs.readFileSync(fixPath, 'utf8'));
 // HM1-specific patches follow the ACTUAL generated round layout:
-// A Q01-15 = law, Q16-30 = hygiene, Q31-40 = physiology.
-// Guard every source ID so upstream reordering cannot silently misapply edits.
-const expectedFixIds = Array.from({length:40}, (_,i) => `practice-A-Q${String(i+1).padStart(2,'0')}`);
+// A Q01-Q15: law, Q16-Q30: hygiene, Q31-Q44: physiology.
+// Verify original source ID before each override to prevent misapplication if
+// upstream HM2 selection or ordering changes.
+const expectedFixIds = Array.from({length:44}, (_,i) => `practice-A-Q${String(i+1).padStart(2,'0')}`);
 if (JSON.stringify(Object.keys(fixPack.questions).sort()) !== JSON.stringify(expectedFixIds)) {
-  throw new Error('Practice-A Q01-Q40 stored patch IDs mismatch');
+  throw new Error('Practice-A Q01-Q44 stored patch IDs mismatch');
 }
 for (const id of expectedFixIds) {
   const q = added.find(q => q.id === id);
   const idx = Number(id.slice(-2));
-  const sourceRound = idx <= 10 ? 'r04' : idx <= 15 ? 'r05' : idx <= 25 ? 'r04' : idx <= 30 ? 'r05' : 'r04';
+  const sourceRound = idx <= 10 ? 'r04' : idx <= 15 ? 'r05' : idx <= 25 ? 'r04'
+    : idx <= 30 ? 'r05' : idx <= 40 ? 'r04' : 'r05';
   const sourceSubject = idx <= 15 ? 'law' : idx <= 30 ? 'hyg' : 'phy';
-  const sourceNumber = idx <= 10 ? idx : idx <= 15 ? idx-10 : idx <= 25 ? idx-15 : idx <= 30 ? idx-25 : idx-30;
+  const sourceNumber = idx <= 10 ? idx : idx <= 15 ? idx-10 : idx <= 25 ? idx-15
+    : idx <= 30 ? idx-25 : idx <= 40 ? idx-30 : idx-40;
   const expectedSource = `hm2:sm2-5y-${sourceRound}-${sourceSubject}-${String(sourceNumber).padStart(2,'0')}`;
   if (!q || !q.conceptKey.startsWith(expectedSource + ':')) {
     throw new Error(`${id}: expected ${expectedSource}; actual ${q?.conceptKey || 'missing'}`);
@@ -164,7 +167,7 @@ for (const id of expectedFixIds) {
     independenceReason: 'HM1現行ID監査の指摘に基づく個別の条件判断型再設計。'
   });
 }
-console.log('PASS: HM1 practice-A source-matched Q01-Q40 source-matched overrides applied (40)');
+console.log('PASS: HM1 practice-A source-matched Q01-Q44 source-matched overrides applied (44)');
 
 const all = [...base, ...added];
 if (all.length !== 264) throw new Error(`Expected total=264, got ${all.length}`);
