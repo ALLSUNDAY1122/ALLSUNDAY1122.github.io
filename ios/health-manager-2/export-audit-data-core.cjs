@@ -75,46 +75,25 @@ for (const q of questions) {
   bodies.set(body, q.id);
 }
 
-// Current-law/content release gate. These are the high-risk numeric or newly-amended
-// assertions rechecked against current MHLW primary materials on 2026-08-18.
-const byTopic = new Map(questions.map(q => [q.topic, q]));
-function requireText(topic, ...needles) {
-  const q = byTopic.get(topic);
-  if (!q) throw new Error(`Missing audited topic: ${topic}`);
-  const text = `${q.question} ${q.quick} ${q.explanation} ${q.basis}`;
-  for (const needle of needles) if (!text.includes(needle)) throw new Error(`${topic}: missing verified current-law value ${needle}`);
+// Test live IDs and actual served answer/explanation, not pre-redesign topic labels.
+// Preserve the independent legal review gate: source URLs and prior legalChecked
+// metadata do not confer approval on rewritten questions.
+const {verifyCurrentLawContent}=require('./verify-current-law-contract.cjs');
+const contract=verifyCurrentLawContent(questions);
+const added=questions.filter(q=>q.fiveYearExpansion);
+const unresolved=added.filter(q=>
+ q.contentReviewStatus?.startsWith('requires-independent-')
+ ||q.publicationStatus!=='公開候補'
+ ||(q.lawRelated?q.auditStatus!=='一次資料照合済':q.auditStatus!=='内容監査済')
+);
+if(unresolved.length){
+ const flagged=unresolved.slice(0,8).map(q=>q.id+':'+q.contentReviewStatus+':'+q.auditStatus);
+ throw new Error('HM2_RELEASE_REVIEW_BLOCKED: '+unresolved.length
+  +' generated questions require independent review / status reconciliation. '
+  +'Samples: '+flagged.join(', ')
+  +'. Canonical JSON snapshot may be generated separately; this release gate must not be bypassed.');
 }
-requireText('健康診断後の医師等の意見聴取','3か月以内');
-requireText('自発的健康診断後の意見聴取','2か月以内');
-requireText('産業医の辞任等の報告','2026年8月1日','所轄労働基準監督署長','辞任・解任・退任');
-requireText('衛生管理者の選任期限','14日以内');
-requireText('衛生管理者の定期巡視','毎週1回');
-requireText('衛生委員会の開催頻度','毎月1回');
-requireText('衛生委員会記録の保存','3年間');
-requireText('暑熱な場所の基準','WBGT28','気温31');
-requireText('熱中症対策の対象作業','継続1時間','1日4時間');
-requireText('法定労働時間（日）','1日8時間');
-requireText('法定労働時間（週）','1週間40時間');
-requireText('6時間超の休憩','45分');
-requireText('8時間超の休憩','1時間');
-requireText('時間外労働の原則月上限','月45時間');
-requireText('時間外労働の原則年上限','年360時間');
-requireText('特別条項の年上限','年720時間');
-requireText('特別条項の単月上限','100時間未満');
-requireText('特別条項の複数月平均','2～6か月','80時間以内');
-requireText('空調時の室温','18℃以上28℃以下');
-requireText('空調時の相対湿度','40％以上70％以下');
-requireText('事務室の気流','0.5m/s以下');
-requireText('供給空気の二酸化炭素','1,000ppm以下');
-requireText('供給空気の一酸化炭素','10ppm以下');
-requireText('一般的な事務作業の照度','300ルクス以上');
-
-for (const q of questions.filter(q => q.fiveYearExpansion)) {
-  if (q.publicationStatus !== '公開候補') throw new Error(`${q.id}: content audit not finalized (${q.publicationStatus})`);
-  if (q.lawRelated && q.auditStatus !== '一次資料照合済') throw new Error(`${q.id}: current-law primary-source audit missing`);
-  if (!q.lawRelated && q.auditStatus !== '内容監査済') throw new Error(`${q.id}: content audit missing`);
-}
-console.log('PASS: 210 added questions passed content-status gate; high-risk current-law numeric/amendment assertions are pinned to 2026-08-18 baseline.');
+console.log('PASS: live-ID numeric checks and all expansion publication review statuses verified.');
 
 const out = questions.map(q => ({
   id: q.id,
