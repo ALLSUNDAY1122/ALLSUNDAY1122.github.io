@@ -108,3 +108,12 @@ GitHub対象ブランチから `q1.js`〜`q12.js`、`difficulty-patch-v5.js`、`
 - X-02の**topicと現行設問の分類照合**は300IDの台帳化と確認できた不一致の是正まで完了。ただし語義の近い別設問の**実質重複300問全件保証ではない**。全誤答肢・法令の独立専門監査やX-04も別工程。170問の出典照合、178問のレビュー状態と公開ゲートは未合格のまま。
 
 **次工程**：Muse側で最新コミットをチェックアウトし`node ios/health-manager-2/export-canonical-snapshot.cjs`を実行して新JSONとGit管理版のバイト一致・新SHA-256を取得する。独立レビュー178問を回避せず、最終品質ゲートBLOCKEDを維持。
+
+
+## 2026-11-11 Muse側Node CLI再検証（topic修正後）
+
+- 対象変更：`sm2-5y-r10-phy-02` のtopicおよびprimary_basisを更新した後の配布JSON。
+- Muse側の独立実測として `node ios/health-manager-2/export-canonical-snapshot.cjs` が正常終了し、再生成した `release-questions.json` はコミット済みのファイルと**バイト単位で一致**したとの報告を受領。
+- 新SHA-256：`17d49d4c2373be7bf5cd8c300331137a3a0ad4dfc8294a662d66411385360850`。
+- 旧SHA-256 `7854cdcf3ee14097ed12c03b56c6779efd0aa952a3d5aed8f738e087a027558d` はtopic修正**前**に対応。新しい値と取り違えない。
+- 利用者から提示されたMuse環境の独立検証結果であり、このセッションでNode CLIを再実行したとの主張ではない。**topic修正後の生成再現性PASS**。公開レビュー状態178件の解消や法令品質ゲートのPASSとは別。
