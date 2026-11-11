@@ -969,3 +969,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH09_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH10_20261111: direct medical references, sourceUrl only.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r07-phy-04","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK545157/","question":"食事由来の脂肪が小腸で消化・吸収される。長鎖脂肪酸由来の脂質が小腸上皮細胞から移動する主要な経路として適切なのはどれか。","correctText":"カイロミクロンとなって小腸のリンパ管に入り、その後血液循環に合流する。"},{"id":"sm2-5y-r07-phy-05","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK232852/","question":"外気温が低い日に皮膚表面の血流が減った。寒冷時に熱放散を抑える循環調節として適切なのはどれか。","correctText":"皮膚の細動脈が収縮して皮膚血流を減らす。"},{"id":"sm2-5y-r07-phy-06","sourceUrl":"https://www.ncbi.nlm.nih.gov/sites/books/NBK279127/","question":"健康な成人が食後しばらくして血糖が低下し始めた。肝臓にはまだグリコーゲンの蓄えがある。このとき血糖維持に向けて比較的速やかに働くホルモンと肝臓の反応の組合せとして、適切なものはどれか。","correctText":"グルカゴンの分泌増加により肝グリコーゲン分解が促進される。"},{"id":"sm2-5y-r07-phy-07","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK541119/","question":"健康な成人が長時間絶食し、肝臓のグリコーゲン貯蔵量が大きく減少した。血糖の維持に寄与する肝臓の代謝変化として、最も適切なものはどれか。","correctText":"乳酸・グリセロール・糖原性アミノ酸などを材料とする糖新生の相対的寄与が増える。"},{"id":"sm2-5y-r07-phy-08","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK1177/","question":"脱水で血中ADHが増加している人に、腎集合管主細胞のバソプレシンV2受容体の働きだけを遮断する条件を仮定する。その他の腎機能と腎髄質浸透圧勾配は保たれている。このとき集合管で起こる変化として最も適切なのはどれか。","correctText":"ADHが増えていてもAQP2の管腔側膜への移行が妨げられ、集合管の水透過性が低下して尿を濃縮しにくくなる。"},{"id":"sm2-5y-r07-phy-09","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK542189/","question":"正常な眼で遠くの標識から手元の文字へ視線を移し、近くの文字に焦点を合わせる。毛様体筋・チン小帯・水晶体の変化として適切な組合せはどれか。","correctText":"毛様体筋が収縮し、チン小帯の張力が低下して、水晶体が厚くなり屈折力が高まる。"},{"id":"sm2-5y-r07-phy-10","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK556043/","question":"細菌に感染した傷口で白血球が異物を取り込み、細胞内で分解する。主としてこの働きを行う細胞の組合せはどれか。","correctText":"好中球とマクロファージ"},{"id":"sm2-5y-r08-phy-01","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK544292/","question":"熱い器具に指が触れ、熱さを意識して判断する前に手を引いた。この素早い反応に関する説明として最も適切なのはどれか。","correctText":"脊髄などの反射回路で、意識的な判断を待たず運動応答が起こり得る。"},{"id":"sm2-5y-r08-phy-02","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK11522/","question":"明るい作業室で色付きの細かな表示を識別できた作業者が、照明の弱い通路に移った直後、色の区別が難しくなった。正常な網膜の視細胞の機能に照らして最も適切なのはどれか。","correctText":"明所での細かな色識別には錐体が重要であり、暗い条件では色を識別しにくくなる一方、杆体の高い光感度が役立つ。"},{"id":"sm2-5y-r08-phy-03","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK603724/table/article-148754.table1/","question":"次の用語と定義の組合せで正しいものはどれか。","correctText":"大脳皮質 ― 感覚・随意運動・言語・思考など高次機能に関与する。"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch10 target count/ID');
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+ !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correctText||
+ (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.sourceUrl))
+ throw Error('HM2 X-01 batch10 unexpected source/content '+f.id);
+ q.sourceUrl=f.sourceUrl;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH10_IDS=fixes.map(f=>f.id);
+})();
