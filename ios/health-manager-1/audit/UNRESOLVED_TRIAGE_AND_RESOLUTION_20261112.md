@@ -232,3 +232,23 @@
 - 今回の4問の264問Node CLI再生成・限定差分、配布Web/iOSのバイト・SHA256比較は未実施。次はMuse側独立検証後、`practice-A-Q21`、`Q26`、`Q28`、`Q34`を中心に追証。
 - 原典の中心命題追証と全5肢の独立逐語PASSは異なる。商用権利・法令適用時点の横断審査・実機は未了。**リリースゲートFAIL/BLOCKED**、mainマージ・App Store申請・公開なし。
 - 個別証跡：`audit/PRIMARY_SOURCE_AUDIT_A_BATCH10_20261112.json`、累積残件：`audit/PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
+
+
+## 続編第11回：Muse演習A4問PASSの追記と（a）群演習A4問中心命題照合（2026-11-12）
+
+### 1. Muse側での前回演習A4問264問再生成（提供された実施結果）
+- 比較基準 `e3e62cb` と修正後状態の両方で264問Node CLI再生成成功。差分は `practice-A-Q08`・`Q11`・`Q13`・`Q20` の4問のみ。監査ステータスと適用対象の出典URLの変更、正答index全問不変、他260問完全一致、限定差分PASS。
+- 差分内訳はQ08/Q20で監査URLとステータス、Q11/Q13ではステータスのみ。本担当でNode CLI両状態・Web/iOS配布バイト・SHA256を独立再実行したものではない。今回修正4問へPASS転用はしない。
+
+### 2. （a）群の次4問
+- **`practice-A-Q21`**（正答index `4` 不変）：厚労省令和8年3月18日付け新熱中症ガイドライン：作業強度・暑熱順化・着衣補正によるWBGT基準照合と、作業時間短縮・休憩・衣服調整を明記。同じWBGTでも重量物運搬＋防護衣のB班を高リスクと評価する中心命題を確認。 URL `https://www.mhlw.go.jp/content/11303000/001618734.pdf` → `https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1`。補助原典 `https://neccyusho.mhlw.go.jp/heat_index/`。変更キー：`auditSourceURL`、`auditStatus`。留保：同一WBGT31℃での定量休憩配分や衣服別補正数値は未確認。全5肢独立逐語立証は未完。
+- **`practice-A-Q26`**（正答index `0` 不変）：NIOSH 2016-106 Glossaryは従来ETを気温・湿度・気流の主観的温熱感覚指標と定義。WBGTは自然湿球温度・黒球温度（屋外日射時は乾球温度も）を用い、炉のふく射の評価にも適用する。 URL `https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf` → `https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf`。補助原典 `https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1`。変更キー：`auditStatus`。留保：NIOSH PDFテキスト到達と検索抜粋確認。ただしPDF画像スクリーンショット取得は502で失敗、詳細の独立視覚確認は未了。ET/ET*/CETの区別や全5肢逐語立証は継続。
+- **`practice-A-Q28`**（正答index `1` 不変）：CDC/NIOSH換気FAQ：CO₂測定は換気の状態把握に使えるが、発生源の種類や局所的汚染・他の空気中物質濃度を直接予測できない。EPA室内空気質技術資料も人由来でない汚染源をCO₂のみでは評価できないと明記。1400→800ppmの低下は条件が揃えば換気改善を示唆する一方、溶剤蒸気を別途評価する正答肢1を支持。 URL `https://www.mhlw.go.jp/content/10900000/000896863.pdf` → `https://www.cdc.gov/niosh/ventilation/faq/`。補助原典 `https://19january2017snapshot.epa.gov/sites/production/files/2016-09/documents/text_modules_diagnosing.pdf`。変更キー：`auditSourceURL`、`auditStatus`。留保：在室人数だけでなく活動・外気CO₂・位置・換気の時間推移・清掃溶剤の実測濃度に依存。全5肢逐語立証は未完。
+- **`practice-A-Q34`**（正答index `4` 不変）：NCBI Bookshelf『Biochemistry, Clotting Factors』で一次止血＝血小板の粘着・活性化・凝集、二次止血＝凝固因子を介したフィブリン形成による血小板栓の安定化と直接定義。血小板減少Aと凝固因子低下Bの機序を区別する正答肢4に一致。 URL `https://www.ncbi.nlm.nih.gov/books/NBK507850/` → `https://www.ncbi.nlm.nih.gov/books/NBK507850/`。補助原典 `https://www.ncbi.nlm.nih.gov/books/NBK507850/`。変更キー：`auditStatus`。留保：実臨床の点状出血と凝固異常の鑑別診断、全5肢の独立逐語立証は未完。
+
+### 3. 集計・品質ゲート・次セッション
+- 中心命題への直接追証済み **52/85 ID**、次の照合待ち **33件（37→33）**。全5肢逐語立証・商用権利・法令時点・配布バイト一致の合格とは区別し、全5肢無条件PASSは0件として管理。
+- **生成元変更ID：`practice-A-Q21`・`practice-A-Q26`・`practice-A-Q28`・`practice-A-Q34`**。Q21/Q28は`auditSourceURL`・`auditStatus`、Q26/Q34は`auditStatus`のみ。設問・5肢・解説・正答indexは不変。上書きファイル44問のうち他40問不変をJSON構造差分で確認。
+- 264問Node CLI再生成・新規4問限定差分・Web/iOS配布JSONバイト・SHA256は**未実施**。次はMuse側で検証、続いて`practice-A-Q37`・`Q39`・`practice-B-Q08`・`Q20`を検討。
+- **リリースゲートFAIL/BLOCKED維持**。mainマージ・審査申請・公開なし。
+- 詳細：`PRIMARY_SOURCE_AUDIT_A_BATCH11_20261112.json`、進捗：`PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。

@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "parentCommit": "c5df1ddb767500bd611b5ac585af0f464af60193",
+  "reportedMusePreviousFourQuestionRegeneration": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "e3e62cb",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "practice-A-Q08",
+      "practice-A-Q11",
+      "practice-A-Q13",
+      "practice-A-Q20"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL where applicable"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN",
+    "fieldClarification": "Q08/Q20 changed auditStatus and auditSourceURL; Q11/Q13 changed auditStatus only."
+  },
+  "subject": "(a) group batch 11 practice-A-Q21/Q26/Q28/Q34",
+  "outcomes": [
+    {
+      "id": "practice-A-Q21",
+      "oldAuditURL": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1",
+      "secondaryEvidenceURL": "https://neccyusho.mhlw.go.jp/heat_index/",
+      "evidence": "厚労省令和8年3月18日付け新熱中症ガイドライン：作業強度・暑熱順化・着衣補正によるWBGT基準照合と、作業時間短縮・休憩・衣服調整を明記。同じWBGTでも重量物運搬＋防護衣のB班を高リスクと評価する中心命題を確認。",
+      "caveat": "同一WBGT31℃での定量休憩配分や衣服別補正数値は未確認。全5肢独立逐語立証は未完。",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q26",
+      "oldAuditURL": "https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf",
+      "newAuditURL": "https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1",
+      "evidence": "NIOSH 2016-106 Glossaryは従来ETを気温・湿度・気流の主観的温熱感覚指標と定義。WBGTは自然湿球温度・黒球温度（屋外日射時は乾球温度も）を用い、炉のふく射の評価にも適用する。",
+      "caveat": "NIOSH PDFテキスト到達と検索抜粋確認。ただしPDF画像スクリーンショット取得は502で失敗、詳細の独立視覚確認は未了。ET/ET*/CETの区別や全5肢逐語立証は継続。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q28",
+      "oldAuditURL": "https://www.mhlw.go.jp/content/10900000/000896863.pdf",
+      "newAuditURL": "https://www.cdc.gov/niosh/ventilation/faq/",
+      "secondaryEvidenceURL": "https://19january2017snapshot.epa.gov/sites/production/files/2016-09/documents/text_modules_diagnosing.pdf",
+      "evidence": "CDC/NIOSH換気FAQ：CO₂測定は換気の状態把握に使えるが、発生源の種類や局所的汚染・他の空気中物質濃度を直接予測できない。EPA室内空気質技術資料も人由来でない汚染源をCO₂のみでは評価できないと明記。1400→800ppmの低下は条件が揃えば換気改善を示唆する一方、溶剤蒸気を別途評価する正答肢1を支持。",
+      "caveat": "在室人数だけでなく活動・外気CO₂・位置・換気の時間推移・清掃溶剤の実測濃度に依存。全5肢逐語立証は未完。",
+      "correctIndex": 1,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q34",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK507850/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK507850/",
+      "secondaryEvidenceURL": "https://www.ncbi.nlm.nih.gov/books/NBK507850/",
+      "evidence": "NCBI Bookshelf『Biochemistry, Clotting Factors』で一次止血＝血小板の粘着・活性化・凝集、二次止血＝凝固因子を介したフィブリン形成による血小板栓の安定化と直接定義。血小板減少Aと凝固因子低下Bの機序を区別する正答肢4に一致。",
+      "caveat": "実臨床の点状出血と凝固異常の鑑別診断、全5肢の独立逐語立証は未完。",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "progress": {
+    "aGroupOriginal": 85,
+    "centralClaimSupportedUnique": 52,
+    "centralClaimNotYetRecorded": 33,
+    "pendingIds": [
+      "practice-A-Q37",
+      "practice-A-Q39",
+      "practice-B-Q08",
+      "practice-B-Q20",
+      "practice-B-Q28",
+      "practice-B-Q33",
+      "practice-C-Q01",
+      "practice-C-Q02",
+      "practice-C-Q03",
+      "practice-C-Q05",
+      "practice-C-Q06",
+      "practice-C-Q07",
+      "practice-C-Q08",
+      "practice-C-Q09",
+      "practice-C-Q10",
+      "practice-C-Q14",
+      "practice-C-Q15",
+      "practice-C-Q17",
+      "practice-C-Q18",
+      "practice-C-Q19",
+      "practice-C-Q20",
+      "practice-C-Q21",
+      "practice-C-Q22",
+      "practice-C-Q26",
+      "practice-C-Q30",
+      "practice-C-Q31",
+      "practice-C-Q32",
+      "practice-C-Q33",
+      "practice-C-Q35",
+      "practice-C-Q36",
+      "practice-C-Q37",
+      "practice-C-Q41",
+      "practice-C-Q44"
+    ],
+    "fullFiveChoiceIndependentDirectProofClosed": 0
+  },
+  "currentBatchIndependent264Regeneration": "NOT_RUN",
+  "currentBatchWebIosByteCheck": "NOT_RUN",
+  "releaseGate": "FAIL/BLOCKED"
+}

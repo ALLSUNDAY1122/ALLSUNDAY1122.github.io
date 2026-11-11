@@ -1699,13 +1699,9 @@
   "aGroupProgress": {
     "countingMethod": "a群85IDのうち中心命題への公開一次資料追証・法令根拠修正を記録済みの固有IDだけを1回計上。前回のC29、C34、C42、Q25および第2〜第6次バッチを含む。完全5肢逐語原典PASSの残数ではない。",
     "aGroupOriginal": 85,
-    "centralClaimSupportedUnique": 48,
-    "centralClaimNotYetRecorded": 37,
+    "centralClaimSupportedUnique": 52,
+    "centralClaimNotYetRecorded": 33,
     "centralClaimPendingIds": [
-      "practice-A-Q21",
-      "practice-A-Q26",
-      "practice-A-Q28",
-      "practice-A-Q34",
       "practice-A-Q37",
       "practice-A-Q39",
       "practice-B-Q08",
@@ -2041,6 +2037,85 @@
       "correctIndex": 0,
       "changedFields": [
         "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "batchElevenMuseValidation": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "e3e62cb",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "practice-A-Q08",
+      "practice-A-Q11",
+      "practice-A-Q13",
+      "practice-A-Q20"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL where applicable"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN",
+    "fieldClarification": "Q08/Q20 changed auditStatus and auditSourceURL; Q11/Q13 changed auditStatus only."
+  },
+  "batchElevenResolutions": [
+    {
+      "id": "practice-A-Q21",
+      "oldAuditURL": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1",
+      "secondaryEvidenceURL": "https://neccyusho.mhlw.go.jp/heat_index/",
+      "evidence": "厚労省令和8年3月18日付け新熱中症ガイドライン：作業強度・暑熱順化・着衣補正によるWBGT基準照合と、作業時間短縮・休憩・衣服調整を明記。同じWBGTでも重量物運搬＋防護衣のB班を高リスクと評価する中心命題を確認。",
+      "caveat": "同一WBGT31℃での定量休憩配分や衣服別補正数値は未確認。全5肢独立逐語立証は未完。",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q26",
+      "oldAuditURL": "https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf",
+      "newAuditURL": "https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1",
+      "evidence": "NIOSH 2016-106 Glossaryは従来ETを気温・湿度・気流の主観的温熱感覚指標と定義。WBGTは自然湿球温度・黒球温度（屋外日射時は乾球温度も）を用い、炉のふく射の評価にも適用する。",
+      "caveat": "NIOSH PDFテキスト到達と検索抜粋確認。ただしPDF画像スクリーンショット取得は502で失敗、詳細の独立視覚確認は未了。ET/ET*/CETの区別や全5肢逐語立証は継続。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q28",
+      "oldAuditURL": "https://www.mhlw.go.jp/content/10900000/000896863.pdf",
+      "newAuditURL": "https://www.cdc.gov/niosh/ventilation/faq/",
+      "secondaryEvidenceURL": "https://19january2017snapshot.epa.gov/sites/production/files/2016-09/documents/text_modules_diagnosing.pdf",
+      "evidence": "CDC/NIOSH換気FAQ：CO₂測定は換気の状態把握に使えるが、発生源の種類や局所的汚染・他の空気中物質濃度を直接予測できない。EPA室内空気質技術資料も人由来でない汚染源をCO₂のみでは評価できないと明記。1400→800ppmの低下は条件が揃えば換気改善を示唆する一方、溶剤蒸気を別途評価する正答肢1を支持。",
+      "caveat": "在室人数だけでなく活動・外気CO₂・位置・換気の時間推移・清掃溶剤の実測濃度に依存。全5肢逐語立証は未完。",
+      "correctIndex": 1,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q34",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK507850/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK507850/",
+      "secondaryEvidenceURL": "https://www.ncbi.nlm.nih.gov/books/NBK507850/",
+      "evidence": "NCBI Bookshelf『Biochemistry, Clotting Factors』で一次止血＝血小板の粘着・活性化・凝集、二次止血＝凝固因子を介したフィブリン形成による血小板栓の安定化と直接定義。血小板減少Aと凝固因子低下Bの機序を区別する正答肢4に一致。",
+      "caveat": "実臨床の点状出血と凝固異常の鑑別診断、全5肢の独立逐語立証は未完。",
+      "correctIndex": 4,
+      "changedFields": [
         "auditStatus"
       ],
       "allFiveIndependentDirectProof": false
