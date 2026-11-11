@@ -1251,3 +1251,16 @@ if(!Array.isArray(next.choices)||next.choices.length!==5||new Set(next.choices).
 Object.assign(q,{question:next.question,topic:next.topic,choices:next.choices.slice(),answer:next.answer,quick:next.quick,explanation:next.explanation,basis:next.basis,sourceUrl:next.sourceUrl});
 window.HM2_X02_SECONDARY_REDRAFT_ID=id;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH01_SM2_DEMO_003_20261112 - strict post-patch URL-only correction.
+(function(){'use strict';
+const id='sm2-demo-003';
+const matches=(window.Q_PARTS||[]).filter(q=>q.id===id);
+if(matches.length!==1)throw Error('HM2 170 B01 target count mismatch '+id);
+const q=matches[0];
+const expected={subject:'関係法令',question:"労働衛生コンサルタントに関する次の記述のうち、正しいものはどれか。",topic:'労働衛生コンサルタント',sourceUrl:"https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/newpage_04164.html",correct:"他人の求めに応じ報酬を得て、事業場の衛生について診断し、これに基づく指導を行うことを業とする。",choicesSorted:["他人の求めに応じ報酬を得て、事業場の衛生について診断し、これに基づく指導を行うことを業とする。","業務上知り得た秘密について、業務をやめた後は守秘義務を負わない。","登録は都道府県知事が備える名簿に行う。","診断を受けた事業者には、その記録を必ず3年間保存する法定義務がある。","試験に合格すれば、登録を受けなくても名称を使用できる。"]};
+if(q.subject!==expected.subject||q.question!==expected.question||q.topic!==expected.topic||q.sourceUrl!==expected.sourceUrl||!Array.isArray(q.choices)||q.choices.length!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==expected.correct||JSON.stringify([...q.choices].sort())!==JSON.stringify(expected.choicesSorted))throw Error('HM2 170 B01 strict old-state mismatch '+id);
+q.sourceUrl="https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0";
+window.HM2_SOURCE_170_B01_DEMO003_VERIFIED=true;
+})();
