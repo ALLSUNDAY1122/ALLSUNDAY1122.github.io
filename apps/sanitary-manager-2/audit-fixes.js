@@ -391,3 +391,13 @@ if(fixes.filter(f=>f.sourceUrl).length!==2)throw Error('HM2 tenth10 source fix c
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 tenth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;if(f.sourceUrl)q.sourceUrl=f.sourceUrl;}
 window.SM2_INDEPENDENT_TENTH10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
 })();
+
+
+// SM2_INDEPENDENT_ELEVENTH10_METADATA_FIX8_20261111: fixed gate No.101-104 and 106-109, topic/basis only. All existing sources/questions/approval gates unchanged.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r08-hyg-07","topic":"職場における感染症拡大防止（手指衛生・換気・体調不良者対応）","basis":"厚生労働省の職場における感染症予防・衛生管理の基本対策"},{"id":"sm2-5y-r08-hyg-08","topic":"重量物保持距離と腰部外力モーメント","basis":"厚生労働省『職場における腰痛予防対策指針』・重量物取扱いの人間工学"},{"id":"sm2-5y-r08-hyg-09","topic":"音の強さの比とデシベル換算","basis":"音の強さレベルの定義（ΔL＝10log10(I₂/I₁)）"},{"id":"sm2-5y-r08-hyg-10","topic":"呼吸器感染症の職場における多層的予防策","basis":"感染症予防の基礎"},{"id":"sm2-5y-r09-hyg-02","topic":"洗浄剤の眼曝露時の流水洗浄・応急対応","basis":"化学物質の安全データシート（SDS）における眼への曝露時の応急措置"},{"id":"sm2-5y-r09-hyg-03","topic":"自由音場の点音源の距離減衰（6dB則）","basis":"点音源の距離減衰の定義（ΔLp＝20log10(r₁/r₂)）"},{"id":"sm2-5y-r09-hyg-04","topic":"長時間立位作業の人間工学的負担軽減","basis":"厚生労働省『職場における腰痛予防対策指針』（作業姿勢・作業管理）"},{"id":"sm2-5y-r09-hyg-05","topic":"暑熱非順化者の段階的作業管理と熱中症予防","basis":"厚生労働省『職場における熱中症防止対策のためのガイドライン』（令和8年3月18日・基発0318第1号）"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==8||new Set(fixes.map(f=>f.id)).size!==8)throw Error('HM2 eleventh10 metadata fix count/IDs invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 eleventh10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
+window.SM2_INDEPENDENT_ELEVENTH10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
+})();
