@@ -39,7 +39,7 @@ p.write_text(updated, encoding='utf-8')
 print(f'PASS: HealthManager2 CURRENT_PROJECT_VERSION={build_number}')
 PY
 
-node "$SCRIPT_DIR/export-audit-data.cjs"
+node "$SCRIPT_DIR/export-canonical-snapshot.cjs"
 test -s "$SCRIPT_DIR/release-questions.json"
 
 rm -rf "$WEB_DST"
