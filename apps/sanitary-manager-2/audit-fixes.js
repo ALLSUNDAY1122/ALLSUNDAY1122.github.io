@@ -641,3 +641,13 @@ if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('P1-12 IDs
 for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='労働生理'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('P1-12 mismatch '+f.id);Object.assign(q,{topic:f.topic,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,basis:f.primary_basis});}
 window.HM2_P1_12_DISTINCT_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_P1_13_SERUM_FIBRINOGEN_VS_CITRATE_PT_20261111: split composition after clotting versus specimen selection for coagulation testing. Preserve answers/release flags.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r04-phy-06","answer":2,"topic":"凝固後の血清で低下するフィブリノゲンの判断","question":"血液を抗凝固剤の入っていない採血管に採り、十分に凝固させた後、遠心して血餅を除いた。得られた上清を、抗凝固剤入り採血管から得た血漿と比較する。凝固因子に関する説明として適切なのはどれか。","choices":["血漿にはフィブリノゲンが存在せず、血清には凝固前と同量のフィブリノゲンが残る。","血清では血液凝固の過程でフィブリノゲンがフィブリンに変化するため、血漿に比べてフィブリノゲンが著しく少ない。","抗凝固剤の有無にかかわらず、血清と血漿の凝固因子の含有状態は完全に同じである。","血清は赤血球だけを集めた沈殿物で、凝固因子の比較には液体成分を用いない。","血清を得る際は必ず抗凝固剤を加え、フィブリノゲンからフィブリンへの変化を防止する。"],"quick":"凝固後の血清ではフィブリノゲンがフィブリンとして消費され、抗凝固処理した血漿より少なくなる。","explanation":"抗凝固剤を入れずに血液を凝固させると、フィブリノゲンはフィブリンに変わって血餅形成に使われる。血餅を除いた上清の血清ではフィブリノゲンが著しく少ないため第2肢が適切。第1肢は血清と血漿の関係が逆、第3肢は凝固による変化を無視、第4肢は血清と赤血球沈殿を混同、第5肢は血清の作製条件と逆である。なお血清中の全凝固関連タンパク質が完全にゼロになるわけではない。","primary_basis":"血液生理／血液凝固・フィブリノゲンのフィブリン化と血清・血漿の成分差"},{"id":"sm2-5y-r04-phy-07","answer":4,"topic":"凝固検査のためのクエン酸加血漿の検体選択","question":"健康診断後、医師がプロトロンビン時間（PT）などの凝固機能を調べる追加検査を指示した。採血後に凝固反応を一時的に抑え、凝固因子を測定可能な状態で保存した上清を使う場合、適切な検体の取り扱いはどれか。","choices":["抗凝固剤を入れず十分に凝固させ、血餅を除いた血清だけを用いる。","採血後に血液を凝固させ、血餅だけを集めてPTを測定する。","赤血球濃厚液を採取し、血漿をすべて除去した検体だけでPTを測定する。","クエン酸ナトリウム入り採血管で血液の凝固を抑え、適切に遠心分離した血漿を用いる。","抗凝固剤は不要なので、全血を採血管内で固まるまで放置してから凝固因子の活性を調べる。"],"quick":"PTなどの一般的な凝固検査には、クエン酸ナトリウムで抗凝固した血漿を用いる。","explanation":"PTなどの一般的な血液凝固検査では、所定量のクエン酸ナトリウムを含む採血管で血液を凝固させずに採取し、分離したクエン酸加血漿を検体として使用する。凝固因子が検体中で消費されることを避けるため、第4肢が正しい。第1・5肢は採血管内で凝固を進めてしまい、第2肢の血餅や第3肢の赤血球濃厚液は通常のPT測定検体ではない。測定前にカルシウムを添加して凝固反応を開始する検査原理と、採血・保存時に凝固を防ぐ目的は区別する。","primary_basis":"血液生理・臨床検査の基本／クエン酸ナトリウム加血漿を用いるPT等の凝固検査"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 P1-13 invalid IDs');
+for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='労働生理'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('HM2 P1-13 source mismatch '+f.id);Object.assign(q,{topic:f.topic,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,basis:f.primary_basis});}
+window.HM2_P1_13_SERUM_PLASMA_DISTINCT_IDS=fixes.map(f=>f.id);
+})();
