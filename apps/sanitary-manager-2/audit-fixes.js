@@ -631,3 +631,13 @@ if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 P1-11
 for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='労働生理'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('HM2 P1-11 source mismatch '+f.id);Object.assign(q,{topic:f.topic,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,basis:f.primary_basis});}
 window.HM2_P1_11_PUPIL_DISTINCT_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_P1_12_ALVEOLAR_CALC_VS_PATTERN_20261111: split scalar alveolar ventilation calculation from same-minute-volume breathing-pattern comparison.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r04-phy-08","answer":1,"topic":"解剖学的死腔を除く毎分肺胞換気量の計算","question":"成人の一回換気量は500mL、解剖学的死腔量は150mL、呼吸数は毎分12回である。生理学的死腔の増大はないものとし、毎分肺胞換気量を計算するとどれか。","choices":["4.2L/分","3.0L/分","1.8L/分","6.0L/分","7.8L/分"],"quick":"（500－150）×12＝4,200mL/分＝4.2L/分。","explanation":"毎分肺胞換気量は（一回換気量－死腔量）×呼吸数。(500－150)×12＝4,200mL/分なので第1肢。第2肢は式による計算結果ではない。第3肢は死腔換気150×12＝1,800mL/分、第4肢は死腔を差し引かない全分時換気量500×12＝6,000mL/分、第5肢は死腔を足した650×12＝7,800mL/分である。","primary_basis":"呼吸生理／肺胞換気量＝（一回換気量－死腔量）×呼吸数"},{"id":"sm2-5y-r09-phy-04","answer":2,"topic":"同じ分時換気量での浅速呼吸・深徐呼吸と肺胞換気比較","question":"成人Aは一回換気量500mL・呼吸数毎分12回、成人Bは一回換気量300mL・呼吸数毎分20回である。両者の解剖学的死腔量は一回150mLとし、生理学的死腔の増大など他の条件差はない。分時換気量はいずれも6.0L/分である。肺胞換気量の比較として適切なのはどれか。","choices":["全分時換気量が同じなので肺胞換気量も両者6.0L/分である。","Aは4.2L/分、Bは3.0L/分で、深くゆっくり呼吸するAの方が大きい。","Aは3.0L/分、Bは4.2L/分で、浅く速いBの方が大きい。","Aは1.8L/分、Bは3.0L/分で、死腔換気は考慮しない。","AとBはともに4.2L/分で、呼吸数が違っても毎分の死腔換気量は同じである。"],"quick":"Aの肺胞換気4.2L/分、Bは3.0L/分。全分時換気量が同じでも、浅速呼吸では毎分の死腔換気が増える。","explanation":"毎分肺胞換気量＝（一回換気量－死腔量）×呼吸数。Aは(500－150)×12＝4,200mL/分、Bは(300－150)×20＝3,000mL/分なので第2肢が正しい。毎分死腔換気はAが150×12＝1.8L、Bが150×20＝3.0Lであり、浅速呼吸Bでは有効な肺胞換気が少ない。第1・5肢は分時換気量と肺胞換気量を混同し、第3肢は大小関係を逆転し、第4肢は死腔換気を肺胞換気と取り違える。","primary_basis":"呼吸生理／同じ分時換気量での死腔換気と肺胞換気の比較"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('P1-12 IDs');
+for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='労働生理'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('P1-12 mismatch '+f.id);Object.assign(q,{topic:f.topic,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,basis:f.primary_basis});}
+window.HM2_P1_12_DISTINCT_IDS=fixes.map(f=>f.id);
+})();
