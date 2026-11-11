@@ -1733,8 +1733,8 @@
 | `sm2-5y-r06-phy-07` | P1 | P1-8 | ADH・集合管水再吸収の重複 | 未着手・要再確認 |
 | `sm2-5y-r06-phy-09` | P1 | P1-8 | ADH・集合管水再吸収の重複 | 未着手・要再確認 |
 | `sm2-5y-r07-phy-02` | P1 | P1-9 | インスリンと筋への糖取込みの近接 | 未着手・要再確認 |
-| `sm2-5y-r07-phy-06` | P1 | P1-7 | グルカゴンと肝糖放出の重複 | 未着手・要再確認 |
-| `sm2-5y-r07-phy-07` | P1 | P1-7 | グルカゴンと肝糖放出の重複 | 未着手・要再確認 |
+| `sm2-5y-r07-phy-06` | P1 | P1-7 | グルカゴンと肝糖放出の重複 | 完了（2026-11-11、短時間空腹時の肝グリコーゲン分解を条件判断する設問へ再設計） |
+| `sm2-5y-r07-phy-07` | P1 | P1-7 | グルカゴンと肝糖放出の重複 | 完了（2026-11-11、長時間絶食時の糖新生を条件判断する設問へ再設計） |
 | `sm2-5y-r07-phy-08` | P1 | P1-8 | ADH・集合管水再吸収の重複 | 未着手・要再確認 |
 | `sm2-5y-r07-phy-09` | P1 | P1-10 | 近方視・水晶体調節の重複 | 未着手・要再確認 |
 | `sm2-5y-r08-phy-02` | P1 | P1-14 | 視細胞の近接出題・誤答使い回し | 未着手・要再確認 |
@@ -1891,3 +1891,14 @@
 - **300問の全ID・配列順・全フィールド比較**：対象2問のtopic/question/choices/quick/explanation/primary_basisのみ変更（`r06-hyg-04` はsource_urlも変更）、対象外298問完全一致。全300問の正答位置・baseline_date・audit_status・publication_statusを保持。
 - 有効登録65問（元66行、誤登録1件を除外）中、**全テーマ完了20問、未完了45問**。次はP1-7（グルカゴンと肝糖放出の重複）。P1・P2・P3の横断監査、独立専門家承認、権利・実機確認は残る。公開品質ゲート **BLOCKED** 継続。
 - GitHubコネクタ経由で生成元パッチとiOS用JSONを同期した。**ローカル再生成コマンド・CI実行成功は未検証**。リリース・TestFlight・App Reviewは行わない。
+
+
+## 2026-11-11追補｜P1-7完了：グルカゴン・肝糖放出2問の条件分離
+- 対象は `sm2-5y-r07-phy-06` と `sm2-5y-r07-phy-07` の2問。従来はいずれもグルカゴンの肝糖放出作用を選ぶ重複だった。
+- `r07-phy-06`：短時間の空腹・肝グリコーゲン残存条件で、膵α細胞グルカゴンによる肝グリコーゲン分解の速やかな促進を選択。正答第2肢（correct_index=1）維持。
+- `r07-phy-07`：長時間絶食・肝グリコーゲン減少条件で、乳酸・グリセロール・糖原性アミノ酸等からの糖新生の相対的寄与増加を選択。正答第4肢（correct_index=3）維持。全身の糖新生を肝臓のみに限定しない。
+- 医学的照合：NCBI Bookshelf『Glucagon Physiology』 https://www.ncbi.nlm.nih.gov/books/NBK279127/ 、ヒトの肝糖代謝総説 https://pmc.ncbi.nlm.nih.gov/articles/PMC5293555/ 。既存 `source_url` は公開試験の一般ページのまま（P1-7範囲で出典URLを変更しない）。個別の直接性・権利監査は別ゲートで未完了。
+- 生成元 `apps/sanitary-manager-2/audit-fixes.js` に `HM2_P1_7_GLUCOSE_FASTING_DURATION_DISTINCT_20261111` 追記。コミット `54ab16e20f2634060e3b6ee73f39caa9f21078e3`。iOS同梱JSON同期更新：コミット `b4e8522a24bb2f652e9719e8649c8ef9ee2efeaa`。
+- 300問のID・配列順・全フィールド比較：**対象2問のtopic/question/choices/quick/explanation/primary_basisのみ変更、他298問完全一致**。正答位置、source_url、baseline_date、legal_checked、audit_status、publication_statusの変更なし。
+- 有効な残件65問（誤登録除外1問）、全テーマ完了22問、未完了43問。次の優先課題はP1-8（ADH・集合管水再吸収の重複）。公開品質ゲート **BLOCKED** 継続。
+- GitHubコネクタで生成元パッチとiOS JSONを同じ定義から同期したが、ローカル再生成スクリプト実行およびCI成功は本件で未検証。新規ビルド・TestFlight・App Review・一般公開は行わない。
