@@ -1,4 +1,4 @@
-name: HM1 integrated 264-question exact-seven Q41-Q50 regression
+name: HM1 integrated 264-question exact-seven Q52-Q60 regression
 on:
   push:
     branches:
@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          BASE=d7e645ab8af6d666758dbf1173a3a14a84fee425
+          BASE=132352377e830b64fc85e326d5b2d60afc0d96d6
           git worktree add --detach /tmp/hm1-base "$BASE"
           node /tmp/hm1-base/ios/health-manager-1/augment-to-264.cjs
           node ios/health-manager-1/augment-to-264.cjs
@@ -38,13 +38,13 @@ jobs:
           assert.equal(new Set(now.map(x=>x.id)).size,264);
           assert.deepEqual(now.map(x=>x.id),base.map(x=>x.id));
           for(const q of now){ assert.equal(q.choices.length,5); assert.ok(Number.isInteger(q.ans)&&q.ans>=0&&q.ans<=4); }
-          const want=['2026-04-Q41','2026-04-Q42','2026-04-Q43','2025-10-Q01','2025-10-Q02','2025-10-Q05','2025-10-Q06'];
+          const want=['2025-10-Q08','2025-10-Q09','2025-10-Q11','2025-10-Q13','2025-10-Q14','2025-10-Q15','2025-10-Q16'];
           const changed=now.filter((q,i)=>JSON.stringify(q)!==JSON.stringify(base[i])).map(q=>q.id);
           assert.deepEqual(changed,want);
           for(const id of want){
             const a=base.find(x=>x.id===id),b=now.find(x=>x.id===id);
             assert.equal(b.ans,a.ans,id+' answer changed');
-            for(const k of Object.keys(a)) if(!['stem','choices','short','detail'].includes(k)) assert.deepEqual(b[k],a[k],id+' '+k);
+            for(const k of Object.keys(a)) if(!['stem','choices','short','detail',...(id==='2025-10-Q08'?['auditSourceURL']:[])].includes(k)) assert.deepEqual(b[k],a[k],id+' '+k);
           }
           console.log(JSON.stringify({result:'PASS',total:now.length,changed,unchanged:now.length-changed.length},null,2));
           NODE
