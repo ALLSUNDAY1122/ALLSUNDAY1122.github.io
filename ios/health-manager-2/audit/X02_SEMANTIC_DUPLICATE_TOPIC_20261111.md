@@ -220,3 +220,11 @@ GitHub対象ブランチから `q1.js`〜`q12.js`、`difficulty-patch-v5.js`、`
 - 実装：生成元コミット`b35eb0a37c1b3810444fda47922ee59eb00677c2`、配布JSONコミット`ba7c423b2a938807cf4b32982f0c76473f7dd055`、統合台帳`X02_HIGH_CLUSTER_MERGE_REDESIGN_20261111.md`（コミット`d351fa92d95fa0cd26e22ec7851fd678fc110ea6`）。
 - **現在の再設計進捗：12/35統合単位、累計19問修正、残23単位**。次セッションは最初に最新の配布JSONをMuse側Node CLIでバイト一致・SHA-256検証し、次に**U13（H03：心停止時の初動反復）**から3〜4単位分の再設計を行う。一次救命処置の最新ガイドライン・出典・新たな重複と誤答肢の一意性は別途直接確認。
 - X-04、170問の個別出典確認、178問の状態照合、専門家の独立法令・医学査読は未完。**本番公開BLOCKED**を維持。
+
+
+## 2026-11-12 Muse側独立Node CLI検証：U09〜U12再設計後
+
+- ユーザー報告のMuse側ローカル独立検証：`node ios/health-manager-2/export-canonical-snapshot.cjs` は正常終了し、再生成JSONとコミット済み配布 `ios/health-manager-2/release-questions.json` が**バイト単位で一致**。
+- 対象：U09〜U12の6問変更後（JSONコミット `ba7c423b2a938807cf4b32982f0c76473f7dd055`）。SHA-256：`56b10ae346ce96f5502c39faf8b7f8fedfb4586ba5573bda4116629e13f9668c`。
+- **利用者提供のMuse実測証拠の転記**であり、このGitHub連携セッション自身がNode CLIを実行したわけではない。U09〜U12生成再現性PASS（利用者報告ベース）。
+- U13以降の修正後にはこのハッシュを流用しない。医学・衛生学の独立専門査読、X-04、170問個別出典、178問レビュー状態、公開ゲートとは別。**本番公開BLOCKED**。
