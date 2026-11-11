@@ -1277,3 +1277,16 @@ if(q.subject!==oldState.subject||q.topic!==oldState.topic||q.question!==oldState
 q.sourceUrl="https://laws.e-gov.go.jp/law/347CO0000000318";
 window.HM2_SOURCE_170_B02_R7O001_VERIFIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH03_R7O011_20261112: env ministry WBGT formula URL only.
+(function(){'use strict';
+const id='sm2-r7o-011';
+const matches=(window.Q_PARTS||[]).filter(q=>q.id===id);
+if(matches.length!==1)throw Error('HM2 170 B03 target count mismatch '+id);
+const q=matches[0];
+const guard={subject:'労働衛生',topic:'WBGTと暑熱リスク',question:"屋内の暑熱作業で、自然湿球温度27℃、黒球温度36℃、乾球温度32℃であった。日射のない屋内におけるWBGTの算出式と評価に関する記述として、正しいものはどれか。",basis:'厚生労働省「職場における熱中症対策」',oldUrl:"https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1&pageNo=1",correct:"WBGTは自然湿球温度と黒球温度から算出し、この条件では約29.7℃となる",choices:["WBGTは乾球温度だけで評価し、この条件では32℃となる","WBGTは気温より常に高い値になるため、算出値が気温を下回れば測定誤差である","WBGTは自然湿球温度と黒球温度から算出し、この条件では約29.7℃となる","WBGTは黒球温度から自然湿球温度を差し引いて求める","屋内では黒球温度を用いず、自然湿球温度だけで評価する"]};
+if(q.subject!==guard.subject||q.topic!==guard.topic||q.question!==guard.question||q.basis!==guard.basis||q.sourceUrl!==guard.oldUrl||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==guard.correct||JSON.stringify([...q.choices].sort())!==JSON.stringify(guard.choices))throw Error('HM2 170 B03 old-state mismatch '+id);
+q.sourceUrl="https://www.wbgt.env.go.jp/doc_observation.php";
+window.HM2_SOURCE_170_B03_R7O011_VERIFIED=true;
+})();
