@@ -455,22 +455,22 @@
       "difficultyAudit": "scenario-discrimination-rewrite-2026-11-11"
     },
     "practice-A-Q26": {
-      "stem": "作業場Aは気流や湿度を含めた温熱感覚の比較をしたい。作業場Bは高温炉からの強いふく射を受ける。実効温度ET・修正実効温度CET・WBGTの使い分けとして最も適切なのはどれか。",
+      "stem": "作業場Aでは気温・湿度・気流による温熱感覚を比較し、作業場Bでは高温炉からのふく射による熱ストレスを評価したい。指標の使い分けとして適切なのはどれか。",
       "choices": [
-        "Aでは実効温度ETで気温・湿度・気流を扱い、Bではふく射の影響も考える指標としてCETやWBGT等を検討する",
-        "AとBはいずれも気温だけを測ればETもCETも確定し、他の測定は不要である",
-        "AではWBGTを使うと気流を直接数式に入れるため、ETでの気流評価は不可能となる",
-        "Bでは強いふく射があるほどETの気温・湿度・気流だけで十分で、黒球温度は不要となる",
-        "AではETを求めた後に湿度と気流の影響を別途常に0とみなし、BではCETとWBGTが同一の尺度であると扱う"
+        "Aでは実効温度（ET）の三要素を参考にし、Bでは黒球温度を含むWBGTによる評価を検討する",
+        "A・Bとも気温だけを測れば湿度・気流・ふく射を含めた評価が完結する",
+        "WBGTは屋内では乾球温度だけで計算し、黒球温度は使用しない",
+        "ETは気流を考慮しない一方、WBGTは気流速度を独立変数として必ず数式に代入する",
+        "作業場所のWBGTが同じなら、作業強度や服装に関係なく熱ストレスの許容条件も同じである"
       ],
       "ans": 0,
-      "detail": "従来の実効温度ETは気温・湿度・気流に基づく温熱感覚の指標である。強いふく射がある作業場では、黒球温度を考慮する修正実効温度CETやWBGTなど、用途に合う指標を組み合わせて評価する。CETとWBGTは同じ計算式・尺度ではない。肢1/3はふく射や湿度等を無視し、2はWBGTの算定要素とETの概念を混同、4は湿度と気流を捨てて両指標を同一視している。計算方法の一次資料との逐語照合は公開前の独立ゲートで行う。",
-      "key": "ET・CET・WBGTの使い分け",
-      "sourceRef": "https://www.exam.or.jp/lckohyo/",
-      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "detail": "実効温度ETは気温・湿度・気流の総合効果を表す従来指標。強いふく射がある作業場では自然湿球温度と黒球温度を用いるWBGTで熱ストレスを評価する。肢1は環境要素の欠落、2は屋内WBGT算式の誤り、3はETとWBGTの混同、4は作業強度・衣服補正の無視。ETの三要素は公表試験問題の技術説明、WBGTの評価・算式は厚労省通達で確認した。CETの直接技術原典は未照合のため、CETに関する旧記述は削除した。",
+      "key": "ETの三要素と黒球温度を含むWBGTの使い分け",
+      "sourceRef": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "auditSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
       "lawAsOf": "2026-11-11",
       "auditStatus": "revised-pending-independent-recheck",
-      "difficultyAudit": "scenario-discrimination-rewrite-2026-11-11"
+      "difficultyAudit": "primary-source-grounded-et-wbgt-2026-11-11"
     },
     "practice-A-Q27": {
       "stem": "ある事務室でCO₂の発生量が0.03m³/h、外気濃度が0.0004（体積比）、目標室内濃度が0.0010（体積比）である。完全混合・定常状態を仮定すると、必要換気量はいくらか。",
@@ -482,13 +482,13 @@
         "約300m³/h"
       ],
       "ans": 2,
-      "detail": "定常・完全混合モデルの必要換気量QはCO₂発生量G÷（許容室内濃度Ci−外気濃度Co）。G=0.03m³/h、差=0.0010−0.0004=0.0006、Q=50m³/h。肢0・1・3・4は濃度差の扱い等の計算誤り。単位は発生量と換気量の体積時間で整える。実空間では混合不均一や変動があるため計算値だけで実測評価を省略しない。",
+      "detail": "完全混合・定常時のCO₂物質収支から、必要換気量Q＝発生量G／（室内濃度Ci－外気濃度Co）。G=0.03m³/h、差=0.0010－0.0004=0.0006、Q=50m³/hで肢2が正答。肢0・1・3・4は濃度差の扱い等の誤算。原子力規制委員会公開資料に必要換気流量とCO₂発生量・許容濃度差の式があり、算式の直接根拠として照合。事務室の法定換気基準ではなく物質収支の根拠として使用する。",
       "key": "必要換気量の定常物質収支",
-      "sourceRef": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1",
-      "auditSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1",
+      "sourceRef": "https://www.nra.go.jp/data/000464217.pdf",
+      "auditSourceURL": "https://www.nra.go.jp/data/000464217.pdf",
       "lawAsOf": "2026-11-11",
-      "auditStatus": "revised-pending-release-audit",
-      "difficultyAudit": "correct-source-scenario-rewrite-2026-11-11"
+      "auditStatus": "revised-pending-independent-recheck",
+      "difficultyAudit": "direct-co2-balance-source-2026-11-11"
     },
     "practice-A-Q28": {
       "stem": "同じ人数が参加する会議室で、換気量の増加後にCO₂濃度が1,400ppmから800ppmに低下した。一方、室内では溶剤を用いる清掃作業が別途行われている。測定結果から判断できることとして最も適切なのはどれか。",
@@ -500,13 +500,13 @@
         "CO₂の測定値が分かれば、溶剤蒸気の種類に関係なく局所排気の捕集速度を一意に算出できる"
       ],
       "ans": 1,
-      "detail": "同一人数・同程度の活動と外気条件なら室内CO₂濃度の低下は換気改善を示唆する。ただし室内CO₂は人の呼気由来の換気参考指標であって、別発生源の溶剤蒸気などの安全性を直接保証しない。肢0は異なる発生源の安全性をCO₂から断定、2は換気との関係を全面否定、3はCO₂値だけで酸欠と誤認、4は局所排気の性能を測れないことを無視。必要に応じて対象化学物質の濃度測定等で別途評価する。",
+      "detail": "人数・活動量・外気条件が同程度ならCO₂低下は換気改善を示唆する。厚労省の建築物環境衛生管理検討会資料は、CO₂測定を換気不足把握の目安と位置付け、他の浄化措置の評価には限界があるとしている。溶剤蒸気は別発生源でありCO₂値から安全性を断定できず別途ばく露評価を行う。肢0は安全保証、2は換気との関係否定、3は酸素欠乏の誤認、4は局所排気性能の誤推定。溶剤別の規制・測定基準は別途逐語照合を要する。",
       "key": "CO₂低下と別汚染源の評価を区別",
-      "sourceRef": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1",
-      "auditSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1",
+      "sourceRef": "https://www.mhlw.go.jp/content/10900000/000896863.pdf",
+      "auditSourceURL": "https://www.mhlw.go.jp/content/10900000/000896863.pdf",
       "lawAsOf": "2026-11-11",
       "auditStatus": "revised-pending-independent-recheck",
-      "difficultyAudit": "scenario-discrimination-rewrite-2026-11-11"
+      "difficultyAudit": "co2-ventilation-source-2026-11-11"
     },
     "practice-A-Q29": {
       "stem": "窓の正面に置いたディスプレイに明るい窓面が映り込み、画面の文字が見づらい。画面の文字サイズは適切で、明るさも調整可能である。反射グレアを抑える対策として最も適切なのはどれか。",
