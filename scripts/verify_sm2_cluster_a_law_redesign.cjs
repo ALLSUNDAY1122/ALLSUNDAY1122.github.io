@@ -29,7 +29,7 @@ for(const [mode,files] of [['browser',[...base,'difficulty-patch-v5.js',...overl
  const clusters=new Map();for(const q of qs){const n=normal(q.question);clusters.set(n,(clusters.get(n)||0)+1)}
  const largest=Math.max(...clusters.values());
  const clusterCounts=[...clusters.values()].filter(n=>n>1).sort((a,b)=>b-a);
- if(mode==='browser'){assert.equal(largest,38,'largest remaining cluster');assert.equal(clusters.size,176,'14 B legal + 10 B hygiene cases separated');assert.deepEqual(clusterCounts,[38,38,37,15]);}
+ if(mode==='browser'){assert.equal(largest,38,'largest remaining cluster');assert.equal(clusters.size,186,'B next ten scenario cases separated');assert.deepEqual(clusterCounts,[38,38,37,5]);}
  if(mode==='release-export'){assert.equal(clusters.size,300);}
  console.log('PASS',mode,JSON.stringify({questions:qs.length,uniqueStems:clusters.size,largest,clusterCounts,redesigned:seen.size}));
 }
