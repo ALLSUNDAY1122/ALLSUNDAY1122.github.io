@@ -330,3 +330,15 @@ if(fixes.length!==4||new Set(fixes.map(f=>f.id)).size!==4)throw Error('HM2 fourt
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 fourth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
 window.SM2_INDEPENDENT_FOURTH10_METADATA_FIX4_IDS=fixes.map(f=>f.id);
 })();
+
+// SM2_INDEPENDENT_FIFTH10_METADATA_FIX9_20261111: reviewed metadata plus CO exception clarification; public review flags unchanged.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r09-law-02","topic":"実労働7時間の法定休憩時間","basis":"労働基準法34条1項"},{"id":"sm2-5y-r09-law-03","topic":"常時120人の衛生管理者選任人数","basis":"労働安全衛生規則7条1項4号・同項の選任人数表"},{"id":"sm2-5y-r09-law-04","topic":"衛生委員会の開催頻度","basis":"労働安全衛生法18条・労働安全衛生法施行令9条・労働安全衛生規則23条1項"},{"id":"sm2-5y-r09-law-07","topic":"年次有給休暇の年5日取得確保期限","basis":"労働基準法39条7項・8項"},{"id":"sm2-5y-r09-law-08","topic":"衛生管理者選任後の報告期限","basis":"労働安全衛生規則7条（選任期限・選任報告）"},{"id":"sm2-5y-r09-law-09","topic":"50人未満の事業場における一般定期健康診断頻度","basis":"労働安全衛生規則44条1項"},{"id":"sm2-5y-r09-law-10","topic":"供給空気の一酸化炭素濃度と特例の適用判断","basis":"事務所衛生基準規則5条1項2号"},{"id":"sm2-5y-r10-law-02","topic":"雇入れ時健康診断と項目省略条件","basis":"労働安全衛生規則43条"},{"id":"sm2-5y-r10-law-03","topic":"法定休日労働の割増賃金率","basis":"労働基準法37条1項・割増賃金令"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==9||new Set(fixes.map(f=>f.id)).size!==9)throw Error('HM2 fifth10 metadata fix count invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 fifth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
+const q=byId.get('sm2-5y-r09-law-10');if(!q||q.answer!==3||q.choices.length!==5||!q.choices[2].includes('10ppm以下'))throw Error('HM2 CO target answer drift');
+q.question="事務室の空気調和設備を点検したところ、供給空気の一酸化炭素濃度が11ppmだった。外気汚染によって10ppm以下の空気の供給が困難となる特例には該当しないものとする。事務所衛生基準規則5条の供給空気の基準に照らした判定はどれか。";
+q.explanation="事務所衛生基準規則5条1項2号では、空気調和設備等から室へ供給する空気の一酸化炭素濃度は原則10ppm以下。外気が汚染され10ppm以下の空気を供給することが困難な場合は20ppm以下という特例がある。本問は特例に該当しない条件なので11ppmは原則基準を超過する。室内空気の基準（同規則3条2項）や二酸化炭素の基準とは区別する。";
+window.SM2_INDEPENDENT_FIFTH10_METADATA_FIX9_IDS=fixes.map(f=>f.id);
+})();
