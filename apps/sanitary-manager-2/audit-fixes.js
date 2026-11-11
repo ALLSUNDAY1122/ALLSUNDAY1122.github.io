@@ -1398,3 +1398,18 @@ q.sourceUrl=f.newUrl;
 q.basis=f.newBasis;
 window.HM2_170_B12_NO113_SOURCE_BASIS_APPLIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH13_PENDING_20261112: strict source-only edits to No122 and No125.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r05-hyg-03","subject":"労働衛生","topic":"心停止疑い時の一次救命処置とAED","question":"救急対応訓練で意識と普段どおりの呼吸がない成人を発見した。AEDの準備中に行う対応として適切なのはどれか。","basis":"日本赤十字社『救急法』（心肺蘇生・AED使用）","oldUrl":"https://www.jrc.or.jp/study/safety/","newUrl":"https://www.jrc.or.jp/study/safety/airway/","answer":"119番通報とAED手配を依頼し、胸骨圧迫を開始する。","choices":["呼吸がないことを確認した後はAEDが届くまで何もしない。","119番通報とAED手配を依頼し、胸骨圧迫を開始する。","意識がない人を一人で歩かせて様子を見る。","胸骨圧迫をせず脈拍を5分以上測り続ける。","通報せずに水分を口から飲ませる。"]},{"id":"sm2-5y-r05-hyg-06","subject":"労働衛生","topic":"情報機器作業の机・椅子・入力機器の体格適合","question":"情報機器作業をする労働者は、椅子を最も高くしても机の高さに合わず、キー入力時に肩が上がり、足裏が床から浮いている。画面の映り込みはない。この状況への作業環境改善として最も適切なものはどれか。","basis":"厚生労働省『情報機器作業における労働衛生管理のためのガイドライン』（令和元年7月12日基発0712第3号・作業管理／作業姿勢）","oldUrl":"https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02.html","newUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1","answer":"机・椅子・入力機器の位置を体格に合わせて調整し、必要に応じ足台を設けて足裏を支持し、肩を不自然に上げずに入力できるようにする。","choices":["足が浮くのは問題ないので、椅子をさらに高く固定する。","机・椅子・入力機器の位置を体格に合わせて調整し、必要に応じ足台を設けて足裏を支持し、肩を不自然に上げずに入力できるようにする。","肩が上がった状態を維持するため、キーボードをさらに高く置く。","身体寸法が異なる作業者にも机と椅子を同じ高さで固定し、個別調整を認めない。","机と椅子の調整は行わず、入力速度を上げることだけで肩の負担を軽くする。"]}];
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 B13 source correction count');
+for(const f of fixes){
+ const hits=(window.Q_PARTS||[]).filter(q=>q.id===f.id);
+ if(hits.length!==1)throw Error('HM2 B13 target count mismatch '+f.id);
+ const q=hits[0];
+ if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==f.basis||q.sourceUrl!==f.oldUrl||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.answer||JSON.stringify([...q.choices].sort())!==JSON.stringify([...f.choices].sort()))throw Error('HM2 B13 strict old state mismatch '+f.id);
+ q.sourceUrl=f.newUrl;
+}
+window.HM2_170_B13_DIRECT_SOURCE_FIXES_APPLIED=true;
+})();
