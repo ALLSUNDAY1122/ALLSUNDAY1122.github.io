@@ -21,11 +21,11 @@ for(const [mode,files] of [['browser',[...base,'difficulty-patch-v5.js',...middl
  const out=ctx.window.Q_PARTS;
  assert.equal(new Set(out.map(q=>q.id)).size,300);
  const unique=new Set(out.map(q=>norm(q.question)));
- assert.equal(unique.size,mode==='browser'?210:300,mode+' unique count');
+ assert.equal(unique.size,mode==='browser'?220:300,mode+' unique count');
  const clusters=new Map();
  for(const q of out)clusters.set(norm(q.question),(clusters.get(norm(q.question))||0)+1);
  const duplicates=[...clusters.values()].filter(n=>n>1).sort((a,b)=>b-a);
- if(mode==='browser')assert.deepEqual(duplicates,[38,37,18]);
+ if(mode==='browser')assert.deepEqual(duplicates,[38,37,8]);
  else assert.equal(duplicates.length,0);
  const stems=new Set();
  for(const id of ids){
