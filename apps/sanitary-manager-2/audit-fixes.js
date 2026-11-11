@@ -1304,3 +1304,22 @@ for(const f of fixes){
 }
 window.HM2_170_B04_DIRECT_SOURCES_APPLIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH06_PENDING_20261112: two strict guarded corrections.
+(function(){'use strict';
+const fixes=[
+ {id:"sm2-5y-r05-law-03",subject:"関係法令",topic:"衛生委員会の設置義務",question:"常時70人の労働者がいる事業場で、安全衛生管理体制を見直している。衛生委員会の設置について正しい判断はどれか。",basis:"労働安全衛生法18条・労働安全衛生法施行令9条",old:"https://laws.e-gov.go.jp/law/347AC0000000057",answer:"業種によらず常時50人以上の事業場では、衛生委員会の設置が必要となる。",choices:["衛生委員会は常時300人以上の場合にだけ義務となる。","衛生委員会は衛生管理者の選任で自動的に設置不要となる。","衛生委員会は健康診断を毎年行えば一律に不要となる。","事務所であれば常時50人以上でも設置義務はない。","業種によらず常時50人以上の事業場では、衛生委員会の設置が必要となる。"]},
+ {id:"sm2-5y-r05-law-06",subject:"関係法令",topic:"産業医の選任基準",question:"一般の事業場で、常時使用する労働者が49人から50人になった。産業医の選任義務が生じる人数の基準として正しいものはどれか。",basis:"労働安全衛生法13条",newBasis:"労働安全衛生法13条・労働安全衛生法施行令第5条",old:"https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",answer:"常時50人以上",choices:["常時500人以上","常時30人以上","常時100人以上","常時200人以上","常時50人以上"]}
+];
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 170 B06 correction count mismatch');
+for(const f of fixes){
+ const hits=(window.Q_PARTS||[]).filter(q=>q.id===f.id);
+ if(hits.length!==1)throw Error('HM2 170 B06 ID count '+f.id);
+ const q=hits[0];
+ if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==f.basis||q.sourceUrl!==f.old||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.answer||JSON.stringify([...q.choices].sort())!==JSON.stringify([...f.choices].sort()))throw Error('HM2 170 B06 guarded old-state mismatch '+f.id);
+ q.sourceUrl="https://laws.e-gov.go.jp/law/347CO0000000318";
+ if(f.newBasis)q.basis=f.newBasis;
+}
+window.HM2_170_B06_PENDING_CORRECTIONS_APPLIED=true;
+})();
