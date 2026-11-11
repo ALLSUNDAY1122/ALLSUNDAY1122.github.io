@@ -1,0 +1,1036 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-11-12",
+  "baseCommit": "72fa3e5103f7bf44bf1768917b964a7214cf2851",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "scope": "演習A Q01〜Q20、20問×5肢＝100肢。対象は生成器が後段適用するpractice_a_fixes_01_10.jsonのパッチ正本を確認。",
+  "limitations": "独立Node CLIの264問再生成は未実施。ソース選定順序は生成器内のexpectedSource照合に依存するため生成後問題の現物一致はMuse側の再実行で確認が必要。DIRECTは中心命題の条項/資料確認を指し、各誤肢すべての全文・適用日に関する独立直接証明は済んでいない。",
+  "counts": {
+    "DIRECT": 15,
+    "PARTIAL": 5,
+    "PENDING": 0
+  },
+  "unconditionalAllFiveChoicePass": 0,
+  "questions": [
+    {
+      "id": "practice-A-Q01",
+      "stem": "事業場で一般定期健康診断の結果に異常所見がなかった労働者と、異常所見のある労働者の個人票を整理している。安衛則51条による記録管理として適切なのはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "異常所見のある者だけ個人票を作成し、その他は本人通知で代える",
+          "expectedCorrect": false,
+          "assessmentReason": "保存対象は有所見者に限定されない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "個人票は本人が保管するものであり、事業者による保存は任意である",
+          "expectedCorrect": false,
+          "assessmentReason": "事業者が個人票を5年間保存",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "事業者は両者の個人票を作成し、一般健康診断の個人票を原則5年間保存する",
+          "expectedCorrect": true,
+          "assessmentReason": "有所見の有無にかかわらず作成・5年保存",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "本人への結果通知を終えた個人票は、所見の有無にかかわらず直ちに廃棄する",
+          "expectedCorrect": false,
+          "assessmentReason": "本人通知後も保存義務は残る",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "所轄署への報告対象事業場なら、報告によって個人票保存義務も消える",
+          "expectedCorrect": false,
+          "assessmentReason": "監督署報告は個人票の保存義務を免除しない",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 2,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "sourceLocator": "安衛則51条、厚労省規則本文",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "5年保存・異常所見有無に関係なし",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q02",
+      "stem": "40人規模の事業場で定期健康診断を受けた労働者に異常所見が認められた。本人への結果通知と就業上の判断のための医師意見聴取について、最も適切なのはどれか（事業場規模による署報告の要件は別に判断する）。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "常時50人未満なら、異常所見があっても健康診断結果を本人に通知する義務はない",
+          "expectedCorrect": false,
+          "assessmentReason": "50人未満でも本人への通知義務がある",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "医師意見聴取が済むまで、本人への検査結果通知を法定期間の末日まで一律に保留する",
+          "expectedCorrect": false,
+          "assessmentReason": "意見聴取完了を待つ理由で通知の不当な先送り不可",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "本人への結果通知だけを実施すれば、異常所見に関する医師の就業上の意見は不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "結果通知と医師意見聴取は別義務",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "本人に健診結果を遅滞なく通知し、所見に応じた医師等の意見聴取・必要な就業上の措置を別途判断する",
+          "expectedCorrect": true,
+          "assessmentReason": "本人通知と医師意見・就業措置を分ける",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "署報告の対象規模ではない事業場では、個人票を作成・保存する必要もない",
+          "expectedCorrect": false,
+          "assessmentReason": "報告対象外でも個人票の作成保存は必要",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 3,
+      "sourceRegistered": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "sourceLocator": "安衛法66条の4・66条の6、安衛則51条の2・51条の4",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "通知と意見聴取の独立性",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q03",
+      "stem": "通常の定期健康診断を4月10日に実施し、異常所見が確認された。必要な医師意見聴取の時点と個人票への記載を計画している。安衛則51条の2第1項に沿う対応はどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "結果を本人に通知した日に医師意見聴取の期限が自動的に6か月延長される",
+          "expectedCorrect": false,
+          "assessmentReason": "通知日を起算として期限延長する規定でない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "3か月以内に医師の意見を聴いても、個人票への意見記載は法令上一律禁止される",
+          "expectedCorrect": false,
+          "assessmentReason": "医師の意見を個人票へ記載する",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "医師意見聴取は受診者からの自発的健診結果の提出日から一律2か月以内として、通常健診にも同じ起算点を使う",
+          "expectedCorrect": false,
+          "assessmentReason": "自発的健康診断とは起算点が異なる",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "事業者に健診結果が郵送された日を基準に一律1年以内に医師意見聴取すればよい",
+          "expectedCorrect": false,
+          "assessmentReason": "郵送受領後1年以内という期限ではない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "医師意見聴取は健康診断実施日から原則3か月以内に行い、その意見を個人票に記載する",
+          "expectedCorrect": true,
+          "assessmentReason": "一般健診日から原則3月以内・意見記録",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 4,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "sourceLocator": "安衛則51条の2第1項",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "通常健診実施日から3月・意見記録を条文確認",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q04",
+      "stem": "深夜業に従事する労働者が、安衛法66条の2の要件を満たして自ら受けた健康診断の結果を書面で事業者に提出した。この後の意見聴取について正しいものはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "提出日ではなく受診日から一律3か月以内に医師の意見を聴く",
+          "expectedCorrect": false,
+          "assessmentReason": "受診日3月は通常の健診であり自発的健診と別",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "自発的健診の結果は法令上の意見聴取の対象にならない",
+          "expectedCorrect": false,
+          "assessmentReason": "自発的健診も意見聴取対象",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "本人に結果を通知したため、意見聴取も記録も不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "結果通知のみでは聴取義務免除にならない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "提出日から6か月以内に事業者の人事担当者が判断する",
+          "expectedCorrect": false,
+          "assessmentReason": "人事担当者ではなく医師・提出日から2月以内",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "提出日から2か月以内に医師の意見を聴き、個人票に記載する",
+          "expectedCorrect": true,
+          "assessmentReason": "提出日から2月以内に医師の意見を聞き記録",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 4,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "sourceLocator": "安衛則51条の2第2項",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "自発的健診提出日から2月・意見記録を条文確認",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q05",
+      "stem": "常時60人の事業場で定期健康診断の結果報告を電子申請する準備をしている。担当者が個人票の保存と提出データの範囲を取り違えないための判断として最も適切なのはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "監督署へは受診した全員の健康診断個人票の原本を提出することが必須であり、所定の集計報告は不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "報告書は集計事項、個人票原本の提出ではない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "電子申請の対象なら事業者側の個人票は直ちに削除でき、健康情報の安全管理も不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "電子申請でも保存・情報管理は継続",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "有所見者がいない年度は安衛則52条の定期健康診断結果報告書の提出義務が一律消滅する",
+          "expectedCorrect": false,
+          "assessmentReason": "有所見者ゼロでも50人以上の報告は必要",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "集計報告の提出方法にかかわらず、個人の検査値を職場の全管理職へ自由に公開してよい",
+          "expectedCorrect": false,
+          "assessmentReason": "健康データの管理職への無制限開示不可",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "法定の定期健康診断結果報告事項を所定の電子申請で届け、個人票の保存と適切なアクセス管理は事業場で別途継続する",
+          "expectedCorrect": true,
+          "assessmentReason": "電子報告と個人票保存・アクセス管理を分ける",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 4,
+      "sourceRegistered": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/denshishinsei.html",
+      "sourceRef": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/denshishinsei.html",
+      "sourceChecked": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/denshishinsei_00002.html",
+      "sourceLocator": "安衛則51・52条、厚労省2025電子申請案内",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "定期健診結果報告電子化・個人票5年保存は別",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q06",
+      "stem": "常時使用する労働者を雇い入れる際の一般健康診断について、正しいものはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "雇入時健診は労働者数50人以上の事業場でのみ行う",
+          "expectedCorrect": false,
+          "assessmentReason": "雇入時健診は人数50人以上限定ではない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "雇入時健診は希望者だけに実施し、事業者に義務はない",
+          "expectedCorrect": false,
+          "assessmentReason": "常時使用する労働者は雇入れ時健診の対象",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "雇入時健診は入社後1年以内の定期健診で必ず代替できる",
+          "expectedCorrect": false,
+          "assessmentReason": "定期健診を1年以内にすれば自動代替できない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "本人が健康であると申告すれば、全項目を省略できる",
+          "expectedCorrect": false,
+          "assessmentReason": "健康の自己申告だけで省略できない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "雇入れ前3か月以内に所定項目の医師による健診を受け結果を証明する書面を提出した者は、該当項目を省略できる",
+          "expectedCorrect": true,
+          "assessmentReason": "雇入れ前3月以内の医師健診結果証明による項目省略",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 4,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "sourceLocator": "安衛則43条",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "雇入時健診と3月以内結果書面による項目省略",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q07",
+      "stem": "安衛則45条の特定業務に常時従事する労働者について、6か月ごとの定期健康診断の検査項目を計画する。胸部エックス線検査等の実施周期に関する正しいものはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "特定業務従事者健診の全項目は例外なく毎月検査し、胸部エックス線だけ6か月ごととする",
+          "expectedCorrect": false,
+          "assessmentReason": "毎月健診という規定でない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "6か月ごとの健診義務があるので、胸部エックス線検査も常に6か月以内ごとに1回必須であり例外はない",
+          "expectedCorrect": false,
+          "assessmentReason": "胸部X線等は原則年1回で足りる",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "特定業務従事者健診は原則6か月以内ごとに行うが、安衛則45条1項が準用する44条1項4号の胸部エックス線検査等は原則1年以内ごとに1回で足りる",
+          "expectedCorrect": true,
+          "assessmentReason": "特定業務6月周期と胸部X線等年1回を区別",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "一般定期健康診断と特定業務従事者健診は同じく3年ごとの実施で足りる",
+          "expectedCorrect": false,
+          "assessmentReason": "一般健診も特定業務健診も3年ごとではない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "胸部エックス線検査はすべての特定業務従事者に対して健診のたびに本人の希望だけで省略できる",
+          "expectedCorrect": false,
+          "assessmentReason": "本人希望だけでX線を一律に省略できない",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 2,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "sourceLocator": "安衛則45条1項",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "特定業務6月以内、胸部X線等の1年周期特例",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q08",
+      "stem": "安衛則45条の特定業務従事者が、前回の定期健康診断で貧血・肝機能・血中脂質・血糖・心電図の検査を受け、6か月以内の次回定期健診を迎えた。これらの検査項目の省略について最も適切なのはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "前回受診していれば、本人の希望だけですべての項目を無条件に省略できる",
+          "expectedCorrect": false,
+          "assessmentReason": "希望だけで全項目省略不可",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "45条2項による項目省略は初回配置替え時の健診にも一律に適用され、前回の受診歴は不要である",
+          "expectedCorrect": false,
+          "assessmentReason": "前回の定期健診受診歴が条件",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "前回の受診歴にかかわらず、45条は貧血・肝機能等の検査をすべて毎回必須とする",
+          "expectedCorrect": false,
+          "assessmentReason": "毎回必須ではなく条件付き項目省略あり",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "前回の定期健診で対象項目を受け、医師が必要でないと認める場合は45条2項により該当項目の全部又は一部を省略できる。45条3項の44条2・3項準用とは区別する",
+          "expectedCorrect": true,
+          "assessmentReason": "前回受診歴と医師判断で所定項目省略可能",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "45条3項による44条3項の準用では、『1年間』が『3年間』に読み替えられるため、3年間すべての健診を省略できる",
+          "expectedCorrect": false,
+          "assessmentReason": "読み替えは3年間ではなく6月間",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 3,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "sourceLocator": "安衛則45条2・3項と44条準用",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "前回検査と医師判断による省略と期間の読み替え条文の該当箇所要逐語追加",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q09",
+      "stem": "事業者が労働者を海外へ7か月派遣し、その後日本国内の業務へ通常復帰させる予定である。健康診断の取扱いで正しいものはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "海外派遣の前に健診を実施し、国内業務へ通常復帰させるときにも健診が必要となる",
+          "expectedCorrect": true,
+          "assessmentReason": "6月以上の海外派遣前と通常の国内復帰時健診",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "派遣先が海外なら、期間や復帰の状態に関係なく健康診断は免除される",
+          "expectedCorrect": false,
+          "assessmentReason": "海外であれば無条件に免除されない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "海外派遣前の健診だけ実施し、国内復帰時は一律不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "復帰時の健診義務もある",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "海外派遣が12か月に満たない場合、派遣前後の健診義務はない",
+          "expectedCorrect": false,
+          "assessmentReason": "閾値は12月ではなく6月",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "帰国時の空港到着だけで直ちに帰国後健診を行う義務があり、一時帰国者も必ず対象となる",
+          "expectedCorrect": false,
+          "assessmentReason": "単なる一時帰国と国内業務通常復帰を区別",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 0,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "sourceLocator": "安衛則45条の2",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "6月以上の海外派遣・国内復帰時の健診、一次時点を確認",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q10",
+      "stem": "ある会社では、事業に附属する従業員食堂で調理・盛付けを担当する職員を新たに配置する。一方、別の社員は食堂で食事を取るだけで、社外の一般飲食店の従業員もいる。安衛則47条の検便による健康診断の対象の説明として正しいものはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "食堂の利用者全員に、当該給食業務への配置替え時の検便を実施する",
+          "expectedCorrect": false,
+          "assessmentReason": "給食業務従事者ではない食堂利用者は非対象",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "一般の飲食店に勤めるすべての者を、事業附属食堂の給食業務とみなして同条で一律に検便する",
+          "expectedCorrect": false,
+          "assessmentReason": "事業附属食堂以外の飲食店一般に一律適用しない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "食堂利用者が50人未満の場合だけ、調理担当者の配置替え時の検便を実施する",
+          "expectedCorrect": false,
+          "assessmentReason": "食堂利用者数50人での条件ではない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "事業附属食堂で給食業務に従事する職員について、雇入れ又はその業務への配置替えの際に検便による健康診断を行う",
+          "expectedCorrect": true,
+          "assessmentReason": "事業附属食堂の給食業務へ雇入れ・配置替え時",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "加熱のみの献立を担当する社員は、事業附属食堂の給食業務であっても同条の対象から必ず除外される",
+          "expectedCorrect": false,
+          "assessmentReason": "加熱のみで対象外とする例外はない",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 3,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "sourceLocator": "安衛則47条",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "事業附属食堂・炊事場の給食従事者の配置替え時検便",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q11",
+      "stem": "2027年2月1日（月）から28日（日）までの4週間を、法定の算定対象となる1か月の期間とする。変形労働時間制は適用せず、休憩を除く各週の労働時間が60・58・55・52時間であった。週40時間を超える時間の月合計と、安衛則52条の2に基づく80時間超の本人通知について最も適切なのはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "月合計は65時間であり、毎月1回以上一定期日で算定するが、この数値のみでは80時間超の法定通知対象にはならない",
+          "expectedCorrect": true,
+          "assessmentReason": "週40時間超の合計は20+18+15+12=65、80以下で情報通知の閾値に達しない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "月合計は225時間なので、225時間をそのまま80時間超通知の判定値とする",
+          "expectedCorrect": false,
+          "assessmentReason": "225時間は総労働時間でなく週40超の算定値と違う",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "4週間の最大週の20時間だけを月の超過時間として扱い、残りの週は算定しない",
+          "expectedCorrect": false,
+          "assessmentReason": "最大週20時間だけでは全週合計でない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "月合計は65時間でも、80時間に達しない限り月次算定自体を実施する必要はない",
+          "expectedCorrect": false,
+          "assessmentReason": "80時間以下でも月次算定は必要",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "各週の超過時間を平均した16.25時間が月の超過時間であるため、この値を本人へ通知する",
+          "expectedCorrect": false,
+          "assessmentReason": "16.25は平均で月合計の65時間でない",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 0,
+      "sourceRegistered": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "sourceLocator": "安衛則52条の2（週40時間超の算定）",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "算術65hは検算、法定休日を含む労働時間算定と月境界の細部は追加逐語を要す",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q12",
+      "stem": "事業者が算定した週40時間超の労働時間が1か月に86時間の一般労働者がいる。正しい対応はどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "算定した超過時間に関する情報を速やかに本人へ通知し、面接指導の実施要件は別に判断する",
+          "expectedCorrect": true,
+          "assessmentReason": "80時間超は本人への速やかな時間情報通知、面接指導は別要件",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "本人への通知は面接指導を申し出た場合に限る",
+          "expectedCorrect": false,
+          "assessmentReason": "本人の面接申出を通知の条件としない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "80時間超になっただけで、疲労蓄積や本人の申出に無関係にすべての一般労働者に面接指導を即時実施する義務が生じる",
+          "expectedCorrect": false,
+          "assessmentReason": "一般労働者の面接は80時間超に加え疲労蓄積と申出等がある",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "本人に通知すれば長時間労働の面接指導制度は適用されなくなる",
+          "expectedCorrect": false,
+          "assessmentReason": "通知しただけで面接制度の対象外にならない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "算定は年1回で足りるので翌年度にまとめて本人へ伝える",
+          "expectedCorrect": false,
+          "assessmentReason": "年1回算定ではなく月ごとに算定",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 0,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "sourceLocator": "安衛則52条の2（本人通知）",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "80時間超時の速やかな通知と面接指導要件の区別",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q13",
+      "stem": "長時間労働者への法定の医師面接指導を受けることになった労働者が、会社指定の医師ではなく、別の医師による同等の面接指導を希望している。労働安全衛生法66条の8第2項ただし書および安衛則52条の5に沿う対応はどれか。なお、面接指導の対象要件は既に満たしている。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "会社指定医師以外が行った面接指導は、内容や証明書にかかわらず法定の面接指導として扱えない",
+          "expectedCorrect": false,
+          "assessmentReason": "他医師の相当の面接は法定の例外として許容",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "別の医師による面接指導であれば、実施の事実を口頭で告げるだけで法定の結果証明書は不要になる",
+          "expectedCorrect": false,
+          "assessmentReason": "法定の書面証明が必要",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "別の医師による面接指導の結果証明には、医師の氏名だけを記載すれば他の事項は不要である",
+          "expectedCorrect": false,
+          "assessmentReason": "医師氏名のみでは証明事項が不足",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "本人が別の医師を選ぶと、事業者による面接指導結果の記録義務も医師意見聴取義務もすべて消滅する",
+          "expectedCorrect": false,
+          "assessmentReason": "事業者の結果記録と医師意見の義務は残る",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "別の医師による法定の面接指導に相当する面接指導を受け、実施年月日・本人と医師の氏名・疲労蓄積や心身の状況等を記載した証明書を事業者に提出する",
+          "expectedCorrect": true,
+          "assessmentReason": "相当面接と実施日・当事者名・疲労等の証明を提出",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 4,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/",
+      "sourceChecked": "https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/",
+      "sourceLocator": "安衛法66条の8、安衛則52条の5",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "登録e-Govの版指定URLは読めるが他医師の証明の全記載事項の逐語確認が不十分",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q14",
+      "stem": "長時間労働者に医師面接指導を実施した事業場で、結果記録を整備する。安衛則52条の6に照らし、適切な取扱いはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "面接指導の記録は健診個人票があれば不要で、医師の意見も記録しなくてよい",
+          "expectedCorrect": false,
+          "assessmentReason": "健診個人票と面接指導の結果記録は別",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "結果を労働者に口頭で知らせたことを記録すれば、実施日や面接医師の氏名の記載は不要である",
+          "expectedCorrect": false,
+          "assessmentReason": "日付・氏名等の必要事項を記録する",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "勤務状況の集計表だけを保管すれば面接指導を行った医師の意見は記録しなくてよい",
+          "expectedCorrect": false,
+          "assessmentReason": "勤務状況表は医師意見の記録代用にならない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "事業者は面接指導の実施年月日・対象労働者及び面接医師の氏名・医師の意見等の必要事項を記録し、5年間保存する",
+          "expectedCorrect": true,
+          "assessmentReason": "必要事項を記録し5年間保存する",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "面接指導の記録は電子保存なら一律30日、紙保存なら5年とする",
+          "expectedCorrect": false,
+          "assessmentReason": "媒体で30日と5年に分ける規定はない",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 3,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2",
+      "sourceLocator": "安衛則52条の6",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "面接指導の結果記録・5年保存",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q15",
+      "stem": "長時間労働者への法定医師面接指導後、医師から『当面の時間外労働の短縮と業務負荷調整が望ましい』との意見が示された。事業者の次の対応として最も適切なものはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "医師の意見は本人に通知した時点で役割を終えるので、事業者は就業措置を検討しない",
+          "expectedCorrect": false,
+          "assessmentReason": "結果通知のみで就業措置検討は免除されない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "面接指導記録を5年間保存すれば、労働時間短縮などの就業上の措置の要否は検討不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "記録保存が就業措置の検討を免除しない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "業務上の必要があれば、医師の意見にかかわらず時間外労働を必ず増やす",
+          "expectedCorrect": false,
+          "assessmentReason": "医師意見を無視して残業増を決めてよいわけではない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "面接指導を行った医師に人事権が移るため、事業者は配置変更の要否を判断できない",
+          "expectedCorrect": false,
+          "assessmentReason": "人事判断の法的主体は事業者",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "面接指導後、医師の意見を遅滞なく聴取し、その意見を勘案して労働時間短縮・業務調整等の必要な就業上の措置を判断する",
+          "expectedCorrect": true,
+          "assessmentReason": "医師の意見を聞き必要な時間短縮や調整を検討・実施",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 4,
+      "sourceRegistered": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceRef": "https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0",
+      "sourceLocator": "安衛法66条の8",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "医師意見と必要な就業措置",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q16",
+      "stem": "WBGTを算定するため、日射のある屋外で自然湿球温度28℃、黒球温度34℃、乾球温度36℃を測定した。日射のある屋外の算式により得られるWBGTとして最も近い値はどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "32.0℃（自然湿球温度と乾球温度の単純平均）",
+          "expectedCorrect": false,
+          "assessmentReason": "自然湿球と乾球の単純平均はWBGT式でない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "36.0℃（乾球温度のみ）",
+          "expectedCorrect": false,
+          "assessmentReason": "乾球だけの温度はWBGTではない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "34.0℃（黒球温度のみ）",
+          "expectedCorrect": false,
+          "assessmentReason": "黒球温度だけではない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "29.8℃（日射のない場合の算式で自然湿球温度0.7と黒球温度0.3を加重した値）",
+          "expectedCorrect": false,
+          "assessmentReason": "日射なしの係数で29.8となるが条件と不一致",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "30.0℃（自然湿球温度0.7・黒球温度0.2・乾球温度0.1の加重和）",
+          "expectedCorrect": true,
+          "assessmentReason": "日射ありの0.7×28+0.2×34+0.1×36=30.0",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 4,
+      "sourceRegistered": "https://www.wbgt.env.go.jp/doc_observation.php",
+      "sourceRef": "https://www.wbgt.env.go.jp/doc_observation.php",
+      "sourceChecked": "https://www.wbgt.env.go.jp/pdf/doc_ccaa/20260401_doc01.pdf",
+      "sourceLocator": "環境省WBGT算式",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "屋外日射あり0.7・0.2・0.1、30.0℃",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q17",
+      "stem": "臨時の屋外作業で、実測WBGTが28℃、連続作業がちょうど60分見込まれる。2025年施行の安衛則612条の2の対象判断として正しいものはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "WBGTが28℃ちょうどなら対象外である",
+          "expectedCorrect": false,
+          "assessmentReason": "閾値はWBGT28度以上、等号を含む",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "WBGT28℃以上と気温31℃以上の両方が必要である",
+          "expectedCorrect": false,
+          "assessmentReason": "環境はWBGT28以上または気温31以上",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "臨時作業なので時間やWBGTにかかわらず対象外である",
+          "expectedCorrect": false,
+          "assessmentReason": "臨時作業でも条件に該当すれば対象",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "連続1時間以上の見込みで、WBGT28℃以上でもあるため対象作業に当たる",
+          "expectedCorrect": true,
+          "assessmentReason": "WBGT28以上と連続1時間以上が両方成立",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "1日の作業時間が4時間を超えなければ、連続1時間でも対象外である",
+          "expectedCorrect": false,
+          "assessmentReason": "4時間超は代替的な時間条件、連続1時間でも成立",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 3,
+      "sourceRegistered": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "sourceRef": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "sourceLocator": "令和7年改正安衛則612条の2・基発0520第6号",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "WBGT28以上、連続1h以上等の境界を厚労省資料で確認",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q18",
+      "stem": "WBGT29℃で1時間以上続く屋外作業の開始前点検で、熱中症が疑われた場合の報告先の電話番号は掲示されていた。しかし、作業離脱後の冷却場所と医療機関への連絡・搬送判断は決まっていない。安衛則612条の2への対応として、最も適切なのはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "電話番号が掲示されていれば、冷却・搬送を含む悪化防止手順の整備は作業後に検討してよい",
+          "expectedCorrect": false,
+          "assessmentReason": "報告先のみでは悪化防止手順が欠ける",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "熱順化した作業者だけが勤務する場合は、法定対象作業でも報告先と悪化防止手順のいずれも任意となる",
+          "expectedCorrect": false,
+          "assessmentReason": "暑熱順化は体制整備免除にならない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "熱中症の症状が確定した事例が出るまでは、冷却場所や医療への連絡手順を定めない",
+          "expectedCorrect": false,
+          "assessmentReason": "患者発生前に手順準備を要する",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "冷却場所だけを決めれば、本人や同僚からの症状報告体制を廃止してよい",
+          "expectedCorrect": false,
+          "assessmentReason": "冷却場所だけでは報告体制が欠ける",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "報告先に加え、作業場ごとの離脱・身体冷却・医師の診察や搬送が必要となる場合の連絡手順を開始前に定め、関係作業者に周知する",
+          "expectedCorrect": true,
+          "assessmentReason": "報告体制と作業離脱・冷却・診療連絡手順の事前整備が必要",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 4,
+      "sourceRegistered": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "sourceRef": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "sourceLocator": "安衛則612条の2第1・2項",
+      "verificationLevel": "DIRECT",
+      "sourceLimitations": "報告体制と悪化防止手順の二重事前要件",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q19",
+      "stem": "暑熱作業を10日間中断した作業者が復帰する。前回は1日6時間の屋外作業に従事していたが、復帰初日の体調は良好である。暑熱順化を考慮した計画として最も適切なのはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "復帰前に6時間作業できていたため、復帰初日から同じ作業負荷と時間に戻す",
+          "expectedCorrect": false,
+          "assessmentReason": "10日中断後は順化低下があり元の6時間へ即復帰は危険",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "復帰初日は高強度・短時間に集中させれば、順化低下があっても安全性は同等である",
+          "expectedCorrect": false,
+          "assessmentReason": "高強度短時間へ集中は安全保証にならない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "復帰初日は暑熱順化を優先して休憩回数を減らし、翌日から休憩を増やす",
+          "expectedCorrect": false,
+          "assessmentReason": "順化を理由に休憩削減は不適切",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "作業負荷を低くすればWBGTと体調の確認を省略し、水分補給だけで管理する",
+          "expectedCorrect": false,
+          "assessmentReason": "WBGT・体調確認は省略できない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "初日は作業時間を短くして段階的に暑熱負荷を増やし、休憩・水分塩分補給・体調確認を併用する",
+          "expectedCorrect": true,
+          "assessmentReason": "負荷を段階的に戻し休憩・補水・体調確認",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 4,
+      "sourceRegistered": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "sourceRef": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "sourceLocator": "基発0520第6号 暑熱順化・補水",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "7日以上段階順化・中断4日後喪失開始を確認。登録PDFの実物画像照合未了",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    },
+    {
+      "id": "practice-A-Q20",
+      "stem": "高温作業中、作業者Aは多量に発汗しているが意識清明で飲水可能、作業者Bはふらつきと反応の鈍さがあり嚥下の安全性を確認できない。補給と初期対応として最も適切なのはどれか。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "Aは水分・塩分の補給と休憩を継続し、Bは作業から離脱させて冷却・救急連絡を進め、無理な経口摂取をさせない",
+          "expectedCorrect": true,
+          "assessmentReason": "Aは水分塩分・休憩、Bは冷却・救急と経口強制を避ける",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 1,
+          "text": "Aは多量発汗しているため水だけを大量に飲ませ、塩分の補給はすべて翌日へ回す",
+          "expectedCorrect": false,
+          "assessmentReason": "多量発汗で電解質補給を一律翌日まで待つのは不適切",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 2,
+          "text": "Aは補給を行い、Bにもまず経口補給を繰り返してから救急連絡の要否を判断する",
+          "expectedCorrect": false,
+          "assessmentReason": "嚥下不明者への経口補給を優先し救急を遅らせない",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 3,
+          "text": "Aは補給してよいが、Bは熱中症と断定できないため冷却せず継続観察だけにする",
+          "expectedCorrect": false,
+          "assessmentReason": "熱中症確定前でも冷却と安全確保を行う",
+          "individuallyDirectlyProven": false
+        },
+        {
+          "index": 4,
+          "text": "AもBも休憩を取らず予定作業を終えてから補給し、Bは自力で帰宅させる",
+          "expectedCorrect": false,
+          "assessmentReason": "症状があるBを作業継続・自力帰宅させない",
+          "individuallyDirectlyProven": false
+        }
+      ],
+      "correctIndex": 0,
+      "sourceRegistered": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "sourceRef": "https://www.mhlw.go.jp/content/11303000/001618734.pdf",
+      "sourceChecked": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1",
+      "sourceLocator": "厚労省 熱中症対応要綱・救急対応",
+      "verificationLevel": "PARTIAL",
+      "sourceLimitations": "意識/嚥下確認困難者への経口摂取禁止の直接該当原典未確認",
+      "sourceReachability": "REGISTERED_OR_ALTERNATIVE_SOURCE_ACCESSIBLE",
+      "sourceInput": "audit/practice_a_fixes_01_10.json applied after generator selects stable IDs",
+      "unconditionalPass": false
+    }
+  ]
+}
