@@ -71,4 +71,4 @@ assert(re.test(index),'Existing bundle embed marker');
 const materialized=index.replace(re,'const QUESTIONS='+compact+';\nconst DOMAINS=');
 const embedded=JSON.parse(materialized.match(/const QUESTIONS=(\[.*?\]);\nconst DOMAINS=/s)[1]);
 assert.deepEqual(embedded,after,'Release embedding preserves revisions');
-console.log(JSON.stringify({pass:true,total:264,changed,unchanged:237,deterministic:true,driftRejected:true,bundleRoundtrip:true,fixture:dir},null,2));
+console.log(JSON.stringify({pass:true,total:264,changed,unchanged:227,deterministic:true,driftRejected:true,bundleRoundtrip:true,fixture:dir},null,2));
