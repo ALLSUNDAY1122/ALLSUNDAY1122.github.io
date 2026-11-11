@@ -1360,3 +1360,16 @@ for(const f of fixes){
 }
 window.HM2_170_B08_DIRECT_SOURCES_APPLIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH10_NO097_20261112 strict URL and basis correction.
+(function(){'use strict';
+const f={"id":"sm2-5y-r09-law-07","subject":"関係法令","topic":"年5日取得義務への半日年休と時間単位年休の算入","question":"法定年次有給休暇を年10日以上付与された労働者が、基準日から1年以内に日単位年休を1日、半日単位年休を2回、時間単位年休を合計8時間取得した（半日年休は適切に認められたものとする）。年5日取得確保義務に算入できる日数と、なお確保すべき日数の組合せはどれか。","basis":"労働基準法39条7項・8項／厚労省『働き方改革関連法セルフチェック』半日単位は0.5日、時間単位年休は年5日から控除しない","oldUrl":"https://www.startup-roudou.mhlw.go.jp/selfcheck/","newBasis":"労働基準法39条7項・8項／厚生労働省『スタートアップ労働条件』事業者・労務管理担当の方のQ&A「半日単位年休・時間単位年休の年5日取得確保への算入」","newUrl":"https://www.startup-roudou.mhlw.go.jp/qa/zigyonushi/yukyu/q11.html","correct":"算入2日、残り3日。","choices":["算入5日、残り0日。","算入3日、残り2日。","算入1日、残り4日。","算入2日、残り3日。","算入0日、残り5日。"]};
+const matches=(window.Q_PARTS||[]).filter(q=>q.id===f.id);
+if(matches.length!==1)throw Error('HM2 B10 No097 ID count mismatch');
+const q=matches[0];
+if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==f.basis||q.sourceUrl!==f.oldUrl||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correct||JSON.stringify([...q.choices].sort())!==JSON.stringify([...f.choices].sort()))throw Error('HM2 B10 No097 strict old-state mismatch');
+q.sourceUrl=f.newUrl;
+q.basis=f.newBasis;
+window.HM2_170_B10_NO097_SOURCE_BASIS_APPLIED=true;
+})();
