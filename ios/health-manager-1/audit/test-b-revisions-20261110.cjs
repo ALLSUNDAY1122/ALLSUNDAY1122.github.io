@@ -8,8 +8,8 @@ const ios = path.resolve(__dirname, '..'), repo = path.resolve(ios,'..','..');
 const {applyContentOverrides} = require(path.join(ios,'apply-content-overrides.cjs'));
 const entries = JSON.parse(fs.readFileSync(path.join(ios,'content-overrides-b-20261110.json'),'utf8'));
 const targets = entries.map(e=>e.id).sort();
-assert.equal(targets.length,37,'Expected cumulative 37 B revisions');
-assert.equal(new Set(targets).size,37,'Duplicate override IDs');
+assert.equal(targets.length,44,'Expected cumulative 44 B revisions');
+assert.equal(new Set(targets).size,44,'Duplicate override IDs');
 const dir = fs.mkdtempSync(path.join(os.tmpdir(),'hm1-b-revisions-'));
 const fixtureIos = path.join(dir,'ios','health-manager-1');
 fs.mkdirSync(path.join(fixtureIos,'Resources'),{recursive:true});
@@ -41,7 +41,7 @@ for(const round of ['2026-04','2025-10','2025-04','practice-A','practice-B','pra
   assert.equal(after.filter(q=>q.round===round).length,44);
 const changed=after.filter((q,i)=>JSON.stringify(q)!==JSON.stringify(before[i])).map(q=>q.id).sort();
 assert.deepEqual(changed,targets,'Only registered override rows may change');
-assert.equal(after.length-changed.length,227,'Non-target questions must remain 227');
+assert.equal(after.length-changed.length,220,'Non-target questions must remain 220');
 assert.deepEqual(after.filter(q=>q.round!=='practice-B'),before.filter(q=>q.round!=='practice-B'),'Base/A/C unchanged');
 for(const q of after){
   assert.equal(q.choices.length,5);
@@ -74,4 +74,4 @@ assert(re.test(index),'Existing bundle embed marker');
 const materialized=index.replace(re,'const QUESTIONS='+compact+';\nconst DOMAINS=');
 const embedded=JSON.parse(materialized.match(/const QUESTIONS=(\[.*?\]);\nconst DOMAINS=/s)[1]);
 assert.deepEqual(embedded,after,'Release embedding preserves revisions');
-console.log(JSON.stringify({pass:true,total:264,changed,unchanged:227,deterministic:true,driftRejected:true,bundleRoundtrip:true,fixture:dir},null,2));
+console.log(JSON.stringify({pass:true,total:264,changed,unchanged:220,deterministic:true,driftRejected:true,bundleRoundtrip:true,fixture:dir},null,2));
