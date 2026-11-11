@@ -1290,5 +1290,115 @@
     "answerIndex": "unchanged",
     "limitedDiff": "PASS_REPORTED",
     "independentlyReexecuted": false
-  }
+  },
+  "batchThreeMuseValidation": {
+    "source": "user-provided Muse-side local validation",
+    "baseline": "4c32d7e",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "2026-04-Q25",
+      "2026-04-Q43",
+      "2025-10-Q37",
+      "2025-10-Q39",
+      "2025-10-Q44",
+      "2025-04-Q38",
+      "2025-04-Q40",
+      "2025-04-Q43"
+    ],
+    "q25Fields": [
+      "detail",
+      "auditStatus",
+      "auditSourceURL"
+    ],
+    "otherSevenFields": [
+      "auditStatus",
+      "auditSourceURL"
+    ],
+    "correctIndexesUnchanged": true,
+    "other256Unchanged": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReexecuted": false
+  },
+  "batchThreeResolutions": [
+    {
+      "id": "2026-04-Q13",
+      "priorLevel": "PENDING",
+      "originalURL": "https://www.atsdr.cdc.gov/ToxProfiles/tp82-c2.pdf",
+      "verifiedURL": "https://www.cdc.gov/niosh/npg/npgd0104.html",
+      "reason": "NIOSH：二硫化炭素による中枢・末梢神経毒性、多発神経障害、精神症状を確認",
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "correctIndex": 0,
+      "allFiveChoicesIndependentlyProven": false
+    },
+    {
+      "id": "2026-04-Q15",
+      "priorLevel": "PENDING",
+      "originalURL": "https://gnssn.iaea.org/main/bptc/BPTC%20Module%20Documents/Module02%20Radiation%20protection%20in%20nuclear%20facilities.pdf",
+      "verifiedURL": "https://www.epa.gov/radiation/radiation-basics",
+      "reason": "EPA：α線は皮膚を透過しにくく、吸入・経口の内部被ばくが重大。CDC説明でも一致",
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "correctIndex": 1,
+      "allFiveChoicesIndependentlyProven": false
+    },
+    {
+      "id": "2026-04-Q17",
+      "priorLevel": "PENDING",
+      "originalURL": "https://wwwn.cdc.gov/TSp/ToxFAQs/ToxFAQsDetails.aspx?faqid=1195&toxid=24",
+      "verifiedURL": "https://wwwn.cdc.gov/TSp/ToxFAQs/ToxFAQsDetails.aspx?faqid=1195&toxid=24",
+      "reason": "ATSDR登録の水銀ToxFAQsは今回本文に到達。蒸気吸入、振戦、記憶・気分の変化を確認。URLの変更は不要",
+      "changedFields": [
+        "auditStatus"
+      ],
+      "correctIndex": 4,
+      "allFiveChoicesIndependentlyProven": false
+    },
+    {
+      "id": "2025-04-Q34",
+      "priorLevel": "PARTIAL",
+      "originalURL": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000130677.html",
+      "verifiedURL": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/guidance-industry-reconditioning-fish-and-fishery-products-segregation",
+      "reason": "FDA：ヒスタミン汚染品の製造・ロット記録による分別と検査を確認。日本法の個別回収判断は別途確認",
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "correctIndex": 3,
+      "allFiveChoicesIndependentlyProven": false
+    },
+    {
+      "id": "2025-04-Q36",
+      "priorLevel": "PARTIAL",
+      "originalURL": "https://www.msdmanuals.com/ja-jp/home/06-心臓と血管の病気/心臓と血管の生物学/心臓の生物学",
+      "verifiedURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK549803/",
+      "reason": "NCBI：PR間隔は心房から心室までの伝導・房室結節遅延を含み延長はAV伝導遅延で説明可能",
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "correctIndex": 1,
+      "allFiveChoicesIndependentlyProven": false
+    },
+    {
+      "id": "2025-04-Q37",
+      "priorLevel": "PARTIAL",
+      "originalURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK482501/",
+      "verifiedURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK482501/",
+      "reason": "NCBI：肺胞換気=(1回換気量−死腔量)×呼吸数=(500−150)×12=4200mL/min。旧原典NBK539825は表面張力で誤題材",
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "correctIndex": 4,
+      "allFiveChoicesIndependentlyProven": false
+    }
+  ],
+  "lastAuditUpdate": "2026-11-12",
+  "statusClarification": "a群85件は分類対象であり、未解決実残数ではない。今回6問の中心命題追証を実施。完全な全肢直接証明は未完了。"
 }

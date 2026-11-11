@@ -59,3 +59,26 @@
 - 「正答の根拠が変わるか」への回答：**正答命題と計算根拠は不変だが、直接引用すべき法令条文が事務所則3条から安衛則601条へ変わる**。根拠条文差替えの意味で変更あり。元の公式回次に係る`sourceRef`は公表テーマ由来を残すため維持。
 - c群は**1→0件、a群は84→85件**に再分類。a群のうち今回原典差替え・確認7問とQ25の法令根拠訂正1問を台帳に記録（前回C29 URL補修、C34/C42追証は別計上）。
 - 新規基本8問を変更した今回の264問Node CLI再生成・限定差分・配布JSONバイト一致/SHA256は本担当では**未実施**。Muse側のQ29に対するPASSを今回の8問へ流用しない。公開ゲートFAIL/BLOCKED維持。
+
+
+## 続編第3回：Muse基本8問限定差分PASS受領、a群基本6問追証（2026-11-12）
+
+### 1. Muse側実施の前回基本8問再生成検証（ユーザー提供）
+- 比較基準`4c32d7e`と修正後状態の**両方で264問Node CLI再生成成功**。差分は`2026-04-Q25、2026-04-Q43、2025-10-Q37、2025-10-Q39、2025-10-Q44、2025-04-Q38、2025-04-Q40、2025-04-Q43`の**8問のみ**。
+- `2026-04-Q25`は解説・監査ステータス・出典URL、他7問は監査ステータス・出典URLのみ。**正答index全問不変、他256問完全一致、限定差分PASS**。
+- これはMuse側ローカル検証の受領結果。本担当で生成コマンド、配布バイト差分、SHA256を独立実行したものではない。今回の次の6問にPASSを転用しない。
+
+### 2. a群次バッチ6問・公開原典確認
+- **`2026-04-Q13`**：NIOSH：二硫化炭素による中枢・末梢神経毒性、多発神経障害、精神症状を確認。確認原典：`https://www.cdc.gov/niosh/npg/npgd0104.html`。旧登録：`https://www.atsdr.cdc.gov/ToxProfiles/tp82-c2.pdf`。変更：`auditSourceURL、auditStatus`、正答index 0不変。
+- **`2026-04-Q15`**：EPA：α線は皮膚を透過しにくく、吸入・経口の内部被ばくが重大。CDC説明でも一致。確認原典：`https://www.epa.gov/radiation/radiation-basics`。旧登録：`https://gnssn.iaea.org/main/bptc/BPTC%20Module%20Documents/Module02%20Radiation%20protection%20in%20nuclear%20facilities.pdf`。変更：`auditSourceURL、auditStatus`、正答index 1不変。
+- **`2026-04-Q17`**：ATSDR登録の水銀ToxFAQsは今回本文に到達。蒸気吸入、振戦、記憶・気分の変化を確認。URLの変更は不要。確認原典：`https://wwwn.cdc.gov/TSp/ToxFAQs/ToxFAQsDetails.aspx?faqid=1195&toxid=24`。旧登録：`https://wwwn.cdc.gov/TSp/ToxFAQs/ToxFAQsDetails.aspx?faqid=1195&toxid=24`。変更：`auditStatus`、正答index 4不変。
+- **`2025-04-Q34`**：FDA：ヒスタミン汚染品の製造・ロット記録による分別と検査を確認。日本法の個別回収判断は別途確認。確認原典：`https://www.fda.gov/regulatory-information/search-fda-guidance-documents/guidance-industry-reconditioning-fish-and-fishery-products-segregation`。旧登録：`https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000130677.html`。変更：`auditSourceURL、auditStatus`、正答index 3不変。
+- **`2025-04-Q36`**：NCBI：PR間隔は心房から心室までの伝導・房室結節遅延を含み延長はAV伝導遅延で説明可能。確認原典：`https://www.ncbi.nlm.nih.gov/sites/books/NBK549803/`。旧登録：`https://www.msdmanuals.com/ja-jp/home/06-心臓と血管の病気/心臓と血管の生物学/心臓の生物学`。変更：`auditSourceURL、auditStatus`、正答index 1不変。
+- **`2025-04-Q37`**：NCBI：肺胞換気=(1回換気量−死腔量)×呼吸数=(500−150)×12=4200mL/min。旧原典NBK539825は表面張力で誤題材。確認原典：`https://www.ncbi.nlm.nih.gov/sites/books/NBK482501/`。旧登録：`https://www.ncbi.nlm.nih.gov/sites/books/NBK482501/`。変更：`auditSourceURL、auditStatus`、正答index 4不変。
+- **`2026-04-Q17`のATSDR元登録URLは今回直接本文取得に成功したため、URL自体は変更せず監査ステータスのみ更新。**`2025-04-Q37`の旧NCBI `NBK539825`は肺胞表面張力を説明しており、肺胞換気の直接原典に置換。
+- 以上6問の中心命題を公開一次・専門医学資料から確認したが、全30肢について原典段落ごとの独立逐語証明は未完了。変更前後の基本132問を本セッション内のレコード単位で照合し、**指定6問以外は不変、全132問の設問・5肢・正答index・detailは不変**。
+- 個別台帳`audit/PRIMARY_SOURCE_AUDIT_A_BATCH3_20261112.json`に元URL、代替URL、原典確認内容、変更フィールド、留保を保存。旧台帳のPENDING/PARTIALは履歴として保持。
+
+### 3. 引継ぎと公開ゲート
+- (a)群の母数85問は分類済IDの総数であり、今回以降も全件未解消という意味ではない。次は`practice-A-Q27` NRA PDF、`practice-A-Q33` RCPA 403、`practice-B-Q27` e-Gov本文障害、`practice-B-Q31` QRS、`practice-C-Q04` 安衛令業種を優先。
+- **本コミットの基本6問についてはNode CLI264問再生成・Web/iOSバイト照合・SHA256を未実施**。前段Muse PASSは今回の基本6問を含まない。全1320肢の直接逐語証明・法令版／商用権利・実機検証も別の未解決課題。総合ゲート**FAIL/BLOCKED維持**。
