@@ -370,3 +370,13 @@ if(fixes.length!==8||new Set(fixes.map(f=>f.id)).size!==8)throw Error('HM2 eight
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 eighth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
 window.SM2_INDEPENDENT_EIGHTH10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
 })();
+
+
+// SM2_INDEPENDENT_NINTH10_METADATA_FIX6_20261111: fixed ID No.83,84,86-89; topic/basis only. Leave source URLs and review status unchanged.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r06-hyg-09","topic":"一酸化炭素中毒疑い時の退避・救急対応","basis":"一酸化炭素中毒の予防・曝露時の安全確保および救急対応"},{"id":"sm2-5y-r06-hyg-10","topic":"スクリーニング検査の感度の計算","basis":"疫学・検査精度指標：感度＝真陽性数÷疾病ありの人数"},{"id":"sm2-5y-r07-hyg-02","topic":"健康診断による早期発見・二次予防","basis":"予防医学の二次予防（早期発見・早期治療）と健診後の受診勧奨"},{"id":"sm2-5y-r07-hyg-03","topic":"小集団の健診情報の再識別防止","basis":"労働者の心身の状態に関する情報の適正な取扱いのために事業者が講ずべき措置に関する指針・個人情報保護"},{"id":"sm2-5y-r07-hyg-04","topic":"WBGT・作業強度・暑熱順化による熱中症リスク評価","basis":"厚生労働省『職場における熱中症予防基本対策要綱』（作業強度別WBGT基準値）"},{"id":"sm2-5y-r07-hyg-05","topic":"成人心肺蘇生の胸骨圧迫と胸郭の戻し","basis":"日本赤十字社『救急法』等の一次救命処置・胸骨圧迫手順"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==6||new Set(fixes.map(f=>f.id)).size!==6)throw Error('HM2 ninth10 metadata fix IDs invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 ninth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
+window.SM2_INDEPENDENT_NINTH10_METADATA_FIX6_IDS=fixes.map(f=>f.id);
+})();
