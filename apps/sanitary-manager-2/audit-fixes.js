@@ -1520,3 +1520,23 @@ q.legalChecked='2026-11-12';
 q.auditStatus='一次資料照合済';
 window.HM2_NO161_ART66_4_5_PRIMARY_VERIFIED_20261112=true;
 })();
+
+
+// HM2_NO146_FINAL_SLEEP_GUIDE_20261112: version-aligned MHLW final-guide source; strict old-state guard.
+(function(){'use strict';
+const id='sm2-5y-r08-hyg-01';
+const oldBasis='厚生労働省『健康づくりのための睡眠ガイド2023』交替制勤務と睡眠：夜勤中の仮眠と睡眠慣性';
+const oldUrl='https://www.mhlw.go.jp/content/10904750/001181265.pdf';
+const newBasis='厚生労働省『健康づくりのための睡眠ガイド2023』（令和6年2月、令和6年9月18日一部修正）INFORMATION 6「就業形態（交替制勤務）と睡眠の課題について」本文42頁「仮眠」：夜勤中20〜50分の仮眠・睡眠慣性';
+const newUrl='https://www.mhlw.go.jp/content/001305530.pdf';
+const expectedQuestion='深夜勤務の職員が勤務中の強い眠気を訴えている。休憩の確保と勤務間の睡眠機会の見直しは別途進めるとして、夜勤中の短い仮眠を導入する際の注意点として最も適切なのはどれか。';
+const expectedChoices=['仮眠は長いほど覚醒直後の作業能力が必ず高まる。','夜勤中の仮眠はすべて禁止し、眠気の申告も無視する。','20〜50分程度の仮眠は有用な場合があるが、長時間仮眠後の睡眠慣性と復帰直後の安全を評価する。','短い仮眠でも覚醒後の状態確認は一切不要である。','仮眠を取れば恒常的な睡眠不足と交代勤務の健康リスクが完全に消失する。'];
+const expectedExplanation='厚生労働省『健康づくりのための睡眠ガイド2023』は、夜勤中に開始する20〜50分の仮眠で眠気や疲労の改善が報告される一方、長い仮眠では起床直後にぼんやりする睡眠慣性が生じ得ると説明する。仮眠は勤務間休息・睡眠の代替ではなく、復帰直後の安全配慮が必要。';
+const hits=(window.Q_PARTS||[]).filter(q=>q.id===id);
+if(hits.length!==1)throw Error('HM2 No146 final guide target count mismatch');
+const q=hits[0];
+if(q.subject!=='労働衛生'||q.topic!=='夜勤中の仮眠の長さと睡眠慣性'||q.question!==expectedQuestion||q.sourceUrl!==oldUrl||q.basis!==oldBasis||q.explanation!==expectedExplanation||q.quick!=='夜勤中の仮眠は有用だが、長すぎると覚醒直後の睡眠慣性に注意が必要。'||q.lawRelated!==false||q.answer!==3||!Array.isArray(q.choices)||JSON.stringify(q.choices)!==JSON.stringify(expectedChoices))throw Error('HM2 No146 final sleep guide strict old-state mismatch');
+q.sourceUrl=newUrl;
+q.basis=newBasis;
+window.HM2_NO146_FINAL_SLEEP_GUIDE_FIXED_20261112=true;
+})();
