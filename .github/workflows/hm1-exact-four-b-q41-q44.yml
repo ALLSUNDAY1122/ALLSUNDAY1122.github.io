@@ -1,0 +1,56 @@
+name: HM1 B Q41-Q44 exact four regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/content-overrides-b-20261110.json'
+      - '.github/workflows/hm1-exact-four-b-q41-q44.yml'
+  workflow_dispatch:
+jobs:
+  exact-four:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regenerate baseline and current 264 questions; verify four-only changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=078f172d104bafdadadb8cc29b2ae20a3d44c322
+          git worktree add --detach /tmp/hm1-b41-before "$BASE"
+          git worktree add --detach /tmp/hm1-b41-after HEAD
+          (cd /tmp/hm1-b41-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-b41-before.log)
+          (cd /tmp/hm1-b41-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-b41-after.log)
+          python3 - <<'PY'
+          import json,unicodedata
+          from pathlib import Path
+          path='ios/health-manager-1/Resources/questions.json'
+          a=json.loads((Path('/tmp/hm1-b41-before')/path).read_text())
+          b=json.loads((Path('/tmp/hm1-b41-after')/path).read_text())
+          expected={f'practice-B-Q{i}' for i in [41,42,43,44]}
+          assert len(a)==len(b)==264,(len(a),len(b))
+          assert [q['id'] for q in a]==[q['id'] for q in b],'ID/order changed'
+          def norm(s):
+              return ''.join(c for c in unicodedata.normalize('NFKC',s).casefold() if not c.isspace())
+          assert len({q['id'] for q in b})==264,'duplicate IDs'
+          assert len({norm(q['stem']) for q in b})==264,'duplicate normalized stems'
+          diffs={x['id'] for x,y in zip(a,b) if x!=y}
+          assert diffs==expected,f'changed IDs {sorted(diffs)}'
+          ans={'practice-B-Q41':2,'practice-B-Q42':1,'practice-B-Q43':0,'practice-B-Q44':1}
+          for x,y in zip(a,b):
+              if x['id'] not in expected: assert x==y,x['id']
+              assert len(y['choices'])==5,y['id']
+              assert len({norm(s) for s in y['choices']})==5,y['id']
+              assert type(y['ans']) is int and 0<=y['ans']<5,y['id']
+              if y['id'] in expected:
+                  assert y['ans']==ans[y['id']],y['id']
+                  assert y['short'] and y['detail'],y['id']
+          print('PASS: both 264 regenerated; four IDs changed; other 260 identical')
+          PY
