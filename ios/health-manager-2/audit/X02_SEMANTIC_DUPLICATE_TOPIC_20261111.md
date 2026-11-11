@@ -309,3 +309,11 @@ GitHub対象ブランチから `q1.js`〜`q12.js`、`difficulty-patch-v5.js`、`
 - **静的検査PASS**：変更は対象4IDのみ、他296問の全出力フィールド不変。IDおよび正規化問題文300件一意、各問5選択肢一意、30セット各10問の最終正答位置1〜5が各2問、正答インデックス・公開状態不変。
 - **未確認**：今回変更後のNode CLI全正本再生成、配布JSONへのバイト一致、新SHA-256、ガード破損負例テスト、CI、医療専門家の独立査読。旧SHAの流用禁止。次回Muse側で最新ブランチの複製にて`node ios/health-manager-2/export-canonical-snapshot.cjs`を実行・バイト照合して記録する。
 - **再設計進捗32/35単位、累計39問修正、残3単位**。次回は**U33/P08→U34/P09→U35/P10+C03**。X-02の重複再設計適用が完了しても、X-04・170問出典個別照合・178問レビュー状態・独立専門査読が別に残る。**本番公開BLOCKED**。
+
+
+## 2026-11-12 Muse側独立Node CLI検証：U29〜U32再設計後
+
+- ユーザー提供のMuse側Node CLI独立検証報告：`node ios/health-manager-2/export-canonical-snapshot.cjs` の再生成が正常終了し、配布 `ios/health-manager-2/release-questions.json` とバイト単位で一致。
+- U29〜U32の4問変更後、配布JSONコミット`8321bd892eab683316e1792b5c42f0106258bf45`時点の報告SHA-256：`cb7e015962a0232c4ba25eda3cec7478ba311c14bf7017e16c8543e85e43a93c`。
+- **Muse側実測の利用者報告を転記**したものであり、このGitHub連携セッションが独立Node CLIを実行した証明ではない。U29〜U32時点の再現性PASS（報告ベース）。U33以降のJSON変更後に当該SHAを流用しない。
+- X-04、170問個別出典、178問レビュー状態、全選択肢の独立専門家査読と本番公開判定は別ゲート。**本番公開BLOCKED**を維持。
