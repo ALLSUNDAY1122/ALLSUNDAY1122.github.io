@@ -353,3 +353,24 @@
 - Q15補助厚労省PDFは公開テキスト抜粋を根拠とする。PDF画像全体・条項単位の独立確認は未了。演習C Q06解説の誤答肢番号の不整合は引き続き要校閲。
 - 全5肢独立逐語・法令版・商用利用権・実機検証未完。**リリースゲートFAIL/BLOCKED維持**、mainマージ・公開・App Store審査なし。
 - 個別証跡 `PRIMARY_SOURCE_AUDIT_A_BATCH16_20261112.json`、累積残件 `PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
+
+
+## 続編第17回：Muse演習C4問限定差分PASS受領・（a）群4問中心命題追証（2026-11-12）
+
+### 1. Muse側264問再生成報告
+- 比較基準 `e1e20ff` と修正後状態の両方で264問Node CLI再生成成功。差分は `practice-C-Q15`・`Q17`・`Q18`・`Q19` の監査ステータスのみ。正答indexは全問不変、他260問完全一致、限定差分PASS。
+- Muse側ローカル実施をユーザーから受領したものであり、本担当でNode CLI両状態やWeb/iOS配布バイト・SHA256を独立再実行したものではない。新4問へのPASS転用不可。
+
+### 2. 今回（a）群4問の原典照合
+- **`practice-C-Q20`**（正答index `0` 維持）：NCBI StatPearls Diagnostic Testing Accuracy、およびCDC EIS教材は陰性的中率をTN/(TN+FN)と定義。設問のTN160、FN20より160/180=88.9%で正答index0を直接確認。 出典URL `https://www.ncbi.nlm.nih.gov/books/NBK557491/` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/`。補助原典 `https://www.cdc.gov/eis/downloads/xscreening-hiv-student-871-703.pdf`。変更キー：`auditSourceURL`、`auditStatus`。留保：陰性的中率は有病率によって変わり得る。全5肢の個別逐語証明、配布一致は別途。
+- **`practice-C-Q21`**（正答index `0` 維持）：NCBI/CDC一次教材のPPV=TP/(TP+FP)を適用。疾病あり10人中TP9、疾病なし990人中FP99、9/(9+99)=8.33%で正答index0を支持。陽性だけで確定診断せず確認検査を検討する臨床的説明と整合。 出典URL `https://www.ncbi.nlm.nih.gov/books/NBK557491/` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/`。補助原典 `https://www.cdc.gov/eis/downloads/xscreening-hiv-student-871-703.pdf`。変更キー：`auditSourceURL`、`auditStatus`。留保：人数は期待値であり、個人の事後確率は特定検査・有病率等に依存する。全5肢逐語証明未完。
+- **`practice-C-Q22`**（正答index `1` 維持）：感度TP/(TP+FN)、特異度TN/(TN+FP)の定義より、検査A TP=90 FP=900×(1−0.8)=180、B TP=80 FP=900×(1−0.95)=45。偽陰性はA10、B20で、肢1のトレードオフと一致。 出典URL `https://www.ncbi.nlm.nih.gov/books/NBK557491/` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/`。補助原典 `https://www.cdc.gov/eis/downloads/xscreening-hiv-student-871-703.pdf`。変更キー：`auditSourceURL`、`auditStatus`。留保：両検査は同一集団への仮想適用。実測の独立性や検査費用等は設問外。全5肢の独立逐語証明未完。
+- **`practice-C-Q26`**（正答index `0` 維持）：NIOSHの2026年更新『Fatigue and Work』は夜勤等による疲労が反応時間・注意・判断を悪化させると明記。2022年科学報告はフォークリフト作業者のヒヤリハットと疲労リスク、シフト・休憩・睡眠対策を具体的に論じている。危険作業の安全確保と勤務・睡眠評価の正答index0を支持。 出典URL `https://www.cdc.gov/niosh/fatigue/about/index.html` → `https://www.cdc.gov/niosh/fatigue/about/index.html`。補助原典 `https://www.cdc.gov/niosh/bulletin/2022/fatigue-detection-technologies.html`。変更キー：`auditStatus`。留保：特定の配置変更や医療受診の閾値までは一律に規定されない。全5肢逐語証明・個別医学評価未実施。
+
+### 3. 件数と引き継ぎ
+- （a）群85固有IDのうち中心命題への公開一次原典等の照合済み **76件**、未照合 **9件（13→9）**。完全5肢独立逐語原典PASSの件数ではない。全5肢無条件PASSは0件扱い。
+- **今回の生成元変更対象ID：`practice-C-Q20`・`Q21`・`Q22`・`Q26`。** Q20/Q21/Q22は`auditSourceURL`・`auditStatus`を変更、Q26は`auditStatus`のみ。問題文・5肢・解説・正答indexは不変。演習C生成元対象外レコードは構造比較で完全一致。
+- Q20～Q22のNCBI既存URL（/books/）はWeb閲覧でリダイレクト時に確認画面が表示されたため、同じ文献の閲覧可能な `/sites/books/` へ登録URLを変更。CDC EIS教材を補助根拠として記録。
+- 今回4問の264問Node CLI再生成・限定差分・Web/iOS配布JSONバイト・SHA256は未実施。次はMuse側で検証後、`practice-C-Q30`・`Q31`・`Q32`・`Q33`を追証する。
+- C Q06の解説内誤答肢番号の不整合も継続要校閲。法令時点・商用権利・全5肢独立逐語証明・実機検証は未了。**リリースゲートFAIL/BLOCKED**、mainマージ・公開・審査申請なし。
+- 今回証跡 `PRIMARY_SOURCE_AUDIT_A_BATCH17_20261112.json`、累積台帳 `PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。

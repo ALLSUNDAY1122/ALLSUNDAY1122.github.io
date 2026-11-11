@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "parentCommit": "6f612914ef2f568e0f4fd743e5869ad5eb25130c",
+  "reportedMusePreviousFourQuestionRegeneration": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "e1e20ff",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "practice-C-Q15",
+      "practice-C-Q17",
+      "practice-C-Q18",
+      "practice-C-Q19"
+    ],
+    "changedFields": [
+      "auditStatus"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN"
+  },
+  "subject": "a-group batch 17 practice-C Q20/Q21/Q22/Q26",
+  "outcomes": [
+    {
+      "id": "practice-C-Q20",
+      "sourceContainer": "c1",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/",
+      "secondaryEvidenceURL": "https://www.cdc.gov/eis/downloads/xscreening-hiv-student-871-703.pdf",
+      "centralClaimEvidence": "NCBI StatPearls Diagnostic Testing Accuracy、およびCDC EIS教材は陰性的中率をTN/(TN+FN)と定義。設問のTN160、FN20より160/180=88.9%で正答index0を直接確認。",
+      "caveat": "陰性的中率は有病率によって変わり得る。全5肢の個別逐語証明、配布一致は別途。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q21",
+      "sourceContainer": "c2",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/",
+      "secondaryEvidenceURL": "https://www.cdc.gov/eis/downloads/xscreening-hiv-student-871-703.pdf",
+      "centralClaimEvidence": "NCBI/CDC一次教材のPPV=TP/(TP+FP)を適用。疾病あり10人中TP9、疾病なし990人中FP99、9/(9+99)=8.33%で正答index0を支持。陽性だけで確定診断せず確認検査を検討する臨床的説明と整合。",
+      "caveat": "人数は期待値であり、個人の事後確率は特定検査・有病率等に依存する。全5肢逐語証明未完。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q22",
+      "sourceContainer": "c2",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/",
+      "secondaryEvidenceURL": "https://www.cdc.gov/eis/downloads/xscreening-hiv-student-871-703.pdf",
+      "centralClaimEvidence": "感度TP/(TP+FN)、特異度TN/(TN+FP)の定義より、検査A TP=90 FP=900×(1−0.8)=180、B TP=80 FP=900×(1−0.95)=45。偽陰性はA10、B20で、肢1のトレードオフと一致。",
+      "caveat": "両検査は同一集団への仮想適用。実測の独立性や検査費用等は設問外。全5肢の独立逐語証明未完。",
+      "correctIndex": 1,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q26",
+      "sourceContainer": "c2",
+      "oldAuditURL": "https://www.cdc.gov/niosh/fatigue/about/index.html",
+      "newAuditURL": "https://www.cdc.gov/niosh/fatigue/about/index.html",
+      "secondaryEvidenceURL": "https://www.cdc.gov/niosh/bulletin/2022/fatigue-detection-technologies.html",
+      "centralClaimEvidence": "NIOSHの2026年更新『Fatigue and Work』は夜勤等による疲労が反応時間・注意・判断を悪化させると明記。2022年科学報告はフォークリフト作業者のヒヤリハットと疲労リスク、シフト・休憩・睡眠対策を具体的に論じている。危険作業の安全確保と勤務・睡眠評価の正答index0を支持。",
+      "caveat": "特定の配置変更や医療受診の閾値までは一律に規定されない。全5肢逐語証明・個別医学評価未実施。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "progress": {
+    "aGroupOriginal": 85,
+    "centralClaimSupportedUnique": 76,
+    "centralClaimNotYetRecorded": 9,
+    "pendingIds": [
+      "practice-C-Q30",
+      "practice-C-Q31",
+      "practice-C-Q32",
+      "practice-C-Q33",
+      "practice-C-Q35",
+      "practice-C-Q36",
+      "practice-C-Q37",
+      "practice-C-Q41",
+      "practice-C-Q44"
+    ],
+    "fullFiveChoiceIndependentDirectProofClosed": 0
+  },
+  "currentBatchIndependent264Regeneration": "NOT_RUN",
+  "currentBatchWebIosByteCheck": "NOT_RUN",
+  "releaseGate": "FAIL/BLOCKED"
+}
