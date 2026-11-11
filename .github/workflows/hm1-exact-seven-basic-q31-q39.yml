@@ -1,0 +1,55 @@
+name: HM1 basic Q31 Q32 Q35-Q39 exact seven regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/Resources/questions.json'
+      - '.github/workflows/hm1-exact-seven-basic-q31-q39.yml'
+  workflow_dispatch:
+jobs:
+  exact-seven:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild both versions and assert 7-only diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=5b1520f94bfce3c7543559cb2cf2b8eea78027cb
+          git worktree add --detach /tmp/hm1-b31-before "$BASE"
+          git worktree add --detach /tmp/hm1-b31-after HEAD
+          (cd /tmp/hm1-b31-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-b31-before.log)
+          (cd /tmp/hm1-b31-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-b31-after.log)
+          python3 - <<'PY'
+          import json,unicodedata
+          from pathlib import Path
+          rel='ios/health-manager-1/Resources/questions.json'
+          a=json.loads((Path('/tmp/hm1-b31-before')/rel).read_text())
+          b=json.loads((Path('/tmp/hm1-b31-after')/rel).read_text())
+          target={f'2026-04-Q{i:02}' for i in [31,32,35,36,37,38,39]}
+          assert len(a)==len(b)==264,(len(a),len(b))
+          assert [q['id'] for q in a]==[q['id'] for q in b],'ID/order changed'
+          norm=lambda s:''.join(c for c in unicodedata.normalize('NFKC',s).casefold() if not c.isspace())
+          assert len({q['id'] for q in b})==264,'duplicate IDs'
+          assert len({norm(q['stem']) for q in b})==264,'duplicate normalized stems'
+          diffs={x['id'] for x,y in zip(a,b) if x!=y}
+          assert diffs==target,{'actual':sorted(diffs),'expected':sorted(target)}
+          answers={f'2026-04-Q{i:02}':ans for i,ans in [(31,0),(32,3),(35,0),(36,0),(37,1),(38,0),(39,0)]}
+          for x,y in zip(a,b):
+              if x['id'] not in target: assert x==y,x['id']
+              assert len(y['choices'])==5,y['id']
+              assert len({norm(c) for c in y['choices']})==5,y['id']
+              assert type(y['ans']) is int and 0<=y['ans']<5,y['id']
+              if y['id'] in target:
+                  assert y['ans']==answers[y['id']],y['id']
+                  assert y['short'] and y['detail'] and y['auditSourceURL'],y['id']
+          print('PASS: both 264; only seven basic Q31 Q32 Q35-Q39 changed; 257 other questions identical')
+          PY
