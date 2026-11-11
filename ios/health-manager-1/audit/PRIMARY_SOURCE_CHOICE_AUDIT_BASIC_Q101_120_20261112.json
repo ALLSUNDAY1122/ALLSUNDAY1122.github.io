@@ -1,0 +1,1016 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "sourceCommit": "ca524f24ca84de3cd5c7e4aaf5f3ef1a890c0bef",
+  "scope": "基本Q101〜Q120、20問×5肢=100肢",
+  "classification": "DIRECT=中心命題の一次原典確認、PARTIAL=原典の該当箇所/数値/適用条項に不足、PENDING=原典未到達。DIRECTでも100肢の各肢独立逐語証明を保証しない。",
+  "counts": {
+    "DIRECT": 12,
+    "PARTIAL": 8,
+    "PENDING": 0
+  },
+  "unconditionalPassCount": 0,
+  "questions": [
+    {
+      "basicPosition": 101,
+      "id": "2025-04-Q13",
+      "stem": "溶剤を扱う職場で容器の取り違えが疑われ、作業者は当日は軽い頭痛のみだったが翌日に視力低下と代謝性アシドーシスを呈した。メタノールばく露を疑う際の評価・対応として最も適切なのはどれか。",
+      "answerIndex": 0,
+      "sourceURL": "https://www.cdc.gov/niosh/ershdb/emergencyresponsecard_29750029.html",
+      "evidenceTitle": "NIOSH Methanol Emergency Response Card",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "本文到達。遅発性1〜72時間、ギ酸・視覚障害・アシドーシスを確認。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "メタノール代謝物であるギ酸による遅発性の視覚・酸塩基障害を疑い、使用容器・SDS・ばく露経路を確認しつつ緊急の医療評価につなぐ",
+          "expectedCorrect": true,
+          "assessmentReason": "代謝物ギ酸と遅発性障害、緊急医療評価が妥当",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "症状出現まで半日以上あったことから、メタノールによる急性中毒は除外できる",
+          "expectedCorrect": false,
+          "assessmentReason": "遅発性だからメタノールを除外できない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "頭痛が軽かった時点で翌日の視覚障害とばく露は無関係と断定してよい",
+          "expectedCorrect": false,
+          "assessmentReason": "初期軽症で翌日の障害を否定できない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "メタノールの主な毒性は2,5-ヘキサンジオンによる末梢軸索障害なので、酸塩基検査は不要である",
+          "expectedCorrect": false,
+          "assessmentReason": "2,5-ヘキサンジオンはn-ヘキサン関連",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "視覚障害の有無だけで原因溶剤を確定し、容器表示や他の原因の確認は省略できる",
+          "expectedCorrect": false,
+          "assessmentReason": "視覚障害だけで原因を確定できない",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "本文到達。遅発性1〜72時間、ギ酸・視覚障害・アシドーシスを確認。"
+    },
+    {
+      "basicPosition": 102,
+      "id": "2025-04-Q14",
+      "stem": "放射線作業者の低線量ばく露について、事業場がLNT（直線しきい値なし）モデルを使い防護対策を検討している。モデルを用いた意思決定の説明として最も適切なのはどれか。",
+      "answerIndex": 0,
+      "sourceURL": "https://www.env.go.jp/chemi/rhm/current/04-01-08.html",
+      "evidenceTitle": "環境省令和7年度放射線基礎資料 4.1 LNTモデルをめぐる論争",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "本文到達。100mSv以下のリスク不確実性とLNTの防護上の仮定を明示。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "低線量の発がんリスクを防護上しきい値なしと仮定して最適化に活用するが、特定の個人が発がんするかを断定したり低線量域の実証的確実性を示したりするものではない",
+          "expectedCorrect": true,
+          "assessmentReason": "低線量の防護上の合理的仮定で個人発症を予言しない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "LNTモデルを使えば、作業者一人ひとりの将来の発がん有無と発症日を確定できる",
+          "expectedCorrect": false,
+          "assessmentReason": "個人の発症日は確定不能",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "100mSv未満では疫学的な線量反応が完全に確立しているので、モデルの不確実性を考える余地はない",
+          "expectedCorrect": false,
+          "assessmentReason": "低線量の科学的不確実性が残る",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "線量限度を超えなければ確率的影響の可能性がゼロと証明されるため、防護の最適化は不要である",
+          "expectedCorrect": false,
+          "assessmentReason": "限度以下がゼロリスクの証明ではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "LNTモデルは水晶体の組織反応のしきい線量を直接決める計算法であり、発がんリスクの管理には使わない",
+          "expectedCorrect": false,
+          "assessmentReason": "水晶体組織反応の閾値モデルと別",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "本文到達。100mSv以下のリスク不確実性とLNTの防護上の仮定を明示。"
+    },
+    {
+      "basicPosition": 103,
+      "id": "2025-04-Q15",
+      "stem": "金属取扱い作業者に長年のばく露歴があり、低分子蛋白尿と近位尿細管機能障害が認められた。物質と慢性影響の対応として最も適切なのはどれか。",
+      "answerIndex": 3,
+      "sourceURL": "https://anzeninfo.mhlw.go.jp/anzen/gmsds/7440-43-9.html",
+      "evidenceTitle": "厚労省 職場のあんぜんサイト カドミウムSDS",
+      "evidenceLevel": "PARTIAL",
+      "accessStatus": "SOURCE_ACCESSIBLE_PARTIAL_COVERAGE",
+      "limitation": "登録SDS本文到達・腎と骨の反復ばく露毒性を直接確認。ただし尿細管低分子蛋白尿の詳細と他4物質の直接反証は未照合。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "金属水銀では低分子蛋白尿が唯一の代表所見で、神経症状は一般に起こらない",
+          "expectedCorrect": false,
+          "assessmentReason": "水銀で神経影響が起こらないとはいえない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "ベンゼンでは骨髄障害よりも近位尿細管障害が主徴となる",
+          "expectedCorrect": false,
+          "assessmentReason": "ベンゼンでは造血器影響が重要",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "n-ヘキサンの代表的な慢性影響は近位尿細管障害で、末梢神経障害は起こらない",
+          "expectedCorrect": false,
+          "assessmentReason": "n-ヘキサンの末梢神経影響を否定できない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "カドミウムでは近位尿細管障害に伴う低分子蛋白尿がみられ、長期的には骨への影響も問題となる",
+          "expectedCorrect": true,
+          "assessmentReason": "カドミウムの近位尿細管・低分子蛋白尿、骨影響のうち低分子尿蛋白の詳細原典不足",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "メタノールでは慢性近位尿細管障害が最も特徴的であり、視覚障害は起こらない",
+          "expectedCorrect": false,
+          "assessmentReason": "メタノールでは視覚障害が起こり得る",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録SDS本文到達・腎と骨の反復ばく露毒性を直接確認。ただし尿細管低分子蛋白尿の詳細と他4物質の直接反証は未照合。"
+    },
+    {
+      "basicPosition": 104,
+      "id": "2025-04-Q16",
+      "stem": "高温環境で大量に発汗した後、体温の著しい上昇はないが有痛性の筋けいれんを生じた。最も関係が深い病態はどれか。",
+      "answerIndex": 2,
+      "sourceURL": "https://www.cdc.gov/niosh/heat-stress/about/illnesses.html",
+      "evidenceTitle": "CDC/NIOSH Heat-related Illnesses 2026-03-03",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "多量発汗による塩分と水分喪失、熱けいれんを直接確認。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "末梢血管拡張に伴う一過性の脳血流低下",
+          "expectedCorrect": false,
+          "assessmentReason": "熱失神の機序であり筋けいれんの主説明でない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "高度の脱水による循環血液量の減少だけが原因となる熱疲労",
+          "expectedCorrect": false,
+          "assessmentReason": "熱疲労の主徴との区別が必要",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "発汗に伴うナトリウムなど電解質の喪失による熱けいれん",
+          "expectedCorrect": true,
+          "assessmentReason": "電解質喪失を伴う熱けいれん",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "体温調節中枢の障害により高体温と意識障害を来す熱射病",
+          "expectedCorrect": false,
+          "assessmentReason": "意識障害と高体温を伴う熱射病の説明",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "長時間の立位で下肢に水分が貯留して生じる熱浮腫",
+          "expectedCorrect": false,
+          "assessmentReason": "熱浮腫の主徴ではない",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "多量発汗による塩分と水分喪失、熱けいれんを直接確認。"
+    },
+    {
+      "basicPosition": 105,
+      "id": "2025-04-Q17",
+      "stem": "シアン化物を扱う工程で作業者が急に意識障害を起こし、周囲では酸素供給装置が作動していた。シアン化物の毒性機序と現場での判断として最も適切なのはどれか。",
+      "answerIndex": 0,
+      "sourceURL": "https://www.cdc.gov/chemical-emergencies/chemical-fact-sheets/cyanide.html",
+      "evidenceTitle": "CDC Cyanide Chemical Fact Sheet 2026-05-05",
+      "evidenceLevel": "PARTIAL",
+      "accessStatus": "SOURCE_ACCESSIBLE_PARTIAL_COVERAGE",
+      "limitation": "登録一次ページ到達。急性毒性と酸素利用阻害は確認できたが、シトクロムcオキシダーゼの酵素名は別資料での確認を要する。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "シアン化物はミトコンドリアのシトクロムcオキシダーゼを阻害し、酸素が供給されても細胞で利用できないため、安全な救出体制を確保して緊急の医療対応につなぐ",
+          "expectedCorrect": true,
+          "assessmentReason": "酸素利用阻害と安全な救出、緊急医療が妥当。酵素名は追証要",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "酸素供給装置が作動していれば組織での酸素利用は必ず正常なので、中毒を除外し作業を継続する",
+          "expectedCorrect": false,
+          "assessmentReason": "酸素を送っても細胞利用が妨げられ得る",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "シアン化物は赤血球でカルボキシヘモグロビンを形成することだけが主機序であり、細胞呼吸の障害はない",
+          "expectedCorrect": false,
+          "assessmentReason": "CO中毒のカルボキシヘモグロビンと別",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "意識障害者の救出を急ぐため、未評価の汚染区域へ保護具なしで同僚を進入させる",
+          "expectedCorrect": false,
+          "assessmentReason": "救助者の二次曝露防止が必要",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "シアン化物による毒性は末梢神経の慢性軸索変性に限られ、急な意識障害を生じ得ない",
+          "expectedCorrect": false,
+          "assessmentReason": "急性意識障害が起こり得る",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録一次ページ到達。急性毒性と酸素利用阻害は確認できたが、シトクロムcオキシダーゼの酵素名は別資料での確認を要する。"
+    },
+    {
+      "basicPosition": 106,
+      "id": "2025-04-Q18",
+      "stem": "溶剤発散源のそばで作業者が容器を開けると短時間だけ濃度が高くなる屋内作業場がある。A測定とB測定の測定点・時間の考え方として適切なのはどれか。",
+      "answerIndex": 4,
+      "sourceURL": "https://www.mhlw.go.jp/content/11300000/001388777.pdf",
+      "evidenceTitle": "厚労省 作業環境測定基準2016年PDF p.2; 第三管理区分対象濃度測定2024年資料p.3",
+      "evidenceLevel": "PARTIAL",
+      "accessStatus": "REGISTERED_PDF_ACCESSIBLE_BUT_NOT_DIRECT_FOR_SOLVENT",
+      "limitation": "登録PDF本文とp.2画像を確認。ただし登録資料のB測定例は粉じんであり、溶剤作業の法令要件に直接適用不可。2024資料は第三管理区分の有機溶剤にC/D原則・A/B条件付と記載。設問にA/B選択の適用前提が不足し得る。要再設計判定。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "A測定は高濃度と予想される1点だけを狙い、B測定は等間隔に単位作業場所全域を測る",
+          "expectedCorrect": false,
+          "assessmentReason": "A測定とB測定の役割が逆",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "A測定とB測定はともに個人ばく露8時間測定であり、測定点の設定は同じである",
+          "expectedCorrect": false,
+          "assessmentReason": "A/Bを個人8h測定とする誤り",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "B測定では発散源から最も遠く、作業をしていない時間帯を優先する",
+          "expectedCorrect": false,
+          "assessmentReason": "Bは高濃度が予想される時間位置で行う",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "作業者の健康診断結果をB測定値として扱い、A測定の結果と比較する",
+          "expectedCorrect": false,
+          "assessmentReason": "健診をB測定値とは扱わない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "A測定で単位作業場所の分布を調べ、B測定は高濃度が予想される作業位置・時間に設定する",
+          "expectedCorrect": true,
+          "assessmentReason": "Aは単位作業場所分布、Bは高濃度条件。ただしA/B適用前提未確定",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録PDF本文とp.2画像を確認。ただし登録資料のB測定例は粉じんであり、溶剤作業の法令要件に直接適用不可。2024資料は第三管理区分の有機溶剤にC/D原則・A/B条件付と記載。設問にA/B選択の適用前提が不足し得る。要再設計判定。"
+    },
+    {
+      "basicPosition": 107,
+      "id": "2025-04-Q19",
+      "stem": "有害ガス用防毒マスクの形状と使用条件を比較している。直結式・隔離式と吸収缶の取扱いとして最も適切な説明はどれか。",
+      "answerIndex": 3,
+      "sourceURL": "https://anzeninfo.mhlw.go.jp/yougo/yougo88_1.html",
+      "evidenceTitle": "厚労省 職場のあんぜんサイト 呼吸用保護具解説",
+      "evidenceLevel": "PARTIAL",
+      "accessStatus": "SOURCE_ACCESSIBLE_PARTIAL_COVERAGE",
+      "limitation": "登録資料の構造図・現行規格の該当箇所の逐語確認が未完。酸欠環境でのろ過式使用不可は基本原則。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "直結式では吸収缶を連結管で腰に保持し、隔離式では面体へ直接装着する",
+          "expectedCorrect": false,
+          "assessmentReason": "直結式と隔離式の接続形態が逆",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "隔離式であればガスの種類・濃度にかかわらず、酸素欠乏場所でも使用できる",
+          "expectedCorrect": false,
+          "assessmentReason": "隔離式も酸素供給しない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "直結式に大型の吸収缶を装着した場合、すべてのガスに共通する使用可能濃度が自動的に決まる",
+          "expectedCorrect": false,
+          "assessmentReason": "大型吸収缶でも万能ではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "直結式は面体に吸収缶を直接装着し、隔離式は連結管で離して接続する。使用可否は対象ガス・吸収缶・規格・濃度・酸素濃度を別途確認する",
+          "expectedCorrect": true,
+          "assessmentReason": "直結式の直接装着・隔離式の連結管を説明",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "直結式と隔離式はともに送気式で、外部から空気を供給するため吸収缶の性能確認は不要である",
+          "expectedCorrect": false,
+          "assessmentReason": "ろ過式と送気式を混同",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録資料の構造図・現行規格の該当箇所の逐語確認が未完。酸欠環境でのろ過式使用不可は基本原則。"
+    },
+    {
+      "basicPosition": 108,
+      "id": "2025-04-Q20",
+      "stem": "有機溶剤を扱う二つの職場で気中濃度は同程度だったが、一方では皮膚接触が頻繁にあった。尿中代謝物による生物学的モニタリングについて最も適切な判断はどれか。",
+      "answerIndex": 1,
+      "sourceURL": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000182467.html",
+      "evidenceTitle": "厚労省 職場の化学物質管理・生物学的モニタリング関連",
+      "evidenceLevel": "PARTIAL",
+      "accessStatus": "SOURCE_ACCESSIBLE_PARTIAL_COVERAGE",
+      "limitation": "登録ページ本文に『皮膚吸収を含む尿中指標の解釈』の直接明示箇所が未確認。ACGIH等の指標別採尿時期を追加照合。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "気中濃度が同じなら、採尿時刻や経皮吸収の違いに関係なく尿中代謝物は必ず同値になる",
+          "expectedCorrect": false,
+          "assessmentReason": "気中濃度一致でも体内摂取は一定ではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "尿中代謝物は吸入以外の取り込みも反映し得るため、皮膚曝露・代謝・採取時刻も考慮して気中濃度と併せて解釈する",
+          "expectedCorrect": true,
+          "assessmentReason": "吸入・経皮・代謝・採尿時期で指標が異なる",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "局所排気装置が稼働していれば、経皮吸収は起こらず、生物学的指標の測定はすべて無意味になる",
+          "expectedCorrect": false,
+          "assessmentReason": "局排は皮膚吸収を必ず防止しない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "尿中代謝物は騒音の8時間等価レベルを代替する指標として用いられる",
+          "expectedCorrect": false,
+          "assessmentReason": "尿中代謝物は騒音指標でない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "作業環境測定の管理区分だけで、個人の生体内取り込み量を常に確定できる",
+          "expectedCorrect": false,
+          "assessmentReason": "作業環境管理区分と個人摂取は別",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録ページ本文に『皮膚吸収を含む尿中指標の解釈』の直接明示箇所が未確認。ACGIH等の指標別採尿時期を追加照合。"
+    },
+    {
+      "basicPosition": 109,
+      "id": "2025-04-Q21",
+      "stem": "製造業の本社（事務管理専業）と工場が約10km離れている。工場では350人、本社では70人が常時働く。工場は製造工程を独立して運営し、本社は人事・経理のみ行う。総括安全衛生管理者の選任について、事業場単位の考え方に沿うものはどれか。",
+      "answerIndex": 4,
+      "sourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb2042&dataType=1&pageNo=1",
+      "evidenceTitle": "昭和47年発基91号・労働安全衛生法施行令2条",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "場所的観念で原則別事業場を厚労省通達本文で直接確認。工場300人・本社その他業種1000人は令2条照合を残す。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "同一法人なので両拠点の人数を合算し、それぞれに総括安全衛生管理者を選任する",
+          "expectedCorrect": false,
+          "assessmentReason": "同一法人だから合算は不可",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "本社は製造業を営む会社の施設なので、事務管理専業でも工場の製造業区分を当然に適用する",
+          "expectedCorrect": false,
+          "assessmentReason": "本社業態を工場に機械的適用しない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "地理的に離れた拠点でも法人内の会計が同じなら、常に一事業場として一括判定する",
+          "expectedCorrect": false,
+          "assessmentReason": "会計一体でも場所的別事業場が原則",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "工場の人員が350人いても、別拠点の本社に統括部門があることだけで工場の選任義務が消える",
+          "expectedCorrect": false,
+          "assessmentReason": "本社の存在だけで工場の義務は消えない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "原則として場所的に別の本社・工場を別事業場と判定し、製造業の工場350人は選任対象だが、事務管理専業の本社70人は当該基準に達しない",
+          "expectedCorrect": true,
+          "assessmentReason": "独立の工場350人は選任、本社事務70人は非該当",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "場所的観念で原則別事業場を厚労省通達本文で直接確認。工場300人・本社その他業種1000人は令2条照合を残す。"
+    },
+    {
+      "basicPosition": 110,
+      "id": "2025-04-Q22",
+      "stem": "常時使用者数が多い事業場で、総括安全衛生管理者・衛生管理者・衛生推進者の法定の役割を整理している。労働安全衛生法10条・12条に照らして正しいものはどれか。",
+      "answerIndex": 1,
+      "sourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0",
+      "evidenceTitle": "労働安全衛生法10条・12条・12条の2",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "総括管理者の指揮下で衛生管理者は衛生技術的事項を管理。推進者の別制度も確認。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "衛生管理者は衛生推進者の指揮命令者として法12条に明記され、総括安全衛生管理者の指揮を受けない",
+          "expectedCorrect": false,
+          "assessmentReason": "衛生管理者が総括管理者の指揮を受けないのは誤り",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "総括安全衛生管理者は安全管理者・衛生管理者を指揮し、衛生管理者は衛生に係る技術的事項を管理する。衛生推進者の指揮を衛生管理者の法定列挙業務と混同しない",
+          "expectedCorrect": true,
+          "assessmentReason": "総括は衛生管理者等を指揮、衛生管理者は技術的事項",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "衛生推進者は総括安全衛生管理者の代わりに安衛法10条所定の安全衛生業務をすべて統括管理する",
+          "expectedCorrect": false,
+          "assessmentReason": "推進者に総括権限を自動付与しない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "衛生管理者の役割は事業場の安全衛生方針を経営者として決定することだけであり、衛生の技術的事項は管理しない",
+          "expectedCorrect": false,
+          "assessmentReason": "衛生管理者の衛生技術管理の否定は誤り",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "総括安全衛生管理者は現場衛生に関与せず、衛生管理者の選任状況にかかわらず指揮権限を持たない",
+          "expectedCorrect": false,
+          "assessmentReason": "総括管理者の指揮関係を否定できない",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "総括管理者の指揮下で衛生管理者は衛生技術的事項を管理。推進者の別制度も確認。"
+    },
+    {
+      "basicPosition": 111,
+      "id": "2025-04-Q23",
+      "stem": "常時使用労働者が50人以上の事業場で衛生委員会を設ける。委員の指名と議長の取扱いについて、労働安全衛生法18条・17条の規定に合うものはどれか。",
+      "answerIndex": 2,
+      "sourceURL": "https://laws.e-gov.go.jp/law/347AC0000000057",
+      "evidenceTitle": "労働安全衛生法17条・18条",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "議長は第1号委員で労働者代表推薦委員の互選と異なることを中心確認。e-Govの該当施行版は次工程で照合。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "議長は労働者側推薦委員の互選で決め、そのほかの委員だけを事業者が指名する",
+          "expectedCorrect": false,
+          "assessmentReason": "議長は労働者側互選ではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "産業医を委員に含める場合、産業医が必ず議長を務める",
+          "expectedCorrect": false,
+          "assessmentReason": "産業医という資格だけで議長ではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "事業者が指名する総括安全衛生管理者又はこれに準ずる統括管理者等の法定第一号委員を議長とし、議長以外の所定委員について労働者側推薦の規定を確認する",
+          "expectedCorrect": true,
+          "assessmentReason": "第1号委員が議長、他委員には推薦要件",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "衛生管理者が委員なら、総括安全衛生管理者の有無にかかわらず衛生管理者を自動的に議長にする",
+          "expectedCorrect": false,
+          "assessmentReason": "衛生管理者が自動議長となるわけではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "議長と議長以外のすべての委員は、労働者の過半数代表者の推薦だけで直接選任する",
+          "expectedCorrect": false,
+          "assessmentReason": "事業者の指名と推薦要件を混同",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "議長は第1号委員で労働者代表推薦委員の互選と異なることを中心確認。e-Govの該当施行版は次工程で照合。"
+    },
+    {
+      "basicPosition": 112,
+      "id": "2025-04-Q24",
+      "stem": "ストレスチェックの個人結果が労働者本人へ通知された。事業者がこの結果の提供を実施者に求める際の取扱いとして、最も適切なのはどれか。",
+      "answerIndex": 3,
+      "sourceURL": "https://www.mhlw.go.jp/content/11300000/001331247.pdf",
+      "evidenceTitle": "厚労省 ストレスチェックQ&A 8-2",
+      "evidenceLevel": "PARTIAL",
+      "accessStatus": "SOURCE_ACCESSIBLE_PARTIAL_COVERAGE",
+      "limitation": "厚労省Q&Aでは結果通知時の同意書同封可・同意判断は本人が結果を見てからと明記。登録PDFの指定版の独立画像照合は未了。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "結果通知前に受検者全員から取った一括同意だけで、通知後の個別同意は不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "結果通知前の包括同意のみで代替できない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "高ストレスと判定された場合は、結果通知前でも上司に個人結果が自動提供される",
+          "expectedCorrect": false,
+          "assessmentReason": "高ストレスだけで自動開示できない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "集団分析の結果を受け取った事業者は、同じ職場の個人結果も本人同意なしで取得できる",
+          "expectedCorrect": false,
+          "assessmentReason": "集団分析から個人結果を自動取得不可",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "本人通知後の同意がなければ、事業者は結果の提供を受けられないが、集団分析結果の取扱いや面接指導の申出に伴う手続は区別する",
+          "expectedCorrect": true,
+          "assessmentReason": "本人への結果通知後の同意が原則",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "本人が面接指導を希望しなければ、個人結果の事業者提供について本人同意は一切不要になる",
+          "expectedCorrect": false,
+          "assessmentReason": "面接指導申出と結果提供同意の別規定を区別",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "厚労省Q&Aでは結果通知時の同意書同封可・同意判断は本人が結果を見てからと明記。登録PDFの指定版の独立画像照合は未了。"
+    },
+    {
+      "basicPosition": 113,
+      "id": "2025-04-Q25",
+      "stem": "事業場附属の炊事場に、外部業者が食材を搬入する動線があり、入口には靴底消毒マットを置いている。炊事従業員は清潔な専用作業衣を使用中である。安衛則630条の立入・履物管理として最も適切な改善策はどれか。",
+      "answerIndex": 0,
+      "sourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=11",
+      "evidenceTitle": "労働安全衛生規則630条14・15号",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "厚労省規則本文の対象条文および現行条文解説で炊事従業員以外の無断出入防止と専用履物を確認。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "搬入業者を含め炊事従業員以外の者のみだりな立入りを防ぎ、入口の消毒マットとは別に炊事場専用の履物を備えて土足立入りをさせない",
+          "expectedCorrect": true,
+          "assessmentReason": "出入管理と専用履物で土足禁止",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "搬入業者が短時間の入室で靴底消毒マットを踏めば、炊事場専用履物を用意しなくても土足入室を認めてよい",
+          "expectedCorrect": false,
+          "assessmentReason": "消毒マットは専用履物の法定代替でない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "炊事従業員が専用作業衣を着用していれば、立入り者の履物や入退室経路の管理は必要ない",
+          "expectedCorrect": false,
+          "assessmentReason": "専用作業衣だけで出入管理の免除なし",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "炊事場を毎日清掃し害虫対策を行えば、搬入業者が土足で入室することは条文上の問題とならない",
+          "expectedCorrect": false,
+          "assessmentReason": "清掃だけで土足を認めない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "食材搬入のときだけは、炊事場専用履物を使う職員も含め全員が屋外用の靴に履き替えて作業する",
+          "expectedCorrect": false,
+          "assessmentReason": "屋外靴への履替えは逆",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "厚労省規則本文の対象条文および現行条文解説で炊事従業員以外の無断出入防止と専用履物を確認。"
+    },
+    {
+      "basicPosition": 114,
+      "id": "2025-04-Q26",
+      "stem": "妊娠中の労働者が、現在の重量物取扱い業務から軽易な業務への転換を請求した。使用者が労基法65条・66条に照らして行う対応として正しいものはどれか。",
+      "answerIndex": 1,
+      "sourceURL": "https://laws.e-gov.go.jp/law/322AC0000000049",
+      "evidenceTitle": "労働基準法65条3項・66条",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "妊娠中の請求に基づく軽易業務転換と時間外・深夜制限の別制度を確認。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "妊娠中の軽易業務転換は、産後8週間を経過するまで請求できない",
+          "expectedCorrect": false,
+          "assessmentReason": "産後8週まで待つ必要はない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "妊娠中の女性から軽易業務への転換請求があれば他の軽易な業務へ転換する。時間外・深夜業等の制限請求は別の制度として確認する",
+          "expectedCorrect": true,
+          "assessmentReason": "妊娠中の請求による軽易業務転換義務",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "深夜業制限の請求を受けた場合だけ、軽易業務への転換請求が可能になる",
+          "expectedCorrect": false,
+          "assessmentReason": "深夜業制限の請求が転換請求の必須前提でない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "産前休業を請求していない妊婦には、重量物取扱いからの軽易業務転換義務が生じない",
+          "expectedCorrect": false,
+          "assessmentReason": "産前休業申請が必須ではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "軽易業務への転換請求があっても、36協定があれば使用者は請求を拒むことができる",
+          "expectedCorrect": false,
+          "assessmentReason": "36協定で転換請求義務を免れない",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "妊娠中の請求に基づく軽易業務転換と時間外・深夜制限の別制度を確認。"
+    },
+    {
+      "basicPosition": 115,
+      "id": "2025-04-Q27",
+      "stem": "週4日勤務でも週所定労働時間30時間、勤続3年6か月、出勤率8割以上なら新たな年休は何日か。",
+      "answerIndex": 4,
+      "sourceURL": "https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudouseisaku/chushoukigyou/joken_kankyou_rule.html",
+      "evidenceTitle": "厚労省 年次有給休暇付与表",
+      "evidenceLevel": "PARTIAL",
+      "accessStatus": "SOURCE_ACCESSIBLE_PARTIAL_COVERAGE",
+      "limitation": "登録ページ到達。ただし週4日・30時間・3年6か月の通常付与『14日』の表の該当交点の画像まで直接独立確認できていない。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "8日",
+          "expectedCorrect": false,
+          "assessmentReason": "8日ではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "15日",
+          "expectedCorrect": false,
+          "assessmentReason": "15日ではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "12日",
+          "expectedCorrect": false,
+          "assessmentReason": "12日ではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "10日",
+          "expectedCorrect": false,
+          "assessmentReason": "10日ではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "14日",
+          "expectedCorrect": true,
+          "assessmentReason": "週30時間なら比例付与でなく通常表14日",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録ページ到達。ただし週4日・30時間・3年6か月の通常付与『14日』の表の該当交点の画像まで直接独立確認できていない。"
+    },
+    {
+      "basicPosition": 116,
+      "id": "2025-04-Q28",
+      "stem": "情報機器作業を行う労働者が、ノートPCを低い机に置き、画面まで約30cmで作業して首と眼の疲労を訴えている。外部ディスプレイを導入する際の配置・照明・視力補正の考え方として最も適切なものはどれか。",
+      "answerIndex": 3,
+      "sourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1",
+      "evidenceTitle": "令和3年基発1201007号 情報機器作業ガイドライン",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "おおむね40cm以上の視距離、画面上端は眼の高さ程度以下、照明・視力矯正を厚労省原文で確認。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "画面を近づければ文字が読みやすいため、視距離30cm未満を標準とし、画面上端を眼より高く配置する",
+          "expectedCorrect": false,
+          "assessmentReason": "視距離30cm未満・上端上方は不適切",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "視距離を40cm以上にすれば、画面の上端位置、文字の大きさ、周囲のまぶしさ、視力補正の確認は不要となる",
+          "expectedCorrect": false,
+          "assessmentReason": "40cmだけで他要件免除されない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "視距離は60cm以上に固定することが法令上の必須条件なので、文字が読みにくくても位置を変えない",
+          "expectedCorrect": false,
+          "assessmentReason": "60cm固定の法定義務はない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "おおむね40cm以上の視距離を確保し、画面上端を眼の高さと同程度かやや下に調整し、文字サイズ・映り込み・必要な視力補正も確認する",
+          "expectedCorrect": true,
+          "assessmentReason": "おおむね40cm・上端と眼の位置・文字・グレアを総合調整",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "画面上端を眼より上に上げれば首の後屈は抑えられるため、視距離や照明の条件は考慮しない",
+          "expectedCorrect": false,
+          "assessmentReason": "上端を高くし首後屈を招く方法は不適切",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "おおむね40cm以上の視距離、画面上端は眼の高さ程度以下、照明・視力矯正を厚労省原文で確認。"
+    },
+    {
+      "basicPosition": 117,
+      "id": "2025-04-Q29",
+      "stem": "ある職場の観察開始時点で疾病のない500人を1年間追跡したところ、その期間中に新たに10人が発症した。追跡中の脱落はない。1年間の累積罹患割合（リスク）として正しいものはどれか。",
+      "answerIndex": 2,
+      "sourceURL": "https://www.cdc.gov/field-epi-manual/php/chapters/describing-epi-data.html",
+      "evidenceTitle": "CDC Field Epidemiology Manual 2024-08-08",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "期間中の新規発症者を初期リスク集団で割る累積罹患割合を算出。10/500=2%の算術確認。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "観察終了時の患者総数が不明なので累積罹患割合は求められない",
+          "expectedCorrect": false,
+          "assessmentReason": "新規患者数と初期分母が分かっている",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "10人を対象の延べ観察人年で割った値だけが累積罹患割合になる",
+          "expectedCorrect": false,
+          "assessmentReason": "人年分母は罹患率で割合と異なる",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "10÷500×100＝2％である",
+          "expectedCorrect": true,
+          "assessmentReason": "10/500=2%",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "10÷（500＋10）×100＝約1.96％である",
+          "expectedCorrect": false,
+          "assessmentReason": "発症者を分母に加えない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "10÷（500－10）×100＝約2.04％である",
+          "expectedCorrect": false,
+          "assessmentReason": "発症者を分母から差引かない",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "期間中の新規発症者を初期リスク集団で割る累積罹患割合を算出。10/500=2%の算術確認。"
+    },
+    {
+      "basicPosition": 118,
+      "id": "2025-04-Q30",
+      "stem": "THPの健康保持増進施策として、法定健康診断の結果から運動習慣への支援が必要な集団を把握し、職場の運動・生活習慣支援を計画している。実施上最も適切な対応はどれか。",
+      "answerIndex": 4,
+      "sourceURL": "https://www.mhlw.go.jp/stf/newpage_76807.html",
+      "evidenceTitle": "厚労省 THP健康保持増進指針",
+      "evidenceLevel": "PARTIAL",
+      "accessStatus": "SOURCE_ACCESSIBLE_PARTIAL_COVERAGE",
+      "limitation": "現行指針到達。ただし健診結果の二次利用と職場運動施策の個別情報管理措置の直接該当箇所を特定できていない。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "健診結果はTHPで利用できないため、部署ごとの健康課題の把握には一切用いない",
+          "expectedCorrect": false,
+          "assessmentReason": "情報利用を全面禁止するのは誤り",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "健診結果を利用するなら、個人名と検査数値を部署全員に公開して運動指導を促進する",
+          "expectedCorrect": false,
+          "assessmentReason": "個人情報を全員に公表するのは不適切",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "健康測定を受けた集団には、その後の法定健診の実施条件を確認しなくてもよい",
+          "expectedCorrect": false,
+          "assessmentReason": "THPは法定健診義務を代替しない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "運動指導を実施するなら、勤務時間や職場環境による活動機会の差は評価しない",
+          "expectedCorrect": false,
+          "assessmentReason": "労働時間や職場環境も評価対象",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "利用目的と健康情報の取扱いに留意して既存の健診結果を健康課題の把握に活用し、必要な健康支援と職場環境上の施策を組み合わせる",
+          "expectedCorrect": true,
+          "assessmentReason": "健康情報保護と運動施策を組み合わせる",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "現行指針到達。ただし健診結果の二次利用と職場運動施策の個別情報管理措置の直接該当箇所を特定できていない。"
+    },
+    {
+      "basicPosition": 119,
+      "id": "2025-04-Q31",
+      "stem": "脳梗塞の発症機序を考えるとき、心房細動のある人に突然の片麻痺が起こった。脳血栓症と脳塞栓症の区別に関する最も適切な説明はどれか。",
+      "answerIndex": 3,
+      "sourceURL": "https://www.stroke.org/en/about-stroke/types-of-stroke/ischemic-stroke-clots",
+      "evidenceTitle": "American Stroke Association Ischemic Stroke (Clots)",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "現地血栓と移動塞栓の定義、心房細動との関連を原典直接確認。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "心房細動があれば脳血管の破綻による出血性脳卒中だけを考える",
+          "expectedCorrect": false,
+          "assessmentReason": "AFで出血性のみに限定できない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "脳血栓症とは心房内で形成された血栓が血流で脳に運ばれ閉塞する病態をいう",
+          "expectedCorrect": false,
+          "assessmentReason": "心房内由来血栓移動は塞栓症",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "脳塞栓症とは脳動脈のその場で形成された血栓によってのみ閉塞する病態をいう",
+          "expectedCorrect": false,
+          "assessmentReason": "脳動脈現地血栓は血栓症",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "心房細動は心原性脳塞栓症の危険因子となり得るが、発症機序は臨床所見・画像検査などで評価し、症状だけでは確定できない",
+          "expectedCorrect": true,
+          "assessmentReason": "AFは脳塞栓のリスク因子だが発症機序は画像と診察で確定",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "脳血栓症と脳塞栓症はいずれも非血管性疾患であり、緊急の評価を要しない",
+          "expectedCorrect": false,
+          "assessmentReason": "血管性疾患で緊急評価が必要",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "現地血栓と移動塞栓の定義、心房細動との関連を原典直接確認。"
+    },
+    {
+      "basicPosition": 120,
+      "id": "2025-04-Q32",
+      "stem": "一般の事務所、病院、喫煙専用室を備える商業施設の受動喫煙対策について、健康増進法の施設区分と立入制限に沿う記述として正しいものはどれか。",
+      "answerIndex": 3,
+      "sourceURL": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000189195.html",
+      "evidenceTitle": "厚労省受動喫煙防止ガイドライン 基発0701第1号",
+      "evidenceLevel": "DIRECT",
+      "accessStatus": "CENTRAL_CLAIM_VERIFIED",
+      "limitation": "20歳未満は喫煙専用室清掃目的でも立入禁止。一般事務所と病院の施設区分を確認。",
+      "choices": [
+        {
+          "index": 0,
+          "text": "一般事務所は第一種施設なので、適合する喫煙専用室を設ける余地はない",
+          "expectedCorrect": false,
+          "assessmentReason": "一般事務所を第一種施設扱いしない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 1,
+          "text": "病院は第二種施設であり、建物内のどの部屋でも自由に喫煙できる",
+          "expectedCorrect": false,
+          "assessmentReason": "病院は第一種施設で喫煙自由ではない",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 2,
+          "text": "適合する喫煙専用室を設ければ、20歳未満の従業員も清掃目的なら立ち入ることができる",
+          "expectedCorrect": false,
+          "assessmentReason": "20歳未満は清掃目的でも喫煙可能場所に立入不可",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 3,
+          "text": "一般事務所は第二種施設で原則屋内禁煙、法定基準を満たす喫煙専用室等の例外があり、20歳未満は喫煙可能な場所に立ち入れない",
+          "expectedCorrect": true,
+          "assessmentReason": "第二種施設の原則屋内禁煙と法定喫煙室、20歳未満禁止",
+          "independentVerbatimProofCompleted": false
+        },
+        {
+          "index": 4,
+          "text": "第一種施設と第二種施設の区別は事業場の従業員数だけで決まり、施設の用途は関係しない",
+          "expectedCorrect": false,
+          "assessmentReason": "施設区分は用途による",
+          "independentVerbatimProofCompleted": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "20歳未満は喫煙専用室清掃目的でも立入禁止。一般事務所と病院の施設区分を確認。"
+    }
+  ]
+}
