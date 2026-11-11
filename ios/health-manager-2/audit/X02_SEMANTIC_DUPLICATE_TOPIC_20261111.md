@@ -199,3 +199,10 @@ GitHub対象ブランチから `q1.js`〜`q12.js`、`difficulty-patch-v5.js`、`
 - 修正は`apps/sanitary-manager-2/audit-fixes.js`（`181c4a33274b125e46d3b3491b7b222f0874bdf1`）、`ios/health-manager-2/release-questions.json`（`e60a5bb8cb7cef059e7008ac3e9b8b7c2758e020`）、従来正答文言のピン検査`ios/health-manager-2/verify-current-law-contract.cjs`（`a3657a62fd7c4b8d2ef5a0955125c9243983658b`）に適用。統合台帳`082c5856d4acb0b8c40f74ca68462b5d80e72772`を更新。
 - **新配布JSONのNode CLI直接再生成・バイト一致および新SHA-256は未確認**。現時点で完了したのは旧JSONからのパッチ再適用検証であり、正本の全ファイル読込チェーンはMuse側で別途独立検証が必要。
 - 再設計適用累計**8/35統合単位、修正13問**。残**27単位**。次回U09（L09：8時間超労働の休憩時間）から開始する。ただし本番公開ゲートは**BLOCKED**：X-04、個別出典170問、公開レビュー状態178問、専門家による独立根拠・正答査読等が未完。
+
+
+## 2026-11-12 Muse側独立Node CLI検証：U05〜U08の6問
+
+- ユーザーから報告されたMuse側ローカル独立検証：`node ios/health-manager-2/export-canonical-snapshot.cjs` が正常終了し、再生成結果が当時の配布 `ios/health-manager-2/release-questions.json` と **バイト単位で一致**。
+- U05〜U08（6問再設計）を反映した配布JSONコミット `e60a5bb8cb7cef059e7008ac3e9b8b7c2758e020` に対応する報告SHA-256：`2cdec39d9345eed9dc1ce16e646b4b481d5256d018af537e5a1bb9252d4819fb`。
+- この証拠はMuse側で実行したとのユーザー報告であり、このセッション自身がNode CLIを直接実行したものではない。**U09以降の問題修正後のSHAとして再利用しない**。Node CLIによる生成再現性の確認は内容の専門家独立査読、X-04、公開審査ゲートの合格を意味しない。
