@@ -1291,3 +1291,13 @@ B別台帳 `CONTENT_REAUDIT_264_B_20261110.md` は前バッチと同一blobで�
   - https://www.mhlw.go.jp/web/t_doc?dataId=74101000
   - https://www.mhlw.go.jp/web/t_doc?dataId=73023000
 - **品質ゲートはFAIL継続**。mainマージ、TestFlight、App Review提出は行わない。
+
+
+## 統合後独立再監査・要改善7問の修正適用と264問差分検証（2026-11-11）
+
+- 対象：第1バッチの要改善7問 `2026-04-Q02`、`Q03`、`Q05`、`Q06`、`Q08`、`Q09`、`Q10`。統合ブランチ `codex/hm1-integrate-basic-a-b-c-20261111` の `Resources/questions.json` に7問の設問文（stem）、全5肢（choices）、短い解説（short）、詳細解説（detail）を修正した。**正答index、ID、参照・法令メタデータは不変**。Q01・Q04・Q07は変更していない。
+- Q02：規格・型式検定と酸欠環境・吸収缶・フィット確認の判断を比較。Q03：特化則31条の2年周期と不使用・再使用時検査の違いを明確化し旧留保を解消。Q05：有機溶剤等健康診断個人票の5年保存と他記録を区別。Q06：常時特定粉じん作業への特別教育の適用条件を明示。Q08：ラベル法定表示事項の具体例とSDSとの違い。Q09：外部放射線測定の原則1か月と条件付き6か月の例外を区別。Q10：著しい寒冷・暑熱・振動・異常気圧下での有害業務の1日2時間制限を比較。
+- 問題データ修正コミット：`2de19f001d6c917e5fab5eb0481ea3dc06b4748e`。
+- **実再生成・全件差分検証：GitHub Actions実行ID `42965801986`、対象コミット `3353bcf220627c1c8e04b6aab8ba19ae7b4bbd6d`、job `130342620155`、conclusion `success`。** 基準コミット `4692fe05e1632fd08e2e476b433eebb714846667` と現行統合ブランチ先端をそれぞれ別worktreeで再生成し、双方とも264問。全IDが同順で一意、全問5肢・正答index0〜4、内容変更は上記7IDのみ、**257問完全一致**。変更7問についても正答index不変、stem/choices/short/detail以外のメタデータ不変。
+- 再生成と差分検証の実行定義：`.github/workflows/hm1-integrated-264-verify.yml`、追加コミット `3353bcf220627c1c8e04b6aab8ba19ae7b4bbd6d`。実行ログ： https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42965801986
+- **再判定：7問は修正適用済、形式・反映・影響範囲の検証PASS。ただし独立の新規全肢・原典の逐語再監査は未実施のため、公開品質PASSには加算しない。** 前回再監査の10問は依然10/264、残254問。重複・難易度・法令改正・著作権等の未解決ゲートが残るため総合品質FAIL、本番提出不可。次の独立再監査は基本Q11〜Q20。mainマージ、TestFlight、App Reviewの操作なし。
