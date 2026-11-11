@@ -1,0 +1,57 @@
+name: HM1 practice C Q01-Q10 exact eight regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/audit/practice_c_fixes_01_10.json'
+      - '.github/workflows/hm1-exact-eight-c-q01-q10.yml'
+  workflow_dispatch:
+jobs:
+  exact-eight:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate both 264 banks and assert eight-only changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=8f177485d678c28ab20f1325d989da48c9f94abb
+          git worktree add --detach /tmp/hm1-c01-before "$BASE"
+          git worktree add --detach /tmp/hm1-c01-after HEAD
+          (cd /tmp/hm1-c01-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-c01-before.log)
+          (cd /tmp/hm1-c01-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-c01-after.log)
+          python3 - <<'PY'
+          import json,unicodedata
+          from pathlib import Path
+          path='ios/health-manager-1/Resources/questions.json'
+          before=json.loads((Path('/tmp/hm1-c01-before')/path).read_text())
+          after=json.loads((Path('/tmp/hm1-c01-after')/path).read_text())
+          targets={f'practice-C-Q{i:02}' for i in [1,2,3,4,5,6,9,10]}
+          assert len(before)==len(after)==264,(len(before),len(after))
+          assert [x['id'] for x in before]==[x['id'] for x in after],'ID/order changed'
+          norm=lambda s:''.join(c for c in unicodedata.normalize('NFKC',s).casefold() if not c.isspace())
+          assert len({q['id'] for q in after})==264,'duplicate IDs'
+          assert len({norm(q['stem']) for q in after})==264,'duplicate normalized stems'
+          different={a['id'] for a,b in zip(before,after) if a!=b}
+          assert different==targets,sorted(different)
+          expected={'practice-C-Q01':1,'practice-C-Q02':1,'practice-C-Q03':2,'practice-C-Q04':1,'practice-C-Q05':1,'practice-C-Q06':1,'practice-C-Q09':0,'practice-C-Q10':1}
+          for a,b in zip(before,after):
+              if a['id'] not in targets:assert a==b,a['id']
+              assert len(b['choices'])==5,b['id']
+              assert len({norm(x) for x in b['choices']})==5,b['id']
+              assert type(b['ans']) is int and 0<=b['ans']<5,b['id']
+              if b['id'] in targets:
+                  assert b['ans']==expected[b['id']],b['id']
+                  assert b['short'] and b['detail'],b['id']
+          for held in ['practice-C-Q07','practice-C-Q08']:
+              assert next(x for x in before if x['id']==held)==next(x for x in after if x['id']==held),held
+          print('PASS: both banks regenerated 264; eight targets only; other 256 identical')
+          PY
