@@ -1,0 +1,57 @@
+name: HM1 practice C Q21-Q30 exact nine regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/audit/practice_c_fixes_21_30.json'
+      - '.github/workflows/hm1-exact-nine-c-q21-q30.yml'
+  workflow_dispatch:
+jobs:
+  exact-nine:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regenerate baseline and current; assert nine-only changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=a93a188a412776e1ba02c2089e8c7a85e9cbac3a
+          git worktree add --detach /tmp/hm1-c21-before "$BASE"
+          git worktree add --detach /tmp/hm1-c21-after HEAD
+          (cd /tmp/hm1-c21-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-c21-before.log)
+          (cd /tmp/hm1-c21-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-c21-after.log)
+          python3 - <<'PY'
+          import json,unicodedata
+          from pathlib import Path
+          path='ios/health-manager-1/Resources/questions.json'
+          a=json.loads((Path('/tmp/hm1-c21-before')/path).read_text())
+          b=json.loads((Path('/tmp/hm1-c21-after')/path).read_text())
+          expected={f'practice-C-Q{i:02}' for i in [21,22,23,24,25,26,27,29,30]}
+          assert len(a)==len(b)==264,(len(a),len(b))
+          assert [x['id'] for x in a]==[x['id'] for x in b],'ID/order changed'
+          norm=lambda s:''.join(c for c in unicodedata.normalize('NFKC',s).casefold() if not c.isspace())
+          assert len({q['id'] for q in b})==264,'duplicate ID'
+          assert len({norm(q['stem']) for q in b})==264,'duplicate stem'
+          diffs={x['id'] for x,y in zip(a,b) if x!=y}
+          assert diffs==expected,sorted(diffs)
+          ans={f'practice-C-Q{i:02}':0 for i in [21,22,23,24,25,26,27,29,30]}
+          for x,y in zip(a,b):
+              if x['id'] not in expected:assert x==y,x['id']
+              assert len(y['choices'])==5,y['id']
+              assert len({norm(s) for s in y['choices']})==5,y['id']
+              assert type(y['ans']) is int and 0<=y['ans']<5,y['id']
+              if y['id'] in expected:
+                  assert y['ans']==ans[y['id']],y['id']
+                  assert y['short'] and y['detail'] and y['sourceRef'],y['id']
+          held='practice-C-Q28'
+          assert next(x for x in a if x['id']==held)==next(x for x in b if x['id']==held)
+          print('PASS: 264 each; specified nine C Q21-Q30 changed; other 255 identical')
+          PY
