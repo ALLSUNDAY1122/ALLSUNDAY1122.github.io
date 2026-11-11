@@ -1185,3 +1185,13 @@
 - No.85の選択肢には一次予防を重複して誤答に使うなど低い識別難度がある。No.80〜82は用語対応の類似形式が連続しており、重複度・難易度を別途再評価する。
 - 今回は監査記録だけ変更。生成元JS、iOS JSON、review/approval/publicationフラグ、新規ビルド、TestFlight、App Reviewには触れない。公開品質ゲート **BLOCKED**。
 - **累計89/178問点検済、残89問**。次は固定ID **No.90〜99**。
+
+
+## 2026-11-11追補｜第9バッチNo.80〜89指摘6件を生成元修正・再生成・差分検証
+
+- 対象：固定No.83・84・86〜89の6件。問題ID `sm2-5y-r06-hyg-09`、`sm2-5y-r06-hyg-10`、`sm2-5y-r07-hyg-02/03/04/05`。生成元 `apps/sanitary-manager-2/audit-fixes.js` の末尾に `SM2_INDEPENDENT_NINTH10_METADATA_FIX6_20261111` を追記し、対象6件の `topic`・`basis` だけを題意に合わせて修正した。
+- 生成元修正コミット `cd55189d56bf632fbfbf49d9e6cf3779c2de6919`。
+- GitHub Actions `HM2 canonical iOS question JSON rebuild` run `42967731865` **SUCCESS**：https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42967731865 。JSON自動再生成コミット `4b4afdac36095918c56048a98ace9ce3bef01edd`。
+- 自動再生成直前のJSON blob `9bfd29c9e15016b8bf9ea59ec96bceb8f3faaaa8` と再生成後のJSON blob `2bc4a1aabc321404e46015635ce1caf998742e4b` を配列順・ID一致で全300問、全フィールド比較。**差分は指定6問のみ**、6件の変更フィールドは `topic` と `primary_basis` のみ。対象外294問は全フィールド完全一致。設問・全選択肢・正答・quick・解説・出典URL・監査承認・公開フラグはすべて不変。
+- 今回は出典改善を対象外としたため、No.84の試験協会一般URLを感度算式の直接原典へ差替える課題、No.83・87・89の直接資料照合、No.80〜82の定型解説補強、No.85の出典具体化、No.89の胸骨圧迫解説の具体化は未完了。
+- 独立レビュー進捗は**89/178問点検済・残89問**のまま。次の監査は固定ID No.90〜99。専門家最終承認は未了であり、公開ゲート**BLOCKED**を維持。新規ビルド・TestFlight・App Reviewなし。
