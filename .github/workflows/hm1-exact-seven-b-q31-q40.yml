@@ -1,0 +1,58 @@
+name: HM1 B Q31-Q40 exact seven regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/content-overrides-b-20261110.json'
+      - '.github/workflows/hm1-exact-seven-b-q31-q40.yml'
+  workflow_dispatch:
+jobs:
+  exact-seven:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild baseline and current 264-question banks and compare records
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=3fb4b00fbe0498308bdf058eb3a531e72edbe324
+          git worktree add --detach /tmp/hm1-b31-before "$BASE"
+          git worktree add --detach /tmp/hm1-b31-after HEAD
+          (cd /tmp/hm1-b31-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-b31-before.log)
+          (cd /tmp/hm1-b31-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-b31-after.log)
+          python3 - <<'PY'
+          import json, unicodedata
+          from pathlib import Path
+          path='ios/health-manager-1/Resources/questions.json'
+          before=json.loads((Path('/tmp/hm1-b31-before')/path).read_text())
+          after=json.loads((Path('/tmp/hm1-b31-after')/path).read_text())
+          targets={f'practice-B-Q{i:02}' for i in [31,32,33,34,36,39,40]}
+          assert len(before)==len(after)==264,(len(before),len(after))
+          assert [q['id'] for q in before]==[q['id'] for q in after],'ID order mismatch'
+          assert len({q['id'] for q in after})==264,'duplicate ID'
+          def norm(s):
+              return ''.join(c for c in unicodedata.normalize('NFKC',s).casefold() if not c.isspace())
+          assert len({norm(q['stem']) for q in after})==264,'duplicate normalized stem'
+          different={a['id'] for a,b in zip(before,after) if a!=b}
+          assert different==targets,f'changed IDs {sorted(different)}'
+          expected={'practice-B-Q31':0,'practice-B-Q32':2,'practice-B-Q33':3,'practice-B-Q34':0,'practice-B-Q36':0,'practice-B-Q39':3,'practice-B-Q40':0}
+          for a,b in zip(before,after):
+              if a['id'] not in targets: assert a==b,a['id']
+              assert len(b['choices'])==5,b['id']
+              assert len({norm(c) for c in b['choices']})==5,b['id']
+              assert type(b['ans']) is int and 0<=b['ans']<5,b['id']
+              if b['id'] in targets:
+                  assert b['ans']==expected[b['id']],b['id']
+                  assert b['short'] and b['detail'],b['id']
+          for held in ['practice-B-Q35','practice-B-Q37','practice-B-Q38']:
+              assert next(q for q in before if q['id']==held)==next(q for q in after if q['id']==held),held
+          print('PASS: both 264; only seven targets changed; other 257 identical; three held unchanged')
+          PY
