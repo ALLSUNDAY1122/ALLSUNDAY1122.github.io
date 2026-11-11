@@ -967,3 +967,15 @@
 - **実質重複候補**：No.50（衛生管理者14日選任）と既レビュー `sm2-5y-r04-law-02`、No.53（一般健康診断個人票5年保存）と既レビュー `sm2-5y-r06-law-07`。第2種試験教材として同一論点の繰返しが多いため、単なるメタデータ修正だけで重複解消とはしない。No.54の8時間休憩は7時間問題と近いものの境界値判断という差がある。
 - 今回は**監査記録のみ変更**。問題JS・iOS JSON・レビュー承認フラグ・ビルド・TestFlight・App Reviewは変更しない。品質ゲートは**BLOCKED**を維持。
 - 公開ゲート固定178問の累計：**59/178件点検済、残119件**。次回は一覧**No.60〜69**の10問を監査。
+
+
+## 2026-11-11追補｜独立レビュー第6バッチの分類・根拠2件修正、正本JSON再生成
+
+- 対象：`sm2-5y-r10-law-04`（No.50）、`sm2-5y-r04-hyg-04`（No.59）。生成元 `apps/sanitary-manager-2/audit-fixes.js` に `SM2_INDEPENDENT_SIXTH10_METADATA_FIX2_20261111` を追加。
+- No.50：`topic` を「衛生管理者の選任期限（14日以内）」、`basis` を「労働安全衛生規則7条1項1号」に更新。
+- No.59：`topic` を「冬季事務室の相対湿度・乾燥対策」、`basis` を「事務所衛生基準規則5条3項（空気調和設備設置時の相対湿度40～70%は努力義務）」へ修正。`sourceUrl` を e-Gov 法令本文 `https://laws.e-gov.go.jp/law/347M50002000043` に更新。以前の熱中症関連出典の不一致も解消。専門家の原典逐語監査を代替するものではない。
+- 生成元修正コミット：`fecfdec776266f62cac60b4ee79cd2c9fe9dba2a`。GitHub Actions `HM2 canonical iOS question JSON rebuild` run `42964250592` は **SUCCESS**。https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42964250592
+- 自動再生成JSONコミット：`f03144a7dc8c087c14f279ea7c41fbaf3a394954`。生成前 `release-questions.json` blob `792c56a9ba2f81b28ab1e291bafa1d7083349604` → 再生成後 blob `7852523393cdd8cfa9dafb4ebce30d921ab07224`。
+- **JSON全300問のID順全フィールド比較PASS**。差分は上記**2問のみ**。No.50は `topic` と `primary_basis` のみ、No.59は `topic` と `primary_basis` と `source_url` のみ。他298問完全一致。全300問の問題文・5肢・正答・解説・レビュー状態・公開状態は不変。GitHub比較でJSONのみ5行追加・5行削除。
+- 今回はNo.59の `law_related` フラグを変更しない（旧来false、関連法令を引用する現在の分類との整合性は次回レビューで要評価）。重複候補No.50対`r04-law-02`、No.53対`r06-law-07`は別途再設計待ち。
+- 独立レビュー進捗は**59/178問点検済・残119問**。メタデータ修正は専門家レビュー承認ではなく、公開品質ゲートは引き続き**BLOCKED**。新規ビルド・TestFlight・App Review提出なし。次の点検は固定ID一覧No.60〜69。
