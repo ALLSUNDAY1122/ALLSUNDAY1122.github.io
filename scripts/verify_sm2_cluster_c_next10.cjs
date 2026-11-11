@@ -29,7 +29,7 @@ for(const [mode,inputs] of [['browser',[...files,'difficulty-patch-v5.js',...ove
  for(const [k,g] of groups){assert.equal(g.length,10,k);const n=[0,0,0,0,0];for(const q of g){assert.equal(q.choices.length,5);assert.equal(new Set(q.choices).size,5);n[q.answer-1]++;}assert.ok(n.every(x=>x===2),k+' '+n);}
  const counts=new Map();for(const q of qs){const k=norm(q.question);counts.set(k,(counts.get(k)||0)+1);}
  const duplicateSizes=[...counts.values()].filter(x=>x>1).sort((a,b)=>b-a);
- assert.equal(counts.size,mode==='browser'?247:300);
- if(mode==='browser')assert.deepEqual(duplicateSizes,[37,18]);else assert.deepEqual(duplicateSizes,[]);
+ assert.equal(counts.size,mode==='browser'?257:300);
+ if(mode==='browser')assert.deepEqual(duplicateSizes,[37,8]);else assert.deepEqual(duplicateSizes,[]);
  console.log('PASS',JSON.stringify({mode,questionCount:qs.length,clusterCSecondBatch:10,uniqueStems:counts.size,duplicateSizes,clusterCRemaining:0}));
 }
