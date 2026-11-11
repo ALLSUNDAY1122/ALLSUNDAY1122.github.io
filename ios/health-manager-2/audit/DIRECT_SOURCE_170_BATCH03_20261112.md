@@ -37,3 +37,12 @@
 - ユーザーからMuse側の独立実測結果を受領：`node ios/health-manager-2/export-canonical-snapshot.cjs`が正常終了、出力と同時点の`ios/health-manager-2/release-questions.json`が**バイト単位で一致**。SHA-256：`14745a77221ac62758acd8ea3031e50d1c4d16efdc581e86dbafa2a4b30fc7b5`。
 - 対象版は`sm2-r7o-001`を労働安全衛生法施行令2条へ変更した後の生成元・配布JSON（生成元コミット`aad6fe7dba0760c4a8fadf3b28029a4b527a6ebb`、JSONコミット`eb92e62ec8a1d67a93b2d33aab3c9de03a3f2dbb`）。**今回続行する`sm2-r7o-011`変更前の状態に限る証拠**であり、後続変更後のSHAとして流用しない。
 - このGitHub連携セッションがNode CLIを直接実行・SHAを再計算したわけではない。Muse報告を`sm2-r7o-001`変更後の**独立生成再現性PASS**として記録。専門家逐語監査、170問全件、178問状態ゲート、公開承認の代替としない。**本番公開BLOCKED**。
+
+
+## 2026-11-12 第3バッチNo.023の出典最適化を完了（修正後追記）
+
+- **訂正**：旧URL`https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1&pageNo=1`（令和7年5月20日基発0520第6号）にも「第1 WBGT値の活用」で**日射なしWBGT＝0.7×自然湿球＋0.3×黒球の算式が掲載されていた**。旧資料が算式の直接根拠にならないとした先行判定は誤り。今回の変更は**より明示的な専門資料へのURL最適化**であり、設問内容の誤り・出典の不存在の修正ではない。
+- 新URL：環境省`https://www.wbgt.env.go.jp/doc_observation.php`、同ページ「暑さ指数(WBGT)の算出式」の屋内式を確認。正答29.7℃と一致。
+- 生成元への厳格旧状態ガード付きsourceUrl修正コミット`bb230006da6bedebb2645de12385a75fd09707ad`。配布JSON同期コミット`fdeb6fba6b366e48a5f1c869d222e40b3c83a36c`。旧blob`b828fe84348f5598847b9f84ffd1b37bcbbef32e`→新blob`05c1f077ea5bfa60fa85d0f77124a0629802a310`を全300問・全フィールドで突合し、`sm2-r7o-011.source_url`の1フィールド差分だけ。他299問不変、300 ID一意・5肢一意・正答分布各セット均衡を維持。
+- **URL以外の変更要否**：設問・選択肢・正答・解説の変更は不要。現`primary_basis`の厚労省資料名と新`source_url`の環境省との資料名対応がずれるため、**次のメタデータ修正候補**として`primary_basis`に環境省WBGTの算式ページと厚労省通知を併記するなどの整合化を記録。現`law_related=true`の算式問題の分類可否も従来の未判定を維持する。今回はURL以外を変更しない。
+- **修正後のNode CLI独立再生成／新SHA／CIは未確認**。直前のMuse検証SHA`14745a77221ac62758acd8ea3031e50d1c4d16efdc581e86dbafa2a4b30fc7b5`は今回の修正**前**の証拠。正式第4バッチは`DIRECT_SOURCE_170_BATCH04_20261112.md`に記録、累計40/170問点検。公開**BLOCKED**。
