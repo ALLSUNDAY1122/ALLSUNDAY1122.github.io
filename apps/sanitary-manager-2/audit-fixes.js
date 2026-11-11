@@ -833,3 +833,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH01_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH02_20261111: sources for 10 reviewed questions; content unchanged.
+(function(){'use strict';
+const fixes=[{"id":"sm2-demo-023","url":"https://bsd.neuroinf.jp/w/index.php?title=%E7%A5%9E%E7%B5%8C%E7%AF%80","question":"神経細胞体の集まりの名称について、正しい組合せはどれか。","correct":"中枢神経系＝神経核、末梢神経系＝神経節"},{"id":"sm2-demo-024","url":"https://www.msdmanuals.com/ja-jp/professional/02-%E8%82%9D%E8%83%86%E9%81%93%E7%96%BE%E6%82%A3/%E8%82%9D%E7%96%BE%E6%82%A3%E3%82%92%E6%9C%89%E3%81%99%E3%82%8B%E6%82%A3%E8%80%85%E3%81%B8%E3%81%AE%E3%82%A2%E3%83%97%E3%83%AD%E3%83%BC%E3%83%81/%E8%82%9D%E8%87%93%E3%81%AE%E6%A7%8B%E9%80%A0%E3%81%8A%E3%82%88%E3%81%B3%E6%A9%9F%E8%83%BD","question":"肝臓の機能として、誤っているものはどれか。","correct":"ヘモグロビンを主に合成する。"},{"id":"sm2-demo-025","url":"https://www.msdmanuals.com/ja-jp/home/05-%E8%85%8E%E8%87%93%E3%81%A8%E5%B0%BF%E8%B7%AF%E3%81%AE%E7%97%85%E6%B0%97/%E8%85%8E%E8%87%93%E3%81%A8%E5%B0%BF%E8%B7%AF%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E8%85%8E%E8%87%93","question":"腎臓と尿の生成に関する次の記述のうち、正しいものはどれか。","correct":"原尿中の電解質の多くは尿細管から血液へ再吸収される。"},{"id":"sm2-demo-026","url":"https://www.bs.jrc.or.jp/kk/hyogo/donation/m2_02_01_00_bloodtype.html","question":"ABO式血液型でA型の人の血清に通常存在する抗体はどれか。","correct":"抗B抗体"},{"id":"sm2-demo-027","url":"https://www.hql.jp/database/cat/senior/funcdb2000/%E8%A8%88%E6%B8%AC%E3%83%87%E3%83%BC%E3%82%BF/%E6%9A%97%E9%A0%86%E5%BF%9C","question":"明るい屋外から暗い室内へ入った直後は見えにくいが、しばらくすると見えるようになる。この現象は何か。","correct":"暗順応"},{"id":"sm2-demo-028","url":"https://www.msdmanuals.com/ja-jp/professional/10-%E5%86%85%E5%88%86%E6%B3%8C%E7%96%BE%E6%82%A3%E3%81%A8%E4%BB%A3%E8%AC%9D%E6%80%A7%E7%96%BE%E6%82%A3/%E6%B0%B4%E4%BB%A3%E8%AC%9D/%E6%B0%B4%E3%81%A8%E3%83%8A%E3%83%88%E3%83%AA%E3%82%A6%E3%83%A0%E3%81%AE%E5%B9%B3%E8%A1%A1","question":"体温調節に関する次の記述のうち、誤っているものはどれか。","correct":"不感蒸泄とは呼気から失われる水分だけをいい、皮膚からの水分喪失は含まない。"},{"id":"sm2-demo-029","url":"https://www.msdmanuals.com/ja-jp/home/multimedia/table/%E4%B8%BB%E3%81%AA%E5%8E%9F%E7%99%BA%E6%80%A7%E5%85%8D%E7%96%AB%E4%B8%8D%E5%85%A8%E7%97%87","question":"抗体が中心となって病原体などに作用する獲得免疫はどれか。","correct":"体液性免疫"},{"id":"sm2-demo-030","url":"https://www.msdmanuals.com/ja-jp/home/19-%E8%80%B3-%E9%BC%BB-%E3%81%AE%E3%81%A9%E3%81%AE%E7%97%85%E6%B0%97/%E8%80%B3-%E9%BC%BB-%E3%81%AE%E3%81%A9%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E5%8A%A0%E9%BD%A2%E3%81%AB%E3%82%88%E3%82%8B%E8%80%B3-%E9%BC%BB-%E3%81%AE%E3%81%A9%E3%81%B8%E3%81%AE%E5%BD%B1%E9%9F%BF","question":"中高年齢者の加齢による生理機能の変化について、誤っているものはどれか。","correct":"老人性難聴では一般に低い周波数の音から先に聞こえにくくなる。"},{"id":"sm2-r7o-014","url":"https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/anzen_eisei/ae-kenkouhoji.html","question":"職場のメンタルヘルス対策における4つのケアについて、担い手と内容の組合せとして正しいものはどれか。","correct":"ラインによるケア―管理監督者が部下からの相談対応や職場環境等の改善を行うこと"},{"id":"sm2-r7o-016","url":"https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/01_00008.html","question":"細菌性食中毒の予防に関する記述として、正しいものはどれか。","correct":"調理後の食品を室温に長時間置かず、低温保存と十分な加熱を組み合わせることは、菌を増やさない・やっつける対策に当たる"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch02 target count/ID');
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+  !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correct||
+  (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.url))
+  throw Error('HM2 X-01 batch02 unexpected source/content '+f.id);
+ q.sourceUrl=f.url;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH02_IDS=fixes.map(f=>f.id);
+})();
