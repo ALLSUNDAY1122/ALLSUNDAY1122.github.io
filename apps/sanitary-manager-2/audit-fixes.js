@@ -312,3 +312,12 @@ window.SM2_INDEPENDENT_FIRST10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
 
 // SM2_INDEPENDENT_NEXT10_METADATA_FIX8_20261111: 11-20 audit batch; only eight topic/basis metadata changes; preserve independent-review block.
 (function(){'use strict';const fixes=[{"id":"sm2-5y-r05-law-04","topic":"法定労働時間（1日・1週）","basis":"労働基準法32条1項・2項"},{"id":"sm2-5y-r05-law-05","topic":"8時間超労働時の法定休憩","basis":"労働基準法34条1項"},{"id":"sm2-5y-r05-law-07","topic":"衛生委員会の議事記録の保存期間","basis":"労働安全衛生規則23条4項"},{"id":"sm2-5y-r05-law-08","topic":"一般定期健康診断の実施頻度","basis":"労働安全衛生規則44条"},{"id":"sm2-5y-r05-law-09","topic":"業務上傷病に関する解雇制限期間","basis":"労働基準法19条1項"},{"id":"sm2-5y-r06-law-03","topic":"6時間超8時間以下の休憩時間","basis":"労働基準法34条1項"},{"id":"sm2-5y-r06-law-04","topic":"年次有給休暇の年5日取得確保義務","basis":"労働基準法39条7項・8項"},{"id":"sm2-5y-r06-law-05","topic":"50人未満事業場の一般定期健康診断義務","basis":"労働安全衛生規則44条（結果報告は同52条）"}];const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));if(fixes.length!==8||new Set(fixes.map(f=>f.id)).size!==8)throw Error('HM2 next10 fix count mismatch');for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 next10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}window.SM2_INDEPENDENT_NEXT10_METADATA_FIX8_IDS=fixes.map(f=>f.id);})();
+
+// SM2_INDEPENDENT_THIRD10_METADATA_FIX6_20261111: metadata correction only; independent review gate stays blocked.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r06-law-08","topic":"時間外・休日労働の36協定と届出","basis":"労働基準法36条"},{"id":"sm2-5y-r06-law-09","topic":"作業環境測定の実施と結果記録","basis":"労働安全衛生法65条"},{"id":"sm2-5y-r07-law-02","topic":"特定業務従事者の定期健康診断間隔","basis":"労働安全衛生規則45条"},{"id":"sm2-5y-r07-law-03","topic":"単胎妊娠の産前休業請求","basis":"労働基準法65条1項"},{"id":"sm2-5y-r07-law-04","topic":"産業医の作業場等巡視頻度","basis":"労働安全衛生規則15条1項"},{"id":"sm2-5y-r07-law-05","topic":"短時間労働者の年次有給休暇の比例付与","basis":"労働基準法39条3項・労働基準法施行規則24条の3"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==6||new Set(fixes.map(f=>f.id)).size!==6)throw Error('HM2 third10 metadata fix IDs invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 third10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
+window.SM2_INDEPENDENT_THIRD10_METADATA_FIX6_IDS=fixes.map(f=>f.id);
+})();
