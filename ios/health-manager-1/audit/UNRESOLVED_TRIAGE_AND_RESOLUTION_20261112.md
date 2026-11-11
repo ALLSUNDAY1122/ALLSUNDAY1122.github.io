@@ -75,7 +75,7 @@
 - **`2025-04-Q34`**：FDA：ヒスタミン汚染品の製造・ロット記録による分別と検査を確認。日本法の個別回収判断は別途確認。確認原典：`https://www.fda.gov/regulatory-information/search-fda-guidance-documents/guidance-industry-reconditioning-fish-and-fishery-products-segregation`。旧登録：`https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000130677.html`。変更：`auditSourceURL、auditStatus`、正答index 3不変。
 - **`2025-04-Q36`**：NCBI：PR間隔は心房から心室までの伝導・房室結節遅延を含み延長はAV伝導遅延で説明可能。確認原典：`https://www.ncbi.nlm.nih.gov/sites/books/NBK549803/`。旧登録：`https://www.msdmanuals.com/ja-jp/home/06-心臓と血管の病気/心臓と血管の生物学/心臓の生物学`。変更：`auditSourceURL、auditStatus`、正答index 1不変。
 - **`2025-04-Q37`**：NCBI：肺胞換気=(1回換気量−死腔量)×呼吸数=(500−150)×12=4200mL/min。旧原典NBK539825は表面張力で誤題材。確認原典：`https://www.ncbi.nlm.nih.gov/sites/books/NBK482501/`。旧登録：`https://www.ncbi.nlm.nih.gov/sites/books/NBK482501/`。変更：`auditSourceURL、auditStatus`、正答index 4不変。
-- **`2026-04-Q17`のATSDR元登録URLは今回直接本文取得に成功したため、URL自体は変更せず監査ステータスのみ更新。**`2025-04-Q37`の旧NCBI `NBK539825`は肺胞表面張力を説明しており、肺胞換気の直接原典に置換。
+- **`2026-04-Q17`のATSDR元登録URLは今回直接本文取得に成功したため、URL自体は変更せず監査ステータスのみ更新。**`2025-04-Q37`の旧個別台帳には肺胞表面張力資料`NBK539825`の誤トピック指摘があるが、今回の修正開始時点で生成正本の`auditSourceURL`は既に肺胞換気の適切な`NBK482501`へ更新されていた。**今回はQ37の`auditStatus`のみ変更し、出典URLは不変**。
 - 以上6問の中心命題を公開一次・専門医学資料から確認したが、全30肢について原典段落ごとの独立逐語証明は未完了。変更前後の基本132問を本セッション内のレコード単位で照合し、**指定6問以外は不変、全132問の設問・5肢・正答index・detailは不変**。
 - 個別台帳`audit/PRIMARY_SOURCE_AUDIT_A_BATCH3_20261112.json`に元URL、代替URL、原典確認内容、変更フィールド、留保を保存。旧台帳のPENDING/PARTIALは履歴として保持。
 
