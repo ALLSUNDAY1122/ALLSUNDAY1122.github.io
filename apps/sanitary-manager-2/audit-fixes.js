@@ -534,8 +534,15 @@ for(const f of fixes){
   if(f.choices.length!==5||new Set(f.choices).size!==5||f.answer<1||f.answer>5)throw Error('HM2 P1-1 options invalid '+f.id);
   const alreadyRedesigned=q.answer===f.answer&&q.question===f.question&&JSON.stringify(q.choices)===JSON.stringify(f.choices);
   const legacy36Agreement=f.id==='sm2-5y-r08-law-05'&&q.answer===5&&/36協定|時間外.*休日労働|時間外労働/.test([q.question,...(Array.isArray(q.choices)?q.choices:[])].join('\n'));
-  if(!alreadyRedesigned&&!legacy36Agreement&&q.answer!==f.answer)throw Error('HM2 P1-1 unexpected source/answer '+f.id);
-  if(f.id==='sm2-5y-r08-law-05'&&!alreadyRedesigned&&!legacy36Agreement)throw Error('HM2 P1-1 unexpected source question '+f.id);
+  // The earlier cluster-C patch replaces the original stem with this intermediate health-report scenario.
+  // Match both the exact intermediate stem and its correct fifth choice; do not accept an arbitrary answer-5 record.
+  const intermediateHealthReport=f.id==='sm2-5y-r08-law-05'&&q.answer===5&&
+    q.question==='常時使用する労働者50人の事業場が定期健康診断を実施した。結果報告に関して適切なのはどれか。'&&
+    Array.isArray(q.choices)&&q.choices.length===5&&
+    q.choices[4]==='所定の健康診断結果報告書を遅滞なく所轄労働基準監督署長に提出する。';
+  const recognizedSource=alreadyRedesigned||legacy36Agreement||intermediateHealthReport;
+  if(!recognizedSource&&q.answer!==f.answer)throw Error('HM2 P1-1 unexpected source/answer '+f.id);
+  if(f.id==='sm2-5y-r08-law-05'&&!recognizedSource)throw Error('HM2 P1-1 unexpected source question '+f.id);
   Object.assign(q,{answer:f.answer,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,topic:f.topic,basis:f.basis,sourceUrl:f.sourceUrl});
 }
 window.HM2_P1_1_DIFFERENT_CONDITION_IDS=fixes.map(f=>f.id);
