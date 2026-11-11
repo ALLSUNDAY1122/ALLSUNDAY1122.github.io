@@ -1,0 +1,1187 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "baseCommit": "d56f0fb0c4889881357c4ebd6fbebda27c46504a",
+  "scope": "全264問一次照合・未解決項目の3群仕分け。未解決台帳のPENDING/PARTIALと登録URL障害をIDで和集合、後続修正済み歴史IDは除外",
+  "method": "1問を1群のみ計上。a=公開代替出典の再確認・URL変更・追証が可能な候補（解消済みではない）、b=特定有料・認証・閲覧権規格自体が必須と立証された候補、c=問題内容の改訂が不可避な候補。JIS一般論だけでbを立てない。旧バッチ分類と現時点解決状況は要再照合。",
+  "excludedHistoricalCorrectedIds": [
+    "2025-10-Q28",
+    "2026-04-Q26",
+    "2026-04-Q32",
+    "practice-A-Q17",
+    "practice-A-Q19",
+    "practice-A-Q41",
+    "practice-A-Q42",
+    "practice-A-Q43",
+    "practice-A-Q44",
+    "practice-B-Q09",
+    "practice-B-Q12"
+  ],
+  "counts": {
+    "a": 84,
+    "b": 0,
+    "c": 1,
+    "total": 85
+  },
+  "groups": {
+    "a": [
+      "2025-04-Q34",
+      "2025-04-Q36",
+      "2025-04-Q37",
+      "2025-04-Q38",
+      "2025-04-Q40",
+      "2025-04-Q43",
+      "2025-10-Q01",
+      "2025-10-Q02",
+      "2025-10-Q06",
+      "2025-10-Q10",
+      "2025-10-Q14",
+      "2025-10-Q15",
+      "2025-10-Q37",
+      "2025-10-Q39",
+      "2025-10-Q44",
+      "2026-04-Q02",
+      "2026-04-Q04",
+      "2026-04-Q08",
+      "2026-04-Q12",
+      "2026-04-Q13",
+      "2026-04-Q14",
+      "2026-04-Q15",
+      "2026-04-Q17",
+      "2026-04-Q19",
+      "2026-04-Q20",
+      "2026-04-Q28",
+      "2026-04-Q29",
+      "2026-04-Q30",
+      "2026-04-Q31",
+      "2026-04-Q33",
+      "2026-04-Q34",
+      "2026-04-Q41",
+      "2026-04-Q42",
+      "2026-04-Q43",
+      "2026-04-Q44",
+      "practice-A-Q08",
+      "practice-A-Q11",
+      "practice-A-Q13",
+      "practice-A-Q20",
+      "practice-A-Q21",
+      "practice-A-Q26",
+      "practice-A-Q27",
+      "practice-A-Q28",
+      "practice-A-Q33",
+      "practice-A-Q34",
+      "practice-A-Q37",
+      "practice-A-Q39",
+      "practice-B-Q08",
+      "practice-B-Q20",
+      "practice-B-Q27",
+      "practice-B-Q28",
+      "practice-B-Q31",
+      "practice-B-Q33",
+      "practice-C-Q01",
+      "practice-C-Q02",
+      "practice-C-Q03",
+      "practice-C-Q04",
+      "practice-C-Q05",
+      "practice-C-Q06",
+      "practice-C-Q07",
+      "practice-C-Q08",
+      "practice-C-Q09",
+      "practice-C-Q10",
+      "practice-C-Q14",
+      "practice-C-Q15",
+      "practice-C-Q17",
+      "practice-C-Q18",
+      "practice-C-Q19",
+      "practice-C-Q20",
+      "practice-C-Q21",
+      "practice-C-Q22",
+      "practice-C-Q26",
+      "practice-C-Q29",
+      "practice-C-Q30",
+      "practice-C-Q31",
+      "practice-C-Q32",
+      "practice-C-Q33",
+      "practice-C-Q34",
+      "practice-C-Q35",
+      "practice-C-Q36",
+      "practice-C-Q37",
+      "practice-C-Q41",
+      "practice-C-Q42",
+      "practice-C-Q44"
+    ],
+    "b": [],
+    "c": [
+      "2026-04-Q25"
+    ]
+  },
+  "items": [
+    {
+      "id": "2025-04-Q34",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-04-Q36",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-04-Q37",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-04-Q38",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-04-Q40",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "UNRESOLVED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-04-Q43",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-10-Q01",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-10-Q02",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-10-Q06",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-10-Q10",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-10-Q14",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-10-Q15",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-10-Q37",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-10-Q39",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2025-10-Q44",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q02",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q04",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q08",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q12",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q13",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q14",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q15",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q17",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q19",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q20",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q25",
+      "group": "c",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "登録原典の適用範囲が設問より狭く、問題条件そのものの再設計が必要",
+      "resolution": "CONTENT_REDESIGN_REQUIRED_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q28",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q29",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q30",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q31",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q33",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q34",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q41",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q42",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q43",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "2026-04-Q44",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q08",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q11",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q13",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q20",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q21",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q26",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q27",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "UNRESOLVED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q28",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q33",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "UNRESOLVED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q34",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q37",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-A-Q39",
+      "group": "a",
+      "origin": {
+        "pending": true,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-B-Q08",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-B-Q20",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-B-Q27",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-B-Q28",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-B-Q31",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-B-Q33",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q01",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q02",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q03",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q04",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q05",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q06",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q07",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q08",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q09",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q10",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q14",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q15",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q17",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q18",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q19",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q20",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q21",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q22",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q26",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q29",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "SOURCE_URL_FIXED_PENDING_REBUILD"
+    },
+    {
+      "id": "practice-C-Q30",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q31",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q32",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q33",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q34",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "SUPPLEMENTAL_CENTRAL_CLAIM_PROVEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q35",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q36",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q37",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q41",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q42",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": true,
+        "accessFlags": []
+      },
+      "reason": "未立証の中心命題を公開法令・行政資料・医学教科書・一次論文で追証する対象",
+      "resolution": "SUPPLEMENTAL_CENTRAL_CLAIM_PROVEN_NO_DATA_CHANGE"
+    },
+    {
+      "id": "practice-C-Q44",
+      "group": "a",
+      "origin": {
+        "pending": false,
+        "partial": false,
+        "accessFlags": [
+          "REGISTERED_URL_REVIEW_REQUIRED"
+        ]
+      },
+      "reason": "公開一次資料の代替経路・別原典の追証可能性があり、登録経路の確認・差替えを優先",
+      "resolution": "OPEN_NO_DATA_CHANGE"
+    }
+  ],
+  "verificationPerformed": [
+    {
+      "id": "practice-C-Q29",
+      "status": "SOURCE_URL_FIXED_PENDING_REBUILD",
+      "original": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000126281.html",
+      "verified": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/campylobacterqa.html",
+      "checked": "厚労省カンピロバクター食中毒予防Q&A。生肉器具経由の二次汚染・洗浄消毒を直接確認",
+      "dataChanged": true
+    },
+    {
+      "id": "practice-C-Q34",
+      "status": "SUPPLEMENTAL_CENTRAL_CLAIM_PROVEN_NO_DATA_CHANGE",
+      "original": "https://www.ncbi.nlm.nih.gov/books/NBK26/",
+      "verified": "https://www.ncbi.nlm.nih.gov/sites/books/NBK539845/",
+      "additional": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12353864/",
+      "checked": "交感節後神経の主な神経伝達物質ノルアドレナリン、ヒト心臓のノルアドレナリン作動性神経分布を補強。副腎髄質は旧登録原典で維持",
+      "dataChanged": false
+    },
+    {
+      "id": "practice-C-Q42",
+      "status": "SUPPLEMENTAL_CENTRAL_CLAIM_PROVEN_NO_DATA_CHANGE",
+      "original": "https://openstax.org/books/anatomy-and-physiology-2e/pages/16-5-the-coordination-and-gait-exams",
+      "verified": "https://www.ncbi.nlm.nih.gov/sites/books/NBK532978/",
+      "additional": "https://openstax.org/books/biology-2e/pages/36-4-hearing-and-vestibular-sensation",
+      "checked": "半規管の角加速度受容はNCBIとOpenStaxで直接確認。小脳の姿勢・協調は元の16.5ページで別途支持",
+      "dataChanged": false
+    },
+    {
+      "id": "2026-04-Q25",
+      "status": "CONTENT_REDESIGN_REQUIRED_NO_DATA_CHANGE",
+      "original": "https://www.mhlw.go.jp/web/t_doc?dataId=74089000",
+      "verified": "https://www.mhlw.go.jp/web/t_doc?dataId=74089000",
+      "checked": "事務所衛生基準規則1条は事務所に対象を限定、3条の1/20を一般屋内作業場へ無条件適用できない。設問の対象を事務室と明確化すべき",
+      "dataChanged": false
+    }
+  ],
+  "references": {
+    "jisTerms": "https://www.jisc.go.jp/site/kiyaku.html",
+    "jisView": "https://www.jisc.go.jp/qa/",
+    "scopeLaw": "https://www.mhlw.go.jp/web/t_doc?dataId=74089000"
+  }
+}
