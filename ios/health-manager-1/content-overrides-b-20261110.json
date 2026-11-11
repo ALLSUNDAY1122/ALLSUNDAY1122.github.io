@@ -196,18 +196,18 @@
     "expectedConceptKey": "hm2:sm2-5y-r06-phy-08:糸球体",
     "expectedStem": "次の説明の対象として正しいものはどれか。「血液から水や低分子物質をろ過し、原尿形成の出発点となる。」",
     "replacement": {
-      "stem": "ネフロンの糸球体を通る血液の経路として、正しい順序はどれか。",
+      "stem": "腎小体で血液と濾液が分かれた後の経路を比較する。血液の通り道と濾液の通り道を正しく対応させたものはどれか。",
       "choices": [
-        "輸出細動脈 → 糸球体 → 輸入細動脈",
-        "輸入細動脈 → 尿細管腔 → 輸出細動脈",
-        "輸入細動脈 → 糸球体 → 尿細管腔",
-        "輸入細動脈 → 糸球体 → 輸出細動脈",
-        "尿細管腔 → 輸入細動脈 → 糸球体"
+        "血液：輸入細動脈→糸球体→輸出細動脈→尿細管周囲毛細血管等／濾液：ボーマン嚢腔→尿細管",
+        "血液：輸入細動脈→糸球体→ボーマン嚢腔→尿細管周囲毛細血管／濾液：輸出細動脈→尿細管",
+        "血液：輸出細動脈→糸球体→輸入細動脈→尿細管周囲毛細血管／濾液：ボーマン嚢腔→尿細管",
+        "血液：輸入細動脈→糸球体→輸出細動脈→尿細管周囲毛細血管等／濾液：輸出細動脈→ボーマン嚢腔→尿細管",
+        "血液：輸入細動脈→糸球体→輸出細動脈→集合管／濾液：ボーマン嚢腔→尿細管周囲毛細血管"
       ],
-      "ans": 3,
-      "short": "糸球体の血液は輸入細動脈から入り、輸出細動脈へ出る。",
-      "key": "糸球体を通る血液の経路",
-      "detail": "糸球体は毛細血管の集まりで、輸入細動脈から血液を受け、輸出細動脈へ血液を送る。肢0は流入と流出が逆。肢1・2は尿細管腔を血液の経路に含め、肢4も尿細管腔を血液の出発点にしている。濾液がボーマン嚢から尿細管へ進む経路と、血液が血管内を進む経路を区別する。 根拠：Biology 2e 41.2, Capillary Network within the Nephron。",
+      "ans": 0,
+      "short": "血液は糸球体から輸出細動脈を経て周囲毛細血管等へ、濾液はボーマン嚢腔から尿細管へ進む。",
+      "key": "糸球体血流と濾液経路の分岐",
+      "detail": "糸球体へは輸入細動脈から血液が入り、輸出細動脈を経て尿細管周囲毛細血管や直血管へ進む。一方、濾過で生じた濾液はボーマン嚢腔から尿細管へ移動し、通常は血管内を直接流れない。肢1はボーマン嚢を血管経路へ混入、肢2は細動脈の流れを逆転、肢3は濾液を輸出細動脈へ通す誤り、肢4は血液を集合管へ、濾液を血管へ流す混同。Q42は尿細管内の区分順序、本問は血液と濾液の分離である。根拠：OpenStax Biology 2e 41.2。出典：https://openstax.org/books/biology-2e/pages/41-2-the-kidneys-and-osmoregulatory-organs",
       "conceptKey": "hm1:reaudit-b-20261110:practice-B-Q43",
       "sourceType": "hm1-original-revised-from-primary-source",
       "sourceRef": "https://openstax.org/books/biology-2e/pages/41-2-the-kidneys-and-osmoregulatory-organs",
@@ -215,12 +215,12 @@
       "lawAsOf": "2026-11-10",
       "auditDate": "2026-11-10",
       "lawVersion": null,
-      "auditStatus": "修正適用・内容再照合済（公開ゲート未判定）",
-      "semanticIndependence": "revised-comparison-reviewed",
-      "independenceReason": "腎臓／ネフロン／糸球体の上下位概念を併置した肢を廃止。基本2025-10-Q35の原尿生成から血管経路へ変更。",
+      "auditStatus": "独立初回再監査第23バッチ指摘に基づく修正適用（公開ゲート未判定）",
+      "semanticIndependence": "revised-comparison-review-pending",
+      "independenceReason": "第23バッチB Q41〜Q44の識別力・意味重複改善。修正後独立最終再判定は別途必要。",
       "revisionSourceConceptKey": "hm2:sm2-5y-r06-phy-08:糸球体",
-      "revisionBatch": "hm1-b-20261110",
-      "revisionBasis": "Biology 2e 41.2, Capillary Network within the Nephron"
+      "revisionBatch": "hm1-b-20261111-reaudit-q41-q44",
+      "revisionBasis": "Biology 2e 41.2, Capillary Network within the Nephron／第23バッチ独立再監査に基づく再設計"
     }
   },
   {
@@ -1306,18 +1306,18 @@
     "expectedConceptKey": "hm2:sm2-5y-r06-phy-06:腎臓",
     "expectedStem": "次の説明と最も一致するものはどれか。「血液から不要物を排泄し、体液量や電解質・酸塩基平衡の調節に関与する。」",
     "replacement": {
-      "stem": "腎臓で大量の原尿が作られるが、健康な人ではその大半が最終尿として出ない。最も適切な説明はどれか。",
+      "stem": "ある成人の腎臓で1日当たり180Lの水分が糸球体で濾過され、そのうち178.5Lが尿細管などで再吸収された。水の正味の分泌はないものとすると、1日の最終尿量として最も適切なものはどれか。",
       "choices": [
-        "糸球体で濾過された水や必要な物質の多くは尿細管で再吸収され、尿として排泄される量は調節される",
-        "糸球体で濾過された血漿成分はすべて再吸収されず尿として排泄される",
-        "腎臓は尿量調節に関わらず、肺胞だけが体液量を調節する",
-        "腎臓は老廃物の排出のみを行い、電解質と酸塩基平衡に関わらない",
-        "ネフロンは分泌だけを行い、濾過や再吸収には関与しない"
+        "180L。糸球体濾過量がそのまま最終尿量となる",
+        "178.5L。再吸収された水分が最終尿として排泄される",
+        "1.5L。濾過量から再吸収量を差し引く",
+        "358.5L。濾過量に再吸収量を加える",
+        "0L。再吸収が起きれば濾過液は必ずすべて血液に戻る"
       ],
-      "ans": 0,
-      "short": "糸球体濾過後に尿細管の再吸収・分泌が働き、最終尿量と組成が調節される。",
-      "key": "NIDDK 腎臓の濾過・再吸収・排泄",
-      "detail": "腎臓は糸球体で血漿の水と低分子物質を濾過し、尿細管で必要な水・溶質の再吸収、物質の分泌などを行うため、濾過量と最終尿量は一致しない。肢1は再吸収を否定、肢2は腎臓の体液調節を否定、肢3は電解質・酸塩基調節を否定、肢4はネフロンの主要作用を取り違える。Q42は機能単位の構成、Q44は物質移動の方向に焦点を当てる。 根拠：NIDDK 腎臓の濾過・再吸収・排泄。 出典：https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work",
+      "ans": 2,
+      "short": "最終尿量は180−178.5＝1.5L/日。濾過量と再吸収量を区別する。",
+      "key": "糸球体濾過量・再吸収量と最終尿量",
+      "detail": "糸球体で濾過された水の大部分は尿細管等で再吸収される。水の正味の分泌がないという条件では、最終尿量＝濾過量−再吸収量＝180−178.5＝1.5L/日。肢0は再吸収を無視、肢1は再吸収と排泄を混同、肢3は再吸収量を加算、肢4は再吸収を全量と誤認する。病態・ホルモンなどで再吸収量は変わる。本問は定量的な水収支を問うもので、Q44の溶質移動方向とは異なる。根拠：NIDDK「Your Kidneys & How They Work」。出典：https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work",
       "conceptKey": "hm1:reaudit-b-20261111:practice-B-Q41",
       "sourceType": "hm1-original-revised-from-primary-source",
       "sourceRef": "https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work",
@@ -1325,12 +1325,12 @@
       "lawAsOf": "2026-11-11",
       "lawVersion": null,
       "auditDate": "2026-11-11",
-      "auditStatus": "設問修正・解説補完適用（公開ゲート未判定）",
+      "auditStatus": "独立初回再監査第23バッチ指摘に基づく修正適用（公開ゲート未判定）",
       "semanticIndependence": "revised-comparison-review-pending",
-      "independenceReason": "用語・分野当てから機序・数値関係・条件判断と近接誤答の識別へ再設計。最終独立再監査待ち。",
+      "independenceReason": "第23バッチB Q41〜Q44の識別力・意味重複改善。修正後独立最終再判定は別途必要。",
       "revisionSourceConceptKey": "hm2:sm2-5y-r06-phy-06:腎臓",
-      "revisionBatch": "hm1-b-20261111-batch5",
-      "revisionBasis": "NIDDK 腎臓の濾過・再吸収・排泄"
+      "revisionBatch": "hm1-b-20261111-reaudit-q41-q44",
+      "revisionBasis": "NIDDK 腎臓の濾過・再吸収・排泄／第23バッチ独立再監査に基づく再設計"
     }
   },
   {
@@ -1338,18 +1338,18 @@
     "expectedConceptKey": "hm2:sm2-5y-r06-phy-07:ネフロン",
     "expectedStem": "次の内容を表す用語・制度として適切なものはどれか。「腎臓の機能単位で、糸球体と尿細管などから構成される。」",
     "replacement": {
-      "stem": "尿が作られる最小の機能単位について、糸球体・ボーマン嚢・尿細管の関係として正しいものはどれか。",
+      "stem": "ネフロンの尿細管内を流れる濾液の順序を確認する。近位尿細管を通過した後、集合管に入る前までの主な経路として正しいものはどれか。",
       "choices": [
-        "腎小体は尿細管の集合のみからなり、糸球体を含まない",
-        "ネフロンは腎小体（糸球体とボーマン嚢）と尿細管から構成される",
-        "糸球体は尿細管内腔の上皮細胞の名称である",
-        "ネフロンは腎臓全体と同義で、左右各1個だけ存在する",
-        "ボーマン嚢は肺胞のガス交換を担う構造である"
+        "近位尿細管 → 遠位尿細管 → ヘンレ係蹄 → 集合管",
+        "近位尿細管 → ヘンレ係蹄 → 遠位尿細管 → 集合管",
+        "近位尿細管 → 輸出細動脈 → 遠位尿細管 → 集合管",
+        "近位尿細管 → ボーマン嚢 → ヘンレ係蹄 → 集合管",
+        "近位尿細管 → 集合管 → ヘンレ係蹄 → 遠位尿細管"
       ],
       "ans": 1,
-      "short": "ネフロンは腎小体（糸球体とボーマン嚢）および尿細管で構成される。",
-      "key": "OpenStax Biology 2e 41.2 腎小体と尿細管",
-      "detail": "腎臓の機能単位であるネフロンは、毛細血管の糸球体とそれを包むボーマン嚢からなる腎小体と、尿細管によって構成される。肢0は腎小体の定義を誤り、肢2は糸球体の位置と構造を誤り、肢3は腎臓と機能単位の階層を混同、肢4はボーマン嚢と肺胞を混同。Q43の糸球体濾過の過程とは区別し、本問は解剖学的構造を判断させる。 根拠：OpenStax Biology 2e 41.2 腎小体と尿細管。 出典：https://openstax.org/books/biology-2e/pages/41-2-the-kidneys-and-osmoregulatory-organs",
+      "short": "濾液は近位尿細管、ヘンレ係蹄、遠位尿細管を経て集合管へ進む。",
+      "key": "尿細管の区分と濾液の流路",
+      "detail": "濾液はボーマン嚢から近位尿細管、ヘンレ係蹄、遠位尿細管を通り、集合管へ送られる。肢0はヘンレ係蹄と遠位尿細管を逆転、肢2は血管内の輸出細動脈を混入、肢3は上流のボーマン嚢へ逆流、肢4は集合管を先行させる。集合管を個々のネフロンの構成要素と扱うかには教科書上の表記差があるため、本問は『集合管に入る前後の濾液経路』だけを問う。Q43の血液経路とは区別する。根拠：OpenStax Biology 2e 41.2。出典：https://openstax.org/books/biology-2e/pages/41-2-the-kidneys-and-osmoregulatory-organs",
       "conceptKey": "hm1:reaudit-b-20261111:practice-B-Q42",
       "sourceType": "hm1-original-revised-from-primary-source",
       "sourceRef": "https://openstax.org/books/biology-2e/pages/41-2-the-kidneys-and-osmoregulatory-organs",
@@ -1357,12 +1357,12 @@
       "lawAsOf": "2026-11-11",
       "lawVersion": null,
       "auditDate": "2026-11-11",
-      "auditStatus": "設問修正・解説補完適用（公開ゲート未判定）",
+      "auditStatus": "独立初回再監査第23バッチ指摘に基づく修正適用（公開ゲート未判定）",
       "semanticIndependence": "revised-comparison-review-pending",
-      "independenceReason": "用語・分野当てから機序・数値関係・条件判断と近接誤答の識別へ再設計。最終独立再監査待ち。",
+      "independenceReason": "第23バッチB Q41〜Q44の識別力・意味重複改善。修正後独立最終再判定は別途必要。",
       "revisionSourceConceptKey": "hm2:sm2-5y-r06-phy-07:ネフロン",
-      "revisionBatch": "hm1-b-20261111-batch5",
-      "revisionBasis": "OpenStax Biology 2e 41.2 腎小体と尿細管"
+      "revisionBatch": "hm1-b-20261111-reaudit-q41-q44",
+      "revisionBasis": "OpenStax Biology 2e 41.2 腎小体と尿細管／第23バッチ独立再監査に基づく再設計"
     }
   },
   {
@@ -1370,18 +1370,18 @@
     "expectedConceptKey": "hm2:sm2-5y-r06-phy-09:尿細管再吸収",
     "expectedStem": "次の学習ポイントに該当する項目はどれか。「原尿中の水や必要な物質を血液側へ戻す過程である。」",
     "replacement": {
-      "stem": "ネフロンの働きについて、原尿から血液側への水や溶質の移動を説明したものとして正しいものはどれか。",
+      "stem": "糸球体で濾過されたブドウ糖が尿細管から血液へ戻る一方、血液側のある薬物成分が尿細管腔へ移されている。各物質の移動過程の説明として正しいものはどれか。",
       "choices": [
-        "尿細管分泌は血液から原尿へ、再吸収は原尿から血液へ物質が移動するという方向の違いがある",
-        "再吸収は糸球体毛細血管からボーマン嚢への濾過だけを意味する",
-        "再吸収とは血液から尿細管内へ薬物等を移すことをいう",
-        "一度濾過された物質は全種類が必ず100%再吸収される",
-        "抗利尿ホルモンはすべての溶質を例外なく再吸収させるため、水の再吸収とは無関係である"
+        "ブドウ糖の血液側への移動も、薬物の尿細管腔への移動も、ともに糸球体濾過である",
+        "ブドウ糖の尿細管から血液への移動は再吸収、薬物成分の血液から尿細管腔への移動は分泌である",
+        "ブドウ糖の尿細管から血液への移動は分泌、薬物成分の尿細管腔への移動は再吸収である",
+        "再吸収はボーマン嚢腔への移動を指すので、ブドウ糖の血液側への移動には該当しない",
+        "分泌は尿細管内の物質を血液へ戻す過程なので、薬物成分の尿細管腔への移動は分泌ではない"
       ],
-      "ans": 0,
-      "short": "再吸収は尿細管内から血液側への移動で、分泌とは移動方向が逆。",
-      "key": "NIDDK 尿細管の再吸収・分泌",
-      "detail": "糸球体濾過は血漿からボーマン嚢側へ原尿が作られる過程。尿細管再吸収は原尿中の水・必要物質などを血液へ戻す過程であり、尿細管分泌は血液側から尿細管腔へ移す過程である。肢1は濾過と混同、肢2は分泌と混同、肢3は全量再吸収の誤った一般化、肢4は抗利尿ホルモンが主に水の再吸収に働くことを誤認。物質・生理条件により再吸収率は異なり、最終尿の組成が調節される。 根拠：NIDDK 尿細管の再吸収・分泌。 出典：https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work",
+      "ans": 1,
+      "short": "尿細管から血液へは再吸収、血液から尿細管腔へは分泌である。",
+      "key": "ブドウ糖再吸収と薬物成分の尿細管分泌",
+      "detail": "糸球体濾過は血管内からボーマン嚢側へ原尿が作られる過程。尿細管再吸収は管腔側から血液側への移動、尿細管分泌は血液側から管腔側への移動を指す。設問のブドウ糖は再吸収、薬物成分は分泌に当たる。肢0は濾過と尿細管輸送を混同、肢2は方向を逆転、肢3は再吸収の向きを誤認、肢4は分泌の向きを誤認する。ブドウ糖が常に全量再吸収されると断定せず、物質と病態により輸送が異なることを留意する。Q41の水の量的収支とは別命題。根拠：NIDDK「Your Kidneys & How They Work」。出典：https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work",
       "conceptKey": "hm1:reaudit-b-20261111:practice-B-Q44",
       "sourceType": "hm1-original-revised-from-primary-source",
       "sourceRef": "https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work",
@@ -1389,12 +1389,12 @@
       "lawAsOf": "2026-11-11",
       "lawVersion": null,
       "auditDate": "2026-11-11",
-      "auditStatus": "設問修正・解説補完適用（公開ゲート未判定）",
+      "auditStatus": "独立初回再監査第23バッチ指摘に基づく修正適用（公開ゲート未判定）",
       "semanticIndependence": "revised-comparison-review-pending",
-      "independenceReason": "用語・分野当てから機序・数値関係・条件判断と近接誤答の識別へ再設計。最終独立再監査待ち。",
+      "independenceReason": "第23バッチB Q41〜Q44の識別力・意味重複改善。修正後独立最終再判定は別途必要。",
       "revisionSourceConceptKey": "hm2:sm2-5y-r06-phy-09:尿細管再吸収",
-      "revisionBatch": "hm1-b-20261111-batch5",
-      "revisionBasis": "NIDDK 尿細管の再吸収・分泌"
+      "revisionBatch": "hm1-b-20261111-reaudit-q41-q44",
+      "revisionBasis": "NIDDK 尿細管の再吸収・分泌／第23バッチ独立再監査に基づく再設計"
     }
   }
 ]
