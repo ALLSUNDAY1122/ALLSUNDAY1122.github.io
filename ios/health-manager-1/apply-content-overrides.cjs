@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const EXPECTED_IDS = [3,11,12,17,18,29,43,1,2,4,5,6,7,8,9,10,13,14,15,16,19,20,21,22,23,24,25,26,27,28,30,31,32,33,34,35,36].map(n=>'practice-B-Q'+String(n).padStart(2,'0'));
+const EXPECTED_IDS = [3,11,12,17,18,29,43,1,2,4,5,6,7,8,9,10,13,14,15,16,19,20,21,22,23,24,25,26,27,28,30,31,32,33,34,35,36,37,38,39,40,41,42,44].map(n=>'practice-B-Q'+String(n).padStart(2,'0'));
 function applyContentOverrides(questions, entries = JSON.parse(fs.readFileSync(path.join(__dirname, 'content-overrides-b-20261110.json'), 'utf8'))) {
   if (!Array.isArray(questions) || !Array.isArray(entries)) throw new Error('Invalid override inputs');
   if (entries.length !== EXPECTED_IDS.length || new Set(entries.map(e=>e.id)).size !== EXPECTED_IDS.length ||
