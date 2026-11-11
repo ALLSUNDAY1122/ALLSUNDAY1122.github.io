@@ -292,3 +292,23 @@
 - 今回生成元変更ID：`practice-B-Q28`、`practice-B-Q33`、`practice-C-Q01`、`practice-C-Q02`。Bは`content-overrides-b-20261110.json`、Cは`audit/practice_c_fixes_01_10.json`。変更フィールドは各問`auditSourceURL`・`auditStatus`のみ。設問・5肢・解説・正答index不変。各生成元の対象外レコードはJSON構造比較で一致。
 - 今回の新4問の264問Node CLI再生成と限定差分、Web/iOS配布JSONのバイト一致・SHA256は未実施。次回Muse側で独立検証を要する。次の照合は`practice-C-Q03`・`Q05`・`Q06`・`Q07`から。
 - 法令適用時点の横断確定・全5肢逐語証明・商用利用権・実機検証は未完。**リリースゲートFAIL/BLOCKED**維持、mainマージ・審査申請・公開なし。個別証跡は`PRIMARY_SOURCE_AUDIT_A_BATCH13_20261112.json`。
+
+
+## 続編第14回：Muse前回4問PASSの追記、（a）群演習C4問中心命題照合（2026-11-12）
+
+### Muse側ローカル再生成PASS（ユーザー提供の検証事実）
+- 比較基準 `c961c2a` と修正後の264問Node CLI再生成がともに成功。差分は `practice-B-Q28`、`practice-B-Q33`、`practice-C-Q01`、`practice-C-Q02` の監査ステータス・出典URLのみ。正答indexは全問不変、他260問完全一致、限定差分PASS。
+- Muse側で実施された結果の記録であり、当担当によるCLI独立再生成・Web/iOS配布バイト照合・SHA256検証ではない。今回の次4問にはPASSを転用しない。
+
+### 次4問・中心命題の法令・公的資料照合
+- **`practice-C-Q03`**（正答index `2` 維持）：労働安全衛生法17条4項：第1号委員以外の半数は過半数組合等の推薦に基づき事業者が指名。17条5項：過半数労組との労働協約に別段の定めがあればその限度で3・4項の適用除外。18条4項により衛生委員会へ準用。正答肢2を支持。 登録URL `https://laws.e-gov.go.jp/law/347AC0000000057?occasion_date=20261001` → `https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0`。補助原典 `https://laws.e-gov.go.jp/law/347AC0000000057?occasion_date=20260202`。変更：`auditSourceURL`、`auditStatus`。留保：委員会設置義務の免除と混同しない。法令の将来版・全5肢独立逐語証明は未完。
+- **`practice-C-Q05`**（正答index `1` 維持）：安衛則12条の2は労働者10～49人の事業場を定義。12条の3第1項は能力要件、選任事由発生14日以内、事業場専属、労働安全・労働衛生コンサルタント等の例外を規定。常時25人の銀行事務所で衛生推進者を選任する正答肢1を確認。 登録URL `https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097` → `https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0`。補助原典 `https://laws.e-gov.go.jp/law/347M50002000032/20240401_505M60000100022`。変更：`auditSourceURL`、`auditStatus`。留保：銀行の業種別区分・選任対象の組織単位、資格詳細、全5肢の独立逐語証明は最終確認待ち。
+- **`practice-C-Q06`**（正答index `3` 維持）：安衛則12条の4は安全衛生推進者等の氏名を作業場の見やすい場所に掲示する等の方法で関係労働者へ周知することを義務づける。氏名が見やすく掲示される正答肢3を直接支持。 登録URL `https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097` → `https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0`。補助原典 `https://laws.e-gov.go.jp/law/347M50002000032/20240401_505M60000100022`。変更：`auditSourceURL`、`auditStatus`。留保：原解説中の誤答肢番号説明の一部が0始まりchoice indexと食い違うため、解説の別途校閲が必要。今回は監査状態と出典のみ変更。全5肢逐語照合未完。
+- **`practice-C-Q07`**（正答index `0` 維持）：厚労省は労基法32条の法定1日8時間・週40時間を確認し、36条の時間外・休日労働協定の締結と所轄労基署への事前届出を明記。変形制なしの1日8時間30分は30分の法定時間外労働で正答肢0を支持。 登録URL `https://laws.e-gov.go.jp/law/322AC0000000049` → `https://laws.e-gov.go.jp/law/322AC0000000049`。補助原典 `https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudouseisaku/chushoukigyou/joken_kankyou_rule.html`。変更：`auditStatus`。留保：36協定届出・特別条項・適用除外や全5肢の直接逐語証明の別途確認を要する。
+
+### 進捗と引継ぎ
+- （a）群の中心命題を公開一次資料で確認して記録したID：**64/85件**、次の照合待ち**21件（25→21）**。これは全5肢独立逐語証明・配布一致等の最終合格数ではなく、全5肢無条件PASSは0件。
+- 問題データ（演習C生成元）変更ID：`practice-C-Q03`、`practice-C-Q05`、`practice-C-Q06`、`practice-C-Q07`。Q03/Q05/Q06は`auditSourceURL`・`auditStatus`、Q07は`auditStatus`のみ。設問・5肢・解説・正答indexは変更しない。生成元の他レコードが同一であることを構造差分で確認。
+- **要校閲：Q06の現行解説の誤答肢番号の記述に0始まりindexと不一致がある。** 今回は原文を維持し品質ゲートの留保として記録。次回解説修正時には限定差分を別途検証すること。
+- 今回4問の264問Node CLI再生成・Web/iOS配布SHA256比較は未実施。次回Muse側検証の対象。次の（a）群は `practice-C-Q08`、`Q09`、`Q10`、`Q14` など。
+- 法令時点・商用権利・全5肢の独立逐語証明・実機検証は未完了。**リリースゲートFAIL/BLOCKED維持**、mainマージ・公開・審査申請なし。個別台帳：`PRIMARY_SOURCE_AUDIT_A_BATCH14_20261112.json`。
