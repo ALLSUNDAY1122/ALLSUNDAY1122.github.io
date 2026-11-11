@@ -1,0 +1,50 @@
+name: HM1 integrated 264-question exact-seven regression
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/**'
+      - '.github/workflows/hm1-integrated-264-verify.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild baseline and current 264-question banks
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=4692fe05e1632fd08e2e476b433eebb714846667
+          git worktree add --detach /tmp/hm1-base "$BASE"
+          node /tmp/hm1-base/ios/health-manager-1/augment-to-264.cjs
+          node ios/health-manager-1/augment-to-264.cjs
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const assert = require('node:assert/strict');
+          const base = JSON.parse(fs.readFileSync('/tmp/hm1-base/ios/health-manager-1/Resources/questions.json','utf8'));
+          const now = JSON.parse(fs.readFileSync('ios/health-manager-1/Resources/questions.json','utf8'));
+          assert.equal(base.length,264);
+          assert.equal(now.length,264);
+          assert.equal(new Set(now.map(x=>x.id)).size,264);
+          assert.deepEqual(now.map(x=>x.id),base.map(x=>x.id));
+          for(const q of now){ assert.equal(q.choices.length,5); assert.ok(Number.isInteger(q.ans)&&q.ans>=0&&q.ans<=4); }
+          const want=['2026-04-Q02','2026-04-Q03','2026-04-Q05','2026-04-Q06','2026-04-Q08','2026-04-Q09','2026-04-Q10'];
+          const changed=now.filter((q,i)=>JSON.stringify(q)!==JSON.stringify(base[i])).map(q=>q.id);
+          assert.deepEqual(changed,want);
+          for(const id of want){
+            const a=base.find(x=>x.id===id),b=now.find(x=>x.id===id);
+            assert.equal(b.ans,a.ans,id+' answer changed');
+            for(const k of Object.keys(a)) if(!['stem','choices','short','detail'].includes(k)) assert.deepEqual(b[k],a[k],id+' '+k);
+          }
+          console.log(JSON.stringify({result:'PASS',total:now.length,changed,unchanged:now.length-changed.length},null,2));
+          NODE
