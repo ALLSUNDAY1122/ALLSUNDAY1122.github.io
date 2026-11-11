@@ -1522,7 +1522,7 @@ window.HM2_NO161_ART66_4_5_PRIMARY_VERIFIED_20261112=true;
 })();
 
 
-// HM2_NO146_FINAL_SLEEP_GUIDE_20261112: final-guide source already applied upstream; strict final-state guard. Q_PARTS.answer is 1-based pre-order (5 for the source U09-U12 block); distribution index is 0-based (2).
+// HM2_NO146_FINAL_SLEEP_GUIDE_20261112: strictly validate both documented input stages; apply source metadata only from old stage.
 (function(){'use strict';
 const id='sm2-5y-r08-hyg-01';
 const oldBasis='厚生労働省『健康づくりのための睡眠ガイド2023』交替制勤務と睡眠：夜勤中の仮眠と睡眠慣性';
@@ -1535,7 +1535,10 @@ const expectedExplanation='厚生労働省『健康づくりのための睡眠�
 const hits=(window.Q_PARTS||[]).filter(q=>q.id===id);
 if(hits.length!==1)throw Error('HM2 No146 final guide target count mismatch');
 const q=hits[0];
-if(q.subject!=='労働衛生'||q.topic!=='夜勤中の仮眠の長さと睡眠慣性'||q.question!==expectedQuestion||q.sourceUrl!==newUrl||q.basis!==newBasis||q.explanation!==expectedExplanation||q.quick!=='夜勤中の仮眠は有用だが、長すぎると覚醒直後の睡眠慣性に注意が必要。'||q.lawRelated!==false||q.answer!==5||!Array.isArray(q.choices)||JSON.stringify(q.choices)!==JSON.stringify(expectedChoices))throw Error('HM2 No146 final sleep guide strict old-state mismatch');
-// Source metadata must already match the final guide; do not mutate a previously corrected input.
+if(q.subject!=='労働衛生'||q.topic!=='夜勤中の仮眠の長さと睡眠慣性'||q.question!==expectedQuestion||q.explanation!==expectedExplanation||q.quick!=='夜勤中の仮眠は有用だが、長すぎると覚醒直後の睡眠慣性に注意が必要。'||q.lawRelated!==false||q.answer!==3||!Array.isArray(q.choices)||JSON.stringify(q.choices)!==JSON.stringify(expectedChoices))throw Error('HM2 No146 final sleep guide strict content mismatch');
+const oldStage=q.sourceUrl===oldUrl&&q.basis===oldBasis;
+const newStage=q.sourceUrl===newUrl&&q.basis===newBasis;
+if(!oldStage&&!newStage)throw Error('HM2 No146 final sleep guide strict source-stage mismatch');
+if(oldStage){q.sourceUrl=newUrl;q.basis=newBasis;}
 window.HM2_NO146_FINAL_SLEEP_GUIDE_FIXED_20261112=true;
 })();
