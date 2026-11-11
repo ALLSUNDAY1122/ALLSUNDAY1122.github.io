@@ -1264,3 +1264,16 @@ if(q.subject!==expected.subject||q.question!==expected.question||q.topic!==expec
 q.sourceUrl="https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0";
 window.HM2_SOURCE_170_B01_DEMO003_VERIFIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH02_R7O001_20261112: source-only, strict old-state check.
+(function(){'use strict';
+const id="sm2-r7o-001";
+const found=(window.Q_PARTS||[]).filter(q=>q.id===id);
+if(found.length!==1)throw Error('HM2 170 B02 target count mismatch '+id);
+const q=found[0];
+const oldState={subject:'関係法令',topic:"総括安全衛生管理者の選任規模",question:"総括安全衛生管理者の選任が必要となる事業場の組合せとして、正しいものはどれか。",sourceUrl:"https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",basis:'労働安全衛生法10条・労働安全衛生法施行令2条',correct:"製造業で常時300人",choicesSorted:["その他の業種で常時900人","小売業（各種商品小売業を除く）で常時500人","建設業で常時90人","清掃業で常時80人","製造業で常時300人"]};
+if(q.subject!==oldState.subject||q.topic!==oldState.topic||q.question!==oldState.question||q.sourceUrl!==oldState.sourceUrl||q.basis!==oldState.basis||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==oldState.correct||JSON.stringify([...q.choices].sort())!==JSON.stringify(oldState.choicesSorted))throw Error('HM2 170 B02 strict old-state mismatch '+id);
+q.sourceUrl="https://laws.e-gov.go.jp/law/347CO0000000318";
+window.HM2_SOURCE_170_B02_R7O001_VERIFIED=true;
+})();
