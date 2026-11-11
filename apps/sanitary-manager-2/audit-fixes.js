@@ -1236,3 +1236,18 @@ Object.assign(q,{question:n.question,topic:n.topic,choices:n.choices.slice(),ans
 }
 window.HM2_X02_MEDIUM_FINAL_REDRAFT_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X02_SECONDARY_ALVEOLAR_DEAD_SPACE_20261112: strict post-U33, pre-question-order guard (do not weaken release gates).
+(function(){'use strict';
+const id='sm2-5y-r10-phy-03';
+const expected={"subject":"労働生理","question":"成人Aの呼吸は一回換気量500mL・毎分12回、成人Bは300mL・毎分20回で、どちらも毎分換気量は6.0Lである。死腔量はいずれも1回150mLで変わらないものとする。毎分肺胞換気量の比較として正しいものはどれか。","topic":"同一分時換気量での呼吸パターンと肺胞換気の差","choices":["AとBはいずれも6.0L/分で同じ。","Aは4.2L/分、Bは3.0L/分で、Aの方が大きい。","Aは3.0L/分、Bは4.2L/分で、Bの方が大きい。","AとBはいずれも4.2L/分で同じ。","Aは1.8L/分、Bは3.0L/分で、Bの方が大きい。"],"answer":2,"quick":"分時換気量がともに6.0Lでも、肺胞換気量はA(500-150)×12=4.2L、B(300-150)×20=3.0L。","explanation":"死腔量一定の条件では毎分肺胞換気量＝（一回換気量－死腔量）×呼吸数。Aは(500－150)×12＝4,200mL/分、Bは(300－150)×20＝3,000mL/分。分時換気量はどちらも6.0L/分だが、浅く速い呼吸では毎回の死腔換気の比率が大きくなり、肺胞に到達する換気量が減る。代表問の単一条件計算と異なり、同一総換気量の2パターンの比較を問う。ここでは生理学的死腔の別途増大はないとする。","basis":"NCBI StatPearls『Physiology, Lung Dead Space』一回換気量・死腔量・呼吸数と肺胞換気の算定および死腔換気","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK482501/"};
+const next={"question":"肺塞栓により肺の一部で血流が著しく減少したが、その領域の肺胞には空気が出入りしている。この領域に生じる換気とガス交換の変化として最も適切なのはどれか。","topic":"肺血流低下に伴う肺胞死腔の増加と換気血流不均衡","choices":["肺胞には空気が入っているため、肺血流がなくても酸素と二酸化炭素の交換は正常に続く。","換気されても血流が乏しい肺胞ではガス交換への寄与が減り、肺胞死腔が増加する。","血流だけが低下すると解剖学的死腔である気管・気管支の容積が必ず増える。","血流が途絶えて換気が保たれた肺胞は、換気血流比がゼロの状態になる。","肺胞死腔とは血流が保たれているのに空気が全く入らない肺胞だけを指す。"],"answer":2,"quick":"換気されていても肺血流が乏しい肺胞ではガス交換が十分にできず、肺胞死腔が増える。","explanation":"肺塞栓などで肺胞への血流（灌流）が低下しても換気が保たれると、換気に対して血流が不足し、換気血流比が高い領域が生じる。血流が途絶した肺胞はガス交換に寄与できず肺胞死腔が増加する。これは気管・気管支の解剖学的死腔の増加でも、換気不足によるシャント（換気血流比ゼロ）でもない。既存のsm2-5y-r09-phy-04およびsm2-5y-r04-phy-08の肺胞換気量算定問題とは異なり、血流低下による肺胞死腔の発生機序を判断する。","basis":"NCBI Bookshelf『Physiology, Lung Dead Space』肺塞栓などによる肺胞灌流低下・肺胞死腔増大・換気血流不均衡","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK482501/"};
+const matches=(window.Q_PARTS||[]).filter(q=>q.id===id);
+if(matches.length!==1)throw Error('HM2 X02 secondary duplicate ID cardinality '+id);
+const q=matches[0];
+if(q.subject!==expected.subject||q.question!==expected.question||q.topic!==expected.topic||q.basis!==expected.basis||q.quick!==expected.quick||q.explanation!==expected.explanation||q.sourceUrl!==expected.sourceUrl||q.answer!==expected.answer||!Array.isArray(q.choices)||JSON.stringify(q.choices)!==JSON.stringify(expected.choices)||q.choices[q.answer-1]!==expected.choices[expected.answer-1])throw Error('HM2 X02 secondary duplicate strict old-state mismatch '+id);
+if(!Array.isArray(next.choices)||next.choices.length!==5||new Set(next.choices).size!==5||!Number.isInteger(next.answer)||next.answer<1||next.answer>5)throw Error('HM2 X02 secondary duplicate new state invalid '+id);
+Object.assign(q,{question:next.question,topic:next.topic,choices:next.choices.slice(),answer:next.answer,quick:next.quick,explanation:next.explanation,basis:next.basis,sourceUrl:next.sourceUrl});
+window.HM2_X02_SECONDARY_REDRAFT_ID=id;
+})();
