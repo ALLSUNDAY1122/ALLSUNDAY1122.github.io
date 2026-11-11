@@ -435,7 +435,7 @@ window.SM2_INDEPENDENT_FOURTEENTH10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
 
 // SM2_INDEPENDENT_FIFTEENTH10_METADATA_FIX6_20261111: fixed No.141-144 and No.146-147 only; preserve question content, sources and release gates.
 (function(){'use strict';
-const fixes=[{"id":"sm2-5y-r05-phy-07","topic":"末梢動脈の脈拍と動脈圧波","basis":"循環生理・心拍出による動脈圧波の伝播"},{"id":"sm2-5y-r05-phy-08","topic":"インスリンによる骨格筋GLUT4膜移行","basis":"糖代謝・インスリン受容体シグナルとGLUT4"},{"id":"sm2-5y-r05-phy-09","topic":"骨格筋収縮とカルシウム・アクチン・ミオシン","basis":"筋生理・興奮収縮連関とトロポニン調節"},{"id":"sm2-5y-r05-phy-10","topic":"膵リパーゼによる中性脂肪消化","basis":"消化器生理・膵外分泌と脂質消化"},{"id":"sm2-5y-r06-phy-02","topic":"横隔膜収縮と安静吸息の胸腔容積・肺内圧変化","basis":"呼吸運動の力学・陰圧吸気"},{"id":"sm2-5y-r06-phy-03","topic":"肺活量の定義・最大吸息後の最大呼気量","basis":"呼吸生理・肺活量の定義"}];
+const fixes=[{"id":"sm2-5y-r05-phy-07","topic":"末梢動脈の脈拍と動脈圧波","basis":"循環生理・心拍出による動脈圧波の伝播"},{"id":"sm2-5y-r05-phy-08","topic":"インスリンによる骨格筋GLUT4膜移行","basis":"糖代謝・インスリン受容体シグナルとGLUT4"},{"id":"sm2-5y-r05-phy-09","topic":"骨格筋収縮とカルシウム・アクチン・ミオシン","basis":"筋生理・興奮収縮連関とトロポニン調節"},{"id":"sm2-5y-r05-phy-10","topic":"膵リパーゼによる中性脂肪消化","basis":"消化器生理・膵外分泌と脂質消化"},{"id":"sm2-5y-r06-phy-02","topic":"横隔膜収縮と安静吸息の胸腔容積・肺内圧変化","basis":"呼吸運動の力学・陰圧吸気"},{"id":"sm2-5y-r06-phy-03","topic":"肺活量","basis":"呼吸生理・肺活量（最大吸息後の最大呼出量）の定義"}];
 const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
 if(fixes.length!==6||new Set(fixes.map(f=>f.id)).size!==6)throw Error('HM2 fifteenth10 metadata fix count invalid');
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 fifteenth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
