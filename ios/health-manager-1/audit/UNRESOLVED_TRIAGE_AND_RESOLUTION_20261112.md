@@ -34,3 +34,28 @@
 - 過去の修正済みの解説肢番号（演習B Q09/Q12など）を新たな未修正として二重計上しない。a/c区分は初回台帳のスナップショットのため、閉鎖前に現行264問生成値との照合が必要。
 - **問題データ変更は演習C Q29の出典参照2フィールドと監査状態のみ**。生成元1ファイル、追加監査JSON、追加監査Markdownの3ファイル更新。既存の巨大な`CONTENT_REAUDIT_264_20261110.md`は内容保持のため編集せず、この追加監査記録を第14バッチの続編として正本に準じる追記資料とする。
 - Node CLI再生成・264問限定差分・Web/iOS配布バイト・SHA256・全1,320肢の逐語証明・商用権利・実機検証は未了。**リリースゲートFAIL/BLOCKED維持**。mainマージ・配信・審査申請なし。
+
+
+## 続編第2回：Muse限定差分PASS追記、a群7問追証、基本Q25法令根拠訂正（2026-11-12）
+
+### Muse側の検証結果（提供された実施記録）
+- 比較基準`d56f0fb`と演習C Q29の修正後状態の両方で、Muse側ローカルNode CLI264問再生成成功。
+- 差分は`practice-C-Q29`の**出典参照・監査ステータス・出典URL**の1問のみ。正答index不変、**他263問完全一致**、限定差分判定**PASS（Muse側ユーザー提供）**。
+- 本担当でその実行ログ・264問出力・Web/iOS配布バイトを独立再実行していない。検証結果の情報源を区別。
+
+### a群で今バッチ対処した7問（基本7問・40行の局所差分ではなく対象7問のみ）
+- `2026-04-Q43`：登録根拠を`https://www.ncbi.nlm.nih.gov/sites/books/NBK27158/`へ差替え。NCBI Immunological memory 10-21〜10-23：記憶B細胞・迅速な二次抗体応答。変更は`auditSourceURL`・`auditStatus`のみ、正答index不変。
+- `2025-10-Q37`：登録根拠を`https://openstax.org/books/anatomy-and-physiology-2e/pages/1-5-homeostasis`へ差替え。OpenStax 1.5：膵β細胞インスリンが筋・脂肪細胞の糖取込みを促進。変更は`auditSourceURL`・`auditStatus`のみ、正答index不変。
+- `2025-10-Q39`：登録根拠を`https://openstax.org/books/anatomy-and-physiology-2e/pages/23-7-chemical-digestion-and-absorption-a-closer-look`へ差替え。OpenStax 23.7：胆汁酸ミセルが脂溶性ビタミンの腸管吸収に寄与。変更は`auditSourceURL`・`auditStatus`のみ、正答index不変。
+- `2025-10-Q44`：登録根拠を`https://www.ncbi.nlm.nih.gov/books/NBK279116/`へ差替え。NCBI Endotext: 交感神経髄質系が先行しHPA軸のコルチゾール応答は遅れて生じる。変更は`auditSourceURL`・`auditStatus`のみ、正答index不変。
+- `2025-04-Q38`：登録根拠を`https://openstax.org/books/anatomy-and-physiology-2e/pages/23-7-chemical-digestion-and-absorption-a-closer-look`へ差替え。OpenStax 23.7：胃ペプシンと小腸膵由来蛋白分解酵素・リパーゼの別機能。変更は`auditSourceURL`・`auditStatus`のみ、正答index不変。
+- `2025-04-Q40`：登録根拠を`https://medlineplus.gov/lab-tests/bun-blood-urea-nitrogen/`へ差替え。NIH MedlinePlus：BUNは脱水・蛋白摂取の影響も受けクレアチニン・GFR等と併せる。変更は`auditSourceURL`・`auditStatus`のみ、正答index不変。
+- `2025-04-Q43`：登録根拠を`https://www.cdc.gov/niosh/fatigue/about/index.html`へ差替え。NIOSH Fatigue and Work（2026-07-14）：夜勤・疲労・反応遅延・勤務設計評価を裏づける。変更は`auditSourceURL`・`auditStatus`のみ、正答index不変。
+- 各問の中心命題は公開一次・教科書本文に照合した。ただし全5肢それぞれの独立逐語立証は未完了。旧URLの再CAPTCHAなどによる不達を「この登録先での追証で解消」と区分し、リリース承認は別。
+
+### 基本2026-04-Q25の法令適用精査と最終修正方針
+- **以前のc群分類「設問の屋内作業場を事務所則3条に合わせて書換え必須」は撤回。**事務所衛生基準規則第1・3条は事務室の規定だが、**安衛則第601条第1項は労働者を常時就業させる屋内作業場一般に同じ1/20の開口面積基準**を規定する。厚労省原典：`https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=10`。事務所則：`https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1`。
+- **問題データへの反映を実施**：生成正本`Resources/questions.json`の`2026-04-Q25`について、`detail`を安衛則第601条直接根拠へ修正し、`auditSourceURL`を同条原典に差替え、`auditStatus`を更新した。**設問・5肢・短解説・正答index2・式（200/20=10㎡、8㎡との差2㎡）は維持**。再設計不要。
+- 「正答の根拠が変わるか」への回答：**正答命題と計算根拠は不変だが、直接引用すべき法令条文が事務所則3条から安衛則601条へ変わる**。根拠条文差替えの意味で変更あり。元の公式回次に係る`sourceRef`は公表テーマ由来を残すため維持。
+- c群は**1→0件、a群は84→85件**に再分類。a群のうち今回原典差替え・確認7問とQ25の法令根拠訂正1問を台帳に記録（前回C29 URL補修、C34/C42追証は別計上）。
+- 新規基本8問を変更した今回の264問Node CLI再生成・限定差分・配布JSONバイト一致/SHA256は本担当では**未実施**。Muse側のQ29に対するPASSを今回の8問へ流用しない。公開ゲートFAIL/BLOCKED維持。

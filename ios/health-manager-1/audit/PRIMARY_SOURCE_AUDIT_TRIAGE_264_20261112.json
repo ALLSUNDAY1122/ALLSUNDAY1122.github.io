@@ -19,9 +19,9 @@
     "practice-B-Q12"
   ],
   "counts": {
-    "a": 84,
+    "a": 85,
     "b": 0,
-    "c": 1,
+    "c": 0,
     "total": 85
   },
   "groups": {
@@ -51,6 +51,7 @@
       "2026-04-Q17",
       "2026-04-Q19",
       "2026-04-Q20",
+      "2026-04-Q25",
       "2026-04-Q28",
       "2026-04-Q29",
       "2026-04-Q30",
@@ -112,9 +113,7 @@
       "practice-C-Q44"
     ],
     "b": [],
-    "c": [
-      "2026-04-Q25"
-    ]
+    "c": []
   },
   "items": [
     {
@@ -412,14 +411,14 @@
     },
     {
       "id": "2026-04-Q25",
-      "group": "c",
+      "group": "a",
       "origin": {
         "pending": false,
         "partial": true,
         "accessFlags": []
       },
-      "reason": "登録原典の適用範囲が設問より狭く、問題条件そのものの再設計が必要",
-      "resolution": "CONTENT_REDESIGN_REQUIRED_NO_DATA_CHANGE"
+      "reason": "安衛則第601条が屋内作業場一般に直接適用され、事務所則3条への誤った根拠紐付けを変更すれば設問・正答は維持可能",
+      "resolution": "SOURCE_LEGAL_BASIS_FIXED_PENDING_REBUILD"
     },
     {
       "id": "2026-04-Q28",
@@ -1183,5 +1182,113 @@
     "jisTerms": "https://www.jisc.go.jp/site/kiyaku.html",
     "jisView": "https://www.jisc.go.jp/qa/",
     "scopeLaw": "https://www.mhlw.go.jp/web/t_doc?dataId=74089000"
+  },
+  "revisionDate": "2026-11-12",
+  "reclassification": {
+    "id": "2026-04-Q25",
+    "from": "c",
+    "to": "a",
+    "reason": "厚生労働省公開の労働安全衛生規則第601条が設問の屋内作業場を直接包含、再設計不要",
+    "verifiedURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=10"
+  },
+  "batchTwoResolutions": [
+    {
+      "id": "2026-04-Q43",
+      "oldAuditSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK27158/",
+      "newAuditSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK27158/",
+      "evidence": "NCBI Immunological memory 10-21〜10-23：記憶B細胞・迅速な二次抗体応答",
+      "status": "PENDING_SOURCE_RESOLVED_CENTRAL_CLAIM",
+      "answerIndex": 1,
+      "changes": [
+        "auditSourceURL",
+        "auditStatus"
+      ]
+    },
+    {
+      "id": "2025-10-Q37",
+      "oldAuditSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK1671/",
+      "newAuditSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/1-5-homeostasis",
+      "evidence": "OpenStax 1.5：膵β細胞インスリンが筋・脂肪細胞の糖取込みを促進",
+      "status": "PENDING_SOURCE_RESOLVED_CENTRAL_CLAIM",
+      "answerIndex": 1,
+      "changes": [
+        "auditSourceURL",
+        "auditStatus"
+      ]
+    },
+    {
+      "id": "2025-10-Q39",
+      "oldAuditSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK597379/",
+      "newAuditSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-7-chemical-digestion-and-absorption-a-closer-look",
+      "evidence": "OpenStax 23.7：胆汁酸ミセルが脂溶性ビタミンの腸管吸収に寄与",
+      "status": "PENDING_SOURCE_RESOLVED_CENTRAL_CLAIM",
+      "answerIndex": 2,
+      "changes": [
+        "auditSourceURL",
+        "auditStatus"
+      ]
+    },
+    {
+      "id": "2025-10-Q44",
+      "oldAuditSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK278995/",
+      "newAuditSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK279116/",
+      "evidence": "NCBI Endotext: 交感神経髄質系が先行しHPA軸のコルチゾール応答は遅れて生じる",
+      "status": "PENDING_SOURCE_RESOLVED_CENTRAL_CLAIM",
+      "answerIndex": 2,
+      "changes": [
+        "auditSourceURL",
+        "auditStatus"
+      ]
+    },
+    {
+      "id": "2025-04-Q38",
+      "oldAuditSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK544242/",
+      "newAuditSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-7-chemical-digestion-and-absorption-a-closer-look",
+      "evidence": "OpenStax 23.7：胃ペプシンと小腸膵由来蛋白分解酵素・リパーゼの別機能",
+      "status": "PENDING_SOURCE_RESOLVED_CENTRAL_CLAIM",
+      "answerIndex": 2,
+      "changes": [
+        "auditSourceURL",
+        "auditStatus"
+      ]
+    },
+    {
+      "id": "2025-04-Q40",
+      "oldAuditSourceURL": "https://www.kidney.org/kidney-topics/blood-urea-nitrogen-bun-test",
+      "newAuditSourceURL": "https://medlineplus.gov/lab-tests/bun-blood-urea-nitrogen/",
+      "evidence": "NIH MedlinePlus：BUNは脱水・蛋白摂取の影響も受けクレアチニン・GFR等と併せる",
+      "status": "PENDING_SOURCE_RESOLVED_CENTRAL_CLAIM",
+      "answerIndex": 2,
+      "changes": [
+        "auditSourceURL",
+        "auditStatus"
+      ]
+    },
+    {
+      "id": "2025-04-Q43",
+      "oldAuditSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK541120/",
+      "newAuditSourceURL": "https://www.cdc.gov/niosh/fatigue/about/index.html",
+      "evidence": "NIOSH Fatigue and Work（2026-07-14）：夜勤・疲労・反応遅延・勤務設計評価を裏づける",
+      "status": "PENDING_SOURCE_RESOLVED_CENTRAL_CLAIM",
+      "answerIndex": 2,
+      "changes": [
+        "auditSourceURL",
+        "auditStatus"
+      ]
+    }
+  ],
+  "batchTwoMuseValidation": {
+    "base": "d56f0fb0c4889881357c4ebd6fbebda27c46504a",
+    "subject": "practice-C-Q29",
+    "source": "user-provided Muse local validation",
+    "regenerateBaseline": "PASS_REPORTED",
+    "regenerateModified": "PASS_REPORTED",
+    "diff": [
+      "practice-C-Q29"
+    ],
+    "other263": "byte identical as reported",
+    "answerIndex": "unchanged",
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReexecuted": false
   }
 }
