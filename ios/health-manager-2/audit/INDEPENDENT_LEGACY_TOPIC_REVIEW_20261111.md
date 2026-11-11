@@ -259,3 +259,15 @@
 - 未適用の改修：20件のtopic・basis、No.21のsource_url、必要に応じ出典・適用条件解説。No.17は現行データ維持。
 - **監査記録のみ更新**。設問JS、出力JSON、auditStatus、contentReviewStatus、legalChecked、iOSビルドを変更せず、CIも今回は再実行していない。公開品質ゲートは**BLOCKED**。
 - 次工程は20件の元データへのメタデータ修正を適切なJSパッチ位置へ反映し、両ランタイム一致・JSON再生成・A〜E回帰・CI・公開ブロックを検証する。独立した全300問監査は別途継続する。
+
+
+## 2026-11-11追補｜確定20件のメタデータ改修と正本JSON再生成
+
+- 変更生成元：`apps/sanitary-manager-2/audit-fixes.js` 末尾へ `SM2_LEGACY_METADATA_20_CORRECTIONS_20261111` を追加。20件の`topic`/`basis`を書き換え、No.21 `sm2-5y-r10-law-10` は `sourceUrl` を労働基準法 `https://laws.e-gov.go.jp/law/322AC0000000049` に変更。No.17 `sm2-5y-r10-law-06` は変更しないことを実行時に検査。
+- 生成元コミット：`3e9bd83c190b95eba351f3e5bab84091e3b031da`。
+- GitHub Actions の自動再生成で `ios/health-manager-2/release-questions.json` が更新されたことをブランチへ再取得して確認。上記生成元コミットから現行ブランチへの比較は **ahead 1 commit / 変更ファイルrelease-questions.jsonのみ / 41行追加41行削除**。Actions workflow IDと最終conclusionは直接取得できず未確認。自動書き出しが完了したことと、最終CI成功を混同しない。
+- 更新前のGitHubコミット時点のJSONと再生成後のJSONをID比較：**300問、ID一意300、正規化問題文300種類、30グループ、各10問で正答位置1〜5が2問ずつ**。
+- 差分のある問題IDは**ちょうど20件**で、19件は`topic`/`primary_basis`のみ、No.21のみ追加で`source_url`変更。質問文、選択肢、正答インデックス、解説、要点、元の監査承認属性に差異なし。
+- 自動再生成されたJSONのGit blob SHA：`9413bd6225b874b51d3feab6e17b0bcc69b8a843`。このSHAはコミットIDではない。
+- この監査記録更新はコードやJSONを変更せず、CIの新たな実行を要求しない。品質ゲートは**BLOCKED**、独立300問審査と実機確認は引き続き未完。
+- 注意：旧見出し文字列による21件検出は改修後の出題topicでは再現できなくなる。旧検出件数の減少は原典逐語監査の完了を意味しない。
