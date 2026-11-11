@@ -131,6 +131,33 @@ for (const round of layouts) {
   if (n !== 45) throw new Error(`${round.id}: expected 44 questions, got ${n-1}`);
 }
 
+// Apply HM1-only reviewed rewrites after stable HM2 selection, preserving IDs and
+// source lineage. This makes the fixes survive every release materialization.
+const fixPath = path.join(IOS_DIR, 'audit', 'practice_a_fixes_01_10.json');
+const fixPack = JSON.parse(fs.readFileSync(fixPath, 'utf8'));
+const expectedFixIds = Array.from({length:10}, (_,i) => `practice-A-Q${String(i+1).padStart(2,'0')}`);
+if (JSON.stringify(Object.keys(fixPack.questions).sort()) !== JSON.stringify(expectedFixIds)) {
+  throw new Error('Practice-A Q01-Q10 override IDs do not match release contract');
+}
+for (const id of expectedFixIds) {
+  const q = added.find(q => q.id === id);
+  if (!q || !q.conceptKey.startsWith('hm2:sm2-5y-r04-law-')) {
+    throw new Error(`${id}: generated source mapping changed; refusing silent override`);
+  }
+  const patch = fixPack.questions[id];
+  if (!Array.isArray(patch.choices) || patch.choices.length !== 5 ||
+      !Number.isInteger(patch.ans) || patch.ans < 0 || patch.ans > 4 ||
+      !patch.stem || !patch.detail || !patch.sourceRef) {
+    throw new Error(`${id}: invalid patch data`);
+  }
+  Object.assign(q, patch, {
+    short: `正解は「${patch.choices[patch.ans]}」です。`,
+    originalExpression: true,
+    independenceReason: 'HM1監査第1バッチの指摘に基づく個別の条件判断型再設計。'
+  });
+}
+console.log('PASS: HM1 practice-A Q01-Q10 case-based overrides applied (10)');
+
 const all = [...base, ...added];
 if (all.length !== 264) throw new Error(`Expected total=264, got ${all.length}`);
 if (new Set(all.map(q=>q.id)).size !== 264) throw new Error('Duplicate ids in HM1 264 bank');
