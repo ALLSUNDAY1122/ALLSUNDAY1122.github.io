@@ -451,3 +451,13 @@ if(fixes.length!==7||new Set(fixes.map(f=>f.id)).size!==7)throw Error('HM2 sixte
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 sixteenth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
 window.SM2_INDEPENDENT_SIXTEENTH10_METADATA_FIX7_IDS=fixes.map(f=>f.id);
 })();
+
+
+// SM2_INDEPENDENT_SEVENTEENTH10_METADATA_FIX5_20261111: fixed No.161-164 and No.166 only; metadata correction, release approval remains blocked.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r07-phy-07","topic":"膵α細胞のグルカゴンと肝糖放出","basis":"内分泌・糖代謝の生理／グルカゴンによる肝グリコーゲン分解・糖新生"},{"id":"sm2-5y-r07-phy-08","topic":"高浸透圧時のADH・AQP2による集合管水再吸収","basis":"腎・体液の生理／バソプレシン・アクアポリン2と尿濃縮"},{"id":"sm2-5y-r07-phy-09","topic":"近方視の毛様体筋収縮と水晶体の厚み変化","basis":"視覚生理／副交感神経性の調節・毛様体筋・チン小帯"},{"id":"sm2-5y-r07-phy-10","topic":"好中球・マクロファージによる貪食と自然免疫","basis":"血液・免疫生理／白血球の貪食機能"},{"id":"sm2-5y-r08-phy-02","topic":"明所視・色覚を担う網膜錐体細胞","basis":"視覚生理／錐体と杆体の機能分担"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==5||new Set(fixes.map(f=>f.id)).size!==5)throw Error('HM2 seventeenth10 metadata fix count invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 seventeenth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
+window.SM2_INDEPENDENT_SEVENTEENTH10_METADATA_FIX5_IDS=fixes.map(f=>f.id);
+})();
