@@ -935,3 +935,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH07_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH08_20261111: individual direct sources; modify sourceUrl only.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r05-phy-04","sourceUrl":"https://www.ncbi.nlm.nih.gov/sites/books/NBK30/","question":"健康な成人が糖質を含む食事を取り、血糖値とインスリン分泌が上昇した。食後の血糖上昇を抑えるための肝臓の代謝変化として最も適切なのはどれか。","correctText":"インスリンの作用により肝糖産生が抑制され、グリコーゲン合成が促される。"},{"id":"sm2-5y-r05-phy-05","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK538339/","question":"腎臓で血液から原尿が形成される過程について、通常の糸球体ろ過で最も通過しにくい成分はどれか。","correctText":"赤血球"},{"id":"sm2-5y-r05-phy-06","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK542175/","question":"安静時の心拍数を把握するため、橈骨動脈に指を当て規則的な拍動を触知した。触れた現象について最も適切なのはどれか。","correctText":"心拍に伴う動脈壁の圧力変動が末梢へ伝わったもの"},{"id":"sm2-5y-r05-phy-07","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK542175/","question":"心臓の拍動が規則的でも、橈骨動脈で触れる脈が弱くなることがある。触知している現象として適切なのはどれか。","correctText":"心臓の駆出に伴う動脈内圧の波が末梢へ伝わる現象。"},{"id":"sm2-5y-r05-phy-08","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC5369262/","question":"健康成人が歩行運動を開始した。運動開始直後で、血中インスリン濃度が増加していない場合でも、活動中の骨格筋でブドウ糖取り込みが高まり得る理由として適切なのはどれか。","correctText":"筋収縮に伴うシグナルでもGLUT4の細胞膜への移行が促され、インスリン増加がなくても糖取り込みが増え得る。"},{"id":"sm2-5y-r05-phy-09","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK9961/","question":"運動中に骨格筋への神経刺激が加わった。筋収縮を起こす直接の過程として適切なのはどれか。","correctText":"筋細胞内のカルシウムイオン濃度上昇によりアクチンとミオシンの相互作用が進む。"},{"id":"sm2-5y-r05-phy-10","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK554545/","question":"脂質を含む食物が小腸に入り、膵液による消化が進んでいる。中性脂肪の加水分解を主に担う膵由来の消化酵素はどれか。","correctText":"膵リパーゼ"},{"id":"sm2-5y-r06-phy-01","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK559004/","question":"安静呼吸で吸息の後に呼気が始まった。努力呼息をせず静かに息を吐くとき、主に働く機序はどれか。","correctText":"吸息筋の弛緩と肺・胸郭の弾性復元"},{"id":"sm2-5y-r06-phy-02","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK482502/","question":"安静呼吸で息を吸う際、横隔膜が収縮することで胸腔内の容積と圧に生じる変化はどれか。","correctText":"胸腔容積が増え、肺内圧が低下して空気が流入する。"},{"id":"sm2-5y-r06-phy-03","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK541099/","question":"列挙した項目と内容の対応のうち、正しいものを選べ。","correctText":"肺活量 ― 最大吸息後にできるだけ吐き出せる空気量をいう。"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch08 target count/ID');
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+ !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correctText||
+ (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.sourceUrl))
+ throw Error('HM2 X-01 batch08 unexpected source/content '+f.id);
+ q.sourceUrl=f.sourceUrl;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH08_IDS=fixes.map(f=>f.id);
+})();
