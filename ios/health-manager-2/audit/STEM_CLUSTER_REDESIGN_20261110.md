@@ -285,3 +285,15 @@ Aの残り：労働衛生12件、労働生理14件、計26件。ブラウザー�
 - **残課題（CI実測）**：ブラウザー版とリリース用読込経路で問題文差異0、選択肢差異**1問**、正答番号差異0、解説差異0。この1問の差異の原因特定・統一が別途必要。JS経路の計測は同梱用`release-questions.json`の更新・iOSアプリへの反映を意味しない。
 - **品質ゲートBLOCKED**：独立した全300問の法令・医学的逐語監査、残る選択肢差異1問の解消、同梱用JSON再出力、iOSビルド・実機検証、本番公開前のQ0/Q1再判定は未完了。**『正規化問題文が300種類』は内容の意味的な独立性・問題難易度・正答の医学的／法令的妥当性を保証しない**。
 - 次工程：選択肢差異1問をID単位で特定し、両教材経路を統一。その後release JSONの再生成、法令・医学的根拠の独立照合、実機検証と公開ゲートの再判定へ進む。
+
+
+## 2026-11-11追補｜ブラウザー／リリース教材統一とiOS用JSON再生成
+
+- 最終A〜E 192問の問題文は既に正規化300/300種類。本工程で両ランタイムの選択肢差異1問を特定：`sm2-5y-r05-law-10`（産業医の辞任等の報告）。**変更前**：ブラウザー版は制度名と説明の近接5択で正答位置3、リリース用経路は単純な制度名の5択で正答位置3。原因はブラウザーのみ実行する`difficulty-patch-v5.js`の未統一適用。**変更後**：`audit-fixes.js`末尾で両経路共通の選択肢を定義し、`question-order-v1.js`による正答位置の組替え前の位置5を保持したうえで、最終出題位置3へ再整列。要点（quick）も統一。
+- 修正コミット：`7ed226d1655e62e7f5fd7b78385438509d34cdd4`。差異診断 `scripts/audit_sm2_question_stem_clusters.cjs` の`CHOICE_DRIFT`出力追加コミット：`47d5a3488ad72de497172b006365ebdac9f0ccee`。
+- **正本をブラウザー実行順（`q1..q12`→`difficulty-patch-v5`→`audit-patch-v2/v3/v4`→`audit-fixes`→`question-order-v1`）に固定**。独立した`ios/health-manager-2/export-canonical-snapshot.cjs`は、これとリリース読込順序をそれぞれ再構成し、問題文・選択肢・正答番号・要点・解説・topic・sourceUrl・baselineDateのID単位一致、300問ID一意、30セット、5択、正答位置各2回、正規化300種類を検査し、`ios/health-manager-2/release-questions.json`を生成。生成器コミット：`3e44d20c9a4ccc3129c0a4a4c35b56280d9a96e4`。
+- `ios/health-manager-2/prepare-web-assets.sh`では出力JSONを改めて再生成してから`HealthManager2/Web/release-questions.json`にコピーし、iOS用Web資産に同梱する手順へ変更（`6f3c27f94223ce73a8ef54187598e2099ea8f164`）。**署名済iOSビルド・配信・実機への組込み確認は未実施**。
+- 専用GitHub Actions`HM2 canonical iOS question JSON rebuild`を追加し、再生成・全件照合・JSONのGit管理下へのコミットを実行（CI定義コミット`a09bb1903550c52d146bee6cd51615e16e2651de`）。実行 **SUCCESS**：https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42956044419 。生成JSONをGitHubに保存したコミット：`15f41cce54f1be50e9078a540a1d4a2fec7de743`。
+- CI実測：**300問／正規化300種類／差異0件／30セット**、出力 **487,524 bytes**、SHA-256 `f807f4c00057c2839b44dc71e4aeb4178f5ffc1206bef0ab8e4e1b4c5bf351a4`。保存したJSONをGitHubから再取得して確認：300件、ID一意300件、正規化問題文一意300件、対象IDの正答インデックス2（0始まり＝第3肢）。
+- 従来の`export-audit-data-core.cjs`には再設計前の原文数値を要求する静的検査が残り、`健康診断後の医師等の意見聴取: missing verified current-law value 3か月以内`で停止した。これを安易に削除・合格扱いせず、今回の**再構成・教材一致の保証**と、**法令・医学的公開審査の保証**を分離。旧エクスポーターの再監査・静的品質ゲートの更新は残作業。正本の先行適用として`export-audit-data-core.cjs`のパッチ順序変更（`ad34c9f52d9255fde31ba0a07cc369036a355eb2`）と非破壊的照合テスト化（`2c6074566bb1b1bfaf4f128ffb06dd8f6ec5fece`）は実施したが、旧ゲート通過を主張しない。
+- **品質ゲートBLOCKED**。独立した法令・医学的原典監査、旧品質ゲートの改訂、iOS署名ビルドと実機検証、現在のビルドへの差分反映およびストア審査は実施していない。本工程の完了はJSON生成およびソースの一致まで。
