@@ -360,3 +360,13 @@ if(fixes.length!==8||new Set(fixes.map(f=>f.id)).size!==8)throw Error('HM2 seven
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 seventh10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;if(f.sourceUrl)q.sourceUrl=f.sourceUrl;}
 window.SM2_INDEPENDENT_SEVENTH10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
 })();
+
+
+// SM2_INDEPENDENT_EIGHTH10_METADATA_FIX8_20261111: fixed gate No.71-74 and 76-79 topic/basis only; preserve question content, sources and approval gates.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r05-hyg-07","topic":"情報機器作業の画面反射・グレア対策","basis":"厚生労働省『情報機器作業における労働衛生管理のためのガイドライン』"},{"id":"sm2-5y-r05-hyg-08","topic":"騒音下の警報認知と衝突防止","basis":"厚生労働省『騒音障害防止のためのガイドライン』・作業現場のリスクアセスメント"},{"id":"sm2-5y-r05-hyg-09","topic":"熱中症疑い時の初期対応","basis":"厚生労働省『職場における熱中症予防基本対策要綱』（症状発生時の対応）"},{"id":"sm2-5y-r05-hyg-10","topic":"音圧レベル差と音圧振幅比の計算","basis":"音圧レベルの定義（差ΔL＝20log10(p2/p1)）"},{"id":"sm2-5y-r06-hyg-02","topic":"在室人数増加時の換気とCO₂濃度管理","basis":"事務所衛生基準規則3条・5条（室内空気・空調設備の供給空気）"},{"id":"sm2-5y-r06-hyg-03","topic":"情報機器作業の頸肩負担と作業環境","basis":"厚生労働省『情報機器作業における労働衛生管理のためのガイドライン』"},{"id":"sm2-5y-r06-hyg-04","topic":"換気状況の補助指標としての室内CO₂濃度","basis":"厚生労働省の職場における換気・室内空気環境管理資料"},{"id":"sm2-5y-r06-hyg-05","topic":"防じんマスクと防毒マスクの対象物質","basis":"厚生労働省『防じんマスク・防毒マスクの適切な選択と使用』"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==8||new Set(fixes.map(f=>f.id)).size!==8)throw Error('HM2 eighth10 metadata fix ID count invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 eighth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
+window.SM2_INDEPENDENT_EIGHTH10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
+})();
