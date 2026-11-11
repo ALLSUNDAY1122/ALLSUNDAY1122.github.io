@@ -366,3 +366,14 @@
 - 上記は**個別の監査着手・不整合判定**であり、8問の修正完了・公開承認ではない。未修正8問があるため先頭10問を『内容承認済』とは扱わない。
 - 未レビュー対象の進捗管理：**個別点検10/178、未着手168/178**。ただし公開用ゲートの停止対象はステータスを変更していないため引き続き178件のまま。次回は固定ID順の11〜20件。
 - このバッチでは教材生成元・JSON・contentReviewStatus/auditStatus/legalCheckedに変更なし。新規iOSビルド・TestFlight・App Review提出なし。公開ゲートBLOCKEDを継続。
+
+
+## 2026-11-11追補｜独立レビュー先頭10問で見つかった8件の修正適用
+
+- 生成元 `apps/sanitary-manager-2/audit-fixes.js` 末尾へ `SM2_INDEPENDENT_FIRST10_METADATA_FIX8_20261111` を追加。対象8問の `topic` および `basis` のみ更新。生成元コミット：`10576bcee562bfa564018707b895cd9b36b4a31e`。
+- GitHub Actionsの自動再生成により `ios/health-manager-2/release-questions.json` がブランチへ反映されたことを再取得して確認。生成元コミットからブランチ先端は **ahead 1 commit**、差分ファイルは `release-questions.json` のみ（16行追加・16行削除）。自動生成コミットのSHAおよびGitHub Actions実行ID・最終conclusionはこの照会で未取得。
+- 修正前（生成元コミット時点）と修正後のJSONを全300件・ID順で比較：差分は**ちょうど8問**（`sm2-5y-r04-law-02`、`r04-law-05`、`r04-law-07`、`r04-law-08`、`r04-law-09`、`r04-law-10`、`r05-law-02`、`r05-law-03`）。全件で差分フィールドは **`topic` と `primary_basis` の2項目のみ**。
+- 問題文、選択肢5肢、正答インデックス、解説、quick、source_url、監査メタデータ、対象外292問の内容に差分なし。
+- 更新後の構造監査実測：**300問、ID一意300、正規化問題文300種類、30グループ、全グループ正答位置1〜5が各2回**。再生成JSON Git blob SHA：`e7eed8b6bf9e39f6722f7035a590bda47ffbac38`（コミットSHAではない）。
+- 既存の独立レビュー報告（10/178問、追加修正8問）はこの修正反映をもって、8問の**メタデータ修正完了**へ更新。レビュー用マーカーと公開ゲートの状態は変更せず、公開品質ゲートは引き続き**BLOCKED**。
+- CI最終SUCCESSは本記録の時点で実行ID・conclusionの裏付け未取得のため未確認とする。構造・差分のGitHub再取得による個別検証結果とCI全体の成否は区別する。
