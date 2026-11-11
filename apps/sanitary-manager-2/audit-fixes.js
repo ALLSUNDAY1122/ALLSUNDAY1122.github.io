@@ -494,3 +494,20 @@ if(choices.length!==5||new Set(choices).size!==5)throw Error('HM2 P0-2 choices i
 Object.assign(target,{question:"2026年8月1日以降、常時50人以上の労働者を使用し産業医の選任義務がある事業場で、産業医が辞任した。前任産業医の辞任に関する事項を含む後任者の選任報告を行っていない場合、事業者の対応として法令上、正しいものはどれか。",choices,answer:3,quick:"産業医が辞任したら、衛生委員会等には旨・理由を遅滞なく報告。選任報告で前任者の辞任事項を報告していない場合は、所轄労基署長にも遅滞なく報告。",explanation:"労働安全衛生規則13条4項により、産業医の辞任・解任時はその旨と理由を遅滞なく衛生委員会又は安全衛生委員会へ報告する。同条5項（2026年8月1日施行）は、産業医の選任義務がある事業場で辞任・解任・退任した産業医の氏名・年月日等を所轄労働基準監督署長へ遅滞なく報告する義務を定める。ただし同条2項の後任選任報告で前任者の辞任等の事項を報告した場合、辞任等の別途報告は不要。報告は原則電子申請だが、改正省令附則2項の経過措置として当分の間は必要事項を記録した書面で報告可能。第1肢は後任選任までの報告猶予がなく誤り、第2肢は署長報告を欠き、第4肢は書面の経過措置を否定し、第5肢は報告先・期限と委員会報告義務を誤る。根拠：安衛則13条2項・4項・5項、令和8年厚労省令86号、基発0428第4号。"});
 window.HM2_P0_2_OCCUPATIONAL_PHYSICIAN_ID=target.id;
 })();
+
+
+// HM2_P0_3_2026_HEATSTROKE_GUIDELINE_SWEEP_20261111: fix four abolished 2021 heatstroke-plan references and direct source links in nine affected five-year questions. Preserve answer/choices and release gates.
+(function(){'use strict';
+const ids=["sm2-5y-r04-hyg-01","sm2-5y-r04-hyg-06","sm2-5y-r04-hyg-07","sm2-5y-r04-hyg-08","sm2-5y-r04-hyg-10","sm2-5y-r05-hyg-09","sm2-5y-r07-hyg-04","sm2-5y-r09-hyg-05","sm2-5y-r10-hyg-03"];
+const oldName="職場における熱中症予防基本対策要綱",newName="職場における熱中症防止対策のためのガイドライン",sourceUrl="https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1";
+const all=window.Q_PARTS||[];const byId=new Map(all.map(q=>[q.id,q]));let replacements=0;
+if(ids.length!==9||new Set(ids).size!==9)throw Error('HM2 P0-3 list invalid');
+for(const id of ids){const q=byId.get(id);if(!q||q.subject!=='労働衛生')throw Error('HM2 P0-3 missing or wrong subject '+id);
+if(q.basis&&q.basis.includes(oldName)){q.basis=q.basis.replace(oldName,newName+'（令和8年3月18日・基発0318第1号）');replacements++;}
+q.sourceUrl=sourceUrl;
+}
+if(replacements!==4)throw Error('HM2 P0-3 old-plan replacement count '+replacements);
+const exp=byId.get('sm2-5y-r05-hyg-09');
+exp.explanation='熱中症が疑われる場合は直ちに作業を中断し、涼しい場所へ移動して身体を冷却し、意識状態を確認する。意識障害など重篤な兆候があれば速やかに救急要請し、単独で放置しない。2026年3月18日の新ガイドラインに基づき、事業場の連絡・救急搬送手順も確認する。';
+window.HM2_P0_3_HEATSTROKE_GUIDELINE_AFFECTED_IDS=ids;
+})();
