@@ -1425,3 +1425,19 @@ if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==
 q.sourceUrl=f.newUrl;
 window.HM2_170_B14_NO137_DIRECT_CO_SOURCE_APPLIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH15_NO145_150_20261112: strictly guarded source and pending-basis correction.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r07-hyg-10","subject":"労働衛生","topic":"重量物取扱いにおける腰部負担軽減","question":"倉庫で重い箱を繰り返し持ち上げる作業を調査したところ、床付近から腕を伸ばして持ち上げる動作が多かった。腰部負担を軽減する対策として適切なのはどれか。","basis":"厚生労働省『職場における腰痛予防対策指針』","oldUrl":"https://www.mhlw.go.jp/stf/houdou/2r98520000034et4.html","newUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1","answer":"荷物をできるだけ身体に近づけ、作業台の高さ調整や運搬補助具の利用を検討する。","choices":["荷物を身体から遠ざけて腕を伸ばしたまま持ち上げる。","箱が重いほど反動だけを使って腰を急にひねる。","荷物をできるだけ身体に近づけ、作業台の高さ調整や運搬補助具の利用を検討する。","作業の負荷を評価せず、重量の上限を無制限にする。","作業台を撤去して全て床から直接持ち上げる。"]},{"id":"sm2-5y-r08-hyg-05","subject":"労働衛生","topic":"エンジン式機器の屋内使用と一酸化炭素曝露予防","question":"換気が不十分な倉庫でエンジン式発電機を使用する計画がある。作業開始前の一酸化炭素中毒予防として、発生源と曝露を最も確実に減らす対応はどれか。","basis":"燃焼排ガスによる一酸化炭素曝露の発生源対策・換気・監視（直接出典の追加照合待ち）","newBasis":"厚生労働省『一酸化炭素による労働災害の防止について』（平成23年7月22日・基安化発0722第2号）／内燃機関の換気不十分な場所での使用回避・換気・CO濃度測定・警報","oldUrl":"https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000116133.html","newUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=00tb7875&dataType=1&pageNo=1","answer":"発電機を屋外の安全な場所に設置して排気が屋内へ流入しないようにし、必要な換気・監視を計画する。","choices":["発電機を室内に置いたまま、排気ガスが無臭なら作業を始める。","扉を閉じて排気が室内に滞留する状態にする。","濃度測定をせず、体調不良が出るまでは使用を続ける。","発電機を屋外の安全な場所に設置して排気が屋内へ流入しないようにし、必要な換気・監視を計画する。","窓を少し開ければエンジン式発電機を密閉倉庫内で無条件に使用できる。"]}];
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 B15 correction list integrity');
+for(const f of fixes){
+const hits=(window.Q_PARTS||[]).filter(q=>q.id===f.id);
+if(hits.length!==1)throw Error('HM2 B15 target ID count '+f.id);
+const q=hits[0];
+if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==f.basis||q.sourceUrl!==f.oldUrl||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.answer||JSON.stringify([...q.choices].sort())!==JSON.stringify([...f.choices].sort()))throw Error('HM2 B15 strict old-state mismatch '+f.id);
+q.sourceUrl=f.newUrl;
+if(f.newBasis!==undefined)q.basis=f.newBasis;
+}
+window.HM2_170_B15_DIRECT_SOURCES_APPLIED=true;
+})();
