@@ -131,6 +131,34 @@ for (const round of layouts) {
   if (n !== 45) throw new Error(`${round.id}: expected 44 questions, got ${n-1}`);
 }
 
+// HM1-only Practice C Q01-Q10 rewrites. Apply after source selection.
+// Stop if HM2 source ordering changes rather than patching an unrelated question.
+const cFixes = JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_01_10.json'), 'utf8')).questions;
+const cIds = Array.from({length:10}, (_,i) => 'practice-C-Q' + String(i+1).padStart(2, '0'));
+if (JSON.stringify(Object.keys(cFixes).sort()) !== JSON.stringify([...cIds].sort())) {
+  throw new Error('Practice C override ID set mismatch');
+}
+for (const id of cIds) {
+  const matches = added.filter(q => q.id === id);
+  if (matches.length !== 1) throw new Error(id + ': missing/duplicate generated ID');
+  const q = matches[0], patch = cFixes[id];
+  if (q.round !== 'practice-C' || q.label !== '関係法令' ||
+      !q.conceptKey.startsWith('hm2:' + patch.expectedSourceId + ':')) {
+    throw new Error(id + ': source mismatch: ' + q.conceptKey);
+  }
+  if (!patch.stem || !patch.detail || !patch.sourceRef || !patch.auditSourceURL ||
+      !Array.isArray(patch.choices) || patch.choices.length !== 5 ||
+      new Set(patch.choices).size !== 5 ||
+      !Number.isInteger(patch.ans) || patch.ans < 0 || patch.ans > 4) {
+    throw new Error(id + ': invalid rewrite');
+  }
+  for (const k of ['stem','choices','ans','detail','key','sourceRef','auditSourceURL','lawAsOf','auditStatus']) q[k] = patch[k];
+  q.short = '正解は「' + q.choices[q.ans] + '」です。';
+  q.originalExpression = true;
+  q.independenceReason = 'HM1 C-specific audit rewrite with source-ID verification.';
+}
+console.log('PASS: Practice-C Q01-Q10 source-matched rewrites applied (10)');
+
 const all = [...base, ...added];
 if (all.length !== 264) throw new Error(`Expected total=264, got ${all.length}`);
 if (new Set(all.map(q=>q.id)).size !== 264) throw new Error('Duplicate ids in HM1 264 bank');
