@@ -24,8 +24,8 @@ for(const [mode,files] of [['browser',[...base,'difficulty-patch-v5.js',...overl
  }
  const counts=new Map();for(const q of qs){const k=norm(q.question);counts.set(k,(counts.get(k)||0)+1);}
  const duplicates=[...counts.values()].filter(n=>n>1).sort((a,b)=>b-a);
- assert.equal(counts.size,mode==='browser'?294:300);
- if(mode==='browser')assert.deepEqual(duplicates,[7]);else assert.deepEqual(duplicates,[]);
+ assert.equal(counts.size,mode==='browser'?300:300);
+ if(mode==='browser')assert.deepEqual(duplicates,[]);else assert.deepEqual(duplicates,[]);
  assert.equal(qs.filter(q=>norm(q.question)===norm('次の5つの対応関係のうち、正しいものはどれか。')).length,0,'cluster C common stem remains');
  const groups=new Map();for(const q of qs){const key=q.examSet+'|'+q.subject;groups.set(key,[...(groups.get(key)||[]),q]);}
  assert.equal(groups.size,30);
