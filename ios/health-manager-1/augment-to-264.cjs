@@ -135,16 +135,25 @@ for (const round of layouts) {
 // source lineage. This makes the fixes survive every release materialization.
 const fixPath = path.join(IOS_DIR, 'audit', 'practice_a_fixes_01_10.json');
 const fixPack = JSON.parse(fs.readFileSync(fixPath, 'utf8'));
-const expectedFixIds = Array.from({length:30}, (_,i) => `practice-A-Q${String(i+1).padStart(2,'0')}`);
-if (JSON.stringify(Object.keys(fixPack.questions).sort()) !== JSON.stringify(expectedFixIds)) {
-  throw new Error('Practice-A Q01-Q30 override IDs do not match release contract');
+// Old patches Q16-Q30 were incorrectly assigned to HM1: their law-domain
+// source IDs belong to other generated rounds. Quarantine them until rewritten
+// against the adopted HM1 hygiene source IDs; never overwrite those questions.
+const expectedFixIds = [
+  ...Array.from({length:15}, (_,i) => `practice-A-Q${String(i+1).padStart(2,'0')}`),
+  ...Array.from({length:10}, (_,i) => `practice-A-Q${String(i+31).padStart(2,'0')}`),
+];
+const knownPatchIds = Array.from({length:40}, (_,i) => `practice-A-Q${String(i+1).padStart(2,'0')}`);
+if (JSON.stringify(Object.keys(fixPack.questions).sort()) !== JSON.stringify(knownPatchIds)) {
+  throw new Error('Practice-A Q01-Q40 stored patch IDs mismatch');
 }
 for (const id of expectedFixIds) {
   const q = added.find(q => q.id === id);
   const idx = Number(id.slice(-2));
-  const sourceRound = idx <= 10 ? 'r04' : idx <= 20 ? 'r05' : 'r06';
-  const sourceNumber = ((idx - 1) % 10) + 1;
-  const expectedSource = `hm2:sm2-5y-${sourceRound}-law-${String(sourceNumber).padStart(2,'0')}`;
+  const expectedSource = idx <= 10
+    ? `hm2:sm2-5y-r04-law-${String(idx).padStart(2,'0')}`
+    : idx <= 15
+      ? `hm2:sm2-5y-r05-law-${String(idx-10).padStart(2,'0')}`
+      : `hm2:sm2-5y-r04-phy-${String(idx-30).padStart(2,'0')}`;
   if (!q || !q.conceptKey.startsWith(expectedSource + ':')) {
     throw new Error(`${id}: generated source mapping changed; refusing silent override`);
   }
@@ -157,10 +166,10 @@ for (const id of expectedFixIds) {
   Object.assign(q, patch, {
     short: `正解は「${patch.choices[patch.ans]}」です。`,
     originalExpression: true,
-    independenceReason: 'HM1監査第1〜第3バッチの指摘に基づく個別の条件判断型再設計。'
+    independenceReason: 'HM1現行ID監査の指摘に基づく個別の条件判断型再設計。'
   });
 }
-console.log('PASS: HM1 practice-A Q01-Q30 case-based overrides applied (30)');
+console.log('PASS: HM1 practice-A source-matched Q01-Q15 and Q31-Q40 overrides applied (25); Q16-Q30 quarantined');
 
 const all = [...base, ...added];
 if (all.length !== 264) throw new Error(`Expected total=264, got ${all.length}`);
