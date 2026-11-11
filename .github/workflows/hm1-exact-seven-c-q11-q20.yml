@@ -1,0 +1,57 @@
+name: HM1 practice C Q11-Q20 exact seven regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/audit/practice_c_fixes_11_20.json'
+      - '.github/workflows/hm1-exact-seven-c-q11-q20.yml'
+  workflow_dispatch:
+jobs:
+  exact-seven:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild baseline and current banks; verify seven-only change
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=23136a039bd8b3a9c83231b01e1e1ce83a8c7591
+          git worktree add --detach /tmp/hm1-c11-before "$BASE"
+          git worktree add --detach /tmp/hm1-c11-after HEAD
+          (cd /tmp/hm1-c11-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-c11-before.log)
+          (cd /tmp/hm1-c11-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-c11-after.log)
+          python3 - <<'PY'
+          import json,unicodedata
+          from pathlib import Path
+          path='ios/health-manager-1/Resources/questions.json'
+          a=json.loads((Path('/tmp/hm1-c11-before')/path).read_text())
+          b=json.loads((Path('/tmp/hm1-c11-after')/path).read_text())
+          expected={f'practice-C-Q{i:02}' for i in [11,12,13,15,16,19,20]}
+          assert len(a)==len(b)==264,(len(a),len(b))
+          assert [x['id'] for x in a]==[x['id'] for x in b],'ID/order changed'
+          norm=lambda s:''.join(c for c in unicodedata.normalize('NFKC',s).casefold() if not c.isspace())
+          assert len({q['id'] for q in b})==264,'duplicate ID'
+          assert len({norm(q['stem']) for q in b})==264,'duplicate stem'
+          diffs={x['id'] for x,y in zip(a,b) if x!=y}
+          assert diffs==expected,sorted(diffs)
+          ans={'practice-C-Q11':1,'practice-C-Q12':2,'practice-C-Q13':2,'practice-C-Q15':1,'practice-C-Q16':0,'practice-C-Q19':0,'practice-C-Q20':0}
+          for x,y in zip(a,b):
+              if x['id'] not in expected:assert x==y,x['id']
+              assert len(y['choices'])==5,y['id']
+              assert len({norm(s) for s in y['choices']})==5,y['id']
+              assert type(y['ans']) is int and 0<=y['ans']<5,y['id']
+              if y['id'] in expected:
+                  assert y['ans']==ans[y['id']],y['id']
+                  assert y['short'] and y['detail'] and y['sourceRef'],y['id']
+          for held in ['practice-C-Q14','practice-C-Q17','practice-C-Q18']:
+              assert next(x for x in a if x['id']==held)==next(x for x in b if x['id']==held),held
+          print('PASS: 264 each; seven C Q11-Q20 IDs changed; other 257 identical')
+          PY
