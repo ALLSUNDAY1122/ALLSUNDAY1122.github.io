@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "baseCommit": "abf8d314ed9f44742a52bda97aa374897f01c4ea",
+  "musePriorValidation": {
+    "baseline": "10be187",
+    "baselineRegeneration": "PASS_REPORTED_USER_MUSE",
+    "modifiedRegeneration": "PASS_REPORTED_USER_MUSE",
+    "changedIds": [
+      "2026-04-Q13",
+      "2026-04-Q15",
+      "2026-04-Q17",
+      "2025-04-Q34",
+      "2025-04-Q36",
+      "2025-04-Q37"
+    ],
+    "claimedChangedFields": "auditStatus and auditSourceURL (some IDs already had final URL and only auditStatus differs in Git record)",
+    "answersUnchanged": true,
+    "other258Identical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReperformed": false
+  },
+  "scope": "a群A27/A33・B27/B31・C04の5問中心原典到達と出典差替え",
+  "outcomes": [
+    {
+      "id": "practice-A-Q27",
+      "old": "https://www.nra.go.jp/data/000464217.pdf",
+      "now": "https://stacks.cdc.gov/view/cdc/190690/cdc_190690_DS1.pdf",
+      "source": "米国CDC収蔵の換気モデル研究論文：VdC/dt = Q(Cin−Cout)+G。完全混合・定常・他除去なしでQ=G/(Ci−Co)。0.03/0.0006=50m³/h。旧原子力規制委員会PDFは取得エラー。",
+      "status": "DIRECT_CENTRAL_CLAIM_US_PUBLIC_RESEARCH_WITH_MODEL_ASSUMPTIONS",
+      "diff": {
+        "id": "practice-A-Q27",
+        "fields": [
+          "sourceRef",
+          "auditSourceURL",
+          "auditStatus"
+        ],
+        "answerIndex": 2
+      },
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-A-Q33",
+      "old": "https://www.rcpa.edu.au/Manuals/RCPA-Manual/Clinical-Presentations-and-Diagnoses/N/Neutrophilia",
+      "now": "https://www.ncbi.nlm.nih.gov/sites/books/NBK570571/",
+      "source": "NCBI StatPearls Neutrophilia：細菌感染・炎症・糖質コルチコイドを含む薬剤、血算/分画/過去の検査値と服薬歴を評価。登録RCPAは403で未到達。",
+      "status": "DIRECT_CENTRAL_CLAIM_ALTERNATIVE_NCBI",
+      "diff": {
+        "id": "practice-A-Q33",
+        "fields": [
+          "sourceRef",
+          "auditSourceURL",
+          "auditStatus"
+        ],
+        "answerIndex": 0
+      },
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q31",
+      "old": "https://openstax.org/books/fundamentals-nursing/pages/7-1-indicators-of-physiologic-functioning",
+      "now": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-key-terms",
+      "extra": "https://pressbooks.library.torontomu.ca/assessmentnursingmain/chapter/auscultation-of-the-apical-pulse/",
+      "source": "OpenStax QRS complex=心室脱分極、Toronto Metropolitan Universityの看護教材=心尖脈と橈骨脈の差が脈拍欠損。QRS数と触知脈の同数を仮定せず同時計測を見直す。",
+      "status": "TWO_PUBLIC_TEXTS_COVER_ELECTRICAL_AND_PERIPHERAL_PULSE",
+      "diff": {
+        "id": "practice-B-Q31",
+        "fields": [
+          "detail",
+          "sourceRef",
+          "auditSourceURL",
+          "auditStatus"
+        ],
+        "answerIndex": 0
+      },
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q27",
+      "old": "https://laws.e-gov.go.jp/law/347AC0000000057",
+      "now": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000",
+      "extra": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc3656&dataType=1&pageNo=1",
+      "source": "厚生労働省安衛法104条本文・施行通達：法定健康確保措置の情報の収集・保管・使用と適正管理。任意相談記録が常に104条に該当すると断定せず、情報の性質・目的・個人情報保護も検討。",
+      "status": "DIRECT_STATUTE_WITH_VOLUNTARY_CONSULTATION_SCOPE_RESERVATION",
+      "diff": {
+        "id": "practice-B-Q27",
+        "fields": [
+          "sourceRef",
+          "auditSourceURL",
+          "auditStatus"
+        ],
+        "answerIndex": 0
+      },
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q04",
+      "old": "https://laws.e-gov.go.jp/law/347AC0000000057?occasion_date=20261001",
+      "now": "https://www.mhlw.go.jp/web/t_doc?dataId=74002000",
+      "extra": "https://www.mhlw.go.jp/stf/newpage_09980.html",
+      "source": "厚生労働省安衛法施行令2条1・2号・3条に製造業を含み銀行業を含まない。安衛法12条の2及び厚労省Q&Aで10人以上50人未満は業種に応じて安全衛生推進者/衛生推進者。銀行30人=衛生推進者、製造業30人=安全衛生推進者。",
+      "status": "DIRECT_GOVERNMENT_DECREE_AND_MHLW_GUIDANCE",
+      "diff": {
+        "id": "practice-C-Q04",
+        "fields": [
+          "detail",
+          "sourceRef",
+          "auditSourceURL",
+          "auditStatus"
+        ],
+        "answerIndex": 4
+      },
+      "allFiveDirectProofPass": false
+    }
+  ],
+  "n": 5,
+  "independent264Generation": "NOT_RUN",
+  "distributionBytes": "NOT_CHECKED",
+  "releaseGate": "FAIL/BLOCKED"
+}

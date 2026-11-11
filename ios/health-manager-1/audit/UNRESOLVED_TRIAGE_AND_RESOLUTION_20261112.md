@@ -82,3 +82,27 @@
 ### 3. 引継ぎと公開ゲート
 - (a)群の母数85問は分類済IDの総数であり、今回以降も全件未解消という意味ではない。次は`practice-A-Q27` NRA PDF、`practice-A-Q33` RCPA 403、`practice-B-Q27` e-Gov本文障害、`practice-B-Q31` QRS、`practice-C-Q04` 安衛令業種を優先。
 - **本コミットの基本6問についてはNode CLI264問再生成・Web/iOSバイト照合・SHA256を未実施**。前段Muse PASSは今回の基本6問を含まない。全1320肢の直接逐語証明・法令版／商用権利・実機検証も別の未解決課題。総合ゲート**FAIL/BLOCKED維持**。
+
+
+## 続編第4回：基本6問Muse限定差分PASS受領、優先5問の直接原典追証（2026-11-12）
+
+### A. ユーザー提供Muse側実施結果
+- 比較基準`10be187`と前回基本6問の修正後状態の**双方で264問Node CLI再生成成功**。
+- 差分は`2026-04-Q13、2026-04-Q15、2026-04-Q17、2025-04-Q34、2025-04-Q36、2025-04-Q37`の6問のみ。監査ステータス・出典URL関連の変更（GitHub上にはURL既存一致でステータスだけの問題もある）。**正答index全問不変、他258問完全一致、限定差分PASS**（Muse側ローカル実施・ユーザー提供）。本セッションでは再実行していない。今回の5問へPASSを転用しない。
+
+### B. 次の優先5問：原典到達・適用範囲
+- **`practice-A-Q27`：DIRECT_CENTRAL_CLAIM_US_PUBLIC_RESEARCH_WITH_MODEL_ASSUMPTIONS**。米国CDC収蔵の換気モデル研究論文：VdC/dt = Q(Cin−Cout)+G。完全混合・定常・他除去なしでQ=G/(Ci−Co)。0.03/0.0006=50m³/h。旧原子力規制委員会PDFは取得エラー。。旧登録`https://www.nra.go.jp/data/000464217.pdf` → 新登録`https://stacks.cdc.gov/view/cdc/190690/cdc_190690_DS1.pdf`。変更フィールド：`sourceRef、auditSourceURL、auditStatus`。正答index **2不変**。
+- **`practice-A-Q33`：DIRECT_CENTRAL_CLAIM_ALTERNATIVE_NCBI**。NCBI StatPearls Neutrophilia：細菌感染・炎症・糖質コルチコイドを含む薬剤、血算/分画/過去の検査値と服薬歴を評価。登録RCPAは403で未到達。。旧登録`https://www.rcpa.edu.au/Manuals/RCPA-Manual/Clinical-Presentations-and-Diagnoses/N/Neutrophilia` → 新登録`https://www.ncbi.nlm.nih.gov/sites/books/NBK570571/`。変更フィールド：`sourceRef、auditSourceURL、auditStatus`。正答index **0不変**。
+- **`practice-B-Q31`：TWO_PUBLIC_TEXTS_COVER_ELECTRICAL_AND_PERIPHERAL_PULSE**。OpenStax QRS complex=心室脱分極、Toronto Metropolitan Universityの看護教材=心尖脈と橈骨脈の差が脈拍欠損。QRS数と触知脈の同数を仮定せず同時計測を見直す。。旧登録`https://openstax.org/books/fundamentals-nursing/pages/7-1-indicators-of-physiologic-functioning` → 新登録`https://openstax.org/books/anatomy-and-physiology-2e/pages/19-key-terms`、補助`https://pressbooks.library.torontomu.ca/assessmentnursingmain/chapter/auscultation-of-the-apical-pulse/`。変更フィールド：`detail、sourceRef、auditSourceURL、auditStatus`。正答index **0不変**。
+- **`practice-B-Q27`：DIRECT_STATUTE_WITH_VOLUNTARY_CONSULTATION_SCOPE_RESERVATION**。厚生労働省安衛法104条本文・施行通達：法定健康確保措置の情報の収集・保管・使用と適正管理。任意相談記録が常に104条に該当すると断定せず、情報の性質・目的・個人情報保護も検討。。旧登録`https://laws.e-gov.go.jp/law/347AC0000000057` → 新登録`https://www.mhlw.go.jp/web/t_doc?dataId=74001000`、補助`https://www.mhlw.go.jp/web/t_doc?dataId=00tc3656&dataType=1&pageNo=1`。変更フィールド：`sourceRef、auditSourceURL、auditStatus`。正答index **0不変**。
+- **`practice-C-Q04`：DIRECT_GOVERNMENT_DECREE_AND_MHLW_GUIDANCE**。厚生労働省安衛法施行令2条1・2号・3条に製造業を含み銀行業を含まない。安衛法12条の2及び厚労省Q&Aで10人以上50人未満は業種に応じて安全衛生推進者/衛生推進者。銀行30人=衛生推進者、製造業30人=安全衛生推進者。。旧登録`https://laws.e-gov.go.jp/law/347AC0000000057?occasion_date=20261001` → 新登録`https://www.mhlw.go.jp/web/t_doc?dataId=74002000`、補助`https://www.mhlw.go.jp/stf/newpage_09980.html`。変更フィールド：`detail、sourceRef、auditSourceURL、auditStatus`。正答index **4不変**。
+- **演習A Q27**：旧NRA PDF取得エラーは解消できなかったが、CDC収蔵の公開換気モデル原論文（生成・排気・外気濃度の物質収支式）を確認し、問題条件で`0.03/(0.0010-0.0004)=50m³/h`。原論文は特定用途の実験であるため、設問の完全混合・定常仮定以外には一般化しない。
+- **演習A Q33**：旧RCPA URLは403。NCBI Neutrophilia（薬剤としてglucocorticoidsも列挙、感染性好中球増加の鑑別）本文を閲覧できた。
+- **演習B Q31**：QRSの心室電気的興奮をOpenStax、脈拍欠損の評価を大学公開看護教材で別個に確認。心尖脈とQRS計数が常に等しいと証明したものではなく、設問の「脈拍欠損などを評価する」という慎重な表現を維持。
+- **演習B Q27**：安衛法104条の厚労省公開原文へ到達。法定措置に関する心身情報の収集・保管・使用が条文上の対象であり、**任意の相談記録全件に104条が直接適用されると断定しない**。心の健康指針・個人情報保護の適用は別途照合が必要。
+- **演習C Q04**：施行令**第2条第1・2号および第3条**を厚労省本文で直接確認。製造業は安全管理者対象業種、銀行業は対象外。安衛法12条の2・厚労省FAQで10〜49人の推進者区分。**登録正答index4は不変**。
+- 5問の登録原典`sourceRef`と`auditSourceURL`を直接内容に対応する公開資料へ差替え、監査ステータスを更新。B31・C04は追加資料・条文を明確化するため`detail`も補完。全25肢の逐語独立証明は未達。内容根拠の留保を個別台帳`audit/PRIMARY_SOURCE_AUDIT_A_BATCH4_20261112.json`に保存。
+
+### C. 引き継ぎ
+- **今回の問題データ変更ID：演習A Q27・Q33、演習B Q27・Q31、演習C Q04の5問**。正答・設問・全選択肢は変更なし。B31・C04は解説フィールド変更。
+- 本コミットの5問は264問Node CLI再生成・限定差分・Web/iOS配布JSONバイト比較・SHA256未実施。次にMuse側の独立検証を必須とする。a群の分類母数85件（未解消85件の意味ではない）。全肢逐語証明・商用権利・法令施行日・実機未了。**リリースゲートFAIL/BLOCKED維持**。
