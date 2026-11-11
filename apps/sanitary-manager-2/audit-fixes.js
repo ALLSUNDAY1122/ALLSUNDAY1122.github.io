@@ -380,3 +380,14 @@ if(fixes.length!==6||new Set(fixes.map(f=>f.id)).size!==6)throw Error('HM2 ninth
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 ninth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
 window.SM2_INDEPENDENT_NINTH10_METADATA_FIX6_IDS=fixes.map(f=>f.id);
 })();
+
+
+// SM2_INDEPENDENT_TENTH10_METADATA_FIX8_20261111: correct topic/basis of No.91-94,96-99; fix mismatched source URL for No.96/98 only. Preserve review/publication flags.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r07-hyg-07","topic":"睡眠不足・作業疲労と勤務計画","basis":"厚生労働省の睡眠・健康に関する情報（睡眠不足と作業時の注意力）"},{"id":"sm2-5y-r07-hyg-08","topic":"換気回数の算定（換気量÷室容積）","basis":"換気回数＝時間当たり換気量Q÷室容積V（換気・空気環境管理）"},{"id":"sm2-5y-r07-hyg-09","topic":"室内温熱環境の気流・放射熱と局所冷感","basis":"事務所衛生基準規則5条・温熱環境評価の基礎（温度・湿度・気流・放射熱）"},{"id":"sm2-5y-r07-hyg-10","topic":"重量物取扱いにおける腰部負担軽減","basis":"厚生労働省『職場における腰痛予防対策指針』"},{"id":"sm2-5y-r08-hyg-02","topic":"感染性胃腸炎疑いの食品取扱者の就業・衛生管理","basis":"厚生労働省『ノロウイルスに関するQ&A』（食品取扱者の衛生管理）","sourceUrl":"https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/kanren/yobou/040204-1.html"},{"id":"sm2-5y-r08-hyg-03","topic":"精密視作業の作業面照度と局部照明","basis":"事務所衛生基準規則10条（作業区分別の照度・まぶしさ防止）"},{"id":"sm2-5y-r08-hyg-04","topic":"洗浄剤のSDSによる有害性・曝露経路の確認","basis":"厚生労働省『化学物質リスクアセスメント』・SDSの活用","sourceUrl":"https://www.mhlw.go.jp/stf/newpage_11389.html"},{"id":"sm2-5y-r08-hyg-05","topic":"燃焼式機器による一酸化炭素中毒疑いの初期対応","basis":"一酸化炭素中毒の防止・曝露時の安全確保と救急対応"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==8||new Set(fixes.map(f=>f.id)).size!==8)throw Error('HM2 tenth10 metadata fixes invalid');
+if(fixes.filter(f=>f.sourceUrl).length!==2)throw Error('HM2 tenth10 source fix count invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 tenth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;if(f.sourceUrl)q.sourceUrl=f.sourceUrl;}
+window.SM2_INDEPENDENT_TENTH10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
+})();
