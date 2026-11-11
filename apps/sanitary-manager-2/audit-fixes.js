@@ -1345,3 +1345,18 @@ q.sourceUrl='https://laws.e-gov.go.jp/law/347CO0000000318';
 q.basis='労働安全衛生法12条・労働安全衛生法施行令第4条';
 window.HM2_170_B07_NO061_SOURCE_BASIS_APPLIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH08_PENDING_20261112: strict source-only corrections.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r07-law-05","subject":"関係法令","topic":"短時間労働者の年次有給休暇の比例付与","question":"週4日・週28時間の短時間労働者と週5日・週28時間の労働者がいる。年次有給休暇の比例付与の適用判断として適切なのはどれか（勤続等の取得要件を満たす）。","basis":"労働基準法39条3項・労働基準法施行規則24条の3","old":"https://laws.e-gov.go.jp/law/322AC0000000049","url":"https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0","answer":"週4日・週28時間の労働者には比例付与の規定が適用され得る。","choices":["週5日・週28時間の労働者だけに比例付与が適用される。","週所定労働時間が30時間未満なら全員必ず比例付与となる。","週4日・週28時間の労働者には比例付与の規定が適用され得る。","短時間労働者には年次有給休暇が一切ない。","週4日でも所定労働時間が40時間なら必ず比例付与となる。"]},{"id":"sm2-5y-r07-law-10","subject":"関係法令","topic":"産業医の選任と専属要件","question":"常時使用する労働者が55人の一般事務所で、産業医の選任に関する説明として適切なのはどれか。","basis":"労働安全衛生法13条・労働安全衛生法施行令5条・労働安全衛生規則13条1項3号","old":"https://laws.e-gov.go.jp/law/347AC0000000057","url":"https://laws.e-gov.go.jp/law/347CO0000000318","answer":"産業医を選任する必要があるが、一定規模等の専属要件には該当しない。","choices":["常時50人以上でも100人未満なら産業医選任は任意である。","一般事務所の55人でも専属産業医を必ず2人選任する。","衛生委員会を開催すれば産業医は選任不要となる。","産業医を選任する必要があるが、一定規模等の専属要件には該当しない。","産業医選任は事業場の規模に一切左右されない。"]}];
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 B08 correction IDs');
+for(const f of fixes){
+ const hits=(window.Q_PARTS||[]).filter(q=>q.id===f.id);
+ if(hits.length!==1)throw Error('HM2 B08 ID count '+f.id);
+ const q=hits[0];
+ if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==f.basis||q.sourceUrl!==f.old||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.answer||JSON.stringify([...q.choices].sort())!==JSON.stringify([...f.choices].sort()))throw Error('HM2 B08 strict old-state mismatch '+f.id);
+ q.sourceUrl=f.url;
+}
+window.HM2_170_B08_DIRECT_SOURCES_APPLIED=true;
+})();
