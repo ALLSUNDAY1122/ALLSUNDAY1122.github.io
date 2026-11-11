@@ -1,0 +1,999 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "sourceCommit": "33b1b3a6c9685dc5472f6ce72502d74f5d0032e4",
+  "scope": "第11バッチ 演習B Q17〜Q36：20問×5肢＝100肢",
+  "sourcePolicy": "最終問題生成元はcontent-overrides-b-20261110.jsonのreplacement。原典HTMLで中心命題を確認した区分と、全肢の独立逐語証明を区別。全肢の最終判定は保留。",
+  "classification": "DIRECT＝問題中心命題の資料本文照合、PARTIAL＝資料の適用条件/出典範囲不十分、PENDING＝中心命題に到達できず。100肢全ての原典逐語PASSを意味しない。",
+  "counts": {
+    "DIRECT": 15,
+    "PARTIAL": 5,
+    "PENDING": 0
+  },
+  "unconditionalPass": 0,
+  "questionCount": 20,
+  "choiceCount": 100,
+  "questions": [
+    {
+      "id": "practice-B-Q17",
+      "stem": "倉庫の重量物搬送をリフターと台車で省力化したところ、持上げ作業は減ったが、台車の車輪が床の段差に引っ掛かり、作業者が強い力で押し出す場面が増えた。機械化後の腰痛予防リスク評価として最も適切なのはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "sourceLocator": "厚労省 腰痛予防対策指針 作業管理・運搬経路",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "段差と台車固有の押出し力について実測・数値閾値は原典にない",
+      "choices": [
+        {
+          "index": 0,
+          "text": "持上げ作業が減った事実だけで、工程全体の腰部負担が解消したと判断する",
+          "expectedCorrect": false,
+          "assessmentReason": "持上げ減少だけでは台車押出しの残余負担を除外できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "リフターを導入した以上、設備の改善は完了とみなし、疼痛の訴えが出るまで追加評価を行わない",
+          "expectedCorrect": false,
+          "assessmentReason": "設備導入後も床段差など新たな負荷の評価が必要",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "台車を使っている限り、押す力や急な動作を腰痛予防の評価対象から除外する",
+          "expectedCorrect": false,
+          "assessmentReason": "台車の押す力と急な動作も腰部負担になる",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "段差をそのままにして、作業者に押し出す速度を上げるよう指導する",
+          "expectedCorrect": false,
+          "assessmentReason": "段差を残した高速押出しは負担軽減と逆方向",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "台車の停止・押し出し力や床面の段差を再評価し、段差解消や運搬経路・台車の適合を見直した上で残余負担を確認する",
+          "expectedCorrect": true,
+          "assessmentReason": "段差・搬送経路・台車適合と押す力を再評価する",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q18",
+      "stem": "腰痛予防のための作業標準を定めている職場で、新しい搬送設備を導入した。指針に沿う作業標準の扱いとして最も適切なものはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "sourceLocator": "同指針 作業標準の策定・見直し",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "作業標準の導入時見直しは確認。現場での実施確認は未了",
+      "choices": [
+        {
+          "index": 0,
+          "text": "設備が改善されたため、既存の標準を継続し定期確認で検討する",
+          "expectedCorrect": false,
+          "assessmentReason": "機器変更時の見直しを先延ばしする",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "過去に腰痛の発生がなければ、新設備にも従来の標準を適用する",
+          "expectedCorrect": false,
+          "assessmentReason": "過去の無災害実績は新設備への適合を証明しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "定期確認に加え、設備導入時にも実際の作業に合うよう標準を見直す",
+          "expectedCorrect": true,
+          "assessmentReason": "定期確認と導入時の見直しを併用する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "標準の変更は各作業者に任せ、職場で共通する手順の見直しは控える",
+          "expectedCorrect": false,
+          "assessmentReason": "現場共通の標準を個人任せにしてはならない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "設備メーカーの操作説明を採用し、個々の作業内容との照合は省く",
+          "expectedCorrect": false,
+          "assessmentReason": "メーカー説明だけでは実際の作業姿勢・手順を網羅しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q19",
+      "stem": "1日40箱、各20kgの荷物を手運搬する作業がある。腰部負担軽減のため各箱を10kgずつ2箱に分けると、1回の重量は半分になるが取扱い回数は80回になる。小分け後の評価として最も適切なのはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "sourceLocator": "同指針 重量物取扱い・作業頻度／重量算術",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "計算は独立検算。姿勢・頻度別の負荷定量モデルは未確定",
+      "choices": [
+        {
+          "index": 0,
+          "text": "小分けすれば1日の総取扱重量も必ず半分の400kgになる",
+          "expectedCorrect": false,
+          "assessmentReason": "20×40と10×80はいずれも800kgで総量は半減しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "小分け前後で総取扱重量が同じなら、1回当たり重量や回数の変化は腰部負担に全く影響しない",
+          "expectedCorrect": false,
+          "assessmentReason": "同じ総量でも単回負荷・頻度等が異なる",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "回数が倍になれば必ず腰部負担も正確に2倍になるので重量低減は無意味である",
+          "expectedCorrect": false,
+          "assessmentReason": "頻度倍増が腰部負担の厳密な2倍を意味しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "1回10kgに減ったので、反復回数や作業姿勢を評価する必要はなくなる",
+          "expectedCorrect": false,
+          "assessmentReason": "反復回数と姿勢を評価から除外できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "1回の重量は半減する一方、取扱回数は倍増するため、総取扱量・移動距離・作業姿勢も含めて負担を再評価する",
+          "expectedCorrect": true,
+          "assessmentReason": "単回重量・頻度・総量・姿勢・距離を合わせて判断",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q20",
+      "stem": "倉庫で平滑な樹脂板（12kg）と表面が粗い袋物（12kg）を搬送する。吸盤式把持具の仕様書には、対象表面と使用条件によって保持力が変動するとある。選定の判断として最も適切なのはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "sourceLocator": "同指針 把持補助具と人力取扱い",
+      "verificationLevel": "PARTIAL",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "吸盤の実測保持力・粗面材への適合条件は登録の腰痛指針では直接証明できない",
+      "choices": [
+        {
+          "index": 0,
+          "text": "両方とも同じ重量であるため、樹脂板で確認した保持性能を袋物にもそのまま適用する",
+          "expectedCorrect": false,
+          "assessmentReason": "対象表面が異なれば同重量でも吸着保持力が異なる",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "袋物の粗面に対する保持試験が未実施でも、吸盤の公称最大保持力が12kgを超えれば両方へ採用できる",
+          "expectedCorrect": false,
+          "assessmentReason": "公称最大保持力だけでは粗面の実条件を保証しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "樹脂板には表面・荷重・姿勢に応じた保持力を確認して適用し、袋物には保持試験や別方式の把持具を含めて適合性を判断する",
+          "expectedCorrect": true,
+          "assessmentReason": "表面・荷重・姿勢の実証と代替把持具の検討が適切",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "樹脂板の平滑面で十分な保持力が得られれば、運搬経路や落下時の危険を評価しなくても同一用途で採用できる",
+          "expectedCorrect": false,
+          "assessmentReason": "落下時危険と運搬経路も検証すべき",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "袋物には吸盤を用いず手作業へ切り替えれば、腰部負担や反復回数の評価を省略してよい",
+          "expectedCorrect": false,
+          "assessmentReason": "手作業に切り替えても腰部負担は残る",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q21",
+      "stem": "重量物取扱いの新規担当者には台車操作の経験があるが、この職場の高さ調整式リフターは初めてである。腰痛予防教育として最も適切な計画はどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "sourceLocator": "同指針 労働衛生教育",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "リフター個別機種の操作・荷崩れ条件は一般指針から推定不能",
+      "choices": [
+        {
+          "index": 0,
+          "text": "既存の台車操作経験を確認し、リフターの使用条件・荷の高さ・持上げ姿勢を実物で訓練し理解度を確認する",
+          "expectedCorrect": true,
+          "assessmentReason": "新機器固有の使い方・姿勢を実地教育し習熟を確認",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "台車の経験があるためリフター操作は取扱説明書の配布だけとし、作業姿勢の確認は定期教育時に回す",
+          "expectedCorrect": false,
+          "assessmentReason": "旧台車経験は新リフターの教育を代替しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "初回はリフター操作だけを実演し、重量物の把持姿勢と作業標準は経験者の判断に任せる",
+          "expectedCorrect": false,
+          "assessmentReason": "操作のみでは姿勢・標準手順の教育が不足",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "負荷の少ない荷から勤務を始めれば、リフター使用時の教育は配置後の事故発生時に行えばよい",
+          "expectedCorrect": false,
+          "assessmentReason": "教育を事故後まで先送りできない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "配置時に一般的な腰痛体操の講義を行い、リフターの停止・荷崩れ防止と標準手順は次の機器更新まで扱わない",
+          "expectedCorrect": false,
+          "assessmentReason": "体操だけでは荷崩れ・操作条件の理解が不足",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q22",
+      "stem": "睡眠不良が続く従業員が、自身で休養を工夫しているが繁忙業務の調整を上司に相談するか迷っている。セルフケアの助言として最も適切なのはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "sourceLocator": "厚労省 心の健康指針 セルフケア",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "業務調整に必要な情報共有は具体的な個人情報取扱要件を別確認",
+      "choices": [
+        {
+          "index": 0,
+          "text": "本人による休養やストレスの把握は有用だが、業務負荷の相談は医師の診断が確定するまで控える",
+          "expectedCorrect": false,
+          "assessmentReason": "診断確定まで業務相談を禁じる理由はない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "上司に相談する際は本人の意向の確認よりも、健康状態の詳細を部署全員に共有して理解を得る方法を優先する",
+          "expectedCorrect": false,
+          "assessmentReason": "本人意向を無視した全員への健康情報開示は不適切",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "睡眠記録は自己対処に使い、相談窓口には業務配分の検討まで本人に代わり決定してもらう",
+          "expectedCorrect": false,
+          "assessmentReason": "相談窓口が本人や上司の業務決定を当然に代替しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "職場での対応を求めるとセルフケアに該当しなくなるため、業務負荷の相談はセルフケアとは無関係と扱う",
+          "expectedCorrect": false,
+          "assessmentReason": "本人の相談もセルフケアと両立する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "本人が睡眠や負荷の変化に気づき対処法を試し、必要に応じ相談窓口を利用するとともに、上司へ調整可能な業務条件を相談する",
+          "expectedCorrect": true,
+          "assessmentReason": "自己把握・対処・相談・業務条件調整を組み合わせる",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q23",
+      "stem": "業務の急増で睡眠不足を訴える部下が上司に相談した。部下は具体的な健康情報の共有範囲に慎重で、当面の業務配分見直しを望んでいる。ラインによるケアの初期対応として最も適切なのはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "sourceLocator": "同指針 ラインによるケア",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "事業者の権限・本人同意など実務個別事情は要追加照合",
+      "choices": [
+        {
+          "index": 0,
+          "text": "部下の訴えを確認した後、診断名が分からない段階では作業量の調整をせず産業医の診断を待つ",
+          "expectedCorrect": false,
+          "assessmentReason": "診断名の確定を業務調整の絶対要件としない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "チームへの負担説明を優先し、本人への確認前に睡眠障害の詳細をチーム全員へ伝える",
+          "expectedCorrect": false,
+          "assessmentReason": "本人の事前確認なく詳細な医療情報を共有しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "産業保健スタッフに相談窓口を紹介した後は上司による職場環境の確認を終了し、その後の業務負荷は見直さない",
+          "expectedCorrect": false,
+          "assessmentReason": "相談窓口紹介後も上司の業務調整役割は残る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "一時的に仕事量を減らした場合は、本人の同意やプライバシーに関係なく医学的経過を上司が一括管理する",
+          "expectedCorrect": false,
+          "assessmentReason": "健康情報を同意や必要性抜きに一括取得しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "本人の意向と業務上の困難を聴き、健康情報を必要な範囲にとどめながら業務調整を検討し、必要なら産業保健スタッフにつなぐ",
+          "expectedCorrect": true,
+          "assessmentReason": "本人の意向と業務負荷を聞き必要な範囲で連携する",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q24",
+      "stem": "上司から『心身の不調を訴える部下の業務量を調整したい』と事業場内産業保健スタッフに相談があった。本人の医療情報を上司へどこまで伝えるかは未整理である。スタッフの支援として最も適切なのはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "sourceLocator": "同指針 事業場内産業保健スタッフ",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "職場への診療情報提供の例外と同意要件の詳細は別法確認",
+      "choices": [
+        {
+          "index": 0,
+          "text": "上司の業務配分判断を効率化するため、本人の検査結果・診療記録を利用目的を確認せず一括提供する",
+          "expectedCorrect": false,
+          "assessmentReason": "診療記録の包括提供は目的・必要性と矛盾",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "医療的判断に詳しいスタッフが業務配分を最終決定し、上司と本人には決定事項のみ通知する",
+          "expectedCorrect": false,
+          "assessmentReason": "産業保健専門職は通常、人事配分の最終決定主体でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "専門的助言と相談機会を提供し、本人の意向・情報取扱いの法令要件を確認し、就業上必要な範囲の情報に整理して上司の職場対応を支える",
+          "expectedCorrect": true,
+          "assessmentReason": "専門助言と必要最小限の情報整理によって支援",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "上司へ詳細な診断名を提供できない限り、業務上の配慮に関する一般的な助言も行わない",
+          "expectedCorrect": false,
+          "assessmentReason": "詳細診断名がなくても一般的な就業助言は可能",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "管理監督者によるケアとスタッフのケアは互いに排他的なので、上司への助言は専門職の役割外とする",
+          "expectedCorrect": false,
+          "assessmentReason": "管理監督者と産業保健職の連携は両立する",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q25",
+      "stem": "事業場が外部EAP（従業員支援プログラム）への相談委託を始める。内部の管理監督者・産業保健スタッフとの連携で最も適切な設計はどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "sourceLocator": "同指針 事業場外資源によるケア",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "外部EAPの具体的契約条件・法定委託義務は資料から直接確定できない",
+      "choices": [
+        {
+          "index": 0,
+          "text": "契約後は内部での職場環境改善と相談窓口の周知を終了する",
+          "expectedCorrect": false,
+          "assessmentReason": "外部委託後も内部ケアと周知を継続する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "外部への委託範囲・緊急時連携・個人情報の取扱いを定め、内部のケアと併用し、利用方法を労働者に周知する",
+          "expectedCorrect": true,
+          "assessmentReason": "委託範囲・緊急連携・情報保護・周知を定める",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "委託先から得た相談内容を人事へ無条件で逐次転送し、対応速度を優先する",
+          "expectedCorrect": false,
+          "assessmentReason": "相談内容の無条件転送は情報管理に反する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "相談件数の統計だけを受け取れば、緊急時の連絡先や事業場内の支援体制は定めなくてよい",
+          "expectedCorrect": false,
+          "assessmentReason": "緊急時連絡体制は相談件数統計で代替できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "外部の専門家が支援するので、管理監督者が気づいた職場の業務負荷は調整せず委託先に任せる",
+          "expectedCorrect": false,
+          "assessmentReason": "管理監督者の業務負荷調整は委託では消えない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q26",
+      "stem": "衛生委員会で心の健康づくり計画の案を審議し、時間外労働の削減を重点目標とした。事業者の次の対応として指針に最も沿うものはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "sourceLocator": "同指針 心の健康づくり計画",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "目標設定と実施責任は本文確認。評価指標の個別設計は判断例",
+      "choices": [
+        {
+          "index": 0,
+          "text": "委員会で審議したため、計画の実施責任は委員会へ移し、事業者は評価に関与しない",
+          "expectedCorrect": false,
+          "assessmentReason": "審議を受けても事業者の計画実施責任は残る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "削減目標を掲げれば十分なので、担当者と確認時期を決めずに運用する",
+          "expectedCorrect": false,
+          "assessmentReason": "担当・時期・効果測定のない目標提示だけでは不足",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "事業者が実施責任と役割分担、評価指標・確認時期を明確にし、実施結果を検証して計画を見直す",
+          "expectedCorrect": true,
+          "assessmentReason": "事業者主導で計画・実施・評価・改善を回す",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "相談件数が減ったことだけをもって、労働時間の実績に関係なく計画は成功と判定する",
+          "expectedCorrect": false,
+          "assessmentReason": "相談件数だけで時間外労働削減を証明できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "委員会の審議結果は記録せず、計画を変更する際も関係者に共有しない",
+          "expectedCorrect": false,
+          "assessmentReason": "審議・修正内容の共有を欠く",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q27",
+      "stem": "職場の相談担当者が、労働者のメンタルヘルス相談記録を業務配分の検討に用いたい。最も適切な取扱いはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/347AC0000000057",
+      "verifiedSourceURL": "https://laws.e-gov.go.jp/law/347AC0000000057",
+      "sourceLocator": "労働安全衛生法104条／心の健康指針7（法文一部未確認）",
+      "verificationLevel": "PARTIAL",
+      "registeredSourceReachability": "HTTP_PAGE_REACHABLE_NO_READABLE_BODY",
+      "limitations": "e-Gov登録URLのHTML本文が抽出不可。安衛法104条の条文と任意相談情報の適用範囲を直接逐語確認できず",
+      "choices": [
+        {
+          "index": 0,
+          "text": "必要性・目的・取扱者を確認し、適用法令と社内規程に沿って必要な範囲に限定する",
+          "expectedCorrect": true,
+          "assessmentReason": "目的・権限・必要範囲の確認を要する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "相談情報は健康情報なので上司全員に自動共有してよい",
+          "expectedCorrect": false,
+          "assessmentReason": "健康情報は上司全員への自動共有対象ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "健康情報は本人同意さえあれば目的や管理方法に制約がない",
+          "expectedCorrect": false,
+          "assessmentReason": "同意があっても他の法令や安全管理が消えない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "相談記録は診断書ではないため個人情報保護の対象にならない",
+          "expectedCorrect": false,
+          "assessmentReason": "相談記録も個人情報として保護の対象となり得る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "業務配分に役立てば、取得目的を問わず全記録を無期限保存する",
+          "expectedCorrect": false,
+          "assessmentReason": "目的を問わない全記録の無期限保存は不適切",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q28",
+      "stem": "心の健康問題で休業した労働者が、主治医の『復職可能』という診断書を提出した。事業場の対応として最も適切なものはどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei28/index.html",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei28/index.html",
+      "sourceLocator": "厚労省 職場復帰支援の手引き紹介（段階詳細一部未確認）",
+      "verificationLevel": "PARTIAL",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "厚労省紹介ページに到達、手引きPDFの第2～5段階の全文逐語確認は未実施",
+      "choices": [
+        {
+          "index": 0,
+          "text": "診断書があれば担当業務の遂行可能性を確かめず直ちに原職復帰させる",
+          "expectedCorrect": false,
+          "assessmentReason": "主治医の復職可能診断と実際の職務遂行評価は別",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "主治医が復帰日・業務軽減・人事上の最終決定を単独で行う",
+          "expectedCorrect": false,
+          "assessmentReason": "主治医だけが人事の最終決定をするわけではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "試し出勤と短時間勤務をすべての復職者に一律に義務付ける",
+          "expectedCorrect": false,
+          "assessmentReason": "試し出勤などの方法は全員一律の義務ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "産業医等が業務遂行能力や職場条件を評価し、支援計画等を検討して事業者が最終決定する",
+          "expectedCorrect": true,
+          "assessmentReason": "業務適合と支援計画を検討し事業者が判断する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "復職を認めた後は体調や業務状況のフォローアップをしない",
+          "expectedCorrect": false,
+          "assessmentReason": "復職後の経過確認が重要",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q29",
+      "stem": "管理監督者が、メンタルヘルス不調の発生を防ぐため職場の過大な業務負荷を見直した。この取組を、ケアの主体と予防段階の組合せで表したものはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2",
+      "sourceLocator": "厚労省 心の健康指針 一次予防・4つのケア",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "主体と予防段階の定義は原典で確認。組合せは事例へ適用した解釈",
+      "choices": [
+        {
+          "index": 0,
+          "text": "セルフケア ― 一次予防",
+          "expectedCorrect": false,
+          "assessmentReason": "行為の主体は本人ではなく上司",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "ラインによるケア ― 二次予防",
+          "expectedCorrect": false,
+          "assessmentReason": "予防目的は早期発見より未然防止",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "事業場内産業保健スタッフ等によるケア ― 一次予防",
+          "expectedCorrect": false,
+          "assessmentReason": "主体は産業保健スタッフではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "事業場外資源によるケア ― 三次予防",
+          "expectedCorrect": false,
+          "assessmentReason": "外部機関の支援や復職支援を直接示さない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "ラインによるケア ― 一次予防",
+          "expectedCorrect": true,
+          "assessmentReason": "管理監督者による業務負荷改善はラインケア・一次予防",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q30",
+      "stem": "上腕血圧が128/78mmHgの人について、左心室が拡張して血液を受け入れている時期と、収縮して大動脈へ駆出している時期を比較する。最も適切なのはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK459327/",
+      "verifiedSourceURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK459327/",
+      "sourceLocator": "NCBI Physiology, Cardiac Cycle 心周期・大動脈弁",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "心周期本文を確認。末梢圧と左室圧の測定学的差の細部は補助文献が必要",
+      "choices": [
+        {
+          "index": 0,
+          "text": "上腕拡張期血圧78mmHgは左室拡張末期圧の直接測定なので、両者の値は同じものとして扱う",
+          "expectedCorrect": false,
+          "assessmentReason": "上腕動脈圧は左室拡張末期圧の直接測定ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "上腕血圧は末梢動脈での圧であり、左室圧は心周期で変動する。駆出期は左室圧が大動脈圧を超えて大動脈弁が開くが、上腕値は左室内圧の直接測定ではない",
+          "expectedCorrect": true,
+          "assessmentReason": "上腕圧と左室圧を区別し左室圧が大動脈圧を超え駆出",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "大動脈弁は左室圧が大動脈圧より低下した時点で開くため、収縮期の駆出と動脈圧との関連はない",
+          "expectedCorrect": false,
+          "assessmentReason": "大動脈弁開放の圧較差を逆転している",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "心室が拡張している間は左室圧も大動脈圧も全く変化せず、心周期の圧較差は発生しない",
+          "expectedCorrect": false,
+          "assessmentReason": "拡張期にも血圧と心室圧の変動はある",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "上腕収縮期圧128mmHgを直接測ると右室収縮期圧が得られるので、左右心室の区別は不要である",
+          "expectedCorrect": false,
+          "assessmentReason": "上腕動脈圧は右室圧の直接測定ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q31",
+      "stem": "心電図で1分間にQRS波を80回確認し、同時に橈骨動脈で触れた脈拍は76回だった。測定の解釈として最も適切なものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://openstax.org/books/fundamentals-nursing/pages/7-1-indicators-of-physiologic-functioning",
+      "verifiedSourceURL": "https://openstax.org/sites/books/fundamentals-nursing/pages/7-1-indicators-of-physiologic-functioning",
+      "sourceLocator": "OpenStax Fundamentals of Nursing 脈拍（QRS根拠不足）",
+      "verificationLevel": "PARTIAL",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "登録OpenStax看護ページにQRS波の直接説明がない。脈拍欠損の電気-機械対応を示す追加医学原典が必要",
+      "choices": [
+        {
+          "index": 0,
+          "text": "QRS波は心室の電気的興奮を反映し、末梢で触れる拍動が一部少ない可能性があるため、測定を確認し脈拍欠損などを評価する",
+          "expectedCorrect": true,
+          "assessmentReason": "QRSと末梢触知脈拍の差を再測定して検討",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "QRS波は心室から駆出された血液量を直接測るため、80回の完全な機械的拍出が証明される",
+          "expectedCorrect": false,
+          "assessmentReason": "QRSは拍出量の直接測定ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "脈拍は必ずQRS波と同数となるため、異なる場合は心電図の表示だけを採用し末梢循環を評価しない",
+          "expectedCorrect": false,
+          "assessmentReason": "脈拍欠損や測定誤差を無視できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "橈骨動脈の触知76回は、同じ時間内に心室が電気的に興奮した回数を直接測定した値である",
+          "expectedCorrect": false,
+          "assessmentReason": "橈骨脈拍は心室電気興奮の直接計測ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "QRS波と脈拍の差4回は、そのまま左心室の拍出量が4mL不足したことを示す",
+          "expectedCorrect": false,
+          "assessmentReason": "回数差はmL単位の拍出量差を表さない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q32",
+      "stem": "下肢の間質にたまった水分がリンパ毛細管に入り、静脈循環へ戻る経路を考える。右下肢から回収されたリンパの主な流路として最も適切なのはどれか（通常の解剖を前提とする）。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology/pages/21-1-anatomy-of-the-lymphatic-and-immune-systems",
+      "verifiedSourceURL": "https://openstax.org/sites/books/anatomy-and-physiology/pages/21-1-anatomy-of-the-lymphatic-and-immune-systems",
+      "sourceLocator": "OpenStax Anatomy and Physiology リンパ本幹・胸管",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "胸管の一般流路は原典で確認。解剖学的個体差は対象外",
+      "choices": [
+        {
+          "index": 0,
+          "text": "右下肢のリンパは右リンパ本幹に直接集まり、右鎖骨下静脈へ流入する",
+          "expectedCorrect": false,
+          "assessmentReason": "右下肢は右上半身のみの右リンパ管の領域外",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "リンパ毛細管に入った液は、すべて近くの毛細血管静脈端に直接戻り、リンパ本幹を通らない",
+          "expectedCorrect": false,
+          "assessmentReason": "リンパは集合管・本幹を経て静脈へ合流する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "右下肢の組織液はリンパ毛細管に入るとリンパと呼ばれ、より太いリンパ管・胸管を経て主に左静脈角付近で静脈系へ戻る",
+          "expectedCorrect": true,
+          "assessmentReason": "下肢リンパは主に胸管を経て左静脈角付近に還流",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "右下肢のリンパは胸管を経由するが、最終的に右心室内へ直接開口し静脈系は通らない",
+          "expectedCorrect": false,
+          "assessmentReason": "胸管は右心室に直接開口しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "右下肢のリンパはリンパ管内を逆流して動脈へ戻るため、静脈角の合流部には到達しない",
+          "expectedCorrect": false,
+          "assessmentReason": "リンパは動脈へ逆行して還流するものではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q33",
+      "stem": "肺胞換気と肺毛細血管血流が保たれ、肺胞気の酸素分圧が流入する肺毛細血管血の酸素分圧より高い。ガス交換に関する説明として最も適切なものはどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://www.nhlbi.nih.gov/health/lungs/breathing-benefits",
+      "verifiedSourceURL": "https://www.nhlbi.nih.gov/health/lungs/breathing-benefits",
+      "sourceLocator": "NHLBI How Lungs Work ガス交換一般（膜厚の説明不足）",
+      "verificationLevel": "PARTIAL",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "NHLBI登録ページはガス交換一般論で、膜肥厚・Fickの法則の直接証明が不足",
+      "choices": [
+        {
+          "index": 0,
+          "text": "酸素の移動方向は肺胞内の酸素分圧ではなく、気管内の空気流速だけで決まる",
+          "expectedCorrect": false,
+          "assessmentReason": "肺胞空気流速のみでは拡散方向を決められない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "酸素は肺胞上皮と毛細血管内皮の障壁を越えず、赤血球が肺胞腔へ出ることで取り込まれる",
+          "expectedCorrect": false,
+          "assessmentReason": "赤血球が肺胞腔に出るのではなく酸素分子が膜を通る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "肺胞気と毛細血管血の酸素分圧差があっても、酸素は必ず血液から肺胞へ拡散する",
+          "expectedCorrect": false,
+          "assessmentReason": "分圧勾配に逆らった一律拡散ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "肺胞気から毛細血管血へ酸素が分圧差に従って拡散するが、分圧差やガス交換膜の状態も移動量に関係する",
+          "expectedCorrect": true,
+          "assessmentReason": "分圧差とガス交換面積・膜厚が移動量に関係する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "肺胞換気と毛細血管血流が保たれれば、ガス交換膜の肥厚は酸素移動に影響しない",
+          "expectedCorrect": false,
+          "assessmentReason": "膜肥厚がガス拡散に無関係とはいえない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q34",
+      "stem": "吸息の際の横隔膜と外肋間筋の役割を調べている。横隔膜の収縮力が低下している一方、外肋間筋の活動は保たれ、気道閉塞はない。最も適切な解釈はどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "verifiedSourceURL": "https://openstax.org/sites/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "sourceLocator": "OpenStax Anatomy and Physiology 22.3 吸息筋",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "吸息筋の役割はOpenStaxで確認。個別筋力低下の定量評価はなし",
+      "choices": [
+        {
+          "index": 0,
+          "text": "横隔膜の下降による胸腔拡大は弱まるが、外肋間筋による肋骨挙上・胸郭拡大は残るので、吸息機能の低下程度は各筋の寄与と呼吸条件に依存する",
+          "expectedCorrect": true,
+          "assessmentReason": "横隔膜と外肋間筋の個別の役割を区別する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "外肋間筋は主に努力性呼息に用いられるため、その活動が保たれても吸息時の胸郭拡大に寄与しない",
+          "expectedCorrect": false,
+          "assessmentReason": "外肋間筋は通常の吸息で胸郭を広げる",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "横隔膜の収縮力が落ちると、外肋間筋への神経指令も必ず途絶え、胸郭は吸息で全く拡大しない",
+          "expectedCorrect": false,
+          "assessmentReason": "横隔膜障害が外肋間筋活動の必然的消失を意味しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "外肋間筋が保たれている場合、横隔膜の機能低下があっても一回換気量と呼吸仕事量は常に以前と同じになる",
+          "expectedCorrect": false,
+          "assessmentReason": "外肋間筋が保たれても代償の程度は一定でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "吸息時の肋骨挙上は主に腹筋によるため、外肋間筋の活動は胸郭運動にほぼ影響しない",
+          "expectedCorrect": false,
+          "assessmentReason": "肋骨挙上を腹筋の主要作用としない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q35",
+      "stem": "健康成人の安静吸息について、吸息中に空気が肺へ流入している時点と、吸息の終末で気流が一時的に止まった時点とを比較する。肺胞内圧と大気圧の関係として最も適切なのはどれか（気道は開存）。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "verifiedSourceURL": "https://openstax.org/sites/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "sourceLocator": "OpenStax Anatomy and Physiology 22.3 圧差・吸息",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "圧と気流は確認。吸気終末の等圧近似は物理学的推論を含む",
+      "choices": [
+        {
+          "index": 0,
+          "text": "吸息中の流入時も終末の気流停止時も、肺胞内圧は大気圧より低い状態を一定に保つ",
+          "expectedCorrect": false,
+          "assessmentReason": "吸気終末の気流停止時に圧差はほぼ消失",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "吸息中に気流が肺へ入る時点では肺胞内圧が大気圧より低く、気流が止まる吸息終末には両圧がほぼ等しくなる",
+          "expectedCorrect": true,
+          "assessmentReason": "流入中は肺胞圧が低く停止時にほぼ等圧",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "吸息中は肺胞内圧が大気圧より高く、その正圧が肺の外側から空気を吸い込む力となる",
+          "expectedCorrect": false,
+          "assessmentReason": "吸息流入時の圧較差の符号を逆転",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "吸息終末に肺胞内圧と大気圧が等しくなれば、胸郭拡大による肺容量の増加はすべて元に戻っている",
+          "expectedCorrect": false,
+          "assessmentReason": "圧が均衡しても膨張した肺容量は残る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "肺胞内圧の変化は胸郭容積とは独立し、吸息中の流入速度は気道抵抗だけで決まる",
+          "expectedCorrect": false,
+          "assessmentReason": "気流は容積と圧差・抵抗の相互関係で決まる",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q36",
+      "stem": "健康な成人の通常の安静呼息と、強く息を吐き出す努力性呼息を比較した。筋活動と空気が流出する条件の組合せとして最も適切なものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "verifiedSourceURL": "https://openstax.org/sites/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "sourceLocator": "OpenStax Anatomy and Physiology 22.3 呼息・圧差",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "MAIN_PAGE_TEXT_RETRIEVED",
+      "limitations": "呼息の圧較差・受動性は確認。努力性呼息での腹筋別作用の補助根拠追加余地",
+      "choices": [
+        {
+          "index": 0,
+          "text": "安静呼息は主に吸息筋の弛緩と肺の弾性収縮によって進み、努力性呼息では腹筋などが加わり、呼息中は肺胞内圧が大気圧より高い方向となる",
+          "expectedCorrect": true,
+          "assessmentReason": "安静呼息の受動性と努力性呼息の筋活動を区別",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "安静呼息も努力性呼息も横隔膜の最大収縮だけで起こり、腹筋は換気運動に関与しない",
+          "expectedCorrect": false,
+          "assessmentReason": "横隔膜の最大収縮だけでは呼息を説明できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "努力性呼息では腹筋が胸腔容積を広げ、肺胞内圧を大気圧より低下させて空気を外へ押し出す",
+          "expectedCorrect": false,
+          "assessmentReason": "腹筋活動と気流の圧差方向が逆",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "安静呼息は主に受動的であるが、空気が肺から流出する間は肺胞内圧が大気圧より低い",
+          "expectedCorrect": false,
+          "assessmentReason": "呼出中の肺胞圧は一般に大気圧より高い",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "努力性呼息では呼息筋が働く一方、安静呼息は毎回腹筋の強い収縮が不可欠である",
+          "expectedCorrect": false,
+          "assessmentReason": "安静呼息に腹筋の強い収縮は必須でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    }
+  ]
+}
