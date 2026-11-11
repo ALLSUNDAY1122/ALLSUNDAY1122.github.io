@@ -1,0 +1,47 @@
+name: HM1 exact seven Q72-Q80 rebuild regression
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - .github/workflows/hm1-exact-seven-q72-q80.yml
+      - ios/health-manager-1/Resources/questions.json
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild baseline and current from exact committed files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/hm1-base 435f4f903668436d8178a22022726100e7d50c12
+          node /tmp/hm1-base/ios/health-manager-1/augment-to-264.cjs >/tmp/hm1-base.log
+          node ios/health-manager-1/augment-to-264.cjs >/tmp/hm1-head.log
+          node - <<'NODE'
+          const fs=require('fs');
+          const base=JSON.parse(fs.readFileSync('/tmp/hm1-base/ios/health-manager-1/Resources/questions.json'));
+          const head=JSON.parse(fs.readFileSync('ios/health-manager-1/Resources/questions.json'));
+          const wanted=['2025-10-Q28','2025-10-Q29','2025-10-Q30','2025-10-Q31','2025-10-Q33','2025-10-Q35','2025-10-Q36'].sort();
+          if(base.length!==264||head.length!==264) throw Error('Not 264');
+          if(new Set(base.map(x=>x.id)).size!==264||new Set(head.map(x=>x.id)).size!==264) throw Error('duplicate ID');
+          if(base.some((x,i)=>x.id!==head[i].id)) throw Error('ID sequence changed');
+          for(const q of head)if(q.choices.length!==5||!Number.isInteger(q.ans)||q.ans<0||q.ans>4)throw Error('invalid choice/answer '+q.id);
+          const diff=head.filter((q,i)=>JSON.stringify(q)!==JSON.stringify(base[i])).map(q=>q.id).sort();
+          if(JSON.stringify(diff)!==JSON.stringify(wanted))throw Error('changed IDs '+JSON.stringify(diff));
+          const permitted=new Set(['stem','choices','short','detail']);
+          for(let i=0;i<264;i++){
+            if(!wanted.includes(head[i].id)) continue;
+            if(head[i].ans!==base[i].ans)throw Error('answer modified '+head[i].id);
+            const keys=new Set([...Object.keys(base[i]),...Object.keys(head[i])]);
+            for(const k of keys)if(JSON.stringify(base[i][k])!==JSON.stringify(head[i][k])&&!permitted.has(k))throw Error('unexpected changed field '+head[i].id+':'+k);
+          }
+          console.log('PASS: baseline and revised rebuilt to 264, exact seven changed, other 257 identical, answer indices retained, five choices each.');
+          NODE
