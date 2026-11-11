@@ -1,0 +1,74 @@
+name: HM1 Practice A 264-question regeneration verification
+on:
+  push:
+    branches:
+      - codex/hm1-practice-a-fix-01-10-20261111
+    paths:
+      - '.github/workflows/hm1-practice-a-verify.yml'
+      - 'ios/health-manager-1/**'
+      - 'apps/sanitary-manager-2/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact branch revision
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regenerate 264 questions (fails closed on source mismatch)
+        run: node ios/health-manager-1/augment-to-264.cjs
+      - name: Compare all 44 Practice A overrides, lineage, and bank cardinality
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const assert = require('node:assert/strict');
+          const root = 'ios/health-manager-1/';
+          const bank = JSON.parse(fs.readFileSync(root + 'Resources/questions.json', 'utf8'));
+          const patches = JSON.parse(fs.readFileSync(root + 'audit/practice_a_fixes_01_10.json', 'utf8')).questions;
+          const ids = Array.from({length:44}, (_,i) => 'practice-A-Q' + String(i+1).padStart(2,'0'));
+          assert.equal(bank.length,264,'bank length');
+          assert.equal(new Set(bank.map(q=>q.id)).size,264,'unique IDs');
+          assert.deepEqual(Object.keys(patches).sort(), [...ids].sort(), 'patch IDs');
+          const counts = Object.groupBy(bank, q => q.round);
+          for (const r of ['2026-04','2025-10','2025-04','practice-A','practice-B','practice-C'])
+            assert.equal(counts[r]?.length,44,'round ' + r);
+          const byId = new Map(bank.map(q=>[q.id,q]));
+          for (let i=1;i<=44;i++) {
+            const id = ids[i-1], q=byId.get(id), patch=patches[id];
+            assert.ok(q,'missing ' + id);
+            const round = i<=10?'r04':i<=15?'r05':i<=25?'r04':i<=30?'r05':i<=40?'r04':'r05';
+            const subject = i<=15?'law':i<=30?'hyg':'phy';
+            const number = i<=10?i:i<=15?i-10:i<=25?i-15:i<=30?i-25:i<=40?i-30:i-40;
+            const origin = 'hm2:sm2-5y-' + round + '-' + subject + '-' + String(number).padStart(2,'0') + ':';
+            assert.ok(q.conceptKey.startsWith(origin),id + ' wrong source ' + q.conceptKey);
+            for (const [field,value] of Object.entries(patch))
+              assert.deepEqual(q[field],value,id + ' mismatch in ' + field);
+            assert.equal(q.choices.length,5,id + ' choices');
+            assert.equal(new Set(q.choices).size,5,id + ' duplicate choices');
+            assert.ok(Number.isInteger(q.ans) && q.ans>=0 && q.ans<5,id + ' ans');
+            assert.equal(q.short,'正解は「'+q.choices[q.ans]+'」です。',id + ' short');
+            console.log('PASS',id,origin);
+          }
+          console.log('PASS: 264 unique IDs, 6 rounds of 44, 44/44 exact patch and source lineage comparisons');
+          NODE
+      - name: Save verification report
+        if: always()
+        run: |
+          echo "commit=${GITHUB_SHA}" > hm1-practice-a-verification.txt
+          echo "workflow_run=${GITHUB_RUN_ID}" >> hm1-practice-a-verification.txt
+          echo "See workflow step logs for per-ID comparisons." >> hm1-practice-a-verification.txt
+      - name: Upload verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hm1-practice-a-verification
+          path: hm1-practice-a-verification.txt
