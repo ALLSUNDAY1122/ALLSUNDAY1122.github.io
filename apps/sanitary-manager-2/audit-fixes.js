@@ -952,3 +952,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH08_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH09_20261111: verified direct physiological references, sourceUrl only.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r06-phy-04","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK537306/","question":"次の概念と特徴の対応として適切なものはどれか。","correctText":"呼吸中枢 ― 延髄などにあり、呼吸運動のリズム調節に関与する。"},{"id":"sm2-5y-r06-phy-05","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK482414/","question":"各項目に対応する説明のうち、正しい組合せはどれか。","correctText":"二酸化炭素と呼吸調節 ― 血中二酸化炭素の変化は呼吸調節に強く影響する。"},{"id":"sm2-5y-r06-phy-06","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK538339/","question":"脱水により循環血液量が減少し、電解質と酸塩基平衡にも変化が起こった。これらの調節に中心的な役割を果たす臓器はどれか。","correctText":"腎臓"},{"id":"sm2-5y-r06-phy-07","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK544365/","question":"健康な労働者が高温下で多量に発汗し、水分補給が不足した。血漿浸透圧の上昇が認められ、腎臓の集合管の機能は正常である。この条件で通常起こる尿量と尿の濃さの組合せとして最も適切なのはどれか。","correctText":"ADH分泌が増加し、尿量が減って尿は濃くなる。"},{"id":"sm2-5y-r06-phy-08","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK553192/","question":"運動中の骨格筋でATP消費が急増した。酸素供給が十分で、ミトコンドリアによるATP生成が高まるとき、最も適切な説明はどれか。","correctText":"酸素を電子伝達系の最終電子受容体として利用し、酸化的リン酸化でATPを合成する。"},{"id":"sm2-5y-r06-phy-09","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK544365/","question":"腎機能が正常な健康成人が短時間に水を多く飲み、血漿浸透圧が低下した。循環血液量の大幅な減少、吐き気、痛みなどADH分泌を刺激する別の条件はない。水分を排出して浸透圧を調節する反応として最も適切なのはどれか。","correctText":"ADH分泌が抑制され、集合管の水透過性が低下して、比較的薄い尿を多く排出する。"},{"id":"sm2-5y-r06-phy-10","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK594995/","question":"階段を上った直後に心拍数が増加した。洞房結節から心室まで刺激が伝わる通常の順序として適切なのはどれか。","correctText":"洞房結節→心房→房室結節→ヒス束・脚→プルキンエ線維"},{"id":"sm2-5y-r07-phy-01","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK470339/","question":"副腎皮質ホルモンの一つが増加した。腎でのナトリウム再吸収を促進し、カリウム排泄にも影響するホルモンはどれか。","correctText":"アルドステロン"},{"id":"sm2-5y-r07-phy-02","sourceUrl":"https://pubmed.ncbi.nlm.nih.gov/37248992/","question":"血中インスリンが十分に分泌されていても、骨格筋のインスリン受容体以降のシグナル伝達が低下している人がいる。同じインスリン濃度の健常者と比較したとき、この人の骨格筋で起こりやすい変化として最も適切なのはどれか（運動による筋収縮の影響は考えない）。","correctText":"インスリン刺激によるGLUT4の細胞膜移行が弱まり、骨格筋への糖取り込みが低下し得る。"},{"id":"sm2-5y-r07-phy-03","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK545263/","question":"出血後の検査で血小板数が大幅に減っている。一方、赤血球数は正常範囲である。最も直接的に障害されやすい止血過程はどれか。","correctText":"傷ついた血管壁への血小板の粘着・凝集による一次止血栓の形成。"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch09 target count/ID');
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+ !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correctText||
+ (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.sourceUrl))
+ throw Error('HM2 X-01 batch09 unexpected source/content '+f.id);
+ q.sourceUrl=f.sourceUrl;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH09_IDS=fixes.map(f=>f.id);
+})();
