@@ -611,3 +611,13 @@ if(fixes.length!==3||new Set(fixes.map(f=>f.id)).size!==3)throw Error('HM2 P1-9 
 for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='労働生理'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('HM2 P1-9 source mismatch '+f.id);Object.assign(q,{topic:f.topic,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,basis:f.primary_basis});}
 window.HM2_P1_9_INSULIN_DISTINCT_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_P1_10_ACCOMMODATION_VS_PRESBYOPIA_20261111: normal near-focus mechanism versus age-related reduction in accommodation.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r07-phy-09","answer":5,"topic":"近方調節時の毛様体筋・チン小帯・水晶体の変化","question":"正常な眼で遠くの標識から手元の文字へ視線を移し、近くの文字に焦点を合わせる。毛様体筋・チン小帯・水晶体の変化として適切な組合せはどれか。","choices":["毛様体筋は弛緩し、チン小帯の張力が低下して、水晶体は厚くなる。","毛様体筋は収縮し、チン小帯の張力が増加して、水晶体は薄くなる。","毛様体筋は弛緩し、チン小帯の張力が増加するが、水晶体は厚くなる。","毛様体筋は収縮するが、水晶体の屈折力は必ず低下する。","毛様体筋が収縮し、チン小帯の張力が低下して、水晶体が厚くなり屈折力が高まる。"],"quick":"近方視では毛様体筋収縮→チン小帯の張力低下→水晶体が厚くなり屈折力増加。","explanation":"正常な眼が遠方から近方へ焦点を合わせると、毛様体筋が収縮しチン小帯の張力は低下する。水晶体は丸みを帯びて厚くなり屈折力が増すため第5肢が正しい。第1肢は毛様体筋の変化が逆、第2肢はチン小帯と水晶体の反応が逆、第3肢は毛様体筋・チン小帯の変化と水晶体の厚さの組合せが不整合、第4肢は近方調節時の屈折力の方向を逆にしている。","primary_basis":"視覚生理／正常な近方調節・毛様体筋・チン小帯・水晶体"},{"id":"sm2-5y-r08-phy-05","answer":3,"topic":"加齢による老視と近点の遠方移動","question":"若い頃は手元の小さな文字を無理なく読めた成人が、加齢とともに近くの文字に焦点を合わせにくくなり、読む物を遠ざけるようになった。主に老視による変化と考えられる場合、最も適切な説明はどれか。","choices":["網膜の杆体細胞が色覚を担うようになることが近方視低下の主要因である。","加齢で水晶体の弾性が増大し、近方調節力が必ず強くなる。","水晶体の硬化・弾性低下などにより調節力が弱まり、近点が遠ざかる。","半規管の機能が低下して毛様体筋の収縮が必ず停止する。","角膜の色が変わることで水晶体の厚さが一定となり、焦点調節が不要になる。"],"quick":"老視では水晶体の弾性低下などで調節力が弱まり、近点が遠ざかる。","explanation":"老視では加齢による水晶体の硬化・弾性低下などで調節可能な範囲が狭まり、近点が遠ざかるため第3肢が正しい。第1肢は杆体の役割と色覚を混同し、第2肢は弾性・調節力の変化を逆にし、第4肢は平衡感覚に関わる半規管と眼の調節を混同し、第5肢は角膜の色と水晶体調節を誤って結び付けている。正常眼の近方視の瞬間的な機構ではなく、加齢に伴う調節力低下を問う。","primary_basis":"視覚生理／老視・水晶体の硬化・調節力低下・近点の遠方移動"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 P1-10 IDs');
+for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='労働生理'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('HM2 P1-10 target '+f.id);Object.assign(q,{topic:f.topic,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,basis:f.primary_basis});}
+window.HM2_P1_10_DISTINCT_IDS=fixes.map(f=>f.id);
+})();
