@@ -300,3 +300,12 @@ for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 legacy metad
 const untouched=byId.get('sm2-5y-r10-law-06');if(!untouched||untouched.topic!=='空調時の相対湿度'||untouched.basis!=='事務所衛生基準規則5条')throw Error('HM2 false positive No17 unexpectedly modified');
 window.SM2_LEGACY_METADATA_FIXED_IDS=fixes.map(f=>f.id);
 })();
+
+// SM2_INDEPENDENT_FIRST10_METADATA_FIX8_20261111: correct only the eight audited legacy topic/basis fields.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r04-law-02","topic":"衛生管理者の選任期限","basis":"労働安全衛生規則7条1項1号"},{"id":"sm2-5y-r04-law-05","topic":"常時50人以上の衛生管理者選任義務","basis":"労働安全衛生法12条・労働安全衛生法施行令4条・労働安全衛生規則7条"},{"id":"sm2-5y-r04-law-07","topic":"衛生委員会の開催頻度","basis":"労働安全衛生法18条・労働安全衛生法施行令9条・労働安全衛生規則23条1項"},{"id":"sm2-5y-r04-law-08","topic":"就業規則の変更と意見聴取・届出","basis":"労働基準法89条・90条"},{"id":"sm2-5y-r04-law-09","topic":"賃金支払の五原則","basis":"労働基準法24条"},{"id":"sm2-5y-r04-law-10","topic":"衛生委員会の議事概要周知","basis":"労働安全衛生規則23条3項"},{"id":"sm2-5y-r05-law-02","topic":"衛生管理者の作業場定期巡視","basis":"労働安全衛生規則11条1項"},{"id":"sm2-5y-r05-law-03","topic":"衛生委員会の設置義務","basis":"労働安全衛生法18条・労働安全衛生法施行令9条"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==8||new Set(fixes.map(f=>f.id)).size!==8)throw Error('HM2 first10 metadata fix count invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 first10 missing question '+f.id);q.topic=f.topic;q.basis=f.basis;}
+window.SM2_INDEPENDENT_FIRST10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
+})();
