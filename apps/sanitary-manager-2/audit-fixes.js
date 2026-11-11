@@ -1385,3 +1385,16 @@ if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==
 q.sourceUrl=f.newUrl;
 window.HM2_170_B11_NO107_LEGAL_SOURCE_APPLIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH12_NO113_20261112: replace unrelated hair-dye page with direct MHLW ventilation guide.
+(function(){'use strict';
+const f={"id":"sm2-5y-r04-hyg-03","subject":"労働衛生","topic":"室内CO₂濃度の上昇と換気改善","question":"窓のない会議室の室内CO₂濃度が、会議中に1000ppmから1800ppmへ上がった。適切な改善手順はどれか。","basis":"厚生労働省『効果的な換気のポイント』・事務所衛生基準規則の換気関連規定","url":"https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000124268.html","newBasis":"厚生労働省『換気を改善するための具体的な対策』（CO₂濃度測定・換気設備・在室人数の管理）／事務所衛生基準規則の換気関連規定","newUrl":"https://www.mhlw.go.jp/content/11130500/001304966.pdf","answer":"在室人数と機械換気の運転状況を確認し、換気量や使用人数・時間を見直す。","choices":["CO₂が上がっても換気は常に十分だと判断する。","換気装置を停止して在室人数を増やす。","窓のない部屋では換気量の調整は不可能と決めつける。","CO₂値だけで感染者の有無を個人単位で断定する。","在室人数と機械換気の運転状況を確認し、換気量や使用人数・時間を見直す。"]};
+const h=(window.Q_PARTS||[]).filter(q=>q.id===f.id);
+if(h.length!==1)throw Error('HM2 B12 No113 count mismatch');
+const q=h[0];
+if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==f.basis||q.sourceUrl!==f.url||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.answer||JSON.stringify([...q.choices].sort())!==JSON.stringify([...f.choices].sort()))throw Error('HM2 B12 No113 old state mismatch');
+q.sourceUrl=f.newUrl;
+q.basis=f.newBasis;
+window.HM2_170_B12_NO113_SOURCE_BASIS_APPLIED=true;
+})();
