@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "appliesTo": "practice-A-Q01..Q30",
+  "appliesTo": "practice-A-Q01..Q40 (Q16..Q30 quarantined pending ID-correct rewrite)",
   "lawAsOf": "2026-11-11",
-  "notes": "Generated HM1 practice A override; applied after deterministic augment, not to HM2 original source.",
+  "notes": "Q16-Q30 prior legal-domain patches were assigned to wrong HM1 IDs; do not apply. A-Q31..Q40 are physiology questions from sm2-5y-r04-phy-01..10. Preserve history but fail closed on wrong mappings.",
   "questions": {
     "practice-A-Q01": {
       "stem": "事業者が定期健康診断を実施した。一般健康診断に係る健康診断個人票の保存について、正しい対応はどれか。",
@@ -543,6 +543,186 @@
       "lawAsOf": "2026-11-11",
       "auditStatus": "revised-pending-release-audit",
       "difficultyAudit": "case-application-rewrite-2026-11-11"
+    },
+    "practice-A-Q31": {
+      "stem": "採血検体でヘモグロビンの量が低下した。血液の酸素運搬能力への影響として最も適切なのはどれか。",
+      "choices": [
+        "血漿中のフィブリノゲンが酸素を代わりに運ぶため影響しない",
+        "白血球が酸素を運ぶためヘモグロビン低下は問題にならない",
+        "赤血球内のヘモグロビンによる酸素運搬が低下し得る",
+        "血小板が酸素を直接結合するので血小板数のみで評価する",
+        "赤血球は酸素を運ばず二酸化炭素だけを運ぶ"
+      ],
+      "ans": 2,
+      "detail": "赤血球にはヘモグロビンが豊富にあり、そのヘム鉄が酸素と可逆的に結合する。ヘモグロビン低下は血液の酸素運搬容量低下につながる。肢0は凝固因子、1は免疫細胞、3は一次止血細胞との混同。肢4は赤血球の主要な酸素輸送機能を否定する。酸素飽和度だけではヘモグロビン濃度による運搬量低下を十分に捉えられない。",
+      "key": "赤血球とヘモグロビンの酸素輸送",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-case-rewrite-2026-11-11"
+    },
+    "practice-A-Q32": {
+      "stem": "ヘモグロビンの機能について、組織で酸素が使われる仕組みを説明するものとして適切なのはどれか。",
+      "choices": [
+        "ヘモグロビンは血漿中の主要な凝固タンパク質である",
+        "酸素は赤血球ではなく白血球にのみ結合して運ばれる",
+        "ヘモグロビンは肺と組織で常に同じ量の酸素を放出する",
+        "酸素分圧などに応じてヘモグロビンの酸素結合・解離が変化する",
+        "ヘモグロビンは肺で酸素を運搬せず、血液凝固だけに関わる"
+      ],
+      "ans": 3,
+      "detail": "ヘモグロビンの酸素親和性と解離は酸素分圧・pH・温度・二酸化炭素分圧などの影響を受け、肺で結合し末梢で放出する。肢0はフィブリノゲン等との混同、1は白血球に輸送を限定、2は環境条件による解離変動を否定、4は酸素運搬機能を否定。Q31は赤血球と酸素運搬容量、Q32は結合・解離の調節を問う。",
+      "key": "ヘモグロビンの酸素解離",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-case-rewrite-2026-11-11"
+    },
+    "practice-A-Q33": {
+      "stem": "細菌感染が疑われる人の血液検査で好中球増加がみられた。好中球の働きとして適切なのはどれか。",
+      "choices": [
+        "主として酸素をヘモグロビンに結合させる",
+        "異物や細菌を貪食するなど自然免疫に関与する",
+        "血小板として一次止血栓を形成する",
+        "血漿の水分を調節する唯一の細胞である",
+        "抗体産生を行う形質細胞と同一である"
+      ],
+      "ans": 1,
+      "detail": "好中球は白血球の一種で、細菌などの貪食・殺菌を担う自然免疫の重要な細胞。肢0は赤血球、2は血小板、3は細胞ではなく血漿の性質を混同する。肢4の形質細胞はBリンパ球系由来で抗体産生に関わる。好中球数だけで感染症の有無を確定できない点にも注意する。",
+      "key": "好中球と免疫防御",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-case-rewrite-2026-11-11"
+    },
+    "practice-A-Q34": {
+      "stem": "小血管が損傷して出血した際、一次止血に中心的な役割を果たす反応はどれか。",
+      "choices": [
+        "血小板が損傷部位に粘着・活性化・凝集して血小板血栓を形成する",
+        "赤血球がフィブリンを直接産生して一次止血する",
+        "白血球が血管外の酸素を血管内に送って出血を止める",
+        "血清中のアルブミンが血小板の代わりに栓を形成する",
+        "凝固因子の作用はすべて一次止血と無関係であり、止血過程に関与しない"
+      ],
+      "ans": 0,
+      "detail": "血小板の粘着・活性化・凝集による血小板血栓が一次止血の中心。凝固因子が産生するフィブリンにより血栓を安定化する二次止血と区別する。肢1は赤血球がフィブリンを産生すると誤り、2は白血球の役割混同、3はアルブミンに止血栓の役割を誤配、4は凝固系と止血全体を過度に切り離す誤り。",
+      "key": "一次止血と二次止血",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-case-rewrite-2026-11-11"
+    },
+    "practice-A-Q35": {
+      "stem": "採血した血液を抗凝固処理して遠心分離した。上澄みとして得られる成分の説明で適切なのはどれか。",
+      "choices": [
+        "抗凝固処理をしても血清だけが得られる",
+        "上澄みは赤血球と白血球だけで構成される",
+        "血漿と血清は凝固因子の有無を含め成分が常に完全に同じである",
+        "血漿には水や電解質・アルブミンなどがあるが、フィブリノゲンは存在しない",
+        "血漿は水・電解質・タンパク質に加えフィブリノゲン等の凝固関連成分を含む"
+      ],
+      "ans": 4,
+      "detail": "抗凝固処理した血液の上澄みは血漿であり、水、電解質、アルブミンなどのタンパク質に加えてフィブリノゲン等を含む。肢0は血清との混同、1は血球成分の混同、2は凝固前後の差を否定、3はフィブリノゲン欠如を誤って主張。血清は凝固後の液体部分であり、血漿と血清の採取方法と成分の違いを理解する。",
+      "key": "血漿の成分と採取方法",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-case-rewrite-2026-11-11"
+    },
+    "practice-A-Q36": {
+      "stem": "血液を凝固させた後に遠心分離して得た上澄みを、抗凝固処理して得た血漿と比較した。正しい説明はどれか。",
+      "choices": [
+        "血清には血球が多量に浮遊しており血漿には血球がない",
+        "血清は凝固させず採取した血漿と全く同じ成分である",
+        "血清では凝固過程でフィブリノゲンなどが消費され、血漿とは凝固関連成分が異なる",
+        "血漿は血液凝固が完了した後でなければ得られない",
+        "血清は赤血球を溶解した際にだけ得られる"
+      ],
+      "ans": 2,
+      "detail": "血清は凝固後に分離される液体成分で、血漿に比べフィブリノゲンなど凝固関連成分が消費・減少している。肢0は血球混入を前提とする誤り、1は成分同一視、3は血漿の採取方法を逆転、4は溶血と凝固後の上清を混同。Q35は抗凝固処理後の血漿、Q36は凝固後の血清を対比する。",
+      "key": "血清と血漿の違い",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-case-rewrite-2026-11-11"
+    },
+    "practice-A-Q37": {
+      "stem": "血液が左心房から左心室に流入した後、全身へ送り出される経路として正しいものはどれか。",
+      "choices": [
+        "左心室から肺動脈を通って肺に向かう",
+        "左心室から大静脈へ送り出される",
+        "左心室から肺静脈に向かう",
+        "左心室から大動脈へ拍出され、体循環に入る",
+        "左心室から右心房へ直接送り出される"
+      ],
+      "ans": 3,
+      "detail": "左心房から僧帽弁を通った血液は左心室で収縮時に大動脈弁を通って大動脈へ拍出され、体循環へ進む。肢0は右心室の流出路、1は静脈還流、2は肺から左心房への流入路、4は正常な循環経路と異なる。次のQ38は右心系の肺循環を扱い、左右と流路を取り違えないことが重要。",
+      "key": "左心室と体循環",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-case-rewrite-2026-11-11"
+    },
+    "practice-A-Q38": {
+      "stem": "静脈血が右心房から右心室に入った後、肺で酸素化され左心房に戻るまでの正しい順路はどれか。",
+      "choices": [
+        "右心室→大動脈→全身→肺静脈→左心房",
+        "右心室→肺動脈→肺毛細血管→肺静脈→左心房",
+        "右心室→肺静脈→肺毛細血管→肺動脈→左心房",
+        "右心室→大静脈→肺毛細血管→大動脈→左心房",
+        "右心室→冠動脈→肺→冠静脈→左心房"
+      ],
+      "ans": 1,
+      "detail": "右心室の血液は肺動脈から肺毛細血管へ達し酸素化された後、肺静脈を通って左心房へ戻る。肢0は体循環との混同、2は肺動脈・静脈の逆転、3は大静脈と大動脈の誤配置、4は冠循環との混同。肺動脈は静脈血、肺静脈は動脈血を運ぶ。Q37の体循環と対比する。",
+      "key": "右心室からの肺循環",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-case-rewrite-2026-11-11"
+    },
+    "practice-A-Q39": {
+      "stem": "肺動脈と肺静脈の違いについて、適切なのはどれか。",
+      "choices": [
+        "肺動脈は右心室から肺へ向かい、通常は酸素の少ない静脈血を運ぶ",
+        "肺動脈は左心室から全身へ向かう動脈血を運ぶ",
+        "肺静脈は右心室から肺へ向かう静脈血を運ぶ",
+        "肺動脈と肺静脈はどちらも全身から右心房へ戻る血管である",
+        "肺動脈は必ず酸素の多い血液、肺静脈は必ず酸素の少ない血液を運ぶ"
+      ],
+      "ans": 0,
+      "detail": "肺動脈は右心室から肺へ向かう血管で、通常は酸素の少ない静脈血を運ぶ。肢1は大動脈、2は肺動脈と肺静脈の混同、3は大静脈への還流、4は動脈・静脈を酸素化状態のみで定義する誤り。動脈と静脈は心臓から出るか戻るかという方向で区分する。Q38の全順路とは違い名称と血液性状を問う。",
+      "key": "肺動脈と静脈血",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-case-rewrite-2026-11-11"
+    },
+    "practice-A-Q40": {
+      "stem": "肺で酸素化された血液が左心房に戻るときの血管として適切なのはどれか。",
+      "choices": [
+        "肺動脈で右心室へ戻る",
+        "大動脈で左心房へ入る",
+        "大静脈で左心房へ入る",
+        "冠静脈で左心房へ入る",
+        "肺静脈で左心房に戻る"
+      ],
+      "ans": 4,
+      "detail": "肺で酸素化された血液は肺静脈を通って左心房へ戻る。肢0は肺動脈の流れを逆転、1は左心室から出る大動脈、2は右心房へ戻る大静脈、3は心筋からの静脈還流を混同する。肺静脈は動脈血を運ぶ点が特徴。Q38・Q39との重複が強いため、次の全件意味重複検査では循環経路の統合・別命題差替を優先。",
+      "key": "肺静脈と動脈血",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-case-rewrite-2026-11-11"
     }
   }
 }
