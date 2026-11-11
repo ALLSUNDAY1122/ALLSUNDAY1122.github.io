@@ -4,6 +4,7 @@ on:
     branches: [audit/hm2-quality-20261110]
     paths:
       - apps/sanitary-manager-2/audit-fixes.js
+      - ios/health-manager-2/export-canonical-snapshot.cjs
       - ios/health-manager-2/export-audit-data-core.cjs
       - ios/health-manager-2/export-audit-data.cjs
       - ios/health-manager-2/verify-difficulty-gate.cjs
@@ -25,7 +26,7 @@ jobs:
       - name: Verify all 300 stems are unique
         run: node scripts/verify_sm2_cluster_e_final7.cjs
       - name: Rebuild canonical iOS JSON and verify browser-release parity
-        run: node ios/health-manager-2/export-audit-data.cjs
+        run: node ios/health-manager-2/export-canonical-snapshot.cjs
       - name: Commit generated canonical JSON to audit branch
         run: |
           git config user.name "github-actions[bot]"
