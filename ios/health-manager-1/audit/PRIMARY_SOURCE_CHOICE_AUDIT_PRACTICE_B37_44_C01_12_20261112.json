@@ -1,0 +1,999 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "sourceCommit": "a7702ceceb4103ad8f8921adc2d441add880020b",
+  "scope": "第12バッチ：演習B Q37〜Q44（8問40肢）＋演習C Q01〜Q12（12問60肢）",
+  "sourcePolicy": "演習Bはcontent-overrides-b-20261110.json replacement、演習Cはpractice_c_fixes_01_10.json / 11_20.jsonを最終書換え元とする。登録e-Govページの全文抽出不能時は厚労省公式法令本文で代替し原本到達を過大に主張しない。",
+  "classification": "DIRECT=中心命題の権威ある法令・教科書本文を読んだ、PARTIAL=適用業種や具体的条件の原典逐語に留保、PENDING=中心命題資料を取得できず。全5肢の独立逐語根拠証明と区別。",
+  "counts": {
+    "DIRECT": 19,
+    "PARTIAL": 1,
+    "PENDING": 0
+  },
+  "questionCount": 20,
+  "choiceCount": 100,
+  "unconditionalPass": 0,
+  "questions": [
+    {
+      "id": "practice-B-Q37",
+      "stem": "安静時の呼吸数が毎分12回、一回換気量が500mLの人の毎分換気量として最も適切なものはどれか。ただし呼吸ごとの換気量は一定とする。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "verifiedSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "sourceLocator": "OpenStax 22.3, tidal volume and respiratory rate",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_HTML_TEXT_READABLE",
+      "limitations": "計算を独立照合。肺胞換気量（死腔を除く）との区別は同章の定義に依拠",
+      "choices": [
+        {
+          "index": 0,
+          "text": "約500mL/分",
+          "expectedCorrect": false,
+          "assessmentReason": "一回換気量を呼吸数で乗じていない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "約1,000mL/分",
+          "expectedCorrect": false,
+          "assessmentReason": "1分12回の条件を2回に置換している",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "約6,000mL/分",
+          "expectedCorrect": true,
+          "assessmentReason": "500mL×12=6000mL/分",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "約12,000mL/分",
+          "expectedCorrect": false,
+          "assessmentReason": "一回換気量の1000mL換算を誤っている",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "約60,000mL/分",
+          "expectedCorrect": false,
+          "assessmentReason": "桁数が10倍過大",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q38",
+      "stem": "ある人の一回換気量は0.5L、予備吸気量は2.5L、予備呼気量は1.0L、残気量は1.2Lだった。肺活量の計算として正しいものはどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "verifiedSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "sourceLocator": "OpenStax 22.3, vital capacity TV+IRV+ERV",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_HTML_TEXT_READABLE",
+      "limitations": "肺活量と努力肺活量の測定上の区別は全逐語証明外",
+      "choices": [
+        {
+          "index": 0,
+          "text": "1.2L（残気量だけ）",
+          "expectedCorrect": false,
+          "assessmentReason": "残気量は肺活量に含まれない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "3.0L（一回換気量と予備吸気量の和）",
+          "expectedCorrect": false,
+          "assessmentReason": "予備呼気量1.0Lを算入し忘れる",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "5.2L（残気量も加えた値）",
+          "expectedCorrect": false,
+          "assessmentReason": "残気量1.2Lを誤って加算",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "4.0L（一回換気量・予備吸気量・予備呼気量の和）",
+          "expectedCorrect": true,
+          "assessmentReason": "TV+IRV+ERV=0.5+2.5+1.0=4.0L",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "2.2L（残気量と予備呼気量の和）",
+          "expectedCorrect": false,
+          "assessmentReason": "残気量と予備呼気量だけでは肺活量を求められない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q39",
+      "stem": "脳幹の呼吸調節回路と横隔膜への運動指令について、橋の機能が障害された場合を考える。延髄の呼吸神経回路および横隔神経の機能は保たれている。最も適切な説明はどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "verifiedSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "sourceLocator": "OpenStax 22.3, medullary/pontine respiratory centers",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_HTML_TEXT_READABLE",
+      "limitations": "橋障害時の呼吸パターン臨床症例の直接実証は教科書中心命題からの推論",
+      "choices": [
+        {
+          "index": 0,
+          "text": "橋は肺胞換気そのものの筋収縮を直接起こす末梢運動神経であるため、障害があると延髄の存在にかかわらず横隔膜の運動指令は消失する",
+          "expectedCorrect": false,
+          "assessmentReason": "橋は末梢の横隔神経そのものではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "呼吸リズムは橋だけで生成されるので、延髄の活動が保たれていても自発呼吸の基礎的リズムは成立しない",
+          "expectedCorrect": false,
+          "assessmentReason": "延髄を含む脳幹で基本リズムを形成する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "延髄の呼吸神経回路が作る基本リズムは橋からの入力を必要とせず、橋の障害は呼吸パターンに一切影響しない",
+          "expectedCorrect": false,
+          "assessmentReason": "橋による呼吸の切替・深さ調節を無視",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "延髄は基本的なリズム形成に関わり、橋は呼吸の深さや切替えなどのパターン調節に寄与するため、橋障害では調節に異常が出得るが、延髄から運動神経への出力経路とは区別する",
+          "expectedCorrect": true,
+          "assessmentReason": "延髄のリズムと橋のパターン調節を区別",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "PaCO₂変化への化学受容入力は横隔膜を直接収縮させるため、延髄と橋の神経回路の関与を考えなくてよい",
+          "expectedCorrect": false,
+          "assessmentReason": "化学受容入力と運動出力の中枢を混同",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q40",
+      "stem": "健康な成人で換気が一時的に低下し、動脈血PaCO₂が40から50mmHgに上昇してpHが低下した。低酸素や薬物など他の条件を考えない場合、呼吸調節の反応として最も適切なものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.nhlbi.nih.gov/health/lungs/body-controls-breathing",
+      "verifiedSourceURL": "https://www.nhlbi.nih.gov/health/lungs/body-controls-breathing",
+      "sourceLocator": "NHLBI How Your Body Controls Breathing, chemoreceptor CO2",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_HTML_TEXT_READABLE",
+      "limitations": "PaCO2=50mmHgの個体反応量まで資料で保証していない",
+      "choices": [
+        {
+          "index": 0,
+          "text": "PaCO₂上昇とpH低下は化学受容系の刺激を強め、一般に換気を増やしてCO₂を排出する方向に働く",
+          "expectedCorrect": true,
+          "assessmentReason": "CO2増加とpH低下は通常換気亢進を誘発",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "PaCO₂上昇時は中枢・末梢の化学受容器の反応が低下するため、正常生理では換気量は必ず減少する",
+          "expectedCorrect": false,
+          "assessmentReason": "刺激に対する健常な化学受容応答を逆に記述",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "pHが低下してもPaCO₂が上昇していれば、呼吸調節系はpHの変化を感知しない",
+          "expectedCorrect": false,
+          "assessmentReason": "pHの呼吸調節への関与を不当に否定",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "換気が増えればPaCO₂は通常さらに上がる方向に調節され、負のフィードバックは成立しない",
+          "expectedCorrect": false,
+          "assessmentReason": "換気によるCO2排出の負帰還を逆転",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "CO₂の変化は化学受容系へ入力されず、吸息筋への運動出力の強さと全く無関係である",
+          "expectedCorrect": false,
+          "assessmentReason": "CO2が化学受容器へ作用する機序を否定",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q41",
+      "stem": "ある成人の腎臓で1日当たり180Lの水分が糸球体で濾過され、そのうち178.5Lが尿細管などで再吸収された。水の正味の分泌はないものとすると、1日の最終尿量として最も適切なものはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work",
+      "verifiedSourceURL": "https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work",
+      "sourceLocator": "NIDDK Your Kidneys and How They Work, filtration/reabsorption",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_HTML_TEXT_READABLE",
+      "limitations": "180−178.5=1.5Lは独立算術、量は設問の仮定",
+      "choices": [
+        {
+          "index": 0,
+          "text": "180L。糸球体濾過量がそのまま最終尿量となる",
+          "expectedCorrect": false,
+          "assessmentReason": "尿細管再吸収178.5Lを無視",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "178.5L。再吸収された水分が最終尿として排泄される",
+          "expectedCorrect": false,
+          "assessmentReason": "再吸収した水は血中へ戻り最終尿ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "1.5L。濾過量から再吸収量を差し引く",
+          "expectedCorrect": true,
+          "assessmentReason": "180−178.5=1.5L/日",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "358.5L。濾過量に再吸収量を加える",
+          "expectedCorrect": false,
+          "assessmentReason": "再吸収分を加算してはならない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "0L。再吸収が起きれば濾過液は必ずすべて血液に戻る",
+          "expectedCorrect": false,
+          "assessmentReason": "再吸収は全量ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q42",
+      "stem": "腎臓で脱水への適応が進み、抗利尿ホルモン（ADH）の作用が強まった。ネフロン各区間の水移動と濾液の流れる順序を合わせて考えると、最も適切な説明はどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption",
+      "verifiedSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption",
+      "sourceLocator": "OpenStax 25.6 Tubular Reabsorption, nephron/ADH",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_HTML_TEXT_READABLE",
+      "limitations": "濾液の全経路は別節のネフロン解剖と併せて確認が望ましい",
+      "choices": [
+        {
+          "index": 0,
+          "text": "近位尿細管を出た濾液は遠位尿細管を経ず直接集合管へ入り、ADHは近位尿細管だけの水再吸収を増やす",
+          "expectedCorrect": false,
+          "assessmentReason": "遠位尿細管を飛ばす経路とADH部位が誤り",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "濾液は集合管→遠位尿細管→ヘンレ係蹄の順に流れ、集合管での水再吸収はADHと無関係で一定となる",
+          "expectedCorrect": false,
+          "assessmentReason": "濾液経路を逆順としADH作用も否定",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "ヘンレ係蹄の上行脚は水に高い透過性を持つため、ADH上昇による尿濃縮は上行脚だけで完結する",
+          "expectedCorrect": false,
+          "assessmentReason": "上行脚は通常水透過性が低い",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "近位尿細管→ヘンレ係蹄→遠位尿細管→集合管の順に進み、ADH作用により集合管などでの水再吸収が増え得る",
+          "expectedCorrect": true,
+          "assessmentReason": "近位→係蹄→遠位→集合管、ADHで集合管再吸収増",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "集合管へ流入した濾液は通常そこで再吸収されず、水はすべて最終尿となる",
+          "expectedCorrect": false,
+          "assessmentReason": "集合管でも水再吸収が起こる",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q43",
+      "stem": "腎小体で血液と濾液が分かれた後の経路を比較する。血液の通り道と濾液の通り道を正しく対応させたものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://openstax.org/books/biology-2e/pages/41-2-the-kidneys-and-osmoregulatory-organs",
+      "verifiedSourceURL": "https://openstax.org/books/biology-2e/pages/41-2-the-kidneys-and-osmoregulatory-organs",
+      "sourceLocator": "OpenStax Biology 2e 41.2 Nephron anatomy",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_HTML_TEXT_READABLE",
+      "limitations": "輸出細動脈から毛細血管系の全変異は図解逐語照合の範囲外",
+      "choices": [
+        {
+          "index": 0,
+          "text": "血液：輸入細動脈→糸球体→輸出細動脈→尿細管周囲毛細血管等／濾液：ボーマン嚢腔→尿細管",
+          "expectedCorrect": true,
+          "assessmentReason": "輸入細動脈→糸球体→輸出細動脈、濾液は嚢腔から尿細管",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "血液：輸入細動脈→糸球体→ボーマン嚢腔→尿細管周囲毛細血管／濾液：輸出細動脈→尿細管",
+          "expectedCorrect": false,
+          "assessmentReason": "ボーマン嚢を血流路へ誤接続",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "血液：輸出細動脈→糸球体→輸入細動脈→尿細管周囲毛細血管／濾液：ボーマン嚢腔→尿細管",
+          "expectedCorrect": false,
+          "assessmentReason": "輸入・輸出の順序を逆転",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "血液：輸入細動脈→糸球体→輸出細動脈→尿細管周囲毛細血管等／濾液：輸出細動脈→ボーマン嚢腔→尿細管",
+          "expectedCorrect": false,
+          "assessmentReason": "濾液が輸出細動脈を経由する点が誤り",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "血液：輸入細動脈→糸球体→輸出細動脈→集合管／濾液：ボーマン嚢腔→尿細管周囲毛細血管",
+          "expectedCorrect": false,
+          "assessmentReason": "血液と集合管・尿細管周囲毛細血管を混同",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-B-Q44",
+      "stem": "糸球体で濾過され近位尿細管に達したブドウ糖の負荷が増え、ブドウ糖輸送担体の再吸収能力を上回った。別の物質については尿細管周囲毛細血管側から尿細管腔への分泌が続いている。最も適切な説明はどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption",
+      "verifiedSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption",
+      "sourceLocator": "OpenStax 25.6 glucose transport maximum and tubular secretion",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_HTML_TEXT_READABLE",
+      "limitations": "トランスポーターの具体的飽和濃度は個人差があり数値確定しない",
+      "choices": [
+        {
+          "index": 0,
+          "text": "ブドウ糖の再吸収能力を超えた分は尿中に現れ得るが、血液側から尿細管腔への物質移動は尿細管分泌であり、再吸収とは向きが異なる",
+          "expectedCorrect": true,
+          "assessmentReason": "担体飽和で尿糖が生じ得る。分泌は血液側→尿細管腔",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "ブドウ糖再吸収担体が飽和すると糸球体濾過が直ちに停止するので、尿中ブドウ糖は増えない",
+          "expectedCorrect": false,
+          "assessmentReason": "担体の飽和は糸球体濾過停止を意味しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "近位尿細管でのブドウ糖再吸収は輸送担体の容量に左右されず、濾過量が増えてもすべて必ず再吸収される",
+          "expectedCorrect": false,
+          "assessmentReason": "糖再吸収には輸送最大値が存在する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "血液側から尿細管腔へ物質を輸送することは再吸収に分類されるため、分泌は濾過の別名である",
+          "expectedCorrect": false,
+          "assessmentReason": "血液側から尿細管腔への移送は分泌である",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "ブドウ糖の再吸収能力を超えた場合、尿細管分泌により余剰ブドウ糖がすべて血液へ戻される",
+          "expectedCorrect": false,
+          "assessmentReason": "余剰糖が分泌で無条件に全量血中へ戻ることはない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q01",
+      "stem": "衛生委員会の開催後、議事概要を速やかに掲示したが、委員会の意見・その意見を踏まえた措置・重要議事の記録を作成していなかった。事業者の是正として適切なものはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則23条3・4項：厚労省現行条文",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "EGOV_SEARCH_SNIPPET_AVAILABLE_FULLTEXT_EXTRACTION_EMPTY_ALTERNATIVE_MHLW_USED",
+      "limitations": "登録e-Gov頁は検索スニペット取得可だがページ全文0行。厚労省同条本文で代替照合",
+      "choices": [
+        {
+          "index": 0,
+          "text": "議事概要の掲示によって記録義務も満たしたため、過去の重要議事を記録する必要はない",
+          "expectedCorrect": false,
+          "assessmentReason": "議事概要の周知は3年間記録保存を代替しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "意見・その意見を踏まえた措置・その他重要議事を記録して3年間保存し、掲示による概要周知とは別に管理する",
+          "expectedCorrect": true,
+          "assessmentReason": "安衛則23条3・4項の別義務を正しく実施",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "委員会の意見の記録だけを作成し、意見に基づいて講じた措置は記録から除外する",
+          "expectedCorrect": false,
+          "assessmentReason": "意見を踏まえた措置も保存対象",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "議事概要の掲示は済んでいるので、記録は次回開催のものから1年間保存すればよい",
+          "expectedCorrect": false,
+          "assessmentReason": "3年保存・開催の都度記録という要件と相違",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "重要議事を3年間保存する場合は、議事概要の労働者への周知を停止できる",
+          "expectedCorrect": false,
+          "assessmentReason": "記録保存をしても概要周知は必要",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q02",
+      "stem": "衛生委員会の議事概要を電子ファイルで労働者に周知する。安衛則23条3項3号の方法に該当する実施案はどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "sourceLocator": "安衛則23条3項3号：厚労省現行条文",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "EGOV_SEARCH_SNIPPET_AVAILABLE_FULLTEXT_EXTRACTION_EMPTY_ALTERNATIVE_MHLW_USED",
+      "limitations": "登録e-Gov頁の全文抽出不可。電子記録媒体の用語・適用日版は厚労省条文で確認",
+      "choices": [
+        {
+          "index": 0,
+          "text": "社内ポータルに保存し、事業場内の管理職だけが閲覧できる権限を設定する",
+          "expectedCorrect": false,
+          "assessmentReason": "管理職限定では労働者の常時確認を満たさない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "社内ファイルに記録し、各作業場の労働者が記録を常時確認できる機器を設置して遅滞なく周知する",
+          "expectedCorrect": true,
+          "assessmentReason": "各作業場に常時確認可能機器を置く",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "社内ファイルに保存し、労働者が閲覧できる機器は本社の人事部にだけ設置する",
+          "expectedCorrect": false,
+          "assessmentReason": "本社だけでは各作業場要件を欠く",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "電子ファイルの閲覧申請を受けた従業員にだけ翌月の委員会開催後に内容を通知する",
+          "expectedCorrect": false,
+          "assessmentReason": "申請・翌月周知では遅滞と常時確認がない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "社内ファイルに記録しておけば、労働者が常時確認できる端末の有無にかかわらず法定周知方法を満たす",
+          "expectedCorrect": false,
+          "assessmentReason": "記録だけでは各作業場の機器要件を欠く",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q03",
+      "stem": "常時50人以上の事業場に過半数労働組合がある。衛生委員会の第1号委員以外の委員の推薦・指名について、同組合との労働協約に別段の定めがある場合の説明として最も適切なものはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/347AC0000000057?occasion_date=20261001",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000",
+      "sourceLocator": "安衛法17条4・5項、18条4項：厚労省条文",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "EGOV_SEARCH_SNIPPET_AVAILABLE_FULLTEXT_EXTRACTION_EMPTY_ALTERNATIVE_MHLW_USED",
+      "limitations": "登録e-Gov法令URLの全文独立抽出が不安定。厚労省現行条文で照合",
+      "choices": [
+        {
+          "index": 0,
+          "text": "第1号委員も含めた全委員について、過半数組合が事業者に代わって直接指名することが法定の原則である",
+          "expectedCorrect": false,
+          "assessmentReason": "過半数組合が全員を直接指名するのではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "第1号委員以外の委員は労働者の選挙のみで選び、事業者の指名は行わない",
+          "expectedCorrect": false,
+          "assessmentReason": "原則は推薦に基づく事業者指名",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "第1号委員以外の委員の半数は原則として過半数組合の推薦に基づき事業者が指名するが、過半数組合との労働協約に別段の定めがあるときはその限度で原則が適用されない",
+          "expectedCorrect": true,
+          "assessmentReason": "17条4・5項の原則と労働協約例外を区別",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "過半数組合の推薦があっても、第1号委員以外の委員の半数を事業者が指名する仕組みは法律上認められない",
+          "expectedCorrect": false,
+          "assessmentReason": "事業者指名が法定されることを否定",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "労働協約があれば衛生委員会の設置義務自体が常に免除され、推薦・指名の手続は不要になる",
+          "expectedCorrect": false,
+          "assessmentReason": "労働協約によって委員会設置義務は消えない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q04",
+      "stem": "常時30人を使用する銀行の事務所と、同人数を使用する製造業の工場がある。安全管理者の選任対象業種の区分を踏まえ、選任すべき推進者の組合せとして正しいものはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/347AC0000000057?occasion_date=20261001",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000",
+      "sourceLocator": "安衛法12条の2・施行令業種、安衛則12条の2",
+      "verificationLevel": "PARTIAL",
+      "registeredSourceReachability": "EGOV_SEARCH_SNIPPET_AVAILABLE_FULLTEXT_EXTRACTION_EMPTY_ALTERNATIVE_MHLW_USED",
+      "limitations": "銀行業が安全管理者選任対象外となる施行令2条の業種リスト・2026年適用版の直接逐語照合が未了",
+      "choices": [
+        {
+          "index": 0,
+          "text": "銀行の事務所：安全衛生推進者／製造業の工場：衛生推進者",
+          "expectedCorrect": false,
+          "assessmentReason": "銀行と製造業の推進者区分が逆",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "銀行の事務所：衛生管理者／製造業の工場：衛生推進者",
+          "expectedCorrect": false,
+          "assessmentReason": "50人未満の事業場に衛生管理者選任と誤適用",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "両事業場とも安全管理者と衛生管理者を選任し、推進者の選任は不要",
+          "expectedCorrect": false,
+          "assessmentReason": "安全管理者・衛生管理者とも30人では原則対象外",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "両事業場とも衛生推進者だけを選任し、安全衛生推進者は選任しない",
+          "expectedCorrect": false,
+          "assessmentReason": "製造業の安全衛生推進者の区分を欠く",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "銀行の事務所：衛生推進者／製造業の工場：安全衛生推進者",
+          "expectedCorrect": true,
+          "assessmentReason": "銀行は衛生推進者、製造業は安全衛生推進者",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q05",
+      "stem": "常時25人を使用する銀行の事務所で衛生推進者の選任事由が発生した。所定の能力を備えた候補者を選ぶ際、安衛則12条の3に沿う対応として最も適切なものはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "sourceLocator": "安衛則12条の3：厚労省原典・e-Gov検索本文",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "EGOV_SEARCH_SNIPPET_AVAILABLE_FULLTEXT_EXTRACTION_EMPTY_ALTERNATIVE_MHLW_USED",
+      "limitations": "e-Govの本文0行であるが厚労省条文が到達可能。原則と例外を確認",
+      "choices": [
+        {
+          "index": 0,
+          "text": "事由発生後14日以内に選任するが、資格や能力を確認しないことを優先する",
+          "expectedCorrect": false,
+          "assessmentReason": "14日だけでなく必要能力の確認が不可欠",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "事由発生後14日以内に衛生業務を担当できる有資格者等から選任し、原則としてその事業場に専属の者とする。ただし法令所定のコンサルタント等には専属例外がある",
+          "expectedCorrect": true,
+          "assessmentReason": "14日以内・能力・専属原則・法定例外をすべて満たす",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "事由発生後30日以内に選任すればよく、所属の如何や業務を担当する能力は問わない",
+          "expectedCorrect": false,
+          "assessmentReason": "30日ではなく14日以内、能力も必要",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "衛生推進者には専属原則がないので、能力を備えた候補者なら事業場外の者を常に自由に選べる",
+          "expectedCorrect": false,
+          "assessmentReason": "専属の原則が存在する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "事由発生後14日以内に選任する場合でも、法令で定める例外対象のコンサルタントを専属にしなければ選任できない",
+          "expectedCorrect": false,
+          "assessmentReason": "定めるコンサルタント等の例外を無視",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q06",
+      "stem": "常時25人の銀行事務所が衛生推進者を選任した。事務所には受付と執務室があり、交替勤務者もいる。氏名の周知方法について、安衛則12条の4に最も適合するのはどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "sourceLocator": "安衛則12条の4：厚労省原典・e-Gov検索本文",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "EGOV_SEARCH_SNIPPET_AVAILABLE_FULLTEXT_EXTRACTION_EMPTY_ALTERNATIVE_MHLW_USED",
+      "limitations": "登録e-Gov本文全文抽出不可、厚労省同条代替確認。掲示以外の等の具体的方法は未確定",
+      "choices": [
+        {
+          "index": 0,
+          "text": "管理職だけが閲覧できる人事管理画面に氏名を載せ、一般の労働者には所属部署のみ知らせる",
+          "expectedCorrect": false,
+          "assessmentReason": "管理職だけのアクセスでは関係労働者への周知にならない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "個別の氏名は示さず、衛生推進者の職務内容だけを全労働者へメール配信して周知とする",
+          "expectedCorrect": false,
+          "assessmentReason": "氏名そのものを示す必要がある",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "衛生推進者の任命書を監督署に送付し、関係労働者への周知はその提出をもって代替する",
+          "expectedCorrect": false,
+          "assessmentReason": "監督署への提出で氏名周知を代替できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "衛生推進者の氏名を執務室の見やすい位置に掲示する等、関係する労働者が選任された人の氏名を確認できる方法で周知する",
+          "expectedCorrect": true,
+          "assessmentReason": "見やすい箇所の掲示等で関係労働者に周知",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "受付担当者には口頭で氏名を知らせ、執務室の関係労働者には問い合わせがあるまで氏名を伝えない",
+          "expectedCorrect": false,
+          "assessmentReason": "一部の労働者に氏名を知らせないのは不足",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q07",
+      "stem": "変形労働時間制を導入していない通常の事業場で、休憩を除く1日の実労働時間が8時間30分となった。法定労働時間との関係として正しいものはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/322AC0000000049",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0",
+      "sourceLocator": "労基法32条・36条：厚労省法令本文",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "EGOV_SEARCH_SNIPPET_AVAILABLE_FULLTEXT_EXTRACTION_EMPTY_ALTERNATIVE_MHLW_USED",
+      "limitations": "上限規制と割増賃金の全適用例外は別途確認",
+      "choices": [
+        {
+          "index": 0,
+          "text": "1日8時間の法定労働時間を30分超えており、適法に時間外労働を行わせるには原則として36協定の締結・届出等の要件が必要となる",
+          "expectedCorrect": true,
+          "assessmentReason": "実労働8時間30分は原則8時間超、36協定等を要する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "1日8時間30分は週40時間以内なら常に時間外労働に当たらない",
+          "expectedCorrect": false,
+          "assessmentReason": "週40時間内でも1日8時間原則は別に適用",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "休憩を除く実労働時間については1日当たりの上限が存在しない",
+          "expectedCorrect": false,
+          "assessmentReason": "1日8時間の法定原則が存在する",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "36協定があれば時間外労働の上限規制も割増賃金規定も適用されない",
+          "expectedCorrect": false,
+          "assessmentReason": "36協定でも上限規制と割増賃金は残る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "法定労働時間は原則1日10時間なので超過はない",
+          "expectedCorrect": false,
+          "assessmentReason": "原則1日8時間であり10時間ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q08",
+      "stem": "常時8人を使用する商業の事業場で、変形労働時間制等を採用していない。週42時間の所定労働時間を定める場合の法定労働時間について正しいものはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/322M40000100023",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0&pageNo=1",
+      "sourceLocator": "労基則25条の2：厚労省原典",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "EGOV_SEARCH_SNIPPET_AVAILABLE_FULLTEXT_EXTRACTION_EMPTY_ALTERNATIVE_MHLW_USED",
+      "limitations": "登録e-Gov URLの全文抽出未確認。厚労省原典に週44時間・日8時間を確認",
+      "choices": [
+        {
+          "index": 0,
+          "text": "全業種・全規模で週40時間を超える所定労働時間は無条件に許されない",
+          "expectedCorrect": false,
+          "assessmentReason": "商業・10人未満には週44時間特例がある",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "週44時間の特例は製造業の事業場にだけ認められる",
+          "expectedCorrect": false,
+          "assessmentReason": "製造業だけの特例ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "常時8人なら業種を問わず週60時間まで認められる",
+          "expectedCorrect": false,
+          "assessmentReason": "業種を問わず60時間ではない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "特例対象の商業事業場では1日の法定労働時間も原則10時間になる",
+          "expectedCorrect": false,
+          "assessmentReason": "特例でも1日は原則8時間",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "商業で常時10人未満の事業場は特例措置対象となり、原則週44時間までの制度がある",
+          "expectedCorrect": true,
+          "assessmentReason": "商業で常時10人未満に週44時間の特例がある",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q09",
+      "stem": "1日の実労働が6時間ちょうどの従業員Aと6時間20分の従業員Bがいる。Bには作業の途中に20分間、電話対応の指示を受け得る待機時間が設定されている。法定休憩について最も適切な説明はどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/322AC0000000049",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0",
+      "sourceLocator": "労基法34条1・3項、厚労省手待時間解説",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "EGOV_SEARCH_SNIPPET_AVAILABLE_FULLTEXT_EXTRACTION_EMPTY_ALTERNATIVE_MHLW_USED",
+      "limitations": "待機と指揮命令関係は設問条件を前提。実際の業務指揮実態は別",
+      "choices": [
+        {
+          "index": 0,
+          "text": "Aには労基法34条による休憩の最低付与義務はなく、Bには労働から解放された休憩を少なくとも45分、労働時間の途中に与える必要がある",
+          "expectedCorrect": true,
+          "assessmentReason": "6時間ちょうどは休憩義務なし、6時間超は45分で電話待機は休憩に算入しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "AにもBにも法定休憩として最低45分必要で、電話待機20分は休憩として数えられる",
+          "expectedCorrect": false,
+          "assessmentReason": "6時間ちょうどの基準と手待時間の双方を誤る",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "Aには最低30分必要で、Bは電話待機20分を与えれば休憩時間の要件を満たす",
+          "expectedCorrect": false,
+          "assessmentReason": "休憩区分を30分とし待機を誤算入",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "Aに法定休憩を与えない場合、Bには労働時間を問わず60分の休憩を与える必要がある",
+          "expectedCorrect": false,
+          "assessmentReason": "8時間超で初めて60分以上、Bは6時間20分",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "Bの待機時間は会社が休憩と表示すれば、労働から解放されていなくても45分の休憩に算入できる",
+          "expectedCorrect": false,
+          "assessmentReason": "電話対応義務のある手待時間は自由な休憩でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q10",
+      "stem": "ある従業員に実労働8時間を予定し、途中に45分の休憩を与えた。その後15分の時間外労働を命じることとなり、実労働は8時間15分となる。休憩に関する適切な対応はどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://laws.e-gov.go.jp/law/322AC0000000049",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0",
+      "sourceLocator": "労基法34条1項、厚労省労働関係法令解説",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "EGOV_SEARCH_SNIPPET_AVAILABLE_FULLTEXT_EXTRACTION_EMPTY_ALTERNATIVE_MHLW_USED",
+      "limitations": "追加15分の時間配置は労働時間途中とする条件に依存",
+      "choices": [
+        {
+          "index": 0,
+          "text": "既に45分休憩を与えているため、8時間を超えても追加休憩は必要ない",
+          "expectedCorrect": false,
+          "assessmentReason": "8時間超では1時間以上に増やす必要がある",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "45分の休憩を過去に与えた事実は無効となるため、必ず60分を新たに連続して与え直す",
+          "expectedCorrect": false,
+          "assessmentReason": "既付与45分を無効として与え直す必要はない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "8時間を超える場合でも、勤務終了後に15分の休憩を追加すれば途中付与の要件を満たす",
+          "expectedCorrect": false,
+          "assessmentReason": "勤務終了後は労働時間の途中でない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "実労働が8時間を超えるので、既付与45分に加え少なくとも15分の休憩を労働時間の途中に与え、合計60分以上とする",
+          "expectedCorrect": true,
+          "assessmentReason": "15分を勤務途中に追加して合計60分",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "15分の時間外労働を命じても労働時間の算入は8時間で止まるので、法定休憩は45分のままである",
+          "expectedCorrect": false,
+          "assessmentReason": "時間外15分も実労働時間に算入する",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q11",
+      "stem": "製造業の工場で昼休憩を班ごとに11時・12時・13時から交替で与えることを検討している。法定の一斉休憩原則について適切な対応はどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb1912&dataType=1&pageNo=1",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0&pageNo=1",
+      "sourceLocator": "労基法34条2項、労基則15条、1999年基発45号",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_HTML_TEXT_READABLE",
+      "limitations": "登録の1999年通達自体に到達、適用除外業種と現行版の将来改正は追確認",
+      "choices": [
+        {
+          "index": 0,
+          "text": "製造業でも班別休憩は事業者が勤務表を公表するだけで常に適法となる",
+          "expectedCorrect": false,
+          "assessmentReason": "製造業は勤務表公表だけでは一斉原則を外せない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "過半数組合又は過半数代表者との書面協定で一斉に与えない労働者の範囲と休憩の与え方を定め、各班に所定の休憩を確保する",
+          "expectedCorrect": true,
+          "assessmentReason": "対象者範囲と休憩の与え方の書面協定が必要",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "班別休憩の協定を結べば休憩そのものを廃止し、労働時間の終了後に付与できる",
+          "expectedCorrect": false,
+          "assessmentReason": "一斉例外は休憩そのものの廃止を許さない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "休憩の一斉付与を除外するためには36協定だけを締結すれば足り、休憩の与え方に関する定めは不要である",
+          "expectedCorrect": false,
+          "assessmentReason": "36協定と一斉休憩労使協定は別",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "業務繁忙日だけであれば書面協定の有無にかかわらず、全班の休憩を0分にできる",
+          "expectedCorrect": false,
+          "assessmentReason": "繁忙でも法定休憩時間は残る",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    },
+    {
+      "id": "practice-C-Q12",
+      "stem": "従業員が労働時間の途中に与えられた休憩中、食事後に私用の読書をしていた。業務上の待機・呼出しはなく、特別な安全上の制約もない。この休憩の扱いとして適切なものはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0",
+      "verifiedSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0",
+      "sourceLocator": "労基法34条3項：厚労省原典",
+      "verificationLevel": "DIRECT",
+      "registeredSourceReachability": "REGISTERED_OR_EQUIVALENT_HTML_TEXT_READABLE",
+      "limitations": "読書を制限し得る安全・施設管理規律の適用は設問の仮定外",
+      "choices": [
+        {
+          "index": 0,
+          "text": "使用者は休憩中の行動を業務上有益な学習だけに限定でき、私用の読書を理由に一律に休憩を取り消せる",
+          "expectedCorrect": false,
+          "assessmentReason": "業務から解放されている休憩は自由利用原則",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 1,
+          "text": "休憩を与えた以上、使用者は業務命令がなくても休憩時間のすべてを労働時間として扱わなければならない",
+          "expectedCorrect": false,
+          "assessmentReason": "自由な休憩は労働時間と混同しない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 2,
+          "text": "休憩時間は自由利用が原則で、業務から解放されている従業員の私用の読書を、業務に役立たないとの理由だけで禁止することは原則に適合しない",
+          "expectedCorrect": true,
+          "assessmentReason": "安全・施設規律の留保の下、私的読書は自由利用",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 3,
+          "text": "休憩時間を自由に使えるのは労働者の過半数代表者だけであり、他の従業員には当てはまらない",
+          "expectedCorrect": false,
+          "assessmentReason": "自由利用の主体を代表者だけに限定できない",
+          "independentlyProvenFromExactSourceParagraph": false
+        },
+        {
+          "index": 4,
+          "text": "休憩を自由に利用した従業員については、翌日の休憩付与を免除することができる",
+          "expectedCorrect": false,
+          "assessmentReason": "翌日の休憩義務は自由利用で消えない",
+          "independentlyProvenFromExactSourceParagraph": false
+        }
+      ],
+      "allFiveDirectProofPass": false
+    }
+  ]
+}
