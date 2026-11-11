@@ -1685,3 +1685,11 @@
 - **固定178/178問の独立レビュー点検完了、残0問**。これは内容修正完了・出典照合完了・専門家最終承認を意味しない。No.179相当 `sm2-5y-r09-phy-05` は今回の固定母数に含めない。
 - 次工程：No.174・176・177・178の分類・根拠修正を生成元に適用し、300問再生成後に限定差分を検証。別工程で解説、重複、個別直接出典、法令更新、権利を監査する。
 - **今回の変更は本監査記録のみ**。生成元JS・iOS JSON・承認/公開フラグ・ビルド・TestFlight・App Reviewは変更しない。品質ゲート **BLOCKED** を維持。
+
+
+## 2026-11-11追補｜最終第18バッチ指摘4件の分類・根拠修正・300問差分検証
+- 対象固定No.174 `sm2-5y-r08-phy-10`、No.176 `sm2-5y-r09-phy-02`、No.177 `sm2-5y-r09-phy-03`、No.178 `sm2-5y-r09-phy-04` の4問。
+- 生成元 `apps/sanitary-manager-2/audit-fixes.js` に `SM2_INDEPENDENT_EIGHTEENTH9_METADATA_FIX4_20261111` を追加し、4問の `topic` と `basis` のみ修正。生成元コミット `18360071f8a55834b4384cbdcee3c203e0c08063`。
+- iOS同梱 `ios/health-manager-2/release-questions.json` 再生成コミット `03f1493c8586c4ccee17d65b67ff61ed6dfb58a0`。旧JSON blob `26676dc720f610502f798e2ecfb2b59c66ecf04d`、新blob `4588ba3bb4d007e1052399fc75a8ba1824254ec2` を全300問についてID・順序・全フィールド比較。
+- **差分は指定4問の `topic` と `primary_basis` のみ**。対象外296問は全フィールド一致。問題文・5肢・正答・quick・解説・source_url・監査承認・公開状態は不変。
+- 固定178/178問の独立点検完了、残0問。分類修正によって重複・定型解説・個別直接出典・法令更新・権利問題は解消されない。品質ゲート **BLOCKED** 継続。iOSビルド・TestFlight・App Review・一般公開は行わない。
