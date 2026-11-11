@@ -1290,3 +1290,17 @@ if(q.subject!==guard.subject||q.topic!==guard.topic||q.question!==guard.question
 q.sourceUrl="https://www.wbgt.env.go.jp/doc_observation.php";
 window.HM2_SOURCE_170_B03_R7O011_VERIFIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH04_R7A011_R7A012_20261112 strict source-only migration.
+(function(){'use strict';
+const fixes=[{"id":"sm2-r7a-011","question":"容積200m³の事務室に、1時間当たり600m³の外気が導入されている。1時間当たりの換気回数として正しいものはどれか。","subject":"労働衛生","topic":"換気回数","basis":"換気管理の基礎計算","answer":"3回/時","choices":["1回/時","2回/時","3回/時","4回/時","6回/時"],"old":"https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1","url":"https://www.jniosh.johas.go.jp/publication/mail_mag/2015/84-column-1.html"},{"id":"sm2-r7a-012","question":"2025年6月施行の職場の熱中症対策で「暑熱な場所」とされる基準の組合せとして正しいものはどれか。","subject":"労働衛生","topic":"熱中症対策の対象作業","basis":"労働安全衛生規則612条の2・令和7年5月20日基発0520第6号","answer":"WBGT28以上又は気温31℃以上","choices":["WBGT25以上又は気温28℃以上","WBGT28以上又は気温31℃以上","WBGT30以上かつ気温35℃以上","気温だけが基準でWBGTは使わない","湿度だけで判定する"],"old":"https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0","url":"https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1&pageNo=1"}];
+for(const f of fixes){
+ const matches=(window.Q_PARTS||[]).filter(q=>q.id===f.id);
+ if(matches.length!==1)throw Error('HM2 170 B04 ID count '+f.id);
+ const q=matches[0];
+ if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==f.basis||q.sourceUrl!==f.old||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.answer||JSON.stringify([...q.choices].sort())!==JSON.stringify(f.choices))throw Error('HM2 170 B04 strict old-state mismatch '+f.id);
+ q.sourceUrl=f.url;
+}
+window.HM2_170_B04_DIRECT_SOURCES_APPLIED=true;
+})();
