@@ -1,0 +1,54 @@
+name: HM1 base Q07 Q08 exact two regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/Resources/questions.json'
+      - '.github/workflows/hm1-exact-two-basic-q07-q08.yml'
+  workflow_dispatch:
+jobs:
+  exact-two:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate baseline and current 264, assert only two changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=481b2cc4fb38cdfd968b43d161145ea0168d3ef4
+          git worktree add --detach /tmp/hm1-basic7-before "$BASE"
+          git worktree add --detach /tmp/hm1-basic7-after HEAD
+          (cd /tmp/hm1-basic7-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-basic7-before.log)
+          (cd /tmp/hm1-basic7-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-basic7-after.log)
+          python3 - <<'PY'
+          import json,unicodedata
+          from pathlib import Path
+          rel='ios/health-manager-1/Resources/questions.json'
+          old=json.loads((Path('/tmp/hm1-basic7-before')/rel).read_text())
+          new=json.loads((Path('/tmp/hm1-basic7-after')/rel).read_text())
+          expected={'2026-04-Q07','2026-04-Q08'}
+          assert len(old)==len(new)==264,(len(old),len(new))
+          assert [q['id'] for q in old]==[q['id'] for q in new],'ID/order changed'
+          normalize=lambda s:''.join(c for c in unicodedata.normalize('NFKC',s).casefold() if not c.isspace())
+          assert len({q['id'] for q in new})==264,'duplicate IDs'
+          assert len({normalize(q['stem']) for q in new})==264,'duplicate stems'
+          diffs={a['id'] for a,b in zip(old,new) if a!=b}
+          assert diffs==expected,{'actual':sorted(diffs),'expected':sorted(expected)}
+          for a,b in zip(old,new):
+              if a['id'] not in expected:assert a==b,a['id']
+              assert len(b['choices'])==5,b['id']
+              assert len({normalize(s) for s in b['choices']})==5,b['id']
+              assert type(b['ans']) is int and 0<=b['ans']<5,b['id']
+              if b['id'] in expected:
+                  assert b['ans']==1,b['id']
+                  assert b['short'] and b['detail'] and b.get('auditSourceURL'),b['id']
+          print('PASS: both 264, base Q07/Q08 only changed, other 262 identical')
+          PY
