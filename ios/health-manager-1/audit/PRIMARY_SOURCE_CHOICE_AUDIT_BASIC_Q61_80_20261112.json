@@ -1,0 +1,1156 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-11-12",
+  "sourceCommit": "d32ff74c6eaefbbad5f70e222d543dec4ba0b76f",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "scope": "基本Q61-Q80 (2025-10-Q17〜Q36) 各5肢、計100肢",
+  "notes": "DIRECT=中心命題を到達可能な一次資料で確認、PARTIAL=原典の一部論点・適用日等に未検証がある、PENDING=原典本文不達。100肢の登録と全5肢の直接根拠完了は異なる。PDF web抽出に異常があったQ72はPARTIAL扱い。",
+  "counts": {
+    "DIRECT": 15,
+    "PARTIAL": 5,
+    "PENDING": 0
+  },
+  "allChoicesDirectlyProven": false,
+  "questions": [
+    {
+      "basicNumber": 61,
+      "id": "2025-10-Q17",
+      "stem": "有機則29条の特殊健康診断の対象となる有機溶剤業務へ、一般事務担当者を4月1日に配置替えした。一般健診は3月に実施済みで、配置替え後の定期特殊健診を9月に予定している。事業者の対応として最も適切なのはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1",
+      "verifiedOrAlternativeURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1",
+      "primaryLocator": "有機則29条2・3項",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "配置替え時と6か月以内ごとの健診を直接確認。一定条件で定期検診1年周期となる特例もあるため『原則』に留意。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "3月の一般健診が正常なので4月の配置替え時特殊健診を省略し、9月の特殊健診だけ実施する",
+          "expectedTruth": "false",
+          "reason": "一般健診だけでは配置替え時の特殊健診を代替不可",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "4月の配置替え時に対象業務に応じた特殊健診を行い、その後も原則6か月以内ごとの健診と結果に基づく事後措置を管理する",
+          "expectedTruth": "true",
+          "reason": "配置替え時特殊健診・その後原則6月ごとの実施",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "9月の定期特殊健診の予定があるため4月の配置替え時は作業環境測定だけを実施する",
+          "expectedTruth": "false",
+          "reason": "作業環境測定は配置替え時特殊健診を代替しない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "4月の配置替え時に特殊健診を受ければ、9月以降の定期特殊健診は労働者から症状の申告があった場合だけ行う",
+          "expectedTruth": "false",
+          "reason": "定期健診を症状申告のみにはできない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "対象業務に従事し始めてから6か月未満は健診義務が生じないので、配置替え時期にかかわらず10月まで待つ",
+          "expectedTruth": "false",
+          "reason": "配置替え時の特殊健診を6か月先送りできない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "配置替え時と6か月以内ごとの健診を直接確認。一定条件で定期検診1年周期となる特例もあるため『原則』に留意。"
+    },
+    {
+      "basicNumber": 62,
+      "id": "2025-10-Q18",
+      "stem": "作業環境測定の評価において、A測定の第二評価値が管理濃度を超える場合の管理区分に関する記述として、正しいものはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74088000&dataType=0&pageNo=1",
+      "verifiedOrAlternativeURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74088000&dataType=0&pageNo=1",
+      "primaryLocator": "作業環境評価基準2条、A/B測定判定表",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "第二評価値＞管理濃度でB測定に関わらず第三管理区分と明記。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "B測定値が管理濃度以下なら第一管理区分となる",
+          "expectedTruth": "false",
+          "reason": "B測定値の小ささで第一管理区分に変更不可",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "B測定値が管理濃度以下なら第二管理区分となる",
+          "expectedTruth": "false",
+          "reason": "B測定値が低くても第二管理区分とはならない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "B測定の結果にかかわらず第三管理区分となる",
+          "expectedTruth": "true",
+          "reason": "第二評価値超過は第三管理区分",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "A測定の第一評価値が管理濃度以下なら第二管理区分となる",
+          "expectedTruth": "false",
+          "reason": "第一評価値だけを理由に第二管理区分にはできない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "A測定をやり直すまで管理区分を決定しない",
+          "expectedTruth": "false",
+          "reason": "条件が確定しており測定やり直しは必要条件でない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "第二評価値＞管理濃度でB測定に関わらず第三管理区分と明記。"
+    },
+    {
+      "basicNumber": 63,
+      "id": "2025-10-Q19",
+      "stem": "アンモニア工程からトルエン工程へ作業者を配置転換する。両工程とも酸素濃度とガス濃度はろ過式防毒マスクの適用範囲内で、手元には緑色のアンモニア用吸収缶と黒色の有機ガス用吸収缶がある。切替時の選定として最も適切なのはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74042100&dataType=0",
+      "verifiedOrAlternativeURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74042100&dataType=0",
+      "primaryLocator": "防毒マスクの規格8条・色彩、厚労省防毒マスク選択通達",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "緑アンモニア用・黒有機ガス用を直接確認。実際の選定には対象ガス適合・製造者説明が必要。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "緑色の吸収缶を継続使用し、色が同じであればトルエンへの適合表示は確認しなくてよい",
+          "expectedTruth": "false",
+          "reason": "アンモニア用吸収缶をトルエン用に流用不可",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "黒色の吸収缶に交換するが、表示された対象ガスが異なっていても識別色だけで適合と確定する",
+          "expectedTruth": "false",
+          "reason": "色だけで適合表示確認省略不可",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "有機ガス用の黒色吸収缶についてトルエンへの適合表示・使用可能濃度を確認して選定し、緑色のアンモニア用吸収缶を色だけで流用しない",
+          "expectedTruth": "true",
+          "reason": "有機ガス用黒・対象ガス表示と適用条件を確認",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "アンモニア用と有機ガス用の吸収缶は色が違っても同じ用途なので、在庫の多い方を選んでよい",
+          "expectedTruth": "false",
+          "reason": "異種ガス用吸収缶は用途が同じでない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "防じんフィルタを装着すればトルエン蒸気を除去できるので、ガス用吸収缶は必要ない",
+          "expectedTruth": "false",
+          "reason": "防じんフィルタは有機溶剤蒸気を吸着しない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "緑アンモニア用・黒有機ガス用を直接確認。実際の選定には対象ガス適合・製造者説明が必要。"
+    },
+    {
+      "basicNumber": 64,
+      "id": "2025-10-Q20",
+      "stem": "放射線業務の教育で、水晶体の白内障と放射線による発がんを比較する。影響の種類と被ばく後の発現について最も適切なのはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.icrp.org/docs/ICRP%20Statement%20on%20Tissue%20Reactions.pdf",
+      "verifiedOrAlternativeURL": "https://www.icrp.org/docs/ICRP%20Statement%20on%20Tissue%20Reactions.pdf",
+      "primaryLocator": "ICRP Statement on Tissue Reactions (2011) p.1",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "ICRP PDF画像1頁で水晶体組織反応と遅発影響の記述を確認。発がん確率影響は補助ICRP103の直接照合未完。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "白内障も発がんも、同じ線量を受ければ全員に必ず発現する組織反応に分類される",
+          "expectedTruth": "false",
+          "reason": "白内障と発がんを全て必発の組織反応とはしない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "白内障は確率的影響としてしきい線量がないことを前提に評価し、発がんは組織反応として扱う",
+          "expectedTruth": "false",
+          "reason": "白内障と発がんの分類は逆",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "放射線誘発白内障は潜伏期間を経て現れ得る水晶体の組織反応であり、発がんは確率的影響として区別される",
+          "expectedTruth": "true",
+          "reason": "水晶体反応と発がんの概念を区別",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "白内障は被ばく直後に限って発現する急性反応であり、遅れて発症した場合は放射線との関連を考えない",
+          "expectedTruth": "false",
+          "reason": "水晶体変化は遅発し得る",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "白内障も発がんも発症時期だけで区別し、線量や影響の分類は評価に用いない",
+          "expectedTruth": "false",
+          "reason": "発症時期だけでは分類できない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "ICRP PDF画像1頁で水晶体組織反応と遅発影響の記述を確認。発がん確率影響は補助ICRP103の直接照合未完。"
+    },
+    {
+      "basicNumber": 65,
+      "id": "2025-10-Q21",
+      "stem": "衛生管理者が法定の週1回巡視を行ったところ、局所排気装置の吸引低下と有機溶剤蒸気の発散のおそれを確認した。作業者は翌日も同じ工程に入る予定である。巡視後の対応として最も適切なのはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "verifiedOrAlternativeURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "primaryLocator": "安衛則11条1項、衛生管理者巡視義務",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "毎週1回以上巡視し、有害のおそれがあるとき直ちに必要措置を講じる根拠。",
+      "lawAsOf": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "巡視記録に記載したうえで、次回の定期巡視まで装置を現状使用し、是正の要否を後日判断する",
+          "expectedTruth": "false",
+          "reason": "次回巡視まで危険を放置できない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "衛生委員会での審議を先に終えるまで、有害のおそれがある設備不良に対する措置を一律に保留する",
+          "expectedTruth": "false",
+          "reason": "委員会まで一律に放置できない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "有害のおそれを発見した時点で必要な健康障害防止措置を直ちに講じ、使用方法・設備の是正や作業の扱いを関係者と調整する",
+          "expectedTruth": "true",
+          "reason": "健康障害防止の即時措置を要する",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "週1回の巡視義務を満たしたことをもって、その週に見つかった不良の是正責任も完了したとする",
+          "expectedTruth": "false",
+          "reason": "巡視履行だけでは措置終了しない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "翌日の作業者が保護具を着ける予定なら、局所排気装置の不良を調査せず作業方法を変更しない",
+          "expectedTruth": "false",
+          "reason": "保護具予定だけで局排不具合放置不可",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "毎週1回以上巡視し、有害のおそれがあるとき直ちに必要措置を講じる根拠。"
+    },
+    {
+      "basicNumber": 66,
+      "id": "2025-10-Q22",
+      "stem": "衛生委員会を設置する事業場で、議長1人を除く委員が8人いる。過半数労働組合はなく、労働協約による別段の定めもない。この8人のうち、過半数代表者の推薦に基づき事業者が指名する委員について最も適切な記述はどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0",
+      "verifiedOrAlternativeURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0",
+      "primaryLocator": "安衛法18条・17条の準用、議長を除く推薦対象",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "議長以外の委員8人の半数4人。過半数代表者推薦を確認。",
+      "lawAsOf": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "推薦対象は議長を含む9人の3分の1として3人に限られる",
+          "expectedTruth": "false",
+          "reason": "議長を分母に含め3分の1とする誤り",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "議長以外の委員8人の半数に当たる4人について、過半数代表者の推薦に基づいて指名するのが原則である",
+          "expectedTruth": "true",
+          "reason": "議長以外8名の半数4名が推薦対象",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "推薦対象は常に議長を含む9人の過半数である5人に限られる",
+          "expectedTruth": "false",
+          "reason": "議長を含めた9名の過半数とは異なる",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "過半数組合がない場合は推薦が不要となり、議長以外の8人をすべて事業者が独自に指名できる",
+          "expectedTruth": "false",
+          "reason": "組合なしでも過半数代表者の推薦が必要",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "推薦を受ける委員は議長1人だけでよく、残る委員には推薦手続を適用しない",
+          "expectedTruth": "false",
+          "reason": "議長のみ推薦対象ではない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "議長以外の委員8人の半数4人。過半数代表者推薦を確認。"
+    },
+    {
+      "basicNumber": 67,
+      "id": "2025-10-Q23",
+      "stem": "常時150人を使用する清掃業の事業場と、同じく150人を使用する製造業の事業場がある。総括安全衛生管理者の人数基準について正しいものはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://anzeninfo.mhlw.go.jp/yougo/yougo35_1.html",
+      "verifiedOrAlternativeURL": "https://anzeninfo.mhlw.go.jp/yougo/yougo35_1.html",
+      "primaryLocator": "労働安全衛生法施行令2条、厚労省解説",
+      "sourceLevel": "PARTIAL",
+      "accessStatus": "SOURCE_REACHED_INCOMPLETE_CLAIM_COVERAGE",
+      "verificationLimit": "清掃100人以上/製造300人以上の基準を概要資料で確認。法令条文の施行日個別検証は追加必要。",
+      "lawAsOf": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "両事業場とも常時150人では選任義務がない",
+          "expectedTruth": "false",
+          "reason": "清掃業150人には選任要件がある",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "製造業のみ150人で選任義務がある",
+          "expectedTruth": "false",
+          "reason": "製造150人では選任義務は生じない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "いずれも常時50人以上なので選任義務がある",
+          "expectedTruth": "false",
+          "reason": "50人以上一律ではない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "両事業場とも常時300人以上にならなければ選任義務はない",
+          "expectedTruth": "false",
+          "reason": "清掃業は300人基準ではない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "清掃業では選任義務があり、製造業では人数基準に達しない",
+          "expectedTruth": "true",
+          "reason": "清掃業150人で必要、製造業150人では不要",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "清掃100人以上/製造300人以上の基準を概要資料で確認。法令条文の施行日個別検証は追加必要。"
+    },
+    {
+      "basicNumber": 68,
+      "id": "2025-10-Q24",
+      "stem": "2026年11月時点で、常時40人の事業場Aと60人の事業場Bがストレスチェックの実施計画を立てている。2028年4月1日の法改正施行予定も踏まえ、制度上の義務を正しく区別したものはどれか。",
+      "correctIndex": 2,
+      "registeredSourceURL": "https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei12/index.html",
+      "verifiedOrAlternativeURL": "https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei12/index.html",
+      "primaryLocator": "厚労省ストレスチェック制度2026年6月案内",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "50人未満の実施義務が2028年4月1日から拡大する点を確認。施行後の報告義務の個別規則は留保。",
+      "lawAsOf": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "2026年11月現在、AもBも実施と労働基準監督署への報告が同じ条件で義務となっている",
+          "expectedTruth": "false",
+          "reason": "2026年11月40人事業場の実施義務を誤る",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "2028年4月1日以降もAの実施は努力義務のままで、Bの実施義務のみ継続する",
+          "expectedTruth": "false",
+          "reason": "2028年の小規模義務化を否定",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "2026年11月時点ではBに実施義務と所定の報告義務があり、Aは実施努力義務である。2028年4月1日からAにも実施義務が広がるが、実施と監督署報告は別の制度要件として判定する",
+          "expectedTruth": "true",
+          "reason": "2026年40人努力義務・60人義務、2028年40人義務化",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "2028年の実施義務拡大に伴い、2026年時点からAの未実施は直ちに違法となる",
+          "expectedTruth": "false",
+          "reason": "未施行の義務を2026年に遡及不可",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "事業場Aが任意に実施した場合は、Bの法定の報告義務も免除される",
+          "expectedTruth": "false",
+          "reason": "A任意実施で別Bの報告義務は消えない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "50人未満の実施義務が2028年4月1日から拡大する点を確認。施行後の報告義務の個別規則は留保。"
+    },
+    {
+      "basicNumber": 69,
+      "id": "2025-10-Q25",
+      "stem": "天井高3m・床面積60m²の事務室で、設備の占有容積は20m³である。高さ4m超の空間はなく、事務所衛生基準規則の気積基準（1人10m³以上）を満たす労働者数の上限はどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1",
+      "verifiedOrAlternativeURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1",
+      "primaryLocator": "事務所衛生基準規則1・2条",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "1人10立方メートル、4m超除外、設備占有容積除外。160/10=16。",
+      "lawAsOf": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "12人",
+          "expectedTruth": "false",
+          "reason": "12人では最大人数にならない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "14人",
+          "expectedTruth": "false",
+          "reason": "14人では最大人数にならない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "18人",
+          "expectedTruth": "false",
+          "reason": "18人は必要気積180立方メートルで不足",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "16人",
+          "expectedTruth": "true",
+          "reason": "60×3−20=160、最大16人",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "20人",
+          "expectedTruth": "false",
+          "reason": "20人は必要気積200立方メートルで不足",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "1人10立方メートル、4m超除外、設備占有容積除外。160/10=16。"
+    },
+    {
+      "basicNumber": 70,
+      "id": "2025-10-Q26",
+      "stem": "夜間に設備の状態を確認する労働者が、定期巡視に加えて頻繁な故障対応・搬送作業も行っている。使用者は『監視業務』という職名を理由に労基法41条3号の適用除外を検討中で、所轄の許可はまだない。対応として最も適切なのはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0",
+      "verifiedOrAlternativeURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0&pageNo=1",
+      "primaryLocator": "労基法41条3号",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "監視断続的業務の行政官庁許可が必要と条文で確認。深夜割増の具体的解釈は追加通知で照合が必要。",
+      "lawAsOf": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "職名に監視とあるため、許可前から労働時間・休憩・休日の適用除外を当然に扱う",
+          "expectedTruth": "false",
+          "reason": "職名だけで無許可の適用除外不可",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "実際の業務負荷・断続性を確認して行政官庁への許可要件を審査し、許可前は適用除外とせず、許可後も深夜割増の規定は原則残る",
+          "expectedTruth": "true",
+          "reason": "実態・許可審査が必要で、深夜割増は原則残る",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "夜間業務であれば頻繁な故障対応があっても、監視労働としての許可は常に不要である",
+          "expectedTruth": "false",
+          "reason": "夜間作業だから許可不要とはいえない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "36協定を締結した時点で、監視・断続的労働の行政官庁許可も自動的に得たものとする",
+          "expectedTruth": "false",
+          "reason": "36協定は41条許可を代替しない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "許可される場合は深夜割増がなくなるので、許可の有無よりも深夜勤務回数だけを確認すれば足りる",
+          "expectedTruth": "false",
+          "reason": "41条除外と深夜割増を混同",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "監視断続的業務の行政官庁許可が必要と条文で確認。深夜割増の具体的解釈は追加通知で照合が必要。"
+    },
+    {
+      "basicNumber": 71,
+      "id": "2025-10-Q27",
+      "stem": "週4日・週24時間勤務の労働者が勤続3年6か月となり、出勤率も8割以上を満たした。週30時間未満に適用する比例付与表による年次有給休暇の新たな付与日数は何日か。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudouseisaku/chushoukigyou/joken_kankyou_rule.html",
+      "verifiedOrAlternativeURL": "https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudouseisaku/chushoukigyou/joken_kankyou_rule.html",
+      "primaryLocator": "厚労省 年次有給休暇比例付与表",
+      "sourceLevel": "PARTIAL",
+      "accessStatus": "SOURCE_REACHED_INCOMPLETE_CLAIM_COVERAGE",
+      "verificationLimit": "週4日・24時間・勤続3年6月の10日を登録資料から追加表照合する必要。旧Q26説明が現Q26の再設計内容と不一致。",
+      "lawAsOf": "2026-08-08",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "10日",
+          "expectedTruth": "true",
+          "reason": "10日が該当とされるが公式表の行列再照合待ち",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "9日",
+          "expectedTruth": "false",
+          "reason": "9日は当該付与日数ではない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "12日",
+          "expectedTruth": "false",
+          "reason": "12日は当該付与日数ではない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "14日",
+          "expectedTruth": "false",
+          "reason": "14日は週30時間以上等の通常付与であり本条件とは別",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "8日",
+          "expectedTruth": "false",
+          "reason": "8日は当該付与日数ではない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "週4日・24時間・勤続3年6月の10日を登録資料から追加表照合する必要。旧Q26説明が現Q26の再設計内容と不一致。"
+    },
+    {
+      "basicNumber": 72,
+      "id": "2025-10-Q28",
+      "stem": "ストレスチェックの部署別集団分析で、特定の部署に業務量の偏りと低い裁量が認められた。個人の高ストレス判定結果を管理職に開示せず、一次予防の職場改善を進める方針として最も適切なのはどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://www.mhlw.go.jp/content/11302000/001741252.pdf",
+      "verifiedOrAlternativeURL": "https://www.mhlw.go.jp/content/11302000/001741252.pdf",
+      "primaryLocator": "厚労省 集団分析・非特定化、改正省令施行案内",
+      "sourceLevel": "PARTIAL",
+      "accessStatus": "PDF_WEB_EXTRACT_MISMATCH_SCREENSHOT_SIZE_LIMIT",
+      "verificationLimit": "登録PDFのweb上テキストが別文書を返し、スクリーンショットは大容量で取得失敗。別の厚労省改正通知では2027年4月施行を確認。集団分析の具体効果は追加根拠が必要。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "部署平均の高ストレス傾向を根拠に個人の判定結果を上司へ配布し、業務配分を個別に決める",
+          "expectedTruth": "false",
+          "reason": "個人判定を無断配布すると個人識別リスク",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "担当者へのセルフケア研修だけを先に行い、業務量や裁量の偏りを改善対象から外す",
+          "expectedTruth": "false",
+          "reason": "研修のみで業務量改善を排除しない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "高ストレス者の面接指導体制を整備するだけで、部署全体の業務設計は次年度まで変更しない",
+          "expectedTruth": "false",
+          "reason": "面接指導のみで職場改善を排除しない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "個人が識別されない集団分析を管理職・労働者と共有し、業務配分・裁量・支援を見直して実施後の変化を評価する",
+          "expectedTruth": "true",
+          "reason": "非特定化集団分析に基づき業務量・裁量を改善",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "部署の業務量を減らす代わりに裁量を一律に縮小し、改善効果の評価は行わない",
+          "expectedTruth": "false",
+          "reason": "裁量一律縮小と効果未確認は不適切",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録PDFのweb上テキストが別文書を返し、スクリーンショットは大容量で取得失敗。別の厚労省改正通知では2027年4月施行を確認。集団分析の具体効果は追加根拠が必要。"
+    },
+    {
+      "basicNumber": 73,
+      "id": "2025-10-Q29",
+      "stem": "ある事業場ではTHPの健康測定と法定定期健康診断を同じ日に実施し、一部の検査結果を共通利用する計画である。法定健診の項目・医師意見聴取・健康保持増進措置の扱いとして最も適切なのはどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.mhlw.go.jp/stf/newpage_76807.html",
+      "verifiedOrAlternativeURL": "https://www.mhlw.go.jp/stf/newpage_76807.html",
+      "primaryLocator": "厚労省 THP・法定健診制度",
+      "sourceLevel": "PARTIAL",
+      "accessStatus": "SOURCE_REACHED_INCOMPLETE_CLAIM_COVERAGE",
+      "verificationLimit": "THP指針と法定健診の併用・情報利用の個別条件は直接規程の照合不足。",
+      "lawAsOf": "2026-11-02",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "共通利用する結果が法定健診の要件を満たすか確認し、不足する法定項目や必要な事後措置を別途実施したうえで、THPの健康保持増進にも適切に活用する",
+          "expectedTruth": "true",
+          "reason": "法定要件を満たし不足項目と事後措置を実施",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "THPの健康測定を同日に行った時点で、法定健診の不足項目は任意項目に変わる",
+          "expectedTruth": "false",
+          "reason": "同日THPだけで法定項目免除とならない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "法定健診の検査項目が全部そろえば、異常所見に基づく医師意見聴取・就業上の措置はTHPによって免除される",
+          "expectedTruth": "false",
+          "reason": "法定健診実施で医師意見聴取を免れない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "共通の測定結果がある場合でも制度間の情報連携は一律に禁止されるため、同日に実施してはいけない",
+          "expectedTruth": "false",
+          "reason": "適切な情報共有が全面禁止ではない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "法定健診で正常な結果が多い事業場では、THPの運動・生活習慣・職場環境改善を行うことは認められない",
+          "expectedTruth": "false",
+          "reason": "正常者が多くてもTHPを禁止しない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "THP指針と法定健診の併用・情報利用の個別条件は直接規程の照合不足。"
+    },
+    {
+      "basicNumber": 74,
+      "id": "2025-10-Q30",
+      "stem": "水揚げ後のマグロを一時的に高温で保管し、その後冷蔵して十分に加熱調理する予定である。ヒスタミン食中毒の予防として最も適切な判断はどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.fda.gov/food/seafood-guidance-documents-regulatory-information/scombrotoxin-poisoning-and-decomposition",
+      "verifiedOrAlternativeURL": "https://www.fda.gov/food/seafood-guidance-documents-regulatory-information/scombrotoxin-poisoning-and-decomposition",
+      "primaryLocator": "FDA Scombrotoxin Poisoning and Decomposition",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "温度逸脱でヒスタミン生成、形成後に加熱・冷凍しても除去不可。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "加熱で生成済みヒスタミンは確実に失活するので、保管時の温度逸脱は問題にならない",
+          "expectedTruth": "false",
+          "reason": "加熱で既生成ヒスタミンを消失させられない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "ヒスチジンに富む魚で不適切な温度管理により生成されたヒスタミンは加熱後も残り得るため、温度履歴を評価し安全性に疑義がある魚は使用しない",
+          "expectedTruth": "true",
+          "reason": "温度管理履歴を確認し疑義魚を使用しない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "冷蔵庫に戻した時点で、既に生成されたヒスタミンは短時間で消失する",
+          "expectedTruth": "false",
+          "reason": "冷蔵へ戻しても生成済みヒスタミンは消失しない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "細菌増殖の抑制よりも喫食直前の加熱時間を長くすることが唯一の予防策である",
+          "expectedTruth": "false",
+          "reason": "加熱延長だけでは予防不足",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "外見やにおいに変化がなければ、ヒスタミン生成は起こっていないと判定できる",
+          "expectedTruth": "false",
+          "reason": "外見臭気だけで安全と断定できない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "温度逸脱でヒスタミン生成、形成後に加熱・冷凍しても除去不可。"
+    },
+    {
+      "basicNumber": 75,
+      "id": "2025-10-Q31",
+      "stem": "労作時胸痛がある安定した成人で、医師が運動可能かつ検査適応ありと判断した。運動に伴う心電図ST変化を観察して心筋虚血の可能性を評価したい。検査の選択として最も適切なのはどれか。",
+      "correctIndex": 1,
+      "registeredSourceURL": "https://www.heart.org/en/health-topics/heart-attack/diagnosing-a-heart-attack/exercise-stress-test%2C",
+      "verifiedOrAlternativeURL": "https://www.heart.org/en/health-topics/heart-attack/diagnosing-a-heart-attack/exercise-stress-test%2C",
+      "primaryLocator": "American Heart Association Exercise Stress Test",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "トレッドミルによる心拍・心電図・血圧と症状監視を直接確認。個別適応は医師判断。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "安静時12誘導心電図のみを記録し、運動時の変化を直接評価したこととする",
+          "expectedTruth": "false",
+          "reason": "安静時のみでは運動中ST変化を測定不可",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "トレッドミル等による運動負荷心電図を行い、運動時の症状・血圧・心電図変化を総合評価する",
+          "expectedTruth": "true",
+          "reason": "運動負荷ECGで心電図・血圧・症状を観察",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "心エコーで安静時の形態を観察するだけで、負荷時の心電図変化も直接記録できると判断する",
+          "expectedTruth": "false",
+          "reason": "安静エコーは負荷時心電図を直接記録しない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "冠動脈CTで冠動脈形態を撮影すれば、運動時ST変化の評価と完全に同義であると判断する",
+          "expectedTruth": "false",
+          "reason": "冠動脈CTと負荷ECGの評価軸が異なる",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "24時間ホルター心電図で安静中心の記録を取れば、十分な運動負荷を加えた検査と常に同等と判断する",
+          "expectedTruth": "false",
+          "reason": "ホルター記録は計画的運動負荷と同義でない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "トレッドミルによる心拍・心電図・血圧と症状監視を直接確認。個別適応は医師判断。"
+    },
+    {
+      "basicNumber": 76,
+      "id": "2025-10-Q32",
+      "stem": "作業員が転倒して下腿を強く打ち、変形と骨折疑いがある。骨は露出していないが、骨折部近くに小さな出血創がある。救急隊到着前の対応として最も適切なのはどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
+      "verifiedOrAlternativeURL": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
+      "primaryLocator": "2024 AHA/American Red Cross First Aid Guidelines",
+      "sourceLevel": "PARTIAL",
+      "accessStatus": "SOURCE_REACHED_INCOMPLETE_CLAIM_COVERAGE",
+      "verificationLimit": "骨折・出血・創傷処置のガイドラインに到達。小さな創と骨折部の交通、固定方法の該当箇所は追加照合。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "骨が見えなければ開放骨折ではないと断定し、創を確認せず歩行させる",
+          "expectedTruth": "false",
+          "reason": "骨露出なしでも開放骨折を排除できない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "小創から骨折部が外界と交通する可能性はあるが、歩行可能なら固定せず帰宅させる",
+          "expectedTruth": "false",
+          "reason": "小創があれば荷重・帰宅判断は不適切",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "創からの出血を止めるため骨片を深く押し戻し、傷口を閉じてから通常作業に戻す",
+          "expectedTruth": "false",
+          "reason": "骨片を押し戻してはいけない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "創と骨折部が交通する可能性を考え、清潔に覆って出血に配慮し、無理な整復を避けて固定・救急搬送につなぐ",
+          "expectedTruth": "true",
+          "reason": "創被覆・整復回避・固定・搬送",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "開放骨折が疑われる場合は感染を防ぐため創部を繰り返し強く洗い、骨折部を動かして骨の露出を調べる",
+          "expectedTruth": "false",
+          "reason": "創を激しく洗い骨折部を動かすのは不適切",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "骨折・出血・創傷処置のガイドラインに到達。小さな創と骨折部の交通、固定方法の該当箇所は追加照合。"
+    },
+    {
+      "basicNumber": 77,
+      "id": "2025-10-Q33",
+      "stem": "ある事業場の調査日に在籍者500人のうち25人が疾病Aを有し、その25人には過去からの患者も含まれていた。調査日の疾病Aの点有病率として正しいものはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson3/section2.html",
+      "verifiedOrAlternativeURL": "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson3/section2.html",
+      "primaryLocator": "CDC Principles of Epidemiology Lesson3 Section2",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "点有病率は時点の既存＋新規患者/対象集団。25/500=5%。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "調査期間中の新規発症者数を500人で除した値だけが点有病率となる",
+          "expectedTruth": "false",
+          "reason": "新規発症のみは罹患率に近い",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "その年の疾病Aによる死亡者数を500人で除して求める",
+          "expectedTruth": "false",
+          "reason": "死亡者数は死亡率",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "患者25人のうち一定期間に死亡した人数の割合を求める",
+          "expectedTruth": "false",
+          "reason": "患者内死亡割合は致命率",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "医療機関を受診した人数を患者25人で除した値を求める",
+          "expectedTruth": "false",
+          "reason": "受診率は点有病率ではない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "調査日に疾病Aを有する25人を在籍者500人で除し、5％とする",
+          "expectedTruth": "true",
+          "reason": "調査時点の25/500=5%",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "点有病率は時点の既存＋新規患者/対象集団。25/500=5%。"
+    },
+    {
+      "basicNumber": 78,
+      "id": "2025-10-Q34",
+      "stem": "成人で身長1.70m、体重68kgの場合、BMI（体重kg÷身長mの2乗）に最も近い数値はどれか。",
+      "correctIndex": 0,
+      "registeredSourceURL": "https://www.cdc.gov/bmi/about/index.html",
+      "verifiedOrAlternativeURL": "https://www.cdc.gov/bmi/about/index.html",
+      "primaryLocator": "CDC BMI About",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "BMI=kg/m²。68/2.89=23.529..。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "約23.5",
+          "expectedTruth": "true",
+          "reason": "68÷1.7²=23.5",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "約40.0",
+          "expectedTruth": "false",
+          "reason": "40.0は計算誤り",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "約17.0",
+          "expectedTruth": "false",
+          "reason": "17.0は計算誤り",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "約28.9",
+          "expectedTruth": "false",
+          "reason": "28.9は計算誤り",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "約20.0",
+          "expectedTruth": "false",
+          "reason": "20.0は計算誤り",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "BMI=kg/m²。68/2.89=23.529..。"
+    },
+    {
+      "basicNumber": 79,
+      "id": "2025-10-Q35",
+      "stem": "尿検査で尿糖を認めた二人について、Aは著明な高血糖があり、Bは血糖正常だが近位尿細管の再吸収障害が疑われる。尿糖が出る機序の比較として最も適切なのはどれか。",
+      "correctIndex": 4,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption",
+      "verifiedOrAlternativeURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption",
+      "primaryLocator": "OpenStax 25.6 Tubular Reabsorption",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "高血糖で最大輸送能力超過、近位尿細管再吸収の低下。腎性糖尿の詳細は補助医学原典が必要。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "AもBも糸球体でブドウ糖が全く濾過されないため尿糖が出る",
+          "expectedTruth": "false",
+          "reason": "尿糖は濾過されないからではない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "Aは尿管での糖分泌増加、Bは膀胱での糖代謝低下によって尿糖が出る",
+          "expectedTruth": "false",
+          "reason": "尿管・膀胱は主たる糖再吸収部位でない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "Aは糸球体の蛋白質濾過障壁が必ず破綻し、Bは血糖が正常なので尿糖が出ない",
+          "expectedTruth": "false",
+          "reason": "血糖正常でも尿細管障害により尿糖が生じ得る",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "AもBも尿細管でのブドウ糖再吸収能力が無限であれば尿糖が出るため、輸送体は関係しない",
+          "expectedTruth": "false",
+          "reason": "再吸収には輸送体と容量制限がある",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "Aでは濾過されるブドウ糖負荷が再吸収能力を超え得る一方、Bでは血糖正常でも近位尿細管の再吸収低下で尿糖が生じ得る",
+          "expectedTruth": "true",
+          "reason": "高血糖負荷超過と尿細管再吸収障害を区別",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "高血糖で最大輸送能力超過、近位尿細管再吸収の低下。腎性糖尿の詳細は補助医学原典が必要。"
+    },
+    {
+      "basicNumber": 80,
+      "id": "2025-10-Q36",
+      "stem": "肺胞での酸素取り込みが低下した患者でも、右心室から肺へ向かう血液と肺から左心房へ戻る血液の流れる経路自体は保たれている。肺循環の経路と酸素化に関する説明として最も適切なのはどれか。",
+      "correctIndex": 3,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/20-5-circulatory-pathways",
+      "verifiedOrAlternativeURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/20-5-circulatory-pathways",
+      "primaryLocator": "OpenStax 20.5 Circulatory Pathways",
+      "sourceLevel": "DIRECT",
+      "accessStatus": "PRIMARY_CENTRAL_CLAIM_REACHED",
+      "verificationLimit": "肺循環の右心室→肺動脈→肺毛細血管→肺静脈→左心房を確認。ガス交換障害の程度は臨床条件依存。",
+      "lawAsOf": "未設定：公開前に適用日確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "肺胞で酸素化が低下すると、右心室から肺へ向かう血液は肺静脈に流れるよう経路が切り替わる",
+          "expectedTruth": "false",
+          "reason": "ガス交換低下で肺動脈と肺静脈が入替わらない",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 1,
+          "choice": "肺動脈は心臓に戻る血管なので、肺胞の酸素化状態に応じて左心房へ直接流入する",
+          "expectedTruth": "false",
+          "reason": "肺動脈は心臓から肺へ出る",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 2,
+          "choice": "肺静脈は常に酸素の多い血液を運ぶので、肺でのガス交換が障害されても酸素含有量は絶対に変わらない",
+          "expectedTruth": "false",
+          "reason": "肺静脈血の酸素化は障害により低下し得る",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 3,
+          "choice": "右心室→肺動脈→肺毛細血管→肺静脈→左心房の経路は変わらず、ガス交換障害時には肺静脈血の酸素化が低下し得る",
+          "expectedTruth": "true",
+          "reason": "肺循環経路と酸素化を分けて判断",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        },
+        {
+          "index": 4,
+          "choice": "酸素化が低下すると肺動脈が左心室から出るようになり、動脈・静脈の命名は血中酸素濃度で決まる",
+          "expectedTruth": "false",
+          "reason": "血管命名は心臓との血流方向に基づく",
+          "directIndependentEvidenceForWholeChoice": false,
+          "status": "中心命題との整合を一次判定・全肢の厳密な逐語証拠は未完了"
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "肺循環の右心室→肺動脈→肺毛細血管→肺静脈→左心房を確認。ガス交換障害の程度は臨床条件依存。"
+    }
+  ]
+}
