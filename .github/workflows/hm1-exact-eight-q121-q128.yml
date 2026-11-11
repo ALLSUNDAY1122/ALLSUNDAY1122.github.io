@@ -1,0 +1,65 @@
+name: HM1 exact eight Q121-Q128 rebuild regression
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - .github/workflows/hm1-exact-eight-q121-q128.yml
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild 264 before and after and verify exact changed IDs and correct options
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/hm1-q121-base 889e73a09a65ec9f85afa2680c41669ff4a85989
+          node /tmp/hm1-q121-base/ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-q121-base.log
+          node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-q121-head.log
+          node - <<'NODE'
+          const fs=require('fs');
+          const base=JSON.parse(fs.readFileSync('/tmp/hm1-q121-base/ios/health-manager-1/Resources/questions.json','utf8'));
+          const cur=JSON.parse(fs.readFileSync('ios/health-manager-1/Resources/questions.json','utf8'));
+          const wanted=Array.from({length:8},(_,i)=>'2025-04-Q'+String(33+i));
+          const norm=s=>String(s||'').normalize('NFKC').replace(/[\\s\\p{P}\\p{S}]/gu,'').toLowerCase();
+          for(const [tag,bank] of [['baseline',base],['revised',cur]]){
+            if(bank.length!==264)throw Error(tag+' count '+bank.length);
+            if(new Set(bank.map(q=>q.id)).size!==264)throw Error(tag+' duplicate IDs');
+            if(new Set(bank.map(q=>norm(q.stem))).size!==264)throw Error(tag+' duplicate normalized stems');
+            for(const q of bank){
+              if(!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5)throw Error(tag+' choice issue '+q.id);
+              if(!Number.isInteger(q.ans)||q.ans<0||q.ans>4)throw Error(tag+' bad answer index '+q.id);
+            }
+          }
+          if(base.some((q,i)=>q.id!==cur[i].id))throw Error('ID ordering differs');
+          const changed=cur.filter((q,i)=>JSON.stringify(q)!==JSON.stringify(base[i])).map(q=>q.id).sort();
+          if(JSON.stringify(changed)!==JSON.stringify(wanted.slice().sort()))throw Error('Changed IDs '+JSON.stringify(changed));
+          const sentinels={
+            '2025-04-Q33':'腹囲',
+            '2025-04-Q34':'温度履歴',
+            '2025-04-Q35':'A型',
+            '2025-04-Q36':'房室結節',
+            '2025-04-Q37':'4,200',
+            '2025-04-Q38':'ペプシノーゲン',
+            '2025-04-Q39':'ふるえ',
+            '2025-04-Q40':'eGFR'
+          };
+          for(let i=0;i<264;i++){
+            const q=cur[i],old=base[i];
+            if(!wanted.includes(q.id))continue;
+            if(q.ans!==old.ans)throw Error(q.id+' answer index changed');
+            if(!q.choices[q.ans].includes(sentinels[q.id]))throw Error(q.id+' answer content mismatched');
+            for(const k of new Set([...Object.keys(q),...Object.keys(old)])){
+              if(JSON.stringify(q[k])!==JSON.stringify(old[k])&&!['stem','choices','short','detail','auditSourceURL'].includes(k))throw Error(q.id+' unexpected field '+k);
+            }
+          }
+          console.log('PASS: 264 regenerated in both refs; only Q121-Q128 changed; other 256 byte-equivalent records; answers semantically checked; ID/normalized-stem uniqueness; five choices.');
+          NODE
