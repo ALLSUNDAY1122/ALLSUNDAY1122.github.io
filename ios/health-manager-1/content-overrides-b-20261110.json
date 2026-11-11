@@ -986,18 +986,18 @@
     "expectedConceptKey": "hm2:sm2-5y-r05-phy-06:脈拍",
     "expectedStem": "次の説明と最も一致するものはどれか。「心臓の拍動に伴う動脈の拍動として触知される。」",
     "replacement": {
-      "stem": "安静時に心電図上は1分間80回の心室収縮があるが、橈骨動脈で触れる脈拍は76回だった。解釈として最も適切なものはどれか。",
+      "stem": "心電図で1分間にQRS波を80回確認し、同時に橈骨動脈で触れた脈拍は76回だった。測定の解釈として最も適切なものはどれか。",
       "choices": [
-        "脈拍数と心拍数は定義上必ず一致するので計測値の差はあり得ない",
-        "脈拍は血液が手首まで移動する速さを直接示す",
-        "触知される動脈の圧波が毎拍必ず十分に生じるとは限らず、心拍数と脈拍数に差が生じ得る",
-        "橈骨動脈の脈拍は静脈の収縮を数えている",
-        "脈拍数は横隔膜の収縮回数と一致する"
+        "QRS波は心室の電気的興奮を反映し、末梢で触れる拍動が一部少ない可能性があるため、測定を確認し脈拍欠損などを評価する",
+        "QRS波は心室から駆出された血液量を直接測るため、80回の完全な機械的拍出が証明される",
+        "脈拍は必ずQRS波と同数となるため、異なる場合は心電図の表示だけを採用し末梢循環を評価しない",
+        "橈骨動脈の触知76回は、同じ時間内に心室が電気的に興奮した回数を直接測定した値である",
+        "QRS波と脈拍の差4回は、そのまま左心室の拍出量が4mL不足したことを示す"
       ],
-      "ans": 2,
-      "short": "触知する脈拍は動脈の圧波で、心拍数と一致しない場合がある。",
-      "key": "OpenStax Fundamentals of Nursing 7.1 脈拍の生理",
-      "detail": "脈拍は心臓の駆出に伴う圧波が動脈壁へ伝わる現象で、血液そのものの移動速度ではない。末梢まで十分な脈波が届かない拍動がある場合、心電図上の心拍数と触知した脈拍数に差が出ることがある。肢0は常時一致とする誤り、肢1は脈波と血流速度の混同、肢3は動脈と静脈の混同、肢4は呼吸筋との混同。実測で差があれば計測方法や循環状態の確認が必要となる。 根拠：OpenStax Fundamentals of Nursing 7.1 脈拍の生理。 出典：https://openstax.org/books/fundamentals-nursing/pages/7-1-indicators-of-physiologic-functioning",
+      "ans": 0,
+      "short": "QRS波は電気的興奮、橈骨脈拍は触知できる動脈圧波であり、差があれば再確認する。",
+      "key": "QRS波と触知脈拍・脈拍欠損",
+      "detail": "QRS波は心室の脱分極を示す電気的指標で、1拍ごとの機械的駆出量を直接示さない。橈骨動脈の脈拍は末梢へ伝わる圧波の触知である。心電図80回・橈骨脈拍76回なら計測の同時性や誤差、末梢で触知できない拍動の可能性を検討する。肢1は電気的興奮と拍出量を混同、肢2は確認を放棄、肢3は測定対象の混同、肢4は回数差と血液量を混同。根拠：OpenStax Fundamentals of Nursing 7.1 脈拍の生理。出典：https://openstax.org/books/fundamentals-nursing/pages/7-1-indicators-of-physiologic-functioning",
       "conceptKey": "hm1:reaudit-b-20261111:practice-B-Q31",
       "sourceType": "hm1-original-revised-from-primary-source",
       "sourceRef": "https://openstax.org/books/fundamentals-nursing/pages/7-1-indicators-of-physiologic-functioning",
@@ -1005,12 +1005,12 @@
       "lawAsOf": "2026-11-11",
       "lawVersion": null,
       "auditDate": "2026-11-11",
-      "auditStatus": "設問修正・解説補完適用（公開ゲート未判定）",
+      "auditStatus": "独立再監査指摘に基づく改善適用（公開ゲート未判定）",
       "semanticIndependence": "revised-comparison-review-pending",
-      "independenceReason": "用語当てを条件判断・機序・誤答比較へ再設計。最終独立監査は別途必要。",
+      "independenceReason": "第22バッチ独立再監査の正確性・誤肢識別力・近接重複指摘を反映。最終独立再判定は未実施。",
       "revisionSourceConceptKey": "hm2:sm2-5y-r05-phy-06:脈拍",
-      "revisionBatch": "hm1-b-20261111-batch4",
-      "revisionBasis": "OpenStax Fundamentals of Nursing 7.1 脈拍の生理"
+      "revisionBatch": "hm1-b-20261111-reaudit-q31-q40",
+      "revisionBasis": "OpenStax Fundamentals of Nursing 7.1 脈拍の生理／第22バッチ独立再監査指摘改善"
     }
   },
   {
@@ -1018,18 +1018,18 @@
     "expectedConceptKey": "hm2:sm2-5y-r05-phy-07:リンパ",
     "expectedStem": "次の内容を表す用語・制度として適切なものはどれか。「組織液の一部がリンパ管へ入り、最終的に静脈系へ戻る。」",
     "replacement": {
-      "stem": "毛細血管から組織間隙へ移動した液の一部が、専用の管に取り込まれて最終的に静脈系へ戻る。液体と経路の説明として正しいものはどれか。",
+      "stem": "毛細血管から出た水分の一部が間質に残り、そこからリンパ毛細管へ取り込まれる。血管内血漿、組織液、リンパの区別として正しいものはどれか。",
       "choices": [
-        "リンパ管内の液をリンパと呼び、組織間隙から取り込まれた液が静脈系へ戻る",
-        "血漿とリンパは常に同じ場所を流れ、リンパ管は存在しない",
-        "組織液は必ずすべて静脈側毛細血管へ直接戻り、リンパ系へは入らない",
-        "リンパ液は肺胞に貯留して呼気とともに排出される",
-        "リンパ管は動脈血を心臓から各組織へ送り出す管である"
+        "血管から間質へ出た液は血漿と同じ場所にとどまり、リンパ管に取り込まれても組織液という名称だけを用いる",
+        "毛細血管で濾過された液はすべてその場で静脈側へ戻るため、リンパ系は余剰液の回収に関わらない",
+        "間質にある液は組織液で、リンパ毛細管に取り込まれた液はリンパと呼ばれ、最終的に静脈系へ還流する",
+        "リンパは毛細血管の動脈側だけを流れ、静脈系へ合流する経路をもたない",
+        "血管内の血漿はリンパ管に入ると赤血球と同じ濃度になり、組織液との区別は不要になる"
       ],
-      "ans": 0,
-      "short": "組織液の一部はリンパ管へ入り、管内ではリンパとして静脈側へ戻る。",
-      "key": "NCI SEER リンパ系の機能",
-      "detail": "血漿から毛細血管外へ移動した液は組織液となり、その一部がリンパ毛細管へ入るとリンパと呼ばれる。リンパ系は最終的に静脈循環へ合流する。肢1は血漿とリンパの区画の混同、肢2はリンパ還流の否定、肢3は肺胞との混同、肢4は動脈とリンパ管の機能の逆転。管内の液の呼称と経路をセットで理解する。 根拠：NCI SEER リンパ系の機能。 出典：https://seer.cancer.gov/seertools/glossary/view/546a0b99e4b0d9658329250a/",
+      "ans": 2,
+      "short": "間質では組織液、リンパ管内ではリンパと呼び、リンパ系を介して静脈循環に還流する。",
+      "key": "組織液の区画とリンパ還流",
+      "detail": "血漿から濾過された水分は間質では組織液と呼ばれ、リンパ毛細管に入った液はリンパとなり、リンパ管を通じて静脈系へ戻る。肢0は血管内・間質・リンパ管内の区別を欠く。肢1は余剰液のリンパ回収を否定、肢3は還流経路の誤り、肢4は細胞成分と区画を誤認する。毛細血管とリンパ系は液体移動に異なる役割を担う。根拠：NCI SEER リンパ系の機能。出典：https://seer.cancer.gov/seertools/glossary/view/546a0b99e4b0d9658329250a/",
       "conceptKey": "hm1:reaudit-b-20261111:practice-B-Q32",
       "sourceType": "hm1-original-revised-from-primary-source",
       "sourceRef": "https://seer.cancer.gov/seertools/glossary/view/546a0b99e4b0d9658329250a/",
@@ -1037,12 +1037,12 @@
       "lawAsOf": "2026-11-11",
       "lawVersion": null,
       "auditDate": "2026-11-11",
-      "auditStatus": "設問修正・解説補完適用（公開ゲート未判定）",
+      "auditStatus": "独立再監査指摘に基づく改善適用（公開ゲート未判定）",
       "semanticIndependence": "revised-comparison-review-pending",
-      "independenceReason": "用語当てを条件判断・機序・誤答比較へ再設計。最終独立監査は別途必要。",
+      "independenceReason": "第22バッチ独立再監査の正確性・誤肢識別力・近接重複指摘を反映。最終独立再判定は未実施。",
       "revisionSourceConceptKey": "hm2:sm2-5y-r05-phy-07:リンパ",
-      "revisionBatch": "hm1-b-20261111-batch4",
-      "revisionBasis": "NCI SEER リンパ系の機能"
+      "revisionBatch": "hm1-b-20261111-reaudit-q31-q40",
+      "revisionBasis": "NCI SEER リンパ系の機能／第22バッチ独立再監査指摘改善"
     }
   },
   {
@@ -1050,18 +1050,18 @@
     "expectedConceptKey": "hm2:sm2-5y-r05-phy-08:肺胞",
     "expectedStem": "次の説明の対象として正しいものはどれか。「肺で酸素と二酸化炭素のガス交換が行われる主要な場所である。」",
     "replacement": {
-      "stem": "肺でのガス交換について正しい説明はどれか。",
+      "stem": "肺胞換気と肺毛細血管血流が保たれ、肺胞気の酸素分圧が流入する肺毛細血管血の酸素分圧より高い。ガス交換に関する説明として最も適切なものはどれか。",
       "choices": [
-        "気管の軟骨壁で血液と外気が直接ガス交換する",
-        "胸膜腔に空気が正常に流入して酸素が血液へ移る",
-        "横隔膜の筋線維内で外気の酸素が肺動脈血へ直接移る",
-        "肺胞と周囲の毛細血管の間で分圧差による拡散が起こり、酸素は通常肺胞側から血液側へ移る",
-        "細気管支の平滑筋の収縮が酸素分子を血液へ能動輸送する"
+        "酸素の移動方向は肺胞内の酸素分圧ではなく、気管内の空気流速だけで決まる",
+        "酸素は肺胞上皮と毛細血管内皮の障壁を越えず、赤血球が肺胞腔へ出ることで取り込まれる",
+        "肺胞気と毛細血管血の酸素分圧差があっても、酸素は必ず血液から肺胞へ拡散する",
+        "肺胞気から毛細血管血へ酸素が分圧差に従って拡散するが、分圧差やガス交換膜の状態も移動量に関係する",
+        "肺胞換気と毛細血管血流が保たれれば、ガス交換膜の肥厚は酸素移動に影響しない"
       ],
       "ans": 3,
-      "short": "肺胞と毛細血管の間で分圧差による拡散が生じる。",
-      "key": "NIH NHLBI 呼吸とガス交換",
-      "detail": "肺胞を覆う薄いガス交換面と毛細血管の間で、酸素は通常肺胞気から血液へ、二酸化炭素は血液から肺胞へ分圧差に従って拡散する。肢0は伝導気道と交換部位の混同、肢1は胸膜腔の誤認、肢2は呼吸筋と交換膜の混同、肢4は拡散と能動輸送の混同。換気により肺胞に空気が届くことと、肺胞膜で交換されることは別の過程である。 根拠：NIH NHLBI 呼吸とガス交換。 出典：https://www.nhlbi.nih.gov/health/lungs/breathing-benefits",
+      "short": "酸素は肺胞気から血液へ分圧差に従って拡散し、膜の状態も拡散量に影響する。",
+      "key": "肺胞毛細血管膜の拡散駆動力",
+      "detail": "肺胞の酸素分圧が流入血より高いとき、酸素は肺胞から血液へ拡散する。実際の交換量には分圧差だけでなく交換面積や膜厚などが関係する。肢0は分圧勾配を無視、肢1は細胞の移動と分子拡散を混同、肢2は濃度勾配に逆らう方向、肢4は膜厚による拡散制限を否定する。換気血流比の異常と拡散障害は異なる観点で評価する。根拠：NIH NHLBI 呼吸とガス交換。出典：https://www.nhlbi.nih.gov/health/lungs/breathing-benefits",
       "conceptKey": "hm1:reaudit-b-20261111:practice-B-Q33",
       "sourceType": "hm1-original-revised-from-primary-source",
       "sourceRef": "https://www.nhlbi.nih.gov/health/lungs/breathing-benefits",
@@ -1069,12 +1069,12 @@
       "lawAsOf": "2026-11-11",
       "lawVersion": null,
       "auditDate": "2026-11-11",
-      "auditStatus": "設問修正・解説補完適用（公開ゲート未判定）",
+      "auditStatus": "独立再監査指摘に基づく改善適用（公開ゲート未判定）",
       "semanticIndependence": "revised-comparison-review-pending",
-      "independenceReason": "用語当てを条件判断・機序・誤答比較へ再設計。最終独立監査は別途必要。",
+      "independenceReason": "第22バッチ独立再監査の正確性・誤肢識別力・近接重複指摘を反映。最終独立再判定は未実施。",
       "revisionSourceConceptKey": "hm2:sm2-5y-r05-phy-08:肺胞",
-      "revisionBatch": "hm1-b-20261111-batch4",
-      "revisionBasis": "NIH NHLBI 呼吸とガス交換"
+      "revisionBatch": "hm1-b-20261111-reaudit-q31-q40",
+      "revisionBasis": "NIH NHLBI 呼吸とガス交換／第22バッチ独立再監査指摘改善"
     }
   },
   {
@@ -1082,18 +1082,18 @@
     "expectedConceptKey": "hm2:sm2-5y-r05-phy-09:横隔膜",
     "expectedStem": "次の学習ポイントに該当する項目はどれか。「吸息時に収縮して下降し、胸腔容積を増加させる主要な呼吸筋である。」",
     "replacement": {
-      "stem": "横隔膜を収縮させたときの呼吸運動と、胸腔内の変化を組み合わせた説明として正しいものはどれか。",
+      "stem": "吸息筋の働きを比較する。横隔膜の収縮が弱くなったが外肋間筋の活動は保たれている場合の説明として最も適切なものはどれか。",
       "choices": [
-        "横隔膜が収縮すると上昇し、胸腔容積は減少する",
-        "横隔膜が弛緩して下降し、胸腔容積が増大する",
-        "横隔膜が収縮・下降し、胸腔容積が増大して吸息を助ける",
-        "横隔膜の収縮で肺胞内圧が必ず大気圧より高くなり吸息する",
-        "横隔膜が収縮すると肺胞壁が能動的に収縮して空気を押し出す"
+        "横隔膜の収縮低下があっても、外肋間筋は肋骨を挙上して胸郭拡大を助け得るが、横隔膜による胸腔の拡大は弱くなる",
+        "横隔膜が収縮しなくなると、外肋間筋は胸郭拡大に一切関与できなくなる",
+        "外肋間筋は通常、胸郭容積を減らして安静呼息だけを担うため、吸息を補助しない",
+        "横隔膜が弱くなると、肺胞自体の平滑筋が吸息の主たる力を担うようになる",
+        "吸息筋の働きが弱くても、胸郭や横隔膜の運動は肺容量に影響せず、常に正常の一回換気量を保てる"
       ],
-      "ans": 2,
-      "short": "横隔膜の収縮・下降は胸腔容積を増やし吸息を促す。",
-      "key": "OpenStax Anatomy and Physiology 2e 22.3 換気機序",
-      "detail": "横隔膜は吸息の主要筋であり、収縮すると下降して胸腔容積を広げ、肺内圧低下を通じて空気の流入を助ける。肢0は運動方向の逆転、肢1は収縮と弛緩の逆転、肢3は吸息時の肺胞内圧差の逆転、肢4は肺が能動的に空気を押し出すとの誤解。Q35では別途、胸腔拡大と肺胞内圧の因果を扱う。 根拠：OpenStax Anatomy and Physiology 2e 22.3 換気機序。 出典：https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "ans": 0,
+      "short": "横隔膜の寄与が低下しても、外肋間筋は肋骨の挙上で吸息を補助し得る。",
+      "key": "横隔膜と外肋間筋の吸息への寄与",
+      "detail": "通常の吸息では横隔膜の収縮・下降に加え、外肋間筋が肋骨を持ち上げ胸郭を拡げる。横隔膜の働きが低下するとその寄与は弱まるが、外肋間筋の作用まで失われるわけではない。肢1は他の吸息筋の役割を否定、肢2は外肋間筋の吸息作用を逆転、肢3は肺胞の自発的筋活動による吸息と誤認、肢4は筋力低下の影響を一律に否定する。Q35は肺胞内圧と気流の関係を問う。根拠：OpenStax Anatomy and Physiology 2e 22.3 換気機序。出典：https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
       "conceptKey": "hm1:reaudit-b-20261111:practice-B-Q34",
       "sourceType": "hm1-original-revised-from-primary-source",
       "sourceRef": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
@@ -1101,12 +1101,12 @@
       "lawAsOf": "2026-11-11",
       "lawVersion": null,
       "auditDate": "2026-11-11",
-      "auditStatus": "設問修正・解説補完適用（公開ゲート未判定）",
+      "auditStatus": "独立再監査指摘に基づく改善適用（公開ゲート未判定）",
       "semanticIndependence": "revised-comparison-review-pending",
-      "independenceReason": "用語当てを条件判断・機序・誤答比較へ再設計。最終独立監査は別途必要。",
+      "independenceReason": "第22バッチ独立再監査の正確性・誤肢識別力・近接重複指摘を反映。最終独立再判定は未実施。",
       "revisionSourceConceptKey": "hm2:sm2-5y-r05-phy-09:横隔膜",
-      "revisionBatch": "hm1-b-20261111-batch4",
-      "revisionBasis": "OpenStax Anatomy and Physiology 2e 22.3 換気機序"
+      "revisionBatch": "hm1-b-20261111-reaudit-q31-q40",
+      "revisionBasis": "OpenStax Anatomy and Physiology 2e 22.3 換気機序／第22バッチ独立再監査指摘改善"
     }
   },
   {
@@ -1146,18 +1146,18 @@
     "expectedConceptKey": "hm2:sm2-5y-r06-phy-01:安静時呼息",
     "expectedStem": "次の説明に最も当てはまる項目はどれか。「主に呼吸筋が弛緩し、肺・胸郭の弾性で空気が排出される。」",
     "replacement": {
-      "stem": "健康な成人が安静に呼吸している。通常の呼息と努力性呼息の違いを示す説明として正しいものはどれか。",
+      "stem": "健康な成人の通常の安静呼息と、強く息を吐き出す努力性呼息を比較した。筋活動と空気が流出する条件の組合せとして最も適切なものはどれか。",
       "choices": [
-        "安静時呼息は主として腹筋の強い収縮で起こる",
-        "安静時呼息は肺の弾性収縮などで主として受動的に生じ、努力性呼息では腹筋等が参加する",
-        "安静時呼息でも横隔膜は持続的に最大収縮している",
-        "努力性呼息でも呼息筋の活動は一切起こらない",
-        "安静時呼息では肺胞内圧が大気圧より常に低いため空気が出る"
+        "安静呼息は主に吸息筋の弛緩と肺の弾性収縮によって進み、努力性呼息では腹筋などが加わり、呼息中は肺胞内圧が大気圧より高い方向となる",
+        "安静呼息も努力性呼息も横隔膜の最大収縮だけで起こり、腹筋は換気運動に関与しない",
+        "努力性呼息では腹筋が胸腔容積を広げ、肺胞内圧を大気圧より低下させて空気を外へ押し出す",
+        "安静呼息は主に受動的であるが、空気が肺から流出する間は肺胞内圧が大気圧より低い",
+        "努力性呼息では呼息筋が働く一方、安静呼息は毎回腹筋の強い収縮が不可欠である"
       ],
-      "ans": 1,
-      "short": "安静時呼息は主として受動的で、努力性呼息には筋活動が加わる。",
-      "key": "OpenStax Anatomy and Physiology 2e 22.3 呼息機序",
-      "detail": "安静時の通常の呼息は吸息筋の弛緩と伸展された肺の弾性収縮等によって生じ、空気が出る間は肺胞内圧が大気圧より高い。努力性呼息では腹筋や内肋間筋等が働く。肢0は安静時を努力性と混同、肢2は横隔膜の作用を逆転、肢3は努力性呼息筋の否定、肢4は呼息時の圧力差の逆転。胸郭が常に内向きへ弾性収縮すると一律には説明しない。 根拠：OpenStax Anatomy and Physiology 2e 22.3 呼息機序。 出典：https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
+      "ans": 0,
+      "short": "安静呼息は主に弾性収縮による受動過程、努力性呼息では腹筋等が加わり、呼出中は肺胞圧が大気圧を上回る。",
+      "key": "安静・努力性呼息の筋活動と圧力差",
+      "detail": "通常の安静呼息では吸息筋が弛緩し、肺の弾性収縮などで空気が出る。努力性呼息には腹筋などの活動が加わる。気流のある呼息中、肺胞内圧は大気圧より高い。肢1は両相を横隔膜最大収縮へ誤帰属、肢2は胸腔容積・圧力の向きを逆転、肢3は呼出中の圧力差が逆、肢4は安静呼息で腹筋の強い活動を必須とする誤り。呼息終了時の圧均衡とは区別する。根拠：OpenStax Anatomy and Physiology 2e 22.3 呼息機序。出典：https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
       "conceptKey": "hm1:reaudit-b-20261111:practice-B-Q36",
       "sourceType": "hm1-original-revised-from-primary-source",
       "sourceRef": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing",
@@ -1165,12 +1165,12 @@
       "lawAsOf": "2026-11-11",
       "lawVersion": null,
       "auditDate": "2026-11-11",
-      "auditStatus": "設問修正・解説補完適用（公開ゲート未判定）",
+      "auditStatus": "独立再監査指摘に基づく改善適用（公開ゲート未判定）",
       "semanticIndependence": "revised-comparison-review-pending",
-      "independenceReason": "用語当てを条件判断・機序・誤答比較へ再設計。最終独立監査は別途必要。",
+      "independenceReason": "第22バッチ独立再監査の正確性・誤肢識別力・近接重複指摘を反映。最終独立再判定は未実施。",
       "revisionSourceConceptKey": "hm2:sm2-5y-r06-phy-01:安静時呼息",
-      "revisionBatch": "hm1-b-20261111-batch4",
-      "revisionBasis": "OpenStax Anatomy and Physiology 2e 22.3 呼息機序"
+      "revisionBatch": "hm1-b-20261111-reaudit-q31-q40",
+      "revisionBasis": "OpenStax Anatomy and Physiology 2e 22.3 呼息機序／第22バッチ独立再監査指摘改善"
     }
   },
   {
@@ -1242,18 +1242,18 @@
     "expectedConceptKey": "hm2:sm2-5y-r06-phy-04:呼吸中枢",
     "expectedStem": "次の特徴を持つものはどれか。「延髄などにあり、呼吸運動のリズム調節に関与する。」",
     "replacement": {
-      "stem": "安静呼吸の基本的なリズム形成と、吸息筋への運動出力を担う神経系の説明として最も適切なものはどれか。",
+      "stem": "安静呼吸のリズム生成と調節について、延髄、橋、横隔膜への神経出力の関係として最も適切なものはどれか。",
       "choices": [
-        "肺胞の酸素分子が横隔膜の収縮を直接指令する",
-        "腎臓の糸球体が運動神経を通じて呼吸リズムを作る",
-        "血中の二酸化炭素が高いほど延髄の神経活動は必ず停止する",
-        "呼吸リズムは肺の平滑筋だけで形成され、中枢神経は関与しない",
-        "延髄を中心とする脳幹の呼吸ネットワークが基本リズムを形成し、橋なども調節に関わる"
+        "延髄の呼吸神経回路は主として肺胞の酸素拡散を担い、呼吸筋への運動指令は肺胞壁で作られる",
+        "橋は呼吸リズムを単独で生成し、延髄は運動出力へ全く関わらない",
+        "横隔膜への運動指令は血液中の二酸化炭素分子が筋を直接刺激することで発生する",
+        "延髄の神経回路が基本的な呼吸リズムに関わり、橋などが呼吸パターンを調節し、その活動が運動神経経路を介して吸息筋に伝わる",
+        "化学受容器からの入力があれば呼吸中枢のリズム生成回路を経由せず、肺内の筋だけで安静呼吸が成立する"
       ],
-      "ans": 4,
-      "short": "脳幹の呼吸ネットワークが基本リズムを形成し、橋なども調節する。",
-      "key": "NHLBI 呼吸調節・脳幹と呼吸筋",
-      "detail": "延髄の神経回路は呼吸の基本的なリズム形成に関わり、橋の神経回路なども呼吸パターンを調節する。中枢から運動神経を介し横隔膜等へ出力される。肢0は肺胞と神経出力を混同、肢1は腎の濾過機構と混同、肢2はCO₂上昇時の換気調節を逆に一般化、肢3は中枢性リズム形成を否定している。化学受容器の入力がどのように換気を変えるかはQ40で扱う。 根拠：NHLBI 呼吸調節・脳幹と呼吸筋。 出典：https://www.nhlbi.nih.gov/health/lungs/body-controls-breathing",
+      "ans": 3,
+      "short": "延髄の呼吸回路がリズム形成に関わり、橋が調節し、運動神経経路を介して横隔膜などを動かす。",
+      "key": "脳幹呼吸回路・調節入力・運動出力",
+      "detail": "呼吸運動は延髄を中心とする脳幹のネットワークが基本リズムを形成し、橋などが呼吸パターンを調節する。運動指令は脊髄運動ニューロンや神経を通じて横隔膜などへ到達する。肢0はガス拡散と中枢指令の混同、肢1は延髄の寄与を否定、肢2は化学受容刺激と直接筋収縮の混同、肢4は中枢ネットワークを迂回するとする誤り。Q40はCO₂・pHの受容による調節を問う。根拠：NHLBI 呼吸調節・脳幹と呼吸筋。出典：https://www.nhlbi.nih.gov/health/lungs/body-controls-breathing",
       "conceptKey": "hm1:reaudit-b-20261111:practice-B-Q39",
       "sourceType": "hm1-original-revised-from-primary-source",
       "sourceRef": "https://www.nhlbi.nih.gov/health/lungs/body-controls-breathing",
@@ -1261,12 +1261,12 @@
       "lawAsOf": "2026-11-11",
       "lawVersion": null,
       "auditDate": "2026-11-11",
-      "auditStatus": "設問修正・解説補完適用（公開ゲート未判定）",
+      "auditStatus": "独立再監査指摘に基づく改善適用（公開ゲート未判定）",
       "semanticIndependence": "revised-comparison-review-pending",
-      "independenceReason": "用語・分野当てから機序・数値関係・条件判断と近接誤答の識別へ再設計。最終独立再監査待ち。",
+      "independenceReason": "第22バッチ独立再監査の正確性・誤肢識別力・近接重複指摘を反映。最終独立再判定は未実施。",
       "revisionSourceConceptKey": "hm2:sm2-5y-r06-phy-04:呼吸中枢",
-      "revisionBatch": "hm1-b-20261111-batch5",
-      "revisionBasis": "NHLBI 呼吸調節・脳幹と呼吸筋"
+      "revisionBatch": "hm1-b-20261111-reaudit-q31-q40",
+      "revisionBasis": "NHLBI 呼吸調節・脳幹と呼吸筋／第22バッチ独立再監査指摘改善"
     }
   },
   {
@@ -1274,18 +1274,18 @@
     "expectedConceptKey": "hm2:sm2-5y-r06-phy-05:二酸化炭素と呼吸調節",
     "expectedStem": "次の記述が示す項目を選べ。「血中二酸化炭素の変化は呼吸調節に強く影響する。」",
     "replacement": {
-      "stem": "健康な成人で動脈血二酸化炭素分圧が通常より上昇し、他の条件が一定だった場合、一般的に予想される反応はどれか。",
+      "stem": "健康な成人で換気が一時的に低下し、動脈血PaCO₂が40から50mmHgに上昇してpHが低下した。低酸素や薬物など他の条件を考えない場合、呼吸調節の反応として最も適切なものはどれか。",
       "choices": [
-        "CO₂上昇により呼吸中枢への刺激が減り、換気量が必ずゼロになる",
-        "化学受容系が変化を検知し、一般に換気を増やしてCO₂排出を促す",
-        "CO₂濃度は呼吸調節に影響せず、血糖だけで換気量が決まる",
-        "血中酸素濃度が変わらなければ、CO₂上昇に対する反応は一切生じない",
-        "CO₂上昇時は横隔膜が必ず弛緩し、呼吸が永続的に止まる"
+        "PaCO₂上昇とpH低下は化学受容系の刺激を強め、一般に換気を増やしてCO₂を排出する方向に働く",
+        "PaCO₂上昇時は中枢・末梢の化学受容器の反応が低下するため、正常生理では換気量は必ず減少する",
+        "pHが低下してもPaCO₂が上昇していれば、呼吸調節系はpHの変化を感知しない",
+        "換気が増えればPaCO₂は通常さらに上がる方向に調節され、負のフィードバックは成立しない",
+        "CO₂の変化は化学受容系へ入力されず、吸息筋への運動出力の強さと全く無関係である"
       ],
-      "ans": 1,
-      "short": "CO₂分圧上昇は化学受容系を介し、通常は換気を増大させる。",
-      "key": "NHLBI 化学受容と呼吸制御",
-      "detail": "一般的な生理条件では動脈血CO₂分圧上昇に伴う中枢性・末梢性化学受容系への刺激を通じ、換気が増えてCO₂を排出する方向へ調節される。肢0と肢4は換気反応を逆転・過度に断定、肢2はCO₂の寄与を否定、肢3は酸素だけが調節因子とする誤り。水素イオン濃度（pH）や酸素分圧なども関係するので、CO₂だけで呼吸を決定するという説明は避ける。Q39はリズムを担う中枢の所在・機能を問う別命題。 根拠：NHLBI 化学受容と呼吸制御。 出典：https://www.nhlbi.nih.gov/health/lungs/body-controls-breathing",
+      "ans": 0,
+      "short": "PaCO₂上昇・pH低下は化学受容を介して通常は換気を増やし、CO₂排出を促す。",
+      "key": "高PaCO₂・低pHに対する換気フィードバック",
+      "detail": "健常者でPaCO₂が上がり呼吸性にpHが低下すると、化学受容器による入力が増え、通常は換気を亢進してCO₂排出を促す方向に働く。中枢性化学受容系は脳脊髄液などのpH変化が重要で、末梢性化学受容系もPaCO₂・pHに反応する。肢1・4は反応方向と入力を否定、肢2はpHへの反応を誤認、肢3は負のフィードバックと逆。Q39の呼吸リズムを担う神経回路の機能とは別の学習命題。根拠：NHLBI 化学受容と呼吸制御。出典：https://www.nhlbi.nih.gov/health/lungs/body-controls-breathing",
       "conceptKey": "hm1:reaudit-b-20261111:practice-B-Q40",
       "sourceType": "hm1-original-revised-from-primary-source",
       "sourceRef": "https://www.nhlbi.nih.gov/health/lungs/body-controls-breathing",
@@ -1293,12 +1293,12 @@
       "lawAsOf": "2026-11-11",
       "lawVersion": null,
       "auditDate": "2026-11-11",
-      "auditStatus": "設問修正・解説補完適用（公開ゲート未判定）",
+      "auditStatus": "独立再監査指摘に基づく改善適用（公開ゲート未判定）",
       "semanticIndependence": "revised-comparison-review-pending",
-      "independenceReason": "用語・分野当てから機序・数値関係・条件判断と近接誤答の識別へ再設計。最終独立再監査待ち。",
+      "independenceReason": "第22バッチ独立再監査の正確性・誤肢識別力・近接重複指摘を反映。最終独立再判定は未実施。",
       "revisionSourceConceptKey": "hm2:sm2-5y-r06-phy-05:二酸化炭素と呼吸調節",
-      "revisionBatch": "hm1-b-20261111-batch5",
-      "revisionBasis": "NHLBI 化学受容と呼吸制御"
+      "revisionBatch": "hm1-b-20261111-reaudit-q31-q40",
+      "revisionBasis": "NHLBI 化学受容と呼吸制御／第22バッチ独立再監査指摘改善"
     }
   },
   {
