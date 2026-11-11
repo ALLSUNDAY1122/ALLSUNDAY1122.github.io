@@ -47,9 +47,10 @@ jobs:
       - name: Verify legacy exporter either passes all its own gates or stops only at review gate
         shell: bash
         run: |
-          set -uo pipefail
+          set +e
           node ios/health-manager-2/export-audit-data.cjs > /tmp/hm2-legacy-export.log 2>&1
           rc=$?
+          set -euo pipefail
           cat /tmp/hm2-legacy-export.log
           if [ "$rc" -eq 0 ]; then
             echo 'PASS HM2_LEGACY_EXPORT: exporter completed with its built-in gates intact'
