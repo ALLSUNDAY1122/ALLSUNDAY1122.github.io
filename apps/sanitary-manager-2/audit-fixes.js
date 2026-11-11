@@ -1056,3 +1056,19 @@ if(!q||q.answer!==5||q.choices[4]!=='門脈')throw Error('HM2 X-02 portal-vs-lym
 Object.assign(q,{answer:5,question:"昼食でブドウ糖と長鎖脂肪酸を摂取した。小腸で吸収された後の主な輸送経路の組合せとして適切なのはどれか。",choices:["ブドウ糖は乳び管・胸管、長鎖脂肪酸由来脂質は門脈を通る。","ブドウ糖も長鎖脂肪酸由来脂質も、吸収後は必ず肺静脈へ直接入る。","ブドウ糖も長鎖脂肪酸由来脂質も、吸収後は門脈を一切経由せず同じリンパ経路だけを通る。","ブドウ糖は胆管へ、長鎖脂肪酸由来脂質は腎動脈へ直接入る。","ブドウ糖は腸管毛細血管から門脈へ、長鎖脂肪酸由来脂質はカイロミクロンとして乳び管へ入る。"],quick:"ブドウ糖は腸管毛細血管から門脈へ、長鎖脂肪酸由来脂質はカイロミクロンとして乳び管へ入る。",explanation:"ブドウ糖などの水溶性栄養素は主に小腸絨毛の毛細血管から門脈を通って肝臓に入る。一方、長鎖脂肪酸由来の脂質は小腸上皮内でカイロミクロンとなり、主に乳び管・リンパ系から血液循環に合流する。これは輸送経路の比較を問う設問であり、門脈の名称だけを選ぶ問題とは異なる。",sourceUrl:"https://www.ncbi.nlm.nih.gov/books/NBK545157/"});
 window.HM2_X02_SEMANTIC_TOPIC_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X02_TOPIC_REMAINDER_20261111: audited topic/basis for bile function question.
+(function(){'use strict';
+const q=(window.Q_PARTS||[]).find(x=>x.id==='sm2-5y-r10-phy-02');
+if(!q||q.subject!=='労働生理'||q.topic!=='胆のう'||q.basis!=='消化器の生理'||
+ q.question!=='脂肪を含む食事の後、肝臓で作られた胆汁が十二指腸に流入する。胆汁について正しい説明はどれか。'||
+ !Array.isArray(q.choices)||q.choices.length!==5||
+ !Number.isInteger(q.answer)||q.answer<1||q.answer>5||
+ q.choices[q.answer-1]!=='胆汁酸などによって脂質の乳化を助けるが、胆汁自体は消化酵素を主成分としない。'||
+ q.sourceUrl!=='https://www.ncbi.nlm.nih.gov/books/NBK470209/')
+ throw Error('HM2 X-02 remaining topic unexpected source sm2-5y-r10-phy-02');
+q.topic='胆汁酸による脂質乳化と胆汁の消化補助作用';
+q.basis='消化器の生理／胆汁酸の脂質乳化と膵消化酵素との区別';
+window.HM2_X02_REMAINDER_TOPIC_IDS=['sm2-5y-r10-phy-02'];
+})();
