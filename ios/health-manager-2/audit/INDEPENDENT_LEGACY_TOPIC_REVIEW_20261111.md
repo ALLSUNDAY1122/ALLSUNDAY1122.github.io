@@ -895,3 +895,13 @@
 - 要修正9件のID：`sm2-5y-r09-law-02`、`r09-law-03`、`r09-law-04`、`r09-law-07`、`r09-law-08`、`r09-law-09`、`r09-law-10`、`r10-law-02`、`r10-law-03`（略記接頭辞はすべて `sm2-5y-`）。No.43 `r09-law-05` は分類・根拠整合。
 - `r09-law-10` の再設計条件：問題文に「外気汚染による特例が適用されない事業場」と明記する、または外気汚染例外を正しく判断させる別シナリオへ変更する。解説に事務所衛生基準規則5条2号の10/20ppmの条件分岐を追加する。
 - 第5バッチ終了時点の累計は**公開ゲート対象49/178件点検済み、未点検129件**。今回の問題データJS・JSON、レビュー・公開状態、iOSビルド・TestFlight・App Reviewには変更を行っていない。公開ゲート**BLOCKED**を維持。次回は固定一覧 No.50〜59 を監査。
+
+
+## 2026-11-11追補｜第5バッチ9件分類・根拠修正とCO例外条件補完
+
+- 対象ブランチ：`audit/hm2-quality-20261110`。生成元 `apps/sanitary-manager-2/audit-fixes.js` に `SM2_INDEPENDENT_FIFTH10_METADATA_FIX9_20261111` を追加。対象9件は `sm2-5y-r09-law-02/03/04/07/08/09/10`、`sm2-5y-r10-law-02/03`。全9件の`topic`・`basis`を現行題意に合わせて修正。
+- `sm2-5y-r09-law-10` は事務所衛生基準規則5条1項2号を確認し、11ppmを判定する問題文に『外気汚染によって10ppm以下の空気の供給が困難となる特例には該当しない』と明記。解説には原則10ppm以下、外気汚染による供給困難時20ppm以下の特例、室内濃度基準との違いを追記。既存の正答第3肢・5肢を維持。一次資料： https://laws.e-gov.go.jp/law/347M50002000043 および https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1 。
+- 生成元実装コミット：`ab205af2af9aaef41e6999e77ec2ff29e0b21786`。初回CIは `HM2 CO target answer drift` で失敗。原因は`question-order-v1.js`適用前の正答肢位置を、適用後の第3肢と同一視したガード。検証ガードを`q.choices[q.answer-1]`で正答内容を確認する形へ改め、修正コミット `f2666ea8c9581a6e50c1e99cc02e894dec57576d`。
+- GitHub Actions `HM2 canonical iOS question JSON rebuild` 実行 `42963264096`：**SUCCESS** https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42963264096 。自動再生成JSONコミット：`777be18a964b0c2aedd33c14243443652107fe21`。
+- 再生成前（生成元初回修正コミット時点のJSON）と後のJSONを全300問・ID順・全フィールドで比較。差分は**指定9問のみ**。8問は`topic`・`primary_basis`のみ、`r09-law-10`は`topic`・`question`・`explanation`・`primary_basis`のみ。対象外291問、全問題の選択肢・正答番号・監査状態・公開状態は不変。GitHubコミット差分はJSONのみ20行追加・20行削除。JSON旧blob：`5eaa419492b17784d9284b195ffc2ad12b92a283`、新blob：`792c56a9ba2f81b28ab1e291bafa1d7083349604`。
+- 独立レビュー進捗は**49/178問点検済、未点検129問**。分類・根拠9件とCO例外条件の修正を適用したが、全件専門家レビューは未了。公開品質ゲートは引き続き**BLOCKED**。新ビルド・TestFlight・App Review提出なし。次の監査範囲は固定ID一覧No.50〜59。
