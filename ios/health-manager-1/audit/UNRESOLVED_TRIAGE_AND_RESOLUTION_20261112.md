@@ -126,3 +126,26 @@
 - 生成元`Resources/questions.json`の変更は**上記6問のみ**。他126問不変、基本132問の全問題文・全5肢・正答index・解説は不変。原典の中心命題に関する照合ができたことと、各問題の全5肢独立逐語証明済み判定は異なる。
 - 個別追証台帳：`audit/PRIMARY_SOURCE_AUDIT_A_BATCH5_20261112.json`。元URL、採用URL、原典上の根拠、保留、実変更キーを記録。
 - 次はこのコミットの基本6問に対するMuse側の264問再生成・限定差分・配布SHA256確認。公開基準の独立全肢直接証明、法令施行日、商用利用権の検証は未了。**ゲートFAIL/BLOCKED維持**。
+
+
+## 続編第6回：Muse基本6問PASS保存、a群基本Q28・Q30・Q34・Q42の4問追証（2026-11-12）
+
+### 1. Muse側の前回基本6問264問再生成（報告受領）
+- 比較基準`7d60cf9`と現在状態の**両方で264問再生成成功**。差分は`2026-04-Q02`・`2026-04-Q04`・`2026-04-Q08`・`2026-04-Q12`・`2026-04-Q14`・`2026-04-Q20`の**6問のみ**。監査ステータス・出典URL関連変更、正答index全問不変、**他258問完全一致**、**限定差分判定PASS**（Muse側ユーザー提供）。
+- 先行コミットのGitHub正本を対象ID単位で照合した結果、出典URLはQ02・Q04のみ更新され、他4問は監査ステータスのみ。Muse報告の「出典URLの変更」は6問すべてのURLが変わったことを意味しない。
+- 本セッションではMuse側のNode CLI再生成・バイト一致・SHA256を独立再実行していない。また今回の新規4問に先行PASSは転用しない。
+
+### 2. a群次のまとまり（4問）
+- **`2026-04-Q28`**：2026-03-18基発0318第1号『職場における熱中症防止対策のためのガイドライン』。旧2021-04-20要綱を廃止。新指針第3のWBGT基準、着衣補正、暑熱順化、作業・休憩・補水・報告体制に一致。。監査出典`https://www.mhlw.go.jp/content/001476821.pdf` → `https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1`、補助原典`https://jsite.mhlw.go.jp/kyoto-roudoukyoku/content/contents/002604006.pdf`。変更キー：`detail、auditStatus、auditSourceURL`。**正答index 1不変**。留保：新指針の条番号・JIS着衣補正細目と法的義務範囲は未全肢逐語検証。
+- **`2026-04-Q30`**：米国NIH/NLM MedlinePlus『How to make a splint』は骨折部上下の関節をまたいで副子固定し、変形の無理な矯正を避け、末梢循環・色・感覚を再評価する旨を明記。旧RedCross一般骨折ページは副子詳細の直接性が弱い。。監査出典`https://www.redcross.org/take-a-class/resources/learn-first-aid/fractures` → `https://www.medlineplus.gov/ency/article/000040.htm`、補助原典`https://www.redcross.org/take-a-class/resources/learn-first-aid/fractures`。変更キー：`auditStatus、auditSourceURL`。**正答index 0不変**。留保：末梢血流消失や開放骨折は緊急医療対応、全5肢の独立逐語立証は未完。
+- **`2026-04-Q34`**：厚労省2026年2月10日『高年齢者の労働災害防止のための指針』(4月1日適用)で照度確保・極端な明暗差解消を規定。旧厚労省職場改善マニュアルで反射グレアの防止を直接確認。。監査出典`https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/newpage_00007.html` → `https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/newpage_00010.html`、補助原典`https://www.mhlw.go.jp/new-info/kobetu/roudou/gyousei/anzen/dl/0903-1a_0007.pdf`。変更キー：`auditStatus、auditSourceURL`。**正答index 3不変**。留保：Q34の光沢部品の反射条件への機器配置の最適解は設計判断を含む。
+- **`2026-04-Q42`**：NCBI MeSH D014870は不感蒸泄を皮膚拡散と呼吸路蒸発による水分喪失と直接定義。現行登録URLの原典到達を再確認。。監査出典`https://www.ncbi.nlm.nih.gov/mesh/68014870` → `https://www.ncbi.nlm.nih.gov/mesh/68014870`、補助原典`https://www.ncbi.nlm.nih.gov/mesh/68014870`。変更キー：`auditStatus`。**正答index 2不変**。留保：温熱性発汗の交感神経コリン作動性支配は補助原典NBK507838で確認し、全肢独立逐語PASSは未了。
+- 特に**基本Q28**は2026年3月18日策定の新ガイドラインが2021年基本対策要綱を廃止したため、旧要綱への直接参照は古くなっていた。**設問・5肢・正答indexは維持して、`auditSourceURL`・`detail`・`auditStatus`を現行ガイドラインに修正**。
+- 基本Q30はRedCrossの一般骨折ページをNIH MedlinePlusの副子固定直接手順へ出典変更。Q34は2026年適用の新指針の公式公示へ出典更新し、反射グレアを補強する厚労省マニュアルを台帳へ追加。Q42はNCBI MeSH原典本文に到達したためURLは不変で監査ステータスのみ更新。
+- 本担当が生成元の基本132問を前後比較したところ**変更は今回の4問のみ**。問題文・5肢・正答indexは全132問不変。全20肢の個別原典逐語証明は未完。詳細は`PRIMARY_SOURCE_AUDIT_A_BATCH6_20261112.json`。
+
+### 3. a群残件集計（重複排除）
+- 当初の分類母数**85 ID**のうち、これまでに中心命題に関して公開一次資料到達・追証・出典差替え・法令根拠訂正を記録した固有IDは**32件**。**中心命題の次の照合待ちは53件**。
+- 残り53 ID：`2025-10-Q01`、`2025-10-Q02`、`2025-10-Q06`、`2025-10-Q10`、`2025-10-Q14`、`2025-10-Q15`、`2026-04-Q19`、`2026-04-Q29`、`2026-04-Q31`、`2026-04-Q33`、`2026-04-Q41`、`2026-04-Q44`、`practice-A-Q08`、`practice-A-Q11`、`practice-A-Q13`、`practice-A-Q20`、`practice-A-Q21`、`practice-A-Q26`、`practice-A-Q28`、`practice-A-Q34`、`practice-A-Q37`、`practice-A-Q39`、`practice-B-Q08`、`practice-B-Q20`、`practice-B-Q28`、`practice-B-Q33`、`practice-C-Q01`、`practice-C-Q02`、`practice-C-Q03`、`practice-C-Q05`、`practice-C-Q06`、`practice-C-Q07`、`practice-C-Q08`、`practice-C-Q09`、`practice-C-Q10`、`practice-C-Q14`、`practice-C-Q15`、`practice-C-Q17`、`practice-C-Q18`、`practice-C-Q19`、`practice-C-Q20`、`practice-C-Q21`、`practice-C-Q22`、`practice-C-Q26`、`practice-C-Q30`、`practice-C-Q31`、`practice-C-Q32`、`practice-C-Q33`、`practice-C-Q35`、`practice-C-Q36`、`practice-C-Q37`、`practice-C-Q41`、`practice-C-Q44`。
+- **注意：これは中心命題の出典問題の解消状況を示す管理上の数字**。全5肢それぞれの独立逐語根拠が揃い、法令版・商用権利・配布一致を通過した問題の数ではない。全5肢無条件PASSの基準では今回の母数85件に未達項目が残る。
+- 今回の4問の264問Node CLI再生成、他260問限定差分、Web/iOS配布バイト照合、SHA256は**未実施**。Muse側で検証後、差分を確定すること。公開ゲート**FAIL/BLOCKED維持**。
