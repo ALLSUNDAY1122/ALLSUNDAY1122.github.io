@@ -30,3 +30,10 @@
 - `sm2-r7o-001`：総括安全衛生管理者の業種別100/300/1000人は安衛法施行令2条なので、`source_url`を `https://laws.e-gov.go.jp/law/347CO0000000318` に変更。生成元は厳格旧状態ガード、配布JSONは対象1問のsource_urlのみ変更。最新Node CLIの再生成・新SHA・CIは未実施（証拠取得待ち）。
 - **累計30/170問点検済、未点検140問**。修正待ちの出典URL：No.023 `sm2-r7o-011` 1件。未実施の専門家査読、178問公開レビュー、リリースゲートは変わらず**本番公開BLOCKED**。
 - 次バッチ：台帳No.031〜040を確定ID順で個別照合。次回はNo.023のURL直接化とメタデータの正本契約調査を優先する。
+
+
+## 2026-11-12追補｜Muse独立検証・第2バッチNo.013出典URL変更後
+
+- ユーザーからMuse側の独立実測結果を受領：`node ios/health-manager-2/export-canonical-snapshot.cjs`が正常終了、出力と同時点の`ios/health-manager-2/release-questions.json`が**バイト単位で一致**。SHA-256：`14745a77221ac62758acd8ea3031e50d1c4d16efdc581e86dbafa2a4b30fc7b5`。
+- 対象版は`sm2-r7o-001`を労働安全衛生法施行令2条へ変更した後の生成元・配布JSON（生成元コミット`aad6fe7dba0760c4a8fadf3b28029a4b527a6ebb`、JSONコミット`eb92e62ec8a1d67a93b2d33aab3c9de03a3f2dbb`）。**今回続行する`sm2-r7o-011`変更前の状態に限る証拠**であり、後続変更後のSHAとして流用しない。
+- このGitHub連携セッションがNode CLIを直接実行・SHAを再計算したわけではない。Muse報告を`sm2-r7o-001`変更後の**独立生成再現性PASS**として記録。専門家逐語監査、170問全件、178問状態ゲート、公開承認の代替としない。**本番公開BLOCKED**。
