@@ -1470,3 +1470,10 @@
 - 正答番号の明白な誤り0、明白な複数正答0。ただしNo.126の『運動時の酸素含有量増加』は生理学的表現の精密化が必要。誤答肢に非現実的な断定が多く識別難度は低い。
 - 重複：No.122とNo.118（健診集団分析）、No.125とNo.126（ヘモグロビンによる酸素輸送）。No.123は2026年3月18日新熱中症指針との直接照合を継続。No.121の公示適用日・文言の逐語照合も未完。
 - **累計129/178問点検済、残49問**。次回固定No.130〜139。今回の変更は監査記録のみ。JS・JSON・監査承認/公開状態・iOSビルド・TestFlight・App Reviewは不変更。品質ゲート**BLOCKED**を維持。
+
+
+## 2026-11-11追補｜第13バッチ指摘6件の限定修正・iOS JSON再生成確認
+- 対象：固定No.122・123・124・127・128・129。生成元 `apps/sanitary-manager-2/audit-fixes.js` に `SM2_INDEPENDENT_THIRTEENTH10_METADATA_FIX6_20261111` を追加した。6問のtopicとbasisを題意に合わせ、No.123のみsource_urlを厚労省2026年3月18日基発0318第1号の新熱中症防止ガイドラインへ修正。問題文・5肢・正答・解説・承認/公開フラグは変更しない。
+- 生成元修正コミット：`7e0ad7a2edcc7a3ef7f82f5f037013149911af91`。GitHub Actions `HM2 canonical iOS question JSON rebuild` run `42971463361` は SUCCESS。自動再生成コミット：`ec4322a56e6979485b75a846e6710abd0a279f0c`。
+- iOS JSON旧blob `68d363960932b4f7bf8f4e0500d19c14d75d6bb8`、新blob `4e32b29ad38c5b04182a85e3874629cca9a02f8d` を全300問でID・配列順・全フィールド比較。**変更は指定6問だけ**。No.123はtopic/primary_basis/source_url、残5問はtopic/primary_basisのみ。その他294問の全フィールドは完全一致。
+- 独立レビュー進捗は**129/178、残49**で変わらない。次はNo.130〜139。未解決の出典直接性・No.126の文言・実質重複を継続管理。公開品質ゲートはBLOCKED、新規ビルド・TestFlight・App Review提出はしない。
