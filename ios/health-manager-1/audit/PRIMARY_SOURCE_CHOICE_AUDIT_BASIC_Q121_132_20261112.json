@@ -1,0 +1,616 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-11-12",
+  "baselineCommit": "a836c61b89b9a1cb78ea5c71bbc01e468ef22fdf",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "scope": "基本Q121〜Q132 12問×5肢=60肢",
+  "classificationRule": "DIRECTは中心命題の一次資料確認、PARTIALは一部根拠未確認・内容不一致、PENDINGは登録原典本文へ到達不可。各肢の原典全文逐語照合が未了なら無条件PASSとしない。",
+  "counts": {
+    "DIRECT": 6,
+    "PARTIAL": 3,
+    "PENDING": 3
+  },
+  "unconditionalPass": 0,
+  "questions": [
+    {
+      "basicNumber": 121,
+      "id": "2025-04-Q33",
+      "stem": "身長1.75m・体重80kgの成人でBMIを算出したところ約26.1であった。これを健康管理に用いる際の評価として最も適切なものはどれか。",
+      "answerIndex": 1,
+      "registeredSourceURL": "https://kennet.mhlw.go.jp/information/information/metabolic/bmi_check",
+      "sourceName": "厚労省 e-ヘルスネット BMIチェックツール（登録URL）",
+      "classification": "DIRECT",
+      "sourceAccess": "ACCESSIBLE",
+      "scopeLimitations": "BMI=80/1.75²≒26.12、BMI25以上は肥満1度。メタボ確定には他項目必要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "BMIが25以上なら、腹囲や血圧などを確認せずメタボリックシンドロームと確定診断できる",
+          "expectedTruth": false,
+          "assessment": "BMIだけでメタボ確定不可",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "BMIは体重を身長(m)の二乗で除して算出し、この例は日本の成人BMI区分で肥満域となるが、健康リスク評価には腹囲・血圧・血糖等も合わせて確認する",
+          "expectedTruth": true,
+          "assessment": "BMI式で26.1、他のリスク要因も評価",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "BMIが26.1であっても、筋肉量が多ければ日本のBMI区分上は必ず低体重に分類される",
+          "expectedTruth": false,
+          "assessment": "筋肉量に関係なくBMI数値区分は変わらない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "BMIは80÷1.75で計算するので約45.7となり、BMIの区分判定には使用できない",
+          "expectedTruth": false,
+          "assessment": "二乗を省いた式は誤り",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "BMIが25以上の者は、血糖や脂質の検査を行う法定健康診断の対象から除外される",
+          "expectedTruth": false,
+          "assessment": "BMIにより法定健康診断除外とはならない",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "BMI=80/1.75²≒26.12、BMI25以上は肥満1度。メタボ確定には他項目必要"
+    },
+    {
+      "basicNumber": 122,
+      "id": "2025-04-Q34",
+      "stem": "マグロ加工場で、同じ仕入先の複数ロットからヒスタミン陽性品が見つかった。未出荷品と既出荷品があり、温度記録は一部欠落している。原因調査と被害拡大防止の優先対応として最も適切なのはどれか。",
+      "answerIndex": 3,
+      "registeredSourceURL": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000130677.html",
+      "sourceName": "厚労省 ヒスタミン食中毒資料（登録URL）",
+      "classification": "PARTIAL",
+      "sourceAccess": "ACCESSIBLE",
+      "scopeLimitations": "ヒスタミンの加熱安定・温度管理・大規模回収例は確認。個別ロット保留・流通回収判断の詳細手順は追加資料が必要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "陽性の1個体だけを除去して同一ロットの出荷を継続し、記録は不要とする",
+          "expectedTruth": false,
+          "assessment": "1個体だけ除去し出荷継続では管理不足",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "ヒスタミンは魚の外観で判別できるので、外見が正常な製品はすべて出荷する",
+          "expectedTruth": false,
+          "assessment": "外観正常でもヒスタミンは否定できない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "既出荷品は回収検討の対象外として、出荷後の流通記録を確認しない",
+          "expectedTruth": false,
+          "assessment": "既出荷品の追跡が必要",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "同一ロット・関連ロットの出荷を保留し、温度・ロット追跡情報と検査結果を確認して、既出荷品の回収要否を食品衛生担当者等と判断する",
+          "expectedTruth": true,
+          "assessment": "関連ロット保留・履歴と回収要否の判断",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "ヒスタミン陽性が出ても、最終製品を再冷凍すれば追加調査なく販売可能とする",
+          "expectedTruth": false,
+          "assessment": "再冷凍で生成済みヒスタミンは除去できない",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "ヒスタミンの加熱安定・温度管理・大規模回収例は確認。個別ロット保留・流通回収判断の詳細手順は追加資料が必要"
+    },
+    {
+      "basicNumber": 123,
+      "id": "2025-04-Q35",
+      "stem": "ABO式血液型の判定で、赤血球を用いるオモテ検査は抗A試薬と凝集し抗B試薬とは凝集しなかった。一方、血清を用いるウラ検査ではB型赤血球と凝集しA型赤血球とは凝集しなかった。整合する判定はどれか。",
+      "answerIndex": 4,
+      "registeredSourceURL": "https://www.jrc.or.jp/mr/blood_product/blood_type/red_blood_cell/",
+      "sourceName": "日本赤十字社 ABO血液型とオモテ・ウラ検査",
+      "classification": "DIRECT",
+      "sourceAccess": "ACCESSIBLE",
+      "scopeLimitations": "A型赤血球はA抗原、血清は抗B、オモテ抗A陽性・ウラB赤血球陽性を確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "B型。赤血球にB抗原、血清に抗A抗体がある",
+          "expectedTruth": false,
+          "assessment": "B型はB抗原で反応が逆",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "AB型。赤血球にA抗原とB抗原があり、血清にも抗A・抗B抗体がある",
+          "expectedTruth": false,
+          "assessment": "AB型はA/B両抗原、通常抗A/B抗体なし",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "O型。赤血球にA・B抗原がなく、血清に抗A抗体だけがある",
+          "expectedTruth": false,
+          "assessment": "O型はA/B抗原なし、血漿抗A/抗B",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "AB型。赤血球にはA抗原しかないが血清に抗B抗体がある",
+          "expectedTruth": false,
+          "assessment": "AB型にA抗原しかないとの記述が誤り",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "A型。赤血球にA抗原があり、血清中の抗B抗体がB型赤血球と反応する",
+          "expectedTruth": true,
+          "assessment": "オモテ抗A陽性・ウラB赤血球陽性はA型",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "A型赤血球はA抗原、血清は抗B、オモテ抗A陽性・ウラB赤血球陽性を確認"
+    },
+    {
+      "basicNumber": 124,
+      "id": "2025-04-Q36",
+      "stem": "洞房結節の刺激が心房に伝わっているが、房室結節を通る伝導が遅くなり、心電図のPR間隔が延長した。心臓の刺激伝導経路と観察された変化について最も適切なのはどれか。",
+      "answerIndex": 1,
+      "registeredSourceURL": "https://www.msdmanuals.com/ja-jp/home/06-心臓と血管の病気/心臓と血管の生物学/心臓の生物学",
+      "sourceName": "MSDマニュアル 心臓の生物学（登録URL）",
+      "classification": "PARTIAL",
+      "sourceAccess": "ACCESSIBLE",
+      "scopeLimitations": "心臓刺激伝導系の概要は到達。ただしPR間隔延長と房室結節遅延の直接医学原典は不足",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "PR間隔延長は心室から洞房結節へ逆向きに興奮することを必ず示す",
+          "expectedTruth": false,
+          "assessment": "PR延長で逆行性伝導と断定不可",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "通常は洞房結節→心房→房室結節→ヒス束→左右脚→プルキンエ線維→心室へ伝わり、房室伝導の遅延はPR間隔延長として現れ得る",
+          "expectedTruth": true,
+          "assessment": "洞房→心房→房室→ヒス→脚→プルキンエ、房室遅延でPR延長",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "PR間隔延長は冠動脈が洞房結節と心室を直接つなぐ伝導路であることを示す",
+          "expectedTruth": false,
+          "assessment": "冠動脈は電気伝導路でない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "房室結節の遅延があれば、洞房結節から心房筋への興奮は必ず完全に停止する",
+          "expectedTruth": false,
+          "assessment": "房室遅延でも心房興奮は残る",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "PR間隔は心室再分極だけを示し、心房から心室への伝導時間と関係しない",
+          "expectedTruth": false,
+          "assessment": "PRは主として房室伝導を反映し心室再分極でない",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "心臓刺激伝導系の概要は到達。ただしPR間隔延長と房室結節遅延の直接医学原典は不足"
+    },
+    {
+      "basicNumber": 125,
+      "id": "2025-04-Q37",
+      "stem": "成人の安静時に1回換気量が約500mL、解剖学的死腔量が約150mL、呼吸数が毎分12回の場合、死腔分を差し引いた毎分の肺胞換気量として最も近いものはどれか。",
+      "answerIndex": 4,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK539825/",
+      "sourceName": "NCBI NBK539825 は肺胞表面張力（Alveolar Tension）",
+      "classification": "PARTIAL",
+      "sourceAccess": "REACHABLE_BUT_WRONG_TOPIC",
+      "scopeLimitations": "登録URLは肺胞換気量ではなく肺胞表面張力の論文。原典の内容不一致につき肺胞換気計算式の直接根拠要差替え",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "約6,000mL/分（死腔を含む総換気量）",
+          "expectedTruth": false,
+          "assessment": "6000は分時換気量で死腔を控除しない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "約1,800mL/分（死腔量だけを12回分合算）",
+          "expectedTruth": false,
+          "assessment": "1800は死腔量×呼吸数",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "約500mL/分（1回換気量をそのまま使用）",
+          "expectedTruth": false,
+          "assessment": "500は単回換気量を誤用",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "約7,800mL/分（1回換気量に死腔量を加算）",
+          "expectedTruth": false,
+          "assessment": "7800は死腔を加算",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "約4,200mL/分（1回換気量から死腔量を引き、毎分呼吸数を乗じる）",
+          "expectedTruth": true,
+          "assessment": "（500−150）×12=4200mL/分",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録URLは肺胞換気量ではなく肺胞表面張力の論文。原典の内容不一致につき肺胞換気計算式の直接根拠要差替え"
+    },
+    {
+      "basicNumber": 126,
+      "id": "2025-04-Q38",
+      "stem": "慢性膵外分泌機能低下が疑われ、食後の蛋白質消化不良と脂肪便がある。胃酸分泌は保たれている。この場合の消化酵素の働きと影響として最も適切なのはどれか。",
+      "answerIndex": 2,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK544242/",
+      "sourceName": "NCBI Bookshelf NBK544242",
+      "classification": "PENDING",
+      "sourceAccess": "RECAPTCHA",
+      "scopeLimitations": "登録原典はreCAPTCHAアクセス確認画面で本文閲覧不可。OpenStax等別の専門原典が必要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "胃酸分泌が保たれていれば小腸での膵由来消化酵素も必ず正常となり、消化不良は起きない",
+          "expectedTruth": false,
+          "assessment": "胃酸だけで膵酵素は代替されない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "胃でペプシンが働けば膵酵素は蛋白質や脂質の小腸での消化に関与しない",
+          "expectedTruth": false,
+          "assessment": "胃ペプシンだけでは小腸膵酵素不要とならない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "膵外分泌機能低下では、胃のペプシンによる蛋白質消化が残っていても、小腸での膵由来蛋白分解酵素・リパーゼの不足による消化不良が生じ得る",
+          "expectedTruth": true,
+          "assessment": "膵プロテアーゼとリパーゼ不足で蛋白・脂質消化不良",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "胆汁酸は膵リパーゼと同じ蛋白分解酵素であり、膵酵素が不足しても完全に代替できる",
+          "expectedTruth": false,
+          "assessment": "胆汁酸は蛋白分解酵素でない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "胃酸は小腸のトリプシノーゲンを直接活性化する唯一の因子なので、膵分泌低下とは無関係である",
+          "expectedTruth": false,
+          "assessment": "トリプシノーゲンの活性化は胃酸だけでない",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録原典はreCAPTCHAアクセス確認画面で本文閲覧不可。OpenStax等別の専門原典が必要"
+    },
+    {
+      "basicNumber": 127,
+      "id": "2025-04-Q39",
+      "stem": "屋外の寒冷作業で、雨にぬれた作業衣のまま強風下で作業を続けた労働者に、ふるえと動作の鈍さが現れた。衛生管理者が優先すべき評価・措置として最も適切なのはどれか。",
+      "answerIndex": 3,
+      "registeredSourceURL": "https://www.cdc.gov/niosh/cold-stress/about/index.html",
+      "sourceName": "CDC NIOSH Cold Stress 2026年7月14日",
+      "classification": "DIRECT",
+      "sourceAccess": "ACCESSIBLE",
+      "scopeLimitations": "低体温の危険と寒冷・風雨・濡れへの対策の中心命題を確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "ふるえが出ていれば熱産生が十分なので、強風と濡れを考慮せず作業を続ける",
+          "expectedTruth": false,
+          "assessment": "ふるえがあっても安全とは限らない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "皮膚血管収縮が起きていることを確認できれば、低体温への進行は生理的に不可能と判断する",
+          "expectedTruth": false,
+          "assessment": "血管収縮しても低体温に進む場合がある",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "冷えた労働者にはまず屋外で追加運動を指示し、保温や症状確認は後回しとする",
+          "expectedTruth": false,
+          "assessment": "屋外運動より安全・保温優先",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "ふるえと動作の鈍さを寒冷障害の警告と捉え、安全な場所へ移し、濡れた衣服・風を避け保温と状態評価を行い、必要に応じて医療へつなぐ",
+          "expectedTruth": true,
+          "assessment": "濡れ衣服を脱がせ避難保温し医療評価",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "気温が氷点下でなければ低体温症は生じないため、風速や濡れを評価しない",
+          "expectedTruth": false,
+          "assessment": "氷点下以外でも低体温になり得る",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "低体温の危険と寒冷・風雨・濡れへの対策の中心命題を確認"
+    },
+    {
+      "basicNumber": 128,
+      "id": "2025-04-Q40",
+      "stem": "定期健康診断でBUN（尿素窒素）が高値だった労働者について、腎機能を評価する際の判断として最も適切なものはどれか。",
+      "answerIndex": 2,
+      "registeredSourceURL": "https://www.kidney.org/kidney-topics/blood-urea-nitrogen-bun-test",
+      "sourceName": "National Kidney Foundation BUN Test（登録URL）",
+      "classification": "PENDING",
+      "sourceAccess": "INTERNAL_ERROR",
+      "scopeLimitations": "登録URLでツール側Internal Error、本文に到達できず。腎臓専門機関の代替ページでBUNの非特異性を再照合要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "BUN高値だけで慢性腎臓病の重症度と原因を確定でき、その他の検査は不要である",
+          "expectedTruth": false,
+          "assessment": "BUN単独で原因・重症度を確定できない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "BUNが高値なら必ず蛋白摂取不足であり、脱水や消化管出血の影響は考えなくてよい",
+          "expectedTruth": false,
+          "assessment": "BUN高値は脱水や出血など複数因子",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "BUNは腎排泄機能だけでなく脱水や蛋白代謝などの影響も受けるため、クレアチニン・eGFR・尿所見や臨床状況と合わせて評価する",
+          "expectedTruth": true,
+          "assessment": "BUN・クレアチニン・eGFR・尿と臨床所見を併用",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "eGFRは血清クレアチニン等と無関係にBUN値だけから算出される",
+          "expectedTruth": false,
+          "assessment": "eGFRはBUNのみから算出しない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "肝機能低下があっても尿素産生量に変化は生じないため、BUNは常に腎機能だけを反映する",
+          "expectedTruth": false,
+          "assessment": "尿素は肝生成・腎排泄の両面の影響",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録URLでツール側Internal Error、本文に到達できず。腎臓専門機関の代替ページでBUNの非特異性を再照合要"
+    },
+    {
+      "basicNumber": 129,
+      "id": "2025-04-Q41",
+      "stem": "全力疾走の開始直後、骨格筋のATP需要が急増した。運動開始から短時間にATPの再合成を支える仕組みと、筋収縮の直接のエネルギー源について最も適切なのはどれか。",
+      "answerIndex": 1,
+      "registeredSourceURL": "https://openstax.org/books/anatomy-and-physiology-2e/pages/10-3-muscle-fiber-contraction-and-relaxation",
+      "sourceName": "OpenStax 10.3 Muscle Fiber Contraction",
+      "classification": "DIRECT",
+      "sourceAccess": "ACCESSIBLE",
+      "scopeLimitations": "筋収縮ミオシンATPase・クレアチンリン酸のATP再合成の基本を確認",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "クレアチンリン酸の分解で直接ミオシンが滑走するため、筋細胞にはATPを必要としない",
+          "expectedTruth": false,
+          "assessment": "クレアチンリン酸がATPを不要にするわけでない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "ミオシンのATP加水分解が収縮を直接駆動し、クレアチンリン酸は短時間のATP再合成を支え、その後は解糖系等も寄与する",
+          "expectedTruth": true,
+          "assessment": "ミオシンATPが直接、クレアチンリン酸は再合成支援",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "グリコーゲン分子がミオシン頭部で直接加水分解されるため、ATP再合成は不要である",
+          "expectedTruth": false,
+          "assessment": "グリコーゲンがミオシン頭部で直接反応するわけでない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "短時間運動では乳酸が筋収縮の唯一の直接エネルギーとなり、ATPの寄与はなくなる",
+          "expectedTruth": false,
+          "assessment": "乳酸だけが直接ATP不要の駆動源でない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "脂肪酸がミオシン頭部に直接結合して運動を起こすため、酸化的リン酸化はATP産生に寄与しない",
+          "expectedTruth": false,
+          "assessment": "脂肪酸はATP産生経由で関与",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "筋収縮ミオシンATPase・クレアチンリン酸のATP再合成の基本を確認"
+    },
+    {
+      "basicNumber": 130,
+      "id": "2025-04-Q42",
+      "stem": "50代の事務職が遠くの標識は裸眼で見やすい一方、近くの資料を読む際に腕を伸ばすようになった。加齢による眼の調節変化と対策として最も適切なのはどれか。",
+      "answerIndex": 1,
+      "registeredSourceURL": "https://www.nei.nih.gov/eye-health-information/eye-conditions-and-diseases/presbyopia",
+      "sourceName": "NEI Presbyopia 2024年12月更新",
+      "classification": "DIRECT",
+      "sourceAccess": "ACCESSIBLE",
+      "scopeLimitations": "水晶体硬化で近見調節困難、読書距離が遠のく、眼鏡等の対策を確認。毛様体収縮の細部は追加原典要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "近見時の毛様体筋の弛緩により水晶体を薄くする働きが弱まるため、遠用のマイナスレンズだけを選ぶ",
+          "expectedTruth": false,
+          "assessment": "毛様体と水晶体の動きの取り違え",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "老視では水晶体の弾性低下などで近方調節力が減少し近点が遠ざかるため、必要に応じ近用加入度数等の視力補正を検討する",
+          "expectedTruth": true,
+          "assessment": "水晶体の弾性低下で老視、近用眼鏡等",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "老視は主に網膜杆体の減少で生じるため、近点が遠ざかっても光の強さだけを上げれば水晶体の調節力は戻る",
+          "expectedTruth": false,
+          "assessment": "網膜杆体が老視主因でない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "遠方視の際は毛様体筋が収縮して水晶体が厚くなるため、近くを見るときも同じ状態を維持する",
+          "expectedTruth": false,
+          "assessment": "遠見時の毛様体収縮説明は逆",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "老視の近見困難は網膜の色覚細胞のみの異常を表し、水晶体の弾性や毛様体の作用とは無関係である",
+          "expectedTruth": false,
+          "assessment": "水晶体の弾性・調節を排除できない",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "水晶体硬化で近見調節困難、読書距離が遠のく、眼鏡等の対策を確認。毛様体収縮の細部は追加原典要"
+    },
+    {
+      "basicNumber": 131,
+      "id": "2025-04-Q43",
+      "stem": "夜勤と日勤が交替する作業者で、初回夜勤の終了後に入眠困難が続いた。急性ストレス時のホルモン分泌そのものではなく、勤務負荷が反復する場合の健康管理と評価として最も適切なのはどれか。",
+      "answerIndex": 2,
+      "registeredSourceURL": "https://www.ncbi.nlm.nih.gov/books/NBK541120/",
+      "sourceName": "NCBI Bookshelf NBK541120",
+      "classification": "PENDING",
+      "sourceAccess": "RECAPTCHA",
+      "scopeLimitations": "登録URLがreCAPTCHAで本文取得できず。NIOSH交替勤務・睡眠資料を代替候補として調査要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "急性ストレス時の心拍数上昇が一度確認できれば、以後の睡眠・疲労の継続評価は不要とする",
+          "expectedTruth": false,
+          "assessment": "急性心拍変化1回では継続評価不足",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "夜勤が反復しても全員が同一の日数で順応するので、個人の睡眠状況や勤務間隔を評価する必要はない",
+          "expectedTruth": false,
+          "assessment": "順応には個人差がある",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "睡眠・疲労の推移、勤務間隔、光環境、回復状況を継続的に把握し、個人差を踏まえて勤務設計や休息機会を見直す",
+          "expectedTruth": true,
+          "assessment": "睡眠・疲労・勤務間隔・光環境の継続把握が必要",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "コルチゾール濃度を一度測定すれば、反復する夜勤の健康影響と作業適性を確定できる",
+          "expectedTruth": false,
+          "assessment": "コルチゾール単回値では健康影響確定不可",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "反復する夜勤では交感神経系とHPA系の反応が必ず増加し続けるため、十分な休息を取っても回復は不可能である",
+          "expectedTruth": false,
+          "assessment": "反復夜勤による回復不能の断定は不可",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "登録URLがreCAPTCHAで本文取得できず。NIOSH交替勤務・睡眠資料を代替候補として調査要"
+    },
+    {
+      "basicNumber": 132,
+      "id": "2025-04-Q44",
+      "stem": "夜勤明けに日中睡眠を確保しようとする労働者が、就寝直前まで強い光を浴びている。光とメラトニン分泌の関係について最も適切な説明はどれか。",
+      "answerIndex": 3,
+      "registeredSourceURL": "https://www.nhlbi.nih.gov/health/sleep-deprivation/body-clock",
+      "sourceName": "NHLBI NIH What Makes You Sleep?",
+      "classification": "DIRECT",
+      "sourceAccess": "ACCESSIBLE",
+      "scopeLimitations": "光・暗と体内時計、メラトニン分泌、明るい光の睡眠影響を本文確認。松果体/視交叉上核の詳細は補助資料要",
+      "choices": [
+        {
+          "index": 0,
+          "choice": "メラトニンは主として膵臓から分泌されるため、網膜に入る光の強さとは無関係である",
+          "expectedTruth": false,
+          "assessment": "メラトニンは膵臓由来ではない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 1,
+          "choice": "明るい光は通常、松果体のメラトニン分泌を促進するため、就寝直前に強い照明を浴びるほど入眠しやすい",
+          "expectedTruth": false,
+          "assessment": "強光で分泌を促進とはいえない",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 2,
+          "choice": "光による概日リズムの調節は大脳皮質だけが担い、視交叉上核は関与しない",
+          "expectedTruth": false,
+          "assessment": "視交叉上核も体内時計に関与",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 3,
+          "choice": "メラトニンは主として松果体から分泌され、網膜から視交叉上核などを介する光情報によって分泌が抑制され得る。日中睡眠には光環境の調整も重要である",
+          "expectedTruth": true,
+          "assessment": "光情報でメラトニンが抑制、日中睡眠の光調整が有用",
+          "verbatimIndividualSourceProof": false
+        },
+        {
+          "index": 4,
+          "choice": "夜勤者でもメラトニンの分泌は日内時刻や光曝露に依存せず、常に一定である",
+          "expectedTruth": false,
+          "assessment": "分泌は光と位相によって変化",
+          "verbatimIndividualSourceProof": false
+        }
+      ],
+      "unconditionalPass": false,
+      "followUp": "光・暗と体内時計、メラトニン分泌、明るい光の睡眠影響を本文確認。松果体/視交叉上核の詳細は補助資料要"
+    }
+  ]
+}
