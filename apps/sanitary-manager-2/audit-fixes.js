@@ -401,3 +401,13 @@ if(fixes.length!==8||new Set(fixes.map(f=>f.id)).size!==8)throw Error('HM2 eleve
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 eleventh10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
 window.SM2_INDEPENDENT_ELEVENTH10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
 })();
+
+
+// SM2_INDEPENDENT_TWELFTH10_METADATA_FIX5_20261111: fixed ID No.111 and 116-119. Correct topic/basis for five items and source URL for No.119 only; all content/approval flags unchanged.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r09-hyg-07","topic":"洗浄剤の皮膚曝露防止とSDSによるリスク評価","basis":"厚生労働省『化学物質リスクアセスメント』・SDSによる危険有害性の確認"},{"id":"sm2-5y-r10-hyg-02","topic":"情報機器作業の視覚・肩頸負担と作業休止","basis":"厚生労働省『情報機器作業における労働衛生管理のためのガイドライン』"},{"id":"sm2-5y-r10-hyg-03","topic":"暑熱順化の違いによる作業負荷の段階調整","basis":"厚生労働省『職場における熱中症防止対策のためのガイドライン』（令和8年3月18日・基発0318第1号）"},{"id":"sm2-5y-r10-hyg-04","topic":"健診データの匿名集団分析と作業条件評価","basis":"労働者の心身の状態に関する情報の適正な取扱いのために事業者が講ずべき措置に関する指針・労働者健康情報保護"},{"id":"sm2-5y-r10-hyg-05","topic":"騒音性難聴の予防と発生源・伝搬経路対策","basis":"厚生労働省『騒音障害防止のためのガイドライン』（令和5年4月改訂）","sourceUrl":"https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02_00004.html"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==5||new Set(fixes.map(f=>f.id)).size!==5||fixes.filter(f=>f.sourceUrl).length!==1)throw Error('HM2 twelfth10 metadata/source fix count invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 twelfth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;if(f.sourceUrl)q.sourceUrl=f.sourceUrl;}
+window.SM2_INDEPENDENT_TWELFTH10_METADATA_FIX5_IDS=fixes.map(f=>f.id);
+})();
