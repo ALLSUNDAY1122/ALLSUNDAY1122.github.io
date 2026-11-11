@@ -1,0 +1,65 @@
+name: HM2 exact JSON parity and strict release-gate regression
+on:
+  push:
+    branches:
+      - audit/hm2-quality-20261110
+    paths:
+      - 'apps/sanitary-manager-2/audit-fixes.js'
+      - 'ios/health-manager-2/release-questions.json'
+      - '.github/workflows/hm2-guard-parity-regression-20261112.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  strict-rebuild-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preserve committed JSON and rebuild through canonical guarded exporter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp ios/health-manager-2/release-questions.json /tmp/hm2-committed.json
+          node ios/health-manager-2/export-canonical-snapshot.cjs
+          if ! cmp -s /tmp/hm2-committed.json ios/health-manager-2/release-questions.json; then
+            echo 'FAIL HM2_EXACT_JSON_PARITY: regenerated canonical JSON differs from committed JSON'
+            node - <<'NODE'
+          const fs=require('fs');
+          const prev=JSON.parse(fs.readFileSync('/tmp/hm2-committed.json','utf8'));
+          const next=JSON.parse(fs.readFileSync('ios/health-manager-2/release-questions.json','utf8'));
+          const diffs=[];
+          for(let i=0;i<Math.max(prev.length,next.length);i++){
+            if(!prev[i]||!next[i]){diffs.push({index:i,issue:'missing question'});continue;}
+            for(const key of new Set([...Object.keys(prev[i]),...Object.keys(next[i])])){
+              if(JSON.stringify(prev[i][key])!==JSON.stringify(next[i][key]))diffs.push({id:prev[i].id,field:key,committed:prev[i][key],generated:next[i][key]});
+            }
+          }
+          console.error(JSON.stringify(diffs.slice(0,15),null,2));
+          NODE
+            exit 1
+          fi
+          echo 'PASS HM2_EXACT_JSON_PARITY: generated file is byte identical'
+          sha256sum /tmp/hm2-committed.json ios/health-manager-2/release-questions.json
+      - name: Verify legacy exporter either passes all its own gates or stops only at review gate
+        shell: bash
+        run: |
+          set -uo pipefail
+          node ios/health-manager-2/export-audit-data.cjs > /tmp/hm2-legacy-export.log 2>&1
+          rc=$?
+          cat /tmp/hm2-legacy-export.log
+          if [ "$rc" -eq 0 ]; then
+            echo 'PASS HM2_LEGACY_EXPORT: exporter completed with its built-in gates intact'
+          elif grep -Fq 'HM2_RELEASE_REVIEW_BLOCKED' /tmp/hm2-legacy-export.log; then
+            echo 'PASS HM2_REVIEW_GATE_EXPECTED_STOP: no strict old-state mismatch'
+          else
+            echo "FAIL HM2_LEGACY_UNEXPECTED_STOP: status=$rc"
+            exit 1
+          fi
+          if grep -Eq 'HM2 strict old-state mismatch|HM2 .*mismatch' /tmp/hm2-legacy-export.log; then
+            echo 'FAIL HM2_STRICT_GUARD: unexpected mismatch'
+            exit 1
+          fi
