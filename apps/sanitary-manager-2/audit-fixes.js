@@ -471,3 +471,15 @@ if(fixes.length!==4||new Set(fixes.map(f=>f.id)).size!==4)throw Error('HM2 eight
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 eighteenth9 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
 window.SM2_INDEPENDENT_EIGHTEENTH9_METADATA_FIX4_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_P0_1_COMMITTEE_RECORD_SCOPE_20261111: specify the two mandatory record categories of Ordinance 23(4); preserve options and answer, approval flags.
+(function(){'use strict';
+const id='sm2-5y-r05-law-07';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+if(!q||q.answer!==2||q.subject!=='関係法令')throw Error('HM2 P0-1 question ID/answer mismatch');
+q.question="事業者が衛生委員会の開催の都度、委員会の意見及びその意見を踏まえて講じた措置の内容と、その他の議事で重要なものを記録した。この記録の法令上の保存期間として正しいものはどれか。";
+q.quick="衛生委員会の意見・対応措置とその他の重要な議事の記録は3年間保存する。";
+q.explanation="労働安全衛生規則23条4項は、委員会の開催の都度、①委員会の意見及びその意見を踏まえて講じた措置の内容、②その他の議事で重要なものを記録し、3年間保存することを定める。議事概要を開催の都度、遅滞なく労働者に周知する義務は同条3項の別規定である。";
+window.HM2_P0_1_COMMITTEE_RECORD_SCOPE_ID=id;
+})();
