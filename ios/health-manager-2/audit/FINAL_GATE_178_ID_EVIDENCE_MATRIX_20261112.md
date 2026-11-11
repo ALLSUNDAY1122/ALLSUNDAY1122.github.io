@@ -5,7 +5,7 @@
 ## 対象集合の再現性と判定規則
 
 - 出典：正本生成経路で得られる`contentReviewStatus`が`requires-independent-legal-review`、`requires-independent-specialist-review`、`requires-independent-subject-expert-review`に該当する問題ID。実行時に得られた件数は**法令44、専門20、科目専門114、計178問**。以下の明細はこの同定済みID集合と現行配布JSONをID突合して構築した。
-- **ID178一意・全件配布JSON内に存在**。固定170問台帳に含まれるもの175件。第1〜17バッチでIDが明示されるもの109件。修正コミットまで問題IDとの対応を既知証拠から明示できるもの3件。**文書に記載がない場合でも、監査未実施と断定しない。**
+- **ID178一意・全件配布JSON内に存在**。正式固定170問台帳と重なるもの**108件**、X-01第1〜13バッチにIDが記録されるもの**67件**、正式固定170第1〜17バッチにIDが記録されるもの**109件**。初期是正3問との対応は別台帳を追跡する。**文書中にIDがない場合でも未監査とは断定しない**。
 - 各行で確認するもの：①現行設問・5肢・正答・解説、②現行`source_url`から到達できる一次資料本文と規制版、③現在の題意への根拠直接性、④修正対象なら旧→新差分とコミット、⑤該当IDの独立専門家・法令レビューの結論、⑥現在の実出題データとの一致。**欠けるものがあれば保留。**
 - 表中「URL候補」は**現在のJSONのURLを写したもので、取得成功や条文適合を表明していない**。「未特定」はこの初回段階でのコミットとの対応未確定を指す。**全178問について機械的なリリース合格変更を行わず、従前のレビュー待ちマーカーを維持**。
 
@@ -74,7 +74,7 @@
 | `sm2-5y-r05-hyg-10` | 専門 | 128 | 音圧レベル差と音圧振幅比の計算 | [BATCH13](DIRECT_SOURCE_170_BATCH13_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r06-hyg-03` | 専門 | 131 | 情報機器作業の視距離とディスプレイ上端の高さ | [BATCH14](DIRECT_SOURCE_170_BATCH14_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r06-hyg-05` | 専門 | 133 | 防じんマスクと防毒マスクの対象物質 | [BATCH14](DIRECT_SOURCE_170_BATCH14_20261112.md) | [URL候補](https://www.mhlw.go.jp/content/11300000/001100842.pdf) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r06-hyg-10` | 専門 | 051 | スクリーニング検査の感度の計算 | X-01/別記録との突合待ち | [URL候補](https://stacks.cdc.gov/view/cdc/193774) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r06-hyg-10` | 専門 | — | スクリーニング検査の感度の計算 | [BATCH05](X01_DIRECT_SOURCE_BATCH05_20261111.md)、[BATCH06](X01_DIRECT_SOURCE_BATCH06_20261111.md) | [URL候補](https://stacks.cdc.gov/view/cdc/193774) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r07-hyg-03` | 専門 | 139 | 小集団の健診情報の再識別防止 | [BATCH14](DIRECT_SOURCE_170_BATCH14_20261112.md) | [URL候補](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei28/index.html) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r07-hyg-05` | 専門 | 141 | 成人心肺蘇生の胸骨圧迫と胸郭の戻し | [BATCH15](DIRECT_SOURCE_170_BATCH15_20261112.md) | [URL候補](https://www.jrc.or.jp/study/safety/) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r09-law-04` | 科目専門 | 094 | 衛生委員会の運営事項を決定する主体 | [BATCH10](DIRECT_SOURCE_170_BATCH10_20261112.md) | [URL候補](https://laws.e-gov.go.jp/law/347M50002000032) | 未特定（要追跡） | **保留** |
@@ -96,10 +96,10 @@
 | `sm2-5y-r06-hyg-02` | 科目専門 | 130 | CO₂濃度測定器の配置による代表値の信頼性評価 | [BATCH13](DIRECT_SOURCE_170_BATCH13_20261112.md) | [URL候補](https://jsite.mhlw.go.jp/mie-roudoukyoku/content/contents/000766889.pdf) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r06-hyg-04` | 科目専門 | 132 | CO₂濃度と空気清浄機・換気の役割の識別 | [BATCH14](DIRECT_SOURCE_170_BATCH14_20261112.md) | [URL候補](https://www.mhlw.go.jp/content/000971006.pdf) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r06-hyg-09` | 科目専門 | 137 | 一酸化炭素中毒疑い時の退避・救急対応 | [BATCH14](DIRECT_SOURCE_170_BATCH14_20261112.md)、[BATCH15](DIRECT_SOURCE_170_BATCH15_20261112.md)、[BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tb7875&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-hyg-01` | 科目専門 | 052 | 三次予防 | X-01/別記録との突合待ち | [URL候補](https://www.cdc.gov/mmwr/preview/mmwrhtml/00016403.htm) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-hyg-01` | 科目専門 | — | 三次予防 | [BATCH06](X01_DIRECT_SOURCE_BATCH06_20261111.md) | [URL候補](https://www.cdc.gov/mmwr/preview/mmwrhtml/00016403.htm) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r07-hyg-02` | 科目専門 | 138 | 健康診断による早期発見・二次予防 | [BATCH14](DIRECT_SOURCE_170_BATCH14_20261112.md) | [URL候補](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r07-hyg-04` | 科目専門 | 140 | WBGT・作業強度・暑熱順化による熱中症リスク評価 | [BATCH14](DIRECT_SOURCE_170_BATCH14_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-hyg-06` | 科目専門 | 053 | 陽性的中率 | X-01/別記録との突合待ち | [URL候補](https://stacks.cdc.gov/view/cdc/198512) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-hyg-06` | 科目専門 | — | 陽性的中率 | [BATCH06](X01_DIRECT_SOURCE_BATCH06_20261111.md) | [URL候補](https://stacks.cdc.gov/view/cdc/198512) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r07-hyg-07` | 科目専門 | 142 | 睡眠不足・作業疲労と勤務計画 | [BATCH15](DIRECT_SOURCE_170_BATCH15_20261112.md) | [URL候補](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/suimin/) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r07-hyg-08` | 科目専門 | 143 | 増床による室容積変化と換気回数の比較 | [BATCH15](DIRECT_SOURCE_170_BATCH15_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r07-hyg-09` | 科目専門 | 144 | 室内温熱環境の気流・放射熱と局所冷感 | [BATCH15](DIRECT_SOURCE_170_BATCH15_20261112.md) | [URL候補](https://www.mhlw.go.jp/content/001499691.pdf) | 未特定（要追跡） | **保留** |
@@ -112,11 +112,11 @@
 | `sm2-5y-r08-hyg-06` | 科目専門 | 151 | ボツリヌス毒素 | [BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md) | [URL候補](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000131106.html) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r08-hyg-07` | 科目専門 | 152 | 職場における感染症拡大防止（手指衛生・換気・体調不良者対応） | [BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md) | [URL候補](https://www.mhlw.go.jp/content/11302000/001741252.pdf) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r08-hyg-08` | 科目専門 | 153 | 重量物保持距離と腰部外力モーメント | [BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r08-hyg-09` | 科目専門 | 054 | 音の強さの比とデシベル換算 | X-01/別記録との突合待ち | [URL候補](https://www.osha.gov/otm/section-3-health-hazards/chapter-5) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r08-hyg-09` | 科目専門 | — | 音の強さの比とデシベル換算 | [BATCH06](X01_DIRECT_SOURCE_BATCH06_20261111.md) | [URL候補](https://www.osha.gov/otm/section-3-health-hazards/chapter-5) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r08-hyg-10` | 科目専門 | 154 | 呼吸器感染症の咳エチケットと飛沫対策 | [BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md) | [URL候補](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/kekkaku-kansenshou/infulenza/QA2026.html) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r09-hyg-01` | 科目専門 | 155 | AEDがショック不要と判定した直後の心肺蘇生 | [BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md) | [URL候補](https://www.fdma.go.jp/relocation/kyukyu_sosei/sisin2015.pdf) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r09-hyg-02` | 科目専門 | 156 | 洗浄剤の眼曝露時の流水洗浄・応急対応 | [BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md) | [URL候補](https://anzeninfo.mhlw.go.jp/anzen/gmsds/88-85-7.html) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r09-hyg-03` | 科目専門 | 055 | 自由音場の点音源の距離減衰（6dB則） | X-01/別記録との突合待ち | [URL候補](https://www.osha.gov/otm/section-3-health-hazards/chapter-5) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r09-hyg-03` | 科目専門 | — | 自由音場の点音源の距離減衰（6dB則） | [BATCH06](X01_DIRECT_SOURCE_BATCH06_20261111.md) | [URL候補](https://www.osha.gov/otm/section-3-health-hazards/chapter-5) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r09-hyg-04` | 科目専門 | 157 | 長時間立位作業の人間工学的負担軽減 | [BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md)、[BATCH17](DIRECT_SOURCE_170_BATCH17_FINAL_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1) | [cdc550f](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/cdc550fe8e426e5ee2b64dd3e31a352549a3c517) | **保留** |
 | `sm2-5y-r09-hyg-05` | 科目専門 | 158 | 暑熱非順化者の段階的作業管理と熱中症予防 | [BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r09-hyg-06` | 科目専門 | 159 | 骨折の副子固定後における末梢血行の観察 | [BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md) | [URL候補](https://www.fdma.go.jp/relocation/syobodan/item/upload/tetyou2025.pdf) | 未特定（要追跡） | **保留** |
@@ -126,75 +126,82 @@
 | `sm2-5y-r10-hyg-03` | 科目専門 | 164 | 暑熱順化が中断した場合の順化低下と再評価 | [BATCH17](DIRECT_SOURCE_170_BATCH17_FINAL_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r10-hyg-04` | 科目専門 | 165 | 健診データの匿名集団分析と作業条件評価 | [BATCH17](DIRECT_SOURCE_170_BATCH17_FINAL_20261112.md) | [URL候補](https://www.mhlw.go.jp/content/000922318.pdf) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r10-hyg-05` | 科目専門 | 166 | 聴覚保護具の適正遮音値と警報音の聞き取り | [BATCH17](DIRECT_SOURCE_170_BATCH17_FINAL_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-hyg-06` | 科目専門 | 057 | 尿色だけで脱水の程度を断定しない職場の水分管理 | X-01/別記録との突合待ち | [URL候補](https://pmc.ncbi.nlm.nih.gov/articles/PMC13692142/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-hyg-06` | 科目専門 | — | 尿色だけで脱水の程度を断定しない職場の水分管理 | [BATCH06](X01_DIRECT_SOURCE_BATCH06_20261111.md) | [URL候補](https://pmc.ncbi.nlm.nih.gov/articles/PMC13692142/) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r10-hyg-08` | 科目専門 | 168 | 健診有所見率の集団分析と勤務条件評価 | [BATCH17](DIRECT_SOURCE_170_BATCH17_FINAL_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r10-hyg-09` | 科目専門 | 169 | WBGT測定地点と暑熱曝露条件 | [BATCH17](DIRECT_SOURCE_170_BATCH17_FINAL_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r10-hyg-10` | 科目専門 | 170 | 情報機器作業の表示文字高と視距離の調整 | [BATCH17](DIRECT_SOURCE_170_BATCH17_FINAL_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r04-phy-01` | 科目専門 | 058 | 高地低酸素とヘモグロビン酸素飽和度 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK539701/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r04-phy-02` | 科目専門 | 059 | 運動時の筋組織による酸素抽出と動静脈酸素較差 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK57139/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r04-phy-03` | 科目専門 | 060 | 心拍出量の計算 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK470455/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r04-phy-04` | 科目専門 | 061 | 運動時の心拍出量と活動筋血流 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK482280/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r04-phy-05` | 科目専門 | 062 | 肺循環から左心房への還流 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK525948/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r04-phy-06` | 科目専門 | 063 | 凝固後の血清で低下するフィブリノゲンの判断 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK531504/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r04-phy-07` | 科目専門 | 064 | 凝固検査のためのクエン酸加血漿の検体選択 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK544269/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r04-phy-08` | 科目専門 | 065 | 解剖学的死腔を除く毎分肺胞換気量の計算 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK493219/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r04-phy-09` | 科目専門 | 066 | 貧血における酸素飽和度と血液酸素含有量の区別 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK525974/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r04-phy-10` | 科目専門 | 067 | 二酸化炭素分圧と化学受容器による換気調節 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK482456/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r05-phy-01` | 科目専門 | 068 | 冠動脈による心筋への酸素供給 | X-01/別記録との突合待ち | [URL候補](https://www.nhlbi.nih.gov/health/heart/blood-flow) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r05-phy-02` | 科目専門 | 069 | 右心室から肺動脈への血液流出 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK554457/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r05-phy-03` | 科目専門 | 070 | 肺胞・肺毛細血管間の二酸化炭素分圧差と拡散 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK539907/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r05-phy-04` | 科目専門 | 071 | 食後のインスリン増加と肝糖放出の抑制 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/sites/books/NBK30/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r05-phy-05` | 科目専門 | 072 | 糸球体ろ過膜の選択性と血球の非透過性 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK538339/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r05-phy-06` | 科目専門 | 073 | 脈拍 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK542175/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r05-phy-07` | 科目専門 | 074 | 心尖拍動数と橈骨脈拍数の差（脈拍欠損） | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK278/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r05-phy-08` | 科目専門 | 075 | 運動時の筋収縮によるインスリン非依存性GLUT4膜移行 | X-01/別記録との突合待ち | [URL候補](https://pmc.ncbi.nlm.nih.gov/articles/PMC5369262/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r05-phy-09` | 科目専門 | 076 | 骨格筋収縮とカルシウム・アクチン・ミオシン | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK9961/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r05-phy-10` | 科目専門 | 077 | 膵リパーゼによる中性脂肪消化 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK554545/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r06-phy-01` | 科目専門 | 078 | 安静時呼息 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK559004/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r06-phy-02` | 科目専門 | 079 | 横隔膜収縮と安静吸息の胸腔容積・肺内圧変化 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK482502/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r06-phy-06` | 科目専門 | 083 | 腎臓 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK538339/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r06-phy-07` | 科目専門 | 084 | ADHのV2受容体とアクアポリン2による水再吸収 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK526069/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r06-phy-08` | 科目専門 | 085 | 骨格筋の酸化的リン酸化とATP生成 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK553192/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r06-phy-09` | 科目専門 | 086 | 多量飲水後のADH抑制と希釈尿 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK544365/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r06-phy-10` | 科目専門 | 087 | 心臓の刺激伝導系と伝導順序 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK594995/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-phy-01` | 科目専門 | 088 | アルドステロン | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK470339/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-phy-02` | 科目専門 | 089 | インスリン抵抗性がある骨格筋の糖取り込み | X-01/別記録との突合待ち | [URL候補](https://pubmed.ncbi.nlm.nih.gov/37248992/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-phy-03` | 科目専門 | 090 | 血小板の一次止血と粘着・凝集 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK545263/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-phy-04` | 科目専門 | 091 | 長鎖脂肪酸由来脂質のカイロミクロン・リンパ輸送 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK545157/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-phy-05` | 科目専門 | 092 | 局所冷却時の寒冷血管拡張反応（ハンティング反応） | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK232852/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-phy-06` | 科目専門 | 093 | 短時間の空腹時におけるグルカゴンと肝グリコーゲン分解 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/sites/books/NBK279127/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-phy-07` | 科目専門 | 094 | 長時間絶食で肝グリコーゲンが減少した際の糖新生 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK541119/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-phy-08` | 科目専門 | 095 | ADH受容体が遮断された場合の集合管AQP2作用 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK1177/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-phy-09` | 科目専門 | 096 | 近見反射に伴う両眼の輻輳と縮瞳 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK542189/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r07-phy-10` | 科目専門 | 097 | 好中球・マクロファージによる貪食と自然免疫 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK556043/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r08-phy-01` | 科目専門 | 098 | 反射 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK544292/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r08-phy-02` | 科目専門 | 099 | 明所から暗所への移行時の錐体・杆体の機能差 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK11522/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r08-phy-06` | 科目専門 | 103 | 網膜の光受容から視神経出力までの情報伝達 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK10885/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r08-phy-10` | 科目専門 | 107 | 対光反射の直接反射と間接（共同）反射 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK553169/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r09-phy-01` | 科目専門 | 108 | 骨格筋 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/sites/books/NBK532258/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r09-phy-02` | 科目専門 | 109 | 骨格筋の滑走説とアクチン・ミオシン | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK26888/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r09-phy-03` | 科目専門 | 110 | 暗所での散瞳と交感神経による瞳孔散大筋 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK553169/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r09-phy-04` | 科目専門 | 111 | 同じ分時換気量での浅速呼吸・深徐呼吸と肺胞換気比較 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK482501/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r09-phy-05` | 科目専門 | 112 | コリ回路における乳酸の肝糖新生と筋への再供給 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK541119/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r09-phy-06` | 科目専門 | 113 | 嫌気的解糖 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK546695/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r09-phy-07` | 科目専門 | 114 | ミトコンドリアの脱共役とATP合成の低下 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK526105/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r09-phy-08` | 科目専門 | 115 | 膵島β細胞とインスリン分泌 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK459261/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r09-phy-09` | 科目専門 | 116 | 出血時の交感神経による循環代償 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK538172/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r09-phy-10` | 科目専門 | 117 | von Willebrand因子と血小板の損傷血管壁への粘着 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK559062/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-phy-01` | 科目専門 | 118 | 肝臓 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK542254/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-phy-02` | 科目専門 | 119 | 胆汁酸による脂質乳化と胆汁の消化補助作用 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK470209/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-phy-03` | 科目専門 | 120 | 肺血流低下に伴う肺胞死腔の増加と換気血流不均衡 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK482501/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-phy-04` | 科目専門 | 121 | 近位尿細管でのブドウ糖再吸収 | X-01/別記録との突合待ち | [URL候補](https://pmc.ncbi.nlm.nih.gov/articles/PMC3889318/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-phy-05` | 科目専門 | 122 | 肺胞から血液への酸素拡散 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/sites/books/NBK493219/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-phy-06` | 科目専門 | 123 | 外気温が皮膚温を超える環境での熱移動と蒸発冷却 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK541107/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-phy-07` | 科目専門 | 124 | 高湿度下の汗の蒸発と熱放散 | X-01/別記録との突合待ち | [URL候補](https://www.cdc.gov/diabetes/articles/managing-diabetes-in-the-heat.html) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-phy-08` | 科目専門 | 125 | 腸管毛細血管から門脈を介した糖輸送 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK597379/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-phy-09` | 科目専門 | 126 | 二酸化炭素増加と血液pHの低下 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/sites/books/NBK482430/) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-phy-10` | 科目専門 | 127 | 小腸での糖質と脂質の輸送経路比較 | X-01/別記録との突合待ち | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK545157/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r04-phy-01` | 科目専門 | — | 高地低酸素とヘモグロビン酸素飽和度 | [BATCH06](X01_DIRECT_SOURCE_BATCH06_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK539701/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r04-phy-02` | 科目専門 | — | 運動時の筋組織による酸素抽出と動静脈酸素較差 | [BATCH06](X01_DIRECT_SOURCE_BATCH06_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK57139/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r04-phy-03` | 科目専門 | — | 心拍出量の計算 | [BATCH06](X01_DIRECT_SOURCE_BATCH06_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK470455/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r04-phy-04` | 科目専門 | — | 運動時の心拍出量と活動筋血流 | [BATCH06](X01_DIRECT_SOURCE_BATCH06_20261111.md)、[BATCH07](X01_DIRECT_SOURCE_BATCH07_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK482280/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r04-phy-05` | 科目専門 | — | 肺循環から左心房への還流 | [BATCH07](X01_DIRECT_SOURCE_BATCH07_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK525948/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r04-phy-06` | 科目専門 | — | 凝固後の血清で低下するフィブリノゲンの判断 | [BATCH07](X01_DIRECT_SOURCE_BATCH07_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK531504/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r04-phy-07` | 科目専門 | — | 凝固検査のためのクエン酸加血漿の検体選択 | [BATCH07](X01_DIRECT_SOURCE_BATCH07_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK544269/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r04-phy-08` | 科目専門 | — | 解剖学的死腔を除く毎分肺胞換気量の計算 | [BATCH07](X01_DIRECT_SOURCE_BATCH07_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK493219/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r04-phy-09` | 科目専門 | — | 貧血における酸素飽和度と血液酸素含有量の区別 | [BATCH07](X01_DIRECT_SOURCE_BATCH07_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK525974/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r04-phy-10` | 科目専門 | — | 二酸化炭素分圧と化学受容器による換気調節 | [BATCH07](X01_DIRECT_SOURCE_BATCH07_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK482456/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r05-phy-01` | 科目専門 | — | 冠動脈による心筋への酸素供給 | [BATCH07](X01_DIRECT_SOURCE_BATCH07_20261111.md) | [URL候補](https://www.nhlbi.nih.gov/health/heart/blood-flow) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r05-phy-02` | 科目専門 | — | 右心室から肺動脈への血液流出 | [BATCH07](X01_DIRECT_SOURCE_BATCH07_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK554457/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r05-phy-03` | 科目専門 | — | 肺胞・肺毛細血管間の二酸化炭素分圧差と拡散 | [BATCH07](X01_DIRECT_SOURCE_BATCH07_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK539907/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r05-phy-04` | 科目専門 | — | 食後のインスリン増加と肝糖放出の抑制 | [BATCH07](X01_DIRECT_SOURCE_BATCH07_20261111.md)、[BATCH08](X01_DIRECT_SOURCE_BATCH08_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/sites/books/NBK30/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r05-phy-05` | 科目専門 | — | 糸球体ろ過膜の選択性と血球の非透過性 | [BATCH08](X01_DIRECT_SOURCE_BATCH08_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK538339/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r05-phy-06` | 科目専門 | — | 脈拍 | [BATCH08](X01_DIRECT_SOURCE_BATCH08_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK542175/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r05-phy-07` | 科目専門 | — | 心尖拍動数と橈骨脈拍数の差（脈拍欠損） | [BATCH08](X01_DIRECT_SOURCE_BATCH08_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK278/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r05-phy-08` | 科目専門 | — | 運動時の筋収縮によるインスリン非依存性GLUT4膜移行 | [BATCH08](X01_DIRECT_SOURCE_BATCH08_20261111.md) | [URL候補](https://pmc.ncbi.nlm.nih.gov/articles/PMC5369262/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r05-phy-09` | 科目専門 | — | 骨格筋収縮とカルシウム・アクチン・ミオシン | [BATCH08](X01_DIRECT_SOURCE_BATCH08_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK9961/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r05-phy-10` | 科目専門 | — | 膵リパーゼによる中性脂肪消化 | [BATCH08](X01_DIRECT_SOURCE_BATCH08_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK554545/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r06-phy-01` | 科目専門 | — | 安静時呼息 | [BATCH08](X01_DIRECT_SOURCE_BATCH08_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK559004/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r06-phy-02` | 科目専門 | — | 横隔膜収縮と安静吸息の胸腔容積・肺内圧変化 | [BATCH08](X01_DIRECT_SOURCE_BATCH08_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK482502/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r06-phy-06` | 科目専門 | — | 腎臓 | [BATCH09](X01_DIRECT_SOURCE_BATCH09_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK538339/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r06-phy-07` | 科目専門 | — | ADHのV2受容体とアクアポリン2による水再吸収 | [BATCH09](X01_DIRECT_SOURCE_BATCH09_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK526069/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r06-phy-08` | 科目専門 | — | 骨格筋の酸化的リン酸化とATP生成 | [BATCH09](X01_DIRECT_SOURCE_BATCH09_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK553192/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r06-phy-09` | 科目専門 | — | 多量飲水後のADH抑制と希釈尿 | [BATCH09](X01_DIRECT_SOURCE_BATCH09_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK544365/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r06-phy-10` | 科目専門 | — | 心臓の刺激伝導系と伝導順序 | [BATCH09](X01_DIRECT_SOURCE_BATCH09_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK594995/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-phy-01` | 科目専門 | — | アルドステロン | [BATCH09](X01_DIRECT_SOURCE_BATCH09_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK470339/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-phy-02` | 科目専門 | — | インスリン抵抗性がある骨格筋の糖取り込み | [BATCH09](X01_DIRECT_SOURCE_BATCH09_20261111.md) | [URL候補](https://pubmed.ncbi.nlm.nih.gov/37248992/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-phy-03` | 科目専門 | — | 血小板の一次止血と粘着・凝集 | [BATCH09](X01_DIRECT_SOURCE_BATCH09_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK545263/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-phy-04` | 科目専門 | — | 長鎖脂肪酸由来脂質のカイロミクロン・リンパ輸送 | [BATCH09](X01_DIRECT_SOURCE_BATCH09_20261111.md)、[BATCH10](X01_DIRECT_SOURCE_BATCH10_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK545157/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-phy-05` | 科目専門 | — | 局所冷却時の寒冷血管拡張反応（ハンティング反応） | [BATCH10](X01_DIRECT_SOURCE_BATCH10_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK232852/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-phy-06` | 科目専門 | — | 短時間の空腹時におけるグルカゴンと肝グリコーゲン分解 | [BATCH10](X01_DIRECT_SOURCE_BATCH10_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/sites/books/NBK279127/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-phy-07` | 科目専門 | — | 長時間絶食で肝グリコーゲンが減少した際の糖新生 | [BATCH10](X01_DIRECT_SOURCE_BATCH10_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK541119/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-phy-08` | 科目専門 | — | ADH受容体が遮断された場合の集合管AQP2作用 | [BATCH10](X01_DIRECT_SOURCE_BATCH10_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK1177/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-phy-09` | 科目専門 | — | 近見反射に伴う両眼の輻輳と縮瞳 | [BATCH10](X01_DIRECT_SOURCE_BATCH10_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK542189/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r07-phy-10` | 科目専門 | — | 好中球・マクロファージによる貪食と自然免疫 | [BATCH10](X01_DIRECT_SOURCE_BATCH10_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK556043/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r08-phy-01` | 科目専門 | — | 反射 | [BATCH10](X01_DIRECT_SOURCE_BATCH10_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK544292/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r08-phy-02` | 科目専門 | — | 明所から暗所への移行時の錐体・杆体の機能差 | [BATCH10](X01_DIRECT_SOURCE_BATCH10_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK11522/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r08-phy-06` | 科目専門 | — | 網膜の光受容から視神経出力までの情報伝達 | [BATCH11](X01_DIRECT_SOURCE_BATCH11_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK10885/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r08-phy-10` | 科目専門 | — | 対光反射の直接反射と間接（共同）反射 | [BATCH11](X01_DIRECT_SOURCE_BATCH11_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK553169/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r09-phy-01` | 科目専門 | — | 骨格筋 | [BATCH11](X01_DIRECT_SOURCE_BATCH11_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/sites/books/NBK532258/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r09-phy-02` | 科目専門 | — | 骨格筋の滑走説とアクチン・ミオシン | [BATCH11](X01_DIRECT_SOURCE_BATCH11_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK26888/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r09-phy-03` | 科目専門 | — | 暗所での散瞳と交感神経による瞳孔散大筋 | [BATCH11](X01_DIRECT_SOURCE_BATCH11_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK553169/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r09-phy-04` | 科目専門 | — | 同じ分時換気量での浅速呼吸・深徐呼吸と肺胞換気比較 | [BATCH11](X01_DIRECT_SOURCE_BATCH11_20261111.md)、[BATCH12](X01_DIRECT_SOURCE_BATCH12_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK482501/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r09-phy-05` | 科目専門 | — | コリ回路における乳酸の肝糖新生と筋への再供給 | [BATCH12](X01_DIRECT_SOURCE_BATCH12_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK541119/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r09-phy-06` | 科目専門 | — | 嫌気的解糖 | [BATCH12](X01_DIRECT_SOURCE_BATCH12_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK546695/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r09-phy-07` | 科目専門 | — | ミトコンドリアの脱共役とATP合成の低下 | [BATCH12](X01_DIRECT_SOURCE_BATCH12_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK526105/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r09-phy-08` | 科目専門 | — | 膵島β細胞とインスリン分泌 | [BATCH12](X01_DIRECT_SOURCE_BATCH12_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK459261/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r09-phy-09` | 科目専門 | — | 出血時の交感神経による循環代償 | [BATCH12](X01_DIRECT_SOURCE_BATCH12_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK538172/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r09-phy-10` | 科目専門 | — | von Willebrand因子と血小板の損傷血管壁への粘着 | [BATCH12](X01_DIRECT_SOURCE_BATCH12_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK559062/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-phy-01` | 科目専門 | — | 肝臓 | [BATCH12](X01_DIRECT_SOURCE_BATCH12_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK542254/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-phy-02` | 科目専門 | — | 胆汁酸による脂質乳化と胆汁の消化補助作用 | [BATCH12](X01_DIRECT_SOURCE_BATCH12_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK470209/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-phy-03` | 科目専門 | — | 肺血流低下に伴う肺胞死腔の増加と換気血流不均衡 | [BATCH12](X01_DIRECT_SOURCE_BATCH12_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK482501/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-phy-04` | 科目専門 | — | 近位尿細管でのブドウ糖再吸収 | [BATCH12](X01_DIRECT_SOURCE_BATCH12_20261111.md)、[BATCH13](X01_DIRECT_SOURCE_BATCH13_FINAL_20261111.md) | [URL候補](https://pmc.ncbi.nlm.nih.gov/articles/PMC3889318/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-phy-05` | 科目専門 | — | 肺胞から血液への酸素拡散 | [BATCH13](X01_DIRECT_SOURCE_BATCH13_FINAL_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/sites/books/NBK493219/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-phy-06` | 科目専門 | — | 外気温が皮膚温を超える環境での熱移動と蒸発冷却 | [BATCH13](X01_DIRECT_SOURCE_BATCH13_FINAL_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK541107/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-phy-07` | 科目専門 | — | 高湿度下の汗の蒸発と熱放散 | [BATCH13](X01_DIRECT_SOURCE_BATCH13_FINAL_20261111.md) | [URL候補](https://www.cdc.gov/diabetes/articles/managing-diabetes-in-the-heat.html) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-phy-08` | 科目専門 | — | 腸管毛細血管から門脈を介した糖輸送 | [BATCH13](X01_DIRECT_SOURCE_BATCH13_FINAL_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK597379/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-phy-09` | 科目専門 | — | 二酸化炭素増加と血液pHの低下 | [BATCH13](X01_DIRECT_SOURCE_BATCH13_FINAL_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/sites/books/NBK482430/) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-phy-10` | 科目専門 | — | 小腸での糖質と脂質の輸送経路比較 | [BATCH13](X01_DIRECT_SOURCE_BATCH13_FINAL_20261111.md) | [URL候補](https://www.ncbi.nlm.nih.gov/books/NBK545157/) | 未特定（要追跡） | **保留** |
 
 ## 今回の判断と後続照合
 
 - 固定170問バッチにIDが存在することは**過去の照合実施を示すだけ**。その後の出典URL・解説・誤肢の修正は、現行内容との再突合が必要。
-- 第1段階では固定170問のバッチ文書を照合した。**X-01の127問分の監査バッチ、初期是正3問の履歴との横断対照は別途追加すること**。この表に「X-01/別記録との突合待ち」とある行は監査記録を未確認であり、不適合と断定しない。
+- 固定170問の17バッチとX-01の13バッチをIDごとに索引照合した。ただし各記録と現行の正答・一次資料本文・修正コミットの一致は未了であり、全件**保留**。初期是正3問の履歴は継続。
 - No.161 `sm2-5y-r09-hyg-09`は本178問集合の外にあり、別途安衛法66条の4・5の一次資料を直接照合し、`legalChecked=2026-11-12`、`auditStatus=一次資料照合済`を個別記録した。**178問のレビュー待ちを解除する根拠にはならない。**
 - 優先順：X-01バッチのID別証跡追加 → 修正コミットの厳密なID紐付け → 出典の逐語・版と全肢の個別判定 → 独立専門家結論 → 逐問状態変更。**本番公開BLOCKED**維持。
+
+
+## 誤集計是正・X-01索引追補（2026-11-12）
+
+- 初回版は固定170問台帳に併記された**X-01の127問一覧を誤って固定170一覧と混同**し、175件と過大集計していた。正式固定170問の見出し以降だけで再集計したため、**175件の旧値を撤回**する。
+- 178問のうち正式固定170問に属するもの**108件**。X-01第1〜13バッチ内にID記載67件、固定170第1〜17バッチ内にID記載109件。固定170・X-01・初期是正3問の母集団区分を混同しない。
+- 記録存在は内容の独立承認ではない。**保留178、マーカー解除0、公開BLOCKED**を維持。
