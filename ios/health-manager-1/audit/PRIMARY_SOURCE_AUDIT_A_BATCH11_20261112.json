@@ -124,7 +124,30 @@
     ],
     "fullFiveChoiceIndependentDirectProofClosed": 0
   },
-  "currentBatchIndependent264Regeneration": "NOT_RUN",
+  "currentBatchIndependent264Regeneration": "PASS_REPORTED_MUSE_ONLY",
   "currentBatchWebIosByteCheck": "NOT_RUN",
-  "releaseGate": "FAIL/BLOCKED"
+  "releaseGate": "FAIL/BLOCKED",
+  "reportedMuseFourQuestionRegeneration": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "c5df1dd",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "practice-A-Q21",
+      "practice-A-Q26",
+      "practice-A-Q28",
+      "practice-A-Q34"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL where applicable"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN",
+    "fieldClarification": "Q21/Q28 modified status and URL; Q26/Q34 modified status only."
+  }
 }

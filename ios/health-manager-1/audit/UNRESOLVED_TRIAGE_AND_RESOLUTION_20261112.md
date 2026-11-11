@@ -252,3 +252,24 @@
 - 264問Node CLI再生成・新規4問限定差分・Web/iOS配布JSONバイト・SHA256は**未実施**。次はMuse側で検証、続いて`practice-A-Q37`・`Q39`・`practice-B-Q08`・`Q20`を検討。
 - **リリースゲートFAIL/BLOCKED維持**。mainマージ・審査申請・公開なし。
 - 詳細：`PRIMARY_SOURCE_AUDIT_A_BATCH11_20261112.json`、進捗：`PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
+
+
+## 続編第12回：Muse演習A4問PASS追記、（a）群演習A/B計4問中心命題照合（2026-11-12）
+
+### Muse側再生成報告の受領（独立再実行ではない）
+- 比較基準 `c5df1dd` と現在状態の双方でNode CLI264問再生成成功。差分は `practice-A-Q21`・`Q26`・`Q28`・`Q34` だけ。正答index全問不変、他260問完全一致、限定差分PASS。
+- Q21/Q28は監査ステータス・出典URL、Q26/Q34は監査ステータスのみの変更。Muse側から提供された実施報告の転記であり、当担当による264問再生成・配布バイト/SHA256照合の独立再検証ではない。今回の修正4問へのPASS転用はしない。
+
+### （a）群・今回の中心命題照合
+- **`practice-A-Q37`**（正答index `2` 不変）：NCBI StatPearls Physiology, Cardiac Cycle: during ventricular systole the mitral valve closes; once left ventricular pressure exceeds aortic pressure, aortic valve opens and rapid ventricular ejection begins. Hence choice 2. 監査URL `https://www.ncbi.nlm.nih.gov/books/NBK459327/` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK459327/`。変更フィールド：`auditSourceURL`、`auditStatus`。留保：僧帽弁閉鎖不全等の病的例や全5肢独立逐語証明は未検証。
+- **`practice-A-Q39`**（正答index `3` 不変）：NCBI StatPearls Physiology, Pulmonary Circulatory System: entire right-heart cardiac output passes through pulmonary circulation, low-pressure/low-resistance arrangement enables gas exchange. Hence choice 3. 監査URL `https://www.ncbi.nlm.nih.gov/books/NBK525948/` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK525948/`。変更フィールド：`auditSourceURL`、`auditStatus`。留保：各病態での肺血管抵抗や全5肢独立逐語反証は未完了。
+- **`practice-B-Q08`**（正答index `0` 不変）：安衛則7条1項1号の14日以内の選任義務と7条3項の遅滞ない所轄監督署長への報告義務を区別。厚労省は2025年1月1日から選任報告の原則電子申請および資格証明記録の添付を案内。肢0の中心命題は直接裏付けられる。 監査URL `https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0` → `https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0`、補助 `https://jsite.mhlw.go.jp/nara-roudoukyoku/content/contents/Health-and-safety-handbook2025_.pdf`。変更フィールド：`auditStatus`。留保：原則電子申請の経過措置として書面報告が可能。添付方法・適用時点・全5肢独立逐語確認は残る。
+- **`practice-B-Q20`**（正答index `2` 不変）：厚労省の腰痛予防指針は手かぎ・吸盤等の補助具を推奨するが、COVAL製造者技術資料は粗面・多孔質表面で空気漏れが起こり保持力が表面と真空流量等に依存すると明記。対象素材ごとの実使用条件検証と把持方式選定を求める肢2の中心命題を支持。 監査URL `https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1` → `https://www.coval.com/en-us/technologies/vacuum-technology/suction-cup-performance`、補助 `https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1`。変更フィールド：`auditSourceURL`、`auditStatus`。留保：COVALは製造者の技術資料（公的法令そのものではない）。12kg袋物の製品固有の実測保持力は未確認。全5肢独立逐語証明未完。
+
+### 集計、出典区分と引継ぎ
+- （a）群中心命題の固有ID照合 **56/85件**、次の照合待ち **29件（33→29）**。全5肢独立逐語PASSは0件扱いを維持。
+- **生成元変更IDは `practice-A-Q37`・`practice-A-Q39`・`practice-B-Q08`・`practice-B-Q20`。** A Q37/Q39は`auditSourceURL`と`auditStatus`、B Q08は`auditStatus`のみ、B Q20は`auditSourceURL`と`auditStatus`。問題文・5肢・解説・正答index不変。演習A上書き44問中他42問、演習B上書き44問中他42問を構造差分確認。
+- B Q20のCOVAL資料は製造者一次技術資料であり公的法令とは異なる。腰痛予防の国内公的根拠を補助資料で保持。吸盤の安全な使用には製品・対象物・条件別の性能試験が必要。
+- 今回の修正4問の264問Node CLI再生成・限定差分、Web/iOS配布バイト・SHA256は未実施。次はMuse側独立確認後、`practice-B-Q28`・`Q33`・`practice-C-Q01`・`Q02`から追証。
+- 法令版・商用利用権・全5肢直接証明・実機検証未了、**リリースゲートFAIL/BLOCKED**、mainマージ・審査申請・公開なし。
+- 新規個別台帳：`audit/PRIMARY_SOURCE_AUDIT_A_BATCH12_20261112.json`、累計台帳：`audit/PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。

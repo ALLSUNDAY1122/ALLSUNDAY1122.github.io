@@ -1699,13 +1699,9 @@
   "aGroupProgress": {
     "countingMethod": "a群85IDのうち中心命題への公開一次資料追証・法令根拠修正を記録済みの固有IDだけを1回計上。前回のC29、C34、C42、Q25および第2〜第6次バッチを含む。完全5肢逐語原典PASSの残数ではない。",
     "aGroupOriginal": 85,
-    "centralClaimSupportedUnique": 52,
-    "centralClaimNotYetRecorded": 33,
+    "centralClaimSupportedUnique": 56,
+    "centralClaimNotYetRecorded": 29,
     "centralClaimPendingIds": [
-      "practice-A-Q37",
-      "practice-A-Q39",
-      "practice-B-Q08",
-      "practice-B-Q20",
       "practice-B-Q28",
       "practice-B-Q33",
       "practice-C-Q01",
@@ -2116,6 +2112,90 @@
       "caveat": "実臨床の点状出血と凝固異常の鑑別診断、全5肢の独立逐語立証は未完。",
       "correctIndex": 4,
       "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "batchTwelveMuseValidation": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "c5df1dd",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "practice-A-Q21",
+      "practice-A-Q26",
+      "practice-A-Q28",
+      "practice-A-Q34"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL where applicable"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN",
+    "fieldClarification": "Q21/Q28 modified status and URL; Q26/Q34 modified status only."
+  },
+  "batchTwelveResolutions": [
+    {
+      "id": "practice-A-Q37",
+      "sourceContainer": "a",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK459327/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK459327/",
+      "secondaryEvidenceURL": null,
+      "evidence": "NCBI StatPearls Physiology, Cardiac Cycle: during ventricular systole the mitral valve closes; once left ventricular pressure exceeds aortic pressure, aortic valve opens and rapid ventricular ejection begins. Hence choice 2.",
+      "caveat": "僧帽弁閉鎖不全等の病的例や全5肢独立逐語証明は未検証。",
+      "correctIndex": 2,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-A-Q39",
+      "sourceContainer": "a",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK525948/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK525948/",
+      "secondaryEvidenceURL": null,
+      "evidence": "NCBI StatPearls Physiology, Pulmonary Circulatory System: entire right-heart cardiac output passes through pulmonary circulation, low-pressure/low-resistance arrangement enables gas exchange. Hence choice 3.",
+      "caveat": "各病態での肺血管抵抗や全5肢独立逐語反証は未完了。",
+      "correctIndex": 3,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-B-Q08",
+      "sourceContainer": "b",
+      "oldAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+      "secondaryEvidenceURL": "https://jsite.mhlw.go.jp/nara-roudoukyoku/content/contents/Health-and-safety-handbook2025_.pdf",
+      "evidence": "安衛則7条1項1号の14日以内の選任義務と7条3項の遅滞ない所轄監督署長への報告義務を区別。厚労省は2025年1月1日から選任報告の原則電子申請および資格証明記録の添付を案内。肢0の中心命題は直接裏付けられる。",
+      "caveat": "原則電子申請の経過措置として書面報告が可能。添付方法・適用時点・全5肢独立逐語確認は残る。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-B-Q20",
+      "sourceContainer": "b",
+      "oldAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "newAuditURL": "https://www.coval.com/en-us/technologies/vacuum-technology/suction-cup-performance",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1",
+      "evidence": "厚労省の腰痛予防指針は手かぎ・吸盤等の補助具を推奨するが、COVAL製造者技術資料は粗面・多孔質表面で空気漏れが起こり保持力が表面と真空流量等に依存すると明記。対象素材ごとの実使用条件検証と把持方式選定を求める肢2の中心命題を支持。",
+      "caveat": "COVALは製造者の技術資料（公的法令そのものではない）。12kg袋物の製品固有の実測保持力は未確認。全5肢独立逐語証明未完。",
+      "correctIndex": 2,
+      "changedFields": [
+        "auditSourceURL",
         "auditStatus"
       ],
       "allFiveIndependentDirectProof": false
