@@ -321,3 +321,12 @@ if(fixes.length!==6||new Set(fixes.map(f=>f.id)).size!==6)throw Error('HM2 third
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 third10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
 window.SM2_INDEPENDENT_THIRD10_METADATA_FIX6_IDS=fixes.map(f=>f.id);
 })();
+
+// SM2_INDEPENDENT_FOURTH10_METADATA_FIX4_20261111: correct four reviewed topics and statutory bases only. Source/answers/review gates unchanged.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r08-law-02","topic":"常時120人の事務所における産業医の選任と専属要件","basis":"労働安全衛生法13条1項・労働安全衛生法施行令5条・労働安全衛生規則13条1項3号"},{"id":"sm2-5y-r08-law-03","topic":"雇入時健康診断と一般定期健康診断","basis":"労働安全衛生規則43条・44条"},{"id":"sm2-5y-r08-law-04","topic":"深夜労働の割増賃金率","basis":"労働基準法37条4項・労働基準法施行規則20条"},{"id":"sm2-5y-r08-law-05","topic":"定期健康診断結果の報告義務（常時50人以上）","basis":"労働安全衛生規則52条"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==4||new Set(fixes.map(f=>f.id)).size!==4)throw Error('HM2 fourth10 fix count invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 fourth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
+window.SM2_INDEPENDENT_FOURTH10_METADATA_FIX4_IDS=fixes.map(f=>f.id);
+})();
