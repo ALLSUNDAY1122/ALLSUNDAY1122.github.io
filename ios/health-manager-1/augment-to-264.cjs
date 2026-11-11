@@ -131,15 +131,16 @@ for (const round of layouts) {
   if (n !== 45) throw new Error(`${round.id}: expected 44 questions, got ${n-1}`);
 }
 
-// HM1-only Practice C Q01-Q10 rewrites. Apply after source selection.
+// HM1-only Practice C Q01-Q44 rewrites. Apply after source selection.
 // Stop if HM2 source ordering changes rather than patching an unrelated question.
 const cFixes = {
   ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_01_10.json'), 'utf8')).questions,
   ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_11_20.json'), 'utf8')).questions,
   ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_21_30.json'), 'utf8')).questions,
-  ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_31_40.json'), 'utf8')).questions
+  ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_31_40.json'), 'utf8')).questions,
+  ...JSON.parse(fs.readFileSync(path.join(IOS_DIR, 'audit', 'practice_c_fixes_41_44.json'), 'utf8')).questions
 };
-const cIds = Array.from({length:40}, (_,i) => 'practice-C-Q' + String(i+1).padStart(2, '0'));
+const cIds = Array.from({length:44}, (_,i) => 'practice-C-Q' + String(i+1).padStart(2, '0'));
 if (JSON.stringify(Object.keys(cFixes).sort()) !== JSON.stringify([...cIds].sort())) {
   throw new Error('Practice C override ID set mismatch');
 }
@@ -162,7 +163,7 @@ for (const id of cIds) {
   q.originalExpression = true;
   q.independenceReason = 'HM1 C-specific audit rewrite with source-ID verification.';
 }
-console.log('PASS: Practice-C Q01-Q40 source-matched rewrites applied (40)');
+console.log('PASS: Practice-C Q01-Q44 source-matched rewrites applied (44)');
 
 const all = [...base, ...added];
 if (all.length !== 264) throw new Error(`Expected total=264, got ${all.length}`);
