@@ -1338,3 +1338,14 @@
 - **実質重複候補**：No.101とNo.104（職場の感染症対策）、No.105と先行の一次救命処置、No.102と他の重量物保持姿勢問題。No.109と他の暑熱順化問題も多様性検証を要する。
 - このバッチは**監査記録だけ更新**。生成元JS・iOS JSON・レビュー承認/公開状態・ビルド・TestFlight・App Reviewには変更しない。公開品質ゲートは**BLOCKED**のまま。
 - **固定対象の累計109/178問点検済、未点検69問**。次は固定ID **No.110〜119**。旧2021年熱中症要綱から2026年3月18日新ガイドラインへの法令基準日の横断確認を優先課題として引き継ぐ。
+
+
+## 2026-11-11追補｜第11バッチNo.100〜109：分類・根拠8件修正とiOS JSON再生成検証
+
+- 対象8問：固定No.101・102・103・104・106・107・108・109（`sm2-5y-r08-hyg-07/08/09/10`、`sm2-5y-r09-hyg-02/03/04/05`）。
+- 生成元 `apps/sanitary-manager-2/audit-fixes.js` 末尾に `SM2_INDEPENDENT_ELEVENTH10_METADATA_FIX8_20261111` を追加。8件の`topic`、うち7件の`basis`を修正。No.104は既存basis「感染症予防の基礎」が設問内容に整合するため維持し、topic「咳エチケット」を「呼吸器感染症の職場における多層的予防策」に修正した。
+- No.109はbasisを厚生労働省「職場における熱中症防止対策のためのガイドライン」（令和8年3月18日・基発0318第1号）へ更新。旧「職場における熱中症予防基本対策要綱」は同通知で廃止（https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1）。他の旧要綱引用箇所については横断修正未実施。
+- 生成元コミット `598ec30151e73d5fd6c52c98efbdb86f1ac42ddb`。GitHub Actions `HM2 canonical iOS question JSON rebuild` run `42969816868` は **SUCCESS**：https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42969816868 。自動再生成JSONコミット `3d789de133e27b3dfa9b981411b540401b46320d`。
+- 再生成前の `ios/health-manager-2/release-questions.json` blob `d87f57fda845b3bbfac08cbe66e547afa6847540` と再生成後blob `8ab429c267c95f8ed41edccd81fa4f9db799d71e` を全300問・配列順・ID・全フィールドで突合。**変更は指定8問のみ**。No.104は`topic`のみ、他7問は`topic`・`primary_basis`のみ。対象外292問は完全一致。設問・選択肢・正答番号・quick・解説・`source_url`・監査承認・公開フラグは変更なし。
+- なお監査上の残件としてNo.103・107の音響式に対応する直接出典URL、No.106の眼曝露・SDSの直接出典、No.101の既存PDFの内容適合性確認、No.109の2026年新指針への出典URL更新、No.101/104等の類似問題再設計を別途要対応。今回の依頼は分類・根拠8件に限定し、出典URL・設問・選択肢・解説には触れない。
+- 独立レビューは**109/178問点検済み、残69問**。次の監査対象は固定No.110〜119。品質ゲート**BLOCKED**継続。新規iOSビルド・TestFlight・App Reviewは実施していない。
