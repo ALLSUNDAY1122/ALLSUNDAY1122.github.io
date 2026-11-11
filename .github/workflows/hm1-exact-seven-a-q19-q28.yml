@@ -1,0 +1,53 @@
+name: HM1 exact seven practice-A Q19-Q28 regression
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/audit/practice_a_fixes_01_10.json'
+      - '.github/workflows/hm1-exact-seven-a-q19-q28.yml'
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regenerate baseline and current 264 and compare exact question records
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=dbc0a6709d41ee2905b0aed7755ab8126336a335
+          git worktree add --detach /tmp/hm1-before "$BASE"
+          git worktree add --detach /tmp/hm1-after HEAD
+          (cd /tmp/hm1-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-before.log)
+          (cd /tmp/hm1-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-after.log)
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p='ios/health-manager-1/Resources/questions.json'
+          old=json.loads((Path('/tmp/hm1-before')/p).read_text())
+          new=json.loads((Path('/tmp/hm1-after')/p).read_text())
+          wanted={'practice-A-Q19','practice-A-Q20','practice-A-Q21','practice-A-Q22','practice-A-Q25','practice-A-Q26','practice-A-Q28'}
+          assert len(old)==len(new)==264,(len(old),len(new))
+          assert [x['id'] for x in old]==[x['id'] for x in new]
+          assert len({x['id'] for x in new})==264
+          changed={a['id'] for a,b in zip(old,new) if a!=b}
+          assert changed==wanted, f'changed IDs: {sorted(changed)}'
+          for a,b in zip(old,new):
+              if a['id'] not in wanted: assert a==b,a['id']
+          for x in new:
+              assert len(x['choices'])==5 and len(set(x['choices']))==5,x['id']
+              assert isinstance(x['ans'],int) and 0<=x['ans']<5,x['id']
+              assert x['short']=='正解は「'+x['choices'][x['ans']]+'」です。' or x['id'] not in wanted,x['id']
+          expected={'practice-A-Q19':1,'practice-A-Q20':0,'practice-A-Q21':2,'practice-A-Q22':3,'practice-A-Q25':1,'practice-A-Q26':0,'practice-A-Q28':1}
+          for x in new:
+              if x['id'] in expected: assert x['ans']==expected[x['id']],x['id']
+          print('PASS: both 264 generated; exactly seven changes; other 257 identical; all five choices and index bounds valid')
+          PY
