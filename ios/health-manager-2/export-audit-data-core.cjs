@@ -69,7 +69,7 @@ for (const q of questions) {
   }
   if (!examRound[q.examSet]) throw new Error(`${q.id}: unknown examSet ${q.examSet}`);
   if (!subjects.includes(q.subject)) throw new Error(`${q.id}: unknown subject ${q.subject}`);
-  if (q.lawRelated && !q.legalChecked) throw new Error(`${q.id}: law-related question missing legalChecked`);
+  if (q.lawRelated && !q.legalChecked) throw new Error(`HM2_RELEASE_REVIEW_BLOCKED: ${q.id}: law-related question missing legalChecked; independent legal verification is required before this release export`);
   const body = normalized(q.question);
   if (bodies.has(body)) throw new Error(`${q.id}: exact normalized duplicate of ${bodies.get(body)}`);
   bodies.set(body, q.id);
