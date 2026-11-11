@@ -1,4 +1,4 @@
-name: HM1 integrated 264-question exact-seven regression
+name: HM1 integrated 264-question exact-five Q13-Q19 regression
 on:
   push:
     branches:
@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          BASE=4692fe05e1632fd08e2e476b433eebb714846667
+          BASE=a7fec64633f0713d02df7ab9e61943d737c839d9
           git worktree add --detach /tmp/hm1-base "$BASE"
           node /tmp/hm1-base/ios/health-manager-1/augment-to-264.cjs
           node ios/health-manager-1/augment-to-264.cjs
@@ -38,7 +38,7 @@ jobs:
           assert.equal(new Set(now.map(x=>x.id)).size,264);
           assert.deepEqual(now.map(x=>x.id),base.map(x=>x.id));
           for(const q of now){ assert.equal(q.choices.length,5); assert.ok(Number.isInteger(q.ans)&&q.ans>=0&&q.ans<=4); }
-          const want=['2026-04-Q02','2026-04-Q03','2026-04-Q05','2026-04-Q06','2026-04-Q08','2026-04-Q09','2026-04-Q10'];
+          const want=['2026-04-Q13','2026-04-Q14','2026-04-Q16','2026-04-Q17','2026-04-Q19'];
           const changed=now.filter((q,i)=>JSON.stringify(q)!==JSON.stringify(base[i])).map(q=>q.id);
           assert.deepEqual(changed,want);
           for(const id of want){
