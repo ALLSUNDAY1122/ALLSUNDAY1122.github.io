@@ -1699,13 +1699,9 @@
   "aGroupProgress": {
     "countingMethod": "a群85IDのうち中心命題への公開一次資料追証・法令根拠修正を記録済みの固有IDだけを1回計上。前回のC29、C34、C42、Q25および第2〜第6次バッチを含む。完全5肢逐語原典PASSの残数ではない。",
     "aGroupOriginal": 85,
-    "centralClaimSupportedUnique": 36,
-    "centralClaimNotYetRecorded": 49,
+    "centralClaimSupportedUnique": 40,
+    "centralClaimNotYetRecorded": 45,
     "centralClaimPendingIds": [
-      "2025-10-Q14",
-      "2025-10-Q15",
-      "2026-04-Q19",
-      "2026-04-Q29",
       "2026-04-Q31",
       "2026-04-Q33",
       "2026-04-Q41",
@@ -1822,6 +1818,79 @@
       "correctIndex": 2,
       "changedFields": [
         "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "batchEightMuseValidation": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "8d906bf",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "2025-10-Q01",
+      "2025-10-Q02",
+      "2025-10-Q06",
+      "2025-10-Q10"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN"
+  },
+  "batchEightResolutions": [
+    {
+      "id": "2025-10-Q14",
+      "oldAuditURL": "https://www.cdc.gov/niosh/noise/prevent/understand.html",
+      "newAuditURL": "https://www.osha.gov/otm/section-3-health-hazards/chapter-5",
+      "evidence": "OSHA Technical Manual section III ch5: noise-related sensorineural hearing loss may show a notch at 3000–6000 Hz, most commonly 4000 Hz. The notch alone is not a confirmed diagnosis, and exposure history/other findings are necessary.",
+      "caveat": "全5肢の逐語反証、および他病因の除外診断は未実施。",
+      "correctIndex": 3,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2025-10-Q15",
+      "oldAuditURL": "https://www.mhlw.go.jp/stf/newpage_11389.html",
+      "newAuditURL": "https://www.mhlw.go.jp/stf/newpage_11389.html",
+      "evidence": "厚労省化学物質リスクアセスメントQ&A Q6-1/Q6-5/Q11-13: handling method and exposure conditions affect assessment; enclosure is an engineering mitigation, and changes or remaining exposure require appropriate reassessment. The same hazardous chemical need not yield identical risk across open and enclosed processes.",
+      "caveat": "工程A/Bでの実測曝露値・残余リスクの定量、全5肢逐語証明は未実施。",
+      "correctIndex": 2,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2026-04-Q19",
+      "oldAuditURL": "https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/",
+      "newAuditURL": "https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/",
+      "evidence": "ACGIH BEI Introduction, Specimen Collection: sampling time depends on determinant retention; end-of-shift means ASAP after exposure, while discretionary sampling may apply to long half-life determinants; urine concentration adjustment does not remove time-dependence.",
+      "caveat": "特定化学物質別BEI Documentationおよび日本の法定採尿条件は問題の一般論とは別に確認が必要。全5肢逐語証明未実施。",
+      "correctIndex": 1,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2026-04-Q29",
+      "oldAuditURL": "https://www.mhlw.go.jp/stf/newpage_76807.html",
+      "newAuditURL": "https://www.mhlw.go.jp/stf/newpage_76807.html",
+      "evidence": "厚労省2026-10-19健康保持増進指針公示13号、2026-11-02訂正: explicitly includes secondary prevention, examination referrals, health insurance coordination and work-treatment support in THP. This does not replace legally required health examinations.",
+      "caveat": "法定健診の代替不可の根拠条文を別途突合する必要あり。全5肢逐語証明未実施。",
+      "correctIndex": 1,
+      "changedFields": [
         "auditStatus"
       ],
       "allFiveIndependentDirectProof": false

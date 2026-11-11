@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "parentCommit": "79a31758103393847519a9e3d6e2565738f36ed1",
+  "reportedMusePreviousFourQuestionRegeneration": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "8d906bf",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "2025-10-Q01",
+      "2025-10-Q02",
+      "2025-10-Q06",
+      "2025-10-Q10"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN"
+  },
+  "subject": "a群第8次：基本2025-10-Q14・Q15、2026-04-Q19・Q29",
+  "outcomes": [
+    {
+      "id": "2025-10-Q14",
+      "oldAuditURL": "https://www.cdc.gov/niosh/noise/prevent/understand.html",
+      "newAuditURL": "https://www.osha.gov/otm/section-3-health-hazards/chapter-5",
+      "evidence": "OSHA Technical Manual section III ch5: noise-related sensorineural hearing loss may show a notch at 3000–6000 Hz, most commonly 4000 Hz. The notch alone is not a confirmed diagnosis, and exposure history/other findings are necessary.",
+      "caveat": "全5肢の逐語反証、および他病因の除外診断は未実施。",
+      "correctIndex": 3,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2025-10-Q15",
+      "oldAuditURL": "https://www.mhlw.go.jp/stf/newpage_11389.html",
+      "newAuditURL": "https://www.mhlw.go.jp/stf/newpage_11389.html",
+      "evidence": "厚労省化学物質リスクアセスメントQ&A Q6-1/Q6-5/Q11-13: handling method and exposure conditions affect assessment; enclosure is an engineering mitigation, and changes or remaining exposure require appropriate reassessment. The same hazardous chemical need not yield identical risk across open and enclosed processes.",
+      "caveat": "工程A/Bでの実測曝露値・残余リスクの定量、全5肢逐語証明は未実施。",
+      "correctIndex": 2,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2026-04-Q19",
+      "oldAuditURL": "https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/",
+      "newAuditURL": "https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/",
+      "evidence": "ACGIH BEI Introduction, Specimen Collection: sampling time depends on determinant retention; end-of-shift means ASAP after exposure, while discretionary sampling may apply to long half-life determinants; urine concentration adjustment does not remove time-dependence.",
+      "caveat": "特定化学物質別BEI Documentationおよび日本の法定採尿条件は問題の一般論とは別に確認が必要。全5肢逐語証明未実施。",
+      "correctIndex": 1,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "2026-04-Q29",
+      "oldAuditURL": "https://www.mhlw.go.jp/stf/newpage_76807.html",
+      "newAuditURL": "https://www.mhlw.go.jp/stf/newpage_76807.html",
+      "evidence": "厚労省2026-10-19健康保持増進指針公示13号、2026-11-02訂正: explicitly includes secondary prevention, examination referrals, health insurance coordination and work-treatment support in THP. This does not replace legally required health examinations.",
+      "caveat": "法定健診の代替不可の根拠条文を別途突合する必要あり。全5肢逐語証明未実施。",
+      "correctIndex": 1,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "progress": {
+    "aGroupOriginal": 85,
+    "centralClaimSupportedUnique": 40,
+    "centralClaimNotYetRecorded": 45,
+    "pendingIds": [
+      "2026-04-Q31",
+      "2026-04-Q33",
+      "2026-04-Q41",
+      "2026-04-Q44",
+      "practice-A-Q08",
+      "practice-A-Q11",
+      "practice-A-Q13",
+      "practice-A-Q20",
+      "practice-A-Q21",
+      "practice-A-Q26",
+      "practice-A-Q28",
+      "practice-A-Q34",
+      "practice-A-Q37",
+      "practice-A-Q39",
+      "practice-B-Q08",
+      "practice-B-Q20",
+      "practice-B-Q28",
+      "practice-B-Q33",
+      "practice-C-Q01",
+      "practice-C-Q02",
+      "practice-C-Q03",
+      "practice-C-Q05",
+      "practice-C-Q06",
+      "practice-C-Q07",
+      "practice-C-Q08",
+      "practice-C-Q09",
+      "practice-C-Q10",
+      "practice-C-Q14",
+      "practice-C-Q15",
+      "practice-C-Q17",
+      "practice-C-Q18",
+      "practice-C-Q19",
+      "practice-C-Q20",
+      "practice-C-Q21",
+      "practice-C-Q22",
+      "practice-C-Q26",
+      "practice-C-Q30",
+      "practice-C-Q31",
+      "practice-C-Q32",
+      "practice-C-Q33",
+      "practice-C-Q35",
+      "practice-C-Q36",
+      "practice-C-Q37",
+      "practice-C-Q41",
+      "practice-C-Q44"
+    ],
+    "fullFiveChoiceProofClosed": 0
+  },
+  "newFourIndependent264Regeneration": "NOT_RUN",
+  "webIosByteCheck": "NOT_RUN",
+  "releaseGate": "FAIL/BLOCKED"
+}

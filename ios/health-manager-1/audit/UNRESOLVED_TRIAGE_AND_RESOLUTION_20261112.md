@@ -168,3 +168,25 @@
 - 変更対象ID：`2025-10-Q01`、`2025-10-Q02`、`2025-10-Q06`、`2025-10-Q10`。問題文・5肢・正答index・解説は不変。基本132問の構造差分で対象外128問不変を確認。
 - 今回の変更の264問再生成、限定差分、Web/iOS配布SHA256一致は未実施。次は `2025-10-Q14`、`2025-10-Q15`、`2026-04-Q19`、`2026-04-Q29` などを順次照合。全5肢逐語証明・法令時点・商用利用権は未完、**ゲートFAIL/BLOCKED**、mainマージ・配信・審査申請なし。
 - 個別根拠は `PRIMARY_SOURCE_AUDIT_A_BATCH7_20261112.json`、進捗は `PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json` を参照。
+
+
+## 続編第8回：Muse前回基本4問限定差分PASS・a群4問中心命題追証（2026-11-12）
+
+### 1. Muse側ローカル実施結果（ユーザー提供／独立再実行ではない）
+- 比較基準 `8d906bf` とその後の修正状態の双方でNode CLI264問再生成成功。
+- 差分は `2025-10-Q01`・`2025-10-Q02`・`2025-10-Q06`・`2025-10-Q10` の監査ステータスと出典URLのみ。正答index全問不変、他260問完全一致、限定差分PASS（Muse側報告）。
+- Web/iOS配布バイト比較・SHA256を今回独立実行したものではない。今回の次の4問に以前のPASSを転用しない。
+
+### 2. a群第8次：基本4問の中心命題追証
+- **`2025-10-Q14`**：OSHA Technical Manual section III ch5: noise-related sensorineural hearing loss may show a notch at 3000–6000 Hz, most commonly 4000 Hz. The notch alone is not a confirmed diagnosis, and exposure history/other findings are necessary. 監査URL：`https://www.cdc.gov/niosh/noise/prevent/understand.html` → `https://www.osha.gov/otm/section-3-health-hazards/chapter-5`。変更フィールド：`auditSourceURL`、`auditStatus`。正答index `3` 不変。留保：全5肢の逐語反証、および他病因の除外診断は未実施。
+- **`2025-10-Q15`**：厚労省化学物質リスクアセスメントQ&A Q6-1/Q6-5/Q11-13: handling method and exposure conditions affect assessment; enclosure is an engineering mitigation, and changes or remaining exposure require appropriate reassessment. The same hazardous chemical need not yield identical risk across open and enclosed processes. 監査URL：`https://www.mhlw.go.jp/stf/newpage_11389.html` → `https://www.mhlw.go.jp/stf/newpage_11389.html`。変更フィールド：`auditStatus`。正答index `2` 不変。留保：工程A/Bでの実測曝露値・残余リスクの定量、全5肢逐語証明は未実施。
+- **`2026-04-Q19`**：ACGIH BEI Introduction, Specimen Collection: sampling time depends on determinant retention; end-of-shift means ASAP after exposure, while discretionary sampling may apply to long half-life determinants; urine concentration adjustment does not remove time-dependence. 監査URL：`https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/` → `https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/`。変更フィールド：`auditStatus`。正答index `1` 不変。留保：特定化学物質別BEI Documentationおよび日本の法定採尿条件は問題の一般論とは別に確認が必要。全5肢逐語証明未実施。
+- **`2026-04-Q29`**：厚労省2026-10-19健康保持増進指針公示13号、2026-11-02訂正: explicitly includes secondary prevention, examination referrals, health insurance coordination and work-treatment support in THP. This does not replace legally required health examinations. 監査URL：`https://www.mhlw.go.jp/stf/newpage_76807.html` → `https://www.mhlw.go.jp/stf/newpage_76807.html`。変更フィールド：`auditStatus`。正答index `1` 不変。留保：法定健診の代替不可の根拠条文を別途突合する必要あり。全5肢逐語証明未実施。
+
+### 3. 進捗と引継ぎ
+- 固有ID85件を母数とした中心命題の照合済み**40件**、未照合**45件（49→45）**。これは全5肢逐語原典証明の合格数ではない。全5肢無条件PASSは0件扱い。
+- 今回問題JSONの変更ID：`2025-10-Q14`、`2025-10-Q15`、`2026-04-Q19`、`2026-04-Q29`。Q14は`auditSourceURL`と`auditStatus`、他3問は`auditStatus`のみ変更。基本132問の構造比較で他128問不変、設問・5肢・正答index・解説全件不変を確認。
+- 今回4問のNode CLI264問再生成、限定差分、Web/iOSバイト一致、SHA256は未実施。次にMuse側独立検証が必要。次の対象候補：`2026-04-Q31`、`Q33`、`Q41`、`Q44`。
+- 出典はQ14：OSHA Technical Manual `https://www.osha.gov/otm/section-3-health-hazards/chapter-5`、Q15：厚労省化学物質RA Q&A `https://www.mhlw.go.jp/stf/newpage_11389.html`、Q19：ACGIH BEI Introduction `https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/`、Q29：厚労省2026年改正THP指針公示 `https://www.mhlw.go.jp/stf/newpage_76807.html`。
+- 法令適用日・全5肢独立逐語・商用利用権・最終配布一致・実機検証は未完了。リリースゲート**FAIL/BLOCKED**維持。mainマージ・公開・審査申請なし。
+- 個別台帳：`PRIMARY_SOURCE_AUDIT_A_BATCH8_20261112.json`、分類・残件正本：`PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
