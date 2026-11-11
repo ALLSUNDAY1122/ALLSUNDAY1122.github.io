@@ -421,3 +421,13 @@ if(fixes.length!==6||new Set(fixes.map(f=>f.id)).size!==6||fixes.filter(f=>f.sou
 for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 thirteenth missing '+f.id);q.topic=f.topic;q.basis=f.basis;if(f.sourceUrl)q.sourceUrl=f.sourceUrl;}
 window.SM2_INDEPENDENT_THIRTEENTH10_METADATA_FIX6_IDS=fixes.map(f=>f.id);
 })();
+
+
+// SM2_INDEPENDENT_FOURTEENTH10_METADATA_FIX8_20261111: fixed No.131-134 and 136-139; topic/basis only; do not alter question, answer, source or release gates.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r04-phy-07","topic":"抗凝固採血後の血漿と血清の違い","basis":"血液の成分と凝固・血漿と血清の区別"},{"id":"sm2-5y-r04-phy-08","topic":"解剖学的死腔を除く毎分肺胞換気量の計算","basis":"呼吸生理・肺胞換気量＝（一回換気量−死腔量）×呼吸数"},{"id":"sm2-5y-r04-phy-09","topic":"ヘモグロビン低下と血液の酸素運搬能","basis":"血液生理・赤血球ヘモグロビンによる酸素輸送"},{"id":"sm2-5y-r04-phy-10","topic":"二酸化炭素分圧と化学受容器による換気調節","basis":"呼吸生理・中枢と末梢の化学受容器と換気応答"},{"id":"sm2-5y-r05-phy-02","topic":"右心室から肺動脈への血液流出","basis":"心臓の構造・肺循環"},{"id":"sm2-5y-r05-phy-03","topic":"肺胞・肺毛細血管間の二酸化炭素分圧差と拡散","basis":"呼吸生理・肺胞ガス交換の分圧勾配"},{"id":"sm2-5y-r05-phy-04","topic":"インスリンによる血糖調節・骨格筋への糖取り込み","basis":"内分泌・糖代謝の生理"},{"id":"sm2-5y-r05-phy-05","topic":"糸球体ろ過膜の選択性と血球の非透過性","basis":"腎生理・糸球体ろ過"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==8||new Set(fixes.map(f=>f.id)).size!==8)throw Error('HM2 fourteenth10 metadata fixes invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 fourteenth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;}
+window.SM2_INDEPENDENT_FOURTEENTH10_METADATA_FIX8_IDS=fixes.map(f=>f.id);
+})();
