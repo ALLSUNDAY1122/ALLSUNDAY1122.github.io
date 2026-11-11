@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "sourceCommit": "2cd04c94f89067f3008bb8ee0a3351ea14dca025",
+  "coverage": {
+    "basic": 132,
+    "practiceA": 44,
+    "practiceB": 44,
+    "practiceC": 44,
+    "total": 264,
+    "choices": 1320,
+    "primaryReviewCompleted": true
+  },
+  "basis": "過去13バッチ台帳のフラグと監査ログに基づく既知残件。一次判定の旧記録は後続修正済みである可能性があり、未修正確定一覧と同義ではない。",
+  "registeredSourceAccessExceptions": [
+    {
+      "ids": [
+        "2026-04-Q13",
+        "2026-04-Q15",
+        "2026-04-Q17",
+        "2026-04-Q41",
+        "2026-04-Q43",
+        "2025-10-Q37",
+        "2025-10-Q39",
+        "2025-10-Q44",
+        "2025-04-Q38",
+        "2025-04-Q43",
+        "practice-A-Q34",
+        "practice-A-Q37",
+        "practice-A-Q39",
+        "practice-C-Q17〜Q22",
+        "practice-C-Q30〜Q32",
+        "practice-C-Q33〜Q36",
+        "practice-C-Q37",
+        "practice-C-Q41",
+        "practice-C-Q44"
+      ],
+      "reason": "NCBI Bookshelf通常/books/がreCAPTCHA、記事によって/sites/books/代替閲覧が可能。登録URLの一括修正は未了",
+      "status": "REGISTERED_URL_REVIEW_REQUIRED"
+    },
+    {
+      "ids": [
+        "2026-04-Q32",
+        "2026-04-Q26"
+      ],
+      "reason": "旧厚労省URLの404（後続バッチで差替え済との記録あり）",
+      "status": "HISTORICAL_FIXED_CHECK_FINAL"
+    },
+    {
+      "ids": [
+        "practice-A-Q27"
+      ],
+      "reason": "NRA PDFが取得時HTTP400相当",
+      "status": "UNRESOLVED"
+    },
+    {
+      "ids": [
+        "practice-A-Q33"
+      ],
+      "reason": "RCPAウェブページ403 Forbidden",
+      "status": "UNRESOLVED"
+    },
+    {
+      "ids": [
+        "2025-04-Q40"
+      ],
+      "reason": "National Kidney Foundation資料の登録経路への到達不良",
+      "status": "UNRESOLVED"
+    },
+    {
+      "ids": [
+        "practice-C-Q14",
+        "practice-B-Q27",
+        "practice-C-Q01〜Q10"
+      ],
+      "reason": "e-GovのHTML本文抽出不能、厚労省同条文で補完した例あり",
+      "status": "REGISTERED_URL_REVIEW_REQUIRED"
+    },
+    {
+      "ids": [
+        "practice-C-Q29"
+      ],
+      "reason": "厚労省の旧URLは移転通知のみ、新ページで内容確認済み、登録URL差替え未了",
+      "status": "REGISTERED_URL_REVIEW_REQUIRED"
+    },
+    {
+      "ids": [
+        "2025-10-Q28"
+      ],
+      "reason": "登録PDF取得内容/表題が疑わしかったが後続バッチで出典変更済との記録あり",
+      "status": "HISTORICAL_FIXED_CHECK_FINAL"
+    }
+  ],
+  "sourceOrProofPendingIds": [
+    "2026-04-Q13",
+    "2026-04-Q15",
+    "2026-04-Q17",
+    "2026-04-Q43",
+    "2025-10-Q37",
+    "2025-10-Q39",
+    "2025-10-Q44",
+    "2025-04-Q38",
+    "2025-04-Q40",
+    "2025-04-Q43",
+    "practice-A-Q27",
+    "practice-A-Q33",
+    "practice-A-Q34",
+    "practice-A-Q37",
+    "practice-A-Q39"
+  ],
+  "partialEvidenceFollowupIds": [
+    "2026-04-Q02",
+    "2026-04-Q04",
+    "2026-04-Q08",
+    "2026-04-Q12",
+    "2026-04-Q14",
+    "2026-04-Q19",
+    "2026-04-Q20",
+    "2026-04-Q25",
+    "2026-04-Q28",
+    "2026-04-Q29",
+    "2026-04-Q30",
+    "2026-04-Q31",
+    "2026-04-Q33",
+    "2026-04-Q34",
+    "2026-04-Q42",
+    "2026-04-Q44",
+    "2025-10-Q01",
+    "2025-10-Q02",
+    "2025-10-Q06",
+    "2025-10-Q10",
+    "2025-10-Q14",
+    "2025-10-Q15",
+    "2025-04-Q34",
+    "2025-04-Q36",
+    "2025-04-Q37",
+    "practice-A-Q08",
+    "practice-A-Q11",
+    "practice-A-Q13",
+    "practice-A-Q20",
+    "practice-A-Q21",
+    "practice-A-Q26",
+    "practice-A-Q28",
+    "practice-B-Q08",
+    "practice-B-Q20",
+    "practice-B-Q27",
+    "practice-B-Q28",
+    "practice-B-Q31",
+    "practice-B-Q33",
+    "practice-C-Q04",
+    "practice-C-Q15",
+    "practice-C-Q26",
+    "practice-C-Q34",
+    "practice-C-Q42"
+  ],
+  "unclassifiedLegacyLedgerNote": "基本Q61〜Q80等の旧台帳にはverificationLevel以外のsourceLevel/分類名を使用した記録があるため、横断的な同一基準への再集計は未完了。元台帳は維持し、公開前に再判定する。",
+  "correctionCandidates": [
+    {
+      "id": "2026-04-Q25",
+      "issue": "屋内作業場一般と事務所衛生基準規則の適用範囲が不一致の疑義。問題文条件の修正または根拠変更を判断",
+      "status": "REQUIRES_SUBSTANTIVE_REVIEW"
+    },
+    {
+      "id": "practice-C-Q34",
+      "issue": "心臓の交感節後終末局所NA放出の直接出典不足",
+      "status": "SUPPLEMENT_SOURCE"
+    },
+    {
+      "id": "practice-C-Q42",
+      "issue": "半規管の角加速度検出の直接出典不足",
+      "status": "SUPPLEMENT_SOURCE"
+    },
+    {
+      "id": "practice-B-Q20",
+      "issue": "粗面吸盤の実条件別保持力の根拠不足",
+      "status": "SUPPLEMENT_SOURCE"
+    },
+    {
+      "id": "practice-B-Q31",
+      "issue": "QRSと末梢脈拍欠損の直接出典不足",
+      "status": "SUPPLEMENT_SOURCE"
+    },
+    {
+      "id": "practice-B-Q33",
+      "issue": "ガス交換膜厚と拡散制限の直接根拠不足",
+      "status": "SUPPLEMENT_SOURCE"
+    },
+    {
+      "id": "practice-B-Q09/Q12",
+      "issue": "誤った解説内肢番号",
+      "status": "FIXED_MUSE_LIMITED_DIFF_PASS_REPORTED"
+    },
+    {
+      "id": "practice-A-Q17/Q19",
+      "issue": "誤った解説内肢番号",
+      "status": "FIXED_MUSE_LIMITED_DIFF_PASS_REPORTED"
+    },
+    {
+      "id": "practice-A-Q41〜Q44",
+      "issue": "NCBI登録原典の到達性",
+      "status": "FIXED_MUSE_LIMITED_DIFF_PASS_REPORTED"
+    },
+    {
+      "id": "2025-10-Q27/Q28",
+      "issue": "古い相互参照と登録出典の不一致",
+      "status": "FIXED_MUSE_LIMITED_DIFF_PASS_REPORTED"
+    }
+  ],
+  "commonUnresolved": [
+    "全1320肢の直接逐語証明未完了",
+    "現行法令適用日・改正経過の全問確定未完了",
+    "商用利用権・原文権利の横断審査未完了",
+    "最終264問のNode CLIとWeb/iOS配布バイトSHA256独立検証未実施",
+    "実機・リリースゲート未完了"
+  ]
+}
