@@ -1,0 +1,58 @@
+name: HM1 Q29-Q38 exact ten regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/audit/practice_a_fixes_01_10.json'
+      - '.github/workflows/hm1-exact-ten-a-q29-q38.yml'
+  workflow_dispatch:
+jobs:
+  regenerate-and-compare:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regenerate before and after and check exact ten question IDs
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=ddb46814a0b6aa79a431240e2d4cf53502bad4b7
+          git worktree add --detach /tmp/hm1-10-before "$BASE"
+          git worktree add --detach /tmp/hm1-10-after HEAD
+          (cd /tmp/hm1-10-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-10-before.log)
+          (cd /tmp/hm1-10-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-10-after.log)
+          python3 - <<'PY'
+          import json, re
+          from pathlib import Path
+          rel='ios/health-manager-1/Resources/questions.json'
+          a=json.loads((Path('/tmp/hm1-10-before')/rel).read_text())
+          b=json.loads((Path('/tmp/hm1-10-after')/rel).read_text())
+          target={f'practice-A-Q{i:02}' for i in range(29,39)}
+          assert len(a)==len(b)==264, (len(a),len(b))
+          assert [q['id'] for q in a]==[q['id'] for q in b], 'ID order changed'
+          assert len(set(q['id'] for q in b))==264, 'Duplicate IDs'
+          def normalized(s):
+              return ''.join(ch for ch in s.strip().lower() if not ch.isspace())
+          assert len(set(normalized(q['stem']) for q in b))==264, 'Duplicate stems'
+          changes={old['id'] for old,new in zip(a,b) if old!=new}
+          assert changes==target, f'Unexpected changed IDs: {sorted(changes)}'
+          for old,new in zip(a,b):
+              if old['id'] not in target:
+                  assert old==new, old['id']
+          expected=dict(zip(sorted(target),[3,1,1,2,3,4,3,1,2,3]))
+          for q in b:
+              assert isinstance(q['choices'],list) and len(q['choices'])==5, q['id']
+              assert len(set(q['choices']))==5, q['id']
+              assert type(q['ans']) is int and 0<=q['ans']<5,q['id']
+              if q['id'] in target:
+                  assert q['ans']==expected[q['id']],q['id']
+                  assert q['short']=='正解は「'+q['choices'][q['ans']]+'」です。',q['id']
+          print('PASS: regenerated 264 before/after, exact Q29-Q38 ten changes, other 254 identical')
+          PY
