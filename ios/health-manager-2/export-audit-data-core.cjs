@@ -15,6 +15,7 @@ global.localStorage = { getItem: () => null, setItem: () => {} };
 
 const scripts = [
   'q1.js','q2.js','q3.js','q4.js','q5.js','q6.js','q7.js','q8.js','q9.js','q10.js','q11.js','q12.js',
+  'difficulty-patch-v5.js',
   'audit-patch-v2.js','audit-patch-v3.js','audit-patch-v4.js','audit-fixes.js','question-order-v1.js'
 ];
 for (const file of scripts) {
@@ -134,7 +135,9 @@ const out = questions.map(q => ({
   law_related: Boolean(q.lawRelated),
   legal_checked: q.legalChecked || null,
   audit_status: q.auditStatus,
-  publication_status: q.publicationStatus
+  publication_status: q.publicationStatus,
+  difficulty_model: q.difficultyModel || null,
+  no_common_sense_shortcut: Boolean(q.noCommonSenseShortcut)
 }));
 
 const outPath = path.join(IOS_DIR, 'release-questions.json');
