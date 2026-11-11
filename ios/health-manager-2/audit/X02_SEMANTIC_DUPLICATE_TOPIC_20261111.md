@@ -49,3 +49,38 @@
 3. X-04の正式な定義・対象と完了条件を正本台帳で確認。
 4. 170問の個別出典確認、178問の公開レビュー状態照合を固定ID台帳により逐問実施。合格証拠なしに保留メタデータを一括昇格しない。
 5. 全検証後のみリリース可否を再判定。現状の**本番公開ゲートはBLOCKED**。App Store Connect・TestFlight操作は実施していない。
+
+
+## 2026-11-11 追補：X-02正答位置ガードによる生成停止の是正
+
+### 事象
+
+Muse側で基準コミット `69a0c489c61bb0c6b335718f19c4806243d01990` の
+`node ios/health-manager-2/export-canonical-snapshot.cjs` が
+`HM2 X-02 portal-vs-lymph answer position mismatch` で停止した。
+これはX-02パッチの `q.answer===3` という前提が誤っていたため。
+
+### 入力・後続変換の正確な対応
+
+- X-02前の `sm2-5y-r10-phy-10` は正答 **第5肢**で、正答文字列は `門脈`。
+- `audit-fixes.js` の後で `question-order-v1.js` が実行される。第10回・労働生理の10問目の最終目標は**第3肢**。従来の配布JSONの `correct_index=2` はこの並べ替え後の番号。
+- 旧X-02ではこの最終番号を並べ替え前に要求し、新5肢でも正答を第3肢に置いていた。そのため旧生成元と矛盾した。
+- 修正 `a8227ca018d348630e80da7b9b8abc77c4d3e35b`：X-02では `q.answer===5` **かつ** `q.choices[4]==='門脈'` を厳密照合。新設問も正答第5肢となる順序で代入し `answer:5` を明示。後続の既存 `question-order-v1.js` が第5肢と第3肢を交換し、最終第3肢の配布JSONと同じ並びを生成する。
+- 他11問のID・問題文・旧topic・旧basis・X-01出典URL・正答肢のガードは維持。例外を握りつぶす変更やガードの一括緩和は行わない。
+
+### 修正後の再生成相当の実行検査
+
+GitHub対象ブランチから `q1.js`〜`q12.js`、`difficulty-patch-v5.js`、`audit-patch-v2/v3/v4.js`、`audit-fixes.js`、`question-order-v1.js` の18本を取得。JavaScriptランタイムで、`export-canonical-snapshot.cjs` と同じ順序（ブラウザー経路：難易度パッチあり／リリース経路：同パッチなし）で全スクリプトを実行し、そのファイルのJSON出力マッピングを用いて現行配布JSONと照合。
+
+- 全スクリプトの例外停止なし。ブラウザー／リリースとも300問。
+- X-02適用直後：`sm2-5y-r10-phy-10` の正答5、正答肢は糖質門脈・長鎖脂質カイロミクロン乳び管の組合せ。
+- `question-order-v1.js` 適用後：同問題の正答3、5選択肢の順序は既存配布JSONと完全一致。
+- ブラウザー／リリースの主要8フィールド（question, choices, answer, quick, explanation, topic, sourceUrl, baselineDate）差異 **0**。
+- エクスポートされる全300問・全22フィールド対現行 `release-questions.json` 差異 **0**。
+- ID一意300／問題文一意300／30セットの正答位置1〜5各2問、すべてPASS。
+- 現行配布JSONを改めて生成結果で上書きする必要なし。
+
+**実行上の留保**：この検査はGitHubから取得した18本のJavaScriptを同順序で動かした独立再構成であり、Nodeによる `export-canonical-snapshot.cjs` 自体のCLI実行ではない。法令回帰契約のCLI呼び出し・ファイル書き込み・GitHub Actionsの成功・実機ビルドは本セッションで未検証。X-03内容再現性については全22フィールド同等性PASS、リリース全ゲートは引き続きBLOCKED。Muse側でNode CLIの再実行証拠を得たら追記する。
+
+### 今後の注意
+修正後の `audit-fixes.js` 末尾では最終出題番号（第3肢）ではなく**並べ替え前の正答位置（第5肢）**が前提。後続の正答位置ポリシーを変更する場合は両経路・配布JSONを再点検する。公開レビュー状態178問、残りのX-02/X-04、個別出典170問の最終ゲートは未解消。
