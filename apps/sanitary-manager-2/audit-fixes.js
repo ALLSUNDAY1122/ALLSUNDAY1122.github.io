@@ -1507,3 +1507,16 @@ for(const f of fixes){
 }
 window.HM2_170_NO089_AND_NO136_NO162_SOURCE_FIX_20261112_APPLIED=true;
 })();
+
+
+// HM2_NO161_PRIMARY_LAW_ART66_4_5_20261112: verified directly against MHLW's published statute (2026-11-12). Independent legal content verification; not 178-question release approval.
+(function(){'use strict';
+const p={"id":"sm2-5y-r09-hyg-09","subject":"労働衛生","topic":"健康診断の医師意見と事業者の就業措置の決定主体","question":"健康診断で異常所見がある労働者について医師が就業上の制限を提案した。労働安全衛生法66条の4・66条の5に照らし事業者の対応として適切なのはどれか。","choices":["医師意見を聴取すれば事業者は必要な就業措置を検討する必要がない。","医師意見を勘案し本人の実情を考慮して、必要性に応じて就業場所の変更や労働時間短縮等の措置を事業者が講ずる。","就業上の措置は医師の意見を無視し、本人の実情を一切考慮せず機械的に決定する。","医師意見は事業者に一切共有できず、適切な措置の判断にも利用できない。","医師意見にかかわらず異常所見者を全員一律に解雇しなければならない。"],"correct":"医師意見を勘案し本人の実情を考慮して、必要性に応じて就業場所の変更や労働時間短縮等の措置を事業者が講ずる。","basis":"労働安全衛生法66条の4・66条の5／医師意見聴取と事業者の措置義務","sourceUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0&pageNo=2","explanation":"労働安全衛生法66条の4は異常所見のある労働者について必要な措置に関する医師等の意見聴取を定め、66条の5は事業者が意見を勘案し本人の実情を考慮して必要な就業措置を講ずることを定める。従前の問題は健診後措置の定義の暗記だったが、今回は医師の意見聴取と事業者による最終措置実施の役割分担を判断する。","oldStatus":"内容監査済"};
+const matches=(window.Q_PARTS||[]).filter(q=>q.id===p.id);
+if(matches.length!==1)throw Error('HM2 No161 legal verification target count');
+const q=matches[0];
+if(q.subject!==p.subject||q.topic!==p.topic||q.question!==p.question||q.basis!==p.basis||q.sourceUrl!==p.sourceUrl||q.explanation!==p.explanation||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||JSON.stringify([...q.choices].sort())!==JSON.stringify([...p.choices].sort())||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==p.correct||q.lawRelated!==true||q.legalChecked!=null||q.auditStatus!==p.oldStatus)throw Error('HM2 No161 strict legal old-state mismatch');
+q.legalChecked='2026-11-12';
+q.auditStatus='一次資料照合済';
+window.HM2_NO161_ART66_4_5_PRIMARY_VERIFIED_20261112=true;
+})();
