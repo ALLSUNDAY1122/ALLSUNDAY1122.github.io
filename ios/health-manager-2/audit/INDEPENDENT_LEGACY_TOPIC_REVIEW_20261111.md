@@ -1749,7 +1749,7 @@
 | `sm2-5y-r08-phy-05` | P1、P2 | P1-10、P2-2 | 近方視・水晶体調節の重複／誤答肢別の定型解説を具体化 | P1-10・P2-2完了（2026-11-11、老視による近点移動を判断し誤答肢4件を個別解説） |
 | `sm2-5y-r08-phy-07` | P1、P2 | P1-14、P2-2、P2-3 | 視細胞の近接出題・誤答使い回し／誤答肢別の定型解説を具体化／低識別難度の誤答肢を改善 | P1-14・P2-2・P2-3完了（2026-11-11、条件別再設計・誤答肢別解説・難度改善） |
 | `sm2-5y-r08-phy-08` | P1、P2 | P1-14、P2-2、P2-3 | 視細胞の近接出題・誤答使い回し／誤答肢別の定型解説を具体化／低識別難度の誤答肢を改善 | P1-14・P2-2・P2-3完了（2026-11-11、条件別再設計・誤答肢別解説・難度改善） |
-| `sm2-5y-r05-hyg-08` | P2 | P2-1 | 出典URLの直接性を個別照合 | 未着手・要再確認 |
+| `sm2-5y-r05-hyg-08` | P2 | P2-1 | 出典URLの直接性を個別照合 | P2-1完了（2026-11-11、2023年改訂厚労省ガイドラインの通知原文へ出典更新。法的義務と現場の補完策を区別） |
 | `sm2-5y-r05-hyg-10` | P2 | P2-1 | 出典URLの直接性を個別照合 | 未着手・要再確認 |
 | `sm2-5y-r06-hyg-05` | P2 | P2-1 | 出典URLの直接性を個別照合 | 未着手・要再確認 |
 | `sm2-5y-r06-phy-03` | P2 | P2-2 | 誤答肢別の定型解説を具体化 | 未着手・要再確認 |
@@ -1984,3 +1984,10 @@
 - 医学的照合：NCBI Bookshelf『The Physiology of High-Altitude Exposure』 https://www.ncbi.nlm.nih.gov/books/NBK232874/ 、『Oxygen Saturation: Monitoring and Interpretation』 https://www.ncbi.nlm.nih.gov/books/NBK525974/ 、『Physiology, Oxygen Transport』 https://www.ncbi.nlm.nih.gov/books/NBK538336/ 。現行source_urlは試験公表一覧のまま。個別出典の直接性・権利は専門家最終ゲートで引き続き検証。
 - 300問全件についてID・順序・全フィールド比較：指定3件の topic/question/choices/quick/explanation/primary_basis のみ変更。他297件は全フィールド一致。correct_index、source_url、baseline_date、legal_checked、audit_status、publication_status等は変更なし。GitHubコネクタで生成元と配布JSONを同一修正定義で同期したがローカル生成CLI・CI成功は未検証。
 - 残件台帳：有効65問中、全テーマ完了43問・未完了22問（P1-15の3件が完了、P1-16もr04-phy-02について完了）。次工程は残件台帳のP2個別項目の点検。公開品質ゲートBLOCKED維持。ビルド・TestFlight・App Review・一般公開はしない。
+
+
+## 2026-11-11追補｜P2-1（騒音下警報認知）個別1件完了
+- 対象 `sm2-5y-r05-hyg-08` のみ。厚労省『騒音障害防止のためのガイドライン』改訂通知（令和5年4月20日、基発0420第2号） https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1&pageNo=1 へ `source_url` を差替え。出典を騒音管理対策の直接通知に揃えた。
+- `primary_basis` と `explanation` を精密化し、発生源・伝ぱ経路・受音者の騒音対策と、個別の作業リスク評価に基づく警報視覚補助を区別。視覚的補助は当該ガイドラインによる一律の法的義務と誤認させない。正答第1肢、設問・5肢は不変。
+- 300問ID・順序・全フィールド比較：変更は対象IDの `explanation`、`primary_basis`、`source_url` のみ。他299問完全一致。生成元パッチと配布JSONを同期したが、ローカルCLI再生成・CI成功は未検証。
+- 有効65ID中、全テーマ完了44問・未完了21問。P2-1全体は未完であり、次の同テーマ `sm2-5y-r05-hyg-10` 等へ継続。専門家逐語承認、権利・実機、公開ゲートは未完。公開品質ゲートBLOCKED維持。ビルド・TestFlight・App Review・一般公開は行わない。
