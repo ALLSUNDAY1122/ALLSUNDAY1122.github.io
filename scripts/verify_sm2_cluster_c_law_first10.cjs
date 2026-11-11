@@ -27,7 +27,7 @@ for(const [mode,files] of [['browser',[...base,'difficulty-patch-v5.js',...patch
  }
  const counts=new Map();for(const q of qs){const k=norm(q.question);counts.set(k,(counts.get(k)||0)+1);}
  const duplicateSizes=[...counts.values()].filter(n=>n>1).sort((a,b)=>b-a);
- assert.equal(counts.size,mode==='browser'?220:300);
- if(mode==='browser')assert.deepEqual(duplicateSizes,[38,37,8]);else assert.deepEqual(duplicateSizes,[]);
- console.log('PASS',JSON.stringify({mode,questions:qs.length,redesignedC:10,uniqueStems:counts.size,duplicateSizes,clusterCRemaining:mode==='browser'?8:0}));
+ assert.equal(counts.size,mode==='browser'?227:300);
+ if(mode==='browser')assert.deepEqual(duplicateSizes,[38,37]);else assert.deepEqual(duplicateSizes,[]);
+ console.log('PASS',JSON.stringify({mode,questions:qs.length,redesignedC:10,uniqueStems:counts.size,duplicateSizes,clusterCRemaining:0}));
 }
