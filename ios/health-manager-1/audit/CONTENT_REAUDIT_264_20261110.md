@@ -1639,3 +1639,16 @@ B別台帳 `CONTENT_REAUDIT_264_B_20261110.md` は前バッチと同一blobで�
 - Q89一次出典 `https://laws.e-gov.go.jp/law/347M50002000032`、Q90一次出典 `https://www.mhlw.go.jp/web/t_doc?dataId=74097000&dataType=0&pageNo=1` と現行条文を照合。医学8問の外部原典全肢逐語検証、原典公表問題PDFとの権利・表現類似、全264問意味重複・実機検査は未了。
 - 次の独立再監査対象：**基本通算Q91〜Q100（想定実ID`2025-04-Q03〜Q12`）**。必ず最新JSON配列位置とIDを照合。今バッチ要改善9問の改修は別工程で実施し、次の差分限定検証時は**本監査コミットを修正前基準SHA**とする。旧CIの比較基準や対象IDを流用しない。
 - **総合品質ゲートFAIL維持**。mainマージ・新規TestFlight・App Review提出を実施しない。
+
+
+## 第9バッチ要改善9問の修正適用・264問再生成差分限定検証（2026-11-11）
+
+- 対象：統合ブランチ `codex/hm1-integrate-basic-a-b-c-20261111`、基本通算Q81/Q82/Q83/Q84/Q85/Q87/Q88/Q89/Q90。実IDは `2025-10-Q37/Q38/Q39/Q40/Q41/Q43/Q44` と `2025-04-Q01/Q02`。Q86（`2025-10-Q42`）は条件付き妥当のため**変更対象外**。
+- **データ修正コミット `b3505f93c90d9e6f10524c6e9308f964bc946b92`**。9問の `stem/choices/short/detail` のみを変更。ID、正答index、法令基準日、出典情報および他メタデータは不変。基本132問中、対象外123問は一致。
+- 修正内容：Q81は食後膵β細胞インスリンとα細胞グルカゴン、Q82は胃ペプシン・小腸トリプシンの前駆体活性化、Q83は胆汁酸不足による脂溶性ビタミン吸収、Q84はABO赤血球抗原と血漿抗体、Q85は皮質灰白質・皮質下白質・深部灰白質、Q87は原発性甲状腺機能低下症のFT4とTSHの負のフィードバック、Q88は交感神経・副腎髄質のカテコールアミンと副腎皮質ホルモン、Q89は600人・有害業務常時30人の衛生管理者3人以上・専任1人以上、Q90は特化則31条2項の再使用時自主検査・34条の点検・32条の記録3年保存。
+- Q89は安衛則7条1項4号・5号ロを根拠とし、衛生工学衛生管理者の資格要件は別要件と明示。Q90は特化則31・32・34条の別義務と記録の区別を明記。根拠：`https://laws.e-gov.go.jp/law/347M50002000032`、`https://www.mhlw.go.jp/web/t_doc?dataId=74097000&dataType=0&pageNo=1`。
+- **検証ワークフロー追加コミット `850d6b333475e837552bf35fee0a0976bf539625`**。`.github/workflows/hm1-exact-nine-q81-q90.yml` を追加。修正前の独立監査コミット `296a9bbf05033d67855dc9c5a3d1221eda591826` と検証対象を各々独立worktree上で `node ios/health-manager-1/augment-to-264.cjs` により264問へ再生成。
+- **GitHub Actions run `42976002492`、job `130375116075`：conclusion `success`**。実行ログ：https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42976002492 。ログ実測：`PASS: rebuilt 264 on both refs, changed exact nine IDs, other 255 identical; IDs in order unique, answer indices preserved, five unique choices per question.`
+- **実測**：双方264問、指定9問のみ変更、他255問完全一致。IDの順序・一意性と問題文正規化の一意性、全問5つの相異なる選択肢、正答index0〜4、変更9問の正答index不変、変更フィールドが`stem/choices/short/detail`のみであることを確認PASS。
+- 品質留保：今回の再生成・差分限定CI成功は教材全肢の医学・法令一次資料逐語照合、元公表過去問との表現類似・著作権、全264問の意味重複・実機確認、修正後の独立再判定を代替しない。**独立再監査の初回判定は90/264、残174**。初回判定での要改善61件は全件修正適用・各バッチ差分検証済み。ただし修正後の独立品質PASSは未認定。**総合品質ゲートFAIL**を維持。
+- 次の独立監査：基本通算Q91〜Q100。統合ブランチ最新JSONの配列位置と実IDを照合してから実施する。次バッチの修正前基準には当該監査直後の新コミットを使用し、以前のworkflowの基準SHA・wantを流用しない。mainマージ・TestFlight・App Review提出なし。
