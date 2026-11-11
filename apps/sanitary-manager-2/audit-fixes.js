@@ -1020,3 +1020,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH12_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH13_20261111: final 7 direct evidence links; sourceUrl only.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r10-phy-04","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC3889318/","question":"成人の腎臓で、原尿中に含まれたブドウ糖が通常ほぼ再吸収される主な部位はどれか。","correctText":"近位尿細管。"},{"id":"sm2-5y-r10-phy-05","sourceUrl":"https://www.ncbi.nlm.nih.gov/sites/books/NBK493219/","question":"運動後に呼吸が速くなり、肺胞と血液の間でガス交換が進む。酸素が通常移動する方向として適切なのはどれか。","correctText":"肺胞内の空気から肺毛細血管内の血液へ拡散する。"},{"id":"sm2-5y-r10-phy-06","sourceUrl":"https://pubmed.ncbi.nlm.nih.gov/12744548/","question":"暑い環境で体温が上昇したとき、皮膚からの熱放散を増やす方向に働く循環系の反応はどれか。","correctText":"皮膚血管が拡張し、皮膚血流が増加する。"},{"id":"sm2-5y-r10-phy-07","sourceUrl":"https://www.cdc.gov/diabetes/articles/managing-diabetes-in-the-heat.html","question":"気温が高く皮膚表面に汗が出ているが、湿度も高く汗が蒸発しにくい。体温調節について最も適切なのはどれか。","correctText":"汗の蒸発による気化熱の放散が妨げられ、発汗量が多くても体を冷やしにくい。"},{"id":"sm2-5y-r10-phy-08","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK597379/","question":"通常の循環で小腸から吸収されたブドウ糖が最初に多く流入する肝臓への血管経路はどれか。","correctText":"腸管の毛細血管から門脈を通って肝臓へ入る経路。"},{"id":"sm2-5y-r10-phy-09","sourceUrl":"https://www.ncbi.nlm.nih.gov/sites/books/NBK482430/","question":"安静時に血液中の二酸化炭素が増加した。血液の酸塩基平衡における直接の変化として適切なのはどれか。","correctText":"炭酸系の平衡により水素イオンが増え、pHが低下する方向に働く。"},{"id":"sm2-5y-r10-phy-10","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK554545/","question":"朝食後、小腸で吸収された水溶性の単糖やアミノ酸は、全身循環へ入る前に主としてどの血管系を通って肝臓へ運ばれるか。","correctText":"門脈"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==7||new Set(fixes.map(f=>f.id)).size!==7)throw Error('HM2 X-01 batch13 target count/ID');
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+ !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correctText||
+ (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.sourceUrl))
+ throw Error('HM2 X-01 batch13 unexpected source/content '+f.id);
+ q.sourceUrl=f.sourceUrl;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH13_IDS=fixes.map(f=>f.id);
+})();
