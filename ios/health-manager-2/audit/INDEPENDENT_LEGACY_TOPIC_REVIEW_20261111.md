@@ -1259,3 +1259,14 @@
 - **実質重複3組**：No.91/95（睡眠・勤務計画）、No.92/69（換気回数の単純計算）、No.99/83（燃焼機器・一酸化炭素中毒の初期対応）。分類修正だけで重複が解消されたとはしない。
 - 今回は**監査記録のみ更新**。問題生成元JS・正本JSON・監査承認状態・公開状態・iOSビルド・TestFlight・App Reviewには触れず、公開品質ゲートは **BLOCKED**。
 - **独立レビュー累計99/178問点検済、残79問**。次の監査対象は固定No.100〜109。
+
+
+## 2026-11-11追補｜第10バッチNo.90〜99指摘8件の修正、JSON再生成と限定差分検証
+
+- 対象8問は固定No.91・92・93・94・96・97・98・99（`sm2-5y-r07-hyg-07/08/09/10`、`sm2-5y-r08-hyg-02/03/04/05`）。生成元 `apps/sanitary-manager-2/audit-fixes.js` に `SM2_INDEPENDENT_TENTH10_METADATA_FIX8_20261111` を追加し、8件の `topic` と `basis` を現行題意へ対応させた。
+- No.96 `sm2-5y-r08-hyg-02` は出典を厚労省ノロウイルスQ&A（https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/kanren/yobou/040204-1.html）、No.98 `sm2-5y-r08-hyg-04` は厚労省化学物質リスクアセスメントQ&A（https://www.mhlw.go.jp/stf/newpage_11389.html）へ変更。他6問のsource_urlは維持。
+- 生成元修正コミット：`a596a6916a6bd8489a985c0a878d3044f618e0d6`。GitHub Actions `HM2 canonical iOS question JSON rebuild` run `42968828486` は **SUCCESS**：https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/42968828486 。自動再生成JSONコミット：`cea916ebac1fe03aa975414f7d5f14a652629955`。
+- `ios/health-manager-2/release-questions.json` の旧blob `2bc4a1aabc321404e46015635ce1caf998742e4b` と新blob `d87f57fda845b3bbfac08cbe66e547afa6847540` を全300問、配列順・問題ID一致を確認し全フィールド比較。差分は**指定8問のみ**。6問は`topic`・`primary_basis`のみ、No.96とNo.98は加えて`source_url`のみ。対象外292問の全フィールドは一致。全問題のquestion・choices・correct_index・quick・explanation・監査状態・公開状態は変更なし。
+- GitHubコミット比較（生成元コミット→自動再生成コミット）でも変更ファイルは`ios/health-manager-2/release-questions.json`のみ（18行追加・18行削除）。
+- 未解決事項：No.91/95、No.92/69、No.99/83の実質重複再設計は未実施。No.90・92・93・99の直接出典の精密化、No.96の有症状者の食品直接取扱い回避の解説補足、No.98の第二種出題範囲への適合確認も今後の別作業。
+- 独立レビュー進捗は**99/178問点検済、残79問**。次の固定ID範囲は**No.100〜109**。公開品質ゲートは引き続き**BLOCKED**。新規iOSビルド、TestFlight、App Reviewは実行していない。
