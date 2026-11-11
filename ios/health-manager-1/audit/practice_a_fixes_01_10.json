@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "appliesTo": "practice-A-Q01..Q40",
+  "appliesTo": "practice-A-Q01..Q44",
   "lawAsOf": "2026-11-11",
-  "notes": "Q16..Q25 mapped to sm2-5y-r04-hyg-01..10, Q26..Q30 mapped to sm2-5y-r05-hyg-01..05. Corrects former law-domain misassignment; source guards in augment-to-264.cjs. Q41..Q44 outstanding. The 15 historical law-topic rows for Q16-Q30 have been REPLACED (not applied) with adopted hygiene-topic revisions.",
+  "notes": "Q01..Q44 all have stored individual overrides; current generated-source IDs must be validated by augment-to-264.cjs prior to accepting any override. Q16..Q30 legacy law misassignment replaced with hygiene content; Q41..Q44 sourced from sm2-5y-r05-phy-01..04. Release-level 264-question test and substantive re-audit still required.",
   "questions": {
     "practice-A-Q01": {
       "stem": "事業者が定期健康診断を実施した。一般健康診断に係る健康診断個人票の保存について、正しい対応はどれか。",
@@ -723,6 +723,78 @@
       "lawAsOf": "2026-11-11",
       "auditStatus": "revised-pending-release-audit",
       "difficultyAudit": "mechanism-case-rewrite-2026-11-11"
+    },
+    "practice-A-Q41": {
+      "stem": "左心室から拍出された血液が全身の臓器へ送られる際、最初に通る主要な動脈として正しいものはどれか。",
+      "choices": [
+        "肺動脈。右心室から肺へ静脈血を運ぶ血管である",
+        "大動脈。左心室から体循環に向かう血液を受ける血管である",
+        "大静脈。全身から右心房へ血液を戻す血管である",
+        "肺静脈。肺で酸素化された血液を左心房へ戻す血管である",
+        "冠静脈洞。心筋の静脈血を右心房へ戻す構造である"
+      ],
+      "ans": 1,
+      "detail": "左心室の収縮で大動脈弁が開き、血液は大動脈を経て全身へ向かう。肺動脈は右心室から肺へ、肺静脈は肺から左心房へ、大静脈は全身から右心房へ戻す。冠静脈洞は心筋からの静脈還流に関係する。血管名だけでなく心腔・弁・循環の起点と終点を区別する。Q37〜Q40の経路暗記とは異なり左心室の拍出先を軸に各血管の役割を比較する。",
+      "key": "左心室から大動脈への体循環",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-scenario-rewrite-2026-11-11"
+    },
+    "practice-A-Q42": {
+      "stem": "冠動脈の血流が急に途絶えた際、心筋に起こり得る変化として最も適切なのはどれか。",
+      "choices": [
+        "心室内に血液が存在するため、冠血流がなくても心筋細胞への酸素供給は必ず維持される",
+        "冠動脈は主として肺胞に酸素を供給するため、心筋への影響はない",
+        "冠静脈から大動脈へ直接酸素が逆流して虚血を防ぐ",
+        "心筋への酸素・栄養供給が不足して虚血を生じ、長引けば心筋障害につながる",
+        "冠動脈の閉塞は動脈血圧だけを変え、心筋細胞の代謝には影響しない"
+      ],
+      "ans": 3,
+      "detail": "冠動脈は大動脈基部から分岐して心筋へ血液を供給する。閉塞で酸素供給が不足すると心筋虚血が生じ、持続すれば壊死に至り得る。肢0は心腔内の血液と冠循環を混同し、1は冠動脈と肺循環の混同、2は冠静脈の血流方向の誤り、4は心筋代謝への影響を否定する。虚血性胸痛などを伴う場合は迅速な医療評価が必要。",
+      "key": "冠動脈と心筋虚血",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-scenario-rewrite-2026-11-11"
+    },
+    "practice-A-Q43": {
+      "stem": "全身の組織で酸素・栄養分が血液から細胞側へ移動する仕組みとして適切なのはどれか。",
+      "choices": [
+        "大動脈の厚い中膜を介して、すべての組織へ直接酸素が拡散する",
+        "静脈弁が酸素を作り、周囲の細胞に分泌する",
+        "毛細血管は厚い筋層に覆われるため、物質交換は原則として生じない",
+        "赤血球が毛細血管外へ常に大量に漏れ出すことで正常な酸素運搬が成り立つ",
+        "薄い毛細血管壁を介して、分圧差などに応じた拡散や水・溶質の移動が行われる"
+      ],
+      "ans": 4,
+      "detail": "毛細血管は内皮細胞を中心とする薄い壁を持ち、酸素・二酸化炭素の拡散や水・溶質の交換が行われる。肢0は大動脈の構造と機能の混同、1は静脈弁の役割の誤認、2は毛細血管に厚い筋層があるとの誤り、3は赤血球の正常な血管外漏出を前提とする誤り。動脈・静脈は主として輸送路、毛細血管は組織との交換の場として区別する。",
+      "key": "毛細血管壁と組織の物質交換",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-scenario-rewrite-2026-11-11"
+    },
+    "practice-A-Q44": {
+      "stem": "血圧が128/78mmHgと測定された成人について、収縮期・拡張期の血行動態に関する説明として正しいものはどれか。",
+      "choices": [
+        "128mmHgは心室の拡張時に対応し、78mmHgは心室収縮時に対応する",
+        "78mmHgが収縮期血圧であり、128mmHgは脈圧である",
+        "収縮期血圧は128mmHg、拡張期血圧は78mmHgで、脈圧は50mmHgである",
+        "血圧は常に大動脈と肺動脈で同じ値となるため、測定部位を考慮する必要はない",
+        "収縮期と拡張期の区別は心室の状態と無関係で、数値が大きい方を拡張期と呼ぶ"
+      ],
+      "ans": 2,
+      "detail": "通常の上腕動脈血圧表示128/78mmHgでは、収縮期（心室収縮に伴う高い側の動脈圧）が128mmHg、拡張期（心室拡張時の低い側）が78mmHg、脈圧は128−78＝50mmHgとなる。肢0・4は収縮期と拡張期の逆転、1は拡張期と脈圧の混同、3は体循環と肺循環の圧差を無視する。個々の血圧値だけで疾病の診断や治療方針は決められない。",
+      "key": "収縮期血圧・拡張期血圧・脈圧",
+      "sourceRef": "https://www.exam.or.jp/lckohyo/",
+      "auditSourceURL": "https://www.exam.or.jp/lckohyo/",
+      "lawAsOf": "2026-11-11",
+      "auditStatus": "revised-pending-release-audit",
+      "difficultyAudit": "mechanism-scenario-rewrite-2026-11-11"
     }
   }
 }
