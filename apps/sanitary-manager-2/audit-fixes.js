@@ -1413,3 +1413,15 @@ for(const f of fixes){
 }
 window.HM2_170_B13_DIRECT_SOURCE_FIXES_APPLIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH14_NO137_20261112: strict source-only correction of heatstroke mismatch.
+(function(){'use strict';
+const f={"id":"sm2-5y-r06-hyg-09","subject":"労働衛生","topic":"一酸化炭素中毒疑い時の退避・救急対応","question":"屋内で燃焼式暖房機器を使用した後、複数の従業員が頭痛・吐き気を訴えた。最も優先する行動はどれか。","basis":"一酸化炭素中毒の予防・曝露時の安全確保および救急対応","oldUrl":"https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000116133.html","newUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=00tb7875&dataType=1&pageNo=1","answer":"一酸化炭素中毒を疑い、救助者の安全を確保して曝露を止め、退避と救急連絡を行う。","choices":["換気せず同じ場所で作業を続ける。","一酸化炭素中毒を疑い、救助者の安全を確保して曝露を止め、退避と救急連絡を行う。","燃焼機器を増やして室温を上げる。","症状を訴える人を密室に一人で残す。","症状を環境と無関係と決めつけ記録もしない。"]};
+const m=(window.Q_PARTS||[]).filter(q=>q.id===f.id);
+if(m.length!==1)throw Error('HM2 B14 No137 ID count mismatch');
+const q=m[0];
+if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==f.basis||q.sourceUrl!==f.oldUrl||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.answer||JSON.stringify([...q.choices].sort())!==JSON.stringify([...f.choices].sort()))throw Error('HM2 B14 No137 strict old-state mismatch');
+q.sourceUrl=f.newUrl;
+window.HM2_170_B14_NO137_DIRECT_CO_SOURCE_APPLIED=true;
+})();
