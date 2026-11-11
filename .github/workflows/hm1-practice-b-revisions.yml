@@ -1,0 +1,25 @@
+name: HM1 practice B 44 revisions regression
+
+on:
+  push:
+    branches:
+      - fix/hm1-practice-b-reaudit-20261110
+    paths:
+      - 'ios/health-manager-1/**'
+      - 'apps/sanitary-manager-2/**'
+      - '.github/workflows/hm1-practice-b-revisions.yml'
+  workflow_dispatch:
+
+jobs:
+  regenerate-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run 264-question deterministic regeneration and B override tests
+        run: node ios/health-manager-1/audit/test-b-revisions-20261110.cjs
