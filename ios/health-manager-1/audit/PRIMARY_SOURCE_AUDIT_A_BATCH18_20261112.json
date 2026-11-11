@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "parentCommit": "9361cd68cb40900ecd607d21e628291f09dc44c0",
+  "reportedMusePreviousFourQuestionRegeneration": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "6f61291",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "practice-C-Q20",
+      "practice-C-Q21",
+      "practice-C-Q22",
+      "practice-C-Q26"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL where applicable"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN",
+    "fieldClarification": "Q20/Q21/Q22 changed status and URL, Q26 status only."
+  },
+  "subject": "a-group batch 18 practice-C Q30/Q31/Q32/Q33",
+  "outcomes": [
+    {
+      "id": "practice-C-Q30",
+      "sourceContainer": "c21",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK1177/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK1177/",
+      "evidence": "NCBI GeneReviews『Hereditary Nephrogenic Diabetes Insipidus』Molecular Pathogenesis: vasopressin binds collecting-duct V2 receptor, activates cAMP/PKA, and inserts AQP2 into luminal membrane, increasing water permeability. Therefore high osmolality with ADH secretion promotes water reabsorption and concentrated urine; answer index 4.",
+      "caveat": "Hereditary disorder reference confirms molecular pathway, not full normal renal physiology context. All 5 choice-by-choice independent evidence and 264-question regeneration pending.",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q31",
+      "sourceContainer": "c31",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK470339/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK470339/",
+      "evidence": "NCBI StatPearls『Physiology, Aldosterone』directly distinguishes aldosterone-driven distal sodium reabsorption/potassium excretion from ADH-driven aquaporin mobilization and water reabsorption. High potassium stimulates aldosterone, high osmolality stimulates ADH; answer index 0.",
+      "caveat": "Multiple hormonal regulators and individual kidney pathologies not ruled out; full 5-choice verification pending.",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q32",
+      "sourceContainer": "c31",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK500006/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK519566/",
+      "evidence": "NCBI StatPearls『Physiology, Thyroid』: anterior-pituitary TSH promotes thyroid T3/T4 synthesis, while high T3/T4 exert negative feedback and decrease TSH. Low TSH and high free T4 are consistent with feedback, not etiology determination; answer index 1.",
+      "caveat": "Low TSH/high free T4 has multiple etiologies; clinical diagnostic tests and full 5-choice independent proof pending.",
+      "correctIndex": 1,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q33",
+      "sourceContainer": "c31",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK537039/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK551659/",
+      "evidence": "NCBI Bookshelf『Histology, Thyroid Gland』separately identifies follicular thyrocytes as thyroid hormone (T3/T4) producers regulating metabolism, and parafollicular C cells as calcitonin-producing cells involved in calcium homeostasis; answer index 2.",
+      "caveat": "Adult calcium regulation is primarily PTH/vitamin D and calcitonin has limited physiologic weight; preserve distinction. Full five-choice independent proof pending.",
+      "correctIndex": 2,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "progress": {
+    "aGroupOriginal": 85,
+    "centralClaimSupportedUnique": 80,
+    "centralClaimNotYetRecorded": 5,
+    "pendingIds": [
+      "practice-C-Q35",
+      "practice-C-Q36",
+      "practice-C-Q37",
+      "practice-C-Q41",
+      "practice-C-Q44"
+    ],
+    "fullFiveChoiceIndependentDirectProofClosed": 0
+  },
+  "currentBatchIndependent264Regeneration": "NOT_RUN",
+  "currentBatchWebIosByteCheck": "NOT_RUN",
+  "releaseGate": "FAIL/BLOCKED"
+}

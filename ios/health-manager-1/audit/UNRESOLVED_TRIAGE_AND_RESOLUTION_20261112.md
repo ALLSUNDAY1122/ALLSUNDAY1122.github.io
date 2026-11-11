@@ -374,3 +374,24 @@
 - 今回4問の264問Node CLI再生成・限定差分・Web/iOS配布JSONバイト・SHA256は未実施。次はMuse側で検証後、`practice-C-Q30`・`Q31`・`Q32`・`Q33`を追証する。
 - C Q06の解説内誤答肢番号の不整合も継続要校閲。法令時点・商用権利・全5肢独立逐語証明・実機検証は未了。**リリースゲートFAIL/BLOCKED**、mainマージ・公開・審査申請なし。
 - 今回証跡 `PRIMARY_SOURCE_AUDIT_A_BATCH17_20261112.json`、累積台帳 `PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
+
+
+## 続編第18回：Muse演習C4問PASS受領、（a）群Q30〜Q33中心命題照合（2026-11-12）
+
+### 1. Muse側264問再生成の検証報告
+- 比較基準 `6f61291` および現在修正後状態の双方で264問Node CLI再生成成功。差分は `practice-C-Q20`、`practice-C-Q21`、`practice-C-Q22`、`practice-C-Q26` の監査ステータスと適用対象の出典URLのみ。正答indexは全問不変、他260問完全一致、限定差分PASS。
+- Q20/Q21/Q22は監査URLと状態、Q26は状態のみ変更。上記はMuse側ローカル報告の記録であり、本担当でNode CLIや配布バイト・SHA256を独立再実行したものではない。今回4問へのPASSは転用しない。
+
+### 2. （a）群次4問・中心命題直接追証
+- **`practice-C-Q30`**（正答index `4` 維持）：NCBI GeneReviews『Hereditary Nephrogenic Diabetes Insipidus』Molecular Pathogenesis: vasopressin binds collecting-duct V2 receptor, activates cAMP/PKA, and inserts AQP2 into luminal membrane, increasing water permeability. Therefore high osmolality with ADH secretion promotes water reabsorption and concentrated urine; answer index 4. 根拠 `https://www.ncbi.nlm.nih.gov/books/NBK1177/` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK1177/`。変更 `auditSourceURL`・`auditStatus` のみ。留保：Hereditary disorder reference confirms molecular pathway, not full normal renal physiology context. All 5 choice-by-choice independent evidence and 264-question regeneration pending.
+- **`practice-C-Q31`**（正答index `0` 維持）：NCBI StatPearls『Physiology, Aldosterone』directly distinguishes aldosterone-driven distal sodium reabsorption/potassium excretion from ADH-driven aquaporin mobilization and water reabsorption. High potassium stimulates aldosterone, high osmolality stimulates ADH; answer index 0. 根拠 `https://www.ncbi.nlm.nih.gov/books/NBK470339/` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK470339/`。変更 `auditSourceURL`・`auditStatus` のみ。留保：Multiple hormonal regulators and individual kidney pathologies not ruled out; full 5-choice verification pending.
+- **`practice-C-Q32`**（正答index `1` 維持）：NCBI StatPearls『Physiology, Thyroid』: anterior-pituitary TSH promotes thyroid T3/T4 synthesis, while high T3/T4 exert negative feedback and decrease TSH. Low TSH and high free T4 are consistent with feedback, not etiology determination; answer index 1. 根拠 `https://www.ncbi.nlm.nih.gov/books/NBK500006/` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK519566/`。変更 `auditSourceURL`・`auditStatus` のみ。留保：Low TSH/high free T4 has multiple etiologies; clinical diagnostic tests and full 5-choice independent proof pending.
+- **`practice-C-Q33`**（正答index `2` 維持）：NCBI Bookshelf『Histology, Thyroid Gland』separately identifies follicular thyrocytes as thyroid hormone (T3/T4) producers regulating metabolism, and parafollicular C cells as calcitonin-producing cells involved in calcium homeostasis; answer index 2. 根拠 `https://www.ncbi.nlm.nih.gov/books/NBK537039/` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK551659/`。変更 `auditSourceURL`・`auditStatus` のみ。留保：Adult calcium regulation is primarily PTH/vitamin D and calcitonin has limited physiologic weight; preserve distinction. Full five-choice independent proof pending.
+
+### 3. 数量、未完検証、引き継ぎ
+- （a）群85固有ID中、中心命題の公開原典照合・記録 **80件**、未照合 **5件（9→5）**。全5肢逐語原典の完全PASS数とは異なる。全5肢無条件PASSは0件扱い。
+- **生成元変更ID**：`practice-C-Q30`、`Q31`、`Q32`、`Q33`。Q30は`audit/practice_c_fixes_21_30.json`、Q31〜Q33は`audit/practice_c_fixes_31_40.json`。監査URLと監査状態のみ変更。設問・5肢・解説・正答indexは不変。各ファイルの対象外レコードは構造比較で完全一致。
+- Q33は既存NCBI文献の内容と整合するが、閲覧時CAPTCHAのため濾胞細胞／C細胞を直接並記した別NCBI組織学資料へ登録URLを変更。Q32も負のフィードバックを明記したNCBIの甲状腺生理の直接ページへ変更。
+- **今回新4問の264問Node CLI再生成、限定差分、Web/iOS配布JSONのバイト一致、SHA256照合は未実施**。次回Muse側独立検証後、残る`practice-C-Q35`・`Q36`・`Q37`・`Q41`・`Q44`を追証。
+- 演習C Q06解説の誤答肢番号不整合は継続要校閲。全5肢逐語、法令適用日・商用利用権・実機検証は未完。**リリースゲートFAIL/BLOCKED維持**、mainマージ・配信・審査申請なし。
+- 今回個別台帳 `PRIMARY_SOURCE_AUDIT_A_BATCH18_20261112.json`、累積残件 `PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
