@@ -1,0 +1,59 @@
+name: HM1 B Q11-Q20 exact seven regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/content-overrides-b-20261110.json'
+      - '.github/workflows/hm1-exact-seven-b-q11-q20.yml'
+  workflow_dispatch:
+jobs:
+  exact-seven:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regenerate baseline and edited bank then inspect exact record differences
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=20d1c0e895e8d2d33601ab26489fccee3ce17679
+          git worktree add --detach /tmp/hm1-b7-before "$BASE"
+          git worktree add --detach /tmp/hm1-b7-after HEAD
+          (cd /tmp/hm1-b7-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-b7-before.log)
+          (cd /tmp/hm1-b7-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-b7-after.log)
+          python3 - <<'PY'
+          import json,unicodedata
+          from pathlib import Path
+          rel='ios/health-manager-1/Resources/questions.json'
+          before=json.loads((Path('/tmp/hm1-b7-before')/rel).read_text())
+          after=json.loads((Path('/tmp/hm1-b7-after')/rel).read_text())
+          targets={f'practice-B-Q{i:02}' for i in [12,13,14,16,17,19,20]}
+          assert len(before)==len(after)==264,(len(before),len(after))
+          assert [q['id'] for q in before]==[q['id'] for q in after],'IDs/order changed'
+          assert len({q['id'] for q in after})==264,'duplicate IDs'
+          def norm(s):return ''.join(c for c in unicodedata.normalize('NFKC',s).casefold() if not c.isspace())
+          assert len({norm(q['stem']) for q in after})==264,'duplicate normalized stems'
+          different={a['id'] for a,b in zip(before,after) if a!=b}
+          assert different==targets,f'Changed IDs: {sorted(different)}'
+          expected={'practice-B-Q12':1,'practice-B-Q13':3,'practice-B-Q14':2,'practice-B-Q16':4,'practice-B-Q17':0,'practice-B-Q19':1,'practice-B-Q20':2}
+          for a,b in zip(before,after):
+              if a['id'] not in targets: assert a==b,a['id']
+              assert len(b['choices'])==5,b['id']
+              assert len({norm(s) for s in b['choices']})==5,b['id']
+              assert type(b['ans']) is int and 0<=b['ans']<5,b['id']
+              if b['id'] in targets:
+                  assert b['ans']==expected[b['id']],b['id']
+                  assert b['short'] and b['detail'],b['id']
+          for hold in ['practice-B-Q11','practice-B-Q15','practice-B-Q18']:
+              a=next(q for q in before if q['id']==hold)
+              b=next(q for q in after if q['id']==hold)
+              assert a==b,hold
+          print('PASS: both 264 generated; exactly 7 modified; other 257 identical; holds unchanged')
+          PY
