@@ -342,3 +342,12 @@ q.question="事務室の空気調和設備を点検したところ、供給空�
 q.explanation="事務所衛生基準規則5条1項2号では、空気調和設備等から室へ供給する空気の一酸化炭素濃度は原則10ppm以下。外気が汚染され10ppm以下の空気を供給することが困難な場合は20ppm以下という特例がある。本問は特例に該当しない条件なので11ppmは原則基準を超過する。室内空気の基準（同規則3条2項）や二酸化炭素の基準とは区別する。";
 window.SM2_INDEPENDENT_FIFTH10_METADATA_FIX9_IDS=fixes.map(f=>f.id);
 })();
+
+// SM2_INDEPENDENT_SIXTH10_METADATA_FIX2_20261111: two audited topic/basis repairs; hyg source URL aligned to the cited ordinance, no review status changes.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r10-law-04","topic":"衛生管理者の選任期限（14日以内）","basis":"労働安全衛生規則7条1項1号"},{"id":"sm2-5y-r04-hyg-04","topic":"冬季事務室の相対湿度・乾燥対策","basis":"事務所衛生基準規則5条3項（空気調和設備設置時の相対湿度40～70%は努力義務）","sourceUrl":"https://laws.e-gov.go.jp/law/347M50002000043"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 sixth10 metadata fixes invalid');
+for(const f of fixes){const q=byId.get(f.id);if(!q)throw Error('HM2 sixth10 missing '+f.id);q.topic=f.topic;q.basis=f.basis;if(f.sourceUrl)q.sourceUrl=f.sourceUrl;}
+window.SM2_INDEPENDENT_SIXTH10_METADATA_FIX2_IDS=fixes.map(f=>f.id);
+})();
