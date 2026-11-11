@@ -1003,3 +1003,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH11_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH12_20261111: direct reference URLs, sourceUrl only.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r09-phy-04","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK482501/","question":"成人Aは一回換気量500mL・呼吸数毎分12回、成人Bは一回換気量300mL・呼吸数毎分20回である。両者の解剖学的死腔量は一回150mLとし、生理学的死腔の増大など他の条件差はない。分時換気量はいずれも6.0L/分である。肺胞換気量の比較として適切なのはどれか。","correctText":"Aは4.2L/分、Bは3.0L/分で、深くゆっくり呼吸するAの方が大きい。"},{"id":"sm2-5y-r09-phy-05","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK541119/","question":"空腹で長時間運動したとき、肝臓がアミノ酸からブドウ糖をつくり血液中に放出した。この代謝過程の名称はどれか。","correctText":"糖新生"},{"id":"sm2-5y-r09-phy-06","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK546695/","question":"短時間の高強度運動で酸素供給が不足しても、筋細胞が解糖系でATPを産生し続ける。持続性に限界のある代謝過程はどれか。","correctText":"嫌気的解糖"},{"id":"sm2-5y-r09-phy-07","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK553192/","question":"酸素供給が十分な状態で持久的な運動を続ける筋細胞が、ミトコンドリアで大量のATPを産生する過程はどれか。","correctText":"電子伝達系と酸化的リン酸化"},{"id":"sm2-5y-r09-phy-08","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK459261/","question":"食後に血糖が上昇した。膵臓の内分泌細胞から分泌され、筋・脂肪組織へのブドウ糖取り込みを高めるホルモンの組合せはどれか。","correctText":"膵島β細胞―インスリン。"},{"id":"sm2-5y-r09-phy-09","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK538172/","question":"出血した直後、交感神経活動が高まり心拍数が増えた。血圧を保持する方向に働く反応として適切なのはどれか。","correctText":"末梢血管の収縮と心拍数の増加が生じる。"},{"id":"sm2-5y-r09-phy-10","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK470328/","question":"血液検査で血小板数が著しく低い場合、一般に特に障害されやすい生理機能はどれか。","correctText":"血管損傷部位での一次止血"},{"id":"sm2-5y-r10-phy-01","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK542254/","question":"食後に吸収された栄養素の代謝調節と、脂肪消化に使う胆汁の生成を行う主な臓器はどれか。","correctText":"肝臓"},{"id":"sm2-5y-r10-phy-02","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK470209/","question":"脂肪を含む食事の後、肝臓で作られた胆汁が十二指腸に流入する。胆汁について正しい説明はどれか。","correctText":"胆汁酸などによって脂質の乳化を助けるが、胆汁自体は消化酵素を主成分としない。"},{"id":"sm2-5y-r10-phy-03","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK482501/","question":"運動で呼吸数が毎分10回から20回へ増えた。一回換気量500mL、解剖学的死腔量150mLが変わらないと仮定した場合、毎分肺胞換気量はどれか。","correctText":"7.0L/分。"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch12 target count/ID');
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+ !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correctText||
+ (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.sourceUrl))
+ throw Error('HM2 X-01 batch12 unexpected source/content '+f.id);
+ q.sourceUrl=f.sourceUrl;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH12_IDS=fixes.map(f=>f.id);
+})();
