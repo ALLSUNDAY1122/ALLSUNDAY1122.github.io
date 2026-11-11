@@ -1,0 +1,54 @@
+name: HM1 basic Q12 Q14 Q15 Q20 exact four regeneration
+on:
+  push:
+    branches:
+      - codex/hm1-integrate-basic-a-b-c-20261111
+    paths:
+      - 'ios/health-manager-1/Resources/questions.json'
+      - '.github/workflows/hm1-exact-four-basic-q12-q14-q15-q20.yml'
+  workflow_dispatch:
+jobs:
+  exact-four:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regenerate baseline and current 264; verify four-only delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=72c349226c6419ba7d3a0d3f23e68df01921f19c
+          git worktree add --detach /tmp/hm1-bq12-before "$BASE"
+          git worktree add --detach /tmp/hm1-bq12-after HEAD
+          (cd /tmp/hm1-bq12-before && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-bq12-before.log)
+          (cd /tmp/hm1-bq12-after && node ios/health-manager-1/augment-to-264.cjs > /tmp/hm1-bq12-after.log)
+          python3 - <<'PY'
+          import json,unicodedata
+          from pathlib import Path
+          rel='ios/health-manager-1/Resources/questions.json'
+          a=json.loads((Path('/tmp/hm1-bq12-before')/rel).read_text())
+          b=json.loads((Path('/tmp/hm1-bq12-after')/rel).read_text())
+          expected={f'2026-04-Q{i:02}' for i in [12,14,15,20]}
+          assert len(a)==len(b)==264,(len(a),len(b))
+          assert [q['id'] for q in a]==[q['id'] for q in b],'ID/order changed'
+          norm=lambda s:''.join(c for c in unicodedata.normalize('NFKC',s).casefold() if not c.isspace())
+          assert len({q['id'] for q in b})==264,'duplicate IDs'
+          assert len({norm(q['stem']) for q in b})==264,'duplicate stems'
+          diff={x['id'] for x,y in zip(a,b) if x!=y}
+          assert diff==expected,{'actual':sorted(diff),'expected':sorted(expected)}
+          for x,y in zip(a,b):
+              if x['id'] not in expected: assert x==y,x['id']
+              assert len(y['choices'])==5,y['id']
+              assert len({norm(c) for c in y['choices']})==5,y['id']
+              assert type(y['ans']) is int and 0<=y['ans']<5,y['id']
+              if y['id'] in expected:
+                  assert y['ans']=={'2026-04-Q12':0,'2026-04-Q14':4,'2026-04-Q15':1,'2026-04-Q20':3}[y['id']],y['id']
+                  assert y['short'] and y['detail'] and y['sourceRef'],y['id']
+          print('PASS: 264 before and after; only basic Q12/Q14/Q15/Q20 changed, 260 others identical')
+          PY
