@@ -531,3 +531,13 @@ if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 P1-1 
 for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='関係法令'||q.answer!==f.answer)throw Error('HM2 P1-1 target/answer mismatch '+f.id);if(f.choices.length!==5||new Set(f.choices).size!==5)throw Error('HM2 P1-1 options invalid '+f.id);Object.assign(q,{question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,topic:f.topic,basis:f.basis,sourceUrl:f.sourceUrl});}
 window.HM2_P1_1_DIFFERENT_CONDITION_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_P1_2_MANAGER_APPOINTMENT_THRESHOLD_20261111: split duplicate 14-day appointment questions into 49-to-50 threshold+deadline and 200-vs-201 minimum staffing count. Preserve correct position, review and publication flags.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r04-law-02","answer":5,"topic":"50人到達時の衛生管理者選任義務・14日以内の期限","basis":"労働安全衛生法12条・同施行令4条／労働安全衛生規則7条1項1号","question":"それまで常時使用する労働者が49人だった事務系の事業場で、増員により初めて常時50人となり、衛生管理者を選任すべき事由が生じた。事業者の対応として法令に適合するものはどれか。","choices":["労働者が100人に達するまで衛生管理者を選任する必要はない。","常時50人となった当日に必ず選任しなければならず、14日間の法定期限はない。","事由が発生してから30日以内に衛生管理者を選任すればよい。","衛生管理者の選任は次回の定期健康診断を実施する日まで猶予される。","常時50人となって選任事由が生じた日から14日以内に、衛生管理者を選任する。"],"quick":"常時50人以上で衛生管理者の選任が必要となり、選任事由発生日から14日以内に選任する。","explanation":"労働安全衛生法12条・同施行令4条により常時50人以上の事業場には業種を問わず衛生管理者の選任義務が生じる。労働安全衛生規則7条1項1号は、選任すべき事由が生じた日から14日以内の選任を求める。49人から50人に達して新たに選任事由が生じた本問では第5肢が正しい。第1肢は必要規模を100人と誤り、第2肢は即日のみと誤り、第3肢は30日への延長、第4肢は健診日までの猶予を誤る。選任後の所轄労働基準監督署長への遅滞ない報告は同条3項の別の義務である。"},{"id":"sm2-5y-r10-law-04","answer":4,"topic":"常時200人・201人事業場の衛生管理者選任人数","basis":"労働安全衛生規則7条1項4号（規模別衛生管理者数）","question":"常時200人の労働者を使用するA事業場と、常時201人を使用するB事業場がある。いずれも衛生管理者の選任義務があり、法定の最低選任人数として正しい組合せはどれか。","choices":["Aは0人、Bは1人。","Aは1人、Bも1人。","Aは2人、Bも2人。","Aは1人、Bは2人。","Aは2人、Bは1人。"],"quick":"衛生管理者は常時50〜200人で1人以上、200人超〜500人で2人以上。","explanation":"労働安全衛生規則7条1項4号の規模別選任人数は、常時50人以上200人以下では衛生管理者1人以上、200人を超え500人以下では2人以上である。したがって200人のAは1人以上、201人のBは2人以上で第4肢が正しい。「200人以上」と「200人を超える」を取り違えない。選任人数の規定と、選任すべき事由が生じてから14日以内という期限（同項1号）は別の要件である。"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==2||new Set(fixes.map(f=>f.id)).size!==2)throw Error('HM2 P1-2 fixed target mismatch');
+for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='関係法令'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('HM2 P1-2 mismatch '+f.id);Object.assign(q,{question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,topic:f.topic,basis:f.basis});}
+window.HM2_P1_2_MANAGER_APPOINTMENT_IDS=fixes.map(f=>f.id);
+})();
