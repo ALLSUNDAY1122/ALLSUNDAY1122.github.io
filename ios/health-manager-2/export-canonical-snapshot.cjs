@@ -12,6 +12,8 @@ function load(includeDifficulty){
  return c.window.Q_PARTS;
 }
 const browser=load(true),release=load(false);
+const {verifyCurrentLawContent}=require('./verify-current-law-contract.cjs');
+verifyCurrentLawContent(browser);
 const keys=['question','choices','answer','quick','explanation','topic','sourceUrl','baselineDate'];
 const byId=new Map(release.map(q=>[q.id,q]));
 const normalized=s=>String(s).replace(/[\\s\\p{P}\\p{S}]/gu,'').toLowerCase();
