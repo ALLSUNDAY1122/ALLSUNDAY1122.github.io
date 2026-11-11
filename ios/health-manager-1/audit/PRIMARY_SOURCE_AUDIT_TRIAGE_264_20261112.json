@@ -1699,13 +1699,9 @@
   "aGroupProgress": {
     "countingMethod": "a群85IDのうち中心命題への公開一次資料追証・法令根拠修正を記録済みの固有IDだけを1回計上。前回のC29、C34、C42、Q25および第2〜第6次バッチを含む。完全5肢逐語原典PASSの残数ではない。",
     "aGroupOriginal": 85,
-    "centralClaimSupportedUnique": 64,
-    "centralClaimNotYetRecorded": 21,
+    "centralClaimSupportedUnique": 68,
+    "centralClaimNotYetRecorded": 17,
     "centralClaimPendingIds": [
-      "practice-C-Q08",
-      "practice-C-Q09",
-      "practice-C-Q10",
-      "practice-C-Q14",
       "practice-C-Q15",
       "practice-C-Q17",
       "practice-C-Q18",
@@ -2352,6 +2348,91 @@
       "caveat": "36協定届出・特別条項・適用除外や全5肢の直接逐語証明の別途確認を要する。",
       "correctIndex": 0,
       "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "batchFifteenMuseValidation": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "a546c23",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "practice-C-Q03",
+      "practice-C-Q05",
+      "practice-C-Q06",
+      "practice-C-Q07"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL where applicable"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN",
+    "fieldClarification": "Q03/Q05/Q06 changed status+URL; Q07 status only."
+  },
+  "batchFifteenResolutions": [
+    {
+      "id": "practice-C-Q08",
+      "sourceContainer": "c1",
+      "oldAuditURL": "https://laws.e-gov.go.jp/law/322M40000100023",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0",
+      "secondaryEvidenceURL": "https://www.check-roudou.mhlw.go.jp/qa/roudousya/roudoujikan/q4.html",
+      "evidence": "労基則25条の2第1項：商業等の指定事業で常時10人未満なら、通常の法定労働時間は1週間44時間・1日8時間まで。厚労省労働条件Q&Aも明記する。常時8人の商業事業場について正答肢4を支持。",
+      "caveat": "変形制等を採用しないという設問前提に依存。各肢独立逐語立証・実態確認は未完。",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q09",
+      "sourceContainer": "c1",
+      "oldAuditURL": "https://laws.e-gov.go.jp/law/322AC0000000049",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0&pageNo=1",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/bunya/roudoukijun/faq_kijyunhou_14.html",
+      "evidence": "労基法34条1・3項：労働が6時間を超える場合に45分以上を途中付与、6時間ちょうどでは同条による最低休憩義務は発生しない。厚労省FAQでは電話応対など指揮命令下の手待時間は労働からの解放を保障する休憩に当たらない。正答肢0を確認。",
+      "caveat": "電話待機20分の具体的指揮命令実態に依存。全5肢独立逐語証明は未完。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q10",
+      "sourceContainer": "c1",
+      "oldAuditURL": "https://laws.e-gov.go.jp/law/322AC0000000049",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0&pageNo=1",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/bunya/roudoukijun/faq_kijyunhou_14.html",
+      "evidence": "労基法34条1項：労働が8時間を超えれば合計1時間以上の途中休憩が必要。既に45分確保している場合の追加15分は途中付与で足りる。厚労省分割休憩FAQは休憩を労働から解放された時間として評価すると説明。正答肢3を確認。",
+      "caveat": "休憩分割が極端に短い場合の実質性、労働の途中の実際の付与時刻等は個別確認が必要。全5肢逐語証明未完。",
+      "correctIndex": 3,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q14",
+      "sourceContainer": "c2",
+      "oldAuditURL": "https://laws.e-gov.go.jp/law/322M40000100023",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/content/11200000/001713615.pdf",
+      "evidence": "労基法35条2項は4週間で4日以上の休日なら週1休日の例外を認め、労基則12条の2第2項は4週間の起算日を就業規則その他これに準ずるもので明らかにする義務を規定。正答肢0を直接支持。",
+      "caveat": "各四週間単位の実際の勤務カレンダーの適法性、全5肢独立逐語証明は未完。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditSourceURL",
         "auditStatus"
       ],
       "allFiveIndependentDirectProof": false

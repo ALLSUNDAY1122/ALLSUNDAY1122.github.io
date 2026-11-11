@@ -312,3 +312,23 @@
 - **要校閲：Q06の現行解説の誤答肢番号の記述に0始まりindexと不一致がある。** 今回は原文を維持し品質ゲートの留保として記録。次回解説修正時には限定差分を別途検証すること。
 - 今回4問の264問Node CLI再生成・Web/iOS配布SHA256比較は未実施。次回Muse側検証の対象。次の（a）群は `practice-C-Q08`、`Q09`、`Q10`、`Q14` など。
 - 法令時点・商用権利・全5肢の独立逐語証明・実機検証は未完了。**リリースゲートFAIL/BLOCKED維持**、mainマージ・公開・審査申請なし。個別台帳：`PRIMARY_SOURCE_AUDIT_A_BATCH14_20261112.json`。
+
+
+## 続編第15回：Muse演習C4問PASS追記、（a）群演習C4問の直接法令照合（2026-11-12）
+
+### Muse側ローカル報告の受領（独立再実行でない）
+- 比較基準 `a546c23` と現在状態の両方で264問Node CLI再生成成功。差分は `practice-C-Q03`・`Q05`・`Q06`・`Q07` の4問のみ、正答index全問不変、他260問完全一致、限定差分PASS。
+- Q03・Q05・Q06は監査状態と出典URL、Q07は監査状態のみ。Muse側実施結果の記録であって本担当の264問独立再生成・Web/iOS配布バイト・SHA256再検証ではない。このPASSを次の4問に転用しない。
+
+### （a）群次4問の中心命題一次資料照合
+- **`practice-C-Q08`**（正答index `4` 不変）：労基則25条の2第1項：商業等の指定事業で常時10人未満なら、通常の法定労働時間は1週間44時間・1日8時間まで。厚労省労働条件Q&Aも明記する。常時8人の商業事業場について正答肢4を支持。 出典 `https://laws.e-gov.go.jp/law/322M40000100023` → `https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0`、補助 `https://www.check-roudou.mhlw.go.jp/qa/roudousya/roudoujikan/q4.html`。変更：`auditSourceURL`・`auditStatus`のみ。留保：変形制等を採用しないという設問前提に依存。各肢独立逐語立証・実態確認は未完。
+- **`practice-C-Q09`**（正答index `0` 不変）：労基法34条1・3項：労働が6時間を超える場合に45分以上を途中付与、6時間ちょうどでは同条による最低休憩義務は発生しない。厚労省FAQでは電話応対など指揮命令下の手待時間は労働からの解放を保障する休憩に当たらない。正答肢0を確認。 出典 `https://laws.e-gov.go.jp/law/322AC0000000049` → `https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0&pageNo=1`、補助 `https://www.mhlw.go.jp/bunya/roudoukijun/faq_kijyunhou_14.html`。変更：`auditSourceURL`・`auditStatus`のみ。留保：電話待機20分の具体的指揮命令実態に依存。全5肢独立逐語証明は未完。
+- **`practice-C-Q10`**（正答index `3` 不変）：労基法34条1項：労働が8時間を超えれば合計1時間以上の途中休憩が必要。既に45分確保している場合の追加15分は途中付与で足りる。厚労省分割休憩FAQは休憩を労働から解放された時間として評価すると説明。正答肢3を確認。 出典 `https://laws.e-gov.go.jp/law/322AC0000000049` → `https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0&pageNo=1`、補助 `https://www.mhlw.go.jp/bunya/roudoukijun/faq_kijyunhou_14.html`。変更：`auditSourceURL`・`auditStatus`のみ。留保：休憩分割が極端に短い場合の実質性、労働の途中の実際の付与時刻等は個別確認が必要。全5肢逐語証明未完。
+- **`practice-C-Q14`**（正答index `0` 不変）：労基法35条2項は4週間で4日以上の休日なら週1休日の例外を認め、労基則12条の2第2項は4週間の起算日を就業規則その他これに準ずるもので明らかにする義務を規定。正答肢0を直接支持。 出典 `https://laws.e-gov.go.jp/law/322M40000100023` → `https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0`、補助 `https://www.mhlw.go.jp/content/11200000/001713615.pdf`。変更：`auditSourceURL`・`auditStatus`のみ。留保：各四週間単位の実際の勤務カレンダーの適法性、全5肢独立逐語証明は未完。
+
+### 件数・検証留保と引継ぎ
+- （a）群中心命題への公開一次資料追証・記録済み **68/85 ID**、次の照合待ち **17件（21→17）**。全5肢独立逐語証明や配布一致の合格数ではなく、全5肢無条件PASSは0件扱いを維持。
+- 今回問題データ変更ID：`practice-C-Q08`、`practice-C-Q09`、`practice-C-Q10`、`practice-C-Q14`。演習C生成元2ファイルで全4問の`auditSourceURL`・`auditStatus`のみ変更。設問・5肢・解説・正答indexは不変。対象外の全レコード不変をJSON構造比較で確認。
+- 今回4問の264問Node CLI再生成・限定差分・Web/iOS配布バイト・SHA256は未実施。次の（a）群は`practice-C-Q15`・`Q17`・`Q18`・`Q19`等。Muse側の修正後264問再生成確認が必要。
+- C Q06の解説内誤答肢番号の不整合は前バッチからの継続要校閲事項。全5肢逐語・商用権利・横断法令時点・実機検証は未完。**リリースゲートFAIL/BLOCKED維持**、mainマージ・App Store審査・公開なし。
+- 詳細：`PRIMARY_SOURCE_AUDIT_A_BATCH15_20261112.json`、累積残件：`PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
