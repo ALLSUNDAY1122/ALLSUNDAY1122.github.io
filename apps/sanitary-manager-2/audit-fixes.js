@@ -1323,3 +1323,25 @@ for(const f of fixes){
 }
 window.HM2_170_B06_PENDING_CORRECTIONS_APPLIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_B07_NO061_20261112: strict guarded source and legal basis migration only.
+(function(){'use strict';
+const id='sm2-5y-r06-law-01';
+const hits=(window.Q_PARTS||[]).filter(q=>q.id===id);
+if(hits.length!==1)throw Error('HM2 B07 No061 target count mismatch '+id);
+const q=hits[0];
+const old={
+subject:'関係法令',
+topic:'衛生管理者の選任基準',
+question:'衛生管理者の選任について、業種を問わず選任義務が生じる事業場の常時使用労働者数はどれか。',
+basis:'労働安全衛生法12条',
+url:'https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0',
+correct:'50人以上',
+choices:['100人以上','30人以上','50人以上','200人以上','500人以上']
+};
+if(q.subject!==old.subject||q.topic!==old.topic||q.question!==old.question||q.basis!==old.basis||q.sourceUrl!==old.url||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==old.correct||JSON.stringify([...q.choices].sort())!==JSON.stringify([...old.choices].sort()))throw Error('HM2 B07 No061 strict old-state mismatch '+id);
+q.sourceUrl='https://laws.e-gov.go.jp/law/347CO0000000318';
+q.basis='労働安全衛生法12条・労働安全衛生法施行令第4条';
+window.HM2_170_B07_NO061_SOURCE_BASIS_APPLIED=true;
+})();
