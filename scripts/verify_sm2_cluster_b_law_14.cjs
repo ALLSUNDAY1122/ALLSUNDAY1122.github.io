@@ -29,6 +29,6 @@ for(const [mode,files] of [['browser',[...base,'difficulty-patch-v5.js',...patch
  assert.equal(groups.size,30);
  for(const [k,list] of groups){assert.equal(list.length,10,k);const count=[0,0,0,0,0];for(const q of list){assert.equal(q.choices.length,5);count[q.answer-1]++;}assert.ok(count.every(n=>n===2),k+': '+count);}
  const all=new Set(qs.map(q=>normalize(q.question)));
- assert.equal(all.size,mode==='browser'?190:300);
+ assert.equal(all.size,mode==='browser'?200:300);
  console.log('PASS',JSON.stringify({mode,questions:qs.length,clusterBLawRedesigned:14,uniqueStems:all.size}));
 }
