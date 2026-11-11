@@ -850,3 +850,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH02_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH03_20261111: direct sources; source URL only.
+(function(){'use strict';
+const fixes=[{"id":"sm2-r7o-017","url":"https://www.nhlbi.nih.gov/health/heart-attack","question":"虚血性心疾患に関する記述として、正しいものはどれか。","correct":"心筋梗塞では冠動脈血流の高度な障害が持続し、心筋壊死を生じ得る"},{"id":"sm2-r7o-018","url":"https://www.redcross.org/take-a-class/resources/learn-first-aid/fractures","question":"前腕骨折が疑われ、変形と腫脹がある負傷者への応急手当として最も適切なのはどれか。","correct":"出血があれば止血し、末梢の血行や感覚を確認しながら、原則として変形を無理に整復せず副子等で固定する"},{"id":"sm2-r7o-019","url":"https://anzeninfo.mhlw.go.jp/yougo/yougo22_1.html","question":"「労働災害による死傷者数 ÷ 延べ実労働時間 × 1,000,000」で求め、災害発生の頻度を示す指標はどれか。","correct":"度数率"},{"id":"sm2-r7o-020","url":"https://kennet.mhlw.go.jp/information/information/dictionary/metabolic/ym-002","question":"身長1.68m、体重70.6kgの労働者についてBMIを算出し、その値に最も近いものを選べ。","correct":"25.0"},{"id":"sm2-r7o-021","url":"https://www.msdmanuals.com/ja-jp/home/05-%E8%85%8E%E8%87%93%E3%81%A8%E5%B0%BF%E8%B7%AF%E3%81%AE%E7%97%85%E6%B0%97/%E8%85%8E%E8%87%93%E3%81%A8%E5%B0%BF%E8%B7%AF%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E8%85%8E%E8%87%93","question":"腎臓における尿生成について、正しいものはどれか。","correct":"糸球体で血漿成分がろ過されて原尿が生じ、その後尿細管で再吸収や分泌を受ける"},{"id":"sm2-r7o-022","url":"https://www.msdmanuals.com/ja-jp/home/06-%E5%BF%83%E8%87%93%E3%81%A8%E8%A1%80%E7%AE%A1%E3%81%AE%E7%97%85%E6%B0%97/%E5%BF%83%E8%87%93%E3%81%A8%E8%A1%80%E7%AE%A1%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E5%BF%83%E8%87%93%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6","question":"心臓と血液循環について、正しいものはどれか。","correct":"左心室から出た血液は大動脈を通って全身へ送られる"},{"id":"sm2-r7o-023","url":"https://www.msdmanuals.com/ja-jp/home/12-%E3%83%9B%E3%83%AB%E3%83%A2%E3%83%B3%E3%81%A8%E4%BB%A3%E8%AC%9D%E3%81%AE%E7%97%85%E6%B0%97/%E7%B3%96%E5%B0%BF%E7%97%85%E3%81%A8%E7%B3%96%E4%BB%A3%E8%AC%9D%E7%95%B0%E5%B8%B8/%E7%B3%96%E5%B0%BF%E7%97%85-dm","question":"血糖調節に関する記述として、正しいものはどれか。","correct":"インスリンは細胞への糖取り込みやグリコーゲン合成を促進し、血糖を低下させる"},{"id":"sm2-r7o-024","url":"https://www.msdmanuals.com/ja-jp/home/03-%E6%B6%88%E5%8C%96%E5%99%A8%E7%B3%BB%E3%81%AE%E7%97%85%E6%B0%97/%E6%B6%88%E5%8C%96%E5%99%A8%E7%B3%BB%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E8%83%83","question":"消化酵素と作用部位・対象栄養素の組合せとして、正しいものはどれか。","correct":"ペプシン―胃―たんぱく質"},{"id":"sm2-r7o-025","url":"https://www.msdmanuals.com/ja-jp/home/04-%E8%82%9D%E8%87%93%E3%81%A8%E8%83%86%E5%9A%A2%E3%81%AE%E7%97%85%E6%B0%97/%E8%82%9D%E8%87%93%E3%81%A8%E8%83%86%E5%9A%A2%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E8%83%86%E5%9A%A2%E3%81%A8%E8%83%86%E9%81%93","question":"胆汁の生成・貯蔵・作用について、正しいものはどれか。","correct":"胆汁は肝臓で生成され、胆のうに貯蔵・濃縮され、脂肪を乳化して消化を助ける"},{"id":"sm2-r7o-026","url":"https://www.msdmanuals.com/ja-jp/home/13-%E8%A1%80%E6%B6%B2%E3%81%AE%E7%97%85%E6%B0%97/%E8%B2%A7%E8%A1%80/%E3%83%98%E3%83%A2%E3%82%B0%E3%83%AD%E3%83%93%E3%83%B3c%E7%97%87-sc%E7%97%87-e%E7%97%87","question":"血液の成分と機能について、正しいものはどれか。","correct":"赤血球中のヘモグロビンは酸素と可逆的に結合し、酸素運搬の中心的役割を担う"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch03 target count/ID');
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+  !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correct||
+  (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.url))
+  throw Error('HM2 X-01 batch03 unexpected source/content '+f.id);
+ q.sourceUrl=f.url;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH03_IDS=fixes.map(f=>f.id);
+})();
