@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "parentCommit": "c961c2a324d3d026e9d21af4a6b48f5d93372ae1",
+  "reportedMusePreviousFourQuestionRegeneration": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "b8bafed",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "practice-A-Q37",
+      "practice-A-Q39",
+      "practice-B-Q08",
+      "practice-B-Q20"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL where applicable"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN",
+    "fieldClarification": "A Q37/Q39 and B Q20 URL and status changes; B Q08 status only."
+  },
+  "subject": "a-group batch 13 practice-B Q28/Q33 practice-C Q01/Q02",
+  "outcomes": [
+    {
+      "id": "practice-B-Q28",
+      "sourceContainer": "B",
+      "oldAuditURL": "https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei28/index.html",
+      "newAuditURL": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000055195_00005.html",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei28/index.html",
+      "evidence": "厚労省『心の健康問題により休業した労働者の職場復帰支援の手引き』第2〜5ステップは、主治医の復職可能診断に加え、産業医等による職務遂行能力・職場条件の評価、職場復帰プランの作成、事業者による最終決定、復帰後フォローを区別。正答肢3の中心命題を支持。",
+      "caveat": "手引き上の個別判断であり、画一的な短時間勤務義務を意味しない。2026年の関連指針との横断整合と全5肢独立逐語証明は未完。",
+      "correctIndex": 3,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-B-Q33",
+      "sourceContainer": "B",
+      "oldAuditURL": "https://www.nhlbi.nih.gov/health/lungs/breathing-benefits",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK54103/",
+      "secondaryEvidenceURL": "https://www.ncbi.nlm.nih.gov/books/NBK493219/",
+      "evidence": "NCBI Bookshelf『Oxygen Transport』Fickの拡散法則：肺胞毛細血管膜を通る酸素移動量は交換面積・分圧差に比例し膜厚に反比例。『Partial Pressure of Oxygen』で肺胞から血液へ酸素が濃度勾配に従い受動拡散することを確認。正答肢3に一致。",
+      "caveat": "原典は生理学的モデルであり、換気血流比など実臨床条件と各誤肢の全逐語反証は未完。",
+      "correctIndex": 3,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q01",
+      "sourceContainer": "C",
+      "oldAuditURL": "https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "secondaryEvidenceURL": "https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097",
+      "evidence": "安衛則23条3項は委員会議事概要の開催の都度・遅滞ない労働者への周知を規定。同条4項は委員会意見、その意見に基づく措置、その他重要議事を記録し3年間保存する義務を独立規定。掲示済でも記録が必要という正答肢1を確認。",
+      "caveat": "過去の未作成記録の遡及的な正確性担保や、全5肢の独立逐語証明は未完。",
+      "correctIndex": 1,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q02",
+      "sourceContainer": "C",
+      "oldAuditURL": "https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097",
+      "newAuditURL": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1",
+      "secondaryEvidenceURL": "https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097",
+      "evidence": "安衛則23条3項3号は、委員会議事概要を電子ファイル等に記録し、各作業場に労働者が記録内容を常時確認できる機器を設置する周知方法を明記。開催の都度遅滞なくという規定と併せ正答肢1を直接確認。",
+      "caveat": "実際のアクセス権・各作業場の機器稼働や法令版横断確認、全5肢逐語反証は未完。",
+      "correctIndex": 1,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "progress": {
+    "aGroupOriginal": 85,
+    "centralClaimSupportedUnique": 60,
+    "centralClaimNotYetRecorded": 25,
+    "pendingIds": [
+      "practice-C-Q03",
+      "practice-C-Q05",
+      "practice-C-Q06",
+      "practice-C-Q07",
+      "practice-C-Q08",
+      "practice-C-Q09",
+      "practice-C-Q10",
+      "practice-C-Q14",
+      "practice-C-Q15",
+      "practice-C-Q17",
+      "practice-C-Q18",
+      "practice-C-Q19",
+      "practice-C-Q20",
+      "practice-C-Q21",
+      "practice-C-Q22",
+      "practice-C-Q26",
+      "practice-C-Q30",
+      "practice-C-Q31",
+      "practice-C-Q32",
+      "practice-C-Q33",
+      "practice-C-Q35",
+      "practice-C-Q36",
+      "practice-C-Q37",
+      "practice-C-Q41",
+      "practice-C-Q44"
+    ],
+    "fullFiveChoiceIndependentDirectProofClosed": 0
+  },
+  "currentBatchIndependent264Regeneration": "NOT_RUN",
+  "currentBatchWebIosByteCheck": "NOT_RUN",
+  "releaseGate": "FAIL/BLOCKED"
+}

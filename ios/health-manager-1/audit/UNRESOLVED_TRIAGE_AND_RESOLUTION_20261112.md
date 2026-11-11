@@ -273,3 +273,22 @@
 - 今回の修正4問の264問Node CLI再生成・限定差分、Web/iOS配布バイト・SHA256は未実施。次はMuse側独立確認後、`practice-B-Q28`・`Q33`・`practice-C-Q01`・`Q02`から追証。
 - 法令版・商用利用権・全5肢直接証明・実機検証未了、**リリースゲートFAIL/BLOCKED**、mainマージ・審査申請・公開なし。
 - 新規個別台帳：`audit/PRIMARY_SOURCE_AUDIT_A_BATCH12_20261112.json`、累計台帳：`audit/PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
+
+
+## 続編第13回：Muse演習A/B4問PASS受領、（a）群演習B/C4問中心命題照合（2026-11-12）
+
+### Muse前回修正4問の264問再生成（ユーザー提供）
+- 比較基準`b8bafed`と現在状態の双方でNode CLI264問再生成成功。差分は`practice-A-Q37`、`practice-A-Q39`、`practice-B-Q08`、`practice-B-Q20`のみ、正答index全問不変、他260問完全一致、限定差分PASS。
+- A Q37/Q39・B Q20は監査URLとステータス、B Q08はステータスだけ変更。Muse側ローカルでの実施報告として記録、担当者が264問再生成・配布Web/iOSバイト照合・SHA256を独立再実行した結果ではない。今回の新4問にはPASSを転用しない。
+
+### 今回の（a）群・個別原典照合4問
+- **`practice-B-Q28`**（正答index `3` 不変）：厚労省『心の健康問題により休業した労働者の職場復帰支援の手引き』第2〜5ステップは、主治医の復職可能診断に加え、産業医等による職務遂行能力・職場条件の評価、職場復帰プランの作成、事業者による最終決定、復帰後フォローを区別。正答肢3の中心命題を支持。 登録根拠 `https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei28/index.html` → `https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000055195_00005.html`、補助根拠 `https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei28/index.html`。変更`auditSourceURL`・`auditStatus`のみ。留保：手引き上の個別判断であり、画一的な短時間勤務義務を意味しない。2026年の関連指針との横断整合と全5肢独立逐語証明は未完。
+- **`practice-B-Q33`**（正答index `3` 不変）：NCBI Bookshelf『Oxygen Transport』Fickの拡散法則：肺胞毛細血管膜を通る酸素移動量は交換面積・分圧差に比例し膜厚に反比例。『Partial Pressure of Oxygen』で肺胞から血液へ酸素が濃度勾配に従い受動拡散することを確認。正答肢3に一致。 登録根拠 `https://www.nhlbi.nih.gov/health/lungs/breathing-benefits` → `https://www.ncbi.nlm.nih.gov/books/NBK54103/`、補助根拠 `https://www.ncbi.nlm.nih.gov/books/NBK493219/`。変更`auditSourceURL`・`auditStatus`のみ。留保：原典は生理学的モデルであり、換気血流比など実臨床条件と各誤肢の全逐語反証は未完。
+- **`practice-C-Q01`**（正答index `1` 不変）：安衛則23条3項は委員会議事概要の開催の都度・遅滞ない労働者への周知を規定。同条4項は委員会意見、その意見に基づく措置、その他重要議事を記録し3年間保存する義務を独立規定。掲示済でも記録が必要という正答肢1を確認。 登録根拠 `https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097` → `https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1`、補助根拠 `https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097`。変更`auditSourceURL`・`auditStatus`のみ。留保：過去の未作成記録の遡及的な正確性担保や、全5肢の独立逐語証明は未完。
+- **`practice-C-Q02`**（正答index `1` 不変）：安衛則23条3項3号は、委員会議事概要を電子ファイル等に記録し、各作業場に労働者が記録内容を常時確認できる機器を設置する周知方法を明記。開催の都度遅滞なくという規定と併せ正答肢1を直接確認。 登録根拠 `https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097` → `https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1`、補助根拠 `https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097`。変更`auditSourceURL`・`auditStatus`のみ。留保：実際のアクセス権・各作業場の機器稼働や法令版横断確認、全5肢逐語反証は未完。
+
+### 件数・検証留保・引き継ぎ
+- （a）群中心命題照合済み**60/85 ID**、次の照合待ち**25件（29→25）**。全5肢独立逐語・商用利用権・施行時点を通過した合格問数ではなく、全5肢無条件PASSは0件扱い。
+- 今回生成元変更ID：`practice-B-Q28`、`practice-B-Q33`、`practice-C-Q01`、`practice-C-Q02`。Bは`content-overrides-b-20261110.json`、Cは`audit/practice_c_fixes_01_10.json`。変更フィールドは各問`auditSourceURL`・`auditStatus`のみ。設問・5肢・解説・正答index不変。各生成元の対象外レコードはJSON構造比較で一致。
+- 今回の新4問の264問Node CLI再生成と限定差分、Web/iOS配布JSONのバイト一致・SHA256は未実施。次回Muse側で独立検証を要する。次の照合は`practice-C-Q03`・`Q05`・`Q06`・`Q07`から。
+- 法令適用時点の横断確定・全5肢逐語証明・商用利用権・実機検証は未完。**リリースゲートFAIL/BLOCKED**維持、mainマージ・審査申請・公開なし。個別証跡は`PRIMARY_SOURCE_AUDIT_A_BATCH13_20261112.json`。
