@@ -1441,3 +1441,15 @@ if(f.newBasis!==undefined)q.basis=f.newBasis;
 }
 window.HM2_170_B15_DIRECT_SOURCES_APPLIED=true;
 })();
+
+
+// HM2_DIRECT_SOURCE_170_BATCH16_NO157_20261112: replace dead URL with MHLW source directly addressing prolonged standing.
+(function(){'use strict';
+const f={"id":"sm2-5y-r09-hyg-04","subject":"労働衛生","topic":"長時間立位作業の人間工学的負担軽減","question":"長時間の立ち作業で脚の疲労を訴える作業者が多い。作業設計上の改善として適切なのはどれか。","basis":"厚生労働省『職場における腰痛予防対策指針』（作業姿勢・作業管理）","oldUrl":"https://www.mhlw.go.jp/stf/houdou/2r98520000034et4.html","newUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1","answer":"作業台の高さと姿勢を見直し、座位との交替や適切な休止を検討する。","choices":["全員に同じ作業台高さを固定し身長差は考慮しない。","休止を減らして立位姿勢の継続時間を延ばす。","床面が硬くても靴や足元の条件は検討対象外とする。","作業台の高さと姿勢を見直し、座位との交替や適切な休止を検討する。","疲労が出た場合でも作業姿勢の見直しを禁止する。"]};
+const hits=(window.Q_PARTS||[]).filter(q=>q.id===f.id);
+if(hits.length!==1)throw Error('HM2 B16 No157 target count mismatch');
+const q=hits[0];
+if(q.subject!==f.subject||q.topic!==f.topic||q.question!==f.question||q.basis!==f.basis||q.sourceUrl!==f.oldUrl||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.answer||JSON.stringify([...q.choices].sort())!==JSON.stringify([...f.choices].sort()))throw Error('HM2 B16 No157 strict old-state mismatch');
+q.sourceUrl=f.newUrl;
+window.HM2_170_B16_NO157_DIRECT_STANDING_SOURCE_APPLIED=true;
+})();
