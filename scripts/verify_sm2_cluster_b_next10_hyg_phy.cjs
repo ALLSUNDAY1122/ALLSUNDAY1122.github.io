@@ -25,10 +25,10 @@ for(const [mode,files] of [['browser',[...base,'difficulty-patch-v5.js',...overl
   assert.ok(q.question.length>=25&&q.explanation.length>=25&&q.sourceUrl.startsWith('https://'),id);
   assert.ok(!seen.has(norm(q.question)),id+' repeated stem');seen.add(norm(q.question));
  }
- assert.equal(uniqueStems.size,mode==='browser'?294:300);
+ assert.equal(uniqueStems.size,mode==='browser'?300:300);
  const counts=new Map();for(const q of qs){const n=norm(q.question);counts.set(n,(counts.get(n)||0)+1);}
  const dupe=[...counts.values()].filter(n=>n>1).sort((a,b)=>b-a);
- if(mode==='browser')assert.deepEqual(dupe,[7]);else assert.deepEqual(dupe,[]);
+ if(mode==='browser')assert.deepEqual(dupe,[]);else assert.deepEqual(dupe,[]);
  const sets=new Map();for(const q of qs){const k=q.examSet+'|'+q.subject;sets.set(k,[...(sets.get(k)||[]),q]);}
  assert.equal(sets.size,30);
  for(const [key,items] of sets){assert.equal(items.length,10,key);const p=[0,0,0,0,0];for(const q of items){assert.equal(q.choices.length,5);assert.equal(new Set(q.choices).size,5);assert.ok(q.answer>=1&&q.answer<=5);p[q.answer-1]++;}assert.ok(p.every(n=>n===2),key+' '+p);}
