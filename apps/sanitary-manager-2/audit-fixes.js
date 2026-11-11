@@ -671,3 +671,7 @@ if(fixes.length!==3||new Set(fixes.map(f=>f.id)).size!==3)throw Error('HM2 P1-15
 for(const f of fixes){const q=byId.get(f.id);if(!q||q.subject!=='労働生理'||q.answer!==f.answer||f.choices.length!==5||new Set(f.choices).size!==5)throw Error('HM2 P1-15 source mismatch '+f.id);Object.assign(q,{topic:f.topic,question:f.question,choices:f.choices,quick:f.quick,explanation:f.explanation,basis:f.primary_basis});}
 window.HM2_P1_15_DISTINCT_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_P2_1_R05_HYG_08_NOISE_PRIMARY_SOURCE_20261111: replace indirect source with 2023 MHLW notification; clarify non-mandatory visual alert supplement.
+(function(){'use strict';const f={"id":"sm2-5y-r05-hyg-08","answer":1,"primary_basis":"厚生労働省 令和5年4月20日基発0420第2号『騒音障害防止のためのガイドライン』／騒音発生源・伝ぱ経路・受音者対策。警報の視覚補助は現場のリスク評価に基づく補完策","source_url":"https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1&pageNo=1","explanation":"第1肢が適切。令和5年4月20日改訂『騒音障害防止のためのガイドライン』（基発0420第2号）は、騒音測定・発生源の低騒音化・伝ぱ経路対策・受音者対策および適切な聴覚保護具の選定を示す。フォークリフト警報が聞こえにくい現場では、騒音と警報の聴取状況、車両・歩行者動線を調べ、設備対策に加え必要に応じて視覚的な警報補助等を組み合わせることが合理的である。ただし、視覚的補助を本ガイドラインが全事業場に一律義務付けるとの意味ではない。第2肢は耳栓のみで警報の認知確認を省略、第3肢は安全警報を停止、第4肢は評価を行わず継続、第5肢は騒音増加による衝突防止を無根拠に断定しており、いずれも不適切。"};const q=(window.Q_PARTS||[]).find(x=>x.id===f.id);if(!q||q.subject!=='労働衛生'||q.answer!==f.answer)throw Error('HM2 P2-1 source mismatch '+f.id);Object.assign(q,{basis:f.primary_basis,sourceUrl:f.source_url,explanation:f.explanation});window.HM2_P2_1_NOISE_SOURCE_ID=f.id;})();
