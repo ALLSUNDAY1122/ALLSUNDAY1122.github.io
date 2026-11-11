@@ -918,3 +918,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH06_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH07_20261111: direct physiological sources, source URL only.
+(function(){'use strict';
+const fixes=[{"id":"sm2-5y-r04-phy-04","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK482280/","question":"運動開始時に骨格筋の酸素需要が増えた。活動中の筋へ酸素供給を増やす循環応答として適切なのはどれか。","correctText":"心拍出量が増加し、活動筋への血流配分も増える。"},{"id":"sm2-5y-r04-phy-05","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK525948/","question":"肺で酸素化された血液が心臓に戻り、全身へ送り出される。肺静脈から戻った血液が最初に入る心腔はどれか。","correctText":"左心房"},{"id":"sm2-5y-r04-phy-06","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK531504/","question":"血液を抗凝固剤の入っていない採血管に採り、十分に凝固させた後、遠心して血餅を除いた。得られた上清を、抗凝固剤入り採血管から得た血漿と比較する。凝固因子に関する説明として適切なのはどれか。","correctText":"血清では血液凝固の過程でフィブリノゲンがフィブリンに変化するため、血漿に比べてフィブリノゲンが著しく少ない。"},{"id":"sm2-5y-r04-phy-07","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK544269/","question":"健康診断後、医師がプロトロンビン時間（PT）などの凝固機能を調べる追加検査を指示した。採血後に凝固反応を一時的に抑え、凝固因子を測定可能な状態で保存した上清を使う場合、適切な検体の取り扱いはどれか。","correctText":"クエン酸ナトリウム入り採血管で血液の凝固を抑え、適切に遠心分離した血漿を用いる。"},{"id":"sm2-5y-r04-phy-08","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK493219/","question":"成人の一回換気量は500mL、解剖学的死腔量は150mL、呼吸数は毎分12回である。生理学的死腔の増大はないものとし、毎分肺胞換気量を計算するとどれか。","correctText":"4.2L/分"},{"id":"sm2-5y-r04-phy-09","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK525974/","question":"2人の成人A・Bは肺での酸素化が正常で、動脈血酸素飽和度と動脈血酸素分圧がともに同程度である。AのHb濃度は15g/dL、貧血のあるBは8g/dLで、異常ヘモグロビンなどはない。動脈血1dL当たりの酸素含有量について適切なのはどれか。","correctText":"酸素飽和度が同程度でもHb濃度の低いBではHb結合酸素量が少なく、動脈血1dL当たりの酸素含有量が小さい。"},{"id":"sm2-5y-r04-phy-10","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK482456/","question":"安静時に呼吸が浅くなり、動脈血の二酸化炭素分圧が上昇した。一般に呼吸中枢への影響として適切なのはどれか。","correctText":"二酸化炭素の増加に伴う化学受容器からの刺激が換気を増やす方向に働く。"},{"id":"sm2-5y-r05-phy-01","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK554457/","question":"左心室が収縮して全身へ血液を送り出すとき、血液が最初に流れ込む大きな動脈はどれか。","correctText":"大動脈"},{"id":"sm2-5y-r05-phy-02","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK554457/","question":"運動時に右心室が収縮し血液を肺へ送り出す。右心室から直接流出する血管はどれか。","correctText":"肺動脈。"},{"id":"sm2-5y-r05-phy-03","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK525948/","question":"運動中に筋肉が大量の酸素を消費して二酸化炭素を生じた。肺で二酸化炭素が血液から肺胞へ移動する主な駆動力はどれか。","correctText":"肺毛細血管血と肺胞気との二酸化炭素分圧差。"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch07 target count/ID');
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+ !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correctText||
+ (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.sourceUrl))
+ throw Error('HM2 X-01 batch07 unexpected source/content '+f.id);
+ q.sourceUrl=f.sourceUrl;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH07_IDS=fixes.map(f=>f.id);
+})();
