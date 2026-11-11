@@ -867,3 +867,20 @@ for(const f of fixes){
 }
 window.HM2_X01_DIRECT_SOURCE_BATCH03_IDS=fixes.map(f=>f.id);
 })();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH04_20261111: replace generic exam-list URL with directly relevant source, preserving question content.
+(function(){'use strict';
+const fixes=[{"id":"sm2-r7o-027","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK430888/table/article-18030.table1/","question":"自律神経系の作用について、一般的な組合せとして正しいものはどれか。","correctText":"交感神経優位―心拍数増加・瞳孔散大・消化管運動抑制"},{"id":"sm2-r7o-028","sourceUrl":"https://www.ncbi.nlm.nih.gov/sites/books/NBK537140/","question":"骨格筋の収縮とエネルギー供給について、正しいものはどれか。","correctText":"ミオシン頭部の運動にはATP加水分解のエネルギーが使われ、ATPはクレアチンリン酸や代謝によって再合成される"},{"id":"sm2-r7o-029","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK507838/","question":"暑熱環境における体温調節反応について、正しいものはどれか。","correctText":"皮膚血管拡張と発汗による蒸発を増やし、体熱放散を促進する"},{"id":"sm2-r7o-030","sourceUrl":"https://www.ncbi.nlm.nih.gov/books/NBK539845/","question":"急性ストレス時にみられる生理反応について、正しいものはどれか。","correctText":"交感神経―副腎髄質系が活性化し、心拍数や血圧が上昇する方向の反応が生じる"},{"id":"sm2-r7a-013","sourceUrl":"https://anzeninfo.mhlw.go.jp/yougo/yougo28_1.html","question":"労働衛生の3管理と対策例の組合せとして、正しいものはどれか。","correctText":"作業環境管理―騒音源の防音囲いによる作業場騒音の低減"},{"id":"sm2-r7a-014","sourceUrl":"https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1","question":"情報機器作業の労働衛生管理について、ガイドラインに沿うものはどれか。","correctText":"一連続作業時間が1時間を超えないようにし、次の連続作業までに10～15分の作業休止を設ける"},{"id":"sm2-r7a-015","sourceUrl":"https://anzeninfo.mhlw.go.jp/yougo/yougo22_1.html","question":"延べ実労働時間が1,000,000時間、労働災害による労働損失日数が500日の事業場の強度率はいくらか。","correctText":"0.5"},{"id":"sm2-r7a-017","sourceUrl":"https://www.ncvc.go.jp/hospital/pub/knowledge/case/brain/","question":"脳梗塞、脳出血及びくも膜下出血の発症機序に関する記述として、正しいものはどれか。","correctText":"脳梗塞は脳血管の閉塞などで灌流が低下し、脳組織の虚血が生じる病態である"},{"id":"sm2-r7a-019","sourceUrl":"https://kennet.mhlw.go.jp/information/information/food/e-02-001.html","question":"身長1.60mの人がBMI 22となる体重として最も近いものはどれか。","correctText":"56.3kg"},{"id":"sm2-r7a-020","sourceUrl":"https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/01_00008.html","question":"食中毒予防の温度・時間管理について、適切なものはどれか。","correctText":"調理後は速やかに喫食するか適切な温度で保存し、細菌が増殖しやすい温度帯に長く置かない"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch04 target IDs invalid');
+for(const f of fixes){
+  const q=byId.get(f.id);
+  if(!q||q.question!==f.question||!Array.isArray(q.choices)||q.choices.length!==5||
+     !Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==f.correctText||
+     (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.sourceUrl))
+    throw Error('HM2 X-01 batch04 unexpected source/content '+f.id);
+  q.sourceUrl=f.sourceUrl;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH04_IDS=fixes.map(f=>f.id);
+})();
