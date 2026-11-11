@@ -19,8 +19,8 @@ for(const [mode,files] of [['browser',[...base,'difficulty-patch-v5.js',...overl
  for(const id of ids){const q=out.find(q=>q.id===id);assert.equal(q.stemRedesignBatch,'2026-11-11-cluster-B-hyg-first10',id);assert.equal(q.subject,'労働衛生');assert.equal(q.difficultyModel,'hygiene-scenario-v2');assert.equal(q.choices.length,5);assert.equal(new Set(q.choices).size,5);assert.equal(q.choices[q.answer-1],correct.get(id));assert.ok(q.question.length>=25&&q.explanation.length>=25&&q.sourceUrl.startsWith('https://'));assert.ok(!stems.has(norm(q.question)));stems.add(norm(q.question));}
  const clusters=new Map();for(const q of out)clusters.set(norm(q.question),(clusters.get(norm(q.question))||0)+1);
  const duplicateSizes=[...clusters.values()].filter(x=>x>1).sort((a,b)=>b-a);
- assert.equal(clusters.size,mode==='browser'?220:300);
- if(mode==='browser')assert.deepEqual(duplicateSizes,[38,37,8]);else assert.deepEqual(duplicateSizes,[]);
+ assert.equal(clusters.size,mode==='browser'?227:300);
+ if(mode==='browser')assert.deepEqual(duplicateSizes,[38,37]);else assert.deepEqual(duplicateSizes,[]);
  const groups=new Map();for(const q of out){const key=q.examSet+'|'+q.subject;groups.set(key,[...(groups.get(key)||[]),q]);}
  assert.equal(groups.size,30);
  for(const [key,group] of groups){assert.equal(group.length,10,key);const counts=[0,0,0,0,0];for(const q of group){assert.equal(q.choices.length,5);assert.equal(new Set(q.choices).size,5);assert.ok(q.answer>=1&&q.answer<=5);counts[q.answer-1]++;}assert.ok(counts.every(x=>x===2),key+' positions '+counts);}
