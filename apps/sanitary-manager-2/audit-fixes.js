@@ -816,3 +816,20 @@ function HM2_P2_CORRECT_CONTENT_MATCH(q,f) {
 
 // HM2_X01_VDT_INVALID_SOURCE_FIX_20261111: replace unrelated committee meeting notice URL with direct 2019 information equipment guideline.
 (function(){'use strict';const ids=["sm2-5y-r04-hyg-09","sm2-5y-r05-hyg-07","sm2-5y-r10-hyg-02"];const expected="https://www.mhlw.go.jp/stf/newpage_08297.html";const sourceUrl="https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1";for(const id of ids){const q=(window.Q_PARTS||[]).find(x=>x.id===id);if(!q||q.subject!=='労働衛生')throw Error('HM2 X-01 missing question '+id);if(q.sourceUrl&&q.sourceUrl!==expected&&q.sourceUrl!==sourceUrl)throw Error('HM2 X-01 unexpected URL '+id);q.sourceUrl=sourceUrl;}window.HM2_X01_VDT_SOURCE_FIX_IDS=ids;})();
+
+
+// HM2_X01_EXAM_LIST_DIRECT_SOURCE_BATCH01_20261111: 10 source-only migrations; expected live question and answer text pinned.
+(function(){'use strict';
+const fixes=[{"id":"sm2-demo-011","url":"https://www.mhlw.go.jp/file/05-Shingikai-10601000-Daijinkanboukouseikagakuka-Kouseikagakuka/0000104585.pdf","question":"疾病あり50人、疾病なし950人の集団で、検査陽性が疾病あり40人、疾病なし95人だった。偽陽性率と偽陰性率の組合せはどれか。","answerText":"10％・20％"},{"id":"sm2-demo-012","url":"https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/campylobacterqa.html","question":"食中毒に関する次の記述のうち、誤っているものはどれか。","answerText":"カンピロバクターによる食中毒は、食品中であらかじめ作られた毒素だけを摂取する毒素型食中毒の代表例である。"},{"id":"sm2-demo-013","url":"https://www.fdma.go.jp/relocation/kyukyukikaku/oukyu/05kobetsu/01/05_01_14.html","question":"成人への一次救命処置に関する次の記述のうち、誤っているものはどれか。","answerText":"胸骨の上半分を選んで圧迫する。"},{"id":"sm2-demo-016","url":"https://www.fdma.go.jp/relocation/syobodan/item/upload/tetyou2025.pdf","question":"骨折が疑われる傷病者への対応として、適切なものはどれか。","answerText":"副子は骨折部分の上下の関節まで固定できる長さのものを用いる。"},{"id":"sm2-demo-017","url":"https://www.nhlbi.nih.gov/health/heart-attack","question":"脳血管疾患・虚血性心疾患について、正しいものはどれか。","answerText":"心筋梗塞では心筋への血流不足によって不可逆的な壊死が生じることがある。"},{"id":"sm2-demo-018","url":"https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1&pageNo=1","question":"重量物取扱い作業の腰痛予防として、適切でないものはどれか。","answerText":"労働者の状態や作業内容に関係なく、全員に腰部保護ベルトの使用を義務付ける。"},{"id":"sm2-demo-019","url":"https://www.jniosh.johas.go.jp/publication/mail_mag/2021/153-column-1.html","question":"外気CO₂濃度400ppm、室内を1,000ppm以下に保ちたい。外気導入量600m³/h、1人当たりCO₂発生量0.018m³/hのとき、在室できる最大人数は何人か。","answerText":"20人"},{"id":"sm2-demo-020","url":"https://www.aoa.org/healthy-eyes/eye-health-for-life/adult-vision-41-to-60-years-of-age","question":"採光・照明に関する次の記述のうち、正しいものはどれか。","answerText":"高齢者は一般に高い照度を必要とするが、まぶしさにも配慮する。"},{"id":"sm2-demo-021","url":"https://www.aao.org/eye-health/anatomy/night-vision","question":"視覚・平衡感覚に関する次の記述のうち、正しいものはどれか。","answerText":"網膜の錐体は主に色を感じ、杆体は主に明暗を感じる。"},{"id":"sm2-demo-022","url":"https://www.msdmanuals.com/ja-jp/home/03-%E6%B6%88%E5%8C%96%E5%99%A8%E7%B3%BB%E3%81%AE%E7%97%85%E6%B0%97/%E6%B6%88%E5%8C%96%E5%99%A8%E7%B3%BB%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E5%B0%8F%E8%85%B8","question":"小腸が栄養素を効率よく吸収するための構造上の特徴として正しいものはどれか。","answerText":"絨毛や微絨毛によって吸収面積が大きい"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+if(fixes.length!==10||new Set(fixes.map(f=>f.id)).size!==10)throw Error('HM2 X-01 batch01 invalid fixed IDs');
+for(const f of fixes){
+  const q=byId.get(f.id);
+  if(!q||!Array.isArray(q.choices)||!Number.isInteger(q.answer)||q.answer<1||q.answer>5||
+     q.question!==f.question||q.choices[q.answer-1]!==f.answerText||
+     (q.sourceUrl!=='https://www.exam.or.jp/lckohyo/'&&q.sourceUrl!==f.url))
+     throw Error('HM2 X-01 batch01 unexpected source or question '+f.id);
+  q.sourceUrl=f.url;
+}
+window.HM2_X01_DIRECT_SOURCE_BATCH01_IDS=fixes.map(f=>f.id);
+})();
