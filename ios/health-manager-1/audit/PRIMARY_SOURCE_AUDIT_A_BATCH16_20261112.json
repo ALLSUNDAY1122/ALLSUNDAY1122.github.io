@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-11-12",
+  "branch": "codex/hm1-integrate-basic-a-b-c-20261111",
+  "parentCommit": "e1e20ffac382cf9919767d5d5dbfcdf80b6cf66a",
+  "reportedMusePreviousFourQuestionRegeneration": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "b5885c5",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "practice-C-Q08",
+      "practice-C-Q09",
+      "practice-C-Q10",
+      "practice-C-Q14"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN"
+  },
+  "subject": "a-group batch 16 practice-C Q15/Q17/Q18/Q19",
+  "outcomes": [
+    {
+      "id": "practice-C-Q15",
+      "oldAuditURL": "https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/roudoukijun_kenshin_0001.html",
+      "newAuditURL": "https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/roudoukijun_kenshin_0001.html",
+      "secondaryEvidenceURL": "https://www.mhlw.go.jp/content/11201250/001291724.pdf",
+      "centralClaimEvidence": "厚生労働省の『健康診断結果に基づき事業者が講ずべき措置に関する指針』と健診事後対応資料は、有所見者の結果通知・受診勧奨・精密検査・医師等の意見聴取・必要な就業措置を明記する。異常所見を未通知にせず、本人を受診につなげる肢4を支持。",
+      "caveat": "指針は法的強制義務と勧奨措置を区別して読む必要がある。PDFの独立画像確認、全5肢逐語証明、疾病の診断は未実施。",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q17",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "secondaryEvidenceURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "centralClaimEvidence": "NCBI Bookshelf NBK557491 は感度を真陽性/(真陽性+偽陰性)と定義する。90/(90+10)=0.9=90%で肢0を直接支持。",
+      "caveat": "疾病なし200人は感度の分母に含まれない。全5肢の直接逐語確認と実機再生成は未実施。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q18",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "secondaryEvidenceURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "centralClaimEvidence": "同NBK557491は特異度を真陰性/(真陰性+偽陽性)と定義。180/(180+20)=90%で肢3を直接支持。",
+      "caveat": "陽性的中率・感度との違いは原典定義で確認、各誤答肢の独立逐語照合は未完。",
+      "correctIndex": 3,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q19",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "secondaryEvidenceURL": "https://www.ncbi.nlm.nih.gov/books/NBK557491/",
+      "centralClaimEvidence": "同NBK557491の感度・特異度定義から、閾値前の感度70/100=70%、特異度(100-10)/100=90%、変更後感度85/100=85%、特異度(100-25)/100=75%。正答肢0の感度上昇・特異度低下が直接計算できる。",
+      "caveat": "閾値引下げ一般の振舞いの保証ではなく、設問の固定された2集団・提供された計数に対する結果である。全5肢逐語証明は未完。",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "progress": {
+    "aGroupOriginal": 85,
+    "centralClaimSupportedUnique": 72,
+    "centralClaimNotYetRecorded": 13,
+    "pendingIds": [
+      "practice-C-Q20",
+      "practice-C-Q21",
+      "practice-C-Q22",
+      "practice-C-Q26",
+      "practice-C-Q30",
+      "practice-C-Q31",
+      "practice-C-Q32",
+      "practice-C-Q33",
+      "practice-C-Q35",
+      "practice-C-Q36",
+      "practice-C-Q37",
+      "practice-C-Q41",
+      "practice-C-Q44"
+    ],
+    "fullFiveChoiceIndependentDirectProofClosed": 0
+  },
+  "currentBatchIndependent264Regeneration": "NOT_RUN",
+  "currentBatchWebIosByteCheck": "NOT_RUN",
+  "releaseGate": "FAIL/BLOCKED"
+}

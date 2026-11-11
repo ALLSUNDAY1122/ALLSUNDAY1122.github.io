@@ -332,3 +332,24 @@
 - 今回4問の264問Node CLI再生成・限定差分・Web/iOS配布バイト・SHA256は未実施。次の（a）群は`practice-C-Q15`・`Q17`・`Q18`・`Q19`等。Muse側の修正後264問再生成確認が必要。
 - C Q06の解説内誤答肢番号の不整合は前バッチからの継続要校閲事項。全5肢逐語・商用権利・横断法令時点・実機検証は未完。**リリースゲートFAIL/BLOCKED維持**、mainマージ・App Store審査・公開なし。
 - 詳細：`PRIMARY_SOURCE_AUDIT_A_BATCH15_20261112.json`、累積残件：`PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
+
+
+## 続編第16回：Muse演習C4問PASS追記・（a）群次4問の中心命題追証（2026-11-12）
+
+### 1. Muse側264問Node CLI再生成検証（ユーザー提供）
+- 比較基準 `b5885c5` と今回の修正前状態の双方で264問再生成に成功。差分は `practice-C-Q08`・`Q09`・`Q10`・`Q14` だけ、変更フィールドは監査ステータスと出典URL、正答index全問不変、他260問完全一致、限定差分PASS。
+- 当担当による独立CLI再実行やWeb/iOS配布バイト・SHA256照合ではない。今次4問にPASSを転用しない。
+
+### 2. （a）群次4問の中心命題原典追証
+- **`practice-C-Q15`**（正答index `4` 維持）：厚生労働省の『健康診断結果に基づき事業者が講ずべき措置に関する指針』と健診事後対応資料は、有所見者の結果通知・受診勧奨・精密検査・医師等の意見聴取・必要な就業措置を明記する。異常所見を未通知にせず、本人を受診につなげる肢4を支持。 監査URL `https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/roudoukijun_kenshin_0001.html` 維持。補助原典 `https://www.mhlw.go.jp/content/11201250/001291724.pdf`。変更キー：`auditStatus`のみ。留保：指針は法的強制義務と勧奨措置を区別して読む必要がある。PDFの独立画像確認、全5肢逐語証明、疾病の診断は未実施。
+- **`practice-C-Q17`**（正答index `0` 維持）：NCBI Bookshelf NBK557491 は感度を真陽性/(真陽性+偽陰性)と定義する。90/(90+10)=0.9=90%で肢0を直接支持。 監査URL `https://www.ncbi.nlm.nih.gov/books/NBK557491/` 維持。補助原典 `https://www.ncbi.nlm.nih.gov/books/NBK557491/`。変更キー：`auditStatus`のみ。留保：疾病なし200人は感度の分母に含まれない。全5肢の直接逐語確認と実機再生成は未実施。
+- **`practice-C-Q18`**（正答index `3` 維持）：同NBK557491は特異度を真陰性/(真陰性+偽陽性)と定義。180/(180+20)=90%で肢3を直接支持。 監査URL `https://www.ncbi.nlm.nih.gov/books/NBK557491/` 維持。補助原典 `https://www.ncbi.nlm.nih.gov/books/NBK557491/`。変更キー：`auditStatus`のみ。留保：陽性的中率・感度との違いは原典定義で確認、各誤答肢の独立逐語照合は未完。
+- **`practice-C-Q19`**（正答index `0` 維持）：同NBK557491の感度・特異度定義から、閾値前の感度70/100=70%、特異度(100-10)/100=90%、変更後感度85/100=85%、特異度(100-25)/100=75%。正答肢0の感度上昇・特異度低下が直接計算できる。 監査URL `https://www.ncbi.nlm.nih.gov/books/NBK557491/` 維持。補助原典 `https://www.ncbi.nlm.nih.gov/books/NBK557491/`。変更キー：`auditStatus`のみ。留保：閾値引下げ一般の振舞いの保証ではなく、設問の固定された2集団・提供された計数に対する結果である。全5肢逐語証明は未完。
+
+### 3. 集計と引継ぎ
+- （a）群85 IDのうち公開一次根拠等による中心命題の照合・記録 **72件**、次の照合待ちは **13件（17→13）**。これは全5肢独立逐語証明・配布一致等の完全合格数ではない。全5肢無条件PASSは0件扱い。
+- **問題データ変更ID：`practice-C-Q15`・`Q17`・`Q18`・`Q19`。** `audit/practice_c_fixes_11_20.json` の監査ステータスのみ変更。現行出典URL・問題文・5肢・正答index・解説は不変。対象外全レコード不変を構造比較で確認。
+- 新規4問のNode CLI264問再生成・限定差分・Web/iOSバイト・SHA256は未実施。次はMuse側による独立検証後、`practice-C-Q20`・`Q21`・`Q22`・`Q26`を追証。
+- Q15補助厚労省PDFは公開テキスト抜粋を根拠とする。PDF画像全体・条項単位の独立確認は未了。演習C Q06解説の誤答肢番号の不整合は引き続き要校閲。
+- 全5肢独立逐語・法令版・商用利用権・実機検証未完。**リリースゲートFAIL/BLOCKED維持**、mainマージ・公開・App Store審査なし。
+- 個別証跡 `PRIMARY_SOURCE_AUDIT_A_BATCH16_20261112.json`、累積残件 `PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
