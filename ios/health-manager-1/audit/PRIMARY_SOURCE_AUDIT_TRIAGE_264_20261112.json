@@ -1699,17 +1699,11 @@
   "aGroupProgress": {
     "countingMethod": "a群85IDのうち中心命題への公開一次資料追証・法令根拠修正を記録済みの固有IDだけを1回計上。前回のC29、C34、C42、Q25および第2〜第6次バッチを含む。完全5肢逐語原典PASSの残数ではない。",
     "aGroupOriginal": 85,
-    "centralClaimSupportedUnique": 80,
-    "centralClaimNotYetRecorded": 5,
-    "centralClaimPendingIds": [
-      "practice-C-Q35",
-      "practice-C-Q36",
-      "practice-C-Q37",
-      "practice-C-Q41",
-      "practice-C-Q44"
-    ],
+    "centralClaimSupportedUnique": 85,
+    "centralClaimNotYetRecorded": 0,
+    "centralClaimPendingIds": [],
     "fullFiveChoicesIndependentDirectEvidenceStillNotClosed": 85,
-    "statusDenominatorWarning": "全85問の各肢逐語証明・配布再生成等が未完のため、現時点で5肢すべて無条件PASSを得た問題は0件と扱う。"
+    "statusDenominatorWarning": "(a)群85件の中心命題に対する公開原典等の追証・台帳記録は完了。これは各5肢の独立逐語証明や配布再生成等の最終品質合格ではなく、そのPASS件数は0として別管理する。"
   },
   "batchSevenMuseValidation": {
     "reportedBy": "Muse-side local validation supplied by user",
@@ -2660,6 +2654,96 @@
       "correctIndex": 2,
       "changedFields": [
         "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    }
+  ],
+  "batchNineteenMuseValidation": {
+    "reportedBy": "Muse-side local validation supplied by user",
+    "baseline": "9361cd6",
+    "baselineRegeneration": "PASS_REPORTED",
+    "modifiedRegeneration": "PASS_REPORTED",
+    "changedIds": [
+      "practice-C-Q30",
+      "practice-C-Q31",
+      "practice-C-Q32",
+      "practice-C-Q33"
+    ],
+    "changedFields": [
+      "auditStatus",
+      "auditSourceURL"
+    ],
+    "answerIndexesUnchanged": true,
+    "other260CompletelyIdentical": true,
+    "limitedDiff": "PASS_REPORTED",
+    "independentlyReproduced": false,
+    "webIosByteCheck": "NOT_RUN",
+    "sha256Check": "NOT_RUN"
+  },
+  "batchNineteenResolutions": [
+    {
+      "id": "practice-C-Q35",
+      "sourceContainer": "c31",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK525983/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/sites/books/NBK525983/",
+      "centralClaimEvidence": "NCBI StatPearls Biochemistry, Insulin Metabolic Effects: insulin activates glycogen synthase and inhibits phosphorylase kinase/glycogen phosphorylase through reciprocal enzyme regulation, making hepatic glycogen storage predominant; exact answer index 4.",
+      "caveat": "Insulin effects require the physiologic context; full five-choice independent word-by-word proof and distributed regeneration are not done.",
+      "correctIndex": 4,
+      "changedFields": [
+        "auditSourceURL",
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q36",
+      "sourceContainer": "c31",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK541119/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK541119/",
+      "centralClaimEvidence": "NCBI StatPearls Physiology, Gluconeogenesis: prolonged fasting depletes hepatic glycogen, increases gluconeogenic glucose synthesis from lactate, glycerol and glucogenic amino acids, primarily in liver and also renal cortex. Supports answer index 0.",
+      "caveat": "Gluconeogenesis overlaps glycogenolysis and increases progressively; exact fasting duration not prescribed. Five-choice independent proof remains outstanding.",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q37",
+      "sourceContainer": "c31",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK544292/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK544292/",
+      "centralClaimEvidence": "NCBI StatPearls Physiology, Withdrawal Response: sensory afferents activate spinal interneuron circuitry and somatic motor efferents to ipsilateral flexors. Motor nerve or neuromuscular damage can attenuate the withdrawal response despite preserved sensory input; supports answer index 1.",
+      "caveat": "Compensation by other flexors and clinical differential have not been tested; full 5-choice independent proof pending.",
+      "correctIndex": 1,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q41",
+      "sourceContainer": "c41",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK544292/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK544292/",
+      "centralClaimEvidence": "NCBI StatPearls Physiology, Withdrawal Response: spinal nociceptive withdrawal reflex is rapidly generated without waiting for conscious cortical processing; pain awareness can occur through ascending pathways afterwards. Supports answer index 0.",
+      "caveat": "Time ordering varies with conditions; the stem describes a plausible sequence, not universal latency. All five-choice independently evidenced proof remains outstanding.",
+      "correctIndex": 0,
+      "changedFields": [
+        "auditStatus"
+      ],
+      "allFiveIndependentDirectProof": false
+    },
+    {
+      "id": "practice-C-Q44",
+      "sourceContainer": "c41",
+      "oldAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK542189/",
+      "newAuditURL": "https://www.ncbi.nlm.nih.gov/books/NBK542189/",
+      "centralClaimEvidence": "NCBI StatPearls Physiology, Accommodation: near response involves ciliary contraction with increased lens curvature, pupil constriction via sphincter pupillae, and medial rectus convergence. Light reflex and near reflex share parasympathetic output but differ in supranuclear control. Supports answer index 3.",
+      "caveat": "Accommodation and convergence may dissociate in disorders; full five-choice independent proof pending.",
+      "correctIndex": 3,
+      "changedFields": [
         "auditStatus"
       ],
       "allFiveIndependentDirectProof": false

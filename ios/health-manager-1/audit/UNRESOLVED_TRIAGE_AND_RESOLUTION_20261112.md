@@ -395,3 +395,25 @@
 - **今回新4問の264問Node CLI再生成、限定差分、Web/iOS配布JSONのバイト一致、SHA256照合は未実施**。次回Muse側独立検証後、残る`practice-C-Q35`・`Q36`・`Q37`・`Q41`・`Q44`を追証。
 - 演習C Q06解説の誤答肢番号不整合は継続要校閲。全5肢逐語、法令適用日・商用利用権・実機検証は未完。**リリースゲートFAIL/BLOCKED維持**、mainマージ・配信・審査申請なし。
 - 今回個別台帳 `PRIMARY_SOURCE_AUDIT_A_BATCH18_20261112.json`、累積残件 `PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
+
+
+## 続編第19回：（a）群85問の中心命題照合完了・Muse前回PASS追記（2026-11-12）
+
+### Muse側ローカル264問再生成（ユーザー提供／独立再実行ではない）
+- 比較基準 `9361cd6` とその後の状態の双方で264問Node CLI再生成が正常終了。差分は`practice-C-Q30`・`Q31`・`Q32`・`Q33`に限られ、監査ステータス・出典URLのみ変更、全問正答indexは不変、他260問完全一致、限定差分PASS。
+- 当担当で基準・現在状態を再生成した結果ではなく、Web/iOS配布のバイト一致やSHA256比較も独立実施していない。今回の次5問へのPASS転用はしない。
+
+### （a）群最後の5問・中心命題の個別追証
+- **`practice-C-Q35`**（正答index `4` 不変）：NCBI StatPearls Biochemistry, Insulin Metabolic Effects: insulin activates glycogen synthase and inhibits phosphorylase kinase/glycogen phosphorylase through reciprocal enzyme regulation, making hepatic glycogen storage predominant; exact answer index 4. 監査URL `https://www.ncbi.nlm.nih.gov/books/NBK525983/` → `https://www.ncbi.nlm.nih.gov/sites/books/NBK525983/`。変更キー：`auditSourceURL`、`auditStatus`。留保：Insulin effects require the physiologic context; full five-choice independent word-by-word proof and distributed regeneration are not done.
+- **`practice-C-Q36`**（正答index `0` 不変）：NCBI StatPearls Physiology, Gluconeogenesis: prolonged fasting depletes hepatic glycogen, increases gluconeogenic glucose synthesis from lactate, glycerol and glucogenic amino acids, primarily in liver and also renal cortex. Supports answer index 0. 監査URL `https://www.ncbi.nlm.nih.gov/books/NBK541119/` → `https://www.ncbi.nlm.nih.gov/books/NBK541119/`。変更キー：`auditStatus`。留保：Gluconeogenesis overlaps glycogenolysis and increases progressively; exact fasting duration not prescribed. Five-choice independent proof remains outstanding.
+- **`practice-C-Q37`**（正答index `1` 不変）：NCBI StatPearls Physiology, Withdrawal Response: sensory afferents activate spinal interneuron circuitry and somatic motor efferents to ipsilateral flexors. Motor nerve or neuromuscular damage can attenuate the withdrawal response despite preserved sensory input; supports answer index 1. 監査URL `https://www.ncbi.nlm.nih.gov/books/NBK544292/` → `https://www.ncbi.nlm.nih.gov/books/NBK544292/`。変更キー：`auditStatus`。留保：Compensation by other flexors and clinical differential have not been tested; full 5-choice independent proof pending.
+- **`practice-C-Q41`**（正答index `0` 不変）：NCBI StatPearls Physiology, Withdrawal Response: spinal nociceptive withdrawal reflex is rapidly generated without waiting for conscious cortical processing; pain awareness can occur through ascending pathways afterwards. Supports answer index 0. 監査URL `https://www.ncbi.nlm.nih.gov/books/NBK544292/` → `https://www.ncbi.nlm.nih.gov/books/NBK544292/`。変更キー：`auditStatus`。留保：Time ordering varies with conditions; the stem describes a plausible sequence, not universal latency. All five-choice independently evidenced proof remains outstanding.
+- **`practice-C-Q44`**（正答index `3` 不変）：NCBI StatPearls Physiology, Accommodation: near response involves ciliary contraction with increased lens curvature, pupil constriction via sphincter pupillae, and medial rectus convergence. Light reflex and near reflex share parasympathetic output but differ in supranuclear control. Supports answer index 3. 監査URL `https://www.ncbi.nlm.nih.gov/books/NBK542189/` → `https://www.ncbi.nlm.nih.gov/books/NBK542189/`。変更キー：`auditStatus`。留保：Accommodation and convergence may dissociate in disorders; full five-choice independent proof pending.
+
+### 完了範囲と未完ゲート・次回引き継ぎ
+- **（a）群85/85固有IDの中心命題への公開原典追証・記録を完了、当該分類の未照合0件（5→0）。** これは全5肢逐語の独立直接証明完了ではない。全5肢の無条件完全PASSは**0件**として管理し、公開・審査を許可しない。
+- 今回問題データ変更ID：`practice-C-Q35`、`practice-C-Q36`、`practice-C-Q37`、`practice-C-Q41`、`practice-C-Q44`。Q35は`auditSourceURL`と`auditStatus`、その他4問は`auditStatus`のみ。問題文、全5選択肢、解説、正答indexは不変。生成元2ファイル内の対象外は構造比較で完全一致。
+- Q35の既存NCBI文献は本文閲覧時にCAPTCHAがあり、同一書籍の閲覧可能な`/sites/books/`表記に統一。Q36/Q37/Q41/Q44は既存一次資料URLを維持。
+- 今回5問についてNode CLI264問再生成・限定差分、Web/iOS配布JSONバイト一致・SHA256は**未実施**。Muse側で修正後の独立再生成確認が必要。
+- 次の作業は（a）群を完了扱いとして放置せず、**全85問の5肢別直接根拠確認、法令適用時点、商用権利、配布一致、実機検証の未解決ゲート**を別台帳・別ステータスで進めること。演習C Q06解説の誤答肢番号不整合は継続要修正。
+- **リリースゲートFAIL/BLOCKED維持**。mainマージ、App Store審査申請、本番公開なし。詳細台帳`PRIMARY_SOURCE_AUDIT_A_BATCH19_20261112.json`、分類集計`PRIMARY_SOURCE_AUDIT_TRIAGE_264_20261112.json`。
