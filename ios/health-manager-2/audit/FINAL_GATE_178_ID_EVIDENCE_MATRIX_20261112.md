@@ -86,11 +86,11 @@
 | `sm2-5y-r04-hyg-04` | 科目専門 | 114 | 冬季事務室の相対湿度・乾燥対策 | [BATCH12](DIRECT_SOURCE_170_BATCH12_20261112.md) | [URL候補](https://laws.e-gov.go.jp/law/347M50002000043) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r04-hyg-06` | 科目専門 | 116 | 暑熱作業の休憩 | [BATCH12](DIRECT_SOURCE_170_BATCH12_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1) | [f53c157](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/f53c157cd892fa0047e0565896a8cb8329ea2a65) | **保留** |
 | `sm2-5y-r04-hyg-07` | 科目専門 | 117 | 熱中症の重篤化防止 | [BATCH12](DIRECT_SOURCE_170_BATCH12_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r04-hyg-09` | 科目専門 | — | 情報機器作業の視覚負担と画面環境 | X-01/別記録との突合待ち | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r04-hyg-09` | 科目専門 | — | 情報機器作業の視覚負担と画面環境 | [初期誤出典是正3問](INDEPENDENT_LEGACY_TOPIC_REVIEW_20261111.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r05-hyg-02` | 科目専門 | 121 | 視作業に応じた照度とまぶしさの管理 | [BATCH13](DIRECT_SOURCE_170_BATCH13_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r05-hyg-04` | 科目専門 | 123 | 騒音障害防止の発生源・伝搬経路対策 | [BATCH13](DIRECT_SOURCE_170_BATCH13_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r05-hyg-06` | 科目専門 | 125 | 情報機器作業の机・椅子・入力機器の体格適合 | [BATCH13](DIRECT_SOURCE_170_BATCH13_20261112.md)、[BATCH14](DIRECT_SOURCE_170_BATCH14_20261112.md)、[BATCH15](DIRECT_SOURCE_170_BATCH15_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r05-hyg-07` | 科目専門 | — | 情報機器作業の画面反射・グレア対策 | [BATCH13](DIRECT_SOURCE_170_BATCH13_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r05-hyg-07` | 科目専門 | — | 情報機器作業の画面反射・グレア対策 | [初期誤出典是正3問](INDEPENDENT_LEGACY_TOPIC_REVIEW_20261111.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r05-hyg-09` | 科目専門 | 127 | 熱中症疑い時の初期対応 | [BATCH13](DIRECT_SOURCE_170_BATCH13_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r06-hyg-01` | 科目専門 | 129 | 腰痛予防教育 | [BATCH13](DIRECT_SOURCE_170_BATCH13_20261112.md) | [URL候補](https://www.mhlw.go.jp/stf/newpage_31158.html) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r06-hyg-02` | 科目専門 | 130 | CO₂濃度測定器の配置による代表値の信頼性評価 | [BATCH13](DIRECT_SOURCE_170_BATCH13_20261112.md) | [URL候補](https://jsite.mhlw.go.jp/mie-roudoukyoku/content/contents/000766889.pdf) | 未特定（要追跡） | **保留** |
@@ -122,7 +122,7 @@
 | `sm2-5y-r09-hyg-06` | 科目専門 | 159 | 骨折の副子固定後における末梢血行の観察 | [BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md) | [URL候補](https://www.fdma.go.jp/relocation/syobodan/item/upload/tetyou2025.pdf) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r09-hyg-07` | 科目専門 | 160 | 化学防護手袋の耐透過性と作業時間に応じた選択 | [BATCH16](DIRECT_SOURCE_170_BATCH16_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc2426&dataType=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r10-hyg-01` | 科目専門 | 163 | ストレスチェック受検者10人未満の集団分析結果提供の例外条件 | [BATCH17](DIRECT_SOURCE_170_BATCH17_FINAL_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc1015&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
-| `sm2-5y-r10-hyg-02` | 科目専門 | — | キーボード作業の手首と前腕支持による肩・腕負担の軽減 | X-01/別記録との突合待ち | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
+| `sm2-5y-r10-hyg-02` | 科目専門 | — | キーボード作業の手首と前腕支持による肩・腕負担の軽減 | [初期誤出典是正3問](INDEPENDENT_LEGACY_TOPIC_REVIEW_20261111.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r10-hyg-03` | 科目専門 | 164 | 暑熱順化が中断した場合の順化低下と再評価 | [BATCH17](DIRECT_SOURCE_170_BATCH17_FINAL_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r10-hyg-04` | 科目専門 | 165 | 健診データの匿名集団分析と作業条件評価 | [BATCH17](DIRECT_SOURCE_170_BATCH17_FINAL_20261112.md) | [URL候補](https://www.mhlw.go.jp/content/000922318.pdf) | 未特定（要追跡） | **保留** |
 | `sm2-5y-r10-hyg-05` | 科目専門 | 166 | 聴覚保護具の適正遮音値と警報音の聞き取り | [BATCH17](DIRECT_SOURCE_170_BATCH17_FINAL_20261112.md) | [URL候補](https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1&pageNo=1) | 未特定（要追跡） | **保留** |
@@ -205,3 +205,10 @@
 - 初回版は固定170問台帳に併記された**X-01の127問一覧を誤って固定170一覧と混同**し、175件と過大集計していた。正式固定170問の見出し以降だけで再集計したため、**175件の旧値を撤回**する。
 - 178問のうち正式固定170問に属するもの**108件**。X-01第1〜13バッチ内にID記載67件、固定170第1〜17バッチ内にID記載109件。固定170・X-01・初期是正3問の母集団区分を混同しない。
 - 記録存在は内容の独立承認ではない。**保留178、マーカー解除0、公開BLOCKED**を維持。
+
+
+## 初期是正3問とのID対応を確定（2026-11-12）
+
+- `sm2-5y-r04-hyg-09`、`sm2-5y-r05-hyg-07`、`sm2-5y-r10-hyg-02` は固定170の正式一覧とX-01 127問から**除外された初期誤出典是正3問**。各IDを`INDEPENDENT_LEGACY_TOPIC_REVIEW_20261111.md`の初期是正記録に照合した。
+- 178問母集団の内訳は、固定170正式一覧に属する**108件**、X-01 127問集合に属する**67件**、初期誤出典是正3問の**3件**で、**108+67+3=178**。**集合間の重複は0**。上記3問についても修正内容の現行版差分・一次資料本文・第三者レビューまで完了したと断定しない。
+- 結論：178行すべての既存監査資料への**所在照合（第一段階）**は実施したが、**修正コミットの厳密照合・出典の条文逐語照合・最終独立査読は残る**。**レビュー待ち解除0／本番公開BLOCKED**。
