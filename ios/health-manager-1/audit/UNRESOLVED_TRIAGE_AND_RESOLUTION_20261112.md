@@ -1019,3 +1019,29 @@
 - **正答index分布**：生成元基本132問は実測`23・34・29・26・20`（変更なし）。7問のindex総差は`0・0・0・0・0`。よって前回Muse実測`53・53・53・53・52`からの**適用後264問分布見込み**は同じ`53・53・53・53・52`。**今回264問の再生成実測ではない**。
 - 今回ローカルNode CLIを動かしていないため、生成済み264問の限定差分7問・他257問一致、配布バイト一致、正答位置分布の実測の独立PASSは未取得。これらは次回Muse検証事項。改稿が確定した範囲以外のデータ変更はなし。
 - 残る著作権・一次資料証跡の解消およびOpenStax残りの出典（B31・C42）等は引き続き要精査。**リリースゲートFAIL/BLOCKED維持**。
+
+
+## 続編第30回：第2組7問Muse限定差分PASSおよびOpenStax追加根拠2問の生成元差替え（2026-11-12）
+
+### 1. Muse側ローカル検証結果（ユーザー提供）
+- 第2組7問 `2025-10-Q36`、`2025-10-Q41`、`2025-10-Q42`、`2025-10-Q43`、`2025-04-Q41`、`practice-B-Q39`、`practice-C-Q40` に対してMuseが264問再生成の限定差分を検証したとの報告を記録。
+- **差分は対象7問のみ、他257問は一致、正答index全7問不変、264問の正答位置分布実測（index0〜4）＝53・53・53・53・52、限定差分PASS**。
+- 当担当はMuseの実行ログ・SHA-256を独立取得していないため、Muse側の独立ローカル検証結果として転記。以下のB31/C42変更後のPASSと混同しない。
+
+### 2. `practice-B-Q31` の出典修正・直接根拠（生成元適用済み）
+- 変更元：`ios/health-manager-1/content-overrides-b-20261110.json`の`replacement`。コミット：`ca452266a3380fff513909fa6df82956419eecab`。
+- `sourceRef`・`auditSourceURL`を旧OpenStax A&P2e第19章用語集から**米国NIH/NHLBI公式 `https://www.nhlbi.nih.gov/health/heart-tests`**に変更。解説`detail`を独立表現に改訂し、QRSは米国NLM Bookshelf `https://www.ncbi.nlm.nih.gov/books/NBK549803/` で心室脱分極として補強、末梢脈拍欠損は臨床報告 `https://pubmed.ncbi.nlm.nih.gov/8233155/` を補助根拠として分離。監査状態・改稿根拠も更新。
+- **根拠の射程に注意**：NHLBIのECG一般説明**だけでは**QRS波の心室脱分極やQRS数と橈骨脈拍差のすべては証明できない。脈拍欠損の臨床報告は**心尖拍動と末梢脈拍**の差を扱うため、ECGのQRS数との比較に直接転用せず、本設問は再測定・評価が必要という結論を維持する。
+- 権利条件が矛盾するToronto Metropolitan University教材（CC BY-NC表示）とOpenStaxの旧URLの引用を解説から外した。**外部資料の内容を転載したわけではない**が、権利の完全CLEARではない。
+
+### 3. `practice-C-Q42` の出典修正・直接根拠（生成元適用済み）
+- 変更元：`ios/health-manager-1/audit/practice_c_fixes_41_44.json`の`questions.practice-C-Q42`。コミット：`1a7a67b411cd16c0437cc013917bc62bca892fe8`。
+- `sourceRef`・`auditSourceURL`をOpenStax A&P2e 16.5から**米国NIH/NIDCD公式 `https://www.nidcd.nih.gov/health/balance-disorders`**へ差し替え。半規管による頭部回旋の検出、前庭入力と姿勢・平衡の関係を直接確認。
+- 小脳の運動協調について、米国NIH/NINDS公式 `https://www.ninds.nih.gov/sites/default/files/2025-05/know-your-brain-brian-basics.pdf` を別の一次機関資料として解説に追記。半規管の**角加速度の厳密な定量特性**についてはNIDCDの説明を超えた断定を避ける。
+- 当該問題の科学的正確性・独立表現の評価を保持し、監査状態のみ「直接出典照合済、264問再生成・最終権利審査待ち」へ変更。
+
+### 4. 更新範囲・検証ゲート
+- 両ファイルともJSONオブジェクトの差分を個別確認：**変更IDは`practice-B-Q31`と`practice-C-Q42`のみ**。それぞれの**stem・choices（全5肢と並び）・ans（B31=index0、C42=index1）は完全不変**。演習Bのsource driftガード（expectedConceptKey/expectedStem）、演習CのexpectedSourceIdも維持。
+- 出典と説明・監査状態のみ変更。**今回の変更後の264問Node CLI再生成と2問限定差分、他262問完全一致、配布JSONバイト一致は未検証**。
+- 正答indexは変更しないため、直前Muse実測53・53・53・53・52に対して分布差分は0。新264問の分布実測ではない。
+- 商用権利・最終リリースゲートは依然として**FAIL/BLOCKED**。次回Museの2問限定差分検証後に状態を更新する。
