@@ -1,7 +1,7 @@
-# 第一種衛生管理者｜StatPearls・GeneReviews参照30問 表現権利・全文照合（2026-11-12）
+# 第一種衛生管理者｜StatPearls・GeneReviews参照29問 表現権利・全文照合（2026-11-12）
 
 ## 対象・方法・重要な限界
-- 対象ブランチ `codex/hm1-integrate-basic-a-b-c-20261111`。調査開始HEAD `53c123ff78c50b329118567493dd7dd65c9fb4aa`。既存の個別原典台帳14ファイル（264問）から登録NCBI Bookshelf記事IDを突合し、StatPearls **29問**、GeneReviews **1問**、合計**30問**（StatPearlsの掲載記事は20固有NBK、GeneReviews 1固有NBK）を抽出した。
+- 対象ブランチ `codex/hm1-integrate-basic-a-b-c-20261111`。調査開始HEAD `53c123ff78c50b329118567493dd7dd65c9fb4aa`。既存の個別原典台帳14ファイル（264問）から登録NCBI Bookshelf記事IDを突合し、StatPearls **28問**、GeneReviews **1問**、合計**29問**（StatPearlsの掲載記事は20固有NBK、GeneReviews 1固有NBK）を抽出した。
 - **製品データの生成・修正は実施しない**。基本`Resources/questions.json`、演習A`practice_a_fixes_01_10.json`、演習B`content-overrides-b-20261110.json`、演習C各`practice_c_fixes_*.json`から現行の設問全文、5肢、`detail`全文を取得し、各掲載原典の公開HTML本文の該当する段落・表・例題・説明順と定性的に突合した。
 - 判定は**著作権侵害認定でも、独立創作の法的最終証明でもない**。「LOW」は原典の文章・図表・数値事例・固有の説明構成の再録が見られず、一般の学術的事実と独自設計が中心とする**条件付き低リスク**。「REWRITE」は原典の保護され得る説明順序・表現への依存を優先排除すべきもの。英日翻訳の完全な文字列自動照合、制作履歴・他の転載元の監査、権利者の許諾取得は未実施。
 - 参考原典は各行のNBKリンク。StatPearlsの掲載書籍は原則**CC BY-NC-ND 4.0**であり、原文・保護表現・翻案文の商用教材配信は別途許諾なしに行わない。GeneReviewsは非商用研究目的に限定。引用・事実参照と、文章や図表の転載・翻案を区別する。StatPearls書籍全体の表示 https://www.ncbi.nlm.nih.gov/sites/books/NBK430685/?report=classic 、GeneReviews権利表示 https://www.ncbi.nlm.nih.gov/sites/books/NBK138602/ 。
@@ -42,8 +42,8 @@
 | `practice-C-Q44` | [NBK542189](https://www.ncbi.nlm.nih.gov/sites/books/NBK542189/) | 条件付き低リスク | 対光反射と近見反応を明暗A/距離Bで独自に分離。図や原典例の転用なし |
 
 ## 件数とデータ変更要否
-- **30問レビュー**：条件付き低リスク **26問**、解説の再設計推奨 **4問**、現時点で権利CLEARの断定 **0問**。4問は `2025-04-Q38`、`practice-C-Q30`、`practice-C-Q35`、`practice-C-Q41`。原典事実の再確認だけでなく、別の利用可能な一次・学術資料に照らし、**説明順・論理の展開・言い回しを独自に組み直すことを推奨**する。正答index・5肢を変更する必要があると確定したわけではない。
+- **29問レビュー**：条件付き低リスク **25問**、解説の再設計推奨 **4問**、現時点で権利CLEARの断定 **0問**。4問は `2025-04-Q38`、`practice-C-Q30`、`practice-C-Q35`、`practice-C-Q41`。原典事実の再確認だけでなく、別の利用可能な一次・学術資料に照らし、**説明順・論理の展開・言い回しを独自に組み直すことを推奨**する。正答index・5肢を変更する必要があると確定したわけではない。
 - **問題データ変更の推奨は4問の`detail`、今回は未適用**。現段階で設問本文・選択肢・正答indexに確定した権利侵害や必須再設計は特定していない。新規執筆後、4問のみに限定した264問再生成・他260問完全一致・正答不変・Web/iOS同期の独立ゲートが必要。
-- **除外・別権利者のNCBI掲載問題**：`practice-A-Q31` のNBK54103（Oxygen Transport、StatPearlsではない）と `practice-C-Q34` のNBK26（2001年BIOS Scientific Publishers刊行書籍）はこの**2系列30問集計に含めない**。各別出版社の商用利用規約・表現監査は引き続き別残件。NBK26は心臓局所ノルアドレナリン放出の直接証明不足も別品質課題。
+- **除外・別権利者のNCBI掲載問題**：`practice-A-Q31` のNBK54103（Oxygen Transport、StatPearlsではない）と `practice-C-Q34` のNBK26（2001年BIOS Scientific Publishers刊行書籍）はこの**2系列29問集計に含めない**。各別出版社の商用利用規約・表現監査は引き続き別残件。NBK26は心臓局所ノルアドレナリン放出の直接証明不足も別品質課題。
 - **OpenStax27問・PMC等は別台帳**。その表現監査結果を本件に重複算入しない。
 - 今回のレビューは書き換えや許諾を完了したものではない。**商用公開権利ゲートOPEN／総合品質FAIL/BLOCKED維持**。mainマージ、新規TestFlight、App Store審査申請は実施しない。
