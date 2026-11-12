@@ -3377,3 +3377,14 @@
 - **今回**：新版5問25肢、内容矛盾0、正答インデックス誤り0、必須追加修正0、AI逐肢内容照合PASS 5問、法令適用・分類PASS 2問。出典URLの指定先へ到達し、各問の主要な直接根拠を確認。**正式最終承認5問ではない。**
 - 前回178/178問の旧版レビュー完了を継承し、今回変更5問について**新SHAのAI再レビュー実施済**に更新する。重複計上しない。実名の資格ある専門家の最終承認は**0/178問**、公開状態は**BLOCKED**を維持。
 - 原典権利・NASA湿度数値例・出典補強候補30問・ID別最終変更履歴追跡・実機/CI・その他専門家承認等は引き続き未完。今回、生成元・配布JSON・ゲート設定はいずれも変更しない。
+
+
+## 2026-11-12｜改善候補第2ラウンド・優先3件＋推奨2件
+
+- **旧SHA-256**：`956f09bd0c33df9fc5fa44894b1723e7754c3804181532de432dacfd8cdbb62a`。修正は生成元 `apps/sanitary-manager-2/audit-fixes.js` の厳格旧状態ガード付き5IDに限定し、配布JSONへ同期。正答index不変、他295問不変、全300問・30グループ各10問・全グループの正答位置均等・5肢一意・法令関連の確認日必須を確認。**正式Node CLIの独立実行・生成JSONバイト一致は別途Muse検証待ち**。公開ゲートや `requires-independent-*` を解除しない。
+- **優先① No.109 `sm2-5y-r10-hyg-01`**：労働安全衛生法66条の10、労働安全衛生規則52条の14第1・2項を一次確認（規則は集団分析/改善の努力義務）。受検者10人未満の非識別集計・衛生委員会等の事前審議という例外は厚労省ストレスチェック指針・厚労省Q&A Q15-3/4に直接記載（https://www.mhlw.go.jp/web/t_doc?dataId=00tc1015&dataType=1&pageNo=1 、https://kokoro.mhlw.go.jp/etc/kaiseianeihou/qa/）。人数要件を安衛則52条の14の条文自体に誤帰属させない。law_related=true、legal_checked=2026-11-12、audit_status=一次資料照合済、basis補強。設問・全5肢・正答不変。**法令に関係するが正式独立承認ではない**。
+- **優先② No.163 `sm2-5y-r09-phy-05`**：現行NCBI『Physiology, Gluconeogenesis』https://www.ncbi.nlm.nih.gov/books/NBK541119/ 『Substrates Of Gluconeogenesis』に乳酸→肝糖新生→筋に戻るCori cycleの名称まで**直接記載を確認**。出典URLは正しいため維持、basisを節・本文に即して補強（補助：PubChem WikiPathways WP1946）。設問・5肢・正答不変。StatPearlsの個別利用条件確認は別途残る。
+- **優先③ No.53 `sm2-5y-r04-hyg-05`**：旧NASA/GLOBE『Relative Humidity Protocol』印刷p.2の表AT-RH-1は実際に**30℃/20℃、9/30/9/17g/m³、30%/53%を同一構成で掲載**（https://mynasadata.larc.nasa.gov/sites/default/files/2019-04/Relative%20Humidity%20Protocol.pdf）。GLOBE利用規約は非商用の研究・教育利用許諾を明記し、商用アプリの図表複製権までは確認できない（https://www.globe.gov/about/privacy/terms-of-use）。NASAの一般メディア方針を個別GLOBE表の商用許諾と混同しない。このため旧数値・表構成は維持せず、25℃/15℃、水蒸気6g/m³、飽和23/13g/m³、26%/46%の**独自設例に再設計**。NOAA/NWS https://www.weather.gov/lmk/humidity の定義をbasis/source_urlに採用、rights_basisを独自数値の記録へ更新。5肢の集合・正答テキストを書換えたがcorrect_index=2を維持。NASA由来の個別転載リスクは対象設問から除去（その他出典の権利未判定は別）。新設例の物理的数値は概数で問題文内に明示。
+- **推奨① No.178 `sm2-5y-r10-phy-10`**：NCBI『Physiology, Nutrient Absorption』NBK597379が糖の腸管毛細血管→門脈→肝と、長鎖脂質の乳び管経路をともに直接説明。主source_urlを同章へ変更しbasisに既存の『Biochemistry, Chylomicron』NBK545157を補助原典として明記。設問・全肢・正答不変。
+- **推奨② No.63 `sm2-5y-r07-hyg-03`**：安衛法104条を一次確認し、一般健康診断の小集団再識別リスクが適正管理に関係することをbasisへ追加。厚労省健康情報適正取扱指針 https://www.mhlw.go.jp/content/000922318.pdf を直接source_urlに設定。law_related=true、legal_checked=2026-11-12、audit_status=一次資料照合済。事務所のストレスチェック10人例外を一般健診へ転用しない。設問・全肢・正答不変。
+- **対象5問は新SHAで独立逐肢レビュー要**。正式最終承認0/178、公開ゲートBLOCKED継続。その他推奨改善候補については、個別原典の到達・版・適用対象を確認できていないものを一括PASSにしない。追加の未対応候補は次回レビューへ引き継ぐ。
