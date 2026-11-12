@@ -1002,3 +1002,12 @@
 - 注意：`practice-B-Q31`の現行出典はOpenStax A&P2e第19章用語集＋Toronto Metropolitan University看護教材であり、旧監査にあるOpenStax Fundamentals Nursing 7.1のURLと異なる。旧版CC BY表記の`practice-B-Q32`もNC対象と一律扱いしない。`practice-C-Q42`は16.5章単独では半規管の直接説明が不十分で、追加の直接出典が必要。
 - **先行優先12問＋残15問＝27/27問の表現リスク一次判定を記録**。ただし翻訳・翻案の法的最終承認や独立制作履歴の監査ではなく、商用権利の無条件CLEARは0問。残15問の**問題データ変更0件**。
 - 次の対応：再設計推奨7問の独自設計・独立出典と残2問の出典・権利精査。商用リリースゲートは引き続き**FAIL/BLOCKED**。
+
+
+## 続編第28回：OpenStax残15問中の再設計7問案・不足2問の一次機関根拠精査（2026-11-12）
+
+- 詳細記録：[`OPENSTAX_SECOND_SEVEN_PROPOSALS_AND_TWO_SOURCE_FIXES_20261112.md`](OPENSTAX_SECOND_SEVEN_PROPOSALS_AND_TWO_SOURCE_FIXES_20261112.md)、案作成コミット`607d926b013d6b0dc4faeb780042e84d2a60a64d`。
+- **独立表現の再設計7問案を全件作成**：基本`2025-10-Q36`（肺静脈の酸素化）、`2025-10-Q41`（皮質/白質病変）、`2025-10-Q42`（高負荷時の乳酸）、`2025-10-Q43`（FT4/TSH検査二例）、`2025-04-Q41`（クレアチンリン酸）、演習`practice-B-Q39`（橋障害下の呼吸パターン）、`practice-C-Q40`（消化管多系統調節）。問題文・5肢・正答・解説全文と、原典の表現構造からどう独立させたかを記録。**正答indexは現行値[3,4,2,2,1,3,4]のまま**とした。内容独立一次資料・権利最終承認は次回の適用ゲート。
+- **`practice-B-Q31` 出典の混在を確認**：現行生成元の登録URLはOpenStax A&P2eの第19章用語集、解説にToronto Metropolitan Universityのapical-radial教材を併記。旧Fundamentals Nursing 7.1 URLは現行登録先でない。米国NHLBIの公式心電図説明（`https://www.nhlbi.nih.gov/health/heart-tests`、`https://www.nhlbi.nih.gov/health/heart/heart-beats`）で**心電図=電気活動の検査**を直接確認。ただしQRS心室脱分極の厳密定義・ECGと触知脈拍の差の全命題はこれだけで証明できない。さらにTMU書籍はCC BY-NC 4.0表示であり、Introductionの商用可能とする文言と矛盾するため、商用転載翻案の許諾があると扱わない。次回は心電図の独立直接資料を加えて出典を差替え/追記する案。**出典差替えは未適用**。
+- **`practice-C-Q42` 半規管の直接根拠確認**：米国NIH/NIDCD公式`https://www.nidcd.nih.gov/health/balance-disorders`で半規管が頭部回旋情報を感知し脳へ伝えることを確認。角加速度の精密機序は`https://pubmed.ncbi.nlm.nih.gov/31239423/`の研究論文でも確認。次回は直接出典をNIDCDへ差替え、原著研究を補助資料登録する案。ただし小脳の協調運動は別の直接資料が必要。問題文・5肢・正答index1を維持する方針。**データへの差替えは未適用**。
+- **今回の問題データ変更0件**。前回のMuse側264問分布53・53・53・53・52は本作業で変化なし（生成元未変更）。OpenStax商用権利・最終リリースゲートは引き続き**BLOCKED**。
