@@ -45,3 +45,15 @@
 - `HM1_A31_C34_SOURCE_CORRECTION_20261112.md` / `HM1_NCBI_OTHER_PUBLISHERS_A31_C34_RIGHTS_EXPRESSION_20261112.md`：NCBI別出版社2問の対照・修正。
 - `HM1_STATPEARLS_4_GOV_REPLACEMENT_20261112.md`：StatPearls未確認4記事と3問のNIH等への出典差替え、Muse限定差分PASS。
 - `HM1_EMPTY_SOURCE_URL_20_HANDOFF_20261112.md`：出典欠損疑義の閉鎖。
+
+## 5. 追加対応（2026-11-12）：演習C Q44 の StatPearls 登録依存解消
+
+- 対象：`practice-C-Q44`（出典旧登録：StatPearls NBK542189）。着手時HEAD `47ada402a1e9ed53a119c04d3ea5c2e500ef1be5`。
+- **主出典（公立大学が公開する医学部教材）**：University of Utah School of Medicine / Suzanne Stensaas, *Visual Reflexes* (2012) [公開講義PDF](https://anatomy.med.utah.edu/diganat/SOM/dental.neuro/06.c%20VisReflex%20dental%20annot%202012.pdf)。PDF p.1で視蓋前域を介する対光反射、p.5で「光に対する縮瞳」と「近見反応の三要素（調節・輻輳・縮瞳）」を別項目として直接説明。同p.5に虹彩括約筋、毛様体筋、チン小帯の緊張低下に関する記述がある。これは**公立大学の公開教材であって連邦政府著作物ではない**。
+- **補助出典**：NIH/NEI [Convergence Insufficiency](https://www.nei.nih.gov/eye-health-information/eye-conditions-and-diseases/convergence-insufficiency) は近方視時の両眼の内転（輻輳）、NLM [MedlinePlus Ciliary body](https://medlineplus.gov/ency/article/002319.htm) は毛様体・水晶体調節、NLM [MedlinePlus Standard eye exam](https://www.medlineplus.gov/ency/article/003434.htm) はペンライト刺激による瞳孔収縮の確認を補強する。
+- **登録変更**：生成元 `audit/practice_c_fixes_41_44.json` のQ44に限り、`sourceRef` と `auditSourceURL` を同一のUtah PDF URLへ差し替え、`supportingSourceURLs` 3件と `sourceBasisNote` を付記し、監査状態 `auditStatus` を更新。**`stem`・`choices`（5肢）・`ans`（index 3）・`detail` は不変**（更新時の対象オブジェクト比較）。旧NBK542189は当該製品生成元の登録出典から除外。変更コミット `5cff1b6a4fe1965a7c5dbc8891c2aa9c697e7b0c`。
+- **判定**：登録された未確認4記事のうち、製品出典としての残依存は **0/4**（先行3問＋今回Q44）。これは**StatPearlsシリーズ全体の参照ゼロや商用権利CLEARを意味しない**。Utah教材の画像・テキスト等は第三者素材を含む可能性があり、科学的事実のみ参照し、文章・図表の転載や翻案を行わない。近見反応の上位経路・対光反射との入力相違、全5肢の細部を独立に立証するゲート、既存問題の表現類似性は継続する。
+- **検証限界**：出典ページの該当箇所を確認し、変更対象オブジェクトの固定4フィールドを更新前後で比較した。Node CLIによる264問再生成、他263問完全一致、Web/iOS配布物バイト一致、SHA-256、独立権利審査は本作業では実施していない。次回は限定差分と配布物の再現性を独立検証する。
+- **リリース判定：FAIL/BLOCKED 維持**。mainへのマージ・TestFlight新規配布・App Store審査申請は行わない。
+
+> 本節は前掲「未解決事項」のQ44未差替え記載を**後続の履歴として更新**する。先行時点の表を遡及改変しない。現在の個別ライセンス未確認という歴史的事項も消去しない。
