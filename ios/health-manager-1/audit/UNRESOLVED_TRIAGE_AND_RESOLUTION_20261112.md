@@ -433,3 +433,490 @@
 - 修正前は`肢3`を正答として評価しながら、同じ`肢3`を「氏名を欠落」の誤答扱いにしていた。誤答説明を**肢0＝管理職限定、肢1＝氏名欠落、肢2＝監督署提出と周知の混同、肢4＝一部のみ周知**へ訂正。
 - 設問・選択肢5肢・`ans=3`・`key`・原典URL・監査状態は変更しない。今回の修正は誤答解説の対応関係のみ。変更後の配布JSON再生成と264問限定差分は未実施のため**検証待ち**。
 - （a）群の中心命題解消と全5肢逐語PASSを区別し、**リリースゲートFAIL/BLOCKED維持**。mainへのマージ・配信・審査申請は行わない。
+
+
+## 続編第21回：演習C Q06 Muse検証PASS・264問出典権利の一次仕分け（2026-11-12）
+
+### 1. Muse側264問再生成結果（ユーザー提供／当担当の独立再実行なし）
+- 比較基準 `1fa58d4` と現行状態の双方で264問Node CLI再生成成功。変更は **`practice-C-Q06` の `detail` のみ**、正答index不変、他263問完全一致、限定差分判定 **PASS**。
+- これはユーザーから提供されたMuse側ローカル検証の転記であり、当担当による再生成・配布バイト一致・SHA-256照合の実行を示すものではない。
+
+### 2. 権利監査の判定基準と一次調査
+- 商用アプリについて、URLの公開・閲覧可・出典引用だけでは転載/翻案/画像・表の商用利用許諾を意味しない。**事実・法令の参照**と**本文・選択肢・翻訳・図の転載・翻案**を分離して判定する。出典と作品の表現類似性を照合していないため、以下の「条件付」は個別問題の権利許可ではない。
+- **日本の国の行政サイト（厚労省・環境省・原子力規制委員会・e-Gov等）：条件付・個別除外確認待ち**。e-Govの利用規約 https://laws.e-gov.go.jp/terms 、厚労省 https://www.mhlw.go.jp/chosakuken/index.html によるPDL1.0の範囲で商用利用可能。ただし出典・改変の明示、第三者著作物・画像等の例外を確認すること。各ページの対象資料・権利者は個別確認未了。
+- **OpenStax: 原則要許諾（商用転載・翻案）**。特にAnatomy and Physiology **2e**はCC BY-NC-SA 4.0、商用利用には権利者の許諾が必要。https://openstax.org/books/anatomy-and-physiology-2e/pages/preface および https://help.openstax.org/s/article/Commercial-use-under-the-Creative-Commons-License 。ただし旧版Anatomy and Physiology（2eではない）の個別CC BY 4.0 https://openstax.org/books/anatomy-and-physiology/pages/preface は異なるため、**書籍・版ごとに確認**する。URLは参考資料としてのリンクのみなら直ちに転載ではないが、表現が転記・翻案されていれば要調査。
+- **NCBI Bookshelf/StatPearls: 権利者・書籍別保留**。NCBI掲載のみを理由にパブリックドメインとは扱えない。ページごとのCopyright and Permissions https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/ 。**PMC: 論文別に許諾要件確認** https://pmc.ncbi.nlm.nih.gov/about/copyright 。
+- **CDC・ATSDR・米国連邦機関資料: 条件付**。米国政府作成文は概ねパブリックドメインだが、第三者画像・請負著作物・日本での利用等は別確認。CDC https://www.cdc.gov/other/agencymaterials.html 。当該URLすべてを無条件商用可と断定しない。
+- **公益財団法人の試験問題、学会、出版社、赤十字、民間医療サイト、Wiley等: 要個別確認**。公表試験問題であることは商用教材への全文転載の許諾を意味しない。安全衛生技術試験協会の公表ページ https://www.exam.or.jp/headquarters/10114/ 。必要なら権利者へ書面許諾を取得。
+
+### 3. 既存14監査バッチを用いた出典一覧（暫定スナップショット）
+- 入力：`PRIMARY_SOURCE_CHOICE_AUDIT_*.json` の14個のバッチ。記録行数 **264**、固有ID **264**、URLの重複除外 **189**、登録URL空欄 **20**。各バッチの保存時点が異なり、現行再生成264問の最新正本の完全な権利台帳とは未照合。存在しないURLも含みうる。
+- URL分類件数（登録・検証URLを重複除外）：CONDITIONAL-PDL 86、CONDITIONAL-USG 28、HOLD-terms 14、HOLD-NC 18、HOLD-article 43。**商用利用許可済件数は0件（未審査として管理）**、無許可の商用転載が確定したという意味ではない。
+- **リスク状態**：HOLD-NC=非商用ライセンスの可能性が高く商用転載は許諾待ち、HOLD-article=書籍/論文ごと確認、CONDITIONAL-PDL=行政規約・第三者例外確認、CONDITIONAL-USG=米国政府著作物/第三者例外確認、HOLD-terms=提供元の規約/権利者個別確認。
+
+#### 登録・検証URLのユニーク一覧
+| 分類 | URL |
+|---|---|
+| CONDITIONAL-PDL | https://anzeninfo.mhlw.go.jp/anzen/gmsds/7440-43-9.html |
+| CONDITIONAL-PDL | https://anzeninfo.mhlw.go.jp/yougo/yougo34_1.html |
+| CONDITIONAL-PDL | https://anzeninfo.mhlw.go.jp/yougo/yougo35_1.html |
+| CONDITIONAL-PDL | https://anzeninfo.mhlw.go.jp/yougo/yougo88_1.html |
+| CONDITIONAL-USG | https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson3/section2.html |
+| HOLD-terms | https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines |
+| HOLD-terms | https://gnssn.iaea.org/main/bptc/BPTC%20Module%20Documents/Module02%20Radiation%20protection%20in%20nuclear%20facilities.pdf |
+| CONDITIONAL-PDL | https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/roudoukijun_kenshin_0001.html |
+| CONDITIONAL-PDL | https://jyudokitsuen.mhlw.go.jp/smoking_room/ |
+| CONDITIONAL-PDL | https://kennet.mhlw.go.jp/information/information/exercise/s-00-002.html |
+| CONDITIONAL-PDL | https://kennet.mhlw.go.jp/information/information/metabolic/bmi_check |
+| CONDITIONAL-PDL | https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097 |
+| CONDITIONAL-PDL | https://laws.e-gov.go.jp/law/322AC0000000049 |
+| CONDITIONAL-PDL | https://laws.e-gov.go.jp/law/322M40000100023 |
+| CONDITIONAL-PDL | https://laws.e-gov.go.jp/law/347AC0000000057 |
+| CONDITIONAL-PDL | https://laws.e-gov.go.jp/law/347AC0000000057?occasion_date=20261001 |
+| CONDITIONAL-PDL | https://laws.e-gov.go.jp/law/347CO0000000318 |
+| CONDITIONAL-PDL | https://laws.e-gov.go.jp/law/347M50002000032 |
+| CONDITIONAL-PDL | https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/ |
+| CONDITIONAL-PDL | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 |
+| CONDITIONAL-PDL | https://laws.e-gov.go.jp/law/347M50002000041 |
+| CONDITIONAL-PDL | https://laws.e-gov.go.jp/law/354M50002000018 |
+| CONDITIONAL-USG | https://medlineplus.gov/lab-tests/hematocrit-test/ |
+| CONDITIONAL-USG | https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir5329.pdf |
+| HOLD-terms | https://onlinelibrary.wiley.com/doi/full/10.1111/ijlh.13584 |
+| HOLD-terms | https://onlinelibrary.wiley.com/doi/full/10.1111/ijlh.13702 |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/10-3-muscle-fiber-contraction-and-relaxation |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/13-4-the-peripheral-nervous-system |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/14-2-central-processing |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/14-3-motor-responses |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/16-5-the-coordination-and-gait-exams |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/20-5-circulatory-pathways |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/23-1-overview-of-the-digestive-system |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/23-7-chemical-digestion-and-absorption-a-closer-look |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/24-4-protein-metabolism |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption |
+| HOLD-NC | https://openstax.org/books/anatomy-and-physiology/pages/21-1-anatomy-of-the-lymphatic-and-immune-systems |
+| HOLD-NC | https://openstax.org/books/biology-2e/pages/41-2-the-kidneys-and-osmoregulatory-organs |
+| HOLD-NC | https://openstax.org/books/fundamentals-nursing/pages/7-1-indicators-of-physiologic-functioning |
+| HOLD-NC | https://openstax.org/sites/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing |
+| HOLD-NC | https://openstax.org/sites/books/anatomy-and-physiology/pages/21-1-anatomy-of-the-lymphatic-and-immune-systems |
+| HOLD-NC | https://openstax.org/sites/books/fundamentals-nursing/pages/7-1-indicators-of-physiologic-functioning |
+| HOLD-article | https://pmc.ncbi.nlm.nih.gov/articles/PMC3302369/ |
+| HOLD-article | https://pmc.ncbi.nlm.nih.gov/articles/PMC6932299/ |
+| HOLD-terms | https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/ |
+| CONDITIONAL-USG | https://www.atsdr.cdc.gov/ToxProfiles/tp82-c2.pdf |
+| CONDITIONAL-USG | https://www.cdc.gov/BMI/about/index.html |
+| CONDITIONAL-USG | https://www.cdc.gov/bmi/about/index.html |
+| CONDITIONAL-USG | https://www.cdc.gov/chemical-emergencies/chemical-fact-sheets/cyanide.html |
+| CONDITIONAL-USG | https://www.cdc.gov/field-epi-manual/php/chapters/describing-epi-data.html |
+| CONDITIONAL-USG | https://www.cdc.gov/niosh/cold-stress/about/index.html |
+| CONDITIONAL-USG | https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf |
+| CONDITIONAL-USG | https://www.cdc.gov/niosh/ershdb/emergencyresponsecard_29750029.html |
+| CONDITIONAL-USG | https://www.cdc.gov/niosh/fatigue/about/index.html |
+| CONDITIONAL-USG | https://www.cdc.gov/niosh/heat-stress/about/illnesses.html |
+| CONDITIONAL-USG | https://www.cdc.gov/niosh/noise/prevent/understand.html |
+| CONDITIONAL-USG | https://www.cdc.gov/niosh/npg/npgd0014.html |
+| CONDITIONAL-USG | https://www.cdc.gov/niosh/npg/npgd0104.html |
+| CONDITIONAL-USG | https://www.cdc.gov/niosh/silica/about/index.html |
+| CONDITIONAL-USG | https://www.cdc.gov/niosh/welding/about/index.html |
+| CONDITIONAL-PDL | https://www.env.go.jp/chemi/rhm/current/04-01-08.html |
+| CONDITIONAL-PDL | https://www.env.go.jp/content/900402537.pdf |
+| CONDITIONAL-USG | https://www.fda.gov/food/seafood-guidance-documents-regulatory-information/scombrotoxin-poisoning-and-decomposition |
+| HOLD-terms | https://www.heart.org/en/health-topics/heart-attack/diagnosing-a-heart-attack/exercise-stress-test%2C |
+| HOLD-terms | https://www.icrp.org/docs/ICRP%20Statement%20on%20Tissue%20Reactions.pdf |
+| HOLD-terms | https://www.jrc.or.jp/mr/blood_product/blood_type/red_blood_cell/ |
+| HOLD-terms | https://www.kidney.org/kidney-topics/blood-urea-nitrogen-bun-test |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei12/index.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei28/index.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/content/000350327.pdf |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/content/000463186.pdf |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/content/000720536.pdf |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/content/001476821.pdf |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/content/10900000/000896863.pdf |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/content/11300000/001331247.pdf |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/content/11300000/001388777.pdf |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/content/11302000/001741252.pdf |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/content/11303000/001618734.pdf |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudoukijun/faq/5.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudouseisaku/chushoukigyou/joken_kankyou_rule.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/houdou/2r98520000034et4.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/newpage_11237.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/newpage_11389.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/newpage_38541.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/newpage_76807.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000126281.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000130677.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000182467.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000189195.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/campylobacterqa.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/newpage_00007.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/denshishinsei.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/denshishinsei_00002.html |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=00tb1912&dataType=1&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=00tb2042&dataType=1&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=00tc2748&dataType=1&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=00td0095&dataType=1&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=73023000 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74001000 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=10 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=11 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74042100&dataType=0 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74088000&dataType=0&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74094000&dataType=0 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74097000&dataType=0 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74097000&dataType=0&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74101000 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74101000&dataType=0&pageNo=2 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74105000&dataType=0&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74107000&dataType=0&pageNo=1 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=74146000&dataType=0 |
+| CONDITIONAL-PDL | https://www.mhlw.go.jp/web/t_doc?dataId=75ac0780&dataType=0&pageNo=1 |
+| HOLD-terms | https://www.msdmanuals.com/ja-jp/home/06-心臓と血管の病気/心臓と血管の生物学/心臓の生物学 |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK1177/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK26/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK27158/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK459327/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK470339/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK499818/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK499897/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK500006/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK507850/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK525948/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK525983/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK526127/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK537039/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK538226/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK539825/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK54103/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK541067/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK541119/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK541120/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK542189/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK544242/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK544292/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK547686/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK553169/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/books/NBK557491/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/mesh/68014870 |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK1177/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK26/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK459327/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK470339/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK499897/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK500006/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK525983/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK537039/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK538226/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK541067/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK541119/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK542189/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK544292/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK547686/ |
+| HOLD-article | https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/ |
+| CONDITIONAL-USG | https://www.nei.nih.gov/eye-health-information/eye-conditions-and-diseases/presbyopia |
+| CONDITIONAL-USG | https://www.nhlbi.nih.gov/health/lungs/body-controls-breathing |
+| CONDITIONAL-USG | https://www.nhlbi.nih.gov/health/lungs/breathing-benefits |
+| CONDITIONAL-USG | https://www.nhlbi.nih.gov/health/sleep-deprivation/body-clock |
+| CONDITIONAL-USG | https://www.nidcd.nih.gov/health/age-related-hearing-loss |
+| CONDITIONAL-USG | https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work |
+| CONDITIONAL-PDL | https://www.nra.go.jp/data/000464217.pdf |
+| CONDITIONAL-USG | https://www.osha.gov/otm/section-3-health-hazards/chapter-3 |
+| CONDITIONAL-USG | https://www.osha.gov/solvents |
+| HOLD-terms | https://www.rcpa.edu.au/Manuals/RCPA-Manual/Clinical-Presentations-and-Diagnoses/N/Neutrophilia |
+| HOLD-terms | https://www.redcross.org/take-a-class/resources/learn-first-aid/fractures |
+| HOLD-terms | https://www.stroke.org/en/about-stroke/stroke-symptoms |
+| HOLD-terms | https://www.stroke.org/en/about-stroke/types-of-stroke/ischemic-stroke-clots |
+| CONDITIONAL-PDL | https://www.wbgt.env.go.jp/doc_observation.php |
+| CONDITIONAL-PDL | https://www.wbgt.env.go.jp/pdf/doc_ccaa/20260401_doc01.pdf |
+| CONDITIONAL-USG | https://wwwn.cdc.gov/TSp/ToxFAQs/ToxFAQsDetails.aspx?faqid=1195&toxid=24 |
+
+#### バッチ264行のID→登録出典対応（作業台帳）
+| バッチ | 問題ID | 登録出典 | 追加検証先 |
+|---|---|---|---|
+| BASIC_Q01_20 | 2026-04-Q01 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| BASIC_Q01_20 | 2026-04-Q02 | https://anzeninfo.mhlw.go.jp/yougo/yougo88_1.html | https://anzeninfo.mhlw.go.jp/yougo/yougo88_1.html |
+| BASIC_Q01_20 | 2026-04-Q03 | https://www.mhlw.go.jp/web/t_doc?dataId=74097000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74097000&dataType=0&pageNo=1 |
+| BASIC_Q01_20 | 2026-04-Q04 | https://www.mhlw.go.jp/web/t_doc?dataId=74097000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74097000&dataType=0&pageNo=1 |
+| BASIC_Q01_20 | 2026-04-Q05 | https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1 | https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0 |
+| BASIC_Q01_20 | 2026-04-Q06 | https://laws.e-gov.go.jp/law/354M50002000018 | https://www.mhlw.go.jp/web/t_doc?dataId=74107000&dataType=0&pageNo=1 |
+| BASIC_Q01_20 | 2026-04-Q07 | https://www.mhlw.go.jp/web/t_doc?dataId=74094000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74094000&dataType=0 |
+| BASIC_Q01_20 | 2026-04-Q08 | https://www.mhlw.go.jp/stf/newpage_11237.html | https://www.mhlw.go.jp/stf/newpage_11237.html |
+| BASIC_Q01_20 | 2026-04-Q09 | https://laws.e-gov.go.jp/law/347M50002000041 | https://www.mhlw.go.jp/web/t_doc?dataId=74101000 |
+| BASIC_Q01_20 | 2026-04-Q10 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=73023000 |
+| BASIC_Q01_20 | 2026-04-Q11 | https://www.cdc.gov/niosh/npg/npgd0014.html | https://www.cdc.gov/niosh/npg/npgd0014.html |
+| BASIC_Q01_20 | 2026-04-Q12 | https://www.mhlw.go.jp/stf/newpage_11389.html | https://www.mhlw.go.jp/stf/newpage_11389.html |
+| BASIC_Q01_20 | 2026-04-Q13 | https://www.atsdr.cdc.gov/ToxProfiles/tp82-c2.pdf | https://www.atsdr.cdc.gov/ToxProfiles/tp82-c2.pdf |
+| BASIC_Q01_20 | 2026-04-Q14 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1 |
+| BASIC_Q01_20 | 2026-04-Q15 | https://gnssn.iaea.org/main/bptc/BPTC%20Module%20Documents/Module02%20Radiation%20protection%20in%20nuclear%20facilities.pdf | https://gnssn.iaea.org/main/bptc/BPTC%20Module%20Documents/Module02%20Radiation%20protection%20in%20nuclear%20facilities.pdf |
+| BASIC_Q01_20 | 2026-04-Q16 | https://www.mhlw.go.jp/web/t_doc?dataId=74105000&dataType=0&pageNo=1 | https://www.mhlw.go.jp/web/t_doc?dataId=74105000&dataType=0&pageNo=1 |
+| BASIC_Q01_20 | 2026-04-Q17 | https://wwwn.cdc.gov/TSp/ToxFAQs/ToxFAQsDetails.aspx?faqid=1195&toxid=24 | https://wwwn.cdc.gov/TSp/ToxFAQs/ToxFAQsDetails.aspx?faqid=1195&toxid=24 |
+| BASIC_Q01_20 | 2026-04-Q18 | https://www.osha.gov/otm/section-3-health-hazards/chapter-3 | https://www.osha.gov/otm/section-3-health-hazards/chapter-3 |
+| BASIC_Q01_20 | 2026-04-Q19 | https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/ | https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/ |
+| BASIC_Q01_20 | 2026-04-Q20 | https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1 | https://www.mhlw.go.jp/content/000720536.pdf |
+| BASIC_Q21_40 | 2026-04-Q21 | https://laws.e-gov.go.jp/law/347M50002000032 | https://laws.e-gov.go.jp/law/347M50002000032 |
+| BASIC_Q21_40 | 2026-04-Q22 | https://www.mhlw.go.jp/web/t_doc?dataId=74146000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74146000&dataType=0 |
+| BASIC_Q21_40 | 2026-04-Q23 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 |
+| BASIC_Q21_40 | 2026-04-Q24 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 |
+| BASIC_Q21_40 | 2026-04-Q25 | https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1 | https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1 |
+| BASIC_Q21_40 | 2026-04-Q26 | https://www.mhlw.go.jp/content/000463186.pdf | https://www.mhlw.go.jp/content/000350327.pdf |
+| BASIC_Q21_40 | 2026-04-Q27 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 |
+| BASIC_Q21_40 | 2026-04-Q28 | https://www.mhlw.go.jp/content/001476821.pdf | https://www.mhlw.go.jp/content/001476821.pdf |
+| BASIC_Q21_40 | 2026-04-Q29 | https://www.mhlw.go.jp/stf/newpage_76807.html | https://www.mhlw.go.jp/stf/newpage_76807.html |
+| BASIC_Q21_40 | 2026-04-Q30 | https://www.redcross.org/take-a-class/resources/learn-first-aid/fractures | https://www.redcross.org/take-a-class/resources/learn-first-aid/fractures |
+| BASIC_Q21_40 | 2026-04-Q31 | https://www.stroke.org/en/about-stroke/stroke-symptoms | https://www.stroke.org/en/about-stroke/stroke-symptoms |
+| BASIC_Q21_40 | 2026-04-Q32 | https://www.mhlw.go.jp/stf/houdou/2r98520000034et4.html | https://www.mhlw.go.jp/stf/houdou/2r98520000034et4.html |
+| BASIC_Q21_40 | 2026-04-Q33 | https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir5329.pdf | https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir5329.pdf |
+| BASIC_Q21_40 | 2026-04-Q34 | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/newpage_00007.html | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/newpage_00007.html |
+| BASIC_Q21_40 | 2026-04-Q35 | https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception | https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception |
+| BASIC_Q21_40 | 2026-04-Q36 | https://openstax.org/books/anatomy-and-physiology-2e/pages/23-7-chemical-digestion-and-absorption-a-closer-look | https://openstax.org/books/anatomy-and-physiology-2e/pages/23-7-chemical-digestion-and-absorption-a-closer-look |
+| BASIC_Q21_40 | 2026-04-Q37 | https://openstax.org/books/anatomy-and-physiology-2e/pages/14-2-central-processing | https://openstax.org/books/anatomy-and-physiology-2e/pages/14-2-central-processing |
+| BASIC_Q21_40 | 2026-04-Q38 | https://openstax.org/books/anatomy-and-physiology-2e/pages/24-4-protein-metabolism | https://openstax.org/books/anatomy-and-physiology-2e/pages/24-4-protein-metabolism |
+| BASIC_Q21_40 | 2026-04-Q39 | https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption | https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption |
+| BASIC_Q21_40 | 2026-04-Q40 | https://medlineplus.gov/lab-tests/hematocrit-test/ | https://medlineplus.gov/lab-tests/hematocrit-test/ |
+| BASIC_Q41_60 | 2026-04-Q41 | https://www.ncbi.nlm.nih.gov/books/NBK553169/ | 未記録 |
+| BASIC_Q41_60 | 2026-04-Q42 | https://www.ncbi.nlm.nih.gov/mesh/68014870 | 未記録 |
+| BASIC_Q41_60 | 2026-04-Q43 | https://www.ncbi.nlm.nih.gov/books/NBK27158/ | 未記録 |
+| BASIC_Q41_60 | 2026-04-Q44 | https://www.nidcd.nih.gov/health/age-related-hearing-loss | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q01 | https://anzeninfo.mhlw.go.jp/yougo/yougo35_1.html | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q02 | https://anzeninfo.mhlw.go.jp/yougo/yougo34_1.html | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q03 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc2748&dataType=1&pageNo=1 | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q04 | https://www.mhlw.go.jp/web/t_doc?dataId=74097000&dataType=0 | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q05 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=10 | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q06 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q07 | https://www.mhlw.go.jp/web/t_doc?dataId=74105000&dataType=0&pageNo=1 | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q08 | https://www.mhlw.go.jp/web/t_doc?dataId=74101000&dataType=0&pageNo=2 | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q09 | https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1 | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q10 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q11 | https://www.cdc.gov/niosh/npg/npgd0104.html | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q12 | https://www.cdc.gov/niosh/welding/about/index.html | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q13 | https://www.cdc.gov/niosh/silica/about/index.html | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q14 | https://www.cdc.gov/niosh/noise/prevent/understand.html | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q15 | https://www.mhlw.go.jp/stf/newpage_11389.html | 未記録 |
+| BASIC_Q41_60 | 2025-10-Q16 | https://www.osha.gov/solvents | 未記録 |
+| BASIC_Q61_80 | 2025-10-Q17 | https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1 | https://www.mhlw.go.jp/web/t_doc?dataId=74090000&dataType=0&pageNo=1 |
+| BASIC_Q61_80 | 2025-10-Q18 | https://www.mhlw.go.jp/web/t_doc?dataId=74088000&dataType=0&pageNo=1 | https://www.mhlw.go.jp/web/t_doc?dataId=74088000&dataType=0&pageNo=1 |
+| BASIC_Q61_80 | 2025-10-Q19 | https://www.mhlw.go.jp/web/t_doc?dataId=74042100&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74042100&dataType=0 |
+| BASIC_Q61_80 | 2025-10-Q20 | https://www.icrp.org/docs/ICRP%20Statement%20on%20Tissue%20Reactions.pdf | https://www.icrp.org/docs/ICRP%20Statement%20on%20Tissue%20Reactions.pdf |
+| BASIC_Q61_80 | 2025-10-Q21 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 |
+| BASIC_Q61_80 | 2025-10-Q22 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 |
+| BASIC_Q61_80 | 2025-10-Q23 | https://anzeninfo.mhlw.go.jp/yougo/yougo35_1.html | https://anzeninfo.mhlw.go.jp/yougo/yougo35_1.html |
+| BASIC_Q61_80 | 2025-10-Q24 | https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei12/index.html | https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei12/index.html |
+| BASIC_Q61_80 | 2025-10-Q25 | https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1 | https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1 |
+| BASIC_Q61_80 | 2025-10-Q26 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0&pageNo=1 |
+| BASIC_Q61_80 | 2025-10-Q27 | https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudouseisaku/chushoukigyou/joken_kankyou_rule.html | https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudouseisaku/chushoukigyou/joken_kankyou_rule.html |
+| BASIC_Q61_80 | 2025-10-Q28 | https://www.mhlw.go.jp/content/11302000/001741252.pdf | https://www.mhlw.go.jp/content/11302000/001741252.pdf |
+| BASIC_Q61_80 | 2025-10-Q29 | https://www.mhlw.go.jp/stf/newpage_76807.html | https://www.mhlw.go.jp/stf/newpage_76807.html |
+| BASIC_Q61_80 | 2025-10-Q30 | https://www.fda.gov/food/seafood-guidance-documents-regulatory-information/scombrotoxin-poisoning-and-decomposition | https://www.fda.gov/food/seafood-guidance-documents-regulatory-information/scombrotoxin-poisoning-and-decomposition |
+| BASIC_Q61_80 | 2025-10-Q31 | https://www.heart.org/en/health-topics/heart-attack/diagnosing-a-heart-attack/exercise-stress-test%2C | https://www.heart.org/en/health-topics/heart-attack/diagnosing-a-heart-attack/exercise-stress-test%2C |
+| BASIC_Q61_80 | 2025-10-Q32 | https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines | https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines |
+| BASIC_Q61_80 | 2025-10-Q33 | https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson3/section2.html | https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson3/section2.html |
+| BASIC_Q61_80 | 2025-10-Q34 | https://www.cdc.gov/bmi/about/index.html | https://www.cdc.gov/bmi/about/index.html |
+| BASIC_Q61_80 | 2025-10-Q35 | https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption | https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption |
+| BASIC_Q61_80 | 2025-10-Q36 | https://openstax.org/books/anatomy-and-physiology-2e/pages/20-5-circulatory-pathways | https://openstax.org/books/anatomy-and-physiology-2e/pages/20-5-circulatory-pathways |
+| BASIC_Q81_100 | 2025-10-Q37 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-10-Q38 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-10-Q39 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-10-Q40 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-10-Q41 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-10-Q42 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-10-Q43 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-10-Q44 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q01 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q02 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q03 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q04 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q05 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q06 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q07 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q08 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q09 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q10 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q11 | 未記録 | 未記録 |
+| BASIC_Q81_100 | 2025-04-Q12 | 未記録 | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q13 | https://www.cdc.gov/niosh/ershdb/emergencyresponsecard_29750029.html | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q14 | https://www.env.go.jp/chemi/rhm/current/04-01-08.html | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q15 | https://anzeninfo.mhlw.go.jp/anzen/gmsds/7440-43-9.html | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q16 | https://www.cdc.gov/niosh/heat-stress/about/illnesses.html | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q17 | https://www.cdc.gov/chemical-emergencies/chemical-fact-sheets/cyanide.html | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q18 | https://www.mhlw.go.jp/content/11300000/001388777.pdf | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q19 | https://anzeninfo.mhlw.go.jp/yougo/yougo88_1.html | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q20 | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000182467.html | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q21 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb2042&dataType=1&pageNo=1 | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q22 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q23 | https://laws.e-gov.go.jp/law/347AC0000000057 | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q24 | https://www.mhlw.go.jp/content/11300000/001331247.pdf | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q25 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=11 | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q26 | https://laws.e-gov.go.jp/law/322AC0000000049 | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q27 | https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudouseisaku/chushoukigyou/joken_kankyou_rule.html | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q28 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1 | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q29 | https://www.cdc.gov/field-epi-manual/php/chapters/describing-epi-data.html | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q30 | https://www.mhlw.go.jp/stf/newpage_76807.html | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q31 | https://www.stroke.org/en/about-stroke/types-of-stroke/ischemic-stroke-clots | 未記録 |
+| BASIC_Q101_120 | 2025-04-Q32 | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000189195.html | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q33 | https://kennet.mhlw.go.jp/information/information/metabolic/bmi_check | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q34 | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000130677.html | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q35 | https://www.jrc.or.jp/mr/blood_product/blood_type/red_blood_cell/ | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q36 | https://www.msdmanuals.com/ja-jp/home/06-心臓と血管の病気/心臓と血管の生物学/心臓の生物学 | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q37 | https://www.ncbi.nlm.nih.gov/books/NBK539825/ | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q38 | https://www.ncbi.nlm.nih.gov/books/NBK544242/ | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q39 | https://www.cdc.gov/niosh/cold-stress/about/index.html | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q40 | https://www.kidney.org/kidney-topics/blood-urea-nitrogen-bun-test | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q41 | https://openstax.org/books/anatomy-and-physiology-2e/pages/10-3-muscle-fiber-contraction-and-relaxation | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q42 | https://www.nei.nih.gov/eye-health-information/eye-conditions-and-diseases/presbyopia | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q43 | https://www.ncbi.nlm.nih.gov/books/NBK541120/ | 未記録 |
+| BASIC_Q121_132 | 2025-04-Q44 | https://www.nhlbi.nih.gov/health/sleep-deprivation/body-clock | 未記録 |
+| PRACTICE_A_Q01_20 | practice-A-Q01 | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2 |
+| PRACTICE_A_Q01_20 | practice-A-Q02 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2 |
+| PRACTICE_A_Q01_20 | practice-A-Q03 | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2 |
+| PRACTICE_A_Q01_20 | practice-A-Q04 | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2 |
+| PRACTICE_A_Q01_20 | practice-A-Q05 | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/denshishinsei.html | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/denshishinsei_00002.html |
+| PRACTICE_A_Q01_20 | practice-A-Q06 | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 |
+| PRACTICE_A_Q01_20 | practice-A-Q07 | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 |
+| PRACTICE_A_Q01_20 | practice-A-Q08 | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 |
+| PRACTICE_A_Q01_20 | practice-A-Q09 | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 |
+| PRACTICE_A_Q01_20 | practice-A-Q10 | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 |
+| PRACTICE_A_Q01_20 | practice-A-Q11 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2 |
+| PRACTICE_A_Q01_20 | practice-A-Q12 | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2 |
+| PRACTICE_A_Q01_20 | practice-A-Q13 | https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/ | https://laws.e-gov.go.jp/law/347M50002000032/20260101_507M60000100097/ |
+| PRACTICE_A_Q01_20 | practice-A-Q14 | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2 |
+| PRACTICE_A_Q01_20 | practice-A-Q15 | https://laws.e-gov.go.jp/law/347M50002000032?occasion_date=20261101 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 |
+| PRACTICE_A_Q01_20 | practice-A-Q16 | https://www.wbgt.env.go.jp/doc_observation.php | https://www.wbgt.env.go.jp/pdf/doc_ccaa/20260401_doc01.pdf |
+| PRACTICE_A_Q01_20 | practice-A-Q17 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1 |
+| PRACTICE_A_Q01_20 | practice-A-Q18 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1 |
+| PRACTICE_A_Q01_20 | practice-A-Q19 | https://www.mhlw.go.jp/content/11303000/001618734.pdf | https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1 |
+| PRACTICE_A_Q01_20 | practice-A-Q20 | https://www.mhlw.go.jp/content/11303000/001618734.pdf | https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1 |
+| PRACTICE_A_Q21_40 | practice-A-Q21 | https://www.mhlw.go.jp/content/11303000/001618734.pdf | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q22 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1 | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q23 | https://www.env.go.jp/content/900402537.pdf | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q24 | https://www.mhlw.go.jp/content/11303000/001618734.pdf | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q25 | https://www.mhlw.go.jp/content/11303000/001618734.pdf | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q26 | https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q27 | https://www.nra.go.jp/data/000464217.pdf | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q28 | https://www.mhlw.go.jp/content/10900000/000896863.pdf | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q29 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1 | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q30 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1 | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q31 | https://www.ncbi.nlm.nih.gov/books/NBK54103/ | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q32 | https://www.ncbi.nlm.nih.gov/books/NBK499818/ | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q33 | https://www.rcpa.edu.au/Manuals/RCPA-Manual/Clinical-Presentations-and-Diagnoses/N/Neutrophilia | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q34 | https://www.ncbi.nlm.nih.gov/books/NBK507850/ | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q35 | https://onlinelibrary.wiley.com/doi/full/10.1111/ijlh.13584 | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q36 | https://onlinelibrary.wiley.com/doi/full/10.1111/ijlh.13702 | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q37 | https://www.ncbi.nlm.nih.gov/books/NBK459327/ | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q38 | https://www.ncbi.nlm.nih.gov/books/NBK526127/ | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q39 | https://www.ncbi.nlm.nih.gov/books/NBK525948/ | 未記録 |
+| PRACTICE_A_Q21_40 | practice-A-Q40 | https://www.ncbi.nlm.nih.gov/books/NBK526127/ | 未記録 |
+| PRACTICE_A41_44_B01_16 | practice-A-Q41 | https://www.ncbi.nlm.nih.gov/books/NBK547686/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK547686/ |
+| PRACTICE_A41_44_B01_16 | practice-A-Q42 | https://www.ncbi.nlm.nih.gov/books/NBK499897/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK499897/ |
+| PRACTICE_A41_44_B01_16 | practice-A-Q43 | https://www.ncbi.nlm.nih.gov/books/NBK541067/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK541067/ |
+| PRACTICE_A41_44_B01_16 | practice-A-Q44 | https://www.ncbi.nlm.nih.gov/books/NBK538226/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK538226/ |
+| PRACTICE_A41_44_B01_16 | practice-B-Q01 | https://laws.e-gov.go.jp/law/347CO0000000318 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q02 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q03 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q04 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q05 | https://www.mhlw.go.jp/web/t_doc?dataId=00td0095&dataType=1&pageNo=1 | https://www.mhlw.go.jp/web/t_doc?dataId=00td0095&dataType=1&pageNo=1 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q06 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q07 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q08 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q09 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q10 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudoukijun/faq/5.html |
+| PRACTICE_A41_44_B01_16 | practice-B-Q11 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q12 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q13 | https://www.osha.gov/otm/section-3-health-hazards/chapter-3 | https://www.osha.gov/otm/section-3-health-hazards/chapter-3 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q14 | https://laws.e-gov.go.jp/law/347AC0000000057 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q15 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_A41_44_B01_16 | practice-B-Q16 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1 |
+| PRACTICE_B_Q17_36 | practice-B-Q17 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1 |
+| PRACTICE_B_Q17_36 | practice-B-Q18 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1 |
+| PRACTICE_B_Q17_36 | practice-B-Q19 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1 |
+| PRACTICE_B_Q17_36 | practice-B-Q20 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1 |
+| PRACTICE_B_Q17_36 | practice-B-Q21 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1 |
+| PRACTICE_B_Q17_36 | practice-B-Q22 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 |
+| PRACTICE_B_Q17_36 | practice-B-Q23 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 |
+| PRACTICE_B_Q17_36 | practice-B-Q24 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 |
+| PRACTICE_B_Q17_36 | practice-B-Q25 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 |
+| PRACTICE_B_Q17_36 | practice-B-Q26 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 |
+| PRACTICE_B_Q17_36 | practice-B-Q27 | https://laws.e-gov.go.jp/law/347AC0000000057 | https://laws.e-gov.go.jp/law/347AC0000000057 |
+| PRACTICE_B_Q17_36 | practice-B-Q28 | https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei28/index.html | https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei28/index.html |
+| PRACTICE_B_Q17_36 | practice-B-Q29 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 | https://www.mhlw.go.jp/web/t_doc?dataId=00tc1466&dataType=1&pageNo=2 |
+| PRACTICE_B_Q17_36 | practice-B-Q30 | https://www.ncbi.nlm.nih.gov/books/NBK459327/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK459327/ |
+| PRACTICE_B_Q17_36 | practice-B-Q31 | https://openstax.org/books/fundamentals-nursing/pages/7-1-indicators-of-physiologic-functioning | https://openstax.org/sites/books/fundamentals-nursing/pages/7-1-indicators-of-physiologic-functioning |
+| PRACTICE_B_Q17_36 | practice-B-Q32 | https://openstax.org/books/anatomy-and-physiology/pages/21-1-anatomy-of-the-lymphatic-and-immune-systems | https://openstax.org/sites/books/anatomy-and-physiology/pages/21-1-anatomy-of-the-lymphatic-and-immune-systems |
+| PRACTICE_B_Q17_36 | practice-B-Q33 | https://www.nhlbi.nih.gov/health/lungs/breathing-benefits | https://www.nhlbi.nih.gov/health/lungs/breathing-benefits |
+| PRACTICE_B_Q17_36 | practice-B-Q34 | https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing | https://openstax.org/sites/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing |
+| PRACTICE_B_Q17_36 | practice-B-Q35 | https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing | https://openstax.org/sites/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing |
+| PRACTICE_B_Q17_36 | practice-B-Q36 | https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing | https://openstax.org/sites/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing |
+| PRACTICE_B37_44_C01_12 | practice-B-Q37 | https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing | https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing |
+| PRACTICE_B37_44_C01_12 | practice-B-Q38 | https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing | https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing |
+| PRACTICE_B37_44_C01_12 | practice-B-Q39 | https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing | https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing |
+| PRACTICE_B37_44_C01_12 | practice-B-Q40 | https://www.nhlbi.nih.gov/health/lungs/body-controls-breathing | https://www.nhlbi.nih.gov/health/lungs/body-controls-breathing |
+| PRACTICE_B37_44_C01_12 | practice-B-Q41 | https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work | https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work |
+| PRACTICE_B37_44_C01_12 | practice-B-Q42 | https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption | https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption |
+| PRACTICE_B37_44_C01_12 | practice-B-Q43 | https://openstax.org/books/biology-2e/pages/41-2-the-kidneys-and-osmoregulatory-organs | https://openstax.org/books/biology-2e/pages/41-2-the-kidneys-and-osmoregulatory-organs |
+| PRACTICE_B37_44_C01_12 | practice-B-Q44 | https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption | https://openstax.org/books/anatomy-and-physiology-2e/pages/25-6-tubular-reabsorption |
+| PRACTICE_B37_44_C01_12 | practice-C-Q01 | https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_B37_44_C01_12 | practice-C-Q02 | https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1 |
+| PRACTICE_B37_44_C01_12 | practice-C-Q03 | https://laws.e-gov.go.jp/law/347AC0000000057?occasion_date=20261001 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000 |
+| PRACTICE_B37_44_C01_12 | practice-C-Q04 | https://laws.e-gov.go.jp/law/347AC0000000057?occasion_date=20261001 | https://www.mhlw.go.jp/web/t_doc?dataId=74001000 |
+| PRACTICE_B37_44_C01_12 | practice-C-Q05 | https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 |
+| PRACTICE_B37_44_C01_12 | practice-C-Q06 | https://laws.e-gov.go.jp/document?lawid=347M50002000032_20260101_507M60000100097 | https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0 |
+| PRACTICE_B37_44_C01_12 | practice-C-Q07 | https://laws.e-gov.go.jp/law/322AC0000000049 | https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0 |
+| PRACTICE_B37_44_C01_12 | practice-C-Q08 | https://laws.e-gov.go.jp/law/322M40000100023 | https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0&pageNo=1 |
+| PRACTICE_B37_44_C01_12 | practice-C-Q09 | https://laws.e-gov.go.jp/law/322AC0000000049 | https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0 |
+| PRACTICE_B37_44_C01_12 | practice-C-Q10 | https://laws.e-gov.go.jp/law/322AC0000000049 | https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0 |
+| PRACTICE_B37_44_C01_12 | practice-C-Q11 | https://www.mhlw.go.jp/web/t_doc?dataId=00tb1912&dataType=1&pageNo=1 | https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0&pageNo=1 |
+| PRACTICE_B37_44_C01_12 | practice-C-Q12 | https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0 | https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0 |
+| PRACTICE_C_Q13_32 | practice-C-Q13 | https://laws.e-gov.go.jp/law/322AC0000000049 | https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0 |
+| PRACTICE_C_Q13_32 | practice-C-Q14 | https://laws.e-gov.go.jp/law/322M40000100023 | https://www.mhlw.go.jp/web/t_doc?dataId=73023000&dataType=0 |
+| PRACTICE_C_Q13_32 | practice-C-Q15 | https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/roudoukijun_kenshin_0001.html | https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/roudoukijun_kenshin_0001.html |
+| PRACTICE_C_Q13_32 | practice-C-Q16 | https://www.mhlw.go.jp/web/t_doc?dataId=75ac0780&dataType=0&pageNo=1 | https://www.mhlw.go.jp/web/t_doc?dataId=75ac0780&dataType=0&pageNo=1 |
+| PRACTICE_C_Q13_32 | practice-C-Q17 | https://www.ncbi.nlm.nih.gov/books/NBK557491/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/ |
+| PRACTICE_C_Q13_32 | practice-C-Q18 | https://www.ncbi.nlm.nih.gov/books/NBK557491/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/ |
+| PRACTICE_C_Q13_32 | practice-C-Q19 | https://www.ncbi.nlm.nih.gov/books/NBK557491/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/ |
+| PRACTICE_C_Q13_32 | practice-C-Q20 | https://www.ncbi.nlm.nih.gov/books/NBK557491/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/ |
+| PRACTICE_C_Q13_32 | practice-C-Q21 | https://www.ncbi.nlm.nih.gov/books/NBK557491/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/ |
+| PRACTICE_C_Q13_32 | practice-C-Q22 | https://www.ncbi.nlm.nih.gov/books/NBK557491/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK557491/ |
+| PRACTICE_C_Q13_32 | practice-C-Q23 | https://www.cdc.gov/BMI/about/index.html | https://www.cdc.gov/BMI/about/index.html |
+| PRACTICE_C_Q13_32 | practice-C-Q24 | https://pmc.ncbi.nlm.nih.gov/articles/PMC3302369/ | https://pmc.ncbi.nlm.nih.gov/articles/PMC3302369/ |
+| PRACTICE_C_Q13_32 | practice-C-Q25 | https://kennet.mhlw.go.jp/information/information/exercise/s-00-002.html | https://kennet.mhlw.go.jp/information/information/exercise/s-00-002.html |
+| PRACTICE_C_Q13_32 | practice-C-Q26 | https://www.cdc.gov/niosh/fatigue/about/index.html | https://www.cdc.gov/niosh/fatigue/about/index.html |
+| PRACTICE_C_Q13_32 | practice-C-Q27 | https://jyudokitsuen.mhlw.go.jp/smoking_room/ | https://jyudokitsuen.mhlw.go.jp/smoking_room/ |
+| PRACTICE_C_Q13_32 | practice-C-Q28 | https://www.mhlw.go.jp/stf/newpage_38541.html | https://www.mhlw.go.jp/stf/newpage_38541.html |
+| PRACTICE_C_Q13_32 | practice-C-Q29 | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000126281.html | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/campylobacterqa.html |
+| PRACTICE_C_Q13_32 | practice-C-Q30 | https://www.ncbi.nlm.nih.gov/books/NBK1177/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK1177/ |
+| PRACTICE_C_Q13_32 | practice-C-Q31 | https://www.ncbi.nlm.nih.gov/books/NBK470339/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK470339/ |
+| PRACTICE_C_Q13_32 | practice-C-Q32 | https://www.ncbi.nlm.nih.gov/books/NBK500006/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK500006/ |
+| PRACTICE_C_Q33_44 | practice-C-Q33 | https://www.ncbi.nlm.nih.gov/books/NBK537039/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK537039/ |
+| PRACTICE_C_Q33_44 | practice-C-Q34 | https://www.ncbi.nlm.nih.gov/books/NBK26/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK26/ |
+| PRACTICE_C_Q33_44 | practice-C-Q35 | https://www.ncbi.nlm.nih.gov/books/NBK525983/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK525983/ |
+| PRACTICE_C_Q33_44 | practice-C-Q36 | https://www.ncbi.nlm.nih.gov/books/NBK541119/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK541119/ |
+| PRACTICE_C_Q33_44 | practice-C-Q37 | https://www.ncbi.nlm.nih.gov/books/NBK544292/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK544292/ |
+| PRACTICE_C_Q33_44 | practice-C-Q38 | https://openstax.org/books/anatomy-and-physiology-2e/pages/13-4-the-peripheral-nervous-system | https://openstax.org/books/anatomy-and-physiology-2e/pages/13-4-the-peripheral-nervous-system |
+| PRACTICE_C_Q33_44 | practice-C-Q39 | https://pmc.ncbi.nlm.nih.gov/articles/PMC6932299/ | https://pmc.ncbi.nlm.nih.gov/articles/PMC6932299/ |
+| PRACTICE_C_Q33_44 | practice-C-Q40 | https://openstax.org/books/anatomy-and-physiology-2e/pages/23-1-overview-of-the-digestive-system | https://openstax.org/books/anatomy-and-physiology-2e/pages/23-1-overview-of-the-digestive-system |
+| PRACTICE_C_Q33_44 | practice-C-Q41 | https://www.ncbi.nlm.nih.gov/books/NBK544292/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK544292/ |
+| PRACTICE_C_Q33_44 | practice-C-Q42 | https://openstax.org/books/anatomy-and-physiology-2e/pages/16-5-the-coordination-and-gait-exams | https://openstax.org/books/anatomy-and-physiology-2e/pages/16-5-the-coordination-and-gait-exams |
+| PRACTICE_C_Q33_44 | practice-C-Q43 | https://openstax.org/books/anatomy-and-physiology-2e/pages/14-3-motor-responses | https://openstax.org/books/anatomy-and-physiology-2e/pages/14-3-motor-responses |
+| PRACTICE_C_Q33_44 | practice-C-Q44 | https://www.ncbi.nlm.nih.gov/books/NBK542189/ | https://www.ncbi.nlm.nih.gov/sites/books/NBK542189/ |
+
+### 4. 未解決・公開ゲート
+1. 上記は**過去14バッチの出典URL抽出**であり、固有ID/URL空欄と現行264問の再生成正本との再照合が必要。登録URL空欄を「利用権問題なし」と扱わない。
+2. 264問について、掲載表現の類似性・出典著作物の翻案/引用/単なる事実参照の区別、OpenStaxの書籍別ライセンス、NCBIの各著作物の条件、試験協会の商用転載許諾を個別に記録し、権利者許諾証跡を保存する。
+3. 出典サイトの利用許可は**当アプリの問題文や解説の独自性**を自動的に保証しない。出典著作物と実際の製品データの照合が必要。
+4. 全問の商用利用権確認は未完了。**権利ゲートBLOCKED、リリースゲートFAIL/BLOCKED**を維持。mainマージ、審査申請、本番公開なし。
