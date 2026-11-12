@@ -1542,3 +1542,25 @@ if(!oldStage&&!newStage)throw Error('HM2 No146 final sleep guide strict source-s
 if(oldStage){q.sourceUrl=newUrl;q.basis=newBasis;}
 window.HM2_NO146_FINAL_SLEEP_GUIDE_FIXED_20261112=true;
 })();
+
+
+// HM2_FINAL_GATE_178_REVIEW_BATCH05_FIX2_20261112
+// Strictly guarded, ID-scoped legal clarification and direct-decree source correction.
+// Applied after prior audit overlays and before question-order-v1.js. Never alter review/release flags.
+(function(){'use strict';
+const a={"id":"sm2-5y-r09-law-08","question":"常時60人を使用する事務所で、衛生管理者を新たに選任した。所轄労働基準監督署長への報告期限として適切なのはどれか。","oldChoice":"選任後遅滞なく、所定の報告書を提出する。","newChoice":"衛生管理者の選任後、遅滞なく電子情報処理組織を使用して、所定事項を所轄労働基準監督署長に報告する。","oldExplanation":"安衛則7条では選任すべき事由が発生した日から14日以内の選任と、選任後の所轄署への報告が定められる。","newExplanation":"労働安全衛生規則7条1項1号は衛生管理者を選任すべき事由の発生から14日以内に選任することを定める。同条3項により、選任後は遅滞なく所定事項を所轄労働基準監督署長へ報告する。2025年1月1日から衛生管理者選任報告は原則電子申請が義務化されたため、電子情報処理組織を使用して報告する。選任の14日以内と選任後の遅滞ない報告は別の要件である。","oldBasis":"労働安全衛生規則7条（選任期限・選任報告）","newBasis":"労働安全衛生規則7条1項1号・3項／2025年1月1日施行の衛生管理者選任報告電子申請義務化","oldUrl":"https://laws.e-gov.go.jp/law/347M50002000032"};
+const b={"id":"sm2-5y-r10-law-03","question":"毎週の法定休日に労働を命じるため、36協定を届出済みである。法定休日労働の割増賃金率の最低基準として適切なのはどれか。","oldBasis":"労働基準法37条1項・割増賃金令","newBasis":"労働基準法37条1項／労働基準法第三十七条第一項の時間外及び休日の割増賃金に係る率の最低限度を定める政令（平成6年政令第5号、休日労働35％以上）","oldUrl":"https://laws.e-gov.go.jp/law/322AC0000000049","newUrl":"https://laws.e-gov.go.jp/law/406CO0000000005","answer":"通常の賃金の35％以上を割増しする。"};
+const all=window.Q_PARTS||[];
+const find=id=>{const matches=all.filter(q=>q.id===id);if(matches.length!==1)throw Error('HM2 FINAL_GATE target cardinality mismatch '+id);return matches[0];};
+const first=find(a.id),second=find(b.id);
+function check(q,expected){if(q.question!==expected.question||q.basis!==expected.oldBasis||q.sourceUrl!==expected.oldUrl||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5)throw Error('HM2 FINAL_GATE strict old-state mismatch '+expected.id);}
+check(first,a);check(second,b);
+if(first.choices[first.answer-1]!==a.oldChoice||first.explanation!==a.oldExplanation||first.quick!==a.oldChoice||second.choices[second.answer-1]!==b.answer)throw Error('HM2 FINAL_GATE old answer/explanation mismatch');
+first.choices[first.answer-1]=a.newChoice;
+first.quick=a.newChoice;
+first.explanation=a.newExplanation;
+first.basis=a.newBasis;
+second.basis=b.newBasis;
+second.sourceUrl=b.newUrl;
+window.HM2_FINAL_GATE_178_REVIEW_BATCH05_FIX2={ids:[a.id,b.id],changedFields:{[a.id]:['choices','quick','explanation','basis'],[b.id]:['basis','sourceUrl']},contentReviewStatus:'unchanged'};
+})();
