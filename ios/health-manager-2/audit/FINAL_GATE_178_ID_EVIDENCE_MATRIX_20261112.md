@@ -1790,3 +1790,12 @@
 - 修正後設問：「暑熱負荷の強い職場で、休憩後も作業者にめまい・強い疲労が続く。現場責任者が直ちに行うべき対応として最も適切なのはどれか。」。第5肢：「直ちに作業を中断して涼しい場所に移し、身体を冷やしながら意識・応答や自力飲水の可否を確認し、必要時は救急要請する。」。`quick` は第5肢と同期、`explanation`は初期救護、危険徴候の119番通報、他肢の誤り、再発予防との役割分離を明記。
 - **正答位置は第5肢（zero-based index=4）を維持**。第1〜4肢・他299問・監査／公開フラグ・権利等の属性はパッチ内で意図的に変更しない。旧ガード・リリースゲートの改変なし。
 - **再レビュー必須**：旧SHA `f5a17cbf84f115db05fcbdf1ad4dabc1abe728844e09529c38fb221c5bf64e44` に対する第8バッチの指摘は修正前の版の記録として保持。新規版の配布JSONが確定したら、**新SHA-256、対象IDの5肢・設問・解説・現行通知、差分限定、再生成の成功、ゲート維持**を独立に照合するまで当該IDを最終承認としない。累計レビュー着手済80/178問、最終承認0/178問、公開ゲートBLOCKEDを維持。
+
+
+## 2026-11-12｜熱中症No.72 strict old-state不整合の修復・配布JSON再生成証跡
+
+- **対象** `sm2-5y-r04-hyg-06`。旧配布JSON SHA-256 `f5a17cbf84f115db05fcbdf1ad4dabc1abe728844e09529c38fb221c5bf64e44`、Git Blob `0cfeb31735eb6205cf3a04087d605bcbf918e621`。Museのローカル再生成で `HM2 heat06 strict old-state mismatch choices` が発生したことを受けて原因を追跡。
+- **根本原因**：`audit-fixes.js` 実行時の5肢配列は `question-order-v1.js` による正答位置入替えの前段。前回追加した最終パッチの旧状態ガードが、入替え後の配布版5肢の順番を前段に要求した。これにより不整合が発生した。旧ガードを削除せず、**5肢の一意性とソートした全文集合一致、現在の `q.answer` の指す旧正答文との一致、問題文・quick・旧解説全文・対象topic/subject/sourceUrlの厳密一致**へ修正。新正答文を `q.choices[q.answer-1]` に適用し、後段の `question-order-v1.js` で従来どおり第5肢へ移動。正答位置規則、公開ゲート、既存の独立レビュー条件は緩和せず。ガード修正コミット [`539ace4e71ff0607433e2ad3ea0262603f78fc4e`](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/539ace4e71ff0607433e2ad3ea0262603f78fc4e)。元の問題文・5肢への救護内容のパッチコミットは `54e8667beffe170de4f46ed1227f1e653b4d1dbf`。
+- **再生成完了**：GitHub Actions の canonical JSON rebuild により配布JSONが更新・コミットされた。配布JSONコミット [`1a9ea777d58e9715cb3b798fc0103ce246b6fe8e`](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/1a9ea777d58e9715cb3b798fc0103ce246b6fe8e)。新Git Blob `03d829fa5f70d61391efd8fb36e68f9cf5c6ffe1`。新配布JSON **SHA-256 `40c6459fef8b84c4b3aa7dabad54e4509422faa0ca1a9d66259e7fe26d5f7607`**、576,148バイト、300問。SHA-256はGitHub取得JSONを `JSON.stringify(JSON.parse(content),null,2)+'\n'` の生成形式へ正規化して算出。旧版の同方式で575,774バイト・既知SHA-256と一致し、算出方法を検算。
+- **限定差分**：旧配布JSONと新配布JSONを全300実IDで比較し、**対象1問のみ変更、他299問完全一致**。対象で変わったのは `question`、第5肢の文字列、`quick`、`explanation` の4フィールドのみ。第1〜4肢、正答第5肢（zero-based `correct_index=4`）、出典、基準日、監査・公開状態、権利情報、他メタデータは不変。問題文と選択肢の即時救護内容は一致。
+- **承認上の制限**：この再生成・差分一致は独立専門家による最終承認ではない。**新SHA版における当該問題の5肢と原典の独立再レビューが必要**。累計最終レビュー着手済80/178問は二重計上せず、最終承認0/178問、公開ゲート **BLOCKED** を維持。次回の独立内容レビューで新SHA版の当該IDを再点検する。
