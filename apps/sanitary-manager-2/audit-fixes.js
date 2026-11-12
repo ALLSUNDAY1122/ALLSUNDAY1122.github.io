@@ -1567,7 +1567,8 @@ window.HM2_FINAL_GATE_178_REVIEW_BATCH05_FIX2={ids:[a.id,b.id],changedFields:{[a
 
 
 // HM2_FINAL_REVIEW_20261112_HEAT_06: symptom-first correction from independent final review.
-// Keep answer slot 5, all other IDs, review markers and release gate unchanged.
+// Pre-order choices are an exact set; question-order-v1.js later moves the answer to slot 5.
+// Preserve all other IDs, review markers, and release gates.
 (function(){'use strict';
 const id='sm2-5y-r04-hyg-06';
 const matches=(window.Q_PARTS||[]).filter(q=>q.id===id);
@@ -1581,13 +1582,17 @@ const old={
  explanation:'第5肢が適切。休憩後もめまい・強い疲労が続く場合は熱中症を疑い、作業時間の短縮や涼しい休憩場所の確保という再発防止策だけで済ませず、直ちに作業を中断して涼しい場所へ移し、衣服を緩めて身体を冷やす。周囲に連絡して一人にせず、意識・応答・自力飲水の可否を確認する。意識や応答に異常がある、自力で飲めない場合は直ちに救急要請する。飲める場合も無理に飲ませず、状態を見ながら水分・塩分を補い、症状が改善しない・悪化する場合は医療機関へつなぐ。第1〜4肢はいずれも暑熱負荷や症状を無視し、休憩・冷却を妨げるため不適切。根拠：厚生労働省の職場の熱中症防止ガイドライン、熱中症疑い時の応急処置。'
 };
 for(const key of Object.keys(old)){
- if(JSON.stringify(q[key])!==JSON.stringify(old[key]))throw Error('HM2 heat06 strict old-state mismatch '+key);
+ if(key==='choices'){
+  if(!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5||JSON.stringify([...q.choices].sort())!==JSON.stringify([...old.choices].sort())||q.choices[q.answer-1]!==old.choices[4])throw Error('HM2 heat06 strict old-state mismatch choices');
+ } else if(key==='answer'){
+  if(!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices[q.answer-1]!==old.choices[4])throw Error('HM2 heat06 strict old-state mismatch answer');
+ } else if(JSON.stringify(q[key])!==JSON.stringify(old[key]))throw Error('HM2 heat06 strict old-state mismatch '+key);
 }
 if(q.subject!=='労働衛生'||q.topic!=='暑熱作業の休憩'||q.sourceUrl!=='https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1')throw Error('HM2 heat06 context mismatch');
 q.question='暑熱負荷の強い職場で、休憩後も作業者にめまい・強い疲労が続く。現場責任者が直ちに行うべき対応として最も適切なのはどれか。';
-q.choices[4]='直ちに作業を中断して涼しい場所に移し、身体を冷やしながら意識・応答や自力飲水の可否を確認し、必要時は救急要請する。';
-q.quick=q.choices[4];
+q.choices[q.answer-1]='直ちに作業を中断して涼しい場所に移し、身体を冷やしながら意識・応答や自力飲水の可否を確認し、必要時は救急要請する。';
+q.quick=q.choices[q.answer-1];
 q.explanation='第5肢が正しい。休憩後もめまい・強い疲労が持続する場合は熱中症を疑い、作業を直ちに中断して涼しい場所へ移し、衣服を緩めて身体を冷却する。周囲に連絡して一人にせず、意識・応答・自力飲水の可否を確認する。意識・応答に異常がある、または自力で水分が飲めないときは直ちに119番通報する。水分が飲めるときは無理に飲ませず適切に水分・塩分補給し、症状が改善しない・悪化する場合には速やかに医療機関へつなぐ。第1肢は暑熱負荷と症状を無視し、第2肢は休憩を廃止、第3肢は作業を延長、第4肢は冷却を妨げるため誤り。作業時間短縮や休憩設備改善は再発防止策として別途必要であり、現に症状のある人への即時救護の代わりにはならない。根拠：厚生労働省「職場における熱中症防止対策のためのガイドライン」（2026年3月18日基発0318第1号）。';
-if(q.answer!==5||q.choices.length!==5||new Set(q.choices).size!==5||q.quick!==q.choices[4])throw Error('HM2 heat06 postcondition failed');
+if(!Number.isInteger(q.answer)||q.answer<1||q.answer>5||q.choices.length!==5||new Set(q.choices).size!==5||q.quick!==q.choices[q.answer-1]||!q.question.includes('直ちに行うべき対応'))throw Error('HM2 heat06 postcondition failed');
 window.HM2_FINAL_HEAT06_REDESIGN_APPLIED=id;
 })();
