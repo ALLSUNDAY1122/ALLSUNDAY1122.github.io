@@ -1011,3 +1011,11 @@
 - **`practice-B-Q31` 出典の混在を確認**：現行生成元の登録URLはOpenStax A&P2eの第19章用語集、解説にToronto Metropolitan Universityのapical-radial教材を併記。旧Fundamentals Nursing 7.1 URLは現行登録先でない。米国NHLBIの公式心電図説明（`https://www.nhlbi.nih.gov/health/heart-tests`、`https://www.nhlbi.nih.gov/health/heart/heart-beats`）で**心電図=電気活動の検査**を直接確認。ただしQRS心室脱分極の厳密定義・ECGと触知脈拍の差の全命題はこれだけで証明できない。さらにTMU書籍はCC BY-NC 4.0表示であり、Introductionの商用可能とする文言と矛盾するため、商用転載翻案の許諾があると扱わない。次回は心電図の独立直接資料を加えて出典を差替え/追記する案。**出典差替えは未適用**。
 - **`practice-C-Q42` 半規管の直接根拠確認**：米国NIH/NIDCD公式`https://www.nidcd.nih.gov/health/balance-disorders`で半規管が頭部回旋情報を感知し脳へ伝えることを確認。角加速度の精密機序は`https://pubmed.ncbi.nlm.nih.gov/31239423/`の研究論文でも確認。次回は直接出典をNIDCDへ差替え、原著研究を補助資料登録する案。ただし小脳の協調運動は別の直接資料が必要。問題文・5肢・正答index1を維持する方針。**データへの差替えは未適用**。
 - **今回の問題データ変更0件**。前回のMuse側264問分布53・53・53・53・52は本作業で変化なし（生成元未変更）。OpenStax商用権利・最終リリースゲートは引き続き**BLOCKED**。
+
+
+## 続編第29回：OpenStax第2組7問の35肢根拠確認・生成元適用（2026-11-12）
+- **適用対象7ID**：基本`2025-10-Q36`、`2025-10-Q41`、`2025-10-Q42`、`2025-10-Q43`、`2025-04-Q41`（`Resources/questions.json`、コミット`acee63ce4174140e422904d29388918c41d7408f`）、演習B`practice-B-Q39`（B上書きJSON、`3ca6bc812088fc507c3f5aa9f68d14be65a5a10d`）、演習C`practice-C-Q40`（C31-40上書きJSON、`6620568a2666bf45a812ae9fb17213addb4a584c`）。問題文・選択肢5肢・解説・出典/監査フィールドを独立条件判断型へ変更。ID・正答indexは全7問で不変（index順3,4,2,2,1,3,4）。
+- 出典はOpenStax以外のNHLBI/NLM/NIDDK公式資料、ATA検査解釈公式資料、ヒトの乳酸・筋クレアチンリン酸の原著、橋‐延髄呼吸ネットワークの実験原著へ置換。**全35肢の正誤理由と出典・資料種別・根拠の射程**を[`OPENSTAX_SECOND_SEVEN_APPLIED_35_CHOICE_EVIDENCE_20261112.md`](OPENSTAX_SECOND_SEVEN_APPLIED_35_CHOICE_EVIDENCE_20261112.md)に記録（コミット`8658e3447a23593e96b95d5caf6a2e3d2d0f009d`）。実験原著にない反事実すべてを各個独立実験で実証したものではないため、全肢の厳密な一次研究ベース最終承認と区別。
+- **正答index分布**：生成元基本132問は実測`23・34・29・26・20`（変更なし）。7問のindex総差は`0・0・0・0・0`。よって前回Muse実測`53・53・53・53・52`からの**適用後264問分布見込み**は同じ`53・53・53・53・52`。**今回264問の再生成実測ではない**。
+- 今回ローカルNode CLIを動かしていないため、生成済み264問の限定差分7問・他257問一致、配布バイト一致、正答位置分布の実測の独立PASSは未取得。これらは次回Muse検証事項。改稿が確定した範囲以外のデータ変更はなし。
+- 残る著作権・一次資料証跡の解消およびOpenStax残りの出典（B31・C42）等は引き続き要精査。**リリースゲートFAIL/BLOCKED維持**。
