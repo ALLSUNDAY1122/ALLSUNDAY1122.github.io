@@ -3300,3 +3300,12 @@
 
 - **施行日追補（No.94）**：事務所衛生基準規則第10条第1項の「一般的な事務作業300lx以上／付随的な事務作業150lx以上」の照度基準は**2022-12-01施行**。厚生労働省『職場における労働衛生基準が変わりました』p.1-2（https://www.mhlw.go.jp/content/11300000/000905329.pdf）で確認。令和3年省令188号のその他規定の施行日2021-12-01と混同しない。No.115安衛法104条は2019-04-01施行。
 - **Gitコミット履歴**：一括是正（生成元・配布JSON・監査台帳）`8a5b0cd4724886de5b193713a2bf85414a968b18`、生成元厳格ガードのフィールド名整合`d3d23a7f1336998a3db9659aefbfe6ce235b9053`、未定義lawRelatedのfalse正規化`468e3a186dd7a1f5b74ff840b67c5c636c2d51a3`。補正はいずれもゲート解除ではない。最終版の配布JSON SHA-256は`956f09bd0c33df9fc5fa44894b1723e7754c3804181532de432dacfd8cdbb62a`のまま。
+
+
+## 2026-11-12｜最終レビュー修正ガードの選択肢順不整合を修復
+
+- **報告された停止**：Museローカルの `node ios/health-manager-2/export-canonical-snapshot.cjs` において `HM2 final old-state mismatch sm2-5y-r07-hyg-06.choices`。パッチ段階では `question-order-v1.js` の正答位置調整前であるのに、旧状態ガードが配布後の並びを直接比較していた。
+- **修正コミット**：`729d4a83bd7ee6809a984e161475fd4626a63672`（`apps/sanitary-manager-2/audit-fixes.js`）。対象5IDについて、選択肢は配列長5・各肢一意・ソート済み選択肢集合完全一致を要求。正答は両側のanswer整数1〜5・正答テキストの一致・当該テキストが選択肢内に一度だけ出現することを要求。他の旧状態フィールドの比較、後段の正答位置均等分布・法令ガードは従来どおり。問題内容や配布JSONに変更なし。
+- **独立検証**：GitHubブランチ上の `q1.js`〜`q12.js`、`difficulty-patch-v5.js`、`audit-patch-v2.js`〜`v4.js`、`audit-fixes.js`、`question-order-v1.js` の全18ファイルを、正規生成経路に準じる順番でJavaScript評価。全18ファイルが停止せずに完走し300問生成。30グループ各10問、正答位置各2問、5肢の一意性、問題文の正規化重複なし、法令関連のlegalChecked必須を確認（PASS）。
+- **配布JSONとの照合**：`export-canonical-snapshot.cjs` と同じ項目順・整形でJSON文字列を生成し、現在の `ios/health-manager-2/release-questions.json` の内容と**全文字列完全一致・問題別差分0件（PASS）**。現配布JSON Git Blob=`0b51c9b61b181214b62205574802c713bb8bba0a`、既存SHA-256=`956f09bd0c33df9fc5fa44894b1723e7754c3804181532de432dacfd8cdbb62a`（不変）。本検証は**Node CLIプロセス自体の起動ではなく、生成元JS実行とJSON整形の独立再現**であり、Muse側のCLI再実行結果は未受領。
+- **新版再レビューとゲート**：前回修正の5問は引き続き新版の独立逐肢レビューが必要。最終承認0/178、公開BLOCKED、その他権利・専門家承認・最終リリースゲートは変更しない。
