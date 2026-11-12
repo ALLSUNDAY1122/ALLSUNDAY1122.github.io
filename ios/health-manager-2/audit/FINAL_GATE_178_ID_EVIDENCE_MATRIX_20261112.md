@@ -3451,3 +3451,20 @@
 - **今回GPT-6独立AIレビュー**：5問・25肢、登録正答との矛盾0、解説矛盾0、追加の内容必須修正0。各問題について選択肢5件を判定・理由と対応づけた。旧版178問台帳の進捗を重複計上せず、変更5問の**新SHA版AI再レビューを実施済**に更新。
 - **総合ゲートの状態**：実名資格者による最終承認**0/178問**。公開**BLOCKED**継続。NASA/GLOBE旧設例を現問題から除外したことと他資料の利用権利クリアは別。特にNBK541119のCC BY-NC-ND 4.0、およびNBK597379/NBK545157の個別権利確認が必要。その他残件（推奨出典補強、法令・権利・URL、実機審査等）を機械的に合格変更しない。
 - **今回の変更ファイル**：監査台帳のみ。生成元JS、配布JSON、判定フラグ、リリースゲートは変更しない。
+
+
+## 2026-11-12｜第3ラウンド：直接出典補強とStatPearls表現・権利レビュー（13問）
+
+- **旧配布SHA-256**：`64b67ae21a6e7e27e9e68b9093964c273d020fbcea94d87be72014eedf981d24`（300問、578,567B）。生成元 `apps/sanitary-manager-2/audit-fixes.js` に `HM2_RECOMMENDATIONS_ROUND3_20261112` 厳格旧状態ガード（全13ID、5肢集合一意・正答テキストと位置、旧問題文/quick/解説/出典/法令/監査/公開状態の一致）を追加し、配布JSONに出典・根拠・権利説明のみ同期。**設問・5肢・正答index・quick・explanation・法令分類・監査フラグ・他287問は不変**。公開ゲートを一切緩めない。
+- **算式（1問）** `sm2-5y-r06-hyg-10`：CDC/WHO『Guidelines for Appropriate Evaluations of HIV Testing Technologies in Africa』p.28（https://stacks.cdc.gov/view/cdc/11100/cdc_11100_DS1.pdf）に感度=A/(A+C)、PPV=A/(A+B)を直接確認。設問は疾病あり100人中陽性90人→感度90%、PPVと混同しない。旧一般入口URLを直接PDFへ差替。
+- **日赤個別手順（1問）** `sm2-5y-r07-hyg-05`：日本赤十字社『心肺蘇生』の胸骨圧迫手順（https://www.jrc.or.jp/study/safety/airway/）へ直接化。2025指針対応消防庁通知2026-10-23を補助根拠。日赤ページの写真やイラストは転載しない。
+- **洗浄剤SDS（2問）** `sm2-5y-r09-hyg-02`、`sm2-5y-r08-hyg-04`：厚労省『職場のあんぜんサイト』**次亜塩素酸ナトリウム水溶液** SDS https://anzeninfo.mhlw.go.jp/anzen/gmsds/7681-52-9.html に差替。第4項は眼曝露時の流水洗浄・医師受診、第2・8・11項は危険有害性・保護具・有害性を扱う。従来の農薬SDSは洗剤の直接根拠として不適切。**SDSは一成分の参考例であり、実使用製品のSDSの代用にはならない**ことをbasisに明記。
+- **情報機器作業2021改正後全文（5問）** `sm2-5y-r04-hyg-09`、`sm2-5y-r05-hyg-06`、`sm2-5y-r05-hyg-07`、`sm2-5y-r10-hyg-02`、`sm2-5y-r10-hyg-10` のsource_urlを厚労省2021-12-01基発1201第7号改正後全文 https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1&pageNo=1 に統一。basisに各問対応節（4(1)・4(2)・5(1)(2)、休止、姿勢、足台、グレア、視距離≒40cm以上、文字高≒3mm以上）を明記。**改訂日2021-12-01は情報機器指針の改訂であり、3mmが法的義務との断定ではない**。別の既に2021全文へ更新済みの問題は重複改変しない。
+- **CC BY-NC-ND等の個別権利対応（4問）**：
+  - `sm2-5y-r05-phy-08`：PMCID `PMC5369262`（CC BY-NC-ND 4.0）から、PubMedの原著総説PMID 9415826（https://pubmed.ncbi.nlm.nih.gov/9415826/）のAbstractへ直接根拠を変更。筋収縮によるインスリン非依存性GLUT4膜移行の科学的事実のみ参照。原著本文の転載や図表の複製は行わず、独立記述として登録。
+  - `sm2-5y-r09-phy-01`：NCBI StatPearls NBK532258からMedlinePlus『Types of muscle tissue』https://medlineplus.gov/ency/imagepages/19841.htm へ。横紋・随意筋の概要本文のみ照合。MedlinePlusは第三者画像を含むため画像の権利クリアとはしない。
+  - `sm2-r7a-030`：StatPearls NBK500006からNLM MedlinePlus『TSH (Thyroid-stimulating hormone) Test』https://medlineplus.gov/lab-tests/tsh-thyroid-stimulating-hormone-test/ へ。甲状腺の代謝調節、下垂体TSHの事実のみ参照。
+  - `sm2-5y-r10-phy-10`：StatPearls NBK597379（補助NBK545157）から公的NIH/NIDDK『Your Digestive System & How It Works』https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works へ。糖の血流経路・脂質のリンパ経路を直接説明。乳び管・カイロミクロンの用語は補助原典NBK545157を引き続き参照するため**当該補助出典の権利評価残件を完全解消したわけではない**。
+- **転載・翻案リスクの照合**：上記4問の現行の日本語設問・5肢・quick・解説を個別に確認し、元出典の英文の特徴的な連続文・図表・数値表・選択肢の直接複製は確認できなかった。生理の一般的事実を用いる独自問題として**明白な逐語転載は認めない**が、著作権者の許諾確認・原文全文との人手照合・法的最終評価は未完了。**『転載していないと確認できた範囲』と『権利最終PASS』は区別**。
+- **引き続き残る権利候補**：`sm2-5y-r09-phy-05`（Cori cycle、StatPearls NBK541119：CC BY-NC-ND表示）、`sm2-5y-r07-phy-07`（同NBK541119）、`sm2-r7a-028`／`sm2-5y-r07-phy-09`（NBK542189）、その他StatPearls/NCBI BookshelfやPMC記事の個別ライセンス確認が必要。今回出典差替・照合をしていない全69件のNCBI参照を機械的に一括承認しない。出典の書換えは転載の事実を遡及して消すものではない。
+- **新版の検査**：正規生成順で18 JSを実行し、300問の正答位置均等・法令ガード・出典パッチ・配布JSON全文字列一致を別途確認して追補する。Node CLIの別環境実測・新SHAで変更13問の独立逐肢再レビューは次工程。正式専門家最終承認**0/178**、公開状態**BLOCKED**維持。
