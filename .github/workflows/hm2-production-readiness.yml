@@ -1,0 +1,55 @@
+name: HM2 Production Readiness (read-only, no submission)
+
+on:
+  push:
+    branches: [audit/hm2-quality-20261110]
+    paths:
+      - 'scripts/hm2_submission_readiness.py'
+      - 'ios/health-manager-2/HealthManager2/StoreKitManager.swift'
+      - 'ios/health-manager-2/release-questions.json'
+      - 'ios/health-manager-2/audit/**'
+      - '.github/workflows/hm2-production-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Check script syntax
+        run: python -m py_compile scripts/hm2_submission_readiness.py
+      - name: Audit source reproducibility and submission blockers
+        env:
+          HM2_REPORT: /tmp/hm2-submission-readiness.json
+        run: |
+          python scripts/hm2_submission_readiness.py --output "$HM2_REPORT"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          d=json.loads(Path(os.environ['HM2_REPORT']).read_text(encoding='utf-8'))
+          lines=["## HM2 production readiness (read-only)", "",
+                 "Submission ready: **"+str(d['submission_ready'])+"**", "",
+                 "Technical errors: "+str(d['technical_errors']), "",
+                 "Blocking evidence:"]
+          lines+=["- "+x for x in d['submission_blockers']]
+          lines+=["", "This job does not approve content, weaken release gates, build IPA, or submit to Apple."]
+          Path(os.environ['GITHUB_STEP_SUMMARY']).write_text("\n".join(lines)+"\n",encoding='utf-8')
+          PY
+      - name: Upload audit evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: hm2-production-readiness-report
+          path: /tmp/hm2-submission-readiness.json
+          if-no-files-found: warn
+          retention-days: 14
