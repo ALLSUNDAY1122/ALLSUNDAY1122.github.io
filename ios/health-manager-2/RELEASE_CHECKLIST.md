@@ -131,3 +131,26 @@
 - [ ] Submit for Review直前のユーザー最終承認
 
 実機FAIL時は対象品質ループへ戻り、Root Cause分類→同種全探索→横断修正→Regression Rule追加→Preflight再実行を行う。本審査Submitは人間の最終承認前に実行しない。
+
+
+## 10. 2026-11-21｜本番申請準備の最新判定（従前チェック欄より優先）
+
+**申請状態：BLOCKED。** 従前の[x]は構造・旧時点の実装確認であり、現行SHAの専門家最終承認・Apple実機適合を意味しない。
+
+- [x] 300問の監査版 SHA-256 `8540991f1a75a9eaa640d695fe7ee1c54dc57861141c5d19514f43311f455fb0` を固定
+- [x] 300問・5肢・問題ID、生成決定性、現行価格表示の静的検査を追加
+- [x] StoreKit 2にローカライズ済み実価格 `Product.displayPrice` と月額契約期間検証を実装
+- [x] 申請前に実名承認・権利・CSV・実スクリーンショット・現行ビルド証跡が足りない場合、停止する安全検査を追加
+- [x] 既存`HM2_RELEASE_REVIEW_BLOCKED`を変更せず保持
+- [ ] **独立専門家による178問・5肢ずつの最終承認：0/178**
+- [ ] **300問の権利・出典の最終判定**
+- [ ] Claude側CSV（300ID→最終変更コミット、SHA `a4404d36387f13c39ad13d06f30a437f78f4f5c763ddb1d5c2b31570fc5aed19`）のユーザー承認後取込・実体照合
+- [ ] 最新SHAを含む新Codemagic署名ビルド→App Store Connect VALID/対象Version紐付け
+- [ ] 現行ビルドのTestFlight・実機・購入／復元／価格の動作検証
+- [ ] 実際のアプリ画面から取得した新スクリーンショットと価格表示の検証
+- [ ] App Privacy、年齢評価、IAP表示・価格・審査資料のApple側fresh read-back
+- [ ] **上記PASS後、提出ビルド固定のうえユーザーが最終承認**
+
+監査スナップショットの再生成PASSはリリース用エクスポートPASSではない。過去のApp Store Build 22は2026-09-25付read-backに存在するが、2026-11-12に確定した300問を含む新候補ではないため本審査に転用しない。現行`project.yml`はiPhone専用設定だが、対象デバイスは新ビルドread-backでも要検証。
+
+詳細・証跡と正しい再開手順：[PRODUCTION_SUBMISSION_READINESS_20261121.md](audit/PRODUCTION_SUBMISSION_READINESS_20261121.md)。
