@@ -1,0 +1,65 @@
+name: HM2 Audit iPhone Simulator Visual Gate (no publishing)
+
+on:
+  push:
+    branches: [audit/hm2-quality-20261110]
+    paths:
+      - '.github/workflows/hm2-audit-simulator-review.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual:
+    runs-on: macos-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Prepare actual iPhone simulator app (not a release approval)
+        env:
+          BUILD_NUMBER: '990001'
+        run: |
+          set -euo pipefail
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick
+          bash ios/health-manager-2/prepare-web-assets.sh
+          cd ios/health-manager-2
+          xcodegen generate
+      - name: Choose available iPhone simulator and run UI test
+        id: test
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEVICE="$(xcrun simctl list devices available | grep -m1 'iPhone' | sed -E 's/^[[:space:]]*([^(]+) \(.*/\1/' | sed 's/[[:space:]]*$//')"
+          test -n "$DEVICE"
+          echo "Running HM2 on simulator: $DEVICE"
+          xcodebuild -project ios/health-manager-2/HealthManager2.xcodeproj \
+            -scheme HealthManager2 \
+            -destination "platform=iOS Simulator,name=$DEVICE" \
+            -resultBundlePath "$RUNNER_TEMP/HM2AuditVisual.xcresult" \
+            CODE_SIGNING_ALLOWED=NO test
+      - name: Export real on-simulator screen captures
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/hm2-visual-attachments"
+          if [ -d "$RUNNER_TEMP/HM2AuditVisual.xcresult" ]; then
+            xcrun xcresulttool export attachments \
+              --path "$RUNNER_TEMP/HM2AuditVisual.xcresult" \
+              --output-path "$RUNNER_TEMP/hm2-visual-attachments"
+          fi
+          find "$RUNNER_TEMP/hm2-visual-attachments" -type f -maxdepth 3 -print
+      - name: Upload visual evidence (provisional; mock StoreKit display price)
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: hm2-audit-visual-capture
+          path: |
+            /Users/runner/work/_temp/hm2-visual-attachments
+          if-no-files-found: warn
+          retention-days: 14
