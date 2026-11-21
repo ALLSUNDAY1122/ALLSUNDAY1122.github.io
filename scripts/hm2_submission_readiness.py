@@ -83,13 +83,66 @@ def main():
 
     # No evidence is inferred merely from a user report; these files must be
     # independently produced, reviewed and checked before submission.
-    for relative, code in (
-        ("ios/health-manager-2/audit/HM2_FINAL_EXPERT_APPROVALS_178.json", "EXPERT_APPROVAL_EVIDENCE_MISSING"),
-        ("ios/health-manager-2/audit/HM2_RIGHTS_CLEARANCE_300.json", "RIGHTS_CLEARANCE_EVIDENCE_MISSING"),
-        ("automation/asc-results/hm2-verified-release-candidate.json", "CURRENT_BUILD_ASC_READBACK_MISSING"),
+    for relative, code, expected_ids, collection in (
+        ("ios/health-manager-2/audit/HM2_FINAL_EXPERT_APPROVALS_178.json", "EXPERT_APPROVALS", set(pending), "reviews"),
+        ("ios/health-manager-2/audit/HM2_RIGHTS_CLEARANCE_300.json", "RIGHTS_CLEARANCE", set(ids), "decisions"),
     ):
-        if not (ROOT / relative).is_file():
-            blockers.append(code)
+        evidence = ROOT / relative
+        if not evidence.is_file():
+            blockers.append(code + "_MISSING")
+            continue
+        try:
+            payload = json.loads(evidence.read_text(encoding="utf-8"))
+            rows = payload.get(collection, [])
+            by_id = {str(x.get("id")): x for x in rows if isinstance(x, dict)}
+            valid = (payload.get("question_bank_sha256") == hashfile(BANK)
+                     and len(by_id) == len(rows) == len(expected_ids)
+                     and set(by_id) == expected_ids)
+            if collection == "reviews":
+                valid = valid and all(
+                    row.get("approved") is True
+                    and row.get("reviewer_name")
+                    and row.get("reviewed_at")
+                    and row.get("all_five_choices_checked") is True
+                    and row.get("primary_source_verified") is True
+                    and row.get("final_change_commit")
+                    for row in by_id.values()
+                )
+            else:
+                valid = valid and all(
+                    row.get("cleared") is True
+                    and row.get("approver")
+                    and row.get("evidence")
+                    for row in by_id.values()
+                )
+            if not valid:
+                blockers.append(code + "_INVALID")
+        except (OSError, ValueError):
+            blockers.append(code + "_UNREADABLE")
+
+    candidate = ROOT / "automation/asc-results/hm2-verified-release-candidate.json"
+    if not candidate.is_file():
+        blockers.append("CURRENT_BUILD_ASC_READBACK_MISSING")
+    else:
+        try:
+            data = json.loads(candidate.read_text(encoding="utf-8"))
+            valid = (
+                str(data.get("app_id")) == "6799751657"
+                and data.get("bundle_id") == "jp.allsunday1122.healthmanager2"
+                and data.get("question_bank_sha256") == hashfile(BANK)
+                and data.get("asc_processing_state") == "VALID"
+                and data.get("app_store_eligible") is True
+                and data.get("expired") is False
+                and data.get("build_id") and data.get("build_number")
+                and data.get("testflight_internal_verified") is True
+                and data.get("device_test_pass") is True
+                and data.get("iap_review_pass") is True
+                and data.get("app_privacy_verified") is True
+            )
+            if not valid:
+                blockers.append("CURRENT_BUILD_ASC_EVIDENCE_INVALID")
+        except (OSError, ValueError):
+            blockers.append("CURRENT_BUILD_ASC_EVIDENCE_UNREADABLE")
     csv = BASE / "audit/HM2_LAST_CONTENT_COMMIT_300.csv"
     if not csv.is_file():
         blockers.append("CLAUDE_300_ID_COMMIT_CSV_NOT_IMPORTED")
@@ -100,8 +153,11 @@ def main():
         blockers.append("ACTUAL_APP_SCREENSHOTS_NOT_STORED")
     else:
         manifest = json.loads(screens.read_text(encoding="utf-8"))
-        if manifest.get("source") != "hm2-review-screenshot.yml":
-            blockers.append("APP_SCREENSHOTS_NOT_ACTUAL_SIMULATOR_CAPTURE")
+        if manifest.get("source") != "hm2-review-screenshot.yml" or manifest.get("question_bank_sha256") != hashfile(BANK):
+            blockers.append("APP_SCREENSHOTS_NOT_CURRENT_SIMULATOR_CAPTURE")
+        names = {f.get("name") for f in manifest.get("files", []) if isinstance(f, dict)}
+        if not {"01-home.png", "02-premium.png"} <= names:
+            blockers.append("REQUIRED_APP_SCREENSHOTS_MISSING")
         for item in manifest.get("files", []):
             p = screens.parent / str(item.get("name", ""))
             if not p.is_file() or hashfile(p) != item.get("sha256"):
