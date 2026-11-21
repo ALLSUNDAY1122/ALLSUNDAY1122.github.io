@@ -1,0 +1,81 @@
+name: FP release preparation regression
+
+on:
+  pull_request:
+    paths:
+      - 'fp2-manabi-sprint/**'
+      - 'fp3-manabi-sprint/**'
+      - 'scripts/fp3_release_state_probe.py'
+      - 'scripts/tests/*fp*'
+      - '.github/workflows/fp-release-regression.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Session resume regression
+        run: node --test scripts/tests/fp3-session.test.mjs
+      - name: Readback and FP2 structural gate regression
+        run: python -B -m unittest discover -s scripts/tests -p 'test_fp*.py'
+      - name: Preserve canonical FP3 bank structure
+        run: python -B fp3-manabi-sprint/tools/audit_learning_bank.py
+
+  fp3-release-icon-simulator:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify exact canonical AppIcon
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json, struct
+          folder=Path('fp3-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset')
+          path=folder/'AppIcon-1024.png'
+          data=path.read_bytes()
+          expected='095f23a9829f0e1e8316e92160da2af8cec0c24c4ae53cb7582ccbb9b88ef51f'
+          assert hashlib.sha256(data).hexdigest()==expected, 'canonical PNG hash mismatch'
+          assert data[:8]==bytes([137,80,78,71,13,10,26,10]), 'not PNG'
+          assert data[12:16]==b'IHDR', 'missing IHDR'
+          w,h,depth,color=struct.unpack('>IIBB',data[16:26])
+          assert (w,h,depth,color)==(1024,1024,8,2), (w,h,depth,color)
+          # RGB PNG color type 2, no alpha; no transparency chunk allowed.
+          i=8
+          while i<len(data):
+            n=int.from_bytes(data[i:i+4],'big')
+            tag=data[i+4:i+8]
+            assert tag != b'tRNS', 'transparency chunk forbidden'
+            i+=n+12
+            if tag==b'IEND': break
+          manifest=json.loads((folder/'Contents.json').read_text())
+          assert any(i.get('filename')==path.name and i.get('size')=='1024x1024' for i in manifest['images'])
+          project=Path('fp3-manabi-sprint/ios/project.yml').read_text()
+          assert 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' in project
+          assert 'path: Assets.xcassets' in project
+          print('PASS canonical SHA256, RGB 1024x1024 PNG, no transparency, manifest and project')
+          PY
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Prepare offline learning bundle
+        run: bash fp3-manabi-sprint/ios/prepare-ios.sh
+      - name: Generate Xcode project
+        working-directory: fp3-manabi-sprint/ios
+        run: xcodegen generate
+      - name: Build iOS Simulator
+        working-directory: fp3-manabi-sprint/ios
+        run: |
+          xcodebuild -project FP3ManabiSprint.xcodeproj \
+            -scheme FP3ManabiSprint -sdk iphonesimulator \
+            -configuration Debug CODE_SIGNING_ALLOWED=NO build
