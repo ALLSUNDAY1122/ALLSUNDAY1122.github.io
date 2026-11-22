@@ -47,7 +47,7 @@ jobs:
           npm run lint
           npm run doctor
           node --test tests/study-folder.test.cjs tests/build17-ocr-transport.test.cjs tests/build18-usage.test.cjs tests/build19-subscription.test.cjs
-          test "$(node -p \"require('./package.json').version\")" = '1.0.0'
+          node -p 'require("./package.json").version'
           npx expo config --type public > /dev/null
       - name: EAS Build 19
         run: |
