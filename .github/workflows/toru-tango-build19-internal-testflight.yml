@@ -10,7 +10,7 @@ permissions:
   contents: read
 concurrency:
   group: toru-tango-build19-internal-testflight
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   ios:
     runs-on: ubuntu-latest
