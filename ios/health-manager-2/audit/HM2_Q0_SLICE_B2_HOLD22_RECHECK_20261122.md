@@ -256,3 +256,10 @@
 - NINDS改稿側oldSrcを**NLM変更後URL** `https://medlineplus.gov/lab-tests/neurological-exam/` に変更。これでファイル内の2段階ソース状態遷移が矛盾しない。修正コミット `46dcf415a1bd38cd16db80c30fe07ab304e38867`。
 - ID `sm2-5y-r10-hyg-08` でも先行厚労省通知パッチと追加PDFパッチの旧URL衝突を検出し、直前のコミット `23fa29c01d19c158a7d038b05d2226d4b2d3f9c0` で解消済。
 - **いずれも静的な状態遷移確認のみ。Nodeで実際に再生成・配布JSON一致検査を通した事実ではない。**今回の一次集計PASS62/HOLD7（69問）をこの整合修正で増減させない。Q0/Q1 BLOCKEDを維持。
+
+## 2026-11-22 B2第16次：No.163 コリ回路 EPA原著一次PASS
+
+- 固定No.163／ID `sm2-5y-r09-phy-05`。米環境保護庁EPA公式公表の乳酸リスク評価（案件EPA-HQ-OPP-2018-0157-0004、PDF印刷13頁「Metabolism」） https://downloads.regulations.gov/EPA-HQ-OPP-2018-0157-0004/content.pdf は、筋由来乳酸→血液→肝臓→ピルビン酸→糖新生→グルコース→筋への経路を「lactic acid (Cori) cycle」と明示。本文はEPA評価書の記述で、引用された生化学文献の政府著作性を主張しない。PDF本文のテキスト確認済、ウェブPDFの画像は403で再取得不能につき画面の独立確認未実施。NLM政府編集のコリ夫妻歴史解説 https://www.nlm.nih.gov/exhibition/changing-the-face-of-medicine-V1/index_hold.html も名称を補強。
+- **5肢**：①尿素回路×（窒素代謝）、②クエン酸回路×（細胞内炭素酸化）、**③コリ回路○（乳酸の肝糖新生再利用）**、④β酸化×（脂肪酸分解）、⑤ペントースリン酸経路×（五炭糖・NADPH生成）。
+- 既存出典はNCBI収載StatPearls（第三者執筆）だったため、EPA当局原著PDFへsourceUrlを差し替え、basis/explanationと監査状態を更新する旧値guard付き生成元修正をコミット：`8d303c32137b6a17c8036f34a6d6d5c8f6d2410e`。正答位置③、問題文・全5肢不変。
+- 分割B一次集計：前節 **PASS62/HOLD7 → PASS63/HOLD6**（重複計上なし）。**正式公開承認ではない**。配布JSON再生成・バイト一致、独立二重監査、最終権利検査は未達。Q0/Q1 BLOCKED、App Review・TestFlight操作なし。
