@@ -10,8 +10,8 @@ const patches=[
       "answerText": "約4.9L/分。"
     },
     "next": {
-      "sourceUrl": "https://biolincc.nhlbi.nih.gov/media/studies/hfn_relax/Protocol.pdf?link_time=2026-01-19_21%3A02%3A46.453754",
-      "basis": "循環生理：心拍出量＝心拍数×一回拍出量 ／ 2026-11-22出典照合：NHLBI BioLINCC HFN-RELAX research protocol, section 14.2.5 p23 (PDF p28): cardiac output = stroke volume x heart rate. Example 70 mL x 70/min = 4.9 L/min. Note this is a hosted study protocol, not NIH clinical guidance."
+      "sourceUrl": "https://evs.nci.nih.gov/ftp1/CDISC/SDTM/Archive/SDTM%20Terminology%202015-09-25.pdf",
+      "basis": "循環生理：心拍出量＝心拍数×一回拍出量 ／ 2026-11-22出典照合：NHLBI BioLINCC HFN-RELAX research protocol, section 14.2.5 p23 (PDF p28): cardiac output = stroke volume x heart rate. Example 70 mL x 70/min = 4.9 L/min. Note this is a hosted study protocol, not NIH clinical guidance. ／ 2026-11-22 HM2-B追加根拠：NCI EVS公開のCDISC統制用語C119246ではCardiac OutputをCO=HR×SVと定義。70回/分×70mL/回=4900mL/分=4.9L/分。CDISC標準が原出典でありNIHが独自執筆した解説とは区別する。"
     }
   },
   {
