@@ -425,3 +425,21 @@ q.explanation='EPA政府公表の乳酸リスク評価（Metabolism、印刷13�
 q.auditStatus='一次資料照合済';
 window.HM2_B2_EPA_CORI_SOURCE_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// B2 No.167 official US Army Medical Department published combat-casualty history.
+const id='sm2-5y-r09-phy-09';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+const old='https://www.ncbi.nlm.nih.gov/books/NBK538172/';
+const url='https://achh.army.mil/history/book-korea-vol3-battlecasualties-chap07/';
+if(!q||q.sourceUrl!==old||!Array.isArray(q.choices)||q.choices.length!==5||q.answer!==1||
+ q.choices[0]!=='末梢血管の収縮と心拍数の増加が生じる。')
+ throw Error('HM2 B2 Army shock old state mismatch '+id);
+q.sourceUrl=url;
+q.basis=String(q.basis||'')+' ／ 2026-11-22 U.S. Army Medical Department Center of History and Heritage official institutional publication Korean War Battle Casualties vol 3 chap 7: loss of blood compensated by elevated cardiac rate and vasoconstriction to maintain near-normal arterial pressure; severe shock may eventually decompensate. Also U.S. Army Aeromedical Evacuation SMOG pharmacology notes sympathetic agonism increases heart rate and vasoconstriction. Original institution-authored military source.';
+q.explanation='米陸軍医務部の公式戦傷医療史第3巻第7章では、出血時に心拍数上昇と血管収縮による代償機構が血圧維持に働くことを記す。設問は交感神経活動と心拍数が既に増えた条件なので、①末梢血管収縮と心拍数増加が適切。②は交感神経の両作用を否定、③は圧受容器反射が必ず消失と誤断定、④は全身の完全拡張・心停止を主張、⑤は代償反応の不存在を断定するため不適切。重度出血では代償が破綻することもあるため全例で心拍数上昇が必ず発生するとの臨床診断には拡張しない。';
+q.auditStatus='一次資料照合済';
+window.HM2_B2_ARMY_HEMORRHAGE_SOURCE_ID=id;
+})();
