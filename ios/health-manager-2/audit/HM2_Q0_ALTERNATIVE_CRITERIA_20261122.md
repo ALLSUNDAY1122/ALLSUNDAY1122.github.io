@@ -225,3 +225,12 @@
 - 独立DC正本：**30/178問・150肢PASS、残148問**。DC先行レビューの対象SHAと最新bank SHAの違いを自動合格扱いせず、問題文等の内容照合と記録継続が必要。
 - **readinessの技術原因**：`UNREVIEWED_BANK_SHA`は新PIN一致で解消、`CANONICAL_REGENERATION_FAILED`はGitHub上の22JSを実行した同等再生成で実測差分0。だが**Node CLIのGHA run上での実測`technical_errors=[]`は未確認**。厳格exportの独立Q0未承認時の`HM2_RELEASE_REVIEW_BLOCKED`はreadinessの`submission_blockers`として扱い、`STRICT_EXPORT_UNEXPECTED_FAILURE`を隠すことやガード撤去はしない。
 - 全検証明細：`HM2_CANONICAL_BYTE_MATCH_20261122.md`、commit `e00455ba9c52b3e4265a3f017e22beeabde35362`。**Q0 BLOCKED / Q1 BLOCKED**はDC残148問等の内容ゲートが未完であるため据置。App Review提出・TestFlight新規配信なし。
+
+## 2026-11-22 12:54 JST：GHA production-readinessの技術失敗解消確認（最新版）
+- 最新bank Git blob `4ecbfea81e3a453aa6bf60e4647d880abf821c09`、SHA-256 `434de86ab795d369a1ef52f16a0cf57cab7054b72f6aac952aa7805fb3872177`（605819 bytes）。前回の`60e9be20...` pinは後続のB内容変更で陳腐化したため、`scripts/hm2_submission_readiness.py`のPINを更新・commit **`b13e5aac5e5b5dbfcbbf0cf54437ff9a122c62f2`**。
+- 現行22JS（q1～q12、difficulty、監査overlays、C16問差し替え、出典更新）をGitHub連携から再取得してJavaScript実行、**生成300問の正規フィールドJSONが配布bankとバイト完全一致／差分0**。difficultyあり／なしの主要8フィールドドリフト0。法令内容固定17/17 PASS。従前の18問不一致は現行生成側で解消済み。独立した実測結果と入力範囲は`HM2_READINESS_RECHECK_20261122_1254.md`（commit **`d660750058c65fc085e79cd1d30bb721532b136f`**）。
+- `sm2-demo-001` の`legal_checked`は現行生成元・配布JSONに`2026-11-22`を確認。gm2に『5年分相当』あり。
+- **新たな内容未承認1問**：`sm2-5y-r10-hyg-04`の`law_related=true, legal_checked=null`。法令確認を捏造せず、厳格exportの`HM2_RELEASE_REVIEW_BLOCKED`による停止を継続（readiness設計では`submission_blockers`）。ゲート弱体化なし。
+- **技術失敗の原因の解消（SHA/再生成）は実測完了**。ただし、最新のGitHub Actions runから`technical_errors: []`という実レポートは取得不可。pin更新コミットのstatus取得は0件、PR起動workflow run検索は0件であり、push起動runの成功・失敗を確定できない。**GHA自体の成功・技術エラーゼロを実測済みと記載しない**。
+- ユーザー代替Q0基準：権利カテゴリはCの284既存PASS＋差替え16再監査PASSで**運用最終300/300 PASS**。DCの独立二重チェック正本は`HM2_Q0_INDEPENDENT_DC_20261122.md`で**30/178 PASS、残148**。最新bankとの内容一致照合を要し、完全Q0承認はまだ行わない。
+- **Q0 BLOCKED／Q1 BLOCKED**。App Review・TestFlightは実施禁止・未操作。
