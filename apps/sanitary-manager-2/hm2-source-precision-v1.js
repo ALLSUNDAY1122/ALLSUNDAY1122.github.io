@@ -119,3 +119,16 @@ for(const f of changes){const q=byId.get(f.id);
 }
 window.HM2_B_FOCUSED_REDESIGN_IDS=changes.map(x=>x.id);
 })();
+
+
+(function(){
+'use strict';
+// HM2 B 2026-11-22 three official-author source metadata corrections; fail-closed.
+const fixes=[{"id":"sm2-5y-r04-phy-01","old":"https://www.ncbi.nlm.nih.gov/books/NBK539701/","url":"https://www.cdc.gov/yellow-book/hcp/environmental-hazards-risks/high-altitude-travel-and-altitude-illness.html","basis":"CDC Yellow Book High-Altitude Travel, Epidemiology: lower atmospheric pressure reduces inspired PO2; at 3050m inspired PO2 approximately 69% sea-level and acute exposure lowers arterial oxygen saturation to 88-91%. CDC MMWR anemia altitude reports consequent reduced saturation and compensatory gradual erythrocyte production. Existing question holds Hb constant immediately."},{"id":"sm2-5y-r05-phy-09","old":"https://www.ncbi.nlm.nih.gov/books/NBK9961/","url":"https://medlineplus.gov/genetics/gene/tnnt3/","basis":"NLM MedlinePlus Genetics TNNT3 Normal Function says skeletal-muscle troponin calcium-dependent change enables thick/thin filament interaction; MedlinePlus RYR1 Normal Function says increasing myocyte calcium triggers contraction; ACTA1 names actin thin and myosin thick filaments. Source-authored NLM, not NCBI-hosted third-party textbook."},{"id":"sm2-5y-r07-phy-02","old":"https://pubmed.ncbi.nlm.nih.gov/37248992/","url":"https://www.niddk.nih.gov/research-funding/at-niddk/labs-branches/laboratory-biological-modeling/mathematical-models/insulin-signaling-models","basis":"NIDDK Laboratory of Biological Modeling 'Metabolic Insulin Signaling Pathway Model' depicts insulin receptor -> PI3K -> GLUT4 translocation and discusses insulin resistance. Complementary NIDDK Insulin Resistance & Prediabetes states muscle cells have reduced insulin response; same-insulin-condition described in question is the constrained mechanism."}];
+const qs=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+for(const f of fixes){const q=qs.get(f.id);
+ if(!q||q.sourceUrl!==f.old||!Array.isArray(q.choices)||q.choices.length!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5)throw Error('HM2 official physiology source stale '+f.id);
+ q.sourceUrl=f.url;q.basis=String(q.basis||'')+' ／ 2026-11-22政府機関原著確認：'+f.basis;
+}
+window.HM2_B_LATE_OFFICIAL_PHYSIOLOGY_IDS=fixes.map(f=>f.id);
+})();
