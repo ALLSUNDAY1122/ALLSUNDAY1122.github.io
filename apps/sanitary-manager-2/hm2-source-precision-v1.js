@@ -198,3 +198,24 @@ for(const f of fixes){
 }
 window.HM2_B2_AUTHORITATIVE_SOURCE_IDS=fixes.map(x=>x.id);
 })();
+
+
+(function(){
+'use strict';
+// B2 original government-authored primary source improvements; source metadata only.
+// Neither this patch nor an audit PASS is a release authorization.
+const fixes=[
+ {id:'sm2-5y-r05-phy-07',old:'https://www.ncbi.nlm.nih.gov/books/NBK278/',url:'https://files.eric.ed.gov/fulltext/ED227275.pdf',answer:3,
+  basis:'US Air Force Training Command original Medical Service Specialist curriculum 1975, ERIC ED227275, APICAL/RADIAL PULSE unit: apical and radial beats counted simultaneously for one minute, pulse deficit defined as absent radial pulses relative to heart beats. The question itself explicitly defines deficit as apical minus radial: 96-78=18. ERIC is a repository, but the named actual author is the US Air Force.'},
+ {id:'sm2-5y-r05-phy-04',old:'https://www.ncbi.nlm.nih.gov/sites/books/NBK30/',url:'https://www.niddk.nih.gov/news/archive/2013/new-mechanism-proposed-glucose-lowering-effect-metformin-drug-type-2-diabetes',answer:4,
+  basis:'NIDDK own 2013 editorial: glucagon increases liver glucose output and insulin secreted after meals works in opposition. NLM independently edited MedlinePlus Genetics GCK gene Normal Function https://medlineplus.gov/genetics/gene/gck/ states liver glucokinase permits excess glucose uptake and glycogen storage; considered together they support liver reduced glucose output and increased glycogen storage under fed-insulin conditions. No third-party NCBI textbook is claimed to be government authored.'}
+];
+const map=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+for(const f of fixes){
+const q=map.get(f.id);
+if(!q||q.sourceUrl!==f.old||q.answer!==f.answer||!Array.isArray(q.choices)||q.choices.length!==5||q.choices.length!==new Set(q.choices).size)throw Error('HM2 B2 original government source old-state mismatch '+f.id);
+q.sourceUrl=f.url;
+q.basis=String(q.basis||'')+' ／ 2026-11-22 B2一次出典検証：'+f.basis;
+}
+window.HM2_B2_GOVERNMENT_SOURCE_FIX_IDS=fixes.map(x=>x.id);
+})();
