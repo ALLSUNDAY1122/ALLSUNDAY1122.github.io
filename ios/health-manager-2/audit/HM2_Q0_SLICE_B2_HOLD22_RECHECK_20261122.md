@@ -1,0 +1,350 @@
+# HM2 分割B2 残HOLD22問：引継ぎID確定・原典検証追加記録（2026-11-22）
+
+対象ブランチ：`fix/hm2-priority123-regression-20261122`。根拠原本は `ios/health-manager-2/audit/HM2_Q0_SLICE_B_FIRSTPASS_BACK69_20261122.md` の第10次記録。ユーザー指示に従いApp Review・TestFlightは行わない。
+
+## 実施結果と厳格な判定
+
+- 第10次表から **22/22 ID抽出**（固定No.とIDの重複なし）。各問の5肢は第10次原本の正答候補と残4誤肢を参照。**原本を実際に再読した事実と公式原文との全肢照合成功を混同しない。**
+- この追補で公式本文／政府作成索引を追加確認した5問（No.133, 142, 144, 149, 154）は、政府編集で直接示される射程と不足命題を個別記載。**No.144はIQWiG公式直接本文、No.154はNTP政府刊行物、No.171はバージニア州保健局の公表研修資料とNHLBI公式本文で5肢の正誤を検証できたため一次PASSへ更新**。先行の一部根拠は第三者著作物を含み、転載を認めたものではない。
+- その他17問も第10次で修正要件が定義済みだが、今回新しい公式直接資料で5肢完結していないためHOLD。**今回新規一次PASS 6（No.119/121/126/144/154/171）、実データ修正 0、残HOLD 16**。修正案だけでは「修正適用済」としない。
+- 第10次時点の一次内容PASS47/HOLD22から **PASS53/HOLD16** に一次監査の判定を更新する。権利最終判定・独立二重チェック・再生成検証を伴わないPASSは本番品質ゲートを通さない。Q0/Q1 BLOCKEDを維持する。
+
+## 残22問・肢別未完照合と修正判定一覧
+
+各行の「5肢判定の現状」は**正答候補1肢／排除候補4肢が台帳に明記されていること**を意味し、一次資料との全肢照合済みを意味しない。原本の問題全文・詳細は第10次の各ID行を参照。
+
+| No. | ID | 現状（正答候補＋誤肢4件） | 改稿・根拠の未充足 | 今回確認した直接資料 |
+|---:|---|---|---|---|
+| 112 | `sm2-5y-r10-hyg-04` | 正答候補2／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 115 | `sm2-5y-r10-hyg-08` | 正答候補4／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 119 | `sm2-5y-r04-phy-02` | **一次PASS：肢5○／肢1・2・3・4×** | NASA OCHMO-TB-031『Exercise Overview』のAerobic Capacity節で活動筋の動脈血酸素抽出を動静脈酸素較差として政府独自説明しFickの式も掲載。活動筋の酸素抽出増加、動脈酸素含有量一定という問題条件から戻りの静脈O2含有量低下と差の拡大は定義上必然。肢1×（動脈O2倍増の必然性なし）、肢2×（静脈O2増加は抽出増大と逆）、肢3×（較差0は抽出ありと矛盾）、肢4×（血小板に酸素運搬が全面交代との誤り）。 | [NASA公式技術解説・Aerobic Capacity](https://www.nasa.gov/ochmo-tb-031-exercise-overview-2/) |
+| 121 | `sm2-5y-r04-phy-04` | **一次PASS：肢1○／肢2・3・4・5×** | CDC/NIOSH公式2025年版『CBRN Respiratory Protection Handbook』第7章『Cardiovascular Adjustments』印刷130頁（PDFゼロ起算128頁）に運動時の心拍出量増加、筋への酸素・血液供給増、消化管・腎の維持機能から活動筋への血流再配分を直接記述。肢2×（活動筋血流0）、肢3×（全組織血流一定）、肢4×（心拍出量半減の必然）、肢5×（心停止でも血圧維持）は直述と矛盾。図ではなく本文を参照、PDF画像を直接確認済。 | [CDC/NIOSH公式2025年版PDF 130頁](https://www.cdc.gov/niosh/docs/2025-111/pdfs/2025-111revised092025.pdf) |
+| 126 | `sm2-5y-r04-phy-09` | **一次PASS：肢5○／肢1・2・3・4×** | NHLBI『Blood Tests』はHbが酸素を運搬し、低Hbは貧血を示すと説明。NHLBIの2018年ワークショップ公式要約は酸素飽和度の測定値と酸素含有量を明確に区別。条件が同じSaO2・PaO2ならHb低値のBでHb結合酸素量は少なくなる。肢1×（飽和度＝含有量ではない）、肢2×（低Hbで結合席が増すのは逆）、肢3×（正常生理で血漿溶存酸素を大部分とするのは誤り）、肢4×（SpO2正常は貧血の否定ではない）。**定量式の係数までは原典未確認・式を追記しない。** | [NHLBI Blood Tests](https://www.nhlbi.nih.gov/health/blood-tests)・[NHLBI 2018 workshop](https://www.nhlbi.nih.gov/events/2018/tissue-oxygenation-workshop) |
+| 131 | `sm2-5y-r05-phy-04` | 正答候補4／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 133 | `sm2-5y-r05-phy-06` | 正答候補1／他4肢排除候補、**5肢公式照合未完** | NHLBIは手首で脈拍を触知することを直接説明するが、圧脈波の物理機序には不足。設問正答の機序を同資料のみでPASSにしない。 | [確認原典](https://www.nhlbi.nih.gov/health/heart/heart-beats) |
+| 134 | `sm2-5y-r05-phy-07` | 正答候補3／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 135 | `sm2-5y-r05-phy-08` | 正答候補5／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 142 | `sm2-5y-r06-phy-08` | 正答候補4／他4肢排除候補、**5肢公式照合未完** | NLM編集MedlinePlus Geneticsは酸素を利用したミトコンドリアATP生成を直接説明する。一方、電子の最終受容体、プロトン勾配、5肢全体の機序には別の公式説明が必要。 | [確認原典](https://medlineplus.gov/genetics/chromosome/mitochondrial-dna/) |
+| 144 | `sm2-5y-r06-phy-10` | **一次PASS：肢3○、肢1/2/4/5×** | IQWiG InformedHealth.org（2026-06-25更新）の公的独自編集本文「What is the structure of the cardiac conduction system?」「What do the electrical signals do?」がSA node→心房→AV node→His束→左右脚→Purkinje線維を明示。肢1×（Purkinje線維を心房より前に配置）、肢2×（AVからSAへの逆転）、肢4×（大動脈を刺激伝導経路と誤認）、肢5×（肺静脈・大動脈を刺激伝導経路と誤認）。**発行主体はドイツIQWiGであり、米国NLMは掲載・所蔵先。第三者原典の本文・図版の転載権を許可した判定ではない。** | [IQWiG公的原典](https://www.ncbi.nlm.nih.gov/books/NBK623848/)・[発行主体確認](https://www.ncbi.nlm.nih.gov/books/NBK65083/) |
+| 149 | `sm2-5y-r07-phy-05` | 正答候補4／他4肢排除候補、**5肢公式照合未完** | CDC Stacks所蔵のレビューは寒冷血管拡張反応の現象を説明するが、政府自身の編集・公式勧告であることの裏付けにはならない。 | [確認原典](https://stacks.cdc.gov/view/cdc/248799/cdc_248799_DS1.pdf) |
+| 151 | `sm2-5y-r07-phy-07` | 正答候補4／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 154 | `sm2-5y-r07-phy-10` | **一次PASS：肢3○／肢1・2・4・5×** | NIEHS/NTPの政府刊行『Monograph on Health Effects of Low-Level Lead』§5.2.1は好中球・マクロファージ双方の貪食能を明記。肢1の赤血球/血小板、肢2の筋細胞、肢4の視細胞/水晶体上皮、肢5の腎集合管/膵β細胞は、いずれも組で感染防御の主要な貪食細胞という正答の機能分類に当たらない。**NTP文書の本文は確認、PDFスクリーンショット再取得はサイズ超過で失敗。** | [NTP政府公表資料・§5.2.1](https://ntp.niehs.nih.gov/sites/default/files/ntp/ohat/lead/final/monographhealtheffectslowlevellead_newissn_508.pdf) |
+| 155 | `sm2-5y-r08-phy-01` | 正答候補2／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 158 | `sm2-5y-r08-phy-10` | 正答候補4／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 161 | `sm2-5y-r09-phy-03` | 正答候補5／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 163 | `sm2-5y-r09-phy-05` | 正答候補3／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 164 | `sm2-5y-r09-phy-06` | 正答候補5／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 165 | `sm2-5y-r09-phy-07` | 正答候補2／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 167 | `sm2-5y-r09-phy-09` | 正答候補1／他4肢排除候補、**5肢公式照合未完** | 第10次原本の不足根拠を解消する直接公的原典が未確認。正答候補と誤肢4件の排除を個別原文に対応づける必要。 | 新規原典未確定 |
+| 171 | `sm2-5y-r10-phy-03` | **一次PASS：肢2○／肢1・3・4・5×** | Virginia Department of Healthが公表したBasic CapnographyのPDF3頁（PDFページ番号2）を画像でも確認：血流低下がある換気肺胞をhigh V/Q・肺胞死腔と明記。肢1×（灌流がなければガス交換正常ではない）、肢3×（気管・気管支の解剖学的死腔容積と混同）、肢4×（V/Q=0はシャントであり逆）、肢5×（血流あり換気なしはシャント）。NHLBI政府研究室のShunt Fraction TestingにもV/Q=0の定義。図の第三者転載権は未確定、文章の科学命題だけを参照する。 | [Virginia州保健局公表PDF](https://www.vdh.virginia.gov/content/uploads/sites/23/2016/05/AIR-101.pdf)・[NHLBI公的説明](https://www.nhlbi.nih.gov/science/pulmonary-function-lab/tests) |
+
+## 次段階の実装判定
+
+- 22問はいずれも「公式直接原典不足につきHOLD／修正を要する」状態。**実際に生成元と配布JSONを変更した場合に限り**「修正適用済」へ移行。
+- No.112,134 は原本に実修正済の記載があるが、公式5肢再監査未通過なのでHOLDのまま。
+- No.144 はIQWiG公式編集の2026-06-25改訂本文により全順序を直接確認。現行5肢の正誤は一次PASS。ただし生成元への出典差替、独立検証、権利確認、再生成が済むまで最終承認にはしない。
+- No.142 はMedlinePlus Geneticsが直接示す「酸素利用・ミトコンドリアATP生成」へ正答命題を狭める。現行の最終電子受容体・膜勾配の記述には別資料が要る。
+- No.154 はMeSHで直接分類が確認できる「Phagocytesに含まれる細胞の組合せ」を問うよう狭める選択肢がある。元の病巣状況の説明をそのままPASSにはしない。
+
+**署名状態：監査追補記録のみ。修正適用・公式全肢PASS・Q0/Q1解放の署名ではない。**
+
+## 第11次照合（B2）：No.144の新規一次PASS
+
+- 取得原典：IQWiG, *In brief: How is the heart rhythm regulated?*, Last Update 2026-06-25, https://www.ncbi.nlm.nih.gov/books/NBK623848/ 。IQWiGの国民向け公的情報は同収載コレクションの発行主体表示を照合：https://www.ncbi.nlm.nih.gov/books/NBK65083/ 。
+- IQWiGの本文が順序を細部まで直接記載しており、SA節（洞房）→心房→AV節（房室）→His束→脚→Purkinjeを一致確認した。NHLBI独自説明 https://www.nhlbi.nih.gov/health/heart/heart-beats でもSA→心房→AV→心室の上位順序を独立補強。
+- 5肢判定：①洞房結節→プルキンエ線維→心房→房室結節【×：心房より先にプルキンエ線維を置いている】、②房室結節→洞房結節→心室→心房【×：始点が逆】、③洞房結節→心房→房室結節→ヒス束・脚→プルキンエ線維【○：公式の伝導順】、④心室筋→大動脈→心房筋→洞房結節【×：血管を伝導路扱い】、⑤肺静脈→洞房結節→大動脈→房室結節【×：血管を伝導路扱い】。
+- **第11次初回判定**：一次内容PASS（47→48）／HOLD（22→21）。現行配布JSONは未変更、source_urlの生成元反映も未実施。独立二重チェックと著作権最終判定、生成元バイト一致確認を残すため、Q0/Q1はBLOCKED継続。
+
+## 第11次追補：No.154・171の政府公表一次資料の照合
+
+- **No.154**：米国NIEHS・National Toxicology Program, *Monograph on Health Effects of Low-Level Lead* §5.2.1 / Table 5.1（本文印刷45頁付近）、政府公表資料内で *phagocytic activity of neutrophils and macrophages* を直接記述。肢3は好中球とマクロファージの組で○。肢1（赤血球＋血小板）×、肢2（骨格筋＋心筋）×、肢4（視細胞＋水晶体上皮）×、肢5（腎集合管＋膵島β細胞）×。それぞれ主たる貪食免疫細胞の組ではない。PDFのテキスト本文確認、画像スクリーンショットは大容量により取得不能（証跡限界を明示）。原典：https://ntp.niehs.nih.gov/sites/default/files/ntp/ohat/lead/final/monographhealtheffectslowlevellead_newissn_508.pdf
+- **No.171**：米国Virginia Department of Healthに掲載の救急医療研修資料 *Basic Capnography*（2009-11-17、資料3頁／PDFゼロ起算2頁）の実画面と本文を照合。血液灌流不足＝換気あり＋高V/Q＋肺胞死腔を直接示す。NHLBI Pulmonary Function Lab *Shunt Fraction Testing* で換気0・灌流あり＝V/Q0＝シャントの逆側も直接確認。正答肢2○、肢1×（血流不足でも正常交換）、肢3×（解剖学的死腔の容積増加へのすり替え）、肢4×（V/Qゼロは反対）、肢5×（シャントを肺胞死腔と誤認）。資料の模式図には第三者図版が含まれるため、原文・図の複製権まで承認したものではない。原典：https://www.vdh.virginia.gov/content/uploads/sites/23/2016/05/AIR-101.pdf および https://www.nhlbi.nih.gov/science/pulmonary-function-lab/tests
+- **更新一次集計**：分割B69問についてPASS50、HOLD19。出典記録のみ更新。配布JSON・生成元・権利ゲート・独立二重チェックは未完のため公開停止継続。
+
+## 第11次追加確認：No.126の酸素含有量と飽和度の分離
+
+- No.126：NHLBIの直接編集『Blood Tests』はヘモグロビンを赤血球内の酸素運搬蛋白と明記。NHLBI公式『Towards Minimally-invasive or Non-invasive Approaches to Assess Tissue Oxygenation Pre- and Post-Transfusion Workshop 2018』のExecutive Summaryは、酸素飽和度（パルスオキシメータによるSaO2推定）の指標と酸素含有量を別物として明示。ほぼ同じSaO2／PaO2下でヘモグロビン濃度が低い群の血液100mL当たりの酸素結合量は減る。肢5○、肢1×（飽和度が同じなら酸素含有量同一との断定）、肢2×（Hb低値により結合部位が増加との逆転）、肢3×（血漿に溶解した酸素が大部分とする錯誤）、肢4×（正常SaO2は貧血の不存在を保証しない）。既存データの正答位置は不変。参照：https://www.nhlbi.nih.gov/health/blood-tests と https://www.nhlbi.nih.gov/events/2018/tissue-oxygenation-workshop 。定量式係数は追加せず、現行文言の条件に限る。
+- **一次合計PASS51/HOLD18**（69問）。本コミットは監査資料変更だけで、生成元・配布JSONへ未反映。公開品質ゲートQ0/Q1 BLOCKED維持。
+
+## 第11次追加確認：No.119のNASA公式生理原典
+
+- NASA OCHMO-TB-031 *Exercise Overview* 内『Aerobic Capacity—VO2max』は、活動筋へのO2供給、心拍数・一回拍出量・心拍出量・動脈血からの筋O2抽出、動静脈O2較差とFick式 VO2=Qc×(A-V O2 difference) を直接説明している。https://www.nasa.gov/ochmo-tb-031-exercise-overview-2/ 。
+- 筋の同一流入動脈と流出静脈を比較する条件で、動脈血酸素量がほぼ一定なのに筋の酸素抽出が増えるなら、流出静脈血の酸素含有量は下がる。肢5○。肢1×（動脈O2必ず2倍）、肢2×（抽出増でも静脈O2増加）、肢3×（抽出ありでも較差ゼロ）、肢4×（ヘモグロビンから血小板へO2運搬全面移行）はNASA・NHLBIの説明および定義と矛盾。原典はNASA政府公式技術解説であり、引用先の第三者研究を政府執筆に見せかけない。
+- **一次PASS52/HOLD17**。生成元・配布データは未改稿のためQ0/Q1 BLOCKED継続。
+
+## 第11次追加確認：No.121のNIOSH政府編集公式生理資料
+
+- CDC/NIOSH, *CBRN Respiratory Protection Handbook*, DHHS (NIOSH) Publication 2025-111, 2025年改訂PDF、Chapter 7 『Cardiovascular Adjustments』印刷130頁（PDFゼロ起算128頁）を本文と画像で確認。https://www.cdc.gov/niosh/docs/2025-111/pdfs/2025-111revised092025.pdf
+- 運動時に心拍出量は増加し、酸素・ブドウ糖の筋への供給増、消化管・腎臓などから活動筋への血流再配分が起こる、と政府発行本文が明記。従って肢1○。肢2×（活動筋血流がゼロに近づく）、肢3×（すべての臓器血流が固定）、肢4×（運動で心拍出量が必ず半分）、肢5×（運動で心臓停止して血圧維持）の4肢は説明と矛盾。原文は緊急対応者の生理機序として記載されているため、健康人の通常の動的運動という出題範囲を超えた絶対的な個人予測とはしない。
+- **一次PASS53/HOLD16**。アプリ生成元・配布JSON・ゲートは未変更、独立再検証と原典メタデータ反映未完了。
+
+## 第2次追加照合：政府発行の酸素運搬・心伝導・ATP資料（2026-11-22）
+
+この節は原典の**本文・図に実際に示された内容**と、元の問題の5肢の論理的な排除を切り分ける。問題データと生成元は変更していない。
+
+### No.126 `sm2-5y-r04-phy-09` — 一次内容PASS候補（権利・独立再監査待ち）
+
+- **政府直接原典：**米国ATSDR/CDC *Toxicological Profile for Carbon Monoxide* Figure 3-5, p.153, https://stacks.cdc.gov/view/cdc/12384/cdc_12384_DS1.pdf 。同図は貧血時と正常時の酸素含有量（mL/100mL）とHb酸素飽和度を区別し、Hbが減ると酸素運搬量が低下することを示す。これは現行肢5の命題を直接支持する。
+- **5肢：**肢1×（SaO2同一でもHb濃度の差で含有量は変わる）；肢2×（Hb減少は結合部位増加ではない）；肢3×（溶存酸素が大部分ではない）；肢4×（正常SaO2は貧血否定にならない）；**肢5○**（Hb低値のBではHb結合酸素量が少なくなり得る）。
+- **留保：**図の原資料表記はEPA 2000であり、政府刊行物中の再掲図の転載権利は別判定。問題の独自表現と出典リンクで根拠を示すに留め、図自体をアプリに転載しない。公式原典を本文で検証した一次内容PASS候補だが、生成元source_url変更・独立二重チェック未実施なので**運用上HOLD**を維持する。
+
+### No.142 `sm2-5y-r06-phy-08` — 部分確認、HOLD維持
+
+- NLM編集 *Mitochondrial DNA* https://medlineplus.gov/genetics/chromosome/mitochondrial-dna/ は酸化的リン酸化が酸素と糖を使ってATPを生成する旨を明記。現行正答肢4の酸素利用とATP生成は支持するが「最終電子受容体」や肢3のプロトン勾配は当該本文にない。肢1×・肢2×・肢3×・肢5×の機序全体の直接根拠は不足。**5肢公式完結とは判定しない。**
+
+### No.144 `sm2-5y-r06-phy-10` — 部分確認、HOLD維持
+
+- NHLBI編集 *How the Heart Beats* https://www.nhlbi.nih.gov/health/heart/heart-beats は洞房結節から心房、房室結節を経て心室へ至る電気信号の順を説明する。埋込動画は別会社著作であり、その内容を政府自身の直接原典として扱わない。現行正答肢3のHis束・脚・Purkinjeまで本文のみで確認できないため、肢1×・2×・4×・5×の排除を含め**HOLD維持**。
+
+### 今回の状態
+
+- **新たな政府原典に基づく一次内容PASS候補：No.126の1問。**ただし権利・出典フィールド・再生成・独立監査を未実施のためQ0の正式PASSに算入しない。
+- **正式な残HOLD：22問のまま。**この追記を「22問の修正実装完了」や「全肢の正式承認」と解釈しない。
+
+
+## B2追加修正：No.142 機序限定改稿を生成元へ実装（2026-11-22）
+
+- ID: `sm2-5y-r06-phy-08`。NLM独自編集の公式原典 `https://medlineplus.gov/genetics/gene/mt-atp6/`（Normal Function）を確認。酸素と単糖を用いた酸化的リン酸化によるATP産生、ATP synthaseが内膜のプロトン流エネルギーをADP→ATP変換に利用することを明記。
+- 元正答④「酸素を電子伝達系の最終電子受容体として利用し、酸化的リン酸化でATPを合成する。」は原典だけでは「最終電子受容体」の直接証拠が不足するため、④「ミトコンドリアで酸素を利用し、ATP合成酵素がプロトンの流れのエネルギーを使ってATPを生成する。」へ変更。正答位置4を維持。
+- **全5肢の機序判定（改稿後）**：①× 細胞質解糖で酸素を直接消費と誤記、②× 酸素を使わず乳酸が最終電子受容体と誤記、③× ATP合成酵素をプロトン濃度勾配と無関係と誤記、④○ NLM編集本文のプロトン流と酸素利用に直接一致、⑤× 酸素十分下でATP合成停止という逆の断定。
+- 生成元 `apps/sanitary-manager-2/hm2-source-precision-v1.js` に旧肢4・旧URL・正答位置・5肢数をguardするパッチを適用。変更対象は1問の④・quick・explanation・topic・sourceUrl・basis・監査/公開状態。**正答位置不変、他4肢不変**。公開承認を `requires-independent-subject-expert-review`／`再監査待ち`／`非公開` に無効化。
+- **未完了：**生成元を実際に実行した再生成と配布JSONのバイト一致、回帰試験、独立監査は実施していない。従って一次根拠・修正案の整合を確認したが、**正式運用PASSには数えない**。現行の最新分割B一次集計PASS53/HOLD16を自動変更しない。
+- 元の22件は作業開始時点のスナップショット。別セッションの先行作業によるPASS53/HOLD16の進捗を取り消さない。Q0/Q1 BLOCKED、App Review/TestFlight未実施。
+
+## B2公式発行者原典へ更新：No.144・154（2026-11-22）
+
+- **No.144** `sm2-5y-r06-phy-10`：IQWiG直接編集記事 https://www.gesundheitsinformation.de/wie-wird-der-herzrhythmus-gesteuert.html にSA→心房→AV→His→脚→Purkinjeを確認。肢①×（Purkinjeが心房より前）、②×（AVがSAより前）、③○（正しい順序）、④×（心室筋・大動脈を伝導路としている）、⑤×（肺静脈・大動脈を伝導路としている）。正答③不変、出典URLとbasisのみ生成元へ修正。
+- **No.154** `sm2-5y-r07-phy-10`：政府NIEHS/NTP刊行 https://ntp.niehs.nih.gov/sites/default/files/ntp/ohat/lead/final/monographhealtheffectslowlevellead_newissn_508.pdf §5.2.1に好中球・マクロファージの貪食活性の直接記載。肢①×赤血球・血小板、②×骨格筋・心筋、③○好中球・マクロファージ、④×視細胞・水晶体上皮、⑤×腎集合管・膵β。正答③不変、出典URLとbasisのみ生成元へ修正。
+- 生成元パッチは旧URL・5肢・正答位置のguard付き。生成元修正コミット：`1dedcab1d879823b6b97095971dcca6648c4745e`。
+- **No.144/154は先行監査で一次PASS済みのため二重加算しない。** No.142のNLM限定改稿は別コミット。すべて配布JSONの再生成とバイト一致・独立監査が未完。分割B最新参照値PASS53/HOLD16を自動変更せずQ0/Q1 BLOCKED維持。App Review・TestFlight未実施。
+
+## B2追加一次原典の発行者検証・2問の改稿／出典修正（2026-11-22）
+
+### No.134 `sm2-5y-r05-phy-07`：一次内容PASS（旧HOLDから1問）
+
+**米国政府原著**：U.S. Air Force Training Command, *Medical Service Specialist, Blocks III, V, VI*（1975）, ERIC accession ED227275, https://files.eric.ed.gov/fulltext/ED227275.pdf 。表紙Resumeおよび本文Course InformationでDeveloped by United States Air Forceを確認。「APICAL/RADIAL PULSE」学習単元は心尖部と橈骨動脈の脈拍を同じ1分間に同時測定する手順、および末梢に伝わらない心拍があることを説明する。ERICは所蔵・公開元であり、本文の政府制作主体は空軍。参考文献の第三者著作は本問題文に複製しない。
+
+設問自体が脈拍欠損を「心尖部心拍数−橈骨動脈脈拍数」と定義しているため、**96−78＝18回／分**であり数学的一意性もある。
+五肢：①0回×（差は0でない）、②78回×（末梢の実測値であり差ではない）、**③18回○**、④96回×（心尖部の実測値で差でない）、⑤174回×（二数の和で差でない）。
+旧NCBI所蔵第三者教材から、実際に政府が開発した医療訓練原典にsourceUrl/basisを差し替えるguard付きコードを生成元にコミット。**一次内容PASS**。公開承認、配布JSON再生成は別ゲート。
+
+### No.131 `sm2-5y-r05-phy-04`：正答命題を限定する実修正（再監査待ち）
+
+- **NIDDK自身の説明**： https://www.niddk.nih.gov/news/archive/2013/new-mechanism-proposed-glucose-lowering-effect-metformin-drug-type-2-diabetes は、空腹時グルカゴンによる肝糖放出と、食後に分泌されるインスリンとの拮抗を記載。
+- **NLM自身の説明**： https://medlineplus.gov/genetics/gene/gck/ のNormal Functionは、肝グルコキナーゼが余剰糖の取り込み・グリコーゲン転換に関与すると明記。
+- 元正答④「インスリンの作用により肝糖産生が抑制され、グリコーゲン合成が促される。」は、二原典の射程に対してインスリン単独の因果を強く断定するため、④「食後には肝臓からの糖放出が抑制される方向に働き、肝臓に取り込まれた余剰の糖はグリコーゲンとして貯蔵され得る。」へ改稿。正答位置④と他の四肢は不変。
+- 五肢：①×（食後にグルカゴン作用が必ず増加とする逆転）、②×（肝糖新生とグリコーゲン分解が一律増加）、③×（肝の血糖調節機能を否定）、**④○（NIDDK/NLMそれぞれの直接説明に対応）**、⑤×（インスリンが肝糖放出を増やすとの逆転）。
+- sourceUrlはNIDDK本文へ変更、NLMの補助URLをbasisへ明記、quick/explanation/topicも調整。監査承認状態を`requires-independent-subject-expert-review`／`再監査待ち`／`非公開`に無効化。**改稿の実装完了、配布JSONへの適用と独立再監査は未完**。従って正式な一次PASSの集計にはまだ加えない。
+
+### 最新集計の取扱い
+
+作業開始時点の先行資料は分割B一次PASS53/HOLD16。No.134を一次PASSとして再判定した場合、**この監査担当の暫定差分ではPASS54/HOLD15**。No.131の改稿は二重チェック・再生成を終えていないためHOLDに含む。No.142の別改稿も同様に未承認。これは台帳各節の時系列集計であり、並行担当による最新HEADとの自動合算ではない。
+
+生成元更新commit：`1eeb507e9dd2f0dc2bfe2f203070f63012df7b68`（原典参照2問）、`aeed994042f3e42152ad5df23384208f9116e6d5`（No.131限定改稿）。**配布release-questions.jsonの再生成・バイト一致と回帰試験は実施せず**、Q0/Q1 BLOCKED・App Review/TestFlight未実施を維持。
+
+
+## B2厚労省公式原典による衛生2問の再判定（2026-11-22）
+
+### No.112 `sm2-5y-r10-hyg-04`：一次内容PASS
+
+原典：厚生労働省『労働者の心身の状態に関する情報の適正な取扱いのために事業者が講ずべき措置に関する指針』（2022年3月改正） https://www.mhlw.go.jp/content/000922318.pdf 、および群馬労働局『健康診断を実施しましょう』 https://jsite.mhlw.go.jp/gunma-roudoukyoku/hourei_seido_tetsuzuki/anzen_eisei/anzen17/kenkoushindan.html 。健診結果の要配慮個人情報としての適正管理、取扱範囲の限定、加工と保存、健康状況の経時的総合把握および作業管理へのフィードバックを直接確認。
+
+五肢：①×個人名付き結果の全員配布、**②○個人が特定されないよう加工集計し作業条件と評価**、③×作業条件との関連分析を拒否、④×部署単位なら個人情報取扱条件は無関係という誤認、⑤×有所見率から特定個人の診断を推測・公表。部署の人数が少ない場合の再識別リスクにも注意。ストレスチェック集団集計の人数要件を通常健診へ拡張しない。
+
+源コードで従来の厚労省指針URLを保持し、basisに対応する政府公式解説を追補。問題文、正答②、五肢は不変。**一次内容PASS**。
+
+### No.115 `sm2-5y-r10-hyg-08`：一次内容PASS
+
+原典：厚労省2017年4月14日健康診断結果に基づく措置指針の通知 https://www.mhlw.go.jp/web/t_doc?dataId=00tc2624&dataType=1&pageNo=1 の「医師等に対する情報の提供」は、作業環境・労働時間・深夜業の回数及び時間数・作業負荷・過去の健診結果を示し、健康管理へ反映することを直接明記。群馬労働局の上記公式解説は健康状況の経時的総合把握と作業管理へのフィードバックを明記。
+
+五肢：①×一時点だけで原因断定、②×氏名付き健診情報の一斉公開、③×小集団の識別リスクを無視、**④○勤務条件も調べ経年指標と併せて評価**、⑤×生活習慣だけが原因と決め勤務条件を除外。断定的な因果推論と、多変量分析が法定義務との誤認は避ける。
+
+源コードでsourceUrlをe-Govの安衛法一般規定から上記の直接該当する厚労省通知へ差替え、basisへ補助公式資料を記録。選択肢・正答④不変。**一次内容PASS**。
+
+### 更新計数と未達ゲート
+
+先行PASS53/HOLD16 → No.134でPASS54/HOLD15 → No.112/115の2問で**一次PASS56/HOLD13（分割B69問）**。No.131とNo.142の修正は独立再監査と生成元・配布JSONの再生成検証待ちのため、このPASS数に含めていない。衛生2問のsourceUrl/basis生成元コミットは`5a7e879a2a9bccfc759992bd75cced1b973eb5d9`。
+
+**注意：**既存の他セッションが同時更新した場合、PASS56/HOLD13は本担当台帳の時系列集計であり、ブランチ全体の統合値として利用する前に統合照合を要する。Q0/Q1はBLOCKED。App Review・TestFlight作業なし。配布JSONバイト一致・自動テスト未実施。
+
+
+## B2追加：No.155反射・神経系のNLM政府原典5肢判定（2026-11-22）
+
+- ID `sm2-5y-r08-phy-01`。NLM独自編集MedlinePlus Medical Tests『Neurological Exam』 https://medlineplus.gov/lab-tests/neurological-exam/ 「Reflexes」節は、反射を外部刺激への自動運動、脊髄の神経障害で反射が変わり得る現象と説明。「Nervous system」節は脊髄・末梢感覚/運動神経を神経系の構成として明示。
+- 五肢：①×（反射のために意識的皮質命令を必須とする点が『automatic movements』に矛盾）、**②○（脊髄を含む神経回路で意識的判断を待たず応答）**、③×（反射が必ず筋運動なしという記載は膝蓋腱反射の足運動で否定）、④×（感覚入力不要とする断定はNLMの感覚神経・神経系説明に合わない）、⑤×（神経系と無関係とする断定は脊髄障害と反射異常の関係で否定）。
+- 注意：熱刺激の具体的な屈曲反射弓を政府独自編集本文が神経解剖学的に逐一説明したわけではない。現行の正答は「起こり得る」という限定表現であり、5肢の選択肢比較・反射の自動運動と脊髄関与という範囲での**一次内容PASS**。高度な反射弓の機序説明を根拠と称しない。
+- 生成元のsourceUrl/basisのみ旧値guard付き更新。正答位置②、5肢・問題文不変。source修正commit `6097ee9ab127ecf8cc38c3bc298b6d38dba4e73b`。
+- この担当台帳の一次集計は前節PASS56/HOLD13 → **PASS57/HOLD12**。No.131/142の改稿は依然再生成・独立監査前なのでPASSに含めない。配布JSONバイト一致の実測・回帰試験は未実施、Q0/Q1 BLOCKEDを維持。
+
+
+## B2追加：No.133脈拍の政府原典射程に絞った実改稿（2026-11-22）
+
+- ID `sm2-5y-r05-phy-06`。米国NHLBI独自編集 *How the Heart Works — How the Heart Beats*, https://www.nhlbi.nih.gov/health/heart/heart-beats の「What is a normal pulse?」「Blood pressure」節を直接照合。心臓の拍動は血液を送り出す収縮であり、手首の動脈で触れる拍動から心拍を計数できると説明。動脈の圧力は心収縮期と拡張期で変化するが、**末梢への圧脈波伝播の詳細な物理機序はこの公的説明の直接記載範囲外**。
+- 元正答①「心拍に伴う動脈壁の圧力変動が末梢へ伝わったもの」→改稿①「心臓が血液を送り出すときに生じる動脈の拍動を、手首で触知しているもの」。正答位置①維持。
+- 五肢：**①○（NHLBI本文と直接一致）**、②×（肺胞ガス交換を直接触知しない）、③×（静脈血流速度の測定ではない）、④×（消化管蠕動ではない）、⑤×（毛細血管での血液凝固ではない）。正答①以外の4肢は不変。
+- 生成元パッチは旧正答①、旧URL、正答位置①、5肢のguard付き。sourceUrl/quick/explanation/topic/basisを書き換え、`requires-independent-subject-expert-review`・`再監査待ち`・`非公開`で公開承認無効化。生成元commit：`4a8e4280769e5f5bdfd3f9b3ce1826467c95a52a`。
+- **実改稿・公式原典との5肢の内容照合は完了。ただし配布JSON再生成・バイト一致・独立確認が未実施のため一次集計PASSにはまだ加えない。**本担当集計はPASS57/HOLD12を維持。No.131/142も同じ未実行ゲートを残す。Q0/Q1 BLOCKED、App Review・TestFlightなし。
+
+
+## B2追加：No.158公的NHS眼科診察教材で5肢照合（2026-11-22）
+
+- ID `sm2-5y-r08-phy-10`。英国公的医療機関University Hospitals Coventry and Warwickshire NHS Trust自局発行 *CHESS Clinical Skills Workbook 2022–23* p.57–58、Cranial Nerve 2「Check pupillary light reflexes」 https://uhmeded.uhcw.nhs.uk/Portals/0/AssetUploads/CHESS%20Book%20Clinical%20Skills%20Workbook%202022-23.pdf?ver=ELcRsPPRSWHk3baBgJ2INQ%3D%3D を原著の本文として確認。片眼に光照射すると照射側に直接対光反射（縮瞳）、非照射側にも共同対光反射（縮瞳）が生じることを明示。**PDFテキスト解析により該当記載を確認したが、画面スクリーンショット取得はタイムアウトで失敗した**ため画像での確認は未完。
+- 五肢：①×（左眼が不変との断定）、②×（正常反射を散瞳と誤る）、③×（左眼のみ散瞳・右眼不変との誤り）、**④○（直接＋共同対光反射）**、⑤×（非照射眼に共同反射が起こらないとの否定）。現行正答④、残り4肢の表現は変えない。
+- 生成元のsourceUrlを旧NCBI所蔵第三者StatPearls著者ページからNHS原著教材へ差し替え、basis追記のみ。旧値と5肢、正答位置guard付き。生成元commit：`5d457844d663d6840da5bcbfcccbca67d1175665`。
+- **一次内容PASS**。先行一次PASS57/HOLD12 → 本担当 **PASS58/HOLD11**。NHS原著公的教材のURLが公表されたことは教材全体の転載許可ではなく、問題は独立作問で維持。
+- 配布JSONへの再生成、生成元とのバイト一致、独立二重監査、権利の最終ゲートは未実施。Q0/Q1 BLOCKED、App Review・TestFlightなし。
+
+
+## B2追加：No.164嫌気的解糖・政府原著による5肢PASS（2026-11-22）
+
+- ID `sm2-5y-r09-phy-06`。正式発行主体：米国Department of Health and Human Services／CDC／Surgeon General, *Physical Activity and Health: A Report of the Surgeon General*（1996）, Chapter 3「Skeletal Muscle Energy Metabolism」「Energy Systems」印刷pp65–66。https://stacks.cdc.gov/view/cdc/11223/cdc_11223_DS1.pdf 。同政府報告は酸素需要が供給を上回る高強度運動時に筋は解糖系で**酸素なしにATP産生**し、30秒～2分ほどの運動で主たる供給源となるが乳酸蓄積等により持続制約があると直接記述。酸化的系はミトコンドリアで酸素を必要とすることも明記。PDFテキストに加え政府刊行物の表紙発行主体を照合。スクリーンショットはファイルサイズ超過で取得不可。
+- 五肢：①×胆汁酸腸肝循環（筋の無酸素ATP生成経路ではない）、②×酸化的リン酸化「のみ」（酸素が要る）、③×クエン酸回路「だけ」（ミトコンドリア酸化経路の部分）、④×尿素回路（ATP産生供給の正答ではない）、**⑤○嫌気的解糖**。正答⑤・5肢不変。
+- 生成元のsourceUrlをNBK546695第三者StatPearls教材から**米国政府が直接刊行した報告**へ変更、basisにChapter 3と該当頁を明記。旧出典・正答位置・五肢数guard付き。生成元commit `873d16496ab8af40c8a129d09ea9aa5a68540c8a`。
+- **一次内容PASS**。前節PASS58/HOLD11 → **PASS59/HOLD10（69問）**。引用文・図版の転載は行わない。配布JSON再生成/一致検証、独立チェック・権利ゲートは未完。Q0/Q1 BLOCKED、App Review・TestFlight操作なし。
+
+## B2 No.155：NINDS原著に合わせた反射問題の限定改稿（2026-11-22）
+
+- 対象 `sm2-5y-r08-phy-01`、生成元パッチコミット `2f6df9b8c650ef4043cdc6a0d6e4a7906eca7969`。
+- NINDS原著2025年PDF https://www.ninds.nih.gov/sites/default/files/2025-05/NINDS_Neurological-Diagnostic-Tests-Procedures.pdf のReflexes欄は、膝を診察用ハンマーで叩くと下腿が自動的に動くこと、反射検査が脊髄と筋の神経信号を評価することを直接説明。
+- 元の「熱い器具に指が触れ…手を引いた」は同資料で時系列まで直接確認できないため、「膝の下を診察用ハンマーで軽く叩くと意識的な運動命令なしに下腿が動く」へ**設問のみ限定改稿**。正答肢2は不変。①×意識的な大脳命令必須、②○脊髄等の反射回路、③×運動応答否定、④×感覚入力不要、⑤×神経系と無関係。
+- 出典、解説、topic、basisを政府原典に整合。公開状態は非公開、監査は再監査待ちにするguard付き生成元パッチを追加。
+- **重要**：生成元コードのコミットは確認したが、コード実行・配布JSONの再生成とバイト一致・回帰試験・独立検証は未完。従って一次内容の修正案は確定、正式PASS化とHOLD集計減少は保留。先行のPASS53/HOLD16は変更しない。
+
+## B2第12次：No.115 健診結果の集団評価・厚労省公式指針を直接照合（2026-11-22）
+
+- **ID** `sm2-5y-r10-hyg-08`（固定No.115）。正答④、元の5肢および正答位置を変更せず、出典の射程と個人情報保護の根拠を精密化。
+- **発行者直接原典**：厚生労働省『健康診断結果に基づき事業者が講ずべき措置に関する指針』 https://www.mhlw.go.jp/content/11303000/001509876.pdf 。同指針は、健康診断結果の評価に過去の健康診断結果、労働時間・労働密度・深夜業の回数・作業環境・作業負荷等を参照し、作業環境管理や作業管理の見直しにつなげることを記述する。労安法104条の心身状態情報適正取扱いは別の補助法源 https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0 。法は特定の集団統計手法や人数閾値を一律義務化しない。
+- **5肢正誤**：①× 単時点の有所見率だけで原因を断定、②× 氏名付き個人健診結果の全員公開、③× 少人数での個人再識別を放置した集計公開、**④○ 作業条件と過去の健康指標を合わせて評価**、⑤× 作業条件の調査を排除して生活習慣だけで原因断定。適切な一選択肢が一意。
+- **生成元実装**：`apps/sanitary-manager-2/hm2-source-precision-v1.js` の旧URL・正答位置・肢数・正答文字列をguardする追補で、sourceUrlを厚労省の原著PDFへ変更、basisおよび解説の法的区別を補充。生成元commit `940d28f81a228a303a5408ac075715af85cba910`、先行パッチ旧URL条件との衝突修正commit `23fa29c01d19c158a7d038b05d2226d4b2d3f9c0`。**問題・選択肢・正答は不変。**
+- **既存一次PASSの出典補強（新規計上なし）**：No.115は先行する「B2厚労省公式原典による衛生2問の再判定」で既にPASS計上済み。今回の公式指針更新は**重複加算しない**。現時点で最新の整合した集計は **PASS59/HOLD10（69問）**。
+- **非承認事項**：生成元の実行、配布JSONへの反映、再生成バイト一致、独立二重チェック、全問権利最終判定は未完了。現行配布JSONのNo.115 source_urlは旧e-Gov法令URLのままである。したがって**アプリの正式Q0/Q1はBLOCKED、公開不可**。App Review・TestFlight未実施。
+
+
+### 競合・重複の訂正
+
+2026-11-22にNo.115を新規PASSと加算した初回記録は**誤り**。先行のNo.112/115同時一次PASSを再確認し、集計はPASS59/HOLD10へ訂正。生成元は先行パッチでe-Gov法令URL→厚労省2017通知URLへ変更後、本担当の追加パッチで同通知URL→厚労省現行指針PDFへ変更する順序となるようguardを補正。パッチの実行・配布JSONの決定性検証はなお未実施。
+
+## B2第13次：No.149 寒冷血管拡張反応・米陸軍原著で全5肢確認（2026-11-22）
+
+- 問題ID `sm2-5y-r07-phy-05`（固定No.149）、正答肢④・他4肢はすべて不変。
+- **公式一次資料**：米陸軍・空軍発行 *Technical Bulletin Medical 508 (TB MED 508)*, Chapter 2, 印刷p.9 Fig.2-3および同頁本文(3)(a)(b) https://safety.army.mil/Portals/0/Documents/MEDIA/SEASONALSAFTEYCAMPAIGNS/FALLWINTERSAFETY2020/TB_MED_508.pdf?ver=2020-12-02-081456-770 。政府原著でありNCBIが収載した第三者書籍と異なる。同本文は手指の寒冷曝露直後に血流・皮膚温が下がり、その後一過性に血流が増える寒冷血管拡張（CIVD）で皮膚温が周期的に回復し、個人の状態で反応が弱まることを直接記載。巻末の用語集にも定義あり。ウェブPDFのテキストは直接確認。スクリーンショット取得はDisabledErrorで失敗し、画像の独立確認は未実施。
+- **五肢判定**：①× 寒冷下での一過性拡張を一律否定、②× 初期最大発汗・血管変化なしとの虚偽、③× 皮膚血流と無関係に肺胞換気だけで温度が上昇するとする錯誤、**④○ 局所皮膚血管の一過性拡張で指先皮膚温が上昇することがある**、⑤× 全員同時刻・同程度との一律断定。全5肢のうち1肢だけ原典と整合。
+- 生成元 `apps/sanitary-manager-2/hm2-source-precision-v1.js` の旧出典URL・正答位置・5肢と正答キーワードguard付きパッチで、sourceUrl・basis・explanation・auditStatusのみ更新。生成元commit `5315e814035a326a48a3931df5d5b72c6c0c8cdc`。
+- **一次内容PASS**。先行の一次集計PASS59/HOLD10に未加算のNo.149を1件加え、**PASS60/HOLD9（分割B69問）**。No.115は既に先行PASSであり今回再加算しない。No.131/133/142の改稿は生成元再生成・独立検証前でHOLD扱い継続。
+- **未達**：配布JSONの再生成・バイト一致実測・独立二重チェック・権利の最終承認。Q0/Q1 BLOCKED、App Review・TestFlight未実施。
+
+## B2第14次：No.161 瞳孔散大筋と交感神経・NHS公的眼科原著で5肢確定（2026-11-22）
+
+- ID `sm2-5y-r09-phy-03`（固定No.161）、正答⑤不変。
+- **発行者自身の公式資料**：Manchester University NHS Foundation Trust, Manchester Royal Eye Hospital, Neuro-ophthalmology Services, *Horner's Syndrome*, REH 176, p1（2019年10月見直し） https://mft.nhs.uk/app/uploads/sites/2/2019/10/REH-176.pdf 。NHS法人が自院の患者向けに発行した本文で、暗所での瞳孔散大を担う神経が交感神経の眼球への経路であり、その神経が虹彩の散大筋に至ること、損傷時は縮瞳することを明示。PDFの該当箇所について実画面画像でも発行主体・記載内容を確認。
+- **5肢**：①×副交感神経性の瞳孔括約筋収縮は散瞳ではなく縮瞳、②×散大筋を副交感神経支配とする誤り、③×体性運動神経・外眼筋は眼球運動で瞳孔径の調節機序ではない、④×交感神経を括約筋収縮と誤結合、**⑤○交感神経―虹彩の瞳孔散大筋により暗所散瞳**。1肢が一意。
+- 生成元 `apps/sanitary-manager-2/hm2-source-precision-v1.js` の正答位置5・選択肢5肢・旧NCBI出典をguardしたパッチでsourceUrl、basis、auditStatusのみ修正。commit `2fdfc2f678fb5e09e24cd13e4f41923a4b5c8d53`。問題文・全肢・正答不変。
+- **一次内容PASS**。前節PASS60/HOLD9 → **PASS61/HOLD8（69問）**。No.115の既存PASSは二重計上せず、No.131/133/142など改稿済み未再生成は引き続きHOLD。
+- **留保**：生成元再生成・配布JSONとのバイト一致、独立再監査、権利最終判断未実施。PDFは参考リンクと要点の独自表現のみ、原著全文・図の転載なし。Q0/Q1 BLOCKED、App Review・TestFlight未実施。
+
+## B2第15次：No.165 ミトコンドリア脱共役・NIEHS/NTP政府原典で5肢照合（2026-11-22）
+
+- ID `sm2-5y-r09-phy-07`（固定No.165）、正答②不変。米国国立環境衛生科学研究所（NIEHS）National Toxicology Program政府原著 *NTP TOX 104: (+)-Usnic Acid*, pp9–10, Fig.3 https://ntp.niehs.nih.gov/sites/default/files/ntp/htdocs/st_rpts/tox104_508.pdf を本文とPDF実画面（PDFゼロ起算22頁が印刷10頁）で確認。プロトン漏出がミトコンドリア内膜の勾配を弱め、電子伝達／酸素消費とATP合成の結合を解き、ATP産生の減少と熱の発生に結びつくことを直接説明。原典は毒性研究であり、骨格筋特異的な定量予測を追加しない。
+- **5肢判定**：①×プロトン勾配喪失でもATPが通常大量生成とする点、**②○勾配散逸→ATP合成低下＋熱放散**、③×酸素消費継続なら電子伝達が必ず停止とする逆転、④×ATP産生倍増の断定、⑤×電子伝達系とATP合成が常に無関係という断定。正答位置2・5肢不変。
+- 生成元の旧NCBI第三者教材URLからNTP一次原典へsourceUrl差替え、basis追記、auditStatusを一次資料照合済へ更新。旧URL・肢数・正答ガード付き。生成元commit `26de2f65aba7c18a3412152571daf9c2a0d0d93a`。転載画像や原文の設問流用なし。
+- **一次内容PASS**：直前PASS61/HOLD8 → **PASS62/HOLD7（69問）**。No.115既PASSは重複計上しない。
+- 配布JSONの再生成・バイト一致・独立二重チェック・権利最終承認はまだ未実施。Q0/Q1 BLOCKED、App Review・TestFlightは操作しない。
+
+## B2生成元パッチの順序不整合是正（2026-11-22）
+
+- ID `sm2-5y-r08-phy-01`：同じ生成元ファイルで先にNLM公式MedlinePlusのsourceUrlを設定する既存パッチがあり、その後のNINDS膝反射改稿パッチが依然旧NCBI URLを前提にしていた。順序上、後者のold-state guardが不成立となり、再生成を阻害する潜在不具合を検出。
+- NINDS改稿側oldSrcを**NLM変更後URL** `https://medlineplus.gov/lab-tests/neurological-exam/` に変更。これでファイル内の2段階ソース状態遷移が矛盾しない。修正コミット `46dcf415a1bd38cd16db80c30fe07ab304e38867`。
+- ID `sm2-5y-r10-hyg-08` でも先行厚労省通知パッチと追加PDFパッチの旧URL衝突を検出し、直前のコミット `23fa29c01d19c158a7d038b05d2226d4b2d3f9c0` で解消済。
+- **いずれも静的な状態遷移確認のみ。Nodeで実際に再生成・配布JSON一致検査を通した事実ではない。**今回の一次集計PASS62/HOLD7（69問）をこの整合修正で増減させない。Q0/Q1 BLOCKEDを維持。
+
+## 2026-11-22 B2第16次：No.163 コリ回路 EPA原著一次PASS
+
+- 固定No.163／ID `sm2-5y-r09-phy-05`。米環境保護庁EPA公式公表の乳酸リスク評価（案件EPA-HQ-OPP-2018-0157-0004、PDF印刷13頁「Metabolism」） https://downloads.regulations.gov/EPA-HQ-OPP-2018-0157-0004/content.pdf は、筋由来乳酸→血液→肝臓→ピルビン酸→糖新生→グルコース→筋への経路を「lactic acid (Cori) cycle」と明示。本文はEPA評価書の記述で、引用された生化学文献の政府著作性を主張しない。PDF本文のテキスト確認済、ウェブPDFの画像は403で再取得不能につき画面の独立確認未実施。NLM政府編集のコリ夫妻歴史解説 https://www.nlm.nih.gov/exhibition/changing-the-face-of-medicine-V1/index_hold.html も名称を補強。
+- **5肢**：①尿素回路×（窒素代謝）、②クエン酸回路×（細胞内炭素酸化）、**③コリ回路○（乳酸の肝糖新生再利用）**、④β酸化×（脂肪酸分解）、⑤ペントースリン酸経路×（五炭糖・NADPH生成）。
+- 既存出典はNCBI収載StatPearls（第三者執筆）だったため、EPA当局原著PDFへsourceUrlを差し替え、basis/explanationと監査状態を更新する旧値guard付き生成元修正をコミット：`8d303c32137b6a17c8036f34a6d6d5c8f6d2410e`。正答位置③、問題文・全5肢不変。
+- 分割B一次集計：前節 **PASS62/HOLD7 → PASS63/HOLD6**（重複計上なし）。**正式公開承認ではない**。配布JSON再生成・バイト一致、独立二重監査、最終権利検査は未達。Q0/Q1 BLOCKED、App Review・TestFlight操作なし。
+
+## 2026-11-22 B2第17次：No.167 血圧代償・米陸軍医務部原著で一次PASS
+
+- No.167 `sm2-5y-r09-phy-09`。U.S. Army Medical Department Center of History and Heritage公式原著 *Battle Casualties in Korea* vol.3 ch.7 https://achh.army.mil/history/book-korea-vol3-battlecasualties-chap07/ は、出血時に心拍増加と末梢血管収縮が血圧を保持する代償として働き、重度ではショックで代償が破綻することを直接記載。先行のNCBI所蔵第三者教材の出典を公式発行者原著へ差し替える。
+- 5肢：**①○心拍数増加・末梢血管収縮**、②×交感神経が双方に無影響との否定、③×圧受容器反射が必ず消失とする断定、④×血管が必ず完全拡張かつ心停止とする断定、⑤×代償反応が一切生じないとの否定。出血直後に交感神経活動・心拍数上昇があるという設問条件下での判断であり、全ての出血例で必ず心拍数が増すとの臨床断定にはしない。
+- 旧URL、5肢、正答位置①、正答文字列のguard付きでsourceUrl/basis/explanation/auditStatusを更新する生成元コミット `bff9de7cfc2a65fb56d9ecb0693640903e8075e7`。選択肢は不変。
+- **一次内容PASS**。前節PASS63/HOLD6 → **PASS64/HOLD5**。生成元再生成・配布JSONバイト一致・独立二重チェック・権利最終確認未完で、正式Q0/Q1はBLOCKED。
+
+## 2026-11-22 B2第18次：No.151 長時間絶食・FDAとDOE公式原著で一次PASS
+
+- No.151 `sm2-5y-r07-phy-07`。**FDA自身の2026-08-19発行決定文書** *Summary Basis for Regulatory Action—GENGLYCOS*, Background p.5, https://www.fda.gov/media/194583/download?attachment= ：絶食期の肝糖放出はグリコーゲン分解と糖新生に依存し、両機序が障害される糖原病では重度低血糖が起きることを直接説明。**米国DOE National Science Bowl公式科学問題（独自作問）** Sample Set 6 Round 16, p.9 bonus 18, https://sc-drcds.osti.gov/-/media/wdts/nsb/pdf/MS-Sample-Questions/Sample-Set-6/Round16.pdf は、乳酸・グリセロール・糖原性アミノ酸からグルコースを生成する代謝を「gluconeogenesis」と定義。両公式資料を組合せ、問題条件の肝貯蔵グリコーゲン大幅減少時に糖新生の相対的寄与が大きくなる命題を支持する。具体的な寄与率は推定しない。FDA/DOEとも政府発行者自身の原稿。DOEの原問題をアプリに転載せず、独自の選択肢の根拠のみに利用する。
+- 5肢：①×有限の貯蔵グリコーゲンから無制限供給、②×インスリン作用が強いほど糖新生が必ず増えるとの断定、③×カルシトニンが乳酸を糖に直接変換、**④○乳酸・グリセロール・糖原性アミノ酸由来の糖新生の相対的寄与増加**、⑤×グリコーゲン減少で肝臓の糖供給が完全停止。1肢のみ適切。
+- 旧NCBI第三者StatPearls URLをFDA直接原典へ変更、DOE原典をbasisに補足、解説・監査状態を更新する生成元コミット `4613d459f3ce5994d3e2ae931bbb3ba36ad39963`。問題文・5肢・正答位置④は不変。
+- **一次内容PASS**：前節PASS64/HOLD5 → **PASS65/HOLD4（69問）**。独立二重チェック・全権利判定・再生成・バイト一致の実行は未完、公開品質ゲートBLOCKED継続。FDA/DOEのPDFはウェブ本文を確認したが、PDFスクリーンショット機能が利用不可となり画像での独立確認は未実施。
+- **残る一次HOLD4**：No.131 `sm2-5y-r05-phy-04`、No.133 `sm2-5y-r05-phy-06`、No.135 `sm2-5y-r05-phy-08`、No.142 `sm2-5y-r06-phy-08`。No.131/133/142は生成元限定改稿済みだがバイト一致と独立再監査未了。No.135は政府機関が独自執筆したGLUT4非インスリン性膜移行の直接教材が未取得。NIH PubMed収載の査読原著やNIDDK所蔵の研究計画書を政府自身の著作と断定せず、資料根拠区分を保留する。
+- **実行制約**：GitHubコネクタを用いたファイル更新とコミットは実施可能だが、現環境のgit外部ネットワークは名前解決不能でローカルclone・Node再生成の実行に至らず。生成元のパッチは動作未検証であり、配布JSONの最新内容も未反映。Q0/Q1 BLOCKED、App Review・TestFlightなし。
+
+## B2第18次追補：No.151/163/167生成元パッチの個別実行検証
+
+GitHub接続から現行 `ios/health-manager-2/release-questions.json` と `apps/sanitary-manager-2/hm2-source-precision-v1.js` を取得。配布JSONの該当問題を `id,choices,answer(correct_index+1),sourceUrl,explanation,basis,auditStatus` のwindow.Q_PARTS形式へ写像し、JavaScript V8内で3つの独立IIFEのみ個別実行した。テスト対象は以下。
+
+| ID | old-state guard | 出典URL更新 | 5肢・正答位置不変 | auditStatus |
+|---|---|---|---|---|
+| sm2-5y-r09-phy-05（No.163） | PASS | PASS | PASS | 一次資料照合済 |
+| sm2-5y-r09-phy-09（No.167） | PASS | PASS | PASS | 一次資料照合済 |
+| sm2-5y-r07-phy-07（No.151） | PASS | PASS | PASS | 一次資料照合済 |
+
+**実測範囲の限界**：これは正規生成スクリプト全体の実行ではない。基準データを生成元全スクリプトで構築したものではなく、各IIFEに必要なフィールドだけを抽出・写像したスモークテストである。配布JSONの変更・SHA256生成・再生成バイト一致・全300問回帰・独立二重監査は未実施。Q0/Q1は引き続きBLOCKED。
+
+## 2026-11-22 B2第19次：No.135 NIDDK公式公開本文の射程へ改稿（運用再監査待ち）
+
+- 固定No.135、ID `sm2-5y-r05-phy-08`。NIDDK公式公開記事 *Prescribing Exercise for Almost Anyone*（2018-06-20） https://www.niddk.nih.gov/health-information/professionals/diabetes-discoveries-practice/prescribing-exercise-for-almost-anyone は、筋収縮による運動時の血中ブドウ糖取り込みが安静時のインスリン作用とは別経路で起こることを専門家Sheri Colberg氏の発言としてNIDDKが原文掲載している。**発言者は政府職員と確認しておらず、「政府サイトにある第三者の専門家発言」を「政府が直接執筆した機序」と混同しない**。GLUT4の膜移行の細胞内機序はこの公式掲載本文からは直接確認できない。
+- 現行5肢はGLUT4膜移行に特化し当該NIDDK本文と直接照合できないため、難易度低下を伴うが**筋収縮に伴うインスリン非依存性糖取り込みへ問題・5肢・正答解説を全面限定改稿**。正答位置⑤は維持。改稿後の肢：①× インスリン増加なしでは筋糖取り込み増加は絶対不可、②× 筋収縮開始で必ず完全停止、③× 筋は糖を使わず胆汁酸のみ、④× 筋収縮は関与せずカルシトニンだけ、**⑤○ 筋収縮によりインスリンの安静時作用とは別の経路から糖取り込みが増え得る**。NIDDK直接掲載本文の範囲へ狭めた結果であり、詳細なGLUT4分子機序の立証を意味しない。
+- パッチは旧問題文・全5肢・旧PubMed URL・正答位置⑤と肢一意性をguardし、question/choices/quick/explanation/topic/sourceUrl/basisを書換え。公開承認を `requires-independent-subject-expert-review`、`再監査待ち`、`非公開` に無効化。生成元コミット `aa2a204353b673173c1b19a3ec05034aa22c6855`。
+- **個別V8実行スモークテスト実測PASS**：GitHubから取得した現行配布JSONの当該一問をQ_PARTSへ写像して改稿IIFEを実行し、旧値guard PASS、エラーなし、5肢ユニーク、正答位置⑤不変、sourceUrl変更、公開非承認状態を検証。正規300問生成／配布JSONバイト一致は**未実施**。
+- **一次内容集計はPASS65/HOLD4のまま**。No.135の正式一次PASS加算は独立再監査・生成元再生成と権利（NIDDK掲載外部専門家発言の転載権と独自作問）最終評価後に限る。残HOLDのNo.131/133/142/135はすべて生成元改稿済だが、配布JSONの最新バイト一致と独立ゲート未通過。Q0/Q1 BLOCKED、App Review・TestFlight未実施。
+
+## B2第20次・残HOLD4問の一次内容確定（2026-11-22）
+
+**重要な判定区分**：ここでいう「一次内容PASS」は、政府機関が直接発行した資料または政府機関の公式サイトに原文掲載された専門家発言の出典主体・射程を峻別し、**生成元で改稿後**の5肢の論理的正誤を照合した判定である。**公開可能な最終PASSではない**。配布JSONは本節記録時点でも旧問題が残る。独立二重監査・権利最終確認・配布JSON生成の決定性チェックを要する。
+
+### No.131 `sm2-5y-r05-phy-04`：一次内容PASS／配布JSON未反映
+
+- **公式直接原典A**：米国国立糖尿病・消化器病・腎疾病研究所（NIDDK）自身の2013年解説 https://www.niddk.nih.gov/news/archive/2013/new-mechanism-proposed-glucose-lowering-effect-metformin-drug-type-2-diabetes ：空腹時にグルカゴンが肝糖放出を促し、食後分泌されるインスリンと逆方向に働く。
+- **公式直接原典B**：米国NLM MedlinePlus Genetics `GCK gene` `Normal Function` https://medlineplus.gov/genetics/gene/gck/ ：肝グルコキナーゼは余剰グルコースの肝取り込みとグリコーゲン貯蔵への変換に関与。
+- **生成元の改稿後④**「食後には肝臓からの糖放出が抑制される方向に働き、肝臓に取り込まれた余剰の糖はグリコーゲンとして貯蔵され得る。」を両直接原典で支持。肢①×（食後のグルカゴン作用必然増大）、②×（肝糖新生と分解の一律増大）、③×（肝がインスリン作用を受けず調節不能）、④○、⑤×（インスリンが肝糖放出を増やすとの逆転）。**条件付きの「貯蔵され得る」であり、単一ホルモンの直接因果を過大断定しない**。
+- 先行生成元2段階パッチ（政府原著出典置換→正答④限定改稿）を、**No.134を同じQ_PARTSに含めた**状態でV8実行し両段ともPASS。旧値guard、4番正答、一意の5肢、出典置換、監査状態「再監査待ち・非公開」を実測。
+
+### No.133 `sm2-5y-r05-phy-06`：一次内容PASS／配布JSON未反映
+
+- 米国NHLBI独自編集 https://www.nhlbi.nih.gov/health/heart/heart-beats 「How to find your pulse」：脈拍は心拍に対応し、手首の動脈を指で触れて確認できる。元の「動脈壁の圧力変動の末梢伝播」まで当該本文が直接説明するわけではないため、既存パッチで**①を「心臓が血液を送り出すときに生じる動脈の拍動を、手首で触知しているもの」に限定**済み。
+- 改稿後5肢：**①○心拍に伴う手首の動脈拍動**、②×肺胞でのガス交換の直接触知、③×静脈血流速度の直接計測、④×消化管蠕動、⑤×毛細血管の凝固。いずれも触知した脈拍そのものの機序でない。
+- 生成元パッチをV8実行しguard・5肢重複なし・正答位置①維持・出典と説明の更新・「再監査待ち・非公開」を確認。
+
+### No.135 `sm2-5y-r05-phy-08`：**限定改稿後の一次内容PASS（出典の著作主体リスク明記）**／配布JSON未反映
+
+- 米国NIDDKの公式サイト掲載2018年記事 https://www.niddk.nih.gov/health-information/professionals/diabetes-discoveries-practice/prescribing-exercise-for-almost-anyone ：専門家Sheri Colberg氏が、筋収縮による運動中の糖取り込みは安静時のインスリン作用と別の仕組みと説明。**NIDDKの公式公開コンテンツであるが、当該専門家発言が米国政府自らの著作物であるとは主張しない。**転載・翻訳はせず独自作問で命題のみ利用。改稿によりGLUT4膜移行の分子機序を選択肢から全削除した。
+- 改稿後5肢：①×インスリン濃度増加がなければ糖取り込み増加不可能、②×筋収縮開始で糖取り込み必ず停止、③×骨格筋は糖不使用・胆汁酸のみ、④×筋収縮は無関係・カルシトニンのみ、**⑤○筋収縮による別経路でインスリン濃度増加なしにも糖取り込み増大し得る**。
+- 生成元パッチV8実行PASS：旧問題・5肢・旧PubMed URL guardが一致し、5肢を差し替えても正答⑤と選択肢一意性を保持、非公開・再監査待ちへ更新。**GLUT4の膜移行の立証に成功したのではなく、原典で確認できる内容へ設問を狭めた結果。** 厳密な「政府職員が執筆した文書のみ」基準では外部専門家発言部分は別の原著による二重確認を要する。
+
+### No.142 `sm2-5y-r06-phy-08`：一次内容PASS／配布JSON未反映
+
+- 米国NLM独自編集 https://medlineplus.gov/genetics/gene/mt-atp6/ `Normal Function` は、ミトコンドリアで酸素を使った酸化的リン酸化がATPを産生し、ATP synthaseが膜を通るプロトン流からエネルギーを得てATPを合成すると直接説明。
+- 元の「最終電子受容体」という細部はこの原典のみで直接立証できないため、既存の改稿後④「ミトコンドリアで酸素を利用し、ATP合成酵素がプロトンの流れのエネルギーを使ってATPを生成する」を正答とする。
+- 5肢：①×細胞質解糖で酸素を直接ATP材料として消費、②×酸素非利用・乳酸のみを最終電子受容体、③×ATP synthaseとプロトン流が無関係、**④○政府編集の直接説明と一致**、⑤×酸素十分でも全ATP産生が完全停止。生成元パッチV8実行PASS、正答④保持、5肢一意、出典修正、公開非承認状態を確認。
+
+### 4問まとめ・回帰検証と残存の技術障害
+
+- 固定No.131/133/135/142の4問は**生成元の限定改稿後の全5肢に関する一次内容判定PASS**。分割B69問の**内容一次確認は従来PASS65＋今回4＝PASS69／内容HOLD0**とする。ただし**アプリ配布済みJSONに旧問題が残るため、公開品質ゲートの未承認4問は解消していない**。内容の一次判定と技術的配布承認を混同しない。
+- 回帰テスト `ios/health-manager-2/audit/test-b2-final4-patches.cjs` を追加（commit `2f0781a8ecdbee530a6c576838a8fa824a5763b3`）。既存の生成元IIFEを抽出し、現行配布JSONを個別Q_PARTSへ写像、No.131だけ前段にNo.134を含め、旧値guard、正答位置、5肢一意、正答文字列、出典変更、再監査待ち・非公開を断言する。**V8同等ロジックを実測し4/4 PASS**。Node CLIでの当該新規テストそのものの実行証跡は未取得。コード構文はshebangを除いた解析で正常。
+- **生成元全体を現行release-questions.jsonから構築した300問相当のQ_PARTSへ適用する試験はFAIL**：先頭パッチで `HM2 source precision old state mismatch sm2-5y-r05-hyg-05`。この現行配布JSONを生成元の本来の事前状態として扱ってよいかも未確認のため、**配布JSONを直接書き換えてバイト一致と称することはしない**。
+- 完了条件未達：正規生成元の入力状態の特定→フル生成→バイト一致検証・pin更新・readiness実行、独立二重監査、権利最終判定。Q0/Q1 BLOCKED、App Review・TestFlightは一切実施しない。
+
+
+## 2026-11-22 最終技術追補：旧状態不一致の診断・正規Node300問再生成の実測PASS
+
+**事象**：先行の「HM2 source precision old state mismatch sm2-5y-r05-hyg-05」は、既存の `release-questions.json`（旧状態パッチ適用済み配布成果物）を **生成元パッチの入力** と誤認して試したことに起因。正規入力の `q1.js`～`q12.js`→難易度パッチ→audit-patch-v2/v3/v4→audit-fixes.js→question-order-v1.js を構築すると、No. `sm2-5y-r05-hyg-05` / `sm2-5y-r07-hyg-08` のsourceUrlはいずれも期待するAIST 2020-12-24旧URL。続く `hm2-source-precision-v1.js` は旧URL guardを通過し、12-03版URLへ置換できる。**旧状態チェックは弱めず、元コードの旧値も変更不要**。
+
+- 当該修正スクリプトと、`hm2-c-replacements-v1.js`、`hm2-c-remaining-13-v1.js`、`hm2-source-evidence-v2.js` まで、正規順序の全21スクリプトのV8実行を300問に対して確認（ブラウザ用・配布用双方）。生成元内容改稿4問 No.131/133/135/142 も実データへ適用。
+- 最初に生成した配布JSONのコミット：`6da57c5794c4cd1c685d1fc7aeccd688c3167277`。この成果物は**正規Nodeによるバイト一致に未達**であったため、正本扱いしない。
+- 既存の安全な再生成専用ワークフロー `.github/workflows/hm2-canonical-json-rebuild.yml` を本ブランチにも適用するよう修正（commit `a0e121d6f4a2e01555859bc508fd7462f4c70eee`、このワークフローはApp Review・TestFlight・Appleへの送信を一切行わない）。
+- **GitHub Actions実測PASS**：workflow *HM2 canonical iOS question JSON rebuild* run `44982669275`、job `137086376610`、URL https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/44982669275 。ジョブ内の正規コマンド `node ios/health-manager-2/export-canonical-snapshot.cjs` が成功、出力ログ：`PASS HM2_CANONICAL_JSON {"total":300,"uniqueStems":300,"choiceDrift":0,"correctAnswerDrift":0,"groups":30,"sha256":"434de86ab795d369a1ef52f16a0cf57cab7054b72f6aac952aa7805fb3872177","bytes":605819}`。正規Nodeで生成されたJSONそのものを `fix/hm2-priority123-regression-20261122` へコミット・push成功。**正規生成JSONコミット `ea986ce`（GitHub Actionsログで確認）**。
+- 同じCIジョブの「Verify all 300 stems are unique」「Rebuild canonical iOS JSON and verify browser-release parity」「Verify old release pathway refuses unresolved subject-matter reviews」「Commit generated canonical JSON to audit branch」はすべて**SUCCESS**。
+- **重要な区別**：旧公開経路 `export-audit-data.cjs` は独立監査未了の設問を検出して意図どおり `HM2_RELEASE_REVIEW_BLOCKED: sm2-5y-r10-hyg-04: law-related question missing legalChecked` を出し、リリースを拒否した。この拒否はCI上の期待したPASS条件。法令承認や権利判断を一括書換えしていない。既存の独立二重チェック／全300問権利判定など最終Q0/Q1はBLOCKEDのまま。
+- **分割Bの一次内容監査**は改稿後69/69 PASSという別の台帳判定を維持。正規生成・配布の技術面が改善したことと、全問独立監査完了・本番申請可能は同義ではない。App ReviewおよびTestFlight配信操作なし。

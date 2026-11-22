@@ -29,6 +29,12 @@ jobs:
       - name: Audit canonical release registry
         run: python3 scripts/app_release_registry_audit.py
 
+      - name: Block submission until strict content, rights, expert, screenshots, and current build evidence pass
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/hm2_submission_readiness.py --enforce-submission --output /tmp/hm2-submission-readiness.json
+
       - name: Require explicit approval for exact current target
         shell: bash
         run: |
@@ -50,7 +56,12 @@ jobs:
           for key,value in expected.items():
               if str(cmd.get(key)) != value:
                   raise SystemExit(f'HUMAN_GATE: {key} mismatch: {cmd.get(key)} != {value}')
-          print('PASS: explicit HM2 approval packet matches exact App ID / Bundle ID / Build 22.')
+          # Do not accept stale Build 22 (or any different Apple build) as the
+          # current SHA-scoped release candidate merely because it once passed.
+          candidate=json.loads(Path('automation/asc-results/hm2-verified-release-candidate.json').read_text(encoding='utf-8'))
+          if str(candidate.get('build_id')) != expected['build_id'] or str(candidate.get('build_number')) != expected['build']:
+              raise SystemExit('HUMAN_GATE: old fixed Build 22 is not the verified current candidate; update workflow and obtain fresh approval')
+          print('PASS: approval packet matches exact verified current candidate.')
           PY
 
       - name: Validate canonical screenshot set

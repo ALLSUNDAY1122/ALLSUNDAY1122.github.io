@@ -1,0 +1,23 @@
+name: HM2 seven primary-source updates regression
+on:
+  push:
+    branches: [audit/hm2-quality-20261110]
+    paths:
+      - apps/sanitary-manager-2/audit-fixes.js
+      - scripts/verify_sm2_seven_primary_sources.cjs
+      - .github/workflows/hm2-seven-primary-sources.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-seven:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source-updated seven in browser and export orders
+        run: node scripts/verify_sm2_seven_primary_sources.cjs
+      - name: Verify earlier 15-item correction not regressed
+        run: node scripts/verify_sm2_15_unique_answers.cjs

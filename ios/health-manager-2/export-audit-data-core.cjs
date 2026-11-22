@@ -15,7 +15,8 @@ global.localStorage = { getItem: () => null, setItem: () => {} };
 
 const scripts = [
   'q1.js','q2.js','q3.js','q4.js','q5.js','q6.js','q7.js','q8.js','q9.js','q10.js','q11.js','q12.js',
-  'audit-patch-v2.js','audit-patch-v3.js','audit-patch-v4.js','audit-fixes.js','question-order-v1.js'
+  'difficulty-patch-v5.js',
+  'audit-patch-v2.js','audit-patch-v3.js','audit-patch-v4.js','audit-fixes.js','question-order-v1.js','hm2-source-precision-v1.js','hm2-c-replacements-v1.js','hm2-c-remaining-13-v1.js','hm2-source-evidence-v2.js'
 ];
 for (const file of scripts) {
   const full = path.join(WEB, file);
@@ -68,52 +69,44 @@ for (const q of questions) {
   }
   if (!examRound[q.examSet]) throw new Error(`${q.id}: unknown examSet ${q.examSet}`);
   if (!subjects.includes(q.subject)) throw new Error(`${q.id}: unknown subject ${q.subject}`);
-  if (q.lawRelated && !q.legalChecked) throw new Error(`${q.id}: law-related question missing legalChecked`);
+  if (q.lawRelated && !q.legalChecked) throw new Error(`HM2_RELEASE_REVIEW_BLOCKED: ${q.id}: law-related question missing legalChecked; independent legal verification is required before this release export`);
   const body = normalized(q.question);
   if (bodies.has(body)) throw new Error(`${q.id}: exact normalized duplicate of ${bodies.get(body)}`);
   bodies.set(body, q.id);
 }
 
-// Current-law/content release gate. These are the high-risk numeric or newly-amended
-// assertions rechecked against current MHLW primary materials on 2026-08-18.
-const byTopic = new Map(questions.map(q => [q.topic, q]));
-function requireText(topic, ...needles) {
-  const q = byTopic.get(topic);
-  if (!q) throw new Error(`Missing audited topic: ${topic}`);
-  const text = `${q.question} ${q.quick} ${q.explanation} ${q.basis}`;
-  for (const needle of needles) if (!text.includes(needle)) throw new Error(`${topic}: missing verified current-law value ${needle}`);
+// Test live IDs and actual served answer/explanation, not pre-redesign topic labels.
+// Preserve the independent legal review gate: source URLs and prior legalChecked
+// metadata do not confer approval on rewritten questions.
+const {verifyCurrentLawContent}=require('./verify-current-law-contract.cjs');
+const contract=verifyCurrentLawContent(questions);
+const added=questions.filter(q=>q.fiveYearExpansion);
+const unresolved=added.filter(q=>
+ q.contentReviewStatus?.startsWith('requires-independent-')
+ ||q.publicationStatus!=='公開候補'
+ ||(q.lawRelated?q.auditStatus!=='一次資料照合済':q.auditStatus!=='内容監査済')
+);
+{
+ // Always enforce the user-approved alternative Q0 criterion, even if legacy
+ // publication markers were cleared or became empty in a subsequent patch.
+ // A status-only change must never bypass the 178-question double review.
+ // The user-approved alternative Q0 process requires two independent reviews
+ // of each of 178 questions plus a separate rights decision for all 300.
+ // This helper checks completeness and pinned IDs, not legal correctness;
+ // human/AI review records must be assessed independently before release.
+ const alternative=spawnSync('python3',[
+   path.join(REPO_ROOT,'scripts/hm2_alternative_q0_gate.py'),'--enforce'
+ ],{encoding:'utf8',cwd:REPO_ROOT,timeout:30000});
+ if(alternative.error || alternative.status!==0){
+   const flagged=unresolved.slice(0,8).map(q=>q.id+':'+q.contentReviewStatus+':'+q.auditStatus);
+   throw new Error('HM2_RELEASE_REVIEW_BLOCKED: '+unresolved.length
+    +' generated questions require independent review / status reconciliation. '
+    +'Alternative Q0 evidence not complete. Samples: '+flagged.join(', ')
+    +'. Validator: '+(alternative.stdout||alternative.stderr||'could not start').slice(0,1400));
+ }
+ console.log('PASS HM2_ALTERNATIVE_Q0_EVIDENCE_STRUCTURE (source validity still requires independent review)');
 }
-requireText('健康診断後の医師等の意見聴取','3か月以内');
-requireText('自発的健康診断後の意見聴取','2か月以内');
-requireText('産業医の辞任等の報告','2026年8月1日','所轄労働基準監督署長','辞任・解任・退任');
-requireText('衛生管理者の選任期限','14日以内');
-requireText('衛生管理者の定期巡視','毎週1回');
-requireText('衛生委員会の開催頻度','毎月1回');
-requireText('衛生委員会記録の保存','3年間');
-requireText('暑熱な場所の基準','WBGT28','気温31');
-requireText('熱中症対策の対象作業','継続1時間','1日4時間');
-requireText('法定労働時間（日）','1日8時間');
-requireText('法定労働時間（週）','1週間40時間');
-requireText('6時間超の休憩','45分');
-requireText('8時間超の休憩','1時間');
-requireText('時間外労働の原則月上限','月45時間');
-requireText('時間外労働の原則年上限','年360時間');
-requireText('特別条項の年上限','年720時間');
-requireText('特別条項の単月上限','100時間未満');
-requireText('特別条項の複数月平均','2～6か月','80時間以内');
-requireText('空調時の室温','18℃以上28℃以下');
-requireText('空調時の相対湿度','40％以上70％以下');
-requireText('事務室の気流','0.5m/s以下');
-requireText('供給空気の二酸化炭素','1,000ppm以下');
-requireText('供給空気の一酸化炭素','10ppm以下');
-requireText('一般的な事務作業の照度','300ルクス以上');
-
-for (const q of questions.filter(q => q.fiveYearExpansion)) {
-  if (q.publicationStatus !== '公開候補') throw new Error(`${q.id}: content audit not finalized (${q.publicationStatus})`);
-  if (q.lawRelated && q.auditStatus !== '一次資料照合済') throw new Error(`${q.id}: current-law primary-source audit missing`);
-  if (!q.lawRelated && q.auditStatus !== '内容監査済') throw new Error(`${q.id}: content audit missing`);
-}
-console.log('PASS: 210 added questions passed content-status gate; high-risk current-law numeric/amendment assertions are pinned to 2026-08-18 baseline.');
+console.log('PASS: live-ID numeric checks and expansion review gate (legacy statuses or complete alternative evidence).');
 
 const out = questions.map(q => ({
   id: q.id,
@@ -134,7 +127,10 @@ const out = questions.map(q => ({
   law_related: Boolean(q.lawRelated),
   legal_checked: q.legalChecked || null,
   audit_status: q.auditStatus,
-  publication_status: q.publicationStatus
+  publication_status: q.publicationStatus,
+  difficulty_model: q.difficultyModel || null,
+  no_common_sense_shortcut: Boolean(q.noCommonSenseShortcut),
+  ...(q.contentReviewStatus && q.auditStatus === '再監査待ち' ? { content_review_status: q.contentReviewStatus } : {})
 }));
 
 const outPath = path.join(IOS_DIR, 'release-questions.json');

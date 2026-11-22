@@ -7,12 +7,8 @@ final class StoreKitManager: ObservableObject {
     static let lifetimeProductID = "jp.allsunday1122.healthmanager2.lifetime"
     static let productIDs = [monthlyProductID, lifetimeProductID]
 
-    // HM2 is sold in Japan at these canonical App Store Connect price points.
-    // Keep the paywall presentation stable even when TestFlight temporarily
-    // serves stale storefront metadata. The Apple purchase sheet remains the
-    // authority for the actual transaction.
-    static let monthlyJapanDisplayPrice = "¥200/月"
-    static let lifetimeJapanDisplayPrice = "¥800"
+    // Display only verified StoreKit product pricing. When unavailable,
+    // do not represent historical Japanese price points as current prices.
 
     @Published private(set) var monthlyProduct: Product?
     @Published private(set) var lifetimeProduct: Product?
@@ -62,11 +58,14 @@ final class StoreKitManager: ObservableObject {
     }
 
     var monthlyDisplayPrice: String {
-        reviewMonthlyPriceOverride ?? Self.monthlyJapanDisplayPrice
+        if let override = reviewMonthlyPriceOverride { return override }
+        guard let product = monthlyProduct else { return "価格を取得中" }
+        return product.displayPrice + "／月"
     }
 
     var lifetimeDisplayPrice: String {
-        reviewLifetimePriceOverride ?? Self.lifetimeJapanDisplayPrice
+        if let override = reviewLifetimePriceOverride { return override }
+        return lifetimeProduct?.displayPrice ?? "価格を取得中"
     }
 
     var monthlyAvailable: Bool { reviewMonthlyPriceOverride != nil || monthlyProduct != nil }
@@ -80,7 +79,9 @@ final class StoreKitManager: ObservableObject {
             // App Store Connect response/configuration from ever wiring the
             // monthly button to the lifetime product (or vice versa).
             monthlyProduct = products.first {
-                $0.id == Self.monthlyProductID && $0.type == .autoRenewable
+                $0.id == Self.monthlyProductID && $0.type == .autoRenewable &&
+                    $0.subscription?.subscriptionPeriod.unit == .month &&
+                    $0.subscription?.subscriptionPeriod.value == 1
             }
             lifetimeProduct = products.first {
                 $0.id == Self.lifetimeProductID && $0.type == .nonConsumable
@@ -134,7 +135,10 @@ final class StoreKitManager: ObservableObject {
         }
 
         // Fail closed if a product ever arrives with an unexpected StoreKit type.
-        if productID == Self.monthlyProductID && product.type != .autoRenewable {
+        if productID == Self.monthlyProductID &&
+            (product.type != .autoRenewable ||
+             product.subscription?.subscriptionPeriod.unit != .month ||
+             product.subscription?.subscriptionPeriod.value != 1) {
             statusMessage = "月額商品の設定を確認できません。"
             return
         }

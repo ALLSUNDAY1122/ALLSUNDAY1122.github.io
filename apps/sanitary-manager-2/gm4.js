@@ -91,7 +91,7 @@ function settingsScreen(){
   <div class="card setting"><h3>試験日</h3><input class="dateinput" type="date" value="${esc(S.examDate)}" onchange="saveExamDate(this.value)"><p>設定するとホームに残日数と一周に必要な1日ペースを表示します。</p></div>
   <div class="card setting"><h3>学習データ</h3><div class="databtns"><button onclick="exportData()">JSONを書き出す</button><button onclick="importData()">JSONを読み込む</button></div></div>
   <div class="card setting"><h3>覚えかたのルール</h3><div class="memory"><span class="memorylabel">苦手卒業</span>間違い・「わからない」は苦手に追加。苦手問題を3回連続で正解すると自動で外れます。</div></div>
-  <div class="card setting"><h3>この教材について</h3><div class="legal">第二種衛生管理者の学習支援教材です。公表問題は論点確認に使用し、問題文・選択肢・解説は独自作成。法令基準日 ${LEGAL_DATE}。法令の最終確認は厚生労働省・e-Gov等の最新一次資料を優先してください。</div></div>
+  <div class="card setting"><h3>この教材について</h3><div class="legal">本アプリは試験実施団体・官公庁の公式教材ではなく、専門家による監修・承認を受けていません。問題文・選択肢・解説は独自作成の学習用資料で、正確性や合格を保証しません。法令基準日 ${LEGAL_DATE}。制度・法令の最終確認には厚生労働省・e-Gov等の最新公式一次資料を優先してください。</div></div>
   <div class="card setting"><h3>学習記録リセット</h3><button class="dangerbtn" onclick="resetAll()">すべての学習記録を消す</button></div>
   </div>`+nav('settings'));
   requestStoreStatus();

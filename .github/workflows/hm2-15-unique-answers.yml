@@ -1,0 +1,23 @@
+name: HM2 15-question unique-answer regression
+on:
+  push:
+    branches:
+      - audit/hm2-quality-20261110
+    paths:
+      - apps/sanitary-manager-2/audit-fixes.js
+      - scripts/verify_sm2_15_unique_answers.cjs
+      - ios/health-manager-2/audit/QUALITY_REAUDIT_20261110.md
+      - .github/workflows/hm2-15-unique-answers.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  unique-answer-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify all 15 in both loading orders
+        run: node scripts/verify_sm2_15_unique_answers.cjs
