@@ -443,3 +443,22 @@ q.explanation='米陸軍医務部の公式戦傷医療史第3巻第7章では、
 q.auditStatus='一次資料照合済';
 window.HM2_B2_ARMY_HEMORRHAGE_SOURCE_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// HM2 B2 fasting: FDA agency-authored regulatory background plus DOE original science question.
+const id='sm2-5y-r07-phy-07';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+const old='https://www.ncbi.nlm.nih.gov/books/NBK541119/';
+const fda='https://www.fda.gov/media/194583/download?attachment=';
+const doe='https://sc-drcds.osti.gov/-/media/wdts/nsb/pdf/MS-Sample-Questions/Sample-Set-6/Round16.pdf';
+if(!q||q.sourceUrl!==old||!Array.isArray(q.choices)||q.choices.length!==5||q.answer!==4||
+ q.choices[3]!=='乳酸・グリセロール・糖原性アミノ酸などを材料とする糖新生の相対的寄与が増える。')
+ throw Error('HM2 B2 fasting old-state mismatch '+id);
+q.sourceUrl=fda;
+q.basis=String(q.basis||'')+' ／ 2026-11-22 U.S. FDA original regulatory decision memo Aug 19 2026 GENGLYCOS Summary Basis for Regulatory Action, background p5: during fasting liver glucose maintenance involves glycogen breakdown and gluconeogenesis, both fail in GSD-Ia. U.S. DOE National Science Bowl official original Sample Set 6 Round16 p9 bonus 18 explicitly defines gluconeogenesis with lactate, glycerol, glucogenic amino acids: '+doe+'. Prior StatPearls third-party authorship is not attributed to government. Relative contribution as glycogen becomes depleted follows from reduced available substrate for glycogenolysis and continued hepatic gluconeogenesis, not a percentage estimate.';
+q.explanation='第4肢が適切。FDAの2026年8月政府作成承認審査文書は、絶食・代謝負荷時の血糖維持に肝グリコーゲン分解と糖新生の両方が必要であると記述。米国DOE National Science Bowl公式科学問題集は乳酸・グリセロール・糖原性アミノ酸からグルコースを作る経路を糖新生と定義する。貯蔵グリコーゲンが大きく減った設問条件では、グリコーゲン分解のみによる供給は制約され、糖新生の相対的寄与が増す。①は枯渇する貯蔵糖を無制限と誤る、②はインスリン増加で糖新生が必ず増えると逆転、③はカルシトニンを肝糖新生の直接変換酵素と混同、⑤は糖新生の継続を否定する。出典2文献にない絶食時間・寄与率の数値は断定しない。';
+q.auditStatus='一次資料照合済';
+window.HM2_B2_FDA_DOE_FASTING_SOURCE_ID=id;
+})();
