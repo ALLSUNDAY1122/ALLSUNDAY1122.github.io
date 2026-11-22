@@ -1,5 +1,5 @@
-import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useMemo, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {
@@ -24,6 +24,7 @@ import {
 } from '@/src/components/ui';
 import { useAppStore } from '@/src/context/AppStore';
 import { generateAiQuestions } from '@/src/services/ai';
+import { useCloudUsage, refreshCloudUsage, updateCloudUsageFromResponse, formatCloudUsage, isCloudUsageLimited } from '@/src/services/cloudUsage';
 import { recognizeWithGemini, type SelectedStudyImage } from '@/src/services/geminiOcr';
 import {
   generateOcrAwareQuestions,
@@ -83,6 +84,9 @@ function availabilityLabel(status: ReturnType<typeof getOnDeviceAIAvailability>)
 
 export default function CreateScreen() {
   const { cards, addCard, addCards } = useAppStore();
+  const cloudUsage=useCloudUsage();
+  const refreshUsage=useCallback(()=>{void refreshCloudUsage();},[]);
+  useFocusEffect(refreshUsage);
   const [sourceText, setSourceText] = useState('');
   const [deckName, setDeckName] = useState('メイン');
   const [type, setType] = useState<QuestionType>('mix');
@@ -143,6 +147,8 @@ export default function CreateScreen() {
         difficulty
       });
       setGeneratedText(formatLines(result.questions));
+      updateCloudUsageFromResponse(result.usageLimit);
+      if(!result.usageLimit)void refreshCloudUsage();
 
       const usage = result.usage.totalTokens
         ? `入力${result.usage.inputTokens}・出力${result.usage.outputTokens}トークン`
@@ -162,6 +168,7 @@ export default function CreateScreen() {
       setGenerateStatus(
         `AI作問に失敗しました：${message}。端末内簡易作問へは自動切替していません。`
       );
+      if(message.includes('AI_MONTHLY_LIMIT'))void refreshCloudUsage();
     } finally {
       setGenerating(false);
     }
@@ -421,11 +428,13 @@ export default function CreateScreen() {
       if (repaired.length < 5) throw new Error('有効な文字を認識できませんでした。');
       setOcrText(repaired);
       setOcrStatus(`Gemini OCRが${images.length}枚を認識しました。結果を必ず確認・修正してください。`);
+      await refreshCloudUsage();
     } catch (error) {
       setOcrText('');
       setOcrStatus(
         `Gemini OCRに失敗しました：${error instanceof Error ? error.message : '原因不明のエラー'}`
       );
+      if(error instanceof Error&&error.message.includes('AI_MONTHLY_LIMIT'))void refreshCloudUsage();
     } finally {
       setOcrRunning(false);
     }
