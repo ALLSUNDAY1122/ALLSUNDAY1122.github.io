@@ -346,7 +346,7 @@ window.HM2_B2_NINDS_REFLEX_REDESIGN_ID=id;
 // HM2 B2 No.115 official MHLW guidance: preserve five choices, correct position, legal approval.
 const id='sm2-5y-r10-hyg-08';
 const q=(window.Q_PARTS||[]).find(x=>x.id===id);
-const old='https://laws.e-gov.go.jp/law/347AC0000000057';
+const old='https://www.mhlw.go.jp/web/t_doc?dataId=00tc2624&dataType=1&pageNo=1';
 const url='https://www.mhlw.go.jp/content/11303000/001509876.pdf';
 if(!q||q.sourceUrl!==old||!Array.isArray(q.choices)||q.choices.length!==5||q.answer!==4||
  q.choices[3]!=='交替勤務や残業などの作業条件も調べ、健康指標の経年変化と併せて評価する。')
