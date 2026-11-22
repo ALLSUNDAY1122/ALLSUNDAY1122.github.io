@@ -30,3 +30,18 @@ for(const fix of fixes){
 }
 window.HM2_OFFICIAL_SOURCE_V2_IDS=fixes.map(f=>f.id);
 })();
+
+
+(function(){
+'use strict';
+// HM2 2026-11-22 official-source batch: strictly source metadata only; fail closed.
+const fixes=[{"id":"sm2-5y-r04-phy-03","old":"https://www.ncbi.nlm.nih.gov/books/NBK470455/","url":"https://biolincc.nhlbi.nih.gov/media/studies/hfn_relax/Protocol.pdf?link_time=2026-01-19_21%3A02%3A46.453754","basis":"NHLBI BioLINCC HFN-RELAX research protocol, section 14.2.5 p23 (PDF p28): cardiac output = stroke volume x heart rate. Example 70 mL x 70/min = 4.9 L/min. Note this is a hosted study protocol, not NIH clinical guidance."},{"id":"sm2-5y-r04-phy-10","old":"https://www.ncbi.nlm.nih.gov/books/NBK482456/","url":"https://stacks.cdc.gov/view/cdc/19367/cdc_19367_DS1.pdf","basis":"NIOSH official 1976 Criteria for a Recommended Standard, Occupational Exposure to Carbon Dioxide, pp23-24 (PDF indices 31-32): CO2 increases hydrogen ion chemoreceptor response and ventilation; high toxic levels may suppress respiration."},{"id":"sm2-5y-r05-phy-03","old":"https://www.ncbi.nlm.nih.gov/books/NBK539907/","url":"https://stacks.cdc.gov/view/cdc/19367/cdc_19367_DS1.pdf","basis":"NIOSH 1976 government report printed p22 PDF index30: pulmonary blood 46 mmHg CO2 versus alveolar 40 mmHg, transfer via partial-pressure gradient."},{"id":"sm2-5y-r07-phy-01","old":"https://www.ncbi.nlm.nih.gov/books/NBK470339/","url":"https://medlineplus.gov/lab-tests/aldosterone-test/","basis":"NLM MedlinePlus official Aldosterone Test section What is an aldosterone test: adrenal aldosterone restores kidney sodium and potassium balances, sodium retention and potassium excretion."},{"id":"sm2-5y-r10-phy-09","old":"https://www.ncbi.nlm.nih.gov/sites/books/NBK482430/","url":"https://stacks.cdc.gov/view/cdc/19367/cdc_19367_DS1.pdf","basis":"NIOSH 1976 government report printed pp22-23 PDF indices30-31: CO2 + H2O <=> H2CO3 <=> H+ + HCO3, Henderson-Hasselbalch acidification."}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.sourceUrl!==f.old||!Array.isArray(q.choices)||q.choices.length!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5)throw Error('HM2 source-batch-20261122 stale state '+f.id);
+ q.sourceUrl=f.url;
+ q.basis=String(q.basis||'')+' ／ 2026-11-22出典照合：'+f.basis;
+}
+window.HM2_OFFICIAL_SOURCE_BATCH3_IDS=fixes.map(f=>f.id);
+})();
