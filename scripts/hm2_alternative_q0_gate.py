@@ -106,6 +106,10 @@ def validate(root=ROOT, evidence=EVIDENCE, rights=RIGHTS):
                         failures.append(f"{id_}:PASS{i+1}_EVIDENCE_INCOMPLETE")
                     if p.get("question_bank_sha256") != bank_hash:
                         failures.append(f"{id_}:PASS{i+1}_STALE_SHA")
+                    if not re.fullmatch(r"[0-9a-f]{64}", str(p.get("evidence_artifact_sha256", ""))):
+                        failures.append(f"{id_}:PASS{i+1}_INVALID_ARTIFACT_SHA")
+                    if p.get("performed_without_prior_review_access") is not True:
+                        failures.append(f"{id_}:PASS{i+1}_INDEPENDENCE_ATTESTATION_MISSING")
                     judgments = p.get("choices")
                     if not isinstance(judgments, list) or len(judgments) != 5:
                         failures.append(f"{id_}:PASS{i+1}_FIVE_CHOICES_REQUIRED")
@@ -127,6 +131,12 @@ def validate(root=ROOT, evidence=EVIDENCE, rights=RIGHTS):
                     if (passes[0].get("independent_session_id") == passes[1].get("independent_session_id")
                         or passes[0].get("evidence_artifact_sha256") == passes[1].get("evidence_artifact_sha256")):
                         failures.append(f"{id_}:SEPARATE_REVIEW_ARTIFACTS_REQUIRED")
+                    fingerprint = lambda p: json.dumps(
+                        {"reasoning": p.get("reasoning"), "choices": p.get("choices")},
+                        sort_keys=True, ensure_ascii=False
+                    )
+                    if fingerprint(passes[0]) == fingerprint(passes[1]):
+                        failures.append(f"{id_}:COPIED_REVIEW_CONTENT")
                 if row.get("final_disposition") != "approved_after_reconciliation":
                     failures.append(f"{id_}:RECONCILIATION_REQUIRED")
     rights_doc = load_json(rights, failures, "RIGHTS")
