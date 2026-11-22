@@ -193,3 +193,11 @@
 - 生成元のsourceUrlを旧NCBI所蔵第三者StatPearls著者ページからNHS原著教材へ差し替え、basis追記のみ。旧値と5肢、正答位置guard付き。生成元commit：`5d457844d663d6840da5bcbfcccbca67d1175665`。
 - **一次内容PASS**。先行一次PASS57/HOLD12 → 本担当 **PASS58/HOLD11**。NHS原著公的教材のURLが公表されたことは教材全体の転載許可ではなく、問題は独立作問で維持。
 - 配布JSONへの再生成、生成元とのバイト一致、独立二重監査、権利の最終ゲートは未実施。Q0/Q1 BLOCKED、App Review・TestFlightなし。
+
+
+## B2追加：No.164嫌気的解糖・政府原著による5肢PASS（2026-11-22）
+
+- ID `sm2-5y-r09-phy-06`。正式発行主体：米国Department of Health and Human Services／CDC／Surgeon General, *Physical Activity and Health: A Report of the Surgeon General*（1996）, Chapter 3「Skeletal Muscle Energy Metabolism」「Energy Systems」印刷pp65–66。https://stacks.cdc.gov/view/cdc/11223/cdc_11223_DS1.pdf 。同政府報告は酸素需要が供給を上回る高強度運動時に筋は解糖系で**酸素なしにATP産生**し、30秒～2分ほどの運動で主たる供給源となるが乳酸蓄積等により持続制約があると直接記述。酸化的系はミトコンドリアで酸素を必要とすることも明記。PDFテキストに加え政府刊行物の表紙発行主体を照合。スクリーンショットはファイルサイズ超過で取得不可。
+- 五肢：①×胆汁酸腸肝循環（筋の無酸素ATP生成経路ではない）、②×酸化的リン酸化「のみ」（酸素が要る）、③×クエン酸回路「だけ」（ミトコンドリア酸化経路の部分）、④×尿素回路（ATP産生供給の正答ではない）、**⑤○嫌気的解糖**。正答⑤・5肢不変。
+- 生成元のsourceUrlをNBK546695第三者StatPearls教材から**米国政府が直接刊行した報告**へ変更、basisにChapter 3と該当頁を明記。旧出典・正答位置・五肢数guard付き。生成元commit `873d16496ab8af40c8a129d09ea9aa5a68540c8a`。
+- **一次内容PASS**。前節PASS58/HOLD11 → **PASS59/HOLD10（69問）**。引用文・図版の転載は行わない。配布JSON再生成/一致検証、独立チェック・権利ゲートは未完。Q0/Q1 BLOCKED、App Review・TestFlight操作なし。
