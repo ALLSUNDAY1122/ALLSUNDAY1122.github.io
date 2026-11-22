@@ -1,6 +1,6 @@
 import type { ExpoConfig, ConfigContext } from 'expo/config';
 
-// Build 15: Restores Gemini connectivity and adds upstream diagnostics; Build 13 selection of a study folder while preserving the Build 12 feature set.
+// Build 16: Compresses Gemini OCR photos before upload and adds transport diagnostics; Build 13 selection of a study folder while preserving the Build 12 feature set.
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: '撮る単語帳',
@@ -14,7 +14,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: 'com.allsunday1122.torutango',
-    buildNumber: '15',
+    buildNumber: '16',
     icon: './assets/icon-appstore.png',
     infoPlist: {
       NSCameraUsageDescription: '教材を撮影して単語カード作成に利用します。',

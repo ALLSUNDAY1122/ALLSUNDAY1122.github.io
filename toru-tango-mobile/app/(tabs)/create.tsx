@@ -339,11 +339,11 @@ export default function CreateScreen() {
     const result = camera
       ? await ImagePicker.launchCameraAsync({
           mediaTypes: ['images'],
-          quality: 0.8
+          quality: 0.65
         })
       : await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ['images'],
-          quality: 0.8,
+          quality: 0.65,
           allowsMultipleSelection: true,
           selectionLimit: 10,
           orderedSelection: true
@@ -352,7 +352,9 @@ export default function CreateScreen() {
     if (!result.canceled) {
       const selected = result.assets.map((asset) => ({
         uri: asset.uri,
-        mimeType: asset.mimeType
+        mimeType: asset.mimeType,
+        width: asset.width,
+        height: asset.height
       }));
       setImages((current) => {
         const merged = [...current, ...selected];
