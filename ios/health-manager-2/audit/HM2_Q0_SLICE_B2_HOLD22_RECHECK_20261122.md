@@ -184,3 +184,12 @@
 - 五肢：**①○（NHLBI本文と直接一致）**、②×（肺胞ガス交換を直接触知しない）、③×（静脈血流速度の測定ではない）、④×（消化管蠕動ではない）、⑤×（毛細血管での血液凝固ではない）。正答①以外の4肢は不変。
 - 生成元パッチは旧正答①、旧URL、正答位置①、5肢のguard付き。sourceUrl/quick/explanation/topic/basisを書き換え、`requires-independent-subject-expert-review`・`再監査待ち`・`非公開`で公開承認無効化。生成元commit：`4a8e4280769e5f5bdfd3f9b3ce1826467c95a52a`。
 - **実改稿・公式原典との5肢の内容照合は完了。ただし配布JSON再生成・バイト一致・独立確認が未実施のため一次集計PASSにはまだ加えない。**本担当集計はPASS57/HOLD12を維持。No.131/142も同じ未実行ゲートを残す。Q0/Q1 BLOCKED、App Review・TestFlightなし。
+
+
+## B2追加：No.158公的NHS眼科診察教材で5肢照合（2026-11-22）
+
+- ID `sm2-5y-r08-phy-10`。英国公的医療機関University Hospitals Coventry and Warwickshire NHS Trust自局発行 *CHESS Clinical Skills Workbook 2022–23* p.57–58、Cranial Nerve 2「Check pupillary light reflexes」 https://uhmeded.uhcw.nhs.uk/Portals/0/AssetUploads/CHESS%20Book%20Clinical%20Skills%20Workbook%202022-23.pdf?ver=ELcRsPPRSWHk3baBgJ2INQ%3D%3D を原著の本文として確認。片眼に光照射すると照射側に直接対光反射（縮瞳）、非照射側にも共同対光反射（縮瞳）が生じることを明示。**PDFテキスト解析により該当記載を確認したが、画面スクリーンショット取得はタイムアウトで失敗した**ため画像での確認は未完。
+- 五肢：①×（左眼が不変との断定）、②×（正常反射を散瞳と誤る）、③×（左眼のみ散瞳・右眼不変との誤り）、**④○（直接＋共同対光反射）**、⑤×（非照射眼に共同反射が起こらないとの否定）。現行正答④、残り4肢の表現は変えない。
+- 生成元のsourceUrlを旧NCBI所蔵第三者StatPearls著者ページからNHS原著教材へ差し替え、basis追記のみ。旧値と5肢、正答位置guard付き。生成元commit：`5d457844d663d6840da5bcbfcccbca67d1175665`。
+- **一次内容PASS**。先行一次PASS57/HOLD12 → 本担当 **PASS58/HOLD11**。NHS原著公的教材のURLが公表されたことは教材全体の転載許可ではなく、問題は独立作問で維持。
+- 配布JSONへの再生成、生成元とのバイト一致、独立二重監査、権利の最終ゲートは未実施。Q0/Q1 BLOCKED、App Review・TestFlightなし。
