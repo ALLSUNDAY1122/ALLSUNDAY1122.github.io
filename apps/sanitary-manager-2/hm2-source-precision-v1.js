@@ -408,3 +408,20 @@ q.basis=String(q.basis||'')+' ／ 2026-11-22 NIEHS National Toxicology Program o
 q.auditStatus='一次資料照合済';
 window.HM2_B2_NTP_UNCOUPLING_SOURCE_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// B2 Cori-cycle direct evidence: EPA agency-authored lactic-acid risk assessment.
+const id='sm2-5y-r09-phy-05';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+const old='https://www.ncbi.nlm.nih.gov/books/NBK541119/';
+const url='https://downloads.regulations.gov/EPA-HQ-OPP-2018-0157-0004/content.pdf';
+if(!q||q.sourceUrl!==old||!Array.isArray(q.choices)||q.choices.length!==5||q.answer!==3||q.choices[2]!=='コリ回路')
+ throw Error('HM2 B2 EPA Cori expected state mismatch '+id);
+q.sourceUrl=url;
+q.basis=String(q.basis||'')+' ／ 2026-11-22 U.S. Environmental Protection Agency direct agency assessment EPA-HQ-OPP-2018-0157-0004, printed page 13, Metabolism section: Cori cycle expressly names lactate from skeletal muscle via blood to liver pyruvate then gluconeogenesis and glucose back to muscle. Figures may contain external credited sources; text is evidence only, no reproduction.';
+q.explanation='EPA政府公表の乳酸リスク評価（Metabolism、印刷13頁）に、筋で生成された乳酸が血液を経て肝臓に移動し、ピルビン酸を経て糖新生でグルコースとなり、筋に戻る経路がCori cycleと明記される。肢3のコリ回路が正答。肢1の尿素回路は窒素処理、肢2のクエン酸回路は細胞内酸化代謝、肢4のβ酸化は脂肪酸分解、肢5のペントースリン酸経路はNADPH・五炭糖生成経路であり、肝臓・筋間の乳酸再利用経路名とは異なる。EPAの図は転載しない。';
+q.auditStatus='一次資料照合済';
+window.HM2_B2_EPA_CORI_SOURCE_ID=id;
+})();
