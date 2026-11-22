@@ -1,0 +1,62 @@
+name: Toru Tango Build 18 Shared Usage (Internal TestFlight)
+on:
+  push:
+    branches:
+      - release/toru-tango-build18-usage-20261122
+    paths:
+      - '.github/workflows/toru-tango-build18-internal-testflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: toru-tango-build18-internal-testflight
+  cancel-in-progress: false
+jobs:
+  ios:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: toru-tango-mobile
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Check Expo credentials
+        run: test -n "$EXPO_TOKEN"
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Verify Build 17 OCR and Worker code are unchanged
+        run: |
+          set -e
+          git diff --exit-code c38babd4730854b41783f2378bb79e8f7c04b7af HEAD -- src/services/geminiOcr.ts
+          cd ..
+          git diff --exit-code 66ac22cf0982c0bff9aaf742f53cd70d95f0fa1e HEAD -- toru-tango/backend/
+      - name: Install and validate mobile
+        run: |
+          npm ci --include=dev --no-audit --no-fund
+          npm run typecheck
+          npm run lint
+          npm run doctor
+          node --test tests/study-folder.test.cjs tests/build17-ocr-transport.test.cjs tests/build18-usage.test.cjs
+          npx expo config --type public > /dev/null
+      - name: EAS Build 18 iOS
+        run: |
+          mkdir -p release-logs
+          set -o pipefail
+          eas build --platform ios --profile production --non-interactive --json | tee release-logs/build18.json
+      - name: Submit Build 18 to App Store Connect for Internal TestFlight only
+        run: |
+          set -o pipefail
+          eas submit --platform ios --profile production --latest --non-interactive | tee release-logs/submit18.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-tango-build18-eas
+          path: toru-tango-mobile/release-logs
+          if-no-files-found: warn
