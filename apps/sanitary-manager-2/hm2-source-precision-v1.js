@@ -152,3 +152,30 @@ for(const e of edits){const q=byId.get(e.id);
 }
 window.HM2_B_SCOPED_REWRITES_20261122=edits.map(x=>x.id);
 })();
+
+
+(function(){
+'use strict';
+// HM2 B2 2026-11-22: narrow an oxidative-phosphorylation claim to NLM-authored source.
+// Deliberately invalidates publication approval; release JSON must be regenerated and re-audited.
+const id='sm2-5y-r06-phy-08';
+const qs=(window.Q_PARTS||[]).filter(q=>q.id===id);
+if(qs.length!==1)throw Error('HM2 B2 ATP expected one question '+id);
+const q=qs[0];
+const oldCorrect='酸素を電子伝達系の最終電子受容体として利用し、酸化的リン酸化でATPを合成する。';
+const newCorrect='ミトコンドリアで酸素を利用し、ATP合成酵素がプロトンの流れのエネルギーを使ってATPを生成する。';
+const oldSource='https://www.ncbi.nlm.nih.gov/books/NBK553192/';
+if(!Array.isArray(q.choices)||q.choices.length!==5||q.answer!==4||q.choices[3]!==oldCorrect||q.sourceUrl!==oldSource)
+ throw Error('HM2 B2 ATP old state mismatch '+id);
+q.choices=[...q.choices];q.choices[3]=newCorrect;
+q.quick=newCorrect;
+q.explanation='NLM MedlinePlus Genetics「MT-ATP6 gene」Normal Functionは、ミトコンドリアが酸素と糖を利用して酸化的リン酸化でATPを生成し、ATP合成酵素が内膜を通るプロトンの流れのエネルギーを利用してADPからATPを合成すると説明する。肢1は酸素消費を細胞質の解糖系に誤配置、肢2は酸素利用を否定し乳酸を最終受容体とする、肢3はATP合成酵素とプロトン流を無関係とする、肢5は十分な酸素下のATP産生停止を断定している点で不適切。元の正答肢の「最終電子受容体」は当該資料に直接明記されないため正答要件から外した。';
+q.topic='ミトコンドリアの酸化的リン酸化とプロトン流によるATP合成';
+q.sourceUrl='https://medlineplus.gov/genetics/gene/mt-atp6/';
+q.basis=String(q.basis||'')+' ／ 2026-11-22 B2 NLM MedlinePlus Genetics MT-ATP6 Normal Function (US National Library of Medicine original editorial): oxygen use in oxidative phosphorylation and ATP synthase utilization of proton flux. No claim of terminal electron acceptor from this source.';
+q.contentReviewStatus='requires-independent-subject-expert-review';
+q.auditStatus='再監査待ち';
+q.publicationStatus='非公開';
+if(new Set(q.choices).size!==5||q.choices[3]!==newCorrect)throw Error('HM2 B2 ATP choice uniqueness failed');
+window.HM2_B2_ATP_REDESIGN_ID=id;
+})();
