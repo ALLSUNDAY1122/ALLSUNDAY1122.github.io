@@ -263,3 +263,19 @@
 - **5肢**：①尿素回路×（窒素代謝）、②クエン酸回路×（細胞内炭素酸化）、**③コリ回路○（乳酸の肝糖新生再利用）**、④β酸化×（脂肪酸分解）、⑤ペントースリン酸経路×（五炭糖・NADPH生成）。
 - 既存出典はNCBI収載StatPearls（第三者執筆）だったため、EPA当局原著PDFへsourceUrlを差し替え、basis/explanationと監査状態を更新する旧値guard付き生成元修正をコミット：`8d303c32137b6a17c8036f34a6d6d5c8f6d2410e`。正答位置③、問題文・全5肢不変。
 - 分割B一次集計：前節 **PASS62/HOLD7 → PASS63/HOLD6**（重複計上なし）。**正式公開承認ではない**。配布JSON再生成・バイト一致、独立二重監査、最終権利検査は未達。Q0/Q1 BLOCKED、App Review・TestFlight操作なし。
+
+## 2026-11-22 B2第17次：No.167 血圧代償・米陸軍医務部原著で一次PASS
+
+- No.167 `sm2-5y-r09-phy-09`。U.S. Army Medical Department Center of History and Heritage公式原著 *Battle Casualties in Korea* vol.3 ch.7 https://achh.army.mil/history/book-korea-vol3-battlecasualties-chap07/ は、出血時に心拍増加と末梢血管収縮が血圧を保持する代償として働き、重度ではショックで代償が破綻することを直接記載。先行のNCBI所蔵第三者教材の出典を公式発行者原著へ差し替える。
+- 5肢：**①○心拍数増加・末梢血管収縮**、②×交感神経が双方に無影響との否定、③×圧受容器反射が必ず消失とする断定、④×血管が必ず完全拡張かつ心停止とする断定、⑤×代償反応が一切生じないとの否定。出血直後に交感神経活動・心拍数上昇があるという設問条件下での判断であり、全ての出血例で必ず心拍数が増すとの臨床断定にはしない。
+- 旧URL、5肢、正答位置①、正答文字列のguard付きでsourceUrl/basis/explanation/auditStatusを更新する生成元コミット `bff9de7cfc2a65fb56d9ecb0693640903e8075e7`。選択肢は不変。
+- **一次内容PASS**。前節PASS63/HOLD6 → **PASS64/HOLD5**。生成元再生成・配布JSONバイト一致・独立二重チェック・権利最終確認未完で、正式Q0/Q1はBLOCKED。
+
+## 2026-11-22 B2第18次：No.151 長時間絶食・FDAとDOE公式原著で一次PASS
+
+- No.151 `sm2-5y-r07-phy-07`。**FDA自身の2026-08-19発行決定文書** *Summary Basis for Regulatory Action—GENGLYCOS*, Background p.5, https://www.fda.gov/media/194583/download?attachment= ：絶食期の肝糖放出はグリコーゲン分解と糖新生に依存し、両機序が障害される糖原病では重度低血糖が起きることを直接説明。**米国DOE National Science Bowl公式科学問題（独自作問）** Sample Set 6 Round 16, p.9 bonus 18, https://sc-drcds.osti.gov/-/media/wdts/nsb/pdf/MS-Sample-Questions/Sample-Set-6/Round16.pdf は、乳酸・グリセロール・糖原性アミノ酸からグルコースを生成する代謝を「gluconeogenesis」と定義。両公式資料を組合せ、問題条件の肝貯蔵グリコーゲン大幅減少時に糖新生の相対的寄与が大きくなる命題を支持する。具体的な寄与率は推定しない。FDA/DOEとも政府発行者自身の原稿。DOEの原問題をアプリに転載せず、独自の選択肢の根拠のみに利用する。
+- 5肢：①×有限の貯蔵グリコーゲンから無制限供給、②×インスリン作用が強いほど糖新生が必ず増えるとの断定、③×カルシトニンが乳酸を糖に直接変換、**④○乳酸・グリセロール・糖原性アミノ酸由来の糖新生の相対的寄与増加**、⑤×グリコーゲン減少で肝臓の糖供給が完全停止。1肢のみ適切。
+- 旧NCBI第三者StatPearls URLをFDA直接原典へ変更、DOE原典をbasisに補足、解説・監査状態を更新する生成元コミット `4613d459f3ce5994d3e2ae931bbb3ba36ad39963`。問題文・5肢・正答位置④は不変。
+- **一次内容PASS**：前節PASS64/HOLD5 → **PASS65/HOLD4（69問）**。独立二重チェック・全権利判定・再生成・バイト一致の実行は未完、公開品質ゲートBLOCKED継続。FDA/DOEのPDFはウェブ本文を確認したが、PDFスクリーンショット機能が利用不可となり画像での独立確認は未実施。
+- **残る一次HOLD4**：No.131 `sm2-5y-r05-phy-04`、No.133 `sm2-5y-r05-phy-06`、No.135 `sm2-5y-r05-phy-08`、No.142 `sm2-5y-r06-phy-08`。No.131/133/142は生成元限定改稿済みだがバイト一致と独立再監査未了。No.135は政府機関が独自執筆したGLUT4非インスリン性膜移行の直接教材が未取得。NIH PubMed収載の査読原著やNIDDK所蔵の研究計画書を政府自身の著作と断定せず、資料根拠区分を保留する。
+- **実行制約**：GitHubコネクタを用いたファイル更新とコミットは実施可能だが、現環境のgit外部ネットワークは名前解決不能でローカルclone・Node再生成の実行に至らず。生成元のパッチは動作未検証であり、配布JSONの最新内容も未反映。Q0/Q1 BLOCKED、App Review・TestFlightなし。
