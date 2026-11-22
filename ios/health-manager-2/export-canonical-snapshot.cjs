@@ -51,7 +51,8 @@ const data=browser.map(q=>({
  primary_basis:q.basis,source_url:q.sourceUrl,baseline_date:q.baselineDate,origin_type:q.originType,
  rights_basis:q.rightsBasis,law_related:Boolean(q.lawRelated),legal_checked:q.legalChecked||null,
  audit_status:q.auditStatus,publication_status:q.publicationStatus,difficulty_model:q.difficultyModel||null,
- no_common_sense_shortcut:Boolean(q.noCommonSenseShortcut)
+ no_common_sense_shortcut:Boolean(q.noCommonSenseShortcut),
+ ...(q.contentReviewStatus ? {content_review_status:q.contentReviewStatus} : {})
 }));
 const out=path.join(__dirname,'release-questions.json');
 const raw=JSON.stringify(data,null,2)+'\n';
