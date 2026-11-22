@@ -41,6 +41,7 @@ jobs:
           git diff --exit-code 66ac22cf0982c0bff9aaf742f53cd70d95f0fa1e HEAD -- toru-tango/backend/
       - name: Install and validate mobile
         run: |
+          npm install --package-lock-only --no-audit --no-fund
           npm ci --include=dev --no-audit --no-fund
           npm run typecheck
           npm run lint
