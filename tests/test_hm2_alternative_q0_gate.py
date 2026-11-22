@@ -123,6 +123,12 @@ class GateTests(unittest.TestCase):
         self.persist()
         self.assertIn("DOUBLE_CHECK_ROW_SCHEMA_INVALID", self.check()["failures"])
 
+    def test_positive_official_supervision_claim_fails(self):
+        (self.root / "apps/sanitary-manager-2/gm4.js").write_text(
+            "公式アプリ。専門家監修済み。", encoding="utf-8"
+        )
+        self.assertIn("IN_APP_DISCLAIMER_MISSING", self.check()["failures"])
+
     def test_missing_nonofficial_notice_fails(self):
         (self.root / "apps/sanitary-manager-2/gm4.js").write_text("unrelated", encoding="utf-8")
         self.assertIn("IN_APP_DISCLAIMER_MISSING", self.check()["failures"])
