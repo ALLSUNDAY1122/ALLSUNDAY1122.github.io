@@ -75,3 +75,14 @@ for(const f of fixes){
 }
 window.HM2_B_CDC_ALVEOLAR_FORMULA_IDS=fixes.map(f=>f.id);
 })();
+
+
+(function(){
+'use strict';
+// HM2-B muscular sliding theory: official NLM MedlinePlus Genetics citation only.
+const q=(window.Q_PARTS||[]).find(x=>x.id==='sm2-5y-r09-phy-02');
+if(!q||q.sourceUrl!=='https://www.ncbi.nlm.nih.gov/books/NBK26888/'||!Array.isArray(q.choices)||q.choices.length!==5||q.choices[q.answer-1]!=='アクチンとミオシン')throw Error('HM2-B actin source stale state');
+q.sourceUrl='https://medlineplus.gov/genetics/condition/actin-accumulation-myopathy/';
+q.basis=String(q.basis||'')+' ／ 2026-11-22 NLM MedlinePlus Genetics：Actin-accumulation myopathy節に筋の細いactin線維と太いmyosin線維が収縮に不可欠と明記。筋線維滑り説は原記載の関係に一致。他選択肢は筋収縮に用いる両線維ではない。';
+window.HM2_B_ACTIN_SOURCE_UPDATED='sm2-5y-r09-phy-02';
+})();
