@@ -1,10 +1,10 @@
 {
   "scope": "HM2_PASS1_A_20261122.json の scope_question_ids のみから抽出した69問",
   "review_type": "independent_pass1_C",
-  "status": "PARTIAL_OFFICIAL_SOURCE_VERIFIED",
+  "status": "COMPLETE_REVIEW_RECORDED",
   "scope_count": 69,
-  "reviewed_count": 54,
-  "remaining_count": 15,
+  "reviewed_count": 69,
+  "remaining_count": 0,
   "scope_question_ids": [
     "sm2-5y-r09-law-05",
     "sm2-5y-r09-law-07",
@@ -2452,7 +2452,667 @@
         }
       ],
       "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r04-hyg-03",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1",
+      "source_section": "事務所衛生基準規則3条2項（CO₂）と換気設備に係る規定",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "CO₂が上がっても換気は常に十分だと判断する。",
+          "correct": false,
+          "reason": "1800ppmまで増加した値から十分換気と断定できない",
+          "source_section": "事務所衛生基準規則3条2項（CO₂）と換気設備に係る規定"
+        },
+        {
+          "text": "換気装置を停止して在室人数を増やす。",
+          "correct": false,
+          "reason": "換気停止と在室人数増加はCO₂蓄積を促進",
+          "source_section": "事務所衛生基準規則3条2項（CO₂）と換気設備に係る規定"
+        },
+        {
+          "text": "窓のない部屋では換気量の調整は不可能と決めつける。",
+          "correct": false,
+          "reason": "無窓室も機械換気設備で換気量調整が可能",
+          "source_section": "事務所衛生基準規則3条2項（CO₂）と換気設備に係る規定"
+        },
+        {
+          "text": "CO₂値だけで感染者の有無を個人単位で断定する。",
+          "correct": false,
+          "reason": "CO₂濃度だけで個々の感染者は特定できない",
+          "source_section": "事務所衛生基準規則3条2項（CO₂）と換気設備に係る規定"
+        },
+        {
+          "text": "在室人数と機械換気の運転状況を確認し、換気量や使用人数・時間を見直す。",
+          "correct": true,
+          "reason": "在室人数・機械換気・利用時間の点検が合理的",
+          "source_section": "事務所衛生基準規則3条2項（CO₂）と換気設備に係る規定"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r04-hyg-05",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://forecast.weather.gov/glossary.php?word=RELATIVE+HUMIDITY",
+      "source_section": "米国気象局 Relative Humidity 定義、問題文の飽和量6/23・6/13",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "25℃・15℃ともに約26％で相対湿度は変わらない。",
+          "correct": false,
+          "reason": "6/23=26.1%、6/13=46.2%で一定ではない",
+          "source_section": "米国気象局 Relative Humidity 定義、問題文の飽和量6/23・6/13"
+        },
+        {
+          "text": "25℃で約46％、15℃で約26％となり低下する。",
+          "correct": false,
+          "reason": "25℃が26.1%、15℃が46.2%なので順序が逆",
+          "source_section": "米国気象局 Relative Humidity 定義、問題文の飽和量6/23・6/13"
+        },
+        {
+          "text": "25℃で約26％、15℃で約46％となり上昇する。",
+          "correct": true,
+          "reason": "6/23=26.1%、6/13=46.2%、冷却で相対湿度上昇",
+          "source_section": "米国気象局 Relative Humidity 定義、問題文の飽和量6/23・6/13"
+        },
+        {
+          "text": "25℃・15℃ともに約6％になる。",
+          "correct": false,
+          "reason": "相対湿度は水蒸気6gだけでは算出不可、飽和量で割る",
+          "source_section": "米国気象局 Relative Humidity 定義、問題文の飽和量6/23・6/13"
+        },
+        {
+          "text": "25℃・15℃ともに100％になる。",
+          "correct": false,
+          "reason": "6gは飽和量23g、13gいずれにも達しない",
+          "source_section": "米国気象局 Relative Humidity 定義、問題文の飽和量6/23・6/13"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r05-hyg-10",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://www.osha.gov/otm/section-3-health-hazards/chapter-5",
+      "source_section": "OSHA Technical Manual・sound pressure level 20log10(p/p0)",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "約1.1倍",
+          "correct": false,
+          "reason": "10dB増加は約1.1倍ではない",
+          "source_section": "OSHA Technical Manual・sound pressure level 20log10(p/p0)"
+        },
+        {
+          "text": "約2倍",
+          "correct": false,
+          "reason": "20log10(2)=6.02dBであり10dBに不足",
+          "source_section": "OSHA Technical Manual・sound pressure level 20log10(p/p0)"
+        },
+        {
+          "text": "約3.2倍",
+          "correct": true,
+          "reason": "10dB増加の音圧比10^(10/20)=約3.162倍",
+          "source_section": "OSHA Technical Manual・sound pressure level 20log10(p/p0)"
+        },
+        {
+          "text": "約100倍",
+          "correct": false,
+          "reason": "100倍なら音圧レベル40dB増加",
+          "source_section": "OSHA Technical Manual・sound pressure level 20log10(p/p0)"
+        },
+        {
+          "text": "約10倍",
+          "correct": false,
+          "reason": "10倍なら音圧レベル20dB増加",
+          "source_section": "OSHA Technical Manual・sound pressure level 20log10(p/p0)"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r06-hyg-05",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://anzeninfo.mhlw.go.jp/anzen/gmsds/108-10-1.html/1000",
+      "source_section": "厚労省職場のあんぜんサイトSDS・有機ガス用吸収缶、防じん機能付き吸収缶",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "防じんマスクのフィルタはすべての有機溶剤蒸気を完全に除去する。",
+          "correct": false,
+          "reason": "粒子用フィルタだけで全有機溶剤蒸気は除去できない",
+          "source_section": "厚労省職場のあんぜんサイトSDS・有機ガス用吸収缶、防じん機能付き吸収缶"
+        },
+        {
+          "text": "ガス用吸収缶だけでどの粒子状物質も必ず除去できる。",
+          "correct": false,
+          "reason": "ガス用吸収缶には粉じん除去性能が別途必要",
+          "source_section": "厚労省職場のあんぜんサイトSDS・有機ガス用吸収缶、防じん機能付き吸収缶"
+        },
+        {
+          "text": "粒子状物質用の防じんマスクだけでは、ガス状物質に対する吸収缶の役割を代替できない。",
+          "correct": true,
+          "reason": "粒子用防じんマスクはガス吸収缶の代用にならない",
+          "source_section": "厚労省職場のあんぜんサイトSDS・有機ガス用吸収缶、防じん機能付き吸収缶"
+        },
+        {
+          "text": "密着性が悪いほど保護具の防護性能は高まる。",
+          "correct": false,
+          "reason": "密着不良は漏れを生じ保護性能を損なう",
+          "source_section": "厚労省職場のあんぜんサイトSDS・有機ガス用吸収缶、防じん機能付き吸収缶"
+        },
+        {
+          "text": "適切な保護具の選択は汚染物質の状態に左右されない。",
+          "correct": false,
+          "reason": "粒子状・ガス状の違いにより保護具選定が異なる",
+          "source_section": "厚労省職場のあんぜんサイトSDS・有機ガス用吸収缶、防じん機能付き吸収缶"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r06-hyg-10",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://reach.cdc.gov/sites/default/files/job-aids-resources/Sensitivity_and_Specificity_Final_5_23_2022_508_0.pdf",
+      "source_section": "CDC Diagnostic Sensitivity and Specificity・感度＝真陽性/疾病あり全体",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "特異度90％",
+          "correct": false,
+          "reason": "特異度は疾病なし集団の陰性割合であり資料不足",
+          "source_section": "CDC Diagnostic Sensitivity and Specificity・感度＝真陽性/疾病あり全体"
+        },
+        {
+          "text": "陽性的中率90％",
+          "correct": false,
+          "reason": "陽性的中率には陽性者全体が必要で資料不足",
+          "source_section": "CDC Diagnostic Sensitivity and Specificity・感度＝真陽性/疾病あり全体"
+        },
+        {
+          "text": "陰性的中率90％",
+          "correct": false,
+          "reason": "陰性的中率には陰性者全体が必要で資料不足",
+          "source_section": "CDC Diagnostic Sensitivity and Specificity・感度＝真陽性/疾病あり全体"
+        },
+        {
+          "text": "感度90％",
+          "correct": true,
+          "reason": "疾病あり100人中90人陽性なので感度90%",
+          "source_section": "CDC Diagnostic Sensitivity and Specificity・感度＝真陽性/疾病あり全体"
+        },
+        {
+          "text": "有病率90％",
+          "correct": false,
+          "reason": "有病率には検査対象者全体の人数が必要",
+          "source_section": "CDC Diagnostic Sensitivity and Specificity・感度＝真陽性/疾病あり全体"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r07-hyg-03",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc1467&dataType=1&pageNo=1",
+      "source_section": "厚労省 健康情報の適正な取扱い・個人識別防止",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "5人全員の健診個票を氏名付きで掲示する。",
+          "correct": false,
+          "reason": "5人の個票を氏名付きで掲示すると個人情報が露出する",
+          "source_section": "厚労省 健康情報の適正な取扱い・個人識別防止"
+        },
+        {
+          "text": "所属が分かれば診断名も自由に公開できると判断する。",
+          "correct": false,
+          "reason": "所属が分かっても診断名を自由公開できない",
+          "source_section": "厚労省 健康情報の適正な取扱い・個人識別防止"
+        },
+        {
+          "text": "健康診断の目的に関係なく詳細な健康情報を全員に配布する。",
+          "correct": false,
+          "reason": "健診目的外の詳細情報一律配布は不適切",
+          "source_section": "厚労省 健康情報の適正な取扱い・個人識別防止"
+        },
+        {
+          "text": "集団分析なら同意や情報管理の検討は一切不要とする。",
+          "correct": false,
+          "reason": "集団分析でも個人特定リスクと共有範囲の管理が必要",
+          "source_section": "厚労省 健康情報の適正な取扱い・個人識別防止"
+        },
+        {
+          "text": "集計範囲を拡大するなど、個人が推測されない単位で分析・共有する。",
+          "correct": true,
+          "reason": "統計対象を拡大し特定困難な集計単位とすることが適切",
+          "source_section": "厚労省 健康情報の適正な取扱い・個人識別防止"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r05-hyg-02",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1",
+      "source_section": "事務所衛生基準規則10条 作業面照度・まぶしさ",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "どの作業も同じ低照度で十分とみなす。",
+          "correct": false,
+          "reason": "細かな文字作業と仕分けでは必要な視認条件が異なる",
+          "source_section": "事務所衛生基準規則10条 作業面照度・まぶしさ"
+        },
+        {
+          "text": "照明は視作業に影響しないので評価から除く。",
+          "correct": false,
+          "reason": "照明は作業面照度を左右するため評価対象",
+          "source_section": "事務所衛生基準規則10条 作業面照度・まぶしさ"
+        },
+        {
+          "text": "まぶしさが増えるほど視認性は必ず改善するとみなす。",
+          "correct": false,
+          "reason": "強いまぶしさは視認性を損ね得る",
+          "source_section": "事務所衛生基準規則10条 作業面照度・まぶしさ"
+        },
+        {
+          "text": "文字の細かさに関係なく照明をすべて消す。",
+          "correct": false,
+          "reason": "照明を消すと細かな文字の視認性を確保できない",
+          "source_section": "事務所衛生基準規則10条 作業面照度・まぶしさ"
+        },
+        {
+          "text": "細かな文字を確認する作業では必要な照度とまぶしさの抑制を個別に検討する。",
+          "correct": true,
+          "reason": "細字作業の照度とグレア対策を個別に検討する",
+          "source_section": "事務所衛生基準規則10条 作業面照度・まぶしさ"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r06-hyg-04",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/dengue_fever_qa_00001.html",
+      "source_section": "厚労省『新型コロナウイルスに関するQ&A』HEPA清浄機と換気の役割",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "HEPA空気清浄機は室内CO₂を確実に除去するため外気導入が不要になる。",
+          "correct": false,
+          "reason": "HEPAは微粒子捕集装置でCO₂を直接吸着しない",
+          "source_section": "厚労省『新型コロナウイルスに関するQ&A』HEPA清浄機と換気の役割"
+        },
+        {
+          "text": "フィルター式空気清浄機があれば在室人数にかかわらずCO₂は常に一定になる。",
+          "correct": false,
+          "reason": "フィルタ設置だけでは在室者の呼気CO₂蓄積を止めない",
+          "source_section": "厚労省『新型コロナウイルスに関するQ&A』HEPA清浄機と換気の役割"
+        },
+        {
+          "text": "CO₂濃度が高いときは機械換気を停止することが優先される。",
+          "correct": false,
+          "reason": "CO₂高値で換気停止すれば希釈できない",
+          "source_section": "厚労省『新型コロナウイルスに関するQ&A』HEPA清浄機と換気の役割"
+        },
+        {
+          "text": "空気清浄機による粒子除去と外気導入によるCO₂希釈は別の機能なので、必要換気量を確保してCO₂の推移を確認する。",
+          "correct": true,
+          "reason": "粒子ろ過と外気導入によるCO₂希釈は別、換気量確保が必要",
+          "source_section": "厚労省『新型コロナウイルスに関するQ&A』HEPA清浄機と換気の役割"
+        },
+        {
+          "text": "CO₂濃度の測定だけで室内の個々の感染者を特定できる。",
+          "correct": false,
+          "reason": "CO₂は換気状況の指標で個別感染者識別は不可",
+          "source_section": "厚労省『新型コロナウイルスに関するQ&A』HEPA清浄機と換気の役割"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r07-hyg-01",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/yobou.index.html",
+      "source_section": "厚労省『攻めの予防医療について』一次・二次・三次予防",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "一次予防と同義の健診前予防",
+          "correct": false,
+          "reason": "健診前の一次予防と復職・再発防止は異なる",
+          "source_section": "厚労省『攻めの予防医療について』一次・二次・三次予防"
+        },
+        {
+          "text": "一次予防",
+          "correct": false,
+          "reason": "一次予防は発症予防を中心とする",
+          "source_section": "厚労省『攻めの予防医療について』一次・二次・三次予防"
+        },
+        {
+          "text": "二次予防",
+          "correct": false,
+          "reason": "二次予防は早期発見・早期治療を中心とする",
+          "source_section": "厚労省『攻めの予防医療について』一次・二次・三次予防"
+        },
+        {
+          "text": "三次予防",
+          "correct": true,
+          "reason": "疾病後の再発防止やリハビリ・社会復帰支援は三次予防",
+          "source_section": "厚労省『攻めの予防医療について』一次・二次・三次予防"
+        },
+        {
+          "text": "二次予防と同義の発症前予防",
+          "correct": false,
+          "reason": "発症前予防と二次予防を同義とするのは誤り",
+          "source_section": "厚労省『攻めの予防医療について』一次・二次・三次予防"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r07-hyg-02",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/yobou.index.html",
+      "source_section": "厚労省『攻めの予防医療について』二次予防＝早期発見・早期治療",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "健診結果を踏まえ受診勧奨や必要な精密検査につなげる。",
+          "correct": true,
+          "reason": "健診異常に基づく受診勧奨・精密検査は二次予防",
+          "source_section": "厚労省『攻めの予防医療について』二次予防＝早期発見・早期治療"
+        },
+        {
+          "text": "発症予防だけを目的として健診結果を破棄する。",
+          "correct": false,
+          "reason": "結果破棄では早期発見・早期治療につながらない",
+          "source_section": "厚労省『攻めの予防医療について』二次予防＝早期発見・早期治療"
+        },
+        {
+          "text": "症状がないので再検査や受診の案内を一切しない。",
+          "correct": false,
+          "reason": "無症状でも健診異常を放置しない",
+          "source_section": "厚労省『攻めの予防医療について』二次予防＝早期発見・早期治療"
+        },
+        {
+          "text": "復職支援のみを実施し、疾病の確認は行わない。",
+          "correct": false,
+          "reason": "復職支援は三次予防に属する",
+          "source_section": "厚労省『攻めの予防医療について』二次予防＝早期発見・早期治療"
+        },
+        {
+          "text": "早期発見より先に治療終了後の社会復帰だけを評価する。",
+          "correct": false,
+          "reason": "治療終了後の社会復帰は三次予防",
+          "source_section": "厚労省『攻めの予防医療について』二次予防＝早期発見・早期治療"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r07-hyg-06",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://stacks.cdc.gov/view/cdc/190100",
+      "source_section": "CDC収載論文・Positive predictive value＝TP/(TP+FP)",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "80％",
+          "correct": false,
+          "reason": "80%は陽性者のうち真陽性20/80に一致しない",
+          "source_section": "CDC収載論文・Positive predictive value＝TP/(TP+FP)"
+        },
+        {
+          "text": "20％",
+          "correct": false,
+          "reason": "20%は20/80に一致しない",
+          "source_section": "CDC収載論文・Positive predictive value＝TP/(TP+FP)"
+        },
+        {
+          "text": "40％",
+          "correct": false,
+          "reason": "40%は20/80に一致しない",
+          "source_section": "CDC収載論文・Positive predictive value＝TP/(TP+FP)"
+        },
+        {
+          "text": "60％",
+          "correct": false,
+          "reason": "60%は20/80に一致しない",
+          "source_section": "CDC収載論文・Positive predictive value＝TP/(TP+FP)"
+        },
+        {
+          "text": "25％",
+          "correct": true,
+          "reason": "陽性的中率=真陽性20/陽性者80=25%",
+          "source_section": "CDC収載論文・Positive predictive value＝TP/(TP+FP)"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r07-hyg-09",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb2144&dataType=1&pageNo=1",
+      "source_section": "厚労省 快適職場環境形成指針『温熱条件』",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "気温だけでなく気流、湿度、周囲の放射熱なども確認する。",
+          "correct": true,
+          "reason": "温熱条件は気温・湿度・輻射熱・気流の総合評価",
+          "source_section": "厚労省 快適職場環境形成指針『温熱条件』"
+        },
+        {
+          "text": "湿度と平均放射温度は温熱環境評価の対象にならない。",
+          "correct": false,
+          "reason": "湿度と放射熱も温熱評価の要素",
+          "source_section": "厚労省 快適職場環境形成指針『温熱条件』"
+        },
+        {
+          "text": "局所的な冷気の訴えは気温が同じなら必ず心理的なものに限られる。",
+          "correct": false,
+          "reason": "気流増による局所冷感があり心理要因だけではない",
+          "source_section": "厚労省 快適職場環境形成指針『温熱条件』"
+        },
+        {
+          "text": "気温が等しければ体感への気流の影響はない。",
+          "correct": false,
+          "reason": "気温が同じでも気流が体感を変える",
+          "source_section": "厚労省 快適職場環境形成指針『温熱条件』"
+        },
+        {
+          "text": "気流が強いほど全員に必ず快適な温熱環境となる。",
+          "correct": false,
+          "reason": "快適性には個人差があり気流増が常に快適とは限らない",
+          "source_section": "厚労省 快適職場環境形成指針『温熱条件』"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r08-hyg-01",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://kennet.mhlw.go.jp/information/information/dictionary/heart/yk-017.html",
+      "source_section": "厚労省e-ヘルスネット交代勤務睡眠障害、および睡眠ガイド2023",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "仮眠は長いほど覚醒直後の作業能力が必ず高まる。",
+          "correct": false,
+          "reason": "長時間仮眠直後に睡眠慣性が生じ得る",
+          "source_section": "厚労省e-ヘルスネット交代勤務睡眠障害、および睡眠ガイド2023"
+        },
+        {
+          "text": "夜勤中の仮眠はすべて禁止し、眠気の申告も無視する。",
+          "correct": false,
+          "reason": "夜勤中の仮眠は作業能率改善に資する場合がある",
+          "source_section": "厚労省e-ヘルスネット交代勤務睡眠障害、および睡眠ガイド2023"
+        },
+        {
+          "text": "20〜50分程度の仮眠は有用な場合があるが、長時間仮眠後の睡眠慣性と復帰直後の安全を評価する。",
+          "correct": true,
+          "reason": "短い仮眠には有用性があり深睡眠からの覚醒直後は状態確認を要する",
+          "source_section": "厚労省e-ヘルスネット交代勤務睡眠障害、および睡眠ガイド2023"
+        },
+        {
+          "text": "短い仮眠でも覚醒後の状態確認は一切不要である。",
+          "correct": false,
+          "reason": "仮眠直後の眠気を無条件に否定できない",
+          "source_section": "厚労省e-ヘルスネット交代勤務睡眠障害、および睡眠ガイド2023"
+        },
+        {
+          "text": "仮眠を取れば恒常的な睡眠不足と交代勤務の健康リスクが完全に消失する。",
+          "correct": false,
+          "reason": "仮眠だけでは交代勤務による恒常的健康リスクは消えない",
+          "source_section": "厚労省e-ヘルスネット交代勤務睡眠障害、および睡眠ガイド2023"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r08-hyg-07",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://www.mhlw.go.jp/stf/index2025.html",
+      "source_section": "厚労省 急性呼吸器感染症総合対策・手洗い、咳エチケット等",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "体調不良でも全員出勤を強制し、換気を停止する。",
+          "correct": false,
+          "reason": "症状ある従業員の無条件出勤強制と換気停止は不適切",
+          "source_section": "厚労省 急性呼吸器感染症総合対策・手洗い、咳エチケット等"
+        },
+        {
+          "text": "手洗いの機会を減らして職場内接触を増やす。",
+          "correct": false,
+          "reason": "手洗い機会削減は感染対策に逆行",
+          "source_section": "厚労省 急性呼吸器感染症総合対策・手洗い、咳エチケット等"
+        },
+        {
+          "text": "共有物品の衛生管理をやめる。",
+          "correct": false,
+          "reason": "共有物品の衛生管理中止は感染対策に逆行",
+          "source_section": "厚労省 急性呼吸器感染症総合対策・手洗い、咳エチケット等"
+        },
+        {
+          "text": "手指衛生や換気を徹底し、体調不良者への適切な対応を促す。",
+          "correct": true,
+          "reason": "手指衛生・換気・体調不良者対応が総合的予防策",
+          "source_section": "厚労省 急性呼吸器感染症総合対策・手洗い、咳エチケット等"
+        },
+        {
+          "text": "体調不良者の症状を確認せず職場内の接触機会を増やす。",
+          "correct": false,
+          "reason": "症状を無視して接触を増やすのは予防策ではない",
+          "source_section": "厚労省 急性呼吸器感染症総合対策・手洗い、咳エチケット等"
+        }
+      ],
+      "performed_without_prior_review_access": true
+    },
+    {
+      "question_id": "sm2-5y-r09-hyg-06",
+      "reviewer_id": "independent-pass1-C-20261122",
+      "reviewed_at": "2026-11-22T14:16:00+09:00",
+      "method": "問題JSONと公的出典・定義・数式を独立照合。先行レビュー判定理由不参照",
+      "primary_source_url": "https://www.fdma.go.jp/relocation/syobodan/item/upload/tetyou2025.pdf",
+      "source_section": "消防庁『消防団員のための応急手当』骨折・副子固定",
+      "applicable_on": "2026-11-22",
+      "reasoning": "命題と各誤肢の成立条件を検証。明記した5肢の個別根拠を採用。",
+      "independent_session_id": "hm2-independent-pass1-C-20261122",
+      "choices": [
+        {
+          "text": "締め付け過ぎによる末梢血行障害を疑い、固定の圧迫を見直しつつ患部を安静に保ち、救急隊へ状態を伝える。",
+          "correct": true,
+          "reason": "固定過強で血流障害が起こり得る。圧迫を見直し末梢色・冷感を確認し報告する",
+          "source_section": "消防庁『消防団員のための応急手当』骨折・副子固定"
+        },
+        {
+          "text": "骨折部を強く引っ張って元に戻してから再びきつく巻く。",
+          "correct": false,
+          "reason": "骨折部位を強く牽引して再固定するのは危険",
+          "source_section": "消防庁『消防団員のための応急手当』骨折・副子固定"
+        },
+        {
+          "text": "足指が見えないよう包帯を追加して変化を観察できなくする。",
+          "correct": false,
+          "reason": "指先・足先が見えるよう固定し血行を観察する必要",
+          "source_section": "消防庁『消防団員のための応急手当』骨折・副子固定"
+        },
+        {
+          "text": "歩かせて足の状態を確かめる。",
+          "correct": false,
+          "reason": "歩行させると骨折部を悪化させる恐れ",
+          "source_section": "消防庁『消防団員のための応急手当』骨折・副子固定"
+        },
+        {
+          "text": "固定したので足指の色や冷感は確認せず放置する。",
+          "correct": false,
+          "reason": "足指の色・冷感は血行障害の重要な手掛かり",
+          "source_section": "消防庁『消防団員のための応急手当』骨折・副子固定"
+        }
+      ],
+      "performed_without_prior_review_access": true
     }
   ],
-  "note": "対象IDのみ既存Aから取得。先行レビューの判定・理由不参照。未検証問題は承認扱いしない。"
+  "note": "先行ファイルAはscope_question_idsだけを使用。先行判定・理由やaudit内の他ファイルは不参照。5肢の正誤は問題データと公的資料から独立に判断。個別証拠の実地リンク確認やゲート通過は別に必要。"
 }
