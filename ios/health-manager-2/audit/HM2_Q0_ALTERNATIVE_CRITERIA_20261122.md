@@ -206,3 +206,12 @@
 - 現行`apps/sanitary-manager-2/gm2.js`には`5年分相当の追加演習`の表記が存在。旧GHAの指摘は現行版と差異があり、追加変更は不要。
 - **今回実際に修正・コミットしたのはPINのみ**。GitHub Actionsの更新後実行結果、Node canonical snapshotのバイト一致、厳格exportの分類結果は未取得。従って**technical_errors=0はまだ証明されていない**。unittest18/18 PASSと非公式表記PASSはユーザー報告に基づく。
 - Q0/Q1の内容・権利承認は別。App Review提出・新規TestFlight配信は行わない。
+
+## 2026-11-22 正規再生成・技術エラー追跡（追加実査）
+- GitHub接続で現行の`release-questions.json`（300問、Git blob `1d416598f518a8631c177885b4a4356bd6a96696`）、`scripts/hm2_submission_readiness.py`、canonical exporter、strict exporter、C差し替えパッチ、DC正本を読み直した。
+- **PINは既に `a37f2b6def74b97f71ac73cbbc73869f739201c1e5766a2247ce39fe742dcb69` に別更新されている**。前回の`95e394...`は旧bank版であり、再度上書きしてはならない。現在のPINとbankのバイト一致は、この確認では再計算・実測できていない。
+- 16差し替え中、法令関連3問 `sm2-demo-001/002/003` は**現行配布JSON上で`legal_checked=2026-11-22`**。ほか13問は`law_related=false`かつ`legal_checked=null`で、`audit_status=再監査待ち`、`publication_status=非公開`。法令非該当13問の`null`を機械的に日付で埋めることはしない。法令関連3問も内容再監査・権利判定のPASSを意味しない。
+- **独立DC正本 `HM2_Q0_INDEPENDENT_DC_20261122.md` は取得できた**。記録冒頭では固定178問中30問・150肢の独立PASS、未実施148問と明記されている。以前の「DC正本404」の記載は現時点で解消。DCの完了件数は30/178であり、全件合格と誤認しない。
+- `export-canonical-snapshot.cjs`は16問差し替え、出典2問ほかのoverlayをロードする実装。実行環境からgithub.comへのDNS解決が失敗し、リポジトリのローカル取得不可。GitHub接続はファイル単位の読み書きに限定される。**Nodeでの正規再生成、現行bankとのバイト一致、最新GHA runの`technical_errors=[]`はこの作業では実測していない**。
+- strict exporterの`lawRelated && !legalChecked`条件は法令関連設問の未確認を遮断するものであり、削除・緩和しない。Q0代替基準は外部専門家承認を要求しないが、公式一次資料照合と差し替え後の独立確認を省略しない。
+- 結論：**技術エラーゼロは未確認**。追加確認を行うまでQ0/Q1 BLOCKED、App Review/TestFlight禁止。
