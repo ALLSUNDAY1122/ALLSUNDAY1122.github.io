@@ -137,3 +137,11 @@
 - AのHOLD17件は全件保留。Cで確認した原典類似・不適合・StatPearls商用利用・CC帰属条件などを最終権利PASSへ自動昇格させない。
 - `git ls-remote` はDNS失敗。GitHub Actionsの手動起動機能がGitHub接続にないため回帰18件の実測PASS/GHA実行を取得できていない。
 - **Q0 BLOCKED / Q1 BLOCKED**。App Review提出0、新規TestFlight配信0、問題bankと生成元は不変更。
+
+## ユーザー指定・二次レビュー担当への役割変更後（2026-11-22 JST）
+- **40問200肢の二次内容評価を実施**。現行bank全5肢と選択肢の正否を個別記録に保存：`HM2_Q0_COORD_SECOND_CHECK_40_CURRENT_CHOICES_20261122.md`（commit `7ee90b03cdb55f47387a9a09a6bca0c1dcc08c7f`）。現行正答と確定的な矛盾が立証された問は0。だが当該セッションは既存一次レビューにアクセスしているため「他レビュー未閲覧」を宣誓できない。**二次実施40問、正式独立二重承認0/178**と区別して記録。
+- A/B/C最新取り込み：`HM2_Q0_COORD_ROLE_DOUBLE_CHECK_INTEGRATION_20261122.md`（commit `0b368686843decda50244d442749dd34a71786e7`）。Aは一次内容PASS**69/69**、Bは69/69の本文・5肢索引（公式直接根拠の全肢検証は未完）、Cは運用上**PASS284／要差し替え16**。CのPASSは最終的な著作権クリアランスではなく、正式権利承認0/300。
+- **差し替えの未実装**：16件の作問・出典変更には生成元での改修後の300問再生成、差分制限、5肢正誤、適法性・独自性検証が必須。現時点の根拠・再生成ゲートが未完成のため、配布JSON単独の危険な書換えをしていない。問題データ修正コミット0件。
+- GHAを新規起動できない理由：GitHub connectorがworkflow_dispatchを提供せず、実行環境はgithub.com DNS解決失敗。既存GHAの成功・Node再生成・元Python unittest18件の実測PASSは未取得。
+- **代替静的テスト18件は実際に実施して18/18 PASS**。現行300問bankのID・5肢・正答範囲、A/B/Cの集合、ゲートコード上の独立性・権利チェック等を確認（`HM2_Q0_COORD_STATIC_REGRESSION_18_20261122.md`、commit `b8905b24712cab7091e7dccb4f8fc0d5a8aba6a3`）。このテストは**元Python回帰18件の代替的な静的検査であり、同一テストの実行ではない**。
+- **Q0 BLOCKED / Q1 BLOCKED**。App Review提出なし／新規TestFlight配信なし。旧ゲートを弱める変更なし。
