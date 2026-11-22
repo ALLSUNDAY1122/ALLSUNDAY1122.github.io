@@ -241,3 +241,11 @@
 - 生成元 `apps/sanitary-manager-2/hm2-source-precision-v1.js` の正答位置5・選択肢5肢・旧NCBI出典をguardしたパッチでsourceUrl、basis、auditStatusのみ修正。commit `2fdfc2f678fb5e09e24cd13e4f41923a4b5c8d53`。問題文・全肢・正答不変。
 - **一次内容PASS**。前節PASS60/HOLD9 → **PASS61/HOLD8（69問）**。No.115の既存PASSは二重計上せず、No.131/133/142など改稿済み未再生成は引き続きHOLD。
 - **留保**：生成元再生成・配布JSONとのバイト一致、独立再監査、権利最終判断未実施。PDFは参考リンクと要点の独自表現のみ、原著全文・図の転載なし。Q0/Q1 BLOCKED、App Review・TestFlight未実施。
+
+## B2第15次：No.165 ミトコンドリア脱共役・NIEHS/NTP政府原典で5肢照合（2026-11-22）
+
+- ID `sm2-5y-r09-phy-07`（固定No.165）、正答②不変。米国国立環境衛生科学研究所（NIEHS）National Toxicology Program政府原著 *NTP TOX 104: (+)-Usnic Acid*, pp9–10, Fig.3 https://ntp.niehs.nih.gov/sites/default/files/ntp/htdocs/st_rpts/tox104_508.pdf を本文とPDF実画面（PDFゼロ起算22頁が印刷10頁）で確認。プロトン漏出がミトコンドリア内膜の勾配を弱め、電子伝達／酸素消費とATP合成の結合を解き、ATP産生の減少と熱の発生に結びつくことを直接説明。原典は毒性研究であり、骨格筋特異的な定量予測を追加しない。
+- **5肢判定**：①×プロトン勾配喪失でもATPが通常大量生成とする点、**②○勾配散逸→ATP合成低下＋熱放散**、③×酸素消費継続なら電子伝達が必ず停止とする逆転、④×ATP産生倍増の断定、⑤×電子伝達系とATP合成が常に無関係という断定。正答位置2・5肢不変。
+- 生成元の旧NCBI第三者教材URLからNTP一次原典へsourceUrl差替え、basis追記、auditStatusを一次資料照合済へ更新。旧URL・肢数・正答ガード付き。生成元commit `26de2f65aba7c18a3412152571daf9c2a0d0d93a`。転載画像や原文の設問流用なし。
+- **一次内容PASS**：直前PASS61/HOLD8 → **PASS62/HOLD7（69問）**。No.115既PASSは重複計上しない。
+- 配布JSONの再生成・バイト一致・独立二重チェック・権利最終承認はまだ未実施。Q0/Q1 BLOCKED、App Review・TestFlightは操作しない。
