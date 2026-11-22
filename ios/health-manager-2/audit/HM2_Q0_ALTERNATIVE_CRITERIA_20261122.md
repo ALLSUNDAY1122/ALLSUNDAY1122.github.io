@@ -162,3 +162,12 @@
 - 元のA/B/Cや二次レビューの銀行SHA証跡は更新前の配布bankを指すため、**SHA-256固定に基づくQ0形式合格に流用せず、現行bankでの再固定と承認が必要**。更新に伴う以前の独立レビュー件数を自動承認しない。
 - GHA新規起動はこのGitHub接続にworkflow_dispatchアクションがない。ローカルgitは `Could not resolve host: github.com` でcheckout不能。正規のNode再生成・Python18回帰の実測PASSも未取得。
 - **Q0 BLOCKED / Q1 BLOCKED**。C残13問の未実装、B57問の原典HOLD、レビュー独立性、権利最終承認0/300、再生成の正規PASS未取得が解除条件。App Review提出・TestFlight新規配信なし。
+
+## 最新B（PASS15/HOLD54）・C要差し替え残13の実装・再判定（2026-11-22 JST）
+- Bの最新版から**一次PASS15/HOLD54**を確認。A一次内容69/69 PASS、既存一次40問と合わせ対象178問、ID重複0。対象178問の二次レビュー用索引は `HM2_Q0_COORD_SECOND_REVIEW_SCOPE_178_20261122.md`、既存40問200肢の意味二次確認記録は `HM2_Q0_COORD_SECOND_CHECK_40_CURRENT_CHOICES_20261122.md` を参照。**正式な独立二重承認済0/178**。本セッションでは先行判定にアクセスしており、盲検「先行レビュー未閲覧」宣誓はできない。BのHOLD54を二重確認済PASSへ機械的変更しない。
+- Cの残13問を新たな独自場面型・基礎概念型問題に再設計し、`apps/sanitary-manager-2/hm2-c-remaining-13-v1.js`（commit `4c9c131682d635dde8e2a43a8135fcf606ec1e2a`）に旧問題・正答文・出典の一致確認ガード付きで反映。 `export-audit-data-core.cjs`、`index.html`、Service Workerへ接続。新しい配布JSONをcommit `b796be432dc0c655cc8e04865e4b571ce3126c51` で保存。変更ID：`sm2-demo-014`, `015`, `022`, `027`, `028`, `029`, `sm2-r7o-015`, `026`, `027`, `028`, `sm2-r7a-016`, `030`, `sm2-5y-r09-phy-01`。
+- 先行実装3問（`sm2-demo-001`〜`003`）と合わせて**C指定16/16問の代替設問を生成元パッチ・配布JSONへ反映**。16問全て `publication_status=非公開`、`audit_status=再監査待ち`、`legal_checked=null` とし、旧承認・公開候補を流用しない。16問の新たな原典逐肢照合と表現独自性・著作権最終判断は未実施。**内容差し替えの実装完了とQ0権利承認は別**。
+- 配布JSON現行Git blob `fc2c1dd22bf0699bb1da2ce49b0ddb4400fce556`。GitHub連携でbank、A/B/C、Cの16問パッチ、画面、SW、exporter、独立性ゲート、Pythonテスト定義を取得して**代替静的検査28/28 PASS**（`HM2_Q0_C16_POST_REPLACEMENT_TEST_20261122.md`、commit `73548104222513a0bc2eb122d8658062a0b46e86`）。300問・30群10問・5肢一意・正答位置分布・16問再監査待ち非公開・独立Q0保護を確認。
+- **GHA起動不可**：現GitHub接続には新規workflow_dispatch操作がなく、ローカルGitHub cloneはDNSエラー `Could not resolve host: github.com`。正規Node exporterによる再生成バイト一致、Python unittest18件、GHAのPASSは未取得。28件のJS静的検査はこれらの代用品ではあるが同等の総合品質テストではない。
+- 16問の本文が変更されたため、一次・二次レビューの旧出題文面証跡は当該16問に再利用できない。新銀行のSHA-256を固定し、原典・正答・権利再判定後に記録をやり直す。C運用PASS284の権利最終クリアランスは**0/300**。
+- **Q0 BLOCKED / Q1 BLOCKED**。App Review提出と新規TestFlight配信は実施していない。
