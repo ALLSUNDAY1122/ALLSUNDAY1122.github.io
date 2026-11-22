@@ -269,6 +269,7 @@ export default {
       const reservation = await resolveUsage(env, request, origin);
       if (reservation.response) return reservation.response;
       const usage = reservation.usage;
+      try {
       const { response, raw } = await generateWithRetry({
           url: `${GEMINI_API_BASE}/${encodeURIComponent(model)}:generateContent`,
           headers: {
