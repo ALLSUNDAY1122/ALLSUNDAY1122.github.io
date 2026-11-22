@@ -21,12 +21,13 @@ const patches=[
       "answer": 2,
       "explanation": "日射のない屋内のWBGT＝0.7×自然湿球温度＋0.3×黒球温度。26×0.7＋34×0.3＝28.4℃。",
       "quick": "日射のない屋内のWBGT＝0.7×自然湿球温度＋0.3×黒球温度。",
-      "basis": "独自場面再設計・公開資料の事実のみ参照（原典逐肢・権利最終未承認）",
+      "basis": "2026-11-22環境省『暑さ指数（WBGT）の詳しい説明』屋内算出式（0.7×自然湿球＋0.3×黒球）の計算問題。法令適用・施行日の判断は問わないためlawRelated=false。26×0.7+34×0.3=28.4。権利と出題再監査は未完了。",
       "sourceUrl": "https://www.wbgt.env.go.jp/doc_observation.php",
       "legalChecked": null,
       "auditStatus": "再監査待ち",
       "publicationStatus": "非公開",
-      "contentReviewStatus": "requires-independent-source-review"
+      "contentReviewStatus": "requires-independent-source-review",
+      "lawRelated": false
     }
   },
   {
