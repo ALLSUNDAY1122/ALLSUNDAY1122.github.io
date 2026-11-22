@@ -295,3 +295,15 @@ q.contentReviewStatus='requires-independent-subject-expert-review';q.auditStatus
 if(new Set(q.choices).size!==5)throw Error('HM2 B2 pulse duplicate choices');
 window.HM2_B2_PULSE_NARROWED_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// UK public NHS hospital authored clinical skills source (2022-23), no third-party NCBI inference.
+const id='sm2-5y-r08-phy-10',old='https://www.ncbi.nlm.nih.gov/books/NBK553169/';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+if(!q||q.sourceUrl!==old||q.answer!==4||!Array.isArray(q.choices)||q.choices.length!==5)throw Error('HM2 B2 pupil source stale');
+q.sourceUrl='https://uhmeded.uhcw.nhs.uk/Portals/0/AssetUploads/CHESS%20Book%20Clinical%20Skills%20Workbook%202022-23.pdf?ver=ELcRsPPRSWHk3baBgJ2INQ%3D%3D';
+q.basis=String(q.basis||'')+' ／ 2026-11-22 University Hospitals Coventry and Warwickshire NHS Trust clinical skills workbook pp57-58 (Cranial Nerve 2), Check pupillary light reflexes: illumination of one eye causes directly stimulated pupil to constrict and the other pupil to constrict consensually. Published directly by NHS clinical education provider; PDF text confirmed, screenshot retrieval unsuccessful.';
+window.HM2_B2_PUPIL_NHS_SOURCE_ID=id;
+})();
