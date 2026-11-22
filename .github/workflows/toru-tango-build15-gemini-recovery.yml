@@ -1,0 +1,94 @@
+name: Toru Tango Build 15 Gemini Recovery (Worker gate then TestFlight)
+on:
+  push:
+    branches:
+      - release/toru-tango-build15-gemini-recovery-20261122
+    paths:
+      - '.github/workflows/toru-tango-build15-gemini-recovery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: toru-tango-build15-gemini-recovery
+  cancel-in-progress: false
+
+jobs:
+  worker:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: toru-tango/backend
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Backend tests
+        run: npm test
+      - name: Check Cloudflare credentials
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+      - name: Install Wrangler
+        run: npm install --no-audit --no-fund
+      - name: Deploy Worker without overwriting existing Gemini secret
+        run: |
+          set -o pipefail
+          npx wrangler deploy | tee worker-deploy.log
+      - name: Verify actual Gemini generation and OCR (HTTP 200 required)
+        run: node scripts/live-probe.mjs | tee live-probe.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-build15-worker-evidence
+          path: |
+            toru-tango/backend/worker-deploy.log
+            toru-tango/backend/live-probe.log
+          if-no-files-found: warn
+  ios:
+    needs: worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: toru-tango-mobile
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Verify EAS token
+        run: test -n "$EXPO_TOKEN"
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Install packages
+        run: npm ci --include=dev --no-audit --no-fund
+      - name: Run iOS validation
+        run: |
+          npm run typecheck
+          npm run lint
+          node --test tests/study-folder.test.cjs
+      - name: EAS iOS Build 15
+        run: |
+          mkdir -p release-logs
+          set -o pipefail
+          eas build --platform ios --profile production --non-interactive --json | tee release-logs/build15.json
+      - name: Upload Build 15 to TestFlight (not App Review)
+        run: |
+          set -o pipefail
+          eas submit --platform ios --profile production --latest --non-interactive | tee release-logs/submit15.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-build15-eas-evidence
+          path: toru-tango-mobile/release-logs
+          if-no-files-found: warn
