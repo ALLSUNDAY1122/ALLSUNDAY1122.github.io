@@ -329,3 +329,38 @@ test('reports Gemini upstream 401, 403, 404, 429 without exposing provider messa
     assert.doesNotMatch(JSON.stringify(payload), /AIza|VerySensitiveCredential|key=/);
   }
 });
+
+test('usage counter is not consumed when Gemini rejects the request', async (t) => {
+  const previous = globalThis.fetch;
+  t.after(() => { globalThis.fetch = previous; });
+  const state = new Map();
+  const env = { GEMINI_API_KEY:'test-key', USAGE_KV:{
+    get: async key => state.get(key) ?? null,
+    put: async (key,value) => { state.set(key,value); }
+  }};
+  globalThis.fetch = async () => Response.json({ error:{status:'RESOURCE_EXHAUSTED'} },{status:429});
+  const req = () => request(validInput,{headers:{'X-Toru-Tango-Anonymous-Id':'quota-failure-00001'}});
+  for(let i=0;i<6;i++){
+    const res=await worker.fetch(req(),env);
+    assert.equal(res.status,502);
+  }
+  assert.equal(state.size,0);
+  const u=await worker.fetch(new Request('https://worker.example/usage',{
+    method:'POST',headers:{'X-Toru-Tango-Anonymous-Id':'quota-failure-00001'}
+  }),env);
+  assert.deepEqual(await u.json(),{used:0,limit:5,tier:'free'});
+});
+test('only successful generation counts toward usage and /usage reports it',async(t)=>{
+  const previous=globalThis.fetch;
+  t.after(()=>{globalThis.fetch=previous;});
+  const state=new Map();
+  const env={GEMINI_API_KEY:'test-key',USAGE_KV:{get:async k=>state.get(k)??null,
+    put:async(k,v)=>state.set(k,v)}};
+  globalThis.fetch=async()=>Response.json({candidates:[{content:{parts:[{text:JSON.stringify({questions:[{question:'日本の首都はどこですか？',answer:'東京',type:'qa',factKey:'capital'}]})}]}}]});
+  const req=()=>request(validInput,{headers:{'X-Toru-Tango-Anonymous-Id':'quota-success-00001'}});
+  const res=await worker.fetch(req(),env);
+  assert.equal(res.status,200);
+  assert.equal((await res.json()).usageLimit.used,1);
+  const u=await worker.fetch(new Request('https://worker.example/usage',{method:'POST',headers:{'X-Toru-Tango-Anonymous-Id':'quota-success-00001'}}),env);
+  assert.equal((await u.json()).used,1);
+});

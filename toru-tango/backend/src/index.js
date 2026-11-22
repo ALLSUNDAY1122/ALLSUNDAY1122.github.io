@@ -124,30 +124,46 @@ function anonymousIdFrom(request) {
 }
 
 function usageKey(id, period) { return 'ai-usage:' + period + ':' + id; }
-async function reserveMonthlyUsage(env, request) {
-  const jws=request.headers.get('X-Toru-Tango-Transaction-JWS');
-  let tier='free',limit=FREE_MONTHLY_AI_LIMIT,id=anonymousIdFrom(request),period=new Date().toISOString().slice(0,7);
-  if(jws){
-    const entitlement=await verifyStoreKitTransaction(jws);
-    ({tier,limit}=entitlement);
-    id=entitlement.originalTransactionId;
-    period=entitlement.purchaseDate+'-'+entitlement.expiresDate;
+
+async function readUsage(env, request) {
+  const jws = request.headers.get('X-Toru-Tango-Transaction-JWS');
+  let tier = 'free', limit = FREE_MONTHLY_AI_LIMIT;
+  let id = anonymousIdFrom(request), period = new Date().toISOString().slice(0,7);
+  if (jws) {
+    const entitlement = await verifyStoreKitTransaction(jws);
+    ({ tier, limit } = entitlement);
+    id = entitlement.originalTransactionId;
+    period = entitlement.purchaseDate + '-' + entitlement.expiresDate;
   }
-  if(!env.USAGE_KV)return {allowed:false,tracked:false,used:0,limit,tier,error:'USAGE_STORAGE_UNAVAILABLE'};
-  if(!id)return {allowed:false,tracked:false,used:0,limit,tier,error:'ANONYMOUS_ID_REQUIRED'};
-  const key=usageKey(id,period),used=Number(await env.USAGE_KV.get(key))||0;
-  if(used>=limit)return {allowed:false,tracked:true,used,limit,tier};
-  await env.USAGE_KV.put(key,String(used+1),{expirationTtl:60*60*24*45});
-  return {allowed:true,tracked:true,used:used+1,limit,tier};
+  if (!env.USAGE_KV) return { error: 'USAGE_STORAGE_UNAVAILABLE' };
+  if (!id) return { error: 'ANONYMOUS_ID_REQUIRED' };
+  const key = usageKey(id, period);
+  const used = Number(await env.USAGE_KV.get(key)) || 0;
+  return { key, used, tier, limit };
 }
-async function resolveUsage(env,request,origin){
+
+// Only successful Gemini OCR / generation is billable; errors never write KV.
+async function commitSuccessfulUsage(env, usage) {
+  const next = usage.used + 1;
+  await env.USAGE_KV.put(usage.key, String(next), { expirationTtl: 60*60*24*45 });
+  return { used: next, limit: usage.limit, tier: usage.tier };
+}
+async function resolveUsage(env, request, origin) {
   try {
-    const usage=await reserveMonthlyUsage(env,request);
-    if(usage.error)return {response:json({error:'利用状況を確認できません。',code:usage.error},503,origin)};
-    if(!usage.allowed)return {response:json({error:'今月のクラウドAI利用枠に達しました。',code:'AI_MONTHLY_LIMIT',usage:{used:usage.used,limit:usage.limit,tier:usage.tier}},429,origin)};
-    return {usage};
-  }catch{
-    return {response:json({error:'購入情報を検証できません。',code:'INVALID_TRANSACTION_JWS'},401,origin)};
+    const usage = await readUsage(env, request);
+    if (usage.error) return { response: json({error:'利用状況を確認できません。',code:usage.error},503,origin) };
+    if (usage.used >= usage.limit) return {
+      response: json({
+        error: usage.tier === 'free'
+          ? '今月の無料回数（5回）を使い切りました。プランで追加利用できます。'
+          : `今月の利用上限（${usage.limit}回）に達しました。次の更新期間までお待ちください。`,
+        code:'AI_MONTHLY_LIMIT',
+        usage:{ used:usage.used,limit:usage.limit,tier:usage.tier }
+      },429,origin)
+    };
+    return { usage };
+  } catch {
+    return { response: json({error:'購入情報を検証できません。',code:'INVALID_TRANSACTION_JWS'},401,origin) };
   }
 }
 
@@ -207,7 +223,7 @@ export default {
     }
 
     const url = new URL(request.url);
-    if (url.pathname !== '/generate' && url.pathname !== '/ocr' && url.pathname !== '/entitlement') {
+    if (url.pathname !== '/generate' && url.pathname !== '/ocr' && url.pathname !== '/entitlement' && url.pathname !== '/usage') {
       return json({ error: 'Not found' }, 404, origin);
     }
     if (url.pathname === '/entitlement') {
@@ -217,6 +233,13 @@ export default {
         const entitlement=await verifyStoreKitTransaction(jws);
         return json({active:true,tier:entitlement.tier,limit:entitlement.limit,expiresDate:entitlement.expiresDate},200,origin);
       } catch { return json({active:false,error:'購入情報を検証できません。'},401,origin); }
+    }
+    if (url.pathname === '/usage') {
+      try {
+        const u=await readUsage(env,request);
+        if(u.error)return json({error:'利用状況を取得できません。',code:u.error},503,origin);
+        return json({used:u.used,limit:u.limit,tier:u.tier},200,origin);
+      }catch {return json({error:'利用状況を確認できません。',code:'INVALID_TRANSACTION_JWS'},401,origin);}
     }
     if (!env.GEMINI_API_KEY) {
       return json({ error: 'サーバー設定が完了していません。' }, 503, origin);
@@ -272,12 +295,13 @@ export default {
         }
         const text = extractOutputText(raw);
         if (!text) return json({ error: '画像から文字を認識できませんでした。' }, 422, origin);
+        const billed = await commitSuccessfulUsage(env,usage);
         return json(
           {
             text: cleanText(text, 50_000),
             provider: 'Google Gemini',
             model: cleanText(raw?.modelVersion || model, 80),
-            usage
+            usage: billed
           },
           200,
           origin
@@ -399,6 +423,7 @@ export default {
         );
       }
 
+      const billed = await commitSuccessfulUsage(env,usage);
       return json(
         {
           questions: result.questions,
@@ -414,7 +439,7 @@ export default {
             rejectedCount: result.rejectedCount
           },
           elapsedMs: Date.now() - startedAt,
-          usageLimit: usage
+          usageLimit: billed
         },
         200,
         origin
