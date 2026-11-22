@@ -71,7 +71,7 @@ const pinned={
 };
 const fields=['id','question','choices','answer','quick','explanation','topic','sourceUrl','baselineDate'];
 const results={};
-const normalize=s=>String(s).replace(/[\\s\\p{P}\\p{S}]/gu,'').toLowerCase();
+const normalize=s=>String(s).replace(/[\s\p{P}\p{S}]/gu,'').toLowerCase();
 function load(files){
  const ctx=vm.createContext({window:{Q_PARTS:[]},localStorage:{getItem:()=>null,setItem:()=>{}}});
  for(const file of files)vm.runInContext(fs.readFileSync(path.join(web,file),'utf8'),ctx,{filename:file});
