@@ -232,3 +232,12 @@
 - 生成元 `apps/sanitary-manager-2/hm2-source-precision-v1.js` の旧出典URL・正答位置・5肢と正答キーワードguard付きパッチで、sourceUrl・basis・explanation・auditStatusのみ更新。生成元commit `5315e814035a326a48a3931df5d5b72c6c0c8cdc`。
 - **一次内容PASS**。先行の一次集計PASS59/HOLD10に未加算のNo.149を1件加え、**PASS60/HOLD9（分割B69問）**。No.115は既に先行PASSであり今回再加算しない。No.131/133/142の改稿は生成元再生成・独立検証前でHOLD扱い継続。
 - **未達**：配布JSONの再生成・バイト一致実測・独立二重チェック・権利の最終承認。Q0/Q1 BLOCKED、App Review・TestFlight未実施。
+
+## B2第14次：No.161 瞳孔散大筋と交感神経・NHS公的眼科原著で5肢確定（2026-11-22）
+
+- ID `sm2-5y-r09-phy-03`（固定No.161）、正答⑤不変。
+- **発行者自身の公式資料**：Manchester University NHS Foundation Trust, Manchester Royal Eye Hospital, Neuro-ophthalmology Services, *Horner's Syndrome*, REH 176, p1（2019年10月見直し） https://mft.nhs.uk/app/uploads/sites/2/2019/10/REH-176.pdf 。NHS法人が自院の患者向けに発行した本文で、暗所での瞳孔散大を担う神経が交感神経の眼球への経路であり、その神経が虹彩の散大筋に至ること、損傷時は縮瞳することを明示。PDFの該当箇所について実画面画像でも発行主体・記載内容を確認。
+- **5肢**：①×副交感神経性の瞳孔括約筋収縮は散瞳ではなく縮瞳、②×散大筋を副交感神経支配とする誤り、③×体性運動神経・外眼筋は眼球運動で瞳孔径の調節機序ではない、④×交感神経を括約筋収縮と誤結合、**⑤○交感神経―虹彩の瞳孔散大筋により暗所散瞳**。1肢が一意。
+- 生成元 `apps/sanitary-manager-2/hm2-source-precision-v1.js` の正答位置5・選択肢5肢・旧NCBI出典をguardしたパッチでsourceUrl、basis、auditStatusのみ修正。commit `2fdfc2f678fb5e09e24cd13e4f41923a4b5c8d53`。問題文・全肢・正答不変。
+- **一次内容PASS**。前節PASS60/HOLD9 → **PASS61/HOLD8（69問）**。No.115の既存PASSは二重計上せず、No.131/133/142など改稿済み未再生成は引き続きHOLD。
+- **留保**：生成元再生成・配布JSONとのバイト一致、独立再監査、権利最終判断未実施。PDFは参考リンクと要点の独自表現のみ、原著全文・図の転載なし。Q0/Q1 BLOCKED、App Review・TestFlight未実施。
