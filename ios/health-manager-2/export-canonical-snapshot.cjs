@@ -4,7 +4,8 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'../..'),web=path.join(root,'apps/sanitary-manager-2');
 const base=Array.from({length:12},(_,i)=>'q'+(i+1)+'.js');
-const patches=['audit-patch-v2.js','audit-patch-v3.js','audit-patch-v4.js','audit-fixes.js','question-order-v1.js'];
+const patches=['audit-patch-v2.js','audit-patch-v3.js','audit-patch-v4.js','audit-fixes.js','question-order-v1.js',
+ 'hm2-source-precision-v1.js','hm2-c-replacements-v1.js','hm2-c-remaining-13-v1.js'];
 function load(includeDifficulty){
  const c=vm.createContext({window:{Q_PARTS:[]},localStorage:{getItem:()=>null,setItem:()=>{}}});
  for(const name of [...base,...(includeDifficulty?['difficulty-patch-v5.js']:[]),...patches])
