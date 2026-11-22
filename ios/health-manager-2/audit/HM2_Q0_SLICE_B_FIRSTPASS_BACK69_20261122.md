@@ -288,3 +288,47 @@
 - 今回の30問すべてについて**外部根拠との命題別比較記録は作成済み**。ただし各5肢それぞれへの公式一次資料の直接条文・全文の照合、特に権利・原著著者・掲載版の確定は未了。新Q0の厳格な逐肢一次確認を今回30件PASSへ一括加算しない。
 - 前回の累計No.110〜178の内容点検69/69問・345/345肢は維持。今回の30問追加後、保留65問すべてについて少なくとも根拠探索・命題別比較を試みたが、**全69問の公式原典照合完了とは判定しない**。既存の厚労省直接照合4/69を据え置き、No.113など直接根拠の追加候補は最終レビュー時に加算可否を個別判断する。
 - 問題データ・生成元・台帳本体は変更なし。App Review提出および新規TestFlight配信なし。二重チェック、権利最終判定、Q0/Q1判定および回帰実行は本分割の対象外。
+
+## 2026-11-22 実際の公開本文を再照会した30問・厳格ステータス（No.112〜115, 153〜178）
+
+現行 `ios/health-manager-2/release-questions.json` Git blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d`（Git object SHA。SHA-256ではない）から各5肢・正答indexを取得。**各論点に対する資料本文の直接記載をweb検索で確認した場合のみ『直接』と記載し、それ以外は明示的に不足とする。** 政府機関の公式解説と労働行政通達、臨床研究原著は異なる証拠階層。原文ページURLと実際の閲覧命題のずれを隠さない。日付2026-11-22 JST。
+
+| No | 問題ID | 正答肢 | 資料の分類 | 実際に確認した根拠／未確認事項 |
+|---:|---|---:|---|---|
+| 112 | `sm2-5y-r10-hyg-04` | 2 | 不足 | [参照本文](https://www.mhlw.go.jp/content/000922318.pdf)：元の健診集団分析資料の本文・匿名化条件を直接確認できず。現行肢2は内容整合に留める |
+| 113 | `sm2-5y-r10-hyg-05` | 3 | 通達・一部直接 | [参照本文](https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1&pageNo=1)：令和5年4月20日改訂：JIS T8161-1の試験遮音値を目安に必要かつ十分な遮音値を選定。警報への配慮も本文に言及。肢3支持 |
+| 114 | `sm2-5y-r10-hyg-06` | 5 | 不足 | [参照本文](https://pmc.ncbi.nlm.nih.gov/articles/PMC13692142/)：元記事の本文未確認。尿色による脱水診断の感度・特異度を直接立証できない |
+| 115 | `sm2-5y-r10-hyg-08` | 4 | 不足 | [参照本文](https://laws.e-gov.go.jp/law/347AC0000000057)：安衛法一般条文だけでは交替勤務や残業と血圧有所見率を関連付ける集団解析手順を直接立証できない |
+| 153 | `sm2-5y-r07-phy-09` | 5 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/books/NBK542189/)：近見反応は輻輳・縮瞳と整合するが、元記事本文の該当箇所は今回未確認 |
+| 154 | `sm2-5y-r07-phy-10` | 3 | 部分・政府情報 | [参照本文](https://medlineplus.gov/plateletdisorders.html)：血小板と白血球の役割は区別できるが好中球・マクロファージの貪食を直接記した原文未確認 |
+| 155 | `sm2-5y-r08-phy-01` | 2 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/books/NBK544292/)：反射弓の元記事本文未確認。肢2の生理学的整合を公式原典完了としない |
+| 156 | `sm2-5y-r08-phy-02` | 5 | 公的解説・直接 | [参照本文](https://www.nei.nih.gov/research-and-training/research-news/eye-cells-rewire-themselves-when-vision-begins-fail)：NEI研究紹介は杆体が暗所・錐体が昼間の視覚を支えると説明。色覚の追加直接根拠は未照合 |
+| 157 | `sm2-5y-r08-phy-06` | 1 | 公的解説・直接 | [参照本文](https://www.nei.nih.gov/research-and-training/research-news/reviving-vision)：NEI資料が視細胞→双極細胞・神経節細胞→視神経という伝達経路を記載。肢1支持 |
+| 158 | `sm2-5y-r08-phy-10` | 4 | 公的解説・部分 | [参照本文](https://www.nei.nih.gov/research-and-training/research-news/nih-researchers-decode-retinal-circuits-circadian-rhythm-pupillary-light-response)：NEI資料で対光反射の網膜回路を確認。ただし片側照射と対側共同縮瞳を明示した箇所は確認できず |
+| 159 | `sm2-5y-r09-phy-01` | 4 | 公的配信・直接 | [参照本文](https://medlineplus.gov/ency/imagepages/19841.htm)：骨格筋が随意筋かつ横紋筋であることを直接確認。A.D.A.M.等第三者著作権で転載不可 |
+| 160 | `sm2-5y-r09-phy-02` | 1 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/books/NBK26888/)：アクチン・ミオシン滑走説の問題設定は整合。元のNCBI記事本文を今回直接確認できず |
+| 161 | `sm2-5y-r09-phy-03` | 5 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/books/NBK553169/)：交感神経・瞳孔散大筋の元記事本文未到達 |
+| 162 | `sm2-5y-r09-phy-04` | 2 | 算術再確認・原典不足 | [参照本文](https://www.ncbi.nlm.nih.gov/books/NBK482501/)：A=(500−150)×12=4200mL/分、B=(300−150)×20=3000mL/分。肢2が算術上一致。元記事本文照合保留 |
+| 163 | `sm2-5y-r09-phy-05` | 3 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/books/NBK541119/)：コリ回路の元記事本文未確認。肝糖新生の語義だけでは直接原典として不十分 |
+| 164 | `sm2-5y-r09-phy-06` | 5 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/books/NBK546695/)：嫌気的解糖の原典本文未確認 |
+| 165 | `sm2-5y-r09-phy-07` | 2 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/books/NBK526105/)：脱共役とATP生成低下の原典本文未確認 |
+| 166 | `sm2-5y-r09-phy-08` | 4 | 政府公式解説・直接 | [参照本文](https://www.niddk.nih.gov/news/archive/2021/story-discovery-medications-diabetes-obesity-emerged-research-pancreatic-hormone)：NIDDK公式資料でβ細胞がインスリン、α細胞がグルカゴンを分泌することを確認。肢4支持 |
+| 167 | `sm2-5y-r09-phy-09` | 1 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/books/NBK538172/)：循環代償の元記事本文未確認 |
+| 168 | `sm2-5y-r09-phy-10` | 3 | 政府公式解説・直接 | [参照本文](https://medlineplus.gov/genetics/gene/vwf/)：MedlinePlus GeneticsでvWFの血小板粘着・損傷部位への接着を確認。肢3支持 |
+| 169 | `sm2-5y-r10-phy-01` | 3 | 政府公式解説・直接 | [参照本文](https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works)：NIDDKで胆汁を肝臓が作ることを確認。肢3支持。代謝調節の全内容は追加照合 |
+| 170 | `sm2-5y-r10-phy-02` | 5 | 政府公式解説・直接 | [参照本文](https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works)：NIDDKで肝臓が作る胆汁は脂肪の消化に役立つと記載。肢5を支持。消化酵素非含有の断定は別原典要 |
+| 171 | `sm2-5y-r10-phy-03` | 2 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/books/NBK482501/)：換気された非灌流肺胞は高V/Q・死腔化と整合。今回元資料の直接照合は未完了 |
+| 172 | `sm2-5y-r10-phy-04` | 1 | 不足 | [参照本文](https://pmc.ncbi.nlm.nih.gov/articles/PMC3889318/)：近位尿細管での糖再吸収の元記事は今回未検証 |
+| 173 | `sm2-5y-r10-phy-05` | 4 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/sites/books/NBK493219/)：肺胞→血液の酸素拡散について本文未検証 |
+| 174 | `sm2-5y-r10-phy-06` | 2 | 政府労働衛生報告・部分 | [参照本文](https://www.cdc.gov/niosh/bulletin/2020/heat-stress-construction.html)：NIOSHは皮膚温・気温・湿度が熱移動に影響すると記載。40℃対35℃の対流方向は物理的推論で、直接の数字照合なし |
+| 175 | `sm2-5y-r10-phy-07` | 4 | 政府労働衛生報告・直接 | [参照本文](https://www.cdc.gov/niosh/docs/2016-106/pdfs/2016-106.pdf)：NIOSH推奨基準文書は高湿度で汗の蒸発が抑制され熱放散が低下すると明記。肢4支持 |
+| 176 | `sm2-5y-r10-phy-08` | 1 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/books/NBK597379/)：ブドウ糖の門脈経路は生理学的に整合、今回直接出典本文照合未完了 |
+| 177 | `sm2-5y-r10-phy-09` | 5 | 不足 | [参照本文](https://www.ncbi.nlm.nih.gov/sites/books/NBK482430/)：炭酸緩衝系とpHの原典本文未検証 |
+| 178 | `sm2-5y-r10-phy-10` | 3 | 政府公式解説・部分 | [参照本文](https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works)：NIDDKで脂肪酸等はリンパ系が吸収すると明記。一方グルコース門脈経路とカイロミクロンの双方の直接記載は未確認 |
+
+### 監査結論とリスク
+- 30問全件の現行出題データを取得し、既存の5肢整合点検・正答indexとの衝突を再点検。一次資料の本文に支持される箇所と、未確認箇所の区別を追加した。
+- **追加の根拠直接照合候補**：No.113（厚労省通達）、No.156・157・159・166・168・169・170・175（米政府資料・第三者著作を含む）。直接根拠は主として正答命題を支持するが、各誤肢を独立に原文と照合したフル5肢証跡ではない。
+- No.162は計算式の数値を独立に確認したが、原典の直接閲覧が未了。No.112/115は厚労省の集団分析指針との直接対応が依然不十分。No.114のPMC記事も内容確認未了。未到達のNCBI解説を『確認済み』としない。
+- 誤肢の排除は医学・生理学の内容推論に依る箇所がある。**新Q0の厳格な公式原典逐肢照合完了を30問追加したとは認定しない**。元の4/69問の正式計上を据え置く。コーディネーターが個別条文・原著一次性と五肢の直接証拠を確認するまでBLOCKED扱い。
+- 本回は専用分割台帳のみを更新。元台帳、出題bank、生成元、ゲート・CI、App Review、新規TestFlightは変更／操作なし。
