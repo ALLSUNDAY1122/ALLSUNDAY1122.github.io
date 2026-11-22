@@ -1,7 +1,18 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import worker from '../src/index.js';
+import realWorker from '../src/index.js';
+
+// Unit tests supply a deterministic anonymous ID and an in-memory KV stand-in.
+// The production Worker rejects usage without the configured storage binding.
+const worker = {
+  fetch(request, env) {
+    const testEnv=env?.GEMINI_API_KEY && !env.USAGE_KV ? {...env,USAGE_KV:{get:async()=>null,put:async()=>{}}} : env;
+    const headers=new Headers(request.headers);
+    if(testEnv?.GEMINI_API_KEY && !headers.has('X-Toru-Tango-Anonymous-Id'))headers.set('X-Toru-Tango-Anonymous-Id','anon-unit-test-00001');
+    return realWorker.fetch(new Request(request,{headers}),testEnv);
+  }
+};
 
 const validInput = {
   text: '日本国憲法は1947年5月3日に施行され、国民主権、基本的人権の尊重、平和主義を基本原理とする。',

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Linking, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Linking, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { useIAP } from 'expo-iap';
 import { AppButton, colors } from '@/src/components/ui';
@@ -73,13 +73,13 @@ export default function PaywallScreen() {
         return <View style={styles.plan} key={id}>
           <Text style={styles.planTitle}>{PLAN_NAMES[id]}</Text>
           <Text style={styles.price}>{product?.displayPrice ? product.displayPrice+'/月' : '価格を読み込み中'}</Text>
-          <AppButton label={product?.displayPrice ? 'このプランに登録' : 'App Store価格を取得できません'} onPress={()=>void purchase(id)} />
+          <AppButton label={product?.displayPrice ? 'このプランに登録' : 'App Store価格を取得できません'} disabled={!product?.displayPrice || busy} onPress={()=>void purchase(id)} />
         </View>;
       }): <Text>iPhoneのApp Storeで利用できます。</Text>}
       {busy?<ActivityIndicator />:null}
       {status?<Text accessibilityRole="alert" style={styles.status}>{status}</Text>:null}
       <Text style={styles.body}>各プランは1か月ごとに自動更新され、解約しない限り課金が継続します。更新前にiPhoneの設定からサブスクリプションを管理・解約できます。プラン変更時の適用時期と請求はApp Storeの規則に従います。</Text>
-      <AppButton label="購入を復元" variant="secondary" onPress={()=>void restore()} />
+      <AppButton label="購入を復元" variant="secondary" disabled={busy} onPress={()=>void restore()} />
       <AppButton label="プライバシーポリシー" variant="secondary" onPress={()=>void Linking.openURL(POLICY)} />
       <AppButton label="利用規約（Apple標準EULA）" variant="secondary" onPress={()=>void Linking.openURL(EULA)} />
     </ScrollView>

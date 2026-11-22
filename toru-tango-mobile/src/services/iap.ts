@@ -13,8 +13,8 @@ export async function getTransactionJws(): Promise<string | null> {
   const purchases = await getAvailablePurchases();
   const now=Date.now();
   const active=purchases.filter(p=>SUBSCRIPTION_IDS.some(id=>id===p.productId) &&
-    typeof p.expirationDateIOS === 'number' && p.expirationDateIOS > now &&
+    'expirationDateIOS' in p && typeof p.expirationDateIOS === 'number' && p.expirationDateIOS > now &&
     typeof p.purchaseToken === 'string' && p.purchaseToken.split('.').length===3)
-    .sort((a,b)=>(b.expirationDateIOS||0)-(a.expirationDateIOS||0));
+    .sort((a,b)=>(('expirationDateIOS' in b ? b.expirationDateIOS : 0)||0)-(('expirationDateIOS' in a ? a.expirationDateIOS : 0)||0));
   return active[0]?.purchaseToken || null;
 }
