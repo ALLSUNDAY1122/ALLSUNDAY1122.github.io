@@ -1,0 +1,65 @@
+name: Toru Tango Build 20 Paywall Safe Area (Internal TestFlight)
+on:
+  push:
+    branches:
+      - release/toru-tango-build20-paywall-safe-area-20261122
+    paths:
+      - '.github/workflows/toru-tango-build20-internal-testflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: toru-tango-build20-internal-testflight
+  cancel-in-progress: true
+jobs:
+  ios:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: toru-tango-mobile
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Verify unchanged Worker, Gemini API, OCR XHR and usage screens
+        run: |
+          set -e
+          git diff --exit-code b5be0dfee7aad9bfc5377ba6764631c055ecc7f8 HEAD -- src/services/geminiOcr.ts src/services/cloudUsage.ts src/services/ai.ts src/services/iap.ts 'app/(tabs)/create.tsx' 'app/(tabs)/records.tsx'
+          cd ..
+          git diff --exit-code b5be0dfee7aad9bfc5377ba6764631c055ecc7f8 HEAD -- toru-tango/backend/
+      - name: Verify Expo credentials
+        run: test -n "$EXPO_TOKEN"
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Typecheck, lint, Expo Doctor and regression tests
+        run: |
+          npm install --package-lock-only --no-audit --no-fund
+          npm ci --include=dev --no-audit --no-fund
+          npm run typecheck
+          npm run lint
+          npm run doctor
+          node --test tests/study-folder.test.cjs tests/build17-ocr-transport.test.cjs tests/build18-usage.test.cjs tests/build19-subscription.test.cjs tests/build20-safe-area.test.cjs
+          npx expo config --type public > /dev/null
+      - name: EAS Build 20 iOS
+        run: |
+          mkdir -p release-logs
+          set -o pipefail
+          eas build --platform ios --profile production --non-interactive --json | tee release-logs/build20.json
+      - name: Upload Build 20 to App Store Connect for Internal TestFlight (NO App Review)
+        run: |
+          set -o pipefail
+          eas submit --platform ios --profile production --latest --non-interactive | tee release-logs/submit20.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-tango-build20-eas
+          path: toru-tango-mobile/release-logs
+          if-no-files-found: warn
