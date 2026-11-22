@@ -197,3 +197,12 @@
 - GitHubにある従来の `scripts/hm2_alternative_q0_gate.py` は、レビュー証跡JSONと権利300件の構造を検査する**旧実装のまま**。今回の**運用基準変更をコード変更・自動ゲートPASSと混同しない**。今後、正本DCおよびC再監査結果を証拠JSONに反映してコードと整合を取る必要がある。承認省略やゲートの迂回は禁止。
 - 現時点ではDC正本の取得不可、B公式原典HOLD、C16再監査未完、正規Node/Python/GHA実測PASS未確認のため、**Q0 BLOCKED → Q1 BLOCKED**と判定する。
 - App Review提出、新規TestFlight配信は実施しない。
+
+## production-readiness技術エラー対応（2026-11-22）
+- ユーザー報告：既存GHA 84/87でunittest18/18 PASS、非公式表記PASS。一方で`UNREVIEWED_BANK_SHA`、`CANONICAL_REGENERATION_FAILED`、厳格exportの`legalChecked`欠落、gm2表示の疑義。**これらのGHA実測値はユーザー報告であり、本セッションで同じrunのログを再取得したものではない。**
+- 現行配布JSON `ios/health-manager-2/release-questions.json` のUTF-8バイト列を独立SHA-256計算（既知ベクトル`abc`で実装検算）し、`95e394dfa8f7d8b8dd23b763c168e61ab71e4e452fc519f87111011fc4c34eef`と確認。`scripts/hm2_submission_readiness.py`の`PIN`をこの値に更新（commit `e10800cbdb57353c63833842686f36cc3b4f2b18`）。**この修正は当該時点のbank固定であり、後続コミットがbankを変更した場合は再計算必須**。
+- 現行の`export-canonical-snapshot.cjs`と`export-audit-data-core.cjs`には`q1..q12`、difficulty patch、監査overlay、`hm2-source-precision-v1.js`、`hm2-c-replacements-v1.js`、`hm2-c-remaining-13-v1.js`、`hm2-source-evidence-v2.js`が組み込まれている。**旧18問への生成側戻りを示したGHAの状態からは更新されているが、今回Node CLIでバイト一致を実測していないためCANONICAL_REGENERATION_FAILED解消は未認定**。
+- `export-audit-data-core.cjs`は法令関連で`legalChecked`がない場合`HM2_RELEASE_REVIEW_BLOCKED`を投げる。readiness scriptはこのコードを`submission_blockers`に分類する設計。ユーザー決定の外部専門家承認不要と、未監査の新設問を無条件承認しないことは両立する。**ゲートを迂回してtechnical_errorsを見かけ上0にする修正はしない**。
+- 現行`apps/sanitary-manager-2/gm2.js`には`5年分相当の追加演習`の表記が存在。旧GHAの指摘は現行版と差異があり、追加変更は不要。
+- **今回実際に修正・コミットしたのはPINのみ**。GitHub Actionsの更新後実行結果、Node canonical snapshotのバイト一致、厳格exportの分類結果は未取得。従って**technical_errors=0はまだ証明されていない**。unittest18/18 PASSと非公式表記PASSはユーザー報告に基づく。
+- Q0/Q1の内容・権利承認は別。App Review提出・新規TestFlight配信は行わない。
