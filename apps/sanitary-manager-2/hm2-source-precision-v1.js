@@ -391,3 +391,20 @@ q.basis=String(q.basis||'')+' ／ 2026-11-22 UK Manchester University NHS Founda
 q.auditStatus='一次資料照合済';
 window.HM2_B2_NHS_IRIS_DILATOR_SOURCE_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// HM2 B2 No.165: government NTP toxicology report describes proton uncoupling and heat.
+const id='sm2-5y-r09-phy-07';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+const old='https://www.ncbi.nlm.nih.gov/books/NBK526105/';
+const source='https://ntp.niehs.nih.gov/sites/default/files/ntp/htdocs/st_rpts/tox104_508.pdf';
+if(!q||q.sourceUrl!==old||!Array.isArray(q.choices)||q.choices.length!==5||q.answer!==2||
+ q.choices[1]!=='プロトン勾配が散逸してATP合成が低下し、エネルギーの一部は熱として放散される。')
+ throw Error('HM2 B2 NTP uncoupling old state mismatch '+id);
+q.sourceUrl=source;
+q.basis=String(q.basis||'')+' ／ 2026-11-22 NIEHS National Toxicology Program original government report NTP TOX-104 pp9-10, Fig 3: uncoupling through inner mitochondrial membrane proton leak dissipates gradient, decreases ATP synthesis, energy appears as heat, electron transport and O2 consumption can continue. NTP published source, not NCBI-hosted third-party StatPearls.';
+q.auditStatus='一次資料照合済';
+window.HM2_B2_NTP_UNCOUPLING_SOURCE_ID=id;
+})();
