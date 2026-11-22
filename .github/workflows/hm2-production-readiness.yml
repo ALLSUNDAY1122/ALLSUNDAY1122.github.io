@@ -5,6 +5,7 @@ on:
     branches: [audit/hm2-quality-20261110, fix/hm2-priority123-regression-20261122]
     paths:
       - 'scripts/hm2_submission_readiness.py'
+      - 'scripts/hm2_alternative_q0_gate.py'
       - 'apps/sanitary-manager-2/gm4.js'
       - 'health-manager-2/support.html'
       - 'ios/health-manager-2/APP_STORE_METADATA_JA.md'
@@ -43,6 +44,10 @@ jobs:
               assert ('監修・承認を受けていません' in s or '専門家監修なし' in s or '監修・承認を受けた教材ではありません'), path
           print('PASS HM2_UNOFFICIAL_UNREVIEWED_DISCLOSURE')
           PY
+      - name: Alternative Q0 evidence verification (expected BLOCKED until complete)
+        run: |
+          python -m py_compile scripts/hm2_alternative_q0_gate.py
+          python scripts/hm2_alternative_q0_gate.py --output /tmp/hm2-q0-alternative.json
       - name: Audit source reproducibility and submission blockers
         env:
           HM2_REPORT: /tmp/hm2-submission-readiness.json
@@ -65,6 +70,8 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: hm2-production-readiness-report
-          path: /tmp/hm2-submission-readiness.json
+          path: |
+            /tmp/hm2-submission-readiness.json
+            /tmp/hm2-q0-alternative.json
           if-no-files-found: warn
           retention-days: 14
