@@ -43,7 +43,14 @@ assert.deepEqual(drift,[],'browser/release content drift: '+drift.join(', '));
 const bById=new Map(browser.map(q=>[q.id,q]));
 for(const q of qs){
  const b=bById.get(q.id);
- for(const key of fields)assert.deepEqual(q[key],b[key],q.id+':'+key);
+ // The core export runs in this realm, while browser scripts run in a VM realm.
+ // Recreate array containers in this realm without changing elements or order;
+ // strict comparison still checks every choice byte-for-byte as a JS string.
+ for(const key of fields){
+  const actual=Array.isArray(q[key])?Array.from(q[key]):q[key];
+  const expected=Array.isArray(b[key])?Array.from(b[key]):b[key];
+  assert.deepEqual(actual,expected,q.id+':'+key);
+ }
 }
 const file=path.join(IOS_DIR,'release-questions.json');
 const exported=JSON.parse(fs.readFileSync(file,'utf8'));
