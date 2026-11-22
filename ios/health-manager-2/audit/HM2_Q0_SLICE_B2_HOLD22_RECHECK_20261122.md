@@ -279,3 +279,15 @@
 - **一次内容PASS**：前節PASS64/HOLD5 → **PASS65/HOLD4（69問）**。独立二重チェック・全権利判定・再生成・バイト一致の実行は未完、公開品質ゲートBLOCKED継続。FDA/DOEのPDFはウェブ本文を確認したが、PDFスクリーンショット機能が利用不可となり画像での独立確認は未実施。
 - **残る一次HOLD4**：No.131 `sm2-5y-r05-phy-04`、No.133 `sm2-5y-r05-phy-06`、No.135 `sm2-5y-r05-phy-08`、No.142 `sm2-5y-r06-phy-08`。No.131/133/142は生成元限定改稿済みだがバイト一致と独立再監査未了。No.135は政府機関が独自執筆したGLUT4非インスリン性膜移行の直接教材が未取得。NIH PubMed収載の査読原著やNIDDK所蔵の研究計画書を政府自身の著作と断定せず、資料根拠区分を保留する。
 - **実行制約**：GitHubコネクタを用いたファイル更新とコミットは実施可能だが、現環境のgit外部ネットワークは名前解決不能でローカルclone・Node再生成の実行に至らず。生成元のパッチは動作未検証であり、配布JSONの最新内容も未反映。Q0/Q1 BLOCKED、App Review・TestFlightなし。
+
+## B2第18次追補：No.151/163/167生成元パッチの個別実行検証
+
+GitHub接続から現行 `ios/health-manager-2/release-questions.json` と `apps/sanitary-manager-2/hm2-source-precision-v1.js` を取得。配布JSONの該当問題を `id,choices,answer(correct_index+1),sourceUrl,explanation,basis,auditStatus` のwindow.Q_PARTS形式へ写像し、JavaScript V8内で3つの独立IIFEのみ個別実行した。テスト対象は以下。
+
+| ID | old-state guard | 出典URL更新 | 5肢・正答位置不変 | auditStatus |
+|---|---|---|---|---|
+| sm2-5y-r09-phy-05（No.163） | PASS | PASS | PASS | 一次資料照合済 |
+| sm2-5y-r09-phy-09（No.167） | PASS | PASS | PASS | 一次資料照合済 |
+| sm2-5y-r07-phy-07（No.151） | PASS | PASS | PASS | 一次資料照合済 |
+
+**実測範囲の限界**：これは正規生成スクリプト全体の実行ではない。基準データを生成元全スクリプトで構築したものではなく、各IIFEに必要なフィールドだけを抽出・写像したスモークテストである。配布JSONの変更・SHA256生成・再生成バイト一致・全300問回帰・独立二重監査は未実施。Q0/Q1は引き続きBLOCKED。
