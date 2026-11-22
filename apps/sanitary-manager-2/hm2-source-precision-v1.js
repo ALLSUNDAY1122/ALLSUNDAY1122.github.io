@@ -219,3 +219,25 @@ q.basis=String(q.basis||'')+' ／ 2026-11-22 B2一次出典検証：'+f.basis;
 }
 window.HM2_B2_GOVERNMENT_SOURCE_FIX_IDS=fixes.map(x=>x.id);
 })();
+
+
+(function(){
+'use strict';
+// B2 government-original source scope revision: avoid asserting a causal insulin-to-glycogen
+// link that the cited NIDDK/NLM public explanations do not state in the same clause.
+const id='sm2-5y-r05-phy-04';
+const qs=(window.Q_PARTS||[]).filter(x=>x.id===id);
+if(qs.length!==1)throw Error('HM2 B2 liver expected one question');
+const q=qs[0];
+const prev='インスリンの作用により肝糖産生が抑制され、グリコーゲン合成が促される。';
+const next='食後には肝臓からの糖放出が抑制される方向に働き、肝臓に取り込まれた余剰の糖はグリコーゲンとして貯蔵され得る。';
+const official='https://www.niddk.nih.gov/news/archive/2013/new-mechanism-proposed-glucose-lowering-effect-metformin-drug-type-2-diabetes';
+if(!Array.isArray(q.choices)||q.choices.length!==5||q.answer!==4||q.choices[3]!==prev||q.sourceUrl!==official)throw Error('HM2 B2 liver expected old-state mismatch');
+q.choices=[...q.choices];q.choices[3]=next;q.quick=next;
+q.explanation='NIDDK公式2013年解説は、空腹時にグルカゴンが肝臓から糖を放出させ、食後に分泌されるインスリンがそれと対抗する作用を持つと説明する。NLM MedlinePlus Genetics GCK gene Normal Function は、肝臓のグルコキナーゼが過剰な糖を取り込みグリコーゲンへ変換する際に働くと明記。よって肢4の条件付き記載が適切。肢1は食後のグルカゴン促進を必然視し、肢2は肝糖放出増加、肢3は肝臓の調節不能、肢5は食後にインスリンが肝糖放出を増やすと逆転させているため不適切。インスリンだけがグリコーゲン合成を直接決定するとの単因果は断定しない。';
+q.topic='食後の肝糖放出調節とグリコーゲン貯蔵';
+q.basis=String(q.basis||'')+' ／ B2正答命題限定：NIDDK postmeal glucagon-insulin opposition and NLM GCK normal function, https://medlineplus.gov/genetics/gene/gck/';
+q.contentReviewStatus='requires-independent-subject-expert-review';q.auditStatus='再監査待ち';q.publicationStatus='非公開';
+if(new Set(q.choices).size!==5)throw Error('HM2 B2 liver duplicate choice');
+window.HM2_B2_LIVER_FOCUSED_REVISION=id;
+})();
