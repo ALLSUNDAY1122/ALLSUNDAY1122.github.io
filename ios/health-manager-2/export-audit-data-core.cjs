@@ -103,7 +103,7 @@ if(unresolved.length){
  }
  console.log('PASS HM2_ALTERNATIVE_Q0_EVIDENCE_STRUCTURE (source validity still requires independent review)');
 }
-console.log('PASS: live-ID numeric checks and all expansion publication review statuses verified.');
+console.log('PASS: live-ID numeric checks and expansion review gate (legacy statuses or complete alternative evidence).');
 
 const out = questions.map(q => ({
   id: q.id,
