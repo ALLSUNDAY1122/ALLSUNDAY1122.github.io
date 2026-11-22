@@ -132,3 +132,23 @@ for(const f of fixes){const q=qs.get(f.id);
 }
 window.HM2_B_LATE_OFFICIAL_PHYSIOLOGY_IDS=fixes.map(f=>f.id);
 })();
+
+
+(function(){
+'use strict';
+// HM2-B scoped rewrites with fail-closed old-state checks. Any rewrite invalidates release approvals.
+const edits=[{"id":"sm2-5y-r10-hyg-04","oldQuestion":"定期健康診断で有所見者が増えた部署がある。個人情報への配慮を保ちながら集団の健康課題を把握する方法はどれか。","oldCorrect":"十分な人数を確保した匿名化・集計結果と職場の作業条件を併せて評価する。","newCorrect":"個人が特定されないよう適切に加工・集計した健診結果を、職場の作業条件と併せて評価する。","newExplanation":"第2肢が適切。厚労省『労働者の心身の状態に関する情報の適正な取扱い指針』2（1）～（5）は健康確保目的に必要な情報に限定し、取扱権限・管理・加工を定める。部署の健康指標を扱う場合、氏名を除いた集計だけでなく少人数・属性の組合せによる再識別リスクを確認し、個人が特定されないよう適切に加工して作業条件と併せて評価する。固定の人数閾値が法的に必須とは断定しない。肢1は氏名付き結果の無制限配布、肢3は勤務条件との関連評価を放棄、肢4は本人同意・取扱規程を無視、肢5は診断の推測と公表で不適切。なお健診集団分析とストレスチェック集団分析の法定人数要件を混同しない。","source":"https://www.mhlw.go.jp/content/000922318.pdf","basis":"厚労省2018年制定・2022年改正心身の状態に関する情報の適正取扱い指針2(1)-(5)：目的と権限制限・加工・適正管理を確認。ストレスチェック独自の集計人数ルールを一般健診へ流用しない。"},{"id":"sm2-5y-r05-phy-07","oldQuestion":"不整脈のある患者で1分間に心尖部で聴取した心拍数が96回、同時に触れた橈骨動脈の脈拍数が78回だった。このときの脈拍欠損（pulse deficit）は何回/分か。","oldCorrect":"18回/分","newQuestion":"脈拍欠損を『同時に測定した心尖部心拍数から橈骨動脈の脈拍数を引いた値』と定義する。不整脈のある患者で、心尖部で96回/分、橈骨動脈で78回/分を測定したとき、脈拍欠損はいくつか。","newExplanation":"設問に脈拍欠損の定義を明記したため、96−78＝18回/分と計算できる。肢1の0、肢2の78、肢4の96、肢5の174はいずれも定義式を満たさない。元出典『Clinical Methods: Pulse』は政府が執筆した教材ではないため、公式の診察定義による独立再確認まで公開しない。"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+for(const e of edits){const q=byId.get(e.id);
+ if(!q||q.question!==e.oldQuestion||!Array.isArray(q.choices)||q.choices.length!==5||q.choices[q.answer-1]!==e.oldCorrect||!Number.isInteger(q.answer)||q.answer<1||q.answer>5)throw Error('HM2 B rewrite expected old state '+e.id);
+ if(e.newQuestion)q.question=e.newQuestion;
+ if(e.newCorrect){q.choices=[...q.choices];q.choices[q.answer-1]=e.newCorrect;q.quick=e.newCorrect;}
+ q.explanation=e.newExplanation;
+ if(e.basis)q.basis=String(q.basis||'')+' ／ '+e.basis;
+ if(e.source)q.sourceUrl=e.source;
+ q.contentReviewStatus='requires-independent-subject-expert-review';q.auditStatus='再監査待ち';q.publicationStatus='非公開';
+ if(q.lawRelated)q.legalChecked=null;
+ if(new Set(q.choices).size!==5)throw Error('HM2 B rewrite duplicate choices '+e.id);
+}
+window.HM2_B_SCOPED_REWRITES_20261122=edits.map(x=>x.id);
+})();
