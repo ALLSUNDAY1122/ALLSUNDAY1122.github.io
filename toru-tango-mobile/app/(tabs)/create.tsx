@@ -476,6 +476,17 @@ export default function CreateScreen() {
       <Text style={commonStyles.subtitle}>
         教材から表裏の単語カードを作り、両面を読み上げて学習します。
       </Text>
+      <Section title="クラウドAI利用状況">
+        <Text style={styles.usageValue}>{formatCloudUsage(cloudUsage.usage)}</Text>
+        {cloudUsage.status==='error' ? <MutedText>利用状況を取得できませんでした。更新をお試しください。</MutedText> : null}
+        {isCloudUsageLimited(cloudUsage.usage) ? (
+          <>
+            <MutedText>今月の利用上限に達しました。プランの詳細をご確認ください。</MutedText>
+            <AppButton label="プランを見る" onPress={() => router.push('/paywall')} />
+          </>
+        ) : null}
+        <AppButton label="利用状況を更新" variant="secondary" onPress={refreshUsage} />
+      </Section>
 
       <Section title="教材を撮る・文字を読む">
         <View style={commonStyles.row}>
@@ -752,6 +763,7 @@ const styles = StyleSheet.create({
     lineHeight: 20
   },
   imageList: { gap: 8 },
+  usageValue: {color:colors.text,fontWeight:'800',fontSize:18,marginBottom:8},
   imageCount: { color: colors.text, fontWeight: '800' },
   thumbnailRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   thumbnailItem: { width: 104, gap: 5 },

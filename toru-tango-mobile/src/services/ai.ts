@@ -25,6 +25,7 @@ export type AiGenerationResult = {
   usage: AiUsage;
   quality: AiQuality;
   elapsedMs: number;
+  usageLimit?: { used:number; limit:number; tier:string };
 };
 
 function isCandidate(value: unknown): value is QuestionCandidate {
@@ -108,7 +109,8 @@ export async function generateAiQuestions(input: {
         duplicateCount: numberValue(quality.duplicateCount),
         rejectedCount: numberValue(quality.rejectedCount)
       },
-      elapsedMs: numberValue(payload.elapsedMs)
+      elapsedMs: numberValue(payload.elapsedMs),
+      usageLimit: payload.usageLimit && typeof payload.usageLimit === 'object' ? payload.usageLimit as {used:number;limit:number;tier:string} : undefined
     };
   } finally {
     clearTimeout(timeout);
