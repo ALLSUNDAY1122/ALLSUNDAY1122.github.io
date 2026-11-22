@@ -45,3 +45,18 @@ for(const f of fixes){
 }
 window.HM2_OFFICIAL_SOURCE_BATCH3_IDS=fixes.map(f=>f.id);
 })();
+
+
+(function(){
+'use strict';
+// HM2-B 2026-11-22 authoritative-source corrections; metadata only, fail closed.
+const fixes=[{"id":"sm2-5y-r04-phy-03","old":"https://biolincc.nhlbi.nih.gov/media/studies/hfn_relax/Protocol.pdf?link_time=2026-01-19_21%3A02%3A46.453754","url":"https://evs.nci.nih.gov/ftp1/CDISC/SDTM/Archive/SDTM%20Terminology%202015-09-25.pdf","basis":"NCI EVS公開のCDISC統制用語C119246ではCardiac OutputをCO=HR×SVと定義。70回/分×70mL/回=4900mL/分=4.9L/分。CDISC標準が原出典でありNIHが独自執筆した解説とは区別する。"},{"id":"sm2-5y-r04-phy-06","old":"https://www.ncbi.nlm.nih.gov/books/NBK531504/","url":"https://cdn-test-cms.who.int/media-tes/docs/default-source/blood-transfusion-safety/guidelines-and-principles-for-safe-blood-transfusion-practice-module-3-.pdf?download=true","basis":"WHO Guidelines and Principles for Safe Blood Transfusion Practice, Module 3 Section 2.6 printed p13, PDF page22: serum after clot and plasma with anticoagulant; soluble fibrinogen converts to fibrin."},{"id":"sm2-5y-r04-phy-07","old":"https://www.ncbi.nlm.nih.gov/books/NBK544269/","url":"https://stacks.cdc.gov/view/cdc/41566/cdc_41566_DS1.pdf","basis":"WHO Guidelines on Drawing Blood: Best Practices in Phlebotomy, Table 2.3: coagulation tube uses sodium citrate for PT/protime; source is WHO publication preserved at CDC Stacks. Plasma centrifugation and PT testing principles corroborated in existing explanation."},{"id":"sm2-5y-r10-phy-08","old":"https://www.ncbi.nlm.nih.gov/books/NBK597379/","url":"https://www.niddk.nih.gov/health-information/liver-disease/biliary-atresia/definition-facts","basis":"NIDDK Definition & Facts of Biliary Atresia section Complications/Portal hypertension: portal vein directly carries blood from intestines to liver. NIDDK digestion article separately shows simple sugars enter bloodstream."}];
+const qById=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+for(const f of fixes){
+ const q=qById.get(f.id);
+ if(!q||q.sourceUrl!==f.old||!Array.isArray(q.choices)||q.choices.length!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5)throw Error('HM2-B authoritative-source stale '+f.id);
+ q.sourceUrl=f.url;
+ q.basis=String(q.basis||'')+' ／ 2026-11-22 HM2-B追加根拠：'+f.basis;
+}
+window.HM2_B_NEW_OFFICIAL_SOURCES=fixes.map(x=>x.id);
+})();
