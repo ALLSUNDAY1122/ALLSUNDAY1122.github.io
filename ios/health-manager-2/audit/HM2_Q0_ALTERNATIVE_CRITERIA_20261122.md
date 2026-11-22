@@ -328,3 +328,14 @@ DC原票の完了178件は**一つの独立セッションによるレビュー*
 - 現状は`approved_after_reconciliation` **109/178**（R40 40＋P1b 69）、正式HOLD **69/178**（P1a 69）。権利JSONは300/300の機械的必須欄を維持。
 - ゲートスクリプトと同項目の静的照合による`--enforce`予測：`PASS1_INDEPENDENCE_ATTESTATION_MISSING` **69件**と`RECONCILIATION_REQUIRED` **69件**、合計 **138件**（R40・B・権利等に他の予期しない差異がない前提）。この集計はPythonの実行ログではなく、既存JSONのフィールド再検査からの予測である。
 - **Q0 BLOCKED / Q1 BLOCKED**。理由はA69問の独立性要件未充足であり、P1aの否定的な自己申告を上書きしない。ゲート要件の変更、App Review、TestFlightは実施していない。
+
+
+## 2026-11-22 P1c 69問差替え統合・Q0/Q1判定
+
+- `HM2_PASS1_C_20261122.json` の69問を読み取り、P1aの69問に対応するID、現行bankの各5肢本文・正答位置、およびDC pass2の5肢正誤と照合。**69/69問・345/345肢一致、独立性申告true 69/69、必須レビュー属性69/69**。P1c原票の説明は「先行Aの対象IDのみ取得し、先行判定・理由を参照しない」。内容確認の有無や実際の独立性は原票に依拠し、機械検査のみで現実の独立性を保証しない。
+- 原票の実SHA-256（UTF-8内容）`c115837f8dd733b416bd0b6b1efd5184bfa00fef076dab850a2739ed27fdc287`、Git blob `2b1a91940c2c33a3a78e3b8973110b6105d8027d`をpass1各行に記録。P1aによるレビューをP1cへ置換しても、旧P1aの独立性が承認されたという扱いにはしない。
+- `HM2_INDEPENDENT_DOUBLE_CHECK_178.json` の最終`approved_after_reconciliation` **178/178**、HOLD **0/178**（R40 40＋P1b69＋P1c69）。統合コミット `085a66887855623240f6506a17712dd49c851281`。
+- 取得したデータによるゲートスキーマ同等の静的照合：独立性宣誓・レビュー属性・5肢照合・実SHA長形式・レビュー差異チェック・権利300件の必須属性・非公式表示いずれもエラー **0件見込み**。法令関係`legal_checked`のnull残0。bankとレビュー・権利のbank SHAは整合。**Python `scripts/hm2_alternative_q0_gate.py --enforce`の実行ログではない**（GitHubコネクタによる読み取りとJavaScript静的照合）。
+- **Q0：ユーザー代替基準の「機械的証跡ゲート」についてPASS見込み。ただし実行ログと原典根拠の独立した真偽確認を未取得のため、運用上は最終PASS確定保留／CONDITIONAL**。権利の運用300/300は第三者原典ライセンスを包括保証するものではない。
+- **Q1：BLOCKED／未再実測**。Q0正式実行の確認、canonical再生成・回帰テスト・strict exportの現行HEADでの実行を要する。過去の成功実績を新HEADの成功と混同しない。
+- App Review提出、新規TestFlight配信なし。Q0条件を弱める変更なし。
