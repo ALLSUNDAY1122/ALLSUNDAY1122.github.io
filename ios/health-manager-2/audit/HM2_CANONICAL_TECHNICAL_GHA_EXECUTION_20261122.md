@@ -1,7 +1,7 @@
 # HM2 canonical technical execution result
 
-- Checked UTC: 2026-11-22T03:55:41.616459+00:00
-- Bank SHA-256: `434de86ab795d369a1ef52f16a0cf57cab7054b72f6aac952aa7805fb3872177`
+- Checked UTC: 2026-11-22T04:55:49.279300+00:00
+- Bank SHA-256: `4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc`
 - Actual Node canonical exit: `0`
 - Canonical exact bytes: **True**
 - Readiness command exit: `0`
@@ -17,7 +17,7 @@ This is a technical check; it does not approve Q0 content/rights, allow TestFlig
 ```text
 PASS HM2_LIVE_LAW_PINS {"assertions":17,"questionIds":13}
 REVIEW_REQUIRED HM2_LEGACY_TOPIC_METADATA {"originalPins":24,"apparentStale":19,"examples":["健康診断後の医師等の意見聴取","自発的健康診断後の意見聴取","衛生管理者の選任期限","衛生委員会記録の保存","暑熱な場所の基準","法定労働時間（日）","法定労働時間（週）","6時間超の休憩"],"independentReviewMarked":177}
-PASS HM2_CANONICAL_JSON {"total":300,"uniqueStems":300,"choiceDrift":0,"correctAnswerDrift":0,"groups":30,"sha256":"434de86ab795d369a1ef52f16a0cf57cab7054b72f6aac952aa7805fb3872177","bytes":605819,"path":"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/ios/health-manager-2/release-questions.json"}
+PASS HM2_CANONICAL_JSON {"total":300,"uniqueStems":300,"choiceDrift":0,"correctAnswerDrift":0,"groups":30,"sha256":"4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc","bytes":605827,"path":"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/ios/health-manager-2/release-questions.json"}
 NOTE: Snapshot is not an independent legal/medical content review or iOS device test.
 
 ```
@@ -52,7 +52,7 @@ test_stale_bank_hash_fails (test_hm2_alternative_q0_gate.GateTests.test_stale_ba
 test_wrong_choice_text_fails (test_hm2_alternative_q0_gate.GateTests.test_wrong_choice_text_fails) ... ok
 
 ----------------------------------------------------------------------
-Ran 18 tests in 0.257s
+Ran 18 tests in 0.289s
 
 OK
 
