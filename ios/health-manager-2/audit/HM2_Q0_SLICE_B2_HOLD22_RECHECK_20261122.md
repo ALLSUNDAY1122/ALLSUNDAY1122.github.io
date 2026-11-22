@@ -110,3 +110,10 @@
 - 生成元 `apps/sanitary-manager-2/hm2-source-precision-v1.js` に旧肢4・旧URL・正答位置・5肢数をguardするパッチを適用。変更対象は1問の④・quick・explanation・topic・sourceUrl・basis・監査/公開状態。**正答位置不変、他4肢不変**。公開承認を `requires-independent-subject-expert-review`／`再監査待ち`／`非公開` に無効化。
 - **未完了：**生成元を実際に実行した再生成と配布JSONのバイト一致、回帰試験、独立監査は実施していない。従って一次根拠・修正案の整合を確認したが、**正式運用PASSには数えない**。現行の最新分割B一次集計PASS53/HOLD16を自動変更しない。
 - 元の22件は作業開始時点のスナップショット。別セッションの先行作業によるPASS53/HOLD16の進捗を取り消さない。Q0/Q1 BLOCKED、App Review/TestFlight未実施。
+
+## B2公式発行者原典へ更新：No.144・154（2026-11-22）
+
+- **No.144** `sm2-5y-r06-phy-10`：IQWiG直接編集記事 https://www.gesundheitsinformation.de/wie-wird-der-herzrhythmus-gesteuert.html にSA→心房→AV→His→脚→Purkinjeを確認。肢①×（Purkinjeが心房より前）、②×（AVがSAより前）、③○（正しい順序）、④×（心室筋・大動脈を伝導路としている）、⑤×（肺静脈・大動脈を伝導路としている）。正答③不変、出典URLとbasisのみ生成元へ修正。
+- **No.154** `sm2-5y-r07-phy-10`：政府NIEHS/NTP刊行 https://ntp.niehs.nih.gov/sites/default/files/ntp/ohat/lead/final/monographhealtheffectslowlevellead_newissn_508.pdf §5.2.1に好中球・マクロファージの貪食活性の直接記載。肢①×赤血球・血小板、②×骨格筋・心筋、③○好中球・マクロファージ、④×視細胞・水晶体上皮、⑤×腎集合管・膵β。正答③不変、出典URLとbasisのみ生成元へ修正。
+- 生成元パッチは旧URL・5肢・正答位置のguard付き。生成元修正コミット：`1dedcab1d879823b6b97095971dcca6648c4745e`。
+- **No.144/154は先行監査で一次PASS済みのため二重加算しない。** No.142のNLM限定改稿は別コミット。すべて配布JSONの再生成とバイト一致・独立監査が未完。分割B最新参照値PASS53/HOLD16を自動変更せずQ0/Q1 BLOCKED維持。App Review・TestFlight未実施。
