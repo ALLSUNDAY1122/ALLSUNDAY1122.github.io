@@ -1,0 +1,86 @@
+name: Toru Tango Build 16 Gemini OCR JPEG Recovery
+on:
+  push:
+    branches:
+      - release/toru-tango-build16-ocr-image-size-20261122
+    paths:
+      - '.github/workflows/toru-tango-build16-ocr-jpeg-testflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: toru-tango-build16-ocr-jpeg
+  cancel-in-progress: false
+
+jobs:
+  photo-smoke:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: toru-tango/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Worker tests without deploying or changing keys
+        run: npm test
+      - name: Create 4032x3024 photo-like JPEG and compress to 1600px
+        run: |
+          python -m pip install --user pillow
+          python scripts/make-photo-smoke.py
+      - name: Live OCR of resized photo payload (HTTP 200 required)
+        run: node scripts/photo-ocr-probe.mjs | tee photo-ocr-smoke.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-build16-photo-ocr-evidence
+          path: toru-tango/backend/photo-ocr-smoke.log
+          if-no-files-found: warn
+
+  ios:
+    needs: photo-smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: toru-tango-mobile
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Verify Expo token
+        run: test -n "$EXPO_TOKEN"
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Synchronize Expo image-manipulator lockfile
+        run: npm install --package-lock-only --no-audit --no-fund
+      - name: Install and validate
+        run: |
+          npm ci --include=dev --no-audit --no-fund
+          npm run typecheck
+          npm run lint
+          npm run doctor
+          node --test tests/study-folder.test.cjs tests/gemini-ocr-transport.test.cjs
+          npx expo config --type public > /dev/null
+      - name: EAS iOS Build 16
+        run: |
+          mkdir -p release-logs
+          set -o pipefail
+          eas build --platform ios --profile production --non-interactive --json | tee release-logs/build16.json
+      - name: Upload Build 16 to TestFlight (not App Review)
+        run: |
+          set -o pipefail
+          eas submit --platform ios --profile production --latest --non-interactive | tee release-logs/submit16.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-build16-eas-evidence
+          path: toru-tango-mobile/release-logs
+          if-no-files-found: warn
