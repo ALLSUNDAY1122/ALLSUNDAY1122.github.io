@@ -21,7 +21,6 @@ DISCLOSURE = {
     "support": ROOT / "health-manager-2/support.html",
     "store": BASE / "APP_STORE_METADATA_JA.md",
 }
-DISCLAIMER_WORDS = ("公式", "監修")
 
 
 def sha256(path):
@@ -149,7 +148,13 @@ def validate(root=ROOT, evidence=EVIDENCE, rights=RIGHTS):
                             ("STORE", "ios/health-manager-2/APP_STORE_METADATA_JA.md")):
         path = root / relative
         s = path.read_text(encoding="utf-8") if path.is_file() else ""
-        if not all(w in s for w in DISCLAIMER_WORDS):
+        # Do not mistake positive official/supervised claims for a disclaimer.
+        unofficial = any(x in s for x in ("非公式", "公式アプリではなく", "公式教材ではなく", "公式アプリではありません"))
+        unsupervised = any(x in s for x in (
+            "監修なし", "監修・承認を受けていません",
+            "監修・承認を受けた教材ではありません", "専門家監修を受けていません"
+        ))
+        if not (unofficial and unsupervised):
             failures.append(f"{label}_DISCLAIMER_MISSING")
     return {"pass": not failures, "question_bank_sha256": bank_hash,
             "scope_count": len(scope), "failures": failures[:40],
