@@ -241,3 +241,24 @@ q.contentReviewStatus='requires-independent-subject-expert-review';q.auditStatus
 if(new Set(q.choices).size!==5)throw Error('HM2 B2 liver duplicate choice');
 window.HM2_B2_LIVER_FOCUSED_REVISION=id;
 })();
+
+
+(function(){
+'use strict';
+// 2026-11-22 B2 official Japan MHLW-based workplace health information source precision.
+// No assumption that individual health exams obey stress-test group size law.
+const changes=[
+ {id:'sm2-5y-r10-hyg-04',old:'https://www.mhlw.go.jp/content/000922318.pdf',url:'https://www.mhlw.go.jp/content/000922318.pdf',answer:2,
+ basis:'厚生労働省2022年改正「労働者の心身の状態に関する情報の適正な取扱い指針」第2項の取扱権限、必要範囲、情報の加工・管理。群馬労働局公式健康診断解説 https://jsite.mhlw.go.jp/gunma-roudoukyoku/hourei_seido_tetsuzuki/anzen_eisei/anzen17/kenkoushindan.html は健診結果の経時的総合把握と作業管理へのフィードバックを説明。ストレスチェック集団分析の法定要件とは区別する。'},
+ {id:'sm2-5y-r10-hyg-08',old:'https://laws.e-gov.go.jp/law/347AC0000000057',url:'https://www.mhlw.go.jp/web/t_doc?dataId=00tc2624&dataType=1&pageNo=1',answer:4,
+ basis:'厚生労働省2017年4月14日基発0414第2号、健康診断結果に基づく措置指針：作業環境、労働時間、深夜業回数、作業負荷、過去の健診結果を総合して医師に提供。群馬労働局公式健康診断解説は健康指標の経時的変化と作業管理・環境管理へのフィードバック。集団分析の特定手法を法定義務と誤記しない。'}
+];
+const map=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+for(const c of changes){
+ const q=map.get(c.id);
+ if(!q||q.sourceUrl!==c.old||q.answer!==c.answer||!Array.isArray(q.choices)||q.choices.length!==5||new Set(q.choices).size!==5)throw Error('HM2 B2 hygiene source old-state mismatch '+c.id);
+ q.sourceUrl=c.url;
+ q.basis=String(q.basis||'')+' ／ 2026-11-22 B2厚労省原典照合：'+c.basis;
+}
+window.HM2_B2_MHLW_HYGIENE_SOURCE_IDS=changes.map(x=>x.id);
+})();
