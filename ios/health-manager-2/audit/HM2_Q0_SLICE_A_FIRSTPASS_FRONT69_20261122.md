@@ -137,3 +137,64 @@
 - No.26：2026年の定期健診に関する通知改正との整合、および安衛則44条2項の省略対象を条文ベースで再確認する。
 - No.29：0.7×26+0.2×36+0.1×32=18.2+7.2+3.2=28.6℃。
 - 本表は**一次判定の作業記録**であり、独立二重レビュー・権利許諾・Q0/Q1ゲート認定ではない。残39問（No.31〜69）は今回未着手。今後の完全確認では選択肢ごとの反証と条文施行版を追記する。
+
+## 続行バッチ：分割No.31〜69（残り39問・195肢）の一次判定（2026-11-22 JST）
+
+- 上記同一配布bank Git blobの39問を突合。全5肢の文言と現行の正答indexを読み取り、選択肢ごとの一次判定を記録した。5肢欄は第1肢から第5肢までの正答性（○=適切な解答肢、×=不適切）を示す。
+- 「直接確認」は該当する中心命題を今回公的機関の公開検索結果で確認した意味であり、**5肢それぞれについて法令の適用日・原典ページまで追跡した最終合格とは異なる**。数値を仮定した問題では算術的計算の検証と法律の根拠確認を分離する。
+
+| No. | 問題ID | 配布正答（1起点） | 第1〜5肢の一次判定 | 判定命題・検証内容 | 根拠資料 | 留保事項 |
+|---:|---|---:|---|---|---|---|
+| 31 | `sm2-5y-r04-hyg-04` | 2 | × / ○ / × / × / × | 乾燥25%時は湿度管理と換気の両立。空調設置条件等の事務所則適用範囲に注意 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 公式条文あり・適用条件追試 |
+| 32 | `sm2-5y-r04-hyg-06` | 5 | × / × / × / × / ○ | めまい持続は暑熱暴露を中断、冷却し意識と自力飲水を見て必要時救急 | [根拠](https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/kenkou/nettyuu/nettyuu_taisaku/happen.html) | 直接確認 |
+| 33 | `sm2-5y-r04-hyg-07` | 2 | × / ○ / × / × / × | WBGTに応じ作業負荷・休憩・水分塩分補給・暑熱順化を考慮 | [根拠](https://neccyusho.mhlw.go.jp/heat_index/) | 直接確認 |
+| 34 | `sm2-5y-r04-hyg-09` | 1 | ○ / × / × / × / × | ディスプレイの映り込み、視距離、文字サイズ、休止を調整 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1) | 直接確認 |
+| 35 | `sm2-5y-r05-hyg-02` | 5 | × / × / × / × / ○ | 精密視作業では局所照度とグレアの確認が重要 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 条文の作業分類追試 |
+| 36 | `sm2-5y-r05-hyg-04` | 1 | ○ / × / × / × / × | 騒音は発生源と伝搬経路の対策が優先候補、保護具のみで完結しない | [根拠](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02_00004.html) | 公式案内・本文要追試 |
+| 37 | `sm2-5y-r05-hyg-06` | 2 | × / ○ / × / × / × | 机椅子足台・入力機器の体格適合で不自然な肩上げを抑制 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1) | 直接確認 |
+| 38 | `sm2-5y-r05-hyg-07` | 4 | × / × / × / ○ / × | 窓の反射や照明グレアは遮光・配置・角度で改善 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=00tc4418&dataType=1&pageNo=1) | 直接確認 |
+| 39 | `sm2-5y-r05-hyg-09` | 5 | × / × / × / × / ○ | 熱中症疑いのめまいは作業中止・冷却・意識確認と必要時救急 | [根拠](https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/kenkou/nettyuu/nettyuu_taisaku/happen.html) | 直接確認 |
+| 40 | `sm2-5y-r06-hyg-01` | 2 | × / ○ / × / × / × | 重量物業務配置時と必要時に腰痛予防教育 | [根拠](https://www.mhlw.go.jp/stf/newpage_31158.html) | 直接確認 |
+| 41 | `sm2-5y-r06-hyg-02` | 5 | × / × / × / × / ○ | CO2計は窓・換気口・人から距離を取る。人から少なくとも50cm | [根拠](https://www.mhlw.go.jp/content/000968524.pdf) | 直接確認 |
+| 42 | `sm2-5y-r06-hyg-04` | 4 | × / × / × / ○ / × | HEPAは粒子除去でCO2希釈には外気換気が必要 | [根拠](https://www.mhlw.go.jp/content/000971006.pdf) | 原典本文追試 |
+| 43 | `sm2-5y-r06-hyg-09` | 2 | × / ○ / × / × / × | 燃焼機器由来COを疑い、安全な退避と救急通報、救助者二次曝露回避 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=00tb7875&dataType=1&pageNo=1) | 原典本文追試 |
+| 44 | `sm2-5y-r07-hyg-01` | 4 | × / × / × / ○ / × | 治療後の再発防止・社会復帰支援は三次予防 | [根拠](https://www.cdc.gov/mmwr/preview/mmwrhtml/00016403.htm) | CDC原典未再閲覧 |
+| 45 | `sm2-5y-r07-hyg-02` | 1 | ○ / × / × / × / × | 早期発見と早期治療への結びつけは二次予防 | [根拠](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/) | 出典直接性追試 |
+| 46 | `sm2-5y-r07-hyg-04` | 2 | × / ○ / × / × / × | WBGTのみでは不十分で代謝率・順化・着衣条件を反映 | [根拠](https://neccyusho.mhlw.go.jp/heat_index/) | 直接確認 |
+| 47 | `sm2-5y-r07-hyg-06` | 5 | × / × / × / × / ○ | 陽性的中率=真陽性20/陽性総数80=25% | [根拠](https://stacks.cdc.gov/view/cdc/198512) | 計算確認・原典未再閲覧 |
+| 48 | `sm2-5y-r07-hyg-07` | 2 | × / ○ / × / × / × | 睡眠機会確保と交替勤務計画・疲労の評価 | [根拠](https://www.mhlw.go.jp/content/001305530.pdf) | 直接確認 |
+| 49 | `sm2-5y-r07-hyg-08` | 4 | × / × / × / ○ / × | 換気回数=換気量/室容積：前900/300=3、後900/450=2 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 計算確認・法定数値でない |
+| 50 | `sm2-5y-r07-hyg-09` | 1 | ○ / × / × / × / × | 体感温熱は温度・気流・湿度・放射熱を含め総合評価 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 原典の放射熱記載追試 |
+| 51 | `sm2-5y-r07-hyg-10` | 3 | × / × / ○ / × / × | 荷を身体に近づけ、作業高や補助具を調整して腰負担減 | [根拠](https://www.mhlw.go.jp/stf/newpage_31158.html) | 直接確認 |
+| 52 | `sm2-5y-r08-hyg-01` | 3 | × / × / ○ / × / × | 夜勤中の仮眠・睡眠慣性に注意。ただし20〜50分という具体幅の直接根拠を要精査 | [根拠](https://www.mhlw.go.jp/content/001305530.pdf) | **数値根拠要修正検討** |
+| 53 | `sm2-5y-r08-hyg-02` | 5 | × / × / × / × / ○ | 感染性胃腸炎疑い食品従事者の就業と衛生管理を評価 | [根拠](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/kanren/yobou/040204-1.html) | 原典本文追試 |
+| 54 | `sm2-5y-r08-hyg-03` | 2 | × / ○ / × / × / × | 作業面の局所照度を測り全般照明・局部照明を調整 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 条文適用範囲追試 |
+| 55 | `sm2-5y-r08-hyg-04` | 1 | ○ / × / × / × / × | SDSから化学物質の吸入・皮膚曝露と適合保護具を判断 | [根拠](https://www.mhlw.go.jp/stf/newpage_11389.html) | 原典本文追試 |
+| 56 | `sm2-5y-r08-hyg-05` | 4 | × / × / × / ○ / × | 発電機を屋外安全位置に設け排気の屋内流入を防止 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=00tb7875&dataType=1&pageNo=1) | 原典本文追試 |
+| 57 | `sm2-5y-r08-hyg-06` | 2 | × / ○ / × / × / × | ボツリヌス毒素はアセチルコリン放出を阻害し弛緩性麻痺 | [根拠](https://www.mhlw.go.jp/content/10900000/001464074.pdf) | 直接確認 |
+| 58 | `sm2-5y-r08-hyg-07` | 4 | × / × / × / ○ / × | 手指衛生・換気・体調不良者対応で拡大防止 | [根拠](https://www.mhlw.go.jp/content/11302000/001741252.pdf) | 原典本文追試 |
+| 59 | `sm2-5y-r08-hyg-08` | 1 | ○ / × / × / × / × | 重量と力点距離から外力モーメントは比例。40cmは10cmの4倍 | [根拠](https://www.mhlw.go.jp/stf/newpage_31158.html) | 力学計算・原典直接性追試 |
+| 60 | `sm2-5y-r08-hyg-09` | 5 | × / × / × / × / ○ | 音の強さ10倍→10log10(10)=10dB。音圧振幅の比とは別 | [根拠](https://www.osha.gov/otm/section-3-health-hazards/chapter-5) | 計算確認・OSHA原典未再閲覧 |
+| 61 | `sm2-5y-r08-hyg-10` | 3 | × / × / ○ / × / × | 咳の際ティッシュまたは腕で口鼻を覆い手洗い | [根拠](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/kekkaku-kansenshou/infulenza/QA2026.html) | 原典URL追試 |
+| 62 | `sm2-5y-r09-hyg-01` | 2 | × / ○ / × / × / × | AED『ショック不要』後も正常呼吸がなければ胸骨圧迫再開 | [根拠](https://www.fdma.go.jp/relocation/kyukyu_sosei/sisin2015.pdf) | 旧2015版・現行ガイド要確認 |
+| 63 | `sm2-5y-r09-hyg-02` | 5 | × / × / × / × / ○ | 眼に洗浄剤が入った場合は流水洗浄、SDSと医療相談 | [根拠](https://anzeninfo.mhlw.go.jp/anzen/gmsds/88-85-7.html) | 個別SDS物質との対応追試 |
+| 64 | `sm2-5y-r09-hyg-03` | 1 | ○ / × / × / × / × | 自由音場点音源では距離2倍により20log10(2)=6.02dB減 | [根拠](https://www.osha.gov/otm/section-3-health-hazards/chapter-5) | 計算確認・原典未再閲覧 |
+| 65 | `sm2-5y-r09-hyg-04` | 4 | × / × / × / ○ / × | 長時間立位の作業高・交替姿勢・休憩で負担軽減 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1) | 指針本文追試 |
+| 66 | `sm2-5y-r09-hyg-05` | 3 | × / × / ○ / × / × | 暑熱非順化者は段階的に負荷を上げ休憩・補給を確保 | [根拠](https://neccyusho.mhlw.go.jp/heat_index/) | 直接確認 |
+| 67 | `sm2-5y-r09-hyg-06` | 1 | ○ / × / × / × / × | 固定後足先の血流・冷感悪化は圧迫を再評価し救急に伝達 | [根拠](https://www.fdma.go.jp/relocation/syobodan/item/upload/tetyou2025.pdf) | 原典本文追試 |
+| 68 | `sm2-5y-r09-hyg-07` | 3 | × / × / ○ / × / × | 化学防護手袋は破過時間と使用90分・実使用条件からBを候補 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=00tc2426&dataType=1) | 数値の設問条件確認・原典追試 |
+| 69 | `sm2-5y-r10-hyg-01` | 4 | × / × / × / ○ / × | ストレスチェック10人未満でも非特定手法+事前衛生委員会審議なら同意不要提供例外 | [根拠](https://www.mhlw.go.jp/web/t_doc?dataId=00tc1015&dataType=1&pageNo=1) | 直接確認 |
+
+### 今回新たに発見した優先確認対象
+
+1. **No.52 `sm2-5y-r08-hyg-01`**：厚労省の睡眠ガイド2023に夜勤中仮眠の記述はあるが、選択肢の「20〜50分程度」という幅が原典本文のどこで支持されるかは未確認。正答位置3を機械的にPASSとせず、具体数値の根拠・表現の再設計要否を検討する。
+2. **No.62 `sm2-5y-r09-hyg-01`**：出典が消防庁2015ガイド。最新版の救急蘇生手順との整合・変更有無を別途確かめる。
+3. **No.69 `sm2-5y-r10-hyg-01`**：10人未満例外は無条件ではない。非特定の分析手法と衛生委員会の事前審議を要件として保持する。
+4. **No.41 `sm2-5y-r06-hyg-02`**：厚労省公表のCO2濃度測定器留意点では人から50cm以上離すと明記。原URLより直接的な公的資料を併記した。
+
+### 分割Aの進捗とQ0ゲートへの投入制限
+
+- **69/69問（345肢）の配布bank取得・5肢一次判定欄の作成は完了**。これは監査作業の進捗であり、正式な一次確認合格69件を意味しない。
+- 全問を各肢の根拠条文・施行版・適用範囲に対応付ける完了証跡は不足しており、**新Q0基準の一次確認完了数は0/69として保守的に据置**。
+- 既存40件とのID重複確認・配布bank SHA-256算出・原典の逐肢直接性・著作権の判断は未完。独立二重チェックやQ0/Q1判定にも計上しない。
+- 問題データ・生成元・台帳本体の変更なし。App Review提出なし、新規TestFlight配信なし。
