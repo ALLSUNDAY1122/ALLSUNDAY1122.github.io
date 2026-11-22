@@ -830,3 +830,55 @@ App Review提出・新規TestFlight配信なし。台帳本体・問題データ
 - 優先対応: No.56の出典適合、No.57の表の権利、No.58のStatPearls NC-ND、No.45の適用版。
 - **権利最終承認0/300問**。未確認の商用利用・改変許諾および独自表現の確認が必要。これは権利侵害を認定するものではない。
 - App Review提出・新規TestFlight配信なし。元台帳・生成元・配布JSON不変更。
+
+
+## 第6段階：No.61〜90（30問）個別原典・権利検証（2026-11-22 JST）
+
+対象: 配布JSON Git blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d`、No.61〜90。30問すべての問題文・5肢・解説と出典URLを抽出した。以下は**個別の比較可能範囲・権利リスク判定**。取得できない原著本文を閲覧済みとせず、全文類似性比較の完了を主張しない。30問の商用利用最終承認はすべて未了。
+
+| No. | 問題ID | 配布文面と原典の対応・権利観点 | 直接確認の範囲 | 出典 | 処置 |
+|---:|---|---|---|---|---|
+| 61 | `sm2-r7a-001` | 衛生管理者資格と業種を分類した法令適用型の肢。法令本文の全肢対照と公表試験類似性未確認 | 厚労省条文画面未取得 | [配布記載出典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | **条件付き保留・最終未承認** |
+| 62 | `sm2-r7a-002` | 14日以内の選任を問う標準的法定数値。選択肢設計と公表問題の一致未確認 | 厚労省条文画面未取得 | [配布記載出典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | **条件付き保留・最終未承認** |
+| 63 | `sm2-r7a-003` | 巡視中の措置の法定義務を状況設定にしたもの。原条文の表現対照未了 | 厚労省条文画面未取得 | [配布記載出典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | **条件付き保留・最終未承認** |
+| 64 | `sm2-r7a-004` | 衛生委員会の半数推薦という法令要件。選択肢の表現と原典比較未了 | 厚労省条文画面未取得 | [配布記載出典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | **条件付き保留・最終未承認** |
+| 65 | `sm2-r7a-005` | 個人結果の本人同意という法令規定。プライバシーに関する原文と肢設計の対照未了 | MHLW制度ページ全文未照合 | [配布記載出典](https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei12/) | **条件付き保留・最終未承認** |
+| 66 | `sm2-r7a-006` | 年1回の定期健診という法令数値。公表試験問題との構成一致は未確認 | 厚労省条文画面未取得 | [配布記載出典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | **条件付き保留・最終未承認** |
+| 67 | `sm2-r7a-007` | 屋内気積10m³および高さ4mを引用。事務所則との適用範囲と原文一致未確認 | 厚労省条文画面未取得 | [配布記載出典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | **条件付き保留・最終未承認** |
+| 68 | `sm2-r7a-008` | 中央管理方式の空気調和設備の測定2か月という法定頻度。施行版の条文と表現対照未完 | 事務所則本文未照合 | [配布記載出典](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | **条件付き保留・最終未承認** |
+| 69 | `sm2-r7a-009` | 妊産婦の請求時の時間外・深夜等の規制。条文の正確性と問題表現の対照未了 | 労基法本文未照合 | [配布記載出典](https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0) | **条件付き保留・最終未承認** |
+| 70 | `sm2-r7a-010` | 比例付与表の週28時間・週4日を用いる。表の事実利用と出題の独創性は区別する | 労基法原文・他教材未比較 | [配布記載出典](https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0) | **条件付き保留・最終未承認** |
+| 71 | `sm2-r7a-011` | 200m³と600m³/hから換気回数3という計算設定。JNIOSHの2015年記事本文との数値一致は未確認 | JNIOSH当該記事未照合 | [配布記載出典](https://www.jniosh.johas.go.jp/publication/mail_mag/2015/84-column-1.html) | **条件付き保留・最終未承認** |
+| 72 | `sm2-r7a-012` | WBGT28℃または気温31℃という暑熱作業の法定閾値。2025年施行の該当条文と公表問題を未逐語照合 | 厚労省改正条文未照合 | [配布記載出典](https://www.mhlw.go.jp/web/t_doc?dataId=00tc9174&dataType=1&pageNo=1) | **版・権利要確認・最終未承認** |
+| 73 | `sm2-r7a-013` | 労働衛生3管理の分類と騒音源の防音囲いを問う。行政用語解説との日本語表現類似を要比較 | 職場のあんぜんサイト本文未照合 | [配布記載出典](https://anzeninfo.mhlw.go.jp/yougo/yougo28_1.html) | **表現比較保留・最終未承認** |
+| 74 | `sm2-r7a-014` | 情報機器作業1時間と休止10〜15分の指針値。指針文言の近似転載がないか要確認 | MHLW指針全文未照合 | [配布記載出典](https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1) | **表現比較保留・最終未承認** |
+| 75 | `sm2-r7a-015` | 100万時間、損失500日から強度率0.5の計算。参照サイトに同数値例があるか未比較 | 職場のあんぜんサイト本文未照合 | [配布記載出典](https://anzeninfo.mhlw.go.jp/yougo/yougo22_1.html) | **条件付き保留・最終未承認** |
+| 76 | `sm2-r7a-016` | 2026年10月19日改正THPと女性・歯科等の列挙。公示ページで改正原文・版の一致が確認できず、原著表現への依存も未判定 | MHLW公示ページ確認、改正本文未確認 | [配布記載出典](https://www.mhlw.go.jp/stf/newpage_76807.html) | **版・出典要修正候補・最終未承認** |
+| 77 | `sm2-r7a-017` | 脳梗塞・脳出血・くも膜下出血の定義を対比。医学的事実と国循サイトの説明表現の一致未確認 | 国立循環器病研究センター本文未比較 | [配布記載出典](https://www.ncvc.go.jp/hospital/pub/knowledge/case/brain/) | **条件付き保留・最終未承認** |
+| 78 | `sm2-r7a-018` | 受動喫煙防止の施設類型・標識・年齢制限。MHLWの説明資料の表現を利用していないか未確認 | 厚労省説明資料全文未比較 | [配布記載出典](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/kitsuen/index.html) | **条件付き保留・最終未承認** |
+| 79 | `sm2-r7a-019` | BMI22、身長1.60mから56.32kgの算数設定。公式のBMI計算式は一般事実だが当該数値例の出所未検証 | e-ヘルスネット当該記事未比較 | [配布記載出典](https://kennet.mhlw.go.jp/information/information/food/e-02-001.html) | **条件付き保留・最終未承認** |
+| 80 | `sm2-r7a-020` | 食中毒の温度時間管理。厚労省の三原則と概念が重なるが5肢と解説の表現一致未確認 | MHLW食中毒ページ部分確認のみ | [配布記載出典](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/01_00008.html) | **条件付き保留・最終未承認** |
+| 81 | `sm2-r7a-021` | 血小板とフィブリンを組み合わせる生理知識。NCBI Bookshelf掲載の書籍別権利表示・本文が未取得 | NCBI個別本未確認 | [配布記載出典](https://www.ncbi.nlm.nih.gov/books/NBK545263/) | **個別ライセンス要確認・最終未承認** |
+| 82 | `sm2-r7a-022` | 肺静脈の血流経路という標準的事実。NCBI掲載元の個別著作権・表現を未確認 | NCBI個別本未確認 | [配布記載出典](https://www.ncbi.nlm.nih.gov/books/NBK545205/) | **個別ライセンス要確認・最終未承認** |
+| 83 | `sm2-r7a-023` | 肺胞と毛細血管の分圧差。NCBI掲載記事の本文・権利条件未照合 | NCBI個別本未確認 | [配布記載出典](https://www.ncbi.nlm.nih.gov/books/NBK539907/) | **個別ライセンス要確認・最終未承認** |
+| 84 | `sm2-r7a-024` | 唾液アミラーゼと糖質分解。NCBI掲載記事の本文および原著の構成未確認 | NCBI個別本未確認 | [配布記載出典](https://www.ncbi.nlm.nih.gov/books/NBK544242/) | **個別ライセンス要確認・最終未承認** |
+| 85 | `sm2-r7a-025` | 皮膚血管収縮・ふるえという生理的事実。NCBIの個別記事ライセンス・翻案不存在未確認 | NCBI個別本未確認 | [配布記載出典](https://www.ncbi.nlm.nih.gov/books/NBK232852/) | **個別ライセンス要確認・最終未承認** |
+| 86 | `sm2-r7a-026` | ADHと集合管の水再吸収。NCBI Bookshelfの著者/章別の権利・原文を未照合 | NCBI個別本未確認 | [配布記載出典](https://www.ncbi.nlm.nih.gov/books/NBK526069/) | **個別ライセンス要確認・最終未承認** |
+| 87 | `sm2-r7a-027` | PMC掲載論文のAbstractを閲覧。phosphocreatineがATPを迅速再生するという論点に直接対応。原著の権利表示はCreative Commons Attributionで商用再利用可の旨。ただし正確な帰属・画像等個別権利・翻案関係は未確認 | PMC4898252本文・オープンアクセス表示確認 | [配布記載出典](https://pmc.ncbi.nlm.nih.gov/articles/PMC4898252/) | **原著本文一部照合・保留・最終未承認** |
+| 88 | `sm2-r7a-028` | StatPearlsの近見調節の記事に毛様体筋収縮・水晶体形状変化が記載。PubMedで©2026 StatPearls Publishing LLCを確認。掲載章の個別利用条件と日本語表現類似性を未確認 | PubMed書誌・検索抜粋確認、NCBI本文reCAPTCHA | [配布記載出典](https://www.ncbi.nlm.nih.gov/books/NBK542189/) | **翻案・商用条件要確認・最終未承認** |
+| 89 | `sm2-r7a-029` | 持続的ストレスの自律神経・睡眠等の一般的知見。掲載NCBI章の本文・個別権利条件を未取得 | NCBI個別本未確認 | [配布記載出典](https://www.ncbi.nlm.nih.gov/books/NBK541120/) | **個別ライセンス要確認・最終未承認** |
+| 90 | `sm2-r7a-030` | MedlinePlus TSH検査の本文で下垂体TSHと甲状腺ホルモンの関係を直接確認。Medical test informationはNLMの案内上public domain対象。ただし画像・第三者素材は例外。設問の全肢の原文類似性は未確定 | MedlinePlus TSH本文・公式利用規約確認 | [配布記載出典](https://medlineplus.gov/lab-tests/tsh-thyroid-stimulating-hormone-test/) | **個別文章比較保留・最終未承認** |
+
+### 個別の直接根拠と権利条件
+- No.87: [原著PMC4898252](https://pmc.ncbi.nlm.nih.gov/articles/PMC4898252/) は、筋細胞でのphosphocreatineによるATP再生を説明。論文本文冒頭の著作権表示にCC Attributionの再利用条件が明記。事実・数値を用いた短い独自問題と矛盾しないが、帰属要件と画像・翻案の個別照合は未実施。この論文をNC-NDと誤分類しない。
+- No.88: [StatPearls Physiology, Accommodation](https://www.ncbi.nlm.nih.gov/books/NBK542189/) は毛様体筋収縮・レンズ形状を説明。[PubMed掲載情報](https://pubmed.ncbi.nlm.nih.gov/31194346/) に©2026 StatPearls Publishing LLC。著作権表示と実際の文章を対照できず、商用・翻案の許諾は推定しない。
+- No.90: [MedlinePlus TSH検査本文](https://medlineplus.gov/lab-tests/tsh-thyroid-stimulating-hormone-test/) で下垂体TSHと甲状腺ホルモンの関係を確認。[公式利用条件](https://medlineplus.gov/about/using/usingcontent/) でMedical test informationがpublic domainの対象とされる一方、第三者記事・画像には独立の権利があることを確認。本文の事実関係を根拠に利用することと文面転載の承認は別に扱う。
+- No.76: [THP公示ページ](https://www.mhlw.go.jp/stf/newpage_76807.html) は閲覧したが、2026-10-19改正の一次文書本文への版照合が未了。根拠日付の検証を優先する。
+- その他のMHLW出典は[厚労省公開コンテンツ利用規約](https://www.mhlw.go.jp/chosakuken/index.html)を参照。PDL1.0原則と個別特記・第三者素材の別権利を区別。
+- なお[試験協会公表問題](https://www.exam.or.jp/lckohyo/)は閲覧可能であるが、No.61〜90について元の試験出題形式との完全比較は実施していない。
+
+### 判定集計
+- **今回個別の問題別所見30/30。累計問題別所見90/300（残210問）。**
+- 原典全文と配布文面の全肢・解説を網羅した逐語類似性精査は今回0件。部分的に原文に到達したNo.87、No.90等を最終承認に数えない。
+- 注意対象: No.76の改正版、No.87のCC Attribution帰属表示、No.88のStatPearls権利条件、No.90のMedlinePlus第三者素材。個別サイトの権利条件を確認するだけで、作問経緯の独自性は確定しない。
+- **権利最終承認0/300、Q0判定は担当範囲外。** 問題データ・生成元・元台帳は不変更。App Review提出・TestFlight新規配信なし。
