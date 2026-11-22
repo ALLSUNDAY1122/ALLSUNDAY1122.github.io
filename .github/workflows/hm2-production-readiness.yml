@@ -2,9 +2,12 @@ name: HM2 Production Readiness (read-only, no submission)
 
 on:
   push:
-    branches: [audit/hm2-quality-20261110]
+    branches: [audit/hm2-quality-20261110, fix/hm2-priority123-regression-20261122]
     paths:
       - 'scripts/hm2_submission_readiness.py'
+      - 'apps/sanitary-manager-2/gm4.js'
+      - 'health-manager-2/support.html'
+      - 'ios/health-manager-2/APP_STORE_METADATA_JA.md'
       - 'ios/health-manager-2/HealthManager2/StoreKitManager.swift'
       - 'ios/health-manager-2/release-questions.json'
       - 'ios/health-manager-2/audit/**'
@@ -28,6 +31,18 @@ jobs:
           node-version: '22'
       - name: Check script syntax
         run: python -m py_compile scripts/hm2_submission_readiness.py
+      - name: Check unofficial disclosure in app, support and store metadata
+        run: |
+          node --check apps/sanitary-manager-2/gm4.js
+          python - <<'PY'
+          from pathlib import Path
+          paths = ['apps/sanitary-manager-2/gm4.js', 'health-manager-2/support.html', 'ios/health-manager-2/APP_STORE_METADATA_JA.md']
+          for path in paths:
+              s = Path(path).read_text(encoding='utf-8')
+              assert '公式' in s and ('監修' in s or '専門家' in s), path
+              assert ('監修・承認を受けていません' in s or '専門家監修なし' in s or '監修・承認を受けた教材ではありません'), path
+          print('PASS HM2_UNOFFICIAL_UNREVIEWED_DISCLOSURE')
+          PY
       - name: Audit source reproducibility and submission blockers
         env:
           HM2_REPORT: /tmp/hm2-submission-readiness.json
