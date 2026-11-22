@@ -498,3 +498,12 @@ q.auditStatus='再監査待ち';q.publicationStatus='非公開';
 if(new Set(q.choices).size!==5||q.answer!==5)throw Error('HM2 B2 exercise new choice uniqueness failed');
 window.HM2_B2_EXERCISE_SCOPE_REDESIGN_ID=id;
 })();
+
+// 2026-11-22 法令確認：労働安全衛生法104条と厚労省健康情報取扱指針。
+(function () {
+  const q = (window.Q_PARTS || []).find(q => q.id === 'sm2-5y-r10-hyg-04');
+  if (!q || !q.lawRelated || q.answer !== 2 || q.legalChecked !== null) {
+    throw new Error('HM2 legal verification expected state mismatch');
+  }
+  q.legalChecked = '2026-11-22';
+})();
