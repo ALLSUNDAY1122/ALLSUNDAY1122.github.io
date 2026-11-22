@@ -28,3 +28,11 @@ Codemagicビルド元SHA: 485d934f3fab79747ee446d947f1bbe21dcafd20
 - 既存のApple側提出前検査・Appleの必須要件によって拒否される可能性は保持し、拒否時はそのまま記録する。
 - 既存の汎用最終提出ワークフローによって、対象アプリ・バージョン・Buildを厳密照合して送信する。
 - この文書の記載は「品質保証の承認」ではなく「品質未確認のまま申請するオーナー判断の記録」である。
+
+## 2026-11-22 — App Review提出試行とApple側の拒否（確定）
+- オーナー承認の対象Build 24による汎用最終提出要求コミット: `c3f771da669ba7bb92206e63e4a25e579849623d`。
+- 提出実行結果: `submitted=false`、stage=`SUBMISSION_READY`。提出要求先の `POST /v1/reviewSubmissionItems` がHTTP 409を返した。
+- Appleからの直接阻害: `STATE_ERROR.ENTITY_STATE_INVALID` 内の `STATE_ERROR.APP_DATA_USAGES_REQUIRED`（アプリのデータ収集・利用回答の公開が必要）。このエラーをPASS化しない。
+- 証拠: `automation/asc-results/app-release-submit-last-result.json`（request_id `hm2-build24-app-review-20261122-r1`）。
+- 試行後の独立ASC readback: `automation/asc-results/hm2-b24-review-postattempt-readback-20261122-r1.json`。App Store Version 1.0=`PREPARE_FOR_SUBMISSION`、Review Submission=`READY_FOR_REVIEW`、選択Build 24を維持。
+- オーナー承認は未解消品質項目を免除したものではなく、Apple側の提出要件を解除するものでもない。提出未完了。再申請にはApp Privacyの公開を実測確認する必要がある。
