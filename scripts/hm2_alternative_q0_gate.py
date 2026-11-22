@@ -52,6 +52,8 @@ def validate(root=ROOT, evidence=EVIDENCE, rights=RIGHTS):
     if not isinstance(questions, list):
         return {"pass": False, "failures": failures + ["BANK_NOT_ARRAY"]}
     ids = [q.get("id") for q in questions if isinstance(q, dict)]
+    if any(not isinstance(q, dict) for q in questions):
+        failures.append("BANK_ROW_SCHEMA_INVALID")
     if len(questions) != 300 or len(ids) != 300 or len(set(ids)) != 300:
         failures.append("BANK_NOT_300_UNIQUE")
     bank_hash = sha256(bank_path)
@@ -64,7 +66,11 @@ def validate(root=ROOT, evidence=EVIDENCE, rights=RIGHTS):
     if len(scope) != 178 or len(set(scope)) != 178 or not set(scope).issubset(ids):
         failures.append("SCOPE_NOT_178_UNIQUE")
     by_question = {q["id"]: q for q in questions if isinstance(q, dict) and nonblank(q.get("id"))}
+    if any(not isinstance(q.get("choices"), list) or len(q["choices"]) != 5 or type(q.get("correct_index")) is not int or not 0 <= q["correct_index"] <= 4 for q in questions if isinstance(q, dict)):
+        failures.append("BANK_CHOICE_SHAPE_INVALID")
     payload = load_json(evidence, failures, "DOUBLE_CHECK")
+    if payload is not None and not isinstance(payload, dict):
+        failures.append("DOUBLE_CHECK_SCHEMA_INVALID")
     if isinstance(payload, dict):
         rows = payload.get("reviews")
         if payload.get("question_bank_sha256") != bank_hash:
@@ -73,6 +79,8 @@ def validate(root=ROOT, evidence=EVIDENCE, rights=RIGHTS):
             failures.append("DOUBLE_CHECK_COUNT")
         else:
             by_id = {r.get("id"): r for r in rows if isinstance(r, dict)}
+            if any(not isinstance(r, dict) for r in rows):
+                failures.append("DOUBLE_CHECK_ROW_SCHEMA_INVALID")
             if len(by_id) != 178 or set(by_id) != set(scope):
                 failures.append("DOUBLE_CHECK_SCOPE")
             for id_, row in by_id.items():
@@ -115,6 +123,8 @@ def validate(root=ROOT, evidence=EVIDENCE, rights=RIGHTS):
                 if row.get("final_disposition") != "approved_after_reconciliation":
                     failures.append(f"{id_}:RECONCILIATION_REQUIRED")
     rights_doc = load_json(rights, failures, "RIGHTS")
+    if rights_doc is not None and not isinstance(rights_doc, dict):
+        failures.append("RIGHTS_SCHEMA_INVALID")
     if isinstance(rights_doc, dict):
         rows = rights_doc.get("decisions")
         if rights_doc.get("question_bank_sha256") != bank_hash:
@@ -123,6 +133,8 @@ def validate(root=ROOT, evidence=EVIDENCE, rights=RIGHTS):
             failures.append("RIGHTS_COUNT")
         else:
             by_id = {r.get("id"): r for r in rows if isinstance(r, dict)}
+            if any(not isinstance(r, dict) for r in rows):
+                failures.append("RIGHTS_ROW_SCHEMA_INVALID")
             if len(by_id) != 300 or set(by_id) != set(ids):
                 failures.append("RIGHTS_SCOPE")
             for id_, row in by_id.items():
