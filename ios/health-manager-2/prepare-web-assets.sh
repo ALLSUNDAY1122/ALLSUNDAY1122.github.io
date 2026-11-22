@@ -52,6 +52,7 @@ files=(
   q1.js q2.js q3.js q4.js q5.js q6.js q7.js q8.js q9.js q10.js q11.js q12.js
   difficulty-patch-v5.js
   audit-patch-v2.js audit-patch-v3.js audit-patch-v4.js audit-fixes.js question-order-v1.js
+  hm2-source-precision-v1.js hm2-c-replacements-v1.js hm2-c-remaining-13-v1.js hm2-source-evidence-v2.js
   gm1.js gm2.js gm3.js gm4.js
   manifest.json icon.svg
 )
@@ -60,6 +61,43 @@ for file in "${files[@]}"; do
   test -f "$WEB_SRC/$file"
   cp "$WEB_SRC/$file" "$WEB_DST/$file"
 done
+
+# Fail closed if any local script referenced by index.html is absent from the
+# iOS Web bundle, duplicated, or copied in a different order from the HTML.
+python3 - "$WEB_DST" "${files[@]}" <<'PY'
+from html.parser import HTMLParser
+from pathlib import Path
+import sys
+
+class Scripts(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.srcs = []
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() == 'script':
+            src = dict(attrs).get('src')
+            if src:
+                self.srcs.append(src)
+
+web = Path(sys.argv[1])
+copied = list(sys.argv[2:])
+parser = Scripts()
+parser.feed((web / 'index.html').read_text(encoding='utf-8'))
+referenced = []
+for src in parser.srcs:
+    if not src.startswith('./') or '?' in src or '#' in src or '/' in src[2:]:
+        raise SystemExit(f'FAIL: unexpected nonlocal script src: {src}')
+    referenced.append(src[2:])
+if not referenced or len(referenced) != len(set(referenced)):
+    raise SystemExit('FAIL: empty or duplicate script references in index.html')
+copy_order = [name for name in copied if name.endswith('.js')]
+if copy_order != referenced:
+    raise SystemExit(f'FAIL: script list/order mismatch: missing={sorted(set(referenced)-set(copy_order))}, extra={sorted(set(copy_order)-set(referenced))}')
+missing = [name for name in referenced if not (web / name).is_file() or not (web / name).stat().st_size]
+if missing:
+    raise SystemExit(f'FAIL: missing/empty bundled scripts: {missing}')
+print(f'PASS: all {len(referenced)} index.html scripts bundled in exact load order')
+PY
 
 # Bundle the same canonical 300-question JSON validated by the release exporter.
 cp "$SCRIPT_DIR/release-questions.json" "$WEB_DST/release-questions.json"
