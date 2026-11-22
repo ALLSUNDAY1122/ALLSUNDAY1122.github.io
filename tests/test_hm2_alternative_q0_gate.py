@@ -105,6 +105,24 @@ class GateTests(unittest.TestCase):
         self.persist()
         self.assertIn("DOUBLE_CHECK_BANK_SHA_MISMATCH", self.check()["failures"])
 
+    def test_nonobject_double_check_payload_fails(self):
+        self.review_file.write_text("[]", encoding="utf-8")
+        self.assertIn("DOUBLE_CHECK_SCHEMA_INVALID", self.check()["failures"])
+
+    def test_nonobject_rights_payload_fails(self):
+        self.rights_file.write_text("[]", encoding="utf-8")
+        self.assertIn("RIGHTS_SCHEMA_INVALID", self.check()["failures"])
+
+    def test_nonobject_rights_row_fails(self):
+        self.rights["decisions"][0] = "not-a-decision"
+        self.persist()
+        self.assertIn("RIGHTS_ROW_SCHEMA_INVALID", self.check()["failures"])
+
+    def test_nonobject_double_review_row_fails(self):
+        self.reviews["reviews"][0] = "not-a-review"
+        self.persist()
+        self.assertIn("DOUBLE_CHECK_ROW_SCHEMA_INVALID", self.check()["failures"])
+
     def test_missing_nonofficial_notice_fails(self):
         (self.root / "apps/sanitary-manager-2/gm4.js").write_text("unrelated", encoding="utf-8")
         self.assertIn("IN_APP_DISCLAIMER_MISSING", self.check()["failures"])
