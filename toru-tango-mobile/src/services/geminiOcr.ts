@@ -39,7 +39,7 @@ export async function recognizeWithGemini(images: SelectedStudyImage[]): Promise
     });
     const payload = (await response.json()) as Record<string, unknown>;
     if (!response.ok) {
-      throw new Error(response.status === 429 && payload.code === 'AI_MONTHLY_LIMIT' ? 'AI_MONTHLY_LIMIT' : typeof payload.error === 'string' ? payload.error : `AI_API_${response.status}`);
+      throw new Error(response.status === 429 && payload.code === 'AI_MONTHLY_LIMIT' ? 'AI_MONTHLY_LIMIT' : typeof payload.code === 'string' && payload.code.startsWith('GEMINI_UPSTREAM_HTTP_') ? `${payload.code} (${payload.upstreamCode ?? 'UNKNOWN'})` : typeof payload.error === 'string' ? payload.error : `AI_API_${response.status}`);
     }
     const text = typeof payload.text === 'string' ? payload.text.trim() : '';
     if (!text) throw new Error('文字を認識できませんでした。写真を撮り直してください。');

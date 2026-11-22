@@ -8,9 +8,20 @@ export const SUBSCRIPTION_IDS = [
 
 let initialized = false;
 export async function getTransactionJws(): Promise<string | null> {
+  // StoreKit may reject a native request while offline or while no App Store account
+  // is configured. Free-tier cloud AI must remain usable in that case.
   if (Platform.OS !== 'ios') return null;
-  if (!initialized) { await initConnection(); initialized = true; }
-  const purchases = await getAvailablePurchases();
+  let purchases;
+  try {
+    if (!initialized) { await initConnection(); initialized = true; }
+    purchases = await getAvailablePurchases();
+  } catch (error) {
+    // A native StoreKit error happens *before* fetch(/generate or /ocr).
+    // Do not mistake it for a Worker/network failure. Server quotas remain enforced.
+    console.warn('StoreKit entitlement lookup unavailable; using free tier',
+      error instanceof Error ? error.name : 'unknown');
+    return null;
+  }
   const now=Date.now();
   const active=purchases.filter(p=>SUBSCRIPTION_IDS.some(id=>id===p.productId) &&
     'expirationDateIOS' in p && typeof p.expirationDateIOS === 'number' && p.expirationDateIOS > now &&

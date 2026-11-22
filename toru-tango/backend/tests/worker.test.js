@@ -224,6 +224,10 @@ test('handles Gemini errors and invalid structured output', async (t) => {
   globalThis.fetch = async () => Response.json({ error: { message: 'quota' } }, { status: 429 });
   const upstreamError = await worker.fetch(request(), { GEMINI_API_KEY: 'test-key' });
   assert.equal(upstreamError.status, 502);
+  const diagnostic = await upstreamError.json();
+  assert.equal(diagnostic.code, 'GEMINI_UPSTREAM_HTTP_429');
+  assert.equal(diagnostic.upstreamStatus, 429);
+  assert.equal(diagnostic.upstreamCode, 'UNKNOWN');
 
   globalThis.fetch = async () =>
     Response.json({ candidates: [{ content: { parts: [{ text: 'not-json' }] } }] });
@@ -307,4 +311,21 @@ test('monthly limit responses include free tier and do not advertise Pro', async
   assert.deepEqual(payload.usage,{used:5,limit:5,tier:'free'});
   assert.equal(payload.code,'AI_MONTHLY_LIMIT');
   assert.doesNotMatch(payload.error,/Proプラン/);
+});
+
+test('reports Gemini upstream 401, 403, 404, 429 without exposing provider message or credentials', async (t) => {
+  const originalFetch = globalThis.fetch;
+  t.after(() => { globalThis.fetch = originalFetch; });
+  for (const status of [401, 403, 404, 429]) {
+    globalThis.fetch = async () => Response.json({
+      error: { status: status === 429 ? 'RESOURCE_EXHAUSTED' : 'PERMISSION_DENIED',
+        message: 'secret key=AIzaVerySensitiveCredentialDataMustNotLeak' }
+    }, { status });
+    const response = await worker.fetch(request(validInput), { GEMINI_API_KEY: 'test-key' });
+    const payload = await response.json();
+    assert.equal(response.status, 502);
+    assert.equal(payload.code, 'GEMINI_UPSTREAM_HTTP_' + status);
+    assert.equal(payload.upstreamStatus, status);
+    assert.doesNotMatch(JSON.stringify(payload), /AIza|VerySensitiveCredential|key=/);
+  }
 });

@@ -23,6 +23,26 @@ function json(data, status = 200, origin = ALLOWED_ORIGIN) {
   return new Response(JSON.stringify(data), { status, headers: cors(origin) });
 }
 
+
+function upstreamFailure(status, payload, operation, origin) {
+  // Never return credentials, headers, source text or raw provider responses.
+  const upstreamCode = typeof payload?.error?.status === 'string'
+    ? payload.error.status.replace(/[^A-Z_]/g, '').slice(0, 48) : 'UNKNOWN';
+  const safeCode = 'GEMINI_UPSTREAM_HTTP_' + status;
+  const rawMessage = String(payload?.error?.message ?? '');
+  const summary = rawMessage.replace(/AIza[\w-]{15,}/g, '[REDACTED_KEY]')
+    .replace(/key=[^&\s]+/gi, 'key=[REDACTED]')
+    .replace(/[\r\n]+/g, ' ').slice(0, 180);
+  console.error(JSON.stringify({
+    event: 'gemini_upstream_error', operation, httpStatus: status,
+    providerStatus: upstreamCode, model: DEFAULT_MODEL, summary
+  }));
+  return json({
+    error: 'Gemini APIがエラーを返しました。通信環境またはサーバー設定を確認してください。',
+    code: safeCode, upstreamStatus: status, upstreamCode
+  }, 502, origin);
+}
+
 function cleanText(value, max) {
   return String(value ?? '')
     .replace(/\u0000/g, '')
@@ -248,8 +268,7 @@ export default {
         );
         const raw = await response.json();
         if (!response.ok) {
-          console.error('Gemini OCR request failed', response.status);
-          return json({ error: 'Gemini OCRに失敗しました。少し時間を置いて再試行してください。' }, 502, origin);
+          return upstreamFailure(response.status, raw, 'ocr', origin);
         }
         const text = extractOutputText(raw);
         if (!text) return json({ error: '画像から文字を認識できませんでした。' }, 422, origin);
@@ -339,12 +358,7 @@ export default {
 
       const raw = await response.json();
       if (!response.ok) {
-        console.error('Gemini request failed', response.status);
-        return json(
-          { error: 'AI作問に失敗しました。しばらくしてから再試行してください。' },
-          502,
-          origin
-        );
+        return upstreamFailure(response.status, raw, 'generate', origin);
       }
 
       const outputText = extractOutputText(raw);
