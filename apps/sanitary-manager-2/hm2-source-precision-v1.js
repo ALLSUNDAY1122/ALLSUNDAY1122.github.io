@@ -86,3 +86,17 @@ q.sourceUrl='https://medlineplus.gov/genetics/condition/actin-accumulation-myopa
 q.basis=String(q.basis||'')+' ／ 2026-11-22 NLM MedlinePlus Genetics：Actin-accumulation myopathy節に筋の細いactin線維と太いmyosin線維が収縮に不可欠と明記。筋線維滑り説は原記載の関係に一致。他選択肢は筋収縮に用いる両線維ではない。';
 window.HM2_B_ACTIN_SOURCE_UPDATED='sm2-5y-r09-phy-02';
 })();
+
+
+(function(){
+'use strict';
+// HM2-B 2026-11-22: exactly three source-only fixes, never set audit/release approval.
+const fixes=[{"id":"sm2-5y-r06-phy-07","old":"https://www.ncbi.nlm.nih.gov/books/NBK526069/","url":"https://medlineplus.gov/genetics/gene/aqp2/","basis":"NLM MedlinePlus Genetics AQP2 Normal Function: ADH releases AQP2-containing vesicles into collecting-duct cell membrane and increases water reabsorption; NLM AVPR2 Normal Function directly locates V2 receptor in collecting ducts. Primary government authored explanations."},{"id":"sm2-5y-r06-phy-09","old":"https://www.ncbi.nlm.nih.gov/books/NBK544365/","url":"https://medlineplus.gov/genetics/gene/aqp2/","basis":"NLM MedlinePlus Genetics AQP2 Normal Function: when fluid intake is adequate, AVP/ADH secretion falls, AQP2 channels leave collecting-duct membrane, water reabsorption falls and urine becomes dilute; original question explicitly rules out other ADH stimuli."},{"id":"sm2-5y-r07-phy-08","old":"https://www.ncbi.nlm.nih.gov/books/NBK1177/","url":"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=e507a317-0acc-4415-f6ec-3ec757565f31","basis":"NLM DailyMed Tolvaptan 12.1 Mechanism of Action: V2 antagonist reduces cAMP; AQP2 vesicles cannot fuse with collecting duct cell membrane; water excretion rises and urine osmolality falls; approval drug label rather than government-authored physiology."}];
+const map=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+for(const x of fixes){const q=map.get(x.id);
+ if(!q||q.sourceUrl!==x.old||!Array.isArray(q.choices)||q.choices.length!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5)throw Error('HM2 B AQP2 source stale '+x.id);
+ q.sourceUrl=x.url;
+ q.basis=String(q.basis||'')+' ／ 2026-11-22 B AQP2公式出典：'+x.basis;
+}
+window.HM2_B_AQP2_SOURCE_IDS=fixes.map(x=>x.id);
+})();
