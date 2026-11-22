@@ -32,5 +32,5 @@ test('successful multi-image OCR refreshes server-authoritative usage',()=>{
 test('working Build17 XHR transport and endpoint remain untouched',()=>{
  assert.match(ocr,/new XMLHttpRequest\(\)/);
  assert.match(ocr,/for\(let attempt=1;attempt<=3;attempt\+\+\)/);
- assert.match(config,/buildNumber: '18'/);
+ assert.match(config,/buildNumber: '(?:18|19)'/);
 });
