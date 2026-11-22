@@ -1,13 +1,20 @@
 {
-  "request_id": "hm2-b24-attach-version1-20261122-r1",
-  "action": "write",
-  "expected_app_id": "6799751657",
-  "expected_bundle_id": "jp.allsunday1122.healthmanager2",
-  "operations": [
+  "request_id": "hm2-b24-asc-attached-readback-20261122-r2",
+  "requests": [
     {
-      "type": "attach_build",
-      "app_store_version_id": "c0372f0c-c99a-4e4f-a8a3-28d13969091a",
-      "build_id": "193141f5-4144-4843-a71c-05419d4aa735"
+      "label": "version",
+      "method": "GET",
+      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a"
+    },
+    {
+      "label": "selected-build",
+      "method": "GET",
+      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/relationships/build"
+    },
+    {
+      "label": "review-submissions",
+      "method": "GET",
+      "path": "/v1/apps/6799751657/reviewSubmissions?limit=20"
     }
   ]
 }
