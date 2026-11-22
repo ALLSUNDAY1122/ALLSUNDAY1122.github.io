@@ -339,3 +339,21 @@ q.contentReviewStatus='requires-independent-subject-expert-review';
 q.auditStatus='再監査待ち';q.publicationStatus='非公開';
 window.HM2_B2_NINDS_REFLEX_REDESIGN_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// HM2 B2 No.115 official MHLW guidance: preserve five choices, correct position, legal approval.
+const id='sm2-5y-r10-hyg-08';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+const old='https://laws.e-gov.go.jp/law/347AC0000000057';
+const url='https://www.mhlw.go.jp/content/11303000/001509876.pdf';
+if(!q||q.sourceUrl!==old||!Array.isArray(q.choices)||q.choices.length!==5||q.answer!==4||
+ q.choices[3]!=='交替勤務や残業などの作業条件も調べ、健康指標の経年変化と併せて評価する。')
+ throw Error('HM2 B2 group-analysis old state mismatch '+id);
+q.sourceUrl=url;
+q.basis=String(q.basis||'')+' ／ 2026-11-22 厚労省直接公表「健康診断結果に基づき事業者が講ずべき措置に関する指針」：医師意見の取得には労働時間、労働密度、深夜業回数・時間、作業環境、過去の健康診断結果などの情報を活用し、健康診断の結果を踏まえて作業環境・作業管理を見直す。これは経年比較の特定統計手法を法定義務とする意味ではない。労働安全衛生法104条による健康情報の適正管理は既存解説の補助法源。';
+q.explanation='第4肢が適切。厚労省「健康診断結果に基づき事業者が講ずべき措置に関する指針」は、健康診断結果のみではなく過去の結果、労働時間・深夜業・作業環境等を把握して医師の意見聴取や就業上の措置・作業環境管理に用いるとする。健康指標の経年比較も集団分析の合理的な評価方法だが、特定の統計手法が法定義務であるとはしない。肢1×は一時点の有所見率から原因を断定、肢2×は氏名付き結果の全員公開、肢3×は小集団の再識別を放置、肢5×は作業条件を検証せず生活習慣だけを原因と断定するため不適切。個人情報の適正管理は労働安全衛生法104条に従う。';
+q.auditStatus='一次資料照合済';
+window.HM2_B2_MHLW_GROUP_ASSESSMENT_ID=id;
+})();
