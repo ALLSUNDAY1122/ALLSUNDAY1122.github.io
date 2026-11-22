@@ -1,0 +1,65 @@
+name: Toru Tango Build 19 Subscription Review Fix (Internal TestFlight)
+on:
+  push:
+    branches:
+      - release/toru-tango-build19-subscription-ui-20261122
+    paths:
+      - '.github/workflows/toru-tango-build19-internal-testflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: toru-tango-build19-internal-testflight
+  cancel-in-progress: false
+jobs:
+  ios:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: toru-tango-mobile
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Verify Build 17 OCR, Build 18 usage and Worker unchanged
+        run: |
+          set -e
+          git diff --exit-code 69e4fa6d7898418f3e2ebc86e24be38fd5462674 HEAD -- src/services/geminiOcr.ts src/services/cloudUsage.ts 'app/(tabs)/create.tsx' 'app/(tabs)/records.tsx'
+          cd ..
+          git diff --exit-code 69e4fa6d7898418f3e2ebc86e24be38fd5462674 HEAD -- toru-tango/backend/
+      - name: Verify Expo token
+        run: test -n "$EXPO_TOKEN"
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Install and validate subscription changes
+        run: |
+          npm install --package-lock-only --no-audit --no-fund
+          npm ci --include=dev --no-audit --no-fund
+          npm run typecheck
+          npm run lint
+          npm run doctor
+          node --test tests/study-folder.test.cjs tests/build17-ocr-transport.test.cjs tests/build18-usage.test.cjs tests/build19-subscription.test.cjs
+          npx expo config --type public > /dev/null
+      - name: EAS Build 19
+        run: |
+          mkdir -p release-logs
+          set -o pipefail
+          eas build --platform ios --profile production --non-interactive --json | tee release-logs/build19.json
+      - name: Upload Build 19 to App Store Connect for Internal TestFlight only
+        run: |
+          set -o pipefail
+          eas submit --platform ios --profile production --latest --non-interactive | tee release-logs/submit19.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-tango-build19-eas
+          path: toru-tango-mobile/release-logs
+          if-no-files-found: warn
