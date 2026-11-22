@@ -23,7 +23,8 @@ for(const q of qs){
  }
 }
 const base=Array.from({length:12},(_,i)=>'q'+(i+1)+'.js');
-const patches=['audit-patch-v2.js','audit-patch-v3.js','audit-patch-v4.js','audit-fixes.js','question-order-v1.js'];
+const patches=['audit-patch-v2.js','audit-patch-v3.js','audit-patch-v4.js','audit-fixes.js','question-order-v1.js',
+ 'hm2-source-precision-v1.js','hm2-c-replacements-v1.js','hm2-c-remaining-13-v1.js','hm2-source-evidence-v2.js'];
 const load=(browser)=>{
  const ctx=vm.createContext({window:{Q_PARTS:[]},localStorage:{getItem:()=>null,setItem:()=>{}}});
  for(const name of [...base,...(browser?['difficulty-patch-v5.js']:[]),...patches])
