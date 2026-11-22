@@ -87,3 +87,53 @@
 ## コーディネーターへの引き継ぎ
 
 このファイルの69件を一次確認済みとして集計しないこと。まず既存40件のID集合と照合して担当範囲を確定し、現行bankのSHA-256を固定する。各問5肢の実際の文言と正誤、根拠本文の条項・施行日・適用範囲を記録して初めて一次確認として数える。二重チェック・300問権利判定・Q0/Q1判定は本担当の範囲外。
+
+## 続行バッチ：分割No.1〜30の現行5肢照合と公式根拠の調査（2026-11-22 JST）
+
+- 対象：固定69問の先頭30問（150肢）、Git blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d` の配布bank。**blob SHAはSHA-256ではない**。現行ブランチへのリベースや更新があれば再固定が必要。
+- 5肢の本文・正答indexはこのblobから読み取った。下表はそれぞれ「1〜5肢の判定」=正答として選ぶべき肢「○」と、それ以外「×」を各肢順に列挙する。誤肢ごとの正誤理由は判定根拠欄の命題から判定したもので、法令全肢個別条項の追加検証までは完了していない。
+- 根拠区分「直接」は今回公式検索で該当する制度・式を確認したこと、「追加確認」「要条文再精査」「原典未再閲覧」は全肢の公式原典直接照合を完了していないことを意味する。**今回の一次確認正式合格数は慎重に0/30とする**（制度・計算の一次評価は30問着手）。
+
+| No. | ID | 配布正答（1起点） | 5肢の一次判定（1→5） | 命題別根拠・計算 | 原典 | 確認水準 |
+|---:|---|---:|---|---|---|---|
+| 1 | `sm2-5y-r09-law-05` | 4 | × / × / × / ○ / × | 産前延長は産前扱いで産後8週を減らさない | [公的資料](https://www.bosei-navi.mhlw.go.jp/faq/faq16.html) | 直接 |
+| 2 | `sm2-5y-r09-law-07` | 4 | × / × / × / ○ / × | 半日年休は0.5日換算、時間単位は5日義務に算入不可 | [公的資料](https://www.startup-roudou.mhlw.go.jp/qa/zigyonushi/yukyu/q11.html) | 追加確認 |
+| 3 | `sm2-5y-r10-law-02` | 5 | × / × / × / × / ○ | 雇入時43条と定期44条2項の省略は別制度 | [公的資料](https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/anzen_eisei/a-hotetu.html) | 直接 |
+| 4 | `sm2-5y-r10-law-07` | 3 | × / × / ○ / × / × | 面接指導申出時の事業者義務と申出による不利益禁止 | [公的資料](https://anzeninfo.mhlw.go.jp/yougo/yougo95_1.html) | 直接 |
+| 5 | `sm2-5y-r09-law-03` | 2 | × / ○ / × / × / × | 安衛則7条1項4号：50〜200人は1人 | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1) | 直接 |
+| 6 | `sm2-5y-r09-law-08` | 1 | ○ / × / × / × / × | 安衛則7条3項：選任後遅滞なく電子報告 | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1) | 直接 |
+| 7 | `sm2-5y-r09-law-10` | 3 | × / × / ○ / × / × | 事務所則5条の供給空気CO原則10ppm以下、特例適用を区別 | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 要条文再精査 |
+| 8 | `sm2-5y-r10-law-03` | 1 | ○ / × / × / × / × | 法定休日労働35%以上の割増、36協定でも免除されない | [公的資料](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudouseisaku/chushoukigyou/joken_kankyou_rule.html) | 直接 |
+| 9 | `sm2-5y-r10-law-05` | 3 | × / × / ○ / × / × | 安衛法66条の4・5：医師意見を踏まえ就業措置 | [公的資料](https://www.mhlw.go.jp/content/11201250/001597865.pdf) | 直接 |
+| 10 | `sm2-5y-r10-law-08` | 5 | × / × / × / × / ○ | 安衛則51条・51条の2：個人票5年、意見3か月以内に聴取・記載 | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2) | 直接 |
+| 11 | `sm2-5y-r10-law-10` | 4 | × / × / × / ○ / × | 労基法65条2項：産後6週間経過、本人請求、医師支障なし | [公的資料](https://www.bosei-navi.mhlw.go.jp/gimu/kyugyo.html) | 直接 |
+| 12 | `sm2-5y-r04-hyg-03` | 5 | × / × / × / × / ○ | CO2上昇時は在室者数・換気設備・運用の再評価、CO2のみで個人感染を特定しない | [公的資料](https://www.mhlw.go.jp/content/11130500/001304966.pdf) | 追加確認 |
+| 13 | `sm2-5y-r04-hyg-05` | 3 | × / × / ○ / × / × | 相対湿度＝実際の水蒸気量÷飽和水蒸気量×100：6/23と6/13 | [公的資料](https://mynasadata.larc.nasa.gov/sites/default/files/2019-04/Relative%20Humidity%20Protocol.pdf) | 計算確認・原典未再閲覧 |
+| 14 | `sm2-5y-r04-hyg-08` | 4 | × / × / × / ○ / × | 織物衣服二重着用はWBGT着衣補正+3℃ | [公的資料](https://anzeninfo.mhlw.go.jp/yougo/yougo89_1.html) | 直接 |
+| 15 | `sm2-5y-r04-hyg-10` | 3 | × / × / ○ / × / × | 日射ありWBGT=0.7湿球+0.2黒球+0.1気温、日射なし=0.7湿球+0.3黒球 | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=00tc6081&dataType=1&pageNo=1) | 直接 |
+| 16 | `sm2-5y-r05-hyg-03` | 2 | × / ○ / × / × / × | 意識・正常呼吸なしなら119通報・AED依頼・胸骨圧迫 | [公的資料](https://www.jrc.or.jp/study/safety/airway/) | 追加確認 |
+| 17 | `sm2-5y-r05-hyg-05` | 4 | × / × / × / ○ / × | 換気回数4回/時×室容積300m³=必要換気量1200m³/時 | [公的資料](https://www.aist.go.jp/aist_j/new_research/2020/nr20201224/nr20201224.html) | 計算確認・出典直接性未確認 |
+| 18 | `sm2-5y-r05-hyg-08` | 1 | ○ / × / × / × / × | 騒音測定と設備・警報の補完的対策、視覚警報の法定一律義務ではない | [公的資料](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02_00004.html) | 追加確認 |
+| 19 | `sm2-5y-r05-hyg-10` | 3 | × / × / ○ / × / × | 音圧レベル差10dB→音圧比10^(10/20)=3.162 | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1&pageNo=1) | 計算確認・式の原典未再閲覧 |
+| 20 | `sm2-5y-r06-hyg-03` | 1 | ○ / × / × / × / × | 情報機器作業指針：視距離40cm以上、画面上端は眼とほぼ同じか下 | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1&pageNo=1) | 直接 |
+| 21 | `sm2-5y-r06-hyg-05` | 3 | × / × / ○ / × / × | 粒子のろ過材とガス・蒸気用の吸収缶を区別 | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=00tc7653&dataType=1&pageNo=1) | 直接 |
+| 22 | `sm2-5y-r06-hyg-10` | 4 | × / × / × / ○ / × | 感度＝真陽性/(真陽性+偽陰性)=90/100 | [公的資料](https://stacks.cdc.gov/view/cdc/193774) | 計算確認・原典未再閲覧 |
+| 23 | `sm2-5y-r07-hyg-03` | 5 | × / × / × / × / ○ | 小集団の健診情報は再識別・目的外共有を避ける | [公的資料](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei28/index.html) | 追加確認 |
+| 24 | `sm2-5y-r07-hyg-05` | 3 | × / × / ○ / × / × | 胸骨圧迫解除時は胸郭を完全に戻す | [公的資料](https://www.jrc.or.jp/study/safety/) | 追加確認 |
+| 25 | `sm2-5y-r09-law-04` | 1 | ○ / × / × / × / × | 安衛則23条2項：委員会運営事項は委員会が定める | [公的資料](https://anzeninfo.mhlw.go.jp/yougo/yougo44_1.html) | 直接 |
+| 26 | `sm2-5y-r09-law-09` | 5 | × / × / × / × / ○ | 安衛則44条2項：血圧・尿検査は医師省略対象に含まれない | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=2) | 要条文再精査 |
+| 27 | `sm2-5y-r10-law-04` | 4 | × / × / × / ○ / × | 安衛則7条：200人までは1人、201〜500人は2人 | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0&pageNo=1) | 直接 |
+| 28 | `sm2-5y-r10-law-09` | 2 | × / ○ / × / × / × | 労基法34条：8時間ちょうどは45分、8時間超は60分 | [公的資料](https://www.mhlw.go.jp/bunya/roudoukijun/faq_kijyunhou_13.html) | 直接 |
+| 29 | `sm2-5y-r04-hyg-01` | 4 | × / × / × / ○ / × | 日射ありWBGT=0.7×26+0.2×36+0.1×32=28.6 | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=00tc6081&dataType=1&pageNo=1) | 直接・計算確認 |
+| 30 | `sm2-5y-r04-hyg-02` | 1 | ○ / × / × / × / × | 事務所則の温湿度・気流・換気の複合管理 | [公的資料](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 直接 |
+
+### 個別の追加検討事項
+
+- No.7：事務所衛生基準規則の「供給する空気」と「室内の測定濃度」、外気汚染時の例外を分離して現行施行版で確定する。
+- No.13：仮定値を使った計算自体は25℃で26.09%、15℃で46.15%。NASAの数値例・著作権重複の疑義は別の権利担当に移管する。
+- No.17：換気回数4回/時は設問条件であり、あらゆる会議室に法定義務として課す値ではない。
+- No.19：振幅比と音響強度比を取り違えないこと（振幅比約3.16、強度比10）。
+- No.22：疾病なし群が提示されていないので、特異度・陽性的中率・有病率を推計してはならない。
+- No.26：2026年の定期健診に関する通知改正との整合、および安衛則44条2項の省略対象を条文ベースで再確認する。
+- No.29：0.7×26+0.2×36+0.1×32=18.2+7.2+3.2=28.6℃。
+- 本表は**一次判定の作業記録**であり、独立二重レビュー・権利許諾・Q0/Q1ゲート認定ではない。残39問（No.31〜69）は今回未着手。今後の完全確認では選択肢ごとの反証と条文施行版を追記する。
