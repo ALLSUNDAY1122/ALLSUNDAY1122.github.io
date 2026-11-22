@@ -47,11 +47,12 @@ class GateTests(unittest.TestCase):
                 passes.append({
                     "reviewer_id": reviewer, "reviewed_at": "2026-11-22",
                     "independent_session_id": "session-" + reviewer,
+                    "performed_without_prior_review_access": True,
                     "evidence_artifact_sha256": hashlib.sha256(reviewer.encode()).hexdigest(),
                     "method": "independent primary-source verification",
                     "primary_source_url": "https://laws.e-gov.go.jp/law/347M50002000032",
                     "source_section": "test", "applicable_on": "2026-11-22",
-                    "reasoning": "test fixture only",
+                    "reasoning": "test fixture " + reviewer,
                     "question_bank_sha256": self.sha,
                     "choices": [
                         {"text": choice, "correct": j == 0,
@@ -124,6 +125,22 @@ class GateTests(unittest.TestCase):
         self.reviews["reviews"][0] = "not-a-review"
         self.persist()
         self.assertIn("DOUBLE_CHECK_ROW_SCHEMA_INVALID", self.check()["failures"])
+
+    def test_copied_review_content_fails(self):
+        passes = self.reviews["reviews"][0]["passes"]
+        passes[1]["reasoning"] = passes[0]["reasoning"]
+        self.persist()
+        self.assertIn("sm2-test-000:COPIED_REVIEW_CONTENT", self.check()["failures"])
+
+    def test_missing_independence_attestation_fails(self):
+        self.reviews["reviews"][0]["passes"][0]["performed_without_prior_review_access"] = False
+        self.persist()
+        self.assertIn("sm2-test-000:PASS1_INDEPENDENCE_ATTESTATION_MISSING", self.check()["failures"])
+
+    def test_fake_artifact_sha_fails(self):
+        self.reviews["reviews"][0]["passes"][0]["evidence_artifact_sha256"] = "not-a-hash"
+        self.persist()
+        self.assertIn("sm2-test-000:PASS1_INVALID_ARTIFACT_SHA", self.check()["failures"])
 
     def test_null_double_check_payload_fails(self):
         self.review_file.write_text("null", encoding="utf-8")
