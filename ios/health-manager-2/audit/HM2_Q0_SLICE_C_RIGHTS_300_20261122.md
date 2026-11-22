@@ -360,3 +360,68 @@
 4. 本Markdownは正式Q0権利承認JSONではない。**この記録を300問の権利PASSとして取り込まないこと。**
 
 App Review提出・新規TestFlight配信なし。台帳本体・問題データは変更しない。
+
+
+## 第2段階：先頭40問の出典元利用条件・リスクの個別追加調査（2026-11-22）
+
+対象は現行配布JSON先頭40行（`sm2-demo-001`〜`sm2-r7o-010`）、bank Git blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d`。今回追加したのは各IDに対する**出典運営主体の一般的な利用条件の照合**であり、個別ページの全文、元公表試験問題との逐語比較は実施していない。問題文・5肢・解説が独自表現であるという既存申告を無条件承認しない。監査対象の40問は権利最終判定すべて保留。
+
+### 出典主体の利用条件（確認できた公表ページ）
+- MHLW-PDL: [厚生労働省 利用規約](https://www.mhlw.go.jp/chosakuken/index.html)。権利表示がない場合PDL1.0に準拠。ただし第三者著作物/個別特記/標章等に注意。`www.mhlw.go.jp` と `jsite.mhlw.go.jp`を分類。
+- FDMA-PDL: [消防庁 利用条件](https://www.fdma.go.jp/about/others/post3.html)。原則PDL1.0。加工物を政府が未加工で公表したかのように表示しない。
+- MSD-RESTRICTED: [MSDマニュアル公式FAQ](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs)。書面による許可なしの文章・画像等の配布、改変、商用再利用を認めない。**事実の参照と著作物表現の流用を厳密に分ける。**
+- EXAM-UNCONFIRMED: [試験協会の公式公表問題](https://www.exam.or.jp/lckohyo/)。公表・閲覧可能なのは確認したが商用教材への転載許諾は未確認。
+- NHLBI-PD-EXCEPT: [NHLBI公式](https://www.nhlbi.nih.gov/about/contact/trademark-branding-and-logo)。特記がなければ原則パブリックドメイン、他者権利がある素材は除外。
+- BSD-AUTHOR: [脳科学辞典の著作権](https://bsd.neuroinf.jp/wiki/脳科学辞典:著作権)。用語解説の著作権は各執筆者に帰属。
+- JRC-PROTECTED: [日本赤十字社の著作権](https://www.jrc.or.jp/rule/)。文章・写真・イラスト等の著作権は日本赤十字社に帰属。
+- UNVERIFIED: 本回で対応するサイト固有の利用規約を確認できなかったため、いかなる利用許諾も推定しない。
+
+| No. | 問題ID | 利用条件分類 | 権利上の注意度 | 個別に確認した一般条件・不足事項 | 根拠 | 最終判定 |
+|---:|---|---|---|---|---|---|
+| 1 | `sm2-demo-001` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 2 | `sm2-demo-002` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 3 | `sm2-demo-003` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 4 | `sm2-demo-004` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 5 | `sm2-demo-005` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 6 | `sm2-demo-006` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 7 | `sm2-demo-007` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 8 | `sm2-demo-008` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 9 | `sm2-demo-009` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 10 | `sm2-demo-010` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 11 | `sm2-demo-011` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 12 | `sm2-demo-012` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 13 | `sm2-demo-013` | FDMA-PDL | 条件付き | PDL1.0原則・個別特記/第三者素材未照合 | [利用条件](https://www.fdma.go.jp/about/others/post3.html) | **保留** |
+| 14 | `sm2-demo-014` | EXAM-UNCONFIRMED | 高（公表試験問題） | 公表事実のみ確認・商用転載許諾未確認 | [利用条件](https://www.exam.or.jp/lckohyo/) | **保留** |
+| 15 | `sm2-demo-015` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 16 | `sm2-demo-016` | FDMA-PDL | 条件付き | PDL1.0原則・個別特記/第三者素材未照合 | [利用条件](https://www.fdma.go.jp/about/others/post3.html) | **保留** |
+| 17 | `sm2-demo-017` | NHLBI-PD-EXCEPT | 条件付き | 原則public domainだが個別著作権表示等は例外 | [利用条件](https://www.nhlbi.nih.gov/about/contact/trademark-branding-and-logo) | **保留** |
+| 18 | `sm2-demo-018` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 19 | `sm2-demo-019` | UNVERIFIED | 未確定 | 公式の個別利用条件を本回で未確認 | 未確認 | **保留** |
+| 20 | `sm2-demo-020` | UNVERIFIED | 未確定 | 公式の個別利用条件を本回で未確認 | 未確認 | **保留** |
+| 21 | `sm2-demo-021` | UNVERIFIED | 未確定 | 公式の個別利用条件を本回で未確認 | 未確認 | **保留** |
+| 22 | `sm2-demo-022` | MSD-RESTRICTED | 高（原文再利用禁止） | 文章画像等の無断商用再利用を認めない旨を確認 | [利用条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留** |
+| 23 | `sm2-demo-023` | BSD-AUTHOR | 高（記事執筆者権利） | 記事著作権は各執筆者に帰属 | [利用条件](https://bsd.neuroinf.jp/wiki/脳科学辞典:著作権) | **保留** |
+| 24 | `sm2-demo-024` | MSD-RESTRICTED | 高（原文再利用禁止） | 文章画像等の無断商用再利用を認めない旨を確認 | [利用条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留** |
+| 25 | `sm2-demo-025` | MSD-RESTRICTED | 高（原文再利用禁止） | 文章画像等の無断商用再利用を認めない旨を確認 | [利用条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留** |
+| 26 | `sm2-demo-026` | JRC-PROTECTED | 条件付き | 掲載情報の著作権は日本赤十字社に帰属 | [利用条件](https://www.jrc.or.jp/rule/) | **保留** |
+| 27 | `sm2-demo-027` | UNVERIFIED | 未確定 | 公式の個別利用条件を本回で未確認 | 未確認 | **保留** |
+| 28 | `sm2-demo-028` | MSD-RESTRICTED | 高（原文再利用禁止） | 文章画像等の無断商用再利用を認めない旨を確認 | [利用条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留** |
+| 29 | `sm2-demo-029` | MSD-RESTRICTED | 高（原文再利用禁止） | 文章画像等の無断商用再利用を認めない旨を確認 | [利用条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留** |
+| 30 | `sm2-demo-030` | MSD-RESTRICTED | 高（原文再利用禁止） | 文章画像等の無断商用再利用を認めない旨を確認 | [利用条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留** |
+| 31 | `sm2-r7o-001` | UNVERIFIED | 未確定 | 公式の個別利用条件を本回で未確認 | 未確認 | **保留** |
+| 32 | `sm2-r7o-002` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 33 | `sm2-r7o-003` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 34 | `sm2-r7o-004` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 35 | `sm2-r7o-005` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 36 | `sm2-r7o-006` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 37 | `sm2-r7o-007` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 38 | `sm2-r7o-008` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 39 | `sm2-r7o-009` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+| 40 | `sm2-r7o-010` | MHLW-PDL | 条件付き | PDL1.0原則・第三者権利/当該ページ特記未照合 | [利用条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留** |
+
+### 継続判定と次工程
+- **追加調査40/300問**（出典元の一般的な権利条件との個別紐付け）。残260問の同段階調査は未実施。40問の原典との逐語類似性比較は未実施。
+- **権利最終承認0/300問**。これは先行する300件メタデータ存在確認とは独立した進捗であり、二つを合算して340件等と計上しない。
+- 優先度高: MSD由来の文章表現の混入、試験協会公表問題の原文転載、脳科学辞典の記事翻案、日本赤十字社・第三者素材の図表転載疑義。特定の侵害が発生したと断定するものではない。
+- 全件について原典の対象版・公開者と権利者・条件更新日・個別素材の表示・実際の文面類似性を照合してから、出典適合と権利判定を別々に確定すること。
+- 本追加調査はQ0 PASS証跡にはならない。提出・配信なし、元台帳・問題JSON・生成元不変更。
