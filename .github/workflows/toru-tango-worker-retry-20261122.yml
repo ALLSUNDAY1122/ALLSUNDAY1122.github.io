@@ -1,0 +1,60 @@
+name: Toru Tango Worker Gemini Retry (Worker only)
+on:
+  push:
+    branches:
+      - release/toru-tango-worker-gemini-retry-20261122
+    paths:
+      - '.github/workflows/toru-tango-worker-retry-20261122.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: toru-tango-worker-gemini-retry
+  cancel-in-progress: false
+jobs:
+  worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: toru-tango/backend
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Syntax verification
+        run: |
+          node --check src/index.js
+          node --check src/gemini-retry.js
+      - name: Worker tests including retries and quota protection
+        run: npm test
+      - name: Verify Cloudflare credentials (no Gemini key injection)
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+      - name: Install Wrangler
+        run: npm install --no-audit --no-fund
+      - name: Deploy Worker without modifying GEMINI_API_KEY
+        run: |
+          set -o pipefail
+          npx wrangler deploy | tee worker-deploy.log
+      - name: Live Gemini generation and OCR (HTTP 200 required)
+        run: node scripts/live-probe.mjs | tee live-probe.log
+      - name: Live photo-size OCR (HTTP 200 required)
+        run: |
+          python -m pip install --user pillow
+          python scripts/make-photo-smoke.py
+          node scripts/photo-ocr-probe.mjs | tee photo-smoke.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-tango-worker-retry-validation
+          path: |
+            toru-tango/backend/worker-deploy.log
+            toru-tango/backend/live-probe.log
+            toru-tango/backend/photo-smoke.log
+          if-no-files-found: warn
