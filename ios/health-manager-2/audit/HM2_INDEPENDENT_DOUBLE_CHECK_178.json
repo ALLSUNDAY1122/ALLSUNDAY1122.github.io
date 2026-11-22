@@ -1,19 +1,64 @@
 {
   "question_bank_sha256": "434de86ab795d369a1ef52f16a0cf57cab7054b72f6aac952aa7805fb3872177",
-  "status": "INCOMPLETE_R40_AND_SOURCE_RECONCILIATION",
+  "status": "INCOMPLETE_R40_40_FORMAL_HOLD_AND_BANK_RECONCILIATION",
   "sources": {
     "dc_git_blob": "6e4eb7a5a232505b424c97caf533e7bec9acfb11",
     "a_git_blob": "720b7187a9dada5e30131a1a5c0e118e7d87d580",
     "b_git_blob": "e984e4592cf289e1d93e2175359edf10aa4f8be9",
-    "r40": "NOT_FOUND"
+    "r40": "NOT_FOUND",
+    "r40_git_blob": "031d14b24686c7f4294dab6df08a289763c55e13"
   },
   "reviews": [
     {
       "id": "sm2-5y-r04-law-02",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生法12条・同施行令4条／労働安全衛生規則7条1項1号",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "労働者が100人に達するまで衛生管理者を選任する必要はない。",
+              "correct": false,
+              "reason": "50人到達で義務が発生し、選任期限は14日。100人・即日のみ・30日・健診時点はいずれも法定期限でない。",
+              "source_section": "労働安全衛生法12条・同施行令4条／労働安全衛生規則7条1項1号"
+            },
+            {
+              "text": "常時50人となった当日に必ず選任しなければならず、14日間の法定期限はない。",
+              "correct": false,
+              "reason": "50人到達で義務が発生し、選任期限は14日。100人・即日のみ・30日・健診時点はいずれも法定期限でない。",
+              "source_section": "労働安全衛生法12条・同施行令4条／労働安全衛生規則7条1項1号"
+            },
+            {
+              "text": "事由が発生してから30日以内に衛生管理者を選任すればよい。",
+              "correct": false,
+              "reason": "50人到達で義務が発生し、選任期限は14日。100人・即日のみ・30日・健診時点はいずれも法定期限でない。",
+              "source_section": "労働安全衛生法12条・同施行令4条／労働安全衛生規則7条1項1号"
+            },
+            {
+              "text": "衛生管理者の選任は次回の定期健康診断を実施する日まで猶予される。",
+              "correct": false,
+              "reason": "50人到達で義務が発生し、選任期限は14日。100人・即日のみ・30日・健診時点はいずれも法定期限でない。",
+              "source_section": "労働安全衛生法12条・同施行令4条／労働安全衛生規則7条1項1号"
+            },
+            {
+              "text": "常時50人となって選任事由が生じた日から14日以内に、衛生管理者を選任する。",
+              "correct": true,
+              "reason": "50人到達で義務が発生し、選任期限は14日。100人・即日のみ・30日・健診時点はいずれも法定期限でない。",
+              "source_section": "労働安全衛生法12条・同施行令4条／労働安全衛生規則7条1項1号"
+            }
+          ],
+          "reasoning": "50人到達で義務が発生し、選任期限は14日。100人・即日のみ・30日・健診時点はいずれも法定期限でない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -64,9 +109,53 @@
     {
       "id": "sm2-5y-r04-law-03",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則7条1項3号イ／製造業の資格要件",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "製造業ではこの候補者を衛生管理者として選任できず、業種に対応した資格を有する者から選任する必要がある。",
+              "correct": true,
+              "reason": "製造業は第二種免許単独での選任対象外。同意・産業医併置・50人超過で資格要件は免除されない。",
+              "source_section": "労働安全衛生規則7条1項3号イ／製造業の資格要件"
+            },
+            {
+              "text": "本人が同意すれば法令上の資格制限はなくなる。",
+              "correct": false,
+              "reason": "製造業は第二種免許単独での選任対象外。同意・産業医併置・50人超過で資格要件は免除されない。",
+              "source_section": "労働安全衛生規則7条1項3号イ／製造業の資格要件"
+            },
+            {
+              "text": "50人以上なら候補者の資格を確認する必要はない。",
+              "correct": false,
+              "reason": "製造業は第二種免許単独での選任対象外。同意・産業医併置・50人超過で資格要件は免除されない。",
+              "source_section": "労働安全衛生規則7条1項3号イ／製造業の資格要件"
+            },
+            {
+              "text": "産業医を別に選任すれば、第二種衛生管理者免許だけで製造業の衛生管理者になれる。",
+              "correct": false,
+              "reason": "製造業は第二種免許単独での選任対象外。同意・産業医併置・50人超過で資格要件は免除されない。",
+              "source_section": "労働安全衛生規則7条1項3号イ／製造業の資格要件"
+            },
+            {
+              "text": "製造業であれば第二種衛生管理者免許だけで常に選任できる。",
+              "correct": false,
+              "reason": "製造業は第二種免許単独での選任対象外。同意・産業医併置・50人超過で資格要件は免除されない。",
+              "source_section": "労働安全衛生規則7条1項3号イ／製造業の資格要件"
+            }
+          ],
+          "reasoning": "製造業は第二種免許単独での選任対象外。同意・産業医併置・50人超過で資格要件は免除されない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -117,9 +206,53 @@
     {
       "id": "sm2-5y-r04-law-04",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法89条",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "都道府県知事のみに提出する。",
+              "correct": false,
+              "reason": "常時10人以上の就業規則は所轄労基署長に届出。知事・市町村・代表への手渡しでは代替不可。",
+              "source_section": "労働基準法89条"
+            },
+            {
+              "text": "市区町村長に届け出る。",
+              "correct": false,
+              "reason": "常時10人以上の就業規則は所轄労基署長に届出。知事・市町村・代表への手渡しでは代替不可。",
+              "source_section": "労働基準法89条"
+            },
+            {
+              "text": "労働者代表へ渡すだけで届出は不要である。",
+              "correct": false,
+              "reason": "常時10人以上の就業規則は所轄労基署長に届出。知事・市町村・代表への手渡しでは代替不可。",
+              "source_section": "労働基準法89条"
+            },
+            {
+              "text": "所轄労働基準監督署長に届け出る。",
+              "correct": true,
+              "reason": "常時10人以上の就業規則は所轄労基署長に届出。知事・市町村・代表への手渡しでは代替不可。",
+              "source_section": "労働基準法89条"
+            },
+            {
+              "text": "常時30人に達するまで届出を待つ。",
+              "correct": false,
+              "reason": "常時10人以上の就業規則は所轄労基署長に届出。知事・市町村・代表への手渡しでは代替不可。",
+              "source_section": "労働基準法89条"
+            }
+          ],
+          "reasoning": "常時10人以上の就業規則は所轄労基署長に届出。知事・市町村・代表への手渡しでは代替不可。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -170,9 +303,53 @@
     {
       "id": "sm2-5y-r04-law-05",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則7条1項2号ただし書・10条3号",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "衛生管理者は必ず全員が専属で、例外はない。",
+              "correct": false,
+              "reason": "衛生管理者2人以上で労働衛生コンサルタントを含むと1人に専属例外。300人で3人義務との記載も誤り。",
+              "source_section": "労働安全衛生規則7条1項2号ただし書・10条3号"
+            },
+            {
+              "text": "衛生管理者を1人だけ選任するときも、どの社外者でも専属性を免除される。",
+              "correct": false,
+              "reason": "衛生管理者2人以上で労働衛生コンサルタントを含むと1人に専属例外。300人で3人義務との記載も誤り。",
+              "source_section": "労働安全衛生規則7条1項2号ただし書・10条3号"
+            },
+            {
+              "text": "2人以上選任し、その中に労働衛生コンサルタントがいる場合は、そのうち1人について専属性の例外が認められる。",
+              "correct": true,
+              "reason": "衛生管理者2人以上で労働衛生コンサルタントを含むと1人に専属例外。300人で3人義務との記載も誤り。",
+              "source_section": "労働安全衛生規則7条1項2号ただし書・10条3号"
+            },
+            {
+              "text": "常時300人の事務所は衛生管理者を3人以上選任しなければならない。",
+              "correct": false,
+              "reason": "衛生管理者2人以上で労働衛生コンサルタントを含むと1人に専属例外。300人で3人義務との記載も誤り。",
+              "source_section": "労働安全衛生規則7条1項2号ただし書・10条3号"
+            },
+            {
+              "text": "産業医がいれば衛生管理者全員の専属性は不要となる。",
+              "correct": false,
+              "reason": "衛生管理者2人以上で労働衛生コンサルタントを含むと1人に専属例外。300人で3人義務との記載も誤り。",
+              "source_section": "労働安全衛生規則7条1項2号ただし書・10条3号"
+            }
+          ],
+          "reasoning": "衛生管理者2人以上で労働衛生コンサルタントを含むと1人に専属例外。300人で3人義務との記載も誤り。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -223,9 +400,53 @@
     {
       "id": "sm2-5y-r04-law-07",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条・労働安全衛生規則23条1項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "3か月に1回の開催で足りる。",
+              "correct": false,
+              "reason": "衛生委員会は毎月1回以上。四半期・半年・年1回や健診成績による免除はない。",
+              "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条・労働安全衛生規則23条1項"
+            },
+            {
+              "text": "半年に1回の開催で足りる。",
+              "correct": false,
+              "reason": "衛生委員会は毎月1回以上。四半期・半年・年1回や健診成績による免除はない。",
+              "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条・労働安全衛生規則23条1項"
+            },
+            {
+              "text": "毎月1回以上開催するようにしなければならない。",
+              "correct": true,
+              "reason": "衛生委員会は毎月1回以上。四半期・半年・年1回や健診成績による免除はない。",
+              "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条・労働安全衛生規則23条1項"
+            },
+            {
+              "text": "年1回の開催だけが義務である。",
+              "correct": false,
+              "reason": "衛生委員会は毎月1回以上。四半期・半年・年1回や健診成績による免除はない。",
+              "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条・労働安全衛生規則23条1項"
+            },
+            {
+              "text": "健康診断の結果が良好なら開催しなくてよい。",
+              "correct": false,
+              "reason": "衛生委員会は毎月1回以上。四半期・半年・年1回や健診成績による免除はない。",
+              "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条・労働安全衛生規則23条1項"
+            }
+          ],
+          "reasoning": "衛生委員会は毎月1回以上。四半期・半年・年1回や健診成績による免除はない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -276,9 +497,53 @@
     {
       "id": "sm2-5y-r04-law-08",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法89条・90条",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "労働者全員の個別同意がなければ届出自体が禁止される。",
+              "correct": false,
+              "reason": "変更も届出対象で、過半数労組等の意見聴取・意見書添付が必要。全員の同意とは区別。",
+              "source_section": "労働基準法89条・90条"
+            },
+            {
+              "text": "就業規則は作成時だけ届出が必要で変更時は一律に不要である。",
+              "correct": false,
+              "reason": "変更も届出対象で、過半数労組等の意見聴取・意見書添付が必要。全員の同意とは区別。",
+              "source_section": "労働基準法89条・90条"
+            },
+            {
+              "text": "労働者の意見聴取を省き事業主の署名だけで法定手続は完了する。",
+              "correct": false,
+              "reason": "変更も届出対象で、過半数労組等の意見聴取・意見書添付が必要。全員の同意とは区別。",
+              "source_section": "労働基準法89条・90条"
+            },
+            {
+              "text": "会社の本社に掲示するだけで所轄署への届出義務は必ず免れる。",
+              "correct": false,
+              "reason": "変更も届出対象で、過半数労組等の意見聴取・意見書添付が必要。全員の同意とは区別。",
+              "source_section": "労働基準法89条・90条"
+            },
+            {
+              "text": "労働者側の所定の意見を聴き、意見書を添えて所轄労働基準監督署長へ届け出る。",
+              "correct": true,
+              "reason": "変更も届出対象で、過半数労組等の意見聴取・意見書添付が必要。全員の同意とは区別。",
+              "source_section": "労働基準法89条・90条"
+            }
+          ],
+          "reasoning": "変更も届出対象で、過半数労組等の意見聴取・意見書添付が必要。全員の同意とは区別。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -329,9 +594,53 @@
     {
       "id": "sm2-5y-r04-law-09",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法24条",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "賃金は原則として半年に1回まとめて支払えばよい。",
+              "correct": false,
+              "reason": "通貨・直接・全額・毎月1回以上・一定期日。労使協定や口座振込の条件付き例外は原則を否定しない。",
+              "source_section": "労働基準法24条"
+            },
+            {
+              "text": "賃金は通貨で、直接労働者に、全額を、毎月1回以上、一定の期日に支払う。",
+              "correct": true,
+              "reason": "通貨・直接・全額・毎月1回以上・一定期日。労使協定や口座振込の条件付き例外は原則を否定しない。",
+              "source_section": "労働基準法24条"
+            },
+            {
+              "text": "支払日を毎月自由に変えてよいのが原則である。",
+              "correct": false,
+              "reason": "通貨・直接・全額・毎月1回以上・一定期日。労使協定や口座振込の条件付き例外は原則を否定しない。",
+              "source_section": "労働基準法24条"
+            },
+            {
+              "text": "本人の意思にかかわらず全額を第三者に支払うのが原則である。",
+              "correct": false,
+              "reason": "通貨・直接・全額・毎月1回以上・一定期日。労使協定や口座振込の条件付き例外は原則を否定しない。",
+              "source_section": "労働基準法24条"
+            },
+            {
+              "text": "賃金は原則として現物のみで支払わなければならない。",
+              "correct": false,
+              "reason": "通貨・直接・全額・毎月1回以上・一定期日。労使協定や口座振込の条件付き例外は原則を否定しない。",
+              "source_section": "労働基準法24条"
+            }
+          ],
+          "reasoning": "通貨・直接・全額・毎月1回以上・一定期日。労使協定や口座振込の条件付き例外は原則を否定しない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -382,9 +691,53 @@
     {
       "id": "sm2-5y-r04-law-10",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則23条3項3号",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "役員だけが閲覧できるフォルダーへ保管する。",
+              "correct": false,
+              "reason": "議事概要の電磁的周知は常時閲覧可能な機器を各作業場に設置。役員限定・閲覧不能・遅延周知は不可。",
+              "source_section": "労働安全衛生規則23条3項3号"
+            },
+            {
+              "text": "電子化すれば労働者への周知は不要である。",
+              "correct": false,
+              "reason": "議事概要の電磁的周知は常時閲覧可能な機器を各作業場に設置。役員限定・閲覧不能・遅延周知は不可。",
+              "source_section": "労働安全衛生規則23条3項3号"
+            },
+            {
+              "text": "作業場に閲覧機器がなくても電子化だけで足りる。",
+              "correct": false,
+              "reason": "議事概要の電磁的周知は常時閲覧可能な機器を各作業場に設置。役員限定・閲覧不能・遅延周知は不可。",
+              "source_section": "労働安全衛生規則23条3項3号"
+            },
+            {
+              "text": "事業者の管理する電子ファイルに記録し、各作業場に労働者が常時内容を確認できる機器を設ける。",
+              "correct": true,
+              "reason": "議事概要の電磁的周知は常時閲覧可能な機器を各作業場に設置。役員限定・閲覧不能・遅延周知は不可。",
+              "source_section": "労働安全衛生規則23条3項3号"
+            },
+            {
+              "text": "保存期間終了後に限って閲覧させる。",
+              "correct": false,
+              "reason": "議事概要の電磁的周知は常時閲覧可能な機器を各作業場に設置。役員限定・閲覧不能・遅延周知は不可。",
+              "source_section": "労働安全衛生規則23条3項3号"
+            }
+          ],
+          "reasoning": "議事概要の電磁的周知は常時閲覧可能な機器を各作業場に設置。役員限定・閲覧不能・遅延周知は不可。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -435,9 +788,53 @@
     {
       "id": "sm2-5y-r05-law-02",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則11条2項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "事業者は衛生管理者に衛生に関する措置を行える権限を与えなければならない。",
+              "correct": true,
+              "reason": "衛生管理者には衛生措置権限の付与が必要。産業医の権限、人数、健診日とは無関係。",
+              "source_section": "労働安全衛生規則11条2項"
+            },
+            {
+              "text": "産業医だけに権限を付与すれば足りる。",
+              "correct": false,
+              "reason": "衛生管理者には衛生措置権限の付与が必要。産業医の権限、人数、健診日とは無関係。",
+              "source_section": "労働安全衛生規則11条2項"
+            },
+            {
+              "text": "常時1000人を超える事業場のみ権限付与が必要となる。",
+              "correct": false,
+              "reason": "衛生管理者には衛生措置権限の付与が必要。産業医の権限、人数、健診日とは無関係。",
+              "source_section": "労働安全衛生規則11条2項"
+            },
+            {
+              "text": "定期健康診断を行う日だけ権限を与えればよい。",
+              "correct": false,
+              "reason": "衛生管理者には衛生措置権限の付与が必要。産業医の権限、人数、健診日とは無関係。",
+              "source_section": "労働安全衛生規則11条2項"
+            },
+            {
+              "text": "選任しただけで、権限付与は不要である。",
+              "correct": false,
+              "reason": "衛生管理者には衛生措置権限の付与が必要。産業医の権限、人数、健診日とは無関係。",
+              "source_section": "労働安全衛生規則11条2項"
+            }
+          ],
+          "reasoning": "衛生管理者には衛生措置権限の付与が必要。産業医の権限、人数、健診日とは無関係。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -488,9 +885,53 @@
     {
       "id": "sm2-5y-r05-law-03",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74002000",
+          "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "衛生委員会は常時300人以上の場合にだけ義務となる。",
+              "correct": false,
+              "reason": "衛生委員会は常時50人以上で業種を問わず必要。衛生管理者・健診による義務代替はない。",
+              "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条"
+            },
+            {
+              "text": "衛生委員会は衛生管理者の選任で自動的に設置不要となる。",
+              "correct": false,
+              "reason": "衛生委員会は常時50人以上で業種を問わず必要。衛生管理者・健診による義務代替はない。",
+              "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条"
+            },
+            {
+              "text": "衛生委員会は健康診断を毎年行えば一律に不要となる。",
+              "correct": false,
+              "reason": "衛生委員会は常時50人以上で業種を問わず必要。衛生管理者・健診による義務代替はない。",
+              "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条"
+            },
+            {
+              "text": "事務所であれば常時50人以上でも設置義務はない。",
+              "correct": false,
+              "reason": "衛生委員会は常時50人以上で業種を問わず必要。衛生管理者・健診による義務代替はない。",
+              "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条"
+            },
+            {
+              "text": "業種によらず常時50人以上の事業場では、衛生委員会の設置が必要となる。",
+              "correct": true,
+              "reason": "衛生委員会は常時50人以上で業種を問わず必要。衛生管理者・健診による義務代替はない。",
+              "source_section": "労働安全衛生法18条・労働安全衛生法施行令9条"
+            }
+          ],
+          "reasoning": "衛生委員会は常時50人以上で業種を問わず必要。衛生管理者・健診による義務代替はない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -541,9 +982,53 @@
     {
       "id": "sm2-5y-r05-law-04",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法32条1項・2項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "1日10時間・1週45時間。",
+              "correct": false,
+              "reason": "一般原則は1日8時間・週40時間。設問では変形制・適用除外を明示的に除いている。",
+              "source_section": "労働基準法32条1項・2項"
+            },
+            {
+              "text": "1日8時間・1週40時間。",
+              "correct": true,
+              "reason": "一般原則は1日8時間・週40時間。設問では変形制・適用除外を明示的に除いている。",
+              "source_section": "労働基準法32条1項・2項"
+            },
+            {
+              "text": "1日9時間・1週45時間。",
+              "correct": false,
+              "reason": "一般原則は1日8時間・週40時間。設問では変形制・適用除外を明示的に除いている。",
+              "source_section": "労働基準法32条1項・2項"
+            },
+            {
+              "text": "1日8時間・1週48時間。",
+              "correct": false,
+              "reason": "一般原則は1日8時間・週40時間。設問では変形制・適用除外を明示的に除いている。",
+              "source_section": "労働基準法32条1項・2項"
+            },
+            {
+              "text": "1日7時間・1週35時間。",
+              "correct": false,
+              "reason": "一般原則は1日8時間・週40時間。設問では変形制・適用除外を明示的に除いている。",
+              "source_section": "労働基準法32条1項・2項"
+            }
+          ],
+          "reasoning": "一般原則は1日8時間・週40時間。設問では変形制・適用除外を明示的に除いている。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -594,9 +1079,53 @@
     {
       "id": "sm2-5y-r05-law-05",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法34条3項／休憩の自由利用",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "60分と表示すれば電話対応を義務づけても必ず休憩となる。",
+              "correct": false,
+              "reason": "電話応対義務のある待機は労働から解放された休憩に当たらない。9時間労働なら自由利用可能な60分が必要。",
+              "source_section": "労働基準法34条3項／休憩の自由利用"
+            },
+            {
+              "text": "休憩時間は会社の指揮命令下で電話対応をさせても自由利用の原則に反しない。",
+              "correct": false,
+              "reason": "電話応対義務のある待機は労働から解放された休憩に当たらない。9時間労働なら自由利用可能な60分が必要。",
+              "source_section": "労働基準法34条3項／休憩の自由利用"
+            },
+            {
+              "text": "電話当番などを義務づけた時間は労働から解放されているかを確認し、自由利用できる休憩時間を確保する必要がある。",
+              "correct": true,
+              "reason": "電話応対義務のある待機は労働から解放された休憩に当たらない。9時間労働なら自由利用可能な60分が必要。",
+              "source_section": "労働基準法34条3項／休憩の自由利用"
+            },
+            {
+              "text": "休憩を労働時間の末尾に置けば自由利用の要件は満たされる。",
+              "correct": false,
+              "reason": "電話応対義務のある待機は労働から解放された休憩に当たらない。9時間労働なら自由利用可能な60分が必要。",
+              "source_section": "労働基準法34条3項／休憩の自由利用"
+            },
+            {
+              "text": "休憩中の電話対応は労働時間には絶対に当たらない。",
+              "correct": false,
+              "reason": "電話応対義務のある待機は労働から解放された休憩に当たらない。9時間労働なら自由利用可能な60分が必要。",
+              "source_section": "労働基準法34条3項／休憩の自由利用"
+            }
+          ],
+          "reasoning": "電話応対義務のある待機は労働から解放された休憩に当たらない。9時間労働なら自由利用可能な60分が必要。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -647,9 +1176,53 @@
     {
       "id": "sm2-5y-r05-law-07",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則23条4項1号",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "議事の概要を労働基準監督署へ届け出た事実だけ。",
+              "correct": false,
+              "reason": "委員会の意見と講じた措置が記録対象。費用・売上等だけでは法定記録に不足。",
+              "source_section": "労働安全衛生規則23条4項1号"
+            },
+            {
+              "text": "委員会の意見と、その意見を踏まえて講じた設備改修等の措置の内容。",
+              "correct": true,
+              "reason": "委員会の意見と講じた措置が記録対象。費用・売上等だけでは法定記録に不足。",
+              "source_section": "労働安全衛生規則23条4項1号"
+            },
+            {
+              "text": "設備改修にかかった費用だけ。",
+              "correct": false,
+              "reason": "委員会の意見と講じた措置が記録対象。費用・売上等だけでは法定記録に不足。",
+              "source_section": "労働安全衛生規則23条4項1号"
+            },
+            {
+              "text": "開催後の事業場の売上高の推移だけ。",
+              "correct": false,
+              "reason": "委員会の意見と講じた措置が記録対象。費用・売上等だけでは法定記録に不足。",
+              "source_section": "労働安全衛生規則23条4項1号"
+            },
+            {
+              "text": "出席した労働者の私生活に関する情報だけ。",
+              "correct": false,
+              "reason": "委員会の意見と講じた措置が記録対象。費用・売上等だけでは法定記録に不足。",
+              "source_section": "労働安全衛生規則23条4項1号"
+            }
+          ],
+          "reasoning": "委員会の意見と講じた措置が記録対象。費用・売上等だけでは法定記録に不足。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -700,9 +1273,53 @@
     {
       "id": "sm2-5y-r05-law-08",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則44条3項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "雇入時健診を受けた者は以後の定期健診が恒久的に免除される。",
+              "correct": false,
+              "reason": "雇入時等の受診から1年間の相当項目に限る省略。健診義務全体の免除ではない。",
+              "source_section": "労働安全衛生規則44条3項"
+            },
+            {
+              "text": "実施済みの項目も例外なく全て再検査しなければならない。",
+              "correct": false,
+              "reason": "雇入時等の受診から1年間の相当項目に限る省略。健診義務全体の免除ではない。",
+              "source_section": "労働安全衛生規則44条3項"
+            },
+            {
+              "text": "雇入時健診を受ければ定期健診の全項目が無条件に省略できる。",
+              "correct": false,
+              "reason": "雇入時等の受診から1年間の相当項目に限る省略。健診義務全体の免除ではない。",
+              "source_section": "労働安全衛生規則44条3項"
+            },
+            {
+              "text": "雇入時健診の実施から1年間に限り、そこで受けた項目に相当する定期健診項目を省略して行える。",
+              "correct": true,
+              "reason": "雇入時等の受診から1年間の相当項目に限る省略。健診義務全体の免除ではない。",
+              "source_section": "労働安全衛生規則44条3項"
+            },
+            {
+              "text": "相当項目を省略できるのは雇入時健診から5年間である。",
+              "correct": false,
+              "reason": "雇入時等の受診から1年間の相当項目に限る省略。健診義務全体の免除ではない。",
+              "source_section": "労働安全衛生規則44条3項"
+            }
+          ],
+          "reasoning": "雇入時等の受診から1年間の相当項目に限る省略。健診義務全体の免除ではない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -753,9 +1370,53 @@
     {
       "id": "sm2-5y-r05-law-09",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法19条1項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "療養のため休業する期間およびその後30日間。",
+              "correct": true,
+              "reason": "業務上傷病による療養休業期間とその後30日間。法定例外を設問で除外。",
+              "source_section": "労働基準法19条1項"
+            },
+            {
+              "text": "休業する期間だけで復帰翌日以降は制限がない。",
+              "correct": false,
+              "reason": "業務上傷病による療養休業期間とその後30日間。法定例外を設問で除外。",
+              "source_section": "労働基準法19条1項"
+            },
+            {
+              "text": "休業期間終了後3日間だけ。",
+              "correct": false,
+              "reason": "業務上傷病による療養休業期間とその後30日間。法定例外を設問で除外。",
+              "source_section": "労働基準法19条1項"
+            },
+            {
+              "text": "療養開始後の最初の7日間だけ。",
+              "correct": false,
+              "reason": "業務上傷病による療養休業期間とその後30日間。法定例外を設問で除外。",
+              "source_section": "労働基準法19条1項"
+            },
+            {
+              "text": "就業規則で定めた1年間だけ。",
+              "correct": false,
+              "reason": "業務上傷病による療養休業期間とその後30日間。法定例外を設問で除外。",
+              "source_section": "労働基準法19条1項"
+            }
+          ],
+          "reasoning": "業務上傷病による療養休業期間とその後30日間。法定例外を設問で除外。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -806,9 +1467,53 @@
     {
       "id": "sm2-5y-r06-law-02",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則44条4項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "35歳の労働者では、同項の代替が常に認められる。",
+              "correct": false,
+              "reason": "聴力代替は45歳未満のうち35歳・40歳を除く。30歳は医師が認める代替検査可。",
+              "source_section": "労働安全衛生規則44条4項"
+            },
+            {
+              "text": "40歳の労働者では、同項の代替が常に認められる。",
+              "correct": false,
+              "reason": "聴力代替は45歳未満のうち35歳・40歳を除く。30歳は医師が認める代替検査可。",
+              "source_section": "労働安全衛生規則44条4項"
+            },
+            {
+              "text": "45歳の労働者にも、同項の代替特例が適用される。",
+              "correct": false,
+              "reason": "聴力代替は45歳未満のうち35歳・40歳を除く。30歳は医師が認める代替検査可。",
+              "source_section": "労働安全衛生規則44条4項"
+            },
+            {
+              "text": "30歳の労働者には、医師の判断による代替は一切認められない。",
+              "correct": false,
+              "reason": "聴力代替は45歳未満のうち35歳・40歳を除く。30歳は医師が認める代替検査可。",
+              "source_section": "労働安全衛生規則44条4項"
+            },
+            {
+              "text": "30歳の労働者については、医師が適当と認める聴力検査を法定の1,000Hz・4,000Hzの検査に代えることができる。",
+              "correct": true,
+              "reason": "聴力代替は45歳未満のうち35歳・40歳を除く。30歳は医師が認める代替検査可。",
+              "source_section": "労働安全衛生規則44条4項"
+            }
+          ],
+          "reasoning": "聴力代替は45歳未満のうち35歳・40歳を除く。30歳は医師が認める代替検査可。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -859,9 +1564,53 @@
     {
       "id": "sm2-5y-r06-law-03",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法34条1項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "労働時間が8時間以下なら休憩は一切不要である。",
+              "correct": false,
+              "reason": "6時間超8時間以下の休憩下限45分。6時間30分は無休憩・15分では足りない。",
+              "source_section": "労働基準法34条1項"
+            },
+            {
+              "text": "労働時間が6時間を超え8時間以下のため45分以上の休憩を与える。",
+              "correct": true,
+              "reason": "6時間超8時間以下の休憩下限45分。6時間30分は無休憩・15分では足りない。",
+              "source_section": "労働基準法34条1項"
+            },
+            {
+              "text": "労働時間が6時間を超えても休憩は15分で足りる。",
+              "correct": false,
+              "reason": "6時間超8時間以下の休憩下限45分。6時間30分は無休憩・15分では足りない。",
+              "source_section": "労働基準法34条1項"
+            },
+            {
+              "text": "休憩は労働時間が10時間を超える場合に初めて必要となる。",
+              "correct": false,
+              "reason": "6時間超8時間以下の休憩下限45分。6時間30分は無休憩・15分では足りない。",
+              "source_section": "労働基準法34条1項"
+            },
+            {
+              "text": "6時間30分の勤務でも一律に90分の休憩が法定最低となる。",
+              "correct": false,
+              "reason": "6時間超8時間以下の休憩下限45分。6時間30分は無休憩・15分では足りない。",
+              "source_section": "労働基準法34条1項"
+            }
+          ],
+          "reasoning": "6時間超8時間以下の休憩下限45分。6時間30分は無休憩・15分では足りない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -912,9 +1661,53 @@
     {
       "id": "sm2-5y-r06-law-04",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73023000",
+          "source_section": "労働基準法施行規則24条の7／年休管理簿の記録事項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "年次有給休暇を与えた時季、日数及び基準日。",
+              "correct": true,
+              "reason": "年休管理簿の法定記載は時季・日数・基準日。売上・病歴・通勤経路等は対象外。",
+              "source_section": "労働基準法施行規則24条の7／年休管理簿の記録事項"
+            },
+            {
+              "text": "会社の売上高・利益・従業員数",
+              "correct": false,
+              "reason": "年休管理簿の法定記載は時季・日数・基準日。売上・病歴・通勤経路等は対象外。",
+              "source_section": "労働基準法施行規則24条の7／年休管理簿の記録事項"
+            },
+            {
+              "text": "個人の健康診断の結果・病歴・服薬情報",
+              "correct": false,
+              "reason": "年休管理簿の法定記載は時季・日数・基準日。売上・病歴・通勤経路等は対象外。",
+              "source_section": "労働基準法施行規則24条の7／年休管理簿の記録事項"
+            },
+            {
+              "text": "労使協定の締結相手の氏名だけ",
+              "correct": false,
+              "reason": "年休管理簿の法定記載は時季・日数・基準日。売上・病歴・通勤経路等は対象外。",
+              "source_section": "労働基準法施行規則24条の7／年休管理簿の記録事項"
+            },
+            {
+              "text": "労働者の年収・職位・通勤方法",
+              "correct": false,
+              "reason": "年休管理簿の法定記載は時季・日数・基準日。売上・病歴・通勤経路等は対象外。",
+              "source_section": "労働基準法施行規則24条の7／年休管理簿の記録事項"
+            }
+          ],
+          "reasoning": "年休管理簿の法定記載は時季・日数・基準日。売上・病歴・通勤経路等は対象外。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -965,9 +1758,53 @@
     {
       "id": "sm2-5y-r06-law-05",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則44条（結果報告は同52条）",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "50人未満では健康診断の実施義務が全くない。",
+              "correct": false,
+              "reason": "健診実施義務は50人未満の常時使用対象労働者にも及ぶ。報告規模とは異なる。",
+              "source_section": "労働安全衛生規則44条（結果報告は同52条）"
+            },
+            {
+              "text": "健康診断は産業医の選任義務がある場合に限り実施する。",
+              "correct": false,
+              "reason": "健診実施義務は50人未満の常時使用対象労働者にも及ぶ。報告規模とは異なる。",
+              "source_section": "労働安全衛生規則44条（結果報告は同52条）"
+            },
+            {
+              "text": "10人未満であれば雇入時の健康診断も必ず免除される。",
+              "correct": false,
+              "reason": "健診実施義務は50人未満の常時使用対象労働者にも及ぶ。報告規模とは異なる。",
+              "source_section": "労働安全衛生規則44条（結果報告は同52条）"
+            },
+            {
+              "text": "常時使用する対象労働者には、50人未満の事業場でも法定の定期健康診断が必要である。",
+              "correct": true,
+              "reason": "健診実施義務は50人未満の常時使用対象労働者にも及ぶ。報告規模とは異なる。",
+              "source_section": "労働安全衛生規則44条（結果報告は同52条）"
+            },
+            {
+              "text": "健康診断実施の代わりに自己申告だけで済ませられる。",
+              "correct": false,
+              "reason": "健診実施義務は50人未満の常時使用対象労働者にも及ぶ。報告規模とは異なる。",
+              "source_section": "労働安全衛生規則44条（結果報告は同52条）"
+            }
+          ],
+          "reasoning": "健診実施義務は50人未満の常時使用対象労働者にも及ぶ。報告規模とは異なる。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1018,9 +1855,53 @@
     {
       "id": "sm2-5y-r06-law-07",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則44条・51条・52条（個人票保存と結果報告の区別）",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "50人未満の事業場では健康診断個人票を作成する必要がない。",
+              "correct": false,
+              "reason": "健診個人票は5年間保存。常時30人では一般定期健診の安衛則52条報告義務なし。",
+              "source_section": "労働安全衛生規則44条・51条・52条（個人票保存と結果報告の区別）"
+            },
+            {
+              "text": "健康診断個人票は1年間保存すればよく、所轄署への結果報告が必須である。",
+              "correct": false,
+              "reason": "健診個人票は5年間保存。常時30人では一般定期健診の安衛則52条報告義務なし。",
+              "source_section": "労働安全衛生規則44条・51条・52条（個人票保存と結果報告の区別）"
+            },
+            {
+              "text": "健康診断個人票は3年間保存すればよく、本人への結果通知も不要である。",
+              "correct": false,
+              "reason": "健診個人票は5年間保存。常時30人では一般定期健診の安衛則52条報告義務なし。",
+              "source_section": "労働安全衛生規則44条・51条・52条（個人票保存と結果報告の区別）"
+            },
+            {
+              "text": "健康診断個人票を作成して5年間保存する。なお、常時30人の本事業場には安衛則52条の定期健診結果報告義務は適用されない。",
+              "correct": true,
+              "reason": "健診個人票は5年間保存。常時30人では一般定期健診の安衛則52条報告義務なし。",
+              "source_section": "労働安全衛生規則44条・51条・52条（個人票保存と結果報告の区別）"
+            },
+            {
+              "text": "健康診断個人票の5年保存は常時50人以上の事業場に限って必要となる。",
+              "correct": false,
+              "reason": "健診個人票は5年間保存。常時30人では一般定期健診の安衛則52条報告義務なし。",
+              "source_section": "労働安全衛生規則44条・51条・52条（個人票保存と結果報告の区別）"
+            }
+          ],
+          "reasoning": "健診個人票は5年間保存。常時30人では一般定期健診の安衛則52条報告義務なし。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1071,9 +1952,53 @@
     {
       "id": "sm2-5y-r06-law-08",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法36条",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "労使協定（36協定）を締結し、所轄労働基準監督署長へ届け出る。",
+              "correct": true,
+              "reason": "法定時間外労働の前提は労使の36協定締結と所轄労基署長への届出。就業規則等では代替不可。",
+              "source_section": "労働基準法36条"
+            },
+            {
+              "text": "就業規則に残業の文言があれば36協定の届出は常に不要となる。",
+              "correct": false,
+              "reason": "法定時間外労働の前提は労使の36協定締結と所轄労基署長への届出。就業規則等では代替不可。",
+              "source_section": "労働基準法36条"
+            },
+            {
+              "text": "従業員へ口頭で説明するだけで時間外労働の法定手続は完了する。",
+              "correct": false,
+              "reason": "法定時間外労働の前提は労使の36協定締結と所轄労基署長への届出。就業規則等では代替不可。",
+              "source_section": "労働基準法36条"
+            },
+            {
+              "text": "個々の従業員の同意だけで36協定の届出義務は免除される。",
+              "correct": false,
+              "reason": "法定時間外労働の前提は労使の36協定締結と所轄労基署長への届出。就業規則等では代替不可。",
+              "source_section": "労働基準法36条"
+            },
+            {
+              "text": "時間外労働が短時間なら協定の締結も届出も一切必要ない。",
+              "correct": false,
+              "reason": "法定時間外労働の前提は労使の36協定締結と所轄労基署長への届出。就業規則等では代替不可。",
+              "source_section": "労働基準法36条"
+            }
+          ],
+          "reasoning": "法定時間外労働の前提は労使の36協定締結と所轄労基署長への届出。就業規則等では代替不可。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1124,9 +2049,53 @@
     {
       "id": "sm2-5y-r06-law-09",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0",
+          "source_section": "労働安全衛生法65条",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "労働者の感覚だけで測定結果を代替し記録は不要とする。",
+              "correct": false,
+              "reason": "法定作業環境測定の実施・記録が必要。体感や健康診断で測定記録の代替不可。",
+              "source_section": "労働安全衛生法65条"
+            },
+            {
+              "text": "測定義務は作業場の有害要因と無関係に任意となる。",
+              "correct": false,
+              "reason": "法定作業環境測定の実施・記録が必要。体感や健康診断で測定記録の代替不可。",
+              "source_section": "労働安全衛生法65条"
+            },
+            {
+              "text": "測定した数値が低ければ結果の記録を直ちに破棄する。",
+              "correct": false,
+              "reason": "法定作業環境測定の実施・記録が必要。体感や健康診断で測定記録の代替不可。",
+              "source_section": "労働安全衛生法65条"
+            },
+            {
+              "text": "作業環境測定はすべて一般定期健康診断で代替できる。",
+              "correct": false,
+              "reason": "法定作業環境測定の実施・記録が必要。体感や健康診断で測定記録の代替不可。",
+              "source_section": "労働安全衛生法65条"
+            },
+            {
+              "text": "必要な作業環境測定を行い、その結果を記録しておく。",
+              "correct": true,
+              "reason": "法定作業環境測定の実施・記録が必要。体感や健康診断で測定記録の代替不可。",
+              "source_section": "労働安全衛生法65条"
+            }
+          ],
+          "reasoning": "法定作業環境測定の実施・記録が必要。体感や健康診断で測定記録の代替不可。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1177,9 +2146,53 @@
     {
       "id": "sm2-5y-r06-law-10",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則51条の2第1項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "健康診断の実施日から3年以内。",
+              "correct": false,
+              "reason": "異常所見がある健診について医師等意見聴取は原則健診日から3か月以内。",
+              "source_section": "労働安全衛生規則51条の2第1項"
+            },
+            {
+              "text": "健康診断の実施日から1年以内。",
+              "correct": false,
+              "reason": "異常所見がある健診について医師等意見聴取は原則健診日から3か月以内。",
+              "source_section": "労働安全衛生規則51条の2第1項"
+            },
+            {
+              "text": "健康診断の実施日から3か月以内。",
+              "correct": true,
+              "reason": "異常所見がある健診について医師等意見聴取は原則健診日から3か月以内。",
+              "source_section": "労働安全衛生規則51条の2第1項"
+            },
+            {
+              "text": "退職時まで意見聴取を先送りできる。",
+              "correct": false,
+              "reason": "異常所見がある健診について医師等意見聴取は原則健診日から3か月以内。",
+              "source_section": "労働安全衛生規則51条の2第1項"
+            },
+            {
+              "text": "事業者が任意に決めた時期でよい。",
+              "correct": false,
+              "reason": "異常所見がある健診について医師等意見聴取は原則健診日から3か月以内。",
+              "source_section": "労働安全衛生規則51条の2第1項"
+            }
+          ],
+          "reasoning": "異常所見がある健診について医師等意見聴取は原則健診日から3か月以内。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1230,9 +2243,53 @@
     {
       "id": "sm2-5y-r07-law-02",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則45条",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "1年以内ごとに1回だけ。",
+              "correct": false,
+              "reason": "特定業務従事者の健診は配置替え時および6か月以内ごと1回。検査項目省略の別規定あり。",
+              "source_section": "労働安全衛生規則45条"
+            },
+            {
+              "text": "配置替え時だけでその後は不要。",
+              "correct": false,
+              "reason": "特定業務従事者の健診は配置替え時および6か月以内ごと1回。検査項目省略の別規定あり。",
+              "source_section": "労働安全衛生規則45条"
+            },
+            {
+              "text": "2年以内ごとに1回。",
+              "correct": false,
+              "reason": "特定業務従事者の健診は配置替え時および6か月以内ごと1回。検査項目省略の別規定あり。",
+              "source_section": "労働安全衛生規則45条"
+            },
+            {
+              "text": "3か月以内ごとに1回を全項目必須。",
+              "correct": false,
+              "reason": "特定業務従事者の健診は配置替え時および6か月以内ごと1回。検査項目省略の別規定あり。",
+              "source_section": "労働安全衛生規則45条"
+            },
+            {
+              "text": "6か月以内ごとに1回。",
+              "correct": true,
+              "reason": "特定業務従事者の健診は配置替え時および6か月以内ごと1回。検査項目省略の別規定あり。",
+              "source_section": "労働安全衛生規則45条"
+            }
+          ],
+          "reasoning": "特定業務従事者の健診は配置替え時および6か月以内ごと1回。検査項目省略の別規定あり。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1283,9 +2340,53 @@
     {
       "id": "sm2-5y-r07-law-03",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法65条1項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "原則として産前6週間以内の請求に当たり、就業させない。",
+              "correct": true,
+              "reason": "単胎妊娠の産前6週間以内の請求は就業させられない。請求要件と産後強制休業を区別。",
+              "source_section": "労働基準法65条1項"
+            },
+            {
+              "text": "産前休業は本人の請求の有無に関係なく常に20週間前から強制される。",
+              "correct": false,
+              "reason": "単胎妊娠の産前6週間以内の請求は就業させられない。請求要件と産後強制休業を区別。",
+              "source_section": "労働基準法65条1項"
+            },
+            {
+              "text": "産前休業は出産予定日当日からしか認められない。",
+              "correct": false,
+              "reason": "単胎妊娠の産前6週間以内の請求は就業させられない。請求要件と産後強制休業を区別。",
+              "source_section": "労働基準法65条1項"
+            },
+            {
+              "text": "本人が請求しても産前6週間以内なら使用者が一律に拒否できる。",
+              "correct": false,
+              "reason": "単胎妊娠の産前6週間以内の請求は就業させられない。請求要件と産後強制休業を区別。",
+              "source_section": "労働基準法65条1項"
+            },
+            {
+              "text": "単胎妊娠の産前休業は出産予定日の2日前からしか認められない。",
+              "correct": false,
+              "reason": "単胎妊娠の産前6週間以内の請求は就業させられない。請求要件と産後強制休業を区別。",
+              "source_section": "労働基準法65条1項"
+            }
+          ],
+          "reasoning": "単胎妊娠の産前6週間以内の請求は就業させられない。請求要件と産後強制休業を区別。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1336,9 +2437,53 @@
     {
       "id": "sm2-5y-r07-law-04",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則15条1項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "少なくとも毎日1回。",
+              "correct": false,
+              "reason": "産業医巡視は原則少なくとも毎月1回。一定要件の2か月緩和は設問で除外。",
+              "source_section": "労働安全衛生規則15条1項"
+            },
+            {
+              "text": "少なくとも毎週3回。",
+              "correct": false,
+              "reason": "産業医巡視は原則少なくとも毎月1回。一定要件の2か月緩和は設問で除外。",
+              "source_section": "労働安全衛生規則15条1項"
+            },
+            {
+              "text": "少なくとも半年に1回。",
+              "correct": false,
+              "reason": "産業医巡視は原則少なくとも毎月1回。一定要件の2か月緩和は設問で除外。",
+              "source_section": "労働安全衛生規則15条1項"
+            },
+            {
+              "text": "少なくとも毎月1回。",
+              "correct": true,
+              "reason": "産業医巡視は原則少なくとも毎月1回。一定要件の2か月緩和は設問で除外。",
+              "source_section": "労働安全衛生規則15条1項"
+            },
+            {
+              "text": "巡視は労働者が200人以上のときに限る。",
+              "correct": false,
+              "reason": "産業医巡視は原則少なくとも毎月1回。一定要件の2か月緩和は設問で除外。",
+              "source_section": "労働安全衛生規則15条1項"
+            }
+          ],
+          "reasoning": "産業医巡視は原則少なくとも毎月1回。一定要件の2か月緩和は設問で除外。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1389,9 +2534,53 @@
     {
       "id": "sm2-5y-r07-law-05",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法39条3項・労働基準法施行規則24条の3",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "週5日・週28時間の労働者だけに比例付与が適用される。",
+              "correct": false,
+              "reason": "週30時間未満かつ週4日以下は比例付与対象となり得る。週5日・28時間は原則通常付与。",
+              "source_section": "労働基準法39条3項・労働基準法施行規則24条の3"
+            },
+            {
+              "text": "週所定労働時間が30時間未満なら全員必ず比例付与となる。",
+              "correct": false,
+              "reason": "週30時間未満かつ週4日以下は比例付与対象となり得る。週5日・28時間は原則通常付与。",
+              "source_section": "労働基準法39条3項・労働基準法施行規則24条の3"
+            },
+            {
+              "text": "週4日・週28時間の労働者には比例付与の規定が適用され得る。",
+              "correct": true,
+              "reason": "週30時間未満かつ週4日以下は比例付与対象となり得る。週5日・28時間は原則通常付与。",
+              "source_section": "労働基準法39条3項・労働基準法施行規則24条の3"
+            },
+            {
+              "text": "短時間労働者には年次有給休暇が一切ない。",
+              "correct": false,
+              "reason": "週30時間未満かつ週4日以下は比例付与対象となり得る。週5日・28時間は原則通常付与。",
+              "source_section": "労働基準法39条3項・労働基準法施行規則24条の3"
+            },
+            {
+              "text": "週4日でも所定労働時間が40時間なら必ず比例付与となる。",
+              "correct": false,
+              "reason": "週30時間未満かつ週4日以下は比例付与対象となり得る。週5日・28時間は原則通常付与。",
+              "source_section": "労働基準法39条3項・労働基準法施行規則24条の3"
+            }
+          ],
+          "reasoning": "週30時間未満かつ週4日以下は比例付与対象となり得る。週5日・28時間は原則通常付与。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1442,9 +2631,53 @@
     {
       "id": "sm2-5y-r07-law-07",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則13条1項1号",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "30日以内。",
+              "correct": false,
+              "reason": "産業医選任事由発生日から14日以内。30日・60日・年度末ではない。",
+              "source_section": "労働安全衛生規則13条1項1号"
+            },
+            {
+              "text": "60日以内。",
+              "correct": false,
+              "reason": "産業医選任事由発生日から14日以内。30日・60日・年度末ではない。",
+              "source_section": "労働安全衛生規則13条1項1号"
+            },
+            {
+              "text": "選任すべき事由が発生した日から14日以内。",
+              "correct": true,
+              "reason": "産業医選任事由発生日から14日以内。30日・60日・年度末ではない。",
+              "source_section": "労働安全衛生規則13条1項1号"
+            },
+            {
+              "text": "3か月以内。",
+              "correct": false,
+              "reason": "産業医選任事由発生日から14日以内。30日・60日・年度末ではない。",
+              "source_section": "労働安全衛生規則13条1項1号"
+            },
+            {
+              "text": "年度末まで。",
+              "correct": false,
+              "reason": "産業医選任事由発生日から14日以内。30日・60日・年度末ではない。",
+              "source_section": "労働安全衛生規則13条1項1号"
+            }
+          ],
+          "reasoning": "産業医選任事由発生日から14日以内。30日・60日・年度末ではない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1495,9 +2728,53 @@
     {
       "id": "sm2-5y-r07-law-08",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則13条1項2号ハ",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "医師であれば統括管理者の立場に関係なく必ず選任できる。",
+              "correct": false,
+              "reason": "統括管理者を産業医に選任できない。医師資格、非専属、委員会承認だけで例外にならない。",
+              "source_section": "労働安全衛生規則13条1項2号ハ"
+            },
+            {
+              "text": "労働者が50人以上なら候補者の立場は全く問われない。",
+              "correct": false,
+              "reason": "統括管理者を産業医に選任できない。医師資格、非専属、委員会承認だけで例外にならない。",
+              "source_section": "労働安全衛生規則13条1項2号ハ"
+            },
+            {
+              "text": "衛生委員会が承認すれば統括管理者を産業医にできる。",
+              "correct": false,
+              "reason": "統括管理者を産業医に選任できない。医師資格、非専属、委員会承認だけで例外にならない。",
+              "source_section": "労働安全衛生規則13条1項2号ハ"
+            },
+            {
+              "text": "産業医を非専属で選ぶ場合には統括管理者の除外規定は適用されない。",
+              "correct": false,
+              "reason": "統括管理者を産業医に選任できない。医師資格、非専属、委員会承認だけで例外にならない。",
+              "source_section": "労働安全衛生規則13条1項2号ハ"
+            },
+            {
+              "text": "事業場で事業の実施を統括管理する者は、産業医として選任することができない。",
+              "correct": true,
+              "reason": "統括管理者を産業医に選任できない。医師資格、非専属、委員会承認だけで例外にならない。",
+              "source_section": "労働安全衛生規則13条1項2号ハ"
+            }
+          ],
+          "reasoning": "統括管理者を産業医に選任できない。医師資格、非専属、委員会承認だけで例外にならない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1548,9 +2825,53 @@
     {
       "id": "sm2-5y-r07-law-09",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法56条1項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "満12歳に達した日の前日まで。",
+              "correct": false,
+              "reason": "15歳到達後最初の3月31日終了まで原則使用不可。単なる15歳誕生日までではない。",
+              "source_section": "労働基準法56条1項"
+            },
+            {
+              "text": "満15歳に達した日以後の最初の3月31日が終了するまで。",
+              "correct": true,
+              "reason": "15歳到達後最初の3月31日終了まで原則使用不可。単なる15歳誕生日までではない。",
+              "source_section": "労働基準法56条1項"
+            },
+            {
+              "text": "満16歳に達する年の12月31日まで。",
+              "correct": false,
+              "reason": "15歳到達後最初の3月31日終了まで原則使用不可。単なる15歳誕生日までではない。",
+              "source_section": "労働基準法56条1項"
+            },
+            {
+              "text": "満15歳の誕生日を迎えるまでだけ。",
+              "correct": false,
+              "reason": "15歳到達後最初の3月31日終了まで原則使用不可。単なる15歳誕生日までではない。",
+              "source_section": "労働基準法56条1項"
+            },
+            {
+              "text": "満18歳に達した日の翌日まで。",
+              "correct": false,
+              "reason": "15歳到達後最初の3月31日終了まで原則使用不可。単なる15歳誕生日までではない。",
+              "source_section": "労働基準法56条1項"
+            }
+          ],
+          "reasoning": "15歳到達後最初の3月31日終了まで原則使用不可。単なる15歳誕生日までではない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1601,9 +2922,53 @@
     {
       "id": "sm2-5y-r07-law-10",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/faq/newpage_50446.html",
+          "source_section": "労働安全衛生法13条・労働安全衛生法施行令5条・労働安全衛生規則13条1項3号",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "常時50人以上でも100人未満なら産業医選任は任意である。",
+              "correct": false,
+              "reason": "55人の一般事務所は産業医の選任義務あり、専属・2人選任の閾値には達しない。",
+              "source_section": "労働安全衛生法13条・労働安全衛生法施行令5条・労働安全衛生規則13条1項3号"
+            },
+            {
+              "text": "一般事務所の55人でも専属産業医を必ず2人選任する。",
+              "correct": false,
+              "reason": "55人の一般事務所は産業医の選任義務あり、専属・2人選任の閾値には達しない。",
+              "source_section": "労働安全衛生法13条・労働安全衛生法施行令5条・労働安全衛生規則13条1項3号"
+            },
+            {
+              "text": "衛生委員会を開催すれば産業医は選任不要となる。",
+              "correct": false,
+              "reason": "55人の一般事務所は産業医の選任義務あり、専属・2人選任の閾値には達しない。",
+              "source_section": "労働安全衛生法13条・労働安全衛生法施行令5条・労働安全衛生規則13条1項3号"
+            },
+            {
+              "text": "産業医を選任する必要があるが、一定規模等の専属要件には該当しない。",
+              "correct": true,
+              "reason": "55人の一般事務所は産業医の選任義務あり、専属・2人選任の閾値には達しない。",
+              "source_section": "労働安全衛生法13条・労働安全衛生法施行令5条・労働安全衛生規則13条1項3号"
+            },
+            {
+              "text": "産業医選任は事業場の規模に一切左右されない。",
+              "correct": false,
+              "reason": "55人の一般事務所は産業医の選任義務あり、専属・2人選任の閾値には達しない。",
+              "source_section": "労働安全衛生法13条・労働安全衛生法施行令5条・労働安全衛生規則13条1項3号"
+            }
+          ],
+          "reasoning": "55人の一般事務所は産業医の選任義務あり、専属・2人選任の閾値には達しない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1654,9 +3019,53 @@
     {
       "id": "sm2-5y-r08-law-02",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則13条1項3号イ／産業医の専属要件（1,000人以上または一定有害業務500人以上）",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "著しく暑熱な場所の業務に常時500人以上従事しているため、事業場に専属の産業医を選任する必要がある。",
+              "correct": true,
+              "reason": "著しい暑熱の場所で常時500人以上の業務なら専属産業医。事業場全体1000人未満でも例外ではない。",
+              "source_section": "労働安全衛生規則13条1項3号イ／産業医の専属要件（1,000人以上または一定有害業務500人以上）"
+            },
+            {
+              "text": "全労働者数が1,000人未満なので、産業医は必ず非専属でよい。",
+              "correct": false,
+              "reason": "著しい暑熱の場所で常時500人以上の業務なら専属産業医。事業場全体1000人未満でも例外ではない。",
+              "source_section": "労働安全衛生規則13条1項3号イ／産業医の専属要件（1,000人以上または一定有害業務500人以上）"
+            },
+            {
+              "text": "産業医を選任する必要があるのは事業場全体が1,500人以上の場合だけである。",
+              "correct": false,
+              "reason": "著しい暑熱の場所で常時500人以上の業務なら専属産業医。事業場全体1000人未満でも例外ではない。",
+              "source_section": "労働安全衛生規則13条1項3号イ／産業医の専属要件（1,000人以上または一定有害業務500人以上）"
+            },
+            {
+              "text": "有害業務従事者が500人以上いても、衛生委員会を開催すれば産業医の専属性は不要となる。",
+              "correct": false,
+              "reason": "著しい暑熱の場所で常時500人以上の業務なら専属産業医。事業場全体1000人未満でも例外ではない。",
+              "source_section": "労働安全衛生規則13条1項3号イ／産業医の専属要件（1,000人以上または一定有害業務500人以上）"
+            },
+            {
+              "text": "有害業務に従事する人数は産業医の専属性を判断する際に一切考慮しない。",
+              "correct": false,
+              "reason": "著しい暑熱の場所で常時500人以上の業務なら専属産業医。事業場全体1000人未満でも例外ではない。",
+              "source_section": "労働安全衛生規則13条1項3号イ／産業医の専属要件（1,000人以上または一定有害業務500人以上）"
+            }
+          ],
+          "reasoning": "著しい暑熱の場所で常時500人以上の業務なら専属産業医。事業場全体1000人未満でも例外ではない。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1707,9 +3116,53 @@
     {
       "id": "sm2-5y-r08-law-03",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則43条・44条",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "採用時に健診を受ければ以後の定期健診は一生不要である。",
+              "correct": false,
+              "reason": "雇入時健診とは別に対象者の一般定期健診を原則1年以内ごとに実施。相当項目省略は別扱い。",
+              "source_section": "労働安全衛生規則43条・44条"
+            },
+            {
+              "text": "雇入時健診に異常がなければ定期健診は法定対象外となる。",
+              "correct": false,
+              "reason": "雇入時健診とは別に対象者の一般定期健診を原則1年以内ごとに実施。相当項目省略は別扱い。",
+              "source_section": "労働安全衛生規則43条・44条"
+            },
+            {
+              "text": "定期健診は企業の希望する5年おきだけで法律上足りる。",
+              "correct": false,
+              "reason": "雇入時健診とは別に対象者の一般定期健診を原則1年以内ごとに実施。相当項目省略は別扱い。",
+              "source_section": "労働安全衛生規則43条・44条"
+            },
+            {
+              "text": "雇入時健診と定期健診は法律上どちらも任意となる。",
+              "correct": false,
+              "reason": "雇入時健診とは別に対象者の一般定期健診を原則1年以内ごとに実施。相当項目省略は別扱い。",
+              "source_section": "労働安全衛生規則43条・44条"
+            },
+            {
+              "text": "雇入時の健診と別に、原則1年以内ごとの定期健康診断を計画する。",
+              "correct": true,
+              "reason": "雇入時健診とは別に対象者の一般定期健診を原則1年以内ごとに実施。相当項目省略は別扱い。",
+              "source_section": "労働安全衛生規則43条・44条"
+            }
+          ],
+          "reasoning": "雇入時健診とは別に対象者の一般定期健診を原則1年以内ごとに実施。相当項目省略は別扱い。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1760,9 +3213,53 @@
     {
       "id": "sm2-5y-r08-law-04",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法37条4項・労働基準法施行規則20条",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "通常の賃金の10％以上。",
+              "correct": false,
+              "reason": "深夜労働割増は25%以上。時間外・休日の割増との重複は別規定。",
+              "source_section": "労働基準法37条4項・労働基準法施行規則20条"
+            },
+            {
+              "text": "通常の賃金の25％以上。",
+              "correct": true,
+              "reason": "深夜労働割増は25%以上。時間外・休日の割増との重複は別規定。",
+              "source_section": "労働基準法37条4項・労働基準法施行規則20条"
+            },
+            {
+              "text": "通常の賃金の20％以上。",
+              "correct": false,
+              "reason": "深夜労働割増は25%以上。時間外・休日の割増との重複は別規定。",
+              "source_section": "労働基準法37条4項・労働基準法施行規則20条"
+            },
+            {
+              "text": "通常の賃金の15％以上。",
+              "correct": false,
+              "reason": "深夜労働割増は25%以上。時間外・休日の割増との重複は別規定。",
+              "source_section": "労働基準法37条4項・労働基準法施行規則20条"
+            },
+            {
+              "text": "通常の賃金の50％以上がすべての場合に最低基準となる。",
+              "correct": false,
+              "reason": "深夜労働割増は25%以上。時間外・休日の割増との重複は別規定。",
+              "source_section": "労働基準法37条4項・労働基準法施行規則20条"
+            }
+          ],
+          "reasoning": "深夜労働割増は25%以上。時間外・休日の割増との重複は別規定。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1813,9 +3310,53 @@
     {
       "id": "sm2-5y-r08-law-05",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則44条・52条（健診実施義務と報告義務の規模閾値）",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "A・Bとも一般定期健康診断の実施義務はなく、結果報告義務もない。",
+              "correct": false,
+              "reason": "一般定期健診は49人事業場でも対象者に義務、結果報告は常時50人以上。",
+              "source_section": "労働安全衛生規則44条・52条（健診実施義務と報告義務の規模閾値）"
+            },
+            {
+              "text": "Aのみ定期健康診断結果の報告義務があり、Bにはない。",
+              "correct": false,
+              "reason": "一般定期健診は49人事業場でも対象者に義務、結果報告は常時50人以上。",
+              "source_section": "労働安全衛生規則44条・52条（健診実施義務と報告義務の規模閾値）"
+            },
+            {
+              "text": "A・Bとも対象労働者への一般定期健康診断は必要だが、定期健康診断結果を所轄労働基準監督署長へ報告する義務はBにある。",
+              "correct": true,
+              "reason": "一般定期健診は49人事業場でも対象者に義務、結果報告は常時50人以上。",
+              "source_section": "労働安全衛生規則44条・52条（健診実施義務と報告義務の規模閾値）"
+            },
+            {
+              "text": "A・Bとも常時使用労働者100人未満なので、結果報告義務はない。",
+              "correct": false,
+              "reason": "一般定期健診は49人事業場でも対象者に義務、結果報告は常時50人以上。",
+              "source_section": "労働安全衛生規則44条・52条（健診実施義務と報告義務の規模閾値）"
+            },
+            {
+              "text": "Bにのみ一般定期健康診断の実施義務があり、Aにはない。",
+              "correct": false,
+              "reason": "一般定期健診は49人事業場でも対象者に義務、結果報告は常時50人以上。",
+              "source_section": "労働安全衛生規則44条・52条（健診実施義務と報告義務の規模閾値）"
+            }
+          ],
+          "reasoning": "一般定期健診は49人事業場でも対象者に義務、結果報告は常時50人以上。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1866,9 +3407,53 @@
     {
       "id": "sm2-5y-r08-law-07",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/denshishinsei_00002.html",
+          "source_section": "労働安全衛生規則51条・51条の4・52条／2025年1月1日電子申請義務化",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "個人票の保存が済んだため、所轄労働基準監督署長への結果報告は不要である。",
+              "correct": false,
+              "reason": "60人事業場の定期健診結果は遅滞なく所轄労基署長へ原則電子申請。本人通知・個人票保存は代替不可。",
+              "source_section": "労働安全衛生規則51条・51条の4・52条／2025年1月1日電子申請義務化"
+            },
+            {
+              "text": "遅滞なく電子申請により、定期健康診断結果の所定事項を所轄労働基準監督署長へ報告する。",
+              "correct": true,
+              "reason": "60人事業場の定期健診結果は遅滞なく所轄労基署長へ原則電子申請。本人通知・個人票保存は代替不可。",
+              "source_section": "労働安全衛生規則51条・51条の4・52条／2025年1月1日電子申請義務化"
+            },
+            {
+              "text": "電子申請は選任報告に限られるため、定期健康診断結果報告は紙の提出のみが認められる。",
+              "correct": false,
+              "reason": "60人事業場の定期健診結果は遅滞なく所轄労基署長へ原則電子申請。本人通知・個人票保存は代替不可。",
+              "source_section": "労働安全衛生規則51条・51条の4・52条／2025年1月1日電子申請義務化"
+            },
+            {
+              "text": "本人への結果通知をした場合、定期健康診断結果報告は5年後まで延期できる。",
+              "correct": false,
+              "reason": "60人事業場の定期健診結果は遅滞なく所轄労基署長へ原則電子申請。本人通知・個人票保存は代替不可。",
+              "source_section": "労働安全衛生規則51条・51条の4・52条／2025年1月1日電子申請義務化"
+            },
+            {
+              "text": "健診結果は所轄労働基準監督署長ではなく都道府県知事にだけ報告する。",
+              "correct": false,
+              "reason": "60人事業場の定期健診結果は遅滞なく所轄労基署長へ原則電子申請。本人通知・個人票保存は代替不可。",
+              "source_section": "労働安全衛生規則51条・51条の4・52条／2025年1月1日電子申請義務化"
+            }
+          ],
+          "reasoning": "60人事業場の定期健診結果は遅滞なく所轄労基署長へ原則電子申請。本人通知・個人票保存は代替不可。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1919,9 +3504,53 @@
     {
       "id": "sm2-5y-r08-law-08",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法39条7項・8項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "労働者が3日取得したので年5日の義務は自動的に完了する。",
+              "correct": false,
+              "reason": "年10日以上付与時は年5日取得確保。自己取得3日を算入して不足2日。",
+              "source_section": "労働基準法39条7項・8項"
+            },
+            {
+              "text": "労働者が10日付与された場合は年5日の義務自体が適用されない。",
+              "correct": false,
+              "reason": "年10日以上付与時は年5日取得確保。自己取得3日を算入して不足2日。",
+              "source_section": "労働基準法39条7項・8項"
+            },
+            {
+              "text": "自発的に取得した3日は年5日の取得日数に算入できない。",
+              "correct": false,
+              "reason": "年10日以上付与時は年5日取得確保。自己取得3日を算入して不足2日。",
+              "source_section": "労働基準法39条7項・8項"
+            },
+            {
+              "text": "付与日から1年以内に、さらに合計2日を取得させる必要がある。",
+              "correct": true,
+              "reason": "年10日以上付与時は年5日取得確保。自己取得3日を算入して不足2日。",
+              "source_section": "労働基準法39条7項・8項"
+            },
+            {
+              "text": "年5日の取得確保は付与から5年以内でよい。",
+              "correct": false,
+              "reason": "年10日以上付与時は年5日取得確保。自己取得3日を算入して不足2日。",
+              "source_section": "労働基準法39条7項・8項"
+            }
+          ],
+          "reasoning": "年10日以上付与時は年5日取得確保。自己取得3日を算入して不足2日。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -1972,9 +3601,53 @@
     {
       "id": "sm2-5y-r08-law-09",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+          "source_section": "労働安全衛生規則11条1項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "設備・作業方法・衛生状態",
+              "correct": true,
+              "reason": "安衛則11条の列挙語は設備・作業方法・衛生状態。他選択肢は法定の列挙語を別概念に置換。",
+              "source_section": "労働安全衛生規則11条1項"
+            },
+            {
+              "text": "設備・作業方法・健康診断結果",
+              "correct": false,
+              "reason": "安衛則11条の列挙語は設備・作業方法・衛生状態。他選択肢は法定の列挙語を別概念に置換。",
+              "source_section": "労働安全衛生規則11条1項"
+            },
+            {
+              "text": "設備・作業環境測定結果・衛生状態",
+              "correct": false,
+              "reason": "安衛則11条の列挙語は設備・作業方法・衛生状態。他選択肢は法定の列挙語を別概念に置換。",
+              "source_section": "労働安全衛生規則11条1項"
+            },
+            {
+              "text": "作業方法・衛生状態・保護具の着用記録",
+              "correct": false,
+              "reason": "安衛則11条の列挙語は設備・作業方法・衛生状態。他選択肢は法定の列挙語を別概念に置換。",
+              "source_section": "労働安全衛生規則11条1項"
+            },
+            {
+              "text": "設備・作業方法・安全衛生教育の実施状況",
+              "correct": false,
+              "reason": "安衛則11条の列挙語は設備・作業方法・衛生状態。他選択肢は法定の列挙語を別概念に置換。",
+              "source_section": "労働安全衛生規則11条1項"
+            }
+          ],
+          "reasoning": "安衛則11条の列挙語は設備・作業方法・衛生状態。他選択肢は法定の列挙語を別概念に置換。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -2025,9 +3698,53 @@
     {
       "id": "sm2-5y-r08-law-10",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1",
+          "source_section": "事務所衛生基準規則2条（法定算定条件との区別）",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "12m³。",
+              "correct": false,
+              "reason": "120平方メートル×3メートル÷10人=36立方メートル/人。法定気積で設備占有体積除外が必要な点と区別。",
+              "source_section": "事務所衛生基準規則2条（法定算定条件との区別）"
+            },
+            {
+              "text": "30m³。",
+              "correct": false,
+              "reason": "120平方メートル×3メートル÷10人=36立方メートル/人。法定気積で設備占有体積除外が必要な点と区別。",
+              "source_section": "事務所衛生基準規則2条（法定算定条件との区別）"
+            },
+            {
+              "text": "36m³。",
+              "correct": true,
+              "reason": "120平方メートル×3メートル÷10人=36立方メートル/人。法定気積で設備占有体積除外が必要な点と区別。",
+              "source_section": "事務所衛生基準規則2条（法定算定条件との区別）"
+            },
+            {
+              "text": "360m³。",
+              "correct": false,
+              "reason": "120平方メートル×3メートル÷10人=36立方メートル/人。法定気積で設備占有体積除外が必要な点と区別。",
+              "source_section": "事務所衛生基準規則2条（法定算定条件との区別）"
+            },
+            {
+              "text": "40m³。",
+              "correct": false,
+              "reason": "120平方メートル×3メートル÷10人=36立方メートル/人。法定気積で設備占有体積除外が必要な点と区別。",
+              "source_section": "事務所衛生基準規則2条（法定算定条件との区別）"
+            }
+          ],
+          "reasoning": "120平方メートル×3メートル÷10人=36立方メートル/人。法定気積で設備占有体積除外が必要な点と区別。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
@@ -2078,9 +3795,53 @@
     {
       "id": "sm2-5y-r09-law-02",
       "review1_source": "HM2_Q0_INDEPENDENT_R40_20261122.md",
-      "review1_status": "PENDING_R40_UNPUBLISHED",
+      "review1_status": "R40_CONTENT_PROVISIONAL_PASS_OFFICIAL_TEXT_HOLD",
       "review2_status": "DC_PASS_PENDING_CURRENT_BANK_RECONCILIATION",
       "passes": [
+        {
+          "reviewer_id": "R40-independent-session",
+          "independent_session_id": "R40-20261122",
+          "evidence_artifact_git_blob_sha": "031d14b24686c7f4294dab6df08a289763c55e13",
+          "performed_without_prior_review_access": true,
+          "reviewed_at": "2026-11-22",
+          "method": "独立に作成した肢別暫定判定（原典逐語照合は未完）",
+          "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000",
+          "source_section": "労働基準法34条1項",
+          "question_bank_sha256": null,
+          "choices": [
+            {
+              "text": "休憩不要。",
+              "correct": false,
+              "reason": "実労働7時間は6時間超8時間以下で45分以上。",
+              "source_section": "労働基準法34条1項"
+            },
+            {
+              "text": "60分。",
+              "correct": false,
+              "reason": "実労働7時間は6時間超8時間以下で45分以上。",
+              "source_section": "労働基準法34条1項"
+            },
+            {
+              "text": "15分。",
+              "correct": false,
+              "reason": "実労働7時間は6時間超8時間以下で45分以上。",
+              "source_section": "労働基準法34条1項"
+            },
+            {
+              "text": "30分。",
+              "correct": false,
+              "reason": "実労働7時間は6時間超8時間以下で45分以上。",
+              "source_section": "労働基準法34条1項"
+            },
+            {
+              "text": "45分。",
+              "correct": true,
+              "reason": "実労働7時間は6時間超8時間以下で45分以上。",
+              "source_section": "労働基準法34条1項"
+            }
+          ],
+          "reasoning": "実労働7時間は6時間超8時間以下で45分以上。"
+        },
         {
           "reviewer_id": "DC-independent-auditor",
           "independent_session_id": "DC-20261122",
