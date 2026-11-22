@@ -357,3 +357,20 @@ q.explanation='第4肢が適切。厚労省「健康診断結果に基づき事�
 q.auditStatus='一次資料照合済';
 window.HM2_B2_MHLW_GROUP_ASSESSMENT_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// B2 No.149: source correction backed by U.S. Army/Air Force original government technical bulletin.
+const id='sm2-5y-r07-phy-05';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+const old='https://www.ncbi.nlm.nih.gov/books/NBK232852/';
+const src='https://safety.army.mil/Portals/0/Documents/MEDIA/SEASONALSAFTEYCAMPAIGNS/FALLWINTERSAFETY2020/TB_MED_508.pdf?ver=2020-12-02-081456-770';
+if(!q||q.sourceUrl!==old||!Array.isArray(q.choices)||q.choices.length!==5||q.answer!==4||
+ !q.choices[3].includes('寒冷血管拡張反応'))throw Error('HM2 B2 Army CIVD old-state mismatch '+id);
+q.sourceUrl=src;
+q.basis=String(q.basis||'')+' ／ 2026-11-22 US Army/Air Force government-authored TB MED 508, Chapter 2, printed p9 Fig 2-3 and paras (3)(a)(b): first finger-skin temperature falls in cold water, later transient local vasodilation and increased blood flow raises finger skin temperature; response varies by conditions and may be blunted. Army Safety official host, original signed publication pp85-86 glossary.';
+q.explanation='米陸軍・空軍の政府刊行TB MED 508第2章9頁（図2-3および本文）は、冷水による指先の初期血管収縮と皮膚温低下の後、一時的な局所血流増加・寒冷血管拡張（CIVD）が起こり皮膚温が再上昇する場合があると説明する。肢4○。肢1×は一時的拡張を全面否定、肢2×は冷却直後の最大発汗を原因と誤認、肢3×は肺胞換気だけを原因と誤認、肢5×は個人差・条件差を否定し時間と強度が全員同一と誤認する。原典は冷水冷却の現象を示すが、全員で必ず生じるとはしていない。';
+q.auditStatus='一次資料照合済';
+window.HM2_B2_ARMY_CIVD_SOURCE_ID=id;
+})();
