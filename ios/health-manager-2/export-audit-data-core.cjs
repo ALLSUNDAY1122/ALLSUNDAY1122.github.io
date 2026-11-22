@@ -86,7 +86,10 @@ const unresolved=added.filter(q=>
  ||q.publicationStatus!=='公開候補'
  ||(q.lawRelated?q.auditStatus!=='一次資料照合済':q.auditStatus!=='内容監査済')
 );
-if(unresolved.length){
+{
+ // Always enforce the user-approved alternative Q0 criterion, even if legacy
+ // publication markers were cleared or became empty in a subsequent patch.
+ // A status-only change must never bypass the 178-question double review.
  // The user-approved alternative Q0 process requires two independent reviews
  // of each of 178 questions plus a separate rights decision for all 300.
  // This helper checks completeness and pinned IDs, not legal correctness;
@@ -94,7 +97,7 @@ if(unresolved.length){
  const alternative=spawnSync('python3',[
    path.join(REPO_ROOT,'scripts/hm2_alternative_q0_gate.py'),'--enforce'
  ],{encoding:'utf8',cwd:REPO_ROOT,timeout:30000});
- if(alternative.status!==0){
+ if(alternative.error || alternative.status!==0){
    const flagged=unresolved.slice(0,8).map(q=>q.id+':'+q.contentReviewStatus+':'+q.auditStatus);
    throw new Error('HM2_RELEASE_REVIEW_BLOCKED: '+unresolved.length
     +' generated questions require independent review / status reconciliation. '
