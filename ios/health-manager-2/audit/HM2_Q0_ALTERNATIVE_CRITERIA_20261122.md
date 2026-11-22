@@ -307,3 +307,14 @@ DC原票の完了178件は**一つの独立セッションによるレビュー*
 - Q0代替条件自体は変更なし。**Q0 BLOCKED（R40公式原典HOLD40、二重証跡と権利JSONの未充足、法令メタデータ欠落）／Q1 BLOCKED（Q0未通過）**。
 - 今回はGitHub上のJSONと監査台帳の更新であり、ローカルPython `--enforce` 実行・GHA再実行を完了したとの主張はしない。現行スキーマでは依然FAILとなる。
 - App Review提出・TestFlight新規配信なし。
+
+
+## 2026-11-22 証跡JSONスキーマ修復・再判定（最終追記）
+
+- 現行release bankのSHA-256は `4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc`。readinessのPINと一致。従来 `434de86a...` は旧bank版。対象 `sm2-5y-r10-hyg-04` の `legal_checked=2026-11-22` を現行bankで確認、法令関連のnull残0。生成元 `hm2-source-precision-v1.js` のガード付きパッチは `3b7a5735...` で反映済み。
+- `HM2_INDEPENDENT_DOUBLE_CHECK_178.json` の178行・356レビュー欄に `applicable_on`（現行設問の基準日を明記し、個別法令施行日の実証とは区別）、現行bank SHA、各原票から独立に計算した64桁SHA-256を登録。R40原票の最新版SHA-256 `58ef0d42bfb0e7c96d292fff07e5a95dee6c6db61fbf7aa1d5684eee3752185c`、DC `99cbd7aba3d4866fb88da57925bc54fa652cd04e56baa4658e9788f2a1758981`、A `ab4cddb72e8b3501749ada4cc83d7a8f41923c772d8de2ed559458d89971245a`、B `086671135eda160cbd3607d870f101fc0c68553e04f2f27efa67c48d04f04899`。各SHAは取得したUTF-8原票のバイト相当を使う実測計算で、Git blob SHA-1とは区別する。レビュー対象bankの旧版と現行版の差は法令メタデータ1項目である。
+- R40原票には後続で正式の厚労省原典照合結果が追記され、**公式原典・内容PASS40/40・200肢、HOLD0**に更新されている。R40/ DCの現行五肢文字列と正誤が双方一致した40問は `approved_after_reconciliation` に更新（commit `b6214771c24d01b2493a3f30da57edb48b672c76`）。全改正附則の通史照合を保証するものではない。
+- A/Bの138問のpass1については、原票が確認できない独立性宣誓 `performed_without_prior_review_access=true` と肢別5件を**創作して埋めていない**。pass1は該当2項目未充足、最終照合も保留138問。
+- `HM2_RIGHTS_CLEARANCE_300.json` の `rights_holder` に、自作設問の制作主体 `ALLSUNDAY1122` を300件追記。ただし掲載元の法令・出版物・画像等の第三者権利者を所有するという意味ではない。権利運用判定300/300と個別権利の法的保証を区別する。
+- 現行スキーマの静的再現により残りの形式エラーは **138×3=414件見込み**：A/Bの独立性宣誓138、五肢選択肢証跡138、最終照合未承認138。SHA不一致0、artifact digest形式エラー0、権利JSONの必須項目不足0、法令関連legalChecked欠落0。**これは実際のPython `--enforce` ローカル実行ではなく同一条件に基づく予測値。**
+- Q0はA/Bの第1レビュー証跡未完のためBLOCKED、Q1もBLOCKED。ゲート弱体化なし、App Review提出・TestFlight配信なし。
