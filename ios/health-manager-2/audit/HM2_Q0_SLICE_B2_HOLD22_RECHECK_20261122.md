@@ -117,3 +117,27 @@
 - **No.154** `sm2-5y-r07-phy-10`：政府NIEHS/NTP刊行 https://ntp.niehs.nih.gov/sites/default/files/ntp/ohat/lead/final/monographhealtheffectslowlevellead_newissn_508.pdf §5.2.1に好中球・マクロファージの貪食活性の直接記載。肢①×赤血球・血小板、②×骨格筋・心筋、③○好中球・マクロファージ、④×視細胞・水晶体上皮、⑤×腎集合管・膵β。正答③不変、出典URLとbasisのみ生成元へ修正。
 - 生成元パッチは旧URL・5肢・正答位置のguard付き。生成元修正コミット：`1dedcab1d879823b6b97095971dcca6648c4745e`。
 - **No.144/154は先行監査で一次PASS済みのため二重加算しない。** No.142のNLM限定改稿は別コミット。すべて配布JSONの再生成とバイト一致・独立監査が未完。分割B最新参照値PASS53/HOLD16を自動変更せずQ0/Q1 BLOCKED維持。App Review・TestFlight未実施。
+
+## B2追加一次原典の発行者検証・2問の改稿／出典修正（2026-11-22）
+
+### No.134 `sm2-5y-r05-phy-07`：一次内容PASS（旧HOLDから1問）
+
+**米国政府原著**：U.S. Air Force Training Command, *Medical Service Specialist, Blocks III, V, VI*（1975）, ERIC accession ED227275, https://files.eric.ed.gov/fulltext/ED227275.pdf 。表紙Resumeおよび本文Course InformationでDeveloped by United States Air Forceを確認。「APICAL/RADIAL PULSE」学習単元は心尖部と橈骨動脈の脈拍を同じ1分間に同時測定する手順、および末梢に伝わらない心拍があることを説明する。ERICは所蔵・公開元であり、本文の政府制作主体は空軍。参考文献の第三者著作は本問題文に複製しない。
+
+設問自体が脈拍欠損を「心尖部心拍数−橈骨動脈脈拍数」と定義しているため、**96−78＝18回／分**であり数学的一意性もある。
+五肢：①0回×（差は0でない）、②78回×（末梢の実測値であり差ではない）、**③18回○**、④96回×（心尖部の実測値で差でない）、⑤174回×（二数の和で差でない）。
+旧NCBI所蔵第三者教材から、実際に政府が開発した医療訓練原典にsourceUrl/basisを差し替えるguard付きコードを生成元にコミット。**一次内容PASS**。公開承認、配布JSON再生成は別ゲート。
+
+### No.131 `sm2-5y-r05-phy-04`：正答命題を限定する実修正（再監査待ち）
+
+- **NIDDK自身の説明**： https://www.niddk.nih.gov/news/archive/2013/new-mechanism-proposed-glucose-lowering-effect-metformin-drug-type-2-diabetes は、空腹時グルカゴンによる肝糖放出と、食後に分泌されるインスリンとの拮抗を記載。
+- **NLM自身の説明**： https://medlineplus.gov/genetics/gene/gck/ のNormal Functionは、肝グルコキナーゼが余剰糖の取り込み・グリコーゲン転換に関与すると明記。
+- 元正答④「インスリンの作用により肝糖産生が抑制され、グリコーゲン合成が促される。」は、二原典の射程に対してインスリン単独の因果を強く断定するため、④「食後には肝臓からの糖放出が抑制される方向に働き、肝臓に取り込まれた余剰の糖はグリコーゲンとして貯蔵され得る。」へ改稿。正答位置④と他の四肢は不変。
+- 五肢：①×（食後にグルカゴン作用が必ず増加とする逆転）、②×（肝糖新生とグリコーゲン分解が一律増加）、③×（肝の血糖調節機能を否定）、**④○（NIDDK/NLMそれぞれの直接説明に対応）**、⑤×（インスリンが肝糖放出を増やすとの逆転）。
+- sourceUrlはNIDDK本文へ変更、NLMの補助URLをbasisへ明記、quick/explanation/topicも調整。監査承認状態を`requires-independent-subject-expert-review`／`再監査待ち`／`非公開`に無効化。**改稿の実装完了、配布JSONへの適用と独立再監査は未完**。従って正式な一次PASSの集計にはまだ加えない。
+
+### 最新集計の取扱い
+
+作業開始時点の先行資料は分割B一次PASS53/HOLD16。No.134を一次PASSとして再判定した場合、**この監査担当の暫定差分ではPASS54/HOLD15**。No.131の改稿は二重チェック・再生成を終えていないためHOLDに含む。No.142の別改稿も同様に未承認。これは台帳各節の時系列集計であり、並行担当による最新HEADとの自動合算ではない。
+
+生成元更新commit：`1eeb507e9dd2f0dc2bfe2f203070f63012df7b68`（原典参照2問）、`aeed994042f3e42152ad5df23384208f9116e6d5`（No.131限定改稿）。**配布release-questions.jsonの再生成・バイト一致と回帰試験は実施せず**、Q0/Q1 BLOCKED・App Review/TestFlight未実施を維持。
