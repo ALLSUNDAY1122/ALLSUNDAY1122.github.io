@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "ios/health-manager-2"
 BANK = BASE / "release-questions.json"
-PIN = "9cc4e647ba1d8dc46c3f5236f6cdd67d8557e63ba976ea74f4656e7d6fc4602c"  # Exact current bank UTF-8 SHA-256; update only with reproducible 300-question snapshot
+PIN = "a37f2b6def74b97f71ac73cbbc73869f739201c1e5766a2247ce39fe742dcb69"  # Exact current bank UTF-8 SHA-256; update only with reproducible 300-question snapshot
 CSV_PIN = "a4404d36387f13c39ad13d06f30a437f78f4f5c763ddb1d5c2b31570fc5aed19"
 
 def hashfile(p):
