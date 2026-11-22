@@ -46,6 +46,8 @@ class GateTests(unittest.TestCase):
             for reviewer in ("first-independent-pass", "second-independent-pass"):
                 passes.append({
                     "reviewer_id": reviewer, "reviewed_at": "2026-11-22",
+                    "independent_session_id": "session-" + reviewer,
+                    "evidence_artifact_sha256": hashlib.sha256(reviewer.encode()).hexdigest(),
                     "method": "independent primary-source verification",
                     "primary_source_url": "https://laws.e-gov.go.jp/law/347M50002000032",
                     "source_section": "test", "applicable_on": "2026-11-22",
@@ -122,6 +124,26 @@ class GateTests(unittest.TestCase):
         self.reviews["reviews"][0] = "not-a-review"
         self.persist()
         self.assertIn("DOUBLE_CHECK_ROW_SCHEMA_INVALID", self.check()["failures"])
+
+    def test_null_double_check_payload_fails(self):
+        self.review_file.write_text("null", encoding="utf-8")
+        self.assertIn("DOUBLE_CHECK_NULL_PAYLOAD", self.check()["failures"])
+
+    def test_null_rights_payload_fails(self):
+        self.rights_file.write_text("null", encoding="utf-8")
+        self.assertIn("RIGHTS_NULL_PAYLOAD", self.check()["failures"])
+
+    def test_same_review_artifact_fails(self):
+        passes = self.reviews["reviews"][0]["passes"]
+        passes[1]["evidence_artifact_sha256"] = passes[0]["evidence_artifact_sha256"]
+        self.persist()
+        self.assertIn("sm2-test-000:SEPARATE_REVIEW_ARTIFACTS_REQUIRED", self.check()["failures"])
+
+    def test_same_session_fails(self):
+        passes = self.reviews["reviews"][0]["passes"]
+        passes[1]["independent_session_id"] = passes[0]["independent_session_id"]
+        self.persist()
+        self.assertIn("sm2-test-000:SEPARATE_REVIEW_ARTIFACTS_REQUIRED", self.check()["failures"])
 
     def test_positive_official_supervision_claim_fails(self):
         (self.root / "apps/sanitary-manager-2/gm4.js").write_text(
