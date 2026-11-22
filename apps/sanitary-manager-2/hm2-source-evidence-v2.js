@@ -136,7 +136,7 @@ window.HM2_EVIDENCE_V2_UPDATED_IDS=patches.map(p=>p.id);
   const expectedTopic='産業医の辞任等の報告';
   const expectedCorrect='辞任の旨と理由を遅滞なく衛生委員会等に報告し、産業医の氏名・辞任年月日等を遅滞なく所轄労働基準監督署長に報告する。';
   if (!q || q.topic!==expectedTopic || q.answer!==3 ||
-      q.difficultyModel!=='exam-paired-judgment-v1' || q.stemRedesignBatch ||
+      (q.difficultyModel && q.difficultyModel!=='exam-paired-judgment-v1') || q.stemRedesignBatch ||
       !Array.isArray(q.choices) || q.choices.length!==5 ||
       q.choices[2]!==expectedCorrect ||
       q.choices.some(c=>typeof c!=='string'||c.includes(' ― '))) {
@@ -144,6 +144,7 @@ window.HM2_EVIDENCE_V2_UPDATED_IDS=patches.map(p=>p.id);
   }
   // Exactly the same statements, with the topic printed as a common label.
   q.choices=q.choices.map(c=>expectedTopic+' ― '+c);
+  q.difficultyModel='exam-paired-judgment-v1';
   if(q.choices.length!==5 || new Set(q.choices).size!==5 ||
      !q.choices.every(c=>c.includes(' ― ')) ||
      !q.choices[q.answer-1].startsWith(q.topic+' ― ')) {
@@ -172,7 +173,7 @@ window.HM2_EVIDENCE_V2_UPDATED_IDS=patches.map(p=>p.id);
   for(const [id,expectedAnswer,expectedModel] of targets){
     const q=byId.get(id);
     if(!q || !q.fiveYearExpansion || q.stemRedesignBatch ||
-       q.answer!==expectedAnswer || q.difficultyModel!==expectedModel ||
+       q.answer!==expectedAnswer || (q.difficultyModel && q.difficultyModel!==expectedModel) ||
        !q.topic || !Array.isArray(q.choices) || q.choices.length!==5 ||
        q.choices.some(c=>typeof c!=='string' || c.includes(' ― '))) {
       throw new Error('HM2 Q1 paired-display stale input '+id);
