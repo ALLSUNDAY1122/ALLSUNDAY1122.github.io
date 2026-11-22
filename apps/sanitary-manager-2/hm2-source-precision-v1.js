@@ -100,3 +100,22 @@ for(const x of fixes){const q=map.get(x.id);
 }
 window.HM2_B_AQP2_SOURCE_IDS=fixes.map(x=>x.id);
 })();
+
+
+(function(){
+'use strict';
+// HM2-B 2026-11-22 3 restricted official-source redesigns. Clear release approval; fail on stale input.
+const changes=[{"id":"sm2-5y-r07-phy-04","oldSource":"https://www.ncbi.nlm.nih.gov/books/NBK545157/","oldQuestion":"食事由来の脂肪が小腸で消化・吸収される。長鎖脂肪酸由来の脂質が小腸上皮細胞から移動する主要な経路として適切なのはどれか。","oldCorrect":"カイロミクロンとなって小腸のリンパ管に入り、その後血液循環に合流する。","newQuestion":"食事由来の脂肪が小腸で分解されて脂肪酸が吸収された。脂肪酸の吸収後の主な移送経路について正しい説明はどれか。","newCorrect":"小腸から吸収された脂肪酸はリンパ系に取り込まれ、体内へ運ばれる。","newExplanation":"NIDDK公式消化器解説は脂肪の分解で脂肪酸が生じ、その吸収にリンパ系が関与することを明記している。肢2の『一切吸収されない』、肢3の『腎糸球体で生成』、肢4の『すべての長鎖脂肪酸が遊離したまま門脈へ』、肢5の『胆汁酸が赤血球へ変換』はいずれも不適切。カイロミクロン形成という詳細命題は本問の正答要件から除外した。","newTopic":"食事由来脂肪酸のリンパ系への吸収","source":"https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works"},{"id":"sm2-5y-r10-phy-02","oldSource":"https://www.ncbi.nlm.nih.gov/books/NBK470209/","oldQuestion":"脂肪を含む食事の後、肝臓で作られた胆汁が十二指腸に流入する。胆汁について正しい説明はどれか。","oldCorrect":"胆汁酸などによって脂質の乳化を助けるが、胆汁自体は消化酵素を主成分としない。","newQuestion":"脂肪を含む食事の後、肝臓で作られた胆汁が十二指腸に流入する。胆汁と膵液の消化への役割について正しい説明はどれか。","newCorrect":"肝臓で作られる胆汁は脂肪の消化を助け、膵液には消化酵素が含まれる。","newExplanation":"NIDDK公式消化器解説『How does my digestive system break food into small parts my body can use?』に、肝臓が胆汁を作り脂肪の消化を助けること、膵臓が脂質・糖質・タンパク質に働く酵素を含む膵液を作ることが明記されている。肢1は胃由来ペプシンの混同、肢2は生成部位・経路の誤り、肢3は胆汁とインスリンの混同、肢4はアミラーゼの対象基質の誤り。乳化という語は原典本文で直接確認できないため正答から除外した。","newTopic":"胆汁による脂肪消化補助と膵液の酵素","source":"https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works"},{"id":"sm2-5y-r10-phy-10","oldSource":"https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works","oldQuestion":"昼食でブドウ糖と長鎖脂肪酸を摂取した。小腸で吸収された後の主な輸送経路の組合せとして適切なのはどれか。","oldCorrect":"ブドウ糖は腸管毛細血管から門脈へ、長鎖脂肪酸由来脂質はカイロミクロンとして乳び管へ入る。","newQuestion":"昼食で糖質と脂肪を摂取し、小腸で消化・吸収された。単糖と脂肪酸の吸収後の主な輸送経路の組合せとして適切なのはどれか。","newCorrect":"吸収された単糖は血液に入り肝臓へ運ばれ、脂肪酸の吸収にはリンパ系が関与する。","newExplanation":"NIDDK公式消化器解説『What happens to the digested food?』に、単糖は腸管から血液に吸収され肝臓に運ばれ、脂肪酸はリンパ系で吸収されることが直接記載されている。肢1は糖と脂肪の経路を逆転、肢2は肺静脈への直接移送、肢4は胆管・腎動脈への直接移送、肢5は単糖までリンパのみで移送するとする点が不適切。カイロミクロン・乳び管など原典に明記のない詳細は正答要件から除外した。","newTopic":"小腸で吸収される単糖の血液輸送と脂肪酸のリンパ輸送","source":"https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works"}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+for(const f of changes){const q=byId.get(f.id);
+ if(!q||q.sourceUrl!==f.oldSource||q.question!==f.oldQuestion||!Array.isArray(q.choices)||q.choices.length!==5||q.choices[q.answer-1]!==f.oldCorrect)throw Error('HM2 B focused redesign stale '+f.id);
+ q.question=f.newQuestion;
+ q.choices=[...q.choices];q.choices[q.answer-1]=f.newCorrect;
+ q.quick=f.newCorrect;q.explanation=f.newExplanation;q.topic=f.newTopic;q.sourceUrl=f.source;
+ q.basis=String(q.basis||'')+' ／ 2026-11-22 NIDDK直接本文の射程に合わせて改稿。NIDDK Digestive System, break down food / digested food sections.';
+ q.contentReviewStatus='requires-independent-subject-expert-review';
+ q.auditStatus='再監査待ち';q.publicationStatus='非公開';
+ if(new Set(q.choices).size!==5||q.choices[q.answer-1]!==f.newCorrect)throw Error('HM2 B redesign choice mapping '+f.id);
+}
+window.HM2_B_FOCUSED_REDESIGN_IDS=changes.map(x=>x.id);
+})();
