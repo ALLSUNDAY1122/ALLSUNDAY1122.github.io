@@ -52,6 +52,7 @@ files=(
   q1.js q2.js q3.js q4.js q5.js q6.js q7.js q8.js q9.js q10.js q11.js q12.js
   difficulty-patch-v5.js
   audit-patch-v2.js audit-patch-v3.js audit-patch-v4.js audit-fixes.js question-order-v1.js
+  hm2-source-precision-v1.js hm2-c-replacements-v1.js hm2-c-remaining-13-v1.js hm2-source-evidence-v2.js
   gm1.js gm2.js gm3.js gm4.js
   manifest.json icon.svg
 )
@@ -60,6 +61,40 @@ for file in "${files[@]}"; do
   test -f "$WEB_SRC/$file"
   cp "$WEB_SRC/$file" "$WEB_DST/$file"
 done
+
+# Fail closed when index.html references a local script missing from the iOS bundle.
+# This checks the actual HTML references rather than a second manually maintained list.
+python3 - "$WEB_DST" <<'PY'
+from html.parser import HTMLParser
+from pathlib import Path
+import sys
+from urllib.parse import urlsplit, unquote
+
+root = Path(sys.argv[1])
+class Scripts(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.sources = []
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() == "script":
+            src = dict(attrs).get("src")
+            if src:
+                self.sources.append(src)
+
+parser = Scripts()
+parser.feed((root / "index.html").read_text(encoding="utf-8"))
+missing = []
+for src in parser.sources:
+    parsed = urlsplit(src)
+    if parsed.scheme or parsed.netloc or src.startswith("//"):
+        continue
+    relative = Path(unquote(parsed.path).lstrip("/"))
+    if not relative.parts or ".." in relative.parts or not (root / relative).is_file():
+        missing.append(src)
+if missing:
+    raise SystemExit("FAIL: local index.html scripts missing from iOS bundle: " + ", ".join(missing))
+print(f"PASS: all {len(parser.sources)} index.html script references checked in iOS bundle")
+PY
 
 # Bundle the same canonical 300-question JSON validated by the release exporter.
 cp "$SCRIPT_DIR/release-questions.json" "$WEB_DST/release-questions.json"
