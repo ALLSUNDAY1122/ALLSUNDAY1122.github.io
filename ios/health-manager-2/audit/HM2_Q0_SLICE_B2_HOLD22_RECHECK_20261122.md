@@ -335,3 +335,16 @@ GitHub接続から現行 `ios/health-manager-2/release-questions.json` と `apps
 - 回帰テスト `ios/health-manager-2/audit/test-b2-final4-patches.cjs` を追加（commit `2f0781a8ecdbee530a6c576838a8fa824a5763b3`）。既存の生成元IIFEを抽出し、現行配布JSONを個別Q_PARTSへ写像、No.131だけ前段にNo.134を含め、旧値guard、正答位置、5肢一意、正答文字列、出典変更、再監査待ち・非公開を断言する。**V8同等ロジックを実測し4/4 PASS**。Node CLIでの当該新規テストそのものの実行証跡は未取得。コード構文はshebangを除いた解析で正常。
 - **生成元全体を現行release-questions.jsonから構築した300問相当のQ_PARTSへ適用する試験はFAIL**：先頭パッチで `HM2 source precision old state mismatch sm2-5y-r05-hyg-05`。この現行配布JSONを生成元の本来の事前状態として扱ってよいかも未確認のため、**配布JSONを直接書き換えてバイト一致と称することはしない**。
 - 完了条件未達：正規生成元の入力状態の特定→フル生成→バイト一致検証・pin更新・readiness実行、独立二重監査、権利最終判定。Q0/Q1 BLOCKED、App Review・TestFlightは一切実施しない。
+
+
+## 2026-11-22 最終技術追補：旧状態不一致の診断・正規Node300問再生成の実測PASS
+
+**事象**：先行の「HM2 source precision old state mismatch sm2-5y-r05-hyg-05」は、既存の `release-questions.json`（旧状態パッチ適用済み配布成果物）を **生成元パッチの入力** と誤認して試したことに起因。正規入力の `q1.js`～`q12.js`→難易度パッチ→audit-patch-v2/v3/v4→audit-fixes.js→question-order-v1.js を構築すると、No. `sm2-5y-r05-hyg-05` / `sm2-5y-r07-hyg-08` のsourceUrlはいずれも期待するAIST 2020-12-24旧URL。続く `hm2-source-precision-v1.js` は旧URL guardを通過し、12-03版URLへ置換できる。**旧状態チェックは弱めず、元コードの旧値も変更不要**。
+
+- 当該修正スクリプトと、`hm2-c-replacements-v1.js`、`hm2-c-remaining-13-v1.js`、`hm2-source-evidence-v2.js` まで、正規順序の全21スクリプトのV8実行を300問に対して確認（ブラウザ用・配布用双方）。生成元内容改稿4問 No.131/133/135/142 も実データへ適用。
+- 最初に生成した配布JSONのコミット：`6da57c5794c4cd1c685d1fc7aeccd688c3167277`。この成果物は**正規Nodeによるバイト一致に未達**であったため、正本扱いしない。
+- 既存の安全な再生成専用ワークフロー `.github/workflows/hm2-canonical-json-rebuild.yml` を本ブランチにも適用するよう修正（commit `a0e121d6f4a2e01555859bc508fd7462f4c70eee`、このワークフローはApp Review・TestFlight・Appleへの送信を一切行わない）。
+- **GitHub Actions実測PASS**：workflow *HM2 canonical iOS question JSON rebuild* run `44982669275`、job `137086376610`、URL https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/44982669275 。ジョブ内の正規コマンド `node ios/health-manager-2/export-canonical-snapshot.cjs` が成功、出力ログ：`PASS HM2_CANONICAL_JSON {"total":300,"uniqueStems":300,"choiceDrift":0,"correctAnswerDrift":0,"groups":30,"sha256":"434de86ab795d369a1ef52f16a0cf57cab7054b72f6aac952aa7805fb3872177","bytes":605819}`。正規Nodeで生成されたJSONそのものを `fix/hm2-priority123-regression-20261122` へコミット・push成功。**正規生成JSONコミット `ea986ce`（GitHub Actionsログで確認）**。
+- 同じCIジョブの「Verify all 300 stems are unique」「Rebuild canonical iOS JSON and verify browser-release parity」「Verify old release pathway refuses unresolved subject-matter reviews」「Commit generated canonical JSON to audit branch」はすべて**SUCCESS**。
+- **重要な区別**：旧公開経路 `export-audit-data.cjs` は独立監査未了の設問を検出して意図どおり `HM2_RELEASE_REVIEW_BLOCKED: sm2-5y-r10-hyg-04: law-related question missing legalChecked` を出し、リリースを拒否した。この拒否はCI上の期待したPASS条件。法令承認や権利判断を一括書換えしていない。既存の独立二重チェック／全300問権利判定など最終Q0/Q1はBLOCKEDのまま。
+- **分割Bの一次内容監査**は改稿後69/69 PASSという別の台帳判定を維持。正規生成・配布の技術面が改善したことと、全問独立監査完了・本番申請可能は同義ではない。App ReviewおよびTestFlight配信操作なし。
