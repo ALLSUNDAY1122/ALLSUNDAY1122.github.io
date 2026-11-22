@@ -1,6 +1,11 @@
 name: Toru Tango Build 14 Cloud AI (Worker then TestFlight)
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - release/toru-tango-build14-cloud-ai-20261122
+    paths:
+      - '.github/workflows/toru-tango-build14-cloud-ai-testflight.yml'
 permissions:
   contents: read
 concurrency:
