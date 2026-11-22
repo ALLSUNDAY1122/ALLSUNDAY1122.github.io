@@ -1,3 +1,4 @@
+import { generateWithRetry } from './gemini-retry.js';
 import { verifyStoreKitTransaction } from './storekit.js';
 const ALLOWED_ORIGIN = 'https://allsunday1122.github.io';
 const MAX_BODY_BYTES = 100_000;
@@ -268,28 +269,22 @@ export default {
       const reservation = await resolveUsage(env, request, origin);
       if (reservation.response) return reservation.response;
       const usage = reservation.usage;
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 60_000);
-      try {
-        const response = await fetch(
-          `${GEMINI_API_BASE}/${encodeURIComponent(model)}:generateContent`,
-          {
-            method: 'POST',
-            headers: {
-              'x-goog-api-key': env.GEMINI_API_KEY,
-              'Content-Type': 'application/json'
-            },
-            signal: controller.signal,
-            body: JSON.stringify({
+      const { response, raw } = await generateWithRetry({
+          url: `${GEMINI_API_BASE}/${encodeURIComponent(model)}:generateContent`,
+          headers: {
+            'x-goog-api-key': env.GEMINI_API_KEY,
+            'Content-Type': 'application/json'
+          },
+          operation: 'ocr',
+          body: JSON.stringify({
               systemInstruction: {
                 parts: [{ text: '画像内の日本語教材を、ページ順にそのまま文字起こししてください。推測で補わず、読めない箇所は［判読不能］としてください。見出し・表・箇条書きの改行は可能な限り保ってください。' }]
               },
               contents: [{ role: 'user', parts: [{ text: 'この教材写真を文字起こししてください。' }, ...parts] }],
               generationConfig: { temperature: 0, maxOutputTokens: 12000 }
             })
-          }
-        );
-        const raw = await response.json();
+        });
+
         if (!response.ok) {
           return upstreamFailure(response.status, raw, 'ocr', origin);
         }
@@ -313,8 +308,6 @@ export default {
           500,
           origin
         );
-      } finally {
-        clearTimeout(timeout);
       }
     }
 
@@ -352,20 +345,13 @@ export default {
       'factKeyには、問題文の形式に依存しない事実の識別子を日本語または短い英数字で入れてください。'
     ].join('\n');
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 45_000);
-    const startedAt = Date.now();
-
-    try {
-      const response = await fetch(
-        `${GEMINI_API_BASE}/${encodeURIComponent(model)}:generateContent`,
-        {
-          method: 'POST',
+      const { response, raw } = await generateWithRetry({
+          url: `${GEMINI_API_BASE}/${encodeURIComponent(model)}:generateContent`,
           headers: {
             'x-goog-api-key': env.GEMINI_API_KEY,
             'Content-Type': 'application/json'
           },
-          signal: controller.signal,
+          operation: 'generate',
           body: JSON.stringify({
             systemInstruction: { parts: [{ text: instructions }] },
             contents: [{ role: 'user', parts: [{ text: source }] }],
@@ -377,10 +363,8 @@ export default {
               temperature: 0.2
             }
           })
-        }
-      );
+        });
 
-      const raw = await response.json();
       if (!response.ok) {
         return upstreamFailure(response.status, raw, 'generate', origin);
       }
@@ -451,8 +435,6 @@ export default {
           ? 'AIの応答が時間切れになりました。'
           : 'サーバー内部でエラーが発生しました。';
       return json({ error: message }, 500, origin);
-    } finally {
-      clearTimeout(timeout);
     }
   }
 };
