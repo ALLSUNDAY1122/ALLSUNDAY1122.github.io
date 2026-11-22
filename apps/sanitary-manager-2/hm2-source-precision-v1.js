@@ -60,3 +60,18 @@ for(const f of fixes){
 }
 window.HM2_B_NEW_OFFICIAL_SOURCES=fixes.map(x=>x.id);
 })();
+
+
+(function(){
+'use strict';
+// HM2-B dead-space calculation formula from CDC/NCHS text. Guard old-state, preserve answer/choices.
+const fixes=[{"id":"sm2-5y-r04-phy-08","old":"https://www.ncbi.nlm.nih.gov/books/NBK493219/","url":"https://www.cdc.gov/nchs/data/misc/assessphacc.pdf","basis":"CDC/NCHS 1989 Assessing Physical Fitness and Physical Activity in Population-Based Surveys, ventilation section: minute ventilated air is partitioned by VD/VT and alveolar ventilation; VA=VE(1−VD/VT)=respiratory rate×(VT−VD). 12×(500−150)=4200mL/min. PDF large; parsed official text confirmed, visual screenshot could not be retrieved."},{"id":"sm2-5y-r09-phy-04","old":"https://www.ncbi.nlm.nih.gov/books/NBK482501/","url":"https://www.cdc.gov/nchs/data/misc/assessphacc.pdf","basis":"CDC/NCHS 1989 population physical-activity report: physiological dead space fraction of tidal volume and expired minute volume; VA=respiratory rate×(VT−VD). A=12×(500−150)=4.2L/min, B=20×(300−150)=3.0L/min. PDF large; parsed official text confirmed, visual screenshot unavailable."}];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.sourceUrl!==f.old||!Array.isArray(q.choices)||q.choices.length!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5)throw Error('HM2-B CDC formula old-state mismatch '+f.id);
+ q.sourceUrl=f.url;
+ q.basis=String(q.basis||'')+' ／ 2026-11-22 CDC換気式照合：'+f.basis;
+}
+window.HM2_B_CDC_ALVEOLAR_FORMULA_IDS=fixes.map(f=>f.id);
+})();
