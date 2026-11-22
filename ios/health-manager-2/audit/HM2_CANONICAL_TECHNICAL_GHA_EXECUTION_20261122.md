@@ -1,7 +1,7 @@
 # HM2 canonical technical execution result
 
-- Checked UTC: 2026-11-22T05:22:52.233918+00:00
-- Bank SHA-256: `e7a9cecff4e7df7c645d790360b1fe0246390063c7066ac547b3e1058b1c1386`
+- Checked UTC: 2026-11-22T05:25:23.558346+00:00
+- Bank SHA-256: `e5061112c8ab6073dc40063b736cfa77b2ee93f57cfe82cdbedcd8098aadc6da`
 - Actual Node canonical exit: `1`
 - Canonical exact bytes: **False**
 - Readiness command exit: `1`
@@ -65,7 +65,7 @@ test_stale_bank_hash_fails (test_hm2_alternative_q0_gate.GateTests.test_stale_ba
 test_wrong_choice_text_fails (test_hm2_alternative_q0_gate.GateTests.test_wrong_choice_text_fails) ... ok
 
 ----------------------------------------------------------------------
-Ran 18 tests in 0.814s
+Ran 18 tests in 0.215s
 
 OK
 
