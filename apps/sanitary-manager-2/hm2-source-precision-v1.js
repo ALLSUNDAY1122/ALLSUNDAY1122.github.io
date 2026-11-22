@@ -307,3 +307,15 @@ q.sourceUrl='https://uhmeded.uhcw.nhs.uk/Portals/0/AssetUploads/CHESS%20Book%20C
 q.basis=String(q.basis||'')+' ／ 2026-11-22 University Hospitals Coventry and Warwickshire NHS Trust clinical skills workbook pp57-58 (Cranial Nerve 2), Check pupillary light reflexes: illumination of one eye causes directly stimulated pupil to constrict and the other pupil to constrict consensually. Published directly by NHS clinical education provider; PDF text confirmed, screenshot retrieval unsuccessful.';
 window.HM2_B2_PUPIL_NHS_SOURCE_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// B2 anaerobic muscle ATP: use government-authored 1996 Surgeon General CDC report.
+const id='sm2-5y-r09-phy-06',old='https://www.ncbi.nlm.nih.gov/books/NBK546695/';
+const q=(window.Q_PARTS||[]).find(v=>v.id===id);
+if(!q||q.sourceUrl!==old||q.answer!==5||!Array.isArray(q.choices)||q.choices.length!==5)throw Error('HM2 B2 anaerobic source mismatch');
+q.sourceUrl='https://stacks.cdc.gov/view/cdc/11223/cdc_11223_DS1.pdf';
+q.basis=String(q.basis||'')+' ／ U.S. HHS CDC original 1996 Physical Activity and Health: A Report of the Surgeon General, Chapter 3 Skeletal Muscle Energy Metabolism, printed pp65–66: muscle oxygen demand may exceed supply during all-out exercise; anaerobic glycolytic system produces ATP without oxygen for approx 30 s–2 min; lactate buildup contributes duration limitation; oxidative system requires oxygen. Source itself is government-authored (not third-party stored on CDC).';
+window.HM2_B2_GOVERNMENT_ANAEROBIC_SOURCE_ID=id;
+})();
