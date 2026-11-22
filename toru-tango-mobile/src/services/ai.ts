@@ -1,3 +1,4 @@
+import { cloudAiErrorMessage } from './cloudAiErrors';
 import type { Difficulty, QuestionCandidate, QuestionType } from '@/src/types';
 import { getAnonymousId } from './anonymousId';
 import { getTransactionJws } from './iap';
@@ -70,8 +71,7 @@ export async function generateAiQuestions(input: {
 
     const payload = (await response.json()) as Record<string, unknown>;
     if (!response.ok) {
-      const message = typeof payload.code === 'string' && payload.code.startsWith('GEMINI_UPSTREAM_HTTP_') ? `${payload.code} (${payload.upstreamCode ?? 'UNKNOWN'})` : typeof payload.error === 'string' ? payload.error : `AI_API_${response.status}`;
-      throw new Error(response.status === 429 && payload.code === 'AI_MONTHLY_LIMIT' ? 'AI_MONTHLY_LIMIT' : message);
+      throw new Error(cloudAiErrorMessage(response.status, payload));
     }
 
     if (!Array.isArray(payload.questions)) {

@@ -1,6 +1,7 @@
 import * as ImageManipulator from 'expo-image-manipulator';
 import { getAnonymousId } from './anonymousId';
 import { getTransactionJws } from './iap';
+import { cloudAiErrorMessage } from './cloudAiErrors';
 
 export type SelectedStudyImage = {
   uri: string;
@@ -10,130 +11,94 @@ export type SelectedStudyImage = {
 };
 
 const MAX_IMAGES = 10;
-const TARGET_LONG_EDGE = 1600;
-const MAX_BASE64_CHARS_PER_IMAGE = 1_500_000;
-const MAX_REQUEST_BYTES = 9_000_000;
-const COMPRESSION_ATTEMPTS = [
-  { edge: 1600, quality: 0.7 },
-  { edge: 1280, quality: 0.55 },
-  { edge: 1024, quality: 0.4 },
-  { edge: 800, quality: 0.35 }
+const MAX_BASE64_CHARS = 1_300_000;
+const COMPRESSION = [
+  { edge: 1280, quality: 0.6 },
+  { edge: 1024, quality: 0.5 },
+  { edge: 800, quality: 0.4 }
 ] as const;
 
-function getOcrEndpoint(): string {
-  const configuredUrl = process.env.EXPO_PUBLIC_AI_API_URL?.trim();
-  if (!configuredUrl) throw new Error('AI_API_NOT_CONFIGURED');
-  const endpoint = configuredUrl.replace(/\/generate\/?$/, '/ocr');
-  if (endpoint === configuredUrl || !endpoint.startsWith('https://')) {
-    throw new Error('OCR_URL_INVALID');
-  }
-  return endpoint;
+function ocrEndpoint() {
+  const configured = process.env.EXPO_PUBLIC_AI_API_URL?.trim();
+  if (!configured?.startsWith('https://')) throw new Error('OCR接続先の設定を確認してください。');
+  return configured.replace(/\/generate\/?$/, '/ocr');
 }
 
-function countBase64Bytes(data: string): number {
-  return Math.floor(data.length * 3 / 4) - (data.endsWith('==') ? 2 : data.endsWith('=') ? 1 : 0);
+function xhrPost(url: string, body: string, headers: Record<string,string>): Promise<{status:number;payload:Record<string,unknown>}> {
+  // Explicit XMLHttpRequest avoids Expo's fetch wrapper and its Promise.swift
+  // transport exception. RN uses NSURLSession-backed native networking.
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.timeout = 45000;
+    Object.entries(headers).forEach(([key, value]) => xhr.setRequestHeader(key,value));
+    xhr.onerror = () => reject(new Error('NATIVE_XHR_NETWORK_ERROR'));
+    xhr.ontimeout = () => reject(new Error('NATIVE_XHR_TIMEOUT'));
+    xhr.onabort = () => reject(new Error('NATIVE_XHR_ABORT'));
+    xhr.onload = () => {
+      try {
+        resolve({status:xhr.status,payload:JSON.parse(xhr.responseText) as Record<string,unknown>});
+      } catch { reject(new Error('OCR_RESPONSE_JSON_INVALID')); }
+    };
+    xhr.send(body);
+  });
 }
 
-async function encodeJpeg(image: SelectedStudyImage, index: number) {
-  const width = image.width ?? 0;
-  const height = image.height ?? 0;
-  // The ImagePicker normally provides both dimensions. If not, the native
-  // manipulator's first pass will still resize to 1600 pixels wide; retry
-  // passes reduce the size further if needed.
-  const longEdge = Math.max(width, height);
-  for (const { edge, quality } of COMPRESSION_ATTEMPTS) {
-    const resize = longEdge > 0
-      ? (longEdge > edge
-        ? { resize: width >= height ? { width: edge } : { height: edge } }
-        : null)
-      : { resize: { width: edge } };
-    const result = await ImageManipulator.manipulateAsync(
-      image.uri,
-      resize ? [resize] : [],
-      { format: ImageManipulator.SaveFormat.JPEG, compress: quality, base64: true }
-    );
-    const data = result.base64;
-    if (!data || !/^[A-Za-z0-9+/]+={0,2}$/.test(data)) {
-      throw new Error(`OCR_IMAGE_ENCODING_FAILED image=${index + 1}`);
-    }
-    if (data.length <= MAX_BASE64_CHARS_PER_IMAGE) {
-      return {
-        data,
-        mimeType: 'image/jpeg' as const,
-        diagnostic: { image: index + 1, width: result.width, height: result.height,
-          jpegBytes: countBase64Bytes(data), base64Chars: data.length }
-      };
-    }
-  }
-  throw new Error(`OCR_IMAGE_TOO_LARGE image=${index + 1} limitBase64Chars=${MAX_BASE64_CHARS_PER_IMAGE}`);
-}
-
-export async function recognizeWithGemini(images: SelectedStudyImage[]): Promise<string> {
-  if (!images.length) throw new Error('画像を選択してください。');
-  if (images.length > MAX_IMAGES) throw new Error(`画像は${MAX_IMAGES}枚まで選択できます。`);
-
-  // Process sequentially: avoid retaining 10 simultaneously decoded full-size
-  // camera photos on iOS while the request is being constructed.
-  const encodedImages: { data: string; mimeType: 'image/jpeg' }[] = [];
-  const diagnostics: { image: number; width: number; height: number; jpegBytes: number; base64Chars: number }[] = [];
-  let requestBytes = '{"images":[]}'.length;
-  for (let index = 0; index < images.length; index += 1) {
-    const compressed = await encodeJpeg(images[index], index);
-    requestBytes += compressed.data.length + 45;
-    if (requestBytes > MAX_REQUEST_BYTES) {
-      throw new Error(`OCR_REQUEST_TOO_LARGE estimatedBytes=${requestBytes} limitBytes=${MAX_REQUEST_BYTES} images=${index + 1}`);
-    }
-    encodedImages.push({ data: compressed.data, mimeType: compressed.mimeType });
-    diagnostics.push(compressed.diagnostic);
-  }
-  const body = JSON.stringify({ images: encodedImages });
-  const bodyBytes = new TextEncoder().encode(body).byteLength;
-  if (bodyBytes > MAX_REQUEST_BYTES) {
-    throw new Error(`OCR_REQUEST_TOO_LARGE bytes=${bodyBytes} limitBytes=${MAX_REQUEST_BYTES}`);
-  }
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 60_000);
-  let stage = 'prepare';
-  try {
-    const anonymousId = await getAnonymousId();
-    const transactionJws = await getTransactionJws();
-    const endpoint = getOcrEndpoint();
-    stage = 'fetch';
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Toru-Tango-Anonymous-Id': anonymousId,
-        ...(transactionJws ? { 'X-Toru-Tango-Transaction-JWS': transactionJws } : {})
-      },
-      body,
-      signal: controller.signal
+async function compressedJpeg(image: SelectedStudyImage) {
+  const width = image.width ?? 0, height = image.height ?? 0;
+  for (const {edge, quality} of COMPRESSION) {
+    const longest = Math.max(width, height);
+    const action = !longest || longest > edge
+      ? [{resize: width >= height ? {width:edge} : {height:edge}}]
+      : [];
+    const result = await ImageManipulator.manipulateAsync(image.uri,action,{
+      format: ImageManipulator.SaveFormat.JPEG, compress:quality, base64:true
     });
-    stage = 'response';
-    const payload = (await response.json()) as Record<string, unknown>;
-    if (!response.ok) {
-      const message = response.status === 429 && payload.code === 'AI_MONTHLY_LIMIT'
-        ? 'AI_MONTHLY_LIMIT'
-        : typeof payload.code === 'string' && payload.code.startsWith('GEMINI_UPSTREAM_HTTP_')
-        ? `${payload.code} (${payload.upstreamCode ?? 'UNKNOWN'})`
-        : typeof payload.error === 'string' ? payload.error : `AI_API_${response.status}`;
-      throw new Error(`${message} HTTP=${response.status} bodyBytes=${bodyBytes}`);
+    if (result.base64 && result.base64.length <= MAX_BASE64_CHARS) {
+      return {data: result.base64, mimeType:'image/jpeg'};
     }
-    const text = typeof payload.text === 'string' ? payload.text.trim() : '';
-    if (!text) throw new Error('文字を認識できませんでした。写真を撮り直してください。');
-    return text;
-  } catch (error) {
-    // A transport failure has no HTTP response. Include only sizes/metadata,
-    // never OCR content, base64 data, anonymous IDs, or transaction JWS.
-    if (stage === 'fetch') {
-      const compressedSizes = diagnostics.map(item => item.jpegBytes).join(',');
-      const kind = controller.signal.aborted ? 'TIMEOUT' : 'NETWORK_OR_NATIVE_FETCH';
-      const detail = error instanceof Error ? error.message.slice(0, 180) : 'unknown';
-      throw new Error(`OCR_${kind} stage=${stage} images=${images.length} bodyBytes=${bodyBytes} jpegBytes=[${compressedSizes}] detail=${detail}`);
-    }
-    throw error;
-  } finally {
-    clearTimeout(timeout);
   }
+  throw new Error('写真が大きすぎます。もう一度撮影してください。（OCR_IMAGE_TOO_LARGE）');
+}
+function isTransport(error: unknown) {
+  return error instanceof Error && /^NATIVE_XHR_(NETWORK_ERROR|TIMEOUT|ABORT)$/.test(error.message);
+}
+function sleep(ms:number) {return new Promise<void>(resolve=>setTimeout(resolve,ms));}
+
+export async function recognizeWithGemini(images:SelectedStudyImage[]):Promise<string> {
+  if (!images.length || images.length > MAX_IMAGES)throw new Error('写真は1～10枚選んでください。');
+  const anonymousId=await getAnonymousId();
+  const jws=await getTransactionJws();
+  const url=ocrEndpoint();
+  const headers:Record<string,string>={
+    'Content-Type':'application/json',
+    'X-Toru-Tango-Anonymous-Id':anonymousId,
+    ...(jws?{'X-Toru-Tango-Transaction-JWS':jws}:{})
+  };
+  const results:string[]=[];
+  for(let i=0;i<images.length;i++) {
+    const jpeg=await compressedJpeg(images[i]);
+    const body=JSON.stringify({images:[jpeg]});
+    const bodyBytes=body.length;
+    let completed=false;
+    for(let attempt=1;attempt<=3;attempt++) {
+      try {
+        const {status,payload}=await xhrPost(url,body,headers);
+        if(status!==200)throw new Error(cloudAiErrorMessage(status,payload));
+        const text=typeof payload.text==='string'?payload.text.trim():'';
+        if(!text)throw new Error('写真から文字を認識できませんでした。');
+        results.push(text);
+        completed=true;
+        break;
+      } catch(error) {
+        if(!isTransport(error)) throw error;
+        if(attempt===3) {
+          throw new Error(`写真${i+1}/${images.length}の通信に失敗しました。電波状況を確認してください。（OCR_XHR_NETWORK attempts=3 bodyBytes=${bodyBytes} detail=${(error as Error).message}）`);
+        }
+        await sleep(500*2**(attempt-1));
+      }
+    }
+    if(!completed)throw new Error('通信を完了できませんでした。');
+  }
+  return results.join('\n\n');
 }

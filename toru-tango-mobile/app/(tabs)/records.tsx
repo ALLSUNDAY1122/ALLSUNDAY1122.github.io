@@ -1,5 +1,8 @@
 import { router } from 'expo-router';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { getAnonymousId } from '@/src/services/anonymousId';
+import { getTransactionJws } from '@/src/services/iap';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import {
   AppButton,
@@ -15,6 +18,24 @@ import { pickBackup, pickCardsCsv, shareBackup, shareCardsCsv } from '@/src/serv
 import { calculateStreak, getCardReviewStage, isReviewDue } from '@/src/utils/data';
 
 export default function RecordsScreen() {
+  const [usageDisplay,setUsageDisplay]=useState('確認中…');
+  const refreshUsage=useCallback(()=>{
+    let alive=true;
+    (async()=>{
+      try {
+        const configured=process.env.EXPO_PUBLIC_AI_API_URL?.trim()||'';
+        const url=configured.replace(/\/generate\/?$/,'/usage');
+        const id=await getAnonymousId();
+        const jws=await getTransactionJws();
+        const response=await fetch(url,{method:'POST',headers:{'X-Toru-Tango-Anonymous-Id':id,...(jws?{'X-Toru-Tango-Transaction-JWS':jws}:{})}});
+        const data=await response.json() as {used?:number;limit?:number;tier?:string};
+        if(!response.ok)throw new Error('usage unavailable');
+        if(alive)setUsageDisplay(`今月 ${data.used ?? 0}/${data.limit ?? 5}回（${data.tier==='free'?'無料':'有料'}）`);
+      }catch {if(alive)setUsageDisplay('利用状況を取得できませんでした。');}
+    })();
+    return ()=>{alive=false;};
+  },[]);
+  useFocusEffect(refreshUsage);
   const { cards, history, studyDays, addCards, createBackup, restoreBackup } = useAppStore();
 
   const summary = useMemo(() => {
@@ -126,7 +147,9 @@ export default function RecordsScreen() {
       </Section>
 
       <Section title="クラウドAIプラン">
-        <MutedText>Gemini作問とGemini OCRを合計して月5回無料。月額プランで50回・100回を選べます。</MutedText>
+        <Text style={styles.usageCount}>{usageDisplay}</Text>
+        <MutedText>Gemini作問とGemini OCRを合計して月5回無料。月額プランで50回・100回を選べます。成功したAI処理のみをカウントします。</MutedText>
+        <AppButton label="利用状況を更新" variant="secondary" onPress={refreshUsage} />
         <AppButton label="プランを見る" onPress={() => router.push("/paywall")} />
       </Section>
       <Section title="バックアップ">
@@ -164,6 +187,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 }
 
 const styles = StyleSheet.create({
+  usageCount: {color:colors.text,fontSize:18,fontWeight:'800',marginBottom:8},
   statGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   statBox: {
     width: '48%',
