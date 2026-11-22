@@ -129,7 +129,8 @@ const out = questions.map(q => ({
   audit_status: q.auditStatus,
   publication_status: q.publicationStatus,
   difficulty_model: q.difficultyModel || null,
-  no_common_sense_shortcut: Boolean(q.noCommonSenseShortcut)
+  no_common_sense_shortcut: Boolean(q.noCommonSenseShortcut),
+  ...(q.contentReviewStatus ? { content_review_status: q.contentReviewStatus } : {})
 }));
 
 const outPath = path.join(IOS_DIR, 'release-questions.json');
