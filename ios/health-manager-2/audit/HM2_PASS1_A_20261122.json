@@ -3,8 +3,8 @@
   "review_type": "independent_pass1_A",
   "status": "PARTIAL_OFFICIAL_SOURCE_VERIFIED",
   "scope_count": 69,
-  "reviewed_count": 9,
-  "remaining_count": 60,
+  "reviewed_count": 30,
+  "remaining_count": 39,
   "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
   "scope_question_ids": [
     "sm2-5y-r09-law-05",
@@ -497,6 +497,993 @@
             "correct": false,
             "reason": "休日労働は35%以上であり、深夜労働が重なる場合は別途深夜割増の検討も必要。",
             "source_section": "労働基準法第37条第1項・割増賃金令（法定休日35%以上）"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r09-law-07",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.startup-roudou.mhlw.go.jp/qa/zigyonushi/yukyu/q11.html",
+        "source_section": "年5日の年次有給休暇取得義務（半日単位は0.5日、時間単位は対象外）",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「年5日取得義務への半日年休と時間単位年休の算入」について年5日の年次有給休暇取得義務（半日単位は0.5日、時間単位は対象外）を適用。日単位1日＋半日2回×0.5日＝2日。5－2＝残3日。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "算入5日、残り0日。",
+            "correct": false,
+            "reason": "時間単位8時間は年5日の取得義務に算入できず、5日ではない。",
+            "source_section": "年5日の年次有給休暇取得義務（半日単位は0.5日、時間単位は対象外）"
+          },
+          {
+            "text": "算入3日、残り2日。",
+            "correct": false,
+            "reason": "半日2回は計1日、日単位1日と合わせ2日であり3日ではない。",
+            "source_section": "年5日の年次有給休暇取得義務（半日単位は0.5日、時間単位は対象外）"
+          },
+          {
+            "text": "算入1日、残り4日。",
+            "correct": false,
+            "reason": "半日2回も合計1日算入するので1日ではない。",
+            "source_section": "年5日の年次有給休暇取得義務（半日単位は0.5日、時間単位は対象外）"
+          },
+          {
+            "text": "算入2日、残り3日。",
+            "correct": true,
+            "reason": "日単位1日＋半日2回×0.5日＝2日。5－2＝残3日。",
+            "source_section": "年5日の年次有給休暇取得義務（半日単位は0.5日、時間単位は対象外）"
+          },
+          {
+            "text": "算入0日、残り5日。",
+            "correct": false,
+            "reason": "日単位1日と半日休暇も算入対象であり0日ではない。",
+            "source_section": "年5日の年次有給休暇取得義務（半日単位は0.5日、時間単位は対象外）"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r04-hyg-03",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/content/11130500/001304966.pdf",
+        "source_section": "換気の評価：二酸化炭素濃度・換気量・在室人数",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「室内CO₂濃度の上昇と換気改善」について換気の評価：二酸化炭素濃度・換気量・在室人数を適用。換気設備と人員・滞在時間を確認することで室内空気質を改善できる。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "CO₂が上がっても換気は常に十分だと判断する。",
+            "correct": false,
+            "reason": "CO₂が1000ppmから1800ppmに増えた場合、十分な換気が常に保たれているとはいえない。",
+            "source_section": "換気の評価：二酸化炭素濃度・換気量・在室人数"
+          },
+          {
+            "text": "換気装置を停止して在室人数を増やす。",
+            "correct": false,
+            "reason": "換気を停止し人数を増やす行為は室内CO₂低減に反する。",
+            "source_section": "換気の評価：二酸化炭素濃度・換気量・在室人数"
+          },
+          {
+            "text": "窓のない部屋では換気量の調整は不可能と決めつける。",
+            "correct": false,
+            "reason": "窓がなくても機械換気の運転量・運用条件の調整を検討できる。",
+            "source_section": "換気の評価：二酸化炭素濃度・換気量・在室人数"
+          },
+          {
+            "text": "CO₂値だけで感染者の有無を個人単位で断定する。",
+            "correct": false,
+            "reason": "CO₂値は換気状態の指標であって個人の感染の有無を断定できない。",
+            "source_section": "換気の評価：二酸化炭素濃度・換気量・在室人数"
+          },
+          {
+            "text": "在室人数と機械換気の運転状況を確認し、換気量や使用人数・時間を見直す。",
+            "correct": true,
+            "reason": "換気設備と人員・滞在時間を確認することで室内空気質を改善できる。",
+            "source_section": "換気の評価：二酸化炭素濃度・換気量・在室人数"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r04-hyg-05",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.weather.gov/lmk/humidity",
+        "source_section": "相対湿度＝実際の水蒸気量／同温度の飽和水蒸気量×100",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「温度変化と相対湿度の計算」について相対湿度＝実際の水蒸気量／同温度の飽和水蒸気量×100を適用。6/23≈26%、6/13≈46%。低温で飽和水蒸気量が減るため上昇する。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "25℃・15℃ともに約26％で相対湿度は変わらない。",
+            "correct": false,
+            "reason": "25℃では6/23≈26%、15℃では6/13≈46%で一定ではない。",
+            "source_section": "相対湿度＝実際の水蒸気量／同温度の飽和水蒸気量×100"
+          },
+          {
+            "text": "25℃で約46％、15℃で約26％となり低下する。",
+            "correct": false,
+            "reason": "25℃と15℃の値を逆にしている。",
+            "source_section": "相対湿度＝実際の水蒸気量／同温度の飽和水蒸気量×100"
+          },
+          {
+            "text": "25℃で約26％、15℃で約46％となり上昇する。",
+            "correct": true,
+            "reason": "6/23≈26%、6/13≈46%。低温で飽和水蒸気量が減るため上昇する。",
+            "source_section": "相対湿度＝実際の水蒸気量／同温度の飽和水蒸気量×100"
+          },
+          {
+            "text": "25℃・15℃ともに約6％になる。",
+            "correct": false,
+            "reason": "水蒸気量6g/m³を百分率6%と取り違えている。",
+            "source_section": "相対湿度＝実際の水蒸気量／同温度の飽和水蒸気量×100"
+          },
+          {
+            "text": "25℃・15℃ともに100％になる。",
+            "correct": false,
+            "reason": "水蒸気量6g/m³は双方の飽和量より少なく100%ではない。",
+            "source_section": "相対湿度＝実際の水蒸気量／同温度の飽和水蒸気量×100"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r04-hyg-08",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://neccyusho.mhlw.go.jp/heat_index/",
+        "source_section": "WBGT着衣補正値の加算",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「WBGTの着衣補正値と作業時の熱中症リスク評価」についてWBGT着衣補正値の加算を適用。測定WBGT28℃に指定の着衣補正＋3℃を加え31℃。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "25℃。",
+            "correct": false,
+            "reason": "28＋3＝31であり25ではない。",
+            "source_section": "WBGT着衣補正値の加算"
+          },
+          {
+            "text": "28℃。",
+            "correct": false,
+            "reason": "28℃は着衣補正前の測定値である。",
+            "source_section": "WBGT着衣補正値の加算"
+          },
+          {
+            "text": "29℃。",
+            "correct": false,
+            "reason": "着衣補正値は＋3℃であり＋1℃ではない。",
+            "source_section": "WBGT着衣補正値の加算"
+          },
+          {
+            "text": "31℃。",
+            "correct": true,
+            "reason": "測定WBGT28℃に指定の着衣補正＋3℃を加え31℃。",
+            "source_section": "WBGT着衣補正値の加算"
+          },
+          {
+            "text": "84℃。",
+            "correct": false,
+            "reason": "着衣補正は乗算ではないため28×3=84℃は誤り。",
+            "source_section": "WBGT着衣補正値の加算"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r04-hyg-10",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1",
+        "source_section": "日射ありWBGT＝0.7自然湿球＋0.2黒球＋0.1乾球／日射なし＝0.7自然湿球＋0.3黒球",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「WBGTの測定条件と日射の有無による算定方法の選択」について日射ありWBGT＝0.7自然湿球＋0.2黒球＋0.1乾球／日射なし＝0.7自然湿球＋0.3黒球を適用。日射のあるAと日射のないBの加重係数がいずれも正しい。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "A・Bとも気温だけをWBGTとして用いる。",
+            "correct": false,
+            "reason": "WBGTは原則気温だけでは評価できない。",
+            "source_section": "日射ありWBGT＝0.7自然湿球＋0.2黒球＋0.1乾球／日射なし＝0.7自然湿球＋0.3黒球"
+          },
+          {
+            "text": "Aでは自然湿球温度と黒球温度だけを用い、気温の寄与は常に無視する。",
+            "correct": false,
+            "reason": "日射ありの算式には乾球温度0.1の項が含まれる。",
+            "source_section": "日射ありWBGT＝0.7自然湿球＋0.2黒球＋0.1乾球／日射なし＝0.7自然湿球＋0.3黒球"
+          },
+          {
+            "text": "Aでは自然湿球温度0.7・黒球温度0.2・気温0.1を加重し、Bでは自然湿球温度0.7・黒球温度0.3を加重する。",
+            "correct": true,
+            "reason": "日射のあるAと日射のないBの加重係数がいずれも正しい。",
+            "source_section": "日射ありWBGT＝0.7自然湿球＋0.2黒球＋0.1乾球／日射なし＝0.7自然湿球＋0.3黒球"
+          },
+          {
+            "text": "Aでは自然湿球温度0.7・黒球温度0.3を加重し、Bでは自然湿球温度0.7・黒球温度0.2・気温0.1を加重する。",
+            "correct": false,
+            "reason": "日射あり・なしの算定式を逆にしている。",
+            "source_section": "日射ありWBGT＝0.7自然湿球＋0.2黒球＋0.1乾球／日射なし＝0.7自然湿球＋0.3黒球"
+          },
+          {
+            "text": "A・Bとも黒球温度だけをWBGTとして用いる。",
+            "correct": false,
+            "reason": "黒球温度のみの値はWBGTの算式と異なる。",
+            "source_section": "日射ありWBGT＝0.7自然湿球＋0.2黒球＋0.1乾球／日射なし＝0.7自然湿球＋0.3黒球"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r05-hyg-05",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.aist.go.jp/aist_j/new_research/2020/nr20201203/nr20201203.html",
+        "source_section": "換気回数＝換気量／室容積",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「目標換気回数を満たす必要換気量の逆算」について換気回数＝換気量／室容積を適用。300m³×4回/時＝1200m³/hで条件を満たす最小換気量。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "300m³/h",
+            "correct": false,
+            "reason": "300/300=1回/時で4回に満たない。",
+            "source_section": "換気回数＝換気量／室容積"
+          },
+          {
+            "text": "600m³/h",
+            "correct": false,
+            "reason": "600/300=2回/時で4回に満たない。",
+            "source_section": "換気回数＝換気量／室容積"
+          },
+          {
+            "text": "900m³/h",
+            "correct": false,
+            "reason": "900/300=3回/時で4回に満たない。",
+            "source_section": "換気回数＝換気量／室容積"
+          },
+          {
+            "text": "1,200m³/h",
+            "correct": true,
+            "reason": "300m³×4回/時＝1200m³/hで条件を満たす最小換気量。",
+            "source_section": "換気回数＝換気量／室容積"
+          },
+          {
+            "text": "75m³/h",
+            "correct": false,
+            "reason": "75/300=0.25回/時で4回に満たない。",
+            "source_section": "換気回数＝換気量／室容積"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r05-hyg-10",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1&pageNo=1",
+        "source_section": "音圧レベル差ΔLp＝20log10(p2/p1)",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「音圧レベル差と音圧振幅比の計算」について音圧レベル差ΔLp＝20log10(p2/p1)を適用。10^(10/20)=√10≈3.16、約3.2倍。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "約1.1倍",
+            "correct": false,
+            "reason": "10dBの音圧振幅比は10^(10/20)≈3.16で1.1倍ではない。",
+            "source_section": "音圧レベル差ΔLp＝20log10(p2/p1)"
+          },
+          {
+            "text": "約2倍",
+            "correct": false,
+            "reason": "2倍の音圧差は約6dBに相当する。",
+            "source_section": "音圧レベル差ΔLp＝20log10(p2/p1)"
+          },
+          {
+            "text": "約3.2倍",
+            "correct": true,
+            "reason": "10^(10/20)=√10≈3.16、約3.2倍。",
+            "source_section": "音圧レベル差ΔLp＝20log10(p2/p1)"
+          },
+          {
+            "text": "約100倍",
+            "correct": false,
+            "reason": "100倍の音圧増幅なら40dBに相当する。",
+            "source_section": "音圧レベル差ΔLp＝20log10(p2/p1)"
+          },
+          {
+            "text": "約10倍",
+            "correct": false,
+            "reason": "10倍の音圧振幅増加なら20dBに相当する。",
+            "source_section": "音圧レベル差ΔLp＝20log10(p2/p1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r06-hyg-03",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1&pageNo=1",
+        "source_section": "情報機器作業ガイドライン：視距離おおむね40cm以上、ディスプレイ上端と眼の高さ",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「情報機器作業の視距離とディスプレイ上端の高さ」について情報機器作業ガイドライン：視距離おおむね40cm以上、ディスプレイ上端と眼の高さを適用。約40cm以上の視距離確保と眼より下方寄りの画面上端の調整が原則に沿う。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "おおむね40cm以上の視距離を確保し、画面上端が眼とほぼ同じかやや下になるよう調整する。",
+            "correct": true,
+            "reason": "約40cm以上の視距離確保と眼より下方寄りの画面上端の調整が原則に沿う。",
+            "source_section": "情報機器作業ガイドライン：視距離おおむね40cm以上、ディスプレイ上端と眼の高さ"
+          },
+          {
+            "text": "画面を近づけるほど眼の疲労が必ず減るため調整しない。",
+            "correct": false,
+            "reason": "20cmの近距離を放置することは視距離確保の推奨に反する。",
+            "source_section": "情報機器作業ガイドライン：視距離おおむね40cm以上、ディスプレイ上端と眼の高さ"
+          },
+          {
+            "text": "上端を眼より大幅に高くし、見上げ続ける姿勢を固定する。",
+            "correct": false,
+            "reason": "見上げる姿勢の固定は画面上端が目より下という推奨に反する。",
+            "source_section": "情報機器作業ガイドライン：視距離おおむね40cm以上、ディスプレイ上端と眼の高さ"
+          },
+          {
+            "text": "画面と眼の距離や高さは作業者による調整を一律に禁止する。",
+            "correct": false,
+            "reason": "ガイドラインは作業者に合わせた机・椅子・画面調整を重視する。",
+            "source_section": "情報機器作業ガイドライン：視距離おおむね40cm以上、ディスプレイ上端と眼の高さ"
+          },
+          {
+            "text": "眼から20cmを全員の標準視距離とし、画面上端はさらに高くする。",
+            "correct": false,
+            "reason": "20cmは推奨の40cm以上を満たさず、高い画面上端も不適当。",
+            "source_section": "情報機器作業ガイドライン：視距離おおむね40cm以上、ディスプレイ上端と眼の高さ"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r06-hyg-10",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.cdc.gov/csels/dsepd/ss1978/lesson3/section6.html",
+        "source_section": "感度＝真陽性数／疾病あり人数",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「スクリーニング検査の感度の計算」について感度＝真陽性数／疾病あり人数を適用。疾病あり100人のうち陽性90人なら感度90%。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "特異度90％",
+            "correct": false,
+            "reason": "感度は求められるが特異度の計算には疾病なし人数が必要。",
+            "source_section": "感度＝真陽性数／疾病あり人数"
+          },
+          {
+            "text": "陽性的中率90％",
+            "correct": false,
+            "reason": "陽性的中率には陽性者全体の人数が必要で、疾病100人中90人だけでは確定しない。",
+            "source_section": "感度＝真陽性数／疾病あり人数"
+          },
+          {
+            "text": "陰性的中率90％",
+            "correct": false,
+            "reason": "陰性的中率には陰性者中の真陰性数が必要。",
+            "source_section": "感度＝真陽性数／疾病あり人数"
+          },
+          {
+            "text": "感度90％",
+            "correct": true,
+            "reason": "疾病あり100人のうち陽性90人なら感度90%。",
+            "source_section": "感度＝真陽性数／疾病あり人数"
+          },
+          {
+            "text": "有病率90％",
+            "correct": false,
+            "reason": "対象集団全体の人数がないため有病率を算出できない。",
+            "source_section": "感度＝真陽性数／疾病あり人数"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r09-law-04",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+        "source_section": "労働安全衛生規則第23条第2項：委員会の運営事項",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「衛生委員会の運営事項を決定する主体」について労働安全衛生規則第23条第2項：委員会の運営事項を適用。委員会の運営に必要な事項は当該委員会が定める。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "衛生委員会が定める。",
+            "correct": true,
+            "reason": "委員会の運営に必要な事項は当該委員会が定める。",
+            "source_section": "労働安全衛生規則第23条第2項：委員会の運営事項"
+          },
+          {
+            "text": "全労働者の全会一致でのみ定められる。",
+            "correct": false,
+            "reason": "全労働者の全会一致を要件とする規定はない。",
+            "source_section": "労働安全衛生規則第23条第2項：委員会の運営事項"
+          },
+          {
+            "text": "運営について必要な事項は一切定めない。",
+            "correct": false,
+            "reason": "運営に必要な事項を定めることが規則上予定されている。",
+            "source_section": "労働安全衛生規則第23条第2項：委員会の運営事項"
+          },
+          {
+            "text": "産業医が単独で定め、委員会の関与は認められない。",
+            "correct": false,
+            "reason": "産業医単独に委員会運営事項を決定させる規定ではない。",
+            "source_section": "労働安全衛生規則第23条第2項：委員会の運営事項"
+          },
+          {
+            "text": "所轄労働基準監督署長が単独で定める。",
+            "correct": false,
+            "reason": "所轄監督署長が単独で決める制度ではない。",
+            "source_section": "労働安全衛生規則第23条第2項：委員会の運営事項"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r10-law-04",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0",
+        "source_section": "労働安全衛生規則第7条第1項第4号：事業場規模ごとの衛生管理者選任数",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「常時200人・201人事業場の衛生管理者選任人数」について労働安全衛生規則第7条第1項第4号：事業場規模ごとの衛生管理者選任数を適用。Aは200人以下で1人、Bは201〜500人で2人が法定最低数。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "Aは0人、Bは1人。",
+            "correct": false,
+            "reason": "200人のAにも1人以上必要なため0人は誤り。",
+            "source_section": "労働安全衛生規則第7条第1項第4号：事業場規模ごとの衛生管理者選任数"
+          },
+          {
+            "text": "Aは1人、Bも1人。",
+            "correct": false,
+            "reason": "201人は201〜500人の区分に入り2人以上必要。",
+            "source_section": "労働安全衛生規則第7条第1項第4号：事業場規模ごとの衛生管理者選任数"
+          },
+          {
+            "text": "Aは2人、Bも2人。",
+            "correct": false,
+            "reason": "200人は50〜200人の区分で1人以上で足りる。",
+            "source_section": "労働安全衛生規則第7条第1項第4号：事業場規模ごとの衛生管理者選任数"
+          },
+          {
+            "text": "Aは1人、Bは2人。",
+            "correct": true,
+            "reason": "Aは200人以下で1人、Bは201〜500人で2人が法定最低数。",
+            "source_section": "労働安全衛生規則第7条第1項第4号：事業場規模ごとの衛生管理者選任数"
+          },
+          {
+            "text": "Aは2人、Bは1人。",
+            "correct": false,
+            "reason": "200人と201人の必要人数が逆になっている。",
+            "source_section": "労働安全衛生規則第7条第1項第4号：事業場規模ごとの衛生管理者選任数"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r10-law-09",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0",
+        "source_section": "労働基準法第34条第1項：6時間超45分以上、8時間超1時間以上",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「実労働8時間の休憩時間」について労働基準法第34条第1項：6時間超45分以上、8時間超1時間以上を適用。労働時間がちょうど8時間なら45分以上が法定最低。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "15分以上。",
+            "correct": false,
+            "reason": "8時間の労働には45分以上の休憩が必要で15分では不足。",
+            "source_section": "労働基準法第34条第1項：6時間超45分以上、8時間超1時間以上"
+          },
+          {
+            "text": "45分以上。",
+            "correct": true,
+            "reason": "労働時間がちょうど8時間なら45分以上が法定最低。",
+            "source_section": "労働基準法第34条第1項：6時間超45分以上、8時間超1時間以上"
+          },
+          {
+            "text": "60分以上が常に必要である。",
+            "correct": false,
+            "reason": "60分以上となるのは労働時間が8時間を超える場合。",
+            "source_section": "労働基準法第34条第1項：6時間超45分以上、8時間超1時間以上"
+          },
+          {
+            "text": "30分以上。",
+            "correct": false,
+            "reason": "30分では6時間超の最低45分に達しない。",
+            "source_section": "労働基準法第34条第1項：6時間超45分以上、8時間超1時間以上"
+          },
+          {
+            "text": "労働時間が8時間なら休憩は不要である。",
+            "correct": false,
+            "reason": "6時間超には法定休憩が必要で8時間でも休憩不要ではない。",
+            "source_section": "労働基準法第34条第1項：6時間超45分以上、8時間超1時間以上"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r04-hyg-01",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1",
+        "source_section": "日射ありWBGT＝0.7×自然湿球＋0.2×黒球＋0.1×乾球",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「日射のある屋外におけるWBGTの算出」について日射ありWBGT＝0.7×自然湿球＋0.2×黒球＋0.1×乾球を適用。18.2＋7.2＋3.2＝28.6℃。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "26.0℃",
+            "correct": false,
+            "reason": "0.7×26+0.2×36+0.1×32=28.6で26ではない。",
+            "source_section": "日射ありWBGT＝0.7×自然湿球＋0.2×黒球＋0.1×乾球"
+          },
+          {
+            "text": "32.0℃",
+            "correct": false,
+            "reason": "32は乾球温度そのものでWBGTではない。",
+            "source_section": "日射ありWBGT＝0.7×自然湿球＋0.2×黒球＋0.1×乾球"
+          },
+          {
+            "text": "29.7℃",
+            "correct": false,
+            "reason": "29.7は指定加重式に一致しない。",
+            "source_section": "日射ありWBGT＝0.7×自然湿球＋0.2×黒球＋0.1×乾球"
+          },
+          {
+            "text": "28.6℃",
+            "correct": true,
+            "reason": "18.2＋7.2＋3.2＝28.6℃。",
+            "source_section": "日射ありWBGT＝0.7×自然湿球＋0.2×黒球＋0.1×乾球"
+          },
+          {
+            "text": "36.0℃",
+            "correct": false,
+            "reason": "36は黒球温度そのものでWBGTではない。",
+            "source_section": "日射ありWBGT＝0.7×自然湿球＋0.2×黒球＋0.1×乾球"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r04-hyg-07",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://neccyusho.mhlw.go.jp/heat_index/",
+        "source_section": "WBGTを用いた暑熱リスク管理・作業強度と休憩・補給",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「熱中症の重篤化防止」についてWBGTを用いた暑熱リスク管理・作業強度と休憩・補給を適用。WBGTと作業負荷に応じた休憩・水分塩分補給の調整は妥当。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "気温だけを見てWBGTを無視する。",
+            "correct": false,
+            "reason": "気温だけでは湿度・放射熱等を考慮できずWBGTを無視できない。",
+            "source_section": "WBGTを用いた暑熱リスク管理・作業強度と休憩・補給"
+          },
+          {
+            "text": "WBGTに応じて作業強度や休憩・水分塩分補給を調整する。",
+            "correct": true,
+            "reason": "WBGTと作業負荷に応じた休憩・水分塩分補給の調整は妥当。",
+            "source_section": "WBGTを用いた暑熱リスク管理・作業強度と休憩・補給"
+          },
+          {
+            "text": "休憩回数を減らして暑い時間帯に作業を集中する。",
+            "correct": false,
+            "reason": "高温時間帯への作業集中と休憩削減は熱中症リスクを高める。",
+            "source_section": "WBGTを用いた暑熱リスク管理・作業強度と休憩・補給"
+          },
+          {
+            "text": "水分補給を作業終了時だけに限定する。",
+            "correct": false,
+            "reason": "作業終了時だけの水分補給では予防として不十分。",
+            "source_section": "WBGTを用いた暑熱リスク管理・作業強度と休憩・補給"
+          },
+          {
+            "text": "暑熱順化の有無を考慮せず作業を一律に延長する。",
+            "correct": false,
+            "reason": "暑熱順化の有無を無視した作業延長は不適切。",
+            "source_section": "WBGTを用いた暑熱リスク管理・作業強度と休憩・補給"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r04-hyg-09",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1&pageNo=1",
+        "source_section": "情報機器作業ガイドライン：画面反射・視距離・作業休止",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「情報機器作業の視覚負担と画面環境」について情報機器作業ガイドライン：画面反射・視距離・作業休止を適用。映り込みの抑制、視距離・表示・休止を見直すことが視覚負担軽減になる。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "画面の映り込みを減らし、視距離・文字の大きさ・休止を見直す。",
+            "correct": true,
+            "reason": "映り込みの抑制、視距離・表示・休止を見直すことが視覚負担軽減になる。",
+            "source_section": "情報機器作業ガイドライン：画面反射・視距離・作業休止"
+          },
+          {
+            "text": "視距離は無関係として常に画面を眼に密着させる。",
+            "correct": false,
+            "reason": "眼への画面密着は適切な視距離確保に反する。",
+            "source_section": "情報機器作業ガイドライン：画面反射・視距離・作業休止"
+          },
+          {
+            "text": "休止をなくし同一姿勢を固定する。",
+            "correct": false,
+            "reason": "休止の排除と固定姿勢は疲労軽減に反する。",
+            "source_section": "情報機器作業ガイドライン：画面反射・視距離・作業休止"
+          },
+          {
+            "text": "画面の映り込みを増やして文字を小さくする。",
+            "correct": false,
+            "reason": "グレア増大と文字縮小は視認性を悪化させ得る。",
+            "source_section": "情報機器作業ガイドライン：画面反射・視距離・作業休止"
+          },
+          {
+            "text": "照明と画面輝度は調整せず残業時間だけ増やす。",
+            "correct": false,
+            "reason": "照明・輝度調整をやめ残業を延ばすことは環境改善でない。",
+            "source_section": "情報機器作業ガイドライン：画面反射・視距離・作業休止"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r05-hyg-04",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02_00004.html",
+        "source_section": "騒音障害防止ガイドライン：作業環境測定と発生源・伝搬経路対策",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「騒音障害防止の発生源・伝搬経路対策」について騒音障害防止ガイドライン：作業環境測定と発生源・伝搬経路対策を適用。騒音源把握と低騒音化・遮へいは合理的な作業環境対策。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "騒音源を把握し、発生源の低騒音化や遮へいを検討する。",
+            "correct": true,
+            "reason": "騒音源把握と低騒音化・遮へいは合理的な作業環境対策。",
+            "source_section": "騒音障害防止ガイドライン：作業環境測定と発生源・伝搬経路対策"
+          },
+          {
+            "text": "騒音源を増設して音を相殺することだけに依存する。",
+            "correct": false,
+            "reason": "騒音源増設では騒音ばく露低減を保証できない。",
+            "source_section": "騒音障害防止ガイドライン：作業環境測定と発生源・伝搬経路対策"
+          },
+          {
+            "text": "全員同じ耳栓を渡せば作業環境対策は必ず不要になる。",
+            "correct": false,
+            "reason": "保護具配布だけで作業環境改善の検討は不要にならない。",
+            "source_section": "騒音障害防止ガイドライン：作業環境測定と発生源・伝搬経路対策"
+          },
+          {
+            "text": "騒音測定をせず全作業者の聴覚症状を無視する。",
+            "correct": false,
+            "reason": "作業環境測定を避け聴覚症状を無視するのは不適切。",
+            "source_section": "騒音障害防止ガイドライン：作業環境測定と発生源・伝搬経路対策"
+          },
+          {
+            "text": "耳鳴りの訴えがあっても健康管理を行わない。",
+            "correct": false,
+            "reason": "耳鳴りを訴える労働者への健康管理を省略してはならない。",
+            "source_section": "騒音障害防止ガイドライン：作業環境測定と発生源・伝搬経路対策"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r05-hyg-06",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tc6314&dataType=1&pageNo=1",
+        "source_section": "情報機器作業ガイドライン：椅子・机・足台・入力機器の調整",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「情報機器作業の机・椅子・入力機器の体格適合」について情報機器作業ガイドライン：椅子・机・足台・入力機器の調整を適用。体格と作業姿勢を基準に机・椅子・キーボードを調整し足支持を確保する。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "足が浮くのは問題ないので、椅子をさらに高く固定する。",
+            "correct": false,
+            "reason": "足が浮く状態を放置し椅子を固定するのは不適切。",
+            "source_section": "情報機器作業ガイドライン：椅子・机・足台・入力機器の調整"
+          },
+          {
+            "text": "机・椅子・入力機器の位置を体格に合わせて調整し、必要に応じ足台を設けて足裏を支持し、肩を不自然に上げずに入力できるようにする。",
+            "correct": true,
+            "reason": "体格と作業姿勢を基準に机・椅子・キーボードを調整し足支持を確保する。",
+            "source_section": "情報機器作業ガイドライン：椅子・机・足台・入力機器の調整"
+          },
+          {
+            "text": "肩が上がった状態を維持するため、キーボードをさらに高く置く。",
+            "correct": false,
+            "reason": "肩をさらにすくめる配置は筋負担を強める。",
+            "source_section": "情報機器作業ガイドライン：椅子・机・足台・入力機器の調整"
+          },
+          {
+            "text": "身体寸法が異なる作業者にも机と椅子を同じ高さで固定し、個別調整を認めない。",
+            "correct": false,
+            "reason": "全員共通寸法に固定せず身体寸法に応じ調節する。",
+            "source_section": "情報機器作業ガイドライン：椅子・机・足台・入力機器の調整"
+          },
+          {
+            "text": "机と椅子の調整は行わず、入力速度を上げることだけで肩の負担を軽くする。",
+            "correct": false,
+            "reason": "足台や机の調整を一律禁止する理由はない。",
+            "source_section": "情報機器作業ガイドライン：椅子・机・足台・入力機器の調整"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r07-hyg-04",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://neccyusho.mhlw.go.jp/heat_index/",
+        "source_section": "WBGT評価に加える身体作業強度・暑熱順化・着衣条件",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「WBGT・作業強度・暑熱順化による熱中症リスク評価」についてWBGT評価に加える身体作業強度・暑熱順化・着衣条件を適用。WBGTのほか作業強度と暑熱順化状態を考慮する。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "WBGTが同一なら重作業と軽作業のリスクは必ず同じである。",
+            "correct": false,
+            "reason": "WBGTが同一でも代謝負荷の異なる作業のリスクは同一とは限らない。",
+            "source_section": "WBGT評価に加える身体作業強度・暑熱順化・着衣条件"
+          },
+          {
+            "text": "WBGTに加えて代謝率に対応する身体作業強度や暑熱順化の状態も考慮する。",
+            "correct": true,
+            "reason": "WBGTのほか作業強度と暑熱順化状態を考慮する。",
+            "source_section": "WBGT評価に加える身体作業強度・暑熱順化・着衣条件"
+          },
+          {
+            "text": "暑熱順化の有無だけを見ればWBGT測定は不要になる。",
+            "correct": false,
+            "reason": "暑熱順化だけではWBGT測定・評価を代替できない。",
+            "source_section": "WBGT評価に加える身体作業強度・暑熱順化・着衣条件"
+          },
+          {
+            "text": "作業強度はWBGT基準値の判断に一切関係しない。",
+            "correct": false,
+            "reason": "WBGT基準値は身体作業強度で異なる。",
+            "source_section": "WBGT評価に加える身体作業強度・暑熱順化・着衣条件"
+          },
+          {
+            "text": "同じWBGTなら保護衣の影響も評価対象から外す。",
+            "correct": false,
+            "reason": "着衣条件も暑熱リスク評価に関係する。",
+            "source_section": "WBGT評価に加える身体作業強度・暑熱順化・着衣条件"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r07-hyg-08",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.aist.go.jp/aist_j/new_research/2020/nr20201203/nr20201203.html",
+        "source_section": "換気回数＝換気量÷室容積",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「増床による室容積変化と換気回数の比較」について換気回数＝換気量÷室容積を適用。900/300=3回/時、900/450=2回/時。容積増で低下。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "変更後は3回/時で、変更前と変わらない。",
+            "correct": false,
+            "reason": "変更前3回/時、変更後2回/時で同じではない。",
+            "source_section": "換気回数＝換気量÷室容積"
+          },
+          {
+            "text": "変更後は4.5回/時で、変更前より増える。",
+            "correct": false,
+            "reason": "900/450=2で4.5回/時にはならない。",
+            "source_section": "換気回数＝換気量÷室容積"
+          },
+          {
+            "text": "変更後は6回/時で、変更前の2倍となる。",
+            "correct": false,
+            "reason": "900/450=2で6回/時にはならない。",
+            "source_section": "換気回数＝換気量÷室容積"
+          },
+          {
+            "text": "変更後は2回/時で、変更前の3回/時より低下する。",
+            "correct": true,
+            "reason": "900/300=3回/時、900/450=2回/時。容積増で低下。",
+            "source_section": "換気回数＝換気量÷室容積"
+          },
+          {
+            "text": "変更後は0.5回/時で、変更前の6分の1となる。",
+            "correct": false,
+            "reason": "900/450=2で0.5回/時にはならない。",
+            "source_section": "換気回数＝換気量÷室容積"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r08-hyg-08",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1&pageNo=1",
+        "source_section": "腰部負荷：荷重によるモーメント＝力×水平距離",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「重量物保持距離と腰部外力モーメント」について腰部負荷：荷重によるモーメント＝力×水平距離を適用。同じ荷重で距離40cmは10cmの4倍の外力モーメントとなる。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "方法Bは荷物による腰部への外力モーメントが方法Aより大きい。",
+            "correct": true,
+            "reason": "同じ荷重で距離40cmは10cmの4倍の外力モーメントとなる。",
+            "source_section": "腰部負荷：荷重によるモーメント＝力×水平距離"
+          },
+          {
+            "text": "荷物の重量が同じなら保持距離による外力モーメントの差はない。",
+            "correct": false,
+            "reason": "荷重が一定でも水平距離が変わればモーメントも変わる。",
+            "source_section": "腰部負荷：荷重によるモーメント＝力×水平距離"
+          },
+          {
+            "text": "方法Aの方が荷物による外力モーメントが必ず4倍大きい。",
+            "correct": false,
+            "reason": "方法Aは距離10cmでありBの4分の1のモーメント。",
+            "source_section": "腰部負荷：荷重によるモーメント＝力×水平距離"
+          },
+          {
+            "text": "方法Bでは荷物の重力は働かない。",
+            "correct": false,
+            "reason": "方法Bにも荷物の重力が作用する。",
+            "source_section": "腰部負荷：荷重によるモーメント＝力×水平距離"
+          },
+          {
+            "text": "保持距離が4倍になると外力モーメントは必ず4分の1になる。",
+            "correct": false,
+            "reason": "保持距離を4倍にするとモーメントは4倍であり4分の1ではない。",
+            "source_section": "腰部負荷：荷重によるモーメント＝力×水平距離"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sm2-5y-r08-hyg-09",
+      "pass": {
+        "reviewer_id": "HM2-pass1-A-independent-20261122",
+        "reviewed_at": "2026-11-22",
+        "method": "問題データの全5肢を個別に検討し、記載した原典の法令条項・ガイドラインまたは明記した計算式と照合。先行レビューの判断は使用しない。",
+        "primary_source_url": "https://www.osha.gov/otm/section-3-health-hazards/chapter-5",
+        "source_section": "音の強さレベル差ΔL＝10log10(I2/I1)",
+        "applicable_on": "2026-11-22（原典参照日。個々の法令改正の効力発生日を意味しない）",
+        "reasoning": "対象「音の強さの比とデシベル換算」について音の強さレベル差ΔL＝10log10(I2/I1)を適用。10log10(10)=10dB。 他の4肢は個別理由のとおり不適合。",
+        "independent_session_id": "HM2-PASS1-A-20261122-SESSION",
+        "question_bank_sha256": "4a49b2bbdef30f1d99b721629e3309443b96565476c2dfd817a912ee88558bdc",
+        "performed_without_prior_review_access": true,
+        "choices": [
+          {
+            "text": "3dB。",
+            "correct": false,
+            "reason": "強度10倍の差は10dBであり3dBでない。",
+            "source_section": "音の強さレベル差ΔL＝10log10(I2/I1)"
+          },
+          {
+            "text": "5dB。",
+            "correct": false,
+            "reason": "強度10倍の差は10dBであり5dBでない。",
+            "source_section": "音の強さレベル差ΔL＝10log10(I2/I1)"
+          },
+          {
+            "text": "20dB。",
+            "correct": false,
+            "reason": "20dB差は音の強さ100倍に相当する。",
+            "source_section": "音の強さレベル差ΔL＝10log10(I2/I1)"
+          },
+          {
+            "text": "100dB。",
+            "correct": false,
+            "reason": "100dB差は音の強さ10倍よりはるかに大きい。",
+            "source_section": "音の強さレベル差ΔL＝10log10(I2/I1)"
+          },
+          {
+            "text": "10dB。",
+            "correct": true,
+            "reason": "10log10(10)=10dB。",
+            "source_section": "音の強さレベル差ΔL＝10log10(I2/I1)"
           }
         ]
       }
