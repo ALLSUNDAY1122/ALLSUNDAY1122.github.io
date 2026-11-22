@@ -374,3 +374,20 @@ q.explanation='米陸軍・空軍の政府刊行TB MED 508第2章9頁（図2-3�
 q.auditStatus='一次資料照合済';
 window.HM2_B2_ARMY_CIVD_SOURCE_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// B2 No.161 NHS public hospital original neuro-ophthalmology patient information.
+const id='sm2-5y-r09-phy-03';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+const old='https://www.ncbi.nlm.nih.gov/books/NBK553169/';
+const source='https://mft.nhs.uk/app/uploads/sites/2/2019/10/REH-176.pdf';
+if(!q||q.sourceUrl!==old||!Array.isArray(q.choices)||q.choices.length!==5||q.answer!==5||
+ q.choices[4]!=='交感神経―虹彩の瞳孔散大筋が収縮して散瞳する。')
+ throw Error('HM2 B2 NHS iris source stale '+id);
+q.sourceUrl=source;
+q.basis=String(q.basis||'')+' ／ 2026-11-22 UK Manchester University NHS Foundation Trust/MREH Neuro-ophthalmology patient leaflet REH176 Horner Syndrome 2019 p1, paragraph What is Horner’s syndrome / What causes Horner’s syndrome: sympathetic oculosympathetic innervation dilates pupil in dark and innervates iris dilator muscle, interruption causes miosis. NHS self-authored public hospital source, not NCBI-hosted third-party textbook.';
+q.auditStatus='一次資料照合済';
+window.HM2_B2_NHS_IRIS_DILATOR_SOURCE_ID=id;
+})();
