@@ -179,3 +179,22 @@ q.publicationStatus='非公開';
 if(new Set(q.choices).size!==5||q.choices[3]!==newCorrect)throw Error('HM2 B2 ATP choice uniqueness failed');
 window.HM2_B2_ATP_REDESIGN_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// B2 source-only corrections backed by the original issuing public bodies.
+// This does NOT grant publication clearance or prove a deterministic rebuild.
+const fixes=[
+ {id:'sm2-5y-r06-phy-10',old:'https://www.ncbi.nlm.nih.gov/books/NBK594995/',url:'https://www.gesundheitsinformation.de/wie-wird-der-herzrhythmus-gesteuert.html',basis:'IQWiG original public-body authored health information (German): sinus node, atrial conduction, AV node, His bundle, bundle branches and Purkinje fibers; original 5 alternatives distinguish conduction from vessels.'},
+ {id:'sm2-5y-r07-phy-10',old:'https://www.ncbi.nlm.nih.gov/books/NBK556043/',url:'https://ntp.niehs.nih.gov/sites/default/files/ntp/ohat/lead/final/monographhealtheffectslowlevellead_newissn_508.pdf',basis:'US National Toxicology Program/NIEHS own monograph section 5.2.1 explicitly identifies phagocytic activity of neutrophils and macrophages; not a third-party StatPearls chapter.'}
+];
+const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+for(const f of fixes){
+ const q=byId.get(f.id);
+ if(!q||q.sourceUrl!==f.old||!Array.isArray(q.choices)||q.choices.length!==5||!Number.isInteger(q.answer)||q.answer<1||q.answer>5)throw Error('HM2 B2 public source old-state mismatch '+f.id);
+ q.sourceUrl=f.url;
+ q.basis=String(q.basis||'')+' ／ 2026-11-22 B2出典確認：'+f.basis;
+}
+window.HM2_B2_AUTHORITATIVE_SOURCE_IDS=fixes.map(x=>x.id);
+})();
