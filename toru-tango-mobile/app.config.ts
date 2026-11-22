@@ -1,6 +1,6 @@
 import type { ExpoConfig, ConfigContext } from 'expo/config';
 
-// Build 19: Subscription entitlement-aware paywall and localized StoreKit errors; Build 13 selection of a study folder while preserving the Build 12 feature set.
+// Build 20: Fixed Safe Area close control on subscription screen; Build 13 selection of a study folder while preserving the Build 12 feature set.
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: '撮る単語帳',
@@ -14,7 +14,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: 'com.allsunday1122.torutango',
-    buildNumber: '19',
+    buildNumber: '20',
     icon: './assets/icon-appstore.png',
     infoPlist: {
       NSCameraUsageDescription: '教材を撮影して単語カード作成に利用します。',

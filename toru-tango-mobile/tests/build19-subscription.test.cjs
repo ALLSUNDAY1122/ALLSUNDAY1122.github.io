@@ -40,5 +40,5 @@ test('Build19 changes no Build17 OCR transport and Build18 usage presentation',(
   assert.match(ocr,/new XMLHttpRequest\(\)/);
   assert.match(ocr,/for\(let attempt=1;attempt<=3;attempt\+\+\)/);
   assert.match(usage,/useSyncExternalStore/);
-  assert.match(config,/buildNumber: '19'/);
+  assert.match(config,/buildNumber: '(?:19|20)'/);
 });

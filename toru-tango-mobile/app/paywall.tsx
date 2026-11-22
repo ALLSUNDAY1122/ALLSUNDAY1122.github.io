@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, AppState, Linking, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, AppState, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { showManageSubscriptionsIOS, useIAP } from 'expo-iap';
 import { AppButton, colors } from '@/src/components/ui';
 import { getTransactionJws, SUBSCRIPTION_IDS } from '@/src/services/iap';
@@ -144,8 +145,24 @@ export default function PaywallScreen() {
   const hasSubscription=entitlement.kind==='active';
   const isLoading=entitlement.kind==='loading';
   return (
-    <ScrollView contentContainerStyle={styles.page}>
-      <AppButton label="戻る" variant="secondary" onPress={()=>router.back()} />
+    <SafeAreaView style={styles.safeArea} edges={['top','bottom']}>
+      <View style={styles.fixedHeader}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="閉じる"
+          accessibilityHint="クラウドAIプラン画面を閉じます"
+          hitSlop={4}
+          onPress={()=>router.back()}
+          style={styles.closeButton}
+        >
+          <Text style={styles.closeLabel}>× 閉じる</Text>
+        </Pressable>
+      </View>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.page}
+        keyboardShouldPersistTaps="handled"
+      >
       <Text style={styles.title}>クラウドAIプラン</Text>
       <Text style={styles.body}>Gemini作問とGemini OCRの合計利用回数を増やせます。無料は月5回です。端末内のApple Vision OCR・Foundation Models・簡易作問は回数に含みません。</Text>
       {isLoading?<ActivityIndicator accessibilityLabel="加入状況を確認しています" />:null}
@@ -172,10 +189,16 @@ export default function PaywallScreen() {
       <AppButton label="購入を復元" variant="secondary" disabled={busy} onPress={()=>void restore()} />
       <AppButton label="プライバシーポリシー" variant="secondary" onPress={()=>void Linking.openURL(POLICY)} />
       <AppButton label="利用規約（Apple標準EULA）" variant="secondary" onPress={()=>void Linking.openURL(EULA)} />
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 const styles=StyleSheet.create({
+ safeArea:{flex:1,backgroundColor:colors.background},
+ fixedHeader:{minHeight:56,paddingHorizontal:16,justifyContent:'center',backgroundColor:colors.background,borderBottomWidth:StyleSheet.hairlineWidth,borderBottomColor:colors.border},
+ closeButton:{minHeight:44,minWidth:88,alignSelf:'flex-start',justifyContent:'center',alignItems:'center',paddingHorizontal:12,borderRadius:10},
+ closeLabel:{fontSize:17,fontWeight:'700',color:colors.text},
+ scroll:{flex:1},
  page:{padding:20,paddingBottom:60,gap:14,backgroundColor:colors.background},
  title:{fontSize:25,fontWeight:'800',color:colors.text},
  body:{fontSize:14,lineHeight:22,color:colors.text},
