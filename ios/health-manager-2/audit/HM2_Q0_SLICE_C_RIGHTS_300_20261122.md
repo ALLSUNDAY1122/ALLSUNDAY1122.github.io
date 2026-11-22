@@ -1308,3 +1308,55 @@ App Review提出・新規TestFlight配信なし。台帳本体・問題データ
 - 要差し替え16問は別工程で生成元修正、配布JSON再生成、5肢正誤確認、限定差分・原文類似性・権利表示チェックが必要。今回の文案は提案のみ。
 - PASS284問も全原典との実質比較・作問履歴の検査が未済で、著作権の最終クリアランスを主張しない。
 - 元台帳・配布JSON・生成元を変更せず、この分割ファイルのみ更新。App Review提出とTestFlight新規配信はしない。
+
+
+## 第8段階：差し替え済み16問の再監査（2026-11-22 JST）
+
+### 対象・判定基準
+- 指定ブランチ現行配布データ `ios/health-manager-2/release-questions.json` の Git blob **`fc2c1dd22bf0699bb1da2ce49b0ddb4400fce556`** を取得。前回の対象bank blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d` から更新され、16IDすべての新しい問題文が含まれていることを確認。
+- 16問について問題文・5肢・正答index・解説・出典を読み、各肢の概念上の正誤を評価。全16件は5肢相互に重複せず、正答と他肢の区別が可能。**正答内容PASS 16/16**（法令施行の細部・出典の全版を通した第三者検証を保証するものではない）。
+- 権利判定の **PASS（暫定）** は、旧出題の構成から新規ケース・独自数値・一般知識の設問へ変更され、確認できる範囲では原典文章の転写を見つけない、という内容運用判定。制作過程の独立性または公的な法的保証ではない。原典との網羅的な機械類似度比較は未実施。
+- **FAIL** は原典との直接対応が成立しないための出典不備。**HOLD** は参照文献の個別本文に到達できず直接照合不能。両者は公開向け権利PASSに数えない。
+
+### 16問の個別判定
+| No. | 問題ID | 正答判定 | 権利・出典判定 | 現行正答（0起点） | 正答・独自性の確認所見 | 出典 |
+|---:|---|---|---|---|---|---|
+| 1 | `sm2-demo-001` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=1／必要な資格を有する者を選任し、事業場の衛生管理業務を担わせる | 120人情報サービス業の職場場面へ変更。条文上の事業場単位・資格確認に対応。旧人数選択式と異なる構成 | [現行出典](https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudoukijun/faq/5.html) |
+| 2 | `sm2-demo-002` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=4／衛生管理体制と連携して必要な改善を検討する | 産業医巡視後の改善判断というケース形式。巡視/勧告の条文趣旨に対応 | [現行出典](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/faq/newpage_50446.html) |
+| 3 | `sm2-demo-003` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=0／改善案を事業場の条件に照らして検討し、必要な措置に結び付ける | 労働衛生コンサルタントの診断後の事業者の判断を問う。試験原問の登録・資格肢構成を使わない | [現行出典](https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0) |
+| 4 | `sm2-demo-014` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=1／28.4℃ | 自然湿球26℃・黒球34℃から28.4℃。環境省の公表算式は事実であり問題数値・誤肢は独自設定 | [現行出典](https://www.wbgt.env.go.jp/doc_observation.php) |
+| 5 | `sm2-demo-015` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=2／医療保険者等との協力や、治療を続ける労働者の就業環境への配慮を検討する | 2026-10-19改正、11-02訂正文書に沿うTHP場面問題。法定健診の免除ではない | [現行出典](https://www.mhlw.go.jp/stf/newpage_76807.html) |
+| 6 | `sm2-demo-028` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=0／0.20L減る | 発汗0.60Lと補給0.40Lの独立計算例。収支−0.20Lは明白 | [現行出典](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzeneisei/heatstroke/index.html) |
+| 7 | `sm2-demo-029` | PASS（5肢・一意正答の内容確認） | **HOLD** | index=4／形質細胞 | 形質細胞が抗体を分泌すること自体は妥当。ただしNBK459455の章名・本文を取得できず直接出典対応確認できない | [現行出典](https://www.ncbi.nlm.nih.gov/books/NBK459455/) |
+| 8 | `sm2-r7a-030` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=2／増加する | TSH負のフィードバックの標準的知識を場面問題化。MedlinePlus Medical Testは米政府公開情報区分、個別原文の転載なしと見える | [現行出典](https://medlineplus.gov/lab-tests/tsh-thyroid-stimulating-hormone-test/) |
+| 9 | `sm2-5y-r09-phy-01` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=3／骨格筋 | ペットボトルを挙げる随意運動の独自場面。骨格筋は自発的収縮を担う。旧MedlinePlusの画像は参照しない | [現行出典](https://www.ncbi.nlm.nih.gov/books/NBK537140/) |
+| 10 | `sm2-r7o-026` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=1／ヘモグロビン | 赤血球の酸素運搬に直接関わるヘモグロビン。MedlinePlus Medical Test本文と対応、短い独自問 | [現行出典](https://medlineplus.gov/lab-tests/hemoglobin-test/) |
+| 11 | `sm2-r7o-027` | PASS（5肢・一意正答の内容確認） | **FAIL（出典不一致）** | index=3／交感神経系の活性化 | 心拍上昇・散瞳なら交感神経の活性化が正答。ただし現在の出典URL 002311 は『Central nervous system』であり自律神経反応の直接出典にならない | [現行出典](https://medlineplus.gov/ency/article/002311.htm) |
+| 12 | `sm2-r7o-028` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=0／クレアチンリン酸 | ATP迅速再生に関するクレアチンリン酸を選ぶ。PMC4898252のオープンアクセスCC BY論文に対応。図版/原文不使用 | [現行出典](https://pmc.ncbi.nlm.nih.gov/articles/PMC4898252/) |
+| 13 | `sm2-demo-022` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=4／門脈 | 消化管から肝臓へ向かう糖の血液経路は門脈。NIDDK本文は栄養素が血流で肝臓へ運ばれることを説明 | [現行出典](https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works) |
+| 14 | `sm2-demo-027` | PASS（5肢・一意正答の内容確認） | **FAIL（出典不一致）** | index=3／杆体細胞 | 暗所視の主役は杆体で正答一意。しかし出典002309は『Stimulus』であり杆体・錐体を説明していない。別一次出典が必要 | [現行出典](https://medlineplus.gov/ency/article/002309.htm) |
+| 15 | `sm2-r7o-015` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=2／新しい支援と別に法定健康診断を継続する | THP改善計画と法定健診義務の区別を場面化。改正版の規定と矛盾しない | [現行出典](https://www.mhlw.go.jp/stf/newpage_76807.html) |
+| 16 | `sm2-r7a-016` | PASS（5肢・一意正答の内容確認） | **PASS（暫定）** | index=4／検診で要精密検査となった人への受診勧奨 | 要精密検査者への受診勧奨は二次予防。改正THP指針の説明に合致 | [現行出典](https://www.mhlw.go.jp/stf/newpage_76807.html) |
+
+### 原典不備と修正案
+1. `sm2-r7o-027`: 現行 `https://medlineplus.gov/ency/article/002311.htm` は [Central nervous system](https://medlineplus.gov/ency/article/002311.htm) であり、交感神経・心拍・瞳孔について直接説明しない。**出典不一致＝FAIL**。自律神経系の交感反応を直接説明する公的資料へ `source_url` を差し替え、その本文・個別利用条件を確認。設問・正答は維持可能。
+2. `sm2-demo-027`: 現行 `https://medlineplus.gov/ency/article/002309.htm` は [Stimulus](https://medlineplus.gov/ency/article/002309.htm)。網膜杆体と錐体の直接説明でない。**出典不一致＝FAIL**。公的な暗所視・網膜視細胞の資料に `source_url` 差し替え。正答は杆体で維持可能。
+3. `sm2-demo-029`: `https://www.ncbi.nlm.nih.gov/books/NBK459455/` はアクセス時reCAPTCHA。章題・個別権利条件および形質細胞への対応を確認できないため **HOLD**。公的なB細胞→形質細胞→抗体の説明へ出典変更または一次確認を行う。
+4. `sm2-r7o-028`: 旧StatPearlsのNC-ND記事から、[PMC4898252](https://pmc.ncbi.nlm.nih.gov/articles/PMC4898252/) のCC BYの論文へ出典変更されている。CC BYの利用には適切な原著表示が必要であり、論文文章・図表の再利用は本問では確認されない。
+
+### 確認可能な公式根拠
+- [衛生管理者の選任・業種別資格（厚労省）](https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/roudoukijun/faq/5.html)（001）
+- [労働安全衛生規則](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0)（001〜003の規定関係）
+- [環境省 WBGT](https://www.wbgt.env.go.jp/doc_observation.php)（014）
+- [厚労省 2026年改正THP](https://www.mhlw.go.jp/stf/newpage_76807.html)（015、r7o-015、r7a-016：2026-11-02訂正版）
+- [MedlinePlus コンテンツ利用条件](https://medlineplus.gov/about/using/usingcontent/)（Medical Testと第三者Medical Encyclopediaを区別）
+- [MedlinePlus ヘモグロビン検査](https://medlineplus.gov/lab-tests/hemoglobin-test/)（r7o-026）
+- [NIDDK 消化の仕組み](https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works)（demo-022）
+- [PMC4898252 筋収縮・クレアチンリン酸](https://pmc.ncbi.nlm.nih.gov/articles/PMC4898252/)（r7o-028）
+
+### 結果と引継ぎ
+- 16問すべて差し替え後の出題形式を確認。**正答内容PASS 16、FAIL 0**。
+- **権利・出典 PASS（暫定）13、FAIL 2、HOLD 1。** 未解決3問はQ0権利PASSに使用不可。前段階の「16問要差し替え」は再設計実装前の履歴であり、今回の判定で上書き消去せず時系列として保持。
+- 配布JSONの既知の不整合は今回変更しない。修正担当に出典差替えを依頼し、原典到達・権利確認後に再判定する。
+- 権利者許諾・全原典の逐語比較と独立制作履歴の法的な最終証明は**未完了**。正式リリースゲートはコーディネーターに委ねる。
+- App Review提出、新規TestFlight配信なし。元台帳・配布問題データ・生成元は変更しない。
