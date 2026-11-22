@@ -1,9 +1,14 @@
 name: HM2 canonical iOS question JSON rebuild
 on:
   push:
-    branches: [audit/hm2-quality-20261110]
+    branches: [audit/hm2-quality-20261110, fix/hm2-priority123-regression-20261122]
     paths:
       - apps/sanitary-manager-2/audit-fixes.js
+      - apps/sanitary-manager-2/hm2-source-precision-v1.js
+      - apps/sanitary-manager-2/hm2-c-replacements-v1.js
+      - apps/sanitary-manager-2/hm2-c-remaining-13-v1.js
+      - apps/sanitary-manager-2/hm2-source-evidence-v2.js
+      - ios/health-manager-2/release-questions.json
       - ios/health-manager-2/export-canonical-snapshot.cjs
       - ios/health-manager-2/verify-current-law-contract.cjs
       - ios/health-manager-2/export-audit-data-core.cjs
@@ -45,5 +50,5 @@ jobs:
             echo "PASS: canonical 300-question JSON already matches committed snapshot"
           else
             git commit -m "Regenerate canonical HM2 iOS 300-question JSON"
-            git push origin "HEAD:audit/hm2-quality-20261110"
+            git push origin "HEAD:$GITHUB_REF_NAME"
           fi
