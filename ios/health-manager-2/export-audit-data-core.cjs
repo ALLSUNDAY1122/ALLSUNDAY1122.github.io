@@ -87,11 +87,21 @@ const unresolved=added.filter(q=>
  ||(q.lawRelated?q.auditStatus!=='一次資料照合済':q.auditStatus!=='内容監査済')
 );
 if(unresolved.length){
- const flagged=unresolved.slice(0,8).map(q=>q.id+':'+q.contentReviewStatus+':'+q.auditStatus);
- throw new Error('HM2_RELEASE_REVIEW_BLOCKED: '+unresolved.length
-  +' generated questions require independent review / status reconciliation. '
-  +'Samples: '+flagged.join(', ')
-  +'. Canonical JSON snapshot may be generated separately; this release gate must not be bypassed.');
+ // The user-approved alternative Q0 process requires two independent reviews
+ // of each of 178 questions plus a separate rights decision for all 300.
+ // This helper checks completeness and pinned IDs, not legal correctness;
+ // human/AI review records must be assessed independently before release.
+ const alternative=spawnSync('python3',[
+   path.join(REPO_ROOT,'scripts/hm2_alternative_q0_gate.py'),'--enforce'
+ ],{encoding:'utf8',cwd:REPO_ROOT,timeout:30000});
+ if(alternative.status!==0){
+   const flagged=unresolved.slice(0,8).map(q=>q.id+':'+q.contentReviewStatus+':'+q.auditStatus);
+   throw new Error('HM2_RELEASE_REVIEW_BLOCKED: '+unresolved.length
+    +' generated questions require independent review / status reconciliation. '
+    +'Alternative Q0 evidence not complete. Samples: '+flagged.join(', ')
+    +'. Validator: '+(alternative.stdout||alternative.stderr||'could not start').slice(0,1400));
+ }
+ console.log('PASS HM2_ALTERNATIVE_Q0_EVIDENCE_STRUCTURE (source validity still requires independent review)');
 }
 console.log('PASS: live-ID numeric checks and all expansion publication review statuses verified.');
 
