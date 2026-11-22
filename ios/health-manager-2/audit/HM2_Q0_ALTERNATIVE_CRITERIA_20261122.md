@@ -339,3 +339,14 @@ DC原票の完了178件は**一つの独立セッションによるレビュー*
 - **Q0：ユーザー代替基準の「機械的証跡ゲート」についてPASS見込み。ただし実行ログと原典根拠の独立した真偽確認を未取得のため、運用上は最終PASS確定保留／CONDITIONAL**。権利の運用300/300は第三者原典ライセンスを包括保証するものではない。
 - **Q1：BLOCKED／未再実測**。Q0正式実行の確認、canonical再生成・回帰テスト・strict exportの現行HEADでの実行を要する。過去の成功実績を新HEADの成功と混同しない。
 - App Review提出、新規TestFlight配信なし。Q0条件を弱める変更なし。
+
+
+## 2026-11-22 Q1難易度形式修復・生成元再検証
+
+- ユーザー報告：旧tip `09e0704` の`scripts/hm2_alternative_q0_gate.py --enforce`実測結果は `pass:true / failure 0`、Q1の技術エラーが`STRICT_EXPORT_UNEXPECTED_FAILURE`で、`verify-difficulty-gate.cjs:21`の`sm2-5y-r05-law-10`における5肢の` ― `書式不足。
+- ゲートの条件は変更せず、生成元 `apps/sanitary-manager-2/hm2-source-evidence-v2.js` に9問をガード付きで表示形式整合化する修正。最初の1問に加え、全対象照合で発見した同形式不足8問も反映。各5肢の「`topic ― `」ラベルの追加だけで命題・正誤は不変。うち`sm2-5y-r08-phy-09`は表示形式に合わせて`difficultyModel`のみ整合化。対象9問ともQ0の178問スコープ外。
+- 追加修正の後、難易度スクリプト`verify-difficulty-gate.cjs`の内部生成側パッチ一覧を正規生成と合わせて更新。ゲートそのものの難易度要件・assertionは一切緩和していない。生成元はブラウザ用（difficultyパッチ有）・配布用（無）を両方サポートする事前条件に調整。
+- 実際の全生成元JavaScriptを読み込んで300問を再生成する検証：ブラウザ用と配布用の`question/choices/answer/quick/explanation/topic/sourceUrl/baselineDate`の差分0、配布bankとの本文・5肢・正答位置の差分0。難易度再設計192問、難易度フラグ250問、ペア書式不備0、法令関連`legal_checked`欠落0。10回×3科目、各10問の正答分布は2/2/2/2/2。再生成JSONは配布JSONとバイト一致。生成検証に使った一時ステージJSON2件は両方削除済み。
+- 最終bank SHA-256 `e5061112c8ab6073dc40063b736cfa77b2ee93f57cfe82cdbedcd8098aadc6da`。readinessのpin、Q0のDOUBLE_CHECKルートおよび356 passのbank SHA、RIGHTSルートを同期。Q0レビュー対象178/178の5肢本文差分0、承認178/178、権利決定300/300。現行データでの静的Q0形式チェック差分0。
+- **検証の限界**：正規生成JavaScriptの実行と結果バイト一致、難易度条件・正答分布の逐項静的再現は確認したが、GitHub ActionsやNodeの`export-audit-data.cjs`そのものの実測ログは未取得。従って**Q0は前tip実測PASS、現行SHAではPASS見込み（実測未実施）／Q1は形式上の既知エラー解消・現行HEADの厳格エクスポート実測待ち**。Q1の全面PASSは宣言しない。
+- App Review・TestFlightには未操作。
