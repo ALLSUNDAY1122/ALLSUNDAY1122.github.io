@@ -64,7 +64,7 @@ done
 
 # Fail closed when index.html references a local script missing from the iOS bundle.
 # This checks the actual HTML references rather than a second manually maintained list.
-python3 - "$WEB_DST" <<'PY'
+python3 - "$WEB_DST" "${files[@]}" <<'PY'
 from html.parser import HTMLParser
 from pathlib import Path
 import sys
@@ -83,17 +83,22 @@ class Scripts(HTMLParser):
 
 parser = Scripts()
 parser.feed((root / "index.html").read_text(encoding="utf-8"))
+copy_order = [name for name in sys.argv[2:] if name.endswith(".js")]
+local_sources = []
 missing = []
 for src in parser.sources:
     parsed = urlsplit(src)
     if parsed.scheme or parsed.netloc or src.startswith("//"):
         continue
     relative = Path(unquote(parsed.path).lstrip("/"))
+    local_sources.append(relative.as_posix())
     if not relative.parts or ".." in relative.parts or not (root / relative).is_file():
         missing.append(src)
 if missing:
     raise SystemExit("FAIL: local index.html scripts missing from iOS bundle: " + ", ".join(missing))
-print(f"PASS: all {len(parser.sources)} index.html script references checked in iOS bundle")
+if local_sources != copy_order:
+    raise SystemExit("FAIL: HTML script order differs from iOS copy order: " + repr({"html": local_sources, "copy": copy_order}))
+print(f"PASS: all {len(parser.sources)} index.html script references exist and load in iOS copy order")
 PY
 
 # Bundle the same canonical 300-question JSON validated by the release exporter.
