@@ -6,6 +6,7 @@ on:
     paths:
       - 'scripts/hm2_submission_readiness.py'
       - 'scripts/hm2_alternative_q0_gate.py'
+      - 'tests/test_hm2_alternative_q0_gate.py'
       - 'apps/sanitary-manager-2/gm4.js'
       - 'health-manager-2/support.html'
       - 'ios/health-manager-2/APP_STORE_METADATA_JA.md'
@@ -47,6 +48,7 @@ jobs:
       - name: Alternative Q0 evidence verification (expected BLOCKED until complete)
         run: |
           python -m py_compile scripts/hm2_alternative_q0_gate.py
+          python -m unittest discover -s tests -p 'test_hm2_alternative_q0_gate.py' -v
           python scripts/hm2_alternative_q0_gate.py --output /tmp/hm2-q0-alternative.json
       - name: Audit source reproducibility and submission blockers
         env:
