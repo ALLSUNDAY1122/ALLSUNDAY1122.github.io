@@ -425,3 +425,305 @@ App Review提出・新規TestFlight配信なし。台帳本体・問題データ
 - 優先度高: MSD由来の文章表現の混入、試験協会公表問題の原文転載、脳科学辞典の記事翻案、日本赤十字社・第三者素材の図表転載疑義。特定の侵害が発生したと断定するものではない。
 - 全件について原典の対象版・公開者と権利者・条件更新日・個別素材の表示・実際の文面類似性を照合してから、出典適合と権利判定を別々に確定すること。
 - 本追加調査はQ0 PASS証跡にはならない。提出・配信なし、元台帳・問題JSON・生成元不変更。
+
+
+## 第3段階：残り260問の出典主体別権利条件スクリーニング（2026-11-22）
+
+対象: 配布JSON No.41〜300、Git blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d`。出典URLの運営主体と、取得できたその主体の公式利用規約を**各問題IDに個別に紐付け**た。対象URLの記事・法令・PDF本文を全件閲覧したわけではなく、記事ごとの個別ライセンス、転載/翻案の実際、図表の権利、参照版の確定は全件未完了。「出典元の方針確認」と「当該問題の合法な商用利用承認」は異なる。**最終承認0/300維持**。
+
+### 今回追加して確認した一般利用規約
+- e-Gov法令検索: https://laws.e-gov.go.jp/terms （PDL1.0原則）
+- NCBI Bookshelf: https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/ （掲載書籍の著作権・再利用ライセンスは個別判断）
+- PMC: https://pmc.ncbi.nlm.nih.gov/about/copyright （記事の権利者・ライセンス、第三者画像は個別判断）
+- 国立労働安全衛生総合研究所: https://www.jniosh.johas.go.jp/rule/rule.html （引用等の例外を除き原則事前許可）
+- 環境省熱中症予防情報サイト: https://www.wbgt.env.go.jp/tos.php （PDL1.0原則、出典表示・例外注意）
+- CDC: https://www.cdc.gov/other/agencymaterials.html （米国政府作成物の原則public domainと例外、非推奨表示）
+- NIH: https://www.nih.gov/about-nih/frequently-asked-questions （米国政府著作物原則public domain、例外あり）
+
+### 全300問の出典分類別集計（URLとサイト方針に基づく暫定分類）
+- MHLW-PDL: 116件
+- NCBI-BOOK-INDIVIDUAL: 67件
+- EGOV-PDL: 52件
+- SITE-UNVERIFIED: 16件
+- MSD-RESTRICTED: 12件
+- NCBI-ROUTE-CHECK: 8件
+- NIH-PD-EXCEPT: 6件
+- CDC-PD-EXCEPT: 5件
+- FDMA-PDL: 4件
+- JRC-PROTECTED: 3件
+- PMC-ARTICLE-INDIVIDUAL: 3件
+- EXAM-UNCONFIRMED: 2件
+- JNIOSH-PERMISSION: 2件
+- PUBMED-METADATA: 2件
+- BSD-AUTHOR: 1件
+- ENV-PDL: 1件
+
+| No. | 問題ID | 出典主体の暫定区分 | 検証済み一般条件・残課題 | 公表された一般条件 | 個別権利判断 |
+|---:|---|---|---|---|---|
+| 41 | `sm2-r7o-011` | ENV-PDL | PDL1.0原則。出典記載・第三者権利を要確認 | [運営主体の条件](https://www.wbgt.env.go.jp/tos.php) | **保留：原典表現未比較** |
+| 42 | `sm2-r7o-012` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 43 | `sm2-r7o-013` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 44 | `sm2-r7o-014` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 45 | `sm2-r7o-015` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 46 | `sm2-r7o-016` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 47 | `sm2-r7o-017` | NIH-PD-EXCEPT | 米国政府作成物原則PDだが個別ページや第三者資料を確認 | [運営主体の条件](https://www.nih.gov/about-nih/frequently-asked-questions) | **保留：原典表現未比較** |
+| 48 | `sm2-r7o-018` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 49 | `sm2-r7o-019` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 50 | `sm2-r7o-020` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 51 | `sm2-r7o-021` | MSD-RESTRICTED | 商用再利用・改変・再配布には書面許可が必要 | [運営主体の条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留：原典表現未比較** |
+| 52 | `sm2-r7o-022` | MSD-RESTRICTED | 商用再利用・改変・再配布には書面許可が必要 | [運営主体の条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留：原典表現未比較** |
+| 53 | `sm2-r7o-023` | MSD-RESTRICTED | 商用再利用・改変・再配布には書面許可が必要 | [運営主体の条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留：原典表現未比較** |
+| 54 | `sm2-r7o-024` | MSD-RESTRICTED | 商用再利用・改変・再配布には書面許可が必要 | [運営主体の条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留：原典表現未比較** |
+| 55 | `sm2-r7o-025` | MSD-RESTRICTED | 商用再利用・改変・再配布には書面許可が必要 | [運営主体の条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留：原典表現未比較** |
+| 56 | `sm2-r7o-026` | MSD-RESTRICTED | 商用再利用・改変・再配布には書面許可が必要 | [運営主体の条件](https://www.msdmanuals.com/ja-jp/professional/resourcespages/faqs) | **保留：原典表現未比較** |
+| 57 | `sm2-r7o-027` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 58 | `sm2-r7o-028` | NCBI-ROUTE-CHECK | NCBI掲載先の種類と個別ライセンスの特定が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/home/about/policies/) | **保留：原典表現未比較** |
+| 59 | `sm2-r7o-029` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 60 | `sm2-r7o-030` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 61 | `sm2-r7a-001` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 62 | `sm2-r7a-002` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 63 | `sm2-r7a-003` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 64 | `sm2-r7a-004` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 65 | `sm2-r7a-005` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 66 | `sm2-r7a-006` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 67 | `sm2-r7a-007` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 68 | `sm2-r7a-008` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 69 | `sm2-r7a-009` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 70 | `sm2-r7a-010` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 71 | `sm2-r7a-011` | JNIOSH-PERMISSION | 引用等の例外を除き転載・複製には事前許可が原則必要 | [運営主体の条件](https://www.jniosh.johas.go.jp/rule/rule.html) | **保留：原典表現未比較** |
+| 72 | `sm2-r7a-012` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 73 | `sm2-r7a-013` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 74 | `sm2-r7a-014` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 75 | `sm2-r7a-015` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 76 | `sm2-r7a-016` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 77 | `sm2-r7a-017` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 78 | `sm2-r7a-018` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 79 | `sm2-r7a-019` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 80 | `sm2-r7a-020` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 81 | `sm2-r7a-021` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 82 | `sm2-r7a-022` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 83 | `sm2-r7a-023` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 84 | `sm2-r7a-024` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 85 | `sm2-r7a-025` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 86 | `sm2-r7a-026` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 87 | `sm2-r7a-027` | PMC-ARTICLE-INDIVIDUAL | PMCは記事権利を所有せず記事別許諾・第三者図版確認 | [運営主体の条件](https://pmc.ncbi.nlm.nih.gov/about/copyright) | **保留：原典表現未比較** |
+| 88 | `sm2-r7a-028` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 89 | `sm2-r7a-029` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 90 | `sm2-r7a-030` | NIH-PD-EXCEPT | 米国政府作成物原則PDだが個別ページや第三者資料を確認 | [運営主体の条件](https://www.nih.gov/about-nih/frequently-asked-questions) | **保留：原典表現未比較** |
+| 91 | `sm2-5y-r04-law-01` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 92 | `sm2-5y-r04-law-02` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 93 | `sm2-5y-r04-law-03` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 94 | `sm2-5y-r04-law-04` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 95 | `sm2-5y-r04-law-05` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 96 | `sm2-5y-r04-law-06` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 97 | `sm2-5y-r04-law-07` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 98 | `sm2-5y-r04-law-08` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 99 | `sm2-5y-r04-law-09` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 100 | `sm2-5y-r04-law-10` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 101 | `sm2-5y-r05-law-01` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 102 | `sm2-5y-r05-law-02` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 103 | `sm2-5y-r05-law-03` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 104 | `sm2-5y-r05-law-04` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 105 | `sm2-5y-r05-law-05` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 106 | `sm2-5y-r05-law-06` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 107 | `sm2-5y-r05-law-07` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 108 | `sm2-5y-r05-law-08` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 109 | `sm2-5y-r05-law-09` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 110 | `sm2-5y-r05-law-10` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 111 | `sm2-5y-r06-law-01` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 112 | `sm2-5y-r06-law-02` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 113 | `sm2-5y-r06-law-03` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 114 | `sm2-5y-r06-law-04` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 115 | `sm2-5y-r06-law-05` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 116 | `sm2-5y-r06-law-06` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 117 | `sm2-5y-r06-law-07` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 118 | `sm2-5y-r06-law-08` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 119 | `sm2-5y-r06-law-09` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 120 | `sm2-5y-r06-law-10` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 121 | `sm2-5y-r07-law-01` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 122 | `sm2-5y-r07-law-02` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 123 | `sm2-5y-r07-law-03` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 124 | `sm2-5y-r07-law-04` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 125 | `sm2-5y-r07-law-05` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 126 | `sm2-5y-r07-law-06` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 127 | `sm2-5y-r07-law-07` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 128 | `sm2-5y-r07-law-08` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 129 | `sm2-5y-r07-law-09` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 130 | `sm2-5y-r07-law-10` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 131 | `sm2-5y-r08-law-01` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 132 | `sm2-5y-r08-law-02` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 133 | `sm2-5y-r08-law-03` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 134 | `sm2-5y-r08-law-04` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 135 | `sm2-5y-r08-law-05` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 136 | `sm2-5y-r08-law-06` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 137 | `sm2-5y-r08-law-07` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 138 | `sm2-5y-r08-law-08` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 139 | `sm2-5y-r08-law-09` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 140 | `sm2-5y-r08-law-10` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 141 | `sm2-5y-r09-law-01` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 142 | `sm2-5y-r09-law-02` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 143 | `sm2-5y-r09-law-03` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 144 | `sm2-5y-r09-law-04` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 145 | `sm2-5y-r09-law-05` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 146 | `sm2-5y-r09-law-06` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 147 | `sm2-5y-r09-law-07` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 148 | `sm2-5y-r09-law-08` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 149 | `sm2-5y-r09-law-09` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 150 | `sm2-5y-r09-law-10` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 151 | `sm2-5y-r10-law-01` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 152 | `sm2-5y-r10-law-02` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 153 | `sm2-5y-r10-law-03` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 154 | `sm2-5y-r10-law-04` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 155 | `sm2-5y-r10-law-05` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 156 | `sm2-5y-r10-law-06` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 157 | `sm2-5y-r10-law-07` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 158 | `sm2-5y-r10-law-08` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 159 | `sm2-5y-r10-law-09` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 160 | `sm2-5y-r10-law-10` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 161 | `sm2-5y-r04-hyg-01` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 162 | `sm2-5y-r04-hyg-02` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 163 | `sm2-5y-r04-hyg-03` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 164 | `sm2-5y-r04-hyg-04` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 165 | `sm2-5y-r04-hyg-05` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 166 | `sm2-5y-r04-hyg-06` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 167 | `sm2-5y-r04-hyg-07` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 168 | `sm2-5y-r04-hyg-08` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 169 | `sm2-5y-r04-hyg-09` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 170 | `sm2-5y-r04-hyg-10` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 171 | `sm2-5y-r05-hyg-01` | EXAM-UNCONFIRMED | 公表問題の商用転載・翻案許諾は未確認 | [運営主体の条件](https://www.exam.or.jp/lckohyo/) | **保留：原典表現未比較** |
+| 172 | `sm2-5y-r05-hyg-02` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 173 | `sm2-5y-r05-hyg-03` | JRC-PROTECTED | サイト文章等の著作権帰属。支部/血液事業の個別条件要確認 | [運営主体の条件](https://www.jrc.or.jp/rule/) | **保留：原典表現未比較** |
+| 174 | `sm2-5y-r05-hyg-04` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 175 | `sm2-5y-r05-hyg-05` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 176 | `sm2-5y-r05-hyg-06` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 177 | `sm2-5y-r05-hyg-07` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 178 | `sm2-5y-r05-hyg-08` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 179 | `sm2-5y-r05-hyg-09` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 180 | `sm2-5y-r05-hyg-10` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 181 | `sm2-5y-r06-hyg-01` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 182 | `sm2-5y-r06-hyg-02` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 183 | `sm2-5y-r06-hyg-03` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 184 | `sm2-5y-r06-hyg-04` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 185 | `sm2-5y-r06-hyg-05` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 186 | `sm2-5y-r06-hyg-06` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 187 | `sm2-5y-r06-hyg-07` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 188 | `sm2-5y-r06-hyg-08` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 189 | `sm2-5y-r06-hyg-09` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 190 | `sm2-5y-r06-hyg-10` | CDC-PD-EXCEPT | 米国政府作成資料原則PDだが第三者著作物等の例外あり | [運営主体の条件](https://www.cdc.gov/other/agencymaterials.html) | **保留：原典表現未比較** |
+| 191 | `sm2-5y-r07-hyg-01` | CDC-PD-EXCEPT | 米国政府作成資料原則PDだが第三者著作物等の例外あり | [運営主体の条件](https://www.cdc.gov/other/agencymaterials.html) | **保留：原典表現未比較** |
+| 192 | `sm2-5y-r07-hyg-02` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 193 | `sm2-5y-r07-hyg-03` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 194 | `sm2-5y-r07-hyg-04` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 195 | `sm2-5y-r07-hyg-05` | JRC-PROTECTED | サイト文章等の著作権帰属。支部/血液事業の個別条件要確認 | [運営主体の条件](https://www.jrc.or.jp/rule/) | **保留：原典表現未比較** |
+| 196 | `sm2-5y-r07-hyg-06` | CDC-PD-EXCEPT | 米国政府作成資料原則PDだが第三者著作物等の例外あり | [運営主体の条件](https://www.cdc.gov/other/agencymaterials.html) | **保留：原典表現未比較** |
+| 197 | `sm2-5y-r07-hyg-07` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 198 | `sm2-5y-r07-hyg-08` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 199 | `sm2-5y-r07-hyg-09` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 200 | `sm2-5y-r07-hyg-10` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 201 | `sm2-5y-r08-hyg-01` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 202 | `sm2-5y-r08-hyg-02` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 203 | `sm2-5y-r08-hyg-03` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 204 | `sm2-5y-r08-hyg-04` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 205 | `sm2-5y-r08-hyg-05` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 206 | `sm2-5y-r08-hyg-06` | CDC-PD-EXCEPT | 米国政府作成資料原則PDだが第三者著作物等の例外あり | [運営主体の条件](https://www.cdc.gov/other/agencymaterials.html) | **保留：原典表現未比較** |
+| 207 | `sm2-5y-r08-hyg-07` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 208 | `sm2-5y-r08-hyg-08` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 209 | `sm2-5y-r08-hyg-09` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 210 | `sm2-5y-r08-hyg-10` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 211 | `sm2-5y-r09-hyg-01` | FDMA-PDL | PDL1.0原則、個別特記・第三者素材未確認 | [運営主体の条件](https://www.fdma.go.jp/about/others/post3.html) | **保留：原典表現未比較** |
+| 212 | `sm2-5y-r09-hyg-02` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 213 | `sm2-5y-r09-hyg-03` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 214 | `sm2-5y-r09-hyg-04` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 215 | `sm2-5y-r09-hyg-05` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 216 | `sm2-5y-r09-hyg-06` | FDMA-PDL | PDL1.0原則、個別特記・第三者素材未確認 | [運営主体の条件](https://www.fdma.go.jp/about/others/post3.html) | **保留：原典表現未比較** |
+| 217 | `sm2-5y-r09-hyg-07` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 218 | `sm2-5y-r09-hyg-08` | SITE-UNVERIFIED | 個別サイトの正式利用条件未取得。権利承認不可 | 未確認 | **保留：原典表現未比較** |
+| 219 | `sm2-5y-r09-hyg-09` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 220 | `sm2-5y-r09-hyg-10` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 221 | `sm2-5y-r10-hyg-01` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 222 | `sm2-5y-r10-hyg-02` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 223 | `sm2-5y-r10-hyg-03` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 224 | `sm2-5y-r10-hyg-04` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 225 | `sm2-5y-r10-hyg-05` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 226 | `sm2-5y-r10-hyg-06` | PMC-ARTICLE-INDIVIDUAL | PMCは記事権利を所有せず記事別許諾・第三者図版確認 | [運営主体の条件](https://pmc.ncbi.nlm.nih.gov/about/copyright) | **保留：原典表現未比較** |
+| 227 | `sm2-5y-r10-hyg-07` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 228 | `sm2-5y-r10-hyg-08` | EGOV-PDL | PDL1.0原則、法令データと編集素材を区別 | [運営主体の条件](https://laws.e-gov.go.jp/terms) | **保留：原典表現未比較** |
+| 229 | `sm2-5y-r10-hyg-09` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 230 | `sm2-5y-r10-hyg-10` | MHLW-PDL | PDL1.0原則。ページ個別特記・第三者素材未確認 | [運営主体の条件](https://www.mhlw.go.jp/chosakuken/index.html) | **保留：原典表現未比較** |
+| 231 | `sm2-5y-r04-phy-01` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 232 | `sm2-5y-r04-phy-02` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 233 | `sm2-5y-r04-phy-03` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 234 | `sm2-5y-r04-phy-04` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 235 | `sm2-5y-r04-phy-05` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 236 | `sm2-5y-r04-phy-06` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 237 | `sm2-5y-r04-phy-07` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 238 | `sm2-5y-r04-phy-08` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 239 | `sm2-5y-r04-phy-09` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 240 | `sm2-5y-r04-phy-10` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 241 | `sm2-5y-r05-phy-01` | NIH-PD-EXCEPT | 米国政府作成物原則PDだが個別ページや第三者資料を確認 | [運営主体の条件](https://www.nih.gov/about-nih/frequently-asked-questions) | **保留：原典表現未比較** |
+| 242 | `sm2-5y-r05-phy-02` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 243 | `sm2-5y-r05-phy-03` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 244 | `sm2-5y-r05-phy-04` | NCBI-ROUTE-CHECK | NCBI掲載先の種類と個別ライセンスの特定が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/home/about/policies/) | **保留：原典表現未比較** |
+| 245 | `sm2-5y-r05-phy-05` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 246 | `sm2-5y-r05-phy-06` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 247 | `sm2-5y-r05-phy-07` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 248 | `sm2-5y-r05-phy-08` | PUBMED-METADATA | 書誌DBへの掲載は原著権利の利用許諾と別 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/home/about/policies/) | **保留：原典表現未比較** |
+| 249 | `sm2-5y-r05-phy-09` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 250 | `sm2-5y-r05-phy-10` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 251 | `sm2-5y-r06-phy-01` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 252 | `sm2-5y-r06-phy-02` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 253 | `sm2-5y-r06-phy-03` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 254 | `sm2-5y-r06-phy-04` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 255 | `sm2-5y-r06-phy-05` | NCBI-ROUTE-CHECK | NCBI掲載先の種類と個別ライセンスの特定が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/home/about/policies/) | **保留：原典表現未比較** |
+| 256 | `sm2-5y-r06-phy-06` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 257 | `sm2-5y-r06-phy-07` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 258 | `sm2-5y-r06-phy-08` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 259 | `sm2-5y-r06-phy-09` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 260 | `sm2-5y-r06-phy-10` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 261 | `sm2-5y-r07-phy-01` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 262 | `sm2-5y-r07-phy-02` | PUBMED-METADATA | 書誌DBへの掲載は原著権利の利用許諾と別 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/home/about/policies/) | **保留：原典表現未比較** |
+| 263 | `sm2-5y-r07-phy-03` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 264 | `sm2-5y-r07-phy-04` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 265 | `sm2-5y-r07-phy-05` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 266 | `sm2-5y-r07-phy-06` | NCBI-ROUTE-CHECK | NCBI掲載先の種類と個別ライセンスの特定が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/home/about/policies/) | **保留：原典表現未比較** |
+| 267 | `sm2-5y-r07-phy-07` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 268 | `sm2-5y-r07-phy-08` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 269 | `sm2-5y-r07-phy-09` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 270 | `sm2-5y-r07-phy-10` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 271 | `sm2-5y-r08-phy-01` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 272 | `sm2-5y-r08-phy-02` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 273 | `sm2-5y-r08-phy-03` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 274 | `sm2-5y-r08-phy-04` | NCBI-ROUTE-CHECK | NCBI掲載先の種類と個別ライセンスの特定が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/home/about/policies/) | **保留：原典表現未比較** |
+| 275 | `sm2-5y-r08-phy-05` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 276 | `sm2-5y-r08-phy-06` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 277 | `sm2-5y-r08-phy-07` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 278 | `sm2-5y-r08-phy-08` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 279 | `sm2-5y-r08-phy-09` | NCBI-ROUTE-CHECK | NCBI掲載先の種類と個別ライセンスの特定が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/home/about/policies/) | **保留：原典表現未比較** |
+| 280 | `sm2-5y-r08-phy-10` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 281 | `sm2-5y-r09-phy-01` | NIH-PD-EXCEPT | 米国政府作成物原則PDだが個別ページや第三者資料を確認 | [運営主体の条件](https://www.nih.gov/about-nih/frequently-asked-questions) | **保留：原典表現未比較** |
+| 282 | `sm2-5y-r09-phy-02` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 283 | `sm2-5y-r09-phy-03` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 284 | `sm2-5y-r09-phy-04` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 285 | `sm2-5y-r09-phy-05` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 286 | `sm2-5y-r09-phy-06` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 287 | `sm2-5y-r09-phy-07` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 288 | `sm2-5y-r09-phy-08` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 289 | `sm2-5y-r09-phy-09` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 290 | `sm2-5y-r09-phy-10` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 291 | `sm2-5y-r10-phy-01` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 292 | `sm2-5y-r10-phy-02` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 293 | `sm2-5y-r10-phy-03` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 294 | `sm2-5y-r10-phy-04` | PMC-ARTICLE-INDIVIDUAL | PMCは記事権利を所有せず記事別許諾・第三者図版確認 | [運営主体の条件](https://pmc.ncbi.nlm.nih.gov/about/copyright) | **保留：原典表現未比較** |
+| 295 | `sm2-5y-r10-phy-05` | NCBI-ROUTE-CHECK | NCBI掲載先の種類と個別ライセンスの特定が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/home/about/policies/) | **保留：原典表現未比較** |
+| 296 | `sm2-5y-r10-phy-06` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 297 | `sm2-5y-r10-phy-07` | CDC-PD-EXCEPT | 米国政府作成資料原則PDだが第三者著作物等の例外あり | [運営主体の条件](https://www.cdc.gov/other/agencymaterials.html) | **保留：原典表現未比較** |
+| 298 | `sm2-5y-r10-phy-08` | NCBI-BOOK-INDIVIDUAL | 掲載本ごとの著作権/ライセンス及び図表の確認が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/sites/books/about/copyright/) | **保留：原典表現未比較** |
+| 299 | `sm2-5y-r10-phy-09` | NCBI-ROUTE-CHECK | NCBI掲載先の種類と個別ライセンスの特定が必要 | [運営主体の条件](https://www.ncbi.nlm.nih.gov/home/about/policies/) | **保留：原典表現未比較** |
+| 300 | `sm2-5y-r10-phy-10` | NIH-PD-EXCEPT | 米国政府作成物原則PDだが個別ページや第三者資料を確認 | [運営主体の条件](https://www.nih.gov/about-nih/frequently-asked-questions) | **保留：原典表現未比較** |
+
+### 完了範囲と非完了範囲
+- 出典URL・権利自己申告の存在チェック: **300/300**。
+- 出典URLをもとにした運営主体の一般利用条件への分類・問題ID対応表: **300/300**。うち区分「SITE-UNVERIFIED」はサイトの条件自体を未確認。
+- 個別の原典全文の類似表現・改変利用・第三者素材の対照による商用利用最終承認: **0/300**。未実施をPASSにしない。
+- 当該ファイルの表には、問題の文章/解説が完全に独創的である証明も法的許諾証明も含まれない。コーディネーターは正式なrights証跡JSONとして無条件インポートしないこと。
+- 元台帳・問題JSONは不変。App Review提出と新規TestFlight配信はしていない。
