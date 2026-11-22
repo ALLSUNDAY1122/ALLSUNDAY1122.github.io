@@ -240,3 +240,51 @@
 - No.123・124のMedlinePlus記述は原著A.D.A.M.等の帰属と検査室標準化の差異を調査。No.149は候補先原文不達、内容点検をPASSへ昇格させない。
 - No.118〜152の35問の**証拠探索・命題別照合35/35**。ただし公式原典と全5肢・版・権利を確定した新Q0正式一次確認 **0/35**。暫定の直接的裏付けは各行の記載に限定し、前回公式資料の直接照合4/69も据置。全69問の監査完了を宣言しない。
 - 結果に基づく正答index修正は現段階で不要と判断。ただし未到達原典の問題は最終判定を保留。Q0/Q1判定・権利最終承認・回帰・リリース操作はいずれも対象外。
+
+## 分割B継続：未調査30問の外部根拠直接対照（2026-11-22）
+
+対象は固定台帳 No.112〜115、No.153〜178 の**30問・150肢**。`release-questions.json` Git blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d` を基準に問題文・5肢・正答indexを再確認。既存のNo.118〜152（35問）と重複しない。**照合した主命題と根拠の直接性を30件それぞれ記録し、原典要件を満たしたと断定できない問題は保留のままとする。**
+
+判定規則：政府通達＝日本の規制・指針の直接資料。NIH/CDC等の政府解説＝公的機関の説明だが日本の国家試験公式問題ではなく必ずしも一次研究原著でもない。PubMedの原著要旨は一次研究の要旨のみ、研究レビュー・StatPearls/教科書は二次資料。医学的な5肢判断と公式原典の逐肢立証を分ける。
+
+| 固定No. | ID | 現行正答（1起点） | 参照資料 | 個別根拠との一致・留保 | 階層 |
+|---:|---|---:|---|---|---|
+| 112 | `sm2-5y-r10-hyg-04` | 2 | [厚労省・健康情報の取扱指針](https://www.mhlw.go.jp/web/t_doc?dataId=00tc1467&dataType=1&pageNo=1) | 部分一致：機微情報の適切な取扱いを明示。匿名集団分析の人数条件・作業条件評価の全要件は未直接照合 | 政府通達 |
+| 113 | `sm2-5y-r10-hyg-05` | 3 | [厚労省・騒音障害防止ガイドライン（令和5年4月20日）](https://www.mhlw.go.jp/web/t_doc?dataId=00tc7618&dataType=1&pageNo=1) | 直接一致：JIS遮音値を基に必要十分な遮音値を選び装着方法等を指導。警報・作業連絡を阻害しない点も解説 | 政府通達 |
+| 114 | `sm2-5y-r10-hyg-06` | 5 | [CDC/NIOSH・熱対策と飲水](https://www.cdc.gov/niosh/bulletin/2011/heat2.html) | 部分一致：暑熱時の飲水・体調評価を支持。尿色の診断精度・薬剤影響は直接確認できない。現行PMC原著にも未到達 | 政府解説（補助） |
+| 115 | `sm2-5y-r10-hyg-08` | 4 | [厚労省ストレスチェック集団分析指針](https://www.mhlw.go.jp/web/t_doc?dataId=00tc1015&dataType=1&pageNo=1) | 類推に限定：勤務形態・職場環境を併せて評価。ただし本問は血圧有所見率であり、ストレスチェックの指針を直接の法的根拠と扱えない | 対象異なる政府通達 |
+| 153 | `sm2-5y-r07-phy-09` | 5 | [NCBI Bookshelf・Accommodation](https://www.ncbi.nlm.nih.gov/sites/books/NBK542189/) | 直接一致：近見時に輻輳・調節・縮瞳が起こる。NCBI収載の二次解説であって日本の試験公式原典ではない | 二次医学解説 |
+| 154 | `sm2-5y-r07-phy-10` | 3 | [MedlinePlus・白血球分類](https://medlineplus.gov/lab-tests/white-blood-count-wbc/) | 部分一致：好中球の細菌感染への関与。マクロファージと共同の貪食機序まで未照合 | 政府配信の解説 |
+| 155 | `sm2-5y-r08-phy-01` | 2 | [現行NCBI Bookshelf（反射）](https://www.ncbi.nlm.nih.gov/books/NBK544292/) | 出題の脊髄反射の説明自体は生理学的に整合。今回の一次根拠本文の直接閲覧証跡不足 | 原典未確定 |
+| 156 | `sm2-5y-r08-phy-02` | 5 | [米国NIH/NEI・視細胞](https://www.nei.nih.gov/research-and-training/research-news/researchers-uncover-critical-early-step-visual-process) | 直接一致：杆体は暗所、錐体は明所と色覚に寄与 | 米政府公式解説 |
+| 157 | `sm2-5y-r08-phy-06` | 1 | [米国NIH/NEI・網膜神経回路](https://www.nei.nih.gov/research-and-training/research-news/reviving-vision) | 直接一致：光受容器→双極細胞・神経節細胞→視神経の流れ | 米政府公式解説 |
+| 158 | `sm2-5y-r08-phy-10` | 4 | [NCBI Bookshelf・対光反射](https://www.ncbi.nlm.nih.gov/books/NBK553169/) | 直接対光反射・共同反射の5肢判定は整合するが本文該当箇所の今回直接到達記録なし | 原典未確定 |
+| 159 | `sm2-5y-r09-phy-01` | 4 | [MedlinePlus・筋組織の種類](https://medlineplus.gov/ency/imagepages/19841.htm) | 直接一致：骨格筋は随意筋かつ横紋筋。MedlinePlusの本文はA.D.A.M.著作権表示に注意 | 米政府配信・第三者著作 |
+| 160 | `sm2-5y-r09-phy-02` | 1 | [NCBI Bookshelf・Molecular Motors](https://www.ncbi.nlm.nih.gov/books/NBK26888/) | 直接一致：ミオシン太いフィラメントとアクチン細いフィラメントの滑走 | 二次教科書 |
+| 161 | `sm2-5y-r09-phy-03` | 5 | [現行NCBI Bookshelf・瞳孔反応](https://www.ncbi.nlm.nih.gov/books/NBK553169/) | 交感神経・散大筋が正答という内容整合はあるが原典の該当箇所を今回直接照合できず | 原典未確定 |
+| 162 | `sm2-5y-r09-phy-04` | 2 | [NCBI Bookshelf・Lung Dead Space](https://www.ncbi.nlm.nih.gov/sites/books/NBK482501/) | 直接一致：肺胞換気は（一回換気量−死腔量）×呼吸数。A=4.2L/分、B=3.0L/分を再計算 | 二次医学解説＋独立算術 |
+| 163 | `sm2-5y-r09-phy-05` | 3 | [PubMed・肝細胞/筋管の乳酸代謝原著](https://pubmed.ncbi.nlm.nih.gov/38147697/) | 直接一致：乳酸が肝臓で糖に転換し筋で利用。コリ回路名称もPubChemで確認できたが詳細原著全文未確認 | 査読研究要旨＋公的DB |
+| 164 | `sm2-5y-r09-phy-06` | 5 | [現行NCBI Bookshelf・嫌気解糖](https://www.ncbi.nlm.nih.gov/books/NBK546695/) | 設問上の代謝名称の内容整合のみ。今回の直接原著本文閲覧記録なし | 原典未確定 |
+| 165 | `sm2-5y-r09-phy-07` | 2 | [PubMed・ミトコンドリア脱共役レビュー](https://pubmed.ncbi.nlm.nih.gov/31366145/) | 直接一致：プロトン勾配散逸でATP合成低下、熱として放散。レビュー論文であって実験原著ではない | 査読レビュー（二次） |
+| 166 | `sm2-5y-r09-phy-08` | 4 | [MedlinePlus・膵島β細胞](https://medlineplus.gov/isletcelltransplantation.html) | 直接一致：膵島β細胞がインスリン産生。食後に筋・脂肪への糖取込促進は別資料補完を要す | 米政府解説（部分） |
+| 167 | `sm2-5y-r09-phy-09` | 1 | [現行NCBI Bookshelf・出血循環代償](https://www.ncbi.nlm.nih.gov/books/NBK538172/) | 交感神経による血管収縮と頻脈の内容整合はあるが、今回の原文個別対照未了 | 原典未確定 |
+| 168 | `sm2-5y-r09-phy-10` | 3 | [MedlinePlus Genetics・VWF](https://medlineplus.gov/genetics/gene/gp1ba/) | 直接一致：VWFとGPIbを介した損傷血管壁への血小板粘着 | 米政府公式解説 |
+| 169 | `sm2-5y-r10-phy-01` | 3 | [MedlinePlus・Bile](https://medlineplus.gov/ency/article/002237.htm) | 直接一致：胆汁は肝で作られ胆嚢に貯蔵される。栄養代謝については同一原典で確認未了 | 米政府配信・第三者著作 |
+| 170 | `sm2-5y-r10-phy-02` | 5 | [MedlinePlus・Bile](https://medlineplus.gov/ency/article/002237.htm) | 直接一致：胆汁の生成場所と脂質消化補助。『胆汁自体の主成分は消化酵素ではない』の直接記載は追加資料要 | 米政府配信・第三者著作 |
+| 171 | `sm2-5y-r10-phy-03` | 2 | [肺塞栓の肺胞死腔に関する原著](https://pubmed.ncbi.nlm.nih.gov/10905639/) | 直接一致：肺塞栓で灌流欠損に伴い肺胞死腔増加。V/Q=0ではなく増大と判断 | 臨床研究原著要旨 |
+| 172 | `sm2-5y-r10-phy-04` | 1 | [米国NIDDK・腎糖再吸収](https://www.niddk.nih.gov/news/archive/2016/story-discovery-sglt2-inhibitors-harnessing-kidneys-help-treat-diabetes) | 直接一致に近い：糸球体で濾過された糖は尿細管の早期区間で再吸収。近位尿細管の直接条文・原著は未確認 | 米政府研究解説 |
+| 173 | `sm2-5y-r10-phy-05` | 4 | [現行NCBI Bookshelf・肺ガス交換](https://www.ncbi.nlm.nih.gov/sites/books/NBK493219/) | 肺胞→毛細血管への酸素拡散が正答という内容整合のみ。今回の直接原文照合の証跡不足 | 原典未確定 |
+| 174 | `sm2-5y-r10-phy-06` | 2 | [米国CDC/NIOSH・Heat Stress](https://www.cdc.gov/niosh/heat-stress/about/index.html) | CDC/NIOSHの高温労働環境資料が蒸発冷却の必要性を支持。皮膚35℃と外気40℃の対流熱流方向は熱力学的関係を別途確認。PDFは本文分析未実施 | 米政府の部分解説＋独立物理推論 |
+| 175 | `sm2-5y-r10-phy-07` | 4 | [米国CDC・Managing Diabetes in the Heat](https://www.cdc.gov/diabetes/articles/managing-diabetes-in-the-heat.html) | 直接一致：高湿度は汗の蒸発を妨げるため冷却困難 | 米政府公式解説 |
+| 176 | `sm2-5y-r10-phy-08` | 1 | [NCBI Bookshelf・Nutrient Absorption](https://www.ncbi.nlm.nih.gov/sites/books/NBK597379/) | 直接一致：小腸絨毛毛細血管から門脈系を通じ肝臓へ | 二次医学解説 |
+| 177 | `sm2-5y-r10-phy-09` | 5 | [MedlinePlus・Respiratory acidosis](https://medlineplus.gov/ency/article/000092.htm) | 直接一致に近い：CO2排出障害で呼吸性アシドーシス。H+上昇の平衡式は同ページでは未確認 | 公的配信の二次解説 |
+| 178 | `sm2-5y-r10-phy-10` | 3 | [NCBI Bookshelf・Nutrient Absorption](https://www.ncbi.nlm.nih.gov/sites/books/NBK597379/) | 直接一致：糖類の毛細血管→門脈、脂質の乳び管→リンパ。カイロミクロンは同記事の脂質段落で確認 | 二次医学解説 |
+
+### 特に重要な限定・追加是正候補
+- No.112の健康診断集団分析と、No.115の血圧有所見率集団評価は、ストレスチェック固有の法令・運用資料で代替して法令適合と判断しない。匿名化と最低集団人数、産業保健専門職経由の加工、再識別リスクについて対象資料の差異が残る。
+- No.113は厚労省の令和5年4月20日改訂ガイドライン本文を直接確認でき、必要十分な遮音・警報音への配慮の方向性を支持。No.114は元のPMC出典そのものの検証に至らず、尿色の診断精度に関する原著補強が必要。
+- No.159/169/170など米国政府配信のMedlinePlusに第三者著作権が存在する場合、米国政府パブリックドメインとみなさない。問題文への転載はしていないが300問権利判定はコーディネーター工程で確認する。
+- No.162 は独立算術：A=(500−150)×12=4,200mL/分、B=(300−150)×20=3,000mL/分。No.171では灌流減少時に肺胞死腔が増大し、換気血流比が0になるという選択肢は誤り。
+- 今回の30問すべてについて**外部根拠との命題別比較記録は作成済み**。ただし各5肢それぞれへの公式一次資料の直接条文・全文の照合、特に権利・原著著者・掲載版の確定は未了。新Q0の厳格な逐肢一次確認を今回30件PASSへ一括加算しない。
+- 前回の累計No.110〜178の内容点検69/69問・345/345肢は維持。今回の30問追加後、保留65問すべてについて少なくとも根拠探索・命題別比較を試みたが、**全69問の公式原典照合完了とは判定しない**。既存の厚労省直接照合4/69を据え置き、No.113など直接根拠の追加候補は最終レビュー時に加算可否を個別判断する。
+- 問題データ・生成元・台帳本体は変更なし。App Review提出および新規TestFlight配信なし。二重チェック、権利最終判定、Q0/Q1判定および回帰実行は本分割の対象外。
