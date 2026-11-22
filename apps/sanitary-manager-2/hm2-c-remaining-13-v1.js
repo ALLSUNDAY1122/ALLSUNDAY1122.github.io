@@ -103,11 +103,12 @@ const patches=[
       "explanation": "B細胞が分化した形質細胞は抗体を分泌する。これは獲得免疫のうち体液性免疫の主要な仕組みである。",
       "quick": "B細胞が分化した形質細胞は抗体を分泌する。",
       "basis": "独自場面再設計・公開資料の事実のみ参照（原典逐肢・権利最終未承認）",
-      "sourceUrl": "https://www.ncbi.nlm.nih.gov/books/NBK459455/",
+      "sourceUrl": "https://www.cancer.gov/publications/dictionaries/cancer-terms/def/plasma-cell",
       "legalChecked": null,
       "auditStatus": "再監査待ち",
       "publicationStatus": "非公開",
-      "contentReviewStatus": "requires-independent-source-review"
+      "contentReviewStatus": "requires-independent-source-review",
+      "rightsBasis": "米国NIH国立がん研究所（NCI）の公式用語辞典が形質細胞は活性化B細胞から分化して特異的抗体を多量産生すると明記。科学的事実のみ参照し文章・図版の転載なし。"
     }
   },
   {
@@ -211,11 +212,12 @@ const patches=[
       "explanation": "交感神経優位では心拍が増え、瞳孔が散大する方向の反応がみられる。神経系の反応は臓器や条件に依存する。",
       "quick": "交感神経優位では心拍が増え、瞳孔が散大する方向の反応がみられる。",
       "basis": "独自場面再設計・公開資料の事実のみ参照（原典逐肢・権利最終未承認）",
-      "sourceUrl": "https://medlineplus.gov/ency/article/002311.htm",
+      "sourceUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6380109/",
       "legalChecked": null,
       "auditStatus": "再監査待ち",
       "publicationStatus": "非公開",
-      "contentReviewStatus": "requires-independent-source-review"
+      "contentReviewStatus": "requires-independent-source-review",
+      "rightsBasis": "査読レビュー（Frontiers in Neurology、PMC6380109）に交感神経系の活性化が心拍数増加・散瞳を生じるとの明記を確認。原著はCC BY、掲載文章・図表は転載せず、設問・5肢・解説を独自の日本語で保持。"
     }
   },
   {
@@ -292,11 +294,12 @@ const patches=[
       "explanation": "杆体細胞は弱い光への感受性が高く、暗所での視覚に重要である。錐体細胞は主として明所の色覚・高解像視に関与する。",
       "quick": "杆体細胞は弱い光への感受性が高く、暗所での視覚に重要である。",
       "basis": "独自場面再設計・公開資料の事実のみ参照（原典逐肢・権利最終未承認）",
-      "sourceUrl": "https://medlineplus.gov/ency/article/002309.htm",
+      "sourceUrl": "https://www.nei.nih.gov/research-and-training/research-news/researchers-uncover-critical-early-step-visual-process",
       "legalChecked": null,
       "auditStatus": "再監査待ち",
       "publicationStatus": "非公開",
-      "contentReviewStatus": "requires-independent-source-review"
+      "contentReviewStatus": "requires-independent-source-review",
+      "rightsBasis": "米国NIH国立眼研究所（NEI）の公式解説が杆体は暗所視、錐体は日中・色覚に対応すると記載。米国政府機関の事実説明を参照し、記事の文章・画像・図は転載しない。"
     }
   },
   {
