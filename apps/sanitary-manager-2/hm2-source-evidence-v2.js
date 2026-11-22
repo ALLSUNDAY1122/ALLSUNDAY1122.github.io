@@ -124,3 +124,30 @@ for(const f of patches){
 }
 window.HM2_EVIDENCE_V2_UPDATED_IDS=patches.map(p=>p.id);
 })();
+
+
+// Q1 difficulty-format repair: a display-only paired-judgment label for the
+// already reviewed 2026-08-01 industrial-physician resignation question.
+// The five original proposition sentences, correct answer and explanations
+// remain unchanged; this prefix must not confer any new legal review approval.
+(function () {
+  'use strict';
+  const q=(window.Q_PARTS||[]).find(x=>x.id==='sm2-5y-r05-law-10');
+  const expectedTopic='産業医の辞任等の報告';
+  const expectedCorrect='辞任の旨と理由を遅滞なく衛生委員会等に報告し、産業医の氏名・辞任年月日等を遅滞なく所轄労働基準監督署長に報告する。';
+  if (!q || q.topic!==expectedTopic || q.answer!==3 ||
+      q.difficultyModel!=='exam-paired-judgment-v1' || q.stemRedesignBatch ||
+      !Array.isArray(q.choices) || q.choices.length!==5 ||
+      q.choices[2]!==expectedCorrect ||
+      q.choices.some(c=>typeof c!=='string'||c.includes(' ― '))) {
+    throw new Error('HM2 R05 LAW10 Q1 format patch stale input');
+  }
+  // Exactly the same statements, with the topic printed as a common label.
+  q.choices=q.choices.map(c=>expectedTopic+' ― '+c);
+  if(q.choices.length!==5 || new Set(q.choices).size!==5 ||
+     !q.choices.every(c=>c.includes(' ― ')) ||
+     !q.choices[q.answer-1].startsWith(q.topic+' ― ')) {
+    throw new Error('HM2 R05 LAW10 Q1 paired-judgment format mismatch');
+  }
+  window.HM2_R05_LAW10_Q1_FORMAT_FIX=true;
+})();
