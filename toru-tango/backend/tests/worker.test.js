@@ -259,3 +259,41 @@ test('removes duplicate and answer-leaking questions', async (t) => {
   assert.equal(body.quality.duplicateCount, 1);
   assert.equal(body.quality.rejectedCount, 1);
 });
+
+test('CORS advertises StoreKit transaction header', async ()=>{
+  const r=await worker.fetch(new Request('https://worker.example/generate',{method:'OPTIONS'}),{});
+  assert.equal(r.status,204);
+  assert.match(r.headers.get('Access-Control-Allow-Headers'),/X-Toru-Tango-Transaction-JWS/);
+});
+test('invalid subscription JWS returns 401 and never calls Gemini',async()=>{
+  const r=await worker.fetch(request(validInput,{headers:{
+    'X-Toru-Tango-Anonymous-Id':'anonymous-signed-test',
+    'X-Toru-Tango-Transaction-JWS':'a.b.c'
+  }}),{GEMINI_API_KEY:'test-key',USAGE_KV:{get:async()=>null,put:async()=>{throw Error('must not store');}}});
+  assert.equal(r.status,401);
+  assert.equal((await r.json()).code,'INVALID_TRANSACTION_JWS');
+});
+test('unauthenticated entitlement reports free tier without consuming usage',async()=>{
+  const r=await worker.fetch(new Request('https://worker.example/entitlement',{method:'POST',body:'{}'}),{});
+  assert.deepEqual(await r.json(),{active:false,tier:'free',limit:5});
+});
+test('signed-transaction endpoint rejects untrusted JWS',async()=>{
+  const r=await worker.fetch(new Request('https://worker.example/entitlement',{
+    method:'POST',headers:{'X-Toru-Tango-Transaction-JWS':'a.b.c'},body:'{}'
+  }),{});
+  assert.equal(r.status,401);
+});
+test('monthly limit responses include free tier and do not advertise Pro', async t=>{
+  const before=globalThis.fetch;
+  globalThis.fetch=async()=>Response.json(geminiResponse([{question:'憲法の施行日はいつ？',answer:'1947年5月3日',factKey:'start'}]));
+  t.after(()=>{globalThis.fetch=before;});
+  const values=new Map([['ai-usage:'+new Date().toISOString().slice(0,7)+':anon-test-user','5']]);
+  const r=await worker.fetch(request(validInput,{headers:{'X-Toru-Tango-Anonymous-Id':'anon-test-user'}}),{
+    GEMINI_API_KEY:'key',USAGE_KV:{get:async k=>values.get(k),put:async()=>{}}
+  });
+  const payload=await r.json();
+  assert.equal(r.status,429);
+  assert.deepEqual(payload.usage,{used:5,limit:5,tier:'free'});
+  assert.equal(payload.code,'AI_MONTHLY_LIMIT');
+  assert.doesNotMatch(payload.error,/Proプラン/);
+});

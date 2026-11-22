@@ -1,0 +1,82 @@
+name: Toru Tango Build 14 Cloud AI (Worker then TestFlight)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: toru-tango-build14-cloud-ai
+  cancel-in-progress: false
+jobs:
+  worker:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: toru-tango/backend
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      GEMINI_API_KEY: ${{ secrets.TORU_TANGO_GEMINI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Test Worker
+        run: npm test
+      - name: Check deployment credentials
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test -n "$GEMINI_API_KEY"
+      - name: Install Wrangler
+        run: npm install --no-audit --no-fund
+      - name: Set Gemini secret
+        run: printf '%s' "$GEMINI_API_KEY" | npx wrangler secret put GEMINI_API_KEY
+      - name: Deploy Worker
+        run: npx wrangler deploy | tee worker-deploy.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-tango-worker-deploy
+          path: toru-tango/backend/worker-deploy.log
+          if-no-files-found: warn
+  ios:
+    needs: worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: toru-tango-mobile
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Check Expo token
+        run: test -n "$EXPO_TOKEN"
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Synchronize IAP lockfile in build workspace
+        run: npm install --package-lock-only --no-audit --no-fund
+      - name: Install and test
+        run: |
+          npm ci --include=dev --no-audit --no-fund
+          npm run typecheck
+          npm run lint
+          node --test tests/study-folder.test.cjs
+      - name: EAS Build 14
+        run: |
+          mkdir -p release-logs
+          eas build --platform ios --profile production --non-interactive --json | tee release-logs/build14.json
+      - name: Submit Build 14 to TestFlight (not App Review)
+        run: eas submit --platform ios --profile production --latest --non-interactive | tee release-logs/submit14.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-tango-build14-release
+          path: toru-tango-mobile/release-logs
+          if-no-files-found: warn

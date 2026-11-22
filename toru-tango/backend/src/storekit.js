@@ -55,7 +55,9 @@ async function verifyCert(child, parent) {
   const hash = child.sigOid === '42,134,72,206,61,4,3,2'?'SHA-256':
     child.sigOid === '42,134,72,206,61,4,3,3'?'SHA-384':null;
   if(!hash)throw Error('unsupported certificate signature');
-  const curve=parent.spki.length>150?'P-384':'P-256';
+  const hex=Array.from(parent.spki,x=>x.toString(16).padStart(2,'0')).join('');
+  const curve=hex.includes('06052b81040022')?'P-384':hex.includes('06082a8648ce3d030107')?'P-256':null;
+  if(!curve)throw Error('unsupported public key curve');
   const key=await crypto.subtle.importKey('spki',parent.spki,{name:'ECDSA',namedCurve:curve},false,['verify']);
   const ok=await crypto.subtle.verify({name:'ECDSA',hash},key,ecdsaRaw(child.signature,curve==='P-384'?48:32),child.tbs);
   if(!ok)throw Error('untrusted certificate');

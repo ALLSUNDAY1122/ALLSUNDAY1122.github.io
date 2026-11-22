@@ -187,8 +187,16 @@ export default {
     }
 
     const url = new URL(request.url);
-    if (url.pathname !== '/generate' && url.pathname !== '/ocr') {
+    if (url.pathname !== '/generate' && url.pathname !== '/ocr' && url.pathname !== '/entitlement') {
       return json({ error: 'Not found' }, 404, origin);
+    }
+    if (url.pathname === '/entitlement') {
+      const jws=request.headers.get('X-Toru-Tango-Transaction-JWS');
+      if(!jws)return json({active:false,tier:'free',limit:FREE_MONTHLY_AI_LIMIT},200,origin);
+      try {
+        const entitlement=await verifyStoreKitTransaction(jws);
+        return json({active:true,tier:entitlement.tier,limit:entitlement.limit,expiresDate:entitlement.expiresDate},200,origin);
+      } catch { return json({active:false,error:'購入情報を検証できません。'},401,origin); }
     }
     if (!env.GEMINI_API_KEY) {
       return json({ error: 'サーバー設定が完了していません。' }, 503, origin);
