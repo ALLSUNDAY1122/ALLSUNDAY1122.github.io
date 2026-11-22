@@ -318,3 +318,13 @@ DC原票の完了178件は**一つの独立セッションによるレビュー*
 - `HM2_RIGHTS_CLEARANCE_300.json` の `rights_holder` に、自作設問の制作主体 `ALLSUNDAY1122` を300件追記。ただし掲載元の法令・出版物・画像等の第三者権利者を所有するという意味ではない。権利運用判定300/300と個別権利の法的保証を区別する。
 - 現行スキーマの静的再現により残りの形式エラーは **138×3=414件見込み**：A/Bの独立性宣誓138、五肢選択肢証跡138、最終照合未承認138。SHA不一致0、artifact digest形式エラー0、権利JSONの必須項目不足0、法令関連legalChecked欠落0。**これは実際のPython `--enforce` ローカル実行ではなく同一条件に基づく予測値。**
 - Q0はA/Bの第1レビュー証跡未完のためBLOCKED、Q1もBLOCKED。ゲート弱体化なし、App Review提出・TestFlight配信なし。
+
+
+## 2026-11-22 P1a/P1b実JSON統合・再判定
+
+- 実在する独立pass1ファイルを取得：`HM2_PASS1_A_20261122.json`（69問、実ファイルSHA-256 `6188a1677cd3c39ca51d111e5e70dea55d413c2aab6a6e3410fd6dadf328eb14`）、`HM2_PASS1_B_20261122.json`（69問、実ファイルSHA-256 `75a9df0c6bc72f2c5feb35c08ff0ac085a31466f8d281e9653c038b5f1f3683d`）。
+- 両原票に各69問×5肢の判定と理由、正式のレビュー属性が記録されている。これらを`HM2_INDEPENDENT_DOUBLE_CHECK_178.json`の該当138問pass1として統合。DC pass2とは138問すべて5肢のtext・correctが一致。R40の40問も一致。更新commit `ae9215f8a2b1c878f2b59fa7c92d8552e1b1a023`。
+- **重要**：P1a自身の`note`と69件のpassに「先行レビューを含む統合証拠JSONを閲覧した」と明記され、`performed_without_prior_review_access:false`。そのためA69問は、内容が一致しても独立証跡と正式照合を承認できない。pass1の`false`を変更せず、`HOLD_PASS1_A_INDEPENDENCE_UNPROVEN`のまま。P1b69問は`true`の証跡あり、DCと一致するため`approved_after_reconciliation`に変更。
+- 現状は`approved_after_reconciliation` **109/178**（R40 40＋P1b 69）、正式HOLD **69/178**（P1a 69）。権利JSONは300/300の機械的必須欄を維持。
+- ゲートスクリプトと同項目の静的照合による`--enforce`予測：`PASS1_INDEPENDENCE_ATTESTATION_MISSING` **69件**と`RECONCILIATION_REQUIRED` **69件**、合計 **138件**（R40・B・権利等に他の予期しない差異がない前提）。この集計はPythonの実行ログではなく、既存JSONのフィールド再検査からの予測である。
+- **Q0 BLOCKED / Q1 BLOCKED**。理由はA69問の独立性要件未充足であり、P1aの否定的な自己申告を上書きしない。ゲート要件の変更、App Review、TestFlightは実施していない。
