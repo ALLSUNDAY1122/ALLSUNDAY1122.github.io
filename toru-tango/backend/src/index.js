@@ -346,6 +346,8 @@ export default {
       'factKeyには、問題文の形式に依存しない事実の識別子を日本語または短い英数字で入れてください。'
     ].join('\n');
 
+    const startedAt = Date.now();
+    try {
       const { response, raw } = await generateWithRetry({
           url: `${GEMINI_API_BASE}/${encodeURIComponent(model)}:generateContent`,
           headers: {
