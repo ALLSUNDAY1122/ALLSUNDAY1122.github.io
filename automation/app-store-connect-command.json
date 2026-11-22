@@ -1,5 +1,5 @@
 {
-  "request_id": "hm2-b24-asc-attached-readback-20261122-r2",
+  "request_id": "hm2-b24-review-postattempt-readback-20261122-r1",
   "requests": [
     {
       "label": "version",
@@ -12,7 +12,12 @@
       "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/relationships/build"
     },
     {
-      "label": "review-submissions",
+      "label": "submission",
+      "method": "GET",
+      "path": "/v1/reviewSubmissions/ce607087-bf41-4f0c-b155-f6bfb0ad5ce0"
+    },
+    {
+      "label": "submissions",
       "method": "GET",
       "path": "/v1/apps/6799751657/reviewSubmissions?limit=20"
     }
