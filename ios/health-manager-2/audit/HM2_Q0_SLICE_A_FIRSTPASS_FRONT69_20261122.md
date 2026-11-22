@@ -1,6 +1,6 @@
 # HM2 Q0 分割A：前半69問・一次照合作業台帳（2026-11-22 JST）
 
-> **最新集計（2026-11-22）**：分割A 69問・345肢を照合し、一次確認PASS **52/69問**、HOLD **17/69問**。初期の0/69・中間の21/69は履歴。権利判定・二重確認・Q0/Q1合否は扱わない。Git blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d` を対象とし、バイトSHA-256再計算は未実施。
+> **最新集計（2026-11-22、HOLD17問再照合後）**：分割A69問、一次内容レビュー**PASS63 / HOLD6**。HOLDはNo.13,17,18,23,44,49。直前までのPASS52は履歴。既存PASS13問の再点検を含む計30問を追加確認。二重レビュー・権利判定・bank SHA-256は未完了。
 
 ## 判定と実施範囲
 
@@ -294,3 +294,52 @@
 **本バッチ：PASS 31/39問、HOLD 8/39問。** 分割A累計：一次PASS 52/69問、HOLD 17/69問。HOLD No.44・47・49・50・52・63・65・67。特にNo.52の「20〜50分」は厚労省睡眠ガイド2023に直接対応を確認できないため要修正候補。No.49の換気回数計算、No.47の陽性的中率計算自体は整合するが、公的原典の式の掲載位置が未確定。No.63は個別の洗浄剤SDSと一般洗浄剤の手順との対応が未確定。
 
 **制約**：現行bank全体のバイトSHA-256再計算・全PDF精読・条文施行履歴の網羅的検証・他者二重確認は実施していない。Q0用の完全証跡として転記せず、同一bankのSHA-256をコーディネーターが固定し、別セッションで根拠直接性を再確認する。問題JSON・生成元・台帳本体を変更せず、App Review提出とTestFlight配信もしない。
+
+## HOLD17問の一次原典再照合＋既存PASS13問の再点検（2026-11-22）
+
+実施者GPT-6（分割A同一担当の追加レビュー。**独立した第二レビュアーによる二重チェックには非該当**）。固定bank Git blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d` の前回記録された5肢を再判定し、公式公開一次資料の具体箇所（PDFはテキスト抽出と閲覧可能な画像）を根拠とした。明白な5肢正答根拠があっても、出典直接性が確認できない場合はHOLDを継続する。バイトSHA-256、権利許諾、独立二重レビューは未完了。
+
+| No. | 問題ID | 再判定 | 5肢判定と原典の追加照合・留保 | 出典 |
+|---:|---|---|---|---|
+| 12 | `sm2-5y-r04-hyg-03` | **PASS** | CO₂が1000→1800ppmなら換気と人数を点検。CO₂のみで個人の感染は判定できず、他肢の停止・増員・個人断定は不適 | [公的原典](https://www.mhlw.go.jp/content/001020788.pdf) |
+| 13 | `sm2-5y-r04-hyg-05` | **HOLD** | 6/23=26.09%、6/13=46.15%と正答3の計算は整合するがNASA原典との数字・著作権上の独立性は未確定 | [公的原典](https://mynasadata.larc.nasa.gov/sites/default/files/2019-04/Relative%20Humidity%20Protocol.pdf) |
+| 17 | `sm2-5y-r05-hyg-05` | **HOLD** | Q=300m³×4/h=1200m³/h、他肢はいずれも4回/hに不足。ただし産総研URLの直接式掲載と出典妥当性が未確定 | [公的原典](https://www.aist.go.jp/aist_j/new_research/2020/nr20201224/nr20201224.html) |
+| 18 | `sm2-5y-r05-hyg-08` | **HOLD** | 騒音源評価・低騒音化・警報の補完は適切だが、視覚警報を組み合わせる具体的根拠が指針本文から未確認 | [公的原典](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02_00004.html) |
+| 19 | `sm2-5y-r05-hyg-10` | **PASS** | OSHA Technical Manualの音圧レベル式20log10(p/p0)より10dBは振幅比3.162倍。選択肢1,2,4,5は振幅と強度の倍率を誤る | [公的原典](https://www.osha.gov/otm/section-3-health-hazards/chapter-5) |
+| 22 | `sm2-5y-r06-hyg-10` | **PASS** | CDCの感度定義は疾病あり集団での真陽性割合。90/100=90%。特異度・陽性的中率・陰性的中率・有病率には別の分母が必要 | [公的原典](https://reach.cdc.gov/sites/default/files/job-aids-resources/Sensitivity_and_Specificity_Final_5_23_2022_508_0.pdf) |
+| 23 | `sm2-5y-r07-hyg-03` | **HOLD** | 個人再識別を防ぐ集計は合理的だが対象厚労省出典の具体的指針本文、法令適用範囲への直接照合が残る | [公的原典](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei28/index.html) |
+| 24 | `sm2-5y-r07-hyg-05` | **PASS** | 日本赤十字社の心肺蘇生資料は圧迫後に元の胸の高さへ戻すと明記。胸を戻さず圧迫・背中叩打・長い中断などの4誤肢を排除 | [公的原典](https://www.jrc.or.jp/volunteer-and-youth/youth/pdf/seisyonen131001-02.pdf) |
+| 30 | `sm2-5y-r04-hyg-02` | **PASS** | 厚労省の事務所則3〜5条：換気と温湿度・気流等を管理するため室温だけでは不十分。湿度不要、加湿せず乾燥、換気停止、記録廃止の誤肢を排除 | [公的原典](https://www.mhlw.go.jp/web/t_doc?dataId=74089000) |
+| 44 | `sm2-5y-r07-hyg-01` | **HOLD** | 発症後の再発防止・機能回復・職場復帰は三次予防に整合するがCDCの三次予防定義段落の全文直接照合が不十分 | [公的原典](https://stacks.cdc.gov/view/cdc/190539/cdc_190539_DS1.pdf) |
+| 47 | `sm2-5y-r07-hyg-06` | **PASS** | CDC公式Validation ToolkitのPPV=TP/(TP+FP)。陽性80人中真陽性20人→25%。20/80以外の誤肢80,20,40,60%を排除 | [公的原典](https://stacks.cdc.gov/view/cdc/153395/cdc_153395_DS1.pdf) |
+| 49 | `sm2-5y-r07-hyg-08` | **HOLD** | 900m³/h÷300m³=3回/h、900÷450=2回/h。正答4は計算整合するが産総研出典に同式が掲載されるか未確認 | [公的原典](https://www.aist.go.jp/aist_j/new_research/2020/nr20201224/nr20201224.html) |
+| 50 | `sm2-5y-r07-hyg-09` | **PASS** | 厚労省基発392号は温熱条件を気温・湿度・輻射熱・気流の総合とし個人差への局所対策も記述。気温のみ判定する他4肢は不適 | [公的原典](https://www.mhlw.go.jp/web/t_doc?dataId=00tb2144&dataType=1&pageNo=1) |
+| 52 | `sm2-5y-r08-hyg-01` | **PASS** | 厚労省睡眠ガイド2023印刷42頁に0〜4時開始の20〜50分仮眠による眠気・効率・疲労の改善と60分仮眠による睡眠慣性・効率悪化を直接記載。前回の数値根拠未確認は訂正 | [公的原典](https://www.mhlw.go.jp/content/001305530.pdf) |
+| 63 | `sm2-5y-r09-hyg-02` | **PASS** | 厚労省の洗浄剤用途SDSは眼への曝露時に水で洗い、刺激持続時は医療受診と記載。中和剤注入・放置・擦る等の4誤肢を排除 | [公的原典](https://anzeninfo.mhlw.go.jp/anzen/gmsds/25155-30-0.html) |
+| 65 | `sm2-5y-r09-hyg-04` | **PASS** | 厚労省腰痛予防対策指針は長時間立位での足台・高い椅子・作業姿勢・休止を明記。固定姿勢継続などの4誤肢を排除 | [公的原典](https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1&pageNo=1) |
+| 67 | `sm2-5y-r09-hyg-06` | **PASS** | 消防庁2025年応急手当冊子印刷37頁は副子の締め付けで血流不良となるため指先・足先を露出させ観察と明記。強い整復・過緊縛・歩行・観察放棄は不適 | [公的原典](https://www.fdma.go.jp/relocation/syobodan/item/upload/tetyou2025.pdf) |
+
+### 既存PASSの再点検（13問、前回と同一担当）
+
+| No. | ID | 再点検の中心条件 | 結果 |
+|---:|---|---|---|
+| 1 | `sm2-5y-r09-law-05` | 産前超過分の産前期間と産後8週の区分（[資料](https://www.bosei-navi.mhlw.go.jp/faq/faq16.html)) | **PASS維持** |
+| 2 | `sm2-5y-r09-law-07` | 半日年休は年5日義務へ算入、時間単位年休は不算入（[資料](https://www.startup-roudou.mhlw.go.jp/qa/zigyonushi/yukyu/q11.html)) | **PASS維持** |
+| 3 | `sm2-5y-r10-law-02` | 雇入時健診43条と定期健診44条の省略適用は異なる（[資料](https://www.mhlw.go.jp/web/t_doc?dataId=74003000)) | **PASS維持** |
+| 5 | `sm2-5y-r09-law-03` | 安衛則7条で常時120人は衛生管理者1人以上（[資料](https://www.mhlw.go.jp/web/t_doc?dataId=74003000)) | **PASS維持** |
+| 6 | `sm2-5y-r09-law-08` | 選任後遅滞ない報告と選任期限は別要件（[資料](https://www.mhlw.go.jp/web/t_doc?dataId=74003000)) | **PASS維持** |
+| 7 | `sm2-5y-r09-law-10` | 事務所則の供給空気COの通常基準と外気例外（[資料](https://www.mhlw.go.jp/web/t_doc?dataId=74089000)) | **PASS維持** |
+| 8 | `sm2-5y-r10-law-03` | 法定休日割増35%以上は36協定でも免除しない（[資料](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudouseisaku/chushoukigyou/joken_kankyou_rule.html)) | **PASS維持** |
+| 10 | `sm2-5y-r10-law-08` | 医師意見3か月以内、健診個人票5年保存（[資料](https://www.mhlw.go.jp/web/t_doc?dataId=74003000)) | **PASS維持** |
+| 11 | `sm2-5y-r10-law-10` | 産後6週経過・本人請求・医師が認めた業務の三条件（[資料](https://www.bosei-navi.mhlw.go.jp/gimu/kyugyo.html)) | **PASS維持** |
+| 14 | `sm2-5y-r04-hyg-08` | 着衣補正+3℃と28+3=31℃（[資料](https://neccyusho.mhlw.go.jp/heat_index/)) | **PASS維持** |
+| 15 | `sm2-5y-r04-hyg-10` | 日射あり・なしのWBGT係数の区別（[資料](https://www.mhlw.go.jp/web/t_doc?dataId=00tc9896&dataType=1&pageNo=1)) | **PASS維持** |
+| 26 | `sm2-5y-r09-law-09` | 44条2項の省略項目から血圧・尿検査を除く（[資料](https://www.mhlw.go.jp/web/t_doc?dataId=74003000)) | **PASS維持** |
+| 27 | `sm2-5y-r10-law-04` | 選任人数は200人1人、201人2人の閾値（[資料](https://www.mhlw.go.jp/web/t_doc?dataId=74003000)) | **PASS維持** |
+
+### 集計・重要な訂正
+
+- 今回の重複なし30問：既存HOLD17問を再照合し**11問PASSへ昇格・6問HOLD維持**、既存PASS13問はPASS維持。
+- 分割A全69問：**一次PASS63、HOLD6**。残るHOLD No.13, 17, 18, 23, 44, 49。既存の古い集計は作業時点の履歴として扱う。
+- **訂正**：No.52の「20〜50分の夜勤仮眠」は厚労省『睡眠ガイド2023』印刷42頁で直接確認できた（2024年9月一部修正後版）。以前の根拠不明判定を取り消す。No.67の消防庁PDFは本文抽出で照合したがスクリーンショット取得は容量制限で失敗した。
+- Q0要件の独立二重レビュー、300問権利判定、現行銀行のバイトSHA-256は未検証。公開判定をPASSにしない。台帳本体・問題データ・生成元には変更なし。App Review提出・新規TestFlight配信なし。
