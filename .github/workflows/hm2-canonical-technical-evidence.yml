@@ -1,0 +1,90 @@
+name: HM2 Canonical Technical Evidence (no submission)
+on:
+  push:
+    branches:
+      - fix/hm2-priority123-regression-20261122
+    paths:
+      - '.github/workflows/hm2-canonical-technical-evidence.yml'
+      - 'ios/health-manager-2/release-questions.json'
+      - 'ios/health-manager-2/export-canonical-snapshot.cjs'
+      - 'scripts/hm2_submission_readiness.py'
+      - 'apps/sanitary-manager-2/hm2-c-replacements-v1.js'
+      - 'apps/sanitary-manager-2/hm2-c-remaining-13-v1.js'
+      - 'apps/sanitary-manager-2/hm2-source-evidence-v2.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute actual Node regeneration and readiness; generate evidence
+        id: verify
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess, pathlib, json, hashlib, datetime
+          bank=pathlib.Path('ios/health-manager-2/release-questions.json')
+          before=bank.read_bytes()
+          sha=hashlib.sha256(before).hexdigest()
+          canonical=subprocess.run(['node','ios/health-manager-2/export-canonical-snapshot.cjs'],text=True,capture_output=True)
+          after=bank.read_bytes()
+          identical=canonical.returncode==0 and after==before
+          readiness=subprocess.run(['python','scripts/hm2_submission_readiness.py','--output','/tmp/hm2-submission-readiness.json'],text=True,capture_output=True)
+          report_file=pathlib.Path('/tmp/hm2-submission-readiness.json')
+          report=json.loads(report_file.read_text()) if report_file.is_file() else {'technical_errors':['READINESS_REPORT_MISSING'],'submission_blockers':[]}
+          errors=report.get('technical_errors',[])
+          test=subprocess.run(['python','-m','unittest','discover','-s','tests','-p','test_hm2_alternative_q0_gate.py','-v'],text=True,capture_output=True)
+          passed=(identical and not errors and readiness.returncode==0 and test.returncode==0)
+          lines=['# HM2 canonical technical execution result','',
+           '- Checked UTC: '+datetime.datetime.now(datetime.timezone.utc).isoformat(),
+           '- Bank SHA-256: `'+sha+'`',
+           '- Actual Node canonical exit: `'+str(canonical.returncode)+'`',
+           '- Canonical exact bytes: **'+str(identical)+'**',
+           '- Readiness command exit: `'+str(readiness.returncode)+'`',
+           '- technical_errors: `'+json.dumps(errors,ensure_ascii=False)+'`',
+           '- submission_blockers: `'+json.dumps(report.get('submission_blockers',[]),ensure_ascii=False)+'`',
+           '- Python 18-case unittest exit: `'+str(test.returncode)+'`',
+           '- Technical verification: **'+('PASS' if passed else 'FAIL')+'**',
+           '',
+           'This is a technical check; it does not approve Q0 content/rights, allow TestFlight or submit to Apple.',
+           '',
+           '## Node canonical stdout/stderr','',
+           '```text',(canonical.stdout+canonical.stderr)[-3000:],'```',
+           '',
+           '## Readiness stdout/stderr','',
+           '```text',(readiness.stdout+readiness.stderr)[-3000:],'```',
+           '',
+           '## Unittest tail','',
+           '```text',(test.stdout+test.stderr)[-3000:],'```']
+          output=pathlib.Path('ios/health-manager-2/audit/HM2_CANONICAL_TECHNICAL_GHA_EXECUTION_20261122.md')
+          output.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          pathlib.Path('/tmp/hm2-verification-state').write_text('PASS' if passed else 'FAIL')
+          print('Node canonical byte exact:',identical,'technical_errors:',errors,'unittest exit:',test.returncode,'check:',('PASS' if passed else 'FAIL'))
+          PY
+      - name: Save execution evidence to the audit branch
+        if: always()
+        shell: bash
+        run: |
+          if [ ! -f ios/health-manager-2/audit/HM2_CANONICAL_TECHNICAL_GHA_EXECUTION_20261122.md ]; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ios/health-manager-2/audit/HM2_CANONICAL_TECHNICAL_GHA_EXECUTION_20261122.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'audit(hm2): persist actual canonical technical execution evidence'
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - name: Enforce technical check result
+        if: always()
+        run: |
+          test "$(cat /tmp/hm2-verification-state 2>/dev/null || echo FAIL)" = PASS
