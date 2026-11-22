@@ -145,3 +145,10 @@
 - GHAを新規起動できない理由：GitHub connectorがworkflow_dispatchを提供せず、実行環境はgithub.com DNS解決失敗。既存GHAの成功・Node再生成・元Python unittest18件の実測PASSは未取得。
 - **代替静的テスト18件は実際に実施して18/18 PASS**。現行300問bankのID・5肢・正答範囲、A/B/Cの集合、ゲートコード上の独立性・権利チェック等を確認（`HM2_Q0_COORD_STATIC_REGRESSION_18_20261122.md`、commit `b8905b24712cab7091e7dccb4f8fc0d5a8aba6a3`）。このテストは**元Python回帰18件の代替的な静的検査であり、同一テストの実行ではない**。
 - **Q0 BLOCKED / Q1 BLOCKED**。App Review提出なし／新規TestFlight配信なし。旧ゲートを弱める変更なし。
+
+## 独立二次チェック正式担当指名後・追加作業（2026-11-22 JST）
+- ユーザーは本セッションを二次担当として指定。現在の300問bank Git blobは `72888a617ff17bf84b25e9d5a61f5cdec0d7493d`。既存40、A69、B69の対象178一意IDと計890肢の現行本文・正答・出典URL・検証状態を再収集し、`HM2_Q0_COORD_SECOND_REVIEW_SCOPE_178_20261122.md`（commit `26beec8216164957908fb759818d9b6eaf58789d`）に保存。正式独立全肢承認ではなく照合範囲の索引。
+- 既存40問200肢の二次内容評価を `HM2_Q0_COORD_SECOND_CHECK_40_CURRENT_CHOICES_20261122.md`（commit `7ee90b03cdb55f47387a9a09a6bca0c1dcc08c7f`）に記録。先行レビューにアクセス済みで、代替ゲートの `performed_without_prior_review_access` の真正な証跡を生成できない。**二次内容検査40/178、完全独立承認0/178**。Aは一次内容69PASS、Bは69問の5肢索引を整備したものの原典逐肢に残件。
+- Cは運用分類PASS284/要差し替え16だが著作権最終承認0/300。16問のうちCが提供した9問の代替草案を、5肢数・正答範囲・重複ID等の5静的条件に合格した構造化JSON `HM2_Q0_C_REPLACEMENTS_16_STAGING_20261122.json`（commit `e86fe1bd03d81fc715323ee370c98e4bfe21a826`）として準備。残7問は `BLOCKED_NO_VALIDATED_REPLACEMENT`。**生成元への差し替え・配布JSON再生成・限定差分検査・公開用コミットは未実施**。草案JSONは本番データではなく、権利・根拠・重複・一意正答の再検証が必要。
+- GHA新規workflow_dispatch操作がGitHub接続に存在せず、コンテナで `git ls-remote` が `Could not resolve host: github.com` となりcloneできないため、Node/Python本来の回帰や再生成を実行できない。代わりに前回の現行bank/スライス/ゲートコードに対する静的検査18/18 PASS（`HM2_Q0_COORD_STATIC_REGRESSION_18_20261122.md`, commit `b8905b24712cab7091e7dccb4f8fc0d5a8aba6a3`）と今回の草案構造5/5 PASSを確認。本来のPython unittest18件実測PASSやGHA成功とは異なる。
+- **Q0 BLOCKED / Q1 BLOCKED**。現行データ、生成元、リリースゲートを改変せず、App Review提出・新規TestFlight配信なし。
