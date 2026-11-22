@@ -319,3 +319,23 @@ q.sourceUrl='https://stacks.cdc.gov/view/cdc/11223/cdc_11223_DS1.pdf';
 q.basis=String(q.basis||'')+' ／ U.S. HHS CDC original 1996 Physical Activity and Health: A Report of the Surgeon General, Chapter 3 Skeletal Muscle Energy Metabolism, printed pp65–66: muscle oxygen demand may exceed supply during all-out exercise; anaerobic glycolytic system produces ATP without oxygen for approx 30 s–2 min; lactate buildup contributes duration limitation; oxidative system requires oxygen. Source itself is government-authored (not third-party stored on CDC).';
 window.HM2_B2_GOVERNMENT_ANAEROBIC_SOURCE_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// B2 No.155: align the eliciting stimulus with the NINDS-authored neurological examination text.
+const id='sm2-5y-r08-phy-01';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+const oldQ='熱い器具に指が触れ、熱さを意識して判断する前に手を引いた。この素早い反応に関する説明として最も適切なのはどれか。';
+const newQ='神経学的診察で膝の下を診察用ハンマーで軽く叩くと、本人が意識的に動かそうとしなくても下腿が動いた。この反射について最も適切な説明はどれか。';
+const oldSrc='https://www.ncbi.nlm.nih.gov/books/NBK544292/';
+if(!q||q.question!==oldQ||q.sourceUrl!==oldSrc||q.answer!==2||q.choices.length!==5||q.choices[1]!=='脊髄などの反射回路で、意識的な判断を待たず運動応答が起こり得る。')throw Error('HM2 B2 NINDS reflex old state mismatch');
+q.question=newQ;
+q.explanation='NINDS政府編集のNeurological Diagnostic Tests and Procedures（2025年版）は、膝を診察用ハンマーで叩くと下腿が自動的に動くこと、反射検査で脊髄と筋の間の神経伝達を確認することを明記する。肢2○。肢1×は意識的な大脳命令が必須との誤り、肢3×は運動応答を否定、肢4×は感覚入力を不要とする誤り、肢5×は神経系と無関係とする誤り。元の熱刺激に伴う逃避反射の詳細時系列をNINDS原典が直接説明しないため、NINDSの直接事例に改稿した。';
+q.topic='膝蓋腱反射と脊髄・筋の自動運動応答';
+q.sourceUrl='https://www.ninds.nih.gov/sites/default/files/2025-05/NINDS_Neurological-Diagnostic-Tests-Procedures.pdf';
+q.basis=String(q.basis||'')+' ／ 2026-11-22 NINDS政府原著 Neurological Diagnostic Tests and Procedures, Reflexes table: knee tap produces automatic leg jerk, tests nerves between spinal cord and muscles.';
+q.contentReviewStatus='requires-independent-subject-expert-review';
+q.auditStatus='再監査待ち';q.publicationStatus='非公開';
+window.HM2_B2_NINDS_REFLEX_REDESIGN_ID=id;
+})();
