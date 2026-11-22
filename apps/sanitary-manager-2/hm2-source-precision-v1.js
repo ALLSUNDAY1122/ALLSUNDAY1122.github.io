@@ -275,3 +275,23 @@ q.sourceUrl='https://medlineplus.gov/lab-tests/neurological-exam/';
 q.basis=String(q.basis||'')+' ／ NLM自身が編集したMedlinePlus Medical Test Neurological Exam: reflexes are automatic body movements in response to triggers, spinal cord and peripheral nerves control reflex and motor responses; heat is a sensory trigger. This is not a third-party MedlinePlus Medical Encyclopedia page.';
 window.HM2_B2_REFLEX_SOURCE_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// B2 pulse question narrowing to NHLBI authored wording, preserve position, fail closed.
+const id='sm2-5y-r05-phy-06';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+const prev='心拍に伴う動脈壁の圧力変動が末梢へ伝わったもの';
+const next='心臓が血液を送り出すときに生じる動脈の拍動を、手首で触知しているもの';
+if(!q||q.sourceUrl!=='https://www.ncbi.nlm.nih.gov/books/NBK542175/'||q.answer!==1||!Array.isArray(q.choices)||q.choices.length!==5||q.choices[0]!==prev)throw Error('HM2 B2 pulse mechanism stale state');
+q.choices=[...q.choices];q.choices[0]=next;
+q.quick=next;
+q.explanation='米国NHLBI公式「How the Heart Beats」では、心拍は心臓の収縮により血液を送り出す働きであり、手首の動脈で触れた拍動を数えて脈拍数を把握すると記載する。肢1が適切。肢2は肺胞のガス交換、肢3は静脈の流速測定、肢4は消化管運動、肢5は毛細血管凝固であり脈拍の触知ではない。原典が直接記述しない脈波の物理伝播機序はこの設問の正答から除外した。';
+q.sourceUrl='https://www.nhlbi.nih.gov/health/heart/heart-beats';
+q.topic='心拍と手首動脈で触知する脈拍';
+q.basis=String(q.basis||'')+' ／ 2026-11-22 B2 NHLBI original clinical health page, What is a normal pulse / Blood pressure sections; heart pumping causes palpable pulse at wrist; propagation dynamics excluded.';
+q.contentReviewStatus='requires-independent-subject-expert-review';q.auditStatus='再監査待ち';q.publicationStatus='非公開';
+if(new Set(q.choices).size!==5)throw Error('HM2 B2 pulse duplicate choices');
+window.HM2_B2_PULSE_NARROWED_ID=id;
+})();
