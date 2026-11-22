@@ -249,3 +249,10 @@
 - 生成元の旧NCBI第三者教材URLからNTP一次原典へsourceUrl差替え、basis追記、auditStatusを一次資料照合済へ更新。旧URL・肢数・正答ガード付き。生成元commit `26de2f65aba7c18a3412152571daf9c2a0d0d93a`。転載画像や原文の設問流用なし。
 - **一次内容PASS**：直前PASS61/HOLD8 → **PASS62/HOLD7（69問）**。No.115既PASSは重複計上しない。
 - 配布JSONの再生成・バイト一致・独立二重チェック・権利最終承認はまだ未実施。Q0/Q1 BLOCKED、App Review・TestFlightは操作しない。
+
+## B2生成元パッチの順序不整合是正（2026-11-22）
+
+- ID `sm2-5y-r08-phy-01`：同じ生成元ファイルで先にNLM公式MedlinePlusのsourceUrlを設定する既存パッチがあり、その後のNINDS膝反射改稿パッチが依然旧NCBI URLを前提にしていた。順序上、後者のold-state guardが不成立となり、再生成を阻害する潜在不具合を検出。
+- NINDS改稿側oldSrcを**NLM変更後URL** `https://medlineplus.gov/lab-tests/neurological-exam/` に変更。これでファイル内の2段階ソース状態遷移が矛盾しない。修正コミット `46dcf415a1bd38cd16db80c30fe07ab304e38867`。
+- ID `sm2-5y-r10-hyg-08` でも先行厚労省通知パッチと追加PDFパッチの旧URL衝突を検出し、直前のコミット `23fa29c01d19c158a7d038b05d2226d4b2d3f9c0` で解消済。
+- **いずれも静的な状態遷移確認のみ。Nodeで実際に再生成・配布JSON一致検査を通した事実ではない。**今回の一次集計PASS62/HOLD7（69問）をこの整合修正で増減させない。Q0/Q1 BLOCKEDを維持。
