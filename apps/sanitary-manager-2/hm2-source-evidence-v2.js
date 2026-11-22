@@ -151,3 +151,41 @@ window.HM2_EVIDENCE_V2_UPDATED_IDS=patches.map(p=>p.id);
   }
   window.HM2_R05_LAW10_Q1_FORMAT_FIX=true;
 })();
+
+
+// Q1 follow-up: normalize the remaining eight legacy five-year items to the
+// same non-substantive "topic ― proposition" presentation expected by the
+// existing (unchanged) difficulty contract. No answer or proposition edits.
+(function () {
+  'use strict';
+  const targets=[
+    ['sm2-5y-r05-hyg-01',3,'exam-paired-judgment-v1'],
+    ['sm2-5y-r09-hyg-09',2,'exam-paired-judgment-v1'],
+    ['sm2-5y-r10-hyg-07',2,'exam-paired-judgment-v1'],
+    ['sm2-5y-r06-phy-05',3,'exam-paired-judgment-v1'],
+    ['sm2-5y-r08-phy-05',3,'exam-paired-judgment-v1'],
+    ['sm2-5y-r08-phy-07',3,'exam-paired-judgment-v1'],
+    ['sm2-5y-r08-phy-08',5,'exam-paired-judgment-v1'],
+    ['sm2-5y-r08-phy-09',2,'auditory-vestibular-discrimination-v2']
+  ];
+  const byId=new Map((window.Q_PARTS||[]).map(q=>[q.id,q]));
+  for(const [id,expectedAnswer,expectedModel] of targets){
+    const q=byId.get(id);
+    if(!q || !q.fiveYearExpansion || q.stemRedesignBatch ||
+       q.answer!==expectedAnswer || q.difficultyModel!==expectedModel ||
+       !q.topic || !Array.isArray(q.choices) || q.choices.length!==5 ||
+       q.choices.some(c=>typeof c!=='string' || c.includes(' ― '))) {
+      throw new Error('HM2 Q1 paired-display stale input '+id);
+    }
+    q.choices=q.choices.map(c=>q.topic+' ― '+c);
+    // One older auditory item was labelled as a different display format;
+    // this metadata alignment does not change its clinical content.
+    q.difficultyModel='exam-paired-judgment-v1';
+    if(new Set(q.choices).size!==5 ||
+       !q.choices.every(c=>c.includes(' ― ')) ||
+       !q.choices[q.answer-1].startsWith(q.topic+' ― ')) {
+      throw new Error('HM2 Q1 paired-display validation '+id);
+    }
+  }
+  window.HM2_Q1_LEGACY_PAIRED_FORMAT_FIXES=targets.map(row=>row[0]);
+})();
