@@ -1,6 +1,5 @@
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
 import { getAnonymousId } from '@/src/services/anonymousId';
 import { getTransactionJws } from '@/src/services/iap';
 import { Alert, StyleSheet, Text, View } from 'react-native';
