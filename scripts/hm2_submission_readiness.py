@@ -81,44 +81,21 @@ def main():
         else:
             errors.append("STRICT_EXPORT_UNEXPECTED_FAILURE")
 
-    # No evidence is inferred merely from a user report; these files must be
-    # independently produced, reviewed and checked before submission.
-    for relative, code, expected_ids, collection in (
-        ("ios/health-manager-2/audit/HM2_FINAL_EXPERT_APPROVALS_178.json", "EXPERT_APPROVALS", set(pending), "reviews"),
-        ("ios/health-manager-2/audit/HM2_RIGHTS_CLEARANCE_300.json", "RIGHTS_CLEARANCE", set(ids), "decisions"),
-    ):
-        evidence = ROOT / relative
-        if not evidence.is_file():
-            blockers.append(code + "_MISSING")
-            continue
-        try:
-            payload = json.loads(evidence.read_text(encoding="utf-8"))
-            rows = payload.get(collection, [])
-            by_id = {str(x.get("id")): x for x in rows if isinstance(x, dict)}
-            valid = (payload.get("question_bank_sha256") == hashfile(BANK)
-                     and len(by_id) == len(rows) == len(expected_ids)
-                     and set(by_id) == expected_ids)
-            if collection == "reviews":
-                valid = valid and all(
-                    row.get("approved") is True
-                    and row.get("reviewer_name")
-                    and row.get("reviewed_at")
-                    and row.get("all_five_choices_checked") is True
-                    and row.get("primary_source_verified") is True
-                    and row.get("final_change_commit")
-                    for row in by_id.values()
-                )
-            else:
-                valid = valid and all(
-                    row.get("cleared") is True
-                    and row.get("approver")
-                    and row.get("evidence")
-                    for row in by_id.values()
-                )
-            if not valid:
-                blockers.append(code + "_INVALID")
-        except (OSError, ValueError):
-            blockers.append(code + "_UNREADABLE")
+    # The Q0 user-approved alternative replaces named external expert approval.
+    # This remains fail-closed: 178 independent double-checks, source references,
+    # the in-app disclosure, and rights decisions for all 300 must be evidenced.
+    # The validator checks completeness only; the substantive assertions still
+    # require direct independent validation before final Q0 release sign-off.
+    alternative = subprocess.run(
+        ["python3", str(ROOT / "scripts/hm2_alternative_q0_gate.py"), "--enforce"],
+        cwd=ROOT, capture_output=True, text=True
+    )
+    checks["alternative_q0_evidence"] = {
+        "exit_code": alternative.returncode,
+        "tail": (alternative.stdout + alternative.stderr)[-1200:],
+    }
+    if alternative.returncode != 0:
+        blockers.append("ALTERNATIVE_Q0_178_DOUBLE_CHECK_AND_300_RIGHTS_PENDING")
 
     candidate = ROOT / "automation/asc-results/hm2-verified-release-candidate.json"
     if not candidate.is_file():
@@ -173,7 +150,7 @@ def main():
         "technical_errors": errors,
         "submission_blockers": blockers,
         "submission_ready": not errors and not blockers,
-        "note": "No expert approval, rights clearance, device test or ASC readback is inferred.",
+        "note": "No independent Q0 completion, rights clearance, device test or ASC readback is inferred.",
     }
     out = Path(args.output)
     out.parent.mkdir(parents=True, exist_ok=True)
