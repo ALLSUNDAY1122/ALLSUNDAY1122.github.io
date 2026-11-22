@@ -1,14 +1,14 @@
 # HM2 canonical technical execution result
 
-- Checked UTC: 2026-11-22T03:18:20.491588+00:00
+- Checked UTC: 2026-11-22T03:19:13.427436+00:00
 - Bank SHA-256: `60e9be2037efd4e840decf75e097232d32cd3d1be3bb99464707439c46e9cad1`
 - Actual Node canonical exit: `0`
 - Canonical exact bytes: **True**
-- Readiness command exit: `1`
-- technical_errors: `["UNREVIEWED_BANK_SHA"]`
+- Readiness command exit: `0`
+- technical_errors: `[]`
 - submission_blockers: `["178_QUESTION_INDEPENDENT_REVIEW_PENDING", "ALTERNATIVE_Q0_178_DOUBLE_CHECK_AND_300_RIGHTS_PENDING", "CURRENT_BUILD_ASC_READBACK_MISSING", "CLAUDE_300_ID_COMMIT_CSV_NOT_IMPORTED", "ACTUAL_APP_SCREENSHOTS_NOT_STORED"]`
 - Python 18-case unittest exit: `0`
-- Technical verification: **FAIL**
+- Technical verification: **PASS**
 
 This is a technical check; it does not approve Q0 content/rights, allow TestFlight or submit to Apple.
 
@@ -25,7 +25,7 @@ NOTE: Snapshot is not an independent legal/medical content review or iOS device 
 ## Readiness stdout/stderr
 
 ```text
-{"technical_errors": ["UNREVIEWED_BANK_SHA"], "submission_blockers": ["178_QUESTION_INDEPENDENT_REVIEW_PENDING", "ALTERNATIVE_Q0_178_DOUBLE_CHECK_AND_300_RIGHTS_PENDING", "CURRENT_BUILD_ASC_READBACK_MISSING", "CLAUDE_300_ID_COMMIT_CSV_NOT_IMPORTED", "ACTUAL_APP_SCREENSHOTS_NOT_STORED"], "submission_ready": false}
+{"technical_errors": [], "submission_blockers": ["178_QUESTION_INDEPENDENT_REVIEW_PENDING", "ALTERNATIVE_Q0_178_DOUBLE_CHECK_AND_300_RIGHTS_PENDING", "CURRENT_BUILD_ASC_READBACK_MISSING", "CLAUDE_300_ID_COMMIT_CSV_NOT_IMPORTED", "ACTUAL_APP_SCREENSHOTS_NOT_STORED"], "submission_ready": false}
 
 ```
 
@@ -52,7 +52,7 @@ test_stale_bank_hash_fails (test_hm2_alternative_q0_gate.GateTests.test_stale_ba
 test_wrong_choice_text_fails (test_hm2_alternative_q0_gate.GateTests.test_wrong_choice_text_fails) ... ok
 
 ----------------------------------------------------------------------
-Ran 18 tests in 0.270s
+Ran 18 tests in 0.335s
 
 OK
 
