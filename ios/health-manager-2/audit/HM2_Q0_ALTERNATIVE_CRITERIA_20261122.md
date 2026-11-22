@@ -259,3 +259,28 @@
 ### 4. 判定時刻と禁止事項
 - **今回Q0/Q1は新たに本判定しない。直前のBLOCKEDを暫定維持し、14:00頃のユーザー再依頼で公式原典・現行bank整合・技術証跡・適用ゲートを統合判定する**。
 - App Review申請、TestFlight新規配信、公開設定変更、リリースゲート弱体化は**行わない**。
+
+
+## 2026-11-22 Coord継続：ゲートスキーマ実査によるQ0→Q1再判定
+
+- 判定基準はユーザー承認の代替Q0（外部専門家承認不要／運用権利判定を最終扱い）とする。外部専門家がいないこと自体を不合格理由にしない。
+- 独立DC原票 `HM2_Q0_INDEPENDENT_DC_20261122.md` の最終結論：178/178問・890肢、正答／解説／総合PASS178、HOLD0。No.134は再判定PASS。
+- C権利台帳 `HM2_Q0_SLICE_C_RIGHTS_300_20261122.md` の最終運用結論：既存284＋差替え16/16＝300/300 PASS、権利運用HOLD0。法律上の非侵害保証ではない。
+- B2一次内容HOLD0は前Coord統合記録とユーザー通知に基づく。旧B分割の履歴上のHOLD22を最新状態と取り違えない。
+- 現行bank記録：300問、Git blob `4ecbfea81e3a453aa6bf60e4647d880abf821c09`、SHA-256 `434de86ab795d369a1ef52f16a0cf57cab7054b72f6aac952aa7805fb3872177`。正規再生成バイト一致、PIN一致は既存実測証跡による。
+- ユーザー提示の追加実測：GHA `hm2-production-readiness` run160 success、技術エラー0、unittest18/18。今回このrunログの直接再取得・`--enforce`ローカル実行は未実施なので、独立実測とは表示しない。
+
+### ゲートJSONについて確認した厳格条件
+
+`scripts/hm2_alternative_q0_gate.py` は次の2ファイルを要求し、markdown台帳そのものでは代用できない。
+1. `audit/HM2_INDEPENDENT_DOUBLE_CHECK_178.json`：178件の `reviews`、各行で**2つの実在する独立レビュー**が必要。それぞれ別 `reviewer_id`・`independent_session_id`・`evidence_artifact_sha256`、現行bank SHA、5肢本文・肢別正誤・根拠・一次資料箇所、先行レビュー非閲覧の真実の宣誓、照合後最終承認が必要。
+2. `audit/HM2_RIGHTS_CLEARANCE_300.json`：300件の `decisions`、個別 `source_url`・`rights_holder`・`license_or_exception`・`originality_comparison`・`decision_rationale`・`reviewer_id`・`reviewed_at` を要する。
+
+DC原票の完了178件は**一つの独立セッションによるレビュー**。既存Coord記録 `HM2_Q0_COORD_ROLE_DOUBLE_CHECK_INTEGRATION_20261122.md` は40件が非ブラインドであると明記し、`performed_without_prior_review_access=true` とすることを禁じている。残り138件についても、別々の独立レビューが実際に完成した証跡をこの実査では確認できていない。**単一DCの記録を2回分に複製したり、レビューID・実施日時・独立性宣誓・権利者・原典比較を捏造して機械的PASSを得ない**。そのため、2つのJSONは未作成のまま保持する。
+
+### legalCheckedと再判定
+
+- `sm2-5y-r10-hyg-04` は前回確認で `law_related=true` かつ `legal_checked=null`。DC-112の内容PASSだけでは生成元に対する法令確認メタデータの更新を自動認可したことにはならない。生成元の該当箇所への証跡付き反映、正規再生成、SHA/PIN更新、strict export実測が残る。
+- 現時点の内容一次判定HOLDは0、権利運用HOLDも0。一方、**ゲートが要求する二重独立証跡・個別機械可読権利証跡は未充足**。これは内容HOLDの数と混同しない。
+- **Q0 BLOCKED（証跡JSON未充足、法令メタデータ要修復）→Q1 BLOCKED（Q0未通過）**。ゲート定義は弱体化しない。
+- App Review申請・TestFlight新規配信・公開設定変更は実施しない。
