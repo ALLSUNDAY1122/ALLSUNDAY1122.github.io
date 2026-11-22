@@ -462,3 +462,39 @@ q.explanation='第4肢が適切。FDAの2026年8月政府作成承認審査文�
 q.auditStatus='一次資料照合済';
 window.HM2_B2_FDA_DOE_FASTING_SOURCE_ID=id;
 })();
+
+
+(function(){
+'use strict';
+// B2 No.135: source-scope redesign. NIDDK-hosted expert interview supports contraction-induced glucose uptake,
+// but NOT molecular GLUT4 traffic directly. Attribution and rights remain distinct. Invalidate publication.
+const id='sm2-5y-r05-phy-08';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+const oldQuestion='健康成人が歩行運動を開始した。運動開始直後で、血中インスリン濃度が増加していない場合でも、活動中の骨格筋でブドウ糖取り込みが高まり得る理由として適切なのはどれか。';
+const oldChoices=[
+'GLUT4はインスリン以外の刺激では細胞膜へ移動できないため、糖取り込みは必ず停止する。',
+'筋収縮に伴う細胞内シグナルはGLUT4を細胞膜からすべて除去する。',
+'運動時の筋細胞はブドウ糖を一切利用せず、胆汁だけをエネルギー源とする。',
+'筋収縮はブドウ糖輸送と無関係で、糖取り込みは血中カルシトニンだけで決まる。',
+'筋収縮に伴うシグナルでもGLUT4の細胞膜への移行が促され、インスリン増加がなくても糖取り込みが増え得る。'];
+const oldSource='https://pubmed.ncbi.nlm.nih.gov/9415826/';
+if(!q||q.sourceUrl!==oldSource||q.question!==oldQuestion||!Array.isArray(q.choices)||q.choices.length!==5||
+ q.answer!==5||q.choices.some((x,i)=>x!==oldChoices[i]))throw Error('HM2 B2 exercise old-state mismatch '+id);
+const choices=[
+'筋細胞へのブドウ糖取り込みは、血中インスリンが増加しなければ絶対に増えない。',
+'筋収縮が始まると、筋細胞のブドウ糖取り込みは必ず完全に停止する。',
+'運動中の骨格筋はブドウ糖をエネルギー源に使えず、胆汁酸だけを使う。',
+'運動中の糖取り込みは筋収縮と無関係で、カルシトニンだけで決まる。',
+'筋収縮により、安静時のインスリン作用とは別の仕組みでも筋のブドウ糖取り込みが増え得る。'
+];
+q.question='健康な成人が歩行運動を始め、血中インスリン濃度は増加していない。それでも活動する骨格筋が血液からブドウ糖を多く取り込むことがある理由として、適切なのはどれか。';
+q.choices=choices;q.quick=choices[4];
+q.explanation='NIDDKが2018年に公開した運動処方の専門家インタビュー（Sheri Colberg博士発言）では、筋収縮による運動中のブドウ糖取り込みが、安静時のインスリン作用とは別の仕組みで増えると説明される。このため⑤が適切。①②は筋収縮に伴う取り込みを否定、③は筋のブドウ糖利用を否定、④は筋収縮の寄与を否定しカルシトニンだけに誤帰属する。GLUT4の膜移行の詳細はこのNIDDKインタビューの直接記載外なので、正答および誤肢から削除した。説明者は政府職員と確認されておらず、NIDDK公式サイト掲載の専門家発言という出典区分で利用し、記事の転載権を政府著作物と推定しない。';
+q.topic='運動中の筋収縮によるインスリン非依存性糖取り込み';
+q.sourceUrl='https://www.niddk.nih.gov/health-information/professionals/diabetes-discoveries-practice/prescribing-exercise-for-almost-anyone';
+q.basis=String(q.basis||'')+' ／ 2026-11-22 B2限定改稿: NIDDK official published transcript 2018-06-20, guest expert Sheri Colberg (external-author statement): contraction-induced muscle glucose uptake separate from insulin actions at rest. Government site as original publication platform, NOT asserted government authored speech; molecular GLUT4 claims deleted. Independent rights and content review still required.';
+q.contentReviewStatus='requires-independent-subject-expert-review';
+q.auditStatus='再監査待ち';q.publicationStatus='非公開';
+if(new Set(q.choices).size!==5||q.answer!==5)throw Error('HM2 B2 exercise new choice uniqueness failed');
+window.HM2_B2_EXERCISE_SCOPE_REDESIGN_ID=id;
+})();
