@@ -1,0 +1,99 @@
+name: Toru Tango Build 17 OCR Transport Recovery
+on:
+  push:
+    branches:
+      - release/toru-tango-build17-ocr-transport-20261122
+    paths:
+      - '.github/workflows/toru-tango-build17-ocr-transport.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: toru-tango-build17-ocr-transport
+  cancel-in-progress: false
+jobs:
+  worker:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: toru-tango/backend
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Worker tests (including failed requests not charged)
+        run: npm test
+      - name: Verify Cloudflare credentials
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+      - name: Install Wrangler
+        run: npm install --no-audit --no-fund
+      - name: Deploy Worker without touching GEMINI_API_KEY
+        run: |
+          set -o pipefail
+          npx wrangler deploy | tee worker-deploy.log
+      - name: Live generated and OCR requests must succeed
+        run: node scripts/live-probe.mjs | tee live-probe.log
+      - name: Live photo OCR must succeed
+        run: |
+          python -m pip install --user pillow
+          python scripts/make-photo-smoke.py
+          node scripts/photo-ocr-probe.mjs | tee photo-smoke.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-build17-worker
+          path: |
+            toru-tango/backend/worker-deploy.log
+            toru-tango/backend/live-probe.log
+            toru-tango/backend/photo-smoke.log
+          if-no-files-found: warn
+  ios:
+    needs: worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: toru-tango-mobile
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: Expo token
+        run: test -n "$EXPO_TOKEN"
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Refresh lockfile
+        run: npm install --package-lock-only --no-audit --no-fund
+      - name: Typecheck, lint, doctor and regressions
+        run: |
+          npm ci --include=dev --no-audit --no-fund
+          npm run typecheck
+          npm run lint
+          npm run doctor
+          node --test tests/study-folder.test.cjs tests/gemini-ocr-transport.test.cjs tests/build17-ocr-transport.test.cjs
+      - name: EAS Build 17
+        run: |
+          mkdir -p release-logs
+          set -o pipefail
+          eas build --platform ios --profile production --non-interactive --json | tee release-logs/build17.json
+      - name: Upload Build 17 to TestFlight, not App Review
+        run: |
+          set -o pipefail
+          eas submit --platform ios --profile production --latest --non-interactive | tee release-logs/submit17.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: toru-build17-eas
+          path: toru-tango-mobile/release-logs
+          if-no-files-found: warn
