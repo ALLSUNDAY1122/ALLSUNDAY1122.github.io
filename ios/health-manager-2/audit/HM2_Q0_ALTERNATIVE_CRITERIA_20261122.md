@@ -24,3 +24,18 @@
 
 ## 次の必須作業
 現行SHAを固定し、178問の各肢を公式根拠と照合して逐問台帳を作成する。誤りは生成元で修正し再生成、対象外差分なしを確認する。権利判定とアプリ本体表示の検査後に厳格ゲート・GHAを実行し、Q0から順に再判定する。未確認項目はPASSにしない。
+
+## 継続作業（同日）
+- 固定178問台帳 `FINAL_GATE_178_ID_EVIDENCE_MATRIX_20261112.md` を取得。法令44・衛生等の専門20・科目専門114の計178問という対象集合の定義を確認。ただし台帳の過去レビューをこのセッションの新基準での独立再検証に流用しない。
+- `export-audit-data-core.cjs` の現行仕様を確認。旧 `requires-independent-*` と `publicationStatus` / `auditStatus` を根拠に BLOCKED となる。承認証跡なしにこの条件を解除しない。
+- `scripts/hm2_submission_readiness.py` は旧 `HM2_FINAL_EXPERT_APPROVALS_178.json` の実名承認を要求しており、**新Q0基準への判定ロジック移行は未完了**。これはApp Store提出の安全停止検査でもあるため、当面変更しない。
+- アプリ設定の「この教材について」に非公式・専門家監修なしを追加。commit `2ae6742caf60682e499b4ff43999c8bf9d423466`。配布済みiOSビルドへの反映は未確認。
+- `.github/workflows/hm2-production-readiness.yml` に対象ブランチのpushと表示文言の静的チェック、`node --check` を追加。commit `17f5884e2dce51d41a772ba9ff859d50ea5c78a2`。GitHub Actionsの成功を確認できるまでPASSにしない。
+- 対象コミットのcombined statusは空、PR起点workflow runsは0（照会時点）。**CI成功証跡なし**。
+- 個別890肢の新たな直接原典再照合と300問の権利最終判定は未実施。したがってQ0/Q1はいずれもBLOCKEDを維持。
+
+## 新基準の実装上の残課題
+1. 178問各肢の独立二重検証を行い、対象SHA・2回の判断・一次資料URLと施行日・具体的根拠を個別に証跡化する。
+2. 300問分の出典権利判断を別台帳に記録する。URLや `rightsBasis` の存在だけでは承認しない。
+3. 旧専門家承認用エクスポートと提出前検査を、**完全な代替証跡がある場合のみ**通す実装へ改修する。新基準満たさない状態はfail-closedを維持。
+4. GHA・Node CLIの結果とアプリ内同梱実物の表示を確認し、Q0→Q1の順で再判定する。
