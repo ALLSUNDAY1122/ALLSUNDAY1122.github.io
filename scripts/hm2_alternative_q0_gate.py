@@ -36,7 +36,10 @@ def load_json(path, failures, label):
         failures.append(label + "_MISSING")
         return None
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if data is None:
+            failures.append(label + "_NULL_PAYLOAD")
+        return data
     except (OSError, ValueError):
         failures.append(label + "_UNREADABLE")
         return None
@@ -98,7 +101,8 @@ def validate(root=ROOT, evidence=EVIDENCE, rights=RIGHTS):
                     reviewer_ids.append(p.get("reviewer_id"))
                     if not all(nonblank(p.get(k)) for k in
                                ("reviewer_id", "reviewed_at", "method", "primary_source_url",
-                                "source_section", "applicable_on", "reasoning")):
+                                "source_section", "applicable_on", "reasoning",
+                                "independent_session_id", "evidence_artifact_sha256")):
                         failures.append(f"{id_}:PASS{i+1}_EVIDENCE_INCOMPLETE")
                     if p.get("question_bank_sha256") != bank_hash:
                         failures.append(f"{id_}:PASS{i+1}_STALE_SHA")
@@ -119,6 +123,10 @@ def validate(root=ROOT, evidence=EVIDENCE, rights=RIGHTS):
                             failures.append(f"{id_}:PASS{i+1}_ANSWER_CONFLICT")
                 if len(reviewer_ids) != 2 or not all(map(nonblank, reviewer_ids)) or reviewer_ids[0] == reviewer_ids[1]:
                     failures.append(f"{id_}:INDEPENDENCE_UNPROVEN")
+                if len(passes) == 2 and all(isinstance(p, dict) for p in passes):
+                    if (passes[0].get("independent_session_id") == passes[1].get("independent_session_id")
+                        or passes[0].get("evidence_artifact_sha256") == passes[1].get("evidence_artifact_sha256")):
+                        failures.append(f"{id_}:SEPARATE_REVIEW_ARTIFACTS_REQUIRED")
                 if row.get("final_disposition") != "approved_after_reconciliation":
                     failures.append(f"{id_}:RECONCILIATION_REQUIRED")
     rights_doc = load_json(rights, failures, "RIGHTS")
