@@ -52,7 +52,7 @@ const data=browser.map(q=>({
  rights_basis:q.rightsBasis,law_related:Boolean(q.lawRelated),legal_checked:q.legalChecked||null,
  audit_status:q.auditStatus,publication_status:q.publicationStatus,difficulty_model:q.difficultyModel||null,
  no_common_sense_shortcut:Boolean(q.noCommonSenseShortcut),
- ...(q.contentReviewStatus ? {content_review_status:q.contentReviewStatus} : {})
+ ...(q.contentReviewStatus && q.auditStatus === '再監査待ち' ? {content_review_status:q.contentReviewStatus} : {})
 }));
 const out=path.join(__dirname,'release-questions.json');
 const raw=JSON.stringify(data,null,2)+'\n';
