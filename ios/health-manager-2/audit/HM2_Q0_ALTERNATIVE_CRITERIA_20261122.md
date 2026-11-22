@@ -215,3 +215,13 @@
 - `export-canonical-snapshot.cjs`は16問差し替え、出典2問ほかのoverlayをロードする実装。実行環境からgithub.comへのDNS解決が失敗し、リポジトリのローカル取得不可。GitHub接続はファイル単位の読み書きに限定される。**Nodeでの正規再生成、現行bankとのバイト一致、最新GHA runの`technical_errors=[]`はこの作業では実測していない**。
 - strict exporterの`lawRelated && !legalChecked`条件は法令関連設問の未確認を遮断するものであり、削除・緩和しない。Q0代替基準は外部専門家承認を要求しないが、公式一次資料照合と差し替え後の独立確認を省略しない。
 - 結論：**技術エラーゼロは未確認**。追加確認を行うまでQ0/Q1 BLOCKED、App Review/TestFlight禁止。
+
+## 生成元完全一致の実測・readiness技術状態更新（2026-11-22 JST）
+- 現行GitHubブランチの**22生成元JS**を正規ロード順でJavaScript実行し、`export-canonical-snapshot.cjs`と同じJSON射影・改行で300問を再生成。再取得した配布JSON Git blob `54aceef12cdd3391920fff7847e83948868ab4dd`との**バイト単位完全一致／差分0**を確認。difficultyあり／なしで問題文・5肢・正答・解説等のドリフト0、30群×10問・正答位置均等PASS。
+- 差分の原因は`sm2-5y-r07-phy-04`, `sm2-5y-r10-phy-02`, `sm2-5y-r10-phy-10`の`content_review_status`欠落のみ（旧配布bankと生成元との差分）。生成側の`requires-independent-subject-expert-review`を配布JSONへ正規反映。問題文・正答は不変。配布JSON修正commit `5ccb3a030c5da6e883cf4ae91c08e0ba8d39afd5`。
+- 正規bankの**SHA-256**：`60e9be2037efd4e840decf75e097232d32cd3d1be3bb99464707439c46e9cad1`。readiness `PIN`を同値に更新、commit `b2ee0defd0a9340d51757f5ec37d0aa15e6dc436`。SHA256実装は既知ベクトルで検算。GitHub内の一時入力束は検査終了後commit `92176e3027a1bd9084a3d45137e1129cb319c50a`で削除済み。
+- `hm2_submission_readiness.py`の実体データに対する構造300問、178問ID、StoreKit現在価格、PrivacyInfo、17法令live pins、`gm2.js`の『5年分相当』、非公式表記の個別検査はPASS。法令関連`legalChecked`欠落0。
+- Cの第9段階正本：**差替え16/16問の正答内容PASS、権利・出典の運用PASS16/16**。既存284運用PASSと合わせ、ユーザー決定の**権利の内部運用最終判定300/300 PASS**と記録。ただし法律上の転載許諾や非侵害を保証する表現ではない。C正本の判定とアプリ内の保留メタデータは別工程であり、無検証の一括公開ステータス操作は行わない。
+- 独立DC正本：**30/178問・150肢PASS、残148問**。DC先行レビューの対象SHAと最新bank SHAの違いを自動合格扱いせず、問題文等の内容照合と記録継続が必要。
+- **readinessの技術原因**：`UNREVIEWED_BANK_SHA`は新PIN一致で解消、`CANONICAL_REGENERATION_FAILED`はGitHub上の22JSを実行した同等再生成で実測差分0。だが**Node CLIのGHA run上での実測`technical_errors=[]`は未確認**。厳格exportの独立Q0未承認時の`HM2_RELEASE_REVIEW_BLOCKED`はreadinessの`submission_blockers`として扱い、`STRICT_EXPORT_UNEXPECTED_FAILURE`を隠すことやガード撤去はしない。
+- 全検証明細：`HM2_CANONICAL_BYTE_MATCH_20261122.md`、commit `e00455ba9c52b3e4265a3f017e22beeabde35362`。**Q0 BLOCKED / Q1 BLOCKED**はDC残148問等の内容ゲートが未完であるため据置。App Review提出・TestFlight新規配信なし。
