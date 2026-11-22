@@ -777,3 +777,56 @@ App Review提出・新規TestFlight配信なし。台帳本体・問題データ
 - Q0を通すには、疑義3問の再設計差分確認、出典差替え、個別資料ライセンス・第三者画像照合が別途必要。監査ファイルの記載をrights PASSとして取り込まない。
 
 元台帳・元JSON・生成元データ不変更。App Review提出・新規TestFlight配信は実施しない。
+
+
+## 第5段階：No.31〜60（30問）の個別原典・権利検証（2026-11-22 JST）
+
+対象: 配布bank Git blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d`。配布JSONから各問題文・5肢・解説を取得した。**30問について原典との比較可能性と問題固有のリスクを個別に記録したが、全文比較ができたとは主張しない。**
+
+| No. | 問題ID | 原典との対応所見・未解消事項 | 個別出典 | 処置 |
+|---:|---|---|---|---|
+| 31 | `sm2-r7o-001` | e-Gov条文の閲覧はできたが本文抽出不可。業種別選任人数の根拠と選択肢の原文比較未了 | [原典](https://laws.e-gov.go.jp/law/347CO0000000318) | 追加検証必要・最終保留 |
+| 32 | `sm2-r7o-002` | 衛生管理者の巡視頻度は法定値。参照条文本文抽出不可、原文比較未了 | [原典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | 追加検証必要・最終保留 |
+| 33 | `sm2-r7o-003` | 衛生委員会の議事周知の法定要件。参照条文未取得、文章比較未了 | [原典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | 追加検証必要・最終保留 |
+| 34 | `sm2-r7o-004` | 180人・450人・1200人の独自数値設定とみられるが、公表問題との設計類似性未照合 | [原典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | 追加検証必要・最終保留 |
+| 35 | `sm2-r7o-005` | ストレスチェック義務の法令適用日が重要。2026年版と将来施行の正式条文未照合 | [原典](https://www.mhlw.go.jp/bunya/roudoukijun/anzeneisei12/) | 版検証必要・最終保留 |
+| 36 | `sm2-r7o-006` | 雇入時健診の3か月前の結果証明に関する法定要件。条文未取得 | [原典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | 追加検証必要・最終保留 |
+| 37 | `sm2-r7o-007` | 気積4mの数値を問う法令問題。法令の事実と試験原文の創作的表現を区別する必要 | [原典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | 追加検証必要・最終保留 |
+| 38 | `sm2-r7o-008` | 機械換気設備の点検2か月。事務所則の適用条項の直接本文未取得 | [原典](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 追加検証必要・最終保留 |
+| 39 | `sm2-r7o-009` | 8時間を超える場合の休憩60分。法令上の数値であり原著表現の比較未了 | [原典](https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0) | 追加検証必要・最終保留 |
+| 40 | `sm2-r7o-010` | 年休5日の取得確保。法定事実を用いた設問だが公表問題の類似比較未了 | [原典](https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0) | 追加検証必要・最終保留 |
+| 41 | `sm2-r7o-011` | 環境省原典の屋内算出式0.7×湿球+0.3×黒球を直接確認。27℃、36℃の設定で29.7℃を算出。第三者教材との比較未了 | [原典](https://www.wbgt.env.go.jp/doc_observation.php) | 追加検証必要・最終保留 |
+| 42 | `sm2-r7o-012` | 事務作業照度300lx・150lx。事務所則本文の直接照合未了 | [原典](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 追加検証必要・最終保留 |
+| 43 | `sm2-r7o-013` | 室内CO₂ 5000ppmと設備供給1000ppmの別基準。条文の適用範囲検証未了 | [原典](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | 追加検証必要・最終保留 |
+| 44 | `sm2-r7o-014` | 4つのケアの説明。東京労働局の当該本文未取得、引用表現不明 | [原典](https://jsite.mhlw.go.jp/tokyo-roudoukyoku/hourei_seido_tetsuzuki/anzen_eisei/ae-kenkouhoji.html) | 追加検証必要・最終保留 |
+| 45 | `sm2-r7o-015` | THP指針掲載ページ到達。ただし2026年10月19日版の施行・改正文書本文は未照合 | [原典](https://www.mhlw.go.jp/stf/newpage_76807.html) | 版検証必要・最終保留 |
+| 46 | `sm2-r7o-016` | 厚労省ページに食品衛生の三原則を直接確認。肢の他の菌の主張と原典全文は未比較 | [原典](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/01_00008.html) | 追加検証必要・最終保留 |
+| 47 | `sm2-r7o-017` | NHLBIに心筋梗塞の血流不足に関する説明。狭心症を含む全選択肢の原典対応までは未確認 | [原典](https://www.nhlbi.nih.gov/health/heart-attack) | 追加検証必要・最終保留 |
+| 48 | `sm2-r7o-018` | 赤十字骨折応急手当ページ到達。末梢循環確認等と直接対応する原文は特定できず | [原典](https://www.redcross.org/take-a-class/resources/learn-first-aid/fractures) | 追加検証必要・最終保留 |
+| 49 | `sm2-r7o-019` | 厚労省職場のあんぜんサイトで度数率ページ到達。算式本文確認は未完了 | [原典](https://anzeninfo.mhlw.go.jp/yougo/yougo22_1.html) | 追加検証必要・最終保留 |
+| 50 | `sm2-r7o-020` | e-ヘルスネットでBMI式を直接確認。70.6kg、1.68mという数値設定は独自例とみられるが他教材比較未了 | [原典](https://kennet.mhlw.go.jp/information/information/dictionary/metabolic/ym-002) | 追加検証必要・最終保留 |
+| 51 | `sm2-r7o-021` | MSD腎臓記事本文未取得。尿生成・ADH・アルドステロンの原文一致未確認 | [原典](https://www.msdmanuals.com/ja-jp/home/05-%E8%85%8E%E8%87%93%E3%81%A8%E5%B0%BF%E8%B7%AF%E3%81%AE%E7%97%85%E6%B0%97/%E8%85%8E%E8%87%93%E3%81%A8%E5%B0%BF%E8%B7%AF%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E8%85%8E%E8%87%93) | 追加検証必要・最終保留 |
+| 52 | `sm2-r7o-022` | MSD心臓記事本文未取得。循環経路の事実に基づくが表現一致未確認 | [原典](https://www.msdmanuals.com/ja-jp/home/06-%E5%BF%83%E8%87%93%E3%81%A8%E8%A1%80%E7%AE%A1%E3%81%AE%E7%97%85%E6%B0%97/%E5%BF%83%E8%87%93%E3%81%A8%E8%A1%80%E7%AE%A1%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E5%BF%83%E8%87%93%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6) | 追加検証必要・最終保留 |
+| 53 | `sm2-r7o-023` | MSD糖尿病記事本文未取得。5肢全てのホルモン作用について出典直接性が不十分な可能性 | [原典](https://www.msdmanuals.com/ja-jp/home/12-%E3%83%9B%E3%83%AB%E3%83%A2%E3%83%B3%E3%81%A8%E4%BB%A3%E8%AC%9D%E3%81%AE%E7%97%85%E6%B0%97/%E7%B3%96%E5%B0%BF%E7%97%85%E3%81%A8%E7%B3%96%E4%BB%A3%E8%AC%9D%E7%95%B0%E5%B8%B8/%E7%B3%96%E5%B0%BF%E7%97%85-dm) | 追加検証必要・最終保留 |
+| 54 | `sm2-r7o-024` | MSD胃記事本文未取得。ペプシン以外の酵素と作用部位の根拠も必要 | [原典](https://www.msdmanuals.com/ja-jp/home/03-%E6%B6%88%E5%8C%96%E5%99%A8%E7%B3%BB%E3%81%AE%E7%97%85%E6%B0%97/%E6%B6%88%E5%8C%96%E5%99%A8%E7%B3%BB%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E8%83%83) | 追加検証必要・最終保留 |
+| 55 | `sm2-r7o-025` | MSD胆嚢・胆道記事本文未取得。胆汁による乳化という事実と原著表現を区別 | [原典](https://www.msdmanuals.com/ja-jp/home/04-%E8%82%9D%E8%87%93%E3%81%A8%E8%83%86%E5%9A%A2%E3%81%AE%E7%97%85%E6%B0%97/%E8%82%9D%E8%87%93%E3%81%A8%E8%83%86%E5%9A%A2%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E8%83%86%E5%9A%A2%E3%81%A8%E8%83%86%E9%81%93) | 追加検証必要・最終保留 |
+| 56 | `sm2-r7o-026` | MSDの参照先はヘモグロビン異常症の記事。血小板や白血球の一般的機能を扱う問題全体には直接性が弱い | [原典](https://www.msdmanuals.com/ja-jp/home/13-%E8%A1%80%E6%B6%B2%E3%81%AE%E7%97%85%E6%B0%97/%E8%B2%A7%E8%A1%80/%E3%83%98%E3%83%A2%E3%82%B0%E3%83%AD%E3%83%93%E3%83%B3c%E7%97%87-sc%E7%97%87-e%E7%97%87) | 出典差替検討・最終保留 |
+| 57 | `sm2-r7o-027` | NCBI Bookshelfの表ページはreCAPTCHA。自律神経の一覧表を再現していないか確認不可 | [原典](https://www.ncbi.nlm.nih.gov/books/NBK430888/table/article-18030.table1/) | 権利重点精査・最終保留 |
+| 58 | `sm2-r7o-028` | StatPearls筋収縮記事のATP機構を直接確認。CC BY-NC-ND 4.0（商用利用・翻案制限）を明記。文章や表の依拠関係は未確定 | [原典](https://www.ncbi.nlm.nih.gov/sites/books/NBK537140/) | 権利重点精査・最終保留 |
+| 59 | `sm2-r7o-029` | NCBI Bookshelfアクセス時reCAPTCHA。記事別権利表示・原典比較不能 | [原典](https://www.ncbi.nlm.nih.gov/books/NBK507838/) | 追加検証必要・最終保留 |
+| 60 | `sm2-r7o-030` | NCBI Bookshelfアクセス時reCAPTCHA。記事別権利表示・原典比較不能 | [原典](https://www.ncbi.nlm.nih.gov/books/NBK539845/) | 追加検証必要・最終保留 |
+
+### 今回閲覧・直接確認した根拠
+- [環境省 WBGT算式](https://www.wbgt.env.go.jp/doc_observation.php): 屋内で湿球0.7、黒球0.3の式を直接確認。No.41の計算は29.7℃。
+- [厚労省 食中毒予防](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/01_00008.html): 三原則と衛生対策を直接確認（No.46）。
+- [NHLBI 心筋梗塞](https://www.nhlbi.nih.gov/health/heart-attack): 心筋梗塞に関する医療解説を確認（No.47）。全肢の翻案不存在までは未確認。
+- [厚労省 BMI](https://kennet.mhlw.go.jp/information/information/dictionary/metabolic/ym-002): 算式と更新日を直接確認（No.50）。
+- [StatPearls Physiology, Muscle Contraction](https://www.ncbi.nlm.nih.gov/sites/books/NBK537140/): ATPとクロスブリッジの記述、©2023 StatPearls Publishing LLC、CC BY-NC-ND 4.0の商用・改変制限を直接確認（No.58）。
+- e-Gov条文のHTML本文は抽出できず、厚労省の古い条文表示URLも取得困難。No.57/59/60のNCBI記事はreCAPTCHA。未閲覧のMSD記事は原文逐語照合済と扱わない。
+
+### 集計と引継ぎ
+- **追加30問（No.31〜60）に問題別所見を記録。累積60/300問に個別所見。**
+- 原典全文との網羅的な逐語比較の完了件数は**0/300**。取得済み資料との部分照合と混同しない。
+- 優先対応: No.56の出典適合、No.57の表の権利、No.58のStatPearls NC-ND、No.45の適用版。
+- **権利最終承認0/300問**。未確認の商用利用・改変許諾および独自表現の確認が必要。これは権利侵害を認定するものではない。
+- App Review提出・新規TestFlight配信なし。元台帳・生成元・配布JSON不変更。
