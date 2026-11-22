@@ -1,5 +1,6 @@
 import type { Difficulty, QuestionCandidate, QuestionType } from '@/src/types';
 import { getAnonymousId } from './anonymousId';
+import { getTransactionJws } from './iap';
 
 type AiUsage = {
   inputTokens: number;
@@ -59,9 +60,10 @@ export async function generateAiQuestions(input: {
 
   try {
     const anonymousId = await getAnonymousId();
+    const transactionJws = await getTransactionJws();
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Toru-Tango-Anonymous-Id': anonymousId },
+      headers: { 'Content-Type': 'application/json', 'X-Toru-Tango-Anonymous-Id': anonymousId, ...(transactionJws ? { 'X-Toru-Tango-Transaction-JWS': transactionJws } : {}) },
       body: JSON.stringify(input),
       signal: controller.signal
     });
@@ -69,7 +71,7 @@ export async function generateAiQuestions(input: {
     const payload = (await response.json()) as Record<string, unknown>;
     if (!response.ok) {
       const message = typeof payload.error === 'string' ? payload.error : `AI_API_${response.status}`;
-      throw new Error(message);
+      throw new Error(response.status === 429 && payload.code === 'AI_MONTHLY_LIMIT' ? 'AI_MONTHLY_LIMIT' : message);
     }
 
     if (!Array.isArray(payload.questions)) {

@@ -1,5 +1,6 @@
 import { File } from 'expo-file-system';
 import { getAnonymousId } from './anonymousId';
+import { getTransactionJws } from './iap';
 
 export type SelectedStudyImage = {
   uri: string;
@@ -29,15 +30,16 @@ export async function recognizeWithGemini(images: SelectedStudyImage[]): Promise
   const timeout = setTimeout(() => controller.abort(), 60_000);
   try {
     const anonymousId = await getAnonymousId();
+    const transactionJws = await getTransactionJws();
     const response = await fetch(getOcrEndpoint(), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Toru-Tango-Anonymous-Id': anonymousId },
+      headers: { 'Content-Type': 'application/json', 'X-Toru-Tango-Anonymous-Id': anonymousId, ...(transactionJws ? { 'X-Toru-Tango-Transaction-JWS': transactionJws } : {}) },
       body: JSON.stringify({ images: encodedImages }),
       signal: controller.signal
     });
     const payload = (await response.json()) as Record<string, unknown>;
     if (!response.ok) {
-      throw new Error(typeof payload.error === 'string' ? payload.error : `AI_API_${response.status}`);
+      throw new Error(response.status === 429 && payload.code === 'AI_MONTHLY_LIMIT' ? 'AI_MONTHLY_LIMIT' : typeof payload.error === 'string' ? payload.error : `AI_API_${response.status}`);
     }
     const text = typeof payload.text === 'string' ? payload.text.trim() : '';
     if (!text) throw new Error('文字を認識できませんでした。写真を撮り直してください。');

@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
@@ -523,6 +524,7 @@ export default function CreateScreen() {
           端末内OCRは写真を外部送信しません。Gemini OCRは写真をGoogle Gemini APIへ送信し、認識前に確認を求めます。
         </MutedText>
         {ocrStatus ? <Text style={styles.status}>{ocrStatus}</Text> : null}
+        {ocrStatus.includes("AI_MONTHLY_LIMIT") ? <AppButton label="プランを見る" onPress={() => router.push("/paywall")} /> : null}
         {ocrText ? (
           <>
             <Field
@@ -691,6 +693,7 @@ export default function CreateScreen() {
           </View>
         ) : null}
         {generateStatus ? <Text style={styles.status}>{generateStatus}</Text> : null}
+        {generateStatus.includes("AI_MONTHLY_LIMIT") ? <AppButton label="プランを見る" onPress={() => router.push("/paywall")} /> : null}
         {generatedText ? (
           <>
             <Field

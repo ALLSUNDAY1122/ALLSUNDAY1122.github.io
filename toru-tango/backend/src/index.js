@@ -1,3 +1,4 @@
+import { verifyStoreKitTransaction } from './storekit.js';
 const ALLOWED_ORIGIN = 'https://allsunday1122.github.io';
 const MAX_BODY_BYTES = 100_000;
 const OCR_MAX_BODY_BYTES = 12_000_000;
@@ -11,7 +12,7 @@ function cors(origin) {
   return {
     'Access-Control-Allow-Origin': origin || ALLOWED_ORIGIN,
     'Access-Control-Allow-Methods': 'POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-Toru-Tango-Anonymous-Id',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Toru-Tango-Anonymous-Id, X-Toru-Tango-Transaction-JWS',
     Vary: 'Origin',
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store'
@@ -102,22 +103,32 @@ function anonymousIdFrom(request) {
   return /^[a-zA-Z0-9._:-]{8,128}$/.test(value) ? value : '';
 }
 
-function usageKey(anonymousId) {
-  const month = new Date().toISOString().slice(0, 7);
-  return `ai-usage:${month}:${anonymousId}`;
-}
-
-async function reserveMonthlyUsage(env, anonymousId) {
-  // KV未設定の開発環境や既存アプリは、課金基盤を有効化するまで従来どおり動かす。
-  if (!anonymousId || !env.USAGE_KV) return { allowed: true, tracked: false };
-  const key = usageKey(anonymousId);
-  const used = Number(await env.USAGE_KV.get(key)) || 0;
-  if (used >= FREE_MONTHLY_AI_LIMIT) {
-    return { allowed: false, tracked: true, used, limit: FREE_MONTHLY_AI_LIMIT };
+function usageKey(id, period) { return 'ai-usage:' + period + ':' + id; }
+async function reserveMonthlyUsage(env, request) {
+  const jws=request.headers.get('X-Toru-Tango-Transaction-JWS');
+  let tier='free',limit=FREE_MONTHLY_AI_LIMIT,id=anonymousIdFrom(request),period=new Date().toISOString().slice(0,7);
+  if(jws){
+    const entitlement=await verifyStoreKitTransaction(jws);
+    ({tier,limit}=entitlement);
+    id=entitlement.originalTransactionId;
+    period=entitlement.purchaseDate+'-'+entitlement.expiresDate;
   }
-  const next = used + 1;
-  await env.USAGE_KV.put(key, String(next), { expirationTtl: 60 * 60 * 24 * 45 });
-  return { allowed: true, tracked: true, used: next, limit: FREE_MONTHLY_AI_LIMIT };
+  if(!env.USAGE_KV)return {allowed:false,tracked:false,used:0,limit,tier,error:'USAGE_STORAGE_UNAVAILABLE'};
+  if(!id)return {allowed:false,tracked:false,used:0,limit,tier,error:'ANONYMOUS_ID_REQUIRED'};
+  const key=usageKey(id,period),used=Number(await env.USAGE_KV.get(key))||0;
+  if(used>=limit)return {allowed:false,tracked:true,used,limit,tier};
+  await env.USAGE_KV.put(key,String(used+1),{expirationTtl:60*60*24*45});
+  return {allowed:true,tracked:true,used:used+1,limit,tier};
+}
+async function resolveUsage(env,request,origin){
+  try {
+    const usage=await reserveMonthlyUsage(env,request);
+    if(usage.error)return {response:json({error:'利用状況を確認できません。',code:usage.error},503,origin)};
+    if(!usage.allowed)return {response:json({error:'今月のクラウドAI利用枠に達しました。',code:'AI_MONTHLY_LIMIT',usage:{used:usage.used,limit:usage.limit,tier:usage.tier}},429,origin)};
+    return {usage};
+  }catch{
+    return {response:json({error:'購入情報を検証できません。',code:'INVALID_TRANSACTION_JWS'},401,origin)};
+  }
 }
 
 function imageParts(images) {
@@ -203,10 +214,9 @@ export default {
       if (!parts) {
         return json({ error: '画像はJPEG・PNG・WebP・HEICを10枚まで、1枚5MB以下で送信してください。' }, 400, origin);
       }
-      const usage = await reserveMonthlyUsage(env, anonymousIdFrom(request));
-      if (!usage.allowed) {
-        return json({ error: '今月のAI利用枠を使い切りました。追加利用はProプランをご利用ください。', code: 'AI_MONTHLY_LIMIT', usage }, 429, origin);
-      }
+      const reservation = await resolveUsage(env, request, origin);
+      if (reservation.response) return reservation.response;
+      const usage = reservation.usage;
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 60_000);
       try {
@@ -268,10 +278,9 @@ export default {
       return json({ error: '教材本文を20文字以上入力してください。' }, 400, origin);
     }
 
-    const usage = await reserveMonthlyUsage(env, anonymousIdFrom(request));
-    if (!usage.allowed) {
-      return json({ error: '今月のAI利用枠を使い切りました。追加利用はProプランをご利用ください。', code: 'AI_MONTHLY_LIMIT', usage }, 429, origin);
-    }
+    const reservation = await resolveUsage(env, request, origin);
+    if (reservation.response) return reservation.response;
+    const usage = reservation.usage;
 
     const instructions = [
       'あなたは日本語教材から、表と裏で学習する単語カードを作る編集者です。',

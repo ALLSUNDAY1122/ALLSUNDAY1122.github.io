@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import {
@@ -124,6 +125,10 @@ export default function RecordsScreen() {
         )}
       </Section>
 
+      <Section title="クラウドAIプラン">
+        <MutedText>Gemini作問とGemini OCRを合計して月5回無料。月額プランで50回・100回を選べます。</MutedText>
+        <AppButton label="プランを見る" onPress={() => router.push("/paywall")} />
+      </Section>
       <Section title="バックアップ">
         <MutedText>
           JSONファイルとして保存できます。復元時は現在のカード・学習記録・連続学習日を置き換えます。
