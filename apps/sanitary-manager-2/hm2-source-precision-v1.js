@@ -262,3 +262,16 @@ for(const c of changes){
 }
 window.HM2_B2_MHLW_HYGIENE_SOURCE_IDS=changes.map(x=>x.id);
 })();
+
+
+(function(){
+'use strict';
+// HM2 B2 original NLM editorial on reflexes: source-only, no publication approval.
+const id='sm2-5y-r08-phy-01';
+const q=(window.Q_PARTS||[]).find(x=>x.id===id);
+const old='https://www.ncbi.nlm.nih.gov/books/NBK544292/';
+if(!q||q.sourceUrl!==old||q.answer!==2||!Array.isArray(q.choices)||q.choices.length!==5)throw Error('HM2 B2 reflex source stale');
+q.sourceUrl='https://medlineplus.gov/lab-tests/neurological-exam/';
+q.basis=String(q.basis||'')+' ／ NLM自身が編集したMedlinePlus Medical Test Neurological Exam: reflexes are automatic body movements in response to triggers, spinal cord and peripheral nerves control reflex and motor responses; heat is a sensory trigger. This is not a third-party MedlinePlus Medical Encyclopedia page.';
+window.HM2_B2_REFLEX_SOURCE_ID=id;
+})();
