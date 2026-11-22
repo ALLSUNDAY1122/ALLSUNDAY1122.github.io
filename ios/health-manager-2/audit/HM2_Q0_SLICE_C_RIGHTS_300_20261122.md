@@ -727,3 +727,53 @@ App Review提出・新規TestFlight配信なし。台帳本体・問題データ
 - 個別の原典全文の類似表現・改変利用・第三者素材の対照による商用利用最終承認: **0/300**。未実施をPASSにしない。
 - 当該ファイルの表には、問題の文章/解説が完全に独創的である証明も法的許諾証明も含まれない。コーディネーターは正式なrights証跡JSONとして無条件インポートしないこと。
 - 元台帳・問題JSONは不変。App Review提出と新規TestFlight配信はしていない。
+
+
+## 第4段階：先頭30問の個別原典本文比較と権利審査（2026-11-22）
+
+対象: No.1〜30、配布bank blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d`。問題文・5肢・解説の合計7テキストフィールドを配布JSONから読み、各原典の取得可能なテキスト/画像上の主要部分と対照した。**原典が取得できない場合は『未比較』と記録し、比較したと偽らない。**
+
+今回の重要発見: [試験協会2026年4月問題](https://www.exam.or.jp/wp-content/uploads/2026/04/LC20260414.pdf)の問1〜3と配布問001〜003で、論点・数値条件・選択肢の設計が相当程度近接していた。**3問は権利上の安全性を確定できず、独立設計への再構築優先候補**。問014は提示したPDFに実効温度を確認できず、問028・029も出典の論点対応が弱い。商用利用の正式な承認件数を増やさない。
+
+| No. | ID | 個別原典との比較所見 | 比較対象・証跡 | 権利・出典審査の処置 |
+|---:|---|---|---|---|
+| 1 | `sm2-demo-001` | 公表試験PDF問1を閲覧。1,000超〜2,000以下4人という同じ具体的数値・論点があり、設問形式も類似。独自表現の確定不可 | PDF p2(表示1/15)／[原典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | **要再設計・原典類似精査** |
+| 2 | `sm2-demo-002` | 公表試験PDF問2を閲覧。産業医選任14日・巡視頻度・辞任報告等の出題項目が複数重複。正誤反転だけでは独立性を証明できない | PDF p2(表示1/15)／[原典](https://www.mhlw.go.jp/web/t_doc?dataId=00td0095&dataType=1&pageNo=1) | **要再設計・原典類似精査** |
+| 3 | `sm2-demo-003` | 公表試験PDF問3を閲覧。試験区分、登録、報酬診断、守秘義務等の肢論点が相当重複 | PDF p3(表示2/15)、法令原典は別途／[原典](https://www.mhlw.go.jp/web/t_doc?dataId=74001000&dataType=0) | **要再設計・原典類似精査** |
+| 4 | `sm2-demo-004` | 安衛則を参照する設問。掲載URLの本文は今回取得失敗。条文事実と設問の表現類似は未比較 | MHLW安衛則URL取得不可／[原典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | **保留** |
+| 5 | `sm2-demo-005` | 安衛則参照。面接指導の数値は法定事実だが、条文および試験原文との逐語比較未実施 | MHLW安衛則URL取得不可／[原典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | **保留** |
+| 6 | `sm2-demo-006` | 安衛則参照。開催間隔・議事保存期間は法定事実、試験問題の同じ選択肢構成との対照未実施 | MHLW安衛則URL取得不可／[原典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | **保留** |
+| 7 | `sm2-demo-007` | 労基法比例付与表の数字を用いた計算問題。元表・試験問題の表現対照は未実施 | MHLW労基法URL取得不可／[原典](https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0) | **保留** |
+| 8 | `sm2-demo-008` | 労基法の時間外上限数値組合せ。法令上の数値そのものは独占不可だが組合せ・配列の出題表現は未比較 | MHLW労基法URL取得不可／[原典](https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0) | **保留** |
+| 9 | `sm2-demo-009` | 換気・気積の法令値に関する設問。厚労省の掲載条文は取得できず個別表現未比較 | MHLW安衛則URL取得不可／[原典](https://www.mhlw.go.jp/web/t_doc?dataId=74003000&dataType=0) | **保留** |
+| 10 | `sm2-demo-010` | 照明点検周期を問う設問。事務所則原文との逐語照合未完了 | MHLW事務所則URL取得不可／[原典](https://www.mhlw.go.jp/web/t_doc?dataId=74089000&dataType=0&pageNo=1) | **保留** |
+| 11 | `sm2-demo-011` | 参照PDF p8を画像で確認。感度・特異度表はあるが、50人/950人/40人/95人の数値事例は当該画像にない。配布問の数値設定は少なくとも図の数値を転写していない | 厚労省参考人資料PDF p8／[原典](https://www.mhlw.go.jp/file/05-Shingikai-10601000-Daijinkanboukouseikagakuka-Kouseikagakuka/0000104585.pdf) | **原資料一部照合・保留** |
+| 12 | `sm2-demo-012` | 厚労省カンピロバクターQ&Aを閲覧。菌による食中毒と防止の事実は関連。残りの病原体を含む各肢の原典との表現比較は未了 | 厚労省Q&A／[原典](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/campylobacterqa.html) | **原資料一部照合・保留** |
+| 13 | `sm2-demo-013` | 消防庁胸骨圧迫ページ本文を閲覧。100〜120回・5cm・胸骨下半分の数値/語彙が直接対応。短い標準的用語であり直ちに侵害とはいえないが、全肢組成の独立性の判断は未了 | 消防庁WEB講習・胸骨圧迫／[原典](https://www.fdma.go.jp/relocation/kyukyukikaku/oukyu/05kobetsu/01/05_01_14.html) | **原資料照合・保留** |
+| 14 | `sm2-demo-014` | 試験協会2026年4月PDFを取得。本文検索では「実効温度」は検出されず、このPDFが直接根拠との記載を確認できない。参照先を再検討 | 公表試験PDF16頁／[原典](https://www.exam.or.jp/wp-content/uploads/2026/04/LC20260414.pdf) | **出典不整合疑義・要修正** |
+| 15 | `sm2-demo-015` | 厚労省指針公示の掲載ページを閲覧。2026年10月19日という本文日付の一致は確認できず、指針本文PDFとの比較未了 | 厚労省THP公示ページ／[原典](https://www.mhlw.go.jp/stf/newpage_76807.html) | **根拠版確認要・保留** |
+| 16 | `sm2-demo-016` | 消防庁2025消防団手帳PDFは容量超過で本文取得不能。上下関節固定という一般的な救急法の事実について原文比較不可 | FDMA PDF取得不能（約18MB）／[原典](https://www.fdma.go.jp/relocation/syobodan/item/upload/tetyou2025.pdf) | **保留** |
+| 17 | `sm2-demo-017` | NHLBI心筋梗塞の原典を閲覧。心筋への血流遮断の医学的事実を参照。選択肢の日本語表現との逐語一致を示すものはないが全素材照合未了 | NHLBI Heart Attack／[原典](https://www.nhlbi.nih.gov/health/heart-attack) | **原資料一部照合・保留** |
+| 18 | `sm2-demo-018` | 厚労省腰痛予防指針のURL本文は取得できず、腰部保護ベルトの記述を逐語比較できない | MHLW指針URL取得不可／[原典](https://www.mhlw.go.jp/web/t_doc?dataId=00tb9484&dataType=1&pageNo=1) | **保留** |
+| 19 | `sm2-demo-019` | JNIOSH換気コラムを閲覧。CO₂換気論点は関連。配布問の400/1000ppm・600m³/h・0.018m³/hという値が原典の事例かは未確認 | JNIOSH換気記事／[原典](https://www.jniosh.johas.go.jp/publication/mail_mag/2021/153-column-1.html) | **原資料一部照合・保留** |
+| 20 | `sm2-demo-020` | AOA記事の取得は502。高齢者照度とグレアの原典表現を未確認 | AOA 502／[原典](https://www.aoa.org/healthy-eyes/eye-health-for-life/adult-vision-41-to-60-years-of-age) | **保留** |
+| 21 | `sm2-demo-021` | AAO記事は403。錐体/杆体の原文照合不可 | AAO 403／[原典](https://www.aao.org/eye-health/anatomy/night-vision) | **保留** |
+| 22 | `sm2-demo-022` | MSD小腸ページ閲覧。絨毛・微絨毛が吸収面積を広げる説明と配布解説が意味・語彙で近接。医学的事実は共有可能だが依存的翻案の有無を確認すべき | MSD小腸 本文／[原典](https://www.msdmanuals.com/ja-jp/home/03-%E6%B6%88%E5%8C%96%E5%99%A8%E7%B3%BB%E3%81%AE%E7%97%85%E6%B0%97/%E6%B6%88%E5%8C%96%E5%99%A8%E7%B3%BB%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E5%B0%8F%E8%85%B8) | **表現類似精査・保留** |
+| 23 | `sm2-demo-023` | 神経節辞典の個別ページはURL取得不可。辞典は記事著作権者が執筆者であるため、原文との比較が必要 | 脳科学辞典記事取得不可／[原典](https://bsd.neuroinf.jp/w/index.php?title=%E7%A5%9E%E7%B5%8C%E7%AF%80) | **保留** |
+| 24 | `sm2-demo-024` | MSD肝臓機能ページ閲覧。代謝・解毒の一般的事実を問うが、配布解説の表現対照は部分的 | MSD肝機能 本文／[原典](https://www.msdmanuals.com/ja-jp/professional/02-%E8%82%9D%E8%83%86%E9%81%93%E7%96%BE%E6%82%A3/%E8%82%9D%E7%96%BE%E6%82%A3%E3%82%92%E6%9C%89%E3%81%99%E3%82%8B%E6%82%A3%E8%80%85%E3%81%B8%E3%81%AE%E3%82%A2%E3%83%97%E3%83%AD%E3%83%BC%E3%83%81/%E8%82%9D%E8%87%93%E3%81%AE%E6%A7%8B%E9%80%A0%E3%81%8A%E3%82%88%E3%81%B3%E6%A9%9F%E8%83%BD) | **原資料一部照合・保留** |
+| 25 | `sm2-demo-025` | MSD腎臓ページ閲覧。参照先の腎機能説明と配布肢の糸球体・尿細管は関連するが、正確な該当段落まで未特定 | MSD腎臓 本文／[原典](https://www.msdmanuals.com/ja-jp/home/05-%E8%85%8E%E8%87%93%E3%81%A8%E5%B0%BF%E8%B7%AF%E3%81%AE%E7%97%85%E6%B0%97/%E8%85%8E%E8%87%93%E3%81%A8%E5%B0%BF%E8%B7%AF%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E8%85%8E%E8%87%93) | **原資料一部照合・保留** |
+| 26 | `sm2-demo-026` | 日本赤十字社血液型表を閲覧。A型の抗Bという短い生物学的事実を問う。出典表を転載しておらず、写真・表の複製も配布JSON上は見られない | 赤十字血液型表・A行／[原典](https://www.bs.jrc.or.jp/kk/hyogo/donation/m2_02_01_00_bloodtype.html) | **原資料照合・条件付低リスク（承認保留）** |
+| 27 | `sm2-demo-027` | HQL暗順応記事閲覧。『明るい屋外から暗い室内』の場面が記事説明と近い。通例の説明でもあるが具体的場面を含めた表現類似精査が必要 | HQL暗順応記事／[原典](https://www.hql.jp/database/cat/senior/funcdb2000/%E8%A8%88%E6%B8%AC%E3%83%87%E3%83%BC%E3%82%BF/%E6%9A%97%E9%A0%86%E5%BF%9C) | **表現類似精査・保留** |
+| 28 | `sm2-demo-028` | MSDの水・ナトリウム平衡ページ閲覧。対象問は体温調節・不感蒸泄が中心で、直接的な論点対応が弱い | MSD水・Na平衡／[原典](https://www.msdmanuals.com/ja-jp/professional/10-%E5%86%85%E5%88%86%E6%B3%8C%E7%96%BE%E6%82%A3%E3%81%A8%E4%BB%A3%E8%AC%9D%E6%80%A7%E7%96%BE%E6%82%A3/%E6%B0%B4%E4%BB%A3%E8%AC%9D/%E6%B0%B4%E3%81%A8%E3%83%8A%E3%83%88%E3%83%AA%E3%82%A6%E3%83%A0%E3%81%AE%E5%B9%B3%E8%A1%A1) | **出典適合不十分・要修正** |
+| 29 | `sm2-demo-029` | MSDの『主な原発性免疫不全症』表を閲覧。対象問の体液性免疫の定義を直接解説する出典ではなく、リンクの関連性が弱い | MSD原発性免疫不全症表／[原典](https://www.msdmanuals.com/ja-jp/home/multimedia/table/%E4%B8%BB%E3%81%AA%E5%8E%9F%E7%99%BA%E6%80%A7%E5%85%8D%E7%96%AB%E4%B8%8D%E5%85%A8%E7%97%87) | **出典適合不十分・要修正** |
+| 30 | `sm2-demo-030` | MSD加齢による耳鼻咽喉の変化ページ閲覧。加齢性難聴の題材は対応するが、5肢のうち他の加齢変化は原資料外。表現類似性は部分確認にとどまる | MSD加齢性聴覚ページ／[原典](https://www.msdmanuals.com/ja-jp/home/19-%E8%80%B3-%E9%BC%BB-%E3%81%AE%E3%81%A9%E3%81%AE%E7%97%85%E6%B0%97/%E8%80%B3-%E9%BC%BB-%E3%81%AE%E3%81%A9%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E5%8A%A0%E9%BD%A2%E3%81%AB%E3%82%88%E3%82%8B%E8%80%B3-%E9%BC%BB-%E3%81%AE%E3%81%A9%E3%81%B8%E3%81%AE%E5%BD%B1%E9%9F%BF) | **原資料一部照合・保留** |
+
+### 権利判定の定義・集計
+- 30/30問について、配布テキストと個別原典の比較可能性・権利危険信号・最終処置を記録。実際に本文を取得した原典は限定的であり、**30問の全文逐語照合が終わったという意味ではない**。
+- 要再設計・原典類似精査: No.1〜3の3問。出典適合・版の疑義: No.14、15、28、29の4問（うち15は版確認が必要）。その他23問は照合・権利条件の証拠が足りず保留。
+- **最終権利承認: 今回0/30、累計0/300。**「条件付低リスク」の表示も承認ではない。侵害確定との法的判断でもない。
+- 公的資料利用規約だけでは試験問題の自由転載や個々の第三者素材を承認できない。閲覧困難なURL・PDFは別環境で再取得し、引用元と配布文言の文字列重複・問題構成を確認する。
+- 参照先の閲覧日時: 2026-11-22 JST。上記照合で閲覧した主な資料: [参照](https://www.exam.or.jp/wp-content/uploads/2026/04/LC20260414.pdf)、[参照](https://www.mhlw.go.jp/file/05-Shingikai-10601000-Daijinkanboukouseikagakuka-Kouseikagakuka/0000104585.pdf)、[参照](https://www.fdma.go.jp/relocation/kyukyukikaku/oukyu/05kobetsu/01/05_01_14.html)、[参照](https://www.msdmanuals.com/ja-jp/home/03-%E6%B6%88%E5%8C%96%E5%99%A8%E7%B3%BB%E3%81%AE%E7%97%85%E6%B0%97/%E6%B6%88%E5%8C%96%E5%99%A8%E7%B3%BB%E3%81%AE%E7%94%9F%E7%89%A9%E5%AD%A6/%E5%B0%8F%E8%85%B8)、[参照](https://www.bs.jrc.or.jp/kk/hyogo/donation/m2_02_01_00_bloodtype.html)。
+- Q0を通すには、疑義3問の再設計差分確認、出典差替え、個別資料ライセンス・第三者画像照合が別途必要。監査ファイルの記載をrights PASSとして取り込まない。
+
+元台帳・元JSON・生成元データ不変更。App Review提出・新規TestFlight配信は実施しない。
