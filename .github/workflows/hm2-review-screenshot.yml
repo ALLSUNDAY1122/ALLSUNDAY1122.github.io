@@ -167,7 +167,9 @@ jobs:
           for name in ('01-home.png','02-premium.png'):
               p=root/name
               files.append({'name':name,'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'size':'1260x2736'})
-          (root/'manifest.json').write_text(json.dumps({'source':'hm2-review-screenshot.yml','canonical':True,'files':files},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          bank=Path('ios/health-manager-2/release-questions.json')
+          bank_sha256=hashlib.sha256(bank.read_bytes()).hexdigest()
+          (root/'manifest.json').write_text(json.dumps({'source':'hm2-review-screenshot.yml','canonical':True,'question_bank_sha256':bank_sha256,'files':files},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
