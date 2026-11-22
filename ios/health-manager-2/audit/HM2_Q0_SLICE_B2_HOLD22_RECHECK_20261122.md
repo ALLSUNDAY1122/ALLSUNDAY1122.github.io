@@ -291,3 +291,11 @@ GitHub接続から現行 `ios/health-manager-2/release-questions.json` と `apps
 | sm2-5y-r07-phy-07（No.151） | PASS | PASS | PASS | 一次資料照合済 |
 
 **実測範囲の限界**：これは正規生成スクリプト全体の実行ではない。基準データを生成元全スクリプトで構築したものではなく、各IIFEに必要なフィールドだけを抽出・写像したスモークテストである。配布JSONの変更・SHA256生成・再生成バイト一致・全300問回帰・独立二重監査は未実施。Q0/Q1は引き続きBLOCKED。
+
+## 2026-11-22 B2第19次：No.135 NIDDK公式公開本文の射程へ改稿（運用再監査待ち）
+
+- 固定No.135、ID `sm2-5y-r05-phy-08`。NIDDK公式公開記事 *Prescribing Exercise for Almost Anyone*（2018-06-20） https://www.niddk.nih.gov/health-information/professionals/diabetes-discoveries-practice/prescribing-exercise-for-almost-anyone は、筋収縮による運動時の血中ブドウ糖取り込みが安静時のインスリン作用とは別経路で起こることを専門家Sheri Colberg氏の発言としてNIDDKが原文掲載している。**発言者は政府職員と確認しておらず、「政府サイトにある第三者の専門家発言」を「政府が直接執筆した機序」と混同しない**。GLUT4の膜移行の細胞内機序はこの公式掲載本文からは直接確認できない。
+- 現行5肢はGLUT4膜移行に特化し当該NIDDK本文と直接照合できないため、難易度低下を伴うが**筋収縮に伴うインスリン非依存性糖取り込みへ問題・5肢・正答解説を全面限定改稿**。正答位置⑤は維持。改稿後の肢：①× インスリン増加なしでは筋糖取り込み増加は絶対不可、②× 筋収縮開始で必ず完全停止、③× 筋は糖を使わず胆汁酸のみ、④× 筋収縮は関与せずカルシトニンだけ、**⑤○ 筋収縮によりインスリンの安静時作用とは別の経路から糖取り込みが増え得る**。NIDDK直接掲載本文の範囲へ狭めた結果であり、詳細なGLUT4分子機序の立証を意味しない。
+- パッチは旧問題文・全5肢・旧PubMed URL・正答位置⑤と肢一意性をguardし、question/choices/quick/explanation/topic/sourceUrl/basisを書換え。公開承認を `requires-independent-subject-expert-review`、`再監査待ち`、`非公開` に無効化。生成元コミット `aa2a204353b673173c1b19a3ec05034aa22c6855`。
+- **個別V8実行スモークテスト実測PASS**：GitHubから取得した現行配布JSONの当該一問をQ_PARTSへ写像して改稿IIFEを実行し、旧値guard PASS、エラーなし、5肢ユニーク、正答位置⑤不変、sourceUrl変更、公開非承認状態を検証。正規300問生成／配布JSONバイト一致は**未実施**。
+- **一次内容集計はPASS65/HOLD4のまま**。No.135の正式一次PASS加算は独立再監査・生成元再生成と権利（NIDDK掲載外部専門家発言の転載権と独自作問）最終評価後に限る。残HOLDのNo.131/133/142/135はすべて生成元改稿済だが、配布JSONの最新バイト一致と独立ゲート未通過。Q0/Q1 BLOCKED、App Review・TestFlight未実施。
