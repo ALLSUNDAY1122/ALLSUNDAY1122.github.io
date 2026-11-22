@@ -190,3 +190,53 @@
 - **厚労省の直接通達／解説との照合を記録できたもの：No.110・111・116・117の4/69問**。残65問は形式的・医学的な内容点検に留まり、新Q0の一次確認完了としては認定しない。
 - NIH/NHLBI等の公的機関の説明は内容を補助的に支持するが、公式一次資料要件への採用と権利判断は別途必要。
 - **正答index変更・生成元・配布JSON変更なし**。二重チェック、権利最終判定、Q0/Q1判定、回帰テスト、App Review提出、新規TestFlight配信は分割対象外で未実施。
+
+## 2026-11-22 追加公式根拠探索：保留35問（No.118〜152）
+
+対象は前回の『内容点検のみ』35問。配布データ `release-questions.json` Git blob `72888a617ff17bf84b25e9d5a61f5cdec0d7493d`、設問5肢・正答indexを再参照。以下では**実際に検索結果の資料本文要旨を確認し、命題の支持範囲を個別に判定**した。『米政府公式解説』と『原著一次研究』『教科書・レビュー（二次）』を明確に区分し、直接記述のない部分や五肢すべての公式逐語的対照を完了したという扱いはしない。
+
+| 固定No. | ID | 正答肢（1起点） | 閲覧根拠・主要命題 | 証拠階層と残件 |
+|---:|---|---:|---|---|
+| 118 | `sm2-5y-r04-phy-01` | 3 | [米NIH/NHLBI・酸素化の公的説明](https://www.nhlbi.nih.gov/health/lungs/breathing-benefits) | 公的解説／高地による分圧低下の直接説明は未確認 |
+| 119 | `sm2-5y-r04-phy-02` | 5 | [OpenStax循環調節解説](https://openstax.org/books/anatomy-and-physiology-2e/pages/20-4-homeostatic-regulation-of-the-vascular-system) | 大学教科書相当の二次資料／動静脈較差の直接原典未確認 |
+| 120 | `sm2-5y-r04-phy-03` | 2 | [OpenStax心拍出量の定義](https://openstax.org/books/medical-surgical-nursing/pages/35-2-cardiovascular-concerns) | 二次教科書に式あり、数値は独立計算で一致 |
+| 121 | `sm2-5y-r04-phy-04` | 1 | [OpenStax運動時心拍出量](https://openstax.org/books/anatomy-and-physiology-2e/pages/19-4-cardiac-physiology) | 二次教科書／活動筋血流の局所配分は補足原典要 |
+| 122 | `sm2-5y-r04-phy-05` | 4 | [米NIH/NHLBI血流経路](https://www.nhlbi.nih.gov/health/heart/blood-flow) | 米政府公式説明で肺静脈→左心房を直接確認 |
+| 123 | `sm2-5y-r04-phy-06` | 2 | [米NIH配信のMedlinePlus凝固機序](https://medlineplus.gov/ency/anatomyvideos/000011.htm) | 公的配信だがA.D.A.M.原著・フィブリノゲン対血清の直接記述未確認 |
+| 124 | `sm2-5y-r04-phy-07` | 4 | [米NIH MedlinePlus PT検査](https://medlineplus.gov/ency/article/003652.htm) | 公的配信でPTが血漿検査と確認／クエン酸条件は別原典必要 |
+| 125 | `sm2-5y-r04-phy-08` | 1 | [OpenStax死腔・呼吸概説](https://openstax.org/books/anatomy-and-physiology-2e/pages/22-key-terms) | 死腔の定義は確認、計算式の一次原典は未確認 |
+| 126 | `sm2-5y-r04-phy-09` | 5 | [米NIH/NHLBI酸素運搬](https://www.nhlbi.nih.gov/health/lungs/breathing-benefits) | 公的説明でHb酸素運搬を確認、8対15g/dL定量関係の直接記述なし |
+| 127 | `sm2-5y-r04-phy-10` | 3 | [OpenStax呼吸化学受容器](https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing) | 二次教科書にCO2上昇と換気刺激の直接記述 |
+| 128 | `sm2-5y-r05-phy-01` | 2 | [米NIH/NHLBI冠動脈](https://www.nhlbi.nih.gov/health/heart/blood-flow) | 米政府公式説明で冠動脈→心筋を確認 |
+| 129 | `sm2-5y-r05-phy-02` | 5 | [米NIH/NHLBI右心室流出](https://www.nhlbi.nih.gov/health/heart/blood-flow) | 米政府公式説明で右心室→肺動脈を確認 |
+| 130 | `sm2-5y-r05-phy-03` | 1 | [米NIH/NHLBI肺胞CO2移動](https://www.nhlbi.nih.gov/health/lungs/respiratory-system) | 米政府公式説明でCO2は血液→肺胞、分圧差機序は別原典必要 |
+| 131 | `sm2-5y-r05-phy-04` | 4 | [OpenStaxインスリンと貯蔵](https://openstax.org/books/anatomy-and-physiology-2e/pages/24-1-overview-of-metabolic-reactions) | 二次教科書でインスリン/グリコーゲンの関係を確認 |
+| 132 | `sm2-5y-r05-phy-05` | 3 | [米NIDDK糸球体](https://www.niddk.nih.gov/health-information/kidney-disease/glomerular-disease) | 米政府公式説明で正常糸球体は血球保持を確認 |
+| 133 | `sm2-5y-r05-phy-06` | 1 | [米NIH/NHLBI心拍・拍動](https://www.nhlbi.nih.gov/health/heart/blood-flow) | 政府血流概説で心臓の拍出を確認、末梢圧波伝播の直接記述未確認 |
+| 134 | `sm2-5y-r05-phy-07` | 3 | [OpenStax心拍・拍出](https://openstax.org/books/anatomy-and-physiology-2e/pages/19-4-cardiac-physiology) | 脈拍欠損定義の直接原典未確認。96−78=18の算術のみ確定 |
+| 135 | `sm2-5y-r05-phy-08` | 5 | [掲載原著・運動刺激とGLUT4](https://pubmed.ncbi.nlm.nih.gov/10331428/) | PubMed収載のヒト実験原著、運動によるGLUT4膜移行を直接報告 |
+| 136 | `sm2-5y-r05-phy-09` | 2 | [OpenStax筋収縮機構](https://openstax.org/books/anatomy-and-physiology-2e/pages/10-3-muscle-fiber-contraction-and-relaxation) | 二次教科書でCa・アクチン・ミオシンの機序を確認 |
+| 137 | `sm2-5y-r05-phy-10` | 4 | [OpenStax膵リパーゼ](https://openstax.org/books/anatomy-and-physiology-2e/pages/23-7-chemical-digestion-and-absorption-a-closer-look) | 二次教科書で膵リパーゼと中性脂肪を直接確認 |
+| 138 | `sm2-5y-r06-phy-01` | 4 | [米NIH/NHLBI呼気](https://www.nhlbi.nih.gov/health/lungs/breathing-benefits) | 米政府公式説明で安静呼気は通常努力不要と確認 |
+| 139 | `sm2-5y-r06-phy-02` | 1 | [OpenStax安静吸気](https://openstax.org/books/anatomy-and-physiology-2e/pages/22-3-the-process-of-breathing) | 二次教科書で横隔膜収縮・胸腔拡大と気圧低下の関係を確認 |
+| 140 | `sm2-5y-r06-phy-06` | 5 | [米NIDDK腎機能](https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work) | 米政府公式説明で水分・老廃物排泄、電解質の管理を確認 |
+| 141 | `sm2-5y-r06-phy-07` | 2 | [原著：vasopressin and aquaporin](https://pubmed.ncbi.nlm.nih.gov/8140421/) | PubMed収載ヒトAQP2研究原著でV2→AQP2挿入を直接確認 |
+| 142 | `sm2-5y-r06-phy-08` | 4 | [OpenStax酸化的リン酸化](https://openstax.org/books/anatomy-and-physiology-2e/pages/24-2-carbohydrate-metabolism) | 二次教科書で酸素最終電子受容体とプロトン勾配を確認 |
+| 143 | `sm2-5y-r06-phy-09` | 1 | [米NIH MedlinePlus浸透圧](https://medlineplus.gov/lab-tests/osmolality-tests/) | 政府配信の公的解説／飲水後ADH低下の直接記述は未確認 |
+| 144 | `sm2-5y-r06-phy-10` | 3 | [OpenStax心臓刺激伝導](https://openstax.org/books/anatomy-and-physiology-2e/pages/19-chapter-review) | 二次教科書でSA→AV→His→脚→Purkinjeを直接確認 |
+| 145 | `sm2-5y-r07-phy-01` | 3 | [OpenStaxアルドステロン](https://openstax.org/books/anatomy-and-physiology-2e/pages/26-3-electrolyte-balance) | 二次教科書で遠位尿細管Na再吸収・K排泄を直接確認 |
+| 146 | `sm2-5y-r07-phy-02` | 5 | [運動・インスリン抵抗性レビュー](https://pmc.ncbi.nlm.nih.gov/articles/PMC8074531/) | 査読レビューだが一次研究原著ではない；現行PubMed候補との直接突合未了 |
+| 147 | `sm2-5y-r07-phy-03` | 2 | [米NIH MedlinePlus血小板](https://medlineplus.gov/plateletdisorders.html) | 米政府配信で血小板が損傷血管を閉塞することを確認 |
+| 148 | `sm2-5y-r07-phy-04` | 1 | [OpenStax脂質吸収](https://openstax.org/books/anatomy-and-physiology-2e/pages/23-7-chemical-digestion-and-absorption-a-closer-look) | 二次教科書／乳び管・カイロミクロンの双方を同じ該当箇所で確認未了 |
+| 149 | `sm2-5y-r07-phy-05` | 4 | [現行NCBI Bookshelf候補](https://www.ncbi.nlm.nih.gov/books/NBK232852/) | 寒冷血管拡張反応の掲載内容は取得未確認、出典直接照合保留 |
+| 150 | `sm2-5y-r07-phy-06` | 2 | [米NIDDKグルカゴン](https://www.niddk.nih.gov/news/archive/2021/story-discovery-medications-diabetes-obesity-emerged-research-pancreatic-hormone) | 政府解説でグルカゴン→肝糖放出、グリコーゲン分解の詳細は二次資料参照 |
+| 151 | `sm2-5y-r07-phy-07` | 4 | [OpenStax糖代謝](https://openstax.org/books/anatomy-and-physiology-2e/pages/24-2-carbohydrate-metabolism) | 絶食時糖新生の直接記述・相対寄与の精査未了 |
+| 152 | `sm2-5y-r07-phy-08` | 1 | [研究原著・V2とAQP2](https://pubmed.ncbi.nlm.nih.gov/8140421/) | ヒトAQP2原著でバソプレシン依存尿濃縮を確認、選択的V2遮断の実験条件は推論 |
+
+### 出典比較に関する判断
+- 米政府のNHLBI/NIDDKが自ら編集した解説は『公的機関による公式説明』だが、各生理学命題のオリジナル実験報告ではない。**政府による公式資料という性質と学術上の一次研究原著は別概念**。新Q0の『公式根拠』を公的機関の説明で満たせるか、コーディネーターが基準を統一する必要がある。
+- PubMedは収載索引であり各論文の著作権・査読・結論を自動保証しない。No.135・141・152に紐付けた原著論文は要旨で関係を照合したが、本文全文・ライセンスは未確認。
+- OpenStaxは教育用二次資料であり、既にOpenStax由来の権利・類似表現を問題視した監査履歴がある。ここでは検証の比較参照に限り、問題文への転載や問題データ変更なし。
+- No.123・124のMedlinePlus記述は原著A.D.A.M.等の帰属と検査室標準化の差異を調査。No.149は候補先原文不達、内容点検をPASSへ昇格させない。
+- No.118〜152の35問の**証拠探索・命題別照合35/35**。ただし公式原典と全5肢・版・権利を確定した新Q0正式一次確認 **0/35**。暫定の直接的裏付けは各行の記載に限定し、前回公式資料の直接照合4/69も据置。全69問の監査完了を宣言しない。
+- 結果に基づく正答index修正は現段階で不要と判断。ただし未到達原典の問題は最終判定を保留。Q0/Q1判定・権利最終承認・回帰・リリース操作はいずれも対象外。
