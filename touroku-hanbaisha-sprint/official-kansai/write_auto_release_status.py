@@ -27,21 +27,23 @@ existing=json.loads((IOS/"release-status.json").read_text())
 total=bank["count"]
 auto=sum(s["auto"] for s in bank["byYear"].values())
 visual=sum(s["visual"] for s in bank["byYear"].values())
-geometry=sum(s.get("geometry",0) for s in bank["byYear"].values())
-if total!=auto+geometry+visual or total>600:raise RuntimeError("approved count mismatch")
+geometry=sum(v.get("geometry",0) for v in bank["byYear"].values())
+ruby=sum(v.get("ruby",0) for v in bank["byYear"].values())
+layout=sum(v.get("layout",0) for v in bank["byYear"].values())
+if total!=auto+geometry+ruby+layout+visual or total>600:raise RuntimeError("approved count mismatch")
 if "KSAI-2023-090" in bank["approvedIds"]:raise RuntimeError("invalid q90 not visually reviewed")
 now=datetime.now(timezone(timedelta(hours=9))).isoformat(timespec="seconds")
 existing["updated_at"]=now
 qb=existing.setdefault("question_bank",{})
 qb.update({"verified_official_imported":total,"official_question_text_imported":total,
            "production_official_bank_count":total,"auto_diff_pass_promoted":auto,
-           "manual_visual_pass_preserved":visual,"auto_geometry_new_promoted":geometry,"official_question_text_staged":600,
+           "manual_visual_pass_preserved":visual,"auto_geometry_new_promoted":geometry,"auto_ruby_new_promoted":ruby,"auto_layout_new_promoted":layout,"official_question_text_staged":600,
            "auto_diff_per_year":by_year,
            "auto_diff_reason_totals":dict(global_reasons),"auto_diff_advisory_totals":dict(global_advisories)})
 gate=existing.setdefault("gates",{})
 gate["normalized_pdf_auto_diff"]=f"COMPLETE_{600-sum(x['notYetDiffed'] for x in by_year.values())}_OF_600"
 gate["official_source_import"]=f"PARTIAL_APPROVED_{total}_OF_600"
-gate["verbatim_and_answer_audit"]=f"AUTO_{auto}_GEOMETRY_{geometry}_VISUAL_{visual}_REMAINING_{600-total}"
+gate["verbatim_and_answer_audit"]=f"AUTO_{auto}_GEOMETRY_{geometry}_RUBY_{ruby}_LAYOUT_{layout}_VISUAL_{visual}_REMAINING_{600-total}"
 gate["content_complete"]="PASS" if total==600 else "BLOCKED"
 gate["official_release_readiness"]="BLOCKED_UNTIL_CONTENT_AND_APP_REVIEW"
 existing["release_gate"]="BLOCKED"
