@@ -79,6 +79,8 @@ jobs:
           test "$result" -ne 0 || { echo 'Unexpected IPA source-image release PASS' >&2; exit 1; }
           grep -q 'BLOCKED:' /tmp/itp-image-release.log
           echo 'PASS: incomplete source assets and verbatim audit cannot release'
+      - name: Validate 500-question alternate-layout OCR discrepancy classification
+        run: python3 apps/it-passport-rebuild/quality/validate-ocr-discrepancy-500.py
       - name: Compile official-source PDF staging parser
         run: python3 -m py_compile apps/it-passport-rebuild/quality/stage-ipa-pdf.py
       - name: Report issue-triggered run
