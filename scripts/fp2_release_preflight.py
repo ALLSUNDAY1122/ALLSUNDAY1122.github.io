@@ -50,7 +50,7 @@ def main():
         errors.append("verbatim independent audit PASS117 FAIL2 HOLD1 mismatch")
     sessions = {}
     for q in selected:
-        session = q.get("exam_year_month") or q.get("examDate")
+        session = q.get("exam_year_month") or q.get("examDate") or "independently-authored"
         sessions[session] = sessions.get(session, 0) + 1
     if sessions != {"2024-05":58,"2024-09":59,"2025-01":60,"2025-05":60,"2026-05":60,"independently-authored":3}:
         errors.append("session distribution invalid: 297 official PASS +3 original replacements")
@@ -68,7 +68,7 @@ def main():
         matches = [q for q in questions if q.get("id") == ident]
         if len(matches) != 1 or matches[0].get("release_selected") is not True or matches[0].get("audit_evidence_path") != "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md" or matches[0].get("independent_audit_status") != "PASS":
             errors.append(f"{ident}: corrected PASS must be independently evidenced in 300 selection")
-    if any(q.get("modification_verification", "").startswith("PROVISIONAL") for q in selected):
+    if any((q.get("modification_verification", "").startswith("PROVISIONAL") or "PENDING" in q.get("modification_verification", "")) for q in selected):
         warnings.append("release selection has provisionally classified modified flags; NOT release ready")
     independent_paths = set()
     for q in questions:
@@ -152,7 +152,7 @@ def main():
         "source_asset_count": len(lock.get("assets", {})),
         "ios_ipa_bundle_verified": False,
         "web_runtime_e2e_verified": False,
-        "selected_original_pdf_verification_all_done": not any(q.get("modification_verification", "").startswith("PROVISIONAL") for q in selected),
+        "selected_original_pdf_verification_all_done": not any((q.get("modification_verification", "").startswith("PROVISIONAL") or "PENDING" in q.get("modification_verification", "")) for q in selected),
         "app_privacy_final_verified": False,
         "release_blockers": release_blockers,
         "errors": errors,
