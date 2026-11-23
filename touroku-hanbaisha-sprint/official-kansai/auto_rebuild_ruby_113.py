@@ -165,3 +165,5 @@ def main():
     md.write_text(md.read_text()+f"\n\n## 2026-11-24 自動ルビ再生成・座標/ブラウザ検査\n- 対象113問、PDF rawdict再抽出・サイズ/座標・Noto CJKブラウザDOM再描画照合。\n- 自動PASS {len(new)}、HOLD {113-len(new)}、正式バンク {bank['count']}/600。目視PASSではなく自動検査PASS。\n- 保留理由（重複あり）: {json.dumps(dict(reasons),ensure_ascii=False)}。\n- 証跡: `official-kansai/{OUT.name}`。Apple実機未確認・本審査未送信・リリースBLOCKED。\n")
     print(json.dumps({"autoPassed":len(new),"hold":113-len(new),"bank":bank["count"],"reasons":dict(reasons)},ensure_ascii=False))
 if __name__=="__main__": main()
+
+# Actions rerun trigger: 2026-11-24; preserve fail-closed auto-promotion gates.
