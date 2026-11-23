@@ -1,0 +1,64 @@
+name: Touhan Ten Directly Viewed Ruby V3 Release
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-ten-ruby-v3.yml'
+      - 'touroku-hanbaisha-sprint/official-kansai/promote_ten_ruby_v3.py'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-ten-ruby-v3
+  cancel-in-progress: false
+jobs:
+  qa-and-promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          sudo apt-get update -qq
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y fonts-noto-cjk fontconfig
+          sudo fc-cache -f
+          python -m pip install 'playwright==1.56.0' 'pillow==11.3.0' 'pymupdf==1.26.5'
+      - name: Start local app server
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory touroku-hanbaisha-sprint >/tmp/touhan-ruby-server.log 2>&1 &
+          sleep 2
+      - name: Validate actual ruby, official answer, source image and mobile UI and promote
+        run: python touroku-hanbaisha-sprint/official-kansai/promote_ten_ruby_v3.py
+      - name: Verify saved bank and status
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          state=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
+          audit=json.loads((b/'TEN_RUBY_DIRECT_REVIEW_QA_20261124.json').read_text())
+          assert bank['count']==486==len(bank['questions'])==len(set(bank['approvedIds']))
+          assert audit['promoted']==10 and audit['browserCases']==20 and audit['status']=='PASS'
+          assert state['question_bank']['production_official_bank_count']==486
+          assert state['unapproved_id_reconciliation_after_ruby_v3']['unapproved']==114
+          assert state['release_gate']=='BLOCKED' and not state['app_review_submitted']
+          assert 'KSAI-2023-090' not in bank['approvedIds']
+          print('PASS 486 approved, 114 remaining, App Review blocked')
+          PY
+      - name: Commit source-verified production data and release status together
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json
+          git add -f touroku-hanbaisha-sprint/official-kansai/TEN_RUBY_DIRECT_REVIEW_QA_20261124.json
+          git add -f touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          git commit -m 'audit(touhan): promote ten directly viewed source-aligned ruby questions'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
