@@ -14,8 +14,12 @@ KEY=json.loads((ROOT/"audit/official-scoring-exceptions-20261124.json").read_tex
 exceptions={x["id"]:x for x in KEY["exceptions"]}
 SUSPICIOUS=re.compile(r"[\x00-\x1f\x7f\ufffd઄¹¼ïñèêçâ]|[!?]|(?:[A-Za-z]{1,}V[A-Za-z]{1,})")
 MEDIA=re.compile(r"図(?:を|に|中|で|の|表)|画像|写真|別冊|模式図|エックス線写真|心電図を|波形を|グラフ")
+FONT_GLYPH_MAP={2:"2",4:"1",5:"3",6:"4",7:"5",8:"9",11:"6",12:"7",31:"（"}
+def clean_font(s):
+    text=str(s).translate(str.maketrans(FONT_GLYPH_MAP))
+    return re.sub(r"（([^（！!\n]{0,90})!",r"（\1）",text)
 def norm(s):
-    return re.sub(r"\s+","",unicodedata.normalize("NFKC",str(s))).replace("～","~").replace("〜","~").replace("−","-").replace("‐","-")
+    return re.sub(r"\s+","",unicodedata.normalize("NFKC",clean_font(s))).replace("～","~").replace("〜","~").replace("−","-").replace("‐","-")
 def fitz_segment(page,n):
     lines=page.get_text("text",sort=False).splitlines(keepends=True)
     start=next((i for i,line in enumerate(lines) if line.strip()==str(n)),None)
@@ -61,13 +65,14 @@ for exam in (112,111):
         if isinstance(pg,int) and 1<=pg<=len(doc):
             page=doc[pg-1]
             source_segment=fitz_segment(page,n)
+            if source_segment is not None:source_segment=clean_font(source_segment)
             if source_segment is None:failures.append("QUESTION_NUMBER_NOT_ISOLATED_ON_SOURCE_PAGE")
             else:
                 if re.search(r"[\x00-\x08\x0b-\x1f\x7f]",source_segment):failures.append("C0_SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
                 if re.search(r"[\ufffd઄¹¼ïñèêçâ\u0080-\u009f\u00a1-\u00ff]",source_segment):failures.append("SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
             if pg not in page_cache:page_cache[pg]=pdftotext(pdf,pg)
             poppler=page_cache[pg]
-            wordblob=norm(page.get_text("text",sort=True))
+            wordblob=norm(page.get_text("text",sort=False))
             altblob=norm(poppler)
             for i,text in enumerate([stem]+choices):
                 if not text:continue
