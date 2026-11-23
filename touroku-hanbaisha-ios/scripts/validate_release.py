@@ -20,6 +20,7 @@ EXPECTED_APP_ID = "6802119268"
 EXPECTED_TEAM = "MN3D2ZM44N"
 EXPECTED_ICON_SHA = "c0cefbae22cdcd7b614d213ddca7942c7d693f02ead758b11b66d447a66bff03"
 EXPECTED_WEB_URL = "https://allsunday1122.github.io/touroku-hanbaisha-sprint/"
+EXPECTED_OFFICIAL_URL = EXPECTED_WEB_URL + "official-practice.html"
 EXPECTED_ORIENTATIONS = (
     "INFOPLIST_KEY_UISupportedInterfaceOrientations: \"UIInterfaceOrientationPortrait "
     "UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft "
@@ -31,7 +32,7 @@ EXPECTED_CHAPTER_COUNTS = {1: 20, 2: 20, 3: 40, 4: 20, 5: 20}
 app = json.loads((IOS / "app.json").read_text(encoding="utf-8"))['expo']
 assert app['version'] == '1.0.0'
 assert app['ios']['bundleIdentifier'] == EXPECTED_BUNDLE
-assert app['extra']['webAppUrl'] == EXPECTED_WEB_URL
+assert app['extra']['webAppUrl'] == EXPECTED_OFFICIAL_URL
 assert app['ios']['icon'].endswith('AppIcon-1024.png')
 
 project = (NATIVE / "project.yml").read_text(encoding="utf-8")
@@ -191,6 +192,34 @@ metadata = (IOS / 'APP_STORE_METADATA.md').read_text(encoding='utf-8')
 assert f'Bundle ID: {EXPECTED_BUNDLE}' in metadata
 assert f'- サポート: {EXPECTED_WEB_URL}support.html' in metadata
 assert f'- プライバシーポリシー: {EXPECTED_WEB_URL}privacy.html' in metadata
+
+# Official bank integration is the launch default, while the old 360-question
+# learning experience stays available as an opt-in legacy web path.
+official = json.loads((WEB / 'official-kansai/APPROVED_OFFICIAL_BANK.json').read_text(encoding='utf-8'))
+official_rows = official['questions']
+assert official['count'] == len(official_rows) == 599
+assert len({q['id'] for q in official_rows}) == 599
+assert 'KSAI-2023-090' not in {q['id'] for q in official_rows}
+year_counts = Counter(q['year'] for q in official_rows)
+assert year_counts == {2022:120, 2023:119, 2024:120, 2025:120, 2026:120}, year_counts
+for q in official_rows:
+    assert q['officialStatus'] == 'NORMAL' and not q['excludeFromAccuracyDenominator'],q['id']
+    assert q['sourceIssuer'] == '関西広域連合' and q['sourceUrl'].startswith('https://'),q['id']
+    assert q['answerSourceUrl'].startswith('https://') and q['attributionDisplay'],q['id']
+    assert q['verbatimCertified'] is True and q['renderReady'] is True and q['needsVisualReview'] is False,q['id']
+    assert len(q['choices']) in (4,5) and q['answer'] == q['answerNumberOfficial'] - 1,q['id']
+    if q.get('originalRubyReadings') is not None:
+        assert q['rubyDisplayMode'] == 'SOURCE_ORDER_UNATTACHED' and q['rubySourceVerified'] is True,q['id']
+        assert q['originalRubyReadings'] and not q.get('questionParts') and not q.get('choicesParts'),q['id']
+    for fig in q.get('sourceFigures',[]):
+        assert (WEB / fig['webPath']).is_file(),(q['id'],fig['webPath'])
+official_html = (WEB/'official-practice.html').read_text(encoding='utf-8')
+assert 'APPROVED_OFFICIAL_BANK.json' in official_html
+assert 'renderRubySequence(q)' in official_html
+native_swift = (NATIVE/'Sources/TouhanSprintApp.swift').read_text(encoding='utf-8')
+expo_js = (IOS/'App.js').read_text(encoding='utf-8')
+assert EXPECTED_OFFICIAL_URL in native_swift and EXPECTED_OFFICIAL_URL in expo_js
+assert '公式過去問599問' in metadata and 'remote HTTPS' in metadata
 
 print(
     'PASS: Touhan release + learning + question quality acceptance; '
