@@ -3,7 +3,7 @@
   "created_at_jst": "2026-11-24T02:20:00+09:00",
   "branch": "feature/fp2-release-scope-20261123",
   "canonical_path": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "canonical_source_blob_sha": "70d34254d5c7563242e8066ec5c2003059fa9dc9",
+  "canonical_source_blob_sha": "dc953026e0d56240d06b8e017c3b23ead556f745",
   "law_effective_date": "2026-04-01",
   "scope": {
     "total": 180,
@@ -25,20 +25,20 @@
   "gate_policy": "以前のPASSは内容一次判定であり、本最終証拠監査の完了を意味しない。証拠行未固定の問題のlegalChecked/explanationCheckedを機械的にtrueへ変更しない。",
   "summary": {
     "target": 180,
-    "pending": 130,
-    "verified": 50,
+    "pending": 110,
+    "verified": 70,
     "hold": 0,
     "fail": 0,
     "by_exam": {
       "2025-01": {
-        "pending": 10,
-        "verified": 50,
+        "pending": 0,
+        "verified": 60,
         "hold": 0,
         "fail": 0
       },
       "2025-05": {
-        "pending": 60,
-        "verified": 0,
+        "pending": 50,
+        "verified": 10,
         "hold": 0,
         "fail": 0
       },
@@ -3152,321 +3152,1228 @@
       "id": "fp2-2025-01-gakka-051",
       "exam_date": "2025-01",
       "question_number": 51,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "書面によらない贈与は履行済部分を除き各当事者が解除可能（民法550条）。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "死因贈与は受贈者との合意で成立する契約。遺贈の単独意思表示とは異なる（554条）。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "定期贈与は贈与者・受贈者いずれか死亡で効力を失う（552条）。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "負担付贈与に双務契約規定を準用し、負担不履行時には原則催告解除可能（553条、541条）。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 書面によらない贈与は履行済部分を除き各当事者が解除可能（民法550条）。 2: 死因贈与は受贈者との合意で成立する契約。遺贈の単独意思表示とは異なる（554条）。 3: 定期贈与は贈与者・受贈者いずれか死亡で効力を失う（552条）。 4: 負担付贈与に双務契約規定を準用し、負担不履行時には原則催告解除可能（553条、541条）。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-052",
       "exam_date": "2025-01",
       "question_number": 52,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "被保険者と保険料負担者が父の死亡保険金は子へのみなし相続財産で贈与税でない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4114.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "著しく低額の土地譲渡は原則通常の取引価額（時価）と支払対価との差額で判定。相続税評価額と同一でない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4423.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "資力喪失による債務弁済困難部分はみなし贈与の非課税例外。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4424.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "離婚に伴う相当な財産分与は原則贈与税対象外。過大分与・租税回避例外あり。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4414.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 被保険者と保険料負担者が父の死亡保険金は子へのみなし相続財産で贈与税でない。 2: 著しく低額の土地譲渡は原則通常の取引価額（時価）と支払対価との差額で判定。相続税評価額と同一でない。 3: 資力喪失による債務弁済困難部分はみなし贈与の非課税例外。 4: 離婚に伴う相当な財産分与は原則贈与税対象外。過大分与・租税回避例外あり。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-053",
       "exam_date": "2025-01",
       "question_number": 53,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "暦年課税の110万円基礎控除は贈与者ごとでなく受贈者の年額。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4402.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "暦年贈与の税率は超過累進税率。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4402.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "2024年1月以降の相続時精算課税にも年110万円の基礎控除あり。複数贈与者で独立110万円ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4402.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "相続時精算課税の特別控除額超過分に一律20％の税率。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4402.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 暦年課税の110万円基礎控除は贈与者ごとでなく受贈者の年額。 2: 暦年贈与の税率は超過累進税率。 3: 2024年1月以降の相続時精算課税にも年110万円の基礎控除あり。複数贈与者で独立110万円ではない。 4: 相続時精算課税の特別控除額超過分に一律20％の税率。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-054",
       "exam_date": "2025-01",
       "question_number": 54,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "遺言による指定がなくても共同相続人の遺産分割協議により法定相続分と異なる配分が可能（907条）。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "共同相続人以外への相続分譲渡の取戻しは所定期間と対価・費用償還により可能（905条）。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "兄弟姉妹が相続開始前に死亡した場合、その子が代襲相続する（889条）。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "養子と実子の法定相続分は同順位同割合（900条）。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 遺言による指定がなくても共同相続人の遺産分割協議により法定相続分と異なる配分が可能（907条）。 2: 共同相続人以外への相続分譲渡の取戻しは所定期間と対価・費用償還により可能（905条）。 3: 兄弟姉妹が相続開始前に死亡した場合、その子が代襲相続する（889条）。 4: 養子と実子の法定相続分は同順位同割合（900条）。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-055",
       "exam_date": "2025-01",
       "question_number": 55,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "配偶者の税額軽減で納税額がゼロでも適用には相続税申告が必要。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4158.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "未分割財産でも3年以内分割見込書の添付と期限後3年以内分割等を満たせば軽減対象。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4158.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "放棄した配偶者でも遺贈で取得した財産は要件を満たせば配偶者税額軽減の対象。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4158.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "配偶者の税額軽減に婚姻20年以上という条件はない（贈与税配偶者控除と混同）。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4158.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 配偶者の税額軽減で納税額がゼロでも適用には相続税申告が必要。 2: 未分割財産でも3年以内分割見込書の添付と期限後3年以内分割等を満たせば軽減対象。 3: 放棄した配偶者でも遺贈で取得した財産は要件を満たせば配偶者税額軽減の対象。 4: 配偶者の税額軽減に婚姻20年以上という条件はない（贈与税配偶者控除と混同）。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-056",
       "exam_date": "2025-01",
       "question_number": 56,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "配当還元方式の還元率は5％ではなく10％。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4638.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "類似業種比準価額の株価指標は直前3か月各月の最低額、前年平均・前々年平均等の所定選択方式も認められる。",
+          "primary_urls": [
+            "https://www.nta.go.jp/law/tsutatsu/kihon/sisan/hyoka_new/08/02.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "小会社の中心的同族株主の株式は純資産価額方式が原則。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4638.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "同族株主以外の株主取得株式は規模にかかわらず原則配当還元方式。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4638.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 配当還元方式の還元率は5％ではなく10％。 2: 類似業種比準価額の株価指標は直前3か月各月の最低額、前年平均・前々年平均等の所定選択方式も認められる。 3: 小会社の中心的同族株主の株式は純資産価額方式が原則。 4: 同族株主以外の株主取得株式は規模にかかわらず原則配当還元方式。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-057",
       "exam_date": "2025-01",
       "question_number": 57,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "相続時精算課税で贈与取得した宅地は相続税に加算されても相続又は遺贈で取得した宅地でなく本特例対象外。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4124.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "構築物がない青空駐車場は貸付事業用宅地等の特例対象外。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4124.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "遺贈で取得した相続人以外の親族にもその他要件次第で特例適用可能。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4124.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "特定居住用宅地等を配偶者が取得する場合は同居が要件でない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4124.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 相続時精算課税で贈与取得した宅地は相続税に加算されても相続又は遺贈で取得した宅地でなく本特例対象外。 2: 構築物がない青空駐車場は貸付事業用宅地等の特例対象外。 3: 遺贈で取得した相続人以外の親族にもその他要件次第で特例適用可能。 4: 特定居住用宅地等を配偶者が取得する場合は同居が要件でない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-058",
       "exam_date": "2025-01",
       "question_number": 58,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "相続税の金銭一括納付へ備え不動産承継者を死亡保険金受取人に指定するのは納税資金対策。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4114.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "指定受取人の死亡保険金請求権は原則固有財産で遺産分割の対象外。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4114.htm",
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "法定相続人が取得した死亡保険金の非課税限度額は500万円×法定相続人の数。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4114.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "相続放棄した受取人自身は法定相続人に含まれず死亡保険金の非課税適用不可。算定上の法定相続人数は放棄前で計算する点と区別。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4114.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 相続税の金銭一括納付へ備え不動産承継者を死亡保険金受取人に指定するのは納税資金対策。 2: 指定受取人の死亡保険金請求権は原則固有財産で遺産分割の対象外。 3: 法定相続人が取得した死亡保険金の非課税限度額は500万円×法定相続人の数。 4: 相続放棄した受取人自身は法定相続人に含まれず死亡保険金の非課税適用不可。算定上の法定相続人数は放棄前で計算する点と区別。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-059",
       "exam_date": "2025-01",
       "question_number": 59,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "株主は引受価額を限度とする有限責任（会社法104条）。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/417AC0000000086?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "特定株主からの自己株式有償取得には原則株主総会の特別決議・特定株主手続が必要（156条・160条）。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/417AC0000000086?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "毎事業年度終了後一定時期の定時株主総会と必要に応じた臨時株主総会がある。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/417AC0000000086?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "公開会社は取締役会設置義務がある（327条）。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/417AC0000000086?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 株主は引受価額を限度とする有限責任（会社法104条）。 2: 特定株主からの自己株式有償取得には原則株主総会の特別決議・特定株主手続が必要（156条・160条）。 3: 毎事業年度終了後一定時期の定時株主総会と必要に応じた臨時株主総会がある。 4: 公開会社は取締役会設置義務がある（327条）。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-01-gakka-060",
       "exam_date": "2025-01",
       "question_number": 60,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "相続開始および所有権取得を知った日から原則3年以内に申請（不動産登記法76条の2）。",
+          "primary_urls": [
+            "https://www.moj.go.jp/MINJI/minji05_00599.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "相続人申告登記の申出によって法定申請義務を履行したとみなされる。持分確定登記とは区別。",
+          "primary_urls": [
+            "https://www.moj.go.jp/MINJI/minji05_00565.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "2024年4月施行前の相続にも適用され原則2027年3月31日までの申請義務あり。",
+          "primary_urls": [
+            "https://www.moj.go.jp/MINJI/minji05_00599.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "正当理由なく義務を怠ると10万円以下の過料の対象となる。",
+          "primary_urls": [
+            "https://www.moj.go.jp/MINJI/minji05_00565.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 相続開始および所有権取得を知った日から原則3年以内に申請（不動産登記法76条の2）。 2: 相続人申告登記の申出によって法定申請義務を履行したとみなされる。持分確定登記とは区別。 3: 2024年4月施行前の相続にも適用され原則2027年3月31日までの申請義務あり。 4: 正当理由なく義務を怠ると10万円以下の過料の対象となる。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2024年4月以前の相続にも2027年3月31日の経過期限を適用。"
     },
     {
       "id": "fp2-2025-05-gakka-001",
       "exam_date": "2025-05",
       "question_number": 1,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "公的年金裁定請求書の有償作成・提出代理は社労士法の資格業務で無登録FPの代行は不可。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/343AC1000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "保険一般活用の説明のみで募集や媒介に当たらなければ保険募集人登録を要しない。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/policy/marketentry/guidebook/02.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "景気・企業業績の一般的情報提供のみなら登録を要する有償投資助言には通常当たらない。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/policy/marketentry/guidebook/02.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "顧客個別の税務計算をせず税理士を紹介する行為自体は税理士独占業務に該当しない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9204.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 公的年金裁定請求書の有償作成・提出代理は社労士法の資格業務で無登録FPの代行は不可。 2: 保険一般活用の説明のみで募集や媒介に当たらなければ保険募集人登録を要しない。 3: 景気・企業業績の一般的情報提供のみなら登録を要する有償投資助言には通常当たらない。 4: 顧客個別の税務計算をせず税理士を紹介する行為自体は税理士独占業務に該当しない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-05-gakka-002",
       "exam_date": "2025-05",
       "question_number": 2,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "短時間労働者の比較基準は通常労働者の4分の3で3分の2ではない。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/nenkin_shikumi_009.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "4分の3ではなく3分の2、週25時間、月8.8万円の組合せは基準に反する。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/nenkin_shikumi_009.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "4分の3未満の短時間労働者は週20時間・月8.8万円基準等で判定（2026年4月時点）。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/nenkin_shikumi_009.html",
+            "https://www.mhlw.go.jp/content/12500000/001633788.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "4分の3は正しいが週25時間・月5.8万円という数値は誤り。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/nenkin_shikumi_009.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 短時間労働者の比較基準は通常労働者の4分の3で3分の2ではない。 2: 4分の3ではなく3分の2、週25時間、月8.8万円の組合せは基準に反する。 3: 4分の3未満の短時間労働者は週20時間・月8.8万円基準等で判定（2026年4月時点）。 4: 4分の3は正しいが週25時間・月5.8万円という数値は誤り。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年10月の賃金要件撤廃予定は2026年4月1日の判定に適用しない。"
     },
     {
       "id": "fp2-2025-05-gakka-003",
       "exam_date": "2025-05",
       "question_number": 3,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "パートやアルバイトであっても労働者なら原則労災保険の適用対象。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/rousai/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "労災保険率は主に事業種類別の災害発生状況に応じて設定され、労働者数のみで定めるものではない。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/rousaihoken/rousaihokenritsu.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "治癒後所定の障害等級の障害が残る場合は障害補償給付。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/rousai/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "業務災害による死亡では要件を満たす遺族へ遺族補償年金または一時金。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/rousai/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: パートやアルバイトであっても労働者なら原則労災保険の適用対象。 2: 労災保険率は主に事業種類別の災害発生状況に応じて設定され、労働者数のみで定めるものではない。 3: 治癒後所定の障害等級の障害が残る場合は障害補償給付。 4: 業務災害による死亡では要件を満たす遺族へ遺族補償年金または一時金。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-05-gakka-004",
       "exam_date": "2025-05",
       "question_number": 4,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "国民年金第1号の所定要件を満たす者は月400円の付加保険料納付可能。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/service/kokunen/hokenryo/20150313-03.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "産前産後の保険料免除期間は納付済期間扱いで年金額に反映。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/service/kokunen/menjo/20180810.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "免除保険料の追納には3年度目以降所定加算額が発生し得る。いつでも元の保険料額とは限らない。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/service/kokunen/menjo/20150331.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "前納した第1号被保険者が第2号に移行すれば未経過月分の保険料は還付対象。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/service/kokunen/hokenryo/20150313-03.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 国民年金第1号の所定要件を満たす者は月400円の付加保険料納付可能。 2: 産前産後の保険料免除期間は納付済期間扱いで年金額に反映。 3: 免除保険料の追納には3年度目以降所定加算額が発生し得る。いつでも元の保険料額とは限らない。 4: 前納した第1号被保険者が第2号に移行すれば未経過月分の保険料は還付対象。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-05-gakka-005",
       "exam_date": "2025-05",
       "question_number": 5,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "老齢厚生年金の繰上げが可能な人は老齢基礎年金と原則同時請求する必要がある。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/jukyu-yoken/20140421-01.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "1962年4月2日以降出生で62歳6か月繰上げなら30月×0.4％=12％減額。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/jukyu-yoken/20140421-01.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "寡婦年金の受給者が老齢基礎年金を繰上げ請求すると寡婦年金の受給権が消滅。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/service/jukyu/seido/izokunenkin/jukyu-yoken/20150401-04.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "加給年金は繰上げ対象でなく原則65歳から所定要件を満たすと支給、繰上げ月数による減額加算ではない。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/jukyu-yoken/20140421-01.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 老齢厚生年金の繰上げが可能な人は老齢基礎年金と原則同時請求する必要がある。 2: 1962年4月2日以降出生で62歳6か月繰上げなら30月×0.4％=12％減額。 3: 寡婦年金の受給者が老齢基礎年金を繰上げ請求すると寡婦年金の受給権が消滅。 4: 加給年金は繰上げ対象でなく原則65歳から所定要件を満たすと支給、繰上げ月数による減額加算ではない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-05-gakka-006",
       "exam_date": "2025-05",
       "question_number": 6,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "遺族基礎年金の対象は所定要件を満たす子のある配偶者又は子。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/service/jukyu/seido/izokunenkin/jukyu-yoken/20150401-04.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "2026年4月時点、子のない30歳未満の妻に対する遺族厚生年金は原則5年間で10年ではない。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/section/faq/jukyu/seido/izoku/izoku-kousei/zenpan/20140421-02.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "子のない40歳以上の妻には所定条件で65歳到達まで中高齢寡婦加算。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/section/faq/jukyu/seido/izoku/izoku-kousei/zenpan/20140421-02.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "遺族基礎年金が受けられると死亡一時金は原則支給されない。",
+          "primary_urls": [
+            "https://www.nenkin.go.jp/service/jukyu/seido/izokunenkin/jukyu-yoken/20150401-04.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 遺族基礎年金の対象は所定要件を満たす子のある配偶者又は子。 2: 2026年4月時点、子のない30歳未満の妻に対する遺族厚生年金は原則5年間で10年ではない。 3: 子のない40歳以上の妻には所定条件で65歳到達まで中高齢寡婦加算。 4: 遺族基礎年金が受けられると死亡一時金は原則支給されない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2028年遺族厚生年金改正等の将来の制度を基準日へ遡及しない。"
     },
     {
       "id": "fp2-2025-05-gakka-007",
       "exam_date": "2025-05",
       "question_number": 7,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "国民年金基金は第3号被保険者を加入対象としない。",
+          "primary_urls": [
+            "https://www.npfa.or.jp/system/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "国民年金基金加入員は国民年金資格変更等の法定事由を除き任意に脱退できない。",
+          "primary_urls": [
+            "https://www.npfa.or.jp/faq/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "1口目は終身年金だが2口目以降は終身年金や確定年金から組合せ可能。",
+          "primary_urls": [
+            "https://www.npfa.or.jp/system/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "国民年金基金の給付に障害年金はなく老齢年金と遺族一時金。",
+          "primary_urls": [
+            "https://www.npfa.or.jp/system/"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 国民年金基金は第3号被保険者を加入対象としない。 2: 国民年金基金加入員は国民年金資格変更等の法定事由を除き任意に脱退できない。 3: 1口目は終身年金だが2口目以降は終身年金や確定年金から組合せ可能。 4: 国民年金基金の給付に障害年金はなく老齢年金と遺族一時金。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-05-gakka-008",
       "exam_date": "2025-05",
       "question_number": 8,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "老齢年金の源泉徴収は所定の控除額等を用いて算定され、一律10.21％という税率ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1600.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "遡及受給の老齢年金は年金雑所得に属し一時所得には分類されない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1600.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "遺族厚生年金は公的年金給付として原則非課税であり相続税の対象となる受給権ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1600.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "未支給公的年金は遺族の固有権として取得し受領者の一時所得の対象。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4117.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 老齢年金の源泉徴収は所定の控除額等を用いて算定され、一律10.21％という税率ではない。 2: 遡及受給の老齢年金は年金雑所得に属し一時所得には分類されない。 3: 遺族厚生年金は公的年金給付として原則非課税であり相続税の対象となる受給権ではない。 4: 未支給公的年金は遺族の固有権として取得し受領者の一時所得の対象。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-05-gakka-009",
       "exam_date": "2025-05",
       "question_number": 9,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "元利均等返済は同額・同利率等で元金均等返済より利息総額が一般に大きくなる。",
+          "primary_urls": [
+            "https://www.jhf.go.jp/loan/yushi/info/henkou.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "期間短縮型のほうが返済額軽減型より利息軽減が一般に大きい。",
+          "primary_urls": [
+            "https://www.jhf.go.jp/loan/yushi/info/henkou.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "繰上げ返済の手数料や最低額は金融機関の商品ごとに異なる。",
+          "primary_urls": [
+            "https://www.bk.mufg.jp/kariru/jutaku/kurikae/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "借換時は旧抵当権抹消と新抵当権設定に係る登録免許税等が通常必要。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/inshi/7191.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 元利均等返済は同額・同利率等で元金均等返済より利息総額が一般に大きくなる。 2: 期間短縮型のほうが返済額軽減型より利息軽減が一般に大きい。 3: 繰上げ返済の手数料や最低額は金融機関の商品ごとに異なる。 4: 借換時は旧抵当権抹消と新抵当権設定に係る登録免許税等が通常必要。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。"
     },
     {
       "id": "fp2-2025-05-gakka-010",
       "exam_date": "2025-05",
       "question_number": 10,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "自己資本比率=16000/20000=80%。",
+          "primary_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202505_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "流動比率=12000/1500=800%。",
+          "primary_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202505_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "固定長期適合率=8000/(2500+16000)=43.2432%で50%ではない。",
+          "primary_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202505_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "ROE=800/16000=5%。",
+          "primary_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202505_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_NOTES",
+        "reason": "公式正答および原解説の正誤を全4肢の一次資料・制度条文・数式に照合。法令時点を2026-04-01に固定。",
+        "conclusion": "1: 自己資本比率=16000/20000=80%。 2: 流動比率=12000/1500=800%。 3: 固定長期適合率=8000/(2500+16000)=43.2432%で50%ではない。 4: ROE=800/16000=5%。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日に有効な制度・法令で判定。",
+      "prior_hold_resolution": {
+        "previous": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
+        "result": "RESOLVED",
+        "reason": "正規バンク内の貸借対照表値を用いて全4指標を独立再計算。公式原典図表の画像再確認は今回の数理監査とは別ゲート。"
+      }
     },
     {
       "id": "fp2-2025-05-gakka-011",
@@ -5229,6 +6136,6 @@
       "verified_at": null
     }
   ],
-  "verified_records_count": 50,
-  "audit_progress_note": "2025-01 Q01-Q50 VERIFIED. Q31-Q50 four-choice 80 evidence entries added; 130 PENDING remaining."
+  "verified_records_count": 70,
+  "audit_progress_note": "2025-01 Q01-Q60 VERIFIED; 2025-05 Q01-Q10 VERIFIED. 20 new records/80 option evidence rows. 110 PENDING remaining."
 }
