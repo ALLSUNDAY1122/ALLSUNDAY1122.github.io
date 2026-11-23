@@ -1,4 +1,4 @@
-name: Kangoshi Verified Numeric Glyphs and Scenario Reaudit
+name: Kangoshi Shared Context Glyph Diagnostics and Reaudit
 on:
   workflow_dispatch:
   push:
@@ -34,6 +34,8 @@ jobs:
           done
       - name: Generate visual evidence for remaining source-text and situation holds
         run: python kangoshi-sprint/scripts/context_control_visual_evidence.py
+      - name: Independently compare remaining shared scenario passage glyphs
+        run: python kangoshi-sprint/scripts/diagnose_pending_context.py
       - name: Overlay 22 independently confirmed quarantined text corrections
         run: python kangoshi-sprint/scripts/overlay_reextracted_pending.py
       - name: Diagnose PDF-number coordinates on source originals
@@ -63,6 +65,7 @@ jobs:
           git add kangoshi-sprint/audit/dual-engine-hold-20261124.json
           git add kangoshi-sprint/release-status.json kangoshi-sprint/RELEASE_STATUS.md
           git add kangoshi-sprint/audit/coordinate-reextraction-evidence-20261124.json
+          git add kangoshi-sprint/audit/context-passage-glyph-diagnostics-20261124.json
           git diff --cached --quiet || git commit -m "kangoshi: apply independent boundary/context recheck and persist source-only gates"
           git pull --rebase -X theirs origin main
           git push origin HEAD:main
