@@ -99,6 +99,7 @@ jobs:
       # Preserve original-PDF visual review metadata in the 23-case audit ledger.
       # Match printed option labels by prefix: the PDF word token may include adjacent Japanese text.
       # Normalize source-PDF font glyphs before parsing those printed option labels.
+      # Allow whitespace between numeric option label and its printed dot, consistent with tested extractor.
       - name: Apply original-page and independent-choice image repairs for 23 OCR-PSM disagreement cases
         run: python kangoshi-sprint/scripts/apply_23_psm_disagreement_visual_repairs.py
       - name: Render each residual held question from geometric source PDF evidence
