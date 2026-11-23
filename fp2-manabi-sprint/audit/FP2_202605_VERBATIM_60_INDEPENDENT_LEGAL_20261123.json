@@ -25,13 +25,13 @@
   "target_legal_date": "2026-04-01",
   "reviewed_date": "2026-11-23",
   "summary": {
-    "pass": 59,
+    "pass": 60,
     "fail": 0,
-    "hold": 1,
+    "hold": 0,
     "critical": 0,
-    "high": 1,
+    "high": 0,
     "table_reconstruction_checks": 7,
-    "canonical_content_candidates": 59
+    "canonical_content_candidates": 60
   },
   "classification_policy": {
     "PASS": "公式正答と2026年基準の内容判断が一致。掲載権利・全証拠固定・画像忠実性は別ゲート",
@@ -39,17 +39,7 @@
     "HOLD": "図の忠実性など検証の根拠を欠いて答えの一意性を完全に保証できないもの"
   },
   "critical_confirmed": [],
-  "high_issues": [
-    {
-      "id": "fp2-2026-05-gakka-055",
-      "severity": "High",
-      "status": "HOLD",
-      "type": "UNREPRODUCIBLE_FAMILY_RELATION_DIAGRAM",
-      "official_answer": 2,
-      "calculated_legal_heirs": 3,
-      "calculated_exemption_jpy": 48000000
-    }
-  ],
+  "high_issues": [],
   "legal_changes_checked": [
     "2026-04 在職老齢年金支給停止調整額51万円→65万円：Q05の選択肢は金額直接言及がなく正答3維持",
     "2026-04 区分所有法改正：Q47の管理者の年1回集会招集・通知・分離処分・決議効力の基本則維持",
@@ -115,7 +105,7 @@
       "status": "PASS"
     }
   ],
-  "limitations": "重要：公式PDFを参照して対象回の回答番号と展示物を対照した。全120問×4肢について、2026-04-01当時の各法令条文・業界規定に対応する正確な条・項・号と歴史版ハッシュを個別固定する作業は未完了。各肢に記録した理由の一部は制作ソース独自解説から抽出したもので、これだけでは完全な独立一次資料監査とは認めない。公式PDFの全ページ・全肢の逐文字機械差分、全参照先の原文行固定も未了。PASSは内容面で重大な反例が現時点で確認されないことを示す暫定承認候補であり、全証拠ゲートや著作権ゲートの通過を意味しない。2026-05 Q55は数値を確認してもデータの忠実再現がないためHOLD。",
+  "limitations": "重要：公式PDFを参照して対象回の回答番号と展示物を対照した。全120問×4肢について、2026-04-01当時の各法令条文・業界規定に対応する正確な条・項・号と歴史版ハッシュを個別固定する作業は未完了。各肢に記録した理由の一部は制作ソース独自解説から抽出したもので、これだけでは完全な独立一次資料監査とは認めない。公式PDFの全ページ・全肢の逐文字機械差分、全参照先の原文行固定も未了。PASSは内容面で重大な反例が現時点で確認されないことを示す暫定承認候補であり、全証拠ゲートや著作権ゲートの通過を意味しない。2026-05 Q55はGitHub保存PNGと公式PDFの関係線を直接目視照合し、HOLD解除。アプリ実行時の画像表示と画像の利用権限は別ゲートで未確認。",
   "items": [
     {
       "id": "fp2-2026-05-gakka-001",
@@ -3606,45 +3596,69 @@
         "6,000万円"
       ],
       "original_official_answer_one_based": 2,
-      "official_pdf_answer_readback": "OFFICIAL_ANSWER_STORED_IN_SOURCE; NOT_REEXTRACTED_PER_QUESTION_IN_THIS_PASS",
-      "official_answer_matches_draft": null,
+      "official_pdf_answer_readback": "OFFICIAL_PDF_Q55_PAGE31_VISUALLY_CHECKED_ANSWER2",
+      "official_answer_matches_draft": true,
       "legal_effective_date": "2026-04-01",
-      "legal_verdict": "HOLD",
+      "legal_verdict": "PASS",
       "critical_issue": null,
-      "legal_answer_one_based": null,
-      "reason": "法定相続人は妻B・子C（放棄した者も基礎控除人数算入）・養子Dの3人。子Cの子E/Fは放棄による代襲相続なし。3,000+600×3=4,800万円。ただし図がJSONで再現不能。",
+      "legal_answer_one_based": 2,
+      "reason": "公式PDF31ページとGitHub保存PNGの婚姻・親子・孫の関係線を視覚照合。妻Bと実子C（相続放棄しても相続税基礎控除では放棄なしとして算入）および普通養子Dの3名を法定相続人の数に算入する。Cの子E/Fは相続放棄による代襲相続をしない。3,000万円+600万円×3=4,800万円。正答2は唯一。",
       "per_choice": [
         {
           "index_one_based": 1,
           "text": "4,200万円",
-          "expected_legal_truth": "UNDETERMINABLE_FROM_JSON_DIAGRAM",
-          "independent_reason_note": "当該肢について現行法に照らした適否は設問全体の独立判定と公式原題・制度資料の対照から記録。個別条項への証拠行固定は未完了。",
-          "evidence_scope": "official_answer_and_topic_primary_source; choice-specific archived statutory citation still needed",
-          "independent_reason_note_source": "source_independent_explanation_and_topic_rule_screening_not_all_primary_clauses_pinned"
+          "expected_legal_truth": "FALSE",
+          "independent_reason_note": "法定相続人の数を2名とする4,200万円は誤り。放棄した実子Cは基礎控除計算上算入される。",
+          "evidence_scope": "OFFICIAL_FAMILY_DIAGRAM_VISUAL_MATCH_AND_NTA_TAXANSWER_2026_04_01",
+          "independent_reason_note_source": "INDEPENDENT_Q55_REAUDIT_20261123",
+          "legal_evidence_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf#page=31",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4152.htm",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4170.htm",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm"
+          ]
         },
         {
           "index_one_based": 2,
           "text": "4,800万円",
-          "expected_legal_truth": "UNDETERMINABLE_FROM_JSON_DIAGRAM",
-          "independent_reason_note": "正解は2。遺産に係る基礎控除額=3,000万円+600万円×法定相続人の数、で算出する。相続放棄をした者(実子Ｃさん)がいても、基礎控除額の計算上は放棄がなかったものとして法定相続人の数に含める。また、実子がいる場合の養子は1人まで法定相続人の数に算入できるため、養子Ｄさんも算入される。したがって法定相続人の数は、配偶者Ｂさん・実子Ｃさん(放棄していても算入)・養子Ｄさんの3人となる。孫Ｅさん・Ｆさんは代襲相続人ではないため、法定相続人の数には算入しない。基礎控除額=3,00",
-          "evidence_scope": "official_answer_and_topic_primary_source; choice-specific archived statutory citation still needed",
-          "independent_reason_note_source": "source_independent_explanation_and_topic_rule_screening_not_all_primary_clauses_pinned"
+          "expected_legal_truth": "TRUE",
+          "independent_reason_note": "妻B、実子C（放棄していても基礎控除上算入）、普通養子Dの3名。3,000万円+600万円×3=4,800万円で適切。",
+          "evidence_scope": "OFFICIAL_FAMILY_DIAGRAM_VISUAL_MATCH_AND_NTA_TAXANSWER_2026_04_01",
+          "independent_reason_note_source": "INDEPENDENT_Q55_REAUDIT_20261123",
+          "legal_evidence_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf#page=31",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4152.htm",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4170.htm",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm"
+          ]
         },
         {
           "index_one_based": 3,
           "text": "5,400万円",
-          "expected_legal_truth": "UNDETERMINABLE_FROM_JSON_DIAGRAM",
-          "independent_reason_note": "当該肢について現行法に照らした適否は設問全体の独立判定と公式原題・制度資料の対照から記録。個別条項への証拠行固定は未完了。",
-          "evidence_scope": "official_answer_and_topic_primary_source; choice-specific archived statutory citation still needed",
-          "independent_reason_note_source": "source_independent_explanation_and_topic_rule_screening_not_all_primary_clauses_pinned"
+          "expected_legal_truth": "FALSE",
+          "independent_reason_note": "5,400万円は4名計算となり誤り。孫E/Fは実子Cの相続放棄によって代襲相続しない。",
+          "evidence_scope": "OFFICIAL_FAMILY_DIAGRAM_VISUAL_MATCH_AND_NTA_TAXANSWER_2026_04_01",
+          "independent_reason_note_source": "INDEPENDENT_Q55_REAUDIT_20261123",
+          "legal_evidence_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf#page=31",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4152.htm",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4170.htm",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm"
+          ]
         },
         {
           "index_one_based": 4,
           "text": "6,000万円",
-          "expected_legal_truth": "UNDETERMINABLE_FROM_JSON_DIAGRAM",
-          "independent_reason_note": "当該肢について現行法に照らした適否は設問全体の独立判定と公式原題・制度資料の対照から記録。個別条項への証拠行固定は未完了。",
-          "evidence_scope": "official_answer_and_topic_primary_source; choice-specific archived statutory citation still needed",
-          "independent_reason_note_source": "source_independent_explanation_and_topic_rule_screening_not_all_primary_clauses_pinned"
+          "expected_legal_truth": "FALSE",
+          "independent_reason_note": "6,000万円は5名計算となり誤り。孫E/Fを別個の法定相続人数に加えない。",
+          "evidence_scope": "OFFICIAL_FAMILY_DIAGRAM_VISUAL_MATCH_AND_NTA_TAXANSWER_2026_04_01",
+          "independent_reason_note_source": "INDEPENDENT_Q55_REAUDIT_20261123",
+          "legal_evidence_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf#page=31",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4152.htm",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4170.htm",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm"
+          ]
         }
       ],
       "source_explanation_for_cross_reference": "【独自解説・回収バンク移管初稿（未再監査）】正解は2。遺産に係る基礎控除額=3,000万円+600万円×法定相続人の数、で算出する。相続放棄をした者(実子Ｃさん)がいても、基礎控除額の計算上は放棄がなかったものとして法定相続人の数に含める。また、実子がいる場合の養子は1人まで法定相続人の数に算入できるため、養子Ｄさんも算入される。したがって法定相続人の数は、配偶者Ｂさん・実子Ｃさん(放棄していても算入)・養子Ｄさんの3人となる。孫Ｅさん・Ｆさんは代襲相続人ではないため、法定相続人の数には算入しない。基礎控除額=3,000万円+600万円×3人=4,800万円。相続放棄者や養子の取扱いを正確に理解しているかがポイントである。",
@@ -3654,15 +3668,43 @@
         "sector_url_is_exact_legal_provision": true
       },
       "calculation_exhibit": null,
-      "exhibit_flag": "UNREPRODUCIBLE_FAMILY_RELATION_DIAGRAM",
-      "issue": {
-        "type": "UNREPRODUCIBLE_FAMILY_RELATION_DIAGRAM",
-        "severity": "High",
-        "note": "原PDFの親族関係図でA・Bの婚姻、C・Dの子の続柄、Cの放棄とE/Fの続柄を目視確認。JSONでは接続線が欠落し、関係を図として忠実に提示できない。数値計算上は基礎控除4800万円（公式2）だが配信用データはHOLD。",
-        "remediation": "原図に忠実な関係図・アクセシブルテキスト代替を制作し、図の接続線を画像・テキストで再監査。"
-      },
-      "canonical_content_eligible": false,
-      "release_approved": false
+      "exhibit_flag": "OFFICIAL_PDF_FAMILY_DIAGRAM_ASSET_LINKED",
+      "issue": null,
+      "canonical_content_eligible": true,
+      "release_approved": false,
+      "figure_reaudit": {
+        "date": "2026-11-23",
+        "decision": "HOLD_TO_PASS",
+        "original": {
+          "legal_verdict": "HOLD",
+          "exhibit_flag": "UNREPRODUCIBLE_FAMILY_RELATION_DIAGRAM",
+          "issue": {
+            "type": "UNREPRODUCIBLE_FAMILY_RELATION_DIAGRAM",
+            "severity": "High",
+            "note": "原PDFの親族関係図でA・Bの婚姻、C・Dの子の続柄、Cの放棄とE/Fの続柄を目視確認。JSONでは接続線が欠落し、関係を図として忠実に提示できない。数値計算上は基礎控除4800万円（公式2）だが配信用データはHOLD。",
+            "remediation": "原図に忠実な関係図・アクセシブルテキスト代替を制作し、図の接続線を画像・テキストで再監査。"
+          },
+          "source_file_sha": null
+        },
+        "source_branch": "feature/fp2-academic-300-expansion-20261123",
+        "source_verbatim_blob_sha": "2cb70aef89cc9703b6e800de91661b13df8af4fb",
+        "asset_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202605-q55-family-diagram.png",
+        "asset_blob_sha": "9ef4ddbe2d038ddb59fc21d36e3ea606fa25cc92",
+        "asset_sha256_user_recorded": "80ba54e48328814e70b5a2b5ee3dce593306734b8393803fdbee10f21ad550e1",
+        "asset_sha256_independently_verified": false,
+        "asset_github_base64_retrieved": true,
+        "figure_visually_compared_with_official_pdf": true,
+        "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+        "original_pdf_printed_page": 31,
+        "original_pdf_zero_based_page": 30,
+        "connections_confirmed": "Aと妻Bの子は実子C・普通養子D。Cと配偶者の子はE・F。Cは相続放棄。",
+        "legal_heir_count_for_basic_exemption": 3,
+        "calculation": "3000万円+600万円×3=4800万円",
+        "official_answer": 2,
+        "current_answer": 2,
+        "publishing_rights_verified": false,
+        "actual_runtime_image_render_verified": false
+      }
     },
     {
       "id": "fp2-2026-05-gakka-056",
@@ -4002,5 +4044,15 @@
     "content_screening_complete": true,
     "full_independent_evidence_audit_complete": false,
     "release_authorized": false
-  }
+  },
+  "figure_hold_resolution_history": [
+    {
+      "date": "2026-11-23",
+      "id": "fp2-2026-05-gakka-055",
+      "previous": "HOLD",
+      "current": "PASS",
+      "evidence_asset_blob_sha": "9ef4ddbe2d038ddb59fc21d36e3ea606fa25cc92",
+      "reason": "GitHub PNG and official PDF page31 visually match; NTA 2026-04-01 rules yield three heirs for base exemption; choice2 unique."
+    }
+  ]
 }
