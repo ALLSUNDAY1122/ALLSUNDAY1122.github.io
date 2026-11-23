@@ -2,7 +2,7 @@
 (function(global){
 "use strict";
 const SOURCE="questions/canonical/approved-questions-20261123.json";
-const isApproved=q=>Boolean(q && q.approved_for_content_bank===true && q.independent_audit_status==="PASS");
+const isApproved=q=>Boolean(q && q.approved_for_content_bank===true && q.independent_audit_status==="PASS" && q.release_selected===true);
 const pick=(...xs)=>xs.find(x=>typeof x==="string"&&x.trim())||"";
 function normalize(q){
  const raw=q.choices||q.options||[];
@@ -38,7 +38,10 @@ async function load(){
   if(seen.has(q.id))throw new Error("Duplicate approved question "+q.id);
   seen.add(q.id);items.push(normalized);
  }
- return {items,path:SOURCE,contentApproved:items.length,publishable:body.publishable_questions===items.length&&body.status==="RELEASE_APPROVED",releaseStatus:body.status};
+ if(body.release_candidate_questions!==items.length)throw new Error("Release candidate count mismatch");
+ const domains=new Map();for(const x of items)domains.set(x.domain,(domains.get(x.domain)||0)+1);
+ if(items.length!==120||domains.size!==6||[...domains.values()].some(n=>n!==20))throw new Error("Release selection must be exactly 6 domains x 20");
+ return {items,path:SOURCE,contentApproved:body.content_approved_questions,publishable:body.publishable_questions===items.length&&body.status==="RELEASE_APPROVED",releaseStatus:body.status};
 }
 global.FP2ApprovedBank={load,normalize,isApproved,SOURCE};
 })(window);
