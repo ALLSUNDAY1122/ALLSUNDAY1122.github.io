@@ -27,6 +27,20 @@ jobs:
         run: python -m pip install --disable-pip-version-check pymupdf
       - name: Download official PDFs and verify existing bank
         run: python kangoshi-sprint/scripts/run_official_pdf_audit.py
+      - name: Prepare ephemeral 112 and 111 original PDF evidence
+        run: |
+          mkdir -p kangoshi-sprint/audit/source-pdfs
+          for exam in 112 111; do
+            for session in AM PM; do
+              cp "/tmp/kangoshi-official/${exam}-${session}.pdf" "kangoshi-sprint/audit/source-pdfs/${exam}-${session}.pdf"
+            done
+          done
+      - name: Upload source PDF evidence (no repository commit)
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-112-111-source-pdfs
+          path: kangoshi-sprint/audit/source-pdfs/
+          retention-days: 7
       - name: Extract 480 quarantined question drafts
         run: python kangoshi-sprint/scripts/extract_official_drafts.py
       - name: Extract all official answer-key pages and word geometry
