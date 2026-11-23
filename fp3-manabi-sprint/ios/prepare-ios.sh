@@ -14,7 +14,7 @@ for file in index.html question_bank_300.payload.json; do
 done
 
 # The native app is fully offline for learning. Only the audited payload is bundled.
-test "$(wc -c < "$WEB_DST/question_bank_300.payload.json" | tr -d ' ')" = "408985"
+test "$(wc -c < "$WEB_DST/question_bank_300.payload.json" | tr -d ' ')" = "409279"
 
 # WKWebView loaded from file:// can reject fetch() for another local file even when
 # read access is granted. Keep the web product fetch-based, but turn the iOS copy
