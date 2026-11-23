@@ -1,12 +1,6 @@
 name: Kangoshi Dual Engine 480 and Media Visual Review
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'kangoshi-sprint/scripts/bulk_dual_engine_verify.py'
-      - 'kangoshi-sprint/scripts/build_media_comparison.py'
-      - 'kangoshi-sprint/scripts/promote_dual_engine.py'
-      - '.github/workflows/kangoshi-dual-engine-480.yml'
 permissions:
   contents: write
 jobs:
