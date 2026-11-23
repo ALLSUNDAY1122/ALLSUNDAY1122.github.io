@@ -7,8 +7,8 @@ import sys,os
 YEAR=int(os.environ.get("EXAM_YEAR",sys.argv[1] if len(sys.argv)>1 else "2022"))
 src=json.loads((BASE/f"QUESTIONS_{YEAR}_RAW_STAGING.json").read_text())
 DIGITS="１２３４５"
-ROWS=re.compile(r"(?m)^\\s*([１２３４５1-5])\\s+(?=\\S)")
-INLINE=re.compile(r"([１２３４５1-5])\\s*[（(]([^）)\\n]+)[）)]")
+ROWS=re.compile(r"(?m)^\s*([１２３４５1-5])\s+(?=\S)")
+INLINE=re.compile(r"([１２３４５1-5])\s*[（(]([^）)\n]+)[）)]")
 out=[]
 holds=[]
 for q in src["questions"]:
