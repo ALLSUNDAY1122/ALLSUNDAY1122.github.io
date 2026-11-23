@@ -1,4 +1,4 @@
-name: Kangoshi Exact Japanese English Gloss Alignment Reaudit
+name: Kangoshi Efficient PDF Engine Recovery and Gloss Alignment Audit
 on:
   workflow_dispatch:
   push:
@@ -17,8 +17,10 @@ jobs:
           python-version: '3.12'
       - name: Install independent PDF engines and render dependencies
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq poppler-utils
+          if ! command -v pdftotext >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq poppler-utils
+          fi
           python -m pip install --disable-pip-version-check 'pymupdf>=1.24,<3' pillow cairosvg
       - name: Fetch MHLW official PDF texts and answer sources
         run: python kangoshi-sprint/scripts/run_official_pdf_audit.py
