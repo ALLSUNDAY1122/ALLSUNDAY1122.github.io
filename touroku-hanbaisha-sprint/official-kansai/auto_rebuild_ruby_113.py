@@ -31,10 +31,12 @@ def certify_from_raw_glyphs(q,doc,clips):
             for fi,f in enumerate(fields):
                 if len(list(re.finditer(r'(?m)^[ \t]*'+re.escape(reading)+r'[ \t]*    bank=load(BANK);st=load(STATE);triage=load(TRIAGE)
     assert len(triage["records"])==113
-    assert bank["count"]==st["question_bank"]["production_official_bank_count"]==486
-    assert len(bank["approvedIds"])==len(set(bank["approvedIds"]))==486
+    assert bank["count"]==st["question_bank"]["production_official_bank_count"]
+    assert len(bank["approvedIds"])==len(set(bank["approvedIds"]))==bank["count"]
     ids={r["id"] for r in triage["records"]}
-    assert len(ids)==113 and not ids.intersection(bank["approvedIds"])
+    previous_approved=ids.intersection(bank["approvedIds"])
+    assert len(ids)==113 and bank["count"]==486+len(previous_approved)
+    starting_bank_count=bank["count"]
     sources={x["year"]:x for x in load(B/"SOURCES_2022_2026.json")["years"]}
     docs={};questions={};geos={};diffs={};answers={};pdfsha={}
     for year in range(2022,2027):
@@ -53,7 +55,12 @@ def certify_from_raw_glyphs(q,doc,clips):
         context=browser.new_context(viewport={"width":375,"height":850},device_scale_factor=2)
         page=context.new_page()
         for source in triage["records"]:
-            id=source["id"];y=int(id[5:9]);n=int(id[-3:]);q=questions[y][n-1];geo=geos[y][n-1];d=diffs[y][n-1];a=answers[y][n-1]
+            id=source["id"]
+            if id in previous_approved:
+                evidence.append({"id":id,"status":"ALREADY_APPROVED","reasons":[],
+                  "existingBank":True,"sourceImage":source["sourceImage"],"previousCandidate":source["candidateImage"]})
+                continue
+            y=int(id[5:9]);n=int(id[-3:]);q=questions[y][n-1];geo=geos[y][n-1];d=diffs[y][n-1];a=answers[y][n-1]
             row={"id":id,"originalIssues":source["issues"],"sourceImage":source["sourceImage"],
                  "previousCandidate":source["candidateImage"],"status":"HOLD","reasons":[]}
             assert q["id"]==geo["id"]==d["id"]==id
@@ -152,11 +159,15 @@ def certify_from_raw_glyphs(q,doc,clips):
         for doc in year_docs.values():doc.close()
     assert len(evidence)==113 and len({r["id"] for r in evidence})==113
     assert sum(r["status"]=="AUTO_PASS" for r in evidence)==len(new)
+    assert sum(r["status"]=="ALREADY_APPROVED" for r in evidence)==len(previous_approved)
     assert all(q["id"] in ids for q in new)
     reasons=collections.Counter(k for r in evidence if r["status"]=="HOLD" for k in r["reasons"])
     timestamp=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).isoformat(timespec="seconds")
-    result={"schema":"touhan-ruby-113-automatic-v1","generatedAt":timestamp,"baseline":486,
-      "processed":113,"autoPassed":len(new),"held":113-len(new),"reasonCountsNonExclusive":dict(reasons),
+    new_hold_count=113-len(new)-len(previous_approved)
+    result={"schema":"touhan-ruby-113-automatic-v2","generatedAt":timestamp,"baseline":starting_bank_count,
+      "processed":113,"previouslyApproved":len(previous_approved),"autoPassed":len(new),
+      "cumulativeAutoPassed":len(previous_approved)+len(new),"held":new_hold_count,
+      "reasonCountsNonExclusive":dict(reasons),
       "limitations":"Source PDF coordinates, browser DOM, official answers and normalized text hashes checked. No human visual certification or iOS Safari hardware test.",
       "records":evidence}
     OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
@@ -164,7 +175,7 @@ def certify_from_raw_glyphs(q,doc,clips):
         bank["questions"]=sorted(bank["questions"]+new,key=lambda q:(q["year"],q["questionNo"]))
         bank["approvedIds"]=[q["id"] for q in bank["questions"]]
         bank["count"]=len(bank["questions"])
-        assert bank["count"]==486+len(new)==len(set(bank["approvedIds"]))
+        assert bank["count"]==starting_bank_count+len(new)==len(set(bank["approvedIds"]))
         for y in range(2022,2027):
             qty=sum(q["year"]==y for q in new)
             bank["byYear"][str(y)]["hold"]-=qty
@@ -173,7 +184,8 @@ def certify_from_raw_glyphs(q,doc,clips):
     st["question_bank"].update(production_official_bank_count=bank["count"],
       verified_official_imported=bank["count"],official_question_text_imported=bank["count"])
     st["ruby_113_auto_rebuild_20261124"]={"evidence":str(OUT.relative_to(B.parents[1])),
-      "processed":113,"autoPassed":len(new),"hold":113-len(new),
+      "processed":113,"previouslyApproved":len(previous_approved),"autoPassed":len(new),
+      "cumulativeAutoPassed":len(previous_approved)+len(new),"hold":new_hold_count,
       "holdReasonsNonExclusive":dict(reasons),"newBankCount":bank["count"],
       "remainingIncludingInvalid":600-bank["count"],"autoVerifiedNotHumanVisual":True}
     st["updated_at"]=timestamp
@@ -184,8 +196,8 @@ def certify_from_raw_glyphs(q,doc,clips):
     BANK.write_text(json.dumps(bank,ensure_ascii=False,indent=2)+"\n")
     STATE.write_text(json.dumps(st,ensure_ascii=False,indent=2)+"\n")
     md=IOS/"RELEASE_STATUS.md"
-    md.write_text(md.read_text()+f"\n\n## 2026-11-24 自動ルビ再生成・座標/ブラウザ検査\n- 対象113問、PDF rawdict再抽出・サイズ/座標・Noto CJKブラウザDOM再描画照合。\n- 自動PASS {len(new)}、HOLD {113-len(new)}、正式バンク {bank['count']}/600。目視PASSではなく自動検査PASS。\n- 保留理由（重複あり）: {json.dumps(dict(reasons),ensure_ascii=False)}。\n- 証跡: `official-kansai/{OUT.name}`。Apple実機未確認・本審査未送信・リリースBLOCKED。\n")
-    print(json.dumps({"autoPassed":len(new),"hold":113-len(new),"bank":bank["count"],"reasons":dict(reasons)},ensure_ascii=False))
+    md.write_text(md.read_text()+f"\n\n## 2026-11-24 自動ルビ再生成・座標/ブラウザ検査\n- 対象113問、PDF rawdict再抽出・サイズ/座標・Noto CJKブラウザDOM再描画照合。\n- 今回自動PASS {len(new)}、累計自動PASS {len(previous_approved)+len(new)}、HOLD {new_hold_count}、正式バンク {bank['count']}/600。目視PASSではなく自動検査PASS。\n- 保留理由（重複あり）: {json.dumps(dict(reasons),ensure_ascii=False)}。\n- 証跡: `official-kansai/{OUT.name}`。Apple実機未確認・本審査未送信・リリースBLOCKED。\n")
+    print(json.dumps({"autoPassed":len(new),"previouslyApproved":len(previous_approved),"hold":new_hold_count,"bank":bank["count"],"reasons":dict(reasons)},ensure_ascii=False))
 if __name__=="__main__": main()
 
 # Actions rerun trigger: 2026-11-24; preserve fail-closed auto-promotion gates.
