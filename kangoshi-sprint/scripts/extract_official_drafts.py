@@ -53,6 +53,7 @@ def parse(pdf,exam,session):
 def main():
     base=ROOT/"audit/runs";base.mkdir(parents=True,exist_ok=True)
     summary={}
+    sources={e["exam"]:e for e in json.loads((ROOT/"audit/official-source-manifest-20261124.json").read_text())["sources"]}
     for exam in (112,111):
         for session in ("AM","PM"):
             pdf=pathlib.Path("/tmp/kangoshi-official")/f"{exam}-{session}.pdf"
@@ -60,6 +61,12 @@ def main():
                 summary[f"{exam}-{session}"]={"status":"PDF_MISSING"};continue
             data=parse(pdf,exam,session)
             data["pdfSha256"]=hashlib.sha256(pdf.read_bytes()).hexdigest()
+            for q in data["questions"]:
+                q["sourceRefs"]=[sources[exam]["morningPdf" if session=="AM" else "afternoonPdf"],sources[exam]["answerPdf"]]
+                q["textFidelity"]="UNVERIFIED_PDF_GLYPH_MAPPING"
+                q["answerSourceChecked"]=False
+                q["requiresMedia"]=None
+                q["reviewStatus"]="HOLD_OFFICIAL_KEY_AND_TEXT_FIDELITY"
             (base/f"exam{exam}-{session}-draft.json").write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n")
             summary[f"{exam}-{session}"]={"status":data["status"],"detected":data.get("detected",0),"invalid":data.get("invalidQuestionNumbers",[])}
     (base/"new-draft-summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2)+"\n")
