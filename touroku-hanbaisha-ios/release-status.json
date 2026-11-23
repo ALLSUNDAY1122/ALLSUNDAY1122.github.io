@@ -692,6 +692,22 @@
       "remainingOnHold": 120,
       "nextGate": "RENDER_WITH_JAPANESE_FONTS_AND_CORRECT_RUBY_MARKUP_THEN_VISUAL_COMPARE",
       "note": "Do not claim individual direct viewing of remaining 113 images; sample identified systematic preview deficiency"
+    },
+    "ruby_comparison_repair_v2": {
+      "target": 120,
+      "previousOfficialBank": 440,
+      "script": "touroku-hanbaisha-sprint/official-kansai/rebuild_ruby_comparison_120.py",
+      "workflow": ".github/workflows/touhan-ruby-comparison-repair.yml",
+      "font": "Noto Sans CJK JP",
+      "markup": "real ruby/rt from PDF raw glyph and candidate text",
+      "evidence": "touroku-hanbaisha-sprint/official-kansai/RUBY_REBUILT_COMPARISON_120_20261124.json",
+      "status": "RUNNING_NOT_VERIFIED",
+      "regeneratedScreenshotCountConfirmed": 0,
+      "visuallyPassedCountConfirmed": 0,
+      "promotedCount": 0,
+      "remainingHold": 120,
+      "precedingAttemptError": "RUBY_REPAIR_ERROR_20261124.json (No script output)",
+      "originalVisualReview": "RUBY_VISUAL_REVIEW_120_20261124.json"
     }
   },
   "gates": {
@@ -746,7 +762,8 @@
     "ruby_dom_browser_position": "PENDING_REAL_CHROMIUM_RESULT",
     "ordered_ruby_source_alignment": "PASS_WITH_EXPLICIT_AMBIGUOUS_HOLDS",
     "official_pdf_region_crop": "STAGED_49_QUESTIONS_WITH_HASH_AND_COORDS",
-    "official_pdf_image_app_release": "BLOCKED_RIGHTS_AND_VISUAL_QA"
+    "official_pdf_image_app_release": "BLOCKED_RIGHTS_AND_VISUAL_QA",
+    "ruby_visual_comparison_v2": "RUNNING_NO_VERIFIED_SCREENSHOTS"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
