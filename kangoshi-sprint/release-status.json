@@ -79,14 +79,14 @@
     "note": "Existing exam 115-113 strict text gate still 629 PASS/91 HOLD; new 111/112 content separately tracked."
   },
   "automation": {
-    "status": "SOURCE_CANONICAL_940_1200_REMAINING_260_IMAGES_20_RELEASE_BLOCKED",
+    "status": "SOURCE_CANONICAL_971_1200_HELD_229_GEOMETRIC_IMAGES_229_RELEASE_BLOCKED",
     "path": "kangoshi-sprint/scripts/audit_official_pdf.py",
     "sourceManifest": "kangoshi-sprint/audit/official-source-manifest-20261124.json",
     "mode": "AM/PM separate strict attribution/media isolation",
     "workflow": ".github/workflows/kangoshi-dual-engine-480.yml",
     "runner": "kangoshi-sprint/scripts/run_official_pdf_audit.py",
     "ciResult": "PASS_SOURCE_AND_MEDIA_ROUTING_INTEGRITY_RELEASE_BLOCKED",
-    "warning": "Current source-only verified bank 940/1200, 260 not verified; existing 720 strict text audit 629 PASS/91 HOLD. No additional questions released in runtime.",
+    "warning": "229 question printed number anchors localized uniquely; question bodies not all independently text verified. Release blocked, 229 remaining source holds plus existing runtime content/legal/media gates.",
     "runId": 45217628155,
     "jobId": 137828435420,
     "artifactId": 14838003424,
@@ -123,7 +123,8 @@
     "latestCoordinateReextractionRunId": 45249375273,
     "latestCoordinateReextractionResult": "SUCCESS_EXECUTION_22_TEXT_AGREED_5_REPAIRS_0_NEW_PROMOTED",
     "latestGeometricRecoveryRunId": 45259501753,
-    "latestGeometricImageEvidenceRunId": 45260033942
+    "latestGeometricImageEvidenceRunId": 45260033942,
+    "latestResidualGeometryEvidenceRunId": 45262412566
   },
   "stagedCandidateCount": 480,
   "staging": {
@@ -482,5 +483,23 @@
     "fullTextManualVisualFidelityCertified": false,
     "newPublishable": 0,
     "releaseStatus": "PREFLIGHT_BLOCKED"
+  },
+  "latestResidualGeometryAudit": {
+    "date": "2026-11-24",
+    "runId": 45262412566,
+    "sourceCanonical": 971,
+    "stillHeld": 229,
+    "inspectedHeldCount": 229,
+    "uniqueQuestionNumberAnchors": 229,
+    "sourceTextFullyDualEngineCertifiedFromTheseImages": 0,
+    "sourceImageEvidenceCount": 229,
+    "sourceImageArtifactId": 14861452631,
+    "sourceImageIndex": "kangoshi-sprint/audit/residual-geometric-source-index-20261124.json",
+    "sourceImagesRendered": true,
+    "fullCharacterManualVisualEquivalenceCertified": false,
+    "method": "Original MHLW PDF page geometric question-number anchor, clipped 2.0x raster and SHA-256 evidence; CMap mapping still requires strict two-engine and official key pass",
+    "newPromotedFromRun": 0,
+    "sourceOnly": true,
+    "release": "PREFLIGHT_BLOCKED"
   }
 }
