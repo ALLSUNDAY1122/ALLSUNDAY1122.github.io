@@ -11,13 +11,13 @@
 | 前回の追加ソース検証済み | **74** | 原典文字層再抽出／文字化け補完／公式正答照合に合格。新規配信不可 |
 | 前回の境界・状況設定の追加昇格 | **3** | 2方式と公式正答照合に合格。新規配信不可 |
 | **今回の座標境界方式による追加昇格** | **15** | 問題番号の座標一意性・本文と4選択肢の2方式照合・公式正答を検証。新規配信不可 |
-| **正規ソースバンク** | **879 / 1,200** | ソース検証済み拡張159問を含む |
-| **第112・111回の未検証** | **321問** | 要修復・監査保留 |
+| **正規ソースバンク** | **888 / 1,200** | ソース検証済み拡張168問を含む |
+| **第112・111回の未検証** | **312問** | 要修復・監査保留 |
 | 今回のアプリ配信追加 | **0問** | 解説独立監査／法令／UI／iOS／権利等の別ゲートが未完 |
 
-上記件数はGitHub Actions Run 45246704920による座標方式監査後の現況。以下の旧監査に関する数値は実施当時の履歴であり、最新件数ではない。
+上記件数はGitHub Actions Run 45249375273終了後の現行main実測値。今回の再抽出での追加昇格は0問（過去の別更新による増分は今回の成果としない）。以下の旧監査に関する数値は実施当時の履歴であり、最新件数ではない。
 
-ソース拡張正本 `product-content/verified-additions-20261124.json`、`product-content/manifest.json`。昇格記録 `audit/dual-engine-promotion-ledger-20261124.json`。保留321問と理由 `audit/dual-engine-hold-20261124.json`。全159問の正規拡張は公開禁止フラグ `publishable=false`、`releaseEligible=false`。
+ソース拡張正本 `product-content/verified-additions-20261124.json`、`product-content/manifest.json`。昇格記録 `audit/dual-engine-promotion-ledger-20261124.json`。保留312問と理由 `audit/dual-engine-hold-20261124.json`。全168問の正規拡張は公開禁止フラグ `publishable=false`、`releaseEligible=false`。
 
 ## 保留413問の原因別検証と修復（理由は重複）
 
@@ -62,7 +62,7 @@
 ## 申請ゲート
 
 - 既存720問の厳格PDF文字列監査は **629 PASS／91 HOLD** のまま（出典画像の別判定・図版の権利ゲートとは独立）。
-- 追加159問のソース・正答チェックが済んでも、**解説の独立確認、法令/学説時点確認、アプリ統合、iOS回帰テスト、未検証321問の監査、図版5件の権利確認**が未完了。
+- 追加168問のソース・正答チェックが済んでも、**解説の独立確認、法令/学説時点確認、アプリ統合、iOS回帰テスト、未検証312問の監査、図版5件の権利確認**が未完了。
 - App ID `6801792293`、Bundle `jp.allsunday1122.kangoshi`。
 - **App Store本審査の最終送信、課金登録、契約確定はいずれも行っていない**。いずれも別途明示承認が必要。
 
@@ -97,3 +97,12 @@
 - 主要保留理由（重複）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 263, COORDINATE_REGION_UNVERIFIED 263, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 176, PYMUPDF_FIELD_MISMATCH_0 172, PAGE_FOOTER_CONTAMINATION 143, POPPLER_FIELD_MISMATCH_0 137, PYMUPDF_FIELD_MISMATCH_4 108, CHOICE_COUNT_NOT_FOUR 91, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 46, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
 - SVG18件は原典との比較画像を再生成するが、画像の意味・医学的所見の忠実性は自動合格にしない。**18件の詳細視覚確認が残存**。
 - 解説・媒体権利・実機確認・本審査の公開ゲートは引き続き保留。
+
+## 座標領域からの独立再抽出（Run 45249375273）
+
+- 対象は残る312問。PyMuPDF座標クリップとPopplerページ全文の独立問題区切りから問題文・4選択肢を再生成し、正答PDFと採点例外を追加照合。
+- **2方式による再抽出一致22問**、候補データからの本文・選択肢修正差分**5問**、今回の正規ソースバンク昇格**0問**。残り**312問**。
+- 修正差分の5問：`K112-AM073`、`K112-AM095`、`K112-PM017`、`K112-PM052`、`K111-AM094`。変更前後・座標・未解除理由は `audit/coordinate-reextraction-evidence-20261124.json` に記録。
+- この5問も未確定制御文字または状況設定の共通文未確認が残るため、昇格・公開を見送った。再抽出済み22問のうち残り17問も状況設定の共通文確認が未完了。
+- **留意：正規ソースバンク888問は今回の追加昇格0問を含む現行値**。候補データの修正記録と正式昇格を混同しない。
+- 公開・実機・権利・審査ゲートは変更なし：`PREFLIGHT_BLOCKED`。
