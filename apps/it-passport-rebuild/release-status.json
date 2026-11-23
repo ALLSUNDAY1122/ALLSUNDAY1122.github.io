@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-23T22:50:00+09:00",
+  "updated_at_jst": "2026-11-23T23:12:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
   "release_stage": "CONTENT_INGEST_PENDING",
@@ -27,12 +27,33 @@
       "canonical": 0,
       "target": 500,
       "verified_rounds": 0,
-      "source_verbatim_audit": "NOT_STARTED"
+      "source_verbatim_audit": "BLOCKED_IPA_PDF_DOWNLOAD_NOT_PDF",
+      "pdf_stage_attempt": {
+        "result": "FAILED_SOURCE_FETCH",
+        "evidence_path": "questions/ipa-staging/extraction-evidence.json",
+        "years_attempted": 5,
+        "question_pdfs_downloaded": 0,
+        "answer_pdfs_downloaded": 0,
+        "action_run": 45191264084,
+        "reason": "IPA public links returned non-PDF responses in GitHub runner; no source document was extracted",
+        "release_promoted": false
+      }
     },
     "ios": {
       "project_exists_on_feature_branch": true,
       "canonical_official_bank_connected": false,
-      "device_acceptance": "NOT_RUN"
+      "device_acceptance": "NOT_RUN",
+      "mobile_first_changes": {
+        "branch": "feature/it-passport-rebuild",
+        "latest_commit": "996918b81329cd0c6087d288860fa3f6c28ee02b",
+        "features": [
+          "4/8/16 question picker",
+          "year-specific 100-question navigation when verified",
+          "provenance labeling",
+          "image zoom"
+        ],
+        "compiled_on_xcode": false
+      }
     },
     "app_store_connect": {
       "app_id": null,
@@ -44,6 +65,11 @@
       "workflow_id_candidate": "it-passport-rebuild-ios",
       "signed_build": "UNVERIFIED",
       "app_store_upload": "UNVERIFIED"
+    },
+    "quality": {
+      "development_dataset_gate": "PASS",
+      "official_incomplete_release_guard": "PASS_EXPECTED_BLOCK",
+      "workflow_run_id": 45190905303
     }
   },
   "ipa_rights": {
@@ -70,7 +96,7 @@
     {
       "code": "IP-SOURCE-FIDELITY",
       "severity": "P0",
-      "detail": "Source PDFs, answer sheets, diagrams and question-by-question provenance not yet audited"
+      "detail": "IPA official PDFs could not be fetched in GitHub hosted runner (non-PDF response). No transcription or source/answer/figure visual audit possible. See ipa-staging/extraction-evidence.json."
     },
     {
       "code": "IP-IOS-BANK",
@@ -89,6 +115,7 @@
     }
   ],
   "next_machine_actions": [
+    "Resolve authorized IPA public PDF download path; only after valid %PDF and SHA-256, transcribe and independently audit",
     "Build an official-only canonical bank and source ledger for five published annual sets",
     "Independently verify exact text, options, correct answer, tables and diagrams against IPA PDFs",
     "Connect canonical official bank to mobile-first iOS UI and run release gates",
