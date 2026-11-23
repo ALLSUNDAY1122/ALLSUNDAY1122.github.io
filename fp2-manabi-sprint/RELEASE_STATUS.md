@@ -1,5 +1,24 @@
 # FP2 RELEASE STATUS（正本・2026-11-23・Q20第2次独立PASS反映）
 
+## 2026-11-23｜最新312/300プリフライト再分類（初回120問記録を置換）
+
+**現行対象：canonical312・学科5回×60＝選定300（6分野×50）・内容PASS予備12・publishable0。** 初回120問および5a72059fのCI8/8は過去履歴。証拠正本：`audit/FP2_PREFLIGHT_312_CANONICAL_300_SELECTED_20261123.md`。
+
+ソース判定対象 `38eeaee1e05831b9ff29e55e4bab2ae0db4794a9` のGitHub Check Runs読戻し：8件中 **SUCCESS6／未完了2／FAIL0**（2026-11-23 JST時点）。Chromium E2E×2、source静的×2、migration、registry auditがPASS。**macOS unsigned Simulator×2 はqueued/in_progressであり最新ヘッドのPASS未確定**。先行300問Simulator [45171875787](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45171875787) は別コミットでSUCCESS、参考扱い。監査記録反映後の新しいcommitにSUCCESS判定を自動継承しない。
+
+| プリフライト分類 | 未了・対応 |
+|---|---|
+| **AUTO-FIX** | 300問スコープの旧120固定値やWeb/監査/選定ロックの機械不整合を自動修正してCI再実行。問題内容・正答を独断変更しない |
+| **BUILD-REQUIRED** | 最新ヘッドmacOS CIの終了確認、署名IPA・組込300問バンクSHA・TestFlight配信・公開URL HTTP200確認 |
+| **HUMAN-REQUIRED** | ASC App ID 6797228406、Bundle、Version 1.0.0/Build1、IAPなし、Privacy、アイコン・スクショ・メタデータ/URLのApple側現物、iPhone/iPad実機受入、原題二次利用・出典/改変・運営責任の最終承認 |
+| **FINAL-APPROVAL** | Q0〜Q5を全通過後、PR #5717 Draft解除・Apple審査提出・公開の明示的ユーザー許可。現時点では未承認・提出禁止 |
+
+**ゲート：Q0 BLOCKED、Q1 CONTENT PASS312/SELECTED300・PUBLICATION BLOCKED、Q2/Q3 Browser E2E PASS（現ヘッド）／実機未了、Q4 NOT TESTED、Q5 最新Simulator未完了／署名・ASC・TestFlight未了。**
+**NOT_SUBMISSION_READY／NOT_SUBMITTED**。PR Draft・main未マージを維持。
+
+---
+
+
 
 ## 2026-11-23｜312問／300問／予備12問・下書きPASS180・Simulator不具合修正（最新判定）
 
