@@ -759,7 +759,7 @@
     "verbatim_and_answer_audit": "AUTO_88_GEOMETRY_215_RUBY_51_ORDERED_5_LAYOUT_13_VISUAL_14_REMAINING_214",
     "mobile_ui": "PENDING",
     "ios_build": "PASS_SIMULATOR_DEBUG_NO_SIGNING",
-    "internal_testflight": "Q7_AUTO_PROVISION_RUNNING",
+    "internal_testflight": "Q7_SIGNED_IPA_BUILDING_NOT_READY",
     "screenshots": "PENDING",
     "privacy_and_metadata": "ASC_PENDING",
     "device_check": "USER_REQUIRED",
@@ -1497,8 +1497,8 @@
       "Q7_TESTFLIGHT_READY"
     ],
     "reassessment_note": "Original preflight 10/14 remains historical; Q6 measured PASS by later macOS workflow; Q5 source/browser PASS but ASC declaration unverified.",
-    "q7_later_evidence": "touroku-hanbaisha-ios/Q7_AUTO_PROVISION_RESULT_20261124.json",
-    "q7_later_result": "FAILED"
+    "q7_later_evidence": "q7_testflight_preparation_20261124",
+    "q7_later_result": "SIGNED_IPA_BUILDING_NOT_VERIFIED"
   },
   "q5_privacy_audit_20261124": {
     "sourceAndBrowserAudit": "PASS",
@@ -1577,5 +1577,62 @@
     "signing": "NOT_VERIFIED",
     "evidence": "touroku-hanbaisha-ios/Q7_AUTO_PROVISION_ENV_ATTEMPT2_START_20261124.json",
     "githubRunId": 45291115834
+  },
+  "q7_testflight_preparation_20261124": {
+    "scope": "App Store signing, Codemagic signed-IPA build preparation; no TestFlight upload nor App Review",
+    "codemagicAppId": "6a769d81a1add9d06020b524",
+    "appStoreConnectAppId": "6802119268",
+    "bundleId": "com.allsunday1122.tourokuhanbaisha",
+    "apiConnectivity": "PASS_CODEMAGIC_AND_ASC",
+    "xcodeSimulator": "PASS_PREVIOUS_Q6",
+    "signingEnvironmentVariables": "PASS_EXISTS_IN_CODEMAGIC_BUILD_CHECK",
+    "signingProfileCurrent": "NOT_YET_VERIFIED",
+    "attempts": [
+      {
+        "buildId": "6b04cd655586d806fe29abea",
+        "workflow": "touhan-q7-signing-preflight",
+        "status": "FAILED",
+        "reason": "No matching app_store provisioning profiles",
+        "evidence": "touroku-hanbaisha-ios/Q7_CODEMAGIC_DIAG_20261124.json"
+      },
+      {
+        "buildId": "6b04ce3d6b11322d3b7eee5a",
+        "workflow": "touhan-q7-auto-provision",
+        "status": "FAILED",
+        "reason": "Missing Codemagic integration tourokuhanbaisha_appstore",
+        "evidence": "touroku-hanbaisha-ios/Q7_AUTO_PROVISION_ATTEMPT1_20261124.json"
+      },
+      {
+        "buildId": "6b04cec46623f499d912aea1",
+        "workflow": "touhan-q7-auto-provision",
+        "status": "FAILED",
+        "reason": "Generate native Xcode project script failed; build number variable corrected",
+        "evidence": "touroku-hanbaisha-ios/Q7_ENV_SIGNING_ATTEMPT1_20261124.json"
+      },
+      {
+        "buildId": "6b04cf7092306a39e3981ca4",
+        "workflow": "touhan-q7-auto-provision",
+        "status": "BUILDING_AT_LAST_OBSERVATION",
+        "signedIpa": "NOT_VERIFIED",
+        "evidence": "https://codemagic.io/app/6a769d81a1add9d06020b524/build/6b04cf7092306a39e3981ca4"
+      }
+    ],
+    "nextRequired": "Read final signing log and IPA export/verification, then ASC/TestFlight upload only as permitted.",
+    "humanGates": [
+      {
+        "trigger": "Apple account 2FA or membership/license agreement required by signing",
+        "action": "User must authenticate/accept directly in Apple; no automated acceptance"
+      },
+      {
+        "trigger": "No valid App Store distribution certificate/profile can be provisioned with existing credentials",
+        "action": "User to configure Apple Developer signing/Codemagic code signing identities"
+      },
+      {
+        "trigger": "Physical-device installation",
+        "action": "User performs iPhone verification"
+      }
+    ],
+    "testflightUploaded": false,
+    "appReviewSubmitted": false
   }
 }
