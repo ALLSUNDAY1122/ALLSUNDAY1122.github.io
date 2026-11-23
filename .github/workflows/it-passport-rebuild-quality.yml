@@ -65,6 +65,8 @@ jobs:
             grep -q 'OFFICIAL_NOT_READY:' /tmp/itp-official-release.log
             echo "PASS: official release remains correctly blocked at $current/500"
           fi
+      - name: Independently validate 500 IPA candidate IDs, source hashes and official answer index
+        run: python3 apps/it-passport-rebuild/quality/validate-official-candidates.py
       - name: Compile official-source PDF staging parser
         run: python3 -m py_compile apps/it-passport-rebuild/quality/stage-ipa-pdf.py
       - name: Report issue-triggered run
