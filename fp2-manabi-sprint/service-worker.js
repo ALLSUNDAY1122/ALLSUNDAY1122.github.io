@@ -1,5 +1,5 @@
 /* FP2 offline-first static preview shell. Scope limited to this app. */
-const CACHE_NAME="fp2-manabi-20261123-300-v3";
+const CACHE_NAME="fp2-manabi-20261123-verbatim300-v4";
 const APP_FILES=["./","./index.html","./fp2-approved-bank.js","./questions/canonical/approved-questions-20261123.json","./manifest.webmanifest"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_FILES)).then(()=>self.skipWaiting()));
