@@ -2,14 +2,14 @@
   "year": 2025,
   "total": 120,
   "target": 40,
-  "rubyPass": 11,
-  "rubyHold": 29,
+  "rubyPass": 13,
+  "rubyHold": 27,
   "reasonCounts": {
-    "GLYPH_AMBIGUOUS": 16,
-    "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING": 28,
+    "GLYPH_AMBIGUOUS": 13,
+    "RUBY_ANCHOR_COUNT_MISMATCH": 26,
     "TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE": 1,
     "OTHER_LAYOUT_HOLD": 1,
-    "PDF_SPAN_GLYPH_MISMATCH": 13,
+    "PDF_SPAN_GLYPH_MISMATCH": 17,
     "FIELD_ANCHOR_NOT_UNIQUE": 11,
     "NO_GLYPH_UNDER_RUBY": 1
   },
@@ -36,7 +36,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -134,7 +134,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-009",
@@ -216,7 +216,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-012",
@@ -333,7 +333,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-020",
@@ -350,8 +350,8 @@
       "year": 2025,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -362,7 +362,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -428,8 +429,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -472,6 +473,25 @@
         },
         {
           "fieldIndex": 0,
+          "kanji": "建",
+          "reading": "けん",
+          "pdfPage": 23,
+          "rubyBBox": [
+            139.08,
+            290.89,
+            151.08,
+            296.89
+          ],
+          "glyphBBox": [
+            139.08,
+            296.65,
+            151.08,
+            308.65
+          ],
+          "sourceText": "建"
+        },
+        {
+          "fieldIndex": 0,
           "kanji": "倦",
           "reading": "けん",
           "pdfPage": 23,
@@ -504,8 +524,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -516,8 +536,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -587,15 +607,15 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-033",
       "year": 2025,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -605,7 +625,7 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -642,7 +662,7 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -700,8 +720,8 @@
       "year": 2025,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -746,7 +766,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -762,8 +782,8 @@
       "year": 2025,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -773,9 +793,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -800,7 +819,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -884,7 +903,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-060",
@@ -959,7 +978,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-062",
@@ -989,8 +1008,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1001,7 +1020,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1071,7 +1090,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-068",
@@ -1093,8 +1112,8 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1111,7 +1130,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -1148,7 +1167,8 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1157,8 +1177,8 @@
       "year": 2025,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1235,15 +1255,13 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-078",
       "year": 2025,
-      "status": "HOLD",
-      "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
-      ],
+      "status": "RUBY_PASS",
+      "reasons": [],
       "placements": [
         {
           "fieldIndex": 0,
@@ -1283,7 +1301,56 @@
           ],
           "sourceText": "ｄ 喘"
         }
-      ]
+      ],
+      "questionParts": [
+        {
+          "text": "消化器系及び呼吸器系に現れる医薬品の副作用に関する記述の正誤について、\n\n正しい組合せを選べ。\n\n\n\n\n\n ａ 消化性潰瘍になると、消化管出血に伴って"
+        },
+        {
+          "rubyBase": "糞",
+          "rubyText": "ふん",
+          "sourcePage": 13
+        },
+        {
+          "text": " 便が黒くなるなどの症状が\n\n  現れることがある。\n\n ｂ イレウス様症状（腸閉塞様症状）は、小児や高齢者のほか、普段から下痢\n\n  傾向のある人の発症リスクが高い。\n\n ｃ 間質性肺炎は、一般的に、原因となる医薬品の使用開始から短時間（１時\n\n  間以内）のうちに起きることが多い。\n\n ｄ "
+        },
+        {
+          "rubyBase": "喘",
+          "rubyText": "ぜん",
+          "sourcePage": 13
+        },
+        {
+          "text": " 息は、合併症の有無にかかわらず、原因となった医薬品の有効成分が体\n\n  内から消失しても症状は寛解しない。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "誤  正  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  正  誤  正"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  誤  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  誤  誤  誤"
+          }
+        ]
+      ],
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-079",
@@ -1311,8 +1378,8 @@
       "year": 2025,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1410,7 +1477,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-088",
@@ -1418,7 +1485,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1558,7 +1625,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-100",
@@ -1647,7 +1714,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-104",
@@ -1712,8 +1779,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "NO_GLYPH_UNDER_RUBY"
+        "NO_GLYPH_UNDER_RUBY",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1729,8 +1796,8 @@
       "year": 2025,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -1790,10 +1857,8 @@
     {
       "id": "KSAI-2025-117",
       "year": 2025,
-      "status": "HOLD",
-      "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
-      ],
+      "status": "RUBY_PASS",
+      "reasons": [],
       "placements": [
         {
           "fieldIndex": 0,
@@ -1833,7 +1898,56 @@
           ],
           "sourceText": "酸化マグネシウムが配合された瀉"
         }
-      ]
+      ],
+      "questionParts": [
+        {
+          "text": "一般用医薬品の添付文書等において、「相談すること」の項目中に「次の診断を\n\n受けた人」として記載することとされている基礎疾患等と医薬品成分・薬効群等\n\nとの関係の正誤について、正しい組合せを選べ。\n\n\n      基礎疾患等        医薬品成分・薬効群等\n\n  ａ 高血圧      アセトアミノフェンが配合された解熱鎮痛薬\n\n  ｂ 腎臓病      スクラルファートが配合された胃腸薬\n\n\n  ｃ 心臓病      グリセリンが配合された"
+        },
+        {
+          "rubyBase": "浣",
+          "rubyText": "かん",
+          "sourcePage": 44
+        },
+        {
+          "text": " 腸薬\n\n\n  ｄ 肝臓病      酸化マグネシウムが配合された"
+        },
+        {
+          "rubyBase": "瀉",
+          "rubyText": "しゃ",
+          "sourcePage": 44
+        },
+        {
+          "text": " 下薬\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "誤  正  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  正  誤  正"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  誤  正"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  正"
+          }
+        ]
+      ],
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2025-118",
@@ -1847,8 +1961,8 @@
       "year": 2025,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1857,8 +1971,8 @@
       "year": 2025,
       "status": "HOLD",
       "reasons": [
-        "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     }

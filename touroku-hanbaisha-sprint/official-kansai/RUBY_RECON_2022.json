@@ -2,14 +2,14 @@
   "year": 2022,
   "total": 120,
   "target": 36,
-  "rubyPass": 9,
-  "rubyHold": 27,
+  "rubyPass": 10,
+  "rubyHold": 26,
   "reasonCounts": {
-    "GLYPH_AMBIGUOUS": 18,
-    "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING": 26,
+    "GLYPH_AMBIGUOUS": 15,
+    "RUBY_ANCHOR_COUNT_MISMATCH": 25,
+    "PDF_SPAN_GLYPH_MISMATCH": 13,
     "FIELD_ANCHOR_NOT_UNIQUE": 13,
     "NO_GLYPH_UNDER_RUBY": 1,
-    "PDF_SPAN_GLYPH_MISMATCH": 10,
     "FIGURE_OR_FORM_REVIEW": 1,
     "OTHER_LAYOUT_HOLD": 1
   },
@@ -36,7 +36,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -134,7 +134,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2022-009",
@@ -209,7 +209,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2022-011",
@@ -277,7 +277,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2022-012",
@@ -333,8 +333,8 @@
       "year": 2022,
       "status": "HOLD",
       "reasons": [
-        "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -431,7 +431,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2022-022",
@@ -447,10 +447,30 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "NO_GLYPH_UNDER_RUBY"
+        "NO_GLYPH_UNDER_RUBY",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
-      "placements": []
+      "placements": [
+        {
+          "fieldIndex": 0,
+          "kanji": "蘇",
+          "reading": "こうそさん",
+          "pdfPage": 15,
+          "rubyBBox": [
+            121.7,
+            581.96,
+            156.5,
+            587.96
+          ],
+          "glyphBBox": [
+            133.1,
+            587.72,
+            145.1,
+            599.72
+          ],
+          "sourceText": "ｃ 香蘇散"
+        }
+      ]
     },
     {
       "id": "KSAI-2022-024",
@@ -459,7 +479,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -584,7 +604,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2022-031",
@@ -593,8 +613,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -619,7 +639,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -649,7 +669,8 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -736,7 +757,7 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -813,7 +834,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2022-039",
@@ -828,8 +849,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -852,8 +873,8 @@
       "year": 2022,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -883,8 +904,8 @@
       "year": 2022,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -894,7 +915,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -945,8 +966,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -969,8 +990,8 @@
       "year": 2022,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -988,7 +1009,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1028,9 +1049,8 @@
       "year": 2022,
       "status": "HOLD",
       "reasons": [
-        "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1040,7 +1060,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -1083,8 +1103,8 @@
       "year": 2022,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -1115,8 +1135,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1130,10 +1150,8 @@
     {
       "id": "KSAI-2022-069",
       "year": 2022,
-      "status": "HOLD",
-      "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
-      ],
+      "status": "RUBY_PASS",
+      "reasons": [],
       "placements": [
         {
           "fieldIndex": 0,
@@ -1192,7 +1210,64 @@
           ],
           "sourceText": "ｃ 腱"
         }
-      ]
+      ],
+      "questionParts": [
+        {
+          "text": "骨格系及び筋組織に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n\n\n ａ 骨の機能の一つである造血機能は、主として胸骨、"
+        },
+        {
+          "rubyBase": "肋",
+          "rubyText": "ろっ",
+          "sourcePage": 6
+        },
+        {
+          "text": " 骨、脊椎、骨盤、大\n\n  "
+        },
+        {
+          "rubyBase": "腿",
+          "rubyText": "たい",
+          "sourcePage": 6
+        },
+        {
+          "text": " 骨などの骨髄が担う。\n ｂ 骨組織では、通常、組織を構成するカルシウムが骨から溶け出し、ほぼ同\n  量のカルシウムが骨に沈着することで、骨吸収と骨形成のバランスが取ら\n  れる。\n\n ｃ "
+        },
+        {
+          "rubyBase": "腱",
+          "rubyText": "けん",
+          "sourcePage": 6
+        },
+        {
+          "text": " は、筋細胞（筋線維）と結合組織からなり、関節を構成する骨に骨格筋\n\n  をつないでいる。\n ｄ 随意筋である骨格筋は、長時間の動作等で疲労した場合でも、運動を続け\n  ることで、筋組織の収縮性が回復する。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "正  誤  正  正"
+          }
+        ],
+        [
+          {
+            "text": "正  正  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  正  誤  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  誤  正"
+          }
+        ],
+        [
+          {
+            "text": "誤  誤  正  正"
+          }
+        ]
+      ],
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2022-070",
@@ -1214,8 +1289,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -1260,7 +1335,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -1298,8 +1373,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1316,7 +1391,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -1446,7 +1521,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2022-084",
@@ -1476,7 +1551,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1546,7 +1621,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2022-089",
@@ -1677,7 +1752,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2022-099",
@@ -1825,7 +1900,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },

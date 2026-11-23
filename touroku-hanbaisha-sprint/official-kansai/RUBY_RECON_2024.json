@@ -2,15 +2,15 @@
   "year": 2024,
   "total": 120,
   "target": 41,
-  "rubyPass": 8,
-  "rubyHold": 33,
+  "rubyPass": 9,
+  "rubyHold": 32,
   "reasonCounts": {
-    "GLYPH_AMBIGUOUS": 16,
-    "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING": 29,
-    "PDF_SPAN_GLYPH_MISMATCH": 13,
+    "GLYPH_AMBIGUOUS": 15,
+    "RUBY_ANCHOR_COUNT_MISMATCH": 28,
+    "PDF_SPAN_GLYPH_MISMATCH": 15,
     "FIGURE_OR_FORM_REVIEW": 3,
     "OTHER_LAYOUT_HOLD": 4,
-    "FIELD_ANCHOR_NOT_UNIQUE": 17,
+    "FIELD_ANCHOR_NOT_UNIQUE": 18,
     "TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE": 1
   },
   "candidateGitBlob": "0645bc09cdfbc747b4be4f18f17a9f00563e8745",
@@ -82,7 +82,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2024-002",
@@ -104,7 +104,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -148,8 +148,8 @@
       "year": 2024,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -219,7 +219,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2024-012",
@@ -279,7 +279,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -306,7 +306,7 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -376,7 +376,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2024-024",
@@ -391,7 +391,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -402,7 +402,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -434,7 +434,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -472,8 +473,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -497,8 +498,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -536,8 +537,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -547,7 +548,7 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -563,8 +564,8 @@
       "year": 2024,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -609,7 +610,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -646,8 +647,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -656,8 +657,8 @@
       "year": 2024,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -734,7 +735,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2024-049",
@@ -767,8 +768,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -834,7 +835,7 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -843,8 +844,9 @@
       "year": 2024,
       "status": "HOLD",
       "reasons": [
+        "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -853,8 +855,8 @@
       "year": 2024,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -877,11 +879,30 @@
       "year": 2024,
       "status": "HOLD",
       "reasons": [
-        "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
-      "placements": []
+      "placements": [
+        {
+          "fieldIndex": 0,
+          "kanji": "瞼",
+          "reading": "けん",
+          "pdfPage": 5,
+          "rubyBBox": [
+            229.08,
+            564.01,
+            241.08,
+            570.01
+          ],
+          "glyphBBox": [
+            229.08,
+            569.77,
+            241.08,
+            581.77
+          ],
+          "sourceText": "目の部分だけでなく眼瞼"
+        }
+      ]
     },
     {
       "id": "KSAI-2024-067",
@@ -890,7 +911,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -907,7 +929,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -932,8 +954,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1003,15 +1025,13 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2024-074",
       "year": 2024,
-      "status": "HOLD",
-      "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
-      ],
+      "status": "RUBY_PASS",
+      "reasons": [],
       "placements": [
         {
           "fieldIndex": 0,
@@ -1051,7 +1071,56 @@
           ],
           "sourceText": "ｃ 顆粒剤は、粒の表面がコーティングされているものもあるので、噛"
         }
-      ]
+      ],
+      "questionParts": [
+        {
+          "text": "内服用医薬品の剤形及びその一般的な特徴に関する記述の正誤について、\n正しい組合せを選べ。\n\n\n ａ 一般的に、錠剤（内服）は、胃や腸で崩壊し、有効成分が溶出することが\n\n  薬効発現の前提となる。\n\n ｂ 口"
+        },
+        {
+          "rubyBase": "腔",
+          "rubyText": "くう",
+          "sourcePage": 10
+        },
+        {
+          "text": " 内崩壊錠は、固形物を飲み込むことが困難な高齢者や乳幼児でも、口\n\n  の中で溶かした後に、唾液と一緒に飲み込むことができる。\n\n ｃ 顆粒剤は、粒の表面がコーティングされているものもあるので、"
+        },
+        {
+          "rubyBase": "噛",
+          "rubyText": "か",
+          "sourcePage": 10
+        },
+        {
+          "text": " み砕か\n\n  ずに水などで飲み込む。\n\n ｄ カプセル剤は、水なしで服用するとゼラチンが喉や食道に貼り付くこと\n\n  があるため、必ず適切な量の水（又はぬるま湯）とともに服用する。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "正  正  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  正  誤  正"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  正"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  正  正"
+          }
+        ],
+        [
+          {
+            "text": "正  正  正  正"
+          }
+        ]
+      ],
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2024-075",
@@ -1060,7 +1129,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1137,7 +1206,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2024-078",
@@ -1145,8 +1214,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1156,7 +1225,7 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -1245,8 +1314,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1316,7 +1385,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2024-090",
@@ -1447,7 +1516,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2024-100",
@@ -1560,7 +1629,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },

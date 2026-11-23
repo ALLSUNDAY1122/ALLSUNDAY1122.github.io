@@ -2,11 +2,11 @@
   "year": 2023,
   "total": 120,
   "target": 34,
-  "rubyPass": 6,
-  "rubyHold": 28,
+  "rubyPass": 9,
+  "rubyHold": 25,
   "reasonCounts": {
-    "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING": 26,
-    "PDF_SPAN_GLYPH_MISMATCH": 11,
+    "PDF_SPAN_GLYPH_MISMATCH": 13,
+    "RUBY_ANCHOR_COUNT_MISMATCH": 23,
     "GLYPH_AMBIGUOUS": 10,
     "FIELD_ANCHOR_NOT_UNIQUE": 9,
     "FIGURE_OR_FORM_REVIEW": 2,
@@ -34,8 +34,8 @@
       "year": 2023,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -72,8 +72,8 @@
       "year": 2023,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -174,7 +174,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -190,8 +190,8 @@
       "year": 2023,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -200,8 +200,8 @@
       "year": 2023,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -271,7 +271,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2023-027",
@@ -280,7 +280,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -316,8 +316,8 @@
       "year": 2023,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -338,7 +338,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -401,8 +401,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -412,8 +412,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -490,7 +490,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2023-038",
@@ -523,10 +523,8 @@
     {
       "id": "KSAI-2023-042",
       "year": 2023,
-      "status": "HOLD",
-      "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
-      ],
+      "status": "RUBY_PASS",
+      "reasons": [],
       "placements": [
         {
           "fieldIndex": 0,
@@ -566,7 +564,56 @@
           ],
           "sourceText": "ｃ アラントインは、痛みや痒"
         }
-      ]
+      ],
+      "questionParts": [
+        {
+          "text": "\n 次の成分を含む一般用医薬品の外用"
+        },
+        {
+          "rubyBase": "痔",
+          "rubyText": "じ",
+          "sourcePage": 28
+        },
+        {
+          "text": " 疾用薬に関する記述の正誤について、\n\n正しい組合せを一つ選べ。\n\n\n     坐剤１個（１.７５ｇ）中：\n           成分            分量\n     リドカイン               ６０ ｍｇ\n     グリチルレチン酸            ３０ ｍｇ\n     アラントイン              ２０ ｍｇ\n     トコフェロール酢酸エステル       ５０ ｍｇ\n\n\n ａ リドカインは、まれに重篤な副作用としてショック（アナフィラキシー）\n  を生じることがある。\n ｂ グリチルレチン酸は、比較的緩和な抗炎症作用を示す成分である。\n\n ｃ アラントインは、痛みや"
+        },
+        {
+          "rubyBase": "痒",
+          "rubyText": "かゆ",
+          "sourcePage": 28
+        },
+        {
+          "text": " みを和らげることを目的として配合される局\n\n  所麻酔成分である。\n\n ｄ トコフェロール酢酸エステルは、出血を抑えることを目的として配合さ\n\n  れる止血成分である。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "正  正  誤  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  正"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  誤  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  誤  正  正"
+          }
+        ]
+      ],
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2023-043",
@@ -592,10 +639,8 @@
     {
       "id": "KSAI-2023-046",
       "year": 2023,
-      "status": "HOLD",
-      "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
-      ],
+      "status": "RUBY_PASS",
+      "reasons": [],
       "placements": [
         {
           "fieldIndex": 0,
@@ -635,7 +680,56 @@
           ],
           "sourceText": "ｄ リドカイン塩酸塩は、鼻粘膜の過敏性や痛みや痒"
         }
-      ]
+      ],
+      "questionParts": [
+        {
+          "text": "鼻炎用点鼻薬の配合成分に関する記述について、正しいものの組合せを一つ\n選べ。\n\n\n ａ ナファゾリン塩酸塩は、鼻粘膜を通っている血管を拡張させることによ\n  り、鼻粘膜の充血や腫れを和らげる。\n ｂ ケトチフェンフマル酸塩は、ヒスタミンの働きを抑えることにより、く\n  しゃみや鼻汁等の症状を緩和する。\n\n ｃ クロモグリク酸ナトリウムは、アレルギー性でない鼻炎や副鼻"
+        },
+        {
+          "rubyBase": "腔",
+          "rubyText": "くう",
+          "sourcePage": 30
+        },
+        {
+          "text": " 炎に対\n\n  しても有効である。\n\n ｄ リドカイン塩酸塩は、鼻粘膜の過敏性や痛みや"
+        },
+        {
+          "rubyBase": "痒",
+          "rubyText": "かゆ",
+          "sourcePage": 30
+        },
+        {
+          "text": " みを抑えることを目的\n\n  として配合される場合がある。"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "ａ、ｂ"
+          }
+        ],
+        [
+          {
+            "text": "ａ、ｃ"
+          }
+        ],
+        [
+          {
+            "text": "ｂ、ｃ"
+          }
+        ],
+        [
+          {
+            "text": "ｂ、ｄ"
+          }
+        ],
+        [
+          {
+            "text": "ｃ、ｄ"
+          }
+        ]
+      ],
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2023-047",
@@ -686,7 +780,7 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -773,7 +867,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2023-057",
@@ -782,7 +876,8 @@
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -817,10 +912,8 @@
     {
       "id": "KSAI-2023-062",
       "year": 2023,
-      "status": "HOLD",
-      "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
-      ],
+      "status": "RUBY_PASS",
+      "reasons": [],
       "placements": [
         {
           "fieldIndex": 0,
@@ -860,7 +953,56 @@
           ],
           "sourceText": "ｄ 胆管閉塞によりビリルビンが循環血液中に滞留すると、黄疸"
         }
-      ]
+      ],
+      "questionParts": [
+        {
+          "text": "\n 肝臓及び胆"
+        },
+        {
+          "rubyBase": "嚢",
+          "rubyText": "のう",
+          "sourcePage": 3
+        },
+        {
+          "text": " に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n ａ 腸内に放出された胆汁酸塩の大部分は、大腸で再吸収されて肝臓に戻る。\n ｂ 胆汁に含まれるビリルビンは、赤血球中のグロブリンが分解された老廃\n  物である。\n ｃ 小腸で吸収されたブドウ糖は、肝臓に運ばれてグリコーゲンとして蓄え\n  られる。\n\n ｄ 胆管閉塞によりビリルビンが循環血液中に滞留すると、黄"
+        },
+        {
+          "rubyBase": "疸",
+          "rubyText": "だん",
+          "sourcePage": 3
+        },
+        {
+          "text": " を生じる。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "正  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  誤  正  正"
+          }
+        ],
+        [
+          {
+            "text": "正  正  誤  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  誤  正"
+          }
+        ]
+      ],
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2023-063",
@@ -928,7 +1070,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2023-064",
@@ -950,7 +1092,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
@@ -980,7 +1122,8 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1032,8 +1175,8 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1103,7 +1246,7 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2023-076",
@@ -1118,7 +1261,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1127,8 +1270,8 @@
       "year": 2023,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1144,8 +1287,8 @@
       "year": 2023,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1257,15 +1400,15 @@
           }
         ]
       ],
-      "proof": "one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby"
+      "proof": "unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip"
     },
     {
       "id": "KSAI-2023-088",
       "year": 2023,
       "status": "HOLD",
       "reasons": [
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING",
-        "PDF_SPAN_GLYPH_MISMATCH"
+        "PDF_SPAN_GLYPH_MISMATCH",
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1331,7 +1474,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1460,7 +1603,7 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1477,7 +1620,7 @@
       "status": "HOLD",
       "reasons": [
         "GLYPH_AMBIGUOUS",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": []
     },
@@ -1494,7 +1637,7 @@
       "status": "HOLD",
       "reasons": [
         "FIELD_ANCHOR_NOT_UNIQUE",
-        "MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING"
+        "RUBY_ANCHOR_COUNT_MISMATCH"
       ],
       "placements": [
         {
