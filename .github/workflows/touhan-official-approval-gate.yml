@@ -27,8 +27,8 @@ jobs:
           b=Path('touroku-hanbaisha-sprint/official-kansai')
           bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
           qa=bank['questions']
-          assert len(qa)==bank['count']==3
-          assert [q['id'] for q in qa]==['KSAI-2022-001','KSAI-2022-002','KSAI-2022-004']
+          assert len(qa)==bank['count']==5
+          assert [q['id'] for q in qa]==['KSAI-2022-001','KSAI-2022-002','KSAI-2022-004','KSAI-2022-006','KSAI-2022-007']
           assert all(q['verbatimCertified'] and q['renderReady'] and not q['needsVisualReview'] for q in qa)
           assert all(len(q['choices']) in (4,5) and 0<=q['answer']<len(q['choices']) for q in qa)
           text=Path('touroku-hanbaisha-sprint/official-practice.html').read_text()
