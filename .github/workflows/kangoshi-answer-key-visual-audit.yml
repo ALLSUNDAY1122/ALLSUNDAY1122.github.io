@@ -1,0 +1,33 @@
+name: Kangoshi Answer Key and Visual Audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/scripts/key_layout_diagnostic.py'
+      - 'kangoshi-sprint/scripts/official_answer_key_audit.py'
+      - 'kangoshi-sprint/scripts/official_visual_evidence.py'
+      - '.github/workflows/kangoshi-answer-key-visual-audit.yml'
+permissions:
+  contents: read
+jobs:
+  audit-answer-key:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install extraction libraries
+        run: python -m pip install --disable-pip-version-check pymupdf
+      - name: Download official PDFs and verify existing bank
+        run: python kangoshi-sprint/scripts/run_official_pdf_audit.py
+      - name: Extract all official answer-key pages and word geometry
+        run: python kangoshi-sprint/scripts/key_layout_diagnostic.py
+      - name: Upload answer-key and text audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-answer-key-layout
+          path: kangoshi-sprint/audit/runs/
+          if-no-files-found: warn
