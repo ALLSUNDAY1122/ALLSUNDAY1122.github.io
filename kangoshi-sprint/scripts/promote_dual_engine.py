@@ -37,7 +37,7 @@ for q in fresh:
         "dualEngineAuditRun":"GitHub Actions 2026-11-24","verifier":"PyMuPDF + Poppler pdftotext -layout",
         "originalPdfGlyphControlAbsent":True,"officialKeyRetestedAgainstPdf":True}
     new.append(q);seen.add(id)
-if len(new)<1:raise ValueError("No newly passed questions; do not overwrite canonical extension")
+if len(new)<1:print("NO_NEW_PASS; preserving existing canonical verified records")
 OLD["questions"]+=new
 OLD["questions"].sort(key=lambda q:(-q["sourceExam"],q["session"],q["questionNo"]))
 OLD["count"]=len(OLD["questions"])
@@ -53,11 +53,11 @@ ext.update({"file":"verified-additions-20261124.json","canonicalSourceVerifiedCo
 M["verifiedExtension"]=ext
 MANIFEST.write_text(json.dumps(M,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
 HOLD=[{"id":x["id"],"reasons":x["reasons"],"exam":x["exam"],"session":x["session"],"number":x["number"]} for x in all_rows if x["status"]!="PASS_DUAL_ENGINE_AND_OFFICIAL_KEY" and "ALREADY_VERIFIED_CANONICAL" not in x["reasons"]]
-if len(HOLD)+len(new)+12!=480:raise ValueError("Count invariant failed")
+if len(HOLD)+len(new)+len(original)!=480:raise ValueError(f"Count invariant failed: HOLD={len(HOLD)} new={len(new)} old={len(original)}")
 A=ROOT/"audit";A.mkdir(exist_ok=True)
 (A/"dual-engine-promotion-ledger-20261124.json").write_text(json.dumps(
- {"schemaVersion":1,"newPromoted":len(new),"newIds":[x["id"] for x in new],"oldVerified":12,
+ {"schemaVersion":1,"newPromoted":len(new),"newIds":[x["id"] for x in new],"oldVerified":len(original),
  "canonicalVerified":len(OLD["questions"]),"runtimeAdditional":0,"officialKeyPdfRechecked":True,"pdfEngines":["PyMuPDF","Poppler"],
  "sourceAuditArtifact":"Workflow dual-engine-480 evidence","releaseBlocked":True,"eachItem":[byid[q["id"]] for q in new]},ensure_ascii=False,indent=2)+"\n")
 (A/"dual-engine-hold-20261124.json").write_text(json.dumps({"count":len(HOLD),"hold":HOLD,"scope":"Nonverified draft questions after 2 independent extraction engines and official key. Only these require manual review."},ensure_ascii=False,indent=2)+"\n")
-print(json.dumps({"newPromoted":len(new),"verifiedCanonicalTotal":720+len(OLD["questions"]),"extensionCount":len(OLD["questions"]),"holdForManual":len(HOLD),"alreadyVerified":12},ensure_ascii=False))
+print(json.dumps({"newPromoted":len(new),"verifiedCanonicalTotal":720+len(OLD["questions"]),"extensionCount":len(OLD["questions"]),"holdForManual":len(HOLD),"alreadyVerified":len(original)},ensure_ascii=False))
