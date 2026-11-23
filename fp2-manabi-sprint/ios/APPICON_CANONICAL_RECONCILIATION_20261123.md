@@ -29,3 +29,14 @@
 ## 解決条件
 採用版フォルダに正式FP2専用PNGを特定または正本登録し、Drive IDとSHA-256を確定する。バイト一致を検査してからのみiOSアセットを差し替え、provenanceのcanonical SHAを更新してCIをPASSにする。
 App Store Connect上の元画像の実バイトや記録済みSHAの読戻しはこの照合では未実施。App Review提出・マージ・署名Buildは行っていない。
+
+
+## 2026-11-23 18:57 JST — Muse照合結果採用・preflight再分類（先行記録を保持）
+- 所有者提供のMuse照合：コーディネーター分岐のAppIconは旧`fp2-kakomon-coach`原典とバイト一致。
+- GitHubの両パスを独立読戻し：両方のGit Blob SHAは`ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d`で完全一致（同じGit Blob＝バイト一致）。
+- 旧原典／現行アイコンのSHA-256：`d456178b2a7b04f180e39b3ad62f5c194832e85aa15102bf6452751551db8033`。
+- **内部同一性：PASS**。差し替え不要。
+- **App Store Connect上の登録済みAppIconとの一致：HUMAN-REQUIRED**。Apple側の画像／登録ハッシュを今回は検証していない。
+- 正本DriveフォルダにFP2アイコンがないという先行確認結果も維持。これを`内部一致FAIL`と同一視しない。
+- `appicon-provenance.json`、`verify-appicon.py`、Release Registry、iOS CIの分類を`INTERNAL_PASS_ASC_HUMAN_REQUIRED`へ更新した。
+- Store提出、署名・Appleへのアップロードは行っていない。
