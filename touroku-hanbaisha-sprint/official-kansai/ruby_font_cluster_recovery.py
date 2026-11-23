@@ -152,7 +152,9 @@ def certify(q,geom,doc,clips):
         for offset,a in offsets:
             parts.append({'text':clean[pos:offset]})
             # Client renderer currently accepts exactly one Kanji per ruby element.
-            if len(a['base'])!=1:return None,['MULTI_KANJI_RENDERER_NOT_CERTIFIED'],small
+            # Native HTML ruby can carry a multi-kanji base; DOM audit checks full base and reading.
+            if not re.fullmatch(r'[\u3400-\u9fff々]+',a['base']):
+                return None,['RUBY_BASE_NOT_KANJI'],small
             parts.append({'rubyBase':a['base'],'rubyText':a['reading'],'sourcePage':a['page']})
             pos=offset+len(a['base'])
         parts.append({'text':clean[pos:]})
