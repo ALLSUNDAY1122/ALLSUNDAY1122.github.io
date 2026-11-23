@@ -74,6 +74,16 @@ def parse_ocr(text,number):
         return None,"OCR_UNABLE_TO_SEGMENT_ALL_CHOICES"
     options[-1]=strip_footer(options[-1])
     return [ "".join(stem)]+options,None
+def balanced_source_brackets(text):
+    stack=[]
+    opens={"(":")","（":"）","〈":"〉","「":"」","『":"』"}
+    closes=set(opens.values())
+    for ch in text:
+        if ch in opens:stack.append(opens[ch])
+        elif ch in closes:
+            if not stack or stack.pop()!=ch:return False
+    return not stack
+
 def safe_repair(old,new):
     old=compact(strip_footer(old));new=compact(strip_footer(new))
     if not old or not new:return False,"EMPTY_FIELD",[]
@@ -184,6 +194,8 @@ def main():
         if not all(z[0] for z in comparisons):
             deny("OCR_CMAP_ONLY_FULL_FIELD_GATE_FAILED");continue
         new_text={"question":fields_a[0],"choices":fields_a[1:]}
+        if not all(balanced_source_brackets(x) for x in [new_text["question"]]+new_text["choices"]):
+            deny("OCR_UNBALANCED_OR_MIXED_BRACKET_GLYPHS");continue
         if any(ch in BAD for f in [new_text["question"]]+new_text["choices"] for ch in f):
             deny("UNRESOLVED_OCR_BAD_GLYPH");continue
         # Full exact OCR fields from two renderings must be identical and
