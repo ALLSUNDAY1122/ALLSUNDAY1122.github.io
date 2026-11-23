@@ -378,13 +378,10 @@
   },
   "latestBoundaryContextAudit": {
     "date": "2026-11-24",
-    "runId": "45280364774",
+    "runId": "45283018157",
     "source": "GitHub Actions official PDF dual engine",
-    "newPromotedInRun": 2,
-    "newIds": [
-      "K111-AM004",
-      "K111-AM055"
-    ],
+    "newPromotedInRun": 0,
+    "newIds": [],
     "currentCanonical": 984,
     "currentHeld": 216,
     "reasonCountsOverlap": true,
@@ -419,24 +416,21 @@
     "quarantinedCandidateRepairs": 5
   },
   "latestContextAndControlAudit": {
-    "runId": "45280364774",
+    "runId": "45283018157",
     "date": "2026-11-24",
     "scope": "480 source candidates, prioritize 22 reextracted",
-    "newPromoted": 2,
-    "newIds": [
-      "K111-AM004",
-      "K111-AM055"
-    ],
+    "newPromoted": 0,
+    "newIds": [],
     "currentCanonical": 984,
     "remaining": 216,
     "reextractedPendingSourcePool": 22,
     "reextractedStillHeld": 0,
     "reextractionSummary": {
-      "checked": 218,
-      "previousVerified": 262,
+      "checked": 216,
+      "previousVerified": 264,
       "sourceReextractPass": 2,
       "updated": 2,
-      "notUpdated": 216
+      "notUpdated": 214
     },
     "sources": [
       "MHLW official question PDF",
@@ -556,18 +550,18 @@
     "releaseStatus": "PREFLIGHT_BLOCKED"
   },
   "latestOcrCategoryAudit": {
-    "runId": "45280364774",
-    "checked": 218,
+    "runId": "45283018157",
+    "checked": 216,
     "categories": {
       "OFFICIAL_KEY_OR_SCORING_NOT_CLEAR": 40,
-      "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH": 94,
       "MEDIA_RIGHTS_OR_DIAGRAM_GATE": 13,
+      "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH": 92,
       "SCENARIO_CONTEXT_REQUIRES_SEPARATE_OCR_PROOF": 71
     },
     "officialDecisions": {
       "EXCEPTION_HANDLING_REQUIRED_include_if_correct_exclude_if_wrong": 2,
-      "NORMAL_KEY_CONFIRMED": 178,
       "EXCEPTION_HANDLING_REQUIRED_multiple_accepted": 3,
+      "NORMAL_KEY_CONFIRMED": 176,
       "NOT_SINGLE_OFFICIAL_KEY": 30,
       "OFFICIAL_KEY_OR_STAGED_MISMATCH": 4,
       "EXCEPTION_HANDLING_REQUIRED_excluded": 1
@@ -577,7 +571,7 @@
     "sourceOnlyReleaseBlocked": true
   },
   "latestOcrCmapRepairAudit": {
-    "runId": "45280364774",
+    "runId": "45283018157",
     "scope": 96,
     "actualSourceRepairs": 0,
     "newSourcePromoted": 0,
@@ -588,14 +582,29 @@
     "status": "SOURCE_ONLY"
   },
   "latestOcrCoordinateRepairAudit": {
-    "runId": "45280364774",
+    "runId": "45283018157",
     "scope": 46,
-    "checkedThisRun": 46,
-    "newlyPromoted": 2,
+    "checkedThisRun": 44,
+    "newlyPromoted": 0,
     "cumulativePromoted": 2,
     "remainingFrom46": 44,
     "individualProof": "kangoshi-sprint/audit/ocr-coordinate-repair-ledger-20261124.json",
     "beforeAfter": "kangoshi-sprint/product-content/ocr-coordinate-repaired-candidates-20261124.json",
+    "releaseEligible": 0,
+    "status": "SOURCE_ONLY"
+  },
+  "latestNonCmap21ImageAudit": {
+    "runId": "45283018157",
+    "originalTarget": 21,
+    "checkedThisRun": 21,
+    "newlyPromoted": 0,
+    "cumulativePromoted": 0,
+    "remainingFrom21": 21,
+    "reasons": {
+      "ONE_OR_BOTH_PDF_ENGINE_FIELDS_UNVERIFIED": 21
+    },
+    "individualProof": "kangoshi-sprint/audit/ocr-noncmap-repair-ledger-20261124.json",
+    "beforeAfter": "kangoshi-sprint/product-content/ocr-noncmap-repaired-candidates-20261124.json",
     "releaseEligible": 0,
     "status": "SOURCE_ONLY"
   }
