@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-23T23:25:00+09:00",
+  "updated_at": "2026-11-23T23:31:00+09:00",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -31,7 +31,7 @@
     "existing_canonical": 360,
     "existing_type": "独自問題（旧版）",
     "target_official": 600,
-    "verified_official_imported": 0,
+    "verified_official_imported": 3,
     "year_2023_invalid_question_review": "PASS: Q90, 解なし・受験者全員正解・模試採点から除外",
     "official_answer_keys_indexed": 600,
     "official_answer_keys_by_year": {
@@ -43,7 +43,7 @@
     },
     "official_single_answer_keys": 599,
     "official_invalid_question_count": 1,
-    "official_question_text_imported": 0,
+    "official_question_text_imported": 3,
     "answer_index_readback_pass": true,
     "official_question_pdf_binaries_downloaded": 10,
     "sha256_verified": 10,
@@ -85,13 +85,37 @@
       "five_choices": 467
     },
     "remaining_four_years_independent_visual_verified": 0,
-    "official_2022_2025_app_release_enabled": false
+    "official_2022_2025_app_release_enabled": false,
+    "independently_visual_verified": 3,
+    "manual_visual_audit": {
+      "PASS": 3,
+      "HOLD": 1,
+      "PENDING": 596,
+      "failed": 0,
+      "reviewed_year": 2022,
+      "passed_ids": [
+        "KSAI-2022-001",
+        "KSAI-2022-002",
+        "KSAI-2022-004"
+      ],
+      "held_ids": [
+        "KSAI-2022-003"
+      ]
+    },
+    "production_official_bank_path": "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json",
+    "production_official_bank_count": 3,
+    "official_preview_ui": "touroku-hanbaisha-sprint/official-practice.html",
+    "official_preview_ui_integrated_into_home": true,
+    "four_five_choices_supported_in_official_ui": true,
+    "invalid_2023_q90_scoring_implemented_in_official_ui": true,
+    "invalid_2023_q90_integrated": false,
+    "official_ui_browser_verified": false
   },
   "gates": {
     "notion_v28_full_read": "PENDING",
     "notion_submission_steps_full_read": "PENDING",
-    "official_source_import": "BLOCKED_0_OF_600_RELEASE_READY_600_STAGED",
-    "verbatim_and_answer_audit": "BLOCKED_0_OF_600_VISUAL",
+    "official_source_import": "PARTIAL_APPROVED_3_OF_600_597_BLOCKED",
+    "verbatim_and_answer_audit": "PARTIAL_3_PASS_OF_600",
     "mobile_ui": "PENDING",
     "ios_build": "PENDING",
     "internal_testflight": "PENDING",
@@ -114,7 +138,15 @@
     "remaining_four_years_pdf_sha256": "PASS_8_OF_8",
     "remaining_four_years_question_answer_mapping": "PASS_480_OF_480_STRUCTURAL",
     "remaining_four_years_choice_parsing": "PASS_480_OF_480_4_OR_5_OPTIONS",
-    "remaining_four_years_verbatim_visual_audit": "BLOCKED_0_OF_480"
+    "remaining_four_years_verbatim_visual_audit": "BLOCKED_0_OF_480",
+    "official_visual_audit": "BLOCKED_3_PASS_1_HOLD_596_PENDING",
+    "official_mobile_ui": "IMPLEMENTED_STATIC_BROWSER_VALIDATION_PENDING",
+    "official_mobile_ui_integration": "HOME_NAVIGATION_CONNECTED_TO_APPROVED_ONLY_BANK",
+    "official_2022_visual_audit": "3_PASS_1_HOLD_116_PENDING",
+    "official_2023_visual_audit": "0_PASS_120_PENDING",
+    "official_2024_visual_audit": "0_PASS_120_PENDING",
+    "official_2025_visual_audit": "0_PASS_120_PENDING",
+    "official_2026_visual_audit": "0_PASS_120_PENDING"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
@@ -146,6 +178,13 @@
     "touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2024.json",
     "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2025_RAW_STAGING.json",
     "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2025_APP_CANDIDATE.json",
-    "touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2025.json"
+    "touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2025.json",
+    "touroku-hanbaisha-sprint/official-kansai/MANUAL_VISUAL_AUDIT_20261123.json",
+    "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json",
+    "touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py",
+    "touroku-hanbaisha-sprint/official-kansai/build_audit_matrix.py",
+    "touroku-hanbaisha-sprint/official-practice.html",
+    ".github/workflows/touhan-official-approval-gate.yml",
+    ".github/workflows/touhan-audit-matrix.yml"
   ]
 }
