@@ -46,7 +46,7 @@ for row in rows:
     imgs=[]
     for asset in row["assets"]:
         file=B/asset["path"];binary=file.read_bytes()
-        assert binary[:8]==b"\\x89PNG\\r\\n\\x1a\\n" and hashlib.sha256(binary).hexdigest()==asset["sha256"]
+        assert binary[:8]==bytes([137,80,78,71,13,10,26,10]) and hashlib.sha256(binary).hexdigest()==asset["sha256"]
         with Image.open(file) as image:
             assert image.format=="PNG" and image.width==asset["width"] and image.height==asset["height"]
             assert image.width>=900 and image.height>=500
