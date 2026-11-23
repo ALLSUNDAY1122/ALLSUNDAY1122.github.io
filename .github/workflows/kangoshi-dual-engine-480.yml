@@ -5,9 +5,10 @@ on:
     paths:
       - 'kangoshi-sprint/scripts/bulk_dual_engine_verify.py'
       - 'kangoshi-sprint/scripts/build_media_comparison.py'
+      - 'kangoshi-sprint/scripts/promote_dual_engine.py'
       - '.github/workflows/kangoshi-dual-engine-480.yml'
 permissions:
-  contents: read
+  contents: write
 jobs:
   dual-engine-and-figures:
     runs-on: ubuntu-latest
@@ -38,6 +39,20 @@ jobs:
         run: python kangoshi-sprint/scripts/bulk_dual_engine_verify.py
       - name: Produce 38 side-by-side source PDF versus image comparisons
         run: python kangoshi-sprint/scripts/build_media_comparison.py
+      - name: Promote only independently verified items to nonpublishable canonical extension
+        run: python kangoshi-sprint/scripts/promote_dual_engine.py
+      - name: Persist canonical extensions and per-item PASS/HOLD evidence to GitHub main
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add kangoshi-sprint/product-content/verified-additions-20261124.json
+          git add kangoshi-sprint/product-content/manifest.json
+          git add kangoshi-sprint/audit/dual-engine-promotion-ledger-20261124.json
+          git add kangoshi-sprint/audit/dual-engine-hold-20261124.json
+          git commit -m "kangoshi: promote dual-engine verified 111/112 records while gating runtime"
+          git pull --rebase origin main
+          git push origin HEAD:main
       - name: Upload 480 record detailed gate report even when a failure occurs
         if: always()
         uses: actions/upload-artifact@v4
