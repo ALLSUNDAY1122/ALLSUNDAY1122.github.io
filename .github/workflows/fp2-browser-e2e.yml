@@ -34,7 +34,7 @@ jobs:
         run: python3 scripts/fp2_five_exam_audit_gate.py
       - name: Check all 300 selected questions and source/evidence fields
         run: python3 scripts/fp2_selected_quality_gate.py
-      - name: Generate native offline 120-only payload and verify source selection
+      - name: Generate native offline 300-only payload and verify source selection
         run: |
           python3 fp2-manabi-sprint/ios/prepare-ios.py
           python3 - <<'PY'
