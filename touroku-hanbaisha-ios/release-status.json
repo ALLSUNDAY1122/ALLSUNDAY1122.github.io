@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-24T01:27:27+09:00",
+  "updated_at": "2026-11-24T02:35:49+09:00",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -31,7 +31,7 @@
     "existing_canonical": 360,
     "existing_type": "独自問題（旧版）",
     "target_official": 600,
-    "verified_official_imported": 440,
+    "verified_official_imported": 468,
     "year_2023_invalid_question_review": "PASS: Q90, 解なし・受験者全員正解・模試採点から除外",
     "official_answer_keys_indexed": 600,
     "official_answer_keys_by_year": {
@@ -43,7 +43,7 @@
     },
     "official_single_answer_keys": 599,
     "official_invalid_question_count": 1,
-    "official_question_text_imported": 440,
+    "official_question_text_imported": 468,
     "answer_index_readback_pass": true,
     "official_question_pdf_binaries_downloaded": 10,
     "sha256_verified": 10,
@@ -119,7 +119,7 @@
       ]
     },
     "production_official_bank_path": "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json",
-    "production_official_bank_count": 440,
+    "production_official_bank_count": 468,
     "official_preview_ui": "touroku-hanbaisha-sprint/official-practice.html",
     "official_preview_ui_integrated_into_home": true,
     "four_five_choices_supported_in_official_ui": true,
@@ -677,7 +677,7 @@
         "physicalDeviceTested": false
       }
     },
-    "ruby_unconfirmed_font_cluster_review": 120,
+    "ruby_unconfirmed_font_cluster_review": 92,
     "ruby_120_visual_comparison_review": {
       "date": "2026-11-24",
       "evidence": "touroku-hanbaisha-sprint/official-kansai/RUBY_VISUAL_REVIEW_120_20261124.json",
@@ -694,26 +694,56 @@
       "note": "Do not claim individual direct viewing of remaining 113 images; sample identified systematic preview deficiency"
     },
     "ruby_comparison_repair_v2": {
+      "status": "COMPLETE_120_SCREENSHOTS_AND_28_DIRECT_VISUAL_MATCHES",
       "target": 120,
-      "previousOfficialBank": 440,
-      "script": "touroku-hanbaisha-sprint/official-kansai/rebuild_ruby_comparison_120.py",
-      "workflow": ".github/workflows/touhan-ruby-comparison-repair.yml",
+      "screenshotCountVerified": 120,
+      "comparisonPagesVerified": 120,
       "font": "Noto Sans CJK JP",
-      "markup": "real ruby/rt from PDF raw glyph and candidate text",
-      "evidence": "touroku-hanbaisha-sprint/official-kansai/RUBY_REBUILT_COMPARISON_120_20261124.json",
-      "status": "RUNNING_NOT_VERIFIED",
-      "regeneratedScreenshotCountConfirmed": 0,
-      "visuallyPassedCountConfirmed": 0,
-      "promotedCount": 0,
-      "remainingHold": 120,
-      "precedingAttemptError": "RUBY_REPAIR_ERROR_20261124.json (No script output)",
-      "originalVisualReview": "RUBY_VISUAL_REVIEW_120_20261124.json"
+      "rubyMarkupQuestionCount": 62,
+      "withoutConfidentInlineRuby": 58,
+      "visuallyComparedCleanShortlist": 32,
+      "visuallyCertified": 28,
+      "visuallyHeld": 92,
+      "newPromotions": 28,
+      "promotedIds": [
+        "KSAI-2022-003",
+        "KSAI-2022-019",
+        "KSAI-2022-043",
+        "KSAI-2022-047",
+        "KSAI-2022-055",
+        "KSAI-2022-066",
+        "KSAI-2023-003",
+        "KSAI-2023-008",
+        "KSAI-2023-024",
+        "KSAI-2023-025",
+        "KSAI-2023-029",
+        "KSAI-2023-078",
+        "KSAI-2023-080",
+        "KSAI-2023-088",
+        "KSAI-2023-097",
+        "KSAI-2024-010",
+        "KSAI-2024-046",
+        "KSAI-2024-063",
+        "KSAI-2024-066",
+        "KSAI-2025-021",
+        "KSAI-2025-033",
+        "KSAI-2025-075",
+        "KSAI-2025-082",
+        "KSAI-2025-119",
+        "KSAI-2025-120",
+        "KSAI-2026-052",
+        "KSAI-2026-078",
+        "KSAI-2026-090"
+      ],
+      "comparisonEvidence": "touroku-hanbaisha-sprint/official-kansai/RUBY_REBUILT_COMPARISON_120_20261124.json",
+      "visualAudit": "touroku-hanbaisha-sprint/official-kansai/RUBY_VISUAL_REAUDIT_V2_20261124.json",
+      "visualHoldNote": "4 table-heavy visually inspected cases and 88 ambiguous/not directly certified cases remain HOLD"
     }
   },
   "gates": {
     "notion_v28_full_read": "PENDING",
     "notion_submission_steps_full_read": "PENDING",
-    "official_source_import": "PARTIAL_APPROVED_440_OF_600",
+    "official_source_import": "PARTIAL_APPROVED_468_OF_600",
     "verbatim_and_answer_audit": "AUTO_88_GEOMETRY_215_RUBY_51_ORDERED_5_LAYOUT_13_VISUAL_14_REMAINING_214",
     "mobile_ui": "PENDING",
     "ios_build": "PENDING",
@@ -763,7 +793,7 @@
     "ordered_ruby_source_alignment": "PASS_WITH_EXPLICIT_AMBIGUOUS_HOLDS",
     "official_pdf_region_crop": "STAGED_49_QUESTIONS_WITH_HASH_AND_COORDS",
     "official_pdf_image_app_release": "BLOCKED_RIGHTS_AND_VISUAL_QA",
-    "ruby_visual_comparison_v2": "RUNNING_NO_VERIFIED_SCREENSHOTS"
+    "ruby_visual_comparison_v2": "PASS_120_SCREENSHOTS_28_VISUAL_PROMOTION_92_HOLD"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
@@ -846,6 +876,9 @@
     "touroku-hanbaisha-sprint/official-kansai/CROP_INDEPENDENT_QA_20261124.json",
     "touroku-hanbaisha-sprint/official-kansai/RUBY_FONT_CLUSTER_ALL_20261124.json",
     "touroku-hanbaisha-sprint/official-kansai/RUBY_FONT_DOM_QA_20261124.json",
-    "touroku-hanbaisha-sprint/official-kansai/RUBY_VISUAL_REVIEW_120_20261124.json"
+    "touroku-hanbaisha-sprint/official-kansai/RUBY_VISUAL_REVIEW_120_20261124.json",
+    "touroku-hanbaisha-sprint/official-kansai/RUBY_REBUILT_COMPARISON_120_20261124.json",
+    "touroku-hanbaisha-sprint/official-kansai/RUBY_VISUAL_REAUDIT_V2_20261124.json",
+    "touroku-hanbaisha-sprint/official-kansai/RUBY_VISUAL_SHORTLIST_V2.json"
   ]
 }
