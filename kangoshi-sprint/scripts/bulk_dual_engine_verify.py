@@ -36,6 +36,7 @@ from boundary_context_verify import verify as verify_boundary
 keys={e:read_official_key(e) for e in (111,112)}
 VISUAL={x["id"]:x for x in json.loads((ROOT/"audit/visual-glyph-confirmation-20261124.json").read_text())["items"]}
 VISUAL_DIR=ROOT/"audit/runs/context-control-visual-20261124"
+SCENARIO_VISUAL={x["id"]:x for x in json.loads((ROOT/"audit/visual-scenario-parentheses-20261124.json").read_text())["items"]}
 all_rows=[];approved=[];by_session={}
 for exam in (112,111):
   for session in ("AM","PM"):
@@ -64,6 +65,15 @@ for exam in (112,111):
                 and q["choices"][ix]==ev["expectedChoice"]
                 and q.get("visualGlyphProof",{}).get("pngSha256")==ev["pngSha256"]):
                 visual=ev
+        scenario_visual=None
+        if qid in SCENARIO_VISUAL:
+            ev=SCENARIO_VISUAL[qid]
+            screenshot=VISUAL_DIR/f"{qid}-p{ev['contextPage']}.png"
+            if (ev["exam"]==exam and ev["session"]==session and ev["contextPage"]<=pg
+                and hashlib.sha256(pdf.read_bytes()).hexdigest()==ev["sourcePdfSha256"]
+                and screenshot.is_file()
+                and hashlib.sha256(screenshot.read_bytes()).hexdigest()==ev["contextPngSha256"]):
+                scenario_visual=ev
         # Independent scenario context validation happens below.
         if qid in exceptions or q.get("officialScoringStatus")!="normal":failures.append("SCORING_EXCEPTION")
         if not q.get("extractionValid",False):failures.append("ORIGINAL_STRUCTURE_INVALID")
@@ -87,7 +97,8 @@ for exam in (112,111):
         else:
             verified_page, boundary_errors, scenario_evidence, geometry, coordinate_segment=verify_boundary(
                 doc,pdf,n,pg,stem,choices,cached_pdftotext,clean_font,norm,
-                visually_verified_fields={visual["choiceIndex"]+1} if visual else set())
+                visually_verified_fields={visual["choiceIndex"]+1} if visual else set(),
+                context_glyph_evidence=scenario_visual)
             if verified_page is not None:
                 boundary_evidence={"previousPage":pg,"correctedPage":verified_page,**(geometry or {})}
                 pg=verified_page
@@ -116,7 +127,7 @@ for exam in (112,111):
         failures=list(dict.fromkeys(failures))
         status="PASS_DUAL_ENGINE_AND_OFFICIAL_KEY" if not failures else "HOLD"
         row={"id":qid,"exam":exam,"session":session,"number":n,"status":status,"reasons":failures,"sourcePdfPage":pg,"pageHasRaster":media_in_page,
-            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),"coordinateBoundaryEvidence":boundary_evidence,"scenarioContext":scenario_evidence,"visualNumericGlyphEvidence":visual,
+            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),"coordinateBoundaryEvidence":boundary_evidence,"scenarioContext":scenario_evidence,"visualNumericGlyphEvidence":visual,"visualScenarioGlyphEvidence":scenario_visual,
             "sourcePdfSha256":hashlib.sha256(pdf.read_bytes()).hexdigest()}
         rows.append(row);all_rows.append(row)
         if status.startswith("PASS"):
