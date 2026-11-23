@@ -22,6 +22,8 @@ private enum Palette {
 }
 
 struct HomeView: View {
+    @State private var dailyCount = 8
+
     private let domains = [
         StudyDomain(id: "strategy", title: "ストラテジ系"),
         StudyDomain(id: "management", title: "マネジメント系"),
@@ -67,13 +69,20 @@ struct HomeView: View {
     }
 
     private var todayCard: some View {
-        let daily = QuestionStore.daily(limit: 8)
+        let daily = QuestionStore.daily(limit: dailyCount)
         return VStack(alignment: .leading, spacing: 10) {
             Text("今日の学習")
                 .font(.system(size: 21, weight: .bold, design: .serif))
-            Text("3分野を交互に8問。まずは短い1セットから。")
+            Text("片手でも進めやすい短時間学習。今日の問題数を選べます。")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+            Picker("問題数", selection: $dailyCount) {
+                Text("4問").tag(4)
+                Text("8問").tag(8)
+                Text("16問").tag(16)
+            }
+            .pickerStyle(.segmented)
+            .accessibilityLabel("今日の学習の問題数")
             NavigationLink {
                 QuizView(title: "今日のスプリント", questions: daily)
             } label: {
