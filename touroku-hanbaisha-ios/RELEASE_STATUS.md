@@ -1280,3 +1280,12 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 全78問を一括で原寸・個別PASSしたとの判断はしない。**新規昇格0・HOLD78**。問題ID別警告、原典画像と候補画像の参照、確認方法を `official-kansai/RUBY_V2_78_FOLLOWUP_VISUAL_20261124.json` に保存。
 - 別系統45問の比較画像は追加生成済み。そのうち10問は直接目視と20件のChromium QAを経て正式昇格済みで、残35問は警告付きHOLD。
 - 全体正式バンク **486/600問（未昇格114問＝V2ルビ78＋追加ルビ35＋2023問90公式無効1）**。審査送信なし、release_gate BLOCKED、iOS実機未試験。
+
+
+## 2026-11-24：ルビ113問・独立トリアージと高解像度直接比較（現セッション）
+- GitHub正本を再取得。正式バンク **486/600問**、未昇格114問＝V2ルビ78＋追加ルビ35＋2023年問90公式無効1。申請ゲートBLOCKED、App Review未送信。
+- 113 IDを重複なく再照合し、既存抽出警告を種類別集計（複数理由あり）：`SOURCE_GLYPH_GEOMETRY_AMBIGUOUS` 71、`TEXT_FIELD_OR_BASE_AMBIGUOUS` 91、`READING_LINES_OVERLAP` 3。
+- 高解像度原典PNGと候補PNGを直接比較したのは **3問**（KSAI-2022-023、KSAI-2023-019、KSAI-2024-093）。いずれも候補の読みが独立行へ分離するなどルビ位置不一致で **FAIL 3**。113問全件を直接目視したとは記録しない。
+- ほか110問は既存の証拠台帳に基づく警告分類のみで個別直接目視未了。新規PASS **0**、昇格 **0**、ルビHOLD **113**。正式バンク486問を維持。個別比較の新規画像生成は未実施。画像取得と個別照合を完了しない段階でPASSにしない。
+- ID別の原典・候補画像パス、警告、個別目視の有無、不一致の記録：`touroku-hanbaisha-sprint/official-kansai/RUBY_113_INDEPENDENT_TRIAGE_20261124.json`。
+- Apple 2FA、契約、課金、実機確認、App Review最終送信は実施しない。
