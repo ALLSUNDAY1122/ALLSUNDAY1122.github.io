@@ -97,12 +97,4 @@
 - 主要保留理由（重複）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 263, COORDINATE_REGION_UNVERIFIED 263, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 176, PYMUPDF_FIELD_MISMATCH_0 172, PAGE_FOOTER_CONTAMINATION 143, POPPLER_FIELD_MISMATCH_0 137, PYMUPDF_FIELD_MISMATCH_4 108, CHOICE_COUNT_NOT_FOUR 91, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 46, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
 - SVG18件は原典との比較画像を再生成するが、画像の意味・医学的所見の忠実性は自動合格にしない。**18件の詳細視覚確認が残存**。
 - 解説・媒体権利・実機確認・本審査の公開ゲートは引き続き保留。
-
-## 座標領域からの独立再抽出（Run 45249375273）
-
-- 対象は残る312問。PyMuPDF座標クリップとPopplerページ全文の独立問題区切りから問題文・4選択肢を再生成し、正答PDFと採点例外を追加照合。
-- **2方式による再抽出一致22問**、候補データからの本文・選択肢修正差分**5問**、今回の正規ソースバンク昇格**0問**。残り**312問**。
-- 修正差分の5問：`K112-AM073`、`K112-AM095`、`K112-PM017`、`K112-PM052`、`K111-AM094`。変更前後・座標・未解除理由は `audit/coordinate-reextraction-evidence-20261124.json` に記録。再抽出済み22問の保留候補正本は `product-content/coordinate-reextracted-pending-20261124.json` に保存（5問の補正本文・選択肢を反映済み、全問 `publishable=false` / `releaseEligible=false`）。
-- この5問も未確定制御文字または状況設定の共通文未確認が残るため、昇格・公開を見送った。再抽出済み22問のうち残り17問も状況設定の共通文確認が未完了。
-- **留意：正規ソースバンク888問は今回の追加昇格0問を含む現行値**。候補データの修正記録と正式昇格を混同しない。
-- 公開・実機・権利・審査ゲートは変更なし：`PREFLIGHT_BLOCKED`。
+\n## 状況設定共通文・制御文字の再監査（2026-11-24）\n\n- 新規正規ソース昇格：**0問**。現行 **888/1,200問**、未昇格 **312問**。\n- 先行再抽出22問のうち未昇格：**22問**。本文2方式一致の事実と、制御文字・状況設定共通文の最終ゲートは区別。\n- 全残件の保留理由（重複）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 263, COORDINATE_REGION_UNVERIFIED 263, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 176, PYMUPDF_FIELD_MISMATCH_0 172, PAGE_FOOTER_CONTAMINATION 143, POPPLER_FIELD_MISMATCH_0 137, PYMUPDF_FIELD_MISMATCH_4 108, CHOICE_COUNT_NOT_FOUR 91, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 46。\n- 正本：`audit/dual-engine-promotion-ledger-20261124.json`、`audit/dual-engine-hold-20261124.json`、`audit/coordinate-reextraction-evidence-20261124.json`。権利・解説・iOS・本審査のゲートは引き続き閉鎖。\n
