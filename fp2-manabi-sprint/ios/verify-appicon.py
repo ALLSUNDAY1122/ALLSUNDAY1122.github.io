@@ -5,7 +5,7 @@ import json
 import struct
 from pathlib import Path
 
-repo = Path(__file__).resolve().parents[3]
+repo = Path(__file__).resolve().parents[2]
 record = json.loads((repo / "fp2-manabi-sprint/ios/appicon-provenance.json").read_text())
 asset = repo / record["current_icon_path"]
 data = asset.read_bytes()
