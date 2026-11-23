@@ -18,7 +18,8 @@ def context_for_group(text, number):
     """Detect an explicit common case passage immediately preceding its first item."""
     lines=text.splitlines()
     markers=[i for i,s in enumerate(lines) if re.search(r"次の文を読み|次の文章を読み|次の事例を読み|次の文を読んで|次の事例について",s)]
-    here=number_lines(text,number)
+    group_first=91+3*((number-91)//3)
+    here=number_lines(text,group_first)
     if not markers or not here:
         return None
     idx=here[0]
@@ -48,7 +49,7 @@ def verify(doc, pdf, n, page_hint, stem, choices, poppler_text, clean_font, norm
     if n>=91:
         # No blanket PASS for a scenario: common case passage must match two engines.
         candidates=[]
-        for p in (pg-1,pg):
+        for p in range(max(1,pg-3),pg+1):
             if p<1:continue
             f=clean_font(doc[p-1].get_text("text",sort=False))
             alt=clean_font(poppler_text(pdf,p))
