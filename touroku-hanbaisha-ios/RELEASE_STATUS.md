@@ -1331,3 +1331,10 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 実測：102問中PASS 26、残HOLD 76。正式バンク 523/600。現mainのバンクが以前の497から468へ戻っていたため、承認済み497問の歴史的コミット(473f978287f80e2d7e2fd067936b359d20fab8c3)と現mainの和集合で承認済み29問を復旧（重複IDなし）。
 - HOLD理由（重複あり）：{"SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH": 76}。監査台帳：\`official-kansai/RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json\`。
 - 2023年問90の公式無効問題は未昇格。公開判定BLOCKED、Apple実機・App Review最終送信未実施。
+
+
+## 2026-11-24：未確定102問の原典ルビ順序独立表示
+- ユーザー指定によって漢字への推定紐付けを廃止。PDFの生文字情報で抽出したルビをページ・Y・X座標順に独立表示し、正規候補中の重複独立かな行のみ削除。原文と旧HOLDは証跡に保持。
+- 実測：102問中今回PASS 76、累計PASS 102、残HOLD 0。正式バンク 599/600。現mainのバンクが以前の497から468へ戻っていたため、承認済み497問の歴史的コミット(473f978287f80e2d7e2fd067936b359d20fab8c3)と現mainの和集合で承認済み0問を復旧（重複IDなし）。
+- HOLD理由（重複あり）：{}。監査台帳：\`official-kansai/RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json\`。
+- 2023年問90の公式無効問題は未昇格。公開判定BLOCKED、Apple実機・App Review最終送信未実施。

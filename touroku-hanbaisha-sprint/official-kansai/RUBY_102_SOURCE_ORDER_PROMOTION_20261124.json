@@ -1,67 +1,35 @@
 {
-  "timestamp": "2026-11-24T07:51:37+09:00",
+  "timestamp": "2026-11-24T07:56:03+09:00",
   "policy": "SOURCE_ORDER_UNATTACHED",
-  "historicalRestoreIds": [
-    "KSAI-2022-005",
-    "KSAI-2022-008",
-    "KSAI-2022-010",
-    "KSAI-2022-011",
-    "KSAI-2022-029",
-    "KSAI-2022-104",
-    "KSAI-2023-019",
-    "KSAI-2023-051",
-    "KSAI-2023-059",
-    "KSAI-2023-064",
-    "KSAI-2023-067",
-    "KSAI-2024-004",
-    "KSAI-2024-025",
-    "KSAI-2024-028",
-    "KSAI-2024-040",
-    "KSAI-2024-060",
-    "KSAI-2024-069",
-    "KSAI-2024-093",
-    "KSAI-2025-003",
-    "KSAI-2025-044",
-    "KSAI-2025-047",
-    "KSAI-2025-052",
-    "KSAI-2025-074",
-    "KSAI-2026-011",
-    "KSAI-2026-025",
-    "KSAI-2026-028",
-    "KSAI-2026-034",
-    "KSAI-2026-036",
-    "KSAI-2026-080"
-  ],
-  "historicalRestoreCount": 29,
-  "startCurrent": 468,
+  "historicalRestoreIds": [],
+  "historicalRestoreCount": 0,
+  "startCurrent": 523,
   "sourceBank497Sha": "473f978287f80e2d7e2fd067936b359d20fab8c3",
   "sourceHolds": 102,
-  "promoted": 26,
-  "held": 76,
-  "canonicalCount": 523,
+  "alreadyApproved": 26,
+  "promoted": 76,
+  "cumulativePromoted": 102,
+  "held": 0,
+  "canonicalCount": 599,
   "byYear": {
-    "2022": 103,
-    "2023": 112,
-    "2024": 104,
-    "2025": 101,
-    "2026": 103
+    "2022": 120,
+    "2023": 119,
+    "2024": 120,
+    "2025": 120,
+    "2026": 120
   },
-  "reasonCountsNonExclusive": {
-    "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH": 76
-  },
+  "reasonCountsNonExclusive": {},
   "records": [
     {
       "id": "KSAI-2022-023",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "かっこんとう",
@@ -108,8 +76,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "かっこんとう": 1,
           "まおうとう": 1,
           "こうそさん": 1,
@@ -118,80 +86,20 @@
         "detachedInCandidate": {
           "かっこんとう": 1,
           "こうそさん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2022-024",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "RUBY_GROUP_SOURCE_NONUNIQUE",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "しゃくやくかんぞうとう",
-          "page": 16,
-          "bbox": [
-            121.1,
-            150.27,
-            187.1,
-            156.27
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "おう",
-          "page": 16,
-          "bbox": [
-            356.59,
-            170.19,
-            368.59,
-            176.19
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "そけいかっけつとう",
-          "page": 16,
-          "bbox": [
-            121.46,
-            210.27,
-            180.81,
-            216.27
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "まきょうよくかんとう",
-          "page": 16,
-          "bbox": [
-            121.1,
-            250.23,
-            181.1,
-            256.23
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "ちょうとうさん",
-          "page": 16,
-          "bbox": [
-            121.1,
-            290.22,
-            163.1,
-            296.22
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 5
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2022-031",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
@@ -200,9 +108,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "せき",
@@ -381,8 +287,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "せき": 4,
           "たん": 1,
           "まきょうかんせきとう": 1,
@@ -397,77 +303,26 @@
         "detachedInCandidate": {
           "がいそう": 1,
           "ばくもんどうとう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 16
     },
     {
       "id": "KSAI-2022-034",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "しゃ",
-          "page": 22,
-          "bbox": [
-            170.06,
-            101.31,
-            182.06,
-            107.31
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "れん",
-          "page": 22,
-          "bbox": [
-            486.22,
-            157.59,
-            498.22,
-            163.59
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "しゃ",
-          "page": 22,
-          "bbox": [
-            169.1,
-            177.63,
-            181.1,
-            183.63
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "もっしょくし",
-          "page": 22,
-          "bbox": [
-            133.58,
-            270.3,
-            169.58,
-            276.3
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 4
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2022-035",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "しゃ",
@@ -536,125 +391,34 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "しゃ": 3,
           "ふん": 3
         },
         "detachedInCandidate": {
           "しゃ": 3,
           "ふん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2022-040",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "じ",
-          "page": 27,
-          "bbox": [
-            258.17,
-            101.31,
-            264.17,
-            107.31
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "じ",
-          "page": 27,
-          "bbox": [
-            196.13,
-            121.35,
-            202.13,
-            127.35
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "じ",
-          "page": 27,
-          "bbox": [
-            148.1,
-            335.82,
-            154.1,
-            341.82
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 3
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2022-052",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "のう",
-          "page": 37,
-          "bbox": [
-            121.46,
-            102.27,
-            133.46,
-            108.27
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "のう",
-          "page": 37,
-          "bbox": [
-            316.03,
-            157.59,
-            328.03,
-            163.59
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "くう",
-          "page": 37,
-          "bbox": [
-            316.03,
-            230.19,
-            328.03,
-            236.19
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "くう",
-          "page": 37,
-          "bbox": [
-            486.34,
-            270.3,
-            498.34,
-            276.3
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 4
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2022-057",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
@@ -662,9 +426,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "おうれんげどくとう",
@@ -722,8 +484,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "おうれんげどくとう": 1,
           "せいじょうぼうふうとう": 1,
           "ぼうふうつうしょうさん": 1,
@@ -734,20 +496,20 @@
           "せいじょうぼうふうとう": 1,
           "ぼうふうつうしょうさん": 1,
           "だいさいことう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 5
     },
     {
       "id": "KSAI-2022-062",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "わん",
@@ -805,8 +567,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "わん": 2,
           "すい": 2,
           "じゅう": 1
@@ -814,21 +576,21 @@
         "detachedInCandidate": {
           "すい": 1,
           "じゅう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 5
     },
     {
       "id": "KSAI-2022-067",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "くう",
@@ -908,84 +670,32 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "くう": 7
         },
         "detachedInCandidate": {
           "くう": 2
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 7
     },
     {
       "id": "KSAI-2022-072",
+      "status": "ALREADY_APPROVED",
+      "reasons": [],
+      "previouslyApproved": true
+    },
+    {
+      "id": "KSAI-2022-075",
       "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "せつ",
-          "page": 7,
-          "bbox": [
-            169.08,
-            413.65,
-            181.08,
-            419.65
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "しょう",
-          "page": 7,
-          "bbox": [
-            408.24,
-            486.25,
-            426.24,
-            492.25
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "せつ",
-          "page": 7,
-          "bbox": [
-            193.08,
-            546.25,
-            205.08,
-            552.25
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "せつ",
-          "page": 7,
-          "bbox": [
-            473.88,
-            566.29,
-            485.88,
-            572.29
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 4
-    },
-    {
-      "id": "KSAI-2022-075",
-      "status": "HOLD",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
       "rawSourceRubies": [
         {
           "reading": "けん",
@@ -1021,29 +731,29 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "けん": 1,
           "そうよう": 1,
           "だん": 1
         },
         "detachedInCandidate": {
           "だん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2022-077",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "おう",
@@ -1090,8 +800,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "おう": 1,
           "かん": 1,
           "ざ": 1,
@@ -1099,68 +809,25 @@
         },
         "detachedInCandidate": {
           "おう": 1
-        }
-      }
-    },
-    {
-      "id": "KSAI-2022-079",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
-      "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "こう",
-          "page": 11,
-          "bbox": [
-            243.0,
-            136.09,
-            255.0,
-            142.09
-          ],
-          "fontSize": 6.0
         },
-        {
-          "reading": "ぼうこう",
-          "page": 11,
-          "bbox": [
-            165.72,
-            156.01,
-            189.72,
-            162.01
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "とう",
-          "page": 11,
-          "bbox": [
-            414.48,
-            228.61,
-            426.48,
-            234.61
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "ぼうこう",
-          "page": 11,
-          "bbox": [
-            109.08,
-            248.65,
-            133.08,
-            254.65
-          ],
-          "fontSize": 6.0
-        }
-      ],
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
       "readingCount": 4
     },
     {
+      "id": "KSAI-2022-079",
+      "status": "ALREADY_APPROVED",
+      "reasons": [],
+      "previouslyApproved": true
+    },
+    {
       "id": "KSAI-2022-087",
+      "status": "ALREADY_APPROVED",
+      "reasons": [],
+      "previouslyApproved": true
+    },
+    {
+      "id": "KSAI-2022-119",
       "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -1169,44 +836,6 @@
         "RUBY_MAPPING_UNCERTIFIED"
       ],
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "ぼう",
-          "page": 15,
-          "bbox": [
-            438.48,
-            152.41,
-            450.48,
-            158.41
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "ぼう",
-          "page": 15,
-          "bbox": [
-            145.08,
-            192.37,
-            157.08,
-            198.37
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 2
-    },
-    {
-      "id": "KSAI-2022-119",
-      "status": "HOLD",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
       "rawSourceRubies": [
         {
           "reading": "がい",
@@ -1242,20 +871,22 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "がい": 1,
           "たん": 1,
           "けん": 1
         },
         "detachedInCandidate": {
           "けん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2023-027",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
@@ -1263,9 +894,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "かみきひとう",
@@ -1323,8 +952,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "かみきひとう": 1,
           "き": 1,
           "よくかんさん": 1,
@@ -1333,194 +962,39 @@
         },
         "detachedInCandidate": {
           "かん": 1
-        }
-      }
-    },
-    {
-      "id": "KSAI-2023-031",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "BASE_LITERAL_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
-      "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "がいそう",
-          "page": 21,
-          "bbox": [
-            425.64,
-            150.25,
-            449.64,
-            156.25
-          ],
-          "fontSize": 6.0
         },
-        {
-          "reading": "がい",
-          "page": 21,
-          "bbox": [
-            181.08,
-            170.17,
-            193.08,
-            176.17
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "き",
-          "page": 21,
-          "bbox": [
-            489.36,
-            222.85,
-            495.36,
-            228.85
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "たん",
-          "page": 21,
-          "bbox": [
-            133.08,
-            282.85,
-            145.08,
-            288.85
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 4
-    },
-    {
-      "id": "KSAI-2023-034",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
-      "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "しゃ",
-          "page": 23,
-          "bbox": [
-            170.04,
-            101.29,
-            182.04,
-            107.29
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "しゃ",
-          "page": 23,
-          "bbox": [
-            253.08,
-            157.57,
-            265.08,
-            163.57
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "しゃ",
-          "page": 23,
-          "bbox": [
-            303.72,
-            266.53,
-            315.72,
-            272.53
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 3
-    },
-    {
-      "id": "KSAI-2023-035",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
-      "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "しゃ",
-          "page": 24,
-          "bbox": [
-            97.08,
-            101.29,
-            109.08,
-            107.29
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "ふん",
-          "page": 24,
-          "bbox": [
-            450.36,
-            137.65,
-            462.36,
-            143.65
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "しゃ",
-          "page": 24,
-          "bbox": [
-            255.12,
-            177.61,
-            267.12,
-            183.61
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "ふん",
-          "page": 24,
-          "bbox": [
-            364.56,
-            250.21,
-            376.56,
-            256.21
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "しゃ",
-          "page": 24,
-          "bbox": [
-            229.08,
-            270.25,
-            241.08,
-            276.25
-          ],
-          "fontSize": 6.0
-        }
-      ],
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
       "readingCount": 5
     },
     {
+      "id": "KSAI-2023-031",
+      "status": "ALREADY_APPROVED",
+      "reasons": [],
+      "previouslyApproved": true
+    },
+    {
+      "id": "KSAI-2023-034",
+      "status": "ALREADY_APPROVED",
+      "reasons": [],
+      "previouslyApproved": true
+    },
+    {
+      "id": "KSAI-2023-035",
+      "status": "ALREADY_APPROVED",
+      "reasons": [],
+      "previouslyApproved": true
+    },
+    {
       "id": "KSAI-2023-053",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "のう",
@@ -1567,20 +1041,22 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "のう": 2,
           "うしょく": 2
         },
         "detachedInCandidate": {
           "のう": 2,
           "ナトリウム": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2023-057",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
@@ -1588,9 +1064,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "ぼうふうつうしょうさん",
@@ -1615,98 +1089,39 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "ぼうふうつうしょうさん": 1,
           "はん": 1
         },
         "detachedInCandidate": {
           "はん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 2
     },
     {
       "id": "KSAI-2023-074",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "こう",
-          "page": 9,
-          "bbox": [
-            133.08,
-            495.13,
-            145.08,
-            501.13
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "こう",
-          "page": 9,
-          "bbox": [
-            201.72,
-            567.73,
-            213.72,
-            573.73
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 2
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2023-115",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "BASE_LITERAL_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "せつ",
-          "page": 34,
-          "bbox": [
-            426.36,
-            168.61,
-            438.36,
-            174.61
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "こう",
-          "page": 34,
-          "bbox": [
-            193.08,
-            241.21,
-            205.08,
-            247.21
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 2
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2023-119",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "がい",
@@ -1742,28 +1157,28 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "がい": 1,
           "たん": 1,
           "しゃ": 1
         },
         "detachedInCandidate": {
           "しゃ": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2024-022",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "たん",
@@ -1777,18 +1192,20 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "たん": 1
         },
         "detachedInCandidate": {
           "メチルエフェドリン": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 1
     },
     {
       "id": "KSAI-2024-026",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
@@ -1796,9 +1213,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "ごしゅゆとう",
@@ -1878,8 +1293,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "ごしゅゆとう": 1,
           "おう": 1,
           "ちょうとうさん": 1,
@@ -1890,12 +1305,14 @@
         "detachedInCandidate": {
           "おう": 1,
           "けいれん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 7
     },
     {
       "id": "KSAI-2024-030",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
@@ -1903,9 +1320,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "き",
@@ -1974,8 +1389,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "き": 1,
           "けん": 1,
           "けいしかしゃくやくとう": 1,
@@ -1986,21 +1401,21 @@
         "detachedInCandidate": {
           "き": 1,
           "けん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2024-032",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "くう",
@@ -2080,67 +1495,28 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "くう": 4,
           "そう": 3
         },
         "detachedInCandidate": {
           "そう": 1,
           "くう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 7
     },
     {
       "id": "KSAI-2024-035",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "しゃ",
-          "page": 24,
-          "bbox": [
-            109.08,
-            379.57,
-            121.08,
-            385.57
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "れん",
-          "page": 24,
-          "bbox": [
-            279.48,
-            495.85,
-            291.48,
-            501.85
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "しゃ",
-          "page": 24,
-          "bbox": [
-            301.08,
-            536.77,
-            313.08,
-            542.77
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 3
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2024-037",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -2148,9 +1524,7 @@
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "しゃ",
@@ -2219,29 +1593,29 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "しゃ": 4,
           "かん": 2
         },
         "detachedInCandidate": {
           "しゃ": 3,
           "かん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2024-043",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "かみしょうようさん",
@@ -2299,8 +1673,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "かみしょうようさん": 1,
           "とうかくじょうきとう": 1,
           "うんけいとう": 1,
@@ -2309,12 +1683,14 @@
         },
         "detachedInCandidate": {
           "しん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 5
     },
     {
       "id": "KSAI-2024-045",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -2322,9 +1698,7 @@
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "くう",
@@ -2360,19 +1734,21 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "くう": 2,
           "のう": 1
         },
         "detachedInCandidate": {
           "くう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2024-052",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
@@ -2380,9 +1756,7 @@
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "のう",
@@ -2429,27 +1803,27 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "のう": 2,
           "うしょく": 2
         },
         "detachedInCandidate": {
           "のう": 2
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2024-062",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "くう",
@@ -2485,28 +1859,28 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "くう": 2,
           "えん": 1
         },
         "detachedInCandidate": {
           "えん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2024-067",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "くう",
@@ -2608,28 +1982,28 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "くう": 8,
           "ほこり": 1
         },
         "detachedInCandidate": {
           "くう": 2
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 9
     },
     {
       "id": "KSAI-2024-072",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "せつ",
@@ -2687,27 +2061,27 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "せつ": 5
         },
         "detachedInCandidate": {
           "せつ": 3
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 5
     },
     {
       "id": "KSAI-2024-075",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "けん",
@@ -2765,8 +2139,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "けん": 1,
           "だん": 2,
           "しん": 1,
@@ -2774,12 +2148,14 @@
         },
         "detachedInCandidate": {
           "だん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 5
     },
     {
       "id": "KSAI-2024-078",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -2787,9 +2163,7 @@
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "せき",
@@ -2858,8 +2232,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "せき": 2,
           "たん": 1,
           "ぜん": 2,
@@ -2868,20 +2242,20 @@
         "detachedInCandidate": {
           "せき": 1,
           "ぜん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2024-079",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "せき",
@@ -2917,80 +2291,34 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "せき": 1,
           "たん": 1,
           "き": 1
         },
         "detachedInCandidate": {
           "き": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2024-088",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "ぼう",
-          "page": 19,
-          "bbox": [
-            336.24,
-            159.73,
-            348.24,
-            165.73
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "ぼう",
-          "page": 19,
-          "bbox": [
-            380.52,
-            219.73,
-            392.52,
-            225.73
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 2
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2024-115",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "もっしょくし",
-          "page": 38,
-          "bbox": [
-            133.32,
-            208.5,
-            168.84,
-            214.02
-          ],
-          "fontSize": 5.52
-        }
-      ],
-      "readingCount": 1
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2025-022",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
@@ -2999,9 +2327,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "かっこんとう",
@@ -3081,8 +2407,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "かっこんとう": 1,
           "さいこけいしとう": 1,
           "しょうせいりゅうとう": 1,
@@ -3093,12 +2419,14 @@
         },
         "detachedInCandidate": {
           "ぜん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 7
     },
     {
       "id": "KSAI-2025-028",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
@@ -3106,9 +2434,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "さんそうにんとう",
@@ -3188,8 +2514,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "さんそうにんとう": 1,
           "かみきひとう": 1,
           "かん": 1,
@@ -3201,12 +2527,14 @@
           "かん": 1,
           "き": 1,
           "けん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 7
     },
     {
       "id": "KSAI-2025-030",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -3214,9 +2542,7 @@
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "がい",
@@ -3274,8 +2600,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "がい": 2,
           "たん": 1,
           "せき": 1,
@@ -3283,12 +2609,14 @@
         },
         "detachedInCandidate": {
           "がい": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 5
     },
     {
       "id": "KSAI-2025-031",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -3296,9 +2624,7 @@
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "くう",
@@ -3389,8 +2715,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "くう": 2,
           "そう": 4,
           "がい": 1,
@@ -3398,69 +2724,20 @@
         },
         "detachedInCandidate": {
           "そう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 8
     },
     {
       "id": "KSAI-2025-034",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "しゃ",
-          "page": 27,
-          "bbox": [
-            97.08,
-            427.21,
-            109.08,
-            433.21
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "ふん",
-          "page": 27,
-          "bbox": [
-            438.36,
-            467.17,
-            450.36,
-            473.17
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "ふん",
-          "page": 27,
-          "bbox": [
-            193.08,
-            487.21,
-            205.08,
-            493.21
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "ふん",
-          "page": 27,
-          "bbox": [
-            437.52,
-            547.21,
-            449.52,
-            553.21
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 4
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2025-053",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -3469,9 +2746,7 @@
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "そしゃく",
@@ -3518,20 +2793,22 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "そしゃく": 1,
           "か": 2,
           "くう": 1
         },
         "detachedInCandidate": {
           "か": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2025-056",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -3541,9 +2818,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "せいじょうぼうふうとう",
@@ -3634,8 +2909,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "せいじょうぼうふうとう": 1,
           "しん": 2,
           "ぼうふうつうしょうさん": 1,
@@ -3646,21 +2921,21 @@
         },
         "detachedInCandidate": {
           "しん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 8
     },
     {
       "id": "KSAI-2025-065",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "ひ",
@@ -3707,28 +2982,28 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "ひ": 3,
           "こ": 1
         },
         "detachedInCandidate": {
           "ひ": 2
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2025-066",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "ぼうこう",
@@ -3808,8 +3083,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "ぼうこう": 4,
           "ろ": 1,
           "ふん": 1,
@@ -3817,102 +3092,33 @@
         },
         "detachedInCandidate": {
           "ぼうこう": 2
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 7
     },
     {
       "id": "KSAI-2025-070",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "しま",
-          "page": 7,
-          "bbox": [
-            354.24,
-            150.85,
-            366.24,
-            156.85
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "ぼうこう",
-          "page": 7,
-          "bbox": [
-            97.08,
-            190.81,
-            121.08,
-            196.81
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 2
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2025-088",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "ぼう",
-          "page": 19,
-          "bbox": [
-            438.72,
-            530.58,
-            450.24,
-            536.1
-          ],
-          "fontSize": 5.52
-        },
-        {
-          "reading": "ぼう",
-          "page": 19,
-          "bbox": [
-            145.32,
-            570.54,
-            156.84,
-            576.06
-          ],
-          "fontSize": 5.52
-        },
-        {
-          "reading": "ぼう",
-          "page": 19,
-          "bbox": [
-            241.08,
-            589.21,
-            253.08,
-            595.21
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 3
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2025-112",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "しょうさいことう",
@@ -3959,8 +3165,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "しょうさいことう": 2,
           "しょうさい": 1,
           "ことう": 1
@@ -3968,66 +3174,25 @@
         "detachedInCandidate": {
           "しょうさいことう": 1,
           "しょうさい": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2025-114",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "ぜん",
-          "page": 42,
-          "bbox": [
-            150.72,
-            546.37,
-            162.72,
-            552.37
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "しゃ",
-          "page": 42,
-          "bbox": [
-            325.08,
-            626.29,
-            337.08,
-            632.29
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "しゃ",
-          "page": 42,
-          "bbox": [
-            253.08,
-            646.33,
-            265.08,
-            652.33
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 3
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2026-019",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DUPLICATE_READING_IN_FIELD",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "しょう",
@@ -4063,27 +3228,27 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "しょう": 3
         },
         "detachedInCandidate": {
           "しょう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2026-022",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "こうそさん",
@@ -4141,8 +3306,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "こうそさん": 1,
           "はんげこうぼくとう": 1,
           "あんちゅうさん": 1,
@@ -4151,21 +3316,21 @@
         },
         "detachedInCandidate": {
           "あんちゅうさん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 5
     },
     {
       "id": "KSAI-2026-026",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "けいれん",
@@ -4245,8 +3410,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "けいれん": 2,
           "ちょうとうさん": 1,
           "そけいかっけつとう": 1,
@@ -4258,21 +3423,21 @@
           "けいれん": 2,
           "ちょうとうさん": 1,
           "しゃくやくかんぞうとう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 7
     },
     {
       "id": "KSAI-2026-029",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "さんそうにんとう",
@@ -4308,8 +3473,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "さんそうにんとう": 1,
           "かみきひとう": 1,
           "よくかんさん": 1
@@ -4317,21 +3482,21 @@
         "detachedInCandidate": {
           "さんそうにんとう": 1,
           "よくかんさん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2026-033",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "がい",
@@ -4422,19 +3587,27 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "がい": 4,
           "たん": 4
         },
         "detachedInCandidate": {
           "がい": 1,
           "たん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 8
     },
     {
       "id": "KSAI-2026-035",
+      "status": "ALREADY_APPROVED",
+      "reasons": [],
+      "previouslyApproved": true
+    },
+    {
+      "id": "KSAI-2026-037",
       "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -4443,66 +3616,6 @@
         "RUBY_MAPPING_UNCERTIFIED"
       ],
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "しゃ",
-          "page": 28,
-          "bbox": [
-            109.08,
-            461.77,
-            121.08,
-            467.77
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "れん",
-          "page": 28,
-          "bbox": [
-            249.72,
-            541.81,
-            261.72,
-            547.81
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "もっしょくし",
-          "page": 28,
-          "bbox": [
-            133.08,
-            581.77,
-            169.08,
-            587.77
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "しゃ",
-          "page": 28,
-          "bbox": [
-            303.72,
-            601.81,
-            315.72,
-            607.81
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 4
-    },
-    {
-      "id": "KSAI-2026-037",
-      "status": "HOLD",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
       "rawSourceRubies": [
         {
           "reading": "かん",
@@ -4560,8 +3673,8 @@
           "fontSize": 5.52
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "かん": 2,
           "こう": 1,
           "ざ": 1,
@@ -4570,21 +3683,21 @@
         "detachedInCandidate": {
           "かん": 2,
           "こう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 5
     },
     {
       "id": "KSAI-2026-042",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "ごしゃじんきがん",
@@ -4642,8 +3755,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "ごしゃじんきがん": 1,
           "ちょれいとう": 1,
           "ろくみがん": 1,
@@ -4653,12 +3766,14 @@
         "detachedInCandidate": {
           "ちょれいとう": 1,
           "りょうけいじゅつかんとう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 5
     },
     {
       "id": "KSAI-2026-044",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
@@ -4667,9 +3782,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "とうかくじょうきとう",
@@ -4760,8 +3873,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "とうかくじょうきとう": 1,
           "じ": 1,
           "とうきしゃくやくさん": 1,
@@ -4773,21 +3886,21 @@
           "じ": 1,
           "しん": 3,
           "うんけいとう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 8
     },
     {
       "id": "KSAI-2026-053",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "のう",
@@ -4834,8 +3947,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "のう": 1,
           "うしょく": 1,
           "ひ": 1,
@@ -4845,21 +3958,21 @@
           "のう": 1,
           "うしょく": 1,
           "ひ": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2026-054",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "くう",
@@ -4906,28 +4019,28 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "くう": 3,
           "ほう": 1
         },
         "detachedInCandidate": {
           "くう": 2
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2026-055",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "そしゃく",
@@ -4996,8 +4109,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "そしゃく": 1,
           "くう": 2,
           "がい": 1,
@@ -5007,91 +4120,33 @@
         "detachedInCandidate": {
           "そしゃく": 1,
           "くう": 2
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2026-067",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "けん",
-          "page": 6,
-          "bbox": [
-            181.08,
-            130.81,
-            193.08,
-            136.81
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "けん",
-          "page": 6,
-          "bbox": [
-            133.08,
-            170.89,
-            145.08,
-            176.89
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 2
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2026-068",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "くう",
-          "page": 6,
-          "bbox": [
-            133.08,
-            470.89,
-            145.08,
-            476.89
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "くう",
-          "page": 6,
-          "bbox": [
-            462.24,
-            510.85,
-            474.24,
-            516.85
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 2
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2022-026",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "かみきひとう",
@@ -5127,8 +4182,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "かみきひとう": 1,
           "よくかんさん": 1,
           "しょうけんちゅうとう": 1
@@ -5136,12 +4191,14 @@
         "detachedInCandidate": {
           "よくかんさん": 1,
           "しょうけんちゅうとう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2022-033",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
@@ -5150,9 +4207,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "あんちゅうさん",
@@ -5232,8 +4287,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "あんちゅうさん": 1,
           "おう": 3,
           "りっくんしとう": 1,
@@ -5245,12 +4300,14 @@
           "おう": 3,
           "へいいさん": 1,
           "にんじんとう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 7
     },
     {
       "id": "KSAI-2022-041",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
@@ -5258,9 +4315,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "き",
@@ -5329,8 +4384,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "き": 2,
           "うんけいとう": 1,
           "とうきしゃくやくさん": 1,
@@ -5341,12 +4396,14 @@
           "き": 2,
           "うんけいとう": 1,
           "けいしぶくりょうがん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2022-042",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -5354,9 +4411,7 @@
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "せき",
@@ -5425,29 +4480,29 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "せき": 2,
           "がい": 2,
           "たん": 2
         },
         "detachedInCandidate": {
           "せき": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2022-046",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "のう",
@@ -5494,28 +4549,28 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "のう": 3,
           "けん": 1
         },
         "detachedInCandidate": {
           "のう": 2
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2022-061",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "し",
@@ -5562,8 +4617,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "し": 1,
           "こう": 1,
           "くう": 1,
@@ -5572,20 +4627,20 @@
         "detachedInCandidate": {
           "し": 1,
           "こう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2022-065",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "のう",
@@ -5665,8 +4720,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "のう": 1,
           "しょう": 1,
           "ろ": 1,
@@ -5678,20 +4733,20 @@
           "しょう": 1,
           "ろ": 1,
           "し": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 7
     },
     {
       "id": "KSAI-2022-078",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "せき",
@@ -5738,29 +4793,29 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "せき": 2,
           "たん": 1,
           "ぜん": 1
         },
         "detachedInCandidate": {
           "ぜん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2023-039",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "りょうけいじゅつかんとう",
@@ -5796,28 +4851,28 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "りょうけいじゅつかんとう": 1,
           "き": 2
         },
         "detachedInCandidate": {
           "き": 2
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2023-044",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "しん",
@@ -5886,8 +4941,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "しん": 1,
           "けいしぶくりょうがん": 1,
           "うんせいいん": 1,
@@ -5897,21 +4952,21 @@
         },
         "detachedInCandidate": {
           "しん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2023-072",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "せつ",
@@ -5969,20 +5024,22 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "せつ": 3,
           "しょう": 1,
           "ろ": 1
         },
         "detachedInCandidate": {
           "せつ": 3
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 5
     },
     {
       "id": "KSAI-2024-033",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
@@ -5990,9 +5047,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "せき",
@@ -6127,8 +5182,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "せき": 2,
           "たん": 3,
           "ぜき": 1,
@@ -6141,12 +5196,14 @@
         },
         "detachedInCandidate": {
           "たん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 12
     },
     {
       "id": "KSAI-2024-036",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -6156,9 +5213,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "ましにんがん",
@@ -6260,8 +5315,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "ましにんがん": 1,
           "おう": 2,
           "りっくんしとう": 1,
@@ -6273,45 +5328,20 @@
         "detachedInCandidate": {
           "おう": 2,
           "じ": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 9
     },
     {
       "id": "KSAI-2024-071",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "SOURCE_RUBY_GROUP_COUNT_MISMATCH"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "くう",
-          "page": 8,
-          "bbox": [
-            133.08,
-            139.81,
-            145.08,
-            145.81
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "ざ",
-          "page": 8,
-          "bbox": [
-            124.08,
-            179.77,
-            130.08,
-            185.77
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 2
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2025-035",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
@@ -6320,9 +5350,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "あんちゅうさん",
@@ -6402,8 +5430,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "あんちゅうさん": 1,
           "おう": 3,
           "ましにんがん": 1,
@@ -6412,20 +5440,20 @@
         },
         "detachedInCandidate": {
           "おう": 3
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 7
     },
     {
       "id": "KSAI-2025-037",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "しゃ",
@@ -6472,29 +5500,29 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "しゃ": 3,
           "けい": 1
         },
         "detachedInCandidate": {
           "けい": 1,
           "しゃ": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2025-040",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "じ",
@@ -6596,8 +5624,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "じ": 5,
           "こう": 3,
           "かゆ": 1
@@ -6605,12 +5633,14 @@
         "detachedInCandidate": {
           "じ": 1,
           "かゆ": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 9
     },
     {
       "id": "KSAI-2025-041",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
@@ -6618,9 +5648,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "かゆ",
@@ -6689,8 +5717,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "かゆ": 1,
           "きゅうききょうがいとう": 1,
           "おつじとう": 1,
@@ -6700,21 +5728,21 @@
         },
         "detachedInCandidate": {
           "かゆ": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2025-043",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "じん",
@@ -6783,8 +5811,8 @@
           "fontSize": 5.52
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "じん": 2,
           "しん": 2,
           "こう": 1,
@@ -6793,12 +5821,14 @@
         "detachedInCandidate": {
           "こう": 1,
           "ぜん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2025-045",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
@@ -6806,9 +5836,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "いんちんこうとう",
@@ -6877,8 +5905,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "いんちんこうとう": 1,
           "しん": 1,
           "かゆ": 1,
@@ -6889,11 +5917,19 @@
         "detachedInCandidate": {
           "かゆ": 1,
           "くう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2025-046",
+      "status": "ALREADY_APPROVED",
+      "reasons": [],
+      "previouslyApproved": true
+    },
+    {
+      "id": "KSAI-2025-051",
       "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -6902,55 +5938,6 @@
         "RUBY_MAPPING_UNCERTIFIED"
       ],
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "くう",
-          "page": 35,
-          "bbox": [
-            414.6,
-            490.5,
-            426.12,
-            496.02
-          ],
-          "fontSize": 5.52
-        },
-        {
-          "reading": "くう",
-          "page": 35,
-          "bbox": [
-            474.48,
-            510.54,
-            486.0,
-            516.06
-          ],
-          "fontSize": 5.52
-        },
-        {
-          "reading": "くう",
-          "page": 35,
-          "bbox": [
-            461.76,
-            689.17,
-            473.76,
-            695.17
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 3
-    },
-    {
-      "id": "KSAI-2025-051",
-      "status": "HOLD",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
       "rawSourceRubies": [
         {
           "reading": "しん",
@@ -6997,8 +5984,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "しん": 1,
           "かゆ": 1,
           "ひ": 1,
@@ -7007,20 +5994,20 @@
         "detachedInCandidate": {
           "しん": 1,
           "かゆ": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 4
     },
     {
       "id": "KSAI-2025-062",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "すい",
@@ -7056,54 +6043,27 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "すい": 2,
           "のう": 1
         },
         "detachedInCandidate": {
           "のう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2025-063",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "くう",
-          "page": 3,
-          "bbox": [
-            193.08,
-            130.81,
-            205.08,
-            136.81
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "くう",
-          "page": 3,
-          "bbox": [
-            109.08,
-            150.85,
-            121.08,
-            156.85
-          ],
-          "fontSize": 6.0
-        }
-      ],
-      "readingCount": 2
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2025-068",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -7111,9 +6071,7 @@
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "くう",
@@ -7193,8 +6151,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "くう": 3,
           "ほこり": 2,
           "こう": 2
@@ -7202,20 +6160,20 @@
         "detachedInCandidate": {
           "くう": 2,
           "ほこり": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 7
     },
     {
       "id": "KSAI-2025-073",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "せつ",
@@ -7251,20 +6209,22 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "せつ": 1,
           "しょう": 1,
           "ろ": 1
         },
         "detachedInCandidate": {
           "せつ": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 3
     },
     {
       "id": "KSAI-2026-023",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -7274,9 +6234,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "かっこんとう",
@@ -7411,8 +6369,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "かっこんとう": 1,
           "せき": 3,
           "さいこけいしとう": 1,
@@ -7426,12 +6384,14 @@
           "かっこんとう": 1,
           "せき": 1,
           "ぜん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 12
     },
     {
       "id": "KSAI-2026-032",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
@@ -7439,9 +6399,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "せき",
@@ -7510,8 +6468,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "せき": 1,
           "たん": 1,
           "ばくもんどうとう": 1,
@@ -7522,12 +6480,14 @@
         "detachedInCandidate": {
           "ばくもんどうとう": 1,
           "かんぞうとう": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 6
     },
     {
       "id": "KSAI-2026-041",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "DETACHED_READING_FIELD_NONUNIQUE",
@@ -7535,9 +6495,7 @@
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "じ",
@@ -7650,19 +6608,21 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "じ": 7,
           "こう": 3
         },
         "detachedInCandidate": {
           "じ": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 10
     },
     {
       "id": "KSAI-2026-043",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
@@ -7670,9 +6630,7 @@
         "RUBY_MAPPING_UNCERTIFIED",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "おう",
@@ -7730,8 +6688,8 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "おう": 1,
           "ごしゃくさん": 1,
           "けいしぶくりょうがん": 1,
@@ -7741,21 +6699,21 @@
         "detachedInCandidate": {
           "おう": 1,
           "うんせいいん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 5
     },
     {
       "id": "KSAI-2026-045",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "BASE_LITERAL_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "じん",
@@ -7857,75 +6815,35 @@
           "fontSize": 5.52
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "じん": 3,
           "しん": 5,
           "かゆ": 1
         },
         "detachedInCandidate": {
           "しん": 1
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 9
     },
     {
       "id": "KSAI-2026-048",
-      "status": "SOURCE_ORDER_PASS",
-      "priorReasons": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
-        "RUBY_MAPPING_UNCERTIFIED"
-      ],
+      "status": "ALREADY_APPROVED",
       "reasons": [],
-      "rawSourceRubies": [
-        {
-          "reading": "かゆ",
-          "page": 40,
-          "bbox": [
-            297.72,
-            90.85,
-            309.72,
-            96.85
-          ],
-          "fontSize": 6.0
-        },
-        {
-          "reading": "じん",
-          "page": 40,
-          "bbox": [
-            428.28,
-            296.34,
-            439.8,
-            301.86
-          ],
-          "fontSize": 5.52
-        },
-        {
-          "reading": "かゆ",
-          "page": 40,
-          "bbox": [
-            275.16,
-            317.34,
-            286.68,
-            322.86
-          ],
-          "fontSize": 5.52
-        }
-      ],
-      "readingCount": 3
+      "previouslyApproved": true
     },
     {
       "id": "KSAI-2026-066",
-      "status": "HOLD",
+      "status": "SOURCE_ORDER_PASS",
       "priorReasons": [
         "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_MAPPING_UNCERTIFIED"
       ],
-      "reasons": [
-        "SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH"
-      ],
+      "reasons": [],
       "rawSourceRubies": [
         {
           "reading": "ぼうこう",
@@ -8016,15 +6934,17 @@
           "fontSize": 6.0
         }
       ],
-      "sourceCandidateMismatch": {
-        "expected": {
+      "candidateReadingDifferenceAllowed": {
+        "source": {
           "ぼうこう": 7,
           "せつ": 1
         },
         "detachedInCandidate": {
           "ぼうこう": 4
-        }
-      }
+        },
+        "policy": "PDF_SOURCE_READINGS_OVERRIDE_CANDIDATE_DETACHED_SPLITS"
+      },
+      "readingCount": 8
     }
   ]
 }
