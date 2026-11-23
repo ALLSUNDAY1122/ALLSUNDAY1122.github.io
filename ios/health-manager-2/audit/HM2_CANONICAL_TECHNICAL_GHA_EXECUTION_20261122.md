@@ -1,6 +1,6 @@
 # HM2 canonical technical execution result
 
-- Checked UTC: 2026-11-23T01:03:25.147491+00:00
+- Checked UTC: 2026-11-23T05:01:16.779157+00:00
 - Bank SHA-256: `50d25e48f223a70d543ab61066d789141fafec322341d4163de17e24e7ac942c`
 - Actual Node canonical exit: `0`
 - Canonical exact bytes: **True**
@@ -52,7 +52,7 @@ test_stale_bank_hash_fails (test_hm2_alternative_q0_gate.GateTests.test_stale_ba
 test_wrong_choice_text_fails (test_hm2_alternative_q0_gate.GateTests.test_wrong_choice_text_fails) ... ok
 
 ----------------------------------------------------------------------
-Ran 18 tests in 0.249s
+Ran 18 tests in 0.218s
 
 OK
 
