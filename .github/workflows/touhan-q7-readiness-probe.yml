@@ -1,0 +1,53 @@
+name: Touhan Q7 Codemagic and ASC Readiness Probe
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-q7-readiness-probe.yml'
+      - 'touroku-hanbaisha-ios/scripts/q7_codemagic_readback.py'
+permissions:
+  contents: write
+jobs:
+  readiness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe API access and historical builds without secret leakage
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python touroku-hanbaisha-ios/scripts/q7_codemagic_readback.py
+      - name: Save Q7 read-only evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('touroku-hanbaisha-ios')
+          j=json.loads((p/'Q7_CODEMAGIC_PREP_20261124.json').read_text())
+          f=p/'release-status.json'; s=json.loads(f.read_text())
+          s['q7_codemagic_preflight_20261124']={'result':j['gate'],'cmApiRead':j['cmApiRead'],'ascRead':j['ascRead'],'evidence':'touroku-hanbaisha-ios/Q7_CODEMAGIC_PREP_20261124.json','runId':${{ github.run_id }}}
+          s['gates']['internal_testflight']='Q7_'+j['gate']
+          s['release_gate']='BLOCKED';s['app_review_submitted']=False
+          f.write_text(json.dumps(s,ensure_ascii=False,indent=2)+'\n')
+          (p/'RELEASE_STATUS.md').write_text((p/'RELEASE_STATUS.md').read_text()+f"\n\n## Q7 Codemagic/ASC読戻し（2026-11-24）\n- Codemagic: {j['cmApiRead']}、ASC: {j['ascRead']}、判定: {j['gate']}。\n- 証跡 Q7_CODEMAGIC_PREP_20261124.json、run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/${{ github.run_id }}。本審査送信なし。\n")
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/Q7_CODEMAGIC_PREP_20261124.json touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          git commit -m 'audit(touhan): record Q7 Codemagic and ASC platform readiness' || true
+          for n in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-q7-platform-readiness
+          path: touroku-hanbaisha-ios/Q7_CODEMAGIC_PREP_20261124.json
+          if-no-files-found: ignore
