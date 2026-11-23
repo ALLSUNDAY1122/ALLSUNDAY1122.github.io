@@ -36,7 +36,7 @@ def main():
         errors.append("duplicate question IDs")
     selected = [q for q in questions if q.get("release_selected") is True]
     reserve = [q for q in questions if q.get("release_selected") is False]
-    if len(selected) != 300 or len(reserve) != 12 or bank.get("release_candidate_questions") != 300 or bank.get("reserve_content_pass_questions") != 12:
+    if len(selected) != 300 or len(reserve) != 9 or bank.get("release_candidate_questions") != 300 or bank.get("reserve_content_pass_questions") != 9:
         errors.append(f"release scope mismatch: selected={len(selected)}, reserves={len(reserve)}")
     domain_counts = {}
     for q in selected:
@@ -46,16 +46,16 @@ def main():
         errors.append("release scope must be 6 domains x 50 questions")
     if bank.get("recovered_pass_count") != 180 or bank.get("recovered_fail_count") != 0 or bank.get("recovered_hold_count") != 0:
         errors.append("independent corrected re-audit 180/0/0 mismatch")
-    if (bank.get("expansion_audit_pass_count"), bank.get("expansion_audit_fail_count"), bank.get("expansion_audit_hold_count")) != (120, 0, 0):
-        errors.append("expansion independent audit 120/0/0 mismatch")
+    if (bank.get("expansion_audit_pass_count"), bank.get("expansion_audit_fail_count"), bank.get("expansion_audit_hold_count")) != (117, 2, 1):
+        errors.append("verbatim independent audit PASS117 FAIL2 HOLD1 mismatch")
     sessions = {}
     for q in selected:
         session = q.get("exam_year_month") or q.get("examDate")
         sessions[session] = sessions.get(session, 0) + 1
-    if sorted(sessions.values()) != [60] * 5 or len(sessions) != 5:
-        errors.append("five official academic sittings must be exactly 60 questions each")
-    if len(questions) != 312:
-        errors.append("312 canonical content-pass expected (300 academic + 12 original reserve)")
+    if sessions != {"2024-05":58,"2024-09":59,"2025-01":60,"2025-05":60,"2026-05":60,"independently-authored":3}:
+        errors.append("session distribution invalid: 297 official PASS +3 original replacements")
+    if len(questions) != 309:
+        errors.append("309 canonical PASS expected (297 original past exam +12 independently authored)")
     reaudited_pass = {
        "fp2-2025-05-gakka-036", "fp2-2025-05-gakka-039",
        "fp2-2025-01-gakka-017", "fp2-2025-01-gakka-013"
