@@ -192,7 +192,7 @@ def main():
         records.append(new)
     # Use headless Chromium with explicit Japanese font. Fail if unavailable.
     with sync_playwright() as playwright:
-        browser=playwright.chromium.launch(headless=True)
+        browser=playwright.chromium.launch(channel='chrome',headless=True)
         ctx=browser.new_context(viewport={'width':375,'height':850},device_scale_factor=1)
         page=ctx.new_page()
         for row in records:
