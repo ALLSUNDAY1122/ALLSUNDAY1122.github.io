@@ -107,7 +107,7 @@
     "status": "draft",
     "legacyReason": null,
     "audit": {
-      "questionChecked": false,
+      "questionChecked": true,
       "answerChecked": true,
       "explanationChecked": false,
       "legalChecked": false,
@@ -115,8 +115,17 @@
       "recheck_status": "2026_LAW_INDEPENDENT_RECHECK_PENDING",
       "official_answer_one_based": 4,
       "verified_2026_answer": null,
-      "exhibit_status": "FORMULA_TEXT_RECONSTRUCTED_PDF_VISUAL_REVIEW_REQUIRED",
-      "explanation_source": "RECOVERED_CANONICAL_BANK_REUSED_AS_UNREVIEWED_DRAFT"
+      "exhibit_status": "FORMULA_TEXT_RECONSTRUCTED_PDF_VISUAL_PASS",
+      "explanation_source": "RECOVERED_CANONICAL_BANK_REUSED_AS_UNREVIEWED_DRAFT",
+      "formula_visual_review": {
+        "status": "PASS",
+        "reviewer": "Muse",
+        "source_pdf": "g2_202501_q.pdf",
+        "source_page": 9,
+        "scope": "ALL_FOUR_FORMULAS_NUMERATOR_DENOMINATOR_VALUES",
+        "evidence": "Muse visual comparison reported by user",
+        "independent_review_by_assistant": false
+      }
     },
     "source_organization": "日本FP協会",
     "source_exam_type": "2級学科",
@@ -125,8 +134,8 @@
     "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
     "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025年1月26日実施 第23問",
     "modified": true,
-    "modification_note": "原レイアウトの上下に分かれた分数の分子・分母を、数値を変更せず括弧・除算記号で一行に表現。原PDFの数式画像との最終照合が必要。",
-    "modification_verification": "FORMULA_TEXT_RECONSTRUCTED_PDF_VISUAL_REVIEW_REQUIRED"
+    "modification_note": "原PDF g2_202501_q.pdf 9ページと線形化した4数式について、Museが分子・分母・数値の一致を全件目視照合したとユーザーが報告。視覚照合PASSを記録し、PDF_VISUAL_REVIEW_REQUIREDを解除。式・問題文・選択肢・正答は維持。",
+    "modification_verification": "FORMULA_TEXT_RECONSTRUCTED_PDF_VISUAL_PASS_REVIEWED_BY_MUSE"
   },
   {
     "id": "fp2-2025-01-gakka-024",
