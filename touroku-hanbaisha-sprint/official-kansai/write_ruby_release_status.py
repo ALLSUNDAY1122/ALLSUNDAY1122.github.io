@@ -30,7 +30,7 @@ for year in range(2022,2027):
         "layoutEvidencePass":layout["cleared"],
         "layoutPromoted":layout_credited,
         "layoutUnresolved":layout["held"],
-        "approvedTotal":data["auto"]+data["geometry"]+data.get("ruby",0)+data.get("rubyOrdered",0)+data.get("layout",0)+data.get("cropImage",0)+data["visual"],
+        "approvedTotal":data["auto"]+data["geometry"]+data.get("ruby",0)+data.get("rubyOrdered",0)+data.get("layout",0)+data.get("cropImage",0)+data.get("rubyFontCluster",0)+data["visual"],
         "unapproved":data["hold"]+data["pending"],
         "rubyReasons":rr["reasonCounts"],
         "layoutReasons":layout["reasonCounts"]
