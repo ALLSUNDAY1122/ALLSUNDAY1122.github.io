@@ -142,7 +142,7 @@ def main():
         for w in words:
             x0,y0,x1,y1,t,*_=w
             if not (region.y0<=y0<region.y1 and region.x0+5<=x0<region.x0+150):continue
-            m=re.match(r"^([1-5])(?:[.．、)）]|\\s+)",clean_font(str(t)).strip())
+            m=re.match(r"^\\s*([1-5])(?:\\s*[.．、)）]|\\s+)",clean_font(str(t)).strip())
             if m:
                 choices_geom.setdefault(int(m.group(1)),[]).append((y0,x0))
         clipped=[]
