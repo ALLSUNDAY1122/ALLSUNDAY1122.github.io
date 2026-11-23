@@ -1,0 +1,48 @@
+name: FP2 canonical bank and web source preflight
+on:
+  push:
+    branches:
+      - feature/fp2-release-scope-20261123
+    paths:
+      - "fp2-manabi-sprint/**"
+      - "scripts/fp2_release_preflight.py"
+      - "scripts/fp2_v21_migration_gate.py"
+      - ".github/workflows/fp2-release-source-preflight.yml"
+  pull_request:
+    paths:
+      - "fp2-manabi-sprint/**"
+      - "scripts/fp2_release_preflight.py"
+      - "scripts/fp2_v21_migration_gate.py"
+      - ".github/workflows/fp2-release-source-preflight.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static-content-and-web-shell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Canonical content, evidence SHA and source bundle lock
+        run: python3 scripts/fp2_release_preflight.py --mode content --output fp2-preflight-result.json
+      - name: UI Master v2.1 migration static checks
+        run: python3 scripts/fp2_v21_migration_gate.py
+      - name: JavaScript syntax of adapter and PWA
+        run: |
+          node --check fp2-manabi-sprint/fp2-approved-bank.js
+          node --check fp2-manabi-sprint/service-worker.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          text = Path('fp2-manabi-sprint/index.html').read_text(encoding='utf-8')
+          blocks = re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>', text, flags=re.S|re.I)
+          if not blocks: raise SystemExit('No inline UI script')
+          Path('/tmp/fp2-inline.js').write_text('\n'.join(blocks), encoding='utf-8')
+          PY
+          node --check /tmp/fp2-inline.js
+      - name: Upload source preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fp2-source-preflight
+          path: fp2-preflight-result.json
+          if-no-files-found: ignore

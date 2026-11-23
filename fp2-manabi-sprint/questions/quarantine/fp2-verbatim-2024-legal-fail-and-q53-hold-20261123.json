@@ -1,0 +1,142 @@
+{
+  "schema_version": "fp2-verbatim-quarantine-v1",
+  "status": "TWO_LEGAL_FAIL_NOT_IN_CANONICAL",
+  "legal_cutoff": "2026-04-01",
+  "records": [
+    {
+      "id": "fp2-2024-09-gakka-007",
+      "status": "FAIL",
+      "exam": "2024-09",
+      "issue": {
+        "severity": "Critical",
+        "type": "MULTIPLE_INCORRECT_CHOICES",
+        "incorrect_choices": [
+          1,
+          2
+        ],
+        "original_answer": 1,
+        "remediation": "選択肢2を2026年以降も正しい記述に変更するか設問を法令基準日2024-04-01と明示し時点固定。逐語版維持なら後者の区分掲載が必要。変更版は逐語版でなく加工版として分離。"
+      },
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202409-b01-verbatim.json",
+      "source_blob_sha": "2f844477aa0062e4f179d612a53ab468acd123f6",
+      "audit_path": "fp2-manabi-sprint/audit/FP2_202409_VERBATIM_60_INDEPENDENT_LEGAL_20261123.json",
+      "audit_blob_sha": "e2bc21f3920d80029c29c684c60adc88149804ff",
+      "source_record": {
+        "id": "fp2-2024-09-gakka-007",
+        "grade": "FP2",
+        "examDate": "2024-09",
+        "examType": "学科",
+        "domain": "ライフプランニングと資金計画",
+        "sourceQuestionNumber": 7,
+        "questionType": "four_choice",
+        "question": "確定拠出年金に関する次の記述のうち、最も不適切なものはどれか。",
+        "choices": [
+          "企業型年金を実施している会社に厚生年金保険の被保険者として新たに入社した６０歳以上７０歳未満の者は、他社で加入した企業型年金の老齢給付金の受給者であっても、新たに入社した会社の企業型年金に加入することができる。",
+          "企業型年金の加入者掛金（マッチング拠出により加入者が拠出する掛金）は、加入者に係る事業主掛金と同額以下、かつ、事業主掛金との合算で拠出限度額までである。",
+          "企業型年金において、企業型年金のマッチング拠出を利用していない加入者は、所定の要件を満たせば、個人型年金に加入することができる。",
+          "企業型年金や確定給付企業年金等を実施していない一定規模以下の中小企業の事業主は、所定の要件を満たせば、従業員が加入している個人型年金の加入者掛金に事業主掛金を上乗せして納付することができる。"
+        ],
+        "answer": 1,
+        "explanation": "【2024年9月公式解答：1】2024年の受給後再加入制限が原解答の論点。2026年4月のマッチング拠出上限規制撤廃により選択肢2も誤りとなるため単一正答性に疑義。 ※2026年4月1日法令での全肢独立再検証は未完了。",
+        "legalReferenceDate": "2024-04-01",
+        "sourceUrl": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+        "status": "draft",
+        "legacyReason": "HOLD_MULTIPLE_INCORRECT_CHOICES_2026",
+        "audit": {
+          "questionChecked": true,
+          "answerChecked": true,
+          "explanationChecked": false,
+          "legalChecked": false,
+          "law_target_date": "2026-04-01",
+          "recheck_status": "HOLD_MULTIPLE_INCORRECT_CHOICES_2026",
+          "official_answer_one_based": 1,
+          "verified_2026_answer": null,
+          "exhibit_status": "NOT_FLAGGED"
+        },
+        "source_organization": "日本FP協会",
+        "source_exam_type": "2級学科",
+        "source_section": "2024年9月 第7問",
+        "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+        "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
+        "attribution_display": "出典：日本FP協会 2級学科 2024年9月 第7問",
+        "modified": false,
+        "modification_note": "原文の行折返しのみ連結。設問の語句および数値を変更しない。",
+        "modification_verification": "SOURCE_TEXT_LAYOUT_NORMALIZED_PDF_VISUAL_NOT_CHECKED"
+      }
+    },
+    {
+      "id": "fp2-2024-05-gakka-008",
+      "status": "FAIL",
+      "exam": "2024-05",
+      "issue": {
+        "severity": "Critical",
+        "type": "NO_INCORRECT_ANSWER_AFTER_LAW_CHANGE",
+        "detail": "2026-04-01の企業型DCマッチング拠出上限撤廃後、旧誤肢1が適切に変わり、他の肢2～4も適切。『最も不適切』がなくなった。",
+        "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/kyoshutsu/2025kaisei.html",
+        "action": "2024法令基準の歴史過去問として分離、または選択肢1を現行法で明確な誤肢に改変し別作品として再監査"
+      },
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202405-b01-verbatim.json",
+      "source_blob_sha": "bf9a636dcf1209c8c4e851726860d87aadfa8abd",
+      "audit_path": "fp2-manabi-sprint/audit/FP2_202405_VERBATIM_60_INDEPENDENT_LEGAL_20261123.json",
+      "audit_blob_sha": "08f1a9f98a74b1cc607b69e4dcedfec222ca3f43",
+      "source_record": {
+        "id": "fp2-2024-05-gakka-008",
+        "grade": "FP2",
+        "examDate": "2024-05",
+        "examType": "学科",
+        "domain": "ライフプランニングと資金計画",
+        "sourceQuestionNumber": 8,
+        "questionType": "four_choice",
+        "question": "確定拠出年金に関する次の記述のうち、最も不適切なものはどれか。",
+        "choices": [
+          "企業型年金加入者掛金（マッチング拠出により加入者が拠出する掛金）の上限額は、事業主掛金の額の多寡にかかわらず、拠出限度額から当該加入者に係る事業主掛金の額を差し引いた額となる。",
+          "企業型年金加入者掛金（マッチング拠出により加入者が拠出する掛金）は、所得税の小規模企業共済等掛金控除の対象となる。",
+          "企業型年金の老齢給付金を年金で受け取った場合、当該給付金は雑所得として所得税の課税対象となり、雑所得の金額の計算上、公的年金等控除額を控除することができる。",
+          "企業型年金加入者が退職し、国民年金の第３号被保険者となった場合、所定の手続きにより、企業型年金の個人別管理資産を個人型年金に移換し、個人型年金加入者または個人型年金運用指図者となることができる。"
+        ],
+        "answer": 1,
+        "explanation": "【2024年5月公式解答：1】マッチング拠出には当時事業主掛金以下という上限もあり、単に拠出限度額との差だけとはできない。2026年改正に注意。 ※2026年4月1日法令での全肢独立再検証は未完了。",
+        "legalReferenceDate": "2023-10-01",
+        "sourceUrl": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+        "status": "draft",
+        "legacyReason": "RECHECK_2026_DC_AMENDMENT",
+        "audit": {
+          "questionChecked": true,
+          "answerChecked": true,
+          "explanationChecked": false,
+          "legalChecked": false,
+          "law_target_date": "2026-04-01",
+          "recheck_status": "RECHECK_2026_DC_AMENDMENT",
+          "official_answer_one_based": 1,
+          "verified_2026_answer": null,
+          "exhibit_status": "NOT_FLAGGED"
+        },
+        "source_organization": "日本FP協会",
+        "source_exam_type": "2級学科",
+        "source_section": "2024年5月 第8問",
+        "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+        "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
+        "attribution_display": "出典：日本FP協会 2級学科 2024年5月 第8問",
+        "modified": false,
+        "modification_note": "添付レイアウト保持版の本文・4肢を転記し、行折返し・字下げのみ整形。内容の改変は行わない。",
+        "modification_verification": "SOURCE_TEXT_LAYOUT_NORMALIZED_PDF_VISUAL_NOT_CHECKED"
+      }
+    }
+  ],
+  "review_commit_202409": "b3f415feed0bcd88f82a62a797df8f72df4c477f",
+  "review_commit_202405": "55ddf49bdf0e947495cebaf46fd855979b8d31b3",
+  "source_202405_b03_changed_after_audit": {
+    "current_blob": "066eadb5116e8430c8e7b2449078983e4e095bda",
+    "audited_blob": "27a08d04670a75f133076df5a86ee97dcf149e86",
+    "explanation": "Q53 user-provided image metadata added after independent audit. 19 PASS records in batch independently matched audit stem/4 choices/answer, Q53 quarantined."
+  },
+  "eligible_for_release": false,
+  "resolved": [
+    {
+      "id": "fp2-2024-05-gakka-053",
+      "status": "PASS",
+      "source_asset": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202405-q53-family-diagram.png",
+      "audit_file": "fp2-manabi-sprint/audit/FP2_202405_VERBATIM_60_INDEPENDENT_LEGAL_20261123.json"
+    }
+  ]
+}

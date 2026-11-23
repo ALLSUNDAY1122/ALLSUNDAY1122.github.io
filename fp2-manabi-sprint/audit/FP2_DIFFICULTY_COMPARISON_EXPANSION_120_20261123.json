@@ -1,0 +1,3645 @@
+{
+  "audit_id": "FP2-DIFFICULTY-EXPANSION-120-20261123",
+  "date": "2026-11-23",
+  "method": "difficulty_equivalence_risk_triage_using_original_official_pdfs_and_source_modification_records",
+  "scope": "2024-09 60 + 2024-05 60",
+  "original_pdf_urls": {
+    "202405": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+    "202409": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+  },
+  "definition": {
+    "equivalent": "原題の条件・論点・誤答肢の識別負荷と加工後が概ね維持",
+    "easier_suspected": "単純化・弱い誤答・必要知識や計算負荷減少の疑い。確定的易化とは限らない",
+    "harder": "原題より負荷が増大",
+    "undetermined": "原題照合なしには判定不能"
+  },
+  "summary": {
+    "total": 120,
+    "equivalent": 0,
+    "easier_suspected": 120,
+    "harder": 0,
+    "undetermined": 0,
+    "confirmed_original_excerpt": 6
+  },
+  "limitations": "本報告は難易度のリスクスクリーニング。原題PDFは閲覧したが120問すべてについて逐肢の全文転記・比較、原題の所要時間・正答率等の実測はできていない。直接比較が実施された原題抜粋は6問に限定。それ以外114問を難易度同等と扱わず易化疑いとして優先再評価。すべて『易化確定』の意味ではない。誤答が短いことのみから安易に同一性を断定しない。",
+  "items": [
+    {
+      "id": "FP2-OFFICIAL-202409-Q01",
+      "exam_year_month": "202409",
+      "original_question_number": 1,
+      "grade": "易化疑い",
+      "confidence": "高（原題抜粋と対照）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": true,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "FPが顧客に商品を勧める際の基本姿勢として最も適切なのはどれか。",
+      "adapted_choices": [
+        "報酬の高い商品を優先する",
+        "顧客の事情と不利益を説明し、理解を確認する",
+        "個人情報を本人の同意なく提携先へ渡す",
+        "将来の運用利益を保証する"
+      ],
+      "comparison_flags": [
+        "CASE_CONDITION_REMOVED",
+        "DISTRACTORS_WEAKENED"
+      ],
+      "reason": "公式原題は個別の顧客相談場面と例外的な公的資料利用可否を含め4事例を判断。加工後は説明責任の一般論と明白に誤った肢で、事例読解負荷が減少。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q02",
+      "exam_year_month": "202409",
+      "original_question_number": 2,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "FPが登録資格を持たずに行う有償業務のうち、資格法上の制限に特に注意が必要なのはどれか。",
+      "adapted_choices": [
+        "年金制度の概要を解説する",
+        "一般的な家計収支を整理する",
+        "社会保険労務士業務に当たる年金請求書の作成・提出代行をする",
+        "生活費の予算表を作る"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均16.0字、設問44字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q03",
+      "exam_year_month": "202409",
+      "original_question_number": 3,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "会社を退職した人が健康保険の任意継続を選ぶ場合の保険料負担はどれか。",
+      "adapted_choices": [
+        "勤務先が全額負担する",
+        "本人が全額負担する",
+        "市町村が半額を負担する",
+        "退職前の事業主が半額を負担する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均11.3字、設問34字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q04",
+      "exam_year_month": "202409",
+      "original_question_number": 4,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "労災保険の障害補償給付について適切なのはどれか。",
+      "adapted_choices": [
+        "被災者は等級に関係なく年金・一時金を自由に選べる",
+        "業務上災害では一切支給されない",
+        "労働者が事業主を兼ねれば必ず対象となる",
+        "障害等級に応じ年金か一時金かの給付区分が定まる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均20.3字、設問24字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q05",
+      "exam_year_month": "202409",
+      "original_question_number": 5,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "出生時育児休業の取得方法で正しいのはどれか。",
+      "adapted_choices": [
+        "原則として子の出生後8週間以内に通算4週間まで、2回に分割できる",
+        "必ず1回で取得しなければならない",
+        "原則として出産前だけ取得できる",
+        "介護休業の93日と通算される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均19.3字、設問22字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q06",
+      "exam_year_month": "202409",
+      "original_question_number": 6,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "障害厚生年金の受給者に子がいる場合の加算に関する原則はどれか。",
+      "adapted_choices": [
+        "障害厚生年金に子の加算が一律に付く",
+        "子の加算は障害基礎年金などの制度で要件に応じて扱う",
+        "すべての障害年金が非課税でない",
+        "子がいると障害等級が一段上がる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均18.0字、設問31字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q07",
+      "exam_year_month": "202409",
+      "original_question_number": 7,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "企業型DCとiDeCoに関する説明として適切なのはどれか。",
+      "adapted_choices": [
+        "企業型DCに入ると必ずiDeCo加入不可となる",
+        "企業型DCとiDeCoは一定の条件の下で併用可能である",
+        "事業主掛金は従業員が全額拠出する",
+        "DCの運用資産は預金保険制度で元本保証される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均22.0字、設問29字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q08",
+      "exam_year_month": "202409",
+      "original_question_number": 8,
+      "grade": "易化疑い",
+      "confidence": "高（原題抜粋と対照）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": true,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "中小企業退職金共済の掛金負担について適切なのはどれか。",
+      "adapted_choices": [
+        "従業員が必ず半額負担する",
+        "国が全額負担する",
+        "事業主が全額を負担する",
+        "従業員が希望すれば全額負担する"
+      ],
+      "comparison_flags": [
+        "FOCUS_CHANGED",
+        "THREE_SYSTEMS_TO_ONE",
+        "DISTRACTORS_WEAKENED"
+      ],
+      "reason": "原題は国民年金基金・小規模企業共済・中退共の3制度を横断比較し、正答は小規模企業共済の解約手当金。加工版は中退共の事業主全額負担という別の1論点を選択させる。単なる易化だけでなく焦点自体の変更。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q09",
+      "exam_year_month": "202409",
+      "original_question_number": 9,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "同じ金利・返済期間・繰上返済額の住宅ローンで、一般に支払利息をより減らす方法はどれか。",
+      "adapted_choices": [
+        "毎月返済額の軽減型",
+        "繰上返済しない方法",
+        "返済期間を短くする期間短縮型",
+        "毎月返済額を任意に増減させる方法"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均12.0字、設問43字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q10",
+      "exam_year_month": "202409",
+      "original_question_number": 10,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "一般的なデビットカードの支払方法として正しいのはどれか。",
+      "adapted_choices": [
+        "翌月一括後払い",
+        "購入時に連動する預金口座から即時引落し",
+        "必ず現金を事前チャージする",
+        "利用後に分割払いへ自動変更される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均13.8字、設問28字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q11",
+      "exam_year_month": "202409",
+      "original_question_number": 11,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "少額短期保険業者の保険料について適切なのはどれか。",
+      "adapted_choices": [
+        "支払保険料は必ず地震保険料控除となる",
+        "契約者保護機構による補償が必ず適用される",
+        "一般に生命保険料控除・地震保険料控除の対象とならない",
+        "生命保険会社の保険と全く同じ上限額が適用される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均21.8字、設問25字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q12",
+      "exam_year_month": "202409",
+      "original_question_number": 12,
+      "grade": "易化疑い",
+      "confidence": "高（原題抜粋と対照）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": true,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "生命保険料を構成する2つの部分の組合せはどれか。",
+      "adapted_choices": [
+        "純保険料と付加保険料",
+        "元本と利息",
+        "掛金と配当金",
+        "保険価額と保険金額"
+      ],
+      "comparison_flags": [
+        "NEGATIVE_TO_POSITIVE",
+        "SINGLE_TOPIC",
+        "DISTRACTORS_WEAKENED"
+      ],
+      "reason": "原題は生命保険の4原則・準備金・保険料構造から『最も不適切』を選択。加工後は『純保険料＋付加保険料』の肯定的定義だけを選択。否定→肯定への形式転換と3論点削除。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q13",
+      "exam_year_month": "202409",
+      "original_question_number": 13,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "高度障害保険金が支払われた養老保険の一般的な取扱いはどれか。",
+      "adapted_choices": [
+        "同じ基本契約で死亡保険金も必ず別途全額支給される",
+        "契約は通常そのまま存続する",
+        "基本契約は通常消滅する",
+        "満期保険金が自動的に倍増する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均15.5字、設問30字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q14",
+      "exam_year_month": "202409",
+      "original_question_number": 14,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "保険料を負担した夫が、被保険者である妻の死亡により死亡保険金を受け取るとき、原則の課税関係はどれか。",
+      "adapted_choices": [
+        "相続税",
+        "所得税（一時所得等）",
+        "贈与税",
+        "固定資産税"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均5.3字、設問50字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q15",
+      "exam_year_month": "202409",
+      "original_question_number": 15,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "法人が保有していた終身保険を解約し解約返戻金を受領した場合の処理として適切なのはどれか。",
+      "adapted_choices": [
+        "受領額を必ず非課税収益とする",
+        "解約返戻金の受領額を益金に計上し、帳簿上の保険積立金等を取り崩す",
+        "返戻金は全額資本金に計上する",
+        "返戻金受領時には会計処理が不要である"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均19.5字、設問44字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q16",
+      "exam_year_month": "202409",
+      "original_question_number": 16,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "損害保険において保険金額が保険価額を超える契約を何というか。",
+      "adapted_choices": [
+        "一部保険",
+        "超過保険",
+        "重複保険",
+        "定額保険"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均4.0字、設問30字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q17",
+      "exam_year_month": "202409",
+      "original_question_number": 17,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "普通傷害保険における地震由来の傷害について、一般的な取扱いはどれか。",
+      "adapted_choices": [
+        "特約なしでも必ず支払われる",
+        "通常は免責であり、特約等の有無を確認する",
+        "天候に関係なく事故は対象外となる",
+        "海外では必ず全事故が対象となる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均16.0字、設問34字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q18",
+      "exam_year_month": "202409",
+      "original_question_number": 18,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "法人所有の建物の風災損害について火災保険金を受け、通常の原状回復修理をした場合の基本的な税務処理はどれか。",
+      "adapted_choices": [
+        "保険金は絶対に益金にならない",
+        "保険金を益金に計上し、修繕費に該当する費用を損金に計上する",
+        "保険金は必ず個人の一時所得になる",
+        "修理費はいかなる場合も資産計上する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均19.0字、設問53字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q19",
+      "exam_year_month": "202409",
+      "original_question_number": 19,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "先進医療特約の対象技術について正しいのはどれか。",
+      "adapted_choices": [
+        "契約時点の先進医療一覧で永続的に固定される",
+        "どの医療機関で受けても無条件に支払われる",
+        "給付対象は技術・施設・治療時点などの約款条件で判断する",
+        "公的医療保険の自己負担額のみを必ず全額支払う"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均22.5字、設問24字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q20",
+      "exam_year_month": "202409",
+      "original_question_number": 20,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "従業員が長期療養で働けない場合の休業補償原資の備えとして、一般に目的が合致する保険はどれか。",
+      "adapted_choices": [
+        "団体信用生命保険",
+        "団体就業不能保障保険",
+        "自動車の車両保険",
+        "住宅火災保険"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均8.0字、設問46字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+      "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、設問・選択肢を独自に再構成。加工後の正答番号は原題と独立。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q21",
+      "exam_year_month": "202409",
+      "original_question_number": 21,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "純金積立で購入価格の平準化を狙う場合、定額購入を継続する方法の特徴として適切なのはどれか。",
+      "adapted_choices": [
+        "価格が高いときに多く買い、安いときに少なく買う",
+        "価格に関係なく毎月同量を買う",
+        "価格が安いときは多く、高いときは少なく買う",
+        "保有金の元本が保証される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均17.5字、設問45字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q22",
+      "exam_year_month": "202409",
+      "original_question_number": 22,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "日経平均株価と反対方向の日次変動を目標にするETFの分類はどれか。",
+      "adapted_choices": [
+        "インバース型",
+        "株価指数と同方向に2倍連動するレバレッジ型",
+        "外国債券の満期保有型",
+        "預金連動型"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均10.5字、設問33字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q23",
+      "exam_year_month": "202409",
+      "original_question_number": 23,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "額面100円、年利息0.6円、購入価格98円の債券を2年後99円で売った。税や手数料を除く単利の所有期間利回り（年率、購入額基準）に最も近いのはどれか。",
+      "adapted_choices": [
+        "約0.61%",
+        "約1.12%",
+        "約1.61%",
+        "約2.04%"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均6.0字、設問76字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q24",
+      "exam_year_month": "202409",
+      "original_question_number": 24,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "東証の市場区分変更について、適切な説明はどれか。",
+      "adapted_choices": [
+        "グロース市場の銘柄はプライム市場に変更できない",
+        "グロース市場に上場している企業も所定の基準を満たし手続きを行えばプライムへの変更が可能",
+        "東証市場はプライムとグロースの2種類のみ",
+        "日経平均の構成銘柄は全上場企業から無条件に抽出する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均27.8字、設問24字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q25",
+      "exam_year_month": "202409",
+      "original_question_number": 25,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "時価総額240億円、当期純利益12億円、自己資本120億円の企業のPERはどれか。",
+      "adapted_choices": [
+        "5倍",
+        "10倍",
+        "20倍",
+        "30倍"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均2.8字、設問41字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q26",
+      "exam_year_month": "202409",
+      "original_question_number": 26,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "コールオプションを買う投資家が取得する権利として最も適切なのはどれか。",
+      "adapted_choices": [
+        "原資産を決められた価格で買う権利",
+        "原資産を決められた価格で売る義務",
+        "原資産を決められた価格で買う義務",
+        "債券利息を無条件に受け取る権利"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均15.8字、設問35字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q27",
+      "exam_year_month": "202409",
+      "original_question_number": 27,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "預金50%（期待収益率0.2%）、債券30%（1%）、株式20%（6%）の資産全体の期待収益率はどれか。",
+      "adapted_choices": [
+        "1.4%",
+        "1.6%",
+        "1.8%",
+        "2.0%"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均4.0字、設問52字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q28",
+      "exam_year_month": "202409",
+      "original_question_number": 28,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "NISA口座で生じた株式譲渡損失の税務上の扱いとして適切なのはどれか。",
+      "adapted_choices": [
+        "課税口座の利益と通算できる",
+        "確定申告をすると3年間繰り越せる",
+        "損益通算も繰越控除もできない",
+        "給与所得から必ず控除できる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均14.0字、設問35字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q29",
+      "exam_year_month": "202409",
+      "original_question_number": 29,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "無利息・要求払い・決済サービス提供の3条件を満たす決済用預金の預金保険制度による保護範囲はどれか。",
+      "adapted_choices": [
+        "元本1,000万円まで",
+        "元本1,000万円とその利息まで",
+        "外貨建てのみ全額",
+        "全額保護される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均10.5字、設問49字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。 独立監査FAIL是正（2026-11-23）：旧選択肢2「元本と利息を含め全額」が正答肢4と実質的に重複したため、「元本1,000万円とその利息まで」へ変更。正答index3は維持。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q30",
+      "exam_year_month": "202409",
+      "original_question_number": 30,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "金融商品の販売等に係る説明義務違反で損害賠償を請求するとき、金融サービス提供法上の損害額推定に関して適切なのはどれか。",
+      "adapted_choices": [
+        "支払った元本総額が必ず推定損害額になる",
+        "元本欠損額を損害額と推定する規定がある",
+        "損害の発生を一切証明せず常に全額返金される",
+        "顧客の投資目的に関係なく契約は自動的に無効になる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均20.8字、設問59字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q31",
+      "exam_year_month": "202409",
+      "original_question_number": 31,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "国税・地方税と直接税・間接税の分類として正しい組合せはどれか。",
+      "adapted_choices": [
+        "法人税は国税の直接税、消費税は国税の間接税",
+        "法人税は地方税の間接税、消費税は国税の直接税",
+        "登録免許税は地方税、法人税は地方税",
+        "不動産取得税は国税、所得税は地方税"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均19.3字、設問31字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q32",
+      "exam_year_month": "202409",
+      "original_question_number": 32,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "個人が事業の資金で取得した上場会社の株式から配当を受けた場合、原則として所得区分はどれか。",
+      "adapted_choices": [
+        "事業所得",
+        "不動産所得",
+        "配当所得",
+        "給与所得"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均4.3字、設問45字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q33",
+      "exam_year_month": "202409",
+      "original_question_number": 33,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "給与所得620万円、不動産所得の損失70万円（損益通算可能なもの）、生活用動産ではないゴルフ会員権の売却損120万円がある。所得税の総所得金額はどれか。",
+      "adapted_choices": [
+        "430万円",
+        "500万円",
+        "550万円",
+        "620万円"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均5.0字、設問76字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q34",
+      "exam_year_month": "202409",
+      "original_question_number": 34,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "2026年に居住開始する住宅で住宅ローン控除を検討するとき、繰上返済後の返済期間について原則適切なのはどれか。",
+      "adapted_choices": [
+        "返済期間が最初の返済月から10年未満になると控除要件を満たさなくなる",
+        "繰上返済を一度行うと必ず控除が打ち切られる",
+        "返済期間は3年あればよい",
+        "ローン残高がある限り無条件に控除できる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均21.5字、設問55字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q35",
+      "exam_year_month": "202409",
+      "original_question_number": 35,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "年末調整済み給与収入800万円、これ以外に原稿料による雑所得15万円だけがある給与所得者の所得税確定申告について原則正しいのはどれか。",
+      "adapted_choices": [
+        "雑所得が1円でもあれば必ず申告義務がある",
+        "そのほかの要件を満たせば所得税の確定申告は不要",
+        "給与収入が500万円超なら無条件に申告が必要",
+        "雑所得は全額非課税である"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均19.3字、設問67字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q36",
+      "exam_year_month": "202409",
+      "original_question_number": 36,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "資本金5,000万円で一定の適用条件を満たす普通法人の所得のうち、年800万円以下の部分の法人税率の扱いとして正しいのはどれか。",
+      "adapted_choices": [
+        "必ず通常税率のみを適用する",
+        "法人税はそもそも課税されない",
+        "所得全額が非課税になる",
+        "中小法人等の軽減税率の対象となり得る"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均14.0字、設問64字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q37",
+      "exam_year_month": "202409",
+      "original_question_number": 37,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "会社の業務会議で通常必要な茶菓や弁当を提供した費用の法人税上の取扱いとして適切なのはどれか。",
+      "adapted_choices": [
+        "支払額の半分しか損金にできない",
+        "必ず役員賞与になる",
+        "通常必要な会議費なら原則損金算入可能",
+        "接待交際費に必ず分類され全額損金不算入"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均15.3字、設問46字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q38",
+      "exam_year_month": "202409",
+      "original_question_number": 38,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "消費税の簡易課税制度の適用を受ける際の基準期間の課税売上高要件はどれか。",
+      "adapted_choices": [
+        "1,000万円以下",
+        "3,000万円以下",
+        "1億円以下",
+        "5,000万円以下"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均8.0字、設問36字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q39",
+      "exam_year_month": "202409",
+      "original_question_number": 39,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "役員が会社所有の土地を時価より著しく安く取得した場合、時価と支払額の差額について役員個人の所得分類として原則適切なのはどれか。",
+      "adapted_choices": [
+        "給与所得",
+        "雑所得",
+        "不動産所得",
+        "山林所得"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均4.0字、設問63字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q40",
+      "exam_year_month": "202409",
+      "original_question_number": 40,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "飲食店など所定の業種の適格請求書発行事業者が交付できる適格簡易請求書について正しいのはどれか。",
+      "adapted_choices": [
+        "簡易課税制度の適用を受けている事業者しか交付できない",
+        "交付できる業種等が定められ、簡易課税選択の有無とは別に扱われる",
+        "登録番号は一切記載できない",
+        "個人事業者には交付が禁じられる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均21.3字、設問47字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+      "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+      "modified": true,
+      "modification_note": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q41",
+      "exam_year_month": "202409",
+      "original_question_number": 41,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "不動産登記の抵当権設定に関する説明として適切なのはどれか。",
+      "adapted_choices": [
+        "抵当権は権利部の甲区に記録される",
+        "抵当権は表題部の地積欄だけで確認できる",
+        "抵当権は原則として権利部の乙区に記録される",
+        "登記された所有者が実際の所有者であることは国が必ず保証する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均21.3字、設問29字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q42",
+      "exam_year_month": "202409",
+      "original_question_number": 42,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "宅地建物取引業者が自ら売主となり、宅建業者ではない買主と売買する場合の手付に関する説明で正しいのはどれか。",
+      "adapted_choices": [
+        "受領した手付は、原則として解約手付として扱われる",
+        "手付金の上限は常に代金の5％である",
+        "売主が手付倍返しすれば、買主が履行着手後でも無条件に解除できる",
+        "買主の契約違反による違約金の定めは常に禁止される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均24.0字、設問53字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q43",
+      "exam_year_month": "202409",
+      "original_question_number": 43,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "普通借地権について、契約書に存続期間の明示がない場合の原則的な存続期間はどれか。",
+      "adapted_choices": [
+        "10年",
+        "20年",
+        "30年",
+        "50年"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均3.0字、設問40字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q44",
+      "exam_year_month": "202409",
+      "original_question_number": 44,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "都市計画法上の市街化区域について、一般的な扱いとして最も適切なのはどれか。",
+      "adapted_choices": [
+        "原則として用途地域を定める",
+        "一切の開発行為を禁止する区域である",
+        "すべての都市計画区域で必ず市街化区域を設ける",
+        "おおむね20年間市街化を抑制する区域である"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均18.3字、設問37字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q45",
+      "exam_year_month": "202409",
+      "original_question_number": 45,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "準防火地域で一定の準耐火建築物を建てる際、建蔽率の扱いとして正しいのはどれか。",
+      "adapted_choices": [
+        "必ず建蔽率の上限が0％となる",
+        "法定要件を満たせば建蔽率の緩和を受けられる",
+        "前面道路が12m未満だと建蔽率そのものが道路幅員で決まる",
+        "建蔽率の計算にはセットバック部分を必ず含める"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均21.3字、設問39字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q46",
+      "exam_year_month": "202409",
+      "original_question_number": 46,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "マンションの共用部分を規約で定めることについて適切なのはどれか。",
+      "adapted_choices": [
+        "構造上・利用上独立した部分を規約共用部分にすることは絶対にできない",
+        "共用部分の持分割合は必ず各戸一律である",
+        "規約により所定の専有可能部分を共用部分とすることができる",
+        "専有部分が共有なら全共有者が別々に議決権を行使できる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均26.5字、設問32字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q47",
+      "exam_year_month": "202409",
+      "original_question_number": 47,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "個人が不動産を相続して所有権移転登記をする場合と、贈与により移転登記をする場合の登録免許税率の関係として正しいのはどれか。",
+      "adapted_choices": [
+        "どちらも無条件に非課税である",
+        "相続による移転と贈与による移転で税率は異なる",
+        "相続による移転の税率が贈与より必ず高い",
+        "取引時の実際の売買代金だけを課税標準とする"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均19.0字、設問61字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q48",
+      "exam_year_month": "202409",
+      "original_question_number": 48,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "亡くなった親から相続した土地を子が売却する場合、長期・短期譲渡所得の所有期間判定として原則正しいのはどれか。",
+      "adapted_choices": [
+        "相続登記の日から数え始める",
+        "相続開始日の翌日から数え始める",
+        "被相続人の取得時期を引き継いで判定する",
+        "売買契約をした日以降の期間しか数えられない"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均17.0字、設問54字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q49",
+      "exam_year_month": "202409",
+      "original_question_number": 49,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "相続した空き家について譲渡所得の特別控除を検討する場合、適用期限について正しいのはどれか。",
+      "adapted_choices": [
+        "相続開始日から必ず90日以内に売却する",
+        "相続開始の翌日から20年以内なら無条件に対象",
+        "売却期限は存在しない",
+        "相続開始があった年から数えて3年を経過する日の属する年の12月31日まで等の条件がある"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均23.5字、設問45字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q50",
+      "exam_year_month": "202409",
+      "original_question_number": 50,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "年間の家賃収入900万円、運営費用300万円、物件価格1億2,000万円の収益不動産のNOI利回りはいくらか。",
+      "adapted_choices": [
+        "2.5％",
+        "5.0％",
+        "7.5％",
+        "10.0％"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均4.3字、設問55字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q51",
+      "exam_year_month": "202409",
+      "original_question_number": 51,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "毎年一定額の金銭を贈与する定期贈与契約がある場合、当事者の死亡による扱いとして適切なのはどれか。",
+      "adapted_choices": [
+        "一方の死亡後も必ず同じ条件で永続する",
+        "死亡すると過去の贈与もすべて無効になる",
+        "贈与者または受贈者の死亡によって効力を失う",
+        "受贈者の死亡時には必ず贈与税が倍額になる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均19.5字、設問48字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q52",
+      "exam_year_month": "202409",
+      "original_question_number": 52,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "贈与税の配偶者控除について、婚姻期間が20年を超える夫婦が初めて適用を検討する場合、正しいのはどれか。",
+      "adapted_choices": [
+        "贈与対象は現金なら用途を問わずよい",
+        "婚姻期間は贈与年の1月1日時点で20年以上必要である",
+        "配偶者からの居住用不動産または取得資金の贈与など、所定の要件を満たす必要がある",
+        "適用には税務申告が不要である"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均24.0字、設問51字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q53",
+      "exam_year_month": "202409",
+      "original_question_number": 53,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "父からの贈与に相続時精算課税を選択した子の扱いとして正しいのはどれか。",
+      "adapted_choices": [
+        "父について選択しても、母からの贈与まで自動的に同制度になるわけではない",
+        "父からの贈与について翌年以降いつでも暦年課税に戻せる",
+        "贈与財産は不動産に限られる",
+        "一度の贈与にしか適用されない"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均22.0字、設問35字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q54",
+      "exam_year_month": "202409",
+      "original_question_number": 54,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "任意後見契約が実際に効力を生じるために必要な手続として適切なのはどれか。",
+      "adapted_choices": [
+        "本人が日記に書けば効力が生じる",
+        "契約書を任意の形式でメール送信すれば効力が生じる",
+        "判断能力の低下と同時に裁判所の手続なしで開始する",
+        "家庭裁判所が任意後見監督人を選任する必要がある"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均21.5字、設問36字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q55",
+      "exam_year_month": "202409",
+      "original_question_number": 55,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "共同相続人が協議によって遺産分割を合意した場合、遺産分割協議書の作成形式について正しいのはどれか。",
+      "adapted_choices": [
+        "必ず公正証書を作成しなければ効力がない",
+        "必ず家庭裁判所の審判を経なければならない",
+        "公正証書でなければならないという一般的な法定要件はない",
+        "未成年の相続人がいれば他の相続人の署名のみで常に有効"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均23.0字、設問49字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q56",
+      "exam_year_month": "202409",
+      "original_question_number": 56,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "配偶者居住権について、被相続人所有の建物が相続開始時に配偶者の住まいでなかった場合の原則として正しいのはどれか。",
+      "adapted_choices": [
+        "配偶者居住権の成立には通常、相続開始時にその建物に居住していたことが必要",
+        "相続開始時の居住と無関係に必ず取得できる",
+        "配偶者居住権は必ず所有権と同一である",
+        "配偶者は所有者の承諾なく自由に建物を第三者へ賃貸できる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均25.3字、設問56字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q57",
+      "exam_year_month": "202409",
+      "original_question_number": 57,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "相続税の配偶者に対する税額軽減で適用対象となる配偶者について、正しいのはどれか。",
+      "adapted_choices": [
+        "事実婚のパートナーを全て含む",
+        "法律上の婚姻関係にある配偶者に限られる",
+        "結婚予定者も必ず対象となる",
+        "離婚済みでも過去の婚姻期間が長ければ対象となる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均17.3字、設問40字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q58",
+      "exam_year_month": "202409",
+      "original_question_number": 58,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "相続開始時点の外貨預金を円換算して相続税評価する場合、原則として適切なのはどれか。",
+      "adapted_choices": [
+        "預入時のTTSを用いる",
+        "預入時のTTBを用いる",
+        "課税時期の取引金融機関のTTB等を用いる",
+        "必ず課税時期のTTMの2倍で評価する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均15.0字、設問41字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q59",
+      "exam_year_month": "202409",
+      "original_question_number": 59,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "遺言による遺産分割方法の指定に関する説明として正しいのはどれか。",
+      "adapted_choices": [
+        "遺言者は第三者に遺産分割方法の指定を委託できる",
+        "遺留分を侵害する遺言は当然に全体が無効になる",
+        "一部の相続人だけ相続分を指定する遺言は必ず無効となる",
+        "遺言執行者を指定する遺言は法的効力を持たない"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均23.3字、設問32字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q60",
+      "exam_year_month": "202409",
+      "original_question_number": 60,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "株式会社が事業の全部を他社へ譲渡する際、原則として会社内部で必要となる意思決定はどれか。",
+      "adapted_choices": [
+        "従業員の過半数投票だけで十分",
+        "代表取締役の個人的な署名だけで十分",
+        "通常、株主総会の特別決議による承認が必要",
+        "許可を受けず会社法上の決議を全て省略できる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均18.0字、設問44字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b03.json",
+      "source_blob_sha": "c4a0180b205efbcbf4169e3d34858d6711ca9d16",
+      "modified": true,
+      "modification_note": "原題のテーマから単一論点を選定し、設問・選択肢・必要に応じ数値を独自に再構成。原題の公式正答と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q01",
+      "exam_year_month": "202405",
+      "original_question_number": 1,
+      "grade": "易化疑い",
+      "confidence": "高（原題抜粋と対照）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": true,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "FPが顧客へ金融商品を説明する際、顧客利益を尊重する姿勢として最も適切なのはどれか。",
+      "adapted_choices": [
+        "本人の同意を得ずに税務資料を取引先に渡す",
+        "手数料が高い商品だけを一方的に推奨する",
+        "金融商品の利点だけでなく元本割れなどの不利益も伝える",
+        "為替相場の将来を確実に予言できると説明する"
+      ],
+      "comparison_flags": [
+        "CASE_CONDITION_REMOVED",
+        "DISTRACTORS_WEAKENED"
+      ],
+      "reason": "原題は具体的顧客相談4場面で倫理の適否を判定。加工版は事例条件と例外を減らし、短い一般的行動選択に変更。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b01.json",
+      "source_blob_sha": "3dd3609b05a89d577664b0b88c5392ccd240b5c0",
+      "modified": true,
+      "modification_note": "原題の顧客相談4場面を要約し、設問表現と全選択肢を再構成。原題と選択肢文章は同一ではない。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q02",
+      "exam_year_month": "202405",
+      "original_question_number": 2,
+      "grade": "易化疑い",
+      "confidence": "高（原題抜粋と対照）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": true,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "毎年一定額を受け取りながら住宅ローンの返済原資を考えるとき、一定の年間返済額から借入可能額（現在価値）を概算するために使う係数はどれか。",
+      "adapted_choices": [
+        "年金終価係数",
+        "減債基金係数",
+        "年金現価係数",
+        "資本回収係数"
+      ],
+      "comparison_flags": [
+        "MULTI_TOPIC_TO_SINGLE",
+        "DISTRACTORS_WEAKENED"
+      ],
+      "reason": "原題は可処分所得・バランスシート・年金現価/終価を横断判定。加工版は年金現価係数の名称を選ぶだけで、複数論点の照合負荷を削除。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b01.json",
+      "source_blob_sha": "3dd3609b05a89d577664b0b88c5392ccd240b5c0",
+      "modified": true,
+      "modification_note": "原題の4つの複合記述を、年金現価係数の選択を問う独立した4択へ再設計。原題の選択肢番号3と現在のindex2は偶然対応するが、本文は加工。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q06",
+      "exam_year_month": "202405",
+      "original_question_number": 6,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "国民年金の学生納付特例が承認された期間について、保険料を追納していない場合の説明として適切なのはどれか。",
+      "adapted_choices": [
+        "老齢基礎年金の受給資格期間に含まれるが、年金額には原則反映されない",
+        "受給資格期間にも年金額にも含まれる",
+        "受給資格期間にも年金額にも含まれない",
+        "受給資格期間には含まれないが年金額には反映される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均23.0字、設問52字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b01.json",
+      "source_blob_sha": "3dd3609b05a89d577664b0b88c5392ccd240b5c0",
+      "modified": true,
+      "modification_note": "原題の複数制度に関する正誤判断を学生納付特例の単一論点へ絞り、4肢を全面再作成。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q03",
+      "exam_year_month": "202405",
+      "original_question_number": 3,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "協会けんぽの傷病手当金について、同一の傷病で支給要件を満たした場合の支給期間は原則どう数えるか。",
+      "adapted_choices": [
+        "最初の支給日から暦日で6か月",
+        "支給開始日から通算して1年6か月",
+        "支給開始日から通算3年間",
+        "就業不能である限り期限なく支給"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均14.3字、設問48字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q04",
+      "exam_year_month": "202405",
+      "original_question_number": 4,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "雇用保険の一般的な基本手当を受給するために必要な被保険者期間について、通常の離職者に適用する要件はどれか。",
+      "adapted_choices": [
+        "離職前6か月中1か月以上",
+        "離職前1年間に3か月以上",
+        "離職前2年間に通算12か月以上",
+        "離職前5年間に通算24か月以上"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均13.5字、設問53字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q05",
+      "exam_year_month": "202405",
+      "original_question_number": 5,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "雇用保険の介護休業給付金の対象家族に関する説明として正しいのはどれか。",
+      "adapted_choices": [
+        "実父母だけであり配偶者の父母は対象外",
+        "配偶者の父母も対象となり得る",
+        "配偶者本人は常に対象外",
+        "祖父母は一律対象外"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均13.0字、設問35字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q07",
+      "exam_year_month": "202405",
+      "original_question_number": 7,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "障害厚生年金と同じ原因で労災保険の障害補償年金も支払われる場合、調整の原則として適切なのはどれか。",
+      "adapted_choices": [
+        "障害厚生年金を先に所定率で減額する",
+        "両制度の年金は必ず双方全額支給される",
+        "労災保険給付側が所定率で調整される",
+        "障害基礎年金のみ一律に全額停止される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均17.5字、設問49字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q08",
+      "exam_year_month": "202405",
+      "original_question_number": 8,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "企業型確定拠出年金の老齢給付金を年金形式で受け取ったとき、所得税の区分として基本的に適切なのはどれか。",
+      "adapted_choices": [
+        "給与所得",
+        "雑所得（公的年金等に係るもの）",
+        "退職所得",
+        "一時所得"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均6.8字、設問51字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q09",
+      "exam_year_month": "202405",
+      "original_question_number": 9,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "同じ元本・金利・期間の住宅ローンを比較した場合、元金均等返済と元利均等返済について一般的に正しいのはどれか。",
+      "adapted_choices": [
+        "元金均等返済は当初返済額が低く、総利息は高くなる",
+        "元利均等返済は返済額が一貫して減る",
+        "元金均等返済は当初負担が比較的大きいが総支払利息は少ない",
+        "どちらも金利が同じなら総利息は必ず等しい"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均22.3字、設問54字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q10",
+      "exam_year_month": "202405",
+      "original_question_number": 10,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "リバースモーゲージの『リコース型』を説明したものとして最も適切なのはどれか。",
+      "adapted_choices": [
+        "担保処分後の不足債務について、契約条件により返済義務が残り得る",
+        "不動産の処分額に関係なく債務は必ずゼロになる",
+        "元金返済は契約時に全額完了する",
+        "利用者が死亡したら必ず金融機関が不足額を無条件免除する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均23.8字、設問38字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q11",
+      "exam_year_month": "202405",
+      "original_question_number": 11,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "年金開始までの死亡保障や解約返戻金を抑え、長生きした場合の年金を厚くする設計の個人年金保険を説明したものはどれか。",
+      "adapted_choices": [
+        "死亡保障を最大化することのみを目的とする",
+        "外貨建てに限られる仕組みである",
+        "毎年の年金額は必ずゼロになる",
+        "生存保障を重視する設計では死亡給付等が相対的に小さくなる場合がある"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均20.5字、設問57字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q12",
+      "exam_year_month": "202405",
+      "original_question_number": 12,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "団体定期保険（Bグループ保険）について、通常の加入の仕組みとして正しいのはどれか。",
+      "adapted_choices": [
+        "企業が全従業員を必ず強制加入させる",
+        "従業員等が任意加入し原則本人が保険料を負担する",
+        "契約は単独の個人保険のみとなる",
+        "加入時はすべての契約で医師の診査が義務付けられる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均19.8字、設問41字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q13",
+      "exam_year_month": "202405",
+      "original_question_number": 13,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "少額短期保険業者の死亡保障の保険料について、所得税の生命保険料控除の扱いとして原則適切なのはどれか。",
+      "adapted_choices": [
+        "死亡保障があれば必ず一般生命保険料控除の対象になる",
+        "個人年金保険料控除のみを受けられる",
+        "少額短期保険業者の保険料は原則、生命保険料控除の対象外",
+        "保険料は全額所得から控除できる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均21.0字、設問50字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q14",
+      "exam_year_month": "202405",
+      "original_question_number": 14,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "保険料負担者と被保険者が同じ人の生命保険で、その人の死亡後に相続人以外の指定受取人が死亡保険金を受領した。課税関係の基本はどれか。",
+      "adapted_choices": [
+        "相続人でなければ常に所得税",
+        "相続税の課税対象になり得るが、法定相続人に係る非課税枠は適用されない",
+        "常に贈与税",
+        "全額非課税"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均14.3字、設問65字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q15",
+      "exam_year_month": "202405",
+      "original_question_number": 15,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "法人が契約者・保険料負担者で、死亡保険金も満期保険金も法人が受け取る養老保険について、通常の保険料経理処理はどれか。",
+      "adapted_choices": [
+        "全額損金処理する",
+        "全額役員給与として扱う",
+        "半額のみ福利厚生費とする",
+        "原則、全額を保険積立金などの資産に計上する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均13.0字、設問58字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q16",
+      "exam_year_month": "202405",
+      "original_question_number": 16,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "任意自動車保険の対物賠償で、運転中に通行人の飼い犬に衝突し法律上の損害賠償責任を負ったときの扱いとして一般に正しいのはどれか。",
+      "adapted_choices": [
+        "犬は法律上の『物』として扱われ、対物賠償の対象となり得る",
+        "犬は人身事故として常に対人賠償だけで補償する",
+        "他人のペットの損害はすべて車両保険から支払う",
+        "犬への損害は法律上賠償責任を負わない"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均22.5字、設問63字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q17",
+      "exam_year_month": "202405",
+      "original_question_number": 17,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "地震保険の建築年・耐震等級・免震建築物・耐震診断の割引制度について原則適切なのはどれか。",
+      "adapted_choices": [
+        "複数条件を満たせば割引率をすべて合算する",
+        "割引制度はどれも証明資料が不要である",
+        "複数の割引を重複適用せず、所定の証明により一つを適用する",
+        "耐震性は保険料と全く無関係である"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均20.5字、設問44字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q18",
+      "exam_year_month": "202405",
+      "original_question_number": 18,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "個人が傷害保険の入院給付金を受け取った場合、所得税上の基本的な取扱いとして適切なのはどれか。",
+      "adapted_choices": [
+        "給与所得になる",
+        "常に雑所得になる",
+        "身体の傷害に基因する入院給付金は原則非課税",
+        "契約者貸付として課税される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均12.3字、設問46字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q19",
+      "exam_year_month": "202405",
+      "original_question_number": 19,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "先進医療特約の給付対象になるかを考える際、先進医療の指定時期について適切な説明はどれか。",
+      "adapted_choices": [
+        "保険契約時点に指定された技術が永続的に対象となる",
+        "実際に療養を受けた時点の先進医療指定や約款の条件を確認する",
+        "保険会社が扱う全ての自由診療が自動的に対象となる",
+        "医師の承認があれば指定医療機関でなくても必ず支払う"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均25.5字、設問44字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q20",
+      "exam_year_month": "202405",
+      "original_question_number": 20,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "企業が従業員の死亡退職金・弔慰金の財源を備える際、一般に目的に適した制度はどれか。",
+      "adapted_choices": [
+        "住宅ローンの返済を保障する団体信用生命保険",
+        "従業員の死亡に備える総合福祉団体定期保険",
+        "企業所有車両の車両保険",
+        "建物の火災保険"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均14.8字、設問41字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q21",
+      "exam_year_month": "202405",
+      "original_question_number": 21,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "消費者物価指数（CPI）の指数水準の読み方として適切なのはどれか。",
+      "adapted_choices": [
+        "指数100なら物価が前年より100%上昇したことを意味する",
+        "指数100なら各品目価格がすべて100円である",
+        "基準年の水準を100として相対的な物価水準を示す",
+        "CPIは必ず毎月基準年を変更する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均23.0字、設問33字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q22",
+      "exam_year_month": "202405",
+      "original_question_number": 22,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "金融機関の仕組預金について、満期の取扱いとして正しいものはどれか。",
+      "adapted_choices": [
+        "商品によって金融機関側の判断など所定条件で満期が早まることがある",
+        "すべて普通預金と同様にいつでも無条件で引き出せる",
+        "預入期間中の金利や条件が必ず固定されない",
+        "仕組預金ではデリバティブを一切使わない"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均23.8字、設問33字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q23",
+      "exam_year_month": "202405",
+      "original_question_number": 23,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "ベア型投資信託の運用目的として最も適切なのはどれか。",
+      "adapted_choices": [
+        "ベンチマークが上がると同率で上昇することのみを目指す",
+        "公社債の利息を毎月定額で保証する",
+        "元本価格を永続的に保証する",
+        "対象指数の下落時に基準価額が上昇するよう設計する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均19.8字、設問26字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+      "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+      "modified": true,
+      "modification_note": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q24",
+      "exam_year_month": "202405",
+      "original_question_number": 24,
+      "grade": "易化疑い",
+      "confidence": "高（原題抜粋と対照）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": true,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "額面100円、年利金0.8円の債券を98円で買い、2年後に99円で売却した。税・手数料を除く所有期間利回り（単利年率）は約何％か。",
+      "adapted_choices": [
+        "0.82％",
+        "1.33％",
+        "2.02％",
+        "2.65％"
+      ],
+      "comparison_flags": [
+        "NUMERIC_SCENARIO_CHANGED",
+        "NEGATIVE_RETURN_TO_POSITIVE",
+        "CALCULATION_EASED"
+      ],
+      "reason": "原題は額面100円・購入100円・売却96.3円という損失を含む10年残存/2年売却の所有期間利回りで負符号の計算を要した。加工版は購入98円→売却99円の値上がり益に変更し、損益符号の判定が容易になった。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q25",
+      "exam_year_month": "202405",
+      "original_question_number": 25,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "債券の信用格付けについて、一般に投資適格とされる格付けの下限はどれか。",
+      "adapted_choices": [
+        "BBB格相当",
+        "BB格相当",
+        "B格相当",
+        "CCC格相当"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均5.3字、設問35字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q26",
+      "exam_year_month": "202405",
+      "original_question_number": 26,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "株価1,600円、1株当たり純利益80円、1株当たり純資産800円の会社のPBRはいくらか。",
+      "adapted_choices": [
+        "0.5倍",
+        "1.0倍",
+        "2.0倍",
+        "20倍"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均3.8字、設問46字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q27",
+      "exam_year_month": "202405",
+      "original_question_number": 27,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "個人が銀行で保有する外貨普通預金について、預金保険制度の扱いはどれか。",
+      "adapted_choices": [
+        "円預金と合算して1,000万円まで保護される",
+        "利息だけ保護される",
+        "預入通貨が米ドルなら全額保護される",
+        "預金保険制度による保護の対象外である"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均16.5字、設問35字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q28",
+      "exam_year_month": "202405",
+      "original_question_number": 28,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "プット・オプションを買った人の権利として適切なのはどれか。",
+      "adapted_choices": [
+        "一定の価格で原資産を買う義務",
+        "一定の価格で原資産を売る権利",
+        "一定の価格で原資産を売る義務",
+        "原資産の利息を無条件で受け取る権利"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均14.8字、設問29字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q29",
+      "exam_year_month": "202405",
+      "original_question_number": 29,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "無リスク利子率1％、投資信託の実績収益率7％、標準偏差3％の場合、シャープレシオはいくらか。",
+      "adapted_choices": [
+        "0.5",
+        "1.0",
+        "2.0",
+        "3.0"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均3.0字、設問46字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q30",
+      "exam_year_month": "202405",
+      "original_question_number": 30,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "事業者の不当な勧誘で消費者が重要事項を誤認して契約した場合、消費者契約法上の扱いで適切なのはどれか。",
+      "adapted_choices": [
+        "契約は例外なく当然無効となる",
+        "契約後に誤認に気付いても一切救済されない",
+        "所定の要件を満たすと消費者は意思表示を取り消せる",
+        "事業者が損失全額を無条件に保証する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均18.8字、設問50字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q31",
+      "exam_year_month": "202405",
+      "original_question_number": 31,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "所得税の基本的な課税方式として適切なのはどれか。",
+      "adapted_choices": [
+        "課税所得が増えても税率は常に一定である",
+        "所得税の税率は一律20％である",
+        "所得税の課税対象となる所得区分は3種類だけである",
+        "課税総所得金額には超過累進税率が適用される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均19.8字、設問24字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q32",
+      "exam_year_month": "202405",
+      "original_question_number": 32,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "会社員が個人で保有する上場株式の配当金を受け取った場合、原則としてどの所得に分類されるか。",
+      "adapted_choices": [
+        "給与所得",
+        "配当所得",
+        "一時所得",
+        "不動産所得"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均4.3字、設問45字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q33",
+      "exam_year_month": "202405",
+      "original_question_number": 33,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "給与所得480万円と物販事業の事業所得の赤字80万円（損益通算を妨げる特例なし）だけがある場合、損益通算後の総所得金額はいくらか。",
+      "adapted_choices": [
+        "400万円",
+        "480万円",
+        "560万円",
+        "赤字は通算不可"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均5.5字、設問65字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q34",
+      "exam_year_month": "202405",
+      "original_question_number": 34,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "所得税の医療費控除について、納税者本人の合計所得金額が1,200万円である場合の説明として適切なのはどれか。",
+      "adapted_choices": [
+        "所得金額が1,000万円超なら適用不可",
+        "給与所得者には適用されない",
+        "支払額が全額無条件に控除される",
+        "所得金額が1,000万円を超えても要件を満たせば適用される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均19.0字、設問54字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q35",
+      "exam_year_month": "202405",
+      "original_question_number": 35,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "住宅ローン控除を初めて受ける給与所得者の、居住開始年分の申告について原則適切なのはどれか。",
+      "adapted_choices": [
+        "最初の年は年末調整だけで控除を完了できる",
+        "最初の年は所定の確定申告が必要である",
+        "年末残高証明書は控除と一切無関係である",
+        "住宅購入額の全額がその年の所得税額から差し引かれる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均20.5字、設問45字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q36",
+      "exam_year_month": "202405",
+      "original_question_number": 36,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "法人税の確定申告書について、一般的な提出期限は事業年度終了日の翌日から何か月以内か（延長特例なし）。",
+      "adapted_choices": [
+        "1か月",
+        "2か月",
+        "3か月",
+        "6か月"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均3.0字、設問50字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q37",
+      "exam_year_month": "202405",
+      "original_question_number": 37,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "会社が支払う租税公課のうち、原則として法人税の所得計算上損金算入が認められないのはどれか。",
+      "adapted_choices": [
+        "法人税の本税",
+        "事務所に課される固定資産税",
+        "会社が事業で納付する所定の印紙税",
+        "会社が納付する事業所税"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均11.5字、設問45字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q38",
+      "exam_year_month": "202405",
+      "original_question_number": 38,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "個人事業主の消費税確定申告について、法定申告期限として通常正しいのはどれか。",
+      "adapted_choices": [
+        "その年の12月31日",
+        "翌年1月31日",
+        "翌年3月31日",
+        "翌年5月31日"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均7.8字、設問38字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q39",
+      "exam_year_month": "202405",
+      "original_question_number": 39,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "法人から役員に社宅を無償で貸している場合、その役員の所得税の取扱いとして原則適切なのはどれか。",
+      "adapted_choices": [
+        "経済的利益は全て非課税となる",
+        "所定の賃貸料相当額などを基準に給与課税が問題となる",
+        "役員が法人へ寄附したとみなされる",
+        "役員の不動産所得となる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均16.5字、設問47字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q40",
+      "exam_year_month": "202405",
+      "original_question_number": 40,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "適格請求書発行事業者の登録を受けた事業者について、消費税の簡易課税制度との関係で適切なのはどれか。",
+      "adapted_choices": [
+        "登録すると簡易課税制度は一律に利用禁止となる",
+        "登録は簡易課税適用の要件と無関係で、簡易課税は条件を満たせば選択可能",
+        "登録すると消費税の納税義務が常に免除される",
+        "登録していれば届出不要で必ず簡易課税になる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均24.5字、設問49字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q41",
+      "exam_year_month": "202405",
+      "original_question_number": 41,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "鑑定評価の収益還元法で、純収益を還元利回りで割って収益価格を求める方法はどれか。",
+      "adapted_choices": [
+        "取引事例比較法",
+        "原価法",
+        "直接還元法",
+        "DCF法"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均4.8字、設問40字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q42",
+      "exam_year_month": "202405",
+      "original_question_number": 42,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "売買目的物に契約内容に適合しない品質上の不具合があり、売主が引渡時にその不具合を知っていた場合、買主による通知について適切なのはどれか。",
+      "adapted_choices": [
+        "買主が1年以内に通知しなければ例外なく権利行使できない",
+        "売主が不具合を知っていた場合には、通知期間に関する一般的な制限の例外がある",
+        "売主が知っていた場合でも常に1週間で権利が消滅する",
+        "売主が知っていた場合は買主の請求権が必ず全て消滅する"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均28.8字、設問68字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q43",
+      "exam_year_month": "202405",
+      "original_question_number": 43,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "一般定期借地権（借地借家法22条）において、更新を行わない旨などの特約を有効に定める形式として適切なのはどれか。",
+      "adapted_choices": [
+        "当事者が口頭だけで合意すればよい",
+        "契約書の形式は一切問われない",
+        "必ず市区町村長の許可書が必要である",
+        "公正証書による等の書面又は電磁的記録による必要がある"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均18.3字、設問56字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b03.json",
+      "source_blob_sha": "755f5f5c8f1a1211054a26d956f78ba4e8442b78",
+      "modified": true,
+      "modification_note": "公式原題のテーマを維持し、設定・数値・選択肢・解説を独自に再構成。原題の正答と加工設問の正答は独立管理。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q44",
+      "exam_year_month": "202405",
+      "original_question_number": 44,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "普通借家契約で契約期間を8か月と定めた場合、期間に関する原則的な法的扱いはどれか。",
+      "adapted_choices": [
+        "期間8か月の定めがそのまま有効となる",
+        "定期借家契約へ自動変更される",
+        "期間の定めのない賃貸借とみなされる",
+        "賃借人は直ちに退去しなければならない"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均16.8字、設問41字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q45",
+      "exam_year_month": "202405",
+      "original_question_number": 45,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "共同住宅の共用廊下・共用階段の床面積について、建築基準法上の容積率算定の原則はどれか。",
+      "adapted_choices": [
+        "必ず全床面積を含める",
+        "共用廊下だけ含める",
+        "共同住宅でも店舗と同様に必ず算入する",
+        "所定の共用廊下・階段部分は算入しない"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均13.8字、設問43字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q46",
+      "exam_year_month": "202405",
+      "original_question_number": 46,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "分譲マンションの専有部分と敷地利用権の処分について、区分所有法の原則として正しいのはどれか。",
+      "adapted_choices": [
+        "専有部分と敷地利用権は通常分離して売却できない",
+        "敷地利用権は必ず単独で自由に売却できる",
+        "管理規約がなくても敷地利用権は常に放棄できる",
+        "区分所有者が1人でも分離売却を希望すれば可能となる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均22.3字、設問46字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q47",
+      "exam_year_month": "202405",
+      "original_question_number": 47,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "都市計画税の制限税率について正しいのはどれか。",
+      "adapted_choices": [
+        "1.4％",
+        "0.3％",
+        "3.0％",
+        "0.03％"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均4.3字、設問23字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q48",
+      "exam_year_month": "202405",
+      "original_question_number": 48,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "居住用財産の3,000万円特別控除について、居住をやめた建物と敷地を売る場合の譲渡期限は原則どれか。",
+      "adapted_choices": [
+        "転居後6か月以内",
+        "転居後1年以内",
+        "住まなくなった日から3年を経過する日の属する年の12月31日まで",
+        "売却期限の規定はない"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均14.3字、設問50字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q49",
+      "exam_year_month": "202405",
+      "original_question_number": 49,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "土地所有者がテナントから建設資金の一部を借り、そのテナントに建物を賃貸する有効活用方式はどれか。",
+      "adapted_choices": [
+        "等価交換方式",
+        "定期借地権方式",
+        "事業受託方式",
+        "建設協力金方式"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均6.5字、設問48字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q50",
+      "exam_year_month": "202405",
+      "original_question_number": 50,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "賃貸ビルの年間運営純収益が600万円、総投資額が1億5,000万円の場合、NOI利回りはどれか。",
+      "adapted_choices": [
+        "4％",
+        "6％",
+        "8％",
+        "10％"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均2.3字、設問48字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q51",
+      "exam_year_month": "202405",
+      "original_question_number": 51,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "民法上、兄弟姉妹の子（甥・姪）は本人から見て何親等の血族か。",
+      "adapted_choices": [
+        "2親等",
+        "3親等",
+        "4親等",
+        "5親等"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均3.0字、設問30字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q52",
+      "exam_year_month": "202405",
+      "original_question_number": 52,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "相続時精算課税で2024年以後の贈与に設けられた年110万円の基礎控除の扱いとして適切なのはどれか。",
+      "adapted_choices": [
+        "制度の基礎控除は存在しない",
+        "贈与者ごとに無制限に110万円ずつ控除できる",
+        "一定の条件下で年110万円の基礎控除が設けられている",
+        "基礎控除後の税率は必ず25％となる"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均19.5字、設問50字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q53",
+      "exam_year_month": "202405",
+      "original_question_number": 53,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "被相続人の子が相続開始前に死亡し、その子に子（被相続人の孫）がいる場合の原則はどれか。",
+      "adapted_choices": [
+        "孫は死亡した子を代襲して相続人となり得る",
+        "死亡した子の配偶者が自動的に代襲相続する",
+        "孫の代襲相続は常に禁止される",
+        "孫が相続するには必ず遺言が必要である"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均18.0字、設問43字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q54",
+      "exam_year_month": "202405",
+      "original_question_number": 54,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "遺産の不動産を長男が単独取得し、他の相続人へ自己資金から金銭を渡す遺産分割はどれか。",
+      "adapted_choices": [
+        "換価分割",
+        "現物分割のみ",
+        "共有分割",
+        "代償分割"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均4.5字、設問42字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q55",
+      "exam_year_month": "202405",
+      "original_question_number": 55,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 1,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "相続人が自己を受取人とする被相続人の生命保険契約から死亡保険金を受領した場合、それだけで民法上の単純承認となるか。",
+      "adapted_choices": [
+        "必ず単純承認となる",
+        "原則として受取人固有の権利に基づく受領であり、それだけでは単純承認とならない",
+        "被相続人のすべての預金を相続したとみなす",
+        "相続放棄の申述が自動的に受理される"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均21.0字、設問57字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q56",
+      "exam_year_month": "202405",
+      "original_question_number": 56,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 2,
+      "adapted_answer_zero_based": 2,
+      "adapted_stem": "自筆証書遺言にパソコンで作成した財産目録を添付する場合の原則的な形式要件はどれか。",
+      "adapted_choices": [
+        "遺言書の全文をパソコンで印字すればよい",
+        "財産目録には署名も押印も不要",
+        "財産目録の各葉に署名と押印が必要となる",
+        "公証人が財産目録に必ず署名しなければならない"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均18.5字、設問41字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q57",
+      "exam_year_month": "202405",
+      "original_question_number": 57,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "相続税の申告・納税について、通常の申告期限は相続の開始を知った日の翌日から何か月以内か。",
+      "adapted_choices": [
+        "3か月",
+        "6か月",
+        "8か月",
+        "10か月"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均3.3字、設問44字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q58",
+      "exam_year_month": "202405",
+      "original_question_number": 58,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 0,
+      "adapted_stem": "所有する宅地上に自分名義のアパートを建て、第三者へ賃貸している場合、土地の相続税評価区分として原則適切なのはどれか。",
+      "adapted_choices": [
+        "貸家建付地",
+        "貸宅地",
+        "自用地しか認められない",
+        "貸家建付借地権"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均6.5字、設問58字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q59",
+      "exam_year_month": "202405",
+      "original_question_number": 59,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 3,
+      "adapted_answer_zero_based": 1,
+      "adapted_stem": "特定居住用宅地等に該当する被相続人の自宅敷地について、相続税評価額の減額割合として原則正しいのはどれか。",
+      "adapted_choices": [
+        "50％",
+        "80％",
+        "90％",
+        "100％"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。公式原題の複数記述の判断を、単一論点の短い設問と識別容易な誤答肢へ再構成している。加工後の肢平均3.3字、設問52字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q60",
+      "exam_year_month": "202405",
+      "original_question_number": 60,
+      "grade": "易化疑い",
+      "confidence": "低～中（加工記録と新設問の構造による一次スクリーニング）",
+      "original_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_pdf_page": "未固定（原題番号で参照）",
+      "original_text_directly_checked": false,
+      "original_answer_one_based": 4,
+      "adapted_answer_zero_based": 3,
+      "adapted_stem": "経営承継円滑化法の遺留分に関する民法の特例について、後継者の範囲として適切なのはどれか。",
+      "adapted_choices": [
+        "旧代表者の実子だけ",
+        "旧代表者の親族だけ",
+        "会社役員であれば承継実態を問わず全員",
+        "法定要件を満たせば親族以外の後継者も対象になり得る"
+      ],
+      "comparison_flags": [
+        "ADAPTED_FOUR_CHOICES",
+        "SINGLE_TOPIC_FOCUS",
+        "SOURCE_COMPARISON_PENDING",
+        "NUMERIC_OR_SCENARIO_CHANGE_REVIEW"
+      ],
+      "reason": "制作データは全4肢を独自再構成した改変版。数値・条件を加工した独立設定になっており、原題の複数条件の読解・比較を残しているか未立証。加工後の肢平均15.3字、設問44字。原題との逐肢・字句の1対1対照未完了につき『易化疑い』として再設計審査を要する。",
+      "source_batch": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+      "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+      "modified": true,
+      "modification_note": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "followup": "原題4肢と加工後4肢の対応表を作り、計算所要手順・選択肢識別力を人手で評価すること"
+    }
+  ]
+}

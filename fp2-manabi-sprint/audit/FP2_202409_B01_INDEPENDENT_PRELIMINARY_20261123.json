@@ -1,0 +1,1112 @@
+{
+  "audit_id": "FP2-202409-B01-INDEPENDENT-PRELIMINARY-20261123",
+  "scope": "2024-09 Q01-Q20",
+  "source_branch": "feature/fp2-academic-300-expansion-20261123",
+  "source_path": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b01.json",
+  "official_question": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+  "official_answer": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+  "applicable_on": "2026-04-01",
+  "audit_type": "independent_primary_source_content_review_20261123",
+  "summary": {
+    "pass": 20,
+    "fail": 0,
+    "hold": 0,
+    "critical_confirmed": 0,
+    "high_review_flags_remaining": 0,
+    "canonical_content_approval": 20,
+    "release_approval": false
+  },
+  "limitations": "現行公開の行政・制度・保険者公式資料と原題・公式解答により照合。各資料の過去版全文を2026-04-01にスナップショット固定できたわけではない。制度変更があるDCについては施行日を別途確認。",
+  "items": [
+    {
+      "id": "FP2-OFFICIAL-202409-Q01",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "FPが顧客に商品を勧める際の基本姿勢として最も適切なのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "顧客の事情と不利益を説明し、理解を確認する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "報酬の高い商品を優先する",
+          "correct": false,
+          "reason": "報酬だけを優先し顧客適合性を無視するため不適切",
+          "source_url": "https://www.fsa.go.jp/policy/kokyakuhoni/kokyakuhoni.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "顧客の事情と不利益を説明し、理解を確認する",
+          "correct": true,
+          "reason": "顧客の事情・不利益説明・理解確認が顧客本位に合う",
+          "source_url": "https://www.fsa.go.jp/policy/kokyakuhoni/kokyakuhoni.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "個人情報を本人の同意なく提携先へ渡す",
+          "correct": false,
+          "reason": "同意なく個人情報を第三者提供するため不適切（法定例外は設問外）",
+          "source_url": "https://www.fsa.go.jp/policy/kokyakuhoni/kokyakuhoni.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "将来の運用利益を保証する",
+          "correct": false,
+          "reason": "不確実な運用利益の保証は不適切",
+          "source_url": "https://www.fsa.go.jp/policy/kokyakuhoni/kokyakuhoni.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "報酬優先でなく顧客本位、理解しやすい重要事項説明が必要。個人情報の無断共有・利益保証も適切でない。",
+      "primary_sources": [
+        "https://www.fsa.go.jp/policy/kokyakuhoni/kokyakuhoni.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q02",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "FPが登録資格を持たずに行う有償業務のうち、資格法上の制限に特に注意が必要なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "社会保険労務士業務に当たる年金請求書の作成・提出代行をする",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "年金制度の概要を解説する",
+          "correct": false,
+          "reason": "一般的な年金制度説明は独占対象の申請書作成代行ではない",
+          "source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=84020000&dataType=0&pageNo=1"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "一般的な家計収支を整理する",
+          "correct": false,
+          "reason": "家計収支整理は独占対象の申請書作成代行ではない",
+          "source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=84020000&dataType=0&pageNo=1"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "社会保険労務士業務に当たる年金請求書の作成・提出代行をする",
+          "correct": true,
+          "reason": "社労士法上の申請書作成・提出代行に該当し資格制限の注意が必要",
+          "source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=84020000&dataType=0&pageNo=1"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "生活費の予算表を作る",
+          "correct": false,
+          "reason": "予算表作成は独占対象の申請書作成代行ではない",
+          "source_url": "https://www.mhlw.go.jp/web/t_doc?dataId=84020000&dataType=0&pageNo=1"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "制度一般説明と違い、報酬を受けて労働社会保険諸法令に基づく申請書を作成・提出代行する業務は社労士法上の制限対象。",
+      "primary_sources": [
+        "https://www.mhlw.go.jp/web/t_doc?dataId=84020000&dataType=0&pageNo=1"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q03",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "会社を退職した人が健康保険の任意継続を選ぶ場合の保険料負担はどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "本人が全額負担する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "勤務先が全額負担する",
+          "correct": false,
+          "reason": "退職前勤務先が全額負担する制度ではない",
+          "source_url": "https://www.kyoukaikenpo.or.jp/about/business/overview/001/index.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "本人が全額負担する",
+          "correct": true,
+          "reason": "任意継続被保険者が全額負担する",
+          "source_url": "https://www.kyoukaikenpo.or.jp/about/business/overview/001/index.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "市町村が半額を負担する",
+          "correct": false,
+          "reason": "市町村による半額負担ではない",
+          "source_url": "https://www.kyoukaikenpo.or.jp/about/business/overview/001/index.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "退職前の事業主が半額を負担する",
+          "correct": false,
+          "reason": "事業主の折半負担は退職後の任意継続には適用されない",
+          "source_url": "https://www.kyoukaikenpo.or.jp/about/business/overview/001/index.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "任意継続保険料は本人が全額負担し事業主・自治体が負担するものではない。",
+      "primary_sources": [
+        "https://www.kyoukaikenpo.or.jp/about/business/overview/001/index.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q04",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "労災保険の障害補償給付について適切なのはどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "障害等級に応じ年金か一時金かの給付区分が定まる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "被災者は等級に関係なく年金・一時金を自由に選べる",
+          "correct": false,
+          "reason": "等級で年金と一時金が区分され自由選択できない",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154478.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "業務上災害では一切支給されない",
+          "correct": false,
+          "reason": "業務上災害こそ障害補償給付の対象",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154478.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "労働者が事業主を兼ねれば必ず対象となる",
+          "correct": false,
+          "reason": "事業主の一般的自動適用はなく特別加入等が別途問題となる",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154478.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "障害等級に応じ年金か一時金かの給付区分が定まる",
+          "correct": true,
+          "reason": "1～7級年金、8～14級一時金に区分",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154478.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "障害1～7級は年金、8～14級は一時金。等級を問わない任意選択制ではない。",
+      "primary_sources": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154478.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q05",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "出生時育児休業の取得方法で正しいのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "原則として子の出生後8週間以内に通算4週間まで、2回に分割できる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "原則として子の出生後8週間以内に通算4週間まで、2回に分割できる",
+          "correct": true,
+          "reason": "出生後8週間以内通算28日まで2回分割できる",
+          "source_url": "https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/ikuji/paternity/"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "必ず1回で取得しなければならない",
+          "correct": false,
+          "reason": "2回分割できるため誤り",
+          "source_url": "https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/ikuji/paternity/"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "原則として出産前だけ取得できる",
+          "correct": false,
+          "reason": "出生時育児休業の原則的取得期間に反する",
+          "source_url": "https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/ikuji/paternity/"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "介護休業の93日と通算される",
+          "correct": false,
+          "reason": "介護休業の通算93日とは別制度",
+          "source_url": "https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/ikuji/paternity/"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "産後8週間以内、4週間（28日）限度、2回分割可能。介護休業と別制度。",
+      "primary_sources": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/ikuji/paternity/"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q06",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "障害厚生年金の受給者に子がいる場合の加算に関する原則はどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "子の加算は障害基礎年金などの制度で要件に応じて扱う",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "障害厚生年金に子の加算が一律に付く",
+          "correct": false,
+          "reason": "子の加算は障害基礎年金で要件に応じて判断",
+          "source_url": "https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150514.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "子の加算は障害基礎年金などの制度で要件に応じて扱う",
+          "correct": true,
+          "reason": "子の加算の主体は障害基礎年金であり正しい",
+          "source_url": "https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150514.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "すべての障害年金が非課税でない",
+          "correct": false,
+          "reason": "障害年金は原則非課税で、否定文は誤り",
+          "source_url": "https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150514.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "子がいると障害等級が一段上がる",
+          "correct": false,
+          "reason": "子の存在で障害等級は変わらない",
+          "source_url": "https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150514.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "子の加算は障害基礎年金の要件に従う。障害厚生年金に一律加算ではなく、障害等級が子の有無で変わるわけでもない。",
+      "primary_sources": [
+        "https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150514.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q07",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "企業型DCとiDeCoに関する説明として適切なのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "企業型DCとiDeCoは一定の条件の下で併用可能である",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "企業型DCに入ると必ずiDeCo加入不可となる",
+          "correct": false,
+          "reason": "企業型DC加入だけでiDeCoが常に禁止されるわけではない",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/kyoshutsu/gaiyou.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "企業型DCとiDeCoは一定の条件の下で併用可能である",
+          "correct": true,
+          "reason": "一定の加入・拠出条件下で併用できる",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/kyoshutsu/gaiyou.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "事業主掛金は従業員が全額拠出する",
+          "correct": false,
+          "reason": "事業主掛金は事業主が拠出する",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/kyoshutsu/gaiyou.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "DCの運用資産は預金保険制度で元本保証される",
+          "correct": false,
+          "reason": "選択した運用資産のすべてが預金保険で元本保証されるわけではない",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/kyoshutsu/gaiyou.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "企業型DCとiDeCoは条件付きで併用可能。事業主掛金は事業主拠出。運用商品すべてが預金保護の対象ではない。",
+      "primary_sources": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/kyoshutsu/gaiyou.html",
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/kyoshutsu/2025kaisei.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q08",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "中小企業退職金共済の掛金負担について適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "事業主が全額を負担する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "従業員が必ず半額負担する",
+          "correct": false,
+          "reason": "従業員に掛金を負担させられない",
+          "source_url": "https://chutaikyo.taisyokukin.go.jp/kentou/seido/seido04.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "国が全額負担する",
+          "correct": false,
+          "reason": "国が全額負担する仕組みではない（助成制度は別）",
+          "source_url": "https://chutaikyo.taisyokukin.go.jp/kentou/seido/seido04.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "事業主が全額を負担する",
+          "correct": true,
+          "reason": "掛金は全額事業主負担",
+          "source_url": "https://chutaikyo.taisyokukin.go.jp/kentou/seido/seido04.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "従業員が希望すれば全額負担する",
+          "correct": false,
+          "reason": "希望があっても従業員全額負担は認められない",
+          "source_url": "https://chutaikyo.taisyokukin.go.jp/kentou/seido/seido04.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "中退共の掛金は全額事業主負担で従業員負担は不可。原題は小規模企業共済の正答肢を含む別構成。",
+      "primary_sources": [
+        "https://chutaikyo.taisyokukin.go.jp/kentou/seido/seido04.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題Q08の正解は小規模企業共済の解約手当金（原題肢3）。加工後は原題肢4に含まれる中退共の『折半可能』という誤りを反転させ、掛金全額事業主負担の独立問題に再設計。原題正解番号を流用していない。",
+      "high_flag_resolution": "resolved_with_documented_scope",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q09",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "同じ金利・返済期間・繰上返済額の住宅ローンで、一般に支払利息をより減らす方法はどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "返済期間を短くする期間短縮型",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "毎月返済額の軽減型",
+          "correct": false,
+          "reason": "一般に期間短縮型より総支払利息の削減は小さい",
+          "source_url": "https://www.jhf.go.jp/hensai/kuriage/index.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "繰上返済しない方法",
+          "correct": false,
+          "reason": "繰上返済なしでは同額の利息削減が生じない",
+          "source_url": "https://www.jhf.go.jp/hensai/kuriage/index.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "返済期間を短くする期間短縮型",
+          "correct": true,
+          "reason": "月額を原則維持し返済期間を短縮して総利息をより削減",
+          "source_url": "https://www.jhf.go.jp/hensai/kuriage/index.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "毎月返済額を任意に増減させる方法",
+          "correct": false,
+          "reason": "毎月の任意増減は通常の繰上返済の比較類型ではない",
+          "source_url": "https://www.jhf.go.jp/hensai/kuriage/index.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "期間短縮型は返済額軽減型より一般に総利息削減効果が大きい。返済方式・金利条件等による例外に留意。",
+      "primary_sources": [
+        "https://www.jhf.go.jp/hensai/kuriage/index.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q10",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "一般的なデビットカードの支払方法として正しいのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "購入時に連動する預金口座から即時引落し",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "翌月一括後払い",
+          "correct": false,
+          "reason": "後払いはクレジットカードの一般的仕組み",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "購入時に連動する預金口座から即時引落し",
+          "correct": true,
+          "reason": "預金口座から原則即時引き落とす",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "必ず現金を事前チャージする",
+          "correct": false,
+          "reason": "事前チャージ必須なのはプリペイドの典型",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "利用後に分割払いへ自動変更される",
+          "correct": false,
+          "reason": "分割払いへの自動変更ではない",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "デビットカードは連動預金口座から決済時に原則即時引落し。原題Q10との主題整合を確認。",
+      "primary_sources": [
+        "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q11",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "少額短期保険業者の保険料について適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "一般に生命保険料控除・地震保険料控除の対象とならない",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "支払保険料は必ず地震保険料控除となる",
+          "correct": false,
+          "reason": "少短の保険料が必ず地震控除になるわけではない",
+          "source_url": "https://www.shougakutanki.jp/general/consumer/insurance.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "契約者保護機構による補償が必ず適用される",
+          "correct": false,
+          "reason": "少短は保険契約者保護機構の対象ではない",
+          "source_url": "https://www.shougakutanki.jp/general/consumer/insurance.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "一般に生命保険料控除・地震保険料控除の対象とならない",
+          "correct": true,
+          "reason": "少短の保険料は所得税法上の保険料控除の対象外",
+          "source_url": "https://www.shougakutanki.jp/general/consumer/insurance.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "生命保険会社の保険と全く同じ上限額が適用される",
+          "correct": false,
+          "reason": "通常の生命保険会社と同じ控除上限が適用されるわけではない",
+          "source_url": "https://www.shougakutanki.jp/general/consumer/insurance.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "少額短期保険料は所得税法上の保険料控除対象外。保護機構も対象外（金融庁資料参照）。",
+      "primary_sources": [
+        "https://www.shougakutanki.jp/general/consumer/insurance.html",
+        "https://www.fsa.go.jp/ordinary/hoken_hogo/"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q12",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "生命保険料を構成する2つの部分の組合せはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "純保険料と付加保険料",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "純保険料と付加保険料",
+          "correct": true,
+          "reason": "営業保険料を純保険料と付加保険料に分解",
+          "source_url": "https://www.jaifa.or.jp/knowledge/kiso_sei_82/"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "元本と利息",
+          "correct": false,
+          "reason": "元本・利息は保険料の構成2区分ではない",
+          "source_url": "https://www.jaifa.or.jp/knowledge/kiso_sei_82/"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "掛金と配当金",
+          "correct": false,
+          "reason": "掛金・配当金は保険料の構成2区分ではない",
+          "source_url": "https://www.jaifa.or.jp/knowledge/kiso_sei_82/"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "保険価額と保険金額",
+          "correct": false,
+          "reason": "保険価額・保険金額は保険料の構成2区分ではない",
+          "source_url": "https://www.jaifa.or.jp/knowledge/kiso_sei_82/"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "営業保険料は純保険料と付加保険料で構成。原題Q12の正答は別の不適切肢なので、正答対象の変更を記録。",
+      "primary_sources": [
+        "https://www.jaifa.or.jp/knowledge/kiso_sei_82/"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題Q12は『不適切な記述』を選ぶ問題で原題正答は肢3。加工後は別の適切な基本知識『純保険料＋付加保険料』を正答とする設問へ再設計。原題の正答と加工後の正答が一致する必要はない。",
+      "high_flag_resolution": "resolved_with_documented_scope",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q13",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "高度障害保険金が支払われた養老保険の一般的な取扱いはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "基本契約は通常消滅する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "同じ基本契約で死亡保険金も必ず別途全額支給される",
+          "correct": false,
+          "reason": "死亡保険金を同じ基本契約から必ず重複支払しない",
+          "source_url": "https://www.fukokushinrai.co.jp/agreement/320007002004.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "契約は通常そのまま存続する",
+          "correct": false,
+          "reason": "高度障害保険金支払で通常契約は消滅",
+          "source_url": "https://www.fukokushinrai.co.jp/agreement/320007002004.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "基本契約は通常消滅する",
+          "correct": true,
+          "reason": "典型的な養老保険約款では基本契約消滅",
+          "source_url": "https://www.fukokushinrai.co.jp/agreement/320007002004.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "満期保険金が自動的に倍増する",
+          "correct": false,
+          "reason": "満期保険金が自動倍増することはない",
+          "source_url": "https://www.fukokushinrai.co.jp/agreement/320007002004.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "養老保険の約款は高度障害保険金支払後に契約消滅と規定。主契約で死亡給付が別途追加支払されない。",
+      "primary_sources": [
+        "https://www.fukokushinrai.co.jp/agreement/320007002004.pdf"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q14",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "保険料を負担した夫が、被保険者である妻の死亡により死亡保険金を受け取るとき、原則の課税関係はどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "所得税（一時所得等）",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "相続税",
+          "correct": false,
+          "reason": "被保険者は妻、保険料負担者は夫であるため相続税型ではない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1750.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "所得税（一時所得等）",
+          "correct": true,
+          "reason": "保険料負担者＝受取人のため所得税型",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1750.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "贈与税",
+          "correct": false,
+          "reason": "保険料負担者と受取人が異なる贈与税型ではない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1750.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "固定資産税",
+          "correct": false,
+          "reason": "死亡保険金に固定資産税は課されない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1750.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "保険料負担者と保険金受取人が同一（夫）の死亡保険金は所得税の対象。被保険者は妻であり相続税型でない。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1750.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q15",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "法人が保有していた終身保険を解約し解約返戻金を受領した場合の処理として適切なのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "解約返戻金の受領額を益金に計上し、帳簿上の保険積立金等を取り崩す",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "受領額を必ず非課税収益とする",
+          "correct": false,
+          "reason": "法人の受取返戻金が必ず非課税となることはない",
+          "source_url": "https://www.nta.go.jp/law/tsutatsu/kihon/hojin/09/09_03.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "解約返戻金の受領額を益金に計上し、帳簿上の保険積立金等を取り崩す",
+          "correct": true,
+          "reason": "受取返戻金と保険積立金資産の取崩しを別々に認識",
+          "source_url": "https://www.nta.go.jp/law/tsutatsu/kihon/hojin/09/09_03.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "返戻金は全額資本金に計上する",
+          "correct": false,
+          "reason": "解約返戻金を資本金に直接計上しない",
+          "source_url": "https://www.nta.go.jp/law/tsutatsu/kihon/hojin/09/09_03.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "返戻金受領時には会計処理が不要である",
+          "correct": false,
+          "reason": "受領に伴い資産・損益の経理処理が必要",
+          "source_url": "https://www.nta.go.jp/law/tsutatsu/kihon/hojin/09/09_03.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "解約返戻金の受領と帳簿上の保険積立金等の取崩しを分ける。実際の課税所得は保険契約内容・従前の資産計上に従う。",
+      "primary_sources": [
+        "https://www.nta.go.jp/law/tsutatsu/kihon/hojin/09/09_03.htm",
+        "https://www.nta.go.jp/about/organization/ntc/kenkyu/ronsou/66/09/index.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "受領額の益金計上と保険積立金等取崩しの会計処理を区別し、差額の税務影響は保険契約類型・従前資産計上・特則で変わる。解説は一般原則に限定。",
+      "high_flag_resolution": "resolved_with_documented_scope",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q16",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "損害保険において保険金額が保険価額を超える契約を何というか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "超過保険",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "一部保険",
+          "correct": false,
+          "reason": "一部保険は保険金額が保険価額未満",
+          "source_url": "https://laws.e-gov.go.jp/law/420AC0000000056?occasion_date=20250627"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "超過保険",
+          "correct": true,
+          "reason": "保険金額が保険価額を上回る超過保険",
+          "source_url": "https://laws.e-gov.go.jp/law/420AC0000000056?occasion_date=20250627"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "重複保険",
+          "correct": false,
+          "reason": "重複保険は複数契約に関する概念",
+          "source_url": "https://laws.e-gov.go.jp/law/420AC0000000056?occasion_date=20250627"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "定額保険",
+          "correct": false,
+          "reason": "定額保険とは異なる",
+          "source_url": "https://laws.e-gov.go.jp/law/420AC0000000056?occasion_date=20250627"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "超過保険は保険金額が保険価額を上回る。『一部保険』は下回る、重複保険は複数契約、定額保険とは異なる。",
+      "primary_sources": [
+        "https://laws.e-gov.go.jp/law/420AC0000000056?occasion_date=20250627"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q17",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "普通傷害保険における地震由来の傷害について、一般的な取扱いはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "通常は免責であり、特約等の有無を確認する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "特約なしでも必ず支払われる",
+          "correct": false,
+          "reason": "通常は地震免責",
+          "source_url": "https://soudanguide.sonpo.or.jp/body/q070.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "通常は免責であり、特約等の有無を確認する",
+          "correct": true,
+          "reason": "約款の地震免責・特約有無を確認する",
+          "source_url": "https://soudanguide.sonpo.or.jp/body/q070.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "天候に関係なく事故は対象外となる",
+          "correct": false,
+          "reason": "天候に関係なく一律全事故免責ではない",
+          "source_url": "https://soudanguide.sonpo.or.jp/body/q070.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "海外では必ず全事故が対象となる",
+          "correct": false,
+          "reason": "海外で必ず全事故補償ではない",
+          "source_url": "https://soudanguide.sonpo.or.jp/body/q070.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "傷害保険は地震・噴火・津波による傷害を原則免責とする。補償特約があれば扱いが変わる。",
+      "primary_sources": [
+        "https://soudanguide.sonpo.or.jp/body/q070.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q18",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "法人所有の建物の風災損害について火災保険金を受け、通常の原状回復修理をした場合の基本的な税務処理はどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "保険金を益金に計上し、修繕費に該当する費用を損金に計上する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "保険金は絶対に益金にならない",
+          "correct": false,
+          "reason": "法人受取保険金が絶対に益金にならないとはいえない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5402.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "保険金を益金に計上し、修繕費に該当する費用を損金に計上する",
+          "correct": true,
+          "reason": "保険金収入と原状回復修繕費をそれぞれ認識",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5402.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "保険金は必ず個人の一時所得になる",
+          "correct": false,
+          "reason": "法人の保険金は個人の一時所得ではない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5402.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "修理費はいかなる場合も資産計上する",
+          "correct": false,
+          "reason": "改良・価値増加を伴う支出は資産計上となることがある",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5402.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "通常の原状回復は修繕費で損金算入し、保険金収入とは別に判定する。改良等の資本的支出は除外。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5402.htm",
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5608.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q19",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "先進医療特約の対象技術について正しいのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "給付対象は技術・施設・治療時点などの約款条件で判断する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "契約時点の先進医療一覧で永続的に固定される",
+          "correct": false,
+          "reason": "対象技術・施設指定は変化し得る",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/sensiniryo/index.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "どの医療機関で受けても無条件に支払われる",
+          "correct": false,
+          "reason": "実施施設の要件がある",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/sensiniryo/index.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "給付対象は技術・施設・治療時点などの約款条件で判断する",
+          "correct": true,
+          "reason": "技術・施設・実施時点・約款の条件に基づく",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/sensiniryo/index.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "公的医療保険の自己負担額のみを必ず全額支払う",
+          "correct": false,
+          "reason": "公的医療保険の自己負担部分だけを必ず支払う特約ではない",
+          "source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/sensiniryo/index.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "先進医療は技術・施設の要件があり、契約時の一覧固定・全施設無条件支払ではない。給付は約款条件に従う。",
+      "primary_sources": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/sensiniryo/index.html",
+        "https://www.mhlw.go.jp/topics/bukyoku/isei/sensiniryo/kikan01.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の論点を元に新たな設問と4肢を作成。原題の正答番号を転用せず、加工設問として独立判定。",
+      "high_flag_resolution": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q20",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "従業員が長期療養で働けない場合の休業補償原資の備えとして、一般に目的が合致する保険はどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "団体就業不能保障保険",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "団体信用生命保険",
+          "correct": false,
+          "reason": "団信は住宅ローン債務等への備えが主目的",
+          "source_url": "https://www.nissay.co.jp/hojin/shohin/fukuri/kyugyo/"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "団体就業不能保障保険",
+          "correct": true,
+          "reason": "団体就業不能保障保険は企業の休業補償の財源に合致",
+          "source_url": "https://www.nissay.co.jp/hojin/shohin/fukuri/kyugyo/"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "自動車の車両保険",
+          "correct": false,
+          "reason": "車両保険は自動車損害に備える",
+          "source_url": "https://www.nissay.co.jp/hojin/shohin/fukuri/kyugyo/"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "住宅火災保険",
+          "correct": false,
+          "reason": "住宅火災保険は住宅等の物的損害に備える",
+          "source_url": "https://www.nissay.co.jp/hojin/shohin/fukuri/kyugyo/"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "企業の休業補償規程に基づく支払原資として団体就業不能保障保険が活用できると保険会社の一次資料で確認。",
+      "primary_sources": [
+        "https://www.nissay.co.jp/hojin/shohin/fukuri/kyugyo/",
+        "https://www.dai-ichi-life.co.jp/legal/hokenkin/shugyou.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "日本生命の商品公式説明は企業の休業補償規程の財源的裏付けと明記。第一生命の約款説明も所定の就業不能状態を定義。原題Q20肢2と加工後肢2の対応を確認。",
+      "high_flag_resolution": "resolved_with_documented_scope",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    }
+  ],
+  "reviewed_at": "2026-11-23",
+  "source_blob_sha": "b87a733d4f605dbff9c273ff043dc4e1b69e74d4",
+  "official_answer_checked": true,
+  "release_note": "20問は内容監査PASS。ただし権利・転載改変利用条件の独立ゲートおよびリリース選定未通過でありDRAFT_NOT_FOR_RELEASEは維持。制作JSONは変更しない。"
+}

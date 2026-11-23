@@ -1,0 +1,69 @@
+name: FP2 Chromium learning and offline E2E
+on:
+  push:
+    branches:
+      - feature/fp2-release-scope-20261123
+    paths:
+      - "fp2-manabi-sprint/**"
+      - "scripts/fp2_browser_e2e.cjs"
+      - "scripts/fp2_selected_quality_gate.py"
+      - "scripts/fp2_five_exam_audit_gate.py"
+      - ".github/workflows/fp2-browser-e2e.yml"
+  pull_request:
+    paths:
+      - "fp2-manabi-sprint/**"
+      - "scripts/fp2_browser_e2e.cjs"
+      - ".github/workflows/fp2-browser-e2e.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  chromium-e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install pinned Playwright and Chromium dependencies
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Reconcile both verbatim legal audits PASS298 FAIL2 HOLD0, selected 300
+        run: python3 scripts/fp2_five_exam_audit_gate.py
+      - name: Check all 298 selected questions and source/evidence fields
+        run: python3 scripts/fp2_selected_quality_gate.py
+      - name: Generate native offline 298-only payload and verify source selection
+        run: |
+          python3 fp2-manabi-sprint/ios/prepare-ios.py
+          python3 - <<'PY'
+          import hashlib,json,re
+          from pathlib import Path
+          app=Path('fp2-manabi-sprint')
+          canonical=(app/'questions/canonical/approved-questions-20261123.json').read_bytes()
+          source=json.loads(canonical)
+          native_bytes=(app/'ios/Web/questions/canonical/approved-questions-20261123.json').read_bytes()
+          native=json.loads(native_bytes)
+          selected={q['id']:q for q in source['questions'] if q['release_selected'] is True}
+          assert len(source['questions'])==310 and len(native['questions'])==298 and len(selected)==298
+          assert all(q==selected[q['id']] for q in native['questions'])
+          assert not set(q['id'] for q in native['questions']) & {q['id'] for q in source['questions'] if not q['release_selected']}
+          evidence=json.loads((app/'ios/Web/bundle-evidence.json').read_text())
+          assert evidence['canonical_sha256']==hashlib.sha256(canonical).hexdigest()
+          assert evidence['release_payload_sha256']==hashlib.sha256(native_bytes).hexdigest()
+          assert evidence['reserve_content_pass_not_bundled']==12
+          html=(app/'ios/Web/index.html').read_text()
+          encoded=re.search(r'<script type="application/json" id="fp2-offline-bank">(.*?)</script>',html,re.S)
+          assert encoded, 'inline offline bank missing'
+          embedded=json.loads(encoded.group(1).replace('<\\/','</'))
+          assert embedded==native
+          assert (app/'ios/Web/manifest.webmanifest').is_file()
+          print('FP2 offline payload: 310 canonical PASS, exactly 298 shipped, 12 original reserves and 2 quarantined excluded, embedded/source/hash PASS')
+          PY
+      - name: Start static app server and run browser E2E
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory fp2-manabi-sprint > /tmp/fp2-http.log 2>&1 &
+          echo $! > /tmp/fp2-http.pid
+          for i in $(seq 1 40); do curl -fsS http://127.0.0.1:8765/ >/dev/null && break; sleep 1; done
+          node scripts/fp2_browser_e2e.cjs

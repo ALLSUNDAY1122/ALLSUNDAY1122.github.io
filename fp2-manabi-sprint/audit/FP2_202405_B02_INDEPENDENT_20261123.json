@@ -1,0 +1,1207 @@
+{
+  "audit_id": "FP2-202405-B02-INDEPENDENT-20261123",
+  "scope": "2024-05 Q03-Q05,Q07-Q23 (20 non-contiguous questions)",
+  "reviewed_at": "2026-11-23",
+  "applicable_on": "2026-04-01",
+  "source_branch": "feature/fp2-academic-300-expansion-20261123",
+  "source_path": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b02.json",
+  "source_blob_sha": "e783fca1e3af719a6cf09633d9e75aa708042f91",
+  "audit_type": "independent_primary_source_choice_by_choice",
+  "official_question": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+  "official_answer": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+  "official_answer_independently_checked": true,
+  "summary": {
+    "pass": 20,
+    "fail": 0,
+    "hold": 0,
+    "critical_confirmed": 0,
+    "high_confirmed": 0,
+    "canonical_content_eligible": 20,
+    "release_approval": false
+  },
+  "critical_high_issues": [],
+  "limitations": "内容と一意性は各肢・出典一次資料と照合済。参照資料すべての2026-04-01時点の版を保存固定したわけではない。公式原題の全4肢と改変後4肢の逐語対応・原題改変利用に係る権利許諾は別ゲート。2024年5月本試験の原題は2023年10月1日現在施行法令を基準としていたが、本判定は2026年4月1日時点。",
+  "release_note": "内容監査上20問をcanonical-bank候補とするが、法務権利ゲートとリリース選定は別。制作JSON DRAFT_NOT_FOR_RELEASEを維持。",
+  "items": [
+    {
+      "id": "FP2-OFFICIAL-202405-Q03",
+      "original_question_number": 3,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "協会けんぽの傷病手当金について、同一の傷病で支給要件を満たした場合の支給期間は原則どう数えるか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "支給開始日から通算して1年6か月",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "最初の支給日から暦日で6か月",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "1年6か月であり6か月ではない",
+          "primary_source_url": "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "支給開始日から通算して1年6か月",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "所定支給日数を通算して1年6か月",
+          "primary_source_url": "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "支給開始日から通算3年間",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "通算3年は誤り（船員保険等と混同）",
+          "primary_source_url": "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "就業不能である限り期限なく支給",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "無期限ではない",
+          "primary_source_url": "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "協会けんぽ公式：同一傷病について支給開始日から通算1年6か月まで支給。6か月、3年、無期限は誤り。",
+      "primary_sources": [
+        "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_checked_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q04",
+      "original_question_number": 4,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "雇用保険の一般的な基本手当を受給するために必要な被保険者期間について、通常の離職者に適用する要件はどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "離職前2年間に通算12か月以上",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "離職前6か月中1か月以上",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "1か月のみでは受給資格を満たさない",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000139508.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "離職前1年間に3か月以上",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "3か月では原則不足",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000139508.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "離職前2年間に通算12か月以上",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "原則2年で通算12か月",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000139508.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "離職前5年間に通算24か月以上",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "5年間24か月は原則要件ではない",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000139508.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "厚労省：基本手当は原則離職日前2年間に被保険者期間通算12か月。例外は特定受給資格者・特定理由離職者等。",
+      "primary_sources": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000139508.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_checked_one_based": 3,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q05",
+      "original_question_number": 5,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "雇用保険の介護休業給付金の対象家族に関する説明として正しいのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "配偶者の父母も対象となり得る",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "実父母だけであり配偶者の父母は対象外",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "配偶者の父母も対象",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000158665.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "配偶者の父母も対象となり得る",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "配偶者の父母を含む",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000158665.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "配偶者本人は常に対象外",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "配偶者本人も対象",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000158665.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "祖父母は一律対象外",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "祖父母も対象",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000158665.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "厚労省：介護休業給付の対象家族は配偶者、父母、配偶者の父母、祖父母等を含む。",
+      "primary_sources": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000158665.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_checked_one_based": 4,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q07",
+      "original_question_number": 7,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "障害厚生年金と同じ原因で労災保険の障害補償年金も支払われる場合、調整の原則として適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "労災保険給付側が所定率で調整される",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "障害厚生年金を先に所定率で減額する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "調整は障害厚生年金側ではない",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154486.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "両制度の年金は必ず双方全額支給される",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "同一事由では労災年金に調整が入る",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154486.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "労災保険給付側が所定率で調整される",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "労災側所定率減額が原則",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154486.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "障害基礎年金のみ一律に全額停止される",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "障害基礎年金だけ全面停止はしない",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154486.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "厚労省：同一事由による障害厚生年金と障害補償年金の併給では、労災保険年金側を所定率で調整。",
+      "primary_sources": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154486.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_checked_one_based": 4,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q08",
+      "original_question_number": 8,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "企業型確定拠出年金の老齢給付金を年金形式で受け取ったとき、所得税の区分として基本的に適切なのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "雑所得（公的年金等に係るもの）",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "給与所得",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "年金形式は給与でない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1600.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "雑所得（公的年金等に係るもの）",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "公的年金等に係る雑所得",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1600.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "退職所得",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "一時金は退職所得だが年金と異なる",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1600.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "一時所得",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "年金は一時所得でない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1600.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "国税庁：確定拠出年金の老齢給付金を年金で受け取る場合は公的年金等に係る雑所得。一時金の退職所得と区別。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1600.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_checked_one_based": 1,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q09",
+      "original_question_number": 9,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "同じ元本・金利・期間の住宅ローンを比較した場合、元金均等返済と元利均等返済について一般的に正しいのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "元金均等返済は当初負担が比較的大きいが総支払利息は少ない",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "元金均等返済は当初返済額が低く、総利息は高くなる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "元金均等は当初負担高く利息小",
+          "primary_source_url": "https://www.jhf.go.jp/kojin/zaikei/jouken.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "元利均等返済は返済額が一貫して減る",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "元利均等は毎月元利合計が原則一定",
+          "primary_source_url": "https://www.jhf.go.jp/kojin/zaikei/jouken.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "元金均等返済は当初負担が比較的大きいが総支払利息は少ない",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "元金均等は元金減少が早く総利息少",
+          "primary_source_url": "https://www.jhf.go.jp/kojin/zaikei/jouken.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "どちらも金利が同じなら総利息は必ず等しい",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "元金償還速度が違うため総利息は同額ではない",
+          "primary_source_url": "https://www.jhf.go.jp/kojin/zaikei/jouken.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "住宅金融支援機構：同額同金利同期間の場合、元金均等は当初返済額が大きいが総支払利息が小さい。",
+      "primary_sources": [
+        "https://www.jhf.go.jp/kojin/zaikei/jouken.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_checked_one_based": 3,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q10",
+      "original_question_number": 10,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "リバースモーゲージの『リコース型』を説明したものとして最も適切なのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "担保処分後の不足債務について、契約条件により返済義務が残り得る",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "担保処分後の不足債務について、契約条件により返済義務が残り得る",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "リコースは担保処分後不足額に債務が残り得る",
+          "primary_source_url": "https://www.jhf.go.jp/kojin/yushihoken_revmo/jouken.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "不動産の処分額に関係なく債務は必ずゼロになる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "ノンリコース型との混同",
+          "primary_source_url": "https://www.jhf.go.jp/kojin/yushihoken_revmo/jouken.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "元金返済は契約時に全額完了する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "元金は契約時全額完済しない",
+          "primary_source_url": "https://www.jhf.go.jp/kojin/yushihoken_revmo/jouken.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "利用者が死亡したら必ず金融機関が不足額を無条件免除する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "リコースでは債務免除が必ずあるわけでない",
+          "primary_source_url": "https://www.jhf.go.jp/kojin/yushihoken_revmo/jouken.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "住宅金融支援機構：リコース型では担保処分後の債務不足額について返済義務が残り得る。ノンリコースと異なる。",
+      "primary_sources": [
+        "https://www.jhf.go.jp/kojin/yushihoken_revmo/jouken.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_checked_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q11",
+      "original_question_number": 11,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "年金開始までの死亡保障や解約返戻金を抑え、長生きした場合の年金を厚くする設計の個人年金保険を説明したものはどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "生存保障を重視する設計では死亡給付等が相対的に小さくなる場合がある",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "死亡保障を最大化することのみを目的とする",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "生存保障を厚くする目的と異なる",
+          "primary_source_url": "https://www.jili.or.jp/knows_learns/kind/main/30.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "外貨建てに限られる仕組みである",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "外貨建て限定ではない",
+          "primary_source_url": "https://www.jili.or.jp/knows_learns/kind/main/30.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "毎年の年金額は必ずゼロになる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "年金額が必ずゼロにはならない",
+          "primary_source_url": "https://www.jili.or.jp/knows_learns/kind/main/30.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "生存保障を重視する設計では死亡給付等が相対的に小さくなる場合がある",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "死亡・解約給付を抑え年金を厚くできる",
+          "primary_source_url": "https://www.jili.or.jp/knows_learns/kind/main/30.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "生命保険文化センター：生存保障重視型個人年金保険は死亡給付等を抑えて年金額を厚くする商品がある。",
+      "primary_sources": [
+        "https://www.jili.or.jp/knows_learns/kind/main/30.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_checked_one_based": 4,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q12",
+      "original_question_number": 12,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "団体定期保険（Bグループ保険）について、通常の加入の仕組みとして正しいのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "従業員等が任意加入し原則本人が保険料を負担する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "企業が全従業員を必ず強制加入させる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "任意加入で強制加入ではない",
+          "primary_source_url": "https://www.metlife.co.jp/products/organization/"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "従業員等が任意加入し原則本人が保険料を負担する",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "本人の任意加入、通常保険料本人負担",
+          "primary_source_url": "https://www.metlife.co.jp/products/organization/"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "契約は単独の個人保険のみとなる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "団体扱い契約である",
+          "primary_source_url": "https://www.metlife.co.jp/products/organization/"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "加入時はすべての契約で医師の診査が義務付けられる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "全契約に医師診査義務はない",
+          "primary_source_url": "https://www.metlife.co.jp/products/organization/"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "メットライフ生命公式：Bグループ保険は任意加入の団体定期保険。保険料は通常本人負担、診査条件は商品で異なる。",
+      "primary_sources": [
+        "https://www.metlife.co.jp/products/organization/"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_checked_one_based": 4,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q13",
+      "original_question_number": 13,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "少額短期保険業者の死亡保障の保険料について、所得税の生命保険料控除の扱いとして原則適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "少額短期保険業者の保険料は原則、生命保険料控除の対象外",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "死亡保障があれば必ず一般生命保険料控除の対象になる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "死亡保障でも少短保険料は控除対象外",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "個人年金保険料控除のみを受けられる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "少短保険料は個人年金控除対象でもない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "少額短期保険業者の保険料は原則、生命保険料控除の対象外",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "少短保険料は生命保険料控除の対象外",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "保険料は全額所得から控除できる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "全額所得控除不可",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "国税庁の生命保険料控除対象契約の範囲に少額短期保険業者の保険契約は含まれない。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_checked_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q14",
+      "original_question_number": 14,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "保険料負担者と被保険者が同じ人の生命保険で、その人の死亡後に相続人以外の指定受取人が死亡保険金を受領した。課税関係の基本はどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "相続税の課税対象になり得るが、法定相続人に係る非課税枠は適用されない",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "相続人でなければ常に所得税",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "相続人以外でもみなし相続財産",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4114.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "相続税の課税対象になり得るが、法定相続人に係る非課税枠は適用されない",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "相続税の課税対象、非課税枠は相続人取得分限定",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4114.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "常に贈与税",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "死亡保険金はこの関係では贈与税でない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4114.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "全額非課税",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "全額非課税ではない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4114.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "国税庁：被相続人が負担した死亡保険金はみなし相続財産。相続人以外の受取には生命保険金非課税限度額の適用がない。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4114.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_checked_one_based": 2,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q15",
+      "original_question_number": 15,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "法人が契約者・保険料負担者で、死亡保険金も満期保険金も法人が受け取る養老保険について、通常の保険料経理処理はどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "原則、全額を保険積立金などの資産に計上する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "全額損金処理する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "全額損金ではなく資産計上",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5363.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "全額役員給与として扱う",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "役員給与にする前提でない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5363.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "半額のみ福利厚生費とする",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "受取人双方が法人なら半額福利厚生費ではない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5363.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "原則、全額を保険積立金などの資産に計上する",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "保険料全額原則資産に計上",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5363.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "国税庁：死亡・満期の保険金受取人が法人である養老保険の保険料は契約終了時まで資産計上。",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5363.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_checked_one_based": 4,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q16",
+      "original_question_number": 16,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "任意自動車保険の対物賠償で、運転中に通行人の飼い犬に衝突し法律上の損害賠償責任を負ったときの扱いとして一般に正しいのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "犬は法律上の『物』として扱われ、対物賠償の対象となり得る",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "犬は法律上の『物』として扱われ、対物賠償の対象となり得る",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "他人の飼い犬は対物賠償対象となり得る",
+          "primary_source_url": "https://www.sonpo.or.jp/report/publish/bousai/koutuu/article/6/"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "犬は人身事故として常に対人賠償だけで補償する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "他人の犬を対人賠償の対象とはしない",
+          "primary_source_url": "https://www.sonpo.or.jp/report/publish/bousai/koutuu/article/6/"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "他人のペットの損害はすべて車両保険から支払う",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "被害者の犬を自車の車両保険で補償しない",
+          "primary_source_url": "https://www.sonpo.or.jp/report/publish/bousai/koutuu/article/6/"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "犬への損害は法律上賠償責任を負わない",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "他人の犬への賠償責任が成立し得る",
+          "primary_source_url": "https://www.sonpo.or.jp/report/publish/bousai/koutuu/article/6/"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "日本損害保険協会：交通事故で他人のペットに与えた損害は対物賠償の対象となる。",
+      "primary_sources": [
+        "https://www.sonpo.or.jp/report/publish/bousai/koutuu/article/6/"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_checked_one_based": 1,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q17",
+      "original_question_number": 17,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "地震保険の建築年・耐震等級・免震建築物・耐震診断の割引制度について原則適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "複数の割引を重複適用せず、所定の証明により一つを適用する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "複数条件を満たせば割引率をすべて合算する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "地震保険の割引率は合算できない",
+          "primary_source_url": "https://soudanguide.sonpo.or.jp/home/q063.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "割引制度はどれも証明資料が不要である",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "所定の証明が必要",
+          "primary_source_url": "https://soudanguide.sonpo.or.jp/home/q063.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "複数の割引を重複適用せず、所定の証明により一つを適用する",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "割引は重複適用せず一つ選択",
+          "primary_source_url": "https://soudanguide.sonpo.or.jp/home/q063.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "耐震性は保険料と全く無関係である",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "耐震性能が割引率に影響する",
+          "primary_source_url": "https://soudanguide.sonpo.or.jp/home/q063.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "日本損害保険協会：地震保険の建築年・耐震等級・免震・耐震診断の割引は重複適用不可、確認資料が必要。",
+      "primary_sources": [
+        "https://soudanguide.sonpo.or.jp/home/q063.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_checked_one_based": 3,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q18",
+      "original_question_number": 18,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "個人が傷害保険の入院給付金を受け取った場合、所得税上の基本的な取扱いとして適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "身体の傷害に基因する入院給付金は原則非課税",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "給与所得になる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "身体傷害に基づく入院保険金は給与でない",
+          "primary_source_url": "https://soudanguide.sonpo.or.jp/basic/6_1.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "常に雑所得になる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "所得税上常に雑所得ではない",
+          "primary_source_url": "https://soudanguide.sonpo.or.jp/basic/6_1.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "身体の傷害に基因する入院給付金は原則非課税",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "傷害入院保険金は原則非課税",
+          "primary_source_url": "https://soudanguide.sonpo.or.jp/basic/6_1.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "契約者貸付として課税される",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "契約者貸付でない",
+          "primary_source_url": "https://soudanguide.sonpo.or.jp/basic/6_1.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "日本損害保険協会：身体の傷害による入院保険金等は非課税。給付の補てん対象との関係は医療費控除では別途問題となる。",
+      "primary_sources": [
+        "https://soudanguide.sonpo.or.jp/basic/6_1.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_checked_one_based": 3,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q19",
+      "original_question_number": 19,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "先進医療特約の給付対象になるかを考える際、先進医療の指定時期について適切な説明はどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "実際に療養を受けた時点の先進医療指定や約款の条件を確認する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "保険契約時点に指定された技術が永続的に対象となる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "契約時点指定が恒久的ではない",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/sensiniryo/index.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "実際に療養を受けた時点の先進医療指定や約款の条件を確認する",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "実際の療養時に技術・医療機関・約款で判定",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/sensiniryo/index.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "保険会社が扱う全ての自由診療が自動的に対象となる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "すべての自由診療が先進医療ではない",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/sensiniryo/index.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "医師の承認があれば指定医療機関でなくても必ず支払う",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "指定施設の要件があり医師の承認だけでは不足",
+          "primary_source_url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/sensiniryo/index.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "厚労省：先進医療は技術・実施医療機関の要件に従い変更され得る。加入時の指定が永続せず、医師の承認だけでもない。",
+      "primary_sources": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/sensiniryo/index.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_checked_one_based": 1,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q20",
+      "original_question_number": 20,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "企業が従業員の死亡退職金・弔慰金の財源を備える際、一般に目的に適した制度はどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "従業員の死亡に備える総合福祉団体定期保険",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "住宅ローンの返済を保障する団体信用生命保険",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "団信は住宅ローン等の債務返済に対応",
+          "primary_source_url": "https://www.dai-ichi-life.co.jp/legal/lineup/sougou_fukushi.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "従業員の死亡に備える総合福祉団体定期保険",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "死亡退職金・弔慰金の財源には総合福祉団体定期保険",
+          "primary_source_url": "https://www.dai-ichi-life.co.jp/legal/lineup/sougou_fukushi.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "企業所有車両の車両保険",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "車両保険は企業車両の損害",
+          "primary_source_url": "https://www.dai-ichi-life.co.jp/legal/lineup/sougou_fukushi.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "建物の火災保険",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "火災保険は建物等の損害",
+          "primary_source_url": "https://www.dai-ichi-life.co.jp/legal/lineup/sougou_fukushi.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "第一生命：総合福祉団体定期保険は死亡退職金・弔慰金の財源確保に用いる。団信は債務返済、車両・火災保険は物損。",
+      "primary_sources": [
+        "https://www.dai-ichi-life.co.jp/legal/lineup/sougou_fukushi.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_checked_one_based": 1,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q21",
+      "original_question_number": 21,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "消費者物価指数（CPI）の指数水準の読み方として適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "基準年の水準を100として相対的な物価水準を示す",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "指数100なら物価が前年より100%上昇したことを意味する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "100は基準年水準、前年比100%増ではない",
+          "primary_source_url": "https://www.stat.go.jp/library/faq/faq17/faq17a03.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "指数100なら各品目価格がすべて100円である",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "物価指数は価格100円の意味ではない",
+          "primary_source_url": "https://www.stat.go.jp/library/faq/faq17/faq17a03.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "基準年の水準を100として相対的な物価水準を示す",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "基準年を100とする相対的指数",
+          "primary_source_url": "https://www.stat.go.jp/library/faq/faq17/faq17a03.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "CPIは必ず毎月基準年を変更する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "基準年改定は毎月ではなく原則5年ごと",
+          "primary_source_url": "https://www.stat.go.jp/library/faq/faq17/faq17a03.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "総務省統計局：CPIは基準年を100として物価を指数化、基準年は5年ごとに変更。指数100は前年比100%増や価格100円ではない。",
+      "primary_sources": [
+        "https://www.stat.go.jp/library/faq/faq17/faq17a03.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_checked_one_based": 3,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q22",
+      "original_question_number": 22,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "金融機関の仕組預金について、満期の取扱いとして正しいものはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "商品によって金融機関側の判断など所定条件で満期が早まることがある",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "商品によって金融機関側の判断など所定条件で満期が早まることがある",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "一定条件で金融機関による満期繰上げ可能",
+          "primary_source_url": "https://www.fsa.go.jp/receipt/soudansitu/advice01.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "すべて普通預金と同様にいつでも無条件で引き出せる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "普通預金と異なり自由引出し不可の場合がある",
+          "primary_source_url": "https://www.fsa.go.jp/receipt/soudansitu/advice01.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "預入期間中の金利や条件が必ず固定されない",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "金利・条件が必ず変動するとはいえない",
+          "primary_source_url": "https://www.fsa.go.jp/receipt/soudansitu/advice01.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "仕組預金ではデリバティブを一切使わない",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "デリバティブを組み込む仕組預金がある",
+          "primary_source_url": "https://www.fsa.go.jp/receipt/soudansitu/advice01.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "金融庁：仕組預金には満期延長・繰上げ条項やデリバティブの組込みによる特殊な契約リスクがある。",
+      "primary_sources": [
+        "https://www.fsa.go.jp/receipt/soudansitu/advice01.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_checked_one_based": 1,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q23",
+      "original_question_number": 23,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "ベア型投資信託の運用目的として最も適切なのはどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "対象指数の下落時に基準価額が上昇するよう設計する",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "ベンチマークが上がると同率で上昇することのみを目指す",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "ベア型は同方向連動でない",
+          "primary_source_url": "https://www.jpx.co.jp/equities/products/etfs/risk/05.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "公社債の利息を毎月定額で保証する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "毎月定額利息を保証しない",
+          "primary_source_url": "https://www.jpx.co.jp/equities/products/etfs/risk/05.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "元本価格を永続的に保証する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "元本保証ではない",
+          "primary_source_url": "https://www.jpx.co.jp/equities/products/etfs/risk/05.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "対象指数の下落時に基準価額が上昇するよう設計する",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "対象指数下落時に上昇する逆連動を目指す",
+          "primary_source_url": "https://www.jpx.co.jp/equities/products/etfs/risk/05.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "日本取引所グループ：インバース（ベア）型は対象指数の日次逆方向変動を目標とする。元本保証・毎月利息保証はない。",
+      "primary_sources": [
+        "https://www.jpx.co.jp/equities/products/etfs/risk/05.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_checked_one_based": 4,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "公式原題の主題・問番号を維持しつつ、単一論点に絞って設問・4選択肢を独自作成。原題の公式正答番号と加工後の正答は別管理。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    }
+  ]
+}

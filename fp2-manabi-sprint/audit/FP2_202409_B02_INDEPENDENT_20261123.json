@@ -1,0 +1,1215 @@
+{
+  "audit_id": "FP2-202409-B02-INDEPENDENT-20261123",
+  "scope": "2024-09 Q21-Q40",
+  "reviewed_at": "2026-11-23",
+  "source_branch": "feature/fp2-academic-300-expansion-20261123",
+  "source_path": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
+  "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+  "applicable_on": "2026-04-01",
+  "audit_type": "independent_primary_source_choice_by_choice",
+  "summary": {
+    "pass": 20,
+    "fail": 0,
+    "hold": 0,
+    "critical_confirmed": 0,
+    "high_confirmed": 0,
+    "canonical_content_eligible": 20,
+    "release_approval": false
+  },
+  "critical_high_issues": [],
+  "limitations": "一次資料の全URLにつき2026-04-01時点のアーカイブ保存は未完了。原題の権利・改変利用条件は別ゲート。Q29は金融庁の制度説明および公式正答PDFで再照合。",
+  "release_note": "Q29のHigh修正を独立再監査PASSへ更新。全20問内容監査PASS。ただし制作DRAFT_NOT_FOR_RELEASEと権利・リリースゲート未通過は維持。",
+  "items": [
+    {
+      "id": "FP2-OFFICIAL-202409-Q21",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "純金積立で購入価格の平準化を狙う場合、定額購入を継続する方法の特徴として適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "価格が安いときは多く、高いときは少なく買う",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "価格が高いときに多く買い、安いときに少なく買う",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "価格が高いほど数量は減る",
+          "source_url": "https://tt.tanaka.jp/guide/tsumitate/"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "価格に関係なく毎月同量を買う",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "一定数量購入ではなく一定金額購入",
+          "source_url": "https://tt.tanaka.jp/guide/tsumitate/"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "価格が安いときは多く、高いときは少なく買う",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "安値時多く高値時少なく買う",
+          "source_url": "https://tt.tanaka.jp/guide/tsumitate/"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "保有金の元本が保証される",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "金は元本保証ではない",
+          "source_url": "https://tt.tanaka.jp/guide/tsumitate/"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "定額購入は安値時に多量、高値時に少量。元本保証なし",
+      "primary_sources": [
+        "https://tt.tanaka.jp/guide/tsumitate/"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q22",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "日経平均株価と反対方向の日次変動を目標にするETFの分類はどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "インバース型",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "インバース型",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "インバース型の定義",
+          "source_url": "https://www.jpx.co.jp/equities/products/etfs/risk/05.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "株価指数と同方向に2倍連動するレバレッジ型",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "同方向2倍はレバレッジ型",
+          "source_url": "https://www.jpx.co.jp/equities/products/etfs/risk/05.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "外国債券の満期保有型",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "満期保有債券とは違う",
+          "source_url": "https://www.jpx.co.jp/equities/products/etfs/risk/05.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "預金連動型",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "預金連動とは違う",
+          "source_url": "https://www.jpx.co.jp/equities/products/etfs/risk/05.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "対象指数の日次変動に逆連動を目標とするETFで長期間の逆数ではない",
+      "primary_sources": [
+        "https://www.jpx.co.jp/equities/products/etfs/risk/05.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q23",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "額面100円、年利息0.6円、購入価格98円の債券を2年後99円で売った。税や手数料を除く単利の所有期間利回り（年率、購入額基準）に最も近いのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "約1.12%",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "約0.61%",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "年利息だけの利回りで売却益がない",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "約1.12%",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "計算値1.12%",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "約1.61%",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "計算値とは異なる",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "約2.04%",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "計算値とは異なる",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "独立検算：(0.6+(99-98)/2)/98×100=1.12244898%",
+      "primary_sources": [
+        "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q24",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "東証の市場区分変更について、適切な説明はどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "グロース市場に上場している企業も所定の基準を満たし手続きを行えばプライムへの変更が可能",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "グロース市場の銘柄はプライム市場に変更できない",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "JPXで市場区分変更可能",
+          "source_url": "https://www.jpx.co.jp/equities/listing-on-tse/transfers/basic/index.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "グロース市場に上場している企業も所定の基準を満たし手続きを行えばプライムへの変更が可能",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "変更には基準と審査が必要",
+          "source_url": "https://www.jpx.co.jp/equities/listing-on-tse/transfers/basic/index.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "東証市場はプライムとグロースの2種類のみ",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "スタンダード市場も存在",
+          "source_url": "https://www.jpx.co.jp/equities/listing-on-tse/transfers/basic/index.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "日経平均の構成銘柄は全上場企業から無条件に抽出する",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "日経平均には銘柄選定基準がある",
+          "source_url": "https://www.jpx.co.jp/equities/listing-on-tse/transfers/basic/index.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "JPXが市場区分変更審査を定め、プライム・スタンダード・グロースの3区分がある",
+      "primary_sources": [
+        "https://www.jpx.co.jp/equities/listing-on-tse/transfers/basic/index.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q25",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "時価総額240億円、当期純利益12億円、自己資本120億円の企業のPERはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "20倍",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "5倍",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "PERは5倍ではない",
+          "source_url": "https://www.jpx.co.jp/markets/statistics-equities/misc/04.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "10倍",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "PERは10倍ではない",
+          "source_url": "https://www.jpx.co.jp/markets/statistics-equities/misc/04.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "20倍",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "240÷12=20倍",
+          "source_url": "https://www.jpx.co.jp/markets/statistics-equities/misc/04.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "30倍",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "PERは30倍ではない",
+          "source_url": "https://www.jpx.co.jp/markets/statistics-equities/misc/04.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "PER=240億÷12億=20倍、PBR=240億÷120億=2倍",
+      "primary_sources": [
+        "https://www.jpx.co.jp/markets/statistics-equities/misc/04.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q26",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "コールオプションを買う投資家が取得する権利として最も適切なのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "原資産を決められた価格で買う権利",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "原資産を決められた価格で買う権利",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "コールは買う権利",
+          "source_url": "https://www.jpx.co.jp/ose-toshijuku/column/futures_option/option/01.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "原資産を決められた価格で売る義務",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "売る義務ではない",
+          "source_url": "https://www.jpx.co.jp/ose-toshijuku/column/futures_option/option/01.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "原資産を決められた価格で買う義務",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "買い手に行使義務なし",
+          "source_url": "https://www.jpx.co.jp/ose-toshijuku/column/futures_option/option/01.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "債券利息を無条件に受け取る権利",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "債券利息と無関係",
+          "source_url": "https://www.jpx.co.jp/ose-toshijuku/column/futures_option/option/01.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "コールの買い手は所定価格で買う権利。行使義務はない",
+      "primary_sources": [
+        "https://www.jpx.co.jp/ose-toshijuku/column/futures_option/option/01.html"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q27",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "預金50%（期待収益率0.2%）、債券30%（1%）、株式20%（6%）の資産全体の期待収益率はどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "1.6%",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "1.4%",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "計算結果と不一致",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "1.6%",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "加重平均は1.6%",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "1.8%",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "計算結果と不一致",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "2.0%",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "計算結果と不一致",
+          "source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "独立検算：50%×0.2%+30%×1%+20%×6%=1.6%",
+      "primary_sources": [
+        "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q28",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "NISA口座で生じた株式譲渡損失の税務上の扱いとして適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "損益通算も繰越控除もできない",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "課税口座の利益と通算できる",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "課税口座と通算不可",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1535.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "確定申告をすると3年間繰り越せる",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "3年繰越不可",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1535.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "損益通算も繰越控除もできない",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "通算・繰越とも不可",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1535.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "給与所得から必ず控除できる",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "給与から控除不可",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1535.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "NISA譲渡損失は損益通算・繰越控除不可",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1535.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q29",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "無利息・要求払い・決済サービス提供の3条件を満たす決済用預金の預金保険制度による保護範囲はどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "全額保護される",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "元本1,000万円まで",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "決済用預金は全額保護であり元本1000万円だけの限定は誤り",
+          "source_url": "https://www.fsa.go.jp/policy/payoff/"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "元本1,000万円とその利息まで",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "元本1000万円とその利息までの保護は一般預金等の仕組みであり決済用預金ではない",
+          "source_url": "https://www.fsa.go.jp/policy/payoff/"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "外貨建てのみ全額",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "外貨建預金のみの全額保護ではなく預金種類の三条件で判定する",
+          "source_url": "https://www.fsa.go.jp/policy/payoff/"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "全額保護される",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "無利息・要求払い・決済サービス提供の三条件を満たし全額保護される",
+          "source_url": "https://www.fsa.go.jp/policy/payoff/"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "金融庁の預金保険制度の一次資料により決済用預金の全額保護、一般預金等の元本1000万円とその利息等の保護の違いを確認。新しい肢2は明確な誤答となり正答index3が一意。",
+      "primary_sources": [
+        "https://www.fsa.go.jp/policy/payoff/",
+        "https://www.fsa.go.jp/policy/payoff/01.pdf"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": true,
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。 独立監査FAIL是正（2026-11-23）：旧選択肢2「元本と利息を含め全額」が正答肢4と実質的に重複したため、「元本1,000万円とその利息まで」へ変更。正答index3は維持。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false,
+      "review_history": [
+        {
+          "review": "2026-11-23 initial",
+          "status": "FAIL",
+          "severity": "High",
+          "old_choice_2": "元本と利息を含め全額",
+          "reason": "肢2と肢4が同じ意味になる可能性"
+        },
+        {
+          "review": "2026-11-23 independent re-audit",
+          "status": "PASS",
+          "new_choice_2": "元本1,000万円とその利息まで",
+          "reason": "肢2の上限1000万円が明確に誤答。原題公式解答肢1と加工後肢4は独立管理。"
+        }
+      ]
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q30",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "金融商品の販売等に係る説明義務違反で損害賠償を請求するとき、金融サービス提供法上の損害額推定に関して適切なのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "元本欠損額を損害額と推定する規定がある",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "支払った元本総額が必ず推定損害額になる",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "元本総額ではなく元本欠損額",
+          "source_url": "https://laws.e-gov.go.jp/law/412AC0000000101?occasion_date=20260319"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "元本欠損額を損害額と推定する規定がある",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "法定の推定あり",
+          "source_url": "https://laws.e-gov.go.jp/law/412AC0000000101?occasion_date=20260319"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "損害の発生を一切証明せず常に全額返金される",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "無条件全額返金でない",
+          "source_url": "https://laws.e-gov.go.jp/law/412AC0000000101?occasion_date=20260319"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "顧客の投資目的に関係なく契約は自動的に無効になる",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "自動無効でない",
+          "source_url": "https://laws.e-gov.go.jp/law/412AC0000000101?occasion_date=20260319"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "法定の元本欠損額損害額推定。元本総額返金とは異なる",
+      "primary_sources": [
+        "https://laws.e-gov.go.jp/law/412AC0000000101?occasion_date=20260319"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q31",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "国税・地方税と直接税・間接税の分類として正しい組合せはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "法人税は国税の直接税、消費税は国税の間接税",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "法人税は国税の直接税、消費税は国税の間接税",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "法人税国税直接税・消費税国税間接税",
+          "source_url": "https://www.nta.go.jp/about/introduction/torikumi/week/download/r05zeishukan_all.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "法人税は地方税の間接税、消費税は国税の直接税",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "法人税は地方税ではない",
+          "source_url": "https://www.nta.go.jp/about/introduction/torikumi/week/download/r05zeishukan_all.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "登録免許税は地方税、法人税は地方税",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "登録免許税も法人税も国税",
+          "source_url": "https://www.nta.go.jp/about/introduction/torikumi/week/download/r05zeishukan_all.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "不動産取得税は国税、所得税は地方税",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "不動産取得税は地方税、所得税は国税",
+          "source_url": "https://www.nta.go.jp/about/introduction/torikumi/week/download/r05zeishukan_all.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "法人税は国税直接税、消費税は国税間接税、不動産取得税は地方税",
+      "primary_sources": [
+        "https://www.nta.go.jp/about/introduction/torikumi/week/download/r05zeishukan_all.pdf"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q32",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "個人が事業の資金で取得した上場会社の株式から配当を受けた場合、原則として所得区分はどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "配当所得",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "事業所得",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "配当は事業所得でない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1330.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "不動産所得",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "配当は不動産所得でない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1330.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "配当所得",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "法人剰余金配当は配当所得",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1330.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "給与所得",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "雇用対価の給与でない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1330.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "法人の配当は原則配当所得で事業資金取得のみで事業所得とならない",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1330.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q33",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "給与所得620万円、不動産所得の損失70万円（損益通算可能なもの）、生活用動産ではないゴルフ会員権の売却損120万円がある。所得税の総所得金額はどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "550万円",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "430万円",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "ゴルフ損120万円まで控除した誤り",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3158.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "500万円",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "正しい計算値と不一致",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3158.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "550万円",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "620-70=550万円",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3158.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "620万円",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "不動産損失通算を欠く",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3158.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "620-70=550万円。ゴルフ会員権売却損は原則損益通算不可",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3158.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q34",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "2026年に居住開始する住宅で住宅ローン控除を検討するとき、繰上返済後の返済期間について原則適切なのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "返済期間が最初の返済月から10年未満になると控除要件を満たさなくなる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "返済期間が最初の返済月から10年未満になると控除要件を満たさなくなる",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "最初の返済月から返済終了まで10年未満は不可",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1225.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "繰上返済を一度行うと必ず控除が打ち切られる",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "繰上返済しただけでは失権しない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1225.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "返済期間は3年あればよい",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "3年では不足",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1225.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "ローン残高がある限り無条件に控除できる",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "残高以外にも適用要件がある",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1225.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "返済期間10年以上を繰上返済後も満たす必要がある",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1225.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 2,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q35",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "年末調整済み給与収入800万円、これ以外に原稿料による雑所得15万円だけがある給与所得者の所得税確定申告について原則正しいのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "そのほかの要件を満たせば所得税の確定申告は不要",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "雑所得が1円でもあれば必ず申告義務がある",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "20万円以下等には申告不要例外あり",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "そのほかの要件を満たせば所得税の確定申告は不要",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "給与2000万円以下・他所得20万円以下等なら不要",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "給与収入が500万円超なら無条件に申告が必要",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "給与500万円超で必ず申告ではない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "雑所得は全額非課税である",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "原稿料は非課税ではない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "給与800万円・年末調整済・その他所得15万円なら他要件を満たせば申告不要",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q36",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "資本金5,000万円で一定の適用条件を満たす普通法人の所得のうち、年800万円以下の部分の法人税率の扱いとして正しいのはどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "中小法人等の軽減税率の対象となり得る",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "必ず通常税率のみを適用する",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "適用条件を満たす場合軽減あり",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5759.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "法人税はそもそも課税されない",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "法人税免除ではない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5759.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "所得全額が非課税になる",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "所得非課税ではない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5759.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "中小法人等の軽減税率の対象となり得る",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "一定の中小法人には軽減あり",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5759.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "中小法人等の年800万円以下の部分は軽減税率対象となり得る",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5759.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q37",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "会社の業務会議で通常必要な茶菓や弁当を提供した費用の法人税上の取扱いとして適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "通常必要な会議費なら原則損金算入可能",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "支払額の半分しか損金にできない",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "一律50%損金制限なし",
+          "source_url": "https://www.nta.go.jp/law/tsutatsu/kobetsu/hojin/sochiho/750214/08/08_61_4a.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "必ず役員賞与になる",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "当然役員賞与ではない",
+          "source_url": "https://www.nta.go.jp/law/tsutatsu/kobetsu/hojin/sochiho/750214/08/08_61_4a.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "通常必要な会議費なら原則損金算入可能",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "通常必要な会議費は損金",
+          "source_url": "https://www.nta.go.jp/law/tsutatsu/kobetsu/hojin/sochiho/750214/08/08_61_4a.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "接待交際費に必ず分類され全額損金不算入",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "通常会議費は必ず交際費ではない",
+          "source_url": "https://www.nta.go.jp/law/tsutatsu/kobetsu/hojin/sochiho/750214/08/08_61_4a.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "通常必要な会議の茶菓・弁当は交際費から除かれる",
+      "primary_sources": [
+        "https://www.nta.go.jp/law/tsutatsu/kobetsu/hojin/sochiho/750214/08/08_61_4a.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q38",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "消費税の簡易課税制度の適用を受ける際の基準期間の課税売上高要件はどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "5,000万円以下",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "1,000万円以下",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "1000万円は誤り",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6505.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "3,000万円以下",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "3000万円は誤り",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6505.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "1億円以下",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "1億円は誤り",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6505.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "5,000万円以下",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "5000万円以下が基準",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6505.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "簡易課税の基準期間課税売上高条件は5000万円以下",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6505.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 4,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q39",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "役員が会社所有の土地を時価より著しく安く取得した場合、時価と支払額の差額について役員個人の所得分類として原則適切なのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "給与所得",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "給与所得",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "低額譲渡差額は原則給与",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5202.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "雑所得",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "雑所得ではない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5202.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "不動産所得",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "土地賃貸収入でない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5202.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "山林所得",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "山林売却でない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5202.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "会社から役員への著しい低額譲渡の経済的利益は原則給与",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5202.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 1,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202409-Q40",
+      "status": "PASS",
+      "severity": "none",
+      "stem": "飲食店など所定の業種の適格請求書発行事業者が交付できる適格簡易請求書について正しいのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "交付できる業種等が定められ、簡易課税選択の有無とは別に扱われる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "簡易課税制度の適用を受けている事業者しか交付できない",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "簡易課税の選択は必要条件でない",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/zeimokubetsu/shohi/keigenzeiritsu/invoice_about.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "交付できる業種等が定められ、簡易課税選択の有無とは別に扱われる",
+          "correct_in_draft": true,
+          "independent_verdict": "SUPPORTED",
+          "reason": "不特定多数向け所定業種は交付可能",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/zeimokubetsu/shohi/keigenzeiritsu/invoice_about.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "登録番号は一切記載できない",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "登録番号は必要",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/zeimokubetsu/shohi/keigenzeiritsu/invoice_about.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "個人事業者には交付が禁じられる",
+          "correct_in_draft": false,
+          "independent_verdict": "REJECTED",
+          "reason": "登録済み個人も交付できる",
+          "source_url": "https://www.nta.go.jp/taxes/shiraberu/zeimokubetsu/shohi/keigenzeiritsu/invoice_about.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "小売・飲食等不特定多数向け事業の適格簡易請求書は簡易課税の選択と別",
+      "primary_sources": [
+        "https://www.nta.go.jp/taxes/shiraberu/zeimokubetsu/shohi/keigenzeiritsu/invoice_about.htm"
+      ],
+      "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
+      "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
+      "original_answer_one_based": 3,
+      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "modified": true,
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
+      "issue": null,
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    }
+  ],
+  "reaudit": {
+    "id": "FP2-OFFICIAL-202409-Q29",
+    "date": "2026-11-23",
+    "review_result": "PASS",
+    "old_source_blob_sha": "846349689de7a45d21dced134082e82a1dcf601c",
+    "new_source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+    "original_answer_independently_verified": true,
+    "official_answer_one_based": 1,
+    "change_only": "choice[1] text and modification_note",
+    "high_issue_status": "RESOLVED",
+    "primary_sources": [
+      "https://www.fsa.go.jp/policy/payoff/",
+      "https://www.fsa.go.jp/policy/payoff/01.pdf"
+    ]
+  }
+}

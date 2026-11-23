@@ -1,36 +1,63 @@
 {
-  "contract_version": "1.0",
-  "updated_at_jst": "2026-09-16",
-  "product_target_questions": 600,
-  "official_audit_reference": {
-    "rows": 180,
-    "purpose": "difficulty/source benchmark only",
-    "verbatim_product_reuse_authorized": false,
-    "note": "Audit-matrix presence is not a rights basis for redistributing official past-exam text."
+  "contract_version": "2.0",
+  "updated_at_jst": "2026-11-23",
+  "scope": "FP2 initial independently content-reviewed MVP",
+  "target_questions": 120,
+  "target_policy": "ceiling not fixed; reduce only if curriculum coverage and release gates independently justified",
+  "current_content_pass_count": 190,
+  "canonical_bank_path": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
+  "canonical_bank_count_source": "read actual canonical JSON; do not hardcode 600 or use spreadsheet row count",
+  "official_reuse_policy": {
+    "sources": [
+      "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
+      "https://products.kinzai.or.jp/exam-ginou/use-of-test-questions/"
+    ],
+    "rights_status": "CONDITIONAL_POLICY_VERIFIED_ITEM_RIGHTS_PENDING",
+    "allowed_condition": "Publicly released exam questions, with attribution and modification statement when adapted, absent prohibited usage categories",
+    "forbid_third_party_content": [
+      "FP2級ドットコム/過去問道場の解説",
+      "FP2級ドットコム/過去問道場の文章",
+      "FP2級ドットコム/過去問道場のデータ"
+    ],
+    "no_unpublished_cbt_capture": true
   },
-  "product_bank": {
-    "required_origin_type": "original",
-    "required_rights_basis": "original_question_based_on_primary_public_source",
-    "required_primary_source_url": true,
-    "required_reference_date": true,
-    "required_explanation": true,
-    "forbid_filler_or_padding": true,
-    "forbid_official_question_verbatim_copy": true,
-    "target_domain_counts": {
-      "ライフプランニングと資金計画": 100,
-      "リスク管理": 100,
-      "金融資産運用": 100,
-      "タックスプランニング": 100,
-      "不動産": 100,
-      "相続・事業承継": 100
-    }
+  "question_gate": {
+    "must_have": [
+      "id",
+      "4 choices",
+      "answer_index 0..3",
+      "explanation",
+      "source URL",
+      "source_section",
+      "modified boolean",
+      "modification_note when modified",
+      "audit_evidence_path",
+      "original and target legal cutoff dates"
+    ],
+    "independent_content_audit": "PASS required",
+    "rights_final_gate": "PASS required",
+    "current_law_independent_revalidation": "required",
+    "canonical_hash_pin": "required before distribution",
+    "release_count_rule": "published count only if all release gates PASS"
   },
-  "generation_policy": {
-    "batch_size": 20,
-    "pre_generation_topic_inventory_required": true,
-    "cross_batch_near_duplicate_gate_required": true,
-    "answer_position_balance_required": true,
-    "legal_baseline_check_required": true,
-    "release_fail_closed_until": 600
+  "runtime_gate": {
+    "golden_master": "UI Master v2.1",
+    "offline": "required",
+    "json_backup_restore": "required",
+    "ios_device_test": "required",
+    "store_app_privacy_actual_runtime": "required"
+  },
+  "shipping_locked_until": "Q0_Q1_Q2_Q3_Q4_Q5_ALL_PASS",
+  "current_release_approved_count": 0,
+  "candidate_scope_excess_over_target": 0,
+  "release_scope_status": "CONTENT_190_RELEASE_CANDIDATE_FIXED_120_SIX_BY_TWENTY_RELEASE_GATES_PENDING",
+  "note": "Initial release is 120 selected (6 subjects x20); 70 remaining content-PASS are audited reserves. Five corrected FAIL questions are excluded pending independent review.",
+  "current_release_candidate_count": 120,
+  "current_content_pass_reserve_count": 70,
+  "latest_independent_audit": {
+    "covered": 180,
+    "pass": 175,
+    "fail": 5,
+    "hold": 0
   }
 }

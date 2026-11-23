@@ -1,0 +1,202 @@
+{
+  "audit_id": "FP2-202405-B01-HOLD3-INDEPENDENT-20261123",
+  "audit_type": "independent_primary_source_choice_by_choice",
+  "reviewed_at": "2026-11-23",
+  "applicable_on": "2026-04-01",
+  "source_branch": "feature/fp2-academic-300-expansion-20261123",
+  "source_path": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b01.json",
+  "source_blob_sha": "3dd3609b05a89d577664b0b88c5392ccd240b5c0",
+  "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+  "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+  "summary": {
+    "pass": 3,
+    "fail": 0,
+    "hold": 0,
+    "critical_confirmed": 0,
+    "high_confirmed": 0,
+    "canonical_content_eligible": 3,
+    "release_approval": false
+  },
+  "critical_high_issues": [],
+  "limitations": "各肢の制度内容と正答一意性を公開一次資料及び制定法の2026-04-01施行関係に照合した内容監査。一次資料すべてについて2026-04-01時点のスナップショット保存は未了。原題公式PDFの解答番号は制作JSON記載であり、今回独立再抽出したものではない。改変の著作権利用条件・公開ゲートは未承認。Q49の土地活用方式は技術名称の定義に依存するため公開前に一次資料原文と再突合が望ましい。",
+  "release_note": "内容監査PASS。正規バンク候補として承認するが権利・公開ゲート未通過でDRAFT_NOT_FOR_RELEASEは維持し、本番統合を行わない。",
+  "items": [
+    {
+      "id": "FP2-OFFICIAL-202405-Q01",
+      "original_question_number": 1,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "FPが顧客へ金融商品を説明する際、顧客利益を尊重する姿勢として最も適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "金融商品の利点だけでなく元本割れなどの不利益も伝える",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "本人の同意を得ずに税務資料を取引先に渡す",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "同意なく顧客の税務資料を他社提供するのは不適切",
+          "primary_source_url": "https://www.fsa.go.jp/policy/kokyakuhoni/kokyakuhoni.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "手数料が高い商品だけを一方的に推奨する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "手数料の高さのみを基準に推奨するのは顧客本位に反する",
+          "primary_source_url": "https://www.fsa.go.jp/policy/kokyakuhoni/kokyakuhoni.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "金融商品の利点だけでなく元本割れなどの不利益も伝える",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "便益と元本割れ等のリスク両面の説明が必要",
+          "primary_source_url": "https://www.fsa.go.jp/policy/kokyakuhoni/kokyakuhoni.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "為替相場の将来を確実に予言できると説明する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "為替相場の将来変動を確実と保証できない",
+          "primary_source_url": "https://www.fsa.go.jp/policy/kokyakuhoni/kokyakuhoni.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "金融庁の顧客本位の業務運営に関する原則。リスク・不利益と便益の公正な説明、利益相反管理が必要",
+      "primary_sources": [
+        {
+          "url": "https://www.fsa.go.jp/policy/kokyakuhoni/kokyakuhoni.html",
+          "section": "顧客本位の業務運営に関する原則"
+        }
+      ],
+      "original_answer_one_based": 3,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "原題の顧客相談4場面を要約し、設問表現と全選択肢を再構成。原題と選択肢文章は同一ではない。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q02",
+      "original_question_number": 2,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "毎年一定額を受け取りながら住宅ローンの返済原資を考えるとき、一定の年間返済額から借入可能額（現在価値）を概算するために使う係数はどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "年金現価係数",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "年金終価係数",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "年金終価係数は一定期間の積立総額の将来価値",
+          "primary_source_url": "https://www.jafp.or.jp/aim/cfp/ninteikyouiku/learning.shtml"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "減債基金係数",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "減債基金係数は将来必要額のための毎期積立額",
+          "primary_source_url": "https://www.jafp.or.jp/aim/cfp/ninteikyouiku/learning.shtml"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "年金現価係数",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "年金現価係数は毎年一定額の返済額から借入可能元金の現在価値を算出",
+          "primary_source_url": "https://www.jafp.or.jp/aim/cfp/ninteikyouiku/learning.shtml"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "資本回収係数",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "資本回収係数は借入元金から毎期返済額を逆算する",
+          "primary_source_url": "https://www.jafp.or.jp/aim/cfp/ninteikyouiku/learning.shtml"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "年金現価係数は毎期一定額を現在価値に換算し、資本回収係数は現在価値から毎期額を算出する",
+      "primary_sources": [
+        {
+          "url": "https://www.jafp.or.jp/aim/cfp/ninteikyouiku/learning.shtml",
+          "section": "6つの係数（元金・年金現価）"
+        }
+      ],
+      "original_answer_one_based": 3,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "原題の4つの複合記述を、年金現価係数の選択を問う独立した4択へ再設計。原題の選択肢番号3と現在のindex2は偶然対応するが、本文は加工。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q06",
+      "original_question_number": 6,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "国民年金の学生納付特例が承認された期間について、保険料を追納していない場合の説明として適切なのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "老齢基礎年金の受給資格期間に含まれるが、年金額には原則反映されない",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "老齢基礎年金の受給資格期間に含まれるが、年金額には原則反映されない",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "未追納でも受給資格期間算入、年金額には反映されない",
+          "primary_source_url": "https://www.nenkin.go.jp/service/kokunen/menjo/20150514.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "受給資格期間にも年金額にも含まれる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "年金額には未追納のままでは反映されない",
+          "primary_source_url": "https://www.nenkin.go.jp/service/kokunen/menjo/20150514.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "受給資格期間にも年金額にも含まれない",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "受給資格期間には算入されるので誤り",
+          "primary_source_url": "https://www.nenkin.go.jp/service/kokunen/menjo/20150514.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "受給資格期間には含まれないが年金額には反映される",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "未追納なら年金額へ反映されないので逆",
+          "primary_source_url": "https://www.nenkin.go.jp/service/kokunen/menjo/20150514.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "学生納付特例の期間は受給資格期間に含まれるが、未追納分は年金額に反映しない",
+      "primary_sources": [
+        {
+          "url": "https://www.nenkin.go.jp/service/kokunen/menjo/20150514.html",
+          "section": "学生納付特例の対象期間と追納"
+        }
+      ],
+      "original_answer_one_based": 1,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "原題の複数制度に関する正誤判断を学生納付特例の単一論点へ絞り、4肢を全面再作成。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    }
+  ]
+}

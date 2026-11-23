@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-04T11:12:00Z",
+  "updated_at": "2026-11-24T01:06:00+09:00",
   "policy": {
     "final_approval": "Explicit user approval is required for the exact App ID / Version / Build immediately read back before App Review submission.",
     "submission_complete": "Only App Store Connect read-back at WAITING_FOR_REVIEW or a later review state counts as App Review submission complete.",
@@ -191,6 +191,111 @@
       "app2_task": null,
       "status": "active",
       "readback": true
+    },
+    "fp2": {
+      "name": "FP2級｜学びスプリント",
+      "app_id": "6797228406",
+      "bundle_id": "com.allsunday1122.fp2manabisprint",
+      "version": "1.0.0",
+      "build": "1",
+      "iap": false,
+      "iap_product_ids": [],
+      "app2_task": null,
+      "status": "VERBATIM_CANONICAL310_SELECTED298_CI8_SUCCESS_RELEASE_BLOCKED",
+      "readback": false,
+      "ios_project": "fp2-manabi-sprint/ios/project.yml",
+      "native_source_branch": "feature/fp2-release-scope-20261123",
+      "source_bank": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
+      "content_review_pass": 310,
+      "publishable_questions": 0,
+      "icon_source_blob_sha": "ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d",
+      "icon_apple_hash_verified": false,
+      "build_validation": "HEAD_0b1dc287_CI8_SUCCESS_UNSIGNED_SIMULATOR",
+      "app_store_upload": "NOT_STARTED",
+      "note": "Canonical 310=official verbatim 298 selected plus audited original reserve 12; two legal FAIL isolated, HOLD0. No original backfill. Check runs 8/8 success at fixed 0b1dc287; unsigned simulator only. App Store Connect, signed IPA, real device, Q0/Q5 and final approval remain blocked.",
+      "ci_run_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45195987237",
+      "ci_source_sha": "0b1dc287b5a6f2f8d39c1b4560e30411f730cf0c",
+      "ci_verified_steps": [
+        "canonical_bank_offline_bundle",
+        "xcodegen",
+        "unsigned_simulator_xcodebuild",
+        "compiled_info_plist_and_bundle_readback",
+        "chromium_learning_offline_e2e",
+        "golden_master_v21_migration_gate",
+        "release_registry_audit",
+        "static_content_web_shell"
+      ],
+      "release_selected": 298,
+      "reserve_questions": 12,
+      "preflight_classification": "AUTO_FIX_CI_PASS__BUILD_REQUIRED__HUMAN_REQUIRED__FINAL_APPROVAL_PENDING",
+      "ci_8_of_8_verified": true,
+      "ci_8_of_8_reference_commit": "0b1dc287b5a6f2f8d39c1b4560e30411f730cf0c",
+      "ci_8_of_8_categories": {
+        "chromium_e2e": 2,
+        "native_simulator_unsigned": 2,
+        "static_web_bank": 2,
+        "ui_migration": 1,
+        "registry_audit": 1
+      },
+      "ci_8_of_8_evidence": "fp2-manabi-sprint/audit/FP2_PREFLIGHT_CI8_HUMAN_REQUIRED_20261123.md",
+      "ci_8_of_8_conclusions": "HEAD_298_SELECTED_ALL_8_SUCCESS",
+      "icon_internal_verification": "PASS_IDENTICAL_FP2_LEGACY_GIT_BLOB",
+      "icon_current_sha256": "d456178b2a7b04f180e39b3ad62f5c194832e85aa15102bf6452751551db8033",
+      "icon_asc_verification": "HUMAN_REQUIRED",
+      "human_required": [
+        "ASC_ICON_REFERENCE_CONFIRMATION",
+        "ASC_APP_ID_BUNDLE_VERSION_BUILD_IAP_PRIVACY_METADATA_SCREENSHOTS_PUBLIC_URLS_READBACK",
+        "REAL_DEVICE_IOS_ACCEPTANCE",
+        "OFFICIAL_VERBATIM_RIGHTS_OPERATOR_SOURCE_DISCLOSURE_SIGNOFF"
+      ],
+      "preflight_scope": {
+        "canonical": 310,
+        "selected": 298,
+        "reserve": 12,
+        "excluded_fail": 2,
+        "hold": 0,
+        "academic_rounds": 5,
+        "domains": 6,
+        "per_domain": [
+          48,
+          50,
+          50,
+          50,
+          50,
+          50
+        ],
+        "official_only": true,
+        "original_backfill_allowed": false
+      },
+      "preflight_source_head_sha": "0b1dc287b5a6f2f8d39c1b4560e30411f730cf0c",
+      "preflight_evidence": "fp2-manabi-sprint/audit/FP2_PREFLIGHT_298_SELECTED_CI8_20261124.md",
+      "latest_head_ci_result": "FP2_CHECKS_8_OF_8_SUCCESS",
+      "latest_head_ci_checked": "2026-11-24",
+      "latest_head_ci_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/0b1dc287b5a6f2f8d39c1b4560e30411f730cf0c/checks",
+      "asc_readback": "HUMAN_REQUIRED_NOT_PERFORMED",
+      "submission_state": "NOT_SUBMITTED",
+      "final_approval": "PENDING_USER_EXPLICIT_APPROVAL",
+      "auto_fix_required": [],
+      "build_required": [
+        "SIGNED_IPA_WITH_298_PAYLOAD_AND_SHA",
+        "TESTFLIGHT_DISTRIBUTION_AND_DEVICE_ARTIFACTS",
+        "PUBLIC_SUPPORT_PRIVACY_URL_HTTP200"
+      ],
+      "final_approval_required": [
+        "Q0_TO_Q5_COMPLETE",
+        "EXPLICIT_APP_REVIEW_SUBMISSION_APPROVAL"
+      ],
+      "quarantined_questions": 2,
+      "verbatim_current_law_audit": {
+        "pass": 117,
+        "fail": 2,
+        "hold": 1,
+        "excluded_ids": [
+          "fp2-2024-09-gakka-007",
+          "fp2-2024-05-gakka-008",
+          "fp2-2024-05-gakka-053"
+        ]
+      }
     }
   }
 }

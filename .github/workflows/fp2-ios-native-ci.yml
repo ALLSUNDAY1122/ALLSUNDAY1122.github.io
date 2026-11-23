@@ -1,0 +1,101 @@
+name: FP2 SwiftUI WKWebView native source and simulator build
+on:
+  push:
+    branches:
+      - feature/fp2-swiftui-wkwebview-release-20261123
+      - feature/fp2-release-scope-20261123
+    paths:
+      - "fp2-manabi-sprint/**"
+      - "automation/app-release-registry.json"
+      - ".github/workflows/fp2-ios-native-ci.yml"
+  pull_request:
+    paths:
+      - "fp2-manabi-sprint/**"
+      - "automation/app-release-registry.json"
+      - ".github/workflows/fp2-ios-native-ci.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static-and-native-simulator:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source consistency and offline bundle
+        run: |
+          python3 fp2-manabi-sprint/ios/prepare-ios.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          registry=json.loads(Path('automation/app-release-registry.json').read_text())['apps']['fp2']
+          evidence=json.loads(Path('fp2-manabi-sprint/ios/Web/bundle-evidence.json').read_text())
+          for field in ('app_id','bundle_id','version','build'):
+              assert str(registry[field])==str(evidence[field]),field
+          assert registry['iap'] is False and evidence['iap_product_ids']==[]
+          assert evidence['publication_release_clear']==0
+          bank=json.loads(Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_text())
+          selection=json.loads(Path('fp2-manabi-sprint/release/release-selection-300-20261123.json').read_text())
+          assert len(bank['questions'])==310 and bank['content_approved_questions']==310
+          assert sum(q.get('release_selected') is True for q in bank['questions'])==298
+          assert sum(q.get('release_selected') is False for q in bank['questions'])==12
+          assert selection['selected_count']==298 and selection['reserve_count']==12
+          assert not selection.get('corrections_excluded_until_independent_reaudit', []), 'unresolved corrected items present'
+          q20=[q for q in bank['questions'] if q['id']=='fp2-2025-01-gakka-020']
+          assert len(q20)==1 and q20[0]['release_selected'] is True and q20[0]['independent_audit_status']=='PASS'
+          assert q20[0]['audit_evidence_path']=='fp2-manabi-sprint/audit/FP2_2025_01_Q20_SECOND_CORRECTION_REAUDIT_PASS_20261123.md'
+          assert all(q.get('publishable') is False for q in bank['questions'])
+          assert 'fp2-2025-01-gakka-020' in {q['id'] for q in bank['questions']}
+          import hashlib
+          assert evidence['canonical_sha256']==hashlib.sha256(Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_bytes()).hexdigest()
+          native_bytes=Path('fp2-manabi-sprint/ios/Web/questions/canonical/approved-questions-20261123.json').read_bytes()
+          native=json.loads(native_bytes)
+          selected={q['id']:q for q in bank['questions'] if q['release_selected'] is True}
+          assert len(native['questions'])==298 and native['content_approved_questions']==298
+          assert len(selected)==298 and {q['id'] for q in native['questions']}==set(selected)
+          assert all(q==selected[q['id']] for q in native['questions'])
+          assert evidence['content_approved_questions']==310
+          assert evidence['selected_release_questions']==298 and evidence['reserve_content_pass_not_bundled']==12
+          assert evidence['release_payload_sha256']==hashlib.sha256(native_bytes).hexdigest()
+          assert Path('fp2-manabi-sprint/ios/Web/manifest.webmanifest').is_file()
+          assert Path('fp2-manabi-sprint/ios/Web/index.html').is_file()
+          print('FP2 registry / offline asset / IAP contract PASS')
+          PY
+          test -f fp2-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png
+          sips -g pixelWidth -g pixelHeight fp2-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project and build unsigned iOS Simulator app
+        run: |
+          cd fp2-manabi-sprint/ios
+          xcodegen generate
+          xcodebuild -project FP2ManabiSprint.xcodeproj -scheme FP2ManabiSprint -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/fp2-derived" CODE_SIGNING_ALLOWED=NO build
+      - name: Read back compiled Info.plist and bundled bank
+        run: |
+          python3 - <<'PY'
+          import os,plistlib,json
+          from pathlib import Path
+          app=Path(os.environ['RUNNER_TEMP'])/'fp2-derived/Build/Products/Debug-iphonesimulator/FP2ManabiSprint.app'
+          p=plistlib.loads((app/'Info.plist').read_bytes())
+          assert p['CFBundleIdentifier']=='com.allsunday1122.fp2manabisprint'
+          assert p['CFBundleShortVersionString']=='1.0.0'
+          assert p['CFBundleVersion']=='1'
+          assert (app/'Web/index.html').exists(), 'Bundled web HTML missing'
+          assert (app/'Web/bundle-evidence.json').exists(), 'Bundled evidence missing'
+          e=json.loads((app/'Web/bundle-evidence.json').read_text())
+          assert e['content_approved_questions']==310
+          assert e['publication_release_clear']==0
+          import hashlib
+          canonical=Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_bytes()
+          assert e['canonical_sha256']==hashlib.sha256(canonical).hexdigest()
+          native_bytes=(app/'Web/questions/canonical/approved-questions-20261123.json').read_bytes()
+          payload=json.loads(native_bytes)
+          assert len(payload['questions'])==298 and payload['content_approved_questions']==298
+          source=json.loads(canonical)
+          selected={q['id']:q for q in source['questions'] if q['release_selected'] is True}
+          assert len(selected)==298 and {q['id'] for q in payload['questions']}==set(selected)
+          assert all(q==selected[q['id']] for q in payload['questions'])
+          assert e['release_payload_sha256']==hashlib.sha256(native_bytes).hexdigest()
+          assert e['selected_release_questions']==298 and e['reserve_content_pass_not_bundled']==12
+          print('iOS Simulator bundle readback PASS')
+          PY
