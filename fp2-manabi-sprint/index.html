@@ -75,7 +75,7 @@ $('saveExamDate').onclick=()=>{state.examDate=$('examDate').value||'';save();ren
 $('exportData').onclick=()=>{const payload=JSON.stringify({app:'fp2-manabi-sprint',version:2,exportedAt:new Date().toISOString(),state},null,2);const url=URL.createObjectURL(new Blob([payload],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='fp2-manabi-sprint-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('importData').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>2e6)throw Error('ファイルサイズが大きすぎます');const payload=JSON.parse(await file.text());if(payload.app!=='fp2-manabi-sprint'||payload.version!==2||!validState(payload.state))throw Error('このアプリのバックアップではありません');if(!confirm('現在の学習記録をバックアップの内容で置き換えますか？'))return;state={...state,...payload.state};save();syncSettings();renderHome();renderHistory();alert('学習データを復元しました')}catch(err){alert('読み込み失敗：'+err.message)}finally{e.target.value=''}};
 // Offline shell is installed only on secure origins (including HTTPS GitHub Pages).
-if("serviceWorker" in navigator && (location.protocol==="https:" || location.hostname==="localhost")) {
+if("serviceWorker" in navigator && (location.protocol==="https:" || location.hostname==="localhost" || location.hostname==="127.0.0.1")) {
   window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js",{scope:"./"}).catch(err=>console.warn("Offline cache unavailable",err)));
 }
 syncSettings();
