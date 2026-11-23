@@ -5,20 +5,22 @@ from pathlib import Path
 from datetime import datetime,timezone,timedelta
 B=Path(__file__).resolve().parent
 IOS=B.parents[1]/"touroku-hanbaisha-ios"
-by_year={};global_reasons=collections.Counter()
+by_year={};global_reasons=collections.Counter();global_advisories=collections.Counter()
 for y in range(2022,2027):
     file=B/f"AUTO_DIFF_{y}.json"
     if file.exists():
         d=json.loads(file.read_text())
         if len(d["questions"])!=120 or d["autoPass"]+d["held"]!=120:raise RuntimeError("invalid audit count")
         reasons=d["reasonCounts"]
+        advisories=d.get("advisoryCounts",{})
         by_year[str(y)]={"candidate":120,"autoDiffPass":d["autoPass"],"autoDiffHeld":d["held"],
-                          "notYetDiffed":0,"reasons":reasons,
+                          "notYetDiffed":0,"reasons":reasons,"advisories":advisories,
                           "evidence":f"touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_{y}.json"}
         global_reasons.update(reasons)
+        global_advisories.update(advisories)
     else:
         by_year[str(y)]={"candidate":120,"autoDiffPass":0,"autoDiffHeld":0,"notYetDiffed":120,
-                          "reasons":{"PDF_REEXTRACTION_NOT_CONFIRMED":120},"evidence":None}
+                          "reasons":{"PDF_REEXTRACTION_NOT_CONFIRMED":120},"advisories":{},"evidence":None}
 bank=json.loads((B/"APPROVED_OFFICIAL_BANK.json").read_text())
 manual=json.loads((B/"MANUAL_VISUAL_AUDIT_20261123.json").read_text())
 existing=json.loads((IOS/"release-status.json").read_text())
@@ -34,7 +36,7 @@ qb.update({"verified_official_imported":total,"official_question_text_imported":
            "production_official_bank_count":total,"auto_diff_pass_promoted":auto,
            "manual_visual_pass_preserved":visual,"official_question_text_staged":600,
            "auto_diff_per_year":by_year,
-           "auto_diff_reason_totals":dict(global_reasons)})
+           "auto_diff_reason_totals":dict(global_reasons),"auto_diff_advisory_totals":dict(global_advisories)})
 gate=existing.setdefault("gates",{})
 gate["normalized_pdf_auto_diff"]=f"COMPLETE_{600-sum(x['notYetDiffed'] for x in by_year.values())}_OF_600"
 gate["official_source_import"]=f"PARTIAL_APPROVED_{total}_OF_600"
@@ -49,6 +51,7 @@ for y in range(2022,2027):
     if a not in ev:ev.append(a)
 (IOS/"release-status.json").write_text(json.dumps(existing,ensure_ascii=False,indent=2)+"\n")
 reason_text="\n".join(f"| {k} | {v} |" for k,v in sorted(global_reasons.items()))
+advisory_text="\n".join(f"| {k} | {v} |" for k,v in sorted(global_advisories.items()))
 table="\n".join(f"| {y} | {t['autoDiffPass']} | {t['autoDiffHeld']} | {t['notYetDiffed']} | {bank['byYear'][y]['visual']} | {bank['byYear'][y]['auto']+bank['byYear'][y]['visual']} |" for y,t in by_year.items())
 section=f"""\n## 自動照合ゲート v1：{now}（最新）\n
 - **公開判定 BLOCKED**。本番問題バンク **{total}/600問**（従来の目視PASS {visual}、新たな自動diff PASS {auto}）。
@@ -68,7 +71,7 @@ section=f"""\n## 自動照合ゲート v1：{now}（最新）\n
 |---|---:|
 {reason_text}
 
-実行成功した年度の差分、原典ページ、公式PDF SHA-256、正規化後のハッシュは `official-kansai/AUTO_DIFF_2022.json` ～ `AUTO_DIFF_2026.json`。PASSは `APPROVED_OFFICIAL_BANK.json` に移し、未PASSは非公開。実ブラウザ・iOSビルド・TestFlightは別ゲートのまま。
+### 合否判定に使わない参考差異\n| 注意コード | 件数 |\n|---|---:|\n{advisory_text}\n\n実行成功した年度の差分、原典ページ、公式PDF SHA-256、正規化後のハッシュは `official-kansai/AUTO_DIFF_2022.json` ～ `AUTO_DIFF_2026.json`。PASSは `APPROVED_OFFICIAL_BANK.json` に移し、未PASSは非公開。実ブラウザ・iOSビルド・TestFlightは別ゲートのまま。
 """
 md_path=IOS/"RELEASE_STATUS.md"
 old=md_path.read_text()
