@@ -47,7 +47,7 @@
     "pass": 629,
     "hold": 91,
     "notExecutedExisting": 0,
-    "notImported": 321,
+    "notImported": 312,
     "rate": 0.8736111111111111,
     "holdByReason": {
       "HOLD_MEDIA_RIGHTS": 38,
@@ -119,7 +119,9 @@
     "mediaRoutingRunId": 45241710210,
     "mediaRoutingArtifactId": 14852120867,
     "latestBoundaryContextRunId": 45246704920,
-    "latestBoundaryContextRunResult": "SUCCESS_SOURCE_ONLY_PLUS_15"
+    "latestBoundaryContextRunResult": "SUCCESS_SOURCE_ONLY_PLUS_15",
+    "latestCoordinateReextractionRunId": 45249375273,
+    "latestCoordinateReextractionResult": "SUCCESS_EXECUTION_22_TEXT_AGREED_5_REPAIRS_0_NEW_PROMOTED"
   },
   "stagedCandidateCount": 480,
   "staging": {
@@ -261,7 +263,7 @@
     "newBulkPromotedFromPreviousState": 74,
     "previousVerifiedTotal": 787,
     "latestPromotionLedger": "kangoshi-sprint/audit/dual-engine-promotion-ledger-20261124.json",
-    "note": "Current source-only total 879 (existing runtime 720 plus verified extension 159); 321 candidate questions held. Independent explanation, law, media, iOS and release gates still pending."
+    "note": "Current 888 source-only records = 720 existing plus 168 extension; 312 candidates held, including 22 with dual extraction matches but additional unresolved legal/scoring or situation/C0 gates; not released."
   },
   "mediaReaudit": {
     "target": 38,
@@ -379,5 +381,27 @@
     "svgOriginalDiagramFaithfulnessVerified": 0,
     "svgPendingDetailedVisualInspection": 18,
     "status": "SOURCE_ONLY_NO_RELEASE"
+  },
+  "latestCoordinateReextractionAudit": {
+    "runId": 45249375273,
+    "date": "2026-11-24",
+    "preexistingCanonicalAtRun": 888,
+    "checkedRemaining": 312,
+    "dualEngineTextAgree": 22,
+    "candidateTextDifferencesRecorded": 5,
+    "newPromoted": 0,
+    "canonicalAfter": 888,
+    "remainingHolds": 312,
+    "evidencePath": "kangoshi-sprint/audit/coordinate-reextraction-evidence-20261124.json",
+    "repairedIds": [
+      "K112-AM073",
+      "K112-AM095",
+      "K112-PM017",
+      "K112-PM052",
+      "K111-AM094"
+    ],
+    "unresolvedReason": "C0_SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY or SITUATION_GROUP_CONTEXT_NOT_VERIFIED",
+    "method": "PyMuPDF geometric question clips versus independently segmented Poppler full-page text; official key and scoring exceptions retained",
+    "releaseStatus": "PREFLIGHT_BLOCKED"
   }
 }
