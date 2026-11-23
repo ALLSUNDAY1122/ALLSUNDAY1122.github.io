@@ -17,15 +17,29 @@ def number_lines(text, number):
     return [i for i,line in enumerate(lines) if pat.match(line)]
 
 def context_for_group(text,number):
+    """Printed situation-block range header and shared passage, not generic prose.
+    Must identify exact 91-93 / 94-96 ... printed heading and first-question anchor.
+    """
     lines=text.splitlines()
-    markers=[i for i,s in enumerate(lines) if re.search(r"次の文を読み|次の文章を読み|次の事例を読み|次の文を読んで|次の事例について",s)]
     first=91+3*((number-91)//3)
-    anchor=number_lines(text,first)
-    if not markers or not anchor:return None
-    prior=[x for x in markers if x<anchor[0] and anchor[0]-x<=55]
-    if not prior:return None
-    passage="\n".join(lines[prior[-1]:anchor[0]]).strip()
-    return passage if len(normalized(passage))>=35 else None
+    last=first+2
+    rx=re.compile(r"次の文を読み\\s*"+str(first)+r"\\s*[〜～~－−-]\\s*"+str(last))
+    headers=[i for i,line in enumerate(lines) if rx.search(line)]
+    anchors=number_lines(text,first)
+    candidates=[(h,a) for h in headers for a in anchors if a>h]
+    if len(candidates)!=1:return None
+    h,a=candidates[0]
+    passage="\\n".join(lines[h:a]).strip()
+    if len(normalized(passage))<35:return None
+    return {"first":first,"last":last,"passage":passage,"header":lines[h].strip()}
+
+def safe_context(raw,clean_font):
+    # Both parsers can share a wrong source CMap. Unmapped control bytes and
+    # suspicious glyphs in context cannot be auto-cleared by parser agreement.
+    fixed=set((2,4,5,6,7,8,11,12,31))
+    bad=[ord(c) for c in raw if ord(c)<32 and ord(c) not in fixed and c not in "\\n\\r\\t"]
+    val=clean_font(raw)
+    return not bad and not re.search(r"[\\ufffd઄¹¼ïñèêçâ\\u0080-\\u009f]",val),bad
 
 def _anchors(page, n, clean_font):
     words=page.get_text("words",sort=True)
@@ -80,17 +94,31 @@ def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize):
     scenario=None
     if n>=91:
         matches=[]
+        rejected=[]
         for p in range(max(1,pg-3),pg+1):
-            f=clean_font(doc[p-1].get_text("text",sort=False))
-            alt=clean_font(poppler_text(pdf,p))
-            passage=context_for_group(f,n)
-            if passage and normalize(passage) in normalize(alt):
-                matches.append((p,passage))
-        if not matches:
-            return pg,["SITUATION_GROUP_CONTEXT_NOT_VERIFIED"],None,geometry,region
-        p,passage=matches[-1]
-        scenario={"page":p,"commonText":passage,"normalizedLength":len(normalize(passage)),
-                  "engines":["PyMuPDF","Poppler"],"status":"DUAL_ENGINE_CONTEXT_MATCH"}
+            original=doc[p-1].get_text("text",sort=False)
+            alt_raw=poppler_text(pdf,p)
+            info=context_for_group(clean_font(original),n)
+            if info is None:continue
+            alt_info=context_for_group(clean_font(alt_raw),n)
+            if alt_info is None:rejected.append("POPLER_SHARED_CONTEXT_NOT_FOUND");continue
+            same=normalized(info["passage"])==normalized(alt_info["passage"])
+            safe1,bad1=safe_context(original,clean_font)
+            safe2,bad2=safe_context(alt_raw,clean_font)
+            if not same:rejected.append("SITUATION_CONTEXT_TEXT_DIFFER");continue
+            # Check the common passage itself, not unrelated text elsewhere on page.
+            safe_passage1,badpass1=safe_context(info["passage"],clean_font)
+            safe_passage2,badpass2=safe_context(alt_info["passage"],clean_font)
+            if not safe_passage1 or not safe_passage2:
+                rejected.append("SITUATION_CONTEXT_UNRESOLVED_SOURCE_GLYPHS")
+                continue
+            matches.append({"page":p,"groupFirst":info["first"],"groupLast":info["last"],
+                            "commonText":info["passage"],"normalizedLength":len(normalized(info["passage"])),
+                            "method":"printed range header + first question position",
+                            "engines":["PyMuPDF","Poppler"],"status":"DUAL_ENGINE_CONTEXT_MATCH"})
+        if len(matches)!=1:
+            return pg,[rejected[0] if rejected else "SITUATION_GROUP_CONTEXT_NOT_VERIFIED"],None,geometry,region
+        scenario=matches[0]
     geometry["verifiedPage"]=pg
     geometry["method"]="PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
     return pg,[],scenario,geometry,region
