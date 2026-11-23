@@ -3,7 +3,7 @@
   "updatedAt": "2026-11-24",
   "qualification": "看護師国家試験",
   "policy": "Verified 112/111 canonical SOURCE bank; new questions pass two independent PDF text extraction and official answer token tests, but still require explanation, app tests, rights checks. Never auto-publish.",
-  "count": 260,
+  "count": 262,
   "sourceExams": [
     112,
     111
@@ -7354,6 +7354,121 @@
         "verifier": "PyMuPDF + Poppler pdftotext -layout",
         "originalPdfGlyphControlAbsent": true,
         "officialKeyRetestedAgainstPdf": true
+      }
+    },
+    {
+      "id": "K112-PM042",
+      "sourceExam": 112,
+      "session": "PM",
+      "questionNo": 42,
+      "question": "成人に対する自動体外式除細動器(AED〉の使用で正しいのはどれか。",
+      "choices": [
+        "胸部が濡れている場合は電極パッドを貼る前に拭き取る。",
+        "電極パッドは左前胸部に並べて貼る。",
+        "心電図の解析中にも胸骨圧迫を継続する。",
+        "心拍が再開されたら電極パッドを直ちにはがす。"
+      ],
+      "answer": 0,
+      "sourcePage": 18,
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "requiresMedia": false,
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "reviewStatus": "OCR_IMAGE_PINNED_CMAP_ONLY_REPAIRED_EXPLANATION_PENDING",
+      "extractionValid": true,
+      "textFidelity": "UNVERIFIED_PDF_GLYPH_MAPPING",
+      "answerSourceChecked": false,
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "officialScoringNotice": null,
+      "officialScoringStatus": "normal",
+      "sourceAnswerTokens": [
+        "1"
+      ],
+      "officialKeyRaw": "1",
+      "officialAcceptedAnswers": [
+        0
+      ],
+      "answerKeyVerification": "MATCH_SINGLE_DIGIT_KEY_NOT_VERBATIM_CERTIFIED",
+      "publishable": false,
+      "printedOptionCount": 4,
+      "mediaAuditStatus": "not_required",
+      "releaseEligible": false,
+      "canonicalStatus": "source_verified_extension",
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "audit": {
+        "sourceImageOcrPsm6Matched": true,
+        "sourceImageOcrPsm3Matched": true,
+        "allChoicesImageOcrMatched": true,
+        "officialKeyMatched": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "evidence": {
+        "sourcePdfPage": 18,
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "sourceImageSha256": "4b7530ee0a843427eb5a798e201accd6ce3fb2595e38c1942071c77d90514d94",
+        "ocrPsm6Sha256": "0c67e6109e0271aa25fb02458a15c6469080fc6c0886425bb38594ea6d27bef8",
+        "ocrPsm3Sha256": "ba6f38d37e20b7d67ddd119feb0527101cac72582c200072cc762b1595dc3c88",
+        "coordinateClip": [
+          0.0,
+          247.51,
+          615.61,
+          419.17
+        ],
+        "corrections": [
+          {
+            "index": 0,
+            "pass": true,
+            "reason": "CMAP_ONLY_ANCHORED_GAP",
+            "deltas": [
+              {
+                "at": 15,
+                "before": "è",
+                "after": "(",
+                "leftAnchor": "式除細動器",
+                "rightAnchor": "AEDêの"
+              },
+              {
+                "at": 19,
+                "before": "ê",
+                "after": "〉",
+                "leftAnchor": "器èAED",
+                "rightAnchor": "の使用で正"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "pass": true,
+            "reason": "UNCHANGED",
+            "deltas": []
+          },
+          {
+            "index": 2,
+            "pass": true,
+            "reason": "UNCHANGED",
+            "deltas": []
+          },
+          {
+            "index": 3,
+            "pass": true,
+            "reason": "UNCHANGED",
+            "deltas": []
+          },
+          {
+            "index": 4,
+            "pass": true,
+            "reason": "UNCHANGED",
+            "deltas": []
+          }
+        ],
+        "auditLedger": "kangoshi-sprint/audit/ocr-cmap-repair-ledger-20261124.json"
       }
     },
     {
@@ -16329,6 +16444,121 @@
         "verifier": "PyMuPDF + Poppler pdftotext -layout",
         "originalPdfGlyphControlAbsent": true,
         "officialKeyRetestedAgainstPdf": true
+      }
+    },
+    {
+      "id": "K111-PM010",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 10,
+      "question": "指定訪問看護ステーションには常勤換算で(  )人以上の看護職員を配置することが定められている。( )に入るのはどれか。",
+      "choices": [
+        "1.0",
+        "1.5",
+        "2.0",
+        "2.5"
+      ],
+      "answer": 3,
+      "sourcePage": 9,
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "requiresMedia": false,
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "reviewStatus": "OCR_IMAGE_PINNED_CMAP_ONLY_REPAIRED_EXPLANATION_PENDING",
+      "extractionValid": true,
+      "textFidelity": "UNVERIFIED_PDF_GLYPH_MAPPING",
+      "answerSourceChecked": false,
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "officialScoringNotice": null,
+      "officialScoringStatus": "normal",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialKeyRaw": "4",
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerKeyVerification": "MATCH_SINGLE_DIGIT_KEY_NOT_VERBATIM_CERTIFIED",
+      "publishable": false,
+      "printedOptionCount": 4,
+      "mediaAuditStatus": "not_required",
+      "releaseEligible": false,
+      "canonicalStatus": "source_verified_extension",
+      "category": "必修",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "audit": {
+        "sourceImageOcrPsm6Matched": true,
+        "sourceImageOcrPsm3Matched": true,
+        "allChoicesImageOcrMatched": true,
+        "officialKeyMatched": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "evidence": {
+        "sourcePdfPage": 9,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "sourceImageSha256": "deca885b35ac3b33aa58d183e45d24214745446a98e1efe2ed9487f33e7a0fd5",
+        "ocrPsm6Sha256": "02731f7d1a1516c3d2fc350ba3c5bb3e60ec7b7dabeb0f417f82dbe5e44cf4be",
+        "ocrPsm3Sha256": "02731f7d1a1516c3d2fc350ba3c5bb3e60ec7b7dabeb0f417f82dbe5e44cf4be",
+        "coordinateClip": [
+          0.0,
+          268.77,
+          609.95,
+          488.62
+        ],
+        "corrections": [
+          {
+            "index": 0,
+            "pass": true,
+            "reason": "CMAP_ONLY_ANCHORED_GAP",
+            "deltas": [
+              {
+                "at": 19,
+                "before": "!",
+                "after": "()",
+                "leftAnchor": "常勤換算で",
+                "rightAnchor": "人以上の看"
+              },
+              {
+                "at": 44,
+                "before": "!",
+                "after": "()",
+                "leftAnchor": "れている。",
+                "rightAnchor": "に入るのは"
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "pass": true,
+            "reason": "UNCHANGED",
+            "deltas": []
+          },
+          {
+            "index": 2,
+            "pass": true,
+            "reason": "UNCHANGED",
+            "deltas": []
+          },
+          {
+            "index": 3,
+            "pass": true,
+            "reason": "UNCHANGED",
+            "deltas": []
+          },
+          {
+            "index": 4,
+            "pass": true,
+            "reason": "UNCHANGED",
+            "deltas": []
+          }
+        ],
+        "auditLedger": "kangoshi-sprint/audit/ocr-cmap-repair-ledger-20261124.json"
       }
     },
     {
