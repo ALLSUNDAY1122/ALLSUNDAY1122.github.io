@@ -1207,3 +1207,10 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - Playwright Chromium（実ブラウザ、スマホ画面模擬）375px／430px、合計88件。画像読込、横はみ出しなし、原寸画像の新規タブ表示、選択肢・採点・出典、すべてPASS。iOS実機/Safari認証は別途。
 - **新規44問を正式バンクへ昇格：386→430/600問**。問題本文の不確かなテキスト転記ではなく、原典画像で表示し、解答選択ボタンのみ設置。画像ごとの出典と「切り出し加工」表示あり。残170問は未承認、App Review未送信、全体判定BLOCKED。
 - 監査：`touroku-hanbaisha-sprint/official-kansai/CROP_INDEPENDENT_QA_20261124.json`／`CROP_MOBILE_QA_RESULT.json`。ルビ未確定130問は変更なし。
+
+
+## 2026-11-24：生フォント・座標ルビ再監査
+- ルビHOLD130問にPDF rawdictフォントサイズ・仮名グループ化・既存の本文BBox照合を適用。新PASS 10、残HOLD 120。
+- 正式バンク追加 10問（ID: KSAI-2022-048, KSAI-2022-063, KSAI-2023-022, KSAI-2023-066, KSAI-2023-077, KSAI-2023-117, KSAI-2024-019, KSAI-2025-050, KSAI-2025-072, KSAI-2026-072）、合計 440/600問。画像方式の既存44問は保持。
+- 未確定問の原典PDF画像・375px候補表示PNGと比較HTMLは touroku-hanbaisha-sprint/official-kansai/ruby-font-review/ に保存。表示は比較用で正式アプリ実機検証ではない。
+- 根拠不明の読みを生成せずHOLDを保持。App Review未送信、契約と課金は未確定、判定BLOCKED。
