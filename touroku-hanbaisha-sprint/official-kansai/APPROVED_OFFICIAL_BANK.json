@@ -2,13 +2,14 @@
   "schema": "touroku-hanbaisha-official-approved-v2",
   "issuer": "関西広域連合",
   "officialPastQuestionsOnly": true,
-  "count": 468,
+  "count": 476,
   "questionCountTarget": 600,
   "approvedIds": [
     "KSAI-2022-001",
     "KSAI-2022-002",
     "KSAI-2022-003",
     "KSAI-2022-004",
+    "KSAI-2022-005",
     "KSAI-2022-006",
     "KSAI-2022-007",
     "KSAI-2022-009",
@@ -80,6 +81,7 @@
     "KSAI-2022-101",
     "KSAI-2022-102",
     "KSAI-2022-103",
+    "KSAI-2022-104",
     "KSAI-2022-105",
     "KSAI-2022-106",
     "KSAI-2022-107",
@@ -220,11 +222,13 @@
     "KSAI-2024-023",
     "KSAI-2024-024",
     "KSAI-2024-027",
+    "KSAI-2024-028",
     "KSAI-2024-029",
     "KSAI-2024-031",
     "KSAI-2024-034",
     "KSAI-2024-038",
     "KSAI-2024-039",
+    "KSAI-2024-040",
     "KSAI-2024-041",
     "KSAI-2024-042",
     "KSAI-2024-044",
@@ -322,9 +326,11 @@
     "KSAI-2025-038",
     "KSAI-2025-039",
     "KSAI-2025-042",
+    "KSAI-2025-044",
     "KSAI-2025-048",
     "KSAI-2025-049",
     "KSAI-2025-050",
+    "KSAI-2025-052",
     "KSAI-2025-054",
     "KSAI-2025-055",
     "KSAI-2025-057",
@@ -401,8 +407,10 @@
     "KSAI-2026-021",
     "KSAI-2026-024",
     "KSAI-2026-027",
+    "KSAI-2026-028",
     "KSAI-2026-030",
     "KSAI-2026-031",
+    "KSAI-2026-036",
     "KSAI-2026-038",
     "KSAI-2026-039",
     "KSAI-2026-040",
@@ -483,9 +491,9 @@
       "layout": 3,
       "visual": 14,
       "crossEngineHold": 1,
-      "hold": 30,
+      "hold": 28,
       "pending": 0,
-      "cropImage": 8,
+      "cropImage": 10,
       "rubyFontCluster": 2,
       "visualRubyV2": 6
     },
@@ -511,9 +519,9 @@
       "layout": 1,
       "visual": 0,
       "crossEngineHold": 2,
-      "hold": 27,
+      "hold": 25,
       "pending": 0,
-      "cropImage": 12,
+      "cropImage": 14,
       "rubyFontCluster": 1,
       "visualRubyV2": 4
     },
@@ -525,9 +533,9 @@
       "layout": 3,
       "visual": 0,
       "crossEngineHold": 0,
-      "hold": 30,
+      "hold": 28,
       "pending": 0,
-      "cropImage": 6,
+      "cropImage": 8,
       "rubyFontCluster": 2,
       "visualRubyV2": 6
     },
@@ -539,15 +547,15 @@
       "layout": 2,
       "visual": 0,
       "crossEngineHold": 1,
-      "hold": 27,
+      "hold": 25,
       "pending": 0,
-      "cropImage": 11,
+      "cropImage": 13,
       "rubyFontCluster": 1,
       "visualRubyV2": 3
     }
   },
   "status": "PARTIAL_APPROVED",
-  "releaseGate": "BLOCKED_PENDING_APP_TESTS_AND_REVIEW",
+  "releaseGate": "BLOCKED_PENDING_REMAINING_124_AND_APP_TESTS",
   "questions": [
     {
       "id": "KSAI-2022-001",
@@ -758,6 +766,54 @@
         "method": "VISUAL",
         "record": "MANUAL_VISUAL_AUDIT_20261123.json",
         "pdfPage": 3
+      }
+    },
+    {
+      "id": "KSAI-2022-005",
+      "year": 2022,
+      "questionNo": 5,
+      "chapter": "第1章",
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "sourceIssuer": "関西広域連合",
+      "sourceTitle": "令和4年度登録販売者試験",
+      "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+      "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanseitou.pdf",
+      "attributionDisplay": "出典：関西広域連合「令和4年度登録販売者試験」問5",
+      "officialStatus": "NORMAL",
+      "excludeFromAccuracyDenominator": false,
+      "question": "公式試験問題の画像を読み、正しい選択肢を選んでください。",
+      "choices": [
+        "画像中の選択肢 1",
+        "画像中の選択肢 2",
+        "画像中の選択肢 3",
+        "画像中の選択肢 4",
+        "画像中の選択肢 5"
+      ],
+      "sourcePdfPages": [
+        4
+      ],
+      "sourceFigures": [
+        {
+          "webPath": "official-kansai/layout-crops/KSAI-2022-005-p4-1.png",
+          "sha256": "511c18d319f46ce90d9a907063913a4431341b13dbb4842d3cbe569fc4f5af2d",
+          "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf",
+          "page": 4,
+          "licenseVerified": true,
+          "visualVerified": true
+        }
+      ],
+      "verbatimCertified": true,
+      "needsVisualReview": false,
+      "renderReady": true,
+      "modificationDisclosureDisplay": "関西広域連合の公式PDFから設問・選択肢を含む領域を画像切り出し（加工）。",
+      "audit": {
+        "status": "PASS",
+        "method": "SOURCE_PDF_CROP_HUMAN_IMAGE_SCOPE_AND_CHROMIUM_QA_V3",
+        "record": "EIGHT_IMAGE_RELEASE_QA_20261124.json",
+        "sourcePdfSha256": "49b359de22d4495a1eb95c7f4923d43e67b7acd6943ca4ba734df8ab9231fcf9",
+        "sourceImageCount": 1,
+        "originalQuestionTextRenderedAsImage": true
       }
     },
     {
@@ -6904,6 +6960,54 @@
         "method": "AUTO_PDF_LAYOUT_FALSE_POSITIVE_TRIAGE",
         "record": "LAYOUT_TRIAGE_2022.json",
         "sourcePdfSha256": "fdd8b77781e61b1a978eac5e94884c2a8f82bd45d23eb08bfad4c6d92830b11e"
+      }
+    },
+    {
+      "id": "KSAI-2022-104",
+      "year": 2022,
+      "questionNo": 104,
+      "chapter": "第5章",
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "sourceIssuer": "関西広域連合",
+      "sourceTitle": "令和4年度登録販売者試験",
+      "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+      "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanseitou.pdf",
+      "attributionDisplay": "出典：関西広域連合「令和4年度登録販売者試験」問104",
+      "officialStatus": "NORMAL",
+      "excludeFromAccuracyDenominator": false,
+      "question": "公式試験問題の画像を読み、正しい選択肢を選んでください。",
+      "choices": [
+        "画像中の選択肢 1",
+        "画像中の選択肢 2",
+        "画像中の選択肢 3",
+        "画像中の選択肢 4",
+        "画像中の選択肢 5"
+      ],
+      "sourcePdfPages": [
+        28
+      ],
+      "sourceFigures": [
+        {
+          "webPath": "official-kansai/layout-crops/KSAI-2022-104-p28-1.png",
+          "sha256": "30edc4534de193282d0638660b4bdd7e1370369f3a591c2905ded16bb4dc1c3e",
+          "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaiato.pdf",
+          "page": 28,
+          "licenseVerified": true,
+          "visualVerified": true
+        }
+      ],
+      "verbatimCertified": true,
+      "needsVisualReview": false,
+      "renderReady": true,
+      "modificationDisclosureDisplay": "関西広域連合の公式PDFから設問・選択肢を含む領域を画像切り出し（加工）。",
+      "audit": {
+        "status": "PASS",
+        "method": "SOURCE_PDF_CROP_HUMAN_IMAGE_SCOPE_AND_CHROMIUM_QA_V3",
+        "record": "EIGHT_IMAGE_RELEASE_QA_20261124.json",
+        "sourcePdfSha256": "fdd8b77781e61b1a978eac5e94884c2a8f82bd45d23eb08bfad4c6d92830b11e",
+        "sourceImageCount": 1,
+        "originalQuestionTextRenderedAsImage": true
       }
     },
     {
@@ -20253,6 +20357,54 @@
       }
     },
     {
+      "id": "KSAI-2024-028",
+      "year": 2024,
+      "questionNo": 28,
+      "chapter": "第3章",
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "sourceIssuer": "関西広域連合",
+      "sourceTitle": "令和6年度登録販売者試験",
+      "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+      "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+      "attributionDisplay": "出典：関西広域連合「令和6年度登録販売者試験」問28",
+      "officialStatus": "NORMAL",
+      "excludeFromAccuracyDenominator": false,
+      "question": "公式試験問題の画像を読み、正しい選択肢を選んでください。",
+      "choices": [
+        "画像中の選択肢 1",
+        "画像中の選択肢 2",
+        "画像中の選択肢 3",
+        "画像中の選択肢 4",
+        "画像中の選択肢 5"
+      ],
+      "sourcePdfPages": [
+        21
+      ],
+      "sourceFigures": [
+        {
+          "webPath": "official-kansai/layout-crops/KSAI-2024-028-p21-1.png",
+          "sha256": "badf62ba66ab73f6abd84807f9bcbf1019fe4b89b091c0f42e60bfc6220dfc2f",
+          "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "page": 21,
+          "licenseVerified": true,
+          "visualVerified": true
+        }
+      ],
+      "verbatimCertified": true,
+      "needsVisualReview": false,
+      "renderReady": true,
+      "modificationDisclosureDisplay": "関西広域連合の公式PDFから設問・選択肢を含む領域を画像切り出し（加工）。",
+      "audit": {
+        "status": "PASS",
+        "method": "SOURCE_PDF_CROP_HUMAN_IMAGE_SCOPE_AND_CHROMIUM_QA_V3",
+        "record": "EIGHT_IMAGE_RELEASE_QA_20261124.json",
+        "sourcePdfSha256": "961723dc28b419a2ec8dc8d359e63aa29ebc4ee8f8e8f523dfdb78473c3c69bc",
+        "sourceImageCount": 1,
+        "originalQuestionTextRenderedAsImage": true
+      }
+    },
+    {
       "id": "KSAI-2024-029",
       "year": 2024,
       "questionNo": 29,
@@ -20851,6 +21003,54 @@
           ],
           "columns": 4
         }
+      }
+    },
+    {
+      "id": "KSAI-2024-040",
+      "year": 2024,
+      "questionNo": 40,
+      "chapter": "第3章",
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "sourceIssuer": "関西広域連合",
+      "sourceTitle": "令和6年度登録販売者試験",
+      "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+      "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R06touhankaitou.pdf",
+      "attributionDisplay": "出典：関西広域連合「令和6年度登録販売者試験」問40",
+      "officialStatus": "NORMAL",
+      "excludeFromAccuracyDenominator": false,
+      "question": "公式試験問題の画像を読み、正しい選択肢を選んでください。",
+      "choices": [
+        "画像中の選択肢 1",
+        "画像中の選択肢 2",
+        "画像中の選択肢 3",
+        "画像中の選択肢 4",
+        "画像中の選択肢 5"
+      ],
+      "sourcePdfPages": [
+        27
+      ],
+      "sourceFigures": [
+        {
+          "webPath": "official-kansai/layout-crops/KSAI-2024-040-p27-1.png",
+          "sha256": "3bd037693803dd56bea0aac0cc15f8606bcdef37a5e079cbd1866632a07ab4c6",
+          "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R6tourokuhanbaisyashiken_zennhan.pdf",
+          "page": 27,
+          "licenseVerified": true,
+          "visualVerified": true
+        }
+      ],
+      "verbatimCertified": true,
+      "needsVisualReview": false,
+      "renderReady": true,
+      "modificationDisclosureDisplay": "関西広域連合の公式PDFから設問・選択肢を含む領域を画像切り出し（加工）。",
+      "audit": {
+        "status": "PASS",
+        "method": "SOURCE_PDF_CROP_HUMAN_IMAGE_SCOPE_AND_CHROMIUM_QA_V3",
+        "record": "EIGHT_IMAGE_RELEASE_QA_20261124.json",
+        "sourcePdfSha256": "961723dc28b419a2ec8dc8d359e63aa29ebc4ee8f8e8f523dfdb78473c3c69bc",
+        "sourceImageCount": 1,
+        "originalQuestionTextRenderedAsImage": true
       }
     },
     {
@@ -29281,6 +29481,54 @@
       }
     },
     {
+      "id": "KSAI-2025-044",
+      "year": 2025,
+      "questionNo": 44,
+      "chapter": "第3章",
+      "answer": 0,
+      "answerNumberOfficial": 1,
+      "sourceIssuer": "関西広域連合",
+      "sourceTitle": "令和7年度登録販売者試験",
+      "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+      "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+      "attributionDisplay": "出典：関西広域連合「令和7年度登録販売者試験」問44",
+      "officialStatus": "NORMAL",
+      "excludeFromAccuracyDenominator": false,
+      "question": "公式試験問題の画像を読み、正しい選択肢を選んでください。",
+      "choices": [
+        "画像中の選択肢 1",
+        "画像中の選択肢 2",
+        "画像中の選択肢 3",
+        "画像中の選択肢 4",
+        "画像中の選択肢 5"
+      ],
+      "sourcePdfPages": [
+        34
+      ],
+      "sourceFigures": [
+        {
+          "webPath": "official-kansai/layout-crops/KSAI-2025-044-p34-1.png",
+          "sha256": "52adfb9cb6bd94f032f96a6233079dc18d07fbb0318586d3949dbebd916f5ad2",
+          "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+          "page": 34,
+          "licenseVerified": true,
+          "visualVerified": true
+        }
+      ],
+      "verbatimCertified": true,
+      "needsVisualReview": false,
+      "renderReady": true,
+      "modificationDisclosureDisplay": "関西広域連合の公式PDFから設問・選択肢を含む領域を画像切り出し（加工）。",
+      "audit": {
+        "status": "PASS",
+        "method": "SOURCE_PDF_CROP_HUMAN_IMAGE_SCOPE_AND_CHROMIUM_QA_V3",
+        "record": "EIGHT_IMAGE_RELEASE_QA_20261124.json",
+        "sourcePdfSha256": "a277785add1961bc8260433ba8419b16a87596dbbb171f41a7d5b07c9d4a6156",
+        "sourceImageCount": 1,
+        "originalQuestionTextRenderedAsImage": true
+      }
+    },
+    {
       "id": "KSAI-2025-048",
       "year": 2025,
       "questionNo": 48,
@@ -29449,6 +29697,54 @@
             "baseText": "痒"
           }
         ]
+      }
+    },
+    {
+      "id": "KSAI-2025-052",
+      "year": 2025,
+      "questionNo": 52,
+      "chapter": "第3章",
+      "answer": 4,
+      "answerNumberOfficial": 5,
+      "sourceIssuer": "関西広域連合",
+      "sourceTitle": "令和7年度登録販売者試験",
+      "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+      "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7touhan_kaitou.pdf",
+      "attributionDisplay": "出典：関西広域連合「令和7年度登録販売者試験」問52",
+      "officialStatus": "NORMAL",
+      "excludeFromAccuracyDenominator": false,
+      "question": "公式試験問題の画像を読み、正しい選択肢を選んでください。",
+      "choices": [
+        "画像中の選択肢 1",
+        "画像中の選択肢 2",
+        "画像中の選択肢 3",
+        "画像中の選択肢 4",
+        "画像中の選択肢 5"
+      ],
+      "sourcePdfPages": [
+        39
+      ],
+      "sourceFigures": [
+        {
+          "webPath": "official-kansai/layout-crops/KSAI-2025-052-p39-1.png",
+          "sha256": "153c57a2de8c9d3a53b0227d40569d72c2132d7e987e6b6c58acc8139914d334",
+          "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R7tourokuhannbaisyashiken_zennhan.pdf",
+          "page": 39,
+          "licenseVerified": true,
+          "visualVerified": true
+        }
+      ],
+      "verbatimCertified": true,
+      "needsVisualReview": false,
+      "renderReady": true,
+      "modificationDisclosureDisplay": "関西広域連合の公式PDFから設問・選択肢を含む領域を画像切り出し（加工）。",
+      "audit": {
+        "status": "PASS",
+        "method": "SOURCE_PDF_CROP_HUMAN_IMAGE_SCOPE_AND_CHROMIUM_QA_V3",
+        "record": "EIGHT_IMAGE_RELEASE_QA_20261124.json",
+        "sourcePdfSha256": "a277785add1961bc8260433ba8419b16a87596dbbb171f41a7d5b07c9d4a6156",
+        "sourceImageCount": 1,
+        "originalQuestionTextRenderedAsImage": true
       }
     },
     {
@@ -36395,6 +36691,54 @@
       ]
     },
     {
+      "id": "KSAI-2026-028",
+      "year": 2026,
+      "questionNo": 28,
+      "chapter": "第3章",
+      "answer": 1,
+      "answerNumberOfficial": 2,
+      "sourceIssuer": "関西広域連合",
+      "sourceTitle": "令和8年度登録販売者試験",
+      "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+      "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+      "attributionDisplay": "出典：関西広域連合「令和8年度登録販売者試験」問28",
+      "officialStatus": "NORMAL",
+      "excludeFromAccuracyDenominator": false,
+      "question": "公式試験問題の画像を読み、正しい選択肢を選んでください。",
+      "choices": [
+        "画像中の選択肢 1",
+        "画像中の選択肢 2",
+        "画像中の選択肢 3",
+        "画像中の選択肢 4",
+        "画像中の選択肢 5"
+      ],
+      "sourcePdfPages": [
+        25
+      ],
+      "sourceFigures": [
+        {
+          "webPath": "official-kansai/layout-crops/KSAI-2026-028-p25-1.png",
+          "sha256": "59f319fd5beef6ac73a726c33faf7982cd92227d2a0dda14a50cadd600866b4b",
+          "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+          "page": 25,
+          "licenseVerified": true,
+          "visualVerified": true
+        }
+      ],
+      "verbatimCertified": true,
+      "needsVisualReview": false,
+      "renderReady": true,
+      "modificationDisclosureDisplay": "関西広域連合の公式PDFから設問・選択肢を含む領域を画像切り出し（加工）。",
+      "audit": {
+        "status": "PASS",
+        "method": "SOURCE_PDF_CROP_HUMAN_IMAGE_SCOPE_AND_CHROMIUM_QA_V3",
+        "record": "EIGHT_IMAGE_RELEASE_QA_20261124.json",
+        "sourcePdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
+        "sourceImageCount": 1,
+        "originalQuestionTextRenderedAsImage": true
+      }
+    },
+    {
       "id": "KSAI-2026-030",
       "year": 2026,
       "questionNo": 30,
@@ -36479,6 +36823,54 @@
         "record": "AUTO_DIFF_2026.json",
         "sourcePdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
         "normalizedTextSha256": "5db2032bb61a50b6690c5bde619fc893e6b36f9a0efeb47396aab195108a69c4"
+      }
+    },
+    {
+      "id": "KSAI-2026-036",
+      "year": 2026,
+      "questionNo": 36,
+      "chapter": "第3章",
+      "answer": 3,
+      "answerNumberOfficial": 4,
+      "sourceIssuer": "関西広域連合",
+      "sourceTitle": "令和8年度登録販売者試験",
+      "sourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+      "answerSourceUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishasikenseitou.pdf",
+      "attributionDisplay": "出典：関西広域連合「令和8年度登録販売者試験」問36",
+      "officialStatus": "NORMAL",
+      "excludeFromAccuracyDenominator": false,
+      "question": "公式試験問題の画像を読み、正しい選択肢を選んでください。",
+      "choices": [
+        "画像中の選択肢 1",
+        "画像中の選択肢 2",
+        "画像中の選択肢 3",
+        "画像中の選択肢 4",
+        "画像中の選択肢 5"
+      ],
+      "sourcePdfPages": [
+        29
+      ],
+      "sourceFigures": [
+        {
+          "webPath": "official-kansai/layout-crops/KSAI-2026-036-p29-1.png",
+          "sha256": "3bd85cf26c7ef1eff9778a0ae8f661c44948859ae7028c4a2714a9ed188b4f7e",
+          "sourcePdfUrl": "https://www.kouiki-kansai.jp/material/files/group/12/R8tourokuhanbaishashiken_zenhan.pdf",
+          "page": 29,
+          "licenseVerified": true,
+          "visualVerified": true
+        }
+      ],
+      "verbatimCertified": true,
+      "needsVisualReview": false,
+      "renderReady": true,
+      "modificationDisclosureDisplay": "関西広域連合の公式PDFから設問・選択肢を含む領域を画像切り出し（加工）。",
+      "audit": {
+        "status": "PASS",
+        "method": "SOURCE_PDF_CROP_HUMAN_IMAGE_SCOPE_AND_CHROMIUM_QA_V3",
+        "record": "EIGHT_IMAGE_RELEASE_QA_20261124.json",
+        "sourcePdfSha256": "02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a",
+        "sourceImageCount": 1,
+        "originalQuestionTextRenderedAsImage": true
       }
     },
     {
