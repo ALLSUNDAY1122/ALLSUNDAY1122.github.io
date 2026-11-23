@@ -17,11 +17,23 @@ for ex in (111,112):
     for q in d["questions"]:
       before=[str(x) for x in q.get("choices",[])]
       after=[EXACT.sub("",c).rstrip() for c in before]
+      # A footer sometimes became a spurious fifth choice; remove ONLY when its page number matches sourcePage.
+      safe=[]
+      for c in after:
+        original=before[len(safe)] if len(safe)<len(before) else c
+        m=re.search(r"DKIX-\\d{2}-(?:前|後)H-(\\d+)",original)
+        if not c and m and int(m.group(1))==q.get("sourcePage"):
+          continue
+        safe.append(c)
+      after=safe
       for index,(b,a) in enumerate(zip(before,after)):
+        if not b and not a:continue
         if b!=a:
           revisions.append({"id":q["id"],"field":f"choices[{index}]","before":b,"after":a,
             "reason":"Remove printed MHLW page-control footer DKIX-XX-前/後H-N which is outside answer options",
             "officialQuestionUrl":(q.get("sourceRefs") or [None])[0]})
+      if len(after)<len(before):
+        revisions.append({"id":q["id"],"field":"choices","before":before,"after":after,"reason":"Dropped page footer masquerading as an extra choice after matching printed page number","officialQuestionUrl":(q.get("sourceRefs") or [None])[0]})
       q["choices"]=after
       if len(after)==4 and all(after) and not any("DKIX" in x for x in after):
         q["extractionValid"]=True
