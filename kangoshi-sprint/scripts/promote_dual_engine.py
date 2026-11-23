@@ -26,7 +26,8 @@ for q in fresh:
     r=byid.get(id)
     if not r or r["status"]!="PASS_DUAL_ENGINE_AND_OFFICIAL_KEY" or r["reasons"]:raise ValueError("unproven: "+id)
     if q.get("publishable") is not False or q.get("releaseEligible") is not False:raise ValueError("ungated: "+id)
-    if not (len(q.get("choices") or [])==4 and isinstance(q.get("answer"),int) and q["answer"] in range(4)):raise ValueError("bad content: "+id)
+    if not (len(q.get("choices") or []) in (4,5) and isinstance(q.get("answer"),int) and q["answer"] in range(len(q.get("choices") or []))):raise ValueError("bad content: "+id)
+    q["printedOptionCount"]=len(q["choices"])
     q["category"]="必修" if q["questionNo"]<=25 else ("状況設定" if q["questionNo"]>=91 else "一般")
     if q["questionNo"]>=91 and (r.get("scenarioContext") or {}).get("status")!="DUAL_ENGINE_CONTEXT_MATCH":raise ValueError("situation context evidence missing: "+id)
     q["majorSubject"]=None
