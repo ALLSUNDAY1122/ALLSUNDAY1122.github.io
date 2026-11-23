@@ -83,10 +83,10 @@
     "path": "kangoshi-sprint/scripts/audit_official_pdf.py",
     "sourceManifest": "kangoshi-sprint/audit/official-source-manifest-20261124.json",
     "mode": "AM/PM separate strict attribution/media isolation",
-    "workflow": ".github/workflows/kangoshi-official-pdf-audit.yml",
+    "workflow": ".github/workflows/kangoshi-dual-engine-480.yml",
     "runner": "kangoshi-sprint/scripts/run_official_pdf_audit.py",
     "ciResult": "SUCCESS_WORKFLOW_CANONICAL_SOURCE_GATES_ONLY_RELEASE_BLOCKED",
-    "warning": "Source PASS/CI success does not mean content, copyright or app release PASS. 55 new extension items remain publishable=false; 5 svg source mismatches and 413 questions pending.",
+    "warning": "Final CI Run 45235747892 SUCCESS means only source and answer eligibility. Existing 720 still 91 text/media holds, 413 additional questions are held, 5 SVG errors found, 38 individual media rights remain open; do not publish or submit.",
     "runId": 45217628155,
     "jobId": 137828435420,
     "artifactId": 14838003424,
@@ -112,7 +112,8 @@
     "promotionCommit": "b82f206b82b1b853f734d6479a74a2eaaa78c5fc",
     "bookletRunId": 45236334522,
     "bookletArtifactId": 14850665593,
-    "bulkHoldCount": 413
+    "bulkHoldCount": 413,
+    "bulkSourceGitCommit": "b82f206b82b1b853f734d6479a74a2eaaa78c5fc"
   },
   "stagedCandidateCount": 480,
   "staging": {
@@ -132,9 +133,9 @@
       "HOLD_INCOMPLETE_DATA": 8
     },
     "invalidStructure": 24,
-    "officialAnswerKeysChecked": 0,
+    "officialAnswerKeysChecked": 480,
     "releaseEligible": 0,
-    "warning": "Original 480 staged branch remains unchanged. Only the 67 independently source-verified copies in canonical extension; none are enabled in iOS without explanation and integration QA.",
+    "warning": "480 official answer PDFs rechecked; 55 newly source-verified copies promoted to nonpublishable canonical extension plus prior 12; 413 remain in hold. Original staging records unchanged.",
     "keyedRunId": 45220877977,
     "answersMappedSingle": 442,
     "ambiguousOrMulti": 37,
