@@ -5,6 +5,7 @@ No candidate text is guessed; all unproved cases are retained as HOLD.
 """
 import argparse, collections, hashlib, html, json, re
 from pathlib import Path
+from playwright.sync_api import sync_playwright
 import fitz
 from auto_diff_pdf import B, download
 from geometry_second_gate import first_question_clip
@@ -227,6 +228,16 @@ def run():
         preview_rel=html.escape(f'{id}-candidate.html')
         (B/row['reviewUrl']).write_text(f'<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{id} ルビ比較</title><style>body{{font-family:sans-serif}}section{{display:flex;gap:10px;flex-wrap:wrap}}section>*{{flex:1 1 330px;max-width:100%}}img{{width:100%;object-fit:contain}}iframe{{height:900px;border:1px solid #ccc}}</style><h1>{id} 原典と候補表示</h1><p>未公開。正誤やルビを確定した証拠ではありません。</p><section><img src="{source_rel}" alt="原典PDF設問画像"><iframe src="{preview_rel}" title="候補アプリ風表示"></iframe></section></html>')
         row['sourceImageAndPreviewSaved']=bool(clips)
+    # Review-only screenshot of the candidate surface at 375px, never production certification.
+    with sync_playwright() as engine:
+        browser=engine.chromium.launch(channel='chrome',headless=True)
+        page=browser.new_page(viewport={'width':375,'height':850},device_scale_factor=1)
+        for row in hold_rows:
+            page.goto((B/row['candidatePreviewHtml']).resolve().as_uri(),wait_until='load')
+            img=REV/(row['id']+'-candidate-375.png')
+            page.screenshot(path=str(img),full_page=True)
+            row['candidatePreviewScreenshot']=str(img.relative_to(B))
+        browser.close()
     for d in docs.values():
         for doc in d.values():doc.close()
     # Promote only if the normalized candidate can safely render in current rich UI and
