@@ -10,7 +10,7 @@ import sys
 root=Path(__file__).resolve().parents[1]
 base=root/"fp2-manabi-sprint"
 bank=json.loads((base/"questions/canonical/approved-questions-20261123.json").read_text())
-selection=json.loads((base/"release/release-selection-120-20261123.json").read_text())
+selection=json.loads((base/"release/release-selection-300-20261123.json").read_text())
 selected=[q for q in bank["questions"] if q.get("release_selected") is True]
 reserved=[q for q in bank["questions"] if q.get("release_selected") is False]
 errors=[]
@@ -19,12 +19,15 @@ answers=Counter()
 source_groups=Counter()
 def git_blob(blob):
     return hashlib.sha1(b"blob "+str(len(blob)).encode()+b"\x00"+blob).hexdigest()
-if len(bank["questions"])!=195 or len(selected)!=120 or len(reserved)!=75:
+if len(bank["questions"])!=312 or len(selected)!=300 or len(reserved)!=12:
     errors.append("canonical/selection/reserve count mismatch")
 if (bank.get("recovered_pass_count"),bank.get("recovered_fail_count"),bank.get("recovered_hold_count"))!=(180,0,0):
     errors.append("recovered180 audit count mismatch")
-if len(domains)!=6 or any(n!=20 for n in domains.values()):
-    errors.append("six domains x 20 violated")
+if len(domains)!=6 or any(n!=50 for n in domains.values()):
+    errors.append("six domains x 50 violated")
+exam_counts=Counter(q.get("exam_year_month") or q.get("examDate") for q in selected)
+if len(exam_counts)!=5 or sorted(exam_counts.values())!=[60]*5: errors.append("five academic sessions x 60 violated")
+if (bank.get("expansion_audit_pass_count"),bank.get("expansion_audit_fail_count"),bank.get("expansion_audit_hold_count"))!=(120,0,0): errors.append("expansion audit 120/0/0 mismatch")
 scope={}
 for group in selection["domains"]:
     for i in group["selected_ids"]:
@@ -57,7 +60,7 @@ for q in selected:
         errors.append(ident+": active HTML in authored content")
     source_groups[q.get("source_organization","UNSPECIFIED")]+=1
 result={"status":"FAIL" if errors else "PASS","canonical":len(bank["questions"]),"selected":len(selected),"reserves":len(reserved),
-        "recovered_independent_audit":"180 PASS / 0 FAIL / 0 HOLD",
+        "recovered_independent_audit":"180 PASS / 0 FAIL / 0 HOLD","expansion_independent_audit":"120 PASS / 0 FAIL / 0 HOLD",
         "domain_counts":domains,"answer_choice_distribution":answers,
         "primary_authority_distribution":source_groups,
         "modified_selected":sum(q["modified"] is True for q in selected),
