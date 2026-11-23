@@ -4208,17 +4208,21 @@
       "contentConcernReason": null,
       "contentConcernEvidenceRefs": [],
       "canonicalL3FallbackSource": "final-category-canonical",
-      "mediaReleaseStatus": "resolved",
-      "mediaRightsStatus": "original_authored",
+      "mediaReleaseStatus": "hold_rights_and_crop_review",
+      "mediaRightsStatus": "original_official_pdf_crop_rights_pending",
       "mediaAssets": [
-        "media/redraw/K115-AM063.svg"
+        "media/official-crops/K115-AM063.png"
       ],
-      "mediaAttribution": "学びスプリント独自再作図（公式設問の学習上必要な情報を独自の線画・模式図で再構成）",
+      "mediaAttribution": "出典：厚生労働省『第115回看護師国家試験問題』（https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05a_01.pdf）から該当領域を切り出し・加工して作成",
       "mediaSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05a_01.pdf",
-      "mediaProcessed": true,
-      "mediaResolutionMethod": "original_redraw",
-      "specialistQuarantineReasons": [],
-      "specialistQuarantineStatus": "clear"
+      "mediaResolutionMethod": "official_pdf_exact_page_crop",
+      "specialistQuarantineReasons": [
+        {
+          "kind": "mediaDependent",
+          "reason": "Source media cropped but rights and visual QA remain blocked"
+        }
+      ],
+      "specialistQuarantineStatus": "quarantined"
     },
     {
       "id": "K115-AM064",
@@ -9525,17 +9529,26 @@
       "contentConcernReason": null,
       "contentConcernEvidenceRefs": [],
       "specialistExplanationStatus": "quarantined_media",
-      "specialistQuarantineStatus": "clear",
-      "specialistQuarantineReasons": [],
-      "mediaReleaseStatus": "resolved",
-      "mediaRightsStatus": "original_authored",
-      "mediaAssets": [
-        "media/redraw/K115-PM020.svg"
+      "specialistQuarantineStatus": "quarantined",
+      "specialistQuarantineReasons": [
+        {
+          "kind": "mediaDependent",
+          "status": "quarantined_media",
+          "reason": "呼吸パターン図が正答判定に必要"
+        },
+        {
+          "kind": "mediaDependent",
+          "reason": "Source media cropped but rights and visual QA remain blocked"
+        }
       ],
-      "mediaAttribution": "学びスプリント独自再作図（公式設問の学習上必要な情報を独自の線画・模式図で再構成）",
+      "mediaReleaseStatus": "hold_rights_and_crop_review",
+      "mediaRightsStatus": "original_official_pdf_crop_rights_pending",
+      "mediaAssets": [
+        "media/official-crops/K115-PM020.png"
+      ],
+      "mediaAttribution": "出典：厚生労働省『第115回看護師国家試験問題』（https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05c_01.pdf）から該当領域を切り出し・加工して作成",
       "mediaSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05c_01.pdf",
-      "mediaProcessed": true,
-      "mediaResolutionMethod": "original_redraw"
+      "mediaResolutionMethod": "official_pdf_exact_page_crop"
     },
     {
       "id": "K115-PM021",
