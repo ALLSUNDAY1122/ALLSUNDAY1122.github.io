@@ -1443,3 +1443,10 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 現在の再試行：`6b04cf7092306a39e3981ca4`、<https://codemagic.io/app/6a769d81a1add9d06020b524/build/6b04cf7092306a39e3981ca4>。最終確認時はbuildingであり**署名済みIPA生成・プロファイル取得は未検証**。Q7はBLOCKEDのまま。
 - ユーザー操作が必要な場合：Appleの2FA・開発者契約同意、証明書／プロファイルの手動登録・権限確認、iPhone実機導入確認。自動操作では2FAや契約を確定しない。
 - Q4オフライン設計は保留、Q5 App Privacy申告質問票の実物照合も保留。Q7完了と混同しない。
+
+
+## Q7 署名済みIPA確定・最新バンク照合（2026-11-24 08:57 JST）
+- 正式バンク599/600、2023年問90は公式無効で除外。品質Gate 11/14、BLOCKED（Q4/Q5/Q7）。
+- Build 6b04cf7092306a39e3981ca4 は finished / SIGNED_IPA_VERIFIED。署名・プロファイル・Bundle ID検証成功。証跡 Q7_SIGNED_IPA_VERIFIED_20261124.json、Actions run 45291377374。以前のbuilding記録を更新する確定結果。
+- ビルド元 74a9adc73404cfcda0ebd12950b859d05e9813b6 と main の正式バンク Git blob は一致（8741e2675af6f41f7fba2afdc89566f48b8258e7、2241943 bytes）。Swift起動ソースも一致（c5f3b2855f2f91fbe20321b5dc2eea0a4be63f18）。ネイティブは公式 official-practice.html を遠隔取得するWebViewであり、599問JSONのIPA内蔵を意味しない。IPA実物の再展開・公開URL実測は未実施。
+- 既存本番 workflow touhan-ios は新規IPAをビルドしてASCへアップロードする構成。現セッションではCodemagic起動・IPA取得手段がなく、ASCアップロード/TestFlight配信は未実施。Q7は署名PASS、配信PENDING。2FA・契約・実機確認・本審査最終送信はユーザー操作として留保。本審査未送信。
