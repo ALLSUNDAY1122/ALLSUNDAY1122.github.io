@@ -1,0 +1,3493 @@
+{
+  "audit_id": "FP2_202501_VERBATIM_60_INDEPENDENT_LEGAL_20261123",
+  "date": "2026-11-23",
+  "source_branch": "feature/fp2-academic-300-expansion-20261123",
+  "legal_effective_date": "2026-04-01",
+  "official_exam_date": "2025-01-26",
+  "original_exam_law_base": "2024-10-01",
+  "official_question_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+  "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+  "source_files": [
+    {
+      "path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "count": 20
+    },
+    {
+      "path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "count": 20
+    },
+    {
+      "path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "count": 20
+    }
+  ],
+  "summary": {
+    "total": 60,
+    "pass": 60,
+    "fail": 0,
+    "hold": 0,
+    "critical": 0,
+    "high": 0,
+    "official_answer_match": 60,
+    "canonical_content_candidate": 60,
+    "release_approved": 0
+  },
+  "critical_high_issues": [],
+  "exhibit_reconstruction_review": {
+    "Q23": {
+      "status": "PASS",
+      "type": "FORMULA_TEXT_RECONSTRUCTED",
+      "original_pdf_visual_verified": true,
+      "final_yield_formula_corrected": "(0.1+(100-102)/5)/102*100",
+      "calculation": {
+        "exhibit_type": "FORMULA_TEXT_RECONSTRUCTED",
+        "source_pdf_zero_based_page": 8,
+        "pdf_visual_checked": true,
+        "source_data": "額面100、発行価格101.20、表面利率0.1%、10年、5年後売買価格102",
+        "checks": [
+          "応募者利回り=(0.1+(100-101.2)/10)/101.2×100≈-0.01976%（肢1）",
+          "直接利回り=0.1/101.2×100≈0.09881%（肢2）",
+          "所有期間利回り=(0.1+(102-101.2)/5)/101.2×100≈0.25692%（肢3）",
+          "最終利回りの正しい式=(0.1+(100-102)/5)/102×100≈-0.29412%、肢4は誤り"
+        ],
+        "official_answer": 4
+      }
+    },
+    "Q26": {
+      "status": "PASS",
+      "type": "TEXT_TABLE_RECONSTRUCTED",
+      "original_pdf_visual_verified": true,
+      "calculation": {
+        "exhibit_type": "TEXT_TABLE_RECONSTRUCTED",
+        "source_pdf_zero_based_page": 10,
+        "pdf_visual_checked": true,
+        "source_data": "株価X2500,Y1300;純利益X210億,Y190億;純資産X6000億,Y2800億;配当X120億,Y70億;発行済X4億株,Y3億株",
+        "checks": [
+          "X時価総額=10000億円、Y=3900億円",
+          "ROE X=3.5%、Y=6.7857%",
+          "PER X=10000/210=47.619倍、Y=3900/190=20.526倍",
+          "PBR X=10000/6000=1.6667倍、Y=3900/2800=1.3929倍",
+          "配当性向 X=120/210=57.1429%、Y=70/190=36.8421%"
+        ],
+        "official_answer": 3
+      }
+    }
+  },
+  "legal_change_high_priority": {
+    "Q05": {
+      "status": "PASS_SCREENING",
+      "notes": "確定拠出年金法施行令2026-04版を参照し原題第3肢のDBからDCへの加入期間通算の論点は維持"
+    },
+    "Q34": {
+      "status": "PASS_SCREENING",
+      "notes": "2025年以降所得要件48→58万円改正後も青色事業専従者給与受給者は配偶者控除対象とならない。原正答4維持"
+    },
+    "Q47": {
+      "status": "PASS_SCREENING",
+      "notes": "改正区分所有法2026-04施行後も管理組合全員構成を規約で免除できない。原正答2維持"
+    },
+    "Q60": {
+      "status": "PASS_SCREENING",
+      "notes": "2024年4月相続登記義務化はそれ以前の相続にも経過措置付きで適用。原正答3維持"
+    }
+  },
+  "limitations": "この報告は出典PDFから公式正答60件の独立読戻し、問題構成・図表フラグ調査、代表的な法改正項目と数式・表の個別確認に基づく一次独立内容監査。60問の240肢すべてについて2026-04-01時点の法令原文の条項を独立に確認して版を固定した最終完全監査ではない。非正答肢のreason_detailは再監査未了を明記する。参考リンクの一部は所轄機関トップ・カテゴリURLであり、具体的条項の証拠とはみなさない。PASSは内容一次審査で重大反例が確定していないことを示し、正式な公開承認・全法令証拠ゲートクリアを意味しない。原題の利用許諾条件は未審査。",
+  "evidence_gate": {
+    "official_answers_independently_read": 60,
+    "all_240_choices_primary_clause_pinned": false,
+    "all_historical_2026_04_law_versions_hashed": false,
+    "official_pdf_verbatim_diff_all": false,
+    "rights_gate_pass": false,
+    "full_final_audit_completed": false
+  },
+  "items": [
+    {
+      "id": "fp2-2025-01-gakka-001",
+      "question_number": 1,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "ファイナンシャル・プランナー（以下「ＦＰ」という）の顧客に対する行為に関する次の記述のうち、関連法規に照らし、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "社会保険労務士の登録を受けていないＦＰのＡさんは、年金について相談に来た顧客の求めに応じ、公的年金の老齢給付を繰り上げた場合と繰り下げた場合の受給額について、それぞれの見込額を試算して説明した。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "年金見込額試算は社労士資格独占の請求代行ではない。税理士法・金商法・弁護士法の独占行為と区別。"
+        },
+        {
+          "number": 2,
+          "text": "税理士の登録を受けていないＦＰのＢさんは、ふるさと納税について相談に来た顧客の求めに応じ、顧客の年間収入や家族構成をもとに寄附金控除の額を計算し、確定申告書の作成を代行した。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "金融商品取引業者の登録を受けていないＦＰのＣさんは、株式投資について相談に来た顧客の求めに応じ、顧客の選んだ銘柄の株価チャートを示しながら投資のタイミングを有償で助言した。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "弁護士の登録を受けていないＦＰのＤさんは、相続について相談に来た顧客の求めに応じ、顧客と代理人契約を締結し、顧客の代理人として、有償で他の相続人との遺産分割協議を行った。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "年金見込額試算は社労士資格独占の請求代行ではない。税理士法・金商法・弁護士法の独占行為と区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.mhlw.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解1。公的年金の受給見込額の試算・説明は社労士資格がなくても可能な一般的な情報提供業務である。2は無資格者による税務書類作成・税務代理で税理士法違反。3は無登録での有償投資助言(個別銘柄のタイミング助言)は金商法の投資助言業務に該当し違反。4は非弁護士による有償の代理人としての遺産分割協議は弁護士法72条(非弁行為)違反。FP実務では「一般的な説明」と「具体的な税務代理・法律代理・有償投資助言」の境界線が頻出論点であり、資格法との抵触の有無を丁寧に見極める必要がある。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-002",
+      "question_number": 2,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "全国健康保険協会管掌健康保険（協会けんぽ）に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "一般保険料率は都道府県ごとに定められているのに対して、４０歳以上６５歳未満の被保険者の介護保険料率は全国一律に定められている。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "療養の給付を受けた被保険者が医療機関に支払った額のうち、差額ベッド代や入院時の食事代は、高額療養費の支給の対象とならない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "退職により被保険者資格を喪失した者は、所定の要件を満たせば、最長で２年間、任意継続被保険者となることができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "夫婦がともに被保険者である場合において、妻が出産したときは、所定の手続きにより、夫婦に対して出産育児一時金および家族出産育児一時金が支給される。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "被保険者である妻の出産に対して夫の家族出産育児一時金は支給されない。"
+        }
+      ],
+      "content_reason": "被保険者である妻の出産に対して夫の家族出産育児一時金は支給されない。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.mhlw.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は4が不適切。出産育児一時金は被保険者本人の出産に対して支給され、家族出産育児一時金は被扶養者(家族)の出産に対して支給されるものであり、妻が被保険者として出産した場合は妻に出産育児一時金のみが支給され、夫にも重複して家族出産育児一時金が支給されることはない。1〜3は協会けんぽの正しい制度内容(介護保険料率は全国一律、差額ベッド代等は高額療養費対象外、任意継続は最長2年)である。給付が重複支給されないという点がひっかけの核心となっている。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-003",
+      "question_number": 3,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "雇用保険に関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "２つの事業所に雇用される６５歳以上の労働者で、１つの事業所における１週間の所定労働時間がそれぞれ５時間以上２０時間未満であり、２つの事業所における１週間の所定労働時間の合計が２０時間以上である者は、所定の要件を満たせば、申出により、雇用保険の高年齢被保険者となることができる。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "65歳以上2事業所のマルチジョブホルダー特例は所定条件下で申出可能。"
+        },
+        {
+          "number": 2,
+          "text": "雇用保険の保険料のうち、失業等給付・育児休業給付に係る保険料は、事業主が全額を負担するのに対し、雇用保険二事業に係る保険料は、事業主と労働者が折半して負担する。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "特定受給資格者等を除く一般の受給資格者に支給される基本手当の所定給付日数は、算定基礎期間が２０年以上の場合、１２０日である。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "育児休業給付金の額は、育児休業期間中に事業主から賃金が支払われなかった場合、１支給単位期間について、休業開始時賃金日額に支給日数を乗じた額の１００分の４０に相当する額となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "65歳以上2事業所のマルチジョブホルダー特例は所定条件下で申出可能。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.mhlw.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解1。マルチジョブホルダー制度により、65歳以上の労働者が複数事業所で合算して週20時間以上等の要件を満たせば、申出により高年齢被保険者となれる。2は逆で、失業等給付・育児休業給付は労使折半、雇用保険二事業は事業主のみ負担が正しく、記述が逆転しているため誤り。3は一般受給資格者(自己都合等)で算定基礎期間20年以上の所定給付日数は150日が正しく、120日は誤り。4は育児休業給付金は原則67%(180日超は50%)であり、40%は誤り。数字の入替えが頻出のひっかけパターンである。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-004",
+      "question_number": 4,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "老齢厚生年金の繰下げ支給に関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "老齢厚生年金の繰下げ支給による年金の増額率は、繰り下げた月数に０.５％を乗じて得た率である。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nenkin.go.jp/service/jukyu/roureinenkin/jukyu-yoken/20140421-01.html",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "老齢厚生年金の受給権者が、老齢厚生年金の受給権を取得したときに遺族厚生年金の受給権者であった場合、老齢厚生年金の繰下げ支給の申出をすることができない。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nenkin.go.jp/service/jukyu/roureinenkin/jukyu-yoken/20140421-01.html",
+          "reason_detail": "遺族厚生年金受給権者は老齢厚生年金繰下げ申出を原則行えない。"
+        },
+        {
+          "number": 3,
+          "text": "老齢厚生年金の受給権者が、老齢厚生年金の繰下げ支給の申出をする場合、老齢基礎年金の繰下げ支給の申出を同時に行わなければならない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nenkin.go.jp/service/jukyu/roureinenkin/jukyu-yoken/20140421-01.html",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "加給年金額が加算される老齢厚生年金について繰下げ支給の申出をする場合、加給年金額についても繰下げ支給による増額の対象となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nenkin.go.jp/service/jukyu/roureinenkin/jukyu-yoken/20140421-01.html",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "遺族厚生年金受給権者は老齢厚生年金繰下げ申出を原則行えない。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nenkin.go.jp/service/jukyu/roureinenkin/jukyu-yoken/20140421-01.html",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解2。老齢厚生年金の受給権取得日に遺族厚生年金など他の年金の受給権がある場合は、繰下げ支給の申出をすることができない。1は増額率が0.7%/月であり0.5%は誤り(繰上げの減額率0.4%と混同しやすい)。3は老齢基礎年金と老齢厚生年金の繰下げは別々に選択可能であり同時申出は不要のため誤り。4は加給年金額・振替加算は繰下げによる増額の対象外というのが正しい知識であり、選択肢の記述は誤り。繰上げ・繰下げ制度の細かい要件の混同がひっかけの中心である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-005",
+      "question_number": 5,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "確定拠出年金の企業型年金を新たに導入する際の既存の退職金制度等との関係等に関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "厚生年金適用事業所の事業主が企業型年金を実施しようとする場合、労使合意に基づいて企業型年金に係る規約を作成し、当該規約について都道府県知事の承認を受ける必要がある。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/law/413AC0000000088/20260401",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "退職給与規程に基づき退職一時金制度を実施している企業が、同制度を廃止して同制度に係る資産を企業型年金に移換する場合、単年度で一括して資産を移換することができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/law/413AC0000000088/20260401",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "確定給付企業年金を実施している企業が、同制度に係る資産を企業型年金に移換した場合、確定給付企業年金の加入期間は、６０歳に達した日の前日が属する月以前の期間に限り、確定拠出年金の通算加入者等期間に通算される。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/law/413AC0000000088/20260401",
+          "reason_detail": "企業型DCへの移換時、確定給付企業年金の加入者期間は60歳前の対象月分を通算する。"
+        },
+        {
+          "number": 4,
+          "text": "中小企業退職金共済に加入している企業が、事業の拡充等により中小企業者でなくなり、所定の申出により共済契約を解除する場合、当該契約に係る資産を企業型年金に移換することはできない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/law/413AC0000000088/20260401",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "企業型DCへの移換時、確定給付企業年金の加入者期間は60歳前の対象月分を通算する。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/law/413AC0000000088/20260401",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解3。確定給付企業年金(DB)から企業型DCへ資産を移換する場合、DBの加入期間は60歳に達する日の前日の属する月以前の期間に限り、DCの通算加入者等期間として通算される。1は規約の承認は厚生労働大臣であり都道府県知事は誤り。2は退職一時金からの資産移換は一定期間に分割して移換する方式が用いられるのが通例であり、単年度一括という限定は不正確。4は中小企業者に該当しなくなった場合の解除に伴う資産移換は認められているため誤り。制度間のポータビリティの細目が頻出である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-006",
+      "question_number": 6,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "国民年金基金、小規模企業共済および中小企業退職金共済に関する次の記述のうち、最も不適切なものはどれか。なお、各選択肢において、ほかに必要とされる要件等はすべて満たしているものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "６０歳以上６５歳未満の国民年金の任意加入被保険者は、国内に住所を有していても、国民年金基金に加入することができない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.npfa.or.jp/system/",
+          "reason_detail": "60～65歳の国民年金任意加入被保険者も国民年金基金の加入資格がある。"
+        },
+        {
+          "number": 2,
+          "text": "常時使用する従業員数が２０人以下の建設業を営む個人事業主は、小規模企業共済に加入することができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.npfa.or.jp/system/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "中小企業退職金共済の掛金は、事業主が全額負担し、掛金月額は被共済者１人当たり３万円が上限となる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.npfa.or.jp/system/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "中小企業退職金共済の退職金は、被共済者が退職した日に６０歳以上であるなどの要件を満たした場合、被共済者の請求により、退職金の全部または一部を分割払いにすることができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.npfa.or.jp/system/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "60～65歳の国民年金任意加入被保険者も国民年金基金の加入資格がある。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.npfa.or.jp/system/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は1が不適切。国民年金の任意加入被保険者(60歳以上65歳未満で国内に住所を有する者等)は、国民年金基金の加入対象者に含まれ加入することができる。よって「加入することができない」とする1が誤り。2は建設業は常時使用従業員20人以下(商業・サービス業は5人以下)で小規模企業共済に加入可、3は中退共掛金月額上限3万円で事業主全額負担、4は要件を満たせば分割払い可能であり、いずれも正しい記述である。加入対象者の範囲の正誤判定がポイントとなる。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-007",
+      "question_number": 7,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "企業年金等に拠出した掛金に係る法人税および所得税の取扱いに関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "確定拠出年金の企業型年金において、法人の事業主が拠出した掛金は、２分の１相当額を限度に損金の額に算入することができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "確定拠出年金の個人型年金において、加入者である妻の掛金を生計を一にする夫が支払った場合、その掛金は夫の小規模企業共済等掛金控除として所得控除の対象となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "中小企業退職金共済において、法人の事業主が拠出した掛金は、全額を損金の額に算入することができる。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "年金等への法人拠出掛金・加入者本人掛金は区分して課税。"
+        },
+        {
+          "number": 4,
+          "text": "小規模企業共済において、個人事業主が拠出した掛金は、事業所得の金額の計算上、全額が必要経費となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "年金等への法人拠出掛金・加入者本人掛金は区分して課税。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.mhlw.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解3。中小企業退職金共済の事業主拠出掛金は、その全額を損金の額に算入できる。1はDC企業型の事業主掛金は全額損金算入が可能であり、2分の1限度という制限はなく誤り。2は小規模企業共済等掛金控除は掛金を実際に支払った加入者本人にのみ適用され、生計を一にする親族が肩代わりしても本人以外の所得控除にはならないため誤り。4は小規模企業共済の掛金は必要経費ではなく所得控除(小規模企業共済等掛金控除)として扱われるため誤り。控除方式の違いがひっかけとなっている。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-008",
+      "question_number": 8,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "日本学生支援機構の奨学金および日本政策金融公庫の教育一般貸付（以下「国の教育ローン」という）に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "日本学生支援機構の入学時特別増額貸与奨学金は、第一種奨学金または第二種奨学金に加えて、入学した月の分の奨学金の月額に一時金として増額して貸与する有利子の奨学金である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.jasso.go.jp/ryugaku/scholarship_a/daigaku/index.html",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "日本学生支援機構の奨学金の対象となる学校は、国内に所在する大学等に限られ、海外に所在する大学等は対象とならない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.jasso.go.jp/ryugaku/scholarship_a/daigaku/index.html",
+          "reason_detail": "日本学生支援機構は海外大学等向けの奨学金も用意。"
+        },
+        {
+          "number": 3,
+          "text": "国の教育ローンを利用するためには、世帯年収（所得）が申込人の世帯で扶養している子の人数に応じて定められた額以下でなければならない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.jasso.go.jp/ryugaku/scholarship_a/daigaku/index.html",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "国の教育ローンの資金使途には、入学金・授業料等の学校納付金や教材費だけでなく、自宅外から通学する学生の住居費用や通学費用も含まれる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.jasso.go.jp/ryugaku/scholarship_a/daigaku/index.html",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "日本学生支援機構は海外大学等向けの奨学金も用意。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.jasso.go.jp/ryugaku/scholarship_a/daigaku/index.html",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は2が不適切。日本学生支援機構の奨学金制度には海外大学等へ進学・留学する学生を対象とした奨学金制度もあり、国内の大学等に限定されるわけではない。1は入学時特別増額貸与奨学金(第二種の増額)が有利子である旨、正しい記述である。3は国の教育ローンの世帯年収要件(扶養する子の人数により基準額が異なる)は正しい。4は資金使途に住居費用・通学費用等も含まれる点は正しい。対象校の範囲についての誤認がひっかけの核心である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-009",
+      "question_number": 9,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "リタイアメントプランニング等に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "金融機関のリバースモーゲージは、通常、利用者が自宅に住み続けながらその不動産を担保に資金を借り入れ、利用者の死亡後に、その不動産の売却等により借入金を返済する仕組みである。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "老後生活資金として一定期間、毎年一定額を受け取るために必要な元本を計算する際、毎年受け取りたい金額に乗じる係数は年金現価係数である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "将来、本人の判断能力が不十分になった場合に備えて、あらかじめ本人が選任した者と締結する任意後見契約は、所定の様式の公正証書によってしなければならない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "定年年齢を７５歳未満に定めている事業主は、高年齢者等の雇用の安定等に関する法律に基づき、雇用する高年齢者の７５歳までの雇用確保のため、所定の措置を講じるよう努めなければならない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "リバースモーゲージ等の資金調達・退職資金計画の注意。"
+        }
+      ],
+      "content_reason": "リバースモーゲージ等の資金調達・退職資金計画の注意。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.mhlw.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は4が不適切。高年齢者雇用安定法上、事業主が講じる義務・努力義務があるのは原則65歳までの雇用確保(義務)および65歳から70歳までの就業機会確保(努力義務)であり、「75歳までの雇用確保」という数字は存在しない。70歳への数字置換えがひっかけとなっている。1〜3はリバースモーゲージ、年金現価係数、任意後見契約(公正証書必須)についていずれも正しい記述であり、年齢要件の数字入替えパターンに注意が必要である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-010",
+      "question_number": 10,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "キャッシュレス決済の一般的な特徴等に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "クレジットカードは、原則として、カード会社が設定した利用枠（利用限度額）内で、商品やサービスを受け取った後に支払請求がされる後払いの決済手段である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "クレジットカードで商品やサービスを購入した場合の返済方法の一つである分割払いは、利用代金の支払回数を決め、その回数で代金を分割して支払う方法である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "デビットカードで商品やサービスを購入した場合、クレジットカードと同様に、定額リボルビング払いや分割払いで代金の支払いをすることができる。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "キャッシュレス決済方式の前払・即時払・後払の違い。"
+        },
+        {
+          "number": 4,
+          "text": "交通系や流通系の電子マネーやプリペイドカードは、カードやスマートフォンに事前にチャージしておき、商品やサービスの購入時にチャージ額から支払う決済手段である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.mhlw.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "キャッシュレス決済方式の前払・即時払・後払の違い。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.mhlw.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は3が不適切。デビットカードは即時決済(口座から即時引落し)が特徴であり、クレジットカードのような分割払いやリボルビング払いという概念は存在しない(後払いの信用供与を伴わないため)。1・2・4はクレジットカードの後払い性、分割払いの仕組み、電子マネー・プリペイドカードの事前チャージ方式について、いずれも一般的で正しい説明である。デビットカードとクレジットカードの決済の仕組みの違い(即時払いか後払いか)を理解しているかがポイントとなる。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-011",
+      "question_number": 11,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "少額短期保険に関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "死亡保障を目的とした少額短期保険の保険料は、所得税の生命保険料控除の対象となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "少額短期保険業者が取り扱う保険契約は、生命保険契約者保護機構または損害保険契約者保護機構による保護の対象となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "少額短期保険では、低発生率保険を除き、被保険者１人につき引き受けることができる保険金額の合計額は１,０００万円が上限である。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "少額短期保険契約は保険契約者保護機構の対象外であり各種限度額は異なる。"
+        },
+        {
+          "number": 4,
+          "text": "少額短期保険の保険期間は、生命保険、傷害疾病保険および損害保険のいずれも１年が上限である。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "少額短期保険契約は保険契約者保護機構の対象外であり各種限度額は異なる。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解3。少額短期保険業者が引き受けることができる保険金額は、被保険者1人当たり原則1,000万円が上限(低発生率保険は特例で上限が異なる)であり、この記述は正しい。1は少短の保険料は生命保険料控除の対象外であり誤り。2は少短業者は保険契約者保護機構の保護対象外(セーフティネット非対象)であり誤り。4は保険期間の上限は生命保険・傷害疾病保険が1年、損害保険が2年であり、損害保険を1年とする点が誤り。保護機構の対象外という論点は頻出である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-012",
+      "question_number": 12,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "生命保険の一般的な商品性に関する次の記述のうち、最も適切なものはどれか。なお、記載のない特約については考慮しないものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "低解約返戻金型終身保険は、保険料払込期間中の一定期間における解約返戻金額および死亡保険金額が他の契約条件が同一で低解約返戻金型ではない終身保険に比べて低く抑えられているため、割安な保険料が設定されている。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "変額保険（終身型）では、契約時に定めた保険金額（基本保険金額）が保証されており、運用実績にかかわらず、死亡保険金の額は基本保険金額を下回らない。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "生命保険の定期・終身・養老等の保障設計を区別。"
+        },
+        {
+          "number": 3,
+          "text": "定期保険特約付終身保険（更新型）は、定期保険特約を同額の保険金額で更新する場合、被保険者の健康状態についての告知や医師の診査が必要であり、その健康状態によっては更新することができない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "逓減定期保険は、保険期間の経過に伴い所定の割合で保険料が逓減するが、保険金額は一定である。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "生命保険の定期・終身・養老等の保障設計を区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解2。変額保険(終身型)は、死亡保険金について基本保険金額が最低保証されており、運用実績が悪化しても基本保険金額を下回ることはない(満期保険金や解約返戻金には最低保証がない点との違いに注意)。1は低解約返戻金型終身保険は死亡保険金額は他の終身保険と同額であり、低く抑えられるのは解約返戻金のみであるため誤り。3は更新型の定期保険特約は告知・診査不要で自動更新されるのが原則であり誤り。4は逓減定期保険は保険料一定で保険金額が逓減するため記述が逆で誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-013",
+      "question_number": 13,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "個人年金保険の一般的な商品性に関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "確定年金では、年金受取開始日前に被保険者が死亡した場合、死亡給付金受取人が契約時に定められた年金受取総額と同額の死亡給付金を受け取ることができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "１０年保証期間付終身年金では、被保険者の性別以外の契約条件が同一である場合、保険料は男性の方が女性よりも高くなる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "ＭＶＡ（市場価格調整）機能を有する変額個人年金保険では、市場金利に応じた運用資産の価格変動が解約返戻金額等に反映され、一般に、解約時の市場金利が契約時と比較して上昇した場合には解約返戻金額が減少する。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "個人年金保険の保証期間・確定年金・終身年金等を区別。"
+        },
+        {
+          "number": 4,
+          "text": "外貨建て個人年金保険では、円換算支払特約を付加することで、当該保険契約の締結後から年金や解約返戻金、死亡給付金を受け取るまでの為替リスクを回避することができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "個人年金保険の保証期間・確定年金・終身年金等を区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は③（最も適切）。MVA（市場価格調整）は、所定の商品・契約において市場金利等の変動に応じた運用資産の価格変化を解約返戻金等へ反映する仕組みで、一般に解約時の市場金利が契約時より上昇すれば解約返戻金が減少し得る。ただしMVAの有無や調整方法は各保険商品の約款・商品類型により異なり、すべての変額個人年金に一律に付くわけではない。①確定年金の受取開始前死亡給付は年金受取総額と必ず一致するわけではない。②同条件の保証期間付終身年金は一般に平均余命の長い女性の保険料が高い。④円換算支払特約は原則受取時等に定められた所定日の為替レートで円換算して支払うもので、契約から受取までの円換算レートを固定せず為替変動リスクは残る。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-014",
+      "question_number": 14,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "２０１２年１月１日以後に締結された生命保険契約の保険料に係る生命保険料控除に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "変額個人年金保険の保険料は、個人年金保険料控除の対象とはならず、一般の生命保険料控除の対象となる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "終身保険に付加された傷害特約の保険料は、生命保険料控除の対象とならない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "終身保険の月払保険料のうち、２０２４年１月に払い込まれた２０２３年１２月分の保険料は、２０２４年分の一般の生命保険料控除の対象となる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "自動振替貸付により払込みに充当された終身保険の保険料は、生命保険料控除の対象とならない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm",
+          "reason_detail": "自動振替貸付で充当された保険料も生命保険料控除の対象。"
+        }
+      ],
+      "content_reason": "自動振替貸付で充当された保険料も生命保険料控除の対象。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は4が不適切。自動振替貸付によって保険料の払込みに充当された金額も、実際に保険料が払い込まれたものとして生命保険料控除の対象となる(貸付金であっても控除対象から除外されない)。1は変額個人年金は個人年金保険料控除の対象外で一般の生命保険料控除の対象という扱いが正しい。2は傷害特約等の身体の傷害のみに起因する給付部分の保険料は控除対象外で正しい。3は実際に払い込んだ年の控除対象となる取扱いも正しい。自動振替貸付の扱いの誤認がひっかけの核心である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-015",
+      "question_number": 15,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "生命保険の税金に関する次の記述のうち、最も不適切なものはどれか。なお、いずれも契約者（＝保険料負担者）および保険金受取人は個人であるものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "契約者と被保険者が同一人である養老保険において、被保険者の相続人ではない者が受け取った死亡保険金は、相続税の課税対象となる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "契約者と被保険者が同一人である一時払終身保険において、被保険者がリビング・ニーズ特約に基づいて受け取る特約保険金は非課税となる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "一時払終身保険を契約から５年以内に解約した場合に受け取る解約返戻金は、一時所得として所得税の課税対象となる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "契約者、被保険者および年金受取人が同一人である個人年金保険（保証期間付終身年金）において、保証期間中に年金受取人が死亡して遺族が取得した残りの保証期間の年金受給権は、一時所得として所得税の課税対象となる。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "死亡保険金・満期返戻金・年金受給権の課税分類は保険料負担者と受取人で決定。"
+        }
+      ],
+      "content_reason": "死亡保険金・満期返戻金・年金受給権の課税分類は保険料負担者と受取人で決定。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は4が不適切。契約者・被保険者・年金受取人が同一人である個人年金保険において、年金受取人死亡後に遺族が取得する残存保証期間の年金受給権は、被相続人から相続により取得したものとみなされ「みなし相続財産」として相続税の課税対象となり、所得税(一時所得)の対象ではない。1・2・3はそれぞれ、みなし相続財産としての死亡保険金の相続税課税、リビング・ニーズ特約給付金の非課税規定、一時払終身保険の解約返戻金が一時所得となる点であり、いずれも正しい。相続税と所得税の課税区分の混同に注意が必要である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-016",
+      "question_number": 16,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "法人を契約者（＝保険料負担者）とする生命保険等に係る保険料の経理処理に関する次の記述のうち、最も適切なものはどれか。なお、いずれの保険契約も保険料は年払いかつ全期払いで、２０２４年１０月に締結したものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "被保険者が特定の役員、死亡保険金受取人が法人である終身保険の支払保険料は、その全額を損金の額に算入することができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5364-2.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "被保険者が役員および従業員全員、死亡保険金受取人が被保険者の遺族、満期保険金受取人が被保険者である養老保険の支払保険料は、その全額を資産に計上する。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5364-2.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "被保険者が特定の役員、死亡保険金受取人が被保険者の遺族である定期保険の支払保険料は、その役員に対する給与となる。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5364-2.htm",
+          "reason_detail": "受取人が遺族の特定役員に係る定期保険料は原則当該役員への給与。"
+        },
+        {
+          "number": 4,
+          "text": "被保険者が特定の役員、保険金受取人が法人である解約返戻金のない終身払いのがん保険（保険期間：終身、年払保険料：８０万円）の支払保険料は、保険期間満了年齢を１１６歳として計算した保険期間の前半４割相当期間においては、その６０％相当額を資産に計上し、残額を損金の額に算入することができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5364-2.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "受取人が遺族の特定役員に係る定期保険料は原則当該役員への給与。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5364-2.htm",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解3。役員・従業員の一部のみを被保険者とし、死亡保険金受取人が被保険者の遺族である定期保険の保険料は、特定の者だけを対象とする給与として、その役員等に対する給与(損金算入だが給与課税対象)として扱われる。1は法人受取の終身保険は資産計上が原則であり全額損金算入は誤り。2はいわゆる福利厚生プラン(全員加入、遺族が死亡保険金・本人が満期保険金)の養老保険料は原則1/2損金・1/2資産計上(福利厚生費)であり全額資産計上は誤り。4はがん保険の経理処理の割合等の数値が実際の通達内容と異なり誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-017",
+      "question_number": 17,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "火災保険および地震保険の一般的な商品性に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "２０２４年中に住宅建物および家財を対象として火災保険を契約する場合、保険期間は最長で１０年とされ、長期契約の保険料を一括払いしたときは、所定の割引率が適用される。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "地震保険の対象は住居と家財に限定され、火災保険と主契約の関係を区別。"
+        },
+        {
+          "number": 2,
+          "text": "地震保険は、火災保険に原則自動付帯となっているが、契約者が地震保険を付帯しないことの意思表示をした場合は、付帯しないことができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "地震保険の保険料には、「建築年割引」「耐震等級割引」「免震建築物割引」「耐震診断割引」の割引制度があるが、これらは重複して適用を受けることはできない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "地震保険における損害の程度の区分は、「全損」「大半損」「小半損」「一部損」である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "地震保険の対象は住居と家財に限定され、火災保険と主契約の関係を区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は①（不適切）。2024年開始の住宅向け火災保険は、保険期間が最長5年となり、最長10年との記述は誤り。この短縮は2022年10月以降始期の契約からであり、2015年10月の改定と混同しない。②地震保険は火災保険に原則セットして契約し、付帯しない旨の意思表示により付帯を外せる。③建築年・耐震等級・免震建築物・耐震診断割引は重複適用しない。④損害区分は全損・大半損・小半損・一部損の4区分。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-018",
+      "question_number": 18,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "任意加入の自動車保険の一般的な商品性に関する次の記述のうち、最も適切なものはどれか。なお、特約については考慮しないものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "被保険者が被保険自動車を運転中に、誤って被保険者の父の所有する自宅の車庫に衝突して損壊させた場合、対物賠償保険の補償の対象となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "被保険者が被保険自動車を運転中に、ハンドル操作を誤って同乗していた被保険者の配偶者がケガをした場合、対人賠償保険の補償の対象となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "被保険者が被保険自動車を運転中に、交通事故を起こしてケガをした場合、その損害額のうち、被保険者の過失割合に相当する部分についても、人身傷害保険の補償の対象となる。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "自動車保険の補償範囲は賠償・人身・車両各契約により異なる。"
+        },
+        {
+          "number": 4,
+          "text": "地震を原因とする津波により被保険自動車に損害が生じた場合、一般条件の車両保険の補償の対象となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "自動車保険の補償範囲は賠償・人身・車両各契約により異なる。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解3。人身傷害保険は、被保険者自身の過失割合にかかわらず、実際の損害額全額(治療費・逸失利益等)が保険金額の範囲内で支払われる点が特徴であり、過失割合相当部分も含めて補償される。1は対物賠償保険は「他人の財物」を対象とし、父・配偶者・子など親族(家族)の財物への損害は原則として対象外(免責)であるため誤り。2は対人賠償保険も「他人」が対象であり、運転者本人の父母・配偶者・子は対象外とされるのが一般的で誤り。4は地震・噴火・津波による損害は車両保険では原則免責(地震保険等の別契約が必要)であり誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-019",
+      "question_number": 19,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "第三分野の保険の一般的な商品性に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "がん保険では、通常９０日間または３ヵ月間の免責期間が設けられており、その期間中にがんと診断確定されても、がん診断給付金は支払われない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "先進医療特約で先進医療給付金の支払対象とされている先進医療は、療養を受けた時点において厚生労働大臣によって定められたものである。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "民間の介護保険は、公的介護保険の自己負担額の補塡を目的としており、被保険者の自己負担額を限度に保険金等が支払われる。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "第三分野の先進医療・給付等の支払要件を区別。"
+        },
+        {
+          "number": 4,
+          "text": "特定（三大）疾病保障定期保険では、被保険者が特定疾病に罹患し、特定疾病保険金を受け取った場合、その後被保険者が死亡しても死亡保険金は支払われない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "第三分野の先進医療・給付等の支払要件を区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は3が不適切。民間の介護保険は、多くの商品が所定の要介護状態等の基準を満たせば契約で定めた一時金や年金が定額で支払われる方式であり、公的介護保険の自己負担額の実費補塡(損害填補)を目的とするものではなく、自己負担額を限度とする支払いでもない。1・2・4はがん保険の免責期間、先進医療の判定時点、特定疾病保障保険で保険金受取後に契約が消滅し重複して死亡保険金が出ない点であり、いずれも正しい一般的な商品性である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-020",
+      "question_number": 20,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "損害保険を活用した事業活動のリスク管理に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "食品製造業を営む事業者が、製造した食品が原因で食中毒を発生させ、法律上の損害賠償責任を負うリスクに備えて、生産物賠償責任保険（ＰＬ保険）を契約した。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "建設業を営む事業者が、業務中の事故で従業員が負傷するリスクに備えて、労働者災害補償保険（政府労災保険）の上乗せとして、労働災害総合保険（法定外補償）を契約した。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "金属製品製造業を営む事業者が、工場内に設置した機械設備が火災により損害を被るリスクに備えて、機械保険を契約した。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "企業の火災・業務賠償・事業中断損失の補償を区別。"
+        },
+        {
+          "number": 4,
+          "text": "複合商業ビルを運営する事業者が、来店客が施設の管理不備によりケガをして、法律上の損害賠償責任を負うリスクに備えて、施設所有（管理）者賠償責任保険を契約した。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "企業の火災・業務賠償・事業中断損失の補償を区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b01-verbatim.json",
+      "source_blob_sha": "e3b48a6d6e5a15e1378ed7c2d8db0996d6126f6e",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は③（不適切）。火災による機械・設備の損害への備えとして機械保険のみを契約することは通常適切ではなく、火災保険等を検討する必要がある。機械保険は、不測かつ突発的な機械的・電気的事故や取扱上のミス等による損害を補償する保険である。AIG損保「機械保険」（2022年10月版、2023年1月1日以降始期）の例では、落雷による損害や、ボイラーの爆発・破裂など約款所定の事故は補償対象となる一方、火災による損害および火災による爆発・破裂による損害は対象外である。補償範囲は商品・約款・特約により異なるため個別に確認する。①食中毒に係る製造物賠償にはPL保険、②労災への法定外補償には労働災害総合保険、④施設管理に伴う法律上の賠償責任には施設所有（管理）者賠償責任保険が適切な例である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-021",
+      "question_number": 21,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "内閣府が公表する景気動向指数に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "景気動向指数は、景気の現状把握および将来予測に資するために作成された指標であり、コンポジット・インデックス（ＣＩ）を中心として公表される。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "消費者物価指数は、全国の世帯が購入する家計に係る財およびサービスの価格等を総合した物価の変動を時系列的に測定した指標であり、そのうち生鮮食品を除く総合指数は、景気動向指数の遅行系列に採用されている。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "コンポジット・インデックス（ＣＩ）は、主として景気拡張の動きの各経済部門への波及度合いを測定することを目的としており、景気の拡張局面では５０％を上回り、景気の後退局面では５０％を下回る傾向がある。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "CIとDIの景気判断指標の目的が異なる。"
+        },
+        {
+          "number": 4,
+          "text": "景気転換点の判定には、一致指数を構成する個別指標ごとに統計的手法を用いて景気の山と谷を設定し、谷から山に向かう局面にある指標の割合を算出したヒストリカル・ディフュージョン・インデックス（ヒストリカルＤＩ）が用いられている。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "CIとDIの景気判断指標の目的が異なる。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.fsa.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は3が不適切。「主として景気拡張の動きの各経済部門への波及度合いを測定」し、50%を基準に上回る・下回るという性質を持つのはDI(ディフュージョン・インデックス)であり、CI(コンポジット・インデックス)は景気変動の大きさやテンポ(量感)を表す指標である。CIとDIの役割・目的を入れ替えたひっかけとなっている。1・2・4はCIを中心とした公表、消費者物価指数(生鮮食品除く総合指数)の遅行系列採用、ヒストリカルDIによる景気の山谷判定であり、いずれも正しい記述である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-022",
+      "question_number": 22,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "銀行等の金融機関で取り扱う預金の一般的な商品性等に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "オプション取引などのデリバティブを組み込んだ仕組預金には、金融機関の判断によって満期日が繰り上がるものがある。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "スーパー定期預金は、預入期間が３年以上の場合、単利型と半年複利型があるが、半年複利型を利用することができるのは法人に限られる。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "スーパー定期預金の単利・半年複利は個人も対象で法人限定ではない。"
+        },
+        {
+          "number": 3,
+          "text": "期日指定定期預金は、据置期間経過後から最長預入期日までの間で、任意の日を満期日として指定することができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "預金口座の名義人自身が、ケガや病気による長期の入院などにより金融機関に行くことが難しくなる場合に備えて、事前に代理人の指名手続きを行うことにより、指名された代理人が口座名義人に代わって、普通預金の払戻しなどを行うことができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "スーパー定期預金の単利・半年複利は個人も対象で法人限定ではない。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.fsa.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は2が不適切。スーパー定期預金の半年複利型を利用できるのは「個人」に限られており、法人は対象外である(選択肢の記述は逆転している)。1・3・4は仕組預金の早期償還条項、期日指定定期預金の満期日指定の仕組み、代理人指名手続き(いわゆる予約型代理人サービス等)による払戻しについて、いずれも正しい記述である。個人限定・法人限定の逆転がひっかけの典型パターンである。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-023",
+      "question_number": 23,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "固定利付債券の利回り（単利・年率）の計算に関する次の記述の空欄（ア）～（エ）にあてはまる計算式として、最も不適切なものはどれか。なお、手数料、経過利子、税金等については考慮しないものとする。\n\n表面利率が０.１％で、償還年限が１０年の固定利付債券が額面１００円当たり１０１円２０銭で発行された。この債券の応募者利回り（％）の計算式は（ ア ）となり、直接利回り（％）の計算式は（ イ ）となる。また、この債券を新規発行時に購入し、５年後に額面１００円当たり１０２円で売却した場合の所有期間利回り（％）の計算式は（ ウ ）となる。さらに、この債券を発行から５年後に額面１００円当たり１０２円で購入し、償還まで保有した場合の最終利回り（％）の計算式は（ エ ）となる。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "（ア）（０.１＋（１００.００－１０１.２０）／１０）／１０１.２０×１００",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "（イ）０.１／１０１.２０×１００",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "（ウ）（０.１＋（１０２.００－１０１.２０）／５）／１０１.２０×１００",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "（エ）（０.１＋（１０２.００－１００.００）／５）／１００.００×１００",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+          "reason_detail": "応募者・直接・所有期間利回りは購入時点・売却時点に応じて計算。第4肢は最終利回りの償還差損益の順序と購入額を逆転。"
+        }
+      ],
+      "content_reason": "応募者・直接・所有期間利回りは購入時点・売却時点に応じて計算。第4肢は最終利回りの償還差損益の順序と購入額を逆転。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "FORMULA_TEXT_RECONSTRUCTED_PDF_VISUAL_REVIEW_REQUIRED",
+      "independent_exhibit_check": {
+        "exhibit_type": "FORMULA_TEXT_RECONSTRUCTED",
+        "source_pdf_zero_based_page": 8,
+        "pdf_visual_checked": true,
+        "source_data": "額面100、発行価格101.20、表面利率0.1%、10年、5年後売買価格102",
+        "checks": [
+          "応募者利回り=(0.1+(100-101.2)/10)/101.2×100≈-0.01976%（肢1）",
+          "直接利回り=0.1/101.2×100≈0.09881%（肢2）",
+          "所有期間利回り=(0.1+(102-101.2)/5)/101.2×100≈0.25692%（肢3）",
+          "最終利回りの正しい式=(0.1+(100-102)/5)/102×100≈-0.29412%、肢4は誤り"
+        ],
+        "official_answer": 4
+      },
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は4(エ)が不適切。最終利回りは「(額面100円-購入価格)/残存年数」を分子、購入価格を分母として計算すべきところ、選択肢4の式は分子の差額計算に購入価格102円ではなく額面100円を用い、かつ分母も購入価格102.00ではなく額面100.00を用いており誤り。正しい最終利回りの式は{0.1+(100-102)/5}/102×100となる。1(ア)応募者利回り、2(イ)直接利回り、3(ウ)所有期間利回りの式はいずれも正しい公式(発行価格・売却価格・額面・残存期間の当てはめ)に則っている。利回り計算では分母(発行価格・購入価格)と差益計算の分子(該当する価格差)を取り違えないことが重要である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-024",
+      "question_number": 24,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "債券のイールドカーブ（利回り曲線）の一般的な特徴等に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "イールドカーブは、縦軸を債券の利回り、横軸を債券の残存期間として、利回りと投資期間の関係を表した曲線である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "残存期間の短い債券の利回りよりも残存期間の長い債券の利回りの方が低く、イールドカーブが右下がりの曲線となる状態を、逆イールドという。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "残存期間の短い債券の利回りよりも残存期間の長い債券の利回りの方が高い状態のとき、両者の金利差が縮小することを、イールドカーブのフラット化という。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "イールドカーブが逆イールドの状態にあるとき、時間の経過に伴って債券価格が上昇し、キャピタルゲインが期待される効果を、ロールダウン効果という。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "イールドカーブ逆イールドとロールダウン効果の定義を区別。"
+        }
+      ],
+      "content_reason": "イールドカーブ逆イールドとロールダウン効果の定義を区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.fsa.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は4が不適切。ロールダウン効果とは、順イールド(右上がり)のカーブの下で、時間の経過とともに残存期間が短くなるにつれて利回りが低下し(価格は上昇し)、キャピタルゲインが期待できる効果を指す。逆イールド(右下がり)の状態では、時間の経過に伴い残存期間短縮によりむしろ利回りが上昇し価格が下落する方向に働くため、この記述は誤り。1〜3はイールドカーブの定義、逆イールドの定義、フラット化の定義について、いずれも正しい。順イールドと逆イールドでの効果の違いに注意する必要がある。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-025",
+      "question_number": 25,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "株式の信用取引に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "信用取引で売建てした場合の決済方法には、反対売買により決済する方法と、売付株と同種同量の株式を証券会社に引き渡して決済する方法がある。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "制度信用取引の対象となる銘柄は、証券取引所が規則等に基づき選定したものに限られる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "一般信用取引では、投資家が証券会社から貸付けを受けた金銭や株式を６ヵ月以内に返済しなければならない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "一般信用取引は返済期限を各証券会社の条件等で定めるため一律6か月ではない。"
+        },
+        {
+          "number": 4,
+          "text": "金融商品取引法等によれば、原則として、株式の信用取引を行う際の委託保証金の額は３０万円以上で、かつ、株式の約定金額に１００分の３０を乗じた金額以上でなければならないとされている。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "一般信用取引は返済期限を各証券会社の条件等で定めるため一律6か月ではない。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.fsa.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は3が不適切。一般信用取引は、返済期限を当事者間(投資家と証券会社)の合意により無期限とすることも可能であり、制度信用取引のように返済期限が法令上6ヵ月と定められているわけではない(6ヵ月というのは制度信用取引の期限である)。1・2・4は信用取引の決済方法、制度信用取引の対象銘柄が取引所選定に限られる点、委託保証金の最低額(30万円以上かつ約定代金の30%以上)について、いずれも正しい記述である。制度信用取引と一般信用取引の返済期限の違いが頻出論点となっている。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-026",
+      "question_number": 26,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "下記＜資料＞に基づき算出されるＸ社およびＹ社の株式の投資指標に関する次の記述のうち、最も適切なものはどれか。\n\n＜資料＞\n| 項目 | Ｘ社 | Ｙ社 |\n|---|---:|---:|\n| 株価 | ２,５００円 | １,３００円 |\n| 当期純利益 | ２１０億円 | １９０億円 |\n| 純資産（自己資本） | ６,０００億円 | ２,８００億円 |\n| 配当金総額 | １２０億円 | ７０億円 |\n| 発行済株式数 | ４億株 | ３億株 |",
+      "choices": [
+        {
+          "number": 1,
+          "text": "ＲＯＥは、Ｙ社よりもＸ社の方が高い。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "ＰＥＲは、Ｘ社よりもＹ社の方が高い。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "ＰＢＲは、Ｙ社よりもＸ社の方が高い。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+          "reason_detail": "X：時価総額10000億、ROE3.5%、PER47.62倍、PBR1.6667倍、配当性向57.14%。Y：時価総額3900億、ROE6.79%、PER20.53倍、PBR1.3929倍、配当性向36.84%。PBRはXが上。"
+        },
+        {
+          "number": 4,
+          "text": "配当性向は、Ｘ社よりもＹ社の方が高い。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "X：時価総額10000億、ROE3.5%、PER47.62倍、PBR1.6667倍、配当性向57.14%。Y：時価総額3900億、ROE6.79%、PER20.53倍、PBR1.3929倍、配当性向36.84%。PBRはXが上。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "TEXT_TABLE_RECONSTRUCTED",
+      "independent_exhibit_check": {
+        "exhibit_type": "TEXT_TABLE_RECONSTRUCTED",
+        "source_pdf_zero_based_page": 10,
+        "pdf_visual_checked": true,
+        "source_data": "株価X2500,Y1300;純利益X210億,Y190億;純資産X6000億,Y2800億;配当X120億,Y70億;発行済X4億株,Y3億株",
+        "checks": [
+          "X時価総額=10000億円、Y=3900億円",
+          "ROE X=3.5%、Y=6.7857%",
+          "PER X=10000/210=47.619倍、Y=3900/190=20.526倍",
+          "PBR X=10000/6000=1.6667倍、Y=3900/2800=1.3929倍",
+          "配当性向 X=120/210=57.1429%、Y=70/190=36.8421%"
+        ],
+        "official_answer": 3
+      },
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解3。ROE:X社210/6000=3.5%、Y社190/2800≒6.79%となりY社の方が高いため1は誤り。EPS:X社210億/4億株=52.5円、Y社190億/3億株≒63.3円。PER:X社2500/52.5≒47.6倍、Y社1300/63.3≒20.5倍となりX社の方が高いため2は誤り。時価総額:X社2500×4億=1兆円、Y社1300×3億=3900億円。PBR:X社1兆/6000億≒1.67倍、Y社3900億/2800億≒1.39倍となりX社の方が高く、3が正しい。配当性向:X社120/210≒57.1%、Y社70/190≒36.8%となりX社の方が高いため4は誤り。各指標の分子分母の取り違えに注意して計算する必要がある。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-027",
+      "question_number": 27,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "オプション取引の一般的な特徴に関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "コール・オプションは「原資産を権利行使価格で売る権利」であり、プット・オプションは「原資産を権利行使価格で買う権利」である。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "権利行使期間中であればいつでも権利行使が可能なものをヨーロピアン・オプションといい、満期日（権利行使日）においてのみ権利行使が可能なものをアメリカン・オプションという。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "コール・オプションの買い手の最大利益とプット・オプションの買い手の最大利益は、いずれもプレミアム（オプション料）の額となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "コール・オプションおよびプット・オプションは、他の条件が同一であれば、いずれもボラティリティが上昇するほど、プレミアム（オプション料）は高くなる。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "オプションのボラティリティ上昇は他条件一定で買い手のプレミアム増加。"
+        }
+      ],
+      "content_reason": "オプションのボラティリティ上昇は他条件一定で買い手のプレミアム増加。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.fsa.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解4。オプション取引において、原資産価格のボラティリティ(変動率)が高いほど、権利行使によって利益を得られる可能性が高まるため、コール・プットいずれのオプションもプレミアム(オプション料)は上昇する。1はコール・オプションは「買う権利」、プット・オプションは「売る権利」であり記述が逆で誤り。2はアメリカンタイプが権利行使期間中いつでも行使可能、ヨーロピアンタイプが満期日のみ行使可能であり名称が逆で誤り。3はオプションの買い手の最大損失がプレミアムに限定される一方、最大利益はコールの場合理論上無限大、プットの場合も大きな利益が見込め、プレミアムに限定されるのは売り手の最大利益であるため誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-028",
+      "question_number": 28,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "ポートフォリオ理論に関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "ポートフォリオのリスクとは、一般に、組成されたポートフォリオの損失額の大きさを示すのではなく、そのポートフォリオの期待収益率からのばらつきの度合いをいう。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "ポートフォリオのリスクは収益率のばらつきで測定。"
+        },
+        {
+          "number": 2,
+          "text": "ポートフォリオのリスクのうち、分散投資によって消去可能なリスクをシステマティック・リスクという。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "ポートフォリオのリスクは、組み入れた各資産のリスクを組入比率で加重平均した値よりも大きくなる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "ポートフォリオの期待収益率は、組み入れた各資産の期待収益率を組入比率で加重平均した値よりも大きくなる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "ポートフォリオのリスクは収益率のばらつきで測定。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.fsa.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解1。ポートフォリオのリスクとは一般に、実現収益率が期待収益率からどの程度ばらつくか(標準偏差・分散)で測られる概念であり、単純な損失額の大小を意味するものではない。2は分散投資により消去できるリスクは「アンシステマティック・リスク(非市場リスク・個別銘柄リスク)」であり、システマティック・リスク(市場リスク)は分散投資では消去できないため名称が逆で誤り。3は相関係数が1未満の資産を組み合わせる場合、分散効果によりポートフォリオ全体のリスクは各資産リスクの加重平均値以下になるため誤り。4はポートフォリオの期待収益率は各資産の期待収益率の加重平均そのものであり、それを上回ることはないため誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-029",
+      "question_number": 29,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "上場株式等の譲渡および配当等（一定の大口株主等が受けるものを除く）に係る税金等に関する次の記述のうち、最も適切なものはどれか。なお、本問においては、特定口座のうち、源泉徴収がされない口座を簡易申告口座といい、源泉徴収がされる口座を源泉徴収選択口座という。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "上場株式等に係る配当所得等について、総合課税を選択して確定申告をした場合、上場株式等に係る譲渡損失の金額と損益通算することができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "上場株式等に係る配当所得等の金額と損益通算してもなお控除しきれない上場株式等に係る譲渡損失の金額は、確定申告をすることにより、翌年以後５年間にわたって繰り越すことができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "簡易申告口座には、上場株式等の配当等を受け入れることはできない。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "株式譲渡損失と配当所得は申告分離課税の選択等で通算可能。"
+        },
+        {
+          "number": 4,
+          "text": "源泉徴収選択口座は、開設が投資家１人当たり１口座までとされており、複数の金融機関にそれぞれ源泉徴収選択口座を開設することはできない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "株式譲渡損失と配当所得は申告分離課税の選択等で通算可能。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.fsa.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解3。簡易申告口座(源泉徴収なしの特定口座)は、譲渡損益のみを管理する口座であり、配当等を受け入れることはできない(配当等を口座内で受け入れられるのは源泉徴収選択口座のみ)。1は上場株式等に係る配当所得等と譲渡損失との損益通算は、配当所得について申告分離課税を選択した場合に限られ、総合課税を選択した場合は損益通算できないため誤り。2は繰越控除の年数は3年間が正しく5年間ではないため誤り。4は源泉徴収選択口座は口座単位(金融機関ごと)で開設・選択が可能であり、複数の金融機関でそれぞれ開設できるため誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-030",
+      "question_number": 30,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "わが国における個人による金融商品取引に係るセーフティネットに関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "確定拠出年金の加入者が運用の方法として選択した定期預金は、預金保険制度による保護の対象とならない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "日本国内に本店のある銀行の海外支店や外国銀行の在日支店に預け入れた預金は、その預金の種類にかかわらず、預金保険制度による保護の対象とならない。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "一般預金は上限があり決済用預金は全額保護。"
+        },
+        {
+          "number": 3,
+          "text": "日本国内で事業を行う生命保険会社が破綻した場合、生命保険契約者保護機構による補償の対象となる保険契約については、高予定利率契約を除き、原則として、破綻時点の責任準備金等の８０％まで補償される。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "日本国内に本店のある銀行で購入した投資信託は、日本投資者保護基金による保護の対象となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.fsa.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "一般預金は上限があり決済用預金は全額保護。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.fsa.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解2。日本国内に本店のある銀行の海外支店に預け入れた預金、および外国銀行の在日支店に預け入れた預金は、預金の種類にかかわらず預金保険制度による保護の対象とならない。1はiDeCoで運用指図した定期預金も預金保険制度の保護対象となるため誤り。3は生命保険契約者保護機構の補償割合は高予定利率契約を除き原則として責任準備金等の90%までであり80%は誤り。4は投資信託は分別管理が徹底されており証券会社破綻時には日本投資者保護基金の対象となり得るが、銀行で購入した投資信託は銀行が同基金の会員ではないため保護対象とならず誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-031",
+      "question_number": 31,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "所得税の基本的な仕組みに関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "所得税では、納税者が申告した所得金額に基づき、納付すべき税額を税務署長が決定する賦課課税方式が採用されている。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "所得税では、課税対象となる所得を８種類に区分し、それぞれの所得の種類ごとに定められた計算方法により所得の金額を計算する。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "所得税の各種所得の金額の計算上、収入金額には、原則として、その年において収入すべきことが確定した金額から、未収入の金額を控除した額を計上する。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "非永住者以外の居住者の課税所得には、日本国内で生じた所得だけでなく、日本国外で生じた所得も含まれる。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "所得の分類と課税方式に従う。"
+        }
+      ],
+      "content_reason": "所得の分類と課税方式に従う。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解4。非永住者以外の居住者(いわゆる永住者)は、国内で生じた所得だけでなく国外で生じた所得も含めて全世界所得が課税対象となる。1は所得税は納税者自身が所得金額と税額を計算して申告する申告納税方式が採用されており、賦課課税方式ではないため誤り。2は所得区分は10種類(利子・配当・不動産・事業・給与・退職・山林・譲渡・一時・雑)であり8種類ではないため誤り。3は権利確定主義により、未収であっても収入すべきことが確定した金額はその年の収入金額に算入するのが原則であり、未収入金額を控除するという記述は誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-032",
+      "question_number": 32,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "所得税の各種所得に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "暗号資産取引により生じた損益は、その暗号資産取引自体が事業と認められる場合等を除き、雑所得となる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "不動産の貸付けを事業的規模で行ったことにより生じた賃貸収入に係る所得は、事業所得となる。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "所得種類ごとに事業・譲渡・不動産など税区分が定まる。"
+        },
+        {
+          "number": 3,
+          "text": "賃貸している建物とその土地を売却したことによる所得は、譲渡所得となる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "ふるさと納税に係る寄附金を支出し、その謝礼として受け取った返礼品に係る経済的利益は、一時所得となる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "所得種類ごとに事業・譲渡・不動産など税区分が定まる。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は2が不適切。不動産の貸付けによる所得は、事業的規模で行われている場合であっても、所得区分としては「不動産所得」であり、事業所得とはならない(事業的規模かどうかは、青色申告特別控除額や必要経費の範囲などに影響するに過ぎない)。1・3・4は暗号資産取引の雑所得該当、賃貸不動産(建物・土地)売却による譲渡所得該当、ふるさと納税返礼品の経済的利益が一時所得となる点であり、いずれも正しい記述である。不動産所得と事業所得の混同がひっかけの典型となっている。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-033",
+      "question_number": 33,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "所得税の各種所得の金額の計算上生じた次の損失の金額のうち、他の所得の金額と損益通算できるものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "不動産所得の金額の計算上生じた損失の金額のうち、不動産所得を生ずべき業務の用に供する土地の取得に要した負債の利子に相当する部分の金額",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "業務用車両を売却したことによる譲渡所得の金額の計算上生じた損失の金額",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "所定の所得損失を他所得と損益通算。"
+        },
+        {
+          "number": 3,
+          "text": "終身保険の解約返戻金を受け取ったことによる一時所得の金額の計算上生じた損失の金額",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "ゴルフ会員権を売却したことによる譲渡所得の金額の計算上生じた損失の金額",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "所定の所得損失を他所得と損益通算。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解2。生活に通常必要でない資産(ゴルフ会員権、貴金属・別荘等)や不動産所得の土地取得に係る負債利子相当部分の損失は損益通算の対象外とされているが、事業用の業務用車両など、事業の用に供していた資産の譲渡による譲渡所得の損失は、生活に通常必要でない資産に該当しない限り、原則として他の所得と損益通算できる。1は不動産所得の損失のうち土地等取得の負債利子部分は損益通算不可、3は一時所得の損失はそもそも他の所得と損益通算できない、4はゴルフ会員権の譲渡損失は税制改正により損益通算の対象外とされており、いずれも通算不可である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-034",
+      "question_number": 34,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "所得税における配偶者控除に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "納税者の合計所得金額が１,０００万円を超える場合、配偶者の合計所得金額の多寡にかかわらず、配偶者控除の適用を受けることはできない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1191.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "老人控除対象配偶者とは、控除対象配偶者のうち、原則として、その年の１２月３１日現在の年齢が７０歳以上の者をいう。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1191.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "納税者との婚姻の届出をしていない、いわゆる内縁関係にあると認められる者は、納税者が加入している健康保険の被扶養者となっている場合であっても、控除対象配偶者には該当しない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1191.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "青色申告者の配偶者で青色事業専従者として給与の支払いを受ける者は、合計所得金額が４８万円以下であれば、控除対象配偶者に該当する。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1191.htm",
+          "reason_detail": "青色事業専従者の給与支払がある配偶者は所得要件を満たしても配偶者控除対象外。"
+        }
+      ],
+      "content_reason": "青色事業専従者の給与支払がある配偶者は所得要件を満たしても配偶者控除対象外。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1191.htm",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は4（不適切）。青色申告者の配偶者で青色事業専従者給与の支払を受ける者は、合計所得金額が58万円以下であっても控除対象配偶者とはならない。2025年分から同一生計配偶者の所得要件は48万円以下から58万円以下に引き上げられたが、青色事業専従者給与の受給者を除外する要件は変わらない。選択肢1（納税者自身の合計所得1000万円超）、2（老人控除対象配偶者70歳以上）、3（事実婚のみでは対象外）は適切である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-035",
+      "question_number": 35,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "所得税における住宅借入金等特別控除（以下「住宅ローン控除」という）に関する次の記述のうち、最も適切なものはどれか。なお、２０２４年１０月中に住宅ローンを利用して住宅を取得し、同月中にその住宅を居住の用に供したものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "取得した住宅が認定住宅等以外の一般の中古住宅である場合、住宅ローン控除の控除額は住宅ローンの年末残高３,０００万円までにつき控除率０.７％で計算され、控除期間は最長で１３年となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1211-1.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "取得した住宅が店舗併用住宅である場合、その床面積の２分の１以上に相当する部分がもっぱら居住の用に供されなければ、住宅ローン控除の適用を受けることができない。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1211-1.htm",
+          "reason_detail": "住宅ローン控除の店舗兼用住宅は床面積の2分の1以上居住用であることが条件。"
+        },
+        {
+          "number": 3,
+          "text": "住宅ローン控除は、納税者が給与所得者である場合、所定の書類を勤務先に提出することにより、住宅を取得し、居住の用に供した年分から年末調整により適用を受けることができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1211-1.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "住宅ローン控除の適用を受けていた者が、転勤等のやむを得ない事由により転居したため、取得した住宅を居住の用に供しなくなった場合、翌年以降に再び当該住宅をその者の居住の用に供したとしても、再入居した年以降、住宅ローン控除の適用を受けることはできない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1211-1.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "住宅ローン控除の店舗兼用住宅は床面積の2分の1以上居住用であることが条件。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1211-1.htm",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解2。住宅ローン控除の適用対象となるためには、取得した家屋の床面積の2分の1以上に相当する部分が専ら自己の居住の用に供されるものでなければならない(店舗併用住宅等の場合)。1は中古住宅(一般・その他既存住宅)の控除期間は最長10年であり13年は誤り(13年となるのは認定住宅等の新築等の場合)。3は住宅ローン控除の適用を受ける最初の年分は、給与所得者であっても確定申告が必要であり、2年目以降から年末調整による適用が可能であるため誤り。4は転勤等のやむを得ない事由により転居した後、再びその住宅に居住した場合は、要件を満たせば再入居した年以降について再度適用を受けられるため誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-036",
+      "question_number": 36,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "所得税の申告に関する次の記述のうち、最も適切なものはどれか。なお、記載のない事項については考慮しないものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "不動産所得、事業所得または雑所得を生ずべき業務を行う者は、納税地の所轄税務署長の承認を受けることにより青色申告書を提出することができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2022.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "年の中途で死亡した者のその年分の所得税について確定申告を要する場合、その相続人は、原則として、相続の開始があったことを知った日の翌日から４ヵ月以内に、当該所得税について確定申告書を提出しなければならない。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2022.htm",
+          "reason_detail": "準確定申告は死亡を知った日の翌日から原則4か月以内。"
+        },
+        {
+          "number": 3,
+          "text": "その年中の給与収入の金額が１,０００万円を超える給与所得者は、年末調整の対象とならず、確定申告をしなければならない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2022.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "その年中の公的年金等の収入金額の合計が４２０万円であり、その全部について所得税が源泉徴収されている場合で、それ以外の所得が原稿料に係る雑所得の金額３０万円のみである者は、確定申告を行う必要はない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2022.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "準確定申告は死亡を知った日の翌日から原則4か月以内。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2022.htm",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解2が適切。年の中途で死亡した者について確定申告を要する場合、その相続人は相続の開始があったことを知った日の翌日から4ヵ月以内に準確定申告書を提出しなければならない。1は不動産・事業・山林所得を生ずべき業務を行う者が青色申告の承認を受けられる旨は概ね正しいが、雑所得は原則として青色申告の対象外であるため「雑所得」を含む記述は誤り。3は年末調整の対象とならない基準は給与収入2,000万円超であり1,000万円超は誤り。4は公的年金等の収入420万円は400万円以下の申告不要制度の基準を超えており、かつ他の所得(雑所得)も20万円を超えるため確定申告が必要であり誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-037",
+      "question_number": 37,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "法人税の損金に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "法人が納付した法人税の本税の額は、損金の額に算入することができない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "法人が従業員の業務遂行中の交通違反に係る反則金を負担した場合、その負担金は、損金の額に算入することができる。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "法人税の損金算入規則と法人税本税不算入を区別。"
+        },
+        {
+          "number": 3,
+          "text": "法人が納付した法人事業税の本税の額は、損金の額に算入することができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "法人が減価償却費として損金経理した金額のうち、償却限度額に達するまでの金額は、その全額を損金の額に算入することができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "法人税の損金算入規則と法人税本税不算入を区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は2が不適切。法人が負担した従業員の交通違反等に係る反則金(罰金・科料・過料に相当するもの)は、法人税法上、損金の額に算入することができない(制裁的な性質を持つ費用は損金不算入とされる)。1は法人税・住民税の本税は損金不算入、3は事業税(本税)は損金算入可能な租税公課、4は減価償却費は償却限度額まで損金経理により全額損金算入可能であり、いずれも正しい記述である。反則金・罰金等の損金不算入という原則の理解がポイントとなる。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-038",
+      "question_number": 38,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "次のうち、消費税の適格請求書等保存方式（インボイス制度）における適格請求書に必要とされる記載事項でないものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "適格請求書発行事業者の氏名または名称および登録番号",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6625.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "適格請求書発行事業者の本店または主たる事務所の所在地",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6625.htm",
+          "reason_detail": "適格請求書に本店所在地は必須記載事項ではない。"
+        },
+        {
+          "number": 3,
+          "text": "課税資産の譲渡等に係る資産または役務の内容",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6625.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "税率ごとに区分した消費税額等",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6625.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "適格請求書に本店所在地は必須記載事項ではない。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6625.htm",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解2。適格請求書(インボイス)の必要記載事項は、発行事業者の氏名・名称および登録番号、取引年月日、取引内容(軽減税率対象品目である旨)、税率ごとに区分して合計した対価の額および適用税率、税率ごとに区分した消費税額等、書類の交付を受ける事業者の氏名・名称などであり、発行事業者の「本店または主たる事務所の所在地」は記載事項に含まれていない(所在地情報は登録番号から確認できる仕組みのため不要)。1・3・4はいずれも法定の記載事項として正しい。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-039",
+      "question_number": 39,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "会社と役員間の取引に係る所得税・法人税に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "役員が会社に無利息で金銭の貸付けを行った場合、原則として、通常収受すべき利息に相当する金額が、その役員の雑所得の収入金額に算入される。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "会社と役員の低額譲渡・無償社宅・債務免除は給与・益金の区別が必要。"
+        },
+        {
+          "number": 2,
+          "text": "会社が役員からの借入金について債務免除を受けた場合、その債務免除を受けた金額が、その会社の所得の金額の計算上、益金の額に算入される。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "役員が会社所有の社宅に無償で居住している場合、原則として、通常の賃貸料相当額が、その役員の給与所得の収入金額に算入される。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "会社が所有する資産を適正な時価よりも高い価額で役員に譲渡した場合、会社は時価で譲渡したものとされ、譲渡価額と時価との差額が、受贈益として益金の額に算入される。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "会社と役員の低額譲渡・無償社宅・債務免除は給与・益金の区別が必要。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は1が不適切。役員が会社に金銭を無利息で貸し付けた場合、貸し手である役員側には利息を受け取っていない以上、経済的利益(みなし収入)は生じず、原則として課税関係は生じない。2は債務免除益の益金算入、3は社宅無償貸与に伴う経済的利益の給与課税、4は高額譲渡による受贈益の益金算入であり、いずれも正しい取扱いである。無利息貸付による経済的利益の認定課税は、会社が役員に無利息で貸し付けた場合に役員側で問題となるものであり、本問のように役員が会社に貸し付ける場合には課税関係が生じない点に注意する必要がある。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-040",
+      "question_number": 40,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "決算書の一般的な特徴に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "貸借対照表において、純資産の部の合計額がマイナスになることはない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "損益計算書、貸借対照表の各項目を区別。"
+        },
+        {
+          "number": 2,
+          "text": "貸借対照表において、資産の部の合計額は、負債の部および純資産の部の合計額と一致する。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "損益計算書において、営業利益の額は、売上総利益の額から販売費及び一般管理費の額を差し引いた額である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "損益計算書において、経常利益の額は、営業利益の額に営業外損益の額を加減した額である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "損益計算書、貸借対照表の各項目を区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b02-verbatim.json",
+      "source_blob_sha": "7eb969120bf4713a13e30fe524aa4a7e563b6c66",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は1が不適切。貸借対照表の純資産の部の合計額は、いわゆる債務超過(資産の部の合計額より負債の部の合計額の方が大きい状態)の会社では、マイナス(資本の欠損)になり得る。2は貸借対照表の借方・貸方の一致(資産=負債+純資産)という複式簿記の大原則であり正しい。3・4は損益計算書における営業利益・経常利益の算定式として正しい。「マイナスになることはない」という断定表現が誤りを示す典型的なひっかけである。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-041",
+      "question_number": 41,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "不動産の登記や調査に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "抵当権の登記の登記事項は、不動産の登記記録の権利部乙区に記録される。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "不動産の登記事項証明書は、対象不動産の所有者以外の者であっても、所定の手数料を納付して交付を請求することができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "新築した建物の所有権を取得した者は、その所有権の取得の日から１ヵ月以内に、所有権保存登記を申請しなければならない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "不動産の抵当権登記や登記事項の区分を確認。"
+        },
+        {
+          "number": 4,
+          "text": "区分建物を除く建物に係る登記記録において、床面積は、各階ごとに壁その他の区画の中心線で囲まれた部分の水平投影面積（壁芯面積）により記録される。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "不動産の抵当権登記や登記事項の区分を確認。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は3が不適切。新築した建物の「表題登記」は、所有権を取得した日から1ヵ月以内に申請しなければならない義務があるが、「所有権保存登記」自体には申請義務や期限の定めはない(任意の登記)。表題登記と保存登記の申請義務の有無を混同させるひっかけとなっている。1は抵当権など担保権に関する登記事項は権利部乙区に記録される。2は登記事項証明書は利害関係の有無を問わず誰でも交付請求できる。4は区分建物以外の建物の床面積は壁芯面積で記録される。いずれも正しい記述である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-042",
+      "question_number": 42,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "宅地建物取引業法に関する次の記述のうち、最も不適切なものはどれか。なお、買主は宅地建物取引業者ではないものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "宅地建物取引業者は、自ら売主となる宅地の売買契約の締結に際して、代金の額の１０分の２を超える額の手付を受領することができない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "宅地建物取引業者が、自ら売主となる宅地の売買契約の締結に際して手付を受領したときは、その手付がいかなる性質のものであっても、買主が契約の履行に着手する前であれば、当該宅地建物取引業者はその倍額を現実に提供して、契約の解除をすることができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "アパートやマンションの所有者が、当該建物の賃貸を自ら業として行うためには、あらかじめ宅地建物取引業の免許を取得しなければならない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "宅建業者が自ら売主となる契約では手付・瑕疵担保等の消費者保護規定が適用。"
+        },
+        {
+          "number": 4,
+          "text": "専任媒介契約の有効期間は３ヵ月を超えることができず、これより長い期間を定めたときは、その期間は３ヵ月とされる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "宅建業者が自ら売主となる契約では手付・瑕疵担保等の消費者保護規定が適用。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は3が不適切。自らが所有する不動産を自ら賃貸人として賃貸する行為は、宅地建物取引業法上の「取引」(売買・交換の代理・媒介、貸借の代理・媒介等)に該当せず、宅地建物取引業の免許は不要である(自ら貸主となる行為は宅建業に含まれない)。1は手付金の額の制限(代金の2/10超禁止)、2は手付解除に関する規定、4は専任媒介契約の有効期間の上限(3ヵ月)であり、いずれも正しい記述である。「自ら貸主」は宅建業の規制対象外という点が頻出論点である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-043",
+      "question_number": 43,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "不動産の売買契約に係る民法の規定に関する次の記述のうち、最も不適切なものはどれか。なお、特約については考慮しないものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "未成年者が法定代理人の同意を得ずに、不動産の売買契約を締結した場合であっても、原則として、法定代理人は当該売買契約を取り消すことができない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "売買目的物の契約不適合・危険負担・解約手付の民法規定を区別。"
+        },
+        {
+          "number": 2,
+          "text": "不動産が共有されている場合に、各共有者が、自己が有している持分を共有者以外の者に売却するときは、他の共有者の同意を得る必要はない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "売買契約締結後、買主の責めに帰することができない事由により、当該契約の目的物の引渡債務の全部が履行不能となった場合、買主は履行の催告をすることなく、直ちに契約の解除をすることができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "同一の不動産について二重に売買契約が締結された場合、譲受人相互間においては、売買契約の締結の先後にかかわらず、原則として、所有権移転登記を先にした者が、当該不動産の所有権の取得を他方に対抗することができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "売買目的物の契約不適合・危険負担・解約手付の民法規定を区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は1が不適切。未成年者が法定代理人の同意を得ずに行った法律行為(不動産売買契約等)は、原則として、本人または法定代理人が取り消すことができる(民法5条2項)。「取り消すことができない」とする記述は誤りである。2は共有持分の処分(自己持分の売却)は各共有者が単独で自由に行うことができ他の共有者の同意は不要で正しい。3は債務者の帰責事由なく履行不能となった場合、債権者(買主)は催告不要で直ちに解除できる(民法542条)ため正しい。4は不動産の物権変動の対抗要件は登記であり、二重譲渡の優劣は登記の先後で決まるため正しい。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-044",
+      "question_number": 44,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "借地借家法に関する次の記述のうち、最も不適切なものはどれか。なお、本問においては、同法第２２条の借地権を一般定期借地権といい、第２２条から第２４条の定期借地権等以外の借地権を普通借地権という。また、記載のない特約については考慮しないものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "普通借地権の存続期間は３０年とされているが、契約でこれより長い期間を定めたときは、その期間とされる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "普通借地権の存続期間が満了した時点で借地上に建物が存在しない場合は、借地権者が契約の更新を請求しても、従前の契約と同一の条件で契約が更新されたものとはみなされない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "借地権者は、借地権の登記がない限り、その土地の上に借地権者の名義で登記されている建物を所有していても、当該借地権を第三者に対抗することはできない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "普通借地の存続期間、更新、定期借地の書面要件を照合。"
+        },
+        {
+          "number": 4,
+          "text": "一般定期借地権において、契約の更新および建物の築造による存続期間の延長がなく、期間満了による建物等の買取りの請求をしないこととする旨を定める特約は、公正証書による等書面（電磁的記録による場合を含む）によってしなければならない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "普通借地の存続期間、更新、定期借地の書面要件を照合。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は3が不適切。借地借家法上、借地権者は借地権自体の登記がなくても、その土地の上に借地権者名義で登記されている建物を所有していれば、それをもって借地権を第三者に対抗することができる(建物登記による対抗力、借地借家法10条)。選択肢は「対抗することはできない」としており誤り。1は普通借地権の存続期間(30年、合意でより長期も可)、2は建物滅失時の更新請求に関する規定、4は一般定期借地権の特約が書面(公正証書等)によるべき旨であり、いずれも正しい記述である。建物登記による借地権の対抗力は頻出の重要論点である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-045",
+      "question_number": 45,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "借地借家法に関する次の記述のうち、最も適切なものはどれか。なお、本問においては、同法第３８条における定期建物賃貸借契約を定期借家契約といい、それ以外の建物賃貸借契約を普通借家契約という。また、特約については考慮しないものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "定期借家契約は、公正証書によってしなければならない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "定期借家契約は、契約当事者間の合意があっても、存続期間を１年未満とすることはできない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "普通借家契約において、賃貸人は、賃貸人および賃借人が建物の使用を必要とする事情や建物の利用状況などを考慮して、正当の事由があると認められる場合でなければ、賃借人に対し、建物の賃貸借の解約の申入れをすることはできない。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "普通借家と定期借家の契約方式・解約申入れ要件を区別。"
+        },
+        {
+          "number": 4,
+          "text": "普通借家契約において、賃貸人が賃借人に対して期間満了の１年前から６ヵ月前までの間に更新をしない旨の通知をしなかったときは、従前の契約と同じ期間で契約を更新したものとみなされる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "普通借家と定期借家の契約方式・解約申入れ要件を区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解3が適切。普通借家契約において、賃貸人からの解約申入れ・更新拒絶には、建物の使用の必要性や利用状況等を考慮した「正当の事由」が必要とされる(借地借家法28条、借主保護の趣旨)。1は定期借家契約は公正証書に限らず書面(電磁的記録を含む)により契約すればよく、公正証書に限定されないため誤り。2は定期借家契約は普通借家契約と異なり1年未満の期間を定めることも可能であるため誤り。4は法定通知期間内に通知をしなかった場合、更新されたものとみなされるのは「期間の定めのない」契約としてであり、従前と同じ期間ではないため誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-046",
+      "question_number": 46,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "都市計画区域および準都市計画区域内における建築基準法の規定に関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "建築基準法第４２条第２項により道路境界線とみなされる線と道路との間の敷地部分（セットバック部分）は、建築物を建築することができないが、建築物の容積率の算定の基礎となる敷地面積に含めることができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "防火地域内にある耐火建築物は、いずれの用途地域内にある場合であっても、建蔽率の制限に関する規定の適用を受けない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "共同住宅の共用の廊下または階段の用に供する部分の床面積は、原則として、建築物の容積率の算定の基礎となる延べ面積に算入されない。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "建築基準法の建蔽率・容積率・セットバックの扱いを区別。"
+        },
+        {
+          "number": 4,
+          "text": "敷地の前面道路の幅員が１２ｍ未満である建築物の容積率は、原則として、「都市計画で定められた容積率」と「前面道路の幅員に一定の数値を乗じて得たもの」とのいずれか高い方が上限となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "建築基準法の建蔽率・容積率・セットバックの扱いを区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解3が適切。共同住宅の共用廊下・共用階段の用に供する部分の床面積は、建築基準法上、容積率算定の基礎となる延べ面積には算入されない(住宅の居住環境向上の趣旨による特例)。1はセットバック部分(道路境界線とみなされる線と道路の間の敷地)は、建築物の建築ができないだけでなく、容積率・建蔽率算定の基礎となる敷地面積にも算入されないため誤り。2は防火地域内の耐火建築物は建蔽率が10%緩和される(または建蔽率80%地域では制限自体が撤廃)のみで、一律に適用除外となるわけではないため誤り。4は前面道路幅員12m未満の場合、容積率の上限は都市計画で定めた容積率と前面道路幅員×法定乗数の「いずれか低い方」であり「高い方」ではなく誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-047",
+      "question_number": 47,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "建物の区分所有等に関する法律に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "一棟の建物のうち、構造上の独立性と利用上の独立性を備えた建物の部分は、区分所有権の目的となる専有部分となるが、規約により共用部分とすることができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/law/337AC0000000069/20260401_507AC0000000047",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "建物ならびにその敷地および附属施設の管理を行うための区分所有者の団体（管理組合）は、原則として、区分所有者全員で構成されるが、規約によりその構成員とならない区分所有者を定めることができる。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/law/337AC0000000069/20260401_507AC0000000047",
+          "reason_detail": "2026年4月区分所有法改正後も管理団体は区分所有者全員で構成され、規約で特定区分所有者を除外できない。"
+        },
+        {
+          "number": 3,
+          "text": "区分所有者は、敷地利用権が数人で有する所有権である場合、規約に別段の定めがない限り、敷地利用権を専有部分と分離して処分することはできない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/law/337AC0000000069/20260401_507AC0000000047",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "共用部分に対する区分所有者の共有持分は、規約に別段の定めがない限り、各共有者が有する専有部分の床面積の割合による。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/law/337AC0000000069/20260401_507AC0000000047",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "2026年4月区分所有法改正後も管理団体は区分所有者全員で構成され、規約で特定区分所有者を除外できない。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/law/337AC0000000069/20260401_507AC0000000047",
+      "statutory_version_fixed": true,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は2が不適切。建物の区分所有等に関する法律上、管理組合は区分所有者全員をもって当然に構成される団体であり、区分所有者である以上、その意思にかかわらず当然に管理組合の構成員となる。規約によって特定の区分所有者を構成員から除外することはできない。1は専有部分となりうる部分を規約により共用部分(規約共用部分)とすることができる旨、3は敷地利用権と専有部分の分離処分禁止の原則、4は共用部分の共有持分の割合(専有部分の床面積割合による)であり、いずれも正しい記述である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-048",
+      "question_number": 48,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "不動産の取得に係る税金に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "不動産取得税は、所有権移転登記の有無にかかわらず、契約内容その他から総合的に判断して現実に所有権を取得したと認められる場合に、当該不動産の取得者に対して課される。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "一定の要件を満たす戸建て住宅（認定長期優良住宅を除く）を新築した場合、不動産取得税の課税標準の算定に当たっては、１戸につき最高１,２００万円を価格から控除することができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "登録免許税は、贈与により取得した不動産の所有権移転登記に対しても課される。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "登録免許税は、新築した建物の表題登記に対しても課される。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "不動産取得税と登録免許税、相続・遺贈・贈与の取得原因を区別。"
+        }
+      ],
+      "content_reason": "不動産取得税と登録免許税、相続・遺贈・贈与の取得原因を区別。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は4が不適切。登録免許税は、所有権保存登記・移転登記・抵当権設定登記など「権利に関する登記」に対して課される税であり、「表題登記」(表示に関する登記、不動産の物理的状況を公示するもの)には登録免許税は課されない。1は不動産取得税が事実上の所有権取得に着目して課される点、2は新築住宅特例の課税標準控除(1戸最高1,200万円、認定長期優良住宅は1,300万円)、3は贈与による所有権移転登記に対する登録免許税の課税であり、いずれも正しい記述である。表題登記と保存・移転登記の課税上の扱いの違いに注意する必要がある。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-049",
+      "question_number": 49,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "個人が土地を譲渡した場合の譲渡所得に関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "相続（限定承認に係るものを除く）により取得した土地を譲渡した場合、その土地の所有期間を判定する際の取得の時期は、被相続人の取得の時期が引き継がれる。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "土地の長期譲渡所得は譲渡年1月1日基準の所有期間で区分。"
+        },
+        {
+          "number": 2,
+          "text": "土地の譲渡に係る所得が長期譲渡所得に区分される場合、課税長期譲渡所得金額に対し、原則として、所得税（復興特別所得税を含む）が２０.４２％、住民税が５％の税率で課される。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "土地の譲渡に係る所得については、その土地を譲渡した日の属する年の１月１日における所有期間が１０年以下の場合、短期譲渡所得に区分される。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "譲渡所得の金額の計算上、譲渡した土地の取得費が不明な場合には、譲渡収入金額の１０％相当額を取得費とすることができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "土地の長期譲渡所得は譲渡年1月1日基準の所有期間で区分。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解1が適切。相続(限定承認に係るものを除く単純承認等)により取得した資産を譲渡した場合、所有期間の判定における取得の時期は、被相続人が取得した時期がそのまま相続人に引き継がれる(取得費も同様に引き継ぐ)。2は長期譲渡所得の税率は所得税15.315%(復興特別所得税込み)・住民税5%が正しく、20.42%という数値は誤り。3は短期・長期の区分は譲渡年の1月1日現在の所有期間が5年以下か5年超かで判定され、10年という基準はないため誤り。4は取得費が不明な場合の概算取得費は譲渡収入金額の5%相当額であり10%は誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-050",
+      "question_number": 50,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "不動産の有効活用の手法の一般的な特徴に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "等価交換方式における全部譲渡方式は、土地所有者が土地の全部をデベロッパーに譲渡し、その対価としてその土地上にデベロッパーが建設した建物およびその土地の一部を譲り受ける方式である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "建設協力金方式は、土地所有者が建設する建物を貸し付ける予定のテナント等から、建設費相当額の全部または一部を借り受けて建物を建設する方式である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "定期借地権方式では、土地所有者は土地を一定期間貸し付けることにより地代収入を得ることができ、当該土地上に建設される建物の建設資金を負担する必要はない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "事業受託方式は、土地の有効活用の企画、建設会社の選定や当該土地上に建設された建物の管理・運営等を土地所有者の依頼を受けたデベロッパーが行う手法であり、土地所有者は建設資金を調達する必要はなく、建物の所有名義はデベロッパーとなる。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "建設協力金方式は出店テナントから資金借入・建物建設。"
+        }
+      ],
+      "content_reason": "建設協力金方式は出店テナントから資金借入・建物建設。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は4が不適切。事業受託方式は、土地の有効活用の企画・建設会社の選定・建物の管理運営等をデベロッパーが受託して行う方式であるが、建設資金の調達や借入れは土地所有者自身が行い、建物の所有名義も土地所有者のままである点が特徴(デベロッパーは事業運営のノウハウを提供する立場に留まる)。1は等価交換方式(全部譲渡方式)の仕組み、2は建設協力金方式の仕組み(テナントからの借入金で建設)、3は定期借地権方式で建設資金負担が不要な点であり、いずれも正しい記述である。事業受託方式と等価交換方式・建設協力金方式との違い(資金調達主体・所有名義)の混同に注意する必要がある。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-051",
+      "question_number": 51,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "民法上の贈与に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "書面によらない贈与は、その履行の終わった部分を除き、各当事者が解除をすることができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "死因贈与では、民法の遺贈に関する規定が準用され、贈与者の一方的な意思表示により成立し、贈与者の死亡によってその効力を生じる。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "書面によらない贈与の履行済部分は解除できない。"
+        },
+        {
+          "number": 3,
+          "text": "定期贈与は、贈与者または受贈者の死亡によって、その効力を失う。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "負担付贈与では、受贈者がその負担である義務を履行しない場合において、贈与者が相当の期間を定めてその履行の催告をし、その期間内に履行がない場合、原則として、贈与者は、当該贈与の解除をすることができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "書面によらない贈与の履行済部分は解除できない。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は2が不適切。死因贈与は、贈与者の死亡によって効力を生ずる贈与契約であり、その効力発生等については民法上「遺贈に関する規定」が準用されるが、契約自体は贈与者と受贈者双方の合意(諾成契約)によって成立するものであり、遺贈のような贈与者の単独(一方的)の意思表示によって成立するものではない。1は書面によらない贈与の任意解除権に関する規定、3は定期贈与の一身専属性(当事者の死亡により効力を失う)、4は負担付贈与の履行遅滞による解除に関する規定であり、いずれも正しい記述である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-052",
+      "question_number": 52,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "みなし贈与財産等に関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "契約者（＝保険料負担者）および被保険者が父、死亡保険金受取人が子である生命保険契約において、父の死亡により子が受け取った死亡保険金は、子が父から贈与により取得したものとみなされ、贈与税の課税対象となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "子が父から著しく低い価額の対価で土地を譲り受けた場合には、原則として、その相続税評価額と支払った対価の額との差額が、子が父から贈与により取得したものとみなされ、贈与税の課税対象となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "債務者である個人が資力を喪失して債務を弁済することが困難になり、債権者である個人から当該債務の免除を受けた場合、当該免除を受けた金額のうちその債務を弁済することが困難である部分の金額についても、贈与税の課税対象となる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "妻が夫から居住用マンションを離婚による財産分与により取得した場合、原則として、妻が取得した当該マンションは、贈与により取得した財産とはみなされず、贈与税の課税対象とならない。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "みなし贈与の成立と贈与税の課税規定。"
+        }
+      ],
+      "content_reason": "みなし贈与の成立と贈与税の課税規定。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解4。離婚に伴う財産分与により取得した財産は、婚姻中の実質的共有財産の清算および離婚後の扶養等を目的とする分与であり、社会通念上相当な範囲内であれば、贈与により取得した財産とはみなされず、原則として贈与税の課税対象とならない。1は契約者と被保険者が同一人(父)である生命保険契約で、被保険者の死亡により相続人以外の子が受け取る死亡保険金は、みなし相続財産として相続税の課税対象となるのであって、贈与税の課税対象ではないため誤り。2はみなし贈与課税の基準となるのは相続税評価額ではなく、その財産の「時価」と支払った対価との差額であるため不正確。3は資力喪失により債務弁済が困難な部分の債務免除については、贈与税の課税対象とならないとされており誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-053",
+      "question_number": 53,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "贈与税の計算に関する次の記述のうち、最も不適切なものはどれか。なお、受贈者は個人であるものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "子が同一年中に父母のそれぞれから贈与を受けた場合、同年分の子の暦年課税に係る贈与税額の計算上、贈与税の課税価格から控除する基礎控除額は、各贈与者につき最高１１０万円である。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4402.htm",
+          "reason_detail": "暦年贈与の基礎控除110万円は受贈者単位で贈与者別ではない。"
+        },
+        {
+          "number": 2,
+          "text": "暦年課税に係る贈与税額の計算上、適用される税率は、超過累進税率である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4402.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "相続時精算課税に係る贈与税額の計算上、２０２４年１月１日以後に贈与により取得した財産については、贈与税の課税価格から基礎控除額として最高１１０万円を控除することができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4402.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "相続時精算課税に係る贈与税額の計算上、適用される税率は、一律２０％である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4402.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "暦年贈与の基礎控除110万円は受贈者単位で贈与者別ではない。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4402.htm",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は1が不適切。暦年課税に係る贈与税の基礎控除額(110万円)は、贈与者ごとではなく、受贈者1人につき、その年中に受けたすべての贈与の合計額に対して適用される上限額である。よって父母それぞれから贈与を受けた場合でも基礎控除は合計で110万円までであり、贈与者ごとに110万円ずつ控除できるわけではない。2は暦年課税の税率構造(超過累進税率)、3は2024年度税制改正により創設された相続時精算課税の基礎控除(年110万円、暦年課税とは別枠)、4は相続時精算課税の贈与税率(一律20%)であり、いずれも正しい記述である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-054",
+      "question_number": 54,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "民法上の相続分に関する次の記述のうち、最も不適切なものはどれか。なお、記載のない事項については考慮しないものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "相続人が複数いる場合、各共同相続人は、被相続人の遺言により相続分や遺産分割方法の指定がされていなければ、法定相続分どおりに相続財産を分割しなければならない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "民法上法定相続分の血族・代襲・配偶者の区分。"
+        },
+        {
+          "number": 2,
+          "text": "共同相続人の１人が遺産の分割前にその相続分を共同相続人以外の第三者に譲り渡した場合、他の共同相続人は、当該第三者に対して一定期間内にその価額および費用を支払うことで、その相続分を譲り受けることができる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "被相続人の兄弟姉妹が相続人である場合において、当該兄弟姉妹のうち被相続人の相続開始以前に死亡した者がいるときは、その死亡した者の子が代襲して相続人となる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "養子の法定相続分は、実子の法定相続分と同じである。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "民法上法定相続分の血族・代襲・配偶者の区分。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は1が不適切。被相続人の遺言による相続分・遺産分割方法の指定がない場合であっても、共同相続人全員の協議(遺産分割協議)により、法定相続分とは異なる割合で自由に遺産を分割することができ、必ずしも法定相続分どおりに分割しなければならないわけではない。2は相続分の取戻権(民法905条)に関する正しい記述、3は兄弟姉妹の代襲相続(一代限り)に関する正しい記述、4は養子と実子の法定相続分が同じである点であり、いずれも正しい記述である。法定相続分はあくまで目安であり、協議による自由な分割が可能という点が本問の核心である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-055",
+      "question_number": 55,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "配偶者に対する相続税額の軽減（以下「配偶者の税額軽減」という）に関する次の記述のうち、最も適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "配偶者の税額軽減の適用を受けることにより配偶者の納付すべき相続税額が０（ゼロ）となる場合、当該配偶者は相続税の申告書を提出する必要はない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4158.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "相続税の申告期限までに分割されていない財産は、原則として、配偶者の税額軽減の対象とならないが、相続税の申告書に「申告期限後３年以内の分割見込書」を添付し、申告期限までに分割されなかった財産について申告期限から３年以内に分割したときは、配偶者の税額軽減の対象となる。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4158.htm",
+          "reason_detail": "配偶者の相続税額軽減は1億6000万円又は法定相続分相当額の大きい方。"
+        },
+        {
+          "number": 3,
+          "text": "相続の放棄をした被相続人の配偶者が遺贈により取得した財産は、配偶者の税額軽減の対象とならない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4158.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "配偶者の税額軽減の適用を受けるためには、相続が開始した日の前日において被相続人との婚姻期間が２０年以上でなければならない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4158.htm",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "配偶者の相続税額軽減は1億6000万円又は法定相続分相当額の大きい方。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4158.htm",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解2。相続税の申告期限までに遺産分割が確定していない財産は、原則として配偶者の税額軽減の対象とならないが、申告書に「申告期限後3年以内の分割見込書」を添付して提出し、申告期限後3年以内に分割が行われた場合には、その分割された財産について税額軽減の適用を受けることができる(更正の請求による)。1は税額軽減の適用を受けるためには、たとえ納付税額が0円となる場合でも相続税の申告書の提出が要件とされるため誤り。3は相続放棄をした者が遺贈により取得した財産であっても税額軽減の対象となるため誤り。4は配偶者の税額軽減には婚姻期間の要件はなく(婚姻期間20年以上の要件があるのは贈与税の配偶者控除)、誤りである。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-056",
+      "question_number": 56,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "相続税における取引相場のない株式の評価に関する次の記述のうち、最も適切なものはどれか。なお、評価の対象となる株式は、特定の評価会社の株式には該当しないものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "配当還元方式による株式の価額は、その株式の１株当たりの年配当金額を５％で還元した元本の金額によって評価する。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "類似業種比準価額を計算する場合の類似業種の株価は、課税時期の属する月以前３ヵ月間の各月の類似業種の株価のうち最も低いものとするが、納税義務者の選択により、類似業種の前年平均株価または課税時期の属する月以前２年間の平均株価によることができる。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "取引相場のない株式は会社規模と株主属性等で評価方式が異なる。"
+        },
+        {
+          "number": 3,
+          "text": "会社規模が小会社である会社において、中心的な同族株主が取得した株式の価額は、原則として、類似業種比準方式によって評価する。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "同族株主のいる会社において、同族株主以外の株主が取得した株式の価額は、その会社規模にかかわらず、原則として、純資産価額方式によって評価する。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "取引相場のない株式は会社規模と株主属性等で評価方式が異なる。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解2。類似業種比準価額の計算における類似業種の株価は、課税時期の属する月以前3ヵ月間の各月の類似業種の株価のうち最も低いものを用いるのが原則だが、納税義務者の選択により、前年平均株価または課税時期の属する月以前2年間の平均株価によることも認められている。1は配当還元方式の還元率は年10%であり5%は誤り。3は小会社(原則として純資産価額方式、または類似業種比準方式と純資産価額方式の併用方式の低い方を選択可能な会社)において中心的な同族株主が取得する株式は、原則として純資産価額方式で評価されるため誤り。4は同族株主のいる会社で、同族株主以外の株主(少数株主)が取得する株式は、原則として特例的評価方式である配当還元方式により評価されるため誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-057",
+      "question_number": 57,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 1,
+      "recorded_answer_one_based": 1,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 1,
+      "one_correct_answer_screening": true,
+      "question_text": "小規模宅地等についての相続税の課税価格の計算の特例（以下「本特例」という）に関する次の記述のうち、最も適切なものはどれか。なお、各選択肢において、ほかに必要な要件等はすべて満たしているものとする。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "被相続人から相続時精算課税の適用を受けて贈与により取得した宅地等の価額が相続税の課税価格に加算される場合、当該宅地等については本特例の適用を受けることができない。",
+          "expected_verdict": "CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "小規模宅地の居住・事業の区分と減額率を確認。"
+        },
+        {
+          "number": 2,
+          "text": "被相続人が月極駐車場（アスファルト等の構築物のない青空駐車場）の用に供していた土地を相続により取得した場合、当該土地について本特例の適用を受けることができる。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "相続人以外の親族が被相続人から宅地を遺贈により取得した場合、当該宅地について本特例の適用を受けることができない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "相続開始の直前において被相続人と同居していなかった被相続人の配偶者が、被相続人が居住の用に供していた宅地を相続により取得した場合、当該宅地について本特例の適用を受けることはできない。",
+          "expected_verdict": "NOT_CORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "小規模宅地の居住・事業の区分と減額率を確認。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解1が適切。相続時精算課税に係る贈与により取得した宅地等で、その贈与財産の価額が相続税の課税価格に加算される場合、その宅地等については小規模宅地等についての課税価格の計算の特例の適用を受けることができない(本特例は相続・遺贈により取得した宅地等が対象であり、生前贈与財産には適用されない)。2は構築物のない青空駐車場の敷地は「事業の用に供されていた宅地等」には該当せず本特例の対象外のため誤り。3は相続人以外の親族(孫等)であっても遺贈により取得した宅地等について要件を満たせば本特例の適用を受けられるため誤り。4は被相続人の配偶者が居住用宅地を取得する場合、同居の有無を問わず無条件に本特例(特定居住用宅地等)の適用を受けられるため誤り。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-058",
+      "question_number": 58,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 4,
+      "recorded_answer_one_based": 4,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 4,
+      "one_correct_answer_screening": true,
+      "question_text": "相続対策としての生命保険の活用等に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "相続税は、金銭による一括納付が原則とされているため、相続財産の大半が不動産であり一括納付が困難になると見込まれる場合には、納税資金対策として、不動産を承継する相続人を死亡保険金受取人とする生命保険契約を締結する方法が考えられる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "契約者（＝保険料負担者）および被保険者が夫、死亡保険金受取人が妻である生命保険契約において、夫の死亡により妻が受け取った死亡保険金は、受取人の固有の財産であり、原則として、遺産分割協議の対象とならない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "相続税額の計算上、死亡保険金の非課税金額の規定による非課税限度額は、「５００万円×法定相続人の数」の算式により計算した金額である。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "契約者（＝保険料負担者）および被保険者が夫、死亡保険金受取人が妻である生命保険契約において、夫の死亡により妻が受け取った死亡保険金は、妻が相続の放棄をした場合であっても、相続税額の計算上、死亡保険金の非課税金額の規定の適用を受けることができる。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+          "reason_detail": "生命保険金の相続税非課税限度500万円×法定相続人、税額の区分。"
+        }
+      ],
+      "content_reason": "生命保険金の相続税非課税限度500万円×法定相続人、税額の区分。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は4が不適切。死亡保険金の非課税限度額(500万円×法定相続人の数)の規定は、相続人が取得した死亡保険金についてのみ適用され、相続の放棄をした者が取得した死亡保険金については、その者は税法上「相続人」として扱われないため非課税規定の適用を受けることができない(ただし、みなし相続財産として相続税の課税対象にはなる)。1は不動産承継者を保険金受取人とする納税資金対策の典型例、2は死亡保険金受取人固有の財産としての性質(遺産分割協議の対象外)、3は非課税限度額の計算式であり、いずれも正しい記述である。相続放棄者は非課税の適用対象外という点が頻出のひっかけである。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-059",
+      "question_number": 59,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 2,
+      "recorded_answer_one_based": 2,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 2,
+      "one_correct_answer_screening": true,
+      "question_text": "会社法に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "株式会社における株主は、その有する株式の引受価額を限度として責任を負う。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "株式会社が特定の株主との合意により自己株式を有償で取得する場合、株主総会の決議は不要である。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "会社法上、特定株主との合意による自己株式有償取得は原則株主総会決議等が必要。"
+        },
+        {
+          "number": 3,
+          "text": "株主総会には、毎事業年度終了後の一定の時期に開催する定時株主総会と、必要に応じて開催する臨時株主総会がある。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 4,
+          "text": "株式会社のうち公開会社は、取締役会を置かなければならない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://laws.e-gov.go.jp/",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "会社法上、特定株主との合意による自己株式有償取得は原則株主総会決議等が必要。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://laws.e-gov.go.jp/",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は2が不適切。会社法上、株式会社が特定の株主との合意により自己株式を有償で取得する場合には、原則として株主総会の特別決議が必要とされ(他の株主に売主追加請求権を認める等の手続も必要)、株主総会決議が不要というのは誤りである。1は株主有限責任の原則、3は定時株主総会・臨時株主総会の区分、4は公開会社における取締役会設置の義務であり、いずれも会社法上正しい記述である。自己株式の特定者からの取得には特別な手続(特別決議等)が必要という点が本問の核心である。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    },
+    {
+      "id": "fp2-2025-01-gakka-060",
+      "question_number": 60,
+      "status": "PASS",
+      "severity": null,
+      "official_answer_one_based": 3,
+      "recorded_answer_one_based": 3,
+      "official_answer_independently_readback": true,
+      "legal_target_date": "2026-04-01",
+      "current_answer_one_based": 3,
+      "one_correct_answer_screening": true,
+      "question_text": "２０２４年４月１日に施行された改正不動産登記法における相続登記に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        {
+          "number": 1,
+          "text": "相続により不動産を取得した相続人は、原則として、自己のために相続の開始があったことを知り、かつ、その所有権を取得したことを知った日から３年以内に相続登記の申請をしなければならない。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.moj.go.jp/MINJI/minji05_00563.html",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 2,
+          "text": "相続登記の申請をしなければならない者は、登記官に対し、所有権の登記名義人について相続が開始した旨および自らが当該所有権の登記名義人の相続人である旨を申し出ることで、相続登記の申請の義務を履行したものとみなされる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.moj.go.jp/MINJI/minji05_00563.html",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        },
+        {
+          "number": 3,
+          "text": "２０２４年３月３１日以前に開始した相続により不動産を取得した相続人は、相続登記がされていない場合であっても、その所有権について相続登記の申請をする義務はない。",
+          "expected_verdict": "INCORRECT",
+          "primary_reference": "https://www.moj.go.jp/MINJI/minji05_00563.html",
+          "reason_detail": "相続登記義務化は2024年4月以前の相続にも経過措置により適用。"
+        },
+        {
+          "number": 4,
+          "text": "相続登記の申請をしなければならない者が、正当な理由がないのにその申請を怠った場合、罰則の適用対象となる。",
+          "expected_verdict": "ACCEPTABLE",
+          "primary_reference": "https://www.moj.go.jp/MINJI/minji05_00563.html",
+          "reason_detail": "独立した条文単位の四肢個別再照合は未完了。原題・公式解答・制作版の解説に基づく適否の一次確認にとどまる。"
+        }
+      ],
+      "content_reason": "相続登記義務化は2024年4月以前の相続にも経過措置により適用。",
+      "original_source_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "official_answer_pdf": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_a.pdf",
+      "statutory_reference": "https://www.moj.go.jp/MINJI/minji05_00563.html",
+      "statutory_version_fixed": false,
+      "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202501-b03-verbatim.json",
+      "source_blob_sha": "0a3d899ccb5d5d4fb6b008d50105e4334109ba27",
+      "source_audit_exhibit_flag": "NOT_FLAGGED",
+      "independent_exhibit_check": null,
+      "display_reproducible": true,
+      "source_explanation_for_reconciliation": "【独自解説・初稿／独立再監査待ち】正解は3が不適切。改正不動産登記法による相続登記の申請義務化は、2024年4月1日の施行日より前に発生していた相続についても遡及的に適用され、既に相続が発生している場合は、施行日から3年以内(2027年3月31日まで)に相続登記の申請をしなければならない義務を負う。「申請する義務はない」とする本肢は誤りである。1は原則的な申請期限(3年以内)、2は相続人申告登記による義務履行のみなし規定、4は義務違反時の過料(10万円以下)の罰則であり、いずれも正しい記述である。施行日前の相続にも遡及適用される点が本問の重要ポイントである。",
+      "canonical_content_candidate": true,
+      "publication_approval": false
+    }
+  ]
+}
