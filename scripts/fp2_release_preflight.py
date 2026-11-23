@@ -36,28 +36,38 @@ def main():
         errors.append("duplicate question IDs")
     selected = [q for q in questions if q.get("release_selected") is True]
     reserve = [q for q in questions if q.get("release_selected") is False]
-    if len(selected) != 120 or len(reserve) != 75 or bank.get("release_candidate_questions") != 120 or bank.get("reserve_content_pass_questions") != 75:
+    if len(selected) != 300 or len(reserve) != 12 or bank.get("release_candidate_questions") != 300 or bank.get("reserve_content_pass_questions") != 12:
         errors.append(f"release scope mismatch: selected={len(selected)}, reserves={len(reserve)}")
     domain_counts = {}
     for q in selected:
         d = q.get("domain")
         domain_counts[d] = domain_counts.get(d, 0) + 1
-    if len(domain_counts) != 6 or any(n != 20 for n in domain_counts.values()):
-        errors.append("release scope must be 6 domains x 20 questions")
+    if len(domain_counts) != 6 or any(n != 50 for n in domain_counts.values()):
+        errors.append("release scope must be 6 domains x 50 questions")
     if bank.get("recovered_pass_count") != 180 or bank.get("recovered_fail_count") != 0 or bank.get("recovered_hold_count") != 0:
         errors.append("independent corrected re-audit 180/0/0 mismatch")
+    if (bank.get("expansion_audit_pass_count"), bank.get("expansion_audit_fail_count"), bank.get("expansion_audit_hold_count")) != (120, 0, 0):
+        errors.append("expansion independent audit 120/0/0 mismatch")
+    sessions = {}
+    for q in selected:
+        session = q.get("exam_year_month") or q.get("examDate")
+        sessions[session] = sessions.get(session, 0) + 1
+    if sorted(sessions.values()) != [60] * 5 or len(sessions) != 5:
+        errors.append("five official academic sittings must be exactly 60 questions each")
+    if len(questions) != 312:
+        errors.append("312 canonical content-pass expected (300 academic + 12 original reserve)")
     reaudited_pass = {
        "fp2-2025-05-gakka-036", "fp2-2025-05-gakka-039",
        "fp2-2025-01-gakka-017", "fp2-2025-01-gakka-013"
     }
     q20 = "fp2-2025-01-gakka-020"
     q20_entries = [q for q in questions if q.get("id") == q20]
-    if len(q20_entries) != 1 or q20_entries[0].get("release_selected") is not False or q20_entries[0].get("independent_audit_status") != "PASS" or q20_entries[0].get("audit_evidence_path") != "fp2-manabi-sprint/audit/FP2_2025_01_Q20_SECOND_CORRECTION_REAUDIT_PASS_20261123.md":
-        errors.append("Q20: second independent re-audit PASS evidence must exist and remain reserve-only")
+    if len(q20_entries) != 1 or q20_entries[0].get("release_selected") is not True or q20_entries[0].get("independent_audit_status") != "PASS" or q20_entries[0].get("audit_evidence_path") != "fp2-manabi-sprint/audit/FP2_2025_01_Q20_SECOND_CORRECTION_REAUDIT_PASS_20261123.md":
+        errors.append("Q20: second independent re-audit PASS evidence must exist and join 300 selection")
     for ident in reaudited_pass:
         matches = [q for q in questions if q.get("id") == ident]
-        if len(matches) != 1 or matches[0].get("release_selected") is not False or matches[0].get("audit_evidence_path") != "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md" or matches[0].get("independent_audit_status") != "PASS":
-            errors.append(f"{ident}: corrected PASS must be independently evidenced and reserve-only")
+        if len(matches) != 1 or matches[0].get("release_selected") is not True or matches[0].get("audit_evidence_path") != "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md" or matches[0].get("independent_audit_status") != "PASS":
+            errors.append(f"{ident}: corrected PASS must be independently evidenced in 300 selection")
     if any(q.get("modification_verification", "").startswith("PROVISIONAL") for q in selected):
         warnings.append("release selection has provisionally classified modified flags; NOT release ready")
     independent_paths = set()
