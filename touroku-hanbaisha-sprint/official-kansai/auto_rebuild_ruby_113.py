@@ -167,3 +167,5 @@ def main():
 if __name__=="__main__": main()
 
 # Actions rerun trigger: 2026-11-24; preserve fail-closed auto-promotion gates.
+
+# Trigger verification after native multi-kanji ruby support; fail closed remains enabled.
