@@ -1144,3 +1144,38 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 **独立抽出：** 直前のpdfplumber/pdfminer標本50件（完全一致44・文字集合一致2・不一致4）の不一致4件は昇格不可とした。標本の照合は全件の無誤りを保証しない。
 
 証跡：\`RUBY_RECON_2022.json\`〜\`RUBY_RECON_2026.json\`、\`LAYOUT_TRIAGE_2022.json\`〜\`LAYOUT_TRIAGE_2026.json\`。以前の集計値は履歴として維持し、この節を最新とする。
+
+
+## 【最新】重複漢字の出現順序監査・公式PDF領域切り抜き（2026-11-24T00:54:58+09:00）
+
+**正式バンク 386/600問、未昇格 214問。今回の順序照合追加昇格は 5問。App Review：BLOCKED。**
+
+原典PDFの文字ごとのページ・座標・字形出現順位と、候補本文の漢字出現回数および独立したルビ読み行を比較。重複漢字も原典と本文の出現順序が一致し、出現回数が等しく、すべての読みが衝突なく一意に割り当てられる場合のみDOM ruby/rtへ構造化した。曖昧なルビや他のHOLDを解消したものとして扱わない。
+
+49件の保留図表／配置は、公式PDFを保存済SHA-256で検証した上で問題の印刷上の範囲をPNGで切り出し、画像SHA-256、ページ、bbox、出典、加工記録を \`LAYOUT_CROPS_2022.json\` ～ \`LAYOUT_CROPS_2026.json\` に保存。画像は \`official-kansai/layout-crops/\` に置く。**49件中、既に正式採用されている問題が5件あるため、未承認の追加対象は44件。今回の画像追加による新規正式昇格は0件。**
+
+| 年度 | 重複漢字ルビ新規昇格 | 順序監査の保留 | PDF画像切り出し成功（問数） | うち既採用 | 生成ファイル数 |
+|---|---:|---:|---:|---:|---:|
+| 2022 | 1 | 25 | 13 | 5 | 13 |
+| 2023 | 0 | 25 | 7 | 0 | 7 |
+| 2024 | 2 | 30 | 12 | 0 | 13 |
+| 2025 | 1 | 26 | 6 | 0 | 7 |
+| 2026 | 1 | 24 | 11 | 0 | 11 |
+| **合計** | **5** | **130** | **49** | **5** | **51** |
+
+### 順序監査で残る理由（重複計上）
+| コード | 件数 |
+|---|---:|
+| ANCHOR_NOT_BIJECTIVE | 117 |
+| DETACHED_READING_COUNT_MISMATCH | 1 |
+| GLYPH_AMBIGUOUS | 66 |
+| NO_GLYPH_UNDER_RUBY | 2 |
+| OTHER_SOURCE_LAYOUT_HOLD | 10 |
+| PDF_APP_KANJI_CARDINALITY_MISMATCH | 1 |
+| PDF_SPAN_GLYPH_MISMATCH | 70 |
+| RUBY_FIELD_NOT_UNIQUE | 38 |
+| RUBY_GLYPH_ORDINAL_UNCERTAIN | 1 |
+
+**図表の再現方式：** \`official-practice.html\` に画像表示部品を追加。個別画像の \`licenseVerified=true\` と \`visualVerified=true\` が両方そろう場合のみ通常アプリで表示を許可する。現状の49問は \`rights=REVIEW_THIRD_PARTY_COMPONENTS\`、\`displayQA=PENDING\`、\`publishable=false\` のため、切り抜き画像を配置しても正式公開扱いにしない。画像切り出しには原典の出典と「表示用切り出し」を併記する。原典PDFへのリンクを保持する。
+
+画像の本番公開には、図版内の第三者権利の確認、問題番号・ページ境界の画像目視、スマートフォン幅での拡大・判読性検証、画像SHA-256のアプリ同梱時確認が必要。2023年度問90の公式不適切問題・全員正解扱い・正答率分母除外は維持し、自動昇格は禁止。

@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-24T00:51:56+09:00",
+  "updated_at": "2026-11-24T00:54:58+09:00",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -544,7 +544,92 @@
       "unresolvedSpecialTableOrCombination": 3,
       "evidence": "touroku-hanbaisha-sprint/official-kansai/SPECIAL_LAYOUT_REVIEW_QUEUE_20261124.json"
     },
-    "auto_ruby_ordered_promoted": 5
+    "auto_ruby_ordered_promoted": 5,
+    "ordered_ruby_and_pdf_crop_per_year": {
+      "2022": {
+        "rubySourceOrderedPass": 1,
+        "rubyOrderedPromoted": 1,
+        "rubyRecoveryHold": 25,
+        "cropRequested": 13,
+        "cropStaged": 13,
+        "cropUnresolved": 0,
+        "cropAssets": 13,
+        "cropAlreadyApprovedQuestions": 5,
+        "cropRightsPending": 13,
+        "rubyEvidence": "touroku-hanbaisha-sprint/official-kansai/ORDERED_RUBY_2022.json",
+        "cropEvidence": "touroku-hanbaisha-sprint/official-kansai/LAYOUT_CROPS_2022.json"
+      },
+      "2023": {
+        "rubySourceOrderedPass": 0,
+        "rubyOrderedPromoted": 0,
+        "rubyRecoveryHold": 25,
+        "cropRequested": 7,
+        "cropStaged": 7,
+        "cropUnresolved": 0,
+        "cropAssets": 7,
+        "cropAlreadyApprovedQuestions": 0,
+        "cropRightsPending": 7,
+        "rubyEvidence": "touroku-hanbaisha-sprint/official-kansai/ORDERED_RUBY_2023.json",
+        "cropEvidence": "touroku-hanbaisha-sprint/official-kansai/LAYOUT_CROPS_2023.json"
+      },
+      "2024": {
+        "rubySourceOrderedPass": 2,
+        "rubyOrderedPromoted": 2,
+        "rubyRecoveryHold": 30,
+        "cropRequested": 12,
+        "cropStaged": 12,
+        "cropUnresolved": 0,
+        "cropAssets": 13,
+        "cropAlreadyApprovedQuestions": 0,
+        "cropRightsPending": 12,
+        "rubyEvidence": "touroku-hanbaisha-sprint/official-kansai/ORDERED_RUBY_2024.json",
+        "cropEvidence": "touroku-hanbaisha-sprint/official-kansai/LAYOUT_CROPS_2024.json"
+      },
+      "2025": {
+        "rubySourceOrderedPass": 1,
+        "rubyOrderedPromoted": 1,
+        "rubyRecoveryHold": 26,
+        "cropRequested": 6,
+        "cropStaged": 6,
+        "cropUnresolved": 0,
+        "cropAssets": 7,
+        "cropAlreadyApprovedQuestions": 0,
+        "cropRightsPending": 6,
+        "rubyEvidence": "touroku-hanbaisha-sprint/official-kansai/ORDERED_RUBY_2025.json",
+        "cropEvidence": "touroku-hanbaisha-sprint/official-kansai/LAYOUT_CROPS_2025.json"
+      },
+      "2026": {
+        "rubySourceOrderedPass": 1,
+        "rubyOrderedPromoted": 1,
+        "rubyRecoveryHold": 24,
+        "cropRequested": 11,
+        "cropStaged": 11,
+        "cropUnresolved": 0,
+        "cropAssets": 11,
+        "cropAlreadyApprovedQuestions": 0,
+        "cropRightsPending": 11,
+        "rubyEvidence": "touroku-hanbaisha-sprint/official-kansai/ORDERED_RUBY_2026.json",
+        "cropEvidence": "touroku-hanbaisha-sprint/official-kansai/LAYOUT_CROPS_2026.json"
+      }
+    },
+    "ordered_ruby_hold_reason_totals": {
+      "ANCHOR_NOT_BIJECTIVE": 117,
+      "GLYPH_AMBIGUOUS": 66,
+      "PDF_SPAN_GLYPH_MISMATCH": 70,
+      "NO_GLYPH_UNDER_RUBY": 2,
+      "RUBY_FIELD_NOT_UNIQUE": 38,
+      "OTHER_SOURCE_LAYOUT_HOLD": 10,
+      "PDF_APP_KANJI_CARDINALITY_MISMATCH": 1,
+      "RUBY_GLYPH_ORDINAL_UNCERTAIN": 1,
+      "DETACHED_READING_COUNT_MISMATCH": 1
+    },
+    "official_pdf_crops_total_questions": 49,
+    "official_pdf_crops_staged_questions": 49,
+    "official_pdf_crop_asset_files": 51,
+    "official_pdf_crops_already_approved": 5,
+    "official_pdf_crops_newly_promoted": 0,
+    "official_pdf_crops_rights_and_visual_qa": "PENDING_49_IMAGES_STAGED_NOT_AUTO_APPROVED",
+    "official_pdf_crop_display_component": "SUPPORTED_WITH_LICENSE_AND_VISUAL_APPROVAL_FIELDS"
   },
   "gates": {
     "notion_v28_full_read": "PENDING",
@@ -595,7 +680,10 @@
     "ruby_position_to_dom_reconstruction": "COMPLETE_WITH_PER_QUESTION_HOLDS",
     "special_structure_and_graphics_triage": "COMPLETE_WITH_PER_QUESTION_HOLDS",
     "special_graphic_rendering": "HOLD_49_SOURCE_GEOMETRY_OR_RIGHTS_OR_APP_REPRODUCTION",
-    "ruby_dom_browser_position": "PENDING_REAL_CHROMIUM_RESULT"
+    "ruby_dom_browser_position": "PENDING_REAL_CHROMIUM_RESULT",
+    "ordered_ruby_source_alignment": "PASS_WITH_EXPLICIT_AMBIGUOUS_HOLDS",
+    "official_pdf_region_crop": "STAGED_49_QUESTIONS_WITH_HASH_AND_COORDS",
+    "official_pdf_image_app_release": "BLOCKED_RIGHTS_AND_VISUAL_QA"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
@@ -663,6 +751,16 @@
     "touroku-hanbaisha-sprint/official-kansai/LAYOUT_TRIAGE_2025.json",
     "touroku-hanbaisha-sprint/official-kansai/RUBY_RECON_2026.json",
     "touroku-hanbaisha-sprint/official-kansai/LAYOUT_TRIAGE_2026.json",
-    "touroku-hanbaisha-sprint/official-kansai/SPECIAL_LAYOUT_REVIEW_QUEUE_20261124.json"
+    "touroku-hanbaisha-sprint/official-kansai/SPECIAL_LAYOUT_REVIEW_QUEUE_20261124.json",
+    "touroku-hanbaisha-sprint/official-kansai/ORDERED_RUBY_2022.json",
+    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_CROPS_2022.json",
+    "touroku-hanbaisha-sprint/official-kansai/ORDERED_RUBY_2023.json",
+    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_CROPS_2023.json",
+    "touroku-hanbaisha-sprint/official-kansai/ORDERED_RUBY_2024.json",
+    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_CROPS_2024.json",
+    "touroku-hanbaisha-sprint/official-kansai/ORDERED_RUBY_2025.json",
+    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_CROPS_2025.json",
+    "touroku-hanbaisha-sprint/official-kansai/ORDERED_RUBY_2026.json",
+    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_CROPS_2026.json"
   ]
 }
