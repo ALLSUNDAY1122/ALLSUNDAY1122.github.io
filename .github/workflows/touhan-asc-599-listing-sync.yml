@@ -1,0 +1,64 @@
+name: Touhan ASC 599 Metadata Safe Sync
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-asc-599-listing-sync.yml'
+      - 'touroku-hanbaisha-ios/scripts/sync_asc_listing_599.py'
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Write and verify store metadata only, never submit review
+        id: write
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python touroku-hanbaisha-ios/scripts/sync_asc_listing_599.py
+      - name: Save observed metadata sync result
+        if: always()
+        env:
+          EXEC_RESULT: ${{ steps.write.outcome }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os,json
+          b=Path('touroku-hanbaisha-ios')
+          p=b/'ASC_599_METADATA_SYNC_20261124.json'
+          d=json.loads(p.read_text()) if p.exists() else {'schema':'touhan-asc-599-metadata-sync-v1','status':'FAIL','error':'No readback file'}
+          d['githubRunId']=int(os.environ['RUN_ID'])
+          if os.environ['EXEC_RESULT']!='success':d['status']='FAIL'
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+          sf=b/'release-status.json';s=json.loads(sf.read_text())
+          s['asc_599_listing_sync_20261124']={'status':d['status'],'description599Verified':d.get('description599Verified',False),
+           'reviewNotes599Verified':d.get('reviewNotes599Verified',False),'evidence':'touroku-hanbaisha-ios/ASC_599_METADATA_SYNC_20261124.json','runId':d['githubRunId']}
+          s['gates']['asc_metadata_599']='PASS' if d['status']=='PASS' else 'FAIL'
+          s['app_review_submitted']=False;s['release_gate']='BLOCKED'
+          sf.write_text(json.dumps(s,ensure_ascii=False,indent=2)+'\n')
+          md=b/'RELEASE_STATUS.md'
+          md.write_text(md.read_text()+f"\n\n## ASC 599問メタデータ同期（2026-11-24）\n- 説明文599問への更新・API読戻し：{d.get('description599Verified',False)}。Review Notes：{d.get('reviewNotes599Verified',False)}。総合：{d['status']}。\n- Run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/{d['githubRunId']}。プライバシー収集質問票は別途未確認。App Review未送信。\n")
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/ASC_599_METADATA_SYNC_20261124.json touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          git commit -m 'audit(touhan): confirm ASC 599 listing metadata without App Review submission' || true
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-asc-599-metadata-sync-result
+          path: touroku-hanbaisha-ios/ASC_599_METADATA_SYNC_20261124.json
+          if-no-files-found: ignore
