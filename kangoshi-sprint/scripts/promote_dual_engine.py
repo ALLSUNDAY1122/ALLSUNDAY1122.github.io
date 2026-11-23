@@ -9,7 +9,8 @@ MANIFEST=ROOT/"product-content/manifest.json"
 D=ROOT/"audit/runs/dual-engine-20261124"
 OLD=json.loads(FILE.read_text(encoding="utf8"))
 M=json.loads(MANIFEST.read_text(encoding="utf8"))
-original=OLD["questions"]
+original=list(OLD["questions"])
+previous_count=len(original)
 seen={q["id"] for q in original}
 fresh=json.loads((D/"bulk-verified-nonpublishable.json").read_text(encoding="utf8"))["questions"]
 all_rows=[]
@@ -53,7 +54,7 @@ ext.update({"file":"verified-additions-20261124.json","canonicalSourceVerifiedCo
 M["verifiedExtension"]=ext
 MANIFEST.write_text(json.dumps(M,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
 HOLD=[{"id":x["id"],"reasons":x["reasons"],"exam":x["exam"],"session":x["session"],"number":x["number"]} for x in all_rows if x["status"]!="PASS_DUAL_ENGINE_AND_OFFICIAL_KEY" and "ALREADY_VERIFIED_CANONICAL" not in x["reasons"]]
-if len(HOLD)+len(new)+len(original)!=480:raise ValueError(f"Count invariant failed: HOLD={len(HOLD)} new={len(new)} old={len(original)}")
+if len(HOLD)+len(new)+previous_count!=480:raise ValueError(f"Count invariant failed: HOLD={len(HOLD)} new={len(new)} old={previous_count}")
 A=ROOT/"audit";A.mkdir(exist_ok=True)
 (A/"dual-engine-promotion-ledger-20261124.json").write_text(json.dumps(
  {"schemaVersion":1,"newPromoted":len(new),"newIds":[x["id"] for x in new],"oldVerified":len(original),
