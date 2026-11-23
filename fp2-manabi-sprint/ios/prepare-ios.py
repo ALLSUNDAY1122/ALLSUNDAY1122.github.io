@@ -27,9 +27,9 @@ selected_ids = [q["id"] for q in selected]
 scoped_ids = [item for group in selection["domains"] for item in group["selected_ids"]]
 if (len(selected) != 300 or len(set(selected_ids)) != 300
         or len(scoped_ids) != 300 or set(selected_ids) != set(scoped_ids)
-        or selection["selected_count"] != 300 or selection["reserve_count"] != 12
-        or len(questions) != 312):
-    raise SystemExit("FP2 native bundle: 312 canonical, 300 selected, 12 reserve contract violated")
+        or selection["selected_count"] != 300 or selection["reserve_count"] != 9
+        or len(questions) != 309):
+    raise SystemExit("FP2 native bundle: 309 content PASS, 300 selected, 9 reserve, 3 quarantine contract violated")
 payload = dict(bank)
 payload.update({
     "status": "CONTENT_PASS_NATIVE_300_PAYLOAD_NOT_PUBLICATION_APPROVED",
