@@ -16,6 +16,11 @@ struct StudyQuestion: Codable, Identifiable, Hashable {
     let legalDate: String
     let originType: String
     let copyrightBasis: String
+    // Optional in the independent 30-question prototype. Mandatory for the IPA release bank.
+    let officialYear: Int?
+    let officialNumber: Int?
+    let sourceFigureName: String?
+    let sourceFigureAlt: String?
 }
 
 enum QuestionStore {
@@ -38,6 +43,15 @@ enum QuestionStore {
 
     static func questions(domain: String) -> [StudyQuestion] {
         all.filter { $0.domain == domain }
+    }
+
+    static var availableOfficialYears: [Int] {
+        Array(Set(all.filter { $0.originType == "ipa_published_verbatim" }.compactMap(\\.officialYear))).sorted(by: >)
+    }
+
+    static func officialExam(year: Int) -> [StudyQuestion] {
+        all.filter { $0.originType == "ipa_published_verbatim" && $0.officialYear == year }
+            .sorted { ($0.officialNumber ?? 0) < ($1.officialNumber ?? 0) }
     }
 
     static func daily(limit: Int = 8) -> [StudyQuestion] {
