@@ -7,13 +7,13 @@
 | 種別 | 件数 | 公開範囲 |
 |---|---:|---|
 | 既存第115〜113回ソースバンク | 720 | 既存ランタイム、厳格原典監査629 PASS／91 HOLD |
-| 今回の監査前の検証済みソース拡張 | 220 | 履歴を保持、配信不可 |
-| **今回の追加昇格** | **0** | 共通文・制御文字と二方式・公式正答の再検証 |
-| **正規ソースバンク** | **940 / 1,200** | ソース拡張220問を含む |
-| **未昇格** | **260問** | 原典の疑義と未合格ゲートは保持 |
+| 今回の監査前の検証済みソース拡張 | 246 | 履歴を保持、配信不可 |
+| **今回の追加昇格** | **5** | 共通文・制御文字と二方式・公式正答の再検証 |
+| **正規ソースバンク** | **971 / 1,200** | ソース拡張251問を含む |
+| **未昇格** | **229問** | 原典の疑義と未合格ゲートは保持 |
 | アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-- GitHub Actions Run：45261299978。先行再抽出22問のうち**0問**が引き続き保留。
+- GitHub Actions Run：45261935811。先行再抽出22問のうち**0問**が引き続き保留。
 - 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
 - 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
 - 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
@@ -165,4 +165,12 @@
 - 追加昇格 **0問**、合計 **940/1,200問**。残り **260問**。
 - 昇格ID：なし。
 - 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 210, COORDINATE_REGION_UNVERIFIED 210, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 149, POPPLER_FIELD_MISMATCH_0 117, PYMUPDF_FIELD_MISMATCH_0 106, CHOICE_COUNT_NOT_FOUR 86, PAGE_FOOTER_CONTAMINATION 84, PYMUPDF_FIELD_MISMATCH_4 63, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 39, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
+- 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+
+## 今回の独立共通文・制御文字監査（Run 45261935811）
+
+- 追加昇格 **5問**、合計 **971/1,200問**。残り **229問**。
+- 昇格ID：K112-AM079, K112-AM081, K112-PM079, K112-PM084, K111-AM084。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 172, COORDINATE_REGION_UNVERIFIED 172, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 148, POPPLER_FIELD_MISMATCH_0 113, PYMUPDF_FIELD_MISMATCH_0 101, PAGE_FOOTER_CONTAMINATION 75, PYMUPDF_FIELD_MISMATCH_4 61, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 38, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38, POPPLER_FIELD_MISMATCH_4 38, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 33。
 - 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
