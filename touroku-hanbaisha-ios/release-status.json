@@ -759,7 +759,7 @@
     "verbatim_and_answer_audit": "AUTO_88_GEOMETRY_215_RUBY_51_ORDERED_5_LAYOUT_13_VISUAL_14_REMAINING_214",
     "mobile_ui": "PENDING",
     "ios_build": "PASS_SIMULATOR_DEBUG_NO_SIGNING",
-    "internal_testflight": "Q7_AUTO_PROVISION_RUNNING",
+    "internal_testflight": "Q7_FAILED_NO_TESTFLIGHT_UPLOAD",
     "screenshots": "PENDING",
     "privacy_and_metadata": "ASC_PENDING",
     "device_check": "USER_REQUIRED",
@@ -1496,7 +1496,9 @@
       "Q5_PRIVACY_AND_NETWORK_DISCLOSURE",
       "Q7_TESTFLIGHT_READY"
     ],
-    "reassessment_note": "Original preflight 10/14 remains historical; Q6 measured PASS by later macOS workflow; Q5 source/browser PASS but ASC declaration unverified."
+    "reassessment_note": "Original preflight 10/14 remains historical; Q6 measured PASS by later macOS workflow; Q5 source/browser PASS but ASC declaration unverified.",
+    "q7_later_evidence": "touroku-hanbaisha-ios/Q7_AUTO_PROVISION_RESULT_20261124.json",
+    "q7_later_result": "FAILED"
   },
   "q5_privacy_audit_20261124": {
     "sourceAndBrowserAudit": "PASS",
@@ -1554,10 +1556,12 @@
     "appReviewSubmitted": false
   },
   "q7_auto_provision_20261124": {
-    "start": "STARTED",
     "buildId": "6b04ce3d6b11322d3b7eee5a",
-    "signing": "NOT_VERIFIED",
-    "evidence": "touroku-hanbaisha-ios/Q7_AUTO_PROVISION_START_20261124.json",
-    "githubRunId": 45290378788
+    "status": "failed",
+    "gate": "FAILED",
+    "failureMessage": "App Store Connect integration \"tourokuhanbaisha_appstore\" does not exist",
+    "evidence": "touroku-hanbaisha-ios/Q7_AUTO_PROVISION_RESULT_20261124.json",
+    "ipaUploadedToASC": false,
+    "appReviewSubmitted": false
   }
 }
