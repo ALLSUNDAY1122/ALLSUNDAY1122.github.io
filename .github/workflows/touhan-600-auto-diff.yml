@@ -28,8 +28,19 @@ jobs:
       - name: Re-download original PDFs, pin SHA and perform year-by-year diff
         run: |
           set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           for y in 2022 2023 2024 2025 2026; do
             python touroku-hanbaisha-sprint/official-kansai/auto_diff_pdf.py --year "$y"
+            git add "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_${y}.json"
+            if ! git diff --cached --quiet; then
+              git commit -m "audit(touhan): persist official normalized PDF diff year ${y}"
+              for attempt in 1 2 3; do
+                git pull --rebase origin main
+                if git push origin HEAD:main; then break; fi
+                if [ "$attempt" = 3 ]; then exit 1; fi
+              done
+            fi
           done
       - name: Promote eligible only and report detailed state
         run: |
