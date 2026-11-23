@@ -40,7 +40,7 @@ async function load(){
  }
  if(body.release_candidate_questions!==items.length)throw new Error("Release candidate count mismatch");
  const domains=new Map();for(const x of items)domains.set(x.domain,(domains.get(x.domain)||0)+1);
- if(items.length!==120||domains.size!==6||[...domains.values()].some(n=>n!==20))throw new Error("Release selection must be exactly 6 domains x 20");
+ if(items.length!==300||domains.size!==6||[...domains.values()].some(n=>n!==50))throw new Error("Release selection must be exactly 6 domains x 50");
  return {items,path:SOURCE,contentApproved:body.content_approved_questions,publishable:body.publishable_questions===items.length&&body.status==="RELEASE_APPROVED",releaseStatus:body.status};
 }
 global.FP2ApprovedBank={load,normalize,isApproved,SOURCE};
