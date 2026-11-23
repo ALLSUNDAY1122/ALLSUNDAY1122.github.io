@@ -59,6 +59,16 @@ S["latestContextAndControlAudit"]={
   "releaseEligibleNew":0,"publishableNew":0,
   "status":"SOURCE_ONLY_RELEASE_BLOCKED"}
 S["textAudit"]["notImported"]=len(hold)
+OCR_CATEGORY=R/"audit/ocr-category-deep-review-20261124.json"
+if OCR_CATEGORY.exists():
+  report=json.loads(OCR_CATEGORY.read_text(encoding="utf8"))
+  assert report["checked"]==len(hold)
+  S["latestOcrCategoryAudit"]={
+    "runId":run_id,"checked":report["checked"],"categories":report["categories"],
+    "officialDecisions":report["officialDecisions"],
+    "evidenceFile":"kangoshi-sprint/audit/ocr-category-deep-review-20261124.json",
+    "newlyPromotedByCategoryAudit":report["newlyPromoted"],
+    "sourceOnlyReleaseBlocked":True}
 J.write_text(json.dumps(S,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
 old=MD.read_text(encoding="utf8")
 # Preserve historical change log, remove previously appended dynamic summaries.
@@ -99,6 +109,14 @@ tail=f"""
 - 保留の多い理由（重複あり）：{", ".join(f"{k} {v}" for k,v in reasons.most_common(12))}。
 - 先行再抽出候補：22問のうち残存保留{len(active_pending)}問。権利・解説・アプリ配信ゲートの自動解除は行わない。
 """
+if OCR_CATEGORY.exists():
+    report=json.loads(OCR_CATEGORY.read_text(encoding="utf8"))
+    tail+=("\n## OCR区分別再監査（Run "+str(run_id)+"）\n\n"
+      "- 対象："+str(report["checked"])+"問。新規昇格："+str(report["newlyPromoted"])+"問。\n"
+      "- 区分："+", ".join(k+" "+str(v) for k,v in report["categories"].items())+"。\n"
+      "- 個別の正答・採点例外、OCR文字単位差分、状況設定共通文画像の証拠："
+      +"`audit/ocr-category-deep-review-20261124.json`。\n"
+      "- この区分別台帳のみで本文・選択肢の確定や公開フラグ解除はしない。\n")
 MD.write_text(summary+history+"\n"+tail,encoding="utf8")
 print(json.dumps({"canonical":total,"remaining":len(hold),"new":P["newPromoted"],
                   "pending22Remaining":len(active_pending),"svgPending":18},ensure_ascii=False))
