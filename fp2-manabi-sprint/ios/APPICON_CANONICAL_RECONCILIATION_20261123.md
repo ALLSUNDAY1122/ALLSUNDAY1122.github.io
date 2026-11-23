@@ -23,7 +23,7 @@
 ## CI結果
 - 対象GitHub Actions: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45148389564
 - `canonical-appicon-gate`: FAIL（正本未登録、意図した安全停止）。現行SHAの計算・RGB 1024×1024検査はPASS。
-- `static-and-native-simulator`: 完了後に別途read-backすること。旧Run 45146663362 はPASS。
+- `static-and-native-simulator`: **PASS**（XcodeGen、署名なしiOS Simulatorビルド、Info.plist、正規教材のバンドル読戻し）。旧Run 45146663362もPASS。\n- CI全体: **FAIL**（アイコン正本不明のため、意図したFail Closed）。
 - この検査のFAILをPNG破損・Xcodeコンパイル失敗と混同しない。
 
 ## 解決条件
