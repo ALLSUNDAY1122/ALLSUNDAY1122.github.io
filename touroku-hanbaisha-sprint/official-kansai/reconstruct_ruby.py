@@ -33,8 +33,16 @@ def pdf_exact_glyph(ruby,chars):
         if not -1.5<=dy<=22:continue
         if abs(gx-cx)>max(4.1,(x1-x0)*0.55):continue
         choices.append((abs(gx-cx)+abs(dy-4)*0.12,glyph))
-    choices.sort(key=lambda x:x[0])
-    if len(choices)!=1:return None,"GLYPH_AMBIGUOUS" if choices else "NO_GLYPH_UNDER_RUBY"
+    # PDF may duplicate an identical visible character at the exact same location.
+    # Deduplicate only byte-identical glyphs with virtually identical bounding boxes.
+    unique={}
+    for score,glyph in choices:
+        key=(glyph["char"],glyph["page"],tuple(round(v,1) for v in glyph["bbox"]))
+        unique[key]=(score,glyph)
+    choices=sorted(unique.values(),key=lambda x:x[0])
+    if not choices:return None,"NO_GLYPH_UNDER_RUBY"
+    if len(choices)>1 and choices[1][0]-choices[0][0]<3:
+        return None,"GLYPH_AMBIGUOUS"
     glyph=choices[0][1]
     if glyph["char"] not in ruby["baseText"]:return None,"PDF_SPAN_GLYPH_MISMATCH"
     return glyph,None
@@ -111,27 +119,51 @@ def run(year):
                 "pdfPage":glyph["page"],"rubyBBox":a["rubyBBox"],
                 "glyphBBox":[round(x,2) for x in glyph["bbox"]],
                 "sourceText":a["baseText"]})
-        if len(placements)!=len(assocs) or len({p["fieldIndex"] for p in placements})!=len(placements):
-            errors.append("MULTIPLE_RUBIES_SAME_FIELD_REQUIRES_ORDERING")
+        if len(placements)!=len(assocs):
+            errors.append("RUBY_ANCHOR_COUNT_MISMATCH")
         if not errors:
             enriched=[]
             for i,original in enumerate(fields):
-                placements_this=[p for p in placements if p["fieldIndex"]==i]
-                if not placements_this:
+                located=[p for p in placements if p["fieldIndex"]==i]
+                if not located:
                     enriched.append([{"text":original}]);continue
-                p=placements_this[0];strip,reason=place_one(original,p["kanji"],p["reading"])
-                if reason:errors.append(reason);break
-                cleaned=strip["clean"];idx=strip["offset"]
-                if cleaned.count(p["kanji"])!=1:errors.append("GLYPH_DUPLICATE_AFTER_CLEAN");break
-                parts=[{"text":cleaned[:idx]},{"rubyBase":p["kanji"],"rubyText":p["reading"],
-                       "sourcePage":p["pdfPage"]},{"text":cleaned[idx+len(p["kanji"]):]}]
+                # Ruby readings and kanji are required to be unique within this field.
+                if len(set(p["reading"] for p in located))!=len(located) or len(set(p["kanji"] for p in located))!=len(located):
+                    errors.append("DUPLICATE_READINGS_OR_KANJI_IN_FIELD");break
+                cleaned=original
+                for p in located:
+                    matches=list(ISOLATED(p["reading"]).finditer(cleaned))
+                    if len(matches)!=1:
+                        errors.append("DETACHED_READING_NOT_UNIQUE_AFTER_REWRITE");break
+                    start,end=matches[0].span()
+                    cleaned=cleaned[:start]+cleaned[end:]
+                if errors:break
+                indexed=[]
+                for p in located:
+                    if cleaned.count(p["kanji"])!=1:
+                        errors.append("KANJI_NOT_UNIQUE_AFTER_REWRITE");break
+                    indexed.append((cleaned.index(p["kanji"]),p))
+                if errors:break
+                indexed.sort(key=lambda x:x[0])
+                # Check physical glyph sequence agrees with candidate reading order.
+                source_order=sorted(located,key=lambda p:(p["pdfPage"],p["glyphBBox"][1],p["glyphBBox"][0]))
+                if [p["kanji"] for p in source_order]!=[p["kanji"] for _,p in indexed]:
+                    errors.append("PDF_AND_APP_GLYPH_ORDER_MISMATCH");break
+                parts=[];cursor=0
+                for offset,p in indexed:
+                    if offset<cursor:errors.append("OVERLAPPING_RUBY_SEGMENTS");break
+                    parts.append({"text":cleaned[cursor:offset]})
+                    parts.append({"rubyBase":p["kanji"],"rubyText":p["reading"],"sourcePage":p["pdfPage"]})
+                    cursor=offset+len(p["kanji"])
+                if errors:break
+                parts.append({"text":cleaned[cursor:]})
                 if "".join(v.get("text",v.get("rubyBase","")) for v in parts)!=cleaned:
                     errors.append("RICH_PARTS_DO_NOT_RECONSTRUCT");break
                 enriched.append(parts)
             if not errors:
                 result.update(status="RUBY_PASS",reasons=[],placements=placements,
                               questionParts=enriched[0],choicesParts=enriched[1:],
-                              proof="one-to-one matching PDF char bbox and unique candidate standalone reading -> DOM ruby")
+                              proof="unique PDF character bbox for each ruby, unique detached readings, physical order and DOM text round-trip")
         if errors:
             result.update(status="HOLD",reasons=sorted(set(errors)),placements=placements)
             counts.update(result["reasons"])
