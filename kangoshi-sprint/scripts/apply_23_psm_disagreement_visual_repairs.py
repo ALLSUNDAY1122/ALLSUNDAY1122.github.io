@@ -86,7 +86,7 @@ def main():
             raise ValueError("Source question identity does not match "+qid)
         if qid in exceptions or q.get("officialScoringStatus")!="normal":
             raise ValueError("Official scoring exception needs separate treatment "+qid)
-        answers,keysha=keys[exam];official=answers.get(qid);expected_answer=item["answerZeroBased"]
+        answers,keysha=keys[exam];official=answers.get(qid);expected_answer=q.get("answer")
         if (not official or official["status"]!="KEY_SINGLE"
             or official.get("rawValue")!=str(expected_answer+1)
             or q.get("officialKeyPdfSha256")!=keysha
