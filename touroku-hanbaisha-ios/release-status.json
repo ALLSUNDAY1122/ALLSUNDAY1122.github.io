@@ -528,7 +528,17 @@
       "ANSWER_TABLE_XY_UNVERIFIED": 1
     },
     "ruby_renderer": "Native DOM ruby+rt with validated source glyph positions and isolated furigana readings",
-    "ruby_source_related_count": 189
+    "ruby_source_related_count": 189,
+    "special_layout_review_queue": {
+      "targeted": 62,
+      "cleared": 13,
+      "clearedOrdinaryProse": 12,
+      "clearedFalsePositiveFigureVerb": 1,
+      "unresolved": 49,
+      "unresolvedFigureOrLayout": 46,
+      "unresolvedSpecialTableOrCombination": 3,
+      "evidence": "touroku-hanbaisha-sprint/official-kansai/SPECIAL_LAYOUT_REVIEW_QUEUE_20261124.json"
+    }
   },
   "gates": {
     "notion_v28_full_read": "PENDING",
@@ -577,7 +587,9 @@
     "alternative_extractor_crosscheck": "50_STRATIFIED_SAMPLES_RECORDED",
     "release_readiness": "BLOCKED",
     "ruby_position_to_dom_reconstruction": "COMPLETE_WITH_PER_QUESTION_HOLDS",
-    "special_structure_and_graphics_triage": "COMPLETE_WITH_PER_QUESTION_HOLDS"
+    "special_structure_and_graphics_triage": "COMPLETE_WITH_PER_QUESTION_HOLDS",
+    "special_graphic_rendering": "HOLD_49_SOURCE_GEOMETRY_OR_RIGHTS_OR_APP_REPRODUCTION",
+    "ruby_dom_browser_position": "PENDING_REAL_CHROMIUM_RESULT"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
@@ -644,6 +656,7 @@
     "touroku-hanbaisha-sprint/official-kansai/RUBY_RECON_2025.json",
     "touroku-hanbaisha-sprint/official-kansai/LAYOUT_TRIAGE_2025.json",
     "touroku-hanbaisha-sprint/official-kansai/RUBY_RECON_2026.json",
-    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_TRIAGE_2026.json"
+    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_TRIAGE_2026.json",
+    "touroku-hanbaisha-sprint/official-kansai/SPECIAL_LAYOUT_REVIEW_QUEUE_20261124.json"
   ]
 }
