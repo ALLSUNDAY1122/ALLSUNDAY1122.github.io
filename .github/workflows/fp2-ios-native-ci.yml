@@ -31,7 +31,7 @@ jobs:
           assert evidence['publication_release_clear']==0
           bank=json.loads(Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_text())
           selection=json.loads(Path('fp2-manabi-sprint/release/release-selection-120-20261123.json').read_text())
-          assert len(bank['questions'])==194 and bank['content_approved_questions']==195
+          assert len(bank['questions'])==195 and bank['content_approved_questions']==195
           assert sum(q.get('release_selected') is True for q in bank['questions'])==120
           assert sum(q.get('release_selected') is False for q in bank['questions'])==75
           assert selection['selected_count']==120 and selection['reserve_count']==75
@@ -40,7 +40,7 @@ jobs:
           assert len(q20)==1 and q20[0]['release_selected'] is False and q20[0]['independent_audit_status']=='PASS'
           assert q20[0]['audit_evidence_path']=='fp2-manabi-sprint/audit/FP2_2025_01_Q20_SECOND_CORRECTION_REAUDIT_PASS_20261123.md'
           assert all(q.get('publishable') is False for q in bank['questions'])
-          assert 'fp2-2025-01-gakka-020' not in {q['id'] for q in bank['questions']}
+          assert 'fp2-2025-01-gakka-020' in {q['id'] for q in bank['questions']}
           import hashlib
           assert evidence['canonical_sha256']==hashlib.sha256(Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_bytes()).hexdigest()
           assert Path('fp2-manabi-sprint/ios/Web/questions/canonical/approved-questions-20261123.json').read_bytes()==Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_bytes()
