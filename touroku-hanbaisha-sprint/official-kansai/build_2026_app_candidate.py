@@ -5,8 +5,8 @@ from pathlib import Path
 BASE=Path(__file__).resolve().parent
 src=json.loads((BASE/"QUESTIONS_2026_RAW_STAGING.json").read_text())
 FULL="１２３４５"
-ROWS=re.compile(r"(?m)^\\s*([１２３４５])\\s+(?=\\S)")
-INLINE=re.compile(r"([１２３４５])（([^）\\n]+)）")
+ROWS=re.compile(r"(?m)^\s*([１２３４５])\s+(?=\S)")
+INLINE=re.compile(r"([１２３４５])（([^）\n]+)）")
 out=[]
 fail=[]
 for q in src["questions"]:
@@ -34,6 +34,6 @@ target.write_text(json.dumps({"schema":"touroku-hanbaisha-official-v1",
   "status":"REVIEW_ONLY_NOT_FOR_PRODUCTION","year":2026,"count":120,
   "sourceKey":"ANSWERS_2026_OFFICIAL.json",
   "warning":"No visual audit of 120 questions; PDF furigana, inline tables and choices may have errors.",
-  "questions":out},ensure_ascii=False,indent=2)+"\\n")
+  "questions":out},ensure_ascii=False,indent=2)+"\n")
 print("app-shaped candidate:",len(out),"row",sum(q["candidateParsingMode"]=="row" for q in out),
  "inline",sum(q["candidateParsingMode"]=="inline" for q in out))
