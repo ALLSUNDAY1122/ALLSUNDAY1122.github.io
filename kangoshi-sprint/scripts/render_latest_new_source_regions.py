@@ -173,6 +173,33 @@ if visual19.exists():
             "pngSha256":hashlib.sha256(f.read_bytes()).hexdigest(),
             "printedOptionCount":e["printedOptionCount"],
             "status":"PDF_PIXELS_VISUALLY_REVIEWED_SOURCE_ONLY_NO_APP_APPROVAL"})
+psm23=ROOT/"audit/ocr-psm-disagreement-23-promotion-ledger-20261124.json"
+if psm23.exists():
+    evidence=json.loads(psm23.read_text())
+    for e in evidence["cases"]:
+        if e["id"] not in set(L.get("newIds",[])):continue
+        qid=e["id"];exam=e["sourceExam"];session=e["session"]
+        n=e["originalPdfPage"];clip=e["originalRegionClip"]
+        if any(row["id"]==qid for row in rows):raise ValueError("Duplicate PSM23 source proof "+qid)
+        pdf=pathlib.Path("/tmp/kangoshi-official")/f"{exam}-{session}.pdf"
+        h=hashlib.sha256(pdf.read_bytes()).hexdigest()
+        if h!=e["questionPdfSha256"]:raise ValueError("PSM23 source PDF SHA drift "+qid)
+        page=fitz.open(pdf)[n-1]
+        x0,y0,x1,y1=map(float,clip)
+        if not(0<=x0<x1<=page.rect.width+.1 and 0<=y0<y1<=page.rect.height+.1):
+            raise ValueError("PSM23 clip out of range "+qid)
+        file=OUT/f"{qid}-official-region.png"
+        page.get_pixmap(matrix=fitz.Matrix(2.6,2.6),clip=fitz.Rect(*clip),alpha=False).save(str(file))
+        thumb=Image.open(file);thumb.thumbnail((660,420))
+        box=Image.new("RGB",(680,465),"white")
+        box.paste(thumb,((680-thumb.width)//2,34))
+        ImageDraw.Draw(box).text((10,10),qid+"  Official PDF "+str(n),fill="black")
+        thumbs.append(box)
+        rows.append({"id":qid,"exam":exam,"session":session,"page":n,
+          "clip":clip,"sourcePdfSha256":h,"pngFilename":file.name,
+          "pngSha256":hashlib.sha256(file.read_bytes()).hexdigest(),
+          "printedOptionCount":e["printedOptionCount"],
+          "status":"SOURCE_PDF_VISUALLY_REVIEWED_SOURCE_ONLY"})
 if len(rows)!=L["newPromoted"]:raise ValueError("image evidence count differs from actual promotion ledger")
 if rows:
     grid=Image.new("RGB",(680*4,465*((len(rows)+3)//4)),"#f0f0f0")
