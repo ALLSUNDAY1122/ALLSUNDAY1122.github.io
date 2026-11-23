@@ -38,9 +38,9 @@ def recognize(png,psm):
 def crop_ocr(page,coords,qid,index):
     f=OUT/f"{qid}-field{index}.png"
     page.get_pixmap(matrix=fitz.Matrix(3,3),clip=fitz.Rect(*coords),alpha=False).save(str(f))
-    a,b=recognize(f,6),recognize(f,3)
-    return a,b,{"png":f.name,"pngSha256":sha(f.read_bytes()),"clip":[round(v,2) for v in coords],
-                 "ocrPsm6Sha256":sha(a.encode()),"ocrPsm3Sha256":sha(b.encode())}
+    texts={m:recognize(f,m) for m in (6,3,4,11)}
+    return texts,{"png":f.name,"pngSha256":sha(f.read_bytes()),"clip":[round(v,2) for v in coords],
+                 "ocrSha256ByPsm":{str(m):sha(t.encode()) for m,t in texts.items()}}
 def anchors(page,rect):
     """Independent PDF word geometry; do not infer answer text from PDF CMap."""
     cand=[]
@@ -139,16 +139,22 @@ def main():
         candidate=[];field_evidence=[];error=None
         for i in range(5):
             coords=[rect.x0,max(rect.y0,cuts[i]),rect.x1,min(rect.y1,cuts[i+1])]
-            try:a,b,proof=crop_ocr(page,coords,qid,i)
+            try:texts,proof=crop_ocr(page,coords,qid,i)
             except Exception as exc_:error="OCR_FAILED";row["detail"]=str(exc_)[:140];break
-            a,err1=normalize_ocr_field(a,i,n)
-            b,err2=normalize_ocr_field(b,i,n)
-            proof.update({"fieldIndex":i,"ocrPsm6Normalized":a,"ocrPsm3Normalized":b,
-                          "psm6Error":err1,"psm3Error":err2})
+            result={m:normalize_ocr_field(t,i,n) for m,t in texts.items()}
+            proof.update({"fieldIndex":i,
+               "normalizedByPsm":{str(m):v for m,(v,err) in result.items()},
+               "errorsByPsm":{str(m):err for m,(v,err) in result.items() if err}})
             field_evidence.append(proof)
-            if err1 or err2:error="COORDINATE_FIELD_OCR_LABEL_UNCERTAIN";break
-            if not a or compact(a)!=compact(b):error="COORDINATE_FIELD_TWO_OCR_MODES_DISAGREE";break
-            candidate.append(a)
+            groups={}
+            for mode,(value,err) in result.items():
+                if not err and value:groups.setdefault(compact(value),[]).append(mode)
+            good=sorted(groups.items(),key=lambda v:(-len(v[1]),v[0]))
+            if not good or len(good[0][1])<2:
+                error="COORDINATE_FIELD_NO_TWO_OCR_PSM_CONSENSUS";break
+            modes=good[0][1]
+            proof["agreedPsmModes"]=modes
+            candidate.append(result[modes[0]][0])
         row["fieldEvidence"]=field_evidence
         if error:deny(error);continue
         if len(q.get("choices") or [])<4:
@@ -205,7 +211,7 @@ def main():
             "remaining":46-len(pastrows)-len(promoted),
             "reasonCounts":dict(reasons),"newIds":sorted(promoted_ids),
             "perQuestion":pastrows+rows,"published":False,
-            "policy":"OCR fields separately clipped by PDF option geometry; two OCR modes; CMap-only substitution; original PDF and image SHA; single official answer and no media/scenario; source-only."}
+            "policy":"OCR fields separately clipped by PDF option geometry; require exact same field in at least 2 of PSM 6/3/4/11; CMap-only substitution; original PDF and image SHA; single official answer and no media/scenario; source-only."}
     PROOF.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
     old_edits=json.loads(REPAIR.read_text()).get("edits",[]) if REPAIR.exists() else []
     edit_ids={v["id"]:v for v in old_edits}
