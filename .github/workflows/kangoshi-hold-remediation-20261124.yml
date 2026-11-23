@@ -9,6 +9,9 @@ on:
       - 'kangoshi-sprint/scripts/crop_five_official_figures.py'
       - 'kangoshi-sprint/scripts/promote_dual_engine.py'
       - '.github/workflows/kangoshi-hold-remediation-20261124.yml'
+concurrency:
+  group: kangoshi-canonical-bank-writes
+  cancel-in-progress: false
 permissions:
   contents: write
 jobs:
