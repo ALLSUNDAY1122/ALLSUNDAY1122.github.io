@@ -18,6 +18,7 @@ MANIFEST=ROOT/"audit/image-pinned-cmap-repairs-20261124.json"
 IMAGES=ROOT/"audit/runs/residual-geometric-images-20261124"
 manifest=json.loads(MANIFEST.read_text())
 BY={x["id"]:x for x in manifest["items"]}
+ALREADY={x["id"]:x for x in json.loads((ROOT/"product-content/verified-additions-20261124.json").read_text())["questions"]}
 assert len(BY)==len(manifest["items"])==7
 
 def extract_and_match(doc,pdf,n,page,entry,pop_raw=None):
@@ -74,6 +75,18 @@ def main():
             for q in data["questions"]:
                 entry=BY.get(q["id"])
                 if entry is None:continue
+                if q["id"] in ALREADY:
+                    prior=ALREADY[q["id"]]
+                    pinned=prior.get("imagePinnedSourceCmapEvidence")
+                    if (not pinned or pinned.get("sourcePdfSha256")!=entry["sourcePdfSha256"]
+                        or pinned.get("sourceImageSha256")!=entry["sourcePngSha256"]
+                        or prior.get("officialKeyPdfSha256") is None):
+                        raise ValueError("Previously promoted image proof mismatched "+q["id"])
+                    result.append({"id":q["id"],"status":"PREVIOUSLY_CANONICAL_WITH_PINNED_SOURCE_EVIDENCE",
+                                   "sourcePdfSha256":pinned["sourcePdfSha256"],
+                                   "sourceImageSha256":pinned["sourceImageSha256"],
+                                   "sourcePage":pinned["sourcePage"]})
+                    continue
                 n=q["questionNo"];page=entry["page"]
                 failures=[]
                 if (ex,session,n)!=(entry["exam"],entry["session"],entry["number"]):
@@ -109,7 +122,9 @@ def main():
                 fixed.append(q["id"])
             path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n")
     ledger={"schemaVersion":1,"source":"original rendered PDF + PyMuPDF geometric clip + Poppler -layout + official answer",
-        "checked":len(BY),"repairedCandidate":len(fixed),"repairedIds":fixed,"rows":result,
+        "checked":len(BY),"repairedCandidate":len(fixed),"repairedIds":fixed,
+        "alreadyCanonicalWithImageProof":sum(x["status"]=="PREVIOUSLY_CANONICAL_WITH_PINNED_SOURCE_EVIDENCE" for x in result),
+        "rows":result,
         "releasePermission":False,"note":"No candidate elevated until independent bulk verifier reruns same tests."}
     out=ROOT/"audit/image-pinned-cmap-repair-results-20261124.json"
     out.write_text(json.dumps(ledger,ensure_ascii=False,indent=2)+"\n")
