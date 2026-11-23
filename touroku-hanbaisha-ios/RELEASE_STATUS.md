@@ -44,3 +44,23 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## 個別転記証跡
 
 - 2023年度問90の公式告知記載の設問・5肢を `official-kansai/QUESTION_2023_Q090_INVALID.json` に保存。正式バンクへの統合は未実施のため、アプリ収録済み件数に算入しない。
+
+
+## 2026年度（令和8年度）120問・取得と初期データ化（2026-11-23）
+
+- **公式問題PDF前半・後半とも取得成功**。各51ページ。GitHub Actionsが実際のPDFバイナリを取得しSHA-256を記録。
+  - 前半: 475,075 bytes / SHA-256 `02d32c72af83a8df143389ab251469f289a25bae2200107eaa4653e323af327a`
+  - 後半: 448,716 bytes / SHA-256 `9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5`
+- PDFテキストから問1〜60・問61〜120の120設問境界を連番で取得。公式2026年度正答索引120件との番号・正答対応は構造チェックPASS。
+- `touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_RAW_STAGING.json`: 120問のPDF抽出テキスト・公式正答・原典URL・該当PDFページを保持。
+- `touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_APP_CANDIDATE.json`: スマホUI用に`question`/`choices[5]`/`answer`を全120問分生成。選択肢認識は縦5行97件・1行組合せ23件。120問とも5選択肢・一意ID・正答位置（0〜4）・非空テキストの構造検査PASS。
+- `touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2026.json`: 原典2件の取得URL・サイズ・ハッシュ。
+- `extract_2026.py`／`build_2026_app_candidate.py`／`.github/workflows/touhan-2026-extract.yml`: 再取得・抽出・候補化の再現パイプラインをGitHubに保存。最初の自動生成コミット：`676993777be3eca6352a642b903d808b8dffc0e9`。
+- PDF原本のテキストにはルビが独立行に分かれる部分、表組み、印刷用ページが存在。自動的な5選択肢分離と正答紐付けは**逐語・視覚監査の合格を意味しない**。120問の独立目視監査は未完了で、候補各問は`verbatimCertified=false`・`needsVisualReview=true`・`renderReady=false`。
+- 既存独自360問は変更せず。**2026年度の公式問題はアプリ本番バンクに0/120問統合、候補ファイルとして120/120問GitHub保存済み**。本番申請判定は引き続き**BLOCKED**。
+
+## 次工程
+
+1. 120問の原本ページと候補JSONを一問ずつ視覚照合（表、ルビ、選択肢、正答、原典出典）。問題ごとにPASS・FAIL・HOLDを記録。
+2. PASSのみを公開用バンクに移し、アプリで実際に読み込む経路、法令時点の注記、出典・加工表示を追加してテスト。
+3. 同じパイプラインを2022〜2025年度へ拡張。ただし正式公開用への採用は年度ごとの監査後。
