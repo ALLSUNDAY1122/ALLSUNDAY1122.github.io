@@ -79,14 +79,14 @@
     "note": "Existing exam 115-113 strict text gate still 629 PASS/91 HOLD; new 111/112 content separately tracked."
   },
   "automation": {
-    "status": "COORDINATE_BOUNDARY_AUDIT_159_VERIFIED_EXTENSION_321_HOLD_RELEASE_BLOCKED",
+    "status": "SOURCE_CANONICAL_940_1200_REMAINING_260_IMAGES_20_RELEASE_BLOCKED",
     "path": "kangoshi-sprint/scripts/audit_official_pdf.py",
     "sourceManifest": "kangoshi-sprint/audit/official-source-manifest-20261124.json",
     "mode": "AM/PM separate strict attribution/media isolation",
     "workflow": ".github/workflows/kangoshi-dual-engine-480.yml",
     "runner": "kangoshi-sprint/scripts/run_official_pdf_audit.py",
     "ciResult": "PASS_SOURCE_AND_MEDIA_ROUTING_INTEGRITY_RELEASE_BLOCKED",
-    "warning": "GitHub Actions succeeded, but no App Store release approval: 339 additional question holds, 91 strict existing holds, five crop copyrights need review; no new runtime questions.",
+    "warning": "Current source-only verified bank 940/1200, 260 not verified; existing 720 strict text audit 629 PASS/91 HOLD. No additional questions released in runtime.",
     "runId": 45217628155,
     "jobId": 137828435420,
     "artifactId": 14838003424,
@@ -121,7 +121,9 @@
     "latestBoundaryContextRunId": 45246704920,
     "latestBoundaryContextRunResult": "SUCCESS_SOURCE_ONLY_PLUS_15",
     "latestCoordinateReextractionRunId": 45249375273,
-    "latestCoordinateReextractionResult": "SUCCESS_EXECUTION_22_TEXT_AGREED_5_REPAIRS_0_NEW_PROMOTED"
+    "latestCoordinateReextractionResult": "SUCCESS_EXECUTION_22_TEXT_AGREED_5_REPAIRS_0_NEW_PROMOTED",
+    "latestGeometricRecoveryRunId": 45259501753,
+    "latestGeometricImageEvidenceRunId": 45260033942
   },
   "stagedCandidateCount": 480,
   "staging": {
@@ -263,7 +265,7 @@
     "newBulkPromotedFromPreviousState": 74,
     "previousVerifiedTotal": 787,
     "latestPromotionLedger": "kangoshi-sprint/audit/dual-engine-promotion-ledger-20261124.json",
-    "note": "Current 888 source-only records = 720 existing plus 168 extension; 312 candidates held, including 22 with dual extraction matches but additional unresolved legal/scoring or situation/C0 gates; not released."
+    "note": "Current 940 source-only records: existing runtime 720 and new 111/112 source verified 220. 260 remain held. No automatic app release."
   },
   "mediaReaudit": {
     "target": 38,
@@ -437,5 +439,48 @@
     "releaseEligibleNew": 0,
     "publishableNew": 0,
     "status": "SOURCE_ONLY_RELEASE_BLOCKED"
+  },
+  "latestGeometryRecoveryAudit": {
+    "date": "2026-11-24",
+    "auditRunId": 45259501753,
+    "imageEvidenceRunId": 45260033942,
+    "priorCanonical": 920,
+    "newPromoted": 20,
+    "currentCanonical": 940,
+    "remainingHeld": 260,
+    "originalReviewCandidatesRecovered": 87,
+    "independentReextractionAgree": 21,
+    "independentFullPass": 20,
+    "promotedIds": [
+      "K112-AM014",
+      "K112-AM029",
+      "K112-AM030",
+      "K112-AM049",
+      "K112-AM051",
+      "K112-PM028",
+      "K112-PM029",
+      "K112-PM054",
+      "K111-AM029",
+      "K111-AM032",
+      "K111-AM039",
+      "K111-AM043",
+      "K111-AM045",
+      "K111-AM051",
+      "K111-AM064",
+      "K111-AM073",
+      "K111-PM045",
+      "K111-PM049",
+      "K111-PM070",
+      "K111-PM072"
+    ],
+    "method": "PDF coordinate unique number and region, exact Japanese content plus English token multiset across PyMuPDF/Poppler, four choices and independent official answer PDF",
+    "imageEvidenceCount": 20,
+    "imageIndex": "kangoshi-sprint/audit/geometry-recovery-image-index-20261124.json",
+    "promotionLedger": "kangoshi-sprint/audit/geometry-recovery-batch-20261124.json",
+    "imageArtifactId": 14860970560,
+    "sourceImagesGenerated": true,
+    "fullTextManualVisualFidelityCertified": false,
+    "newPublishable": 0,
+    "releaseStatus": "PREFLIGHT_BLOCKED"
   }
 }
