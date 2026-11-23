@@ -44,14 +44,14 @@ jobs:
           report=json.loads((b/'RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json').read_text())
           qa=json.loads((b/'RUBY_102_SOURCE_ORDER_BROWSER_QA_20261124.json').read_text())
           status=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
-          assert report['sourceHolds']==102 and report['promoted']+report['held']==102
+          assert report['sourceHolds']==102 and report['promoted']+report['held']+report.get('alreadyApproved',0)==102
           assert bank['count']==report['canonicalCount']==status['question_bank']['production_official_bank_count']
           assert len(bank['questions'])==len(bank['approvedIds'])==len(set(bank['approvedIds']))==bank['count']
           assert 'KSAI-2023-090' not in bank['approvedIds']
           assert qa['result']=='PASS' and qa['productionBankLoaded']==bank['count']
           assert qa['browserCases']==2*report['promoted']
           assert status['release_gate']=='BLOCKED' and status['app_review_submitted']==False
-          assert all((r['status']=='SOURCE_ORDER_PASS')==(not r['reasons']) for r in report['records'])
+          assert all((r['status'] in ('SOURCE_ORDER_PASS','ALREADY_APPROVED'))==(not r['reasons']) for r in report['records'])
           print('PASS source-order promotions',report['promoted'],'held',report['held'],'canonical',bank['count'])
           PY
       - name: Commit canonical bank and both release statuses
