@@ -6,13 +6,54 @@ from playwright.sync_api import sync_playwright
 from auto_diff_pdf import B,download
 from geometry_second_gate import first_question_clip
 from ruby_font_cluster_recovery import rawglyphs,clusters,certify
-from rebuild_ruby_comparison_120 import field_parts,make_preview
+from rebuild_ruby_comparison_120 import field_parts,make_preview,source_glyph_candidates
 IOS=B.parents[1]/"touroku-hanbaisha-ios"
 OUT=B/"RUBY_113_AUTO_REBUILD_20261124.json"
 BANK=B/"APPROVED_OFFICIAL_BANK.json"
 STATE=IOS/"release-status.json"
 TRIAGE=B/"RUBY_113_INDEPENDENT_TRIAGE_20261124.json"
 def load(p): return json.loads(p.read_text())
+def certify_unique_raw(q,doc,clips):
+    """Raw PDF-only fallback, rejects all nonunique groups and source coordinates."""
+    glyphs=rawglyphs(doc,clips)
+    groups=clusters(glyphs)
+    if not groups:return None,["RAW_GROUPS_MISSING"],groups
+    fields=[q["question"],*q["choices"]]
+    mappings=[]
+    for group in groups:
+        reading=group["reading"]
+        options=[]
+        for score,glyph in source_glyph_candidates(group,glyphs):
+            base=glyph["c"]
+            if not re.fullmatch(r'[\u3400-\u9fff々]',base):continue
+            rx0,ry0,rx1,ry1=group["bbox"];x0,y0,x1,y1=glyph["bbox"]
+            overlap=max(0,min(rx1,x1)-max(rx0,x0))
+            if overlap<min(rx1-rx0,x1-x0)*0.4 or not -3<=y0-ry1<=12:continue
+            for fi,field in enumerate(fields):
+                if len(list(re.finditer(r'(?m)^[ \t]*'+re.escape(reading)+r'[ \t]*$',field)))!=1:continue
+                if field.count(base)!=1:continue
+                options.append((fi,base,glyph))
+        unique={(fi,base,tuple(round(v,1) for v in glyph["bbox"])):(fi,base,glyph)
+                for fi,base,glyph in options}
+        if len(unique)!=1:return None,["RAW_BASE_OR_FIELD_AMBIGUOUS"],groups
+        fi,base,glyph=next(iter(unique.values()))
+        if any(x["fieldIndex"]==fi and x["reading"]==reading for x in mappings):
+            return None,["RAW_READING_DUPLICATE"],groups
+        mappings.append({"fieldIndex":fi,"base":base,"reading":reading,"page":group["page"],
+          "glyphBBox":glyph["bbox"],"rubyBBox":group["bbox"]})
+    parts=[]
+    for fi,field in enumerate(fields):
+        these=[m for m in mappings if m["fieldIndex"]==fi]
+        if not these:parts.append([{"text":field}]);continue
+        parsed,why=field_parts(field,these)
+        if why:return None,["RAW_"+why],groups
+        parts.append(parsed)
+    if sum("rubyBase" in p for field in parts for p in field)!=len(groups):
+        return None,["RAW_DOM_COUNT_MISMATCH"],groups
+    placements=[{"field":m["fieldIndex"],"base":m["base"],"reading":m["reading"],
+       "page":m["page"],"baseBBox":m["glyphBBox"],"rubyBBox":m["rubyBBox"]} for m in mappings]
+    return {"questionParts":parts[0],"choicesParts":parts[1:],"placements":placements},[],groups
+
 def main():
     bank=load(BANK);st=load(STATE);triage=load(TRIAGE)
     assert len(triage["records"])==113
@@ -54,6 +95,13 @@ def main():
             if not clip:row["reasons"].append("SOURCE_REGION_UNAVAILABLE")
             else:
                 rich,reasons,groups=certify(q,geo,doc,clip)
+                if not rich:
+                    fresh,fresh_reasons,fresh_groups=certify_unique_raw(q,doc,clip)
+                    if fresh:
+                        rich,reasons,groups=fresh,[],fresh_groups
+                        row["sourceMappingMode"]="RAW_GLYPH_FIELD_UNIQUE"
+                    else:
+                        row["rawFallbackIssues"]=fresh_reasons
                 if reasons:row["reasons"]+=reasons
                 if not rich:row["reasons"].append("RUBY_MAPPING_UNCERTIFIED")
                 elif len(rich["placements"])!=len(groups) or not groups:
