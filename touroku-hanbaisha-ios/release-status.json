@@ -1418,13 +1418,16 @@
   "ruby_113_auto_pipeline_20261124": {
     "implementation": "touroku-hanbaisha-sprint/official-kansai/auto_rebuild_ruby_113.py",
     "workflow": ".github/workflows/touhan-ruby-113-auto.yml",
-    "execution": "NOT_CONFIRMED",
+    "execution": "SUCCESS",
     "resultFile": "touroku-hanbaisha-sprint/official-kansai/RUBY_113_AUTO_REBUILD_20261124.json",
-    "resultFilePresent": false,
-    "promotedVerified": 0,
-    "bankVerified": 486,
-    "remainingRubyHold": 113,
-    "policy": "Promote only after raw PDF ruby geometry, DOM rendering, official answer and normalized source hash all PASS; unresolved cases stay HOLD"
+    "resultFilePresent": true,
+    "promotedVerified": 11,
+    "bankVerified": 497,
+    "remainingRubyHold": 102,
+    "policy": "Promote only after raw PDF ruby geometry, DOM rendering, official answer and normalized source hash all PASS; unresolved cases stay HOLD",
+    "workflowRunUrl": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45241297706",
+    "verifiedMode": "PDF_RAW_GLYPH_GEOMETRY_AND_CHROMIUM_RUBY_DOM_AUTOMATED",
+    "humanVisualCertified": false
   },
   "ruby_113_auto_rebuild_20261124": {
     "evidence": "touroku-hanbaisha-sprint/official-kansai/RUBY_113_AUTO_REBUILD_20261124.json",
@@ -1446,6 +1449,8 @@
     },
     "newBankCount": 497,
     "remainingIncludingInvalid": 103,
-    "autoVerifiedNotHumanVisual": true
+    "autoVerifiedNotHumanVisual": true,
+    "sourceOfTruth": "LATEST_AUTO_AUDIT_20261124",
+    "visualCheckWarning": "Automated glyph/DOM geometry verified; individual human comparison still needed for non-auto-passed 102"
   }
 }
