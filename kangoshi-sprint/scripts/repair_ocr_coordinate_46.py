@@ -133,6 +133,15 @@ def main():
         choice_boxes,err=anchors(page,rect)
         if err:deny(err);continue
         cuts=[rect.y0]+[(choice_boxes[i][2]+choice_boxes[i][4])/2 if False else choice_boxes[i][2]-3 for i in range(4)]+[rect.y1]
+        # Exclude printed page-control/footer text geometrically, never by
+        # guessing/replacing OCR characters. Footer is below the final choice.
+        footer_ys=[float(w[1]) for w in page.get_text("words",sort=True)
+          if "DKIX-" in str(w[4]) and w[1]>choice_boxes[3][2]+9
+          and w[1]<rect.y1]
+        if footer_ys:
+            cuts[-1]=min(cuts[-1],min(footer_ys)-4)
+            row["footerBoundaryEvidence"]={"y":min(footer_ys),
+                  "lastChoiceEndsAt":cuts[-1],"method":"original PDF word-coordinate footer anchor"}
         # Each OCR field owns its printed label and text until the next label.
         if not all(cuts[i+1]-cuts[i]>10 for i in range(5)):
             deny("FIELD_RECTANGLES_TOO_SHORT");continue
