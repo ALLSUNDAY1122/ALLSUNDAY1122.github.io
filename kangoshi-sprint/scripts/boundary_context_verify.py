@@ -37,7 +37,7 @@ def _anchors(page, n, clean_font):
             continue
         # Printed question numbers appear in the left body margin;
         # avoid arbitrary numerals in body/answer choices.
-        if x0>width*.27 or y0<page.rect.height*.055:
+        if x0>width*.16 or y0<page.rect.height*.055:
             continue
         # Adjacent text is allowed, but anchor must precede it geometrically.
         following=[w for w in words if abs(w[1]-y0)<(y1-y0)*1.5 and w[0]>x1]
@@ -55,7 +55,7 @@ def _region(page,n,clean_font):
     bottom=min((b[1] for b in after),default=float(page.rect.height)*.96)
     if bottom<=y1+8:return None,None
     box=fitz.Rect(0,max(0,y0-3),float(page.rect.width),bottom)
-    text=clean_font(page.get_text("text",clip=box,sort=True))
+    text=clean_font(page.get_text("text",clip=box,sort=False))
     return text,{"anchorBox":[round(z,2) for z in a[0]],"clip":[round(z,2) for z in box],"nextAnchorFound":bool(after)}
 
 def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize):
@@ -81,7 +81,7 @@ def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize):
     if n>=91:
         matches=[]
         for p in range(max(1,pg-3),pg+1):
-            f=clean_font(doc[p-1].get_text("text",sort=True))
+            f=clean_font(doc[p-1].get_text("text",sort=False))
             alt=clean_font(poppler_text(pdf,p))
             passage=context_for_group(f,n)
             if passage and normalize(passage) in normalize(alt):
