@@ -868,3 +868,12 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 **独立抽出：** 直前のpdfplumber/pdfminer標本50件（完全一致44・文字集合一致2・不一致4）の不一致4件は昇格不可とした。標本の照合は全件の無誤りを保証しない。
 
 証跡：\`RUBY_RECON_2022.json\`〜\`RUBY_RECON_2026.json\`、\`LAYOUT_TRIAGE_2022.json\`〜\`LAYOUT_TRIAGE_2026.json\`。以前の集計値は履歴として維持し、この節を最新とする。
+
+
+### 特殊構造・図表の例外処理／再現計画（2026-11-24）
+
+当初の `TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE` 15件と `FIGURE_OR_FORM_REVIEW` 48件を合わせた**重複排除62件**を個別整理し、**13件を追加昇格、49件を保留**とした。昇格13件の内訳は、文章選択肢を表と誤判定した12件と、「図る」の文字を図版と誤判定した1件。**実際の図・表の再現完了を13件と誤解しないこと。**
+
+保留49件は、図形・配置46件、特殊な表・組合せ3件。出典PDF URL・ページ・保留理由・必要な再現工程を `touroku-hanbaisha-sprint/official-kansai/SPECIAL_LAYOUT_REVIEW_QUEUE_20261124.json` に列挙した。図版は原典の図形位置を特定し、必要なら高解像度切り抜きで再現する。ただし、第三者権利を個別確認し、アプリ表示の忠実性とファイルハッシュを照合するまで昇格しない。特殊な表は複数ページ対応と文字以外のセル配置を検証する。
+
+**ブラウザ表示ゲート：** `official-practice.html` にHTML `ruby`／`rt` を実装済み。Chromiumで幅375px・430pxを実測するCIを設定したが、現時点では成功の記録ファイル `RUBY_DOM_QA_RESULT.json` を読戻しできていないため、ブラウザの最終確認はPENDING。iOS実機・TestFlightは別の未完了ゲート。App Reviewは未提出。
