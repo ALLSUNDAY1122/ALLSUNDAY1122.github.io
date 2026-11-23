@@ -10,20 +10,20 @@
     111
   ],
   "targetQuestions": 1200,
-  "recordedImported": 720,
+  "recordedImported": 732,
   "verifiedThisSession": 629,
-  "additionalRequired": 480,
+  "additionalRequired": 468,
   "releaseStatus": "PREFLIGHT_BLOCKED",
   "submissionAllowed": false,
-  "contentGate": "ANSWER_KEYS_1200_CHECKED_EXISTING_TEXT_629_PASS_91_HOLD_NEW_480_STAGING_NOT_PUBLISHABLE",
-  "mediaGate": "38_HOLD_PENDING_INDIVIDUAL_RIGHTS_PROOF",
+  "contentGate": "CANONICAL_732_OF_1200_720_RUNTIME_12_SOURCE_AND_KEY_PASS_REQUIRES_EXPLANATION_RUNTIME_468_PENDING",
+  "mediaGate": "38_ASSETS_PRESENT_23_VECTOR_15_JPEG_ZERO_NEW_RIGHTS_CLEARANCE",
   "appleAppId": "6801792293",
   "bundleId": "jp.allsunday1122.kangoshi",
   "appIconGate": "NOT_INTEGRATED_AS_OF_COORDINATOR_STATUS",
   "iapGate": "NOT_REGISTERED_AS_OF_COORDINATOR_STATUS",
   "finalSubmission": "PROHIBITED_WITHOUT_EXPLICIT_APPROVAL",
   "note": "Existing 720-question PASS claims are historical and do not establish 5-exam completeness or current independent PDF verification.",
-  "newlyImported": 0,
+  "newlyImported": 12,
   "officialSourcePagesVerified": [
     112,
     111
@@ -47,7 +47,7 @@
     "pass": 629,
     "hold": 91,
     "notExecutedExisting": 0,
-    "notImported": 480,
+    "notImported": 468,
     "rate": 0.8736111111111111,
     "holdByReason": {
       "HOLD_MEDIA_RIGHTS": 38,
@@ -73,20 +73,20 @@
       }
     },
     "passMeaning": "TEXT_ONLY: no key, scoring exception, or media clearance",
-    "resultSource": "run 45217628155 official PDF audit",
+    "resultSource": "CI 45232275084 720 recheck; PASS629 HOLD91",
     "perQuestionResultsStoredIn": "GitHub Actions artifact 14837008371",
-    "sourcePostEditRun": 45222199248,
-    "note": "Latest source-corrected raw 720 retest: 629 strict text matches and 91 holds. Six confirmed edits have NOT yet cleared PDF text gate."
+    "sourcePostEditRun": 45232275084,
+    "note": "Existing 720 strict PDF text recheck 629 PASS, 91 HOLD after 114-PM017 source-choice correction; visual signoffs do not automatically clear strict text gate."
   },
   "automation": {
-    "status": "OFFICIAL_1200_ANSWER_AUDIT_EXECUTED_AND_49_IMAGE_EVIDENCE_CREATED",
+    "status": "CANONICAL_12_PASS_AND_38_MEDIA_INTEGRITY_PASS_RELEASE_BLOCKED",
     "path": "kangoshi-sprint/scripts/audit_official_pdf.py",
     "sourceManifest": "kangoshi-sprint/audit/official-source-manifest-20261124.json",
     "mode": "AM/PM separate strict attribution/media isolation",
     "workflow": ".github/workflows/kangoshi-official-pdf-audit.yml",
     "runner": "kangoshi-sprint/scripts/run_official_pdf_audit.py",
-    "ciResult": "SUCCESS_INFRASTRUCTURE_CONTENT_GATES_BLOCKED",
-    "warning": "Job SUCCESS because runner returns 0 even when 92 content holds exist; NOT release-quality PASS",
+    "ciResult": "SUCCESS_SOURCE_12_AND_MEDIA_BYTE_INTEGRITY_ONLY_CONTENT_RIGHTS_REMAIN_BLOCKED",
+    "warning": "GitHub Actions SUCCESS is not product release PASS. Strict existing text 91 HOLD, media rights 38 HOLD, 468 additional candidates unverified; 12 canonical additions not published.",
     "runId": 45217628155,
     "jobId": 137828435420,
     "artifactId": 14838003424,
@@ -101,7 +101,11 @@
     "answerAuditArtifactId": 14841122447,
     "answerAuditArtifactSha256": "e2c0caab29d6f01fd440ae6d105d5bae2bd9849b4328c8f8bca298b5b30aff2f",
     "keyedStagingRunId": 45220877977,
-    "lastTextAuditRunId": 45222199248
+    "lastTextAuditRunId": 45222199248,
+    "verifiedExtensionRunId": 45232275084,
+    "verifiedExtensionArtifactId": 14847463373,
+    "verifiedExtensionArtifactSha256": "4bad6deb048ad72271ccf6d471fd8c29f6c7f0001c9dcade299f94f4263331fc",
+    "latestExistingTextRunId": 45232275084
   },
   "stagedCandidateCount": 480,
   "staging": {
@@ -123,19 +127,21 @@
     "invalidStructure": 24,
     "officialAnswerKeysChecked": 0,
     "releaseEligible": 0,
-    "warning": "Extraction reuses PDF text layer with missing glyph mapping. PASS_TEXT_ONLY does not mean verbatim original PDF fidelity; all 480 in isolated staging.",
+    "warning": "The original 480 staging branch stays quarantine-only; 12 source-and-key-verified copies promoted into a canonical extension, still runtime gated.",
     "keyedRunId": 45220877977,
     "answersMappedSingle": 442,
     "ambiguousOrMulti": 37,
     "officiallyExcluded": 1,
-    "allCandidatesQuarantined": true
+    "allCandidatesQuarantined": true,
+    "verifiedExtensionCount": 12,
+    "remainingNotCanonicalVerified": 468
   },
   "holdReaudit": {
     "previousHolds": 92,
     "secondaryRecheckedNonMedia": 54,
     "existingTextMismatch": 49,
     "alternateExactMatches": 0,
-    "confirmedCorrections": 0,
+    "confirmedCorrections": 7,
     "remainingExistingHolds": 91,
     "mediaHolds": 38,
     "mediaTriage": {
@@ -144,7 +150,7 @@
       "MEDIA_TYPE_UNDETERMINED": 3
     },
     "incompleteExisting": 4,
-    "note": "1 wave-dash character variant cleared after strict normalization; 49 text/options mismatches and 4 incomplete items remain. No unverified content edits.",
+    "note": "Seven original-image-confirmed edits in 49-case cohort, four additional Japanese text matches, 38 not fully signed off. Current strict text gate remains PASS629/HOLD91; SVG/media rights separate.",
     "normalizationOnlyResolved": 1,
     "normalizationOnlyIds": [
       "K115-AM096"
@@ -190,8 +196,8 @@
   "visualReaudit": {
     "initialTextMismatchCount": 49,
     "originalPdfPageImagesRendered": 49,
-    "sourceVerifiedCorrectedQuestions": 6,
-    "otherItemsPendingDetailedVisualSignoff": 43,
+    "sourceVerifiedCorrectedQuestions": 7,
+    "otherItemsPendingDetailedVisualSignoff": 38,
     "glyphTwoChoiceTranscriptionsCorrected": 38,
     "sourceImageEvidenceArtifactId": 14841122447,
     "originalCorrections": [
@@ -200,7 +206,41 @@
       "kangoshi-sprint/audit/visual-corrections-addendum-20261124.json"
     ],
     "individualReviewLedger": "kangoshi-sprint/audit/visual-49-case-ledger-20261124.json",
-    "qualityOutcome": "6 edited, no HOLD cleared by strict PDF text retest; text sorting and embedded gloss obstruct direct match",
-    "releaseDecision": "HOLD"
+    "qualityOutcome": "11 of 49 source images verified or corrected; 38 pending per-item signoff, including one wrongly mapped source page. Existing strict PDF text HOLD remains 91.",
+    "releaseDecision": "HOLD_UNRESOLVED_IMAGES",
+    "manuallyConfirmedNoEdit": 4,
+    "newlyVisualInspected": 6,
+    "sourcePageSelectionErrors": 1,
+    "latestCorrectedId": "K114-PM017"
+  },
+  "canonicalBank": {
+    "existingRuntimeRecords": 720,
+    "sourceVerifiedExtension": 12,
+    "verifiedTotal": 732,
+    "target": 1200,
+    "unverifiedRemaining": 468,
+    "extensionFile": "kangoshi-sprint/product-content/verified-additions-20261124.json",
+    "manifest": "kangoshi-sprint/product-content/manifest.json",
+    "extensionAuditResult": "PASS_12_OF_12_TEXT_CHOICES_KEYS_ONLY",
+    "extensionRuntimeEligible": 0,
+    "extensionPublished": 0,
+    "notes": "Twelve are registered in canonical source-verified extension; separate explanation review and app integration remain gates."
+  },
+  "mediaReaudit": {
+    "target": 38,
+    "historicalMediaPdlClaim": 15,
+    "historicalVectorRedrawClaim": 23,
+    "verifiedAssetsPresent": 38,
+    "missingAssets": 0,
+    "structurallySelfContainedSvg": 23,
+    "validJpegFiles": 15,
+    "newIndividualCopyrightClearances": 0,
+    "rightClearedForRelease": 0,
+    "rightsHoldsRemaining": 38,
+    "legacyClaimProvenance": "kangoshi-sprint/COORDINATOR_STATUS.json; kangoshi-sprint/product-content/media-rights-audit.json; kangoshi-sprint/product-content/media-redraw-audit.json",
+    "individualBlobEvidence": "kangoshi-sprint/audit/media-38-asset-readback-20261124.json",
+    "structuralEvidenceArtifactId": 14847463373,
+    "ciRunId": 45232275084,
+    "policy": "PDL1.0 does not automatically extend to third-party photographs; source-rights and redraw answer-position fidelity are unverified."
   }
 }
