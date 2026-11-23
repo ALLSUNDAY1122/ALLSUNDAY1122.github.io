@@ -105,7 +105,7 @@ def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize,vi
         # AND independently present in Poppler extraction of the same page.
         alt=clean_font(poppler_text(pdf,pg))
         five=[stem]+choices
-        if len(choices)!=4:continue
+        if len(choices) not in (4,5):continue
         if not (strict_geometric_fields_verified and pg==page_hint) and not all(i in (visually_verified_fields or set()) or (normalize(s) in normalize(region) and normalize(s) in normalize(alt)) for i,s in enumerate(five)):
             continue
         matched.append((pg,region,geometry))
