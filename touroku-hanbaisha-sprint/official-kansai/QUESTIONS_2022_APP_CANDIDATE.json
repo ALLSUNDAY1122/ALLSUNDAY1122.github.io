@@ -665,7 +665,7 @@
         "正  誤  正  正",
         "正  正  正  正",
         "正  誤  正  誤",
-        "誤  正  誤  正\n\n\n\n\n［主な医薬品とその作用］"
+        "誤  正  誤  正"
       ],
       "answer": 1,
       "answerNumberOfficial": 2,
@@ -686,7 +686,18 @@
       "needsVisualReview": true,
       "renderReady": false,
       "extractionMethod": "PyMuPDF page.get_text(sort=True), raw unedited",
-      "candidateParsingMode": "row"
+      "candidateParsingMode": "row",
+      "correctionHistory": [
+        {
+          "changed_at": "2026-11-23",
+          "field": "choices[4]",
+          "before": "誤  正  誤  正\n\n\n\n\n［主な医薬品とその作用］",
+          "after": "誤  正  誤  正",
+          "reason": "PDF次章の見出し混入を除去。原図PDFページ13の選択肢5は『誤 正 誤 正』であり、次章見出しは別要素",
+          "rawOriginalTextPreserved": true,
+          "visualSource": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf#page=13"
+        }
+      ]
     },
     {
       "id": "KSAI-2022-021",
