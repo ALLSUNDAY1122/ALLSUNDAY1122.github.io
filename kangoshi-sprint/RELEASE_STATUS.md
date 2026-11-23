@@ -215,3 +215,12 @@
 - 昇格ID：K112-AM044, K111-PM006。
 - 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 163, COORDINATE_REGION_UNVERIFIED 163, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 145, POPPLER_FIELD_MISMATCH_0 107, PYMUPDF_FIELD_MISMATCH_0 97, PAGE_FOOTER_CONTAMINATION 75, PYMUPDF_FIELD_MISMATCH_4 60, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 38, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38, POPPLER_FIELD_MISMATCH_4 38, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 33。
 - 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+## 原典画像・文字対応表の個別修正と昇格（2026-11-24）
+
+- 対象：正規971問、保留229問から開始。原典PDFの座標切り出し画像とPDF文字抽出の差分を個別照合。
+- 画像・PDF双方のSHA-256を固定し、数字「6」「7」の抽出欠落・位置ずれ5問、PDF固有の括弧文字コード2問を限定修復。PyMuPDFとPopplerの残余全文一致、印刷された5フィールドの一致、厚労省公式正答PDFを独立再確認し、**7問昇格**（Run `45264606229` 成功）。対象：`K112-AM003`, `K112-AM007`, `K112-AM041`, `K112-AM062`, `K112-PM036`, `K111-AM057`, `K111-AM060`。
+- 続いて英語医学用語のPDF併記位置によって空白正規化が誤判定されていた処理を修正し、数字・日本語文字の一致と英語語句の完全一致を維持して**2問昇格**（Run `45265121217` 成功）。対象：`K112-AM044`, `K111-PM006`。追加再実行 Run `45265610368` も成功。
+- **今回の新規合計9問、正規980/1200問、保留220問**。累積画像・公式解答・文字修正証拠：`kangoshi-sprint/audit/cumulative-image-cmap-proof-20261124.json`、原典修正許可リスト：`kangoshi-sprint/audit/image-pinned-cmap-repairs-20261124.json`、残り保留：`kangoshi-sprint/audit/dual-engine-hold-20261124.json`。
+- 再実行時に既昇格問の旧候補へ「保留」を誤記しないよう、候補生成スクリプトの既存正規ソース照合ガードも追加。証拠は累積正本で保存。
+- 合格は**原典文字列と公式正答のソースゲート**に限定される。新規260問分はすべて公開・ランタイム統合を許可していない。採点例外、図版、共通状況文、解説独立監査、既存720問の別途原典監査は引き続き個別保留。公開判定は`PREFLIGHT_BLOCKED`。Apple最終送信や課金・契約確定なし。
