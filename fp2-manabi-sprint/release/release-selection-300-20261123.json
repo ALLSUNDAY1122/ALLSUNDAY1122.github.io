@@ -1,17 +1,17 @@
 {
   "schema_version": "fp2-five-exam-verbatim-mixed-300-release-selection-v2",
-  "status": "CONTENT_PASS_300_SELECTED_9_RESERVE_3_LEGAL_OR_DIAGRAM_QUARANTINED",
-  "release_policy": "300 content-PASS: three exam rounds 60 each, 2024-09 59 valid verbatim and 2024-05 58 valid verbatim, plus three independently audited original reserve replacements; 3 invalid/HOLD verbatim excluded",
+  "status": "CONTENT_PASS_300_SELECTED_10_RESERVE_2_FAIL_QUARANTINED",
+  "release_policy": "Five exams official298 PASS, 2 legal FAIL excluded; selected298 official + 2 originals, 10 reserves",
   "canonical_source": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "canonical_git_blob_sha": "3dcf7966eb8bfd0567be74dc58a0704e1dfb070f",
-  "total_content_pass": 309,
+  "canonical_git_blob_sha": "90c832a0f1fbc6ac1450d47642b97571cc377d4c",
+  "total_content_pass": 310,
   "selected_count": 300,
-  "reserve_count": 9,
+  "reserve_count": 10,
   "fully_release_clear_count": 0,
   "exam_sessions": [
     {
       "exam": "2024-05",
-      "count": 58
+      "count": 59
     },
     {
       "exam": "2024-09",
@@ -31,7 +31,7 @@
     },
     {
       "exam": "independently-authored",
-      "count": 3
+      "count": 2
     }
   ],
   "domains": [
@@ -360,7 +360,6 @@
         "fp2-2025-01-gakka-057",
         "fp2-2025-01-gakka-058",
         "fp2-2025-01-gakka-059",
-        "FP2-ORIG-20261123-S01",
         "fp2-2024-09-gakka-051",
         "fp2-2024-09-gakka-052",
         "fp2-2024-09-gakka-053",
@@ -379,15 +378,17 @@
         "fp2-2024-05-gakka-057",
         "fp2-2024-05-gakka-058",
         "fp2-2024-05-gakka-059",
-        "fp2-2024-05-gakka-060"
+        "fp2-2024-05-gakka-060",
+        "fp2-2024-05-gakka-053"
       ],
       "reserve_ids": [
-        "FP2-ORIG-20261123-S02"
+        "FP2-ORIG-20261123-S02",
+        "FP2-ORIG-20261123-S01"
       ]
     }
   ],
   "source_branch": "feature/fp2-academic-300-expansion-20261123",
-  "accepted_new_ids": 117,
+  "accepted_new_ids": 118,
   "existing_2024_05_reaudit_pass_retained_ids": [
     "FP2-OFFICIAL-202405-Q01",
     "FP2-OFFICIAL-202405-Q02",
@@ -410,33 +411,44 @@
   },
   "selected_integration_eligible": true,
   "publishable": false,
-  "source_note": "Verbatim audit PASS117, FAIL2(Q07 2024-09 Q08 2024-05), HOLD1(Q53 uncommitted and unaudited figure). Quarantined 3 outside canonical. Canonical309 selects 300 with 3 independent-original backfills and 9 remaining originals reserve.",
+  "source_note": "Official five exams PASS298 FAIL2 HOLD0; selected official298 and originals2; original reserves10; rights pending",
   "submission_state": "NOT_SUBMISSION_READY",
   "verbatim_audit_202409": {
     "PASS": 59,
     "FAIL": 1,
-    "HOLD": 0,
-    "commit": "b3f415feed0bcd88f82a62a797df8f72df4c477f"
+    "HOLD": 0
   },
   "verbatim_audit_202405": {
-    "PASS": 58,
+    "PASS": 59,
     "FAIL": 1,
-    "HOLD": 1,
-    "commit": "55ddf49bdf0e947495cebaf46fd855979b8d31b3"
+    "HOLD": 0
   },
-  "current_law_verbatim_pass": 117,
+  "current_law_verbatim_pass": 298,
   "current_law_verbatim_fail": 2,
-  "current_law_verbatim_hold": 1,
+  "current_law_verbatim_hold": 0,
   "current_law_excluded_ids": [
     "fp2-2024-09-gakka-007",
-    "fp2-2024-05-gakka-008",
-    "fp2-2024-05-gakka-053"
+    "fp2-2024-05-gakka-008"
   ],
   "original_backfill_ids": [
     "FP2-ORIG-20261123-L01",
-    "FP2-ORIG-20261123-L02",
-    "FP2-ORIG-20261123-S01"
+    "FP2-ORIG-20261123-L02"
   ],
-  "original_content_pass_reserve_count": 9,
-  "publication_rights_clearance": false
+  "original_content_pass_reserve_count": 10,
+  "publication_rights_clearance": false,
+  "verbatim_audit_202501": {
+    "PASS": 60,
+    "FAIL": 0,
+    "HOLD": 0
+  },
+  "verbatim_audit_202505": {
+    "PASS": 60,
+    "FAIL": 0,
+    "HOLD": 0
+  },
+  "verbatim_audit_202605": {
+    "PASS": 60,
+    "FAIL": 0,
+    "HOLD": 0
+  }
 }
