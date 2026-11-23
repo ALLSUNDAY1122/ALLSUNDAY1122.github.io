@@ -1,6 +1,6 @@
 /* FP2 development preview: cache app shell and canonical bank for offline reading.
    No release entitlement is inferred from cached content. */
-const CACHE='fp2-ui-master21-20261123-r1';
+const CACHE='fp2-ui-master21-20261123-r2-312';
 const ASSETS=['./','./index.html','./fp2-approved-bank.js','./questions/canonical/approved-questions-20261123.json','./manifest.json','./icon.svg'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
