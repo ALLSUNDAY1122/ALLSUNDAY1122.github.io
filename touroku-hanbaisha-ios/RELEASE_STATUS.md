@@ -165,3 +165,18 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 実際のiOSビルド、ブラウザ操作、画面の視覚回帰、TestFlightは未完了。本審査を提出していない。
 
 **最終判定 BLOCKED：正式バンク12/600、未承認588件（うちHOLD5件）。**
+
+
+## 【最新確定】2022年度 第1章20問・目視監査一巡と問20修正（2026-11-23）
+
+最終優先値：**正式バンク14問／HOLD6問／未監査580問（総数600）**。以前の3・5・12・13件は作業中の履歴値。
+
+- 2022年度問1〜20の公式PDF・正答表ページ画像を照合。PASS：問1、2、4、6、7、9、12、13、14、15、16、17、18、20（計14）。HOLD：問3、5、8、10、11、19（ルビ・表示再現6件）。同年度の残100問はまだ視覚監査していない。
+- 問20は原典PDFページ13で確認した選択肢5「誤 正 誤 正」に次章見出しが混入していた。候補JSONの選択肢だけ修正し、元のrawOriginalTextと correctionHistory の before/after を保持。原典・正答2との再照合でPASS。修正候補 Git blob `78a42c796f906a4f2091210968872804aa8fe7c3`。旧blob `4dce337ab38a255327da851f2979998628557d6f` を監査台帳に保存。
+- `MANUAL_VISUAL_AUDIT_20261123.json` と `AUDIT_MATRIX_600.json` を更新し、行別ステータスを確認。正式バンク `APPROVED_OFFICIAL_BANK.json` はPASS14問のみを収録。
+- `build_approved_bank.py` では承認済みの問題候補と正答索引のGit blob SHAを固定。監査後に原典データが変わった場合は公開昇格を停止する。
+- `official-practice.html` は原典合格済み正式バンクのみ読み込み、既存360問の独自模擬試験とは別メニューで案内。
+- Chromium 375px/430pxの公式問題・採点除外テスト `test_mobile_ui.py` と `.github/workflows/touhan-mobile-ui-qa.yml` を追加。ただしPASS結果 `MOBILE_QA_RESULT.json` は現時点で未確認であり、ブラウザQA合格とは報告しない。Apple実機・署名ビルド・TestFlightも未完了。
+- 2023問90の採点例外は公式問題の候補および公式UIコードで保持。正式バンクへの昇格は独立目視監査まで禁止。
+
+**App Reviewは未提出、申請判定BLOCKED。ユーザー操作を要求する段階に達していない。**
