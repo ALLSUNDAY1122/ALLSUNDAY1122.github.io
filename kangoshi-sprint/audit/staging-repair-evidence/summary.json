@@ -2,62 +2,62 @@
   "engine1": "PyMuPDF geometric word bounding boxes + clipped question rectangle",
   "engine2": "Poppler pdftotext -layout",
   "key": "MHLW 2026-11-24 official answer PDF tokens",
-  "policy": "Conservative coordinate boundary gate: question number x/y, bounded question rectangle, full stem/four choices in crop and independent Poppler PDF page, official answer source; reject source control glyphs, raster pages, scoring exceptions and unverified scenario context.",
+  "policy": "Conservative coordinate boundary gate: question number x/y, bounded question rectangle, full stem/four or five printed choices in crop and independent Poppler PDF page, official answer source; reject source control glyphs, raster pages, scoring exceptions and unverified scenario context.",
   "total": 480,
-  "freshPromotable": 0,
+  "freshPromotable": 26,
   "alreadyCanonical": 220,
-  "holds": 480,
+  "holds": 454,
   "bySession": {
     "112-AM": {
       "total": 120,
-      "pass": 0,
-      "hold": 120
+      "pass": 6,
+      "hold": 114
     },
     "112-PM": {
       "total": 120,
-      "pass": 0,
-      "hold": 120
+      "pass": 7,
+      "hold": 113
     },
     "111-AM": {
       "total": 120,
-      "pass": 0,
-      "hold": 120
+      "pass": 5,
+      "hold": 115
     },
     "111-PM": {
       "total": 120,
-      "pass": 0,
-      "hold": 120
+      "pass": 8,
+      "hold": 112
     }
   },
   "holdReasons": {
     "ALREADY_VERIFIED_CANONICAL": 220,
     "SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT": 147,
-    "SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY": 53,
-    "OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX": 48,
+    "SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY": 60,
+    "OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX": 38,
     "OFFICIAL_ANSWER_NOT_SINGLE": 38,
     "INDEPENDENT_OFFICIAL_KEY_MISMATCH": 38,
-    "COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED": 200,
-    "COORDINATE_REGION_UNVERIFIED": 200,
+    "COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED": 162,
+    "COORDINATE_REGION_UNVERIFIED": 162,
     "POPPLER_FIELD_MISMATCH_0": 110,
     "PYMUPDF_FIELD_MISMATCH_0": 28,
-    "CHOICE_COUNT_NOT_FOUR": 81,
     "C0_SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY": 10,
     "PYMUPDF_FIELD_MISMATCH_1": 2,
     "PYMUPDF_FIELD_MISMATCH_2": 3,
     "MEDIA_OR_DIAGRAM_CUE": 14,
     "ORIGINAL_STRUCTURE_INVALID": 6,
+    "CHOICE_COUNT_NOT_FOUR_OR_FIVE": 5,
     "POPPLER_FIELD_MISMATCH_3": 10,
     "PYMUPDF_FIELD_MISMATCH_5": 6,
     "POPPLER_FIELD_MISMATCH_5": 8,
     "PYMUPDF_FIELD_MISMATCH_4": 34,
     "POPPLER_FIELD_MISMATCH_4": 37,
     "SITUATION_CONTEXT_UNRESOLVED_SOURCE_GLYPHS": 18,
-    "SITUATION_CONTEXT_TEXT_DIFFER": 8,
+    "SITUATION_CONTEXT_TEXT_DIFFER": 9,
     "POPPLER_FIELD_MISMATCH_2": 3,
     "SCORING_EXCEPTION": 6,
     "POPPLER_FIELD_MISMATCH_1": 5,
-    "TOO_SHORT_FOR_UNIQUE_STEM": 12,
-    "SITUATION_GROUP_CONTEXT_NOT_VERIFIED": 1
+    "TOO_SHORT_FOR_UNIQUE_STEM": 4,
+    "SITUATION_GROUP_CONTEXT_NOT_VERIFIED": 2
   },
   "promotionMeaning": "Source-verified canonical extension only; explanation independent audit & runtime not completed. Not publishable.",
   "releaseReady": 0

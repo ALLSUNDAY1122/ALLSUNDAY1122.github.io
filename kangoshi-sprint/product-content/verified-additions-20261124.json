@@ -3,7 +3,7 @@
   "updatedAt": "2026-11-24",
   "qualification": "看護師国家試験",
   "policy": "Verified 112/111 canonical SOURCE bank; new questions pass two independent PDF text extraction and official answer token tests, but still require explanation, app tests, rights checks. Never auto-publish.",
-  "count": 220,
+  "count": 246,
   "sourceExams": [
     112,
     111
@@ -1008,6 +1008,109 @@
         "verifier": "PyMuPDF + Poppler pdftotext -layout",
         "originalPdfGlyphControlAbsent": true,
         "officialKeyRetestedAgainstPdf": true
+      }
+    },
+    {
+      "id": "K112-AM025",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 25,
+      "question": "母乳栄養の児に不足しやすいのはどれか。",
+      "choices": [
+        "ビタミンA",
+        "ビタミンB",
+        "ビタミンC",
+        "ビタミンE",
+        "ビタミンK"
+      ],
+      "answer": 4,
+      "officialAcceptedAnswers": [
+        4
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "5"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 13,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 13,
+        "correctedPage": 13,
+        "anchorBox": [
+          78.91,
+          81.85,
+          90.96,
+          93.89
+        ],
+        "clip": [
+          0.0,
+          78.85,
+          615.61,
+          274.6
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 13,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "必修",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 13,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 13,
+          "correctedPage": 13,
+          "anchorBox": [
+            78.91,
+            81.85,
+            90.96,
+            93.89
+          ],
+          "clip": [
+            0.0,
+            78.85,
+            615.61,
+            274.6
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 13,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
       }
     },
     {
@@ -2930,6 +3033,521 @@
         "verifier": "PyMuPDF + Poppler pdftotext -layout",
         "originalPdfGlyphControlAbsent": true,
         "officialKeyRetestedAgainstPdf": true
+      }
+    },
+    {
+      "id": "K112-AM076",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 76,
+      "question": "正常な糸球体で濾過される物質はどれか。",
+      "choices": [
+        "フィブリノゲン",
+        "ミオグロビン",
+        "アルブミン",
+        "血小板",
+        "赤血球"
+      ],
+      "answer": 1,
+      "officialAcceptedAnswers": [
+        1
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "2"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 28,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 28,
+        "correctedPage": 28,
+        "anchorBox": [
+          78.91,
+          274.6,
+          90.96,
+          286.65
+        ],
+        "clip": [
+          0.0,
+          271.6,
+          615.61,
+          467.36
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 28,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 28,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 28,
+          "correctedPage": 28,
+          "anchorBox": [
+            78.91,
+            274.6,
+            90.96,
+            286.65
+          ],
+          "clip": [
+            0.0,
+            271.6,
+            615.61,
+            467.36
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 28,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K112-AM077",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 77,
+      "question": "冷たい川に飛び込んだときに急激に体温が低下する原因で正しいのはどれか。",
+      "choices": [
+        "対流による体熱の放散",
+        "放射による体熱の放散",
+        "熱伝導による体熱の放散",
+        "代謝による熱エネルギー産生の低下",
+        "骨格筋における熱エネルギー産生の低下"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 28,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 28,
+        "correctedPage": 28,
+        "anchorBox": [
+          78.91,
+          467.36,
+          90.96,
+          479.4
+        ],
+        "clip": [
+          0.0,
+          464.36,
+          615.61,
+          827.44
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 28,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 28,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 28,
+          "correctedPage": 28,
+          "anchorBox": [
+            78.91,
+            467.36,
+            90.96,
+            479.4
+          ],
+          "clip": [
+            0.0,
+            464.36,
+            615.61,
+            827.44
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 28,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K112-AM078",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 78,
+      "question": "インスリンを過剰に投与したときに現れる症候で正しいのはどれか。",
+      "choices": [
+        "発 熱",
+        "浮 腫",
+        "口渇感",
+        "顔面紅潮",
+        "手足のふるえ"
+      ],
+      "answer": 4,
+      "officialAcceptedAnswers": [
+        4
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "5"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 29,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 29,
+        "correctedPage": 29,
+        "anchorBox": [
+          78.91,
+          81.85,
+          90.96,
+          93.89
+        ],
+        "clip": [
+          0.0,
+          78.85,
+          615.61,
+          274.6
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 29,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 29,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 29,
+          "correctedPage": 29,
+          "anchorBox": [
+            78.91,
+            81.85,
+            90.96,
+            93.89
+          ],
+          "clip": [
+            0.0,
+            78.85,
+            615.61,
+            274.6
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 29,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K112-AM082",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 82,
+      "question": "学校保健安全法で出席停止となる学校感染症のうち、第二種に分類されているの はどれか。",
+      "choices": [
+        "インフルエンザ influenza",
+        "細菌性赤痢 shigellosis",
+        "ジフテリア diphtheria",
+        "腸チフス typhoid fever",
+        "流行性角結膜炎 epidemic keratoconjunctivitis"
+      ],
+      "answer": 0,
+      "officialAcceptedAnswers": [
+        0
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "1"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 30,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 30,
+        "correctedPage": 30,
+        "anchorBox": [
+          78.91,
+          274.6,
+          90.96,
+          286.65
+        ],
+        "clip": [
+          0.0,
+          271.6,
+          615.61,
+          491.45
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 30,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 30,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 30,
+          "correctedPage": 30,
+          "anchorBox": [
+            78.91,
+            274.6,
+            90.96,
+            286.65
+          ],
+          "clip": [
+            0.0,
+            271.6,
+            615.61,
+            491.45
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 30,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K112-AM084",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 84,
+      "question": "老化による尿の生成と排尿機能の変化はどれか。",
+      "choices": [
+        "排尿回数の減少",
+        "膀胱容量の増加",
+        "夜間尿量の減少",
+        "残尿量の増加",
+        "尿比重の上昇"
+      ],
+      "answer": 3,
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 31,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 31,
+        "correctedPage": 31,
+        "anchorBox": [
+          78.91,
+          81.85,
+          90.96,
+          93.89
+        ],
+        "clip": [
+          0.0,
+          78.85,
+          615.61,
+          274.6
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 31,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 31,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 31,
+          "correctedPage": 31,
+          "anchorBox": [
+            78.91,
+            81.85,
+            90.96,
+            93.89
+          ],
+          "clip": [
+            0.0,
+            78.85,
+            615.61,
+            274.6
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 31,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
       }
     },
     {
@@ -6840,6 +7458,727 @@
         "verifier": "PyMuPDF + Poppler pdftotext -layout",
         "originalPdfGlyphControlAbsent": true,
         "officialKeyRetestedAgainstPdf": true
+      }
+    },
+    {
+      "id": "K112-PM074",
+      "sourceExam": 112,
+      "session": "PM",
+      "questionNo": 74,
+      "question": "細菌が体内に初めて侵入したときに最初に産生される免疫グロブリンはどれか。",
+      "choices": [
+        "IgA",
+        "IgD",
+        "IgE",
+        "IgG",
+        "IgM"
+      ],
+      "answer": 4,
+      "officialAcceptedAnswers": [
+        4
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "5"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 29,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 29,
+        "correctedPage": 29,
+        "anchorBox": [
+          78.91,
+          587.83,
+          90.96,
+          599.88
+        ],
+        "clip": [
+          0.0,
+          584.83,
+          615.61,
+          827.44
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 29,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 29,
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 29,
+          "correctedPage": 29,
+          "anchorBox": [
+            78.91,
+            587.83,
+            90.96,
+            599.88
+          ],
+          "clip": [
+            0.0,
+            584.83,
+            615.61,
+            827.44
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 29,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K112-PM075",
+      "sourceExam": 112,
+      "session": "PM",
+      "questionNo": 75,
+      "question": "膀胱の蓄尿と排尿反射で正しいのはどれか。",
+      "choices": [
+        "排尿中枢はホルモンによって制御される。",
+        "排尿反射は交感神経を介して起こる。",
+        "蓄尿時に内尿道括約筋は収縮する。",
+        "排尿時に外尿道括約筋は収縮する。",
+        "蓄尿時に排尿筋は収縮する。"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 30,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 30,
+        "correctedPage": 30,
+        "anchorBox": [
+          78.91,
+          81.85,
+          90.96,
+          93.89
+        ],
+        "clip": [
+          0.0,
+          78.85,
+          615.61,
+          274.6
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 30,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 30,
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 30,
+          "correctedPage": 30,
+          "anchorBox": [
+            78.91,
+            81.85,
+            90.96,
+            93.89
+          ],
+          "clip": [
+            0.0,
+            78.85,
+            615.61,
+            274.6
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 30,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K112-PM078",
+      "sourceExam": 112,
+      "session": "PM",
+      "questionNo": 78,
+      "question": "プリン体の代謝産物である尿酸で正しいのはどれか。",
+      "choices": [
+        "下肢末端は温度が下がるので結晶化しやすい。",
+        "男性ホルモンによって腎排泄が増加する。",
+        "激しい運動で産生が減少する。",
+        "利尿薬によって排泄される。",
+        "肝臓で分解される。"
+      ],
+      "answer": 0,
+      "officialAcceptedAnswers": [
+        0
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "1"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 31,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 31,
+        "correctedPage": 31,
+        "anchorBox": [
+          78.91,
+          81.85,
+          90.96,
+          93.89
+        ],
+        "clip": [
+          0.0,
+          78.85,
+          615.61,
+          274.6
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 31,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 31,
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 31,
+          "correctedPage": 31,
+          "anchorBox": [
+            78.91,
+            81.85,
+            90.96,
+            93.89
+          ],
+          "clip": [
+            0.0,
+            78.85,
+            615.61,
+            274.6
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 31,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K112-PM080",
+      "sourceExam": 112,
+      "session": "PM",
+      "questionNo": 80,
+      "question": "成人に経鼻経管栄養の胃管を挿入する方法で適切なのはどれか。",
+      "choices": [
+        "無菌操作で行う。",
+        "挿入時、患者の体位は仰臥位にする。",
+        "胃管が咽頭に達するまで頸部を前屈してもらう。",
+        "胃管が咽頭に達したら嚥下を促す。",
+        "水を注入して胃管の先端が胃内に到達したことを確認する。"
+      ],
+      "answer": 3,
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 31,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 31,
+        "correctedPage": 31,
+        "anchorBox": [
+          78.91,
+          467.36,
+          90.96,
+          479.4
+        ],
+        "clip": [
+          0.0,
+          464.36,
+          615.61,
+          827.44
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 31,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 31,
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 31,
+          "correctedPage": 31,
+          "anchorBox": [
+            78.91,
+            467.36,
+            90.96,
+            479.4
+          ],
+          "clip": [
+            0.0,
+            464.36,
+            615.61,
+            827.44
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 31,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K112-PM081",
+      "sourceExam": 112,
+      "session": "PM",
+      "questionNo": 81,
+      "question": "介護保険サービスを利用して購入できるのはどれか。",
+      "choices": [
+        "簡易浴槽",
+        "特殊寝台",
+        "体位変換器",
+        "移動用リフト",
+        "取り付け工事を伴わないスロープ"
+      ],
+      "answer": 0,
+      "officialAcceptedAnswers": [
+        0
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "1"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 32,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 32,
+        "correctedPage": 32,
+        "anchorBox": [
+          78.91,
+          81.85,
+          90.96,
+          93.89
+        ],
+        "clip": [
+          0.0,
+          78.85,
+          615.61,
+          274.6
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 32,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 32,
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 32,
+          "correctedPage": 32,
+          "anchorBox": [
+            78.91,
+            81.85,
+            90.96,
+            93.89
+          ],
+          "clip": [
+            0.0,
+            78.85,
+            615.61,
+            274.6
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 32,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K112-PM082",
+      "sourceExam": 112,
+      "session": "PM",
+      "questionNo": 82,
+      "question": "標準的な成長をしている正期産児の身長が出生時の約2倍になるのはどれか。",
+      "choices": [
+        "生後 か月",
+        "生後12 か月",
+        "2 歳",
+        "4 歳",
+        " 歳"
+      ],
+      "answer": 3,
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 32,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 32,
+        "correctedPage": 32,
+        "anchorBox": [
+          78.91,
+          274.6,
+          90.96,
+          286.65
+        ],
+        "clip": [
+          0.0,
+          271.6,
+          615.61,
+          467.36
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 32,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 32,
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 32,
+          "correctedPage": 32,
+          "anchorBox": [
+            78.91,
+            274.6,
+            90.96,
+            286.65
+          ],
+          "clip": [
+            0.0,
+            271.6,
+            615.61,
+            467.36
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 32,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K112-PM083",
+      "sourceExam": 112,
+      "session": "PM",
+      "questionNo": 83,
+      "question": "女子の第二次性徴に最も関与するホルモンはどれか。",
+      "choices": [
+        "エストロゲン",
+        "オキシトシン",
+        "成長ホルモン",
+        "甲状腺ホルモン",
+        "テストステロン"
+      ],
+      "answer": 0,
+      "officialAcceptedAnswers": [
+        0
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "1"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 32,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 32,
+        "correctedPage": 32,
+        "anchorBox": [
+          78.91,
+          467.36,
+          90.96,
+          479.4
+        ],
+        "clip": [
+          0.0,
+          464.36,
+          615.61,
+          827.44
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 32,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 32,
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 32,
+          "correctedPage": 32,
+          "anchorBox": [
+            78.91,
+            467.36,
+            90.96,
+            479.4
+          ],
+          "clip": [
+            0.0,
+            464.36,
+            615.61,
+            827.44
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 32,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
       }
     },
     {
@@ -11544,6 +12883,521 @@
       }
     },
     {
+      "id": "K111-AM078",
+      "sourceExam": 111,
+      "session": "AM",
+      "questionNo": 78,
+      "question": "眼の遠近調節を行う筋はどれか。",
+      "choices": [
+        "下斜筋",
+        "下直筋",
+        "毛様体筋",
+        "上眼瞼挙筋",
+        "瞳孔括約筋"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 31,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 31,
+        "correctedPage": 31,
+        "anchorBox": [
+          76.08,
+          512.72,
+          88.13,
+          524.76
+        ],
+        "clip": [
+          0.0,
+          509.72,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 31,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": true,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 31,
+        "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 31,
+          "correctedPage": 31,
+          "anchorBox": [
+            76.08,
+            512.72,
+            88.13,
+            524.76
+          ],
+          "clip": [
+            0.0,
+            509.72,
+            609.95,
+            822.01
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 31,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K111-AM079",
+      "sourceExam": 111,
+      "session": "AM",
+      "questionNo": 79,
+      "question": "咀嚼運動にかかわる脳神経はどれか。",
+      "choices": [
+        "嗅神経",
+        "滑車神経",
+        "三叉神経",
+        "動眼神経",
+        "内耳神経"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 32,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 32,
+        "correctedPage": 32,
+        "anchorBox": [
+          76.08,
+          79.02,
+          88.13,
+          91.06
+        ],
+        "clip": [
+          0.0,
+          76.02,
+          609.95,
+          271.77
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 32,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": true,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 32,
+        "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 32,
+          "correctedPage": 32,
+          "anchorBox": [
+            76.08,
+            79.02,
+            88.13,
+            91.06
+          ],
+          "clip": [
+            0.0,
+            76.02,
+            609.95,
+            271.77
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 32,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K111-AM080",
+      "sourceExam": 111,
+      "session": "AM",
+      "questionNo": 80,
+      "question": "射出される精子が通るのはどれか。",
+      "choices": [
+        "精 囊",
+        "尿 管",
+        "尿 道",
+        "膀 胱",
+        "前立腺"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 32,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 32,
+        "correctedPage": 32,
+        "anchorBox": [
+          76.08,
+          271.77,
+          88.13,
+          283.82
+        ],
+        "clip": [
+          0.0,
+          268.77,
+          609.95,
+          464.53
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 32,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": true,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 32,
+        "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 32,
+          "correctedPage": 32,
+          "anchorBox": [
+            76.08,
+            271.77,
+            88.13,
+            283.82
+          ],
+          "clip": [
+            0.0,
+            268.77,
+            609.95,
+            464.53
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 32,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K111-AM083",
+      "sourceExam": 111,
+      "session": "AM",
+      "questionNo": 83,
+      "question": "タイムアウトによって予防できるのはどれか。",
+      "choices": [
+        "患者の誤認",
+        "抗癌薬の曝露",
+        "個人情報の漏洩",
+        "ベッドからの転落",
+        "血液を媒介とする感染"
+      ],
+      "answer": 0,
+      "officialAcceptedAnswers": [
+        0
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "1"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 33,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 33,
+        "correctedPage": 33,
+        "anchorBox": [
+          76.08,
+          271.77,
+          88.13,
+          283.82
+        ],
+        "clip": [
+          0.0,
+          268.77,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 33,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 33,
+        "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 33,
+          "correctedPage": 33,
+          "anchorBox": [
+            76.08,
+            271.77,
+            88.13,
+            283.82
+          ],
+          "clip": [
+            0.0,
+            268.77,
+            609.95,
+            822.01
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 33,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K111-AM085",
+      "sourceExam": 111,
+      "session": "AM",
+      "questionNo": 85,
+      "question": "A さんは職場の上司に不満をぶつけたいと考えているが、それができないので、 不満をぶつけやすい対象である後輩を叱責している。 A さんの防衛機制で正しいのはどれか。",
+      "choices": [
+        "解 離",
+        "昇 華",
+        "合理化",
+        "置き換え",
+        "反動形成"
+      ],
+      "answer": 3,
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 34,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 34,
+        "correctedPage": 34,
+        "anchorBox": [
+          76.08,
+          271.77,
+          88.13,
+          283.82
+        ],
+        "clip": [
+          0.0,
+          268.77,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 34,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 34,
+        "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 34,
+          "correctedPage": 34,
+          "anchorBox": [
+            76.08,
+            271.77,
+            88.13,
+            283.82
+          ],
+          "clip": [
+            0.0,
+            268.77,
+            609.95,
+            822.01
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 34,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
       "id": "K111-AM094",
       "sourceExam": 111,
       "session": "AM",
@@ -15681,6 +17535,727 @@
       }
     },
     {
+      "id": "K111-PM077",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 77,
+      "question": "肩峰があるのはどれか。",
+      "choices": [
+        "鎖 骨",
+        "胸骨柄",
+        "肩甲棘",
+        "上腕骨",
+        "烏口突起"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 28,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 28,
+        "correctedPage": 28,
+        "anchorBox": [
+          76.08,
+          416.34,
+          88.13,
+          428.39
+        ],
+        "clip": [
+          0.0,
+          413.34,
+          609.95,
+          609.09
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 28,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": true,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 28,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 28,
+          "correctedPage": 28,
+          "anchorBox": [
+            76.08,
+            416.34,
+            88.13,
+            428.39
+          ],
+          "clip": [
+            0.0,
+            413.34,
+            609.95,
+            609.09
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 28,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K111-PM079",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 79,
+      "question": "採血時に操作を誤ったため溶血し、採血管内の血漿が暗赤色になってしまった。 この血漿の電解質濃度を測定したときに、本来の値よりも高くなるのはどれか。",
+      "choices": [
+        "塩化物イオン",
+        "重炭酸イオン",
+        "カリウムイオン",
+        "カルシウムイオン",
+        "ナトリウムイオン"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 29,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 29,
+        "correctedPage": 29,
+        "anchorBox": [
+          76.08,
+          79.02,
+          88.13,
+          91.06
+        ],
+        "clip": [
+          0.0,
+          76.02,
+          609.95,
+          295.87
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 29,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 29,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 29,
+          "correctedPage": 29,
+          "anchorBox": [
+            76.08,
+            79.02,
+            88.13,
+            91.06
+          ],
+          "clip": [
+            0.0,
+            76.02,
+            609.95,
+            295.87
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 29,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K111-PM080",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 80,
+      "question": "糸球体濾過量の推定に用いられる生体内物質はどれか。",
+      "choices": [
+        "尿 素",
+        "イヌリン",
+        "ビリルビン",
+        "クレアチニン",
+        "パラアミノ馬尿酸"
+      ],
+      "answer": 3,
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 29,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 29,
+        "correctedPage": 29,
+        "anchorBox": [
+          76.08,
+          295.87,
+          88.13,
+          307.91
+        ],
+        "clip": [
+          0.0,
+          292.87,
+          609.95,
+          488.62
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 29,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 29,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 29,
+          "correctedPage": 29,
+          "anchorBox": [
+            76.08,
+            295.87,
+            88.13,
+            307.91
+          ],
+          "clip": [
+            0.0,
+            292.87,
+            609.95,
+            488.62
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 29,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K111-PM081",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 81,
+      "question": "疾病の内因となるのはどれか。",
+      "choices": [
+        "免疫複合体",
+        "栄養素",
+        "温 度",
+        "細 菌",
+        "薬 物"
+      ],
+      "answer": 0,
+      "officialAcceptedAnswers": [
+        0
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "1"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 29,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 29,
+        "correctedPage": 29,
+        "anchorBox": [
+          76.08,
+          488.62,
+          88.13,
+          500.67
+        ],
+        "clip": [
+          0.0,
+          485.62,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 29,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": true,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 29,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 29,
+          "correctedPage": 29,
+          "anchorBox": [
+            76.08,
+            488.62,
+            88.13,
+            500.67
+          ],
+          "clip": [
+            0.0,
+            485.62,
+            609.95,
+            822.01
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 29,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K111-PM084",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 84,
+      "question": "食物の嚥下において喉頭蓋が喉頭口を閉鎖する時期はどれか。",
+      "choices": [
+        "先行期",
+        "準備期",
+        "口腔期",
+        "咽頭期",
+        "食道期"
+      ],
+      "answer": 3,
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 30,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 30,
+        "correctedPage": 30,
+        "anchorBox": [
+          76.08,
+          464.53,
+          88.13,
+          476.57
+        ],
+        "clip": [
+          0.0,
+          461.53,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 30,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 30,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 30,
+          "correctedPage": 30,
+          "anchorBox": [
+            76.08,
+            464.53,
+            88.13,
+            476.57
+          ],
+          "clip": [
+            0.0,
+            461.53,
+            609.95,
+            822.01
+          ],
+          "nextAnchorFound": false,
+          "verifiedPage": 30,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K111-PM085",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 85,
+      "question": "放射性同位元素を用いるのはどれか。",
+      "choices": [
+        "脳血管造影",
+        "膀胱鏡検査",
+        "頭部CT 検査",
+        "腹部超音波検査",
+        "骨シンチグラフィ"
+      ],
+      "answer": 4,
+      "officialAcceptedAnswers": [
+        4
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "5"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 31,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 31,
+        "correctedPage": 31,
+        "anchorBox": [
+          76.08,
+          79.02,
+          88.13,
+          91.06
+        ],
+        "clip": [
+          0.0,
+          76.02,
+          609.95,
+          271.77
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 31,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": true,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 31,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 31,
+          "correctedPage": 31,
+          "anchorBox": [
+            76.08,
+            79.02,
+            88.13,
+            91.06
+          ],
+          "clip": [
+            0.0,
+            76.02,
+            609.95,
+            271.77
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 31,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
+      "id": "K111-PM086",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 86,
+      "question": "地域包括支援センターの目的を定める法律はどれか。",
+      "choices": [
+        "介護保険法",
+        "健康増進法",
+        "社会福祉法",
+        "地域保健法",
+        "老人福祉法"
+      ],
+      "answer": 0,
+      "officialAcceptedAnswers": [
+        0
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "1"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 31,
+      "scenarioContextEvidence": null,
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 31,
+        "correctedPage": 31,
+        "anchorBox": [
+          76.08,
+          271.77,
+          88.13,
+          283.82
+        ],
+        "clip": [
+          0.0,
+          268.77,
+          609.95,
+          464.53
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 31,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 31,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 31,
+          "correctedPage": 31,
+          "anchorBox": [
+            76.08,
+            271.77,
+            88.13,
+            283.82
+          ],
+          "clip": [
+            0.0,
+            268.77,
+            609.95,
+            464.53
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 31,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": null
+      }
+    },
+    {
       "id": "K111-PM091",
       "sourceExam": 111,
       "session": "PM",
@@ -16353,6 +18928,147 @@
             "latinTokenMultisetExactMatch": true,
             "japaneseChars": 327,
             "latinTokens": 8
+          },
+          "engines": [
+            "PyMuPDF",
+            "Poppler"
+          ],
+          "status": "DUAL_ENGINE_CONTEXT_MATCH"
+        }
+      }
+    },
+    {
+      "id": "K111-PM103",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 103,
+      "question": "A ちゃんにみられる状態はどれか。",
+      "choices": [
+        "昏睡状態である。",
+        "流涙は普段と変わらない。",
+        "体重は3日前と変わらない。",
+        "排尿頻度は普段通りである。",
+        "皮膚のツルゴールは低下している。"
+      ],
+      "answer": 4,
+      "officialAcceptedAnswers": [
+        4
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "5"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 42,
+      "scenarioContextEvidence": {
+        "page": 42,
+        "groupFirst": 103,
+        "groupLast": 105,
+        "commonText": "次の文を読み103〜105 の問いに答えよ。\nA ちゃん（2歳10 か月、女児）は昨日から下痢と嘔吐を繰り返し、食事が摂れなく\nなったため、母親に抱かれて小児科外来を受診した。診察の結果、ウイルス性胃腸炎\nviral gastroenteritis\nによる中等度の脱水症と\ndehydration 診断され入院した。入院時、体温38.2 ℃、呼吸数36/分、\n心拍数136/分であった。3日前の保育所の身体計測では身長90 cm、体重12.5 kg で\nあった。",
+        "normalizedLength": 216,
+        "visualContextGlyphEvidence": null,
+        "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+        "comparison": {
+          "japaneseExactMatch": true,
+          "latinTokenMultisetExactMatch": true,
+          "japaneseChars": 180,
+          "latinTokens": 6
+        },
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 42,
+        "correctedPage": 42,
+        "anchorBox": [
+          70.06,
+          271.77,
+          88.13,
+          283.82
+        ],
+        "clip": [
+          0.0,
+          268.77,
+          609.95,
+          464.53
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 42,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": true,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "printedOptionCount": 5,
+      "category": "状況設定",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 42,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 42,
+          "correctedPage": 42,
+          "anchorBox": [
+            70.06,
+            271.77,
+            88.13,
+            283.82
+          ],
+          "clip": [
+            0.0,
+            268.77,
+            609.95,
+            464.53
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 42,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": {
+          "page": 42,
+          "groupFirst": 103,
+          "groupLast": 105,
+          "commonText": "次の文を読み103〜105 の問いに答えよ。\nA ちゃん（2歳10 か月、女児）は昨日から下痢と嘔吐を繰り返し、食事が摂れなく\nなったため、母親に抱かれて小児科外来を受診した。診察の結果、ウイルス性胃腸炎\nviral gastroenteritis\nによる中等度の脱水症と\ndehydration 診断され入院した。入院時、体温38.2 ℃、呼吸数36/分、\n心拍数136/分であった。3日前の保育所の身体計測では身長90 cm、体重12.5 kg で\nあった。",
+          "normalizedLength": 216,
+          "visualContextGlyphEvidence": null,
+          "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+          "comparison": {
+            "japaneseExactMatch": true,
+            "latinTokenMultisetExactMatch": true,
+            "japaneseChars": 180,
+            "latinTokens": 6
           },
           "engines": [
             "PyMuPDF",
