@@ -41,6 +41,9 @@ for exam in (112,111):
     doc=fitz.open(pdf)
     draft=json.loads((STAGE/f"exam{exam}-{session}-draft.json").read_text())
     page_cache={}
+    def cached_pdftotext(path,page):
+        if page not in page_cache:page_cache[page]=pdftotext(path,page)
+        return page_cache[page]
     rows=[]
     for q in draft["questions"]:
         qid=q["id"];n=q["questionNo"];pg=q.get("sourcePage")
@@ -67,7 +70,7 @@ for exam in (112,111):
             failures.append("SOURCE_PAGE_INVALID")
         else:
             verified_page, boundary_errors, scenario_evidence=verify_boundary(
-                doc,pdf,n,pg,stem,choices,pdftotext,clean_font,norm)
+                doc,pdf,n,pg,stem,choices,cached_pdftotext,clean_font,norm)
             if verified_page is not None and verified_page!=pg:
                 boundary_evidence={"previousPage":pg,"correctedPage":verified_page,
                                    "method":"unique numbered page and 5 fields across 2 engines"}
@@ -81,8 +84,7 @@ for exam in (112,111):
             else:
                 if re.search(r"[\x00-\x08\x0b-\x1f\x7f]",source_segment):failures.append("C0_SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
                 if re.search(r"[\ufffd઄¹¼ïñèêçâ\u0080-\u009f\u00a1-\u00ff]",source_segment):failures.append("SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
-            if pg not in page_cache:page_cache[pg]=pdftotext(pdf,pg)
-            poppler=page_cache[pg]
+            poppler=cached_pdftotext(pdf,pg)
             wordblob=norm(page.get_text("text",sort=False))
             altblob=norm(poppler)
             for i,text in enumerate([stem]+choices):
