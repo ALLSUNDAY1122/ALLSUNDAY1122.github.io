@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/fp2-swiftui-wkwebview-release-20261123
+      - feature/fp2-release-scope-20261123
     paths:
       - "fp2-manabi-sprint/**"
       - "automation/app-release-registry.json"
@@ -28,7 +29,19 @@ jobs:
               assert str(registry[field])==str(evidence[field]),field
           assert registry['iap'] is False and evidence['iap_product_ids']==[]
           assert evidence['publication_release_clear']==0
-          assert evidence['content_approved_questions']==122
+          bank=json.loads(Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_text())
+          selection=json.loads(Path('fp2-manabi-sprint/release/release-selection-120-20261123.json').read_text())
+          assert len(bank['questions'])==194 and bank['content_approved_questions']==194
+          assert sum(q.get('release_selected') is True for q in bank['questions'])==120
+          assert sum(q.get('release_selected') is False for q in bank['questions'])==74
+          assert selection['selected_count']==120 and selection['reserve_count']==74
+          assert set(selection['corrections_excluded_until_independent_reaudit'])=={'fp2-2025-01-gakka-020'}
+          assert all(q.get('publishable') is False for q in bank['questions'])
+          assert 'fp2-2025-01-gakka-020' not in {q['id'] for q in bank['questions']}
+          import hashlib
+          assert evidence['canonical_sha256']==hashlib.sha256(Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_bytes()).hexdigest()
+          assert Path('fp2-manabi-sprint/ios/Web/questions/canonical/approved-questions-20261123.json').read_bytes()==Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_bytes()
+          assert evidence['content_approved_questions']==194
           assert Path('fp2-manabi-sprint/ios/Web/index.html').is_file()
           print('FP2 registry / offline asset / IAP contract PASS')
           PY
@@ -54,7 +67,11 @@ jobs:
           assert (app/'Web/index.html').exists(), 'Bundled web HTML missing'
           assert (app/'Web/bundle-evidence.json').exists(), 'Bundled evidence missing'
           e=json.loads((app/'Web/bundle-evidence.json').read_text())
-          assert e['content_approved_questions']==122
+          assert e['content_approved_questions']==194
           assert e['publication_release_clear']==0
+          import hashlib
+          canonical=Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_bytes()
+          assert (app/'Web/questions/canonical/approved-questions-20261123.json').read_bytes()==canonical
+          assert e['canonical_sha256']==hashlib.sha256(canonical).hexdigest()
           print('iOS Simulator bundle readback PASS')
           PY
