@@ -3,7 +3,7 @@
   "created_at_jst": "2026-11-24T02:20:00+09:00",
   "branch": "feature/fp2-release-scope-20261123",
   "canonical_path": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "canonical_source_blob_sha": "f6ee02fccfea688cf04598bf6391f1711b3c1f1d",
+  "canonical_source_blob_sha": "1cae02e05c61c9aec6010abc6ea14eb7ebeb793a",
   "law_effective_date": "2026-04-01",
   "scope": {
     "total": 180,
@@ -25,8 +25,8 @@
   "gate_policy": "以前のPASSは内容一次判定であり、本最終証拠監査の完了を意味しない。証拠行未固定の問題のlegalChecked/explanationCheckedを機械的にtrueへ変更しない。",
   "summary": {
     "target": 180,
-    "pending": 50,
-    "verified": 130,
+    "pending": 30,
+    "verified": 150,
     "hold": 0,
     "fail": 0,
     "by_exam": {
@@ -43,8 +43,8 @@
         "fail": 0
       },
       "2026-05": {
-        "pending": 50,
-        "verified": 10,
+        "pending": 30,
+        "verified": 30,
         "hold": 0,
         "fail": 0
       }
@@ -8058,321 +8058,1221 @@
       "id": "fp2-2026-05-gakka-011",
       "exam_date": "2026-05",
       "question_number": 11,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "共済も保険法上の保険契約の実質を満たす場合は適用対象であり、一律除外ではない。",
+          "primary_urls": [
+            "https://www.moj.go.jp/MINJI/minji07_00114.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "保険金の支払時期などの片面的強行規定に反し、受取人に不利な約定は無効となる。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/420AC0000000056?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "保険期間1年以内の契約は原則クーリングオフ適用除外である。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/407AC0000000105?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "2026年3月31日から経済価値ベースのソルベンシー規制が適用。300％未満を当然の早期是正措置基準とする記述は誤り。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/news/r7/hoken/20260323/20260323.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答2を維持。保険金の支払時期などの片面的強行規定に反し、受取人に不利な約定は無効となる。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-03-31施行の経済価値ベース規制に基づき判定。旧SMRの一律200％基準を現行法と混同しない。"
     },
     {
       "id": "fp2-2026-05-gakka-012",
       "exam_date": "2026-05",
       "question_number": 12,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "養老保険は死亡保険金と同額の満期保険金を予定する生死混合保険である。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/9376.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "一般的な学資保険の契約者死亡では保険料払込免除が中心であり既払保険料相当額の死亡給付金が支払われるとはいえない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/9374.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "変額終身保険の死亡保険金には基本保険金額の最低保証がある。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/9366.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "終身払込に比べ有期払込は一般に短期間で全保険料を払うため一回の保険料は高い。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/9375.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答1を維持。養老保険は死亡保険金と同額の満期保険金を予定する生死混合保険である。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-013",
       "exam_date": "2026-05",
       "question_number": 13,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "総合福祉団体定期保険で加入者の同意・告知を無条件に不要とすることはできない。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/common/law/guide/ninka/02b.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "通常1年更新の団体保険であり個別被保険者の保険期間を1～5年の範囲で任意設定する制度ではない。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/common/law/guide/ninka/02b.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "通常の福利厚生規程に基づく保険料は原則全額損金処理となり2分の1の資産計上ではない。",
+          "primary_urls": [
+            "https://afpmember.fpk.co.jp/login/member_area/txt/2508/3-2_seiho_250831.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "ヒューマン・ヴァリュー特約の保険金受取人は契約者である法人。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/common/law/guide/ninka/02b.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答4を維持。ヒューマン・ヴァリュー特約の保険金受取人は契約者である法人。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-014",
       "exam_date": "2026-05",
       "question_number": 14,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "FAIL_CORRECTION_AWAITING_REVIEW",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "旧一般保険料10万円による控除額は5万円、旧個人年金10万円による控除額も5万円で計10万円。8万円ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "一般5万円＋個人年金旧5万円で9万円ではない。新旧同種を単純合算しない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "旧一般5万円＋旧個人年金5万円＝10万円。新個人年金4万円を用いるより大きい。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "新旧年金の控除を5万円＋4万円と単純合算できず、合計12万円にはならない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答3を維持。旧一般5万円＋旧個人年金5万円＝10万円。新個人年金4万円を用いるより大きい。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "設問指定の2025年分所得税の生命保険料控除を計算（2026年分改正を遡及適用しない）。"
     },
     {
       "id": "fp2-2026-05-gakka-015",
       "exam_date": "2026-05",
       "question_number": 15,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "リビング・ニーズ特約に基づき本人が受領する疾病等に起因する所定の生前給付保険金は非課税。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1760.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "終身保険は5年以下の短期一時払金融類似商品と異なり、解約返戻金の差益は原則一時所得。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1490.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "保険料負担者＝被保険者の死亡保険金は、相続人以外の受取人には遺贈により取得したものとみなすため贈与税ではなく相続税対象。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1750.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "本人が疾病入院で受け取る医療保険の入院給付金は非課税。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1760.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答3を維持。保険料負担者＝被保険者の死亡保険金は、相続人以外の受取人には遺贈により取得したものとみなすため贈与税ではなく相続税対象。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-016",
       "exam_date": "2026-05",
       "question_number": 16,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "自己所有の車庫は対物賠償の他人の物という対象から外れる。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/wakaru/seminar/kaisetsu/2024/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "地震・噴火・津波による車両損害は一般条件でも通常補償対象外。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/wakaru/seminar/kaisetsu/2024/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "他人のペットは法律上財産として対物賠償責任の対象になる。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/wakaru/seminar/kaisetsu/2024/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "対人賠償は自賠責で賄われる部分を超える損害賠償責任を補償する。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/wakaru/seminar/kaisetsu/2024/"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答4を維持。対人賠償は自賠責で賄われる部分を超える損害賠償責任を補償する。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-017",
       "exam_date": "2026-05",
       "question_number": 17,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "隣家の火災への消火活動に起因する家財の水濡れ損害は火災事故による損害として補償される。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/wakaru/seminar/kaisetsu/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "経年劣化・自然消耗による腐食は事故としての保険補償対象外。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/wakaru/seminar/kaisetsu/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "落雷による過電圧で生じた家財損害は火災保険の落雷事故に該当し得る。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/wakaru/seminar/kaisetsu/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "保険金支払額を常に保険金額から差し引く方式ではなく、原則自動的には減額されない。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/wakaru/seminar/kaisetsu/"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答1を維持。隣家の火災への消火活動に起因する家財の水濡れ損害は火災事故による損害として補償される。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-018",
       "exam_date": "2026-05",
       "question_number": 18,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "普通傷害保険の入院保険金は身体の傷害に起因する非課税給付。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1760.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "10年の積立傷害保険の満期返戻金は原則一時所得（短期金融類似商品と異なる）。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1490.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "車両の損害補償保険金は修理の有無にかかわらず原則非課税。",
+          "primary_urls": [
+            "https://www.nta.go.jp/law/joho-zeikaishaku/shotoku/shinkoku/0024002-140.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "家屋の損害補償としての火災保険金は損害額を上回る部分も原則非課税である。",
+          "primary_urls": [
+            "https://www.nta.go.jp/law/joho-zeikaishaku/shotoku/shinkoku/0024002-140.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答2を維持。10年の積立傷害保険の満期返戻金は原則一時所得（短期金融類似商品と異なる）。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-019",
       "exam_date": "2026-05",
       "question_number": 19,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "医師から余命6か月以内と判断された場合に所定の死亡保険金相当額を前払請求できる。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/special/9259.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "リビング・ニーズ特約は原則特約保険料が不要であり、別途負担が必須ではない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/special/9259.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "先進医療は療養時点で厚生労働大臣の定める技術が対象。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000207115.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "特定疾病保険金支払時に当該主契約は消滅し、後日死亡保険金は二重に支払われない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/9376.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答2を維持。リビング・ニーズ特約は原則特約保険料が不要であり、別途負担が必須ではない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "リビング・ニーズ特約の無償付加を確認。全契約に自動付帯するとの一般化は不可。"
     },
     {
       "id": "fp2-2026-05-gakka-020",
       "exam_date": "2026-05",
       "question_number": 20,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "定期保険の主たる機能は死亡保障であり、単独では病気・けが入院費用を補償しない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/9375.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "収入保障保険は被保険者死亡後に家族の生活費を一定期間にわたり保障するため適合。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/9376.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "ファミリーバイク特約は所定の家族の原付事故による法律上の賠償責任を保障。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/wakaru/seminar/kaisetsu/2024/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "個人賠償責任補償特約は所定の子の自転車事故における法律上の損害賠償責任を保障し得る。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/wakaru/seminar/kaisetsu/"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答1を維持。定期保険の主たる機能は死亡保障であり、単独では病気・けが入院費用を補償しない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-021",
       "exam_date": "2026-05",
       "question_number": 21,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "内閣府景気動向指数にはCIとDIがある。",
+          "primary_urls": [
+            "https://www.esri.cao.go.jp/jp/stat/di/di.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "採用系列は景気循環の山谷を踏まえ見直される。",
+          "primary_urls": [
+            "https://www.esri.cao.go.jp/jp/stat/di/di.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "内閣府はGDP・成長率の四半期および年次統計を公表する。",
+          "primary_urls": [
+            "https://www.esri.cao.go.jp/jp/sna/menu.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "デフレ時は一般に名目成長率より物価変化を除いた実質成長率が高くなるため逆。",
+          "primary_urls": [
+            "https://www.esri.cao.go.jp/jp/sna/menu.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答4を維持。デフレ時は一般に名目成長率より物価変化を除いた実質成長率が高くなるため逆。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-022",
       "exam_date": "2026-05",
       "question_number": 22,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "預入者に不利な期限前償還条項を持つ仕組預金が存在する。",
+          "primary_urls": [
+            "https://www8.cao.go.jp/kyumin_yokin/seido/seido.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "オンライン通帳サービスはネット専業銀行以外の銀行でも提供されるため限定は誤り。",
+          "primary_urls": [
+            "https://www8.cao.go.jp/kyumin_yokin/seido/seido.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "自動積立定期預金は指定日に預金口座から一定額を振り替えて積み立てる。",
+          "primary_urls": [
+            "https://www8.cao.go.jp/kyumin_yokin/seido/seido.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "休眠預金は10年以上異動なしの対象預金で、預金保険機構に移管された資金が民間公益活動に活用される。",
+          "primary_urls": [
+            "https://www8.cao.go.jp/kyumin_yokin/seido/seido.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答2を維持。オンライン通帳サービスはネット専業銀行以外の銀行でも提供されるため限定は誤り。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-023",
       "exam_date": "2026-05",
       "question_number": 23,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "J-REITは投資家からの資金で不動産を運用し賃貸収入等を分配する。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/reits/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "上場の投資口は指値注文・成行注文を通じて売買できる。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/reits/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "J-REITは原則投資法人が日常的に買戻すオープンエンドではなく市場で換金するクローズドエンド型。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/reits/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "J-REITの利益分配金には配当控除が適用されない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1330.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答3を維持。J-REITは原則投資法人が日常的に買戻すオープンエンドではなく市場で換金するクローズドエンド型。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-024",
       "exam_date": "2026-05",
       "question_number": 24,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "個人向け国債は1万円から1万円単位で購入でき、5万円が最低ではない。",
+          "primary_urls": [
+            "https://www.mof.go.jp/jgbs/individual/kojinmuke/main/guide/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "変動10年・固定5年・固定3年の3種類があり毎月発行される。",
+          "primary_urls": [
+            "https://www.mof.go.jp/jgbs/individual/kojinmuke/main/guide/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "10年型は固定金利ではなく半年ごとに利率が見直される変動型。",
+          "primary_urls": [
+            "https://www.mof.go.jp/jgbs/individual/kojinmuke/main/guide/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "原則発行1年後に中途換金できるが中途換金手数料は不要で、調整額のみ控除する。",
+          "primary_urls": [
+            "https://www.mof.go.jp/jgbs/individual/kojinmuke/main/qa/answer_qd.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答2を維持。変動10年・固定5年・固定3年の3種類があり毎月発行される。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-025",
       "exam_date": "2026-05",
       "question_number": 25,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "時価変動で委託保証金維持率を下回ると追証による不足解消が必要。",
+          "primary_urls": [
+            "https://www.jsda.or.jp/shijyo/seido/jishukisei/words/0312.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "信用取引では株式を保有していなくても株を借りて売建てできる。",
+          "primary_urls": [
+            "https://www.jsda.or.jp/shijyo/seido/jishukisei/words/0312.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "制度上の委託保証金は約定額の30%以上かつ30万円以上が基本。",
+          "primary_urls": [
+            "https://www.jsda.or.jp/about/kaigi/jisyukisei/gijigaiyou/files/171026_shiryou.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "制度信用取引と一般信用取引は約定前に選択し、同一建玉を後から変更できない。",
+          "primary_urls": [
+            "https://www.jsda.or.jp/shijyo/seido/jishukisei/words/0312.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答2を維持。信用取引では株式を保有していなくても株を借りて売建てできる。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-026",
       "exam_date": "2026-05",
       "question_number": 26,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "ROE＝純利益120億÷自己資本2000億＝6％。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "EPS＝120億÷2億株＝60円、PER＝1800÷60＝30倍であり20倍ではない。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "PBR＝(1800円×2億株)÷2000億円＝1.8倍。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "1株配当＝36億÷2億＝18円、配当利回り＝18÷1800＝1％。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答2を維持。EPS＝120億÷2億株＝60円、PER＝1800÷60＝30倍であり20倍ではない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "各選択肢に明示した数値計算による独立検算。"
     },
     {
       "id": "fp2-2026-05-gakka-027",
       "exam_date": "2026-05",
       "question_number": 27,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "TTS140円で元本140万円、TTB144円で1年後10300ドル＝148万3200円、利回り83200÷1400000＝5.94％となり選択肢1に一致。",
+          "primary_urls": [
+            "https://www.mof.go.jp/policy/international_policy/reference/exchange_rate/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "同一の円貨ベース損益計算は約5.94％であり6.68％とはならない。",
+          "primary_urls": [
+            "https://www.mof.go.jp/policy/international_policy/reference/exchange_rate/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "元利10300ドルを満期時TTB144円で交換する必要があり6.71％とはならない。",
+          "primary_urls": [
+            "https://www.mof.go.jp/policy/international_policy/reference/exchange_rate/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "為替手数料を含んだTTS/TTBで評価すると約5.94％であり7.45％ではない。",
+          "primary_urls": [
+            "https://www.mof.go.jp/policy/international_policy/reference/exchange_rate/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答1を維持。TTS140円で元本140万円、TTB144円で1年後10300ドル＝148万3200円、利回り83200÷1400000＝5.94％となり選択肢1に一致。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "各選択肢に明示した数値計算による独立検算。"
     },
     {
       "id": "fp2-2026-05-gakka-028",
       "exam_date": "2026-05",
       "question_number": 28,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "シャープレシオA＝(4.6－1.0)÷1.2＝3.0、B＝(11.0－1.0)÷4.0＝2.5でAの方が高い。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "Aの値は3.0であり3.4ではない。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "A=3.0は正しいがBの方が効率的という比較は誤り。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "A=3.4は誤りで、比較対象もBでなくAが高い。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答1を維持。シャープレシオA＝(4.6－1.0)÷1.2＝3.0、B＝(11.0－1.0)÷4.0＝2.5でAの方が高い。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "各選択肢に明示した数値計算による独立検算。"
     },
     {
       "id": "fp2-2026-05-gakka-029",
       "exam_date": "2026-05",
       "question_number": 29,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "総合課税を選択した上場株式配当は申告分離課税の上場株式譲渡損と損益通算できない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1331.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "繰越控除期間は翌年以後3年間であり5年間ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1474.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "源泉徴収選択口座内の譲渡益と配当等は条件に応じて申告方法を別々に選べる。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1474.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "源泉徴収なしの特定口座も年間取引報告書を発行する。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1474.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答1を維持。総合課税を選択した上場株式配当は申告分離課税の上場株式譲渡損と損益通算できない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-030",
       "exam_date": "2026-05",
       "question_number": 30,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "金融サービス仲介業で扱える範囲は複雑・高度な説明を要する商品等を除くため記載は逆。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/412AC0000000101?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "金融商品販売業者等は業として勧誘を行う場合、あらかじめ勧誘方針を策定・公表する義務がある。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/412AC0000000101?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "説明義務違反の損害推定額は元本総額でなく元本欠損額。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/412AC0000000101?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "顧客の知識・経験・財産状況・目的等に応じた説明が求められ、一律同一手法ではない。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/412AC0000000101?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "逐語問題の全選択肢・解説を法令・公的制度原典または商品提供者の一次資料と独立照合。計算問題は数値式を再計算。",
+        "conclusion": "正答2を維持。金融商品販売業者等は業として勧誘を行う場合、あらかじめ勧誘方針を策定・公表する義務がある。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "single_correct_answer": true,
+      "verified_primary_source_material": true,
+      "source_date_note": "2026-04-01基準。商品約款により差があるものは設問記載の一般的商品性に限定。"
     },
     {
       "id": "fp2-2026-05-gakka-031",
