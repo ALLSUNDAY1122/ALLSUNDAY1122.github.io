@@ -56,7 +56,15 @@ for year in range(2022,2027):
             raise RuntimeError("invalid or stale ruby reconstruction for "+str(year))
         ruby_byid={r["id"]:r for r in ruby_report["records"]}
         if len(ruby_byid)!=120:raise RuntimeError("duplicate ruby IDs")
-    stats={"auto":0,"geometry":0,"ruby":0,"visual":0,"crossEngineHold":0,"hold":0,"pending":0}
+    layout_file=B/f"LAYOUT_TRIAGE_{year}.json"
+    layout=json.loads(layout_file.read_text()) if layout_file.exists() else None
+    layout_byid={}
+    if layout:
+        if layout["year"]!=year or layout["total"]!=120 or layout["candidateGitBlob"]!=expected_candidate_sha or len(layout["records"])!=120:
+            raise RuntimeError("invalid or stale figure/structure triage for "+str(year))
+        layout_byid={r["id"]:r for r in layout["records"]}
+        if len(layout_byid)!=120:raise RuntimeError("duplicate layout IDs")
+    stats={"auto":0,"geometry":0,"ruby":0,"layout":0,"visual":0,"crossEngineHold":0,"hold":0,"pending":0}
     for idx,q in enumerate(candidates):
         id=q["id"];n=idx+1
         if id!=f"KSAI-{year}-{n:03d}" or q["questionNo"]!=n:
@@ -68,6 +76,7 @@ for year in range(2022,2027):
         auto_result=byid.get(id)
         geometry_result=geom_byid.get(id)
         ruby_result=ruby_byid.get(id)
+        layout_result=layout_byid.get(id)
         if report and not auto_result:raise RuntimeError("missing diff")
         if auto_result and (auto_result["questionNo"]!=n or auto_result["officialAnswer"]!=k["official_answer"]):
             raise RuntimeError("diff key mismatch")
@@ -131,6 +140,26 @@ for year in range(2022,2027):
                    "sourcePdfSha256":auto_result["officialPdfSha256"],
                    "glyphCount":len(ruby_result["placements"])}
             stats["ruby"]+=1
+        elif layout_result and layout_result["status"]=="LAYOUT_FALSE_POSITIVE_PASS" and not layout_result["reasons"]:
+            if not auto_result or not geometry_result:
+                raise RuntimeError("missing source geometry for layout "+id)
+            if auto_result["status"]!="HOLD" or auto_result["candidateNormalizedSha256"]!=auto_result["sourceNormalizedSha256"]:
+                raise RuntimeError("original source mismatch for layout "+id)
+            if geometry_result.get("ruby") is not None:
+                raise RuntimeError("unexpected ruby in cleared layout "+id)
+            if not set(geometry_result["reasons"]).issubset({"FIGURE_OR_FORM_REVIEW","TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE"}):
+                raise RuntimeError("unresolved layout flags "+id)
+            if layout_result.get("subtype")=="BENIGN_FIGURE_VERB":
+                if "FIGURE_OR_FORM_REVIEW" not in geometry_result["reasons"]:
+                    raise RuntimeError("figure proof mismatch")
+            elif layout_result.get("subtype")=="ORDINARY_PROSE_OPTIONS":
+                if geometry_result["reasons"]!=["TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE"]:
+                    raise RuntimeError("special table proof mismatch")
+            else:raise RuntimeError("unexpected layout proof subtype")
+            audit={"status":"PASS","method":"AUTO_PDF_LAYOUT_FALSE_POSITIVE_TRIAGE",
+                "record":f"LAYOUT_TRIAGE_{year}.json",
+                "sourcePdfSha256":auto_result["officialPdfSha256"]}
+            stats["layout"]+=1
         else:
             stats["hold" if auto_result else "pending"]+=1
             continue
