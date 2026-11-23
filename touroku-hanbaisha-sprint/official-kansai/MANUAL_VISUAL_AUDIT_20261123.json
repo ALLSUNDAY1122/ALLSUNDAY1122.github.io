@@ -142,7 +142,7 @@
       "status": "PASS",
       "pdf_page": 13,
       "answer": 2,
-      "evidence": "Official PDF page13 visual review confirmed choice 5 is 誤 正 誤 正; trailing [主な医薬品とその作用] heading was incorrectly attached by extractor. Corrected choice only, retained original rawOriginalText and before/after correction in candidate; answer 2 matched official key.",
+      "evidence": "Official PDF page13 visual review confirmed choice 5 is 誤 正 誤 正; trailing [主な医薬品とその作用] heading was incorrectly attached by extractor. Corrected choice only, retained original rawOriginalText and before/after correction in candidate; answer 2 matched official key. Corrected sourcePdfPages from [13,14] to [13], preserved previous metadata in correctionHistory.",
       "priorStatus": "HOLD",
       "correctionPath": "QUESTIONS_2022_APP_CANDIDATE.json Q20 correctionHistory"
     }
@@ -160,10 +160,16 @@
   "reviewScope": "2022 Q01-Q20 visual review (source PDF pages2-13), 13 PASS / 7 HOLD",
   "auditSourceFrozenGitBlobs": {
     "2022": {
-      "candidate": "78a42c796f906a4f2091210968872804aa8fe7c3",
+      "candidate": "4a9aac1cb423fafd68576650d35254a7609ac9c6",
       "officialAnswerIndex": "8a345fcb70c1e2ac3466b4db9d8e2a2348c75c31",
       "previousCandidate": "4dce337ab38a255327da851f2979998628557d6f",
-      "changeScope": "2022 Q20 choices[4] only; all other question data unchanged"
+      "changeScope": "Q20 choices[4] removed following chapter heading and sourcePdfPages [13,14] -> [13], all changes logged",
+      "history": [
+        {
+          "sha": "78a42c796f906a4f2091210968872804aa8fe7c3",
+          "change": "Q20 choices[4] removed next chapter header"
+        }
+      ]
     }
   },
   "auditSourceFreezePolicy": "Candidate sha change requires documented source audit; 2022 Q20 exception explicitly recorded."
