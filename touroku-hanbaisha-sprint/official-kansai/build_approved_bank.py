@@ -1,61 +1,94 @@
 #!/usr/bin/env python3
-"""Build release bank from explicitly signed off visual-audit records only."""
-import json,hashlib
+"""Official release bank: reviewed visual PASS plus strict normalized official-PDF AUTO_PASS.
+Never silently promote a known HOLD or a diff tied to stale Git blobs.
+"""
+import hashlib,json
 from pathlib import Path
-BASE=Path(__file__).resolve().parent
-AUDIT=json.loads((BASE/"MANUAL_VISUAL_AUDIT_20261123.json").read_text())
-APPROVED=[]
-seen=set()
-def blob_sha(path):
-    data=path.read_bytes()
-    return hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
-review_sources=AUDIT.get('auditSourceFrozenGitBlobs',{})
-for record in AUDIT["reviewedQuestions"]:
-    key=record["id"]
-    if key in seen:raise ValueError("duplicate audit ID "+key)
-    seen.add(key)
-    if record["status"]!="PASS":continue
-    # Only supported years with official per-year source/answer index
-    _,year_string,qno_string=key.split("-")
-    year=int(year_string);number=int(qno_string)
-    frozen=review_sources.get(str(year))
-    if not frozen:raise ValueError('unfrozen reviewed source year '+str(year))
-    candidate_file=BASE/f'QUESTIONS_{year}_APP_CANDIDATE.json'
-    answer_file=BASE/f'ANSWERS_{year}_OFFICIAL.json'
-    if blob_sha(candidate_file)!=frozen['candidate'] or blob_sha(answer_file)!=frozen['officialAnswerIndex']:
-        raise ValueError('audited candidate or answer source changed; re-review required for '+str(year))
-    candidate=json.loads(candidate_file.read_text())
-    official=json.loads(answer_file.read_text())
-    q=next((x for x in candidate["questions"] if x["id"]==key),None)
-    if not q or q["questionNo"]!=number:raise ValueError("missing candidate "+key)
-    k=official["questions"][number-1]
-    if k["question_no"]!=number or q["answerNumberOfficial"]!=k["official_answer"]:
-        raise ValueError("answer index mismatch "+key)
-    if q["sourceIssuer"]!="関西広域連合" or not q.get("attributionDisplay") or not q.get("sourceUrl"):
-        raise ValueError("source mismatch "+key)
-    if not isinstance(q["choices"],list) or len(q["choices"]) not in (4,5) or not all(q["choices"]):
-        raise ValueError("options mismatch "+key)
-    if q["officialStatus"]=="OFFICIALLY_INVALID_ALL_CANDIDATES_CORRECT":
-        if q["answer"] is not None or not q["excludeFromAccuracyDenominator"]:
-            raise ValueError("invalid scoring "+key)
-    else:
-        if not isinstance(q["answer"],int) or q["answer"]<0 or q["answer"]>=len(q["choices"]):
-            raise ValueError("invalid answer "+key)
-    if record["answer"]!=k["official_answer"]:raise ValueError("manual review answer mismatch "+key)
-    fields=["id","year","questionNo","chapter","question","choices","answer","answerNumberOfficial","sourceIssuer","sourceTitle","sourceUrl","answerSourceUrl","sourcePdfPages","attributionDisplay","officialStatus","excludeFromAccuracyDenominator"]
-    item={name:q[name] for name in fields}
-    item.update({"modificationDisclosureDisplay":"PDFから抽出した表示用テキスト。原典PDFと改行・組版が異なります。",
-                 "verbatimCertified":True,"needsVisualReview":False,"renderReady":True,
-                 "audit":{"status":"PASS","source": "MANUAL_VISUAL_AUDIT_20261123.json","pdf_page":record["pdf_page"],"reviewedAt":AUDIT["reviewed_at"]}})
-    APPROVED.append(item)
-APPROVED.sort(key=lambda q:(q["year"],q["questionNo"]))
-expected={r["id"] for r in AUDIT["reviewedQuestions"] if r["status"]=="PASS"}
-if {q["id"] for q in APPROVED}!=expected or not expected:
-    raise ValueError("unexpected promotion set")
-out={"schema":"touroku-hanbaisha-official-approved-v1","issuer":"関西広域連合",
-     "officialPastQuestionsOnly":True,"officialYear":2022,"count":len(APPROVED),
-     "approvedIds":[q["id"] for q in APPROVED],"questionCountTarget":600,
-     "reviewScope":"2022 visual audit PASS subset only","status":"PARTIAL_APPROVED","questions":APPROVED}
-file=BASE/"APPROVED_OFFICIAL_BANK.json"
-file.write_text(json.dumps(out,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-print("PASS: approved",len(APPROVED),"HOLD",sum(r["status"]=="HOLD" for r in AUDIT["reviewedQuestions"]))
+B=Path(__file__).resolve().parent
+manual=json.loads((B/"MANUAL_VISUAL_AUDIT_20261123.json").read_text())
+reviews={r["id"]:r for r in manual["reviewedQuestions"]}
+frozen=manual.get("auditSourceFrozenGitBlobs",{})
+def blob(path):
+    contents=path.read_bytes()
+    return hashlib.sha1(f"blob {len(contents)}\0".encode()+contents).hexdigest()
+accepted={}
+status_by_year={}
+for year in range(2022,2027):
+    candidate_path=B/f"QUESTIONS_{year}_APP_CANDIDATE.json"
+    answer_path=B/f"ANSWERS_{year}_OFFICIAL.json"
+    candidates=json.loads(candidate_path.read_text())["questions"]
+    answers=json.loads(answer_path.read_text())["questions"]
+    expected_candidate_sha=blob(candidate_path)
+    expected_answers_sha=blob(answer_path)
+    if len(candidates)!=len(answers)!=120:raise RuntimeError("incorrect lengths")
+    report_file=B/f"AUTO_DIFF_{year}.json"
+    report=json.loads(report_file.read_text()) if report_file.exists() else None
+    if report is not None:
+        if report["year"]!=year or report["total"]!=120 or len(report["questions"])!=120:
+            raise RuntimeError(f"invalid auto report for {year}")
+        if report["candidateGitBlob"]!=expected_candidate_sha or report["answerIndexGitBlob"]!=expected_answers_sha:
+            raise RuntimeError(f"stale auto diff for {year}")
+        if len({r["id"] for r in report["questions"]})!=120:
+            raise RuntimeError(f"duplicate IDs {year}")
+        byid={r["id"]:r for r in report["questions"]}
+    else:byid={}
+    stats={"auto":0,"visual":0,"hold":0,"pending":0}
+    for idx,q in enumerate(candidates):
+        id=q["id"];n=idx+1
+        if id!=f"KSAI-{year}-{n:03d}" or q["questionNo"]!=n:
+            raise RuntimeError("candidate order")
+        k=answers[idx]
+        if k["question_no"]!=n or k["official_answer"]!=q["answerNumberOfficial"]:
+            raise RuntimeError("official key mismatch")
+        manual_result=reviews.get(id)
+        auto_result=byid.get(id)
+        if report and not auto_result:raise RuntimeError("missing diff")
+        if auto_result and (auto_result["questionNo"]!=n or auto_result["officialAnswer"]!=k["official_answer"]):
+            raise RuntimeError("diff key mismatch")
+        if manual_result and manual_result["status"]=="HOLD":
+            stats["hold"]+=1
+            continue
+        if manual_result and manual_result["status"]=="PASS":
+            pin=frozen.get(str(year))
+            if not pin or pin["candidate"]!=expected_candidate_sha or pin["officialAnswerIndex"]!=expected_answers_sha:
+                raise RuntimeError("visual evidence source hash drift "+id)
+            if manual_result["answer"]!=q["answerNumberOfficial"]:
+                raise RuntimeError("manual answer mismatch")
+            audit={"status":"PASS","method":"VISUAL","record":"MANUAL_VISUAL_AUDIT_20261123.json","pdfPage":manual_result["pdf_page"]}
+            stats["visual"]+=1
+        elif auto_result and auto_result["status"]=="AUTO_PASS" and not auto_result["reasons"]:
+            if auto_result["candidateNormalizedSha256"]!=auto_result["sourceNormalizedSha256"]:
+                raise RuntimeError("invalid normalized evidence")
+            audit={"status":"PASS","method":"AUTO_SHA_PINNED_PDF_NFC_WHITESPACE_DIFF","record":f"AUTO_DIFF_{year}.json",
+                   "sourcePdfSha256":auto_result["officialPdfSha256"],
+                   "normalizedTextSha256":auto_result["sourceNormalizedSha256"]}
+            stats["auto"]+=1
+        else:
+            stats["hold" if auto_result else "pending"]+=1
+            continue
+        if q["sourceIssuer"]!="関西広域連合" or not q.get("sourceUrl") or not q.get("answerSourceUrl") or not q.get("attributionDisplay"):
+            raise RuntimeError("source attribution absent "+id)
+        if not isinstance(q["choices"],list) or len(q["choices"]) not in (4,5) or not all(q["choices"]):
+            raise RuntimeError("choice structural failure "+id)
+        if year==2023 and n==90:
+            # Official invalid must never get automatic approval.
+            if audit["method"]!="VISUAL" or q["answer"] is not None or not q["excludeFromAccuracyDenominator"]:
+                raise RuntimeError("invalid Q90 promotion")
+        elif not isinstance(q["answer"],int) or not 0<=q["answer"]<len(q["choices"]) or q["excludeFromAccuracyDenominator"]:
+            raise RuntimeError("invalid answer "+id)
+        fields=("id","year","questionNo","chapter","question","choices","answer","answerNumberOfficial",
+                "sourceIssuer","sourceTitle","sourceUrl","answerSourceUrl","sourcePdfPages",
+                "attributionDisplay","officialStatus","excludeFromAccuracyDenominator")
+        item={field:q[field] for field in fields}
+        item.update({"modificationDisclosureDisplay":q.get("modificationDisclosureDisplay") or "PDFを表示用に加工",
+                     "verbatimCertified":True,"needsVisualReview":False,"renderReady":True,"audit":audit})
+        accepted[id]=item
+    status_by_year[str(year)]=stats
+approved=sorted(accepted.values(),key=lambda q:(q["year"],q["questionNo"]))
+out={"schema":"touroku-hanbaisha-official-approved-v2","issuer":"関西広域連合",
+     "officialPastQuestionsOnly":True,"count":len(approved),"questionCountTarget":600,
+     "approvedIds":[q["id"] for q in approved],"byYear":status_by_year,
+     "status":"PARTIAL_APPROVED" if len(approved)<600 else "APPROVED_CONTENT",
+     "releaseGate":"BLOCKED_PENDING_APP_TESTS_AND_REVIEW","questions":approved}
+(B/"APPROVED_OFFICIAL_BANK.json").write_text(json.dumps(out,ensure_ascii=False,indent=2)+"\n")
+print(json.dumps({"approved":len(approved),"byYear":status_by_year},ensure_ascii=False))
