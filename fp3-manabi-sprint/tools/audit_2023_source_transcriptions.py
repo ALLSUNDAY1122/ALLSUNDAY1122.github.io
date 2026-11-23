@@ -40,6 +40,23 @@ def main() -> int:
             fail(f"{exam}: answer PDF date mismatch")
         if not all(f"問{x}" in atext for x in (1,10,20,30,31,40,50,60)):
             fail(f"{exam}: answer PDF question labels missing")
+        lines = [line.strip() for line in atext.splitlines()]
+        extracted = []
+        for i, line in enumerate(lines):
+            labels = re.findall(r"問\\s*(\\d+)", line)
+            if len(labels) == 10:
+                j = i + 1
+                while j < len(lines) and not lines[j]:
+                    j += 1
+                if j >= len(lines):
+                    fail(f"{exam}: answer row missing after labels")
+                values = [int(v) for v in re.findall(r"(?<!\\d)[123](?!\\d)", lines[j])]
+                if len(values) != 10:
+                    fail(f"{exam}: expected 10 answer values, got {values}")
+                extracted.extend(values)
+        expected = item["tf"] + item["mc"]
+        if extracted != expected:
+            fail(f"{exam}: extracted official answer vector mismatch: {extracted}")
         report[exam] = {"date": item["date"], "questions": 60, "true_false": 30,
                         "multiple_choice": 30, "answer_key_entries": 60,
                         "answer_key_source": item["answer"].name}
