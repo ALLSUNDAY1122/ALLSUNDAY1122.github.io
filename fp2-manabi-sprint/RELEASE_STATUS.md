@@ -1,5 +1,13 @@
 # FP2 RELEASE STATUS（最新正本・2026-11-23）
 
+## CI evidence after corrected PASS4 integration (2026-11-23 JST)
+
+For commit `313d0614bb0640d71afe0abbc3fae68f04c81c3e` (bank and source-lock final), GitHub PR checks read-back:
+- FP2 canonical bank and web source preflight **SUCCESS**: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45149246610. Log: content 194, selected 120, reserve 74, six domains x 20, seven pinned assets; `errors=[]`, `status=PASS`; JS syntax / v2.1 migration static check PASS.
+- FP2 Golden Master v2.1 migration gate **SUCCESS**: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45149246573.
+- App Release Registry Audit **SUCCESS**: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45149246631.
+- iOS-native simulator push CI on this latest head, signed IPA and distributed payload **NOT VERIFIED**. Source static bundle-pin equality is verified; iOS executable bundle SHA and TestFlight remain **NOT TESTED**. This is not SUBMISSION_READY.
+
 ## Corrected FAIL5 follow-up / canonical 194 (2026-11-23 JST)
 
 Independent re-audit: `audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md` (blob `26f92519480b8c32f44d246440b556a176b472af`). Recovered 180: **PASS179 / FAIL1 / HOLD0**. Four corrected PASS (2025-05 Q36/Q39, 2025-01 Q17/Q13) are admitted to the **content-reviewed reserve only**, not the 120-question release selection. Canonical **194** = 120 selected + 74 reserve; all `publishable=false`. Original 120 IDs unchanged.
