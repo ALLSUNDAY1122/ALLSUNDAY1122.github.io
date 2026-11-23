@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""FP2 selected-120 structural/provenance regression gate. This is not legal sign-off."""
+"""FP2 selected-300 verbatim legal exclusion structural/provenance regression gate. This is not legal sign-off."""
 from pathlib import Path
 from collections import Counter
 import hashlib
@@ -19,15 +19,15 @@ answers=Counter()
 source_groups=Counter()
 def git_blob(blob):
     return hashlib.sha1(b"blob "+str(len(blob)).encode()+b"\x00"+blob).hexdigest()
-if len(bank["questions"])!=312 or len(selected)!=300 or len(reserved)!=12:
+if len(bank["questions"])!=309 or len(selected)!=300 or len(reserved)!=9:
     errors.append("canonical/selection/reserve count mismatch")
 if (bank.get("recovered_pass_count"),bank.get("recovered_fail_count"),bank.get("recovered_hold_count"))!=(180,0,0):
     errors.append("recovered180 audit count mismatch")
 if len(domains)!=6 or any(n!=50 for n in domains.values()):
     errors.append("six domains x 50 violated")
 exam_counts=Counter(q.get("exam_year_month") or q.get("examDate") for q in selected)
-if len(exam_counts)!=5 or sorted(exam_counts.values())!=[60]*5: errors.append("five academic sessions x 60 violated")
-if (bank.get("expansion_audit_pass_count"),bank.get("expansion_audit_fail_count"),bank.get("expansion_audit_hold_count"))!=(120,0,0): errors.append("expansion audit 120/0/0 mismatch")
+if dict(exam_counts)!={"2026-05":60,"2025-05":60,"2025-01":60,"independently-authored":3,"2024-09":59,"2024-05":58}: errors.append("2024 law-excluded 297 official +3 originals session distribution violated")
+if (bank.get("expansion_audit_pass_count"),bank.get("expansion_audit_fail_count"),bank.get("expansion_audit_hold_count"))!=(117,2,1): errors.append("verbatim audit 117/2/1 mismatch")
 scope={}
 for group in selection["domains"]:
     for i in group["selected_ids"]:
