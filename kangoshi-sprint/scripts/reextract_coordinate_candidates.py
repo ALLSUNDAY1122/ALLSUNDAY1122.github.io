@@ -68,6 +68,22 @@ def split_fields(raw,n):
         return None,"UNRESOLVED_SOURCE_GLYPH_OR_FOOTER"
     return result,None
 
+def equivalent_english_gloss_reorder(a,b):
+    """Conservative fallback for inline English ruby/annotations with punctuation.
+
+    Japanese, digits, brackets, all other punctuation must be exact after
+    whitespace removal. ASCII periods and commas may shift position ONLY if
+    their counts and the English word multiset are unchanged.
+    """
+    a=clean_font(a);b=clean_font(b)
+    english_a=sorted(re.findall(r"[A-Za-z]+",a))
+    english_b=sorted(re.findall(r"[A-Za-z]+",b))
+    if not english_a or english_a!=english_b:return False
+    if (a.count(".")!=b.count(".") or a.count(",")!=b.count(",")):
+        return False
+    stripped=lambda t:re.sub(r"\\s+","",re.sub(r"[A-Za-z.,]","",unicodedata.normalize("NFKC",t)))
+    return bool(stripped(a)) and stripped(a)==stripped(b)
+
 def main():
     verified=json.loads((ROOT/"product-content/verified-additions-20261124.json").read_text())
     skip={q["id"] for q in verified["questions"]}
@@ -102,10 +118,10 @@ def main():
                 continue
             exact_stem=norm(pa["question"])==norm(pb["question"])
             meaningful_stem,_=equivalent_shared_context(pa["question"],pb["question"])
-            if not exact_stem and not meaningful_stem:
+            if not exact_stem and not meaningful_stem and not equivalent_english_gloss_reorder(pa["question"],pb["question"]):
                 diagnostics.append({"pg":pg,"reason":"STEM_DIFFER","pymupdf":pa["question"][:220],"poppler":pb["question"][:220]})
                 continue
-            choice_checks=[equivalent_shared_context(x,y)[0] for x,y in zip(pa["choices"],pb["choices"])]
+            choice_checks=[equivalent_shared_context(x,y)[0] or equivalent_english_gloss_reorder(x,y) for x,y in zip(pa["choices"],pb["choices"])]
             if not all(choice_checks):
                 diagnostics.append({"pg":pg,"reason":"CHOICE_DIFFER","pymupdf":pa["choices"],"poppler":pb["choices"]})
                 continue
