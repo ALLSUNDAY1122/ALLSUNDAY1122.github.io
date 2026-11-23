@@ -1,4 +1,4 @@
-name: Kangoshi Residual 229 Geometric Image Triage and Dual Engine
+name: Kangoshi Original Image Pinned CMap Numeral Recovery
 on:
   workflow_dispatch:
   push:
@@ -42,6 +42,8 @@ jobs:
         run: python kangoshi-sprint/scripts/overlay_reextracted_pending.py
       - name: Restore clean prior visually reviewed text as unverified candidates
         run: python kangoshi-sprint/scripts/overlay_prior_source_repairs.py
+      - name: Render pre-repair original PDF regions with pinned image hashes
+        run: python kangoshi-sprint/scripts/render_residual_geometric_evidence.py
       - name: Diagnose PDF-number coordinates on source originals
         run: python kangoshi-sprint/scripts/debug_pdf_coordinates.py
       - name: Reextract original coordinate question regions by both independent PDF engines
@@ -50,6 +52,8 @@ jobs:
         run: cp kangoshi-sprint/audit/runs/dual-engine-20261124/coordinate-reextraction-evidence.json kangoshi-sprint/audit/coordinate-reextraction-evidence-20261124.json
       - name: Apply three PDF-and-image SHA-pinned numeric glyph repairs
         run: python kangoshi-sprint/scripts/apply_visual_glyph_evidence.py
+      - name: Reconstruct image-verified missing numerals and paired parentheses
+        run: python kangoshi-sprint/scripts/apply_image_pinned_cmap_repairs.py
       - name: Perform 480 question Poppler versus PyMuPDF dual engine and official key audit
         run: python kangoshi-sprint/scripts/bulk_dual_engine_verify.py
       - name: Produce 38 side-by-side source PDF versus image comparisons
@@ -77,6 +81,7 @@ jobs:
           git add kangoshi-sprint/audit/geometry-recovery-image-index-20261124.json
           git add kangoshi-sprint/audit/latest-new-source-images-20261124.json
           git add kangoshi-sprint/audit/residual-geometric-source-index-20261124.json
+          git add kangoshi-sprint/audit/image-pinned-cmap-repair-results-20261124.json
           git diff --cached --quiet || git commit -m "kangoshi: apply independent boundary/context recheck and persist source-only gates"
           git pull --rebase -X theirs origin main
           git push origin HEAD:main
