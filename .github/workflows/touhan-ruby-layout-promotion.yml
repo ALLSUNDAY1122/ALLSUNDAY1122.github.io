@@ -93,8 +93,8 @@ jobs:
           git add -f "$b/RUBY_PIPELINE_DIAGNOSTICS.json" 2>/dev/null || true
           git add -f "$b/RUBY_DOM_QA_RESULT.json" 2>/dev/null || true
           for y in 2022 2023 2024 2025 2026; do
-            git add -f "$b/RUBY_RECON_\${y}.json" 2>/dev/null || true
-            git add -f "$b/LAYOUT_TRIAGE_\${y}.json" 2>/dev/null || true
+            git add -f "$b/RUBY_RECON_${y}.json" 2>/dev/null || true
+            git add -f "$b/LAYOUT_TRIAGE_${y}.json" 2>/dev/null || true
           done
           git add "$b/APPROVED_OFFICIAL_BANK.json" 2>/dev/null || true
           git add touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
