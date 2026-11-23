@@ -2,7 +2,7 @@
 """Reconstruct candidate stems and options from PDF geometric question regions.
 
 A candidate changes ONLY when PyMuPDF and Poppler independently reproduce the
-same stem and all four choices inside the same unambiguous coordinate crop.
+same stem and all printed four or five choices inside the same unique crop.
 Save original/repaired differences and rejected reasons as an audit artifact.
 Never infer CMap glyphs; do not grant rights, scoring exceptions, or publication.
 """
@@ -47,7 +47,7 @@ def split_fields(raw,n):
     lines[0]=first.sub("",lines[0],count=1).strip()
     if not lines[0]:lines.pop(0)
     fields=[];stem=[];current=None
-    # Choice labels must appear in order at line start; no missing or fifth choice.
+    # Preserve actual printed 4 or 5 answer options; reject a missing number.
     ch=re.compile(r"^([1-5])[.．、)）]\s*(.*)$")
     for line in lines:
         if current==4 and (line.startswith("DKIX-") or re.fullmatch(r"\d{1,3}",line)):
@@ -55,13 +55,12 @@ def split_fields(raw,n):
         m=ch.match(line)
         if m:
             label=int(m.group(1))
-            if label==5:return None,"FIFTH_CHOICE_PRESENT"
             if label!=len(fields)+1:return None,"CHOICE_ORDER_AMBIGUOUS"
             fields.append(m.group(2));current=label
         elif current is None:stem.append(line)
         else:fields[-1]+=line
-    if len(fields)!=4 or any(not s for s in fields) or not stem:
-        return None,"INCOMPLETE_STEM_OR_FOUR_CHOICES"
+    if len(fields) not in (4,5) or any(not s for s in fields) or not stem:
+        return None,"INCOMPLETE_STEM_OR_FOUR_OR_FIVE_CHOICES"
     # Prevent printed footer/reference and suspicious extracted characters from release.
     result={"question":"".join(stem),"choices":fields}
     if any(suspicious(x) for x in [result["question"]]+fields):
@@ -122,7 +121,7 @@ def main():
                 diagnostics.append({"pg":pg,"reason":"STEM_DIFFER","pymupdf":pa["question"][:220],"poppler":pb["question"][:220]})
                 continue
             choice_checks=[equivalent_shared_context(x,y)[0] or equivalent_english_gloss_reorder(x,y) for x,y in zip(pa["choices"],pb["choices"])]
-            if not all(choice_checks):
+            if len(pa["choices"])!=len(pb["choices"]) or not all(choice_checks):
                 diagnostics.append({"pg":pg,"reason":"CHOICE_DIFFER","pymupdf":pa["choices"],"poppler":pb["choices"]})
                 continue
             candidates.append((pg,geo,pa,pb))
@@ -136,6 +135,7 @@ def main():
                 or q.get("officialKeyPdfSha256")!=keysha):
                 reason.append("OFFICIAL_KEY_OR_SHA_NOT_MATCHED")
             if q.get("officialScoringStatus")!="normal":reason.append("SCORING_EXCEPTION")
+            if not 0<=q.get("answer",-1)<len(pa["choices"]):reason.append("OFFICIAL_ANSWER_OUTSIDE_PRINTED_OPTIONS")
             if re.search(r"図|画像|写真|別冊|心電図|グラフ|波形",pa["question"]):
                 reason.append("SOURCE_MEDIA_CUE")
             if n>=91:
@@ -149,7 +149,7 @@ def main():
           previous={"question":q.get("question"),"choices":q.get("choices"),"sourcePage":q.get("sourcePage"),"extractionValid":q.get("extractionValid")}
           changed=norm(previous["question"])!=norm(pb["question"]) or [norm(x) for x in previous["choices"] or []]!=[norm(x) for x in pb["choices"]] or previous["sourcePage"]!=pg
           q.update(question=pb["question"],choices=pb["choices"],sourcePage=pg,extractionValid=True)
-          q["coordinateReextraction"]={"page":pg,"anchorBox":geo["anchorBox"],"clip":geo["clip"],"source":"PyMuPDF+Poppler cropped text", "sourcePdfSha256":hashlib.sha256(pdf.read_bytes()).hexdigest(),"previousCandidateChanged":changed,"independentFieldEquality":"EXACT_JAPANESE_AND_LATIN_TOKEN_MULTISET_PLUS_FOUR_FIELD_ORDER"}
+          q["coordinateReextraction"]={"page":pg,"anchorBox":geo["anchorBox"],"clip":geo["clip"],"source":"PyMuPDF+Poppler cropped text", "sourcePdfSha256":hashlib.sha256(pdf.read_bytes()).hexdigest(),"previousCandidateChanged":changed,"independentFieldEquality":"EXACT_JAPANESE_AND_LATIN_TOKEN_MULTISET_PRINTED_OPTION_ORDER","printedOptionCount":len(pb["choices"])}
           if changed:
             summary["updated"]+=1
             repairs.append({"id":q["id"],"before":previous,"after":{"question":q["question"],"choices":q["choices"],"sourcePage":pg},"bbox":geo["clip"]})
