@@ -89,6 +89,8 @@ jobs:
       # Source PDF coordinates exclude page DKIX footer from final printed option.
       - name: Repair 46 OCR-segmentation holds from independently clipped stem and four choice coordinates
         run: python kangoshi-sprint/scripts/repair_ocr_coordinate_46.py
+      - name: Individually compare and repair 21 non-CMap OCR mismatches against image and both PDF engines
+        run: python kangoshi-sprint/scripts/repair_ocr_non_cmap_21.py
       - name: Render each residual held question from geometric source PDF evidence
         run: python kangoshi-sprint/scripts/render_residual_geometric_evidence.py
       # OCR-promoted records require the same PDF image evidence and ID count invariant.
@@ -118,9 +120,18 @@ jobs:
           git add kangoshi-sprint/product-content/ocr-repaired-candidates-20261124.json
           git add kangoshi-sprint/audit/ocr-coordinate-repair-ledger-20261124.json
           git add kangoshi-sprint/product-content/ocr-coordinate-repaired-candidates-20261124.json
+          git add kangoshi-sprint/audit/ocr-noncmap-repair-ledger-20261124.json
+          git add kangoshi-sprint/product-content/ocr-noncmap-repaired-candidates-20261124.json
           git diff --cached --quiet || git commit -m "kangoshi: apply independent boundary/context recheck and persist source-only gates"
           git pull --rebase -X theirs origin main
           git push origin HEAD:main
+      - name: Upload individual 21-case OCR source image and delta evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-ocr-noncmap-21-images
+          path: kangoshi-sprint/audit/runs/ocr-noncmap-21-20261124/
+          if-no-files-found: warn
       - name: Upload separately clipped question and option OCR evidence
         if: always()
         uses: actions/upload-artifact@v4
