@@ -3,7 +3,7 @@
   "created_at_jst": "2026-11-24T02:20:00+09:00",
   "branch": "feature/fp2-release-scope-20261123",
   "canonical_path": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "canonical_source_blob_sha": "dc953026e0d56240d06b8e017c3b23ead556f745",
+  "canonical_source_blob_sha": "3a4e8b13270cbb2900213633fc33094aee70961c",
   "law_effective_date": "2026-04-01",
   "scope": {
     "total": 180,
@@ -25,8 +25,8 @@
   "gate_policy": "以前のPASSは内容一次判定であり、本最終証拠監査の完了を意味しない。証拠行未固定の問題のlegalChecked/explanationCheckedを機械的にtrueへ変更しない。",
   "summary": {
     "target": 180,
-    "pending": 110,
-    "verified": 70,
+    "pending": 90,
+    "verified": 90,
     "hold": 0,
     "fail": 0,
     "by_exam": {
@@ -37,8 +37,8 @@
         "fail": 0
       },
       "2025-05": {
-        "pending": 50,
-        "verified": 10,
+        "pending": 30,
+        "verified": 30,
         "hold": 0,
         "fail": 0
       },
@@ -4379,321 +4379,1240 @@
       "id": "fp2-2025-05-gakka-011",
       "exam_date": "2025-05",
       "question_number": 11,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "責任準備金は将来の保険金支払等に備えて保険数理に基づき積み立てる。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/basic/insurance/101.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "純保険料は予定死亡率と予定利率に基づき算定。予定事業費率は付加保険料に関係。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/basic/insurance/101.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "他条件一定で予定利率が上昇すると運用見込収益増により新契約保険料は通常低下する。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/basic/insurance/101.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "実際の事業費が予定事業費より少なければ費差益が発生。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/basic/insurance/101.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.責任準備金は将来の保険金支払等に備えて保険数理に基づき積み立てる。 2.純保険料は予定死亡率と予定利率に基づき算定。予定事業費率は付加保険料に関係。 3.他条件一定で予定利率が上昇すると運用見込収益増により新契約保険料は通常低下する。 4.実際の事業費が予定事業費より少なければ費差益が発生。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-012",
       "exam_date": "2025-05",
       "question_number": 12,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "逓減定期は死亡保険金額が逓減し、保険料が逓減するという記述は逆。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/28.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "収入保障保険で年金を一時金換算すると将来の利息等相当を差し引くため総額より少ない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/28.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "低解約返戻金型は払込中解約返戻金を抑え通常終身より割安保険料の設計。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/28.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "更新型定期保険特約は更新年齢で保険料再計算され通常高くなる。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/28.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.逓減定期は死亡保険金額が逓減し、保険料が逓減するという記述は逆。 2.収入保障保険で年金を一時金換算すると将来の利息等相当を差し引くため総額より少ない。 3.低解約返戻金型は払込中解約返戻金を抑え通常終身より割安保険料の設計。 4.更新型定期保険特約は更新年齢で保険料再計算され通常高くなる。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-013",
       "exam_date": "2025-05",
       "question_number": 13,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "確定年金受取期間中の受給者死亡後は残存年金等の支払が基本で、払込保険料から既払年金を差引く方式と一律にいえない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/30.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "保証期間付終身年金は平均余命の長い女性のほうが一般に同条件の保険料が高い。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/30.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "変額個人年金は特別勘定運用実績により年金額と解約返戻金が変動。最低保証は商品条件による。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/29.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "高度障害時の保険料払込免除があっても通常は契約所定の年金開始日前から直ちに年金が出るわけではない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/30.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.確定年金受取期間中の受給者死亡後は残存年金等の支払が基本で、払込保険料から既払年金を差引く方式と一律にいえない。 2.保証期間付終身年金は平均余命の長い女性のほうが一般に同条件の保険料が高い。 3.変額個人年金は特別勘定運用実績により年金額と解約返戻金が変動。最低保証は商品条件による。 4.高度障害時の保険料払込免除があっても通常は契約所定の年金開始日前から直ちに年金が出るわけではない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-014",
       "exam_date": "2025-05",
       "question_number": 14,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "一般財形貯蓄積立保険は生命保険料控除の対象外。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "所定の特定疾病保障定期保険は死亡保障があるため一般生命保険料控除の対象。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1141.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "新契約における一般・介護医療・個人年金の所得税控除限度額は各4万円で各5万円ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "自動振替貸付で保険料充当された額も実際の払込扱いで生命保険料控除対象。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.一般財形貯蓄積立保険は生命保険料控除の対象外。 2.所定の特定疾病保障定期保険は死亡保障があるため一般生命保険料控除の対象。 3.新契約における一般・介護医療・個人年金の所得税控除限度額は各4万円で各5万円ではない。 4.自動振替貸付で保険料充当された額も実際の払込扱いで生命保険料控除対象。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-015",
       "exam_date": "2025-05",
       "question_number": 15,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "養老保険で死亡保険金受取人が全員の遺族・満期保険金受取人が法人の場合、所定要件で保険料の半額を資産計上、半額を損金算入する。全額損金は誤り。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5363.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "法人が死亡保険金を受ける終身保険の保険料は原則全額資産計上。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5363.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "保険金受取人が法人で解約返戻金がない全期払医療保険は、保険期間対応の保険料を原則損金算入可能。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5364.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "最高解約返戻率75％は70％超85％以下区分で、資産計上期間は保険期間の前半4割・支払保険料の60％を資産計上する。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5364-2.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.養老保険で死亡保険金受取人が全員の遺族・満期保険金受取人が法人の場合、所定要件で保険料の半額を資産計上、半額を損金算入する。全額損金は誤り。 2.法人が死亡保険金を受ける終身保険の保険料は原則全額資産計上。 3.保険金受取人が法人で解約返戻金がない全期払医療保険は、保険期間対応の保険料を原則損金算入可能。 4.最高解約返戻率75％は70％超85％以下区分で、資産計上期間は保険期間の前半4割・支払保険料の60％を資産計上する。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。",
+      "prior_hold_resolution": {
+        "prior_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
+        "result": "RESOLVED_FOR_LEGAL_EXPLANATION_AUDIT",
+        "reason": "国税庁No.5363、5364、5364-2により法人契約の受取人区分と返戻率75％資産計上を確認。"
+      }
     },
     {
       "id": "fp2-2025-05-gakka-016",
       "exam_date": "2025-05",
       "question_number": 16,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "原付も自動車損害賠償保障法による自賠責加入の義務対象。",
+          "primary_urls": [
+            "https://soudanguide.sonpo.or.jp/car/q001.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "加害車両1台の場合、被害者1名の死亡損害に対する支払限度は3,000万円。",
+          "primary_urls": [
+            "https://soudanguide.sonpo.or.jp/car/q001.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "自賠責は他人の死傷による対人賠償のみで対物損害を補償しない。",
+          "primary_urls": [
+            "https://soudanguide.sonpo.or.jp/car/q001.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "被害者は保険会社に対して所定限度額内で直接請求できる。",
+          "primary_urls": [
+            "https://soudanguide.sonpo.or.jp/car/q001.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.原付も自動車損害賠償保障法による自賠責加入の義務対象。 2.加害車両1台の場合、被害者1名の死亡損害に対する支払限度は3,000万円。 3.自賠責は他人の死傷による対人賠償のみで対物損害を補償しない。 4.被害者は保険会社に対して所定限度額内で直接請求できる。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-017",
       "exam_date": "2025-05",
       "question_number": 17,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "火災保険の契約途中でも地震保険の中途付帯が可能。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/insurance/jishin/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "地震保険料は建物構造だけでなく建物所在地（都道府県）で異なる。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/insurance/jishin/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "建築年・耐震等級・免震・耐震診断の各割引は重複適用されない。",
+          "primary_urls": [
+            "https://soudanguide.sonpo.or.jp/home/q063.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "地震保険は全損・大半損・小半損・一部損の4区分に応じ支払。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/insurance/jishin/"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.火災保険の契約途中でも地震保険の中途付帯が可能。 2.地震保険料は建物構造だけでなく建物所在地（都道府県）で異なる。 3.建築年・耐震等級・免震・耐震診断の各割引は重複適用されない。 4.地震保険は全損・大半損・小半損・一部損の4区分に応じ支払。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-018",
       "exam_date": "2025-05",
       "question_number": 18,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "従業員全員を被保険者・受取人とする通常の普通傷害保険で一般福利厚生に係る保険料は全額損金算入可能（同族優遇等の例外除く）。",
+          "primary_urls": [
+            "https://www.sonpo-dairiten.jp/daigaku/koushin/text/consulting/documents/zeimu2-songaihoken-2024.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "5年一括払火災保険料は未経過期間に対応する分を前払費用処理し、支払年度に全額損金にできない。",
+          "primary_urls": [
+            "https://www.sonpo-dairiten.jp/daigaku/koushin/text/consulting/documents/zeimu2-songaihoken-2024.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "車両保険金の受領と修理費支出は各々益金・損金等として経理が必要で相殺して無記帳にできない。",
+          "primary_urls": [
+            "https://www.sonpo-dairiten.jp/daigaku/koushin/text/consulting/documents/zeimu2-songaihoken-2024.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "火災保険差益の圧縮記帳は固定資産等が対象で、棚卸資産の滅失・再取得には適用されない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5608.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.従業員全員を被保険者・受取人とする通常の普通傷害保険で一般福利厚生に係る保険料は全額損金算入可能（同族優遇等の例外除く）。 2.5年一括払火災保険料は未経過期間に対応する分を前払費用処理し、支払年度に全額損金にできない。 3.車両保険金の受領と修理費支出は各々益金・損金等として経理が必要で相殺して無記帳にできない。 4.火災保険差益の圧縮記帳は固定資産等が対象で、棚卸資産の滅失・再取得には適用されない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。",
+      "prior_hold_resolution": {
+        "prior_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
+        "result": "RESOLVED_FOR_LEGAL_EXPLANATION_AUDIT",
+        "reason": "損保税務資料および国税庁の圧縮記帳資料から各肢の分類を確認。"
+      }
     },
     {
       "id": "fp2-2025-05-gakka-019",
       "exam_date": "2025-05",
       "question_number": 19,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "治療目的でなく異常なしの検査入院・人間ドックは通常入院給付金対象外。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/34.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "限定告知型・引受基準緩和型は通常同条件の一般医療保険より保険料が高くなる。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/34.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "所得補償保険は入院を必要条件とせず、自宅療養でも約款所定の就業不能なら対象。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/sme_insurance/employee/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "がん保険の一般的待ち期間は90日・3か月程度で180日・6か月が一般原則とはいえない。",
+          "primary_urls": [
+            "https://www.jili.or.jp/knows_learns/kind/main/34.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.治療目的でなく異常なしの検査入院・人間ドックは通常入院給付金対象外。 2.限定告知型・引受基準緩和型は通常同条件の一般医療保険より保険料が高くなる。 3.所得補償保険は入院を必要条件とせず、自宅療養でも約款所定の就業不能なら対象。 4.がん保険の一般的待ち期間は90日・3か月程度で180日・6か月が一般原則とはいえない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-020",
       "exam_date": "2025-05",
       "question_number": 20,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "飲食店料理が原因の食中毒による法律上の賠償責任はPL保険の典型的補償対象。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/sme_insurance/liability/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "機械保険の通常約款例では火災損害が免責であり火災リスクには火災保険等が適切。落雷等の補償範囲は商品ごとに異なる。",
+          "primary_urls": [
+            "https://www.aig.co.jp/content/dam/aig/sonpo/jp/ja/pamphlets/1A2-853.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "請負工事中の落下工具による第三者傷害賠償は請負業者賠償責任保険で備える。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/sme_insurance/liability/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "業務中の従業員負傷に伴う政府労災上乗せの法定外補償は労働災害総合保険の目的。",
+          "primary_urls": [
+            "https://www.sonpo.or.jp/sme_insurance/employee/"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.飲食店料理が原因の食中毒による法律上の賠償責任はPL保険の典型的補償対象。 2.機械保険の通常約款例では火災損害が免責であり火災リスクには火災保険等が適切。落雷等の補償範囲は商品ごとに異なる。 3.請負工事中の落下工具による第三者傷害賠償は請負業者賠償責任保険で備える。 4.業務中の従業員負傷に伴う政府労災上乗せの法定外補償は労働災害総合保険の目的。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-021",
       "exam_date": "2025-05",
       "question_number": 21,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "購買力平価の考え方では日本の相対インフレは円の価値低下・円安要因。",
+          "primary_urls": [
+            "https://www.boj.or.jp/about/education/oshiete/kokusai/h05.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "他条件一定で米国利上げによる日米金利差拡大は一般に円売り・ドル買いによる円安ドル高要因。",
+          "primary_urls": [
+            "https://www.boj.or.jp/about/education/oshiete/gaitame/h01.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "対米貿易黒字拡大は輸出代金等のドル売り円買いを通じ円高方向の要因。",
+          "primary_urls": [
+            "https://www.boj.or.jp/about/education/oshiete/gaitame/h01.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "同じ財が米3ドル・日450円なら購買力平価は450/3=150円/ドル。",
+          "primary_urls": [
+            "https://www.boj.or.jp/about/education/oshiete/kokusai/h05.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.購買力平価の考え方では日本の相対インフレは円の価値低下・円安要因。 2.他条件一定で米国利上げによる日米金利差拡大は一般に円売り・ドル買いによる円安ドル高要因。 3.対米貿易黒字拡大は輸出代金等のドル売り円買いを通じ円高方向の要因。 4.同じ財が米3ドル・日450円なら購買力平価は450/3=150円/ドル。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-022",
       "exam_date": "2025-05",
       "question_number": 22,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "期日指定定期預金は所定の据置期間後に満期日指定できるので預入翌営業日からではない。",
+          "primary_urls": [
+            "https://www.bk.mufg.jp/regulation/teiki_kijitsushitei.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "当座預金は支払決済等の口座振替に利用できる。",
+          "primary_urls": [
+            "https://www.bk.mufg.jp/tameru/yen/taikou/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "スーパー定期3年以上の半年複利型は個人向けで法人限定ではない。",
+          "primary_urls": [
+            "https://www.bk.mufg.jp/tameru/yen/sp_teiki/btm/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "大口定期は一般に最低1,000万円以上の固定金利型で2,000万円最低・変動金利とするのは誤り。",
+          "primary_urls": [
+            "https://www.bk.mufg.jp/tameru/yen/taikou/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.期日指定定期預金は所定の据置期間後に満期日指定できるので預入翌営業日からではない。 2.当座預金は支払決済等の口座振替に利用できる。 3.スーパー定期3年以上の半年複利型は個人向けで法人限定ではない。 4.大口定期は一般に最低1,000万円以上の固定金利型で2,000万円最低・変動金利とするのは誤り。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-023",
       "exam_date": "2025-05",
       "question_number": 23,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "ETFは投資信託であり運用管理費用・信託報酬が通常徴収される。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "取引所上場ETFは現物取引に加え信用取引も可能。対象区分や売建て可否には条件あり。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "ETFの分配金は必ず自動再投資されるとは限らず現金分配が一般的。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/outline/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "ETFには株価指数だけでなく東証REIT指数や商品指数等に連動する銘柄もある。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/products/etfs/issues/01-07.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.ETFは投資信託であり運用管理費用・信託報酬が通常徴収される。 2.取引所上場ETFは現物取引に加え信用取引も可能。対象区分や売建て可否には条件あり。 3.ETFの分配金は必ず自動再投資されるとは限らず現金分配が一般的。 4.ETFには株価指数だけでなく東証REIT指数や商品指数等に連動する銘柄もある。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-024",
       "exam_date": "2025-05",
       "question_number": 24,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "固定利付債券の金利上昇は債券価格下落、低下は価格上昇の要因。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/learning/basics/investment/06.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "発行体の信用悪化はデフォルト懸念と要求利回り上昇を通じ価格下落の要因。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/learning/basics/investment/06.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "一般に好況で持続的インフレが進み市場金利上昇すれば既発固定利付債券価格は下落方向。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/learning/basics/investment/06.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "同条件の債券は償還までの期間が長い方が一般に金利感応度・価格変動が大きい。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/learning/basics/investment/06.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.固定利付債券の金利上昇は債券価格下落、低下は価格上昇の要因。 2.発行体の信用悪化はデフォルト懸念と要求利回り上昇を通じ価格下落の要因。 3.一般に好況で持続的インフレが進み市場金利上昇すれば既発固定利付債券価格は下落方向。 4.同条件の債券は償還までの期間が長い方が一般に金利感応度・価格変動が大きい。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-025",
       "exam_date": "2025-05",
       "question_number": 25,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "指値注文は価格優先、同値では時間優先に従う。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/trading/domestic/01.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "成行注文は指値注文より優先されるため指値が成行に優先するとはいえない。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/trading/domestic/01.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "普通取引の株式受渡は約定日を含め3営業日目、すなわちT+2。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/trading/domestic/01.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "国内上場内国普通株の売買単位は原則100株。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/trading/domestic/01.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.指値注文は価格優先、同値では時間優先に従う。 2.成行注文は指値注文より優先されるため指値が成行に優先するとはいえない。 3.普通取引の株式受渡は約定日を含め3営業日目、すなわちT+2。 4.国内上場内国普通株の売買単位は原則100株。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-026",
       "exam_date": "2025-05",
       "question_number": 26,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "日経平均は全プライム市場銘柄でなく代表的225銘柄で構成。",
+          "primary_urls": [
+            "https://indexes.nikkei.co.jp/nkave/index/profile"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "JPX日経400は東証対象市場銘柄から資本効率や収益性・市場流動性等に基づき400銘柄を選定。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/markets/indices/jpx-nikkei400/01.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "東証REIT指数は上場REIT全銘柄ベースで上位30銘柄限定ではない。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/markets/indices/topix/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "S&P500は米国の代表的株式指数で英国ロンドン市場の500銘柄ではない。",
+          "primary_urls": [
+            "https://www.spglobal.com/spdji/en/indices/equity/sp-500/"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.日経平均は全プライム市場銘柄でなく代表的225銘柄で構成。 2.JPX日経400は東証対象市場銘柄から資本効率や収益性・市場流動性等に基づき400銘柄を選定。 3.東証REIT指数は上場REIT全銘柄ベースで上位30銘柄限定ではない。 4.S&P500は米国の代表的株式指数で英国ロンドン市場の500銘柄ではない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-027",
       "exam_date": "2025-05",
       "question_number": 27,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "外貨建商品の為替手数料は通貨が同じでも金融機関ごとに異なり得る。",
+          "primary_urls": [
+            "https://www.bk.mufg.jp/tameru/yen/sp_teiki/btm/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "外貨を円に換える際の為替レートはTTBでありTTSではない。",
+          "primary_urls": [
+            "https://www.bk.mufg.jp/tameru/yen/sp_teiki/btm/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "個人FXのレバレッジには法令上の上限（原則25倍）がある。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/ordinary/iwagai/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "米ドル建債券の円換算運用リターンは円安ドル高で上昇要因となる。",
+          "primary_urls": [
+            "https://www.boj.or.jp/about/education/oshiete/gaitame/h01.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.外貨建商品の為替手数料は通貨が同じでも金融機関ごとに異なり得る。 2.外貨を円に換える際の為替レートはTTBでありTTSではない。 3.個人FXのレバレッジには法令上の上限（原則25倍）がある。 4.米ドル建債券の円換算運用リターンは円安ドル高で上昇要因となる。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-028",
       "exam_date": "2025-05",
       "question_number": 28,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "期待収益率は0.6×0.1%+0.1×1.0%+0.3×7.0%=2.26%。0.32%ではない。",
+          "primary_urls": [
+            "https://www.gpif.go.jp/gpif/diversification2.html",
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202505_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "同じ加重平均で2.26%。1.10%ではない。",
+          "primary_urls": [
+            "https://www.gpif.go.jp/gpif/diversification2.html",
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202505_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "3資産の期待収益率の加重平均は2.26%。標準偏差は期待収益率の算出には用いない。",
+          "primary_urls": [
+            "https://www.gpif.go.jp/gpif/diversification2.html",
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202505_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "期待収益率は2.26%で2.70%ではない。",
+          "primary_urls": [
+            "https://www.gpif.go.jp/gpif/diversification2.html",
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202505_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.期待収益率は0.6×0.1%+0.1×1.0%+0.3×7.0%=2.26%。0.32%ではない。 2.同じ加重平均で2.26%。1.10%ではない。 3.3資産の期待収益率の加重平均は2.26%。標準偏差は期待収益率の算出には用いない。 4.期待収益率は2.26%で2.70%ではない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "期待収益率の数学的再計算による確認。公式PDFとの再目視照合は別工程。",
+      "prior_hold_resolution": {
+        "prior_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
+        "result": "RESOLVED_FOR_LEGAL_EXPLANATION_AUDIT",
+        "reason": "期待収益率2.26％を独立検算。原典の図版同一性は別ゲートで継続検査。"
+      }
     },
     {
       "id": "fp2-2025-05-gakka-029",
       "exam_date": "2025-05",
       "question_number": 29,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "新NISAのつみたて投資枠と成長投資枠は同年中に併用可能。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/policy/nisa2/know/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "NISAは原則基準年1月1日時点18歳以上が利用可で20歳未満一律不可ではない（2026-04基準）。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1535.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "2024年以降の新NISAの非課税保有期間は無期限で旧20年ではない。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/policy/nisa2/know/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "つみたて投資枠の年間投資限度額は120万円。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/policy/nisa2/know/"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.新NISAのつみたて投資枠と成長投資枠は同年中に併用可能。 2.NISAは原則基準年1月1日時点18歳以上が利用可で20歳未満一律不可ではない（2026-04基準）。 3.2024年以降の新NISAの非課税保有期間は無期限で旧20年ではない。 4.つみたて投資枠の年間投資限度額は120万円。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日有効制度で判定。2027年以降施行予定の未成年者枠を本基準日に含めない。"
     },
     {
       "id": "fp2-2025-05-gakka-030",
       "exam_date": "2025-05",
       "question_number": 30,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "確定拠出年金の預金運用商品も加入者単位で預金保険制度による保護対象。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/policy/payoff/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "決済用預金は3要件（無利息・要求払・決済サービス）を満たせば全額保護され、元本1,000万円限度ではない。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/policy/payoff/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "国内銀行の国内支店でも外貨預金は預金保険対象外。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/policy/payoff/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "他人名義を形式上借りた実質借名預金は原則預金保険の保護対象外。",
+          "primary_urls": [
+            "https://www.dic.go.jp/yokinsha/page_000105.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_QUALIFICATIONS",
+        "reason": "旧解説と4肢の正誤を法令・公的資料・制度主体の商品説明・数理で照合し、設問の一般論と商品別例外を区別。",
+        "conclusion": "1.確定拠出年金の預金運用商品も加入者単位で預金保険制度による保護対象。 2.決済用預金は3要件（無利息・要求払・決済サービス）を満たせば全額保護され、元本1,000万円限度ではない。 3.国内銀行の国内支店でも外貨預金は預金保険対象外。 4.他人名義を形式上借りた実質借名預金は原則預金保険の保護対象外。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の法令・税務及び一般の商品性に基づき判定。実際の商品約款は個別に異なる。"
     },
     {
       "id": "fp2-2025-05-gakka-031",
@@ -6136,6 +7055,6 @@
       "verified_at": null
     }
   ],
-  "verified_records_count": 70,
-  "audit_progress_note": "2025-01 Q01-Q60 VERIFIED; 2025-05 Q01-Q10 VERIFIED. 20 new records/80 option evidence rows. 110 PENDING remaining."
+  "verified_records_count": 90,
+  "audit_progress_note": "2025-01 Q01-Q60 verified; 2025-05 Q01-Q30 verified. New 20 legal/explanation reviews and 80 choice_evidence rows; total 90/180, pending 90."
 }
