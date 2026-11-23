@@ -10,6 +10,7 @@ on:
       - 'kangoshi-sprint/scripts/extract_official_drafts.py'
       - 'kangoshi-sprint/scripts/secondary_pdf_audit.py'
       - 'kangoshi-sprint/scripts/triage_media_rights.py'
+      - 'kangoshi-sprint/scripts/run_staged_text_audit.py'
 permissions:
   contents: write
 jobs:
@@ -29,6 +30,8 @@ jobs:
         run: python kangoshi-sprint/scripts/extract_official_drafts.py
       - name: Recheck mismatches using independent PDF extraction modes
         run: python kangoshi-sprint/scripts/secondary_pdf_audit.py
+      - name: Audit 480 provisional drafts against official PDFs
+        run: python kangoshi-sprint/scripts/run_staged_text_audit.py
       - name: Classify media rights candidates conservatively
         run: python kangoshi-sprint/scripts/triage_media_rights.py
       - name: Persist 480 draft items in isolated GitHub staging branch
@@ -40,12 +43,13 @@ jobs:
           mkdir -p kangoshi-sprint/audit/staging-evidence
           cp kangoshi-sprint/audit/runs/*-summary.json kangoshi-sprint/audit/staging-evidence/
           cp kangoshi-sprint/audit/runs/*-secondary.json kangoshi-sprint/audit/staging-evidence/
+          cp kangoshi-sprint/audit/runs/*-draft-text-audit.json kangoshi-sprint/audit/staging-evidence/
           cp kangoshi-sprint/audit/runs/media-rights-triage.json kangoshi-sprint/audit/staging-evidence/
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add kangoshi-sprint/product-content/raw-candidates/ kangoshi-sprint/audit/staging-evidence/
           git commit -m "kangoshi: persist 480 provisional PDF drafts and 92 hold triage evidence"
-          git push origin HEAD:refs/heads/feature/kangoshi-112-111-staging-20261124
+          git push origin HEAD:refs/heads/feature/kangoshi-112-111-staging-audit-20261124
       - name: Upload evidence even when there are source access failures
         if: always()
         uses: actions/upload-artifact@v4
