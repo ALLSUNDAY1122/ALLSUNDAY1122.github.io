@@ -1,5 +1,21 @@
 # FP2 RELEASE STATUS（最新正本・2026-11-23）
 
+## Coordinator handoff / post-native integration (2026-11-23 18:34 JST)
+
+**Actual: BLOCKED / NOT_SUBMITTED / NOT_SUBMISSION_READY.** Target: SUBMISSION_READY / WAITING_FINAL_APPROVAL by 2026-11-24 08:00 JST; target is not achieved or asserted.
+
+- Native SwiftUI/WKWebView wrapper merged into release branch via PR #5718, merge commit `e27238a8f20f4d1f2377c67c1a46ae0eaa6b9a6b`. PR #5717 remains the only main-target release PR and must remain Draft.
+- App ID 6797228406; bundle `com.allsunday1122.fp2manabisprint`; planned version 1.0.0/build 1; IAP none. Simulator CI success applies to the earlier native branch, **not** an attestation of the integrated commit, signed IPA or App Store Connect state.
+- Canonical content PASS 190, release selected 120 (six domains x 20), reserve 70, publishable 0. Five corrected FAIL explanations remain isolated and pending independent re-audit. No unreviewed corrected question may enter the 120.
+- Q0 **BLOCKED**: business rights holder/operator authorization, legal-currentness, visible source and modification disclosures not finally accepted.
+- Q1 **BLOCKED**: five corrected FAIL re-audit pending; exact integrated release bank and offline payload consistency not yet revalidated.
+- Q2 **NOT TESTED**: real learner answer/explanation/review loop not verified.
+- Q3 **FAIL / DEVICE E2E NOT TESTED**: static UI success is not browser/iPhone Golden Master, 4/8/16, backup, or offline/PWA recovery verification.
+- Q4 **NOT TESTED**: independent acceptance and actual-device evidence missing.
+- Q5 **BLOCKED**: post-merge native CI, signed IPA/payload hash, ASC App ID/Version/Build/IAP/Privacy read-back, screenshots, live public URLs, TestFlight evidence missing.
+- User-only final steps: (1) ASC login and App ID, bundle, version/build, IAP/privacy and public URLs verification; (2) signed build/TestFlight installation and iPhone acceptance with screenshots and evidence; (3) confirm reuse rights, source/modified notices and operating entity; (4) explicit final approval after Q0–Q5 pass. No ASC login, App Review submission, or main merge performed.
+
+
 **Actual: BLOCKED / NOT_SUBMITTED / NOT_SUBMISSION_READY**。初回提出期限目標：2026-11-24 08:00 JST。
 最終統合証拠：`audit/FP2_180_FINAL_175PASS_5FAIL_120_SELECTION_20261123.md`。以下に続く過去履歴の古い件数は現行状態ではない。
 
