@@ -10,7 +10,7 @@ record = json.loads((repo / "fp2-manabi-sprint/ios/appicon-provenance.json").rea
 current = repo / record["current_icon_path"]
 data = current.read_bytes()
 sha = hashlib.sha256(data).hexdigest()
-if data[:8] != b"\x5c\x78\x38\x39PNG\x5c\x72\x5c\x6e\x5c\x78\x31\x61\x5c\x6e":
+if data[:8] != b"\x89PNG\r\n\x1a\n":
     raise SystemExit("FAIL: current AppIcon is not PNG")
 width, height = struct.unpack(">II", data[16:24])
 assert (width, height) == (1024, 1024), "FAIL: AppIcon must be 1024x1024"
