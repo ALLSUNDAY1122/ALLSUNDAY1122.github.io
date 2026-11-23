@@ -49,21 +49,30 @@
     "K112-PM077"
   ],
   "processedThisRun": 46,
-  "newPromoted": 0,
-  "cumulativePromoted": 0,
-  "remaining": 46,
+  "newPromoted": 2,
+  "cumulativePromoted": 2,
+  "remaining": 44,
   "reasonCounts": {
-    "NOT_CMAP_ONLY_DIFFERENCE": 22,
-    "COORDINATE_FIELD_NO_TWO_OCR_PSM_CONSENSUS": 24
+    "PROMOTED_SOURCE_ONLY": 2,
+    "NOT_CMAP_ONLY_DIFFERENCE": 21,
+    "COORDINATE_FIELD_NO_TWO_OCR_PSM_CONSENSUS": 23
   },
-  "newIds": [],
+  "newIds": [
+    "K111-AM004",
+    "K111-AM055"
+  ],
   "perQuestion": [
     {
       "id": "K111-AM004",
       "exam": 111,
       "session": "AM",
       "number": 4,
-      "status": "HOLD",
+      "status": "PROMOTED_SOURCE_ONLY",
+      "footerBoundaryEvidence": {
+        "y": 785.2114868164062,
+        "lastChoiceEndsAt": 781.2114868164062,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K111-AM004-field0.png",
@@ -189,32 +198,33 @@
         },
         {
           "png": "K111-AM004-field4.png",
-          "pngSha256": "ed18fa4d827384497482e75eda44a522601063561c1a93dd5085890af5f91734",
+          "pngSha256": "c2d96e6ba9dff7ed6fde600322aa4b4205e753eaa73cd9c5f6518351f2be137b",
           "clip": [
             0.0,
             750.66,
             609.95,
-            822.01
+            781.21
           ],
           "ocrSha256ByPsm": {
-            "6": "8bd8d00b90bf6f80c1e81411aa5c5bec7ff62c734ca5221ae594fba5f85540b2",
-            "3": "fdfd6350486ee79ab8bc65e3afdd3120146ebdc18b819dad2dc730edd689b543",
-            "4": "168362c5a3f1ee82dfedb69635565d012028cd678b31f11b2f56cfa9c99104b7",
-            "11": "da8e5122b47dbd1e4eec1fed654b0a065c46b85eedf5606a677515b09208afdf"
+            "6": "e06b5ce8e1fa1fb463845a2e2fc2909f4272c3110123ef699a414c1fe814ecff",
+            "3": "20adaf1eff49fca33994d028d56b00cd8365ad4ba470b2a6145c69158ed934c5",
+            "4": "e06b5ce8e1fa1fb463845a2e2fc2909f4272c3110123ef699a414c1fe814ecff",
+            "11": "e06b5ce8e1fa1fb463845a2e2fc2909f4272c3110123ef699a414c1fe814ecff"
           },
           "fieldIndex": 4,
           "normalizedByPsm": {
-            "6": "85デーュー                  DKIX-05-前HH-7",
+            "6": "85",
             "3": null,
-            "4": "85デーュー                                                         DKIX-05-前HH-7",
-            "11": "85ー 1 一"
+            "4": "85",
+            "11": "85"
           },
           "errorsByPsm": {
             "3": "OPTION_LABEL_NOT_RECOGNIZED"
           },
           "agreedPsmModes": [
             6,
-            4
+            4,
+            11
           ]
         }
       ],
@@ -267,12 +277,74 @@
         },
         {
           "index": 4,
-          "pass": false,
-          "decision": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "pass": true,
+          "decision": "UNCHANGED",
           "deltas": []
         }
       ],
-      "reason": "NOT_CMAP_ONLY_DIFFERENCE"
+      "before": {
+        "question": "後期高齢者医療制度の被保険者は、区域内に住居を有する   !歳以上の者、お よび65 歳以上   !歳未満であって、政令で定める程度の障害の状態にあるとし て後期高齢者医療広域連合の認定を受けた者である。 !に入るのはどれか。",
+        "choices": [
+          "70",
+          "75",
+          "80",
+          "85",
+          "DKIX-05-前H-7"
+        ],
+        "sourcePage": 7
+      },
+      "after": {
+        "question": "後期高齢者医療制度の被保険者は、区域内に住居を有する(  )歳以上の者、および65歳以上(  )歳未満であって、政令で定める程度の障害の状態にあるとして後期高齢者医療広域連合の認定を受けた者である。( )に入るのはどれか。",
+        "choices": [
+          "70",
+          "75",
+          "80",
+          "85"
+        ],
+        "sourcePage": 7
+      },
+      "reason": null,
+      "pdfPage": 7,
+      "originalPdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "originalImageSha256": "14c70899c0d4969e9f174f2047aac4377ed1df1a40701c7e55439138f2a2183f",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "officialAnswer": 1,
+      "coordinateClip": [
+        0.0,
+        582.0,
+        609.95,
+        822.01
+      ],
+      "printedOptionAnchors": [
+        [
+          1,
+          106.19467163085938,
+          681.3775634765625,
+          136.31268310546875,
+          693.4247436523438
+        ],
+        [
+          2,
+          106.19467163085938,
+          705.4719848632812,
+          136.31268310546875,
+          717.5191650390625
+        ],
+        [
+          3,
+          106.19467163085938,
+          729.56640625,
+          136.31268310546875,
+          741.6135864257812
+        ],
+        [
+          4,
+          106.19467163085938,
+          753.6608276367188,
+          136.31268310546875,
+          765.7080078125
+        ]
+      ]
     },
     {
       "id": "K111-AM024",
@@ -489,6 +561,11 @@
       "session": "AM",
       "number": 30,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 785.2114868164062,
+        "lastChoiceEndsAt": 781.2114868164062,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K111-AM030-field0.png",
@@ -917,7 +994,12 @@
       "exam": 111,
       "session": "AM",
       "number": 55,
-      "status": "HOLD",
+      "status": "PROMOTED_SOURCE_ONLY",
+      "footerBoundaryEvidence": {
+        "y": 785.2114868164062,
+        "lastChoiceEndsAt": 781.2114868164062,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K111-AM055-field0.png",
@@ -1040,30 +1122,142 @@
         },
         {
           "png": "K111-AM055-field4.png",
-          "pngSha256": "e5546e0fdd25ff502adb795a5c725f298de8c5fa1a59b8aaf7b8bfabd6a73348",
+          "pngSha256": "9f66cb2a0f1c590f082b9ba20358ce617b46949812e28094122ed7fe54c244d1",
           "clip": [
             0.0,
             533.81,
             609.95,
-            822.01
+            781.21
           ],
           "ocrSha256ByPsm": {
-            "6": "fc8f81ca356def30411a6c306e504e884f43b320badf63eb1dcb5c86255c87da",
-            "3": "7aeb95a007f55061f809c06c20bb28af54b82f83ac5df546cb4f63baefcd6e69",
-            "4": "6bdf6ce3f1e4bf97bafde5848097f7a80707f0972b4dde35c821b731e126c1bd",
-            "11": "57e08790098b4927c122818c55163a483eb35b72353e918e924e9acf520c713e"
+            "6": "bf8e063b18dfe4bbe7b9e0aac1491fa73926298740967634db6db2f0501a729d",
+            "3": "4ee64712a4bbe857bad0f8121ff9bf20af034de4ad79a1e055bd2733c47eb308",
+            "4": "52f1095e19106408e33a8eb32cea8530c40b5b87f689bc78db47f502ced6692c",
+            "11": "7e5ed5f76840d5b2cdbd72ac09d22fcdb6351bc90770aed3b3abf75740cf6900"
           },
           "fieldIndex": 4,
           "normalizedByPsm": {
-            "6": "薬物の副作用(有害事象〉が発生しやすい。ー 17 一",
-            "3": "楽物の副作用〈有ntJinuy&ュン5,aihe生しやすい。ー 17 一",
-            "4": "薬物の副作用〈有害事象〉が発生しやすい。ー 17 一",
+            "6": "楽物の副作用〈有害事象)が発生しやすい。",
+            "3": "楽物の副作用〈有ntJinuy&ュン5,aihe生しやすい。",
+            "4": "薬物の副作用〈有害事象〉が発生しやすい。",
             "11": "薬物の副作用〈有害事象〉が発生しやすい。"
           },
-          "errorsByPsm": {}
+          "errorsByPsm": {},
+          "agreedPsmModes": [
+            4,
+            11
+          ]
         }
       ],
-      "reason": "COORDINATE_FIELD_NO_TWO_OCR_PSM_CONSENSUS"
+      "fieldChecks": [
+        {
+          "index": 0,
+          "pass": true,
+          "decision": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 1,
+          "pass": true,
+          "decision": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 2,
+          "pass": true,
+          "decision": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 3,
+          "pass": true,
+          "decision": "UNCHANGED",
+          "deltas": []
+        },
+        {
+          "index": 4,
+          "pass": true,
+          "decision": "CMAP_ONLY_ANCHORED_GAP",
+          "deltas": [
+            {
+              "at": 6,
+              "before": "",
+              "after": "〈",
+              "leftAnchor": "物の副作用",
+              "rightAnchor": "有害事象"
+            },
+            {
+              "at": 11,
+              "before": "",
+              "after": "〉",
+              "leftAnchor": "有害事象",
+              "rightAnchor": "が発生しや"
+            }
+          ]
+        }
+      ],
+      "before": {
+        "question": "高齢者の健康障害の特徴で正しいのはどれか。",
+        "choices": [
+          "症状の出現は定型である。",
+          "治療の効果が現れやすい。",
+          "疾患の発生に心理的要因の影響は少ない。",
+          "薬物の副作用有害事象が発生しやすい。 17                                  DKIX-05-前H-23"
+        ],
+        "sourcePage": 23
+      },
+      "after": {
+        "question": "高齢者の健康障害の特徴で正しいのはどれか。",
+        "choices": [
+          "症状の出現は定型である。",
+          "治療の効果が現れやすい。",
+          "疾患の発生に心理的要因の影響は少ない。",
+          "薬物の副作用〈有害事象〉が発生しやすい。"
+        ],
+        "sourcePage": 23
+      },
+      "reason": null,
+      "pdfPage": 23,
+      "originalPdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "originalImageSha256": "4ff71985d5ea2a06cbb0c96ea391a7c59dc3a0ee5c0da257577402c794c8b08d",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "officialAnswer": 3,
+      "coordinateClip": [
+        0.0,
+        437.43,
+        609.95,
+        822.01
+      ],
+      "printedOptionAnchors": [
+        [
+          1,
+          106.20036315917969,
+          464.5270080566406,
+          268.8352355957031,
+          476.575439453125
+        ],
+        [
+          2,
+          106.19801330566406,
+          488.62261962890625,
+          268.8352966308594,
+          500.6698303222656
+        ],
+        [
+          3,
+          106.19804382324219,
+          512.7169799804688,
+          353.1657409667969,
+          524.76416015625
+        ],
+        [
+          4,
+          106.19808959960938,
+          536.8114013671875,
+          353.1657409667969,
+          548.8585815429688
+        ]
+      ]
     },
     {
       "id": "K111-AM067",
@@ -1241,6 +1435,11 @@
       "session": "PM",
       "number": 28,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 785.2114868164062,
+        "lastChoiceEndsAt": 781.2114868164062,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K111-PM028-field0.png",
@@ -1309,6 +1508,11 @@
       "session": "PM",
       "number": 50,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 785.2114868164062,
+        "lastChoiceEndsAt": 781.2114868164062,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K111-PM050-field0.png",
@@ -1432,31 +1636,32 @@
         },
         {
           "png": "K111-PM050-field4.png",
-          "pngSha256": "0ceab6d511e669fa369356107fce41f912087843f1c6e8f2a53eec402385596f",
+          "pngSha256": "7f4692c6579b5cf4ed229be5bb7ada2eabb552ccc59e289322617985872c9a8d",
           "clip": [
             0.0,
             702.47,
             609.95,
-            822.01
+            781.21
           ],
           "ocrSha256ByPsm": {
-            "6": "171ae17118adb69b4de3df95d794ab9f99f75eed4dba230a0af835d9ecb8aa10",
-            "3": "eba384624f38b228ba98166c4dd63854a3f0ec7ba48acce0f15a8dc81d0e30b8",
-            "4": "eba384624f38b228ba98166c4dd63854a3f0ec7ba48acce0f15a8dc81d0e30b8",
-            "11": "57e3a218a188336bc1184b5abf866f4947625a8efb615a704a72e918f148b91f"
+            "6": "d4e85552eead88f3c6e409f9225db8a5abac1fcad6051cd1a612d3b592e37eaa",
+            "3": "d4e85552eead88f3c6e409f9225db8a5abac1fcad6051cd1a612d3b592e37eaa",
+            "4": "d4e85552eead88f3c6e409f9225db8a5abac1fcad6051cd1a612d3b592e37eaa",
+            "11": "d4e85552eead88f3c6e409f9225db8a5abac1fcad6051cd1a612d3b592e37eaa"
           },
           "fieldIndex": 4,
           "normalizedByPsm": {
-            "6": "末栓神経障害ー 14 一",
-            "3": "末栓神経障害ー 14 一",
-            "4": "末栓神経障害ー 14 一",
+            "6": "末栓神経障害",
+            "3": "末栓神経障害",
+            "4": "末栓神経障害",
             "11": "末栓神経障害"
           },
           "errorsByPsm": {},
           "agreedPsmModes": [
             6,
             3,
-            4
+            4,
+            11
           ]
         }
       ],
@@ -2262,6 +2467,11 @@
       "session": "PM",
       "number": 71,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 785.2114868164062,
+        "lastChoiceEndsAt": 781.2114868164062,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K111-PM071-field0.png",
@@ -2385,27 +2595,28 @@
         },
         {
           "png": "K111-PM071-field4.png",
-          "pngSha256": "24d0655530d7d26a8a24b7c786b920cddefb0ff1080e57ab2cb78f24fec10c6b",
+          "pngSha256": "d3afc60792b56589d4d95c6f3ed92e75cc5ee56d185f2d5018e969ebc0c7d60b",
           "clip": [
             0.0,
             702.47,
             609.95,
-            822.01
+            781.21
           ],
           "ocrSha256ByPsm": {
-            "6": "9c2825d1c58cca59e5dd2f4a23592785912973c130effc6728238212bc212686",
-            "3": "30cac03b6dd9de269060c29b37e94c49e08f0f16662213170a2eaf4a8d24847f",
-            "4": "30cac03b6dd9de269060c29b37e94c49e08f0f16662213170a2eaf4a8d24847f",
-            "11": "bc8fd39bf2315a5f8cdadae20a682dfa54cc85ab8a1954cbbf5ddf91f0a33c4a"
+            "6": "92ea5ffdb974232386e7164dd352da0bbca7aad8a6aa4c057b09094a3e51e6ab",
+            "3": "92ea5ffdb974232386e7164dd352da0bbca7aad8a6aa4c057b09094a3e51e6ab",
+            "4": "92ea5ffdb974232386e7164dd352da0bbca7aad8a6aa4c057b09094a3e51e6ab",
+            "11": "92ea5ffdb974232386e7164dd352da0bbca7aad8a6aa4c057b09094a3e51e6ab"
           },
           "fieldIndex": 4,
           "normalizedByPsm": {
-            "6": "オストメイト対応のトイレがなければ旅行先を変更する。— 20 一                            DKIX-05-後HH-26",
+            "6": null,
             "3": null,
             "4": null,
             "11": null
           },
           "errorsByPsm": {
+            "6": "OPTION_LABEL_NOT_RECOGNIZED",
             "3": "OPTION_LABEL_NOT_RECOGNIZED",
             "4": "OPTION_LABEL_NOT_RECOGNIZED",
             "11": "OPTION_LABEL_NOT_RECOGNIZED"
@@ -2612,6 +2823,11 @@
       "session": "AM",
       "number": 8,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 788.0408325195312,
+        "lastChoiceEndsAt": 784.0408325195312,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K112-AM008-field0.png",
@@ -2735,22 +2951,22 @@
         },
         {
           "png": "K112-AM008-field4.png",
-          "pngSha256": "1afacf7ae45c3f4beef91bb2171dc7bbd628eacdd379f841d63877173180c7ce",
+          "pngSha256": "c5f86dfa59f52aa7c483b91d0ec8f8394add0e9d051fce1e260ede652a41431f",
           "clip": [
             0.0,
             681.21,
             615.61,
-            827.44
+            784.04
           ],
           "ocrSha256ByPsm": {
-            "6": "bdb6c483de788050abddd503040cb2cd8da989277b4ea2a029e0abed0bd5b051",
-            "3": "6cfd8633e7c4f5d66906ce831cfd8e3e66a615d8ea1a33dccc8d8c9feab8102f",
-            "4": "6cfd8633e7c4f5d66906ce831cfd8e3e66a615d8ea1a33dccc8d8c9feab8102f",
-            "11": "4480274a6b163f42e81b6d00e74bf0b82b39677d83d4f41980c52a892a1cc090"
+            "6": "e3ae1ca8ced8ff9268c815f7e7c6b2f5862cbd27425549635409811f3cc95b9c",
+            "3": "83635c5608834c69d23b58a8fa5502c818b36c287bc365519c49a2cc58cf8989",
+            "4": "83635c5608834c69d23b58a8fa5502c818b36c287bc365519c49a2cc58cf8989",
+            "11": "69668cd31bc553ac501cec44886d6f14d269baa7ec6a8d6bc5656c956c9b2aa3"
           },
           "fieldIndex": 4,
           "normalizedByPsm": {
-            "6": "読み、書き、計算ができる。ー2 一                    DKTX-05-前H-8",
+            "6": "読み、書き、計算ができる。",
             "3": null,
             "4": null,
             "11": null
@@ -2955,6 +3171,11 @@
       "session": "AM",
       "number": 27,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 788.0408325195312,
+        "lastChoiceEndsAt": 784.0408325195312,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K112-AM027-field0.png",
@@ -3077,28 +3298,29 @@
         },
         {
           "png": "K112-AM027-field4.png",
-          "pngSha256": "43e6799449f9d341fefde25b69fb520613d9f585e1acd6b79272d0f29a5e7da0",
+          "pngSha256": "81d643a821d203c320962f9c6ed515a1145f049a33b924b9343097caa8cb0690",
           "clip": [
             0.0,
             608.92,
             615.61,
-            827.44
+            784.04
           ],
           "ocrSha256ByPsm": {
-            "6": "636cb3d6312eb32af34d50cbfe5d7dc89b0a3053a87477e4395a028f59c1b86a",
-            "3": "48b2cb58a64d8c257395c29debb22d841be138ceaf6fc19f6c67834c37010dac",
-            "4": "48b2cb58a64d8c257395c29debb22d841be138ceaf6fc19f6c67834c37010dac",
-            "11": "090e1787970f3b9c1240b0bec54c26f415e26c89733b44e5a9b9412b386a9f3c"
+            "6": "e3803d9766e06a2454a930145723aa1843355c5c316d43f96b7c8b156632e9b7",
+            "3": "358c7eb6e3fe226b6e4cb1b76944cd97319b2f9ba80d476573b4079ffecc9553",
+            "4": "358c7eb6e3fe226b6e4cb1b76944cd97319b2f9ba80d476573b4079ffecc9553",
+            "11": "3c3add5eb0b0a201e9939c8c0c8302e9915a112848e8eaea333b5680c60d804a"
           },
           "fieldIndex": 4,
           "normalizedByPsm": {
-            "6": "動脈血二酸化炭素分圧(PaCO。〉 は基準値よりも高い。ー 7 一                   DKIX-05-前HH-13",
-            "3": "動脈血二酸化炭素分圧くPaCO。〉 は基準値よりも高い。ー 7 一                                                 DKIX-05-前HH-13",
-            "4": "動脈血二酸化炭素分圧くPaCO。〉 は基準値よりも高い。ー 7 一                                                 DKIX-05-前HH-13",
-            "11": "動脈血酸化炭素分圧くPaCOz〉は基信値よりも高い。ー 7 一"
+            "6": "動脈血二酸化炭素分圧くPaCO。〉 は基準値よりも高い。",
+            "3": "動脈血二酸化炭素分圧くPaCO。〉 は基準値よりも高い。",
+            "4": "動脈血二酸化炭素分圧くPaCO。〉 は基準値よりも高い。",
+            "11": "動脈血酸化炭素分圧くPaCOz〉は基信値よりも高い。"
           },
           "errorsByPsm": {},
           "agreedPsmModes": [
+            6,
             3,
             4
           ]
@@ -3582,6 +3804,11 @@
       "session": "AM",
       "number": 65,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 788.0411987304688,
+        "lastChoiceEndsAt": 784.0411987304688,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K112-AM065-field0.png",
@@ -3701,31 +3928,31 @@
         },
         {
           "png": "K112-AM065-field4.png",
-          "pngSha256": "868a50059f105afd78e570a2548b0d6be4e985ab3c704079c5ee6f293e52c675",
+          "pngSha256": "917e67b1f0ff11851319a1fa375f825ed0a030812e978d1c174c66fc17b00717",
           "clip": [
             0.0,
             729.4,
             615.61,
-            827.44
+            784.04
           ],
           "ocrSha256ByPsm": {
-            "6": "24b4d032ab730463c7bcc503f8a8f857fb41aa57d6ad14e14030535055d867d3",
-            "3": "fdf75e26e92b006f1d534fcabd8297d4dd1c2697936485d378d747e309068970",
-            "4": "fdf75e26e92b006f1d534fcabd8297d4dd1c2697936485d378d747e309068970",
-            "11": "28e507f769ba2b94675c7eb828b4c98472f378603b7a0c26d5d30cb046143a9c"
+            "6": "30987def69e0752b6d3cb28c493ffdea0d045626a1af9ecae5d31efd949be745",
+            "3": "55247723a836d81370f3f45b235a8028d81ee3df95486bf6203c3dc97690cb42",
+            "4": "55247723a836d81370f3f45b235a8028d81ee3df95486bf6203c3dc97690cb42",
+            "11": "55247723a836d81370f3f45b235a8028d81ee3df95486bf6203c3dc97690cb42"
           },
           "fieldIndex": 4,
           "normalizedByPsm": {
-            "6": "Lennox-Gastaut(レノックス・ガストー)症候群Lennox-Gastaut syndrome— 18 一",
-            "3": "Lennox-Gastaut(レノックス・ガストー)症候群Lennox-Gastaut syndrome— 18 一",
-            "4": "Lennox-Gastaut(レノックス・ガストー)症候群Lennox-Gastaut syndrome— 18 一",
+            "6": "Lennox-Gastaut〈 レノックス・ガスストー)症候群ennox-Gastaut syndrome",
+            "3": "Lennox-Gastaut(レノックス・ガストー)症候群Lennox-Gastaut syndrome",
+            "4": "Lennox-Gastaut(レノックス・ガストー)症候群Lennox-Gastaut syndrome",
             "11": "Lennox-Gastaut(レノックス・ガストー)症候群Lennox-Gastaut syndrome"
           },
           "errorsByPsm": {},
           "agreedPsmModes": [
-            6,
             3,
-            4
+            4,
+            11
           ]
         }
       ],
@@ -3801,8 +4028,8 @@
         },
         {
           "index": 4,
-          "pass": false,
-          "decision": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "pass": true,
+          "decision": "CMAP_ONLY_ANCHORED_GAP",
           "deltas": [
             {
               "at": 14,
@@ -4572,6 +4799,11 @@
       "session": "PM",
       "number": 24,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 788.0408325195312,
+        "lastChoiceEndsAt": 784.0408325195312,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K112-PM024-field0.png",
@@ -4693,31 +4925,31 @@
         },
         {
           "png": "K112-PM024-field4.png",
-          "pngSha256": "a82d0dc604e8bddd4032b6beae9df708a7b3ae5ca9430eb178cdfac1f2843759",
+          "pngSha256": "78fb4aea009cd60785b79807c2da425ae11b02d7da93810e14c42e9f594ff339",
           "clip": [
             0.0,
             681.21,
             615.61,
-            827.44
+            784.04
           ],
           "ocrSha256ByPsm": {
-            "6": "5e015f350d038c575f1e0082013e0efaea42219ce41bcbe898d7a19b24e34510",
-            "3": "89fed77affea860c9c6e16534bbd4c932cc313e7b6cfd6b2d9c37d88afdc9506",
-            "4": "89fed77affea860c9c6e16534bbd4c932cc313e7b6cfd6b2d9c37d88afdc9506",
-            "11": "661c94323989286a72892848a732734c05e4bebfc2c15e19ed54489710cfc872"
+            "6": "b9908168fe738467fca2be6c87d5318f71e8bf0ba60eba8795690b0b4451161a",
+            "3": "32c2f01abbfd2119616624013ef6bcb6100838cac99c28df4aa929fe3392db23",
+            "4": "8df60900d8a28d551b3234e33d031bfcdf8c96081e30edbd113592f49bb75638",
+            "11": "b9908168fe738467fca2be6c87d5318f71e8bf0ba60eba8795690b0b4451161a"
           },
           "fieldIndex": 4,
           "normalizedByPsm": {
-            "6": "130~150 回/分ー 6一                   DKTX-05-後H-12",
-            "3": "130~150 回/分ー 6一                                                 DKTX-05-後H-12",
-            "4": "130~150 回/分ー 6一                                                 DKTX-05-後H-12",
-            "11": "130~150 回/分ー 6 一"
+            "6": "130~150 回/分",
+            "3": "130一150",
+            "4": "130~150 回/分",
+            "11": "130~150 回/分"
           },
           "errorsByPsm": {},
           "agreedPsmModes": [
             6,
-            3,
-            4
+            4,
+            11
           ]
         }
       ],
@@ -4763,8 +4995,8 @@
         },
         {
           "index": 4,
-          "pass": false,
-          "decision": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "pass": true,
+          "decision": "UNCHANGED",
           "deltas": []
         }
       ],
@@ -4969,6 +5201,11 @@
       "session": "PM",
       "number": 30,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 788.0408325195312,
+        "lastChoiceEndsAt": 784.0408325195312,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K112-PM030-field0.png",
@@ -5089,31 +5326,32 @@
         },
         {
           "png": "K112-PM030-field4.png",
-          "pngSha256": "e73d4455ae36e8800c429af1a2626d0047d6fae43d40455223dda13d3525e396",
+          "pngSha256": "afd621de34f700f450ab4e67c97fd22e2d66fbb02f121b8df9b6b834950492da",
           "clip": [
             0.0,
             681.21,
             615.61,
-            827.44
+            784.04
           ],
           "ocrSha256ByPsm": {
-            "6": "fc4f05b7c916dd818e3a309977170f3e27790cbe981ea0c5bafec07bfef04a20",
-            "3": "6b4bc521a1668eed48d77cb31a5fc80f438b20a553717ce3f481eff69b8c93ce",
-            "4": "6b4bc521a1668eed48d77cb31a5fc80f438b20a553717ce3f481eff69b8c93ce",
-            "11": "87b73811d610a010426f40c44cc0fbd831f5d97c2813b4a262e96442a7494136"
+            "6": "62c661906a7fb97646899af908154fcd7d25cbea3b789f92ba943b343acacb6f",
+            "3": "ba4bc76472152cbcf7b189965d205e24f1911733a9e163182f4838dcdd2683b4",
+            "4": "ba4bc76472152cbcf7b189965d205e24f1911733a9e163182f4838dcdd2683b4",
+            "11": "62c661906a7fb97646899af908154fcd7d25cbea3b789f92ba943b343acacb6f"
           },
           "fieldIndex": 4,
           "normalizedByPsm": {
-            "6": "単純ヘルペスウイルスの感染が原因である。ー 8 一                              DKTX-05-後H-14",
-            "3": "単純ヘルペスウイルスの感染が原因である。ー 8 一                                                 DKTX-05-後H-14",
-            "4": "単純ヘルペスウイルスの感染が原因である。ー 8 一                                                 DKTX-05-後H-14",
-            "11": "単純ヘルペスウイルスの感染が原因である。ー 8 一"
+            "6": "単純ヘルペスウイルスの感染が原因である。",
+            "3": "単純ヘルペスウイルスの感染が原因である。",
+            "4": "単純ヘルペスウイルスの感染が原因である。",
+            "11": "単純ヘルペスウイルスの感染が原因である。"
           },
           "errorsByPsm": {},
           "agreedPsmModes": [
             6,
             3,
-            4
+            4,
+            11
           ]
         }
       ],
@@ -5144,8 +5382,8 @@
         },
         {
           "index": 4,
-          "pass": false,
-          "decision": "DIFFERENCE_NOT_EXCLUSIVELY_CMAP_GLYPHS",
+          "pass": true,
+          "decision": "UNCHANGED",
           "deltas": []
         }
       ],
@@ -5255,6 +5493,11 @@
       "session": "PM",
       "number": 47,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 788.0408325195312,
+        "lastChoiceEndsAt": 784.0408325195312,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K112-PM047-field0.png",
@@ -5528,6 +5771,11 @@
       "session": "PM",
       "number": 56,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 788.0408325195312,
+        "lastChoiceEndsAt": 784.0408325195312,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K112-PM056-field0.png",
@@ -5785,6 +6033,11 @@
       "session": "PM",
       "number": 66,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 788.0408325195312,
+        "lastChoiceEndsAt": 784.0408325195312,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K112-PM066-field0.png",
@@ -5907,24 +6160,24 @@
         },
         {
           "png": "K112-PM066-field4.png",
-          "pngSha256": "3cf9b3796f057b55221d77782886cda02e927503eb33874844e1f259803421ef",
+          "pngSha256": "258965f60f1c276c14ee0982593d6f21435c8bb4b0e92f30509fee5900ed890a",
           "clip": [
             0.0,
             705.3,
             615.61,
-            827.44
+            784.04
           ],
           "ocrSha256ByPsm": {
-            "6": "71262930752459dfed9938bc1bea27e6045090f4912e20613fecafc365203e1d",
-            "3": "a80cf0217308b93da7d235e81377d50fdfa91c097e50ea156c300a607e890866",
-            "4": "d45ae07b8dfe0c09377de00282ba192451ecdf704f549f5b73f92fcd85e041f6",
-            "11": "2bc99b77b16deb0f9e95ecf3409c2e0d0aea6c47916b6bfd7ae9d6e216b75d3f"
+            "6": "899611d2c8f711ea3238d0303980e171354d8b8436e31a14f4e046184ca99246",
+            "3": "5ae286269ff4ab05dbfb5d10e63ec9f9dab5c47ff9b6fed0aa41c2210d22e339",
+            "4": "a736548e5090a398946a4ff94a82a94f561d7b4b06315b9fc2387058dcb21b47",
+            "11": "4df9432b50853d294c3f2592e3d10dd9548f04568517c3bf2f10472eabcbf8aa"
           },
           "fieldIndex": 4,
           "normalizedByPsm": {
-            "6": "中枢から末椅に下股をマッサージする。ーーパー",
+            "6": "中枢から末椅に下股をマッサージする。",
             "3": null,
-            "4": "中枢から末栓に下肢をマッサージする。— 19 一                                                 DKIX-05-(#H-25",
+            "4": "中枢から末栓に下肢をマッサージする。",
             "11": null
           },
           "errorsByPsm": {
@@ -5941,6 +6194,11 @@
       "session": "PM",
       "number": 68,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 788.0408325195312,
+        "lastChoiceEndsAt": 784.0408325195312,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K112-PM068-field0.png",
@@ -5975,6 +6233,11 @@
       "session": "PM",
       "number": 72,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 788.0408325195312,
+        "lastChoiceEndsAt": 784.0408325195312,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K112-PM072-field0.png",
@@ -6009,6 +6272,11 @@
       "session": "PM",
       "number": 77,
       "status": "HOLD",
+      "footerBoundaryEvidence": {
+        "y": 788.0408325195312,
+        "lastChoiceEndsAt": 784.0408325195312,
+        "method": "original PDF word-coordinate footer anchor"
+      },
       "fieldEvidence": [
         {
           "png": "K112-PM077-field0.png",
@@ -6133,28 +6401,29 @@
         },
         {
           "png": "K112-PM077-field4.png",
-          "pngSha256": "e196f18dc87acc1343a6c7cfaa7d6a866f91b124f3616664fb78601f4fdbc395",
+          "pngSha256": "fc1f9a82e606a55a0a033eabd883a913d02d978bf0cff3b8269ea9c3c98c7cf1",
           "clip": [
             0.0,
             584.83,
             615.61,
-            827.44
+            784.04
           ],
           "ocrSha256ByPsm": {
-            "6": "828d8a9fe5b6fff738847e01f6e456ff5c20a0dfd496436f09d9beaf6456888b",
-            "3": "8a39d866503dfaa0fac3fcea45f6af7ea975dab7edaa40a238e0c1043ad51c16",
-            "4": "8a39d866503dfaa0fac3fcea45f6af7ea975dab7edaa40a238e0c1043ad51c16",
-            "11": "31f9c30cf50656c655328440b4b20ac244a39f1e6a1ba368b1def8afa26ecb2e"
+            "6": "7ab4f968d888434493d7886f4135da6baddf155c2659f0fae874118495fc7dda",
+            "3": "7ab4f968d888434493d7886f4135da6baddf155c2659f0fae874118495fc7dda",
+            "4": "7ab4f968d888434493d7886f4135da6baddf155c2659f0fae874118495fc7dda",
+            "11": "9b89214d45bd8821a8e0568fd94ff05c8e5f8dff99e885bd538f85f3216db27c"
           },
           "fieldIndex": 4,
           "normalizedByPsm": {
-            "6": "V45. aVs— 24 一                              DKIX-05-後HH-30",
+            "6": "V45.   aVs",
             "3": "V45.   aVs",
             "4": "V45.   aVs",
             "11": "V45      aVs"
           },
           "errorsByPsm": {},
           "agreedPsmModes": [
+            6,
             3,
             4
           ]
