@@ -1,12 +1,12 @@
 {
-  "schema_version": "fp2-five-exam-verbatim-mixed-300-release-selection-v2",
-  "status": "CONTENT_PASS_300_SELECTED_10_RESERVE_2_FAIL_QUARANTINED",
-  "release_policy": "Five exams official298 PASS, 2 legal FAIL excluded; selected298 official + 2 originals, 10 reserves",
+  "schema_version": "fp2-five-exam-298-official-only-v3",
+  "status": "OFFICIAL_VERBATIM_298_SELECTED_12_ORIGINAL_RESERVE_2_FAIL_EXCLUDED",
+  "release_policy": "Select only 298 content-audited verbatim official questions, 2 legal FAIL excluded; no original or paraphrase substitution, 12 original reserve",
   "canonical_source": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "canonical_git_blob_sha": "90c832a0f1fbc6ac1450d47642b97571cc377d4c",
+  "canonical_git_blob_sha": "77b08133f831dceaa6d50d8b126f495d69d8a7a8",
   "total_content_pass": 310,
-  "selected_count": 300,
-  "reserve_count": 10,
+  "selected_count": 298,
+  "reserve_count": 12,
   "fully_release_clear_count": 0,
   "exam_sessions": [
     {
@@ -28,10 +28,6 @@
     {
       "exam": "2026-05",
       "count": 60
-    },
-    {
-      "exam": "independently-authored",
-      "count": 2
     }
   ],
   "domains": [
@@ -68,8 +64,6 @@
         "fp2-2025-01-gakka-008",
         "fp2-2025-01-gakka-009",
         "fp2-2025-01-gakka-010",
-        "FP2-ORIG-20261123-L01",
-        "FP2-ORIG-20261123-L02",
         "fp2-2024-09-gakka-001",
         "fp2-2024-09-gakka-002",
         "fp2-2024-09-gakka-003",
@@ -89,7 +83,10 @@
         "fp2-2024-05-gakka-009",
         "fp2-2024-05-gakka-010"
       ],
-      "reserve_ids": []
+      "reserve_ids": [
+        "FP2-ORIG-20261123-L01",
+        "FP2-ORIG-20261123-L02"
+      ]
     },
     {
       "domain": "リスク管理",
@@ -409,9 +406,9 @@
     "fail": 0,
     "hold": 0
   },
-  "selected_integration_eligible": true,
+  "selected_integration_eligible": false,
   "publishable": false,
-  "source_note": "Official five exams PASS298 FAIL2 HOLD0; selected official298 and originals2; original reserves10; rights pending",
+  "source_note": "Official five exams PASS298 FAIL2 HOLD0; selected 298 verbatim only; 12 independently authored items reserve; 300 requirement intentionally not satisfied",
   "submission_state": "NOT_SUBMISSION_READY",
   "verbatim_audit_202409": {
     "PASS": 59,
@@ -430,11 +427,8 @@
     "fp2-2024-09-gakka-007",
     "fp2-2024-05-gakka-008"
   ],
-  "original_backfill_ids": [
-    "FP2-ORIG-20261123-L01",
-    "FP2-ORIG-20261123-L02"
-  ],
-  "original_content_pass_reserve_count": 10,
+  "original_backfill_ids": [],
+  "original_content_pass_reserve_count": 12,
   "publication_rights_clearance": false,
   "verbatim_audit_202501": {
     "PASS": 60,
