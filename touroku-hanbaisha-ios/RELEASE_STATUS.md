@@ -180,3 +180,5 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 2023問90の採点例外は公式問題の候補および公式UIコードで保持。正式バンクへの昇格は独立目視監査まで禁止。
 
 **App Reviewは未提出、申請判定BLOCKED。ユーザー操作を要求する段階に達していない。**
+
+**問20ページ証跡の最終補正**：原典PDFページ13の問題であり、候補の誤った `sourcePdfPages=[13,14]` を `[13]` に修正。修正前後は候補JSONの `correctionHistory` に記録。現在の監査済み候補Git blobは `4a9aac1cb423fafd68576650d35254a7609ac9c6`、正式バンクも問20の `sourcePdfPages=[13]` を読戻し確認。原文抽出 `rawOriginalText` は変更していない。
