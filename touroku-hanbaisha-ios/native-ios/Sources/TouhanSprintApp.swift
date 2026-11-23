@@ -3,7 +3,7 @@ import WebKit
 import UIKit
 
 private enum ReleaseConfig {
-    static let homeURL = URL(string: "https://allsunday1122.github.io/touroku-hanbaisha-sprint/")!
+    static let homeURL = URL(string: "https://allsunday1122.github.io/touroku-hanbaisha-sprint/official-practice.html")!
     static let allowedHost = "allsunday1122.github.io"
     static let allowedPathPrefix = "/touroku-hanbaisha-sprint/"
 }
