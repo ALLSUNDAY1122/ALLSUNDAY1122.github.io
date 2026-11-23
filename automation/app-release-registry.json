@@ -201,7 +201,7 @@
       "iap": false,
       "iap_product_ids": [],
       "app2_task": null,
-      "status": "native_source_created_release_blocked",
+      "status": "native_simulator_ci_pass_release_blocked",
       "readback": false,
       "ios_project": "fp2-manabi-sprint/ios/project.yml",
       "native_source_branch": "feature/fp2-swiftui-wkwebview-release-20261123",
@@ -210,9 +210,17 @@
       "publishable_questions": 0,
       "icon_source_blob_sha": "ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d",
       "icon_apple_hash_verified": false,
-      "build_validation": "CI_PENDING",
+      "build_validation": "IOS_SIMULATOR_UNSIGNED_PASS",
       "app_store_upload": "NOT_STARTED",
-      "note": "Version/Build fixed in XcodeGen source. Not confirmed by signed binary/ASC. Offline native payload is content-reviewed only (not publication approved); requires release scoping and Q0–Q5 gates."
+      "note": "Version/Build fixed in XcodeGen source. Not confirmed by signed binary/ASC. Offline native payload is content-reviewed only (not publication approved); requires release scoping and Q0–Q5 gates.",
+      "ci_run_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45146663362",
+      "ci_source_sha": "e763d61ebb93d5bfd95f637e219936d2bac49354",
+      "ci_verified_steps": [
+        "canonical_bank_offline_bundle",
+        "xcodegen",
+        "unsigned_simulator_xcodebuild",
+        "compiled_info_plist_and_bundle_readback"
+      ]
     }
   }
 }
