@@ -1,0 +1,1028 @@
+{
+  "audit_id": "FP2-202405-B04-INDEPENDENT-20261123",
+  "audit_type": "independent_primary_source_choice_by_choice",
+  "reviewed_at": "2026-11-23",
+  "applicable_on": "2026-04-01",
+  "source_branch": "feature/fp2-academic-300-expansion-20261123",
+  "source_path": "fp2-manabi-sprint/questions/draft/fp2-official-202405-b04.json",
+  "source_blob_sha": "e4c27d4f8fc4c1bbf22a1a2000018c3884c165dc",
+  "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
+  "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
+  "summary": {
+    "pass": 17,
+    "fail": 0,
+    "hold": 0,
+    "critical_confirmed": 0,
+    "high_confirmed": 0,
+    "canonical_content_eligible": 17,
+    "release_approval": false
+  },
+  "critical_high_issues": [],
+  "limitations": "各肢の制度内容と正答一意性を公開一次資料及び制定法の2026-04-01施行関係に照合した内容監査。一次資料すべてについて2026-04-01時点のスナップショット保存は未了。原題公式PDFの解答番号は制作JSON記載であり、今回独立再抽出したものではない。改変の著作権利用条件・公開ゲートは未承認。Q49の土地活用方式は技術名称の定義に依存するため公開前に一次資料原文と再突合が望ましい。",
+  "release_note": "内容監査PASS。正規バンク候補として承認するが権利・公開ゲート未通過でDRAFT_NOT_FOR_RELEASEは維持し、本番統合を行わない。",
+  "items": [
+    {
+      "id": "FP2-OFFICIAL-202405-Q44",
+      "original_question_number": 44,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "普通借家契約で契約期間を8か月と定めた場合、期間に関する原則的な法的扱いはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "期間の定めのない賃貸借とみなされる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "期間8か月の定めがそのまま有効となる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "普通借家の1年未満の期間は定めなしとみなす",
+          "primary_source_url": "https://www.mlit.go.jp/jutakukentiku/house/teishaku/111215-4.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "定期借家契約へ自動変更される",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "定期借家への自動変更規定はない",
+          "primary_source_url": "https://www.mlit.go.jp/jutakukentiku/house/teishaku/111215-4.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "期間の定めのない賃貸借とみなされる",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "借地借家法29条1項の扱い",
+          "primary_source_url": "https://www.mlit.go.jp/jutakukentiku/house/teishaku/111215-4.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "賃借人は直ちに退去しなければならない",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "期間定めなしで直ちに退去義務にはならない",
+          "primary_source_url": "https://www.mlit.go.jp/jutakukentiku/house/teishaku/111215-4.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "普通建物賃貸借の期間1年未満は期間の定めなしとみなす。定期借家の別要件と混同しない",
+      "primary_sources": [
+        {
+          "url": "https://www.mlit.go.jp/jutakukentiku/house/teishaku/111215-4.htm",
+          "section": "借地借家法29条1項"
+        }
+      ],
+      "original_answer_one_based": 3,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q45",
+      "original_question_number": 45,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "共同住宅の共用廊下・共用階段の床面積について、建築基準法上の容積率算定の原則はどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "所定の共用廊下・階段部分は算入しない",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "必ず全床面積を含める",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "共用廊下と階段の所定部分は不算入",
+          "primary_source_url": "https://www.mlit.go.jp/notice/noticedata/sgml/105/81000275/81000275.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "共用廊下だけ含める",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "共用階段のみ除外されないわけではない",
+          "primary_source_url": "https://www.mlit.go.jp/notice/noticedata/sgml/105/81000275/81000275.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "共同住宅でも店舗と同様に必ず算入する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "共同住宅の共用部分は所定範囲で不算入",
+          "primary_source_url": "https://www.mlit.go.jp/notice/noticedata/sgml/105/81000275/81000275.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "所定の共用廊下・階段部分は算入しない",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "容積率算定用延べ面積から共用廊下・階段を除く",
+          "primary_source_url": "https://www.mlit.go.jp/notice/noticedata/sgml/105/81000275/81000275.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "共同住宅の共用廊下・共用階段は容積率算定用延べ面積から不算入",
+      "primary_sources": [
+        {
+          "url": "https://www.mlit.go.jp/notice/noticedata/sgml/105/81000275/81000275.html",
+          "section": "建築基準法52条6項及び関連運用"
+        }
+      ],
+      "original_answer_one_based": 4,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q46",
+      "original_question_number": 46,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "分譲マンションの専有部分と敷地利用権の処分について、区分所有法の原則として正しいのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "専有部分と敷地利用権は通常分離して売却できない",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "専有部分と敷地利用権は通常分離して売却できない",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "区分所有法22条により原則分離処分禁止",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji07_00375.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "敷地利用権は必ず単独で自由に売却できる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "敷地利用権は無条件に単独処分可ではない",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji07_00375.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "管理規約がなくても敷地利用権は常に放棄できる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "敷地利用権をいつでも放棄できるわけではない",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji07_00375.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "区分所有者が1人でも分離売却を希望すれば可能となる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "特定の区分所有者の意思だけで例外は成立しない",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji07_00375.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "区分所有法22条では数人で有する敷地利用権と専有部分の分離処分が原則禁止。規約例外あり",
+      "primary_sources": [
+        {
+          "url": "https://www.moj.go.jp/MINJI/minji07_00375.html",
+          "section": "建物の区分所有等に関する法律22条"
+        }
+      ],
+      "original_answer_one_based": 2,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q47",
+      "original_question_number": 47,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "都市計画税の制限税率について正しいのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "0.3％",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "1.4％",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "1.4%は固定資産税の標準税率と混同",
+          "primary_source_url": "https://www.city.utsunomiya.lg.jp/faq/zei/koteishisan/1001715.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "0.3％",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "都市計画税の制限税率0.3%",
+          "primary_source_url": "https://www.city.utsunomiya.lg.jp/faq/zei/koteishisan/1001715.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "3.0％",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "3.0%は制限税率を超える",
+          "primary_source_url": "https://www.city.utsunomiya.lg.jp/faq/zei/koteishisan/1001715.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "0.03％",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "0.03%は制限税率ではない",
+          "primary_source_url": "https://www.city.utsunomiya.lg.jp/faq/zei/koteishisan/1001715.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "都市計画税の制限税率は地方税法上0.3%。条例で低い率を定め得る",
+      "primary_sources": [
+        {
+          "url": "https://www.city.utsunomiya.lg.jp/faq/zei/koteishisan/1001715.html",
+          "section": "地方税法702条の4"
+        }
+      ],
+      "original_answer_one_based": 3,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q48",
+      "original_question_number": 48,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "居住用財産の3,000万円特別控除について、居住をやめた建物と敷地を売る場合の譲渡期限は原則どれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "住まなくなった日から3年を経過する日の属する年の12月31日まで",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "転居後6か月以内",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "半年の期限は規定されない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3302.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "転居後1年以内",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "1年以内の一般期限ではない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3302.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "住まなくなった日から3年を経過する日の属する年の12月31日まで",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "住まなくなった日から3年経過日の属する年末まで",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3302.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "売却期限の規定はない",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "売却期限は存在する",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3302.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "住まなくなった日から3年経過日の属する年の12月31日までに譲渡するなどの要件",
+      "primary_sources": [
+        {
+          "url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3302.htm",
+          "section": "No.3302 居住用財産譲渡3,000万円特別控除"
+        }
+      ],
+      "original_answer_one_based": 2,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q49",
+      "original_question_number": 49,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "土地所有者がテナントから建設資金の一部を借り、そのテナントに建物を賃貸する有効活用方式はどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "建設協力金方式",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "等価交換方式",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "等価交換は土地と建物等の交換による活用",
+          "primary_source_url": "https://www.mlit.go.jp/common/001205705.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "定期借地権方式",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "定期借地権方式は土地賃借と借地権設定",
+          "primary_source_url": "https://www.mlit.go.jp/common/001205705.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "事業受託方式",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "事業受託方式は建設資金の調達主体が異なる",
+          "primary_source_url": "https://www.mlit.go.jp/common/001205705.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "建設協力金方式",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "テナントから建設協力金を借り建設した後に賃貸する",
+          "primary_source_url": "https://www.mlit.go.jp/common/001205705.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "土地所有者がテナントから建設協力金を借りて建設しテナントに賃貸する方式を建設協力金方式という。原題の設問は加工後と異なる",
+      "primary_sources": [
+        {
+          "url": "https://www.mlit.go.jp/common/001205705.pdf",
+          "section": "土地活用方式の整理・建設協力金方式"
+        }
+      ],
+      "original_answer_one_based": 1,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q50",
+      "original_question_number": 50,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "賃貸ビルの年間運営純収益が600万円、総投資額が1億5,000万円の場合、NOI利回りはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "4％",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "4％",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "600/15000×100=4%",
+          "primary_source_url": "https://www.mlit.go.jp/common/001191116.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "6％",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "計算値は6%でない",
+          "primary_source_url": "https://www.mlit.go.jp/common/001191116.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "8％",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "計算値は8%でない",
+          "primary_source_url": "https://www.mlit.go.jp/common/001191116.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "10％",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "計算値は10%でない",
+          "primary_source_url": "https://www.mlit.go.jp/common/001191116.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "NOI利回り＝運営純収益÷総投資額。600÷15000×100＝4%",
+      "primary_sources": [
+        {
+          "url": "https://www.mlit.go.jp/common/001191116.pdf",
+          "section": "不動産収益利回り・NOI"
+        }
+      ],
+      "original_answer_one_based": 1,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q51",
+      "original_question_number": 51,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "民法上、兄弟姉妹の子（甥・姪）は本人から見て何親等の血族か。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "3親等",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "2親等",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "兄弟姉妹は2親等だがその子は3親等",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "3親等",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "共通の父母を経由して甥姪は3親等",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "4親等",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "4親等は甥姪でない",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "5親等",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "5親等は甥姪でない",
+          "primary_source_url": "https://laws.e-gov.go.jp/law/129AC0000000089"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "民法726条。本人→父母→兄弟姉妹→甥姪で3親等。4・5親等ではない",
+      "primary_sources": [
+        {
+          "url": "https://laws.e-gov.go.jp/law/129AC0000000089",
+          "section": "民法726条 親等の計算"
+        }
+      ],
+      "original_answer_one_based": 2,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q52",
+      "original_question_number": 52,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "相続時精算課税で2024年以後の贈与に設けられた年110万円の基礎控除の扱いとして適切なのはどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "一定の条件下で年110万円の基礎控除が設けられている",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "制度の基礎控除は存在しない",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "2024年以後に基礎控除110万円が存在",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4410.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "贈与者ごとに無制限に110万円ずつ控除できる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "複数特定贈与者は110万円を按分",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4410.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "一定の条件下で年110万円の基礎控除が設けられている",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "所定条件の年110万円基礎控除",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4410.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "基礎控除後の税率は必ず25％となる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "基礎控除後の税率は必ず25%ではなく制度の税率は20%",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4410.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "2024年以降の相続時精算課税基礎控除年110万円。複数特定贈与者間では110万円を按分し、贈与者ごとに累積しない",
+      "primary_sources": [
+        {
+          "url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/zoyo/4410.htm",
+          "section": "No.4410 複数の人から贈与を受けたとき"
+        }
+      ],
+      "original_answer_one_based": 1,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q53",
+      "original_question_number": 53,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "被相続人の子が相続開始前に死亡し、その子に子（被相続人の孫）がいる場合の原則はどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "孫は死亡した子を代襲して相続人となり得る",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "孫は死亡した子を代襲して相続人となり得る",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "先死亡の子の子は原則代襲相続人",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "死亡した子の配偶者が自動的に代襲相続する",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "子の配偶者はこの関係で代襲相続しない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "孫の代襲相続は常に禁止される",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "孫代襲は認められる",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "孫が相続するには必ず遺言が必要である",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "遺言なくとも法定代襲する",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "子が先に死亡した場合、孫は代襲相続人となり得る。子の配偶者は代襲人ではない",
+      "primary_sources": [
+        {
+          "url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm",
+          "section": "民法887条2項 代襲相続"
+        }
+      ],
+      "original_answer_one_based": 3,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q54",
+      "original_question_number": 54,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "遺産の不動産を長男が単独取得し、他の相続人へ自己資金から金銭を渡す遺産分割はどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "代償分割",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "換価分割",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "換価分割は遺産を売却して金銭を分ける",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4173.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "現物分割のみ",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "単なる現物分割でなく他相続人への代償金がある",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4173.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "共有分割",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "共有分割は共有持分を取得",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4173.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "代償分割",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "特定相続人による遺産取得と他相続人への金銭交付が代償分割",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4173.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "相続人が特定の遺産を取得する代わりに自己資金等を他相続人へ交付するのは代償分割",
+      "primary_sources": [
+        {
+          "url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4173.htm",
+          "section": "No.4173 代償分割"
+        }
+      ],
+      "original_answer_one_based": 4,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q55",
+      "original_question_number": 55,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "相続人が自己を受取人とする被相続人の生命保険契約から死亡保険金を受領した場合、それだけで民法上の単純承認となるか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "原則として受取人固有の権利に基づく受領であり、それだけでは単純承認とならない",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "必ず単純承認となる",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "指定受取人固有の死亡保険金受領のみで単純承認にはならない",
+          "primary_source_url": "https://www.courts.go.jp/sendai/vc-files/sendai/2023/kasaisoumu/kaji/syoshiki/isanbunkatuqar50401.pdf"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "原則として受取人固有の権利に基づく受領であり、それだけでは単純承認とならない",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "指定受取人固有財産の受領であり相続財産の処分と異なる",
+          "primary_source_url": "https://www.courts.go.jp/sendai/vc-files/sendai/2023/kasaisoumu/kaji/syoshiki/isanbunkatuqar50401.pdf"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "被相続人のすべての預金を相続したとみなす",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "保険金受領は被相続人預金の全額承継ではない",
+          "primary_source_url": "https://www.courts.go.jp/sendai/vc-files/sendai/2023/kasaisoumu/kaji/syoshiki/isanbunkatuqar50401.pdf"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "相続放棄の申述が自動的に受理される",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "相続放棄の申述は別途家庭裁判所への手続が必要",
+          "primary_source_url": "https://www.courts.go.jp/sendai/vc-files/sendai/2023/kasaisoumu/kaji/syoshiki/isanbunkatuqar50401.pdf"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "指定受取人の死亡保険金は受取人固有の財産であり通常相続財産に含まれない。受領のみでは民法921条1号の遺産処分とはならない",
+      "primary_sources": [
+        {
+          "url": "https://www.courts.go.jp/sendai/vc-files/sendai/2023/kasaisoumu/kaji/syoshiki/isanbunkatuqar50401.pdf",
+          "section": "裁判所 遺産分割Q&A 生命保険金、民法921条"
+        }
+      ],
+      "original_answer_one_based": 1,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q56",
+      "original_question_number": 56,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "自筆証書遺言にパソコンで作成した財産目録を添付する場合の原則的な形式要件はどれか。",
+      "answer_zero_based": 2,
+      "answer_one_based": 3,
+      "correct_choice": "財産目録の各葉に署名と押印が必要となる",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "遺言書の全文をパソコンで印字すればよい",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "本文は原則自書が必要で全文印字は不可",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji07_00240.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "財産目録には署名も押印も不要",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "添付目録の各葉に署名押印が必要",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji07_00240.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "財産目録の各葉に署名と押印が必要となる",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "民法968条2項による各葉の署名押印要件",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji07_00240.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "公証人が財産目録に必ず署名しなければならない",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "公証人による目録への署名要件ではない",
+          "primary_source_url": "https://www.moj.go.jp/MINJI/minji07_00240.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "自筆証書遺言のパソコン作成財産目録は各葉（両面記載なら両面）に署名・押印を要する",
+      "primary_sources": [
+        {
+          "url": "https://www.moj.go.jp/MINJI/minji07_00240.html",
+          "section": "民法968条2項"
+        }
+      ],
+      "original_answer_one_based": 2,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q57",
+      "original_question_number": 57,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "相続税の申告・納税について、通常の申告期限は相続の開始を知った日の翌日から何か月以内か。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "10か月",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "3か月",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "3か月は相続放棄熟慮期間の原則",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4205.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "6か月",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "6か月ではない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4205.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "8か月",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "8か月ではない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4205.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "10か月",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "申告期限は知った日の翌日から原則10か月",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4205.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "申告期限は相続開始を知った日の翌日から原則10か月以内。相続放棄の3か月と区別",
+      "primary_sources": [
+        {
+          "url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4205.htm",
+          "section": "No.4205 相続税の申告と納税"
+        }
+      ],
+      "original_answer_one_based": 3,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q58",
+      "original_question_number": 58,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "所有する宅地上に自分名義のアパートを建て、第三者へ賃貸している場合、土地の相続税評価区分として原則適切なのはどれか。",
+      "answer_zero_based": 0,
+      "answer_one_based": 1,
+      "correct_choice": "貸家建付地",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "貸家建付地",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "自有地上の賃貸アパート敷地は貸家建付地",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4614.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "貸宅地",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "貸宅地は土地自体を賃貸する場合",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4614.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "自用地しか認められない",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "賃貸アパート敷地が常に自用地評価とは限らない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4614.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "貸家建付借地権",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "借地権付きの貸家の場合と異なり自己所有土地",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4614.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "自有地上の貸家を第三者に賃貸している敷地は原則貸家建付地と評価。土地そのものを貸す貸宅地とは異なる",
+      "primary_sources": [
+        {
+          "url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hyoka/4614.htm",
+          "section": "No.4614 貸家建付地の評価"
+        }
+      ],
+      "original_answer_one_based": 4,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q59",
+      "original_question_number": 59,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "特定居住用宅地等に該当する被相続人の自宅敷地について、相続税評価額の減額割合として原則正しいのはどれか。",
+      "answer_zero_based": 1,
+      "answer_one_based": 2,
+      "correct_choice": "80％",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "50％",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "特定居住用宅地等は50%でない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4124.htm"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "80％",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "要件を満たせば330㎡まで80%減額",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4124.htm"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "90％",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "90%減額でない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4124.htm"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "100％",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "100%減額でない",
+          "primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4124.htm"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "特定居住用宅地等の対象要件を満たす部分は330平方メートルまで80%減額",
+      "primary_sources": [
+        {
+          "url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4124.htm",
+          "section": "No.4124 小規模宅地等の特例"
+        }
+      ],
+      "original_answer_one_based": 3,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    },
+    {
+      "id": "FP2-OFFICIAL-202405-Q60",
+      "original_question_number": 60,
+      "status": "PASS",
+      "severity": "none",
+      "stem": "経営承継円滑化法の遺留分に関する民法の特例について、後継者の範囲として適切なのはどれか。",
+      "answer_zero_based": 3,
+      "answer_one_based": 4,
+      "correct_choice": "法定要件を満たせば親族以外の後継者も対象になり得る",
+      "choice_verification": [
+        {
+          "index_zero_based": 0,
+          "text": "旧代表者の実子だけ",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "親族外の後継者も対象となり得る",
+          "primary_source_url": "https://www.chusho.meti.go.jp/pamflet/hakusyo/H29/h29/html/b2_2_1_1.html"
+        },
+        {
+          "index_zero_based": 1,
+          "text": "旧代表者の親族だけ",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "後継者は親族限定でない",
+          "primary_source_url": "https://www.chusho.meti.go.jp/pamflet/hakusyo/H29/h29/html/b2_2_1_1.html"
+        },
+        {
+          "index_zero_based": 2,
+          "text": "会社役員であれば承継実態を問わず全員",
+          "correct": false,
+          "verdict": "REJECTED",
+          "reason": "会社役員全員が無条件に対象ではない",
+          "primary_source_url": "https://www.chusho.meti.go.jp/pamflet/hakusyo/H29/h29/html/b2_2_1_1.html"
+        },
+        {
+          "index_zero_based": 3,
+          "text": "法定要件を満たせば親族以外の後継者も対象になり得る",
+          "correct": true,
+          "verdict": "SUPPORTED",
+          "reason": "法定要件と確認許可のもと親族外後継者も対象",
+          "primary_source_url": "https://www.chusho.meti.go.jp/pamflet/hakusyo/H29/h29/html/b2_2_1_1.html"
+        }
+      ],
+      "explanation_verdict": "PASS",
+      "explanation_reason": "経営承継円滑化法の遺留分民法特例は法定要件下で親族外後継者も対象。遺留分権利者合意、経済産業大臣確認と家庭裁判所許可が必要",
+      "primary_sources": [
+        {
+          "url": "https://www.chusho.meti.go.jp/pamflet/hakusyo/H29/h29/html/b2_2_1_1.html",
+          "section": "遺留分に関する民法の特例"
+        }
+      ],
+      "original_answer_one_based": 4,
+      "original_answer_independently_extracted": false,
+      "modified": true,
+      "modification_note_review": "公式原題の論点を基に設問・4選択肢・設定を独自に再構成。原題の正答番号と加工後正答は別記録。",
+      "applicable_on": "2026-04-01",
+      "canonical_content_eligible": true,
+      "release_eligible": false
+    }
+  ]
+}
