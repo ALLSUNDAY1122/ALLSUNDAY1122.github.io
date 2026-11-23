@@ -1,7 +1,7 @@
 {
   "schema_version": "fp2-canonical-reviewed-v3",
-  "status": "CONTENT_AUDIT_PASS_194_RELEASE_CANDIDATE_120_NOT_PUBLISHABLE",
-  "content_approved_questions": 194,
+  "status": "CONTENT_AUDIT_PASS_195_RELEASE_CANDIDATE_120_NOT_PUBLISHABLE",
+  "content_approved_questions": 195,
   "publishable_questions": 0,
   "source_branches": [
     "feature/fp2-release-scope-20261123"
@@ -48,14 +48,21 @@
       "covered": 5,
       "pass": 4,
       "fail": 1
+    },
+    {
+      "path": "fp2-manabi-sprint/audit/FP2_2025_01_Q20_SECOND_CORRECTION_REAUDIT_PASS_20261123.md",
+      "blob_sha": "bccab94170391e9074b021fcee2125b3b5d64bf7",
+      "covered": 1,
+      "pass": 1,
+      "fail": 0
     }
   ],
   "origin_count": 15,
-  "recovered_pass_count": 179,
-  "recovered_fail_count": 1,
+  "recovered_pass_count": 180,
+  "recovered_fail_count": 0,
   "recovered_hold_count": 0,
   "recovered_not_yet_reviewed": 0,
-  "source_note": "Recovered 180 independent re-audit PASS179/FAIL1/HOLD0. Four corrected PASS admitted to reserve only. Q20 still FAIL, corrected again and held pending independent re-audit.",
+  "source_note": "Recovered 180 independently content PASS180 FAIL0 HOLD0. 15 prior-original PASS -> canonical 195. Five corrected issues re-audited, Q20 secondary re-audit PASS. Initial release 120 unchanged; all 195 publishable=false.",
   "answer_contract": "answer_index is zero-based in canonical bank; original record answer is retained with original_answer_base and answer_one_based fields.",
   "release_blockers": [
     "2026-04-01 current-law and legal history independent exhaustive Q0 review",
@@ -68,14 +75,7 @@
     "回収PASS107問中の未確定modifiedと出典表示・権利・法令適用日のQ0検証",
     "HOLD11件と未監査60件、UI Master v2.1実機/Q3〜Q5・Apple提出前検査"
   ],
-  "excluded_from_reviewed": [
-    {
-      "id": "fp2-2025-01-gakka-020",
-      "status": "FAIL_RECORRECTED_REAUDIT_PENDING",
-      "reason": "落雷・ボイラー補償の誤記を再修正、再監査待ち",
-      "evidence_path": "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md"
-    }
-  ],
+  "excluded_from_reviewed": [],
   "questions": [
     {
       "id": "fp2-2026-05-gakka-005",
@@ -13157,14 +13157,101 @@
       "provenance_gate_status": "PROVISIONAL_OFFICIAL_PDF_COMPARISON_PENDING",
       "content_status": "PASS",
       "release_candidate_status": "RESERVE_CONTENT_PASS_NOT_RELEASE_CLEAR"
+    },
+    {
+      "id": "fp2-2025-01-gakka-020",
+      "grade": "FP2",
+      "examDate": "2025-01",
+      "examType": "学科",
+      "domain": "リスク管理",
+      "sourceQuestionNumber": 20,
+      "questionType": "four_choice",
+      "question": "損害保険を活用した事業活動のリスク管理に関する次の記述のうち、最も不適切なものはどれか。",
+      "choices": [
+        "食品製造業を営む事業者が、製造した食品が原因で食中毒を発生させ、法律上の損害賠償責任を負うリスクに備えて、生産物賠償責任保険(PL保険)を契約した。",
+        "建設業を営む事業者が、業務中の事故で従業員が負傷するリスクに備えて、労働者災害補償保険(政府労災保険)の上乗せとして、労働災害総合保険(法定外補償)を契約した。",
+        "金属製品製造業を営む事業者が、工場内に設置した機械設備が火災により損害を被るリスクに備えて、機械保険を契約した。",
+        "複合商業ビルを運営する事業者が、来店客が施設の管理不備によりケガをして、法律上の損害賠償責任を負うリスクに備えて、施設所有(管理)者賠償責任保険を契約した。"
+      ],
+      "answer": 3,
+      "explanation": "正解は③（不適切）。火災による機械・設備の損害への備えとして機械保険のみを契約することは通常適切ではなく、火災保険等を検討する必要がある。機械保険は、不測かつ突発的な機械的・電気的事故や取扱上のミス等による損害を補償する保険である。AIG損保「機械保険」（2022年10月版、2023年1月1日以降始期）の例では、落雷による損害や、ボイラーの爆発・破裂など約款所定の事故は補償対象となる一方、火災による損害および火災による爆発・破裂による損害は対象外である。補償範囲は商品・約款・特約により異なるため個別に確認する。①食中毒に係る製造物賠償にはPL保険、②労災への法定外補償には労働災害総合保険、④施設管理に伴う法律上の賠償責任には施設所有（管理）者賠償責任保険が適切な例である。",
+      "legalReferenceDate": "2024-10-01",
+      "sourceUrl": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "status": "active",
+      "legacyReason": null,
+      "audit": {
+        "questionChecked": true,
+        "answerChecked": true,
+        "explanationChecked": true,
+        "legalChecked": true
+      },
+      "source_organization": "日本FP協会",
+      "source_exam_type": "2級学科",
+      "source_section": "2025-01公表 2級学科 第20問",
+      "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
+      "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-01 第20問",
+      "modified": true,
+      "modification_note": "【解説修正／原題の問題文・4選択肢は変更なし】従来の『火災・落雷等の火災以外の偶発的事故』という自己矛盾を削除。機械事故と火災等の免責を分離し、約款・特約による例外を明示。正答③維持。 第2次解説独立再監査PASS。原題の変更分類は未最終確認。",
+      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
+      "law_target_date": "2026-04-01",
+      "law_current_recheck": "EXPLANATION_INDEPENDENT_PASS_2026_04_01",
+      "source_original_law_date": "2024-10-01",
+      "legacy_matrix_checks": {
+        "transcription": "済",
+        "explanation": "済"
+      },
+      "visual_exhibit_review": "NOT_FLAGGED_BY_PATTERN",
+      "independent_review_status": "PASS",
+      "publishable": false,
+      "dataVersion": "fp2-recovered-180-draft-20261123",
+      "correction_prior": [
+        {
+          "explanation": "正解は3が不適切。機械保険は、火災・落雷・破裂・爆発など「火災以外」の偶発的事故(機械の破損・作動不良等)による損害を補償する保険であり、火災による損害は機械保険の対象外(火災保険等で対応すべき)である。よって「火災により損害を被るリスク」に機械保険を契約するという設定が誤り。1・2・4はPL保険・労働災害総合保険・施設所有者賠償責任保険のいずれも典型的な活用例として正しい。機械保険の担保範囲(火災を除く)の理解がポイントとなる。",
+          "answer": 3,
+          "modified": null,
+          "modification_note": null
+        },
+        {
+          "explanation": "正解は③（不適切）。機械保険は、機械・設備の運転中などに生じる不測かつ突発的な機械的・電気的事故などを対象とする保険で、一般に火災・落雷・破裂・爆発等は対象外のため、火災への備えには適切な火災保険等を検討する。実際の補償・免責範囲は個別の適用約款と特約で確認すること。①食中毒の製造物賠償はPL保険、②従業員の業務災害への法定外補償は労働災害総合保険、④施設管理上の法律上の賠償責任は施設所有（管理）者賠償責任保険が適切な活用例。",
+          "answer": 3,
+          "audit_status": "FAIL_REAUDIT_20261123",
+          "reason": "独立再監査で落雷および特定ボイラー事故まで免責と誤記していたことが判明",
+          "evidence_path": "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md",
+          "evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af"
+        }
+      ],
+      "question_text_modified": false,
+      "explanation_modified": true,
+      "modification_scope": "explanation_only",
+      "correction_primary_source_url": "https://www.aig.co.jp/content/dam/aig/sonpo/jp/ja/pamphlets/1A2-853.pdf",
+      "audit_status": "PASS_CORRECTED_INDEPENDENT_REAUDIT",
+      "release_selected": false,
+      "independent_audit_status": "PASS",
+      "approved_for_content_bank": true,
+      "modification_explanation_only": true,
+      "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_2025_01_Q20_SECOND_CORRECTION_REAUDIT_PASS_20261123.md",
+      "audit_evidence_blob_sha": "bccab94170391e9074b021fcee2125b3b5d64bf7",
+      "audit_reason": "機械保険の落雷・所定ボイラー事故の補償例、火災・火災起因爆発破裂の免責を一次資料と照合。第2次解説独立再監査PASS。原題対照・権利・公開ゲートは別途未了。",
+      "canonical_id": "fp2-2025-01-gakka-020",
+      "answer_index": 2,
+      "answer_one_based": 3,
+      "answer_index_base": 0,
+      "original_answer_base": 1,
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "provenance_gate_status": "PROVISIONAL_OFFICIAL_PDF_COMPARISON_PENDING",
+      "content_status": "PASS",
+      "release_candidate_status": "RESERVE_CONTENT_PASS_NOT_RELEASE_CLEAR"
     }
   ],
   "provenance_verified_count": 114,
-  "provenance_pending_count": 65,
+  "provenance_pending_count": 66,
   "release_clear_count": 0,
   "release_candidate_questions": 120,
-  "reserve_content_pass_questions": 74,
-  "provenance_qualification": "In 175 recovered content-PASS questions, 114 have prior official-source/independent exhibit comparison evidence; 61 reserve-only records have preliminary modified boolean classification not yet full official text checked. All 120 selected release candidates have no PROVISIONAL record. All five FAIL are corrected only in draft, excluded from canonical pending independent re-review. Newly admitted PASS4 are RESERVE_ONLY, provenance official-PDF full-text review not asserted.",
+  "reserve_content_pass_questions": 75,
+  "provenance_qualification": "In 175 recovered content-PASS questions, 114 have prior official-source/independent exhibit comparison evidence; 61 reserve-only records have preliminary modified boolean classification not yet full official text checked. All 120 selected release candidates have no PROVISIONAL record. All five FAIL are corrected only in draft, excluded from canonical pending independent re-review. Newly admitted PASS4 are RESERVE_ONLY, provenance official-PDF full-text review not asserted. Q20 is content-PASS reserve only; source-versus-PDF original text/provenance and release rights not final.",
   "domain_release_selection": {
     "ライフプランニングと資金計画": {
       "available": 35,
@@ -13194,9 +13281,9 @@
       ]
     },
     "リスク管理": {
-      "available": 31,
+      "available": 32,
       "selected": 20,
-      "reserve": 11,
+      "reserve": 12,
       "selectedIDs": [
         "FP2-ORIG-20261123-R01",
         "FP2-ORIG-20261123-R02",
