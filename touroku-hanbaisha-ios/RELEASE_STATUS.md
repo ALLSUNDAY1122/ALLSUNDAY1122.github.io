@@ -1265,3 +1265,10 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - GitHub Actions Chromium 375px/430px、計16ケースで画像読込・横はみ出し・原寸リンク・選択肢数・出典表示・公式正答による採点をPASS。実機Safariは未試験。
 - 新規8問正式昇格：468→476/600問。残124問＝V2ルビ78・別系統ルビ45・2023年問90公式無効1。
 - 証跡：`official-kansai/REMAINING_EVIDENCE_V3_20261124.json`、`official-kansai/EIGHT_IMAGE_RELEASE_QA_20261124.json`。本審査未提出・BLOCKED。
+
+
+## 2026-11-24：比較対象外45問からルビ10問の直接目視PASS・昇格
+- PDF原図と修復後375px Noto日本語フォント画面を10問それぞれ直接目視し、読みの文字・位置をPASS。原典PDFのSHA・normalized text hash・公式正答索引・既存重複もチェック。
+- GitHub Actions Chromium 375px/430px各10件、合計20件でruby/rt DOM読みによる対応、出典、画面幅、選択肢と採点をPASS。iOS実機ではない。
+- 新規昇格10問：正式バンク476→486/600。未収録114問＝旧V2ルビ78＋今回の追加比較の残35＋公式無効1。
+- 監査：`official-kansai/REMAINING_EVIDENCE_V3_20261124.json`、`official-kansai/TEN_RUBY_DIRECT_REVIEW_QA_20261124.json`。全体ゲートBLOCKED、本審査未送信。
