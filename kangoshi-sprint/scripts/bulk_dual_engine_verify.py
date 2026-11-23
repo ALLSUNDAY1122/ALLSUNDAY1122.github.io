@@ -50,6 +50,7 @@ for exam in (112,111):
         if len(norm(stem))<18:failures.append("TOO_SHORT_FOR_UNIQUE_STEM")
         if MEDIA.search(stem):failures.append("MEDIA_OR_DIAGRAM_CUE")
         if any(SUSPICIOUS.search(x) for x in [stem]+choices):failures.append("SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT")
+        if any(re.search(r"DKIX|[前後]H-\\d+|[-−]H[-−]\\d+",x) for x in [stem]+choices):failures.append("PAGE_FOOTER_CONTAMINATION")
         if not isinstance(pg,int) or not 1<=pg<=len(doc):failures.append("SOURCE_PAGE_INVALID")
         if isinstance(pg,int) and 1<=pg<=len(doc):
             page=doc[pg-1]
