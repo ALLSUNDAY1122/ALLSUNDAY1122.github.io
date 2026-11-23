@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#fdf6ef">
+<link rel="manifest" href="./manifest.webmanifest">
 <meta name="description" content="FP2級｜学びスプリント｜内容監査PASS問題の検証用プレビュー">
 <meta name="robots" content="noindex,follow">
 <title>FP2級｜学びスプリント</title>
@@ -73,6 +74,10 @@ function syncSettings(){document.querySelectorAll('[data-goal]').forEach(b=>b.cl
 $('saveExamDate').onclick=()=>{state.examDate=$('examDate').value||'';save();renderHome();};
 $('exportData').onclick=()=>{const payload=JSON.stringify({app:'fp2-manabi-sprint',version:2,exportedAt:new Date().toISOString(),state},null,2);const url=URL.createObjectURL(new Blob([payload],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='fp2-manabi-sprint-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('importData').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>2e6)throw Error('ファイルサイズが大きすぎます');const payload=JSON.parse(await file.text());if(payload.app!=='fp2-manabi-sprint'||payload.version!==2||!validState(payload.state))throw Error('このアプリのバックアップではありません');if(!confirm('現在の学習記録をバックアップの内容で置き換えますか？'))return;state={...state,...payload.state};save();syncSettings();renderHome();renderHistory();alert('学習データを復元しました')}catch(err){alert('読み込み失敗：'+err.message)}finally{e.target.value=''}};
+// Offline shell is installed only on secure origins (including HTTPS GitHub Pages).
+if("serviceWorker" in navigator && (location.protocol==="https:" || location.hostname==="localhost")) {
+  window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js",{scope:"./"}).catch(err=>console.warn("Offline cache unavailable",err)));
+}
 syncSettings();
 applyFont();renderHome();FP2ApprovedBank.load().then(({items,path,publishable})=>{QUESTIONS=items;document.body.dataset.releaseApproved=String(publishable); $('bankStatus').textContent=items.length?`内容監査PASS ${items.length}問｜公開審査未完了`:'承認済み問題データ未配信';renderHome();renderMock();}).catch(e=>{$('bankStatus').textContent='教材読込エラー';$('startAll').disabled=true;console.error(e)});
 </script>
