@@ -17,7 +17,7 @@ const {verifyCurrentLawContent}=require('./verify-current-law-contract.cjs');
 verifyCurrentLawContent(browser);
 const keys=['question','choices','answer','quick','explanation','topic','sourceUrl','baselineDate'];
 const byId=new Map(release.map(q=>[q.id,q]));
-const normalized=s=>String(s).replace(/[\\s\\p{P}\\p{S}]/gu,'').toLowerCase();
+const normalized=s=>String(s).replace(/[\s\p{P}\p{S}]/gu,'').toLowerCase();
 assert.equal(browser.length,300);assert.equal(release.length,300);
 assert.equal(byId.size,300);assert.equal(new Set(browser.map(q=>q.id)).size,300);
 assert.equal(new Set(browser.map(q=>normalized(q.question))).size,300);
