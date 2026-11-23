@@ -34,6 +34,25 @@ def main():
     ids = [q.get("id") for q in questions]
     if len(ids) != len(set(ids)):
         errors.append("duplicate question IDs")
+    selected = [q for q in questions if q.get("release_selected") is True]
+    reserve = [q for q in questions if q.get("release_selected") is False]
+    if len(selected) != 120 or len(reserve) != 70 or bank.get("release_candidate_questions") != 120 or bank.get("reserve_content_pass_questions") != 70:
+        errors.append(f"release scope mismatch: selected={len(selected)}, reserves={len(reserve)}")
+    domain_counts = {}
+    for q in selected:
+        d = q.get("domain")
+        domain_counts[d] = domain_counts.get(d, 0) + 1
+    if len(domain_counts) != 6 or any(n != 20 for n in domain_counts.values()):
+        errors.append("release scope must be 6 domains x 20 questions")
+    if bank.get("recovered_pass_count") != 175 or bank.get("recovered_fail_count") != 5 or bank.get("recovered_hold_count") != 0:
+        errors.append("independent final audit 175/5/0 mismatch")
+    if any(q.get("id") in {
+       "fp2-2025-05-gakka-036", "fp2-2025-05-gakka-039",
+       "fp2-2025-01-gakka-017", "fp2-2025-01-gakka-020", "fp2-2025-01-gakka-013"
+    } for q in questions):
+        errors.append("corrected-but-not-reaudited FAIL question included in canonical")
+    if any(q.get("modification_verification", "").startswith("PROVISIONAL") for q in selected):
+        warnings.append("release selection has provisionally classified modified flags; NOT release ready")
     independent_paths = set()
     for q in questions:
         ident = q.get("id", "UNKNOWN")
@@ -109,10 +128,14 @@ def main():
         "gate": "FP2 source and content static gate",
         "mode": args.mode,
         "content_questions": len(questions),
+        "selected_release_candidates": len(selected),
+        "reserve_content_pass": len(reserve),
+        "selected_domain_counts": domain_counts,
         "verified_independent_evidence_files": sorted(independent_paths),
         "source_asset_count": len(lock.get("assets", {})),
         "ios_ipa_bundle_verified": False,
         "web_runtime_e2e_verified": False,
+        "selected_original_pdf_verification_all_done": not any(q.get("modification_verification", "").startswith("PROVISIONAL") for q in selected),
         "app_privacy_final_verified": False,
         "release_blockers": release_blockers,
         "errors": errors,
