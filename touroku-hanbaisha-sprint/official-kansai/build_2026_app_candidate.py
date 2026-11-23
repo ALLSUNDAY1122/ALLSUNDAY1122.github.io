@@ -25,7 +25,7 @@ for q in src["questions"]:
    mode="inline"
  if choices is None or any(not c for c in choices):
   fail.append(q["questionNo"]);continue
- question={**q,"question":prefix,"choices":choices,"answer":q["answer"],"candidateParsingMode":mode,
+ question={**q,"question":prefix,"choices":choices,"answer":q["answer"],"officialStatus":"NORMAL","excludeFromAccuracyDenominator":False,"scoringPolicy":"SINGLE_ANSWER","candidateParsingMode":mode,
            "needsVisualReview":True,"verbatimCertified":False,"renderReady":False}
  out.append(question)
 if fail or len(out)!=120:raise RuntimeError(f"choice parsing failed: {fail}, count={len(out)}")
