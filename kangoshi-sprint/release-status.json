@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24T01:17:00+09:00",
+  "updatedAt": "2026-11-24",
   "app": "kangoshi-sprint",
   "targetExams": [
     115,
@@ -15,8 +15,8 @@
   "additionalRequired": 480,
   "releaseStatus": "PREFLIGHT_BLOCKED",
   "submissionAllowed": false,
-  "contentGate": "PDF_TEXT_PASS_628_HOLD_92_ANSWER_KEY_NOT_AUDITED",
-  "mediaGate": "38_MEDIA_DEPENDENT_QUESTIONS_HOLD",
+  "contentGate": "EXISTING_628_TEXT_PASS_92_HOLD_NEW_430_TEXT_PASS_50_HOLD_ALL_480_NOT_RELEASE_READY",
+  "mediaGate": "38_HOLD_RIGHTS_PROOF_REQUIRED",
   "appleAppId": "6801792293",
   "bundleId": "jp.allsunday1122.kangoshi",
   "appIconGate": "NOT_INTEGRATED_AS_OF_COORDINATOR_STATUS",
@@ -39,7 +39,7 @@
     "status": "SUCCESS_IN_GITHUB_ACTIONS",
     "countFetched": 15,
     "countFailed": 0,
-    "source": "GitHub Actions run 45213543414 artifact 14837008371",
+    "source": "GitHub Actions run 45216945937 artifact 14838617222",
     "sha256Computed": 15
   },
   "textAudit": {
@@ -77,21 +77,61 @@
     "perQuestionResultsStoredIn": "GitHub Actions artifact 14837008371"
   },
   "automation": {
-    "status": "EXECUTED_WITH_92_CONTENT_HOLDS",
+    "status": "STAGING_AND_SECONDARY_AUDITS_EXECUTED_WITH_UNRESOLVED_HOLDS",
     "path": "kangoshi-sprint/scripts/audit_official_pdf.py",
     "sourceManifest": "kangoshi-sprint/audit/official-source-manifest-20261124.json",
     "mode": "AM/PM separate strict attribution/media isolation",
     "workflow": ".github/workflows/kangoshi-official-pdf-audit.yml",
     "runner": "kangoshi-sprint/scripts/run_official_pdf_audit.py",
-    "ciResult": "SUCCESS_INFRASTRUCTURE_ONLY",
+    "ciResult": "SUCCESS_INFRASTRUCTURE_CONTENT_GATES_BLOCKED",
     "warning": "Job SUCCESS because runner returns 0 even when 92 content holds exist; NOT release-quality PASS",
-    "runId": 45213543414,
+    "runId": 45216945937,
     "jobId": 137828435420,
-    "artifactId": 14837008371,
+    "artifactId": 14838617222,
     "artifactFileCount": 7,
     "artifactSizeBytes": 9580,
-    "artifactSha256": "aee70c580c279d01232c87b630efd58069921f010049e89aeb9e0a54572258f7",
-    "runCommit": "2102b940c51ce7c5c8055938a48189c82dcf182c",
-    "runAt": "2026-11-24T01:10:46+09:00"
+    "artifactSha256": "e68b51ed2c17637ec4502f299029445cefc5ccbacc383194e85ae53a598e3322",
+    "runCommit": "a09aedd5ad6397f3638ead647e122d557933b49a",
+    "runAt": "2026-11-24T01:10:46+09:00",
+    "stagingBranch": "feature/kangoshi-112-111-staging-audit-20261124",
+    "stagingCommit": "730c54fa189ab7f2a36c747b7afae57b47c8e7f4"
+  },
+  "stagedCandidateCount": 480,
+  "staging": {
+    "branch": "feature/kangoshi-112-111-staging-audit-20261124",
+    "commit": "730c54fa189ab7f2a36c747b7afae57b47c8e7f4",
+    "pdfExams": [
+      112,
+      111
+    ],
+    "expected": 480,
+    "detected": 480,
+    "textGateChecked": 480,
+    "passTextOnly": 430,
+    "holds": 50,
+    "holdByReason": {
+      "HOLD_CHOICES_MISMATCH": 42,
+      "HOLD_INCOMPLETE_DATA": 8
+    },
+    "invalidStructure": 24,
+    "officialAnswerKeysChecked": 0,
+    "releaseEligible": 0,
+    "warning": "Extraction reuses PDF text layer with missing glyph mapping. PASS_TEXT_ONLY does not mean verbatim original PDF fidelity; all 480 in isolated staging."
+  },
+  "holdReaudit": {
+    "previousHolds": 92,
+    "secondaryRecheckedNonMedia": 54,
+    "existingTextMismatch": 50,
+    "alternateExactMatches": 0,
+    "confirmedCorrections": 0,
+    "remainingExistingHolds": 92,
+    "mediaHolds": 38,
+    "mediaTriage": {
+      "EXAM_CREATED_CHART_CANDIDATE_UNPROVEN": 29,
+      "THIRD_PARTY_OR_PATIENT_IMAGE_SUSPECTED": 6,
+      "MEDIA_TYPE_UNDETERMINED": 3
+    },
+    "incompleteExisting": 4,
+    "note": "50 mismatches unresolved using independent extraction modes; 4 incomplete data remain separate. Previously 3 false positive secondary matches fixed."
   }
 }
