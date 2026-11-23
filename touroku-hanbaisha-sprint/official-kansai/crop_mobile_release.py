@@ -107,7 +107,7 @@ assert len(promote) == 44
 body = json.dumps({'count':44,'questions':promote,'status':'TEST_ONLY'},ensure_ascii=False)
 results = []
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True)
+    browser = p.chromium.launch(channel='chrome', headless=True)
     for width in (375,430):
         context = browser.new_context(viewport={'width':width,'height':800},
            device_scale_factor=2,is_mobile=True,has_touch=True)
