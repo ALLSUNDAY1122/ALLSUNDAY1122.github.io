@@ -50,6 +50,35 @@ data = payload_bytes.decode("utf-8").replace("</", "<\\/")
 # The same exact canonical data is shipped as JSON and embedded for WKWebView file-origin use.
 (dst / "questions/canonical").mkdir(parents=True)
 (dst / "questions/canonical/approved-questions-20261123.json").write_bytes(payload_bytes)
+diagram_dir = Path("questions/verbatim/assets")
+diagrams = {
+    "fp2-2024-05-gakka-053": (diagram_dir / "fp2-202405-q53-family-diagram.png").as_posix(),
+    "fp2-2026-05-gakka-055": (diagram_dir / "fp2-202605-q55-family-diagram.png").as_posix(),
+}
+if not diagrams.keys() <= set(selected_ids):
+    raise SystemExit("FP2 figure questions are missing from the release selection")
+for filename in diagrams.values():
+    (dst / filename).parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(web / filename, dst / filename)
+
+render_anchor = "$('qtext').textContent=q.q;"
+if html.count(render_anchor) != 1:
+    raise SystemExit("FP2 question rendering marker changed")
+html = html.replace(render_anchor, render_anchor + "renderOfflineDiagram(q.id);", 1)
+diagram_script = "const offlineDiagrams=" + json.dumps(diagrams) + ";\n" + """
+function renderOfflineDiagram(questionId) {
+  document.getElementById('fp2-offline-diagram')?.remove();
+  const path = offlineDiagrams[questionId];
+  if (!path) return;
+  const image = document.createElement('img');
+  image.id = 'fp2-offline-diagram';
+  image.alt = '親族関係図';
+  image.src = path;
+  image.style.maxWidth = '100%';
+  image.style.height = 'auto';
+  document.getElementById('qtext').after(image);
+}
+"""
 shim = """<script type="application/json" id="fp2-offline-bank">""" + data + """</script>
 <script>
 (function(){
@@ -63,6 +92,7 @@ shim = """<script type="application/json" id="fp2-offline-bank">""" + data + """
   return Promise.reject(new Error('Offline FP2 build blocks network fetch: '+url));
  };
 })();
+""" + diagram_script + """
 </script>
 <script>""" + adapter.replace("</script", "<\\/script") + """</script>"""
 html = html.replace('<script src="fp2-approved-bank.js"></script>', shim, 1)

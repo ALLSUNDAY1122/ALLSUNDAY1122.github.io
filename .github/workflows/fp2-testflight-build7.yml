@@ -1,0 +1,148 @@
+name: FP2 1.0.0 Build 7 Internal TestFlight
+
+on:
+  push:
+    branches: [codex/fp2-testflight-1-0-0-build-7]
+    paths: [.github/workflows/fp2-testflight-build7.yml, fp2-manabi-sprint/ios/prepare-ios.py]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fp2-ios-1-0-0-build-7
+  cancel-in-progress: false
+
+jobs:
+  archive-and-upload:
+    runs-on: macos-15
+    timeout-minutes: 35
+    env:
+      DEVELOPMENT_TEAM_ID: MN3D2ZM44N
+      BUNDLE_ID: com.allsunday1122.fp2manabisprint
+      BUILD_NUMBER: '7'
+      APP_VERSION: '1.0.0'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Select Xcode 26 and install XcodeGen
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.3.app/Contents/Developer
+          xcodebuild -version
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+
+      - name: Generate the offline bundle and Xcode project
+        run: |
+          python3 fp2-manabi-sprint/ios/prepare-ios.py
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          path = Path('fp2-manabi-sprint/ios/Web/bundle-evidence.json')
+          evidence = json.loads(path.read_bytes())
+          assert evidence['app_id'] == '6797228406'
+          evidence['build'] = os.environ['BUILD_NUMBER']
+          path.write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+          cd fp2-manabi-sprint/ios
+          xcodegen generate
+
+      - name: Verify Release settings and create a signed device archive
+        working-directory: fp2-manabi-sprint/ios
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          : "${ASC_KEY_ID:?Missing App Store Connect key ID}"
+          : "${ASC_ISSUER_ID:?Missing App Store Connect issuer ID}"
+          : "${ASC_PRIVATE_KEY:?Missing App Store Connect private key}"
+          umask 077
+          key_path="$RUNNER_TEMP/fp2-asc.p8"
+          trap 'rm -f "$key_path"' EXIT
+          printf '%s\n' "$ASC_PRIVATE_KEY" > "$key_path"
+          openssl pkey -in "$key_path" -noout
+          unset ASC_PRIVATE_KEY
+
+          settings=(-project FP2ManabiSprint.xcodeproj -scheme FP2ManabiSprint
+            -configuration Release -destination 'generic/platform=iOS'
+            "DEVELOPMENT_TEAM=$DEVELOPMENT_TEAM_ID" CODE_SIGN_STYLE=Automatic
+            "CURRENT_PROJECT_VERSION=$BUILD_NUMBER")
+          xcodebuild "${settings[@]}" -showBuildSettings -json > "$RUNNER_TEMP/fp2-settings.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          path = Path(os.environ['RUNNER_TEMP']) / 'fp2-settings.json'
+          settings = next(row['buildSettings'] for row in json.loads(path.read_bytes())
+                          if row['target'] == 'FP2ManabiSprint')
+          expected = {'DEVELOPMENT_TEAM': os.environ['DEVELOPMENT_TEAM_ID'],
+                      'CODE_SIGN_STYLE': 'Automatic', 'CONFIGURATION': 'Release',
+                      'PRODUCT_BUNDLE_IDENTIFIER': os.environ['BUNDLE_ID'],
+                      'MARKETING_VERSION': os.environ['APP_VERSION'],
+                      'CURRENT_PROJECT_VERSION': os.environ['BUILD_NUMBER']}
+          for name, value in expected.items():
+              assert settings[name] == value, (name, settings[name])
+          print('Release / automatic signing / MN3D2ZM44N / 1.0.0 (7) verified')
+          PY
+
+          xcodebuild "${settings[@]}" -archivePath "$RUNNER_TEMP/FP2ManabiSprint.xcarchive" \
+            -allowProvisioningUpdates -authenticationKeyPath "$key_path" \
+            -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" archive
+
+      - name: Verify the signed archive, 298 questions and original diagrams
+        run: |
+          app="$RUNNER_TEMP/FP2ManabiSprint.xcarchive/Products/Applications/FP2ManabiSprint.app"
+          codesign --verify --deep --strict "$app"
+          codesign -dv --verbose=4 "$app" 2>&1 | grep -Fx "TeamIdentifier=$DEVELOPMENT_TEAM_ID"
+          python3 - <<'PY'
+          import json, os, plistlib
+          from pathlib import Path
+
+          source = Path('fp2-manabi-sprint')
+          app = Path(os.environ['RUNNER_TEMP']) / 'FP2ManabiSprint.xcarchive/Products/Applications/FP2ManabiSprint.app'
+          info = plistlib.loads((app / 'Info.plist').read_bytes())
+          assert info['CFBundleIdentifier'] == os.environ['BUNDLE_ID']
+          assert info['CFBundleShortVersionString'] == os.environ['APP_VERSION']
+          assert info['CFBundleVersion'] == os.environ['BUILD_NUMBER']
+          assert info['ITSAppUsesNonExemptEncryption'] is False
+          path = 'questions/canonical/approved-questions-20261123.json'
+          full = json.loads((source / path).read_bytes())['questions']
+          archived = json.loads((app / 'Web' / path).read_bytes())['questions']
+          assert len(full) == 310 and len(archived) == 298
+          assert archived == [q for q in full if q['release_selected'] is True]
+          for name in ('fp2-202405-q53-family-diagram.png', 'fp2-202605-q55-family-diagram.png'):
+              asset = Path('questions/verbatim/assets') / name
+              assert (app / 'Web' / asset).read_bytes() == (source / asset).read_bytes()
+          print('Signed archive verified: 1.0.0 (7), 298 official questions, 2 original PNGs')
+          PY
+
+      - name: Upload to App Store Connect for internal TestFlight only
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          umask 077
+          key_path="$RUNNER_TEMP/fp2-asc.p8"
+          trap 'rm -f "$key_path"' EXIT
+          printf '%s\n' "$ASC_PRIVATE_KEY" > "$key_path"
+          unset ASC_PRIVATE_KEY
+          xcodebuild -help > "$RUNNER_TEMP/fp2-xcode-help.txt" 2>&1
+          grep -q testFlightInternalTestingOnly "$RUNNER_TEMP/fp2-xcode-help.txt"
+          python3 - <<'PY'
+          import os, plistlib
+          from pathlib import Path
+
+          options = {'method': 'app-store-connect', 'destination': 'upload',
+                     'teamID': os.environ['DEVELOPMENT_TEAM_ID'], 'signingStyle': 'automatic',
+                     'testFlightInternalTestingOnly': True, 'manageAppVersionAndBuildNumber': False}
+          (Path(os.environ['RUNNER_TEMP']) / 'fp2-export.plist').write_bytes(plistlib.dumps(options))
+          PY
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/FP2ManabiSprint.xcarchive" \
+            -exportPath "$RUNNER_TEMP/fp2-export" -exportOptionsPlist "$RUNNER_TEMP/fp2-export.plist" \
+            -allowProvisioningUpdates -authenticationKeyPath "$key_path" \
+            -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID"
