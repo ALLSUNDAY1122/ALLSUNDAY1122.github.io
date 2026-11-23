@@ -126,6 +126,11 @@ with sync_playwright() as p:
             assert imgs.count() == len(q['sourceFigures']), id
             assert page.locator('#choices button').count() == len(q['choices']), id
             assert q['attributionDisplay'] in page.locator('#attribution').inner_text(), id
+            # Wait for native lazy-loading after scrolling each image into view.
+            for image_index in range(imgs.count()):
+                imgs.nth(image_index).scroll_into_view_if_needed()
+            page.wait_for_function("""() => [...document.querySelectorAll('#sourceFigure img')]
+                .every(img => img.complete && img.naturalWidth > 0 && img.naturalHeight > 0)""", timeout=20000)
             layout = page.evaluate("""() => ({
                 scroll: document.documentElement.scrollWidth,
                 client: document.documentElement.clientWidth,
