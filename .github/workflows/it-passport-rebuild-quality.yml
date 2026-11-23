@@ -67,6 +67,18 @@ jobs:
           fi
       - name: Independently validate 500 IPA candidate IDs, source hashes and official answer index
         run: python3 apps/it-passport-rebuild/quality/validate-official-candidates.py
+      - name: Audit repaired original-source question image evidence (21 of 21 and 500 HOLD)
+        run: python3 apps/it-passport-rebuild/quality/validate-image-evidence.py
+      - name: Prove binary-and-verbatim release gate rejects incomplete assets
+        shell: bash
+        run: |
+          set +e
+          python3 apps/it-passport-rebuild/quality/validate-image-evidence.py --release > /tmp/itp-image-release.log 2>&1
+          result=$?
+          set -e
+          test "$result" -ne 0 || { echo 'Unexpected IPA source-image release PASS' >&2; exit 1; }
+          grep -q 'BLOCKED:' /tmp/itp-image-release.log
+          echo 'PASS: incomplete source assets and verbatim audit cannot release'
       - name: Compile official-source PDF staging parser
         run: python3 -m py_compile apps/it-passport-rebuild/quality/stage-ipa-pdf.py
       - name: Report issue-triggered run
