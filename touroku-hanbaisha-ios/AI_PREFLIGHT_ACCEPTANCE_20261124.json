@@ -1,6 +1,6 @@
 {
   "schema": "touhan-ai-preflight-acceptance-v1",
-  "timestampJST": "2026-11-24T08:09:17.512152+09:00",
+  "timestampJST": "2026-11-24T08:12:08.270451+09:00",
   "canonicalBank": 599,
   "years": {
     "2022": 120,
@@ -22,8 +22,8 @@
     },
     {
       "id": "Q1_CONTENT_AND_ATTRIBUTION",
-      "status": "FAIL",
-      "detail": "invalid records=8; unattached ruby=102; image refs=52; inline ruby records=115; examples=['KSAI-2022-005:FIGURE_MISSING', 'KSAI-2022-104:FIGURE_MISSING', 'KSAI-2024-028:FIGURE_MISSING', 'KSAI-2024-040:FIGURE_MISSING', 'KSAI-2025-044:FIGURE_MISSING', 'KSAI-2025-052:FIGURE_MISSING', 'KSAI-2026-028:FIGURE_MISSING', 'KSAI-2026-036:FIGURE_MISSING']",
+      "status": "PASS",
+      "detail": "invalid records=0; unattached ruby=102; image refs=52; inline ruby records=115; examples=[]",
       "evidence": [
         "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json"
       ]
@@ -91,36 +91,49 @@
       "status": "PASS",
       "detail": "GitHub Actions step success",
       "evidence": [
-        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286228531"
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286288944"
       ]
     },
     {
       "id": "Q10_LEGACY_AND_OFFICIAL_RELEASE_VALIDATOR",
-      "status": "FAIL",
-      "detail": "GitHub Actions step failed; inspect job logs",
+      "status": "PASS",
+      "detail": "GitHub Actions step success",
       "evidence": [
-        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286228531"
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286288944"
       ]
     },
     {
       "id": "Q11_CHROMIUM_FULL_BANK_375_430",
-      "status": "FAIL",
-      "detail": "GitHub Actions step failed; inspect job logs",
+      "status": "PASS",
+      "detail": "GitHub Actions step success",
       "evidence": [
-        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286228531"
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286288944"
+      ]
+    },
+    {
+      "id": "Q12_SOURCE_FIGURE_SHA",
+      "status": "PASS",
+      "detail": "GitHub Actions step success",
+      "evidence": [
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286288944"
+      ]
+    },
+    {
+      "id": "Q13_CANONICAL_APP_ICON",
+      "status": "PASS",
+      "detail": "GitHub Actions step success",
+      "evidence": [
+        "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45286288944"
       ]
     }
   ],
   "blocking": [
-    "Q1_CONTENT_AND_ATTRIBUTION",
     "Q4_OFFLINE_RESILIENCE",
     "Q5_PRIVACY_AND_NETWORK_DISCLOSURE",
     "Q6_IOS_BUILD_AND_LAUNCH",
-    "Q7_TESTFLIGHT_READY",
-    "Q10_LEGACY_AND_OFFICIAL_RELEASE_VALIDATOR",
-    "Q11_CHROMIUM_FULL_BANK_375_430"
+    "Q7_TESTFLIGHT_READY"
   ],
   "explicitNoSubmission": true,
-  "actionsRunId": 45286228531,
-  "actionsHead": "3ba71e1f7cc86f7262d27ee58bef877e6f4972c0"
+  "actionsRunId": 45286288944,
+  "actionsHead": "a7b142d79012d3e09d8c3c892b696b217f412df2"
 }
