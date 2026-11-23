@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-24T00:27:59+09:00",
+  "updated_at": "2026-11-24T00:38:15+09:00",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -31,7 +31,7 @@
     "existing_canonical": 360,
     "existing_type": "独自問題（旧版）",
     "target_official": 600,
-    "verified_official_imported": 317,
+    "verified_official_imported": 381,
     "year_2023_invalid_question_review": "PASS: Q90, 解なし・受験者全員正解・模試採点から除外",
     "official_answer_keys_indexed": 600,
     "official_answer_keys_by_year": {
@@ -43,7 +43,7 @@
     },
     "official_single_answer_keys": 599,
     "official_invalid_question_count": 1,
-    "official_question_text_imported": 317,
+    "official_question_text_imported": 381,
     "answer_index_readback_pass": true,
     "official_question_pdf_binaries_downloaded": 10,
     "sha256_verified": 10,
@@ -119,7 +119,7 @@
       ]
     },
     "production_official_bank_path": "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json",
-    "production_official_bank_count": 317,
+    "production_official_bank_count": 381,
     "official_preview_ui": "touroku-hanbaisha-sprint/official-practice.html",
     "official_preview_ui_integrated_into_home": true,
     "four_five_choices_supported_in_official_ui": true,
@@ -218,12 +218,12 @@
         "geometryUnresolved": 61,
         "rubySourceAnchorAssociated": 36,
         "rubySourceInconclusive": 9,
-        "promotedTotal": 63,
+        "promotedTotal": 73,
         "promotedByGeometry": 35,
-        "promotedByRuby": 0,
-        "promotedByLayout": 0,
+        "promotedByRuby": 7,
+        "promotedByLayout": 3,
         "manualPass": 14,
-        "holdTotal": 57,
+        "holdTotal": 47,
         "reasons": {
           "FIGURE_OR_FORM_REVIEW": 13,
           "RUBY_RENDER_NOT_CERTIFIED": 36,
@@ -247,12 +247,12 @@
         "geometryUnresolved": 51,
         "rubySourceAnchorAssociated": 34,
         "rubySourceInconclusive": 7,
-        "promotedTotal": 69,
+        "promotedTotal": 82,
         "promotedByGeometry": 53,
-        "promotedByRuby": 0,
-        "promotedByLayout": 0,
+        "promotedByRuby": 9,
+        "promotedByLayout": 4,
         "manualPass": 0,
-        "holdTotal": 51,
+        "holdTotal": 38,
         "reasons": {
           "RUBY_RENDER_NOT_CERTIFIED": 34,
           "FIGURE_OR_FORM_REVIEW": 8,
@@ -273,12 +273,12 @@
         "geometryUnresolved": 55,
         "rubySourceAnchorAssociated": 41,
         "rubySourceInconclusive": 5,
-        "promotedTotal": 64,
+        "promotedTotal": 74,
         "promotedByGeometry": 41,
-        "promotedByRuby": 0,
-        "promotedByLayout": 0,
+        "promotedByRuby": 9,
+        "promotedByLayout": 1,
         "manualPass": 0,
-        "holdTotal": 56,
+        "holdTotal": 46,
         "reasons": {
           "RUBY_RENDER_NOT_CERTIFIED": 41,
           "FIGURE_OR_FORM_REVIEW": 11,
@@ -300,12 +300,12 @@
         "geometryUnresolved": 61,
         "rubySourceAnchorAssociated": 40,
         "rubySourceInconclusive": 13,
-        "promotedTotal": 59,
+        "promotedTotal": 75,
         "promotedByGeometry": 38,
-        "promotedByRuby": 0,
-        "promotedByLayout": 0,
+        "promotedByRuby": 13,
+        "promotedByLayout": 3,
         "manualPass": 0,
-        "holdTotal": 61,
+        "holdTotal": 45,
         "reasons": {
           "RUBY_RENDER_NOT_CERTIFIED": 40,
           "FIGURE_OR_FORM_REVIEW": 5,
@@ -325,12 +325,12 @@
         "geometryUnresolved": 57,
         "rubySourceAnchorAssociated": 38,
         "rubySourceInconclusive": 10,
-        "promotedTotal": 62,
+        "promotedTotal": 77,
         "promotedByGeometry": 48,
-        "promotedByRuby": 0,
-        "promotedByLayout": 0,
+        "promotedByRuby": 13,
+        "promotedByLayout": 2,
         "manualPass": 0,
-        "holdTotal": 58,
+        "holdTotal": 43,
         "reasons": {
           "FIGURE_OR_FORM_REVIEW": 11,
           "RUBY_RENDER_NOT_CERTIFIED": 38,
@@ -361,14 +361,180 @@
       "REVIEW_EXTRACTOR_DISAGREEMENT": 4
     },
     "ruby_layout_auto_certification_policy": "Source glyph-to-Kanji mapping may be observed, but detached ruby cannot be approved until UI ruby markup layout is verified",
-    "auto_ruby_new_promoted": 0,
-    "auto_layout_new_promoted": 0
+    "auto_ruby_new_promoted": 51,
+    "auto_layout_new_promoted": 13,
+    "ruby_ui_per_year": {
+      "2022": {
+        "sourceRubyCandidates": 36,
+        "rubyEvidencePass": 10,
+        "rubyPromoted": 7,
+        "rubyHoldAfterReconstruction": 26,
+        "layoutTriageTargets": 16,
+        "layoutEvidencePass": 3,
+        "layoutPromoted": 3,
+        "layoutUnresolved": 13,
+        "approvedTotal": 73,
+        "unapproved": 47,
+        "rubyReasons": {
+          "GLYPH_AMBIGUOUS": 15,
+          "RUBY_ANCHOR_COUNT_MISMATCH": 25,
+          "PDF_SPAN_GLYPH_MISMATCH": 13,
+          "FIELD_ANCHOR_NOT_UNIQUE": 13,
+          "NO_GLYPH_UNDER_RUBY": 1,
+          "FIGURE_OR_FORM_REVIEW": 1,
+          "OTHER_LAYOUT_HOLD": 1
+        },
+        "layoutReasons": {
+          "VECTOR_GRAPHICS_NEAR_QUESTION": 12,
+          "FIGURE_KEYWORD_NOT_BENIGN": 2,
+          "OTHER_UNRESOLVED_REASON": 1,
+          "EXPLICIT_FIGURE_OR_LIST": 1,
+          "FIGURE_TRIGGER_OUTSIDE_STEM": 1
+        }
+      },
+      "2023": {
+        "sourceRubyCandidates": 34,
+        "rubyEvidencePass": 9,
+        "rubyPromoted": 9,
+        "rubyHoldAfterReconstruction": 25,
+        "layoutTriageTargets": 11,
+        "layoutEvidencePass": 4,
+        "layoutPromoted": 4,
+        "layoutUnresolved": 7,
+        "approvedTotal": 82,
+        "unapproved": 38,
+        "rubyReasons": {
+          "PDF_SPAN_GLYPH_MISMATCH": 13,
+          "RUBY_ANCHOR_COUNT_MISMATCH": 23,
+          "GLYPH_AMBIGUOUS": 10,
+          "FIELD_ANCHOR_NOT_UNIQUE": 9,
+          "FIGURE_OR_FORM_REVIEW": 2,
+          "OTHER_LAYOUT_HOLD": 2
+        },
+        "layoutReasons": {
+          "FIGURE_KEYWORD_NOT_BENIGN": 2,
+          "VECTOR_GRAPHICS_NEAR_QUESTION": 7,
+          "OTHER_UNRESOLVED_REASON": 2,
+          "EXPLICIT_FIGURE_OR_LIST": 1,
+          "FIGURE_TRIGGER_OUTSIDE_STEM": 1
+        }
+      },
+      "2024": {
+        "sourceRubyCandidates": 41,
+        "rubyEvidencePass": 9,
+        "rubyPromoted": 9,
+        "rubyHoldAfterReconstruction": 32,
+        "layoutTriageTargets": 13,
+        "layoutEvidencePass": 1,
+        "layoutPromoted": 1,
+        "layoutUnresolved": 12,
+        "approvedTotal": 74,
+        "unapproved": 46,
+        "rubyReasons": {
+          "GLYPH_AMBIGUOUS": 15,
+          "RUBY_ANCHOR_COUNT_MISMATCH": 28,
+          "PDF_SPAN_GLYPH_MISMATCH": 15,
+          "FIGURE_OR_FORM_REVIEW": 3,
+          "OTHER_LAYOUT_HOLD": 4,
+          "FIELD_ANCHOR_NOT_UNIQUE": 18,
+          "TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE": 1
+        },
+        "layoutReasons": {
+          "FIGURE_KEYWORD_NOT_BENIGN": 1,
+          "VECTOR_GRAPHICS_NEAR_QUESTION": 11,
+          "OTHER_UNRESOLVED_REASON": 4,
+          "EXPLICIT_FIGURE_OR_LIST": 2,
+          "FIGURE_TRIGGER_OUTSIDE_STEM": 2,
+          "ORIGINAL_HOLD_REASON_NOT_ISOLATED": 1
+        }
+      },
+      "2025": {
+        "sourceRubyCandidates": 40,
+        "rubyEvidencePass": 13,
+        "rubyPromoted": 13,
+        "rubyHoldAfterReconstruction": 27,
+        "layoutTriageTargets": 9,
+        "layoutEvidencePass": 3,
+        "layoutPromoted": 3,
+        "layoutUnresolved": 6,
+        "approvedTotal": 75,
+        "unapproved": 45,
+        "rubyReasons": {
+          "GLYPH_AMBIGUOUS": 13,
+          "RUBY_ANCHOR_COUNT_MISMATCH": 26,
+          "TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE": 1,
+          "OTHER_LAYOUT_HOLD": 1,
+          "PDF_SPAN_GLYPH_MISMATCH": 17,
+          "FIELD_ANCHOR_NOT_UNIQUE": 11,
+          "NO_GLYPH_UNDER_RUBY": 1
+        },
+        "layoutReasons": {
+          "VECTOR_GRAPHICS_NEAR_QUESTION": 5,
+          "ORIGINAL_HOLD_REASON_NOT_ISOLATED": 1,
+          "OTHER_UNRESOLVED_REASON": 1,
+          "EXPLICIT_FIGURE_OR_LIST": 1,
+          "FIGURE_TRIGGER_OUTSIDE_STEM": 1
+        }
+      },
+      "2026": {
+        "sourceRubyCandidates": 38,
+        "rubyEvidencePass": 13,
+        "rubyPromoted": 13,
+        "rubyHoldAfterReconstruction": 25,
+        "layoutTriageTargets": 13,
+        "layoutEvidencePass": 2,
+        "layoutPromoted": 2,
+        "layoutUnresolved": 11,
+        "approvedTotal": 77,
+        "unapproved": 43,
+        "rubyReasons": {
+          "GLYPH_AMBIGUOUS": 13,
+          "RUBY_ANCHOR_COUNT_MISMATCH": 22,
+          "FIGURE_OR_FORM_REVIEW": 2,
+          "OTHER_LAYOUT_HOLD": 2,
+          "DUPLICATE_READINGS_OR_KANJI_IN_FIELD": 1,
+          "FIELD_ANCHOR_NOT_UNIQUE": 14,
+          "PDF_SPAN_GLYPH_MISMATCH": 12
+        },
+        "layoutReasons": {
+          "VECTOR_GRAPHICS_NEAR_QUESTION": 10,
+          "FIGURE_KEYWORD_NOT_BENIGN": 1,
+          "OTHER_UNRESOLVED_REASON": 4,
+          "FIGURE_TRIGGER_OUTSIDE_STEM": 2,
+          "ANSWER_TABLE_XY_UNVERIFIED": 1,
+          "ORIGINAL_HOLD_REASON_NOT_ISOLATED": 1,
+          "EXPLICIT_FIGURE_OR_LIST": 1
+        }
+      }
+    },
+    "ruby_reconstruction_hold_reason_totals": {
+      "GLYPH_AMBIGUOUS": 66,
+      "RUBY_ANCHOR_COUNT_MISMATCH": 124,
+      "PDF_SPAN_GLYPH_MISMATCH": 70,
+      "FIELD_ANCHOR_NOT_UNIQUE": 65,
+      "NO_GLYPH_UNDER_RUBY": 2,
+      "FIGURE_OR_FORM_REVIEW": 8,
+      "OTHER_LAYOUT_HOLD": 10,
+      "TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE": 2,
+      "DUPLICATE_READINGS_OR_KANJI_IN_FIELD": 1
+    },
+    "special_diagram_triage_reason_totals": {
+      "VECTOR_GRAPHICS_NEAR_QUESTION": 45,
+      "FIGURE_KEYWORD_NOT_BENIGN": 6,
+      "OTHER_UNRESOLVED_REASON": 12,
+      "EXPLICIT_FIGURE_OR_LIST": 6,
+      "FIGURE_TRIGGER_OUTSIDE_STEM": 7,
+      "ORIGINAL_HOLD_REASON_NOT_ISOLATED": 3,
+      "ANSWER_TABLE_XY_UNVERIFIED": 1
+    },
+    "ruby_renderer": "Native DOM ruby+rt with validated source glyph positions and isolated furigana readings",
+    "ruby_source_related_count": 189
   },
   "gates": {
     "notion_v28_full_read": "PENDING",
     "notion_submission_steps_full_read": "PENDING",
-    "official_source_import": "PARTIAL_APPROVED_317_OF_600",
-    "verbatim_and_answer_audit": "AUTO_88_GEOMETRY_215_RUBY_0_LAYOUT_0_VISUAL_14_REMAINING_283",
+    "official_source_import": "PARTIAL_APPROVED_381_OF_600",
+    "verbatim_and_answer_audit": "AUTO_88_GEOMETRY_215_RUBY_51_LAYOUT_13_VISUAL_14_REMAINING_219",
     "mobile_ui": "PENDING",
     "ios_build": "PENDING",
     "internal_testflight": "PENDING",
@@ -409,7 +575,9 @@
     "pdf_coordinate_table_audit": "COMPLETE_600_EVALUATED",
     "rubies_source_anchor_audit": "COMPLETE_600_EVALUATED_REQUIRES_RENDER_FIDELITY",
     "alternative_extractor_crosscheck": "50_STRATIFIED_SAMPLES_RECORDED",
-    "release_readiness": "BLOCKED"
+    "release_readiness": "BLOCKED",
+    "ruby_position_to_dom_reconstruction": "COMPLETE_WITH_PER_QUESTION_HOLDS",
+    "special_structure_and_graphics_triage": "COMPLETE_WITH_PER_QUESTION_HOLDS"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
@@ -466,6 +634,16 @@
     "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2025.json",
     "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2025.json",
     "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2026.json",
-    "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2026.json"
+    "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2026.json",
+    "touroku-hanbaisha-sprint/official-kansai/RUBY_RECON_2022.json",
+    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_TRIAGE_2022.json",
+    "touroku-hanbaisha-sprint/official-kansai/RUBY_RECON_2023.json",
+    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_TRIAGE_2023.json",
+    "touroku-hanbaisha-sprint/official-kansai/RUBY_RECON_2024.json",
+    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_TRIAGE_2024.json",
+    "touroku-hanbaisha-sprint/official-kansai/RUBY_RECON_2025.json",
+    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_TRIAGE_2025.json",
+    "touroku-hanbaisha-sprint/official-kansai/RUBY_RECON_2026.json",
+    "touroku-hanbaisha-sprint/official-kansai/LAYOUT_TRIAGE_2026.json"
   ]
 }
