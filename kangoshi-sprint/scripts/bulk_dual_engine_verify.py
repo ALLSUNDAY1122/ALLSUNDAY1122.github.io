@@ -60,7 +60,7 @@ for exam in (112,111):
         if q.get("officialKeyPdfSha256")!=keys[exam][1]:failures.append("OFFICIAL_KEY_SOURCE_SHA_DRIFT")
         stem=q.get("question") or ""
         choices=q.get("choices") or []
-        if len(norm(stem))<18:failures.append("TOO_SHORT_FOR_UNIQUE_STEM")
+        short_stem=len(norm(stem))<18  # coordinate uniqueness may certify a short official stem
         if MEDIA.search(stem):failures.append("MEDIA_OR_DIAGRAM_CUE")
         if any(SUSPICIOUS.search(x) or re.search(r"[\u0080-\u009f\u00a1-\u00ff]",x) for x in [stem]+choices):failures.append("SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT")
         if any(re.search(r"DKIX|[前後]H-\\d+|[-−]H[-−]\\d+",x) for x in [stem]+choices):failures.append("PAGE_FOOTER_CONTAMINATION")
@@ -76,6 +76,7 @@ for exam in (112,111):
                 boundary_evidence={"previousPage":pg,"correctedPage":verified_page,**(geometry or {})}
                 pg=verified_page
             failures.extend(boundary_errors)
+        if short_stem and coordinate_segment is None:failures.append("TOO_SHORT_FOR_UNIQUE_STEM")
         if isinstance(pg,int) and 1<=pg<=len(doc):
             page=doc[pg-1]
             source_segment=coordinate_segment
@@ -108,7 +109,7 @@ for exam in (112,111):
               "answerType":"singleChoice","sourceAnswerTokens":q["sourceAnswerTokens"],"officialScoringStatus":"normal",
               "scoringException":None,"requiresMedia":False,"mediaAuditStatus":"not_required",
               "rightsStatus":"mhlw-pdl1.0-text","sourceRefs":q["sourceRefs"],"sourceAttribution":q["sourceAttribution"],
-              "sourcePage":pg,"scenarioContextEvidence":scenario_evidence,"coordinateBoundaryEvidence":boundary_evidence,"sourcePdfSha256":row["sourcePdfSha256"],"officialKeyPdfSha256":q.get("officialKeyPdfSha256"),
+              "sourcePage":pg,"scenarioContextEvidence":scenario_evidence,"coordinateBoundaryEvidence":boundary_evidence,"shortStemVerifiedByCoordinates":bool(short_stem and coordinate_segment is not None),"sourcePdfSha256":row["sourcePdfSha256"],"officialKeyPdfSha256":q.get("officialKeyPdfSha256"),
               "reviewStatus":"source_dual_engine_and_official_key_verified","canonicalStatus":"source_verified_extension",
               "publishable":False,"releaseEligible":False,
               "audit":{"questionDualEngineMatched":True,"allChoicesDualEngineMatched":True,"officialKeyMatched":True,
