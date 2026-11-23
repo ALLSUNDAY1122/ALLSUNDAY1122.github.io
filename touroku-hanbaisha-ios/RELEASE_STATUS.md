@@ -1289,3 +1289,10 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - ほか110問は既存の証拠台帳に基づく警告分類のみで個別直接目視未了。新規PASS **0**、昇格 **0**、ルビHOLD **113**。正式バンク486問を維持。個別比較の新規画像生成は未実施。画像取得と個別照合を完了しない段階でPASSにしない。
 - ID別の原典・候補画像パス、警告、個別目視の有無、不一致の記録：`touroku-hanbaisha-sprint/official-kansai/RUBY_113_INDEPENDENT_TRIAGE_20261124.json`。
 - Apple 2FA、契約、課金、実機確認、App Review最終送信は実施しない。
+
+
+## 2026-11-24：ルビ113問の生PDF再生成・自動座標照合パイプライン準備
+- `official-kansai/auto_rebuild_ruby_113.py` と `.github/workflows/touhan-ruby-113-auto.yml` をmainへコミット。既存113問をPDF rawdictの生字形・ルビから再構成し、原典座標、読みの完全対応、Noto CJK Chromeレンダリング、ruby/rt DOM、選択肢・正答・正規化原典ハッシュを検査する。
+- 未解消はID別の理由付きHOLD、全ゲートPASSのみ機械的AUTO_PASSとして正式バンクと両状態ファイルへ同期する設計。
+- **この時点でActions実行・結果JSON生成を確認できていない**。新規昇格は実測0、正式バンク486/600のまま。対象113問は引き続きHOLD。機械PASSを人間の目視PASSとは表示しない。
+- 本審査未送信・リリースBLOCKED。
