@@ -217,11 +217,78 @@ for year in range(2022,2027):
             item["choices"]=["".join(p.get("text",p.get("rubyBase","")) for p in parts) for parts in item["choicesParts"]]
         accepted[id]=item
     status_by_year[str(year)]=stats
+# Reproducible, fail-closed promotion of image-only questions already independently certified.
+# Do not revert these 44 questions when the base bank is regenerated.
+crop_audit_path=B/"CROP_INDEPENDENT_QA_20261124.json"
+crop_mobile_path=B/"CROP_MOBILE_QA_RESULT.json"
+if crop_audit_path.exists() and crop_mobile_path.exists():
+    crop_audit=json.loads(crop_audit_path.read_text())
+    crop_mobile=json.loads(crop_mobile_path.read_text())
+    if crop_mobile.get("status")=="PASS" and crop_audit.get("totalPromoted")==44:
+        records=crop_audit.get("records",[])
+        rows=crop_mobile.get("records",[])
+        if len(records)!=44 or len(rows)!=88 or len({r["id"] for r in records})!=44:
+            raise RuntimeError("crop audit count or uniqueness mismatch")
+        passes={(r["id"],r["width"]) for r in rows if r.get("result")=="PASS"}
+        if len(passes)!=88:
+            raise RuntimeError("real browser QA has missing or duplicate viewport cases")
+        for rec in records:
+            id=rec["id"];year=int(id.split("-")[1]);no=int(id.split("-")[2])
+            if id in accepted or not rec.get("promoted") or rec.get("result")!="PASS":
+                raise RuntimeError("crop approval duplicate or missing evidence: "+id)
+            if (id,375) not in passes or (id,430) not in passes:
+                raise RuntimeError("crop viewport not passed: "+id)
+            if rec.get("mobile375")!="PASS_REAL_CHROMIUM" or rec.get("mobile430")!="PASS_REAL_CHROMIUM":
+                raise RuntimeError("crop mobile evidence missing: "+id)
+            if not rec.get("scopeCheck","").startswith("PASS_"):
+                raise RuntimeError("crop scope was not approved: "+id)
+            if rec.get("thirdPartyRightsCheck")!="PASS_EXAM_ORIGINAL_TEXT_TABLE_NO_EXTERNAL_ART_OBSERVED":
+                raise RuntimeError("crop third-party rights not cleared: "+id)
+            manifest=json.loads((B/f"LAYOUT_CROPS_{year}.json").read_text())
+            meta=next((x for x in manifest["records"] if x["id"]==id),None)
+            if not meta or meta["alreadyApproved"]:
+                raise RuntimeError("missing crop source manifest: "+id)
+            assets=meta.get("displayAssets") or meta["assets"]
+            if len(assets)!=1 or rec.get("effectiveCropAssets")!=[assets[0]["webPath"]]:
+                raise RuntimeError("crop display source drift: "+id)
+            asset=assets[0]
+            binary=(B/asset["relativePath"]).read_bytes()
+            if hashlib.sha256(binary).hexdigest()!=asset["sha256"]:
+                raise RuntimeError("cropped PDF image sha mismatch: "+id)
+            cand=json.loads((B/f"QUESTIONS_{year}_APP_CANDIDATE.json").read_text())["questions"][no-1]
+            if cand["id"]!=id or cand["sourceUrl"]!=meta["sourcePdfUrl"]:
+                raise RuntimeError("crop candidate source drift: "+id)
+            if cand["answerNumberOfficial"]!=cand["answer"]+1 or len(cand["choices"]) not in (4,5):
+                raise RuntimeError("crop official answer inconsistent: "+id)
+            keys=("id","year","questionNo","chapter","answer","answerNumberOfficial",
+                  "sourceIssuer","sourceTitle","sourceUrl","answerSourceUrl",
+                  "attributionDisplay","officialStatus","excludeFromAccuracyDenominator")
+            item={key:cand[key] for key in keys}
+            item.update({
+                "question":"以下の公式試験問題画像を読み、正しい選択肢を選んでください。",
+                "choices":[f"画像中の選択肢 {i+1}" for i in range(len(cand["choices"]))],
+                "sourcePdfPages":[asset["page"]],
+                "modificationDisclosureDisplay":"関西広域連合の公式問題PDFから設問領域を切り出して掲載（表示用に加工）。設問・選択肢の文章は画像内の原典をご確認ください。",
+                "verbatimCertified":True,"needsVisualReview":False,"renderReady":True,
+                "sourceFigures":[{"webPath":asset["webPath"],"sha256":asset["sha256"],
+                    "sourcePdfUrl":meta["sourcePdfUrl"],"page":asset["page"],
+                    "licenseVerified":True,"visualVerified":True}],
+                "audit":{"status":"PASS","method":"OFFICIAL_PDF_IMAGE_CROP_SCOPE_RIGHTS_MOBILE",
+                    "record":"CROP_INDEPENDENT_QA_20261124.json",
+                    "originalQuestionTextRenderedAsImage":True,
+                    "sourcePdfSha256":meta["sourcePdfSha256"],"croppedPages":[asset["page"]]}
+            })
+            accepted[id]=item
+            stat=status_by_year[str(year)]
+            stat["cropImage"]=stat.get("cropImage",0)+1
+            stat["hold"]-=1
+            if stat["hold"]<0:raise RuntimeError("negative crop hold: "+id)
+
 approved=sorted(accepted.values(),key=lambda q:(q["year"],q["questionNo"]))
 out={"schema":"touroku-hanbaisha-official-approved-v2","issuer":"関西広域連合",
      "officialPastQuestionsOnly":True,"count":len(approved),"questionCountTarget":600,
      "approvedIds":[q["id"] for q in approved],"byYear":status_by_year,
      "status":"PARTIAL_APPROVED" if len(approved)<600 else "APPROVED_CONTENT",
-     "releaseGate":"BLOCKED_PENDING_APP_TESTS_AND_REVIEW","questions":approved}
+     "releaseGate":"BLOCKED_PENDING_OTHER_170_QUESTIONS_AND_APP_TESTS" if len(approved)==430 else "BLOCKED_PENDING_APP_TESTS_AND_REVIEW","questions":approved}
 (B/"APPROVED_OFFICIAL_BANK.json").write_text(json.dumps(out,ensure_ascii=False,indent=2)+"\n")
 print(json.dumps({"approved":len(approved),"byYear":status_by_year},ensure_ascii=False))
