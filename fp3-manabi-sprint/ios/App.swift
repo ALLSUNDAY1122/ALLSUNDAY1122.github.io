@@ -21,6 +21,7 @@ final class StoreKitManager: ObservableObject {
     @Published private(set) var isPremium = false
     @Published private(set) var displayPrice = ""
     @Published private(set) var status = "unknown"
+    @Published private(set) var isBusy = false
 
     private var product: Product?
     private var transactionUpdatesTask: Task<Void, Never>?
@@ -61,6 +62,9 @@ final class StoreKitManager: ObservableObject {
     }
 
     func purchase() async {
+        guard !isBusy else { return }
+        isBusy = true
+        defer { isBusy = false }
         if product == nil { await refresh() }
         guard let product else { status = "product_unavailable"; return }
         do {
@@ -83,6 +87,9 @@ final class StoreKitManager: ObservableObject {
     }
 
     func restore() async {
+        guard !isBusy else { return }
+        isBusy = true
+        defer { isBusy = false }
         do {
             try await AppStore.sync()
             await refresh()
@@ -92,7 +99,7 @@ final class StoreKitManager: ObservableObject {
     }
 
     func payload() -> [String: Any] {
-        ["native": true, "premium": isPremium, "displayPrice": displayPrice, "status": status]
+        ["native": true, "premium": isPremium, "displayPrice": displayPrice, "status": status, "busy": isBusy]
     }
 }
 
@@ -147,6 +154,20 @@ struct WebAppView: UIViewRepresentable {
 
         init(store: StoreKitManager) { self.store = store }
 
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+                     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            guard let url = navigationAction.request.url else { decisionHandler(.cancel); return }
+            if url.isFileURL || url.absoluteString == "about:blank" {
+                decisionHandler(.allow)
+                return
+            }
+            if navigationAction.navigationType == .linkActivated,
+               ["https", "mailto"].contains(url.scheme?.lowercased() ?? "") {
+                UIApplication.shared.open(url)
+            }
+            decisionHandler(.cancel)
+        }
+
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             Task { @MainActor in
                 await store.refresh()
@@ -198,7 +219,7 @@ struct WebAppView: UIViewRepresentable {
     (() => {
       if (window.__fp3NativeBridgeInstalled) return;
       window.__fp3NativeBridgeInstalled = true;
-      const state = { native:true, premium:false, displayPrice:'', status:'unknown' };
+      const state = { native:true, premium:false, displayPrice:'', status:'unknown', busy:false };
       const setText = (el, text) => { if (el && el.textContent !== text) el.textContent = text; };
       const post = action => {
         const h = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.storeKit;
@@ -261,6 +282,18 @@ struct WebAppView: UIViewRepresentable {
           n.textContent='学科CBT対策｜2026-04-01基準へ補正。公式認定アプリではありません。'; top.appendChild(n);
         }
         const settings=document.querySelector('#settings .section .card');
+        if(settings && !document.getElementById('fp3-settings-premium')){
+          const controls=document.createElement('div'); controls.id='fp3-settings-premium'; controls.className='stack';
+          const premium=document.createElement('button'); premium.className='secondary'; premium.textContent='Premiumについて'; premium.addEventListener('click',showPaywall);
+          const restore=document.createElement('button'); restore.className='secondary'; restore.textContent='購入を復元'; restore.dataset.nativeRestore=''; restore.addEventListener('click',()=>post('restore'));
+          controls.append(premium,restore); settings.appendChild(controls);
+          const links=document.createElement('p'); links.className='muted';
+          [['利用案内','terms.html'],['プライバシーポリシー','privacy.html'],['サポート','support.html']].forEach(([label,path],index)=>{
+            if(index) links.appendChild(document.createTextNode(' · '));
+            const link=document.createElement('a'); link.href=`https://allsunday1122.github.io/fp3-manabi-sprint/${path}`; link.textContent=label; links.appendChild(link);
+          });
+          controls.appendChild(links);
+        }
         if(settings && !document.getElementById('fp3-source-note')){
           const n=document.createElement('div'); n.id='fp3-source-note'; n.className='fp3-scope-note';
           n.textContent='出典：日本FP協会・金融財政事情研究会の公開試験問題を参照。学習用に表現・解説・法令基準を加工しています。'; settings.appendChild(n);
@@ -268,10 +301,11 @@ struct WebAppView: UIViewRepresentable {
         const buy=document.querySelector('[data-native-purchase]');
         const price=document.querySelector('[data-native-price]');
         if(buy){
-          const ready=state.status==='known' && !!state.displayPrice;
-          buy.disabled=!ready;
+          const ready=!!state.displayPrice && !['unknown','product_unavailable','error','pending'].includes(state.status);
+          buy.disabled=!ready || state.busy;
           setText(buy, ready?`${state.displayPrice}でPremiumを購入`:(state.status==='pending'?'購入承認待ち':'価格を取得中…'));
         }
+        document.querySelectorAll('[data-native-restore]').forEach(button=>{button.disabled=state.busy});
         if(price) setText(price, state.premium?'Premium購入済み':(state.status==='error'?'App Storeへ接続できません':state.displayPrice?`買い切り ${state.displayPrice}`:''));
         const backdrop=document.getElementById('fp3-native-paywall');
         if(state.premium && backdrop) backdrop.hidden=true;
