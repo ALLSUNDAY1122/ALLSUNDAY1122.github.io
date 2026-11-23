@@ -1,6 +1,6 @@
 {
-  "updatedAtUtc": "2026-11-23T15:34:20.354302+00:00",
-  "status": "FAIL",
+  "updatedAtUtc": "2026-11-23T15:35:39.965144+00:00",
+  "status": "PASS",
   "results": [
     {
       "year": 2022,
@@ -13,10 +13,10 @@
     {
       "year": 2022,
       "kind": "LAYOUT",
-      "result": "FAIL",
-      "returnCode": 1,
-      "stdout": "",
-      "stderr": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 82, in <module>\n    run(ap.parse_args().year)\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 55, in run\n    if any(fitz_rect_intersects(rect,el.get(\"rect\")) for el in drawings if el.get(\"rect\")):\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 55, in <genexpr>\n    if any(fitz_rect_intersects(rect,el.get(\"rect\")) for el in drawings if el.get(\"rect\")):\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 79, in fitz_rect_intersects\n    return a.intersects(b) and (a & b).get_area()>8\n                               ^^^^^^^^^^^^^^^^\nAttributeError: 'Rect' object has no attribute 'get_area'\n"
+      "result": "PASS",
+      "returnCode": 0,
+      "stdout": "{\"year\": 2022, \"targets\": 16, \"newPass\": 3, \"held\": 13, \"reasonCounts\": {\"VECTOR_GRAPHICS_NEAR_QUESTION\": 12, \"FIGURE_KEYWORD_NOT_BENIGN\": 2, \"OTHER_UNRESOLVED_REASON\": 1, \"EXPLICIT_FIGURE_OR_LIST\": 1, \"FIGURE_TRIGGER_OUTSIDE_STEM\": 1}}\n",
+      "stderr": ""
     },
     {
       "year": 2023,
@@ -29,10 +29,10 @@
     {
       "year": 2023,
       "kind": "LAYOUT",
-      "result": "FAIL",
-      "returnCode": 1,
-      "stdout": "",
-      "stderr": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 82, in <module>\n    run(ap.parse_args().year)\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 55, in run\n    if any(fitz_rect_intersects(rect,el.get(\"rect\")) for el in drawings if el.get(\"rect\")):\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 55, in <genexpr>\n    if any(fitz_rect_intersects(rect,el.get(\"rect\")) for el in drawings if el.get(\"rect\")):\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 79, in fitz_rect_intersects\n    return a.intersects(b) and (a & b).get_area()>8\n                               ^^^^^^^^^^^^^^^^\nAttributeError: 'Rect' object has no attribute 'get_area'\n"
+      "result": "PASS",
+      "returnCode": 0,
+      "stdout": "{\"year\": 2023, \"targets\": 11, \"newPass\": 4, \"held\": 7, \"reasonCounts\": {\"FIGURE_KEYWORD_NOT_BENIGN\": 2, \"VECTOR_GRAPHICS_NEAR_QUESTION\": 7, \"OTHER_UNRESOLVED_REASON\": 2, \"EXPLICIT_FIGURE_OR_LIST\": 1, \"FIGURE_TRIGGER_OUTSIDE_STEM\": 1}}\n",
+      "stderr": ""
     },
     {
       "year": 2024,
@@ -45,10 +45,10 @@
     {
       "year": 2024,
       "kind": "LAYOUT",
-      "result": "FAIL",
-      "returnCode": 1,
-      "stdout": "",
-      "stderr": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 82, in <module>\n    run(ap.parse_args().year)\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 55, in run\n    if any(fitz_rect_intersects(rect,el.get(\"rect\")) for el in drawings if el.get(\"rect\")):\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 55, in <genexpr>\n    if any(fitz_rect_intersects(rect,el.get(\"rect\")) for el in drawings if el.get(\"rect\")):\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 79, in fitz_rect_intersects\n    return a.intersects(b) and (a & b).get_area()>8\n                               ^^^^^^^^^^^^^^^^\nAttributeError: 'Rect' object has no attribute 'get_area'\n"
+      "result": "PASS",
+      "returnCode": 0,
+      "stdout": "{\"year\": 2024, \"targets\": 13, \"newPass\": 1, \"held\": 12, \"reasonCounts\": {\"FIGURE_KEYWORD_NOT_BENIGN\": 1, \"VECTOR_GRAPHICS_NEAR_QUESTION\": 11, \"OTHER_UNRESOLVED_REASON\": 4, \"EXPLICIT_FIGURE_OR_LIST\": 2, \"FIGURE_TRIGGER_OUTSIDE_STEM\": 2, \"ORIGINAL_HOLD_REASON_NOT_ISOLATED\": 1}}\n",
+      "stderr": ""
     },
     {
       "year": 2025,
@@ -61,10 +61,10 @@
     {
       "year": 2025,
       "kind": "LAYOUT",
-      "result": "FAIL",
-      "returnCode": 1,
-      "stdout": "",
-      "stderr": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 82, in <module>\n    run(ap.parse_args().year)\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 55, in run\n    if any(fitz_rect_intersects(rect,el.get(\"rect\")) for el in drawings if el.get(\"rect\")):\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 55, in <genexpr>\n    if any(fitz_rect_intersects(rect,el.get(\"rect\")) for el in drawings if el.get(\"rect\")):\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 79, in fitz_rect_intersects\n    return a.intersects(b) and (a & b).get_area()>8\n                               ^^^^^^^^^^^^^^^^\nAttributeError: 'Rect' object has no attribute 'get_area'\n"
+      "result": "PASS",
+      "returnCode": 0,
+      "stdout": "{\"year\": 2025, \"targets\": 9, \"newPass\": 3, \"held\": 6, \"reasonCounts\": {\"VECTOR_GRAPHICS_NEAR_QUESTION\": 5, \"ORIGINAL_HOLD_REASON_NOT_ISOLATED\": 1, \"OTHER_UNRESOLVED_REASON\": 1, \"EXPLICIT_FIGURE_OR_LIST\": 1, \"FIGURE_TRIGGER_OUTSIDE_STEM\": 1}}\n",
+      "stderr": ""
     },
     {
       "year": 2026,
@@ -77,10 +77,10 @@
     {
       "year": 2026,
       "kind": "LAYOUT",
-      "result": "FAIL",
-      "returnCode": 1,
-      "stdout": "",
-      "stderr": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 82, in <module>\n    run(ap.parse_args().year)\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 55, in run\n    if any(fitz_rect_intersects(rect,el.get(\"rect\")) for el in drawings if el.get(\"rect\")):\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 55, in <genexpr>\n    if any(fitz_rect_intersects(rect,el.get(\"rect\")) for el in drawings if el.get(\"rect\")):\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/touroku-hanbaisha-sprint/official-kansai/layout_exception_triage.py\", line 79, in fitz_rect_intersects\n    return a.intersects(b) and (a & b).get_area()>8\n                               ^^^^^^^^^^^^^^^^\nAttributeError: 'Rect' object has no attribute 'get_area'\n"
+      "result": "PASS",
+      "returnCode": 0,
+      "stdout": "{\"year\": 2026, \"targets\": 13, \"newPass\": 2, \"held\": 11, \"reasonCounts\": {\"VECTOR_GRAPHICS_NEAR_QUESTION\": 10, \"FIGURE_KEYWORD_NOT_BENIGN\": 1, \"OTHER_UNRESOLVED_REASON\": 4, \"FIGURE_TRIGGER_OUTSIDE_STEM\": 2, \"ANSWER_TABLE_XY_UNVERIFIED\": 1, \"ORIGINAL_HOLD_REASON_NOT_ISOLATED\": 1, \"EXPLICIT_FIGURE_OR_LIST\": 1}}\n",
+      "stderr": ""
     }
   ]
 }
