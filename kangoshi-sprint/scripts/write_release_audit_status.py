@@ -1,79 +1,104 @@
 #!/usr/bin/env python3
-"""Sync the two coordinator status files from actual on-disk promotion/hold evidence."""
-import json,pathlib,collections,datetime,re
+"""Synchronize source-only release ledgers from validated canonical and hold files.
+Writes contemporary summary without overwriting historical audit narrative.
+"""
+import json, pathlib, collections, os, re
 R=pathlib.Path(__file__).resolve().parents[1]
 J=R/"release-status.json"
 MD=R/"RELEASE_STATUS.md"
-S=json.loads(J.read_text())
-H=json.loads((R/"audit/dual-engine-hold-20261124.json").read_text())
-E=json.loads((R/"product-content/verified-additions-20261124.json").read_text())
-P=json.loads((R/"audit/dual-engine-promotion-ledger-20261124.json").read_text())
-rows=H["hold"]
-ext=len(E["questions"])
-assert ext+len(rows)==480,(ext,len(rows))
-assert len({q["id"] for q in E["questions"]})==ext
-assert all(q.get("publishable") is False and q.get("releaseEligible") is False for q in E["questions"])
-reasons=collections.Counter(x for q in rows for x in q["reasons"])
-S.update(recordedImported=720+ext,additionalRequired=480-ext,
-         newlyImported=ext,stagedCandidateCount=480,
-         contentGate=f"CANONICAL_SOURCE_{720+ext}_OF_1200_EXISTING_RUNTIME_720_NEW{ext}_RELEASE_BLOCKED_{480-ext}_UNVERIFIED",
-         releaseStatus="PREFLIGHT_BLOCKED",submissionAllowed=False)
-S["canonicalBank"].update(sourceVerifiedExtension=ext,verifiedTotal=720+ext,
-                          unverifiedRemaining=480-ext,extensionRuntimeEligible=0,extensionPublished=0)
-S["staging"].update(verifiedExtensionCount=ext,remainingNotCanonicalVerified=480-ext,
-                   publishableNew=0)
-S["automation"]["bulkHoldCount"]=len(rows)
-S["holdRemediation"].update(finalHold=len(rows),netReleasedFromHold=480-len(rows)-67,
-                            reasonCountsNow=dict(reasons))
-S["latestBoundaryContextAudit"]={
-    "date":"2026-11-24","source":"GitHub Actions dual engine recheck",
-    "newPromotedInRun":P["newPromoted"],"currentCanonical":720+ext,
-    "currentHeld":len(rows),"reasonCountsOverlap":True,
-    "boundaryCorrectionRequiresUniqueFiveFieldDualEngineMatch":True,
-    "scenarioContextRequiresDualEngineSourcePassage":True,
-    "svgOriginalDiagramFaithfulnessVerified":0,
-    "svgPendingDetailedVisualInspection":18,
-    "status":"SOURCE_ONLY_NO_RELEASE"}
-# Report the verified reextracted pool without silently marking it publishable.
+S=json.loads(J.read_text(encoding="utf8"))
+H=json.loads((R/"audit/dual-engine-hold-20261124.json").read_text(encoding="utf8"))
+E=json.loads((R/"product-content/verified-additions-20261124.json").read_text(encoding="utf8"))
+P=json.loads((R/"audit/dual-engine-promotion-ledger-20261124.json").read_text(encoding="utf8"))
+records=E["questions"]
+hold=H["hold"]
+ext=len(records)
+assert ext==E["count"] and ext+len(hold)==480
+assert len(hold)==H["count"]
+assert len({q["id"] for q in records})==ext
+assert not ({q["id"] for q in records}&{q["id"] for q in hold})
+assert all(q.get("publishable") is False and q.get("releaseEligible") is False for q in records)
+assert all(q.get("publishable") is False and q.get("releaseEligible") is False for q in records if q.get("reviewStatus"))
+reasons=collections.Counter(reason for q in hold for reason in q["reasons"])
+run_id=os.getenv("GITHUB_RUN_ID","unrecorded")
 pending_file=R/"product-content/coordinate-reextracted-pending-20261124.json"
 pending=json.loads(pending_file.read_text()) if pending_file.exists() else {"questions":[]}
-verified_ids={q["id"] for q in E["questions"]}
-pending_active=[q["id"] for q in pending["questions"] if q["id"] not in verified_ids]
+verified_ids={q["id"] for q in records}
+pending_ids={q["id"] for q in pending["questions"]}
+active_pending=pending_ids-verified_ids
 evidence_path=R/"audit/coordinate-reextraction-evidence-20261124.json"
-exvidence=json.loads(evidence_path.read_text()) if evidence_path.exists() else {"summary":{}}
-S["latestContextAndControlAudit"]={
-    "auditDate":"2026-11-24","scope":"all 480 candidates, prioritize 22 previously reextracted",
-    "newPromoted":P["newPromoted"],"newIds":P["newIds"],
-    "currentCanonical":720+ext,"remaining":len(rows),
-    "quarantinedReextractedTotal":len(pending["questions"]),
-    "quarantinedReextractedStillPending":len(pending_active),
-    "lastReextraction":exvidence["summary"],
-    "sources":["official exam PDF","independent official key PDF","PyMuPDF","Poppler"],
-    "noAutoClearForUnknownControlGlyphs":True,
-    "releaseEligibleNew":0,"publishableNew":0,
-    "status":"SOURCE_ONLY_AND_PENDING_EXPLANATION_MEDIA_IOS"}
-J.write_text(json.dumps(S,ensure_ascii=False,indent=2)+"\n")
-lines=MD.read_text()
-# Keep the canonical summary current, without rewriting the historical work log.
-lines=re.sub(r"(\\| \\*\\*正規ソースバンク\\*\\* \\|) \\*\\*\\d+ / 1,200\\*\\*",lambda m:m.group(1)+f" **{720+ext} / 1,200**",lines,count=1)
-lines=re.sub(r"(\\| \\*\\*第112・111回の未検証\\*\\* \\|) \\*\\*\\d+問\\*\\*",lambda m:m.group(1)+f" **{len(rows)}問**",lines,count=1)
-lines=re.sub(r"(ソース検証済み拡張)\\d+問",lambda m:m.group(1)+str(ext)+"問",lines,count=1)
-lines=re.sub(r"(保留)\\d+問(と理由 \\x60audit/dual-engine-hold-20261124.json\\x60)",lambda m:m.group(1)+str(len(rows))+"問"+m.group(2),lines,count=1)
-lines=re.sub(r"(全)\\d+問(の正規拡張)",lambda m:m.group(1)+str(ext)+"問"+m.group(2),lines,count=1)
-heading="## 境界位置・状況設定の再検証（自動実行記録）"
-if heading in lines:lines=lines.split(heading)[0].rstrip()+"\n"
-lines+="\n"+heading+"\n\n"
-lines+=f"- 正規ソースバンク：**{720+ext}/1,200問**（追加{ext}問、既存720問）。\n"
-lines+=f"- 追加480問の未昇格：**{len(rows)}問**。今回の自動昇格：**{P['newPromoted']}問**。\n"
-lines+="- 番号境界を前後3ページで探索し、単独行の問題番号と問題文・4選択肢の両エンジン一致・候補一意性を確認する。状況設定の共通文も2エンジン一致がない限り保留。\n"
-lines+="- 主要保留理由（重複）："+", ".join(f"{k} {v}" for k,v in reasons.most_common(12))+"。\n"
-lines+="- SVG18件は原典との比較画像を再生成するが、画像の意味・医学的所見の忠実性は自動合格にしない。**18件の詳細視覚確認が残存**。\n"
-lines+="- 解説・媒体権利・実機確認・本審査の公開ゲートは引き続き保留。\n"
-print(json.dumps({"canonical":720+ext,"remaining":len(rows),"new":P["newPromoted"],"svgPending":18}))
+reextract=json.loads(evidence_path.read_text()) if evidence_path.exists() else {"summary":{}}
+total=720+ext
 
-lines += "\\n## 状況設定共通文・制御文字の再監査（2026-11-24）\\n\\n"
-lines += f"- 新規正規ソース昇格：**{P['newPromoted']}問**。現行 **{720+ext}/1,200問**、未昇格 **{len(rows)}問**。\\n"
-lines += f"- 先行再抽出22問のうち未昇格：**{len(pending_active)}問**。本文2方式一致の事実と、制御文字・状況設定共通文の最終ゲートは区別。\\n"
-lines += f"- 全残件の保留理由（重複）："+", ".join(f"{k} {v}" for k,v in reasons.most_common(10))+"。\\n"
-lines += "- 正本：`audit/dual-engine-promotion-ledger-20261124.json`、`audit/dual-engine-hold-20261124.json`、`audit/coordinate-reextraction-evidence-20261124.json`。権利・解説・iOS・本審査のゲートは引き続き閉鎖。\\n"
-MD.write_text(lines)
+S.update(recordedImported=total,newlyImported=ext,additionalRequired=len(hold),
+         stagedCandidateCount=480,releaseStatus="PREFLIGHT_BLOCKED",submissionAllowed=False,
+         contentGate=f"CANONICAL_SOURCE_{total}_OF_1200_EXISTING_RUNTIME_720_NEW{ext}_RELEASE_BLOCKED_{len(hold)}_UNVERIFIED")
+S["canonicalBank"].update(sourceVerifiedExtension=ext,verifiedTotal=total,
+                           unverifiedRemaining=len(hold),
+                           extensionRuntimeEligible=0,extensionPublished=0)
+S["staging"].update(verifiedExtensionCount=ext,remainingNotCanonicalVerified=len(hold),publishableNew=0)
+S["automation"]["bulkHoldCount"]=len(hold)
+S["holdRemediation"].update(finalHold=len(hold),netReleasedFromHold=480-len(hold)-67,
+                            reasonCountsNow=dict(reasons))
+S["latestBoundaryContextAudit"]={
+  "date":"2026-11-24","runId":run_id,"source":"GitHub Actions official PDF dual engine",
+  "newPromotedInRun":P["newPromoted"],"newIds":P["newIds"],
+  "currentCanonical":total,"currentHeld":len(hold),"reasonCountsOverlap":True,
+  "scenarioContextRequiresDualEngineSourcePassage":True,
+  "svgOriginalDiagramFaithfulnessVerified":0,"svgPendingDetailedVisualInspection":18,
+  "status":"SOURCE_ONLY_NO_RELEASE"}
+S["latestContextAndControlAudit"]={
+  "runId":run_id,"date":"2026-11-24","scope":"480 source candidates, prioritize 22 reextracted",
+  "newPromoted":P["newPromoted"],"newIds":P["newIds"],
+  "currentCanonical":total,"remaining":len(hold),
+  "reextractedPendingSourcePool":len(pending_ids),
+  "reextractedStillHeld":len(active_pending),
+  "reextractionSummary":reextract.get("summary",{}),
+  "sources":["MHLW official question PDF","MHLW official answer PDF","PyMuPDF","Poppler"],
+  "unmappedSourceControlsRequireIndividualEvidence":True,
+  "releaseEligibleNew":0,"publishableNew":0,
+  "status":"SOURCE_ONLY_RELEASE_BLOCKED"}
+S["textAudit"]["notImported"]=len(hold)
+J.write_text(json.dumps(S,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
+old=MD.read_text(encoding="utf8")
+# Preserve historical change log, remove previously appended dynamic summaries.
+history_marker="## 保留413問の原因別検証と修復"
+history=old[old.index(history_marker):] if history_marker in old else ""
+for marker in ("## 境界位置・状況設定の再検証（自動実行記録）",
+               "## PDF座標による問題番号境界再監査",
+               "## 状況設定共通文・制御文字の再監査"):
+  if marker in history:history=history[:history.index(marker)].rstrip()
+# Old writer accidentally wrote literal "\n" escapes; strip them from historical tail only.
+history=history.replace("\\n## 状況設定共通文・制御文字の再監査","")
+summary=f"""# 看護師国家試験｜RELEASE_STATUS
+
+更新：2026-11-24 JST　**最終送信禁止／リリース判定 PREFLIGHT_BLOCKED**
+
+## 現時点の問題バンク（全1,200問）
+
+| 種別 | 件数 | 公開範囲 |
+|---|---:|---|
+| 既存第115〜113回ソースバンク | 720 | 既存ランタイム、厳格原典監査629 PASS／91 HOLD |
+| 今回の監査前の検証済みソース拡張 | {ext-P["newPromoted"]} | 履歴を保持、配信不可 |
+| **今回の追加昇格** | **{P["newPromoted"]}** | 共通文・制御文字と二方式・公式正答の再検証 |
+| **正規ソースバンク** | **{total} / 1,200** | ソース拡張{ext}問を含む |
+| **未昇格** | **{len(hold)}問** | 原典の疑義と未合格ゲートは保持 |
+| アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
+
+- GitHub Actions Run：{run_id}。先行再抽出22問のうち**{len(active_pending)}問**が引き続き保留。
+- 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
+- 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
+- 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
+
+"""
+tail=f"""
+## 今回の独立共通文・制御文字監査（Run {run_id}）
+
+- 追加昇格 **{P["newPromoted"]}問**、合計 **{total}/1,200問**。残り **{len(hold)}問**。
+- 昇格ID：{", ".join(P["newIds"]) if P["newIds"] else "なし"}。
+- 保留の多い理由（重複あり）：{", ".join(f"{k} {v}" for k,v in reasons.most_common(12))}。
+- 先行再抽出候補：22問のうち残存保留{len(active_pending)}問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+"""
+MD.write_text(summary+history+"\n"+tail,encoding="utf8")
+print(json.dumps({"canonical":total,"remaining":len(hold),"new":P["newPromoted"],
+                  "pending22Remaining":len(active_pending),"svgPending":18},ensure_ascii=False))
