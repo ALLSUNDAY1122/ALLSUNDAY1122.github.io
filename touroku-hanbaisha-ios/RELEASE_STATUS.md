@@ -1374,3 +1374,11 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## Q5 App Privacy 独立再照合（2026-11-24）
 - WebViewのHTML/JS・Chromium通信と端末保存・プライバシー文書の監査：**PASS**。App Store Connectの実回答：**NOT_VERIFIED**、総合：**NOT_VERIFIED**。
 - Run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45287794947、詳細 `PRIVACY_Q5_AUDIT_20261124.json`。GitHub Pagesのログ保持・利用目的とASCの申告照合が残る。
+
+
+## Q6 iOS Simulator 実測とQ5再照合の確定結果（2026-11-24）
+- **Q6：PASS（Simulator実測）**。macOS/Xcode、XcodeGen生成、Simulator Debugビルド、iPhone 16 Pro Simulatorの起動・アプリインストール・`simctl launch`（PID 5055）、スクリーンショット生成、プロセス存在照合がすべてSUCCESS。実機と画面内容の独立目視、TestFlight配布は未検証。
+- Q6証拠：<https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45287450236>、`touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261124.json`、Actions artifact `touhan-q6-ios-simulator-evidence`（ID 14872941877）。ワークフロー全体のFAILは最後のGitHub `RELEASE_STATUS.md` rebase競合に起因し、Simulatorビルド/起動の失敗ではない。結果は別コミットに救済保存済み。
+- **Q5：ブラウザ・ソース監査PASS、App Store Connect申告照合NOT_VERIFIED**。Chromiumで公式599問起動時のリクエスト3件（HTML・JSON）、回答後のlocalStorage/sessionStorage/cookie空、プライバシー・サポート導線、PrivacyInfo.xcprivacyを確認。監査はローカル配信でありGitHub Pages側のログ保持・収集目的は確定できない。
+- Q5証拠：<https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45287794947>、`touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json`。ASCアプリID `6802119268` のプライバシー回答現物を直接読めないため、WebView通信由来のIP等の処理と表示上の「データ収集なし」を未確認でPASSにしない。
+- **AI Preflight再評価：11/14 PASS、BLOCKED**。残るQ4（オフライン対応・別設計課題）、Q5（ASC申告現物とGitHub Pagesのデータ処理）、Q7（署名・TestFlight配布）。iOS SimulatorのQ6は解消。本審査最終送信は実施しない。
