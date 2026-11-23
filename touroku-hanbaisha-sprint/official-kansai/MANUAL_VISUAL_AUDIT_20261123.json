@@ -122,6 +122,27 @@
       "pdf_page": 11,
       "answer": 3,
       "evidence": "Official PDF page 11 stem, statements, 4 choice rows and official answer 3 visually compared to app candidate; line breaks differ in UI"
+    },
+    {
+      "id": "KSAI-2022-018",
+      "status": "PASS",
+      "pdf_page": 12,
+      "answer": 3,
+      "evidence": "All four assertions and five option rows visually match official page; answer index shows 3"
+    },
+    {
+      "id": "KSAI-2022-019",
+      "status": "HOLD",
+      "pdf_page": 13,
+      "answer": 5,
+      "evidence": "Ruby in 罹患・痺れ is detached in PDF text extraction; original visual representation not faithfully reproduced"
+    },
+    {
+      "id": "KSAI-2022-020",
+      "status": "HOLD",
+      "pdf_page": 13,
+      "answer": 2,
+      "evidence": "Candidate choice 5 contains next section header ［主な医薬品とその作用］ incorrectly attached; needs cleanup and re-audit"
     }
   ],
   "allOtherQuestions": "PENDING_NOT_REVIEWED",
@@ -134,7 +155,7 @@
     "excludeFromAccuracyDenominator": true,
     "reviewedInThisAudit": false
   },
-  "reviewScope": "2022 Q01-Q17 question+answer PDF screenshots, including ruby/choice layout holds",
+  "reviewScope": "2022 Q01-Q20 visual review (source PDF pages2-13), 13 PASS / 7 HOLD",
   "auditSourceFrozenGitBlobs": {
     "2022": {
       "candidate": "4dce337ab38a255327da851f2979998628557d6f",
