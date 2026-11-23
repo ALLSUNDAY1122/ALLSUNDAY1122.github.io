@@ -84,7 +84,7 @@ for key,audit_path in audits.items():
     assert len(docs)==60
 assert len(found)==120 and len(retained_pass)==117
 assert len([q for q in selected if q["id"] in retained_pass])==117
-assert all(q["id"] in retained_pass for q in selected if q["examDate"] in ("2024-09","2024-05"))
+assert all(q["id"] in retained_pass for q in selected if q.get("examDate") in ("2024-09","2024-05"))
 original_backfills={"FP2-ORIG-20261123-L01","FP2-ORIG-20261123-L02","FP2-ORIG-20261123-S01"}
 assert {q["id"] for q in selected if q["id"].startswith("FP2-ORIG-")}==original_backfills
 assert all(q["independent_audit_status"]=="PASS" for q in selected if q["id"] in original_backfills)
