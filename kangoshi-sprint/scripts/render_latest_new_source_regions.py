@@ -42,7 +42,7 @@ ocr_proof=ROOT/"audit/ocr-cmap-repair-ledger-20261124.json"
 if ocr_proof.exists():
     evidence=json.loads(ocr_proof.read_text())
     for e in evidence["perQuestion"]:
-        if e["status"]!="REPAIRED_SOURCE_ONLY":continue
+        if e["status"]!="REPAIRED_SOURCE_ONLY" or e["id"] not in set(L.get("newIds",[])):continue
         qid=e["id"];exam=e["sourceExam"];sess=e["session"];page_n=e["sourcePage"]
         if any(r["id"]==qid for r in rows):raise ValueError("Duplicate image evidence "+qid)
         clip=e["coordinateClip"]
