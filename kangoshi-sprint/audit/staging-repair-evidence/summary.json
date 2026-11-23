@@ -2,40 +2,41 @@
   "engine1": "PyMuPDF document page text and question-boundary segment",
   "engine2": "Poppler pdftotext -layout",
   "key": "MHLW 2026-11-24 official answer PDF tokens",
-  "policy": "Conservative bulk gates: reject any control glyphs in source segment, raster pages, unusual glyphs, scoring exception, scenario, or mismatched choice.",
+  "policy": "Conservative bulk gates: reject source control glyphs, raster pages, scoring exceptions; require uniquely numbered dual-engine page and dual-engine scenario context.",
   "total": 480,
-  "freshPromotable": 47,
-  "alreadyCanonical": 94,
-  "holds": 433,
+  "freshPromotable": 0,
+  "alreadyCanonical": 141,
+  "holds": 480,
   "bySession": {
     "112-AM": {
       "total": 120,
-      "pass": 13,
-      "hold": 107
+      "pass": 0,
+      "hold": 120
     },
     "112-PM": {
       "total": 120,
-      "pass": 11,
-      "hold": 109
+      "pass": 0,
+      "hold": 120
     },
     "111-AM": {
       "total": 120,
-      "pass": 13,
-      "hold": 107
+      "pass": 0,
+      "hold": 120
     },
     "111-PM": {
       "total": 120,
-      "pass": 10,
-      "hold": 110
+      "pass": 0,
+      "hold": 120
     }
   },
   "holdReasons": {
+    "ALREADY_VERIFIED_CANONICAL": 141,
+    "BOUNDARY_NO_UNIQUE_DUAL_ENGINE_PAGE": 480,
     "SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT": 147,
     "SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY": 104,
     "OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX": 48,
     "OFFICIAL_ANSWER_NOT_SINGLE": 38,
     "INDEPENDENT_OFFICIAL_KEY_MISMATCH": 38,
-    "ALREADY_VERIFIED_CANONICAL": 94,
     "TOO_SHORT_FOR_UNIQUE_STEM": 45,
     "POPPLER_FIELD_MISMATCH_0": 110,
     "PYMUPDF_FIELD_MISMATCH_0": 28,
@@ -49,7 +50,6 @@
     "POPPLER_FIELD_MISMATCH_3": 10,
     "PYMUPDF_FIELD_MISMATCH_5": 6,
     "POPPLER_FIELD_MISMATCH_5": 8,
-    "SITUATION_GROUP_CONTEXT_NOT_VERIFIED": 120,
     "PYMUPDF_FIELD_MISMATCH_4": 34,
     "POPPLER_FIELD_MISMATCH_4": 37,
     "POPPLER_FIELD_MISMATCH_2": 3,
