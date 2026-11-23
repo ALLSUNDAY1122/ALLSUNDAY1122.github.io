@@ -3,7 +3,7 @@
 更新：2026-11-24 JST　状態：**PREFLIGHT_BLOCKED**
 
 ## 成果物・検証根拠
-- CI： [GitHub Actions run 45217628155](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45216945937)、インフラ実行SUCCESS（品質ゲートは未合格）。
+- CI： [GitHub Actions run 45217628155](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45217628155)、インフラ実行SUCCESS（品質ゲートは未合格）。
 - 成果物 Artifact ID `14838003424`、ZIP SHA-256 `16c05776d50db4551e9d3210e6975aef13886514d2acfc9e477ab2458ae8c57d`。
 - 暫定データ：ブランチ `feature/kangoshi-112-111-staging-audit-v3-20261124`、commit `d9f774797926304a993b962919c217e8d13075e2`。4ファイル合計480問、個別出典URL付記。正答未照合・テキスト忠実性未確認のため、正式バンクには未統合。
 
