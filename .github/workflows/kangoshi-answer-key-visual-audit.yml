@@ -5,10 +5,15 @@ on:
     paths:
       - 'kangoshi-sprint/scripts/key_layout_diagnostic.py'
       - 'kangoshi-sprint/scripts/official_answer_key_audit.py'
+      - 'kangoshi-sprint/scripts/apply_official_keys_to_staging.py'
+      - 'kangoshi-sprint/audit/official-scoring-exceptions-20261124.json'
+      - 'kangoshi-sprint/product-content/raw/set1-raw.json'
+      - 'kangoshi-sprint/product-content/raw/set2-raw.json'
+      - 'kangoshi-sprint/product-content/raw/set3-raw.json'
       - 'kangoshi-sprint/scripts/official_visual_evidence.py'
       - '.github/workflows/kangoshi-answer-key-visual-audit.yml'
 permissions:
-  contents: read
+  contents: write
 jobs:
   audit-answer-key:
     runs-on: ubuntu-latest
@@ -28,10 +33,25 @@ jobs:
         run: python kangoshi-sprint/scripts/key_layout_diagnostic.py
       - name: Compare all 1200 records with official answer key PDFs
         run: python kangoshi-sprint/scripts/official_answer_key_audit.py
+      - name: Attach official keys and scoring notices to all 480 staging drafts
+        run: python kangoshi-sprint/scripts/apply_official_keys_to_staging.py
       - name: Locate unresolved mismatches with secondary PDF text order
         run: python kangoshi-sprint/scripts/secondary_pdf_audit.py
       - name: Render original PDF pages for visual re-audit
         run: python kangoshi-sprint/scripts/official_visual_evidence.py
+      - name: Persist keyed candidates in isolated run-specific staging branch
+        run: |
+          set -euo pipefail
+          mkdir -p kangoshi-sprint/product-content/keyed-candidates
+          cp kangoshi-sprint/audit/runs/keyed-drafts/*.json kangoshi-sprint/product-content/keyed-candidates/
+          mkdir -p kangoshi-sprint/audit/key-evidence
+          cp kangoshi-sprint/audit/runs/answer-audit/answer-summary.json kangoshi-sprint/audit/key-evidence/
+          cp kangoshi-sprint/audit/runs/visual-evidence/visual-index.json kangoshi-sprint/audit/key-evidence/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add kangoshi-sprint/product-content/keyed-candidates/ kangoshi-sprint/audit/key-evidence/
+          git commit -m "kangoshi: preserve 480 keyed non-publishable drafts and visual audit index"
+          git push origin HEAD:refs/heads/feature/kangoshi-keyed-staging-${{ github.run_id }}
       - name: Upload answer-key and text audit evidence
         if: always()
         uses: actions/upload-artifact@v4
