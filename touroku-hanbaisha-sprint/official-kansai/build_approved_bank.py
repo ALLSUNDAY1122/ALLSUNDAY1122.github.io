@@ -56,6 +56,14 @@ for year in range(2022,2027):
             raise RuntimeError("invalid or stale ruby reconstruction for "+str(year))
         ruby_byid={r["id"]:r for r in ruby_report["records"]}
         if len(ruby_byid)!=120:raise RuntimeError("duplicate ruby IDs")
+    ordered_file=B/f"ORDERED_RUBY_{year}.json"
+    ordered=json.loads(ordered_file.read_text()) if ordered_file.exists() else None
+    ordered_byid={}
+    if ordered:
+        if ordered["year"]!=year or ordered["total"]!=120 or ordered["candidateGitBlob"]!=expected_candidate_sha or len(ordered["records"])!=120:
+            raise RuntimeError("invalid/stale ordered ruby report")
+        ordered_byid={r["id"]:r for r in ordered["records"]}
+        if len(ordered_byid)!=120:raise RuntimeError("duplicate ordered ruby IDs")
     layout_file=B/f"LAYOUT_TRIAGE_{year}.json"
     layout=json.loads(layout_file.read_text()) if layout_file.exists() else None
     layout_byid={}
@@ -64,7 +72,7 @@ for year in range(2022,2027):
             raise RuntimeError("invalid or stale figure/structure triage for "+str(year))
         layout_byid={r["id"]:r for r in layout["records"]}
         if len(layout_byid)!=120:raise RuntimeError("duplicate layout IDs")
-    stats={"auto":0,"geometry":0,"ruby":0,"layout":0,"visual":0,"crossEngineHold":0,"hold":0,"pending":0}
+    stats={"auto":0,"geometry":0,"ruby":0,"rubyOrdered":0,"layout":0,"visual":0,"crossEngineHold":0,"hold":0,"pending":0}
     for idx,q in enumerate(candidates):
         id=q["id"];n=idx+1
         if id!=f"KSAI-{year}-{n:03d}" or q["questionNo"]!=n:
@@ -76,6 +84,7 @@ for year in range(2022,2027):
         auto_result=byid.get(id)
         geometry_result=geom_byid.get(id)
         ruby_result=ruby_byid.get(id)
+        ordered_result=ordered_byid.get(id)
         layout_result=layout_byid.get(id)
         if report and not auto_result:raise RuntimeError("missing diff")
         if auto_result and (auto_result["questionNo"]!=n or auto_result["officialAnswer"]!=k["official_answer"]):
@@ -140,6 +149,27 @@ for year in range(2022,2027):
                    "sourcePdfSha256":auto_result["officialPdfSha256"],
                    "glyphCount":len(ruby_result["placements"])}
             stats["ruby"]+=1
+        elif ordered_result and ordered_result["status"]=="ORDERED_RUBY_PASS" and not ordered_result["reasons"]:
+            if not ruby_result or ruby_result["status"]!="HOLD":
+                raise RuntimeError("cannot overwrite first-stage certified ruby")
+            if not auto_result or not geometry_result or auto_result["status"]!="HOLD":
+                raise RuntimeError("ordered ruby lacks held PDF evidence")
+            if auto_result["candidateNormalizedSha256"]!=auto_result["sourceNormalizedSha256"]:
+                raise RuntimeError("ordered ruby PDF text diff unresolved")
+            if geometry_result["reasons"]!=["RUBY_RENDER_NOT_CERTIFIED"]:
+                raise RuntimeError("ordered ruby cannot override other holds")
+            rich=[ordered_result["questionParts"],*ordered_result["choicesParts"]]
+            if len(rich)!=len(q["choices"])+1 or not ordered_result["placements"]:
+                raise RuntimeError("ordered ruby mapping invalid")
+            for parts in rich:
+                if not isinstance(parts,list) or not parts:raise RuntimeError("rich field absent")
+                if any(("text" in v)==("rubyBase" in v) for v in parts):
+                    raise RuntimeError("rich field invalid")
+            audit={"status":"PASS","method":"AUTO_PDF_ORDERED_GLYPH_RUBY_DOM_RECONSTRUCTION",
+                "record":f"ORDERED_RUBY_{year}.json",
+                "sourcePdfSha256":auto_result["officialPdfSha256"],
+                "glyphCount":len(ordered_result["placements"])}
+            stats["rubyOrdered"]+=1
         elif layout_result and layout_result["status"]=="LAYOUT_FALSE_POSITIVE_PASS" and not layout_result["reasons"]:
             if not auto_result or not geometry_result:
                 raise RuntimeError("missing source geometry for layout "+id)
@@ -179,9 +209,10 @@ for year in range(2022,2027):
         item={field:q[field] for field in fields}
         item.update({"modificationDisclosureDisplay":q.get("modificationDisclosureDisplay") or "PDFを表示用に加工",
                      "verbatimCertified":True,"needsVisualReview":False,"renderReady":True,"audit":audit})
-        if audit["method"]=="AUTO_PDF_GLYPH_XY_RUBY_DOM_RECONSTRUCTION":
-            item["questionParts"]=ruby_result["questionParts"]
-            item["choicesParts"]=ruby_result["choicesParts"]
+        if audit["method"] in ("AUTO_PDF_GLYPH_XY_RUBY_DOM_RECONSTRUCTION","AUTO_PDF_ORDERED_GLYPH_RUBY_DOM_RECONSTRUCTION"):
+            rich_source=ruby_result if audit["method"]=="AUTO_PDF_GLYPH_XY_RUBY_DOM_RECONSTRUCTION" else ordered_result
+            item["questionParts"]=rich_source["questionParts"]
+            item["choicesParts"]=rich_source["choicesParts"]
             item["question"]="".join(p.get("text",p.get("rubyBase","")) for p in item["questionParts"])
             item["choices"]=["".join(p.get("text",p.get("rubyBase","")) for p in parts) for parts in item["choicesParts"]]
         accepted[id]=item
