@@ -206,3 +206,5 @@ def main():
 if __name__=="__main__": main()
 
 # CI rerun: enforce cumulative 102 source-order validation and Chrome QA after safe checklist update.
+
+# Trigger cumulative final source-order 102 audit after workflow registration.
