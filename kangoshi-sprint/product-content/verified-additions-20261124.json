@@ -3,7 +3,7 @@
   "updatedAt": "2026-11-24",
   "qualification": "看護師国家試験",
   "policy": "Verified 112/111 canonical SOURCE bank; new questions pass two independent PDF text extraction and official answer token tests, but still require explanation, app tests, rights checks. Never auto-publish.",
-  "count": 199,
+  "count": 200,
   "sourceExams": [
     112,
     111
@@ -3021,6 +3021,175 @@
             "latinTokenMultisetExactMatch": true,
             "japaneseChars": 311,
             "latinTokens": 7
+          },
+          "engines": [
+            "PyMuPDF",
+            "Poppler"
+          ],
+          "status": "DUAL_ENGINE_CONTEXT_MATCH"
+        }
+      }
+    },
+    {
+      "id": "K112-AM100",
+      "sourceExam": 112,
+      "session": "AM",
+      "questionNo": 100,
+      "question": "看護師のA さんへの食事援助で正しいのはどれか。",
+      "choices": [
+        "頸部を後屈した体位にする。",
+        "座位時の体幹を安定させる。",
+        "食後に嚥下体操を実施する。",
+        "こぼさずに摂取できるよう全介助する。"
+      ],
+      "answer": 1,
+      "officialAcceptedAnswers": [
+        1
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "2"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 40,
+      "scenarioContextEvidence": {
+        "page": 40,
+        "groupFirst": 100,
+        "groupLast": 102,
+        "commonText": "次の文を読み100〜102 の問いに答えよ。\nA さん（75 歳、男性） は妻（75 歳） と2 人暮らしで、15 年前に\nParkinson（パーキンソン）病\nParkinson disease\nと診断された。7年前よりレボドパ（L-dopa）を1日3回\n内服している。Hoehn & Yahr（ホーエン・ヤール）重症度分類のステージⅣで、要介\n護2である。妻は腰痛のため毎日リハビリテーション目的で通院中である。妻の介護\n負担を軽減するため、A さんは毎月10 日間、介護老人保健施設の短期入所（ショー\nトステイ）を利用している。今回は妻の腰痛が増強したため、A さんは予定を早めて\n入所した。A さんは握力が低下しているが、スプーンを使用し自力で食事を摂取し\nている。食事中に姿勢が崩れることが多く、むせや食べこぼしがある。",
+        "normalizedLength": 341,
+        "visualContextGlyphEvidence": {
+          "id": "K112-AM100",
+          "exam": 112,
+          "session": "AM",
+          "contextPage": 40,
+          "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+          "contextPngSha256": "c26bcc17eab42d42e0d303771e5066755c8fb93daf146889d43605138618c9b6",
+          "allowedPairedGlyphs": [
+            "ï",
+            "ñ"
+          ],
+          "allowedPopplerOmission": "7年前より => 年前より, source PDF shows printed 7",
+          "visualObservation": "Official source rendering reads 7年前より, while Poppler dropped this single glyph; all other Japanese and Latin tokens must match exactly",
+          "review": "visual screenshot source page checked; special case only K112-AM100"
+        },
+        "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+        "comparison": {
+          "japaneseExactMatch": false,
+          "latinTokenMultisetExactMatch": true,
+          "japaneseChars": 298,
+          "latinTokens": 11,
+          "singlePopplerMissingPrintedSevenVisuallyVerified": true
+        },
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "visualNumericGlyphEvidence": null,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 40,
+        "correctedPage": 40,
+        "anchorBox": [
+          72.88,
+          346.88,
+          90.95,
+          358.93
+        ],
+        "clip": [
+          0.0,
+          343.88,
+          615.61,
+          515.55
+        ],
+        "nextAnchorFound": true,
+        "verifiedPage": 40,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "shortStemVerifiedByCoordinates": false,
+      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "状況設定",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 40,
+        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true,
+        "coordinateBoundaryEvidence": {
+          "previousPage": 40,
+          "correctedPage": 40,
+          "anchorBox": [
+            72.88,
+            346.88,
+            90.95,
+            358.93
+          ],
+          "clip": [
+            0.0,
+            343.88,
+            615.61,
+            515.55
+          ],
+          "nextAnchorFound": true,
+          "verifiedPage": 40,
+          "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+        },
+        "scenarioContextEvidence": {
+          "page": 40,
+          "groupFirst": 100,
+          "groupLast": 102,
+          "commonText": "次の文を読み100〜102 の問いに答えよ。\nA さん（75 歳、男性） は妻（75 歳） と2 人暮らしで、15 年前に\nParkinson（パーキンソン）病\nParkinson disease\nと診断された。7年前よりレボドパ（L-dopa）を1日3回\n内服している。Hoehn & Yahr（ホーエン・ヤール）重症度分類のステージⅣで、要介\n護2である。妻は腰痛のため毎日リハビリテーション目的で通院中である。妻の介護\n負担を軽減するため、A さんは毎月10 日間、介護老人保健施設の短期入所（ショー\nトステイ）を利用している。今回は妻の腰痛が増強したため、A さんは予定を早めて\n入所した。A さんは握力が低下しているが、スプーンを使用し自力で食事を摂取し\nている。食事中に姿勢が崩れることが多く、むせや食べこぼしがある。",
+          "normalizedLength": 341,
+          "visualContextGlyphEvidence": {
+            "id": "K112-AM100",
+            "exam": 112,
+            "session": "AM",
+            "contextPage": 40,
+            "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
+            "contextPngSha256": "c26bcc17eab42d42e0d303771e5066755c8fb93daf146889d43605138618c9b6",
+            "allowedPairedGlyphs": [
+              "ï",
+              "ñ"
+            ],
+            "allowedPopplerOmission": "7年前より => 年前より, source PDF shows printed 7",
+            "visualObservation": "Official source rendering reads 7年前より, while Poppler dropped this single glyph; all other Japanese and Latin tokens must match exactly",
+            "review": "visual screenshot source page checked; special case only K112-AM100"
+          },
+          "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
+          "comparison": {
+            "japaneseExactMatch": false,
+            "latinTokenMultisetExactMatch": true,
+            "japaneseChars": 298,
+            "latinTokens": 11,
+            "singlePopplerMissingPrintedSevenVisuallyVerified": true
           },
           "engines": [
             "PyMuPDF",

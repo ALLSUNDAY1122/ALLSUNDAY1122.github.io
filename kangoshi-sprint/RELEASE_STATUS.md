@@ -7,13 +7,13 @@
 | 種別 | 件数 | 公開範囲 |
 |---|---:|---|
 | 既存第115〜113回ソースバンク | 720 | 既存ランタイム、厳格原典監査629 PASS／91 HOLD |
-| 今回の監査前の検証済みソース拡張 | 191 | 履歴を保持、配信不可 |
-| **今回の追加昇格** | **8** | 共通文・制御文字と二方式・公式正答の再検証 |
-| **正規ソースバンク** | **919 / 1,200** | ソース拡張199問を含む |
-| **未昇格** | **281問** | 原典の疑義と未合格ゲートは保持 |
+| 今回の監査前の検証済みソース拡張 | 199 | 履歴を保持、配信不可 |
+| **今回の追加昇格** | **1** | 共通文・制御文字と二方式・公式正答の再検証 |
+| **正規ソースバンク** | **920 / 1,200** | ソース拡張200問を含む |
+| **未昇格** | **280問** | 原典の疑義と未合格ゲートは保持 |
 | アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-- GitHub Actions Run：45256648834。先行再抽出22問のうち**1問**が引き続き保留。
+- GitHub Actions Run：45257252230。先行再抽出22問のうち**0問**が引き続き保留。
 - 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
 - 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
 - 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
@@ -117,3 +117,11 @@
 - 昇格ID：K112-AM095, K112-AM097, K112-AM112, K112-PM098, K112-PM103, K112-PM115, K111-AM094, K111-AM109。
 - 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 253, COORDINATE_REGION_UNVERIFIED 253, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 176, PYMUPDF_FIELD_MISMATCH_0 168, POPPLER_FIELD_MISMATCH_0 133, PAGE_FOOTER_CONTAMINATION 133, PYMUPDF_FIELD_MISMATCH_4 100, CHOICE_COUNT_NOT_FOUR 89, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 45, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
 - 先行再抽出候補：22問のうち残存保留1問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+
+## 今回の独立共通文・制御文字監査（Run 45257252230）
+
+- 追加昇格 **1問**、合計 **920/1,200問**。残り **280問**。
+- 昇格ID：K112-AM100。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 253, COORDINATE_REGION_UNVERIFIED 253, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 176, PYMUPDF_FIELD_MISMATCH_0 168, POPPLER_FIELD_MISMATCH_0 133, PAGE_FOOTER_CONTAMINATION 133, PYMUPDF_FIELD_MISMATCH_4 100, CHOICE_COUNT_NOT_FOUR 89, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 45, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
+- 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
