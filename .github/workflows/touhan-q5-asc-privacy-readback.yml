@@ -1,0 +1,65 @@
+name: Touhan Q5 Read Only ASC Privacy Metadata Readback
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-q5-asc-privacy-readback.yml'
+      - 'touroku-hanbaisha-ios/scripts/readback_asc_privacy_q5.py'
+permissions:
+  contents: write
+jobs:
+  readback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read App Store Connect app info and privacy URL without any write
+        id: read
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python touroku-hanbaisha-ios/scripts/readback_asc_privacy_q5.py
+      - name: Save readback evidence and preserve questionnaire HOLD
+        if: always()
+        env:
+          RESULT: ${{ steps.read.outcome }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,os
+          b=Path('touroku-hanbaisha-ios')
+          report=b/'ASC_Q5_PRIVACY_METADATA_READBACK_20261124.json'
+          d=json.loads(report.read_text()) if report.exists() else {'schema':'touhan-q5-asc-readback-v1','privacyPolicyURLMatched':False,'questionnaireVerified':False,'error':'ASC read-only API unavailable'}
+          d['githubRunId']=int(os.environ['RUN_ID'])
+          d['readStepResult']=os.environ['RESULT']
+          report.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+          sf=b/'release-status.json';s=json.loads(sf.read_text())
+          s['q5_asc_privacy_metadata_readback_20261124']={'result':'PASS_URL_ONLY' if d.get('privacyPolicyURLMatched') else 'NOT_VERIFIED',
+            'actualDataCollectionQuestionnaire':'NOT_VERIFIED','evidence':'touroku-hanbaisha-ios/ASC_Q5_PRIVACY_METADATA_READBACK_20261124.json',
+            'runId':d['githubRunId']}
+          s['gates']['app_privacy']='NOT_VERIFIED_QUESTIONNAIRE'
+          s['release_gate']='BLOCKED';s['app_review_submitted']=False
+          sf.write_text(json.dumps(s,ensure_ascii=False,indent=2)+'\n')
+          md=b/'RELEASE_STATUS.md'
+          md.write_text(md.read_text()+f"\n\n## Q5 ASC read-onlyメタデータ照合（2026-11-24）\n- API読戻し：{d['readStepResult']}、Privacy Policy URL一致：{d.get('privacyPolicyURLMatched')}、プライバシー質問票：**未検証**。\n- Run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/{d['githubRunId']}。データ収集申告は確認せずにPASSとしない。\n")
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/ASC_Q5_PRIVACY_METADATA_READBACK_20261124.json touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          git commit -m 'audit(touhan): record read-only ASC privacy URL and questionnaire gap' || true
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-q5-asc-privacy-metadata
+          path: touroku-hanbaisha-ios/ASC_Q5_PRIVACY_METADATA_READBACK_20261124.json
+          if-no-files-found: ignore
