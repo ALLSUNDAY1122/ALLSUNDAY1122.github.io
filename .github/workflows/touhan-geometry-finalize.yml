@@ -1,0 +1,74 @@
+name: Registered Seller Geometry Promotion Finalize
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py'
+      - 'touroku-hanbaisha-sprint/official-kansai/write_geometry_release_status.py'
+      - '.github/workflows/touhan-geometry-finalize.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-geometry-finalize-main
+  cancel-in-progress: false
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Rebuild only audited published questions, report and capture exceptions
+        run: |
+          set -o pipefail
+          (
+            python touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py &&
+            python touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py &&
+            python touroku-hanbaisha-sprint/official-kansai/write_geometry_release_status.py
+          ) > /tmp/touhan-finalize.log 2>&1
+          result=$?
+          cat /tmp/touhan-finalize.log
+          if [ "$result" -ne 0 ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('touroku-hanbaisha-sprint/official-kansai/GEOMETRY_RELEASE_WRITER_ERROR.json')
+          p.write_text(json.dumps({'status':'BLOCKED','error':Path('/tmp/touhan-finalize.log').read_text()[-5500:]},ensure_ascii=False,indent=2)+'\n')
+          PY
+            exit 1
+          fi
+      - name: Verify release bank and source gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          d=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          s=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
+          assert d['count']==s['question_bank']['production_official_bank_count']
+          assert s['release_gate']=='BLOCKED'
+          assert 'KSAI-2023-090' not in d['approvedIds']
+          assert s['question_bank']['cross_engine_sample_size']==50
+          assert s['question_bank']['auto_geometry_and_ruby_per_year']
+          print('PASS: all geometry and crosscheck status saved')
+          PY
+      - name: Commit successful outcomes or explicit failure evidence
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f touroku-hanbaisha-sprint/official-kansai/GEOMETRY_RELEASE_WRITER_ERROR.json 2>/dev/null || true
+          git add touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json
+          git add touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): finalize coordinate promotion and independent crosscheck status'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              if [ "$attempt" -eq 3 ]; then exit 1; fi
+            done
+          fi
