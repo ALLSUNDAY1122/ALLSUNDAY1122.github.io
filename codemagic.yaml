@@ -1143,8 +1143,8 @@ workflows:
     name: 登録販売者 - Q7 Automatically Fetch App Store Signing (No Upload)
     max_build_duration: 60
     instance_type: mac_mini_m2
-    integrations:
-      app_store_connect: tourokuhanbaisha_appstore
+    # API key credentials are provided by app2_010_touhan_signing group.
+    # Avoid referring to a Codemagic integration not configured in this team.
     environment:
       groups:
         - app2_010_touhan_signing
