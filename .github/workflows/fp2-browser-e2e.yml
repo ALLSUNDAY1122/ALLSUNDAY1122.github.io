@@ -43,20 +43,20 @@ jobs:
           native_bytes=(app/'ios/Web/questions/canonical/approved-questions-20261123.json').read_bytes()
           native=json.loads(native_bytes)
           selected={q['id']:q for q in source['questions'] if q['release_selected'] is True}
-          assert len(source['questions'])==195 and len(native['questions'])==120 and len(selected)==120
+          assert len(source['questions'])==312 and len(native['questions'])==300 and len(selected)==300
           assert all(q==selected[q['id']] for q in native['questions'])
           assert not set(q['id'] for q in native['questions']) & {q['id'] for q in source['questions'] if not q['release_selected']}
           evidence=json.loads((app/'ios/Web/bundle-evidence.json').read_text())
           assert evidence['canonical_sha256']==hashlib.sha256(canonical).hexdigest()
           assert evidence['release_payload_sha256']==hashlib.sha256(native_bytes).hexdigest()
-          assert evidence['reserve_content_pass_not_bundled']==75
+          assert evidence['reserve_content_pass_not_bundled']==12
           html=(app/'ios/Web/index.html').read_text()
           encoded=re.search(r'<script type="application/json" id="fp2-offline-bank">(.*?)</script>',html,re.S)
           assert encoded, 'inline offline bank missing'
           embedded=json.loads(encoded.group(1).replace('<\\/','</'))
           assert embedded==native
           assert (app/'ios/Web/manifest.webmanifest').is_file()
-          print('FP2 offline payload: 195 canonical, exactly 120 shipped, 75 reserves excluded, embedded/source/hash PASS')
+          print('FP2 offline payload: 312 canonical, exactly 300 shipped, 12 reserves excluded, embedded/source/hash PASS')
           PY
       - name: Start static app server and run browser E2E
         run: |
