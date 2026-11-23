@@ -1,0 +1,37 @@
+name: Kangoshi Verified Extension and Media Integrity
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/product-content/verified-additions-20261124.json'
+      - 'kangoshi-sprint/scripts/audit_verified_additions.py'
+      - 'kangoshi-sprint/scripts/audit_media_38_structural.py'
+      - '.github/workflows/kangoshi-verified-extension-audit.yml'
+permissions:
+  contents: read
+jobs:
+  verify-extension-and-media:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF extractor
+        run: python -m pip install --disable-pip-version-check 'pymupdf>=1.24,<3'
+      - name: Fetch official PDFs
+        run: python kangoshi-sprint/scripts/run_official_pdf_audit.py
+      - name: Verify twelve source-image-reviewed records, every choice and answer
+        run: python kangoshi-sprint/scripts/audit_verified_additions.py
+      - name: Verify 38 media asset byte structures and record SHA256
+        run: python kangoshi-sprint/scripts/audit_media_38_structural.py
+      - name: Upload independent evidence even if a gate fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-extension-media-evidence
+          path: |
+            kangoshi-sprint/audit/runs/verified-additions-12.json
+            kangoshi-sprint/audit/runs/media-38-structural-reaudit.json
+          if-no-files-found: warn
