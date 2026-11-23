@@ -1,5 +1,22 @@
 # FP2｜Q0〜Q5最終ゲート・統合監査（2026-11-23 現行正本）
 
+## 2026-11-23｜312/300対象の最新プリフライト追記
+
+前段の`3116840c`・`b00b924c` CI証拠は当該コミットに限る。対象最新ソース `38eeaee1e05831b9ff29e55e4bab2ae0db4794a9` の8チェック再読戻しは **SUCCESS6／未完了2／FAIL0**。source静的×2、Chromium×2、migration×1、registry audit×1が成功。最新Simulator×2は未完了。別コミットのSimulator 300問版SUCCESSを最新ヘッド合格と誤認しない。
+
+**スコープを固定**：canonical312（内容PASS312）／初回選定300（学科5回×60、6分野×50）／予備12／公開許可0。旧120問の判定は廃止。分類と証拠は`fp2-manabi-sprint/audit/FP2_PREFLIGHT_312_CANONICAL_300_SELECTED_20261123.md`。
+
+**AUTO-FIX**：旧120固定条件、台帳/ソースSHA、CI不整合の技術修正・再検査。
+
+**BUILD-REQUIRED**：現ヘッドSimulator終了結果と署名IPA／300問同梱SHA／TestFlight、公開URL HTTP200の技術証明。
+
+**HUMAN-REQUIRED**：App Store Connect側でAppIcon・App ID・Bundle ID・Version/Build・IAPなし・App Privacy・スクショ・URL・ストア表示の実物確認、iPhone/iPad実機受入、二次利用の権利/法令/表示・運営者承認。内部AppIcon一致のみPASSでApple側未確認は維持。
+
+**FINAL-APPROVAL**：Q0〜Q5全通過後のユーザー明示的な提出/公開許可。**Q0 BLOCKED、Q1 公開BLOCKED、Q2/Q3 Browser技術PASSだが実機未了、Q4未了、Q5 BLOCKED。PR #5717 Draft・NOT_SUBMISSION_READY・NOT_SUBMITTEDを維持。**
+
+---
+
+
 > 旧122問・旧120問選定に基づく前版を更新。内容PASSは公開承認と異なり、Apple提出は行わない。
 
 ## 1. 現行確定コンテンツ
