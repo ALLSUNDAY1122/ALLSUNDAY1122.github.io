@@ -95,6 +95,7 @@ jobs:
         run: python kangoshi-sprint/scripts/apply_21_visual_source_repairs.py
       - name: Apply 19 original-PDF source-image reviewed non-CMap question and choice repairs
         run: python kangoshi-sprint/scripts/apply_19_original_image_transcriptions.py
+      # Official answer comes from independently read MHLW key, not an optional candidate field.
       - name: Apply original-page and independent-choice image repairs for 23 OCR-PSM disagreement cases
         run: python kangoshi-sprint/scripts/apply_23_psm_disagreement_visual_repairs.py
       - name: Render each residual held question from geometric source PDF evidence
