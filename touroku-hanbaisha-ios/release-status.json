@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-23T23:22:00+09:00",
+  "updated_at": "2026-11-23T23:25:00+09:00",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -45,10 +45,10 @@
     "official_invalid_question_count": 1,
     "official_question_text_imported": 0,
     "answer_index_readback_pass": true,
-    "official_question_pdf_binaries_downloaded": 2,
-    "sha256_verified": 2,
-    "official_question_text_staged": 120,
-    "official_question_text_staged_ids": "KSAI-2026-001..KSAI-2026-120",
+    "official_question_pdf_binaries_downloaded": 10,
+    "sha256_verified": 10,
+    "official_question_text_staged": 600,
+    "official_question_text_staged_ids": "KSAI-2022..2026 Q001-Q120 each",
     "official_2026_raw_staging": 120,
     "official_2026_app_candidate": 120,
     "official_2026_five_choices_parsed": 120,
@@ -66,8 +66,8 @@
     ],
     "remaining_four_years_target": 480,
     "remaining_four_years_extraction_implemented": true,
-    "remaining_four_years_confirmed_candidates": 0,
-    "remaining_four_years_confirmed_sha256": 0,
+    "remaining_four_years_confirmed_candidates": 480,
+    "remaining_four_years_confirmed_sha256": 8,
     "remaining_four_years_app_release_enabled": false,
     "year_2022_choice_count_policy": "four or five per official booklet; keep actual count",
     "year_2023_q90_scoring_contract": {
@@ -76,12 +76,21 @@
       "officialStatus": "OFFICIALLY_INVALID_ALL_CANDIDATES_CORRECT",
       "excludeFromAccuracyDenominator": true,
       "scoringPolicy": "ALL_CANDIDATES_CORRECT_NO_STANDARD_GRADING"
-    }
+    },
+    "remaining_four_years_answer_index_mapped": 480,
+    "remaining_four_years_choice_arrays_parsed": 480,
+    "remaining_four_years_parse_holds": 0,
+    "remaining_four_years_choice_count_distribution": {
+      "four_choices": 13,
+      "five_choices": 467
+    },
+    "remaining_four_years_independent_visual_verified": 0,
+    "official_2022_2025_app_release_enabled": false
   },
   "gates": {
     "notion_v28_full_read": "PENDING",
     "notion_submission_steps_full_read": "PENDING",
-    "official_source_import": "BLOCKED_0_OF_600_RELEASE_READY_120_STAGED",
+    "official_source_import": "BLOCKED_0_OF_600_RELEASE_READY_600_STAGED",
     "verbatim_and_answer_audit": "BLOCKED_0_OF_600_VISUAL",
     "mobile_ui": "PENDING",
     "ios_build": "PENDING",
@@ -100,10 +109,12 @@
     "official_2026_raw_extraction": "PASS_120_STAGING",
     "official_2026_app_candidate": "PASS_120_FIVE_CHOICE_STRUCTURAL_REVIEW_ONLY",
     "official_2026_verbatim_visual_audit": "BLOCKED_0_OF_120",
-    "remaining_four_years_extraction_pipeline": "IMPLEMENTED_GITHUB_ACTIONS_RESULT_UNCONFIRMED",
-    "remaining_four_years_output_commits": "NOT_FOUND_0_OF_4",
-    "remaining_four_years_pdf_sha256": "PENDING_0_OF_8",
-    "remaining_four_years_question_answer_mapping": "PENDING_0_OF_480"
+    "remaining_four_years_extraction_pipeline": "PASS_4_YEARS_GITHUB_READBACK",
+    "remaining_four_years_output_commits": "PASS_4_OF_4_JSON_AND_SHA",
+    "remaining_four_years_pdf_sha256": "PASS_8_OF_8",
+    "remaining_four_years_question_answer_mapping": "PASS_480_OF_480_STRUCTURAL",
+    "remaining_four_years_choice_parsing": "PASS_480_OF_480_4_OR_5_OPTIONS",
+    "remaining_four_years_verbatim_visual_audit": "BLOCKED_0_OF_480"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
@@ -122,6 +133,19 @@
     "touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2026.json",
     "touroku-hanbaisha-sprint/official-kansai/extract_year.py",
     "touroku-hanbaisha-sprint/official-kansai/build_year_app_candidate.py",
-    ".github/workflows/touhan-2022-2025-extract.yml"
+    ".github/workflows/touhan-2022-2025-extract.yml",
+    "touroku-hanbaisha-sprint/official-kansai/AUDIT_2022_2025_480_20261123.md",
+    "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2022_RAW_STAGING.json",
+    "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2022_APP_CANDIDATE.json",
+    "touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2022.json",
+    "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2023_RAW_STAGING.json",
+    "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2023_APP_CANDIDATE.json",
+    "touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2023.json",
+    "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2024_RAW_STAGING.json",
+    "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2024_APP_CANDIDATE.json",
+    "touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2024.json",
+    "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2025_RAW_STAGING.json",
+    "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2025_APP_CANDIDATE.json",
+    "touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2025.json"
   ]
 }
