@@ -7,13 +7,13 @@
 | 種別 | 件数 | 公開範囲 |
 |---|---:|---|
 | 既存第115〜113回ソースバンク | 720 | 既存ランタイム、厳格原典監査629 PASS／91 HOLD |
-| 今回の監査前の検証済みソース拡張 | 258 | 履歴を保持、配信不可 |
-| **今回の追加昇格** | **2** | 共通文・制御文字と二方式・公式正答の再検証 |
+| 今回の監査前の検証済みソース拡張 | 260 | 履歴を保持、配信不可 |
+| **今回の追加昇格** | **0** | 共通文・制御文字と二方式・公式正答の再検証 |
 | **正規ソースバンク** | **980 / 1,200** | ソース拡張260問を含む |
 | **未昇格** | **220問** | 原典の疑義と未合格ゲートは保持 |
 | アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-- GitHub Actions Run：45265610368。先行再抽出22問のうち**0問**が引き続き保留。
+- GitHub Actions Run：45267195714。先行再抽出22問のうち**0問**が引き続き保留。
 - 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
 - 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
 - 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
@@ -224,3 +224,11 @@
 - **今回の新規合計9問、正規980/1200問、保留220問**。累積画像・公式解答・文字修正証拠：`kangoshi-sprint/audit/cumulative-image-cmap-proof-20261124.json`、原典修正許可リスト：`kangoshi-sprint/audit/image-pinned-cmap-repairs-20261124.json`、残り保留：`kangoshi-sprint/audit/dual-engine-hold-20261124.json`。
 - 再実行時に既昇格問の旧候補へ「保留」を誤記しないよう、候補生成スクリプトの既存正規ソース照合ガードも追加。証拠は累積正本で保存。
 - 合格は**原典文字列と公式正答のソースゲート**に限定される。新規260問分はすべて公開・ランタイム統合を許可していない。採点例外、図版、共通状況文、解説独立監査、既存720問の別途原典監査は引き続き個別保留。公開判定は`PREFLIGHT_BLOCKED`。Apple最終送信や課金・契約確定なし。
+
+
+## 今回の独立共通文・制御文字監査（Run 45267195714）
+
+- 追加昇格 **0問**、合計 **980/1,200問**。残り **220問**。
+- 昇格ID：なし。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 163, COORDINATE_REGION_UNVERIFIED 163, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 145, POPPLER_FIELD_MISMATCH_0 107, PYMUPDF_FIELD_MISMATCH_0 97, PAGE_FOOTER_CONTAMINATION 75, PYMUPDF_FIELD_MISMATCH_4 60, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 38, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38, POPPLER_FIELD_MISMATCH_4 38, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 33。
+- 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
