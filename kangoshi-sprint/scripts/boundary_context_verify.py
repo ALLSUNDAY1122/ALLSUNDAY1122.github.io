@@ -49,12 +49,17 @@ def equivalent_shared_context(a,b):
         "latinTokens":len(words_a)
     }
 
-def safe_context(raw,clean_font):
+def safe_context(raw,clean_font,visual_pairs=None):
     # Both parsers can share a wrong source CMap. Unmapped control bytes and
     # suspicious glyphs in context cannot be auto-cleared by parser agreement.
     fixed=set((2,4,5,6,7,8,11,12,31))
     bad=[ord(c) for c in raw if ord(c)<32 and ord(c) not in fixed and c not in "\n\r\t"]
     val=clean_font(raw)
+    supported={"ï":"ñ","è":"ê","\u008d":"\u008f"}
+    for left,right in supported.items():
+        if (left in val or right in val) and (visual_pairs is not None and left in visual_pairs and right in visual_pairs):
+            if val.count(left)!=val.count(right):return False,["UNPAIRED_VISUAL_SOURCE_GLYPHS"]
+            val=val.replace(left,"（").replace(right,"）")
     return not bad and not re.search(r"[\ufffd઄¹¼ïñèêçâ\u0080-\u009f!?]",val),bad
 
 def _anchors(page, n, clean_font):
@@ -88,7 +93,7 @@ def _region(page,n,clean_font):
     text=clean_font(page.get_text("text",clip=box,sort=False))
     return text,{"anchorBox":[round(z,2) for z in a[0]],"clip":[round(z,2) for z in box],"nextAnchorFound":bool(after)}
 
-def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize,visually_verified_fields=None):
+def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize,visually_verified_fields=None,context_glyph_evidence=None):
     """Return (page, issues, scenario evidence, coordinate evidence, cropped text)."""
     pages=range(max(1,page_hint-3),min(len(doc),page_hint+3)+1)
     matched=[]
@@ -123,13 +128,19 @@ def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize,vi
             safe2,bad2=safe_context(alt_raw,clean_font)
             if not same:rejected.append("SITUATION_CONTEXT_TEXT_DIFFER");continue
             # Check the common passage itself, not unrelated text elsewhere on page.
-            safe_passage1,badpass1=safe_context(info["passage"],clean_font)
-            safe_passage2,badpass2=safe_context(alt_info["passage"],clean_font)
+            glyph_pairs=(context_glyph_evidence or {}).get("allowedPairedGlyphs",[]) if (context_glyph_evidence or {}).get("contextPage")==p else []
+            safe_passage1,badpass1=safe_context(info["passage"],clean_font,glyph_pairs)
+            safe_passage2,badpass2=safe_context(alt_info["passage"],clean_font,glyph_pairs)
             if not safe_passage1 or not safe_passage2:
                 rejected.append("SITUATION_CONTEXT_UNRESOLVED_SOURCE_GLYPHS")
                 continue
+            common=info["passage"]
+            if glyph_pairs:
+                for l,r in (("ï","ñ"),("è","ê"),("\u008d","\u008f")):
+                    if l in glyph_pairs and r in glyph_pairs:common=common.replace(l,"（").replace(r,"）")
             matches.append({"page":p,"groupFirst":info["first"],"groupLast":info["last"],
-                            "commonText":info["passage"],"normalizedLength":len(normalized(info["passage"])),
+                            "commonText":common,"normalizedLength":len(normalized(common)),
+                            "visualContextGlyphEvidence":context_glyph_evidence if glyph_pairs else None,
                             "method":"printed range header + first question position + exact Japanese content and Latin token multiset",
                             "comparison":shared_evidence,
                             "engines":["PyMuPDF","Poppler"],"status":"DUAL_ENGINE_CONTEXT_MATCH"})
