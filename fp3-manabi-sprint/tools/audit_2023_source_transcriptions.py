@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Verify source transcription completeness and official answer-key vectors for FP3 2023."""
 from __future__ import annotations
-import json, pathlib, re
+import json, pathlib, re, unicodedata
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SOURCES = {
@@ -27,8 +27,8 @@ def fail(message: str) -> None:
 def main() -> int:
     report = {}
     for exam, item in SOURCES.items():
-        qtext = item["question"].read_text(encoding="utf-8")
-        atext = item["answer"].read_text(encoding="utf-8")
+        qtext = unicodedata.normalize("NFKC", item["question"].read_text(encoding="utf-8"))
+        atext = unicodedata.normalize("NFKC", item["answer"].read_text(encoding="utf-8"))
         nums = sorted({int(x) for x in re.findall(r"\((\d{1,2})\)", qtext) if 1 <= int(x) <= 60})
         if nums != list(range(1, 61)):
             fail(f"{exam}: question numbers incomplete: {nums}")
