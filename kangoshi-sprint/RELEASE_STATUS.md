@@ -61,3 +61,12 @@
 - 追加141問のソース・正答チェックが済んでも、**解説の独立確認、法令/学説時点確認、アプリ統合、iOS回帰テスト、未検証339問の監査、図版5件の権利確認**が未完了。
 - App ID `6801792293`、Bundle `jp.allsunday1122.kangoshi`。
 - **App Store本審査の最終送信、課金登録、契約確定はいずれも行っていない**。いずれも別途明示承認が必要。
+
+## 境界位置・状況設定の再検証（自動実行記録）
+
+- 正規ソースバンク：**864/1,200問**（追加144問、既存720問）。
+- 追加480問の未昇格：**336問**。今回の自動昇格：**3問**。
+- 番号境界を前後3ページで探索し、単独行の問題番号と問題文・4選択肢の両エンジン一致・候補一意性を確認する。状況設定の共通文も2エンジン一致がない限り保留。
+- 主要保留理由（重複）：BOUNDARY_NO_UNIQUE_DUAL_ENGINE_PAGE 249, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 178, PYMUPDF_FIELD_MISMATCH_0 177, PYMUPDF_WRONG_QUESTION_BOUNDARY 177, PAGE_FOOTER_CONTAMINATION 151, POPPLER_FIELD_MISMATCH_0 142, PYMUPDF_FIELD_MISMATCH_4 115, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 104, CHOICE_COUNT_NOT_FOUR 93, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 48, TOO_SHORT_FOR_UNIQUE_STEM 41。
+- SVG18件は原典との比較画像を再生成するが、画像の意味・医学的所見の忠実性は自動合格にしない。**18件の詳細視覚確認が残存**。
+- 解説・媒体権利・実機確認・本審査の公開ゲートは引き続き保留。

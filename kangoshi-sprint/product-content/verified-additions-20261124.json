@@ -3,7 +3,7 @@
   "updatedAt": "2026-11-24",
   "qualification": "看護師国家試験",
   "policy": "Verified 112/111 canonical SOURCE bank; new questions pass two independent PDF text extraction and official answer token tests, but still require explanation, app tests, rights checks. Never auto-publish.",
-  "count": 141,
+  "count": 144,
   "sourceExams": [
     112,
     111
@@ -3656,6 +3656,75 @@
       }
     },
     {
+      "id": "K112-PM113",
+      "sourceExam": 112,
+      "session": "PM",
+      "questionNo": 113,
+      "question": "入院当日、A さんは日中は会話ができていたが、夕方からそわそわしながら落 ち着かない様子であった。また、話のつじつまが合わず、朝と夕方を間違え急に大 きな声を出し、夜中に起きだして自分の荷物を触っていることがあった。翌日、日 中は眠気を訴えながらも眠ることなく静かに過ごし、夜間は焦燥があり眠れていな い。 A さんの状態はどれか。",
+      "choices": [
+        "せん妄 delirium",
+        "睡眠時遊行症 sleepwalking",
+        "レム睡眠行動障害 REM sleep behavior disorder",
+        "睡眠時無呼吸症候群 sleep apnea syndrome"
+      ],
+      "answer": 0,
+      "officialAcceptedAnswers": [
+        0
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "1"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp230524-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第112回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 51,
+      "scenarioContextEvidence": {
+        "page": 50,
+        "commonText": "次の文を読み112〜114 の問いに答えよ。\nA さん（80 歳、女性）は発熱があり、呼吸状態が悪いため、外来を受診し肺炎と診\npneumonia\n断され緊急入院となった。\n入院時、病室でA さんは｢ここはどこ｣と話し混乱した様子であった。湿性の咳嗽\nがあり、口唇の乾燥が著明である。同居の夫からの情報では、1週前から食事は摂れ\nていたが、水分摂取量が減っていた。3日前から寝て過ごしていたが、トイレには自\n分で行くことができていた。身の回りのことは自立している。入院後に点滴静脈内注\n射1,500 mL/日の指示があり、抗菌薬が開始された。\n身体所見：身長152 cm、体重45 kg、体温38.0 ℃、呼吸数32/分、脈拍120/分、整、\n血圧107/80 mmHg、経皮的動脈血酸素飽和度èSpO2ê93 %（room air）。\nジャパン・コーマ・スケールèJCSêⅠ- 2。\n検査所見：赤血球447 万/μL、Hb 12.5 g/dL、白血球16,600/μL、総蛋白6.2 g/dL、\nアルブミン4.0 g/dL、血糖98 mg/dL、Na 151 mEq/L、K 4.0 mEq/L、\nCl 97 mEq/L、Ca 8.7 mg/dL、CRP 23.0 mg/dL。",
+        "normalizedLength": 499,
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+      "officialKeyPdfSha256": "c42b7b61fe9b7fd39265b0e4fef5f0a4d277db077618a98db16e9717047a9502",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 51,
+        "sourcePdfSha256": "137d583931c6ae6a7fa2f3f8655352bdce24735c6f0b2bbbb0b192e6a357d01e",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true
+      }
+    },
+    {
       "id": "K111-AM002",
       "sourceExam": 111,
       "session": "AM",
@@ -6069,6 +6138,75 @@
       }
     },
     {
+      "id": "K111-AM106",
+      "sourceExam": 111,
+      "session": "AM",
+      "questionNo": 106,
+      "question": "入院時のA さんと胎児の状態で正しいのはどれか。",
+      "choices": [
+        "過期産である。",
+        "高年妊婦である。",
+        "胎児心拍数基線は正常である。",
+        "低出生体重児となる可能性が高い。"
+      ],
+      "answer": 2,
+      "officialAcceptedAnswers": [
+        2
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "3"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 48,
+      "scenarioContextEvidence": {
+        "page": 48,
+        "commonText": "次の文を読み106〜108 の問いに答えよ。\nA さん（34 歳、初産婦）は順調な妊娠経過であった。妊娠40 週5日の午前\n時、10\n分毎の規則的な子宮収縮を主訴に来院し、医師の診察の結果、入院となった。入院時\nの胎児心拍数基線は130 bpm、胎児の推定体重は3,300 g であった。",
+        "normalizedLength": 133,
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 48,
+        "sourcePdfSha256": "e853d7a86ef06ef41e8622f550dcf9bb3ffa48af076e412394070f237827bfb3",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true
+      }
+    },
+    {
       "id": "K111-PM001",
       "sourceExam": 111,
       "session": "PM",
@@ -8297,6 +8435,75 @@
       "detail": null,
       "evidence": {
         "sourcePdfPage": 28,
+        "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+        "dualEngineAuditRun": "GitHub Actions 2026-11-24",
+        "verifier": "PyMuPDF + Poppler pdftotext -layout",
+        "originalPdfGlyphControlAbsent": true,
+        "officialKeyRetestedAgainstPdf": true
+      }
+    },
+    {
+      "id": "K111-PM106",
+      "sourceExam": 111,
+      "session": "PM",
+      "questionNo": 106,
+      "question": "帰室時に看護師がA さんに行う説明で適切なのはどれか。",
+      "choices": [
+        "｢排泄後は会陰部を消毒しましょう｣",
+        "｢会陰縫合部が痛くなったら温めましょう｣",
+        "｢ 時間おきにトイレに行って排尿しましょう｣",
+        "｢悪露に血の塊が混じったら看護師に知らせてください｣"
+      ],
+      "answer": 3,
+      "officialAcceptedAnswers": [
+        3
+      ],
+      "answerType": "singleChoice",
+      "sourceAnswerTokens": [
+        "4"
+      ],
+      "officialScoringStatus": "normal",
+      "scoringException": null,
+      "requiresMedia": false,
+      "mediaAuditStatus": "not_required",
+      "rightsStatus": "mhlw-pdl1.0-text",
+      "sourceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp220421-05seitou.pdf"
+      ],
+      "sourceAttribution": "出典：厚生労働省『第111回看護師国家試験』を学習用データとして加工",
+      "sourcePage": 44,
+      "scenarioContextEvidence": {
+        "page": 44,
+        "commonText": "次の文を読み106〜108 の問いに答えよ。\nA さん（32 歳、初産婦）は妊娠39 週4日に3,200 g の男児を経腟分娩で出産した。\n分娩時に会陰切開縫合術を受けた。児のApgarÖアプガーÙスコアは1分後\n点、5\n分後10 点であった。分娩時の出血量200 mL、分娩所要時間12 時間30 分であった。\n分娩室から病室に帰室する前に尿意を自覚したためトイレまで歩行し、排尿があっ\nた。",
+        "normalizedLength": 181,
+        "engines": [
+          "PyMuPDF",
+          "Poppler"
+        ],
+        "status": "DUAL_ENGINE_CONTEXT_MATCH"
+      },
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
+      "officialKeyPdfSha256": "b395c7eddb7820daaaf19ae44766889cf19b7b4f5e0d8f9411a8ba1787dfac85",
+      "reviewStatus": "DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING",
+      "canonicalStatus": "source_verified_extension",
+      "publishable": false,
+      "releaseEligible": false,
+      "audit": {
+        "questionDualEngineMatched": true,
+        "allChoicesDualEngineMatched": true,
+        "officialKeyMatched": true,
+        "sourceGlyphControlAbsent": true,
+        "mediaNotRequired": true,
+        "explanationIndependentlyReviewed": false,
+        "runtimeIntegrationChecked": false
+      },
+      "category": "一般",
+      "majorSubject": null,
+      "point": null,
+      "detail": null,
+      "evidence": {
+        "sourcePdfPage": 44,
         "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090",
         "dualEngineAuditRun": "GitHub Actions 2026-11-24",
         "verifier": "PyMuPDF + Poppler pdftotext -layout",
