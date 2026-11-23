@@ -26,6 +26,9 @@ def pdftotext(pdf,page):
     r=subprocess.run(["pdftotext","-f",str(page),"-l",str(page),"-layout","-nopgbrk","-enc","UTF-8",str(pdf),"-"],capture_output=True,text=True)
     if r.returncode:raise RuntimeError(f"Poppler failed {pdf.name} page {page}: {r.stderr[-350:]}")
     return r.stdout
+sys.path.insert(0,str(ROOT/'scripts'))
+from official_answer_key_audit import parse as read_official_key
+keys={e:read_official_key(e) for e in (111,112)}
 all_rows=[];approved=[];by_session={}
 for exam in (112,111):
   for session in ("AM","PM"):
@@ -45,6 +48,9 @@ for exam in (112,111):
         if len(q.get("choices") or [])!=4:failures.append("CHOICE_COUNT_NOT_FOUR")
         if not isinstance(q.get("answer"),int) or q["answer"] not in range(4) or str(q["answer"]+1)!=(q.get("officialKeyRaw") or "").strip():failures.append("OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX")
         if q.get("answerKeyVerification")!="MATCH_SINGLE_DIGIT_KEY_NOT_VERBATIM_CERTIFIED":failures.append("OFFICIAL_ANSWER_NOT_SINGLE")
+        official=keys[exam][0].get(qid)
+        if not official or official.get("status")!="KEY_SINGLE" or official.get("rawValue")!=str((q.get("answer") if isinstance(q.get("answer"),int) else -10)+1):failures.append("INDEPENDENT_OFFICIAL_KEY_MISMATCH")
+        if q.get("officialKeyPdfSha256")!=keys[exam][1]:failures.append("OFFICIAL_KEY_SOURCE_SHA_DRIFT")
         stem=q.get("question") or ""
         choices=q.get("choices") or []
         if len(norm(stem))<18:failures.append("TOO_SHORT_FOR_UNIQUE_STEM")
