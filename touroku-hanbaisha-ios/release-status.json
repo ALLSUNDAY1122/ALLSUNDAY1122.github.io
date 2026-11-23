@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-23T23:00:00+09:00",
+  "updated_at": "2026-11-23T23:12:00+09:00",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -45,18 +45,25 @@
     "official_invalid_question_count": 1,
     "official_question_text_imported": 0,
     "answer_index_readback_pass": true,
-    "official_question_pdf_binaries_downloaded": 0,
-    "sha256_verified": 0,
-    "official_question_text_staged": 1,
-    "official_question_text_staged_ids": [
-      "KSAI-2023-090"
-    ]
+    "official_question_pdf_binaries_downloaded": 2,
+    "sha256_verified": 2,
+    "official_question_text_staged": 120,
+    "official_question_text_staged_ids": "KSAI-2026-001..KSAI-2026-120",
+    "official_2026_raw_staging": 120,
+    "official_2026_app_candidate": 120,
+    "official_2026_five_choices_parsed": 120,
+    "official_2026_choice_parse_methods": {
+      "rows": 97,
+      "inline": 23
+    },
+    "official_2026_independently_visual_verified": 0,
+    "official_2026_app_release_enabled": false
   },
   "gates": {
     "notion_v28_full_read": "PENDING",
     "notion_submission_steps_full_read": "PENDING",
-    "official_source_import": "BLOCKED_0_OF_600_VERBATIM",
-    "verbatim_and_answer_audit": "BLOCKED_0_OF_600_VERBATIM",
+    "official_source_import": "BLOCKED_0_OF_600_RELEASE_READY_120_STAGED",
+    "verbatim_and_answer_audit": "BLOCKED_0_OF_600_VISUAL",
     "mobile_ui": "PENDING",
     "ios_build": "PENDING",
     "internal_testflight": "PENDING",
@@ -68,7 +75,12 @@
     "official_pdf_url_manifest": "PASS_15_URLS",
     "official_answer_index": "PASS_600_ENTRIES_INITIAL_TRANSCRIPTION",
     "official_answer_independent_double_check": "PENDING",
-    "invalid_2023_q90": "PASS"
+    "invalid_2023_q90": "PASS",
+    "official_2026_pdf_binary": "PASS_2_DOWNLOADED_SHA256",
+    "official_2026_answer_index": "PASS_120_INDEX_MAPPED",
+    "official_2026_raw_extraction": "PASS_120_STAGING",
+    "official_2026_app_candidate": "PASS_120_FIVE_CHOICE_STRUCTURAL_REVIEW_ONLY",
+    "official_2026_verbatim_visual_audit": "BLOCKED_0_OF_120"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
@@ -78,6 +90,12 @@
     "touroku-hanbaisha-sprint/official-kansai/ANSWERS_2025_OFFICIAL.json",
     "touroku-hanbaisha-sprint/official-kansai/ANSWERS_2026_OFFICIAL.json",
     "touroku-hanbaisha-sprint/official-kansai/LICENSE_AND_AUDIT_20261123.md",
-    "touroku-hanbaisha-sprint/official-kansai/QUESTION_2023_Q090_INVALID.json"
+    "touroku-hanbaisha-sprint/official-kansai/QUESTION_2023_Q090_INVALID.json",
+    "touroku-hanbaisha-sprint/official-kansai/extract_2026.py",
+    "touroku-hanbaisha-sprint/official-kansai/build_2026_app_candidate.py",
+    ".github/workflows/touhan-2026-extract.yml",
+    "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_RAW_STAGING.json",
+    "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_APP_CANDIDATE.json",
+    "touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2026.json"
   ]
 }
