@@ -1,4 +1,4 @@
-name: Kangoshi Fixed Independent Poppler Geometric Reextraction
+name: Kangoshi Situation Context and C0 Recovery Audit
 on:
   workflow_dispatch:
   push:
@@ -32,6 +32,8 @@ jobs:
               git show "FETCH_HEAD:kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json" > "kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json"
             done
           done
+      - name: Overlay 22 independently confirmed quarantined text corrections
+        run: python kangoshi-sprint/scripts/overlay_reextracted_pending.py
       - name: Diagnose PDF-number coordinates on source originals
         run: python kangoshi-sprint/scripts/debug_pdf_coordinates.py
       - name: Reextract original coordinate question regions by both independent PDF engines
