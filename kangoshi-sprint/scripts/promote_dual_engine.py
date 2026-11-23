@@ -27,7 +27,8 @@ for q in fresh:
     if not r or r["status"]!="PASS_DUAL_ENGINE_AND_OFFICIAL_KEY" or r["reasons"]:raise ValueError("unproven: "+id)
     if q.get("publishable") is not False or q.get("releaseEligible") is not False:raise ValueError("ungated: "+id)
     if not (len(q.get("choices") or [])==4 and isinstance(q.get("answer"),int) and q["answer"] in range(4)):raise ValueError("bad content: "+id)
-    q["category"]="必修" if q["questionNo"]<=25 else "一般"
+    q["category"]="必修" if q["questionNo"]<=25 else ("状況設定" if q["questionNo"]>=91 else "一般")
+    if q["questionNo"]>=91 and (r.get("scenarioContext") or {}).get("status")!="DUAL_ENGINE_CONTEXT_MATCH":raise ValueError("situation context evidence missing: "+id)
     q["majorSubject"]=None
     q["point"]=None
     q["detail"]=None
@@ -36,7 +37,8 @@ for q in fresh:
     q["reviewStatus"]="DUAL_ENGINE_SOURCE_AND_OFFICIAL_KEY_VERIFIED_EXPLANATION_PENDING"
     q["evidence"]={"sourcePdfPage":r["sourcePdfPage"],"sourcePdfSha256":r["sourcePdfSha256"],
         "dualEngineAuditRun":"GitHub Actions 2026-11-24","verifier":"PyMuPDF + Poppler pdftotext -layout",
-        "originalPdfGlyphControlAbsent":True,"officialKeyRetestedAgainstPdf":True}
+        "originalPdfGlyphControlAbsent":True,"officialKeyRetestedAgainstPdf":True,
+        "coordinateBoundaryEvidence":r.get("coordinateBoundaryEvidence"),"scenarioContextEvidence":r.get("scenarioContext")}
     new.append(q);seen.add(id)
 if len(new)<1:print("NO_NEW_PASS; preserving existing canonical verified records")
 OLD["questions"]+=new
