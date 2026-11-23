@@ -27,12 +27,12 @@
   "answer_number_matches_official": true,
   "summary": {
     "total": 60,
-    "pass": 58,
+    "pass": 59,
     "fail": 1,
-    "hold": 1,
+    "hold": 0,
     "critical_confirmed": 1,
-    "high_confirmed": 1,
-    "canonical_content_eligible": 58,
+    "high_confirmed": 0,
+    "canonical_content_eligible": 59,
     "release_approval": false
   },
   "critical_high_issues": [
@@ -44,15 +44,6 @@
         "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/kyoshutsu/2025kaisei.html",
         "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9640&dataType=1&pageNo=1",
         "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1135.htm"
-      ]
-    },
-    {
-      "id": "fp2-2024-05-gakka-053",
-      "severity": "High",
-      "details": "親族関係図の接続線が制作JSONにないため原図の忠実再現性なし",
-      "evidence": [
-        "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
-        "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
       ]
     }
   ],
@@ -97,14 +88,17 @@
       "official_answer": 2
     },
     "Q53": {
-      "status": "HOLD",
-      "diagram_reproducible": false,
+      "status": "PASS",
+      "diagram_reproducible": true,
       "source_image_verified": true,
       "official_answer": 3,
-      "conclusion": "親族関係図の線を制作JSONが保持しないため再現不能。原PDFは視認可能であり正式問題への登録は図の忠実再現後に限る。"
+      "answer_2026": 3,
+      "conclusion": "GitHubの公式PDF切り出しPNGを取得・表示し、家系図の接続線を確認。配偶者C、子E・F・Gと代襲孫Iの5名のみが法定相続人。HOLDを解除。",
+      "asset_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202405-q53-family-diagram.png",
+      "asset_sha": "98911a09460d990d65c60e45494e80a3f0c578eb"
     }
   },
-  "limitations": "60問の選択肢別の法令・制度に関する判定理由を保存。公式問題PDFと公式解答PDFを参照し、Q08/Q26/Q29/Q53は公式PDFページ画像で直接確認。残り56問のすべての原題PDFと制作JSONの逐文字比較、個々の参照URLの2026-04-01時点の完全版固定・ハッシュ化は未完了。原題の転載利用権限は別ゲート。このため内容監査上PASS58を認定するが、完全な逐文字・法令証拠固定・公開承認の完了と同義ではない。",
+  "limitations": "60問の選択肢別の法令・制度に関する判定理由を保存。公式問題PDFと公式解答PDFを参照し、Q08/Q26/Q29は公式PDFページ画像で直接確認し、Q53はGitHubで保存された公式PDF切り出しPNGを表示して確認。残り56問のすべての原題PDFと制作JSONの逐文字比較、個々の参照URLの2026-04-01時点の完全版固定・ハッシュ化は未完了。原題の転載利用権限は別ゲート。このため内容監査上PASS58を認定するが、完全な逐文字・法令証拠固定・公開承認の完了と同義ではない。",
   "items": [
     {
       "id": "fp2-2024-05-gakka-001",
@@ -3199,66 +3193,108 @@
       "official_answer_one_based": 3,
       "source_answer_one_based": 3,
       "answer_matches_2024_official_pdf": true,
-      "answer_valid_as_of_2026_04_01": null,
-      "answer_on_2026_04_01": null,
-      "status": "HOLD",
-      "severity": "High",
+      "answer_valid_as_of_2026_04_01": true,
+      "answer_on_2026_04_01": 3,
+      "status": "PASS",
+      "severity": null,
       "choice_verification": [
         {
           "index_one_based": 1,
           "text": "妻Ｃさん、子Ｆさん、子Ｇさんの計３名",
-          "assessment": "EXHIBIT_MISSING_CANNOT_VERIFY",
-          "reason": "原図の妻C・前妻B・子D,E,F,G・孫Iおよび夫Hの接続線がJSONでは復元されず、3人との判定はできない",
+          "assessment": "REJECTED",
+          "reason": "子Eおよび子Dの代襲相続人である孫Iを除外しており、法定相続人は3名ではない",
           "evidence_urls": [
-            "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
-            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
-          ]
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm",
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401",
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf"
+          ],
+          "figure_asset_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202405-q53-family-diagram.png"
         },
         {
           "index_one_based": 2,
           "text": "妻Ｃさん、子Ｅさん、子Ｆさん、子Ｇさんの計４名",
-          "assessment": "EXHIBIT_MISSING_CANNOT_VERIFY",
-          "reason": "親族線が欠け、4人との判定はできない",
+          "assessment": "REJECTED",
+          "reason": "先死亡の子Dの直系卑属である孫Iが民法887条2項の代襲相続人となるため4名ではない",
           "evidence_urls": [
-            "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
-            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
-          ]
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm",
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401",
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf"
+          ],
+          "figure_asset_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202405-q53-family-diagram.png"
         },
         {
           "index_one_based": 3,
           "text": "妻Ｃさん、子Ｅさん、子Ｆさん、子Ｇさん、孫Ｉさんの計５名",
-          "assessment": "EXHIBIT_MISSING_CANNOT_VERIFY",
-          "reason": "公式PDF原図では妻C、子E,F,G、孫Iの計5人が正答。しかし制作JSONでは関係線欠落で検証不可能",
+          "assessment": "SUPPORTED_UNIQUE",
+          "reason": "民法887条1・2項、890条。現妻C、子E・F・G、死亡した子Dを代襲する孫Iの計5名が法定相続人",
           "evidence_urls": [
-            "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
-            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
-          ]
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm",
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401",
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf"
+          ],
+          "figure_asset_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202405-q53-family-diagram.png"
         },
         {
           "index_one_based": 4,
           "text": "妻Ｃさん、子Ｅさん、子Ｆさん、子Ｇさん、子Ｄさんの夫Ｈさん、孫Ｉさんの計６名",
-          "assessment": "EXHIBIT_MISSING_CANNOT_VERIFY",
-          "reason": "夫Hが代襲相続人であるとは通常いえないが、JSONが親族図を忠実に示していない",
+          "assessment": "REJECTED",
+          "reason": "子Dの夫Hは被相続人Aの血族・配偶者でなく代襲相続人にもならないため6名ではない",
           "evidence_urls": [
-            "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
-            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
-          ]
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm",
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401",
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf"
+          ],
+          "figure_asset_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202405-q53-family-diagram.png"
         }
       ],
-      "explanation_quality": "UNVERIFIABLE_DIAGRAM",
+      "explanation_quality": "PASS_VERIFIED_FAMILY_DIAGRAM_AND_CIVIL_CODE",
       "original_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
       "official_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_a.pdf",
       "legal_target_date": "2026-04-01",
       "source_path": "fp2-manabi-sprint/questions/verbatim/fp2-official-202405-b03-verbatim.json",
-      "source_blob_sha": "27a08d04670a75f133076df5a86ee97dcf149e86",
-      "canonical_content_candidate": false,
-      "exhibit_status": "UNREPRODUCIBLE_FAMILY_RELATION_DIAGRAM",
-      "issue": {
-        "severity": "High",
-        "type": "UNREPRODUCIBLE_FAMILY_DIAGRAM",
-        "detail": "公式PDFには家系関係を示す接続線があるがJSONでは欠落。テキストから人物関係を復元できず正答3を独立確証できない。",
-        "source": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf#page=22",
-        "action": "原図を忠実再現したアクセシブルな図表を制作し、視覚比較と再監査。推測再作図は禁止。"
+      "source_blob_sha": "68c5d9237cfbee278a8905570dd133a7de7e7eec",
+      "canonical_content_candidate": true,
+      "exhibit_status": "OFFICIAL_PDF_FAMILY_DIAGRAM_ASSET_LINKED",
+      "issue": null,
+      "reaudit": {
+        "date": "2026-11-23",
+        "source_branch": "feature/fp2-academic-300-expansion-20261123",
+        "source_commit_reported": "1e1c6c3a",
+        "source_file_sha": "68c5d9237cfbee278a8905570dd133a7de7e7eec",
+        "asset_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202405-q53-family-diagram.png",
+        "asset_github_blob_sha": "98911a09460d990d65c60e45494e80a3f0c578eb",
+        "asset_format": "PNG",
+        "asset_pixel_dimensions": {
+          "width": 1363,
+          "height": 444
+        },
+        "binary_committed": true,
+        "figure_hold_resolved": true,
+        "png_github_base64_fetched": true,
+        "png_rendered_and_connecting_lines_visually_verified": true,
+        "sha256_user_recorded": "fdb9f28062464ce5c8d1bae0467038f7e471f2bcc3c69baf39ff5c123fb531f0",
+        "sha256_independently_recomputed": false,
+        "figure_relationships": "Aの前妻Bとの子D（先死亡）と子E、Aの現妻Cとの子F・G、Dと夫Hの子I。Dに代わりIが代襲。",
+        "legal_evidence": [
+          "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401",
+          "https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4132.htm"
+        ],
+        "old": {
+          "status": "HOLD",
+          "severity": "High",
+          "exhibit_status": "UNREPRODUCIBLE_FAMILY_RELATION_DIAGRAM",
+          "issue": {
+            "severity": "High",
+            "type": "UNREPRODUCIBLE_FAMILY_DIAGRAM",
+            "detail": "公式PDFには家系関係を示す接続線があるがJSONでは欠落。テキストから人物関係を復元できず正答3を独立確証できない。",
+            "source": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf#page=22",
+            "action": "原図を忠実再現したアクセシブルな図表を制作し、視覚比較と再監査。推測再作図は禁止。"
+          },
+          "explanation_quality": "UNVERIFIABLE_DIAGRAM",
+          "source_blob_sha": "27a08d04670a75f133076df5a86ee97dcf149e86"
+        },
+        "decision": "HOLD_TO_PASS",
+        "publication_rights_gate": "NOT_EVALUATED"
       }
     },
     {
@@ -3673,6 +3709,17 @@
       "canonical_content_candidate": true,
       "exhibit_status": "NOT_FLAGGED",
       "issue": null
+    }
+  ],
+  "reaudit_history": [
+    {
+      "date": "2026-11-23",
+      "question_id": "fp2-2024-05-gakka-053",
+      "from": "HOLD",
+      "to": "PASS",
+      "reason": "Source figure PNG checked for family connections and Civil Code 887/890 heirship; legacy High closed",
+      "source_asset_blob_sha": "98911a09460d990d65c60e45494e80a3f0c578eb",
+      "source_verbatim_blob_sha": "68c5d9237cfbee278a8905570dd133a7de7e7eec"
     }
   ]
 }
