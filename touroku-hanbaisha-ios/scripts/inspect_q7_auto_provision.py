@@ -42,3 +42,5 @@ def main():
     OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print(json.dumps({"gate":gate,"status":state,"message":result["message"],"steps":steps[-8:],"artifacts":arts_list[-5:]},ensure_ascii=False))
 if __name__=="__main__":main()
+
+# Second read-only evidence sample for build 6b04cf7092306a39e3981ca4.
