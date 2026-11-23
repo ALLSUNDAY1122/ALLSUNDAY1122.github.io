@@ -1,0 +1,46 @@
+{
+  "reviewed_at": "2026-11-23",
+  "method": "Official question PDF page screenshot versus candidate verbatim text and 5 option table; official answer sheet page screenshot versus answer index",
+  "sourceQuestion": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanmondaimae.pdf#page=2",
+  "sourceAnswer": "https://www.kouiki-kansai.jp/material/files/group/12/R4touhanseitou.pdf#page=1",
+  "reviewedQuestions": [
+    {
+      "id": "KSAI-2022-001",
+      "status": "PASS",
+      "pdf_page": 2,
+      "answer": 2,
+      "evidence": "original stem, four assertions, five option rows, and correct answer 2 visually reviewed"
+    },
+    {
+      "id": "KSAI-2022-002",
+      "status": "PASS",
+      "pdf_page": 2,
+      "answer": 2,
+      "evidence": "original stem, four assertions, five option rows, and correct answer 2 visually reviewed"
+    },
+    {
+      "id": "KSAI-2022-003",
+      "status": "HOLD",
+      "pdf_page": 3,
+      "answer": 3,
+      "evidence": "PDF ruby around 罹患 appears as detached り in extracted text; position/formatted text not yet fidelity-checked"
+    },
+    {
+      "id": "KSAI-2022-004",
+      "status": "PASS",
+      "pdf_page": 3,
+      "answer": 3,
+      "evidence": "original stem, four assertions, five option rows, and correct answer 3 visually reviewed"
+    }
+  ],
+  "allOtherQuestions": "PENDING_NOT_REVIEWED",
+  "publishRule": "PASS only; question candidate must have five-or-four choices and correct source answer, no HOLD; never auto-pass remaining questions",
+  "releasePolicy": "No App Review until full 600/600 verified and tested",
+  "scoringException": {
+    "id": "KSAI-2023-090",
+    "officialStatus": "OFFICIALLY_INVALID_ALL_CANDIDATES_CORRECT",
+    "answer": null,
+    "excludeFromAccuracyDenominator": true,
+    "reviewedInThisAudit": false
+  }
+}
