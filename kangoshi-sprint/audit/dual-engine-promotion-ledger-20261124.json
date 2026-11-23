@@ -1,9 +1,12 @@
 {
   "schemaVersion": 1,
-  "newPromoted": 0,
-  "newIds": [],
+  "newPromoted": 2,
+  "newIds": [
+    "K111-PM012",
+    "K111-PM016"
+  ],
   "oldVerified": 168,
-  "canonicalVerified": 168,
+  "canonicalVerified": 170,
   "runtimeAdditional": 0,
   "officialKeyPdfRechecked": true,
   "pdfEngines": [
@@ -12,5 +15,72 @@
   ],
   "sourceAuditArtifact": "Workflow dual-engine-480 evidence",
   "releaseBlocked": true,
-  "eachItem": []
+  "eachItem": [
+    {
+      "id": "K111-PM012",
+      "exam": 111,
+      "session": "PM",
+      "number": 12,
+      "status": "PASS_DUAL_ENGINE_AND_OFFICIAL_KEY",
+      "reasons": [],
+      "sourcePdfPage": 9,
+      "pageHasRaster": false,
+      "officialKeyRaw": "3",
+      "answer": 2,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 9,
+        "correctedPage": 9,
+        "anchorBox": [
+          76.08,
+          657.28,
+          88.13,
+          669.33
+        ],
+        "clip": [
+          0.0,
+          654.28,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 9,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "scenarioContext": null,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090"
+    },
+    {
+      "id": "K111-PM016",
+      "exam": 111,
+      "session": "PM",
+      "number": 16,
+      "status": "PASS_DUAL_ENGINE_AND_OFFICIAL_KEY",
+      "reasons": [],
+      "sourcePdfPage": 10,
+      "pageHasRaster": false,
+      "officialKeyRaw": "4",
+      "answer": 3,
+      "coordinateBoundaryEvidence": {
+        "previousPage": 10,
+        "correctedPage": 10,
+        "anchorBox": [
+          76.08,
+          585.0,
+          88.13,
+          597.05
+        ],
+        "clip": [
+          0.0,
+          582.0,
+          609.95,
+          822.01
+        ],
+        "nextAnchorFound": false,
+        "verifiedPage": 10,
+        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
+      },
+      "scenarioContext": null,
+      "sourcePdfSha256": "fd5074d12571f2dd6b99f658590c62282d64cf36f286ab9223fe6ab7b29d0090"
+    }
+  ]
 }
