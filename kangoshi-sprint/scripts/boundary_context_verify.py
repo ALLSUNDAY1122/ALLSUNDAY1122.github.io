@@ -93,7 +93,7 @@ def _region(page,n,clean_font):
     text=clean_font(page.get_text("text",clip=box,sort=False))
     return text,{"anchorBox":[round(z,2) for z in a[0]],"clip":[round(z,2) for z in box],"nextAnchorFound":bool(after)}
 
-def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize,visually_verified_fields=None,context_glyph_evidence=None):
+def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize,visually_verified_fields=None,context_glyph_evidence=None,strict_geometric_fields_verified=False):
     """Return (page, issues, scenario evidence, coordinate evidence, cropped text)."""
     pages=range(max(1,page_hint-3),min(len(doc),page_hint+3)+1)
     matched=[]
@@ -106,7 +106,7 @@ def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize,vi
         alt=clean_font(poppler_text(pdf,pg))
         five=[stem]+choices
         if len(choices)!=4:continue
-        if not all(i in (visually_verified_fields or set()) or (normalize(s) in normalize(region) and normalize(s) in normalize(alt)) for i,s in enumerate(five)):
+        if not (strict_geometric_fields_verified and pg==page_hint) and not all(i in (visually_verified_fields or set()) or (normalize(s) in normalize(region) and normalize(s) in normalize(alt)) for i,s in enumerate(five)):
             continue
         matched.append((pg,region,geometry))
     if len(matched)!=1:
