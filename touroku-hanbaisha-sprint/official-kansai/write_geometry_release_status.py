@@ -28,7 +28,7 @@ for year in range(2022,2027):
         "geometryUnresolved":geometry["remainingHold"],
         "rubySourceAnchorAssociated":sum(q.get("ruby",{}).get("status")=="ASSOCIATED_SOURCE_ONLY" for q in geometry["questions"] if q.get("ruby")),
         "rubySourceInconclusive":sum(q.get("ruby",{}).get("status")=="INCONCLUSIVE" for q in geometry["questions"] if q.get("ruby")),
-        "promotedTotal":mapped["auto"]+mapped["geometry"]+mapped.get("ruby",0)+mapped.get("layout",0)+mapped["visual"],
+        "promotedTotal":mapped["auto"]+mapped["geometry"]+mapped.get("ruby",0)+mapped.get("rubyOrdered",0)+mapped.get("layout",0)+mapped["visual"],
         "promotedByGeometry":mapped["geometry"],
         "promotedByRuby":mapped.get("ruby",0),
         "promotedByLayout":mapped.get("layout",0),
