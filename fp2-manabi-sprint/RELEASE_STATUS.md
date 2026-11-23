@@ -9,7 +9,7 @@ Canonical procedures: see RELEASE_SCOPE_20261124.md.
 | Quality gate | Status | Blocker |
 |---|---|---|
 | Q0 | BLOCKED | Official JAFP + Kinzai reuse rules verified CONDITIONAL_PASS; per-item citation, modification disclosure, historical/current law audit and independent signoff remain. See audits/FP2_Q0_OFFICIAL_PAST_EXAM_RIGHTS_20261123.md |
-| Q1 | BLOCKED | Draft batch A: mechanical 12 PASS / 0 FAIL, independent review 0 PASS / 0 FAIL / 12 HOLD; canonical integration not done |
+| Q1 | BLOCKED | Draft A mechanical 12 PASS / 0 FAIL / independent 12 HOLD. Official batch B01 (2024-05 Q1,Q2,Q6) mechanical 3 PASS / 0 FAIL / independent 3 HOLD. Canonical integration not done |
 | Q2 | NOT TESTED | Real learning cycle not tested |
 | Q3 | FAIL | GitHub HTML source retains v1.3 marker, 8-question sample and 600-question placeholder; lacks v2.1 identity, 4/8/16 setting, 5-week heatmap and JSON import evidence. Real-device inspection remains NOT TESTED. |
 | Q4 | NOT TESTED | Independent reviewer and learner acceptance evidence missing |
@@ -30,3 +30,8 @@ Direct inspection of the current branch's `fp2-manabi-sprint/index.html` confirm
 
 ## 2026-11-23 Q0 rights-policy update
 Both official entities affirm conditional reuse of publicly released common 2nd-grade academic exam questions, with source attribution, modification disclosure, and exclusions. Remaining batches should prioritize authorized official past questions. Third-party FP2過去問道場 content, explanations, wording and datasets must not be copied. This policy verification does NOT approve any specific new question; current Q0 remains BLOCKED. Source: `audits/FP2_Q0_OFFICIAL_PAST_EXAM_RIGHTS_20261123.md`.
+
+## 2026-11-23 second batch update
+- Original draft A 12 records: L02 now cites Japan Pension Service's direct `合算対象期間` explanation; all 12 `source_section` descriptions made specific, including correction of E01's previously inapposite source.
+- First official past-exam draft B01 3 records, sourced to JAFP 2024-05-26 second-grade academic examination Q1,Q2,Q6 with original law cutoff 2023-10-01 and target 2026-04-01; question-level source, modification notices and original explanations included.
+- New records are only in `questions/draft/fp2-official-202405-b01.json`; audit `audits/FP2_OFFICIAL_BATCH_B01_AUDIT_20261123.md`. No UI integration, no independent review, no release approval. Q0 and Q1 remain BLOCKED.
