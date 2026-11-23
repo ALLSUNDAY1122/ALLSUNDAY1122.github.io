@@ -1,5 +1,18 @@
 # FP2 RELEASE STATUS（正本・2026-11-23・Q20第2次独立PASS反映）
 
+## 2026-11-23｜300問版・実測CI読戻し（前段の未実測記載を更新）
+
+- **PASS** [FP2正規バンク/静的Webソース CI](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45169448751)：ログでcanonical312、選定300、予備12、6分野×50、Git Blobピン及びソース整合、status=PASSを確認。
+- **PASS** [Chromium学習・オフラインE2Eと7監査バッチ照合](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45169448906)：実行ログに `batch_records=[20,20,20,20,20,17]` ＋再監査既存3、拡充PASS120/FAIL0/HOLD0、canonical312/selected300、原典5回×60、6分野×50、120問限定旧条件撤廃、埋込Web payload300とSHAの一致を記録。Chromium実画面操作はbank300/chapters6/sourceMetadata300、4問解答ループ・未着手優先・35日記録・JSONバックアップ往復・Service Workerオフライン再読み込み、pageErrors0、全PASS。
+- **PASS** 同コミット [Golden Master v2.1静的移行ゲート](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45169448763) および [Release Registry静的監査](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45169448834)。
+- **未確認** [iOS Simulator xcodebuildとコンパイル済みバンドル同一性](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45169448845) は確認時queued。生成スクリプトの300問選定データとSHA/HTML埋込の比較は**Linux上でPASS**したが、macOS Simulatorからの成果物readbackはまだPASSとしない。
+- 上記PASSは統合後の300問内容・Web実行のCI結果だが、実iPhone、署名IPA、Apple側AppIcon/ASC、Q0権利承認やQ4独立利用者受入には流用しない。**直近の表示ログ修正（E2Eの300問表記）のコミットでは別のCIが起動し得るため、常にコミットSHAとrun IDを対応付ける。**
+
+**最新ゲート区分：** Q0=BLOCKED、Q1=CONTENT_AUDIT_PASS_300/300 + STATIC_INTEGRATION_PASS／PUBLICATION_BLOCKED、Q2=CHROMIUM_E2E_PASS／REAL_DEVICE_PENDING、Q3=WEB_OFFLINE_E2E_PASS／GOLDEN_MASTER_DEVICE_PENDING、Q4=NOT_TESTED、Q5=SIMULATOR_QUEUED／SIGNED_IPA_ASC_BLOCKED。全体 `NOT_SUBMISSION_READY`。
+
+---
+
+
 ## 2026-11-23｜学科5回分300問の統合完了（最優先・旧120問履歴の上書きではない）
 
 **最新版の実データ：canonical 312件、学科5回分の選定300件（5回分×60、6分野×50）、独自作成の内容監査PASS予備12件。** 現在までの監査は既存180問PASS180/FAIL0/HOLD0＋拡充120問PASS120/FAIL0/HOLD0＝**学科300/300内容監査PASS**。2024-05のQ01/Q02/Q06は既存正規3件を再監査して重複登録せず、新規のユニーク統合は117件。修正済2024-09 Q29は独立再監査PASS。全312件 `publishable=false`、公開承認0件。
