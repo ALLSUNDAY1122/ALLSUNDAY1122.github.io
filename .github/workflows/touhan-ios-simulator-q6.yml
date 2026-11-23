@@ -1,0 +1,116 @@
+name: Touhan Q6 iOS Simulator Build and Launch
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-ios-simulator-q6.yml'
+      - 'touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift'
+      - 'touroku-hanbaisha-ios/native-ios/project.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-ios-sim-q6
+  cancel-in-progress: false
+jobs:
+  simulator:
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Xcode/Simulator environment and XcodeGen
+        id: environment
+        run: |
+          set -euxo pipefail
+          xcodebuild -version
+          xcrun simctl list devices available
+          brew install xcodegen
+          xcodegen --version
+          python3 -m venv "$RUNNER_TEMP/touhan-python"
+          source "$RUNNER_TEMP/touhan-python/bin/activate"
+          python -m pip install 'cairosvg==2.8.2'
+          bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
+          mkdir -p touroku-hanbaisha-ios/ci-evidence
+      - name: Generate Xcode project and build for iOS Simulator
+        id: build
+        run: |
+          set -euxo pipefail
+          cd touroku-hanbaisha-ios/native-ios
+          xcodegen generate --spec project.yml
+          xcodebuild -project TouhanSprint.xcodeproj -scheme TouhanSprint -configuration Debug -sdk iphonesimulator -derivedDataPath "$RUNNER_TEMP/touhan-derived" CODE_SIGNING_ALLOWED=NO build >"$RUNNER_TEMP/touhan-xcodebuild.log" 2>&1 || { tail -160 "$RUNNER_TEMP/touhan-xcodebuild.log"; exit 1; }
+          grep 'BUILD SUCCEEDED' "$RUNNER_TEMP/touhan-xcodebuild.log"
+          APP="$RUNNER_TEMP/touhan-derived/Build/Products/Debug-iphonesimulator/TouhanSprint.app"
+          test -d "$APP"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist" | grep -Fx 'com.allsunday1122.tourokuhanbaisha'
+          echo "app_path=$APP" >> "$GITHUB_OUTPUT"
+      - name: Boot simulator, install app, launch and capture
+        id: launch
+        run: |
+          set -euxo pipefail
+          DEVICE=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; a=[x for v in d.values() for x in v if x["isAvailable"] and "iPhone" in x["name"]]; print(a[0]["udid"] if a else "")')
+          test -n "$DEVICE"
+          xcrun simctl boot "$DEVICE"
+          xcrun simctl bootstatus "$DEVICE" -b
+          xcrun simctl install "$DEVICE" "${{ steps.build.outputs.app_path }}"
+          xcrun simctl launch "$DEVICE" com.allsunday1122.tourokuhanbaisha | tee "$RUNNER_TEMP/touhan-launch.txt"
+          grep 'com.allsunday1122.tourokuhanbaisha:' "$RUNNER_TEMP/touhan-launch.txt"
+          sleep 12
+          xcrun simctl io "$DEVICE" screenshot touroku-hanbaisha-ios/ci-evidence/simulator-launch.png
+          test -s touroku-hanbaisha-ios/ci-evidence/simulator-launch.png
+          xcrun simctl spawn "$DEVICE" launchctl list | grep -F 'com.allsunday1122.tourokuhanbaisha' > "$RUNNER_TEMP/touhan-launchctl.txt"
+          xcrun simctl spawn "$DEVICE" log show --last 2m --style compact --predicate 'process == "TouhanSprint"' > "$RUNNER_TEMP/touhan-simulator.log" || true
+          echo "device=$DEVICE" >> "$GITHUB_OUTPUT"
+      - name: Persist objective Q6 evidence and status
+        if: always()
+        env:
+          BUILD_RESULT: ${{ steps.build.outcome }}
+          LAUNCH_RESULT: ${{ steps.launch.outcome }}
+          ENV_RESULT: ${{ steps.environment.outcome }}
+          DEVICE: ${{ steps.launch.outputs.device }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_SHA: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          import json,os,datetime
+          from pathlib import Path
+          p=Path('touroku-hanbaisha-ios')
+          success=all(os.environ.get(k)=='success' for k in ('ENV_RESULT','BUILD_RESULT','LAUNCH_RESULT'))
+          result={'schema':'touhan-q6-ios-simulator-v1','timestampJST':datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).isoformat(),'status':'PASS' if success else 'FAIL',
+          'environment':os.environ.get('ENV_RESULT'),'build':os.environ.get('BUILD_RESULT'),'installAndLaunch':os.environ.get('LAUNCH_RESULT'),
+          'simulatorUDID':os.environ.get('DEVICE') or None,'githubRunId':os.environ.get('RUN_ID'),'headSHA':os.environ.get('RUN_SHA'),
+          'checks':{'xcodebuild':'PASS' if os.environ.get('BUILD_RESULT')=='success' else 'FAIL','simctlInstallLaunchScreenshotAndProcess':'PASS' if os.environ.get('LAUNCH_RESULT')=='success' else 'FAIL'},
+          'limits':['No physical iPhone test','No TestFlight installation','Screenshot captured but not independently visually certified','No signing or App Store submission']}
+          (p/'IOS_SIMULATOR_Q6_20261124.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          f=p/'release-status.json';s=json.loads(f.read_text())
+          s['q6_ios_simulator_20261124']=result
+          s['gates']['native_simulator']=result['status']
+          s['gates']['ios_build']=result['status']
+          s['release_gate']='BLOCKED';s['app_review_submitted']=False
+          if 'ai_preflight_acceptance_20261124' in s:
+              a=s['ai_preflight_acceptance_20261124']
+              a['q6_later_evidence']='touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261124.json'
+              a['q6_later_result']=result['status']
+          f.write_text(json.dumps(s,ensure_ascii=False,indent=2)+'\n')
+          m=p/'RELEASE_STATUS.md'
+          m.write_text(m.read_text()+f"\n\n## Q6 iOS Simulator 実測（2026-11-24）\n- 判定 **{result['status']}**: Xcode環境 {result['environment']}、build {result['build']}、simctl install/launch/screenshot {result['installAndLaunch']}。\n- Run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/{result['githubRunId']} / 詳細 `IOS_SIMULATOR_Q6_20261124.json`。\n- 実機・TestFlight/署名・App Review未実施。Q4オフラインは別設計課題。\n")
+          print(result)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261124.json touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          git commit -m 'audit(touhan): record observed Q6 macOS iOS simulator build and launch' || true
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-q6-ios-simulator-evidence
+          path: |
+            touroku-hanbaisha-ios/ci-evidence/simulator-launch.png
+            touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261124.json
+            ${{ runner.temp }}/touhan-xcodebuild.log
+            ${{ runner.temp }}/touhan-simulator.log
+          if-no-files-found: ignore
+      - name: Enforce objective Simulator verdict
+        run: python3 -c 'import json; d=json.load(open("touroku-hanbaisha-ios/IOS_SIMULATOR_Q6_20261124.json")); assert d["status"]=="PASS",d'
