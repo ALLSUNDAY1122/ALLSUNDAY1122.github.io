@@ -1,0 +1,59 @@
+name: Touhan Q7 Diagnose Codemagic Build
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-q7-diagnose.yml'
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect exact failed build details read only
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json,os,urllib.request,urllib.error,re
+          from pathlib import Path
+          token=os.environ.get('CM_API_TOKEN','')
+          assert token
+          app='6a769d81a1add9d06020b524'; build='6b04cd655586d806fe29abea'
+          def fetch(path):
+              req=urllib.request.Request('https://api.codemagic.io'+path,headers={'x-auth-token':token,'Accept':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:return r.status,json.loads(r.read())
+              except urllib.error.HTTPError as e:
+                  return e.code,{'httpError':e.code}
+          detail={}
+          for label,path in [('buildDetails','/builds/'+build),('appBuildList','/builds?appId='+app)]:
+              status,raw=fetch(path)
+              if label=='appBuildList':
+                  rows=raw.get('builds') or raw.get('data') or []
+                  if isinstance(rows,dict):rows=rows.get('builds') or []
+                  raw=next((x for x in rows if str(x.get('_id') or x.get('id'))==build),{})
+              def safe(v):
+                  if isinstance(v,dict):
+                      return {k:('[REDACTED]' if any(x in k.lower() for x in ('key','token','secret','private','credential','environment','variable','password')) else safe(val)) for k,val in v.items()}
+                  if isinstance(v,list):return [safe(x) for x in v[:25]]
+                  if isinstance(v,str):
+                      v=re.sub(r'eyJ[A-Za-z0-9._-]{20,}','[JWT REDACTED]',v)
+                      v=re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----','[PEM REDACTED]',v,flags=re.S)
+                      return v[:2000]
+                  return v
+              selected={k:raw.get(k) for k in ('status','message','error','errors','buildNumber','startedAt','finishedAt','workflowId','fileWorkflowId','branch','actions','artifacts','warnings','trace') if isinstance(raw,dict) and k in raw}
+              detail[label]={'httpStatus':status,'fields':list(raw.keys())[:60] if isinstance(raw,dict) else [],'data':safe(selected)}
+          path=Path('touroku-hanbaisha-ios/Q7_CODEMAGIC_DIAG_20261124.json')
+          path.write_text(json.dumps(detail,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(detail,ensure_ascii=False)[:5500])
+          PY
+      - name: Persist failure diagnostics
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/Q7_CODEMAGIC_DIAG_20261124.json
+          git commit -m 'audit(touhan): store exact Codemagic Q7 failure diagnostics' || true
+          for i in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; done
+          exit 1
