@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-24T00:16:00+09:00",
+  "updated_at": "2026-11-24T00:18:58+09:00",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -31,7 +31,7 @@
     "existing_canonical": 360,
     "existing_type": "独自問題（旧版）",
     "target_official": 600,
-    "verified_official_imported": 320,
+    "verified_official_imported": 317,
     "year_2023_invalid_question_review": "PASS: Q90, 解なし・受験者全員正解・模試採点から除外",
     "official_answer_keys_indexed": 600,
     "official_answer_keys_by_year": {
@@ -43,7 +43,7 @@
     },
     "official_single_answer_keys": 599,
     "official_invalid_question_count": 1,
-    "official_question_text_imported": 320,
+    "official_question_text_imported": 317,
     "answer_index_readback_pass": true,
     "official_question_pdf_binaries_downloaded": 10,
     "sha256_verified": 10,
@@ -119,7 +119,7 @@
       ]
     },
     "production_official_bank_path": "touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json",
-    "production_official_bank_count": 320,
+    "production_official_bank_count": 317,
     "official_preview_ui": "touroku-hanbaisha-sprint/official-practice.html",
     "official_preview_ui_integrated_into_home": true,
     "four_five_choices_supported_in_official_ui": true,
@@ -209,13 +209,154 @@
     "auto_diff_advisory_totals": {
       "LEGACY_STAGING_PDF_DRIFT": 96
     },
-    "auto_geometry_new_promoted": 218
+    "auto_geometry_new_promoted": 215,
+    "auto_geometry_and_ruby_per_year": {
+      "2022": {
+        "pdfQuestionCount": 120,
+        "oldAutoPass": 15,
+        "newGeometryPass": 44,
+        "geometryUnresolved": 61,
+        "rubySourceAnchorAssociated": 36,
+        "rubySourceInconclusive": 9,
+        "promotedTotal": 63,
+        "promotedByGeometry": 35,
+        "manualPass": 14,
+        "holdTotal": 57,
+        "reasons": {
+          "FIGURE_OR_FORM_REVIEW": 13,
+          "RUBY_RENDER_NOT_CERTIFIED": 36,
+          "CHOICE_DIFF": 1,
+          "OTHER_LAYOUT_FLAGS": 1,
+          "RUBY_XY_ASSOCIATION_INCONCLUSIVE": 9,
+          "TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE": 3
+        },
+        "sampleCrossCheck": {
+          "PASS_EXACT": 8,
+          "PASS_CHARACTER_MULTISET": 1,
+          "REVIEW_EXTRACTOR_DISAGREEMENT": 1
+        },
+        "geometryEvidence": "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2022.json",
+        "crosscheckEvidence": "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2022.json"
+      },
+      "2023": {
+        "pdfQuestionCount": 120,
+        "oldAutoPass": 16,
+        "newGeometryPass": 53,
+        "geometryUnresolved": 51,
+        "rubySourceAnchorAssociated": 34,
+        "rubySourceInconclusive": 7,
+        "promotedTotal": 69,
+        "promotedByGeometry": 53,
+        "manualPass": 0,
+        "holdTotal": 51,
+        "reasons": {
+          "RUBY_RENDER_NOT_CERTIFIED": 34,
+          "FIGURE_OR_FORM_REVIEW": 8,
+          "RUBY_XY_ASSOCIATION_INCONCLUSIVE": 7,
+          "TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE": 3,
+          "OFFICIAL_INVALID_Q90_REVIEW": 1
+        },
+        "sampleCrossCheck": {
+          "PASS_EXACT": 10
+        },
+        "geometryEvidence": "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2023.json",
+        "crosscheckEvidence": "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2023.json"
+      },
+      "2024": {
+        "pdfQuestionCount": 120,
+        "oldAutoPass": 23,
+        "newGeometryPass": 42,
+        "geometryUnresolved": 55,
+        "rubySourceAnchorAssociated": 41,
+        "rubySourceInconclusive": 5,
+        "promotedTotal": 64,
+        "promotedByGeometry": 41,
+        "manualPass": 0,
+        "holdTotal": 56,
+        "reasons": {
+          "RUBY_RENDER_NOT_CERTIFIED": 41,
+          "FIGURE_OR_FORM_REVIEW": 11,
+          "RUBY_XY_ASSOCIATION_INCONCLUSIVE": 5,
+          "TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE": 2
+        },
+        "sampleCrossCheck": {
+          "PASS_CHARACTER_MULTISET": 1,
+          "PASS_EXACT": 7,
+          "REVIEW_EXTRACTOR_DISAGREEMENT": 2
+        },
+        "geometryEvidence": "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2024.json",
+        "crosscheckEvidence": "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2024.json"
+      },
+      "2025": {
+        "pdfQuestionCount": 120,
+        "oldAutoPass": 21,
+        "newGeometryPass": 38,
+        "geometryUnresolved": 61,
+        "rubySourceAnchorAssociated": 40,
+        "rubySourceInconclusive": 13,
+        "promotedTotal": 59,
+        "promotedByGeometry": 38,
+        "manualPass": 0,
+        "holdTotal": 61,
+        "reasons": {
+          "RUBY_RENDER_NOT_CERTIFIED": 40,
+          "FIGURE_OR_FORM_REVIEW": 5,
+          "TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE": 4,
+          "RUBY_XY_ASSOCIATION_INCONCLUSIVE": 13
+        },
+        "sampleCrossCheck": {
+          "PASS_EXACT": 10
+        },
+        "geometryEvidence": "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2025.json",
+        "crosscheckEvidence": "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2025.json"
+      },
+      "2026": {
+        "pdfQuestionCount": 120,
+        "oldAutoPass": 14,
+        "newGeometryPass": 49,
+        "geometryUnresolved": 57,
+        "rubySourceAnchorAssociated": 38,
+        "rubySourceInconclusive": 10,
+        "promotedTotal": 62,
+        "promotedByGeometry": 48,
+        "manualPass": 0,
+        "holdTotal": 58,
+        "reasons": {
+          "FIGURE_OR_FORM_REVIEW": 11,
+          "RUBY_RENDER_NOT_CERTIFIED": 38,
+          "TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE": 3,
+          "RUBY_XY_ASSOCIATION_INCONCLUSIVE": 10
+        },
+        "sampleCrossCheck": {
+          "PASS_EXACT": 9,
+          "REVIEW_EXTRACTOR_DISAGREEMENT": 1
+        },
+        "geometryEvidence": "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2026.json",
+        "crosscheckEvidence": "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2026.json"
+      }
+    },
+    "auto_geometry_reason_totals": {
+      "FIGURE_OR_FORM_REVIEW": 48,
+      "RUBY_RENDER_NOT_CERTIFIED": 189,
+      "CHOICE_DIFF": 1,
+      "OTHER_LAYOUT_FLAGS": 1,
+      "RUBY_XY_ASSOCIATION_INCONCLUSIVE": 44,
+      "TABLE_XY_NOT_PURE_TRUE_FALSE_TABLE": 15,
+      "OFFICIAL_INVALID_Q90_REVIEW": 1
+    },
+    "cross_engine_sample_size": 50,
+    "cross_engine_sample_results": {
+      "PASS_EXACT": 44,
+      "PASS_CHARACTER_MULTISET": 2,
+      "REVIEW_EXTRACTOR_DISAGREEMENT": 4
+    },
+    "ruby_layout_auto_certification_policy": "Source glyph-to-Kanji mapping may be observed, but detached ruby cannot be approved until UI ruby markup layout is verified"
   },
   "gates": {
     "notion_v28_full_read": "PENDING",
     "notion_submission_steps_full_read": "PENDING",
-    "official_source_import": "PARTIAL_APPROVED_320_OF_600",
-    "verbatim_and_answer_audit": "AUTO_88_GEOMETRY_218_VISUAL_14_REMAINING_280",
+    "official_source_import": "PARTIAL_APPROVED_317_OF_600",
+    "verbatim_and_answer_audit": "AUTO_88_GEOMETRY_215_VISUAL_14_REMAINING_283",
     "mobile_ui": "PENDING",
     "ios_build": "PENDING",
     "internal_testflight": "PENDING",
@@ -252,7 +393,11 @@
     "mobile_browser_QA": "PENDING_NO_PASS_RESULT_FILE",
     "normalized_pdf_auto_diff": "COMPLETE_600_OF_600",
     "content_complete": "BLOCKED",
-    "official_release_readiness": "BLOCKED_UNTIL_CONTENT_AND_APP_REVIEW"
+    "official_release_readiness": "BLOCKED_UNTIL_CONTENT_AND_APP_REVIEW",
+    "pdf_coordinate_table_audit": "COMPLETE_600_EVALUATED",
+    "rubies_source_anchor_audit": "COMPLETE_600_EVALUATED_REQUIRES_RENDER_FIDELITY",
+    "alternative_extractor_crosscheck": "50_STRATIFIED_SAMPLES_RECORDED",
+    "release_readiness": "BLOCKED"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
@@ -299,6 +444,16 @@
     "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_2023.json",
     "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_2024.json",
     "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_2025.json",
-    "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_2026.json"
+    "touroku-hanbaisha-sprint/official-kansai/AUTO_DIFF_2026.json",
+    "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2022.json",
+    "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2022.json",
+    "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2023.json",
+    "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2023.json",
+    "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2024.json",
+    "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2024.json",
+    "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2025.json",
+    "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2025.json",
+    "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_2026.json",
+    "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_2026.json"
   ]
 }
