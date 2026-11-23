@@ -32,6 +32,7 @@ def pdftotext(pdf,page):
     return r.stdout
 sys.path.insert(0,str(ROOT/'scripts'))
 from official_answer_key_audit import parse as read_official_key
+from boundary_context_verify import verify as verify_boundary
 keys={e:read_official_key(e) for e in (111,112)}
 all_rows=[];approved=[];by_session={}
 for exam in (112,111):
@@ -45,8 +46,7 @@ for exam in (112,111):
         qid=q["id"];n=q["questionNo"];pg=q.get("sourcePage")
         failures=[]
         if qid in existing:failures.append("ALREADY_VERIFIED_CANONICAL")
-        if n>=91:failures.append("SITUATION_GROUP_CONTEXT_NOT_VERIFIED")
-        if n>90 and n<111:failures.append("SITUATION_GROUP_CONTEXT_NOT_VERIFIED")
+        # Independent scenario context validation happens below.
         if qid in exceptions or q.get("officialScoringStatus")!="normal":failures.append("SCORING_EXCEPTION")
         if not q.get("extractionValid",False):failures.append("ORIGINAL_STRUCTURE_INVALID")
         if len(q.get("choices") or [])!=4:failures.append("CHOICE_COUNT_NOT_FOUR")
@@ -61,7 +61,18 @@ for exam in (112,111):
         if MEDIA.search(stem):failures.append("MEDIA_OR_DIAGRAM_CUE")
         if any(SUSPICIOUS.search(x) or re.search(r"[\u0080-\u009f\u00a1-\u00ff]",x) for x in [stem]+choices):failures.append("SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT")
         if any(re.search(r"DKIX|[前後]H-\\d+|[-−]H[-−]\\d+",x) for x in [stem]+choices):failures.append("PAGE_FOOTER_CONTAMINATION")
-        if not isinstance(pg,int) or not 1<=pg<=len(doc):failures.append("SOURCE_PAGE_INVALID")
+        boundary_evidence=None
+        scenario_evidence=None
+        if not isinstance(pg,int) or not 1<=pg<=len(doc):
+            failures.append("SOURCE_PAGE_INVALID")
+        else:
+            verified_page, boundary_errors, scenario_evidence=verify_boundary(
+                doc,pdf,n,pg,stem,choices,pdftotext,clean_font,norm)
+            if verified_page is not None and verified_page!=pg:
+                boundary_evidence={"previousPage":pg,"correctedPage":verified_page,
+                                   "method":"unique numbered page and 5 fields across 2 engines"}
+                pg=verified_page
+            failures.extend(boundary_errors)
         if isinstance(pg,int) and 1<=pg<=len(doc):
             page=doc[pg-1]
             source_segment=fitz_segment(page,n)
@@ -85,7 +96,7 @@ for exam in (112,111):
         failures=list(dict.fromkeys(failures))
         status="PASS_DUAL_ENGINE_AND_OFFICIAL_KEY" if not failures else "HOLD"
         row={"id":qid,"exam":exam,"session":session,"number":n,"status":status,"reasons":failures,"sourcePdfPage":pg,"pageHasRaster":media_in_page,
-            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),
+            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),"boundaryCorrection":boundary_evidence,"scenarioContext":scenario_evidence,
             "sourcePdfSha256":hashlib.sha256(pdf.read_bytes()).hexdigest()}
         rows.append(row);all_rows.append(row)
         if status.startswith("PASS"):
@@ -95,7 +106,7 @@ for exam in (112,111):
               "answerType":"singleChoice","sourceAnswerTokens":q["sourceAnswerTokens"],"officialScoringStatus":"normal",
               "scoringException":None,"requiresMedia":False,"mediaAuditStatus":"not_required",
               "rightsStatus":"mhlw-pdl1.0-text","sourceRefs":q["sourceRefs"],"sourceAttribution":q["sourceAttribution"],
-              "sourcePage":pg,"sourcePdfSha256":row["sourcePdfSha256"],"officialKeyPdfSha256":q.get("officialKeyPdfSha256"),
+              "sourcePage":pg,"scenarioContextEvidence":scenario_evidence,"sourcePdfSha256":row["sourcePdfSha256"],"officialKeyPdfSha256":q.get("officialKeyPdfSha256"),
               "reviewStatus":"source_dual_engine_and_official_key_verified","canonicalStatus":"source_verified_extension",
               "publishable":False,"releaseEligible":False,
               "audit":{"questionDualEngineMatched":True,"allChoicesDualEngineMatched":True,"officialKeyMatched":True,
@@ -105,7 +116,7 @@ for exam in (112,111):
     by_session[f"{exam}-{session}"]={"total":len(rows),"pass":sum(x["status"].startswith("PASS") for x in rows),"hold":sum(x["status"]=="HOLD" for x in rows)}
     (OUT/f"{exam}-{session}-per-question.json").write_text(json.dumps(rows,ensure_ascii=False,indent=2)+"\n")
 summary={"engine1":"PyMuPDF document page text and question-boundary segment", "engine2":"Poppler pdftotext -layout", "key":"MHLW 2026-11-24 official answer PDF tokens",
- "policy":"Conservative bulk gates: reject any control glyphs in source segment, raster pages, unusual glyphs, scoring exception, scenario, or mismatched choice.",
+ "policy":"Conservative bulk gates: reject source control glyphs, raster pages, scoring exceptions; require uniquely numbered dual-engine page and dual-engine scenario context.",
  "total":len(all_rows),"freshPromotable":len(approved),"alreadyCanonical":len(existing),
  "holds":len(all_rows)-len(approved),"bySession":by_session,
  "holdReasons":dict(collections.Counter(reason for row in all_rows for reason in row["reasons"])),
