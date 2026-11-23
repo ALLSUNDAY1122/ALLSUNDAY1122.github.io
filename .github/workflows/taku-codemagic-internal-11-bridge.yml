@@ -1,0 +1,100 @@
+name: TAKU Codemagic Internal TestFlight 11 Bridge
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+concurrency:
+  group: taku-codemagic-internal-build11
+  cancel-in-progress: false
+jobs:
+  bridge:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TAKU-CM] Register and build 11 Internal TestFlight'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - name: Run guarded Codemagic build start
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          token=os.environ.get('CM_API_TOKEN','')
+          if not token: raise SystemExit('CM_API_TOKEN not configured')
+          repo='ALLSUNDAY1122/taku-calc-app'
+          url='https://github.com/'+repo+'.git'
+          workflow='taku-ios-build11-internal'
+          result={'request_id':'taku-build11-internal-20261123','repository':repo,'workflow_id':workflow,'branch':'main','intended_version':'1.5.0','intended_build':'11','app_review_submission':False}
+          output=Path('taku-codemagic-build11-result.json')
+          def save(**kwargs):
+              result.update(kwargs)
+              output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          def call(method,path,data=None):
+              body=None if data is None else json.dumps(data).encode()
+              req=urllib.request.Request('https://api.codemagic.io'+path,data=body,method=method,headers={'x-auth-token':token,'Accept':'application/json','Content-Type':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=40) as response:
+                      raw=response.read().decode()
+                      return response.status,json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as err:
+                  raw=err.read().decode(errors='replace')
+                  try: data=json.loads(raw)
+                  except Exception: data={'message':raw[:500]}
+                  return err.code,data
+          def brief(obj):
+              if not isinstance(obj,dict): return str(type(obj).__name__)
+              return {k:obj[k] for k in ('message','error','code') if k in obj}
+          status,apps=call('GET','/apps')
+          if not 200 <= status < 300:
+              save(stage='list_apps_failed',http_status=status,detail=brief(apps))
+              raise SystemExit('Codemagic app listing failed')
+          rows=apps.get('applications') or apps.get('data') or []
+          if isinstance(rows,dict): rows=rows.get('applications') or []
+          matches=[]
+          for app in rows:
+              if not isinstance(app,dict): continue
+              summary=json.dumps(app,ensure_ascii=False).lower().replace('.git','')
+              if 'allsunday1122/taku-calc-app' in summary or ('taku' in summary and 'calc' in summary):
+                  matches.append(app)
+          app_id=None
+          if len(matches)>1:
+              save(stage='ambiguous_existing_app',candidate_count=len(matches))
+              raise SystemExit('Multiple matching apps. Refuse to start.')
+          if len(matches)==1:
+              app_id=matches[0].get('_id') or matches[0].get('id')
+              save(stage='existing_app',app_id=app_id)
+          else:
+              save(stage='register_app',app_count=len(rows))
+              status,data=call('POST','/apps',{'repositoryUrl':url})
+              if not 200<=status<300:
+                  save(stage='register_app_failed',register_http_status=status,detail=brief(data))
+                  raise SystemExit('Cannot register repository with existing Codemagic token')
+              app=data.get('application') or data
+              app_id=app.get('_id') or app.get('id')
+              save(stage='registered_app',register_http_status=status,app_id=app_id)
+          if not app_id:
+              save(stage='missing_app_id')
+              raise SystemExit('Codemagic app ID missing')
+          status,data=call('POST','/builds',{'appId':app_id,'workflowId':workflow,'branch':'main'})
+          if not 200<=status<300:
+              save(stage='start_failed',start_http_status=status,detail=brief(data))
+              raise SystemExit('Codemagic build start failed')
+          build_id=data.get('buildId') or data.get('id')
+          if not build_id:
+              save(stage='missing_build_id',start_http_status=status)
+              raise SystemExit('Build was not confirmed started')
+          build_url=f'https://codemagic.io/app/{app_id}/build/{build_id}'
+          save(stage='started',start_http_status=status,build_id=build_id,build_url=build_url)
+          print(f'STARTED Codemagic TAKU build: {build_url}')
+          print('No App Review action executed; Codemagic yaml publishes only to TestFlight.')
+          PY
+      - name: Upload sanitized build-start evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: taku-codemagic-build11-start
+          path: taku-codemagic-build11-result.json
+          if-no-files-found: warn
+          retention-days: 7
