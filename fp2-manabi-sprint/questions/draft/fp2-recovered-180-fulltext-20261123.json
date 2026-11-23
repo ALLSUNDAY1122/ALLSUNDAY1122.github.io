@@ -1,13 +1,13 @@
 {
-  "schema": "FP2_RECOVERED_DRAFT_180_V1",
+  "schema": "FP2_RECOVERED_DRAFT_180_V2_AUDIT_STATUS_SYNC",
   "origin_repo_branch": "feature/fp2-kakomon-coach",
   "origin_path": "fp2-kakomon-coach/questions/question_bank_fp2.json",
   "joined_source": "fp2-manabi-sprint/questions/draft/fp2-drive-matrix-180-source-index-20261123.json",
   "import_count": 180,
   "complete_structural_count": 180,
   "release_approved_count": 0,
-  "status": "DRAFT_QUARANTINED_CURRENT_LAW_RIGHTS_REVIEW_PENDING",
-  "note": "Original 180 objects preserved and augmented with provenance metadata. Do not treat legacy audit flags as fresh content review. Modified remains null pending original PDF comparison; current law and independently authored explanation provenance remain unverified. Correction on 2026-05 Q14 and 2025-01 Q34 applied 2026-11-23, original values stored in correction_prior. Both remain quarantined for fresh independent review.  Batch04 FAIL Q36/Q39 explanation corrected using NTA primary sources; independent re-review not yet performed. 2026-11-23: FAIL5独立再監査 PASS4/FAIL1。Q20の機械保険解説再修正、旧文はcorrection_priorに保存、再監査待ち。 2026-11-23 Q20 second corrected explanation independent PASS documented at fp2-manabi-sprint/audit/FP2_2025_01_Q20_SECOND_CORRECTION_REAUDIT_PASS_20261123.md; recovered 180 content-PASS, 0 FAIL/HOLD. Rights/source/provenance and release gates remain separate.",
+  "status": "CONTENT_AUDIT_PASS_180_RIGHTS_RELEASE_BLOCKED",
+  "note": "180問の独立内容監査最終PASS180/FAIL0/HOLD0を正規バンク312問の該当180件からID/本文/4肢/正答/解説一致確認の上、監査フラグ・根拠パス・SHAを同期した。修正履歴correction_priorは保持。Q20の二次独立再監査PASSを含む。元の試験PDFとの逐語対照未完了、法令施行日スナップショット、公開の著作権・利用主体承認は未完了。内容PASSとpublishable=falseの公開ゲートを分離。",
   "questions": [
     {
       "id": "fp2-2026-05-gakka-001",
@@ -66,7 +66,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①現価でなく終価、②年金現価でなく年金終価、③減債基金係数が正答、④資本回収でなく年金現価。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-002",
@@ -125,7 +128,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①70歳未満3割、②傷病手当金通算1年6か月、③21000円合算基準、④共働き被保険者の夫に家族出産育児一時金は出ず誤り。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-003",
@@ -184,7 +190,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①通常2年12月、②一般受給資格者20年以上150日、③原則4週間ごとの失業認定、④賃金日額に賞与を算入する記述が誤り。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-004",
@@ -243,7 +252,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①学生本人所得が基準で世帯所得ではない、②申請は原則年度単位、③追納10年で正答、④未追納なら年金額には反映しない。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-005",
@@ -302,7 +314,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "2026年4月の停止調整額51→65万円変更を考慮。選択肢3（停止部分は繰下げ増額対象外）のみ正しい。1は超過額の全額でなく半額、2は基礎年金停止なし、4は70歳以上も対象。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-006",
@@ -361,7 +376,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①認定日は原則1年6か月、②20歳前障害基礎年金は存在、③配偶者加給は障害厚生1級・2級、④認定月後の被保険者期間不算入が正答。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-007",
@@ -420,7 +438,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "iDeCoの①第3号上限月2.3万円、②掛金変更年1回、③最低保証なしで不適切、④60歳受給には加入等期間10年以上。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-008",
@@ -479,7 +500,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①マッチング拠出は小規模企業共済等掛金控除、②中退共事業主掛金は給与所得でない、③小規模企業共済掛金は事業必要経費ではない、④iDeCo一時金は退職所得。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-009",
@@ -538,7 +562,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①借入期間上限80歳・35年、②投資用賃貸物件は資金使途外で誤り、③第一順位抵当権、④住・My Noteの繰上返済10万円以上・手数料不要。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-010",
@@ -597,7 +624,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①直接・間接金融が逆、②インパクトローンは使途限定でない、③ABLは売掛債権・棚卸資産等担保で正答、④第三者割当は既存株主限定でない。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-011",
@@ -647,15 +677,18 @@
       "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
-      "independent_audit_status": "HOLD",
+      "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
-      "approved_for_content_bank": false,
+      "approved_for_content_bank": true,
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_reviewed_at": "2026-11-23",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "①共済は保険法の対象となるものがあり『一切非適用』が誤り、②保険法52条・53条の片面的強行規定で受取人不利の支払時期約款が無効（正答）、③保険期間1年以下は原則クーリングオフ適用除外、④早期是正措置の指標は300%でなく200%。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-012",
@@ -714,7 +747,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①養老保険満期保険金は死亡保険金と同額、②学資保険契約者死亡時に当然既払込額が支給されるわけではない、③変額終身の死亡基本保険金は保証、④短期払の1回保険料は一般に高い。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-013",
@@ -764,15 +800,18 @@
       "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
-      "independent_audit_status": "HOLD",
+      "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
-      "approved_for_content_bank": false,
+      "approved_for_content_bank": true,
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_reviewed_at": "2026-11-23",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "①加入同意は金融庁監督指針で求められ告知制度も存在、②総合福祉団体定期の保険期間は通常1年で5年まで個人別設定でない、③福利厚生型定期保険を機械的に1/2資産計上はしない、④ヒューマン・ヴァリュー特約の死亡保険金受取人は契約企業。正答④。会社・保険者の契約資料と監督指針で同意確認を照合。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-014",
@@ -835,7 +874,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "Batch03修正2件の独立再監査PASS。正答番号維持、元の修正と説明を照合",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-015",
@@ -894,7 +936,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①リビングニーズ非課税、②一時払終身の解約返戻金は条件記載上、一時所得、③保険料負担者＝被保険者の死亡保険金は贈与税でなく相続税、④疾病入院給付金非課税。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-016",
@@ -953,7 +998,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①自己所有車庫への対物事故は対象外、②地震津波は通常車両免責、③第三者ペットの対物賠償責任は原則対象、④対人賠償は自賠責超過額補償。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-017",
@@ -1012,7 +1060,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①隣家火災の消火に伴う家財水濡れ損害が補償対象、②経年腐食対象外、③落雷損害も補償対象、④部分損の保険金は原則保険金額から自動控除されない。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-018",
@@ -1071,7 +1122,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①傷害入院保険金は非課税、②10年積立傷害の満期返戻金は一時所得、③車両保険損害保険金は原則非課税、④火災保険損害填補金は原則非課税。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-019",
@@ -1130,7 +1184,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①余命6か月リビング・ニーズ、②通常特約保険料負担不要なので誤り、③先進医療は診療時点で指定された技術、④三大疾病保険金支払後契約消滅なら死亡保険金なし。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-020",
@@ -1189,7 +1246,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①医療費負担に死亡保障の定期保険は不適切、②収入保障は遺族生活費、③ファミリーバイク特約は原付の賠償、④個人賠償特約は自転車対人賠償。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-021",
@@ -1248,7 +1308,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①CIとDI、②採用系列の景気の山谷見直し、③GDPの四半期・年次統計、④デフレ時には実質成長率は通常名目成長率を上回るため誤り。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-022",
@@ -1307,7 +1370,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①期限前償還型仕組預金あり、②電子通帳はネット専業銀行に限らず誤り、③自動積立定期預金の仕組み、④10年以上の休眠預金制度。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-023",
@@ -1366,7 +1432,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①不動産投資法人の分配、②上場市場の指値・成行売買、③上場REITはクローズドエンド型で誤り、④投資法人分配金に配当控除なし。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-024",
@@ -1425,7 +1494,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①個人向け国債は最低1万円、②固定3・固定5・変動10が毎月発行で正答、③変動10年を固定金利として誤り、④中途換金に別途手数料を要するとして誤り。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-025",
@@ -1484,7 +1556,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①維持率不足なら追証、②現物保有しなくても信用売り可で誤り、③保証金最低30万円・約定代金30%、④制度信用から一般信用への途中変更不可。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-026",
@@ -1543,7 +1618,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "公式PDF p14とX社全数値一致。ROE6%、PER30倍（20倍は誤り＝②）、PBR1.8倍、配当利回り1%。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-027",
@@ -1602,7 +1680,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "公式PDF p15と条件一致。円投入140万円、受取148.32万円、（8.32÷140）×100=5.94%、①。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-028",
@@ -1661,7 +1742,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "公式PDF p16と資料一致。シャープA=(4.6-1)/1.2=3、B=(11-1)/4=2.5、①A優位。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-029",
@@ -1720,7 +1804,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①総合課税を選んだ配当は譲渡損失と通算不可で正答、②繰越3年で5年ではない、③配当等と譲渡損益は申告を分離選択可能、④簡易申告口座でも年間取引報告書作成。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-030",
@@ -1779,7 +1866,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①複雑な商品は仲介業対象外、②勧誘方針策定・公表が正答、③推定損害は元本欠損額、④説明は顧客属性に応じた方法。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-031",
@@ -1838,7 +1928,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①外国籍居住者にも所得税課税、法人は法人税、②納税地特例あり、③未収金も権利確定で計上、④超過累進税率が正答。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-032",
@@ -1897,7 +1990,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①役員退職一時金は退職所得、②個人年金一時受取は原則一時所得、③賃貸土地の売却は譲渡所得、④金地金の一般的譲渡は譲渡所得で正答。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-033",
@@ -1956,7 +2052,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "公式PDF p19と所得資料一致。損益通算後の一時所得60万円の1/2=30万円、②。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-034",
@@ -2015,7 +2114,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①未払医療費は支払時に控除、②医療費控除は年末調整対象外で誤り、③公共交通機関の通院費は対象、④保険金控除は該当費用が上限。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-035",
@@ -2074,7 +2176,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "10年未満への短縮は控除継続不可で①のみ不適切。②転勤後再居住、③初年度確定申告、④住民税控除は制度上可能。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-036",
@@ -2133,7 +2238,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①青色承認は原則3月15日期限、②取止め届も翌3月15日、③12月31日のみなし承認が正答、④開業後原則2か月以内で3か月ではない。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-037",
@@ -2183,15 +2291,18 @@
       "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
-      "independent_audit_status": "HOLD",
+      "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
-      "approved_for_content_bank": false,
+      "approved_for_content_bank": true,
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_reviewed_at": "2026-11-23",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "①法人税本税還付金の益金不算入・還付加算金の益金算入、②完全子法人株式等の受取配当原則全額益金不算入、③資産譲渡収益は引渡時点認識が原則、④棚卸資産評価増に係る評価益は法人税法25条により原則益金不算入で誤肢。正答④。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-038",
@@ -2241,15 +2352,18 @@
       "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
-      "independent_audit_status": "HOLD",
+      "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
-      "approved_for_content_bank": false,
+      "approved_for_content_bank": true,
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_reviewed_at": "2026-11-23",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "①会社から役員への無利息貸付は原則認定利息の問題がある、②債務免除益は原則会社益金、③役員から会社への土地無償贈与は時価の1/2でなく時価全額の受贈益（誤肢）、④役員が会社から時価未満で譲り受ける差額は原則役員給与として経済的利益。正答③。①の経済的利益を認定する『原則』に低額貸付の例外があっても正答一意性は変わらない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-039",
@@ -2307,7 +2421,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①みなし仕入率は従業員数でなく事業区分、②開業課税期間内の届出可、③原則2年継続、④選択不適用届期限は前課税期間末。①のみ誤り。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-040",
@@ -2357,15 +2474,18 @@
       "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
-      "independent_audit_status": "HOLD",
+      "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
-      "approved_for_content_bank": false,
+      "approved_for_content_bank": true,
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_reviewed_at": "2026-11-23",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "①税引前利益に減価償却・運転資本調整、②資金調達は原則総額表示、③企業が現金同等物とほぼ同様に利用する当座借越は負の現金同等物とする旨が会計基準移管指針第6号に明記、④固定資産増加は投資CFだが借入返済・配当支払は財務CFなので一括して投資CF減少は誤り。正答④。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-041",
@@ -2423,7 +2543,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①地価公示1/1、②地価調査7/1、③相続税路線価概ね公示価格80%、④固定資産税評価替えは5年でなく3年が原則。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-042",
@@ -2481,7 +2604,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①専任媒介はREINS登録義務あり。②3月超は期間短縮され契約無効でない、③自動更新不可、④報告は2週に1度以上。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-043",
@@ -2539,7 +2665,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①一般定期借地は50年以上、②事業用途でも設定可能、③事業用は公正証書要、④借地権譲渡不承諾の建物買取請求は認められる。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-044",
@@ -2597,7 +2726,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①定期借家6か月未満も可、②事前説明は公正証書限定でなく誤り、③引渡しにより対抗可、④1年前から6か月前の終了通知。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-045",
@@ -2655,7 +2787,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①市街化区域の定義、②小規模開発の許可不要基準、③分筆のみでは開発行為でなく誤り、④工事完了前建築の制限。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-046",
@@ -2713,7 +2848,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①前面道路12m未満が対象、②共用廊下階段は1/3制限なし、③車庫の上限は1/5、④地階住宅の算入除外は1/3で正答。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-047",
@@ -2772,7 +2910,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "2026-04-01施行の区分所有法改正を考慮。①年1回の集会招集、②原則1週間前通知、③敷地利用権分離処分禁止、④特定承継人へ効力。正答①を変更する根拠なし。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-048",
@@ -2830,7 +2971,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①相続移転登記は原則0.4%課税、②表題登記に登録免許税なし、③抵当権設定は債権額、④贈与移転は固定資産評価額。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-049",
@@ -2888,7 +3032,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①3000万円特別控除は所有期間を問わない。②転居後の譲渡期限を短く誤記、③長期軽減は1/1時点10年超、④両特例併用可。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-050",
@@ -2946,7 +3093,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①DCFは純収益を現在価値化、②NPV正なら投資適格、③物件利回りが金利未満なら逆レバレッジ、④NOIは総収入でなく純収益。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-051",
@@ -3004,7 +3154,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①死因贈与は相続税、②適正財産分与は贈与税対象外、③法人→個人の贈与は原則所得税であり誤り、④著しい低額譲受はみなし贈与。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-052",
@@ -3062,7 +3215,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①婚姻20年以上、②住宅用不動産または取得金銭限定なので誤り、③同配偶者から1度限り、④2000万円＋110万円。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-053",
@@ -3120,7 +3276,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①判断能力低下前＝任意後見、②低下後＋家庭裁判所＋後見/保佐/補助で正答、③本人選任等誤り、④後見類型誤り。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-054",
@@ -3178,7 +3337,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①無検認開封は遺言の効力を直ちに失わせない、②PC財産目録は各頁署名押印必要、③公正証書遺言証人2人、④自筆遺言による撤回可。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-055",
@@ -3237,7 +3399,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "公式PDF p30の親族関係図一致。放棄者Cを算入、普通養子D1人を算入、孫E/Fは代襲なし、配偶者Bを含む3人で4800万円②。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-056",
@@ -3295,7 +3460,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①代襲相続孫は2割加算対象外、②全財産配偶者なら配偶者軽減で0、③内縁は配偶者軽減対象外、④未成年控除18歳まで年10万円。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-057",
@@ -3354,7 +3522,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "公式PDF p32と価格資料一致。相続日1210円、当月平均1240円、前月1180円、前々月1150円の最小は1150円②。1月1140円は対象外。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-058",
@@ -3412,7 +3583,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①貸家建付地算式正、②賃貸店舗は貸家建付地、③建物所有目的の賃借権は貸宅地、④使用貸借の子への土地は原則自用地評価で誤り。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-059",
@@ -3471,7 +3645,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "公式PDF p33表と一致。特定事業400㎡80%、居住330㎡80%、特定同族事業400㎡80%で①。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2026-05-gakka-060",
@@ -3529,7 +3706,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①株式会社の最低資本金1000万円は撤廃済み、②特定株主自己株式取得は原則特別決議、③総会招集、④取締役は株主総会で解任可。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-001",
@@ -3587,7 +3767,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①無資格の年金裁定請求代行報酬受領は社労士業務違反、②生命保険一般活用説明は可能、③市場情報提供は一般に可、④税理士への紹介は可。公式問1正答①と整合。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-002",
@@ -3645,7 +3828,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①②分母が3分の2で誤り、③通常労働者4分の3未満＋週20時間＋月8.8万円の2026-04適用要件で正答、④25時間・5.8万円誤り。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-003",
@@ -3703,7 +3889,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①アルバイト・パートも対象、②労災保険率は人数でなく事業種類別なので誤り、③障害補償、④遺族補償年金/一時金は正。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-004",
@@ -3761,7 +3950,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①付加400円、②産前産後免除は納付済期間、③追納に加算額が生じ得るので誤り、④未経過の前納保険料還付。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-005",
@@ -3819,7 +4011,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①繰上げ同時請求、②0.4%×30か月=12%、③繰上げで寡婦年金失権、④加給年金の繰上げ減額・即加算はないので誤り。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-006",
@@ -3876,8 +4071,11 @@
       "audit_evidence_blob_sha": "8cddd09934cec5ca7e313e3835b796f95ecdca96",
       "approved_for_content_bank": true,
       "audit_reason": "①遺族基礎は子・子ある配偶者、②30歳未満子なし妻の遺族厚生は原則5年間で10年は誤り、③中高齢寡婦加算、④遺族基礎と死亡一時金の併給なし。2026-04時点で後年の遺族年金改正施行と混同しない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-007",
@@ -3934,8 +4132,11 @@
       "audit_evidence_blob_sha": "8cddd09934cec5ca7e313e3835b796f95ecdca96",
       "approved_for_content_bank": true,
       "audit_reason": "①国民年金第3号加入不可、②加入者は任意脱退できず正答、③2口目以降は終身・確定を選べる、④障害年金は給付にない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-008",
@@ -3992,8 +4193,11 @@
       "audit_evidence_blob_sha": "8cddd09934cec5ca7e313e3835b796f95ecdca96",
       "approved_for_content_bank": true,
       "audit_reason": "①老齢年金源泉税率10.21%ではない、②遡及年金も雑所得、③遺族厚生年金非課税、④未支給年金は遺族の一時所得で正答。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-009",
@@ -4050,8 +4254,11 @@
       "audit_evidence_blob_sha": "8cddd09934cec5ca7e313e3835b796f95ecdca96",
       "approved_for_content_bank": true,
       "audit_reason": "①同条件なら元利均等の利息総額が多い、②期間短縮型の利息軽減効果が大きく記述は逆、③条件は銀行ごと、④借換登記費用あり。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-010",
@@ -4101,15 +4308,18 @@
       "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
-      "independent_audit_status": "HOLD",
+      "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
-      "approved_for_content_bank": false,
+      "approved_for_content_bank": true,
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "modification_reviewed_at": "2026-11-23",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "日本FP協会公式PDF表示6頁を画面確認。流動資産12000、流動負債1500、固定資産8000、固定負債2500、純資産16000、純利益800（百万円）がJSONと一致。①16000/20000=80%、②12000/1500=800%、③8000/(2500+16000)=43.24%で50%は誤り、④800/16000=5%。正答③。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-011",
@@ -4167,7 +4377,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①責任準備金の定義、②純保険料は予定死亡率・予定利率、③予定利率上昇で通常保険料は低下し誤り、④事業費が想定より小なら費差益。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-012",
@@ -4225,7 +4438,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①逓減定期は保険金額が逓減し保険料は通常一定、②収入保障年金受取総額は一括を上回る、③低解約返戻金型は低保険料、④更新で保険料高くなる。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-013",
@@ -4283,7 +4499,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①確定年金死亡時は残期間給付、②終身年金は通常女性保険料が高い、③変額個人年金は運用成績で年金額・解約返戻金変動、④高度障害で直ちに年金は開始されない。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-014",
@@ -4342,7 +4561,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "生命保険料控除は②三大疾病保障定期が一般対象。①一般財形は対象外、③新契約各4万円、④自動振替貸付も払込扱い。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-015",
@@ -4392,15 +4614,18 @@
       "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
-      "independent_audit_status": "HOLD",
+      "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
-      "approved_for_content_bank": false,
+      "approved_for_content_bank": true,
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "modification_reviewed_at": "2026-11-23",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "①養老保険で死亡受取人遺族・満期受取人法人の場合は原則半額資産・半額損金で全額損金とする記述が誤り、②法人受取終身保険は資産計上、③無解約返戻金・全期払の第三分野保険の保険料は原則期間対応損金、④最高返戻率75%は70%超85%以下の区分で前半40%期間に保険料60%資産計上と国税庁通達9-3-5の2の表に一致。正答①。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-016",
@@ -4459,7 +4684,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①原付も自賠責義務ありで誤り。②死亡3000万円、③対人のみ、④被害者請求権はいずれも正しい。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-017",
@@ -4518,7 +4746,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①中途付帯可、②地震保険料は構造と所在地に応じて異なるため誤り、③耐震割引重複不可、④損害区分4段階。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-018",
@@ -4568,15 +4799,18 @@
       "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
-      "independent_audit_status": "HOLD",
+      "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
-      "approved_for_content_bank": false,
+      "approved_for_content_bank": true,
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "modification_reviewed_at": "2026-11-23",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "①従業員全員を被保険者・受取人とする通常の普通傷害保険料は福利厚生の保険料として損金算入し得る、②5年一時払い火災保険料は前払分資産化・期間按分、③会社の受取保険金と修理費用は別々の経理処理、④棚卸資産の保険金は固定資産保険差益の圧縮記帳対象外。なお①は全員加入・均等な一般福利厚生・契約条件を前提とする。正答①。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-019",
@@ -4635,7 +4869,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①検査目的で異常なしなら通常入院給付対象外、②引受基準緩和型は通常割高、③所得補償は入院必須ではない、④がんの一般的免責90日程度で180日/6月一律ではない。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-020",
@@ -4694,7 +4931,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①PL保険は食中毒賠償、②機械保険は火災を一般に免責し不適切、③請負業者賠償は第三者事故、④労災上乗せに労働災害総合保険。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-021",
@@ -4753,7 +4993,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①相対日本インフレで円安傾向、②米利上げ金利差拡大は円安傾向のため誤り、③貿易黒字は円高要因、④450円/3ドル=150円。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-022",
@@ -4812,7 +5055,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①期日指定は預入翌営業日から満期日選択できず誤り、②当座預金の口座振替可、③半年複利は個人利用可、④大口定期の最低額は一般に1000万円で固定金利。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-023",
@@ -4871,7 +5117,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①ETFにも信託報酬、②上場ETF信用取引可、③分配金の自動再投資とは限らない、④REIT指数・商品指数にも連動商品あり。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-024",
@@ -4930,7 +5179,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①金利上昇なら価格下落、②発行体悪化も下落、③インフレと金利上昇で一般に価格下落するため誤り、④長期債ほど金利感応度大。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-025",
@@ -4989,7 +5241,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①指値は価格・時間優先、②成行優先なので指値優先は誤り、③約定日を含め3営業日目受渡、④通常内国株100株単位。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-026",
@@ -5048,7 +5303,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①日経225は全銘柄でない、②JPX日経400は収益性・流動性等から400銘柄選定、③東証REIT指数は30銘柄限定でない、④S&P500は米国株指数。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-027",
@@ -5107,7 +5365,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①為替手数料は金融機関差あり、②外貨→円はTTBでTTS記載が誤り、③個人FX倍率に上限、④円安で外貨債券の円換算利回り上昇要因。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-028",
@@ -5157,15 +5418,18 @@
       "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
-      "independent_audit_status": "HOLD",
+      "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
-      "approved_for_content_bank": false,
+      "approved_for_content_bank": true,
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "modification_reviewed_at": "2026-11-23",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "日本FP協会公式PDF表示15頁を画面確認。預金60%×0.1%=0.06%、債券10%×1%=0.10%、株式30%×7%=2.10%、合計2.26%で正答③。①0.32%、②1.10%、④2.70%は不一致。公式表にある標準偏差0%、5%、15%は復旧JSONでは省略されているためmodified=true等による省略表示を別途明示する必要あり。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-029",
@@ -5224,7 +5488,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①両NISA枠併用可、②基準年1/1時点18歳以上で20歳未満一律禁止は誤り、③保有期間無期限、④積立枠年120万円正答。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-030",
@@ -5282,8 +5549,11 @@
       "modification_reviewed_at": "2026-11-23",
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①DCの預金商品も預金保険対象、②決済用預金は全額保護で1000万円限定は誤り、③外貨預金対象外、④単なる借名預金は保護対象外。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-031",
@@ -5342,7 +5612,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①所得10区分、②相続税は申告納税方式で賦課課税ではない、③消費税間接税、④法人税国税・不動産取得税地方税。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-032",
@@ -5401,7 +5674,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①株式配当は配当所得、②所得金額調整控除最大15万円で10万円ではない、③貸付けは事業規模でも不動産所得、④従業員の無利息借入利益は原則給与所得。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-033",
@@ -5460,7 +5736,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①土地取得借入利子相当額の損失通算不可、②先物損失は原則他所得通算不可、③生活用自動車の損失通算不可、④事業所得赤字と不動産所得通算可。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-034",
@@ -5519,7 +5798,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①特定扶養親族19～22歳、②老人扶養70歳以上、③本人所得1000万円超なら配偶者控除不可、④内縁は配偶者控除不可。2025年の特定親族特別控除新設後も④は唯一の誤肢。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-035",
@@ -5578,7 +5860,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "非上場の内国法人配当も総合課税なら原則配当控除可、①が不適切。②公募株式投信（対象除外例を除く）、③借入利子控除、④損益通算前の配当金額は整合。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-036",
@@ -5614,7 +5899,7 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-05 第36問",
       "modified": true,
-      "modification_note": "【解説修正／原題の問題文・4選択肢は変更なし】解説が給与収入に金額上限なしと誤って一般化していた。1,500万円の設問条件と2,000万円超の確定申告要件を区別。正答①維持。 独立再監査前のため内容PASSとはしない。",
+      "modification_note": "【解説修正／原題の問題文・4選択肢は変更なし】解説が給与収入に金額上限なしと誤って一般化していた。1,500万円の設問条件と2,000万円超の確定申告要件を区別。正答①維持。 独立再監査により解説内容PASS、公開承認とは別。",
       "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
@@ -5625,7 +5910,7 @@
         "explanation": "済"
       },
       "visual_exhibit_review": "NOT_FLAGGED_BY_PATTERN",
-      "independent_review_status": "FAIL_CORRECTED_REAUDIT_PENDING",
+      "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
       "correction_prior": [
@@ -5652,8 +5937,14 @@
       "modification_scope": "explanation_only",
       "correction_primary_source_url": "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm",
       "audit_status": "PASS_CORRECTED_INDEPENDENT_REAUDIT",
-      "release_selected": false,
-      "audit_evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af"
+      "release_selected": true,
+      "audit_evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af",
+      "audit_reason": "年収2000万円超の確定申告例外を明記。国税庁No.1900/1901に整合。",
+      "provenance_gate_status": "PROVISIONAL_OFFICIAL_PDF_COMPARISON_PENDING",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "release_candidate_status": "RESERVE_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-037",
@@ -5712,7 +6003,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①納税地は原則本店等、②異動前税務署長へ届出正答、③申告期限は原則2か月、④設立後青色申請の原則期限は1か月でない。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-038",
@@ -5771,7 +6065,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①損金経理原則必要、②2016年4月以後の建物等は定額法のみで定率法のみは誤り、③10万円未満の全額損金、④10～20万円未満は3年一括償却可。対象事業年度2024-04～2025-03を保持。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-039",
@@ -5807,7 +6104,7 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-05 第39問",
       "modified": true,
-      "modification_note": "【解説修正／原題の問題文・4選択肢は変更なし】選択肢③も誤りとみなす誤解説が正答一意性を損ねた。両指標1,000万円超は適切と明記して正答①を維持。 独立再監査前のため内容PASSとはしない。",
+      "modification_note": "【解説修正／原題の問題文・4選択肢は変更なし】選択肢③も誤りとみなす誤解説が正答一意性を損ねた。両指標1,000万円超は適切と明記して正答①を維持。 独立再監査により解説内容PASS、公開承認とは別。",
       "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
@@ -5818,7 +6115,7 @@
         "explanation": "済"
       },
       "visual_exhibit_review": "NOT_FLAGGED_BY_PATTERN",
-      "independent_review_status": "FAIL_CORRECTED_REAUDIT_PENDING",
+      "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
       "correction_prior": [
@@ -5845,8 +6142,14 @@
       "modification_scope": "explanation_only",
       "correction_primary_source_url": "https://www.nta.go.jp/law/tsutatsu/kihon/shohi/01/05.htm",
       "audit_status": "PASS_CORRECTED_INDEPENDENT_REAUDIT",
-      "release_selected": false,
-      "audit_evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af"
+      "release_selected": true,
+      "audit_evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af",
+      "audit_reason": "基準期間は前々年、特定期間は給与等支払額による選択判定を明記。国税庁資料に整合。",
+      "provenance_gate_status": "PROVISIONAL_OFFICIAL_PDF_COMPARISON_PENDING",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "release_candidate_status": "RESERVE_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-040",
@@ -5905,7 +6208,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①売上総利益=売上高-売上原価、②営業利益を経常利益-販管費とするのは誤り、③無形資産に特許・商標、④固定負債は長期借入等。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-041",
@@ -5964,7 +6270,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①不動産登記は法務局、②抵当権は権利部乙区、③一般建物は壁芯面積、④登記事項証明書は利害関係不要。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-042",
@@ -6023,7 +6332,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①顕名なしでも相手方が代理権を知り得た場合は無効とは限らない、②自己共有持分譲渡は全員同意不要、③引渡前の地震全壊では反対給付拒絶可、④履行着手後は解約手付解除不可。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-043",
@@ -6082,7 +6394,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①普通借地50年超可、②債務不履行解除では建物買取請求不可、③更新請求は建物存在が必要、④普通借地は公正証書必須でない。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-044",
@@ -6141,7 +6456,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①正当事由ある貸主解約6か月、②普通借家1年未満は期間の定めなしとみなされる、③通常損耗・経年変化は原状回復義務なし、④造作買取請求権を行使しない特約は有効。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-045",
@@ -6200,7 +6518,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①非線引き都市計画区域あり、②建物建築等目的が必要、③土地区画整理事業の施行として行う開発行為は許可不要、④農業従事者用住宅の例外規定。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-046",
@@ -6259,7 +6580,10 @@
       "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING",
       "audit_reason": "①前面道路幅12m未満容積率制限、②準防火地域の耐火建築物で建蔽率緩和、③セットバック部分は敷地面積不算入で誤り、④敷地過半用途地域で用途規制。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_MODIFICATION_UI_AND_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-047",
@@ -6318,7 +6642,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "2026年4月の改正を考慮。共用部分費用は持分に応じた負担が原則で均等割ではない（①）。②管理者選解任、③全員で団体、④床面積割合は整合。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-048",
@@ -6377,7 +6704,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①相続人以外への特定遺贈は原則課税、②死因贈与は取得税課税、③交換も取得、④一般新築住宅の控除は原則1200万円（1500万円は認定長期優良住宅等）。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-049",
@@ -6432,8 +6762,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①概算取得費は10%でなく5%（誤）。②1月1日時点5年超が長期、③15.315%＋住民税5%、④仲介料は譲渡費用。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-05-gakka-050",
@@ -6488,8 +6823,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①事業受託でも建設費負担は所有者、②建設協力金はテナント等から借りる方式（正）、③定期借地では建物所有者は借地人、④等価交換で建物全部取得はしない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-05-gakka-051",
@@ -6545,7 +6885,12 @@
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①定期贈与は当事者一方死亡で失効、②書面によらない未履行部分は解除可（正）、③負担未履行なら解除可、④死因贈与契約書は遺言書検認対象ではない。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-05-gakka-052",
@@ -6604,7 +6949,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①基礎控除は贈与者でなく受贈者あたり年110万円、父母2名でも220万にならない。②18歳以上の直系尊属贈与、③2024以降の相続時精算課税の基礎控除、④一律20%整合。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-053",
@@ -6663,7 +7011,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①実子と養子同等、②非嫡出子が嫡出子の半分は2013年改正で誤り、③半血兄弟は半分、④単独代襲人は被代襲者相当。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-054",
@@ -6719,7 +7070,12 @@
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①単純承認は債務も引き継ぐ、②放棄は知った時から原則3か月の家裁申述（正）、③放棄で代襲しない、④限定承認は共同相続人全員。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-05-gakka-055",
@@ -6778,7 +7134,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①3000+600×人数、②放棄なしと仮定、③特別養子は実子扱い、④実子なしなら普通養子2人まで算入できるため不適切。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-056",
@@ -6834,7 +7193,12 @@
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①申告先は相続人住所地でなく被相続人死亡時住所地（誤）、②死亡保険金非課税で基礎控除以下なら申告義務なし、③小規模宅地特例後の物納収納価額、④第三者財産等の延納担保可。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-05-gakka-057",
@@ -6889,8 +7253,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①小会社は原則純資産価額、②従業員数70人以上は大会社（正）、③少数株主は配当還元、④比準要素は配当・利益・純資産で売上高でない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-05-gakka-058",
@@ -6945,8 +7314,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①路線価なしは倍率方式、②倍率方式に更に不整形地補正を加えるのは原則誤り、③一体利用なら1画地評価、④正面路線は奥行補正後の単価比較。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-05-gakka-059",
@@ -7005,7 +7379,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①配偶者がいる場合非同居の子は家なき子要件を満たさず適用不可、②③配偶者取得には居住・保有継続要件なし、④同居孫の遺贈には適用余地。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-05-gakka-060",
@@ -7060,8 +7437,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①自己株式取得で分散抑制、②法人受取終身保険は役員退職金原資になり得る、③特例承継計画の確認・提出要（2026-04-01に提出期限が2027-09-30へ延長）、④相続時精算課税は条件を満たせば併用可能で『できない』が誤り。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-001",
@@ -7116,8 +7498,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①年金見込額の試算説明は資格独占業務でない。②申告書代行は税理士法に抵触、③個別有償投資助言は登録要、④有償代理交渉は非弁行為。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-002",
@@ -7172,8 +7559,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①協会けんぽ保険料率は都道府県別、介護保険料率は全国一律、②差額ベッド・食事代は高額療養費対象外、③任意継続最長2年、④被保険者夫婦では出産育児一時金の二重受給不可。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-003",
@@ -7228,8 +7620,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①65歳以上の2事業所合算・各週5～20時間未満・合計20時間以上の特例適用可能。②雇用保険二事業は事業主のみ、③一般受給資格者20年以上150日で120日でない、④育児休業給付は一律40%でない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-004",
@@ -7284,8 +7681,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①繰下げは月0.7%、②2026-04-01時点で遺族厚生年金受給権者は原則繰下げ不可（2028改正前）、③老齢基礎・厚生は別々に繰下げ選択可、④加給年金は繰下げ増額対象外。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-005",
@@ -7335,15 +7737,18 @@
       "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
-      "independent_audit_status": "HOLD",
+      "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
-      "approved_for_content_bank": false,
+      "approved_for_content_bank": true,
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
       "modification_reviewed_at": "2026-11-23",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "①企業型DC規約の承認は都道府県知事でなく厚生労働大臣、②退職一時金制度からの移換は所定期間・方法に基づき単年度一括不可、③DBから企業型DCへの移換で60歳前までの期間を通算加入者等期間に通算する旨は法令の条文と整合、④中退共から企業型DCへの所定の移換制度はある。正答③。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-01-gakka-006",
@@ -7398,8 +7803,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①60～65歳国内居住の任意加入者は国民年金基金に加入可能、②建設業20人以下は小規模企業共済の加入対象、③中退共掛金は事業主負担・月額3万円上限、④要件を満たせば分割払い可能。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-007",
@@ -7454,8 +7864,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①企業型DC事業主掛金は全額損金、②iDeCo小規模企業共済等掛金控除は加入者本人、③中退共事業主掛金は全額損金、④小規模企業共済掛金は必要経費ではなく所得控除。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-008",
@@ -7510,8 +7925,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①入学時特別増額は有利子貸与、②海外大学へのJASSO奨学金もあり不適切、③国の教育ローンに所得条件、④住居費・通学費も使途に含まれる。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-009",
@@ -7566,8 +7986,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①リバースモーゲージは不動産担保と死亡時清算、②必要元本には年金現価係数、③任意後見契約は公正証書、④高齢者の就業機会確保努力義務は原則70歳までで75歳までではない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-010",
@@ -7622,8 +8047,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①クレジットは後払い、②分割払は定めた回数で返済、③デビットに一般的な分割・リボ払いはなく不適切、④プリペイド電子マネーは先払い。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-011",
@@ -7678,8 +8108,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①少短保険料は生命保険料控除対象外、②契約者保護機構は対象外、③低発生率保険を除き保険金額総額1000万円が上限、④生命・医療1年に対して損害は2年まで。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-012",
@@ -7734,8 +8169,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①低解約返戻金型は死亡保険金まで抑えるとは限らず誤り、②変額終身の死亡基本保険金は最低保証、③更新時に改めて告知必須ではない、④逓減定期は保険金額が逓減。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-013",
@@ -7771,7 +8211,7 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-01 第13問",
       "modified": true,
-      "modification_note": "【解説修正／原題の問題文・4選択肢は変更なし】円換算支払特約が受取時のレートを固定するという誤解説を訂正。受取時等の所定日のレートを使用し為替リスクは残ることを明示。MVAの適用は商品・約款依存と限定。正答③維持。 独立再監査前のため内容PASSとはしない。",
+      "modification_note": "【解説修正／原題の問題文・4選択肢は変更なし】円換算支払特約が受取時のレートを固定するという誤解説を訂正。受取時等の所定日のレートを使用し為替リスクは残ることを明示。MVAの適用は商品・約款依存と限定。正答③維持。 独立再監査により解説内容PASS、公開承認とは別。",
       "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
@@ -7782,7 +8222,7 @@
         "explanation": "済"
       },
       "visual_exhibit_review": "NOT_FLAGGED_BY_PATTERN",
-      "independent_review_status": "FAIL_CORRECTED_REAUDIT_PENDING",
+      "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
       "correction_prior": [
@@ -7798,11 +8238,17 @@
       "modification_scope": "explanation_only",
       "correction_primary_source_url": "https://www.jili.or.jp/knows_learns/q_a/life_insurance/134.html",
       "audit_status": "PASS_CORRECTED_INDEPENDENT_REAUDIT",
-      "release_selected": false,
+      "release_selected": true,
       "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md",
       "audit_evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af",
-      "approved_for_content_bank": true
+      "approved_for_content_bank": true,
+      "audit_reason": "MVA適用の限定および円換算時点の為替リスクを明記。保険業界一次資料に整合。",
+      "provenance_gate_status": "PROVISIONAL_OFFICIAL_PDF_COMPARISON_PENDING",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "release_candidate_status": "RESERVE_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-01-gakka-014",
@@ -7861,7 +8307,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "①変額個人年金は一般生命保険控除、②傷害のみの特約保険料は除外、③払込年の控除、④自動振替貸付で払込む保険料は控除対象なので④不適切。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-01-gakka-015",
@@ -7916,8 +8365,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①被保険者＝保険料負担者の死亡保険金は相続税、②リビングニーズ給付非課税、③通常一時払終身の5年以内解約は一時所得（金融類似商品と一般化不可）、④保証期間残年金受給権は相続税課税で一時所得ではない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-016",
@@ -7967,15 +8421,18 @@
       "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
-      "independent_audit_status": "HOLD",
+      "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
-      "approved_for_content_bank": false,
+      "approved_for_content_bank": true,
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
       "modification_reviewed_at": "2026-11-23",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "①法人受取終身保険は資産計上で全額損金不可、②養老保険で全員・遺族死亡受取、本人満期受取なら全額資産計上と断定不可、③特定役員を対象に遺族受取の定期保険料は原則役員への給与で正答、④2024年契約・終身払・解約返戻金なし第三分野保険を最高解約返戻率75%の定期保険に適用する60%資産計上区分とは同視できない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-01-gakka-017",
@@ -8011,7 +8468,7 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-01 第17問",
       "modified": true,
-      "modification_note": "【解説修正／原題の問題文・4選択肢は変更なし】火災保険の最長5年への移行を2015年10月とする誤った時系列を2022年10月始期契約に訂正。正答①維持。 独立再監査前のため内容PASSとはしない。",
+      "modification_note": "【解説修正／原題の問題文・4選択肢は変更なし】火災保険の最長5年への移行を2015年10月とする誤った時系列を2022年10月始期契約に訂正。正答①維持。 独立再監査により解説内容PASS、公開承認とは別。",
       "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
@@ -8022,7 +8479,7 @@
         "explanation": "済"
       },
       "visual_exhibit_review": "NOT_FLAGGED_BY_PATTERN",
-      "independent_review_status": "FAIL_CORRECTED_REAUDIT_PENDING",
+      "independent_review_status": "PASS",
       "publishable": false,
       "dataVersion": "fp2-recovered-180-draft-20261123",
       "correction_prior": [
@@ -8038,11 +8495,17 @@
       "modification_scope": "explanation_only",
       "correction_primary_source_url": "https://faq2.ms-ins.com/faq/show/8148?site_domain=default",
       "audit_status": "PASS_CORRECTED_INDEPENDENT_REAUDIT",
-      "release_selected": false,
+      "release_selected": true,
       "independent_audit_status": "PASS",
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md",
       "audit_evidence_blob_sha": "26f92519480b8c32f44d246440b556a176b472af",
-      "approved_for_content_bank": true
+      "approved_for_content_bank": true,
+      "audit_reason": "火災保険最長5年への短縮は2022年10月始期以降と明記。保険会社公式約款と整合。",
+      "provenance_gate_status": "PROVISIONAL_OFFICIAL_PDF_COMPARISON_PENDING",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "release_candidate_status": "RESERVE_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-01-gakka-018",
@@ -8097,8 +8560,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①親族所有車庫は対物賠償免責、②配偶者のけがは対人賠償免責、③人身傷害は過失割合に関わらず約款の損害額を填補、④通常車両保険は地震津波免責。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-019",
@@ -8153,8 +8621,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①がん保険には一般に待機期間、②先進医療は受診時点の指定、③民間介護保険を公的介護の自己負担限度内の損害填補とするのは誤り、④三大疾病保障保険は給付後通常契約消滅。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-020",
@@ -8225,13 +8698,18 @@
       "modification_scope": "explanation_only",
       "correction_primary_source_url": "https://www.aig.co.jp/content/dam/aig/sonpo/jp/ja/pamphlets/1A2-853.pdf",
       "audit_status": "PASS_CORRECTED_INDEPENDENT_REAUDIT",
-      "release_selected": false,
+      "release_selected": true,
       "independent_audit_status": "PASS",
       "approved_for_content_bank": true,
       "modification_explanation_only": true,
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_2025_01_Q20_SECOND_CORRECTION_REAUDIT_PASS_20261123.md",
       "audit_evidence_blob_sha": "bccab94170391e9074b021fcee2125b3b5d64bf7",
-      "audit_reason": "機械保険の落雷・所定ボイラー事故の補償例、火災・火災起因爆発破裂の免責を一次資料と照合。第2次解説独立再監査PASS。原題対照・権利・公開ゲートは別途未了。"
+      "audit_reason": "機械保険の落雷・所定ボイラー事故の補償例、火災・火災起因爆発破裂の免責を一次資料と照合。第2次解説独立再監査PASS。原題対照・権利・公開ゲートは別途未了。",
+      "provenance_gate_status": "PROVISIONAL_OFFICIAL_PDF_COMPARISON_PENDING",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "release_candidate_status": "RESERVE_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-01-gakka-021",
@@ -8286,8 +8764,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①景気動向指数はCI中心、②生鮮食品除くCPIは2026-04の遅行系列、③50%拡散度を示すのはDIでCIではない、④転換点判定にヒストリカルDI。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-022",
@@ -8342,8 +8825,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①仕組預金に早期償還型、②スーパー定期半年複利は法人限定でなく個人向け、③期日指定は据置期間後に満期選択、④事前代理人指名サービス等で払戻し可能な銀行あり。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-023",
@@ -8398,8 +8886,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①応募者利回り式は償還価格100と購入価格101.20の差を10年で按分、②直接利回り0.1/101.20、③5年保有利回りは売値102との差分を5年で按分、④最終利回りは購入102から償還100を差し引くべきで提示式は逆、④が誤り。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-024",
@@ -8454,8 +8947,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①イールドカーブの軸、②右下がり＝逆イールド、③金利差縮小＝フラット化、④ロールダウンによる価格上昇は通常順イールドであり逆イールド時との記述は不適切。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-025",
@@ -8510,8 +9008,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①信用売りは現渡しで決済可能、②制度信用銘柄は取引所選定、③一般信用の返済期限は契約別で6か月一律でない、④委託保証金30万円・約定代金30%以上。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-026",
@@ -8569,8 +9072,11 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "approved_for_content_bank": true,
       "audit_reason": "原題公式PDF p11で数値・選択肢が一致。①ROE X3.5%<Y6.79%、②PER X47.62>Y20.53、③PBR X1.667>Y1.393が正答、④配当性向 X57.14>Y36.84。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-01-gakka-027",
@@ -8625,8 +9131,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①コールは買う権利・プットは売る権利、②アメリカンは期中行使可・欧州型は満期のみ、③買い手最大損失がプレミアムで最大利益ではない、④ボラティリティ上昇で双方のプレミアム増加。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-028",
@@ -8681,8 +9192,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①リスクは期待収益率からの標準偏差・分散、②分散可能なものは非システマティック、③リスクが個別リスクの加重平均を上回るとはいえない、④期待収益率は加重平均値と一致。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-029",
@@ -8737,8 +9253,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①総合課税配当は株式譲渡損と通算不可、②繰越3年、③簡易申告口座（源泉徴収なし）に上場配当を口座内で受け入れることはできない、④源泉徴収選択口座は各金融機関で開設可。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-030",
@@ -8793,8 +9314,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①DC加入者の預金商品も保護、②国内銀行海外支店と外国銀行国内支店は預金保険対象外、③保護機構は原則責任準備金等90%で80%でない、④銀行で購入の投信は日本投資者保護基金対象外。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-031",
@@ -8849,8 +9375,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①所得税は申告納税方式、②所得は10区分、③未収入を差し引かず権利確定額計上、④非永住者以外の居住者は全世界所得課税。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-032",
@@ -8905,8 +9436,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①暗号資産取引損益は原則雑所得（2026-04時点、後の改正案と区別）、②事業的規模でも貸付けは不動産所得、③賃貸土地建物売却は譲渡所得、④ふるさと納税返礼品は一時所得。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-033",
@@ -8961,8 +9497,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①土地購入に係る借入利子相当損失は通算不可、②業務用車両の譲渡損は原則通算可能、③一時所得の損失は通算不可、④生活通常必要でないゴルフ会員権の損失は原則通算不可。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-034",
@@ -9031,7 +9572,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "Batch03修正2件の独立再監査PASS。正答番号維持、元の修正と説明を照合",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_RIGHTS_UI_Q3_Q5_AND_INDEPENDENT_FINAL",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-01-gakka-035",
@@ -9090,7 +9634,10 @@
       "approved_for_content_bank": true,
       "audit_reason": "2024年10月取得という固定事実。①一般既存住宅の期間は10年、②併用住宅の居住部分1/2以上で正答、③初年は申告、④再居住で再適用可能。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-01-gakka-036",
@@ -9145,8 +9692,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH05_30_20261123.md",
       "audit_evidence_blob_sha": "a82d29af9fba0793f64fa1c9ada6f5cfca9adc45",
       "audit_reason": "①青色申告の対象に雑所得は含まれず誤り、②死亡時の準確定申告は相続開始を知った翌日から4か月で正答、③給与収入1000万円超でも年末調整対象外ではない、④公的年金420万円・他雑所得30万円は免除要件を満たさない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-037",
@@ -9201,8 +9753,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①法人税本税損金不算入、②業務中交通反則金を会社負担しても損金不可（誤）、③法人事業税の本税損金可、④償却限度内損金経理可。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-038",
@@ -9257,8 +9814,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①登録番号・名称必要、②発行事業者の本店所在地は適格請求書の法定記載事項に含まれない、③取引内容必要、④税率別消費税額必要。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-039",
@@ -9313,8 +9875,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_HOLD13_PRIMARY_SOURCE_RESOLUTION_20261123.md",
       "audit_evidence_blob_sha": "f8290a8ac91ed700b8359f6d5df48132a4c2efd2",
       "audit_reason": "①役員が法人へ無利息で貸す場合は受け取っていない利息を自動的に役員雑所得へ算入する原則はなく誤り（正答①）、②役員からの債務免除は法人の益金、③役員無償社宅は賃貸料相当額が給与課税、④会社が時価超で資産を役員に売却した場合の超過受領分は受贈益に相当する（ただし取引実態による）。国税庁No.5202の『役員から時価超で資産を買い入れた場合』は逆方向であり、この設問④へ誤転用しない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-040",
@@ -9369,8 +9936,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①純資産マイナスの債務超過は生じ得る（誤）、②資産＝負債＋純資産、③売上総利益－販管費＝営業利益、④営業利益±営業外損益＝経常利益。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-041",
@@ -9425,8 +9997,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①抵当権は乙区、②所有者以外も証明書請求可能、③新築建物で1か月以内義務は表題登記で保存登記ではない（誤）、④一般建物床面積は壁芯。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-042",
@@ -9481,8 +10058,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①業者自ら売主の手付上限は2割、②買主履行着手前なら倍額提供による解除、③自ら賃貸は宅建業免許不要（誤）、④専任媒介期間超過は3か月扱い。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-043",
@@ -9537,8 +10119,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①未成年者の同意なき売買は原則取消可（誤）、②共有持分の処分は同意不要、③不可帰責の引渡不能なら催告なく解除、④二重譲渡は原則先登記が優先。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-044",
@@ -9593,8 +10180,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①普通借地当初30年・延長可、②建物不在で当然更新なし、③借地上の借地権者名義登記建物があれば借地権登記なしでも対抗可（正答誤肢③）、④一般定期借地は書面または電磁的方法。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-045",
@@ -9649,8 +10241,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①定期借家は公正証書限定でない、②1年未満も可能、③賃貸人の解約申入れには正当事由が必要（正）、④通知欠如で更新されるときは期間の定めのない契約で同期間ではない。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-046",
@@ -9705,8 +10302,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①セットバック部分は容積率敷地面積に含まれない、②防火地域の耐火建築物が全用途で建蔽率規制なしとは限らない、③共同住宅共用廊下階段は容積率算入除外（正）、④前面道路制限は小さい方が上限。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-047",
@@ -9764,8 +10366,11 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "approved_for_content_bank": true,
       "audit_reason": "2026-04の区分所有法改正を考慮。①規約共用部分可能、②管理団体は区分所有者全員で構成し一部除外規約不可、③敷地利用権分離処分不可、④共用部分持分は原則床面積割合。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     },
     {
       "id": "fp2-2025-01-gakka-048",
@@ -9820,8 +10425,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①不動産取得税は登記に関わらず現実の取得に課税、②一般新築住宅の控除1200万円、③贈与所有権移転は登録免許税課税、④表題登記は登録免許税不要で誤肢。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-049",
@@ -9876,8 +10486,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①相続取得は原則被相続人取得時を承継（正）、②長期譲渡の所得税は15.315%で20.42%でない、③長短判定は1月1日時点5年、④概算取得費は5%。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-050",
@@ -9932,8 +10547,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①等価交換全部譲渡方式は土地・建物一部を対価取得、②建設協力金はテナントから建設資金借入、③定期借地は建物建設資金負担なし、④事業受託では土地所有者が建物所有・資金負担で誤り。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-051",
@@ -9988,8 +10608,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①口頭贈与は未履行部分解除可、②死因贈与は契約であり一方的意思表示ではない（誤）、③定期贈与は一方死亡で効力失う、④負担不履行は解除可。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-052",
@@ -10044,8 +10669,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①保険料負担者＝被保険者の死亡保険金は相続税、②著しい低額譲受は原則時価差額で相続税評価額と断定不可、③資力喪失等の困難部分の債務免除は非課税、④相当な離婚財産分与は原則贈与税なし（正）。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-053",
@@ -10100,8 +10730,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①暦年贈与基礎控除は各贈与者でなく受贈者年110万円（誤）、②累進税率、③相続時精算課税の年110万円控除、④一律20%。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-054",
@@ -10156,8 +10791,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①共同相続人の協議で法定相続分と異なる分割可（誤）、②第三者譲受相続分の取戻し可、③兄弟姉妹の子の代襲、④養子実子同等。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-055",
@@ -10212,8 +10852,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①配偶者軽減適用には申告要件あり、②3年以内分割見込書と期限内分割で軽減可（正）、③相続放棄配偶者でも遺贈取得分は対象、④婚姻20年要件なし。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-056",
@@ -10268,8 +10913,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①配当還元の還元率は10%で5%ではない、②類似業種の株価は3か月最小、前年平均や2年間平均の選択可（正）、③小会社は純資産価額が原則、④同族株主以外は配当還元方式。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-057",
@@ -10324,8 +10974,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①相続時精算課税による生前贈与宅地は相続税計算へ加算されても小規模宅地特例対象外（正）、②青空駐車場に構築物なしは対象外、③相続人以外の親族も遺贈取得なら適用余地、④配偶者は同居不要。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-058",
@@ -10380,8 +11035,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①保険は納税資金、②受取人固有財産、③非課税枠500万円×法定相続人数、④相続放棄した受取人は死亡保険金の非課税適用なし（登録正答）。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-059",
@@ -10436,8 +11096,13 @@
       "audit_evidence_path": "fp2-manabi-sprint/audit/FP2_RECOVERED_180_INDEPENDENT_BATCH06_FINAL30_20261123.md",
       "audit_evidence_blob_sha": "b8dc0faa470a6105e4892b69f61cfd2cc199ff34",
       "audit_reason": "①株主有限責任、②特定株主から有償自己株式取得は原則株主総会特別決議要（誤）、③定時・臨時総会、④公開会社に取締役会設置義務。",
-      "release_selected": false,
-      "release_candidate_status": "CONTENT_PASS_RESERVE"
+      "release_selected": true,
+      "release_candidate_status": "CONTENT_PASS_RESERVE",
+      "independent_audit_status": "PASS",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_PROVENANCE_FINAL_Q0_Q5",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY",
+      "approved_for_content_bank": true
     },
     {
       "id": "fp2-2025-01-gakka-060",
@@ -10496,30 +11161,29 @@
       "approved_for_content_bank": true,
       "audit_reason": "①取得を知って3年、②相続人申告登記の義務履行、③2024年施行前の相続も義務化対象で不適切、④正当理由なく不履行なら過料。2027-03-31経過期限。",
       "release_selected": true,
-      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR"
+      "release_candidate_status": "SELECTED_CONTENT_PASS_NOT_RELEASE_CLEAR",
+      "content_status": "PASS",
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "approval_scope": "INDEPENDENT_CONTENT_REVIEW_PASS_ONLY"
     }
   ],
   "provenance_verified_pass_50": 114,
-  "provenance_note": "175 reviewed content-PASS; 114 original-PDF/exhibit provenance reviewed and 61 reserve-only provisional; five corrected FAIL excluded pending re-audit. Do not ship draft.",
+  "provenance_note": "回収180問は全問独立内容監査PASS。原典逐語比較・変更分類・2026-04-01法令/権利の最終承認は別ゲートで、先行のprovenance集計をこの監査PASS数として使わない。",
   "last_content_update": "2026-11-23",
   "quality_counts": {
-    "pass": 107,
-    "fail": 2,
-    "hold": 11,
-    "unreviewed": 60
+    "content_pass": 180,
+    "content_fail": 0,
+    "content_hold": 0,
+    "selected_in_five_exam_release": 180,
+    "publication_clear": 0
   },
-  "content_approved_count": 107,
+  "content_approved_count": 180,
   "canonical_bank_path": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "pending_reaudit_ids": [
-    "fp2-2025-05-gakka-036",
-    "fp2-2025-05-gakka-039"
-  ],
-  "latest_review_batch": "Batch04",
-  "reconciliation_note": "107 individual content-audit PASS statuses, audit evidence paths and source modification fields synchronized from canonical approved bank; excluded FAIL and HOLD retain draft quarantine.",
-  "latest_independent_review": {
-    "total": 180,
-    "pass": 175,
-    "fail_correction_pending": 5,
-    "hold": 0
-  }
+  "pending_reaudit_ids": [],
+  "latest_review_batch": "Q20_SECOND_INDEPENDENT_REAUDIT_PASS_20261123",
+  "reconciliation_note": "Draft 180 IDs and full question/choice/answer/explanation fields match canonical312; all audit evidence and corrected PASS flags synchronized, no reaudits pending. 180/180 in five-exam 300 selection, 12 original reserves outside 180.",
+  "latest_independent_review": "RECONCILED_ALL_180_PASS_20261123",
+  "content_audit_pass_count": 180,
+  "content_audit_fail_count": 0,
+  "content_audit_hold_count": 0
 }
