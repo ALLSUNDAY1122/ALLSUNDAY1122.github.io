@@ -3,7 +3,7 @@
   "created_at_jst": "2026-11-24T02:20:00+09:00",
   "branch": "feature/fp2-release-scope-20261123",
   "canonical_path": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "canonical_source_blob_sha": "b3428392860b354893b65df342ec40e72b2c01cb",
+  "canonical_source_blob_sha": "9e048e14d44ba793d83b078a2068530f8e9def03",
   "law_effective_date": "2026-04-01",
   "scope": {
     "total": 180,
@@ -25,8 +25,8 @@
   "gate_policy": "以前のPASSは内容一次判定であり、本最終証拠監査の完了を意味しない。証拠行未固定の問題のlegalChecked/explanationCheckedを機械的にtrueへ変更しない。",
   "summary": {
     "target": 180,
-    "pending": 72,
-    "verified": 108,
+    "pending": 70,
+    "verified": 110,
     "hold": 0,
     "fail": 0,
     "by_exam": {
@@ -37,8 +37,8 @@
         "fail": 0
       },
       "2025-05": {
-        "pending": 12,
-        "verified": 48,
+        "pending": 10,
+        "verified": 50,
         "hold": 0,
         "fail": 0
       },
@@ -6167,17 +6167,62 @@
       "id": "fp2-2025-05-gakka-040",
       "exam_date": "2025-05",
       "question_number": 40,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "売上総利益＝売上高－売上原価の公式に一致する。",
+          "primary_urls": [
+            "https://www.asb-j.jp/jp/accounting_standards_system/details.html?topics_id=81-0"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "営業利益＝売上総利益－販売費及び一般管理費であり、経常利益から販管費を差し引くものではない。",
+          "primary_urls": [
+            "https://www.chusho.meti.go.jp/zaimu/kaikei/tools/2008/06.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "特許権・商標権は物的形態を持たない無形固定資産に属する。",
+          "primary_urls": [
+            "https://www.asb-j.jp/jp/accounting_standards_system/details.html?topics_id=81-0"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "返済期限が決算日後1年を超える負債は原則固定負債に分類する。",
+          "primary_urls": [
+            "https://www.asb-j.jp/jp/accounting_standards_system/details.html?topics_id=81-0"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "4肢それぞれについて会計規範・公的手法資料の記載を確認し、既存解説との整合を独立点検。",
+        "conclusion": "正答2維持。営業利益＝売上総利益－販売費及び一般管理費であり、経常利益から販管費を差し引くものではない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "企業会計原則・中小企業庁の公的会計説明で照合。"
     },
     {
       "id": "fp2-2025-05-gakka-041",
@@ -6732,17 +6777,62 @@
       "id": "fp2-2025-05-gakka-050",
       "exam_date": "2025-05",
       "question_number": 50,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "事業受託方式の資金調達者は土地所有者とする国交省の比較表に反する。",
+          "primary_urls": [
+            "https://www.mlit.go.jp/common/000032366.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "建設協力金方式は入居予定テナントの協力金を建設費に充当する事業方法である。",
+          "primary_urls": [
+            "https://trust-mf.or.jp/pdf/books/19.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "定期借地方式は原則借地人が建物所有者となり地主は地代を得る。",
+          "primary_urls": [
+            "https://www.mlit.go.jp/totikensangyo/totikensangyo_tk5_000121.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "等価交換方式では開発業者と土地所有者が建物を区分所有するのが原則であり全部取得ではない。",
+          "primary_urls": [
+            "https://www.mlit.go.jp/common/000032366.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "4肢それぞれについて会計規範・公的手法資料の記載を確認し、既存解説との整合を独立点検。",
+        "conclusion": "正答2維持。建設協力金方式は入居予定テナントの協力金を建設費に充当する事業方法である。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "事業手法の公的比較資料・公益財団法人調査を照合。制定法による直接正誤ではない。"
     },
     {
       "id": "fp2-2025-05-gakka-051",
