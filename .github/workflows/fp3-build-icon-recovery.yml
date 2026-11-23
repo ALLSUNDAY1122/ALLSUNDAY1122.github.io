@@ -55,17 +55,23 @@ jobs:
           assert struct.unpack('>II',b[16:24]) == (1024,1024), 'AppIcon must be 1024x1024'
           print('AppIcon SHA-256:',hashlib.sha256(b).hexdigest())
           contents={'images':[{'filename':'AppIcon.png','idiom':'universal','platform':'ios','size':'1024x1024'}],'info':{'author':'xcode','version':1}}
-          Path('fp3-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/Contents.json').write_text(json.dumps(contents,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')
+          Path('fp3-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/Contents.json').write_text(json.dumps(contents,ensure_ascii=False,indent=2)+chr(10),encoding='utf-8')
           p=Path('fp3-manabi-sprint/ios/project.yml')
-          s=p.read_text(encoding='utf-8')
-          s=s.replace('    CURRENT_PROJECT_VERSION: 10','    CURRENT_PROJECT_VERSION: 11',1)
-          if '    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' not in s:
-              s=s.replace('    CURRENT_PROJECT_VERSION: 11\\n','    CURRENT_PROJECT_VERSION: 11\\n    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon\\n',1)
-          if '      - path: Assets.xcassets' not in s:
-              s=s.replace('      - path: Web\\n        type: folder\\n        buildPhase: resources\\n','      - path: Web\\n        type: folder\\n        buildPhase: resources\\n      - path: Assets.xcassets\\n        buildPhase: resources\\n',1)
-          if '        CFBundleIconName: AppIcon' not in s:
-              s=s.replace('        CFBundleDisplayName: FP3級 学びスプリント\\n','        CFBundleDisplayName: FP3級 学びスプリント\\n        CFBundleIconName: AppIcon\\n',1)
-          p.write_text(s,encoding='utf-8')
+          lines=p.read_text(encoding='utf-8').splitlines()
+          for i,line in enumerate(lines):
+              if line.strip() == 'CURRENT_PROJECT_VERSION: 10':
+                  lines[i]='    CURRENT_PROJECT_VERSION: 11'
+                  lines.insert(i+1,'    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon')
+                  break
+          if not any('ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' in x for x in lines):
+              raise SystemExit('AppIcon build setting insertion failed')
+          if not any('path: Assets.xcassets' in x for x in lines):
+              i=next(i for i,x in enumerate(lines) if x.strip() == 'buildPhase: resources' and i>0 and lines[i-1].strip() == 'type: folder')
+              lines[i+1:i+1]=['      - path: Assets.xcassets','        buildPhase: resources']
+          if not any('CFBundleIconName: AppIcon' in x for x in lines):
+              i=next(i for i,x in enumerate(lines) if 'CFBundleDisplayName:' in x)
+              lines.insert(i+1,'        CFBundleIconName: AppIcon')
+          p.write_text(chr(10).join(lines)+chr(10),encoding='utf-8')
           PY
           cat >> codemagic.yaml <<'YAML'
 
