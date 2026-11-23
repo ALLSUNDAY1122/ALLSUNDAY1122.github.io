@@ -129,3 +129,9 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 4. Appleの2FA・契約・実機確認・本審査最終送信は本人操作が必要な場合のみ確認。
 
 **未監査597問を本番に公開しない。申請可能判定はBLOCKEDを維持。**
+
+## CI証跡の追加確認
+
+- 600問年度別監査台帳 `official-kansai/AUDIT_MATRIX_600.json` をGitHubで読戻し、600件／PASS3・HOLD1・未監査596と年度別内訳を確認。
+- GitHub Actions生成コミット：監査台帳 `813dcb773eba`、正式バンク再生成 `e6e112ff08ae`。既存3件の承認IDは維持。
+- CIの自動構造検査が成功したことと、実ブラウザで操作を確認したことは異なるため、ブラウザ・実機テストは未完了のまま。
