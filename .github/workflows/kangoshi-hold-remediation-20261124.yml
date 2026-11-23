@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'kangoshi-sprint/scripts/repair_page_footers.py'
+      - 'kangoshi-sprint/scripts/repair_verified_pdf_font_glyphs.py'
+      - 'kangoshi-sprint/scripts/bulk_dual_engine_verify.py'
       - 'kangoshi-sprint/scripts/crop_five_official_figures.py'
       - 'kangoshi-sprint/scripts/promote_dual_engine.py'
       - '.github/workflows/kangoshi-hold-remediation-20261124.yml'
@@ -37,6 +39,8 @@ jobs:
           done
       - name: Repair uniquely recognized PDF page footers
         run: python kangoshi-sprint/scripts/repair_page_footers.py
+      - name: Re-extract all 480 using visually verified Ryumin glyph mappings
+        run: python kangoshi-sprint/scripts/repair_verified_pdf_font_glyphs.py
       - name: Recheck 480 with Poppler, PyMuPDF and official key
         run: python kangoshi-sprint/scripts/bulk_dual_engine_verify.py
       - name: Promote only newly eligible records
@@ -48,6 +52,7 @@ jobs:
           set -euo pipefail
           mkdir -p kangoshi-sprint/audit/staging-repair-evidence
           cp kangoshi-sprint/audit/runs/footer-repair-20261124/footer-repairs.json kangoshi-sprint/audit/staging-repair-evidence/
+          cp kangoshi-sprint/audit/runs/glyph-map-repair-20261124/glyph-map-repair-ledger.json kangoshi-sprint/audit/staging-repair-evidence/
           cp kangoshi-sprint/audit/runs/dual-engine-20261124/summary.json kangoshi-sprint/audit/staging-repair-evidence/
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -64,6 +69,7 @@ jobs:
           name: kangoshi-413-hold-remediation
           path: |
             kangoshi-sprint/audit/runs/footer-repair-20261124/
+            kangoshi-sprint/audit/runs/glyph-map-repair-20261124/
             kangoshi-sprint/audit/runs/dual-engine-20261124/
             kangoshi-sprint/audit/official-pdf-crop-replacements-20261124.json
             kangoshi-sprint/media/official-crops/
