@@ -18,7 +18,7 @@ PRINT_PAGE=re.compile(r"^\s*-\s*[0-9０-９]{1,3}\s*-\s*$")
 PRINT_HASH=re.compile(r"^\s*[♯＃#]{15,}\s*$")
 def git_blob_sha(path):
     b=path.read_bytes()
-    return hashlib.sha1(f"blob {len(b)}\\0".encode()+b).hexdigest()
+    return hashlib.sha1(f"blob {len(b)}\0".encode()+b).hexdigest()
 def norm(value):
     """NFC only; discard Unicode whitespace incl LF/U+3000; never remove kana, marks or punctuation."""
     return "".join(c for c in unicodedata.normalize("NFC",value) if not c.isspace())
