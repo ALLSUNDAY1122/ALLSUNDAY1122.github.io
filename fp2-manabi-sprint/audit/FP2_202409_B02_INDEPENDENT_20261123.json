@@ -4,28 +4,21 @@
   "reviewed_at": "2026-11-23",
   "source_branch": "feature/fp2-academic-300-expansion-20261123",
   "source_path": "fp2-manabi-sprint/questions/draft/fp2-official-202409-b02.json",
-  "source_blob_sha": "846349689de7a45d21dced134082e82a1dcf601c",
+  "source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
   "applicable_on": "2026-04-01",
   "audit_type": "independent_primary_source_choice_by_choice",
   "summary": {
-    "pass": 19,
-    "fail": 1,
+    "pass": 20,
+    "fail": 0,
     "hold": 0,
     "critical_confirmed": 0,
-    "high_confirmed": 1,
-    "canonical_content_eligible": 19,
+    "high_confirmed": 0,
+    "canonical_content_eligible": 20,
     "release_approval": false
   },
-  "critical_high_issues": [
-    {
-      "id": "FP2-OFFICIAL-202409-Q29",
-      "severity": "High",
-      "type": "ANSWER_UNIQUENESS",
-      "action": "選択肢2の修正後、独立再監査必須"
-    }
-  ],
-  "limitations": "参照した公式資料の全件について2026-04-01時点の履歴スナップショットは未固定。原題公式解答の各番号は制作JSONに記録された値であり、今回独立再抽出までは実施していない。権利ゲートも未実施。",
-  "release_note": "内容監査PASS19問は正規バンク承認候補だがDRAFT_NOT_FOR_RELEASEを維持。Q29は修正再監査まで除外。",
+  "critical_high_issues": [],
+  "limitations": "一次資料の全URLにつき2026-04-01時点のアーカイブ保存は未完了。原題の権利・改変利用条件は別ゲート。Q29は金融庁の制度説明および公式正答PDFで再照合。",
+  "release_note": "Q29のHigh修正を独立再監査PASSへ更新。全20問内容監査PASS。ただし制作DRAFT_NOT_FOR_RELEASEと権利・リリースゲート未通過は維持。",
   "items": [
     {
       "id": "FP2-OFFICIAL-202409-Q21",
@@ -493,8 +486,8 @@
     },
     {
       "id": "FP2-OFFICIAL-202409-Q29",
-      "status": "FAIL",
-      "severity": "High",
+      "status": "PASS",
+      "severity": "none",
       "stem": "無利息・要求払い・決済サービス提供の3条件を満たす決済用預金の預金保険制度による保護範囲はどれか。",
       "answer_zero_based": 3,
       "answer_one_based": 4,
@@ -505,15 +498,15 @@
           "text": "元本1,000万円まで",
           "correct_in_draft": false,
           "independent_verdict": "REJECTED",
-          "reason": "1000万円限定は一般預金等の規則",
+          "reason": "決済用預金は全額保護であり元本1000万円だけの限定は誤り",
           "source_url": "https://www.fsa.go.jp/policy/payoff/"
         },
         {
           "index_zero_based": 1,
-          "text": "元本と利息を含め全額",
+          "text": "元本1,000万円とその利息まで",
           "correct_in_draft": false,
-          "independent_verdict": "ALTERNATIVE_PLAUSIBLE",
-          "reason": "無利息なので利息ゼロを含めて全額と読める、肢4と実質重複のおそれ",
+          "independent_verdict": "REJECTED",
+          "reason": "元本1000万円とその利息までの保護は一般預金等の仕組みであり決済用預金ではない",
           "source_url": "https://www.fsa.go.jp/policy/payoff/"
         },
         {
@@ -521,7 +514,7 @@
           "text": "外貨建てのみ全額",
           "correct_in_draft": false,
           "independent_verdict": "REJECTED",
-          "reason": "外貨建預金全額保護ではない",
+          "reason": "外貨建預金のみの全額保護ではなく預金種類の三条件で判定する",
           "source_url": "https://www.fsa.go.jp/policy/payoff/"
         },
         {
@@ -529,29 +522,41 @@
           "text": "全額保護される",
           "correct_in_draft": true,
           "independent_verdict": "SUPPORTED",
-          "reason": "決済用預金は全額保護",
+          "reason": "無利息・要求払い・決済サービス提供の三条件を満たし全額保護される",
           "source_url": "https://www.fsa.go.jp/policy/payoff/"
         }
       ],
-      "explanation_verdict": "FAIL_UNIQUENESS",
-      "explanation_reason": "決済用預金は全額保護。ただし無利息という前提で『元本と利息を含め全額』の肢も全額保護と読めるため正答一意性不十分",
+      "explanation_verdict": "PASS",
+      "explanation_reason": "金融庁の預金保険制度の一次資料により決済用預金の全額保護、一般預金等の元本1000万円とその利息等の保護の違いを確認。新しい肢2は明確な誤答となり正答index3が一意。",
       "primary_sources": [
-        "https://www.fsa.go.jp/policy/payoff/"
+        "https://www.fsa.go.jp/policy/payoff/",
+        "https://www.fsa.go.jp/policy/payoff/01.pdf"
       ],
       "original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_q.pdf",
       "original_answer_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202409_a.pdf",
       "original_answer_one_based": 1,
-      "original_answer_matches_official": "NOT_RECHECKED_INDEPENDENTLY",
+      "original_answer_matches_official": true,
       "modified": true,
-      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。",
-      "issue": {
-        "severity": "High",
-        "type": "ANSWER_UNIQUENESS",
-        "details": "選択肢2『元本と利息を含め全額』と選択肢4『全額保護される』が設問の無利息預金について実質重複と解釈され得る。選択肢2を明確な誤答に置換要。"
-      },
+      "modification_note_review": "原題の主題から単一論点を抽出し、数値・設定・設問・選択肢を独自に再構成。原題の公式正答と加工後の正答を別管理。 独立監査FAIL是正（2026-11-23）：旧選択肢2「元本と利息を含め全額」が正答肢4と実質的に重複したため、「元本1,000万円とその利息まで」へ変更。正答index3は維持。",
+      "issue": null,
       "applicable_on": "2026-04-01",
-      "canonical_content_eligible": false,
-      "release_eligible": false
+      "canonical_content_eligible": true,
+      "release_eligible": false,
+      "review_history": [
+        {
+          "review": "2026-11-23 initial",
+          "status": "FAIL",
+          "severity": "High",
+          "old_choice_2": "元本と利息を含め全額",
+          "reason": "肢2と肢4が同じ意味になる可能性"
+        },
+        {
+          "review": "2026-11-23 independent re-audit",
+          "status": "PASS",
+          "new_choice_2": "元本1,000万円とその利息まで",
+          "reason": "肢2の上限1000万円が明確に誤答。原題公式解答肢1と加工後肢4は独立管理。"
+        }
+      ]
     },
     {
       "id": "FP2-OFFICIAL-202409-Q30",
@@ -1191,5 +1196,20 @@
       "canonical_content_eligible": true,
       "release_eligible": false
     }
-  ]
+  ],
+  "reaudit": {
+    "id": "FP2-OFFICIAL-202409-Q29",
+    "date": "2026-11-23",
+    "review_result": "PASS",
+    "old_source_blob_sha": "846349689de7a45d21dced134082e82a1dcf601c",
+    "new_source_blob_sha": "979b07fcfe21d2d8f1476720a4277287d7f3e87b",
+    "original_answer_independently_verified": true,
+    "official_answer_one_based": 1,
+    "change_only": "choice[1] text and modification_note",
+    "high_issue_status": "RESOLVED",
+    "primary_sources": [
+      "https://www.fsa.go.jp/policy/payoff/",
+      "https://www.fsa.go.jp/policy/payoff/01.pdf"
+    ]
+  }
 }
