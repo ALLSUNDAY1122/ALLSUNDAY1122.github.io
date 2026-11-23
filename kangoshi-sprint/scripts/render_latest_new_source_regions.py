@@ -35,6 +35,39 @@ for e in L["eachItem"]:
         "officialAnswer":e.get("answer"),"clip":clip,"sourcePdfSha256":source_sha,
         "pngFilename":file.name,"pngSha256":hashlib.sha256(file.read_bytes()).hexdigest(),
         "status":"SOURCE_IMAGE_RENDERED_FIDELITY_NOT_HUMAN_SIGNED"})
+# OCR-CMap promotions are proven by a separate image-pinned ledger.
+# Include them in the same image count invariant, rather than counting only
+# PyMuPDF/Poppler promotions in L["eachItem"].
+ocr_proof=ROOT/"audit/ocr-cmap-repair-ledger-20261124.json"
+if ocr_proof.exists():
+    evidence=json.loads(ocr_proof.read_text())
+    for e in evidence["perQuestion"]:
+        if e["status"]!="REPAIRED_SOURCE_ONLY":continue
+        qid=e["id"];exam=e["sourceExam"];sess=e["session"];page_n=e["sourcePage"]
+        if any(r["id"]==qid for r in rows):raise ValueError("Duplicate image evidence "+qid)
+        clip=e["coordinateClip"]
+        pdf=pathlib.Path("/tmp/kangoshi-official")/f"{exam}-{sess}.pdf"
+        source_sha=hashlib.sha256(pdf.read_bytes()).hexdigest()
+        if source_sha!=e["sourcePdfSha256"]:raise ValueError("OCR proof PDF hash drift "+qid)
+        doc=fitz.open(pdf); page=doc[page_n-1]
+        x0,y0,x1,y1=map(float,clip)
+        if not (0<=x0<x1<=page.rect.width+.1 and 0<=y0<y1<=page.rect.height+.1):
+            raise ValueError("OCR proof out-of-range clip "+qid)
+        original=ROOT/"audit/runs/residual-geometric-images-20261124"/(qid+"-source-region.png")
+        if not original.is_file() or hashlib.sha256(original.read_bytes()).hexdigest()!=e["sourceImageSha256"]:
+            raise ValueError("OCR image hash not pinned "+qid)
+        file=OUT/f"{qid}-official-region.png"
+        page.get_pixmap(matrix=fitz.Matrix(2.6,2.6),clip=fitz.Rect(*clip),alpha=False).save(str(file))
+        thumb=Image.open(file);thumb.thumbnail((660,420))
+        box=Image.new("RGB",(680,465),"white")
+        box.paste(thumb,((680-thumb.width)//2,34))
+        ImageDraw.Draw(box).text((10,10),qid+"  OCR PDF page "+str(page_n),fill="black")
+        thumbs.append(box)
+        rows.append({"id":qid,"exam":exam,"session":sess,"page":page_n,
+            "clip":clip,"sourcePdfSha256":source_sha,"pngFilename":file.name,
+            "pngSha256":hashlib.sha256(file.read_bytes()).hexdigest(),
+            "originalOcrSourceImageSha256":e["sourceImageSha256"],
+            "status":"OCR_CMAP_SOURCE_IMAGE_RENDERED_NO_HUMAN_SIGNOFF"})
 if len(rows)!=L["newPromoted"]:raise ValueError("image evidence count differs from actual promotion ledger")
 if rows:
     grid=Image.new("RGB",(680*4,465*((len(rows)+3)//4)),"#f0f0f0")
