@@ -21,18 +21,18 @@ if bank.get("publishable_questions", 0) != 0:
     raise SystemExit("Release authorization unexpectedly changed; manually re-audit the bundle")
 # Ship only the fixed release selection. Audited reserves stay in GitHub canonical but
 # are never copied into the native distributable payload.
-selection = json.loads((web / "release/release-selection-120-20261123.json").read_text(encoding="utf-8"))
+selection = json.loads((web / "release/release-selection-300-20261123.json").read_text(encoding="utf-8"))
 selected = [q for q in questions if q.get("release_selected") is True]
 selected_ids = [q["id"] for q in selected]
 scoped_ids = [item for group in selection["domains"] for item in group["selected_ids"]]
-if (len(selected) != 120 or len(set(selected_ids)) != 120
-        or len(scoped_ids) != 120 or set(selected_ids) != set(scoped_ids)
-        or selection["selected_count"] != 120 or selection["reserve_count"] != 75
-        or len(questions) != 195):
-    raise SystemExit("FP2 native bundle: 195 canonical, 120 selected, 75 reserve contract violated")
+if (len(selected) != 300 or len(set(selected_ids)) != 300
+        or len(scoped_ids) != 300 or set(selected_ids) != set(scoped_ids)
+        or selection["selected_count"] != 300 or selection["reserve_count"] != 12
+        or len(questions) != 312):
+    raise SystemExit("FP2 native bundle: 312 canonical, 300 selected, 12 reserve contract violated")
 payload = dict(bank)
 payload.update({
-    "status": "CONTENT_PASS_NATIVE_120_PAYLOAD_NOT_PUBLICATION_APPROVED",
+    "status": "CONTENT_PASS_NATIVE_300_PAYLOAD_NOT_PUBLICATION_APPROVED",
     "content_approved_questions": 120,
     "release_candidate_questions": 120,
     "reserve_content_pass_questions": 0,
