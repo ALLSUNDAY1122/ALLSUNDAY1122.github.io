@@ -1,0 +1,41 @@
+{
+  "schema": "touhan-q5-privacy-audit-v1",
+  "timestampJST": "2026-11-24T08:23:24.856894+09:00",
+  "sourceAndBrowserAudit": "PASS",
+  "appStoreConnectReconciliation": "NOT_VERIFIED",
+  "gate": "NOT_VERIFIED",
+  "observedRequestCount": 3,
+  "observedHosts": [
+    "127.0.0.1"
+  ],
+  "observedPaths": [
+    "/official-kansai/APPROVED_OFFICIAL_BANK.json",
+    "/official-practice.html"
+  ],
+  "networkOriginCheck": "PASS",
+  "browserStorage": {
+    "localStorageKeys": [],
+    "sessionStorageKeys": [],
+    "cookie": "",
+    "indexedDBSupported": true,
+    "privacyLink": "./privacy.html"
+  },
+  "noNewStorageDuringOneAnswer": true,
+  "privacyPolicyAccessible": true,
+  "privacyPolicyConsistent": true,
+  "privacyManifestChecks": true,
+  "metadataPrivacyURLIncluded": true,
+  "pageErrors": [],
+  "appleRule": "https://developer.apple.com/jp/app-store/app-privacy-details/",
+  "requiredASCVerification": [
+    "Read actual App Store Connect App Privacy questionnaire for app ID 6802119268",
+    "Confirm hosting provider request/log retention and purposes; WebView traffic is in scope",
+    "Reconcile declared data types, linkage, tracking, privacy policy URL against service and provider policies"
+  ],
+  "limitations": [
+    "Local-host replay inspects actual shipped HTML/JS but does not prove external CDN/hosting retention.",
+    "This evidence is not an App Store Connect configuration readback.",
+    "No real iOS WebView network capture or privacy report was performed."
+  ],
+  "githubRunId": 45287794947
+}

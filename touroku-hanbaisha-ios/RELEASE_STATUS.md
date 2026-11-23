@@ -1369,3 +1369,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 実測：102問中今回PASS 0、累計PASS 102、残HOLD 0。正式バンク 599/600。現mainのバンクが以前の497から468へ戻っていたため、承認済み497問の歴史的コミット(473f978287f80e2d7e2fd067936b359d20fab8c3)と現mainの和集合で承認済み0問を復旧（重複IDなし）。
 - HOLD理由（重複あり）：{}。監査台帳：\`official-kansai/RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json\`。
 - 2023年問90の公式無効問題は未昇格。公開判定BLOCKED、Apple実機・App Review最終送信未実施。
+
+
+## Q5 App Privacy 独立再照合（2026-11-24）
+- WebViewのHTML/JS・Chromium通信と端末保存・プライバシー文書の監査：**PASS**。App Store Connectの実回答：**NOT_VERIFIED**、総合：**NOT_VERIFIED**。
+- Run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45287794947、詳細 `PRIVACY_Q5_AUDIT_20261124.json`。GitHub Pagesのログ保持・利用目的とASCの申告照合が残る。

@@ -761,7 +761,7 @@
     "ios_build": "PENDING",
     "internal_testflight": "PENDING",
     "screenshots": "PENDING",
-    "privacy_and_metadata": "PENDING",
+    "privacy_and_metadata": "ASC_PENDING",
     "device_check": "USER_REQUIRED",
     "final_app_review_send": "USER_REQUIRED",
     "official_source_license": "PASS_WITH_THIRD_PARTY_RIGHTS_CAVEAT",
@@ -814,7 +814,8 @@
     "v2_ruby_78_visual_followup": "HOLD_78_MAPPING_WARNINGS_CONTACT_SHEETS_15_VIEWED",
     "ai_preflight_acceptance": "BLOCKED",
     "ios_offline_runtime": "BLOCKED_REMOTE_ONLY",
-    "native_simulator": "NOT_TESTED"
+    "native_simulator": "NOT_TESTED",
+    "app_privacy": "NOT_VERIFIED_ASC"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
@@ -1484,5 +1485,12 @@
     "run_id": 45286288944,
     "native_ios_simulator_tested": false,
     "testflight_uploaded": false
+  },
+  "q5_privacy_audit_20261124": {
+    "sourceAndBrowserAudit": "PASS",
+    "appStoreConnect": "NOT_VERIFIED",
+    "gate": "NOT_VERIFIED",
+    "evidence": "touroku-hanbaisha-ios/PRIVACY_Q5_AUDIT_20261124.json",
+    "githubRunId": 45287794947
   }
 }
