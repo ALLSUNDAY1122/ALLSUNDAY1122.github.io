@@ -1,19 +1,18 @@
 {
   "schema": "touhan-ruby-113-automatic-v1",
-  "generatedAt": "2026-11-24T03:36:23+09:00",
+  "generatedAt": "2026-11-24T03:38:53+09:00",
   "baseline": 486,
   "processed": 113,
-  "autoPassed": 0,
-  "held": 113,
+  "autoPassed": 2,
+  "held": 111,
   "reasonCountsNonExclusive": {
     "INCOMPLETE_RUBY_MAPPING": 107,
     "RUBY_GROUP_SOURCE_NONUNIQUE": 35,
-    "RUBY_MAPPING_UNCERTIFIED": 112,
+    "RUBY_MAPPING_UNCERTIFIED": 110,
     "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION": 28,
     "DETACHED_READING_FIELD_NONUNIQUE": 66,
     "NO_FULL_SIZE_KANJI_BELOW": 73,
     "BASE_LITERAL_NONUNIQUE": 22,
-    "MULTI_KANJI_RENDERER_NOT_CERTIFIED": 2,
     "DUPLICATE_READING_IN_FIELD": 1,
     "SOURCE_ASSOCIATIONS_MISSING": 2,
     "SOURCE_RUBY_GROUP_COUNT_MISMATCH": 1
@@ -625,10 +624,44 @@
       ],
       "sourceImage": "ruby-font-review/KSAI-2024-069-source.png",
       "previousCandidate": "ruby-font-review/KSAI-2024-069-candidate-375-v2.png",
-      "status": "HOLD",
-      "reasons": [
-        "MULTI_KANJI_RENDERER_NOT_CERTIFIED",
-        "RUBY_MAPPING_UNCERTIFIED"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "renderedScreenshot": "ruby-auto-113/KSAI-2024-069-candidate-auto.png",
+      "domGeometry": {
+        "font": true,
+        "rubies": [
+          {
+            "base": "膀胱",
+            "reading": "ぼうこう",
+            "horizontalDelta": 0.0078125,
+            "above": true
+          }
+        ],
+        "scroll": 375,
+        "width": 375
+      },
+      "sourcePdfSha256": "c67ce3b5f9648503da65d6af7eb4a555bbfb6d2e227c725a485ff29938a3098c",
+      "sourceGlyphMappings": [
+        {
+          "field": 0,
+          "reading": "ぼうこう",
+          "base": "膀胱",
+          "page": 7,
+          "rubyBBox": [
+            309.72,
+            239.77,
+            333.72,
+            245.77
+          ],
+          "baseBBox": [
+            309.72,
+            245.53,
+            333.72,
+            257.53
+          ],
+          "fontSize": 6.0,
+          "baseText": "膀胱"
+        }
       ]
     },
     {
@@ -1210,10 +1243,70 @@
       ],
       "sourceImage": "ruby-font-review/KSAI-2026-080-source.png",
       "previousCandidate": "ruby-font-review/KSAI-2026-080-candidate-375-v2.png",
-      "status": "HOLD",
-      "reasons": [
-        "MULTI_KANJI_RENDERER_NOT_CERTIFIED",
-        "RUBY_MAPPING_UNCERTIFIED"
+      "status": "AUTO_PASS",
+      "reasons": [],
+      "renderedScreenshot": "ruby-auto-113/KSAI-2026-080-candidate-auto.png",
+      "domGeometry": {
+        "font": true,
+        "rubies": [
+          {
+            "base": "亢",
+            "reading": "こう",
+            "horizontalDelta": 0.0078125,
+            "above": true
+          },
+          {
+            "base": "膀胱",
+            "reading": "ぼうこう",
+            "horizontalDelta": 0.0078125,
+            "above": true
+          }
+        ],
+        "scroll": 375,
+        "width": 375
+      },
+      "sourcePdfSha256": "9d6a73071c1edfaa3d57d7ec18d04da882dbd4f1ea083d1f2e08f496d1f775a5",
+      "sourceGlyphMappings": [
+        {
+          "field": 0,
+          "reading": "こう",
+          "base": "亢",
+          "page": 15,
+          "rubyBBox": [
+            243.0,
+            509.17,
+            255.0,
+            515.17
+          ],
+          "baseBBox": [
+            243.0,
+            514.93,
+            255.0,
+            526.93
+          ],
+          "fontSize": 6.0,
+          "baseText": "亢"
+        },
+        {
+          "field": 0,
+          "reading": "ぼうこう",
+          "base": "膀胱",
+          "page": 15,
+          "rubyBBox": [
+            166.8,
+            529.21,
+            190.8,
+            535.21
+          ],
+          "baseBBox": [
+            166.8,
+            534.97,
+            190.8,
+            546.97
+          ],
+          "fontSize": 6.0,
+          "baseText": "膀胱"
+        }
       ]
     },
     {
