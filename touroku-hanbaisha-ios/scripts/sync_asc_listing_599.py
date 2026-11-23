@@ -23,7 +23,7 @@ def main():
     description=segment("## 説明","## キーワード案")
     promotional=segment("## プロモーションテキスト","## 説明")
     review_notes=segment("## App Review Notes","## 提出前にApp Store Connect")
-    assert "599問" in description and "360問" not in description
+    assert "599問" in description and "公式過去問" in description and "独立模擬試験3回" not in description
     assert "599問" in promotional and "360問" not in promotional
     assert "599" in review_notes and "360" not in review_notes
     key,cleanup=load_private_key()
