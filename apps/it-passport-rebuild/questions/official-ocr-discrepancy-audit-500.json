@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "updated_jst": "2026-11-24",
+  "questions": 500,
+  "source_image_raster_equivalent": 500,
+  "repaired_source_crops": 21,
+  "ocr_method": "earlier Tesseract OCR vs Japanese+English Tesseract PSM11 segmentation",
+  "warning": "Two passes are not independent OCR engines. Matching OCR results are not sufficient to establish character-for-character equivalence with original IPA scans.",
+  "codes_zlib_base64": "eNpdUdsJADEIm07Ih9l/ndPGF1eoaBtjVILA7z5bB3PK1bMFig/bKewANMBFQ+ehHDxsacOnHjiMU9WJ0mBUPF/lcURnXtTDqUd0jMY8Ou9iCaCrJK/GFB4fSvWXdciGr4yLEz2U7WJ7SUxMRgpkzJZrpjsk1KxVyXA2Md0cOb5TLbFnlcuP3NwHNOOQMA==",
+  "order": "2022 Q001..Q100, 2023 Q001..Q100, 2024 Q001..Q100, 2025 Q001..Q100, 2026 Q001..Q100",
+  "codes_sha256": "4f6f0901d58162a959b5e0a3c70f127b41777f3fcec69501d043c09290895177",
+  "code_legend": {
+    "E": "normalized two-OCR outputs are equal; NOT source visual pass",
+    "H": "similarity>=0.95 excluding exact",
+    "M": "0.75<=similarity<0.95",
+    "L": "similarity<0.75"
+  },
+  "counts": {
+    "E": 12,
+    "H": 295,
+    "M": 175,
+    "L": 18
+  },
+  "textual_source_independent_visual_pass": 0,
+  "promoted_to_release": 0,
+  "binary_assets_committed_to_github": 0,
+  "release_eligible": false,
+  "raw_details_local_file": "itp_ocr_comparison_500.json",
+  "raw_details_status": "LOCAL_ARTIFACT_NOT_GITHUB"
+}
