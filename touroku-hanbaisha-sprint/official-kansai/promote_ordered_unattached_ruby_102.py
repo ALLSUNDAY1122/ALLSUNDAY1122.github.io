@@ -204,3 +204,5 @@ def main():
       "promotedSourceOrdered":len(created),"alreadyApproved":len(previously_approved),
       "rubyHold":102-len(created)-len(previously_approved),"reasons":dict(reasons)},ensure_ascii=False))
 if __name__=="__main__": main()
+
+# CI rerun: enforce cumulative 102 source-order validation and Chrome QA after safe checklist update.
