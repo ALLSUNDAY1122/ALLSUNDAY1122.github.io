@@ -31,7 +31,7 @@ def run():
                 found=[]
                 for i,p in enumerate(pages):
                     for mode,s in p.items():
-                        if stem and stem in s and all(ch in s for ch in choices if ch):
+                        if stem and choices and all(choices) and stem in s and all(ch in s for ch in choices):
                             found.append({"page":i+1,"method":mode})
                 # find approximate text context; never apply fuzzy candidate as official correction.
                 best={"ratio":0,"page":None,"snippet":""}
