@@ -519,21 +519,21 @@
       "妻Ｃさん、子Ｅさん、子Ｆさん、子Ｇさん、子Ｄさんの夫Ｈさん、孫Ｉさんの計６名"
     ],
     "answer": 3,
-    "explanation": "【2024年5月公式解答：3】図の接続線が抽出されていないため、各人物の法定相続関係は原PDFの図で確認する必要がある。公式解答を暫定収録。 ※2026年4月1日法令での全肢独立再検証は未完了。",
+    "explanation": "【2024年5月公式解答：3】図の子ＤさんはＡさんの相続開始前に死亡しているため、孫Ｉさんが代襲相続人となる。前妻Ｂさんと子Ｄさんの夫ＨさんはＡさんの法定相続人に該当しない。現妻Ｃさん、子Ｅさん、子Ｆさん、子Ｇさん、孫Ｉさんの計５名が法定相続人。図は公式PDF（g2_202405_q.pdf、22ページ）を200 DPIで直接切り出した画像を参照。2026年4月1日法令での全肢独立再監査は別途必要。",
     "legalReferenceDate": "2023-10-01",
     "sourceUrl": "https://www.jafp.or.jp/exam/mohan/files/g2_202405_q.pdf",
     "status": "draft",
-    "legacyReason": "HOLD_FAMILY_DIAGRAM_ORIGINAL_PDF_REQUIRED",
+    "legacyReason": null,
     "audit": {
-      "questionChecked": false,
+      "questionChecked": true,
       "answerChecked": true,
       "explanationChecked": false,
       "legalChecked": false,
       "law_target_date": "2026-04-01",
-      "recheck_status": "HOLD_FAMILY_DIAGRAM_ORIGINAL_PDF_REQUIRED",
+      "recheck_status": "2026_LAW_INDEPENDENT_RECHECK_PENDING",
       "official_answer_one_based": 3,
       "verified_2026_answer": null,
-      "exhibit_status": "UNREPRODUCIBLE_FAMILY_RELATION_DIAGRAM",
+      "exhibit_status": "OFFICIAL_PDF_FAMILY_DIAGRAM_ASSET_LINKED",
       "uploaded_visual_source": {
         "filename": "fp2-202405-q53-family-diagram.png",
         "sha256": "fdb9f28062464ce5c8d1bae0467038f7e471f2bcc3c69baf39ff5c123fb531f0",
@@ -541,8 +541,25 @@
         "height": 444,
         "bytes": 34933,
         "proposed_repo_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202405-q53-family-diagram.png",
-        "binary_committed": false,
-        "provenance": "USER_SUPPLIED_IMAGE_OFFICIAL_PDF_ORIGIN_NOT_INDEPENDENTLY_VERIFIED"
+        "binary_committed": true,
+        "provenance": "USER_CONFIRMED_DIRECT_CROP_FROM_OFFICIAL_JAFP_PDF_PAGE_22",
+        "repo_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202405-q53-family-diagram.png",
+        "github_blob_sha": "98911a09460d990d65c60e45494e80a3f0c578eb",
+        "source_pdf": "g2_202405_q.pdf",
+        "source_page": 22,
+        "extraction_operator": "Muse",
+        "extraction_dpi": 200,
+        "image_content_review": "FULL_FAMILY_RELATION_DIAGRAM_WITH_CONNECTING_LINES_VISUALLY_CONFIRMED_BY_USER",
+        "checksum_verification": "SHA256_REPORTED_BY_USER_NOT_INDEPENDENTLY_RECOMPUTED"
+      },
+      "figure_hold_resolved": true,
+      "figure_hold_resolution_evidence": {
+        "asset_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202405-q53-family-diagram.png",
+        "github_blob_sha": "98911a09460d990d65c60e45494e80a3f0c578eb",
+        "source_pdf": "g2_202405_q.pdf",
+        "source_page": 22,
+        "extracted_at_dpi": 200,
+        "visual_verified_by": "user/Muse report"
       }
     },
     "source_organization": "日本FP協会",
@@ -552,8 +569,8 @@
     "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
     "attribution_display": "出典：日本FP協会 2級学科 2024年5月 第53問",
     "modified": false,
-    "modification_note": "添付された親族関係図PNG（1363×444、SHA-256 fdb9f28062464ce5c8d1bae0467038f7e471f2bcc3c69baf39ff5c123fb531f0）を現物確認。図の接続線を保持する画像のため、テキスト再構成は不要。ただしGitHubへのPNGバイナリ保存が未了のため、図の参照と再現不能フラグの解除は保留。公式PDF原画像であるかは独立照合未実施。原文・4肢・出典を維持。",
-    "modification_verification": "UNREPRODUCIBLE_FAMILY_RELATION_DIAGRAM"
+    "modification_note": "Q53の原文・選択肢・公式解答・出典表記は変更なし。公式FP協会PDF g2_202405_q.pdf 22ページからMuseが200 DPIで直接切り出した親族関係図としてユーザーが出所・接続線の目視確認を報告。GitHubのPNGバイナリの存在を確認し、画像パスを参照。SHA-256はユーザー申告値を記録（独立再計算未実施）。画像未保存を理由とした旧HOLDを解除。",
+    "modification_verification": "OFFICIAL_FIGURE_ASSET_GITHUB_READBACK_CONFIRMED_USER_VISUAL_VERIFIED"
   },
   {
     "id": "fp2-2024-05-gakka-054",
