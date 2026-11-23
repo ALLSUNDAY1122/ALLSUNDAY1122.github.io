@@ -2,8 +2,8 @@
   "method": "RAW_FONT_CLUSTER_GROUP_AND_EXACT_BASE",
   "year": 2026,
   "reviewed": 130,
-  "newPass": 1,
-  "remainHold": 129,
+  "newPass": 10,
+  "remainHold": 120,
   "records": [
     {
       "id": "KSAI-2022-003",
@@ -108,7 +108,6 @@
       "status": "HOLD",
       "reasonCodes": [
         "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
@@ -181,7 +180,6 @@
       "status": "HOLD",
       "reasonCodes": [
         "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE"
       ],
       "sourceRubyGroups": [
@@ -264,6 +262,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
@@ -468,8 +467,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -632,6 +631,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -691,8 +691,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "BASE_GLYPHS_OUTSIDE_READING",
-        "INCOMPLETE_RUBY_MAPPING"
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
       ],
       "sourceRubyGroups": [
         {
@@ -763,11 +763,8 @@
         34
       ],
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
-      "status": "HOLD",
-      "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
-      ],
+      "status": "FONT_CLUSTER_PASS",
+      "reasonCodes": [],
       "sourceRubyGroups": [
         {
           "reading": "ひ",
@@ -792,11 +789,96 @@
           "fontSize": 6.0
         }
       ],
-      "originalPageImage": "ruby-font-review/KSAI-2022-048-source.png",
-      "candidatePreviewHtml": "ruby-font-review/KSAI-2022-048-candidate.html",
-      "reviewUrl": "ruby-font-review/KSAI-2022-048-review.html",
-      "sourceImageAndPreviewSaved": true,
-      "candidatePreviewScreenshot": "ruby-font-review/KSAI-2022-048-candidate-375.png"
+      "questionParts": [
+        {
+          "text": "次の成分を含む鎮痛消炎貼付剤に関する記述の正誤について、正しい組合せ\nを一つ選べ。\n\n\n       １００ｇ中：\n             成分         分量\n       サリチル酸グリコール        ２.０ ｇ\n       トコフェロール酢酸エステル     １.０ ｇ\n       メントール              １.０ ｇ\n\n\n ａ サリチル酸グリコールは、局所刺激により患部の血行を促し、また末梢の\n\n  知覚神経に軽い麻"
+        },
+        {
+          "rubyBase": "痺",
+          "rubyText": "ひ",
+          "sourcePage": 34
+        },
+        {
+          "text": "を起こすことにより、鎮痛作用をもたらす。\n\n ｂ トコフェロール酢酸エステルは、患部局所の血行を促す目的で配合され\n\n  ているが、血液凝固を抑える働きもあるため、血友病などの出血性血液疾患\n\n  の診断を受けた人では使用を避ける。\n\n ｃ メントールは、冷感刺激成分であり、患部の血行を促す効果や鎮痛・鎮"
+        },
+        {
+          "rubyBase": "痒",
+          "rubyText": "よう",
+          "sourcePage": 34
+        },
+        {
+          "text": "\n\n  効果を期待して配合されている。\n ｄ 本剤は、打撲や捻挫などの急性の腫れや熱感を伴う症状には適さない。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "正  正  誤  正"
+          }
+        ],
+        [
+          {
+            "text": "誤  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  正  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  誤  正"
+          }
+        ]
+      ],
+      "placements": [
+        {
+          "field": 0,
+          "reading": "ひ",
+          "base": "痺",
+          "page": 34,
+          "rubyBBox": [
+            208.13,
+            276.06,
+            214.13,
+            282.06
+          ],
+          "baseBBox": [
+            205.13,
+            281.82,
+            217.13,
+            293.82
+          ],
+          "fontSize": 6.0,
+          "baseText": "痺"
+        },
+        {
+          "field": 0,
+          "reading": "よう",
+          "base": "痒",
+          "page": 34,
+          "rubyBBox": [
+            498.34,
+            356.1,
+            510.34,
+            362.1
+          ],
+          "baseBBox": [
+            498.34,
+            361.86,
+            510.34,
+            373.86
+          ],
+          "fontSize": 6.0,
+          "baseText": "痒"
+        }
+      ]
     },
     {
       "id": "KSAI-2022-052",
@@ -813,7 +895,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "BASE_GLYPHS_OUTSIDE_READING",
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -922,8 +1004,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "BASE_LITERAL_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
@@ -1027,7 +1109,6 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -1107,11 +1188,8 @@
         3
       ],
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
-      "status": "HOLD",
-      "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
-      ],
+      "status": "FONT_CLUSTER_PASS",
+      "reasonCodes": [],
       "sourceRubyGroups": [
         {
           "reading": "くう",
@@ -1136,11 +1214,96 @@
           "fontSize": 6.0
         }
       ],
-      "originalPageImage": "ruby-font-review/KSAI-2022-063-source.png",
-      "candidatePreviewHtml": "ruby-font-review/KSAI-2022-063-candidate.html",
-      "reviewUrl": "ruby-font-review/KSAI-2022-063-review.html",
-      "sourceImageAndPreviewSaved": true,
-      "candidatePreviewScreenshot": "ruby-font-review/KSAI-2022-063-candidate-375.png"
+      "questionParts": [
+        {
+          "text": "呼吸器系に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n\n\n ａ 鼻"
+        },
+        {
+          "rubyBase": "腔",
+          "rubyText": "くう",
+          "sourcePage": 3
+        },
+        {
+          "text": " の内壁から分泌される鼻汁には、アミラーゼが多く含まれ、気道の防\n\n  御機構の一つとなっている。\n ｂ 声帯は、喉頭上部にあり、呼気で振動させると声が発せられるが、過度の\n  負担がかかると、声はかすれてくる。\n ｃ 気道に細菌等の異物が吸い込まれると、異物は気道粘膜から分泌される\n  粘液にからめ取られ、粘液層の連続した流れによって咽頭へ向けて排出さ\n  れる。\n\n ｄ 肺自体には肺を動かす筋組織がないため、横隔膜や"
+        },
+        {
+          "rubyBase": "肋",
+          "rubyText": "ろっ",
+          "sourcePage": 3
+        },
+        {
+          "text": " 間筋によって拡張・\n\n  収縮して呼吸運動が行われる。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "正  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  正"
+          }
+        ],
+        [
+          {
+            "text": "正  正  誤  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  正  正"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  誤  正"
+          }
+        ]
+      ],
+      "placements": [
+        {
+          "field": 0,
+          "reading": "くう",
+          "base": "腔",
+          "page": 3,
+          "rubyBBox": [
+            133.08,
+            119.77,
+            145.08,
+            125.77
+          ],
+          "baseBBox": [
+            133.08,
+            125.53,
+            145.08,
+            137.53
+          ],
+          "fontSize": 6.0,
+          "baseText": "腔"
+        },
+        {
+          "field": 0,
+          "reading": "ろっ",
+          "base": "肋",
+          "page": 3,
+          "rubyBBox": [
+            394.56,
+            241.21,
+            406.56,
+            247.21
+          ],
+          "baseBBox": [
+            394.56,
+            246.97,
+            406.56,
+            258.97
+          ],
+          "fontSize": 6.0,
+          "baseText": "肋"
+        }
+      ]
     },
     {
       "id": "KSAI-2022-066",
@@ -1206,7 +1369,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "BASE_GLYPHS_OUTSIDE_READING",
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -1310,6 +1473,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -1381,8 +1545,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -1442,6 +1606,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -1513,8 +1678,7 @@
       "status": "HOLD",
       "reasonCodes": [
         "DETACHED_READING_FIELD_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -1583,7 +1747,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "BASE_GLYPHS_OUTSIDE_READING",
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -1632,6 +1796,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -1763,11 +1928,8 @@
         15
       ],
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
-      "status": "HOLD",
-      "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
-      ],
+      "status": "FONT_CLUSTER_PASS",
+      "reasonCodes": [],
       "sourceRubyGroups": [
         {
           "reading": "せき",
@@ -1792,11 +1954,96 @@
           "fontSize": 6.0
         }
       ],
-      "originalPageImage": "ruby-font-review/KSAI-2023-022-source.png",
-      "candidatePreviewHtml": "ruby-font-review/KSAI-2023-022-candidate.html",
-      "reviewUrl": "ruby-font-review/KSAI-2023-022-review.html",
-      "sourceImageAndPreviewSaved": true,
-      "candidatePreviewScreenshot": "ruby-font-review/KSAI-2023-022-candidate-375.png"
+      "questionParts": [
+        {
+          "text": "かぜ薬（総合感冒薬）の配合成分とその配合目的との関係について、正しいも\nのの組合せを一つ選べ。\n\n\n        配合成分            配合目的\n\n\n ａ サリチルアミド         "
+        },
+        {
+          "rubyBase": "咳",
+          "rubyText": "せき",
+          "sourcePage": 15
+        },
+        {
+          "text": " を抑える。\n\n ｂ グアイフェネシン        "
+        },
+        {
+          "rubyBase": "痰",
+          "rubyText": "たん",
+          "sourcePage": 15
+        },
+        {
+          "text": " の切れを良くする。\n ｃ チペピジンヒベンズ酸塩     発熱を鎮める。\n ｄ ベラドンナ総アルカロイド    くしゃみや鼻汁を抑える。"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "ａ、ｂ"
+          }
+        ],
+        [
+          {
+            "text": "ａ、ｃ"
+          }
+        ],
+        [
+          {
+            "text": "ａ、ｄ"
+          }
+        ],
+        [
+          {
+            "text": "ｂ、ｃ"
+          }
+        ],
+        [
+          {
+            "text": "ｂ、ｄ"
+          }
+        ]
+      ],
+      "placements": [
+        {
+          "field": 0,
+          "reading": "せき",
+          "base": "咳",
+          "page": 15,
+          "rubyBBox": [
+            320.28,
+            567.85,
+            332.28,
+            573.85
+          ],
+          "baseBBox": [
+            320.28,
+            573.61,
+            332.28,
+            585.61
+          ],
+          "fontSize": 6.0,
+          "baseText": "咳"
+        },
+        {
+          "field": 0,
+          "reading": "たん",
+          "base": "痰",
+          "page": 15,
+          "rubyBBox": [
+            320.28,
+            588.37,
+            332.28,
+            594.37
+          ],
+          "baseBBox": [
+            320.28,
+            594.13,
+            332.28,
+            606.13
+          ],
+          "fontSize": 6.0,
+          "baseText": "痰"
+        }
+      ]
     },
     {
       "id": "KSAI-2023-024",
@@ -1888,8 +2135,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
@@ -1971,8 +2218,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "BASE_GLYPHS_OUTSIDE_READING",
-        "INCOMPLETE_RUBY_MAPPING"
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
       ],
       "sourceRubyGroups": [
         {
@@ -2030,8 +2277,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "BASE_LITERAL_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -2100,6 +2347,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -2159,6 +2407,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -2241,8 +2490,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE"
       ],
       "sourceRubyGroups": [
@@ -2337,6 +2586,7 @@
       "status": "HOLD",
       "reasonCodes": [
         "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
@@ -2383,11 +2633,8 @@
         5
       ],
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
-      "status": "HOLD",
-      "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
-      ],
+      "status": "FONT_CLUSTER_PASS",
+      "reasonCodes": [],
       "sourceRubyGroups": [
         {
           "reading": "けん",
@@ -2412,11 +2659,96 @@
           "fontSize": 6.0
         }
       ],
-      "originalPageImage": "ruby-font-review/KSAI-2023-066-source.png",
-      "candidatePreviewHtml": "ruby-font-review/KSAI-2023-066-candidate.html",
-      "reviewUrl": "ruby-font-review/KSAI-2023-066-review.html",
-      "sourceImageAndPreviewSaved": true,
-      "candidatePreviewScreenshot": "ruby-font-review/KSAI-2023-066-candidate-375.png"
+      "questionParts": [
+        {
+          "text": "目に関する記述の正誤について、正しい組合せを一つ選べ。\n\n\n\n\n ａ 眼"
+        },
+        {
+          "rubyBase": "瞼",
+          "rubyText": "けん",
+          "sourcePage": 5
+        },
+        {
+          "text": "（まぶた）は、物理的・化学的刺激から目を防護するために、皮下組\n\n  織が多く厚くできていて、内出血や裂傷を生じにくい。\n ｂ 角膜と水晶体の間は、組織液（房水）で満たされ、眼圧を生じさせている。\n\n ｃ 雪眼炎は、赤外線に眼球が長時間"
+        },
+        {
+          "rubyBase": "曝",
+          "rubyText": "さら",
+          "sourcePage": 5
+        },
+        {
+          "text": " されることにより、角膜の上皮が損傷\n\n  を起こした状態である。\n ｄ 視細胞が光を感じる反応にはビタミンＤが不可欠であるため、ビタミンＤ\n  が不足すると夜間の視力が低下する夜盲症を生じる。\n\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "正  正  誤  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  正"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  誤  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  誤  正  正"
+          }
+        ]
+      ],
+      "placements": [
+        {
+          "field": 0,
+          "reading": "けん",
+          "base": "瞼",
+          "page": 5,
+          "rubyBBox": [
+            133.08,
+            421.09,
+            145.08,
+            427.09
+          ],
+          "baseBBox": [
+            133.08,
+            426.85,
+            145.08,
+            438.85
+          ],
+          "fontSize": 6.0,
+          "baseText": "瞼"
+        },
+        {
+          "field": 0,
+          "reading": "さら",
+          "base": "曝",
+          "page": 5,
+          "rubyBBox": [
+            297.72,
+            477.37,
+            309.72,
+            483.37
+          ],
+          "baseBBox": [
+            297.72,
+            483.13,
+            309.72,
+            495.13
+          ],
+          "fontSize": 6.0,
+          "baseText": "曝"
+        }
+      ]
     },
     {
       "id": "KSAI-2023-067",
@@ -2482,6 +2814,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -2528,11 +2861,8 @@
         11
       ],
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
-      "status": "HOLD",
-      "reasonCodes": [
-        "BASE_LITERAL_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING"
-      ],
+      "status": "FONT_CLUSTER_PASS",
+      "reasonCodes": [],
       "sourceRubyGroups": [
         {
           "reading": "ふん",
@@ -2546,11 +2876,68 @@
           "fontSize": 6.0
         }
       ],
-      "originalPageImage": "ruby-font-review/KSAI-2023-077-source.png",
-      "candidatePreviewHtml": "ruby-font-review/KSAI-2023-077-candidate.html",
-      "reviewUrl": "ruby-font-review/KSAI-2023-077-review.html",
-      "sourceImageAndPreviewSaved": true,
-      "candidatePreviewScreenshot": "ruby-font-review/KSAI-2023-077-candidate-375.png"
+      "questionParts": [
+        {
+          "text": "消化器系に現れる医薬品の副作用に関する記述の正誤について、正しい組合\nせを一つ選べ。\n\n\n ａ 消化性潰瘍とは、胃や十二指腸の粘膜組織が傷害されているが、粘膜組織\n  の欠損は粘膜筋板を超えない状態をいう。\n\n ｂ 医薬品の副作用による消化性潰瘍は、必ず自覚症状があり、胃のもたれ、\n\n  食欲低下、胸やけ、吐きけ、胃痛、空腹時にみぞおちが痛くなる、消化管出\n\n  血に伴って"
+        },
+        {
+          "rubyBase": "糞",
+          "rubyText": "ふん",
+          "sourcePage": 11
+        },
+        {
+          "text": " 便が黒くなるなどの症状が現れる。\n ｃ イレウス様症状が悪化すると、腸内細菌の異常増殖によって全身状態の\n  衰弱が急激に進行する可能性がある。\n ｄ イレウス様症状は、下痢治癒後の便秘を放置すると、症状を悪化させてし\n  まうことがある。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "正  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  誤  正  正"
+          }
+        ],
+        [
+          {
+            "text": "正  正  誤  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  誤  正"
+          }
+        ]
+      ],
+      "placements": [
+        {
+          "field": 0,
+          "reading": "ふん",
+          "base": "糞",
+          "page": 11,
+          "rubyBBox": [
+            169.08,
+            208.69,
+            181.08,
+            214.69
+          ],
+          "baseBBox": [
+            169.08,
+            214.45,
+            181.08,
+            226.45
+          ],
+          "fontSize": 6.0,
+          "baseText": "糞"
+        }
+      ]
     },
     {
       "id": "KSAI-2023-078",
@@ -2605,8 +2992,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "BASE_GLYPHS_OUTSIDE_READING",
-        "INCOMPLETE_RUBY_MAPPING"
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
       ],
       "sourceRubyGroups": [
         {
@@ -2715,8 +3102,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "BASE_LITERAL_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -2778,15 +3165,15 @@
       ],
       "questionParts": [
         {
-          "text": "プソイドエフェドリン塩酸塩が配合された一般用医薬品の鼻炎用内服薬の添\n付文書等において、「次の人は使用（服用）しないこと」の項目中に記載するこ\nととされている対象者の正誤について、正しい組合せを一つ選べ。\n\n\n ａ 糖尿病の診断を受けた人\n ｂ 心臓病の診断を受けた人\n\n ｃ 吐き気・嘔 吐の症状がある人\n ｄ 前立腺肥"
+          "text": "プソイドエフェドリン塩酸塩が配合された一般用医薬品の鼻炎用内服薬の添\n付文書等において、「次の人は使用（服用）しないこと」の項目中に記載するこ\nととされている対象者の正誤について、正しい組合せを一つ選べ。\n\n\n ａ 糖尿病の診断を受けた人\n ｂ 心臓病の診断を受けた人\n\n ｃ 吐き気・"
         },
         {
-          "rubyBase": "大",
+          "rubyBase": "嘔",
           "rubyText": "おう",
           "sourcePage": 35
         },
         {
-          "text": "による排尿困難の症状がある人\n\n\n              ａ  ｂ  ｃ  ｄ"
+          "text": " 吐の症状がある人\n ｄ 前立腺肥大による排尿困難の症状がある人\n\n\n              ａ  ｂ  ｃ  ｄ"
         }
       ],
       "choicesParts": [
@@ -2820,7 +3207,7 @@
         {
           "field": 0,
           "reading": "おう",
-          "base": "大",
+          "base": "嘔",
           "page": 35,
           "rubyBBox": [
             169.08,
@@ -2830,12 +3217,12 @@
           ],
           "baseBBox": [
             169.08,
-            207.13,
+            190.69,
             181.08,
-            219.13
+            202.69
           ],
           "fontSize": 6.0,
-          "baseText": "大"
+          "baseText": "嘔"
         }
       ]
     },
@@ -2854,8 +3241,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -2913,8 +3300,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "BASE_LITERAL_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING"
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
       ],
       "sourceRubyGroups": [
         {
@@ -3007,11 +3394,8 @@
         16
       ],
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
-      "status": "HOLD",
-      "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
-      ],
+      "status": "FONT_CLUSTER_PASS",
+      "reasonCodes": [],
       "sourceRubyGroups": [
         {
           "reading": "り",
@@ -3025,11 +3409,68 @@
           "fontSize": 6.0
         }
       ],
-      "originalPageImage": "ruby-font-review/KSAI-2024-019-source.png",
-      "candidatePreviewHtml": "ruby-font-review/KSAI-2024-019-candidate.html",
-      "reviewUrl": "ruby-font-review/KSAI-2024-019-review.html",
-      "sourceImageAndPreviewSaved": true,
-      "candidatePreviewScreenshot": "ruby-font-review/KSAI-2024-019-candidate-375.png"
+      "questionParts": [
+        {
+          "text": "クロイツフェルト・ヤコブ病（ＣＪＤ）及びＣＪＤ訴訟に関する記述の正誤に\nついて、正しい組合せを選べ。\n\n\n ａ ＣＪＤ訴訟とは、脳外科手術等に用いられていたヒト乾燥硬膜を介して\n\n  ＣＪＤに"
+        },
+        {
+          "rubyBase": "罹",
+          "rubyText": "り",
+          "sourcePage": 16
+        },
+        {
+          "text": " 患したことに対する損害賠償訴訟である。\n\n ｂ ＣＪＤ訴訟は、生物由来製品による感染等被害救済制度が創設等される\n\n  契機のひとつとなった。\n\n ｃ ＣＪＤは、次第に認知症に類似した症状が現れ、死に至る重篤な神経難病\n\n  である。\n\n ｄ ＣＪＤは、細菌でもウイルスでもない脂質の一種であるプリオンが原因\n\n  とされている。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "正  正  誤  正"
+          }
+        ],
+        [
+          {
+            "text": "誤  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  正  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  誤  正"
+          }
+        ]
+      ],
+      "placements": [
+        {
+          "field": 0,
+          "reading": "り",
+          "base": "罹",
+          "page": 16,
+          "rubyBBox": [
+            160.08,
+            156.01,
+            166.08,
+            162.01
+          ],
+          "baseBBox": [
+            157.08,
+            161.77,
+            169.08,
+            173.77
+          ],
+          "fontSize": 6.0,
+          "baseText": "罹"
+        }
+      ]
     },
     {
       "id": "KSAI-2024-021",
@@ -3068,8 +3509,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -3345,6 +3786,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "BASE_LITERAL_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -3448,6 +3890,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -3508,6 +3951,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -3650,7 +4095,6 @@
       "status": "HOLD",
       "reasonCodes": [
         "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
@@ -3733,6 +4177,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -3926,8 +4372,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -4083,6 +4529,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -4208,8 +4655,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "MULTI_KANJI_RENDERER_NOT_CERTIFIED"
       ],
       "sourceRubyGroups": [
         {
@@ -4246,6 +4692,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -4328,8 +4775,9 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -4410,6 +4858,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -4502,8 +4952,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -4584,6 +5034,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -4632,8 +5083,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "BASE_LITERAL_NONUNIQUE",
-        "INCOMPLETE_RUBY_MAPPING"
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
       ],
       "sourceRubyGroups": [
         {
@@ -4768,6 +5219,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
@@ -4875,8 +5327,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "BASE_LITERAL_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
         "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION"
       ],
@@ -4981,6 +5433,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -5064,6 +5518,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -5178,7 +5634,6 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "BASE_GLYPHS_OUTSIDE_READING",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -5226,8 +5681,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -5331,11 +5786,8 @@
         37
       ],
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
-      "status": "HOLD",
-      "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
-      ],
+      "status": "FONT_CLUSTER_PASS",
+      "reasonCodes": [],
       "sourceRubyGroups": [
         {
           "reading": "かゆ",
@@ -5349,11 +5801,68 @@
           "fontSize": 6.0
         }
       ],
-      "originalPageImage": "ruby-font-review/KSAI-2025-050-source.png",
-      "candidatePreviewHtml": "ruby-font-review/KSAI-2025-050-candidate.html",
-      "reviewUrl": "ruby-font-review/KSAI-2025-050-review.html",
-      "sourceImageAndPreviewSaved": true,
-      "candidatePreviewScreenshot": "ruby-font-review/KSAI-2025-050-candidate-375.png"
+      "questionParts": [
+        {
+          "text": "\n "
+        },
+        {
+          "rubyBase": "痒",
+          "rubyText": "かゆ",
+          "sourcePage": 37
+        },
+        {
+          "text": " み、腫れ、痛み等を抑える配合成分に関する記述の正誤について、正しい\n\n組合せを選べ。\n\n\n ａ デキサメタゾンは、ステロイド骨格を持つ抗炎症成分の一つである。\n\n ｂ ステロイド性抗炎症成分は、末梢組織の免疫機能を増強させる作用を示\n\n  すため、みずむし、たむし、にきび等に用いられる。\n\n ｃ ケトプロフェンを主薬とする外皮用薬では、紫外線により、使用中又は使\n\n  用後しばらくしてから重篤な光線過敏症が現れることがある。\n\n ｄ ジクロフェナクナトリウムを主薬とする外皮用薬は、皮膚感染症に対し\n\n  て効果がなく、痛みや腫れを鎮めることでかえって皮膚感染が自覚されに\n\n  くくなるおそれがある。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "正  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  正"
+          }
+        ],
+        [
+          {
+            "text": "正  正  誤  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  正  正"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  誤  正"
+          }
+        ]
+      ],
+      "placements": [
+        {
+          "field": 0,
+          "reading": "かゆ",
+          "base": "痒",
+          "page": 37,
+          "rubyBBox": [
+            97.08,
+            390.85,
+            109.32,
+            396.85
+          ],
+          "baseBBox": [
+            97.08,
+            396.61,
+            109.08,
+            408.61
+          ],
+          "fontSize": 6.0,
+          "baseText": "痒"
+        }
+      ]
     },
     {
       "id": "KSAI-2025-052",
@@ -5408,6 +5917,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE"
@@ -5480,6 +5991,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
@@ -5597,6 +6110,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -5668,6 +6182,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -5818,11 +6333,8 @@
         8
       ],
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
-      "status": "HOLD",
-      "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
-      ],
+      "status": "FONT_CLUSTER_PASS",
+      "reasonCodes": [],
       "sourceRubyGroups": [
         {
           "reading": "いき",
@@ -5847,11 +6359,96 @@
           "fontSize": 6.0
         }
       ],
-      "originalPageImage": "ruby-font-review/KSAI-2025-072-source.png",
-      "candidatePreviewHtml": "ruby-font-review/KSAI-2025-072-candidate.html",
-      "reviewUrl": "ruby-font-review/KSAI-2025-072-review.html",
-      "sourceImageAndPreviewSaved": true,
-      "candidatePreviewScreenshot": "ruby-font-review/KSAI-2025-072-candidate-375.png"
+      "questionParts": [
+        {
+          "text": "薬が働く仕組みに関する記述の正誤について、正しい組合せを選べ。\n\n\n ａ 全身作用を目的とする医薬品では、その有効成分が吸収されて、循環血液\n\n  中に移行することが不可欠である。\n\n ｂ 有効成分が吸収されるにつれて、その血中濃度は上昇し、ある最小有効濃\n\n  度（"
+        },
+        {
+          "rubyBase": "閾",
+          "rubyText": "いき",
+          "sourcePage": 8
+        },
+        {
+          "text": " 値）を超えたときに生体の反応としての薬効が現れる。\n\n ｃ 有効成分の血中濃度は、ある時点でピーク（最高血中濃度）に達し、その\n\n  後は低下していくが、これは代謝・排"
+        },
+        {
+          "rubyBase": "泄",
+          "rubyText": "せつ",
+          "sourcePage": 8
+        },
+        {
+          "text": " の速度が吸収・分布の速度を上回る\n\n  ためである。\n\n ｄ 舌下錠は、有効成分を舌下で溶解させる剤形で、薬効を期待する部位は口\n\n  の中や喉である。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "正  誤  正  正"
+          }
+        ],
+        [
+          {
+            "text": "正  正  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  正  誤  誤"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  誤  正"
+          }
+        ],
+        [
+          {
+            "text": "誤  誤  正  正"
+          }
+        ]
+      ],
+      "placements": [
+        {
+          "field": 0,
+          "reading": "いき",
+          "base": "閾",
+          "page": 8,
+          "rubyBBox": [
+            133.08,
+            190.81,
+            145.08,
+            196.81
+          ],
+          "baseBBox": [
+            133.08,
+            196.57,
+            145.08,
+            208.57
+          ],
+          "fontSize": 6.0,
+          "baseText": "閾"
+        },
+        {
+          "field": 0,
+          "reading": "せつ",
+          "base": "泄",
+          "page": 8,
+          "rubyBBox": [
+            308.52,
+            230.89,
+            320.52,
+            236.89
+          ],
+          "baseBBox": [
+            308.52,
+            236.65,
+            320.52,
+            248.65
+          ],
+          "fontSize": 6.0,
+          "baseText": "泄"
+        }
+      ]
     },
     {
       "id": "KSAI-2025-074",
@@ -6002,7 +6599,6 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -6136,6 +6732,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -6327,8 +6924,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "DUPLICATE_READING_IN_FIELD"
       ],
       "sourceRubyGroups": [
         {
@@ -6673,6 +7269,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "BASE_LITERAL_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -6787,6 +7384,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -7061,6 +7659,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW",
         "RUBY_GROUP_SOURCE_NONUNIQUE",
@@ -7177,8 +7776,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "BASE_GLYPHS_OUTSIDE_READING",
-        "INCOMPLETE_RUBY_MAPPING"
+        "INCOMPLETE_RUBY_MAPPING",
+        "NO_FULL_SIZE_KANJI_BELOW"
       ],
       "sourceRubyGroups": [
         {
@@ -7216,7 +7815,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "BASE_LITERAL_NONUNIQUE",
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -7360,6 +7959,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
+        "DETACHED_READING_FIELD_NONUNIQUE",
         "INCOMPLETE_RUBY_MAPPING",
         "NO_FULL_SIZE_KANJI_BELOW"
       ],
@@ -7452,8 +8052,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -7500,8 +8100,8 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "DETACHED_READING_FIELD_NONUNIQUE",
+        "INCOMPLETE_RUBY_MAPPING"
       ],
       "sourceRubyGroups": [
         {
@@ -7546,11 +8146,8 @@
         9
       ],
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
-      "status": "HOLD",
-      "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
-      ],
+      "status": "FONT_CLUSTER_PASS",
+      "reasonCodes": [],
       "sourceRubyGroups": [
         {
           "reading": "ざ",
@@ -7564,11 +8161,68 @@
           "fontSize": 6.0
         }
       ],
-      "originalPageImage": "ruby-font-review/KSAI-2026-072-source.png",
-      "candidatePreviewHtml": "ruby-font-review/KSAI-2026-072-candidate.html",
-      "reviewUrl": "ruby-font-review/KSAI-2026-072-review.html",
-      "sourceImageAndPreviewSaved": true,
-      "candidatePreviewScreenshot": "ruby-font-review/KSAI-2026-072-candidate-375.png"
+      "questionParts": [
+        {
+          "text": "薬の吸収に関する記述の正誤について、正しい組合せを選べ。\n\n\n ａ 内服薬の有効成分によっては、消化管の粘膜に障害を起こすことがある\n\n  ため、食事の時間と服用時期との関係が、各医薬品の用法に定められている。\n\n ｂ 一般に、内服薬の有効成分の小腸からの吸収は、濃度の高い方から低い方\n\n  へ受動的に拡散していく現象である。\n\n ｃ 皮膚に適用する医薬品（塗り薬、貼り薬等）は、皮膚表面から循環血液中\n\n  に移行する量が少ないため、適用部位以外にアレルギー性の副作用が現れ\n\n  ることはない。\n\n ｄ "
+        },
+        {
+          "rubyBase": "坐",
+          "rubyText": "ざ",
+          "sourcePage": 9
+        },
+        {
+          "text": "剤は、有効成分が容易に循環血液中に入るため、内服の場合よりも全身\n\n  作用が速やかに現れる。\n\n\n              ａ  ｂ  ｃ  ｄ"
+        }
+      ],
+      "choicesParts": [
+        [
+          {
+            "text": "誤  正  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  正"
+          }
+        ],
+        [
+          {
+            "text": "誤  正  誤  正"
+          }
+        ],
+        [
+          {
+            "text": "正  誤  正  誤"
+          }
+        ],
+        [
+          {
+            "text": "正  正  誤  正"
+          }
+        ]
+      ],
+      "placements": [
+        {
+          "field": 0,
+          "reading": "ざ",
+          "base": "坐",
+          "page": 9,
+          "rubyBBox": [
+            124.08,
+            270.85,
+            130.08,
+            276.85
+          ],
+          "baseBBox": [
+            121.08,
+            276.61,
+            133.08,
+            288.61
+          ],
+          "fontSize": 6.0,
+          "baseText": "坐"
+        }
+      ]
     },
     {
       "id": "KSAI-2026-078",
@@ -7623,8 +8277,7 @@
       "method": "PDF_RAWDICT_FONT_SIZE_CLUSTER_BASE_GEOMETRY",
       "status": "HOLD",
       "reasonCodes": [
-        "INCOMPLETE_RUBY_MAPPING",
-        "NO_FULL_SIZE_KANJI_BELOW"
+        "MULTI_KANJI_RENDERER_NOT_CERTIFIED"
       ],
       "sourceRubyGroups": [
         {
