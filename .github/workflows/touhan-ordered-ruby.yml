@@ -1,0 +1,72 @@
+name: Registered Seller Ordered Ruby Recovery
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-ordered-ruby.yml'
+      - 'touroku-hanbaisha-sprint/official-kansai/ordered_ruby_recovery.py'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-ordered-ruby
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'pymupdf==1.26.5'
+      - name: Resolve repeated kanji/reading via PDF ordinal proof by year
+        run: |
+          set -euo pipefail
+          for y in 2022 2023 2024 2025 2026; do
+            python touroku-hanbaisha-sprint/official-kansai/ordered_ruby_recovery.py --year "$y"
+          done
+      - name: Regenerate approved bank and canonical records
+        run: |
+          python touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py
+          python touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py
+          python touroku-hanbaisha-sprint/official-kansai/write_geometry_release_status.py
+          python touroku-hanbaisha-sprint/official-kansai/write_ruby_release_status.py
+      - name: Assert source proof and no invalid question auto-promotion
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          approved=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          status=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
+          assert approved['count']==status['question_bank']['production_official_bank_count']
+          assert 'KSAI-2023-090' not in approved['approvedIds']
+          assert status['release_gate']=='BLOCKED' and not status['app_review_submitted']
+          for y in range(2022,2027):
+            evidence=json.loads((b/f'ORDERED_RUBY_{y}.json').read_text())
+            assert evidence['total']==len(evidence['records'])==120
+            assert evidence['recoveryPass']==sum(r['status']=='ORDERED_RUBY_PASS' for r in evidence['records'])
+          print('PASS: year 2022-2026 ordered ruby source proof and publication contract')
+          PY
+      - name: Commit observed outcome
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          b=touroku-hanbaisha-sprint/official-kansai
+          for y in 2022 2023 2024 2025 2026; do
+            git add -f "$b/ORDERED_RUBY_${y}.json" 2>/dev/null || true
+          done
+          git add "$b/APPROVED_OFFICIAL_BANK.json" 2>/dev/null || true
+          git add touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): reconcile occurrence-ordered ruby and app bank'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              if [ "$attempt" -eq 3 ]; then exit 1; fi
+            done
+          fi
