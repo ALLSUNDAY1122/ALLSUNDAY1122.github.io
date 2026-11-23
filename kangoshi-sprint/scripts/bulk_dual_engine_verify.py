@@ -79,8 +79,8 @@ for exam in (112,111):
         # Independent scenario context validation happens below.
         if qid in exceptions or q.get("officialScoringStatus")!="normal":failures.append("SCORING_EXCEPTION")
         if not q.get("extractionValid",False):failures.append("ORIGINAL_STRUCTURE_INVALID")
-        if len(q.get("choices") or [])!=4:failures.append("CHOICE_COUNT_NOT_FOUR")
-        if not isinstance(q.get("answer"),int) or q["answer"] not in range(4) or str(q["answer"]+1)!=(q.get("officialKeyRaw") or "").strip():failures.append("OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX")
+        if len(q.get("choices") or []) not in (4,5):failures.append("CHOICE_COUNT_NOT_FOUR_OR_FIVE")
+        if not isinstance(q.get("answer"),int) or q["answer"] not in range(len(q.get("choices") or [])) or str(q["answer"]+1)!=(q.get("officialKeyRaw") or "").strip():failures.append("OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX")
         if q.get("answerKeyVerification")!="MATCH_SINGLE_DIGIT_KEY_NOT_VERBATIM_CERTIFIED":failures.append("OFFICIAL_ANSWER_NOT_SINGLE")
         official=keys[exam][0].get(qid)
         if not official or official.get("status")!="KEY_SINGLE" or official.get("rawValue")!=str((q.get("answer") if isinstance(q.get("answer"),int) else -10)+1):failures.append("INDEPENDENT_OFFICIAL_KEY_MISMATCH")
@@ -105,9 +105,9 @@ for exam in (112,111):
                     left=[py_fields["question"]]+py_fields["choices"]
                     right=[pop_fields["question"]]+pop_fields["choices"]
                     target=[stem]+choices
-                    if len(target)==5 and all((equivalent_shared_context(x,y)[0] or equivalent_english_gloss_reorder(x,y)) and (equivalent_shared_context(x,z)[0] or equivalent_english_gloss_reorder(x,z)) for x,y,z in zip(left,right,target)):
+                    if len(target) in (5,6) and len(left)==len(right)==len(target) and all((equivalent_shared_context(x,y)[0] or equivalent_english_gloss_reorder(x,y)) and (equivalent_shared_context(x,z)[0] or equivalent_english_gloss_reorder(x,z)) for x,y,z in zip(left,right,target)):
                         geometric_crosscheck={"page":pg,"anchor":geom["anchorBox"],"rectangle":geom["clip"],
-                            "fields":5,"method":"exact Japanese and Latin token multiset; PyMuPDF clip vs independent Poppler page segmentation",
+                            "fields":len(target),"printedOptionCount":len(choices),"method":"exact Japanese and Latin token multiset; PyMuPDF clip vs independent Poppler page segmentation",
                             "requiresOfficialAnswer":True}
         if not isinstance(pg,int) or not 1<=pg<=len(doc):
             failures.append("SOURCE_PAGE_INVALID")
@@ -166,7 +166,7 @@ for exam in (112,111):
     by_session[f"{exam}-{session}"]={"total":len(rows),"pass":sum(x["status"].startswith("PASS") for x in rows),"hold":sum(x["status"]=="HOLD" for x in rows)}
     (OUT/f"{exam}-{session}-per-question.json").write_text(json.dumps(rows,ensure_ascii=False,indent=2)+"\n")
 summary={"engine1":"PyMuPDF geometric word bounding boxes + clipped question rectangle", "engine2":"Poppler pdftotext -layout", "key":"MHLW 2026-11-24 official answer PDF tokens",
- "policy":"Conservative coordinate boundary gate: question number x/y, bounded question rectangle, full stem/four choices in crop and independent Poppler PDF page, official answer source; reject source control glyphs, raster pages, scoring exceptions and unverified scenario context.",
+ "policy":"Conservative coordinate boundary gate: question number x/y, bounded question rectangle, full stem/four or five printed choices in crop and independent Poppler PDF page, official answer source; reject source control glyphs, raster pages, scoring exceptions and unverified scenario context.",
  "total":len(all_rows),"freshPromotable":len(approved),"alreadyCanonical":len(existing),
  "holds":len(all_rows)-len(approved),"bySession":by_session,
  "holdReasons":dict(collections.Counter(reason for row in all_rows for reason in row["reasons"])),
