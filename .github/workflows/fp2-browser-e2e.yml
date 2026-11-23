@@ -7,6 +7,7 @@ on:
       - "fp2-manabi-sprint/**"
       - "scripts/fp2_browser_e2e.cjs"
       - "scripts/fp2_selected_quality_gate.py"
+      - "scripts/fp2_five_exam_audit_gate.py"
       - ".github/workflows/fp2-browser-e2e.yml"
   pull_request:
     paths:
@@ -29,7 +30,9 @@ jobs:
         run: |
           npm install --no-save --no-package-lock playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Check all 120 selected questions and source/evidence fields
+      - name: Reconcile all independent 2024 batch audits and selected 300
+        run: python3 scripts/fp2_five_exam_audit_gate.py
+      - name: Check all 300 selected questions and source/evidence fields
         run: python3 scripts/fp2_selected_quality_gate.py
       - name: Generate native offline 120-only payload and verify source selection
         run: |
