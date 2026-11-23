@@ -48,7 +48,15 @@ for year in range(2022,2027):
             raise RuntimeError("stale geometry audit for "+str(year))
         geom_byid={item["id"]:item for item in geom["questions"]}
         if len(geom_byid)!=120:raise RuntimeError("missing geometry records")
-    stats={"auto":0,"geometry":0,"visual":0,"crossEngineHold":0,"hold":0,"pending":0}
+    ruby_file=B/f"RUBY_RECON_{year}.json"
+    ruby_report=json.loads(ruby_file.read_text()) if ruby_file.exists() else None
+    ruby_byid={}
+    if ruby_report:
+        if ruby_report["year"]!=year or ruby_report["total"]!=120 or ruby_report["candidateGitBlob"]!=expected_candidate_sha or len(ruby_report["records"])!=120:
+            raise RuntimeError("invalid or stale ruby reconstruction for "+str(year))
+        ruby_byid={r["id"]:r for r in ruby_report["records"]}
+        if len(ruby_byid)!=120:raise RuntimeError("duplicate ruby IDs")
+    stats={"auto":0,"geometry":0,"ruby":0,"visual":0,"crossEngineHold":0,"hold":0,"pending":0}
     for idx,q in enumerate(candidates):
         id=q["id"];n=idx+1
         if id!=f"KSAI-{year}-{n:03d}" or q["questionNo"]!=n:
@@ -59,6 +67,7 @@ for year in range(2022,2027):
         manual_result=reviews.get(id)
         auto_result=byid.get(id)
         geometry_result=geom_byid.get(id)
+        ruby_result=ruby_byid.get(id)
         if report and not auto_result:raise RuntimeError("missing diff")
         if auto_result and (auto_result["questionNo"]!=n or auto_result["officialAnswer"]!=k["official_answer"]):
             raise RuntimeError("diff key mismatch")
@@ -101,6 +110,27 @@ for year in range(2022,2027):
                 "normalizedTextSha256":auto_result["sourceNormalizedSha256"],
                 "table":geometry_result["table"]}
             stats["geometry"]+=1
+        elif ruby_result and ruby_result["status"]=="RUBY_PASS" and not ruby_result["reasons"]:
+            if not auto_result or not geometry_result:
+                raise RuntimeError("ruby source evidence missing "+id)
+            if auto_result["status"]!="HOLD" or auto_result["candidateNormalizedSha256"]!=auto_result["sourceNormalizedSha256"]:
+                raise RuntimeError("unresolved PDF text mismatch "+id)
+            if geometry_result["reasons"]!=["RUBY_RENDER_NOT_CERTIFIED"]:
+                raise RuntimeError("other layout hold cannot be overwritten "+id)
+            if not ruby_result.get("placements") or len(ruby_result["questionParts"])!=0 and not isinstance(ruby_result["questionParts"],list):
+                raise RuntimeError("invalid ruby DOM evidence "+id)
+            allparts=[ruby_result["questionParts"],*ruby_result["choicesParts"]]
+            if len(allparts)!=len(q["choices"])+1:
+                raise RuntimeError("rich field length mismatch "+id)
+            for parts in allparts:
+                if not isinstance(parts,list) or not parts:raise RuntimeError("missing ruby rich parts "+id)
+                if any(("text" in part)==("rubyBase" in part) for part in parts):
+                    raise RuntimeError("ambiguous rich part "+id)
+            audit={"status":"PASS","method":"AUTO_PDF_GLYPH_XY_RUBY_DOM_RECONSTRUCTION",
+                   "record":f"RUBY_RECON_{year}.json",
+                   "sourcePdfSha256":auto_result["officialPdfSha256"],
+                   "glyphCount":len(ruby_result["placements"])}
+            stats["ruby"]+=1
         else:
             stats["hold" if auto_result else "pending"]+=1
             continue
@@ -120,6 +150,11 @@ for year in range(2022,2027):
         item={field:q[field] for field in fields}
         item.update({"modificationDisclosureDisplay":q.get("modificationDisclosureDisplay") or "PDFを表示用に加工",
                      "verbatimCertified":True,"needsVisualReview":False,"renderReady":True,"audit":audit})
+        if audit["method"]=="AUTO_PDF_GLYPH_XY_RUBY_DOM_RECONSTRUCTION":
+            item["questionParts"]=ruby_result["questionParts"]
+            item["choicesParts"]=ruby_result["choicesParts"]
+            item["question"]="".join(p.get("text",p.get("rubyBase","")) for p in item["questionParts"])
+            item["choices"]=["".join(p.get("text",p.get("rubyBase","")) for p in parts) for parts in item["choicesParts"]]
         accepted[id]=item
     status_by_year[str(year)]=stats
 approved=sorted(accepted.values(),key=lambda q:(q["year"],q["questionNo"]))
