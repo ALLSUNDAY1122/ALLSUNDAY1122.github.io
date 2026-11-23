@@ -1,5 +1,42 @@
 # FP2 RELEASE STATUS（正本・2026-11-23・Q20第2次独立PASS反映）
 
+## 2026-11-23｜学科5回分300問の統合完了（最優先・旧120問履歴の上書きではない）
+
+**最新版の実データ：canonical 312件、学科5回分の選定300件（5回分×60、6分野×50）、独自作成の内容監査PASS予備12件。** 現在までの監査は既存180問PASS180/FAIL0/HOLD0＋拡充120問PASS120/FAIL0/HOLD0＝**学科300/300内容監査PASS**。2024-05のQ01/Q02/Q06は既存正規3件を再監査して重複登録せず、新規のユニーク統合は117件。修正済2024-09 Q29は独立再監査PASS。全312件 `publishable=false`、公開承認0件。
+
+**証拠の読戻し方法：** `audit/FP2_FIVE_EXAM_300_INTEGRATION_20261123.md` に6つの拡充ドラフトと7件の独立監査（2024-09 B01/02/03、2024-05 B01解消/B02/03/04）のGit Blob SHAと、**各itemsの件数・ID・正答・4肢・改変理由**の照合結果を記録。原題番号重複は2024-05 Q01/Q02/Q06の3件だけを既存側へ統合。新規117件は**modified=true**で、制作側改変説明と監査側の最終改変説明を両方保存し、監査側説明を正規バンクのmodification_noteに使用。公式PDFの全肢逐語比較や利用権限はQ0未完了。
+
+| コンテンツ・実装 | 今回の実測・根拠 |
+|---|---|
+| 正規バンク | 312、blob `03b449dbe8a848b192bd970801846b18c486b1b4` |
+| 正本選定 | `release/release-selection-300-20261123.json`、300件、5回×60・6分野×50 |
+| 予備 | 独自作成12件、内容監査PASSだが非選定 |
+| Webアダプタ | 300件、6分野×50を読み込む条件へ改修 |
+| iOSオフライン生成 | canonical312を入力し、**選定300件のみ**をHTML・JSONへ書き出す設計（予備12件を含めない） |
+| 静的ソースゲート | 312/300/12と5回分60件を判定するよう更新 |
+| Chromium E2E | 300問ロード/各分野、解答・出典/改変・復習、35日履歴・JSONバックアップ/オフライン復元を検査するよう更新 |
+| iOS Simulator CI | 312→300 payloadとSHA/正答レコード一致、Version 1.0.0/Build 1/IAPなしを検査するよう更新 |
+| 新規監査回帰 | `scripts/fp2_five_exam_audit_gate.py` にバッチ7件のsource blob・改変判定・正答肢・監査証拠整合を固定 |
+| AppIcon | Apple登録原本との一致は**既知未検証**。今回の新たな不具合ではない |
+
+**300問版の新規CIがSUCCESSとなった証拠は別途読み戻す必要がある。** 過去の `5a72059f` におけるFP2 CI8/8 PASSは**旧120問版**に対する結果であり、312件バンク・300問アプリに流用しない。Web/Simulator/生成コードの変更は実装・保存済だが、実ビルドの完了を確かめずPASSとはしない。署名IPA／ASC／TestFlightは未着手。
+
+### 最新Q0–Q5判定（内容監査PASSと製品承認を区別）
+
+| ゲート | 現行判定 | 未了 |
+|---|---|---|
+| Q0 | **BLOCKED** | 日本FP協会の利用許諾/改変表示/運用主体、2026-04-01時点の原典法律・図表 |
+| Q1 | **CONTENT AUDIT PASS300/300、RELEASE QUALITY BLOCKED** | 統合300問の難易度/教育価値・出典逐語比較、最新CI証拠 |
+| Q2 | **E2E CI RESULT PENDING** | 300問版解答・採点・弱点復習のブラウザ結果 |
+| Q3 | **E2E/DEVICE NOT VERIFIED** | オフライン・復旧・300問データ/UI/Golden Masterの実際の結果 |
+| Q4 | **NOT TESTED** | 独立利用者/実iPhoneによる300問版受入 |
+| Q5 | **BLOCKED** | iOS Simulatorビルド、署名IPAとpayloadハッシュ/ASC・TestFlight・プライバシー・スクショ・AppIcon確認 |
+
+**結論：BLOCKED / NOT_SUBMISSION_READY / NOT_SUBMITTED。** PR #5717 Draft、mainマージ・App Review提出・ASCログインなし。
+
+---
+
+
 ## 2026-11-23 20:44 JST｜5a72059f CI 8/8 SUCCESS・preflight区分更新（今回の追記）
 
 **検証対象固定：** `5a72059f69e77375dbfa6568f613362a2712cc75`。GitHub check-runsを実際に再取得し、FP2 **8ジョブすべてcompleted/success、queued=0** と確認。Chromium E2E×2、iOS unsigned Simulator×2、正規bank/Web静的×2、UI Master v2.1 migration×1、Registry audit×1。ジョブURL・8件の監査証拠：`audit/FP2_PREFLIGHT_CI8_HUMAN_REQUIRED_20261123.md`。対象コミット以後の変更に自動的にPASSを拡張しない。関係のないアプリのActions失敗はFP2 8ジョブの判定に含めない。
