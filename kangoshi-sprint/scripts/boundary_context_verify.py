@@ -33,13 +33,29 @@ def context_for_group(text,number):
     if len(normalized(passage))<35:return None
     return {"first":first,"last":last,"passage":passage,"header":lines[h].strip()}
 
+def equivalent_shared_context(a,b):
+    """Compare exact Japanese/punctuation/numerical content plus a Latin token bag.
+    PDF layout shifts English ruby/translation annotations without changing text.
+    Latin tokens may move but never be dropped, added or rewritten.
+    """
+    words_a=sorted(re.findall(r"[A-Za-z]+",a,re.ASCII))
+    words_b=sorted(re.findall(r"[A-Za-z]+",b,re.ASCII))
+    japanese_a=normalized(re.sub(r"[A-Za-z]+","",a,flags=re.ASCII))
+    japanese_b=normalized(re.sub(r"[A-Za-z]+","",b,flags=re.ASCII))
+    return bool(japanese_a) and japanese_a==japanese_b and words_a==words_b, {
+        "japaneseExactMatch":japanese_a==japanese_b,
+        "latinTokenMultisetExactMatch":words_a==words_b,
+        "japaneseChars":len(japanese_a),
+        "latinTokens":len(words_a)
+    }
+
 def safe_context(raw,clean_font):
     # Both parsers can share a wrong source CMap. Unmapped control bytes and
     # suspicious glyphs in context cannot be auto-cleared by parser agreement.
     fixed=set((2,4,5,6,7,8,11,12,31))
     bad=[ord(c) for c in raw if ord(c)<32 and ord(c) not in fixed and c not in "\\n\\r\\t"]
     val=clean_font(raw)
-    return not bad and not re.search(r"[\\ufffd઄¹¼ïñèêçâ\\u0080-\\u009f]",val),bad
+    return not bad and not re.search(r"[\\ufffd઄¹¼ïñèêçâ\\u0080-\\u009f!?]",val),bad
 
 def _anchors(page, n, clean_font):
     words=page.get_text("words",sort=True)
@@ -102,7 +118,7 @@ def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize):
             if info is None:continue
             alt_info=context_for_group(clean_font(alt_raw),n)
             if alt_info is None:rejected.append("POPLER_SHARED_CONTEXT_NOT_FOUND");continue
-            same=normalized(info["passage"])==normalized(alt_info["passage"])
+            same,shared_evidence=equivalent_shared_context(info["passage"],alt_info["passage"])
             safe1,bad1=safe_context(original,clean_font)
             safe2,bad2=safe_context(alt_raw,clean_font)
             if not same:rejected.append("SITUATION_CONTEXT_TEXT_DIFFER");continue
@@ -114,7 +130,8 @@ def verify(doc,pdf,n,page_hint,stem,choices,poppler_text,clean_font,normalize):
                 continue
             matches.append({"page":p,"groupFirst":info["first"],"groupLast":info["last"],
                             "commonText":info["passage"],"normalizedLength":len(normalized(info["passage"])),
-                            "method":"printed range header + first question position",
+                            "method":"printed range header + first question position + exact Japanese content and Latin token multiset",
+                            "comparison":shared_evidence,
                             "engines":["PyMuPDF","Poppler"],"status":"DUAL_ENGINE_CONTEXT_MATCH"})
         if len(matches)!=1:
             return pg,[rejected[0] if rejected else "SITUATION_GROUP_CONTEXT_NOT_VERIFIED"],None,geometry,region
