@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import re, sys
+import re, sys, subprocess
 
 p = Path('fp2-manabi-sprint/index.html')
 if not p.exists():
@@ -34,6 +34,10 @@ require('reduced-motion handling missing', 'prefers-reduced-motion' in s)
 # Product-data guard: the public product cannot be promoted while it still self-identifies as an 8-question UI-only sample.
 require('UI-only sample marker remains', '公開状態：Safari UI検証版（独自表現8問）' not in s)
 require('600-question product bank not evidenced', ('600問' in s and '製品版データは別途600問監査後に置換します' not in s))
+require('canonical bank must be wired into the product UI', 'question_bank.json' in s)
+require('600-question content contract not satisfied', subprocess.run(
+    [sys.executable, 'fp2-manabi-sprint/tools/audit_product_bank.py'], check=False
+).returncode == 0)
 
 if fail:
     print('FP2 Golden Master v2.1 migration gate: FAIL')
