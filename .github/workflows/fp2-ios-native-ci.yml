@@ -48,8 +48,16 @@ jobs:
           assert 'fp2-2025-01-gakka-020' in {q['id'] for q in bank['questions']}
           import hashlib
           assert evidence['canonical_sha256']==hashlib.sha256(Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_bytes()).hexdigest()
-          assert Path('fp2-manabi-sprint/ios/Web/questions/canonical/approved-questions-20261123.json').read_bytes()==Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_bytes()
+          native_bytes=Path('fp2-manabi-sprint/ios/Web/questions/canonical/approved-questions-20261123.json').read_bytes()
+          native=json.loads(native_bytes)
+          selected={q['id']:q for q in bank['questions'] if q['release_selected'] is True}
+          assert len(native['questions'])==120 and native['content_approved_questions']==120
+          assert len(selected)==120 and {q['id'] for q in native['questions']}==set(selected)
+          assert all(q==selected[q['id']] for q in native['questions'])
           assert evidence['content_approved_questions']==195
+          assert evidence['selected_release_questions']==120 and evidence['reserve_content_pass_not_bundled']==75
+          assert evidence['release_payload_sha256']==hashlib.sha256(native_bytes).hexdigest()
+          assert Path('fp2-manabi-sprint/ios/Web/manifest.webmanifest').is_file()
           assert Path('fp2-manabi-sprint/ios/Web/index.html').is_file()
           print('FP2 registry / offline asset / IAP contract PASS')
           PY
@@ -79,7 +87,15 @@ jobs:
           assert e['publication_release_clear']==0
           import hashlib
           canonical=Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_bytes()
-          assert (app/'Web/questions/canonical/approved-questions-20261123.json').read_bytes()==canonical
           assert e['canonical_sha256']==hashlib.sha256(canonical).hexdigest()
+          native_bytes=(app/'Web/questions/canonical/approved-questions-20261123.json').read_bytes()
+          payload=json.loads(native_bytes)
+          assert len(payload['questions'])==120 and payload['content_approved_questions']==120
+          source=json.loads(canonical)
+          selected={q['id']:q for q in source['questions'] if q['release_selected'] is True}
+          assert len(selected)==120 and {q['id'] for q in payload['questions']}==set(selected)
+          assert all(q==selected[q['id']] for q in payload['questions'])
+          assert e['release_payload_sha256']==hashlib.sha256(native_bytes).hexdigest()
+          assert e['selected_release_questions']==120 and e['reserve_content_pass_not_bundled']==75
           print('iOS Simulator bundle readback PASS')
           PY
