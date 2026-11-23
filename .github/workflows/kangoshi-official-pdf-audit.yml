@@ -1,0 +1,31 @@
+name: Kangoshi Official PDF Text Audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/scripts/audit_official_pdf.py'
+      - 'kangoshi-sprint/scripts/run_official_pdf_audit.py'
+      - 'kangoshi-sprint/audit/official-source-manifest-20261124.json'
+      - '.github/workflows/kangoshi-official-pdf-audit.yml'
+permissions:
+  contents: read
+jobs:
+  official-pdf-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF extraction
+        run: python -m pip install --disable-pip-version-check pymupdf
+      - name: Fetch official Ministry PDFs and audit existing question banks
+        run: python kangoshi-sprint/scripts/run_official_pdf_audit.py
+      - name: Upload evidence even when there are source access failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-official-pdf-audit
+          path: kangoshi-sprint/audit/runs/
+          if-no-files-found: warn
