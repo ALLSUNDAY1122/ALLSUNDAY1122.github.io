@@ -1434,3 +1434,12 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## Q7自動プロビジョニング試行（2026-11-24）
 - 結果: True / build ID: 6b04cf7092306a39e3981ca4、署名完了は未実測。
 - CodemagicによるIOS_APP_STOREプロファイル取得/必要時生成を試行。署名付きIPAのみが対象でASCアップロード・本審査送信はなし。
+
+
+## Q7 TestFlight前・Codemagic署名準備（2026-11-24）
+- ASCアプリID `6802119268`、Bundle ID `com.allsunday1122.tourokuhanbaisha`、Codemagic App ID `6a769d81a1add9d06020b524`。Codemagic/ASC API読戻しは成功。従来のASC Build 13は2026-09-13アップロードの過去ビルドで、今回の599問版の署名ビルドとはみなさない。
+- GitHubに署名付きIPA生成のみを行う専用ワークフロー `touhan-q7-signing-preflight` と、既存のCodemagic暗号化環境変数から`app-store-connect fetch-signing-files --type IOS_APP_STORE --create`を実行する `touhan-q7-auto-provision` を追加。App Store ConnectへのIPAアップロード、TestFlight配信、本審査送信は両ワークフローで無効。
+- 失敗記録（原因別）：`6b04cd655586d806fe29abea`＝App Store用プロファイル不在、`6b04ce3d6b11322d3b7eee5a`＝Codemagic連携名未登録、`6b04cec46623f499d912aea1`＝Xcodeプロジェクト生成段階の失敗（文書化されたBUILD_NUMBERを使う修正済）。
+- 現在の再試行：`6b04cf7092306a39e3981ca4`、<https://codemagic.io/app/6a769d81a1add9d06020b524/build/6b04cf7092306a39e3981ca4>。最終確認時はbuildingであり**署名済みIPA生成・プロファイル取得は未検証**。Q7はBLOCKEDのまま。
+- ユーザー操作が必要な場合：Appleの2FA・開発者契約同意、証明書／プロファイルの手動登録・権限確認、iPhone実機導入確認。自動操作では2FAや契約を確定しない。
+- Q4オフライン設計は保留、Q5 App Privacy申告質問票の実物照合も保留。Q7完了と混同しない。
