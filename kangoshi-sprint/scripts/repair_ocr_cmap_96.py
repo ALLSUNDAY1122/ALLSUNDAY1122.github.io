@@ -112,7 +112,8 @@ def main():
     indexed={x["id"]:x for x in json.loads(SOURCE.read_text())["items"]}
     excluded={x["id"] for x in json.loads((AUDIT/"official-scoring-exceptions-20261124.json").read_text())["exceptions"]}
     target={r["id"] for r in deep["records"] if r["category"]=="NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH"}
-    assert len(target)==96,("Expected original 96",len(target))
+    prior_ocr=[q for q in original["questions"] if q.get("reviewStatus")=="OCR_IMAGE_PINNED_CMAP_ONLY_REPAIRED_EXPLANATION_PENDING"]
+    assert len(target)+len(prior_ocr)<=96,("Original OCR scope exceeds 96",len(target),len(prior_ocr))
     draft={}
     for ex in (111,112):
       for ses in ("AM","PM"):
@@ -218,14 +219,21 @@ def main():
         result.append(row);stats["REPAIRED_SOURCE_ONLY"]+=1
     ids={q["id"] for q in promoted}
     assert len(ids)==len(promoted) and not (ids&canonical_ids)
-    assert len(result)==96
-    report={"schemaVersion":1,"scope":96,"repairedCount":len(promoted),
-            "promotedSourceOnlyCount":len(promoted),"remainingFrom96":96-len(promoted),
-            "reasonCounts":dict(stats),"editedIds":sorted(ids),"perQuestion":result,
+    assert len(result)==len(target)
+    past=json.loads(PROOF.read_text())["perQuestion"] if PROOF.exists() else []
+    past=[r for r in past if r.get("status")=="REPAIRED_SOURCE_ONLY" and r["id"] not in {x["id"] for x in result}]
+    report={"schemaVersion":1,"scope":96,"processedThisRun":len(target),
+            "alreadyOcrVerified":len(prior_ocr),"cumulativeOcrVerified":len(prior_ocr)+len(promoted),
+            "repairedCount":len(promoted),
+            "promotedSourceOnlyCount":len(promoted),"remainingFrom96":96-len(prior_ocr)-len(promoted),
+            "reasonCounts":dict(stats),"editedIds":sorted(ids),"perQuestion":past+result,
             "validation":"Two image OCR PSM renderings full five fields; CMap-only original gap modifications; original PDF/image hashes; single official answer; no media/scenarios; not a product release."}
     PROOF.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
-    REPAIRED.write_text(json.dumps({"schemaVersion":1,"count":len(candidate_edits),
-        "edits":candidate_edits},ensure_ascii=False,indent=2)+"\n",encoding="utf8")
+    old_edits=json.loads(REPAIRED.read_text()).get("edits",[]) if REPAIRED.exists() else []
+    edits={x["id"]:x for x in old_edits}
+    edits.update({x["id"]:x for x in candidate_edits})
+    REPAIRED.write_text(json.dumps({"schemaVersion":1,"count":len(edits),
+        "edits":list(edits.values())},ensure_ascii=False,indent=2)+"\n",encoding="utf8")
     if promoted:
         original["questions"].extend(promoted)
         original["questions"].sort(key=lambda q:(-q["sourceExam"],q["session"],q["questionNo"]))
