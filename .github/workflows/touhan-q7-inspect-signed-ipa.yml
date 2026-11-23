@@ -1,0 +1,54 @@
+name: Touhan Q7 Inspect Codemagic Signed IPA
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-q7-inspect-signed-ipa.yml'
+      - 'touroku-hanbaisha-ios/scripts/inspect_q7_signed_ipa.py'
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect exact Codemagic build and signed artifact, read only
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: python touroku-hanbaisha-ios/scripts/inspect_q7_signed_ipa.py
+      - name: Commit evidence and honest Q7 gate state
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('touroku-hanbaisha-ios')
+          r=json.loads((p/'Q7_SIGNED_IPA_RESULT_20261124.json').read_text())
+          sf=p/'release-status.json';s=json.loads(sf.read_text())
+          s['q7_signed_ipa_build_20261124']={
+            'requested':True,'buildId':r['buildId'],'result':r['gate'],'buildStatus':r['status'],
+            'evidence':'touroku-hanbaisha-ios/Q7_SIGNED_IPA_RESULT_20261124.json',
+            'testflightUploaded':False,'appReviewSubmitted':False}
+          s['gates']['internal_testflight']='Q7_'+r['gate']+'_TESTFLIGHT_NOT_UPLOADED'
+          s['release_gate']='BLOCKED';s['app_review_submitted']=False
+          sf.write_text(json.dumps(s,ensure_ascii=False,indent=2)+'\n')
+          md=p/'RELEASE_STATUS.md'
+          md.write_text(md.read_text()+f"\n\n## Q7 Codemagic署名結果の実測（2026-11-24）\n- Build `{r['buildId']}`、状態 `{r['status']}`、署名監査 `{r['gate']}`。IPAアップロード/TestFlight配布なし。本審査未送信。\n- 詳細 `Q7_SIGNED_IPA_RESULT_20261124.json` / {r['evidence']}。\n")
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/Q7_SIGNED_IPA_RESULT_20261124.json touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          git commit -m 'audit(touhan): record exact Codemagic signing result and TestFlight readiness' || true
+          for n in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-q7-signed-ipa-inspection
+          path: touroku-hanbaisha-ios/Q7_SIGNED_IPA_RESULT_20261124.json
+          if-no-files-found: ignore
