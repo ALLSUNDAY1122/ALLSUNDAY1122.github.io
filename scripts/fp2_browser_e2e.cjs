@@ -17,7 +17,7 @@ const URL='http://127.0.0.1:8765/';
   assert.equal(await page.locator('.chapter').count(),6,'six subject chapters');
   const loaded=await page.evaluate(()=>({n:QUESTIONS.length,domains:[...new Set(QUESTIONS.map(x=>x.domain))].length,meta:QUESTIONS.filter(x=>x.source_url&&x.source_section&&x.modification_note&&x.legal_cutoff).length}));
   assert.deepEqual(loaded,{n:300,domains:6,meta:300});
-  console.log('E2E checkpoint loaded canonical 120');
+  console.log('E2E checkpoint loaded selected 300');
   // Daily goal and guided sprint: wrong answer, source provenance, rest of session.
   await page.locator('[data-screen="settings"]').click();
   await page.locator('[data-goal="4"]').click();
