@@ -127,6 +127,18 @@ if VISUAL19.exists():
     "individualProof":"kangoshi-sprint/audit/ocr-noncmap-19-promotion-ledger-20261124.json",
     "beforeAfter":"kangoshi-sprint/product-content/ocr-noncmap-19-before-after-20261124.json",
     "fifthOptionRetained":"K112-PM077","releaseEligible":0,"status":"SOURCE_ONLY"}
+PSM23=R/"audit/ocr-psm-disagreement-23-promotion-ledger-20261124.json"
+if PSM23.exists():
+  p=json.loads(PSM23.read_text(encoding="utf8"))
+  assert p["sourceReviewScope"]==23
+  assert p["cumulativePromoted"]+p["remainingFrom23"]==23
+  S["latestPsm23OriginalImageAudit"]={
+    "runId":run_id,"scope":23,"newlyPromoted":p["newPromoted"],
+    "cumulativePromoted":p["cumulativePromoted"],"remainingFrom23":p["remainingFrom23"],
+    "mediaHoldCount":p["mediaHoldCount"],"mediaHeld":p["mediaHeld"],
+    "individualProof":"kangoshi-sprint/audit/ocr-psm-disagreement-23-promotion-ledger-20261124.json",
+    "beforeAfter":"kangoshi-sprint/product-content/ocr-psm-disagreement-23-before-after-20261124.json",
+    "fiveChoiceCase":"K112-AM075","releaseEligible":0,"status":"SOURCE_ONLY"}
 J.write_text(json.dumps(S,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
 old=MD.read_text(encoding="utf8")
 # Preserve historical change log, remove previously appended dynamic summaries.
@@ -220,6 +232,16 @@ if VISUAL19.exists():
       "`audit/ocr-noncmap-19-promotion-ledger-20261124.json`。\n"
       "- 全問の修正前後：`product-content/ocr-noncmap-19-before-after-20261124.json`。"
       "合格は原典ソース限定、アプリ配信・本審査は禁止。\n")
+if PSM23.exists():
+    p=json.loads(PSM23.read_text(encoding="utf8"))
+    tail+=("\n## OCR複数設定不一致23問の原典画像修復（Run "+str(run_id)+"）\n\n"
+      "- 原典画像逐問照合23問、新規ソース昇格："+str(p["newPromoted"])+"問、未昇格："+str(p["remainingFrom23"])+"問。\n"
+      "- 図版保留："+str(p["mediaHoldCount"])+"問（"+", ".join(q["id"] for q in p["mediaHeld"])+"）。"
+      "第112回午前75は5択として保持。\n"
+      "- 問題・全選択肢・公式正答・画像ハッシュ・差分："
+      "`audit/ocr-psm-disagreement-23-promotion-ledger-20261124.json`、"
+      "`product-content/ocr-psm-disagreement-23-before-after-20261124.json`。\n"
+      "- ソース検証限定。解説・権利・実アプリ表示と本審査は未承認。\n")
 MD.write_text(summary+history+"\n"+tail,encoding="utf8")
 print(json.dumps({"canonical":total,"remaining":len(hold),"new":P["newPromoted"],
                   "pending22Remaining":len(active_pending),"svgPending":18},ensure_ascii=False))
