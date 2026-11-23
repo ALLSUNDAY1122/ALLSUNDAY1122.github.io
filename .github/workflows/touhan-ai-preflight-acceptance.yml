@@ -1,0 +1,138 @@
+name: Touhan AI Preflight Acceptance 599 (Pre-TestFlight)
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'touroku-hanbaisha-ios/App.js'
+      - 'touroku-hanbaisha-ios/app.json'
+      - 'touroku-hanbaisha-ios/APP_STORE_METADATA.md'
+      - 'touroku-hanbaisha-ios/scripts/validate_release.py'
+      - 'touroku-hanbaisha-ios/scripts/ai_preflight_acceptance.py'
+      - 'touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift'
+      - '.github/workflows/touhan-ai-preflight-acceptance.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-ai-preflight-599
+  cancel-in-progress: false
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Static syntax and Node JavaScript parsing
+        id: syntax
+        continue-on-error: true
+        run: |
+          python -m py_compile touroku-hanbaisha-ios/scripts/validate_release.py touroku-hanbaisha-ios/scripts/ai_preflight_acceptance.py
+          node --check touroku-hanbaisha-sprint/app-v07.js
+          node --check touroku-hanbaisha-sprint/r1-canonical-loader-v08.js
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          html=Path('touroku-hanbaisha-sprint/official-practice.html').read_text()
+          scripts=re.findall(r'<script>(.*?)</script>',html,re.S)
+          assert len(scripts)==1
+          Path('/tmp/touhan-official-ui.js').write_text(scripts[0])
+          PY
+          node --check /tmp/touhan-official-ui.js
+      - name: Run existing legacy-360 release validator plus canonical-599 integration contract
+        id: release_validation
+        continue-on-error: true
+        run: python touroku-hanbaisha-ios/scripts/validate_release.py
+      - name: Install Chromium and run full 599-question real browser QA
+        id: full_browser
+        continue-on-error: true
+        run: |
+          python -m pip install --disable-pip-version-check 'playwright==1.56.0'
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --directory touroku-hanbaisha-sprint >/tmp/touhan-preflight-web.log 2>&1 &
+          sleep 2
+          python touroku-hanbaisha-sprint/official-kansai/test_mobile_ui.py
+      - name: Generate independent AI preflight acceptance result
+        run: python touroku-hanbaisha-ios/scripts/ai_preflight_acceptance.py
+      - name: Persist observed failures to release-status.json and RELEASE_STATUS.md
+        env:
+          SYNTAX: ${{ steps.syntax.outcome }}
+          RELEASE_VALIDATION: ${{ steps.release_validation.outcome }}
+          FULL_BROWSER: ${{ steps.full_browser.outcome }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_HEAD: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-ios')
+          p=b/'AI_PREFLIGHT_ACCEPTANCE_20261124.json'
+          d=json.loads(p.read_text())
+          names={'SYNTAX':'Q9_SYNTAX_AND_JS','RELEASE_VALIDATION':'Q10_LEGACY_AND_OFFICIAL_RELEASE_VALIDATOR','FULL_BROWSER':'Q11_CHROMIUM_FULL_BANK_375_430'}
+          for k,name in names.items():
+              success=os.environ[k]=='success'
+              d['checks'].append({'id':name,'status':'PASS' if success else 'FAIL',
+                                  'detail':('GitHub Actions step success' if success else 'GitHub Actions step failed; inspect job logs'),
+                                  'evidence':[f'https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/{os.environ["RUN_ID"]}']})
+          d['blocking']=[x['id'] for x in d['checks'] if x['status']!='PASS']
+          d['overall']='BLOCKED' if d['blocking'] else 'PASS'
+          d['actionsRunId']=int(os.environ['RUN_ID'])
+          d['actionsHead']=os.environ['RUN_HEAD']
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+          sp=b/'release-status.json'
+          s=json.loads(sp.read_text())
+          assert s['question_bank']['production_official_bank_count']==d['canonicalBank']==599
+          s['ai_preflight_acceptance_20261124']={
+              'result':d['overall'],'totalGates':len(d['checks']),
+              'pass':sum(x['status']=='PASS' for x in d['checks']),
+              'blocking':d['blocking'],'report':'touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json',
+              'run_id':d['actionsRunId'],'native_ios_simulator_tested':False,'testflight_uploaded':False}
+          s['gates']['ai_preflight_acceptance']=d['overall']
+          s['gates']['ios_offline_runtime']='BLOCKED_REMOTE_ONLY'
+          s['gates']['native_simulator']='NOT_TESTED'
+          s['release_gate']='BLOCKED'
+          s['app_review_submitted']=False
+          sp.write_text(json.dumps(s,ensure_ascii=False,indent=2)+'\n')
+          md=b/'RELEASE_STATUS.md'
+          md.write_text(md.read_text()+ '\n\n## AI Preflight Acceptance｜599問のiOSアプリ統合（2026-11-24）\n'
+          +'- ネイティブSwift / Expo WebView起動先を公式599問のofficial-practice.htmlに変更。旧360問の学習基盤は別画面として保持。\n'
+          +f'- Run: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/{d["actionsRunId"]}\n'
+          +f'- 合否: **{d["overall"]}**。PASS {sum(x["status"]=="PASS" for x in d["checks"])}/{len(d["checks"])}。\n'
+          +f'- 未通過: {", ".join(d["blocking"]) or "なし"}。\n'
+          +'- 詳細：touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json。実機・Simulator未確認、TestFlight送信なし、本審査未提出。\n')
+          print(d['overall'],d['blocking'])
+          PY
+      - name: Commit reproducible preflight evidence and both statuses
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json
+          git add touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): persist observed 599 iOS preflight gate results'
+            for retry in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-599-ai-preflight
+          path: |
+            touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json
+            /tmp/touhan_mobile_*.png
+          if-no-files-found: ignore
+      - name: Enforce acceptance verdict
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('touroku-hanbaisha-ios/AI_PREFLIGHT_ACCEPTANCE_20261124.json'))
+          if d['overall']!='PASS':
+              raise SystemExit('AI PREFLIGHT BLOCKED: '+', '.join(d['blocking']))
+          print('AI PREFLIGHT PASS')
+          PY
