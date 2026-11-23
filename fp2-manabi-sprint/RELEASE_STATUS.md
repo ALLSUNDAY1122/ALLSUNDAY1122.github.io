@@ -9,7 +9,7 @@ Canonical procedures: see RELEASE_SCOPE_20261124.md.
 | Quality gate | Status | Blocker |
 |---|---|---|
 | Q0 | BLOCKED | Official JAFP + Kinzai reuse rules verified CONDITIONAL_PASS; per-item citation, modification disclosure, historical/current law audit and independent signoff remain. See audits/FP2_Q0_OFFICIAL_PAST_EXAM_RIGHTS_20261123.md |
-| Q1 | BLOCKED | Draft A mechanical 12 PASS / 0 FAIL / independent 12 HOLD. Official batch B01 (2024-05 Q1,Q2,Q6) mechanical 3 PASS / 0 FAIL / independent 3 HOLD. Canonical integration not done |
+| Q1 | BLOCKED | Recovered 180 complete full-text questions and matched to 180 source-index rows without discrepancy; individual PDF/modification and 2026 law review, independent review and canonical/UI integration remain pending |
 | Q2 | NOT TESTED | Real learning cycle not tested |
 | Q3 | FAIL | GitHub HTML source retains v1.3 marker, 8-question sample and 600-question placeholder; lacks v2.1 identity, 4/8/16 setting, 5-week heatmap and JSON import evidence. Real-device inspection remains NOT TESTED. |
 | Q4 | NOT TESTED | Independent reviewer and learner acceptance evidence missing |
@@ -38,3 +38,6 @@ Both official entities affirm conditional reuse of publicly released common 2nd-
 
 ## 2026-11-23 Drive 180 source-only import
 Live Google Sheet `AUDIT_MATRIX_FP2.csv` A1:I181 yielded 180 IDs (2026-05, 2025-05, 2025-01 each 60). All have historical answer/source URLs and legacy transcription/explanation flags, but source sheet lacks question stem, option texts and actual explanations. **180 metadata records imported; 0 complete questions imported; 180 current-law reviews NOT TESTED.** Quarantined `questions/draft/fp2-drive-matrix-180-source-index-20261123.json`, audit `audits/FP2_DRIVE_180_REUSE_EVALUATION_20261123.md`. Never count these 180 source-only entries toward release bank; Q0/Q1 BLOCKED and no submission readiness.
+
+## 2026-11-23 full-text corpus recovered (supersedes source-only import as available draft data)
+Actual source: `feature/fp2-kakomon-coach:fp2-kakomon-coach/questions/question_bank_fp2.json`. 180 complete structured questions matched 180 Drive source-index IDs with **zero metadata discrepancies**. Draft import: `questions/draft/fp2-recovered-180-fulltext-20261123.json`. Audit: `audits/FP2_180_FULLTEXT_RECOVERY_AUDIT_20261123.md`. Legacy audit flags are not independently reverified; all `modified` values remain null until official PDF text comparison; all current-law review statuses `NOT_TESTED`; 11 figure/exhibit keywords flagged. **180 recovered / 0 independently approved / 0 in app.** Q0/Q1 BLOCKED, no submission.
