@@ -55,7 +55,8 @@ for half,url,start,end in RANGE:
   raise RuntimeError(f"{half}: expected 60 sequential questions but got {len(nums)}; missing={sorted(set(expected)-set(nums))}, duplicates={len(nums)-len(set(nums))}")
  for chunk in chunks:
   n=chunk["number"]
-  raw="\n".join(chunk["lines"]).strip()
+  cleaned=[line for line in chunk["lines"] if not re.fullmatch(r"\s*[♯＃#]{15,}\s*",line) and not re.fullmatch(r"\s*-\s*[0-9０-９]{1,3}\s*-\s*",line)]
+  raw="\n".join(cleaned).strip()
   if len(raw)<35:raise RuntimeError(f"Q{n}: suspiciously short text")
   # Choices may be presented in a table or interrupted by ruby text.
   # Do NOT attempt to reflow into unreliable 5-choice UI before manual review.
