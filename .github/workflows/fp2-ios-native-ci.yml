@@ -8,6 +8,11 @@ on:
       - "fp2-manabi-sprint/**"
       - "automation/app-release-registry.json"
       - ".github/workflows/fp2-ios-native-ci.yml"
+  pull_request:
+    paths:
+      - "fp2-manabi-sprint/**"
+      - "automation/app-release-registry.json"
+      - ".github/workflows/fp2-ios-native-ci.yml"
   workflow_dispatch:
 permissions:
   contents: read
