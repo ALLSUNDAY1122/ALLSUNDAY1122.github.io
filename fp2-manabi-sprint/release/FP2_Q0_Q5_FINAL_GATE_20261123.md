@@ -1,5 +1,17 @@
 # FP2｜Q0〜Q5最終ゲート・統合監査（2026-11-23 現行正本）
 
+### 逐語版309→300の最新Simulator・Chromium技術ゲート：PASS
+
+- [Chromium E2E run 45176802420](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45176802420) **SUCCESS**：逐語監査PASS117/FAIL2/HOLD1と隔離ID3件の再照合、正規309・選定300・予備9・オフラインバンドルSHA、学習・35日履歴・JSON入出力・オフライン再起動の実操作PASS。
+- [unsigned iOS Simulator run 45176802436](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45176802436) **SUCCESS**：XcodeGen、署名なしSimulator用xcodebuild、Info.plist、実際にコンパイルされた300問バンクとsource SHAの読戻し全ステップPASS。`content_approved_questions=309`、`selected_release_questions=300`、`reserve_content_pass_not_bundled=9`をmacOSログで確認。
+- [55ddf49 Chromium E2E run 45173608313](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45173608313) **SUCCESS**を確認。ただしその時点の内容は置換前であり、今回の置換後のSUCCESSとは分けて評価。
+- 静的canonical/Web、Golden Master migration、Registry auditも同シリーズでSUCCESS。これらは権利/正式配布や実機受入の承認ではない。
+
+**Q5技術サブゲート（署名なしSimulator）はPASSに更新。** Q5の製品全体は、署名IPA・TestFlight実機・ASCのプライバシー/Version/Build/IAP/スクリーンショット・サポートURL到達の確認がないため引き続き**BLOCKED**。Q53画像再現HOLDとQ0権利・法令承認も残る。
+
+---
+
+
 ## 2026-11-23｜逐語版監査・現行法リリース再選定（最優先正本）
 
 **本行以下の312問／300問・予備12問は2024年の言い換え版を含む旧履歴。最新正本は** `questions/canonical/approved-questions-20261123.json` の**内容PASS309問、選定300問、予備9問、隔離3問（FAIL2・HOLD1）**。
