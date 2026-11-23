@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-23T09:34:00Z",
+  "updated_at": "2026-11-23T11:44:00Z",
   "policy": {
     "final_approval": "Explicit user approval is required for the exact App ID / Version / Build immediately read back before App Review submission.",
     "submission_complete": "Only App Store Connect read-back at WAITING_FOR_REVIEW or a later review state counts as App Review submission complete.",
@@ -201,7 +201,7 @@
       "iap": false,
       "iap_product_ids": [],
       "app2_task": null,
-      "status": "native_integrated_content195_release_blocked",
+      "status": "ci8_pass_at_5a72059f_q0_q5_release_blocked",
       "readback": false,
       "ios_project": "fp2-manabi-sprint/ios/project.yml",
       "native_source_branch": "feature/fp2-release-scope-20261123",
@@ -210,19 +210,45 @@
       "publishable_questions": 0,
       "icon_source_blob_sha": "ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d",
       "icon_apple_hash_verified": false,
-      "build_validation": "POST_Q20_RELEASE_CI_PENDING",
+      "build_validation": "CI8_PASS_AT_5a72059f_UNSIGNED_SIMULATOR_ONLY",
       "app_store_upload": "NOT_STARTED",
-      "note": "All recovered180 independent content PASS; canonical 195=120 selected+75 reserves, publishable 0. Q20 second independent audit PASS, added to reserve only. Signed native build/TestFlight and ASC readback not verified.",
-      "ci_run_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45146663362",
-      "ci_source_sha": "e763d61ebb93d5bfd95f637e219936d2bac49354",
+      "note": "All recovered180 independent content PASS; canonical 195=120 selected+75 reserves, publishable 0. Q20 second independent audit PASS, added to reserve only. Signed native build/TestFlight and ASC readback not verified. CI8 successful at fixed 5a72059f commit; do not extend success to later commits or App Store Connect. Q0–Q5 and publishable=0 remain blocked.",
+      "ci_run_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45158866204",
+      "ci_source_sha": "5a72059f69e77375dbfa6568f613362a2712cc75",
       "ci_verified_steps": [
         "canonical_bank_offline_bundle",
         "xcodegen",
         "unsigned_simulator_xcodebuild",
-        "compiled_info_plist_and_bundle_readback"
+        "compiled_info_plist_and_bundle_readback",
+        "chromium_learning_offline_e2e",
+        "golden_master_v21_migration_gate",
+        "release_registry_audit",
+        "static_content_web_shell"
       ],
       "release_selected": 120,
-      "reserve_questions": 75
+      "reserve_questions": 75,
+      "preflight_classification": "CI8_PASS_AT_5a72059f_HUMAN_REQUIRED_REMAIN",
+      "ci_8_of_8_verified": true,
+      "ci_8_of_8_reference_commit": "5a72059f69e77375dbfa6568f613362a2712cc75",
+      "ci_8_of_8_categories": {
+        "chromium_e2e": 2,
+        "native_simulator_unsigned": 2,
+        "static_web_bank": 2,
+        "ui_migration": 1,
+        "registry_audit": 1
+      },
+      "ci_8_of_8_evidence": "fp2-manabi-sprint/audit/FP2_PREFLIGHT_CI8_HUMAN_REQUIRED_20261123.md",
+      "ci_8_of_8_conclusions": "8_SUCCESS_0_QUEUED",
+      "icon_internal_verification": "PASS_IDENTICAL_FP2_LEGACY_GIT_BLOB",
+      "icon_current_sha256": "d456178b2a7b04f180e39b3ad62f5c194832e85aa15102bf6452751551db8033",
+      "icon_asc_verification": "HUMAN_REQUIRED",
+      "human_required": [
+        "ASC_ICON_REFERENCE_CONFIRMATION",
+        "ASC_APP_VERSION_BUILD_IAP_PRIVACY_METADATA_SCREENSHOTS_FINAL_CHECK",
+        "SIGNED_TESTFLIGHT_INSTALL_REAL_DEVICE_ACCEPTANCE",
+        "RIGHTS_OPERATOR_AND_SOURCE_DISCLOSURE_SIGNOFF",
+        "EXPLICIT_FINAL_REVIEW_SUBMISSION_APPROVAL"
+      ]
     }
   }
 }
