@@ -1230,3 +1230,9 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - **残113問を個別に目視確認したとの主張はしない**。共通の表示欠陥が認められるため未照合のままHOLD。将来、日本語フォントを有効にした画面で`ruby`/`rt`を正しく生成し、原典の文字位置と比較して一意性を証明できた問題だけ昇格させる。
 - 120問別の原典画像・候補375pxスクリーンショット・左右比較HTML・元の保留理由・直接目視の有無・今回判定を記録した台帳：`touroku-hanbaisha-sprint/official-kansai/RUBY_VISUAL_REVIEW_120_20261124.json`。ソース一式は`ruby-font-review/`。当該比較画面は公開アプリではなく監査用候補表示。
 - 検査結果は「目視一致0、昇格0、保留120」であり、既存の440問と先行する10問のルビ昇格に変更なし。Apple 2FA・契約・課金・実機確認・本審査最終送信は行っていない。
+
+## 2026-11-24 02:25 JST：120問の比較画面修復を実装・再実行中
+- `rebuild_ruby_comparison_120.py` と `.github/workflows/touhan-ruby-comparison-repair.yml` を追加。GitHub Actions上で日本語フォント `fonts-noto-cjk` を導入し、候補JSON＋原典PDFの字形位置から真正のHTML `ruby/rt` を構築して、375px画像120件と比較ページ120件、一覧シート15件を生成する設計。
+- 原典の位置が曖昧な問題を確定済みとして扱わず、個別の警告と根拠を記録する。直接の目視一致がなければ正式バンクへ昇格させない。
+- 初回Actionsは準備段階で停止し `RUBY_REPAIR_ERROR_20261124.json` の「No script output」を確認。日本語フォントのインストールログを保存し、既存Chromeを利用する方式へ修正して再実行。
+- **現時点では生成結果のGitHub読戻しは未完了**。正式バンク440問、追加昇格0問、目視未確定120問、申請ゲートBLOCKEDを維持。成功を仮記入しない。
