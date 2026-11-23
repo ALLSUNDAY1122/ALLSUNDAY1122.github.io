@@ -62,13 +62,25 @@ S["textAudit"]["notImported"]=len(hold)
 OCR_CATEGORY=R/"audit/ocr-category-deep-review-20261124.json"
 if OCR_CATEGORY.exists():
   report=json.loads(OCR_CATEGORY.read_text(encoding="utf8"))
-  assert report["checked"]==len(hold)
+  assert report["checked"]>=len(hold)  # category snapshot precedes OCR repair promotion
   S["latestOcrCategoryAudit"]={
     "runId":run_id,"checked":report["checked"],"categories":report["categories"],
     "officialDecisions":report["officialDecisions"],
     "evidenceFile":"kangoshi-sprint/audit/ocr-category-deep-review-20261124.json",
     "newlyPromotedByCategoryAudit":report["newlyPromoted"],
     "sourceOnlyReleaseBlocked":True}
+OCR_REPAIR=R/"audit/ocr-cmap-repair-ledger-20261124.json"
+if OCR_REPAIR.exists():
+  proof=json.loads(OCR_REPAIR.read_text(encoding="utf8"))
+  assert proof["scope"]==96
+  assert proof["repairedCount"]==proof["promotedSourceOnlyCount"]
+  S["latestOcrCmapRepairAudit"]={
+    "runId":run_id,"scope":proof["scope"],"actualSourceRepairs":proof["repairedCount"],
+    "newSourcePromoted":proof["promotedSourceOnlyCount"],
+    "stillHeldFrom96":proof["remainingFrom96"],
+    "individualProof":"kangoshi-sprint/audit/ocr-cmap-repair-ledger-20261124.json",
+    "beforeAfter":"kangoshi-sprint/product-content/ocr-repaired-candidates-20261124.json",
+    "releaseEligible":0,"status":"SOURCE_ONLY"}
 J.write_text(json.dumps(S,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
 old=MD.read_text(encoding="utf8")
 # Preserve historical change log, remove previously appended dynamic summaries.
@@ -117,6 +129,15 @@ if OCR_CATEGORY.exists():
       "- 個別の正答・採点例外、OCR文字単位差分、状況設定共通文画像の証拠："
       +"`audit/ocr-category-deep-review-20261124.json`。\n"
       "- この区分別台帳のみで本文・選択肢の確定や公開フラグ解除はしない。\n")
+if OCR_REPAIR.exists():
+    proof=json.loads(OCR_REPAIR.read_text(encoding="utf8"))
+    tail+=("\n## 画像OCRに基づくCMap欠落修復（Run "+str(run_id)+"）\n\n"
+      "- 96問を対象に修正判定。実際のデータ修正・ソース昇格："+str(proof["repairedCount"])+"問。"
+      "修正未確定："+str(proof["remainingFrom96"])+"問。\n"
+      "- 修正前後の本文・全選択肢："+ "`product-content/ocr-repaired-candidates-20261124.json`。\n"
+      "- 原典画像・PDFハッシュ、OCR二設定、公式正答の証拠："
+      "`audit/ocr-cmap-repair-ledger-20261124.json`。\n"
+      "- OCR修正はソース限定。解説・アプリ表示・権利・Apple申請は保留。\n")
 MD.write_text(summary+history+"\n"+tail,encoding="utf8")
 print(json.dumps({"canonical":total,"remaining":len(hold),"new":P["newPromoted"],
                   "pending22Remaining":len(active_pending),"svgPending":18},ensure_ascii=False))
