@@ -13,7 +13,7 @@
 | **未昇格** | **260問** | 原典の疑義と未合格ゲートは保持 |
 | アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-- GitHub Actions Run：45260033942。先行再抽出22問のうち**0問**が引き続き保留。
+- GitHub Actions Run：45261299978。先行再抽出22問のうち**0問**が引き続き保留。
 - 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
 - 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
 - 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
@@ -158,3 +158,11 @@
 - 昇格IDと設問座標の凍結証拠：`audit/geometry-recovery-batch-20261124.json`。20問のPDF原典切出画像、PNG SHA-256、PDF SHA-256、公式解答PDF SHA-256、ページ番号・座標を`audit/geometry-recovery-image-index-20261124.json`に保存。画像証拠生成・再監査 Run `45260033942` **SUCCESS**。証拠画像は同RunのArtifacts `kangoshi-20-geometric-source-regions`（ID `14860970560`）へ格納。
 - 画像20問分の出力を確認。画像生成と2方式照合は完了したが、**全字の独立目視一致を自動保証するものではない**。解説・媒体・アプリ・iOS等のゲートは継続保留。
 - **一般公開不可**：既存ランタイム720問は別途原典文字列監査で629 PASS/91 HOLD。新規220問はすべて`publishable=false`、`releaseEligible=false`。Apple最終送信・課金契約確定は未実施。
+
+
+## 今回の独立共通文・制御文字監査（Run 45261299978）
+
+- 追加昇格 **0問**、合計 **940/1,200問**。残り **260問**。
+- 昇格ID：なし。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 210, COORDINATE_REGION_UNVERIFIED 210, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 149, POPPLER_FIELD_MISMATCH_0 117, PYMUPDF_FIELD_MISMATCH_0 106, CHOICE_COUNT_NOT_FOUR 86, PAGE_FOOTER_CONTAMINATION 84, PYMUPDF_FIELD_MISMATCH_4 63, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 39, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
+- 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
