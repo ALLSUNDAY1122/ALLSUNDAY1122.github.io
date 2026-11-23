@@ -39,12 +39,13 @@ for record in AUDIT["reviewedQuestions"]:
                  "audit":{"status":"PASS","source": "MANUAL_VISUAL_AUDIT_20261123.json","pdf_page":record["pdf_page"],"reviewedAt":AUDIT["reviewed_at"]}})
     APPROVED.append(item)
 APPROVED.sort(key=lambda q:(q["year"],q["questionNo"]))
-if len(APPROVED)!=3 or {q["id"] for q in APPROVED}!={"KSAI-2022-001","KSAI-2022-002","KSAI-2022-004"}:
+expected={r["id"] for r in AUDIT["reviewedQuestions"] if r["status"]=="PASS"}
+if {q["id"] for q in APPROVED}!=expected or not expected:
     raise ValueError("unexpected promotion set")
 out={"schema":"touroku-hanbaisha-official-approved-v1","issuer":"関西広域連合",
      "officialPastQuestionsOnly":True,"officialYear":2022,"count":len(APPROVED),
      "approvedIds":[q["id"] for q in APPROVED],"questionCountTarget":600,
-     "reviewScope":"2022 Q01,Q02,Q04 only","status":"PARTIAL_APPROVED","questions":APPROVED}
+     "reviewScope":"2022 visual audit PASS subset only","status":"PARTIAL_APPROVED","questions":APPROVED}
 file=BASE/"APPROVED_OFFICIAL_BANK.json"
 file.write_text(json.dumps(out,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 print("PASS: approved",len(APPROVED),"HOLD",sum(r["status"]=="HOLD" for r in AUDIT["reviewedQuestions"]))
