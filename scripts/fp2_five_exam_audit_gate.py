@@ -62,6 +62,7 @@ assert pass_count==117
 
 resolution_path=APP/"audit/FP2_202405_B01_HOLD3_RESOLUTION_20261123.json"
 resolution=json.loads(resolution_path.read_text())
+assert resolution["source_blob_sha"]==blob_sha(ROOT/resolution["source_path"]),"2024-05 B01 source SHA mismatch"
 existing=[]
 assert len(resolution["items"])==3
 for v in resolution["items"]:
