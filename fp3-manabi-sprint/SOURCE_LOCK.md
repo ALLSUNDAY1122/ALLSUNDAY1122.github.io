@@ -1,6 +1,6 @@
 # FP3級｜学びスプリント Source Lock
 
-Updated: 2026-11-23 (local backup branch `fp3-300q-backup`)
+Updated: 2026-11-24 (local backup branch `fp3-300q-backup`; 2023 explanation audit fixes)
 
 ## Canonical product definition
 
@@ -10,8 +10,8 @@ Updated: 2026-11-23 (local backup branch `fp3-300q-backup`)
 - Normal learning pool: 295 questions (`active_core`).
 - Legacy/old-regime isolated: 5 questions (`archived_law_changed`).
 - Payload file: `question_bank_300.payload.json`
-- Canonical validation SHA-256 for `question_bank_300.payload.json`: `63f110cc5bff5cfa0b6c57396e2ba9339305d166b6c9c07526099a594b61c485`.
-- Payload bytes: 408985.
+- Canonical validation SHA-256 for `question_bank_300.payload.json`: `deceb3943286559cc9e087af4cbc4c2845caa6fc09b00c477a5468146c9e1690`.
+- Payload bytes: 409279.
 - Manifest: `question_bank_300.json`.
 - Previous 180-question payload is retained as `question_bank_180.payload.json` for rollback only. Do not ship it as the product bank on this branch.
 
