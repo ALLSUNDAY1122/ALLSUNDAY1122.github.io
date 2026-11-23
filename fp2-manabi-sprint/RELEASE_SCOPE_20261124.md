@@ -1,4 +1,39 @@
-# FP2 初回リリース範囲・正式ゲート（2026-11-23）
+# FP2 学科5回分300問｜現行リリース範囲・正式ゲート（2026-11-23）
+
+## 最新決定｜拡充制作と独立監査を受領・300問選定済み
+
+**学科5回分、各60問の計300問を内容監査PASSとしてリリース選定した。** 内訳は2026-05、2025-05、2025-01の各60問（計180）、2024-09の60問、2024-05の60問（新規57問＋既存Q01/Q02/Q06の独立PASS再確認）。拡充分は7件のバッチ別itemsの判定を直接突き合わせ、PASS120、FAIL0、HOLD0。旧120問選定は履歴保存し、今後のリリース対象は300問とする。
+
+| 指標 | 統合後 |
+|---|---:|
+| 正規バンク・内容PASS | **312問** |
+| うち学科5回分・300問選定 | **300問（5回分×60、6分野×50）** |
+| うち独自作成・内容監査PASS予備 | **12問** |
+| 追加された新規原題由来のユニーク問題 | **117問** |
+| 既存2024-05 Q01/Q02/Q06 | **3問、再監査PASSで重複追加なし** |
+| 2024-09 Q29 | **修正済み、再監査PASS** |
+| 公開承認済み問題 | **0問（全問publishable=false）** |
+
+**統合元：** `feature/fp2-academic-300-expansion-20261123` の `fp2-manabi-sprint/questions/draft/fp2-official-202409-b01/b02/b03.json` および `fp2-official-202405-b02/b03/b04.json`（6ファイルはリリースブランチの同じdraftにGit Blobを変えずに保存）。**受入証拠：** `audit/FP2_FIVE_EXAM_300_INTEGRATION_20261123.md` および7件のバッチ別監査JSON。
+
+**改変判定：** 新規117問はすべて `modified=true`、原題と異なる独自加工の説明を監査側 `modification_note_review` から確定し、制作元の `modification_note` は `modification_note_draft` に保存。2024-09 B01の20問の制作・監査文言差分も履歴保存。原文逐語照合・権利許諾の最終承認は**別のQ0**であり、改変判定PASSを著作権利用許可とはしない。
+
+**選定正本：** `release/release-selection-300-20261123.json`、対象canonical `questions/canonical/approved-questions-20261123.json`。旧 `release-selection-120-20261123.json` は比較履歴として保持し、アプリ/CIの現行参照先には使用しない。iOS生成元の300問・予備12問除外、Web300問アダプタとキャッシュ、6分野×50・5回分×60のゲートを最新基準とする。Version 1.0.0／Build 1／IAPなしの登録予定は維持するが、署名/ASC/配布は別途検証する。
+
+## Q0–Q5に必要な残ゲート
+
+- Q0 **BLOCKED**：問題原題・加工表示・著作権二次利用条件・運用主体の最終承認、2026-04-01基準の一次資料・改正例外と図表利用を独立確認。
+- Q1 **CONTENT REVIEW 300/300 PASS／最終公開品質BLOCKED**：バッチ別監査照合済。統合300問の分布/完全重複、出典元・解説/難易度・改変表示の最終再検査と最新静的CI読戻しが残る。
+- Q2/Q3 **最新の300問学習・Chromium/オフラインE2EとUI/復元のCI読戻し要**。既存120問版CIは300問版の合格証拠には流用できない。
+- Q4 **NOT TESTED**：300問版の独立利用者・実機受け入れ。
+- Q5 **BLOCKED**：300問iOS Simulator/バンドルハッシュ、署名IPA/実機TestFlight、App Store Connect Version/Build/Privacy/公開URL/スクショ。AppIconのApple側一致は既知未確認で、新規不具合として扱わない。
+
+**状態：BLOCKED / NOT_SUBMISSION_READY / NOT_SUBMITTED。** PR #5717 Draft維持、mainマージ・ASCログイン・Apple審査提出を行わない。
+
+---
+
+## 旧120問版・制作計画の履歴（以下の件数・「未受領」は現行状態ではない）
+
 
 期限: 2026-11-24 08:00 JST。今回の目標: SUBMISSION_READY / WAITING_FINAL_APPROVAL。App Reviewへの提出は禁止。
 
