@@ -76,3 +76,12 @@
 
 - 新規昇格ID：`K112-PM113`、`K111-AM106`、`K111-PM106`。証拠は個別昇格台帳に記録。
 - SVG18件は本比較で問題PDFページ側に「別冊」参照があるものを確認。少なくとも `K113-AM023` は原図が別冊にあるため、この左右比較だけでは忠実性判定不可。原図別冊に基づく照合までHOLD継続。
+
+## 境界位置・状況設定の再検証（自動実行記録）
+
+- 正規ソースバンク：**864/1,200問**（追加144問、既存720問）。
+- 追加480問の未昇格：**336問**。今回の自動昇格：**0問**。
+- 番号境界を前後3ページで探索し、単独行の問題番号と問題文・4選択肢の両エンジン一致・候補一意性を確認する。状況設定の共通文も2エンジン一致がない限り保留。
+- 主要保留理由（重複）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 228, COORDINATE_REGION_UNVERIFIED 228, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 178, PYMUPDF_FIELD_MISMATCH_0 177, PAGE_FOOTER_CONTAMINATION 151, POPPLER_FIELD_MISMATCH_0 142, PYMUPDF_FIELD_MISMATCH_4 115, CHOICE_COUNT_NOT_FOUR 93, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 48, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 42, TOO_SHORT_FOR_UNIQUE_STEM 41。
+- SVG18件は原典との比較画像を再生成するが、画像の意味・医学的所見の忠実性は自動合格にしない。**18件の詳細視覚確認が残存**。
+- 解説・媒体権利・実機確認・本審査の公開ゲートは引き続き保留。

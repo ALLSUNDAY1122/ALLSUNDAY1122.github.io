@@ -336,10 +336,10 @@
     "reasonCountsNow": {
       "SCORING_EXCEPTION": 6,
       "SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT": 178,
-      "BOUNDARY_NO_UNIQUE_DUAL_ENGINE_PAGE": 249,
+      "COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED": 228,
+      "COORDINATE_REGION_UNVERIFIED": 228,
       "PYMUPDF_FIELD_MISMATCH_0": 177,
       "POPPLER_FIELD_MISMATCH_0": 142,
-      "PYMUPDF_WRONG_QUESTION_BOUNDARY": 177,
       "ORIGINAL_STRUCTURE_INVALID": 17,
       "CHOICE_COUNT_NOT_FOUR": 93,
       "PAGE_FOOTER_CONTAMINATION": 151,
@@ -348,19 +348,18 @@
       "INDEPENDENT_OFFICIAL_KEY_MISMATCH": 38,
       "TOO_SHORT_FOR_UNIQUE_STEM": 41,
       "MEDIA_OR_DIAGRAM_CUE": 14,
-      "SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY": 104,
+      "SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY": 42,
       "PYMUPDF_FIELD_MISMATCH_4": 115,
       "PYMUPDF_FIELD_MISMATCH_2": 20,
       "POPPLER_FIELD_MISMATCH_2": 16,
       "PYMUPDF_FIELD_MISMATCH_1": 18,
       "POPPLER_FIELD_MISMATCH_1": 17,
       "PYMUPDF_FIELD_MISMATCH_3": 22,
-      "C0_SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY": 17,
       "POPPLER_FIELD_MISMATCH_4": 48,
       "POPPLER_FIELD_MISMATCH_3": 12,
       "PYMUPDF_FIELD_MISMATCH_5": 35,
-      "POPPLER_FIELD_MISMATCH_5": 9,
-      "SITUATION_GROUP_CONTEXT_NOT_VERIFIED": 19
+      "SITUATION_GROUP_CONTEXT_NOT_VERIFIED": 37,
+      "POPPLER_FIELD_MISMATCH_5": 9
     },
     "note": "Reasons overlap by question; counts cannot be added. Current full per-question reason ledger is canonical. Unrecognized CID glyphs never guessed.",
     "latestSuccessfulRunId": 45240759737,
@@ -370,7 +369,7 @@
   "latestBoundaryContextAudit": {
     "date": "2026-11-24",
     "source": "GitHub Actions dual engine recheck",
-    "newPromotedInRun": 3,
+    "newPromotedInRun": 0,
     "currentCanonical": 864,
     "currentHeld": 336,
     "reasonCountsOverlap": true,
@@ -378,12 +377,6 @@
     "scenarioContextRequiresDualEngineSourcePassage": true,
     "svgOriginalDiagramFaithfulnessVerified": 0,
     "svgPendingDetailedVisualInspection": 18,
-    "status": "SOURCE_ONLY_NO_RELEASE",
-    "promotedIds": [
-      "K112-PM113",
-      "K111-AM106",
-      "K111-PM106"
-    ],
-    "workflowRunId": 45244159028
+    "status": "SOURCE_ONLY_NO_RELEASE"
   }
 }
