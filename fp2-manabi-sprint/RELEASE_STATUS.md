@@ -1,5 +1,20 @@
 # FP2 RELEASE STATUS（正本・2026-11-23・Q20第2次独立PASS反映）
 
+## 2026-11-23｜逐語版300問・配布前技術CIの実測PASS（最新追記）
+
+**監査済み正規309／選定300（公式学科297＋独自補充3）／監査済み予備9／隔離3（Q07・Q08 FAIL、Q53 HOLD）／公開承認0**の構成は維持。
+
+- **PASS [Chromium学習・オフラインE2E](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45176802420)**：法令監査2件の逐語版117 PASS・2 FAIL・1 HOLDを個別突合、正規309/選定300/予備9、300問オフラインJSONと埋込HTMLの内容/ハッシュ一致、学習操作・バックアップ復元・Service Workerオフライン復帰PASS。
+- **PASS [macOS unsigned iOS Simulator](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45176802436)**：コード生成、署名なしSimulatorコンパイル、ビルド後バンドル内Info.plistと300問実データ読戻しが全ステップSUCCESS。バンドル証拠はcanonical309・selected300・reserves9。
+- **PASS [監査コミット55ddf49のChromium E2E](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45173608313)**：このSUCCESSは監査保存時点に限定。今回はその後の逐語版差替後に別途Chromium/Simulatorを成功させている。
+- **PASS** 対応コミットの静的canonical/Web・UI Golden Master移行・Release Registry静的監査。後続の文書更新コミットのCI完了は別途追跡。
+- **製品Q0・Q4・Q5配布承認は未達**。Q53親族関係図のGitHub PNG未保存・公式原図比較/再監査未了、逐語版の公式PDF全字差分、原題転載/利用条件、実機TestFlight、署名IPA/ASCの確認は別ゲート。Q5の**unsigned Simulator技術サブゲートPASS**と**署名IPA配布ゲートBLOCKED**を区別する。
+
+**最終判定：BLOCKED / NOT_SUBMISSION_READY / NOT_SUBMITTED。** PR #5717 Draft、mainマージ・App Review提出禁止。
+
+---
+
+
 ## 2026-11-23｜逐語版2024年過去問へ差替・法改正FAIL2／図版HOLD1の隔離（最新・正本）
 
 **現行コンテンツ＝正規承認バンク309問（全問内容監査PASS）、選定300問、内容監査PASSの予備9問、別隔離3問（FAIL2・HOLD1）、公開許可0問。** 旧312問・300問・予備12問は**言い換え版2024問を含む履歴状態**であり、現行の正規出題バンクではない。
