@@ -63,7 +63,7 @@ def main():
                 output["changes"].append("reviewNotes")
             readback=get(token,f"/v1/appStoreReviewDetails/{rid}")["data"]
             output["reviewNotes599Verified"]=readback.get("attributes",{}).get("notes")==review_notes
-        except (KeyError,IndexError) as e:
+        except Exception as e:
             output["reviewNotes599Verified"]=False
             output["reviewNotesError"]=str(e)[:150]
         output["status"]="PASS" if output["description599Verified"] else "FAIL"
