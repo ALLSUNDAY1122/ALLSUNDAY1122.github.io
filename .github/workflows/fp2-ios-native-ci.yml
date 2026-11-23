@@ -36,10 +36,10 @@ jobs:
           assert evidence['publication_release_clear']==0
           bank=json.loads(Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_text())
           selection=json.loads(Path('fp2-manabi-sprint/release/release-selection-300-20261123.json').read_text())
-          assert len(bank['questions'])==312 and bank['content_approved_questions']==312
+          assert len(bank['questions'])==309 and bank['content_approved_questions']==309
           assert sum(q.get('release_selected') is True for q in bank['questions'])==300
-          assert sum(q.get('release_selected') is False for q in bank['questions'])==12
-          assert selection['selected_count']==300 and selection['reserve_count']==12
+          assert sum(q.get('release_selected') is False for q in bank['questions'])==9
+          assert selection['selected_count']==300 and selection['reserve_count']==9
           assert not selection.get('corrections_excluded_until_independent_reaudit', []), 'unresolved corrected items present'
           q20=[q for q in bank['questions'] if q['id']=='fp2-2025-01-gakka-020']
           assert len(q20)==1 and q20[0]['release_selected'] is True and q20[0]['independent_audit_status']=='PASS'
@@ -54,8 +54,8 @@ jobs:
           assert len(native['questions'])==300 and native['content_approved_questions']==300
           assert len(selected)==300 and {q['id'] for q in native['questions']}==set(selected)
           assert all(q==selected[q['id']] for q in native['questions'])
-          assert evidence['content_approved_questions']==312
-          assert evidence['selected_release_questions']==300 and evidence['reserve_content_pass_not_bundled']==12
+          assert evidence['content_approved_questions']==309
+          assert evidence['selected_release_questions']==300 and evidence['reserve_content_pass_not_bundled']==9
           assert evidence['release_payload_sha256']==hashlib.sha256(native_bytes).hexdigest()
           assert Path('fp2-manabi-sprint/ios/Web/manifest.webmanifest').is_file()
           assert Path('fp2-manabi-sprint/ios/Web/index.html').is_file()
@@ -83,7 +83,7 @@ jobs:
           assert (app/'Web/index.html').exists(), 'Bundled web HTML missing'
           assert (app/'Web/bundle-evidence.json').exists(), 'Bundled evidence missing'
           e=json.loads((app/'Web/bundle-evidence.json').read_text())
-          assert e['content_approved_questions']==312
+          assert e['content_approved_questions']==309
           assert e['publication_release_clear']==0
           import hashlib
           canonical=Path('fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json').read_bytes()
@@ -96,6 +96,6 @@ jobs:
           assert len(selected)==300 and {q['id'] for q in payload['questions']}==set(selected)
           assert all(q==selected[q['id']] for q in payload['questions'])
           assert e['release_payload_sha256']==hashlib.sha256(native_bytes).hexdigest()
-          assert e['selected_release_questions']==300 and e['reserve_content_pass_not_bundled']==12
+          assert e['selected_release_questions']==300 and e['reserve_content_pass_not_bundled']==9
           print('iOS Simulator bundle readback PASS')
           PY
