@@ -1,6 +1,6 @@
 {
   "schema_version": "fp2-approved-content-bank-v2",
-  "status": "CONTENT_AUDIT_PASS_RELEASE_BLOCKED",
+  "status": "CONTENT_AUDIT_PASS_PROVENANCE_50_VERIFIED_RELEASE_BLOCKED",
   "content_approved_questions": 65,
   "publishable_questions": 0,
   "source_branches": [
@@ -40,12 +40,12 @@
   "source_note": "Original 15 independently PASS, Batch01 24 PASS, Batch02 26 PASS. Batch01 audit references a pre-correction blob: two corrected FAIL questions remain excluded, other PASS records unchanged in current recovered bank. Batch02 referenced blob matches current recovered bank. PASS is content review only, NOT final Q0 rights/modification or release approval.",
   "answer_contract": "answer_index is zero-based in canonical bank; original record answer is retained with original_answer_base and answer_one_based fields.",
   "release_blockers": [
-    "For recovered 50 PASS, compare every official PDF source and finalize modified/modification_note (currently null for unverified items)",
     "2026-04-01 current-law and legal history independent exhaustive Q0 review",
     "show attribution and modifications in product UI; check content/bundle equality",
     "independently re-review the two corrected FAIL items before admitting",
     "review 8 HOLD and 120 other recovered questions",
-    "rights exclusions and third-party content provenance confirmation"
+    "rights exclusions and third-party content provenance confirmation",
+    "50 recovered PASS question-level modified flags have been classified, but full rights主体確認, current-law cutoffs, UI mobile E2E and golden-master fidelity still pending."
   ],
   "excluded_from_reviewed": [
     {
@@ -825,9 +825,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第5問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第5問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -851,7 +851,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "2026年4月の停止調整額51→65万円変更を考慮。選択肢3（停止部分は繰下げ増額対象外）のみ正しい。1は超過額の全額でなく半額、2は基礎年金停止なし、4は70歳以上も対象。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-007",
@@ -886,9 +889,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第7問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第7問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -912,7 +915,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "iDeCoの①第3号上限月2.3万円、②掛金変更年1回、③最低保証なしで不適切、④60歳受給には加入等期間10年以上。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-026",
@@ -948,8 +954,8 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第26問",
       "modified": true,
-      "modification_note": "公式2026年5月問26の『X社のデータ』箇条書き（株価、株数、売上高、営業利益、純利益、自己資本、配当金）を問題文へ1行の説明として再配置。独立監査で数値一致確認済み。4肢・正答は維持。",
-      "modification_verification": "SOURCE_PDF_AND_INDEPENDENT_AUDIT_CHECKED",
+      "modification_note": "原題問26『X社のデータ』の箇条書き7項目を問題文へ1行の数値列として移植。独立監査で全項目と4肢の数値一致を確認。本文レイアウト加工であり設問数値変更なし。",
+      "modification_verification": "OFFICIAL_SOURCE_SUBSTANTIVE_LAYOUT_ADAPTATION_CONFIRMED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -976,7 +982,8 @@
       "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_source_pdf_page": 14,
-      "modification_reviewed_at": "2026-11-23"
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-027",
@@ -1012,8 +1019,8 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第27問",
       "modified": true,
-      "modification_note": "公式2026年5月問27の預入期間・金利・為替予約・TTS/TTB一覧を改行区切りの説明文へ再構成。独立監査で為替・利率数値を照合済み。4肢・正答は維持。",
-      "modification_verification": "SOURCE_PDF_AND_INDEPENDENT_AUDIT_CHECKED",
+      "modification_note": "原題問27の預入期間・金利・TTS/TTB条件一覧を一続きの本文条件へ変換。原題の利率・為替条件・正答肢は維持し、レイアウトを加工。",
+      "modification_verification": "OFFICIAL_SOURCE_SUBSTANTIVE_LAYOUT_ADAPTATION_CONFIRMED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1040,7 +1047,8 @@
       "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_source_pdf_page": 15,
-      "modification_reviewed_at": "2026-11-23"
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-028",
@@ -1076,8 +1084,8 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第28問",
       "modified": true,
-      "modification_note": "公式2026年5月問28のファンドA/B収益率・標準偏差の資料表を本文に文章化し、表題と前置き文章のレイアウトを再構成。独立監査で数値一致を確認済み。4肢・正答は維持。",
-      "modification_verification": "SOURCE_PDF_AND_INDEPENDENT_AUDIT_CHECKED",
+      "modification_note": "原題問28のA/Bファンド実績平均と標準偏差の資料を文章に展開し、元PDFの表見出し・説明段落を再構成。数値・選択肢・正答は維持。",
+      "modification_verification": "OFFICIAL_SOURCE_SUBSTANTIVE_LAYOUT_ADAPTATION_CONFIRMED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1104,7 +1112,8 @@
       "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_source_pdf_page": 16,
-      "modification_reviewed_at": "2026-11-23"
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-033",
@@ -1140,8 +1149,8 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第33問",
       "modified": true,
-      "modification_note": "公式2026年5月問33の不動産所得60万円・事業損失100万円・一時所得100万円の資料欄を文章化。独立監査で資料数値と正答を確認済み。4肢・正答は維持。",
-      "modification_verification": "SOURCE_PDF_AND_INDEPENDENT_AUDIT_CHECKED",
+      "modification_note": "原題問33の所得内訳の3行資料を文章に統合。不動産60万円、事業▲100万円、一時100万円は維持。表レイアウト加工。",
+      "modification_verification": "OFFICIAL_SOURCE_SUBSTANTIVE_LAYOUT_ADAPTATION_CONFIRMED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1168,7 +1177,8 @@
       "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_source_pdf_page": 19,
-      "modification_reviewed_at": "2026-11-23"
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-035",
@@ -1203,9 +1213,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第35問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第35問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1229,7 +1239,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "10年未満への短縮は控除継続不可で①のみ不適切。②転勤後再居住、③初年度確定申告、④住民税控除は制度上可能。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-047",
@@ -1264,9 +1277,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第47問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第47問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1290,7 +1303,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "2026-04-01施行の区分所有法改正を考慮。①年1回の集会招集、②原則1週間前通知、③敷地利用権分離処分禁止、④特定承継人へ効力。正答①を変更する根拠なし。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-055",
@@ -1326,8 +1342,8 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第55問",
       "modified": true,
-      "modification_note": "公式2026年5月問55の親族関係図を、配偶者B、実子C（放棄）、普通養子D、孫E/Fの関係を表すテキストへ変換。図にない解釈補足（孫の代襲相続の扱い）も加筆しているため原題の逐語版ではない。独立監査は4800万円と判定。",
-      "modification_verification": "SOURCE_PDF_AND_INDEPENDENT_AUDIT_CHECKED",
+      "modification_note": "原題問55の親族関係図をテキストに変換。配偶者B・子C（放棄）・養子D・孫E/Fの関係を文章化し、放棄と代襲の扱いの説明を補足。画像からの表現加工であり逐語転記ではない。",
+      "modification_verification": "OFFICIAL_SOURCE_SUBSTANTIVE_LAYOUT_ADAPTATION_CONFIRMED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1354,7 +1370,8 @@
       "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_source_pdf_page": 30,
-      "modification_reviewed_at": "2026-11-23"
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-057",
@@ -1390,8 +1407,8 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第57問",
       "modified": true,
-      "modification_note": "公式2026年5月問57の上場株式価格資料表（1～4月月平均と4/4・4/7最終価格）を1文の数値列へ文章化。独立監査で各数値一致を確認済み。",
-      "modification_verification": "SOURCE_PDF_AND_INDEPENDENT_AUDIT_CHECKED",
+      "modification_note": "原題問57の上場株式Yの複数月平均価格と相続日の終値を表から文章列へ再配置。元PDFの価格値を維持。",
+      "modification_verification": "OFFICIAL_SOURCE_SUBSTANTIVE_LAYOUT_ADAPTATION_CONFIRMED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1418,7 +1435,8 @@
       "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_source_pdf_page": 32,
-      "modification_reviewed_at": "2026-11-23"
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-059",
@@ -1454,8 +1472,8 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第59問",
       "modified": true,
-      "modification_note": "公式2026年5月問59の小規模宅地の限度面積・減額割合の空欄表を文章の列挙形式に変換。独立監査で原典表と一致確認済み。",
-      "modification_verification": "SOURCE_PDF_AND_INDEPENDENT_AUDIT_CHECKED",
+      "modification_note": "原題問59の小規模宅地等の限度面積・減額割合の穴埋め表を文章の列挙形式に変更。元表の区分・数値・選択肢は維持。",
+      "modification_verification": "OFFICIAL_SOURCE_SUBSTANTIVE_LAYOUT_ADAPTATION_CONFIRMED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1482,7 +1500,8 @@
       "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_source_pdf_page": 33,
-      "modification_reviewed_at": "2026-11-23"
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-05-gakka-034",
@@ -1517,9 +1536,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-05 第34問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-05公表2級学科第34問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1543,7 +1562,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "①特定扶養親族19～22歳、②老人扶養70歳以上、③本人所得1000万円超なら配偶者控除不可、④内縁は配偶者控除不可。2025年の特定親族特別控除新設後も④は唯一の誤肢。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-05-gakka-035",
@@ -1578,9 +1600,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-05 第35問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-05公表2級学科第35問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1604,7 +1626,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "非上場の内国法人配当も総合課税なら原則配当控除可、①が不適切。②公募株式投信（対象除外例を除く）、③借入利子控除、④損益通算前の配当金額は整合。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-05-gakka-047",
@@ -1639,9 +1664,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-05 第47問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-05公表2級学科第47問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1665,7 +1690,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "2026年4月の改正を考慮。共用部分費用は持分に応じた負担が原則で均等割ではない（①）。②管理者選解任、③全員で団体、④床面積割合は整合。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-05-gakka-048",
@@ -1700,9 +1728,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-05 第48問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-05公表2級学科第48問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1726,7 +1754,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "①相続人以外への特定遺贈は原則課税、②死因贈与は取得税課税、③交換も取得、④一般新築住宅の控除は原則1200万円（1500万円は認定長期優良住宅等）。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-05-gakka-052",
@@ -1761,9 +1792,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-05 第52問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-05公表2級学科第52問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1787,7 +1818,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "①基礎控除は贈与者でなく受贈者あたり年110万円、父母2名でも220万にならない。②18歳以上の直系尊属贈与、③2024以降の相続時精算課税の基礎控除、④一律20%整合。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-05-gakka-053",
@@ -1822,9 +1856,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-05 第53問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-05公表2級学科第53問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1848,7 +1882,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "①実子と養子同等、②非嫡出子が嫡出子の半分は2013年改正で誤り、③半血兄弟は半分、④単独代襲人は被代襲者相当。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-05-gakka-055",
@@ -1883,9 +1920,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-05 第55問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-05公表2級学科第55問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1909,7 +1946,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "①3000+600×人数、②放棄なしと仮定、③特別養子は実子扱い、④実子なしなら普通養子2人まで算入できるため不適切。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-05-gakka-059",
@@ -1944,9 +1984,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-05 第59問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-05公表2級学科第59問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -1970,7 +2010,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "①配偶者がいる場合非同居の子は家なき子要件を満たさず適用不可、②③配偶者取得には居住・保有継続要件なし、④同居孫の遺贈には適用余地。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-01-gakka-014",
@@ -2005,9 +2048,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-01 第14問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-01公表2級学科第14問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2031,7 +2074,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "①変額個人年金は一般生命保険控除、②傷害のみの特約保険料は除外、③払込年の控除、④自動振替貸付で払込む保険料は控除対象なので④不適切。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-01-gakka-026",
@@ -2067,8 +2113,8 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-01 第26問",
       "modified": true,
-      "modification_note": "公式2025年1月問26のX社/Y社の株価・純利益・純資産等の企業比較資料を問題本文中の文章へ移し、表のレイアウトを加工。独立バッチ1監査は原典PDF11頁で数値・選択肢を照合しPASS。",
-      "modification_verification": "SOURCE_PDF_AND_INDEPENDENT_AUDIT_CHECKED",
+      "modification_note": "原題問26のX社・Y社の株価、利益、純資産などを比較する資料表を文章化。2025年1月公式原題PDF11頁の数値と各選択肢は独立監査で照合済み。",
+      "modification_verification": "OFFICIAL_SOURCE_SUBSTANTIVE_LAYOUT_ADAPTATION_CONFIRMED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2095,7 +2141,8 @@
       "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
       "modification_source_pdf_page": 11,
-      "modification_reviewed_at": "2026-11-23"
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-01-gakka-035",
@@ -2130,9 +2177,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-01 第35問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-01公表2級学科第35問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2156,7 +2203,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "2024年10月取得という固定事実。①一般既存住宅の期間は10年、②併用住宅の居住部分1/2以上で正答、③初年は申告、④再居住で再適用可能。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-01-gakka-047",
@@ -2191,9 +2241,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-01 第47問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-01公表2級学科第47問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2217,7 +2267,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "2026-04の区分所有法改正を考慮。①規約共用部分可能、②管理団体は区分所有者全員で構成し一部除外規約不可、③敷地利用権分離処分不可、④共用部分持分は原則床面積割合。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2025-01-gakka-060",
@@ -2252,9 +2305,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2025-01 第60問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2025-01公表2級学科第60問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2278,7 +2331,10 @@
       "audit_evidence_blob_sha": "d60d6c836e589b4357d5e65f8b7cb26431633255",
       "audit_reason": "①取得を知って3年、②相続人申告登記の義務履行、③2024年施行前の相続も義務化対象で不適切、④正当理由なく不履行なら過料。2027-03-31経過期限。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-001",
@@ -2314,8 +2370,8 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第1問",
       "modified": false,
-      "modification_note": "公式2026年5月公表問1の問題文・4選択肢を原典PDF1頁と照合。原文の語句・数値を維持し、PDFの折返し改行と選択肢番号のみデータ表示用に調整。独自解説は別フィールド。",
-      "modification_verification": "SOURCE_PDF_TEXT_AND_ALL_4_CHOICES_CHECKED",
+      "modification_note": "日本FP協会公式2026-05公表2級学科第1問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2342,7 +2398,8 @@
       "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_source_pdf_page": 1,
-      "modification_reviewed_at": "2026-11-23"
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-002",
@@ -2378,8 +2435,8 @@
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第2問",
       "modified": false,
-      "modification_note": "公式2026年5月公表問2の問題文・4選択肢を原典PDF1頁と照合。原文の語句・数値を維持し、PDFの折返し改行と選択肢番号のみデータ表示用に調整。独自解説は別フィールド。",
-      "modification_verification": "SOURCE_PDF_TEXT_AND_ALL_4_CHOICES_CHECKED",
+      "modification_note": "日本FP協会公式2026-05公表2級学科第2問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2406,7 +2463,8 @@
       "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
       "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "modification_source_pdf_page": 1,
-      "modification_reviewed_at": "2026-11-23"
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-003",
@@ -2441,9 +2499,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第3問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第3問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2467,7 +2525,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①通常2年12月、②一般受給資格者20年以上150日、③原則4週間ごとの失業認定、④賃金日額に賞与を算入する記述が誤り。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-004",
@@ -2502,9 +2563,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第4問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第4問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2528,7 +2589,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①学生本人所得が基準で世帯所得ではない、②申請は原則年度単位、③追納10年で正答、④未追納なら年金額には反映しない。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-006",
@@ -2563,9 +2627,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第6問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第6問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2589,7 +2653,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①認定日は原則1年6か月、②20歳前障害基礎年金は存在、③配偶者加給は障害厚生1級・2級、④認定月後の被保険者期間不算入が正答。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-008",
@@ -2624,9 +2691,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第8問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第8問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2650,7 +2717,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①マッチング拠出は小規模企業共済等掛金控除、②中退共事業主掛金は給与所得でない、③小規模企業共済掛金は事業必要経費ではない、④iDeCo一時金は退職所得。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-009",
@@ -2685,9 +2755,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第9問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第9問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2711,7 +2781,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①借入期間上限80歳・35年、②投資用賃貸物件は資金使途外で誤り、③第一順位抵当権、④住・My Noteの繰上返済10万円以上・手数料不要。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-010",
@@ -2746,9 +2819,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第10問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第10問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2772,7 +2845,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①直接・間接金融が逆、②インパクトローンは使途限定でない、③ABLは売掛債権・棚卸資産等担保で正答、④第三者割当は既存株主限定でない。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-012",
@@ -2807,9 +2883,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第12問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第12問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2833,7 +2909,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①養老保険満期保険金は死亡保険金と同額、②学資保険契約者死亡時に当然既払込額が支給されるわけではない、③変額終身の死亡基本保険金は保証、④短期払の1回保険料は一般に高い。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-015",
@@ -2868,9 +2947,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第15問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第15問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2894,7 +2973,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①リビングニーズ非課税、②一時払終身の解約返戻金は条件記載上、一時所得、③保険料負担者＝被保険者の死亡保険金は贈与税でなく相続税、④疾病入院給付金非課税。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-016",
@@ -2929,9 +3011,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第16問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第16問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -2955,7 +3037,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①自己所有車庫への対物事故は対象外、②地震津波は通常車両免責、③第三者ペットの対物賠償責任は原則対象、④対人賠償は自賠責超過額補償。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-017",
@@ -2990,9 +3075,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第17問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第17問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3016,7 +3101,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①隣家火災の消火に伴う家財水濡れ損害が補償対象、②経年腐食対象外、③落雷損害も補償対象、④部分損の保険金は原則保険金額から自動控除されない。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-018",
@@ -3051,9 +3139,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第18問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第18問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3077,7 +3165,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①傷害入院保険金は非課税、②10年積立傷害の満期返戻金は一時所得、③車両保険損害保険金は原則非課税、④火災保険損害填補金は原則非課税。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-019",
@@ -3112,9 +3203,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第19問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第19問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3138,7 +3229,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①余命6か月リビング・ニーズ、②通常特約保険料負担不要なので誤り、③先進医療は診療時点で指定された技術、④三大疾病保険金支払後契約消滅なら死亡保険金なし。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-020",
@@ -3173,9 +3267,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第20問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第20問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3199,7 +3293,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①医療費負担に死亡保障の定期保険は不適切、②収入保障は遺族生活費、③ファミリーバイク特約は原付の賠償、④個人賠償特約は自転車対人賠償。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-021",
@@ -3234,9 +3331,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第21問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第21問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3260,7 +3357,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①CIとDI、②採用系列の景気の山谷見直し、③GDPの四半期・年次統計、④デフレ時には実質成長率は通常名目成長率を上回るため誤り。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-022",
@@ -3295,9 +3395,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第22問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第22問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3321,7 +3421,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①期限前償還型仕組預金あり、②電子通帳はネット専業銀行に限らず誤り、③自動積立定期預金の仕組み、④10年以上の休眠預金制度。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-023",
@@ -3356,9 +3459,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第23問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第23問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3382,7 +3485,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①不動産投資法人の分配、②上場市場の指値・成行売買、③上場REITはクローズドエンド型で誤り、④投資法人分配金に配当控除なし。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-024",
@@ -3417,9 +3523,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第24問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第24問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3443,7 +3549,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①個人向け国債は最低1万円、②固定3・固定5・変動10が毎月発行で正答、③変動10年を固定金利として誤り、④中途換金に別途手数料を要するとして誤り。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-025",
@@ -3478,9 +3587,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第25問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第25問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3504,7 +3613,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①維持率不足なら追証、②現物保有しなくても信用売り可で誤り、③保証金最低30万円・約定代金30%、④制度信用から一般信用への途中変更不可。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-029",
@@ -3539,9 +3651,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第29問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第29問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3565,7 +3677,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①総合課税を選んだ配当は譲渡損失と通算不可で正答、②繰越3年で5年ではない、③配当等と譲渡損益は申告を分離選択可能、④簡易申告口座でも年間取引報告書作成。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-030",
@@ -3600,9 +3715,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第30問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第30問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3626,7 +3741,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①複雑な商品は仲介業対象外、②勧誘方針策定・公表が正答、③推定損害は元本欠損額、④説明は顧客属性に応じた方法。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-031",
@@ -3661,9 +3779,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第31問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第31問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3687,7 +3805,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①外国籍居住者にも所得税課税、法人は法人税、②納税地特例あり、③未収金も権利確定で計上、④超過累進税率が正答。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-032",
@@ -3722,9 +3843,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第32問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第32問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3748,7 +3869,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①役員退職一時金は退職所得、②個人年金一時受取は原則一時所得、③賃貸土地の売却は譲渡所得、④金地金の一般的譲渡は譲渡所得で正答。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-034",
@@ -3783,9 +3907,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第34問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第34問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3809,7 +3933,10 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①未払医療費は支払時に控除、②医療費控除は年末調整対象外で誤り、③公共交通機関の通院費は対象、④保険金控除は該当費用が上限。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     },
     {
       "id": "fp2-2026-05-gakka-036",
@@ -3844,9 +3971,9 @@
       "source_original_question_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
       "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
       "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05 第36問",
-      "modified": null,
-      "modification_note": null,
-      "modification_verification": "NOT_TESTED_SOURCE_TEXT_COMPARISON",
+      "modified": false,
+      "modification_note": "日本FP協会公式2026-05公表2級学科第36問の問題文・4肢を出典PDFと比較。原題の本文語句、選択肢内容および数値について実質変更なし。PDFの折返し・選択肢番号・全角半角・空白のみ画面用に整形（内容加工なし）。解説は原題と別に収録。",
+      "modification_verification": "OFFICIAL_SOURCE_CONTENT_VERBATIM_CONFIRMED_LAYOUT_NORMALIZED",
       "explanation_provenance": "LEGACY_REVIEW_FLAG_NOT_INDEPENDENTLY_VERIFIED",
       "law_target_date": "2026-04-01",
       "law_current_recheck": "NOT_TESTED",
@@ -3870,10 +3997,13 @@
       "audit_evidence_blob_sha": "fc664e44a75bb7bf47f85793c76dc8ad8910541d",
       "audit_reason": "①青色承認は原則3月15日期限、②取止め届も翌3月15日、③12月31日のみなし承認が正答、④開業後原則2か月以内で3か月ではない。",
       "approved_for_content_bank": true,
-      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI"
+      "release_gate_status": "BLOCKED_SOURCE_MODIFICATION_RIGHTS_UI",
+      "modification_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
+      "modification_reviewed_at": "2026-11-23",
+      "provenance_gate_status": "SOURCE_AND_MODIFICATION_REVIEW_PASS_OTHER_Q0_GATES_PENDING"
     }
   ],
-  "provenance_verified_count": 10,
-  "provenance_pending_count": 40,
+  "provenance_verified_count": 50,
+  "provenance_pending_count": 0,
   "release_clear_count": 0
 }
