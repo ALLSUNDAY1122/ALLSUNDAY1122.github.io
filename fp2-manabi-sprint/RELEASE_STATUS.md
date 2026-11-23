@@ -1,5 +1,39 @@
 # FP2 RELEASE STATUS（正本・2026-11-23・Q20第2次独立PASS反映）
 
+
+## 2026-11-23｜312問／300問／予備12問・下書きPASS180・Simulator不具合修正（最新判定）
+
+**正規バンク312問（全問独立内容監査PASS）、選定300問（学科5回分×60、6分野×50）、監査済み独自作成予備12問、公開承認0件を維持。** 下書き `questions/draft/fp2-recovered-180-fulltext-20261123.json` に、正規バンク該当180問のID・本文・4肢・正答・解説を照合して独立監査PASS180／FAIL0／HOLD0を同期。改変説明4件を正規バンクと揃え、修正済み5問の二次監査履歴・`correction_prior`は保持。内容監査PASSは公開許可ではない。
+
+**PR #5717本文**を旧122/120・FAIL5未再監査から現行312/300/12・PASS180/0/0・拡充PASS120/0/0へ更新。PRは引き続きDraft、mainへのマージなし。
+
+### `3116840cf6b7a3a4f88ac2ed172f40c999807ff5`のCI結果と修正
+
+| CI | 実測 | Run |
+|---|---|---|
+| 正規バンク/静的Web | **SUCCESS** | [45169903628](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45169903628) |
+| Chromium学習フロー・300問・オフライン/JSON往復 | **SUCCESS** | [45169903733](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45169903733) |
+| Golden Master v2.1 migration | **SUCCESS** | [45169904527](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45169904527) |
+| App Release Registry audit | **SUCCESS** | [45169903611](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45169903611) |
+| macOS unsigned iOS Simulator | **FAIL（修正前）** | [45169903544](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45169903544) |
+| macOS unsigned iOS Simulator・300問payload | **SUCCESS（修正後）** | [45171875787](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45171875787) |
+
+Simulator失敗理由①：旧120問選定JSONの `corrections_excluded_until_independent_reaudit` キーに必須アクセスし、300問台帳には当該キーがなく `KeyError`。安全な `.get(..., [])` の検証に変更。失敗理由②：iOSの生成スクリプトは実際に選定300問を内包したが、オフラインpayloadの `content_approved_questions=120` と `release_candidate_questions=120` が旧値のまま。両方300へ修正。**同一選定・同一正答のまま** 修正後CIで、オフラインバンク生成、XcodeGen、unsigned Simulator `xcodebuild`、コンパイル済みInfo.plist・同梱バンクのSHA/300件読戻しが**全ステップSUCCESS**。署名済IPA・配信済TestFlightの成功ではない。
+
+### Q0–Q5更新後
+
+- **Q0 BLOCKED**：日本FP協会等の公式問題二次利用許可条件への利用主体適合、出典・加工表記・第三者図版、2026-04-01法令・施行例外の最終承認。
+- **Q1 CONTENT AUDIT PASS300/300、バンク312/312 PASS／RELEASE QUALITY BLOCKED**：独立監査証拠・改変記録・構造検査はPASS。試験原題との難易度同等性の追加疑義や表示/利用許諾は最終確認が必要。
+- **Q2 CHROMIUM E2E PASS／DEVICE USER ACCEPTANCE PENDING**：実ブラウザで出題→回答→結果・目標・学習履歴まで成功。実際の学習者検証は未了。
+- **Q3 CHROMIUM OFFLINE/JSON PASS／DEVICE UI PENDING**：35日ヒートマップ・JSONバックアップ往復・オフライン再読込成功。iPhone Safe Area/VoiceOver等未検証。
+- **Q4 NOT TESTED**：独立利用者・iPhone実機の最終受入記録未取得。
+- **Q5 UNSIGNED SIMULATOR TECHNICAL PASS／RELEASE BLOCKED**：最新実測の署名なしSimulatorビルドはPASS。署名IPAと実機TestFlight、ASC App ID `6797228406`、Bundle ID `com.allsunday1122.fp2manabisprint`、Version `1.0.0`／Build `1`、IAPなし、App Privacy、スクショ/URL・Apple側AppIcon一致の実物確認と明示的提出承認が残る。Apple側AppIconの未確認は既知事項で、新規欠陥とは扱わない。
+
+**最終状態：BLOCKED / NOT_SUBMISSION_READY / NOT_SUBMITTED。** PR #5717 Draft維持、App Store Connect提出・mainマージなし。旧CIのPASSは固定したcommitに限る。実装変更後は当該新commitのCIを別途再確認する。
+
+---
+
+
 ## 2026-11-23｜300問版・実測CI読戻し（前段の未実測記載を更新）
 
 - **PASS** [FP2正規バンク/静的Webソース CI](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45169448751)：ログでcanonical312、選定300、予備12、6分野×50、Git Blobピン及びソース整合、status=PASSを確認。
