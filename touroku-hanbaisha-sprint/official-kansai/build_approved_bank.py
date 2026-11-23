@@ -20,7 +20,7 @@ for year in range(2022,2027):
     answers=json.loads(answer_path.read_text())["questions"]
     expected_candidate_sha=blob(candidate_path)
     expected_answers_sha=blob(answer_path)
-    if len(candidates)!=len(answers)!=120:raise RuntimeError("incorrect lengths")
+    if len(candidates)!=120 or len(answers)!=120:raise RuntimeError("incorrect lengths")
     report_file=B/f"AUTO_DIFF_{year}.json"
     report=json.loads(report_file.read_text()) if report_file.exists() else None
     if report is not None:
