@@ -1,5 +1,39 @@
 # FP2 RELEASE STATUS（正本・2026-11-23・Q20第2次独立PASS反映）
 
+## 2026-11-23 19:15 JST｜最新CI読戻し・安全修正（後続の最優先正本）
+
+**対象ブランチ：** `feature/fp2-release-scope-20261123`。前回報告の先端 `b7495370d98019f7865856197a4875abab21f653` は今回の検査開始時も先端と一致していた。そのコミットのGitHub Actions 5件を直接再読込したところ、静的ソース検査 `45153039021`、Chromium学習/オフラインE2E `45153039020`、Golden Master移行ゲート `45153039061`、Release Registry監査 `45153039116`、iOS Simulator `45153039083` は全て **queued / conclusion=null** で、成功や失敗は未報告だった。**queued をPASS/FAILに置き換えない**。終了していないジョブに失敗ログがないことも確認。
+
+**再点検で確定したテスト環境の不整合：** WebのService Worker登録条件はHTTPSまたはhostname=`localhost`だけだったが、Playwright E2Eは`http://127.0.0.1:8765`を使用していた。そのままだとWorkerが登録されず、オフライン復旧E2Eが誤って失敗・待機する。アプリ側でHTTPS/localhostに加え標準ループバック `127.0.0.1` を許可（安全なローカル検証範囲のみ）。`fp2-manabi-sprint/index.html` Git blob `6a927616d94252e0bebcbc2df694c60b360dfbb9`。source lockも同じblobへ更新。コードレビューでは修正確認済み、ブラウザでの実行PASSではない。
+
+**修正後CI再起動：** `ffe4119dbe40f1d426f1b8e3f05622e39119cf97`（Service Worker条件修正）、`e93af7a915d2e51d307b882472e108b0075a792c`（bundle source SHA再固定）。GitHub Actionsはpush/PRトリガーで再実行される定義。**修正後の最新コミットの全ジョブがSUCCESSとなったことは未読戻し**。元のrunが未完了なので既知のビルドFAILの修正を行ったという意味ではない。最新のrun URLを後続で読み戻すこと。
+
+**ソース構造検証の事実：** canonical195問／初回120／予備75、回収独立内容監査PASS180・FAIL0・HOLD0、公開承認0は前回と同一。ソースバンク `270b82b493f54a07316b1c7ed47fb196405e832d` は selection と bundle-lockのSHA固定値に一致（今回のHTML修正はバンク内容/出題120のIDを変更していない）。iOS生成スクリプトは120問だけを抽出・予備75問除外する設計だが、**実際の生成・ハッシュ照合とmacOS SimulatorビルドのCI完了結果は未確認**。
+
+### CI結果（未完了を明記）
+
+| 検査 | 最新実測 | 備考 |
+|---|---|---|
+| 静的ソース・全選定120品質 | **QUEUED / NOT VERIFIED** | 先端run `45153039021`。過去commitのPASSは現先端に代用しない |
+| Chromium学習E2E | **QUEUED / NOT VERIFIED** | 先端run `45153039020`、Service Worker条件を修正して再トリガー |
+| Webオフライン復旧/JSON復元 | **NOT VERIFIED** | 上記実ブラウザE2E内の検査、PASS報告なし |
+| iOS Simulatorビルド | **QUEUED / NOT VERIFIED** | 先端run `45153039083`、署名IPAとは別 |
+| iOS 120問生成・バンクSHA/埋込JSON検査 | **NOT VERIFIED** | CIに検査を実装、実行完了待ち |
+| AppIcon | **KNOWN UNVERIFIED, NOT NEW DEFECT** | ユーザー指定どおり既知の不確定事項を維持 |
+
+### Q0–Q5最新ゲート
+
+- **Q0 BLOCKED**：権利利用主体・法令基準と実配布表示の承認未了。
+- **Q1 CONTENT AUDIT PASS180/180、RELEASE GATE BLOCKED**：選定120の原典再検討・教育品質と現ブランチ最新CIは未確定。
+- **Q2 NOT TESTED / E2E RESULT PENDING**：学習フローの実ブラウザ操作がSUCCESSと確証されていない。
+- **Q3 STATIC PASS (older source only) / LATEST BROWSER E2E NOT VERIFIED**：オフライン条件バグのコード修正済、回帰テストが必要。
+- **Q4 NOT TESTED**：実機受け入れ及び独立利用者の検証未了。
+- **Q5 BLOCKED**：最新Simulator CI、署名IPA、TestFlight、ASC実物・プライバシー・スクショ未確認。
+
+**Actual `BLOCKED / NOT_SUBMISSION_READY / NOT_SUBMITTED`**。ユーザーの最終承認待ちへ遷移させない。PR #5717 Draft、mainマージ・App Review提出・App Store Connectログインを行わない。
+
+---
+
 ## 後継コーディネーター追加技術検証（2026-11-23・現行正本）
 
 **Actual: BLOCKED / NOT_SUBMISSION_READY / NOT_SUBMITTED.** PR #5717 Draft。mainマージ・ASCログイン・App Review提出なし。
