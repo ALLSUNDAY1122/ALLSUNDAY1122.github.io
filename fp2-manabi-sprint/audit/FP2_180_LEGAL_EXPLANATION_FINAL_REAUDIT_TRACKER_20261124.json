@@ -25,14 +25,14 @@
   "gate_policy": "以前のPASSは内容一次判定であり、本最終証拠監査の完了を意味しない。証拠行未固定の問題のlegalChecked/explanationCheckedを機械的にtrueへ変更しない。",
   "summary": {
     "target": 180,
-    "pending": 180,
-    "verified": 0,
+    "pending": 177,
+    "verified": 3,
     "hold": 0,
     "fail": 0,
     "by_exam": {
       "2025-01": {
-        "pending": 60,
-        "verified": 0,
+        "pending": 57,
+        "verified": 3,
         "hold": 0,
         "fail": 0
       },
@@ -55,49 +55,188 @@
       "id": "fp2-2025-01-gakka-001",
       "exam_date": "2025-01",
       "question_number": 1,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "公的年金の受給額試算・一般的な説明のみであり、労働社会保険諸法令の申請書等作成・提出代理を行っていない。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/web/t_doc?dataId=84020000",
+            "https://www.nenkin.go.jp/denshibenri_kojin/n_net/introduction/estimatedamount.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "無登録FPが顧客の確定申告書作成を代行するのは税理士業務。税理士法2条・52条に反する。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9204.htm",
+            "https://www.nta.go.jp/law/tsutatsu/kihon/zeirishi/02.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "個別銘柄の売買時期について対価を得た助言は投資助言・代理業の登録対象。無登録業者ではできない。",
+          "primary_urls": [
+            "https://www.fsa.go.jp/policy/marketentry/guidebook/02.html",
+            "https://www.fsa.go.jp/common/law/guide/kinyushohin/07.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "有償で相続人の代理として遺産分割協議する業務は弁護士法72条の法律事務に該当。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/324AC1000000205?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "旧解説の正答および4肢の説明は維持。『一般的な年金試算』と『資格専有の申請代理』を区別することを明確化すべき。",
+        "conclusion": "社労士独占の申請書作成・提出代理とは異なり公的年金の概算見込額を試算・説明すること自体は資格専有ではない。税務書類代行、登録を要する有償投資助言、有償遺産分割代理は各専門法に抵触。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "専門資格法の個別施行条文は2026-04-01を基準に照合。官公庁掲載説明は更新日が異なるため制度内容に影響する差分がないかを確認する。"
     },
     {
       "id": "fp2-2025-01-gakka-002",
       "exam_date": "2025-01",
       "question_number": 2,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "健康保険料率は協会けんぽの都道府県支部ごと。40～64歳の介護保険第2号被保険者に係る介護保険料率は全国一律。",
+          "primary_urls": [
+            "https://www.kyoukaikenpo.or.jp/about/business/insurance_rate/rate_prefectures/r08/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "差額ベッド代（保険外負担）と入院時食事負担額は高額療養費の計算対象外。",
+          "primary_urls": [
+            "https://www.kyoukaikenpo.or.jp/faq/benefit/004/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "所定の加入条件等により任意継続は退職日の翌日から最長2年（途中喪失あり）。",
+          "primary_urls": [
+            "https://www.kyoukaikenpo.or.jp/faq/voluntary_continuation/004/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "出産育児一時金は出産した被保険者本人、家族出産育児一時金は被扶養者の出産が対象。双方本人被保険者の場合は同一出産で併給不可。",
+          "primary_urls": [
+            "https://www.kyoukaikenpo.or.jp/benefit/childbirth/002/"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "旧解説の正誤と根拠は妥当。妻自身の健康保険による本人給付と夫の被扶養者出産という前提は両立しないことを確認。",
+        "conclusion": "協会けんぽ都道府県別保険料率／介護保険料率全国一律、高額療養費対象外の食費・差額ベッド、任意継続2年は適切。夫婦双方被保険者なら夫の家族出産育児一時金は併給できない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026年4月1日時点の制度構造をチェック。介護保険料の全国一律・健康保険料の都道府県別構造は継続。"
     },
     {
       "id": "fp2-2025-01-gakka-003",
       "exam_date": "2025-01",
       "question_number": 3,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "厚生労働省『雇用保険マルチジョブホルダー制度』および雇用保険法の適用要件と一致。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000139508_00002.html",
+            "https://www.mhlw.go.jp/web/t_doc?dataId=75161000&dataType=0&pageNo=1"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "失業等給付・育児休業給付は労使双方負担、雇用保険二事業は事業主のみ負担。提示文は逆。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/newpage_46832.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "一般受給資格者で算定基礎期間20年以上の所定給付日数は150日（120日ではない）。",
+          "primary_urls": [
+            "https://www.hellowork.mhlw.go.jp/insurance/insurance_benefitdays.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "無賃金の育児休業給付金は原則開始180日間67％、181日以降50％。一律40％は誤り。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000158500.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "旧解説の正答および4肢の説明は整合。育児休業給付率には賃金支払い等の調整があるが本設問は無賃金と明示。",
+        "conclusion": "65歳以上・各事業所週5時間以上20時間未満・二事業所合計週20時間以上・所定要件と本人申出でマルチ高年齢被保険者可。保険料の負担主体は他肢の記述と逆。通常受給者20年以上は150日、育児給付67％→50％。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "マルチジョブ制度は2022年開始、2026年4月制度で継続。育児休業給付率の一般原則67％／50％に照合。"
     },
     {
       "id": "fp2-2025-01-gakka-004",
@@ -2931,5 +3070,7 @@
       "explanation_review": null,
       "verified_at": null
     }
-  ]
+  ],
+  "verified_records_count": 3,
+  "audit_progress_note": "2025-01 Q01-Q03 first three 4-choice checks documented. Remaining 177 PENDING. All verified flags must sync to canonical source and be read back."
 }
