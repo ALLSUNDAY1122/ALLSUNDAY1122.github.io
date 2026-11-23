@@ -116,6 +116,17 @@ if VISUAL21.exists():
     "individualEvidence":"kangoshi-sprint/audit/ocr-noncmap-visual-promotion-ledger-20261124.json",
     "beforeAfter":"kangoshi-sprint/product-content/ocr-noncmap-visual-repaired-candidates-20261124.json",
     "releaseEligible":0,"status":"SOURCE_ONLY"}
+VISUAL19=R/"audit/ocr-noncmap-19-promotion-ledger-20261124.json"
+if VISUAL19.exists():
+  p=json.loads(VISUAL19.read_text(encoding="utf8"))
+  assert p["sourceReviewScope"]==19
+  assert p["cumulativePromoted"]+p["remainingFrom19"]==19
+  S["latestNonCmap19OriginalImageAudit"]={
+    "runId":run_id,"scope":19,"newlyPromoted":p["newPromoted"],
+    "cumulativePromoted":p["cumulativePromoted"],"remainingFrom19":p["remainingFrom19"],
+    "individualProof":"kangoshi-sprint/audit/ocr-noncmap-19-promotion-ledger-20261124.json",
+    "beforeAfter":"kangoshi-sprint/product-content/ocr-noncmap-19-before-after-20261124.json",
+    "fifthOptionRetained":"K112-PM077","releaseEligible":0,"status":"SOURCE_ONLY"}
 J.write_text(json.dumps(S,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
 old=MD.read_text(encoding="utf8")
 # Preserve historical change log, remove previously appended dynamic summaries.
@@ -199,6 +210,16 @@ if VISUAL21.exists():
       "- PDF原典ページ、画像ハッシュ、各選択肢OCR一致、公式正答："
       "`audit/ocr-noncmap-visual-promotion-ledger-20261124.json`。\n"
       "- ソースのみ合格。Apple本審査・一般公開不可。\n")
+if VISUAL19.exists():
+    p=json.loads(VISUAL19.read_text(encoding="utf8"))
+    tail+=("\n## CMap以外の文字不一致19問の原典画像逐問修復（Run "+str(run_id)+"）\n\n"
+      "- 原典ページ画像の逐問照合19問。今回の新規ソース昇格："+str(p["newPromoted"])+"問、"
+      "累計："+str(p["cumulativePromoted"])+"問、未確定："+str(p["remainingFrom19"])+"問。\n"
+      "- 第112回午後77は公式原典に従い5選択肢として保持。英語小注記は問題・肢本文とは別に保持。\n"
+      "- 公式問題画像・各選択肢のOCR座標証拠・公式正答："
+      "`audit/ocr-noncmap-19-promotion-ledger-20261124.json`。\n"
+      "- 全問の修正前後：`product-content/ocr-noncmap-19-before-after-20261124.json`。"
+      "合格は原典ソース限定、アプリ配信・本審査は禁止。\n")
 MD.write_text(summary+history+"\n"+tail,encoding="utf8")
 print(json.dumps({"canonical":total,"remaining":len(hold),"new":P["newPromoted"],
                   "pending22Remaining":len(active_pending),"svgPending":18},ensure_ascii=False))
