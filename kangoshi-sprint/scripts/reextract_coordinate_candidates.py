@@ -83,7 +83,7 @@ def equivalent_english_gloss_reorder(a,b):
     if not english_a or english_a!=english_b:return False
     if (a.count(".")!=b.count(".") or a.count(",")!=b.count(",")):
         return False
-    stripped=lambda t:re.sub(r"\\s+","",re.sub(r"[A-Za-z.,]","",unicodedata.normalize("NFKC",t)))
+    stripped=lambda t:re.sub(r"\s+","",re.sub(r"[A-Za-z.,]","",unicodedata.normalize("NFKC",t)))
     return bool(stripped(a)) and stripped(a)==stripped(b)
 
 def main():
