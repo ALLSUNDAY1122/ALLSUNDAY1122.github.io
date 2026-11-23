@@ -135,7 +135,7 @@ def main():
                 or q.get("officialKeyPdfSha256")!=keysha):
                 reason.append("OFFICIAL_KEY_OR_SHA_NOT_MATCHED")
             if q.get("officialScoringStatus")!="normal":reason.append("SCORING_EXCEPTION")
-            if not 0<=q.get("answer",-1)<len(pa["choices"]):reason.append("OFFICIAL_ANSWER_OUTSIDE_PRINTED_OPTIONS")
+            if not isinstance(q.get("answer"),int) or not 0<=q["answer"]<len(pa["choices"]):reason.append("OFFICIAL_ANSWER_OUTSIDE_PRINTED_OPTIONS")
             if re.search(r"図|画像|写真|別冊|心電図|グラフ|波形",pa["question"]):
                 reason.append("SOURCE_MEDIA_CUE")
             if n>=91:
