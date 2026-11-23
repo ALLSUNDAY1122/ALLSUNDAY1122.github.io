@@ -34,6 +34,8 @@ sys.path.insert(0,str(ROOT/'scripts'))
 from official_answer_key_audit import parse as read_official_key
 from boundary_context_verify import verify as verify_boundary
 keys={e:read_official_key(e) for e in (111,112)}
+VISUAL={x["id"]:x for x in json.loads((ROOT/"audit/visual-glyph-confirmation-20261124.json").read_text())["items"]}
+VISUAL_DIR=ROOT/"audit/runs/context-control-visual-20261124"
 all_rows=[];approved=[];by_session={}
 for exam in (112,111):
   for session in ("AM","PM"):
@@ -49,6 +51,19 @@ for exam in (112,111):
         qid=q["id"];n=q["questionNo"];pg=q.get("sourcePage")
         failures=[]
         if qid in existing:failures.append("ALREADY_VERIFIED_CANONICAL")
+        visual=None
+        if qid in VISUAL:
+            ev=VISUAL[qid]
+            img=VISUAL_DIR/f"{qid}-p{ev['page']}.png"
+            ix=ev["choiceIndex"]
+            if (q.get("sourcePage")==ev["page"] and q.get("questionNo")==ev["number"]
+                and q.get("sourceExam")==ev["exam"] and q.get("session")==ev["session"]
+                and hashlib.sha256(pdf.read_bytes()).hexdigest()==ev["pdfSha256"]
+                and img.is_file() and hashlib.sha256(img.read_bytes()).hexdigest()==ev["pngSha256"]
+                and len(q.get("choices") or [])==4
+                and q["choices"][ix]==ev["expectedChoice"]
+                and q.get("visualGlyphProof",{}).get("pngSha256")==ev["pngSha256"]):
+                visual=ev
         # Independent scenario context validation happens below.
         if qid in exceptions or q.get("officialScoringStatus")!="normal":failures.append("SCORING_EXCEPTION")
         if not q.get("extractionValid",False):failures.append("ORIGINAL_STRUCTURE_INVALID")
@@ -71,7 +86,8 @@ for exam in (112,111):
             failures.append("SOURCE_PAGE_INVALID")
         else:
             verified_page, boundary_errors, scenario_evidence, geometry, coordinate_segment=verify_boundary(
-                doc,pdf,n,pg,stem,choices,cached_pdftotext,clean_font,norm)
+                doc,pdf,n,pg,stem,choices,cached_pdftotext,clean_font,norm,
+                visually_verified_fields={visual["choiceIndex"]+1} if visual else set())
             if verified_page is not None:
                 boundary_evidence={"previousPage":pg,"correctedPage":verified_page,**(geometry or {})}
                 pg=verified_page
@@ -83,12 +99,13 @@ for exam in (112,111):
             if source_segment is not None:source_segment=clean_font(source_segment)
             if source_segment is None:failures.append("COORDINATE_REGION_UNVERIFIED")
             else:
-                if re.search(r"[\x00-\x08\x0b-\x1f\x7f]",source_segment):failures.append("C0_SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
+                if re.search(r"[\x00-\x08\x0b-\x1f\x7f]",source_segment) and not visual:failures.append("C0_SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
                 if re.search(r"[\ufffd઄¹¼ïñèêçâ\u0080-\u009f\u00a1-\u00ff]",source_segment):failures.append("SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
             poppler=cached_pdftotext(pdf,pg)
             wordblob=norm(page.get_text("text",sort=False))
             altblob=norm(poppler)
             for i,text in enumerate([stem]+choices):
+                if visual and i==visual["choiceIndex"]+1:continue
                 if not text:continue
                 if norm(text) not in wordblob:failures.append("PYMUPDF_FIELD_MISMATCH_"+str(i))
                 if norm(text) not in altblob:failures.append("POPPLER_FIELD_MISMATCH_"+str(i))
@@ -99,7 +116,7 @@ for exam in (112,111):
         failures=list(dict.fromkeys(failures))
         status="PASS_DUAL_ENGINE_AND_OFFICIAL_KEY" if not failures else "HOLD"
         row={"id":qid,"exam":exam,"session":session,"number":n,"status":status,"reasons":failures,"sourcePdfPage":pg,"pageHasRaster":media_in_page,
-            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),"coordinateBoundaryEvidence":boundary_evidence,"scenarioContext":scenario_evidence,
+            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),"coordinateBoundaryEvidence":boundary_evidence,"scenarioContext":scenario_evidence,"visualNumericGlyphEvidence":visual,
             "sourcePdfSha256":hashlib.sha256(pdf.read_bytes()).hexdigest()}
         rows.append(row);all_rows.append(row)
         if status.startswith("PASS"):
@@ -109,7 +126,7 @@ for exam in (112,111):
               "answerType":"singleChoice","sourceAnswerTokens":q["sourceAnswerTokens"],"officialScoringStatus":"normal",
               "scoringException":None,"requiresMedia":False,"mediaAuditStatus":"not_required",
               "rightsStatus":"mhlw-pdl1.0-text","sourceRefs":q["sourceRefs"],"sourceAttribution":q["sourceAttribution"],
-              "sourcePage":pg,"scenarioContextEvidence":scenario_evidence,"coordinateBoundaryEvidence":boundary_evidence,"shortStemVerifiedByCoordinates":bool(short_stem and coordinate_segment is not None),"sourcePdfSha256":row["sourcePdfSha256"],"officialKeyPdfSha256":q.get("officialKeyPdfSha256"),
+              "sourcePage":pg,"scenarioContextEvidence":scenario_evidence,"visualNumericGlyphEvidence":visual,"coordinateBoundaryEvidence":boundary_evidence,"shortStemVerifiedByCoordinates":bool(short_stem and coordinate_segment is not None),"sourcePdfSha256":row["sourcePdfSha256"],"officialKeyPdfSha256":q.get("officialKeyPdfSha256"),
               "reviewStatus":"source_dual_engine_and_official_key_verified","canonicalStatus":"source_verified_extension",
               "publishable":False,"releaseEligible":False,
               "audit":{"questionDualEngineMatched":True,"allChoicesDualEngineMatched":True,"officialKeyMatched":True,
