@@ -10,7 +10,15 @@ ROOT=pathlib.Path(__file__).resolve().parents[1]
 LED=json.loads((ROOT/"audit/visual-glyph-confirmation-20261124.json").read_text())
 OUT=ROOT/"audit/runs/context-control-visual-20261124"
 assert len(LED["items"])==3
+VERIFIED={q["id"]:q for q in json.loads((ROOT/"product-content/verified-additions-20261124.json").read_text())["questions"]}
 for evidence in LED["items"]:
+    if evidence["id"] in VERIFIED:
+        canonical=VERIFIED[evidence["id"]]
+        if (canonical["choices"][evidence["choiceIndex"]]!=evidence["expectedChoice"]
+            or canonical.get("visualNumericGlyphEvidence",{}).get("pngSha256")!=evidence["pngSha256"]):
+            raise ValueError("Previously promoted visual evidence does not match canonical source "+evidence["id"])
+        print("GLYPH_ALREADY_VERIFIED",evidence["id"])
+        continue
     ex,ss,no=evidence["exam"],evidence["session"],evidence["number"]
     pdf=pathlib.Path("/tmp/kangoshi-official")/f"{ex}-{ss}.pdf"
     if hashlib.sha256(pdf.read_bytes()).hexdigest()!=evidence["pdfSha256"]:
