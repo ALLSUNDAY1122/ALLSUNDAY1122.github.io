@@ -8,12 +8,12 @@
 |---|---:|---|
 | 既存第115〜113回ソースバンク | 720 | 既存ランタイム、厳格原典監査629 PASS／91 HOLD |
 | 今回の監査前の検証済みソース拡張 | 180 | 履歴を保持、配信不可 |
-| **今回の追加昇格** | **0** | 共通文・制御文字と二方式・公式正答の再検証 |
-| **正規ソースバンク** | **900 / 1,200** | ソース拡張180問を含む |
-| **未昇格** | **300問** | 原典の疑義と未合格ゲートは保持 |
+| **今回の追加昇格** | **3** | 共通文・制御文字と二方式・公式正答の再検証 |
+| **正規ソースバンク** | **903 / 1,200** | ソース拡張183問を含む |
+| **未昇格** | **297問** | 原典の疑義と未合格ゲートは保持 |
 | アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-- GitHub Actions Run：45253735557。先行再抽出22問のうち**12問**が引き続き保留。
+- GitHub Actions Run：45254606876。先行再抽出22問のうち**9問**が引き続き保留。
 - 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
 - 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
 - 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
@@ -93,3 +93,11 @@
 - 昇格ID：なし。
 - 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 261, COORDINATE_REGION_UNVERIFIED 261, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 176, PYMUPDF_FIELD_MISMATCH_0 172, PAGE_FOOTER_CONTAMINATION 141, POPPLER_FIELD_MISMATCH_0 137, PYMUPDF_FIELD_MISMATCH_4 108, CHOICE_COUNT_NOT_FOUR 89, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 46, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
 - 先行再抽出候補：22問のうち残存保留12問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+
+## 今回の独立共通文・制御文字監査（Run 45254606876）
+
+- 追加昇格 **3問**、合計 **903/1,200問**。残り **297問**。
+- 昇格ID：K112-AM073, K112-PM017, K112-PM052。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 261, COORDINATE_REGION_UNVERIFIED 261, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 176, PYMUPDF_FIELD_MISMATCH_0 172, PAGE_FOOTER_CONTAMINATION 141, POPPLER_FIELD_MISMATCH_0 137, PYMUPDF_FIELD_MISMATCH_4 108, CHOICE_COUNT_NOT_FOUR 89, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 46, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
+- 先行再抽出候補：22問のうち残存保留9問。権利・解説・アプリ配信ゲートの自動解除は行わない。
