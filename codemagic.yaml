@@ -1714,3 +1714,100 @@ workflows:
         beta_groups:
           - sun
         submit_to_app_store: false
+
+  fp2-internal-testflight-build7:
+    name: FP2 1.0.0 Build 7 Internal TestFlight
+    max_build_duration: 40
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: Codemagic Shiwake Swipe
+    environment:
+      xcode: latest
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.allsunday1122.fp2manabisprint
+    scripts:
+      - name: Verify the branch and install XcodeGen
+        script: |
+          set -euo pipefail
+          test "$CM_BRANCH" = 'codex/fp2-testflight-1-0-0-build-7'
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version | grep -Eq '^2[6-9](\.|$)'
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Prepare the verified FP2 device archive
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          python3 fp2-manabi-sprint/ios/prepare-ios.py
+          cd fp2-manabi-sprint/ios
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('Web/bundle-evidence.json')
+          evidence = json.loads(path.read_bytes())
+          evidence['build'] = '7'
+          path.write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+          xcodegen generate
+          xcodebuild -project FP2ManabiSprint.xcodeproj -scheme FP2ManabiSprint \
+            -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath "$CM_BUILD_DIR/build/FP2ManabiSprint.xcarchive" \
+            DEVELOPMENT_TEAM=MN3D2ZM44N CODE_SIGN_STYLE=Automatic CURRENT_PROJECT_VERSION=7 \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO archive
+      - name: Automatically sign the export for internal TestFlight
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          security find-identity -v -p codesigning | grep -q 'Apple Distribution:'
+          xcodebuild -help > "$TMPDIR/fp2-xcode-help.txt" 2>&1
+          grep -q testFlightInternalTestingOnly "$TMPDIR/fp2-xcode-help.txt"
+          python3 - <<'PY'
+          import os, plistlib
+          from pathlib import Path
+
+          options = {'method': 'app-store-connect', 'destination': 'export',
+                     'teamID': 'MN3D2ZM44N', 'signingStyle': 'automatic',
+                     'testFlightInternalTestingOnly': True, 'manageAppVersionAndBuildNumber': False}
+          (Path(os.environ['TMPDIR']) / 'fp2-export.plist').write_bytes(plistlib.dumps(options))
+          PY
+          xcodebuild -exportArchive -archivePath "$CM_BUILD_DIR/build/FP2ManabiSprint.xcarchive" \
+            -exportPath "$CM_BUILD_DIR/build/fp2-internal" -exportOptionsPlist "$TMPDIR/fp2-export.plist"
+      - name: Verify the signed IPA before uploading
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          ipa=(build/fp2-internal/*.ipa)
+          test "${#ipa[@]}" -eq 1
+          expanded="$(mktemp -d)"
+          ditto -x -k "${ipa[0]}" "$expanded"
+          app="$expanded/Payload/FP2ManabiSprint.app"
+          codesign --verify --deep --strict "$app"
+          codesign -dv --verbose=4 "$app" 2>&1 | grep -Fx 'TeamIdentifier=MN3D2ZM44N'
+          python3 - "$app" <<'PY'
+          import json, plistlib, sys
+          from pathlib import Path
+
+          app = Path(sys.argv[1])
+          source = Path('fp2-manabi-sprint')
+          info = plistlib.loads((app / 'Info.plist').read_bytes())
+          assert info['CFBundleIdentifier'] == 'com.allsunday1122.fp2manabisprint'
+          assert info['CFBundleShortVersionString'] == '1.0.0' and info['CFBundleVersion'] == '7'
+          assert info['ITSAppUsesNonExemptEncryption'] is False
+          path = 'questions/canonical/approved-questions-20261123.json'
+          full = json.loads((source / path).read_bytes())['questions']
+          bundled = json.loads((app / 'Web' / path).read_bytes())['questions']
+          assert len(full) == 310 and len(bundled) == 298
+          assert bundled == [q for q in full if q['release_selected'] is True]
+          for name in ('fp2-202405-q53-family-diagram.png', 'fp2-202605-q55-family-diagram.png'):
+              asset = Path('questions/verbatim/assets') / name
+              assert (app / 'Web' / asset).read_bytes() == (source / asset).read_bytes()
+          print('Signed 1.0.0 (7) IPA verified: 298 official questions and 2 original PNGs')
+          PY
+    artifacts:
+      - build/fp2-internal/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
