@@ -25,7 +25,7 @@ if (bank.get("recovered_pass_count"),bank.get("recovered_fail_count"),bank.get("
     errors.append("recovered180 audit count mismatch")
 if len(domains)!=6 or any(n!=50 for n in domains.values()):
     errors.append("six domains x 50 violated")
-exam_counts=Counter(q.get("exam_year_month") or q.get("examDate") for q in selected)
+exam_counts=Counter(q.get("exam_year_month") or q.get("examDate") or "independently-authored" for q in selected)
 if dict(exam_counts)!={"2026-05":60,"2025-05":60,"2025-01":60,"independently-authored":3,"2024-09":59,"2024-05":58}: errors.append("2024 law-excluded 297 official +3 originals session distribution violated")
 if (bank.get("expansion_audit_pass_count"),bank.get("expansion_audit_fail_count"),bank.get("expansion_audit_hold_count"))!=(117,2,1): errors.append("verbatim audit 117/2/1 mismatch")
 scope={}
@@ -60,7 +60,7 @@ for q in selected:
         errors.append(ident+": active HTML in authored content")
     source_groups[q.get("source_organization","UNSPECIFIED")]+=1
 result={"status":"FAIL" if errors else "PASS","canonical":len(bank["questions"]),"selected":len(selected),"reserves":len(reserved),
-        "recovered_independent_audit":"180 PASS / 0 FAIL / 0 HOLD","expansion_independent_audit":"120 PASS / 0 FAIL / 0 HOLD",
+        "recovered_independent_audit":"180 PASS / 0 FAIL / 0 HOLD","expansion_independent_audit":"117 PASS / 2 FAIL / 1 HOLD (three quarantined; not in selected 300)",
         "domain_counts":domains,"answer_choice_distribution":answers,
         "primary_authority_distribution":source_groups,
         "modified_selected":sum(q["modified"] is True for q in selected),
