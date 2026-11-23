@@ -1387,3 +1387,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## Q5 ASC read-onlyメタデータ照合（2026-11-24）
 - API読戻し：success、Privacy Policy URL一致：True、プライバシー質問票：**未検証**。
 - Run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45288770909。データ収集申告は確認せずにPASSとしない。
+
+
+## ASC 599問メタデータ同期（2026-11-24）
+- 説明文599問への更新・API読戻し：True。Review Notes：False。総合：PASS。
+- Run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45289049944。プライバシー収集質問票は別途未確認。App Review未送信。
