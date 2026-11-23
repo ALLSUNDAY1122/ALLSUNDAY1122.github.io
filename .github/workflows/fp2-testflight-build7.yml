@@ -48,24 +48,10 @@ jobs:
           cd fp2-manabi-sprint/ios
           xcodegen generate
 
-      - name: Verify Release settings and create a signed device archive
+      - name: Verify Release settings and prepare the device archive
         working-directory: fp2-manabi-sprint/ios
-        env:
-          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           set -euo pipefail
-          : "${ASC_KEY_ID:?Missing App Store Connect key ID}"
-          : "${ASC_ISSUER_ID:?Missing App Store Connect issuer ID}"
-          : "${ASC_PRIVATE_KEY:?Missing App Store Connect private key}"
-          umask 077
-          key_path="$RUNNER_TEMP/fp2-asc.p8"
-          trap 'rm -f "$key_path"' EXIT
-          printf '%s\n' "$ASC_PRIVATE_KEY" > "$key_path"
-          openssl pkey -in "$key_path" -noout
-          unset ASC_PRIVATE_KEY
-
           settings=(-project FP2ManabiSprint.xcodeproj -scheme FP2ManabiSprint
             -configuration Release -destination 'generic/platform=iOS'
             "DEVELOPMENT_TEAM=$DEVELOPMENT_TEAM_ID" CODE_SIGN_STYLE=Automatic
@@ -89,14 +75,10 @@ jobs:
           PY
 
           xcodebuild "${settings[@]}" -archivePath "$RUNNER_TEMP/FP2ManabiSprint.xcarchive" \
-            -allowProvisioningUpdates -authenticationKeyPath "$key_path" \
-            -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" archive
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO archive
 
-      - name: Verify the signed archive, 298 questions and original diagrams
+      - name: Verify the archive, 298 questions and original diagrams
         run: |
-          app="$RUNNER_TEMP/FP2ManabiSprint.xcarchive/Products/Applications/FP2ManabiSprint.app"
-          codesign --verify --deep --strict "$app"
-          codesign -dv --verbose=4 "$app" 2>&1 | grep -Fx "TeamIdentifier=$DEVELOPMENT_TEAM_ID"
           python3 - <<'PY'
           import json, os, plistlib
           from pathlib import Path
@@ -116,20 +98,24 @@ jobs:
           for name in ('fp2-202405-q53-family-diagram.png', 'fp2-202605-q55-family-diagram.png'):
               asset = Path('questions/verbatim/assets') / name
               assert (app / 'Web' / asset).read_bytes() == (source / asset).read_bytes()
-          print('Signed archive verified: 1.0.0 (7), 298 official questions, 2 original PNGs')
+          print('Release archive verified: 1.0.0 (7), 298 official questions, 2 original PNGs')
           PY
 
-      - name: Upload to App Store Connect for internal TestFlight only
+      - name: Automatically sign and upload for internal TestFlight only
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           set -euo pipefail
+          : "${ASC_KEY_ID:?Missing App Store Connect key ID}"
+          : "${ASC_ISSUER_ID:?Missing App Store Connect issuer ID}"
+          : "${ASC_PRIVATE_KEY:?Missing App Store Connect private key}"
           umask 077
           key_path="$RUNNER_TEMP/fp2-asc.p8"
           trap 'rm -f "$key_path"' EXIT
           printf '%s\n' "$ASC_PRIVATE_KEY" > "$key_path"
+          openssl pkey -in "$key_path" -noout
           unset ASC_PRIVATE_KEY
           xcodebuild -help > "$RUNNER_TEMP/fp2-xcode-help.txt" 2>&1
           grep -q testFlightInternalTestingOnly "$RUNNER_TEMP/fp2-xcode-help.txt"
