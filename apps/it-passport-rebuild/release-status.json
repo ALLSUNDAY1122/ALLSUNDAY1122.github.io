@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-23T23:22:00+09:00",
+  "updated_at_jst": "2026-11-24T08:00:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
-  "release_stage": "OFFICIAL_SOURCE_ACCESS_RETRY_FAILED",
+  "release_stage": "OFFICIAL_PDF_RECEIVED_500_ANSWERS_VERIFIED_OCR_FIDELITY_PENDING",
   "app_review_submitted": false,
   "requirements": {
     "official_question_verbatim": true,
@@ -27,36 +27,34 @@
       "canonical": 0,
       "target": 500,
       "verified_rounds": 0,
-      "source_verbatim_audit": "NOT_STARTED_NO_VERIFIED_OFFICIAL_PDF_BINARY",
+      "source_verbatim_audit": "OCR_CANDIDATES_EXTRACTED_NOT_INDEPENDENTLY_VISUALLY_VERIFIED",
       "pdf_stage_attempt": {
-        "result": "FAILED_SOURCE_FETCH_AFTER_OFFICIAL_SITE_NAVIGATION",
-        "evidence_path": "questions/ipa-staging/extraction-evidence.json",
-        "question_pdfs_downloaded": 0,
-        "answer_pdfs_downloaded": 0,
-        "years_attempted": 5,
-        "route_attempts_per_pdf": 3,
-        "tried_routes": [
-          "direct official PDF link",
-          "official exam site's published past-exam page with cookies and referer",
-          "same with IPv4"
-        ],
-        "action_runs": [
-          45192577663,
-          45193088237
-        ],
-        "failure": "ALL_10_OFFICIAL_PDF_URLS_RETURNED_NON_PDF_HTML",
-        "cached_web_index_result": "2025 official question PDF indexed and screenshot visually visible in web cached result, not binary download",
-        "release_promoted": false
+        "result": "RESOLVED_BY_USER_UPLOADED_ORIGINALS",
+        "source": "10 attached original PDFs",
+        "question_pdfs_downloaded": 5,
+        "answer_pdfs_downloaded": 5,
+        "sha256_matches": 10,
+        "official_answer_records_verified": 500,
+        "official_answer_cross_engine_matches": 500,
+        "previous_access_failure": "SUPERSEDED"
       },
       "staging_pipeline": {
-        "script": "quality/stage-ipa-pdf.py",
-        "workflow": ".github/workflows/itp-ipa-official-pdf-source-extract.yml",
-        "activation": "ON_VALID_OFFICIAL_QUESTION_AND_ANSWER_PDF_PAIR",
-        "release_promotion": "NEVER_AUTOMATIC",
-        "staged_years": 0,
-        "staged_question_drafts": 0,
-        "output_status": "HOLD_UNTIL_INDEPENDENT_VISUAL_SOURCE_ANSWER_FIGURE_AUDIT"
-      }
+        "status": "STAGED_OFFICIAL_QUESTION_CANDIDATES",
+        "source_file": "questions/official-candidate-index.json",
+        "answer_file": "questions/official-answer-index.json",
+        "original_ocr_drafts": "LOCAL_AUDIT_ARCHIVE",
+        "source_page_identified": 500,
+        "question_candidates": 500,
+        "question_verbatim_pass": 0,
+        "answer_audit_pass": 500,
+        "unverified_text": 500,
+        "release_promotion": "ONLY_AFTER_INDEPENDENT_ORIGINAL_IMAGE_VS_TEXT_CHOICES_FIGURE_AUDIT",
+        "separate_original_mock_count": 240
+      },
+      "candidate_index_count": 500,
+      "source_pdfs_verified": 10,
+      "answer_key_verified": 500,
+      "verbatim_promoted": 0
     },
     "ios": {
       "project_exists_on_feature_branch": true,
@@ -88,7 +86,11 @@
     "quality": {
       "development_dataset_gate": "PASS",
       "official_incomplete_release_guard": "PASS_EXPECTED_BLOCK",
-      "workflow_run_id": 45190905303
+      "workflow_run_id": 45190905303,
+      "answer_pdf_dual_engine": "PASS_500_OF_500",
+      "pdf_sha256": "PASS_10_OF_10",
+      "candidate_source_id_and_page": "REGISTERED_500_OF_500",
+      "verbatim_question_content": "HOLD_500_OF_500"
     }
   },
   "ipa_rights": {
@@ -110,12 +112,12 @@
     {
       "code": "IP-OFF-500",
       "severity": "P0",
-      "detail": "No independently verified verbatim IPA official exam data; five annual published sets require 500 questions"
+      "detail": "500 official question IDs and exact PDF page locations staged, official answers 500/500 double-checked; fully verified verbatim text/choices/figures 0/500, so audited release bank remains empty."
     },
     {
       "code": "IP-SOURCE-FIDELITY",
       "severity": "P0",
-      "detail": "IPA official parent page and official exam site PDF paths were traced. GitHub Actions direct, official-site navigation with cookie/Referer, and IPv4 attempts all returned non-PDF HTML for each of five years' question/answer PDFs. The official 2025 PDF is only visible through search-index cached rendering, not obtainable as verified binary. No canonical IPA questions may be promoted."
+      "detail": "RESOLVED: all 10 user-uploaded IPA PDF originals SHA-256 match. New blocking gate is scan-only question PDFs: 500 OCR drafts require visual word/option/diagram transcription verification, and original image assets must be app-renderable."
     },
     {
       "code": "IP-IOS-BANK",
@@ -134,12 +136,11 @@
     }
   ],
   "next_machine_actions": [
-    "Obtain valid original IPA PDF bytes via an authorized directly accessible source, or an uploaded authenticated original; perform SHA, page/answer/figure audit on each obtained year",
-    "Build an official-only canonical bank and source ledger for five published annual sets",
-    "Independently verify exact text, options, correct answer, tables and diagrams against IPA PDFs",
-    "Connect canonical official bank to mobile-first iOS UI and run release gates",
-    "Register or verify a NEW Apple App record without using legacy application credentials",
-    "Build, upload and prepare ASC metadata; then request device acceptance and final submit approval"
+    "Verify OCR question text and all four choices against original scanned IPA images, preserve diagrams and equations as source image crops, and promote only independently verified records",
+    "Make official image assets durable in the GitHub repository and connect only verified official questions to mobile-first iOS UI",
+    "Run complete release gates and simulator/device tests on the exact selected build",
+    "Verify new App Store Connect record and prepare screenshots, privacy and review information",
+    "Request only Apple 2FA, contracts, device acceptance or final App Review submit confirmation when reached"
   ],
   "human_gates": [
     "Apple 2FA",
