@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-24T08:10:00+09:00",
+  "updated_at_jst": "2026-11-24T08:15:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
   "release_stage": "OFFICIAL_PDF_RECEIVED_500_ANSWERS_VERIFIED_OCR_FIDELITY_PENDING",
@@ -68,14 +68,19 @@
       "image_evidence": {
         "source": "5 user-uploaded scanned question PDFs",
         "source_image_crops_generated": 500,
-        "automatic_question_crops": 472,
-        "full_pdf_page_fallbacks": 28,
+        "automatic_question_crops": 479,
+        "full_pdf_page_fallbacks": 21,
         "each_crop_lossless_webp": true,
         "visual_fidelity_reviewed": 0,
         "status": "HOLD_IMAGE_CROP_UNREVIEWED",
         "local_archive": "itp_500_verbatim_image_audit_pack.zip",
-        "archive_sha256": "06d7e3c4e2b0a8730a9655a859ab0ccde594547d2aec9f19cff9644d170a2d4b",
-        "github_image_assets_committed": false
+        "archive_sha256": "62afc7885a1309b3d49db37aa9405d193c15301ef8948bbe742f4d48b75e553b",
+        "github_image_assets_committed": false,
+        "repair_methods": [
+          "OCR PSM6 first pass",
+          "OCR PSM4 fallback retries",
+          "OCR PSM3 fallback retries"
+        ]
       }
     },
     "ios": {
@@ -139,7 +144,7 @@
     {
       "code": "IP-OFF-500",
       "severity": "P0",
-      "detail": "All 500 answer/page candidates and 500 local original-image crops exist, with 472 auto-delineated and 28 full-page fallbacks. The crop assets are not yet in GitHub nor individually visually certified; fully audited publishable verbatim questions remain 0."
+      "detail": "All 500 question/answer/page indexes and lossless local image evidence are prepared; 479 question crops auto-separated, 21 remain full-page fallback. Neither per-question image crop nor OCR text has passed independent visual verification or been deployed as app assets; production verbatim bank is 0."
     },
     {
       "code": "IP-SOURCE-FIDELITY",
@@ -163,7 +168,7 @@
     }
   ],
   "next_machine_actions": [
-    "Audit 472 automatic source-image cuts and reframe 28 entire-page fallback images, then independently verify 500 text/choices/figure equivalence against official scans before promotion",
+    "Resolve 21 full-page fallback question-image crops and visually verify 479 automatic crops; independently audit OCR question/choices/figures and release only confirmed exact representations",
     "Make official image assets durable in the GitHub repository and connect only verified official questions to mobile-first iOS UI",
     "Run complete release gates and simulator/device tests on the exact selected build",
     "Verify new App Store Connect record and prepare screenshots, privacy and review information",
