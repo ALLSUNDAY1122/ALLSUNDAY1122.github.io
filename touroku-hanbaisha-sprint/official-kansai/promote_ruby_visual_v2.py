@@ -45,6 +45,22 @@ compare=load(compfile)
 old=load(B/"RUBY_FONT_CLUSTER_ALL_20261124.json")
 bankfile=B/"APPROVED_OFFICIAL_BANK.json"
 bank=load(bankfile)
+# This promotion may already have been committed by a parallel release coordinator.
+# Idempotence prevents a successful 468 bank from being treated as a failure.
+if bank["count"]==468:
+    visual_now=load(B/"RUBY_VISUAL_AUDIT_V2_120_20261124.json")
+    passed=set(visual_now["approvedIds"])
+    indexed={q["id"]:q for q in bank["questions"]}
+    state_now=load(IOS/"release-status.json")
+    if len(passed)!=28 or not passed.issubset(indexed):
+        raise RuntimeError("468 count does not include all 28 visually approved IDs")
+    if state_now["question_bank"]["production_official_bank_count"]!=468:
+        raise RuntimeError("release state and already-promoted bank disagree")
+    if "KSAI-2023-090" in indexed or state_now["release_gate"]!="BLOCKED":
+        raise RuntimeError("published bank violates release gate")
+    print(json.dumps({"approved":468,"added":0,"alreadyPromoted":28,
+       "note":"Visual v2 28 promotions already persisted; no duplicate write"},ensure_ascii=False))
+    raise SystemExit(0)
 if bank["count"]!=440 or len(bank["questions"])!=440 or len(set(bank["approvedIds"]))!=440:
     raise RuntimeError("baseline release bank not exactly 440; stop and reconcile")
 if visual["questionCount"]!=120 or visual["visualPass"]!=28 or len(visual["approvedIds"])!=28:
