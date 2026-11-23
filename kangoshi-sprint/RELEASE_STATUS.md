@@ -13,7 +13,7 @@
 | **未昇格** | **229問** | 原典の疑義と未合格ゲートは保持 |
 | アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-- GitHub Actions Run：45262412566。先行再抽出22問のうち**0問**が引き続き保留。
+- GitHub Actions Run：45264232204。先行再抽出22問のうち**0問**が引き続き保留。
 - 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
 - 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
 - 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
@@ -191,3 +191,11 @@
 - 続けて残229問の原典設問番号をPyMuPDFで座標確認し、各問を2倍拡大のPDF領域画像として再出力。Run `45262412566` **SUCCESS**、229問すべてに一意な設問番号アンカーがあり、画像・座標・PDF SHA-256・保留理由を`audit/residual-geometric-source-index-20261124.json`に保存。画像Artifactsは`kangoshi-residual-geometric-page-evidence`、ID `14861452631`。
 - **設問番号の座標が一意であることは、本文と選択肢の文字・図版・正答が確定したことを意味しない**。この追加画像監査での昇格は0問。次工程は残229問のPDF CMap/本文と選択肢の差分をページ画像で照合し、2方式・正答が一致した問だけ昇格。
 - 新規拡張のアプリへの配信は0問。公開ゲートは`PREFLIGHT_BLOCKED`。本審査送信・契約・課金は未実施。
+
+
+## 今回の独立共通文・制御文字監査（Run 45264232204）
+
+- 追加昇格 **0問**、合計 **971/1,200問**。残り **229問**。
+- 昇格ID：なし。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 165, COORDINATE_REGION_UNVERIFIED 165, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 145, POPPLER_FIELD_MISMATCH_0 109, PYMUPDF_FIELD_MISMATCH_0 97, PAGE_FOOTER_CONTAMINATION 75, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 64, PYMUPDF_FIELD_MISMATCH_4 60, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 38, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38, POPPLER_FIELD_MISMATCH_4 38。
+- 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
