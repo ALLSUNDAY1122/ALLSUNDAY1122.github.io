@@ -1397,3 +1397,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## Q7 Codemagic/ASC読戻し（2026-11-24）
 - Codemagic: PASS、ASC: PASS、判定: PENDING_SIGNED_IPA。
 - 証跡 Q7_CODEMAGIC_PREP_20261124.json、run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45289652184。本審査送信なし。
+
+
+## Q7 Codemagic署名付きIPA専用ビルド開始（2026-11-24）
+- API request: True、buildId: 6b04cd655586d806fe29abea、署名実測：NOT_YET_VERIFIED。App Store Connectアップロードなし、TestFlight配布なし。
+- GitHub Actions run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45289842353、証跡 Q7_CODEMAGIC_SIGNING_BUILD_20261124.json。
