@@ -1,6 +1,6 @@
 {
   "app": "登録販売者｜学びスプリント",
-  "updated_at": "2026-11-23T23:12:00+09:00",
+  "updated_at": "2026-11-23T23:22:00+09:00",
   "version": "1.0.0",
   "bundle_id": "com.allsunday1122.tourokuhanbaisha",
   "app_store_connect_app_id": "6802119268",
@@ -57,7 +57,26 @@
       "inline": 23
     },
     "official_2026_independently_visual_verified": 0,
-    "official_2026_app_release_enabled": false
+    "official_2026_app_release_enabled": false,
+    "remaining_four_years": [
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "remaining_four_years_target": 480,
+    "remaining_four_years_extraction_implemented": true,
+    "remaining_four_years_confirmed_candidates": 0,
+    "remaining_four_years_confirmed_sha256": 0,
+    "remaining_four_years_app_release_enabled": false,
+    "year_2022_choice_count_policy": "four or five per official booklet; keep actual count",
+    "year_2023_q90_scoring_contract": {
+      "question_id": "KSAI-2023-090",
+      "answer": null,
+      "officialStatus": "OFFICIALLY_INVALID_ALL_CANDIDATES_CORRECT",
+      "excludeFromAccuracyDenominator": true,
+      "scoringPolicy": "ALL_CANDIDATES_CORRECT_NO_STANDARD_GRADING"
+    }
   },
   "gates": {
     "notion_v28_full_read": "PENDING",
@@ -80,7 +99,11 @@
     "official_2026_answer_index": "PASS_120_INDEX_MAPPED",
     "official_2026_raw_extraction": "PASS_120_STAGING",
     "official_2026_app_candidate": "PASS_120_FIVE_CHOICE_STRUCTURAL_REVIEW_ONLY",
-    "official_2026_verbatim_visual_audit": "BLOCKED_0_OF_120"
+    "official_2026_verbatim_visual_audit": "BLOCKED_0_OF_120",
+    "remaining_four_years_extraction_pipeline": "IMPLEMENTED_GITHUB_ACTIONS_RESULT_UNCONFIRMED",
+    "remaining_four_years_output_commits": "NOT_FOUND_0_OF_4",
+    "remaining_four_years_pdf_sha256": "PENDING_0_OF_8",
+    "remaining_four_years_question_answer_mapping": "PENDING_0_OF_480"
   },
   "evidence": [
     "touroku-hanbaisha-sprint/official-kansai/SOURCES_2022_2026.json",
@@ -96,6 +119,9 @@
     ".github/workflows/touhan-2026-extract.yml",
     "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_RAW_STAGING.json",
     "touroku-hanbaisha-sprint/official-kansai/QUESTIONS_2026_APP_CANDIDATE.json",
-    "touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2026.json"
+    "touroku-hanbaisha-sprint/official-kansai/PDF_SHA256_2026.json",
+    "touroku-hanbaisha-sprint/official-kansai/extract_year.py",
+    "touroku-hanbaisha-sprint/official-kansai/build_year_app_candidate.py",
+    ".github/workflows/touhan-2022-2025-extract.yml"
   ]
 }
