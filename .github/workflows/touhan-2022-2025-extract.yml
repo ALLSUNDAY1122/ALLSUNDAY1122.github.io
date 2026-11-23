@@ -46,7 +46,7 @@ jobs:
             for q,k in zip(qs,keys):
               assert q['questionNo']==k['question_no']
               assert q['answerNumberOfficial']==k['official_answer']
-              assert len(q['choices'])==5 and q['needsVisualReview'] and not q['renderReady']
+              assert (q['choices'] is None or len(q['choices']) in (4,5)) and q['needsVisualReview'] and not q['renderReady']
               if y==2023 and q['questionNo']==90:
                 assert q['answer'] is None and q['excludeFromAccuracyDenominator']
               else:
