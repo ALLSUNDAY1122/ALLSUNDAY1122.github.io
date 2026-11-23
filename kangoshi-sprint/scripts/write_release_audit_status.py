@@ -105,6 +105,17 @@ if NONCMAP21.exists():
     "individualProof":"kangoshi-sprint/audit/ocr-noncmap-repair-ledger-20261124.json",
     "beforeAfter":"kangoshi-sprint/product-content/ocr-noncmap-repaired-candidates-20261124.json",
     "releaseEligible":0,"status":"SOURCE_ONLY"}
+VISUAL21=R/"audit/ocr-noncmap-visual-promotion-ledger-20261124.json"
+if VISUAL21.exists():
+  p=json.loads(VISUAL21.read_text(encoding="utf8"))
+  assert p["visualVerifiedScope"]==2
+  assert p["cumulativePromoted"]+p["remainingFrom2"]==2
+  S["latestNonCmapVisualPageCorrection"]={
+    "runId":run_id,"verifiedScope":2,"newlyPromoted":p["newPromoted"],
+    "cumulativePromoted":p["cumulativePromoted"],"remainingFrom2":p["remainingFrom2"],
+    "individualEvidence":"kangoshi-sprint/audit/ocr-noncmap-visual-promotion-ledger-20261124.json",
+    "beforeAfter":"kangoshi-sprint/product-content/ocr-noncmap-visual-repaired-candidates-20261124.json",
+    "releaseEligible":0,"status":"SOURCE_ONLY"}
 J.write_text(json.dumps(S,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
 old=MD.read_text(encoding="utf8")
 # Preserve historical change log, remove previously appended dynamic summaries.
@@ -179,6 +190,15 @@ if NONCMAP21.exists():
       "`audit/ocr-noncmap-repair-ledger-20261124.json`。\n"
       "- 修正前後：`product-content/ocr-noncmap-repaired-candidates-20261124.json`。"
       "OCR誤読の疑いがあっても文字を推測で置換したものは昇格しない。\n")
+if VISUAL21.exists():
+    p=json.loads(VISUAL21.read_text(encoding="utf8"))
+    tail+=("\n## 原典PDF画像直接照合で修正したOCR誤認識（Run "+str(run_id)+"）\n\n"
+      "- 原典画像目視確認2問のうち、今回の修正・正規ソース昇格："
+      +str(p["newPromoted"])+"問。累計："+str(p["cumulativePromoted"])+"問。\n"
+      "- 修正前後全文：`product-content/ocr-noncmap-visual-repaired-candidates-20261124.json`。\n"
+      "- PDF原典ページ、画像ハッシュ、各選択肢OCR一致、公式正答："
+      "`audit/ocr-noncmap-visual-promotion-ledger-20261124.json`。\n"
+      "- ソースのみ合格。Apple本審査・一般公開不可。\n")
 MD.write_text(summary+history+"\n"+tail,encoding="utf8")
 print(json.dumps({"canonical":total,"remaining":len(hold),"new":P["newPromoted"],
                   "pending22Remaining":len(active_pending),"svgPending":18},ensure_ascii=False))
