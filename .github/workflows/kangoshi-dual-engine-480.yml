@@ -1,6 +1,9 @@
 name: Kangoshi Dual Engine 480 and Media Visual Review
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/kangoshi-dual-engine-480.yml'
 permissions:
   contents: write
 jobs:
@@ -35,6 +38,8 @@ jobs:
         run: python kangoshi-sprint/scripts/build_media_comparison.py
       - name: Promote only independently verified items to nonpublishable canonical extension
         run: python kangoshi-sprint/scripts/promote_dual_engine.py
+      - name: Update status from actual promotion and media audit evidence
+        run: python kangoshi-sprint/scripts/write_release_audit_status.py
       - name: Persist canonical extensions and per-item PASS/HOLD evidence to GitHub main
         run: |
           set -euo pipefail
@@ -44,7 +49,8 @@ jobs:
           git add kangoshi-sprint/product-content/manifest.json
           git add kangoshi-sprint/audit/dual-engine-promotion-ledger-20261124.json
           git add kangoshi-sprint/audit/dual-engine-hold-20261124.json
-          git commit -m "kangoshi: promote dual-engine verified 111/112 records while gating runtime"
+          git add kangoshi-sprint/release-status.json kangoshi-sprint/RELEASE_STATUS.md
+          git diff --cached --quiet || git commit -m "kangoshi: apply independent boundary/context recheck and persist source-only gates"
           git pull --rebase origin main
           git push origin HEAD:main
       - name: Upload 480 record detailed gate report even when a failure occurs
