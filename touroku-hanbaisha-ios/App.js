@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Linking, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-const HOME_URL = 'https://allsunday1122.github.io/touroku-hanbaisha-sprint/';
+const HOME_URL = 'https://allsunday1122.github.io/touroku-hanbaisha-sprint/official-practice.html';
 const ALLOWED_ORIGIN = 'https://allsunday1122.github.io';
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
 
   const shouldStart = request => {
     const url = request?.url || '';
-    if (url === 'about:blank' || url.startsWith(ALLOWED_ORIGIN)) return true;
+    if (url === 'about:blank' || url === ALLOWED_ORIGIN || url.startsWith(ALLOWED_ORIGIN + '/touroku-hanbaisha-sprint/')) return true;
     if (/^https?:\/\//i.test(url)) Linking.openURL(url).catch(() => {});
     return false;
   };
