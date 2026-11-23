@@ -29,13 +29,13 @@ for year in range(2022,2027):
                        "sourceIndexMatches":True,"riskFlags":flags,
                        "reviewEvidence":reviewed.get("evidence","") if reviewed else ""})
 assert len(result)==600
-assert sum(r["status"]=="PASS" for r in result)==5
-assert sum(r["status"]=="HOLD" for r in result)==3
-assert sum(r["status"]=="PENDING_VISUAL_AUDIT" for r in result)==592
+assert sum(r["status"]=="PASS" for r in result)==sum(r["status"]=="PASS" for r in reviews)
+assert sum(r["status"]=="HOLD" for r in result)==sum(r["status"]=="HOLD" for r in reviews)
+assert sum(r["status"]=="PENDING_VISUAL_AUDIT" for r in result)==600-len(reviews)
 assert any(r["id"]=="KSAI-2023-090" and "OFFICIAL_INVALID_EXCLUDED_FROM_SCORING" in r["riskFlags"] for r in result)
 out={"status":"VISUAL_AUDIT_IN_PROGRESS","yearlyTotals":{str(y):{"total":120,"PASS":sum(q["year"]==y and q["status"]=="PASS" for q in result),"HOLD":sum(q["year"]==y and q["status"]=="HOLD" for q in result),"PENDING":sum(q["year"]==y and q["status"]=="PENDING_VISUAL_AUDIT" for q in result)} for y in range(2022,2027)},
-     "count":600,"visualPass":5,"visualHold":3,"visualPending":592,
+     "count":600,"visualPass":sum(r["status"]=="PASS" for r in result),"visualHold":sum(r["status"]=="HOLD" for r in result),"visualPending":600-len(reviews),
      "note":"Source index and five/four-choice structure PASS do not constitute per-question visual fidelity.",
      "questions":result}
 (ROOT/"AUDIT_MATRIX_600.json").write_text(json.dumps(out,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-print("AUDIT MATRIX: 600 entries / PASS 5 / HOLD 3 / PENDING 592")
+print("AUDIT MATRIX",len(result),"PASS",sum(r["status"]=="PASS" for r in result),"HOLD",sum(r["status"]=="HOLD" for r in result))
