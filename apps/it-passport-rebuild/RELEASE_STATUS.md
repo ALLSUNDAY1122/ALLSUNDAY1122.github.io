@@ -47,3 +47,12 @@
 - 2026-11-23：IPA公式FAQを独立確認。Notionの法律方針を利用権の根拠としない。
 - 既存 `original-mock.json`（240問）、`batch-13.json`（20問）は削除・書換えず、旧独自300問計画のまま保管する。
 - 今後、過去問以外で500問の不足を埋めた表示や、未収録なのに「本試験5回分」と宣伝することを禁止する。
+
+## 2026-11-23｜実行証跡（追加）
+
+- [独自240問＋公式500問未完成の品質ゲート run #45190905303](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45190905303)：**SUCCESS**。独自240問の開発データ検証PASS、300問未完成ゲートが期待どおりBLOCK、公式500問未収録の本番ゲートも期待どおりBLOCK。
+- [IPA公式PDF抽出 run #45191264084](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45191264084)：**workflow SUCCESS、資料取得は失敗**。2022〜2026年度の公開PDF候補計10件をHTTPS取得したが、すべてファイル先頭が `%PDF` でなく `NOT_PDF`。IPA配信側の非PDF応答であり、取得成功・正本収録・逐語監査PASSとは判定しない。結果は `questions/ipa-staging/extraction-evidence.json` に読戻し保存済み。
+- 2026年公開問題の直接URLは第三者掲載情報で候補を確認できるが、IPA公式のPDF実体を読取できないため `QUESTION_PDF_DIRECT_URL_UNVERIFIED` とする。
+- iOS開発ブランチの4/8/16問・年度別・画像拡大コードはGitHub保存済みだが、現行バイナリが30問独自スターターをロードしているため**本審査用のビルドではない**。
+
+**最終判定：BLOCKED / 公式0/500問 / App Review未提出。** 現時点では5年度分のIPA公式PDFから忠実な問題文・図・正答を再現するための一次資料がダウンロードできていない。推測転記、類似サイトからの原文転写、独自問題を公式と偽装する代替処理は行わない。
