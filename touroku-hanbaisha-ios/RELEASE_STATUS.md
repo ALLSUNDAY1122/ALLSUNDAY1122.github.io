@@ -1214,3 +1214,10 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 正式バンク追加 10問（ID: KSAI-2022-048, KSAI-2022-063, KSAI-2023-022, KSAI-2023-066, KSAI-2023-077, KSAI-2023-117, KSAI-2024-019, KSAI-2025-050, KSAI-2025-072, KSAI-2026-072）、合計 440/600問。画像方式の既存44問は保持。
 - 未確定問の原典PDF画像・375px候補表示PNGと比較HTMLは touroku-hanbaisha-sprint/official-kansai/ruby-font-review/ に保存。表示は比較用で正式アプリ実機検証ではない。
 - 根拠不明の読みを生成せずHOLDを保持。App Review未送信、契約と課金は未確定、判定BLOCKED。
+
+
+### 2026-11-24 ルビ新規昇格10問の実ブラウザ追加検証
+- GitHub Actions上のChrome実ブラウザ、375pxと430px（各10問、合計20ケース）でルビの漢字・読み一致、DOMの水平中心位置、縦配置、画面の横はみ出し、選択肢および採点を検査し、**PASS20/20**。iOS Safari／実機の代替ではない。
+- 証跡：`touroku-hanbaisha-sprint/official-kansai/RUBY_FONT_DOM_QA_20261124.json`。以前の誤対応（2023年度問117の「おう」→「大」）は、既存PDF本文行の座標拘束を追加して排除し、再監査では「おう」→「嘔」を確認。誤対応版は昇格していない。
+- 残るルビHOLD120問については、PDF原画像120件、候補表示375pxスクリーンショット120件、比較HTML120件を保管。候補表示は監査用模擬画面であり、通常アプリ内で公開していない。
+- 正式バンク440/600問、未承認160問、最終審査未送信、リリースゲートBLOCKED。
