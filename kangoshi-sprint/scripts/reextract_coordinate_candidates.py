@@ -36,7 +36,10 @@ def segment_poppler(text,n):
     stop=next((k for k in range(i+1,len(lines)) if next_heading.match(lines[k])),len(lines))
     return "\n".join(lines[i:stop])
 
-def split_fields(raw,n):
+def split_fields(raw,n,visually_verified_parentheses=False):
+    if visually_verified_parentheses:
+        if raw.count('ï')!=raw.count('ñ'):return None,'UNPAIRED_SOURCE_GLYPHS'
+        raw=raw.replace('ï','（').replace('ñ','）')
     lines=[line.strip() for line in clean_font(raw).splitlines() if line.strip()]
     if not lines: return None,"EMPTY_CROP"
     # A question anchor may occupy a standalone line or start the stem line.
