@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-24T08:35:00+09:00",
+  "updated_at_jst": "2026-11-24T08:25:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
   "release_stage": "CROP_21_REPAIRED_RASTER_500_PASS_VERBATIM_QA_PENDING",
@@ -93,7 +93,11 @@
         "github_boundary_repair_manifest": "questions/official-image-boundary-repairs.json",
         "github_500_image_audit_manifest": "questions/official-image-audit-500.json",
         "visual_boundary_manual_checks": 21,
-        "content_lexical_audit_pass": 0
+        "content_lexical_audit_pass": 0,
+        "raster_note": "21 repaired crops are pixel-identical to freshly rendered source image crops; 479 existing crops are pixel-identical for 381 or raster-equivalent with only maximum 2-9 channel-level conversion variance for 98; total 500/500 raster equivalent. This is not independent text/choice audit.",
+        "verbatim_ocr_second_pass": "ATTEMPTED_500_TIMED_OUT_NO_COMPLETED_RESULT",
+        "archive_storage": "LOCAL_ATTACHMENT_AND_PRIVATE_GOOGLE_DRIVE_STAGING",
+        "source_crop_boundary_21": "REPAIRED_AND_VISUALLY_INSPECTED"
       }
     },
     "ios": {
@@ -140,7 +144,13 @@
       "original_raster_equivalence": "PASS_500_OF_500",
       "official_text_verbatim": "HOLD_500_OF_500",
       "binary_assets_in_github": "NOT_COMMITTED",
-      "app_release_gate": "BLOCKED"
+      "app_release_gate": "BLOCKED",
+      "github_image_evidence_ci_run": 45288368053,
+      "github_image_evidence_ci_conclusion": "SUCCESS",
+      "image_bounds_21": "PASS",
+      "source_raster_500": "PASS",
+      "textual_verbatim_500": "NOT_PASSED",
+      "github_asset_binary": "MISSING"
     }
   },
   "ipa_rights": {
