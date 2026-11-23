@@ -759,7 +759,7 @@
     "verbatim_and_answer_audit": "AUTO_88_GEOMETRY_215_RUBY_51_ORDERED_5_LAYOUT_13_VISUAL_14_REMAINING_214",
     "mobile_ui": "PENDING",
     "ios_build": "PASS_SIMULATOR_DEBUG_NO_SIGNING",
-    "internal_testflight": "Q7_SIGNED_IPA_BUILDING_NOT_READY",
+    "internal_testflight": "Q7_SIGNED_IPA_PASS_ASC_UPLOAD_PENDING",
     "screenshots": "PENDING",
     "privacy_and_metadata": "ASC_PENDING",
     "device_check": "USER_REQUIRED",
@@ -1556,11 +1556,10 @@
     "appReviewSubmitted": false
   },
   "q7_auto_provision_20261124": {
-    "buildId": "6b04ce3d6b11322d3b7eee5a",
-    "status": "failed",
-    "gate": "FAILED",
-    "failureMessage": "App Store Connect integration \"tourokuhanbaisha_appstore\" does not exist",
-    "evidence": "touroku-hanbaisha-ios/Q7_AUTO_PROVISION_RESULT_20261124.json",
+    "buildId": "6b04cf7092306a39e3981ca4",
+    "status": "SIGNED_IPA_VERIFIED",
+    "gate": "PASS_SIGNED_IPA",
+    "evidence": "touroku-hanbaisha-ios/Q7_SIGNED_IPA_VERIFIED_20261124.json",
     "ipaUploadedToASC": false,
     "appReviewSubmitted": false
   },
@@ -1586,7 +1585,7 @@
     "apiConnectivity": "PASS_CODEMAGIC_AND_ASC",
     "xcodeSimulator": "PASS_PREVIOUS_Q6",
     "signingEnvironmentVariables": "PASS_EXISTS_IN_CODEMAGIC_BUILD_CHECK",
-    "signingProfileCurrent": "NOT_YET_VERIFIED",
+    "signingProfileCurrent": "PASS_CODEMAGIC_FETCH_OR_CREATE_AND_CODESIGN",
     "attempts": [
       {
         "buildId": "6b04cd655586d806fe29abea",
@@ -1612,12 +1611,12 @@
       {
         "buildId": "6b04cf7092306a39e3981ca4",
         "workflow": "touhan-q7-auto-provision",
-        "status": "BUILDING_AT_LAST_OBSERVATION",
-        "signedIpa": "NOT_VERIFIED",
-        "evidence": "https://codemagic.io/app/6a769d81a1add9d06020b524/build/6b04cf7092306a39e3981ca4"
+        "status": "SIGNED_IPA_VERIFIED",
+        "signedIpa": "PASS",
+        "evidence": "touroku-hanbaisha-ios/Q7_SIGNED_IPA_VERIFIED_20261124.json"
       }
     ],
-    "nextRequired": "Read final signing log and IPA export/verification, then ASC/TestFlight upload only as permitted.",
+    "nextRequired": "App Store Connect/TestFlight upload and Apple processing readback; no final App Review submission",
     "humanGates": [
       {
         "trigger": "Apple account 2FA or membership/license agreement required by signing",
@@ -1633,6 +1632,7 @@
       }
     ],
     "testflightUploaded": false,
-    "appReviewSubmitted": false
+    "appReviewSubmitted": false,
+    "signedIpaVerified": true
   }
 }
