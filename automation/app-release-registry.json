@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-23T09:35:00Z",
+  "updated_at": "2026-11-23T09:57:00Z",
   "policy": {
     "final_approval": "Explicit user approval is required for the exact App ID / Version / Build immediately read back before App Review submission.",
     "submission_complete": "Only App Store Connect read-back at WAITING_FOR_REVIEW or a later review state counts as App Review submission complete.",
@@ -201,7 +201,7 @@
       "iap": false,
       "iap_product_ids": [],
       "app2_task": null,
-      "status": "native_simulator_ci_pass_appicon_release_gate_blocked",
+      "status": "native_simulator_ci_pass_asc_icon_human_required_release_blocked",
       "readback": false,
       "ios_project": "fp2-manabi-sprint/ios/project.yml",
       "native_source_branch": "feature/fp2-swiftui-wkwebview-release-20261123",
@@ -224,11 +224,17 @@
       "icon_current_sha256": "d456178b2a7b04f180e39b3ad62f5c194832e85aa15102bf6452751551db8033",
       "icon_canonical_sha256": null,
       "icon_canonical_source": "https://app.notion.com/p/3b709c10697d812cb85dca00649afa9b",
-      "icon_verification": "BLOCKED_CANONICAL_APPICON_MISSING",
+      "icon_verification": "INTERNAL_PASS_ASC_HUMAN_REQUIRED",
       "icon_ci_run_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45148389564",
-      "icon_ci_result": "FAIL_CANONICAL_NOT_FOUND",
+      "icon_ci_result": "PREVIOUS_FAIL_SUPERSEDED_RERUN_PENDING",
       "native_ci_recheck": "PASS_UNSIGNED_IOS_SIMULATOR",
-      "icon_replacement_performed": false
+      "icon_replacement_performed": false,
+      "icon_internal_verification": "PASS_IDENTICAL_FP2_SOURCE",
+      "icon_internal_reference_path": "fp2-kakomon-coach/ios-app/assets/icon.png",
+      "icon_internal_reference_branch": "feature/fp2-kakomon-coach",
+      "icon_internal_reference_sha256": "d456178b2a7b04f180e39b3ad62f5c194832e85aa15102bf6452751551db8033",
+      "icon_internal_reference_blob_sha": "ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d",
+      "icon_asc_verification": "HUMAN_REQUIRED"
     }
   }
 }
