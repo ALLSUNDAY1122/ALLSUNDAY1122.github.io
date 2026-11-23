@@ -6,6 +6,7 @@ import json
 import plistlib
 import re
 import subprocess
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,9 +61,19 @@ def main():
         errors.append("PRIVACY_MANIFEST_MISMATCH")
 
     original = BANK.read_bytes()
-    snapshot = subprocess.run(["node", str(BASE / "export-canonical-snapshot.cjs")],
-                              cwd=ROOT, capture_output=True, text=True)
-    snapshot_ok = snapshot.returncode == 0 and BANK.read_bytes() == original
+    # Generate into a separate temporary file; never mutate the tracked bank during preflight.
+    with tempfile.TemporaryDirectory(prefix="hm2-canonical-check-") as temp_dir:
+        generated = Path(temp_dir) / "release-questions.json"
+        snapshot = subprocess.run(
+            ["node", str(BASE / "export-canonical-snapshot.cjs"), "--output", str(generated)],
+            cwd=ROOT, capture_output=True, text=True
+        )
+        snapshot_ok = (
+            snapshot.returncode == 0
+            and generated.is_file()
+            and generated.read_bytes() == original
+            and BANK.read_bytes() == original
+        )
     checks["canonical_snapshot_byte_identical"] = snapshot_ok
     if not snapshot_ok:
         errors.append("CANONICAL_REGENERATION_FAILED")
