@@ -46,7 +46,7 @@ enum QuestionStore {
     }
 
     static var availableOfficialYears: [Int] {
-        Array(Set(all.filter { $0.originType == "ipa_published_verbatim" }.compactMap(\\.officialYear))).sorted(by: >)
+        Array(Set(all.filter { $0.originType == "ipa_published_verbatim" }.compactMap(\.officialYear))).sorted(by: >)
     }
 
     static func officialExam(year: Int) -> [StudyQuestion] {
