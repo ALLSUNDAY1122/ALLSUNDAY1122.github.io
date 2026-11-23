@@ -6,18 +6,15 @@
 
 | 種別 | 件数 | 公開範囲 |
 |---|---:|---|
-| 既存第115〜113回のソースバンク | 720 | 既存ランタイム範囲。ただし厳格原典文字列監査629 PASS/91 HOLD |
-| 前回までの追加ソース検証済み | 67 | 新規アプリ配信不可 |
-| 前回の追加ソース検証済み | **74** | 原典文字層再抽出／文字化け補完／公式正答照合に合格。新規配信不可 |
-| 前回の境界・状況設定の追加昇格 | **3** | 2方式と公式正答照合に合格。新規配信不可 |
-| **今回の座標境界方式による追加昇格** | **15** | 問題番号の座標一意性・本文と4選択肢の2方式照合・公式正答を検証。新規配信不可 |
-| **正規ソースバンク** | **888 / 1,200** | ソース検証済み拡張168問を含む |
-| **第112・111回の未検証** | **312問** | 要修復・監査保留 |
-| 今回のアプリ配信追加 | **0問** | 解説独立監査／法令／UI／iOS／権利等の別ゲートが未完 |
+| 既存第115〜113回ソースバンク | 720 | 既存ランタイム、厳格原典監査629 PASS／91 HOLD |
+| 今回実行前の検証済み拡張 | 170 | ソースのみ、アプリ配信不可 |
+| **今回の新規昇格** | **10** | 共通文・文字コード・2方式・公式正答の照合済み |
+| **正規ソースバンク** | **900 / 1,200** | 検証済み拡張180問を含む |
+| **第112・111回の未昇格** | **300問** | 残る疑義は個別保留 |
+| 今回のアプリ追加配信 | **0問** | 解説・権利・iOSゲート未解除 |
 
-上記件数はGitHub Actions Run 45249375273終了後の現行main実測値。今回の再抽出での追加昇格は0問（過去の別更新による増分は今回の成果としない）。以下の旧監査に関する数値は実施当時の履歴であり、最新件数ではない。
-
-ソース拡張正本 `product-content/verified-additions-20261124.json`、`product-content/manifest.json`。昇格記録 `audit/dual-engine-promotion-ledger-20261124.json`。保留312問と理由 `audit/dual-engine-hold-20261124.json`。全168問の正規拡張は公開禁止フラグ `publishable=false`、`releaseEligible=false`。
+本表はGitHub Actions Run 45252425096の実測値。過去の監査値は下記の履歴として保持。
+正規ソースバンクは `product-content/verified-additions-20261124.json`、保留理由は `audit/dual-engine-hold-20261124.json`、追加昇格台帳は `audit/dual-engine-promotion-ledger-20261124.json` を正本とする。新規拡張はすべて `publishable=false`、`releaseEligible=false`。
 
 ## 保留413問の原因別検証と修復（理由は重複）
 
@@ -78,23 +75,11 @@
 - 新規昇格ID：`K112-PM113`、`K111-AM106`、`K111-PM106`。証拠は個別昇格台帳に記録。
 - SVG18件は本比較で問題PDFページ側に「別冊」参照があるものを確認。少なくとも `K113-AM023` は原図が別冊にあるため、この左右比較だけでは忠実性判定不可。原図別冊に基づく照合までHOLD継続。
 
-## PDF座標による問題番号境界再監査（Run 45246704920：SUCCESS）
+## 今回の状況設定共通文・制御文字再監査（Run 45252425096）
 
-- 正規ソースバンク：**879/1,200問**（追加159問、既存720問）。
-- 追加480問の未昇格：**321問**。今回の自動昇格：**15問**。
-- 問題番号の実PDF座標（設問番号おおむねx=70〜82pt、選択肢はx=106pt付近）と次の設問番号位置で領域を設定。切出し領域に問題文と4選択肢が存在し、Poppler側の別抽出と公式正答PDFが一致することを確認。短文15問は一意の座標境界が証明されたため従来の18文字制限を解除して昇格。状況設定の共通文未確認など他の品質保留は解除していない。
-- 主要保留理由（重複）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 277, COORDINATE_REGION_UNVERIFIED 277, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 178, PYMUPDF_FIELD_MISMATCH_0 177, PAGE_FOOTER_CONTAMINATION 151, POPPLER_FIELD_MISMATCH_0 142, PYMUPDF_FIELD_MISMATCH_4 115, CHOICE_COUNT_NOT_FOUR 93, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 48, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
-- SVG18件は原典との比較画像を再生成するが、画像の意味・医学的所見の忠実性は自動合格にしない。**18件の詳細視覚確認が残存**。
-- 解説・媒体権利・実機確認・本審査の公開ゲートは引き続き保留。
-
-- 今回昇格ID：`K112-AM013`、`K112-AM034`、`K112-AM036`、`K112-AM038`、`K112-AM058`、`K112-AM063`、`K112-PM009`、`K112-PM015`、`K112-PM055`、`K112-PM059`、`K111-AM049`、`K111-PM013`、`K111-PM014`、`K111-PM019`、`K111-PM053`。ソース検証済みであり、公開可能にはしていない。
-
-## 境界位置・状況設定の再検証（自動実行記録）
-
-- 正規ソースバンク：**900/1,200問**（追加180問、既存720問）。
-- 追加480問の未昇格：**300問**。今回の自動昇格：**10問**。
-- 番号境界を前後3ページで探索し、単独行の問題番号と問題文・4選択肢の両エンジン一致・候補一意性を確認する。状況設定の共通文も2エンジン一致がない限り保留。
-- 主要保留理由（重複）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 261, COORDINATE_REGION_UNVERIFIED 261, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 176, PYMUPDF_FIELD_MISMATCH_0 172, PAGE_FOOTER_CONTAMINATION 141, POPPLER_FIELD_MISMATCH_0 137, PYMUPDF_FIELD_MISMATCH_4 108, CHOICE_COUNT_NOT_FOUR 89, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 46, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
-- SVG18件は原典との比較画像を再生成するが、画像の意味・医学的所見の忠実性は自動合格にしない。**18件の詳細視覚確認が残存**。
-- 解説・媒体権利・実機確認・本審査の公開ゲートは引き続き保留。
-\n## 状況設定共通文・制御文字の再監査（2026-11-24）\n\n- 新規正規ソース昇格：**10問**。現行 **900/1,200問**、未昇格 **300問**。\n- 先行再抽出22問のうち未昇格：**12問**。本文2方式一致の事実と、制御文字・状況設定共通文の最終ゲートは区別。\n- 全残件の保留理由（重複）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 261, COORDINATE_REGION_UNVERIFIED 261, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 176, PYMUPDF_FIELD_MISMATCH_0 172, PAGE_FOOTER_CONTAMINATION 141, POPPLER_FIELD_MISMATCH_0 137, PYMUPDF_FIELD_MISMATCH_4 108, CHOICE_COUNT_NOT_FOUR 89, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 46。\n- 正本：`audit/dual-engine-promotion-ledger-20261124.json`、`audit/dual-engine-hold-20261124.json`、`audit/coordinate-reextraction-evidence-20261124.json`。権利・解説・iOS・本審査のゲートは引き続き閉鎖。\n
+- 先行再抽出22問を優先し、公式PDFの共通文見出し・番号範囲・本文を確認。**10問が合格・昇格、12問が保留**。
+- 昇格ID：`K112-AM091`、`K112-PM100`、`K112-PM109`、`K111-AM112`、`K111-AM118`、`K111-PM091`、`K111-PM094`、`K111-PM097`、`K111-PM109`、`K111-PM112`。
+- 12問の残理由：原典C0制御文字3問、共通文の未確定グリフ8問、共通文の2方式本文差1問。未知の原典文字対応は自動補正せず保留。
+- 残る全300問も同じ一連の抽出・2方式・公式正答・採点例外・共通文ゲートを実行。主要な残理由（重複あり）：座標の一意性不足261件、疑義文字176件、PyMuPDF問題文不一致172件など。
+- 図版18件、既存720問の厳格原典監査91件、解説・権利・iOSの未完了ゲートは引き続き保留。
+- 詳細証拠は `audit/dual-engine-hold-20261124.json` と `audit/dual-engine-promotion-ledger-20261124.json`。最終送信・契約・課金確定は行わない。
