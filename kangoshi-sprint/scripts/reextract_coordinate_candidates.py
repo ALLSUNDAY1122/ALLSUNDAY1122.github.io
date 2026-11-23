@@ -77,6 +77,7 @@ def main():
           n=int(q["questionNo"]);hint=q.get("sourcePage")
           pages=range(max(1,hint-3),min(len(doc),hint+3)+1) if isinstance(hint,int) else range(1,len(doc)+1)
           candidates=[]
+          diagnostics=[]
           for pg in pages:
             a,geo=_region(doc[pg-1],n,clean_font)
             if a is None:continue
@@ -84,9 +85,15 @@ def main():
             b=crop_poppler(pdf,pg,geo["clip"])
             pa,err1=split_fields(a,n)
             pb,err2=split_fields(b,n)
-            if err1 or err2:continue
-            if norm(pa["question"])!=norm(pb["question"]):continue
-            if any(norm(x)!=norm(y) for x,y in zip(pa["choices"],pb["choices"])):continue
+            if err1 or err2:
+                diagnostics.append({"pg":pg,"pymupdfError":err1,"popplerError":err2,"pymupdfSample":a[:320],"popplerSample":b[:320],"clip":geo["clip"]})
+                continue
+            if norm(pa["question"])!=norm(pb["question"]):
+                diagnostics.append({"pg":pg,"reason":"STEM_DIFFER","pymupdf":pa["question"][:220],"poppler":pb["question"][:220]})
+                continue
+            if any(norm(x)!=norm(y) for x,y in zip(pa["choices"],pb["choices"])):
+                diagnostics.append({"pg":pg,"reason":"CHOICE_DIFFER","pymupdf":pa["choices"],"poppler":pb["choices"]})
+                continue
             candidates.append((pg,geo,pa,pb))
           reason=[]
           if len(candidates)!=1:reason.append("NO_UNIQUE_DUAL_ENGINE_COORDINATE_REEXTRACTION")
@@ -105,7 +112,7 @@ def main():
                 pass
           if reason:
             reasons.update(reason);summary["notUpdated"]+=1
-            result.append({"id":q["id"],"status":"HOLD","reasons":reason})
+            result.append({"id":q["id"],"status":"HOLD","reasons":reason,"diagnostics":diagnostics[:2]})
             continue
           summary["sourceReextractPass"]+=1
           previous={"question":q.get("question"),"choices":q.get("choices"),"sourcePage":q.get("sourcePage"),"extractionValid":q.get("extractionValid")}
@@ -120,5 +127,7 @@ def main():
     report={"summary":summary,"reasons":dict(reasons),"questions":result,"repairs":repairs,
             "note":"Staged candidates only; official key/exception verified at reextract and again in bulk. No release authorization."}
     (OUT/"coordinate-reextraction-evidence.json").write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n")
+    samples=[x for x in result if x.get("diagnostics")][:6]
+    print("REEXTRACT_DIAGNOSTICS",json.dumps(samples,ensure_ascii=False)[:11000])
     print(json.dumps({"coordinateReextraction":summary,"holdReasons":dict(reasons)},ensure_ascii=False))
 if __name__=="__main__":main()
