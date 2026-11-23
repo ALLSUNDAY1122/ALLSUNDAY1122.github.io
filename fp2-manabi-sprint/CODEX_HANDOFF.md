@@ -11,3 +11,6 @@ Read RELEASE_SCOPE_20261124.md and RELEASE_STATUS.md first. Use Notion v2.8, app
 7. Only when all independent Q0-Q5 and submission preparation gates PASS set SUBMISSION_READY / WAITING_FINAL_APPROVAL. Never Add for Review / Submit for Review.
 
 Write ownership: use one branch/worker by default. For parallel waves HQ+2 workers max, distinct branches, explicit owned files and integration retest.
+
+## Confirmed official reuse policy (2026-11-23)
+Read `audits/FP2_Q0_OFFICIAL_PAST_EXAM_RIGHTS_20261123.md` before authoring remaining batches. JAFP + Kinzai conditional permission permits their released 2級学科 exam questions without preapplication, requiring question-level official provenance and a visible modification notice when altered. JAFP and Kinzai share copyrights for 2級学科. Write all explanations independently. For each historic question verify the question's original law cut-off separately from current/app target law and revalidate all answers. Do not use or copy FP2級ドットコム（過去問道場） wording, explanations, datasets. The general rights-policy finding is CONDITIONAL_PASS but Q0 is still BLOCKED until per-question evidence. No App Review submission.
