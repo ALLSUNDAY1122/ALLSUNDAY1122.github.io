@@ -1,23 +1,24 @@
 # FP2 RELEASE STATUS（最新正本・2026-11-23）
 
-**Actual: BLOCKED / NOT_SUBMITTED / NOT_SUBMISSION_READY**。期限：2026-11-24 08:00 JST（未達）。
-**詳細な最終検証正本**：`release/FP2_Q0_Q5_FINAL_GATE_20261123.md`。以下の古い時系列記録は過去のスナップショットであり、現行件数や現行ゲートの判断には使わない。
+**Actual: BLOCKED / NOT_SUBMITTED / NOT_SUBMISSION_READY**。初回提出期限目標：2026-11-24 08:00 JST。
+最終統合証拠：`audit/FP2_180_FINAL_175PASS_5FAIL_120_SELECTION_20261123.md`。以下に続く過去履歴の古い件数は現行状態ではない。
 
-| Gate | 最新判定 | 要点 |
+| Gate | 最新判定 | 根拠・未了 |
 | --- | --- | --- |
-| Q0 | BLOCKED | 公開公式問題の利用条件は条件付き確認。正規122問の出典・改変注記は揃うが、権利運用主体・法令の最終独立検証・実UI表示未確定 |
-| Q1 | BLOCKED（内容監査PASS122） | 先行15問＋回収107問の独立内容PASS。回収全180監査の最新内訳PASS163/FAIL4/HOLD13、うち追加PASS56未統合。現行122問はMVP最大120問を超過 |
-| Q2 | NOT TESTED | 出題→解説→復習の学習者実測なし |
-| Q3 | FAIL（UI静的ゲートPASS） | 4タブ・4/8/16・35日・リング・JSON・PWA実装あり。実ブラウザ/実機E2E、Golden Master完全性未検証 |
-| Q4 | NOT TESTED | 独立した実機・学習者受入なし |
-| Q5 | BLOCKED | IPA、ASC Version/Build/IAP/プライバシー、実スクショ、公開URLとバンドルSHA未確認 |
+| Q0 | BLOCKED | 官方公開原題の出典・加工注記は初回候補120に記録済み。権利利用主体の最終確認、現行法/図表/説明の最終証拠、実配布表示の立証未了 |
+| Q1 | BLOCKED（内容監査PASS190） | 回収180の最終PASS175/FAIL5/HOLD0、先行15のPASSを含めcanonical190。初回6分野×20=120選定、内容PASS予備70。修正済FAIL5は再監査未了 |
+| Q2 | NOT TESTED | 学習者の実練習/定着フローの操作検査未了 |
+| Q3 | FAIL（静的検査PASS） | 4タブ・目標・PWA・JSON出入力は実装。ブラウザ/iPhone/Golden Master実画面検証未了 |
+| Q4 | NOT TESTED | 製品全体の独立受け入れ/E2E未実施 |
+| Q5 | BLOCKED | iOS専用署名IPA/本番バンドル一致/ASC Version Build IAP/Privacy/公開ページ/実スクショ未確定 |
 
-**Canonical**: `questions/canonical/approved-questions-20261123.json` = 122 distinct content-PASS / `modified`判定122件 / published=0 / release-clear=0.
-**CI source-side PASS**: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45145368115
-**Git Blob pinned web source assets**: `release/bundle-lock-20261123.json`。実IPA一致はNOT TESTED。
-**Store/privacy**: `release/STORE_AND_APP_PRIVACY_20261123.md`。HTMLページは準備済だがpublic HTTP200とASC設定の一致は未証明。
-**Human vs engineering/quality blockers**: `release/FP2_Q0_Q5_FINAL_GATE_20261123.md`。
-**PR**: #5717 Draft、mainマージ/App Review提出禁止。
+**Canonical**: `questions/canonical/approved-questions-20261123.json` = 190 content-PASS, `release_selected=true` 120 (各分野20), reserve70, release_clear=0。
+**変更判定**: 初回候補120は原典内容/改変確認の暫定項目なし。予備61問の modified は暫定分類でPDF全字比較未了。原典の改変は出典と具体的変更説明を記録。
+**修正FAIL**: 2025-05 Q36/Q39, 2025-01 Q17/Q20/Q13 の5問を解説修正し独立再監査待ちへ隔離。問題文/4選択肢/正答番号は不変。
+**初回選定正本**: `release/release-selection-120-20261123.json`（120 IDs, 70 reserves）。
+**ソースSHA**: `release/bundle-lock-20261123.json`。IPA一致は未実証。
+**CI**: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45147284570（内容・UI静的・JS構文SUCCESS）。
+**PR**: #5717 Draft、mainマージ/Apple審査提出禁止。
 
 ---
 
