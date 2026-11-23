@@ -35,6 +35,12 @@ for year in range(2022,2027):
     geom_file=B/f"GEOMETRY_AUDIT_{year}.json"
     geom=json.loads(geom_file.read_text()) if geom_file.exists() else None
     geom_byid={}
+    cross_file=B/f"CROSSCHECK_{year}.json"
+    cross=json.loads(cross_file.read_text()) if cross_file.exists() else None
+    disputed=set()
+    if cross:
+        if cross["year"]!=year or cross["samples"]!=10:raise RuntimeError("invalid cross engine evidence")
+        disputed={x["id"] for x in cross["results"] if x["status"]=="REVIEW_EXTRACTOR_DISAGREEMENT"}
     if geom:
         if geom["year"]!=year or geom["total"]!=120 or len(geom["questions"])!=120:
             raise RuntimeError("invalid geometry audit for "+str(year))
@@ -42,7 +48,7 @@ for year in range(2022,2027):
             raise RuntimeError("stale geometry audit for "+str(year))
         geom_byid={item["id"]:item for item in geom["questions"]}
         if len(geom_byid)!=120:raise RuntimeError("missing geometry records")
-    stats={"auto":0,"geometry":0,"visual":0,"hold":0,"pending":0}
+    stats={"auto":0,"geometry":0,"visual":0,"crossEngineHold":0,"hold":0,"pending":0}
     for idx,q in enumerate(candidates):
         id=q["id"];n=idx+1
         if id!=f"KSAI-{year}-{n:03d}" or q["questionNo"]!=n:
@@ -56,6 +62,10 @@ for year in range(2022,2027):
         if report and not auto_result:raise RuntimeError("missing diff")
         if auto_result and (auto_result["questionNo"]!=n or auto_result["officialAnswer"]!=k["official_answer"]):
             raise RuntimeError("diff key mismatch")
+        if id in disputed:
+            stats["hold"]+=1
+            stats["crossEngineHold"]+=1
+            continue
         if manual_result and manual_result["status"]=="HOLD":
             stats["hold"]+=1
             continue
