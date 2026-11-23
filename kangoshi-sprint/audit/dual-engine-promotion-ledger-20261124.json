@@ -1,10 +1,8 @@
 {
   "schemaVersion": 1,
-  "newPromoted": 1,
-  "newIds": [
-    "K112-AM100"
-  ],
-  "oldVerified": 199,
+  "newPromoted": 0,
+  "newIds": [],
+  "oldVerified": 200,
   "canonicalVerified": 200,
   "runtimeAdditional": 0,
   "officialKeyPdfRechecked": true,
@@ -14,89 +12,5 @@
   ],
   "sourceAuditArtifact": "Workflow dual-engine-480 evidence",
   "releaseBlocked": true,
-  "eachItem": [
-    {
-      "id": "K112-AM100",
-      "exam": 112,
-      "session": "AM",
-      "number": 100,
-      "status": "PASS_DUAL_ENGINE_AND_OFFICIAL_KEY",
-      "reasons": [],
-      "sourcePdfPage": 40,
-      "pageHasRaster": false,
-      "officialKeyRaw": "2",
-      "answer": 1,
-      "coordinateBoundaryEvidence": {
-        "previousPage": 40,
-        "correctedPage": 40,
-        "anchorBox": [
-          72.88,
-          346.88,
-          90.95,
-          358.93
-        ],
-        "clip": [
-          0.0,
-          343.88,
-          615.61,
-          515.55
-        ],
-        "nextAnchorFound": true,
-        "verifiedPage": 40,
-        "method": "PyMuPDF word bounding boxes; next question anchor; Poppler full field cross-check"
-      },
-      "scenarioContext": {
-        "page": 40,
-        "groupFirst": 100,
-        "groupLast": 102,
-        "commonText": "次の文を読み100〜102 の問いに答えよ。\nA さん（75 歳、男性） は妻（75 歳） と2 人暮らしで、15 年前に\nParkinson（パーキンソン）病\nParkinson disease\nと診断された。7年前よりレボドパ（L-dopa）を1日3回\n内服している。Hoehn & Yahr（ホーエン・ヤール）重症度分類のステージⅣで、要介\n護2である。妻は腰痛のため毎日リハビリテーション目的で通院中である。妻の介護\n負担を軽減するため、A さんは毎月10 日間、介護老人保健施設の短期入所（ショー\nトステイ）を利用している。今回は妻の腰痛が増強したため、A さんは予定を早めて\n入所した。A さんは握力が低下しているが、スプーンを使用し自力で食事を摂取し\nている。食事中に姿勢が崩れることが多く、むせや食べこぼしがある。",
-        "normalizedLength": 341,
-        "visualContextGlyphEvidence": {
-          "id": "K112-AM100",
-          "exam": 112,
-          "session": "AM",
-          "contextPage": 40,
-          "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-          "contextPngSha256": "c26bcc17eab42d42e0d303771e5066755c8fb93daf146889d43605138618c9b6",
-          "allowedPairedGlyphs": [
-            "ï",
-            "ñ"
-          ],
-          "allowedPopplerOmission": "7年前より => 年前より, source PDF shows printed 7",
-          "visualObservation": "Official source rendering reads 7年前より, while Poppler dropped this single glyph; all other Japanese and Latin tokens must match exactly",
-          "review": "visual screenshot source page checked; special case only K112-AM100"
-        },
-        "method": "printed range header + first question position + exact Japanese content and Latin token multiset",
-        "comparison": {
-          "japaneseExactMatch": false,
-          "latinTokenMultisetExactMatch": true,
-          "japaneseChars": 298,
-          "latinTokens": 11,
-          "singlePopplerMissingPrintedSevenVisuallyVerified": true
-        },
-        "engines": [
-          "PyMuPDF",
-          "Poppler"
-        ],
-        "status": "DUAL_ENGINE_CONTEXT_MATCH"
-      },
-      "visualNumericGlyphEvidence": null,
-      "visualScenarioGlyphEvidence": {
-        "id": "K112-AM100",
-        "exam": 112,
-        "session": "AM",
-        "contextPage": 40,
-        "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406",
-        "contextPngSha256": "c26bcc17eab42d42e0d303771e5066755c8fb93daf146889d43605138618c9b6",
-        "allowedPairedGlyphs": [
-          "ï",
-          "ñ"
-        ],
-        "allowedPopplerOmission": "7年前より => 年前より, source PDF shows printed 7",
-        "visualObservation": "Official source rendering reads 7年前より, while Poppler dropped this single glyph; all other Japanese and Latin tokens must match exactly",
-        "review": "visual screenshot source page checked; special case only K112-AM100"
-      },
-      "sourcePdfSha256": "884acfda334c298179cded6374cc860630ac6c42c572260f89c64b50818e1406"
-    }
-  ]
+  "eachItem": []
 }
