@@ -54,7 +54,9 @@ const data=browser.map(q=>({
  no_common_sense_shortcut:Boolean(q.noCommonSenseShortcut),
  ...(q.contentReviewStatus && q.auditStatus === '再監査待ち' ? {content_review_status:q.contentReviewStatus} : {})
 }));
-const out=path.join(__dirname,'release-questions.json');
+const outputArg=process.argv.indexOf('--output');
+assert.ok(outputArg===-1 || (process.argv[outputArg+1] && outputArg===process.argv.length-2), 'Expected --output <path>');
+const out=outputArg===-1 ? path.join(__dirname,'release-questions.json') : path.resolve(process.argv[outputArg+1]);
 const raw=JSON.stringify(data,null,2)+'\n';
 fs.writeFileSync(out,raw);
 const reread=JSON.parse(fs.readFileSync(out,'utf8'));assert.equal(reread.length,300);
