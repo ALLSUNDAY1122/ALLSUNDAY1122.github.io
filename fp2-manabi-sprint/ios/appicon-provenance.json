@@ -7,7 +7,7 @@
   "canonical_drive_folder": "https://drive.google.com/drive/folders/1pPp5EJZZpv3ScsvyTWhkRMqpcKrgniWh",
   "canonical_drive_file_id": null,
   "canonical_sha256": null,
-  "canonical_status": "NOT_FOUND_IN_OFFICIAL_SERIES_MANIFEST_OR_DRIVE_FOLDER",
+  "canonical_status": "LEGACY_FP2_SOURCE_INTERNAL_MATCH_ONLY_EXTERNAL_REGISTRATION_UNVERIFIED",
   "current_icon_path": "fp2-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png",
   "current_icon_sha256": "d456178b2a7b04f180e39b3ad62f5c194832e85aa15102bf6452751551db8033",
   "current_icon_git_blob_sha": "ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d",
@@ -17,8 +17,17 @@
     "height": 1024,
     "alpha": false
   },
-  "comparison": "UNKNOWN_NO_CANONICAL_HASH",
-  "replacement": "NOT_PERFORMED_SOURCE_NOT_AUTHENTICATED",
-  "release_gate": "BLOCKED_CANONICAL_APPICON_MISSING",
-  "checked_at": "2026-11-23"
+  "comparison": "INTERNAL_PASS_ASC_NOT_CHECKED",
+  "replacement": "NOT_NEEDED_INTERNAL_IDENTICAL_BYTES",
+  "release_gate": "INTERNAL_ICON_PASS_ASC_HUMAN_REQUIRED",
+  "checked_at": "2026-11-23",
+  "internal_reference_path": "fp2-kakomon-coach/ios-app/assets/icon.png",
+  "internal_reference_branch": "feature/fp2-kakomon-coach",
+  "internal_reference_git_blob_sha": "ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d",
+  "internal_reference_sha256": "d456178b2a7b04f180e39b3ad62f5c194832e85aa15102bf6452751551db8033",
+  "internal_comparison": "PASS_IDENTICAL_BYTES_GIT_BLOB_SHA",
+  "internal_review_evidence": "Muse independent comparison supplied by owner; independently corroborated by GitHub file readback identical blob SHA at both paths",
+  "asc_comparison": "HUMAN_REQUIRED",
+  "asc_verified": false,
+  "verified_at": "2026-11-23T18:57:00+09:00"
 }
