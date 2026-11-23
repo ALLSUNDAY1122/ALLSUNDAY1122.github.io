@@ -149,3 +149,12 @@
 - 昇格ID：なし。
 - 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 210, COORDINATE_REGION_UNVERIFIED 210, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 149, POPPLER_FIELD_MISMATCH_0 117, PYMUPDF_FIELD_MISMATCH_0 106, CHOICE_COUNT_NOT_FOUR 86, PAGE_FOOTER_CONTAMINATION 84, PYMUPDF_FIELD_MISMATCH_4 63, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 39, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
 - 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+## 座標領域・独立2方式による280問再監査（2026-11-24）
+
+- 監査前：正規ソース920問、保留280問。GitHub Actions Run `45259501753` **SUCCESS**。
+- 過去の原典文字形状修復候補87問を読み戻し、候補内容を差分記録。採用を先決せず、問題番号座標による矩形範囲とPyMuPDF/Popplerの本文・4選択肢照合、厚労省公式正答PDF検証を再実行。
+- 独立再抽出一致21問、**新規ソースバンク昇格20問**。**現行940/1200問・未昇格260問**。英語医学用語の併記がPDF抽出順で前後するケースは、日本語の全文一致と英語語句の出現集合一致を別々に検証。数字や日本語の欠落があれば不合格。
+- 昇格IDと設問座標の凍結証拠：`audit/geometry-recovery-batch-20261124.json`。20問のPDF原典切出画像、PNG SHA-256、PDF SHA-256、公式解答PDF SHA-256、ページ番号・座標を`audit/geometry-recovery-image-index-20261124.json`に保存。画像証拠生成・再監査 Run `45260033942` **SUCCESS**。証拠画像は同RunのArtifacts `kangoshi-20-geometric-source-regions`（ID `14860970560`）へ格納。
+- 画像20問分の出力を確認。画像生成と2方式照合は完了したが、**全字の独立目視一致を自動保証するものではない**。解説・媒体・アプリ・iOS等のゲートは継続保留。
+- **一般公開不可**：既存ランタイム720問は別途原典文字列監査で629 PASS/91 HOLD。新規220問はすべて`publishable=false`、`releaseEligible=false`。Apple最終送信・課金契約確定は未実施。
