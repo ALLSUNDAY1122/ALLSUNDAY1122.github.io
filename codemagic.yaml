@@ -1666,7 +1666,7 @@ workflows:
         bundle_identifier: com.allsunday1122.fp3kakomoncoach
       vars:
         BUNDLE_ID: com.allsunday1122.fp3kakomoncoach
-        BUILD_NUMBER: "11"
+        BUILD_NUMBER: "12"
         XCODE_PROJECT: fp3-manabi-sprint/ios/FP3ManabiSprint.xcodeproj
         XCODE_SCHEME: FP3ManabiSprint
       xcode: latest
@@ -1688,14 +1688,14 @@ workflows:
           from pathlib import Path
           root=Path('fp3-manabi-sprint/ios')
           p=(root/'project.yml').read_text()
-          assert 'CURRENT_PROJECT_VERSION: 11' in p
+          assert 'CURRENT_PROJECT_VERSION: 12' in p
           assert 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' in p
           assert 'PRODUCT_BUNDLE_IDENTIFIER: com.allsunday1122.fp3kakomoncoach' in p
           c=json.loads((root/'Assets.xcassets/AppIcon.appiconset/Contents.json').read_text())
           assert any(x.get('filename')=='AppIcon.png' and x.get('size')=='1024x1024' for x in c['images'])
           b=(root/'Assets.xcassets/AppIcon.appiconset/AppIcon.png').read_bytes()
           assert b[25] in (0,2) and struct.unpack('>II',b[16:24])==(1024,1024)
-          print('PASS: FP3 Bundle ID, Build 11 and opaque 1024px AppIcon')
+          print('PASS: FP3 Bundle ID, Build 12 and opaque 1024px AppIcon')
           PY
       - name: Apply App Store signing profiles
         script: |
