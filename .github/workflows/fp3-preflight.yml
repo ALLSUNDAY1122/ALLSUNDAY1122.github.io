@@ -46,7 +46,7 @@ jobs:
             "12問スプリント","60問チャレンジ","苦手復習","続きから",
             "迷ったので復習に入れる","詳しい解説を見る","学習記録",
             "v===q.answer-1","st.weak[q.id].streak>=3",
-            "q.status==='archived_law_changed'","active!==178","tf!==90","mc!==90"
+            "q.status==='archived_law_changed'","active!==295","tf!==150","mc!==150"
           ]
           missing=[x for x in required if x not in s]
           if missing: raise SystemExit('missing contract markers: '+repr(missing))
@@ -101,7 +101,7 @@ jobs:
             "String(q.year)==='2026'",
             "el.id === 'startWeak'",
             "el.closest('#domains')",
-            "t.includes('2024') || t.includes('2025')",
+            "t.includes('2023') || t.includes('2024') || t.includes('2025')",
             'FP3級 学科', '2026-04-01基準',
             '出典：日本FP協会・金融財政事情研究会',
             '学習用に表現・解説・法令基準を加工しています。'
