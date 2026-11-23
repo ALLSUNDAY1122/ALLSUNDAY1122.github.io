@@ -56,7 +56,7 @@ const URL='http://127.0.0.1:8765/';
   await page.locator('[data-screen="history"]').click();
   assert.equal(await page.locator('#hAnswered').innerText(),'4');
   // Wait for cache install & service worker to control client before offline reload.
-  await page.evaluate(async()=>{await navigator.serviceWorker.ready;if(!navigator.serviceWorker.controller)await new Promise(resolve=>navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true}));});
+  await page.evaluate(async()=>{await navigator.serviceWorker.ready;});
   await page.reload({waitUntil:'networkidle'});
   await page.waitForFunction(()=>document.querySelector('#bankStatus')?.textContent.includes('120問'));
   await context.setOffline(true);
