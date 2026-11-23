@@ -40,7 +40,7 @@ jobs:
           assert sum(q.get('release_selected') is True for q in bank['questions'])==300
           assert sum(q.get('release_selected') is False for q in bank['questions'])==12
           assert selection['selected_count']==300 and selection['reserve_count']==12
-          assert selection['corrections_excluded_until_independent_reaudit']==[]
+          assert not selection.get('corrections_excluded_until_independent_reaudit', []), 'unresolved corrected items present'
           q20=[q for q in bank['questions'] if q['id']=='fp2-2025-01-gakka-020']
           assert len(q20)==1 and q20[0]['release_selected'] is True and q20[0]['independent_audit_status']=='PASS'
           assert q20[0]['audit_evidence_path']=='fp2-manabi-sprint/audit/FP2_2025_01_Q20_SECOND_CORRECTION_REAUDIT_PASS_20261123.md'
