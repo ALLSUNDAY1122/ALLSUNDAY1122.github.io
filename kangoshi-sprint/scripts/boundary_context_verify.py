@@ -11,8 +11,8 @@ def normalized(value):
 def number_lines(text, number):
     lines=text.splitlines()
     # A complete standalone printed item number, not numerals in a choice or dosage.
-    pat=re.compile(r"^\s*(?:問\s*)?"+str(number)+r"\s*[.．。]?\s*$")
-    return [i for i,line in enumerate(lines) if pat.fullmatch(line)]
+    pat=re.compile(r"^\s*(?:問\s*)?0*"+str(number)+r"(?=$|[\s.．。)）])")
+    return [i for i,line in enumerate(lines) if pat.match(line)]
 
 def context_for_group(text, number):
     """Detect an explicit common case passage immediately preceding its first item."""
@@ -37,7 +37,7 @@ def verify(doc, pdf, n, page_hint, stem, choices, poppler_text, clean_font, norm
     for pg in candidate_pages:
         fitz_text=clean_font(doc[pg-1].get_text("text",sort=False))
         pop_text=clean_font(poppler_text(pdf,pg))
-        if not number_lines(fitz_text,n) or not number_lines(pop_text,n):
+        if not number_lines(fitz_text,n) and not number_lines(pop_text,n):
             continue
         if not all(normalize(t) in normalize(fitz_text) and normalize(t) in normalize(pop_text) for t in full if t):
             continue
