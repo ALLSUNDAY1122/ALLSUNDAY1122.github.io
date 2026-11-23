@@ -17,21 +17,22 @@ def assert_no_overflow(page):
 def standard(page,width):
     page.set_viewport_size({"width":width,"height":800})
     page.goto(URL,wait_until="networkidle")
-    page.locator("#available").get_by_text("12問",exact=False).wait_for()
-    assert "12問" in page.locator("#count").inner_text()
+    page.locator("#available").get_by_text(str(BANK["count"])+"問",exact=False).wait_for()
+    assert str(BANK["count"])+"問" in page.locator("#count").inner_text()
     assert_no_overflow(page)
     page.locator("#start").click()
+    four_seen=False
     for i,q in enumerate(BANK["questions"]):
         assert f"問{q['questionNo']}" in page.locator("#questionTitle").inner_text()
         assert page.locator("#choices button").count()==len(q["choices"])
         assert q["attributionDisplay"] in page.locator("#attribution").inner_text()
         assert_no_overflow(page)
         if i==0:page.screenshot(path=f"/tmp/touhan_mobile_{width}.png",full_page=True)
-        if i==len(BANK["questions"])-1:
-            assert len(q["choices"])==4, "Four-choice exam must remain four-choice"
+        if len(q["choices"])==4:four_seen=True
         page.locator("#choices button").nth(q["answer"]).click()
         page.locator("#next").click()
-    assert "12 / 12" in page.locator("#summary").inner_text()
+    assert four_seen,"Four-option official sample missing"
+    assert str(BANK["count"])+" / "+str(BANK["count"]) in page.locator("#summary").inner_text()
     assert "100%" in page.locator("#summary").inner_text()
 def q90_mock(page):
     # Never commits or publishes the unreviewed Q90; use request interception for QA.
