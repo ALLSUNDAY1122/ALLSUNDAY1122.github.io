@@ -57,6 +57,10 @@
     "status": "IMPLEMENTED_NOT_INTEGRATION_TESTED",
     "path": "kangoshi-sprint/scripts/audit_official_pdf.py",
     "sourceManifest": "kangoshi-sprint/audit/official-source-manifest-20261124.json",
-    "mode": "AM/PM separate strict attribution/media isolation"
+    "mode": "AM/PM separate strict attribution/media isolation",
+    "workflow": ".github/workflows/kangoshi-official-pdf-audit.yml",
+    "runner": "kangoshi-sprint/scripts/run_official_pdf_audit.py",
+    "ciResult": "NOT_READ_BACK",
+    "warning": "Workflow YAML committed; do not claim GitHub Actions executed until run ID and artifact inspected"
   }
 }
