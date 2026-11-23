@@ -1,5 +1,45 @@
 # FP2 RELEASE STATUS（正本・2026-11-23・Q20第2次独立PASS反映）
 
+## 後継コーディネーター追加技術検証（2026-11-23・現行正本）
+
+**Actual: BLOCKED / NOT_SUBMISSION_READY / NOT_SUBMITTED.** PR #5717 Draft。mainマージ・ASCログイン・App Review提出なし。
+
+### 確認済みソース・品質
+
+- 正規バンク195問、独立内容監査回収180/180 PASS、初回120問=6分野×20、予備75問、publishable=0。GitHubで正規bank blob `270b82b493f54a07316b1c7ed47fb196405e832d` とrelease-selectionおよびsource lock内のSHAが一致。
+- 選定120問の追加構造検査：全問の独立監査PASS、4肢・正答indexとone-based番号、解説・改変理由、原典HTTPS・出典箇所・法令基準日、選定ID/6分野固定を読戻し確認。**これは内容監査の独立再実施ではない。** 似た一般設問文が2問存在するが選択肢/問番号は異なり、完全重複認定していない。
+- 独自作成12問の出典団体名を明示するメタデータを補完。一次資料は従来のURL・出典箇所を保持。元の正答・問題内容・release selectionは変更なし。
+- `index.html` の毎日スプリントを先頭固定n問から未着手優先へ改善し、Service Workerのキャッシュ名を `fp2-manabi-20261123-195-v2` に更新。Web index blob `ee488a452032b65f3934f20080a1718dc620bb3e` はsource lockに一致。
+- iOSビルド元の検査矛盾（195問にもかかわらず194件を要求、Q20 PASSを誤って不許可）を修正。
+- iOS生成方式を変更：GitHub canonical 195問を検証したうえで**配布用オフラインpayloadは選定120問だけ**に縮約し、予備75問はiOS資産へ同梱しない。source/selection/配布payloadのID+全レコード一致・埋込JSON一致・SHA256検証をCIに追加。これは **生成スクリプトとCIテストの実装完了**であり、最新ビルドの実測PASSと同義ではない。
+
+### 実ブラウザ・iOS検証（CI実行状況）
+
+- Chromium Playwright実画面E2EをGitHub Actionsに追加：120問ロード、6分野表示、4問設定、回答→正誤→解説/出典・改変表示→結果、未着手優先、35日ヒートマップ、JSONエクスポート/リセット/インポート、Service Workerオフライン再読み込みを実操作する。直接接続ブラウザは拡張コンテキスト未提供で操作できず、**GitHub Actions内の実ブラウザ実行に代替**。最終結果の成功読戻しまで **E2E NOT VERIFIED**。
+- 選定120問品質の全件チェック `scripts/fp2_selected_quality_gate.py`、native 120-only payload/HTML embedded bytesチェックをブラウザCIの先行ステップに追加。これらも **最新CIの終了読戻しが必要**。
+- 統合後macOS/iOS Simulator CIにpull_requestトリガーを追加し、Version 1.0.0／Build 1／IAPなし／Info.plist・120-onlyバンドルとcanonical 195の選定投影一致を確認する設定に変更。**実ビルドSUCCESSはまだ未確認**。署名済みIPA・TestFlight・iPhone実機は未検証。
+- GitHub Actionの実行例：Browser E2E `45152519247`、Simulator `45152519257`（2026-11-23 19時前後の取得時点でqueued。完了結果未取得）。後続のcommitで再起動したジョブの最終状態を別途確認すること。
+- AppIconの正規登録資産とのハッシュ一致は**既知の未検証事項**。今回の追加不具合として扱わない。
+
+### 再判定
+
+| Gate | 判定 | 最新の残留条件 |
+|---|---|---|
+| Q0 | **BLOCKED** | 権利利用主体・法令2026-04-01適用・原典加工の最終確認、実画面の最終承認 |
+| Q1 | **CONTENT PASS180/180／追加データ構造チェックPASS、最終Q1 BLOCKED** | 全120問の二重の意味内容・難易度・同等性を独立最終検証。静的CI新コード読戻し |
+| Q2 | **NOT TESTED（E2E実行中・完了未確認）** | Playwright実学習フローと実機の回答/復習受け入れ |
+| Q3 | **STATIC PASS (prior source)／BROWSER-OFFLINE E2E NOT VERIFIED** | Chromium結果読戻し、iPhone/PWA/Golden Master実画面確認 |
+| Q4 | **NOT TESTED** | 別担当者・利用者の独立受入、復旧/実機障害確認 |
+| Q5 | **BLOCKED（native CI結果待ち）** | macOS Simulator PASSの読戻し、署名済IPA・実配布payload/ASC/スクショ・公開URL・プライバシー最終確認 |
+
+**ChatGPT側の残作業**：最新CI E2E/Simulator/原典・source/payloadゲートの終了結果を読戻してFAILがあれば修正し再実行、残るブラウザGolden Master・復元/学習動線検証、初回120問の高リスク論点の追加内容独立検査、署名IPA以外のWeb・メタデータ整合の確認と記録。
+
+**ユーザー・運用者の残作業**：権利/運用主体判断、ASCログイン/アプリ識別子・プライバシー・公開URL・IAP/Version/Buildの照合、署名済ビルド/TestFlightのiPhone実機受入と証拠、最終ビルドを特定した明示承認。これらをChatGPTの未検証コード修正と混同しない。
+
+**旧CIの注意**：2026-11-23の静的検査SUCCESS（例 `45150492137`）は新しいnative 120-only資産とPlaywrightを検査したものではなく、最新commitのCI成功の代用に使わない。
+
+---
+
 **状態: BLOCKED / NOT_SUBMISSION_READY / NOT_SUBMITTED。** 目標期限 2026-11-24 08:00 JST。PR #5717 Draft維持。mainマージ、App Store Connectログイン、Apple審査提出は行わない。
 
 ## 監査済み最終コンテンツ状態
