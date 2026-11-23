@@ -62,8 +62,8 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           for year in 2022 2023 2024 2025 2026; do
-            git add "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_\${year}.json" \
-                    "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_\${year}.json"
+            git add -f "touroku-hanbaisha-sprint/official-kansai/GEOMETRY_AUDIT_${year}.json" 2>/dev/null || true
+            git add -f "touroku-hanbaisha-sprint/official-kansai/CROSSCHECK_${year}.json" 2>/dev/null || true
           done
           git add -f touroku-hanbaisha-sprint/official-kansai/GEOMETRY_PIPELINE_DIAGNOSTICS.json 2>/dev/null || true
           git add touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json
