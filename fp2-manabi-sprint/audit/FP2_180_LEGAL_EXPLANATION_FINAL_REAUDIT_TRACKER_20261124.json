@@ -3,7 +3,7 @@
   "created_at_jst": "2026-11-24T02:20:00+09:00",
   "branch": "feature/fp2-release-scope-20261123",
   "canonical_path": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "canonical_source_blob_sha": "02c73f4079bfc03c0e8abb2e9f5db59dce7eb3bf",
+  "canonical_source_blob_sha": "bec2bf08d686707849cf6ab8121e75a6ed121e48",
   "law_effective_date": "2026-04-01",
   "scope": {
     "total": 180,
@@ -25,14 +25,14 @@
   "gate_policy": "以前のPASSは内容一次判定であり、本最終証拠監査の完了を意味しない。証拠行未固定の問題のlegalChecked/explanationCheckedを機械的にtrueへ変更しない。",
   "summary": {
     "target": 180,
-    "pending": 176,
-    "verified": 4,
+    "pending": 170,
+    "verified": 10,
     "hold": 0,
     "fail": 0,
     "by_exam": {
       "2025-01": {
-        "pending": 56,
-        "verified": 4,
+        "pending": 50,
+        "verified": 10,
         "hold": 0,
         "fail": 0
       },
@@ -307,97 +307,384 @@
       "id": "fp2-2025-01-gakka-005",
       "exam_date": "2025-01",
       "question_number": 5,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "確定拠出年金法第3条・第4条：企業型年金規約の承認権者は厚生労働大臣であり都道府県知事ではない。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/413AC0000000088?occasion_date=20260401",
+            "https://www.mhlw.go.jp/web/t_doc?dataId=85aa2545&dataType=0"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "退職手当制度の過去勤務分の移換は、施行令所定の4～8年度で均等分割するのが原則。制度廃止を理由に単年度で一括移換することはできない。加入資格喪失時の残額一括など個別例外とは区別。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/413CO0000000248/20260401_508CO0000000043",
+            "https://www.mhlw.go.jp/web/t_doc?dataId=85aa2606&dataType=0"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "確定拠出年金法第54条の移換時の通算加入者等期間の取扱いは60歳到達日前日が属する月以前の期間という制限を置く。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/413AC0000000088?occasion_date=20260401",
+            "https://www.mhlw.go.jp/web/t_doc?dataId=85aa2545&dataType=0"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "中退共実施企業が中小企業者でなくなり共済契約を解除した場合でも、従業員同意・労働契約の承継など所定要件を満たせば企業型DCへ解約手当金相当額の移換が可能。",
+          "primary_urls": [
+            "https://chutaikyo.taisyokukin.go.jp/faq/qa-02/2-1-3.html",
+            "https://chutaikyo.taisyokukin.go.jp/faq/qa-04/4-3-3.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説の結論は維持。条件や例外を2026-04-01基準の制度運営主体・公的条文と独立照合し、断定しすぎる表現と制度名称を補正。",
+        "conclusion": "【2026-04-01基準・独立最終監査済み】正解3。企業型DC規約は厚生労働大臣の承認を要し、都道府県知事ではない（1誤り）。退職一時金制度からの過去勤務分移換は施行令に基づき原則4～8年度で均等分割するため、廃止に際し単年度一括移換できるとの一般化は誤り（2）。DBから企業型DCへの移換では、60歳到達日前日が属する月以前の該当期間が通算加入者等期間に算入される（3正しい）。中退共からも所定要件を満たす企業型DC等への移換は認められる（4誤り）。移換例外と原則を区別する。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01有効法令・制度に照合。公開FAQの現時点版の記述と法的効力発生時点を区別。",
+      "prior_hold_resolution": {
+        "prior_status": "HOLD_PRIMARY_SOURCE_REVIEW_PENDING",
+        "result": "RESOLVED",
+        "reason": "退職一時金からの所定分割移換（施行令）と中退共から企業型DCへ移換できる例外・条件（中退共公式FAQ）を独立確認。"
+      }
     },
     {
       "id": "fp2-2025-01-gakka-006",
       "exam_date": "2025-01",
       "question_number": 6,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "国民年金の任意加入被保険者（国内居住60歳以上65歳未満）は国民年金基金へ加入できる。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000059350.html",
+            "https://www.npfa.or.jp/system/60over.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "建設業・常時使用する従業員20人以下の個人事業主は小規模企業共済の加入対象。",
+          "primary_urls": [
+            "https://kyosai-faq.smrj.go.jp/skyosai/index.php?action=faq&artlang=ja&cat=12&id=737"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "中退共掛金は全額事業主負担。一般の掛金月額は被共済者1人につき最大30,000円。",
+          "primary_urls": [
+            "https://chutaikyo.taisyokukin.go.jp/kentou/seido/seido04.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "退職時60歳以上で退職金額等の要件を満たせば5年/10年の全額または一部分割払いが可能。",
+          "primary_urls": [
+            "https://chutaikyo.taisyokukin.go.jp/faq/qa-08/8-1-5.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説の結論は維持。条件や例外を2026-04-01基準の制度運営主体・公的条文と独立照合し、断定しすぎる表現と制度名称を補正。",
+        "conclusion": "【2026-04-01基準・独立最終監査済み】正解1（不適切）。国内居住の60歳以上65歳未満で国民年金に任意加入する被保険者も国民年金基金に加入できる（1誤り）。建設業の常時使用従業員20人以下の個人事業主は小規模企業共済に加入できる（2）。中退共掛金は全額事業主負担で月額上限3万円（3）。退職時60歳以上かつ金額等の要件を満たす被共済者は全額・一部分割払いを選択できる（4）。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01有効法令・制度に照合。公開FAQの現時点版の記述と法的効力発生時点を区別。"
     },
     {
       "id": "fp2-2025-01-gakka-007",
       "exam_date": "2025-01",
       "question_number": 7,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "企業型DCの事業主掛金は所定限度内の全額が損金算入対象であり、1/2限度ではない。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/kyoshutsu/gaiyou.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "小規模企業共済等掛金控除は加入者本人のiDeCo掛金に係る所得控除であり、夫が妻の掛金を負担しても夫の控除対象とはならない。生計を一にする親族の社会保険料控除とは異なる。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1135.htm",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1130.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "中退共掛金は法人事業主が全額損金計上できる（法人税法施行令135条）。",
+          "primary_urls": [
+            "https://chutaikyo.taisyokukin.go.jp/faq/qa-09/9-2-1.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "個人事業主自身の小規模企業共済掛金は事業所得の必要経費でなく小規模企業共済等掛金控除。",
+          "primary_urls": [
+            "https://kyosai-web.smrj.go.jp/customer/skyosai/installment/",
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1135.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説の結論は維持。条件や例外を2026-04-01基準の制度運営主体・公的条文と独立照合し、断定しすぎる表現と制度名称を補正。",
+        "conclusion": "【2026-04-01基準・独立最終監査済み】正解3。企業型DCの事業主掛金は所定の範囲で全額損金算入されるため半額制限は誤り（1）。iDeCoの小規模企業共済等掛金控除は加入者本人に係るもので、妻の掛金を夫が負担しても夫の所得控除にならない（2）。法人の中退共掛金は全額損金算入できる（3）。個人事業主自身の小規模企業共済掛金は事業の必要経費ではなく所得控除（4）。社会保険料控除との混同に注意。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01有効法令・制度に照合。公開FAQの現時点版の記述と法的効力発生時点を区別。"
     },
     {
       "id": "fp2-2025-01-gakka-008",
       "exam_date": "2025-01",
       "question_number": 8,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "入学時特別増額貸与は第一種または第二種の奨学金と併用できる入学時一時金で、有利子貸与。",
+          "primary_urls": [
+            "https://www.jasso.go.jp/shogakukin/about/taiyo/nyuzo/joken.html",
+            "https://www.jasso.go.jp/shogakukin/about/taiyo/taiyo_2shu/riritsu_santei.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "JASSOは海外大学・大学院の学位取得者を対象とする第二種奨学金（海外）を実施。国内限定は誤り。",
+          "primary_urls": [
+            "https://www.jasso.go.jp/shogakukin/about/kaigai/2shu_kaigai/about.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "日本政策金融公庫の国の教育ローンには扶養する子の数に対応した世帯年収（所得）上限がある。",
+          "primary_urls": [
+            "https://www.jfc.go.jp/n/faq/kyoqa_m.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "学校納付金、教材費に加え自宅外通学時の家賃・敷金、通学費等も資金使途。",
+          "primary_urls": [
+            "https://www.jfc.go.jp/n/finance/ippan/sim.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説の結論は維持。条件や例外を2026-04-01基準の制度運営主体・公的条文と独立照合し、断定しすぎる表現と制度名称を補正。",
+        "conclusion": "【2026-04-01基準・独立最終監査済み】正解2（不適切）。入学時特別増額貸与奨学金は第一種・第二種の貸与奨学金に併せて利用できる有利子の一時金（1）。JASSOには海外大学等の学位取得を対象とする第二種奨学金（海外）があるので国内校限定は誤り（2）。国の教育ローンには扶養する子の人数別の世帯所得上限があり（3）、家賃・敷金・通学費にも利用できる（4）。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01有効法令・制度に照合。公開FAQの現時点版の記述と法的効力発生時点を区別。"
     },
     {
       "id": "fp2-2025-01-gakka-009",
       "exam_date": "2025-01",
       "question_number": 9,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "リバースモーゲージは自宅を担保に居住を継続し、一般に死亡後に相続人返済・物件売却等で元本清算する仕組み。商品ごとに返済条件差がある。",
+          "primary_urls": [
+            "https://www.jhf.go.jp/kojin/yushihoken_revmo/index.html",
+            "https://www.jhf.go.jp/kojin/yushihoken_revmo/hensai.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "年金現価係数は一定期間、年々一定額の受取を行うのに必要な現在元本を年額に乗じて求める係数（金融数学の定義）。",
+          "primary_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/j2_202505_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "任意後見契約に関する法律第3条の方式要件は法務省令所定様式の公正証書での締結。",
+          "primary_urls": [
+            "https://www.moj.go.jp/MINJI/a03.html",
+            "https://www.moj.go.jp/MINJI/minji30"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "高年齢者雇用安定法では65歳までの雇用確保は義務、65～70歳までの就業確保措置は努力義務。75歳までの雇用確保努力義務ではない。",
+          "primary_urls": [
+            "https://www.kourei-koyou.mhlw.go.jp/businessowner.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説の結論は維持。条件や例外を2026-04-01基準の制度運営主体・公的条文と独立照合し、断定しすぎる表現と制度名称を補正。",
+        "conclusion": "【2026-04-01基準・独立最終監査済み】正解4（不適切）。リバースモーゲージは一般に自宅を担保に居住継続し死亡後等に担保売却・相続人返済で清算する（1）。毎年一定額を一定期間取り崩すための必要元本は年額×年金現価係数で計算する（2）。任意後見契約には所定方式の公正証書が必要（3）。高年齢者雇用安定法上は65歳までの雇用確保が義務、70歳までの就業確保が努力義務であり、75歳ではない（4）。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01有効法令・制度に照合。公開FAQの現時点版の記述と法的効力発生時点を区別。"
     },
     {
       "id": "fp2-2025-01-gakka-010",
       "exam_date": "2025-01",
       "question_number": 10,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "クレジットカードは与信枠の範囲内で先に購入し後で支払う後払い決済。",
+          "primary_urls": [
+            "https://www.meti.go.jp/policy/mono_info_service/cashless/image_pdf_movie/pamphlet_people.pdf",
+            "https://www.meti.go.jp/policy/economy/consumer/credit/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "クレジットカードの分割払いは利用代金の支払回数を定めて各回に分割して支払う方式。",
+          "primary_urls": [
+            "https://www.j-credit.or.jp/customer/basis/revolving.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "通常のデビットカードは預金口座から即時払いであり、信用供与を前提とするリボ払い・分割払いを同カードの通常の決済方法として選択できない。別建て後払いサービス等とは区別。",
+          "primary_urls": [
+            "https://www.meti.go.jp/policy/mono_info_service/cashless/image_pdf_movie/pamphlet_people.pdf",
+            "https://www.meti.go.jp/policy/economy/consumer/credit/atobaraigaiyousiryou.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "交通系・流通系のプリペイド型電子マネーやプリペイドカードは事前チャージ額から支払う前払い方式。後払い型電子マネーの存在とは区別。",
+          "primary_urls": [
+            "https://www.meti.go.jp/policy/mono_info_service/cashless/image_pdf_movie/pamphlet_people.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS_WITH_CLARIFICATION",
+        "reason": "原解説の結論は維持。条件や例外を2026-04-01基準の制度運営主体・公的条文と独立照合し、断定しすぎる表現と制度名称を補正。",
+        "conclusion": "【2026-04-01基準・独立最終監査済み】正解3（不適切）。クレジットカードは利用枠内の後払い（1）で、分割払いは回数を定めて支払う方法（2）。一般的なデビットカードは預金口座からの即時払いで、通常はカード決済にリボ・分割払いを選択できない（3）。プリペイド型の電子マネー・カードは事前にチャージした残高で支払う（4）。電子マネー全般には後払い型もあるため、設問の『事前チャージ型』との区別が必要。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01有効法令・制度に照合。公開FAQの現時点版の記述と法的効力発生時点を区別。"
     },
     {
       "id": "fp2-2025-01-gakka-011",
@@ -3120,6 +3407,6 @@
       "verified_at": null
     }
   ],
-  "verified_records_count": 4,
-  "audit_progress_note": "2025-01 Q01-Q04 verified with 4-choice source evidence. Q05 onward pending (176)."
+  "verified_records_count": 10,
+  "audit_progress_note": "2025-01 Q01-Q10 verified; Q05 prior primary-source HOLD resolved; remaining 170 PENDING. Canonical legal/explanation flags synchronized."
 }
