@@ -1324,3 +1324,10 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - 今回自動PASS 9、累計自動PASS 11、HOLD 102、正式バンク 497/600。目視PASSではなく自動検査PASS。
 - 保留理由（重複あり）: {"INCOMPLETE_RUBY_MAPPING": 100, "RUBY_GROUP_SOURCE_NONUNIQUE": 35, "RUBY_MAPPING_UNCERTIFIED": 101, "RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION": 28, "DETACHED_READING_FIELD_NONUNIQUE": 66, "NO_FULL_SIZE_KANJI_BELOW": 66, "BASE_LITERAL_NONUNIQUE": 22, "DUPLICATE_READING_IN_FIELD": 1, "SOURCE_RUBY_GROUP_COUNT_MISMATCH": 1}。
 - 証跡: `official-kansai/RUBY_113_AUTO_REBUILD_20261124.json`。Apple実機未確認・本審査未送信・リリースBLOCKED。
+
+
+## 2026-11-24：未確定102問の原典ルビ順序独立表示
+- ユーザー指定によって漢字への推定紐付けを廃止。PDFの生文字情報で抽出したルビをページ・Y・X座標順に独立表示し、正規候補中の重複独立かな行のみ削除。原文と旧HOLDは証跡に保持。
+- 実測：102問中PASS 26、残HOLD 76。正式バンク 523/600。現mainのバンクが以前の497から468へ戻っていたため、承認済み497問の歴史的コミット(473f978287f80e2d7e2fd067936b359d20fab8c3)と現mainの和集合で承認済み29問を復旧（重複IDなし）。
+- HOLD理由（重複あり）：{"SOURCE_AND_CANDIDATE_READING_MULTISET_MISMATCH": 76}。監査台帳：\`official-kansai/RUBY_102_SOURCE_ORDER_PROMOTION_20261124.json\`。
+- 2023年問90の公式無効問題は未昇格。公開判定BLOCKED、Apple実機・App Review最終送信未実施。
