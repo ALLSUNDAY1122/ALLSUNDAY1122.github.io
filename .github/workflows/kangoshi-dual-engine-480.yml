@@ -1,0 +1,54 @@
+name: Kangoshi Dual Engine 480 and Media Visual Review
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/scripts/bulk_dual_engine_verify.py'
+      - 'kangoshi-sprint/scripts/build_media_comparison.py'
+      - '.github/workflows/kangoshi-dual-engine-480.yml'
+permissions:
+  contents: read
+jobs:
+  dual-engine-and-figures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install independent PDF engines and render dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          python -m pip install --disable-pip-version-check 'pymupdf>=1.24,<3' pillow cairosvg
+      - name: Fetch MHLW official PDF texts and answer sources
+        run: python kangoshi-sprint/scripts/run_official_pdf_audit.py
+      - name: Read staged 480 keyed records from historic audit branch
+        run: |
+          set -euo pipefail
+          mkdir -p kangoshi-sprint/product-content/keyed-candidates
+          git fetch --no-tags --depth=1 origin feature/kangoshi-keyed-staging-45220877977
+          for exam in 111 112; do
+            for session in AM PM; do
+              git show "FETCH_HEAD:kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json" > "kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json"
+            done
+          done
+      - name: Perform 480 question Poppler versus PyMuPDF dual engine and official key audit
+        run: python kangoshi-sprint/scripts/bulk_dual_engine_verify.py
+      - name: Produce 38 side-by-side source PDF versus image comparisons
+        run: python kangoshi-sprint/scripts/build_media_comparison.py
+      - name: Upload 480 record detailed gate report even when a failure occurs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-480-dual-engine-evidence
+          path: kangoshi-sprint/audit/runs/dual-engine-20261124/
+          if-no-files-found: warn
+      - name: Upload 38 media source-page visual comparisons
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-media-38-visual-comparisons
+          path: kangoshi-sprint/audit/runs/media-visual-20261124/
+          if-no-files-found: warn
