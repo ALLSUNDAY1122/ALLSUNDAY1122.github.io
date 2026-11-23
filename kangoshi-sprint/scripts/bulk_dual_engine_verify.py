@@ -155,7 +155,7 @@ for exam in (112,111):
                 if re.search(r"[\x00-\x08\x0b-\x1f\x7f]",source_segment) and not visual:failures.append("C0_SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
                 source_for_glyph_gate=(source_segment.replace("ï","（").replace("ñ","）")
                     if cmap_verified and PINNED_CMAP[qid].get("allowedPairedGlyphs") else source_segment)
-                if re.search(r"[\\ufffd઄¹¼ïñèêçâ\\u0080-\\u009f\\u00a1-\\u00ff]",source_for_glyph_gate):failures.append("SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
+                if re.search(r"[\ufffd઄¹¼ïñèêçâ\u0080-\u009f\u00a1-\u00ff]",source_for_glyph_gate):failures.append("SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
             poppler=cached_pdftotext(pdf,pg)
             wordblob=norm(page.get_text("text",sort=False))
             altblob=norm(poppler)
