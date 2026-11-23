@@ -64,3 +64,16 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 1. 120問の原本ページと候補JSONを一問ずつ視覚照合（表、ルビ、選択肢、正答、原典出典）。問題ごとにPASS・FAIL・HOLDを記録。
 2. PASSのみを公開用バンクに移し、アプリで実際に読み込む経路、法令時点の注記、出典・加工表示を追加してテスト。
 3. 同じパイプラインを2022〜2025年度へ拡張。ただし正式公開用への採用は年度ごとの監査後。
+
+
+## 2022〜2025年度・480問パイプライン（2026-11-23）
+
+- 2026年度の手法を `official-kansai/extract_year.py` / `build_year_app_candidate.py` に一般化。
+- `.github/workflows/touhan-2022-2025-extract.yml`: 4年度を別々の matrix job として取得・抽出・検査・コミットする。1年度の失敗で他年度の成功を隠さない。main push の競合を想定しリベース再試行。
+- 原典は `SOURCES_2022_2026.json` の関西広域連合公式・各年前後半PDFのみ。選択肢は4肢または5肢に対応し、抽出失敗の問題は `UNPARSED_HOLD` として候補に保持（正式公開不可）。
+- 2023年度問90は `answer=null` / `officialStatus=OFFICIALLY_INVALID_ALL_CANDIDATES_CORRECT` / `excludeFromAccuracyDenominator=true` / `scoringPolicy=ALL_CANDIDATES_CORRECT_NO_STANDARD_GRADING` を必須検査。
+- 各年度ごとに `QUESTIONS_<year>_RAW_STAGING.json`、`QUESTIONS_<year>_APP_CANDIDATE.json`、`PDF_SHA256_<year>.json` の計3ファイルをGitHubへ書く設計。正答索引との1〜120問対応・2PDFのハッシュ・未監査のフラグをCIで判定。
+- **現時点の読戻し確認：2022〜2025年度の候補JSONおよびPDF SHA記録はGitHubで未確認（0/480問・0/8 PDF）。** ワークフローは実装・保存済みだが、成功実行ログおよび成果コミットの証拠がない。実行成功として計上しない。
+- 2026年度の候補120問は従前どおりステージング、公式5回600問の正式本番収録は0問で変わらない。
+
+**リリース判定：BLOCKED。** 原典PDFの取得・抽出に加え、年度別120問の正答と選択肢の精密な目視監査が引き続き必要。
