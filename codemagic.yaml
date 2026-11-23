@@ -1829,6 +1829,8 @@ workflows:
           info = plistlib.loads((app / 'Info.plist').read_bytes())
           assert info['CFBundleIdentifier'] == 'com.allsunday1122.fp2manabisprint'
           assert info['CFBundleShortVersionString'] == '1.0.0' and info['CFBundleVersion'] == '7'
+          assert info['UIDeviceFamily'] == [1], info['UIDeviceFamily']
+          assert info['UISupportedInterfaceOrientations'] == ['UIInterfaceOrientationPortrait']
           assert info['ITSAppUsesNonExemptEncryption'] is False
           path = 'questions/canonical/approved-questions-20261123.json'
           full = json.loads((source / path).read_bytes())['questions']
