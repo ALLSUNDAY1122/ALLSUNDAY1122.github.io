@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent 220-case triage: official keys/exceptions, OCR character diffs, scenario passages.
+"""Independent remaining source-hold triage: official keys/exceptions, OCR character diffs, scenario passages.
 An evidence report, not a substitute for final source/rights gating.
 """
 import collections, difflib, hashlib, json, pathlib, re, subprocess, sys, unicodedata
@@ -132,7 +132,7 @@ for held in SOURCE["hold"]:
   row["categoryDecision"]="SCENARIO_IMAGE_AND_TEXT_CHECKED_SOURCE_HOLD" if context_found else "SHARED_PASSAGE_NOT_LOCATED"
  else:row["categoryDecision"]="MEDIA_REQUIRES_SEPARATE_RIGHTS_AND_FIDELITY"
  rows.append(row)
-assert len(rows)==len(SOURCE["hold"])==220
+assert len(rows)==len(SOURCE["hold"]) and len(rows)+len(json.loads((ROOT/"product-content/verified-additions-20261124.json").read_text())["questions"])==480
 result={"schemaVersion":1,"examScope":[111,112],"checked":len(rows),
  "categories":dict(categories),"officialDecisions":dict(keys_out),
  "promotionAllowedFromThisLedger":False,"newlyPromoted":0,"records":rows,
@@ -140,4 +140,4 @@ result={"schemaVersion":1,"examScope":[111,112],"checked":len(rows),
 dest=ROOT/"audit/ocr-category-deep-review-20261124.json"
 dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
 (OUT/"summary.json").write_text(json.dumps({k:v for k,v in result.items() if k!="records"},ensure_ascii=False,indent=2)+"\n")
-print(json.dumps({"checked":220,"categories":dict(categories),"official":dict(keys_out),"newlyPromoted":0},ensure_ascii=False))
+print(json.dumps({"checked":len(rows),"categories":dict(categories),"official":dict(keys_out),"newlyPromoted":0},ensure_ascii=False))
