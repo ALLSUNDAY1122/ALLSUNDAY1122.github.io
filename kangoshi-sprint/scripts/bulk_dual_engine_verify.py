@@ -33,6 +33,8 @@ def pdftotext(pdf,page):
 sys.path.insert(0,str(ROOT/'scripts'))
 from official_answer_key_audit import parse as read_official_key
 from boundary_context_verify import verify as verify_boundary
+from boundary_context_verify import _region,equivalent_shared_context
+from reextract_coordinate_candidates import split_fields,segment_poppler
 keys={e:read_official_key(e) for e in (111,112)}
 VISUAL={x["id"]:x for x in json.loads((ROOT/"audit/visual-glyph-confirmation-20261124.json").read_text())["items"]}
 VISUAL_DIR=ROOT/"audit/runs/context-control-visual-20261124"
@@ -92,13 +94,29 @@ for exam in (112,111):
         boundary_evidence=None
         scenario_evidence=None
         coordinate_segment=None
+        geometric_crosscheck=None
+        if isinstance(pg,int) and 1<=pg<=len(doc) and q.get("coordinateReextraction"):
+            raw_clip,geom=_region(doc[pg-1],n,clean_font)
+            alt_crop=segment_poppler(cached_pdftotext(pdf,pg),n)
+            if raw_clip and alt_crop and geom and q["coordinateReextraction"].get("page")==pg:
+                py_fields,err1=split_fields(raw_clip,n)
+                pop_fields,err2=split_fields(alt_crop,n)
+                if not err1 and not err2:
+                    left=[py_fields["question"]]+py_fields["choices"]
+                    right=[pop_fields["question"]]+pop_fields["choices"]
+                    target=[stem]+choices
+                    if len(target)==5 and all(equivalent_shared_context(x,y)[0] and equivalent_shared_context(x,z)[0] for x,y,z in zip(left,right,target)):
+                        geometric_crosscheck={"page":pg,"anchor":geom["anchorBox"],"rectangle":geom["clip"],
+                            "fields":5,"method":"exact Japanese and Latin token multiset; PyMuPDF clip vs independent Poppler page segmentation",
+                            "requiresOfficialAnswer":True}
         if not isinstance(pg,int) or not 1<=pg<=len(doc):
             failures.append("SOURCE_PAGE_INVALID")
         else:
             verified_page, boundary_errors, scenario_evidence, geometry, coordinate_segment=verify_boundary(
                 doc,pdf,n,pg,stem,choices,cached_pdftotext,clean_font,norm,
                 visually_verified_fields={visual["choiceIndex"]+1} if visual else set(),
-                context_glyph_evidence=scenario_visual)
+                context_glyph_evidence=scenario_visual,
+                strict_geometric_fields_verified=bool(geometric_crosscheck))
             if verified_page is not None:
                 boundary_evidence={"previousPage":pg,"correctedPage":verified_page,**(geometry or {})}
                 pg=verified_page
@@ -116,18 +134,19 @@ for exam in (112,111):
             wordblob=norm(page.get_text("text",sort=False))
             altblob=norm(poppler)
             for i,text in enumerate([stem]+choices):
+                if geometric_crosscheck:continue
                 if visual and i==visual["choiceIndex"]+1:continue
                 if not text:continue
                 if norm(text) not in wordblob:failures.append("PYMUPDF_FIELD_MISMATCH_"+str(i))
                 if norm(text) not in altblob:failures.append("POPPLER_FIELD_MISMATCH_"+str(i))
-            if source_segment and norm(stem) not in norm(source_segment):failures.append("PYMUPDF_WRONG_QUESTION_BOUNDARY")
+            if source_segment and not geometric_crosscheck and norm(stem) not in norm(source_segment):failures.append("PYMUPDF_WRONG_QUESTION_BOUNDARY")
             media_in_page=bool(page.get_images(full=True))
             if media_in_page:failures.append("PAGE_HAS_RASTER_OR_DIAGRAM_REVIEW")
         else:media_in_page=None
         failures=list(dict.fromkeys(failures))
         status="PASS_DUAL_ENGINE_AND_OFFICIAL_KEY" if not failures else "HOLD"
         row={"id":qid,"exam":exam,"session":session,"number":n,"status":status,"reasons":failures,"sourcePdfPage":pg,"pageHasRaster":media_in_page,
-            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),"coordinateBoundaryEvidence":boundary_evidence,"scenarioContext":scenario_evidence,"visualNumericGlyphEvidence":visual,"visualScenarioGlyphEvidence":scenario_visual,
+            "officialKeyRaw":q.get("officialKeyRaw"),"answer":q.get("answer"),"coordinateBoundaryEvidence":boundary_evidence,"scenarioContext":scenario_evidence,"visualNumericGlyphEvidence":visual,"visualScenarioGlyphEvidence":scenario_visual,"geometricCrosscheckEvidence":geometric_crosscheck,
             "sourcePdfSha256":hashlib.sha256(pdf.read_bytes()).hexdigest()}
         rows.append(row);all_rows.append(row)
         if status.startswith("PASS"):
