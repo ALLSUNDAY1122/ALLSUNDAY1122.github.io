@@ -1741,22 +1741,48 @@ workflows:
           python3 fp2-manabi-sprint/ios/prepare-ios.py
           cd fp2-manabi-sprint/ios
           python3 - <<'PY'
-          import json
+          import hashlib, json, os, plistlib, shutil, subprocess
           from pathlib import Path
 
           path = Path('Web/bundle-evidence.json')
           evidence = json.loads(path.read_bytes())
           evidence['build'] = '7'
           path.write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          team = 'MN3D2ZM44N'
+          bundle = 'com.allsunday1122.fp2manabisprint'
+          library = Path.home() / 'Library'
+          old_profiles = library / 'MobileDevice/Provisioning Profiles'
+          xcode_profiles = library / 'Developer/Xcode/UserData/Provisioning Profiles'
+          installed = subprocess.check_output(['security', 'find-identity', '-v', '-p', 'codesigning'], text=True)
+          for candidate in old_profiles.glob('*.mobileprovision'):
+              profile = plistlib.loads(subprocess.check_output(['security', 'cms', '-D', '-i', str(candidate)]))
+              if profile.get('Name') != 'FP2 App Store Codemagic':
+                  continue
+              assert profile['Entitlements']['application-identifier'] == f'{team}.{bundle}'
+              assert 'ProvisionedDevices' not in profile and not profile.get('ProvisionsAllDevices')
+              certificate = next(hashlib.sha1(cert).hexdigest().upper() for cert in profile['DeveloperCertificates']
+                                 if hashlib.sha1(cert).hexdigest().upper() in installed)
+              xcode_profiles.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(candidate, xcode_profiles / (profile['UUID'] + '.mobileprovision'))
+              break
+          else:
+              raise SystemExit('The approved FP2 profile was not installed by Codemagic')
+
+          options = {'method': 'app-store-connect', 'destination': 'export', 'teamID': team,
+                     'signingStyle': 'manual', 'signingCertificate': certificate,
+                     'provisioningProfiles': {bundle: profile['UUID']},
+                     'testFlightInternalTestingOnly': True, 'manageAppVersionAndBuildNumber': False}
+          (Path(os.environ['TMPDIR']) / 'fp2-export.plist').write_bytes(plistlib.dumps(options))
+          (Path(os.environ['TMPDIR']) / 'fp2-certificate.txt').write_text(certificate, encoding='ascii')
           PY
           xcodegen generate
-          xcode-project use-profiles --project FP2ManabiSprint.xcodeproj --archive-method app-store \
-            --export-options-plist "$TMPDIR/fp2-export.plist" \
-            --custom-export-options='{"method":"app-store-connect","destination":"export","testFlightInternalTestingOnly":true,"manageAppVersionAndBuildNumber":false}'
           xcodebuild -project FP2ManabiSprint.xcodeproj -scheme FP2ManabiSprint \
             -configuration Release -destination 'generic/platform=iOS' \
             -archivePath "$CM_BUILD_DIR/build/FP2ManabiSprint.xcarchive" \
-            DEVELOPMENT_TEAM=MN3D2ZM44N CURRENT_PROJECT_VERSION=7 archive
+            DEVELOPMENT_TEAM=MN3D2ZM44N CURRENT_PROJECT_VERSION=7 CODE_SIGN_STYLE=Manual \
+            "CODE_SIGN_IDENTITY=$(cat "$TMPDIR/fp2-certificate.txt")" \
+            'PROVISIONING_PROFILE_SPECIFIER=FP2 App Store Codemagic' archive
       - name: Export for internal TestFlight with the FP2 profile
         script: |
           set -euo pipefail
