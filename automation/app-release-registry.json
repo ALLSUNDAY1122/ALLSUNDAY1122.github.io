@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-04T11:12:00Z",
+  "updated_at": "2026-11-23T09:25:00Z",
   "policy": {
     "final_approval": "Explicit user approval is required for the exact App ID / Version / Build immediately read back before App Review submission.",
     "submission_complete": "Only App Store Connect read-back at WAITING_FOR_REVIEW or a later review state counts as App Review submission complete.",
@@ -191,6 +191,28 @@
       "app2_task": null,
       "status": "active",
       "readback": true
+    },
+    "fp2": {
+      "name": "FP2級｜学びスプリント",
+      "app_id": "6797228406",
+      "bundle_id": "com.allsunday1122.fp2manabisprint",
+      "version": "1.0.0",
+      "build": "1",
+      "iap": false,
+      "iap_product_ids": [],
+      "app2_task": null,
+      "status": "native_source_created_release_blocked",
+      "readback": false,
+      "ios_project": "fp2-manabi-sprint/ios/project.yml",
+      "native_source_branch": "feature/fp2-swiftui-wkwebview-release-20261123",
+      "source_bank": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
+      "content_review_pass": 122,
+      "publishable_questions": 0,
+      "icon_source_blob_sha": "ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d",
+      "icon_apple_hash_verified": false,
+      "build_validation": "CI_PENDING",
+      "app_store_upload": "NOT_STARTED",
+      "note": "Version/Build fixed in XcodeGen source. Not confirmed by signed binary/ASC. Offline native payload is content-reviewed only (not publication approved); requires release scoping and Q0–Q5 gates."
     }
   }
 }
