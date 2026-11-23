@@ -1392,3 +1392,8 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 ## ASC 599問メタデータ同期（2026-11-24）
 - 説明文599問への更新・API読戻し：True。Review Notes：False。総合：PASS。
 - Run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45289049944。プライバシー収集質問票は別途未確認。App Review未送信。
+
+
+## Q7 Codemagic/ASC読戻し（2026-11-24）
+- Codemagic: PASS、ASC: PASS、判定: PENDING_SIGNED_IPA。
+- 証跡 Q7_CODEMAGIC_PREP_20261124.json、run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45289652184。本審査送信なし。
