@@ -76,7 +76,8 @@ def run(year):
     (B/f"LAYOUT_TRIAGE_{year}.json").write_text(json.dumps(output,ensure_ascii=False,indent=2)+"\n")
     print(json.dumps({"year":year,"targets":target_count,"newPass":passes,"held":target_count-passes,"reasonCounts":dict(reason_counts)},ensure_ascii=False))
 def fitz_rect_intersects(a,b):
-    return a.intersects(b) and (a & b).get_area()>8
+    intersection=a & b
+    return a.intersects(b) and intersection.width*intersection.height>8
 if __name__=="__main__":
     ap=argparse.ArgumentParser();ap.add_argument("--year",type=int,required=True,choices=range(2022,2027))
     run(ap.parse_args().year)
