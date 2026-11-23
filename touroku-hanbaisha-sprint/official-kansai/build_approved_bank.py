@@ -8,7 +8,7 @@ APPROVED=[]
 seen=set()
 def blob_sha(path):
     data=path.read_bytes()
-    return hashlib.sha1(f'blob {len(data)}\\0'.encode()+data).hexdigest()
+    return hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
 review_sources=AUDIT.get('auditSourceFrozenGitBlobs',{})
 for record in AUDIT["reviewedQuestions"]:
     key=record["id"]
