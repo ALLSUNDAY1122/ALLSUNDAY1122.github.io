@@ -59,9 +59,9 @@ jobs:
           print('iOS Simulator bundle readback PASS')
           PY
 
-  canonical-appicon-gate:
+  internal-appicon-gate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify FP2 registered AppIcon SHA-256 or fail closed
+      - name: Verify current FP2 icon matches legacy source (ASC separately HUMAN-REQUIRED)
         run: python3 fp2-manabi-sprint/ios/verify-appicon.py
