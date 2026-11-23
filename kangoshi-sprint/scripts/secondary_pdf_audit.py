@@ -5,7 +5,7 @@ import fitz
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 OUT=ROOT/"audit/runs"
 def norm(s):
-    return re.sub(r"[\s\u200b\ufeff]+","",unicodedata.normalize("NFKC",str(s))).replace("−","-").replace("‐","-")
+    return re.sub(r"[\s\u200b\ufeff]+","",unicodedata.normalize("NFKC",str(s))).replace("−","-").replace("‐","-").replace("〜","~").replace("～","~")
 def run():
     summary={}
     for exam in (115,114,113):
