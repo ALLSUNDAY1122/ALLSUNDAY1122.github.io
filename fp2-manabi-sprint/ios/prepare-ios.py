@@ -33,8 +33,8 @@ if (len(selected) != 300 or len(set(selected_ids)) != 300
 payload = dict(bank)
 payload.update({
     "status": "CONTENT_PASS_NATIVE_300_PAYLOAD_NOT_PUBLICATION_APPROVED",
-    "content_approved_questions": 120,
-    "release_candidate_questions": 120,
+    "content_approved_questions": 300,
+    "release_candidate_questions": 300,
     "reserve_content_pass_questions": 0,
     "questions": selected,
 })
