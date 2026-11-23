@@ -7,9 +7,9 @@ reintroduction of archived-law questions into the normal learning pool.
 from __future__ import annotations
 import json, pathlib, sys
 
-EXPECTED_TOTAL = 180
-EXPECTED_ACTIVE = 178
-EXPECTED_ARCHIVED = 2
+EXPECTED_TOTAL = 300
+EXPECTED_ACTIVE = 295
+EXPECTED_ARCHIVED = 5
 EXPECTED_DOMAINS = {
     "ライフプランニング", "リスク管理", "金融資産運用",
     "タックスプランニング", "不動産", "相続・事業承継",
@@ -21,7 +21,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> int:
-    path = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "fp3-manabi-sprint/question_bank_180.payload.json")
+    path = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "fp3-manabi-sprint/question_bank_300.payload.json")
     data = json.loads(path.read_text(encoding="utf-8"))
     qs = data.get("questions")
     if not isinstance(qs, list) or len(qs) != EXPECTED_TOTAL:
@@ -72,8 +72,8 @@ def main() -> int:
         if not q["source_url"].startswith("https://"):
             fail(f"{qid}: source_url must use HTTPS")
 
-    if tf != 90 or mc != 90:
-        fail(f"type counts true_false={tf} multiple_choice={mc}")
+    if tf != 150 or mc != 150:
+        fail(f"type counts true_false={tf} multiple_choice={mc}, expected 150/150")
 
     print(json.dumps({
         "status": "PASS",
