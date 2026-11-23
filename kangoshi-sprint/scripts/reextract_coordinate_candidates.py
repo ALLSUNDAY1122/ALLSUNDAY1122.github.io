@@ -14,7 +14,7 @@ STAGE=ROOT/"product-content/keyed-candidates"
 OUT=ROOT/"audit/runs/dual-engine-20261124"
 OUT.mkdir(parents=True,exist_ok=True)
 sys.path.insert(0,str(ROOT/"scripts"))
-from boundary_context_verify import _region
+from boundary_context_verify import _region,equivalent_shared_context
 from official_answer_key_audit import parse as parse_key
 from bulk_text_helpers import clean_font, norm, suspicious
 
@@ -100,10 +100,13 @@ def main():
             if err1 or err2:
                 diagnostics.append({"pg":pg,"pymupdfError":err1,"popplerError":err2,"pymupdfSample":a[:320],"popplerSample":b[:320],"clip":geo["clip"]})
                 continue
-            if norm(pa["question"])!=norm(pb["question"]):
+            exact_stem=norm(pa["question"])==norm(pb["question"])
+            meaningful_stem,_=equivalent_shared_context(pa["question"],pb["question"])
+            if not exact_stem and not meaningful_stem:
                 diagnostics.append({"pg":pg,"reason":"STEM_DIFFER","pymupdf":pa["question"][:220],"poppler":pb["question"][:220]})
                 continue
-            if any(norm(x)!=norm(y) for x,y in zip(pa["choices"],pb["choices"])):
+            choice_checks=[equivalent_shared_context(x,y)[0] for x,y in zip(pa["choices"],pb["choices"])]
+            if not all(choice_checks):
                 diagnostics.append({"pg":pg,"reason":"CHOICE_DIFFER","pymupdf":pa["choices"],"poppler":pb["choices"]})
                 continue
             candidates.append((pg,geo,pa,pb))
@@ -128,9 +131,9 @@ def main():
             continue
           summary["sourceReextractPass"]+=1
           previous={"question":q.get("question"),"choices":q.get("choices"),"sourcePage":q.get("sourcePage"),"extractionValid":q.get("extractionValid")}
-          changed=norm(previous["question"])!=norm(pa["question"]) or [norm(x) for x in previous["choices"] or []]!=[norm(x) for x in pa["choices"]] or previous["sourcePage"]!=pg
-          q.update(question=pa["question"],choices=pa["choices"],sourcePage=pg,extractionValid=True)
-          q["coordinateReextraction"]={"page":pg,"anchorBox":geo["anchorBox"],"clip":geo["clip"],"source":"PyMuPDF+Poppler cropped text", "sourcePdfSha256":hashlib.sha256(pdf.read_bytes()).hexdigest(),"previousCandidateChanged":changed}
+          changed=norm(previous["question"])!=norm(pb["question"]) or [norm(x) for x in previous["choices"] or []]!=[norm(x) for x in pb["choices"]] or previous["sourcePage"]!=pg
+          q.update(question=pb["question"],choices=pb["choices"],sourcePage=pg,extractionValid=True)
+          q["coordinateReextraction"]={"page":pg,"anchorBox":geo["anchorBox"],"clip":geo["clip"],"source":"PyMuPDF+Poppler cropped text", "sourcePdfSha256":hashlib.sha256(pdf.read_bytes()).hexdigest(),"previousCandidateChanged":changed,"independentFieldEquality":"EXACT_JAPANESE_AND_LATIN_TOKEN_MULTISET_PLUS_FOUR_FIELD_ORDER"}
           if changed:
             summary["updated"]+=1
             repairs.append({"id":q["id"],"before":previous,"after":{"question":q["question"],"choices":q["choices"],"sourcePage":pg},"bbox":geo["clip"]})
