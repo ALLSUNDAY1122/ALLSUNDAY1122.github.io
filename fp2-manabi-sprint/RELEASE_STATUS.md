@@ -1,5 +1,32 @@
 # FP2 RELEASE STATUS（正本・2026-11-23・Q20第2次独立PASS反映）
 
+## 2026-11-23 20:44 JST｜5a72059f CI 8/8 SUCCESS・preflight区分更新（今回の追記）
+
+**検証対象固定：** `5a72059f69e77375dbfa6568f613362a2712cc75`。GitHub check-runsを実際に再取得し、FP2 **8ジョブすべてcompleted/success、queued=0** と確認。Chromium E2E×2、iOS unsigned Simulator×2、正規bank/Web静的×2、UI Master v2.1 migration×1、Registry audit×1。ジョブURL・8件の監査証拠：`audit/FP2_PREFLIGHT_CI8_HUMAN_REQUIRED_20261123.md`。対象コミット以後の変更に自動的にPASSを拡張しない。関係のないアプリのActions失敗はFP2 8ジョブの判定に含めない。
+
+**CI部分ゲート：PASS（5a72059f）／製品Q0–Q5：未通過。** 初回版は正規195問（独立回収180 PASS＋先行15）、選定120問（6分野×20）、予備75問、公開許可0。300問への拡充は別ブランチの将来計画であり、このCIを新120問や300問版の合格証拠にしない。
+
+| 分類 | 判定 | 証拠／残件 |
+| --- | --- | --- |
+| 問題バンク・静的Web・UI migration | **CI_PASS_AT_5a72059f** | GitHub 8ジョブ中の4件。権利許諾ではない |
+| Chromium学習・オフライン | **CI_PASS_AT_5a72059f** | 実ブラウザE2E 2件。実iPhone受入とは別 |
+| iOS Simulator | **CI_PASS_UNSIGNED_AT_5a72059f** | 2件。署名IPA・TestFlight・ASC readbackは未了 |
+| Registry監査 | **CI_PASS_AT_5a72059f** | 1件。App Store Connect登録内容までは検証していない |
+| AppIcon内部の旧FP2原典一致 | **INTERNAL_PASS** | Blob `ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d`、SHA-256 `d456178b2a7b04f180e39b3ad62f5c194832e85aa15102bf6452751551db8033` |
+| App Store Connect側AppIcon一致 | **HUMAN-REQUIRED** | Apple側現物との一致は未確認 |
+| Q0 権利・利用主体・公開許可 | **BLOCKED** | 法令/公式過去問利用条件・改変注記/出典の運営者最終承認 |
+| Q1 正規バンクの公開ゲート | **CONTENT CI PASS / RELEASE BLOCKED** | 195問中120選定済、公開許可0のまま |
+| Q2/Q3 Web学習とUI | **BROWSER CI PASS / DEVICE ACCEPTANCE PENDING** | 実機Safe Area、長文、アクセシビリティ、利用者受入未了 |
+| Q4 独立受入 | **NOT COMPLETED** | 第三者/実機・学習者受入記録未了 |
+| Q5 配布・ストア | **BLOCKED** | 署名IPA/実機TestFlight/ASC/App Privacy/スクショ/公開URL |
+
+**HUMAN-REQUIRED更新：** (1) ASC側のAppIcon一致とApp ID `6797228406`、Bundle ID、Version `1.0.0`／Build `1`、IAPなし、App Privacy、ストア表示、サポート/プライバシーURL、スクリーンショットの登録確認・責任者承認、(2) 署名・TestFlight配布後のiPhone/iPad実機受入と証拠、(3) 問題・出典/改変の二次利用権限と運営者責任の最終承認、(4) Q0–Q5を完了した後の明示的なApp Review提出許可。**既にCI PASSの8ジョブを人手で再実行することはHUMAN-REQUIREDから除外**。
+
+**技術側で未了：** 署名IPAの生成と実配布物SHA照合、Apple連携経路、公開URL HTTP200、必要な実機/独立E2Eの証拠整備。**PR #5717はDraft維持／main未マージ／Apple未提出／NOT_SUBMISSION_READY**。
+
+---
+
+
 ## 2026-11-23 19:42 JST｜5回分・学科過去問300問への拡充計画（最新方針）
 
 **承認されたのは将来スコープの変更・受入計画の記録のみ。新規120問は未受領・未監査・未統合。現行120問リリース候補・出題数は凍結。** 正式詳細は RELEASE_SCOPE_20261124.md「拡充方針」を正本とする。
