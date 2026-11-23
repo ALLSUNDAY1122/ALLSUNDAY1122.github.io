@@ -1,0 +1,74 @@
+name: Touhan Q7 Start Isolated Signed IPA Preflight
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-q7-start-signed-ipa.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-q7-signing-start
+  cancel-in-progress: false
+jobs:
+  start:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate and request signed-IPA-only Codemagic build
+        id: request
+        continue-on-error: true
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python -m pip install 'PyYAML==6.0.2'
+          cat > /tmp/touhan-q7-request.json <<'JSON'
+          {"request_id":"touhan-q7-signed-ipa-20261124","action":"build","app_id":"6a769d81a1add9d06020b524","repository":"ALLSUNDAY1122/ALLSUNDAY1122.github.io","branch":"main","workflow_id":"touhan-q7-signing-preflight","wait":false}
+          JSON
+          python scripts/codemagic_build_gateway.py --command /tmp/touhan-q7-request.json --output touroku-hanbaisha-ios/Q7_CODEMAGIC_SIGNING_BUILD_20261124.json
+      - name: Save start result without implying completed signing
+        if: always()
+        env:
+          START_RESULT: ${{ steps.request.outcome }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,os
+          b=Path('touroku-hanbaisha-ios')
+          f=b/'Q7_CODEMAGIC_SIGNING_BUILD_20261124.json'
+          d=json.loads(f.read_text()) if f.exists() else {'ok':False,'error':'Codemagic API request did not generate result'}
+          d['githubActionsRunId']=int(os.environ['RUN_ID'])
+          d['githubActionStepResult']=os.environ['START_RESULT']
+          d['signingResult']='NOT_YET_VERIFIED'
+          d['ipaUploadedToASC']=False
+          d['appReviewSubmitted']=False
+          f.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+          sp=b/'release-status.json';s=json.loads(sp.read_text())
+          s['q7_signed_ipa_build_20261124']={'requested':bool(d.get('ok')),'buildId':d.get('build_id'),
+             'result':'RUNNING_NOT_VERIFIED' if d.get('ok') else 'BLOCKED_START_FAILED',
+             'evidence':'touroku-hanbaisha-ios/Q7_CODEMAGIC_SIGNING_BUILD_20261124.json','githubRunId':d['githubActionsRunId'],
+             'testflightUploaded':False,'appReviewSubmitted':False}
+          s['gates']['internal_testflight']='Q7_SIGNED_IPA_RUNNING' if d.get('ok') else 'Q7_SIGNING_BUILD_START_BLOCKED'
+          s['release_gate']='BLOCKED';s['app_review_submitted']=False
+          sp.write_text(json.dumps(s,ensure_ascii=False,indent=2)+'\n')
+          m=b/'RELEASE_STATUS.md'
+          m.write_text(m.read_text()+f"\n\n## Q7 Codemagic署名付きIPA専用ビルド開始（2026-11-24）\n- API request: {d.get('ok')}、buildId: {d.get('build_id','NONE')}、署名実測：NOT_YET_VERIFIED。App Store Connectアップロードなし、TestFlight配布なし。\n- GitHub Actions run https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/{d['githubActionsRunId']}、証跡 Q7_CODEMAGIC_SIGNING_BUILD_20261124.json。\n")
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-ios/Q7_CODEMAGIC_SIGNING_BUILD_20261124.json touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          git commit -m 'audit(touhan): record isolated Codemagic signed IPA build start' || true
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touhan-q7-codemagic-start-result
+          path: touroku-hanbaisha-ios/Q7_CODEMAGIC_SIGNING_BUILD_20261124.json
+          if-no-files-found: ignore
