@@ -3,7 +3,7 @@
   "created_at_jst": "2026-11-24T02:20:00+09:00",
   "branch": "feature/fp2-release-scope-20261123",
   "canonical_path": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "canonical_source_blob_sha": "469a94ab8e12aa42bc0c878d96d9edd92c4092ee",
+  "canonical_source_blob_sha": "32ac1d5db7c5a17581689604697c68739d60e383",
   "law_effective_date": "2026-04-01",
   "scope": {
     "total": 180,
@@ -25,14 +25,14 @@
   "gate_policy": "以前のPASSは内容一次判定であり、本最終証拠監査の完了を意味しない。証拠行未固定の問題のlegalChecked/explanationCheckedを機械的にtrueへ変更しない。",
   "summary": {
     "target": 180,
-    "pending": 160,
-    "verified": 20,
+    "pending": 150,
+    "verified": 30,
     "hold": 0,
     "fail": 0,
     "by_exam": {
       "2025-01": {
-        "pending": 40,
-        "verified": 20,
+        "pending": 30,
+        "verified": 30,
         "hold": 0,
         "fail": 0
       },
@@ -1320,161 +1320,612 @@
       "id": "fp2-2025-01-gakka-021",
       "exam_date": "2025-01",
       "question_number": 21,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "CI中心の公表で景気の現状把握に利用する。",
+          "primary_urls": [
+            "https://www.esri.cao.go.jp/jp/stat/di/di3"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "生鮮食品を除く消費者物価指数は遅行系列。",
+          "primary_urls": [
+            "https://www.esri.cao.go.jp/jp/stat/di/di3"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "50％を境に波及度合いを示すのはDI、CIは景気変動の大きさ・テンポ。",
+          "primary_urls": [
+            "https://www.esri.cao.go.jp/jp/stat/di/di3"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "転換点の判定は一致系列に基づくヒストリカルDIを使用。",
+          "primary_urls": [
+            "https://www.esri.cao.go.jp/jp/stat/di/di3"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "全4選択肢の正誤と既存解説を独立照合し、金融数学・商品仕様・税制・法令の適用時点を点検。",
+        "conclusion": "1: CI中心の公表で景気の現状把握に利用する。 2: 生鮮食品を除く消費者物価指数は遅行系列。 3: 50％を境に波及度合いを示すのはDI、CIは景気変動の大きさ・テンポ。 4: 転換点の判定は一致系列に基づくヒストリカルDIを使用。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準の制度・取扱いで確認。数式・金融理論は法改正ではなく数理再計算の対象。Q23の原典画像目視再鑑定は既存監査の範囲外。"
     },
     {
       "id": "fp2-2025-01-gakka-022",
       "exam_date": "2025-01",
       "question_number": 22,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "デリバティブ内包の満期繰上型預金は銀行判断で満期日が繰り上がる。",
+          "primary_urls": [
+            "https://faq.aozorabank.co.jp/fa/bank/web/knowledge850.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "スーパー定期の半年複利型は個人利用のためのもので法人限定ではない。",
+          "primary_urls": [
+            "https://www.bk.mufg.jp/tameru/yen/sp_teiki/btm/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "期日指定定期は据置期間後に所定期限内で満期日を指定できる。",
+          "primary_urls": [
+            "https://www.bk.mufg.jp/regulation/teiki_kijitsushitei.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "事前の代理人指名等、銀行所定の代理制度により預金の払戻しを委ねられる。",
+          "primary_urls": [
+            "https://faq.smbctb.co.jp/faq/show/4926"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "全4選択肢の正誤と既存解説を独立照合し、金融数学・商品仕様・税制・法令の適用時点を点検。",
+        "conclusion": "1: デリバティブ内包の満期繰上型預金は銀行判断で満期日が繰り上がる。 2: スーパー定期の半年複利型は個人利用のためのもので法人限定ではない。 3: 期日指定定期は据置期間後に所定期限内で満期日を指定できる。 4: 事前の代理人指名等、銀行所定の代理制度により預金の払戻しを委ねられる。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準の制度・取扱いで確認。数式・金融理論は法改正ではなく数理再計算の対象。Q23の原典画像目視再鑑定は既存監査の範囲外。"
     },
     {
       "id": "fp2-2025-01-gakka-023",
       "exam_date": "2025-01",
       "question_number": 23,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "応募者=(0.1+(100-101.2)/10)/101.2×100=-0.0197628％。",
+          "primary_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "直接=0.1/101.2×100=0.0988142％。",
+          "primary_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "所有期間=(0.1+(102-101.2)/5)/101.2×100=0.256917％。",
+          "primary_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "最終=(0.1+(100-102)/5)/102×100=-0.2941176％。設問式は符号と分母の両方が誤る。",
+          "primary_urls": [
+            "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "全4選択肢の正誤と既存解説を独立照合し、金融数学・商品仕様・税制・法令の適用時点を点検。",
+        "conclusion": "1: 応募者=(0.1+(100-101.2)/10)/101.2×100=-0.0197628％。 2: 直接=0.1/101.2×100=0.0988142％。 3: 所有期間=(0.1+(102-101.2)/5)/101.2×100=0.256917％。 4: 最終=(0.1+(100-102)/5)/102×100=-0.2941176％。設問式は符号と分母の両方が誤る。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準の制度・取扱いで確認。数式・金融理論は法改正ではなく数理再計算の対象。Q23の原典画像目視再鑑定は既存監査の範囲外。"
     },
     {
       "id": "fp2-2025-01-gakka-024",
       "exam_date": "2025-01",
       "question_number": 24,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "縦軸利回り、横軸残存年限がイールドカーブ。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/glossary/a/12.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "長期金利が短期金利より低い状態は逆イールド。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/glossary/a/12.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "長短金利差の縮小はフラット化。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/glossary/a/12.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "ロールダウンの価格上昇は順イールドでの残存年数短縮による利回り低下を前提とする典型例で、逆イールドでは逆方向になり得る。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/glossary/a/12.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "全4選択肢の正誤と既存解説を独立照合し、金融数学・商品仕様・税制・法令の適用時点を点検。",
+        "conclusion": "1: 縦軸利回り、横軸残存年限がイールドカーブ。 2: 長期金利が短期金利より低い状態は逆イールド。 3: 長短金利差の縮小はフラット化。 4: ロールダウンの価格上昇は順イールドでの残存年数短縮による利回り低下を前提とする典型例で、逆イールドでは逆方向になり得る。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準の制度・取扱いで確認。数式・金融理論は法改正ではなく数理再計算の対象。Q23の原典画像目視再鑑定は既存監査の範囲外。"
     },
     {
       "id": "fp2-2025-01-gakka-025",
       "exam_date": "2025-01",
       "question_number": 25,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "信用売建ては反対売買と現渡しで決済できる。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/trading/margin/outline/01.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "制度信用取引の対象銘柄は取引所が選定する。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/trading/margin/outline/01.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "一般信用は証券会社との合意による返済期限で、6か月以内と一律に定められていない。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/equities/trading/margin/outline/01.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "通常の信用取引の委託保証金は原則約定代金30％以上かつ30万円以上。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/glossary/a/15.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "全4選択肢の正誤と既存解説を独立照合し、金融数学・商品仕様・税制・法令の適用時点を点検。",
+        "conclusion": "1: 信用売建ては反対売買と現渡しで決済できる。 2: 制度信用取引の対象銘柄は取引所が選定する。 3: 一般信用は証券会社との合意による返済期限で、6か月以内と一律に定められていない。 4: 通常の信用取引の委託保証金は原則約定代金30％以上かつ30万円以上。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準の制度・取扱いで確認。数式・金融理論は法改正ではなく数理再計算の対象。Q23の原典画像目視再鑑定は既存監査の範囲外。"
     },
     {
       "id": "fp2-2025-01-gakka-026",
       "exam_date": "2025-01",
       "question_number": 26,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "ROE：X=3.5％、Y=6.7857％。Yが高い。",
+          "primary_urls": [
+            "https://port.jpx.co.jp/jpxhp/portdocs/beginner_a_03.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "PER：X=47.619倍、Y=20.526倍。Xが高い。",
+          "primary_urls": [
+            "https://port.jpx.co.jp/jpxhp/portdocs/beginner_a_03.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "PBR：X=1.6667倍、Y=1.3929倍。Xが高い。",
+          "primary_urls": [
+            "https://port.jpx.co.jp/jpxhp/portdocs/beginner_a_03.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "配当性向：X=57.1429％、Y=36.8421％。Xが高い。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/glossary/ha/353.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "全4選択肢の正誤と既存解説を独立照合し、金融数学・商品仕様・税制・法令の適用時点を点検。",
+        "conclusion": "1: ROE：X=3.5％、Y=6.7857％。Yが高い。 2: PER：X=47.619倍、Y=20.526倍。Xが高い。 3: PBR：X=1.6667倍、Y=1.3929倍。Xが高い。 4: 配当性向：X=57.1429％、Y=36.8421％。Xが高い。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準の制度・取扱いで確認。数式・金融理論は法改正ではなく数理再計算の対象。Q23の原典画像目視再鑑定は既存監査の範囲外。"
     },
     {
       "id": "fp2-2025-01-gakka-027",
       "exam_date": "2025-01",
       "question_number": 27,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "コールは買う権利、プットは売る権利。設問は逆。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/glossary/a/47.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "アメリカンは期間中行使可能、ヨーロピアンは満期のみ。設問は逆。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/glossary/a/8.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "オプション買い手の最大損失がプレミアムであり、最大利益はプレミアムに限定されない。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/derivatives/rules/margin/"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "他条件一定でボラティリティ上昇時にはコールとプットのプレミアムが上がる。",
+          "primary_urls": [
+            "https://www.jpx.co.jp/ose-toshijuku/column/futures_option/option/03.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "全4選択肢の正誤と既存解説を独立照合し、金融数学・商品仕様・税制・法令の適用時点を点検。",
+        "conclusion": "1: コールは買う権利、プットは売る権利。設問は逆。 2: アメリカンは期間中行使可能、ヨーロピアンは満期のみ。設問は逆。 3: オプション買い手の最大損失がプレミアムであり、最大利益はプレミアムに限定されない。 4: 他条件一定でボラティリティ上昇時にはコールとプットのプレミアムが上がる。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準の制度・取扱いで確認。数式・金融理論は法改正ではなく数理再計算の対象。Q23の原典画像目視再鑑定は既存監査の範囲外。"
     },
     {
       "id": "fp2-2025-01-gakka-028",
       "exam_date": "2025-01",
       "question_number": 28,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "投資リスクは期待リターン周辺の変動、標準偏差で表す。",
+          "primary_urls": [
+            "https://www.gpif.go.jp/gpif/diversification2.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "分散で抑制できるのは非システマティックな個別リスクで、市場リスクとは異なる。",
+          "primary_urls": [
+            "https://www.gpif.go.jp/gpif/diversification2.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "ポートフォリオ標準偏差は構成資産の標準偏差の加重平均を超えない。相関関係によって低下する。",
+          "primary_urls": [
+            "https://www.gpif.go.jp/operation/h20_q4.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "期待リターンは構成資産の期待値の加重平均と等しく、上回らない。",
+          "primary_urls": [
+            "https://www.gpif.go.jp/operation/h20_q4.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "全4選択肢の正誤と既存解説を独立照合し、金融数学・商品仕様・税制・法令の適用時点を点検。",
+        "conclusion": "1: 投資リスクは期待リターン周辺の変動、標準偏差で表す。 2: 分散で抑制できるのは非システマティックな個別リスクで、市場リスクとは異なる。 3: ポートフォリオ標準偏差は構成資産の標準偏差の加重平均を超えない。相関関係によって低下する。 4: 期待リターンは構成資産の期待値の加重平均と等しく、上回らない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準の制度・取扱いで確認。数式・金融理論は法改正ではなく数理再計算の対象。Q23の原典画像目視再鑑定は既存監査の範囲外。"
     },
     {
       "id": "fp2-2025-01-gakka-029",
       "exam_date": "2025-01",
       "question_number": 29,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "総合課税で申告した上場配当は上場譲渡損失との損益通算ができない。申告分離課税の選択を要する。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1474.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "損失繰越は所定の確定申告によって翌年以降3年間で5年間ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1474.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "配当等を口座内受入れできるのは源泉徴収選択口座であり、簡易申告口座ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1476.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "源泉徴収選択口座は金融機関ごとに開設でき、全国通算1口座の制約ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1476.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "全4選択肢の正誤と既存解説を独立照合し、金融数学・商品仕様・税制・法令の適用時点を点検。",
+        "conclusion": "1: 総合課税で申告した上場配当は上場譲渡損失との損益通算ができない。申告分離課税の選択を要する。 2: 損失繰越は所定の確定申告によって翌年以降3年間で5年間ではない。 3: 配当等を口座内受入れできるのは源泉徴収選択口座であり、簡易申告口座ではない。 4: 源泉徴収選択口座は金融機関ごとに開設でき、全国通算1口座の制約ではない。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準の制度・取扱いで確認。数式・金融理論は法改正ではなく数理再計算の対象。Q23の原典画像目視再鑑定は既存監査の範囲外。"
     },
     {
       "id": "fp2-2025-01-gakka-030",
       "exam_date": "2025-01",
       "question_number": 30,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202501_q.pdf",
-      "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "evidence_document": "fp2-manabi-sprint/audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json",
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "DC運用商品として選択した対象金融機関の円預金は預金保険の対象となる。",
+          "primary_urls": [
+            "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/kyoshutsu/gaiyou.html",
+            "https://www.mizuhobank.co.jp/yokin_hoken/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "国内銀行海外支店と外国銀行在日支店の預金は預金保険対象外。",
+          "primary_urls": [
+            "https://www.mizuhobank.co.jp/yokin_hoken/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "生命保険契約者保護機構の責任準備金等の補償割合は原則90％で80％ではない。",
+          "primary_urls": [
+            "https://www.seihohogo.jp/qa/qa12.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "銀行で購入した投信は証券会社の破綻に備える日本投資者保護基金の対象外。",
+          "primary_urls": [
+            "https://jipf.or.jp/qa/index.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "全4選択肢の正誤と既存解説を独立照合し、金融数学・商品仕様・税制・法令の適用時点を点検。",
+        "conclusion": "1: DC運用商品として選択した対象金融機関の円預金は預金保険の対象となる。 2: 国内銀行海外支店と外国銀行在日支店の預金は預金保険対象外。 3: 生命保険契約者保護機構の責任準備金等の補償割合は原則90％で80％ではない。 4: 銀行で購入した投信は証券会社の破綻に備える日本投資者保護基金の対象外。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準の制度・取扱いで確認。数式・金融理論は法改正ではなく数理再計算の対象。Q23の原典画像目視再鑑定は既存監査の範囲外。"
     },
     {
       "id": "fp2-2025-01-gakka-031",
@@ -3877,6 +4328,6 @@
       "verified_at": null
     }
   ],
-  "verified_records_count": 20,
-  "audit_progress_note": "2025-01 Q01-Q20 verified with four-choice evidence; Q16 previous primary-source HOLD resolved. Remaining 160 PENDING."
+  "verified_records_count": 30,
+  "audit_progress_note": "2025-01 Q01-Q30 VERIFIED. Q21-Q30: 40 choice evidence entries. Remaining 150 PENDING."
 }
