@@ -1,0 +1,48 @@
+{
+  "schema": "touhan-q7-signed-ipa-v1",
+  "verifiedAtJST": "2026-11-24T08:44:40+09:00",
+  "codemagicAppId": "6a769d81a1add9d06020b524",
+  "buildId": "6b04cf7092306a39e3981ca4",
+  "workflow": "touhan-q7-auto-provision",
+  "status": "SIGNED_IPA_VERIFIED",
+  "codemagicStatus": "finished",
+  "shaOfWorkflowGitHead": "74a9adc73404cfcda0ebd12950b859d05e9813b6",
+  "steps": [
+    {
+      "name": "Validate signing inputs without exposing secrets",
+      "status": "success"
+    },
+    {
+      "name": "Generate native Xcode project",
+      "status": "success"
+    },
+    {
+      "name": "Obtain or create only necessary App Store signing files",
+      "status": "success"
+    },
+    {
+      "name": "Build App Store signed IPA without uploading",
+      "status": "success"
+    },
+    {
+      "name": "Verify App Store signing and generated IPA",
+      "status": "success"
+    }
+  ],
+  "artifactNames": [
+    "TouhanSprint.ipa",
+    "ALLSUNDAY1122.github.io_3_artifacts.zip"
+  ],
+  "appId": "6802119268",
+  "bundleId": "com.allsunday1122.tourokuhanbaisha",
+  "appleTeam": "MN3D2ZM44N",
+  "evidence": "https://codemagic.io/app/6a769d81a1add9d06020b524/build/6b04cf7092306a39e3981ca4",
+  "githubInspectionRun": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45291377374",
+  "ipaUploadedToASC": false,
+  "testflightAvailable": false,
+  "appReviewSubmitted": false,
+  "limits": [
+    "Signed IPA passed Codemagic code signature and profile checks. A separate App Store Connect/TestFlight upload is still required.",
+    "Physical iPhone and TestFlight install have not been tested."
+  ]
+}
