@@ -32,7 +32,17 @@ for year in range(2022,2027):
             raise RuntimeError(f"duplicate IDs {year}")
         byid={r["id"]:r for r in report["questions"]}
     else:byid={}
-    stats={"auto":0,"visual":0,"hold":0,"pending":0}
+    geom_file=B/f"GEOMETRY_AUDIT_{year}.json"
+    geom=json.loads(geom_file.read_text()) if geom_file.exists() else None
+    geom_byid={}
+    if geom:
+        if geom["year"]!=year or geom["total"]!=120 or len(geom["questions"])!=120:
+            raise RuntimeError("invalid geometry audit for "+str(year))
+        if not report or geom["priorAuditCandidateGitBlob"]!=expected_candidate_sha:
+            raise RuntimeError("stale geometry audit for "+str(year))
+        geom_byid={item["id"]:item for item in geom["questions"]}
+        if len(geom_byid)!=120:raise RuntimeError("missing geometry records")
+    stats={"auto":0,"geometry":0,"visual":0,"hold":0,"pending":0}
     for idx,q in enumerate(candidates):
         id=q["id"];n=idx+1
         if id!=f"KSAI-{year}-{n:03d}" or q["questionNo"]!=n:
@@ -42,6 +52,7 @@ for year in range(2022,2027):
             raise RuntimeError("official key mismatch")
         manual_result=reviews.get(id)
         auto_result=byid.get(id)
+        geometry_result=geom_byid.get(id)
         if report and not auto_result:raise RuntimeError("missing diff")
         if auto_result and (auto_result["questionNo"]!=n or auto_result["officialAnswer"]!=k["official_answer"]):
             raise RuntimeError("diff key mismatch")
@@ -63,6 +74,23 @@ for year in range(2022,2027):
                    "sourcePdfSha256":auto_result["officialPdfSha256"],
                    "normalizedTextSha256":auto_result["sourceNormalizedSha256"]}
             stats["auto"]+=1
+        elif geometry_result and geometry_result["status"]=="GEOMETRY_PASS" and not geometry_result["reasons"]:
+            if not auto_result or auto_result["status"]!="HOLD":
+                raise RuntimeError("geometry promotion must resolve known auto HOLD "+id)
+            if auto_result["candidateNormalizedSha256"]!=auto_result["sourceNormalizedSha256"]:
+                raise RuntimeError("unresolved raw mismatch "+id)
+            if geometry_result.get("ruby") is not None:
+                raise RuntimeError("ruby layout cannot be promoted without certified renderer "+id)
+            if geometry_result.get("table",{}).get("status")!="PASS":
+                raise RuntimeError("geometry evidence missing table coordinates "+id)
+            if sorted(auto_result["reasons"])!=["ANSWER_TABLE_REVIEW"]:
+                raise RuntimeError("unexpected geometry source reasons "+id)
+            audit={"status":"PASS","method":"AUTO_SHA_PINNED_TABLE_XY_CELL_ALIGNMENT",
+                "record":f"GEOMETRY_AUDIT_{year}.json",
+                "sourcePdfSha256":auto_result["officialPdfSha256"],
+                "normalizedTextSha256":auto_result["sourceNormalizedSha256"],
+                "table":geometry_result["table"]}
+            stats["geometry"]+=1
         else:
             stats["hold" if auto_result else "pending"]+=1
             continue
