@@ -3,7 +3,7 @@
   "created_at_jst": "2026-11-24T02:20:00+09:00",
   "branch": "feature/fp2-release-scope-20261123",
   "canonical_path": "fp2-manabi-sprint/questions/canonical/approved-questions-20261123.json",
-  "canonical_source_blob_sha": "3a4e8b13270cbb2900213633fc33094aee70961c",
+  "canonical_source_blob_sha": "b3428392860b354893b65df342ec40e72b2c01cb",
   "law_effective_date": "2026-04-01",
   "scope": {
     "total": 180,
@@ -25,8 +25,8 @@
   "gate_policy": "以前のPASSは内容一次判定であり、本最終証拠監査の完了を意味しない。証拠行未固定の問題のlegalChecked/explanationCheckedを機械的にtrueへ変更しない。",
   "summary": {
     "target": 180,
-    "pending": 90,
-    "verified": 90,
+    "pending": 72,
+    "verified": 108,
     "hold": 0,
     "fail": 0,
     "by_exam": {
@@ -37,8 +37,8 @@
         "fail": 0
       },
       "2025-05": {
-        "pending": 30,
-        "verified": 30,
+        "pending": 12,
+        "verified": 48,
         "hold": 0,
         "fail": 0
       },
@@ -5618,145 +5618,550 @@
       "id": "fp2-2025-05-gakka-031",
       "exam_date": "2025-05",
       "question_number": 31,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "所得税法上、所得は性質別の10区分に分けて所得計算する。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1000.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "相続税は納税義務者が税額を算定して申告する申告納税方式であり、賦課課税方式ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1000.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "消費税は消費者が負担し事業者が納税する間接税である。",
+          "primary_urls": [
+            "https://www.nta.go.jp/publication/pamph/koho/kurashi/html/01_3.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "法人税は国税、不動産取得税は都道府県税に区分される。",
+          "primary_urls": [
+            "https://www.tax.metro.tokyo.lg.jp/shitsumon/real_estate/f"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答2を維持。相続税は納税義務者が税額を算定して申告する申告納税方式であり、賦課課税方式ではない。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-032",
       "exam_date": "2025-05",
       "question_number": 32,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "株式の配当は取得原資が事業資金でも配当所得に分類される。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1300.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "850万円超の給与と23歳未満の扶養親族等の要件では所得金額調整控除の上限は15万円であり10万円ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1411.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "不動産貸付収入は事業的規模でも不動産所得である。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1300.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "勤務先による無利息貸付で生じる利息相当の経済的利益は、原則給与課税の対象となる。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2606.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答4を維持。勤務先による無利息貸付で生じる利息相当の経済的利益は、原則給与課税の対象となる。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-033",
       "exam_date": "2025-05",
       "question_number": 33,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "不動産所得の損失のうち土地取得の借入利子相当額は損益通算対象外。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1391.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "分離課税の先物取引の損失を他の不動産所得とは通算できない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2250.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "日常生活用自家用車の譲渡損失は他所得との損益通算対象外。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2250.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "事業所得の損失は原則として不動産所得等と損益通算できる。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2250.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答4を維持。事業所得の損失は原則として不動産所得等と損益通算できる。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-034",
       "exam_date": "2025-05",
       "question_number": 34,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 4,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "19歳以上23歳未満の控除対象扶養親族は特定扶養親族。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/yogo/senmon.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "70歳以上の控除対象扶養親族は老人扶養親族。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/yogo/senmon.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "本人の合計所得金額が1000万円超の場合、配偶者控除は適用されない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1191.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "配偶者控除は法律上の婚姻関係を必要とし、内縁関係は健康保険の扶養認定があっても対象外。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1191.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答4を維持。配偶者控除は法律上の婚姻関係を必要とし、内縁関係は健康保険の扶養認定があっても対象外。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 4,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-035",
       "exam_date": "2025-05",
       "question_number": 35,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "内国法人の非上場株配当は総合課税で申告すれば所定の配当控除を利用できる。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1250.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "公募株式投資信託の分配金は例外対象を除き総合課税選択時に配当控除の対象となる。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1250.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "配当所得の計算では株式等取得の負債利子を差し引く。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1250.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "配当控除の基礎となる配当所得は他所得との損益通算前の金額で判定する。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1250.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答1を維持。内国法人の非上場株配当は総合課税で申告すれば所定の配当控除を利用できる。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-036",
       "exam_date": "2025-05",
       "question_number": 36,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "FAIL_CORRECTED_REAUDIT_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "給与1500万円・一か所・年末調整済み・ほかの所得なしなら通常申告義務はない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "同族会社役員が当該会社から賃料を受け取れば20万円以下でも申告対象。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1901.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "従たる給与の未年末調整収入25万円は20万円超となり申告を要する。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "所得税の確定申告期限は原則翌年3月15日であり3月31日ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答1を維持。給与1500万円・一か所・年末調整済み・ほかの所得なしなら通常申告義務はない。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-037",
       "exam_date": "2025-05",
       "question_number": 37,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "法人税納税地は原則法人の本店または主たる事務所所在地である。",
+          "primary_urls": [
+            "https://www.nta.go.jp/publication/pamph/hojin/aramashi2026/pdf/01.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "法人税の納税地異動届は原則として異動前の所轄税務署長に提出する。",
+          "primary_urls": [
+            "https://www.nta.go.jp/publication/pamph/hojin/aramashi2026/pdf/01.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "法人税確定申告は事業年度終了から原則2か月以内であり1か月ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/publication/pamph/hojin/aramashi2026/pdf/01.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "設立事業年度の青色申告承認申請期限は原則設立3か月経過日と初年度末の早い日の前日である。",
+          "primary_urls": [
+            "https://www.nta.go.jp/publication/pamph/hojin/aramashi2026/pdf/01.pdf"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答2を維持。法人税の納税地異動届は原則として異動前の所轄税務署長に提出する。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-038",
       "exam_date": "2025-05",
       "question_number": 38,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "法人の減価償却費の損金算入は原則確定決算の損金経理が要件。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5410.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "2016年4月1日以降取得の建物・建物附属設備・構築物の償却方法は定額法であり定率法のみではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2100.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "問題指定の2024年度では10万円未満の少額減価償却資産は原則全額損金算入できる。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2100.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "取得価額10万円以上20万円未満は一括償却資産として原則3年均等償却が可能。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2100.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答2を維持。2016年4月1日以降取得の建物・建物附属設備・構築物の償却方法は定額法であり定率法のみではない。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-039",
       "exam_date": "2025-05",
       "question_number": 39,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "FAIL_CORRECTED_REAUDIT_PENDING",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "個人事業者の基準期間は前々年であって前年ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/publication/pamph/koho/kurashi/html/01_3.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "基準期間課税売上高1000万円超の法人は原則免税対象外。",
+          "primary_urls": [
+            "https://www.nta.go.jp/publication/pamph/koho/kurashi/html/01_3.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "特定期間の課税売上高・給与等支払額がともに1000万円超なら課税義務の免除はない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/publication/pamph/koho/kurashi/html/01_3.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "法人の消費税の確定申告は原則課税期間終了後2か月以内。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6137.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答1を維持。個人事業者の基準期間は前々年であって前年ではない。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-040",
@@ -5778,145 +6183,550 @@
       "id": "fp2-2025-05-gakka-041",
       "exam_date": "2025-05",
       "question_number": 41,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "不動産登記事務を扱うのは登記所であり市区町村ではない。",
+          "primary_urls": [
+            "https://www.moj.go.jp/MINJI/minji02"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "抵当権設定など所有権以外の登記は権利部乙区に記録される。",
+          "primary_urls": [
+            "https://www.moj.go.jp/MINJI/minji02"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "通常建物の床面積は壁芯算定であり区分建物の内法算定と異なる。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/416AC0000000123?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "不動産登記事項証明書は利害関係がなくても請求できる。",
+          "primary_urls": [
+            "https://www.moj.go.jp/MINJI/minji02"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答2を維持。抵当権設定など所有権以外の登記は権利部乙区に記録される。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-042",
       "exam_date": "2025-05",
       "question_number": 42,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "民法100条ただし書により相手方が代理関係を知り又は知り得た場合、顕名欠如だけで無効とはならない。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "共有者は原則自己の共有持分を独立して処分できる。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "目的物の不可抗力滅失による反対給付の履行拒絶は民法536条1項に沿う。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "民法557条の手付解除は相手方の履行着手前に限る。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答3を維持。目的物の不可抗力滅失による反対給付の履行拒絶は民法536条1項に沿う。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-043",
       "exam_date": "2025-05",
       "question_number": 43,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "普通借地権の設定時存続期間は原則30年以上で上限50年ではない。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "借地権者の債務不履行による解除に建物買取請求権は原則認められない。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "借地権更新請求の法定更新には原則建物の存在が必要。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "普通借地権の契約に公正証書は必須ではない。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答2を維持。借地権者の債務不履行による解除に建物買取請求権は原則認められない。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-044",
       "exam_date": "2025-05",
       "question_number": 44,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 2,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "期間の定めのない建物賃貸借で賃貸人の適法な解約申入れ後は6か月で終了。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "普通建物賃貸借を1年未満と定めると期間の定めのない契約とみなす。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "民法621条により通常損耗・経年変化の原状回復義務は原則負わない。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/129AC0000000089?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "借地借家法33条の造作買取請求権を排除する特約は原則有効。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/403AC0000000090?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答2を維持。普通建物賃貸借を1年未満と定めると期間の定めのない契約とみなす。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 2,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-045",
       "exam_date": "2025-05",
       "question_number": 45,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "都市計画区域は必ずしも線引きを要せず非線引き区域がある。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/343AC0000000100?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "建築物建設等を目的としない土地の変更は原則開発行為の定義外。",
+          "primary_urls": [
+            "https://www.mlit.go.jp/toshi/city_plan/toshi_city_plan_fr_000046.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "土地区画整理事業の施行としての開発行為は開発許可不要。",
+          "primary_urls": [
+            "https://www.mlit.go.jp/toshi/city_plan/toshi_city_plan_fr_000046.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "市街化調整区域内の一定の農業従事者用住宅の開発は許可不要。",
+          "primary_urls": [
+            "https://www.mlit.go.jp/toshi/city_plan/toshi_city_plan_fr_000046.html"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答3を維持。土地区画整理事業の施行としての開発行為は開発許可不要。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-046",
       "exam_date": "2025-05",
       "question_number": 46,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 3,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "前面道路幅員12m未満なら法定乗率による容積率上限と指定容積率の低い方が原則。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/325AC0000000201?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "準防火地域内の耐火建築物には所定の建蔽率緩和がある。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/325AC0000000201?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "建築基準法42条2項道路のセットバック部分は建蔽率・容積率の敷地面積に含まれない。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/325AC0000000201?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "用途地域をまたぐ敷地の用途規制は原則過半の属する区域の規制。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/325AC0000000201?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答3を維持。建築基準法42条2項道路のセットバック部分は建蔽率・容積率の敷地面積に含まれない。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 3,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-047",
       "exam_date": "2025-05",
       "question_number": 47,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "区分所有法19条により共用部分の負担は原則持分割合であり均等割ではない。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/337AC0000000069?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "管理者の選任解任は規約に別段の定めがない限り集会決議による。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/337AC0000000069?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "管理団体は区分所有者全員によって構成される。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/337AC0000000069?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "共用部分持分は原則各専有部分の床面積割合。2026年4月施行改正も勘案。",
+          "primary_urls": [
+            "https://laws.e-gov.go.jp/law/337AC0000000069?occasion_date=20260401"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答1を維持。区分所有法19条により共用部分の負担は原則持分割合であり均等割ではない。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-048",
       "exam_date": "2025-05",
       "question_number": 48,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "TRUE",
+          "reason": "相続人以外への特定遺贈は不動産取得税が原則課税となる。",
+          "primary_urls": [
+            "https://www.tax.metro.tokyo.lg.jp/shitsumon/real_estate/f"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "FALSE",
+          "reason": "死因贈与は相続取得による非課税と異なり原則課税対象。",
+          "primary_urls": [
+            "https://www.tax.metro.tokyo.lg.jp/shitsumon/real_estate/f"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "FALSE",
+          "reason": "土地の等価交換による取得でも不動産取得税が原則課税される。",
+          "primary_urls": [
+            "https://www.tax.metro.tokyo.lg.jp/shitsumon/real_estate/f"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "FALSE",
+          "reason": "通常の新築住宅の課税標準控除は最大1200万円であり1500万円ではない。",
+          "primary_urls": [
+            "https://www.tax.metro.tokyo.lg.jp/shitsumon/real_estate/f"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答1を維持。相続人以外への特定遺贈は不動産取得税が原則課税となる。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-049",
       "exam_date": "2025-05",
       "question_number": 49,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "previous_content_status": "PASS",
       "legacy_independent_review_status": "NOT_TESTED",
-      "canonical_legalChecked": false,
-      "canonical_explanationChecked": false,
+      "canonical_legalChecked": true,
+      "canonical_explanationChecked": true,
       "official_answer_one_based": 1,
       "question_source_url": "https://www.jafp.or.jp/exam/mohan/files/g2_202505_qa.pdf",
       "evidence_document": null,
-      "choice_evidence": [],
-      "explanation_review": null,
-      "verified_at": null
+      "choice_evidence": [
+        {
+          "choice_number": 1,
+          "verdict": "FALSE",
+          "reason": "取得費不明時に概算取得費は譲渡収入の5%であり10%ではない。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3258.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 2,
+          "verdict": "TRUE",
+          "reason": "長期譲渡は譲渡年1月1日現在の所有期間が5年超。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3208.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 3,
+          "verdict": "TRUE",
+          "reason": "長期譲渡の原則税率は所得税15%と復興特別所得税0.315%、住民税5%。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3208.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        },
+        {
+          "choice_number": 4,
+          "verdict": "TRUE",
+          "reason": "売買仲介手数料は譲渡費用として控除される。",
+          "primary_urls": [
+            "https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3208.htm"
+          ],
+          "legal_as_of": "2026-04-01"
+        }
+      ],
+      "explanation_review": {
+        "result": "PASS",
+        "reason": "2025-05逐語ファイルの設問・全4肢と既存解説を突合。選択肢別に一次法令・官公庁資料を基準とした現行判定を記録。",
+        "conclusion": "正答1を維持。取得費不明時に概算取得費は譲渡収入の5%であり10%ではない。 その他の3肢についても別記理由で正誤確認。"
+      },
+      "verified_at": "2026-11-24",
+      "current_answer_one_based": 1,
+      "verified_primary_source_material": true,
+      "single_correct_answer": true,
+      "source_date_note": "2026-04-01基準。設問に明示された過去年期・取得年月日はその歴史的条件を維持。"
     },
     {
       "id": "fp2-2025-05-gakka-050",
