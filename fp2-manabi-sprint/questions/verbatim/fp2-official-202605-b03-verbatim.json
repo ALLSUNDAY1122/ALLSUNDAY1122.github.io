@@ -621,9 +621,9 @@
     "legalReferenceDate": "2025-04-01",
     "sourceUrl": "https://www.jafp.or.jp/exam/mohan/files/g2_202605_qa.pdf",
     "status": "draft",
-    "legacyReason": "HOLD_FAMILY_DIAGRAM_ORIGINAL_PDF_REQUIRED",
+    "legacyReason": null,
     "audit": {
-      "questionChecked": false,
+      "questionChecked": true,
       "answerChecked": true,
       "explanationChecked": false,
       "legalChecked": false,
@@ -631,8 +631,30 @@
       "recheck_status": "2026_LAW_INDEPENDENT_RECHECK_PENDING",
       "official_answer_one_based": 2,
       "verified_2026_answer": null,
-      "exhibit_status": "UNREPRODUCIBLE_FAMILY_RELATION_DIAGRAM",
-      "explanation_source": "RECOVERED_CANONICAL_BANK_REUSED_AS_UNREVIEWED_DRAFT"
+      "exhibit_status": "OFFICIAL_PDF_FAMILY_DIAGRAM_ASSET_LINKED",
+      "explanation_source": "RECOVERED_CANONICAL_BANK_REUSED_AS_UNREVIEWED_DRAFT",
+      "figure_hold_resolved": true,
+      "uploaded_visual_source": {
+        "filename": "fp2-202605-q55-family-diagram.png",
+        "repo_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202605-q55-family-diagram.png",
+        "binary_committed": true,
+        "github_blob_sha": "9ef4ddbe2d038ddb59fc21d36e3ea606fa25cc92",
+        "source_pdf": "g2_202605_qa.pdf",
+        "source_page": 31,
+        "extraction_operator": "Muse",
+        "extraction_dpi": 200,
+        "size_label": "34KB",
+        "sha256": "80ba54e48328814e70b5a2b5ee3dce593306734b8393803fdbee10f21ad550e1",
+        "provenance": "USER_REPORTED_DIRECT_CROP_FROM_OFFICIAL_COMBINED_PDF_PAGE_31",
+        "checksum_verification": "USER_REPORTED_NOT_INDEPENDENTLY_RECOMPUTED"
+      },
+      "figure_hold_resolution_evidence": {
+        "asset_path": "fp2-manabi-sprint/questions/verbatim/assets/fp2-202605-q55-family-diagram.png",
+        "github_blob_sha": "9ef4ddbe2d038ddb59fc21d36e3ea606fa25cc92",
+        "source_pdf": "g2_202605_qa.pdf",
+        "source_page": 31,
+        "extraction_dpi": 200
+      }
     },
     "source_organization": "日本FP協会",
     "source_exam_type": "2級学科",
@@ -641,8 +663,8 @@
     "rights_policy_url": "https://fair.jafp.or.jp/exam/mohan/files/exam_riyou.pdf",
     "attribution_display": "出典：日本FP協会 2級FP技能検定 学科 2026-05公表 第55問",
     "modified": false,
-    "modification_note": "親族関係図の人物名・文字位置は保持したが、接続線がテキスト抽出されないため図の再現は不能。推測による描き直しを禁止し、原PDFの画像参照が必要。",
-    "modification_verification": "UNREPRODUCIBLE_FAMILY_RELATION_DIAGRAM"
+    "modification_note": "出典：日本FP協会公式結合PDF g2_202605_qa.pdf、31ページの親族関係図。Museが200 DPIで直接切り出し、ユーザーがSHA-256を提示。GitHubに保存済みのPNG実体を読み戻し確認したため、図のテキスト再現不能HOLDを解除した。設問・選択肢・公式解答・出典は維持。画像SHA-256はユーザー申告値で独立再計算未実施。",
+    "modification_verification": "OFFICIAL_FIGURE_ASSET_GITHUB_READBACK_CONFIRMED"
   },
   {
     "id": "fp2-2026-05-gakka-056",
