@@ -313,3 +313,38 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 | LEGACY_STAGING_PDF_DRIFT | 96 |
 
 実行成功した年度の差分、原典ページ、公式PDF SHA-256、正規化後のハッシュは `official-kansai/AUTO_DIFF_2022.json` ～ `AUTO_DIFF_2026.json`。PASSは `APPROVED_OFFICIAL_BANK.json` に移し、未PASSは非公開。実ブラウザ・iOSビルド・TestFlightは別ゲートのまま。
+
+
+## 自動照合ゲート v1：2026-11-24T00:03:11+09:00（最新）
+
+- **公開判定 BLOCKED**。本番問題バンク **102/600問**（従来の目視PASS 14、新たな自動diff PASS 88）。
+- 検証手順：原典PDFを公式URLから再取得し、保存済SHA-256と一致したバイナリのみPyMuPDF再抽出。問題境界・rawOriginalText・選択肢・解答番号を正規化diff。
+- 正規化：**Unicode NFC、Unicode空白（半角・全角・改行・タブ）の除去のみ**。かな、漢字、句読点、記号、ルビ本文は削除・書換しない。ルビ配置は独立審査対象。
+- 自動昇格禁止：画像、図表、正誤組合せ表、ルビ独立行、抽出不一致、4/5肢判定失敗、2023年度問90。表組のレイアウト再現は文字diffが一致しても合格しない。
+- 注意：PyMuPDF同一エンジンの再抽出のため独立した逐語転記ではない。**原典バイナリの固定・構造diffは確認できるが、非テキスト要素やPDF自体の文字抽出誤りを保証しない。**
+- 2023年度問90は収録候補として保持、`answer=null`、全員正解扱い、模試の正答率分母から除外。視覚・公式例外監査完了までは正式昇格不可。
+
+| 年度 | diff PASS候補 | diff HOLD | 未照合 | 保存済目視PASS | 年度別正式昇格 |
+|---|---:|---:|---:|---:|---:|
+| 2022 | 15 | 105 | 0 | 14 | 28 |
+| 2023 | 16 | 104 | 0 | 0 | 16 |
+| 2024 | 23 | 97 | 0 | 0 | 23 |
+| 2025 | 21 | 99 | 0 | 0 | 21 |
+| 2026 | 14 | 106 | 0 | 0 | 14 |
+| **合計** | **89** | **511** | **0** | **14** | **102** |
+
+### 自動検出の保留理由（重複計上、合計は600に一致しない）
+| 理由コード | 該当件数 |
+|---|---:|
+| ANSWER_TABLE_REVIEW | 445 |
+| CHOICE_DIFF | 1 |
+| FIGURE_OR_FORM_REVIEW | 48 |
+| OFFICIAL_INVALID_Q90_REVIEW | 1 |
+| RUBY_POSITION_REVIEW | 233 |
+
+### 合否判定に使わない参考差異
+| 注意コード | 件数 |
+|---|---:|
+| LEGACY_STAGING_PDF_DRIFT | 96 |
+
+実行成功した年度の差分、原典ページ、公式PDF SHA-256、正規化後のハッシュは `official-kansai/AUTO_DIFF_2022.json` ～ `AUTO_DIFF_2026.json`。PASSは `APPROVED_OFFICIAL_BANK.json` に移し、未PASSは非公開。実ブラウザ・iOSビルド・TestFlightは別ゲートのまま。
