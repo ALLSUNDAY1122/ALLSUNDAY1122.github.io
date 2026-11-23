@@ -201,7 +201,7 @@
       "iap": false,
       "iap_product_ids": [],
       "app2_task": null,
-      "status": "CANONICAL312_SELECTED300_NEW_CI_NOT_VERIFIED",
+      "status": "CANONICAL312_SELECTED300_PREFLIGHT_PARTIAL_LATEST_HEAD_CI_PENDING_NO_SUBMISSION",
       "readback": false,
       "ios_project": "fp2-manabi-sprint/ios/project.yml",
       "native_source_branch": "feature/fp2-release-scope-20261123",
@@ -210,9 +210,9 @@
       "publishable_questions": 0,
       "icon_source_blob_sha": "ce0cb5bc61296d7ca2ebde213c729ae5d1e4ab9d",
       "icon_apple_hash_verified": false,
-      "build_validation": "POST_300_UPDATE_CI_PENDING",
+      "build_validation": "300_CONTENT_AND_E2E_PRIOR_PASS_LATEST_HEAD_NOT_ALL_COMPLETE",
       "app_store_upload": "NOT_STARTED",
-      "note": "Five official academic exam rounds independently content PASS 300/300 (2024-09 60, 2024-05 60 incl 3 preexisting, three previous rounds 180). Canonical312 includes 12 independently approved original reserves not in five-round release. Newly imported modified 117 independently audited. All publishable=false. Previous CI8 success at 5a72059f was for 120-only source, not evidence for 300 implementation; new Simulator/Chromium/compiled payload/ASC remain unverified.",
+      "note": "312 content PASS; 300 selected, 12 reserve, publishable 0. Reference 300 CI passed on earlier head; latest source head 38eeaee1 check results still pending at time of record. ASC and device HUMAN REQUIRED; no submission.",
       "ci_run_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45158866204",
       "ci_source_sha": "5a72059f69e77375dbfa6568f613362a2712cc75",
       "ci_verified_steps": [
@@ -227,7 +227,7 @@
       ],
       "release_selected": 300,
       "reserve_questions": 12,
-      "preflight_classification": "EXPANSION300_CI_PENDING_Q0_Q5_HUMAN_REQUIRED",
+      "preflight_classification": "AUTO-FIX_BUILD-REQUIRED_HUMAN-REQUIRED_FINAL-APPROVAL",
       "ci_8_of_8_verified": false,
       "ci_8_of_8_reference_commit": "5a72059f69e77375dbfa6568f613362a2712cc75",
       "ci_8_of_8_categories": {
@@ -238,16 +238,44 @@
         "registry_audit": 1
       },
       "ci_8_of_8_evidence": "fp2-manabi-sprint/audit/FP2_PREFLIGHT_CI8_HUMAN_REQUIRED_20261123.md",
-      "ci_8_of_8_conclusions": "HISTORICAL_120_ONLY_CI8_PASS_NOT_300_VALIDATION",
+      "ci_8_of_8_conclusions": "HISTORICAL_120_ONLY_5a72059f_NOT_300_RELEASE",
       "icon_internal_verification": "PASS_IDENTICAL_FP2_LEGACY_GIT_BLOB",
       "icon_current_sha256": "d456178b2a7b04f180e39b3ad62f5c194832e85aa15102bf6452751551db8033",
       "icon_asc_verification": "HUMAN_REQUIRED",
       "human_required": [
         "ASC_ICON_REFERENCE_CONFIRMATION",
-        "ASC_APP_VERSION_BUILD_IAP_PRIVACY_METADATA_SCREENSHOTS_FINAL_CHECK",
-        "SIGNED_TESTFLIGHT_INSTALL_REAL_DEVICE_ACCEPTANCE",
-        "RIGHTS_OPERATOR_AND_SOURCE_DISCLOSURE_SIGNOFF",
-        "EXPLICIT_FINAL_REVIEW_SUBMISSION_APPROVAL"
+        "ASC_APP_ID_BUNDLE_VERSION_BUILD_IAP_PRIVACY_METADATA_SCREENSHOTS_PUBLIC_URLS_READBACK",
+        "REAL_DEVICE_IOS_ACCEPTANCE",
+        "RIGHTS_OPERATOR_AND_SOURCE_DISCLOSURE_SIGNOFF"
+      ],
+      "preflight_scope": {
+        "canonical": 312,
+        "selected": 300,
+        "reserve": 12,
+        "academic_rounds": 5,
+        "domains": 6,
+        "per_domain": 50
+      },
+      "preflight_source_head_sha": "38eeaee1e05831b9ff29e55e4bab2ae0db4794a9",
+      "preflight_evidence": "fp2-manabi-sprint/audit/FP2_PREFLIGHT_312_CANONICAL_300_SELECTED_20261123.md",
+      "latest_head_ci_result": "PARTIAL_NOT_ALL_PASS",
+      "latest_head_ci_checked": "2026-11-23",
+      "latest_head_ci_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/38eeaee1e05831b9ff29e55e4bab2ae0db4794a9/checks",
+      "asc_readback": "HUMAN_REQUIRED_NOT_PERFORMED",
+      "submission_state": "NOT_SUBMITTED",
+      "final_approval": "PENDING_USER_EXPLICIT_APPROVAL",
+      "auto_fix_required": [
+        "CLOSE_LATEST_HEAD_CI_OR_FIX_FAILURES",
+        "REVALIDATE_300_WEB_AND_BUNDLE_HASH"
+      ],
+      "build_required": [
+        "SIGNED_IPA_300_PAYLOAD_SHA_PROOF",
+        "TESTFLIGHT_BUILD_AND_DEVICE_TEST_MATERIALS",
+        "PUBLIC_SUPPORT_PRIVACY_HTTP200"
+      ],
+      "final_approval_required": [
+        "Q0_TO_Q5_COMPLETE",
+        "EXPLICIT_APP_REVIEW_SUBMISSION_APPROVAL"
       ]
     }
   }
