@@ -65,6 +65,8 @@ jobs:
             grep -q 'OFFICIAL_NOT_READY:' /tmp/itp-official-release.log
             echo "PASS: official release remains correctly blocked at $current/500"
           fi
+      - name: Compile official-source PDF staging parser
+        run: python3 -m py_compile apps/it-passport-rebuild/quality/stage-ipa-pdf.py
       - name: Report issue-triggered run
         if: github.event_name == 'issues' && always()
         uses: actions/github-script@v8
