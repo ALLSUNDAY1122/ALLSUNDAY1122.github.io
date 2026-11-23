@@ -32,6 +32,8 @@ jobs:
               git show "FETCH_HEAD:kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json" > "kangoshi-sprint/product-content/keyed-candidates/exam${exam}-${session}-draft.json"
             done
           done
+      - name: Diagnose PDF-number coordinates on source originals
+        run: python kangoshi-sprint/scripts/debug_pdf_coordinates.py
       - name: Perform 480 question Poppler versus PyMuPDF dual engine and official key audit
         run: python kangoshi-sprint/scripts/bulk_dual_engine_verify.py
       - name: Produce 38 side-by-side source PDF versus image comparisons
