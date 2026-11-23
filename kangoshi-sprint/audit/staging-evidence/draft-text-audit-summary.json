@@ -1,0 +1,54 @@
+{
+  "target": 480,
+  "questionsAudited": 480,
+  "counts": {
+    "HOLD_CHOICES_MISMATCH": 42,
+    "HOLD_INCOMPLETE_DATA": 8,
+    "PASS_TEXT_ONLY": 430
+  },
+  "sessions": {
+    "112-AM": {
+      "status": "EXECUTED_STAGING_ONLY",
+      "counts": {
+        "HOLD_CHOICES_MISMATCH": 11,
+        "HOLD_INCOMPLETE_DATA": 2,
+        "PASS_TEXT_ONLY": 107
+      },
+      "invalidStructure": 6,
+      "exitCode": 1
+    },
+    "112-PM": {
+      "status": "EXECUTED_STAGING_ONLY",
+      "counts": {
+        "HOLD_CHOICES_MISMATCH": 10,
+        "HOLD_INCOMPLETE_DATA": 3,
+        "PASS_TEXT_ONLY": 107
+      },
+      "invalidStructure": 7,
+      "exitCode": 1
+    },
+    "111-AM": {
+      "status": "EXECUTED_STAGING_ONLY",
+      "counts": {
+        "HOLD_CHOICES_MISMATCH": 10,
+        "HOLD_INCOMPLETE_DATA": 1,
+        "PASS_TEXT_ONLY": 109
+      },
+      "invalidStructure": 5,
+      "exitCode": 1
+    },
+    "111-PM": {
+      "status": "EXECUTED_STAGING_ONLY",
+      "counts": {
+        "HOLD_CHOICES_MISMATCH": 11,
+        "HOLD_INCOMPLETE_DATA": 2,
+        "PASS_TEXT_ONLY": 107
+      },
+      "invalidStructure": 6,
+      "exitCode": 1
+    }
+  },
+  "officialCorrectAnswersChecked": 0,
+  "publishable": 0,
+  "note": "A same-source extract/text match can pass even when the PDF glyph mapping dropped original digits or symbols. ALL 480 remain quarantined."
+}
