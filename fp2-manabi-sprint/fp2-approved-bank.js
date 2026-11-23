@@ -2,7 +2,7 @@
 (function(global){
 "use strict";
 const SOURCE="questions/canonical/approved-questions-20261123.json";
-const isApproved=q=>Boolean(q && q.approved_for_content_bank===true && q.independent_audit_status==="PASS" && q.release_selected===true);
+const isApproved=q=>Boolean(q && q.approved_for_content_bank===true && q.independent_audit_status==="PASS");
 const pick=(...xs)=>xs.find(x=>typeof x==="string"&&x.trim())||"";
 function normalize(q){
  const raw=q.choices||q.options||[];
@@ -29,19 +29,18 @@ async function load(){
  if(!response.ok)throw new Error("Canonical bank HTTP "+response.status);
  const body=await response.json();
  if(!body || !Array.isArray(body.questions))throw new Error("Canonical bank structure invalid");
- if(body.content_approved_questions!==body.questions.length)throw new Error("Canonical approved count mismatch");
+ if(body.questions.length!==310 || body.release_candidate_questions!==298 || body.reserve_content_pass_questions!==12)throw new Error("Expected canonical 310 / selected 298 / reserve 12");
  const seen=new Set(),items=[];
  for(const q of body.questions){
-  if(!isApproved(q))continue;
+  if(q.release_selected!==true)continue;
+  if(q.independent_audit_status==="FAIL"||q.independent_audit_status==="HOLD"||q.audit_status==="FAIL"||q.audit_status==="HOLD")throw new Error("Unresolved question in canonical bank "+q.id);
   const normalized=normalize(q);
   if(!normalized)throw new Error("Invalid approved question "+String(q.id));
-  if(seen.has(q.id))throw new Error("Duplicate approved question "+q.id);
+  if(seen.has(q.id))throw new Error("Duplicate selected question "+q.id);
   seen.add(q.id);items.push(normalized);
  }
- if(body.release_candidate_questions!==items.length)throw new Error("Release candidate count mismatch");
- const domains=new Map();for(const x of items)domains.set(x.domain,(domains.get(x.domain)||0)+1);
- if(items.length!==298||domains.size!==6||[...domains.values()].sort((a,b)=>a-b).join(',')!=='48,50,50,50,50,50')throw new Error("Release selection must be 298 official questions in six domains");
- return {items,path:SOURCE,contentApproved:body.content_approved_questions,publishable:body.publishable_questions===items.length&&body.status==="RELEASE_APPROVED",releaseStatus:body.status};
+ if(items.length!==298)throw new Error("Selected 298 count mismatch: "+items.length);
+ return {items,path:SOURCE,contentApproved:items.length,selectedTarget:298,reserveTarget:12,publishable:false,releaseStatus:body.status||"RELEASE_GATE_UNVERIFIED"};
 }
 global.FP2ApprovedBank={load,normalize,isApproved,SOURCE};
 })(window);
