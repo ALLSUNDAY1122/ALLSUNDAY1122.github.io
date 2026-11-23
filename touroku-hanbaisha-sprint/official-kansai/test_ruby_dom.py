@@ -44,11 +44,11 @@ with sync_playwright() as p:
             assert x["verticalGap"]>-3,x
         overflow=page.evaluate("document.documentElement.scrollWidth-document.documentElement.clientWidth")
         assert overflow<=2,overflow
+        screenshot=f"/tmp/touhan-ruby-{width}.png"
+        page.screenshot(path=screenshot,full_page=True)
         page.locator("#choices button").nth(chosen["answer"]).click()
         page.locator("#next").click()
         assert "100%" in page.locator("#summary").inner_text()
-        screenshot=f"/tmp/touhan-ruby-{width}.png"
-        page.screenshot(path=screenshot,full_page=True)
         results.append({"viewport":width,"rubyElements":len(positions),"maxHorizontalOffset":round(max(x["horizontalOffset"] for x in positions),2),
                         "screenshot":screenshot,"status":"PASS"})
         context.close()
