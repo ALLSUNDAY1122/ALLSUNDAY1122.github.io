@@ -56,3 +56,23 @@
 - iOS開発ブランチの4/8/16問・年度別・画像拡大コードはGitHub保存済みだが、現行バイナリが30問独自スターターをロードしているため**本審査用のビルドではない**。
 
 **最終判定：BLOCKED / 公式0/500問 / App Review未提出。** 現時点では5年度分のIPA公式PDFから忠実な問題文・図・正答を再現するための一次資料がダウンロードできていない。推測転記、類似サイトからの原文転写、独自問題を公式と偽装する代替処理は行わない。
+
+## 2026-11-23 23:22 JST｜IPA公式リンクをたどった別経路での取得検証
+
+公式の出発点：[IPA過去問題](https://www.ipa.go.jp/shiken/mondai-kaiotu/index.html)。IPAがこのページから案内する専用サイトは[ITパスポート公開問題一覧](https://www3.jitec.ipa.go.jp/JitesCbt/html/openinfo/questions.html)であり、問題冊子および解答例の年度別PDFへのリンクがある。
+
+前回の直接URL取得に加え、公式一覧ページへアクセス後のCookieとRefererを保持するルート、およびIPv4指定ルートの計3ルートを **2022～2026年度の問題・解答例各10件** に再試行した。[GitHub Actions run #45192577663](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45192577663)、[再実行 #45193088237](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45193088237) の証拠を `questions/ipa-staging/extraction-evidence.json` へ保存して読み戻し確認。すべて `NOT_PDF`（公式サイトのリクエスト検証用HTMLを受信）で、**PDF実体の取得0件、年度別ドラフト収録0件、独立監査PASS 0件、本番公式正規バンク0/500問** を維持した。
+
+Web検索のインデックス経由では2025年度のIPA公式PDFのページ画像が表示でき、PDFの所在・一部原稿の存在は視覚的に確認できた。ただし、検索インデックスのキャッシュ画像は元PDFファイルではなく、全ページ・図版・正答PDFとの照合も未完成のため、本番原典として採用しない。
+
+取得成功時に各年度のPDFペアだけを独立して処理できる `quality/stage-ipa-pdf.py` を追加。PDF先頭署名、SHA-256、PDFページ、問題番号検出、重複・欠落を記録し、回答原典を同梱した `ipa-staging/{year}-unverified-drafts.json` を生成する。**ドラフトは全件HOLDで、公式正規バンク `official-verbatim.json` へ自動昇格しない。** 5年度を一括で要求せず、取得できた年度のみドラフトへ進める。ただし、現時点でこの工程に進めた年度はない。
+
+**停止理由**：IPA専用サイトのリクエスト検証により、提供環境から公式PDFバイナリを取得できない。非公式サイトの転載や推測テキストで公式問題を捏造しない。原典を正規に取得できるアクセス経路またはIPA原本PDFの提供が確認できた時点で、年度別に再開できる。
+
+### 実行した変更と結果
+
+- 取得Workflow：公式一覧ページからCookie/Refererを得て再試行し、PDF先頭署名を機械検査。
+- 出典台帳：`official-source-ledger.json` に公式ナビゲーション、年度ごとの問題・解答例URL、未取得状態を追加。
+- 原文ステージング：`quality/stage-ipa-pdf.py` を実装し、問題・解答PDF両方の正本確認なしに収録しない。
+- 正本：`release-status.json` に今次の再試行、取得0件、ステージング0件、申請保留理由を保存。
+- 申請判断：**BLOCKED（App Store本審査未提出）**、以前の独自240問は公式過去問と混同せず保全。
