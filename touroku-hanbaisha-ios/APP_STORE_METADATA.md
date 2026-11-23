@@ -2,7 +2,7 @@
 
 ## 基本情報
 - アプリ名: 登録販売者｜学びスプリント
-- サブタイトル: 12問で弱点を減らす試験対策
+- サブタイトル: 公式過去問で学ぶ登録販売者試験
 - プライマリカテゴリ: 教育
 - セカンダリカテゴリ: 辞書／辞典／その他
 - 対象年齢: 4+
@@ -10,24 +10,19 @@
 - バージョン: 1.0.0
 
 ## プロモーションテキスト
-令和8年4月の厚生労働省「試験問題の作成に関する手引き」を基準に、短い反復で苦手論点を減らす登録販売者試験対策アプリです。
+関西広域連合の登録販売者試験・公式過去問を2022〜2026年度の5年分から599問収録。年度別・分野別に学び、採点結果を確認できます。
 
 ## 説明
-登録販売者試験の5分野を、短時間で繰り返し学べる試験対策アプリです。
+登録販売者試験の公式過去問を用いた試験対策アプリです。
 
-・独立模擬試験3回分、全360問の独自問題
-・各回120問、本試験の分野配分20・20・40・20・20問に対応
-・毎回12問のクイック学習
-・試験回・章別の15分類学習
-・誤答と「わからない」を自動で苦手登録
-・3回連続正解で苦手から解除
-・第1回〜第3回を各120問通しで解ける総合模試
-・学習履歴カレンダーと途中再開
-・文字サイズ変更
+・関西広域連合の公式過去問599問（2022〜2026年度）
+・2023年度問90は公式不適切問題のため除外
+・年度・分野別の選択、問題回答と採点
+・問題ごとに実施年度・問番号・公式問題PDF・公式正答PDFを表示
+・漢字へのルビ対応を確定できない設問は読みを原典出現順に独立表示
+・旧版の独自問題360問はWeb上で別途利用可能
 
-問題は厚生労働省「登録販売者試験問題の作成に関する手引き（令和8年4月）」を基準にした独自問題です。実際の試験問題の転載を中心とした構成ではありません。
-
-本アプリは試験学習用であり、実際の症状の診断、治療、医薬品の使用判断を行うものではありません。医薬品の使用については、医師・薬剤師・登録販売者等の専門家へご相談ください。
+公式PDFの改行・図表・ルビ表示をスマートフォン向けに加工しています。原典の出典は各問題画面に表示します。関西広域連合の公式アプリではありません。インターネット接続が必要です。オフライン学習は現在対応していません。医薬品の使用判断や治療を目的とするものではありません。
 
 ## キーワード案
 登録販売者,資格,試験,過去問,医薬品,ドラッグストア,勉強,学習,模試,復習
@@ -38,9 +33,7 @@
 - マーケティングURL: https://allsunday1122.github.io/touroku-hanbaisha-sprint/
 
 ## App Review Notes
-This app is an educational quiz app for Japan's registered seller examination. It does not diagnose symptoms, recommend treatment, or provide individualized medication-use decisions. Learning progress is stored locally in the WebView storage. No login, advertising SDK, analytics SDK, location access, contacts, camera, microphone, or health data integration is used.
-
-The app contains 360 original educational questions across three independent 120-question mock examinations based on the Japanese Ministry of Health, Labour and Welfare's April 2026 examination handbook. The app shows a clear educational-use disclaimer.
+This educational app loads a remote HTTPS practice page inside WKWebView and contains 599 official past examination questions published by the Kansai Regional Union (2022–2026). The officially invalid 2023 question 90 is excluded. Each question links to official source/answer PDFs. Unattached ruby readings are displayed in original PDF order, with no inferred Kanji mapping. The app requires internet access and is not an official government app. No medical advice, user login, or in-app purchase is provided. Store privacy declarations require final verification for remote web content.
 
 ## 提出前にApp Store Connectで最終確認する項目
 - Seller Name / Copyright はApple Developer登録名に合わせる
