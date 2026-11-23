@@ -80,6 +80,7 @@ jobs:
         run: python kangoshi-sprint/scripts/promote_dual_engine.py
       - name: Verify held questions with source-image OCR as third independent engine
         run: python kangoshi-sprint/scripts/ocr_third_engine_recovery.py
+      # Use actual held count (218 after the first two OCR promotions), not a fixed 220 invariant.
       - name: Analyze OCR character-level diffs, official scoring exceptions, and 71 scenario passages
         run: python kangoshi-sprint/scripts/audit_ocr_residual_by_category.py
       - name: Repair only OCR-verified CMap character omissions in 96 question source records
