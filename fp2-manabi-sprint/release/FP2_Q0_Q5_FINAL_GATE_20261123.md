@@ -5,7 +5,7 @@
 - **監査フラグの実測：** 現行監査対象の選抜298/298問で `audit.legalChecked=true`、`audit.explanationChecked=true`（両方trueも298/298）。照合した正規バンクの実Git Blob SHAは `2f46642dbbe1ade7f48c6db6ac4dc13b62e1c4a5`。対象コードHEADは `b830743b8882d2d6589bb8afda93f273036917f2`。
 - **180問監査台帳：** `audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json` を読戻し、`items`180件すべてVERIFIED、`summary.verified=180`、`pending=0`、`hold=0`、`fail=0`。回次別2025-01/2025-05/2026-05が各VERIFIED60。台帳Git Blob SHA `8d471b935702e4a9e267f6f5296ecb82ebdae9cd`。
 - **重要な限定：** 監査証拠として保存された各URLについて、**2026-04-01基準の施行日版・当時有効な原典を今回個別再取得して再照合したわけではない**。記録済み一次資料URLや監査担当者の検証記録の存在・フラグ完了を、全原典の再取得・権利承認の完了と同一視しない。追加独立検証と権利/利用主体/図版/出典の最終責任者承認は引き続き必要。
-- **HEAD b830743bのCI読戻し（2026-11-24 JST、記録時点）：** `static-content-and-web-shell` completed/**SUCCESS**（[run 45248010727](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45248010727)）、`chromium-e2e` completed/**SUCCESS**（[run 45248010736](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45248010736)）、`static-and-native-simulator` **QUEUED**（[run 45248011118](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45248011118)）。計3チェック中SUCCESS2、FAIL0、未完1。**当該HEADのCI全成功は未確定**。本ドキュメント更新後HEADの結果にも成功を自動継承しない。
+- **HEAD `02f4c7d0558e5d5e2c712ab5e14b8d7f5a14a910` のCI読戻し（2026-11-24 JST）：3/3 completed/**SUCCESS**。`static-content-and-web-shell` [run 45249031355](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45249031355)、`chromium-e2e` [run 45249031368](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45249031368)、`static-and-native-simulator` [run 45249031111](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45249031111)。SUCCESS3／FAIL0／未完了0。**これは当該コードHEADの実測結果であり、本記録のみの後続更新コミットにCI結果を無条件には継承しない。**
 
 ## 最新品質ゲート判定
 
@@ -13,8 +13,8 @@
 |---|---|---|
 | Q0 原典・権利・法令 | **BLOCKED** | 施行日版の各証拠URL個別再取得・法令の追加検証、二次利用の権利・出典/図版と運用主体の責任者承認 |
 | Q1 教材・問題品質 | **監査フラグPASS298/298・台帳180/180 VERIFIED／出版BLOCKED** | 内部記録上の最終確認は完了。出版承認・施行日版の独立再取得は別条件 |
-| Q2 学習価値 | **ブラウザ技術証拠あり／実利用者受入未了** | 現行HEADのE2E完了確認・受験者相当の学習評価 |
-| Q3 UI/オフライン | **技術検証一部PASS／実機未了** | 現行HEADのChromium・Simulator終了確認、Safe Area・VoiceOver・図版等の実機確認 |
+| Q2 学習価値 | **Chromium E2E SUCCESS／実利用者受入未了** | 自動E2Eは当該HEADで成功。受験者相当の学習評価は未実施 |
+| Q3 UI/オフライン | **Chromium・unsigned Simulator技術SUCCESS／実機未了** | 署名済実機・Safe Area・VoiceOver・図版等の確認は未実施 |
 | Q4 独立実利用 | **NOT TESTED** | 独立した受験者相当の実利用・復旧テスト |
 | Q5 配布・申請 | **BLOCKED** | 署名IPA、TestFlight/端末受入、App Store Connect実値、Privacy/スクリーンショット/公開URL、ユーザー最終承認 |
 
