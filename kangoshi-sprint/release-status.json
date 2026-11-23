@@ -47,7 +47,7 @@
     "pass": 629,
     "hold": 91,
     "notExecutedExisting": 0,
-    "notImported": 312,
+    "notImported": 300,
     "rate": 0.8736111111111111,
     "holdByReason": {
       "HOLD_MEDIA_RIGHTS": 38,
@@ -372,12 +372,13 @@
   },
   "latestBoundaryContextAudit": {
     "date": "2026-11-24",
-    "source": "GitHub Actions dual engine recheck",
-    "newPromotedInRun": 10,
+    "runId": "45253735557",
+    "source": "GitHub Actions official PDF dual engine",
+    "newPromotedInRun": 0,
+    "newIds": [],
     "currentCanonical": 900,
     "currentHeld": 300,
     "reasonCountsOverlap": true,
-    "boundaryCorrectionRequiresUniqueFiveFieldDualEngineMatch": true,
     "scenarioContextRequiresDualEngineSourcePassage": true,
     "svgOriginalDiagramFaithfulnessVerified": 0,
     "svgPendingDetailedVisualInspection": 18,
@@ -409,41 +410,31 @@
     "quarantinedCandidateRepairs": 5
   },
   "latestContextAndControlAudit": {
-    "auditDate": "2026-11-24",
-    "scope": "all 480 candidates, prioritize 22 previously reextracted",
-    "newPromoted": 10,
-    "newIds": [
-      "K112-AM091",
-      "K112-PM100",
-      "K112-PM109",
-      "K111-AM112",
-      "K111-AM118",
-      "K111-PM091",
-      "K111-PM094",
-      "K111-PM097",
-      "K111-PM109",
-      "K111-PM112"
-    ],
+    "runId": "45253735557",
+    "date": "2026-11-24",
+    "scope": "480 source candidates, prioritize 22 reextracted",
+    "newPromoted": 0,
+    "newIds": [],
     "currentCanonical": 900,
     "remaining": 300,
-    "quarantinedReextractedTotal": 22,
-    "quarantinedReextractedStillPending": 12,
-    "lastReextraction": {
-      "checked": 310,
-      "previousVerified": 170,
-      "sourceReextractPass": 22,
+    "reextractedPendingSourcePool": 22,
+    "reextractedStillHeld": 12,
+    "reextractionSummary": {
+      "checked": 300,
+      "previousVerified": 180,
+      "sourceReextractPass": 12,
       "updated": 0,
       "notUpdated": 288
     },
     "sources": [
-      "official exam PDF",
-      "independent official key PDF",
+      "MHLW official question PDF",
+      "MHLW official answer PDF",
       "PyMuPDF",
       "Poppler"
     ],
-    "noAutoClearForUnknownControlGlyphs": true,
+    "unmappedSourceControlsRequireIndividualEvidence": true,
     "releaseEligibleNew": 0,
     "publishableNew": 0,
-    "status": "SOURCE_ONLY_AND_PENDING_EXPLANATION_MEDIA_IOS"
+    "status": "SOURCE_ONLY_RELEASE_BLOCKED"
   }
 }

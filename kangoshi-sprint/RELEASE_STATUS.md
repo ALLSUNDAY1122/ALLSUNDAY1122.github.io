@@ -7,14 +7,16 @@
 | 種別 | 件数 | 公開範囲 |
 |---|---:|---|
 | 既存第115〜113回ソースバンク | 720 | 既存ランタイム、厳格原典監査629 PASS／91 HOLD |
-| 今回実行前の検証済み拡張 | 170 | ソースのみ、アプリ配信不可 |
-| **今回の新規昇格** | **10** | 共通文・文字コード・2方式・公式正答の照合済み |
-| **正規ソースバンク** | **900 / 1,200** | 検証済み拡張180問を含む |
-| **第112・111回の未昇格** | **300問** | 残る疑義は個別保留 |
-| 今回のアプリ追加配信 | **0問** | 解説・権利・iOSゲート未解除 |
+| 今回の監査前の検証済みソース拡張 | 180 | 履歴を保持、配信不可 |
+| **今回の追加昇格** | **0** | 共通文・制御文字と二方式・公式正答の再検証 |
+| **正規ソースバンク** | **900 / 1,200** | ソース拡張180問を含む |
+| **未昇格** | **300問** | 原典の疑義と未合格ゲートは保持 |
+| アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-本表はGitHub Actions Run 45252425096の実測値。過去の監査値は下記の履歴として保持。
-正規ソースバンクは `product-content/verified-additions-20261124.json`、保留理由は `audit/dual-engine-hold-20261124.json`、追加昇格台帳は `audit/dual-engine-promotion-ledger-20261124.json` を正本とする。新規拡張はすべて `publishable=false`、`releaseEligible=false`。
+- GitHub Actions Run：45253735557。先行再抽出22問のうち**12問**が引き続き保留。
+- 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
+- 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
+- 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
 
 ## 保留413問の原因別検証と修復（理由は重複）
 
@@ -83,3 +85,11 @@
 - 残る全300問も同じ一連の抽出・2方式・公式正答・採点例外・共通文ゲートを実行。主要な残理由（重複あり）：座標の一意性不足261件、疑義文字176件、PyMuPDF問題文不一致172件など。
 - 図版18件、既存720問の厳格原典監査91件、解説・権利・iOSの未完了ゲートは引き続き保留。
 - 詳細証拠は `audit/dual-engine-hold-20261124.json` と `audit/dual-engine-promotion-ledger-20261124.json`。最終送信・契約・課金確定は行わない。
+
+
+## 今回の独立共通文・制御文字監査（Run 45253735557）
+
+- 追加昇格 **0問**、合計 **900/1,200問**。残り **300問**。
+- 昇格ID：なし。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 261, COORDINATE_REGION_UNVERIFIED 261, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 176, PYMUPDF_FIELD_MISMATCH_0 172, PAGE_FOOTER_CONTAMINATION 141, POPPLER_FIELD_MISMATCH_0 137, PYMUPDF_FIELD_MISMATCH_4 108, CHOICE_COUNT_NOT_FOUR 89, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 48, POPPLER_FIELD_MISMATCH_4 46, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38。
+- 先行再抽出候補：22問のうち残存保留12問。権利・解説・アプリ配信ゲートの自動解除は行わない。
