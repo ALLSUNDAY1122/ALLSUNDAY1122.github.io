@@ -1,47 +1,16 @@
-# 2026-11-24｜FP2現行正本・最終監査フラグ完了後のQ0〜Q5再評価
+# FP2 現行リリース判定（2026-11-24／298問選抜）
 
-> **この節が本ファイル内の旧「現行」「最新」判定に優先する。** 過去の309/312問・選抜300問・Q53 HOLDなどの数値は履歴のみ。正規310問（公式逐語選抜298問・独自予備12問）、FAIL2隔離、HOLD0、出題補充なし、公開承認0を維持。
+> 現行の唯一の判定節。以下の2026-11-23以前の309/300、312/300、Q53 HOLD等は監査経緯を示す**履歴**であり、現行値として参照・再利用しない。
 
-- **監査フラグの実測：** 現行監査対象の選抜298/298問で `audit.legalChecked=true`、`audit.explanationChecked=true`（両方trueも298/298）。照合した正規バンクの実Git Blob SHAは `2f46642dbbe1ade7f48c6db6ac4dc13b62e1c4a5`。対象コードHEADは `b830743b8882d2d6589bb8afda93f273036917f2`。
-- **180問監査台帳：** `audit/FP2_180_LEGAL_EXPLANATION_FINAL_REAUDIT_TRACKER_20261124.json` を読戻し、`items`180件すべてVERIFIED、`summary.verified=180`、`pending=0`、`hold=0`、`fail=0`。回次別2025-01/2025-05/2026-05が各VERIFIED60。台帳Git Blob SHA `8d471b935702e4a9e267f6f5296ecb82ebdae9cd`。
-- **重要な限定：** 監査証拠として保存された各URLについて、**2026-04-01基準の施行日版・当時有効な原典を今回個別再取得して再照合したわけではない**。記録済み一次資料URLや監査担当者の検証記録の存在・フラグ完了を、全原典の再取得・権利承認の完了と同一視しない。追加独立検証と権利/利用主体/図版/出典の最終責任者承認は引き続き必要。
-- **HEAD `02f4c7d0558e5d5e2c712ab5e14b8d7f5a14a910` のCI読戻し（2026-11-24 JST）：3/3 completed/**SUCCESS**。`static-content-and-web-shell` [run 45249031355](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45249031355)、`chromium-e2e` [run 45249031368](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45249031368)、`static-and-native-simulator` [run 45249031111](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45249031111)。SUCCESS3／FAIL0／未完了0。**これは当該コードHEADの実測結果であり、本記録のみの後続更新コミットにCI結果を無条件には継承しない。**
-
-## 最新品質ゲート判定
-
-| ゲート | 判定 | 未了条件 |
-|---|---|---|
-| Q0 原典・権利・法令 | **BLOCKED** | 施行日版の各証拠URL個別再取得・法令の追加検証、二次利用の権利・出典/図版と運用主体の責任者承認 |
-| Q1 教材・問題品質 | **監査フラグPASS298/298・台帳180/180 VERIFIED／出版BLOCKED** | 内部記録上の最終確認は完了。出版承認・施行日版の独立再取得は別条件 |
-| Q2 学習価値 | **Chromium E2E SUCCESS／実利用者受入未了** | 自動E2Eは当該HEADで成功。受験者相当の学習評価は未実施 |
-| Q3 UI/オフライン | **Chromium・unsigned Simulator技術SUCCESS／実機未了** | 署名済実機・Safe Area・VoiceOver・図版等の確認は未実施 |
-| Q4 独立実利用 | **NOT TESTED** | 独立した受験者相当の実利用・復旧テスト |
-| Q5 配布・申請 | **BLOCKED** | 署名IPA、TestFlight/端末受入、App Store Connect実値、Privacy/スクリーンショット/公開URL、ユーザー最終承認 |
-
-**総合：NOT_SUBMISSION_READY / NOT_SUBMITTED。Q0・Q5のユーザー側BLOCKEDは残存。** PR #5717 Draftを維持し、mainマージ・App Review本審査提出・課金/契約の確定はしない。
+- 正規バンク310問＝公式逐語監査PASS298問＋独自予備12問。選抜298問（公式のみ）、予備12問、隔離FAIL2問（2024-09 Q07・2024-05 Q08）、HOLD0問。Q53・Q55はPASS。300問への独自・言い換え補充は禁止。全310問 publishable=false。
+- 分野別選抜48/50/50/50/50/50。PR #5717 Draft、main未マージ、App Review未提出。公開許可0問。
+- CI実測の既知証跡：0b1dc287b5a6f2f8d39c1b4560e30411f730cf0cでFP2関連8ジョブSUCCESS（audit/FP2_PREFLIGHT_298_SELECTED_CI8_20261124.md）。**c1cf40cおよび本記録更新コミットの8ジョブSUCCESSを意味しない**。
+- Q0 **BLOCKED**（逐語利用条件・出典／図版・法令の最終責任者承認未了）。Q1 **教材監査PASS298／出版BLOCKED**（FAIL2隔離済み、最終出版承認未了）。Q2 **ブラウザE2E PASS／実利用者受入未了**。Q3 **Chromium・Golden Master検査PASS／実機・アクセシビリティ未了**。Q4 **NOT TESTED**（第三者・受験者相当の受入未完）。Q5 **BLOCKED**（unsigned Simulatorのみ確認、署名IPA・TestFlight・ASC実値・審査資料未確認）。
+- 総合 **NOT_SUBMISSION_READY / NOT_SUBMITTED**。本審査提出、公開、課金契約は実施しない。
 
 ---
 
-## 旧判定・履歴（以下は今回の再評価に優先しない）
-
-# FP2 現行判定・唯一の正本（2026-11-24／リリース選抜298問）
-
-> **現行値はこの節のみ。** 以下に保存された「最新」「正本」「現行」と称する旧309/312件・選抜300件・Q53 HOLDなどは**当時の履歴**であり、現行判定ではない。前回の記録変更コミット 8d8adc8 の意味内容を本リリースブランチへ反映。
-
-- **正規310件＝公式逐語監査PASS298件＋監査済み独自予備12件。選抜298件（公式のみ）、予備12件、隔離FAIL2件（2024-09 Q07・2024-05 Q08）、HOLD0件。Q53・Q55はPASS。** 選抜内訳：2024-05 59、2024-09 59、2025-01 60、2025-05 60、2026-05 60。6分野は48/50/50/50/50/50。
-- 独自L01・L02・S01も予備のまま。300問へ独自・言い換え補充しない。全310件のpublishable=false、公開許可0。PR #5717 Draft、main未マージ、App Review未提出。
-- **技術CIの実測記録は0b1dc287b5a6f2f8d39c1b4560e30411f730cf0cで8/8 SUCCESS**（監査記録 `audit/FP2_PREFLIGHT_298_SELECTED_CI8_20261124.md`）。これは本記録更新後のHEADで8/8成功したという意味ではない。
-- **Q0 BLOCKED**：公式逐語問題の二次利用条件、図版・出典・法令の最終責任者承認が未了。
-- **Q1 内容監査PASS298／出版BLOCKED**：正答監査PASS298、FAIL2隔離、HOLD0。出版判断未承認。
-- **Q2 ブラウザE2E PASS／実利用者受入未了**：実際の学習者検証が残る。
-- **Q3 Chromium・Golden Master技術PASS／実機未了**：iPhone図版・Safe Area・アクセシビリティ・オフライン実機受入未了。
-- **Q4 NOT TESTED**：独立第三者・受験者相当者の最終実機受入が未完。
-- **Q5 unsigned Simulator技術PASS／配布BLOCKED**：署名IPA、TestFlight、ASC実値・Privacy・スクリーンショット・URLなど未確認。
-- **全体：NOT_SUBMISSION_READY / NOT_SUBMITTED。** 追加の最終承認がない限り審査提出・公開は実施しない。
-
----
-
-## 旧判定履歴（以下は現行値ではない）
+## 過去の監査・構成履歴（現行判定ではない）
 
 ## 2026-11-24｜最新正本：選抜298のみ・0b1dc28のFP2 CI 8/8 SUCCESS
 
