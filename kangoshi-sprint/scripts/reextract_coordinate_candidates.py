@@ -18,16 +18,23 @@ from boundary_context_verify import _region
 from official_answer_key_audit import parse as parse_key
 from bulk_text_helpers import clean_font, norm, suspicious
 
-def crop_poppler(pdf,pg,rect):
-    # Poppler's -x/-y/-W/-H use 72-dpi output image coordinates; PDF is 72pt.
-    x0,y0,x1,y1=rect
-    cmd=["pdftotext","-f",str(pg),"-l",str(pg),"-r","72",
-         "-x",str(max(0,int(x0))),"-y",str(max(0,int(y0))),
-         "-W",str(max(1,int(x1-x0)+2)),"-H",str(max(1,int(y1-y0)+2)),
-         "-layout","-nopgbrk","-enc","UTF-8",str(pdf),"-"]
+def poppler_page(pdf,pg):
+    cmd=["pdftotext","-f",str(pg),"-l",str(pg),"-layout","-nopgbrk","-enc","UTF-8",str(pdf),"-"]
     p=subprocess.run(cmd,capture_output=True,text=True,timeout=30)
-    if p.returncode: raise RuntimeError("Poppler crop: "+p.stderr[-180:])
+    if p.returncode: raise RuntimeError("Poppler page: "+p.stderr[-180:])
     return p.stdout
+
+def segment_poppler(text,n):
+    # Unlike PDF image coordinates, Poppler's -x/-y crop on some source files
+    # omitted the final choice; independently segment full page by heading numbers.
+    lines=text.splitlines()
+    heading=re.compile(r"^\\s*(?:問\\s*)?0*"+str(n)+r"(?=\\s|$)")
+    next_heading=re.compile(r"^\\s*(?:問\\s*)?0*"+str(n+1)+r"(?=\\s|$)")
+    starts=[i for i,x in enumerate(lines) if heading.match(x)]
+    if len(starts)!=1:return None
+    i=starts[0]
+    stop=next((k for k in range(i+1,len(lines)) if next_heading.match(lines[k])),len(lines))
+    return "\\n".join(lines[i:stop])
 
 def split_fields(raw,n):
     lines=[line.strip() for line in clean_font(raw).splitlines() if line.strip()]
@@ -43,6 +50,8 @@ def split_fields(raw,n):
     # Choice labels must appear in order at line start; no missing or fifth choice.
     ch=re.compile(r"^([1-5])[.．、)）]\s*(.*)$")
     for line in lines:
+        if current==4 and (line.startswith("DKIX-") or re.fullmatch(r"\\d{1,3}",line)):
+            break
         m=ch.match(line)
         if m:
             label=int(m.group(1))
@@ -71,6 +80,7 @@ def main():
         bank=json.loads(path.read_text())
         doc=fitz.open(pathlib.Path("/tmp/kangoshi-official")/f"{ex}-{session}.pdf")
         pdf=pathlib.Path("/tmp/kangoshi-official")/f"{ex}-{session}.pdf"
+        poppler_cache={}
         for q in bank["questions"]:
           if q["id"] in skip:continue
           summary["checked"]+=1
@@ -82,7 +92,9 @@ def main():
             a,geo=_region(doc[pg-1],n,clean_font)
             if a is None:continue
             # Reject ambiguous coordinate extraction, including one page's two anchors.
-            b=crop_poppler(pdf,pg,geo["clip"])
+            if pg not in poppler_cache:poppler_cache[pg]=poppler_page(pdf,pg)
+            b=segment_poppler(poppler_cache[pg],n)
+            if b is None:continue
             pa,err1=split_fields(a,n)
             pb,err2=split_fields(b,n)
             if err1 or err2:
