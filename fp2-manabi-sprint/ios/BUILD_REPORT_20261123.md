@@ -18,11 +18,11 @@
 ## CI
 - Workflow: `.github/workflows/fp2-ios-native-ci.yml`; macos-15 unsigned iOS Simulator XcodeGen build, source/Info.plist/asset contract readback.
 - Run URL: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45146663362
-- GitHub push trigger on native branch; no signing, IPA upload or App Store submission.
+- GitHub push trigger on native branch; **run 45146663362 completed SUCCESS**: source and offline bundle PASS, XcodeGen PASS, unsigned iOS Simulator xcodebuild PASS, compiled Info.plist and canonical bank readback PASS. This is NOT a signed device IPA or TestFlight acceptance. No signing, IPA upload or App Store submission.
 - Registry: `automation/app-release-registry.json` entry `fp2` with version 1.0.0/build 1/IAP false, `readback:false` (not ASC confirmed).
 
 ## Blockers
-1. CI macOS compile and resulting simulator .app success must be checked; then update CI evidence.
+1. CI macOS unsigned iOS Simulator build and bundled source readback: **PASS** (run 45146663362, source SHA e763d61ebb93d5bfd95f637e219936d2bac49354). Signed device IPA still pending.
 2. Correct AppIcon hash / 1024x1024 opaque PNG verification against user-registered asset.
 3. Signed device IPA provisioning and Apple build/Version readback, TestFlight routing and real-device acceptance.
 4. Q0/Q1 rights and 120-question release bank selection, Q2/Q3 actual experience, Q4/Q5 independent acceptance.
