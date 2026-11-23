@@ -86,6 +86,7 @@ jobs:
         run: python kangoshi-sprint/scripts/repair_ocr_cmap_96.py
       - name: Render each residual held question from geometric source PDF evidence
         run: python kangoshi-sprint/scripts/render_residual_geometric_evidence.py
+      # OCR-promoted records require the same PDF image evidence and ID count invariant.
       - name: Render original PDF source rectangles for every new verified promotion
         run: python kangoshi-sprint/scripts/render_latest_new_source_regions.py
       - name: Update status from actual promotion and media audit evidence
