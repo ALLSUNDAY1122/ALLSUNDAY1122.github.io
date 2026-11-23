@@ -12,12 +12,12 @@ def lines(pdf):
 def parse(pdf,exam,session):
     # The official PDF has sample questions 201-204 on pages 1-3;
     # actual examination starts at question 1 on subsequent pages.
-    rows=list(lines(pdf));start=next((i for i,(pg,line) in enumerate(rows) if pg>=5 and re.match(r"^1\\s+[^0-9.]",line)),None)
+    rows=list(lines(pdf));start=next((i for i,(pg,line) in enumerate(rows) if pg>=5 and re.match(r"^1\s+[^0-9.]",line)),None)
     if start is None: return {"exam":exam,"session":session,"status":"NO_QUESTION_1_DETECTED","questions":[]}
     chunks=[];num=None;content=[];page=None
     for pg,line in rows[start:]:
         # parse only valid numbered question headers in ascending sequence
-        m=re.match(r"^(\\d{1,3})[ \\t　]+([^\\s].*)$",line)
+        m=re.match(r"^(\d{1,3})[ \t　]+([^\s].*)$",line)
         n=int(m.group(1)) if m else None
         if n is not None and 1<=n<=120 and (num is None and n==1 or num is not None and n==num+1):
             if num is not None:chunks.append((num,page,content))
@@ -29,7 +29,7 @@ def parse(pdf,exam,session):
     for n,page,body in chunks:
         groups=[];current=None
         for s in body:
-            m=re.match(r"^([1-5])[\\.．。．\\s]+(.+)$",s)
+            m=re.match(r"^([1-5])[\.．。．\s]+(.+)$",s)
             if m:
                 if current:groups.append(current)
                 current={"index":int(m.group(1)),"parts":[m.group(2)]}
@@ -39,7 +39,7 @@ def parse(pdf,exam,session):
         clean=[{"number":g["index"],"text":" ".join(g["parts"])} for g in groups]
         valid=len(clean)>=2 and choice_numbers==list(range(1,len(clean)+1)) and len(clean)<=5 and n<=120
         q={"id":f"K{exam}-{session}{n:03d}","sourceExam":exam,"session":session,"questionNo":n,
-            "question":" ".join(body[:next((i for i,s in enumerate(body) if re.match(r"^[1-5][\\.．。．\\s]+",s)),len(body))]),
+            "question":" ".join(body[:next((i for i,s in enumerate(body) if re.match(r"^[1-5][\.．。．\s]+",s)),len(body))]),
             "choices":[v["text"] for v in clean],"answer":None,"sourcePage":page,
             "sourceRefs":[],"sourceAttribution":f"出典：厚生労働省『第{exam}回看護師国家試験』を学習用データとして加工",
             "requiresMedia":None,"rightsStatus":"not_audited","reviewStatus":"HOLD_OFFICIAL_KEY_AND_LAYOUT",
@@ -60,8 +60,8 @@ def main():
                 summary[f"{exam}-{session}"]={"status":"PDF_MISSING"};continue
             data=parse(pdf,exam,session)
             data["pdfSha256"]=hashlib.sha256(pdf.read_bytes()).hexdigest()
-            (base/f"exam{exam}-{session}-draft.json").write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\\n")
+            (base/f"exam{exam}-{session}-draft.json").write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n")
             summary[f"{exam}-{session}"]={"status":data["status"],"detected":data.get("detected",0),"invalid":data.get("invalidQuestionNumbers",[])}
-    (base/"new-draft-summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2)+"\\n")
+    (base/"new-draft-summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2)+"\n")
     print(json.dumps(summary,ensure_ascii=False))
 if __name__=="__main__":main()
