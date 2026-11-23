@@ -1,5 +1,42 @@
 # FP2 RELEASE STATUS（正本・2026-11-23・Q20第2次独立PASS反映）
 
+## 2026-11-23｜逐語版2024年過去問へ差替・法改正FAIL2／図版HOLD1の隔離（最新・正本）
+
+**現行コンテンツ＝正規承認バンク309問（全問内容監査PASS）、選定300問、内容監査PASSの予備9問、別隔離3問（FAIL2・HOLD1）、公開許可0問。** 旧312問・300問・予備12問は**言い換え版2024問を含む履歴状態**であり、現行の正規出題バンクではない。
+
+- 逐語版2024-09：60問の独立法令監査PASS59、FAIL1＝Q07、HOLD0（監査コミット `b3f415feed0bcd88f82a62a797df8f72df4c477f`）。
+- 逐語版2024-05：60問の独立法令監査PASS58、FAIL1＝Q08、HOLD1＝Q53（監査コミット `55ddf49bdf0e947495cebaf46fd855979b8d31b3`）。
+- 旧2024言い換え版120件を承認バンクから削除し、逐語版の**117件だけ**を独立内容PASSとして受入れ。回収180件と既存独自作成PASS12件を合わせて **180＋117＋12＝309件**。
+- 選定300件＝既存の学科180件＋逐語版117件＋独立監査済み独自作成補充3件。補充元は `FP2-ORIG-20261123-L01`・`FP2-ORIG-20261123-L02`・`FP2-ORIG-20261123-S01`。予備9件は独自作成の残り。分野は6×50問維持。
+- **5回分の公式出題300問そのものではなく**、2024-05＝58、2024-09＝59、2025-01＝60、2025-05＝60、2026-05＝60の公式学科297問＋独自3問の合計300問。販促・ASC表示で「公式学科過去問300問」と誤称しない。
+- Q07（2024-09）・Q08（2024-05）は企業型DCマッチング拠出制度の2026-04-01法令変更によって原題の単一正答が崩れ、出題禁止。Q53（2024-05）は親族関係図のPNGがGitHubに保存されておらず原PDFとの照合も未了のため、**HOLD継続**。3件を `questions/quarantine/fp2-verbatim-2024-legal-fail-and-q53-hold-20261123.json` に原文・理由とともに隔離し、承認バンク・iOS/Web出題バンドルから除外。
+- 2024-05 B03の逐語JSONは監査後Q53メタデータ追加でBlob SHAが変更された。監査時 `27a08d04670a75f133076df5a86ee97dcf149e86`、現行 `066eadb5116e8430c8e7b2449078983e4e095bda`。独立監査PASSの他19件は本文・4肢・正答を監査原本と照合した。全問の公式PDF逐文字照合とQ0権利許諾は未完了。
+
+**証拠正本：** `audit/FP2_VERBATIM_2024_LEGAL_SAFE_300_INTEGRATION_20261123.md`、2件の逐語法令監査JSON、6件の逐語JSON原本、`release/release-selection-300-20261123.json`。旧言い換え版の原本は履歴として `questions/draft/` に保存。
+
+### 逐語版への差替後のCI
+
+- **PASS** [FP2 Chromium学習・オフラインE2E](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45176802420)：独立監査の117/2/1をバッチ別に再突合、正規309・選定300・予備9・隔離3の判定、300問限定Web埋込/JSONとSHA一致、6分野×50・実ブラウザ学習/オフライン・JSON復元の全テストを成功と読戻し。
+- **PASS** 逐語版統合後のソース静的検査、Golden Master移行ゲート、Registry監査は同系列CIでSUCCESSを確認。
+- **旧コミット55ddf49のChromium E2EもSUCCESS**（run [45173608313](https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45173608313)）。これは逐語版監査記録保存時点の結果であり、今回置換後のCI代用ではない。
+- **macOS iOS Simulator：最新の逐語版300問構成のジョブ結果を別途読戻す**。実署名IPA/実機TestFlightは未確認で、Linux上の生成PASSだけをネイティブ完成とみなさない。
+
+### 最新Q0〜Q5
+
+| Gate | 判定 | 残るブロッカー |
+|---|---|---|
+| Q0 権利・法令・原図 | **BLOCKED** | 2026-04-01原典適用、2024全問の逐文字公式PDF照合、二次利用権限、画像原本／Q53未再監査、出典・改変表示の責任者承認 |
+| Q1 内容監査 | **APPROVED CONTENT309／SELECTED300 PASS、3件隔離** | 独立監査PASS117を使用。逐語由来の正答一意性・法令FAIL2を除外済み、親族図HOLD1。問題改変/法令の最終引用根拠と元PDFの全面比較は残る |
+| Q2 学習機能 | **CHROMIUM E2E PASS／DEVICE PENDING** | 300問出題、解答、履歴の実ブラウザ検査PASS、iPhone実機の受験者テスト未完 |
+| Q3 UI/オフライン | **CHROMIUM OFFLINE/JSON PASS／DEVICE PENDING** | ブラウザでバックアップ・Service Worker復旧PASS、端末Safe Area・VoiceOver・長文/図表・Golden Master実機比較未了 |
+| Q4 独立受入 | **NOT TESTED** | 第三者/受験者相当の実機検証・障害復旧・完了記録未取得 |
+| Q5 ビルド/ストア | **BLOCKED** | 新309→300のmacOS Simulator読戻し、署名IPA/実機TestFlight、ASC Version/Build/IAP/Privacy、サポート/プライバシーURL・スクショ、Apple登録アイコンとの一致・最終提出承認 |
+
+**状態：BLOCKED／NOT_SUBMISSION_READY／NOT_SUBMITTED**。PR #5717はDraft、mainマージ・App Review提出禁止。AppIconのApple側未確認は既知の未検証事項であり、今回の新規欠陥ではない。
+
+---
+
+
 ## 2026-11-23｜最新312/300プリフライト再分類（初回120問記録を置換）
 
 **現行対象：canonical312・学科5回×60＝選定300（6分野×50）・内容PASS予備12・publishable0。** 初回120問および5a72059fのCI8/8は過去履歴。証拠正本：`audit/FP2_PREFLIGHT_312_CANONICAL_300_SELECTED_20261123.md`。
