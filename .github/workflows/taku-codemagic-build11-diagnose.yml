@@ -46,7 +46,7 @@ jobs:
                       res[label+'_diagnostics']={k:scrub(str(v))[:350] for k,v in item.items() if re.search(r'(?i)error|fail|reason|status|message|workflow|branch|action|stage|step',k) and not re.search(r'(?i)token|secret|private|credential|password',k) and not isinstance(v,(dict,list))}
               if label=='actions':
                   rows=data.get('data') or [] if isinstance(data,dict) else []
-                  if isinstance(rows,dict): rows=rows.get('actions') or []
+                  while isinstance(rows,dict): rows=rows.get('actions') or rows.get('data') or []
                   res['steps']=[{'id':x.get('id') or x.get('_id'),'name':x.get('name'),'status':x.get('status'),'error':scrub(str(x.get('error') or ''))[:400]} for x in rows if isinstance(x,dict)]
                   for step in res['steps']:
                       if str(step['status']).lower() not in ('failed','failure','error'): continue
@@ -58,6 +58,17 @@ jobs:
                       step['log_http_status']=code
               elif isinstance(data,dict):
                   item=data.get('data') or data
+                  if label=='legacy' and isinstance(data.get('build'),dict):
+                      item=data['build']
+                  if isinstance(item,dict):
+                      res[label+'_nested_keys']=list(item.keys())[:70]
+                      res[label+'_nested_diagnostics']={k:scrub(str(v))[:450] for k,v in item.items() if re.search(r'(?i)error|fail|reason|status|message|workflow|branch|action|stage|step',k) and not isinstance(v,(dict,list))}
+                  if label=='v3' and isinstance(item,dict):
+                      for fld in ('workflow','config','build_inputs'):
+                          obj=item.get(fld)
+                          if isinstance(obj,dict):
+                              res[fld+'_keys']=list(obj.keys())[:60]
+                              res[fld+'_error_fields']={k:scrub(str(v))[:400] for k,v in obj.items() if re.search(r'(?i)error|fail|reason|status|message|workflow|branch|valid|parse',k) and not isinstance(v,(dict,list))}
                   if isinstance(item,dict):
                       res[label+'_summary']={k:scrub(str(item.get(k)))[:300] for k in ('status','workflowId','fileWorkflowId','branch','message','error','failureReason') if item.get(k) is not None}
           Path('taku-build11-diagnose.json').write_text(json.dumps(res,ensure_ascii=False,indent=2))
