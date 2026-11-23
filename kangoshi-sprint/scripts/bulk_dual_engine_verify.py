@@ -34,7 +34,7 @@ sys.path.insert(0,str(ROOT/'scripts'))
 from official_answer_key_audit import parse as read_official_key
 from boundary_context_verify import verify as verify_boundary
 from boundary_context_verify import _region,equivalent_shared_context
-from reextract_coordinate_candidates import split_fields,segment_poppler
+from reextract_coordinate_candidates import split_fields,segment_poppler,equivalent_english_gloss_reorder
 keys={e:read_official_key(e) for e in (111,112)}
 VISUAL={x["id"]:x for x in json.loads((ROOT/"audit/visual-glyph-confirmation-20261124.json").read_text())["items"]}
 VISUAL_DIR=ROOT/"audit/runs/context-control-visual-20261124"
@@ -105,7 +105,7 @@ for exam in (112,111):
                     left=[py_fields["question"]]+py_fields["choices"]
                     right=[pop_fields["question"]]+pop_fields["choices"]
                     target=[stem]+choices
-                    if len(target)==5 and all(equivalent_shared_context(x,y)[0] and equivalent_shared_context(x,z)[0] for x,y,z in zip(left,right,target)):
+                    if len(target)==5 and all((equivalent_shared_context(x,y)[0] or equivalent_english_gloss_reorder(x,y)) and (equivalent_shared_context(x,z)[0] or equivalent_english_gloss_reorder(x,z)) for x,y,z in zip(left,right,target)):
                         geometric_crosscheck={"page":pg,"anchor":geom["anchorBox"],"rectangle":geom["clip"],
                             "fields":5,"method":"exact Japanese and Latin token multiset; PyMuPDF clip vs independent Poppler page segmentation",
                             "requiresOfficialAnswer":True}
