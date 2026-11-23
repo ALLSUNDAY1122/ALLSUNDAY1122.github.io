@@ -27,20 +27,21 @@ existing=json.loads((IOS/"release-status.json").read_text())
 total=bank["count"]
 auto=sum(s["auto"] for s in bank["byYear"].values())
 visual=sum(s["visual"] for s in bank["byYear"].values())
-if total!=auto+visual or total>600:raise RuntimeError("approved count mismatch")
+geometry=sum(s.get("geometry",0) for s in bank["byYear"].values())
+if total!=auto+geometry+visual or total>600:raise RuntimeError("approved count mismatch")
 if "KSAI-2023-090" in bank["approvedIds"]:raise RuntimeError("invalid q90 not visually reviewed")
 now=datetime.now(timezone(timedelta(hours=9))).isoformat(timespec="seconds")
 existing["updated_at"]=now
 qb=existing.setdefault("question_bank",{})
 qb.update({"verified_official_imported":total,"official_question_text_imported":total,
            "production_official_bank_count":total,"auto_diff_pass_promoted":auto,
-           "manual_visual_pass_preserved":visual,"official_question_text_staged":600,
+           "manual_visual_pass_preserved":visual,"auto_geometry_new_promoted":geometry,"official_question_text_staged":600,
            "auto_diff_per_year":by_year,
            "auto_diff_reason_totals":dict(global_reasons),"auto_diff_advisory_totals":dict(global_advisories)})
 gate=existing.setdefault("gates",{})
 gate["normalized_pdf_auto_diff"]=f"COMPLETE_{600-sum(x['notYetDiffed'] for x in by_year.values())}_OF_600"
 gate["official_source_import"]=f"PARTIAL_APPROVED_{total}_OF_600"
-gate["verbatim_and_answer_audit"]=f"AUTO_{auto}_VISUAL_{visual}_REMAINING_{600-total}"
+gate["verbatim_and_answer_audit"]=f"AUTO_{auto}_GEOMETRY_{geometry}_VISUAL_{visual}_REMAINING_{600-total}"
 gate["content_complete"]="PASS" if total==600 else "BLOCKED"
 gate["official_release_readiness"]="BLOCKED_UNTIL_CONTENT_AND_APP_REVIEW"
 existing["release_gate"]="BLOCKED"
@@ -54,7 +55,7 @@ reason_text="\n".join(f"| {k} | {v} |" for k,v in sorted(global_reasons.items())
 advisory_text="\n".join(f"| {k} | {v} |" for k,v in sorted(global_advisories.items()))
 table="\n".join(f"| {y} | {t['autoDiffPass']} | {t['autoDiffHeld']} | {t['notYetDiffed']} | {bank['byYear'][y]['visual']} | {bank['byYear'][y]['auto']+bank['byYear'][y]['visual']} |" for y,t in by_year.items())
 section=f"""\n## 自動照合ゲート v1：{now}（最新）\n
-- **公開判定 BLOCKED**。本番問題バンク **{total}/600問**（従来の目視PASS {visual}、新たな自動diff PASS {auto}）。
+- **公開判定 BLOCKED**。本番問題バンク **{total}/600問**（目視PASS {visual}、文字diff PASS {auto}、座標照合PASS {geometry}）。
 - 検証手順：原典PDFを公式URLから再取得し、保存済SHA-256と一致したバイナリのみPyMuPDF再抽出。問題境界・rawOriginalText・選択肢・解答番号を正規化diff。
 - 正規化：**Unicode NFC、Unicode空白（半角・全角・改行・タブ）の除去のみ**。かな、漢字、句読点、記号、ルビ本文は削除・書換しない。ルビ配置は独立審査対象。
 - 自動昇格禁止：画像、図表、正誤組合せ表、ルビ独立行、抽出不一致、4/5肢判定失敗、2023年度問90。表組のレイアウト再現は文字diffが一致しても合格しない。
