@@ -1,0 +1,64 @@
+name: Registered Seller Ruby/Structure Release Registry Finalization
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/touhan-ruby-release-finalize.yml'
+permissions:
+  contents: write
+concurrency:
+  group: touhan-ruby-release-registry
+  cancel-in-progress: false
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reconcile only already persisted Ruby and figure evidence
+        run: |
+          python touroku-hanbaisha-sprint/official-kansai/build_approved_bank.py
+          python touroku-hanbaisha-sprint/official-kansai/write_auto_release_status.py
+          python touroku-hanbaisha-sprint/official-kansai/write_geometry_release_status.py
+          python touroku-hanbaisha-sprint/official-kansai/write_ruby_release_status.py
+      - name: Fail closed when source and registry diverge
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('touroku-hanbaisha-sprint/official-kansai')
+          bank=json.loads((b/'APPROVED_OFFICIAL_BANK.json').read_text())
+          status=json.loads(Path('touroku-hanbaisha-ios/release-status.json').read_text())
+          assert len(bank['questions'])==bank['count']==status['question_bank']['production_official_bank_count']
+          assert len(set(bank['approvedIds']))==bank['count']
+          assert bank['count']>=317
+          assert 'KSAI-2023-090' not in bank['approvedIds']
+          assert status['release_gate']=='BLOCKED' and status['app_review_submitted'] is False
+          assert sum(sum(x.get(k,0) for k in ['auto','geometry','ruby','layout','visual']) for x in bank['byYear'].values())==bank['count']
+          for year in range(2022,2027):
+            r=json.loads((b/f'RUBY_RECON_{year}.json').read_text())
+            g=json.loads((b/f'LAYOUT_TRIAGE_{year}.json').read_text())
+            assert r['total']==g['total']==120
+          for q in bank['questions']:
+            if q['audit']['method']=='AUTO_PDF_GLYPH_XY_RUBY_DOM_RECONSTRUCTION':
+              assert q.get('questionParts') and len(q.get('choicesParts',[]))==len(q['choices'])
+          print('PASS: registry and 600-item audit evidence consistent')
+          PY
+      - name: Update published bank and canonical status
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-sprint/official-kansai/APPROVED_OFFICIAL_BANK.json touroku-hanbaisha-ios/release-status.json touroku-hanbaisha-ios/RELEASE_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(touhan): persist ruby and layout promotions from verified source evidence'
+            for n in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              if [ "$n" -eq 3 ]; then exit 1; fi
+            done
+          fi
