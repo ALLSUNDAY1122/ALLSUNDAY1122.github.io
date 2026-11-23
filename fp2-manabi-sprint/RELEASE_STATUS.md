@@ -1,24 +1,27 @@
-# FP2 RELEASE STATUS
+# FP2 RELEASE STATUS（最新正本・2026-11-23）
 
-Updated: 2026-11-23 JST
-Target: SUBMISSION_READY / WAITING_FINAL_APPROVAL by 2026-11-24 08:00 JST (not achieved)
-Actual status: BLOCKED / NOT_SUBMITTED
+**Actual: BLOCKED / NOT_SUBMITTED / NOT_SUBMISSION_READY**。期限：2026-11-24 08:00 JST（未達）。
+**詳細な最終検証正本**：`release/FP2_Q0_Q5_FINAL_GATE_20261123.md`。以下の古い時系列記録は過去のスナップショットであり、現行件数や現行ゲートの判断には使わない。
 
-Canonical procedures: see RELEASE_SCOPE_20261124.md.
+| Gate | 最新判定 | 要点 |
+| --- | --- | --- |
+| Q0 | BLOCKED | 公開公式問題の利用条件は条件付き確認。正規122問の出典・改変注記は揃うが、権利運用主体・法令の最終独立検証・実UI表示未確定 |
+| Q1 | BLOCKED（内容監査PASS122） | 先行15問＋回収107問の独立内容PASS。回収全180監査の最新内訳PASS163/FAIL4/HOLD13、うち追加PASS56未統合。現行122問はMVP最大120問を超過 |
+| Q2 | NOT TESTED | 出題→解説→復習の学習者実測なし |
+| Q3 | FAIL（UI静的ゲートPASS） | 4タブ・4/8/16・35日・リング・JSON・PWA実装あり。実ブラウザ/実機E2E、Golden Master完全性未検証 |
+| Q4 | NOT TESTED | 独立した実機・学習者受入なし |
+| Q5 | BLOCKED | IPA、ASC Version/Build/IAP/プライバシー、実スクショ、公開URLとバンドルSHA未確認 |
 
-| Quality gate | Status | Blocker |
-|---|---|---|
-| Q0 | BLOCKED | Official JAFP + Kinzai reuse rules verified CONDITIONAL_PASS; per-item citation, modification disclosure, historical/current law audit and independent signoff remain. See audits/FP2_Q0_OFFICIAL_PAST_EXAM_RIGHTS_20261123.md |
-| Q1 | BLOCKED | Recovered 180 complete full-text questions and matched to 180 source-index rows without discrepancy; individual PDF/modification and 2026 law review, independent review and canonical/UI integration remain pending |
-| Q2 | NOT TESTED | Real learning cycle not tested |
-| Q3 | FAIL | GitHub HTML source retains v1.3 marker, 8-question sample and 600-question placeholder; lacks v2.1 identity, 4/8/16 setting, 5-week heatmap and JSON import evidence. Real-device inspection remains NOT TESTED. |
-| Q4 | NOT TESTED | Independent reviewer and learner acceptance evidence missing |
-| Q5 | BLOCKED | Q0-Q4 not passed |
+**Canonical**: `questions/canonical/approved-questions-20261123.json` = 122 distinct content-PASS / `modified`判定122件 / published=0 / release-clear=0.
+**CI source-side PASS**: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/45145368115
+**Git Blob pinned web source assets**: `release/bundle-lock-20261123.json`。実IPA一致はNOT TESTED。
+**Store/privacy**: `release/STORE_AND_APP_PRIVACY_20261123.md`。HTMLページは準備済だがpublic HTTP200とASC設定の一致は未証明。
+**Human vs engineering/quality blockers**: `release/FP2_Q0_Q5_FINAL_GATE_20261123.md`。
+**PR**: #5717 Draft、mainマージ/App Review提出禁止。
 
-Submission preparation: BLOCKED; App Store Connect, signed build, privacy, screenshots and TestFlight real-device acceptance unverified.
-App Review actions: NOT PERFORMED.
-Branch: feature/fp2-release-scope-20261123; PR #5717 (draft).
-This status must not be promoted on the basis of planning documents or historical audit matrix alone.
+---
+
+## 過去履歴（現行判定ではない）
 
 ## 2026-11-23 read-only source inspection
 Direct inspection of the current branch's `fp2-manabi-sprint/index.html` confirms obsolete v1.3 description, 8-question UI-only marker, 600-question placeholder, and missing v2.1 markers / 4-8-16 control / heatmap / JSON import. Q3 therefore FAIL, not merely an untested assertion. `scripts/fp2_v21_migration_gate.py` was updated on this branch to remove the obsolete hard-coded 600-question requirement; running the full Python validator in CI is still pending.
