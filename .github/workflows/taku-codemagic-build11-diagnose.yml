@@ -1,0 +1,64 @@
+name: TAKU Codemagic Build11 Diagnostics
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TAKU-CM] Diagnose Build 11 failure'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Query sanitized Codemagic failure details
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json,os,re,urllib.request,urllib.error
+          from pathlib import Path
+          token=os.environ.get('CM_API_TOKEN','')
+          if not token: raise SystemExit('Missing CM_API_TOKEN')
+          build_id='6b03de78107b588bf714f21c'
+          def get(url,accept='application/json'):
+              req=urllib.request.Request(url,headers={'x-auth-token':token,'Accept':accept})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as resp:
+                      return resp.status,resp.read().decode('utf-8',errors='replace')
+              except urllib.error.HTTPError as exc:
+                  return exc.code,exc.read().decode(errors='replace')
+          def scrub(s):
+              s=s.replace(token,'[REDACTED]')
+              s=re.sub(r'(?i)(token|password|api_key|secret|issuer_id|private_key)\s*[:=]\s*\S+',r'\1=[REDACTED]',s)
+              return s
+          res={'build_id':build_id}
+          for label,url in [('v3','https://codemagic.io/api/v3/builds/'+build_id),('actions','https://codemagic.io/api/v3/builds/'+build_id+'/actions'),('legacy','https://api.codemagic.io/builds/'+build_id)]:
+              code,raw=get(url)
+              res[label+'_http_status']=code
+              try: data=json.loads(raw)
+              except Exception: data={'message':raw[:200]}
+              if label=='actions':
+                  rows=data.get('data') or [] if isinstance(data,dict) else []
+                  if isinstance(rows,dict): rows=rows.get('actions') or []
+                  res['steps']=[{'id':x.get('id') or x.get('_id'),'name':x.get('name'),'status':x.get('status'),'error':scrub(str(x.get('error') or ''))[:400]} for x in rows if isinstance(x,dict)]
+                  for step in res['steps']:
+                      if str(step['status']).lower() not in ('failed','failure','error'): continue
+                      sid=step.get('id')
+                      if not sid:continue
+                      code,raw=get('https://api.codemagic.io/builds/'+build_id+'/step/'+str(sid),'text/plain,*/*')
+                      lines=[line for line in scrub(raw).splitlines() if re.search(r'(?i)error|fail|invalid|denied|not found|not configured|no matching|missing|exception|fatal',line)]
+                      step['error_lines']=lines[-12:]
+                      step['log_http_status']=code
+              elif isinstance(data,dict):
+                  item=data.get('data') or data
+                  if isinstance(item,dict):
+                      res[label+'_summary']={k:scrub(str(item.get(k)))[:300] for k in ('status','workflowId','fileWorkflowId','branch','message','error','failureReason') if item.get(k) is not None}
+          Path('taku-build11-diagnose.json').write_text(json.dumps(res,ensure_ascii=False,indent=2))
+          print(json.dumps(res,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: taku-build11-diagnostics
+          path: taku-build11-diagnose.json
+          if-no-files-found: warn
