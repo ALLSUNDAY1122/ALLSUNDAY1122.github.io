@@ -60,14 +60,18 @@ def clusters(chars):
                 'fontSize':round(part[0]['size'],2),'font':part[0]['font'],
                 'glyphs':len(part)})
     return groups
-def base_for(group,chars):
+def base_for(group,chars,prior_bbox,prior_base_text):
     rx0,ry0,rx1,ry1=group['bbox'];cx=(rx0+rx1)/2
     cand=[]
     for g in chars:
         if g['page']!=group['page'] or not re.fullmatch(r'[\u3400-\u9fff々]',g['c']):continue
         if g['size']<group['fontSize']*1.45:continue
         x0,y0,x1,y1=g['bbox']
-        if not 0<=y0-ry1<=19:continue
+        if not -2.5<=y0-ry1<=12:continue
+        # The prior independent PDF span is the authoritative base line.
+        if not (prior_bbox[0]-1<=x0 and x1<=prior_bbox[2]+1 and
+                prior_bbox[1]-1<=y0 and y1<=prior_bbox[3]+1):continue
+        if g['c'] not in prior_base_text:continue
         if x1<rx0-2 or x0>rx1+2:continue
         cand.append(g)
     if not cand:return None,'NO_FULL_SIZE_KANJI_BELOW'
@@ -109,8 +113,10 @@ def certify(q,geom,doc,clips):
         g=compatible[0]
         if g['reading']!=a['ruby']:
             reasons.append('RUBY_TEXT_DIFF_FROM_PDF_ASSOCIATION');continue
-        base,error=base_for(g,chars)
+        base,error=base_for(g,chars,a['baseBBox'],a['baseText'])
         if error:reasons.append(error);continue
+        if base['base'] not in a['baseText']:
+            reasons.append('SOURCE_BASE_SPAN_TEXT_MISMATCH');continue
         fields_with_read=[i for i,f in enumerate(fields) if len(list(ISOLATED(g['reading']).finditer(f)))==1]
         if len(fields_with_read)!=1:
             reasons.append('DETACHED_READING_FIELD_NONUNIQUE');continue
