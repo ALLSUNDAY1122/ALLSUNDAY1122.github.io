@@ -53,7 +53,9 @@ def main():
             images+=1
             web_path=fig.get("webPath","")
             if not web_path.startswith("official-kansai/layout-crops/") or not is_file(WEB/web_path):
-                invalid.append(x+":FIGURE")
+                invalid.append(x+":FIGURE_MISSING")
+            elif hashlib.sha256((WEB/web_path).read_bytes()).hexdigest()!=fig.get("sha256"):
+                invalid.append(x+":FIGURE_SHA_MISMATCH")
     gate("Q1_CONTENT_AND_ATTRIBUTION","PASS" if not invalid else "FAIL",
         f"invalid records={len(invalid)}; unattached ruby={ordered}; image refs={images}; inline ruby records={rich}; examples={invalid[:15]}",
         [str(B.relative_to(ROOT)/"APPROVED_OFFICIAL_BANK.json")])
