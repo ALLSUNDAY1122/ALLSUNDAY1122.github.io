@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """Build release bank from explicitly signed off visual-audit records only."""
-import json
+import json,hashlib
 from pathlib import Path
 BASE=Path(__file__).resolve().parent
 AUDIT=json.loads((BASE/"MANUAL_VISUAL_AUDIT_20261123.json").read_text())
 APPROVED=[]
 seen=set()
+def blob_sha(path):
+    data=path.read_bytes()
+    return hashlib.sha1(f'blob {len(data)}\\0'.encode()+data).hexdigest()
+review_sources=AUDIT.get('auditSourceFrozenGitBlobs',{})
 for record in AUDIT["reviewedQuestions"]:
     key=record["id"]
     if key in seen:raise ValueError("duplicate audit ID "+key)
@@ -14,8 +18,14 @@ for record in AUDIT["reviewedQuestions"]:
     # Only supported years with official per-year source/answer index
     _,year_string,qno_string=key.split("-")
     year=int(year_string);number=int(qno_string)
-    candidate=json.loads((BASE/f"QUESTIONS_{year}_APP_CANDIDATE.json").read_text())
-    official=json.loads((BASE/f"ANSWERS_{year}_OFFICIAL.json").read_text())
+    frozen=review_sources.get(str(year))
+    if not frozen:raise ValueError('unfrozen reviewed source year '+str(year))
+    candidate_file=BASE/f'QUESTIONS_{year}_APP_CANDIDATE.json'
+    answer_file=BASE/f'ANSWERS_{year}_OFFICIAL.json'
+    if blob_sha(candidate_file)!=frozen['candidate'] or blob_sha(answer_file)!=frozen['officialAnswerIndex']:
+        raise ValueError('audited candidate or answer source changed; re-review required for '+str(year))
+    candidate=json.loads(candidate_file.read_text())
+    official=json.loads(answer_file.read_text())
     q=next((x for x in candidate["questions"] if x["id"]==key),None)
     if not q or q["questionNo"]!=number:raise ValueError("missing candidate "+key)
     k=official["questions"][number-1]
