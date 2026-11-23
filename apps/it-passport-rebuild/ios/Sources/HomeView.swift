@@ -40,6 +40,7 @@ struct HomeView: View {
                         .font(.headline)
                         .foregroundStyle(.secondary)
                     domainGrid
+                    officialExamCard
                     sourceNotice
                 }
                 .padding(.horizontal, 18)
@@ -130,6 +131,42 @@ struct HomeView: View {
         }
     }
 
+    private var officialExamCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("IPA公式公開問題・年度別100問")
+                .font(.headline)
+            if QuestionStore.availableOfficialYears.isEmpty {
+                Text("公式公開問題の原文・正答・図表を照合中です。監査前の問題は公開しません。")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            } else {
+                ForEach(QuestionStore.availableOfficialYears, id: \.self) { year in
+                    let questions = QuestionStore.officialExam(year: year)
+                    if questions.count == 100 {
+                        NavigationLink {
+                            QuizView(title: "\(year)年度 公式公開問題", questions: questions)
+                        } label: {
+                            HStack {
+                                Text("\(year)年度").font(.subheadline.bold())
+                                Spacer()
+                                Text("100問").font(.caption)
+                                Image(systemName: "chevron.right")
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        Text("\(year)年度：照合未完了（\(questions.count)/100問）")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
+    }
+
     private var sourceNotice: some View {
         VStack(alignment: .leading, spacing: 6) {
             Label("問題品質を優先して段階追加中", systemImage: "checkmark.shield")
@@ -201,6 +238,7 @@ private struct QuizView: View {
     @State private var selected: Int? = nil
     @State private var correctCount = 0
     @State private var finished = false
+    @State private var imageScale: CGFloat = 1
 
     private var current: StudyQuestion? {
         guard questions.indices.contains(index) else { return nil }
@@ -223,6 +261,28 @@ private struct QuizView: View {
                     Text(q.question)
                         .font(.system(size: 19, weight: .bold, design: .serif))
                         .lineSpacing(5)
+                    if q.originType == "ipa_published_verbatim" {
+                        Text(q.primaryEvidence)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("独自演習（IPA公式公開問題ではありません）")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    if let asset = q.sourceFigureName, !asset.isEmpty {
+                        Image(asset)
+                            .resizable()
+                            .scaledToFit()
+                            .scaleEffect(imageScale)
+                            .gesture(MagnificationGesture().onChanged { value in
+                                imageScale = min(max(value, 1), 4)
+                            })
+                            .onTapGesture(count: 2) { imageScale = 1 }
+                            .accessibilityLabel(q.sourceFigureAlt ?? "問題の公式図表")
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                    }
 
                     ForEach(q.choices.indices, id: \.self) { choiceIndex in
                         Button {
@@ -308,6 +368,7 @@ private struct QuizView: View {
         } else {
             index += 1
             selected = nil
+            imageScale = 1
         }
     }
 
