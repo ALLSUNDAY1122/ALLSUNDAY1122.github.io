@@ -378,7 +378,7 @@
   },
   "latestBoundaryContextAudit": {
     "date": "2026-11-24",
-    "runId": "45268183191",
+    "runId": "45269817198",
     "source": "GitHub Actions official PDF dual engine",
     "newPromotedInRun": 0,
     "newIds": [],
@@ -416,7 +416,7 @@
     "quarantinedCandidateRepairs": 5
   },
   "latestContextAndControlAudit": {
-    "runId": "45268183191",
+    "runId": "45269817198",
     "date": "2026-11-24",
     "scope": "480 source candidates, prioritize 22 reextracted",
     "newPromoted": 0,
@@ -548,5 +548,26 @@
     "finalSubmissionAllowed": false,
     "explanationsAndRuntimeChecked": false,
     "releaseStatus": "PREFLIGHT_BLOCKED"
+  },
+  "latestOcrCategoryAudit": {
+    "runId": "45269817198",
+    "checked": 220,
+    "categories": {
+      "OFFICIAL_KEY_OR_SCORING_NOT_CLEAR": 40,
+      "NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH": 96,
+      "MEDIA_RIGHTS_OR_DIAGRAM_GATE": 13,
+      "SCENARIO_CONTEXT_REQUIRES_SEPARATE_OCR_PROOF": 71
+    },
+    "officialDecisions": {
+      "EXCEPTION_HANDLING_REQUIRED_include_if_correct_exclude_if_wrong": 2,
+      "NORMAL_KEY_CONFIRMED": 180,
+      "EXCEPTION_HANDLING_REQUIRED_multiple_accepted": 3,
+      "NOT_SINGLE_OFFICIAL_KEY": 30,
+      "OFFICIAL_KEY_OR_STAGED_MISMATCH": 4,
+      "EXCEPTION_HANDLING_REQUIRED_excluded": 1
+    },
+    "evidenceFile": "kangoshi-sprint/audit/ocr-category-deep-review-20261124.json",
+    "newlyPromotedByCategoryAudit": 0,
+    "sourceOnlyReleaseBlocked": true
   }
 }

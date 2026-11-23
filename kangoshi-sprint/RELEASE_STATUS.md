@@ -13,7 +13,7 @@
 | **未昇格** | **220問** | 原典の疑義と未合格ゲートは保持 |
 | アプリへの今回の追加配信 | 0問 | 解説・図版権利・アプリ／iOSゲート未完了 |
 
-- GitHub Actions Run：45268183191。先行再抽出22問のうち**0問**が引き続き保留。
+- GitHub Actions Run：45269817198。先行再抽出22問のうち**0問**が引き続き保留。
 - 正規ソース：\`product-content/verified-additions-20261124.json\`。保留：\`audit/dual-engine-hold-20261124.json\`。
 - 昇格台帳：\`audit/dual-engine-promotion-ledger-20261124.json\`。全新規問の\`publishable=false\`、\`releaseEligible=false\`を維持。
 - 制御文字について、両抽出方式が同一の壊れたPDF文字対応表を共有する危険があるため、未確認の原典文字は自動合格としない。
@@ -240,3 +240,18 @@
 - 昇格ID：なし。
 - 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 163, COORDINATE_REGION_UNVERIFIED 163, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 145, POPPLER_FIELD_MISMATCH_0 107, PYMUPDF_FIELD_MISMATCH_0 97, PAGE_FOOTER_CONTAMINATION 75, PYMUPDF_FIELD_MISMATCH_4 60, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 38, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38, POPPLER_FIELD_MISMATCH_4 38, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 33。
 - 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+
+## 今回の独立共通文・制御文字監査（Run 45269817198）
+
+- 追加昇格 **0問**、合計 **980/1,200問**。残り **220問**。
+- 昇格ID：なし。
+- 保留の多い理由（重複あり）：COORDINATE_BOUNDARY_NOT_UNIQUELY_CONFIRMED 163, COORDINATE_REGION_UNVERIFIED 163, SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT 145, POPPLER_FIELD_MISMATCH_0 107, PYMUPDF_FIELD_MISMATCH_0 97, PAGE_FOOTER_CONTAMINATION 75, PYMUPDF_FIELD_MISMATCH_4 60, OFFICIAL_ANSWER_MISMATCH_OR_COMPLEX 38, OFFICIAL_ANSWER_NOT_SINGLE 38, INDEPENDENT_OFFICIAL_KEY_MISMATCH 38, POPPLER_FIELD_MISMATCH_4 38, SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY 33。
+- 先行再抽出候補：22問のうち残存保留0問。権利・解説・アプリ配信ゲートの自動解除は行わない。
+
+## OCR区分別再監査（Run 45269817198）
+
+- 対象：220問。新規昇格：0問。
+- 区分：OFFICIAL_KEY_OR_SCORING_NOT_CLEAR 40, NO_EXACT_OCR_AND_ENGINE_FULL_FIELD_MATCH 96, MEDIA_RIGHTS_OR_DIAGRAM_GATE 13, SCENARIO_CONTEXT_REQUIRES_SEPARATE_OCR_PROOF 71。
+- 個別の正答・採点例外、OCR文字単位差分、状況設定共通文画像の証拠：`audit/ocr-category-deep-review-20261124.json`。
+- この区分別台帳のみで本文・選択肢の確定や公開フラグ解除はしない。
