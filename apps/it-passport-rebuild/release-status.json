@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at_jst": "2026-11-24T08:00:00+09:00",
+  "updated_at_jst": "2026-11-24T08:05:00+09:00",
   "project": "新ITパスポート｜ゼロベース開発",
   "release_decision": "BLOCKED",
   "release_stage": "OFFICIAL_PDF_RECEIVED_500_ANSWERS_VERIFIED_OCR_FIDELITY_PENDING",
@@ -49,12 +49,22 @@
         "answer_audit_pass": 500,
         "unverified_text": 500,
         "release_promotion": "ONLY_AFTER_INDEPENDENT_ORIGINAL_IMAGE_VS_TEXT_CHOICES_FIGURE_AUDIT",
-        "separate_original_mock_count": 240
+        "separate_original_mock_count": 240,
+        "ocr_question_head_exact": 455,
+        "ocr_question_head_corrected_by_order": 45,
+        "ocr_candidate_count": 500,
+        "local_self_contained_audit_package": "itp_official_500_audit_with_sources.zip",
+        "github_index": "questions/official-candidate-index.json",
+        "text_is_ocr_unverified": true
       },
       "candidate_index_count": 500,
       "source_pdfs_verified": 10,
       "answer_key_verified": 500,
-      "verbatim_promoted": 0
+      "verbatim_promoted": 0,
+      "official_answer_reference": "questions/official-answer-index.json",
+      "official_candidate_reference": "questions/official-candidate-index.json",
+      "original_scan_uploaded_count": 5,
+      "answer_pdf_uploaded_count": 5
     },
     "ios": {
       "project_exists_on_feature_branch": true,
@@ -90,7 +100,12 @@
       "answer_pdf_dual_engine": "PASS_500_OF_500",
       "pdf_sha256": "PASS_10_OF_10",
       "candidate_source_id_and_page": "REGISTERED_500_OF_500",
-      "verbatim_question_content": "HOLD_500_OF_500"
+      "verbatim_question_content": "HOLD_500_OF_500",
+      "github_canonical_quality_run": 45285592093,
+      "github_canonical_quality_conclusion": "SUCCESS",
+      "official_candidate_index_integrity": "PASS_500_OF_500",
+      "official_verbatim_release_gate": "EXPECTED_BLOCK_0_OF_500",
+      "original_mock_excluded_from_official_pool": true
     }
   },
   "ipa_rights": {
@@ -112,7 +127,7 @@
     {
       "code": "IP-OFF-500",
       "severity": "P0",
-      "detail": "500 official question IDs and exact PDF page locations staged, official answers 500/500 double-checked; fully verified verbatim text/choices/figures 0/500, so audited release bank remains empty."
+      "detail": "The 500 official question IDs, scanned-original PDF pages and 500 official answers are indexed, but OCR differs from original; zero textual questions independently verified verbatim. No fully verified published drill bank."
     },
     {
       "code": "IP-SOURCE-FIDELITY",
