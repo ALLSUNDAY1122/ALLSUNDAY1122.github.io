@@ -55,7 +55,7 @@ for exam in (112,111):
         choices=q.get("choices") or []
         if len(norm(stem))<18:failures.append("TOO_SHORT_FOR_UNIQUE_STEM")
         if MEDIA.search(stem):failures.append("MEDIA_OR_DIAGRAM_CUE")
-        if any(SUSPICIOUS.search(x) for x in [stem]+choices):failures.append("SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT")
+        if any(SUSPICIOUS.search(x) or re.search(r"[\u0080-\u009f\u00a1-\u00ff]",x) for x in [stem]+choices):failures.append("SUSPICIOUS_GLYPH_OR_CONTROL_IN_DRAFT")
         if any(re.search(r"DKIX|[前後]H-\\d+|[-−]H[-−]\\d+",x) for x in [stem]+choices):failures.append("PAGE_FOOTER_CONTAMINATION")
         if not isinstance(pg,int) or not 1<=pg<=len(doc):failures.append("SOURCE_PAGE_INVALID")
         if isinstance(pg,int) and 1<=pg<=len(doc):
@@ -64,7 +64,7 @@ for exam in (112,111):
             if source_segment is None:failures.append("QUESTION_NUMBER_NOT_ISOLATED_ON_SOURCE_PAGE")
             else:
                 if re.search(r"[\x00-\x08\x0b-\x1f\x7f]",source_segment):failures.append("C0_SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
-                if re.search(r"[\ufffd઄¹¼ïñèêçâ]",source_segment):failures.append("SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
+                if re.search(r"[\ufffd઄¹¼ïñèêçâ\u0080-\u009f\u00a1-\u00ff]",source_segment):failures.append("SOURCE_GLYPH_MAPPING_UNTRUSTWORTHY")
             if pg not in page_cache:page_cache[pg]=pdftotext(pdf,pg)
             poppler=page_cache[pg]
             wordblob=norm(page.get_text("text",sort=True))
