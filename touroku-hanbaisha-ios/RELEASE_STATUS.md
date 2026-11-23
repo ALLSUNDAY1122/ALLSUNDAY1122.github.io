@@ -1272,3 +1272,11 @@ Apple固定識別子: Bundle `com.allsunday1122.tourokuhanbaisha`、ASC `6802119
 - GitHub Actions Chromium 375px/430px各10件、合計20件でruby/rt DOM読みによる対応、出典、画面幅、選択肢と採点をPASS。iOS実機ではない。
 - 新規昇格10問：正式バンク476→486/600。未収録114問＝旧V2ルビ78＋今回の追加比較の残35＋公式無効1。
 - 監査：`official-kansai/REMAINING_EVIDENCE_V3_20261124.json`、`official-kansai/TEN_RUBY_DIRECT_REVIEW_QA_20261124.json`。全体ゲートBLOCKED、本審査未送信。
+
+
+## 2026-11-24：V2残78問の比較シート目視追跡
+
+- 左右比較シート15枚（CONTACT_SHEET_V2_01〜15）を直接閲覧。該当78問はいずれも候補生成で原典字形座標、ルビ対応、またはルビ行重複の警告が残る。原典に存在するルビが候補内で分離して表示されているケースも確認。
+- 全78問を一括で原寸・個別PASSしたとの判断はしない。**新規昇格0・HOLD78**。問題ID別警告、原典画像と候補画像の参照、確認方法を `official-kansai/RUBY_V2_78_FOLLOWUP_VISUAL_20261124.json` に保存。
+- 別系統45問の比較画像は追加生成済み。そのうち10問は直接目視と20件のChromium QAを経て正式昇格済みで、残35問は警告付きHOLD。
+- 全体正式バンク **486/600問（未昇格114問＝V2ルビ78＋追加ルビ35＋2023問90公式無効1）**。審査送信なし、release_gate BLOCKED、iOS実機未試験。
