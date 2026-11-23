@@ -78,7 +78,7 @@ def check_year(year):
     if len(expected)!=2 or len(candidate)!=120 or len(answer)!=120 or len(raw_staging)!=120:
         raise RuntimeError("LENGTH_MISMATCH")
     halves=[("first_half",entry["question_pdf_first_half"],1,60),("second_half",entry["question_pdf_second_half"],61,120)]
-    rows=[];passed=[];distribution=collections.Counter()
+    rows=[];passed=[];distribution=collections.Counter();advisory_counts=collections.Counter()
     for (half,url,first,last),e in zip(halves,expected):
         if e["half"]!=half or e["url"]!=url:raise RuntimeError("SOURCE_URL_MISMATCH")
         doc=download(url,B/f".tmp_{year}_{half}.pdf",e["sha256"])
@@ -94,10 +94,10 @@ def check_year(year):
                     raise RuntimeError("Q90_SCORING_REGRESSION")
             elif q["answer"]!=a["official_answer"]-1 or q["excludeFromAccuracyDenominator"]:
                 raise RuntimeError(f"ANSWER_ERROR {year}/{n}")
-            flags=[]
+            flags=[];advisories=[]
             actual=norm(ref["raw"]);raw=norm(q["rawOriginalText"])
             if raw!=actual:flags.append("PDF_RAW_DIFF")
-            if norm(old["rawOriginalText"])!=actual:flags.append("STAGING_PDF_DIFF")
+            if norm(old["rawOriginalText"])!=actual:advisories.append("LEGACY_STAGING_PDF_DRIFT")
             stem,choices,mode,matches=split_options(ref["raw"])
             if stem is None:flags.append("PDF_OPTION_PARSE")
             elif q.get("choices") is None:flags.append("CANDIDATE_OPTIONS_MISSING")
@@ -121,8 +121,9 @@ def check_year(year):
             flags=list(dict.fromkeys(flags))
             status="AUTO_PASS" if not flags else "HOLD"
             distribution.update(flags)
+            advisory_counts.update(advisories)
             evidence={"id":q["id"],"year":year,"questionNo":n,
-              "status":status,"reasons":flags,"officialPdfSha256":e["sha256"],"sourcePdfUrl":url,
+              "status":status,"reasons":flags,"advisories":advisories,"officialPdfSha256":e["sha256"],"sourcePdfUrl":url,
               "sourcePages":ref["pages"],"sourceNormalizedSha256":hashlib.sha256(actual.encode()).hexdigest(),
               "candidateNormalizedSha256":hashlib.sha256(raw.encode()).hexdigest(),
               "sourceRawCharacterCount":len(ref["raw"]),"candidateRawCharacterCount":len(q["rawOriginalText"]),
@@ -137,11 +138,11 @@ def check_year(year):
     assert len(rows)==120 and len(set(x["id"] for x in rows))==120
     output={"year":year,"method":"FRESH_OFFICIAL_PDF_SHA256_PINNED_NORMALIZED_DIFF",
       "normalization":"NFC Unicode, remove only Unicode whitespace including line breaks and fullwidth spaces. Ruby characters are never removed. No punctuation/symbol/kana/kanji deletion.",
-      "caveat":"Source text extracted with PyMuPDF is not an independent second transcription; nontext artwork and answer tables are always held for manual review.",
+      "caveat":"Source text extracted with PyMuPDF is not an independent second transcription; nontext artwork and answer tables are always held for manual review. Legacy raw staging drift is tracked but never substitutes for direct fresh PDF-to-app comparison.",
       "total":120,"autoPass":len(passed),"held":120-len(passed),
       "candidateGitBlob":git_blob_sha(B/f"QUESTIONS_{year}_APP_CANDIDATE.json"),
       "answerIndexGitBlob":git_blob_sha(B/f"ANSWERS_{year}_OFFICIAL.json"),
-      "reasonCounts":dict(sorted(distribution.items())),"passedIds":passed,"questions":rows}
+      "reasonCounts":dict(sorted(distribution.items())),"advisoryCounts":dict(sorted(advisory_counts.items())),"passedIds":passed,"questions":rows}
     output_file=B/f"AUTO_DIFF_{year}.json"
     output_file.write_text(json.dumps(output,ensure_ascii=False,indent=2)+"\n")
     print(json.dumps({"year":year,"PASS":len(passed),"HOLD":120-len(passed),"reasons":dict(distribution)},ensure_ascii=False))
