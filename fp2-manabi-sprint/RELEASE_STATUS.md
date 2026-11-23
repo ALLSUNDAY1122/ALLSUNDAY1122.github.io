@@ -49,3 +49,9 @@ Actual source: `feature/fp2-kakomon-coach:fp2-kakomon-coach/questions/question_b
 - Specified independent audit `audits/FP2_RECOVERED_180_INDEPENDENT_BATCH01_30_20261123.md`: 404 on target branch. Prior 15 draft questions remain HOLD. No source evidence of the 28 other purported PASS IDs; therefore cannot certify their modified status or release inclusion.
 - Canonical approval placeholder: `questions/canonical/approved-questions-20261123.json`: verified count **0**, BLOCKED_INDEPENDENT_EVIDENCE_MISSING. This is not a shipped question bank. Full 180 draft has 2 individually documented modified=true, 178 modification flags still unverified/null, all quarantined.
 - Audit record: `audits/FP2_FAIL2_CORRECTION_20261123.md`. Q0/Q1 blocked, SUBMISSION_READY prohibited.
+
+## 2026-11-23 canonical content-PASS rebuild from singular audit/ folder
+- Independent review files: `audit/FP2_INDEPENDENT_REAUDIT_15_20261123.md` (15 PASS), `audit/FP2_RECOVERED_180_INDEPENDENT_BATCH01_30_20261123.md` (24 PASS/2 FAIL/4 HOLD), `audit/FP2_RECOVERED_180_INDEPENDENT_BATCH02_30_20261123.md` (26 PASS/0 FAIL/4 HOLD). Together: **65 independent CONTENT-PASS**, 10 excluded (2 corrected FAIL awaiting new review, 8 HOLD), 120 unreviewed recovered questions.
+- Canonical `questions/canonical/approved-questions-20261123.json` now contains **65 distinct content-PASS records** (15+24+26); each records its audit evidence path and blob SHA. `publishable=false` for all records; content approval does not imply final release approval.
+- 50 recovered PASS still require source-vs-PDF `modified`/`modification_note` confirmation (not fabricated), plus legal/rights/attribution/UI/bundle gates. This replaces the earlier zero-question fail-closed placeholder, which was based on the incorrect plural `audits/` location.
+- Q0/Q1 final release gate remains BLOCKED, no App Review submission.
