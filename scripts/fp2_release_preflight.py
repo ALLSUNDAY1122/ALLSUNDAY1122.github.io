@@ -36,7 +36,7 @@ def main():
         errors.append("duplicate question IDs")
     selected = [q for q in questions if q.get("release_selected") is True]
     reserve = [q for q in questions if q.get("release_selected") is False]
-    if len(selected) != 120 or len(reserve) != 70 or bank.get("release_candidate_questions") != 120 or bank.get("reserve_content_pass_questions") != 70:
+    if len(selected) != 120 or len(reserve) != 74 or bank.get("release_candidate_questions") != 120 or bank.get("reserve_content_pass_questions") != 74:
         errors.append(f"release scope mismatch: selected={len(selected)}, reserves={len(reserve)}")
     domain_counts = {}
     for q in selected:
@@ -44,13 +44,19 @@ def main():
         domain_counts[d] = domain_counts.get(d, 0) + 1
     if len(domain_counts) != 6 or any(n != 20 for n in domain_counts.values()):
         errors.append("release scope must be 6 domains x 20 questions")
-    if bank.get("recovered_pass_count") != 175 or bank.get("recovered_fail_count") != 5 or bank.get("recovered_hold_count") != 0:
-        errors.append("independent final audit 175/5/0 mismatch")
-    if any(q.get("id") in {
+    if bank.get("recovered_pass_count") != 179 or bank.get("recovered_fail_count") != 1 or bank.get("recovered_hold_count") != 0:
+        errors.append("independent corrected re-audit 179/1/0 mismatch")
+    reaudited_pass = {
        "fp2-2025-05-gakka-036", "fp2-2025-05-gakka-039",
-       "fp2-2025-01-gakka-017", "fp2-2025-01-gakka-020", "fp2-2025-01-gakka-013"
-    } for q in questions):
-        errors.append("corrected-but-not-reaudited FAIL question included in canonical")
+       "fp2-2025-01-gakka-017", "fp2-2025-01-gakka-013"
+    }
+    q20 = "fp2-2025-01-gakka-020"
+    if q20 in ids:
+        errors.append("Q20 still FAIL: must not enter canonical")
+    for ident in reaudited_pass:
+        matches = [q for q in questions if q.get("id") == ident]
+        if len(matches) != 1 or matches[0].get("release_selected") is not False or matches[0].get("audit_evidence_path") != "fp2-manabi-sprint/audit/FP2_FAIL5_CORRECTED_INDEPENDENT_REAUDIT_20261123.md" or matches[0].get("independent_audit_status") != "PASS":
+            errors.append(f"{ident}: corrected PASS must be independently evidenced and reserve-only")
     if any(q.get("modification_verification", "").startswith("PROVISIONAL") for q in selected):
         warnings.append("release selection has provisionally classified modified flags; NOT release ready")
     independent_paths = set()
