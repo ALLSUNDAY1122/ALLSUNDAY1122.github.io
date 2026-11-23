@@ -85,6 +85,7 @@ jobs:
         run: python kangoshi-sprint/scripts/audit_ocr_residual_by_category.py
       - name: Repair only OCR-verified CMap character omissions in 96 question source records
         run: python kangoshi-sprint/scripts/repair_ocr_cmap_96.py
+      # Cross-check each independently clipped source field using at least two agreeing OCR modes.
       - name: Repair 46 OCR-segmentation holds from independently clipped stem and four choice coordinates
         run: python kangoshi-sprint/scripts/repair_ocr_coordinate_46.py
       - name: Render each residual held question from geometric source PDF evidence
